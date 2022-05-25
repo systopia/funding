@@ -8,14 +8,18 @@ use Civi\API\Events;
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Api4Interface;
 use Civi\Funding\Event\RemoteCheckAccessEvent;
+use Civi\Funding\Contact\RemoteContactIdResolverInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class RemoteApiAuthorizeSubscriber implements EventSubscriberInterface {
 
   private Api4Interface $api4;
 
-  public function __construct(Api4Interface $api4) {
+  private RemoteContactIdResolverInterface $remoteContactIdResolver;
+
+  public function __construct(Api4Interface $api4, RemoteContactIdResolverInterface $remoteContactIdResolver) {
     $this->api4 = $api4;
+    $this->remoteContactIdResolver = $remoteContactIdResolver;
   }
 
   public static function getSubscribedEvents() {
@@ -34,7 +38,6 @@ class RemoteApiAuthorizeSubscriber implements EventSubscriberInterface {
       $event->setAuthorized(FALSE);
       $event->stopPropagation();
     }
-
   }
 
   public function onCheckAccess(RemoteCheckAccessEvent $event): void {
@@ -53,17 +56,21 @@ class RemoteApiAuthorizeSubscriber implements EventSubscriberInterface {
       return !$this->isRemoteContactIdRequired($apiRequest);
     }
 
-    // TODO: Resolve contact ID
-    $contactId = $remoteContactId;
-    $userId = \CRM_Core_BAO_UFMatch::getUFId($contactId);
+    $userId = $this->remoteContactIdResolver->getUFId($remoteContactId);
     if (NULL === $userId) {
       return FALSE;
     }
 
-    return \CRM_Core_Permission::check($apiRequest->getPermissions(), $contactId);
+    // TODO: Use injected service instead of static method
+    return \CRM_Core_Permission::check($apiRequest->getPermissions(), $this->remoteContactIdResolver->getContactId($remoteContactId));
   }
 
-  private function getRemoteContactId(AbstractAction $apiRequest): ?string {
+  /**
+   * @param \Civi\Api4\Generic\AbstractAction $apiRequest
+   *
+   * @return int|string|null
+   */
+  private function getRemoteContactId(AbstractAction $apiRequest) {
     if (method_exists($apiRequest, 'getRemoteContactId')) {
       return $apiRequest->getRemoteContactId();
     }
@@ -82,7 +89,7 @@ class RemoteApiAuthorizeSubscriber implements EventSubscriberInterface {
 
   private function isRemoteContactIdRequired(AbstractAction $apiRequest): bool {
     return $apiRequest->paramExists('remoteContactId')
-      && $apiRequest->getParamInfo('remoteContactId')['required'] ?? FALSE;
+      && ($apiRequest->getParamInfo('remoteContactId')['required'] ?? FALSE);
   }
 
 }

@@ -8,6 +8,8 @@ use Civi\Api4\Generic\Api4Interface;
 use Civi\Funding\EventSubscriber\RemoteApiAuthorizeSubscriber;
 use Civi\Funding\EventSubscriber\RemoteFundingProgramDAOGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\RemoteFundingProgramDAOGetSubscriber;
+use Civi\Funding\Contact\IdentityRemoteContactIdResolver;
+use Civi\Funding\Contact\RemoteContactIdResolverInterface;
 use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -22,6 +24,7 @@ function funding_civicrm_config(&$config) {
 
 function funding_civicrm_container(ContainerBuilder $container): void {
   $container->register(Api4Interface::class, Api4::class);
+  $container->register(RemoteContactIdResolverInterface::class, IdentityRemoteContactIdResolver::class);
 
   $container->autowire(RemoteApiAuthorizeSubscriber::class)
     ->addTag('kernel.event_subscriber');
