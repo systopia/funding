@@ -1,0 +1,11 @@
+type: object
+properties:
+  jsonSchema:
+    $ref: ./JSONSchema.yaml
+  uiSchema:
+    type: object
+    additionalProperties: true
+  data:
+    type: object
+    additionalProperties: true
+required: ["jsonSchema", "uiSchema"]

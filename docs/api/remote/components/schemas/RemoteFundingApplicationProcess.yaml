@@ -1,0 +1,44 @@
+type: object
+properties:
+  id:
+    type: integer
+  fundingCaseId:
+    type: integer
+  status:
+    type: string
+  creationDate:
+    type: string
+    format: date-time
+  modificationDate:
+    type: string
+    format: date-time
+  title:
+    type: string
+  shortDescription:
+    type: string
+  startDate:
+    type:
+      - string
+      - 'null'
+    format: date-time
+  endDate:
+    type:
+      - string
+      - 'null'
+    format: date-time
+  amountGranted:
+    type:
+      - number
+      - 'null'
+  grantedBudget:
+    type:
+      - number
+      - 'null'
+  reviewContent:
+    type:
+      - boolean
+      - 'null'
+  reviewCalculative:
+    type:
+      - boolean
+      - 'null'

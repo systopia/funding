@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Funding</base>
+  <class>FundingCaseTypeProgram</class>
+  <name>civicrm_funding_case_type_program</name>
+  <comment>Stores which funding case types are available in a funding program</comment>
+  <log>true</log>
+
+  <field>
+    <name>id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>Unique FundingCaseTypeProgram ID</comment>
+    <html>
+      <type>Number</type>
+    </html>
+  </field>
+  <primaryKey>
+    <name>id</name>
+    <autoincrement>true</autoincrement>
+  </primaryKey>
+
+  <field>
+    <name>funding_program_id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>FK to FundingProgram</comment>
+    <html>
+      <type>Number</type>
+    </html>
+  </field>
+  <foreignKey>
+    <name>funding_program_id</name>
+    <table>civicrm_funding_program</table>
+    <key>id</key>
+    <onDelete>CASCADE</onDelete>
+  </foreignKey>
+
+  <field>
+    <name>funding_case_type_id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>FK to FundingCaseType</comment>
+    <html>
+      <type>Number</type>
+    </html>
+  </field>
+  <foreignKey>
+    <name>funding_case_type_id</name>
+    <table>civicrm_funding_case_type</table>
+    <key>id</key>
+    <onDelete>RESTRICT</onDelete>
+  </foreignKey>
+</table>

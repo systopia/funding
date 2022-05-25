@@ -1,0 +1,5 @@
+name: remoteContactId
+in: query
+required: true
+schema:
+  type: [integer, string]

@@ -1,0 +1,48 @@
+post:
+  summary: Get funding programs
+  description: Retrieves the funding programs available for the specified contact.
+  parameters:
+    - $ref: ../components/parameters/contactIdParam.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            where:
+              type: object
+              properties:
+                id:
+                  type: integer
+              minProperties: 1
+            orderBy:
+              type: object
+              patternProperties:
+                ^[A-Za-z0-9_]+$:
+                  type: string
+                  enum:
+                    - ASC
+                    - DESC
+              minProperties: 1
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              version:
+                type: integer
+              count:
+                type: integer
+              values:
+                type: array
+                items:
+                  $ref: ../components/schemas/RemoteFundingProgram.yaml
+    '400':
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ErrorResponse.yaml

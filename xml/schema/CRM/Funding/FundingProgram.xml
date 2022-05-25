@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Funding</base>
+  <class>FundingProgram</class>
+  <name>civicrm_funding_program</name>
+  <log>true</log>
+
+  <field>
+    <name>id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>Unique FundingProgram ID</comment>
+    <html>
+      <type>Number</type>
+    </html>
+  </field>
+  <primaryKey>
+    <name>id</name>
+    <autoincrement>true</autoincrement>
+  </primaryKey>
+
+  <field>
+    <name>title</name>
+    <type>varchar</type>
+    <length>255</length>
+    <required>true</required>
+    <html>
+      <type>Text</type>
+    </html>
+  </field>
+  <index>
+    <name>index_title</name>
+    <fieldName>title</fieldName>
+    <unique>true</unique>
+  </index>
+
+  <field>
+    <name>start_date</name>
+    <type>date</type>
+    <required>true</required>
+    <html>
+      <type>Select Date</type>
+    </html>
+  </field>
+
+  <field>
+    <name>end_date</name>
+    <type>date</type>
+    <required>true</required>
+    <html>
+      <type>Select Date</type>
+    </html>
+  </field>
+
+  <field>
+    <name>requests_start_date</name>
+    <type>date</type>
+    <required>true</required>
+    <html>
+      <type>Select Date</type>
+    </html>
+  </field>
+
+  <field>
+    <name>requests_end_date</name>
+    <type>date</type>
+    <required>true</required>
+    <html>
+      <type>Select Date</type>
+    </html>
+  </field>
+
+  <field>
+    <name>currency</name>
+    <type>varchar</type>
+    <length>10</length>
+    <required>true</required>
+    <html>
+      <type>Text</type>
+    </html>
+  </field>
+
+  <field>
+    <name>budget</name>
+    <type>decimal(10,2)</type>
+    <required>false</required>
+    <crmType>CRM_Utils_Type::T_MONEY</crmType>
+    <dataPattern>/^\d{1,10}(\.\d{2})?$/</dataPattern>
+    <html>
+      <type>Text</type>
+    </html>
+  </field>
+</table>

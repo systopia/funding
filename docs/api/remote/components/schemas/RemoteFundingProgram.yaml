@@ -1,0 +1,31 @@
+type: object
+properties:
+  id:
+    type: integer
+  title:
+    type: string
+  startDate:
+    type: string
+    format: date
+  endDate:
+    type: string
+    format: date
+  requestsStartDate:
+    type: string
+    format: date
+  requestsEndDate:
+    type: string
+    format: date
+  currency:
+    type: string
+  permissions:
+    type: array
+    items:
+      type: string
+    description: The permissions that the given contact has in the funding program
+  patternProperties:
+    ^PERM_[A-Za-z0-9_]+$:
+      type: boolean
+      enum:
+        - true
+      description: Flattened permissions (every permission in permissions prefixed with "PERM_")

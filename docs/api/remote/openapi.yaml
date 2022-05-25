@@ -1,0 +1,33 @@
+openapi: 3.1.0
+info:
+  title: Funding Remote API
+  description: Funding Remote API
+  license:
+    name: GNU Affero General Public License v3.0
+    identifier: AGPL-3.0-only
+  version: 0.0.1
+servers:
+  - url: https://www.example.org/civicrm/ajax/api4
+paths:
+  /RemoteFundingProgram/get:
+    $ref: paths/RemoteFundingProgram_get.yaml
+  /RemoteFundingProgram/getRelated:
+    $ref: paths/RemoteFundingProgram_getRelated.yaml
+  /RemoteFundingCaseType/get:
+    $ref: paths/RemoteFundingCaseType_get.yaml
+  /RemoteFundingCase/getNewApplicationForm:
+    $ref: paths/RemoteFundingCase_getNewApplicationForm.yaml
+  /RemoteFundingCase/validateNewApplicationForm:
+    $ref: paths/RemoteFundingCase_validateNewApplicationForm.yaml
+  /RemoteFundingCase/submitNewApplicationForm:
+    $ref: paths/RemoteFundingCase_submitNewApplicationForm.yaml
+  /RemoteFundingCase/get:
+    $ref: paths/RemoteFundingCase_get.yaml
+  /RemoteFundingApplicationProcess/get:
+    $ref: paths/RemoteFundingApplicationProcess_get.yaml
+  /RemoteFundingApplicationProcess/getForm:
+    $ref: paths/RemoteFundingApplicationProcess_getForm.yaml
+  /RemoteFundingApplicationProcess/validateForm:
+    $ref: paths/RemoteFundingApplicationProcess_validateForm.yaml
+  /RemoteFundingApplicationProcess/submitForm:
+    $ref: paths/RemoteFundingApplicationProcess_submitForm.yaml

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Funding</base>
+  <class>FundingCase</class>
+  <name>civicrm_funding_case</name>
+  <log>true</log>
+
+  <field>
+    <name>id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>Unique FundingCase ID</comment>
+    <html>
+      <type>Number</type>
+    </html>
+  </field>
+  <primaryKey>
+    <name>id</name>
+    <autoincrement>true</autoincrement>
+  </primaryKey>
+
+  <field>
+    <name>funding_program_id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>FK to FundingProgram</comment>
+    <html>
+      <type>Number</type>
+    </html>
+  </field>
+  <foreignKey>
+    <name>funding_program_id</name>
+    <table>civicrm_funding_program</table>
+    <key>id</key>
+    <onDelete>RESTRICT</onDelete>
+  </foreignKey>
+
+  <field>
+    <name>funding_case_type_id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>FK to FundingCaseType</comment>
+    <html>
+      <type>Number</type>
+    </html>
+  </field>
+  <foreignKey>
+    <name>funding_case_type_id</name>
+    <table>civicrm_funding_case_type</table>
+    <key>id</key>
+    <onDelete>RESTRICT</onDelete>
+  </foreignKey>
+
+  <field>
+    <name>status</name>
+    <type>varchar</type>
+    <length>64</length>
+    <required>true</required>
+    <pseudoconstant>
+      <callback>Civi\Funding\FundingPseudoConstants::getFundingCaseStatus</callback>
+    </pseudoconstant>
+    <html>
+      <type>Select</type>
+    </html>
+  </field>
+
+  <field>
+    <name>creation_date</name>
+    <type>timestamp</type>
+    <required>true</required>
+  </field>
+
+  <field>
+    <name>modification_date</name>
+    <type>timestamp</type>
+    <required>true</required>
+  </field>
+
+  <field>
+    <name>recipient_contact_id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>FK to Contact</comment>
+    <html>
+      <type>EntityRef</type>
+    </html>
+  </field>
+  <foreignKey>
+    <name>recipient_contact_id</name>
+    <table>civicrm_contact</table>
+    <key>id</key>
+    <onDelete>RESTRICT</onDelete>
+  </foreignKey>
+</table>

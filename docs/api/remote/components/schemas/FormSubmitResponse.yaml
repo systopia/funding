@@ -1,0 +1,23 @@
+type: object
+properties:
+  action:
+    type: string
+    enum: ["showValidation", "showForm", "closeForm"]
+  message:
+    description: A message describing the result
+    type: string
+required: ["action"]
+if:
+  properties:
+    action: { const: "showValidation" }
+then:
+  properties:
+    errors:
+      $ref: FormErrors.yaml
+else:
+  if:
+    properties:
+      action: { const: "showForm" }
+  then:
+      $ref: Form.yaml
+unevaluatedProperties: false

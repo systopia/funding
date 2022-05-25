@@ -1,0 +1,7 @@
+type: object
+properties:
+  valid:
+    type: boolean
+  errors:
+    $ref: FormErrors.yaml
+required: ["valid"]

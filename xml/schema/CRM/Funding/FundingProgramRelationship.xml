@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Funding</base>
+  <class>FundingProgramRelationship</class>
+  <name>civicrm_funding_program_relationship</name>
+  <comment>Stores relationships between FundingProgram entities</comment>
+  <log>true</log>
+
+  <field>
+    <name>id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>Unique FundingProgramRelationship ID</comment>
+    <html>
+      <type>Number</type>
+    </html>
+  </field>
+  <primaryKey>
+    <name>id</name>
+    <autoincrement>true</autoincrement>
+  </primaryKey>
+
+  <field>
+    <name>id_a</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>FK to FundingProgram</comment>
+    <html>
+      <type>Number</type>
+    </html>
+  </field>
+  <foreignKey>
+    <name>id_a</name>
+    <table>civicrm_funding_program</table>
+    <key>id</key>
+    <onDelete>CASCADE</onDelete>
+  </foreignKey>
+
+  <field>
+    <name>id_b</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>FK to FundingProgram</comment>
+    <html>
+      <type>Number</type>
+    </html>
+  </field>
+  <foreignKey>
+    <name>id_b</name>
+    <table>civicrm_funding_program</table>
+    <key>id</key>
+    <onDelete>CASCADE</onDelete>
+  </foreignKey>
+
+  <field>
+    <name>type</name>
+    <type>varchar</type>
+    <length>64</length>
+    <required>true</required>
+    <pseudoconstant>
+      <callback>Civi\Funding\FundingPseudoConstants::getFundingProgramRelationshipTypes</callback>
+    </pseudoconstant>
+    <html>
+      <type>Number</type>
+    </html>
+  </field>
+</table>

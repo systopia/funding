@@ -1,0 +1,8 @@
+description: JSON pointers mapped to error messages
+type: object
+patternProperties:
+  ^[A-Za-z0-9_/#]+$:
+    description: JSON pointer mapped to errors
+    type: array
+    items:
+      type: string

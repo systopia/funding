@@ -1,0 +1,6 @@
+type: object
+properties:
+  error_code:
+    type: integer
+  error_message:
+    type: string

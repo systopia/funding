@@ -1,0 +1,42 @@
+post:
+  summary: Get funding case type
+  parameters:
+    - $ref: ../components/parameters/contactIdParam.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            where:
+              type: object
+              properties:
+                id:
+                  type: integer
+                fundingProgramId:
+                  type: integer
+              minProperties: 1
+          required:
+            - where
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              version:
+                type: integer
+              count:
+                type: integer
+              values:
+                type: array
+                items:
+                  $ref: ../components/schemas/RemoteFundingCaseType.yaml
+    '400':
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ErrorResponse.yaml

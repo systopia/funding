@@ -1,0 +1,42 @@
+post:
+  summary: Get new application form
+  parameters:
+    - $ref: ../components/parameters/contactIdParam.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            fundingProgramId:
+              type: integer
+            fundingTypeId:
+              type: integer
+          required:
+            - fundingProgramId
+            - fundingTypeId
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              version:
+                type: integer
+              count:
+                type: integer
+                const: 1
+              values:
+                type: array
+                maxItems: 1
+                minItems: 1
+                items:
+                  $ref: ../components/schemas/Form.yaml
+    '400':
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/ErrorResponse.yaml
