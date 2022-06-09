@@ -3,7 +3,9 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber;
 
+use Civi\Funding\Event\RemoteFundingGetFieldsEvent;
 use Civi\Funding\EventSubscriber\Traits\RemoteFundingProgramSubscriberTrait;
+use Civi\RemoteTools\EventSubscriber\AbstractRemoteDAOGetFieldsSubscriber;
 
 class RemoteFundingProgramDAOGetFieldsSubscriber extends AbstractRemoteDAOGetFieldsSubscriber {
 
@@ -12,5 +14,7 @@ class RemoteFundingProgramDAOGetFieldsSubscriber extends AbstractRemoteDAOGetFie
   protected const DAO_ENTITY_NAME = 'FundingProgram';
 
   protected const ENTITY_NAME = 'RemoteFundingProgram';
+
+  protected const EVENT_CLASS = RemoteFundingGetFieldsEvent::class;
 
 }

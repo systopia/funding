@@ -3,13 +3,15 @@ declare(strict_types = 1);
 
 require_once 'funding.civix.php';
 
-use Civi\Api4\Generic\Api4;
-use Civi\Api4\Generic\Api4Interface;
-use Civi\Funding\EventSubscriber\RemoteApiAuthorizeSubscriber;
+use Civi\Funding\Contact\FundingRemoteContactIdResolver;
+use Civi\Funding\EventSubscriber\RemoteFundingApiAuthorizeSubscriber;
 use Civi\Funding\EventSubscriber\RemoteFundingProgramDAOGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\RemoteFundingProgramDAOGetSubscriber;
-use Civi\Funding\Contact\IdentityRemoteContactIdResolver;
-use Civi\Funding\Contact\RemoteContactIdResolverInterface;
+use Civi\Funding\EventSubscriber\RemoteFundingRequestInitSubscriber;
+use Civi\RemoteTools\Api4\Api4;
+use Civi\RemoteTools\Api4\Api4Interface;
+use Civi\RemoteTools\EventSubscriber\ApiAuthorizeInitRequestSubscriber;
+use Civi\RemoteTools\EventSubscriber\ApiAuthorizeSubscriber;
 use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -24,14 +26,25 @@ function funding_civicrm_config(&$config) {
 
 function funding_civicrm_container(ContainerBuilder $container): void {
   $container->register(Api4Interface::class, Api4::class);
-  $container->register(RemoteContactIdResolverInterface::class, IdentityRemoteContactIdResolver::class);
+  $container->register(ApiAuthorizeInitRequestSubscriber::class)
+    ->addTag('kernel.event_subscriber');
+  $container->register(ApiAuthorizeSubscriber::class)
+    ->addTag('kernel.event_subscriber');
 
-  $container->autowire(RemoteApiAuthorizeSubscriber::class)
-    ->addTag('kernel.event_subscriber');
+  $container->autowire(FundingRemoteContactIdResolver::class);
+
+  $container->autowire(RemoteFundingRequestInitSubscriber::class)
+    ->addTag('kernel.event_subscriber')
+    ->setLazy(TRUE);
+  $container->autowire(RemoteFundingApiAuthorizeSubscriber::class)
+    ->addTag('kernel.event_subscriber')
+    ->setLazy(TRUE);
   $container->autowire(RemoteFundingProgramDAOGetFieldsSubscriber::class)
-    ->addTag('kernel.event_subscriber');
+    ->addTag('kernel.event_subscriber')
+    ->setLazy(TRUE);
   $container->autowire(RemoteFundingProgramDAOGetSubscriber::class)
-    ->addTag('kernel.event_subscriber');
+    ->addTag('kernel.event_subscriber')
+    ->setLazy(TRUE);
 }
 
 /**
