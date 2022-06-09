@@ -1,5 +1,5 @@
 Package: funding
-Copyright (C) 2022, Dominic Tubach <tubach@systopia.de>
+Copyright (C) 2022, SYSTOPIA GmbH <info@systopia.de>
 Licensed under the GNU Affero Public License 3.0 (below).
 
 -------------------------------------------------------------------------------
