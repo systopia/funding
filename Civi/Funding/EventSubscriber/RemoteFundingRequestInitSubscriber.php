@@ -28,7 +28,7 @@ final class RemoteFundingRequestInitSubscriber implements EventSubscriberInterfa
   public function onRemoteRequestInit(InitApiRequestEvent $event): void {
     $request = $event->getApiRequest();
     Assert::isInstanceOf($request, RemoteFundingActionInterface::class);
-    /** @noinspection PhpPossiblePolymorphicInvocationInspection */
+    /** @var \Civi\Funding\Api4\Action\RemoteFundingActionInterface $request */
     $remoteContactId = $request->getRemoteContactId();
     if (NULL !== $remoteContactId) {
       $request->setExtraParam('contactId', $this->remoteContactIdResolver->getContactId($remoteContactId));

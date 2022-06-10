@@ -19,7 +19,9 @@ class RemoteFundingDAOGetAction extends EventDAOGetAction implements RemoteFundi
       $entityName, $actionName, $eventDispatcher);
   }
 
-  /** @noinspection PhpMissingParentCallCommonInspection */
+  /**
+   * @noinspection PhpMissingParentCallCommonInspection
+   */
   protected function getEventClass(): string {
     return RemoteFundingDAOGetEvent::class;
   }

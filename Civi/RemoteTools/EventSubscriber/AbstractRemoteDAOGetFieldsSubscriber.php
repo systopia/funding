@@ -45,6 +45,9 @@ abstract class AbstractRemoteDAOGetFieldsSubscriber implements EventSubscriberIn
     return (static::EVENT_CLASS)::getEventName(static::ENTITY_NAME);
   }
 
+  /**
+   * @throws \API_Exception
+   */
   public function onGetFields(GetFieldsEvent $event): void {
     $action = (new RemoteDAOGetFieldsAction(static::DAO_ENTITY_NAME, $event->getActionName()))
       ->setCheckPermissions($event->isCheckPermissions())

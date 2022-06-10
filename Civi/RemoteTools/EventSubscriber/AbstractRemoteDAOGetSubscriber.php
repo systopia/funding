@@ -45,6 +45,9 @@ abstract class AbstractRemoteDAOGetSubscriber implements EventSubscriberInterfac
     $this->api4 = $api4;
   }
 
+  /**
+   * @throws \API_Exception
+   */
   public function onGet(DAOGetEvent $event): void {
     /*
      * Note: "where" could contain excluded fields, i.e. requester could use it
