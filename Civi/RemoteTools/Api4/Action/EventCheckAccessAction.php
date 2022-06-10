@@ -48,6 +48,11 @@ class EventCheckAccessAction extends CheckAccessAction implements EventActionInt
   private function checkRemoteAccessGranted(Result $result): void {
     /** @var \Civi\RemoteTools\Event\CheckAccessEvent $event */
     $event = $this->createEvent();
+
+    if (CheckAccessEvent::class !== get_class($event)) {
+      /** @noinspection PhpParamsInspection */
+      $this->_eventDispatcher->dispatch(CheckAccessEvent::getEventName(), $event);
+    }
     $this->dispatchEvent($event);
 
     $result->debug['event'] = $event->getDebugOutput();

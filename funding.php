@@ -4,7 +4,6 @@ declare(strict_types = 1);
 require_once 'funding.civix.php';
 
 use Civi\Funding\Contact\FundingRemoteContactIdResolver;
-use Civi\Funding\EventSubscriber\RemoteFundingApiAuthorizeSubscriber;
 use Civi\Funding\EventSubscriber\RemoteFundingProgramDAOGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\RemoteFundingProgramDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\RemoteFundingRequestInitSubscriber;
@@ -12,6 +11,7 @@ use Civi\RemoteTools\Api4\Api4;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\EventSubscriber\ApiAuthorizeInitRequestSubscriber;
 use Civi\RemoteTools\EventSubscriber\ApiAuthorizeSubscriber;
+use Civi\RemoteTools\EventSubscriber\CheckAccessSubscriber;
 use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -30,13 +30,13 @@ function funding_civicrm_container(ContainerBuilder $container): void {
     ->addTag('kernel.event_subscriber');
   $container->register(ApiAuthorizeSubscriber::class)
     ->addTag('kernel.event_subscriber');
+  $container->autowire(CheckAccessSubscriber::class)
+    ->addTag('kernel.event_subscriber')
+    ->setLazy(TRUE);
 
   $container->autowire(FundingRemoteContactIdResolver::class);
 
   $container->autowire(RemoteFundingRequestInitSubscriber::class)
-    ->addTag('kernel.event_subscriber')
-    ->setLazy(TRUE);
-  $container->autowire(RemoteFundingApiAuthorizeSubscriber::class)
     ->addTag('kernel.event_subscriber')
     ->setLazy(TRUE);
   $container->autowire(RemoteFundingProgramDAOGetFieldsSubscriber::class)
