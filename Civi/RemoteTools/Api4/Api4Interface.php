@@ -17,7 +17,6 @@ interface Api4Interface {
    *
    * @throws \Civi\API\Exception\NotImplementedException
    */
-
   public function createAction(string $entityName, string $action, array $params = []): AbstractAction;
 
   /**

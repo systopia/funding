@@ -17,8 +17,8 @@
 
     <rule ref="tools/phpcs/vendor/drupal/coder/coder_sniffer/Drupal">
         <!-- Conflicts with PHPStan type hints -->
-        <exclude name="Drupal.Commenting.VariableComment"/>
-        <exclude name="Drupal.Commenting.FunctionComment"/>
+        <exclude name="Drupal.Commenting.VariableComment.IncorrectVarType"/>
+        <exclude name="Drupal.Commenting.FunctionComment.ParamTypeSpaces"/>
     </rule>
 
 </ruleset>
