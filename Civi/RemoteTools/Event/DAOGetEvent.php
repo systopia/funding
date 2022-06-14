@@ -13,7 +13,7 @@ class DAOGetEvent extends GetEvent {
   protected array $groupBy = [];
 
   /**
-   * @var array<scalar[]>
+   * @var array<array<scalar|array{string, string, 2?: scalar}>>
    */
   protected array $join = [];
 
@@ -83,13 +83,13 @@ class DAOGetEvent extends GetEvent {
 
   /**
    * @param string $entity
-   * @param string|bool $type
-   * @param null|string $bridge
-   * @param scalar ...$conditions
+   * @param string $type
+   * @param null|string|array{string, string, 2?: scalar} $bridge
+   * @param array{string, string, 2?: scalar} ...$conditions
    *
    * @return $this
    */
-  public function addJoin(string $entity, $type = 'LEFT', ?string $bridge = NULL, ...$conditions): self {
+  public function addJoin(string $entity, string $type = 'LEFT', $bridge = NULL, array ...$conditions): self {
     if (NULL !== $bridge) {
       array_unshift($conditions, $bridge);
     }
@@ -100,7 +100,7 @@ class DAOGetEvent extends GetEvent {
   }
 
   /**
-   * @return array<scalar[]>
+   * @return array<array<scalar|array{string, string, 2?: scalar}>>
    */
   public function getJoin(): array {
     return $this->join;
