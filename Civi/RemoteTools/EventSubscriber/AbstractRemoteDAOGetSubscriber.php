@@ -126,7 +126,9 @@ abstract class AbstractRemoteDAOGetSubscriber implements EventSubscriberInterfac
       return $includedFields;
     }
 
-    return array_intersect($event->getSelect(), $includedFields + ['row_count']) ?: $includedFields;
+    $select = array_intersect($event->getSelect(), $includedFields + ['row_count']);
+
+    return [] === $select ? $includedFields : $select;
   }
 
 }

@@ -43,7 +43,7 @@ class GetEvent extends AbstractRequestEvent {
    * @throws \API_Exception
    */
   public function addWhere(string $fieldName, string $op, $value = NULL): self {
-    if (!in_array($op, CoreUtil::getOperators())) {
+    if (!in_array($op, CoreUtil::getOperators(), TRUE)) {
       throw new \API_Exception('Unsupported operator');
     }
 

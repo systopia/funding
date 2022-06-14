@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace Civi\RemoteTools\EventSubscriber;
 
 use Civi\API\Event\AuthorizeEvent;
-use Civi\Api4\Generic\AbstractAction;
 use Civi\RemoteTools\Api4\Action\EventActionInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -29,7 +28,7 @@ final class ApiAuthorizeInitRequestSubscriber implements EventSubscriberInterfac
    */
   public function onApiAuthorize(AuthorizeEvent $event, string $eventName, EventDispatcherInterface $eventDispatcher): void {
     $request = $event->getApiRequest();
-    if ($request instanceof EventActionInterface && $request instanceof AbstractAction) {
+    if ($request instanceof EventActionInterface) {
       $initRequestEvent = $request->getInitRequestEventClass()::fromApiRequest($request);
       $eventDispatcher->dispatch($request->getInitRequestEventName(), $initRequestEvent);
       $this->assertExtraParams($request);

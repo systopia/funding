@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Civi\RemoteTools\Api4\Action\Traits;
 
+use Civi\RemoteTools\Api4\Action\EventActionInterface;
 use Civi\RemoteTools\Event\AbstractRequestEvent;
 use Civi\RemoteTools\Event\AuthorizeApiRequestEvent;
 use Civi\RemoteTools\Event\InitApiRequestEvent;
@@ -56,16 +57,16 @@ trait EventActionTrait {
   }
 
   public function hasExtraParam(string $key): bool {
-    return array_key_exists($key, $this->_extraParams);
+    return isset($this->_extraParams[$key]);
   }
 
-  public function setExtraParam(string $key, $value): self {
+  public function setExtraParam(string $key, $value): EventActionInterface {
     $this->_extraParams[$key] = $value;
 
     return $this;
   }
 
-  public function setExtraParams(array $extraParams): self {
+  public function setExtraParams(array $extraParams): EventActionInterface {
     $this->_extraParams = $extraParams;
 
     return $this;

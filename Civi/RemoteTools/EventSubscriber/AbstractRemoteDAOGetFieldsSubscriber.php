@@ -27,7 +27,7 @@ abstract class AbstractRemoteDAOGetFieldsSubscriber implements EventSubscriberIn
   /**
    * Overwrite in subclasses, if necessary
    *
-   * @var string
+   * @var class-string<\Civi\RemoteTools\Event\GetFieldsEvent>
    */
   protected const EVENT_CLASS = GetFieldsEvent::class;
 

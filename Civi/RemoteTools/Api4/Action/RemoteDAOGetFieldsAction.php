@@ -117,7 +117,7 @@ class RemoteDAOGetFieldsAction extends DAOGetFieldsAction {
         'nullable' => $field->getNullable(),
         'operators' => $field->operators,
       ];
-      if ($this->loadOptions) {
+      if (FALSE !== $this->loadOptions) {
         $fieldDef['options'] = $field->getOptions($this->values, $this->loadOptions, $this->checkPermissions);
       }
       $fieldArray[] = $fieldDef;

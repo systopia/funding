@@ -38,6 +38,9 @@ class EventGetAction extends AbstractGetAction implements EventActionInterface {
     $result->exchangeArray($event->getRecords());
   }
 
+  /**
+   * @inheritDoc
+   */
   protected function getEventClass(): string {
     return GetEvent::class;
   }
