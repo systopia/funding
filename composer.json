@@ -46,7 +46,7 @@
             "@php tools/phpstan/vendor/bin/phpstan"
         ],
         "phpunit": [
-            "@php tools/phpunit/vendor/bin/simple-phpunit"
+            "@php tools/phpunit/vendor/bin/simple-phpunit --coverage-text"
         ],
         "test": [
             "@phpcs",
