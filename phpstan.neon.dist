@@ -1,6 +1,5 @@
 parameters:
 	paths:
-		- api
 		- Civi
 		- CRM
 		- tests
@@ -11,6 +10,13 @@ parameters:
 			- tests/phpunit/bootstrap.php
 	scanFiles:
 		- funding.civix.php
+		- tools/phpunit/vendor/bin/.phpunit/phpunit/src/Framework/TestCase.php
+	scanDirectories:
+		- tools/phpunit/vendor/bin/.phpunit/phpunit/src/Framework
+		- vendor/civicrm/civicrm-core/
+	bootstrapFiles:
+		- tools/phpunit/vendor/bin/.phpunit/phpunit/vendor/autoload.php
+		- vendor/autoload.php
 	level: 9
 	checkTooWideReturnTypesInProtectedAndPublicMethods: true
 	checkUninitializedProperties: true

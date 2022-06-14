@@ -1,0 +1,57 @@
+{
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "composer/installers": false,
+            "civicrm/composer-compile-plugin": false,
+            "civicrm/composer-downloads-plugin": false,
+            "cweagans/composer-patches": false,
+            "civicrm/civicrm-asset-plugin": false
+        }
+    },
+    "require-dev": {
+        "civicrm/civicrm-core": "^5.50",
+        "webmozart/assert": "^1.11",
+        "symfony/event-dispatcher": "^4"
+    },
+    "scripts": {
+        "composer-phpcs": [
+            "@composer --working-dir=tools/phpcs"
+        ],
+        "composer-phpstan": [
+            "@composer --working-dir=tools/phpstan"
+        ],
+        "composer-phpunit": [
+            "@composer --working-dir=tools/phpunit"
+        ],
+        "composer-tools": [
+            "@composer-phpcs",
+            "@composer-phpstan",
+            "@composer-phpunit"
+        ],
+        "post-install-cmd": [
+            "@composer-tools install"
+        ],
+        "post-update-cmd": [
+            "@composer-tools update"
+        ],
+        "phpcs": [
+            "@php tools/phpcs/vendor/bin/phpcs"
+        ],
+        "phpcbf": [
+            "@php tools/phpcs/vendor/bin/phpcbf"
+        ],
+        "phpstan": [
+            "@php tools/phpstan/vendor/bin/phpstan"
+        ],
+        "phpunit": [
+            "@php tools/phpunit/vendor/bin/simple-phpunit"
+        ],
+        "test": [
+            "@phpcs",
+            "@phpstan",
+            "@phpunit"
+        ]
+    }
+}
