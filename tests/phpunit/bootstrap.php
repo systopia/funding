@@ -15,6 +15,9 @@ $loader->add('api_', [__DIR__ . '/../..', __DIR__]);
 $loader->addPsr4('api\\', [__DIR__ . '/../../api', __DIR__ . '/api']);
 $loader->register();
 
+// Ensure function ts() is available - it's declared in the same file as CRM_Core_I18n
+\CRM_Core_I18n::singleton();
+
 /**
  * Call the "cv" command.
  *
