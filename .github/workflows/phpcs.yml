@@ -1,0 +1,28 @@
+name: PHP_CodeSniffer
+
+on:
+  push: ~
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  phpcs:
+    runs-on: ubuntu-latest
+    name: PHP_CodeSniffer
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 8.1
+        tools: cs2pr
+      env:
+        fail-fast: true
+
+    - name: Install dependencies
+      run: composer update --prefer-dist
+
+    - name: Run PHP_CodeSniffer
+      run: composer phpcs -- -q --report=checkstyle | cs2pr

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="CiviCRM - PHPStan" xsi:noNamespaceSchemaLocation="phpcs.xsd">
+    <description>CiviCRM coding standard with support for PHPStan type hints</description>
+
+    <file>Civi</file>
+    <file>CRM</file>
+    <file>tests</file>
+
+    <exclude-pattern>/CRM/Funding/BAO/.*\.php$</exclude-pattern>
+    <exclude-pattern>/CRM/Funding/Upgrader\.php$</exclude-pattern>
+    <exclude-pattern>/CRM/Funding/Upgrader/Base\.php$</exclude-pattern>
+
+    <arg name="extensions" value="php"/>
+    <arg name="cache" value=".phpcs.cache"/>
+    <arg name="colors"/>
+    <arg value="sp"/>
+
+    <rule ref="tools/phpcs/vendor/drupal/coder/coder_sniffer/Drupal">
+        <!-- Conflicts with PHPStan type hints -->
+        <exclude name="Drupal.Commenting.VariableComment"/>
+        <exclude name="Drupal.Commenting.FunctionComment"/>
+    </rule>
+
+</ruleset>
