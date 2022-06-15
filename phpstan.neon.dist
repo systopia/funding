@@ -17,6 +17,8 @@ parameters:
 	bootstrapFiles:
 		- tools/phpunit/vendor/bin/.phpunit/phpunit/vendor/autoload.php
 		- vendor/autoload.php
+	stubFiles:
+		- stubs/AbstractAction.stub
 	level: 9
 	checkTooWideReturnTypesInProtectedAndPublicMethods: true
 	checkUninitializedProperties: true
@@ -27,7 +29,7 @@ parameters:
 			missingCheckedExceptionInThrows: true
 			tooWideThrowType: true
 		checkedExceptionClasses:
-			- '\API_Exception'
+			- \Webmozart\Assert\InvalidArgumentException
 		implicitThrows: false
 	ignoreErrors:
 		-
