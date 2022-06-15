@@ -3,6 +3,7 @@
          xsi:noNamespaceSchemaLocation="tools/phpcs/vendor/squizlabs/php_codesniffer/phpcs.xsd">
     <description>CiviCRM coding standard with support for PHPStan type hints and some additional rules</description>
 
+    <file>api</file>
     <file>Civi</file>
     <file>CRM</file>
     <file>tests</file>
