@@ -52,7 +52,7 @@
     {
         "location": "Civi\\Api4\\RemoteFundingProgramTest::setUp",
         "message": "Calling the \"Symfony\\Component\\EventDispatcher\\EventDispatcherInterface::dispatch()\" method with the event name as the first argument is deprecated since Symfony 4.3, pass it as the second argument and provide the event object as the first argument instead.",
-        "count": 768
+        "count": 673
     },
     {
         "location": "Civi\\Api4\\RemoteFundingProgramTest::setUp",
@@ -70,14 +70,9 @@
         "count": 1
     },
     {
-        "location": "Civi\\Api4\\RemoteFundingProgramTest::setUp",
-        "message": "The \"Civi\\Api4\\Event\\SchemaMapBuildEvent\" class extends \"Symfony\\Component\\EventDispatcher\\Event\" that is deprecated since Symfony 4.3, use \"Symfony\\Contracts\\EventDispatcher\\Event\" instead.",
-        "count": 1
-    },
-    {
         "location": "Civi\\Api4\\RemoteFundingProgramTest::testPermissions",
         "message": "Calling the \"Symfony\\Component\\EventDispatcher\\EventDispatcherInterface::dispatch()\" method with the event name as the first argument is deprecated since Symfony 4.3, pass it as the second argument and provide the event object as the first argument instead.",
-        "count": 126
+        "count": 122
     },
     {
         "location": "Civi\\Api4\\RemoteFundingProgramTest::testPermissions",
