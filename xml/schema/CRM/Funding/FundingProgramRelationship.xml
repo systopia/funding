@@ -62,7 +62,7 @@
       <callback>Civi\Funding\FundingPseudoConstants::getFundingProgramRelationshipTypes</callback>
     </pseudoconstant>
     <html>
-      <type>Number</type>
+      <type>Select</type>
     </html>
   </field>
 </table>
