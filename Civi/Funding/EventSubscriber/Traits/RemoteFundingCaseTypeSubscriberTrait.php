@@ -7,6 +7,9 @@ use Civi\RemoteTools\Event\AbstractRequestEvent;
 
 trait RemoteFundingCaseTypeSubscriberTrait {
 
+  /**
+   * @return string[]
+   */
   protected function getIncludedFields(AbstractRequestEvent $event): array {
     return ['id', 'title'];
   }
