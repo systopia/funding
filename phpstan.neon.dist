@@ -32,29 +32,33 @@ parameters:
 			- \Webmozart\Assert\InvalidArgumentException
 		implicitThrows: false
 	ignoreErrors:
+		# Note paths are prefixed with ""*/" to wirk with inspections in PHPStorm because of:
+		# https://youtrack.jetbrains.com/issue/WI-63891/PHPStan-ignoreErrors-configuration-isnt-working-with-inspections
 		-
 			message: '#has an uninitialized property#'
 			paths:
-				- Civi/Funding/Event/*.php
-				- Civi/RemoteTools/Event/*.php
-		-
-			message: '#^Access to an uninitialized property Civi\\Funding\\Event\\RemoteFundingCheckAccessEvent::\$remoteContactId.$#'
-			path: Civi/Funding/Event/RemoteFundingCheckAccessEvent.php
+				- */Civi/Funding/Event/*.php
+				- */Civi/RemoteTools/Event/*.php
 		-
 			message: '#^Access to an undefined property Civi\\Api4\\Generic\\AbstractAction::\$_eventDispatcher.$#'
-			path: Civi/RemoteTools/Api4/Action/Traits/EventActionTrait.php
+			path: */Civi/RemoteTools/Api4/Action/Traits/EventActionTrait.php
+		- '#^Class Civi\\Funding\\Api4\\Action\\[^\s]+Action has an uninitialized property \$[^\s]+\. Give it default value or assign it in the constructor.$#'
+		- '#^Access to an uninitialized property Civi\\Funding\\Event\\[^\s]+Event::\$[^\s]+.$#'
+		-
+			message: '#^Call to static method Webmozart\\Assert\\Assert::[^\s]+\(\) with .+ will always evaluate to true.$#'
+			path: */Civi/Funding/Event/*Event.php
 		-
 			message: '#^PHPDoc tag @var for constant [^\s]+::[^\s]+ with type string is incompatible with value null.$#'
-			path: Civi/RemoteTools/EventSubscriber/Abstract*.php
+			path: */Civi/RemoteTools/EventSubscriber/Abstract*.php
 		- # Required because "null" is missing in type hint of CiviCRM
 			message: '#^Strict comparison using !== between null and int will always evaluate to true.$#'
-			path: Civi/RemoteTools/Api4/Action/RemoteDAOGetFieldsAction.php
+			path: */Civi/RemoteTools/Api4/Action/RemoteDAOGetFieldsAction.php
 		- # false positive
 			message: '#^Variable \$granted might not be defined.$#'
-			path: Civi/RemoteTools/Authorization/PermissionChecker.php
+			path: */Civi/RemoteTools/Authorization/PermissionChecker.php
 		-
 			message: '#^Variable property access on \$this\(Civi\\RemoteTools\\Event\\AbstractRequestEvent\).$#'
-			path: Civi/RemoteTools/Event/AbstractRequestEvent.php
+			path: */Civi/RemoteTools/Event/AbstractRequestEvent.php
 		- '#^Method Civi\\Funding\\Event\\RemoteFunding[^\s]+Event::getContactId\(\) should return int but returns int\|null.$#'
 		- '#^Property Civi\\Api4\\Generic\\Result::\$debug \(array\) on left side of \?\? is not nullable.$#'
 		- '#^Method Civi\\RemoteTools\\Api4\\Api4::createAction\(\) should return Civi\\Api4\\Generic\\AbstractAction but returns array|Civi\Api4\Generic\AbstractAction.$#'
@@ -65,5 +69,5 @@ parameters:
 		- '/^Parameter #1 \$iterator of function iterator_to_array expects Traversable, iterable(<.+>)? given.$/' # false positive
 		-
 			message: '#^Call to function method_exists\(\) with .+ will always evaluate to true.$#'
-			path: tests/phpunit/**/EventSubscriber/*SubscriberTest.php
+			path: */tests/phpunit/**/EventSubscriber/*SubscriberTest.php
 	tmpDir: .phpstan
