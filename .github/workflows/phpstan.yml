@@ -15,12 +15,13 @@ jobs:
     name: PHPStan with PHP ${{ matrix.php-versions }} ${{ matrix.prefer }}
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-versions }}
+        coverage: none
       env:
         fail-fast: true
 
@@ -32,11 +33,11 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ${{ steps.composer-cache.outputs.dir }}
-        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}-${{ matrix.prefer }}-
+        key: ${{ runner.os }}-composer-${{ matrix.prefer }}-${{ hashFiles('**/composer.json') }}
         restore-keys: ${{ runner.os }}-composer-${{ matrix.prefer }}-
 
     - name: Install dependencies
-      run: composer update --prefer-dist --${{ matrix.prefer }}
+      run: composer update --prefer-dist --${{ matrix.prefer }} --ignore-platform-req=ext-gd
 
     - name: Run PHPStan
       run: composer phpstan -- analyse -c phpstan.ci.neon
