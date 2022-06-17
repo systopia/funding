@@ -57,7 +57,8 @@ abstract class AbstractRequestEvent extends Event {
    * @param array<string, mixed> $params
    */
   public function __construct(string $entityName, string $actionName, array $params) {
-    $missingParams = array_diff($this->getRequiredParams(), array_keys($params));
+    $missingParams = array_diff($this->getRequiredParams(),
+      array_keys(array_filter($params, fn ($value) => NULL !== $value)));
     if ([] !== $missingParams) {
       throw new \InvalidArgumentException(sprintf('Required params missing: %s', implode(', ', $missingParams)));
     }
