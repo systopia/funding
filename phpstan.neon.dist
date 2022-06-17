@@ -47,9 +47,6 @@ parameters:
 		- '#^Class Civi\\Funding\\Api4\\Action\\[^\s]+Action has an uninitialized property \$[^\s]+\. Give it default value or assign it in the constructor.$#'
 		- '#^Access to an uninitialized property Civi\\Funding\\Event\\[^\s]+Event::\$[^\s]+.$#'
 		-
-			message: '#^Call to static method Webmozart\\Assert\\Assert::[^\s]+\(\) with .+ will always evaluate to true.$#'
-			path: */Civi/Funding/Event/*Event.php
-		-
 			message: '#^PHPDoc tag @var for constant [^\s]+::[^\s]+ with type string is incompatible with value null.$#'
 			path: */Civi/RemoteTools/EventSubscriber/Abstract*.php
 		- # Required because "null" is missing in type hint of CiviCRM
