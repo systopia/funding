@@ -10,9 +10,11 @@
             "civicrm/civicrm-asset-plugin": false
         }
     },
+    "require": {
+        "webmozart/assert": "^1"
+    },
     "require-dev": {
-        "civicrm/civicrm-core": "^5.50",
-        "webmozart/assert": "^1.11"
+        "civicrm/civicrm-core": "^5.50"
     },
     "scripts": {
         "composer-phpcs": [
@@ -28,12 +30,6 @@
             "@composer-phpcs",
             "@composer-phpstan",
             "@composer-phpunit"
-        ],
-        "post-install-cmd": [
-            "@composer-tools install"
-        ],
-        "post-update-cmd": [
-            "@composer-tools update"
         ],
         "phpcs": [
             "@php tools/phpcs/vendor/bin/phpcs"

@@ -37,7 +37,10 @@ jobs:
         restore-keys: ${{ runner.os }}-composer-${{ matrix.prefer }}-
 
     - name: Install dependencies
-      run: composer update --prefer-dist --${{ matrix.prefer }} --ignore-platform-req=ext-gd
+      run: |
+        composer update --prefer-dist --${{ matrix.prefer }} --ignore-platform-req=ext-gd &&
+        composer composer-phpunit -- update --prefer-dist &&
+        composer composer-phpstan -- update --prefer-dist
 
     - name: Run PHPStan
       run: composer phpstan -- analyse -c phpstan.ci.neon
