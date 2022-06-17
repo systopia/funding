@@ -4,9 +4,9 @@ declare(strict_types = 1);
 namespace Civi\RemoteTools\EventSubscriber;
 
 use Civi\API\Event\AuthorizeEvent;
+use Civi\Core\CiviEventDispatcher;
 use Civi\RemoteTools\Api4\Action\EventActionInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final class ApiAuthorizeInitRequestSubscriber implements EventSubscriberInterface {
 
@@ -22,11 +22,11 @@ final class ApiAuthorizeInitRequestSubscriber implements EventSubscriberInterfac
   /**
    * @param \Civi\API\Event\AuthorizeEvent $event
    * @param string $eventName
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher
+   * @param \Civi\Core\CiviEventDispatcher $eventDispatcher
    *
    * @throws \API_Exception
    */
-  public function onApiAuthorize(AuthorizeEvent $event, string $eventName, EventDispatcherInterface $eventDispatcher): void {
+  public function onApiAuthorize(AuthorizeEvent $event, string $eventName, CiviEventDispatcher $eventDispatcher): void {
     $request = $event->getApiRequest();
     if ($request instanceof EventActionInterface) {
       $initRequestEvent = $request->getInitRequestEventClass()::fromApiRequest($request);

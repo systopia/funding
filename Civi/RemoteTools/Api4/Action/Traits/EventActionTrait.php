@@ -3,11 +3,11 @@ declare(strict_types = 1);
 
 namespace Civi\RemoteTools\Api4\Action\Traits;
 
+use Civi\Core\CiviEventDispatcher;
 use Civi\RemoteTools\Api4\Action\EventActionInterface;
 use Civi\RemoteTools\Event\AbstractRequestEvent;
 use Civi\RemoteTools\Event\AuthorizeApiRequestEvent;
 use Civi\RemoteTools\Event\InitApiRequestEvent;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 trait EventActionTrait {
 
@@ -18,7 +18,7 @@ trait EventActionTrait {
    */
   protected array $_extraParams = [];
 
-  protected EventDispatcherInterface $_eventDispatcher;
+  protected CiviEventDispatcher $_eventDispatcher;
 
   protected string $_initRequestEventName;
 

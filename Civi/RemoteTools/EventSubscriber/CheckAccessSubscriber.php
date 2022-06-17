@@ -4,10 +4,10 @@ declare(strict_types = 1);
 namespace Civi\RemoteTools\EventSubscriber;
 
 use Civi\API\Events;
+use Civi\Core\CiviEventDispatcher;
 use Civi\RemoteTools\Api4\Action\EventActionInterface;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Event\CheckAccessEvent;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CheckAccessSubscriber extends ApiAuthorizeSubscriber {
 
@@ -29,7 +29,7 @@ class CheckAccessSubscriber extends ApiAuthorizeSubscriber {
   /**
    * @throws \Civi\API\Exception\NotImplementedException
    */
-  public function onCheckAccess(CheckAccessEvent $event, string $eventName, EventDispatcherInterface $eventDispatcher): void {
+  public function onCheckAccess(CheckAccessEvent $event, string $eventName, CiviEventDispatcher $eventDispatcher): void {
     $event->addDebugOutput(static::class, []);
     $apiRequest = $this->api4->createAction($event->getEntityName(), $event->getAction(), $event->getRequestParams());
 

@@ -9,11 +9,11 @@ declare(strict_types = 1);
 namespace Civi\RemoteTools\Api4\Action;
 
 use Civi\Api4\Generic\Result;
+use Civi\Core\CiviEventDispatcher;
 use Civi\RemoteTools\Event\GetEvent;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub\ReturnCallback;
 use PHPUnit\Framework\TestCase;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @covers \Civi\RemoteTools\Api4\Action\EventGetAction
@@ -21,7 +21,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 final class EventGetActionTest extends TestCase {
 
   /**
-   * @var \PHPUnit\Framework\MockObject\MockObject&\Symfony\Contracts\EventDispatcher\EventDispatcherInterface
+   * @var \PHPUnit\Framework\MockObject\MockObject&\Civi\Core\CiviEventDispatcher
    */
   private MockObject $eventDispatcherMock;
 
@@ -29,7 +29,7 @@ final class EventGetActionTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
-    $this->eventDispatcherMock = $this->createMock(EventDispatcherInterface::class);
+    $this->eventDispatcherMock = $this->createMock(CiviEventDispatcher::class);
     $this->eventGetAction = new EventGetAction(
       'test.request.init',
       'test.request.authorize',

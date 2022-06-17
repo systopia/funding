@@ -5,10 +5,10 @@ namespace Civi\RemoteTools\Api4\Action;
 
 use Civi\Api4\Generic\CheckAccessAction;
 use Civi\Api4\Generic\Result;
+use Civi\Core\CiviEventDispatcher;
 use Civi\RemoteTools\Api4\Action\Traits\CreateActionEventTrait;
 use Civi\RemoteTools\Api4\Action\Traits\EventActionTrait;
 use Civi\RemoteTools\Event\CheckAccessEvent;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Webmozart\Assert\Assert;
 
 class EventCheckAccessAction extends CheckAccessAction implements EventActionInterface {
@@ -19,7 +19,7 @@ class EventCheckAccessAction extends CheckAccessAction implements EventActionInt
 
   public function __construct(string $initRequestEventName, string $authorizeRequestEventName,
                               string $entityName, string $actionName = 'checkAccess',
-                              EventDispatcherInterface $eventDispatcher = NULL) {
+                              CiviEventDispatcher $eventDispatcher = NULL) {
     parent::__construct($entityName, $actionName);
     $this->_initRequestEventName = $initRequestEventName;
     $this->_authorizeRequestEventName = $authorizeRequestEventName;

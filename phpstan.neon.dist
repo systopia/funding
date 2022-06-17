@@ -19,6 +19,8 @@ parameters:
 		- vendor/autoload.php
 	stubFiles:
 		- stubs/AbstractAction.stub
+		- stubs/Civi.stub
+		- stubs/CiviEventDispatcher.stub
 	level: 9
 	checkTooWideReturnTypesInProtectedAndPublicMethods: true
 	checkUninitializedProperties: true
@@ -64,8 +66,7 @@ parameters:
 		- '#^Method Civi\\RemoteTools\\Api4\\Api4::createAction\(\) should return Civi\\Api4\\Generic\\AbstractAction but returns array|Civi\Api4\Generic\AbstractAction.$#'
 		- '#extends deprecated class Symfony\\Component\\EventDispatcher\\Event:#'
 		- '#^Call to deprecated method stopPropagation\(\) of class Symfony\\Component\\EventDispatcher\\Event:#'
-		- '#^Method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface::dispatch\(\) invoked with 2 parameters, 1 required.$#'
-		- '/^Parameter #1 \$event of method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface::dispatch\(\) expects object, string given.$/'
+		- '/^Parameter #1 \$eventName of method Civi\\Core\\CiviEventDispatcher::dispatch\(\) expects object, string given.$/'
 		- '/^Parameter #1 \$iterator of function iterator_to_array expects Traversable, iterable(<.+>)? given.$/' # false positive
 		-
 			message: '#^Call to function method_exists\(\) with .+ will always evaluate to true.$#'

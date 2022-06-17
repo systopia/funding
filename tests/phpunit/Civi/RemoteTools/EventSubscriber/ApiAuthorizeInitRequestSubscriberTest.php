@@ -8,11 +8,11 @@ declare(strict_types = 1);
 namespace Civi\RemoteTools\EventSubscriber;
 
 use Civi\API\Event\AuthorizeEvent;
+use Civi\Core\CiviEventDispatcher;
 use Civi\RemoteTools\Api4\Action\EventGetAction;
 use Civi\RemoteTools\Event\AuthorizeApiRequestEvent;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @covers \Civi\RemoteTools\Event\AuthorizeApiRequestEvent
@@ -32,7 +32,7 @@ final class ApiAuthorizeInitRequestSubscriberTest extends TestCase {
   private MockObject $requestMock;
 
   /**
-   * @var \PHPUnit\Framework\MockObject\MockObject&EventDispatcherInterface
+   * @var \PHPUnit\Framework\MockObject\MockObject&CiviEventDispatcher
    */
   private MockObject $eventDispatcherMock;
 
@@ -44,7 +44,7 @@ final class ApiAuthorizeInitRequestSubscriberTest extends TestCase {
     $this->requestMock->method('getInitRequestEventClass')->willReturn(AuthorizeApiRequestEvent::class);
     $this->requestMock->method('getInitRequestEventName')->willReturn('test.request.init');
     $this->eventMock->method('getApiRequest')->willReturn($this->requestMock);
-    $this->eventDispatcherMock = $this->createMock(EventDispatcherInterface::class);
+    $this->eventDispatcherMock = $this->createMock(CiviEventDispatcher::class);
 
     $this->subscriber = new ApiAuthorizeInitRequestSubscriber();
   }

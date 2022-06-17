@@ -7,13 +7,13 @@ use Civi\Funding\Api4\Action\Traits\RemoteFundingActionContactIdTrait;
 use Civi\Funding\Event\FundingEvents;
 use Civi\Funding\Event\RemoteFundingGetFieldsEvent;
 use Civi\RemoteTools\Api4\Action\EventGetFieldsAction;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Civi\Core\CiviEventDispatcher;
 
 class RemoteFundingGetFieldsAction extends EventGetFieldsAction implements RemoteFundingActionInterface {
 
   use RemoteFundingActionContactIdTrait;
 
-  public function __construct(string $entityName, string $actionName = 'getFields', EventDispatcherInterface $eventDispatcher = NULL) {
+  public function __construct(string $entityName, string $actionName = 'getFields', CiviEventDispatcher $eventDispatcher = NULL) {
     parent::__construct(FundingEvents::REMOTE_REQUEST_INIT_EVENT_NAME,
       FundingEvents::REMOTE_REQUEST_AUTHORIZE_EVENT_NAME,
       $entityName, $actionName, $eventDispatcher);
