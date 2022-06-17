@@ -5,20 +5,20 @@ namespace Civi\Funding\Api4\Action\Traits;
 
 trait RemoteFundingActionContactIdRequiredTrait {
 
-  use RemoteFundingActionContactIdTrait;
-
   /**
    * @var string
    * @required
-   * @noinspection PhpDocFieldTypeMismatchInspection
    */
-  protected ?string $remoteContactId = NULL;
+  protected string $remoteContactId;
 
-  /**
-   * @return string
-   */
-  public function getRemoteContactId(): ?string {
+  public function getRemoteContactId(): string {
     return $this->remoteContactId;
+  }
+
+  public function setRemoteContactId(string $remoteContactId): self {
+    $this->remoteContactId = $remoteContactId;
+
+    return $this;
   }
 
 }
