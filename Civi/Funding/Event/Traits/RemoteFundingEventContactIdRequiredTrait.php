@@ -19,7 +19,7 @@ trait RemoteFundingEventContactIdRequiredTrait {
    * @return string[]
    */
   protected function getRequiredParams(): array {
-    return array_merge(parent::getRequiredParams() + ['contactId', 'remoteContactId']);
+    return array_merge(parent::getRequiredParams(), ['contactId', 'remoteContactId']);
   }
 
 }
