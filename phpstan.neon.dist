@@ -44,7 +44,6 @@ parameters:
 		-
 			message: '#^Access to an undefined property Civi\\Api4\\Generic\\AbstractAction::\$_eventDispatcher.$#'
 			path: */Civi/RemoteTools/Api4/Action/Traits/EventActionTrait.php
-		- '#^Class Civi\\Funding\\Api4\\Action\\[^\s]+Action has an uninitialized property \$[^\s]+\. Give it default value or assign it in the constructor.$#'
 		- '#^Access to an uninitialized property Civi\\Funding\\Event\\[^\s]+Event::\$[^\s]+.$#'
 		-
 			message: '#^PHPDoc tag @var for constant [^\s]+::[^\s]+ with type string is incompatible with value null.$#'
