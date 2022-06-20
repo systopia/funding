@@ -31,7 +31,9 @@ abstract class AbstractRequestEvent extends Event {
    * @return static
    */
   public static function fromApiRequest(AbstractAction $apiRequest, array $extraParams = []): self {
-    return new static($apiRequest->getEntityName(), $apiRequest->getActionName(), $apiRequest->getParams() + $extraParams);
+    return new static($apiRequest->getEntityName(), $apiRequest->getActionName(),
+      $apiRequest->getParams() + $extraParams
+    );
   }
 
   public static function getEventName(string $entityName = NULL, string $actionName = NULL): string {

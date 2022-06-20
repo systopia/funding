@@ -13,7 +13,9 @@ class RemoteFundingDAOGetAction extends EventDAOGetAction implements RemoteFundi
 
   use RemoteFundingActionContactIdRequiredTrait;
 
-  public function __construct(string $entityName, string $actionName = 'get', CiviEventDispatcher $eventDispatcher = NULL) {
+  public function __construct(string $entityName, string $actionName = 'get',
+    CiviEventDispatcher $eventDispatcher = NULL
+  ) {
     parent::__construct(FundingEvents::REMOTE_REQUEST_INIT_EVENT_NAME,
       FundingEvents::REMOTE_REQUEST_AUTHORIZE_EVENT_NAME,
       $entityName, $actionName, $eventDispatcher);

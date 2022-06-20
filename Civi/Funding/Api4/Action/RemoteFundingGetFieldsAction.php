@@ -13,7 +13,9 @@ class RemoteFundingGetFieldsAction extends EventGetFieldsAction implements Remot
 
   use RemoteFundingActionContactIdTrait;
 
-  public function __construct(string $entityName, string $actionName = 'getFields', CiviEventDispatcher $eventDispatcher = NULL) {
+  public function __construct(string $entityName, string $actionName = 'getFields',
+    CiviEventDispatcher $eventDispatcher = NULL
+  ) {
     parent::__construct(FundingEvents::REMOTE_REQUEST_INIT_EVENT_NAME,
       FundingEvents::REMOTE_REQUEST_AUTHORIZE_EVENT_NAME,
       $entityName, $actionName, $eventDispatcher);

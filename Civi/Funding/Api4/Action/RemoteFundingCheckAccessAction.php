@@ -13,7 +13,9 @@ class RemoteFundingCheckAccessAction extends EventCheckAccessAction implements R
 
   use RemoteFundingActionContactIdRequiredTrait;
 
-  public function __construct(string $entityName, string $actionName = 'checkAccess', CiviEventDispatcher $eventDispatcher = NULL) {
+  public function __construct(string $entityName, string $actionName = 'checkAccess',
+    CiviEventDispatcher $eventDispatcher = NULL
+  ) {
     parent::__construct(FundingEvents::REMOTE_REQUEST_INIT_EVENT_NAME,
       FundingEvents::REMOTE_REQUEST_AUTHORIZE_EVENT_NAME,
       $entityName, $actionName, $eventDispatcher);

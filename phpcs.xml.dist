@@ -7,6 +7,7 @@
     <file>tests</file>
 
     <exclude-pattern>/CRM/Funding/BAO/.*\.php$</exclude-pattern>
+    <exclude-pattern>/CRM/Funding/DAO/.*\.php$</exclude-pattern>
     <exclude-pattern>/CRM/Funding/Upgrader\.php$</exclude-pattern>
     <exclude-pattern>/CRM/Funding/Upgrader/Base\.php$</exclude-pattern>
 
@@ -21,4 +22,40 @@
         <exclude name="Drupal.Commenting.FunctionComment.ParamTypeSpaces"/>
     </rule>
 
+    <rule ref="Squiz.Strings.DoubleQuoteUsage">
+        <exclude name="Squiz.Strings.DoubleQuoteUsage.ContainsVar"/>
+    </rule>
+
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+    <rule ref="Generic.CodeAnalysis.EmptyStatement">
+        <exclude name="Generic.CodeAnalysis.EmptyStatement.DetectedCatch"/>
+    </rule>
+    <rule ref="Generic.ControlStructures.InlineControlStructure"/>
+    <rule ref="Generic.Formatting.DisallowMultipleStatements"/>
+    <rule ref="Generic.WhiteSpace.IncrementDecrementSpacing"/>
+    <rule ref="PEAR.ControlStructures.MultiLineCondition"/>
+    <rule ref="PEAR.Formatting.MultiLineAssignment"/>
+    <rule ref="PSR2.Files.EndFileNewline"/>
+    <rule ref="Zend.Debug.CodeAnalyzer"/>
+
+    <!-- Lines can be 120 chars long, but never show errors -->
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="120"/>
+            <property name="absoluteLineLimit" value="0"/>
+        </properties>
+    </rule>
+
+    <!-- Ban some functions -->
+    <rule ref="Generic.PHP.ForbiddenFunctions">
+        <properties>
+            <property name="forbiddenFunctions" type="array">
+                <element key="sizeof" value="count"/>
+                <element key="delete" value="unset"/>
+                <element key="print" value="echo"/>
+                <element key="is_null" value="null"/>
+                <element key="create_function" value="null"/>
+            </property>
+        </properties>
+    </rule>
 </ruleset>

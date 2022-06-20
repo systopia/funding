@@ -29,7 +29,9 @@ class CheckAccessSubscriber extends ApiAuthorizeSubscriber {
   /**
    * @throws \Civi\API\Exception\NotImplementedException
    */
-  public function onCheckAccess(CheckAccessEvent $event, string $eventName, CiviEventDispatcher $eventDispatcher): void {
+  public function onCheckAccess(CheckAccessEvent $event, string $eventName,
+    CiviEventDispatcher $eventDispatcher
+  ): void {
     $event->addDebugOutput(static::class, []);
     $apiRequest = $this->api4->createAction($event->getEntityName(), $event->getAction(), $event->getRequestParams());
 
