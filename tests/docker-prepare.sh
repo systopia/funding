@@ -23,5 +23,5 @@ cv flush >/dev/null 2>/dev/null || {
 }
 
 cd "$FUNDING_EXT_DIR"
-composer update --prefer-dist --no-dev
-composer composer-phpunit -- update --prefer-dist
+composer update --no-progress --prefer-dist --optimize-autoloader --no-dev
+composer composer-phpunit -- update --no-progress --prefer-dist

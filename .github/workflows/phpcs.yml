@@ -27,14 +27,14 @@ jobs:
       run: echo "::set-output name=dir::$(composer config cache-files-dir)"
 
     - name: Cache dependencies
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ${{ steps.composer-cache.outputs.dir }}
         key: ${{ runner.os }}-composer-${{ hashFiles('tools/phpcs/composer.json') }}
         restore-keys: ${{ runner.os }}-composer-
 
     - name: Install dependencies
-      run: composer composer-phpcs -- update --prefer-dist
+      run: composer composer-phpcs -- update --no-progress --prefer-dist
 
     - name: Run PHP_CodeSniffer
       run: composer phpcs -- -q --report=checkstyle | cs2pr
