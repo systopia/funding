@@ -17,6 +17,7 @@ done
 
 echo
 
+export XDEBUG_MODE=off
 cv flush >/dev/null 2>/dev/null || {
   civicrm-docker-install
   cv ext:enable funding

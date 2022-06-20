@@ -21,6 +21,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: Pull images
+      run: docker compose -f tests/docker-compose.yml pull --quiet
     - name: Start containers
       run: docker compose -f tests/docker-compose.yml up -d
     - name: Prepare environment
