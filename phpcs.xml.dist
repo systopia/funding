@@ -22,6 +22,22 @@
         <exclude name="Drupal.Commenting.FunctionComment.ParamTypeSpaces"/>
     </rule>
 
+    <rule ref="Generic.CodeAnalysis.ForLoopWithTestFunctionCall"/>
+    <rule ref="Generic.Files.OneClassPerFile"/>
+    <rule ref="Generic.Files.OneInterfacePerFile"/>
+    <rule ref="Generic.Files.OneObjectStructurePerFile"/>
+    <rule ref="Generic.Files.OneTraitPerFile"/>
+    <rule ref="Generic.Metrics.CyclomaticComplexity"/>
+    <rule ref="Generic.Metrics.NestingLevel"/>
+    <rule ref="Generic.NamingConventions.AbstractClassNamePrefix"/>
+    <rule ref="Generic.NamingConventions.InterfaceNameSuffix"/>
+    <rule ref="Generic.NamingConventions.TraitNameSuffix"/>
+    <rule ref="Generic.PHP.RequireStrictTypes"/>
+    <rule ref="PSR1.Files.SideEffects"/>
+    <rule ref="PSR12.Classes.ClassInstantiation"/>
+    <rule ref="PSR12.Properties.ConstantVisibility"/>
+    <rule ref="Squiz.PHP.CommentedOutCode"/>
+    <rule ref="Squiz.PHP.GlobalKeyword"/>
     <rule ref="Squiz.Strings.DoubleQuoteUsage">
         <exclude name="Squiz.Strings.DoubleQuoteUsage.ContainsVar"/>
     </rule>
