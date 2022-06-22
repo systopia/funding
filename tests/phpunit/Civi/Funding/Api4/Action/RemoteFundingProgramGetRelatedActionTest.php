@@ -35,6 +35,7 @@ final class RemoteFundingProgramGetRelatedActionTest extends TestCase {
   public function testRun(): void {
     $result = new Result();
 
+    $this->action->setRemoteContactId('00');
     $this->action->setExtraParam('contactId', 11);
     $this->action->setId(12);
     $this->action->setType('test');

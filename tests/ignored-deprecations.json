@@ -15,22 +15,22 @@
         "count": 1
     },
     {
-        "location": "Civi\\Funding\\Api4\\Action\\RemoteFundingCaseGetNewApplicationFormActionTest::testRun",
+        "location": "Civi\\Funding\\Api4\\Action\\RemoteFundingProgramGetRelatedActionTest::testRun",
         "message": "The \"Civi\\RemoteTools\\Event\\AbstractRequestEvent\" class extends \"Symfony\\Component\\EventDispatcher\\Event\" that is deprecated since Symfony 4.3, use \"Symfony\\Contracts\\EventDispatcher\\Event\" instead.",
         "count": 1
     },
     {
-        "location": "Civi\\Funding\\Api4\\Action\\RemoteFundingCaseGetNewApplicationFormActionTest::testRun",
+        "location": "Civi\\Funding\\Api4\\Action\\RemoteFundingProgramGetRelatedActionTest::testRun",
         "message": "The \"Drupal\\Component\\EventDispatcher\\Event\" class extends \"Symfony\\Component\\EventDispatcher\\Event\" that is deprecated since Symfony 4.3, use \"Symfony\\Contracts\\EventDispatcher\\Event\" instead.",
         "count": 1
     },
     {
-        "location": "Civi\\Funding\\Api4\\Action\\RemoteFundingCaseGetNewApplicationFormActionTest::testRun",
+        "location": "Civi\\Funding\\Api4\\Action\\RemoteFundingProgramGetRelatedActionTest::testRun",
         "message": "The \"Civi\\Test\\CiviTestListenerPHPUnit7\" class implements \"PHPUnit\\Framework\\TestListener\" that is deprecated.",
         "count": 1
     },
     {
-        "location": "Civi\\Funding\\Api4\\Action\\RemoteFundingCaseGetNewApplicationFormActionTest::testRun",
+        "location": "Civi\\Funding\\Api4\\Action\\RemoteFundingProgramGetRelatedActionTest::testRun",
         "message": "The \"Civi\\Test\\CiviTestListenerPHPUnit7\" class uses \"PHPUnit\\Framework\\TestListenerDefaultImplementation\" that is deprecated The `TestListener` interface is deprecated.",
         "count": 1
     },

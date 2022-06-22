@@ -22,16 +22,20 @@ final class RemoteFundingProgramGetRelatedAction extends AbstractAction implemen
   use RemoteFundingActionContactIdRequiredTrait;
 
   /**
-   * @var int
+   * Must be initialized because it is directly accessed in AbstractAction.
+   *
+   * @var int|null
    * @required
    */
-  protected int $id;
+  protected ?int $id = NULL;
 
   /**
-   * @var string
+   * Must be initialized because it is directly accessed in AbstractAction.
+   *
+   * @var string|null
    * @required
    */
-  protected string $type;
+  protected ?string $type = NULL;
 
   public function __construct(CiviEventDispatcher $eventDispatcher = NULL) {
     parent::__construct('RemoteFundingProgram', 'getRelated');
