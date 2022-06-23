@@ -19,6 +19,11 @@ trait RemoteFundingActionContactIdRequiredTrait {
     return $this->remoteContactId;
   }
 
+  /**
+   * @param string $remoteContactId
+   *
+   * @return $this
+   */
   public function setRemoteContactId(string $remoteContactId): RemoteFundingActionInterface {
     $this->remoteContactId = $remoteContactId;
 
