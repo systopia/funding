@@ -21,6 +21,7 @@ DROP TABLE IF EXISTS `civicrm_funding_app_cost_item`;
 DROP TABLE IF EXISTS `civicrm_funding_app_resources_item`;
 DROP TABLE IF EXISTS `civicrm_funding_application_process`;
 DROP TABLE IF EXISTS `civicrm_funding_program_relationship`;
+DROP TABLE IF EXISTS `civicrm_funding_program_contact_type`;
 DROP TABLE IF EXISTS `civicrm_funding_program`;
 DROP TABLE IF EXISTS `civicrm_funding_case_type_program`;
 DROP TABLE IF EXISTS `civicrm_funding_case_type`;
@@ -101,6 +102,25 @@ CREATE TABLE `civicrm_funding_case_type_program` (
   PRIMARY KEY (`id`),
   CONSTRAINT FK_civicrm_funding_case_type_program_funding_program_id FOREIGN KEY (`funding_program_id`) REFERENCES `civicrm_funding_program`(`id`) ON DELETE CASCADE,
   CONSTRAINT FK_civicrm_funding_case_type_program_funding_case_type_id FOREIGN KEY (`funding_case_type_id`) REFERENCES `civicrm_funding_case_type`(`id`) ON DELETE RESTRICT
+)
+ENGINE=InnoDB;
+
+-- /*******************************************************
+-- *
+-- * civicrm_funding_program_contact_type
+-- *
+-- * Defines who is allowed to access a funding program
+-- *
+-- *******************************************************/
+CREATE TABLE `civicrm_funding_program_contact_type` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique FundingProgramContactType ID',
+  `funding_program_id` int unsigned COMMENT 'FK to FundingProgram',
+  `contact_type_id` int unsigned COMMENT 'FK to ContactType',
+  `relationship_type_id` int unsigned COMMENT 'FK to RelationshipType',
+  PRIMARY KEY (`id`),
+  CONSTRAINT FK_civicrm_funding_program_contact_type_funding_program_id FOREIGN KEY (`funding_program_id`) REFERENCES `civicrm_funding_program`(`id`) ON DELETE CASCADE,
+  CONSTRAINT FK_civicrm_funding_program_contact_type_contact_type_id FOREIGN KEY (`contact_type_id`) REFERENCES `civicrm_contact_type`(`id`) ON DELETE RESTRICT,
+  CONSTRAINT FK_civicrm_funding_program_contact_type_relationship_type_id FOREIGN KEY (`relationship_type_id`) REFERENCES `civicrm_relationship_type`(`id`) ON DELETE RESTRICT
 )
 ENGINE=InnoDB;
 
