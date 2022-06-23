@@ -69,7 +69,7 @@ abstract class AbstractRemoteDAOGetSubscriber implements EventSubscriberInterfac
     $result = $this->api4->executeAction($action);
 
     $event->setRowCount($result->rowCount)
-      ->addDebugOutput(static::class, $result->debug);
+      ->addDebugOutput(static::class, $result->debug ?? []);
     /** @var array<string, scalar|null> $record */
     foreach ($result as $record) {
       $event->addRecord($this->filterRecordFields($event, $record));
