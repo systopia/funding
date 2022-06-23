@@ -14,7 +14,7 @@
         "webmozart/assert": "^1"
     },
     "require-dev": {
-        "civicrm/civicrm-core": "^5.50"
+        "civicrm/civicrm-core": "^5.48"
     },
     "scripts": {
         "composer-phpcs": [
