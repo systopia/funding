@@ -19,8 +19,15 @@ echo
 
 export XDEBUG_MODE=off
 cv flush >/dev/null 2>/dev/null || {
+  # For headless tests it is required that CIVICRM_UF is defined using the corresponding env variable.
+  sed -E "s/define\('CIVICRM_UF', '([^']+)'\);/define('CIVICRM_UF', getenv('CIVICRM_UF') ?: '\1');/g" \
+    -i /var/www/html/sites/default/civicrm.settings.php
   civicrm-docker-install
   cv ext:enable funding
+
+  # For headless tests these files need to exist.
+  touch /var/www/html/sites/all/modules/civicrm/sql/test_data.mysql
+  touch /var/www/html/sites/all/modules/civicrm/sql/test_data_second_domain.mysql
 }
 
 cd "$FUNDING_EXT_DIR"
