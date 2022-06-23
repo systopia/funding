@@ -1,7 +1,9 @@
 <?php
 declare(strict_types = 1);
 
+// phpcs:disable PSR1.Files.SideEffects
 require_once 'funding.civix.php';
+// phpcs:enable
 
 use Civi\Funding\Contact\FundingRemoteContactIdResolver;
 use Civi\Funding\EventSubscriber\RemoteFundingProgramDAOGetFieldsSubscriber;
@@ -20,7 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_config/
  */
-function funding_civicrm_config(&$config) {
+function funding_civicrm_config(&$config): void {
   _funding_civix_civicrm_config($config);
 }
 
@@ -52,7 +54,7 @@ function funding_civicrm_container(ContainerBuilder $container): void {
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_install
  */
-function funding_civicrm_install() {
+function funding_civicrm_install(): void {
   _funding_civix_civicrm_install();
 }
 
@@ -61,7 +63,7 @@ function funding_civicrm_install() {
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_postInstall
  */
-function funding_civicrm_postInstall() {
+function funding_civicrm_postInstall(): void {
   _funding_civix_civicrm_postInstall();
 }
 
@@ -70,7 +72,7 @@ function funding_civicrm_postInstall() {
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_uninstall
  */
-function funding_civicrm_uninstall() {
+function funding_civicrm_uninstall(): void {
   _funding_civix_civicrm_uninstall();
 }
 
@@ -79,7 +81,7 @@ function funding_civicrm_uninstall() {
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_enable
  */
-function funding_civicrm_enable() {
+function funding_civicrm_enable(): void {
   _funding_civix_civicrm_enable();
 }
 
@@ -88,7 +90,7 @@ function funding_civicrm_enable() {
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_disable
  */
-function funding_civicrm_disable() {
+function funding_civicrm_disable(): void {
   _funding_civix_civicrm_disable();
 }
 
@@ -108,7 +110,7 @@ function funding_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_entityTypes
  */
-function funding_civicrm_entityTypes(&$entityTypes) {
+function funding_civicrm_entityTypes(&$entityTypes): void {
   _funding_civix_civicrm_entityTypes($entityTypes);
 }
 
@@ -116,31 +118,3 @@ function funding_civicrm_permission(array &$permissions): void {
   $permissions['apply Funding'] = E::ts('Funding: make applications');
   $permissions['access Remote Funding'] = E::ts('Funding: access remote API');
 }
-
-// --- Functions below this ship commented out. Uncomment as required. ---
-
-/**
- * Implements hook_civicrm_preProcess().
- *
- * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_preProcess
- */
-//function funding_civicrm_preProcess($formName, &$form) {
-//
-//}
-
-/**
- * Implements hook_civicrm_navigationMenu().
- *
- * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_navigationMenu
- */
-//function funding_civicrm_navigationMenu(&$menu) {
-//  _funding_civix_insert_navigation_menu($menu, 'Mailings', [
-//    'label' => E::ts('New subliminal message'),
-//    'name' => 'mailing_subliminal_message',
-//    'url' => 'civicrm/mailing/subliminal',
-//    'permission' => 'access CiviMail',
-//    'operator' => 'OR',
-//    'separator' => 0,
-//  ]);
-//  _funding_civix_navigationMenu($menu);
-//}
