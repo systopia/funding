@@ -6,6 +6,7 @@ namespace Civi\Funding\EventSubscriber;
 use Civi\Funding\Event\RemoteFundingDAOGetEvent;
 use Civi\RemoteTools\Event\DAOGetEvent;
 use Civi\RemoteTools\EventSubscriber\AbstractRemoteDAOGetSubscriber;
+use Webmozart\Assert\Assert;
 
 final class RemoteFundingCaseDAOGetSubscriber extends AbstractRemoteDAOGetSubscriber {
 
@@ -19,36 +20,50 @@ final class RemoteFundingCaseDAOGetSubscriber extends AbstractRemoteDAOGetSubscr
     /** @var \Civi\Funding\Event\RemoteFundingDAOGetEvent $event */
     parent::onGet($event);
 
-    /** @var array<array<string, mixed>> $records */
-    $records = iterator_to_array($this->addPermissionsToRecords($event));
-    $event->setRecords($records);
+    $event->setRecords($this->handlePermissions($event->getRecords()));
   }
 
   /**
-   * @param \Civi\Funding\Event\RemoteFundingDAOGetEvent $event
+   * @param array<array<string, mixed>> $records
    *
-   * @return iterable<array<string, mixed>>
+   * @return array<array<string, mixed>>
    */
-  private function addPermissionsToRecords(RemoteFundingDAOGetEvent $event): iterable {
-    foreach ($event->getRecords() as $record) {
-      $record['permissions'] = $this->getRecordPermissions($event, $record);
+  private function handlePermissions(array $records): array {
+    foreach ($records as &$record) {
+      Assert::isArray($record['permissions']);
+      $record['permissions'] = $this->mergePermissions(
+        $this->jsonEncodePermissions($record['permissions'])
+      );
+
       foreach ($record['permissions'] as $permission) {
         $record['PERM_' . $permission] = TRUE;
       }
-
-      yield $record;
     }
+
+    return $records;
   }
 
   /**
-   * @param \Civi\Funding\Event\RemoteFundingDAOGetEvent $event
-   * @param array<string, mixed> $record
+   * @param string[] $permissions
+   *
+   * @return array<string[]>
+   */
+  private function jsonEncodePermissions(array $permissions): array {
+    /** @var array<string[]> $permissions */
+    $permissions = array_map('json_decode', $permissions);
+
+    return $permissions;
+  }
+
+  /**
+   * @param array<string[]> $permissions
    *
    * @return string[]
    */
-  private function getRecordPermissions(RemoteFundingDAOGetEvent $event, array $record): array {
-    // TODO
-    return ['dummy'];
+  private function mergePermissions(array $permissions): array {
+    return array_values(array_unique(
+      array_reduce($permissions, fn(array $p1, array $p2): array => array_merge($p1, $p2), [])
+    ));
   }
 
 }

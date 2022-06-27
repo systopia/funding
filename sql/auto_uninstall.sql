@@ -23,6 +23,7 @@ DROP TABLE IF EXISTS `civicrm_funding_program_contact_type`;
 DROP TABLE IF EXISTS `civicrm_funding_program`;
 DROP TABLE IF EXISTS `civicrm_funding_case_type_program`;
 DROP TABLE IF EXISTS `civicrm_funding_case_type`;
+DROP TABLE IF EXISTS `civicrm_funding_case_contact`;
 DROP TABLE IF EXISTS `civicrm_funding_case`;
 
 SET FOREIGN_KEY_CHECKS=1;

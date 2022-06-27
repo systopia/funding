@@ -10,6 +10,7 @@ use Civi\Funding\EventSubscriber\RemoteFundingApplicationProcessDAOGetFieldsSubs
 use Civi\Funding\EventSubscriber\RemoteFundingApplicationProcessDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\RemoteFundingCaseDAOGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\RemoteFundingCaseDAOGetSubscriber;
+use Civi\Funding\EventSubscriber\RemoteFundingCasePermissionsSubscriber;
 use Civi\Funding\EventSubscriber\RemoteFundingCaseTypeDAOGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\RemoteFundingCaseTypeDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\RemoteFundingProgramDAOGetFieldsSubscriber;
@@ -58,6 +59,9 @@ function funding_civicrm_container(ContainerBuilder $container): void {
     ->addTag('kernel.event_subscriber')
     ->setLazy(TRUE);
   $container->autowire(RemoteFundingCaseDAOGetSubscriber::class)
+    ->addTag('kernel.event_subscriber')
+    ->setLazy(TRUE);
+  $container->autowire(RemoteFundingCasePermissionsSubscriber::class)
     ->addTag('kernel.event_subscriber')
     ->setLazy(TRUE);
   $container->autowire(RemoteFundingCaseTypeDAOGetFieldsSubscriber::class)
