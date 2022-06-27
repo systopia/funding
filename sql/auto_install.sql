@@ -25,6 +25,7 @@ DROP TABLE IF EXISTS `civicrm_funding_program_contact_type`;
 DROP TABLE IF EXISTS `civicrm_funding_program`;
 DROP TABLE IF EXISTS `civicrm_funding_case_type_program`;
 DROP TABLE IF EXISTS `civicrm_funding_case_type`;
+DROP TABLE IF EXISTS `civicrm_funding_case_contact`;
 DROP TABLE IF EXISTS `civicrm_funding_case`;
 
 SET FOREIGN_KEY_CHECKS=1;
@@ -85,6 +86,27 @@ CREATE TABLE `civicrm_funding_case` (
   CONSTRAINT FK_civicrm_funding_case_funding_program_id FOREIGN KEY (`funding_program_id`) REFERENCES `civicrm_funding_program`(`id`) ON DELETE RESTRICT,
   CONSTRAINT FK_civicrm_funding_case_funding_case_type_id FOREIGN KEY (`funding_case_type_id`) REFERENCES `civicrm_funding_case_type`(`id`) ON DELETE RESTRICT,
   CONSTRAINT FK_civicrm_funding_case_recipient_contact_id FOREIGN KEY (`recipient_contact_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE RESTRICT
+)
+ENGINE=InnoDB;
+
+-- /*******************************************************
+-- *
+-- * civicrm_funding_case_contact
+-- *
+-- * Stores which permissions a contact or a related contact has on a funding case
+-- *
+-- *******************************************************/
+CREATE TABLE `civicrm_funding_case_contact` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique FundingCaseContact ID',
+  `funding_case_id` int unsigned NOT NULL COMMENT 'FK to FundingCase',
+  `contact_id` int unsigned NOT NULL COMMENT 'FK to Contact',
+  `relationship_type_id` int unsigned COMMENT 'FK to RelationshipType',
+  `relationship_direction` char(3),
+  `permissions` text NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT FK_civicrm_funding_case_contact_funding_case_id FOREIGN KEY (`funding_case_id`) REFERENCES `civicrm_funding_case`(`id`) ON DELETE CASCADE,
+  CONSTRAINT FK_civicrm_funding_case_contact_contact_id FOREIGN KEY (`contact_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE CASCADE,
+  CONSTRAINT FK_civicrm_funding_case_contact_relationship_type_id FOREIGN KEY (`relationship_type_id`) REFERENCES `civicrm_relationship_type`(`id`) ON DELETE RESTRICT
 )
 ENGINE=InnoDB;
 

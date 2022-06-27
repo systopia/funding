@@ -45,4 +45,14 @@ final class FundingPseudoConstants {
     ];
   }
 
+  /**
+   * @return array<string, string>
+   */
+  public static function getRelationshipTypeDirections(): array {
+    return [
+      'a_b' => E::ts('Relationship from a to b'),
+      'b_a' => E::ts('Relationship from b to a'),
+    ];
+  }
+
 }
