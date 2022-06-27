@@ -39,7 +39,7 @@ final class FundingPseudoConstants {
   /**
    * @return array<string, string>
    */
-  public function getFundingProgramRelationshipTypes(): array {
+  public static function getFundingProgramRelationshipTypes(): array {
     return [
       'adoptable' => E::ts('Applications adoptable'),
     ];
