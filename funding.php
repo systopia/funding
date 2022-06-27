@@ -6,6 +6,8 @@ require_once 'funding.civix.php';
 // phpcs:enable
 
 use Civi\Funding\Contact\FundingRemoteContactIdResolver;
+use Civi\Funding\EventSubscriber\RemoteFundingCaseTypeDAOGetFieldsSubscriber;
+use Civi\Funding\EventSubscriber\RemoteFundingCaseTypeDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\RemoteFundingProgramDAOGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\RemoteFundingProgramDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\RemoteFundingRequestInitSubscriber;
@@ -45,6 +47,12 @@ function funding_civicrm_container(ContainerBuilder $container): void {
     ->addTag('kernel.event_subscriber')
     ->setLazy(TRUE);
   $container->autowire(RemoteFundingProgramDAOGetSubscriber::class)
+    ->addTag('kernel.event_subscriber')
+    ->setLazy(TRUE);
+  $container->autowire(RemoteFundingCaseTypeDAOGetFieldsSubscriber::class)
+    ->addTag('kernel.event_subscriber')
+    ->setLazy(TRUE);
+  $container->autowire(RemoteFundingCaseTypeDAOGetSubscriber::class)
     ->addTag('kernel.event_subscriber')
     ->setLazy(TRUE);
 }
