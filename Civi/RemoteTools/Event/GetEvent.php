@@ -5,6 +5,12 @@ namespace Civi\RemoteTools\Event;
 
 use Civi\Api4\Utils\CoreUtil;
 
+/**
+ * @phpstan-type Comparison array{string, string, 2?:scalar}
+ * Actually this should be: array{string, array<Comparison|CompositeCondition>}, so that is not possible
+ * @phpstan-type CompositeCondition array{string, array<array>}
+ * @phpstan-type Condition Comparison|CompositeCondition
+ */
 class GetEvent extends AbstractRequestEvent {
 
   protected int $limit = 0;
@@ -34,6 +40,20 @@ class GetEvent extends AbstractRequestEvent {
   private ?int $rowCount = NULL;
 
   /**
+   * @param string $field
+   *
+   * @return $this
+   */
+  public function addSelect(string $field): self {
+    if ([] === $this->select) {
+      $this->select[] = '*';
+    }
+    $this->select[] = $field;
+
+    return $this;
+  }
+
+  /**
    * @param string $fieldName
    * @param string $op
    * @param mixed $value
@@ -56,16 +76,13 @@ class GetEvent extends AbstractRequestEvent {
    * Adds one or more AND/OR/NOT clause groups
    *
    * @param string $operator
-   * @param mixed $condition1 ... $conditionN
-   *   Either a nested array of arguments, or a variable number of arguments passed to this function.
+   * @param array ...$conditions
+   * @phpstan-param Condition[]|Condition ...$conditions
    *
    * @return $this
    */
-  public function addClause(string $operator, $condition1): self {
-    if (!is_array($condition1) || !is_array($condition1[0])) {
-      $condition1 = array_slice(func_get_args(), 1);
-    }
-    $this->where[] = [$operator, $condition1];
+  public function addClause(string $operator, array ...$conditions): self {
+    $this->where[] = [$operator, $conditions];
 
     return $this;
   }

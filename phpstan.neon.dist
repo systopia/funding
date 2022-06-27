@@ -57,6 +57,10 @@ parameters:
 		-
 			message: '#^Variable property access on \$this\(Civi\\RemoteTools\\Event\\AbstractRequestEvent\).$#'
 			path: */Civi/RemoteTools/Event/AbstractRequestEvent.php
+		- '#^Method Civi\\RemoteTools\\Event\\GetEvent::addClause\(\) has parameter \$conditions with no value type specified in iterable type array.$#'
+		- '#^Property Civi\\RemoteTools\\Event\\DAOGetEvent::\$join type has no value type specified in iterable type array.$#'
+		- '#^Method Civi\\RemoteTools\\Event\\DAOGetEvent::addJoin\(\) has parameter \$conditions with no value type specified in iterable type array.$#'
+		- '#^Method Civi\\RemoteTools\\Event\\DAOGetEvent::getJoin\(\) return type has no value type specified in iterable type array.$#'
 		- '#^Method Civi\\Funding\\Event\\RemoteFunding[^\s]+Event::getContactId\(\) should return int but returns int\|null.$#'
 		- '#^Property Civi\\Api4\\Generic\\Result::\$debug \(array\) on left side of \?\? is not nullable.$#'
 		- '#^Method Civi\\RemoteTools\\Api4\\Api4::createAction\(\) should return Civi\\Api4\\Generic\\AbstractAction but returns array|Civi\Api4\Generic\AbstractAction.$#'

@@ -5,6 +5,17 @@ namespace Civi\RemoteTools\Event;
 
 use Civi\Api4\Utils\CoreUtil;
 
+/**
+ * @property array<array{string, string|mixed[], 2?: mixed, 3?: bool}> $where
+ * @method array<array{string, string|mixed[], 2?: mixed, 3?: bool}> getWhere()
+ *
+ * @phpstan-type Comparison array{string, string, 2?:scalar}
+ * Actually this should be: array{string, array<Comparison|CompositeCondition>}, so that is not possible
+ * @phpstan-type CompositeCondition array{string, array<array>}
+ * @phpstan-type Condition Comparison|CompositeCondition
+ * Actually this should be array{string, string, ...Condition}, so this is not possible
+ * @phpstan-type Join array<string|Condition>
+ */
 class DAOGetEvent extends GetEvent {
 
   /**
@@ -13,7 +24,7 @@ class DAOGetEvent extends GetEvent {
   protected array $groupBy = [];
 
   /**
-   * @var array<array<scalar|array{string, string, 2?: scalar}>>
+   * @var array<Join>
    */
   protected array $join = [];
 
@@ -50,6 +61,11 @@ class DAOGetEvent extends GetEvent {
     return $this->groupBy;
   }
 
+  /**
+   * @param string $field
+   *
+   * @return $this
+   */
   public function addGroupBy(string $field): self {
     $this->groupBy[] = $field;
 
@@ -84,12 +100,13 @@ class DAOGetEvent extends GetEvent {
   /**
    * @param string $entity
    * @param string $type
-   * @param null|string|array{string, string, 2?: scalar} $bridge
-   * @param array{string, string, 2?: scalar} ...$conditions
+   * @param null|string $bridge
+   * @param array ...$conditions
+   * @phpstan-param Condition ...$conditions
    *
    * @return $this
    */
-  public function addJoin(string $entity, string $type = 'LEFT', $bridge = NULL, array ...$conditions): self {
+  public function addJoin(string $entity, string $type = 'LEFT', ?string $bridge = NULL, array ...$conditions): self {
     if (NULL !== $bridge) {
       array_unshift($conditions, $bridge);
     }
@@ -100,7 +117,7 @@ class DAOGetEvent extends GetEvent {
   }
 
   /**
-   * @return array<array<scalar|array{string, string, 2?: scalar}>>
+   * @return array<Join>
    */
   public function getJoin(): array {
     return $this->join;
