@@ -25,6 +25,9 @@
         <!-- Conflicts with PHPStan type hints -->
         <exclude name="Drupal.Commenting.VariableComment.IncorrectVarType"/>
         <exclude name="Drupal.Commenting.FunctionComment.ParamTypeSpaces"/>
+
+        <!-- False positive when license header is set and variable has no comment -->
+        <exclude name="Drupal.Commenting.VariableComment.WrongStyle"/>
     </rule>
 
     <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
