@@ -14,6 +14,7 @@ use Civi\Funding\EventSubscriber\RemoteFundingCaseTypeDAOGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\RemoteFundingCaseTypeDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\RemoteFundingProgramDAOGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\RemoteFundingProgramDAOGetSubscriber;
+use Civi\Funding\EventSubscriber\RemoteFundingProgramPermissionsSubscriber;
 use Civi\Funding\EventSubscriber\RemoteFundingRequestInitSubscriber;
 use Civi\RemoteTools\Api4\Api4;
 use Civi\RemoteTools\Api4\Api4Interface;
@@ -71,6 +72,8 @@ function funding_civicrm_container(ContainerBuilder $container): void {
   $container->autowire(RemoteFundingProgramDAOGetSubscriber::class)
     ->addTag('kernel.event_subscriber')
     ->setLazy(TRUE);
+  $container->autowire(RemoteFundingProgramPermissionsSubscriber::class)
+    ->addTag('kernel.event_subscriber');
 }
 
 /**

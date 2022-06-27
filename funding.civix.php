@@ -342,6 +342,11 @@ function _funding_civix_civicrm_entityTypes(&$entityTypes) {
       'class' => 'CRM_Funding_DAO_FundingProgram',
       'table' => 'civicrm_funding_program',
     ],
+    'CRM_Funding_DAO_FundingProgramContactType' => [
+      'name' => 'FundingProgramContactType',
+      'class' => 'CRM_Funding_DAO_FundingProgramContactType',
+      'table' => 'civicrm_funding_program_contact_type',
+    ],
     'CRM_Funding_DAO_FundingProgramRelationship' => [
       'name' => 'FundingProgramRelationship',
       'class' => 'CRM_Funding_DAO_FundingProgramRelationship',
