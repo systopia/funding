@@ -9,18 +9,18 @@ namespace Civi\Funding\Api4\Action;
 
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
-use Civi\Funding\Event\RemoteFundingCaseValidateNewApplicationFormEvent;
+use Civi\Funding\Event\RemoteFundingApplicationProcessValidateFormEvent;
 use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Civi\Funding\Api4\Action\RemoteFundingCaseValidateNewApplicationFormAction
- * @covers \Civi\Funding\Event\RemoteFundingCaseValidateNewApplicationFormEvent
+ * @covers \Civi\Funding\Api4\Action\RemoteFundingApplicationProcessValidateFormAction
+ * @covers \Civi\Funding\Event\RemoteFundingApplicationProcessValidateFormEvent
  * @covers \Civi\Funding\Event\AbstractRemoteFundingValidateFormEvent
  */
-final class RemoteFundingCaseValidateNewApplicationFormActionTest extends TestCase {
+final class RemoteFundingApplicationProcessValidateFormActionTest extends TestCase {
 
-  private RemoteFundingCaseValidateNewApplicationFormAction $action;
+  private RemoteFundingApplicationProcessValidateFormAction $action;
 
   /**
    * @var array<string, mixed>
@@ -35,36 +35,40 @@ final class RemoteFundingCaseValidateNewApplicationFormActionTest extends TestCa
   /**
    * @var array<string, mixed>
    */
-  private array $fundingCaseType;
+  private array $applicationProcess;
 
   /**
    * @var array<string, mixed>
    */
-  private array $fundingProgram;
+  private array $fundingCase;
+
+  /**
+   * @var array<string, mixed>
+   */
+  private array $fundingCaseType;
 
   protected function setUp(): void {
     parent::setUp();
     $remoteFundingEntityManagerMock = $this->createMock(RemoteFundingEntityManagerInterface::class);
     $this->eventDispatcherMock = $this->createMock(CiviEventDispatcher::class);
-    $this->action = new RemoteFundingCaseValidateNewApplicationFormAction(
+    $this->action = new RemoteFundingApplicationProcessValidateFormAction(
       $remoteFundingEntityManagerMock,
       $this->eventDispatcherMock
     );
 
     $this->action->setRemoteContactId('00');
     $this->action->setExtraParam('contactId', 11);
-    $this->data = [
-      'fundingCaseTypeId' => 22,
-      'fundingProgramId' => 33,
-    ];
+    $this->data = ['applicationProcessId' => 22];
     $this->action->setData($this->data);
 
-    $this->fundingCaseType = ['id' => 22];
-    $this->fundingProgram = ['id' => 33];
+    $this->applicationProcess = ['id' => 22, 'funding_case_id' => 33];
+    $this->fundingCase = ['id' => 33, 'funding_case_type_id' => 44];
+    $this->fundingCaseType = ['id' => 44];
 
     $remoteFundingEntityManagerMock->method('getById')->willReturnMap([
-      ['FundingCaseType', 22, '00', $this->fundingCaseType],
-      ['FundingProgram', 33, '00', $this->fundingProgram],
+      ['FundingApplicationProcess', 22, '00', $this->applicationProcess],
+      ['FundingCase', 33, '00', $this->fundingCase],
+      ['FundingCaseType', 44, '00', $this->fundingCaseType],
     ]);
   }
 
@@ -73,15 +77,16 @@ final class RemoteFundingCaseValidateNewApplicationFormActionTest extends TestCa
       ->method('dispatch')
       ->withConsecutive(
         [
-          RemoteFundingCaseValidateNewApplicationFormEvent::getEventName(
-            'RemoteFundingCase', 'validateNewApplicationForm'
+          RemoteFundingApplicationProcessValidateFormEvent::getEventName(
+            'RemoteFundingApplicationProcess', 'validateForm'
           ),
           static::callback(
-            function (RemoteFundingCaseValidateNewApplicationFormEvent $event): bool {
+            function (RemoteFundingApplicationProcessValidateFormEvent $event): bool {
               static::assertSame(11, $event->getContactId());
               static::assertSame($this->data, $event->getData());
+              static::assertSame($this->applicationProcess, $event->getApplicationProcess());
+              static::assertSame($this->fundingCase, $event->getFundingCase());
               static::assertSame($this->fundingCaseType, $event->getFundingCaseType());
-              static::assertSame($this->fundingProgram, $event->getFundingProgram());
 
               $event->setValid(TRUE);
 
@@ -89,12 +94,12 @@ final class RemoteFundingCaseValidateNewApplicationFormActionTest extends TestCa
             }),
         ],
         [
-          RemoteFundingCaseValidateNewApplicationFormEvent::getEventName('RemoteFundingCase'),
-          static::isInstanceOf(RemoteFundingCaseValidateNewApplicationFormEvent::class),
+          RemoteFundingApplicationProcessValidateFormEvent::getEventName('RemoteFundingApplicationProcess'),
+          static::isInstanceOf(RemoteFundingApplicationProcessValidateFormEvent::class),
         ],
         [
-          RemoteFundingCaseValidateNewApplicationFormEvent::getEventName(),
-          static::isInstanceOf(RemoteFundingCaseValidateNewApplicationFormEvent::class),
+          RemoteFundingApplicationProcessValidateFormEvent::getEventName(),
+          static::isInstanceOf(RemoteFundingApplicationProcessValidateFormEvent::class),
         ]
       );
 
@@ -112,23 +117,23 @@ final class RemoteFundingCaseValidateNewApplicationFormActionTest extends TestCa
       ->method('dispatch')
       ->withConsecutive(
         [
-          RemoteFundingCaseValidateNewApplicationFormEvent::getEventName(
-            'RemoteFundingCase', 'validateNewApplicationForm'
+          RemoteFundingApplicationProcessValidateFormEvent::getEventName(
+            'RemoteFundingApplicationProcess', 'validateForm'
           ),
           static::callback(
-            function (RemoteFundingCaseValidateNewApplicationFormEvent $event): bool {
+            function (RemoteFundingApplicationProcessValidateFormEvent $event): bool {
               $event->addError('/foo', 'Bar');
 
               return TRUE;
             }),
         ],
         [
-          RemoteFundingCaseValidateNewApplicationFormEvent::getEventName('RemoteFundingCase'),
-          static::isInstanceOf(RemoteFundingCaseValidateNewApplicationFormEvent::class),
+          RemoteFundingApplicationProcessValidateFormEvent::getEventName('RemoteFundingApplicationProcess'),
+          static::isInstanceOf(RemoteFundingApplicationProcessValidateFormEvent::class),
         ],
         [
-          RemoteFundingCaseValidateNewApplicationFormEvent::getEventName(),
-          static::isInstanceOf(RemoteFundingCaseValidateNewApplicationFormEvent::class),
+          RemoteFundingApplicationProcessValidateFormEvent::getEventName(),
+          static::isInstanceOf(RemoteFundingApplicationProcessValidateFormEvent::class),
         ]
       );
 

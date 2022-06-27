@@ -6,6 +6,8 @@ require_once 'funding.civix.php';
 // phpcs:enable
 
 use Civi\Funding\Contact\FundingRemoteContactIdResolver;
+use Civi\Funding\EventSubscriber\RemoteFundingApplicationProcessDAOGetFieldsSubscriber;
+use Civi\Funding\EventSubscriber\RemoteFundingApplicationProcessDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\RemoteFundingCaseDAOGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\RemoteFundingCaseDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\RemoteFundingCaseTypeDAOGetFieldsSubscriber;
@@ -43,6 +45,12 @@ function funding_civicrm_container(ContainerBuilder $container): void {
   $container->autowire(FundingRemoteContactIdResolver::class);
 
   $container->autowire(RemoteFundingRequestInitSubscriber::class)
+    ->addTag('kernel.event_subscriber')
+    ->setLazy(TRUE);
+  $container->autowire(RemoteFundingApplicationProcessDAOGetFieldsSubscriber::class)
+    ->addTag('kernel.event_subscriber')
+    ->setLazy(TRUE);
+  $container->autowire(RemoteFundingApplicationProcessDAOGetSubscriber::class)
     ->addTag('kernel.event_subscriber')
     ->setLazy(TRUE);
   $container->autowire(RemoteFundingCaseDAOGetFieldsSubscriber::class)
@@ -134,3 +142,31 @@ function funding_civicrm_permission(array &$permissions): void {
   $permissions['apply Funding'] = E::ts('Funding: make applications');
   $permissions['access Remote Funding'] = E::ts('Funding: access remote API');
 }
+
+// --- Functions below this ship commented out. Uncomment as required. ---
+
+/**
+ * Implements hook_civicrm_preProcess().
+ *
+ * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_preProcess
+ */
+//function funding_civicrm_preProcess($formName, &$form) {
+//
+//}
+
+/**
+ * Implements hook_civicrm_navigationMenu().
+ *
+ * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_navigationMenu
+ */
+//function funding_civicrm_navigationMenu(&$menu) {
+//  _funding_civix_insert_navigation_menu($menu, 'Mailings', [
+//    'label' => E::ts('New subliminal message'),
+//    'name' => 'mailing_subliminal_message',
+//    'url' => 'civicrm/mailing/subliminal',
+//    'permission' => 'access CiviMail',
+//    'operator' => 'OR',
+//    'separator' => 0,
+//  ]);
+//  _funding_civix_navigationMenu($menu);
+//}

@@ -5,13 +5,15 @@ namespace Civi\Funding\Event\Traits;
 
 trait RemoteFundingEventContactIdRequiredTrait {
 
-  use RemoteFundingEventTrait;
+  protected int $contactId;
+
+  protected string $remoteContactId;
 
   public function getContactId(): int {
     return $this->contactId;
   }
 
-  public function getRemoteContactId(): ?string {
+  public function getRemoteContactId(): string {
     return $this->remoteContactId;
   }
 
