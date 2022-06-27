@@ -17,10 +17,11 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Api4\Action;
+namespace Civi\Funding\Api4\Action\Remote\FundingCase;
 
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
+use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingAction;
 use Civi\Funding\Api4\Action\Traits\RemoteFundingActionContactIdRequiredTrait;
 use Civi\Funding\Event\FundingEvents;
 use Civi\Funding\Event\RemoteFundingCaseGetNewApplicationFormEvent;
@@ -32,7 +33,7 @@ use Webmozart\Assert\Assert;
  * @method void setFundingProgramId(int $fundingProgramId)
  * @method void setFundingCaseTypeId(int $fundingCaseTypeId)
  */
-final class RemoteFundingCaseGetNewApplicationFormAction extends AbstractRemoteFundingAction {
+final class GetNewApplicationFormAction extends AbstractRemoteFundingAction {
 
   use RemoteFundingActionContactIdRequiredTrait;
 

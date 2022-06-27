@@ -26,12 +26,13 @@ namespace Civi\Funding\Api4\Action;
 
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
+use Civi\Funding\Api4\Action\Remote\FundingProgram\GetRelatedAction;
 use Civi\Funding\Event\RemoteFundingDAOGetEvent;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Civi\Funding\Api4\Action\RemoteFundingProgramGetRelatedAction
+ * @covers \Civi\Funding\Api4\Action\Remote\FundingProgram\GetRelatedAction
  */
 final class RemoteFundingProgramGetRelatedActionTest extends TestCase {
 
@@ -40,12 +41,12 @@ final class RemoteFundingProgramGetRelatedActionTest extends TestCase {
    */
   private MockObject $eventDispatcherMock;
 
-  private RemoteFundingProgramGetRelatedAction $action;
+  private GetRelatedAction $action;
 
   protected function setUp(): void {
     parent::setUp();
     $this->eventDispatcherMock = $this->createMock(CiviEventDispatcher::class);
-    $this->action = new RemoteFundingProgramGetRelatedAction($this->eventDispatcherMock);
+    $this->action = new GetRelatedAction($this->eventDispatcherMock);
   }
 
   public function testRun(): void {

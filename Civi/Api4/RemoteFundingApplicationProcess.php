@@ -20,27 +20,27 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\Funding\Api4\AbstractRemoteFundingEntity;
-use Civi\Funding\Api4\Action\RemoteFundingApplicationProcessGetFormAction;
-use Civi\Funding\Api4\Action\RemoteFundingApplicationProcessSubmitFormAction;
-use Civi\Funding\Api4\Action\RemoteFundingApplicationProcessValidateFormAction;
-use Civi\Funding\Api4\Action\RemoteFundingDAOGetAction;
+use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetFormAction;
+use Civi\Funding\Api4\Action\Remote\ApplicationProcess\SubmitFormAction;
+use Civi\Funding\Api4\Action\Remote\ApplicationProcess\ValidateFormAction;
+use Civi\Funding\Api4\Action\Remote\DAOGetAction;
 
 final class RemoteFundingApplicationProcess extends AbstractRemoteFundingEntity {
 
-  public static function get(): RemoteFundingDAOGetAction {
-    return new RemoteFundingDAOGetAction(static::getEntityName());
+  public static function get(): DAOGetAction {
+    return new DAOGetAction(static::getEntityName());
   }
 
-  public static function getForm(): RemoteFundingApplicationProcessGetFormAction {
-    return new RemoteFundingApplicationProcessGetFormAction();
+  public static function getForm(): GetFormAction {
+    return new GetFormAction();
   }
 
-  public static function submitForm(): RemoteFundingApplicationProcessSubmitFormAction {
-    return new RemoteFundingApplicationProcessSubmitFormAction();
+  public static function submitForm(): SubmitFormAction {
+    return new SubmitFormAction();
   }
 
-  public static function validateForm(): RemoteFundingApplicationProcessValidateFormAction {
-    return new RemoteFundingApplicationProcessValidateFormAction();
+  public static function validateForm(): ValidateFormAction {
+    return new ValidateFormAction();
   }
 
 }

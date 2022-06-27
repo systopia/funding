@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber;
 
-use Civi\Funding\Api4\Action\RemoteFundingActionInterface;
+use Civi\Funding\Api4\Action\Remote\RemoteFundingActionInterface;
 use Civi\Funding\Contact\FundingRemoteContactIdResolver;
 use Civi\Funding\Event\FundingEvents;
 use Civi\RemoteTools\Event\InitApiRequestEvent;
@@ -44,7 +44,7 @@ final class RemoteFundingRequestInitSubscriber implements EventSubscriberInterfa
   public function onRemoteRequestInit(InitApiRequestEvent $event): void {
     $request = $event->getApiRequest();
     Assert::isInstanceOf($request, RemoteFundingActionInterface::class);
-    /** @var \Civi\Funding\Api4\Action\RemoteFundingActionInterface $request */
+    /** @var \Civi\Funding\Api4\Action\Remote\RemoteFundingActionInterface $request */
     $remoteContactId = $request->getRemoteContactId();
     if (NULL !== $remoteContactId) {
       $request->setExtraParam('contactId', $this->remoteContactIdResolver->getContactId($remoteContactId));

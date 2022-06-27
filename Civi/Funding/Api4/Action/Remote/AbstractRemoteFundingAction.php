@@ -17,7 +17,7 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Api4\Action;
+namespace Civi\Funding\Api4\Action\Remote;
 
 use Civi\Api4\Generic\AbstractAction;
 use Civi\RemoteTools\Api4\Action\Traits\EventActionTrait;

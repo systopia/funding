@@ -17,10 +17,11 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Api4\Action;
+namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
+use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingAction;
 use Civi\Funding\Api4\Action\Traits\RemoteFundingActionContactIdRequiredTrait;
 use Civi\Funding\Event\FundingEvents;
 use Civi\Funding\Event\RemoteFundingApplicationProcessValidateFormEvent;
@@ -31,7 +32,7 @@ use Webmozart\Assert\Assert;
 /**
  * @method void setData(array $data)
  */
-final class RemoteFundingApplicationProcessValidateFormAction extends AbstractRemoteFundingAction {
+final class ValidateFormAction extends AbstractRemoteFundingAction {
 
   use RemoteFundingActionContactIdRequiredTrait;
 
