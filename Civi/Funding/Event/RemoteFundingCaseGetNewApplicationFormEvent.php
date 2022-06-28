@@ -22,24 +22,24 @@ namespace Civi\Funding\Event;
 final class RemoteFundingCaseGetNewApplicationFormEvent extends AbstractRemoteFundingGetFormEvent {
 
   /**
-   * @var array<string, mixed>&array{id: int}
+   * @var array<string, mixed>&array{id: int, currency: string}
    */
   protected array $fundingProgram;
 
   /**
-   * @var array<string, mixed>&array{id: int}
+   * @var array<string, mixed>&array{id: int, name: string}
    */
   protected array $fundingCaseType;
 
   /**
-   * @return array<string, mixed>&array{id: int}
+   * @return array<string, mixed>&array{id: int, currency: string}
    */
   public function getFundingProgram(): array {
     return $this->fundingProgram;
   }
 
   /**
-   * @return array<string, mixed>&array{id: int}
+   * @return array<string, mixed>&array{id: int, name: string}
    */
   public function getFundingCaseType(): array {
     return $this->fundingCaseType;

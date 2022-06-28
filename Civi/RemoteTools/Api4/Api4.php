@@ -28,7 +28,7 @@ final class Api4 implements Api4Interface {
 
   private static self $instance;
 
-  public static function getInstance(): Api4 {
+  public static function getInstance(): self {
     return self::$instance ?? new self();
   }
 
