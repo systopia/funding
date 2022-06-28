@@ -17,18 +17,34 @@
 
 declare(strict_types = 1);
 
-namespace Civi\RemoteTools\Contact;
+namespace Civi\RemoteTools\Api3;
 
-interface RemoteContactIdResolverInterface {
+interface Api3Interface {
 
   /**
-   * @param int|string $remoteAuthenticationToken
+   * To be used for actions returning an array.
+   *
+   * @param string $entityName
+   * @param string $action
+   * @param array<string, mixed> $params
+   *
+   * @return array<string, mixed>
+   *
+   * @throws \CiviCRM_API3_Exception
+   */
+  public function execute(string $entityName, string $action, array $params = []): array;
+
+  /**
+   * To be used for actions returning an integer (e.g. getcount).
+   *
+   * @param string $entityName
+   * @param string $action
+   * @param array<string, mixed> $params
    *
    * @return int
    *
-   * @throws \Civi\RemoteTools\Exception\ResolveContactIdFailedException
-   *   If a unique contact ID was not found or an error occurred.
+   * @throws \CiviCRM_API3_Exception
    */
-  public function getContactId($remoteAuthenticationToken): int;
+  public function executeInt(string $entityName, string $action, array $params = []): int;
 
 }

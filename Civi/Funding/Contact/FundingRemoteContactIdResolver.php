@@ -27,12 +27,12 @@ class FundingRemoteContactIdResolver implements RemoteContactIdResolverInterface
   /**
    * @inheritDoc
    */
-  public function getContactId($remoteAuthenticateToken): int {
+  public function getContactId($remoteAuthenticationToken): int {
     // TODO
 
-    Assert::integerish($remoteAuthenticateToken);
+    Assert::integerish($remoteAuthenticationToken);
 
-    return (int) $remoteAuthenticateToken;
+    return (int) $remoteAuthenticationToken;
   }
 
 }

@@ -17,18 +17,8 @@
 
 declare(strict_types = 1);
 
-namespace Civi\RemoteTools\Contact;
+namespace Civi\RemoteTools\Exception;
 
-interface RemoteContactIdResolverInterface {
-
-  /**
-   * @param int|string $remoteAuthenticationToken
-   *
-   * @return int
-   *
-   * @throws \Civi\RemoteTools\Exception\ResolveContactIdFailedException
-   *   If a unique contact ID was not found or an error occurred.
-   */
-  public function getContactId($remoteAuthenticationToken): int;
+final class ResolveContactIdFailedException extends \RuntimeException implements ExceptionInterface {
 
 }
