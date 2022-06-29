@@ -17,40 +17,38 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Api4\Action;
+namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
+use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingAction;
 use Civi\Funding\Api4\Action\Traits\RemoteFundingActionContactIdRequiredTrait;
 use Civi\Funding\Event\FundingEvents;
-use Civi\Funding\Event\RemoteFundingCaseValidateNewApplicationFormEvent;
+use Civi\Funding\Event\RemoteFundingApplicationProcessGetFormEvent;
 use Civi\Funding\Remote\RemoteFundingEntityManager;
 use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
 use Webmozart\Assert\Assert;
 
 /**
- * @method void setData(array $data)
+ * @method void setApplicationProcessId(int $applicationProcessId)
  */
-final class RemoteFundingCaseValidateNewApplicationFormAction extends AbstractRemoteFundingAction {
+final class GetFormAction extends AbstractRemoteFundingAction {
 
   use RemoteFundingActionContactIdRequiredTrait;
 
   /**
-   * @var array<string, mixed>
+   * @var int
    * @required
    */
-  protected array $data;
+  protected int $applicationProcessId;
 
-  /**
-   * @var \Civi\Funding\Remote\RemoteFundingEntityManagerInterface
-   */
-  private $_remoteFundingEntityManager;
+  private RemoteFundingEntityManagerInterface $_remoteFundingEntityManager;
 
   public function __construct(
     RemoteFundingEntityManagerInterface $remoteFundingEntityManager = NULL,
     CiviEventDispatcher $eventDispatcher = NULL
   ) {
-    parent::__construct('RemoteFundingCase', 'validateNewApplicationForm');
+    parent::__construct('RemoteFundingApplicationProcess', 'getForm');
     $this->_remoteFundingEntityManager = $remoteFundingEntityManager ?? RemoteFundingEntityManager::getInstance();
     $this->_eventDispatcher = $eventDispatcher ?? \Civi::dispatcher();
     $this->_authorizeRequestEventName = FundingEvents::REMOTE_REQUEST_AUTHORIZE_EVENT_NAME;
@@ -67,46 +65,43 @@ final class RemoteFundingCaseValidateNewApplicationFormAction extends AbstractRe
     $this->dispatchEvent($event);
 
     $result->debug['event'] = $event->getDebugOutput();
-
-    if (NULL === $event->isValid()) {
-      throw new \API_Exception('Form not validated');
+    if ([] === $event->getJsonSchema() || [] === $event->getUiSchema()) {
+      throw new \API_Exception('Invalid applicationProcessId', 'invalid_arguments');
     }
+
+    Assert::keyExists($event->getData(), 'applicationProcessId');
+    Assert::same($event->getData()['applicationProcessId'], $this->applicationProcessId);
 
     $result->rowCount = 1;
     $result->exchangeArray([
-      'valid' => $event->isValid(),
-      'errors' => $event->getErrors(),
+      'jsonSchema' => $event->getJsonSchema(),
+      'uiSchema' => $event->getUiSchema(),
+      'data' => $event->getData(),
     ]);
   }
 
   /**
    * @throws \API_Exception
    */
-  private function createEvent(): RemoteFundingCaseValidateNewApplicationFormEvent {
+  private function createEvent(): RemoteFundingApplicationProcessGetFormEvent {
     Assert::notNull($this->remoteContactId);
-    $fundingCaseType = $this->_remoteFundingEntityManager
-      ->getById('FundingCaseType', $this->getFundingCaseTypeId(), $this->remoteContactId);
-    $fundingProgram = $this->_remoteFundingEntityManager
-      ->getById('FundingProgram', $this->getFundingProgramId(), $this->remoteContactId);
+    /** @var array<string, mixed>&array{id: int, funding_case_id: int} $applicationProcess */
+    $applicationProcess = $this->_remoteFundingEntityManager->getById(
+      'FundingApplicationProcess', $this->applicationProcessId, $this->remoteContactId
+    );
+    /** @var array<string, mixed>&array{id: int, funding_case_type_id: int} $fundingCase */
+    $fundingCase = $this->_remoteFundingEntityManager->getById(
+      'FundingCase', $applicationProcess['funding_case_id'], $this->remoteContactId
+    );
+    $fundingCaseType = $this->_remoteFundingEntityManager->getById(
+      'FundingCaseType', $fundingCase['funding_case_type_id'], $this->remoteContactId
+    );
 
-    return RemoteFundingCaseValidateNewApplicationFormEvent::fromApiRequest($this, $this->getExtraParams() + [
+    return RemoteFundingApplicationProcessGetFormEvent::fromApiRequest($this, $this->getExtraParams() + [
+      'applicationProcess' => $applicationProcess,
+      'fundingCase' => $fundingCase,
       'fundingCaseType' => $fundingCaseType,
-      'fundingProgram' => $fundingProgram,
     ]);
-  }
-
-  public function getFundingProgramId(): int {
-    Assert::keyExists($this->data, 'fundingProgramId');
-    Assert::integer($this->data['fundingProgramId']);
-
-    return $this->data['fundingProgramId'];
-  }
-
-  public function getFundingCaseTypeId(): int {
-    Assert::keyExists($this->data, 'fundingCaseTypeId');
-    Assert::integer($this->data['fundingCaseTypeId']);
-
-    return $this->data['fundingCaseTypeId'];
   }
 
 }

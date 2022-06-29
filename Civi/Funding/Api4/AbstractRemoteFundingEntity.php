@@ -20,8 +20,8 @@ declare(strict_types = 1);
 namespace Civi\Funding\Api4;
 
 use Civi\Api4\Generic\AbstractEntity;
-use Civi\Funding\Api4\Action\RemoteFundingCheckAccessAction;
-use Civi\Funding\Api4\Action\RemoteFundingGetFieldsAction;
+use Civi\Funding\Api4\Action\Remote\CheckAccessAction;
+use Civi\Funding\Api4\Action\Remote\GetFieldsAction;
 
 class AbstractRemoteFundingEntity extends AbstractEntity {
 
@@ -30,14 +30,14 @@ class AbstractRemoteFundingEntity extends AbstractEntity {
    * @noinspection PhpMissingParentCallCommonInspection
    */
   public static function checkAccess() {
-    return new RemoteFundingCheckAccessAction(static::getEntityName(), __FUNCTION__);
+    return new CheckAccessAction(static::getEntityName(), __FUNCTION__);
   }
 
   /**
    * @inheritDoc
    */
   public static function getFields() {
-    return new RemoteFundingGetFieldsAction(static::getEntityName(), __FUNCTION__);
+    return new GetFieldsAction(static::getEntityName(), __FUNCTION__);
   }
 
   /**

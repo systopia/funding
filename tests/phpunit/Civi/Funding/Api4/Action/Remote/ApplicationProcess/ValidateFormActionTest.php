@@ -25,18 +25,19 @@ namespace Civi\Funding\Api4\Action;
 
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
+use Civi\Funding\Api4\Action\Remote\ApplicationProcess\ValidateFormAction;
 use Civi\Funding\Event\RemoteFundingApplicationProcessValidateFormEvent;
 use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Civi\Funding\Api4\Action\RemoteFundingApplicationProcessValidateFormAction
+ * @covers \Civi\Funding\Api4\Action\Remote\ApplicationProcess\ValidateFormAction
  * @covers \Civi\Funding\Event\RemoteFundingApplicationProcessValidateFormEvent
  * @covers \Civi\Funding\Event\AbstractRemoteFundingValidateFormEvent
  */
 final class RemoteFundingApplicationProcessValidateFormActionTest extends TestCase {
 
-  private RemoteFundingApplicationProcessValidateFormAction $action;
+  private ValidateFormAction $action;
 
   /**
    * @var array<string, mixed>
@@ -67,7 +68,7 @@ final class RemoteFundingApplicationProcessValidateFormActionTest extends TestCa
     parent::setUp();
     $remoteFundingEntityManagerMock = $this->createMock(RemoteFundingEntityManagerInterface::class);
     $this->eventDispatcherMock = $this->createMock(CiviEventDispatcher::class);
-    $this->action = new RemoteFundingApplicationProcessValidateFormAction(
+    $this->action = new ValidateFormAction(
       $remoteFundingEntityManagerMock,
       $this->eventDispatcherMock
     );

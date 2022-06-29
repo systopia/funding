@@ -25,18 +25,19 @@ namespace Civi\Funding\Api4\Action;
 
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
+use Civi\Funding\Api4\Action\Remote\FundingCase\ValidateNewApplicationFormAction;
 use Civi\Funding\Event\RemoteFundingCaseValidateNewApplicationFormEvent;
 use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Civi\Funding\Api4\Action\RemoteFundingCaseValidateNewApplicationFormAction
+ * @covers \Civi\Funding\Api4\Action\Remote\FundingCase\ValidateNewApplicationFormAction
  * @covers \Civi\Funding\Event\RemoteFundingCaseValidateNewApplicationFormEvent
  * @covers \Civi\Funding\Event\AbstractRemoteFundingValidateFormEvent
  */
 final class RemoteFundingCaseValidateNewApplicationFormActionTest extends TestCase {
 
-  private RemoteFundingCaseValidateNewApplicationFormAction $action;
+  private ValidateNewApplicationFormAction $action;
 
   /**
    * @var array<string, mixed>
@@ -62,7 +63,7 @@ final class RemoteFundingCaseValidateNewApplicationFormActionTest extends TestCa
     parent::setUp();
     $remoteFundingEntityManagerMock = $this->createMock(RemoteFundingEntityManagerInterface::class);
     $this->eventDispatcherMock = $this->createMock(CiviEventDispatcher::class);
-    $this->action = new RemoteFundingCaseValidateNewApplicationFormAction(
+    $this->action = new ValidateNewApplicationFormAction(
       $remoteFundingEntityManagerMock,
       $this->eventDispatcherMock
     );

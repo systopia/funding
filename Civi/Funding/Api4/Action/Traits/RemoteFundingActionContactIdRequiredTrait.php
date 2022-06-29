@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\Traits;
 
-use Civi\Funding\Api4\Action\RemoteFundingActionInterface;
+use Civi\Funding\Api4\Action\Remote\RemoteFundingActionInterface;
 
 trait RemoteFundingActionContactIdRequiredTrait {
 

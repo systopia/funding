@@ -17,11 +17,12 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Api4\Action;
+namespace Civi\Funding\Api4\Action\Remote\FundingProgram;
 
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
+use Civi\Funding\Api4\Action\Remote\RemoteFundingActionInterface;
 use Civi\Funding\Api4\Action\Traits\RemoteFundingActionContactIdRequiredTrait;
 use Civi\Funding\Event\FundingEvents;
 use Civi\Funding\Event\RemoteFundingDAOGetEvent;
@@ -31,7 +32,7 @@ use Civi\RemoteTools\Api4\Action\Traits\EventActionTrait;
  * @method void setId(int $id)
  * @method void setType(string $type)
  */
-final class RemoteFundingProgramGetRelatedAction extends AbstractAction implements RemoteFundingActionInterface {
+final class GetRelatedAction extends AbstractAction implements RemoteFundingActionInterface {
 
   use EventActionTrait;
 
