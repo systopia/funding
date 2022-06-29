@@ -22,11 +22,10 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Api4\Action;
+namespace Civi\Funding\Api4\Action\Remote\FundingProgram;
 
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
-use Civi\Funding\Api4\Action\Remote\FundingProgram\GetRelatedAction;
 use Civi\Funding\Event\RemoteFundingDAOGetEvent;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -34,7 +33,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @covers \Civi\Funding\Api4\Action\Remote\FundingProgram\GetRelatedAction
  */
-final class RemoteFundingProgramGetRelatedActionTest extends TestCase {
+final class GetRelatedActionTest extends TestCase {
 
   /**
    * @var \PHPUnit\Framework\MockObject\MockObject&\Civi\Core\CiviEventDispatcher

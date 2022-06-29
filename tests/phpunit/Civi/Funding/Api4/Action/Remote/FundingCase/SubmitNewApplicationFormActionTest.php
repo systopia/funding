@@ -21,11 +21,10 @@
  */
 declare(strict_types = 1);
 
-namespace Civi\Funding\Api4\Action;
+namespace Civi\Funding\Api4\Action\Remote\FundingCase;
 
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
-use Civi\Funding\Api4\Action\Remote\FundingCase\SubmitNewApplicationFormAction;
 use Civi\Funding\Event\RemoteFundingCaseSubmitNewApplicationFormEvent;
 use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
 use PHPUnit\Framework\TestCase;
@@ -35,7 +34,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \Civi\Funding\Event\RemoteFundingCaseSubmitNewApplicationFormEvent
  * @covers \Civi\Funding\Event\AbstractRemoteFundingSubmitFormEvent
  */
-final class RemoteFundingCaseSubmitNewApplicationFormActionTest extends TestCase {
+final class SubmitNewApplicationFormActionTest extends TestCase {
 
   private SubmitNewApplicationFormAction $action;
 
