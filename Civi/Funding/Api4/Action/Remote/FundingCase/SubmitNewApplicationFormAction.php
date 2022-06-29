@@ -23,8 +23,8 @@ use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingAction;
 use Civi\Funding\Api4\Action\Traits\RemoteFundingActionContactIdRequiredTrait;
-use Civi\Funding\Event\FundingEvents;
-use Civi\Funding\Event\RemoteFundingCaseSubmitNewApplicationFormEvent;
+use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
+use Civi\Funding\Event\Remote\FundingEvents;
 use Civi\Funding\Remote\RemoteFundingEntityManager;
 use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
 use Webmozart\Assert\Assert;
@@ -54,8 +54,8 @@ final class SubmitNewApplicationFormAction extends AbstractRemoteFundingAction {
     parent::__construct('RemoteFundingCase', 'submitNewApplicationForm');
     $this->_remoteFundingEntityManager = $remoteFundingEntityManager ?? RemoteFundingEntityManager::getInstance();
     $this->_eventDispatcher = $eventDispatcher ?? \Civi::dispatcher();
-    $this->_authorizeRequestEventName = FundingEvents::REMOTE_REQUEST_AUTHORIZE_EVENT_NAME;
-    $this->_initRequestEventName = FundingEvents::REMOTE_REQUEST_INIT_EVENT_NAME;
+    $this->_authorizeRequestEventName = FundingEvents::REQUEST_AUTHORIZE_EVENT_NAME;
+    $this->_initRequestEventName = FundingEvents::REQUEST_INIT_EVENT_NAME;
   }
 
   /**
@@ -80,7 +80,7 @@ final class SubmitNewApplicationFormAction extends AbstractRemoteFundingAction {
     }
 
     switch ($event->getAction()) {
-      case RemoteFundingCaseSubmitNewApplicationFormEvent::ACTION_SHOW_FORM:
+      case SubmitNewApplicationFormEvent::ACTION_SHOW_FORM:
         Assert::notNull($event->getForm());
         Assert::keyExists($event->getForm()['data'], 'fundingCaseTypeId');
         Assert::integer($event->getForm()['data']['fundingCaseTypeId']);
@@ -91,12 +91,12 @@ final class SubmitNewApplicationFormAction extends AbstractRemoteFundingAction {
         $result['data'] = $event->getForm()['data'];
         break;
 
-      case RemoteFundingCaseSubmitNewApplicationFormEvent::ACTION_SHOW_VALIDATION:
+      case SubmitNewApplicationFormEvent::ACTION_SHOW_VALIDATION:
         Assert::notEmpty($event->getErrors());
         $result['errors'] = $event->getErrors();
         break;
 
-      case RemoteFundingCaseSubmitNewApplicationFormEvent::ACTION_CLOSE_FORM:
+      case SubmitNewApplicationFormEvent::ACTION_CLOSE_FORM:
         break;
 
       default:
@@ -107,14 +107,14 @@ final class SubmitNewApplicationFormAction extends AbstractRemoteFundingAction {
   /**
    * @throws \API_Exception
    */
-  private function createEvent(): RemoteFundingCaseSubmitNewApplicationFormEvent {
+  private function createEvent(): SubmitNewApplicationFormEvent {
     Assert::notNull($this->remoteContactId);
     $fundingCaseType = $this->_remoteFundingEntityManager
       ->getById('FundingCaseType', $this->getFundingCaseTypeId(), $this->remoteContactId);
     $fundingProgram = $this->_remoteFundingEntityManager
       ->getById('FundingProgram', $this->getFundingProgramId(), $this->remoteContactId);
 
-    return RemoteFundingCaseSubmitNewApplicationFormEvent::fromApiRequest($this, $this->getExtraParams() + [
+    return SubmitNewApplicationFormEvent::fromApiRequest($this, $this->getExtraParams() + [
       'fundingCaseType' => $fundingCaseType,
       'fundingProgram' => $fundingProgram,
     ]);

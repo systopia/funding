@@ -6,17 +6,17 @@ require_once 'funding.civix.php';
 // phpcs:enable
 
 use Civi\Funding\Contact\FundingRemoteContactIdResolver;
-use Civi\Funding\EventSubscriber\RemoteFundingApplicationProcessDAOGetFieldsSubscriber;
-use Civi\Funding\EventSubscriber\RemoteFundingApplicationProcessDAOGetSubscriber;
-use Civi\Funding\EventSubscriber\RemoteFundingCaseDAOGetFieldsSubscriber;
-use Civi\Funding\EventSubscriber\RemoteFundingCaseDAOGetSubscriber;
-use Civi\Funding\EventSubscriber\RemoteFundingCasePermissionsSubscriber;
-use Civi\Funding\EventSubscriber\RemoteFundingCaseTypeDAOGetFieldsSubscriber;
-use Civi\Funding\EventSubscriber\RemoteFundingCaseTypeDAOGetSubscriber;
-use Civi\Funding\EventSubscriber\RemoteFundingProgramDAOGetFieldsSubscriber;
-use Civi\Funding\EventSubscriber\RemoteFundingProgramDAOGetSubscriber;
-use Civi\Funding\EventSubscriber\RemoteFundingProgramPermissionsSubscriber;
-use Civi\Funding\EventSubscriber\RemoteFundingRequestInitSubscriber;
+use Civi\Funding\EventSubscriber\Remote\ApplicationProcessDAOGetFieldsSubscriber;
+use Civi\Funding\EventSubscriber\Remote\ApplicationProcessDAOGetSubscriber;
+use Civi\Funding\EventSubscriber\Remote\FundingCaseDAOGetFieldsSubscriber;
+use Civi\Funding\EventSubscriber\Remote\FundingCaseDAOGetSubscriber;
+use Civi\Funding\EventSubscriber\Remote\FundingCasePermissionsSubscriber;
+use Civi\Funding\EventSubscriber\Remote\FundingCaseTypeDAOGetFieldsSubscriber;
+use Civi\Funding\EventSubscriber\Remote\FundingCaseTypeDAOGetSubscriber;
+use Civi\Funding\EventSubscriber\Remote\FundingProgramDAOGetFieldsSubscriber;
+use Civi\Funding\EventSubscriber\Remote\FundingProgramDAOGetSubscriber;
+use Civi\Funding\EventSubscriber\Remote\FundingProgramPermissionsSubscriber;
+use Civi\Funding\EventSubscriber\Remote\FundingRequestInitSubscriber;
 use Civi\RemoteTools\Api4\Api4;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\EventSubscriber\ApiAuthorizeInitRequestSubscriber;
@@ -46,37 +46,37 @@ function funding_civicrm_container(ContainerBuilder $container): void {
 
   $container->autowire(FundingRemoteContactIdResolver::class);
 
-  $container->autowire(RemoteFundingRequestInitSubscriber::class)
+  $container->autowire(FundingRequestInitSubscriber::class)
     ->addTag('kernel.event_subscriber')
     ->setLazy(TRUE);
-  $container->autowire(RemoteFundingApplicationProcessDAOGetFieldsSubscriber::class)
+  $container->autowire(ApplicationProcessDAOGetFieldsSubscriber::class)
     ->addTag('kernel.event_subscriber')
     ->setLazy(TRUE);
-  $container->autowire(RemoteFundingApplicationProcessDAOGetSubscriber::class)
+  $container->autowire(ApplicationProcessDAOGetSubscriber::class)
     ->addTag('kernel.event_subscriber')
     ->setLazy(TRUE);
-  $container->autowire(RemoteFundingCaseDAOGetFieldsSubscriber::class)
+  $container->autowire(FundingCaseDAOGetFieldsSubscriber::class)
     ->addTag('kernel.event_subscriber')
     ->setLazy(TRUE);
-  $container->autowire(RemoteFundingCaseDAOGetSubscriber::class)
+  $container->autowire(FundingCaseDAOGetSubscriber::class)
     ->addTag('kernel.event_subscriber')
     ->setLazy(TRUE);
-  $container->autowire(RemoteFundingCasePermissionsSubscriber::class)
+  $container->autowire(FundingCasePermissionsSubscriber::class)
     ->addTag('kernel.event_subscriber')
     ->setLazy(TRUE);
-  $container->autowire(RemoteFundingCaseTypeDAOGetFieldsSubscriber::class)
+  $container->autowire(FundingCaseTypeDAOGetFieldsSubscriber::class)
     ->addTag('kernel.event_subscriber')
     ->setLazy(TRUE);
-  $container->autowire(RemoteFundingCaseTypeDAOGetSubscriber::class)
+  $container->autowire(FundingCaseTypeDAOGetSubscriber::class)
     ->addTag('kernel.event_subscriber')
     ->setLazy(TRUE);
-  $container->autowire(RemoteFundingProgramDAOGetFieldsSubscriber::class)
+  $container->autowire(FundingProgramDAOGetFieldsSubscriber::class)
     ->addTag('kernel.event_subscriber')
     ->setLazy(TRUE);
-  $container->autowire(RemoteFundingProgramDAOGetSubscriber::class)
+  $container->autowire(FundingProgramDAOGetSubscriber::class)
     ->addTag('kernel.event_subscriber')
     ->setLazy(TRUE);
-  $container->autowire(RemoteFundingProgramPermissionsSubscriber::class)
+  $container->autowire(FundingProgramPermissionsSubscriber::class)
     ->addTag('kernel.event_subscriber');
 }
 

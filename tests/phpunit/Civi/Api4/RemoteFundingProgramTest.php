@@ -33,7 +33,7 @@ use PHPUnit\Framework\TestCase;
  * @group headless
  *
  * @covers \Civi\Api4\RemoteFundingProgram
- * @covers \Civi\Funding\EventSubscriber\RemoteFundingProgramPermissionsSubscriber
+ * @covers \Civi\Funding\EventSubscriber\Remote\FundingProgramPermissionsSubscriber
  */
 final class RemoteFundingProgramTest extends TestCase implements HeadlessInterface, TransactionalInterface {
 

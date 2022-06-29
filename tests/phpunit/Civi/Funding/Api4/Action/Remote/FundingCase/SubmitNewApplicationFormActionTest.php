@@ -25,14 +25,14 @@ namespace Civi\Funding\Api4\Action\Remote\FundingCase;
 
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
-use Civi\Funding\Event\RemoteFundingCaseSubmitNewApplicationFormEvent;
+use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
 use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Civi\Funding\Api4\Action\Remote\FundingCase\SubmitNewApplicationFormAction
- * @covers \Civi\Funding\Event\RemoteFundingCaseSubmitNewApplicationFormEvent
- * @covers \Civi\Funding\Event\AbstractRemoteFundingSubmitFormEvent
+ * @covers \Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent
+ * @covers \Civi\Funding\Event\Remote\AbstractFundingSubmitFormEvent
  */
 final class SubmitNewApplicationFormActionTest extends TestCase {
 
@@ -90,11 +90,11 @@ final class SubmitNewApplicationFormActionTest extends TestCase {
       ->method('dispatch')
       ->withConsecutive(
         [
-          RemoteFundingCaseSubmitNewApplicationFormEvent::getEventName(
+          SubmitNewApplicationFormEvent::getEventName(
             'RemoteFundingCase', 'submitNewApplicationForm'
           ),
           static::callback(
-            function (RemoteFundingCaseSubmitNewApplicationFormEvent $event): bool {
+            function (SubmitNewApplicationFormEvent $event): bool {
               static::assertSame(11, $event->getContactId());
               static::assertSame($this->data, $event->getData());
               static::assertSame($this->fundingCaseType, $event->getFundingCaseType());
@@ -106,12 +106,12 @@ final class SubmitNewApplicationFormActionTest extends TestCase {
             }),
         ],
         [
-          RemoteFundingCaseSubmitNewApplicationFormEvent::getEventName('RemoteFundingCase'),
-          static::isInstanceOf(RemoteFundingCaseSubmitNewApplicationFormEvent::class),
+          SubmitNewApplicationFormEvent::getEventName('RemoteFundingCase'),
+          static::isInstanceOf(SubmitNewApplicationFormEvent::class),
         ],
         [
-          RemoteFundingCaseSubmitNewApplicationFormEvent::getEventName(),
-          static::isInstanceOf(RemoteFundingCaseSubmitNewApplicationFormEvent::class),
+          SubmitNewApplicationFormEvent::getEventName(),
+          static::isInstanceOf(SubmitNewApplicationFormEvent::class),
         ]
       );
 
@@ -129,11 +129,11 @@ final class SubmitNewApplicationFormActionTest extends TestCase {
       ->method('dispatch')
       ->withConsecutive(
         [
-          RemoteFundingCaseSubmitNewApplicationFormEvent::getEventName(
+          SubmitNewApplicationFormEvent::getEventName(
             'RemoteFundingCase', 'submitNewApplicationForm'
           ),
           static::callback(
-            function (RemoteFundingCaseSubmitNewApplicationFormEvent $event): bool {
+            function (SubmitNewApplicationFormEvent $event): bool {
               $jsonSchema = ['type' => 'object'];
               $uiSchema = ['type' => 'Group'];
               $data = ['fundingCaseTypeId' => 22, 'fundingProgramId' => 33, 'foo' => 'bar'];
@@ -144,12 +144,12 @@ final class SubmitNewApplicationFormActionTest extends TestCase {
             }),
         ],
         [
-          RemoteFundingCaseSubmitNewApplicationFormEvent::getEventName('RemoteFundingCase'),
-          static::isInstanceOf(RemoteFundingCaseSubmitNewApplicationFormEvent::class),
+          SubmitNewApplicationFormEvent::getEventName('RemoteFundingCase'),
+          static::isInstanceOf(SubmitNewApplicationFormEvent::class),
         ],
         [
-          RemoteFundingCaseSubmitNewApplicationFormEvent::getEventName(),
-          static::isInstanceOf(RemoteFundingCaseSubmitNewApplicationFormEvent::class),
+          SubmitNewApplicationFormEvent::getEventName(),
+          static::isInstanceOf(SubmitNewApplicationFormEvent::class),
         ]
       );
 
@@ -170,24 +170,24 @@ final class SubmitNewApplicationFormActionTest extends TestCase {
       ->method('dispatch')
       ->withConsecutive(
         [
-          RemoteFundingCaseSubmitNewApplicationFormEvent::getEventName(
+          SubmitNewApplicationFormEvent::getEventName(
             'RemoteFundingCase', 'submitNewApplicationForm'
           ),
           static::callback(
-            function (RemoteFundingCaseSubmitNewApplicationFormEvent $event): bool {
-              $event->setAction(RemoteFundingCaseSubmitNewApplicationFormEvent::ACTION_CLOSE_FORM);
+            function (SubmitNewApplicationFormEvent $event): bool {
+              $event->setAction(SubmitNewApplicationFormEvent::ACTION_CLOSE_FORM);
               $event->setMessage('Test');
 
               return TRUE;
             }),
         ],
         [
-          RemoteFundingCaseSubmitNewApplicationFormEvent::getEventName('RemoteFundingCase'),
-          static::isInstanceOf(RemoteFundingCaseSubmitNewApplicationFormEvent::class),
+          SubmitNewApplicationFormEvent::getEventName('RemoteFundingCase'),
+          static::isInstanceOf(SubmitNewApplicationFormEvent::class),
         ],
         [
-          RemoteFundingCaseSubmitNewApplicationFormEvent::getEventName(),
-          static::isInstanceOf(RemoteFundingCaseSubmitNewApplicationFormEvent::class),
+          SubmitNewApplicationFormEvent::getEventName(),
+          static::isInstanceOf(SubmitNewApplicationFormEvent::class),
         ]
       );
 
