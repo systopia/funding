@@ -65,7 +65,7 @@ function cv(string $cmd, string $decode = 'json') {
       return $result;
 
     case 'json':
-      return json_decode($result, 1);
+      return json_decode($result, TRUE);
 
     default:
       throw new RuntimeException("Bad decoder format ($decode)");
