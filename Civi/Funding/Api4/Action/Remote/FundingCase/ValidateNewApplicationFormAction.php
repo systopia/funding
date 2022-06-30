@@ -23,8 +23,8 @@ use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingAction;
 use Civi\Funding\Api4\Action\Traits\RemoteFundingActionContactIdRequiredTrait;
-use Civi\Funding\Event\FundingEvents;
-use Civi\Funding\Event\RemoteFundingCaseValidateNewApplicationFormEvent;
+use Civi\Funding\Event\Remote\FundingCase\ValidateNewApplicationFormEvent;
+use Civi\Funding\Event\Remote\FundingEvents;
 use Civi\Funding\Remote\RemoteFundingEntityManager;
 use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
 use Webmozart\Assert\Assert;
@@ -54,8 +54,8 @@ final class ValidateNewApplicationFormAction extends AbstractRemoteFundingAction
     parent::__construct('RemoteFundingCase', 'validateNewApplicationForm');
     $this->_remoteFundingEntityManager = $remoteFundingEntityManager ?? RemoteFundingEntityManager::getInstance();
     $this->_eventDispatcher = $eventDispatcher ?? \Civi::dispatcher();
-    $this->_authorizeRequestEventName = FundingEvents::REMOTE_REQUEST_AUTHORIZE_EVENT_NAME;
-    $this->_initRequestEventName = FundingEvents::REMOTE_REQUEST_INIT_EVENT_NAME;
+    $this->_authorizeRequestEventName = FundingEvents::REQUEST_AUTHORIZE_EVENT_NAME;
+    $this->_initRequestEventName = FundingEvents::REQUEST_INIT_EVENT_NAME;
   }
 
   /**
@@ -83,14 +83,14 @@ final class ValidateNewApplicationFormAction extends AbstractRemoteFundingAction
   /**
    * @throws \API_Exception
    */
-  private function createEvent(): RemoteFundingCaseValidateNewApplicationFormEvent {
+  private function createEvent(): ValidateNewApplicationFormEvent {
     Assert::notNull($this->remoteContactId);
     $fundingCaseType = $this->_remoteFundingEntityManager
       ->getById('FundingCaseType', $this->getFundingCaseTypeId(), $this->remoteContactId);
     $fundingProgram = $this->_remoteFundingEntityManager
       ->getById('FundingProgram', $this->getFundingProgramId(), $this->remoteContactId);
 
-    return RemoteFundingCaseValidateNewApplicationFormEvent::fromApiRequest($this, $this->getExtraParams() + [
+    return ValidateNewApplicationFormEvent::fromApiRequest($this, $this->getExtraParams() + [
       'fundingCaseType' => $fundingCaseType,
       'fundingProgram' => $fundingProgram,
     ]);

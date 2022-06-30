@@ -25,15 +25,15 @@ namespace Civi\Funding\Api4\Action\Remote\FundingCase;
 
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
-use Civi\Funding\Event\RemoteFundingCaseGetNewApplicationFormEvent;
+use Civi\Funding\Event\Remote\FundingCase\GetNewApplicationFormEvent;
 use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Civi\Funding\Api4\Action\Remote\FundingCase\GetNewApplicationFormAction
- * @covers \Civi\Funding\Event\RemoteFundingCaseGetNewApplicationFormEvent
- * @covers \Civi\Funding\Event\AbstractRemoteFundingGetFormEvent
+ * @covers \Civi\Funding\Event\Remote\FundingCase\GetNewApplicationFormEvent
+ * @covers \Civi\Funding\Event\Remote\AbstractFundingGetFormEvent
  */
 final class GetNewApplicationFormActionTest extends TestCase {
 
@@ -82,9 +82,9 @@ final class GetNewApplicationFormActionTest extends TestCase {
       ->method('dispatch')
       ->withConsecutive(
         [
-          RemoteFundingCaseGetNewApplicationFormEvent::getEventName('RemoteFundingCase', 'getNewApplicationForm'),
+          GetNewApplicationFormEvent::getEventName('RemoteFundingCase', 'getNewApplicationForm'),
           static::callback(
-            function (RemoteFundingCaseGetNewApplicationFormEvent $event): bool {
+            function (GetNewApplicationFormEvent $event): bool {
               static::assertSame(11, $event->getContactId());
               static::assertSame($this->fundingCaseType, $event->getFundingCaseType());
               static::assertSame($this->fundingProgram, $event->getFundingProgram());
@@ -97,12 +97,12 @@ final class GetNewApplicationFormActionTest extends TestCase {
             }),
         ],
         [
-          RemoteFundingCaseGetNewApplicationFormEvent::getEventName('RemoteFundingCase'),
-          static::isInstanceOf(RemoteFundingCaseGetNewApplicationFormEvent::class),
+          GetNewApplicationFormEvent::getEventName('RemoteFundingCase'),
+          static::isInstanceOf(GetNewApplicationFormEvent::class),
         ],
         [
-          RemoteFundingCaseGetNewApplicationFormEvent::getEventName(),
-          static::isInstanceOf(RemoteFundingCaseGetNewApplicationFormEvent::class),
+          GetNewApplicationFormEvent::getEventName(),
+          static::isInstanceOf(GetNewApplicationFormEvent::class),
         ]
       );
 

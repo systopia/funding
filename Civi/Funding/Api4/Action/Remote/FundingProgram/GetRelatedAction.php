@@ -24,8 +24,8 @@ use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Api4\Action\Remote\RemoteFundingActionInterface;
 use Civi\Funding\Api4\Action\Traits\RemoteFundingActionContactIdRequiredTrait;
-use Civi\Funding\Event\FundingEvents;
-use Civi\Funding\Event\RemoteFundingDAOGetEvent;
+use Civi\Funding\Event\Remote\FundingDAOGetEvent;
+use Civi\Funding\Event\Remote\FundingEvents;
 use Civi\RemoteTools\Api4\Action\Traits\EventActionTrait;
 
 /**
@@ -57,8 +57,8 @@ final class GetRelatedAction extends AbstractAction implements RemoteFundingActi
   public function __construct(CiviEventDispatcher $eventDispatcher = NULL) {
     parent::__construct('RemoteFundingProgram', 'getRelated');
     $this->_eventDispatcher = $eventDispatcher ?? \Civi::dispatcher();
-    $this->_authorizeRequestEventName = FundingEvents::REMOTE_REQUEST_AUTHORIZE_EVENT_NAME;
-    $this->_initRequestEventName = FundingEvents::REMOTE_REQUEST_INIT_EVENT_NAME;
+    $this->_authorizeRequestEventName = FundingEvents::REQUEST_AUTHORIZE_EVENT_NAME;
+    $this->_initRequestEventName = FundingEvents::REQUEST_INIT_EVENT_NAME;
   }
 
   /**
@@ -77,12 +77,12 @@ final class GetRelatedAction extends AbstractAction implements RemoteFundingActi
   }
 
   /**
-   * @return \Civi\Funding\Event\RemoteFundingDAOGetEvent
+   * @return \Civi\Funding\Event\Remote\FundingDAOGetEvent
    *
    * @throws \API_Exception
    */
-  private function createEvent(): RemoteFundingDAOGetEvent {
-    $event = RemoteFundingDAOGetEvent::fromApiRequest($this, $this->getExtraParams());
+  private function createEvent(): FundingDAOGetEvent {
+    $event = FundingDAOGetEvent::fromApiRequest($this, $this->getExtraParams());
     $event->addJoin('FundingProgramRelationship AS relationship', 'INNER', NULL,
       ['id', '=', 'relationship.id_b'],
       ['relationship.type', '=', "'" . $this->type . "'"]);

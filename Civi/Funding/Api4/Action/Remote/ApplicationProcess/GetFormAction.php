@@ -23,8 +23,8 @@ use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingAction;
 use Civi\Funding\Api4\Action\Traits\RemoteFundingActionContactIdRequiredTrait;
-use Civi\Funding\Event\FundingEvents;
-use Civi\Funding\Event\RemoteFundingApplicationProcessGetFormEvent;
+use Civi\Funding\Event\Remote\ApplicationProcess\GetFormEvent;
+use Civi\Funding\Event\Remote\FundingEvents;
 use Civi\Funding\Remote\RemoteFundingEntityManager;
 use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
 use Webmozart\Assert\Assert;
@@ -51,8 +51,8 @@ final class GetFormAction extends AbstractRemoteFundingAction {
     parent::__construct('RemoteFundingApplicationProcess', 'getForm');
     $this->_remoteFundingEntityManager = $remoteFundingEntityManager ?? RemoteFundingEntityManager::getInstance();
     $this->_eventDispatcher = $eventDispatcher ?? \Civi::dispatcher();
-    $this->_authorizeRequestEventName = FundingEvents::REMOTE_REQUEST_AUTHORIZE_EVENT_NAME;
-    $this->_initRequestEventName = FundingEvents::REMOTE_REQUEST_INIT_EVENT_NAME;
+    $this->_authorizeRequestEventName = FundingEvents::REQUEST_AUTHORIZE_EVENT_NAME;
+    $this->_initRequestEventName = FundingEvents::REQUEST_INIT_EVENT_NAME;
   }
 
   /**
@@ -83,7 +83,7 @@ final class GetFormAction extends AbstractRemoteFundingAction {
   /**
    * @throws \API_Exception
    */
-  private function createEvent(): RemoteFundingApplicationProcessGetFormEvent {
+  private function createEvent(): GetFormEvent {
     Assert::notNull($this->remoteContactId);
     /** @var array<string, mixed>&array{id: int, funding_case_id: int} $applicationProcess */
     $applicationProcess = $this->_remoteFundingEntityManager->getById(
@@ -97,7 +97,7 @@ final class GetFormAction extends AbstractRemoteFundingAction {
       'FundingCaseType', $fundingCase['funding_case_type_id'], $this->remoteContactId
     );
 
-    return RemoteFundingApplicationProcessGetFormEvent::fromApiRequest($this, $this->getExtraParams() + [
+    return GetFormEvent::fromApiRequest($this, $this->getExtraParams() + [
       'applicationProcess' => $applicationProcess,
       'fundingCase' => $fundingCase,
       'fundingCaseType' => $fundingCaseType,

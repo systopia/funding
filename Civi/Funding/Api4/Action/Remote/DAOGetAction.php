@@ -21,8 +21,8 @@ namespace Civi\Funding\Api4\Action\Remote;
 
 use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Api4\Action\Traits\RemoteFundingActionContactIdRequiredTrait;
-use Civi\Funding\Event\FundingEvents;
-use Civi\Funding\Event\RemoteFundingDAOGetEvent;
+use Civi\Funding\Event\Remote\FundingDAOGetEvent;
+use Civi\Funding\Event\Remote\FundingEvents;
 use Civi\RemoteTools\Api4\Action\EventDAOGetAction;
 
 class DAOGetAction extends EventDAOGetAction implements RemoteFundingActionInterface {
@@ -32,8 +32,8 @@ class DAOGetAction extends EventDAOGetAction implements RemoteFundingActionInter
   public function __construct(string $entityName, string $actionName = 'get',
     CiviEventDispatcher $eventDispatcher = NULL
   ) {
-    parent::__construct(FundingEvents::REMOTE_REQUEST_INIT_EVENT_NAME,
-      FundingEvents::REMOTE_REQUEST_AUTHORIZE_EVENT_NAME,
+    parent::__construct(FundingEvents::REQUEST_INIT_EVENT_NAME,
+      FundingEvents::REQUEST_AUTHORIZE_EVENT_NAME,
       $entityName, $actionName, $eventDispatcher);
   }
 
@@ -41,7 +41,7 @@ class DAOGetAction extends EventDAOGetAction implements RemoteFundingActionInter
    * @noinspection PhpMissingParentCallCommonInspection
    */
   protected function getEventClass(): string {
-    return RemoteFundingDAOGetEvent::class;
+    return FundingDAOGetEvent::class;
   }
 
 }

@@ -26,7 +26,7 @@ namespace Civi\Funding\Api4\Action\Remote\FundingProgram;
 
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
-use Civi\Funding\Event\RemoteFundingDAOGetEvent;
+use Civi\Funding\Event\Remote\FundingDAOGetEvent;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -60,9 +60,9 @@ final class GetRelatedActionTest extends TestCase {
       ->method('dispatch')
       ->withConsecutive(
         [
-          RemoteFundingDAOGetEvent::getEventName('RemoteFundingProgram', 'getRelated'),
+          FundingDAOGetEvent::getEventName('RemoteFundingProgram', 'getRelated'),
           static::callback(
-            function (RemoteFundingDAOGetEvent $event): bool {
+            function (FundingDAOGetEvent $event): bool {
               static::assertSame(11, $event->getContactId());
               static::assertSame([
                 [
@@ -88,12 +88,12 @@ final class GetRelatedActionTest extends TestCase {
             }),
         ],
         [
-          RemoteFundingDAOGetEvent::getEventName('RemoteFundingProgram'),
-          static::isInstanceOf(RemoteFundingDAOGetEvent::class),
+          FundingDAOGetEvent::getEventName('RemoteFundingProgram'),
+          static::isInstanceOf(FundingDAOGetEvent::class),
         ],
         [
-          RemoteFundingDAOGetEvent::getEventName(),
-          static::isInstanceOf(RemoteFundingDAOGetEvent::class),
+          FundingDAOGetEvent::getEventName(),
+          static::isInstanceOf(FundingDAOGetEvent::class),
         ]
       );
 

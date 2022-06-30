@@ -25,14 +25,14 @@ namespace Civi\Funding\Api4\Action\Remote\FundingCase;
 
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
-use Civi\Funding\Event\RemoteFundingCaseValidateNewApplicationFormEvent;
+use Civi\Funding\Event\Remote\FundingCase\ValidateNewApplicationFormEvent;
 use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Civi\Funding\Api4\Action\Remote\FundingCase\ValidateNewApplicationFormAction
- * @covers \Civi\Funding\Event\RemoteFundingCaseValidateNewApplicationFormEvent
- * @covers \Civi\Funding\Event\AbstractRemoteFundingValidateFormEvent
+ * @covers \Civi\Funding\Event\Remote\FundingCase\ValidateNewApplicationFormEvent
+ * @covers \Civi\Funding\Event\Remote\AbstractFundingValidateFormEvent
  */
 final class ValidateNewApplicationFormActionTest extends TestCase {
 
@@ -89,11 +89,11 @@ final class ValidateNewApplicationFormActionTest extends TestCase {
       ->method('dispatch')
       ->withConsecutive(
         [
-          RemoteFundingCaseValidateNewApplicationFormEvent::getEventName(
+          ValidateNewApplicationFormEvent::getEventName(
             'RemoteFundingCase', 'validateNewApplicationForm'
           ),
           static::callback(
-            function (RemoteFundingCaseValidateNewApplicationFormEvent $event): bool {
+            function (ValidateNewApplicationFormEvent $event): bool {
               static::assertSame(11, $event->getContactId());
               static::assertSame($this->data, $event->getData());
               static::assertSame($this->fundingCaseType, $event->getFundingCaseType());
@@ -105,12 +105,12 @@ final class ValidateNewApplicationFormActionTest extends TestCase {
             }),
         ],
         [
-          RemoteFundingCaseValidateNewApplicationFormEvent::getEventName('RemoteFundingCase'),
-          static::isInstanceOf(RemoteFundingCaseValidateNewApplicationFormEvent::class),
+          ValidateNewApplicationFormEvent::getEventName('RemoteFundingCase'),
+          static::isInstanceOf(ValidateNewApplicationFormEvent::class),
         ],
         [
-          RemoteFundingCaseValidateNewApplicationFormEvent::getEventName(),
-          static::isInstanceOf(RemoteFundingCaseValidateNewApplicationFormEvent::class),
+          ValidateNewApplicationFormEvent::getEventName(),
+          static::isInstanceOf(ValidateNewApplicationFormEvent::class),
         ]
       );
 
@@ -128,23 +128,23 @@ final class ValidateNewApplicationFormActionTest extends TestCase {
       ->method('dispatch')
       ->withConsecutive(
         [
-          RemoteFundingCaseValidateNewApplicationFormEvent::getEventName(
+          ValidateNewApplicationFormEvent::getEventName(
             'RemoteFundingCase', 'validateNewApplicationForm'
           ),
           static::callback(
-            function (RemoteFundingCaseValidateNewApplicationFormEvent $event): bool {
+            function (ValidateNewApplicationFormEvent $event): bool {
               $event->addError('/foo', 'Bar');
 
               return TRUE;
             }),
         ],
         [
-          RemoteFundingCaseValidateNewApplicationFormEvent::getEventName('RemoteFundingCase'),
-          static::isInstanceOf(RemoteFundingCaseValidateNewApplicationFormEvent::class),
+          ValidateNewApplicationFormEvent::getEventName('RemoteFundingCase'),
+          static::isInstanceOf(ValidateNewApplicationFormEvent::class),
         ],
         [
-          RemoteFundingCaseValidateNewApplicationFormEvent::getEventName(),
-          static::isInstanceOf(RemoteFundingCaseValidateNewApplicationFormEvent::class),
+          ValidateNewApplicationFormEvent::getEventName(),
+          static::isInstanceOf(ValidateNewApplicationFormEvent::class),
         ]
       );
 
