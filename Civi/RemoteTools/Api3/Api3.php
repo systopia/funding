@@ -17,28 +17,28 @@
 
 declare(strict_types = 1);
 
-namespace Civi\RemoteTools\Contact;
+namespace Civi\RemoteTools\Api3;
 
-use CRM_Xcm_Matcher_IdTrackerMatcher;
+final class Api3 implements Api3Interface {
 
-final class IdTrackerRemoteContactIdResolver implements RemoteContactIdResolverInterface {
+  /**
+   * @inheritDoc
+   */
+  public function execute(string $entityName, string $action, array $params = []): array {
+    /** @var array<string, mixed> $result */
+    $result = civicrm_api3($entityName, $action, $params);
 
-  private const REMOTE_CONTACT_ID_FIELD = 'remoteContactId';
-
-  private CRM_Xcm_Matcher_IdTrackerMatcher $idTrackerMatcher;
-
-  public function __construct(string $identityType) {
-    $this->idTrackerMatcher = new CRM_Xcm_Matcher_IdTrackerMatcher($identityType, [self::REMOTE_CONTACT_ID_FIELD]);
+    return $result;
   }
 
   /**
    * @inheritDoc
    */
-  public function getContactId($remoteAuthenticateToken): ?int {
-    $data = [self::REMOTE_CONTACT_ID_FIELD => $remoteAuthenticateToken];
-    $matchResult = $this->idTrackerMatcher->matchContact($data);
+  public function executeInt(string $entityName, string $action, array $params = []): int {
+    /** @var int $result */
+    $result = civicrm_api3($entityName, $action, $params);
 
-    return $matchResult['contact_id'] ?? NULL;
+    return $result;
   }
 
 }
