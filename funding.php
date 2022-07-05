@@ -17,12 +17,12 @@ use Civi\Funding\EventSubscriber\Remote\ApplicationProcessDAOGetFieldsSubscriber
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseDAOGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseDAOGetSubscriber;
-use Civi\Funding\EventSubscriber\Remote\FundingCasePermissionsSubscriber;
+use Civi\Funding\EventSubscriber\Remote\FundingCasePermissionsGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseTypeDAOGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseTypeDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingProgramDAOGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingProgramDAOGetSubscriber;
-use Civi\Funding\EventSubscriber\Remote\FundingProgramPermissionsSubscriber;
+use Civi\Funding\EventSubscriber\Remote\FundingProgramPermissionsGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingRequestInitSubscriber;
 use Civi\Funding\Remote\RemoteFundingEntityManager;
 use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
@@ -92,7 +92,7 @@ function funding_civicrm_container(ContainerBuilder $container): void {
     ->addTag('kernel.event_subscriber');
   $container->autowire(FundingCaseDAOGetSubscriber::class)
     ->addTag('kernel.event_subscriber');
-  $container->autowire(FundingCasePermissionsSubscriber::class)
+  $container->autowire(FundingCasePermissionsGetSubscriber::class)
     ->addTag('kernel.event_subscriber');
   $container->autowire(FundingCaseTypeDAOGetFieldsSubscriber::class)
     ->addTag('kernel.event_subscriber');
@@ -102,7 +102,7 @@ function funding_civicrm_container(ContainerBuilder $container): void {
     ->addTag('kernel.event_subscriber');
   $container->autowire(FundingProgramDAOGetSubscriber::class)
     ->addTag('kernel.event_subscriber');
-  $container->autowire(FundingProgramPermissionsSubscriber::class)
+  $container->autowire(FundingProgramPermissionsGetSubscriber::class)
     ->addTag('kernel.event_subscriber');
 }
 

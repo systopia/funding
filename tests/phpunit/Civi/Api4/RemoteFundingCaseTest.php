@@ -34,11 +34,13 @@ use PHPUnit\Framework\TestCase;
  *
  * @covers \Civi\Api4\RemoteFundingCase
  * @covers \Civi\Funding\EventSubscriber\Remote\FundingCaseDAOGetSubscriber
- * @covers \Civi\Funding\EventSubscriber\Remote\FundingCasePermissionsSubscriber
+ * @covers \Civi\Funding\EventSubscriber\Remote\FundingCasePermissionsGetSubscriber
  */
 final class RemoteFundingCaseTest extends TestCase implements HeadlessInterface, TransactionalInterface {
 
   private int $associatedContactId;
+
+  private int $associatedContactIdNoPermissions;
 
   private int $relatedABContactId;
 
@@ -60,31 +62,47 @@ final class RemoteFundingCaseTest extends TestCase implements HeadlessInterface,
   }
 
   public function testPermissions(): void {
+    // Contact is directly associated
     $permittedAssociatedResult = RemoteFundingCase::get()
       ->setRemoteContactId((string) $this->associatedContactId)
       ->execute();
     static::assertSame(1, $permittedAssociatedResult->rowCount);
     static::assertSame($this->permittedFundingCaseId, $permittedAssociatedResult->first()['id']);
-    static::assertSame(['a', 'b', 'c'], $permittedAssociatedResult->first()['permissions']);
+    static::assertSame(['foo', 'bar'], $permittedAssociatedResult->first()['permissions']);
+    static::assertTrue($permittedAssociatedResult->first()['PERM_foo']);
+    static::assertTrue($permittedAssociatedResult->first()['PERM_bar']);
 
+    // Contact has an a-b-relationship with an associated contact
     $permittedABResult = RemoteFundingCase::get()
       ->setRemoteContactId((string) $this->relatedABContactId)
       ->execute();
     static::assertSame(1, $permittedABResult->rowCount);
     static::assertSame($this->permittedFundingCaseId, $permittedABResult->first()['id']);
-    static::assertSame(['a', 'b'], $permittedABResult->first()['permissions']);
+    static::assertSame(['c', 'd'], $permittedABResult->first()['permissions']);
+    static::assertTrue($permittedABResult->first()['PERM_c']);
+    static::assertTrue($permittedABResult->first()['PERM_d']);
 
+    // Contact has an b-a-relationship with an associated contact
     $permittedBAResult = RemoteFundingCase::get()
       ->setRemoteContactId((string) $this->relatedBAContactId)
       ->execute();
     static::assertSame(1, $permittedBAResult->rowCount);
     static::assertSame($this->permittedFundingCaseId, $permittedBAResult->first()['id']);
-    static::assertSame(['a', 'c'], $permittedBAResult->first()['permissions']);
+    static::assertSame(['c', 'd'], $permittedBAResult->first()['permissions']);
+    static::assertTrue($permittedBAResult->first()['PERM_c']);
+    static::assertTrue($permittedBAResult->first()['PERM_d']);
 
+    // Contact has a not permitted relationship with an associated contact
     $notPermittedResult = RemoteFundingCase::get()
       ->setRemoteContactId((string) $this->notPermittedContactId)
       ->execute();
     static::assertSame(0, $notPermittedResult->rowCount);
+
+    // Contact is directly associated, but has no permissions set
+    $permittedAssociatedResult = RemoteFundingCase::get()
+      ->setRemoteContactId((string) $this->associatedContactIdNoPermissions)
+      ->execute();
+    static::assertSame(0, $permittedAssociatedResult->rowCount);
   }
 
   private function addFixtures(): void {
@@ -130,17 +148,9 @@ final class RemoteFundingCaseTest extends TestCase implements HeadlessInterface,
         'recipient_contact_id' => $recipientContactId,
       ])->execute();
 
-    $permittedABRelationshipTypeId = RelationshipType::create()
+    $permittedRelationshipTypeId = RelationshipType::create()
       ->setValues([
         'name_a_b' => 'permitted',
-        'name_b_a' => 'not permitted',
-        'contact_type_a' => 'Individual',
-        'contact_type_b' => 'Individual',
-      ])->execute()->first()['id'];
-
-    $permittedBARelationshipTypeId = RelationshipType::create()
-      ->setValues([
-        'name_a_b' => 'not permitted',
         'name_b_a' => 'permitted',
         'contact_type_a' => 'Individual',
         'contact_type_b' => 'Individual',
@@ -154,6 +164,21 @@ final class RemoteFundingCaseTest extends TestCase implements HeadlessInterface,
         'contact_type_b' => 'Individual',
       ])->execute()->first()['id'];
 
+    $this->associatedContactIdNoPermissions = Contact::create()
+      ->setValues([
+        'contact_type' => 'Individual',
+        'first_name' => 'Associated No Permissions',
+        'last_name' => 'User',
+      ])->execute()->first()['id'];
+
+    $contactRelationId = FundingCaseContactRelation::create()
+      ->setValues([
+        'funding_case_id' => $this->permittedFundingCaseId,
+        'entity_table' => 'civicrm_contact',
+        'entity_id' => $this->associatedContactIdNoPermissions,
+        'permissions' => NULL,
+      ])->execute()->first()['id'];
+
     $this->associatedContactId = Contact::create()
       ->setValues([
         'contact_type' => 'Individual',
@@ -161,22 +186,21 @@ final class RemoteFundingCaseTest extends TestCase implements HeadlessInterface,
         'last_name' => 'User',
       ])->execute()->first()['id'];
 
-    FundingCaseContact::create()
+    FundingCaseContactRelation::create()
       ->setValues([
         'funding_case_id' => $this->permittedFundingCaseId,
-        'contact_id' => $this->associatedContactId,
-        'relationship_type_id' => $permittedABRelationshipTypeId,
-        'relationship_direction' => 'a_b',
-        'permissions' => ['a', 'b'],
+        'entity_table' => 'civicrm_contact',
+        'entity_id' => $this->associatedContactId,
+        'permissions' => ['foo', 'bar'],
       ])->execute();
 
-    FundingCaseContact::create()
+    FundingCaseContactRelation::create()
       ->setValues([
         'funding_case_id' => $this->permittedFundingCaseId,
-        'contact_id' => $this->associatedContactId,
-        'relationship_type_id' => $permittedBARelationshipTypeId,
-        'relationship_direction' => 'b_a',
-        'permissions' => ['a', 'c'],
+        'entity_table' => 'civicrm_relationship_type',
+        'entity_id' => $permittedRelationshipTypeId,
+        'parent_id' => $contactRelationId,
+        'permissions' => ['c', 'd'],
       ])->execute();
 
     $this->relatedABContactId = Contact::create()
@@ -189,9 +213,9 @@ final class RemoteFundingCaseTest extends TestCase implements HeadlessInterface,
 
     Relationship::create()
       ->setValues([
-        'contact_id_a' => $this->associatedContactId,
+        'contact_id_a' => $this->associatedContactIdNoPermissions,
         'contact_id_b' => $this->relatedABContactId,
-        'relationship_type_id' => $permittedABRelationshipTypeId,
+        'relationship_type_id' => $permittedRelationshipTypeId,
       ])->execute();
 
     $this->relatedBAContactId = Contact::create()
@@ -205,8 +229,8 @@ final class RemoteFundingCaseTest extends TestCase implements HeadlessInterface,
     Relationship::create()
       ->setValues([
         'contact_id_a' => $this->relatedBAContactId,
-        'contact_id_b' => $this->associatedContactId,
-        'relationship_type_id' => $permittedBARelationshipTypeId,
+        'contact_id_b' => $this->associatedContactIdNoPermissions,
+        'relationship_type_id' => $permittedRelationshipTypeId,
       ])->execute();
 
     $this->notPermittedContactId = Contact::create()
@@ -220,7 +244,7 @@ final class RemoteFundingCaseTest extends TestCase implements HeadlessInterface,
     Relationship::create()
       ->setValues([
         'contact_id_a' => $this->notPermittedContactId,
-        'contact_id_b' => $this->associatedContactId,
+        'contact_id_b' => $this->associatedContactIdNoPermissions,
         'relationship_type_id' => $notPermittedRelationshipTypeId,
       ])->execute();
   }

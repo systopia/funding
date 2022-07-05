@@ -27,7 +27,7 @@ interface Api4Interface {
   /**
    * @param string $entityName
    * @param string $action
-   * @param array<string, mixed> $params
+   * @param array<string, mixed|ApiParameterInterface> $params
    *
    * @return \Civi\Api4\Generic\AbstractAction
    *
@@ -43,7 +43,7 @@ interface Api4Interface {
   /**
    * @param string $entityName
    * @param string $actionName
-   * @param array<string, mixed> $params
+   * @param array<string, mixed|ApiParameterInterface> $params
    *
    * @return \Civi\Api4\Generic\Result
    *

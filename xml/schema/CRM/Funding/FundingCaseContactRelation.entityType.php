@@ -3,8 +3,8 @@
 // https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_entityTypes
 return [
   [
-    'name' => 'FundingCaseContact',
-    'class' => 'CRM_Funding_DAO_FundingCaseContact',
-    'table' => 'civicrm_funding_case_contact',
+    'name' => 'FundingCaseContactRelation',
+    'class' => 'CRM_Funding_DAO_FundingCaseContactRelation',
+    'table' => 'civicrm_funding_case_contact_relation',
   ],
 ];

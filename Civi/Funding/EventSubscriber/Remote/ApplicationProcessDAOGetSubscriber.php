@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\Remote;
 
+use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Event\Remote\FundingDAOGetEvent;
 use Civi\RemoteTools\Event\DAOGetEvent;
 use Civi\RemoteTools\EventSubscriber\AbstractRemoteDAOGetSubscriber;
@@ -31,9 +32,9 @@ final class ApplicationProcessDAOGetSubscriber extends AbstractRemoteDAOGetSubsc
 
   protected const EVENT_CLASS = FundingDAOGetEvent::class;
 
-  public function onGet(DAOGetEvent $event): void {
+  public function onGet(DAOGetEvent $event, string $eventName, CiviEventDispatcher $eventDispatcher): void {
     /** @var \Civi\Funding\Event\Remote\FundingDAOGetEvent $event */
-    parent::onGet($event);
+    parent::onGet($event, $eventName, $eventDispatcher);
 
     /** @var array<array<string, mixed>> $records */
     $records = iterator_to_array($this->addPermissionsToRecords($event));

@@ -17,15 +17,15 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Api4;
+namespace Civi\Funding\Event\Remote\FundingCase;
 
-/**
- * FundingCaseContact entity.
- *
- * Provided by the Funding Program Manager extension.
- *
- * @package Civi\Api4
- */
-class FundingCaseContact extends Generic\DAOEntity {
+use Civi\Api4\RemoteFundingCase;
+use Civi\Funding\Event\Remote\AbstractFundingPermissionsGetEvent;
+
+final class PermissionsGetEvent extends AbstractFundingPermissionsGetEvent {
+
+  public function __construct(int $entityId, int $contactId) {
+    parent::__construct(RemoteFundingCase::getEntityName(), $entityId, $contactId);
+  }
 
 }

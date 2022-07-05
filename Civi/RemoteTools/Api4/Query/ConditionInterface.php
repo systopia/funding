@@ -17,15 +17,21 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Api4;
+namespace Civi\RemoteTools\Api4\Query;
 
 /**
- * FundingProgramContactType entity.
- *
- * Provided by the Funding Program Manager extension.
- *
- * @package Civi\Api4
+ * @phpstan-type ComparisonT array{string, string, 2?: scalar|array<scalar>}
+ * Actually this should be: array{string, array<int, ComparisonT|CompositeConditionT>}, so that is not possible
+ * @phpstan-type CompositeConditionT array{string, array<int, array>}
  */
-class FundingProgramContactType extends Generic\DAOEntity {
+interface ConditionInterface {
+
+  public function getOperator(): string;
+
+  /**
+   * @return array
+   * @phpstan-return ComparisonT|CompositeConditionT
+   */
+  public function toArray(): array;
 
 }

@@ -17,17 +17,17 @@
 
 use CRM_Funding_ExtensionUtil as E;
 
-class CRM_Funding_BAO_FundingProgramContactType extends CRM_Funding_DAO_FundingProgramContactType {
+class CRM_Funding_BAO_FundingCaseContactRelation extends CRM_Funding_DAO_FundingCaseContactRelation {
 
   /**
-   * Create a new FundingProgramContactType based on array-data
+   * Create a new FundingCaseContactRelation based on array-data
    *
    * @param array $params key-value pairs
-   * @return CRM_Funding_DAO_FundingProgramContactType|NULL
+   * @return CRM_Funding_DAO_FundingCaseContactRelation|NULL
    *
   public static function create($params) {
-    $className = 'CRM_Funding_DAO_FundingProgramContactType';
-    $entityName = 'FundingProgramContactType';
+    $className = 'CRM_Funding_DAO_FundingCaseContactRelation';
+    $entityName = 'FundingCaseContactRelation';
     $hook = empty($params['id']) ? 'create' : 'edit';
 
     CRM_Utils_Hook::pre($hook, $entityName, CRM_Utils_Array::value('id', $params), $params);

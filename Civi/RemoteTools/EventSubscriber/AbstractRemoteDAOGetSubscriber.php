@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\RemoteTools\EventSubscriber;
 
 use Civi\Api4\Generic\DAOGetAction;
+use Civi\Core\CiviEventDispatcher;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Event\DAOGetEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -64,7 +65,7 @@ abstract class AbstractRemoteDAOGetSubscriber implements EventSubscriberInterfac
   /**
    * @throws \API_Exception
    */
-  public function onGet(DAOGetEvent $event): void {
+  public function onGet(DAOGetEvent $event, string $eventName, CiviEventDispatcher $eventDispatcher): void {
     /*
      * Note: "where" could contain excluded fields, i.e. requester could use it
      * to detect values of excluded fields (if he knows the field name). Though

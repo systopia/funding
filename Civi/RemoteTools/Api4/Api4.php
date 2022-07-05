@@ -47,6 +47,8 @@ final class Api4 implements Api4Interface {
       $params['version'] = 4;
     }
 
+    $params = array_map(fn ($value) => $value instanceof ApiParameterInterface ? $value->toParam() : $value, $params);
+
     return Request::create($entityName, $action, $params);
   }
 

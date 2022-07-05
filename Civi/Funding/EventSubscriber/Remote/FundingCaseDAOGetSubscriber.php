@@ -19,10 +19,11 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\Remote;
 
+use Civi\Core\CiviEventDispatcher;
+use Civi\Funding\Event\Remote\FundingCase\PermissionsGetEvent;
 use Civi\Funding\Event\Remote\FundingDAOGetEvent;
 use Civi\RemoteTools\Event\DAOGetEvent;
 use Civi\RemoteTools\EventSubscriber\AbstractRemoteDAOGetSubscriber;
-use Webmozart\Assert\Assert;
 
 final class FundingCaseDAOGetSubscriber extends AbstractRemoteDAOGetSubscriber {
 
@@ -32,54 +33,51 @@ final class FundingCaseDAOGetSubscriber extends AbstractRemoteDAOGetSubscriber {
 
   protected const EVENT_CLASS = FundingDAOGetEvent::class;
 
-  public function onGet(DAOGetEvent $event): void {
+  public function onGet(DAOGetEvent $event, string $eventName, CiviEventDispatcher $eventDispatcher): void {
     /** @var \Civi\Funding\Event\Remote\FundingDAOGetEvent $event */
-    parent::onGet($event);
+    parent::onGet($event, $eventName, $eventDispatcher);
 
-    $event->setRecords($this->handlePermissions($event->getRecords()));
+    /** @var array<array<string, mixed>> $records */
+    $records = iterator_to_array($this->addPermissionsToRecords($event, $eventDispatcher));
+    $event->setRowCount(count($records));
+    $event->setRecords($records);
   }
 
   /**
-   * @param array<array<string, mixed>> $records
+   * @param \Civi\Funding\Event\Remote\FundingDAOGetEvent $event
+   * @param \Civi\Core\CiviEventDispatcher $eventDispatcher
    *
-   * @return array<array<string, mixed>>
+   * @return iterable<array<string, mixed>>
    */
-  private function handlePermissions(array $records): array {
-    foreach ($records as &$record) {
-      Assert::isArray($record['permissions']);
-      $record['permissions'] = $this->mergePermissions(
-        $this->jsonEncodePermissions($record['permissions'])
-      );
-
+  private function addPermissionsToRecords(FundingDAOGetEvent $event, CiviEventDispatcher $eventDispatcher): iterable {
+    /** @var array<string, mixed>&array{id: int} $record */
+    foreach ($event->getRecords() as $record) {
+      $record['permissions'] = $this->getRecordPermissions($event, $record, $eventDispatcher);
+      if (NULL === $record['permissions']) {
+        continue;
+      }
       foreach ($record['permissions'] as $permission) {
         $record['PERM_' . $permission] = TRUE;
       }
+
+      yield $record;
     }
-
-    return $records;
   }
 
   /**
-   * @param string[] $permissions
+   * @param \Civi\Funding\Event\Remote\FundingDAOGetEvent $event
+   * @param array{id: int} $record
+   * @param \Civi\Core\CiviEventDispatcher $eventDispatcher
    *
-   * @return array<string[]>
+   * @return string[]|null
    */
-  private function jsonEncodePermissions(array $permissions): array {
-    /** @var array<string[]> $permissions */
-    $permissions = array_map('json_decode', $permissions);
+  private function getRecordPermissions(FundingDAOGetEvent $event, array $record,
+    CiviEventDispatcher $eventDispatcher
+  ): ?array {
+    $permissionsGetEvent = new PermissionsGetEvent($record['id'], $event->getContactId());
+    $eventDispatcher->dispatch(PermissionsGetEvent::class, $permissionsGetEvent);
 
-    return $permissions;
-  }
-
-  /**
-   * @param array<string[]> $permissions
-   *
-   * @return string[]
-   */
-  private function mergePermissions(array $permissions): array {
-    return array_values(array_unique(
-      array_reduce($permissions, fn(array $p1, array $p2): array => array_merge($p1, $p2), [])
-    ));
+    return $permissionsGetEvent->getPermissions();
   }
 
 }

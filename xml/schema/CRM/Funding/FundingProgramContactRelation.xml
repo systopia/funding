@@ -2,8 +2,8 @@
 
 <table>
   <base>CRM/Funding</base>
-  <class>FundingProgramContactType</class>
-  <name>civicrm_funding_program_contact_type</name>
+  <class>FundingProgramContactRelation</class>
+  <name>civicrm_funding_program_contact_relation</name>
   <comment>Defines who is allowed to access a funding program</comment>
   <log>true</log>
 
@@ -11,7 +11,7 @@
     <name>id</name>
     <type>int unsigned</type>
     <required>true</required>
-    <comment>Unique FundingProgramContactType ID</comment>
+    <comment>Unique FundingProgramContactRelation ID</comment>
     <html>
       <type>Number</type>
     </html>
@@ -24,6 +24,7 @@
   <field>
     <name>funding_program_id</name>
     <type>int unsigned</type>
+    <required>true</required>
     <comment>FK to FundingProgram</comment>
     <html>
       <type>Number</type>
@@ -37,33 +38,50 @@
   </foreignKey>
 
   <field>
-    <name>contact_type_id</name>
+    <name>entity_table</name>
+    <type>varchar</type>
+    <length>64</length>
+    <required>true</required>
+    <comment>Table referenced by ID in `entity_id</comment>
+    <html>
+      <type>Text</type>
+    </html>
+  </field>
+
+  <field>
+    <name>entity_id</name>
     <type>int unsigned</type>
-    <comment>FK to ContactType</comment>
+    <required>true</required>
+    <comment>ID of entity in `entity_table`</comment>
+    <html>
+      <type>Number</type>
+    </html>
+  </field>
+
+  <field>
+    <name>parent_id</name>
+    <type>int unsigned</type>
+    <comment>FK to FundingProgramContactRelation</comment>
     <html>
       <type>Number</type>
     </html>
   </field>
   <foreignKey>
-    <name>contact_type_id</name>
-    <table>civicrm_contact_type</table>
+    <name>parent_id</name>
+    <table>civicrm_funding_program_contact_relation</table>
     <key>id</key>
     <onDelete>RESTRICT</onDelete>
   </foreignKey>
 
   <field>
-    <name>relationship_type_id</name>
-    <type>int unsigned</type>
-    <comment>FK to RelationshipType</comment>
+    <name>permissions</name>
+    <type>varchar</type>
+    <length>512</length>
+    <comment>Permissions as JSON array</comment>
+    <serialize>JSON</serialize>
     <html>
-      <type>Number</type>
+      <type>Text</type>
     </html>
   </field>
-  <foreignKey>
-    <name>relationship_type_id</name>
-    <table>civicrm_relationship_type</table>
-    <key>id</key>
-    <onDelete>RESTRICT</onDelete>
-  </foreignKey>
 
 </table>
