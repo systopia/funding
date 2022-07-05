@@ -52,10 +52,6 @@ final class RemoteFundingEntityManagerTest extends TestCase {
     $this->entityManager = new RemoteFundingEntityManager($this->api4Mock);
   }
 
-  public function testGetInstance(): void {
-    static::assertNotNull(RemoteFundingEntityManager::getInstance());
-  }
-
   public function testGetById(): void {
     $apiResult = new Result();
     $apiResult->rowCount = 1;

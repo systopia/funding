@@ -46,6 +46,8 @@ parameters:
 			message: '#^Access to an undefined property Civi\\Api4\\Generic\\AbstractAction::\$_eventDispatcher.$#'
 			path: */Civi/RemoteTools/Api4/Action/Traits/EventActionTrait.php
 		- '#^Class Civi\\Funding\\Api4\\Action\\[^\s]+Action has an uninitialized property \$[^\s]+\. Give it default value or assign it in the constructor.$#'
+		# For actions that are fetched from container
+		- '#^Method Civi\\Api4\\[^\\]+::[^(]+\(\) should return Civi\\Funding\\Api4\\Action\\[^\s]+\\[^\s]+Action but returns mixed.$#'
 		- '#^Access to an uninitialized property Civi\\Funding\\Event\\[^\s]+Event::\$[^\s]+.$#'
 		-
 			message: '#^PHPDoc tag @var for constant [^\s]+::[^\s]+ with type string is incompatible with value null.$#'
@@ -75,7 +77,4 @@ parameters:
 		-
 			message: "#^Offset '[a-z0-9_]+' does not exist on array\\|null.$#"
 			path: */tests/phpunit/Civi/Api4/*Test.php
-		-
-			message: '#^Call to static method [^\s]+::assertNotNull\(\) with .+ will always evaluate to true.$#'
-			path: */tests/phpunit/**/*Test.php
 	tmpDir: .phpstan

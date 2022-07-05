@@ -5,6 +5,13 @@ declare(strict_types = 1);
 require_once 'funding.civix.php';
 // phpcs:enable
 
+use Civi\Core\CiviEventDispatcher;
+use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetFormAction;
+use Civi\Funding\Api4\Action\Remote\ApplicationProcess\SubmitFormAction;
+use Civi\Funding\Api4\Action\Remote\ApplicationProcess\ValidateFormAction;
+use Civi\Funding\Api4\Action\Remote\FundingCase\GetNewApplicationFormAction;
+use Civi\Funding\Api4\Action\Remote\FundingCase\SubmitNewApplicationFormAction;
+use Civi\Funding\Api4\Action\Remote\FundingCase\ValidateNewApplicationFormAction;
 use Civi\Funding\Contact\FundingRemoteContactIdResolver;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessDAOGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessDAOGetSubscriber;
@@ -17,6 +24,8 @@ use Civi\Funding\EventSubscriber\Remote\FundingProgramDAOGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingProgramDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingProgramPermissionsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingRequestInitSubscriber;
+use Civi\Funding\Remote\RemoteFundingEntityManager;
+use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
 use Civi\RemoteTools\Api4\Api4;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\EventSubscriber\ApiAuthorizeInitRequestSubscriber;
@@ -35,6 +44,7 @@ function funding_civicrm_config(&$config): void {
 }
 
 function funding_civicrm_container(ContainerBuilder $container): void {
+  $container->setAlias(CiviEventDispatcher::class, 'dispatcher.boot');
   $container->register(Api4Interface::class, Api4::class);
   $container->register(ApiAuthorizeInitRequestSubscriber::class)
     ->addTag('kernel.event_subscriber');
@@ -44,7 +54,21 @@ function funding_civicrm_container(ContainerBuilder $container): void {
     ->addTag('kernel.event_subscriber')
     ->setLazy(TRUE);
 
+  $container->autowire(RemoteFundingEntityManagerInterface::class, RemoteFundingEntityManager::class);
   $container->autowire(FundingRemoteContactIdResolver::class);
+
+  $container->autowire(GetNewApplicationFormAction::class)
+    ->setPublic(TRUE);
+  $container->autowire(SubmitNewApplicationFormAction::class)
+    ->setPublic(TRUE);
+  $container->autowire(ValidateNewApplicationFormAction::class)
+    ->setPublic(TRUE);
+  $container->autowire(GetFormAction::class)
+    ->setPublic(TRUE);
+  $container->autowire(SubmitFormAction::class)
+    ->setPublic(TRUE);
+  $container->autowire(ValidateFormAction::class)
+    ->setPublic(TRUE);
 
   $container->autowire(FundingRequestInitSubscriber::class)
     ->addTag('kernel.event_subscriber')
