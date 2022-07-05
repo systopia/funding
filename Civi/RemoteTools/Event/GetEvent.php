@@ -22,7 +22,7 @@ namespace Civi\RemoteTools\Event;
 use Civi\Api4\Utils\CoreUtil;
 
 /**
- * @phpstan-type Comparison array{string, string, 2?:scalar}
+ * @phpstan-type Comparison array{string, string, 2?: scalar|array<scalar>}
  * Actually this should be: array{string, array<Comparison|CompositeCondition>}, so that is not possible
  * @phpstan-type CompositeCondition array{string, array<array>}
  * @phpstan-type Condition Comparison|CompositeCondition
@@ -93,7 +93,7 @@ class GetEvent extends AbstractRequestEvent {
    *
    * @param string $operator
    * @param array ...$conditions
-   * @phpstan-param Condition[]|Condition ...$conditions
+   * @phpstan-param Condition ...$conditions
    *
    * @return $this
    */

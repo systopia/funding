@@ -25,11 +25,11 @@ use Civi\Api4\Utils\CoreUtil;
  * @property array<array{string, string|mixed[], 2?: mixed, 3?: bool}> $where
  * @method array<array{string, string|mixed[], 2?: mixed, 3?: bool}> getWhere()
  *
- * @phpstan-type Comparison array{string, string, 2?:scalar}
+ * @phpstan-type Comparison array{string, string, 2?: scalar|array<scalar>}
  * Actually this should be: array{string, array<Comparison|CompositeCondition>}, so that is not possible
  * @phpstan-type CompositeCondition array{string, array<array>}
  * @phpstan-type Condition Comparison|CompositeCondition
- * Actually this should be array{string, string, ...Condition}, so this is not possible
+ * Actually this should be array{string, string, string|Condition, ...Condition}, so this is not possible
  * @phpstan-type Join array<string|Condition>
  */
 class DAOGetEvent extends GetEvent {
