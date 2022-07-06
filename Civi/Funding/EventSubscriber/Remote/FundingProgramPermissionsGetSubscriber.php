@@ -55,6 +55,7 @@ final class FundingProgramPermissionsGetSubscriber implements EventSubscriberInt
     ])->indexBy('id')->getArrayCopy();
 
     foreach ($contactRelations as $contactRelation) {
+      // A relation that is used as parent might not have permissions
       if (NULL === $contactRelation['permissions']) {
         continue;
       }
