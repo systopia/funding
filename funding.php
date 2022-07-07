@@ -58,17 +58,23 @@ function funding_civicrm_container(ContainerBuilder $container): void {
   $container->autowire(FundingRemoteContactIdResolver::class);
 
   $container->autowire(GetNewApplicationFormAction::class)
-    ->setPublic(TRUE);
+    ->setPublic(TRUE)
+    ->setShared(FALSE);
   $container->autowire(SubmitNewApplicationFormAction::class)
-    ->setPublic(TRUE);
+    ->setPublic(TRUE)
+    ->setShared(FALSE);
   $container->autowire(ValidateNewApplicationFormAction::class)
-    ->setPublic(TRUE);
+    ->setPublic(TRUE)
+    ->setShared(FALSE);
   $container->autowire(GetFormAction::class)
-    ->setPublic(TRUE);
+    ->setPublic(TRUE)
+    ->setShared(FALSE);
   $container->autowire(SubmitFormAction::class)
-    ->setPublic(TRUE);
+    ->setPublic(TRUE)
+    ->setShared(FALSE);
   $container->autowire(ValidateFormAction::class)
-    ->setPublic(TRUE);
+    ->setPublic(TRUE)
+    ->setShared(FALSE);
 
   $container->autowire(FundingRequestInitSubscriber::class)
     ->addTag('kernel.event_subscriber')
