@@ -17,16 +17,15 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\EventSubscriber\Remote;
+namespace Civi\Funding\EventSubscriber;
 
+use Civi\Api4\ContactType;
 use Civi\Api4\FundingProgramContactRelation;
+use Civi\Api4\Relationship;
 use Civi\Funding\Event\Remote\FundingProgram\PermissionsGetEvent;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
-use Civi\RemoteTools\Api4\Query\Join;
-use Civi\RemoteTools\Api4\Query\JoinParameter;
-use Civi\RemoteTools\Api4\Query\WhereParameter;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Webmozart\Assert\Assert;
 
@@ -49,10 +48,11 @@ final class FundingProgramPermissionsGetSubscriber implements EventSubscriberInt
    * @throws \API_Exception
    */
   public function onPermissionsGet(PermissionsGetEvent $event): void {
+    $action = FundingProgramContactRelation::get()
+      ->addWhere('funding_program_id', '=', $event->getEntityId());
+
     /** @var array<int, array{id: int, funding_program_id: int, entity_table: string, entity_id: int, parent_id: int|null, permissions: array<string>|null}> $contactRelations */
-    $contactRelations = $this->api4->execute(FundingProgramContactRelation::getEntityName(), 'get', [
-      'where' => WhereParameter::new(Comparison::new('funding_program_id', '=', $event->getEntityId())),
-    ])->indexBy('id')->getArrayCopy();
+    $contactRelations = $this->api4->executeAction($action)->indexBy('id')->getArrayCopy();
 
     foreach ($contactRelations as $contactRelation) {
       // A relation that is used as parent might not have permissions
@@ -82,60 +82,56 @@ final class FundingProgramPermissionsGetSubscriber implements EventSubscriberInt
    * @throws \API_Exception
    */
   private function hasContactType(int $contactId, int $contactTypeId): bool {
-    return $this->api4->execute('ContactType', 'get', [
-      'select' => ['id'],
-      'where' => WhereParameter::new(Comparison::new('id', '=', $contactTypeId)),
-      'join' => JoinParameter::new(
-        Join::new('Contact', 'c', 'INNER',
-          CompositeCondition::new('AND',
-            Comparison::new('c.id', '=', $contactId),
-            CompositeCondition::new('OR',
-              Comparison::new('c.contact_type', '=', 'name'),
-              Comparison::new('c.contact_sub_type', '=', 'name'),
-            )
-          )
-        )
-      ),
-    ])->rowCount === 1;
+    $action = ContactType::get()
+      ->addSelect('id')
+      ->addWhere('id', '=', $contactTypeId)
+      ->addJoin('Contact AS c', 'INNER', NULL,
+        CompositeCondition::new('AND',
+          Comparison::new('c.id', '=', $contactId),
+          CompositeCondition::new('OR',
+            Comparison::new('c.contact_type', '=', 'name'),
+            Comparison::new('c.contact_sub_type', '=', 'name'),
+          ),
+        )->toArray(),
+      );
+
+    return $this->api4->executeAction($action)->rowCount === 1;
   }
 
   /**
    * @throws \API_Exception
    */
   private function hasRelation(int $contactId, int $relationshipTypeId, int $contactTypeId): bool {
-    return $this->api4->execute('Relationship', 'get', [
-      'select' => ['id'],
-      'where' => WhereParameter::new(
-        Comparison::new('relationship_type_id', '=', $relationshipTypeId),
-        CompositeCondition::new('OR',
-          Comparison::new('contact_id_a', '=', $contactId),
-          Comparison::new('contact_id_b', '=', $contactId),
-        ),
-      ),
-      'join' => JoinParameter::new(
-        Join::new('ContactType', 'ct', 'INNER',
-          Comparison::new('ct.id', '=', $contactTypeId)
-        ),
-        Join::new('Contact', 'c', 'INNER',
-          CompositeCondition::new('AND',
-            CompositeCondition::new('OR',
-              Comparison::new('c.contact_type', '=', 'ct.name'),
-              Comparison::new('c.contact_sub_type', '=', 'ct.name'),
+    $action = Relationship::get()
+      ->addSelect('id')
+      ->addWhere('relationship_type_id', '=', $relationshipTypeId)
+      ->addClause('OR',
+        ['contact_id_a', '=', $contactId],
+        ['contact_id_b', '=', $contactId],
+      )
+      ->addJoin('ContactType AS ct', 'INNER', NULL,
+        ['ct.id', '=', $contactTypeId]
+      )
+      ->addJoin('Contact AS c', 'INNER', NULL,
+        CompositeCondition::new('AND',
+          CompositeCondition::new('OR',
+            Comparison::new('c.contact_type', '=', 'ct.name'),
+            Comparison::new('c.contact_sub_type', '=', 'ct.name'),
+          ),
+          CompositeCondition::new('OR',
+            CompositeCondition::new('AND',
+              Comparison::new('c.id', '=', 'contact_id_a'),
+              Comparison::new('contact_id_a', '!=', $contactId),
             ),
-            CompositeCondition::new('OR',
-              CompositeCondition::new('AND',
-                Comparison::new('c.id', '=', 'contact_id_a'),
-                Comparison::new('contact_id_a', '!=', $contactId),
-              ),
-              CompositeCondition::new('AND',
-                Comparison::new('c.id', '=', 'contact_id_b'),
-                Comparison::new('contact_id_b', '!=', $contactId),
-              ),
+            CompositeCondition::new('AND',
+              Comparison::new('c.id', '=', 'contact_id_b'),
+              Comparison::new('contact_id_b', '!=', $contactId),
             ),
           ),
-        ),
-      ),
-    ])->rowCount >= 1;
+        )->toArray()
+      );
+
+    return $this->api4->executeAction($action)->rowCount >= 1;
   }
 
 }

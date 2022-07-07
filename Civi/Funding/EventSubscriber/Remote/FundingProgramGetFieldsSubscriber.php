@@ -21,13 +21,13 @@ namespace Civi\Funding\EventSubscriber\Remote;
 
 use Civi\Funding\Event\Remote\FundingGetFieldsEvent;
 use Civi\Funding\EventSubscriber\Remote\Traits\FundingProgramSubscriberTrait;
-use Civi\RemoteTools\EventSubscriber\AbstractRemoteDAOGetFieldsSubscriber;
+use Civi\RemoteTools\EventSubscriber\AbstractRemoteGetFieldsSubscriber;
 
-class FundingProgramDAOGetFieldsSubscriber extends AbstractRemoteDAOGetFieldsSubscriber {
+class FundingProgramGetFieldsSubscriber extends AbstractRemoteGetFieldsSubscriber {
 
   use FundingProgramSubscriberTrait;
 
-  protected const DAO_ENTITY_NAME = 'FundingProgram';
+  protected const BASIC_ENTITY_NAME = 'FundingProgram';
 
   protected const ENTITY_NAME = 'RemoteFundingProgram';
 

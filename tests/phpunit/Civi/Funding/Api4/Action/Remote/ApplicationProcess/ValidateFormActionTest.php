@@ -82,9 +82,9 @@ final class ValidateFormActionTest extends TestCase {
     $this->fundingCaseType = ['id' => 44];
 
     $remoteFundingEntityManagerMock->method('getById')->willReturnMap([
-      ['FundingApplicationProcess', 22, '00', $this->applicationProcess],
-      ['FundingCase', 33, '00', $this->fundingCase],
-      ['FundingCaseType', 44, '00', $this->fundingCaseType],
+      ['FundingApplicationProcess', 22, '00', 11, $this->applicationProcess],
+      ['FundingCase', 33, '00', 11, $this->fundingCase],
+      ['FundingCaseType', 44, '00', 11, $this->fundingCaseType],
     ]);
   }
 

@@ -26,7 +26,12 @@ namespace Civi\RemoteTools\Api4\Traits;
  */
 trait EntityNameTrait {
 
-  public static function getEntityName(): string {
+  /**
+   * Get entity name from called class.
+   *
+   * The "_" prefix is required so the method is not recognized as action method.
+   */
+  public static function _getEntityName(): string {
     return parent::getEntityName();
   }
 

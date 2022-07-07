@@ -17,17 +17,26 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\EventSubscriber\Remote;
+namespace Civi\Funding\Mock\Api4\Action;
 
-use Civi\Funding\Event\Remote\FundingGetFieldsEvent;
-use Civi\RemoteTools\EventSubscriber\AbstractRemoteDAOGetFieldsSubscriber;
+use Civi\Funding\Api4\Action\Remote\RemoteFundingActionInterface;
+use Civi\Funding\Api4\Action\Remote\Traits\RemoteFundingActionContactIdRequiredTrait;
+use Civi\RemoteTools\Api4\Action\Traits\EventActionTrait;
 
-final class FundingCaseDAOGetFieldsSubscriber extends AbstractRemoteDAOGetFieldsSubscriber {
+class RemoteActionMock extends StandardActionMock implements RemoteFundingActionInterface {
 
-  protected const DAO_ENTITY_NAME = 'FundingCase';
+  use EventActionTrait;
 
-  protected const ENTITY_NAME = 'RemoteFundingCase';
+  use RemoteFundingActionContactIdRequiredTrait;
 
-  protected const EVENT_CLASS = FundingGetFieldsEvent::class;
+  public function __construct(string $entityName = 'RemoteTestEntity', string $actionName = 'get') {
+    parent::__construct($entityName, $actionName);
+  }
+
+  public function setContactId(int $contactId): self {
+    $this->_extraParams['contactId'] = $contactId;
+
+    return $this;
+  }
 
 }

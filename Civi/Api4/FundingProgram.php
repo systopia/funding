@@ -19,6 +19,10 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
+use Civi\Funding\Api4\Action\FundingProgram\GetAction;
+use Civi\Funding\Api4\Action\FundingProgram\GetFieldsAction;
+use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
+
 /**
  * FundingProgram entity.
  *
@@ -27,5 +31,25 @@ namespace Civi\Api4;
  * @package Civi\Api4
  */
 class FundingProgram extends Generic\DAOEntity {
+
+  use EntityNameTrait;
+
+  /**
+   * @inheritDoc
+   *
+   * @return \Civi\Funding\Api4\Action\FundingProgram\GetAction
+   */
+  public static function get($checkPermissions = TRUE) {
+    return (new GetAction(\Civi::dispatcher()))->setCheckPermissions($checkPermissions);
+  }
+
+  /**
+   * @inheritDoc
+   *
+   * @return \Civi\Funding\Api4\Action\FundingProgram\GetFieldsAction
+   */
+  public static function getFields($checkPermissions = TRUE) {
+    return (new GetFieldsAction())->setCheckPermissions($checkPermissions);
+  }
 
 }

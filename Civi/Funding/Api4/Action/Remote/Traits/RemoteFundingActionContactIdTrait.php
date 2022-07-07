@@ -17,7 +17,9 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Api4\Action\Traits;
+namespace Civi\Funding\Api4\Action\Remote\Traits;
+
+use Webmozart\Assert\Assert;
 
 trait RemoteFundingActionContactIdTrait {
 
@@ -31,6 +33,11 @@ trait RemoteFundingActionContactIdTrait {
     $this->remoteContactId = $remoteContactId;
 
     return $this;
+  }
+
+  protected function getContactId(): ?int {
+    Assert::nullOrInteger($this->_extraParams['contactId'] ?? NULL);
+    return $this->_extraParams['contactId'] ?? NULL;
   }
 
 }

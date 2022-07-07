@@ -25,7 +25,7 @@ use Civi\Funding\Event\Remote\AbstractFundingPermissionsGetEvent;
 final class PermissionsGetEvent extends AbstractFundingPermissionsGetEvent {
 
   public function __construct(int $entityId, int $contactId) {
-    parent::__construct(RemoteFundingCase::getEntityName(), $entityId, $contactId);
+    parent::__construct(RemoteFundingCase::_getEntityName(), $entityId, $contactId);
   }
 
 }

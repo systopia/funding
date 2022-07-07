@@ -52,9 +52,6 @@ parameters:
 		-
 			message: '#^PHPDoc tag @var for constant [^\s]+::[^\s]+ with type string is incompatible with value null.$#'
 			path: */Civi/RemoteTools/EventSubscriber/Abstract*.php
-		- # Required because "null" is missing in type hint of CiviCRM
-			message: '#^Strict comparison using !== between null and int will always evaluate to true.$#'
-			path: */Civi/RemoteTools/Api4/Action/RemoteDAOGetFieldsAction.php
 		- # false positive
 			message: '#^Variable \$granted might not be defined.$#'
 			path: */Civi/RemoteTools/Authorization/PermissionChecker.php
@@ -78,4 +75,8 @@ parameters:
 		-
 			message: "#^Offset '[a-zA-Z0-9_]+' does not exist on array\\|null.$#"
 			path: */tests/phpunit/Civi/Api4/*Test.php
+		-
+			message: '#^Class [^\s]+ has an uninitialized property#'
+			path : */tests/phpunit/Civi/Funding/Mock/**/*.php
+		- '#^Method Civi\\Funding\\Fixtures\\[^\s]+Fixture::[^\s]+\(\) should return array{id: int} but returns array\|null.$#'
 	tmpDir: .phpstan

@@ -17,17 +17,29 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\EventSubscriber\Remote;
+namespace Civi\Funding\Api4\Action\Traits;
 
-use Civi\Funding\Event\Remote\FundingGetFieldsEvent;
-use Civi\RemoteTools\EventSubscriber\AbstractRemoteDAOGetFieldsSubscriber;
+use Webmozart\Assert\Assert;
 
-final class ApplicationProcessDAOGetFieldsSubscriber extends AbstractRemoteDAOGetFieldsSubscriber {
+trait FundingActionContactIdRequiredTrait {
 
-  protected const DAO_ENTITY_NAME = 'FundingApplicationProcess';
+  /**
+   * Must be initialized because it is directly accessed in AbstractAction.
+   *
+   * @var int|null
+   * @required
+   */
+  protected ?int $contactId = NULL;
 
-  protected const ENTITY_NAME = 'RemoteFundingApplicationProcess';
+  public function setContactId(int $contactId): self {
+    $this->contactId = $contactId;
 
-  protected const EVENT_CLASS = FundingGetFieldsEvent::class;
+    return $this;
+  }
+
+  public function getContactId(): int {
+    Assert::notNull($this->contactId);
+    return $this->contactId;
+  }
 
 }

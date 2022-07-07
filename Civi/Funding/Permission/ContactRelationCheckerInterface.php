@@ -17,33 +17,23 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Api4\Action\Traits;
+namespace Civi\Funding\Permission;
 
-use Civi\Funding\Api4\Action\Remote\RemoteFundingActionInterface;
-
-trait RemoteFundingActionContactIdRequiredTrait {
-
-  /**
-   * Must be initialized because it is directly accessed in AbstractAction.
-   *
-   * @var string|null
-   * @required
-   */
-  protected ?string $remoteContactId = NULL;
-
-  public function getRemoteContactId(): ?string {
-    return $this->remoteContactId;
-  }
+/**
+ * @phpstan-type ContactRelationT array{id: int, entity_table: string, entity_id: int, parent_id: int|null}
+ */
+interface ContactRelationCheckerInterface {
 
   /**
-   * @param string $remoteContactId
-   *
-   * @return $this
+   * @phpstan-param ContactRelationT $contactRelation
+   * @phpstan-param ContactRelationT|null $parentContactRelation
    */
-  public function setRemoteContactId(string $remoteContactId): RemoteFundingActionInterface {
-    $this->remoteContactId = $remoteContactId;
+  public function hasRelation(int $contactId, array $contactRelation, ?array $parentContactRelation): bool;
 
-    return $this;
-  }
+  /**
+   * @phpstan-param ContactRelationT $contactRelation
+   * @phpstan-param ContactRelationT|null $parentContactRelation
+   */
+  public function supportsRelation(array $contactRelation, ?array $parentContactRelation): bool;
 
 }

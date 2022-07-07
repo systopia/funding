@@ -19,9 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\Remote;
 
-use Civi\Core\CiviEventDispatcher;
+use Civi\Api4\Generic\AbstractAction;
 use Civi\Funding\Event\Remote\FundingDAOGetEvent;
-use Civi\Funding\Event\Remote\FundingProgram\PermissionsGetEvent;
 use Civi\Funding\EventSubscriber\Remote\Traits\FundingProgramSubscriberTrait;
 use Civi\RemoteTools\Event\DAOGetEvent;
 use Civi\RemoteTools\EventSubscriber\AbstractRemoteDAOGetSubscriber;
@@ -36,51 +35,12 @@ class FundingProgramDAOGetSubscriber extends AbstractRemoteDAOGetSubscriber {
 
   protected const EVENT_CLASS = FundingDAOGetEvent::class;
 
-  public function onGet(DAOGetEvent $event, string $eventName, CiviEventDispatcher $eventDispatcher): void {
+  protected function createAction(DAOGetEvent $event): AbstractAction {
     /** @var \Civi\Funding\Event\Remote\FundingDAOGetEvent $event */
-    parent::onGet($event, $eventName, $eventDispatcher);
+    /** @var \Civi\Funding\Api4\Action\FundingProgram\GetAction $action */
+    $action = parent::createAction($event);
 
-    /** @var array<array<string, mixed>> $records */
-    $records = iterator_to_array($this->addPermissionsToRecords($event, $eventDispatcher));
-    $event->setRowCount(count($records));
-    $event->setRecords($records);
-  }
-
-  /**
-   * @param \Civi\Funding\Event\Remote\FundingDAOGetEvent $event
-   * @param \Civi\Core\CiviEventDispatcher $eventDispatcher
-   *
-   * @return iterable<array<string, mixed>>
-   */
-  private function addPermissionsToRecords(FundingDAOGetEvent $event, CiviEventDispatcher $eventDispatcher): iterable {
-    /** @var array<string, mixed>&array{id: int} $record */
-    foreach ($event->getRecords() as $record) {
-      $record['permissions'] = $this->getRecordPermissions($event, $record, $eventDispatcher);
-      if (NULL === $record['permissions']) {
-        continue;
-      }
-      foreach ($record['permissions'] as $permission) {
-        $record['PERM_' . $permission] = TRUE;
-      }
-
-      yield $record;
-    }
-  }
-
-  /**
-   * @param \Civi\Funding\Event\Remote\FundingDAOGetEvent $event
-   * @param array{id: int} $record
-   * @param \Civi\Core\CiviEventDispatcher $eventDispatcher
-   *
-   * @return string[]|null
-   */
-  private function getRecordPermissions(FundingDAOGetEvent $event, array $record,
-    CiviEventDispatcher $eventDispatcher
-  ): ?array {
-    $permissionsGetEvent = new PermissionsGetEvent($record['id'], $event->getContactId());
-    $eventDispatcher->dispatch(PermissionsGetEvent::class, $permissionsGetEvent);
-
-    return $permissionsGetEvent->getPermissions();
+    return $action->setContactId($event->getContactId());
   }
 
 }
