@@ -20,22 +20,14 @@ declare(strict_types = 1);
 namespace Civi\Funding\Remote;
 
 use Civi\API\Exception\NotImplementedException;
-use Civi\RemoteTools\Api4\Api4;
 use Civi\RemoteTools\Api4\Api4Interface;
 
 final class RemoteFundingEntityManager implements RemoteFundingEntityManagerInterface {
-
-  private static RemoteFundingEntityManager $instance;
 
   private Api4Interface $api4;
 
   public function __construct(Api4Interface $api4) {
     $this->api4 = $api4;
-    self::$instance = $this;
-  }
-
-  public static function getInstance(): self {
-    return self::$instance ?? new self(Api4::getInstance());
   }
 
   /**

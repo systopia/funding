@@ -25,7 +25,6 @@ use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingAction;
 use Civi\Funding\Api4\Action\Traits\RemoteFundingActionContactIdRequiredTrait;
 use Civi\Funding\Event\Remote\ApplicationProcess\GetFormEvent;
 use Civi\Funding\Event\Remote\FundingEvents;
-use Civi\Funding\Remote\RemoteFundingEntityManager;
 use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
 use Webmozart\Assert\Assert;
 
@@ -45,12 +44,12 @@ final class GetFormAction extends AbstractRemoteFundingAction {
   private RemoteFundingEntityManagerInterface $_remoteFundingEntityManager;
 
   public function __construct(
-    RemoteFundingEntityManagerInterface $remoteFundingEntityManager = NULL,
-    CiviEventDispatcher $eventDispatcher = NULL
+    RemoteFundingEntityManagerInterface $remoteFundingEntityManager,
+    CiviEventDispatcher $eventDispatcher
   ) {
     parent::__construct('RemoteFundingApplicationProcess', 'getForm');
-    $this->_remoteFundingEntityManager = $remoteFundingEntityManager ?? RemoteFundingEntityManager::getInstance();
-    $this->_eventDispatcher = $eventDispatcher ?? \Civi::dispatcher();
+    $this->_remoteFundingEntityManager = $remoteFundingEntityManager;
+    $this->_eventDispatcher = $eventDispatcher;
     $this->_authorizeRequestEventName = FundingEvents::REQUEST_AUTHORIZE_EVENT_NAME;
     $this->_initRequestEventName = FundingEvents::REQUEST_INIT_EVENT_NAME;
   }
