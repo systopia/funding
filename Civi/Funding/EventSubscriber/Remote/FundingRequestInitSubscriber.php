@@ -26,7 +26,7 @@ use Civi\RemoteTools\Event\InitApiRequestEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Webmozart\Assert\Assert;
 
-final class FundingRequestInitSubscriber implements EventSubscriberInterface {
+class FundingRequestInitSubscriber implements EventSubscriberInterface {
 
   private FundingRemoteContactIdResolver $remoteContactIdResolver;
 

@@ -32,6 +32,7 @@ use Civi\RemoteTools\EventSubscriber\ApiAuthorizeInitRequestSubscriber;
 use Civi\RemoteTools\EventSubscriber\ApiAuthorizeSubscriber;
 use Civi\RemoteTools\EventSubscriber\CheckAccessSubscriber;
 use CRM_Funding_ExtensionUtil as E;
+use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -44,6 +45,11 @@ function funding_civicrm_config(&$config): void {
 }
 
 function funding_civicrm_container(ContainerBuilder $container): void {
+  // Allow lazy service instantiation (requires symfony/proxy-manager-bridge)
+  if (class_exists(\ProxyManager\Configuration::class) && class_exists(RuntimeInstantiator::class)) {
+    $container->setProxyInstantiator(new RuntimeInstantiator());
+  }
+
   $container->setAlias(CiviEventDispatcher::class, 'dispatcher.boot');
   $container->register(Api4Interface::class, Api4::class);
   $container->register(ApiAuthorizeInitRequestSubscriber::class)
@@ -51,8 +57,7 @@ function funding_civicrm_container(ContainerBuilder $container): void {
   $container->register(ApiAuthorizeSubscriber::class)
     ->addTag('kernel.event_subscriber');
   $container->autowire(CheckAccessSubscriber::class)
-    ->addTag('kernel.event_subscriber')
-    ->setLazy(TRUE);
+    ->addTag('kernel.event_subscriber');
 
   $container->autowire(RemoteFundingEntityManagerInterface::class, RemoteFundingEntityManager::class);
   $container->autowire(FundingRemoteContactIdResolver::class);
@@ -80,32 +85,23 @@ function funding_civicrm_container(ContainerBuilder $container): void {
     ->addTag('kernel.event_subscriber')
     ->setLazy(TRUE);
   $container->autowire(ApplicationProcessDAOGetFieldsSubscriber::class)
-    ->addTag('kernel.event_subscriber')
-    ->setLazy(TRUE);
+    ->addTag('kernel.event_subscriber');
   $container->autowire(ApplicationProcessDAOGetSubscriber::class)
-    ->addTag('kernel.event_subscriber')
-    ->setLazy(TRUE);
+    ->addTag('kernel.event_subscriber');
   $container->autowire(FundingCaseDAOGetFieldsSubscriber::class)
-    ->addTag('kernel.event_subscriber')
-    ->setLazy(TRUE);
+    ->addTag('kernel.event_subscriber');
   $container->autowire(FundingCaseDAOGetSubscriber::class)
-    ->addTag('kernel.event_subscriber')
-    ->setLazy(TRUE);
+    ->addTag('kernel.event_subscriber');
   $container->autowire(FundingCasePermissionsSubscriber::class)
-    ->addTag('kernel.event_subscriber')
-    ->setLazy(TRUE);
+    ->addTag('kernel.event_subscriber');
   $container->autowire(FundingCaseTypeDAOGetFieldsSubscriber::class)
-    ->addTag('kernel.event_subscriber')
-    ->setLazy(TRUE);
+    ->addTag('kernel.event_subscriber');
   $container->autowire(FundingCaseTypeDAOGetSubscriber::class)
-    ->addTag('kernel.event_subscriber')
-    ->setLazy(TRUE);
+    ->addTag('kernel.event_subscriber');
   $container->autowire(FundingProgramDAOGetFieldsSubscriber::class)
-    ->addTag('kernel.event_subscriber')
-    ->setLazy(TRUE);
+    ->addTag('kernel.event_subscriber');
   $container->autowire(FundingProgramDAOGetSubscriber::class)
-    ->addTag('kernel.event_subscriber')
-    ->setLazy(TRUE);
+    ->addTag('kernel.event_subscriber');
   $container->autowire(FundingProgramPermissionsSubscriber::class)
     ->addTag('kernel.event_subscriber');
 }
