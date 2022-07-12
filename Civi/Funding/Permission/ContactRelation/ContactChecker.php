@@ -21,6 +21,9 @@ namespace Civi\Funding\Permission\ContactRelation;
 
 use Civi\Funding\Permission\ContactRelationCheckerInterface;
 
+/**
+ * Checks if a contact is the same as a given one.
+ */
 final class ContactChecker implements ContactRelationCheckerInterface {
 
   /**

@@ -25,6 +25,9 @@ use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
 
+/**
+ * Checks if the type of a contact is equal to a given type.
+ */
 final class ContactTypeChecker implements ContactRelationCheckerInterface {
 
   private Api4Interface $api4;

@@ -26,6 +26,9 @@ use Civi\RemoteTools\Api4\Query\Comparison;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
 use Webmozart\Assert\Assert;
 
+/**
+ * Checks if a contact has a relationship of a given type to a given contact.
+ */
 final class ContactRelationshipChecker implements ContactRelationCheckerInterface {
 
   private Api4Interface $api4;
