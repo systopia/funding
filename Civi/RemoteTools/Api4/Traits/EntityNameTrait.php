@@ -27,7 +27,8 @@ namespace Civi\RemoteTools\Api4\Traits;
 trait EntityNameTrait {
 
   /**
-   * Get entity name from called class.
+   * Get entity name from called class. Use it to avoid re-typing and
+   * hard-coding the entity name.
    *
    * The "_" prefix is required so the method is not recognized as action method.
    */
