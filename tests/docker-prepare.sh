@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eu -o pipefail
 
-FUNDING_EXT_DIR=$(dirname "$(dirname "$0")")
+FUNDING_EXT_DIR=$(dirname "$(dirname "$(realpath "$0")")")
 
 i=0
 while ! mysql -h "$CIVICRM_DB_HOST" -P "$CIVICRM_DB_PORT" -u "$CIVICRM_DB_USER" --password="$CIVICRM_DB_PASS" -e 'SELECT 1;' >/dev/null 2>&1; do
