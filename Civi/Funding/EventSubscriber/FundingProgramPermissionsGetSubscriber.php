@@ -19,22 +19,21 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber;
 
-use Civi\Api4\ContactType;
 use Civi\Api4\FundingProgramContactRelation;
-use Civi\Api4\Relationship;
 use Civi\Funding\Event\Remote\FundingProgram\PermissionsGetEvent;
+use Civi\Funding\Permission\ContactRelationCheckerInterface;
 use Civi\RemoteTools\Api4\Api4Interface;
-use Civi\RemoteTools\Api4\Query\Comparison;
-use Civi\RemoteTools\Api4\Query\CompositeCondition;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Webmozart\Assert\Assert;
 
 final class FundingProgramPermissionsGetSubscriber implements EventSubscriberInterface {
 
   private Api4Interface $api4;
 
-  public function __construct(Api4Interface $api4) {
+  private ContactRelationCheckerInterface $contactRelationChecker;
+
+  public function __construct(Api4Interface $api4, ContactRelationCheckerInterface $contactRelationChecker) {
     $this->api4 = $api4;
+    $this->contactRelationChecker = $contactRelationChecker;
   }
 
   /**
@@ -60,78 +59,19 @@ final class FundingProgramPermissionsGetSubscriber implements EventSubscriberInt
         continue;
       }
 
-      if ('civicrm_contact_type' === $contactRelation['entity_table']) {
-        if ($this->hasContactType($event->getContactId(), $contactRelation['entity_id'])) {
-          $event->addPermissions($contactRelation['permissions']);
-        }
-      }
-      elseif ('civicrm_relationship_type' === $contactRelation['entity_table']) {
-        Assert::notNull($contactRelation['parent_id']);
+      if (NULL !== $contactRelation['parent_id']) {
         $parentContactRelation = $contactRelations[$contactRelation['parent_id']];
-        if ('civicrm_contact_type' === $parentContactRelation['entity_table']
-          && $this->hasRelation($event->getContactId(), $contactRelation['entity_id'],
-            $parentContactRelation['entity_id'])
-        ) {
-          $event->addPermissions($contactRelation['permissions']);
-        }
+      }
+      else {
+        $parentContactRelation = NULL;
+      }
+
+      if ($this->contactRelationChecker->hasRelation($event->getContactId(),
+        $contactRelation, $parentContactRelation)
+      ) {
+        $event->addPermissions($contactRelation['permissions']);
       }
     }
-  }
-
-  /**
-   * @throws \API_Exception
-   */
-  private function hasContactType(int $contactId, int $contactTypeId): bool {
-    $action = ContactType::get()
-      ->addSelect('id')
-      ->addWhere('id', '=', $contactTypeId)
-      ->addJoin('Contact AS c', 'INNER', NULL,
-        CompositeCondition::new('AND',
-          Comparison::new('c.id', '=', $contactId),
-          CompositeCondition::new('OR',
-            Comparison::new('c.contact_type', '=', 'name'),
-            Comparison::new('c.contact_sub_type', '=', 'name'),
-          ),
-        )->toArray(),
-      );
-
-    return $this->api4->executeAction($action)->rowCount === 1;
-  }
-
-  /**
-   * @throws \API_Exception
-   */
-  private function hasRelation(int $contactId, int $relationshipTypeId, int $contactTypeId): bool {
-    $action = Relationship::get()
-      ->addSelect('id')
-      ->addWhere('relationship_type_id', '=', $relationshipTypeId)
-      ->addClause('OR',
-        ['contact_id_a', '=', $contactId],
-        ['contact_id_b', '=', $contactId],
-      )
-      ->addJoin('ContactType AS ct', 'INNER', NULL,
-        ['ct.id', '=', $contactTypeId]
-      )
-      ->addJoin('Contact AS c', 'INNER', NULL,
-        CompositeCondition::new('AND',
-          CompositeCondition::new('OR',
-            Comparison::new('c.contact_type', '=', 'ct.name'),
-            Comparison::new('c.contact_sub_type', '=', 'ct.name'),
-          ),
-          CompositeCondition::new('OR',
-            CompositeCondition::new('AND',
-              Comparison::new('c.id', '=', 'contact_id_a'),
-              Comparison::new('contact_id_a', '!=', $contactId),
-            ),
-            CompositeCondition::new('AND',
-              Comparison::new('c.id', '=', 'contact_id_b'),
-              Comparison::new('contact_id_b', '!=', $contactId),
-            ),
-          ),
-        )->toArray()
-      );
-
-    return $this->api4->executeAction($action)->rowCount >= 1;
   }
 
 }
