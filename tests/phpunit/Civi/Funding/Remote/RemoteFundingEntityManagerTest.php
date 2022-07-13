@@ -81,7 +81,7 @@ final class RemoteFundingEntityManagerTest extends TestCase {
     $apiResult->exchangeArray([$record]);
     $this->api4Mock->expects(static::once())->method('execute')
       ->with('RemoteFoo', 'get', [
-        'where' => ['id', '=', 11],
+        'where' => [['id', '=', 11]],
         'remoteContactId' => '00',
       ])->willReturn($apiResult);
 
@@ -96,7 +96,7 @@ final class RemoteFundingEntityManagerTest extends TestCase {
     $apiResult->rowCount = 0;
     $this->api4Mock->expects(static::once())->method('execute')
       ->with('RemoteFoo', 'get', [
-        'where' => ['id', '=', 11],
+        'where' => [['id', '=', 11]],
         'remoteContactId' => '00',
       ])->willReturn($apiResult);
 
@@ -120,10 +120,10 @@ final class RemoteFundingEntityManagerTest extends TestCase {
       [
         'RemoteFoo',
         'get',
-        ['select' => ['id'], 'where' => ['id', '=', 11], 'remoteContactId' => '00'],
+        ['select' => ['id'], 'where' => [['id', '=', 11]], 'remoteContactId' => '00'],
         $accessCheckResult,
       ],
-      ['Foo', 'get', ['where' => ['id', '=', 11]], $apiResult],
+      ['Foo', 'get', ['where' => [['id', '=', 11]]], $apiResult],
     ];
 
     $this->api4Mock->expects(static::exactly(2))->method('execute')
@@ -145,7 +145,7 @@ final class RemoteFundingEntityManagerTest extends TestCase {
     $apiResult->exchangeArray([$record]);
 
     $valueMap = [
-      ['Foo', 'get', ['where' => ['id', '=', 11], 'contactId' => 2], $apiResult],
+      ['Foo', 'get', ['where' => [['id', '=', 11]], 'contactId' => 2], $apiResult],
     ];
 
     $this->api4Mock->expects(static::once())->method('execute')
@@ -173,7 +173,7 @@ final class RemoteFundingEntityManagerTest extends TestCase {
     $apiResult->rowCount = 1;
     $apiResult->exchangeArray([['id' => 11]]);
     $this->api4Mock->expects(static::once())->method('execute')
-      ->with('RemoteFoo', 'get', ['select' => ['id'], 'where' => ['id', '=', 11], 'remoteContactId' => '00'])
+      ->with('RemoteFoo', 'get', ['select' => ['id'], 'where' => [['id', '=', 11]], 'remoteContactId' => '00'])
       ->willReturn($apiResult);
 
     static::assertTrue($this->entityManager->hasAccess('RemoteFoo', 11, '00', 2));
@@ -185,7 +185,7 @@ final class RemoteFundingEntityManagerTest extends TestCase {
     $apiResult = new Result();
     $apiResult->rowCount = 0;
     $this->api4Mock->expects(static::once())->method('execute')
-      ->with('RemoteFoo', 'get', ['select' => ['id'], 'where' => ['id', '=', 11], 'remoteContactId' => '00'])
+      ->with('RemoteFoo', 'get', ['select' => ['id'], 'where' => [['id', '=', 11]], 'remoteContactId' => '00'])
       ->willReturn($apiResult);
 
     static::assertFalse($this->entityManager->hasAccess('RemoteFoo', 11, '00', 2));
@@ -199,7 +199,7 @@ final class RemoteFundingEntityManagerTest extends TestCase {
     $apiResult->exchangeArray([['id' => 11]]);
 
     $this->api4Mock->expects(static::once())->method('execute')
-      ->with('Foo', 'get', ['select' => ['id'], 'where' => ['id', '=', 11]])
+      ->with('Foo', 'get', ['select' => ['id'], 'where' => [['id', '=', 11]]])
       ->willReturn($apiResult);
 
     static::assertTrue($this->entityManager->hasAccess('Foo', 11, '00', 2));
@@ -213,7 +213,7 @@ final class RemoteFundingEntityManagerTest extends TestCase {
     $apiResult->exchangeArray([['id' => 11]]);
 
     $this->api4Mock->expects(static::once())->method('execute')
-      ->with('Foo', 'get', ['select' => ['id'], 'where' => ['id', '=', 11], 'contactId' => 2])
+      ->with('Foo', 'get', ['select' => ['id'], 'where' => [['id', '=', 11]], 'contactId' => 2])
       ->willReturn($apiResult);
 
     static::assertTrue($this->entityManager->hasAccess('Foo', 11, '00', 2));

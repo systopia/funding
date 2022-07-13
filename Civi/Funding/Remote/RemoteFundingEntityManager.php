@@ -34,7 +34,11 @@ final class RemoteFundingEntityManager implements RemoteFundingEntityManagerInte
    * @inheritDoc
    */
   public function getById(string $entity, int $id, string $remoteContactId, int $contactId): ?array {
-    $params = ['where' => ['id', '=', $id]];
+    $params = [
+      'where' => [
+        ['id', '=', $id],
+      ],
+    ];
 
     try {
       $contactIdParams = $this->buildContactIdParams($entity, $remoteContactId, $contactId);
@@ -111,7 +115,7 @@ final class RemoteFundingEntityManager implements RemoteFundingEntityManagerInte
     $result = $this->api4->execute($entity, 'get', array_merge([
       'select' => ['id'],
       'where' => [
-        'id', '=', $id,
+        ['id', '=', $id],
       ],
     ], $contactIdParams));
 
