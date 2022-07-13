@@ -37,14 +37,25 @@ final class GetFieldsAction extends DAOGetFieldsAction {
    * @return array<FieldT>
    */
   protected function getRecords(): array {
-    return array_merge(parent::getRecords(), [
+    return array_merge(parent::getRecords(), $this->getExtraFields());
+  }
+
+  /**
+   * @return array<FieldT>
+   */
+  private function getExtraFields(): array {
+    if (!str_starts_with($this->action, 'get')) {
+      return [];
+    }
+
+    return [
       [
         'name' => 'permissions',
         'type' => 'Extra',
         'data_type' => 'Array',
         'readonly' => TRUE,
       ],
-    ]);
+    ];
   }
 
 }
