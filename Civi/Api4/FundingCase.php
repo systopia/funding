@@ -19,6 +19,10 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
+use Civi\Funding\Api4\Action\FundingCase\GetAction;
+use Civi\Funding\Api4\Action\FundingCase\GetFieldsAction;
+use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
+
 /**
  * FundingCase entity.
  *
@@ -27,5 +31,21 @@ namespace Civi\Api4;
  * @package Civi\Api4
  */
 class FundingCase extends Generic\DAOEntity {
+
+  use EntityNameTrait;
+
+  /**
+   * @inheritDoc
+   */
+  public static function get($checkPermissions = TRUE) {
+    return (new GetAction(\Civi::dispatcher()))->setCheckPermissions($checkPermissions);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public static function getFields($checkPermissions = TRUE) {
+    return (new GetFieldsAction())->setCheckPermissions($checkPermissions);
+  }
 
 }

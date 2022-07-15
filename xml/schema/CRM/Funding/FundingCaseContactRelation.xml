@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Funding</base>
+  <class>FundingCaseContactRelation</class>
+  <name>civicrm_funding_case_contact_relation</name>
+  <comment>Stores which permissions a contact or a related contact has on a funding case</comment>
+  <log>true</log>
+
+  <field>
+    <name>id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>Unique FundingCaseContactRelation ID</comment>
+    <html>
+      <type>Number</type>
+    </html>
+  </field>
+  <primaryKey>
+    <name>id</name>
+    <autoincrement>true</autoincrement>
+  </primaryKey>
+
+  <field>
+    <name>funding_case_id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>FK to FundingCase</comment>
+    <html>
+      <type>Number</type>
+    </html>
+  </field>
+  <foreignKey>
+    <name>funding_case_id</name>
+    <table>civicrm_funding_case</table>
+    <key>id</key>
+    <onDelete>CASCADE</onDelete>
+  </foreignKey>
+
+  <field>
+    <name>entity_table</name>
+    <type>varchar</type>
+    <length>64</length>
+    <required>true</required>
+    <comment>Table referenced by ID in `entity_id</comment>
+    <html>
+      <type>Text</type>
+    </html>
+  </field>
+
+  <field>
+    <name>entity_id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>ID of entity in `entity_table`</comment>
+    <html>
+      <type>Number</type>
+    </html>
+  </field>
+
+  <field>
+    <name>parent_id</name>
+    <type>int unsigned</type>
+    <comment>FK to FundingCaseContactRelation</comment>
+    <html>
+      <type>Number</type>
+    </html>
+  </field>
+  <foreignKey>
+    <name>parent_id</name>
+    <table>civicrm_funding_case_contact_relation</table>
+    <key>id</key>
+    <onDelete>RESTRICT</onDelete>
+  </foreignKey>
+
+  <field>
+    <name>permissions</name>
+    <type>varchar</type>
+    <length>512</length>
+    <comment>Permissions as JSON array</comment>
+    <serialize>JSON</serialize>
+    <html>
+      <type>Text</type>
+    </html>
+  </field>
+
+</table>

@@ -52,9 +52,6 @@ parameters:
 		-
 			message: '#^PHPDoc tag @var for constant [^\s]+::[^\s]+ with type string is incompatible with value null.$#'
 			path: */Civi/RemoteTools/EventSubscriber/Abstract*.php
-		- # Required because "null" is missing in type hint of CiviCRM
-			message: '#^Strict comparison using !== between null and int will always evaluate to true.$#'
-			path: */Civi/RemoteTools/Api4/Action/RemoteDAOGetFieldsAction.php
 		- # false positive
 			message: '#^Variable \$granted might not be defined.$#'
 			path: */Civi/RemoteTools/Authorization/PermissionChecker.php
@@ -65,6 +62,7 @@ parameters:
 		- '#^Property Civi\\RemoteTools\\Event\\DAOGetEvent::\$join type has no value type specified in iterable type array.$#'
 		- '#^Method Civi\\RemoteTools\\Event\\DAOGetEvent::addJoin\(\) has parameter \$conditions with no value type specified in iterable type array.$#'
 		- '#^Method Civi\\RemoteTools\\Event\\DAOGetEvent::getJoin\(\) return type has no value type specified in iterable type array.$#'
+		- '#^Method Civi\\RemoteTools\\Api4\\Query\\[^\\]+::toArray\(\) return type has no value type specified in iterable type array.$#'
 		- '#^Property Civi\\Api4\\Generic\\Result::\$debug \(array\) on left side of \?\? is not nullable.$#'
 		- '#^Method Civi\\RemoteTools\\Api4\\Api4::createAction\(\) should return Civi\\Api4\\Generic\\AbstractAction but returns array|Civi\Api4\Generic\AbstractAction.$#'
 		- '#extends deprecated class Symfony\\Component\\EventDispatcher\\Event:#'
@@ -75,6 +73,10 @@ parameters:
 			message: '#^Call to function method_exists\(\) with .+ will always evaluate to true.$#'
 			path: */tests/phpunit/**/EventSubscriber/*SubscriberTest.php
 		-
-			message: "#^Offset '[a-z0-9_]+' does not exist on array\\|null.$#"
+			message: "#^Offset '[a-zA-Z0-9_]+' does not exist on array\\|null.$#"
 			path: */tests/phpunit/Civi/Api4/*Test.php
+		-
+			message: '#^Class [^\s]+ has an uninitialized property#'
+			path : */tests/phpunit/Civi/Funding/Mock/**/*.php
+		- '#^Method Civi\\Funding\\Fixtures\\[^\s]+Fixture::[^\s]+\(\) should return array{id: int} but returns array\|null.$#'
 	tmpDir: .phpstan

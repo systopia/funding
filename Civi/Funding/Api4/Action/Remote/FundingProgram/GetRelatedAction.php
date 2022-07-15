@@ -23,7 +23,7 @@ use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Api4\Action\Remote\RemoteFundingActionInterface;
-use Civi\Funding\Api4\Action\Traits\RemoteFundingActionContactIdRequiredTrait;
+use Civi\Funding\Api4\Action\Remote\Traits\RemoteFundingActionContactIdRequiredTrait;
 use Civi\Funding\Event\Remote\FundingDAOGetEvent;
 use Civi\Funding\Event\Remote\FundingEvents;
 use Civi\RemoteTools\Api4\Action\Traits\EventActionTrait;

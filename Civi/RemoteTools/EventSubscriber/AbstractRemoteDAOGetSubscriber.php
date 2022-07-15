@@ -19,7 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\RemoteTools\EventSubscriber;
 
-use Civi\Api4\Generic\DAOGetAction;
+use Civi\Api4\Generic\AbstractAction;
+use Civi\Core\CiviEventDispatcher;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Event\DAOGetEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -47,7 +48,7 @@ abstract class AbstractRemoteDAOGetSubscriber implements EventSubscriberInterfac
    */
   protected const EVENT_CLASS = DAOGetEvent::class;
 
-  private Api4Interface $api4;
+  protected Api4Interface $api4;
 
   public static function getSubscribedEvents(): array {
     return [self::getEventName() => 'onGet'];
@@ -64,14 +65,30 @@ abstract class AbstractRemoteDAOGetSubscriber implements EventSubscriberInterfac
   /**
    * @throws \API_Exception
    */
-  public function onGet(DAOGetEvent $event): void {
+  public function onGet(DAOGetEvent $event, string $eventName, CiviEventDispatcher $eventDispatcher): void {
+    $result = $this->api4->executeAction($this->createAction($event));
+
+    $event->setRowCount($result->rowCount)
+      ->addDebugOutput(static::class, $result->debug ?? []);
+    /** @var array<string, scalar|null> $record */
+    foreach ($result as $record) {
+      $event->addRecord($this->filterRecordFields($event, $record));
+    }
+  }
+
+  /**
+   * @throws \Civi\API\Exception\NotImplementedException
+   */
+  protected function createAction(DAOGetEvent $event): AbstractAction {
     /*
      * Note: "where" could contain excluded fields, i.e. requester could use it
      * to detect values of excluded fields (if he knows the field name). Though
      * we trust the requester that he doesn't misuse it.
      */
-    $action = (new DAOGetAction(static::DAO_ENTITY_NAME, $event->getActionName()))
-      ->setCheckPermissions($event->isCheckPermissions())
+    /** @var \Civi\Api4\Generic\DAOGetAction $action */
+    $action = $this->api4->createAction(static::DAO_ENTITY_NAME, 'get');
+
+    return $action->setCheckPermissions($event->isCheckPermissions())
       ->setDebug($event->isDebug())
       ->setLimit($event->getLimit())
       ->setOffset($event->getOffset())
@@ -81,15 +98,6 @@ abstract class AbstractRemoteDAOGetSubscriber implements EventSubscriberInterfac
       ->setGroupBy($event->getGroupBy())
       ->setHaving($event->getHaving())
       ->setJoin($event->getJoin());
-
-    $result = $this->api4->executeAction($action);
-
-    $event->setRowCount($result->rowCount)
-      ->addDebugOutput(static::class, $result->debug ?? []);
-    /** @var array<string, scalar|null> $record */
-    foreach ($result as $record) {
-      $event->addRecord($this->filterRecordFields($event, $record));
-    }
   }
 
   /**

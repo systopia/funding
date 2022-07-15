@@ -33,13 +33,24 @@ final class RemoteFundingEntityManager implements RemoteFundingEntityManagerInte
   /**
    * @inheritDoc
    */
-  public function getById(string $entity, int $id, string $remoteContactId): ?array {
-    $params = ['where' => ['id', '=', $id]];
-    $remoteEntityParams = ['remoteContactId' => $remoteContactId];
+  public function getById(string $entity, int $id, string $remoteContactId, int $contactId): ?array {
+    $params = [
+      'where' => [
+        ['id', '=', $id],
+      ],
+    ];
 
-    if (!str_starts_with($entity, 'Remote')) {
+    try {
+      $contactIdParams = $this->buildContactIdParams($entity, $remoteContactId, $contactId);
+    }
+    catch (NotImplementedException $e) {
+      throw new \InvalidArgumentException(
+        sprintf('Unknown entity "%s"', $entity), $e->getCode(), $e);
+    }
+
+    if ([] === $contactIdParams && !str_starts_with($entity, 'Remote')) {
       try {
-        if (!$this->doHasAccess('Remote' . $entity, $id, $remoteEntityParams)) {
+        if (!$this->doHasAccess('Remote' . $entity, $id, $remoteContactId, $contactId)) {
           return NULL;
         }
       }
@@ -48,42 +59,28 @@ final class RemoteFundingEntityManager implements RemoteFundingEntityManagerInte
       }
     }
     else {
-      $params += $remoteEntityParams;
+      $params += $contactIdParams;
     }
 
-    try {
-      $result = $this->api4->execute($entity, 'get', $params);
-    }
-    catch (NotImplementedException $e) {
-      throw new \InvalidArgumentException(
-        sprintf('Unknown entity "%s"', $entity), $e->getCode(), $e);
-    }
-
+    $result = $this->api4->execute($entity, 'get', $params);
     /** @var array<string, mixed>|null $record */
     $record = $result->getArrayCopy()[0] ?? NULL;
 
     return $record;
   }
 
-  public function hasAccess(string $entity, int $id, string $remoteContactId): bool {
-    $params = [];
-    $remoteEntityParams = ['remoteContactId' => $remoteContactId];
+  public function hasAccess(string $entity, int $id, string $remoteContactId, int $contactId): bool {
     if (!str_starts_with($entity, 'Remote')) {
-      $remoteEntity = 'Remote' . $entity;
-
       try {
-        return $this->doHasAccess($remoteEntity, $id, $remoteEntityParams);
+        return $this->doHasAccess('Remote' . $entity, $id, $remoteContactId, $contactId);
       }
       catch (NotImplementedException $ignore) {
         // @ignoreException
       }
     }
-    else {
-      $params = $remoteEntityParams;
-    }
 
     try {
-      return $this->doHasAccess($entity, $id, $params);
+      return $this->doHasAccess($entity, $id, $remoteContactId, $contactId);
     }
     catch (NotImplementedException $e) {
       throw new \InvalidArgumentException(
@@ -93,22 +90,43 @@ final class RemoteFundingEntityManager implements RemoteFundingEntityManagerInte
   }
 
   /**
-   * @param string $entity
-   * @param int $id
-   * @param array<string, mixed> $params
+   * @return array{remoteContactId?: string, contactId?: int}
    *
+   * @throws \Civi\API\Exception\NotImplementedException
+   */
+  private function buildContactIdParams(string $entity, string $remoteContactId, int $contactId): array {
+    $contactIdParams = [];
+    if ($this->hasParam($entity, 'remoteContactId')) {
+      $contactIdParams['remoteContactId'] = $remoteContactId;
+    }
+    if ($this->hasParam($entity, 'contactId')) {
+      $contactIdParams['contactId'] = $contactId;
+    }
+
+    return $contactIdParams;
+  }
+
+  /**
    * @throws \API_Exception
    * @throws \Civi\API\Exception\NotImplementedException
    */
-  private function doHasAccess(string $entity, int $id, array $params = []): bool {
+  private function doHasAccess(string $entity, int $id, string $remoteContactId, int $contactId): bool {
+    $contactIdParams = $this->buildContactIdParams($entity, $remoteContactId, $contactId);
     $result = $this->api4->execute($entity, 'get', array_merge([
       'select' => ['id'],
       'where' => [
-        'id', '=', $id,
+        ['id', '=', $id],
       ],
-    ], $params));
+    ], $contactIdParams));
 
     return 1 === $result->rowCount;
+  }
+
+  /**
+   * @throws \Civi\API\Exception\NotImplementedException
+   */
+  private function hasParam(string $entityName, string $param): bool {
+    return $this->api4->createAction($entityName, 'get')->paramExists($param);
   }
 
 }

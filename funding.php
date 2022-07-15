@@ -13,17 +13,23 @@ use Civi\Funding\Api4\Action\Remote\FundingCase\GetNewApplicationFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\SubmitNewApplicationFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\ValidateNewApplicationFormAction;
 use Civi\Funding\Contact\FundingRemoteContactIdResolver;
-use Civi\Funding\EventSubscriber\Remote\ApplicationProcessDAOGetFieldsSubscriber;
+use Civi\Funding\EventSubscriber\FundingCasePermissionsGetSubscriber;
+use Civi\Funding\EventSubscriber\FundingProgramPermissionsGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessDAOGetSubscriber;
-use Civi\Funding\EventSubscriber\Remote\FundingCaseDAOGetFieldsSubscriber;
+use Civi\Funding\EventSubscriber\Remote\ApplicationProcessGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseDAOGetSubscriber;
-use Civi\Funding\EventSubscriber\Remote\FundingCasePermissionsSubscriber;
-use Civi\Funding\EventSubscriber\Remote\FundingCaseTypeDAOGetFieldsSubscriber;
+use Civi\Funding\EventSubscriber\Remote\FundingCaseGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseTypeDAOGetSubscriber;
-use Civi\Funding\EventSubscriber\Remote\FundingProgramDAOGetFieldsSubscriber;
+use Civi\Funding\EventSubscriber\Remote\FundingCaseTypeGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingProgramDAOGetSubscriber;
-use Civi\Funding\EventSubscriber\Remote\FundingProgramPermissionsSubscriber;
+use Civi\Funding\EventSubscriber\Remote\FundingProgramGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingRequestInitSubscriber;
+use Civi\Funding\Permission\ContactRelation\ContactChecker;
+use Civi\Funding\Permission\ContactRelation\ContactRelationshipChecker;
+use Civi\Funding\Permission\ContactRelation\ContactTypeChecker;
+use Civi\Funding\Permission\ContactRelation\ContactTypeRelationshipChecker;
+use Civi\Funding\Permission\ContactRelationCheckerCollection;
+use Civi\Funding\Permission\ContactRelationCheckerInterface;
 use Civi\Funding\Remote\RemoteFundingEntityManager;
 use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
 use Civi\RemoteTools\Api4\Api4;
@@ -33,6 +39,7 @@ use Civi\RemoteTools\EventSubscriber\ApiAuthorizeSubscriber;
 use Civi\RemoteTools\EventSubscriber\CheckAccessSubscriber;
 use CRM_Funding_ExtensionUtil as E;
 use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
+use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -51,6 +58,18 @@ function funding_civicrm_container(ContainerBuilder $container): void {
   }
 
   $container->setAlias(CiviEventDispatcher::class, 'dispatcher.boot');
+
+  $container->autowire(ContactChecker::class)
+    ->addTag('funding.permission.contact_relation_checker');
+  $container->autowire(ContactRelationshipChecker::class)
+    ->addTag('funding.permission.contact_relation_checker');
+  $container->autowire(ContactTypeChecker::class)
+    ->addTag('funding.permission.contact_relation_checker');
+  $container->autowire(ContactTypeRelationshipChecker::class)
+    ->addTag('funding.permission.contact_relation_checker');
+  $container->register(ContactRelationCheckerInterface::class, ContactRelationCheckerCollection::class)
+    ->addArgument(new TaggedIteratorArgument('funding.permission.contact_relation_checker'));
+
   $container->register(Api4Interface::class, Api4::class);
   $container->register(ApiAuthorizeInitRequestSubscriber::class)
     ->addTag('kernel.event_subscriber');
@@ -84,25 +103,25 @@ function funding_civicrm_container(ContainerBuilder $container): void {
   $container->autowire(FundingRequestInitSubscriber::class)
     ->addTag('kernel.event_subscriber')
     ->setLazy(TRUE);
-  $container->autowire(ApplicationProcessDAOGetFieldsSubscriber::class)
+  $container->autowire(ApplicationProcessGetFieldsSubscriber::class)
     ->addTag('kernel.event_subscriber');
   $container->autowire(ApplicationProcessDAOGetSubscriber::class)
     ->addTag('kernel.event_subscriber');
-  $container->autowire(FundingCaseDAOGetFieldsSubscriber::class)
+  $container->autowire(FundingCaseGetFieldsSubscriber::class)
     ->addTag('kernel.event_subscriber');
   $container->autowire(FundingCaseDAOGetSubscriber::class)
     ->addTag('kernel.event_subscriber');
-  $container->autowire(FundingCasePermissionsSubscriber::class)
+  $container->autowire(FundingCasePermissionsGetSubscriber::class)
     ->addTag('kernel.event_subscriber');
-  $container->autowire(FundingCaseTypeDAOGetFieldsSubscriber::class)
+  $container->autowire(FundingCaseTypeGetFieldsSubscriber::class)
     ->addTag('kernel.event_subscriber');
   $container->autowire(FundingCaseTypeDAOGetSubscriber::class)
     ->addTag('kernel.event_subscriber');
-  $container->autowire(FundingProgramDAOGetFieldsSubscriber::class)
+  $container->autowire(FundingProgramGetFieldsSubscriber::class)
     ->addTag('kernel.event_subscriber');
   $container->autowire(FundingProgramDAOGetSubscriber::class)
     ->addTag('kernel.event_subscriber');
-  $container->autowire(FundingProgramPermissionsSubscriber::class)
+  $container->autowire(FundingProgramPermissionsGetSubscriber::class)
     ->addTag('kernel.event_subscriber');
 }
 

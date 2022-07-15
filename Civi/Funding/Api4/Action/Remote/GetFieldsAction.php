@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Api4\Action\Remote;
 
 use Civi\Core\CiviEventDispatcher;
-use Civi\Funding\Api4\Action\Traits\RemoteFundingActionContactIdTrait;
+use Civi\Funding\Api4\Action\Remote\Traits\RemoteFundingActionContactIdTrait;
 use Civi\Funding\Event\Remote\FundingEvents;
 use Civi\Funding\Event\Remote\FundingGetFieldsEvent;
 use Civi\RemoteTools\Api4\Action\EventGetFieldsAction;

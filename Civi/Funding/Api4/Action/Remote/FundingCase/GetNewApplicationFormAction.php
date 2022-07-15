@@ -22,7 +22,7 @@ namespace Civi\Funding\Api4\Action\Remote\FundingCase;
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingAction;
-use Civi\Funding\Api4\Action\Traits\RemoteFundingActionContactIdRequiredTrait;
+use Civi\Funding\Api4\Action\Remote\Traits\RemoteFundingActionContactIdRequiredTrait;
 use Civi\Funding\Event\Remote\FundingCase\GetNewApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingEvents;
 use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
@@ -94,9 +94,9 @@ final class GetNewApplicationFormAction extends AbstractRemoteFundingAction {
   private function createEvent(): GetNewApplicationFormEvent {
     Assert::notNull($this->remoteContactId);
     $fundingCaseType = $this->_remoteFundingEntityManager
-      ->getById('FundingCaseType', $this->fundingCaseTypeId, $this->remoteContactId);
+      ->getById('FundingCaseType', $this->fundingCaseTypeId, $this->remoteContactId, $this->getContactId());
     $fundingProgram = $this->_remoteFundingEntityManager
-      ->getById('FundingProgram', $this->fundingProgramId, $this->remoteContactId);
+      ->getById('FundingProgram', $this->fundingProgramId, $this->remoteContactId, $this->getContactId());
 
     return GetNewApplicationFormEvent::fromApiRequest($this, $this->getExtraParams() + [
       'fundingCaseType' => $fundingCaseType,

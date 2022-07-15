@@ -19,10 +19,10 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\Remote;
 
+use Civi\Api4\Generic\AbstractAction;
 use Civi\Funding\Event\Remote\FundingDAOGetEvent;
 use Civi\RemoteTools\Event\DAOGetEvent;
 use Civi\RemoteTools\EventSubscriber\AbstractRemoteDAOGetSubscriber;
-use Webmozart\Assert\Assert;
 
 final class FundingCaseDAOGetSubscriber extends AbstractRemoteDAOGetSubscriber {
 
@@ -32,54 +32,12 @@ final class FundingCaseDAOGetSubscriber extends AbstractRemoteDAOGetSubscriber {
 
   protected const EVENT_CLASS = FundingDAOGetEvent::class;
 
-  public function onGet(DAOGetEvent $event): void {
+  protected function createAction(DAOGetEvent $event): AbstractAction {
     /** @var \Civi\Funding\Event\Remote\FundingDAOGetEvent $event */
-    parent::onGet($event);
+    /** @var \Civi\Funding\Api4\Action\FundingCase\GetAction $action */
+    $action = parent::createAction($event);
 
-    $event->setRecords($this->handlePermissions($event->getRecords()));
-  }
-
-  /**
-   * @param array<array<string, mixed>> $records
-   *
-   * @return array<array<string, mixed>>
-   */
-  private function handlePermissions(array $records): array {
-    foreach ($records as &$record) {
-      Assert::isArray($record['permissions']);
-      $record['permissions'] = $this->mergePermissions(
-        $this->jsonEncodePermissions($record['permissions'])
-      );
-
-      foreach ($record['permissions'] as $permission) {
-        $record['PERM_' . $permission] = TRUE;
-      }
-    }
-
-    return $records;
-  }
-
-  /**
-   * @param string[] $permissions
-   *
-   * @return array<string[]>
-   */
-  private function jsonEncodePermissions(array $permissions): array {
-    /** @var array<string[]> $permissions */
-    $permissions = array_map('json_decode', $permissions);
-
-    return $permissions;
-  }
-
-  /**
-   * @param array<string[]> $permissions
-   *
-   * @return string[]
-   */
-  private function mergePermissions(array $permissions): array {
-    return array_values(array_unique(
-      array_reduce($permissions, fn(array $p1, array $p2): array => array_merge($p1, $p2), [])
-    ));
+    return $action->setContactId($event->getContactId());
   }
 
 }
