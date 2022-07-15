@@ -13,6 +13,9 @@ use Civi\Funding\Api4\Action\Remote\FundingCase\GetNewApplicationFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\SubmitNewApplicationFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\ValidateNewApplicationFormAction;
 use Civi\Funding\Contact\FundingRemoteContactIdResolver;
+use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1GetNewApplicationFormSubscriber;
+use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1SubmitNewApplicationFormSubscriber;
+use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1ValidateNewApplicationFormSubscriber;
 use Civi\Funding\EventSubscriber\FundingCasePermissionsGetSubscriber;
 use Civi\Funding\EventSubscriber\FundingProgramPermissionsGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessDAOGetSubscriber;
@@ -24,6 +27,10 @@ use Civi\Funding\EventSubscriber\Remote\FundingCaseTypeGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingProgramDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingProgramGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingRequestInitSubscriber;
+use Civi\Funding\Form\Validation\FormValidator;
+use Civi\Funding\Form\Validation\FormValidatorInterface;
+use Civi\Funding\Form\Validation\OpisValidatorFactory;
+use Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker;
 use Civi\Funding\Permission\ContactRelation\ContactChecker;
 use Civi\Funding\Permission\ContactRelation\ContactRelationshipChecker;
 use Civi\Funding\Permission\ContactRelation\ContactTypeChecker;
@@ -38,6 +45,7 @@ use Civi\RemoteTools\EventSubscriber\ApiAuthorizeInitRequestSubscriber;
 use Civi\RemoteTools\EventSubscriber\ApiAuthorizeSubscriber;
 use Civi\RemoteTools\EventSubscriber\CheckAccessSubscriber;
 use CRM_Funding_ExtensionUtil as E;
+use Opis\JsonSchema\Validator;
 use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -78,8 +86,12 @@ function funding_civicrm_container(ContainerBuilder $container): void {
   $container->autowire(CheckAccessSubscriber::class)
     ->addTag('kernel.event_subscriber');
 
+  $container->register(Validator::class)->setFactory([OpisValidatorFactory::class, 'getValidator']);
+  $container->autowire(FormValidatorInterface::class, FormValidator::class);
+
   $container->autowire(RemoteFundingEntityManagerInterface::class, RemoteFundingEntityManager::class);
   $container->autowire(FundingRemoteContactIdResolver::class);
+  $container->autowire(FundingCaseTypeProgramRelationChecker::class);
 
   $container->autowire(GetNewApplicationFormAction::class)
     ->setPublic(TRUE)
@@ -112,6 +124,12 @@ function funding_civicrm_container(ContainerBuilder $container): void {
   $container->autowire(FundingCaseDAOGetSubscriber::class)
     ->addTag('kernel.event_subscriber');
   $container->autowire(FundingCasePermissionsGetSubscriber::class)
+    ->addTag('kernel.event_subscriber');
+  $container->autowire(AVK1GetNewApplicationFormSubscriber::class)
+    ->addTag('kernel.event_subscriber');
+  $container->autowire(AVK1SubmitNewApplicationFormSubscriber::class)
+    ->addTag('kernel.event_subscriber');
+  $container->autowire(AVK1ValidateNewApplicationFormSubscriber::class)
     ->addTag('kernel.event_subscriber');
   $container->autowire(FundingCaseTypeGetFieldsSubscriber::class)
     ->addTag('kernel.event_subscriber');

@@ -5,6 +5,8 @@ use Composer\Autoload\ClassLoader;
 
 ini_set('memory_limit', '2G');
 
+require_once __DIR__ . '/../../vendor/autoload.php';
+
 // phpcs:disable
 eval(cv('php:boot --level=classloader', 'phpcode'));
 // phpcs:enable

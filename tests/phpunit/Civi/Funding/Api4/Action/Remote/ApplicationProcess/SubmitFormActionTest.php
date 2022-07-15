@@ -26,6 +26,9 @@ namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Event\Remote\ApplicationProcess\SubmitFormEvent;
+use Civi\Funding\Form\FundingForm;
+use Civi\Funding\Form\JsonForms\JsonFormsElement;
+use Civi\Funding\Form\JsonSchema\JsonSchema;
 use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -130,6 +133,8 @@ final class SubmitFormActionTest extends TestCase {
   }
 
   public function testShowForm(): void {
+    $jsonSchema = new JsonSchema(['foo' => 'test']);
+    $uiSchema = new JsonFormsElement('Test');
     $this->eventDispatcherMock->expects(static::exactly(3))
       ->method('dispatch')
       ->withConsecutive(
@@ -138,11 +143,9 @@ final class SubmitFormActionTest extends TestCase {
             'RemoteFundingApplicationProcess', 'submitForm'
           ),
           static::callback(
-            function (SubmitFormEvent $event): bool {
-              $jsonSchema = ['type' => 'object'];
-              $uiSchema = ['type' => 'Group'];
+            function (SubmitFormEvent $event) use ($jsonSchema, $uiSchema): bool {
               $data = ['applicationProcessId' => 22, 'foo' => 'bar'];
-              $event->setForm($jsonSchema, $uiSchema, $data);
+              $event->setForm(new FundingForm($jsonSchema, $uiSchema, $data));
               $event->setMessage('Test');
 
               return TRUE;
@@ -164,8 +167,8 @@ final class SubmitFormActionTest extends TestCase {
     static::assertSame([
       'action' => 'showForm',
       'message' => 'Test',
-      'jsonSchema' => ['type' => 'object'],
-      'uiSchema' => ['type' => 'Group'],
+      'jsonSchema' => $jsonSchema,
+      'uiSchema' => $uiSchema,
       'data' => ['applicationProcessId' => 22, 'foo' => 'bar'],
     ], $result->getArrayCopy());
   }

@@ -24,24 +24,24 @@ use Civi\Funding\Event\Remote\AbstractFundingSubmitFormEvent;
 final class SubmitNewApplicationFormEvent extends AbstractFundingSubmitFormEvent {
 
   /**
-   * @var array<string, mixed>&array{id: int}
+   * @var array<string, mixed>&array{id: int, name: string}
    */
   protected array $fundingCaseType;
 
   /**
-   * @var array<string, mixed>&array{id: int}
+   * @var array<string, mixed>&array{id: int, currency: string, permissions: array<int, string>}
    */
   protected array $fundingProgram;
 
   /**
-   * @return array<string, mixed>&array{id: int}
+   * @return array<string, mixed>&array{id: int, name: string}
    */
   public function getFundingCaseType(): array {
     return $this->fundingCaseType;
   }
 
   /**
-   * @return array<string, mixed>&array{id: int}
+   * @return array<string, mixed>&array{id: int, currency: string, permissions: array<int, string>}
    */
   public function getFundingProgram(): array {
     return $this->fundingProgram;

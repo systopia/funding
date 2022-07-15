@@ -19,21 +19,26 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\Remote\FundingCase;
 
+use Civi\Api4\FundingCaseType;
+use Civi\Api4\FundingProgram;
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingAction;
+use Civi\Funding\Api4\Action\Remote\FundingCase\Traits\NewApplicationFormActionTrait;
 use Civi\Funding\Api4\Action\Remote\Traits\RemoteFundingActionContactIdRequiredTrait;
 use Civi\Funding\Event\Remote\FundingCase\GetNewApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingEvents;
+use Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker;
 use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
 use Webmozart\Assert\Assert;
 
 /**
- * @method void setFundingProgramId(int $fundingProgramId)
- * @method void setFundingCaseTypeId(int $fundingCaseTypeId)
+ * @method $this setFundingProgramId(int $fundingProgramId)
+ * @method $this setFundingCaseTypeId(int $fundingCaseTypeId)
  */
 final class GetNewApplicationFormAction extends AbstractRemoteFundingAction {
 
+  use NewApplicationFormActionTrait;
   use RemoteFundingActionContactIdRequiredTrait;
 
   /**
@@ -52,11 +57,13 @@ final class GetNewApplicationFormAction extends AbstractRemoteFundingAction {
 
   public function __construct(
     RemoteFundingEntityManagerInterface $remoteFundingEntityManager,
-    CiviEventDispatcher $eventDispatcher
+    CiviEventDispatcher $eventDispatcher,
+    FundingCaseTypeProgramRelationChecker $relationChecker
   ) {
     parent::__construct('RemoteFundingCase', 'getNewApplicationForm');
     $this->_remoteFundingEntityManager = $remoteFundingEntityManager;
     $this->_eventDispatcher = $eventDispatcher;
+    $this->_relationChecker = $relationChecker;
     $this->_authorizeRequestEventName = FundingEvents::REQUEST_AUTHORIZE_EVENT_NAME;
     $this->_initRequestEventName = FundingEvents::REQUEST_INIT_EVENT_NAME;
   }
@@ -67,11 +74,12 @@ final class GetNewApplicationFormAction extends AbstractRemoteFundingAction {
    * @throws \API_Exception
    */
   public function _run(Result $result): void {
+    $this->assertFundingCaseTypeAndProgramRelated($this->fundingCaseTypeId, $this->fundingProgramId);
     $event = $this->createEvent();
     $this->dispatchEvent($event);
 
     $result->debug['event'] = $event->getDebugOutput();
-    if ([] === $event->getJsonSchema() || [] === $event->getUiSchema()) {
+    if (NULL === $event->getJsonSchema() || NULL === $event->getUiSchema()) {
       throw new \API_Exception('Invalid fundingProgramId or fundingCaseTypeId', 'invalid_arguments');
     }
 
@@ -93,15 +101,29 @@ final class GetNewApplicationFormAction extends AbstractRemoteFundingAction {
    */
   private function createEvent(): GetNewApplicationFormEvent {
     Assert::notNull($this->remoteContactId);
-    $fundingCaseType = $this->_remoteFundingEntityManager
-      ->getById('FundingCaseType', $this->fundingCaseTypeId, $this->remoteContactId, $this->getContactId());
-    $fundingProgram = $this->_remoteFundingEntityManager
-      ->getById('FundingProgram', $this->fundingProgramId, $this->remoteContactId, $this->getContactId());
+    $fundingCaseType = $this->_remoteFundingEntityManager->getById(
+      FundingCaseType::_getEntityName(),
+      $this->fundingCaseTypeId,
+      $this->remoteContactId,
+      $this->getContactId()
+    );
+    /** @var array<string, mixed>&array{requests_start_date: string|null, requests_end_date: string|null} $fundingProgram */
+    $fundingProgram = $this->_remoteFundingEntityManager->getById(
+      FundingProgram::_getEntityName(),
+      $this->fundingProgramId,
+      $this->remoteContactId,
+      $this->getContactId()
+    );
 
-    return GetNewApplicationFormEvent::fromApiRequest($this, $this->getExtraParams() + [
-      'fundingCaseType' => $fundingCaseType,
-      'fundingProgram' => $fundingProgram,
-    ]);
+    $this->assertFundingProgramDates($fundingProgram);
+
+    return GetNewApplicationFormEvent::fromApiRequest(
+      $this,
+      $this->getExtraParams() + [
+        'fundingCaseType' => $fundingCaseType,
+        'fundingProgram' => $fundingProgram,
+      ]
+    );
   }
 
 }

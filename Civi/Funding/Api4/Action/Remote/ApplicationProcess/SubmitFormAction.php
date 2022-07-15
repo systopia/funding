@@ -78,11 +78,11 @@ final class SubmitFormAction extends AbstractRemoteFundingAction {
     switch ($event->getAction()) {
       case SubmitFormEvent::ACTION_SHOW_FORM:
         Assert::notNull($event->getForm());
-        Assert::keyExists($event->getForm()['data'], 'applicationProcessId');
-        Assert::integer($event->getForm()['data']['applicationProcessId']);
-        $result['jsonSchema'] = $event->getForm()['jsonSchema'];
-        $result['uiSchema'] = $event->getForm()['uiSchema'];
-        $result['data'] = $event->getForm()['data'];
+        Assert::keyExists($event->getForm()->getData(), 'applicationProcessId');
+        Assert::integer($event->getForm()->getData()['applicationProcessId']);
+        $result['jsonSchema'] = $event->getForm()->getJsonSchema();
+        $result['uiSchema'] = $event->getForm()->getUiSchema();
+        $result['data'] = $event->getForm()->getData();
         break;
 
       case SubmitFormEvent::ACTION_SHOW_VALIDATION:
