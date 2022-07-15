@@ -327,6 +327,11 @@ function _funding_civix_civicrm_entityTypes(&$entityTypes) {
       'class' => 'CRM_Funding_DAO_FundingCase',
       'table' => 'civicrm_funding_case',
     ],
+    'CRM_Funding_DAO_FundingCaseContactRelation' => [
+      'name' => 'FundingCaseContactRelation',
+      'class' => 'CRM_Funding_DAO_FundingCaseContactRelation',
+      'table' => 'civicrm_funding_case_contact_relation',
+    ],
     'CRM_Funding_DAO_FundingCaseType' => [
       'name' => 'FundingCaseType',
       'class' => 'CRM_Funding_DAO_FundingCaseType',
@@ -341,6 +346,11 @@ function _funding_civix_civicrm_entityTypes(&$entityTypes) {
       'name' => 'FundingProgram',
       'class' => 'CRM_Funding_DAO_FundingProgram',
       'table' => 'civicrm_funding_program',
+    ],
+    'CRM_Funding_DAO_FundingProgramContactRelation' => [
+      'name' => 'FundingProgramContactRelation',
+      'class' => 'CRM_Funding_DAO_FundingProgramContactRelation',
+      'table' => 'civicrm_funding_program_contact_relation',
     ],
     'CRM_Funding_DAO_FundingProgramRelationship' => [
       'name' => 'FundingProgramRelationship',

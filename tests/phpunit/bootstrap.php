@@ -1,17 +1,26 @@
 <?php
+declare(strict_types = 1);
+
+use Composer\Autoload\ClassLoader;
 
 ini_set('memory_limit', '2G');
 
 // phpcs:disable
 eval(cv('php:boot --level=classloader', 'phpcode'));
 // phpcs:enable
+
+// phpcs:disable PSR1.Files.SideEffects
+
 // Allow autoloading of PHPUnit helper classes in this extension.
-$loader = new \Composer\Autoload\ClassLoader();
+$loader = new ClassLoader();
 $loader->add('CRM_', [__DIR__ . '/../..', __DIR__]);
 $loader->addPsr4('Civi\\', [__DIR__ . '/../../Civi', __DIR__ . '/Civi']);
 $loader->add('api_', [__DIR__ . '/../..', __DIR__]);
 $loader->addPsr4('api\\', [__DIR__ . '/../../api', __DIR__ . '/api']);
 $loader->register();
+
+// Ensure function ts() is available - it's declared in the same file as CRM_Core_I18n
+\CRM_Core_I18n::singleton();
 
 /**
  * Call the "cv" command.
@@ -51,12 +60,12 @@ function cv(string $cmd, string $decode = 'json') {
     case 'phpcode':
       // If the last output is /*PHPCODE*/, then we managed to complete execution.
       if (substr(trim($result), 0, 12) !== '/*BEGINPHP*/' || substr(trim($result), -10) !== '/*ENDPHP*/') {
-        throw new \RuntimeException("Command failed ($cmd):\n$result");
+        throw new RuntimeException("Command failed ($cmd):\n$result");
       }
       return $result;
 
     case 'json':
-      return json_decode($result, 1);
+      return json_decode($result, TRUE);
 
     default:
       throw new RuntimeException("Bad decoder format ($decode)");

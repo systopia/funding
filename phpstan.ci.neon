@@ -1,0 +1,13 @@
+includes:
+	- phpstan.neon.dist
+
+parameters:
+	# Because we test with different versions in CI we have unmatched errors
+	reportUnmatchedIgnoredErrors: false
+	excludePaths:
+		analyse:
+			# Depends on extension de.systopia.identitytracker
+			- Civi/RemoteTools/Contact/IdTrackerRemoteContactIdResolver.php
+	ignoreErrors:
+		# Errors we get when using "prefer-lowest"
+		- '#::getSubscribedEvents\(\) return type has no value type specified in iterable type array.$#'

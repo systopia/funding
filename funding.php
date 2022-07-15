@@ -1,16 +1,45 @@
 <?php
 declare(strict_types = 1);
 
+// phpcs:disable PSR1.Files.SideEffects
 require_once 'funding.civix.php';
+// phpcs:enable
 
-use Civi\Api4\Generic\Api4;
-use Civi\Api4\Generic\Api4Interface;
-use Civi\Funding\EventSubscriber\RemoteApiAuthorizeSubscriber;
-use Civi\Funding\EventSubscriber\RemoteFundingProgramDAOGetFieldsSubscriber;
-use Civi\Funding\EventSubscriber\RemoteFundingProgramDAOGetSubscriber;
-use Civi\Funding\Contact\IdentityRemoteContactIdResolver;
-use Civi\Funding\Contact\RemoteContactIdResolverInterface;
+use Civi\Core\CiviEventDispatcher;
+use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetFormAction;
+use Civi\Funding\Api4\Action\Remote\ApplicationProcess\SubmitFormAction;
+use Civi\Funding\Api4\Action\Remote\ApplicationProcess\ValidateFormAction;
+use Civi\Funding\Api4\Action\Remote\FundingCase\GetNewApplicationFormAction;
+use Civi\Funding\Api4\Action\Remote\FundingCase\SubmitNewApplicationFormAction;
+use Civi\Funding\Api4\Action\Remote\FundingCase\ValidateNewApplicationFormAction;
+use Civi\Funding\Contact\FundingRemoteContactIdResolver;
+use Civi\Funding\EventSubscriber\FundingCasePermissionsGetSubscriber;
+use Civi\Funding\EventSubscriber\FundingProgramPermissionsGetSubscriber;
+use Civi\Funding\EventSubscriber\Remote\ApplicationProcessDAOGetSubscriber;
+use Civi\Funding\EventSubscriber\Remote\ApplicationProcessGetFieldsSubscriber;
+use Civi\Funding\EventSubscriber\Remote\FundingCaseDAOGetSubscriber;
+use Civi\Funding\EventSubscriber\Remote\FundingCaseGetFieldsSubscriber;
+use Civi\Funding\EventSubscriber\Remote\FundingCaseTypeDAOGetSubscriber;
+use Civi\Funding\EventSubscriber\Remote\FundingCaseTypeGetFieldsSubscriber;
+use Civi\Funding\EventSubscriber\Remote\FundingProgramDAOGetSubscriber;
+use Civi\Funding\EventSubscriber\Remote\FundingProgramGetFieldsSubscriber;
+use Civi\Funding\EventSubscriber\Remote\FundingRequestInitSubscriber;
+use Civi\Funding\Permission\ContactRelation\ContactChecker;
+use Civi\Funding\Permission\ContactRelation\ContactRelationshipChecker;
+use Civi\Funding\Permission\ContactRelation\ContactTypeChecker;
+use Civi\Funding\Permission\ContactRelation\ContactTypeRelationshipChecker;
+use Civi\Funding\Permission\ContactRelationCheckerCollection;
+use Civi\Funding\Permission\ContactRelationCheckerInterface;
+use Civi\Funding\Remote\RemoteFundingEntityManager;
+use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
+use Civi\RemoteTools\Api4\Api4;
+use Civi\RemoteTools\Api4\Api4Interface;
+use Civi\RemoteTools\EventSubscriber\ApiAuthorizeInitRequestSubscriber;
+use Civi\RemoteTools\EventSubscriber\ApiAuthorizeSubscriber;
+use Civi\RemoteTools\EventSubscriber\CheckAccessSubscriber;
 use CRM_Funding_ExtensionUtil as E;
+use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
+use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -18,19 +47,81 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_config/
  */
-function funding_civicrm_config(&$config) {
+function funding_civicrm_config(&$config): void {
   _funding_civix_civicrm_config($config);
 }
 
 function funding_civicrm_container(ContainerBuilder $container): void {
-  $container->register(Api4Interface::class, Api4::class);
-  $container->register(RemoteContactIdResolverInterface::class, IdentityRemoteContactIdResolver::class);
+  // Allow lazy service instantiation (requires symfony/proxy-manager-bridge)
+  if (class_exists(\ProxyManager\Configuration::class) && class_exists(RuntimeInstantiator::class)) {
+    $container->setProxyInstantiator(new RuntimeInstantiator());
+  }
 
-  $container->autowire(RemoteApiAuthorizeSubscriber::class)
+  $container->setAlias(CiviEventDispatcher::class, 'dispatcher.boot');
+
+  $container->autowire(ContactChecker::class)
+    ->addTag('funding.permission.contact_relation_checker');
+  $container->autowire(ContactRelationshipChecker::class)
+    ->addTag('funding.permission.contact_relation_checker');
+  $container->autowire(ContactTypeChecker::class)
+    ->addTag('funding.permission.contact_relation_checker');
+  $container->autowire(ContactTypeRelationshipChecker::class)
+    ->addTag('funding.permission.contact_relation_checker');
+  $container->register(ContactRelationCheckerInterface::class, ContactRelationCheckerCollection::class)
+    ->addArgument(new TaggedIteratorArgument('funding.permission.contact_relation_checker'));
+
+  $container->register(Api4Interface::class, Api4::class);
+  $container->register(ApiAuthorizeInitRequestSubscriber::class)
     ->addTag('kernel.event_subscriber');
-  $container->autowire(RemoteFundingProgramDAOGetFieldsSubscriber::class)
+  $container->register(ApiAuthorizeSubscriber::class)
     ->addTag('kernel.event_subscriber');
-  $container->autowire(RemoteFundingProgramDAOGetSubscriber::class)
+  $container->autowire(CheckAccessSubscriber::class)
+    ->addTag('kernel.event_subscriber');
+
+  $container->autowire(RemoteFundingEntityManagerInterface::class, RemoteFundingEntityManager::class);
+  $container->autowire(FundingRemoteContactIdResolver::class);
+
+  $container->autowire(GetNewApplicationFormAction::class)
+    ->setPublic(TRUE)
+    ->setShared(FALSE);
+  $container->autowire(SubmitNewApplicationFormAction::class)
+    ->setPublic(TRUE)
+    ->setShared(FALSE);
+  $container->autowire(ValidateNewApplicationFormAction::class)
+    ->setPublic(TRUE)
+    ->setShared(FALSE);
+  $container->autowire(GetFormAction::class)
+    ->setPublic(TRUE)
+    ->setShared(FALSE);
+  $container->autowire(SubmitFormAction::class)
+    ->setPublic(TRUE)
+    ->setShared(FALSE);
+  $container->autowire(ValidateFormAction::class)
+    ->setPublic(TRUE)
+    ->setShared(FALSE);
+
+  $container->autowire(FundingRequestInitSubscriber::class)
+    ->addTag('kernel.event_subscriber')
+    ->setLazy(TRUE);
+  $container->autowire(ApplicationProcessGetFieldsSubscriber::class)
+    ->addTag('kernel.event_subscriber');
+  $container->autowire(ApplicationProcessDAOGetSubscriber::class)
+    ->addTag('kernel.event_subscriber');
+  $container->autowire(FundingCaseGetFieldsSubscriber::class)
+    ->addTag('kernel.event_subscriber');
+  $container->autowire(FundingCaseDAOGetSubscriber::class)
+    ->addTag('kernel.event_subscriber');
+  $container->autowire(FundingCasePermissionsGetSubscriber::class)
+    ->addTag('kernel.event_subscriber');
+  $container->autowire(FundingCaseTypeGetFieldsSubscriber::class)
+    ->addTag('kernel.event_subscriber');
+  $container->autowire(FundingCaseTypeDAOGetSubscriber::class)
+    ->addTag('kernel.event_subscriber');
+  $container->autowire(FundingProgramGetFieldsSubscriber::class)
+    ->addTag('kernel.event_subscriber');
+  $container->autowire(FundingProgramDAOGetSubscriber::class)
+    ->addTag('kernel.event_subscriber');
+  $container->autowire(FundingProgramPermissionsGetSubscriber::class)
     ->addTag('kernel.event_subscriber');
 }
 
@@ -39,7 +130,7 @@ function funding_civicrm_container(ContainerBuilder $container): void {
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_install
  */
-function funding_civicrm_install() {
+function funding_civicrm_install(): void {
   _funding_civix_civicrm_install();
 }
 
@@ -48,7 +139,7 @@ function funding_civicrm_install() {
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_postInstall
  */
-function funding_civicrm_postInstall() {
+function funding_civicrm_postInstall(): void {
   _funding_civix_civicrm_postInstall();
 }
 
@@ -57,7 +148,7 @@ function funding_civicrm_postInstall() {
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_uninstall
  */
-function funding_civicrm_uninstall() {
+function funding_civicrm_uninstall(): void {
   _funding_civix_civicrm_uninstall();
 }
 
@@ -66,7 +157,7 @@ function funding_civicrm_uninstall() {
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_enable
  */
-function funding_civicrm_enable() {
+function funding_civicrm_enable(): void {
   _funding_civix_civicrm_enable();
 }
 
@@ -75,7 +166,7 @@ function funding_civicrm_enable() {
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_disable
  */
-function funding_civicrm_disable() {
+function funding_civicrm_disable(): void {
   _funding_civix_civicrm_disable();
 }
 
@@ -95,7 +186,7 @@ function funding_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_entityTypes
  */
-function funding_civicrm_entityTypes(&$entityTypes) {
+function funding_civicrm_entityTypes(&$entityTypes): void {
   _funding_civix_civicrm_entityTypes($entityTypes);
 }
 
@@ -103,31 +194,3 @@ function funding_civicrm_permission(array &$permissions): void {
   $permissions['apply Funding'] = E::ts('Funding: make applications');
   $permissions['access Remote Funding'] = E::ts('Funding: access remote API');
 }
-
-// --- Functions below this ship commented out. Uncomment as required. ---
-
-/**
- * Implements hook_civicrm_preProcess().
- *
- * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_preProcess
- */
-//function funding_civicrm_preProcess($formName, &$form) {
-//
-//}
-
-/**
- * Implements hook_civicrm_navigationMenu().
- *
- * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_navigationMenu
- */
-//function funding_civicrm_navigationMenu(&$menu) {
-//  _funding_civix_insert_navigation_menu($menu, 'Mailings', [
-//    'label' => E::ts('New subliminal message'),
-//    'name' => 'mailing_subliminal_message',
-//    'url' => 'civicrm/mailing/subliminal',
-//    'permission' => 'access CiviMail',
-//    'operator' => 'OR',
-//    'separator' => 0,
-//  ]);
-//  _funding_civix_navigationMenu($menu);
-//}

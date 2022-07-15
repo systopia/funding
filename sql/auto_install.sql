@@ -21,9 +21,11 @@ DROP TABLE IF EXISTS `civicrm_funding_app_cost_item`;
 DROP TABLE IF EXISTS `civicrm_funding_app_resources_item`;
 DROP TABLE IF EXISTS `civicrm_funding_application_process`;
 DROP TABLE IF EXISTS `civicrm_funding_program_relationship`;
+DROP TABLE IF EXISTS `civicrm_funding_program_contact_relation`;
 DROP TABLE IF EXISTS `civicrm_funding_program`;
 DROP TABLE IF EXISTS `civicrm_funding_case_type_program`;
 DROP TABLE IF EXISTS `civicrm_funding_case_type`;
+DROP TABLE IF EXISTS `civicrm_funding_case_contact_relation`;
 DROP TABLE IF EXISTS `civicrm_funding_case`;
 
 SET FOREIGN_KEY_CHECKS=1;
@@ -89,6 +91,26 @@ ENGINE=InnoDB;
 
 -- /*******************************************************
 -- *
+-- * civicrm_funding_case_contact_relation
+-- *
+-- * Stores which permissions a contact or a related contact has on a funding case
+-- *
+-- *******************************************************/
+CREATE TABLE `civicrm_funding_case_contact_relation` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique FundingCaseContactRelation ID',
+  `funding_case_id` int unsigned NOT NULL COMMENT 'FK to FundingCase',
+  `entity_table` varchar(64) NOT NULL COMMENT 'Table referenced by ID in `entity_id',
+  `entity_id` int unsigned NOT NULL COMMENT 'ID of entity in `entity_table`',
+  `parent_id` int unsigned COMMENT 'FK to FundingCaseContactRelation',
+  `permissions` varchar(512) COMMENT 'Permissions as JSON array',
+  PRIMARY KEY (`id`),
+  CONSTRAINT FK_civicrm_funding_case_contact_relation_funding_case_id FOREIGN KEY (`funding_case_id`) REFERENCES `civicrm_funding_case`(`id`) ON DELETE CASCADE,
+  CONSTRAINT FK_civicrm_funding_case_contact_relation_parent_id FOREIGN KEY (`parent_id`) REFERENCES `civicrm_funding_case_contact_relation`(`id`) ON DELETE RESTRICT
+)
+ENGINE=InnoDB;
+
+-- /*******************************************************
+-- *
 -- * civicrm_funding_case_type_program
 -- *
 -- * Stores which funding case types are available in a funding program
@@ -101,6 +123,26 @@ CREATE TABLE `civicrm_funding_case_type_program` (
   PRIMARY KEY (`id`),
   CONSTRAINT FK_civicrm_funding_case_type_program_funding_program_id FOREIGN KEY (`funding_program_id`) REFERENCES `civicrm_funding_program`(`id`) ON DELETE CASCADE,
   CONSTRAINT FK_civicrm_funding_case_type_program_funding_case_type_id FOREIGN KEY (`funding_case_type_id`) REFERENCES `civicrm_funding_case_type`(`id`) ON DELETE RESTRICT
+)
+ENGINE=InnoDB;
+
+-- /*******************************************************
+-- *
+-- * civicrm_funding_program_contact_relation
+-- *
+-- * Defines who is allowed to access a funding program
+-- *
+-- *******************************************************/
+CREATE TABLE `civicrm_funding_program_contact_relation` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique FundingProgramContactRelation ID',
+  `funding_program_id` int unsigned NOT NULL COMMENT 'FK to FundingProgram',
+  `entity_table` varchar(64) NOT NULL COMMENT 'Table referenced by ID in `entity_id',
+  `entity_id` int unsigned NOT NULL COMMENT 'ID of entity in `entity_table`',
+  `parent_id` int unsigned COMMENT 'FK to FundingProgramContactRelation',
+  `permissions` varchar(512) COMMENT 'Permissions as JSON array',
+  PRIMARY KEY (`id`),
+  CONSTRAINT FK_civicrm_funding_program_contact_relation_funding_program_id FOREIGN KEY (`funding_program_id`) REFERENCES `civicrm_funding_program`(`id`) ON DELETE CASCADE,
+  CONSTRAINT FK_civicrm_funding_program_contact_relation_parent_id FOREIGN KEY (`parent_id`) REFERENCES `civicrm_funding_program_contact_relation`(`id`) ON DELETE RESTRICT
 )
 ENGINE=InnoDB;
 

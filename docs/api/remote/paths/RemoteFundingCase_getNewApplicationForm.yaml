@@ -10,11 +10,11 @@ post:
           properties:
             fundingProgramId:
               type: integer
-            fundingTypeId:
+            fundingCaseTypeId:
               type: integer
           required:
             - fundingProgramId
-            - fundingTypeId
+            - fundingCaseTypeId
   responses:
     '200':
       description: OK
