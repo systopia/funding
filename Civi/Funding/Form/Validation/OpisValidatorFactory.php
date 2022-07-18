@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\Validation;
 
+use CRM_Funding_ExtensionUtil as E;
 use Opis\JsonSchema\Validator;
 use Systopia\ExpressionLanguage\SystopiaExpressionLanguage;
 use Systopia\JsonSchema\Expression\SymfonyExpressionHandler;
@@ -31,7 +32,7 @@ final class OpisValidatorFactory {
   public static function getValidator(): Validator {
     if (!isset(self::$validator)) {
       if (!class_exists(SymfonyExpressionHandler::class)) {
-        require_once __DIR__ . '/../../../../vendor/autoload.php';
+        require_once E::path() . '/vendor/autoload.php';
       }
 
       $expressionHandler = new SymfonyExpressionHandler(new SystopiaExpressionLanguage());
