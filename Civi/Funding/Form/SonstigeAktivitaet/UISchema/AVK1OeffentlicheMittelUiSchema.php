@@ -26,14 +26,12 @@ final class AVK1OeffentlicheMittelUiSchema extends JsonFormsGroup {
 
   public function __construct(string $currency) {
     $elements = [
-      new JsonFormsGroup('Öffentliche Mittel', [
-        new JsonFormsControl('#/properties/finanzierung/properties/oeffentlicheMittel/properties/europa',
-          'Europa', NULL, NULL, $currency),
-        new JsonFormsControl('#/properties/finanzierung/properties/oeffentlicheMittel/properties/bundeslaender',
-          'Bundesländer', NULL, NULL, $currency),
-        new JsonFormsControl('#/properties/finanzierung/properties/oeffentlicheMittel/properties/staedteUndKreise',
-          'Städte und Kreise', NULL, NULL, $currency),
-      ], 'Bitte geben Sie die öffentlichen Mittel an.'),
+      new JsonFormsControl('#/properties/finanzierung/properties/oeffentlicheMittel/properties/europa',
+        'Europa', NULL, NULL, $currency),
+      new JsonFormsControl('#/properties/finanzierung/properties/oeffentlicheMittel/properties/bundeslaender',
+        'Bundesländer', NULL, NULL, $currency),
+      new JsonFormsControl('#/properties/finanzierung/properties/oeffentlicheMittel/properties/staedteUndKreise',
+        'Städte und Kreise', NULL, NULL, $currency),
     ];
 
     parent::__construct(

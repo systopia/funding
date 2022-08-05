@@ -27,7 +27,7 @@ final class AVK1SonstigeMittelUiSchema extends JsonFormsGroup {
 
   public function __construct(string $currency) {
     $elements = [
-      new JsonFormsArray('#/properties/finanzierung/properties/sonstigeMittel', 'Honorare', NULL, [
+      new JsonFormsArray('#/properties/finanzierung/properties/sonstigeMittel', 'Sonstige Mittel', NULL, [
         new JsonFormsControl('#/properties/betrag', 'Betrag', NULL, NULL, $currency),
         new JsonFormsControl('#/properties/quelle', 'Quelle'),
       ]),

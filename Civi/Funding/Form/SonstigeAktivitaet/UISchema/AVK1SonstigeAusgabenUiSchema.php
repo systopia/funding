@@ -27,7 +27,7 @@ final class AVK1SonstigeAusgabenUiSchema extends JsonFormsGroup {
 
   public function __construct(string $currency) {
     $elements = [
-      new JsonFormsArray('#/properties/kosten/properties/honorare', 'Honorare', NULL, [
+      new JsonFormsArray('#/properties/kosten/properties/sonstigeAusgaben', 'Sonstige Ausgaben', NULL, [
         new JsonFormsControl('#/properties/betrag', 'Betrag', NULL, NULL, $currency),
         new JsonFormsControl('#/properties/zweck', 'Zweck'),
       ]),
