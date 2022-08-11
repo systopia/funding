@@ -18,6 +18,7 @@ parameters:
 	bootstrapFiles:
 		- tools/phpunit/vendor/bin/.phpunit/phpunit/vendor/autoload.php
 		- vendor/autoload.php
+		- phpstanBootstrap.php
 	stubFiles:
 		- stubs/AbstractAction.stub
 		- stubs/Civi.stub
