@@ -107,6 +107,7 @@ final class GetNewApplicationFormAction extends AbstractRemoteFundingAction {
       $this->remoteContactId,
       $this->getContactId()
     );
+    Assert::notNull($fundingCaseType);
     /** @var array<string, mixed>&array{requests_start_date: string|null, requests_end_date: string|null} $fundingProgram */
     $fundingProgram = $this->_remoteFundingEntityManager->getById(
       FundingProgram::_getEntityName(),
@@ -114,6 +115,7 @@ final class GetNewApplicationFormAction extends AbstractRemoteFundingAction {
       $this->remoteContactId,
       $this->getContactId()
     );
+    Assert::notNull($fundingProgram);
 
     $this->assertFundingProgramDates($fundingProgram);
 
