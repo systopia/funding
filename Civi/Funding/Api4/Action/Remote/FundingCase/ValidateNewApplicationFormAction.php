@@ -41,7 +41,8 @@ final class ValidateNewApplicationFormAction extends AbstractRemoteFundingAction
   use RemoteFundingActionContactIdRequiredTrait;
 
   /**
-   * @var array<string, mixed>
+   * @var array
+   * @phpstan-var array<string, mixed>
    * @required
    */
   protected array $data;
