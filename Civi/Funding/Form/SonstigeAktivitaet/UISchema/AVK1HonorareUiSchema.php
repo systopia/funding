@@ -33,7 +33,8 @@ final class AVK1HonorareUiSchema extends JsonFormsGroup {
         new JsonFormsControl('#/properties/zweck', 'Zweck'),
         new JsonFormsControl('#/properties/betrag', 'Betrag', NULL, NULL, $currency),
       ]),
-      new JsonFormsControl('#/properties/kosten/properties/honorareGesamt', 'Honorarkosten gesamt'),
+      new JsonFormsControl('#/properties/kosten/properties/honorareGesamt', 'Honorarkosten gesamt',
+        NULL, NULL, $currency),
     ];
 
     parent::__construct(
