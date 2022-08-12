@@ -38,8 +38,40 @@ trait FundingActionContactIdRequiredTrait {
   }
 
   public function getContactId(): int {
-    Assert::notNull($this->contactId);
+    if (NULL === $this->contactId) {
+      /*
+       * CiviCRM executes internal get actions via AbstractBatchAction (used for
+       * example in DAODeleteAction). In this case additional parameters are not
+       * set. So if this action is not the result of some remote API request we
+       * use the contact ID of the logged-in user or 0 if there's no logged-in
+       * user (e.g. on CLI).
+       */
+      if (!$this->isRemoteApiRequest()) {
+        $this->contactId = \CRM_Core_Session::getLoggedInContactID() ?? 0;
+      }
+      Assert::notNull($this->contactId);
+    }
+
     return $this->contactId;
+  }
+
+  private function isRemoteApiRequest(): bool {
+    if ('cli' === PHP_SAPI && !isset($_SERVER['REQUEST_URI'])) {
+      // No HTTP request
+      return FALSE;
+    }
+
+    if (str_contains($_SERVER['REQUEST_URI'] ?? '', '/Remote')) {
+      // APIv4
+      return TRUE;
+    }
+
+    if (str_starts_with($_REQUEST['entity'] ?? '', 'Remote')) {
+      // APIv3
+      return TRUE;
+    }
+
+    return FALSE;
   }
 
 }
