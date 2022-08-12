@@ -20,54 +20,38 @@ declare(strict_types = 1);
 namespace Civi\Funding\Event\Remote;
 
 use Civi\Funding\Event\Remote\Traits\EventContactIdRequiredTrait;
+use Civi\Funding\Form\JsonForms\JsonFormsElement;
+use Civi\Funding\Form\JsonSchema\JsonSchema;
 use Civi\RemoteTools\Event\AbstractRequestEvent;
 
 abstract class AbstractFundingGetFormEvent extends AbstractRequestEvent {
 
   use EventContactIdRequiredTrait;
 
-  /**
-   * @var array<string, mixed>
-   */
-  private array $jsonSchema = [];
+  private ?JsonSchema $jsonSchema = NULL;
 
-  /**
-   * @var array<string, mixed>
-   */
-  private array $uiSchema = [];
+  private ?JsonFormsElement $uiSchema = NULL;
 
   /**
    * @var array<string, mixed>
    */
   private array $data = [];
 
-  /**
-   * @return array<string, mixed>
-   */
-  public function getJsonSchema(): array {
+  public function getJsonSchema(): ?JsonSchema {
     return $this->jsonSchema;
   }
 
-  /**
-   * @param array<string, mixed> $jsonSchema
-   */
-  public function setJsonSchema(array $jsonSchema): self {
+  public function setJsonSchema(JsonSchema $jsonSchema): self {
     $this->jsonSchema = $jsonSchema;
 
     return $this;
   }
 
-  /**
-   * @return array<string, mixed>
-   */
-  public function getUiSchema(): array {
+  public function getUiSchema(): ?JsonFormsElement {
     return $this->uiSchema;
   }
 
-  /**
-   * @param array<string, mixed> $uiSchema
-   */
-  public function setUiSchema(array $uiSchema): self {
+  public function setUiSchema(JsonFormsElement $uiSchema): self {
     $this->uiSchema = $uiSchema;
 
     return $this;

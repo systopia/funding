@@ -64,7 +64,7 @@ final class GetFormAction extends AbstractRemoteFundingAction {
     $this->dispatchEvent($event);
 
     $result->debug['event'] = $event->getDebugOutput();
-    if ([] === $event->getJsonSchema() || [] === $event->getUiSchema()) {
+    if (NULL === $event->getJsonSchema() || NULL === $event->getUiSchema()) {
       throw new \API_Exception('Invalid applicationProcessId', 'invalid_arguments');
     }
 

@@ -24,7 +24,7 @@ use Civi\Funding\Event\Remote\AbstractFundingGetFormEvent;
 final class GetNewApplicationFormEvent extends AbstractFundingGetFormEvent {
 
   /**
-   * @var array<string, mixed>&array{id: int, currency: string}
+   * @var array<string, mixed>&array{id: int, currency: string, permissions: array<int, string>}
    */
   protected array $fundingProgram;
 
@@ -34,7 +34,7 @@ final class GetNewApplicationFormEvent extends AbstractFundingGetFormEvent {
   protected array $fundingCaseType;
 
   /**
-   * @return array<string, mixed>&array{id: int, currency: string}
+   * @return array<string, mixed>&array{id: int, currency: string, permissions: array<int, string>}
    */
   public function getFundingProgram(): array {
     return $this->fundingProgram;

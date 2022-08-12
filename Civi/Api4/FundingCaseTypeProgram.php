@@ -19,6 +19,9 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
+use Civi\Funding\Api4\Action\FundingCaseTypeProgram\GetRelationAction;
+use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
+
 /**
  * FundingCaseTypeProgram entity.
  *
@@ -27,5 +30,17 @@ namespace Civi\Api4;
  * @package Civi\Api4
  */
 class FundingCaseTypeProgram extends Generic\DAOEntity {
+
+  use EntityNameTrait;
+
+  /**
+   * Returns the entity that has the given funding case type ID and the given
+   * funding program ID, or an empty result.
+   *
+   * @return \Civi\Funding\Api4\Action\FundingCaseTypeProgram\GetRelationAction
+   */
+  public static function getRelation(): GetRelationAction {
+    return new GetRelationAction(static::get());
+  }
 
 }

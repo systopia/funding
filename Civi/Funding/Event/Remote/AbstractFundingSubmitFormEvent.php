@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Event\Remote;
 
 use Civi\Funding\Event\Remote\Traits\EventContactIdRequiredTrait;
+use Civi\Funding\Form\FundingFormInterface;
 use Civi\RemoteTools\Event\AbstractRequestEvent;
 
 abstract class AbstractFundingSubmitFormEvent extends AbstractRequestEvent {
@@ -49,10 +50,7 @@ abstract class AbstractFundingSubmitFormEvent extends AbstractRequestEvent {
    */
   private array $errors = [];
 
-  /**
-   * @var array{jsonSchema: array<string, mixed>, uiSchema: array<string, mixed>, data: array<string, mixed>}|null
-   */
-  private ?array $form = NULL;
+  private ?FundingFormInterface $form = NULL;
 
   private ?string $message = NULL;
 
@@ -95,24 +93,12 @@ abstract class AbstractFundingSubmitFormEvent extends AbstractRequestEvent {
     return $this->errors;
   }
 
-  /**
-   * @return array{jsonSchema: array<string, mixed>, uiSchema: array<string, mixed>, data: array<string, mixed>}|null
-   */
-  public function getForm(): ?array {
+  public function getForm(): ?FundingFormInterface {
     return $this->form;
   }
 
-  /**
-   * @param array<string, mixed> $jsonSchema
-   * @param array<string, mixed> $uiSchema
-   * @param array<string, mixed> $data
-   */
-  public function setForm(array $jsonSchema, array $uiSchema, array $data = []): self {
-    $this->form = [
-      'jsonSchema' => $jsonSchema,
-      'uiSchema' => $uiSchema,
-      'data' => $data,
-    ];
+  public function setForm(FundingFormInterface $form): self {
+    $this->form = $form;
     $this->action = self::ACTION_SHOW_FORM;
 
     return $this;

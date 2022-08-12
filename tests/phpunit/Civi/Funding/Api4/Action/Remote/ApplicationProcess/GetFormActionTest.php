@@ -26,6 +26,8 @@ namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Event\Remote\ApplicationProcess\GetFormEvent;
+use Civi\Funding\Form\JsonForms\JsonFormsElement;
+use Civi\Funding\Form\JsonSchema\JsonSchema;
 use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -84,20 +86,22 @@ final class GetFormActionTest extends TestCase {
   }
 
   public function testRun(): void {
+    $jsonSchema = new JsonSchema(['foo' => 'test']);
+    $uiSchema = new JsonFormsElement('Test');
     $this->eventDispatcherMock->expects(static::exactly(3))
       ->method('dispatch')
       ->withConsecutive(
         [
           GetFormEvent::getEventName('RemoteFundingApplicationProcess', 'getForm'),
           static::callback(
-            function (GetFormEvent $event): bool {
+            function (GetFormEvent $event) use ($jsonSchema, $uiSchema): bool {
               static::assertSame(11, $event->getContactId());
               static::assertSame($this->applicationProcess, $event->getApplicationProcess());
               static::assertSame($this->fundingCase, $event->getFundingCase());
               static::assertSame($this->fundingCaseType, $event->getFundingCaseType());
 
-              $event->setJsonSchema(['type' => 'object']);
-              $event->setUiSchema(['type' => 'Group']);
+              $event->setJsonSchema($jsonSchema);
+              $event->setUiSchema($uiSchema);
               $event->setData(['applicationProcessId' => 22, 'foo' => 'bar']);
 
               return TRUE;
@@ -117,8 +121,8 @@ final class GetFormActionTest extends TestCase {
     $this->action->_run($result);
     static::assertSame(1, $result->rowCount);
     static::assertSame([
-      'jsonSchema' => ['type' => 'object'],
-      'uiSchema' => ['type' => 'Group'],
+      'jsonSchema' => $jsonSchema,
+      'uiSchema' => $uiSchema,
       'data' => ['applicationProcessId' => 22, 'foo' => 'bar'],
     ], $result->getArrayCopy());
   }

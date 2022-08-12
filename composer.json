@@ -10,9 +10,21 @@
             "civicrm/civicrm-asset-plugin": false
         }
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/systopia/opis-json-schema-ext"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/systopia/expression-language-ext"
+        }
+    ],
     "require": {
         "webmozart/assert": "^1",
-        "symfony/polyfill-php80": ">=1"
+        "symfony/polyfill-php80": ">=1",
+        "systopia/expression-language-ext": "dev-main",
+        "systopia/opis-json-schema-ext": "dev-main"
     },
     "require-dev": {
         "civicrm/civicrm-core": "^5.48"
