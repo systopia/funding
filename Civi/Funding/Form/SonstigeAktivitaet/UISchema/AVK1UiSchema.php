@@ -30,6 +30,8 @@ final class AVK1UiSchema extends JsonFormsGroup {
    */
   public function __construct(string $currency, array $submitButtons) {
     parent::__construct('Förderantrag für sonstige Aktivität', [
+      new JsonFormsControl('#/properties/titel', 'Titel'),
+      new JsonFormsControl('#/properties/kurzbezeichnungDesInhalts', 'Kurzbezeichnung des Inhalts'),
       new JsonFormsGroup('Kosten', [
         new JsonFormsGroup('Unterkunft und Verpflegung', [
           new JsonFormsControl(
