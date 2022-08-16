@@ -96,7 +96,8 @@ final class AVK1SubmitNewApplicationFormSubscriber implements EventSubscriberInt
       ]);
 
       // TODO: Change message
-      $event->setMessage(E::ts('Success!'));
+      $event->setMessage(E::ts('Success! (Application process ID: %1)',
+        ['%1' => $applicationProcess->getId()]));
       $event->setForm(new AVK1FormExisting(
         $event->getFundingProgram()['currency'],
         $applicationProcess->getId(),
