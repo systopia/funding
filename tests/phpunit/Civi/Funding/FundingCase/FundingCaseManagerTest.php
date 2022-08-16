@@ -20,12 +20,15 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase;
 
 use Civi\Api4\FundingCaseContactRelation;
+use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
+use Civi\Funding\Api4\Action\FundingCase\GetAction;
 use Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\RemoteTools\Api4\Api4;
+use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\Test;
 use Civi\Test\CiviEnvBuilder;
 use Civi\Test\HeadlessInterface;
@@ -108,6 +111,34 @@ final class FundingCaseManagerTest extends TestCase implements HeadlessInterface
       'permissions' => ['test_permission'],
       'PERM_test_permission' => TRUE,
     ], $fundingCase->toArray());
+  }
+
+  public function testHasAccessTrue(): void {
+    $api4Mock = $this->createMock(Api4Interface::class);
+    $this->fundingCaseManager = new FundingCaseManager($api4Mock, $this->eventDispatcherMock);
+
+    $api4Mock->expects(static::once())->method('executeAction')->with(static::callback(function (GetAction $action) {
+      static::assertSame(11, $action->getContactId());
+      static::assertSame([['id', '=', 12, FALSE]], $action->getWhere());
+
+      return TRUE;
+    }))->willReturn(new Result([['id' => 12]]));
+
+    static::assertTrue($this->fundingCaseManager->hasAccess(11, 12));
+  }
+
+  public function testHasAccessFalse(): void {
+    $api4Mock = $this->createMock(Api4Interface::class);
+    $this->fundingCaseManager = new FundingCaseManager($api4Mock, $this->eventDispatcherMock);
+
+    $api4Mock->expects(static::once())->method('executeAction')->with(static::callback(function (GetAction $action) {
+      static::assertSame(11, $action->getContactId());
+      static::assertSame([['id', '=', 12, FALSE]], $action->getWhere());
+
+      return TRUE;
+    }))->willReturn(new Result());
+
+    static::assertFalse($this->fundingCaseManager->hasAccess(11, 12));
   }
 
 }

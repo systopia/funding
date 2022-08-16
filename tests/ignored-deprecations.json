@@ -47,37 +47,62 @@
     {
         "location": "Civi\\Test\\CiviTestListenerPHPUnit7::startTest",
         "message": "Calling the \"Symfony\\Component\\EventDispatcher\\EventDispatcherInterface::dispatch()\" method with the event name as the first argument is deprecated since Symfony 4.3, pass it as the second argument and provide the event object as the first argument instead.",
-        "count": 84
+        "count": 120
     },
     {
-        "location": "Civi\\Api4\\FundingCaseTest::setUp",
+        "location": "Civi\\Api4\\FundingApplicationProcessTest::testGet",
         "message": "The \"Civi\\API\\Event\\Event\" class extends \"Symfony\\Component\\EventDispatcher\\Event\" that is deprecated since Symfony 4.3, use \"Symfony\\Contracts\\EventDispatcher\\Event\" instead.",
+        "count": 1
+    },
+    {
+        "location": "Civi\\Api4\\FundingApplicationProcessTest::testGet",
+        "message": "Calling the \"Symfony\\Component\\EventDispatcher\\EventDispatcherInterface::dispatch()\" method with the event name as the first argument is deprecated since Symfony 4.3, pass it as the second argument and provide the event object as the first argument instead.",
+        "count": 459
+    },
+    {
+        "location": "Civi\\Api4\\FundingApplicationProcessTest::testGet",
+        "message": "The \"Civi\\Core\\DAO\\Event\\PreUpdate\" class extends \"Symfony\\Component\\EventDispatcher\\Event\" that is deprecated since Symfony 4.3, use \"Symfony\\Contracts\\EventDispatcher\\Event\" instead.",
+        "count": 1
+    },
+    {
+        "location": "Civi\\Api4\\FundingApplicationProcessTest::testGet",
+        "message": "The \"Civi\\Core\\DAO\\Event\\PostUpdate\" class extends \"Symfony\\Component\\EventDispatcher\\Event\" that is deprecated since Symfony 4.3, use \"Symfony\\Contracts\\EventDispatcher\\Event\" instead.",
+        "count": 1
+    },
+    {
+        "location": "Civi\\Api4\\FundingApplicationProcessTest::testGet",
+        "message": "The \"Civi\\Token\\Event\\TokenEvent\" class extends \"Symfony\\Component\\EventDispatcher\\Event\" that is deprecated since Symfony 4.3, use \"Symfony\\Contracts\\EventDispatcher\\Event\" instead.",
+        "count": 1
+    },
+    {
+        "location": "Civi\\Api4\\FundingApplicationProcessTest::testGet",
+        "message": "The \"Civi\\Api4\\Event\\SchemaMapBuildEvent\" class extends \"Symfony\\Component\\EventDispatcher\\Event\" that is deprecated since Symfony 4.3, use \"Symfony\\Contracts\\EventDispatcher\\Event\" instead.",
+        "count": 1
+    },
+    {
+        "location": "Civi\\Api4\\FundingApplicationProcessTest::testGet",
+        "message": "The \"Civi\\Funding\\Event\\AbstractFundingPermissionsGetEvent\" class extends \"Symfony\\Component\\EventDispatcher\\Event\" that is deprecated since Symfony 4.3, use \"Symfony\\Contracts\\EventDispatcher\\Event\" instead.",
+        "count": 1
+    },
+    {
+        "location": "Civi\\Api4\\FundingApplicationProcessTest::testGet",
+        "message": "The \"Drupal\\Component\\EventDispatcher\\Event\" class extends \"Symfony\\Component\\EventDispatcher\\Event\" that is deprecated since Symfony 4.3, use \"Symfony\\Contracts\\EventDispatcher\\Event\" instead.",
+        "count": 1
+    },
+    {
+        "location": "Civi\\Api4\\FundingApplicationProcessTest::testGet",
+        "message": "The \"Civi\\Test\\CiviTestListenerPHPUnit7\" class implements \"PHPUnit\\Framework\\TestListener\" that is deprecated.",
+        "count": 1
+    },
+    {
+        "location": "Civi\\Api4\\FundingApplicationProcessTest::testGet",
+        "message": "The \"Civi\\Test\\CiviTestListenerPHPUnit7\" class uses \"PHPUnit\\Framework\\TestListenerDefaultImplementation\" that is deprecated The `TestListener` interface is deprecated.",
         "count": 1
     },
     {
         "location": "Civi\\Api4\\FundingCaseTest::setUp",
         "message": "Calling the \"Symfony\\Component\\EventDispatcher\\EventDispatcherInterface::dispatch()\" method with the event name as the first argument is deprecated since Symfony 4.3, pass it as the second argument and provide the event object as the first argument instead.",
-        "count": 1136
-    },
-    {
-        "location": "Civi\\Api4\\FundingCaseTest::setUp",
-        "message": "The \"Civi\\Core\\DAO\\Event\\PreUpdate\" class extends \"Symfony\\Component\\EventDispatcher\\Event\" that is deprecated since Symfony 4.3, use \"Symfony\\Contracts\\EventDispatcher\\Event\" instead.",
-        "count": 1
-    },
-    {
-        "location": "Civi\\Api4\\FundingCaseTest::setUp",
-        "message": "The \"Civi\\Core\\DAO\\Event\\PostUpdate\" class extends \"Symfony\\Component\\EventDispatcher\\Event\" that is deprecated since Symfony 4.3, use \"Symfony\\Contracts\\EventDispatcher\\Event\" instead.",
-        "count": 1
-    },
-    {
-        "location": "Civi\\Api4\\FundingCaseTest::setUp",
-        "message": "The \"Civi\\Token\\Event\\TokenEvent\" class extends \"Symfony\\Component\\EventDispatcher\\Event\" that is deprecated since Symfony 4.3, use \"Symfony\\Contracts\\EventDispatcher\\Event\" instead.",
-        "count": 1
-    },
-    {
-        "location": "Civi\\Api4\\FundingCaseTest::setUp",
-        "message": "The \"Civi\\Api4\\Event\\SchemaMapBuildEvent\" class extends \"Symfony\\Component\\EventDispatcher\\Event\" that is deprecated since Symfony 4.3, use \"Symfony\\Contracts\\EventDispatcher\\Event\" instead.",
-        "count": 1
+        "count": 1134
     },
     {
         "location": "Civi\\Api4\\FundingCaseTest::testPermissions",
@@ -87,26 +112,6 @@
     {
         "location": "Civi\\Api4\\FundingCaseTest::testPermissions",
         "message": "The \"Civi\\RemoteTools\\Event\\AbstractApiRequestEvent\" class extends \"Symfony\\Component\\EventDispatcher\\Event\" that is deprecated since Symfony 4.3, use \"Symfony\\Contracts\\EventDispatcher\\Event\" instead.",
-        "count": 1
-    },
-    {
-        "location": "Civi\\Api4\\FundingCaseTest::testPermissions",
-        "message": "The \"Civi\\Funding\\Event\\AbstractFundingPermissionsGetEvent\" class extends \"Symfony\\Component\\EventDispatcher\\Event\" that is deprecated since Symfony 4.3, use \"Symfony\\Contracts\\EventDispatcher\\Event\" instead.",
-        "count": 1
-    },
-    {
-        "location": "Civi\\Api4\\FundingCaseTest::testPermissions",
-        "message": "The \"Drupal\\Component\\EventDispatcher\\Event\" class extends \"Symfony\\Component\\EventDispatcher\\Event\" that is deprecated since Symfony 4.3, use \"Symfony\\Contracts\\EventDispatcher\\Event\" instead.",
-        "count": 1
-    },
-    {
-        "location": "Civi\\Api4\\FundingCaseTest::testPermissions",
-        "message": "The \"Civi\\Test\\CiviTestListenerPHPUnit7\" class implements \"PHPUnit\\Framework\\TestListener\" that is deprecated.",
-        "count": 1
-    },
-    {
-        "location": "Civi\\Api4\\FundingCaseTest::testPermissions",
-        "message": "The \"Civi\\Test\\CiviTestListenerPHPUnit7\" class uses \"PHPUnit\\Framework\\TestListenerDefaultImplementation\" that is deprecated The `TestListener` interface is deprecated.",
         "count": 1
     },
     {
