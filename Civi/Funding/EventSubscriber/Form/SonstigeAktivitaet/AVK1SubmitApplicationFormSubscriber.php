@@ -21,19 +21,15 @@ namespace Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet;
 
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\ApplicationProcessStatusDeterminer;
-use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
+use Civi\Funding\Event\Remote\ApplicationProcess\SubmitFormEvent;
 use Civi\Funding\Form\SonstigeAktivitaet\AVK1FormExisting;
-use Civi\Funding\Form\SonstigeAktivitaet\AVK1FormNew;
 use Civi\Funding\Form\Validation\FormValidatorInterface;
-use Civi\Funding\FundingCase\FundingCaseManager;
 use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-final class AVK1SubmitNewApplicationFormSubscriber implements EventSubscriberInterface {
+final class AVK1SubmitApplicationFormSubscriber implements EventSubscriberInterface {
 
   private ApplicationProcessManager $applicationProcessManager;
-
-  private FundingCaseManager $fundingCaseManager;
 
   private ApplicationProcessStatusDeterminer $statusDeterminer;
 
@@ -41,12 +37,10 @@ final class AVK1SubmitNewApplicationFormSubscriber implements EventSubscriberInt
 
   public function __construct(FormValidatorInterface $validator,
     ApplicationProcessStatusDeterminer $statusDeterminer,
-    FundingCaseManager $fundingCaseManager,
     ApplicationProcessManager $applicationProcessManager
   ) {
     $this->validator = $validator;
     $this->statusDeterminer = $statusDeterminer;
-    $this->fundingCaseManager = $fundingCaseManager;
     $this->applicationProcessManager = $applicationProcessManager;
   }
 
@@ -54,19 +48,18 @@ final class AVK1SubmitNewApplicationFormSubscriber implements EventSubscriberInt
    * @inheritDoc
    */
   public static function getSubscribedEvents(): array {
-    return [SubmitNewApplicationFormEvent::getEventName() => 'onSubmitNewForm'];
+    return [SubmitFormEvent::getEventName() => 'onSubmitForm'];
   }
 
-  public function onSubmitNewForm(SubmitNewApplicationFormEvent $event): void {
+  public function onSubmitForm(SubmitFormEvent $event): void {
     if ('AVK1SonstigeAktivitaet' !== $event->getFundingCaseType()['name']) {
       return;
     }
 
-    $form = new AVK1FormNew(
+    $form = new AVK1FormExisting(
       $event->getFundingProgram()['currency'],
-      $event->getFundingCaseType()['id'],
-      $event->getFundingProgram()['id'],
-      $event->getFundingProgram()['permissions'],
+      $event->getApplicationProcess()->getId(),
+      $event->getFundingCase()->getPermissions(),
       $event->getData()
     );
     $validationResult = $this->validator->validate($form);
@@ -80,28 +73,22 @@ final class AVK1SubmitNewApplicationFormSubscriber implements EventSubscriberInt
     $data = $validationResult->getData();
 
     if ($validationResult->isValid()) {
-      $fundingCase = $this->fundingCaseManager->create($event->getContactId(), [
-        'funding_program' => $event->getFundingProgram(),
-        'funding_case_type' => $event->getFundingCaseType(),
-        // TODO: This has to be part of the form or determined somehow else.
-        'recipient_contact_id' => $event->getContactId(),
-      ]);
-
-      $applicationProcess = $this->applicationProcessManager->create($event->getContactId(), [
-        'funding_case' => $fundingCase,
-        'status' => $this->statusDeterminer->getStatusForNew($data['action']),
-        'title' => $data['titel'],
-        'short_description' => $data['kurzbezeichnungDesInhalts'],
-        'request_data' => $data,
-      ]);
+      $applicationProcess = $event->getApplicationProcess();
+      $applicationProcess->setStatus(
+        $this->statusDeterminer->getStatus($applicationProcess->getStatus(), $data['action'])
+      );
+      $applicationProcess->setRequestData($data);
+      $applicationProcess->setTitle($data['titel']);
+      $applicationProcess->setShortDescription($data['kurzbezeichnungDesInhalts']);
+      $this->applicationProcessManager->update($event->getContactId(), $applicationProcess, $event->getFundingCase());
 
       // TODO: Change message
       $event->setMessage(E::ts('Success!'));
       $event->setForm(new AVK1FormExisting(
         $event->getFundingProgram()['currency'],
         $applicationProcess->getId(),
-        $fundingCase->getPermissions(),
-        $applicationProcess->getRequestData(),
+        $event->getFundingCase()->getPermissions(),
+        $validationResult->getData()
       ));
     }
     else {

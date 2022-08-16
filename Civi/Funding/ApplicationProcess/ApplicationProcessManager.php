@@ -22,6 +22,8 @@ namespace Civi\Funding\ApplicationProcess;
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Entity\ApplicationProcessEntity;
+use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
 use Civi\RemoteTools\Api4\Api4Interface;
 
@@ -93,6 +95,18 @@ class ApplicationProcessManager {
     $this->eventDispatcher->dispatch(ApplicationProcessCreatedEvent::class, $event);
 
     return $applicationProcess;
+  }
+
+  public function update(int $contactId, ApplicationProcessEntity $applicationProcess,
+    FundingCaseEntity $fundingCase
+  ): void {
+    $applicationProcess->setModificationDate(new \DateTime(date('YmdHis')));
+
+    $action = FundingApplicationProcess::update()->setValues($applicationProcess->toArray());
+    $this->api4->executeAction($action);
+
+    $event = new ApplicationProcessUpdatedEvent($contactId, $applicationProcess, $fundingCase);
+    $this->eventDispatcher->dispatch(ApplicationProcessUpdatedEvent::class, $event);
   }
 
 }

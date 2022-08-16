@@ -64,7 +64,7 @@ final class RemoteFundingEntityManager implements RemoteFundingEntityManagerInte
 
     $result = $this->api4->execute($entity, 'get', $params);
     /** @var array<string, mixed>|null $record */
-    $record = $result->getArrayCopy()[0] ?? NULL;
+    $record = $result->first();
 
     return $record;
   }

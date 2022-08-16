@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase;
 
+use Civi\Api4\FundingCaseContactRelation;
 use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent;
 use Civi\Funding\Fixtures\ContactFixture;
@@ -35,6 +36,7 @@ use Symfony\Bridge\PhpUnit\ClockMock;
 
 /**
  * @covers \Civi\Funding\FundingCase\FundingCaseManager
+ * @covers \Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent
  *
  * @group headless
  */
@@ -74,7 +76,19 @@ final class FundingCaseManagerTest extends TestCase implements HeadlessInterface
     $this->eventDispatcherMock->expects(static::once())->method('dispatch')->with(
       FundingCaseCreatedEvent::class,
       static::isInstanceOf(FundingCaseCreatedEvent::class)
-    );
+    )->willReturnCallback(function (string $eventName, FundingCaseCreatedEvent $event)
+      use ($contact, $fundingProgram, $fundingCaseType): void {
+      static::assertSame($contact['id'], $event->getContactId());
+      static::assertSame($fundingProgram, $event->getFundingProgram());
+      static::assertSame($fundingCaseType, $event->getFundingCaseType());
+      FundingCaseContactRelation::create()
+        ->setValues([
+          'funding_case_id' => $event->getFundingCase()->getId(),
+          'entity_table' => 'civicrm_contact',
+          'entity_id' => $event->getContactId(),
+          'permissions' => ['test_permission'],
+        ])->execute();
+    });
 
     $fundingCase = $this->fundingCaseManager->create($contact['id'], [
       'funding_program' => $fundingProgram,
@@ -89,8 +103,10 @@ final class FundingCaseManagerTest extends TestCase implements HeadlessInterface
       'funding_case_type_id' => $fundingCaseType['id'],
       'recipient_contact_id' => $recipientContact['id'],
       'status' => 'open',
-      'creation_date' => date('YmdHis'),
-      'modification_date' => date('YmdHis'),
+      'creation_date' => date('Y-m-d H:i:s'),
+      'modification_date' => date('Y-m-d H:i:s'),
+      'permissions' => ['test_permission'],
+      'PERM_test_permission' => TRUE,
     ], $fundingCase->toArray());
   }
 

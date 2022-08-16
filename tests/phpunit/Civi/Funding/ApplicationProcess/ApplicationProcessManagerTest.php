@@ -20,7 +20,10 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess;
 
 use Civi\Core\CiviEventDispatcher;
+use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
+use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
+use Civi\Funding\Fixtures\ApplicationProcessFixture;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
@@ -36,6 +39,8 @@ use Symfony\Bridge\PhpUnit\ClockMock;
 
 /**
  * @covers \Civi\Funding\ApplicationProcess\ApplicationProcessManager
+ * @covers \Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent
+ * @covers \Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent
  *
  * @group headless
  */
@@ -71,19 +76,17 @@ final class ApplicationProcessManagerTest extends TestCase implements HeadlessIn
 
   public function testCreate(): void {
     $contact = ContactFixture::addIndividual();
-    $fundingProgram = FundingProgramFixture::addFixture();
-    $fundingCaseType = FundingCaseTypeFixture::addFixture();
-    $recipientContact = ContactFixture::addOrganization();
-    $fundingCase = FundingCaseFixture::addFixture(
-      $fundingProgram['id'],
-      $fundingCaseType['id'],
-      $recipientContact['id'],
-    );
+    $fundingCase = $this->createFundingCase();
 
     $this->eventDispatcherMock->expects(static::once())->method('dispatch')->with(
-      ApplicationProcessCreatedEvent::class,
-      static::isInstanceOf(ApplicationProcessCreatedEvent::class)
-    );
+      ApplicationProcessCreatedEvent::class, static::callback(
+        function (ApplicationProcessCreatedEvent $event) use ($contact, $fundingCase) {
+          static::assertSame($contact['id'], $event->getContactId());
+          static::assertSame($fundingCase, $event->getFundingCase());
+
+          return TRUE;
+        }
+      ));
 
     $applicationProcess = $this->applicationProcessManager->create($contact['id'], [
       'funding_case' => $fundingCase,
@@ -110,6 +113,40 @@ final class ApplicationProcessManagerTest extends TestCase implements HeadlessIn
       'is_review_content' => NULL,
       'is_review_calculative' => NULL,
     ], $applicationProcess->toArray());
+  }
+
+  public function testUpdate(): void {
+    $contact = ContactFixture::addIndividual();
+    $fundingCase = $this->createFundingCase();
+    $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId());
+
+    $event = new ApplicationProcessUpdatedEvent($contact['id'], $applicationProcess, $fundingCase);
+    $this->eventDispatcherMock->expects(static::once())->method('dispatch')
+      ->with(ApplicationProcessUpdatedEvent::class, static::callback(
+        function (ApplicationProcessUpdatedEvent $event) use ($contact, $applicationProcess, $fundingCase) {
+          static::assertSame($contact['id'], $event->getContactId());
+          static::assertSame($applicationProcess, $event->getApplicationProcess());
+          static::assertSame($fundingCase, $event->getFundingCase());
+
+          return TRUE;
+        }
+      ));
+
+    $applicationProcess->setTitle('New title');
+    $this->applicationProcessManager->update($contact['id'], $applicationProcess, $fundingCase);
+    static::assertSame(time(), $applicationProcess->getModificationDate()->getTimestamp());
+  }
+
+  private function createFundingCase(): FundingCaseEntity {
+    $fundingProgram = FundingProgramFixture::addFixture();
+    $fundingCaseType = FundingCaseTypeFixture::addFixture();
+    $recipientContact = ContactFixture::addOrganization();
+
+    return FundingCaseFixture::addFixture(
+      $fundingProgram['id'],
+      $fundingCaseType['id'],
+      $recipientContact['id'],
+    );
   }
 
 }

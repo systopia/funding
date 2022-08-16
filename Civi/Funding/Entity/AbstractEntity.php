@@ -62,10 +62,31 @@ abstract class AbstractEntity {
   }
 
   /**
+   * @phpstan-param entityT $values
+   *
+   * @internal
+   */
+  public function setValues(array $values): void {
+    $this->values = $values;
+  }
+
+  /**
    * @phpstan-return entityT
    */
   public function toArray(): array {
     return $this->values;
+  }
+
+  protected static function toDateTimeOrNull(?string $dateTimeStr): ?\DateTime {
+    return NULL === $dateTimeStr ? NULL : new \DateTime($dateTimeStr);
+  }
+
+  protected static function toDateTimeStr(\DateTimeInterface $dateTime): string {
+    return $dateTime->format('Y-m-d H:i:s');
+  }
+
+  protected static function toDateTimeStrOrNull(?\DateTimeInterface $dateTime): ?string {
+    return NULL === $dateTime ? NULL : $dateTime->format('Y-m-d H:i:s');
   }
 
 }

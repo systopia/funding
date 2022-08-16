@@ -24,17 +24,15 @@ declare(strict_types = 1);
 namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 
 use Civi\Api4\Generic\Result;
-use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Event\Remote\ApplicationProcess\ValidateFormEvent;
-use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
-use PHPUnit\Framework\TestCase;
+use Webmozart\Assert\Assert;
 
 /**
  * @covers \Civi\Funding\Api4\Action\Remote\ApplicationProcess\ValidateFormAction
  * @covers \Civi\Funding\Event\Remote\ApplicationProcess\ValidateFormEvent
  * @covers \Civi\Funding\Event\Remote\AbstractFundingValidateFormEvent
  */
-final class ValidateFormActionTest extends TestCase {
+final class ValidateFormActionTest extends AbstractFormActionTest {
 
   private ValidateFormAction $action;
 
@@ -43,49 +41,18 @@ final class ValidateFormActionTest extends TestCase {
    */
   private array $data;
 
-  /**
-   * @var \Civi\Core\CiviEventDispatcher&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private $eventDispatcherMock;
-
-  /**
-   * @var array<string, mixed>
-   */
-  private array $applicationProcess;
-
-  /**
-   * @var array<string, mixed>
-   */
-  private array $fundingCase;
-
-  /**
-   * @var array<string, mixed>
-   */
-  private array $fundingCaseType;
-
   protected function setUp(): void {
     parent::setUp();
-    $remoteFundingEntityManagerMock = $this->createMock(RemoteFundingEntityManagerInterface::class);
-    $this->eventDispatcherMock = $this->createMock(CiviEventDispatcher::class);
     $this->action = new ValidateFormAction(
-      $remoteFundingEntityManagerMock,
+      $this->remoteFundingEntityManagerMock,
       $this->eventDispatcherMock
     );
 
-    $this->action->setRemoteContactId('00');
-    $this->action->setExtraParam('contactId', 11);
-    $this->data = ['applicationProcessId' => 22];
+    $this->action->setRemoteContactId(static::REMOTE_CONTACT_ID);
+    $this->action->setExtraParam('contactId', static::CONTACT_ID);
+    Assert::integer($this->applicationProcess['id']);
+    $this->data = ['applicationProcessId' => $this->applicationProcess['id']];
     $this->action->setData($this->data);
-
-    $this->applicationProcess = ['id' => 22, 'funding_case_id' => 33];
-    $this->fundingCase = ['id' => 33, 'funding_case_type_id' => 44];
-    $this->fundingCaseType = ['id' => 44];
-
-    $remoteFundingEntityManagerMock->method('getById')->willReturnMap([
-      ['FundingApplicationProcess', 22, '00', 11, $this->applicationProcess],
-      ['FundingCase', 33, '00', 11, $this->fundingCase],
-      ['FundingCaseType', 44, '00', 11, $this->fundingCaseType],
-    ]);
   }
 
   public function testValid(): void {
@@ -100,9 +67,10 @@ final class ValidateFormActionTest extends TestCase {
             function (ValidateFormEvent $event): bool {
               static::assertSame(11, $event->getContactId());
               static::assertSame($this->data, $event->getData());
-              static::assertSame($this->applicationProcess, $event->getApplicationProcess());
-              static::assertSame($this->fundingCase, $event->getFundingCase());
+              static::assertSame($this->applicationProcess, $event->getApplicationProcess()->toArray());
+              static::assertSame($this->fundingCase, $event->getFundingCase()->toArray());
               static::assertSame($this->fundingCaseType, $event->getFundingCaseType());
+              static::assertSame($this->fundingProgram, $event->getFundingProgram());
 
               $event->setValid(TRUE);
 

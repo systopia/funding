@@ -15,8 +15,12 @@ use Civi\Funding\Api4\Action\Remote\FundingCase\ValidateNewApplicationFormAction
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\ApplicationProcessStatusDeterminer;
 use Civi\Funding\Contact\FundingRemoteContactIdResolver;
+use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessModificationDateSubscriber;
+use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1GetApplicationFormSubscriber;
 use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1GetNewApplicationFormSubscriber;
+use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1SubmitApplicationFormSubscriber;
 use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1SubmitNewApplicationFormSubscriber;
+use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1ValidateApplicationFormSubscriber;
 use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1ValidateNewApplicationFormSubscriber;
 use Civi\Funding\EventSubscriber\FundingCase\AddFundingCasePermissionsSubscriber;
 use Civi\Funding\EventSubscriber\FundingCase\FundingCasePermissionsGetSubscriber;
@@ -122,12 +126,34 @@ function funding_civicrm_container(ContainerBuilder $container): void {
   $container->autowire(FundingRequestInitSubscriber::class)
     ->addTag('kernel.event_subscriber')
     ->setLazy(TRUE);
+
   $container->autowire(ApplicationProcessGetFieldsSubscriber::class)
     ->addTag('kernel.event_subscriber');
+  $container->autowire(ApplicationProcessModificationDateSubscriber::class)
+    ->addTag('kernel.event_subscriber')
+    ->setLazy(TRUE);
   $container->autowire(ApplicationProcessDAOGetSubscriber::class)
     ->addTag('kernel.event_subscriber');
   $container->autowire(ApplicationProcessStatusDeterminer::class)
     ->addTag('event_subscriber');
+
+  $container->autowire(AVK1GetNewApplicationFormSubscriber::class)
+    ->addTag('kernel.event_subscriber');
+  $container->autowire(AVK1SubmitNewApplicationFormSubscriber::class)
+    ->addTag('kernel.event_subscriber')
+    ->setLazy(TRUE);
+  $container->autowire(AVK1ValidateNewApplicationFormSubscriber::class)
+    ->addTag('kernel.event_subscriber')
+    ->setLazy(TRUE);
+  $container->autowire(AVK1GetApplicationFormSubscriber::class)
+    ->addTag('kernel.event_subscriber');
+  $container->autowire(AVK1ValidateApplicationFormSubscriber::class)
+    ->addTag('kernel.event_subscriber')
+    ->setLazy(TRUE);
+  $container->autowire(AVK1SubmitApplicationFormSubscriber::class)
+    ->addTag('kernel.event_subscriber')
+    ->setLazy(TRUE);
+
   $container->autowire(FundingCaseGetFieldsSubscriber::class)
     ->addTag('kernel.event_subscriber');
   $container->autowire(FundingCaseDAOGetSubscriber::class)
@@ -136,17 +162,11 @@ function funding_civicrm_container(ContainerBuilder $container): void {
     ->addTag('kernel.event_subscriber');
   $container->autowire(AddFundingCasePermissionsSubscriber::class)
     ->addTag('kernel.event_subscriber');
-  $container->autowire(AVK1GetNewApplicationFormSubscriber::class)
-    ->addTag('kernel.event_subscriber');
-  $container->autowire(AVK1SubmitNewApplicationFormSubscriber::class)
-    ->addTag('kernel.event_subscriber')
-    ->setLazy(TRUE);
-  $container->autowire(AVK1ValidateNewApplicationFormSubscriber::class)
-    ->addTag('kernel.event_subscriber');
   $container->autowire(FundingCaseTypeGetFieldsSubscriber::class)
     ->addTag('kernel.event_subscriber');
   $container->autowire(FundingCaseTypeDAOGetSubscriber::class)
     ->addTag('kernel.event_subscriber');
+
   $container->autowire(FundingProgramGetFieldsSubscriber::class)
     ->addTag('kernel.event_subscriber');
   $container->autowire(FundingProgramDAOGetSubscriber::class)

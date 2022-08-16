@@ -24,65 +24,31 @@ declare(strict_types = 1);
 namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 
 use Civi\Api4\Generic\Result;
-use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Event\Remote\ApplicationProcess\GetFormEvent;
 use Civi\Funding\Form\JsonForms\JsonFormsElement;
 use Civi\Funding\Form\JsonSchema\JsonSchema;
-use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
+use Webmozart\Assert\Assert;
 
 /**
  * @covers \Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetFormAction
  * @covers \Civi\Funding\Event\Remote\ApplicationProcess\GetFormEvent
  * @covers \Civi\Funding\Event\Remote\AbstractFundingGetFormEvent
  */
-final class GetFormActionTest extends TestCase {
+final class GetFormActionTest extends AbstractFormActionTest {
 
   private GetFormAction $action;
 
-  /**
-   * @var \PHPUnit\Framework\MockObject\MockObject&\Civi\Core\CiviEventDispatcher
-   */
-  private MockObject $eventDispatcherMock;
-
-  /**
-   * @var array<string, mixed>
-   */
-  private array $applicationProcess;
-
-  /**
-   * @var array<string, mixed>
-   */
-  private array $fundingCase;
-
-  /**
-   * @var array<string, mixed>
-   */
-  private array $fundingCaseType;
-
   protected function setUp(): void {
     parent::setUp();
-    $remoteFundingEntityManagerMock = $this->createMock(RemoteFundingEntityManagerInterface::class);
-    $this->eventDispatcherMock = $this->createMock(CiviEventDispatcher::class);
     $this->action = new GetFormAction(
-      $remoteFundingEntityManagerMock,
+      $this->remoteFundingEntityManagerMock,
       $this->eventDispatcherMock
     );
 
-    $this->action->setRemoteContactId('00');
-    $this->action->setExtraParam('contactId', 11);
-    $this->action->setApplicationProcessId(22);
-
-    $this->applicationProcess = ['id' => 22, 'funding_case_id' => 33];
-    $this->fundingCase = ['id' => 33, 'funding_case_type_id' => 44];
-    $this->fundingCaseType = ['id' => 44];
-
-    $remoteFundingEntityManagerMock->method('getById')->willReturnMap([
-      ['FundingApplicationProcess', 22, '00', 11, $this->applicationProcess],
-      ['FundingCase', 33, '00', 11, $this->fundingCase],
-      ['FundingCaseType', 44, '00', 11, $this->fundingCaseType],
-    ]);
+    $this->action->setRemoteContactId(static::REMOTE_CONTACT_ID);
+    $this->action->setExtraParam('contactId', static::CONTACT_ID);
+    Assert::integer($this->applicationProcess['id']);
+    $this->action->setApplicationProcessId($this->applicationProcess['id']);
   }
 
   public function testRun(): void {
@@ -96,9 +62,10 @@ final class GetFormActionTest extends TestCase {
           static::callback(
             function (GetFormEvent $event) use ($jsonSchema, $uiSchema): bool {
               static::assertSame(11, $event->getContactId());
-              static::assertSame($this->applicationProcess, $event->getApplicationProcess());
-              static::assertSame($this->fundingCase, $event->getFundingCase());
+              static::assertSame($this->applicationProcess, $event->getApplicationProcess()->toArray());
+              static::assertSame($this->fundingCase, $event->getFundingCase()->toArray());
               static::assertSame($this->fundingCaseType, $event->getFundingCaseType());
+              static::assertSame($this->fundingProgram, $event->getFundingProgram());
 
               $event->setJsonSchema($jsonSchema);
               $event->setUiSchema($uiSchema);
