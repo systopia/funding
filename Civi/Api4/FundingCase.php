@@ -38,7 +38,7 @@ use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
  *   recipient_contact_id: int,
  * }
  */
-class FundingCase extends Generic\DAOEntity {
+final class FundingCase extends Generic\DAOEntity {
 
   use EntityNameTrait;
 
@@ -48,7 +48,7 @@ class FundingCase extends Generic\DAOEntity {
    * @return \Civi\Funding\Api4\Action\FundingCase\GetAction
    */
   public static function get($checkPermissions = TRUE) {
-    return (new GetAction(\Civi::dispatcher()))->setCheckPermissions($checkPermissions);
+    return \Civi::service(GetAction::class)->setCheckPermissions($checkPermissions);
   }
 
   /**
@@ -57,7 +57,7 @@ class FundingCase extends Generic\DAOEntity {
    * @return \Civi\Funding\Api4\Action\FundingCase\GetFieldsAction
    */
   public static function getFields($checkPermissions = TRUE) {
-    return (new GetFieldsAction())->setCheckPermissions($checkPermissions);
+    return \Civi::service(GetFieldsAction::class)->setCheckPermissions($checkPermissions);
   }
 
 }

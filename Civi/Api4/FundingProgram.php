@@ -30,7 +30,7 @@ use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
  *
  * @package Civi\Api4
  */
-class FundingProgram extends Generic\DAOEntity {
+final class FundingProgram extends Generic\DAOEntity {
 
   use EntityNameTrait;
 
@@ -40,7 +40,7 @@ class FundingProgram extends Generic\DAOEntity {
    * @return \Civi\Funding\Api4\Action\FundingProgram\GetAction
    */
   public static function get($checkPermissions = TRUE) {
-    return (new GetAction(\Civi::dispatcher()))->setCheckPermissions($checkPermissions);
+    return \Civi::service(GetAction::class)->setCheckPermissions($checkPermissions);
   }
 
   /**
@@ -49,7 +49,7 @@ class FundingProgram extends Generic\DAOEntity {
    * @return \Civi\Funding\Api4\Action\FundingProgram\GetFieldsAction
    */
   public static function getFields($checkPermissions = TRUE) {
-    return (new GetFieldsAction())->setCheckPermissions($checkPermissions);
+    return \Civi::service(GetFieldsAction::class)->setCheckPermissions($checkPermissions);
   }
 
 }

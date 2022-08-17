@@ -17,7 +17,7 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Api4\Action\Helper;
+namespace Civi\RemoteTools\Api4\Action\Helper;
 
 use Civi\Api4\Generic\Result;
 
@@ -25,37 +25,47 @@ final class AddPermissionsToRecords {
 
   /**
    * @var callable
-   * @phpstan-var callable(array<string, mixed>&array{id: int}): (array<int, string>|null)
+   * @phpstan-var callable(array<string, mixed>&array{id: int}): (array<string>|null)
    */
   private $getRecordPermissions;
 
   /**
+   * @phpstan-var array<string>
+   */
+  private array $possiblePermissions;
+
+  /**
+   * @phpstan-param array<string> $possiblePermissions
    * @phpstan-param callable(array<string, mixed>&array{id: int}): (array<int, string>|null) $getRecordPermissions
    *   Callable that returns the permissions for a given record. If it returns
    *   NULL, the record is filtered out.
    */
-  public function __construct(callable $getRecordPermissions) {
+  public function __construct(array $possiblePermissions, callable $getRecordPermissions) {
+    $this->possiblePermissions = $possiblePermissions;
     $this->getRecordPermissions = $getRecordPermissions;
   }
 
   public function __invoke(Result $result): void {
     $records = [];
-    /** @var array<string, mixed>&array{id: int} $record */
+    /** @phpstan-var array<string, mixed>&array{id: int} $record */
     foreach ($result as $record) {
-      $record['permissions'] = ($this->getRecordPermissions)($record);
-      if (NULL === $record['permissions']) {
+      $record['permissions'] = $permissions = ($this->getRecordPermissions)($record);
+      if (NULL === $permissions) {
         continue;
       }
 
-      // For Drupal Views
-      foreach ($record['permissions'] as $permission) {
+      // Flattened permissions might be useful for some frontends (e.g. Drupal Views).
+      foreach ($this->possiblePermissions as $permission) {
+        $record['PERM_' . $permission] = FALSE;
+      }
+      foreach ($permissions as $permission) {
         $record['PERM_' . $permission] = TRUE;
       }
 
       $records[] = $record;
     }
 
-    $result->rowCount = count($records);
+    $result->rowCount = \count($records);
     $result->exchangeArray($records);
   }
 

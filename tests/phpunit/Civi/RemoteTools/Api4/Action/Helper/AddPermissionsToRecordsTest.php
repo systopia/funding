@@ -17,19 +17,21 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Api4\Action\Helper;
+namespace Civi\RemoteTools\Api4\Action\Helper;
 
 use Civi\Api4\Generic\Result;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Civi\Funding\Api4\Action\Helper\AddPermissionsToRecords
+ * @covers \Civi\RemoteTools\Api4\Action\Helper\AddPermissionsToRecords
  */
 final class AddPermissionsToRecordsTest extends TestCase {
 
   public function testPermissionIsAdded(): void {
-
-    $addPermissionsToRecords = new AddPermissionsToRecords(fn () => ['foo', 'bar']);
+    $addPermissionsToRecords = new AddPermissionsToRecords(
+      ['foo', 'bar', 'baz'],
+      fn () => ['foo', 'bar']
+    );
     $result = new Result([['id' => 1, 'name' => 'Test']]);
     $addPermissionsToRecords($result);
 
@@ -40,6 +42,7 @@ final class AddPermissionsToRecordsTest extends TestCase {
       'permissions' => ['foo', 'bar'],
       'PERM_foo' => TRUE,
       'PERM_bar' => TRUE,
+      'PERM_baz' => FALSE,
     ];
     static::assertSame([$expectedRecord], $result->getArrayCopy());
 
@@ -47,7 +50,7 @@ final class AddPermissionsToRecordsTest extends TestCase {
 
   public function testRecordIsFilteredOut(): void {
 
-    $addPermissionsToRecords = new AddPermissionsToRecords(fn () => NULL);
+    $addPermissionsToRecords = new AddPermissionsToRecords(['foo'], fn () => NULL);
     $result = new Result([['id' => 1, 'name' => 'Test']]);
     $addPermissionsToRecords($result);
 
