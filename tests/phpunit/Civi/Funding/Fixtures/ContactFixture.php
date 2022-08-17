@@ -19,11 +19,9 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Fixtures;
 
-use Civi\Api4\ContactType;
+use Civi\Api4\Contact;
 
-final class ContactTypeFixture {
-
-  public const CONTACT_TYPE_ORGANIZATION_ID = 3;
+final class ContactFixture {
 
   /**
    * @param array<string, scalar> $values
@@ -33,24 +31,27 @@ final class ContactTypeFixture {
    *
    * @throws \API_Exception
    */
-  public static function addFixture(array $values = []): array {
-    return ContactType::create()
-      ->setValues($values + [
-        'name' => 'TestContactType',
-        'label' => 'test contact type',
-        'parent_id' => self::CONTACT_TYPE_ORGANIZATION_ID,
-      ])->execute()->first();
+  public static function addIndividual(array $values = []): array {
+    return Contact::create()->setValues($values + [
+      'contact_type' => 'Individial',
+      'first_name' => 'Associated No Permissions',
+      'last_name' => 'User',
+    ])->execute()->first();
   }
 
   /**
-   * @return array<string, scalar|null>&array{id: int}
+   * @param array<string, scalar> $values
+   *
+   * @return array
+   * @phpstan-return array<string, scalar|null>&array{id: int}
    *
    * @throws \API_Exception
    */
-  public static function addOrganizationFixture(string $name = 'TestOrganizationContactType',
-    string $label = 'test organization contact type'
-  ): array {
-    return self::addFixture(['name' => $name, 'label' => $label, 'parent_id' => self::CONTACT_TYPE_ORGANIZATION_ID]);
+  public static function addOrganization(array $values = []): array {
+    return Contact::create()->setValues($values + [
+      'contact_type' => 'Organization',
+      'legal_name' => 'Test organization',
+    ])->execute()->first();
   }
 
 }

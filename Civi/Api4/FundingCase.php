@@ -28,7 +28,15 @@ use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
  *
  * Provided by the Funding Program Manager extension.
  *
- * @package Civi\Api4
+ * @phpstan-type fundingCaseT array{
+ *   id: int,
+ *   funding_program_id: int,
+ *   funding_case_type_id: int,
+ *   status: string,
+ *   creation_date: string,
+ *   modification_date: string,
+ *   recipient_contact_id: int,
+ * }
  */
 class FundingCase extends Generic\DAOEntity {
 
@@ -36,6 +44,8 @@ class FundingCase extends Generic\DAOEntity {
 
   /**
    * @inheritDoc
+   *
+   * @return \Civi\Funding\Api4\Action\FundingCase\GetAction
    */
   public static function get($checkPermissions = TRUE) {
     return (new GetAction(\Civi::dispatcher()))->setCheckPermissions($checkPermissions);
@@ -43,6 +53,8 @@ class FundingCase extends Generic\DAOEntity {
 
   /**
    * @inheritDoc
+   *
+   * @return \Civi\Funding\Api4\Action\FundingCase\GetFieldsAction
    */
   public static function getFields($checkPermissions = TRUE) {
     return (new GetFieldsAction())->setCheckPermissions($checkPermissions);

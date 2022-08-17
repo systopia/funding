@@ -17,15 +17,26 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Event\Remote\FundingProgram;
+namespace Civi\Funding\Fixtures;
 
-use Civi\Api4\RemoteFundingProgram;
-use Civi\Funding\Event\Remote\AbstractFundingPermissionsGetEvent;
+use Civi\Api4\FundingCaseType;
 
-final class PermissionsGetEvent extends AbstractFundingPermissionsGetEvent {
+final class FundingCaseTypeFixture {
 
-  public function __construct(int $entityId, int $contactId) {
-    parent::__construct(RemoteFundingProgram::_getEntityName(), $entityId, $contactId);
+  /**
+   * @param array<string, scalar> $values
+   *
+   * @return array
+   * @phpstan-return array<string, scalar|null>&array{id: int}
+   *
+   * @throws \API_Exception
+   */
+  public static function addFixture(array $values = []): array {
+    return FundingCaseType::create()
+      ->setValues($values + [
+        'title' => 'Test Case Type',
+        'name' => 'TestCaseType',
+      ])->execute()->first();
   }
 
 }

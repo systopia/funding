@@ -17,10 +17,10 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\EventSubscriber;
+namespace Civi\Funding\EventSubscriber\FundingCase;
 
 use Civi\Api4\FundingCaseContactRelation;
-use Civi\Funding\Event\Remote\FundingCase\PermissionsGetEvent;
+use Civi\Funding\Event\FundingCase\PermissionsGetEvent;
 use Civi\Funding\Permission\ContactRelationCheckerInterface;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

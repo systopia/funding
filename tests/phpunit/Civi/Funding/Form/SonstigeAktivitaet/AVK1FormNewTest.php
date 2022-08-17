@@ -31,7 +31,7 @@ final class AVK1FormNewTest extends TestCase {
   /**
    * @var array<string, string>
    */
-  private $permissionActionMap = [
+  private array $permissionActionMap = [
     'create_application' => 'save',
     'apply_application' => 'apply',
   ];

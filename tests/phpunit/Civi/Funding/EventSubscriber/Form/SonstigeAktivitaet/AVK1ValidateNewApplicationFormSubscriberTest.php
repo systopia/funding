@@ -124,7 +124,7 @@ final class AVK1ValidateNewApplicationFormSubscriberTest extends TestCase {
   private function createEvent(array $data,
     string $fundingCaseTypeName = 'AVK1SonstigeAktivitaet'
   ): ValidateNewApplicationFormEvent {
-    return new ValidateNewApplicationFormEvent('RemoteFundingCase', 'ValidateNewApplicationForm', [
+    return new ValidateNewApplicationFormEvent('RemoteFundingCase', 'validateNewApplicationForm', [
       'remoteContactId' => '00',
       'contactId' => 1,
       'fundingProgram' => ['id' => 2, 'currency' => '€', 'permissions' => []],

@@ -17,30 +17,15 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Api4;
+namespace Civi\Funding\Event\FundingProgram;
 
-/**
- * FundingApplicationProcess entity.
- *
- * Provided by the Funding Program Manager extension.
- *
- * @phpstan-type applicationProcessT array{
- *   id: int,
- *   funding_case_id: int,
- *   status: string,
- *   creation_date: string,
- *   modification_date: string,
- *   title: string,
- *   short_description: string,
- *   start_date: string|null,
- *   end_date: string|null,
- *   request_data: array<string, mixed>,
- *   amount_granted: float|null,
- *   granted_budget: float|null,
- *   is_review_content: bool|null,
- *   is_review_calculative: bool|null,
- * }
- */
-class FundingApplicationProcess extends Generic\DAOEntity {
+use Civi\Api4\RemoteFundingProgram;
+use Civi\Funding\Event\AbstractFundingPermissionsGetEvent;
+
+final class PermissionsGetEvent extends AbstractFundingPermissionsGetEvent {
+
+  public function __construct(int $entityId, int $contactId) {
+    parent::__construct(RemoteFundingProgram::_getEntityName(), $entityId, $contactId);
+  }
 
 }

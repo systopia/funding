@@ -17,7 +17,7 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Event\Remote;
+namespace Civi\Funding\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 
@@ -58,7 +58,7 @@ abstract class AbstractFundingPermissionsGetEvent extends Event {
    * @return $this
    */
   public function addPermissions(array $permissions): self {
-    $this->permissions = array_values(array_unique(array_merge($this->permissions ?? [], $permissions)));
+    $this->permissions = \array_values(array_unique(array_merge($this->permissions ?? [], $permissions)));
 
     return $this;
   }
