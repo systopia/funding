@@ -25,6 +25,11 @@ use Civi\Funding\Form\JsonSchema\JsonSchemaString;
 use Civi\Funding\Form\SonstigeAktivitaet\JsonSchema\AVK1JsonSchema;
 use Civi\Funding\Form\SonstigeAktivitaet\UISchema\AVK1UiSchema;
 
+/**
+ * This implements the "AV-K1" form to apply for a funding for a
+ * "Sonstige Aktivität" in the "Kinder- und Jugendplan des Bundes (KJP)".
+ * Because it is a specific German form strings are not translated.
+ */
 class AVK1Form extends FundingForm {
 
   /**

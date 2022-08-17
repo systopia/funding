@@ -31,7 +31,9 @@ final class AVK1KostenSchema extends JsonSchemaObject {
 
   public function __construct() {
     parent::__construct([
+      // Abschnitt I.1
       'unterkunftUndVerpflegung' => new JsonSchemaMoney(),
+      // Abschnitt I.2
       'honorare' => new JsonSchemaArray(
         new JsonSchemaObject([
           'stunden' => new JsonSchemaNumber(['precision' => 2]),
@@ -50,6 +52,7 @@ final class AVK1KostenSchema extends JsonSchemaObject {
       'honorareGesamt' => new JsonSchemaCalculate('number', 'sum(map(honorare, "value.betrag"))', [
         'honorare' => new JsonSchemaDataPointer('1/honorare'),
       ]),
+      // Abschnitt I.6
       'sonstigeAusgaben' => new JsonSchemaArray(
         new JsonSchemaObject([
           'betrag' => new JsonSchemaMoney(),
@@ -59,6 +62,7 @@ final class AVK1KostenSchema extends JsonSchemaObject {
       'sonstigeAusgabenGesamt' => new JsonSchemaCalculate('number', 'sum(map(sonstigeAusgaben, "value.betrag"))', [
         'sonstigeAusgaben' => new JsonSchemaDataPointer('1/sonstigeAusgaben'),
       ]),
+      // Abschnitt I.4
       'fahrtkosten' => new JsonSchemaArray(
         new JsonSchemaObject([
           'betrag' => new JsonSchemaMoney(),
@@ -68,6 +72,7 @@ final class AVK1KostenSchema extends JsonSchemaObject {
       'fahrtkostenGesamt' => new JsonSchemaCalculate('number', 'sum(map(fahrtkosten, "value.betrag"))', [
         'fahrtkosten' => new JsonSchemaDataPointer('1/fahrtkosten'),
       ]),
+      // Gesamtkosten
       'gesamtkosten' => new JsonSchemaCalculate(
         'number',
         'unterkunftUndVerpflegung + honorareGesamt + sonstigeAusgabenGesamt + fahrtkostenGesamt',

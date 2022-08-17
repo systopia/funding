@@ -32,7 +32,9 @@ final class AVK1JsonSchema extends JsonSchemaObject {
     parent::__construct([
       'titel' => new JsonSchemaString(),
       'kurzbezeichnungDesInhalts' => new JsonSchemaString(),
+      // Abschnitt I
       'kosten' => new AVK1KostenSchema(),
+      // Abschnitt II
       'finanzierung' => new AVK1FinanzierungSchema(),
     ] + $extraProperties);
   }

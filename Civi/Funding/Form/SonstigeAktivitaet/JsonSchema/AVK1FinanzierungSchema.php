@@ -30,8 +30,11 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
 
   public function __construct() {
     parent::__construct([
+      // Abschnitt II.1
       'teilnehmerbeitraege' => new JsonSchemaMoney(),
+      // Abschnitt II.2
       'eigenmittel' => new JsonSchemaMoney(),
+      // Abschnitt II.3
       'oeffentlicheMittel' => new JsonSchemaObject([
         'europa' => new JsonSchemaMoney(),
         'bundeslaender' => new JsonSchemaMoney(),
@@ -42,6 +45,7 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
         'bundeslaender' => new JsonSchemaDataPointer('1/oeffentlicheMittel/bundeslaender'),
         'staedteUndKreise' => new JsonSchemaDataPointer('1/oeffentlicheMittel/staedteUndKreise'),
       ]),
+      // Abschnitt II.4
       'sonstigeMittel' => new JsonSchemaArray(
         new JsonSchemaObject([
           'betrag' => new JsonSchemaMoney(),
@@ -51,6 +55,7 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
       'sonstigeMittelGesamt' => new JsonSchemaCalculate('number', 'sum(map(sonstigeMittel, "value.betrag"))', [
         'sonstigeMittel' => new JsonSchemaDataPointer('1/sonstigeMittel'),
       ]),
+      // Gesamtmittel ohne Zuschuss
       'gesamtmittel' => new JsonSchemaCalculate(
         'number',
         'teilnehmerbeitraege + eigenmittel + oeffentlicheMittelGesamt + sonstigeMittelGesamt',
@@ -61,6 +66,7 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
           'sonstigeMittelGesamt' => new JsonSchemaDataPointer('1/sonstigeMittelGesamt'),
         ]
       ),
+      // Beantragter Zuschuss
       'beantragterZuschuss' => new JsonSchemaCalculate('number', 'max(gesamtkosten - gesamtmittel, 0)', [
         'gesamtkosten' => new JsonSchemaDataPointer('/kosten/gesamtkosten'),
         'gesamtmittel' => new JsonSchemaDataPointer('1/gesamtmittel'),
