@@ -49,8 +49,8 @@ class FundingCaseManager {
 
   /**
    * @phpstan-param array{
-   *   funding_program: array<string, mixed>&array{id: int, permissions: array<string>},
-   *   funding_case_type: array<string, mixed>&array{id: int},
+   *   funding_program: \Civi\Funding\Entity\FundingProgramEntity,
+   *   funding_case_type: \Civi\Funding\Entity\FundingCaseTypeEntity,
    *   recipient_contact_id: int,
    * } $values
    *
@@ -59,8 +59,8 @@ class FundingCaseManager {
   public function create(int $contactId, array $values): FundingCaseEntity {
     $now = date('Y-m-d H:i:s');
     $fundingCase = FundingCaseEntity::fromArray([
-      'funding_program_id' => $values['funding_program']['id'],
-      'funding_case_type_id' => $values['funding_case_type']['id'],
+      'funding_program_id' => $values['funding_program']->getId(),
+      'funding_case_type_id' => $values['funding_case_type']->getId(),
       'recipient_contact_id' => $values['recipient_contact_id'],
       'status' => 'open',
       'creation_date' => $now,

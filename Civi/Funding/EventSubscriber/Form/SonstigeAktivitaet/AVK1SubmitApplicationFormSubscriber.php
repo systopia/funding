@@ -52,12 +52,12 @@ final class AVK1SubmitApplicationFormSubscriber implements EventSubscriberInterf
   }
 
   public function onSubmitForm(SubmitFormEvent $event): void {
-    if ('AVK1SonstigeAktivitaet' !== $event->getFundingCaseType()['name']) {
+    if ('AVK1SonstigeAktivitaet' !== $event->getFundingCaseType()->getName()) {
       return;
     }
 
     $form = new AVK1FormExisting(
-      $event->getFundingProgram()['currency'],
+      $event->getFundingProgram()->getCurrency(),
       $event->getApplicationProcess()->getId(),
       $event->getFundingCase()->getPermissions(),
       $event->getData()
@@ -85,7 +85,7 @@ final class AVK1SubmitApplicationFormSubscriber implements EventSubscriberInterf
       // TODO: Change message
       $event->setMessage(E::ts('Success!'));
       $event->setForm(new AVK1FormExisting(
-        $event->getFundingProgram()['currency'],
+        $event->getFundingProgram()->getCurrency(),
         $applicationProcess->getId(),
         $event->getFundingCase()->getPermissions(),
         $validationResult->getData()

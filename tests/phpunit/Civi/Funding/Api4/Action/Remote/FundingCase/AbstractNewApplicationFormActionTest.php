@@ -17,43 +17,30 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
+namespace Civi\Funding\Api4\Action\Remote\FundingCase;
 
 use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Api4\Action\Remote\FundingCase\Traits\NewApplicationFormActionTrait;
+use Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker;
 use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ClockMock;
 
-abstract class AbstractFormActionTest extends TestCase {
-
-  protected const REMOTE_CONTACT_ID = '00';
-
-  protected const CONTACT_ID = 11;
+abstract class AbstractNewApplicationFormActionTest extends TestCase {
 
   /**
-   * @var \Civi\Core\CiviEventDispatcher&\PHPUnit\Framework\MockObject\MockObject
+   * @var \PHPUnit\Framework\MockObject\MockObject&\Civi\Core\CiviEventDispatcher
    */
-  protected $eventDispatcherMock;
+  protected MockObject $eventDispatcherMock;
 
   /**
-   * @phpstan-var array<string, mixed>
-   */
-  protected array $applicationProcessValues;
-
-  /**
-   * @phpstan-var array<string, mixed>
-   */
-  protected array $fundingCaseValues;
-
-  /**
-   * @phpstan-var array<string, mixed>
+   * @var array<string, mixed>
    */
   protected array $fundingCaseTypeValues;
 
   /**
-   * @phpstan-var array<string, mixed>
+   * @var array<string, mixed>
    */
   protected array $fundingProgramValues;
 
@@ -61,6 +48,11 @@ abstract class AbstractFormActionTest extends TestCase {
    * @var \Civi\Funding\Remote\RemoteFundingEntityManagerInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   protected MockObject $remoteFundingEntityManagerMock;
+
+  /**
+   * @var \PHPUnit\Framework\MockObject\MockObject&\Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker
+   */
+  protected MockObject $relationCheckerMock;
 
   public static function setUpBeforeClass(): void {
     parent::setUpBeforeClass();
@@ -73,21 +65,18 @@ abstract class AbstractFormActionTest extends TestCase {
     parent::setUp();
     $this->remoteFundingEntityManagerMock = $this->createMock(RemoteFundingEntityManagerInterface::class);
     $this->eventDispatcherMock = $this->createMock(CiviEventDispatcher::class);
+    $this->relationCheckerMock = $this->createMock(FundingCaseTypeProgramRelationChecker::class);
 
-    $this->applicationProcessValues = ['id' => 22, 'funding_case_id' => 33];
-    $this->fundingCaseValues = ['id' => 33, 'funding_case_type_id' => 44, 'funding_program_id' => 55];
-    $this->fundingCaseTypeValues = ['id' => 44];
+    $this->fundingCaseTypeValues = ['id' => 22];
     $this->fundingProgramValues = [
-      'id' => 55,
+      'id' => 33,
       'requests_start_date' => date('Y-m-d', time() - 86400),
       'requests_end_date' => date('Y-m-d', time() + 86400),
     ];
 
     $this->remoteFundingEntityManagerMock->method('getById')->willReturnMap([
-      ['FundingApplicationProcess', 22, static::REMOTE_CONTACT_ID, static::CONTACT_ID, $this->applicationProcessValues],
-      ['FundingCase', 33, static::REMOTE_CONTACT_ID, static::CONTACT_ID, $this->fundingCaseValues],
-      ['FundingCaseType', 44, static::REMOTE_CONTACT_ID, static::CONTACT_ID, $this->fundingCaseTypeValues],
-      ['FundingProgram', 55, static::REMOTE_CONTACT_ID, static::CONTACT_ID, $this->fundingProgramValues],
+      ['FundingCaseType', 22, '00', 11, &$this->fundingCaseTypeValues],
+      ['FundingProgram', 33, '00', 11, &$this->fundingProgramValues],
     ]);
   }
 

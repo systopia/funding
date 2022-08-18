@@ -45,8 +45,8 @@ final class FundingCaseFixture {
   ): FundingCaseEntity {
     $now = date('Y-m-d H:i:s');
 
-    /** @phpstan-var fundingCaseT $fundingCaseData */
-    $fundingCaseData = FundingCase::create()
+    /** @phpstan-var fundingCaseT $fundingCaseValues */
+    $fundingCaseValues = FundingCase::create()
       ->setValues($values + [
         'funding_program_id' => $fundingProgramId,
         'funding_case_type_id' => $fundingCaseTypeId,
@@ -56,7 +56,7 @@ final class FundingCaseFixture {
         'modification_date' => $now,
       ])->execute()->first();
 
-    return FundingCaseEntity::fromArray($fundingCaseData);
+    return FundingCaseEntity::fromArray($fundingCaseValues);
   }
 
 }

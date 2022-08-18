@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\Remote\FundingCase\Traits;
 
+use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker;
 
 trait NewApplicationFormActionTrait {
@@ -28,29 +29,27 @@ trait NewApplicationFormActionTrait {
   /**
    * @throws \API_Exception
    */
-  private function assertFundingCaseTypeAndProgramRelated(int $fundingCaseTypeId, int $fundingProgramId): void {
+  protected function assertFundingCaseTypeAndProgramRelated(int $fundingCaseTypeId, int $fundingProgramId): void {
     if (!$this->_relationChecker->areFundingCaseTypeAndProgramRelated($fundingCaseTypeId, $fundingProgramId)) {
       throw new \API_Exception('Funding program and funding case type are not related', 'invalid_arguments');
     }
   }
 
   /**
-   * @param array{requests_start_date: string|null, requests_end_date: string|null} $fundingProgram
-   *
    * @throws \API_Exception
    */
-  protected function assertFundingProgramDates(array $fundingProgram): void {
-    if (NULL !== $fundingProgram['requests_start_date'] && date('Y-m-d') < $fundingProgram['requests_start_date']) {
+  protected function assertFundingProgramDates(FundingProgramEntity $fundingProgram): void {
+    if (new \DateTime(date('Y-m-d')) < $fundingProgram->getRequestsStartDate()) {
       throw new \API_Exception(sprintf(
         'Funding program does not allow applications before %s',
-        $fundingProgram['requests_start_date']
+        $fundingProgram->getRequestsStartDate()->format('Y-m-d')
       ), 'invalid_arguments');
     }
 
-    if (NULL !== $fundingProgram['requests_end_date'] && date('Y-m-d') > $fundingProgram['requests_end_date']) {
+    if (new \DateTime(date('Y-m-d')) > $fundingProgram->getRequestsEndDate()) {
       throw new \API_Exception(sprintf(
         'Funding program does not allow applications after %s',
-        $fundingProgram['requests_end_date']
+        $fundingProgram->getRequestsEndDate()->format('Y-m-d')
       ), 'invalid_arguments');
     }
   }

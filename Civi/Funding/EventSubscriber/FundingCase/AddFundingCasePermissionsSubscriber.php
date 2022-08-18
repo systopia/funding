@@ -63,7 +63,7 @@ final class AddFundingCasePermissionsSubscriber implements EventSubscriberInterf
    */
   public function getCreatingContactPermissions(FundingCaseCreatedEvent $event): array {
     // TODO: Initial permissions of the creating contact?
-    return array_merge(['modify_application'], array_filter($event->getFundingProgram()['permissions'],
+    return array_merge(['modify_application'], array_filter($event->getFundingProgram()->getPermissions(),
       fn (string $permission) => 'create_application' !== $permission));
   }
 

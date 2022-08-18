@@ -30,7 +30,7 @@ use Civi\Funding\Fixtures\FundingProgramFixture;
 trait FundingCaseTestFixturesTrait {
 
   private function addFixtures(): void {
-    $fundingProgramId = FundingProgramFixture::addFixture(['title' => 'Foo'])['id'];
+    $fundingProgramId = FundingProgramFixture::addFixture(['title' => 'Foo'])->getId();
 
     $fundingCaseTypeId = FundingCaseType::create()
       ->setValues([

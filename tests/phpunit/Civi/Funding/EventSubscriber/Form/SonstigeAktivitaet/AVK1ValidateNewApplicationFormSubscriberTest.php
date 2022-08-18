@@ -21,31 +21,22 @@ namespace Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet;
 
 use Civi\Funding\Event\Remote\FundingCase\ValidateNewApplicationFormEvent;
 use Civi\Funding\Form\SonstigeAktivitaet\AVK1FormNew;
-use Civi\Funding\Form\Validation\FormValidatorInterface;
 use Civi\Funding\Form\Validation\ValidationResult;
 use Opis\JsonSchema\Errors\ValidationError;
 use Opis\JsonSchema\Info\DataInfo;
 use Opis\JsonSchema\Info\SchemaInfo;
 use Opis\JsonSchema\Schemas\EmptySchema;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use Systopia\JsonSchema\Errors\ErrorCollector;
 
 /**
  * @covers \Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1ValidateNewApplicationFormSubscriber
  */
-final class AVK1ValidateNewApplicationFormSubscriberTest extends TestCase {
+final class AVK1ValidateNewApplicationFormSubscriberTest extends AbstractNewApplicationFormSubscriberTest {
 
   private AVK1ValidateNewApplicationFormSubscriber $subscriber;
 
-  /**
-   * @var \Civi\Funding\Form\Validation\FormValidatorInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $validatorMock;
-
   protected function setUp(): void {
     parent::setUp();
-    $this->validatorMock = $this->createMock(FormValidatorInterface::class);
     $this->subscriber = new AVK1ValidateNewApplicationFormSubscriber($this->validatorMock);
   }
 
@@ -66,10 +57,10 @@ final class AVK1ValidateNewApplicationFormSubscriberTest extends TestCase {
     $event = $this->createEvent($data);
 
     $validatedForm = new AVK1FormNew(
-      $event->getFundingProgram()['currency'],
-      $event->getFundingCaseType()['id'],
-      $event->getFundingProgram()['id'],
-      $event->getFundingProgram()['permissions'],
+      $event->getFundingProgram()->getCurrency(),
+      $event->getFundingCaseType()->getId(),
+      $event->getFundingProgram()->getId(),
+      $event->getFundingProgram()->getPermissions(),
       $data
     );
     $postValidationData = ['foo' => 'baz'];
@@ -88,10 +79,10 @@ final class AVK1ValidateNewApplicationFormSubscriberTest extends TestCase {
     $event = $this->createEvent($data);
 
     $validatedForm = new AVK1FormNew(
-      $event->getFundingProgram()['currency'],
-      $event->getFundingCaseType()['id'],
-      $event->getFundingProgram()['id'],
-      $event->getFundingProgram()['permissions'],
+      $event->getFundingProgram()->getCurrency(),
+      $event->getFundingCaseType()->getId(),
+      $event->getFundingProgram()->getId(),
+      $event->getFundingProgram()->getPermissions(),
       $data
     );
     $errorCollector = new ErrorCollector();
@@ -127,8 +118,8 @@ final class AVK1ValidateNewApplicationFormSubscriberTest extends TestCase {
     return new ValidateNewApplicationFormEvent('RemoteFundingCase', 'validateNewApplicationForm', [
       'remoteContactId' => '00',
       'contactId' => 1,
-      'fundingProgram' => ['id' => 2, 'currency' => '€', 'permissions' => []],
-      'fundingCaseType' => ['id' => 3, 'name' => $fundingCaseTypeName],
+      'fundingProgram' => $this->createFundingProgram(),
+      'fundingCaseType' => $this->createFundingCaseType($fundingCaseTypeName),
       'data' => $data,
     ]);
   }
