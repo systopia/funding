@@ -12,11 +12,14 @@ use Civi\Funding\Api4\Action\Remote\ApplicationProcess\ValidateFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\GetNewApplicationFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\SubmitNewApplicationFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\ValidateNewApplicationFormAction;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
+use Civi\Funding\ApplicationProcess\ApplicationProcessStatusDeterminer;
 use Civi\Funding\Contact\FundingRemoteContactIdResolver;
 use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1GetNewApplicationFormSubscriber;
 use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1SubmitNewApplicationFormSubscriber;
 use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1ValidateNewApplicationFormSubscriber;
-use Civi\Funding\EventSubscriber\FundingCasePermissionsGetSubscriber;
+use Civi\Funding\EventSubscriber\FundingCase\AddFundingCasePermissionsSubscriber;
+use Civi\Funding\EventSubscriber\FundingCase\FundingCasePermissionsGetSubscriber;
 use Civi\Funding\EventSubscriber\FundingProgramPermissionsGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessGetFieldsSubscriber;
@@ -30,6 +33,7 @@ use Civi\Funding\EventSubscriber\Remote\FundingRequestInitSubscriber;
 use Civi\Funding\Form\Validation\FormValidator;
 use Civi\Funding\Form\Validation\FormValidatorInterface;
 use Civi\Funding\Form\Validation\OpisValidatorFactory;
+use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker;
 use Civi\Funding\Permission\ContactRelation\ContactChecker;
 use Civi\Funding\Permission\ContactRelation\ContactRelationshipChecker;
@@ -93,6 +97,9 @@ function funding_civicrm_container(ContainerBuilder $container): void {
   $container->autowire(FundingRemoteContactIdResolver::class);
   $container->autowire(FundingCaseTypeProgramRelationChecker::class);
 
+  $container->autowire(FundingCaseManager::class);
+  $container->autowire(ApplicationProcessManager::class);
+
   $container->autowire(GetNewApplicationFormAction::class)
     ->setPublic(TRUE)
     ->setShared(FALSE);
@@ -119,16 +126,21 @@ function funding_civicrm_container(ContainerBuilder $container): void {
     ->addTag('kernel.event_subscriber');
   $container->autowire(ApplicationProcessDAOGetSubscriber::class)
     ->addTag('kernel.event_subscriber');
+  $container->autowire(ApplicationProcessStatusDeterminer::class)
+    ->addTag('event_subscriber');
   $container->autowire(FundingCaseGetFieldsSubscriber::class)
     ->addTag('kernel.event_subscriber');
   $container->autowire(FundingCaseDAOGetSubscriber::class)
     ->addTag('kernel.event_subscriber');
   $container->autowire(FundingCasePermissionsGetSubscriber::class)
     ->addTag('kernel.event_subscriber');
+  $container->autowire(AddFundingCasePermissionsSubscriber::class)
+    ->addTag('kernel.event_subscriber');
   $container->autowire(AVK1GetNewApplicationFormSubscriber::class)
     ->addTag('kernel.event_subscriber');
   $container->autowire(AVK1SubmitNewApplicationFormSubscriber::class)
-    ->addTag('kernel.event_subscriber');
+    ->addTag('kernel.event_subscriber')
+    ->setLazy(TRUE);
   $container->autowire(AVK1ValidateNewApplicationFormSubscriber::class)
     ->addTag('kernel.event_subscriber');
   $container->autowire(FundingCaseTypeGetFieldsSubscriber::class)

@@ -19,17 +19,34 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet;
 
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
+use Civi\Funding\ApplicationProcess\ApplicationProcessStatusDeterminer;
 use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
 use Civi\Funding\Form\SonstigeAktivitaet\AVK1FormNew;
 use Civi\Funding\Form\Validation\FormValidatorInterface;
+use Civi\Funding\FundingCase\FundingCaseManager;
+use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 final class AVK1SubmitNewApplicationFormSubscriber implements EventSubscriberInterface {
 
+  private ApplicationProcessManager $applicationProcessManager;
+
+  private FundingCaseManager $fundingCaseManager;
+
+  private ApplicationProcessStatusDeterminer $statusDeterminer;
+
   private FormValidatorInterface $validator;
 
-  public function __construct(FormValidatorInterface $validator) {
+  public function __construct(FormValidatorInterface $validator,
+    ApplicationProcessStatusDeterminer $statusDeterminer,
+    FundingCaseManager $fundingCaseManager,
+    ApplicationProcessManager $applicationProcessManager
+  ) {
     $this->validator = $validator;
+    $this->statusDeterminer = $statusDeterminer;
+    $this->fundingCaseManager = $fundingCaseManager;
+    $this->applicationProcessManager = $applicationProcessManager;
   }
 
   /**
@@ -53,9 +70,32 @@ final class AVK1SubmitNewApplicationFormSubscriber implements EventSubscriberInt
     );
     $validationResult = $this->validator->validate($form);
 
+    /** @phpstan-var array<string, mixed>&array{
+     *   action: string,
+     *   titel: string,
+     *   kurzbezeichnungDesInhalts: string,
+     * } $data
+     */
+    $data = $validationResult->getData();
+
     if ($validationResult->isValid()) {
-      // TODO: Change and translate message, create new funding case, ...
-      $event->setMessage('Success!');
+      $fundingCase = $this->fundingCaseManager->create($event->getContactId(), [
+        'funding_program' => $event->getFundingProgram(),
+        'funding_case_type' => $event->getFundingCaseType(),
+        // TODO: This has to be part of the form or determined somehow else.
+        'recipient_contact_id' => $event->getContactId(),
+      ]);
+
+      $this->applicationProcessManager->create($event->getContactId(), [
+        'funding_case' => $fundingCase,
+        'status' => $this->statusDeterminer->getStatusForNew($data['action']),
+        'title' => $data['titel'],
+        'short_description' => $data['kurzbezeichnungDesInhalts'],
+        'request_data' => $data,
+      ]);
+
+      // TODO: Change message
+      $event->setMessage(E::ts('Success!'));
       $event->setForm(new AVK1FormNew(
         $event->getFundingProgram()['currency'],
         $event->getFundingCaseType()['id'],
@@ -65,9 +105,9 @@ final class AVK1SubmitNewApplicationFormSubscriber implements EventSubscriberInt
       ));
     }
     else {
+      // TODO: Change message
+      $event->setMessage(E::ts('Validation failed'));
       foreach ($validationResult->getLeafErrorMessages() as $jsonPointer => $messages) {
-        // TODO: Change and translate message
-        $event->setMessage('Validation failed');
         $event->addErrorsAt($jsonPointer, $messages);
       }
     }

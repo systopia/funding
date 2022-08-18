@@ -7,6 +7,9 @@ ini_set('memory_limit', '2G');
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
+// Make CRM_Funding_ExtensionUtil available.
+require_once __DIR__ . '/../../funding.civix.php';
+
 // phpcs:disable
 eval(cv('php:boot --level=classloader', 'phpcode'));
 // phpcs:enable

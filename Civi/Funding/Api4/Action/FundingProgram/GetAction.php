@@ -25,7 +25,7 @@ use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Api4\Action\Helper\AddPermissionsToRecords;
 use Civi\Funding\Api4\Action\Traits\FundingActionContactIdRequiredTrait;
-use Civi\Funding\Event\Remote\FundingProgram\PermissionsGetEvent;
+use Civi\Funding\Event\FundingProgram\PermissionsGetEvent;
 
 final class GetAction extends DAOGetAction {
 

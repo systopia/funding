@@ -17,10 +17,10 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Event\Remote\FundingCase;
+namespace Civi\Funding\Event\FundingCase;
 
 use Civi\Api4\RemoteFundingCase;
-use Civi\Funding\Event\Remote\AbstractFundingPermissionsGetEvent;
+use Civi\Funding\Event\AbstractFundingPermissionsGetEvent;
 
 final class PermissionsGetEvent extends AbstractFundingPermissionsGetEvent {
 

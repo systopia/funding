@@ -68,6 +68,8 @@ parameters:
 		- '#^Method Civi\\RemoteTools\\Api4\\Api4::createAction\(\) should return Civi\\Api4\\Generic\\AbstractAction but returns array|Civi\Api4\Generic\AbstractAction.$#'
 		- '#extends deprecated class Symfony\\Component\\EventDispatcher\\Event:#'
 		- '#^Call to deprecated method stopPropagation\(\) of class Symfony\\Component\\EventDispatcher\\Event:#'
+		- '#^Class Civi\\Funding\\Entity\\[^\s]+ has an uninitialized property \$values. Give it default value or assign it in the constructor.$#'
+		- '#^PHPDoc type array\{[^}]+\} of property Civi\\Funding\\Entity\\[^:]+::\$values is not the same as PHPDoc type array\{[^}]+\} of overridden property Civi\\Funding\\Entity\\AbstractEntity::\$values.$#'
 		- '/^Parameter #1 \$eventName of method Civi\\Core\\CiviEventDispatcher::dispatch\(\) expects object, string given.$/'
 		- '/^Parameter #1 \$iterator of function iterator_to_array expects Traversable, iterable(<.+>)? given.$/' # false positive
 		-
@@ -79,5 +81,5 @@ parameters:
 		-
 			message: '#^Class [^\s]+ has an uninitialized property#'
 			path : */tests/phpunit/Civi/Funding/Mock/**/*.php
-		- '#^Method Civi\\Funding\\Fixtures\\[^\s]+Fixture::[^\s]+\(\) should return array{id: int} but returns array\|null.$#'
+		- '#^Method Civi\\Funding\\Fixtures\\[^\s]+Fixture::[^\s]+\(\) should return array{[^}]+} but returns array\|null.$#'
 	tmpDir: .phpstan

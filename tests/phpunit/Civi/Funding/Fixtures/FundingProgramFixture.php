@@ -21,12 +21,18 @@ namespace Civi\Funding\Fixtures;
 
 use Civi\Api4\FundingProgram;
 
+/**
+ * @phpstan-type fundingProgramT array<string, mixed>&array{
+ *   id: int,
+ *   permissions: array<string>,
+ * }
+ */
 final class FundingProgramFixture {
 
   /**
-   * @param array<string, scalar> $values
+   * @param array<string, scalar|null> $values
    *
-   * @return array<string, scalar|null>&array{id: int}
+   * @phpstan-return fundingProgramT
    *
    * @throws \API_Exception
    */

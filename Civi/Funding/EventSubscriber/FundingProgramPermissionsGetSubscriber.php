@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\EventSubscriber;
 
 use Civi\Api4\FundingProgramContactRelation;
-use Civi\Funding\Event\Remote\FundingProgram\PermissionsGetEvent;
+use Civi\Funding\Event\FundingProgram\PermissionsGetEvent;
 use Civi\Funding\Permission\ContactRelationCheckerInterface;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
