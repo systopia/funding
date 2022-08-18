@@ -48,6 +48,9 @@ parameters:
 			path: */Civi/RemoteTools/Api4/Action/Traits/EventActionTrait.php
 		- '#^Class Civi\\Funding\\Api4\\Action\\[^\s]+Action has an uninitialized property \$[^\s]+\. Give it default value or assign it in the constructor.$#'
 		# For actions that are fetched from container
+		-
+			message: '#^Cannot call method setCheckPermissions\(\) on mixed.$#'
+			path: */Civi/Api4/*.php
 		- '#^Method Civi\\Api4\\[^\\]+::[^(]+\(\) should return Civi\\Funding\\Api4\\Action\\[^\s]+\\[^\s]+Action but returns mixed.$#'
 		- '#^Access to an uninitialized property Civi\\Funding\\Event\\[^\s]+Event::\$[^\s]+.$#'
 		-

@@ -91,4 +91,13 @@ class FundingCaseManager {
     $this->api4->executeAction($action);
   }
 
+  public function hasAccess(int $contactId, int $id): bool {
+    $action = FundingCase::get()
+      ->setContactId($contactId)
+      ->addSelect('id')
+      ->addWhere('id', '=', $id);
+
+    return 1 === $this->api4->executeAction($action)->count();
+  }
+
 }
