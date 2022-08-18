@@ -23,6 +23,7 @@ use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\ApplicationProcessStatusDeterminer;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
 use Civi\Funding\Form\SonstigeAktivitaet\AVK1FormExisting;
 use Civi\Funding\Form\SonstigeAktivitaet\AVK1FormNew;
@@ -95,10 +96,10 @@ final class AVK1SubmitNewApplicationFormSubscriberTest extends TestCase {
     $event = $this->createEvent($data);
 
     $validatedForm = new AVK1FormNew(
-      $event->getFundingProgram()['currency'],
+      $event->getFundingProgram()->getCurrency(),
       $event->getFundingCaseType()['id'],
-      $event->getFundingProgram()['id'],
-      $event->getFundingProgram()['permissions'],
+      $event->getFundingProgram()->getId(),
+      $event->getFundingProgram()->getPermissions(),
       $data
     );
     $postValidationData = [
@@ -116,7 +117,7 @@ final class AVK1SubmitNewApplicationFormSubscriberTest extends TestCase {
 
     $fundingCase = FundingCaseEntity::fromArray([
       'id' => 4,
-      'funding_program_id' => $event->getFundingProgram()['id'],
+      'funding_program_id' => $event->getFundingProgram()->getId(),
       'funding_case_type_id' => $event->getFundingCaseType()['id'],
       'status' => 'open',
       // TODO: This has to be adapted when fixed in the CUT.
@@ -163,7 +164,7 @@ final class AVK1SubmitNewApplicationFormSubscriberTest extends TestCase {
 
     static::assertSame(SubmitNewApplicationFormEvent::ACTION_SHOW_FORM, $event->getAction());
     $expectedForm = new AVK1FormExisting(
-      $event->getFundingProgram()['currency'],
+      $event->getFundingProgram()->getCurrency(),
       $applicationProcess->getId(),
       $fundingCase->getPermissions(),
       $postValidationData
@@ -176,10 +177,10 @@ final class AVK1SubmitNewApplicationFormSubscriberTest extends TestCase {
     $event = $this->createEvent($data);
 
     $validatedForm = new AVK1FormNew(
-      $event->getFundingProgram()['currency'],
+      $event->getFundingProgram()->getCurrency(),
       $event->getFundingCaseType()['id'],
-      $event->getFundingProgram()['id'],
-      $event->getFundingProgram()['permissions'],
+      $event->getFundingProgram()->getId(),
+      $event->getFundingProgram()->getPermissions(),
       $data
     );
     $errorCollector = new ErrorCollector();
@@ -221,9 +222,22 @@ final class AVK1SubmitNewApplicationFormSubscriberTest extends TestCase {
     return new SubmitNewApplicationFormEvent('RemoteFundingCase', 'submitNewApplicationForm', [
       'remoteContactId' => '00',
       'contactId' => 1,
-      'fundingProgram' => ['id' => 2, 'currency' => '€', 'permissions' => []],
+      'fundingProgram' => $this->createFundingProgram(),
       'fundingCaseType' => ['id' => 3, 'name' => $fundingCaseTypeName],
       'data' => $data,
+    ]);
+  }
+
+  private function createFundingProgram(): FundingProgramEntity {
+    return FundingProgramEntity::fromArray([
+      'id' => 2,
+      'title' => 'TestFundingProgram',
+      'start_date' => '2022-10-22',
+      'end_date' => '2023-10-22',
+      'requests_start_date' => '2022-06-22',
+      'requests_end_date' => '2022-12-31',
+      'budget' => NULL,
+      'currency' => '€',
     ]);
   }
 

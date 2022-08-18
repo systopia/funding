@@ -45,10 +45,10 @@ final class AVK1ValidateNewApplicationFormSubscriber implements EventSubscriberI
     }
 
     $form = new AVK1FormNew(
-      $event->getFundingProgram()['currency'],
+      $event->getFundingProgram()->getCurrency(),
       $event->getFundingCaseType()['id'],
-      $event->getFundingProgram()['id'],
-      $event->getFundingProgram()['permissions'],
+      $event->getFundingProgram()->getId(),
+      $event->getFundingProgram()->getPermissions(),
       $event->getData()
     );
     $validationResult = $this->validator->validate($form);

@@ -20,11 +20,18 @@ declare(strict_types = 1);
 namespace Civi\Funding\Fixtures;
 
 use Civi\Api4\FundingProgram;
+use Civi\Funding\Entity\FundingProgramEntity;
 
 /**
- * @phpstan-type fundingProgramT array<string, mixed>&array{
+ * @phpstan-type fundingProgramT array{
  *   id: int,
- *   permissions: array<string>,
+ *   title: string,
+ *   start_date: string,
+ *   end_date: string,
+ *   requests_start_date: string,
+ *   requests_end_date: string,
+ *   currency: string,
+ *   budget: float|null,
  * }
  */
 final class FundingProgramFixture {
@@ -32,20 +39,22 @@ final class FundingProgramFixture {
   /**
    * @param array<string, scalar|null> $values
    *
-   * @phpstan-return fundingProgramT
-   *
    * @throws \API_Exception
    */
-  public static function addFixture(array $values = []): array {
-    return FundingProgram::create()
+  public static function addFixture(array $values = []): FundingProgramEntity {
+    /** @phpstan-var fundingProgramT $fundingProgramValues */
+    $fundingProgramValues = FundingProgram::create()
       ->setValues($values + [
         'title' => 'TestFundingProgram',
         'start_date' => '2022-10-22',
         'end_date' => '2023-10-22',
         'requests_start_date' => '2022-06-22',
         'requests_end_date' => '2022-12-31',
+        'budget' => NULL,
         'currency' => '€',
       ])->execute()->first();
+
+    return FundingProgramEntity::fromArray($fundingProgramValues);
   }
 
 }

@@ -47,8 +47,8 @@ final class GetFormActionTest extends AbstractFormActionTest {
 
     $this->action->setRemoteContactId(static::REMOTE_CONTACT_ID);
     $this->action->setExtraParam('contactId', static::CONTACT_ID);
-    Assert::integer($this->applicationProcess['id']);
-    $this->action->setApplicationProcessId($this->applicationProcess['id']);
+    Assert::integer($this->applicationProcessValues['id']);
+    $this->action->setApplicationProcessId($this->applicationProcessValues['id']);
   }
 
   public function testRun(): void {
@@ -62,10 +62,10 @@ final class GetFormActionTest extends AbstractFormActionTest {
           static::callback(
             function (GetFormEvent $event) use ($jsonSchema, $uiSchema): bool {
               static::assertSame(11, $event->getContactId());
-              static::assertSame($this->applicationProcess, $event->getApplicationProcess()->toArray());
-              static::assertSame($this->fundingCase, $event->getFundingCase()->toArray());
-              static::assertSame($this->fundingCaseType, $event->getFundingCaseType());
-              static::assertSame($this->fundingProgram, $event->getFundingProgram());
+              static::assertSame($this->applicationProcessValues, $event->getApplicationProcess()->toArray());
+              static::assertSame($this->fundingCaseValues, $event->getFundingCase()->toArray());
+              static::assertSame($this->fundingCaseTypeValues, $event->getFundingCaseType());
+              static::assertSame($this->fundingProgramValues, $event->getFundingProgram()->toArray());
 
               $event->setJsonSchema($jsonSchema);
               $event->setUiSchema($uiSchema);

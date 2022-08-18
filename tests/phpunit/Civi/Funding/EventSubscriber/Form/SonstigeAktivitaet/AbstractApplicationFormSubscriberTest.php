@@ -21,6 +21,7 @@ namespace Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet;
 
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\FundingProgramEntity;
 use PHPUnit\Framework\TestCase;
 
 abstract class AbstractApplicationFormSubscriberTest extends TestCase {
@@ -70,11 +71,17 @@ abstract class AbstractApplicationFormSubscriberTest extends TestCase {
     return ['id' => 5, 'name' => $fundingCaseTypeName];
   }
 
-  /**
-   * @phpstan-return array<string, mixed>
-   */
-  protected function createFundingProgram(): array {
-    return ['id' => 4, 'currency' => '€', 'permissions' => []];
+  protected function createFundingProgram(): FundingProgramEntity {
+    return FundingProgramEntity::fromArray([
+      'id' => 4,
+      'title' => 'TestFundingProgram',
+      'start_date' => '2022-10-22',
+      'end_date' => '2023-10-22',
+      'requests_start_date' => '2022-06-22',
+      'requests_end_date' => '2022-12-31',
+      'budget' => NULL,
+      'currency' => '€',
+    ]);
   }
 
 }

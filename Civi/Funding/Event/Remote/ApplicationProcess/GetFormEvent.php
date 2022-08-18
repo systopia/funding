@@ -21,6 +21,7 @@ namespace Civi\Funding\Event\Remote\ApplicationProcess;
 
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Event\Remote\AbstractFundingGetFormEvent;
 
 final class GetFormEvent extends AbstractFundingGetFormEvent {
@@ -34,10 +35,7 @@ final class GetFormEvent extends AbstractFundingGetFormEvent {
    */
   protected array $fundingCaseType;
 
-  /**
-   * @phpstan-var array<string, mixed>&array{id: int, currency: string, permissions: array<int, string>}
-   */
-  protected array $fundingProgram;
+  protected FundingProgramEntity $fundingProgram;
 
   public function getApplicationProcess(): ApplicationProcessEntity {
     return $this->applicationProcess;
@@ -54,10 +52,7 @@ final class GetFormEvent extends AbstractFundingGetFormEvent {
     return $this->fundingCaseType;
   }
 
-  /**
-   * @phpstan-return array<string, mixed>&array{id: int, currency: string, permissions: array<int, string>}
-   */
-  public function getFundingProgram(): array {
+  public function getFundingProgram(): FundingProgramEntity {
     return $this->fundingProgram;
   }
 

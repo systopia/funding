@@ -24,13 +24,8 @@ declare(strict_types = 1);
 namespace Civi\Funding\Api4\Action\Remote\FundingCase;
 
 use Civi\Api4\Generic\Result;
-use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Api4\Action\Remote\FundingCase\Traits\NewApplicationFormActionTrait;
 use Civi\Funding\Event\Remote\FundingCase\ValidateNewApplicationFormEvent;
-use Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker;
-use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ClockMock;
 
 /**
@@ -38,7 +33,7 @@ use Symfony\Bridge\PhpUnit\ClockMock;
  * @covers \Civi\Funding\Event\Remote\FundingCase\ValidateNewApplicationFormEvent
  * @covers \Civi\Funding\Event\Remote\AbstractFundingValidateFormEvent
  */
-final class ValidateNewApplicationFormActionTest extends TestCase {
+final class ValidateNewApplicationFormActionTest extends AbstractNewApplicationFormActionTest {
 
   private ValidateNewApplicationFormAction $action;
 
@@ -47,39 +42,17 @@ final class ValidateNewApplicationFormActionTest extends TestCase {
    */
   private array $data;
 
-  /**
-   * @var \Civi\Core\CiviEventDispatcher&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $eventDispatcherMock;
-
-  /**
-   * @var array<string, mixed>
-   */
-  private array $fundingCaseType;
-
-  /**
-   * @var array<string, mixed>
-   */
-  private array $fundingProgram;
-
-  /**
-   * @var \PHPUnit\Framework\MockObject\MockObject&\Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker
-   */
-  private MockObject $relationCheckerMock;
-
   public static function setUpBeforeClass(): void {
     parent::setUpBeforeClass();
+    ClockMock::register(__CLASS__);
     ClockMock::register(NewApplicationFormActionTrait::class);
     ClockMock::withClockMock(strtotime('1970-01-02'));
   }
 
   protected function setUp(): void {
     parent::setUp();
-    $remoteFundingEntityManagerMock = $this->createMock(RemoteFundingEntityManagerInterface::class);
-    $this->eventDispatcherMock = $this->createMock(CiviEventDispatcher::class);
-    $this->relationCheckerMock = $this->createMock(FundingCaseTypeProgramRelationChecker::class);
     $this->action = new ValidateNewApplicationFormAction(
-      $remoteFundingEntityManagerMock,
+      $this->remoteFundingEntityManagerMock,
       $this->eventDispatcherMock,
       $this->relationCheckerMock,
     );
@@ -91,14 +64,6 @@ final class ValidateNewApplicationFormActionTest extends TestCase {
       'fundingProgramId' => 33,
     ];
     $this->action->setData($this->data);
-
-    $this->fundingCaseType = ['id' => 22];
-    $this->fundingProgram = ['id' => 33, 'requests_start_date' => NULL, 'requests_end_date' => NULL];
-
-    $remoteFundingEntityManagerMock->method('getById')->willReturnMap([
-      ['FundingCaseType', 22, '00', 11, &$this->fundingCaseType],
-      ['FundingProgram', 33, '00', 11, &$this->fundingProgram],
-    ]);
   }
 
   public function testValid(): void {
@@ -116,8 +81,8 @@ final class ValidateNewApplicationFormActionTest extends TestCase {
             function (ValidateNewApplicationFormEvent $event): bool {
               static::assertSame(11, $event->getContactId());
               static::assertSame($this->data, $event->getData());
-              static::assertSame($this->fundingCaseType, $event->getFundingCaseType());
-              static::assertSame($this->fundingProgram, $event->getFundingProgram());
+              static::assertSame($this->fundingCaseTypeValues, $event->getFundingCaseType());
+              static::assertSame($this->fundingProgramValues, $event->getFundingProgram()->toArray());
 
               $event->setValid(TRUE);
 
@@ -207,7 +172,7 @@ final class ValidateNewApplicationFormActionTest extends TestCase {
     $this->relationCheckerMock->expects(static::once())->method('areFundingCaseTypeAndProgramRelated')
       ->with(22, 33)->willReturn(TRUE);
 
-    $this->fundingProgram['requests_start_date'] = '1970-01-03';
+    $this->fundingProgramValues['requests_start_date'] = '1970-01-03';
 
     static::expectExceptionObject(new \API_Exception(
       'Funding program does not allow applications before 1970-01-03',
@@ -222,7 +187,7 @@ final class ValidateNewApplicationFormActionTest extends TestCase {
     $this->relationCheckerMock->expects(static::once())->method('areFundingCaseTypeAndProgramRelated')
       ->with(22, 33)->willReturn(TRUE);
 
-    $this->fundingProgram['requests_end_date'] = '1970-01-01';
+    $this->fundingProgramValues['requests_end_date'] = '1970-01-01';
 
     static::expectExceptionObject(new \API_Exception(
       'Funding program does not allow applications after 1970-01-01',

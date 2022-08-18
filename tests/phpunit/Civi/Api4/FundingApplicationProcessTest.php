@@ -72,7 +72,7 @@ final class FundingApplicationProcessTest extends TestCase implements HeadlessIn
     $recipientContact = ContactFixture::addOrganization();
 
     return FundingCaseFixture::addFixture(
-      $fundingProgram['id'],
+      $fundingProgram->getId(),
       $fundingCaseType['id'],
       $recipientContact['id'],
     );

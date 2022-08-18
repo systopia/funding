@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Event\Remote\FundingCase;
 
+use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Event\Remote\AbstractFundingSubmitFormEvent;
 
 final class SubmitNewApplicationFormEvent extends AbstractFundingSubmitFormEvent {
@@ -28,10 +29,7 @@ final class SubmitNewApplicationFormEvent extends AbstractFundingSubmitFormEvent
    */
   protected array $fundingCaseType;
 
-  /**
-   * @var array<string, mixed>&array{id: int, currency: string, permissions: array<int, string>}
-   */
-  protected array $fundingProgram;
+  protected FundingProgramEntity $fundingProgram;
 
   /**
    * @return array<string, mixed>&array{id: int, name: string}
@@ -40,10 +38,7 @@ final class SubmitNewApplicationFormEvent extends AbstractFundingSubmitFormEvent
     return $this->fundingCaseType;
   }
 
-  /**
-   * @return array<string, mixed>&array{id: int, currency: string, permissions: array<int, string>}
-   */
-  public function getFundingProgram(): array {
+  public function getFundingProgram(): FundingProgramEntity {
     return $this->fundingProgram;
   }
 

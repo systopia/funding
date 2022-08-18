@@ -102,7 +102,7 @@ final class FundingCaseManagerTest extends TestCase implements HeadlessInterface
     static::assertGreaterThan(0, $fundingCase->getId());
     static::assertEquals([
       'id' => $fundingCase->getId(),
-      'funding_program_id' => $fundingProgram['id'],
+      'funding_program_id' => $fundingProgram->getId(),
       'funding_case_type_id' => $fundingCaseType['id'],
       'recipient_contact_id' => $recipientContact['id'],
       'status' => 'open',

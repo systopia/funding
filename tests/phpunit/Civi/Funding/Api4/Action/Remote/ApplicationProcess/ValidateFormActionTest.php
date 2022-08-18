@@ -50,8 +50,8 @@ final class ValidateFormActionTest extends AbstractFormActionTest {
 
     $this->action->setRemoteContactId(static::REMOTE_CONTACT_ID);
     $this->action->setExtraParam('contactId', static::CONTACT_ID);
-    Assert::integer($this->applicationProcess['id']);
-    $this->data = ['applicationProcessId' => $this->applicationProcess['id']];
+    Assert::integer($this->applicationProcessValues['id']);
+    $this->data = ['applicationProcessId' => $this->applicationProcessValues['id']];
     $this->action->setData($this->data);
   }
 
@@ -67,10 +67,10 @@ final class ValidateFormActionTest extends AbstractFormActionTest {
             function (ValidateFormEvent $event): bool {
               static::assertSame(11, $event->getContactId());
               static::assertSame($this->data, $event->getData());
-              static::assertSame($this->applicationProcess, $event->getApplicationProcess()->toArray());
-              static::assertSame($this->fundingCase, $event->getFundingCase()->toArray());
-              static::assertSame($this->fundingCaseType, $event->getFundingCaseType());
-              static::assertSame($this->fundingProgram, $event->getFundingProgram());
+              static::assertSame($this->applicationProcessValues, $event->getApplicationProcess()->toArray());
+              static::assertSame($this->fundingCaseValues, $event->getFundingCase()->toArray());
+              static::assertSame($this->fundingCaseTypeValues, $event->getFundingCaseType());
+              static::assertSame($this->fundingProgramValues, $event->getFundingProgram()->toArray());
 
               $event->setValid(TRUE);
 
