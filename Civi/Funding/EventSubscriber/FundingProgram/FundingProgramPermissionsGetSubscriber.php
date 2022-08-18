@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\EventSubscriber\FundingProgram;
 
 use Civi\Api4\FundingProgramContactRelation;
-use Civi\Funding\Event\FundingProgram\PermissionsGetEvent;
+use Civi\Funding\Event\FundingProgram\GetPermissionsEvent;
 use Civi\Funding\Permission\ContactRelationCheckerInterface;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -40,13 +40,13 @@ final class FundingProgramPermissionsGetSubscriber implements EventSubscriberInt
    * @inheritDoc
    */
   public static function getSubscribedEvents(): array {
-    return [PermissionsGetEvent::class => 'onPermissionsGet'];
+    return [GetPermissionsEvent::class => 'onPermissionsGet'];
   }
 
   /**
    * @throws \API_Exception
    */
-  public function onPermissionsGet(PermissionsGetEvent $event): void {
+  public function onPermissionsGet(GetPermissionsEvent $event): void {
     $action = FundingProgramContactRelation::get()
       ->addWhere('funding_program_id', '=', $event->getEntityId());
 

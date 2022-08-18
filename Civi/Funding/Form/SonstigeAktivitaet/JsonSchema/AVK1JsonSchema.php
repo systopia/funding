@@ -19,13 +19,13 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\SonstigeAktivitaet\JsonSchema;
 
-use Civi\Funding\Form\JsonSchema\JsonSchemaObject;
-use Civi\Funding\Form\JsonSchema\JsonSchemaString;
+use Civi\RemoteTools\Form\JsonSchema\JsonSchemaObject;
+use Civi\RemoteTools\Form\JsonSchema\JsonSchemaString;
 
 final class AVK1JsonSchema extends JsonSchemaObject {
 
   /**
-   * @param array<string, \Civi\Funding\Form\JsonSchema\JsonSchema> $extraProperties
+   * @param array<string, \Civi\RemoteTools\Form\JsonSchema\JsonSchema> $extraProperties
    */
   public function __construct(array $extraProperties) {
     // TODO: Additional validations (required, length, min, max, ...)

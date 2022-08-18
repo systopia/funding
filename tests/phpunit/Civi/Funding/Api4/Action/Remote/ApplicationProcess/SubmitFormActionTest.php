@@ -25,9 +25,9 @@ namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 
 use Civi\Api4\Generic\Result;
 use Civi\Funding\Event\Remote\ApplicationProcess\SubmitFormEvent;
-use Civi\Funding\Form\FundingForm;
-use Civi\Funding\Form\JsonForms\JsonFormsElement;
-use Civi\Funding\Form\JsonSchema\JsonSchema;
+use Civi\RemoteTools\Form\RemoteForm;
+use Civi\RemoteTools\Form\JsonForms\JsonFormsElement;
+use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
 use Webmozart\Assert\Assert;
 
 /**
@@ -112,7 +112,7 @@ final class SubmitFormActionTest extends AbstractFormActionTest {
           static::callback(
             function (SubmitFormEvent $event) use ($jsonSchema, $uiSchema): bool {
               $data = ['applicationProcessId' => 22, 'foo' => 'bar'];
-              $event->setForm(new FundingForm($jsonSchema, $uiSchema, $data));
+              $event->setForm(new RemoteForm($jsonSchema, $uiSchema, $data));
               $event->setMessage('Test');
 
               return TRUE;

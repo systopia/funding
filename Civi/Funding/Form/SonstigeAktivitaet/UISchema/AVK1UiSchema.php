@@ -19,14 +19,14 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\SonstigeAktivitaet\UISchema;
 
-use Civi\Funding\Form\JsonForms\JsonFormsControl;
-use Civi\Funding\Form\JsonForms\Layout\JsonFormsGroup;
+use Civi\RemoteTools\Form\JsonForms\JsonFormsControl;
+use Civi\RemoteTools\Form\JsonForms\Layout\JsonFormsGroup;
 
 final class AVK1UiSchema extends JsonFormsGroup {
 
   /**
    * @param string $currency
-   * @param array<int, \Civi\Funding\Form\JsonForms\Control\JsonFormsSubmitButton> $submitButtons
+   * @param array<int, \Civi\RemoteTools\Form\JsonForms\Control\JsonFormsSubmitButton> $submitButtons
    */
   public function __construct(string $currency, array $submitButtons) {
     parent::__construct('Förderantrag für sonstige Aktivität', [

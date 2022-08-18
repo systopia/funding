@@ -19,11 +19,11 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\SonstigeAktivitaet;
 
-use Civi\Funding\Form\JsonSchema\JsonSchema;
-use Civi\Funding\Form\JsonSchema\JsonSchemaString;
 use Civi\Funding\Form\SonstigeAktivitaet\JsonSchema\AVK1JsonSchema;
 use Civi\Funding\Form\SonstigeAktivitaet\UISchema\AVK1UiSchema;
 use Civi\Funding\Form\Traits\AssertFormTrait;
+use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
+use Civi\RemoteTools\Form\JsonSchema\JsonSchemaString;
 use Civi\Funding\Form\Validation\OpisValidatorFactory;
 use PHPUnit\Framework\TestCase;
 

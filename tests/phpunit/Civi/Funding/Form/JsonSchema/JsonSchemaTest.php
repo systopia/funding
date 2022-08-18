@@ -19,10 +19,11 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\JsonSchema;
 
+use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Civi\Funding\Form\JsonSchema\JsonSchema
+ * @covers \Civi\RemoteTools\Form\JsonSchema\JsonSchema
  */
 final class JsonSchemaTest extends TestCase {
 

@@ -75,8 +75,8 @@ final class ValidationResult {
    * @return array<string, non-empty-array<string>>
    */
   private static function mapErrorsToMessages(array $errors): array {
-    return array_map(
-      fn (array $errors): array => array_map(fn (ValidationError $error): string => $error->message(), $errors),
+    return \array_map(
+      fn (array $errors): array => \array_map(fn (ValidationError $error): string => $error->message(), $errors),
       $errors
     );
   }

@@ -19,24 +19,24 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\SonstigeAktivitaet;
 
-use Civi\Funding\Form\FundingForm;
-use Civi\Funding\Form\JsonForms\Control\JsonFormsSubmitButton;
-use Civi\Funding\Form\JsonSchema\JsonSchemaString;
 use Civi\Funding\Form\SonstigeAktivitaet\JsonSchema\AVK1JsonSchema;
 use Civi\Funding\Form\SonstigeAktivitaet\UISchema\AVK1UiSchema;
+use Civi\RemoteTools\Form\RemoteForm;
+use Civi\RemoteTools\Form\JsonForms\Control\JsonFormsSubmitButton;
+use Civi\RemoteTools\Form\JsonSchema\JsonSchemaString;
 
 /**
  * This implements the "AV-K1" form to apply for a funding for a
  * "Sonstige Aktivität" in the "Kinder- und Jugendplan des Bundes (KJP)".
  * Because it is a specific German form strings are not translated.
  */
-class AVK1Form extends FundingForm {
+class AVK1Form extends RemoteForm {
 
   /**
    * @param string $currency
    * @param array<string, mixed> $data
    * @param array<string, string> $submitActions Map of action names to button labels.
-   * @param array<string, \Civi\Funding\Form\JsonSchema\JsonSchema> $extraProperties
+   * @param array<string, \Civi\RemoteTools\Form\JsonSchema\JsonSchema> $extraProperties
    */
   public function __construct(string $currency, array $data, array $submitActions, array $extraProperties = []) {
     $extraProperties['action'] = new JsonSchemaString(['enum' => array_keys($submitActions)]);

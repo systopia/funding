@@ -17,16 +17,14 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Form\JsonSchema;
+namespace Civi\RemoteTools\Form\JsonForms;
 
-/**
- * Value of type number with non-standard keyword precision set to 2 to
- * specify a money value.
- */
-final class JsonSchemaMoney extends JsonSchemaNumber {
+use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
 
-  public function __construct(array $keywords = []) {
-    parent::__construct(['precision' => 2] + $keywords);
+class JsonFormsElement extends JsonSchema {
+
+  public function __construct(string $type, array $keywords = []) {
+    parent::__construct(['type' => $type] + $keywords);
   }
 
 }

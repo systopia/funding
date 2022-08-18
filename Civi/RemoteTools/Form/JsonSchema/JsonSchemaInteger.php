@@ -17,25 +17,12 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Form\JsonSchema;
+namespace Civi\RemoteTools\Form\JsonSchema;
 
-/**
- * Non-standard element that points to another element.
- */
-class JsonSchemaDataPointer extends JsonSchema {
+class JsonSchemaInteger extends JsonSchema {
 
-  /**
-   * @param string $path JSON pointer
-   * @param scalar|null|JsonSchema $fallback
-   *   Fallback is used if the pointed element does not exist or has no value.
-   */
-  public function __construct(string $path, $fallback = NULL) {
-    $keywords = ['$data' => $path];
-    if (NULL !== $fallback) {
-      $keywords['fallback'] = $fallback;
-    }
-
-    parent::__construct($keywords);
+  public function __construct(array $keywords = []) {
+    parent::__construct(['type' => 'integer'] + $keywords);
   }
 
 }

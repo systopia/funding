@@ -86,7 +86,7 @@
     },
     {
         "location": "Civi\\Api4\\FundingApplicationProcessTest::testGet",
-        "message": "The \"Civi\\Funding\\Event\\AbstractFundingPermissionsGetEvent\" class extends \"Symfony\\Component\\EventDispatcher\\Event\" that is deprecated since Symfony 4.3, use \"Symfony\\Contracts\\EventDispatcher\\Event\" instead.",
+        "message": "The \"Civi\\RemoteTools\\Event\\AbstractGetPermissionsEvent\" class extends \"Symfony\\Component\\EventDispatcher\\Event\" that is deprecated since Symfony 4.3, use \"Symfony\\Contracts\\EventDispatcher\\Event\" instead.",
         "count": 1
     },
     {

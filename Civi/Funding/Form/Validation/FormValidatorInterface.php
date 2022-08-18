@@ -19,10 +19,10 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\Validation;
 
-use Civi\Funding\Form\FundingFormInterface;
+use Civi\RemoteTools\Form\RemoteFormInterface;
 
 interface FormValidatorInterface {
 
-  public function validate(FundingFormInterface $form): ValidationResult;
+  public function validate(RemoteFormInterface $form): ValidationResult;
 
 }

@@ -17,18 +17,34 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Form\JsonSchema;
+namespace Civi\RemoteTools\Form\JsonSchema;
 
-class JsonSchemaObject extends JsonSchema {
+/**
+ * Non-standard schema representing a calculated value.
+ */
+class JsonSchemaCalculate extends JsonSchema {
 
   /**
-   * @param array<string, JsonSchema> $properties
+   * @param string $type
+   * @param string $expression
+   * @param array<string, scalar|JsonSchema> $variables
+   * @param scalar|null|JsonSchema $fallback
    * @param array<string, scalar|JsonSchema|null> $keywords
    */
-  public function __construct(array $properties, array $keywords = []) {
+  public function __construct(string $type, string $expression, array $variables,
+    $fallback = NULL, array $keywords = []
+  ) {
+    $calculate = [
+      'expression' => $expression,
+      'variables' => new JsonSchema($variables),
+    ];
+    if (NULL !== $fallback) {
+      $calculate['fallback'] = $fallback;
+    }
+
     parent::__construct([
-      'type' => 'object',
-      'properties' => new JsonSchema($properties),
+      'type' => $type,
+      '$calculate' => new JsonSchema($calculate),
     ] + $keywords);
   }
 

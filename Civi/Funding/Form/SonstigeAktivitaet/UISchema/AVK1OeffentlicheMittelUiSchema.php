@@ -19,8 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\SonstigeAktivitaet\UISchema;
 
-use Civi\Funding\Form\JsonForms\JsonFormsControl;
-use Civi\Funding\Form\JsonForms\Layout\JsonFormsGroup;
+use Civi\RemoteTools\Form\JsonForms\JsonFormsControl;
+use Civi\RemoteTools\Form\JsonForms\Layout\JsonFormsGroup;
 
 final class AVK1OeffentlicheMittelUiSchema extends JsonFormsGroup {
 

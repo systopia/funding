@@ -20,8 +20,8 @@ declare(strict_types = 1);
 namespace Civi\Funding\Event\Remote;
 
 use Civi\Funding\Event\Remote\Traits\EventContactIdRequiredTrait;
-use Civi\Funding\Form\FundingFormInterface;
 use Civi\RemoteTools\Event\AbstractRequestEvent;
+use Civi\RemoteTools\Form\RemoteFormInterface;
 
 abstract class AbstractFundingSubmitFormEvent extends AbstractRequestEvent {
 
@@ -50,7 +50,7 @@ abstract class AbstractFundingSubmitFormEvent extends AbstractRequestEvent {
    */
   private array $errors = [];
 
-  private ?FundingFormInterface $form = NULL;
+  private ?RemoteFormInterface $form = NULL;
 
   private ?string $message = NULL;
 
@@ -93,11 +93,11 @@ abstract class AbstractFundingSubmitFormEvent extends AbstractRequestEvent {
     return $this->errors;
   }
 
-  public function getForm(): ?FundingFormInterface {
+  public function getForm(): ?RemoteFormInterface {
     return $this->form;
   }
 
-  public function setForm(FundingFormInterface $form): self {
+  public function setForm(RemoteFormInterface $form): self {
     $this->form = $form;
     $this->action = self::ACTION_SHOW_FORM;
 

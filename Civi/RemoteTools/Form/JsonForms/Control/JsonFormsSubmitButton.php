@@ -17,14 +17,16 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Form\JsonForms;
+namespace Civi\RemoteTools\Form\JsonForms\Control;
 
-class JsonFormsMarkup extends JsonFormsElement {
+use Civi\RemoteTools\Form\JsonForms\JsonFormsControl;
 
-  public function __construct(string $content, string $contentMediaType = 'text/html') {
-    parent::__construct('Markup', [
-      'content' => $content,
-      'contentMediaType' => $contentMediaType,
+class JsonFormsSubmitButton extends JsonFormsControl {
+
+  public function __construct(string $scope, string $label, string $data) {
+    parent::__construct($scope, $label, NULL, NULL, NULL, [
+      'type' => 'submit',
+      'data' => $data,
     ]);
   }
 
