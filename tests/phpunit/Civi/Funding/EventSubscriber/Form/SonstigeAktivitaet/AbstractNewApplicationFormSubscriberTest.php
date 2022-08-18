@@ -19,55 +19,27 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet;
 
-use Civi\Funding\Entity\ApplicationProcessEntity;
-use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\Form\Validation\FormValidatorInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-abstract class AbstractApplicationFormSubscriberTest extends TestCase {
+abstract class AbstractNewApplicationFormSubscriberTest extends TestCase {
 
-  protected string $now;
+  /**
+   * @var \Civi\Funding\Form\Validation\FormValidatorInterface&\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected MockObject $validatorMock;
 
   protected function setUp(): void {
     parent::setUp();
-    $this->now = date('Y-m-d H:i:s');
-  }
-
-  protected function createApplicationProcess(): ApplicationProcessEntity {
-    return ApplicationProcessEntity::fromArray([
-      'id' => 2,
-      'funding_case_id' => 3,
-      'status' => 'new_status',
-      'title' => 'Title',
-      'short_description' => 'Description',
-      'request_data' => ['foo' => 'bar'],
-      'creation_date' => $this->now,
-      'modification_date' => $this->now,
-      'start_date' => NULL,
-      'end_date' => NULL,
-      'amount_granted' => NULL,
-      'granted_budget' => NULL,
-      'is_review_content' => NULL,
-      'is_review_calculative' => NULL,
-    ]);
-  }
-
-  protected function createFundingCase(): FundingCaseEntity {
-    return FundingCaseEntity::fromArray([
-      'funding_program_id' => 4,
-      'funding_case_type_id' => 5,
-      'recipient_contact_id' => 1,
-      'status' => 'open',
-      'creation_date' => $this->now,
-      'modification_date' => $this->now,
-      'permissions' => ['test_permission'],
-    ]);
+    $this->validatorMock = $this->createMock(FormValidatorInterface::class);
   }
 
   protected function createFundingCaseType(string $fundingCaseTypeName): FundingCaseTypeEntity {
     return FundingCaseTypeEntity::fromArray([
-      'id' => 5,
+      'id' => 3,
       'title' => 'TestFundingCaseType',
       'name' => $fundingCaseTypeName,
       'properties' => [],
@@ -76,7 +48,7 @@ abstract class AbstractApplicationFormSubscriberTest extends TestCase {
 
   protected function createFundingProgram(): FundingProgramEntity {
     return FundingProgramEntity::fromArray([
-      'id' => 4,
+      'id' => 2,
       'title' => 'TestFundingProgram',
       'start_date' => '2022-10-22',
       'end_date' => '2023-10-22',

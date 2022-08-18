@@ -40,7 +40,7 @@ final class AVK1ValidateApplicationFormSubscriber implements EventSubscriberInte
   }
 
   public function onValidateForm(ValidateFormEvent $event): void {
-    if ('AVK1SonstigeAktivitaet' !== $event->getFundingCaseType()['name']) {
+    if ('AVK1SonstigeAktivitaet' !== $event->getFundingCaseType()->getName()) {
       return;
     }
 

@@ -19,34 +19,24 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet;
 
-use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Event\Remote\FundingCase\ValidateNewApplicationFormEvent;
 use Civi\Funding\Form\SonstigeAktivitaet\AVK1FormNew;
-use Civi\Funding\Form\Validation\FormValidatorInterface;
 use Civi\Funding\Form\Validation\ValidationResult;
 use Opis\JsonSchema\Errors\ValidationError;
 use Opis\JsonSchema\Info\DataInfo;
 use Opis\JsonSchema\Info\SchemaInfo;
 use Opis\JsonSchema\Schemas\EmptySchema;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use Systopia\JsonSchema\Errors\ErrorCollector;
 
 /**
  * @covers \Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1ValidateNewApplicationFormSubscriber
  */
-final class AVK1ValidateNewApplicationFormSubscriberTest extends TestCase {
+final class AVK1ValidateNewApplicationFormSubscriberTest extends AbstractNewApplicationFormSubscriberTest {
 
   private AVK1ValidateNewApplicationFormSubscriber $subscriber;
 
-  /**
-   * @var \Civi\Funding\Form\Validation\FormValidatorInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $validatorMock;
-
   protected function setUp(): void {
     parent::setUp();
-    $this->validatorMock = $this->createMock(FormValidatorInterface::class);
     $this->subscriber = new AVK1ValidateNewApplicationFormSubscriber($this->validatorMock);
   }
 
@@ -68,7 +58,7 @@ final class AVK1ValidateNewApplicationFormSubscriberTest extends TestCase {
 
     $validatedForm = new AVK1FormNew(
       $event->getFundingProgram()->getCurrency(),
-      $event->getFundingCaseType()['id'],
+      $event->getFundingCaseType()->getId(),
       $event->getFundingProgram()->getId(),
       $event->getFundingProgram()->getPermissions(),
       $data
@@ -90,7 +80,7 @@ final class AVK1ValidateNewApplicationFormSubscriberTest extends TestCase {
 
     $validatedForm = new AVK1FormNew(
       $event->getFundingProgram()->getCurrency(),
-      $event->getFundingCaseType()['id'],
+      $event->getFundingCaseType()->getId(),
       $event->getFundingProgram()->getId(),
       $event->getFundingProgram()->getPermissions(),
       $data
@@ -129,21 +119,8 @@ final class AVK1ValidateNewApplicationFormSubscriberTest extends TestCase {
       'remoteContactId' => '00',
       'contactId' => 1,
       'fundingProgram' => $this->createFundingProgram(),
-      'fundingCaseType' => ['id' => 3, 'name' => $fundingCaseTypeName],
+      'fundingCaseType' => $this->createFundingCaseType($fundingCaseTypeName),
       'data' => $data,
-    ]);
-  }
-
-  private function createFundingProgram(): FundingProgramEntity {
-    return FundingProgramEntity::fromArray([
-      'id' => 2,
-      'title' => 'TestFundingProgram',
-      'start_date' => '2022-10-22',
-      'end_date' => '2023-10-22',
-      'requests_start_date' => '2022-06-22',
-      'requests_end_date' => '2022-12-31',
-      'budget' => NULL,
-      'currency' => '€',
     ]);
   }
 

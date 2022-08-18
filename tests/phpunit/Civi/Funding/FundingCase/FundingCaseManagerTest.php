@@ -103,7 +103,7 @@ final class FundingCaseManagerTest extends TestCase implements HeadlessInterface
     static::assertEquals([
       'id' => $fundingCase->getId(),
       'funding_program_id' => $fundingProgram->getId(),
-      'funding_case_type_id' => $fundingCaseType['id'],
+      'funding_case_type_id' => $fundingCaseType->getId(),
       'recipient_contact_id' => $recipientContact['id'],
       'status' => 'open',
       'creation_date' => date('Y-m-d H:i:s'),

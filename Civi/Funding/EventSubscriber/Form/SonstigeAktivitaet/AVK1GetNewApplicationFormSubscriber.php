@@ -33,13 +33,13 @@ final class AVK1GetNewApplicationFormSubscriber implements EventSubscriberInterf
   }
 
   public function onGetNewForm(GetNewApplicationFormEvent $event): void {
-    if ('AVK1SonstigeAktivitaet' !== $event->getFundingCaseType()['name']) {
+    if ('AVK1SonstigeAktivitaet' !== $event->getFundingCaseType()->getName()) {
       return;
     }
 
     $form = new AVK1FormNew(
       $event->getFundingProgram()->getCurrency(),
-      $event->getFundingCaseType()['id'],
+      $event->getFundingCaseType()->getId(),
       $event->getFundingProgram()->getId(),
       $event->getFundingProgram()->getPermissions(),
     );

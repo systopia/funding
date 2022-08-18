@@ -28,6 +28,7 @@ use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingAction;
 use Civi\Funding\Api4\Action\Remote\Traits\RemoteFundingActionContactIdRequiredTrait;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Event\Remote\FundingEvents;
 use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
@@ -59,6 +60,13 @@ use Webmozart\Assert\Assert;
  *   recipient_contact_id: int,
  *   creation_date: string,
  *   modification_date: string,
+ * }
+ *
+ * @phpstan-type fundingCaseTypeT array{
+ *   id: int,
+ *   title: string,
+ *   name: string,
+ *   properties: array<string, mixed>
  * }
  *
  * @phpstan-type fundingProgramT array{
@@ -115,6 +123,7 @@ abstract class AbstractFormAction extends AbstractRemoteFundingAction {
     Assert::notNull($fundingCaseValues);
     $fundingCase = FundingCaseEntity::fromArray($fundingCaseValues);
 
+    /** @phpstan-var fundingCaseTypeT|null $fundingCaseTypeValues */
     $fundingCaseTypeValues = $this->_remoteFundingEntityManager->getById(
       FundingCaseType::_getEntityName(),
       $fundingCase->getFundingCaseTypeId(),
@@ -122,6 +131,7 @@ abstract class AbstractFormAction extends AbstractRemoteFundingAction {
       $this->getContactId(),
     );
     Assert::notNull($fundingCaseTypeValues);
+    $fundingCaseType = FundingCaseTypeEntity::fromArray($fundingCaseTypeValues);
 
     /** @var fundingProgramT|null $fundingProgramValues */
     $fundingProgramValues = $this->_remoteFundingEntityManager->getById(
@@ -136,7 +146,7 @@ abstract class AbstractFormAction extends AbstractRemoteFundingAction {
     return $this->getExtraParams() + [
       'applicationProcess' => $applicationProcess,
       'fundingCase' => $fundingCase,
-      'fundingCaseType' => $fundingCaseTypeValues,
+      'fundingCaseType' => $fundingCaseType,
       'fundingProgram' => $fundingProgram,
     ];
   }

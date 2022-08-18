@@ -64,7 +64,7 @@ final class GetFormActionTest extends AbstractFormActionTest {
               static::assertSame(11, $event->getContactId());
               static::assertSame($this->applicationProcessValues, $event->getApplicationProcess()->toArray());
               static::assertSame($this->fundingCaseValues, $event->getFundingCase()->toArray());
-              static::assertSame($this->fundingCaseTypeValues, $event->getFundingCaseType());
+              static::assertSame($this->fundingCaseTypeValues, $event->getFundingCaseType()->toArray());
               static::assertSame($this->fundingProgramValues, $event->getFundingProgram()->toArray());
 
               $event->setJsonSchema($jsonSchema);

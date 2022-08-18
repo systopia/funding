@@ -81,7 +81,7 @@ final class ValidateNewApplicationFormActionTest extends AbstractNewApplicationF
             function (ValidateNewApplicationFormEvent $event): bool {
               static::assertSame(11, $event->getContactId());
               static::assertSame($this->data, $event->getData());
-              static::assertSame($this->fundingCaseTypeValues, $event->getFundingCaseType());
+              static::assertSame($this->fundingCaseTypeValues, $event->getFundingCaseType()->toArray());
               static::assertSame($this->fundingProgramValues, $event->getFundingProgram()->toArray());
 
               $event->setValid(TRUE);

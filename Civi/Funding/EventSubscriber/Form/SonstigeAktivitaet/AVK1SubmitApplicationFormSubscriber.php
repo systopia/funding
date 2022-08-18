@@ -52,7 +52,7 @@ final class AVK1SubmitApplicationFormSubscriber implements EventSubscriberInterf
   }
 
   public function onSubmitForm(SubmitFormEvent $event): void {
-    if ('AVK1SonstigeAktivitaet' !== $event->getFundingCaseType()['name']) {
+    if ('AVK1SonstigeAktivitaet' !== $event->getFundingCaseType()->getName()) {
       return;
     }
 

@@ -26,6 +26,7 @@ use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\Traits\NewApplicationFormActionTrait;
 use Civi\Funding\Api4\Action\Remote\Traits\RemoteFundingActionContactIdRequiredTrait;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Event\Remote\FundingEvents;
 use Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker;
@@ -33,6 +34,13 @@ use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
 use Webmozart\Assert\Assert;
 
 /**
+ * @phpstan-type fundingCaseTypeT array{
+ *   id: int,
+ *   title: string,
+ *   name: string,
+ *   properties: array<string, mixed>
+ * }
+ *
  * @phpstan-type fundingProgramT array{
  *   id: int,
  *   title: string,
@@ -73,6 +81,7 @@ abstract class AbstractNewApplicationFormAction extends AbstractRemoteFundingAct
   protected function createEventParams(int $fundingCaseTypeId, int $fundingProgramId): array {
     Assert::notNull($this->remoteContactId);
 
+    /** @phpstan-var fundingCaseTypeT|null $fundingCaseTypeValues */
     $fundingCaseTypeValues = $this->_remoteFundingEntityManager->getById(
       FundingCaseType::_getEntityName(),
       $fundingCaseTypeId,
@@ -80,6 +89,7 @@ abstract class AbstractNewApplicationFormAction extends AbstractRemoteFundingAct
       $this->getContactId(),
     );
     Assert::notNull($fundingCaseTypeValues);
+    $fundingCaseType = FundingCaseTypeEntity::fromArray($fundingCaseTypeValues);
 
     /** @var fundingProgramT|null $fundingProgramValues */
     $fundingProgramValues = $this->_remoteFundingEntityManager->getById(
@@ -93,7 +103,7 @@ abstract class AbstractNewApplicationFormAction extends AbstractRemoteFundingAct
     $this->assertFundingProgramDates($fundingProgram);
 
     return $this->getExtraParams() + [
-      'fundingCaseType' => $fundingCaseTypeValues,
+      'fundingCaseType' => $fundingCaseType,
       'fundingProgram' => $fundingProgram,
     ];
   }

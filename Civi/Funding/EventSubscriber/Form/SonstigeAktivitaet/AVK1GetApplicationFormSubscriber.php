@@ -33,7 +33,7 @@ final class AVK1GetApplicationFormSubscriber implements EventSubscriberInterface
   }
 
   public function onGetForm(GetFormEvent $event): void {
-    if ('AVK1SonstigeAktivitaet' !== $event->getFundingCaseType()['name']) {
+    if ('AVK1SonstigeAktivitaet' !== $event->getFundingCaseType()->getName()) {
       return;
     }
 

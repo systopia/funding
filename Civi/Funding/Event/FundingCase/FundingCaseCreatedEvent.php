@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Event\FundingCase;
 
 use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Symfony\Component\EventDispatcher\Event;
 
@@ -29,19 +30,12 @@ final class FundingCaseCreatedEvent extends Event {
 
   private FundingCaseEntity $fundingCase;
 
-  /**
-   * @var array
-   * @phpstan-var array<string, mixed>&array{id: int}
-   */
-  private array $fundingCaseType;
+  private FundingCaseTypeEntity $fundingCaseType;
 
   private FundingProgramEntity $fundingProgram;
 
-  /**
-   * @phpstan-param array<string, mixed>&array{id: int} $fundingCaseType
-   */
   public function __construct(int $contactId, FundingCaseEntity $fundingCase,
-    FundingProgramEntity $fundingProgram, array $fundingCaseType
+    FundingProgramEntity $fundingProgram, FundingCaseTypeEntity $fundingCaseType
   ) {
     $this->contactId = $contactId;
     $this->fundingCase = $fundingCase;
@@ -57,10 +51,7 @@ final class FundingCaseCreatedEvent extends Event {
     return $this->fundingCase;
   }
 
-  /**
-   * @phpstan-return array<string, mixed>&array{id: int}
-   */
-  public function getFundingCaseType(): array {
+  public function getFundingCaseType(): FundingCaseTypeEntity {
     return $this->fundingCaseType;
   }
 

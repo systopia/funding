@@ -20,23 +20,32 @@ declare(strict_types = 1);
 namespace Civi\Funding\Fixtures;
 
 use Civi\Api4\FundingCaseType;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
 
+/**
+ * @phpstan-type fundingCaseTypeT array{
+ *   id: int,
+ *   title: string,
+ *   name: string,
+ *   properties: array<string, mixed>
+ * }
+ */
 final class FundingCaseTypeFixture {
 
   /**
    * @param array<string, scalar> $values
    *
-   * @return array
-   * @phpstan-return array<string, scalar|null>&array{id: int}
-   *
    * @throws \API_Exception
    */
-  public static function addFixture(array $values = []): array {
-    return FundingCaseType::create()
+  public static function addFixture(array $values = []): FundingCaseTypeEntity {
+    /** @phpstan-var fundingCaseTypeT $fundingCaseTypeValues */
+    $fundingCaseTypeValues = FundingCaseType::create()
       ->setValues($values + [
         'title' => 'Test Case Type',
         'name' => 'TestCaseType',
       ])->execute()->first();
+
+    return FundingCaseTypeEntity::fromArray($fundingCaseTypeValues);
   }
 
 }

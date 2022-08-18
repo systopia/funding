@@ -65,7 +65,7 @@ final class GetNewApplicationFormActionTest extends AbstractNewApplicationFormAc
           static::callback(
             function (GetNewApplicationFormEvent $event) use ($jsonSchema, $uiSchema): bool {
               static::assertSame(11, $event->getContactId());
-              static::assertSame($this->fundingCaseTypeValues, $event->getFundingCaseType());
+              static::assertSame($this->fundingCaseTypeValues, $event->getFundingCaseType()->toArray());
               static::assertSame($this->fundingProgramValues, $event->getFundingProgram()->toArray());
 
               $event->setJsonSchema($jsonSchema);

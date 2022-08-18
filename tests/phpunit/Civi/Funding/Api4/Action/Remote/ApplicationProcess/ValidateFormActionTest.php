@@ -69,7 +69,7 @@ final class ValidateFormActionTest extends AbstractFormActionTest {
               static::assertSame($this->data, $event->getData());
               static::assertSame($this->applicationProcessValues, $event->getApplicationProcess()->toArray());
               static::assertSame($this->fundingCaseValues, $event->getFundingCase()->toArray());
-              static::assertSame($this->fundingCaseTypeValues, $event->getFundingCaseType());
+              static::assertSame($this->fundingCaseTypeValues, $event->getFundingCaseType()->toArray());
               static::assertSame($this->fundingProgramValues, $event->getFundingProgram()->toArray());
 
               $event->setValid(TRUE);

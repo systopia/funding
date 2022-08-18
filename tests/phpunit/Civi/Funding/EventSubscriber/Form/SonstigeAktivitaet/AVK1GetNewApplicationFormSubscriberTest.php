@@ -19,14 +19,12 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet;
 
-use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Event\Remote\FundingCase\GetNewApplicationFormEvent;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1GetNewApplicationFormSubscriber
  */
-final class AVK1GetNewApplicationFormSubscriberTest extends TestCase {
+final class AVK1GetNewApplicationFormSubscriberTest extends AbstractNewApplicationFormSubscriberTest {
 
   public function testGetSubscribedEvents(): void {
     $expectedSubscriptions = [
@@ -68,20 +66,7 @@ final class AVK1GetNewApplicationFormSubscriberTest extends TestCase {
       'remoteContactId' => '00',
       'contactId' => 1,
       'fundingProgram' => $this->createFundingProgram(),
-      'fundingCaseType' => ['id' => 3, 'name' => $fundingCaseTypeName],
-    ]);
-  }
-
-  private function createFundingProgram(): FundingProgramEntity {
-    return FundingProgramEntity::fromArray([
-      'id' => 2,
-      'title' => 'TestFundingProgram',
-      'start_date' => '2022-10-22',
-      'end_date' => '2023-10-22',
-      'requests_start_date' => '2022-06-22',
-      'requests_end_date' => '2022-12-31',
-      'budget' => NULL,
-      'currency' => '€',
+      'fundingCaseType' => $this->createFundingCaseType($fundingCaseTypeName),
     ]);
   }
 

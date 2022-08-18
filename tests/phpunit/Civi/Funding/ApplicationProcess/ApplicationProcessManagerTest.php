@@ -144,7 +144,7 @@ final class ApplicationProcessManagerTest extends TestCase implements HeadlessIn
 
     return FundingCaseFixture::addFixture(
       $fundingProgram->getId(),
-      $fundingCaseType['id'],
+      $fundingCaseType->getId(),
       $recipientContact['id'],
     );
   }
