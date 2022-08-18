@@ -21,14 +21,24 @@ namespace Civi\Funding\Form\SonstigeAktivitaet\JsonSchema;
 
 use Civi\RemoteTools\Form\JsonSchema\JsonSchemaObject;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchemaString;
+use Webmozart\Assert\Assert;
 
 final class AVK1JsonSchema extends JsonSchemaObject {
 
   /**
-   * @param array<string, \Civi\RemoteTools\Form\JsonSchema\JsonSchema> $extraProperties
+   * @phpstan-param array<string, \Civi\RemoteTools\Form\JsonSchema\JsonSchema> $extraProperties
    */
-  public function __construct(array $extraProperties) {
+  public function __construct(array $extraProperties, array $keywords = []) {
     // TODO: Additional validations (required, length, min, max, ...)
+    $required = $keywords['required'] ?? [];
+    Assert::isArray($required);
+    $keywords['required'] = array_merge([
+      'titel',
+      'kurzbezeichnungDesInhalts',
+      'kosten',
+      'finanzierung',
+    ], $required);
+
     parent::__construct([
       'titel' => new JsonSchemaString(),
       'kurzbezeichnungDesInhalts' => new JsonSchemaString(),
@@ -36,7 +46,7 @@ final class AVK1JsonSchema extends JsonSchemaObject {
       'kosten' => new AVK1KostenSchema(),
       // Abschnitt II
       'finanzierung' => new AVK1FinanzierungSchema(),
-    ] + $extraProperties);
+    ] + $extraProperties, $keywords);
   }
 
 }

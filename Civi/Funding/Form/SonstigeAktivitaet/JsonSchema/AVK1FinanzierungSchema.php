@@ -31,15 +31,15 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
   public function __construct() {
     parent::__construct([
       // Abschnitt II.1
-      'teilnehmerbeitraege' => new JsonSchemaMoney(),
+      'teilnehmerbeitraege' => new JsonSchemaMoney(['minimum' => 0]),
       // Abschnitt II.2
-      'eigenmittel' => new JsonSchemaMoney(),
+      'eigenmittel' => new JsonSchemaMoney(['minimum' => 0]),
       // Abschnitt II.3
       'oeffentlicheMittel' => new JsonSchemaObject([
-        'europa' => new JsonSchemaMoney(),
-        'bundeslaender' => new JsonSchemaMoney(),
-        'staedteUndKreise' => new JsonSchemaMoney(),
-      ]),
+        'europa' => new JsonSchemaMoney(['minimum' => 0]),
+        'bundeslaender' => new JsonSchemaMoney(['minimum' => 0]),
+        'staedteUndKreise' => new JsonSchemaMoney(['minimum' => 0]),
+      ], ['required' => ['europa', 'bundeslaender', 'staedteUndKreise']]),
       'oeffentlicheMittelGesamt' => new JsonSchemaCalculate('number', 'europa + bundeslaender + staedteUndKreise', [
         'europa' => new JsonSchemaDataPointer('1/oeffentlicheMittel/europa'),
         'bundeslaender' => new JsonSchemaDataPointer('1/oeffentlicheMittel/bundeslaender'),
@@ -48,9 +48,9 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
       // Abschnitt II.4
       'sonstigeMittel' => new JsonSchemaArray(
         new JsonSchemaObject([
-          'betrag' => new JsonSchemaMoney(),
+          'betrag' => new JsonSchemaMoney(['minimum' => 0]),
           'quelle' => new JsonSchemaString(),
-        ])
+        ], ['required' => ['betrag', 'quelle']])
       ),
       'sonstigeMittelGesamt' => new JsonSchemaCalculate('number', 'sum(map(sonstigeMittel, "value.betrag"))', [
         'sonstigeMittel' => new JsonSchemaDataPointer('1/sonstigeMittel'),
@@ -71,6 +71,12 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
         'gesamtkosten' => new JsonSchemaDataPointer('/kosten/gesamtkosten'),
         'gesamtmittel' => new JsonSchemaDataPointer('1/gesamtmittel'),
       ]),
+    ], [
+      'required' => [
+        'teilnehmerbeitraege',
+        'eigenmittel',
+        'oeffentlicheMittel',
+      ],
     ]);
   }
 

@@ -31,7 +31,7 @@ final class AVK1FormExisting extends AVK1Form {
     $data['applicationProcessId'] = $applicationProcessId;
 
     $extraProperties = [
-      'applicationProcessId' => new JsonSchemaInteger(['readonly' => TRUE]),
+      'applicationProcessId' => new JsonSchemaInteger(['const' => $applicationProcessId, 'readonly' => TRUE]),
     ];
 
     $submitActions = iterator_to_array($this->getSubmitActions($permissions));

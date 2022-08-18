@@ -40,11 +40,17 @@ class AVK1Form extends RemoteForm {
    */
   public function __construct(string $currency, array $data, array $submitActions, array $extraProperties = []) {
     $extraProperties['action'] = new JsonSchemaString(['enum' => array_keys($submitActions)]);
+    $extraKeywords = ['required' => ['action']];
     $submitButtons = [];
     foreach ($submitActions as $name => $label) {
       $submitButtons[] = new JsonFormsSubmitButton('#/properties/action', $label, $name);
     }
-    parent::__construct(new AVK1JsonSchema($extraProperties), new AVK1UiSchema($currency, $submitButtons), $data);
+
+    parent::__construct(
+      new AVK1JsonSchema($extraProperties, $extraKeywords),
+      new AVK1UiSchema($currency, $submitButtons),
+      $data
+    );
   }
 
 }
