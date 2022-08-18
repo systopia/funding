@@ -47,7 +47,7 @@
     {
         "location": "Civi\\Test\\CiviTestListenerPHPUnit7::startTest",
         "message": "Calling the \"Symfony\\Component\\EventDispatcher\\EventDispatcherInterface::dispatch()\" method with the event name as the first argument is deprecated since Symfony 4.3, pass it as the second argument and provide the event object as the first argument instead.",
-        "count": 120
+        "count": 340
     },
     {
         "location": "Civi\\Api4\\FundingApplicationProcessTest::testGet",
@@ -57,7 +57,7 @@
     {
         "location": "Civi\\Api4\\FundingApplicationProcessTest::testGet",
         "message": "Calling the \"Symfony\\Component\\EventDispatcher\\EventDispatcherInterface::dispatch()\" method with the event name as the first argument is deprecated since Symfony 4.3, pass it as the second argument and provide the event object as the first argument instead.",
-        "count": 543
+        "count": 427
     },
     {
         "location": "Civi\\Api4\\FundingApplicationProcessTest::testGet",
@@ -72,6 +72,16 @@
     {
         "location": "Civi\\Api4\\FundingApplicationProcessTest::testGet",
         "message": "The \"Civi\\Token\\Event\\TokenEvent\" class extends \"Symfony\\Component\\EventDispatcher\\Event\" that is deprecated since Symfony 4.3, use \"Symfony\\Contracts\\EventDispatcher\\Event\" instead.",
+        "count": 1
+    },
+    {
+        "location": "Civi\\Api4\\FundingApplicationProcessTest::testGet",
+        "message": "The \"Civi\\Api4\\Event\\SchemaMapBuildEvent\" class extends \"Symfony\\Component\\EventDispatcher\\Event\" that is deprecated since Symfony 4.3, use \"Symfony\\Contracts\\EventDispatcher\\Event\" instead.",
+        "count": 1
+    },
+    {
+        "location": "Civi\\Api4\\FundingApplicationProcessTest::testGet",
+        "message": "The \"Civi\\RemoteTools\\Event\\GetPossiblePermissionsEvent\" class extends \"Symfony\\Component\\EventDispatcher\\Event\" that is deprecated since Symfony 4.3, use \"Symfony\\Contracts\\EventDispatcher\\Event\" instead.",
         "count": 1
     },
     {
@@ -97,12 +107,12 @@
     {
         "location": "Civi\\Api4\\FundingCaseTest::setUp",
         "message": "Calling the \"Symfony\\Component\\EventDispatcher\\EventDispatcherInterface::dispatch()\" method with the event name as the first argument is deprecated since Symfony 4.3, pass it as the second argument and provide the event object as the first argument instead.",
-        "count": 1116
+        "count": 1172
     },
     {
         "location": "Civi\\Api4\\FundingCaseTest::testPermissions",
         "message": "Calling the \"Symfony\\Component\\EventDispatcher\\EventDispatcherInterface::dispatch()\" method with the event name as the first argument is deprecated since Symfony 4.3, pass it as the second argument and provide the event object as the first argument instead.",
-        "count": 889
+        "count": 269
     },
     {
         "location": "Civi\\Api4\\FundingCaseTest::testPermissions",
@@ -112,37 +122,37 @@
     {
         "location": "Civi\\Api4\\FundingProgramTest::setUp",
         "message": "Calling the \"Symfony\\Component\\EventDispatcher\\EventDispatcherInterface::dispatch()\" method with the event name as the first argument is deprecated since Symfony 4.3, pass it as the second argument and provide the event object as the first argument instead.",
-        "count": 841
+        "count": 1014
     },
     {
         "location": "Civi\\Api4\\FundingProgramTest::testPermissions",
         "message": "Calling the \"Symfony\\Component\\EventDispatcher\\EventDispatcherInterface::dispatch()\" method with the event name as the first argument is deprecated since Symfony 4.3, pass it as the second argument and provide the event object as the first argument instead.",
-        "count": 304
+        "count": 310
     },
     {
         "location": "Civi\\Api4\\RemoteFundingCaseTest::setUp",
         "message": "Calling the \"Symfony\\Component\\EventDispatcher\\EventDispatcherInterface::dispatch()\" method with the event name as the first argument is deprecated since Symfony 4.3, pass it as the second argument and provide the event object as the first argument instead.",
-        "count": 1116
+        "count": 1172
     },
     {
         "location": "Civi\\Api4\\RemoteFundingCaseTest::testPermissions",
         "message": "Calling the \"Symfony\\Component\\EventDispatcher\\EventDispatcherInterface::dispatch()\" method with the event name as the first argument is deprecated since Symfony 4.3, pass it as the second argument and provide the event object as the first argument instead.",
-        "count": 889
+        "count": 269
     },
     {
         "location": "Civi\\Api4\\RemoteFundingProgramTest::setUp",
         "message": "Calling the \"Symfony\\Component\\EventDispatcher\\EventDispatcherInterface::dispatch()\" method with the event name as the first argument is deprecated since Symfony 4.3, pass it as the second argument and provide the event object as the first argument instead.",
-        "count": 838
+        "count": 1011
     },
     {
         "location": "Civi\\Api4\\RemoteFundingProgramTest::testPermissions",
         "message": "Calling the \"Symfony\\Component\\EventDispatcher\\EventDispatcherInterface::dispatch()\" method with the event name as the first argument is deprecated since Symfony 4.3, pass it as the second argument and provide the event object as the first argument instead.",
-        "count": 352
+        "count": 362
     },
     {
         "location": "Civi\\Funding\\ApplicationProcess\\ApplicationProcessManagerTest::testCreate",
         "message": "Calling the \"Symfony\\Component\\EventDispatcher\\EventDispatcherInterface::dispatch()\" method with the event name as the first argument is deprecated since Symfony 4.3, pass it as the second argument and provide the event object as the first argument instead.",
-        "count": 265
+        "count": 314
     },
     {
         "location": "Civi\\Funding\\ApplicationProcess\\ApplicationProcessManagerTest::testCreate",
@@ -152,12 +162,12 @@
     {
         "location": "Civi\\Funding\\ApplicationProcess\\ApplicationProcessManagerTest::testUpdate",
         "message": "Calling the \"Symfony\\Component\\EventDispatcher\\EventDispatcherInterface::dispatch()\" method with the event name as the first argument is deprecated since Symfony 4.3, pass it as the second argument and provide the event object as the first argument instead.",
-        "count": 283
+        "count": 332
     },
     {
         "location": "Civi\\Funding\\FundingCase\\FundingCaseManagerTest::testCreate",
         "message": "Calling the \"Symfony\\Component\\EventDispatcher\\EventDispatcherInterface::dispatch()\" method with the event name as the first argument is deprecated since Symfony 4.3, pass it as the second argument and provide the event object as the first argument instead.",
-        "count": 282
+        "count": 337
     },
     {
         "location": "Civi\\Funding\\FundingCase\\FundingCaseManagerTest::testCreate",
