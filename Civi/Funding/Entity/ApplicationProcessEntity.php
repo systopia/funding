@@ -30,7 +30,7 @@ namespace Civi\Funding\Entity;
  *   short_description: string,
  *   start_date: string|null,
  *   end_date: string|null,
- *   request_data: array<int|string, mixed>,
+ *   request_data: array<string, mixed>,
  *   amount_granted: float|null,
  *   granted_budget: float|null,
  *   is_review_content: bool|null,
@@ -38,6 +38,7 @@ namespace Civi\Funding\Entity;
  * }
  *
  * @phpstan-method applicationProcessT toArray()
+ * @phpstan-method void setValues(applicationProcessT $values)
  */
 final class ApplicationProcessEntity extends AbstractEntity {
 
@@ -75,25 +76,16 @@ final class ApplicationProcessEntity extends AbstractEntity {
     return $this;
   }
 
-  /**
-   * @return string  date in the form "YmdHis".
-   */
-  public function getCreationDate(): string {
-    return $this->values['creation_date'];
+  public function getCreationDate(): \DateTime {
+    return new \DateTime($this->values['creation_date']);
   }
 
-  /**
-   * @return string Modification date in the form "YmdHis".
-   */
-  public function getModificationDate(): string {
-    return $this->values['modification_date'];
+  public function getModificationDate(): \DateTime {
+    return new \DateTime($this->values['modification_date']);
   }
 
-  /**
-   * @param string $modificationDate Modification date in the form "YmdHis".
-   */
-  public function setModificationDate(string $modificationDate): self {
-    $this->values['modification_date'] = $modificationDate;
+  public function setModificationDate(\DateTimeInterface $modificationDate): self {
+    $this->values['modification_date'] = static::toDateTimeStr($modificationDate);
 
     return $this;
   }
@@ -118,47 +110,35 @@ final class ApplicationProcessEntity extends AbstractEntity {
     return $this;
   }
 
-  /**
-   * @return string|null Start date in the form "YmdHis".
-   */
-  public function getStartDate(): ?string {
-    return $this->values['start_date'];
+  public function getStartDate(): ?\DateTime {
+    return static::toDateTimeOrNull($this->values['start_date']);
   }
 
-  /**
-   * @param string|null $startDate Start date in the form "YmdHis".
-   */
-  public function setStartDate(?string $startDate): self {
-    $this->values['start_date'] = $startDate;
+  public function setStartDate(?\DateTimeInterface $startDate): self {
+    $this->values['start_date'] = static::toDateTimeStrOrNull($startDate);
+
+    return $this;
+  }
+
+  public function getEndDate(): ?\DateTime {
+    return static::toDateTimeOrNull($this->values['end_date']);
+  }
+
+  public function setEndDate(?\DateTimeInterface $endDate): self {
+    $this->values['end_date'] = static::toDateTimeStrOrNull($endDate);
 
     return $this;
   }
 
   /**
-   * @return string|null End date in the form "YmdHis".
-   */
-  public function getEndDate(): ?string {
-    return $this->values['end_date'];
-  }
-
-  /**
-   * @param string|null $endDate End date in the form "YmdHis".
-   */
-  public function setEndDate(?string $endDate): self {
-    $this->values['end_date'] = $endDate;
-
-    return $this;
-  }
-
-  /**
-   * @phpstan-return array<int|string, mixed>
+   * @phpstan-return array<string, mixed>
    */
   public function getRequestData(): array {
     return $this->values['request_data'];
   }
 
   /**
-   * @phpstan-param array<int|string, mixed> $requestData
+   * @phpstan-param array<string, mixed> $requestData
    */
   public function setRequestData(array $requestData): self {
     $this->values['request_data'] = $requestData;

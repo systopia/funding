@@ -19,44 +19,46 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Event\Remote\ApplicationProcess;
 
+use Civi\Funding\Entity\ApplicationProcessEntity;
+use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Event\Remote\AbstractFundingGetFormEvent;
 
 final class GetFormEvent extends AbstractFundingGetFormEvent {
 
-  /**
-   * @var array<string, mixed>
-   */
-  protected array $applicationProcess;
+  protected ApplicationProcessEntity $applicationProcess;
+
+  protected FundingCaseEntity $fundingCase;
 
   /**
-   * @var array<string, mixed>
-   */
-  protected array $fundingCase;
-
-  /**
-   * @var array<string, mixed>
+   * @phpstan-var array<string, mixed>
    */
   protected array $fundingCaseType;
 
   /**
-   * @return array<string, mixed>
+   * @phpstan-var array<string, mixed>&array{id: int, currency: string, permissions: array<int, string>}
    */
-  public function getApplicationProcess(): array {
+  protected array $fundingProgram;
+
+  public function getApplicationProcess(): ApplicationProcessEntity {
     return $this->applicationProcess;
   }
 
-  /**
-   * @return array<string, mixed>
-   */
-  public function getFundingCase(): array {
+  public function getFundingCase(): FundingCaseEntity {
     return $this->fundingCase;
   }
 
   /**
-   * @return array<string, mixed>
+   * @phpstan-return array<string, mixed>
    */
   public function getFundingCaseType(): array {
     return $this->fundingCaseType;
+  }
+
+  /**
+   * @phpstan-return array<string, mixed>&array{id: int, currency: string, permissions: array<int, string>}
+   */
+  public function getFundingProgram(): array {
+    return $this->fundingProgram;
   }
 
   protected function getRequiredParams(): array {
@@ -64,6 +66,7 @@ final class GetFormEvent extends AbstractFundingGetFormEvent {
       'applicationProcess',
       'fundingCase',
       'fundingCaseType',
+      'fundingProgram',
     ]);
   }
 

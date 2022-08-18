@@ -28,9 +28,11 @@ namespace Civi\Funding\Entity;
  *   recipient_contact_id: int,
  *   creation_date: string,
  *   modification_date: string,
+ *   permissions?: array<string>,
  * }
  *
  * @phpstan-method fundingCaseT toArray()
+ * @phpstan-method void setValues(fundingCaseT $values)
  */
 final class FundingCaseEntity extends AbstractEntity {
 
@@ -77,25 +79,16 @@ final class FundingCaseEntity extends AbstractEntity {
     return $this;
   }
 
-  /**
-   * @return string Creation date in the form "YmdHis".
-   */
-  public function getCreationDate(): string {
-    return $this->values['creation_date'];
+  public function getCreationDate(): \DateTime {
+    return new \DateTime($this->values['creation_date']);
   }
 
-  /**
-   * @return string Modification date in the form 'YmdHis'.
-   */
-  public function getModificationDate(): string {
-    return $this->values['modification_date'];
+  public function getModificationDate(): \DateTime {
+    return new \DateTime($this->values['modification_date']);
   }
 
-  /**
-   * @param string $modificationDate Modification date in the form 'YmdHis'.
-   */
-  public function setModificationDate(string $modificationDate): self {
-    $this->values['modification_date'] = $modificationDate;
+  public function setModificationDate(\DateTimeInterface $modificationDate): self {
+    $this->values['modification_date'] = static::toDateTimeStr($modificationDate);
 
     return $this;
   }
@@ -108,6 +101,13 @@ final class FundingCaseEntity extends AbstractEntity {
     $this->values['recipient_contact_id'] = $recipientContactId;
 
     return $this;
+  }
+
+  /**
+   * @phpstan-return array<string>
+   */
+  public function getPermissions(): array {
+    return $this->values['permissions'] ?? [];
   }
 
 }

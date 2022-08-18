@@ -68,15 +68,27 @@ class FundingCaseManager {
     ]);
     $action = FundingCase::create()->setValues($fundingCase->toArray());
 
-    /** @phpstan-var fundingCaseT $fundingCaseData */
-    $fundingCaseData = $this->api4->executeAction($action)->first();
-    $fundingCase = FundingCaseEntity::fromArray($fundingCaseData);
+    /** @phpstan-var fundingCaseT $fundingCaseValues */
+    $fundingCaseValues = $this->api4->executeAction($action)->first();
+    $fundingCase = FundingCaseEntity::fromArray($fundingCaseValues);
 
     $event = new FundingCaseCreatedEvent($contactId, $fundingCase,
       $values['funding_program'], $values['funding_case_type']);
     $this->eventDispatcher->dispatch(FundingCaseCreatedEvent::class, $event);
 
+    // Fetch permissions
+    $action = FundingCase::get()->setContactId($contactId)
+      ->addWhere('id', '=', $fundingCase->getId());
+    /** @phpstan-var fundingCaseT $fundingCaseValues */
+    $fundingCaseValues = $this->api4->executeAction($action)->first();
+    $fundingCase->setValues($fundingCaseValues);
+
     return $fundingCase;
+  }
+
+  public function update(FundingCaseEntity $fundingCase): void {
+    $action = FundingCase::update()->setValues($fundingCase->toArray());
+    $this->api4->executeAction($action);
   }
 
 }

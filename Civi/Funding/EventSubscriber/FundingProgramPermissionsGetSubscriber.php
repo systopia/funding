@@ -71,6 +71,9 @@ final class FundingProgramPermissionsGetSubscriber implements EventSubscriberInt
       ) {
         $event->addPermissions($contactRelation['permissions']);
       }
+      elseif (0 === $event->getContactId()) {
+        $event->addPermissions(['all']);
+      }
     }
   }
 
