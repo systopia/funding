@@ -17,19 +17,20 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Form\JsonSchema;
+namespace Civi\RemoteTools\Form;
 
-class JsonSchemaArray extends JsonSchema {
+use Civi\RemoteTools\Form\JsonForms\JsonFormsElement;
+use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
+
+interface RemoteFormInterface {
 
   /**
-   * @param \Civi\Funding\Form\JsonSchema\JsonSchema $items
-   * @param array<string, scalar|JsonSchema|null> $keywords
+   * @return array<string, mixed>
    */
-  public function __construct(JsonSchema $items, array $keywords = []) {
-    parent::__construct([
-      'type' => 'array',
-      'items' => $items,
-    ] + $keywords);
-  }
+  public function getData(): array;
+
+  public function getJsonSchema(): JsonSchema;
+
+  public function getUiSchema(): JsonFormsElement;
 
 }

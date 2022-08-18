@@ -17,34 +17,16 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Util;
+namespace Civi\RemoteTools\Form\JsonSchema;
 
-use Webmozart\Assert\Assert;
+/**
+ * Value of type number with non-standard keyword precision set to 2 to
+ * specify a money value.
+ */
+final class JsonSchemaMoney extends JsonSchemaNumber {
 
-final class JsonConverter {
-
-  /**
-   * @return array<string, mixed>
-   *
-   * @throws \JsonException
-   */
-  public static function toArray(\stdClass $data): array {
-    $result = \json_decode(\json_encode($data, JSON_THROW_ON_ERROR), TRUE);
-    Assert::isArray($result);
-
-    return $result;
-  }
-
-  /**
-   * @param array<string, mixed> $data
-   *
-   * @throws \JsonException
-   */
-  public static function toStdClass(array $data): \stdClass {
-    $result = \json_decode(\json_encode($data, JSON_THROW_ON_ERROR));
-    Assert::isInstanceOf($result, \stdClass::class);
-
-    return $result;
+  public function __construct(array $keywords = []) {
+    parent::__construct(['precision' => 2] + $keywords);
   }
 
 }

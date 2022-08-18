@@ -25,8 +25,8 @@ namespace Civi\Funding\Api4\Action\Remote\FundingCase;
 
 use Civi\Api4\Generic\Result;
 use Civi\Funding\Event\Remote\FundingCase\GetNewApplicationFormEvent;
-use Civi\Funding\Form\JsonForms\JsonFormsElement;
-use Civi\Funding\Form\JsonSchema\JsonSchema;
+use Civi\RemoteTools\Form\JsonForms\JsonFormsElement;
+use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
 
 /**
  * @covers \Civi\Funding\Api4\Action\Remote\FundingCase\GetNewApplicationFormAction

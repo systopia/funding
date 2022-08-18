@@ -31,7 +31,7 @@ final class OpisValidatorFactory {
 
   public static function getValidator(): Validator {
     if (!isset(self::$validator)) {
-      if (!class_exists(SymfonyExpressionHandler::class)) {
+      if (!\class_exists(SymfonyExpressionHandler::class)) {
         require_once E::path() . '/vendor/autoload.php';
       }
 

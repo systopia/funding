@@ -17,12 +17,12 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Form;
+namespace Civi\RemoteTools\Form;
 
-use Civi\Funding\Form\JsonForms\JsonFormsElement;
-use Civi\Funding\Form\JsonSchema\JsonSchema;
+use Civi\RemoteTools\Form\JsonForms\JsonFormsElement;
+use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
 
-class FundingForm implements FundingFormInterface {
+class RemoteForm implements RemoteFormInterface {
 
   /**
    * @var array<string, mixed>
@@ -34,8 +34,8 @@ class FundingForm implements FundingFormInterface {
   private JsonFormsElement $uiSchema;
 
   /**
-   * @param \Civi\Funding\Form\JsonSchema\JsonSchema $jsonSchema
-   * @param \Civi\Funding\Form\JsonForms\JsonFormsElement $uiSchema
+   * @param \Civi\RemoteTools\Form\JsonSchema\JsonSchema $jsonSchema
+   * @param \Civi\RemoteTools\Form\JsonForms\JsonFormsElement $uiSchema
    * @param array<string, mixed> $data
    */
   public function __construct(JsonSchema $jsonSchema, JsonFormsElement $uiSchema, array $data = []) {

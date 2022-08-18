@@ -17,10 +17,10 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Form\JsonForms\Control;
+namespace Civi\RemoteTools\Form\JsonForms\Control;
 
-use Civi\Funding\Form\JsonForms\JsonFormsControl;
-use Civi\Funding\Form\JsonSchema\JsonSchema;
+use Civi\RemoteTools\Form\JsonForms\JsonFormsControl;
+use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
 
 class JsonFormsArray extends JsonFormsControl {
 

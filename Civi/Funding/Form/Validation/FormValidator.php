@@ -19,8 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\Validation;
 
-use Civi\Funding\Form\FundingFormInterface;
-use Civi\Funding\Util\JsonConverter;
+use Civi\RemoteTools\Form\RemoteFormInterface;
+use Civi\RemoteTools\Util\JsonConverter;
 use Opis\JsonSchema\Validator as OpisValidator;
 use Systopia\JsonSchema\Errors\ErrorCollector;
 
@@ -35,7 +35,7 @@ final class FormValidator implements FormValidatorInterface {
   /**
    * @throws \JsonException
    */
-  public function validate(FundingFormInterface $form): ValidationResult {
+  public function validate(RemoteFormInterface $form): ValidationResult {
 
     $data = JsonConverter::toStdClass($form->getData());
     $jsonSchema = $form->getJsonSchema()->toStdClass();

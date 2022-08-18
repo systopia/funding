@@ -17,14 +17,12 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Form\JsonForms;
+namespace Civi\RemoteTools\Form\JsonSchema;
 
-use Civi\Funding\Form\JsonSchema\JsonSchema;
+class JsonSchemaString extends JsonSchema {
 
-class JsonFormsElement extends JsonSchema {
-
-  public function __construct(string $type, array $keywords = []) {
-    parent::__construct(['type' => $type] + $keywords);
+  public function __construct(array $keywords = []) {
+    parent::__construct(['type' => 'string'] + $keywords);
   }
 
 }

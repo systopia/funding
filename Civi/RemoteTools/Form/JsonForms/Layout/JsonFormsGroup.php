@@ -17,12 +17,19 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Form\JsonSchema;
+namespace Civi\RemoteTools\Form\JsonForms\Layout;
 
-class JsonSchemaInteger extends JsonSchema {
+use Civi\RemoteTools\Form\JsonForms\JsonFormsLayout;
 
-  public function __construct(array $keywords = []) {
-    parent::__construct(['type' => 'integer'] + $keywords);
+class JsonFormsGroup extends JsonFormsLayout {
+
+  /**
+   * @param string $label
+   * @param array<int, \Civi\RemoteTools\Form\JsonForms\JsonFormsElement> $elements
+   * @param string|null $description
+   */
+  public function __construct(string $label, array $elements, ?string $description = NULL) {
+    parent::__construct('Group', $label, $elements, $description);
   }
 
 }

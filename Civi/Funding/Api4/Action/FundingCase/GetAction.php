@@ -23,7 +23,7 @@ use Civi\Api4\FundingCase;
 use Civi\Api4\Generic\DAOGetAction;
 use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Api4\Action\Traits\FundingActionContactIdRequiredTrait;
-use Civi\Funding\Event\FundingCase\PermissionsGetEvent;
+use Civi\Funding\Event\FundingCase\GetPermissionsEvent;
 use Civi\RemoteTools\Api4\Action\Traits\PermissionsGetActionTrait;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
 
@@ -50,8 +50,8 @@ final class GetAction extends DAOGetAction {
    * @return array<int, string>|null
    */
   protected function getRecordPermissions(array $record): ?array {
-    $permissionsGetEvent = new PermissionsGetEvent($record['id'], $this->getContactId());
-    $this->_eventDispatcher->dispatch(PermissionsGetEvent::class, $permissionsGetEvent);
+    $permissionsGetEvent = new GetPermissionsEvent($record['id'], $this->getContactId());
+    $this->_eventDispatcher->dispatch(GetPermissionsEvent::class, $permissionsGetEvent);
 
     return $permissionsGetEvent->getPermissions();
   }

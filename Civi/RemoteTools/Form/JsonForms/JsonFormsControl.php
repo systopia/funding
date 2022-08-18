@@ -17,38 +17,47 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Form\JsonForms;
+namespace Civi\RemoteTools\Form\JsonForms;
 
-use Civi\Funding\Form\JsonSchema\JsonSchema;
+use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
 
-class JsonFormsLayout extends JsonFormsElement {
+class JsonFormsControl extends JsonFormsElement {
 
   /**
-   * @param string $type
+   * @param string $scope
    * @param string $label
-   * @param array<int, JsonFormsElement> $elements
    * @param string|null $description
+   * @param string|null $prefix
+   * @param string|null $suffix
+   * @param array<string, mixed>|null $options
    */
-  public function __construct(string $type, string $label, array $elements, ?string $description = NULL) {
+  public function __construct(string $scope, string $label,
+    ?string $description = NULL, ?string $prefix = NULL, ?string $suffix = NULL, ?array $options = NULL) {
     $keywords = [
+      'scope' => $scope,
       'label' => $label,
-      'elements' => JsonSchema::convertToJsonSchemaArray($elements),
     ];
     if (NULL !== $description) {
       $keywords['description'] = $description;
     }
+    if (NULL !== $prefix) {
+      $keywords['prefix'] = $prefix;
+    }
+    if (NULL !== $suffix) {
+      $keywords['suffix'] = $suffix;
+    }
+    if (NULL !== $options) {
+      $keywords['options'] = JsonSchema::fromArray($options);
+    }
 
-    parent::__construct($type, $keywords);
+    parent::__construct('Control', $keywords);
   }
 
-  /**
-   * @return array<int, JsonFormsElement>
-   */
-  public function getElements(): array {
-    /** @var array<int, JsonFormsElement> $elements */
-    $elements = $this->keywords['elements'];
+  public function getScope(): string {
+    /** @var string $scope */
+    $scope = $this->keywords['scope'];
 
-    return $elements;
+    return $scope;
   }
 
 }

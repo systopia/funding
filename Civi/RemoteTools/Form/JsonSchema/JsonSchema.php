@@ -17,7 +17,7 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Form\JsonSchema;
+namespace Civi\RemoteTools\Form\JsonSchema;
 
 class JsonSchema implements \JsonSerializable {
 
@@ -32,9 +32,9 @@ class JsonSchema implements \JsonSerializable {
    * @return array<int, scalar|self|null>
    */
   public static function convertToJsonSchemaArray(array $array): array {
-    return array_values(array_map(function ($value) {
-      if (is_array($value)) {
-        if (!is_string(key($value))) {
+    return \array_values(\array_map(function ($value) {
+      if (\is_array($value)) {
+        if (!\is_string(key($value))) {
           throw new \InvalidArgumentException('Expected associative array got non-associative array');
         }
 
@@ -56,8 +56,8 @@ class JsonSchema implements \JsonSerializable {
    */
   public static function fromArray(array $array): self {
     foreach ($array as $key => $value) {
-      if (is_array($value)) {
-        if (is_string(key($value))) {
+      if (\is_array($value)) {
+        if (\is_string(key($value))) {
           $array[$key] = self::fromArray($value);
         }
         else {
@@ -81,10 +81,10 @@ class JsonSchema implements \JsonSerializable {
   protected static function assertAllowedValue($value): void {
     if (!static::isAllowedValue($value)) {
       throw new \InvalidArgumentException(
-        sprintf(
+        \sprintf(
           'Expected scalar, %s, NULL, or non-associative array containing those three types, got "%s"',
           self::class,
-          is_object($value) ? get_class($value) : gettype($value),
+          \is_object($value) ? \get_class($value) : \gettype($value),
         )
       );
     }
@@ -97,12 +97,12 @@ class JsonSchema implements \JsonSerializable {
    *   True if value is scalar|self|null|array<int, scalar|self|null>.
    */
   protected static function isAllowedValue($value): bool {
-    if (!is_array($value)) {
+    if (!\is_array($value)) {
       $value = [$value];
     }
 
     foreach ($value as $k => $v) {
-      if (!is_int($k) || (!is_scalar($v) && !$v instanceof self && NULL !== $v)) {
+      if (!\is_int($k) || (!\is_scalar($v) && !$v instanceof self && NULL !== $v)) {
         return FALSE;
       }
     }
@@ -125,7 +125,7 @@ class JsonSchema implements \JsonSerializable {
    */
   public function addKeyword(string $keyword, $value): self {
     if ($this->hasKeyword($keyword)) {
-      throw new \InvalidArgumentException(sprintf('Keyword "%s" already exists', $keyword));
+      throw new \InvalidArgumentException(\sprintf('Keyword "%s" already exists', $keyword));
     }
 
     $this->keywords[$keyword] = $value;
@@ -151,7 +151,7 @@ class JsonSchema implements \JsonSerializable {
    */
   public function getKeywordValue(string $keyword) {
     if (!$this->hasKeyword($keyword)) {
-      throw new \InvalidArgumentException(sprintf('No such keyword "%s"', $keyword));
+      throw new \InvalidArgumentException(\sprintf('No such keyword "%s"', $keyword));
     }
 
     return $this->keywords[$keyword];
@@ -161,12 +161,12 @@ class JsonSchema implements \JsonSerializable {
    * @return array<string, mixed> Values are of type array|scalar|null with leaves of type array{}|scalar|null.
    */
   public function toArray(): array {
-    return array_map(function ($value) {
+    return \array_map(function ($value) {
       if ($value instanceof self) {
         return $value->toArray();
       }
-      elseif (is_array($value)) {
-        return array_values(array_map(fn ($value) => $value instanceof self ? $value->toArray() : $value, $value));
+      elseif (\is_array($value)) {
+        return \array_values(\array_map(fn ($value) => $value instanceof self ? $value->toArray() : $value, $value));
       }
 
       return $value;
@@ -179,12 +179,12 @@ class JsonSchema implements \JsonSerializable {
    *   of type array{}|scalar|null.
    */
   public function toStdClass(): \stdClass {
-    return (object) array_map(function ($value) {
+    return (object) \array_map(function ($value) {
       if ($value instanceof self) {
         return $value->toStdClass();
       }
-      elseif (is_array($value)) {
-        return array_values(array_map(fn ($value) => $value instanceof self ? $value->toStdClass() : $value, $value));
+      elseif (\is_array($value)) {
+        return \array_values(\array_map(fn ($value) => $value instanceof self ? $value->toStdClass() : $value, $value));
       }
 
       return $value;

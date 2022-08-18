@@ -19,12 +19,12 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\SonstigeAktivitaet\JsonSchema;
 
-use Civi\Funding\Form\JsonSchema\JsonSchemaArray;
-use Civi\Funding\Form\JsonSchema\JsonSchemaCalculate;
-use Civi\Funding\Form\JsonSchema\JsonSchemaMoney;
-use Civi\Funding\Form\JsonSchema\JsonSchemaObject;
-use Civi\Funding\Form\JsonSchema\JsonSchemaDataPointer;
-use Civi\Funding\Form\JsonSchema\JsonSchemaString;
+use Civi\RemoteTools\Form\JsonSchema\JsonSchemaArray;
+use Civi\RemoteTools\Form\JsonSchema\JsonSchemaCalculate;
+use Civi\RemoteTools\Form\JsonSchema\JsonSchemaDataPointer;
+use Civi\RemoteTools\Form\JsonSchema\JsonSchemaMoney;
+use Civi\RemoteTools\Form\JsonSchema\JsonSchemaObject;
+use Civi\RemoteTools\Form\JsonSchema\JsonSchemaString;
 
 final class AVK1FinanzierungSchema extends JsonSchemaObject {
 

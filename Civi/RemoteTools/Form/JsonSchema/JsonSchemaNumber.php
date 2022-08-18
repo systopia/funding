@@ -17,15 +17,12 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Event\FundingCase;
+namespace Civi\RemoteTools\Form\JsonSchema;
 
-use Civi\Api4\RemoteFundingCase;
-use Civi\Funding\Event\AbstractFundingPermissionsGetEvent;
+class JsonSchemaNumber extends JsonSchema {
 
-final class PermissionsGetEvent extends AbstractFundingPermissionsGetEvent {
-
-  public function __construct(int $entityId, int $contactId) {
-    parent::__construct(RemoteFundingCase::_getEntityName(), $entityId, $contactId);
+  public function __construct(array $keywords = []) {
+    parent::__construct(['type' => 'number'] + $keywords);
   }
 
 }

@@ -17,12 +17,34 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Form\JsonSchema;
+namespace Civi\RemoteTools\Util;
 
-class JsonSchemaString extends JsonSchema {
+use Webmozart\Assert\Assert;
 
-  public function __construct(array $keywords = []) {
-    parent::__construct(['type' => 'string'] + $keywords);
+final class JsonConverter {
+
+  /**
+   * @return array<string, mixed>
+   *
+   * @throws \JsonException
+   */
+  public static function toArray(\stdClass $data): array {
+    $result = \json_decode(\json_encode($data, JSON_THROW_ON_ERROR), TRUE);
+    Assert::isArray($result);
+
+    return $result;
+  }
+
+  /**
+   * @param array<string, mixed> $data
+   *
+   * @throws \JsonException
+   */
+  public static function toStdClass(array $data): \stdClass {
+    $result = \json_decode(\json_encode($data, JSON_THROW_ON_ERROR));
+    Assert::isInstanceOf($result, \stdClass::class);
+
+    return $result;
   }
 
 }

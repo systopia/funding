@@ -17,20 +17,15 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Form;
+namespace Civi\Funding\Event\FundingProgram;
 
-use Civi\Funding\Form\JsonForms\JsonFormsElement;
-use Civi\Funding\Form\JsonSchema\JsonSchema;
+use Civi\Api4\RemoteFundingProgram;
+use Civi\RemoteTools\Event\AbstractGetPermissionsEvent;
 
-interface FundingFormInterface {
+final class GetPermissionsEvent extends AbstractGetPermissionsEvent {
 
-  /**
-   * @return array<string, mixed>
-   */
-  public function getData(): array;
-
-  public function getJsonSchema(): JsonSchema;
-
-  public function getUiSchema(): JsonFormsElement;
+  public function __construct(int $entityId, int $contactId) {
+    parent::__construct(RemoteFundingProgram::_getEntityName(), $entityId, $contactId);
+  }
 
 }

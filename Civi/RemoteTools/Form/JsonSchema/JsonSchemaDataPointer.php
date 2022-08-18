@@ -17,19 +17,25 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Form\JsonForms\Layout;
+namespace Civi\RemoteTools\Form\JsonSchema;
 
-use Civi\Funding\Form\JsonForms\JsonFormsLayout;
-
-class JsonFormsGroup extends JsonFormsLayout {
+/**
+ * Non-standard element that points to another element.
+ */
+class JsonSchemaDataPointer extends JsonSchema {
 
   /**
-   * @param string $label
-   * @param array<int, \Civi\Funding\Form\JsonForms\JsonFormsElement> $elements
-   * @param string|null $description
+   * @param string $path JSON pointer
+   * @param scalar|null|JsonSchema $fallback
+   *   Fallback is used if the pointed element does not exist or has no value.
    */
-  public function __construct(string $label, array $elements, ?string $description = NULL) {
-    parent::__construct('Group', $label, $elements, $description);
+  public function __construct(string $path, $fallback = NULL) {
+    $keywords = ['$data' => $path];
+    if (NULL !== $fallback) {
+      $keywords['fallback'] = $fallback;
+    }
+
+    parent::__construct($keywords);
   }
 
 }

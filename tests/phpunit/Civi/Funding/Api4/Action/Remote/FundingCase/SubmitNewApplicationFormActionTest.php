@@ -25,9 +25,9 @@ namespace Civi\Funding\Api4\Action\Remote\FundingCase;
 
 use Civi\Api4\Generic\Result;
 use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
-use Civi\Funding\Form\FundingForm;
-use Civi\Funding\Form\JsonForms\JsonFormsElement;
-use Civi\Funding\Form\JsonSchema\JsonSchema;
+use Civi\RemoteTools\Form\RemoteForm;
+use Civi\RemoteTools\Form\JsonForms\JsonFormsElement;
+use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
 
 /**
  * @covers \Civi\Funding\Api4\Action\Remote\FundingCase\SubmitNewApplicationFormAction
@@ -118,7 +118,7 @@ final class SubmitNewApplicationFormActionTest extends AbstractNewApplicationFor
           static::callback(
             function (SubmitNewApplicationFormEvent $event) use ($jsonSchema, $uiSchema): bool {
               $data = ['fundingCaseTypeId' => 22, 'fundingProgramId' => 33, 'foo' => 'bar'];
-              $event->setForm(new FundingForm($jsonSchema, $uiSchema, $data));
+              $event->setForm(new RemoteForm($jsonSchema, $uiSchema, $data));
               $event->setMessage('Test');
 
               return TRUE;

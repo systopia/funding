@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\SonstigeAktivitaet;
 
-use Civi\Funding\Form\JsonSchema\JsonSchemaInteger;
+use Civi\RemoteTools\Form\JsonSchema\JsonSchemaInteger;
 
 final class AVK1FormExisting extends AVK1Form {
 
