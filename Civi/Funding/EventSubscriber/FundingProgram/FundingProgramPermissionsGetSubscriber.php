@@ -17,7 +17,7 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\EventSubscriber;
+namespace Civi\Funding\EventSubscriber\FundingProgram;
 
 use Civi\Api4\FundingProgramContactRelation;
 use Civi\Funding\Event\FundingProgram\PermissionsGetEvent;

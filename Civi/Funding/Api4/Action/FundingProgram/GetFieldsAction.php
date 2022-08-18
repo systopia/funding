@@ -21,41 +21,25 @@ namespace Civi\Funding\Api4\Action\FundingProgram;
 
 use Civi\Api4\FundingProgram;
 use Civi\Api4\Generic\DAOGetFieldsAction;
+use Civi\RemoteTools\Api4\Action\Traits\PermissionsGetFieldsActionTrait;
+use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
 
-/**
- * @phpstan-type FieldT array<string, array<string, scalar>|scalar[]|scalar|null>&array{name: string}
- */
 final class GetFieldsAction extends DAOGetFieldsAction {
 
-  public function __construct() {
+  use PermissionsGetFieldsActionTrait;
+
+  protected PossiblePermissionsLoaderInterface $_possiblePermissionsLoader;
+
+  public function __construct(PossiblePermissionsLoaderInterface $possiblePermissionsLoader) {
     parent::__construct(FundingProgram::_getEntityName(), 'getFields');
+    $this->_possiblePermissionsLoader = $possiblePermissionsLoader;
   }
 
   /**
-   * @inheritDoc
-   *
-   * @return array<FieldT>
+   * @phpstan-return array<string>
    */
-  protected function getRecords(): array {
-    return array_merge(parent::getRecords(), $this->getExtraFields());
-  }
-
-  /**
-   * @return array<FieldT>
-   */
-  private function getExtraFields(): array {
-    if (!str_starts_with($this->action, 'get')) {
-      return [];
-    }
-
-    return [
-      [
-        'name' => 'permissions',
-        'type' => 'Extra',
-        'data_type' => 'Array',
-        'readonly' => TRUE,
-      ],
-    ];
+  protected function getPossiblePermissions(): array {
+    return $this->_possiblePermissionsLoader->getPermissions($this->getEntityName());
   }
 
 }

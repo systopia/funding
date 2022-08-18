@@ -21,31 +21,27 @@ namespace Civi\Funding\Api4\Action\FundingProgram;
 
 use Civi\Api4\FundingProgram;
 use Civi\Api4\Generic\DAOGetAction;
-use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
-use Civi\Funding\Api4\Action\Helper\AddPermissionsToRecords;
 use Civi\Funding\Api4\Action\Traits\FundingActionContactIdRequiredTrait;
 use Civi\Funding\Event\FundingProgram\PermissionsGetEvent;
+use Civi\RemoteTools\Api4\Action\Traits\PermissionsGetActionTrait;
+use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
 
 final class GetAction extends DAOGetAction {
 
   use FundingActionContactIdRequiredTrait;
+  use PermissionsGetActionTrait;
 
   private CiviEventDispatcher $_eventDispatcher;
 
-  private AddPermissionsToRecords $_addPermissionsToRecords;
+  private PossiblePermissionsLoaderInterface $_possiblePermissionsLoader;
 
-  public function __construct(CiviEventDispatcher $eventDispatcher) {
+  public function __construct(CiviEventDispatcher $eventDispatcher,
+    PossiblePermissionsLoaderInterface $possiblePermissionsLoader
+  ) {
     parent::__construct(FundingProgram::_getEntityName(), 'get');
     $this->_eventDispatcher = $eventDispatcher;
-    $this->_addPermissionsToRecords = new AddPermissionsToRecords(
-      fn (array $record) => $this->getRecordPermissions($record)
-    );
-  }
-
-  public function _run(Result $result): void {
-    parent::_run($result);
-    ($this->_addPermissionsToRecords)($result);
+    $this->_possiblePermissionsLoader = $possiblePermissionsLoader;
   }
 
   /**
@@ -53,11 +49,18 @@ final class GetAction extends DAOGetAction {
    *
    * @return array<int, string>|null
    */
-  private function getRecordPermissions(array $record): ?array {
+  protected function getRecordPermissions(array $record): ?array {
     $permissionsGetEvent = new PermissionsGetEvent($record['id'], $this->getContactId());
     $this->_eventDispatcher->dispatch(PermissionsGetEvent::class, $permissionsGetEvent);
 
     return $permissionsGetEvent->getPermissions();
+  }
+
+  /**
+   * @phpstan-return array<string>
+   */
+  protected function getPossiblePermissions(): array {
+    return $this->_possiblePermissionsLoader->getPermissions($this->getEntityName());
   }
 
 }

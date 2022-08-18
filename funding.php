@@ -24,7 +24,7 @@ use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1ValidateApplication
 use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1ValidateNewApplicationFormSubscriber;
 use Civi\Funding\EventSubscriber\FundingCase\AddFundingCasePermissionsSubscriber;
 use Civi\Funding\EventSubscriber\FundingCase\FundingCasePermissionsGetSubscriber;
-use Civi\Funding\EventSubscriber\FundingProgramPermissionsGetSubscriber;
+use Civi\Funding\EventSubscriber\FundingProgram\FundingProgramPermissionsGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseDAOGetSubscriber;
@@ -49,11 +49,14 @@ use Civi\Funding\Remote\RemoteFundingEntityManager;
 use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
 use Civi\RemoteTools\Api4\Api4;
 use Civi\RemoteTools\Api4\Api4Interface;
+use Civi\RemoteTools\Authorization\PossiblePermissionsLoader;
+use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
 use Civi\RemoteTools\EventSubscriber\ApiAuthorizeInitRequestSubscriber;
 use Civi\RemoteTools\EventSubscriber\ApiAuthorizeSubscriber;
 use Civi\RemoteTools\EventSubscriber\CheckAccessSubscriber;
 use CRM_Funding_ExtensionUtil as E;
 use Opis\JsonSchema\Validator;
+use Psr\SimpleCache\CacheInterface;
 use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -74,6 +77,20 @@ function funding_civicrm_container(ContainerBuilder $container): void {
   }
 
   $container->setAlias(CiviEventDispatcher::class, 'dispatcher.boot');
+  $container->setAlias(CacheInterface::class, 'cache.long');
+
+  $container->register(Api4Interface::class, Api4::class);
+
+  $container->register(ApiAuthorizeInitRequestSubscriber::class)
+    ->addTag('kernel.event_subscriber');
+  $container->register(ApiAuthorizeSubscriber::class)
+    ->addTag('kernel.event_subscriber');
+  $container->autowire(CheckAccessSubscriber::class)
+    ->addTag('kernel.event_subscriber');
+
+  $container->autowire(RemoteFundingEntityManagerInterface::class, RemoteFundingEntityManager::class);
+  $container->autowire(FundingRemoteContactIdResolver::class);
+  $container->autowire(PossiblePermissionsLoaderInterface::class, PossiblePermissionsLoader::class);
 
   $container->autowire(ContactChecker::class)
     ->addTag('funding.permission.contact_relation_checker');
@@ -86,19 +103,12 @@ function funding_civicrm_container(ContainerBuilder $container): void {
   $container->register(ContactRelationCheckerInterface::class, ContactRelationCheckerCollection::class)
     ->addArgument(new TaggedIteratorArgument('funding.permission.contact_relation_checker'));
 
-  $container->register(Api4Interface::class, Api4::class);
-  $container->register(ApiAuthorizeInitRequestSubscriber::class)
-    ->addTag('kernel.event_subscriber');
-  $container->register(ApiAuthorizeSubscriber::class)
-    ->addTag('kernel.event_subscriber');
-  $container->autowire(CheckAccessSubscriber::class)
-    ->addTag('kernel.event_subscriber');
+  $container->autowire(FundingRequestInitSubscriber::class)
+    ->addTag('kernel.event_subscriber')
+    ->setLazy(TRUE);
 
   $container->register(Validator::class)->setFactory([OpisValidatorFactory::class, 'getValidator']);
   $container->autowire(FormValidatorInterface::class, FormValidator::class);
-
-  $container->autowire(RemoteFundingEntityManagerInterface::class, RemoteFundingEntityManager::class);
-  $container->autowire(FundingRemoteContactIdResolver::class);
   $container->autowire(FundingCaseTypeProgramRelationChecker::class);
 
   $container->autowire(FundingCaseManager::class);
@@ -107,6 +117,20 @@ function funding_civicrm_container(ContainerBuilder $container): void {
   $container->autowire(\Civi\Funding\Api4\Action\FundingApplication\GetAction::class)
     ->setPublic(TRUE)
     ->setShared(TRUE);
+
+  $container->autowire(\Civi\Funding\Api4\Action\FundingCase\GetAction::class)
+    ->setPublic(TRUE)
+    ->setShared(FALSE);
+  $container->autowire(\Civi\Funding\Api4\Action\FundingCase\GetFieldsAction::class)
+    ->setPublic(TRUE)
+    ->setShared(FALSE);
+
+  $container->autowire(\Civi\Funding\Api4\Action\FundingProgram\GetAction::class)
+    ->setPublic(TRUE)
+    ->setShared(FALSE);
+  $container->autowire(\Civi\Funding\Api4\Action\FundingProgram\GetFieldsAction::class)
+    ->setPublic(TRUE)
+    ->setShared(FALSE);
 
   $container->autowire(GetNewApplicationFormAction::class)
     ->setPublic(TRUE)
@@ -117,6 +141,7 @@ function funding_civicrm_container(ContainerBuilder $container): void {
   $container->autowire(ValidateNewApplicationFormAction::class)
     ->setPublic(TRUE)
     ->setShared(FALSE);
+
   $container->autowire(GetFormAction::class)
     ->setPublic(TRUE)
     ->setShared(FALSE);
@@ -127,9 +152,26 @@ function funding_civicrm_container(ContainerBuilder $container): void {
     ->setPublic(TRUE)
     ->setShared(FALSE);
 
-  $container->autowire(FundingRequestInitSubscriber::class)
-    ->addTag('kernel.event_subscriber')
-    ->setLazy(TRUE);
+  $container->autowire(FundingCaseGetFieldsSubscriber::class)
+    ->addTag('kernel.event_subscriber');
+  $container->autowire(FundingCaseDAOGetSubscriber::class)
+    ->addTag('kernel.event_subscriber');
+  $container->autowire(FundingCasePermissionsGetSubscriber::class)
+    ->addTag('kernel.event_subscriber');
+  $container->autowire(AddFundingCasePermissionsSubscriber::class)
+    ->addTag('kernel.event_subscriber');
+
+  $container->autowire(FundingCaseTypeGetFieldsSubscriber::class)
+    ->addTag('kernel.event_subscriber');
+  $container->autowire(FundingCaseTypeDAOGetSubscriber::class)
+    ->addTag('kernel.event_subscriber');
+
+  $container->autowire(FundingProgramGetFieldsSubscriber::class)
+    ->addTag('kernel.event_subscriber');
+  $container->autowire(FundingProgramDAOGetSubscriber::class)
+    ->addTag('kernel.event_subscriber');
+  $container->autowire(FundingProgramPermissionsGetSubscriber::class)
+    ->addTag('kernel.event_subscriber');
 
   $container->autowire(ApplicationProcessGetFieldsSubscriber::class)
     ->addTag('kernel.event_subscriber');
@@ -149,6 +191,7 @@ function funding_civicrm_container(ContainerBuilder $container): void {
   $container->autowire(AVK1ValidateNewApplicationFormSubscriber::class)
     ->addTag('kernel.event_subscriber')
     ->setLazy(TRUE);
+
   $container->autowire(AVK1GetApplicationFormSubscriber::class)
     ->addTag('kernel.event_subscriber');
   $container->autowire(AVK1ValidateApplicationFormSubscriber::class)
@@ -158,24 +201,11 @@ function funding_civicrm_container(ContainerBuilder $container): void {
     ->addTag('kernel.event_subscriber')
     ->setLazy(TRUE);
 
-  $container->autowire(FundingCaseGetFieldsSubscriber::class)
+  $container->autowire(AVK1GetNewApplicationFormSubscriber::class)
     ->addTag('kernel.event_subscriber');
-  $container->autowire(FundingCaseDAOGetSubscriber::class)
+  $container->autowire(AVK1SubmitNewApplicationFormSubscriber::class)
     ->addTag('kernel.event_subscriber');
-  $container->autowire(FundingCasePermissionsGetSubscriber::class)
-    ->addTag('kernel.event_subscriber');
-  $container->autowire(AddFundingCasePermissionsSubscriber::class)
-    ->addTag('kernel.event_subscriber');
-  $container->autowire(FundingCaseTypeGetFieldsSubscriber::class)
-    ->addTag('kernel.event_subscriber');
-  $container->autowire(FundingCaseTypeDAOGetSubscriber::class)
-    ->addTag('kernel.event_subscriber');
-
-  $container->autowire(FundingProgramGetFieldsSubscriber::class)
-    ->addTag('kernel.event_subscriber');
-  $container->autowire(FundingProgramDAOGetSubscriber::class)
-    ->addTag('kernel.event_subscriber');
-  $container->autowire(FundingProgramPermissionsGetSubscriber::class)
+  $container->autowire(AVK1ValidateNewApplicationFormSubscriber::class)
     ->addTag('kernel.event_subscriber');
 }
 

@@ -35,7 +35,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @covers \Civi\Api4\FundingProgram
  * @covers \Civi\Funding\Api4\Action\FundingProgram\GetAction
- * @covers \Civi\Funding\EventSubscriber\FundingProgramPermissionsGetSubscriber
+ * @covers \Civi\Funding\EventSubscriber\FundingProgram\FundingProgramPermissionsGetSubscriber
  */
 final class FundingProgramTest extends TestCase implements HeadlessInterface, TransactionalInterface {
 

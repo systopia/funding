@@ -22,7 +22,9 @@ namespace Civi\RemoteTools\Authorization;
 interface PermissionCheckerInterface {
 
   /**
-   * Checks if the available permissions match the required ones.
+   * Checks if the available permissions match the required ones. It does
+   * actually the same as \CRM_Core_Permission::check(), but does not depend on
+   * a contact's permissions.
    *
    * Examples for required permissions:
    *
@@ -49,6 +51,8 @@ interface PermissionCheckerInterface {
    * @param string[] $availablePermissions
    *
    * @return bool
+   *
+   * @see \CRM_Core_Permission::check()
    */
   public function isAccessGranted(array $requiredPermissions, array $availablePermissions): bool;
 
