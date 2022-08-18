@@ -32,12 +32,12 @@ final class AVK1KostenSchema extends JsonSchemaObject {
   public function __construct() {
     parent::__construct([
       // Abschnitt I.1
-      'unterkunftUndVerpflegung' => new JsonSchemaMoney(),
+      'unterkunftUndVerpflegung' => new JsonSchemaMoney(['minimum' => 0]),
       // Abschnitt I.2
       'honorare' => new JsonSchemaArray(
         new JsonSchemaObject([
           'stunden' => new JsonSchemaNumber(['precision' => 2]),
-          'verguetung' => new JsonSchemaMoney(),
+          'verguetung' => new JsonSchemaMoney(['minimum' => 0]),
           'zweck' => new JsonSchemaString(),
           'betrag' => new JsonSchemaCalculate(
             'number',
@@ -47,7 +47,7 @@ final class AVK1KostenSchema extends JsonSchemaObject {
               'verguetung' => new JsonSchemaDataPointer('1/verguetung'),
             ]
           ),
-        ])
+        ], ['required' => ['stunden', 'verguetung', 'zweck']])
       ),
       'honorareGesamt' => new JsonSchemaCalculate('number', 'sum(map(honorare, "value.betrag"))', [
         'honorare' => new JsonSchemaDataPointer('1/honorare'),
@@ -55,9 +55,9 @@ final class AVK1KostenSchema extends JsonSchemaObject {
       // Abschnitt I.6
       'sonstigeAusgaben' => new JsonSchemaArray(
         new JsonSchemaObject([
-          'betrag' => new JsonSchemaMoney(),
+          'betrag' => new JsonSchemaMoney(['minimum' => 0]),
           'zweck' => new JsonSchemaString(),
-        ])
+        ], ['required' => ['betrag', 'zweck']])
       ),
       'sonstigeAusgabenGesamt' => new JsonSchemaCalculate('number', 'sum(map(sonstigeAusgaben, "value.betrag"))', [
         'sonstigeAusgaben' => new JsonSchemaDataPointer('1/sonstigeAusgaben'),
@@ -65,9 +65,9 @@ final class AVK1KostenSchema extends JsonSchemaObject {
       // Abschnitt I.4
       'fahrtkosten' => new JsonSchemaArray(
         new JsonSchemaObject([
-          'betrag' => new JsonSchemaMoney(),
+          'betrag' => new JsonSchemaMoney(['minimum' => 0]),
           'zweck' => new JsonSchemaString(),
-        ])
+        ], ['required' => ['betrag', 'zweck']])
       ),
       'fahrtkostenGesamt' => new JsonSchemaCalculate('number', 'sum(map(fahrtkosten, "value.betrag"))', [
         'fahrtkosten' => new JsonSchemaDataPointer('1/fahrtkosten'),
@@ -83,6 +83,10 @@ final class AVK1KostenSchema extends JsonSchemaObject {
           'fahrtkostenGesamt' => new JsonSchemaDataPointer('1/fahrtkostenGesamt'),
         ]
       ),
+    ], [
+      'required' => [
+        'unterkunftUndVerpflegung',
+      ],
     ]);
   }
 

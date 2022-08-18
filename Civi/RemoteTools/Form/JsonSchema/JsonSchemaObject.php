@@ -22,8 +22,7 @@ namespace Civi\RemoteTools\Form\JsonSchema;
 class JsonSchemaObject extends JsonSchema {
 
   /**
-   * @param array<string, JsonSchema> $properties
-   * @param array<string, scalar|JsonSchema|null> $keywords
+   * @phpstan-param array<string, JsonSchema> $properties
    */
   public function __construct(array $properties, array $keywords = []) {
     parent::__construct([

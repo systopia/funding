@@ -37,8 +37,8 @@ final class AVK1FormNew extends AVK1Form {
     $data['fundingProgramId'] = $fundingProgramId;
 
     $extraProperties = [
-      'fundingCaseTypeId' => new JsonSchemaInteger(['readonly' => TRUE]),
-      'fundingProgramId' => new JsonSchemaInteger(['readonly' => TRUE]),
+      'fundingCaseTypeId' => new JsonSchemaInteger(['const' => $fundingCaseTypeId, 'readonly' => TRUE]),
+      'fundingProgramId' => new JsonSchemaInteger(['const' => $fundingProgramId, 'readonly' => TRUE]),
     ];
 
     $submitActions = iterator_to_array($this->getSubmitActions($permissions));
