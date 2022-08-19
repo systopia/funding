@@ -19,28 +19,29 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\SonstigeAktivitaet\UISchema;
 
+use Civi\RemoteTools\Form\JsonForms\Control\JsonFormsArray;
 use Civi\RemoteTools\Form\JsonForms\JsonFormsControl;
 use Civi\RemoteTools\Form\JsonForms\Layout\JsonFormsGroup;
 
-final class AVK1FahrtkostenUiSchema extends JsonFormsGroup {
+final class AVK1SachkostenUiSchema extends JsonFormsGroup {
 
   public function __construct(string $currency) {
     $elements = [
-      new JsonFormsControl('#/properties/kosten/properties/fahrtkosten/properties/intern',
-        'Interne Fahrtkosten',
-        'Bitte geben Sie hier die Fahrtkosten an, die innerhalb der '
-        . 'Veranstaltung anfallen und nicht an Teilnehmende erstattet werden.',
-        NULL, $currency),
-      new JsonFormsControl('#/properties/kosten/properties/fahrtkosten/properties/anTeilnehmerErstattet',
-        'An Teilnehmende erstattete Fahrtkosten',
-        'Bitte geben Sie die Fahrtkosten an, die den Teilnehmern und Teilnehmerinnen erstattet werden.',
-        NULL, $currency),
-      new JsonFormsControl('#/properties/kosten/properties/fahrtkostenGesamt',
-        'Fahrtkosten gesamt', NULL, NULL, $currency),
+      new JsonFormsControl('#/properties/kosten/properties/sachkosten/properties/haftungKfz',
+        'Haftung von Kraftfahrzeugen', NULL, NULL, $currency),
+      new JsonFormsArray('#/properties/kosten/properties/sachkosten/properties/ausstattung',
+        'Geräte, Ausstattungs- und Ausrüstungsgegenstände',
+        '(Gegenstände mit einem Wert von über 800 € (ohne Umsatzsteuer) einzeln aufführen)', [
+          new JsonFormsControl('#/properties/gegenstand', 'Gegenstand'),
+          new JsonFormsControl('#/properties/betrag', 'Betrag', NULL, NULL, $currency),
+        ]
+      ),
+      new JsonFormsControl('#/properties/kosten/properties/sachkostenGesamt',
+        'Sachkosten gesamt', NULL, NULL, $currency),
     ];
 
     parent::__construct(
-      'Fahrtkosten',
+      'Sachkosten',
       $elements,
     );
   }

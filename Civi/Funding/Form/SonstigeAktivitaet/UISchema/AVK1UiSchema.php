@@ -43,10 +43,19 @@ final class AVK1UiSchema extends JsonFormsGroup {
         ], 'Hier können Sie die Kosten für Unterbringung und Verpflegung angeben.'),
         // Abschnitt I.2
         new AVK1HonorareUiSchema($currency),
-        // Abschnitt I.6
-        new AVK1SonstigeAusgabenUiSchema($currency),
         // Abschnitt I.4
         new AVK1FahrtkostenUiSchema($currency),
+        // Abschnitt I.5
+        new AVK1SachkostenUiSchema($currency),
+        // Abschnitt I.6
+        new AVK1SonstigeAusgabenUiSchema($currency),
+        // Abschnitt I.7
+        new JsonFormsGroup('Nur bei internationalen Maßnahmen', [
+          new JsonFormsControl(
+            '#/properties/kosten/properties/versicherungTeilnehmer',
+            'Kosten der Versicherung der Teilnehmenden', NULL, NULL, $currency
+          ),
+        ]),
       ]),
       // Abschnitt II
       new JsonFormsGroup('Finanzierung', [
