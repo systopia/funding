@@ -25,6 +25,7 @@ use Civi\Funding\Form\Traits\AssertFormTrait;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchemaString;
 use Civi\Funding\Form\Validation\OpisValidatorFactory;
+use Opis\JsonSchema\Errors\ErrorFormatter;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -66,6 +67,23 @@ class AVK1FormTest extends TestCase {
             'zweck' => 'Honorar 2',
           ],
         ],
+        'fahrtkosten' => (object) [
+          'intern' => 2.2,
+          'anTeilnehmerErstattet' => 3.3,
+        ],
+        'sachkosten' => (object) [
+          'haftungKfz' => 4.4,
+          'ausstattung' => [
+            (object) [
+              'gegenstand' => 'Thing1',
+              'betrag' => 5.5,
+            ],
+            (object) [
+              'gegenstand' => 'Thing2',
+              'betrag' => 6.6,
+            ],
+          ],
+        ],
         'sonstigeAusgaben' => [
           (object) [
             'betrag' => 12.34,
@@ -76,16 +94,7 @@ class AVK1FormTest extends TestCase {
             'zweck' => 'Sonstige Ausgaben 2',
           ],
         ],
-        'fahrtkosten' => [
-          (object) [
-            'betrag' => 1.23,
-            'zweck' => 'Fahrtkosten 1',
-          ],
-          (object) [
-            'betrag' => 4.56,
-            'zweck' => 'Fahrtkosten 2',
-          ],
-        ],
+        'versicherungTeilnehmer' => 9.9,
       ],
       'finanzierung' => (object) [
         'teilnehmerbeitraege' => 100.00,
@@ -110,19 +119,32 @@ class AVK1FormTest extends TestCase {
 
     $validator = OpisValidatorFactory::getValidator();
     $result = $validator->validate($data, \json_encode($jsonSchema));
-    static::assertTrue($result->isValid());
+    if (NULL !== $result->error()) {
+      $errorFormatter = new ErrorFormatter();
+      // Will fail, but we'll know why
+      static::assertSame([], $errorFormatter->formatKeyed($result->error()));
+    }
 
+    $unterkunftUndVerpflegung = 222.22;
     $honorar1 = round(11.1 * 22.22, 2);
     static::assertSame($honorar1, $data->kosten->honorare[0]->betrag);
     $honorar2 = round(9.9 * 10, 2);
     static::assertSame($honorar2, $data->kosten->honorare[1]->betrag);
     $honorareGesamt = $honorar1 + $honorar2;
     static::assertSame($honorareGesamt, $data->kosten->honorareGesamt);
+    $fahrtkostenGesamt = 2.2 + 3.3;
+    static::assertSame($fahrtkostenGesamt, $data->kosten->fahrtkostenGesamt);
+    $sachkostenGesamt = 4.4 + 5.5 + 6.6;
+    static::assertSame($sachkostenGesamt, $data->kosten->sachkostenGesamt);
     $sonstigeAusgabenGesamt = 12.34 + 56.78;
     static::assertSame($sonstigeAusgabenGesamt, $data->kosten->sonstigeAusgabenGesamt);
-    $fahrtkostenGesamt = 1.23 + 4.56;
-    static::assertSame($fahrtkostenGesamt, $data->kosten->fahrtkostenGesamt);
-    $gesamtkosten = 222.22 + $honorareGesamt + $sonstigeAusgabenGesamt + $fahrtkostenGesamt;
+    $versicherungTeilnehmer = 9.9;
+    $gesamtkosten = $unterkunftUndVerpflegung
+      + $honorareGesamt
+      + $fahrtkostenGesamt
+      + $sachkostenGesamt
+      + $sonstigeAusgabenGesamt
+      + $versicherungTeilnehmer;
     static::assertSame($gesamtkosten, $data->kosten->gesamtkosten);
 
     $oeffentlicheMittelGesamt = 1.11 + 2.22 + 3.33;

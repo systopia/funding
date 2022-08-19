@@ -38,7 +38,7 @@ final class AVK1SonstigeAusgabenUiSchema extends JsonFormsGroup {
     parent::__construct(
       'Sonstige Ausgaben',
       $elements,
-      'Bitte geben Sie hier alle Kosten an, die keiner der anderen Kategorien zuzuordnen sind.'
+      'Bitte geben Sie hier alle weiteren Kosten an. Bitte führen Sie jede Position einzeln auf.'
     );
   }
 
