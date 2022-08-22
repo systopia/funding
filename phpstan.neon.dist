@@ -44,9 +44,6 @@ parameters:
 				- */Civi/Funding/Event/*.php
 				- */Civi/RemoteTools/Event/*.php
 		-
-			message: '#you should not use the \$_REQUEST superglobal.#'
-			path: */Civi/Funding/Api4/Action/Traits/FundingActionContactIdRequiredTrait.php
-		-
 			message: '#^Access to an undefined property Civi\\Api4\\Generic\\AbstractAction::\$_eventDispatcher.$#'
 			path: */Civi/RemoteTools/Api4/Action/Traits/EventActionTrait.php
 		- '#^Class Civi\\Funding\\Api4\\Action\\[^\s]+Action has an uninitialized property \$[^\s]+\. Give it default value or assign it in the constructor.$#'

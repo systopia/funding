@@ -93,6 +93,7 @@ final class FundingCaseManagerTest extends TestCase implements HeadlessInterface
         ])->execute();
     });
 
+    \CRM_Core_Session::singleton()->set('userID', $contact['id']);
     $fundingCase = $this->fundingCaseManager->create($contact['id'], [
       'funding_program' => $fundingProgram,
       'funding_case_type' => $fundingCaseType,
@@ -117,6 +118,7 @@ final class FundingCaseManagerTest extends TestCase implements HeadlessInterface
     $api4Mock = $this->createMock(Api4Interface::class);
     $this->fundingCaseManager = new FundingCaseManager($api4Mock, $this->eventDispatcherMock);
 
+    \CRM_Core_Session::singleton()->set('userID', 11);
     $api4Mock->expects(static::once())->method('executeAction')->with(static::callback(function (GetAction $action) {
       static::assertSame(11, $action->getContactId());
       static::assertSame([['id', '=', 12, FALSE]], $action->getWhere());
@@ -124,13 +126,14 @@ final class FundingCaseManagerTest extends TestCase implements HeadlessInterface
       return TRUE;
     }))->willReturn(new Result([['id' => 12]]));
 
-    static::assertTrue($this->fundingCaseManager->hasAccess(11, 12));
+    static::assertTrue($this->fundingCaseManager->hasAccess(12));
   }
 
   public function testHasAccessFalse(): void {
     $api4Mock = $this->createMock(Api4Interface::class);
     $this->fundingCaseManager = new FundingCaseManager($api4Mock, $this->eventDispatcherMock);
 
+    \CRM_Core_Session::singleton()->set('userID', 11);
     $api4Mock->expects(static::once())->method('executeAction')->with(static::callback(function (GetAction $action) {
       static::assertSame(11, $action->getContactId());
       static::assertSame([['id', '=', 12, FALSE]], $action->getWhere());
@@ -138,7 +141,7 @@ final class FundingCaseManagerTest extends TestCase implements HeadlessInterface
       return TRUE;
     }))->willReturn(new Result());
 
-    static::assertFalse($this->fundingCaseManager->hasAccess(11, 12));
+    static::assertFalse($this->fundingCaseManager->hasAccess(12));
   }
 
 }

@@ -19,10 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\Remote;
 
-use Civi\Api4\Generic\AbstractAction;
 use Civi\Funding\Event\Remote\FundingDAOGetEvent;
 use Civi\Funding\EventSubscriber\Remote\Traits\FundingProgramSubscriberTrait;
-use Civi\RemoteTools\Event\DAOGetEvent;
 use Civi\RemoteTools\EventSubscriber\AbstractRemoteDAOGetSubscriber;
 
 class FundingProgramDAOGetSubscriber extends AbstractRemoteDAOGetSubscriber {
@@ -34,13 +32,5 @@ class FundingProgramDAOGetSubscriber extends AbstractRemoteDAOGetSubscriber {
   protected const ENTITY_NAME = 'RemoteFundingProgram';
 
   protected const EVENT_CLASS = FundingDAOGetEvent::class;
-
-  protected function createAction(DAOGetEvent $event): AbstractAction {
-    /** @var \Civi\Funding\Event\Remote\FundingDAOGetEvent $event */
-    /** @var \Civi\Funding\Api4\Action\FundingProgram\GetAction $action */
-    $action = parent::createAction($event);
-
-    return $action->setContactId($event->getContactId());
-  }
 
 }

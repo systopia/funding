@@ -62,8 +62,8 @@ final class FundingProgramTest extends TestCase implements HeadlessInterface, Tr
 
   public function testPermissions(): void {
     // Contact has a permitted type
+    \CRM_Core_Session::singleton()->set('userID', $this->permittedOrganizationId);
     $permittedOrganizationResult = FundingProgram::get()
-      ->setContactId($this->permittedOrganizationId)
       ->execute();
     static::assertSame(1, $permittedOrganizationResult->rowCount);
     static::assertSame('Foo', $permittedOrganizationResult->first()['title']);
@@ -72,8 +72,8 @@ final class FundingProgramTest extends TestCase implements HeadlessInterface, Tr
     static::assertTrue($permittedOrganizationResult->first()['PERM_bar']);
 
     // Contact has a relation that has a permitted type with a contact that has a permitted type
+    \CRM_Core_Session::singleton()->set('userID', $this->permittedIndividualId);
     $permittedIndividualResult = FundingProgram::get()
-      ->setContactId($this->permittedIndividualId)
       ->execute();
     static::assertSame(1, $permittedIndividualResult->rowCount);
     static::assertSame('Foo', $permittedIndividualResult->first()['title']);
@@ -82,14 +82,14 @@ final class FundingProgramTest extends TestCase implements HeadlessInterface, Tr
     static::assertTrue($permittedIndividualResult->first()['PERM_b']);
 
     // Contact has a relation that has a not permitted type with a contact that has a permitted type
+    \CRM_Core_Session::singleton()->set('userID', $this->notPermittedContactId);
     $notPermittedResult = FundingProgram::get()
-      ->setContactId($this->notPermittedContactId)
       ->execute();
     static::assertSame(0, $notPermittedResult->rowCount);
 
     // Contact has a permitted type, but the relation has no permissions set
+    \CRM_Core_Session::singleton()->set('userID', $this->permittedOrganizationIdNoPermissions);
     $notPermittedResult = FundingProgram::get()
-      ->setContactId($this->permittedOrganizationIdNoPermissions)
       ->execute();
     static::assertSame(0, $notPermittedResult->rowCount);
   }

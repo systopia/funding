@@ -77,7 +77,7 @@ class FundingCaseManager {
     $this->eventDispatcher->dispatch(FundingCaseCreatedEvent::class, $event);
 
     // Fetch permissions
-    $action = FundingCase::get()->setContactId($contactId)
+    $action = FundingCase::get()
       ->addWhere('id', '=', $fundingCase->getId());
     /** @phpstan-var fundingCaseT $fundingCaseValues */
     $fundingCaseValues = $this->api4->executeAction($action)->first();
@@ -91,9 +91,15 @@ class FundingCaseManager {
     $this->api4->executeAction($action);
   }
 
-  public function hasAccess(int $contactId, int $id): bool {
+  /**
+   * @return bool
+   *   TRUE if the current contact (either remote or local) has access to the
+   *   FundingCase with the given ID.
+   *
+   * @throws \API_Exception
+   */
+  public function hasAccess(int $id): bool {
     $action = FundingCase::get()
-      ->setContactId($contactId)
       ->addSelect('id')
       ->addWhere('id', '=', $id);
 

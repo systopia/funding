@@ -17,17 +17,16 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Mock\Api4\Action;
+namespace Civi\Funding\Api4\Action;
 
-use Civi\Funding\Api4\Action\FundingContactIdSessionAwareInterface;
-use Civi\Funding\Api4\Action\Traits\FundingActionContactIdSessionTrait;
+/**
+ * Marker for actions that fetch the contact ID from the session. Either the
+ * resolved remote contact ID or the logged-in user's contact ID.
+ *
+ * @see \Civi\Funding\Api4\Action\Traits\FundingActionContactIdSessionTrait
+ */
+interface FundingContactIdSessionAwareInterface {
 
-class StandardWithContactIdActionMock extends StandardActionMock implements FundingContactIdSessionAwareInterface {
-
-  use FundingActionContactIdSessionTrait;
-
-  public function __construct(string $entityName = 'TestEntityWithContactId', string $actionName = 'get') {
-    parent::__construct($entityName, $actionName);
-  }
+  public function getContactId(): int;
 
 }

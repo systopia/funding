@@ -22,14 +22,14 @@ namespace Civi\Funding\Api4\Action\FundingCase;
 use Civi\Api4\FundingCase;
 use Civi\Api4\Generic\DAOGetAction;
 use Civi\Core\CiviEventDispatcher;
-use Civi\Funding\Api4\Action\Traits\FundingActionContactIdRequiredTrait;
+use Civi\Funding\Api4\Action\Traits\FundingActionContactIdSessionTrait;
 use Civi\Funding\Event\FundingCase\GetPermissionsEvent;
 use Civi\RemoteTools\Api4\Action\Traits\PermissionsGetActionTrait;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
 
 final class GetAction extends DAOGetAction {
 
-  use FundingActionContactIdRequiredTrait;
+  use FundingActionContactIdSessionTrait;
   use PermissionsGetActionTrait;
 
   private CiviEventDispatcher $_eventDispatcher;

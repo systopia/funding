@@ -59,10 +59,13 @@ final class FundingApplicationProcessTest extends TestCase implements HeadlessIn
         'permissions' => ['test_permission'],
       ])->execute();
 
-    $result = FundingApplicationProcess::get()->setContactId($contact['id'])->addSelect('id')->execute();
+    \CRM_Core_Session::singleton()->set('userID', $contact['id']);
+    $result = FundingApplicationProcess::get()->addSelect('id')->execute();
     static::assertCount(1, $result);
     static::assertSame(['id' => $applicationProcess->getId()], $result->first());
-    static::assertCount(0, FundingApplicationProcess::get()->setContactId($contactNotPermitted['id'])
+
+    \CRM_Core_Session::singleton()->set('userID', $contactNotPermitted['id']);
+    static::assertCount(0, FundingApplicationProcess::get()
       ->addSelect('id')->execute());
   }
 

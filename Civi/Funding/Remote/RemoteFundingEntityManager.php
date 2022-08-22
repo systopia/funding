@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Remote;
 
 use Civi\API\Exception\NotImplementedException;
+use Civi\Funding\Api4\Action\FundingContactIdSessionAwareInterface;
 use Civi\RemoteTools\Api4\Api4Interface;
 
 final class RemoteFundingEntityManager implements RemoteFundingEntityManagerInterface {
@@ -40,15 +41,19 @@ final class RemoteFundingEntityManager implements RemoteFundingEntityManagerInte
       ],
     ];
 
+    $okToContinue = FALSE;
     try {
       $contactIdParams = $this->buildContactIdParams($entity, $remoteContactId, $contactId);
+      if ([] !== $contactIdParams || $this->isContactIdSessionAware($entity)) {
+        $okToContinue = TRUE;
+      }
     }
     catch (NotImplementedException $e) {
       throw new \InvalidArgumentException(
         sprintf('Unknown entity "%s"', $entity), $e->getCode(), $e);
     }
 
-    if ([] === $contactIdParams && !str_starts_with($entity, 'Remote')) {
+    if (!$okToContinue && !str_starts_with($entity, 'Remote')) {
       try {
         if (!$this->doHasAccess('Remote' . $entity, $id, $remoteContactId, $contactId)) {
           return NULL;
@@ -127,6 +132,13 @@ final class RemoteFundingEntityManager implements RemoteFundingEntityManagerInte
    */
   private function hasParam(string $entityName, string $param): bool {
     return $this->api4->createAction($entityName, 'get')->paramExists($param);
+  }
+
+  /**
+   * @throws \Civi\API\Exception\NotImplementedException
+   */
+  private function isContactIdSessionAware(string $entityName): bool {
+    return $this->api4->createAction($entityName, 'get') instanceof FundingContactIdSessionAwareInterface;
   }
 
 }
