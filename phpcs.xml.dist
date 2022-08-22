@@ -29,6 +29,8 @@
 
         <!-- False positive when license header is set and variable has no comment -->
         <exclude name="Drupal.Commenting.VariableComment.WrongStyle"/>
+
+        <exclude name="Drupal.Commenting.VariableComment.MissingVar"/>
     </rule>
 
     <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>

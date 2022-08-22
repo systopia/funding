@@ -32,9 +32,6 @@ trait FundingProgramTestFixturesTrait {
    * @throws \API_Exception
    */
   protected function addFixtures(): void {
-    \CRM_Core_DAO::executeQuery('DELETE FROM civicrm_funding_case');
-    \CRM_Core_DAO::executeQuery('DELETE FROM civicrm_funding_program_contact_relation');
-    \CRM_Core_DAO::executeQuery('DELETE FROM civicrm_funding_program');
     $fundingProgramId = FundingProgramFixture::addFixture(['title' => 'Foo'])->getId();
     FundingProgramFixture::addFixture(['title' => 'Bar']);
 

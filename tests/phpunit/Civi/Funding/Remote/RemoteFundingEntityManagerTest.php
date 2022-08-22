@@ -145,7 +145,7 @@ final class RemoteFundingEntityManagerTest extends TestCase {
     $apiResult->exchangeArray([$record]);
 
     $valueMap = [
-      ['Foo', 'get', ['where' => [['id', '=', 11]], 'contactId' => 2], $apiResult],
+      ['Foo', 'get', ['where' => [['id', '=', 11]]], $apiResult],
     ];
 
     $this->api4Mock->expects(static::once())->method('execute')
@@ -213,7 +213,7 @@ final class RemoteFundingEntityManagerTest extends TestCase {
     $apiResult->exchangeArray([['id' => 11]]);
 
     $this->api4Mock->expects(static::once())->method('execute')
-      ->with('Foo', 'get', ['select' => ['id'], 'where' => [['id', '=', 11]], 'contactId' => 2])
+      ->with('Foo', 'get', ['select' => ['id'], 'where' => [['id', '=', 11]]])
       ->willReturn($apiResult);
 
     static::assertTrue($this->entityManager->hasAccess('Foo', 11, '00', 2));

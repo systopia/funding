@@ -22,12 +22,12 @@ namespace Civi\Funding\Api4\Action\FundingApplication;
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\DAOGetAction;
 use Civi\Api4\Generic\Result;
-use Civi\Funding\Api4\Action\Traits\FundingActionContactIdRequiredTrait;
+use Civi\Funding\Api4\Action\Traits\FundingActionContactIdSessionTrait;
 use Civi\Funding\FundingCase\FundingCaseManager;
 
 final class GetAction extends DAOGetAction {
 
-  use FundingActionContactIdRequiredTrait;
+  use FundingActionContactIdSessionTrait;
 
   private FundingCaseManager $fundingCaseManager;
 
@@ -46,7 +46,7 @@ final class GetAction extends DAOGetAction {
     $records = [];
     /** @phpstan-var array<string, mixed>&array{funding_case_id: int} $record */
     foreach ($result as $record) {
-      if ($this->fundingCaseManager->hasAccess($this->getContactId(), $record['funding_case_id'])) {
+      if ($this->fundingCaseManager->hasAccess($record['funding_case_id'])) {
         if (!$fundingCaseIdSelected) {
           unset($record['funding_case_id']);
         }

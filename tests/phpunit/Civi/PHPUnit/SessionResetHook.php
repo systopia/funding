@@ -17,17 +17,18 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Mock\Api4\Action;
+namespace Civi\PHPUnit;
 
-use Civi\Funding\Api4\Action\FundingContactIdSessionAwareInterface;
-use Civi\Funding\Api4\Action\Traits\FundingActionContactIdSessionTrait;
+use Civi\Test\HeadlessInterface;
+use PHPUnit\Runner\AfterTestHook;
 
-class StandardWithContactIdActionMock extends StandardActionMock implements FundingContactIdSessionAwareInterface {
+final class SessionResetHook implements AfterTestHook {
 
-  use FundingActionContactIdSessionTrait;
-
-  public function __construct(string $entityName = 'TestEntityWithContactId', string $actionName = 'get') {
-    parent::__construct($entityName, $actionName);
+  public function executeAfterTest(string $test, float $time): void {
+    list($testClass) = explode('::', $test, 2);
+    if (\is_a($testClass, HeadlessInterface::class, TRUE)) {
+      \CRM_Core_Session::singleton()->reset();
+    }
   }
 
 }

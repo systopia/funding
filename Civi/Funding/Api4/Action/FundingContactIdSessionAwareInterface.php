@@ -17,29 +17,16 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Api4\Action\Traits;
+namespace Civi\Funding\Api4\Action;
 
-use Webmozart\Assert\Assert;
+/**
+ * Marker for actions that fetch the contact ID from the session. Either the
+ * resolved remote contact ID or the logged-in user's contact ID.
+ *
+ * @see \Civi\Funding\Api4\Action\Traits\FundingActionContactIdSessionTrait
+ */
+interface FundingContactIdSessionAwareInterface {
 
-trait FundingActionContactIdRequiredTrait {
-
-  /**
-   * Must be initialized because it is directly accessed in AbstractAction.
-   *
-   * @var int|null
-   * @required
-   */
-  protected ?int $contactId = NULL;
-
-  public function setContactId(int $contactId): self {
-    $this->contactId = $contactId;
-
-    return $this;
-  }
-
-  public function getContactId(): int {
-    Assert::notNull($this->contactId);
-    return $this->contactId;
-  }
+  public function getContactId(): int;
 
 }
