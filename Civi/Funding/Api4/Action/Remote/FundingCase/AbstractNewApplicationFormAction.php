@@ -88,7 +88,7 @@ abstract class AbstractNewApplicationFormAction extends AbstractRemoteFundingAct
       $this->remoteContactId,
       $this->getContactId(),
     );
-    Assert::notNull($fundingCaseTypeValues);
+    Assert::notNull($fundingCaseTypeValues, sprintf('Funding case type with ID %d not found', $fundingCaseTypeId));
     $fundingCaseType = FundingCaseTypeEntity::fromArray($fundingCaseTypeValues);
 
     /** @var fundingProgramT|null $fundingProgramValues */
@@ -98,7 +98,7 @@ abstract class AbstractNewApplicationFormAction extends AbstractRemoteFundingAct
       $this->remoteContactId,
       $this->getContactId()
     );
-    Assert::notNull($fundingProgramValues);
+    Assert::notNull($fundingProgramValues, sprintf('Funding program with ID %d not found', $fundingProgramId));
     $fundingProgram = FundingProgramEntity::fromArray($fundingProgramValues);
     $this->assertFundingProgramDates($fundingProgram);
 
