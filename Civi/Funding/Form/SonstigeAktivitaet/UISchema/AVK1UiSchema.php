@@ -56,6 +56,7 @@ final class AVK1UiSchema extends JsonFormsGroup {
             'Kosten der Versicherung der Teilnehmenden', NULL, NULL, $currency
           ),
         ]),
+        new JsonFormsControl('#/properties/kosten/properties/gesamtkosten', 'Gesamtkosten'),
       ]),
       // Abschnitt II
       new JsonFormsGroup('Finanzierung', [
