@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\Remote;
 
+use Civi\Funding\Api4\Action\Remote\GetFieldsAction;
 use Civi\Funding\Api4\Action\Remote\RemoteFundingActionInterface;
 use Civi\Funding\Contact\FundingRemoteContactIdResolver;
 use Civi\Funding\Event\Remote\FundingEvents;
@@ -43,11 +44,15 @@ class FundingRequestInitSubscriber implements EventSubscriberInterface {
 
   public function onRemoteRequestInit(InitApiRequestEvent $event): void {
     $session = \CRM_Core_Session::singleton();
-    $session->set('isRemote', TRUE, 'funding');
     $request = $event->getApiRequest();
     Assert::isInstanceOf($request, RemoteFundingActionInterface::class);
     /** @var \Civi\Funding\Api4\Action\Remote\RemoteFundingActionInterface $request */
     $remoteContactId = $request->getRemoteContactId();
+    // GetFieldsAction is called in API explorer, though in that case it's no
+    // remote session. Thus, the condition.
+    if (!$request instanceof GetFieldsAction || NULL !== $remoteContactId) {
+      $session->set('isRemote', TRUE, 'funding');
+    }
     if (NULL !== $remoteContactId) {
       $contactId = $this->remoteContactIdResolver->getContactId($remoteContactId);
       $request->setExtraParam('contactId', $contactId);
