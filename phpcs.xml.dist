@@ -27,6 +27,9 @@
         <exclude name="Drupal.Commenting.FunctionComment.ParamTypeSpaces"/>
         <exclude name="Drupal.Commenting.VariableComment.MissingVar"/>
 
+        <!-- Don't enforce phpdoc type hint because it (might) only duplicate a PHP type hint -->
+        <exclude name="Drupal.Commenting.FunctionComment.ParamMissingDefinition"/>
+
         <!-- False positive when license header is set and variable has no comment -->
         <exclude name="Drupal.Commenting.VariableComment.WrongStyle"/>
 

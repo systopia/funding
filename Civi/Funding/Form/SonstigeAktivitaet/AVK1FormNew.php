@@ -30,8 +30,8 @@ final class AVK1FormNew extends AVK1Form {
    * @param array<int, string> $permissions
    * @param array<string, mixed> $data
    */
-  public function __construct(string $currency, int $fundingCaseTypeId, int $fundingProgramId,
-    array $permissions, array $data = []
+  public function __construct(\DateTimeInterface $minBegin, \DateTimeInterface $maxEnd,
+    string $currency, int $fundingCaseTypeId, int $fundingProgramId, array $permissions, array $data = []
   ) {
     $data['fundingCaseTypeId'] = $fundingCaseTypeId;
     $data['fundingProgramId'] = $fundingProgramId;
@@ -43,7 +43,7 @@ final class AVK1FormNew extends AVK1Form {
 
     $submitActions = iterator_to_array($this->getSubmitActions($permissions));
 
-    parent::__construct($currency, $data, $submitActions, $extraProperties);
+    parent::__construct($minBegin, $maxEnd, $currency, $data, $submitActions, $extraProperties);
   }
 
   /**

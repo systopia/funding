@@ -38,6 +38,8 @@ final class AVK1GetApplicationFormSubscriber implements EventSubscriberInterface
     }
 
     $form = new AVK1FormExisting(
+      $event->getFundingProgram()->getRequestsStartDate(),
+      $event->getFundingProgram()->getRequestsEndDate(),
       $event->getFundingProgram()->getCurrency(),
       $event->getApplicationProcess()->getId(),
       $event->getFundingCase()->getPermissions(),

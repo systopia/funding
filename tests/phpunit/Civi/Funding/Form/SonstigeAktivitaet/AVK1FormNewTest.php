@@ -38,7 +38,8 @@ final class AVK1FormNewTest extends TestCase {
 
   public function testPermission(): void {
     foreach ($this->permissionActionMap as $permission => $action) {
-      $form = new AVK1FormNew('€', 2, 3, [$permission]);
+      $form = new AVK1FormNew(new \DateTime('2022-08-24'), new \DateTime('2022-08-25'),
+        '€', 2, 3, [$permission]);
 
       $jsonSchema = $form->getJsonSchema();
       $properties = $jsonSchema->getKeywordValue('properties');
@@ -48,7 +49,8 @@ final class AVK1FormNewTest extends TestCase {
   }
 
   public function testPermissionAll(): void {
-    $form = new AVK1FormNew('€', 2, 3, array_keys($this->permissionActionMap));
+    $form = new AVK1FormNew(new \DateTime('2022-08-24'), new \DateTime('2022-08-25'),
+      '€', 2, 3, array_keys($this->permissionActionMap));
 
     $jsonSchema = $form->getJsonSchema();
     $properties = $jsonSchema->getKeywordValue('properties');

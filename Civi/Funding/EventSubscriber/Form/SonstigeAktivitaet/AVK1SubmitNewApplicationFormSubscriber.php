@@ -63,6 +63,8 @@ final class AVK1SubmitNewApplicationFormSubscriber implements EventSubscriberInt
     }
 
     $form = new AVK1FormNew(
+      $event->getFundingProgram()->getRequestsStartDate(),
+      $event->getFundingProgram()->getRequestsEndDate(),
       $event->getFundingProgram()->getCurrency(),
       $event->getFundingCaseType()->getId(),
       $event->getFundingProgram()->getId(),
@@ -99,6 +101,8 @@ final class AVK1SubmitNewApplicationFormSubscriber implements EventSubscriberInt
       $event->setMessage(E::ts('Success! (Application process ID: %1)',
         ['%1' => $applicationProcess->getId()]));
       $event->setForm(new AVK1FormExisting(
+        $event->getFundingProgram()->getRequestsStartDate(),
+        $event->getFundingProgram()->getRequestsEndDate(),
         $event->getFundingProgram()->getCurrency(),
         $applicationProcess->getId(),
         $fundingCase->getPermissions(),

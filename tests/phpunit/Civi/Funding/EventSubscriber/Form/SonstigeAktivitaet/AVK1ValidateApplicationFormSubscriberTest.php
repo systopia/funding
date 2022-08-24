@@ -67,6 +67,8 @@ final class AVK1ValidateApplicationFormSubscriberTest extends AbstractApplicatio
     $applicationProcess = $event->getApplicationProcess();
 
     $validatedForm = new AVK1FormExisting(
+      $event->getFundingProgram()->getRequestsStartDate(),
+      $event->getFundingProgram()->getRequestsEndDate(),
       $event->getFundingProgram()->getCurrency(),
       $applicationProcess->getId(),
       $event->getFundingCase()->getPermissions(),
@@ -90,6 +92,8 @@ final class AVK1ValidateApplicationFormSubscriberTest extends AbstractApplicatio
     $applicationProcess = $event->getApplicationProcess();
 
     $validatedForm = new AVK1FormExisting(
+      $event->getFundingProgram()->getRequestsStartDate(),
+      $event->getFundingProgram()->getRequestsEndDate(),
       $event->getFundingProgram()->getCurrency(),
       $applicationProcess->getId(),
       $event->getFundingCase()->getPermissions(),

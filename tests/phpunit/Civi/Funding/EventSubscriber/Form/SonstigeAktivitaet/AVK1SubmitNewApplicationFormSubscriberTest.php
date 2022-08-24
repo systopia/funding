@@ -87,6 +87,8 @@ final class AVK1SubmitNewApplicationFormSubscriberTest extends AbstractNewApplic
     $event = $this->createEvent($data);
 
     $validatedForm = new AVK1FormNew(
+      $event->getFundingProgram()->getRequestsStartDate(),
+      $event->getFundingProgram()->getRequestsEndDate(),
       $event->getFundingProgram()->getCurrency(),
       $event->getFundingCaseType()->getId(),
       $event->getFundingProgram()->getId(),
@@ -155,6 +157,8 @@ final class AVK1SubmitNewApplicationFormSubscriberTest extends AbstractNewApplic
 
     static::assertSame(SubmitNewApplicationFormEvent::ACTION_SHOW_FORM, $event->getAction());
     $expectedForm = new AVK1FormExisting(
+      $event->getFundingProgram()->getRequestsStartDate(),
+      $event->getFundingProgram()->getRequestsEndDate(),
       $event->getFundingProgram()->getCurrency(),
       $applicationProcess->getId(),
       $fundingCase->getPermissions(),
@@ -168,6 +172,8 @@ final class AVK1SubmitNewApplicationFormSubscriberTest extends AbstractNewApplic
     $event = $this->createEvent($data);
 
     $validatedForm = new AVK1FormNew(
+      $event->getFundingProgram()->getRequestsStartDate(),
+      $event->getFundingProgram()->getRequestsEndDate(),
       $event->getFundingProgram()->getCurrency(),
       $event->getFundingCaseType()->getId(),
       $event->getFundingProgram()->getId(),

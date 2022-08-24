@@ -39,7 +39,9 @@ class AVK1Form extends RemoteForm {
    * @param array<string, string> $submitActions Map of action names to button labels.
    * @param array<string, \Civi\RemoteTools\Form\JsonSchema\JsonSchema> $hiddenProperties
    */
-  public function __construct(string $currency, array $data, array $submitActions, array $hiddenProperties = []) {
+  public function __construct(\DateTimeInterface $minBegin, \DateTimeInterface $maxEnd,
+    string $currency, array $data, array $submitActions, array $hiddenProperties = []
+  ) {
     $hiddenFields = [];
     foreach (array_keys($hiddenProperties) as $property) {
       $hiddenFields[] = new JsonFormsHidden('#/properties/' . $property);
@@ -55,7 +57,7 @@ class AVK1Form extends RemoteForm {
     }
 
     parent::__construct(
-      new AVK1JsonSchema($extraProperties, $extraKeywords),
+      new AVK1JsonSchema($minBegin, $maxEnd, $extraProperties, $extraKeywords),
       new AVK1UiSchema($currency, $submitButtons, $hiddenFields),
       $data
     );

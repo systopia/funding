@@ -27,6 +27,7 @@ use Civi\RemoteTools\Form\JsonSchema\JsonSchemaString;
 use Civi\Funding\Form\Validation\OpisValidatorFactory;
 use Opis\JsonSchema\Errors\ErrorFormatter;
 use PHPUnit\Framework\TestCase;
+use Systopia\JsonSchema\Errors\ErrorCollector;
 
 /**
  * @covers \Civi\Funding\Form\SonstigeAktivitaet\AVK1Form
@@ -39,7 +40,8 @@ class AVK1FormTest extends TestCase {
 
   public function testJsonSchema(): void {
     $fooSchemaString = new JsonSchemaString();
-    $form = new AVK1Form('€', ['foo' => 'bar'], ['submitAction' => 'Do Submit'], ['foo' => $fooSchemaString]);
+    $form = new AVK1Form(new \DateTime('2022-08-24'), new \DateTime('2022-08-25'),
+      '€', ['foo' => 'bar'], ['submitAction' => 'Do Submit'], ['foo' => $fooSchemaString]);
 
     $jsonSchema = $form->getJsonSchema();
     static::assertInstanceOf(AVK1JsonSchema::class, $jsonSchema);
@@ -53,6 +55,8 @@ class AVK1FormTest extends TestCase {
       'action' => 'submitAction',
       'titel' => 'Test',
       'kurzbezeichnungDesInhalts' => 'foo bar',
+      'beginn' => '2022-08-24',
+      'ende' => '2022-08-25',
       'kosten' => (object) [
         'unterkunftUndVerpflegung' => 222.22,
         'honorare' => [
@@ -161,8 +165,52 @@ class AVK1FormTest extends TestCase {
     static::assertAllPropertiesSet($jsonSchema->toStdClass(), $data);
   }
 
+  public function testNotAllowedDates(): void {
+    $form = new AVK1Form(new \DateTime('2022-08-24'), new \DateTime('2022-08-25'),
+      '€', [], ['submitAction' => 'Do Submit']);
+
+    $data = (object) [
+      'beginn' => '2022-08-23',
+      'ende' => '2022-08-26',
+    ];
+
+    $jsonSchema = $form->getJsonSchema();
+    $validator = OpisValidatorFactory::getValidator();
+    $validator->setMaxErrors(20);
+    $errorCollector = new ErrorCollector();
+    $result = $validator->validate($data, \json_encode($jsonSchema), ['errorCollector' => $errorCollector]);
+
+    $beginnErrors = $errorCollector->getErrorsAt('/beginn');
+    static::assertCount(1, $beginnErrors);
+    static::assertSame('minDate', $beginnErrors[0]->keyword());
+    $endeErrors = $errorCollector->getErrorsAt('/ende');
+    static::assertCount(1, $endeErrors);
+    static::assertSame('maxDate', $endeErrors[0]->keyword());
+  }
+
+  public function testEndeBeforeBeginn(): void {
+    $form = new AVK1Form(new \DateTime('2022-08-24'), new \DateTime('2022-08-25'),
+      '€', [], ['submitAction' => 'Do Submit']);
+
+    $data = (object) [
+      'beginn' => '2022-08-25',
+      'ende' => '2022-08-24',
+    ];
+
+    $jsonSchema = $form->getJsonSchema();
+    $validator = OpisValidatorFactory::getValidator();
+    $errorCollector = new ErrorCollector();
+    $result = $validator->validate($data, \json_encode($jsonSchema), ['errorCollector' => $errorCollector]);
+
+    static::assertFalse($errorCollector->hasErrorAt('/beginn'));
+    $endeErrors = $errorCollector->getErrorsAt('/ende');
+    static::assertCount(1, $endeErrors);
+    static::assertSame('minDate', $endeErrors[0]->keyword());
+  }
+
   public function testUiSchema(): void {
-    $form = new AVK1Form('€', ['foo' => 'bar'], ['submitAction' => 'Do Submit']);
+    $form = new AVK1Form(new \DateTime('2022-08-24'), new \DateTime('2022-08-25'),
+      '€', ['foo' => 'bar'], ['submitAction' => 'Do Submit']);
     $uiSchema = $form->getUiSchema();
     static::assertInstanceOf(AVK1UiSchema::class, $uiSchema);
     static::assertScopesExist($form->getJsonSchema()->toStdClass(), $uiSchema);

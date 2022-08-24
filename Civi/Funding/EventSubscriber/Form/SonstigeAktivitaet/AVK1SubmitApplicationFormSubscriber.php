@@ -57,6 +57,8 @@ final class AVK1SubmitApplicationFormSubscriber implements EventSubscriberInterf
     }
 
     $form = new AVK1FormExisting(
+      $event->getFundingProgram()->getRequestsStartDate(),
+      $event->getFundingProgram()->getRequestsEndDate(),
       $event->getFundingProgram()->getCurrency(),
       $event->getApplicationProcess()->getId(),
       $event->getFundingCase()->getPermissions(),
@@ -85,6 +87,8 @@ final class AVK1SubmitApplicationFormSubscriber implements EventSubscriberInterf
       // TODO: Change message
       $event->setMessage(E::ts('Success!'));
       $event->setForm(new AVK1FormExisting(
+        $event->getFundingProgram()->getRequestsStartDate(),
+        $event->getFundingProgram()->getRequestsEndDate(),
         $event->getFundingProgram()->getCurrency(),
         $applicationProcess->getId(),
         $event->getFundingCase()->getPermissions(),
