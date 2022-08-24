@@ -110,7 +110,8 @@ abstract class AbstractFormAction extends AbstractRemoteFundingAction {
     $applicationProcessValues = $this->_remoteFundingEntityManager->getById(
       'FundingApplicationProcess', $applicationProcessId, $this->remoteContactId, $this->getContactId()
     );
-    Assert::notNull($applicationProcessValues, sprintf('Application process with ID %d not found', $applicationProcessId));
+    Assert::notNull($applicationProcessValues,
+      sprintf('Application process with ID %d not found', $applicationProcessId));
     $applicationProcess = ApplicationProcessEntity::fromArray($applicationProcessValues);
 
     /** @phpstan-var fundingCaseT|null $fundingCaseValues */
