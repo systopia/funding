@@ -27,8 +27,9 @@ final class AVK1UiSchema extends JsonFormsGroup {
   /**
    * @param string $currency
    * @param array<int, \Civi\RemoteTools\Form\JsonForms\Control\JsonFormsSubmitButton> $submitButtons
+   * @param array<int, \Civi\RemoteTools\Form\JsonForms\Control\JsonFormsHidden> $hiddenFields
    */
-  public function __construct(string $currency, array $submitButtons) {
+  public function __construct(string $currency, array $submitButtons, array $hiddenFields = []) {
     parent::__construct('Förderantrag für sonstige Aktivität', [
       new JsonFormsControl('#/properties/titel', 'Titel'),
       new JsonFormsControl('#/properties/kurzbezeichnungDesInhalts', 'Kurzbezeichnung des Inhalts'),
@@ -86,6 +87,7 @@ final class AVK1UiSchema extends JsonFormsGroup {
           'Beantragter Zuschuss', NULL, NULL, $currency),
       ]),
       ...$submitButtons,
+      ...$hiddenFields,
     ]);
   }
 

@@ -115,6 +115,7 @@ class AVK1FormTest extends TestCase {
           ],
         ],
       ],
+      'foo' => 'baz',
     ];
 
     $validator = OpisValidatorFactory::getValidator();
