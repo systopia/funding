@@ -23,7 +23,9 @@ use Civi\Api4\FundingCase;
 use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent;
+use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
 use Civi\RemoteTools\Api4\Api4Interface;
+use Webmozart\Assert\Assert;
 
 /**
  * @phpstan-type fundingCaseT array{
@@ -77,18 +79,33 @@ class FundingCaseManager {
     $this->eventDispatcher->dispatch(FundingCaseCreatedEvent::class, $event);
 
     // Fetch permissions
-    $action = FundingCase::get()
-      ->addWhere('id', '=', $fundingCase->getId());
-    /** @phpstan-var fundingCaseT $fundingCaseValues */
-    $fundingCaseValues = $this->api4->executeAction($action)->first();
-    $fundingCase->setValues($fundingCaseValues);
+    $persistedFundingCase = $this->get($fundingCase->getId());
+    Assert::notNull($persistedFundingCase, 'Funding case could not be loaded');
+    $fundingCase->setValues($persistedFundingCase->toArray());
 
     return $fundingCase;
   }
 
+  public function get(int $id): ?FundingCaseEntity {
+    $action = FundingCase::get()->addWhere('id', '=', $id);
+    /** @phpstan-var fundingCaseT|null $values */
+    $values = $this->api4->executeAction($action)->first();
+
+    if (NULL === $values) {
+      return NULL;
+    }
+
+    return FundingCaseEntity::fromArray($values);
+  }
+
   public function update(FundingCaseEntity $fundingCase): void {
+    $previousFundingCase = $this->get($fundingCase->getId());
+    Assert::notNull($previousFundingCase, 'Funding case could not be loaded');
     $action = FundingCase::update()->setValues($fundingCase->toArray());
     $this->api4->executeAction($action);
+
+    $event = new FundingCaseUpdatedEvent($previousFundingCase, $fundingCase);
+    $this->eventDispatcher->dispatch(FundingCaseUpdatedEvent::class, $event);
   }
 
   /**

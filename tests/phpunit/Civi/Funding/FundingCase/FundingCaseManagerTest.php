@@ -22,9 +22,12 @@ namespace Civi\Funding\FundingCase;
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Api4\Action\FundingCase\GetAction;
+use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent;
+use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
+use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\RemoteTools\Api4\Api4;
@@ -111,6 +114,40 @@ final class FundingCaseManagerTest extends TestCase implements HeadlessInterface
     ], $fundingCase->toArray());
   }
 
+  public function testGet(): void {
+    $fundingCase = $this->createFundingCase();
+
+    $api4Mock = $this->createMock(Api4Interface::class);
+    $this->fundingCaseManager = new FundingCaseManager($api4Mock, $this->eventDispatcherMock);
+
+    \CRM_Core_Session::singleton()->set('userID', 11);
+    $api4Mock->expects(static::exactly(2))->method('executeAction')->withConsecutive(
+      [
+        static::callback(function (GetAction $action) {
+          static::assertSame(11, $action->getContactId());
+          static::assertSame([['id', '=', 13, FALSE]], $action->getWhere());
+
+          return TRUE;
+        }),
+      ],
+      [
+        static::callback(function (GetAction $action) {
+          static::assertSame(11, $action->getContactId());
+          static::assertSame([['id', '=', 12, FALSE]], $action->getWhere());
+
+          return TRUE;
+        }),
+      ]
+    )->willReturnOnConsecutiveCalls(new Result(), new Result([$fundingCase->toArray()]));
+
+    $fundingCaseLoaded = $this->fundingCaseManager->get(13);
+    static::assertNull($fundingCaseLoaded);
+
+    $fundingCaseLoaded = $this->fundingCaseManager->get(12);
+    static::assertNotNull($fundingCaseLoaded);
+    static::assertSame($fundingCase->toArray(), $fundingCaseLoaded->toArray());
+  }
+
   public function testHasAccessTrue(): void {
     $api4Mock = $this->createMock(Api4Interface::class);
     $this->fundingCaseManager = new FundingCaseManager($api4Mock, $this->eventDispatcherMock);
@@ -139,6 +176,40 @@ final class FundingCaseManagerTest extends TestCase implements HeadlessInterface
     }))->willReturn(new Result());
 
     static::assertFalse($this->fundingCaseManager->hasAccess(12));
+  }
+
+  public function testUpdate(): void {
+    $contact = ContactFixture::addIndividual();
+    $fundingCase = $this->createFundingCase();
+    \CRM_Core_Session::singleton()->set('userID', $contact['id']);
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['test_permission']);
+
+    $updatedFundingCase = FundingCaseEntity::fromArray($fundingCase->toArray());
+    $updatedFundingCase->setStatus('updated');
+
+    $this->eventDispatcherMock->expects(static::once())->method('dispatch')
+      ->with(FundingCaseUpdatedEvent::class, static::callback(
+        function (FundingCaseUpdatedEvent $event) {
+          static::assertSame('open', $event->getPreviousFundingCase()->getStatus());
+          static::assertSame('updated', $event->getFundingCase()->getStatus());
+
+          return TRUE;
+        }
+      ));
+
+    $this->fundingCaseManager->update($updatedFundingCase);
+  }
+
+  private function createFundingCase(): FundingCaseEntity {
+    $fundingProgram = FundingProgramFixture::addFixture();
+    $fundingCaseType = FundingCaseTypeFixture::addFixture();
+    $recipientContact = ContactFixture::addOrganization();
+
+    return FundingCaseFixture::addFixture(
+      $fundingProgram->getId(),
+      $fundingCaseType->getId(),
+      $recipientContact['id'],
+    );
   }
 
 }
