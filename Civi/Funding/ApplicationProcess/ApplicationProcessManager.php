@@ -26,6 +26,7 @@ use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
 use Civi\RemoteTools\Api4\Api4Interface;
+use Webmozart\Assert\Assert;
 
 /**
  * @phpstan-type applicationProcessT array{
@@ -97,15 +98,34 @@ class ApplicationProcessManager {
     return $applicationProcess;
   }
 
+  public function get(int $id): ?ApplicationProcessEntity {
+    $action = FundingApplicationProcess::get()->addWhere('id', '=', $id);
+    /** @phpstan-var applicationProcessT|null $values */
+    $values = $this->api4->executeAction($action)->first();
+
+    if (NULL === $values) {
+      return NULL;
+    }
+
+    return ApplicationProcessEntity::fromArray($values);
+  }
+
   public function update(int $contactId, ApplicationProcessEntity $applicationProcess,
     FundingCaseEntity $fundingCase
   ): void {
     $applicationProcess->setModificationDate(new \DateTime(date('YmdHis')));
 
-    $action = FundingApplicationProcess::update()->setValues($applicationProcess->toArray());
-    $this->api4->executeAction($action);
+    $previousApplicationProcess = $this->get($applicationProcess->getId());
+    Assert::notNull($previousApplicationProcess, 'Application process could not be loaded');
 
-    $event = new ApplicationProcessUpdatedEvent($contactId, $applicationProcess, $fundingCase);
+    $updateAction = FundingApplicationProcess::update()->setValues($applicationProcess->toArray());
+    $this->api4->executeAction($updateAction);
+
+    $event = new ApplicationProcessUpdatedEvent($contactId,
+      $previousApplicationProcess,
+      $applicationProcess,
+      $fundingCase
+    );
     $this->eventDispatcher->dispatch(ApplicationProcessUpdatedEvent::class, $event);
   }
 

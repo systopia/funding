@@ -31,10 +31,15 @@ final class ApplicationProcessUpdatedEvent extends Event {
 
   private FundingCaseEntity $fundingCase;
 
+  private ApplicationProcessEntity $previousApplicationProcess;
+
   public function __construct(int $contactId,
-    ApplicationProcessEntity $applicationProcess, FundingCaseEntity $fundingCase
+    ApplicationProcessEntity $previousApplicationProcess,
+    ApplicationProcessEntity $applicationProcess,
+    FundingCaseEntity $fundingCase
   ) {
     $this->contactId = $contactId;
+    $this->previousApplicationProcess = $previousApplicationProcess;
     $this->applicationProcess = $applicationProcess;
     $this->fundingCase = $fundingCase;
   }
@@ -49,6 +54,10 @@ final class ApplicationProcessUpdatedEvent extends Event {
 
   public function getFundingCase(): FundingCaseEntity {
     return $this->fundingCase;
+  }
+
+  public function getPreviousApplicationProcess(): ApplicationProcessEntity {
+    return $this->previousApplicationProcess;
   }
 
 }

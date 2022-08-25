@@ -19,12 +19,12 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase;
 
-use Civi\Api4\FundingCaseContactRelation;
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Api4\Action\FundingCase\GetAction;
 use Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent;
 use Civi\Funding\Fixtures\ContactFixture;
+use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\RemoteTools\Api4\Api4;
@@ -84,13 +84,10 @@ final class FundingCaseManagerTest extends TestCase implements HeadlessInterface
       static::assertSame($contact['id'], $event->getContactId());
       static::assertSame($fundingProgram, $event->getFundingProgram());
       static::assertSame($fundingCaseType, $event->getFundingCaseType());
-      FundingCaseContactRelation::create()
-        ->setValues([
-          'funding_case_id' => $event->getFundingCase()->getId(),
-          'entity_table' => 'civicrm_contact',
-          'entity_id' => $event->getContactId(),
-          'permissions' => ['test_permission'],
-        ])->execute();
+      FundingCaseContactRelationFixture::addContact($event->getContactId(),
+        $event->getFundingCase()->getId(),
+        ['test_permission'],
+      );
     });
 
     \CRM_Core_Session::singleton()->set('userID', $contact['id']);

@@ -25,6 +25,7 @@ use Civi\Api4\FundingCaseContactRelation;
 use Civi\Api4\FundingCaseType;
 use Civi\Api4\Relationship;
 use Civi\Api4\RelationshipType;
+use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 
 trait FundingCaseTestFixturesTrait {
@@ -87,13 +88,10 @@ trait FundingCaseTestFixturesTrait {
         'last_name' => 'User',
       ])->execute()->first()['id'];
 
-    $contactRelationId = FundingCaseContactRelation::create()
-      ->setValues([
-        'funding_case_id' => $this->permittedFundingCaseId,
-        'entity_table' => 'civicrm_contact',
-        'entity_id' => $this->associatedContactIdNoPermissions,
-        'permissions' => NULL,
-      ])->execute()->first()['id'];
+    $contactRelationId = FundingCaseContactRelationFixture::addContact(
+      $this->associatedContactIdNoPermissions,
+      $this->permittedFundingCaseId,
+      NULL)['id'];
 
     $this->associatedContactId = Contact::create()
       ->setValues([
@@ -102,13 +100,10 @@ trait FundingCaseTestFixturesTrait {
         'last_name' => 'User',
       ])->execute()->first()['id'];
 
-    FundingCaseContactRelation::create()
-      ->setValues([
-        'funding_case_id' => $this->permittedFundingCaseId,
-        'entity_table' => 'civicrm_contact',
-        'entity_id' => $this->associatedContactId,
-        'permissions' => ['foo', 'bar'],
-      ])->execute();
+    FundingCaseContactRelationFixture::addContact(
+      $this->associatedContactId,
+      $this->permittedFundingCaseId,
+      ['foo', 'bar']);
 
     FundingCaseContactRelation::create()
       ->setValues([

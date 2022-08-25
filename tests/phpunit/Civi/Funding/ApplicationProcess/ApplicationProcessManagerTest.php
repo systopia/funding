@@ -25,6 +25,7 @@ use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
 use Civi\Funding\Fixtures\ApplicationProcessFixture;
 use Civi\Funding\Fixtures\ContactFixture;
+use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
@@ -115,16 +116,36 @@ final class ApplicationProcessManagerTest extends TestCase implements HeadlessIn
     ], $applicationProcess->toArray());
   }
 
+  public function testGet(): void {
+    $contact = ContactFixture::addIndividual();
+    $fundingCase = $this->createFundingCase();
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['test_permission']);
+
+    $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId());
+    static::assertNull($this->applicationProcessManager->get($applicationProcess->getId()));
+
+    \CRM_Core_Session::singleton()->set('userID', $contact['id']);
+    static::assertNotNull($this->applicationProcessManager->get($applicationProcess->getId()));
+
+    static::assertNull($this->applicationProcessManager->get($applicationProcess->getId() + 1));
+  }
+
   public function testUpdate(): void {
     $contact = ContactFixture::addIndividual();
     $fundingCase = $this->createFundingCase();
-    $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId());
+    \CRM_Core_Session::singleton()->set('userID', $contact['id']);
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['test_permission']);
 
-    $event = new ApplicationProcessUpdatedEvent($contact['id'], $applicationProcess, $fundingCase);
+    $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId());
+    $previousTitle = $applicationProcess->getTitle();
+
     $this->eventDispatcherMock->expects(static::once())->method('dispatch')
       ->with(ApplicationProcessUpdatedEvent::class, static::callback(
-        function (ApplicationProcessUpdatedEvent $event) use ($contact, $applicationProcess, $fundingCase) {
+        function (ApplicationProcessUpdatedEvent $event) use ($contact, $previousTitle,
+          $applicationProcess, $fundingCase
+        ) {
           static::assertSame($contact['id'], $event->getContactId());
+          static::assertSame($previousTitle, $event->getPreviousApplicationProcess()->getTitle());
           static::assertSame($applicationProcess, $event->getApplicationProcess());
           static::assertSame($fundingCase, $event->getFundingCase());
 
