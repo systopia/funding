@@ -34,7 +34,7 @@ final class RemoteFundingEntityManager implements RemoteFundingEntityManagerInte
   /**
    * @inheritDoc
    */
-  public function getById(string $entity, int $id, string $remoteContactId, int $contactId): ?array {
+  public function getById(string $entity, int $id, string $remoteContactId): ?array {
     $params = [
       'where' => [
         ['id', '=', $id],
@@ -43,7 +43,7 @@ final class RemoteFundingEntityManager implements RemoteFundingEntityManagerInte
 
     $okToContinue = FALSE;
     try {
-      $contactIdParams = $this->buildContactIdParams($entity, $remoteContactId, $contactId);
+      $contactIdParams = $this->buildContactIdParams($entity, $remoteContactId);
       if ([] !== $contactIdParams || $this->isContactIdSessionAware($entity)) {
         $okToContinue = TRUE;
       }
@@ -55,7 +55,7 @@ final class RemoteFundingEntityManager implements RemoteFundingEntityManagerInte
 
     if (!$okToContinue && !str_starts_with($entity, 'Remote')) {
       try {
-        if (!$this->doHasAccess('Remote' . $entity, $id, $remoteContactId, $contactId)) {
+        if (!$this->doHasAccess('Remote' . $entity, $id, $remoteContactId)) {
           return NULL;
         }
       }
@@ -74,10 +74,10 @@ final class RemoteFundingEntityManager implements RemoteFundingEntityManagerInte
     return $record;
   }
 
-  public function hasAccess(string $entity, int $id, string $remoteContactId, int $contactId): bool {
+  public function hasAccess(string $entity, int $id, string $remoteContactId): bool {
     if (!str_starts_with($entity, 'Remote')) {
       try {
-        return $this->doHasAccess('Remote' . $entity, $id, $remoteContactId, $contactId);
+        return $this->doHasAccess('Remote' . $entity, $id, $remoteContactId);
       }
       catch (NotImplementedException $ignore) {
         // @ignoreException
@@ -85,7 +85,7 @@ final class RemoteFundingEntityManager implements RemoteFundingEntityManagerInte
     }
 
     try {
-      return $this->doHasAccess($entity, $id, $remoteContactId, $contactId);
+      return $this->doHasAccess($entity, $id, $remoteContactId);
     }
     catch (NotImplementedException $e) {
       throw new \InvalidArgumentException(
@@ -99,13 +99,10 @@ final class RemoteFundingEntityManager implements RemoteFundingEntityManagerInte
    *
    * @throws \Civi\API\Exception\NotImplementedException
    */
-  private function buildContactIdParams(string $entity, string $remoteContactId, int $contactId): array {
+  private function buildContactIdParams(string $entity, string $remoteContactId): array {
     $contactIdParams = [];
     if ($this->hasParam($entity, 'remoteContactId')) {
       $contactIdParams['remoteContactId'] = $remoteContactId;
-    }
-    if ($this->hasParam($entity, 'contactId')) {
-      $contactIdParams['contactId'] = $contactId;
     }
 
     return $contactIdParams;
@@ -115,8 +112,8 @@ final class RemoteFundingEntityManager implements RemoteFundingEntityManagerInte
    * @throws \API_Exception
    * @throws \Civi\API\Exception\NotImplementedException
    */
-  private function doHasAccess(string $entity, int $id, string $remoteContactId, int $contactId): bool {
-    $contactIdParams = $this->buildContactIdParams($entity, $remoteContactId, $contactId);
+  private function doHasAccess(string $entity, int $id, string $remoteContactId): bool {
+    $contactIdParams = $this->buildContactIdParams($entity, $remoteContactId);
     $result = $this->api4->execute($entity, 'get', array_merge([
       'select' => ['id'],
       'where' => [

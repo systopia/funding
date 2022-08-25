@@ -26,11 +26,11 @@ interface RemoteFundingEntityManagerInterface {
    *
    * @throws \API_Exception
    */
-  public function getById(string $entity, int $id, string $remoteContactId, int $contactId): ?array;
+  public function getById(string $entity, int $id, string $remoteContactId): ?array;
 
   /**
    * @throws \API_Exception
    */
-  public function hasAccess(string $entity, int $id, string $remoteContactId, int $contactId): bool;
+  public function hasAccess(string $entity, int $id, string $remoteContactId): bool;
 
 }
