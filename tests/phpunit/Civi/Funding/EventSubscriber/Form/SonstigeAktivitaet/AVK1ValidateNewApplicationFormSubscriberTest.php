@@ -20,7 +20,6 @@ declare(strict_types = 1);
 namespace Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet;
 
 use Civi\Funding\Event\Remote\FundingCase\ValidateNewApplicationFormEvent;
-use Civi\Funding\Form\SonstigeAktivitaet\AVK1FormNew;
 use Civi\Funding\Form\Validation\ValidationResult;
 use Opis\JsonSchema\Errors\ValidationError;
 use Opis\JsonSchema\Info\DataInfo;
@@ -56,15 +55,12 @@ final class AVK1ValidateNewApplicationFormSubscriberTest extends AbstractNewAppl
     $data = ['foo' => 'bar'];
     $event = $this->createEvent($data);
 
-    $validatedForm = new AVK1FormNew(
-      $event->getFundingProgram()->getRequestsStartDate(),
-      $event->getFundingProgram()->getRequestsEndDate(),
-      $event->getFundingProgram()->getCurrency(),
-      $event->getFundingCaseType()->getId(),
-      $event->getFundingProgram()->getId(),
-      $event->getFundingProgram()->getPermissions(),
-      $data
-    );
+    $validatedForm = AVK1FormBuilder::new()
+      ->isNew(TRUE)
+      ->fundingProgram($event->getFundingProgram())
+      ->fundingCaseType($event->getFundingCaseType())
+      ->data($data)
+      ->build();
     $postValidationData = ['foo' => 'baz'];
     $this->validatorMock->expects(static::once())->method('validate')
       ->with($validatedForm)
@@ -80,15 +76,12 @@ final class AVK1ValidateNewApplicationFormSubscriberTest extends AbstractNewAppl
     $data = ['foo' => 'bar'];
     $event = $this->createEvent($data);
 
-    $validatedForm = new AVK1FormNew(
-      $event->getFundingProgram()->getRequestsStartDate(),
-      $event->getFundingProgram()->getRequestsEndDate(),
-      $event->getFundingProgram()->getCurrency(),
-      $event->getFundingCaseType()->getId(),
-      $event->getFundingProgram()->getId(),
-      $event->getFundingProgram()->getPermissions(),
-      $data
-    );
+    $validatedForm = AVK1FormBuilder::new()
+      ->isNew(TRUE)
+      ->fundingProgram($event->getFundingProgram())
+      ->fundingCaseType($event->getFundingCaseType())
+      ->data($data)
+      ->build();
     $errorCollector = new ErrorCollector();
     $errorCollector->addError(new ValidationError(
       'keyword',

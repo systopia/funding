@@ -24,8 +24,6 @@ use Civi\Funding\ApplicationProcess\ApplicationProcessStatusDeterminer;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
-use Civi\Funding\Form\SonstigeAktivitaet\AVK1FormExisting;
-use Civi\Funding\Form\SonstigeAktivitaet\AVK1FormNew;
 use Civi\Funding\Form\Validation\ValidationResult;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Opis\JsonSchema\Errors\ValidationError;
@@ -86,15 +84,13 @@ final class AVK1SubmitNewApplicationFormSubscriberTest extends AbstractNewApplic
     $data = ['foo' => 'bar'];
     $event = $this->createEvent($data);
 
-    $validatedForm = new AVK1FormNew(
-      $event->getFundingProgram()->getRequestsStartDate(),
-      $event->getFundingProgram()->getRequestsEndDate(),
-      $event->getFundingProgram()->getCurrency(),
-      $event->getFundingCaseType()->getId(),
-      $event->getFundingProgram()->getId(),
-      $event->getFundingProgram()->getPermissions(),
-      $data
-    );
+    $validatedForm = AVK1FormBuilder::new()
+      ->isNew(TRUE)
+      ->fundingProgram($event->getFundingProgram())
+      ->fundingCaseType($event->getFundingCaseType())
+      ->data($data)
+      ->build();
+    ;
     $postValidationData = [
       'action' => 'test',
       'titel' => 'Title',
@@ -156,14 +152,12 @@ final class AVK1SubmitNewApplicationFormSubscriberTest extends AbstractNewApplic
     $this->subscriber->onSubmitNewForm($event);
 
     static::assertSame(SubmitNewApplicationFormEvent::ACTION_SHOW_FORM, $event->getAction());
-    $expectedForm = new AVK1FormExisting(
-      $event->getFundingProgram()->getRequestsStartDate(),
-      $event->getFundingProgram()->getRequestsEndDate(),
-      $event->getFundingProgram()->getCurrency(),
-      $applicationProcess->getId(),
-      $fundingCase->getPermissions(),
-      $postValidationData
-    );
+    $expectedForm = AVK1FormBuilder::new()
+      ->fundingProgram($event->getFundingProgram())
+      ->fundingCase($fundingCase)
+      ->applicationProcess($applicationProcess)
+      ->data($postValidationData)
+      ->build();
     static::assertEquals($expectedForm, $event->getForm());
   }
 
@@ -171,15 +165,12 @@ final class AVK1SubmitNewApplicationFormSubscriberTest extends AbstractNewApplic
     $data = ['foo' => 'bar'];
     $event = $this->createEvent($data);
 
-    $validatedForm = new AVK1FormNew(
-      $event->getFundingProgram()->getRequestsStartDate(),
-      $event->getFundingProgram()->getRequestsEndDate(),
-      $event->getFundingProgram()->getCurrency(),
-      $event->getFundingCaseType()->getId(),
-      $event->getFundingProgram()->getId(),
-      $event->getFundingProgram()->getPermissions(),
-      $data
-    );
+    $validatedForm = AVK1FormBuilder::new()
+      ->isNew(TRUE)
+      ->fundingProgram($event->getFundingProgram())
+      ->fundingCaseType($event->getFundingCaseType())
+      ->data($data)
+      ->build();
     $errorCollector = new ErrorCollector();
     $errorCollector->addError(
       new ValidationError(
