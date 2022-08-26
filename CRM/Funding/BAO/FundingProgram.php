@@ -44,7 +44,7 @@ class CRM_Funding_BAO_FundingProgram extends CRM_Funding_DAO_FundingProgram impl
   /**
    * @inheritDoc
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     return [
       'civi.afform_admin.metadata' => 'afformAdminMetadata',
       'civi.afform.get' => 'afformGet',
@@ -56,14 +56,10 @@ class CRM_Funding_BAO_FundingProgram extends CRM_Funding_DAO_FundingProgram impl
    *
    * @see \Civi\AfformAdmin\AfformAdminMeta::getMetadata().
    *
-   * TODO: Replace with "afformEntities/*.php" files.
+   * TODO: Replace with "afformEntities/*.php" files?
    *       See civicrm/civicrm-core/mixin/afform-entity-php@1/mixin.php.
-   *
-   * @param \Civi\Core\Event\GenericHookEvent $event
-   *
-   * @return void
    */
-  public static function afformAdminMetadata(GenericHookEvent $event) {
+  public static function afformAdminMetadata(GenericHookEvent $event): void {
     $event->entities['FundingProgram'] = [
       'entity' => 'FundingProgram',
       'label' => 'Funding Program',
@@ -75,14 +71,10 @@ class CRM_Funding_BAO_FundingProgram extends CRM_Funding_DAO_FundingProgram impl
 
   /**
    * Provides Afform(s) for this entity.
-   *
-   * @param \Civi\Core\Event\GenericHookEvent $event
-   *
-   * @return void
    */
-  public static function afformGet(GenericHookEvent $event) {
+  public static function afformGet(GenericHookEvent $event): void {
     // Early return if forms are not requested.
-    if ($event->getTypes && !in_array('form', $event->getTypes, TRUE)) {
+    if (is_array($event->getTypes) && !in_array('form', $event->getTypes, TRUE)) {
       return;
     }
 
