@@ -57,6 +57,8 @@ final class AVK1ValidateNewApplicationFormSubscriberTest extends AbstractNewAppl
     $event = $this->createEvent($data);
 
     $validatedForm = new AVK1FormNew(
+      $event->getFundingProgram()->getRequestsStartDate(),
+      $event->getFundingProgram()->getRequestsEndDate(),
       $event->getFundingProgram()->getCurrency(),
       $event->getFundingCaseType()->getId(),
       $event->getFundingProgram()->getId(),
@@ -79,6 +81,8 @@ final class AVK1ValidateNewApplicationFormSubscriberTest extends AbstractNewAppl
     $event = $this->createEvent($data);
 
     $validatedForm = new AVK1FormNew(
+      $event->getFundingProgram()->getRequestsStartDate(),
+      $event->getFundingProgram()->getRequestsEndDate(),
       $event->getFundingProgram()->getCurrency(),
       $event->getFundingCaseType()->getId(),
       $event->getFundingProgram()->getId(),

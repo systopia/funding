@@ -27,7 +27,9 @@ final class AVK1FormExisting extends AVK1Form {
    * @phpstan-param array<string> $permissions
    * @phpstan-param array<string, mixed> $data
    */
-  public function __construct(string $currency, int $applicationProcessId, array $permissions, array $data) {
+  public function __construct(\DateTimeInterface $minBegin, \DateTimeInterface $maxEnd,
+    string $currency, int $applicationProcessId, array $permissions, array $data
+  ) {
     $data['applicationProcessId'] = $applicationProcessId;
 
     $extraProperties = [
@@ -36,7 +38,7 @@ final class AVK1FormExisting extends AVK1Form {
 
     $submitActions = iterator_to_array($this->getSubmitActions($permissions));
 
-    parent::__construct($currency, $data, $submitActions, $extraProperties);
+    parent::__construct($minBegin, $maxEnd, $currency, $data, $submitActions, $extraProperties);
   }
 
   /**
