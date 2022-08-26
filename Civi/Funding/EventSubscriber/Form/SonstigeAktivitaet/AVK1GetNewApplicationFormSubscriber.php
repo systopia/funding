@@ -20,7 +20,6 @@ declare(strict_types = 1);
 namespace Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet;
 
 use Civi\Funding\Event\Remote\FundingCase\GetNewApplicationFormEvent;
-use Civi\Funding\Form\SonstigeAktivitaet\AVK1FormNew;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 final class AVK1GetNewApplicationFormSubscriber implements EventSubscriberInterface {
@@ -37,14 +36,11 @@ final class AVK1GetNewApplicationFormSubscriber implements EventSubscriberInterf
       return;
     }
 
-    $form = new AVK1FormNew(
-      $event->getFundingProgram()->getRequestsStartDate(),
-      $event->getFundingProgram()->getRequestsEndDate(),
-      $event->getFundingProgram()->getCurrency(),
-      $event->getFundingCaseType()->getId(),
-      $event->getFundingProgram()->getId(),
-      $event->getFundingProgram()->getPermissions(),
-    );
+    $form = AVK1FormBuilder::new()
+      ->isNew(TRUE)
+      ->fundingProgram($event->getFundingProgram())
+      ->fundingCaseType($event->getFundingCaseType())
+      ->build();
 
     $event->setData($form->getData());
     $event->setJsonSchema($form->getJsonSchema());

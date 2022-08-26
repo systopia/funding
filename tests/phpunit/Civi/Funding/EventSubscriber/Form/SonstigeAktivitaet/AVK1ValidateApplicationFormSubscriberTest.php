@@ -21,7 +21,6 @@ namespace Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet;
 
 use Civi\Api4\RemoteFundingApplicationProcess;
 use Civi\Funding\Event\Remote\ApplicationProcess\ValidateFormEvent;
-use Civi\Funding\Form\SonstigeAktivitaet\AVK1FormExisting;
 use Civi\Funding\Form\Validation\FormValidatorInterface;
 use Civi\Funding\Form\Validation\ValidationResult;
 use Opis\JsonSchema\Errors\ValidationError;
@@ -66,14 +65,12 @@ final class AVK1ValidateApplicationFormSubscriberTest extends AbstractApplicatio
     $event = $this->createEvent($data);
     $applicationProcess = $event->getApplicationProcess();
 
-    $validatedForm = new AVK1FormExisting(
-      $event->getFundingProgram()->getRequestsStartDate(),
-      $event->getFundingProgram()->getRequestsEndDate(),
-      $event->getFundingProgram()->getCurrency(),
-      $applicationProcess->getId(),
-      $event->getFundingCase()->getPermissions(),
-      $applicationProcess->getRequestData(),
-    );
+    $validatedForm = AVK1FormBuilder::new()
+      ->fundingProgram($event->getFundingProgram())
+      ->fundingCase($event->getFundingCase())
+      ->applicationProcess($applicationProcess)
+      ->data($applicationProcess->getRequestData())
+      ->build();
     $postValidationData = ['foo' => 'baz'];
 
     $this->validatorMock->expects(static::once())->method('validate')->with($validatedForm)->willReturn(
@@ -91,14 +88,12 @@ final class AVK1ValidateApplicationFormSubscriberTest extends AbstractApplicatio
     $event = $this->createEvent($data);
     $applicationProcess = $event->getApplicationProcess();
 
-    $validatedForm = new AVK1FormExisting(
-      $event->getFundingProgram()->getRequestsStartDate(),
-      $event->getFundingProgram()->getRequestsEndDate(),
-      $event->getFundingProgram()->getCurrency(),
-      $applicationProcess->getId(),
-      $event->getFundingCase()->getPermissions(),
-      $applicationProcess->getRequestData(),
-    );
+    $validatedForm = AVK1FormBuilder::new()
+      ->fundingProgram($event->getFundingProgram())
+      ->fundingCase($event->getFundingCase())
+      ->applicationProcess($applicationProcess)
+      ->data($applicationProcess->getRequestData())
+      ->build();
     $postValidationData = ['foo' => 'baz'];
 
     $errorCollector = new ErrorCollector();

@@ -20,7 +20,6 @@ declare(strict_types = 1);
 namespace Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet;
 
 use Civi\Funding\Event\Remote\ApplicationProcess\ValidateFormEvent;
-use Civi\Funding\Form\SonstigeAktivitaet\AVK1FormExisting;
 use Civi\Funding\Form\Validation\FormValidatorInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -44,14 +43,12 @@ final class AVK1ValidateApplicationFormSubscriber implements EventSubscriberInte
       return;
     }
 
-    $form = new AVK1FormExisting(
-      $event->getFundingProgram()->getRequestsStartDate(),
-      $event->getFundingProgram()->getRequestsEndDate(),
-      $event->getFundingProgram()->getCurrency(),
-      $event->getApplicationProcess()->getId(),
-      $event->getFundingCase()->getPermissions(),
-      $event->getData()
-    );
+    $form = AVK1FormBuilder::new()
+      ->fundingProgram($event->getFundingProgram())
+      ->fundingCase($event->getFundingCase())
+      ->applicationProcess($event->getApplicationProcess())
+      ->data($event->getData())
+      ->build();
     $validationResult = $this->validator->validate($form);
 
     if ($validationResult->isValid()) {

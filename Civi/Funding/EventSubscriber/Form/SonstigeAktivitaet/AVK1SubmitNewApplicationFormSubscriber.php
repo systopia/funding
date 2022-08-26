@@ -22,8 +22,6 @@ namespace Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\ApplicationProcessStatusDeterminer;
 use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
-use Civi\Funding\Form\SonstigeAktivitaet\AVK1FormExisting;
-use Civi\Funding\Form\SonstigeAktivitaet\AVK1FormNew;
 use Civi\Funding\Form\Validation\FormValidatorInterface;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use CRM_Funding_ExtensionUtil as E;
@@ -62,15 +60,12 @@ final class AVK1SubmitNewApplicationFormSubscriber implements EventSubscriberInt
       return;
     }
 
-    $form = new AVK1FormNew(
-      $event->getFundingProgram()->getRequestsStartDate(),
-      $event->getFundingProgram()->getRequestsEndDate(),
-      $event->getFundingProgram()->getCurrency(),
-      $event->getFundingCaseType()->getId(),
-      $event->getFundingProgram()->getId(),
-      $event->getFundingProgram()->getPermissions(),
-      $event->getData()
-    );
+    $form = AVK1FormBuilder::new()
+      ->isNew(TRUE)
+      ->fundingProgram($event->getFundingProgram())
+      ->fundingCaseType($event->getFundingCaseType())
+      ->data($event->getData())
+      ->build();
     $validationResult = $this->validator->validate($form);
 
     /** @phpstan-var array<string, mixed>&array{
@@ -100,14 +95,13 @@ final class AVK1SubmitNewApplicationFormSubscriber implements EventSubscriberInt
       // TODO: Change message
       $event->setMessage(E::ts('Success! (Application process ID: %1)',
         ['%1' => $applicationProcess->getId()]));
-      $event->setForm(new AVK1FormExisting(
-        $event->getFundingProgram()->getRequestsStartDate(),
-        $event->getFundingProgram()->getRequestsEndDate(),
-        $event->getFundingProgram()->getCurrency(),
-        $applicationProcess->getId(),
-        $fundingCase->getPermissions(),
-        $applicationProcess->getRequestData(),
-      ));
+      $event->setForm(AVK1FormBuilder::new()
+        ->fundingProgram($event->getFundingProgram())
+        ->fundingCase($fundingCase)
+        ->applicationProcess($applicationProcess)
+        ->data($applicationProcess->getRequestData())
+        ->build()
+      );
     }
     else {
       // TODO: Change message

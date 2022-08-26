@@ -22,7 +22,6 @@ namespace Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\ApplicationProcessStatusDeterminer;
 use Civi\Funding\Event\Remote\ApplicationProcess\SubmitFormEvent;
-use Civi\Funding\Form\SonstigeAktivitaet\AVK1FormExisting;
 use Civi\Funding\Form\Validation\FormValidatorInterface;
 use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -56,14 +55,12 @@ final class AVK1SubmitApplicationFormSubscriber implements EventSubscriberInterf
       return;
     }
 
-    $form = new AVK1FormExisting(
-      $event->getFundingProgram()->getRequestsStartDate(),
-      $event->getFundingProgram()->getRequestsEndDate(),
-      $event->getFundingProgram()->getCurrency(),
-      $event->getApplicationProcess()->getId(),
-      $event->getFundingCase()->getPermissions(),
-      $event->getData()
-    );
+    $form = AVK1FormBuilder::new()
+      ->fundingProgram($event->getFundingProgram())
+      ->fundingCase($event->getFundingCase())
+      ->applicationProcess($event->getApplicationProcess())
+      ->data($event->getData())
+      ->build();
     $validationResult = $this->validator->validate($form);
 
     /** @phpstan-var array<string, mixed>&array{
@@ -86,14 +83,13 @@ final class AVK1SubmitApplicationFormSubscriber implements EventSubscriberInterf
 
       // TODO: Change message
       $event->setMessage(E::ts('Success!'));
-      $event->setForm(new AVK1FormExisting(
-        $event->getFundingProgram()->getRequestsStartDate(),
-        $event->getFundingProgram()->getRequestsEndDate(),
-        $event->getFundingProgram()->getCurrency(),
-        $applicationProcess->getId(),
-        $event->getFundingCase()->getPermissions(),
-        $validationResult->getData()
-      ));
+      $event->setForm(AVK1FormBuilder::new()
+        ->fundingProgram($event->getFundingProgram())
+        ->fundingCase($event->getFundingCase())
+        ->applicationProcess($event->getApplicationProcess())
+        ->data($validationResult->getData())
+        ->build()
+      );
     }
     else {
       // TODO: Change message
