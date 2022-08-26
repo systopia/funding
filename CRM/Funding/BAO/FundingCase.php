@@ -15,9 +15,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Civi\Core\Event\GenericHookEvent;
 use CRM_Funding_ExtensionUtil as E;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class CRM_Funding_BAO_FundingCase extends CRM_Funding_DAO_FundingCase {
+class CRM_Funding_BAO_FundingCase extends CRM_Funding_DAO_FundingCase implements EventSubscriberInterface {
 
   /**
    * Create a new FundingCase based on array-data
@@ -38,5 +40,45 @@ class CRM_Funding_BAO_FundingCase extends CRM_Funding_DAO_FundingCase {
 
     return $instance;
   } */
+
+  /**
+   * @inheritDoc
+   */
+  public static function getSubscribedEvents(): array {
+    return [
+      'civi.afform_admin.metadata' => 'afformAdminMetadata',
+      'civi.afform.get' => 'afformGet',
+    ];
+  }
+
+  /**
+   * Provides Afform metadata about this entity.
+   *
+   * @see \Civi\AfformAdmin\AfformAdminMeta::getMetadata().
+   *
+   * TODO: Replace with "afformEntities/*.php" files?
+   *       See civicrm/civicrm-core/mixin/afform-entity-php@1/mixin.php.
+   */
+  public static function afformAdminMetadata(GenericHookEvent $event): void {
+    $event->entities['FundingCase'] = [
+      'entity' => 'FundingCase',
+      'label' => 'Funding Case',
+      'icon' => NULL, // TODO.
+      'type' => 'primary',
+      'defaults' => '{}',
+    ];
+  }
+
+  /**
+   * Provides Afform(s) for this entity.
+   */
+  public static function afformGet(GenericHookEvent $event): void {
+    // Early return if forms are not requested.
+    if (is_array($event->getTypes) && !in_array('form', $event->getTypes, TRUE)) {
+      return;
+    }
+
+    // TODO: Provide Afform for a funding case.
+  }
 
 }
