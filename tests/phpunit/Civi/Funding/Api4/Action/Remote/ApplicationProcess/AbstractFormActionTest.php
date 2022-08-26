@@ -84,10 +84,10 @@ abstract class AbstractFormActionTest extends TestCase {
     ];
 
     $this->remoteFundingEntityManagerMock->method('getById')->willReturnMap([
-      ['FundingApplicationProcess', 22, static::REMOTE_CONTACT_ID, static::CONTACT_ID, $this->applicationProcessValues],
-      ['FundingCase', 33, static::REMOTE_CONTACT_ID, static::CONTACT_ID, $this->fundingCaseValues],
-      ['FundingCaseType', 44, static::REMOTE_CONTACT_ID, static::CONTACT_ID, $this->fundingCaseTypeValues],
-      ['FundingProgram', 55, static::REMOTE_CONTACT_ID, static::CONTACT_ID, $this->fundingProgramValues],
+      ['FundingApplicationProcess', 22, static::REMOTE_CONTACT_ID, $this->applicationProcessValues],
+      ['FundingCase', 33, static::REMOTE_CONTACT_ID, $this->fundingCaseValues],
+      ['FundingCaseType', 44, static::REMOTE_CONTACT_ID, $this->fundingCaseTypeValues],
+      ['FundingProgram', 55, static::REMOTE_CONTACT_ID, $this->fundingProgramValues],
     ]);
   }
 

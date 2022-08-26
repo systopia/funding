@@ -75,8 +75,8 @@ abstract class AbstractNewApplicationFormActionTest extends TestCase {
     ];
 
     $this->remoteFundingEntityManagerMock->method('getById')->willReturnMap([
-      ['FundingCaseType', 22, '00', 11, &$this->fundingCaseTypeValues],
-      ['FundingProgram', 33, '00', 11, &$this->fundingProgramValues],
+      ['FundingCaseType', 22, '00', &$this->fundingCaseTypeValues],
+      ['FundingProgram', 33, '00', &$this->fundingProgramValues],
     ]);
   }
 

@@ -85,7 +85,7 @@ final class RemoteFundingEntityManagerTest extends TestCase {
         'remoteContactId' => '00',
       ])->willReturn($apiResult);
 
-    static::assertSame($record, $this->entityManager->getById('RemoteFoo', 11, '00', 2));
+    static::assertSame($record, $this->entityManager->getById('RemoteFoo', 11, '00'));
   }
 
   public function testGetByIdNotFound(): void {
@@ -100,7 +100,7 @@ final class RemoteFundingEntityManagerTest extends TestCase {
         'remoteContactId' => '00',
       ])->willReturn($apiResult);
 
-    static::assertNull($this->entityManager->getById('RemoteFoo', 11, '00', 2));
+    static::assertNull($this->entityManager->getById('RemoteFoo', 11, '00'));
   }
 
   public function testGetByIdNonRemote(): void {
@@ -129,7 +129,7 @@ final class RemoteFundingEntityManagerTest extends TestCase {
     $this->api4Mock->expects(static::exactly(2))->method('execute')
       ->willReturnMap($valueMap);
 
-    static::assertSame($record, $this->entityManager->getById('Foo', 11, '00', 2));
+    static::assertSame($record, $this->entityManager->getById('Foo', 11, '00'));
   }
 
   public function testGetByIdNonRemoteWithContactId(): void {
@@ -151,19 +151,19 @@ final class RemoteFundingEntityManagerTest extends TestCase {
     $this->api4Mock->expects(static::once())->method('execute')
       ->willReturnMap($valueMap);
 
-    static::assertSame($record, $this->entityManager->getById('Foo', 11, '00', 2));
+    static::assertSame($record, $this->entityManager->getById('Foo', 11, '00'));
   }
 
   public function testGetByIdInvalidEntity(): void {
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage('Unknown entity "Foo"');
-    $this->entityManager->getById('Foo', 11, '00', 2);
+    $this->entityManager->getById('Foo', 11, '00');
   }
 
   public function testGetByIdInvalidRemoteEntity(): void {
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage('Unknown entity "RemoteFoo"');
-    $this->entityManager->getById('RemoteFoo', 11, '00', 2);
+    $this->entityManager->getById('RemoteFoo', 11, '00');
   }
 
   public function testHasAccessTrue(): void {
@@ -176,7 +176,7 @@ final class RemoteFundingEntityManagerTest extends TestCase {
       ->with('RemoteFoo', 'get', ['select' => ['id'], 'where' => [['id', '=', 11]], 'remoteContactId' => '00'])
       ->willReturn($apiResult);
 
-    static::assertTrue($this->entityManager->hasAccess('RemoteFoo', 11, '00', 2));
+    static::assertTrue($this->entityManager->hasAccess('RemoteFoo', 11, '00'));
   }
 
   public function testHasAccessFalse(): void {
@@ -188,7 +188,7 @@ final class RemoteFundingEntityManagerTest extends TestCase {
       ->with('RemoteFoo', 'get', ['select' => ['id'], 'where' => [['id', '=', 11]], 'remoteContactId' => '00'])
       ->willReturn($apiResult);
 
-    static::assertFalse($this->entityManager->hasAccess('RemoteFoo', 11, '00', 2));
+    static::assertFalse($this->entityManager->hasAccess('RemoteFoo', 11, '00'));
   }
 
   public function testHasAccessNonRemote(): void {
@@ -202,7 +202,7 @@ final class RemoteFundingEntityManagerTest extends TestCase {
       ->with('Foo', 'get', ['select' => ['id'], 'where' => [['id', '=', 11]]])
       ->willReturn($apiResult);
 
-    static::assertTrue($this->entityManager->hasAccess('Foo', 11, '00', 2));
+    static::assertTrue($this->entityManager->hasAccess('Foo', 11, '00'));
   }
 
   public function testHasAccessNonRemoteWithContactId(): void {
@@ -216,19 +216,19 @@ final class RemoteFundingEntityManagerTest extends TestCase {
       ->with('Foo', 'get', ['select' => ['id'], 'where' => [['id', '=', 11]]])
       ->willReturn($apiResult);
 
-    static::assertTrue($this->entityManager->hasAccess('Foo', 11, '00', 2));
+    static::assertTrue($this->entityManager->hasAccess('Foo', 11, '00'));
   }
 
   public function testHasAccessInvalidEntity(): void {
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage('Unknown entity "Foo"');
-    $this->entityManager->hasAccess('Foo', 11, '00', 2);
+    $this->entityManager->hasAccess('Foo', 11, '00');
   }
 
   public function testHasAccessInvalidRemoteEntity(): void {
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage('Unknown entity "RemoteFoo"');
-    $this->entityManager->hasAccess('RemoteFoo', 11, '00', 2);
+    $this->entityManager->hasAccess('RemoteFoo', 11, '00');
   }
 
   private function addMockAction(string $entity, string $actionName, AbstractAction $action): self {
