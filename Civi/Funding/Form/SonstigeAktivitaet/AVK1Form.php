@@ -21,6 +21,7 @@ namespace Civi\Funding\Form\SonstigeAktivitaet;
 
 use Civi\Funding\Form\SonstigeAktivitaet\JsonSchema\AVK1JsonSchema;
 use Civi\Funding\Form\SonstigeAktivitaet\UISchema\AVK1UiSchema;
+use Civi\RemoteTools\Form\JsonForms\Control\JsonFormsHidden;
 use Civi\RemoteTools\Form\RemoteForm;
 use Civi\RemoteTools\Form\JsonForms\Control\JsonFormsSubmitButton;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchemaString;
@@ -36,11 +37,18 @@ class AVK1Form extends RemoteForm {
    * @param string $currency
    * @param array<string, mixed> $data
    * @param array<string, string> $submitActions Map of action names to button labels.
-   * @param array<string, \Civi\RemoteTools\Form\JsonSchema\JsonSchema> $extraProperties
+   * @param array<string, \Civi\RemoteTools\Form\JsonSchema\JsonSchema> $hiddenProperties
    */
-  public function __construct(string $currency, array $data, array $submitActions, array $extraProperties = []) {
+  public function __construct(string $currency, array $data, array $submitActions, array $hiddenProperties = []) {
+    $hiddenFields = [];
+    foreach (array_keys($hiddenProperties) as $property) {
+      $hiddenFields[] = new JsonFormsHidden('#/properties/' . $property);
+    }
+    $extraProperties = $hiddenProperties;
+    $extraKeywords = ['required' => array_keys($hiddenProperties)];
+
     $extraProperties['action'] = new JsonSchemaString(['enum' => array_keys($submitActions)]);
-    $extraKeywords = ['required' => ['action']];
+    $extraKeywords['required'][] = 'action';
     $submitButtons = [];
     foreach ($submitActions as $name => $label) {
       $submitButtons[] = new JsonFormsSubmitButton('#/properties/action', $label, $name);
@@ -48,7 +56,7 @@ class AVK1Form extends RemoteForm {
 
     parent::__construct(
       new AVK1JsonSchema($extraProperties, $extraKeywords),
-      new AVK1UiSchema($currency, $submitButtons),
+      new AVK1UiSchema($currency, $submitButtons, $hiddenFields),
       $data
     );
   }
