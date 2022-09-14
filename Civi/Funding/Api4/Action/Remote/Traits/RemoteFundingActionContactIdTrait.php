@@ -36,8 +36,9 @@ trait RemoteFundingActionContactIdTrait {
   }
 
   protected function getContactId(): ?int {
-    Assert::nullOrInteger($this->_extraParams['contactId'] ?? NULL);
-    return $this->_extraParams['contactId'] ?? NULL;
+    $contactId = $this->_extraParams['contactId'] ?? NULL;
+    Assert::nullOrInteger($contactId);
+    return $contactId;
   }
 
 }
