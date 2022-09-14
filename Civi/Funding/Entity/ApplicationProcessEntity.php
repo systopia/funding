@@ -35,6 +35,8 @@ namespace Civi\Funding\Entity;
  *   granted_budget: float|null,
  *   is_review_content: bool|null,
  *   is_review_calculative: bool|null,
+ *   check_permissions?: bool,
+ *   custom?: mixed,
  * }
  *
  * @phpstan-method applicationProcessT toArray()

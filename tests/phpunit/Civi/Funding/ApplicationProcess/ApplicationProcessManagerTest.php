@@ -113,7 +113,12 @@ final class ApplicationProcessManagerTest extends TestCase implements HeadlessIn
       'granted_budget' => NULL,
       'is_review_content' => NULL,
       'is_review_calculative' => NULL,
-    ], $applicationProcess->toArray());
+    ], array_filter(
+      $applicationProcess->toArray(),
+      // Required for BC because CiviCRM 5.53 adds the filtered keys
+      fn (string $key) => 'custom' !== $key && 'check_permissions' !== $key,
+      ARRAY_FILTER_USE_KEY
+    ));
   }
 
   public function testGet(): void {
