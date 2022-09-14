@@ -22,6 +22,7 @@ namespace Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\ApplicationProcessStatusDeterminer;
 use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
+use Civi\Funding\Form\SonstigeAktivitaet\AVK1FormBuilder;
 use Civi\Funding\Form\Validation\FormValidatorInterface;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use CRM_Funding_ExtensionUtil as E;

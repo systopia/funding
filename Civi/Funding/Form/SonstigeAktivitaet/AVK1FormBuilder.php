@@ -17,15 +17,12 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet;
+namespace Civi\Funding\Form\SonstigeAktivitaet;
 
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
-use Civi\Funding\Form\SonstigeAktivitaet\AVK1Form;
-use Civi\Funding\Form\SonstigeAktivitaet\AVK1FormExisting;
-use Civi\Funding\Form\SonstigeAktivitaet\AVK1FormNew;
 use Webmozart\Assert\Assert;
 
 final class AVK1FormBuilder {

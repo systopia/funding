@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet;
 
 use Civi\Funding\Event\Remote\FundingCase\GetNewApplicationFormEvent;
+use Civi\Funding\Form\SonstigeAktivitaet\AVK1FormBuilder;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 final class AVK1GetNewApplicationFormSubscriber implements EventSubscriberInterface {

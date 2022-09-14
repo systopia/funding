@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet;
 
 use Civi\Funding\Event\Remote\ApplicationProcess\ValidateFormEvent;
+use Civi\Funding\Form\SonstigeAktivitaet\AVK1FormBuilder;
 use Civi\Funding\Form\Validation\FormValidatorInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 

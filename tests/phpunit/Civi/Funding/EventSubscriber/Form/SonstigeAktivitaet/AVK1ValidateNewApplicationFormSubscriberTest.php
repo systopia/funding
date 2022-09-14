@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet;
 
 use Civi\Funding\Event\Remote\FundingCase\ValidateNewApplicationFormEvent;
+use Civi\Funding\Form\SonstigeAktivitaet\AVK1FormBuilder;
 use Civi\Funding\Form\Validation\ValidationResult;
 use Opis\JsonSchema\Errors\ValidationError;
 use Opis\JsonSchema\Info\DataInfo;
