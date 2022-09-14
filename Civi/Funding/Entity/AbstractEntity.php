@@ -22,8 +22,14 @@ namespace Civi\Funding\Entity;
 /**
  * Wrapper class for the entity arrays returned by CiviCRM API. This class
  * requires that the entity has a primary key named "id" of type unsigned int.
+ * "check_permissions" and "custom" are automatically added by CiviCRM since
+ * version 5.53.
  *
- * @phpstan-type entityT array<string, mixed>&array{id?: int}
+ * @phpstan-type entityT array<string, mixed>&array{
+ *   id?: int,
+ *   check_permissions?: bool,
+ *   custom?: mixed,
+ * }
  */
 abstract class AbstractEntity {
 
