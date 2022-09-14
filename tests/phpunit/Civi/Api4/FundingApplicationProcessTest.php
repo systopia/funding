@@ -22,6 +22,7 @@ namespace Civi\Api4;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Fixtures\ApplicationProcessFixture;
 use Civi\Funding\Fixtures\ContactFixture;
+use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
@@ -51,13 +52,7 @@ final class FundingApplicationProcessTest extends TestCase implements HeadlessIn
     $fundingCase = $this->createFundingCase();
     $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId());
 
-    FundingCaseContactRelation::create()
-      ->setValues([
-        'funding_case_id' => $fundingCase->getId(),
-        'entity_table' => 'civicrm_contact',
-        'entity_id' => $contact['id'],
-        'permissions' => ['test_permission'],
-      ])->execute();
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['test_permission']);
 
     \CRM_Core_Session::singleton()->set('userID', $contact['id']);
     $result = FundingApplicationProcess::get()->addSelect('id')->execute();
