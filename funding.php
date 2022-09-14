@@ -200,13 +200,6 @@ function funding_civicrm_container(ContainerBuilder $container): void {
   $container->autowire(AVK1SubmitApplicationFormSubscriber::class)
     ->addTag('kernel.event_subscriber')
     ->setLazy(TRUE);
-
-  $container->autowire(AVK1GetNewApplicationFormSubscriber::class)
-    ->addTag('kernel.event_subscriber');
-  $container->autowire(AVK1SubmitNewApplicationFormSubscriber::class)
-    ->addTag('kernel.event_subscriber');
-  $container->autowire(AVK1ValidateNewApplicationFormSubscriber::class)
-    ->addTag('kernel.event_subscriber');
 }
 
 /**
