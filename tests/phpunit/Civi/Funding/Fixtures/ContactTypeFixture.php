@@ -23,6 +23,8 @@ use Civi\Api4\ContactType;
 
 final class ContactTypeFixture {
 
+  public const CONTACT_TYPE_INDIVIDUAL_ID = 1;
+
   public const CONTACT_TYPE_ORGANIZATION_ID = 3;
 
   /**
@@ -40,6 +42,17 @@ final class ContactTypeFixture {
         'label' => 'test contact type',
         'parent_id' => self::CONTACT_TYPE_ORGANIZATION_ID,
       ])->execute()->first();
+  }
+
+  /**
+   * @return array<string, scalar|null>&array{id: int}
+   *
+   * @throws \API_Exception
+   */
+  public static function addIndividualFixture(string $name = 'TestIndividualContactType',
+    string $label = 'test individual contact type'
+  ): array {
+    return self::addFixture(['name' => $name, 'label' => $label, 'parent_id' => self::CONTACT_TYPE_INDIVIDUAL_ID]);
   }
 
   /**

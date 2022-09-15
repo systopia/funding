@@ -19,14 +19,10 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Event\Remote;
 
-use Civi\Funding\Event\Remote\Traits\EventContactIdRequiredTrait;
-use Civi\RemoteTools\Event\AbstractRequestEvent;
 use Civi\RemoteTools\Form\JsonForms\JsonFormsElement;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
 
-abstract class AbstractFundingGetFormEvent extends AbstractRequestEvent {
-
-  use EventContactIdRequiredTrait;
+abstract class AbstractFundingGetFormEvent extends AbstractFundingRequestEvent {
 
   private ?JsonSchema $jsonSchema = NULL;
 

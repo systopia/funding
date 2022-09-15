@@ -17,20 +17,13 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Api4;
+namespace Civi\Funding\Event\Remote;
 
-use Civi\Funding\Api4\AbstractRemoteFundingEntity;
-use Civi\Funding\Api4\Action\Remote\DAOGetAction;
-use Civi\Funding\Api4\Action\Remote\FundingCaseType\GetByFundingProgramIdAction;
+use Civi\Funding\Event\Remote\Traits\EventContactIdRequiredTrait;
+use Civi\RemoteTools\Event\AbstractRequestEvent;
 
-final class RemoteFundingCaseType extends AbstractRemoteFundingEntity {
+abstract class AbstractFundingRequestEvent extends AbstractRequestEvent {
 
-  public static function get(): DAOGetAction {
-    return new DAOGetAction(static::getEntityName());
-  }
-
-  public static function getByFundingProgramId(): GetByFundingProgramIdAction {
-    return new GetByFundingProgramIdAction();
-  }
+  use EventContactIdRequiredTrait;
 
 }
