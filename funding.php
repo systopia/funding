@@ -15,6 +15,7 @@ use Civi\Funding\Api4\Action\Remote\FundingCase\ValidateNewApplicationFormAction
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\ApplicationProcessStatusDeterminer;
 use Civi\Funding\Contact\FundingRemoteContactIdResolver;
+use Civi\Funding\Contact\FundingRemoteContactIdResolverInterface;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessModificationDateSubscriber;
 use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1GetApplicationFormSubscriber;
 use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1GetNewApplicationFormSubscriber;
@@ -47,6 +48,8 @@ use Civi\Funding\Permission\ContactRelationCheckerCollection;
 use Civi\Funding\Permission\ContactRelationCheckerInterface;
 use Civi\Funding\Remote\RemoteFundingEntityManager;
 use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
+use Civi\RemoteTools\Api3\Api3;
+use Civi\RemoteTools\Api3\Api3Interface;
 use Civi\RemoteTools\Api4\Api4;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoader;
@@ -80,6 +83,7 @@ function funding_civicrm_container(ContainerBuilder $container): void {
   $container->setAlias(CacheInterface::class, 'cache.long');
 
   $container->register(Api4Interface::class, Api4::class);
+  $container->register(Api3Interface::class, Api3::class);
 
   $container->register(ApiAuthorizeInitRequestSubscriber::class)
     ->addTag('kernel.event_subscriber');
@@ -89,7 +93,7 @@ function funding_civicrm_container(ContainerBuilder $container): void {
     ->addTag('kernel.event_subscriber');
 
   $container->autowire(RemoteFundingEntityManagerInterface::class, RemoteFundingEntityManager::class);
-  $container->autowire(FundingRemoteContactIdResolver::class);
+  $container->autowire(FundingRemoteContactIdResolverInterface::class, FundingRemoteContactIdResolver::class);
   $container->autowire(PossiblePermissionsLoaderInterface::class, PossiblePermissionsLoader::class);
 
   $container->autowire(ContactChecker::class)
@@ -200,6 +204,11 @@ function funding_civicrm_container(ContainerBuilder $container): void {
   $container->autowire(AVK1SubmitApplicationFormSubscriber::class)
     ->addTag('kernel.event_subscriber')
     ->setLazy(TRUE);
+
+  if (function_exists('_funding_test_civicrm_container')) {
+    // Allow to use different services in tests.
+    _funding_test_civicrm_container($container);
+  }
 }
 
 /**

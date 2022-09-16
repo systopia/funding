@@ -28,9 +28,9 @@ final class IdentityTrackerRemoteContactIdResolver implements RemoteContactIdRes
 
   private string $identifierType;
 
-  public function __construct(string $identifierType, Api3Interface $api3) {
-    $this->identifierType = $identifierType;
+  public function __construct(Api3Interface $api3, string $identifierType = 'remote_contact') {
     $this->api3 = $api3;
+    $this->identifierType = $identifierType;
   }
 
   /**
@@ -38,13 +38,13 @@ final class IdentityTrackerRemoteContactIdResolver implements RemoteContactIdRes
    */
   public function getContactId($remoteAuthenticationToken): int {
     try {
-      /** @var array<string, mixed>&array{values: array<array{id: int}>} $result */
+      /** @var array<string, mixed>&array{id: int, values: array<int, array{id: int}>} $result */
       $result = $this->api3->execute('Contact', 'identify', [
         'identifier' => $remoteAuthenticationToken,
         'identifier_type' => $this->identifierType,
       ]);
 
-      return $result['values'][0]['id'];
+      return $result['id'];
     }
     catch (\Exception $e) {
       throw new ResolveContactIdFailedException($e->getMessage(), $e->getCode(), $e);
