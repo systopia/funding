@@ -50,38 +50,17 @@ final class GetByFundingProgramIdAction extends AbstractAction {
    * @throws \API_Exception
    */
   public function _run(Result $result): void {
-    $fundingCaseTypeIds = $this->getFundingCaseTypeIds();
-    if ([] !== $fundingCaseTypeIds) {
-      $action = FundingCaseType::get()
-        ->setDebug($this->getDebug())
-        ->addWhere('id', 'IN', $fundingCaseTypeIds);
+    if ($this->hasFundingProgramAccess()) {
+      $action = FundingCaseType::get()->setDebug($this->getDebug())
+        ->addJoin(
+          FundingCaseTypeProgram::_getEntityName() . ' AS cp', 'INNER', NULL,
+          ['cp.funding_case_type_id', '=', 'id']
+        )->addWhere('cp.funding_program_id', '=', $this->fundingProgramId);
       $action->_run($result);
       if ($this->getDebug()) {
         $this->_debugOutput['get'] = $action->_debugOutput;
       }
     }
-  }
-
-  /**
-   * @return array<int>
-   *
-   * @throws \API_Exception
-   */
-  private function getFundingCaseTypeIds(): array {
-    if (!$this->hasFundingProgramAccess()) {
-      return [];
-    }
-
-    $action = FundingCaseTypeProgram::get()
-      ->setDebug($this->getDebug())
-      ->addWhere('funding_program_id', '=', $this->fundingProgramId);
-    $result = $this->_api4->executeAction($action);
-
-    if ($this->getDebug()) {
-      $this->_debugOutput['getFundingCaseTypeIds'] = $result->debug;
-    }
-
-    return $result->column('funding_case_type_id');
   }
 
   /**
