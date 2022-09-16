@@ -21,7 +21,7 @@ namespace Civi\Funding\EventSubscriber\Remote;
 
 use Civi\Funding\Api4\Action\Remote\GetFieldsAction;
 use Civi\Funding\Api4\Action\Remote\RemoteFundingActionInterface;
-use Civi\Funding\Contact\FundingRemoteContactIdResolver;
+use Civi\Funding\Contact\FundingRemoteContactIdResolverInterface;
 use Civi\Funding\Event\Remote\FundingEvents;
 use Civi\RemoteTools\Event\InitApiRequestEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -29,9 +29,9 @@ use Webmozart\Assert\Assert;
 
 class FundingRequestInitSubscriber implements EventSubscriberInterface {
 
-  private FundingRemoteContactIdResolver $remoteContactIdResolver;
+  private FundingRemoteContactIdResolverInterface $remoteContactIdResolver;
 
-  public function __construct(FundingRemoteContactIdResolver $remoteContactIdResolver) {
+  public function __construct(FundingRemoteContactIdResolverInterface $remoteContactIdResolver) {
     $this->remoteContactIdResolver = $remoteContactIdResolver;
   }
 

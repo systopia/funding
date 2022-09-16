@@ -19,22 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Contact;
 
-use Civi\RemoteTools\Api3\Api3Interface;
-use Civi\RemoteTools\Contact\IdentityTrackerRemoteContactIdResolver;
+use Civi\RemoteTools\Contact\RemoteContactIdResolverInterface;
 
-class FundingRemoteContactIdResolver implements FundingRemoteContactIdResolverInterface {
-
-  private IdentityTrackerRemoteContactIdResolver $resolver;
-
-  public function __construct(Api3Interface $api3) {
-    $this->resolver = new IdentityTrackerRemoteContactIdResolver($api3);
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public function getContactId($remoteAuthenticationToken): int {
-    return $this->resolver->getContactId($remoteAuthenticationToken);
-  }
-
+interface FundingRemoteContactIdResolverInterface extends RemoteContactIdResolverInterface {
 }

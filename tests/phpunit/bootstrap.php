@@ -1,7 +1,10 @@
 <?php
 declare(strict_types = 1);
 
+use Civi\Funding\Contact\DummyRemoteContactIdResolver;
+use Civi\Funding\Contact\FundingRemoteContactIdResolverInterface;
 use Composer\Autoload\ClassLoader;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 ini_set('memory_limit', '2G');
 
@@ -26,6 +29,11 @@ $loader->register();
 
 // Ensure function ts() is available - it's declared in the same file as CRM_Core_I18n
 \CRM_Core_I18n::singleton();
+
+function _funding_test_civicrm_container(ContainerBuilder $container): void {
+  // overwrite remote contact ID resolver
+  $container->autowire(FundingRemoteContactIdResolverInterface::class, DummyRemoteContactIdResolver::class);
+}
 
 /**
  * Call the "cv" command.

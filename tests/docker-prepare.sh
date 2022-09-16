@@ -1,6 +1,10 @@
 #!/bin/bash
 set -eu -o pipefail
 
+XCM_VERSION=1.8
+IDENTITYTRACKER_VERSION=1.3
+REMOTETOOLS_VERSION=0.4
+
 FUNDING_EXT_DIR=$(dirname "$(dirname "$(realpath "$0")")")
 
 i=0
@@ -23,6 +27,10 @@ cv flush >/dev/null 2>/dev/null || {
   sed -E "s/define\('CIVICRM_UF', '([^']+)'\);/define('CIVICRM_UF', getenv('CIVICRM_UF') ?: '\1');/g" \
     -i /var/www/html/sites/default/civicrm.settings.php
   civicrm-docker-install
+
+  cv ext:download "de.systopia.xcm@https://github.com/systopia/de.systopia.xcm/releases/download/$XCM_VERSION/de.systopia.xcm-$XCM_VERSION.zip"
+  cv ext:download "de.systopia.identitytracker@https://github.com/systopia/de.systopia.identitytracker/releases/download/$IDENTITYTRACKER_VERSION/de.systopia.identitytracker-$IDENTITYTRACKER_VERSION.zip"
+  cv ext:download "de.systopia.remotetools@https://github.com/systopia/de.systopia.remotetools/archive/refs/tags/$REMOTETOOLS_VERSION.zip"
   cv ext:enable funding
 
   # For headless tests these files need to exist.

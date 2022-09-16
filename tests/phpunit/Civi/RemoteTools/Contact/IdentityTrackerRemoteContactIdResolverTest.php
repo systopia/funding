@@ -44,8 +44,7 @@ final class IdentityTrackerRemoteContactIdResolverTest extends TestCase {
     parent::setUp();
     $this->api3Mock = $this->createMock(Api3Interface::class);
     $this->contactIdResolver = new IdentityTrackerRemoteContactIdResolver(
-      'test_identifier_type',
-      $this->api3Mock
+      $this->api3Mock, 'test_identifier_type'
     );
   }
 
@@ -58,7 +57,7 @@ final class IdentityTrackerRemoteContactIdResolverTest extends TestCase {
         'identifier' => 'test',
         'identifier_type' => 'test_identifier_type',
       ])
-      ->willReturn(['values' => [['id' => 12]]]);
+      ->willReturn(['id' => 12, 'values' => [12 => ['id' => 12]]]);
 
     static::assertSame(12, $this->contactIdResolver->getContactId('test'));
   }

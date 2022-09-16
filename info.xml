@@ -21,6 +21,10 @@
     <ver>5.48</ver>
   </compatibility>
   <comments></comments>
+  <requires>
+    <ext>de.systopia.remotetools</ext>
+    <ext>de.systopia.identitytracker</ext>
+  </requires>
   <classloader>
     <psr4 prefix="Civi\" path="Civi"/>
   </classloader>
