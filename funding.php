@@ -12,11 +12,15 @@ use Civi\Funding\Api4\Action\Remote\ApplicationProcess\ValidateFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\GetNewApplicationFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\SubmitNewApplicationFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\ValidateNewApplicationFormAction;
+use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\ApplicationProcessStatusDeterminer;
+use Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager;
 use Civi\Funding\Contact\FundingRemoteContactIdResolver;
 use Civi\Funding\Contact\FundingRemoteContactIdResolverInterface;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessModificationDateSubscriber;
+use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1ApplicationCostItemSubscriber;
+use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1ApplicationResourcesItemSubscriber;
 use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1GetApplicationFormSubscriber;
 use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1GetNewApplicationFormSubscriber;
 use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1SubmitApplicationFormSubscriber;
@@ -39,6 +43,7 @@ use Civi\Funding\Form\Validation\FormValidator;
 use Civi\Funding\Form\Validation\FormValidatorInterface;
 use Civi\Funding\Form\Validation\OpisValidatorFactory;
 use Civi\Funding\FundingCase\FundingCaseManager;
+use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker;
 use Civi\Funding\Permission\ContactRelation\ContactChecker;
 use Civi\Funding\Permission\ContactRelation\ContactRelationshipChecker;
@@ -48,6 +53,8 @@ use Civi\Funding\Permission\ContactRelationCheckerCollection;
 use Civi\Funding\Permission\ContactRelationCheckerInterface;
 use Civi\Funding\Remote\RemoteFundingEntityManager;
 use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
+use Civi\Funding\SonstigeAktivitaet\AVK1ApplicationCostItemsFactory;
+use Civi\Funding\SonstigeAktivitaet\AVK1ApplicationResourcesItemsFactory;
 use Civi\RemoteTools\Api3\Api3;
 use Civi\RemoteTools\Api3\Api3Interface;
 use Civi\RemoteTools\Api4\Api4;
@@ -116,7 +123,10 @@ function funding_civicrm_container(ContainerBuilder $container): void {
   $container->autowire(FundingCaseTypeProgramRelationChecker::class);
 
   $container->autowire(FundingCaseManager::class);
+  $container->autowire(FundingCaseTypeManager::class);
   $container->autowire(ApplicationProcessManager::class);
+  $container->autowire(ApplicationCostItemManager::class);
+  $container->autowire(ApplicationResourcesItemManager::class);
 
   $container->autowire(\Civi\Funding\Api4\Action\FundingApplication\GetAction::class)
     ->setPublic(TRUE)
@@ -204,6 +214,17 @@ function funding_civicrm_container(ContainerBuilder $container): void {
   $container->autowire(AVK1SubmitApplicationFormSubscriber::class)
     ->addTag('kernel.event_subscriber')
     ->setLazy(TRUE);
+
+  $container->autowire(AVK1ApplicationCostItemSubscriber::class)
+    ->addTag('kernel.event_subscriber')
+    ->setLazy(TRUE);
+
+  $container->autowire(AVK1ApplicationResourcesItemSubscriber::class)
+    ->addTag('kernel.event_subscriber')
+    ->setLazy(TRUE);
+
+  $container->autowire(AVK1ApplicationCostItemsFactory::class);
+  $container->autowire(AVK1ApplicationResourcesItemsFactory::class);
 
   if (function_exists('_funding_test_civicrm_container')) {
     // Allow to use different services in tests.

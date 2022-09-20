@@ -196,12 +196,14 @@ ENGINE=InnoDB;
 -- *
 -- *******************************************************/
 CREATE TABLE `civicrm_funding_app_resources_item` (
-  `id` varchar(255) NOT NULL COMMENT 'Unique FundingApplicationResourcesItem ID',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique FundingApplicationResourcesItem ID',
   `application_process_id` int unsigned NOT NULL COMMENT 'FK to FundingApplicationProcess',
+  `identifier` varchar(255) NOT NULL,
   `type` varchar(255) NOT NULL,
   `amount` decimal(10,2) NOT NULL,
   `properties` text NOT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE INDEX `index_identifier_application_process_id`(identifier, application_process_id),
   CONSTRAINT FK_civicrm_funding_app_resources_item_application_process_id FOREIGN KEY (`application_process_id`) REFERENCES `civicrm_funding_application_process`(`id`) ON DELETE CASCADE
 )
 ENGINE=InnoDB;
@@ -212,12 +214,14 @@ ENGINE=InnoDB;
 -- *
 -- *******************************************************/
 CREATE TABLE `civicrm_funding_app_cost_item` (
-  `id` varchar(255) NOT NULL COMMENT 'Unique FundingApplicationCostItem ID',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique FundingApplicationCostItem ID',
   `application_process_id` int unsigned NOT NULL COMMENT 'FK to FundingApplicationProcess',
+  `identifier` varchar(255) NOT NULL,
   `type` varchar(255) NOT NULL,
   `amount` decimal(10,2) NOT NULL,
   `properties` text NOT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE INDEX `index_identifier_application_process_id`(identifier, application_process_id),
   CONSTRAINT FK_civicrm_funding_app_cost_item_application_process_id FOREIGN KEY (`application_process_id`) REFERENCES `civicrm_funding_application_process`(`id`) ON DELETE CASCADE
 )
 ENGINE=InnoDB;

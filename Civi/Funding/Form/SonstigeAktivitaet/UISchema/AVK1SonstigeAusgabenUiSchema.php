@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Form\SonstigeAktivitaet\UISchema;
 
 use Civi\RemoteTools\Form\JsonForms\Control\JsonFormsArray;
+use Civi\RemoteTools\Form\JsonForms\Control\JsonFormsHidden;
 use Civi\RemoteTools\Form\JsonForms\JsonFormsControl;
 use Civi\RemoteTools\Form\JsonForms\Layout\JsonFormsGroup;
 
@@ -28,6 +29,7 @@ final class AVK1SonstigeAusgabenUiSchema extends JsonFormsGroup {
   public function __construct(string $currency) {
     $elements = [
       new JsonFormsArray('#/properties/kosten/properties/sonstigeAusgaben', 'Sonstige Ausgaben', NULL, [
+        new JsonFormsHidden('#/properties/_identifier'),
         new JsonFormsControl('#/properties/betrag', 'Betrag', NULL, NULL, $currency),
         new JsonFormsControl('#/properties/zweck', 'Zweck'),
       ]),

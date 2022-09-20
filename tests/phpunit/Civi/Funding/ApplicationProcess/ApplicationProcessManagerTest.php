@@ -22,6 +22,8 @@ namespace Civi\Funding\ApplicationProcess;
 use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
+use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreCreateEvent;
+use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
 use Civi\Funding\Fixtures\ApplicationProcessFixture;
 use Civi\Funding\Fixtures\ContactFixture;
@@ -40,7 +42,9 @@ use Symfony\Bridge\PhpUnit\ClockMock;
 
 /**
  * @covers \Civi\Funding\ApplicationProcess\ApplicationProcessManager
+ * @covers \Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreCreateEvent
  * @covers \Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent
+ * @covers \Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent
  * @covers \Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent
  *
  * @group headless
@@ -79,15 +83,30 @@ final class ApplicationProcessManagerTest extends TestCase implements HeadlessIn
     $contact = ContactFixture::addIndividual();
     $fundingCase = $this->createFundingCase();
 
-    $this->eventDispatcherMock->expects(static::once())->method('dispatch')->with(
-      ApplicationProcessCreatedEvent::class, static::callback(
-        function (ApplicationProcessCreatedEvent $event) use ($contact, $fundingCase) {
-          static::assertSame($contact['id'], $event->getContactId());
-          static::assertSame($fundingCase, $event->getFundingCase());
+    $this->eventDispatcherMock->expects(static::exactly(2))->method('dispatch')->withConsecutive(
+      [
+        ApplicationProcessPreCreateEvent::class,
+        static::callback(
+          function (ApplicationProcessPreCreateEvent $event) use ($contact, $fundingCase) {
+            static::assertSame($contact['id'], $event->getContactId());
+            static::assertSame($fundingCase, $event->getFundingCase());
 
-          return TRUE;
-        }
-      ));
+            return TRUE;
+          }
+        ),
+      ],
+      [
+        ApplicationProcessCreatedEvent::class,
+        static::callback(
+          function (ApplicationProcessCreatedEvent $event) use ($contact, $fundingCase) {
+            static::assertSame($contact['id'], $event->getContactId());
+            static::assertSame($fundingCase, $event->getFundingCase());
+
+            return TRUE;
+          }
+        ),
+      ]
+    );
 
     $applicationProcess = $this->applicationProcessManager->create($contact['id'], [
       'funding_case' => $fundingCase,
@@ -144,19 +163,38 @@ final class ApplicationProcessManagerTest extends TestCase implements HeadlessIn
     $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId());
     $previousTitle = $applicationProcess->getTitle();
 
-    $this->eventDispatcherMock->expects(static::once())->method('dispatch')
-      ->with(ApplicationProcessUpdatedEvent::class, static::callback(
-        function (ApplicationProcessUpdatedEvent $event) use ($contact, $previousTitle,
-          $applicationProcess, $fundingCase
-        ) {
-          static::assertSame($contact['id'], $event->getContactId());
-          static::assertSame($previousTitle, $event->getPreviousApplicationProcess()->getTitle());
-          static::assertSame($applicationProcess, $event->getApplicationProcess());
-          static::assertSame($fundingCase, $event->getFundingCase());
+    $this->eventDispatcherMock->expects(static::exactly(2))->method('dispatch')->withConsecutive(
+      [
+        ApplicationProcessPreUpdateEvent::class,
+        static::callback(
+          function (ApplicationProcessPreUpdateEvent $event) use ($contact, $previousTitle,
+            $applicationProcess, $fundingCase
+          ) {
+            static::assertSame($contact['id'], $event->getContactId());
+            static::assertSame($previousTitle, $event->getPreviousApplicationProcess()->getTitle());
+            static::assertSame($applicationProcess, $event->getApplicationProcess());
+            static::assertSame($fundingCase, $event->getFundingCase());
 
-          return TRUE;
-        }
-      ));
+            return TRUE;
+          }
+        ),
+      ],
+      [
+        ApplicationProcessUpdatedEvent::class,
+        static::callback(
+          function (ApplicationProcessUpdatedEvent $event) use ($contact, $previousTitle,
+          $applicationProcess, $fundingCase
+          ) {
+            static::assertSame($contact['id'], $event->getContactId());
+            static::assertSame($previousTitle, $event->getPreviousApplicationProcess()->getTitle());
+            static::assertSame($applicationProcess, $event->getApplicationProcess());
+            static::assertSame($fundingCase, $event->getFundingCase());
+
+            return TRUE;
+          }
+        ),
+      ]
+    );
 
     $applicationProcess->setTitle('New title');
     $this->applicationProcessManager->update($contact['id'], $applicationProcess, $fundingCase);

@@ -23,6 +23,8 @@ use Civi\Api4\FundingApplicationProcess;
 use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreCreateEvent;
+use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
 use Civi\RemoteTools\Api4\Api4Interface;
@@ -86,6 +88,10 @@ class ApplicationProcessManager {
       'is_review_content' => NULL,
       'is_review_calculative' => NULL,
     ]);
+
+    $event = new ApplicationProcessPreCreateEvent($contactId, $applicationProcess, $values['funding_case']);
+    $this->eventDispatcher->dispatch(ApplicationProcessPreCreateEvent::class, $event);
+
     $action = FundingApplicationProcess::create()->setValues($applicationProcess->toArray());
 
     /** @phpstan-var applicationProcessT $applicationProcessValues */
@@ -118,8 +124,15 @@ class ApplicationProcessManager {
     $previousApplicationProcess = $this->get($applicationProcess->getId());
     Assert::notNull($previousApplicationProcess, 'Application process could not be loaded');
 
-    $updateAction = FundingApplicationProcess::update()->setValues($applicationProcess->toArray());
-    $this->api4->executeAction($updateAction);
+    $event = new ApplicationProcessPreUpdateEvent($contactId,
+      $previousApplicationProcess,
+      $applicationProcess,
+      $fundingCase
+    );
+    $this->eventDispatcher->dispatch(ApplicationProcessPreUpdateEvent::class, $event);
+
+    $action = FundingApplicationProcess::update()->setValues($applicationProcess->toArray());
+    $this->api4->executeAction($action);
 
     $event = new ApplicationProcessUpdatedEvent($contactId,
       $previousApplicationProcess,

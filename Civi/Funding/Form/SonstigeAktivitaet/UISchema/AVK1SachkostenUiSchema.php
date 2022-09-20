@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Form\SonstigeAktivitaet\UISchema;
 
 use Civi\RemoteTools\Form\JsonForms\Control\JsonFormsArray;
+use Civi\RemoteTools\Form\JsonForms\Control\JsonFormsHidden;
 use Civi\RemoteTools\Form\JsonForms\JsonFormsControl;
 use Civi\RemoteTools\Form\JsonForms\Layout\JsonFormsGroup;
 
@@ -32,6 +33,7 @@ final class AVK1SachkostenUiSchema extends JsonFormsGroup {
       new JsonFormsArray('#/properties/kosten/properties/sachkosten/properties/ausstattung',
         'Geräte, Ausstattungs- und Ausrüstungsgegenstände',
         '(Gegenstände mit einem Wert von über 800 € (ohne Umsatzsteuer) einzeln aufführen)', [
+          new JsonFormsHidden('#/properties/_identifier'),
           new JsonFormsControl('#/properties/gegenstand', 'Gegenstand'),
           new JsonFormsControl('#/properties/betrag', 'Betrag', NULL, NULL, $currency),
         ]

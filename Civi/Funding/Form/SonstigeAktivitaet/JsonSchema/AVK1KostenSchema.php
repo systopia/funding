@@ -36,6 +36,7 @@ final class AVK1KostenSchema extends JsonSchemaObject {
       // Abschnitt I.2
       'honorare' => new JsonSchemaArray(
         new JsonSchemaObject([
+          '_identifier' => new JsonSchemaString(['readonly' => TRUE]),
           'stunden' => new JsonSchemaNumber(['precision' => 2]),
           'verguetung' => new JsonSchemaMoney(['minimum' => 0]),
           'zweck' => new JsonSchemaString(),
@@ -66,6 +67,7 @@ final class AVK1KostenSchema extends JsonSchemaObject {
         'haftungKfz' => new JsonSchemaMoney(['minimum' => 0]),
         'ausstattung' => new JsonSchemaArray(
           new JsonSchemaObject([
+            '_identifier' => new JsonSchemaString(['readonly' => TRUE]),
             'gegenstand' => new JsonSchemaString(),
             'betrag' => new JsonSchemaMoney(['minimum' => 0]),
           ], ['required' => ['gegenstand', 'betrag']])
@@ -78,6 +80,7 @@ final class AVK1KostenSchema extends JsonSchemaObject {
       // Abschnitt I.6
       'sonstigeAusgaben' => new JsonSchemaArray(
         new JsonSchemaObject([
+          '_identifier' => new JsonSchemaString(['readonly' => TRUE]),
           'betrag' => new JsonSchemaMoney(['minimum' => 0]),
           'zweck' => new JsonSchemaString(),
         ], ['required' => ['betrag', 'zweck']])
