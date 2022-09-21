@@ -73,6 +73,7 @@ final class AVK1SubmitNewApplicationFormSubscriber implements EventSubscriberInt
      *   action: string,
      *   titel: string,
      *   kurzbezeichnungDesInhalts: string,
+     *   finanzierung: array{beantragterZuschuss: float},
      * } $data
      */
     $data = $validationResult->getData();
@@ -91,6 +92,7 @@ final class AVK1SubmitNewApplicationFormSubscriber implements EventSubscriberInt
         'title' => $data['titel'],
         'short_description' => $data['kurzbezeichnungDesInhalts'],
         'request_data' => $data,
+        'amount_requested' => $data['finanzierung']['beantragterZuschuss'],
       ]);
 
       // TODO: Change message

@@ -17,17 +17,27 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\EventSubscriber\Remote;
+namespace Civi\Funding\Fixtures;
 
-use Civi\Funding\Event\Remote\FundingDAOGetEvent;
-use Civi\RemoteTools\EventSubscriber\AbstractRemoteDAOGetSubscriber;
+use Civi\Api4\FundingProgramContactRelation;
 
-final class FundingCaseDAOGetSubscriber extends AbstractRemoteDAOGetSubscriber {
+final class FundingProgramContactRelationFixture {
 
-  protected const BASIC_ENTITY_NAME = 'FundingCase';
-
-  protected const ENTITY_NAME = 'RemoteFundingCase';
-
-  protected const EVENT_CLASS = FundingDAOGetEvent::class;
+  /**
+   * @phpstan-param array<string>|null $permissions
+   *
+   * @phpstan-return array<string, scalar|null>&array{id: int}
+   *
+   * @throws \API_Exception
+   */
+  public static function addContact(int $contactId, int $fundingProgramId, ?array $permissions): array {
+    return FundingProgramContactRelation::create()
+      ->setValues([
+        'funding_program_id' => $fundingProgramId,
+        'entity_table' => 'civicrm_contact',
+        'entity_id' => $contactId,
+        'permissions' => $permissions,
+      ])->execute()->first();
+  }
 
 }

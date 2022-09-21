@@ -31,6 +31,7 @@ use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
+use Civi\Funding\Util\TestUtil;
 use Civi\RemoteTools\Api4\Api4;
 use Civi\Test;
 use Civi\Test\CiviEnvBuilder;
@@ -114,6 +115,7 @@ final class ApplicationProcessManagerTest extends TestCase implements HeadlessIn
       'title' => 'Title',
       'short_description' => 'Description',
       'request_data' => ['foo' => 'bar'],
+      'amount_requested' => 1.2,
     ]);
 
     static::assertGreaterThan(0, $applicationProcess->getId());
@@ -124,20 +126,16 @@ final class ApplicationProcessManagerTest extends TestCase implements HeadlessIn
       'title' => 'Title',
       'short_description' => 'Description',
       'request_data' => ['foo' => 'bar'],
-      'creation_date' => date('YmdHis'),
-      'modification_date' => date('YmdHis'),
+      'amount_requested' => 1.2,
+      'creation_date' => date('Y-m-d H:i:s'),
+      'modification_date' => date('Y-m-d H:i:s'),
       'start_date' => NULL,
       'end_date' => NULL,
       'amount_granted' => NULL,
       'granted_budget' => NULL,
       'is_review_content' => NULL,
       'is_review_calculative' => NULL,
-    ], array_filter(
-      $applicationProcess->toArray(),
-      // Required for BC because CiviCRM 5.53 adds the filtered keys
-      fn (string $key) => 'custom' !== $key && 'check_permissions' !== $key,
-      ARRAY_FILTER_USE_KEY
-    ));
+    ], TestUtil::filterCiviExtraFields($applicationProcess->toArray()));
   }
 
   public function testGet(): void {
@@ -152,6 +150,32 @@ final class ApplicationProcessManagerTest extends TestCase implements HeadlessIn
     static::assertNotNull($this->applicationProcessManager->get($applicationProcess->getId()));
 
     static::assertNull($this->applicationProcessManager->get($applicationProcess->getId() + 1));
+  }
+
+  public function testGetFirstByFundingCaseId(): void {
+    $contact = ContactFixture::addIndividual();
+    $fundingCase = $this->createFundingCase();
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['test_permission']);
+
+    \CRM_Core_Session::singleton()->set('userID', $contact['id']);
+    $firstApplicationProcess = $this->applicationProcessManager->getFirstByFundingCaseId($fundingCase->getId());
+    static::assertNull($firstApplicationProcess);
+
+    $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId());
+    $firstApplicationProcess = $this->applicationProcessManager->getFirstByFundingCaseId($fundingCase->getId());
+    static::assertNotNull($firstApplicationProcess);
+    static::assertEquals(
+      TestUtil::filterCiviExtraFields($applicationProcess->toArray()),
+      $firstApplicationProcess->toArray(),
+    );
+
+    ApplicationProcessFixture::addFixture($fundingCase->getId(), ['title' => 'Title2']);
+    $firstApplicationProcess = $this->applicationProcessManager->getFirstByFundingCaseId($fundingCase->getId());
+    static::assertNotNull($firstApplicationProcess);
+    static::assertEquals(
+      TestUtil::filterCiviExtraFields($applicationProcess->toArray()),
+      $firstApplicationProcess->toArray(),
+    );
   }
 
   public function testUpdate(): void {

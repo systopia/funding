@@ -17,17 +17,13 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\EventSubscriber\Remote;
+namespace Civi\Funding\Event\Remote;
 
-use Civi\Funding\Event\Remote\FundingDAOGetEvent;
-use Civi\RemoteTools\EventSubscriber\AbstractRemoteDAOGetSubscriber;
+use Civi\Funding\Event\Remote\Traits\EventContactIdRequiredTrait;
+use Civi\RemoteTools\Event\GetEvent;
 
-final class FundingCaseDAOGetSubscriber extends AbstractRemoteDAOGetSubscriber {
+class FundingGetEvent extends GetEvent {
 
-  protected const BASIC_ENTITY_NAME = 'FundingCase';
-
-  protected const ENTITY_NAME = 'RemoteFundingCase';
-
-  protected const EVENT_CLASS = FundingDAOGetEvent::class;
+  use EventContactIdRequiredTrait;
 
 }

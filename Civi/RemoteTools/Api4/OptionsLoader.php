@@ -17,17 +17,35 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\EventSubscriber\Remote;
+namespace Civi\RemoteTools\Api4;
 
-use Civi\Funding\Event\Remote\FundingDAOGetEvent;
-use Civi\RemoteTools\EventSubscriber\AbstractRemoteDAOGetSubscriber;
+final class OptionsLoader implements OptionsLoaderInterface {
 
-final class FundingCaseDAOGetSubscriber extends AbstractRemoteDAOGetSubscriber {
+  private Api4Interface $api4;
 
-  protected const BASIC_ENTITY_NAME = 'FundingCase';
+  public function __construct(Api4Interface $api4) {
+    $this->api4 = $api4;
+  }
 
-  protected const ENTITY_NAME = 'RemoteFundingCase';
+  /**
+   * @inheritDoc
+   */
+  public function getOptions(string $entityName, string $field): array {
+    $result = $this->api4->execute($entityName, 'getFields', [
+      'checkPermissions' => FALSE,
+      'loadOptions' => TRUE,
+      'where' => [
+        ['name', '=', $field],
+      ],
+      'select' => [
+        'options',
+      ],
+    ]);
 
-  protected const EVENT_CLASS = FundingDAOGetEvent::class;
+    /** @var array<scalar|null, string> $options */
+    $options = $result->first()['options'] ?? [];
+
+    return $options;
+  }
 
 }

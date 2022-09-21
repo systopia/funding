@@ -17,17 +17,26 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\EventSubscriber\Remote;
+namespace Civi\Api4;
 
-use Civi\Funding\Event\Remote\FundingDAOGetEvent;
-use Civi\RemoteTools\EventSubscriber\AbstractRemoteDAOGetSubscriber;
+use Civi\Api4\Generic\AbstractEntity;
+use Civi\Funding\Api4\Action\FundingCaseInfo\GetAction;
+use Civi\Funding\Api4\Action\FundingCaseInfo\GetFieldsAction;
+use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
 
-final class FundingCaseDAOGetSubscriber extends AbstractRemoteDAOGetSubscriber {
+final class FundingCaseInfo extends AbstractEntity {
 
-  protected const BASIC_ENTITY_NAME = 'FundingCase';
+  use EntityNameTrait;
 
-  protected const ENTITY_NAME = 'RemoteFundingCase';
+  public static function get(): GetAction {
+    return \Civi::service(GetAction::class);
+  }
 
-  protected const EVENT_CLASS = FundingDAOGetEvent::class;
+  /**
+   * @inheritDoc
+   */
+  public static function getFields() {
+    return \Civi::service(GetFieldsAction::class);
+  }
 
 }

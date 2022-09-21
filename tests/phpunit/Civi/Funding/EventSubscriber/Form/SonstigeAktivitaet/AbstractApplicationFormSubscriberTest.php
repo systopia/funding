@@ -42,6 +42,7 @@ abstract class AbstractApplicationFormSubscriberTest extends TestCase {
       'title' => 'Title',
       'short_description' => 'Description',
       'request_data' => ['foo' => 'bar'],
+      'amount_requested' => 1.2,
       'creation_date' => $this->now,
       'modification_date' => $this->now,
       'start_date' => NULL,

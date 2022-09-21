@@ -180,6 +180,7 @@ CREATE TABLE `civicrm_funding_application_process` (
   `start_date` timestamp NULL,
   `end_date` timestamp NULL,
   `request_data` text NOT NULL,
+  `amount_requested` decimal(10,2) NOT NULL,
   `amount_granted` decimal(10,2) NULL,
   `granted_budget` decimal(10,2) NULL,
   `is_review_content` tinyint NULL,

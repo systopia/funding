@@ -152,6 +152,25 @@ final class FundingCaseManagerTest extends TestCase implements HeadlessInterface
     static::assertSame($fundingCase->toArray(), $fundingCaseLoaded->toArray());
   }
 
+  public function testGetAll(): void {
+    $fundingCase = $this->createFundingCase();
+
+    $api4Mock = $this->createMock(Api4Interface::class);
+    $this->fundingCaseManager = new FundingCaseManager($api4Mock, $this->eventDispatcherMock);
+
+    \CRM_Core_Session::singleton()->set('userID', 11);
+    $api4Mock->expects(static::once())->method('executeAction')->with(
+      static::callback(function (GetAction $action) {
+        static::assertSame(11, $action->getContactId());
+        static::assertSame([], $action->getWhere());
+
+        return TRUE;
+      })
+    )->willReturn(new Result([$fundingCase->toArray()]));
+
+    static::assertEquals([$fundingCase], $this->fundingCaseManager->getAll());
+  }
+
   public function testHasAccessTrue(): void {
     $api4Mock = $this->createMock(Api4Interface::class);
     $this->fundingCaseManager = new FundingCaseManager($api4Mock, $this->eventDispatcherMock);

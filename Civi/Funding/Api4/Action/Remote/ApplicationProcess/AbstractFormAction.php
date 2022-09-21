@@ -46,6 +46,7 @@ use Webmozart\Assert\Assert;
  *   start_date: string|null,
  *   end_date: string|null,
  *   request_data: array<string, mixed>,
+ *   amount_requested: float,
  *   amount_granted: float|null,
  *   granted_budget: float|null,
  *   is_review_content: bool|null,

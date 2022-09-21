@@ -17,17 +17,23 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\EventSubscriber\Remote;
+namespace Civi\Funding\Util;
 
-use Civi\Funding\Event\Remote\FundingDAOGetEvent;
-use Civi\RemoteTools\EventSubscriber\AbstractRemoteDAOGetSubscriber;
+final class TestUtil {
 
-final class FundingCaseDAOGetSubscriber extends AbstractRemoteDAOGetSubscriber {
-
-  protected const BASIC_ENTITY_NAME = 'FundingCase';
-
-  protected const ENTITY_NAME = 'RemoteFundingCase';
-
-  protected const EVENT_CLASS = FundingDAOGetEvent::class;
+  /**
+   * Filters out extra entity fields added on create action since CiviCRM 5.53.
+   *
+   * @phpstan-param array<string, mixed> $values
+   *
+   * @phpstan-return array<string, mixed>
+   */
+  public static function filterCiviExtraFields(array $values): array {
+    return array_filter(
+      $values,
+      fn (string $key) => 'custom' !== $key && 'check_permissions' !== $key,
+      ARRAY_FILTER_USE_KEY
+    );
+  }
 
 }

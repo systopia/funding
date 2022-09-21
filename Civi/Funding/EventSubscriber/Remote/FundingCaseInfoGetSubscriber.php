@@ -19,15 +19,15 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\Remote;
 
-use Civi\Funding\Event\Remote\FundingDAOGetEvent;
-use Civi\RemoteTools\EventSubscriber\AbstractRemoteDAOGetSubscriber;
+use Civi\Funding\Event\Remote\FundingGetEvent;
+use Civi\RemoteTools\EventSubscriber\AbstractRemoteGetSubscriber;
 
-final class FundingCaseDAOGetSubscriber extends AbstractRemoteDAOGetSubscriber {
+class FundingCaseInfoGetSubscriber extends AbstractRemoteGetSubscriber {
 
-  protected const BASIC_ENTITY_NAME = 'FundingCase';
+  protected const BASIC_ENTITY_NAME = 'FundingCaseInfo';
 
-  protected const ENTITY_NAME = 'RemoteFundingCase';
+  protected const ENTITY_NAME = 'RemoteFundingCaseInfo';
 
-  protected const EVENT_CLASS = FundingDAOGetEvent::class;
+  protected const EVENT_CLASS = FundingGetEvent::class;
 
 }

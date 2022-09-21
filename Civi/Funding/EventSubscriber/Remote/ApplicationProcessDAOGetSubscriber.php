@@ -24,7 +24,7 @@ use Civi\RemoteTools\EventSubscriber\AbstractRemoteDAOGetSubscriber;
 
 final class ApplicationProcessDAOGetSubscriber extends AbstractRemoteDAOGetSubscriber {
 
-  protected const DAO_ENTITY_NAME = 'FundingApplicationProcess';
+  protected const BASIC_ENTITY_NAME = 'FundingApplicationProcess';
 
   protected const ENTITY_NAME = 'RemoteFundingApplicationProcess';
 

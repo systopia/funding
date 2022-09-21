@@ -110,4 +110,17 @@ final class FundingCaseEntity extends AbstractEntity {
     return $this->values['permissions'] ?? [];
   }
 
+  /**
+   * On create CiviCRM returns a different date format than on get. This method
+   * reformats the dates in $values so that they are as on get.
+   *
+   * @internal
+   */
+  public function reformatDates(): self {
+    $this->values['creation_date'] = static::toDateTimeStr($this->getCreationDate());
+    $this->setModificationDate($this->getModificationDate());
+
+    return $this;
+  }
+
 }
