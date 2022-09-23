@@ -95,10 +95,12 @@ abstract class AbstractRemoteGetFieldsSubscriber implements EventSubscriberInter
   protected function getAllowedFieldKeys(GetFieldsEvent $event): array {
     return [
       'name',
+      'title',
       'options',
       'readonly',
       'operators',
       'data_type',
+      'serialize',
       'nullable',
       'description',
     ];

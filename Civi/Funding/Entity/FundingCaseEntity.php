@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Entity;
 
+use Civi\RemoteTools\Api4\RemoteApiConstants;
+
 /**
  * @phpstan-type fundingCaseT array{
  *   id?: int,
@@ -101,6 +103,20 @@ final class FundingCaseEntity extends AbstractEntity {
     $this->values['recipient_contact_id'] = $recipientContactId;
 
     return $this;
+  }
+
+  /**
+   * @phpstan-return array<string, bool>
+   *   Permissions with key as permission prefixed by
+   *   RemoteApiConstants::PERMISSIONS_FIELD_PREFIX.
+   */
+  public function getFlattenedPermissions(): array {
+    /** @phpstan-var array<string, bool> */
+    return array_filter(
+      $this->values,
+      fn (string $key) => str_starts_with($key, RemoteApiConstants::PERMISSION_FIELD_PREFIX),
+      ARRAY_FILTER_USE_KEY,
+    );
   }
 
   /**

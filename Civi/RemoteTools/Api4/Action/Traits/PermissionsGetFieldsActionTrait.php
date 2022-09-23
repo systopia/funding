@@ -71,7 +71,7 @@ trait PermissionsGetFieldsActionTrait {
     foreach ($possiblePermissions as $permission) {
       $fields[] = [
         'name' => RemoteApiConstants::PERMISSION_FIELD_PREFIX . $permission,
-        'type' => 'Extra',
+        'type' => 'Custom',
         'data_type' => 'Boolean',
         'readonly' => TRUE,
         'nullable' => FALSE,

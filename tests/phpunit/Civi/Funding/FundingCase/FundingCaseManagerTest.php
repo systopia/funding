@@ -30,9 +30,9 @@ use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
+use Civi\Funding\Util\TestUtil;
 use Civi\RemoteTools\Api4\Api4;
 use Civi\RemoteTools\Api4\Api4Interface;
-use Civi\RemoteTools\Api4\RemoteApiConstants;
 use Civi\Test;
 use Civi\Test\CiviEnvBuilder;
 use Civi\Test\HeadlessInterface;
@@ -114,7 +114,7 @@ final class FundingCaseManagerTest extends TestCase implements HeadlessInterface
       'PERM_test_permission' => TRUE,
     ],
       // Not given, but possible permissions are part of the flattened permissions
-      $this->filterPermissions($fundingCase->toArray())
+      TestUtil::filterFlattenedPermissions($fundingCase->toArray())
     );
   }
 
@@ -232,21 +232,6 @@ final class FundingCaseManagerTest extends TestCase implements HeadlessInterface
       $fundingProgram->getId(),
       $fundingCaseType->getId(),
       $recipientContact['id'],
-    );
-  }
-
-  /**
-   * @phpstan-param array<string, mixed> $fundingCaseValues
-   *
-   * @phpstan-return array<string, mixed>
-   */
-  private function filterPermissions(array $fundingCaseValues): array {
-    return array_filter(
-      $fundingCaseValues,
-      fn ($value, string $key) =>
-        !str_starts_with($key, RemoteApiConstants::PERMISSION_FIELD_PREFIX)
-        || TRUE === $value,
-      ARRAY_FILTER_USE_BOTH,
     );
   }
 

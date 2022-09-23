@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Util;
 
+use Civi\RemoteTools\Api4\RemoteApiConstants;
+
 final class TestUtil {
 
   /**
@@ -33,6 +35,24 @@ final class TestUtil {
       $values,
       fn (string $key) => 'custom' !== $key && 'check_permissions' !== $key,
       ARRAY_FILTER_USE_KEY
+    );
+  }
+
+  /**
+   * Filters flattened permissions that are not TRUE.
+   *
+   * @phpstan-param array<string, mixed> $values
+   *
+   * @phpstan-return array<string, mixed>
+   */
+  public static function filterFlattenedPermissions(
+    array $values,
+    string $permissionFieldPrefix = RemoteApiConstants::PERMISSION_FIELD_PREFIX
+  ): array {
+    return array_filter(
+      $values,
+      fn ($value, string $key) => !str_starts_with($key, $permissionFieldPrefix) || TRUE === $value,
+      ARRAY_FILTER_USE_BOTH,
     );
   }
 

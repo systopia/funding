@@ -22,6 +22,7 @@ namespace Civi\Funding\Api4\Action\FundingCaseInfo;
 use Civi\Api4\FundingCaseInfo;
 use Civi\Api4\Generic\AbstractGetAction;
 use Civi\Api4\Generic\Result;
+use Civi\Api4\Generic\Traits\ArrayQueryActionTrait;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\FundingCaseEntity;
@@ -31,6 +32,8 @@ use Civi\Funding\FundingProgram\FundingProgramManager;
 use Webmozart\Assert\Assert;
 
 final class GetAction extends AbstractGetAction {
+
+  use ArrayQueryActionTrait;
 
   private ApplicationProcessManager $applicationProcessManager;
 
@@ -55,6 +58,7 @@ final class GetAction extends AbstractGetAction {
    * @throws \API_Exception
    */
   public function _run(Result $result): void {
+    $records = [];
     foreach ($this->getFundingCases() as $fundingCase) {
       $applicationProcess = $this->applicationProcessManager->getFirstByFundingCaseId($fundingCase->getId());
       if (NULL === $applicationProcess) {
@@ -64,7 +68,18 @@ final class GetAction extends AbstractGetAction {
       $fundingProgram = $this->fundingProgramManager->get($fundingCase->getFundingProgramId());
       Assert::notNull($fundingProgram);
 
-      $result->append($this->buildRecord($fundingCase, $fundingProgram, $applicationProcess));
+      $records[] = $this->buildRecord($fundingCase, $fundingProgram, $applicationProcess);
+    }
+
+    if ($this->isRowCountSelected()) {
+      $result->setCountMatched(count($records));
+    }
+
+    if (!$this->isRowCountSelectedOnly()) {
+      $records = $this->sortArray($records);
+      $records = $this->limitArray($records);
+      $records = $this->selectArray($records);
+      $result->exchangeArray($records);
     }
   }
 
@@ -76,7 +91,7 @@ final class GetAction extends AbstractGetAction {
     FundingProgramEntity $fundingProgram,
     ApplicationProcessEntity $applicationProcess
   ): array {
-    return [
+    $record = [
       'funding_case_id' => $fundingCase->getId(),
       'funding_case_permissions' => $fundingCase->getPermissions(),
       'funding_case_status' => $fundingCase->getStatus(),
@@ -100,6 +115,12 @@ final class GetAction extends AbstractGetAction {
       'application_process_start_date' => self::toFormattedDateOrNull($applicationProcess->getStartDate()),
       'application_process_end_date' => self::toFormattedDateOrNull($applicationProcess->getEndDate()),
     ];
+
+    foreach ($fundingCase->getFlattenedPermissions() as $permission => $active) {
+      $record['funding_case_' . $permission] = $active;
+    }
+
+    return $record;
   }
 
   private static function toFormattedDateOrNull(?\DateTimeInterface $date): ?string {
@@ -130,6 +151,14 @@ final class GetAction extends AbstractGetAction {
     $fundingCase = $this->fundingCaseManager->get($fundingCaseId);
 
     return NULL === $fundingCase ? [] : [$fundingCase];
+  }
+
+  private function isRowCountSelected(): bool {
+    return in_array('row_count', $this->getSelect(), TRUE);
+  }
+
+  private function isRowCountSelectedOnly(): bool {
+    return ['row_count'] === $this->getSelect();
   }
 
 }

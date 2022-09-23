@@ -26,6 +26,8 @@ use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
+use Civi\Funding\Util\TestUtil;
+use Civi\RemoteTools\Api4\RemoteApiConstants;
 use Civi\Test;
 use Civi\Test\CiviEnvBuilder;
 use Civi\Test\HeadlessInterface;
@@ -68,6 +70,8 @@ final class RemoteFundingCaseInfoTest extends TestCase implements HeadlessInterf
     $result = $action->execute();
     static::assertCount(1, $result);
 
+    /** @var array<string, mixed> $values */
+    $values = $result->first();
     $expected = [
       'funding_case_id' => $fundingCase->getId(),
       'funding_case_permissions' => ['case_perm'],
@@ -91,8 +95,13 @@ final class RemoteFundingCaseInfoTest extends TestCase implements HeadlessInterf
       'application_process_modification_date' => $applicationProcess->getModificationDate()->format('Y-m-d H:i:s'),
       'application_process_start_date' => '2022-09-20 20:20:20',
       'application_process_end_date' => NULL,
+      'funding_case_PERM_case_perm' => TRUE,
     ];
-    static::assertEquals($expected, $result->first());
+    static::assertEquals($expected,
+      // Not given, but possible permissions are part of the flattened permissions
+      TestUtil::filterFlattenedPermissions($values, 'funding_case_' . RemoteApiConstants::PERMISSION_FIELD_PREFIX)
+    );
+    static::assertGreaterThan(\count($expected), \count($values));
 
     $fundingCase2 = FundingCaseFixture::addFixture(
       $fundingProgram->getId(),
@@ -121,20 +130,33 @@ final class RemoteFundingCaseInfoTest extends TestCase implements HeadlessInterf
     $action = RemoteFundingCaseInfo::getFields()->setLoadOptions(TRUE);
     $result = $action->execute();
 
-    static::assertCount(22, $result);
+    $permissionsCount = 0;
     /** @phpstan-var array<string, mixed> $field */
     foreach ($result as $field) {
+      static::assertIsString($field['name']);
       static::assertNotEmpty($field['name']);
-      static::assertNotEmpty($field['data_type']);
-      static::assertTrue($field['readonly']);
-      if ('funding_case_status' === $field['name'] || 'application_process_status' === $field['name']) {
-        static::assertIsArray($field['options']);
-        static::assertNotEmpty($field['options']);
+      $message = sprintf('Failed for field %s', $field['name']);
+      static::assertNotEmpty($field['data_type'], $message);
+      static::assertTrue($field['readonly'], $message);
+      if (in_array(
+        $field['name'],
+        ['funding_case_status', 'funding_case_permissions', 'application_process_status'],
+        TRUE
+      )) {
+        static::assertIsArray($field['options'], $message);
+        static::assertNotEmpty($field['options'], $message);
+
+        if ('funding_case_permissions' === $field['name']) {
+          $permissionsCount = count($field['options']);
+          static::assertGreaterThan(0, $permissionsCount);
+        }
       }
       else {
-        static::assertFalse($field['options']);
+        static::assertFalse($field['options'], $message);
       }
     }
+
+    static::assertCount(22 + $permissionsCount, $result);
   }
 
 }

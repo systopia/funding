@@ -68,6 +68,7 @@ final class AVK1SubmitApplicationFormSubscriber implements EventSubscriberInterf
      *   action: string,
      *   titel: string,
      *   kurzbezeichnungDesInhalts: string,
+     *   finanzierung: array{beantragterZuschuss: float},
      * } $data
      */
     $data = $validationResult->getData();
@@ -80,6 +81,7 @@ final class AVK1SubmitApplicationFormSubscriber implements EventSubscriberInterf
       $applicationProcess->setRequestData($data);
       $applicationProcess->setTitle($data['titel']);
       $applicationProcess->setShortDescription($data['kurzbezeichnungDesInhalts']);
+      $applicationProcess->setAmountRequested($data['finanzierung']['beantragterZuschuss']);
       $this->applicationProcessManager->update($event->getContactId(), $applicationProcess, $event->getFundingCase());
 
       // TODO: Change message
