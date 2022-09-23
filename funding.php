@@ -24,7 +24,9 @@ use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1SubmitNewApplicatio
 use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1ValidateApplicationFormSubscriber;
 use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1ValidateNewApplicationFormSubscriber;
 use Civi\Funding\EventSubscriber\FundingCase\AddFundingCasePermissionsSubscriber;
+use Civi\Funding\EventSubscriber\FundingCase\FundingCaseGetPossiblePermissionsSubscriber;
 use Civi\Funding\EventSubscriber\FundingCase\FundingCasePermissionsGetSubscriber;
+use Civi\Funding\EventSubscriber\FundingProgram\FundingProgramGetPossiblePermissionsSubscriber;
 use Civi\Funding\EventSubscriber\FundingProgram\FundingProgramPermissionsGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessGetFieldsSubscriber;
@@ -162,6 +164,8 @@ function funding_civicrm_container(ContainerBuilder $container): void {
     ->addTag('kernel.event_subscriber');
   $container->autowire(FundingCasePermissionsGetSubscriber::class)
     ->addTag('kernel.event_subscriber');
+  $container->autowire(FundingCaseGetPossiblePermissionsSubscriber::class)
+    ->addTag('kernel.event_subscriber');
   $container->autowire(AddFundingCasePermissionsSubscriber::class)
     ->addTag('kernel.event_subscriber');
 
@@ -175,6 +179,8 @@ function funding_civicrm_container(ContainerBuilder $container): void {
   $container->autowire(FundingProgramDAOGetSubscriber::class)
     ->addTag('kernel.event_subscriber');
   $container->autowire(FundingProgramPermissionsGetSubscriber::class)
+    ->addTag('kernel.event_subscriber');
+  $container->autowire(FundingProgramGetPossiblePermissionsSubscriber::class)
     ->addTag('kernel.event_subscriber');
 
   $container->autowire(ApplicationProcessGetFieldsSubscriber::class)
