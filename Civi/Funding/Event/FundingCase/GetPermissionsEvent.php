@@ -19,13 +19,13 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Event\FundingCase;
 
-use Civi\Api4\RemoteFundingCase;
+use Civi\Api4\FundingCase;
 use Civi\RemoteTools\Event\AbstractGetPermissionsEvent;
 
 final class GetPermissionsEvent extends AbstractGetPermissionsEvent {
 
   public function __construct(int $entityId, int $contactId) {
-    parent::__construct(RemoteFundingCase::_getEntityName(), $entityId, $contactId);
+    parent::__construct(FundingCase::_getEntityName(), $entityId, $contactId);
   }
 
 }
