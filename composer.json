@@ -27,7 +27,7 @@
         "systopia/opis-json-schema-ext": "dev-main"
     },
     "require-dev": {
-        "civicrm/civicrm-core": "^5.48"
+        "civicrm/civicrm-core": "^5.50"
     },
     "scripts": {
         "composer-phpcs": [
