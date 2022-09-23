@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\RemoteTools\Api4\Action\Traits;
 
+use Civi\RemoteTools\Api4\RemoteApiConstants;
+
 /**
  * Adds permissions fields in GetFieldsAction.
  */
@@ -44,29 +46,35 @@ trait PermissionsGetFieldsActionTrait {
       return [];
     }
 
+    $possiblePermissions = $this->getPossiblePermissions();
     return array_merge([
       [
         'name' => 'permissions',
         'type' => 'Extra',
-        'data_type' => 'Array',
+        'data_type' => 'String',
         'readonly' => TRUE,
+        'serialize' => 1,
+        'options' => array_combine($possiblePermissions, $possiblePermissions),
       ],
-    ], $this->getFlattenedPermissionsFields());
+    ], $this->getFlattenedPermissionsFields($possiblePermissions));
   }
 
   /**
+   * @phpstan-param array<string> $possiblePermissions
+   *
    * @phpstan-return array<array<string, array<string, scalar>|array<scalar>|scalar|null>&array{name: string}>
    *   Flattened permissions might be useful for some frontends (e.g. Drupal Views).
    */
-  private function getFlattenedPermissionsFields(): array {
+  private function getFlattenedPermissionsFields(array $possiblePermissions): array {
     $fields = [];
 
-    foreach ($this->getPossiblePermissions() as $permission) {
+    foreach ($possiblePermissions as $permission) {
       $fields[] = [
-        'name' => 'PERM_' . $permission,
+        'name' => RemoteApiConstants::PERMISSION_FIELD_PREFIX . $permission,
         'type' => 'Extra',
         'data_type' => 'Boolean',
         'readonly' => TRUE,
+        'nullable' => FALSE,
       ];
     }
 

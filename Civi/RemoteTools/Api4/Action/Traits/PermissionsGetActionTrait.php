@@ -30,12 +30,39 @@ trait PermissionsGetActionTrait {
   private AddPermissionsToRecords $_addPermissionsToRecords;
 
   public function _run(Result $result): void {
+    $additionallySelectedFields = [];
+    $countSelectedOnly = $this->isRowCountSelectedOnly();
+    if ($countSelectedOnly) {
+      $this->addSelect(...$this->getFieldsRequiredToGetPermissions());
+    }
+    else {
+      foreach ($this->getFieldsRequiredToGetPermissions() as $field) {
+        if (!$this->isFieldSelected($field)) {
+          $additionallySelectedFields[] = $field;
+          $this->addSelect($field);
+        }
+      }
+    }
+
     parent::_run($result);
     $this->_addPermissionsToRecords ??= new AddPermissionsToRecords(
       $this->getPossiblePermissions(),
       fn (array $record) => $this->getRecordPermissions($record)
     );
     ($this->_addPermissionsToRecords)($result);
+
+    if ($countSelectedOnly) {
+      $result->setCountMatched($result->count());
+      $result->exchangeArray([]);
+    }
+    elseif ([] !== $additionallySelectedFields) {
+      /** @var array<string, mixed> $record */
+      foreach ($result as &$record) {
+        foreach ($additionallySelectedFields as $field) {
+          unset($record[$field]);
+        }
+      }
+    }
   }
 
   /**
@@ -49,5 +76,25 @@ trait PermissionsGetActionTrait {
    * @phpstan-return array<string>
    */
   abstract protected function getPossiblePermissions(): array;
+
+  /**
+   * @phpstan-return array<string>
+   *   Name of the fields used to retrieve the permissions.
+   */
+  protected function getFieldsRequiredToGetPermissions(): array {
+    return ['id'];
+  }
+
+  private function isFieldSelected(string $field): bool {
+    $select = $this->getSelect();
+
+    return [] === $select
+      || \in_array('*', $select, TRUE)
+      || \in_array($field, $select, TRUE);
+  }
+
+  private function isRowCountSelectedOnly(): bool {
+    return ['row_count'] === $this->getSelect();
+  }
 
 }
