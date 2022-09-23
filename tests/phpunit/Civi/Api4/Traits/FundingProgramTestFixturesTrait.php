@@ -39,7 +39,7 @@ trait FundingProgramTestFixturesTrait {
       'PermittedNoPermissions', 'permitted no permissions')['id'];
 
     $permittedContactTypeId = ContactTypeFixture::addOrganizationFixture(
-      'Permitted', 'permitted no permissions')['id'];
+      'Permitted', 'permitted')['id'];
 
     FundingProgramContactRelation::create()
       ->setValues([
