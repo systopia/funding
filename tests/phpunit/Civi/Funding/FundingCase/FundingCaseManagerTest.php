@@ -32,6 +32,7 @@ use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\RemoteTools\Api4\Api4;
 use Civi\RemoteTools\Api4\Api4Interface;
+use Civi\RemoteTools\Api4\RemoteApiConstants;
 use Civi\Test;
 use Civi\Test\CiviEnvBuilder;
 use Civi\Test\HeadlessInterface;
@@ -111,7 +112,10 @@ final class FundingCaseManagerTest extends TestCase implements HeadlessInterface
       'modification_date' => date('Y-m-d H:i:s'),
       'permissions' => ['test_permission'],
       'PERM_test_permission' => TRUE,
-    ], $fundingCase->toArray());
+    ],
+      // Not given, but possible permissions are part of the flattened permissions
+      $this->filterPermissions($fundingCase->toArray())
+    );
   }
 
   public function testGet(): void {
@@ -209,6 +213,21 @@ final class FundingCaseManagerTest extends TestCase implements HeadlessInterface
       $fundingProgram->getId(),
       $fundingCaseType->getId(),
       $recipientContact['id'],
+    );
+  }
+
+  /**
+   * @phpstan-param array<string, mixed> $fundingCaseValues
+   *
+   * @phpstan-return array<string, mixed>
+   */
+  private function filterPermissions(array $fundingCaseValues): array {
+    return array_filter(
+      $fundingCaseValues,
+      fn ($value, string $key) =>
+        !str_starts_with($key, RemoteApiConstants::PERMISSION_FIELD_PREFIX)
+        || TRUE === $value,
+      ARRAY_FILTER_USE_BOTH,
     );
   }
 
