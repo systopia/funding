@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\RemoteTools\Api4\Action\Helper;
 
 use Civi\Api4\Generic\Result;
+use Civi\RemoteTools\Api4\RemoteApiConstants;
 
 final class AddPermissionsToRecords {
 
@@ -56,10 +57,10 @@ final class AddPermissionsToRecords {
 
       // Flattened permissions might be useful for some frontends (e.g. Drupal Views).
       foreach ($this->possiblePermissions as $permission) {
-        $record['PERM_' . $permission] = FALSE;
+        $record[RemoteApiConstants::PERMISSION_FIELD_PREFIX . $permission] = FALSE;
       }
       foreach ($permissions as $permission) {
-        $record['PERM_' . $permission] = TRUE;
+        $record[RemoteApiConstants::PERMISSION_FIELD_PREFIX . $permission] = TRUE;
       }
 
       $records[] = $record;
