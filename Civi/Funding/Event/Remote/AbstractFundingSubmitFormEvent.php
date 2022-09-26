@@ -19,21 +19,15 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Event\Remote;
 
-use Civi\Funding\Event\Remote\Traits\EventContactIdRequiredTrait;
-use Civi\RemoteTools\Event\AbstractRequestEvent;
 use Civi\RemoteTools\Form\RemoteFormInterface;
 
-abstract class AbstractFundingSubmitFormEvent extends AbstractRequestEvent {
+abstract class AbstractFundingSubmitFormEvent extends AbstractFundingRequestEvent {
 
   public const ACTION_CLOSE_FORM = 'closeForm';
 
   public const ACTION_SHOW_FORM = 'showForm';
 
   public const ACTION_SHOW_VALIDATION = 'showValidation';
-
-  use EventContactIdRequiredTrait {
-    getRequiredParams as traitGetRequiredParams;
-  }
 
   /**
    * @var array<string, mixed>
@@ -122,7 +116,7 @@ abstract class AbstractFundingSubmitFormEvent extends AbstractRequestEvent {
   }
 
   protected function getRequiredParams(): array {
-    return array_merge($this->traitGetRequiredParams(), ['data']);
+    return array_merge(parent::getRequiredParams(), ['data']);
   }
 
 }

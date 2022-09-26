@@ -33,6 +33,7 @@ use Civi\Funding\EventSubscriber\Remote\ApplicationProcessGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseTypeDAOGetSubscriber;
+use Civi\Funding\EventSubscriber\Remote\FundingCaseTypeGetByFundingProgramIdSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseTypeGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingProgramDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingProgramGetFieldsSubscriber;
@@ -131,6 +132,10 @@ function funding_civicrm_container(ContainerBuilder $container): void {
     ->setPublic(TRUE)
     ->setShared(FALSE);
 
+  $container->autowire(\Civi\Funding\Api4\Action\FundingCaseType\GetByFundingProgramIdAction::class)
+    ->setPublic(TRUE)
+    ->setShared(FALSE);
+
   $container->autowire(\Civi\Funding\Api4\Action\FundingProgram\GetAction::class)
     ->setPublic(TRUE)
     ->setShared(FALSE);
@@ -172,6 +177,8 @@ function funding_civicrm_container(ContainerBuilder $container): void {
   $container->autowire(FundingCaseTypeGetFieldsSubscriber::class)
     ->addTag('kernel.event_subscriber');
   $container->autowire(FundingCaseTypeDAOGetSubscriber::class)
+    ->addTag('kernel.event_subscriber');
+  $container->autowire(FundingCaseTypeGetByFundingProgramIdSubscriber::class)
     ->addTag('kernel.event_subscriber');
 
   $container->autowire(FundingProgramGetFieldsSubscriber::class)
