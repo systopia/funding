@@ -100,6 +100,8 @@ function funding_civicrm_container(ContainerBuilder $container): void {
   $container->register(Api4Interface::class, Api4::class);
   $container->register(Api3Interface::class, Api3::class);
 
+  $container->autowire(OptionsLoaderInterface::class, OptionsLoader::class);
+
   $container->register(ApiAuthorizeInitRequestSubscriber::class)
     ->addTag('kernel.event_subscriber');
   $container->register(ApiAuthorizeSubscriber::class)
