@@ -98,6 +98,8 @@ final class AVK1SubmitNewApplicationFormSubscriberTest extends AbstractNewApplic
       'kurzbezeichnungDesInhalts' => 'Description',
       'foo' => 'baz',
       'finanzierung' => ['beantragterZuschuss' => 1.2],
+      'beginn' => '2022-09-26',
+      'ende' => '2022-10-26',
     ];
 
     $this->statusDeterminerMock->method('getStatusForNew')->with('test')->willReturn('new_status');
@@ -136,8 +138,8 @@ final class AVK1SubmitNewApplicationFormSubscriberTest extends AbstractNewApplic
       'amount_requested' => 1.2,
       'creation_date' => date('Y-m-d H:i:s'),
       'modification_date' => date('Y-m-d H:i:s'),
-      'start_date' => NULL,
-      'end_date' => NULL,
+      'start_date' => '2022-09-26',
+      'end_date' => '2022-10-26',
       'amount_granted' => NULL,
       'granted_budget' => NULL,
       'is_review_content' => NULL,
@@ -149,6 +151,8 @@ final class AVK1SubmitNewApplicationFormSubscriberTest extends AbstractNewApplic
         'status' => 'new_status',
         'title' => 'Title',
         'short_description' => 'Description',
+        'start_date' => '2022-09-26',
+        'end_date' => '2022-10-26',
         'request_data' => $postValidationData,
         'amount_requested' => 1.2,
       ])->willReturn($applicationProcess);

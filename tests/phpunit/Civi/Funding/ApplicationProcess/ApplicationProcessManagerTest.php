@@ -116,6 +116,7 @@ final class ApplicationProcessManagerTest extends TestCase implements HeadlessIn
       'short_description' => 'Description',
       'request_data' => ['foo' => 'bar'],
       'amount_requested' => 1.2,
+      'end_date' => '2022-09-26 01:02:03',
     ]);
 
     static::assertGreaterThan(0, $applicationProcess->getId());
@@ -130,7 +131,7 @@ final class ApplicationProcessManagerTest extends TestCase implements HeadlessIn
       'creation_date' => date('Y-m-d H:i:s'),
       'modification_date' => date('Y-m-d H:i:s'),
       'start_date' => NULL,
-      'end_date' => NULL,
+      'end_date' => '2022-09-26 01:02:03',
       'amount_granted' => NULL,
       'granted_budget' => NULL,
       'is_review_content' => NULL,

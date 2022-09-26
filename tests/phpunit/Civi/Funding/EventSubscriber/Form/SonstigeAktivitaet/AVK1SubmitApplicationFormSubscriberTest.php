@@ -95,6 +95,8 @@ final class AVK1SubmitApplicationFormSubscriberTest extends AbstractApplicationF
       'action' => 'test',
       'titel' => 'Title2',
       'kurzbezeichnungDesInhalts' => 'Description2',
+      'beginn' => '2022-09-26',
+      'ende' => '2022-10-26',
       'foo' => 'baz',
       'finanzierung' => ['beantragterZuschuss' => 47.11],
     ];
@@ -113,6 +115,8 @@ final class AVK1SubmitApplicationFormSubscriberTest extends AbstractApplicationF
 
     static::assertSame('Title2', $applicationProcess->getTitle());
     static::assertSame('Description2', $applicationProcess->getShortDescription());
+    static::assertEquals(new \DateTime('2022-09-26'), $applicationProcess->getStartDate());
+    static::assertEquals(new \DateTime('2022-10-26'), $applicationProcess->getEndDate());
     static::assertSame(47.11, $applicationProcess->getAmountRequested());
     static::assertSame($postValidationData, $applicationProcess->getRequestData());
     static::assertSame(SubmitFormEvent::ACTION_SHOW_FORM, $event->getAction());
