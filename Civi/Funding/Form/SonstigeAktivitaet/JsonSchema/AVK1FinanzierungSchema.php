@@ -48,6 +48,7 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
       // Abschnitt II.4
       'sonstigeMittel' => new JsonSchemaArray(
         new JsonSchemaObject([
+          '_identifier' => new JsonSchemaString(['readonly' => TRUE]),
           'quelle' => new JsonSchemaString(),
           'betrag' => new JsonSchemaMoney(['minimum' => 0]),
         ], ['required' => ['betrag', 'quelle']])

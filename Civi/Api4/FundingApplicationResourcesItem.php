@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
+use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
+
 /**
  * ApplicationResourcesItem entity.
  *
@@ -27,5 +29,7 @@ namespace Civi\Api4;
  * @package Civi\Api4
  */
 class FundingApplicationResourcesItem extends Generic\DAOEntity {
+
+  use EntityNameTrait;
 
 }
