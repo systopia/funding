@@ -71,6 +71,7 @@ abstract class AbstractRemoteGetFieldsSubscriber implements EventSubscriberInter
     /** @var iterable<FieldT> $result */
     $result = $this->api4->executeAction($this->createAction($event));
     $fields = $this->filterFields($result, $event);
+    $fields = $this->addExtraKeys($fields, $event);
     $event->setFields($fields)
       ->addDebugOutput(static::class, $result->debug ?? []);
   }
@@ -103,6 +104,8 @@ abstract class AbstractRemoteGetFieldsSubscriber implements EventSubscriberInter
       'serialize',
       'nullable',
       'description',
+      'api.sort',
+      'api.filter',
     ];
   }
 
@@ -122,6 +125,22 @@ abstract class AbstractRemoteGetFieldsSubscriber implements EventSubscriberInter
    */
   protected function getIncludedFields(GetFieldsEvent $event): ?array {
     return NULL;
+  }
+
+  /**
+   * @phpstan-param array<FieldT> $fields
+   *
+   * @phpstan-return array<FieldT>
+   */
+  protected function addExtraKeys(array $fields, GetFieldsEvent $event): array {
+    foreach ($fields as &$field) {
+      if ([] === ($field['operators'] ?? NULL) && !isset($field['api.filter'])) {
+        // Mark field as not filterable
+        $field['api.filter'] = 0;
+      }
+    }
+
+    return $fields;
   }
 
   /**

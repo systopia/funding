@@ -75,6 +75,7 @@ trait PermissionsGetFieldsActionTrait {
         'data_type' => 'Boolean',
         'readonly' => TRUE,
         'nullable' => FALSE,
+        'operators' => [],
       ];
     }
 
