@@ -27,8 +27,14 @@
     <required>true</required>
     <comment>FK to FundingProgram</comment>
     <html>
-      <type>Number</type>
+      <type>EntityRef</type>
     </html>
+    <pseudoconstant>
+      <table>civicrm_funding_program</table>
+      <keyColumn>id</keyColumn>
+      <labelColumn>title</labelColumn>
+      <prefetch>false</prefetch>
+    </pseudoconstant>
   </field>
   <foreignKey>
     <name>funding_program_id</name>
@@ -63,7 +69,7 @@
     <type>int unsigned</type>
     <comment>FK to FundingProgramContactRelation</comment>
     <html>
-      <type>Number</type>
+      <type>EntityRef</type>
     </html>
   </field>
   <foreignKey>

@@ -27,7 +27,7 @@
     <required>true</required>
     <comment>FK to FundingCase</comment>
     <html>
-      <type>Number</type>
+      <type>EntityRef</type>
     </html>
   </field>
   <foreignKey>
@@ -63,7 +63,7 @@
     <type>int unsigned</type>
     <comment>FK to FundingCaseContactRelation</comment>
     <html>
-      <type>Number</type>
+      <type>EntityRef</type>
     </html>
   </field>
   <foreignKey>

@@ -24,6 +24,9 @@
     <name>funding_case_id</name>
     <type>int unsigned</type>
     <comment>FK to FundingCase</comment>
+    <html>
+      <type>EntityRef</type>
+    </html>
   </field>
   <foreignKey>
     <name>funding_case_id</name>
