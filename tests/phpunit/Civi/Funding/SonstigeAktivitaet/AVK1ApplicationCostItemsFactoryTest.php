@@ -191,6 +191,7 @@ final class AVK1ApplicationCostItemsFactoryTest extends TestCase {
       'title' => 'Title',
       'short_description' => 'Description',
       'request_data' => ['kosten' => $kosten],
+      'amount_requested' => 1.2,
       'creation_date' => $now,
       'modification_date' => $now,
       'start_date' => NULL,
