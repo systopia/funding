@@ -29,6 +29,15 @@
     <type>int unsigned</type>
     <required>true</required>
     <comment>FK to FundingApplicationProcess</comment>
+    <html>
+      <type>EntityRef</type>
+    </html>
+    <pseudoconstant>
+      <table>civicrm_funding_application_process</table>
+      <keyColumn>id</keyColumn>
+      <labelColumn>title</labelColumn>
+      <prefetch>false</prefetch>
+    </pseudoconstant>
   </field>
   <foreignKey>
     <name>application_process_id</name>

@@ -27,8 +27,14 @@
     <required>true</required>
     <comment>FK to FundingProgram</comment>
     <html>
-      <type>Number</type>
+      <type>EntityRef</type>
     </html>
+    <pseudoconstant>
+      <table>civicrm_funding_program</table>
+      <keyColumn>id</keyColumn>
+      <labelColumn>title</labelColumn>
+      <prefetch>false</prefetch>
+    </pseudoconstant>
   </field>
   <foreignKey>
     <name>id_a</name>
@@ -43,8 +49,14 @@
     <required>true</required>
     <comment>FK to FundingProgram</comment>
     <html>
-      <type>Number</type>
+      <type>EntityRef</type>
     </html>
+    <pseudoconstant>
+      <table>civicrm_funding_program</table>
+      <keyColumn>id</keyColumn>
+      <labelColumn>title</labelColumn>
+      <prefetch>false</prefetch>
+    </pseudoconstant>
   </field>
   <foreignKey>
     <name>id_b</name>
