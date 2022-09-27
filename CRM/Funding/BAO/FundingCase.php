@@ -16,7 +16,6 @@
  */
 
 use Civi\Core\Event\GenericHookEvent;
-use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class CRM_Funding_BAO_FundingCase extends CRM_Funding_DAO_FundingCase implements EventSubscriberInterface {

@@ -15,9 +15,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use CRM_Funding_ExtensionUtil as E;
+use Civi\Core\Event\GenericHookEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class CRM_Funding_BAO_FundingCaseType extends CRM_Funding_DAO_FundingCaseType {
+class CRM_Funding_BAO_FundingCaseType extends CRM_Funding_DAO_FundingCaseType implements EventSubscriberInterface {
 
   /**
    * Create a new FundingCaseType based on array-data
@@ -38,5 +39,30 @@ class CRM_Funding_BAO_FundingCaseType extends CRM_Funding_DAO_FundingCaseType {
 
     return $instance;
   } */
+
+  /**
+   * @inheritDoc
+   */
+  public static function getSubscribedEvents(): array {
+    return [
+      'civi.afform_admin.metadata' => 'afformAdminMetadata',
+    ];
+  }
+
+  /**
+   * Provides Afform metadata about this entity.
+   *
+   * @see \Civi\AfformAdmin\AfformAdminMeta::getMetadata().
+   */
+  public static function afformAdminMetadata(GenericHookEvent $event): void {
+    $entity = pathinfo(__FILE__, PATHINFO_FILENAME);
+    $event->entities[$entity] = [
+      'entity' => $entity,
+      'label' => $entity,
+      'icon' => NULL, // TODO.
+      'type' => 'primary',
+      'defaults' => '{}',
+    ];
+  }
 
 }
