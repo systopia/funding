@@ -61,7 +61,7 @@ final class GetFieldsAction extends BasicGetFieldsAction {
       [
         'name' => 'type',
         'data_type' => 'String',
-        'default_value' => 'Custom',
+        'default_value' => 'Extra',
         'options' => [
           'Field' => ts('Primary Field'),
           'Custom' => ts('Custom Field'),

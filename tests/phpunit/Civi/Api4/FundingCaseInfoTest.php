@@ -138,7 +138,7 @@ final class FundingCaseInfoTest extends TestCase implements HeadlessInterface, T
       static::assertIsString($field['name']);
       static::assertNotEmpty($field['name']);
       $message = sprintf('Failed for field %s', $field['name']);
-      static::assertSame('Custom', $field['type'], $message);
+      static::assertSame('Extra', $field['type'], $message);
       static::assertNotEmpty($field['data_type'], $message);
       static::assertTrue($field['readonly'], $message);
       if (in_array(
