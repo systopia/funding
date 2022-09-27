@@ -81,9 +81,9 @@ abstract class AbstractRemoteGetSubscriber implements EventSubscriberInterface {
    */
   protected function createAction(GetEvent $event): AbstractAction {
     /*
-     * Note: "where" could contain excluded fields, i.e. requester could use it
-     * to detect values of excluded fields (if he knows the field name). Though
-     * we trust the requester that he doesn't misuse it.
+     * Note: "where" could contain excluded fields, i.e. requesters could use it
+     * to detect values of excluded fields (if they know the field name). Though
+     * we trust the requesters that they don't misuse it.
      */
     /** @var \Civi\Api4\Generic\AbstractGetAction $action */
     $action = $this->api4->createAction(static::BASIC_ENTITY_NAME, 'get');
@@ -99,6 +99,7 @@ abstract class AbstractRemoteGetSubscriber implements EventSubscriberInterface {
 
   /**
    * @return string[]
+   *   Field names that will be excluded from records.
    */
   protected function getExcludedFields(GetEvent $event): array {
     return [];
@@ -106,6 +107,8 @@ abstract class AbstractRemoteGetSubscriber implements EventSubscriberInterface {
 
   /**
    * @return string[]
+   *   Field names that are allowed to be included in records. "*" means all
+   *   fields.
    */
   protected function getIncludedFields(GetEvent $event): array {
     return ['*'];
