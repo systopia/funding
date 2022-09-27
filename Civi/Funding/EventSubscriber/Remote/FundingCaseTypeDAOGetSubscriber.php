@@ -27,7 +27,7 @@ final class FundingCaseTypeDAOGetSubscriber extends AbstractRemoteDAOGetSubscrib
 
   use FundingCaseTypeSubscriberTrait;
 
-  protected const DAO_ENTITY_NAME = 'FundingCaseType';
+  protected const BASIC_ENTITY_NAME = 'FundingCaseType';
 
   protected const ENTITY_NAME = 'RemoteFundingCaseType';
 

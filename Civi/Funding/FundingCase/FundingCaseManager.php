@@ -72,7 +72,7 @@ class FundingCaseManager {
 
     /** @phpstan-var fundingCaseT $fundingCaseValues */
     $fundingCaseValues = $this->api4->executeAction($action)->first();
-    $fundingCase = FundingCaseEntity::fromArray($fundingCaseValues);
+    $fundingCase = FundingCaseEntity::fromArray($fundingCaseValues)->reformatDates();
 
     $event = new FundingCaseCreatedEvent($contactId, $fundingCase,
       $values['funding_program'], $values['funding_case_type']);
@@ -96,6 +96,23 @@ class FundingCaseManager {
     }
 
     return FundingCaseEntity::fromArray($values);
+  }
+
+  /**
+   * @phpstan-return array<FundingCaseEntity>
+   *
+   * @throws \API_Exception
+   */
+  public function getAll(): array {
+    $action = FundingCase::get();
+
+    /** @var array<fundingCaseT> $records */
+    $records = $this->api4->executeAction($action)->getArrayCopy();
+
+    return array_map(
+      fn (array $values) => FundingCaseEntity::fromArray($values),
+      $records,
+    );
   }
 
   public function update(FundingCaseEntity $fundingCase): void {

@@ -56,7 +56,7 @@ final class FundingCaseFixture {
         'modification_date' => $now,
       ])->execute()->first();
 
-    return FundingCaseEntity::fromArray($fundingCaseValues);
+    return FundingCaseEntity::fromArray($fundingCaseValues)->reformatDates();
   }
 
 }

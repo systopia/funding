@@ -30,9 +30,9 @@ use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
+use Civi\Funding\Util\TestUtil;
 use Civi\RemoteTools\Api4\Api4;
 use Civi\RemoteTools\Api4\Api4Interface;
-use Civi\RemoteTools\Api4\RemoteApiConstants;
 use Civi\Test;
 use Civi\Test\CiviEnvBuilder;
 use Civi\Test\HeadlessInterface;
@@ -114,7 +114,7 @@ final class FundingCaseManagerTest extends TestCase implements HeadlessInterface
       'PERM_test_permission' => TRUE,
     ],
       // Not given, but possible permissions are part of the flattened permissions
-      $this->filterPermissions($fundingCase->toArray())
+      TestUtil::filterFlattenedPermissions($fundingCase->toArray())
     );
   }
 
@@ -150,6 +150,25 @@ final class FundingCaseManagerTest extends TestCase implements HeadlessInterface
     $fundingCaseLoaded = $this->fundingCaseManager->get(12);
     static::assertNotNull($fundingCaseLoaded);
     static::assertSame($fundingCase->toArray(), $fundingCaseLoaded->toArray());
+  }
+
+  public function testGetAll(): void {
+    $fundingCase = $this->createFundingCase();
+
+    $api4Mock = $this->createMock(Api4Interface::class);
+    $this->fundingCaseManager = new FundingCaseManager($api4Mock, $this->eventDispatcherMock);
+
+    \CRM_Core_Session::singleton()->set('userID', 11);
+    $api4Mock->expects(static::once())->method('executeAction')->with(
+      static::callback(function (GetAction $action) {
+        static::assertSame(11, $action->getContactId());
+        static::assertSame([], $action->getWhere());
+
+        return TRUE;
+      })
+    )->willReturn(new Result([$fundingCase->toArray()]));
+
+    static::assertEquals([$fundingCase], $this->fundingCaseManager->getAll());
   }
 
   public function testHasAccessTrue(): void {
@@ -213,21 +232,6 @@ final class FundingCaseManagerTest extends TestCase implements HeadlessInterface
       $fundingProgram->getId(),
       $fundingCaseType->getId(),
       $recipientContact['id'],
-    );
-  }
-
-  /**
-   * @phpstan-param array<string, mixed> $fundingCaseValues
-   *
-   * @phpstan-return array<string, mixed>
-   */
-  private function filterPermissions(array $fundingCaseValues): array {
-    return array_filter(
-      $fundingCaseValues,
-      fn ($value, string $key) =>
-        !str_starts_with($key, RemoteApiConstants::PERMISSION_FIELD_PREFIX)
-        || TRUE === $value,
-      ARRAY_FILTER_USE_BOTH,
     );
   }
 

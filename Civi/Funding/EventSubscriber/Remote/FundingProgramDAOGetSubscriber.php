@@ -27,7 +27,7 @@ class FundingProgramDAOGetSubscriber extends AbstractRemoteDAOGetSubscriber {
 
   use FundingProgramSubscriberTrait;
 
-  protected const DAO_ENTITY_NAME = 'FundingProgram';
+  protected const BASIC_ENTITY_NAME = 'FundingProgram';
 
   protected const ENTITY_NAME = 'RemoteFundingProgram';
 

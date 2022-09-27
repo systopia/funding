@@ -97,6 +97,9 @@ final class AVK1SubmitNewApplicationFormSubscriberTest extends AbstractNewApplic
       'titel' => 'Title',
       'kurzbezeichnungDesInhalts' => 'Description',
       'foo' => 'baz',
+      'finanzierung' => ['beantragterZuschuss' => 1.2],
+      'beginn' => '2022-09-26',
+      'ende' => '2022-10-26',
     ];
 
     $this->statusDeterminerMock->method('getStatusForNew')->with('test')->willReturn('new_status');
@@ -112,8 +115,8 @@ final class AVK1SubmitNewApplicationFormSubscriberTest extends AbstractNewApplic
       'status' => 'open',
       // TODO: This has to be adapted when fixed in the CUT.
       'recipient_contact_id' => $event->getContactId(),
-      'creation_date' => date('YmdHis'),
-      'modification_date' => date('YmdHis'),
+      'creation_date' => date('Y-m-d H:i:s'),
+      'modification_date' => date('Y-m-d H:i:s'),
       'permissions' => ['test_permission'],
     ]);
     $this->fundingCaseManagerMock->expects(static::once())->method('create')
@@ -132,10 +135,11 @@ final class AVK1SubmitNewApplicationFormSubscriberTest extends AbstractNewApplic
       'title' => 'Title',
       'short_description' => 'Description',
       'request_data' => $postValidationData,
-      'creation_date' => date('YmdHis'),
-      'modification_date' => date('YmdHis'),
-      'start_date' => NULL,
-      'end_date' => NULL,
+      'amount_requested' => 1.2,
+      'creation_date' => date('Y-m-d H:i:s'),
+      'modification_date' => date('Y-m-d H:i:s'),
+      'start_date' => '2022-09-26',
+      'end_date' => '2022-10-26',
       'amount_granted' => NULL,
       'granted_budget' => NULL,
       'is_review_content' => NULL,
@@ -147,7 +151,10 @@ final class AVK1SubmitNewApplicationFormSubscriberTest extends AbstractNewApplic
         'status' => 'new_status',
         'title' => 'Title',
         'short_description' => 'Description',
+        'start_date' => '2022-09-26',
+        'end_date' => '2022-10-26',
         'request_data' => $postValidationData,
+        'amount_requested' => 1.2,
       ])->willReturn($applicationProcess);
 
     $this->subscriber->onSubmitNewForm($event);

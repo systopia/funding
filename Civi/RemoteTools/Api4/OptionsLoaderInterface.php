@@ -17,17 +17,16 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\EventSubscriber\Remote;
+namespace Civi\RemoteTools\Api4;
 
-use Civi\Funding\Event\Remote\FundingDAOGetEvent;
-use Civi\RemoteTools\EventSubscriber\AbstractRemoteDAOGetSubscriber;
+interface OptionsLoaderInterface {
 
-final class FundingCaseDAOGetSubscriber extends AbstractRemoteDAOGetSubscriber {
-
-  protected const BASIC_ENTITY_NAME = 'FundingCase';
-
-  protected const ENTITY_NAME = 'RemoteFundingCase';
-
-  protected const EVENT_CLASS = FundingDAOGetEvent::class;
+  /**
+   * @phpstan-return array<scalar|null, string>
+   *   Options in the form "value => label".
+   *
+   * @throws \API_Exception
+   */
+  public function getOptions(string $entityName, string $field): array;
 
 }

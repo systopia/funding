@@ -51,7 +51,7 @@ parameters:
 		-
 			message: '#^Cannot call method setCheckPermissions\(\) on mixed.$#'
 			path: */Civi/Api4/*.php
-		- '#^Method Civi\\Api4\\[^\\]+::[^(]+\(\) should return Civi\\Funding\\Api4\\Action\\[^\s]+\\[^\s]+Action but returns mixed.$#'
+		- '#^Method Civi\\Api4\\[^\\]+::[^(]+\(\) should return Civi\\[^\s]+\\[^\s]+Action but returns mixed.$#'
 		- '#^Access to an uninitialized property Civi\\Funding\\Event\\[^\s]+Event::\$[^\s]+.$#'
 		- '#^Access to an undefined property Civi\\Core\\Event\\GenericHookEvent::#'
 		-
@@ -63,6 +63,8 @@ parameters:
 		-
 			message: '#^Variable property access on \$this\(Civi\\RemoteTools\\Event\\AbstractRequestEvent\).$#'
 			path: */Civi/RemoteTools/Event/AbstractRequestEvent.php
+		# Wrong type hint
+		- '#^Property Civi\\Api4\\Generic\\Result::\$rowCount \(int\) on left side of \?\? is not nullable.$#'
 		- '#^Method Civi\\RemoteTools\\Event\\GetEvent::addClause\(\) has parameter \$conditions with no value type specified in iterable type array.$#'
 		- '#^Property Civi\\RemoteTools\\Event\\DAOGetEvent::\$join type has no value type specified in iterable type array.$#'
 		- '#^Method Civi\\RemoteTools\\Event\\DAOGetEvent::addJoin\(\) has parameter \$conditions with no value type specified in iterable type array.$#'

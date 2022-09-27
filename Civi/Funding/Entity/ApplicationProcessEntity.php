@@ -31,6 +31,7 @@ namespace Civi\Funding\Entity;
  *   start_date: string|null,
  *   end_date: string|null,
  *   request_data: array<string, mixed>,
+ *   amount_requested: float,
  *   amount_granted: float|null,
  *   granted_budget: float|null,
  *   is_review_content: bool|null,
@@ -148,6 +149,16 @@ final class ApplicationProcessEntity extends AbstractEntity {
     return $this;
   }
 
+  public function getAmountRequested(): float {
+    return $this->values['amount_requested'];
+  }
+
+  public function setAmountRequested(float $amountRequested): self {
+    $this->values['amount_requested'] = $amountRequested;
+
+    return $this;
+  }
+
   public function getAmountGranted(): ?float {
     return $this->values['amount_granted'];
   }
@@ -184,6 +195,21 @@ final class ApplicationProcessEntity extends AbstractEntity {
 
   public function setIsReviewCalculative(?bool $isReviewCalculative): self {
     $this->values['is_review_calculative'] = $isReviewCalculative;
+
+    return $this;
+  }
+
+  /**
+   * On create CiviCRM returns a different date format than on get. This method
+   * reformats the dates in $values so that they are as on get.
+   *
+   * @internal
+   */
+  public function reformatDates(): self {
+    $this->values['creation_date'] = static::toDateTimeStr($this->getCreationDate());
+    $this->setModificationDate($this->getModificationDate());
+    $this->setStartDate($this->getStartDate());
+    $this->setEndDate($this->getEndDate());
 
     return $this;
   }

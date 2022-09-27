@@ -34,6 +34,7 @@ use Civi\Funding\Entity\ApplicationProcessEntity;
  *   start_date: string|null,
  *   end_date: string|null,
  *   request_data: array<string, mixed>,
+ *   amount_requested: float,
  *   amount_granted: float|null,
  *   granted_budget: float|null,
  *   is_review_content: bool|null,
@@ -58,6 +59,7 @@ final class ApplicationProcessFixture {
         'title' => 'Title',
         'short_description' => 'Description',
         'request_data' => ['foo' => 'bar'],
+        'amount_requested' => 1.2,
         'creation_date' => $now,
         'modification_date' => $now,
         'start_date' => NULL,
@@ -68,7 +70,7 @@ final class ApplicationProcessFixture {
         'is_review_calculative' => NULL,
       ])->execute()->first();
 
-    return ApplicationProcessEntity::fromArray($applicationProcessValues);
+    return ApplicationProcessEntity::fromArray($applicationProcessValues)->reformatDates();
   }
 
 }

@@ -34,11 +34,13 @@ use Civi\Funding\EventSubscriber\FundingProgram\FundingProgramGetPossiblePermiss
 use Civi\Funding\EventSubscriber\FundingProgram\FundingProgramPermissionsGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessGetFieldsSubscriber;
+use Civi\Funding\EventSubscriber\Remote\FundingCaseInfoGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseTypeDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseTypeGetByFundingProgramIdSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseTypeGetFieldsSubscriber;
+use Civi\Funding\EventSubscriber\Remote\FundingCaseInfoGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingProgramDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingProgramGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingRequestInitSubscriber;
@@ -48,6 +50,7 @@ use Civi\Funding\Form\Validation\OpisValidatorFactory;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker;
+use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\Funding\Permission\ContactRelation\ContactChecker;
 use Civi\Funding\Permission\ContactRelation\ContactRelationshipChecker;
 use Civi\Funding\Permission\ContactRelation\ContactTypeChecker;
@@ -62,6 +65,8 @@ use Civi\RemoteTools\Api3\Api3;
 use Civi\RemoteTools\Api3\Api3Interface;
 use Civi\RemoteTools\Api4\Api4;
 use Civi\RemoteTools\Api4\Api4Interface;
+use Civi\RemoteTools\Api4\OptionsLoader;
+use Civi\RemoteTools\Api4\OptionsLoaderInterface;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoader;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
 use Civi\RemoteTools\EventSubscriber\ApiAuthorizeInitRequestSubscriber;
@@ -95,6 +100,8 @@ function funding_civicrm_container(ContainerBuilder $container): void {
   $container->register(Api4Interface::class, Api4::class);
   $container->register(Api3Interface::class, Api3::class);
 
+  $container->autowire(OptionsLoaderInterface::class, OptionsLoader::class);
+
   $container->register(ApiAuthorizeInitRequestSubscriber::class)
     ->addTag('kernel.event_subscriber');
   $container->register(ApiAuthorizeSubscriber::class)
@@ -127,6 +134,7 @@ function funding_civicrm_container(ContainerBuilder $container): void {
 
   $container->autowire(FundingCaseManager::class);
   $container->autowire(FundingCaseTypeManager::class);
+  $container->autowire(FundingProgramManager::class);
   $container->autowire(ApplicationProcessManager::class);
   $container->autowire(ApplicationCostItemManager::class);
   $container->autowire(ApplicationResourcesItemManager::class);
@@ -143,6 +151,13 @@ function funding_civicrm_container(ContainerBuilder $container): void {
     ->setShared(FALSE);
 
   $container->autowire(\Civi\Funding\Api4\Action\FundingCaseType\GetByFundingProgramIdAction::class)
+    ->setPublic(TRUE)
+    ->setShared(FALSE);
+
+  $container->autowire(\Civi\Funding\Api4\Action\FundingCaseInfo\GetAction::class)
+    ->setPublic(TRUE)
+    ->setShared(FALSE);
+  $container->autowire(\Civi\Funding\Api4\Action\FundingCaseInfo\GetFieldsAction::class)
     ->setPublic(TRUE)
     ->setShared(FALSE);
 
@@ -182,6 +197,11 @@ function funding_civicrm_container(ContainerBuilder $container): void {
   $container->autowire(FundingCaseGetPossiblePermissionsSubscriber::class)
     ->addTag('kernel.event_subscriber');
   $container->autowire(AddFundingCasePermissionsSubscriber::class)
+    ->addTag('kernel.event_subscriber');
+
+  $container->autowire(FundingCaseInfoGetSubscriber::class)
+    ->addTag('kernel.event_subscriber');
+  $container->autowire(FundingCaseInfoGetFieldsSubscriber::class)
     ->addTag('kernel.event_subscriber');
 
   $container->autowire(FundingCaseTypeGetFieldsSubscriber::class)
