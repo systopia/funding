@@ -24,14 +24,14 @@ declare(strict_types = 1);
 namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 
 use Civi\Api4\Generic\Result;
-use Civi\Funding\Event\Remote\ApplicationProcess\GetFormEvent;
+use Civi\Funding\Event\Remote\ApplicationProcess\GetApplicationFormEvent;
 use Civi\RemoteTools\Form\JsonForms\JsonFormsElement;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
 use Webmozart\Assert\Assert;
 
 /**
  * @covers \Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetFormAction
- * @covers \Civi\Funding\Event\Remote\ApplicationProcess\GetFormEvent
+ * @covers \Civi\Funding\Event\Remote\ApplicationProcess\GetApplicationFormEvent
  * @covers \Civi\Funding\Event\Remote\AbstractFundingGetFormEvent
  */
 final class GetFormActionTest extends AbstractFormActionTest {
@@ -58,9 +58,9 @@ final class GetFormActionTest extends AbstractFormActionTest {
       ->method('dispatch')
       ->withConsecutive(
         [
-          GetFormEvent::getEventName('RemoteFundingApplicationProcess', 'getForm'),
+          GetApplicationFormEvent::getEventName('RemoteFundingApplicationProcess', 'getForm'),
           static::callback(
-            function (GetFormEvent $event) use ($jsonSchema, $uiSchema): bool {
+            function (GetApplicationFormEvent $event) use ($jsonSchema, $uiSchema): bool {
               static::assertSame(11, $event->getContactId());
               static::assertSame($this->applicationProcessValues, $event->getApplicationProcess()->toArray());
               static::assertSame($this->fundingCaseValues, $event->getFundingCase()->toArray());
@@ -75,12 +75,12 @@ final class GetFormActionTest extends AbstractFormActionTest {
             }),
         ],
         [
-          GetFormEvent::getEventName('RemoteFundingApplicationProcess'),
-          static::isInstanceOf(GetFormEvent::class),
+          GetApplicationFormEvent::getEventName('RemoteFundingApplicationProcess'),
+          static::isInstanceOf(GetApplicationFormEvent::class),
         ],
         [
-          GetFormEvent::getEventName(),
-          static::isInstanceOf(GetFormEvent::class),
+          GetApplicationFormEvent::getEventName(),
+          static::isInstanceOf(GetApplicationFormEvent::class),
         ]
       );
 

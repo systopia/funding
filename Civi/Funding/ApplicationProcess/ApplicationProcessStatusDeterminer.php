@@ -24,19 +24,23 @@ namespace Civi\Funding\ApplicationProcess;
  */
 class ApplicationProcessStatusDeterminer {
 
+  private const STATUS_FOR_NEW_MAP = [
+    'save' => 'new',
+  ];
+
   public function getStatusForNew(string $action): string {
-    if ('save' === $action) {
-      return 'new';
+    $status = self::STATUS_FOR_NEW_MAP[$action] ?? NULL;
+    if (NULL === $status) {
+      throw new \InvalidArgumentException(sprintf(
+        'Could not determine application process status for action "%s"',
+        $action
+      ));
     }
 
-    throw new \InvalidArgumentException(sprintf(
-      'Could not determine application process status for action "%s"',
-      $action
-    ));
+    return $status;
   }
 
   public function getStatus(string $currentStatus, string $action): string {
-
     if ('save' === $action) {
       return $currentStatus;
     }

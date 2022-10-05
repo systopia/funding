@@ -21,7 +21,7 @@ namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
-use Civi\Funding\Event\Remote\ApplicationProcess\ValidateFormEvent;
+use Civi\Funding\Event\Remote\ApplicationProcess\ValidateApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingEvents;
 use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
 use Webmozart\Assert\Assert;
@@ -74,8 +74,11 @@ final class ValidateFormAction extends AbstractFormAction {
   /**
    * @throws \API_Exception
    */
-  private function createEvent(): ValidateFormEvent {
-    return ValidateFormEvent::fromApiRequest($this, $this->createEventParams($this->getApplicationProcessId()));
+  private function createEvent(): ValidateApplicationFormEvent {
+    return ValidateApplicationFormEvent::fromApiRequest(
+      $this,
+      $this->createEventParams($this->getApplicationProcessId())
+    );
   }
 
   public function getApplicationProcessId(): int {

@@ -17,38 +17,31 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet;
+namespace Civi\Funding\EntityFactory;
 
-use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
-use Civi\Funding\Form\Validation\FormValidatorInterface;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 
-abstract class AbstractNewApplicationFormSubscriberTest extends TestCase {
+/**
+ * @phpstan-type fundingProgramValuesT array{
+ *   id?: int,
+ *   title?: string,
+ *   start_date?: string,
+ *   end_date?: string,
+ *   requests_start_date?: string,
+ *   requests_end_date?: string,
+ *   currency?: string,
+ *   budget?: float|null,
+ *   permissions?: array<string>,
+ * }
+ */
+final class FundingProgramFactory {
 
   /**
-   * @var \Civi\Funding\Form\Validation\FormValidatorInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @phpstan-param fundingProgramValuesT $values
    */
-  protected MockObject $validatorMock;
-
-  protected function setUp(): void {
-    parent::setUp();
-    $this->validatorMock = $this->createMock(FormValidatorInterface::class);
-  }
-
-  protected function createFundingCaseType(string $fundingCaseTypeName): FundingCaseTypeEntity {
-    return FundingCaseTypeEntity::fromArray([
-      'id' => 3,
-      'title' => 'TestFundingCaseType',
-      'name' => $fundingCaseTypeName,
-      'properties' => [],
-    ]);
-  }
-
-  protected function createFundingProgram(): FundingProgramEntity {
-    return FundingProgramEntity::fromArray([
-      'id' => 2,
+  public static function createFundingProgram(array $values = []): FundingProgramEntity {
+    return FundingProgramEntity::fromArray($values + [
+      'id' => 4,
       'title' => 'TestFundingProgram',
       'start_date' => '2022-10-22',
       'end_date' => '2023-10-22',

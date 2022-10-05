@@ -13,20 +13,18 @@ use Civi\Funding\Api4\Action\Remote\FundingCase\GetNewApplicationFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\SubmitNewApplicationFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\ValidateNewApplicationFormAction;
 use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
+use Civi\Funding\ApplicationProcess\ApplicationProcessActionsDeterminer;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\ApplicationProcessStatusDeterminer;
 use Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager;
 use Civi\Funding\Contact\FundingRemoteContactIdResolver;
 use Civi\Funding\Contact\FundingRemoteContactIdResolverInterface;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessModificationDateSubscriber;
+use Civi\Funding\EventSubscriber\Form\GetApplicationFormSubscriber;
 use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1ApplicationCostItemSubscriber;
 use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1ApplicationResourcesItemSubscriber;
-use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1GetApplicationFormSubscriber;
-use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1GetNewApplicationFormSubscriber;
-use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1SubmitApplicationFormSubscriber;
-use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1SubmitNewApplicationFormSubscriber;
-use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1ValidateApplicationFormSubscriber;
-use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1ValidateNewApplicationFormSubscriber;
+use Civi\Funding\EventSubscriber\Form\SubmitApplicationFormSubscriber;
+use Civi\Funding\EventSubscriber\Form\ValidateApplicationFormSubscriber;
 use Civi\Funding\EventSubscriber\FundingCase\AddFundingCasePermissionsSubscriber;
 use Civi\Funding\EventSubscriber\FundingCase\FundingCaseGetPossiblePermissionsSubscriber;
 use Civi\Funding\EventSubscriber\FundingCase\FundingCasePermissionsGetSubscriber;
@@ -34,16 +32,25 @@ use Civi\Funding\EventSubscriber\FundingProgram\FundingProgramGetPossiblePermiss
 use Civi\Funding\EventSubscriber\FundingProgram\FundingProgramPermissionsGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessGetFieldsSubscriber;
-use Civi\Funding\EventSubscriber\Remote\FundingCaseInfoGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseGetFieldsSubscriber;
+use Civi\Funding\EventSubscriber\Remote\FundingCaseInfoGetFieldsSubscriber;
+use Civi\Funding\EventSubscriber\Remote\FundingCaseInfoGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseTypeDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseTypeGetByFundingProgramIdSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseTypeGetFieldsSubscriber;
-use Civi\Funding\EventSubscriber\Remote\FundingCaseInfoGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingProgramDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingProgramGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingRequestInitSubscriber;
+use Civi\Funding\Form\ApplicationFormFactoryCollection;
+use Civi\Funding\Form\ApplicationFormFactoryInterface;
+use Civi\Funding\Form\Handler\GetApplicationFormHandler;
+use Civi\Funding\Form\Handler\GetApplicationFormHandlerInterface;
+use Civi\Funding\Form\Handler\SubmitApplicationFormHandler;
+use Civi\Funding\Form\Handler\SubmitApplicationFormHandlerInterface;
+use Civi\Funding\Form\Handler\ValidateApplicationFormHandler;
+use Civi\Funding\Form\Handler\ValidateApplicationFormHandlerInterface;
+use Civi\Funding\Form\SonstigeAktivitaet\AVK1FormFactory;
 use Civi\Funding\Form\Validation\FormValidator;
 use Civi\Funding\Form\Validation\FormValidatorInterface;
 use Civi\Funding\Form\Validation\OpisValidatorFactory;
@@ -76,6 +83,7 @@ use CRM_Funding_ExtensionUtil as E;
 use Opis\JsonSchema\Validator;
 use Psr\SimpleCache\CacheInterface;
 use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
+use Symfony\Component\DependencyInjection\Argument\ServiceLocatorArgument;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -227,24 +235,25 @@ function funding_civicrm_container(ContainerBuilder $container): void {
     ->setLazy(TRUE);
   $container->autowire(ApplicationProcessDAOGetSubscriber::class)
     ->addTag('kernel.event_subscriber');
-  $container->autowire(ApplicationProcessStatusDeterminer::class)
-    ->addTag('event_subscriber');
 
-  $container->autowire(AVK1GetNewApplicationFormSubscriber::class)
-    ->addTag('kernel.event_subscriber');
-  $container->autowire(AVK1SubmitNewApplicationFormSubscriber::class)
-    ->addTag('kernel.event_subscriber')
-    ->setLazy(TRUE);
-  $container->autowire(AVK1ValidateNewApplicationFormSubscriber::class)
-    ->addTag('kernel.event_subscriber')
-    ->setLazy(TRUE);
+  $container->register(ApplicationFormFactoryInterface::class, ApplicationFormFactoryCollection::class)
+    ->addArgument(new ServiceLocatorArgument(
+      new TaggedIteratorArgument('funding.form_factory', 'funding_case_type', 'getSupportedFundingCaseType', TRUE)
+    ));
+  $container->autowire(ApplicationProcessActionsDeterminer::class);
+  $container->autowire(ApplicationProcessStatusDeterminer::class);
 
-  $container->autowire(AVK1GetApplicationFormSubscriber::class)
-    ->addTag('kernel.event_subscriber');
-  $container->autowire(AVK1ValidateApplicationFormSubscriber::class)
+  $container->autowire(GetApplicationFormHandlerInterface::class, GetApplicationFormHandler::class);
+  $container->autowire(ValidateApplicationFormHandlerInterface::class, ValidateApplicationFormHandler::class);
+  $container->autowire(SubmitApplicationFormHandlerInterface::class, SubmitApplicationFormHandler::class);
+
+  $container->autowire(GetApplicationFormSubscriber::class)
     ->addTag('kernel.event_subscriber')
     ->setLazy(TRUE);
-  $container->autowire(AVK1SubmitApplicationFormSubscriber::class)
+  $container->autowire(ValidateApplicationFormSubscriber::class)
+    ->addTag('kernel.event_subscriber')
+    ->setLazy(TRUE);
+  $container->autowire(SubmitApplicationFormSubscriber::class)
     ->addTag('kernel.event_subscriber')
     ->setLazy(TRUE);
 
@@ -256,6 +265,8 @@ function funding_civicrm_container(ContainerBuilder $container): void {
     ->addTag('kernel.event_subscriber')
     ->setLazy(TRUE);
 
+  $container->autowire(AVK1FormFactory::class)
+    ->addTag('funding.form_factory');
   $container->autowire(AVK1ApplicationCostItemsFactory::class);
   $container->autowire(AVK1ApplicationResourcesItemsFactory::class);
 

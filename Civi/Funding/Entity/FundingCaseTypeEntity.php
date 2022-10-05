@@ -24,7 +24,7 @@ namespace Civi\Funding\Entity;
  *   id?: int,
  *   title: string,
  *   name: string,
- *   properties: array<string, mixed>
+ *   properties: array<string, mixed>,
  * }
  *
  * @phpstan-method fundingCaseTypeT toArray()

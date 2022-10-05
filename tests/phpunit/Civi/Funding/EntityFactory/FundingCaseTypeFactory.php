@@ -17,30 +17,29 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Event\Remote\FundingCase;
+namespace Civi\Funding\EntityFactory;
 
 use Civi\Funding\Entity\FundingCaseTypeEntity;
-use Civi\Funding\Entity\FundingProgramEntity;
-use Civi\Funding\Event\Remote\AbstractFundingSubmitFormEvent;
 
-final class SubmitNewApplicationFormEvent extends AbstractFundingSubmitFormEvent {
+/**
+ * @phpstan-type fundingCaseTypeValuesT array{
+ *   id?: int,
+ *   title?: string,
+ *   name?: string,
+ *   properties?: array<string, mixed>,
+ * }
+ */
+final class FundingCaseTypeFactory {
 
-  protected FundingCaseTypeEntity $fundingCaseType;
-
-  protected FundingProgramEntity $fundingProgram;
-
-  public function getFundingCaseType(): FundingCaseTypeEntity {
-    return $this->fundingCaseType;
-  }
-
-  public function getFundingProgram(): FundingProgramEntity {
-    return $this->fundingProgram;
-  }
-
-  protected function getRequiredParams(): array {
-    return array_merge(parent::getRequiredParams(), [
-      'fundingCaseType',
-      'fundingProgram',
+  /**
+   * @phpstan-param fundingCaseTypeValuesT $values
+   */
+  public static function createFundingCaseType(array $values = []): FundingCaseTypeEntity {
+    return FundingCaseTypeEntity::fromArray([
+      'id' => 5,
+      'title' => 'Test Funding Case Type',
+      'name' => 'TestFundingCaseType',
+      'properties' => [],
     ]);
   }
 

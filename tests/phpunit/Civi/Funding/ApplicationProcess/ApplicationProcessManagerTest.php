@@ -31,6 +31,7 @@ use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
+use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
 use Civi\Funding\Util\TestUtil;
 use Civi\RemoteTools\Api4\Api4;
 use Civi\Test;
@@ -109,29 +110,24 @@ final class ApplicationProcessManagerTest extends TestCase implements HeadlessIn
       ]
     );
 
-    $applicationProcess = $this->applicationProcessManager->create($contact['id'], [
-      'funding_case' => $fundingCase,
-      'status' => 'new',
-      'title' => 'Title',
-      'short_description' => 'Description',
-      'request_data' => ['foo' => 'bar'],
-      'amount_requested' => 1.2,
-      'end_date' => '2022-09-26 01:02:03',
-    ]);
+    $validatedData = new ValidatedApplicationDataMock();
+    $applicationProcess = $this->applicationProcessManager->create(
+      $contact['id'], $fundingCase, 'test_status', $validatedData
+    );
 
     static::assertGreaterThan(0, $applicationProcess->getId());
     static::assertEquals([
       'id' => $applicationProcess->getId(),
       'funding_case_id' => $fundingCase->getId(),
-      'status' => 'new',
-      'title' => 'Title',
-      'short_description' => 'Description',
-      'request_data' => ['foo' => 'bar'],
-      'amount_requested' => 1.2,
+      'status' => 'test_status',
+      'title' => ValidatedApplicationDataMock::TITLE,
+      'short_description' => ValidatedApplicationDataMock::SHORT_DESCRIPTION,
+      'request_data' => ValidatedApplicationDataMock::APPLICATION_DATA,
+      'amount_requested' => ValidatedApplicationDataMock::AMOUNT_REQUESTED,
       'creation_date' => date('Y-m-d H:i:s'),
       'modification_date' => date('Y-m-d H:i:s'),
-      'start_date' => NULL,
-      'end_date' => '2022-09-26 01:02:03',
+      'start_date' => ValidatedApplicationDataMock::START_DATE,
+      'end_date' => ValidatedApplicationDataMock::END_DATE,
       'amount_granted' => NULL,
       'granted_budget' => NULL,
       'is_review_content' => NULL,

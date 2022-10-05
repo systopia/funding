@@ -19,8 +19,10 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\SonstigeAktivitaet;
 
+use Civi\Funding\Form\Traits\AssertFormTrait;
+use Civi\RemoteTools\Form\JsonForms\Control\JsonFormsHidden;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchemaString;
+use Civi\RemoteTools\Form\JsonSchema\JsonSchemaInteger;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -28,35 +30,34 @@ use PHPUnit\Framework\TestCase;
  */
 final class AVK1FormExistingTest extends TestCase {
 
-  /**
-   * @phpstan-var array<string, string>
-   */
-  private array $permissionActionMap = [
-    'modify_application' => 'save',
-    'apply_application' => 'apply',
-  ];
+  use AssertFormTrait;
 
-  public function testPermission(): void {
-    foreach ($this->permissionActionMap as $permission => $action) {
-      $form = new AVK1FormExisting(new \DateTime('2022-08-24'), new \DateTime('2022-08-25'),
-        '€', 2, [$permission], []);
-
-      $jsonSchema = $form->getJsonSchema();
-      $properties = $jsonSchema->getKeywordValue('properties');
-      static::assertInstanceOf(JsonSchema::class, $properties);
-      static::assertEquals(new JsonSchemaString(['enum' => [$action]]), $properties->getKeywordValue('action'));
-    }
-  }
-
-  public function testPermissionAll(): void {
+  public function test(): void {
     $form = new AVK1FormExisting(new \DateTime('2022-08-24'), new \DateTime('2022-08-25'),
-      '€', 2, array_keys($this->permissionActionMap), []);
+      '€', 2, ['save' => 'Save'], FALSE, []);
 
     $jsonSchema = $form->getJsonSchema();
     $properties = $jsonSchema->getKeywordValue('properties');
     static::assertInstanceOf(JsonSchema::class, $properties);
-    static::assertEquals(new JsonSchemaString(['enum' => array_values($this->permissionActionMap)]),
-      $properties->getKeywordValue('action'));
+    static::assertEquals(
+      new JsonSchemaInteger(['const' => 2, 'readOnly' => TRUE]),
+      $properties->getKeywordValue('applicationProcessId')
+    );
+
+    static::assertFalse($form->isReadOnly());
+    static::assertScopesExist($jsonSchema->toStdClass(), $form->getUiSchema());
+
+    static::assertControlInSchemaEquals(
+      new JsonFormsHidden('#/properties/applicationProcessId'),
+      $form->getUiSchema()
+    );
+  }
+
+  public function testReadOnly(): void {
+    $form = new AVK1FormExisting(new \DateTime('2022-08-24'), new \DateTime('2022-08-25'),
+      '€', 2, ['save' => 'Save'], TRUE, []);
+
+    static::assertTrue($form->isReadOnly());
   }
 
 }

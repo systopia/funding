@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\Traits;
 
+use Civi\Funding\Util\FormTestUtil;
 use Civi\RemoteTools\Form\JsonForms\Control\JsonFormsArray;
 use Civi\RemoteTools\Form\JsonForms\JsonFormsControl;
 use Civi\RemoteTools\Form\JsonForms\JsonFormsElement;
@@ -63,21 +64,16 @@ trait AssertFormTrait {
     }
   }
 
-  public static function assertScopeExists(string $scope, JsonFormsElement $uiSchema): void {
-    $elementQueue = new \SplQueue();
-    $elementQueue->push($uiSchema);
-    while (($element = $elementQueue->pop()) !== NULL) {
-      if ($element instanceof JsonFormsControl) {
-        if ($scope === $element->getScope()) {
-          return;
-        }
-      }
-      elseif ($element instanceof JsonFormsLayout) {
-        array_map(fn ($element) => $elementQueue->push($element), $element->getElements());
-      }
-    }
+  public static function assertControlInSchemaEquals(JsonFormsControl $expected, JsonFormsElement $uiSchema): void {
+    $actual = FormTestUtil::getFirstControlWithScope($expected->getScope(), $uiSchema);
+    Assert::assertEquals($expected, $actual);
+  }
 
-    Assert::fail(sprintf('Scope "%s" does not exist in UI schema', $scope));
+  public static function assertScopeExists(string $scope, JsonFormsElement $uiSchema): void {
+    Assert::assertNotNull(
+      FormTestUtil::getFirstControlWithScope($scope, $uiSchema),
+      sprintf('Scope "%s" does not exist in UI schema', $scope)
+    );
   }
 
   /**

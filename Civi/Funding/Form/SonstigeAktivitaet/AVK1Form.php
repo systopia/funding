@@ -19,10 +19,10 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\SonstigeAktivitaet;
 
+use Civi\Funding\Form\AbstractApplicationForm;
 use Civi\Funding\Form\SonstigeAktivitaet\JsonSchema\AVK1JsonSchema;
 use Civi\Funding\Form\SonstigeAktivitaet\UISchema\AVK1UiSchema;
 use Civi\RemoteTools\Form\JsonForms\Control\JsonFormsHidden;
-use Civi\RemoteTools\Form\RemoteForm;
 use Civi\RemoteTools\Form\JsonForms\Control\JsonFormsSubmitButton;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchemaString;
 
@@ -30,17 +30,25 @@ use Civi\RemoteTools\Form\JsonSchema\JsonSchemaString;
  * This implements the "AV-K1" form to apply for a funding for a
  * "Sonstige Aktivität" in the "Kinder- und Jugendplan des Bundes (KJP)".
  * Because it is a specific German form strings are not translated.
+ *
+ * @method AVK1UiSchema getUiSchema()
+ * @method AVK1JsonSchema getJsonSchema()
  */
-class AVK1Form extends RemoteForm {
+class AVK1Form extends AbstractApplicationForm {
 
   /**
-   * @param string $currency
-   * @param array<string, mixed> $data
-   * @param array<string, string> $submitActions Map of action names to button labels.
-   * @param array<string, \Civi\RemoteTools\Form\JsonSchema\JsonSchema> $hiddenProperties
+   * @phpstan-param array<string, string> $submitActions
+   *   Map of action names to button labels.
+   * @phpstan-param array<string, \Civi\RemoteTools\Form\JsonSchema\JsonSchema> $hiddenProperties
+   * @phpstan-param array<string, mixed> $data
    */
-  public function __construct(\DateTimeInterface $minBegin, \DateTimeInterface $maxEnd,
-    string $currency, array $data, array $submitActions, array $hiddenProperties = []
+  public function __construct(
+    \DateTimeInterface $minBegin,
+    \DateTimeInterface $maxEnd,
+    string $currency,
+    array $submitActions,
+    array $hiddenProperties,
+    array $data
   ) {
     $hiddenFields = [];
     foreach (array_keys($hiddenProperties) as $property) {

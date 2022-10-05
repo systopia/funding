@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Entity;
 
+use Civi\Funding\Util\DateTimeUtil;
+
 /**
  * Wrapper class for the entity arrays returned by CiviCRM API. This class
  * requires that the entity has a primary key named "id" of type unsigned int.
@@ -84,15 +86,15 @@ abstract class AbstractEntity {
   }
 
   protected static function toDateTimeOrNull(?string $dateTimeStr): ?\DateTime {
-    return NULL === $dateTimeStr ? NULL : new \DateTime($dateTimeStr);
+    return DateTimeUtil::toDateTimeOrNull($dateTimeStr);
   }
 
   protected static function toDateTimeStr(\DateTimeInterface $dateTime): string {
-    return $dateTime->format('Y-m-d H:i:s');
+    return DateTimeUtil::toDateTimeStr($dateTime);
   }
 
   protected static function toDateTimeStrOrNull(?\DateTimeInterface $dateTime): ?string {
-    return NULL === $dateTime ? NULL : $dateTime->format('Y-m-d H:i:s');
+    return DateTimeUtil::toDateTimeStrOrNull($dateTime);
   }
 
 }
