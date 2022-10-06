@@ -27,6 +27,7 @@ class JsonFormsSubmitButton extends JsonFormsControl {
     parent::__construct($scope, $label, NULL, NULL, NULL, [
       'type' => 'submit',
       'data' => $data,
+      'readonly' => FALSE,
     ]);
   }
 
