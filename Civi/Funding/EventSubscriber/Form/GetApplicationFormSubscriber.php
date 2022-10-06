@@ -24,7 +24,7 @@ use Civi\Funding\Event\Remote\FundingCase\GetNewApplicationFormEvent;
 use Civi\Funding\Form\Handler\GetApplicationFormHandlerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-final class GetApplicationFormSubscriber implements EventSubscriberInterface {
+class GetApplicationFormSubscriber implements EventSubscriberInterface {
 
   private GetApplicationFormHandlerInterface $formHandler;
 
