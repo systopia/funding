@@ -34,7 +34,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Civi\Api4\FundingApplicationProcess
- * @covers \Civi\Funding\Api4\Action\FundingApplication\GetAction
+ * @covers \Civi\Funding\Api4\Action\FundingApplicationProcess\GetAction
  *
  * @group headless
  */

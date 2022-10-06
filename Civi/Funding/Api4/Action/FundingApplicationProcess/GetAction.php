@@ -17,7 +17,7 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Api4\Action\FundingApplication;
+namespace Civi\Funding\Api4\Action\FundingApplicationProcess;
 
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\DAOGetAction;

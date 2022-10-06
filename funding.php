@@ -139,7 +139,7 @@ function funding_civicrm_container(ContainerBuilder $container): void {
   $container->autowire(ApplicationCostItemManager::class);
   $container->autowire(ApplicationResourcesItemManager::class);
 
-  $container->autowire(\Civi\Funding\Api4\Action\FundingApplication\GetAction::class)
+  $container->autowire(\Civi\Funding\Api4\Action\FundingApplicationProcess\GetAction::class)
     ->setPublic(TRUE)
     ->setShared(FALSE);
 
