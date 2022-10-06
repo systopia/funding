@@ -23,7 +23,7 @@ use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-final class ApplicationProcessModificationDateSubscriber implements EventSubscriberInterface {
+class ApplicationProcessModificationDateSubscriber implements EventSubscriberInterface {
 
   private FundingCaseManager $fundingCaseManager;
 

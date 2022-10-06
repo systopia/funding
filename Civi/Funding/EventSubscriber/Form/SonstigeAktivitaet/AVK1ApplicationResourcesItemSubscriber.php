@@ -47,7 +47,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  *   }>,
  * }
  */
-final class AVK1ApplicationResourcesItemSubscriber implements EventSubscriberInterface {
+class AVK1ApplicationResourcesItemSubscriber implements EventSubscriberInterface {
 
   private ApplicationResourcesItemManager $applicationResourcesItemManager;
 

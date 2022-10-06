@@ -60,7 +60,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  *   versicherungTeilnehmer: float,
  * }
  */
-final class AVK1ApplicationCostItemSubscriber implements EventSubscriberInterface {
+class AVK1ApplicationCostItemSubscriber implements EventSubscriberInterface {
 
   private ApplicationCostItemManager $applicationCostItemManager;
 
