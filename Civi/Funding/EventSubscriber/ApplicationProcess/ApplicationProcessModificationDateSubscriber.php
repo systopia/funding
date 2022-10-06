@@ -34,7 +34,7 @@ final class ApplicationProcessModificationDateSubscriber implements EventSubscri
   /**
    * @inheritDoc
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     return [ApplicationProcessUpdatedEvent::class => 'onUpdated'];
   }
 
