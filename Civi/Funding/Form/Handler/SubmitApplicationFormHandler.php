@@ -43,8 +43,6 @@ final class SubmitApplicationFormHandler implements SubmitApplicationFormHandler
 
   private FormValidatorInterface $validator;
 
-  /**
-   */
   public function __construct(
     ApplicationProcessManager $applicationProcessManager,
     ApplicationFormFactoryInterface $formFactory,
