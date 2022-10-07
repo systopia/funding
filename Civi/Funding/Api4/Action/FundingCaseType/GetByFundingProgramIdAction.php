@@ -55,7 +55,7 @@ final class GetByFundingProgramIdAction extends AbstractAction {
    * @throws \API_Exception
    */
   public function _run(Result $result): void {
-    if (!$this->existsFundingProgram()) {
+    if (!$this->fundingProgramExists()) {
       $this->logger->debug(sprintf('A funding program with id "%d" does not exist', $this->fundingProgramId));
     }
     elseif (!$this->hasFundingProgramAccess()) {
@@ -74,14 +74,14 @@ final class GetByFundingProgramIdAction extends AbstractAction {
     }
   }
 
-  private function existsFundingProgram(): bool {
+  private function fundingProgramExists(): bool {
     $action = (new DAOGetAction(FundingProgram::_getEntityName(), 'get'))
       ->selectRowCount()
       ->addWhere('id', '=', $this->fundingProgramId);
 
     $result = $this->api4->executeAction($action);
     if ($this->getDebug()) {
-      $this->_debugOutput['existsFundingProgram'] = $result->debug;
+      $this->_debugOutput['fundingProgramExists'] = $result->debug;
     }
 
     return 1 === $result->countMatched();
