@@ -17,27 +17,15 @@
 
 declare(strict_types = 1);
 
-namespace Civi\RemoteTools\Form\JsonForms\Control;
-
-use Civi\RemoteTools\Form\JsonForms\JsonFormsControl;
+namespace Civi\Funding\ApplicationProcess;
 
 /**
- * Custom control that creates a submit button.
- *
- * @codeCoverageIgnore
+ * Determines the status of an application process for a given action.
  */
-class JsonFormsSubmitButton extends JsonFormsControl {
+interface ApplicationProcessStatusDeterminerInterface {
 
-  public function __construct(string $scope, string $data, string $label, ?string $confirm = NULL) {
-    $options = [
-      'type' => 'submit',
-      'data' => $data,
-      'readonly' => FALSE,
-    ];
-    if (NULL !== $confirm) {
-      $options['confirm'] = $confirm;
-    }
-    parent::__construct($scope, $label, NULL, NULL, NULL, $options);
-  }
+  public function getStatusForNew(string $action): string;
+
+  public function getStatus(string $currentStatus, string $action): string;
 
 }

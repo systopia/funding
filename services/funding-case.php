@@ -26,13 +26,18 @@ use Civi\Funding\Api4\Action\Remote\FundingCase\GetNewApplicationFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\SubmitNewApplicationFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\ValidateNewApplicationFormAction;
 use Civi\Funding\EventSubscriber\FundingCase\AddFundingCasePermissionsSubscriber;
+use Civi\Funding\EventSubscriber\FundingCase\ApplicationProcessDeletedSubscriber;
+use Civi\Funding\EventSubscriber\FundingCase\ApplicationProcessStatusSubscriber;
 use Civi\Funding\EventSubscriber\FundingCase\FundingCaseGetPossiblePermissionsSubscriber;
 use Civi\Funding\EventSubscriber\FundingCase\FundingCasePermissionsGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseGetFieldsSubscriber;
 use Civi\Funding\FundingCase\FundingCaseManager;
+use Civi\Funding\FundingCase\FundingCaseStatusDeterminer;
+use Civi\Funding\FundingCase\FundingCaseStatusDeterminerInterface;
 
 $container->autowire(FundingCaseManager::class);
+$container->autowire(FundingCaseStatusDeterminerInterface::class, FundingCaseStatusDeterminer::class);
 
 $container->autowire(GetAction::class)
   ->setPublic(TRUE)
@@ -51,6 +56,13 @@ $container->autowire(FundingCaseGetPossiblePermissionsSubscriber::class)
   ->addTag('kernel.event_subscriber');
 $container->autowire(AddFundingCasePermissionsSubscriber::class)
   ->addTag('kernel.event_subscriber');
+
+$container->autowire(ApplicationProcessStatusSubscriber::class)
+  ->addTag('kernel.event_subscriber')
+  ->setLazy(TRUE);
+$container->autowire(ApplicationProcessDeletedSubscriber::class)
+  ->addTag('kernel.event_subscriber')
+  ->setLazy(TRUE);
 
 $container->autowire(GetNewApplicationFormAction::class)
   ->setPublic(TRUE)

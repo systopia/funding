@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
+use Civi\API\Exception\UnauthorizedException;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Fixtures\ApplicationProcessFixture;
 use Civi\Funding\Fixtures\ContactFixture;
@@ -34,6 +35,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Civi\Api4\FundingApplicationProcess
+ * @covers \Civi\Funding\Api4\Action\FundingApplicationProcess\DeleteAction
  * @covers \Civi\Funding\Api4\Action\FundingApplicationProcess\GetAction
  *
  * @group headless
@@ -44,6 +46,44 @@ final class FundingApplicationProcessTest extends TestCase implements HeadlessIn
     return Test::headless()
       ->installMe(__DIR__)
       ->apply();
+  }
+
+  public function testDelete(): void {
+    $contact = ContactFixture::addIndividual();
+    $fundingCase = $this->createFundingCase();
+    $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId());
+
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['delete_application']);
+
+    \CRM_Core_Session::singleton()->set('userID', $contact['id']);
+    $result = FundingApplicationProcess::delete()->addWhere('id', '=', $applicationProcess->getId())->execute();
+    static::assertCount(1, $result);
+    static::assertSame(['id' => $applicationProcess->getId()], $result->first());
+  }
+
+  public function testDeleteMissingPermission(): void {
+    $contact = ContactFixture::addIndividual();
+    $fundingCase = $this->createFundingCase();
+    $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId());
+
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['some_permission']);
+
+    \CRM_Core_Session::singleton()->set('userID', $contact['id']);
+    $this->expectException(UnauthorizedException::class);
+    $this->expectExceptionMessage('Deletion is not allowed');
+
+    FundingApplicationProcess::delete()->addWhere('id', '=', $applicationProcess->getId())->execute();
+  }
+
+  public function testDeleteWithoutAnyPermission(): void {
+    $contact = ContactFixture::addIndividual();
+    $fundingCase = $this->createFundingCase();
+    $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId());
+
+    // Contact does not now that application process exists without any permission.
+    \CRM_Core_Session::singleton()->set('userID', $contact['id']);
+    $result = FundingApplicationProcess::delete()->addWhere('id', '=', $applicationProcess->getId())->execute();
+    static::assertCount(0, $result);
   }
 
   public function testGet(): void {

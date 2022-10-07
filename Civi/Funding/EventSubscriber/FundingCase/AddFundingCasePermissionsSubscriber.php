@@ -61,7 +61,7 @@ final class AddFundingCasePermissionsSubscriber implements EventSubscriberInterf
    *
    * @phpstan-return array<string>
    */
-  public function getCreatingContactPermissions(FundingCaseCreatedEvent $event): array {
+  private function getCreatingContactPermissions(FundingCaseCreatedEvent $event): array {
     // TODO: Initial permissions of the creating contact?
     return array_merge(['modify_application'], array_filter($event->getFundingProgram()->getPermissions(),
       fn (string $permission) => 'create_application' !== $permission));

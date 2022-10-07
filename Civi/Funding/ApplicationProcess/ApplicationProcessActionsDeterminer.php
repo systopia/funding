@@ -19,51 +19,57 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess;
 
-use CRM_Funding_ExtensionUtil as E;
+final class ApplicationProcessActionsDeterminer implements ApplicationProcessActionsDeterminerInterface {
 
-final class ApplicationProcessActionsDeterminer {
+  private const STATUS_PERMISSION_ACTIONS_MAP = [
+    NULL => [
+      'create_application' => ['save'],
+      'apply_application' => ['apply'],
+    ],
+    'new' => [
+      'modify_application' => ['save'],
+      'apply_application' => ['apply'],
+      'delete_application' => ['delete'],
+    ],
+    'applied' => [
+      'modify_application' => ['modify'],
+      'withdraw_application' => ['withdraw'],
+    ],
+    'draft' => [
+      'modify_application' => ['save'],
+      'apply_application' => ['apply'],
+      'withdraw_application' => ['withdraw'],
+    ],
+  ];
 
-  /**
-   * @phpstan-param array<string> $permissions
-   *
-   * @phpstan-return array<string, string>
-   *   Action mapped to label.
-   */
   public function getActions(string $status, array $permissions): array {
-    $actions = [];
-    if (in_array('modify_application', $permissions, TRUE)) {
-      $actions['save'] = E::ts('Save');
-    }
-    if (in_array('apply_application', $permissions, TRUE)) {
-      $actions['apply'] = E::ts('Apply');
-    }
+    return $this->doGetActions($status, $permissions);
+  }
 
-    return $actions;
+  public function getActionsForNew(array $permissions): array {
+    return $this->doGetActions(NULL, $permissions);
+  }
+
+  public function isActionAllowed(string $action, string $status, array $permissions): bool {
+    return in_array($action, $this->getActions($status, $permissions), TRUE);
+  }
+
+  public function isEditAllowed(string $status, array $permissions): bool {
+    return $this->isActionAllowed('save', $status, $permissions);
   }
 
   /**
    * @phpstan-param array<string> $permissions
    *
-   * @phpstan-return array<string, string>
-   *   Action mapped to label.
+   * @phpstan-return array<string>
    */
-  public function getActionsForNew(array $permissions): array {
+  private function doGetActions(?string $status, array $permissions): array {
     $actions = [];
-    if (in_array('create_application', $permissions, TRUE)) {
-      $actions['save'] = E::ts('Save');
-    }
-    if (in_array('apply_application', $permissions, TRUE)) {
-      $actions['apply'] = E::ts('Apply');
+    foreach ($permissions as $permission) {
+      $actions = array_merge($actions, self::STATUS_PERMISSION_ACTIONS_MAP[$status][$permission] ?? []);
     }
 
-    return $actions;
-  }
-
-  /**
-   * @phpstan-param array<string> $permissions
-   */
-  public function isModifyAllowed(string $status, array $permissions): bool {
-    return in_array('modify_application', $permissions, TRUE);
+    return array_unique($actions);
   }
 
 }

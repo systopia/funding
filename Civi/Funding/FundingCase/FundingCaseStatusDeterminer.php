@@ -17,27 +17,17 @@
 
 declare(strict_types = 1);
 
-namespace Civi\RemoteTools\Form\JsonForms\Control;
+namespace Civi\Funding\FundingCase;
 
-use Civi\RemoteTools\Form\JsonForms\JsonFormsControl;
+final class FundingCaseStatusDeterminer implements FundingCaseStatusDeterminerInterface {
 
-/**
- * Custom control that creates a submit button.
- *
- * @codeCoverageIgnore
- */
-class JsonFormsSubmitButton extends JsonFormsControl {
+  private const APPLICATION_PROCESS_FINAL_STATES = [
+    'rejected',
+    'withdrawn',
+  ];
 
-  public function __construct(string $scope, string $data, string $label, ?string $confirm = NULL) {
-    $options = [
-      'type' => 'submit',
-      'data' => $data,
-      'readonly' => FALSE,
-    ];
-    if (NULL !== $confirm) {
-      $options['confirm'] = $confirm;
-    }
-    parent::__construct($scope, $label, NULL, NULL, NULL, $options);
+  public function isClosedByApplicationProcess(string $applicationProcessStatus): bool {
+    return in_array($applicationProcessStatus, self::APPLICATION_PROCESS_FINAL_STATES, TRUE);
   }
 
 }

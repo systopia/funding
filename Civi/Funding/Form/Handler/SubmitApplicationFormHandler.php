@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Form\Handler;
 
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
-use Civi\Funding\ApplicationProcess\ApplicationProcessStatusDeterminer;
+use Civi\Funding\ApplicationProcess\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\Event\Remote\AbstractFundingSubmitFormEvent;
 use Civi\Funding\Event\Remote\ApplicationProcess\SubmitApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
@@ -39,7 +39,7 @@ final class SubmitApplicationFormHandler implements SubmitApplicationFormHandler
 
   private FundingCaseManager $fundingCaseManager;
 
-  private ApplicationProcessStatusDeterminer $statusDeterminer;
+  private ApplicationProcessStatusDeterminerInterface $statusDeterminer;
 
   private FormValidatorInterface $validator;
 
@@ -47,7 +47,7 @@ final class SubmitApplicationFormHandler implements SubmitApplicationFormHandler
     ApplicationProcessManager $applicationProcessManager,
     ApplicationFormFactoryInterface $formFactory,
     FundingCaseManager $fundingCaseManager,
-    ApplicationProcessStatusDeterminer $statusDeterminer,
+    ApplicationProcessStatusDeterminerInterface $statusDeterminer,
     FormValidatorInterface $validator
   ) {
     $this->applicationProcessManager = $applicationProcessManager;
@@ -127,6 +127,14 @@ final class SubmitApplicationFormHandler implements SubmitApplicationFormHandler
       $event->getFundingCaseType(),
       $validationResult
     );
+
+    if ('delete' === $validatedData->getAction()) {
+      $this->applicationProcessManager->delete($applicationProcess, $event->getFundingCase());
+      $event->setAction($event::ACTION_CLOSE_FORM);
+
+      return;
+    }
+
     $applicationProcess->setStatus(
       $this->statusDeterminer->getStatus($applicationProcess->getStatus(), $validatedData->getAction())
     );
@@ -143,14 +151,23 @@ final class SubmitApplicationFormHandler implements SubmitApplicationFormHandler
 
     // TODO: Change message
     $event->setMessage(E::ts('Success!'));
-    $event->setForm(
-      $this->formFactory->createForm(
-        $applicationProcess,
-        $event->getFundingProgram(),
-        $event->getFundingCase(),
-        $event->getFundingCaseType(),
-      )
-    );
+    if ($this->isShouldShowForm($validatedData->getAction())) {
+      $event->setForm(
+        $this->formFactory->createForm(
+          $applicationProcess,
+          $event->getFundingProgram(),
+          $event->getFundingCase(),
+          $event->getFundingCaseType(),
+        )
+      );
+    }
+    else {
+      $event->setAction($event::ACTION_CLOSE_FORM);
+    }
+  }
+
+  private function isShouldShowForm(string $action): bool {
+    return in_array($action, ['save', 'modify'], TRUE);
   }
 
   private function mapValidationErrorsToEvent(

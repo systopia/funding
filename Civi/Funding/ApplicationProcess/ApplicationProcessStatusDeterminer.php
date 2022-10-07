@@ -19,17 +19,30 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess;
 
-/**
- * Determines the status of an application process for a given action.
- */
-class ApplicationProcessStatusDeterminer {
+final class ApplicationProcessStatusDeterminer implements ApplicationProcessStatusDeterminerInterface {
 
-  private const STATUS_FOR_NEW_MAP = [
-    'save' => 'new',
+  private const STATUS_ACTION_STATUS_MAP = [
+    NULL => [
+      'save' => 'new',
+      'apply' => 'applied',
+    ],
+    'new' => [
+      'save' => 'new',
+      'apply' => 'applied',
+    ],
+    'applied' => [
+      'modify' => 'draft',
+      'withdraw' => 'withdrawn',
+    ],
+    'draft' => [
+      'save' => 'draft',
+      'apply' => 'applied',
+      'withdraw' => 'withdrawn',
+    ],
   ];
 
   public function getStatusForNew(string $action): string {
-    $status = self::STATUS_FOR_NEW_MAP[$action] ?? NULL;
+    $status = self::STATUS_ACTION_STATUS_MAP[NULL][$action] ?? NULL;
     if (NULL === $status) {
       throw new \InvalidArgumentException(sprintf(
         'Could not determine application process status for action "%s"',
@@ -41,15 +54,18 @@ class ApplicationProcessStatusDeterminer {
   }
 
   public function getStatus(string $currentStatus, string $action): string {
-    if ('save' === $action) {
-      return $currentStatus;
+    $status = self::STATUS_ACTION_STATUS_MAP[$currentStatus][$action] ?? NULL;
+    if (NULL === $status) {
+      throw new \InvalidArgumentException(
+        sprintf(
+          'Could not determine application process status for action "%s" and current status "%s"',
+          $action,
+          $currentStatus,
+        )
+      );
     }
 
-    throw new \InvalidArgumentException(sprintf(
-      'Could not determine application process status for action "%s" and current status "%s"',
-      $action,
-      $currentStatus,
-    ));
+    return $status;
   }
 
 }

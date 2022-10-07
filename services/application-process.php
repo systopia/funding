@@ -20,14 +20,17 @@ declare(strict_types = 1);
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
+use Civi\Funding\Api4\Action\FundingApplicationProcess\DeleteAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\GetAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetFormAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\SubmitFormAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\ValidateFormAction;
 use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
 use Civi\Funding\ApplicationProcess\ApplicationProcessActionsDeterminer;
+use Civi\Funding\ApplicationProcess\ApplicationProcessActionsDeterminerInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\ApplicationProcessStatusDeterminer;
+use Civi\Funding\ApplicationProcess\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessModificationDateSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessDAOGetSubscriber;
@@ -37,6 +40,9 @@ $container->autowire(ApplicationProcessManager::class);
 $container->autowire(ApplicationCostItemManager::class);
 $container->autowire(ApplicationResourcesItemManager::class);
 
+$container->autowire(DeleteAction::class)
+  ->setPublic(TRUE)
+  ->setShared(TRUE);
 $container->autowire(GetAction::class)
   ->setPublic(TRUE)
   ->setShared(FALSE);
@@ -59,5 +65,5 @@ $container->autowire(ApplicationProcessModificationDateSubscriber::class)
 $container->autowire(ApplicationProcessDAOGetSubscriber::class)
   ->addTag('kernel.event_subscriber');
 
-$container->autowire(ApplicationProcessActionsDeterminer::class);
-$container->autowire(ApplicationProcessStatusDeterminer::class);
+$container->autowire(ApplicationProcessActionsDeterminerInterface::class, ApplicationProcessActionsDeterminer::class);
+$container->autowire(ApplicationProcessStatusDeterminerInterface::class, ApplicationProcessStatusDeterminer::class);

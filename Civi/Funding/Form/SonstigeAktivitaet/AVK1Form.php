@@ -38,8 +38,8 @@ use Civi\RemoteTools\Form\JsonSchema\JsonSchemaString;
 class AVK1Form extends AbstractApplicationForm {
 
   /**
-   * @phpstan-param array<string, string> $submitActions
-   *   Map of action names to button labels.
+   * @phpstan-param array<string, array{label: string, confirm?: string|null}> $submitActions
+   *   Map of action names to button labels and confirm messages.
    * @phpstan-param array<int, string> $possibleRecipients
    *   Map of contact IDs to names.
    * @phpstan-param array<string, \Civi\RemoteTools\Form\JsonSchema\JsonSchema> $hiddenProperties
@@ -67,8 +67,13 @@ class AVK1Form extends AbstractApplicationForm {
     $extraProperties['action'] = new JsonSchemaString(['enum' => array_keys($submitActions)]);
     $extraKeywords['required'][] = 'action';
     $submitButtons = [];
-    foreach ($submitActions as $name => $label) {
-      $submitButtons[] = new JsonFormsSubmitButton('#/properties/action', $label, $name);
+    foreach ($submitActions as $name => $action) {
+      $submitButtons[] = new JsonFormsSubmitButton(
+        '#/properties/action',
+        $name,
+        $action['label'],
+        $action['confirm'] ?? NULL
+      );
     }
 
     parent::__construct(

@@ -20,9 +20,11 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess;
 
 use Civi\Api4\FundingApplicationProcess;
+use Civi\Api4\Generic\DAODeleteAction;
 use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Event\ApplicationProcess\ApplicationProcessDeletedEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreCreateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
@@ -62,6 +64,14 @@ class ApplicationProcessManager {
   public function __construct(Api4Interface $api4, CiviEventDispatcher $eventDispatcher) {
     $this->api4 = $api4;
     $this->eventDispatcher = $eventDispatcher;
+  }
+
+  public function countByFundingCaseId(int $fundingCaseId): int {
+    $action = FundingApplicationProcess::get()
+      ->addWhere('funding_case_id', '=', $fundingCaseId)
+      ->selectRowCount();
+
+    return $this->api4->executeAction($action)->countMatched();
   }
 
   public function create(
@@ -158,6 +168,15 @@ class ApplicationProcessManager {
       $fundingCase
     );
     $this->eventDispatcher->dispatch(ApplicationProcessUpdatedEvent::class, $event);
+  }
+
+  public function delete(ApplicationProcessEntity $applicationProcess, FundingCaseEntity $fundingCase): void {
+    $action = (new DAODeleteAction(FundingApplicationProcess::_getEntityName(), 'delete'))
+      ->addWhere('id', '=', $applicationProcess->getId());
+    $this->api4->executeAction($action);
+
+    $event = new ApplicationProcessDeletedEvent($applicationProcess, $fundingCase);
+    $this->eventDispatcher->dispatch(ApplicationProcessDeletedEvent::class, $event);
   }
 
 }

@@ -36,7 +36,7 @@ final class AVK1FormNewTest extends TestCase {
 
   public function test(): void {
     $form = new AVK1FormNew(new \DateTime('2022-08-24'), new \DateTime('2022-08-25'),
-      '€', 2, 3, [1 => 'Recipient'], ['save' => 'Save'], []);
+      '€', 2, 3, [1 => 'Recipient'], ['save' => ['label' => 'Save']], []);
 
     $jsonSchema = $form->getJsonSchema();
     $properties = $jsonSchema->getKeywordValue('properties');

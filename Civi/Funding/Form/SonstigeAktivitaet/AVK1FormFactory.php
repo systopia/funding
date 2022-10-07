@@ -19,7 +19,6 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\SonstigeAktivitaet;
 
-use Civi\Funding\ApplicationProcess\ApplicationProcessActionsDeterminer;
 use Civi\Funding\Contact\FundingCaseRecipientLoaderInterface;
 use Civi\Funding\Contact\PossibleRecipientsLoaderInterface;
 use Civi\Funding\Entity\ApplicationProcessEntity;
@@ -34,12 +33,13 @@ use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingCase\ValidateNewApplicationFormEvent;
 use Civi\Funding\Form\ApplicationFormFactoryInterface;
 use Civi\Funding\Form\ApplicationFormInterface;
+use Civi\Funding\Form\ApplicationSubmitActionsFactoryInterface;
 use Civi\Funding\Form\ValidatedApplicationDataInterface;
 use Civi\Funding\Form\Validation\ValidationResult;
 
 class AVK1FormFactory implements ApplicationFormFactoryInterface {
 
-  private ApplicationProcessActionsDeterminer $actionsDeterminer;
+  private ApplicationSubmitActionsFactoryInterface $submitActionsFactory;
 
   private FundingCaseRecipientLoaderInterface $existingCaseRecipientLoader;
 
@@ -50,11 +50,11 @@ class AVK1FormFactory implements ApplicationFormFactoryInterface {
   }
 
   public function __construct(
-    ApplicationProcessActionsDeterminer $actionsDeterminer,
+    ApplicationSubmitActionsFactoryInterface $submitActionsFactory,
     FundingCaseRecipientLoaderInterface $existingCaseRecipientLoader,
     PossibleRecipientsLoaderInterface $possibleRecipientsLoader
   ) {
-    $this->actionsDeterminer = $actionsDeterminer;
+    $this->submitActionsFactory = $submitActionsFactory;
     $this->existingCaseRecipientLoader = $existingCaseRecipientLoader;
     $this->possibleRecipientsLoader = $possibleRecipientsLoader;
   }
@@ -159,10 +159,10 @@ class AVK1FormFactory implements ApplicationFormFactoryInterface {
       $fundingProgram->getCurrency(),
       $applicationProcess->getId(),
       $this->existingCaseRecipientLoader->getRecipient($fundingCase),
-      $this->actionsDeterminer->getActions(
+      $this->submitActionsFactory->createSubmitActions(
         $applicationProcess->getStatus(), $fundingCase->getPermissions()
       ),
-      !$this->actionsDeterminer->isModifyAllowed(
+      !$this->submitActionsFactory->isEditAllowed(
         $applicationProcess->getStatus(), $fundingCase->getPermissions()
       ),
       $data,
@@ -185,7 +185,7 @@ class AVK1FormFactory implements ApplicationFormFactoryInterface {
       $fundingCaseType->getId(),
       $fundingProgram->getId(),
       $this->possibleRecipientsLoader->getPossibleRecipients($contactId),
-      $this->actionsDeterminer->getActionsForNew($fundingProgram->getPermissions()),
+      $this->submitActionsFactory->createSubmitActionsForNew($fundingProgram->getPermissions()),
       $data
     );
   }

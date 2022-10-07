@@ -17,27 +17,25 @@
 
 declare(strict_types = 1);
 
-namespace Civi\RemoteTools\Form\JsonForms\Control;
+namespace Civi\Funding\Form;
 
-use Civi\RemoteTools\Form\JsonForms\JsonFormsControl;
+use CRM_Funding_ExtensionUtil as E;
 
 /**
- * Custom control that creates a submit button.
- *
  * @codeCoverageIgnore
  */
-class JsonFormsSubmitButton extends JsonFormsControl {
+final class DefaultApplicationSubmitActionsContainerFactory {
 
-  public function __construct(string $scope, string $data, string $label, ?string $confirm = NULL) {
-    $options = [
-      'type' => 'submit',
-      'data' => $data,
-      'readonly' => FALSE,
-    ];
-    if (NULL !== $confirm) {
-      $options['confirm'] = $confirm;
-    }
-    parent::__construct($scope, $label, NULL, NULL, NULL, $options);
+  public static function create(): SubmitActionsContainer {
+    $submitActionsContainer = new SubmitActionsContainer();
+    $submitActionsContainer
+      ->add('save', E::ts('Save'))
+      ->add('modify', E::ts('Modify'))
+      ->add('apply', E::ts('Apply'))
+      ->add('withdraw', E::ts('Withdraw'), E::ts('Do you really want to withdraw the application?'))
+      ->add('delete', E::ts('Delete'), E::ts('Do you really want to delete the application?'));
+
+    return $submitActionsContainer;
   }
 
 }

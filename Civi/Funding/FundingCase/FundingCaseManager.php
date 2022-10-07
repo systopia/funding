@@ -86,6 +86,13 @@ class FundingCaseManager {
     return $fundingCase;
   }
 
+  public function delete(FundingCaseEntity $fundingCase): void {
+    $action = FundingCase::delete()
+      ->addWhere('id', '=', $fundingCase->getId());
+
+    $this->api4->executeAction($action);
+  }
+
   public function get(int $id): ?FundingCaseEntity {
     $action = FundingCase::get()->addWhere('id', '=', $id);
     /** @phpstan-var fundingCaseT|null $values */
