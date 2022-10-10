@@ -131,7 +131,9 @@ final class ApplicationProcessManagerTest extends TestCase implements HeadlessIn
       'amount_granted' => NULL,
       'granted_budget' => NULL,
       'is_review_content' => NULL,
+      'reviewer_cont_contact_id' => NULL,
       'is_review_calculative' => NULL,
+      'reviewer_calc_contact_id' => NULL,
     ], TestUtil::filterCiviExtraFields($applicationProcess->toArray()));
   }
 

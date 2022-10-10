@@ -23,6 +23,8 @@ use Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\ApplicationResourcesItemEntity;
 use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\EntityFactory\ApplicationProcessFactory;
+use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreCreateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
@@ -54,11 +56,8 @@ final class AVK1ApplicationResourcesItemSubscriberTest extends TestCase {
 
   private AVK1ApplicationResourcesItemSubscriber $subscriber;
 
-  private string $now;
-
   protected function setUp(): void {
     parent::setUp();
-    $this->now = date('Y-m-d H:i:s');
     $this->applicationResourcesItemManagerMock = $this->createMock(ApplicationResourcesItemManager::class);
     $this->applicationResourcesItemsFactoryMock = $this->createMock(AVK1ApplicationResourcesItemsFactory::class);
     $this->fundingCaseTypeManagerMock = $this->createMock(FundingCaseTypeManager::class);
@@ -229,35 +228,11 @@ final class AVK1ApplicationResourcesItemSubscriberTest extends TestCase {
   }
 
   private function createFundingCase(): FundingCaseEntity {
-    return FundingCaseEntity::fromArray([
-      'funding_program_id' => 4,
-      'funding_case_type_id' => 5,
-      'recipient_contact_id' => 1,
-      'status' => 'open',
-      'creation_date' => $this->now,
-      'modification_date' => $this->now,
-      'permissions' => ['test_permission'],
-    ]);
+    return FundingCaseFactory::createFundingCase();
   }
 
   private function createApplicationProcess(): ApplicationProcessEntity {
-    return ApplicationProcessEntity::fromArray([
-      'id' => 2,
-      'funding_case_id' => 3,
-      'status' => 'new_status',
-      'title' => 'Title',
-      'short_description' => 'Description',
-      'request_data' => ['foo' => 'bar'],
-      'amount_requested' => 1.2,
-      'creation_date' => $this->now,
-      'modification_date' => $this->now,
-      'start_date' => NULL,
-      'end_date' => NULL,
-      'amount_granted' => NULL,
-      'granted_budget' => NULL,
-      'is_review_content' => NULL,
-      'is_review_calculative' => NULL,
-    ]);
+    return ApplicationProcessFactory::createApplicationProcess();
   }
 
   private function createApplicationResourcesItem(): ApplicationResourcesItemEntity {

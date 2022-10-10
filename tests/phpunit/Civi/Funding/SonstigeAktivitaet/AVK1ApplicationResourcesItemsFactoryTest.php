@@ -21,6 +21,7 @@ namespace Civi\Funding\SonstigeAktivitaet;
 
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\ApplicationResourcesItemEntity;
+use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -95,7 +96,6 @@ final class AVK1ApplicationResourcesItemsFactoryTest extends TestCase {
   }
 
   private function createApplicationProcess(): ApplicationProcessEntity {
-    $now = date('Y-m-d H:i:s');
     $finanzierung = [
       'teilnehmerbeitraege' => 100.00,
       'eigenmittel' => 10.00,
@@ -118,22 +118,8 @@ final class AVK1ApplicationResourcesItemsFactoryTest extends TestCase {
       ],
     ];
 
-    return ApplicationProcessEntity::fromArray([
-      'id' => 2,
-      'funding_case_id' => 3,
-      'status' => 'new_status',
-      'title' => 'Title',
-      'short_description' => 'Description',
+    return ApplicationProcessFactory::createApplicationProcess([
       'request_data' => ['finanzierung' => $finanzierung],
-      'amount_requested' => 1.2,
-      'creation_date' => $now,
-      'modification_date' => $now,
-      'start_date' => NULL,
-      'end_date' => NULL,
-      'amount_granted' => NULL,
-      'granted_budget' => NULL,
-      'is_review_content' => NULL,
-      'is_review_calculative' => NULL,
     ]);
   }
 

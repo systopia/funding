@@ -18,8 +18,6 @@
 SET FOREIGN_KEY_CHECKS=0;
 
 DROP TABLE IF EXISTS `civicrm_funding_app_cost_item`;
-DROP TABLE IF EXISTS `civicrm_funding_app_resources_item`;
-DROP TABLE IF EXISTS `civicrm_funding_application_process`;
 DROP TABLE IF EXISTS `civicrm_funding_program_relationship`;
 DROP TABLE IF EXISTS `civicrm_funding_program_contact_relation`;
 DROP TABLE IF EXISTS `civicrm_funding_program`;
@@ -27,6 +25,8 @@ DROP TABLE IF EXISTS `civicrm_funding_case_type_program`;
 DROP TABLE IF EXISTS `civicrm_funding_case_type`;
 DROP TABLE IF EXISTS `civicrm_funding_case_contact_relation`;
 DROP TABLE IF EXISTS `civicrm_funding_case`;
+DROP TABLE IF EXISTS `civicrm_funding_app_resources_item`;
+DROP TABLE IF EXISTS `civicrm_funding_application_process`;
 
 SET FOREIGN_KEY_CHECKS=1;
 -- /*******************************************************
@@ -184,10 +184,14 @@ CREATE TABLE `civicrm_funding_application_process` (
   `amount_granted` decimal(10,2) NULL,
   `granted_budget` decimal(10,2) NULL,
   `is_review_content` tinyint NULL,
+  `reviewer_cont_contact_id` int unsigned NULL COMMENT 'FK to Contact',
   `is_review_calculative` tinyint NULL,
+  `reviewer_calc_contact_id` int unsigned NULL COMMENT 'FK to Contact',
   PRIMARY KEY (`id`),
   UNIQUE INDEX `index_title`(title),
-  CONSTRAINT FK_civicrm_funding_application_process_funding_case_id FOREIGN KEY (`funding_case_id`) REFERENCES `civicrm_funding_case`(`id`) ON DELETE CASCADE
+  CONSTRAINT FK_civicrm_funding_application_process_funding_case_id FOREIGN KEY (`funding_case_id`) REFERENCES `civicrm_funding_case`(`id`) ON DELETE CASCADE,
+  CONSTRAINT FK_civicrm_funding_application_process_reviewer_cont_contact_id FOREIGN KEY (`reviewer_cont_contact_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE RESTRICT,
+  CONSTRAINT FK_civicrm_funding_application_process_reviewer_calc_contact_id FOREIGN KEY (`reviewer_calc_contact_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE RESTRICT
 )
 ENGINE=InnoDB;
 

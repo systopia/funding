@@ -147,6 +147,23 @@
   </field>
 
   <field>
+    <!-- shortened because of limited FK identifier length -->
+    <name>reviewer_cont_contact_id</name>
+    <type>int unsigned</type>
+    <required>false</required>
+    <comment>FK to Contact</comment>
+    <html>
+      <type>EntityRef</type>
+    </html>
+  </field>
+  <foreignKey>
+    <name>reviewer_cont_contact_id</name>
+    <table>civicrm_contact</table>
+    <key>id</key>
+    <onDelete>RESTRICT</onDelete>
+  </foreignKey>
+
+  <field>
     <name>is_review_calculative</name>
     <type>boolean</type>
     <required>false</required>
@@ -154,4 +171,21 @@
       <type>CheckBox</type>
     </html>
   </field>
+
+  <field>
+    <!-- shortened because of limited FK identifier length -->
+    <name>reviewer_calc_contact_id</name>
+    <type>int unsigned</type>
+    <required>false</required>
+    <comment>FK to Contact</comment>
+    <html>
+      <type>EntityRef</type>
+    </html>
+  </field>
+  <foreignKey>
+    <name>reviewer_calc_contact_id</name>
+    <table>civicrm_contact</table>
+    <key>id</key>
+    <onDelete>RESTRICT</onDelete>
+  </foreignKey>
 </table>

@@ -42,7 +42,9 @@ use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
  *   amount_granted: float|null,
  *   granted_budget: float|null,
  *   is_review_content: bool|null,
+ *   reviewer_cont_contact_id: int|null,
  *   is_review_calculative: bool|null,
+ *   reviewer_calc_contact_id: int|null,
  * }
  */
 class FundingApplicationProcess extends Generic\DAOEntity {
