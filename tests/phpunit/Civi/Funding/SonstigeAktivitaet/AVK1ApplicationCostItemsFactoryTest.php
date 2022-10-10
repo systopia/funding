@@ -21,6 +21,7 @@ namespace Civi\Funding\SonstigeAktivitaet;
 
 use Civi\Funding\Entity\ApplicationCostItemEntity;
 use Civi\Funding\Entity\ApplicationProcessEntity;
+use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -131,7 +132,6 @@ final class AVK1ApplicationCostItemsFactoryTest extends TestCase {
   }
 
   private function createApplicationProcess(): ApplicationProcessEntity {
-    $now = date('Y-m-d H:i:s');
     $kosten = [
       'unterkunftUndVerpflegung' => 222.22,
       'honorare' => [
@@ -184,22 +184,8 @@ final class AVK1ApplicationCostItemsFactoryTest extends TestCase {
       'versicherungTeilnehmer' => 9.9,
     ];
 
-    return ApplicationProcessEntity::fromArray([
-      'id' => 2,
-      'funding_case_id' => 3,
-      'status' => 'new_status',
-      'title' => 'Title',
-      'short_description' => 'Description',
+    return ApplicationProcessFactory::createApplicationProcess([
       'request_data' => ['kosten' => $kosten],
-      'amount_requested' => 1.2,
-      'creation_date' => $now,
-      'modification_date' => $now,
-      'start_date' => NULL,
-      'end_date' => NULL,
-      'amount_granted' => NULL,
-      'granted_budget' => NULL,
-      'is_review_content' => NULL,
-      'is_review_calculative' => NULL,
     ]);
   }
 

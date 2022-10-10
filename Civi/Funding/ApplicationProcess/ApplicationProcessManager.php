@@ -48,7 +48,9 @@ use Webmozart\Assert\Assert;
  *   amount_granted: float|null,
  *   granted_budget: float|null,
  *   is_review_content: bool|null,
+ *   reviewer_cont_contact_id: int|null,
  *   is_review_calculative: bool|null,
+ *   reviewer_calc_contact_id: int|null,
  * }
  */
 class ApplicationProcessManager {
@@ -84,7 +86,9 @@ class ApplicationProcessManager {
       'amount_granted' => NULL,
       'granted_budget' => NULL,
       'is_review_content' => NULL,
+      'reviewer_cont_contact_id' => NULL,
       'is_review_calculative' => NULL,
+      'reviewer_calc_contact_id' => NULL,
     ]);
 
     $event = new ApplicationProcessPreCreateEvent($contactId, $applicationProcess, $fundingCase);
