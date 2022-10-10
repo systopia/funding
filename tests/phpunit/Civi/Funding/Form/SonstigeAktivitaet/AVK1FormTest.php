@@ -19,12 +19,13 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\SonstigeAktivitaet;
 
-use Civi\Funding\Form\SonstigeAktivitaet\JsonSchema\AVK1JsonSchema;
-use Civi\Funding\Form\SonstigeAktivitaet\UISchema\AVK1UiSchema;
 use Civi\Funding\Form\Traits\AssertFormTrait;
+use Civi\Funding\Form\Validation\OpisValidatorFactory;
+use Civi\Funding\Util\FormTestUtil;
+use Civi\RemoteTools\Form\JsonForms\Control\JsonFormsHidden;
+use Civi\RemoteTools\Form\JsonForms\Control\JsonFormsSubmitButton;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchemaString;
-use Civi\Funding\Form\Validation\OpisValidatorFactory;
 use Opis\JsonSchema\Errors\ErrorFormatter;
 use PHPUnit\Framework\TestCase;
 use Systopia\JsonSchema\Errors\ErrorCollector;
@@ -40,19 +41,27 @@ class AVK1FormTest extends TestCase {
 
   public function testJsonSchema(): void {
     $fooSchemaString = new JsonSchemaString();
-    $form = new AVK1Form(new \DateTime('2022-08-24'), new \DateTime('2022-08-25'),
-      '€', ['foo' => 'bar'], ['submitAction' => 'Do Submit'], ['foo' => $fooSchemaString]);
+    $form = new AVK1Form(
+      new \DateTime('2022-08-24'),
+      new \DateTime('2022-08-25'),
+      '€',
+      ['submitAction1' => 'Do Submit1', 'submitAction2' => 'Do Submit2'],
+      ['foo' => $fooSchemaString],
+      ['foo' => 'bar']
+    );
 
     $jsonSchema = $form->getJsonSchema();
-    static::assertInstanceOf(AVK1JsonSchema::class, $jsonSchema);
     $properties = $jsonSchema->getKeywordValue('properties');
     static::assertInstanceOf(JsonSchema::class, $properties);
     static::assertSame($fooSchemaString, $properties->getKeywordValue('foo'));
-    static::assertEquals(new JsonSchemaString(['enum' => ['submitAction']]), $properties->getKeywordValue('action'));
+    static::assertEquals(
+      new JsonSchemaString(['enum' => ['submitAction1', 'submitAction2']]),
+      $properties->getKeywordValue('action')
+    );
     static::assertSame(['foo' => 'bar'], $form->getData());
 
     $data = (object) [
-      'action' => 'submitAction',
+      'action' => 'submitAction1',
       'titel' => 'Test',
       'kurzbezeichnungDesInhalts' => 'foo bar',
       'beginn' => '2022-08-24',
@@ -166,8 +175,14 @@ class AVK1FormTest extends TestCase {
   }
 
   public function testNotAllowedDates(): void {
-    $form = new AVK1Form(new \DateTime('2022-08-24'), new \DateTime('2022-08-25'),
-      '€', [], ['submitAction' => 'Do Submit']);
+    $form = new AVK1Form(
+      new \DateTime('2022-08-24'),
+      new \DateTime('2022-08-25'),
+      '€',
+      ['submitAction' => 'Do Submit'],
+      [],
+      [],
+    );
 
     $data = (object) [
       'beginn' => '2022-08-23',
@@ -178,7 +193,7 @@ class AVK1FormTest extends TestCase {
     $validator = OpisValidatorFactory::getValidator();
     $validator->setMaxErrors(20);
     $errorCollector = new ErrorCollector();
-    $result = $validator->validate($data, \json_encode($jsonSchema), ['errorCollector' => $errorCollector]);
+    $validator->validate($data, \json_encode($jsonSchema), ['errorCollector' => $errorCollector]);
 
     $beginnErrors = $errorCollector->getErrorsAt('/beginn');
     static::assertCount(1, $beginnErrors);
@@ -189,8 +204,14 @@ class AVK1FormTest extends TestCase {
   }
 
   public function testEndeBeforeBeginn(): void {
-    $form = new AVK1Form(new \DateTime('2022-08-24'), new \DateTime('2022-08-25'),
-      '€', [], ['submitAction' => 'Do Submit']);
+    $form = new AVK1Form(
+      new \DateTime('2022-08-24'),
+      new \DateTime('2022-08-25'),
+      '€',
+      ['submitAction' => 'Do Submit'],
+      [],
+      []
+    );
 
     $data = (object) [
       'beginn' => '2022-08-25',
@@ -200,7 +221,7 @@ class AVK1FormTest extends TestCase {
     $jsonSchema = $form->getJsonSchema();
     $validator = OpisValidatorFactory::getValidator();
     $errorCollector = new ErrorCollector();
-    $result = $validator->validate($data, \json_encode($jsonSchema), ['errorCollector' => $errorCollector]);
+    $validator->validate($data, \json_encode($jsonSchema), ['errorCollector' => $errorCollector]);
 
     static::assertFalse($errorCollector->hasErrorAt('/beginn'));
     $endeErrors = $errorCollector->getErrorsAt('/ende');
@@ -209,12 +230,32 @@ class AVK1FormTest extends TestCase {
   }
 
   public function testUiSchema(): void {
-    $form = new AVK1Form(new \DateTime('2022-08-24'), new \DateTime('2022-08-25'),
-      '€', ['foo' => 'bar'], ['submitAction' => 'Do Submit']);
+    $form = new AVK1Form(
+      new \DateTime('2022-08-24'),
+      new \DateTime('2022-08-25'),
+      '€',
+      ['submitAction1' => 'Do Submit1', 'submitAction2' => 'Do Submit2'],
+      ['hidden' => new JsonSchemaString()],
+      ['foo' => 'bar']
+    );
+
     $uiSchema = $form->getUiSchema();
-    static::assertInstanceOf(AVK1UiSchema::class, $uiSchema);
+    static::assertNull($uiSchema->isReadonly());
     static::assertScopesExist($form->getJsonSchema()->toStdClass(), $uiSchema);
     static::assertScopeExists('#/properties/action', $uiSchema);
+
+    static::assertControlInSchemaEquals(
+      new JsonFormsHidden('#/properties/hidden'),
+      $form->getUiSchema()
+    );
+
+    static::assertEquals(
+      [
+        new JsonFormsSubmitButton('#/properties/action', 'Do Submit1', 'submitAction1'),
+        new JsonFormsSubmitButton('#/properties/action', 'Do Submit2', 'submitAction2'),
+      ],
+      FormTestUtil::getControlsWithScope('#/properties/action', $uiSchema)
+    );
   }
 
 }

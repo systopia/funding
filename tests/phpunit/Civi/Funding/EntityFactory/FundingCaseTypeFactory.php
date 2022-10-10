@@ -17,17 +17,29 @@
 
 declare(strict_types = 1);
 
-namespace Civi\RemoteTools\Form\JsonForms\Control;
+namespace Civi\Funding\EntityFactory;
 
-use Civi\RemoteTools\Form\JsonForms\JsonFormsControl;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
 
-class JsonFormsSubmitButton extends JsonFormsControl {
+/**
+ * @phpstan-type fundingCaseTypeValuesT array{
+ *   id?: int,
+ *   title?: string,
+ *   name?: string,
+ *   properties?: array<string, mixed>,
+ * }
+ */
+final class FundingCaseTypeFactory {
 
-  public function __construct(string $scope, string $label, string $data) {
-    parent::__construct($scope, $label, NULL, NULL, NULL, [
-      'type' => 'submit',
-      'data' => $data,
-      'readonly' => FALSE,
+  /**
+   * @phpstan-param fundingCaseTypeValuesT $values
+   */
+  public static function createFundingCaseType(array $values = []): FundingCaseTypeEntity {
+    return FundingCaseTypeEntity::fromArray([
+      'id' => 5,
+      'title' => 'Test Funding Case Type',
+      'name' => 'TestFundingCaseType',
+      'properties' => [],
     ]);
   }
 

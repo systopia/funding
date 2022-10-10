@@ -23,41 +23,18 @@ use Civi\RemoteTools\Form\JsonSchema\JsonSchemaInteger;
 
 final class AVK1FormNew extends AVK1Form {
 
-  /**
-   * @param string $currency
-   * @param int $fundingCaseTypeId
-   * @param int $fundingProgramId
-   * @param array<int, string> $permissions
-   * @param array<string, mixed> $data
-   */
   public function __construct(\DateTimeInterface $minBegin, \DateTimeInterface $maxEnd,
-    string $currency, int $fundingCaseTypeId, int $fundingProgramId, array $permissions, array $data = []
+    string $currency, int $fundingCaseTypeId, int $fundingProgramId, array $submitActions, array $data
   ) {
     $data['fundingCaseTypeId'] = $fundingCaseTypeId;
     $data['fundingProgramId'] = $fundingProgramId;
 
-    $extraProperties = [
-      'fundingCaseTypeId' => new JsonSchemaInteger(['const' => $fundingCaseTypeId, 'readonly' => TRUE]),
-      'fundingProgramId' => new JsonSchemaInteger(['const' => $fundingProgramId, 'readonly' => TRUE]),
+    $hiddenProperties = [
+      'fundingCaseTypeId' => new JsonSchemaInteger(['const' => $fundingCaseTypeId, 'readOnly' => TRUE]),
+      'fundingProgramId' => new JsonSchemaInteger(['const' => $fundingProgramId, 'readOnly' => TRUE]),
     ];
 
-    $submitActions = iterator_to_array($this->getSubmitActions($permissions));
-
-    parent::__construct($minBegin, $maxEnd, $currency, $data, $submitActions, $extraProperties);
-  }
-
-  /**
-   * @param array<int, string> $permissions
-   *
-   * @return iterable<string, string>
-   */
-  private function getSubmitActions(array $permissions): iterable {
-    if (in_array('create_application', $permissions, TRUE)) {
-      yield 'save' => 'Save';
-    }
-    if (in_array('apply_application', $permissions, TRUE)) {
-      yield 'apply' => 'Apply';
-    }
+    parent::__construct($minBegin, $maxEnd, $currency, $submitActions, $hiddenProperties, $data);
   }
 
 }

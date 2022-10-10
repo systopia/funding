@@ -17,18 +17,24 @@
 
 declare(strict_types = 1);
 
-namespace Civi\RemoteTools\Form\JsonForms\Control;
+namespace Civi\Funding\Mock\Form;
 
+use Civi\Funding\Form\AbstractApplicationForm;
 use Civi\RemoteTools\Form\JsonForms\JsonFormsControl;
+use Civi\RemoteTools\Form\JsonForms\JsonFormsLayout;
+use Civi\RemoteTools\Form\JsonForms\Layout\JsonFormsGroup;
+use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
+use Civi\RemoteTools\Form\JsonSchema\JsonSchemaObject;
+use Civi\RemoteTools\Form\JsonSchema\JsonSchemaString;
 
-class JsonFormsSubmitButton extends JsonFormsControl {
+final class ApplicationFormMock extends AbstractApplicationForm {
 
-  public function __construct(string $scope, string $label, string $data) {
-    parent::__construct($scope, $label, NULL, NULL, NULL, [
-      'type' => 'submit',
-      'data' => $data,
-      'readonly' => FALSE,
-    ]);
+  public function __construct(?JsonSchema $jsonSchema = NULL, ?JsonFormsLayout $uiSchema = NULL, array $data = []) {
+    parent::__construct(
+      $jsonSchema ?? new JsonSchemaObject(['test' => new JsonSchemaString()]),
+      $uiSchema ?? new JsonFormsGroup('Label', [new JsonFormsControl('#/properties/test', 'Test')]),
+      $data
+    );
   }
 
 }

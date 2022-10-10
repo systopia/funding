@@ -25,7 +25,6 @@ use Civi\Funding\Event\Remote\AbstractFundingSubmitFormEvent;
 
 final class SubmitNewApplicationFormEvent extends AbstractFundingSubmitFormEvent {
 
-
   protected FundingCaseTypeEntity $fundingCaseType;
 
   protected FundingProgramEntity $fundingProgram;

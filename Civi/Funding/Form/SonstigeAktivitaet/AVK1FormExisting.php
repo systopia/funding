@@ -23,35 +23,19 @@ use Civi\RemoteTools\Form\JsonSchema\JsonSchemaInteger;
 
 final class AVK1FormExisting extends AVK1Form {
 
-  /**
-   * @phpstan-param array<string> $permissions
-   * @phpstan-param array<string, mixed> $data
-   */
   public function __construct(\DateTimeInterface $minBegin, \DateTimeInterface $maxEnd,
-    string $currency, int $applicationProcessId, array $permissions, array $data
+    string $currency, int $applicationProcessId, array $submitActions, bool $readOnly, array $data
   ) {
     $data['applicationProcessId'] = $applicationProcessId;
 
-    $extraProperties = [
-      'applicationProcessId' => new JsonSchemaInteger(['const' => $applicationProcessId, 'readonly' => TRUE]),
+    $hiddenProperties = [
+      'applicationProcessId' => new JsonSchemaInteger(['const' => $applicationProcessId, 'readOnly' => TRUE]),
     ];
 
-    $submitActions = iterator_to_array($this->getSubmitActions($permissions));
+    parent::__construct($minBegin, $maxEnd, $currency, $submitActions, $hiddenProperties, $data);
 
-    parent::__construct($minBegin, $maxEnd, $currency, $data, $submitActions, $extraProperties);
-  }
-
-  /**
-   * @param array<string> $permissions
-   *
-   * @return iterable<string, string>
-   */
-  private function getSubmitActions(array $permissions): iterable {
-    if (in_array('modify_application', $permissions, TRUE)) {
-      yield 'save' => 'Save';
-    }
-    if (in_array('apply_application', $permissions, TRUE)) {
-      yield 'apply' => 'Apply';
+    if ($readOnly) {
+      $this->getUiSchema()->setReadonly(TRUE);
     }
   }
 

@@ -16,9 +16,4 @@ export XDEBUG_MODE=coverage
 # tests to pass (if baselineFile does not contain all deprecations).
 export SYMFONY_DEPRECATIONS_HELPER="max[total]=99999&baselineFile=./tests/ignored-deprecations.json"
 
-# TODO: Remove retry when not needed, anymore.
-# In Docker container with CiviCRM 5.51.0 the first run of phpunit fails with
-# the error below. For this reason, phpunit is run a second time, when the first
-# run fails.
-# Uncaught Error: Class 'Civi\Api4\SearchSegment' not found in /var/www/html/sites/all/modules/civicrm/ext/search_kit/Civi/Api4/Service/Spec/Provider/SearchSegmentExtraFieldProvider.php:52
-composer phpunit -- --cache-result-file=/tmp/.phpunit.result.cache "$@" || composer phpunit -- --cache-result-file=/tmp/.phpunit.result.cache "$@"
+composer phpunit -- --cache-result-file=/tmp/.phpunit.result.cache "$@"

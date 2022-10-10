@@ -28,6 +28,14 @@ cv flush >/dev/null 2>/dev/null || {
     -i /var/www/html/sites/default/civicrm.settings.php
   civicrm-docker-install
 
+  # Ensure we have at least symfony/dependency-injection:~4 which is mandatory
+  # for service locators. At least in Docker container with CiviCRM 5.50 there's
+  # symfony/dependency-injection:~3 installed.
+  cd /var/www/html/sites/all/modules/civicrm
+  if composer show symfony/dependency-injection "<4" >/dev/null 2>/dev/null; then
+    composer update --no-dev --no-scripts --optimize-autoloader symfony/*
+  fi
+
   cv ext:download "de.systopia.xcm@https://github.com/systopia/de.systopia.xcm/releases/download/$XCM_VERSION/de.systopia.xcm-$XCM_VERSION.zip"
   cv ext:download "de.systopia.identitytracker@https://github.com/systopia/de.systopia.identitytracker/releases/download/$IDENTITYTRACKER_VERSION/de.systopia.identitytracker-$IDENTITYTRACKER_VERSION.zip"
   cv ext:download "de.systopia.remotetools@https://github.com/systopia/de.systopia.remotetools/archive/refs/tags/$REMOTETOOLS_VERSION.zip"

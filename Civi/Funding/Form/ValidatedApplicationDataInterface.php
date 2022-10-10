@@ -17,18 +17,26 @@
 
 declare(strict_types = 1);
 
-namespace Civi\RemoteTools\Form\JsonForms\Control;
+namespace Civi\Funding\Form;
 
-use Civi\RemoteTools\Form\JsonForms\JsonFormsControl;
+interface ValidatedApplicationDataInterface {
 
-class JsonFormsSubmitButton extends JsonFormsControl {
+  public function getAction(): string;
 
-  public function __construct(string $scope, string $label, string $data) {
-    parent::__construct($scope, $label, NULL, NULL, NULL, [
-      'type' => 'submit',
-      'data' => $data,
-      'readonly' => FALSE,
-    ]);
-  }
+  public function getTitle(): string;
+
+  public function getShortDescription(): string;
+
+  public function getStartDate(): ?\DateTimeInterface;
+
+  public function getEndDate(): ?\DateTimeInterface;
+
+  public function getAmountRequested(): float;
+
+  /**
+   * @phpstan-return array<string, mixed>
+   *   Application data without extra data like "action".
+   */
+  public function getApplicationData(): array;
 
 }

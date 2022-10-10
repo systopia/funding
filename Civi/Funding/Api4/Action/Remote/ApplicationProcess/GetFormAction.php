@@ -21,7 +21,7 @@ namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
-use Civi\Funding\Event\Remote\ApplicationProcess\GetFormEvent;
+use Civi\Funding\Event\Remote\ApplicationProcess\GetApplicationFormEvent;
 use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
 use Webmozart\Assert\Assert;
 
@@ -71,8 +71,8 @@ final class GetFormAction extends AbstractFormAction {
   /**
    * @throws \API_Exception
    */
-  private function createEvent(): GetFormEvent {
-    return GetFormEvent::fromApiRequest($this, $this->createEventParams($this->applicationProcessId));
+  private function createEvent(): GetApplicationFormEvent {
+    return GetApplicationFormEvent::fromApiRequest($this, $this->createEventParams($this->applicationProcessId));
   }
 
 }

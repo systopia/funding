@@ -27,6 +27,8 @@ use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreCreateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
+use Civi\Funding\Form\ValidatedApplicationDataInterface;
+use Civi\Funding\Util\DateTimeUtil;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Webmozart\Assert\Assert;
 
@@ -60,39 +62,32 @@ class ApplicationProcessManager {
     $this->eventDispatcher = $eventDispatcher;
   }
 
-  /**
-   * @phpstan-param array{
-   *   funding_case: \Civi\Funding\Entity\FundingCaseEntity,
-   *   status: string,
-   *   title: string,
-   *   short_description: string,
-   *   request_data: array<string, mixed>,
-   *   amount_requested: float,
-   *   start_date?: ?string,
-   *   end_date?: ?string,
-   * } $values
-   */
-  public function create(int $contactId, array $values): ApplicationProcessEntity {
+  public function create(
+    int $contactId,
+    FundingCaseEntity $fundingCase,
+    string $status,
+    ValidatedApplicationDataInterface $data
+  ): ApplicationProcessEntity {
     /** @var string $now */
     $now = date('Y-m-d H:i:s');
     $applicationProcess = ApplicationProcessEntity::fromArray([
-      'funding_case_id' => $values['funding_case']->getId(),
-      'status' => $values['status'],
-      'title' => $values['title'],
-      'short_description' => $values['short_description'],
-      'request_data' => $values['request_data'],
-      'amount_requested' => $values['amount_requested'],
+      'funding_case_id' => $fundingCase->getId(),
+      'status' => $status,
+      'title' => $data->getTitle(),
+      'short_description' => $data->getShortDescription(),
+      'request_data' => $data->getApplicationData(),
+      'amount_requested' => $data->getAmountRequested(),
       'creation_date' => $now,
       'modification_date' => $now,
-      'start_date' => $values['start_date'] ?? NULL,
-      'end_date' => $values['end_date'] ?? NULL,
+      'start_date' => DateTimeUtil::toDateTimeStrOrNull($data->getStartDate()),
+      'end_date' => DateTimeUtil::toDateTimeStrOrNull($data->getEndDate()),
       'amount_granted' => NULL,
       'granted_budget' => NULL,
       'is_review_content' => NULL,
       'is_review_calculative' => NULL,
     ]);
 
-    $event = new ApplicationProcessPreCreateEvent($contactId, $applicationProcess, $values['funding_case']);
+    $event = new ApplicationProcessPreCreateEvent($contactId, $applicationProcess, $fundingCase);
     $this->eventDispatcher->dispatch(ApplicationProcessPreCreateEvent::class, $event);
 
     $action = FundingApplicationProcess::create()->setValues($applicationProcess->toArray());
@@ -101,7 +96,7 @@ class ApplicationProcessManager {
     $applicationProcessValues = $this->api4->executeAction($action)->first();
     $applicationProcess = ApplicationProcessEntity::fromArray($applicationProcessValues)->reformatDates();
 
-    $event = new ApplicationProcessCreatedEvent($contactId, $applicationProcess, $values['funding_case']);
+    $event = new ApplicationProcessCreatedEvent($contactId, $applicationProcess, $fundingCase);
     $this->eventDispatcher->dispatch(ApplicationProcessCreatedEvent::class, $event);
 
     return $applicationProcess;

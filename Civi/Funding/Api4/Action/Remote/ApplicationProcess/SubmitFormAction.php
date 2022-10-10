@@ -21,7 +21,7 @@ namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
-use Civi\Funding\Event\Remote\ApplicationProcess\SubmitFormEvent;
+use Civi\Funding\Event\Remote\ApplicationProcess\SubmitApplicationFormEvent;
 use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
 use Webmozart\Assert\Assert;
 
@@ -66,7 +66,7 @@ final class SubmitFormAction extends AbstractFormAction {
     }
 
     switch ($event->getAction()) {
-      case SubmitFormEvent::ACTION_SHOW_FORM:
+      case SubmitApplicationFormEvent::ACTION_SHOW_FORM:
         Assert::notNull($event->getForm());
         Assert::keyExists($event->getForm()->getData(), 'applicationProcessId');
         Assert::integer($event->getForm()->getData()['applicationProcessId']);
@@ -75,12 +75,12 @@ final class SubmitFormAction extends AbstractFormAction {
         $result['data'] = $event->getForm()->getData();
         break;
 
-      case SubmitFormEvent::ACTION_SHOW_VALIDATION:
+      case SubmitApplicationFormEvent::ACTION_SHOW_VALIDATION:
         Assert::notEmpty($event->getErrors());
         $result['errors'] = $event->getErrors();
         break;
 
-      case SubmitFormEvent::ACTION_CLOSE_FORM:
+      case SubmitApplicationFormEvent::ACTION_CLOSE_FORM:
         break;
 
       default:
@@ -95,8 +95,11 @@ final class SubmitFormAction extends AbstractFormAction {
   /**
    * @throws \API_Exception
    */
-  private function createEvent(): SubmitFormEvent {
-    return SubmitFormEvent::fromApiRequest($this, $this->createEventParams($this->getApplicationProcessId()));
+  private function createEvent(): SubmitApplicationFormEvent {
+    return SubmitApplicationFormEvent::fromApiRequest(
+      $this,
+      $this->createEventParams($this->getApplicationProcessId())
+    );
   }
 
   public function getApplicationProcessId(): int {

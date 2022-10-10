@@ -23,9 +23,9 @@ use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
-use Civi\Funding\Event\Remote\AbstractFundingSubmitFormEvent;
+use Civi\Funding\Event\Remote\AbstractFundingGetFormEvent;
 
-final class SubmitFormEvent extends AbstractFundingSubmitFormEvent {
+final class GetApplicationFormEvent extends AbstractFundingGetFormEvent {
 
   protected ApplicationProcessEntity $applicationProcess;
 

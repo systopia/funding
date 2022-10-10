@@ -17,18 +17,20 @@
 
 declare(strict_types = 1);
 
-namespace Civi\RemoteTools\Form\JsonForms\Control;
+namespace Civi\Funding\Util;
 
-use Civi\RemoteTools\Form\JsonForms\JsonFormsControl;
+final class DateTimeUtil {
 
-class JsonFormsSubmitButton extends JsonFormsControl {
+  public static function toDateTimeOrNull(?string $dateTimeStr): ?\DateTime {
+    return NULL === $dateTimeStr ? NULL : new \DateTime($dateTimeStr);
+  }
 
-  public function __construct(string $scope, string $label, string $data) {
-    parent::__construct($scope, $label, NULL, NULL, NULL, [
-      'type' => 'submit',
-      'data' => $data,
-      'readonly' => FALSE,
-    ]);
+  public static function toDateTimeStr(\DateTimeInterface $dateTime): string {
+    return $dateTime->format('Y-m-d H:i:s');
+  }
+
+  public static function toDateTimeStrOrNull(?\DateTimeInterface $dateTime): ?string {
+    return NULL === $dateTime ? NULL : $dateTime->format('Y-m-d H:i:s');
   }
 
 }

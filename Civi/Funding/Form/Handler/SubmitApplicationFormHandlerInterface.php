@@ -17,18 +17,17 @@
 
 declare(strict_types = 1);
 
-namespace Civi\RemoteTools\Form\JsonForms\Control;
+namespace Civi\Funding\Form\Handler;
 
-use Civi\RemoteTools\Form\JsonForms\JsonFormsControl;
+use Civi\Funding\Event\Remote\ApplicationProcess\SubmitApplicationFormEvent;
+use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
 
-class JsonFormsSubmitButton extends JsonFormsControl {
+interface SubmitApplicationFormHandlerInterface {
 
-  public function __construct(string $scope, string $label, string $data) {
-    parent::__construct($scope, $label, NULL, NULL, NULL, [
-      'type' => 'submit',
-      'data' => $data,
-      'readonly' => FALSE,
-    ]);
-  }
+  public function handleSubmitForm(SubmitApplicationFormEvent $event): void;
+
+  public function handleSubmitNewForm(SubmitNewApplicationFormEvent $event): void;
+
+  public function supportsFundingCaseType(string $fundingCaseType): bool;
 
 }

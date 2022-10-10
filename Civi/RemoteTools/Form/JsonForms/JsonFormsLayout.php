@@ -51,4 +51,17 @@ class JsonFormsLayout extends JsonFormsElement {
     return $elements;
   }
 
+  public function isReadonly(): ?bool {
+    /** @var bool|null */
+    return $this->keywords['options']->keywords['readonly'] ?? NULL;
+  }
+
+  public function setReadonly(bool $readonly): self {
+    /** @var \Civi\RemoteTools\Form\JsonSchema\JsonSchema $options */
+    $options = $this->keywords['options'] ??= new JsonSchema([]);
+    $options->addKeyword('readonly', $readonly);
+
+    return $this;
+  }
+
 }

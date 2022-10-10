@@ -17,18 +17,12 @@
 
 declare(strict_types = 1);
 
-namespace Civi\RemoteTools\Form\JsonForms\Control;
+namespace Civi\Funding\Form;
 
-use Civi\RemoteTools\Form\JsonForms\JsonFormsControl;
+use Civi\RemoteTools\Form\RemoteFormInterface;
 
-class JsonFormsSubmitButton extends JsonFormsControl {
+interface ApplicationFormInterface extends RemoteFormInterface {
 
-  public function __construct(string $scope, string $label, string $data) {
-    parent::__construct($scope, $label, NULL, NULL, NULL, [
-      'type' => 'submit',
-      'data' => $data,
-      'readonly' => FALSE,
-    ]);
-  }
+  public function isReadOnly(): bool;
 
 }
