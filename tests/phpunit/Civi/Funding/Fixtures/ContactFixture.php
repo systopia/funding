@@ -33,9 +33,9 @@ final class ContactFixture {
    */
   public static function addIndividual(array $values = []): array {
     return Contact::create()->setValues($values + [
-      'contact_type' => 'Individial',
-      'first_name' => 'Associated No Permissions',
-      'last_name' => 'User',
+      'contact_type' => 'Individual',
+      'first_name' => 'Some',
+      'last_name' => 'Individual',
     ])->execute()->first();
   }
 
