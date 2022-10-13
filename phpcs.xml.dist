@@ -6,6 +6,7 @@
     <file>api</file>
     <file>Civi</file>
     <file>CRM</file>
+    <file>services</file>
     <file>tests</file>
 
     <exclude-pattern>/CRM/Funding/BAO/.*\.php$</exclude-pattern>

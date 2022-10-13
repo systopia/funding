@@ -3,6 +3,7 @@ parameters:
 		- api
 		- Civi
 		- CRM
+		- services
 		- tests
 	excludePaths:
 		analyse:
