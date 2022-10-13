@@ -32,10 +32,12 @@ use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
 use Civi\RemoteTools\EventSubscriber\ApiAuthorizeInitRequestSubscriber;
 use Civi\RemoteTools\EventSubscriber\ApiAuthorizeSubscriber;
 use Civi\RemoteTools\EventSubscriber\CheckAccessSubscriber;
+use Psr\Log\LoggerInterface;
 use Psr\SimpleCache\CacheInterface;
 
 $container->setAlias(CiviEventDispatcher::class, 'dispatcher.boot');
 $container->setAlias(CacheInterface::class, 'cache.long');
+$container->setAlias(LoggerInterface::class, 'psr_log');
 
 $container->register(Api4Interface::class, Api4::class);
 $container->register(Api3Interface::class, Api3::class);
