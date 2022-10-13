@@ -94,8 +94,7 @@ final class SubmitApplicationFormHandler implements SubmitApplicationFormHandler
     $fundingCase = $this->fundingCaseManager->create($event->getContactId(), [
       'funding_program' => $event->getFundingProgram(),
       'funding_case_type' => $event->getFundingCaseType(),
-      // TODO: This has to be part of the form or determined somehow else.
-      'recipient_contact_id' => $event->getContactId(),
+      'recipient_contact_id' => $validatedData->getRecipientContactId(),
     ]);
 
     $applicationProcess = $this->applicationProcessManager->create(

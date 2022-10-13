@@ -21,7 +21,7 @@
         }
     ],
     "require": {
-        "webmozart/assert": "^1",
+        "webmozart/assert": "^1.2",
         "symfony/polyfill-php80": ">=1",
         "systopia/expression-language-ext": "dev-main",
         "systopia/opis-json-schema-ext": "dev-main"

@@ -17,28 +17,25 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Form;
+namespace Civi\RemoteTools\Form\JsonSchema\Util;
 
-interface ValidatedApplicationDataInterface {
+use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
 
-  public function getAction(): string;
-
-  public function getTitle(): string;
-
-  public function getShortDescription(): string;
-
-  public function getRecipientContactId(): int;
-
-  public function getStartDate(): ?\DateTimeInterface;
-
-  public function getEndDate(): ?\DateTimeInterface;
-
-  public function getAmountRequested(): float;
+final class JsonSchemaUtil {
 
   /**
-   * @phpstan-return array<string, mixed>
-   *   Application data without extra data like "action".
+   * @phpstan-param array<int|string, scalar> $titles
+   *   Allowed values mapped to titles.
+   *
+   * @phpstan-return array<JsonSchema> To be used as value of "oneOf" keyword.
    */
-  public function getApplicationData(): array;
+  public static function buildTitledOneOf(array $titles): array {
+    $oneOf = [];
+    foreach ($titles as $value => $title) {
+      $oneOf[] = JsonSchema::fromArray(['const' => $value, 'title' => $title]);
+    }
+
+    return $oneOf;
+  }
 
 }

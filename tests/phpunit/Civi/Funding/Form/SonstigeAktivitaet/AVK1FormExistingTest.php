@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\SonstigeAktivitaet;
 
+use Civi\Funding\Form\JsonSchema\JsonSchemaRecipient;
 use Civi\Funding\Form\Traits\AssertFormTrait;
 use Civi\RemoteTools\Form\JsonForms\Control\JsonFormsHidden;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
@@ -34,7 +35,7 @@ final class AVK1FormExistingTest extends TestCase {
 
   public function test(): void {
     $form = new AVK1FormExisting(new \DateTime('2022-08-24'), new \DateTime('2022-08-25'),
-      '€', 2, ['save' => 'Save'], FALSE, []);
+      '€', 2, [1 => 'Recipient'], ['save' => 'Save'], FALSE, []);
 
     $jsonSchema = $form->getJsonSchema();
     $properties = $jsonSchema->getKeywordValue('properties');
@@ -43,6 +44,7 @@ final class AVK1FormExistingTest extends TestCase {
       new JsonSchemaInteger(['const' => 2, 'readOnly' => TRUE]),
       $properties->getKeywordValue('applicationProcessId')
     );
+    static::assertEquals(new JsonSchemaRecipient([1 => 'Recipient']), $properties->getKeywordValue('empfaenger'));
 
     static::assertFalse($form->isReadOnly());
     static::assertScopesExist($jsonSchema->toStdClass(), $form->getUiSchema());
@@ -55,7 +57,7 @@ final class AVK1FormExistingTest extends TestCase {
 
   public function testReadOnly(): void {
     $form = new AVK1FormExisting(new \DateTime('2022-08-24'), new \DateTime('2022-08-25'),
-      '€', 2, ['save' => 'Save'], TRUE, []);
+      '€', 2, [1 => 'Recipient'], ['save' => 'Save'], TRUE, []);
 
     static::assertTrue($form->isReadOnly());
   }

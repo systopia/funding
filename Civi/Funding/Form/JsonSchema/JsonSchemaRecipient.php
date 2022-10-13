@@ -17,28 +17,27 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Form;
+namespace Civi\Funding\Form\JsonSchema;
 
-interface ValidatedApplicationDataInterface {
+use Civi\RemoteTools\Form\JsonSchema\JsonSchemaInteger;
+use Civi\RemoteTools\Form\JsonSchema\Util\JsonSchemaUtil;
 
-  public function getAction(): string;
-
-  public function getTitle(): string;
-
-  public function getShortDescription(): string;
-
-  public function getRecipientContactId(): int;
-
-  public function getStartDate(): ?\DateTimeInterface;
-
-  public function getEndDate(): ?\DateTimeInterface;
-
-  public function getAmountRequested(): float;
+/**
+ * JSON schema for funding recipient.
+ */
+final class JsonSchemaRecipient extends JsonSchemaInteger {
 
   /**
-   * @phpstan-return array<string, mixed>
-   *   Application data without extra data like "action".
+   * @phpstan-param array<int, string> $possibleRecipients Contact ID mapped to name.
    */
-  public function getApplicationData(): array;
+  public function __construct(array $possibleRecipients, array $keywords = []) {
+    $keywords['oneOf'] = JsonSchemaUtil::buildTitledOneOf($possibleRecipients);
+    if (1 === count($possibleRecipients)) {
+      $keywords['default'] = array_key_first($possibleRecipients);
+      $keywords['readOnly'] = TRUE;
+    }
+
+    parent::__construct($keywords);
+  }
 
 }

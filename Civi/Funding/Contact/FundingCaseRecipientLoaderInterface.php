@@ -17,28 +17,16 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Form;
+namespace Civi\Funding\Contact;
 
-interface ValidatedApplicationDataInterface {
+use Civi\Funding\Entity\FundingCaseEntity;
 
-  public function getAction(): string;
-
-  public function getTitle(): string;
-
-  public function getShortDescription(): string;
-
-  public function getRecipientContactId(): int;
-
-  public function getStartDate(): ?\DateTimeInterface;
-
-  public function getEndDate(): ?\DateTimeInterface;
-
-  public function getAmountRequested(): float;
+interface FundingCaseRecipientLoaderInterface {
 
   /**
-   * @phpstan-return array<string, mixed>
-   *   Application data without extra data like "action".
+   * @phpstan-return non-empty-array<int, string>
+   *   One key-value-pair mapping contact ID to display name.
    */
-  public function getApplicationData(): array;
+  public function getRecipient(FundingCaseEntity $fundingCase): array;
 
 }

@@ -20,6 +20,8 @@ declare(strict_types = 1);
 namespace Civi\Funding\Form\SonstigeAktivitaet;
 
 use Civi\Funding\ApplicationProcess\ApplicationProcessActionsDeterminer;
+use Civi\Funding\Contact\FundingCaseRecipientLoaderInterface;
+use Civi\Funding\Contact\PossibleRecipientsLoaderInterface;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
@@ -39,12 +41,22 @@ class AVK1FormFactory implements ApplicationFormFactoryInterface {
 
   private ApplicationProcessActionsDeterminer $actionsDeterminer;
 
+  private FundingCaseRecipientLoaderInterface $existingCaseRecipientLoader;
+
+  private PossibleRecipientsLoaderInterface $possibleRecipientsLoader;
+
   public static function getSupportedFundingCaseType(): string {
     return 'AVK1SonstigeAktivitaet';
   }
 
-  public function __construct(ApplicationProcessActionsDeterminer $actionsDeterminer) {
+  public function __construct(
+    ApplicationProcessActionsDeterminer $actionsDeterminer,
+    FundingCaseRecipientLoaderInterface $existingCaseRecipientLoader,
+    PossibleRecipientsLoaderInterface $possibleRecipientsLoader
+  ) {
     $this->actionsDeterminer = $actionsDeterminer;
+    $this->existingCaseRecipientLoader = $existingCaseRecipientLoader;
+    $this->possibleRecipientsLoader = $possibleRecipientsLoader;
   }
 
   public function createForm(
@@ -98,11 +110,17 @@ class AVK1FormFactory implements ApplicationFormFactoryInterface {
   }
 
   public function createNewFormOnGet(GetNewApplicationFormEvent $event): ApplicationFormInterface {
-    return $this->doCreateFormNew($event->getFundingProgram(), $event->getFundingCaseType(), []);
+    return $this->doCreateFormNew(
+      $event->getContactId(),
+      $event->getFundingProgram(),
+      $event->getFundingCaseType(),
+      [],
+    );
   }
 
   public function createNewFormOnSubmit(SubmitNewApplicationFormEvent $event): ApplicationFormInterface {
     return $this->doCreateFormNew(
+      $event->getContactId(),
       $event->getFundingProgram(),
       $event->getFundingCaseType(),
       $event->getData(),
@@ -111,6 +129,7 @@ class AVK1FormFactory implements ApplicationFormFactoryInterface {
 
   public function createNewFormOnValidate(ValidateNewApplicationFormEvent $event): ApplicationFormInterface {
     return $this->doCreateFormNew(
+      $event->getContactId(),
       $event->getFundingProgram(),
       $event->getFundingCaseType(),
       $event->getData(),
@@ -139,6 +158,7 @@ class AVK1FormFactory implements ApplicationFormFactoryInterface {
       $fundingProgram->getRequestsEndDate(),
       $fundingProgram->getCurrency(),
       $applicationProcess->getId(),
+      $this->existingCaseRecipientLoader->getRecipient($fundingCase),
       $this->actionsDeterminer->getActions(
         $applicationProcess->getStatus(), $fundingCase->getPermissions()
       ),
@@ -153,6 +173,7 @@ class AVK1FormFactory implements ApplicationFormFactoryInterface {
    * @phpstan-param array<string, mixed> $data JSON serializable.
    */
   private function doCreateFormNew(
+    int $contactId,
     FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType,
     array $data
@@ -163,6 +184,7 @@ class AVK1FormFactory implements ApplicationFormFactoryInterface {
       $fundingProgram->getCurrency(),
       $fundingCaseType->getId(),
       $fundingProgram->getId(),
+      $this->possibleRecipientsLoader->getPossibleRecipients($contactId),
       $this->actionsDeterminer->getActionsForNew($fundingProgram->getPermissions()),
       $data
     );
