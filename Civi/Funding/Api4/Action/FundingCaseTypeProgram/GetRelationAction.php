@@ -33,13 +33,13 @@ final class GetRelationAction extends AbstractAction {
    * @var int
    * @required
    */
-  protected int $fundingCaseTypeId;
+  protected ?int $fundingCaseTypeId = NULL;
 
   /**
    * @var int
    * @required
    */
-  protected int $fundingProgramId;
+  protected ?int $fundingProgramId = NULL;
 
   private AbstractGetAction $getAction;
 

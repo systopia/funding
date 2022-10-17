@@ -23,11 +23,12 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\Remote\FundingCase;
 
+use Civi\API\Exception\UnauthorizedException;
 use Civi\Api4\Generic\Result;
 use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
-use Civi\RemoteTools\Form\RemoteForm;
 use Civi\RemoteTools\Form\JsonForms\JsonFormsElement;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
+use Civi\RemoteTools\Form\RemoteForm;
 
 /**
  * @covers \Civi\Funding\Api4\Action\Remote\FundingCase\SubmitNewApplicationFormAction
@@ -203,6 +204,18 @@ final class SubmitNewApplicationFormActionTest extends AbstractNewApplicationFor
       'Funding program and funding case type are not related',
       'invalid_parameters'
     ));
+
+    $result = new Result();
+    $this->action->_run($result);
+  }
+
+  public function testPermissionMissing(): void {
+    $this->fundingProgramValues['permissions'] = ['some_permission'];
+
+    $this->relationCheckerMock->expects(static::once())->method('areFundingCaseTypeAndProgramRelated')
+      ->with(22, 33)->willReturn(TRUE);
+
+    static::expectExceptionObject(new UnauthorizedException('Required permission is missing'));
 
     $result = new Result();
     $this->action->_run($result);

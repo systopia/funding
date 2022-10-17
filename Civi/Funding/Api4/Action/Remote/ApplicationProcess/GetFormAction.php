@@ -26,7 +26,7 @@ use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
 use Webmozart\Assert\Assert;
 
 /**
- * @method void setApplicationProcessId(int $applicationProcessId)
+ * @method $this setApplicationProcessId(int $applicationProcessId)
  */
 final class GetFormAction extends AbstractFormAction {
 
@@ -34,7 +34,7 @@ final class GetFormAction extends AbstractFormAction {
    * @var int
    * @required
    */
-  protected int $applicationProcessId;
+  protected ?int $applicationProcessId = NULL;
 
   public function __construct(
     RemoteFundingEntityManagerInterface $remoteFundingEntityManager,
@@ -72,6 +72,8 @@ final class GetFormAction extends AbstractFormAction {
    * @throws \API_Exception
    */
   private function createEvent(): GetApplicationFormEvent {
+    Assert::notNull($this->applicationProcessId);
+
     return GetApplicationFormEvent::fromApiRequest($this, $this->createEventParams($this->applicationProcessId));
   }
 
