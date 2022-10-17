@@ -91,6 +91,7 @@ parameters:
 			message: '#^Class [^\s]+ has an uninitialized property#'
 			path : */tests/phpunit/Civi/Funding/Mock/**/*.php
 		- '#^Method Civi\\Funding\\Fixtures\\[^\s]+Fixture::[^\s]+\(\) should return array{[^}]+} but returns array\|null.$#'
+		- '#^In method "Civi\\[^\s]+Test::[^\s]+", caught "Exception" must be rethrown.#'
 		# Notation "[$object, 'method']" is not recognized as callable.
 		- '/^Parameter #1 \$(function|callback) of function call_user_func_array expects callable\(\): mixed, array\{mixed, string\} given.$/'
 	tmpDir: .phpstan

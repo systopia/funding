@@ -27,7 +27,7 @@ use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
 use Webmozart\Assert\Assert;
 
 /**
- * @method void setData(array $data)
+ * @method $this setData(array $data)
  */
 final class ValidateFormAction extends AbstractFormAction {
 
@@ -36,7 +36,7 @@ final class ValidateFormAction extends AbstractFormAction {
    * @phpstan-var array<string, mixed>
    * @required
    */
-  protected array $data;
+  protected ?array $data = NULL;
 
   public function __construct(
     RemoteFundingEntityManagerInterface $remoteFundingEntityManager,
@@ -82,6 +82,7 @@ final class ValidateFormAction extends AbstractFormAction {
   }
 
   public function getApplicationProcessId(): int {
+    Assert::notNull($this->data);
     Assert::keyExists($this->data, 'applicationProcessId');
     Assert::integer($this->data['applicationProcessId']);
 

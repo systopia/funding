@@ -46,7 +46,7 @@ use Civi\Funding\Entity\ApplicationProcessEntity;
 final class ApplicationProcessFixture {
 
   /**
-   * @phpstan-param array<string, scalar> $values
+   * @phpstan-param array<string, mixed> $values
    *
    * @throws \API_Exception
    */

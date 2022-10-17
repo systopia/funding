@@ -19,12 +19,23 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\Remote\FundingCase\Traits;
 
+use Civi\API\Exception\UnauthorizedException;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker;
+use CRM_Funding_ExtensionUtil as E;
 
 trait NewApplicationFormActionTrait {
 
   protected FundingCaseTypeProgramRelationChecker $_relationChecker;
+
+  /**
+   * @throws \Civi\API\Exception\UnauthorizedException
+   */
+  protected function assertCreateApplicationPermission(FundingProgramEntity $fundingProgram): void {
+    if (!in_array('create_application', $fundingProgram->getPermissions(), TRUE)) {
+      throw new UnauthorizedException(E::ts('Required permission is missing'));
+    }
+  }
 
   /**
    * @throws \API_Exception

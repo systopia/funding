@@ -99,6 +99,7 @@ abstract class AbstractNewApplicationFormAction extends AbstractRemoteFundingAct
     Assert::notNull($fundingProgramValues, sprintf('Funding program with ID %d not found', $fundingProgramId));
     $fundingProgram = FundingProgramEntity::fromArray($fundingProgramValues);
     $this->assertFundingProgramDates($fundingProgram);
+    $this->assertCreateApplicationPermission($fundingProgram);
 
     return $this->getExtraParams() + [
       'fundingCaseType' => $fundingCaseType,

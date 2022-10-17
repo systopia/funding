@@ -39,13 +39,13 @@ final class GetNewApplicationFormAction extends AbstractNewApplicationFormAction
    * @var int
    * @required
    */
-  protected int $fundingProgramId;
+  protected ?int $fundingProgramId = NULL;
 
   /**
    * @var int
    * @required
    */
-  protected int $fundingCaseTypeId;
+  protected ?int $fundingCaseTypeId = NULL;
 
   public function __construct(
     RemoteFundingEntityManagerInterface $remoteFundingEntityManager,
@@ -66,7 +66,7 @@ final class GetNewApplicationFormAction extends AbstractNewApplicationFormAction
    * @throws \API_Exception
    */
   public function _run(Result $result): void {
-    $this->assertFundingCaseTypeAndProgramRelated($this->fundingCaseTypeId, $this->fundingProgramId);
+    $this->assertFundingCaseTypeAndProgramRelated($this->getFundingCaseTypeId(), $this->getFundingProgramId());
     $event = $this->createEvent();
     $this->dispatchEvent($event);
 
@@ -76,9 +76,9 @@ final class GetNewApplicationFormAction extends AbstractNewApplicationFormAction
     }
 
     Assert::keyExists($event->getData(), 'fundingCaseTypeId');
-    Assert::same($event->getData()['fundingCaseTypeId'], $this->fundingCaseTypeId);
+    Assert::same($event->getData()['fundingCaseTypeId'], $this->getFundingCaseTypeId());
     Assert::keyExists($event->getData(), 'fundingProgramId');
-    Assert::same($event->getData()['fundingProgramId'], $this->fundingProgramId);
+    Assert::same($event->getData()['fundingProgramId'], $this->getFundingProgramId());
 
     $result->rowCount = 1;
     $result->exchangeArray([
@@ -94,8 +94,20 @@ final class GetNewApplicationFormAction extends AbstractNewApplicationFormAction
   private function createEvent(): GetNewApplicationFormEvent {
     return GetNewApplicationFormEvent::fromApiRequest(
       $this,
-      $this->createEventParams($this->fundingCaseTypeId, $this->fundingProgramId),
+      $this->createEventParams($this->getFundingCaseTypeId(), $this->getFundingProgramId()),
     );
+  }
+
+  private function getFundingCaseTypeId(): int {
+    Assert::notNull($this->fundingCaseTypeId);
+
+    return $this->fundingCaseTypeId;
+  }
+
+  private function getFundingProgramId(): int {
+    Assert::notNull($this->fundingProgramId);
+
+    return $this->fundingProgramId;
   }
 
 }

@@ -36,7 +36,7 @@ final class ValidateNewApplicationFormAction extends AbstractNewApplicationFormA
    * @phpstan-var array<string, mixed>
    * @required
    */
-  protected array $data;
+  protected ?array $data = NULL;
 
   public function __construct(
     RemoteFundingEntityManagerInterface $remoteFundingEntityManager,
@@ -85,6 +85,7 @@ final class ValidateNewApplicationFormAction extends AbstractNewApplicationFormA
   }
 
   public function getFundingProgramId(): int {
+    Assert::notNull($this->data);
     Assert::keyExists($this->data, 'fundingProgramId');
     Assert::integer($this->data['fundingProgramId']);
 
@@ -92,6 +93,7 @@ final class ValidateNewApplicationFormAction extends AbstractNewApplicationFormA
   }
 
   public function getFundingCaseTypeId(): int {
+    Assert::notNull($this->data);
     Assert::keyExists($this->data, 'fundingCaseTypeId');
     Assert::integer($this->data['fundingCaseTypeId']);
 

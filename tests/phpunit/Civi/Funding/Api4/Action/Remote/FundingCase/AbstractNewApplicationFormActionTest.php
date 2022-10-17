@@ -21,6 +21,8 @@ namespace Civi\Funding\Api4\Action\Remote\FundingCase;
 
 use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Api4\Action\Remote\FundingCase\Traits\NewApplicationFormActionTrait;
+use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
+use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker;
 use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -67,12 +69,13 @@ abstract class AbstractNewApplicationFormActionTest extends TestCase {
     $this->eventDispatcherMock = $this->createMock(CiviEventDispatcher::class);
     $this->relationCheckerMock = $this->createMock(FundingCaseTypeProgramRelationChecker::class);
 
-    $this->fundingCaseTypeValues = ['id' => 22];
-    $this->fundingProgramValues = [
+    $this->fundingCaseTypeValues = FundingCaseTypeFactory::createFundingCaseType(['id' => 22])->toArray();
+    $this->fundingProgramValues = FundingProgramFactory::createFundingProgram([
       'id' => 33,
       'requests_start_date' => date('Y-m-d', time() - 86400),
       'requests_end_date' => date('Y-m-d', time() + 86400),
-    ];
+      'permissions' => ['create_application'],
+    ])->toArray();
 
     $this->remoteFundingEntityManagerMock->method('getById')->willReturnMap([
       ['FundingCaseType', 22, '00', &$this->fundingCaseTypeValues],
