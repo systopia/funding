@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\Validation;
 
+use Opis\JsonSchema\Errors\ErrorFormatter;
 use Opis\JsonSchema\Errors\ValidationError;
 use Systopia\JsonSchema\Errors\ErrorCollector;
 
@@ -30,6 +31,13 @@ final class ValidationResult {
   private array $data;
 
   private ErrorCollector $errorCollector;
+
+  private static function getErrorFormatter(): ErrorFormatter {
+    static $errorFormatter;
+    $errorFormatter ??= new ErrorFormatter();
+
+    return $errorFormatter;
+  }
 
   /**
    * @param array<string, mixed> $data
@@ -75,9 +83,12 @@ final class ValidationResult {
    * @return array<string, non-empty-array<string>>
    */
   private static function mapErrorsToMessages(array $errors): array {
-    return \array_map(
-      fn (array $errors): array => \array_map(fn (ValidationError $error): string => $error->message(), $errors),
-      $errors
+    $errorFormatter = static::getErrorFormatter();
+    return array_map(
+      fn (array $errors): array => array_map(
+        fn (ValidationError $error): string => $errorFormatter->formatErrorMessage($error),
+        $errors
+      ), $errors
     );
   }
 
