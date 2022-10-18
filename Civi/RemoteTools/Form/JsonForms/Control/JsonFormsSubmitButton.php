@@ -21,6 +21,11 @@ namespace Civi\RemoteTools\Form\JsonForms\Control;
 
 use Civi\RemoteTools\Form\JsonForms\JsonFormsControl;
 
+/**
+ * Custom control that creates a submit button.
+ *
+ * @codeCoverageIgnore
+ */
 class JsonFormsSubmitButton extends JsonFormsControl {
 
   public function __construct(string $scope, string $label, string $data) {

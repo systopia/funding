@@ -19,6 +19,9 @@ declare(strict_types = 1);
 
 namespace Civi\RemoteTools\Form\JsonSchema;
 
+/**
+ * @codeCoverageIgnore
+ */
 class JsonSchemaString extends JsonSchema {
 
   public function __construct(array $keywords = []) {

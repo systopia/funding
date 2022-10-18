@@ -22,6 +22,8 @@ namespace Civi\RemoteTools\Form\JsonSchema;
 /**
  * Value of type number with non-standard keyword precision set to 2 to
  * specify a money value.
+ *
+ * @codeCoverageIgnore
  */
 final class JsonSchemaMoney extends JsonSchemaNumber {
 

@@ -17,22 +17,23 @@
 
 declare(strict_types = 1);
 
-namespace Civi\RemoteTools\Form\JsonForms\Layout;
+namespace Civi\RemoteTools\Form\JsonSchema;
 
-use Civi\RemoteTools\Form\JsonForms\JsonFormsLayout;
+use PHPUnit\Framework\TestCase;
 
 /**
- * @codeCoverageIgnore
+ * @covers \Civi\RemoteTools\Form\JsonSchema\JsonSchemaObject
  */
-class JsonFormsGroup extends JsonFormsLayout {
+final class JsonSchemaObjectTest extends TestCase {
 
-  /**
-   * @param string $label
-   * @param array<int, \Civi\RemoteTools\Form\JsonForms\JsonFormsElement> $elements
-   * @param string|null $description
-   */
-  public function __construct(string $label, array $elements, ?string $description = NULL) {
-    parent::__construct('Group', $label, $elements, $description);
+  public function testConstruct(): void {
+    $fooSchema = new JsonSchema([]);
+    $jsonSchemaObject = new JsonSchemaObject(['foo' => $fooSchema], ['x' => 'y']);
+
+    static::assertSame('y', $jsonSchemaObject->getKeywordValue('x'));
+    $properties = $jsonSchemaObject->getKeywordValue('properties');
+    static::assertInstanceOf(JsonSchema::class, $properties);
+    static::assertSame(['foo' => $fooSchema], $properties->getKeywords());
   }
 
 }

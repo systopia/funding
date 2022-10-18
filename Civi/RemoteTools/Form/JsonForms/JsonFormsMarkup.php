@@ -19,6 +19,11 @@ declare(strict_types = 1);
 
 namespace Civi\RemoteTools\Form\JsonForms;
 
+/**
+ * Custom element for markup content.
+ *
+ * @codeCoverageIgnore
+ */
 class JsonFormsMarkup extends JsonFormsElement {
 
   public function __construct(string $content, string $contentMediaType = 'text/html') {

@@ -17,22 +17,27 @@
 
 declare(strict_types = 1);
 
-namespace Civi\RemoteTools\Form\JsonForms\Layout;
+namespace Civi\RemoteTools\Util;
 
-use Civi\RemoteTools\Form\JsonForms\JsonFormsLayout;
+use PHPUnit\Framework\TestCase;
 
 /**
- * @codeCoverageIgnore
+ * @covers \Civi\RemoteTools\Util\JsonConverter
  */
-class JsonFormsGroup extends JsonFormsLayout {
+final class JsonConverterTest extends TestCase {
 
-  /**
-   * @param string $label
-   * @param array<int, \Civi\RemoteTools\Form\JsonForms\JsonFormsElement> $elements
-   * @param string|null $description
-   */
-  public function __construct(string $label, array $elements, ?string $description = NULL) {
-    parent::__construct('Group', $label, $elements, $description);
+  public function testToArray(): void {
+    $object = new \stdClass();
+    $object->foo = 'bar';
+
+    static::assertSame(['foo' => 'bar'], JsonConverter::toArray($object));
+  }
+
+  public function testToStdClass(): void {
+    $array = ['foo' => 'bar'];
+    $object = JsonConverter::toStdClass($array);
+
+    static::assertSame('bar', $object->foo);
   }
 
 }

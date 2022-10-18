@@ -19,6 +19,9 @@ declare(strict_types = 1);
 
 namespace Civi\RemoteTools\Api3;
 
+/**
+ * @codeCoverageIgnore
+ */
 final class Api3 implements Api3Interface {
 
   /**

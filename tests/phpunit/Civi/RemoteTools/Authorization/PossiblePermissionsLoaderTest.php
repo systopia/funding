@@ -59,6 +59,7 @@ final class PossiblePermissionsLoaderTest extends TestCase {
       ->willReturn(FALSE);
 
     $event = new GetPossiblePermissionsEvent('test');
+    static::assertSame('test', $event->getEntityName());
     $this->eventDispatcherMock->expects(static::once())->method('dispatch')
       ->with(GetPossiblePermissionsEvent::getName('test'), $event)
       ->willReturnCallback(function (string $eventName, GetPossiblePermissionsEvent $event) {

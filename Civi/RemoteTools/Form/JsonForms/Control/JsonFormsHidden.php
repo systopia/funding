@@ -23,6 +23,8 @@ use Civi\RemoteTools\Form\JsonForms\JsonFormsControl;
 
 /**
  * Custom control that creates a hidden field.
+ *
+ * @codeCoverageIgnore
  */
 class JsonFormsHidden extends JsonFormsControl {
 
