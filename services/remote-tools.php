@@ -29,6 +29,7 @@ use Civi\RemoteTools\Api4\OptionsLoader;
 use Civi\RemoteTools\Api4\OptionsLoaderInterface;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoader;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
+use Civi\RemoteTools\Database\TransactionFactory;
 use Civi\RemoteTools\EventSubscriber\ApiAuthorizeInitRequestSubscriber;
 use Civi\RemoteTools\EventSubscriber\ApiAuthorizeSubscriber;
 use Civi\RemoteTools\EventSubscriber\CheckAccessSubscriber;
@@ -41,6 +42,8 @@ $container->setAlias(LoggerInterface::class, 'psr_log');
 
 $container->register(Api4Interface::class, Api4::class);
 $container->register(Api3Interface::class, Api3::class);
+
+$container->register(TransactionFactory::class);
 
 $container->autowire(OptionsLoaderInterface::class, OptionsLoader::class);
 $container->autowire(PossiblePermissionsLoaderInterface::class, PossiblePermissionsLoader::class);
