@@ -67,7 +67,6 @@ final class ApiAuthorizeInitRequestSubscriberTest extends TestCase {
   }
 
   public function testGetSubscribedEvents(): void {
-
     $expectedSubscriptions = [
       'civi.api.authorize' => ['onApiAuthorize', PHP_INT_MAX],
     ];
