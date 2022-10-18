@@ -24,6 +24,9 @@ use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
 use Webmozart\Assert\Assert;
 
+/**
+ * @codeCoverageIgnore
+ */
 final class Api4 implements Api4Interface {
 
   private static self $instance;

@@ -21,6 +21,9 @@ namespace Civi\RemoteTools\Form\JsonForms;
 
 use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
 
+/**
+ * @codeCoverageIgnore
+ */
 class JsonFormsElement extends JsonSchema {
 
   public function __construct(string $type, array $keywords = []) {

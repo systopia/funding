@@ -21,6 +21,8 @@ namespace Civi\RemoteTools\Form\JsonSchema;
 
 /**
  * Non-standard element that points to another element.
+ *
+ * @codeCoverageIgnore
  */
 class JsonSchemaDataPointer extends JsonSchema {
 

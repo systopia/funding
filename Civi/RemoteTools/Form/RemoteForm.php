@@ -22,6 +22,9 @@ namespace Civi\RemoteTools\Form;
 use Civi\RemoteTools\Form\JsonForms\JsonFormsElement;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
 
+/**
+ * @codeCoverageIgnore
+ */
 class RemoteForm implements RemoteFormInterface {
 
   /**

@@ -15,16 +15,12 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * @noinspection PropertyAnnotationInspection
- * @noinspection PhpUnhandledExceptionInspection
- */
-
 declare(strict_types = 1);
 
 namespace Civi\RemoteTools\EventSubscriber;
 
 use Civi\API\Event\AuthorizeEvent;
+use Civi\API\Events;
 use Civi\Core\CiviEventDispatcher;
 use Civi\RemoteTools\Api4\Action\EventGetAction;
 use Civi\RemoteTools\Event\AuthorizeApiRequestEvent;
@@ -32,12 +28,11 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Civi\RemoteTools\EventSubscriber\ApiAuthorizeInitRequestSubscriber
- * @covers \Civi\RemoteTools\Event\AuthorizeApiRequestEvent
+ * @covers \Civi\RemoteTools\EventSubscriber\ApiAuthorizeSubscriber
  */
-final class ApiAuthorizeInitRequestSubscriberTest extends TestCase {
+final class ApiAuthorizeSubscriberTest extends TestCase {
 
-  private ApiAuthorizeInitRequestSubscriber $subscriber;
+  private ApiAuthorizeSubscriber $subscriber;
 
   /**
    * @var \PHPUnit\Framework\MockObject\MockObject&AuthorizeEvent
@@ -59,53 +54,57 @@ final class ApiAuthorizeInitRequestSubscriberTest extends TestCase {
 
     $this->eventMock = $this->createMock(AuthorizeEvent::class);
     $this->requestMock = $this->createMock(EventGetAction::class);
-    $this->requestMock->method('getInitRequestEventClass')->willReturn(AuthorizeApiRequestEvent::class);
-    $this->requestMock->method('getInitRequestEventName')->willReturn('test.request.init');
+    $this->requestMock->method('getAuthorizeRequestEventClass')->willReturn(AuthorizeApiRequestEvent::class);
+    $this->requestMock->method('getAuthorizeRequestEventName')->willReturn('test.request.authorize');
     $this->eventMock->method('getApiRequest')->willReturn($this->requestMock);
     $this->eventDispatcherMock = $this->createMock(CiviEventDispatcher::class);
-
-    $this->subscriber = new ApiAuthorizeInitRequestSubscriber();
+    $this->eventDispatcherMock = $this->createMock(CiviEventDispatcher::class);
+    $this->subscriber = new ApiAuthorizeSubscriber();
   }
 
   public function testGetSubscribedEvents(): void {
     $expectedSubscriptions = [
-      'civi.api.authorize' => ['onApiAuthorize', PHP_INT_MAX],
+      'civi.api.authorize' => ['onApiAuthorize', Events::W_EARLY],
     ];
 
-    static::assertEquals($expectedSubscriptions, ApiAuthorizeInitRequestSubscriber::getSubscribedEvents());
+    static::assertEquals($expectedSubscriptions, $this->subscriber::getSubscribedEvents());
 
-    foreach ($expectedSubscriptions as $event => $method) {
-      static::assertTrue(method_exists(ApiAuthorizeInitRequestSubscriber::class, $method[0]));
+    foreach ($expectedSubscriptions as [$method, $priority]) {
+      static::assertTrue(method_exists(get_class($this->subscriber), $method));
     }
   }
 
-  public function testOnApiAuthorize(): void {
-    $this->requestMock->expects(static::once())->method('getRequiredExtraParams')->willReturn(['foo']);
-
+  /**
+   * @dataProvider provideAuthorize
+   */
+  public function testOnApiAuthorize(bool $authorize): void {
     $this->eventDispatcherMock->expects(static::once())->method('dispatch')
-      ->with('test.request.init', static::isInstanceOf(AuthorizeApiRequestEvent::class))
-      ->willReturnCallback(function (string $eventName, AuthorizeApiRequestEvent $event) {
+      ->with('test.request.authorize', static::isInstanceOf(AuthorizeApiRequestEvent::class))
+      ->willReturnCallback(function (string $eventName, AuthorizeApiRequestEvent $event) use ($authorize) {
         static::assertSame($this->requestMock, $event->getApiRequest());
-        $this->requestMock->expects(static::once())->method('hasExtraParam')->with('foo')->willReturn(TRUE);
+        $event->setAuthorized($authorize);
       });
 
+    $this->eventMock->expects(static::once())->method('setAuthorized')->with($authorize);
+    $this->eventMock->expects(static::once())->method('stopPropagation');
     $this->subscriber->onApiAuthorize($this->eventMock, 'civi.api.authorize', $this->eventDispatcherMock);
   }
 
-  public function testOnApiAuthorizeRequiredExtraParamMissing(): void {
-    $this->requestMock->expects(static::once())->method('getRequiredExtraParams')->willReturn(['foo']);
-
+  public function testOnApiAuthorizeNoListener(): void {
     $this->eventDispatcherMock->expects(static::once())->method('dispatch')
-      ->with('test.request.init', static::isInstanceOf(AuthorizeApiRequestEvent::class))
-      ->willReturnCallback(function (string $eventName, AuthorizeApiRequestEvent $event) {
-        static::assertSame($this->requestMock, $event->getApiRequest());
-      });
+      ->with('test.request.authorize', static::isInstanceOf(AuthorizeApiRequestEvent::class));
 
-    $this->requestMock->expects(static::once())->method('hasExtraParam')->with('foo')->willReturn(FALSE);
-
-    static::expectException(\API_Exception::class);
-    static::expectExceptionMessage('Required extra param "foo" is missing');
+    $this->eventMock->expects(static::never())->method('setAuthorized');
+    $this->eventMock->expects(static::never())->method('stopPropagation');
     $this->subscriber->onApiAuthorize($this->eventMock, 'civi.api.authorize', $this->eventDispatcherMock);
+  }
+
+  /**
+   * @phpstan-return iterable<array{bool}>
+   */
+  public function provideAuthorize(): iterable {
+    yield [TRUE];
+    yield [FALSE];
   }
 
 }

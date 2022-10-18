@@ -15,40 +15,34 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * @noinspection PhpUnhandledExceptionInspection
- * @noinspection PropertyAnnotationInspection
- */
-
 declare(strict_types = 1);
 
 namespace Civi\RemoteTools\Api4\Action;
 
-use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
-use Civi\RemoteTools\Event\GetEvent;
+use Civi\RemoteTools\Event\GetFieldsEvent;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub\ReturnCallback;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Civi\RemoteTools\Api4\Action\EventGetAction
- * @covers \Civi\RemoteTools\Event\GetEvent
+ * @covers \Civi\RemoteTools\Api4\Action\EventGetFieldsAction
+ * @covers \Civi\RemoteTools\Event\GetFieldsEvent
  * @covers \Civi\RemoteTools\Event\AbstractRequestEvent
  */
-final class EventGetActionTest extends TestCase {
+final class EventGetFieldsActionTest extends TestCase {
 
   /**
    * @var \PHPUnit\Framework\MockObject\MockObject&\Civi\Core\CiviEventDispatcher
    */
   private MockObject $eventDispatcherMock;
 
-  private EventGetAction $eventGetAction;
+  private EventGetFieldsAction $action;
 
   protected function setUp(): void {
     parent::setUp();
     $this->eventDispatcherMock = $this->createMock(CiviEventDispatcher::class);
-    $this->eventGetAction = new EventGetAction(
+    $this->action = new EventGetFieldsAction(
       'test.request.init',
       'test.request.authorize',
       'test',
@@ -57,26 +51,23 @@ final class EventGetActionTest extends TestCase {
     );
   }
 
-  public function testRun(): void {
-    $result = new Result();
+  public function test(): void {
+    static::assertSame([], $this->action->fields());
 
     $this->eventDispatcherMock->expects(static::exactly(3))->method('dispatch')
       ->withConsecutive(
-        [GetEvent::getEventName('test', 'action'), static::isInstanceOf(GetEvent::class)],
-        [GetEvent::getEventName('test'), static::isInstanceOf(GetEvent::class)],
-        [GetEvent::getEventName(), static::isInstanceOf(GetEvent::class)]
+        [GetFieldsEvent::getEventName('test', 'action'), static::isInstanceOf(GetFieldsEvent::class)],
+        [GetFieldsEvent::getEventName('test'), static::isInstanceOf(GetFieldsEvent::class)],
+        [GetFieldsEvent::getEventName(), static::isInstanceOf(GetFieldsEvent::class)]
       )
       ->willReturnOnConsecutiveCalls(
-        new ReturnCallback(function (string $eventName, GetEvent $event) {
-          $event->setRowCount(123);
-          $event->addRecord(['foo' => 'bar']);
+        new ReturnCallback(function (string $eventName, GetFieldsEvent $event) {
+          $event->addField(['name' => 'foo', 'x' => 'y']);
         })
       );
 
-    $this->eventGetAction->_run($result);
-
-    static::assertSame(123, $result->rowCount);
-    static::assertSame([['foo' => 'bar']], $result->getArrayCopy());
+    $records = $this->action->getRecords();
+    static::assertSame(['foo' => ['name' => 'foo', 'x' => 'y']], $records);
   }
 
 }

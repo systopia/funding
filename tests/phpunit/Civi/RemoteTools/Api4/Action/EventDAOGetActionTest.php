@@ -33,6 +33,9 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Civi\RemoteTools\Api4\Action\EventDAOGetAction
+ * @covers \Civi\RemoteTools\Event\DAOGetEvent
+ * @covers \Civi\RemoteTools\Event\GetEvent
+ * @covers \Civi\RemoteTools\Event\AbstractRequestEvent
  */
 final class EventDAOGetActionTest extends TestCase {
 

@@ -15,46 +15,54 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * @noinspection PhpUnhandledExceptionInspection
- * @noinspection PropertyAnnotationInspection
- */
-
 declare(strict_types = 1);
 
 namespace Civi\RemoteTools\Api4\Action;
 
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
+use Civi\RemoteTools\Event\AbstractRequestEvent;
 use Civi\RemoteTools\Event\GetEvent;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub\ReturnCallback;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Civi\RemoteTools\Api4\Action\EventGetAction
- * @covers \Civi\RemoteTools\Event\GetEvent
- * @covers \Civi\RemoteTools\Event\AbstractRequestEvent
+ * @covers \Civi\RemoteTools\Api4\Action\AbstractEventAction
  */
-final class EventGetActionTest extends TestCase {
+final class AbstractEventActionTest extends TestCase {
 
   /**
    * @var \PHPUnit\Framework\MockObject\MockObject&\Civi\Core\CiviEventDispatcher
    */
   private MockObject $eventDispatcherMock;
 
-  private EventGetAction $eventGetAction;
+  private AbstractEventAction $eventGetAction;
 
   protected function setUp(): void {
     parent::setUp();
     $this->eventDispatcherMock = $this->createMock(CiviEventDispatcher::class);
-    $this->eventGetAction = new EventGetAction(
+    $this->eventGetAction = new class (
       'test.request.init',
       'test.request.authorize',
       'test',
       'action',
       $this->eventDispatcherMock
-    );
+    ) extends AbstractEventAction {
+
+      protected function updateResult(Result $result, AbstractRequestEvent $event): void {
+        /** @var \Civi\RemoteTools\Event\GetEvent $event */
+        $result->exchangeArray($event->getRecords());
+      }
+
+      /**
+       * @inheritDoc
+       */
+      protected function getEventClass(): string {
+        return GetEvent::class;
+      }
+
+    };
   }
 
   public function testRun(): void {
@@ -68,14 +76,12 @@ final class EventGetActionTest extends TestCase {
       )
       ->willReturnOnConsecutiveCalls(
         new ReturnCallback(function (string $eventName, GetEvent $event) {
-          $event->setRowCount(123);
           $event->addRecord(['foo' => 'bar']);
         })
       );
 
     $this->eventGetAction->_run($result);
 
-    static::assertSame(123, $result->rowCount);
     static::assertSame([['foo' => 'bar']], $result->getArrayCopy());
   }
 
