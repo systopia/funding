@@ -28,6 +28,7 @@ use Civi\Funding\Api4\Action\Remote\FundingCase\ValidateNewApplicationFormAction
 use Civi\Funding\EventSubscriber\FundingCase\AddFundingCasePermissionsSubscriber;
 use Civi\Funding\EventSubscriber\FundingCase\ApplicationProcessDeletedSubscriber;
 use Civi\Funding\EventSubscriber\FundingCase\ApplicationProcessStatusSubscriber;
+use Civi\Funding\EventSubscriber\FundingCase\FundingCaseFilterPermissionsSubscriber;
 use Civi\Funding\EventSubscriber\FundingCase\FundingCaseGetPossiblePermissionsSubscriber;
 use Civi\Funding\EventSubscriber\FundingCase\FundingCasePermissionsGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseDAOGetSubscriber;
@@ -51,6 +52,8 @@ $container->autowire(FundingCaseGetFieldsSubscriber::class)
 $container->autowire(FundingCaseDAOGetSubscriber::class)
   ->addTag('kernel.event_subscriber');
 $container->autowire(FundingCasePermissionsGetSubscriber::class)
+  ->addTag('kernel.event_subscriber');
+$container->autowire(FundingCaseFilterPermissionsSubscriber::class)
   ->addTag('kernel.event_subscriber');
 $container->autowire(FundingCaseGetPossiblePermissionsSubscriber::class)
   ->addTag('kernel.event_subscriber');

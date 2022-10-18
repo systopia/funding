@@ -27,7 +27,7 @@ interface ApplicationSubmitActionsFactoryInterface {
    * @phpstan-return array<string, array{label: string, confirm: string|null}>
    *   Map of action names to button labels and confirm messages.
    */
-  public function createSubmitActions(string $status, array $permissions): array;
+  public function createInitialSubmitActions(array $permissions): array;
 
   /**
    * @phpstan-param array<string> $permissions
@@ -35,7 +35,7 @@ interface ApplicationSubmitActionsFactoryInterface {
    * @phpstan-return array<string, array{label: string, confirm: string|null}>
    *   Map of action names to button labels and confirm messages.
    */
-  public function createSubmitActionsForNew(array $permissions): array;
+  public function createSubmitActions(string $status, array $permissions): array;
 
   /**
    * @phpstan-param array<string> $permissions

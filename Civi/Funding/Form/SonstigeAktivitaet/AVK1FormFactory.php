@@ -185,7 +185,7 @@ class AVK1FormFactory implements ApplicationFormFactoryInterface {
       $fundingCaseType->getId(),
       $fundingProgram->getId(),
       $this->possibleRecipientsLoader->getPossibleRecipients($contactId),
-      $this->submitActionsFactory->createSubmitActionsForNew($fundingProgram->getPermissions()),
+      $this->submitActionsFactory->createInitialSubmitActions($fundingProgram->getPermissions()),
       $data
     );
   }

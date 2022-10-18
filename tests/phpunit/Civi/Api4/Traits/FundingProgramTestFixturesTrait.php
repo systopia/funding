@@ -32,6 +32,22 @@ trait FundingProgramTestFixturesTrait {
    * @throws \API_Exception
    */
   protected function addFixtures(): void {
+    $this->doAddFixtures(
+      ['application_foo', 'review_bar'],
+      ['application_a', 'review_b']
+    );
+  }
+
+  /**
+   * @phpstan-param array<string> $permittedContactTypePermissions
+   * @phpstan-param array<string> $permittedRelationshipTypePermissions
+   *
+   * @throws \API_Exception
+   */
+  private function doAddFixtures(
+    array $permittedContactTypePermissions,
+    array $permittedRelationshipTypePermissions
+  ): void {
     $fundingProgramId = FundingProgramFixture::addFixture(['title' => 'Foo'])->getId();
     FundingProgramFixture::addFixture(['title' => 'Bar']);
 
@@ -46,7 +62,7 @@ trait FundingProgramTestFixturesTrait {
         'funding_program_id' => $fundingProgramId,
         'entity_table' => 'civicrm_contact_type',
         'entity_id' => $permittedContactTypeId,
-        'permissions' => ['foo', 'bar'],
+        'permissions' => $permittedContactTypePermissions,
       ])->execute();
 
     ContactTypeFixture::addOrganizationFixture('NotPermitted', 'not permitted');
@@ -82,7 +98,7 @@ trait FundingProgramTestFixturesTrait {
         'entity_table' => 'civicrm_relationship_type',
         'entity_id' => $permittedRelationshipTypeId,
         'parent_id' => $permittedContactRelationId,
-        'permissions' => ['a', 'b'],
+        'permissions' => $permittedRelationshipTypePermissions,
       ])->execute();
 
     $this->permittedOrganizationIdNoPermissions = Contact::create()->setValues([

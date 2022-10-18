@@ -17,9 +17,9 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\ApplicationProcess;
+namespace Civi\Funding\ApplicationProcess\StatusDeterminer;
 
-final class ApplicationProcessStatusDeterminer implements ApplicationProcessStatusDeterminerInterface {
+final class DefaultApplicationProcessStatusDeterminer extends ApplicationProcessStatusDeterminer {
 
   private const STATUS_ACTION_STATUS_MAP = [
     NULL => [
@@ -33,39 +33,29 @@ final class ApplicationProcessStatusDeterminer implements ApplicationProcessStat
     'applied' => [
       'modify' => 'draft',
       'withdraw' => 'withdrawn',
+      'review' => 'review',
+    ],
+    'review' => [
+      // @todo When do we switch to "approved"?
+      'approve-calculative' => 'review',
+      'approve-content' => 'review',
+      // @todo When do we switch to "draft", when to "rejected"?
+      'reject-calculative' => 'review',
+      'reject-content' => 'review',
     ],
     'draft' => [
       'save' => 'draft',
       'apply' => 'applied',
       'withdraw' => 'withdrawn',
     ],
+    'pre-approved' => [
+      'approve' => 'approved',
+      'reject' => 'draft',
+    ],
   ];
 
-  public function getStatusForNew(string $action): string {
-    $status = self::STATUS_ACTION_STATUS_MAP[NULL][$action] ?? NULL;
-    if (NULL === $status) {
-      throw new \InvalidArgumentException(sprintf(
-        'Could not determine application process status for action "%s"',
-        $action
-      ));
-    }
-
-    return $status;
-  }
-
-  public function getStatus(string $currentStatus, string $action): string {
-    $status = self::STATUS_ACTION_STATUS_MAP[$currentStatus][$action] ?? NULL;
-    if (NULL === $status) {
-      throw new \InvalidArgumentException(
-        sprintf(
-          'Could not determine application process status for action "%s" and current status "%s"',
-          $action,
-          $currentStatus,
-        )
-      );
-    }
-
-    return $status;
+  public function __construct() {
+    parent::__construct(self::STATUS_ACTION_STATUS_MAP);
   }
 
 }

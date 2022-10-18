@@ -20,12 +20,12 @@ declare(strict_types = 1);
 namespace Civi\Funding\Form\Handler;
 
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
-use Civi\Funding\ApplicationProcess\ApplicationProcessStatusDeterminerInterface;
+use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\Event\Remote\AbstractFundingSubmitFormEvent;
 use Civi\Funding\Event\Remote\ApplicationProcess\SubmitApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
-use Civi\Funding\Form\ApplicationFormInterface;
 use Civi\Funding\Form\ApplicationFormFactoryInterface;
+use Civi\Funding\Form\ApplicationFormInterface;
 use Civi\Funding\Form\Validation\FormValidatorInterface;
 use Civi\Funding\Form\Validation\ValidationResult;
 use Civi\Funding\FundingCase\FundingCaseManager;
@@ -100,7 +100,7 @@ final class SubmitApplicationFormHandler implements SubmitApplicationFormHandler
     $applicationProcess = $this->applicationProcessManager->create(
       $event->getContactId(),
       $fundingCase,
-      $this->statusDeterminer->getStatusForNew($validatedData->getAction()),
+      $this->statusDeterminer->getInitialStatus($validatedData->getAction()),
       $validatedData,
     );
 

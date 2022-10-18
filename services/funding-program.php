@@ -22,6 +22,7 @@ declare(strict_types = 1);
 
 use Civi\Funding\Api4\Action\FundingProgram\GetAction;
 use Civi\Funding\Api4\Action\FundingProgram\GetFieldsAction;
+use Civi\Funding\EventSubscriber\FundingProgram\FundingProgramFilterPermissionsSubscriber;
 use Civi\Funding\EventSubscriber\FundingProgram\FundingProgramGetPossiblePermissionsSubscriber;
 use Civi\Funding\EventSubscriber\FundingProgram\FundingProgramPermissionsGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingProgramDAOGetSubscriber;
@@ -46,6 +47,8 @@ $container->autowire(FundingProgramGetFieldsSubscriber::class)
 $container->autowire(FundingProgramDAOGetSubscriber::class)
   ->addTag('kernel.event_subscriber');
 $container->autowire(FundingProgramPermissionsGetSubscriber::class)
+  ->addTag('kernel.event_subscriber');
+$container->autowire(FundingProgramFilterPermissionsSubscriber::class)
   ->addTag('kernel.event_subscriber');
 $container->autowire(FundingProgramGetPossiblePermissionsSubscriber::class)
   ->addTag('kernel.event_subscriber');

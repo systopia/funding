@@ -17,7 +17,7 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\ApplicationProcess;
+namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
 interface ApplicationProcessActionsDeterminerInterface {
 
@@ -33,7 +33,7 @@ interface ApplicationProcessActionsDeterminerInterface {
    *
    * @phpstan-return array<string>
    */
-  public function getActionsForNew(array $permissions): array;
+  public function getInitialActions(array $permissions): array;
 
   /**
    * @phpstan-param array<string> $permissions

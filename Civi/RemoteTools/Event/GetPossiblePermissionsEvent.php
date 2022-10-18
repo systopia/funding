@@ -64,4 +64,13 @@ class GetPossiblePermissionsEvent extends Event {
     return $this->permissions;
   }
 
+  /**
+   * @phpstan-param array<string> $permissions
+   */
+  public function setPermissions(array $permissions): self {
+    $this->permissions = \array_values($permissions);
+
+    return $this;
+  }
+
 }

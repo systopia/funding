@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\Api4\Traits\FundingCaseTypeFixturesTrait;
+use Civi\Funding\Util\SessionTestUtil;
 use Civi\Test;
 use Civi\Test\CiviEnvBuilder;
 use Civi\Test\HeadlessInterface;
@@ -48,7 +49,7 @@ final class FundingCaseTypeTest extends TestCase implements HeadlessInterface, T
   }
 
   public function testGetByFundingProgramId(): void {
-    \CRM_Core_Session::singleton()->set('userID', $this->permittedContactId);
+    SessionTestUtil::mockRemoteRequestSession((string) $this->permittedContactId);
     static::assertCount(1, FundingCaseType::getByFundingProgramId()
       ->setFundingProgramId($this->fundingProgramId)
       ->execute());
@@ -57,7 +58,7 @@ final class FundingCaseTypeTest extends TestCase implements HeadlessInterface, T
       ->setFundingProgramId($this->fundingProgramIdWithoutFundingCaseType)
       ->execute());
 
-    \CRM_Core_Session::singleton()->set('userID', $this->notPermittedContactId);
+    SessionTestUtil::mockRemoteRequestSession((string) $this->notPermittedContactId);
     static::assertCount(0, FundingCaseType::getByFundingProgramId()
       ->setFundingProgramId($this->fundingProgramId)
       ->execute());

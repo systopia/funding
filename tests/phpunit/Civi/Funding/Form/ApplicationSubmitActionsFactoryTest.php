@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form;
 
-use Civi\Funding\ApplicationProcess\ApplicationProcessActionsDeterminerInterface;
+use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -29,7 +29,7 @@ use PHPUnit\Framework\TestCase;
 final class ApplicationSubmitActionsFactoryTest extends TestCase {
 
   /**
-   * @var \Civi\Funding\ApplicationProcess\ApplicationProcessActionsDeterminerInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $actionsDeterminerMock;
 
@@ -74,15 +74,15 @@ final class ApplicationSubmitActionsFactoryTest extends TestCase {
     $this->submitActionsFactory->createSubmitActions('test', ['permission']);
   }
 
-  public function testCreateSubmitActionsForNew(): void {
+  public function testCreateInitialSubmitActions(): void {
     $this->submitActionsContainer->add('test1', 'Test1');
     $this->submitActionsContainer->add('test2', 'Test2');
     $this->submitActionsContainer->add('test3', 'Test3', 'Really?');
-    $this->actionsDeterminerMock->expects(static::once())->method('getActionsForNew')
+    $this->actionsDeterminerMock->expects(static::once())->method('getInitialActions')
       ->with(['permission'])
       ->willReturn(['test3', 'test1']);
 
-    $submitActions = $this->submitActionsFactory->createSubmitActionsForNew(['permission']);
+    $submitActions = $this->submitActionsFactory->createInitialSubmitActions(['permission']);
     // "test1" must be first
     static::assertSame([
       'test1' => ['label' => 'Test1', 'confirm' => NULL],
@@ -90,15 +90,15 @@ final class ApplicationSubmitActionsFactoryTest extends TestCase {
     ], $submitActions);
   }
 
-  public function testCreateSubmitActionsForNewUnknownAction(): void {
+  public function testCreateInitialSubmitActionsUnknownAction(): void {
     $this->submitActionsContainer->add('test1', 'Test1');
-    $this->actionsDeterminerMock->expects(static::once())->method('getActionsForNew')
+    $this->actionsDeterminerMock->expects(static::once())->method('getInitialActions')
       ->with(['permission'])
       ->willReturn(['test2']);
 
     $this->expectException(\RuntimeException::class);
     $this->expectExceptionMessage('Unknown action "test2"');
-    $this->submitActionsFactory->createSubmitActionsForNew(['permission']);
+    $this->submitActionsFactory->createInitialSubmitActions(['permission']);
   }
 
   public function testIsEditAllowed(): void {

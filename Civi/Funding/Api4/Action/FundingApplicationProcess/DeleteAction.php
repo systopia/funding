@@ -23,7 +23,7 @@ use Civi\API\Exception\UnauthorizedException;
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\AbstractBatchAction;
 use Civi\Api4\Generic\Result;
-use Civi\Funding\ApplicationProcess\ApplicationProcessActionsDeterminerInterface;
+use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\FundingCaseEntity;

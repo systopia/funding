@@ -30,9 +30,9 @@ abstract class AbstractGetPermissionsEvent extends Event {
   private int $entityId;
 
   /**
-   * @var array<int, string>|null
+   * @var array<string>
    */
-  private ?array $permissions = NULL;
+  private array $permissions = [];
 
   public function __construct(string $entityName, int $entityId, int $contactId) {
     $this->entityName = $entityName;
@@ -56,23 +56,23 @@ abstract class AbstractGetPermissionsEvent extends Event {
    * @param array<string> $permissions
    */
   public function addPermissions(array $permissions): self {
-    $this->permissions = \array_values(array_unique(array_merge($this->permissions ?? [], $permissions)));
+    $this->permissions = \array_values(array_unique(array_merge($this->permissions, $permissions)));
 
     return $this;
   }
 
   /**
-   * @return array<int, string>|null
+   * @phpstan-return array<string>
    */
-  public function getPermissions(): ?array {
+  public function getPermissions(): array {
     return $this->permissions;
   }
 
   /**
-   * @param array<string>|null $permissions
+   * @phpstan-param array<string> $permissions
    */
-  public function setPermissions(?array $permissions): self {
-    $this->permissions = NULL === $permissions ? NULL : \array_values($permissions);
+  public function setPermissions(array $permissions): self {
+    $this->permissions = \array_values($permissions);
 
     return $this;
   }

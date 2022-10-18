@@ -17,15 +17,15 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\ApplicationProcess;
+namespace Civi\Funding\Util;
 
 /**
- * Determines the status of an application process for a given action.
+ * @codeCoverageIgnore
  */
-interface ApplicationProcessStatusDeterminerInterface {
+final class SessionUtil {
 
-  public function getStatusForNew(string $action): string;
-
-  public function getStatus(string $currentStatus, string $action): string;
+  public static function isRemoteSession(\CRM_Core_Session $session): bool {
+    return (bool) $session->get('isRemote', 'funding');
+  }
 
 }

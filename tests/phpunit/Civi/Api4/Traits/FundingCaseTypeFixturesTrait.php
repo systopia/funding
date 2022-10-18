@@ -52,7 +52,7 @@ trait FundingCaseTypeFixturesTrait {
         'funding_program_id' => $this->fundingProgramId,
         'entity_table' => 'civicrm_contact_type',
         'entity_id' => $permittedContactTypeId,
-        'permissions' => ['foo', 'bar'],
+        'permissions' => ['application_foo', 'application_bar', 'review_baz'],
       ])->execute();
 
     FundingProgramContactRelation::create()
@@ -60,7 +60,7 @@ trait FundingCaseTypeFixturesTrait {
         'funding_program_id' => $this->fundingProgramIdWithoutFundingCaseType,
         'entity_table' => 'civicrm_contact_type',
         'entity_id' => $permittedContactTypeId,
-        'permissions' => ['foo', 'bar'],
+        'permissions' => ['application_foo', 'application_bar', 'review_baz'],
       ])->execute();
 
     $permittedContact = Contact::create()

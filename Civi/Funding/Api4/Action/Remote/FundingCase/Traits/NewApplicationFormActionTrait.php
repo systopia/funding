@@ -32,7 +32,7 @@ trait NewApplicationFormActionTrait {
    * @throws \Civi\API\Exception\UnauthorizedException
    */
   protected function assertCreateApplicationPermission(FundingProgramEntity $fundingProgram): void {
-    if (!in_array('create_application', $fundingProgram->getPermissions(), TRUE)) {
+    if (!in_array('application_create', $fundingProgram->getPermissions(), TRUE)) {
       throw new UnauthorizedException(E::ts('Required permission is missing'));
     }
   }

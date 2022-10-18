@@ -35,8 +35,8 @@ final class FundingProgramGetPossiblePermissionsSubscriber implements EventSubsc
   public function onGetPossiblePermissions(GetPossiblePermissionsEvent $event): void {
     // TODO: Possible permissions for FundingProgram
     $event->addPermissions([
-      'create_application',
-      'apply_application',
+      'application_create',
+      'application_apply',
     ]);
   }
 

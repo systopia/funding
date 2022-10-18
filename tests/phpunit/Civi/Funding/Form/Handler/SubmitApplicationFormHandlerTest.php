@@ -22,7 +22,7 @@ namespace Civi\Funding\Form\Handler;
 use Civi\Api4\RemoteFundingApplicationProcess;
 use Civi\Api4\RemoteFundingCase;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
-use Civi\Funding\ApplicationProcess\ApplicationProcessStatusDeterminerInterface;
+use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
@@ -69,7 +69,7 @@ final class SubmitApplicationFormHandlerTest extends TestCase {
   private SubmitApplicationFormHandler $handler;
 
   /**
-   * @var \Civi\Funding\ApplicationProcess\ApplicationProcessStatusDeterminerInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $statusDeterminerMock;
 
@@ -253,7 +253,7 @@ final class SubmitApplicationFormHandlerTest extends TestCase {
       $validationResult
     )->willReturn($validatedData);
 
-    $this->statusDeterminerMock->expects(static::once())->method('getStatusForNew')
+    $this->statusDeterminerMock->expects(static::once())->method('getInitialStatus')
       ->with(ValidatedApplicationDataMock::ACTION)
       ->willReturn('test_status');
 

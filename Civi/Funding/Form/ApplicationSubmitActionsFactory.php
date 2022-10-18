@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form;
 
-use Civi\Funding\ApplicationProcess\ApplicationProcessActionsDeterminerInterface;
+use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerInterface;
 
 final class ApplicationSubmitActionsFactory implements ApplicationSubmitActionsFactoryInterface {
 
@@ -39,8 +39,8 @@ final class ApplicationSubmitActionsFactory implements ApplicationSubmitActionsF
     return $this->doCreateSubmitActions($this->actionsDeterminer->getActions($status, $permissions));
   }
 
-  public function createSubmitActionsForNew(array $permissions): array {
-    return $this->doCreateSubmitActions($this->actionsDeterminer->getActionsForNew($permissions));
+  public function createInitialSubmitActions(array $permissions): array {
+    return $this->doCreateSubmitActions($this->actionsDeterminer->getInitialActions($permissions));
   }
 
   public function isEditAllowed(string $status, array $permissions): bool {

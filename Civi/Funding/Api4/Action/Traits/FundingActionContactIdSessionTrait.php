@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\Traits;
 
+use Civi\Funding\Util\SessionUtil;
 use Webmozart\Assert\Assert;
 
 /**
@@ -46,7 +47,7 @@ trait FundingActionContactIdSessionTrait {
   }
 
   private function isRemoteApiRequest(): bool {
-    return (bool) \CRM_Core_Session::singleton()->get('isRemote', 'funding');
+    return SessionUtil::isRemoteSession(\CRM_Core_Session::singleton());
   }
 
 }

@@ -67,9 +67,9 @@ final class RemoteFundingProgramTest extends TestCase implements HeadlessInterfa
       ->execute();
     static::assertSame(1, $permittedOrganizationResult->rowCount);
     static::assertSame('Foo', $permittedOrganizationResult->first()['title']);
-    static::assertSame(['foo', 'bar'], $permittedOrganizationResult->first()['permissions']);
-    static::assertTrue($permittedOrganizationResult->first()['PERM_foo']);
-    static::assertTrue($permittedOrganizationResult->first()['PERM_bar']);
+    static::assertSame(['application_foo'], $permittedOrganizationResult->first()['permissions']);
+    static::assertTrue($permittedOrganizationResult->first()['PERM_application_foo']);
+    static::assertArrayNotHasKey('PERM_review_bar', $permittedOrganizationResult->first());
 
     // Contact has a relation that has a permitted type with a contact that has a permitted type
     $permittedIndividualResult = RemoteFundingProgram::get()
@@ -77,9 +77,9 @@ final class RemoteFundingProgramTest extends TestCase implements HeadlessInterfa
       ->execute();
     static::assertSame(1, $permittedIndividualResult->rowCount);
     static::assertSame('Foo', $permittedIndividualResult->first()['title']);
-    static::assertSame(['a', 'b'], $permittedIndividualResult->first()['permissions']);
-    static::assertTrue($permittedIndividualResult->first()['PERM_a']);
-    static::assertTrue($permittedIndividualResult->first()['PERM_b']);
+    static::assertSame(['application_a'], $permittedIndividualResult->first()['permissions']);
+    static::assertTrue($permittedIndividualResult->first()['PERM_application_a']);
+    static::assertArrayNotHasKey('PERM_review_b', $permittedOrganizationResult->first());
 
     // Contact has a relation that has a not permitted type with a contact that has a permitted type
     $notPermittedResult = RemoteFundingProgram::get()

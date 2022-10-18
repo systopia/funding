@@ -48,9 +48,9 @@ final class GetAction extends DAOGetAction implements FundingContactIdSessionAwa
   /**
    * @param array{id: int} $record
    *
-   * @return array<int, string>|null
+   * @return array<string>
    */
-  protected function getRecordPermissions(array $record): ?array {
+  protected function getRecordPermissions(array $record): array {
     $permissionsGetEvent = new GetPermissionsEvent($record['id'], $this->getContactId());
     $this->_eventDispatcher->dispatch(GetPermissionsEvent::class, $permissionsGetEvent);
 

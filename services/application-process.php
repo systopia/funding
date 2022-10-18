@@ -25,13 +25,13 @@ use Civi\Funding\Api4\Action\FundingApplicationProcess\GetAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetFormAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\SubmitFormAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\ValidateFormAction;
+use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerInterface;
+use Civi\Funding\ApplicationProcess\ActionsDeterminer\DefaultApplicationProcessActionsDeterminer;
 use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
-use Civi\Funding\ApplicationProcess\ApplicationProcessActionsDeterminer;
-use Civi\Funding\ApplicationProcess\ApplicationProcessActionsDeterminerInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
-use Civi\Funding\ApplicationProcess\ApplicationProcessStatusDeterminer;
-use Civi\Funding\ApplicationProcess\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager;
+use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
+use Civi\Funding\ApplicationProcess\StatusDeterminer\DefaultApplicationProcessStatusDeterminer;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessModificationDateSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessGetFieldsSubscriber;
@@ -65,5 +65,7 @@ $container->autowire(ApplicationProcessModificationDateSubscriber::class)
 $container->autowire(ApplicationProcessDAOGetSubscriber::class)
   ->addTag('kernel.event_subscriber');
 
-$container->autowire(ApplicationProcessActionsDeterminerInterface::class, ApplicationProcessActionsDeterminer::class);
-$container->autowire(ApplicationProcessStatusDeterminerInterface::class, ApplicationProcessStatusDeterminer::class);
+$container->autowire(ApplicationProcessActionsDeterminerInterface::class,
+  DefaultApplicationProcessActionsDeterminer::class);
+$container->autowire(ApplicationProcessStatusDeterminerInterface::class,
+  DefaultApplicationProcessStatusDeterminer::class);

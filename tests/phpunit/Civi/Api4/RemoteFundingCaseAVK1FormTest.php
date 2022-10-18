@@ -84,7 +84,7 @@ final class RemoteFundingCaseAVK1FormTest extends TestCase implements HeadlessIn
     FundingProgramContactRelationFixture::addContact(
       $this->contact['id'],
       $this->fundingProgram->getId(),
-      ['some_permission']
+      ['application_permission']
     );
 
     $e = NULL;
@@ -100,7 +100,7 @@ final class RemoteFundingCaseAVK1FormTest extends TestCase implements HeadlessIn
     FundingProgramContactRelationFixture::addContact(
       $this->contact['id'],
       $this->fundingProgram->getId(),
-      ['create_application']
+      ['application_create']
     );
 
     $values = $action->execute()->getArrayCopy();
@@ -121,7 +121,7 @@ final class RemoteFundingCaseAVK1FormTest extends TestCase implements HeadlessIn
     FundingProgramContactRelationFixture::addContact(
       $this->contact['id'],
       $this->fundingProgram->getId(),
-      ['some_permission']
+      ['application_permission']
     );
 
     $e = NULL;
@@ -137,7 +137,7 @@ final class RemoteFundingCaseAVK1FormTest extends TestCase implements HeadlessIn
     FundingProgramContactRelationFixture::addContact(
       $this->contact['id'],
       $this->fundingProgram->getId(),
-      ['create_application']
+      ['application_create']
     );
 
     $values = $action->execute()->getArrayCopy();
@@ -157,7 +157,7 @@ final class RemoteFundingCaseAVK1FormTest extends TestCase implements HeadlessIn
     FundingProgramContactRelationFixture::addContact(
       $this->contact['id'],
       $this->fundingProgram->getId(),
-      ['some_permission']
+      ['application_permission']
     );
 
     $e = NULL;
@@ -173,7 +173,7 @@ final class RemoteFundingCaseAVK1FormTest extends TestCase implements HeadlessIn
     FundingProgramContactRelationFixture::addContact(
       $this->contact['id'],
       $this->fundingProgram->getId(),
-      ['create_application']
+      ['application_create']
     );
 
     $values = $action->execute()->getArrayCopy();

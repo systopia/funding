@@ -19,39 +19,41 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess;
 
+use Civi\Funding\ApplicationProcess\StatusDeterminer\DefaultApplicationProcessStatusDeterminer;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Civi\Funding\ApplicationProcess\ApplicationProcessStatusDeterminer
+ * @covers \Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminer
+ * @covers \Civi\Funding\ApplicationProcess\StatusDeterminer\DefaultApplicationProcessStatusDeterminer
  */
-final class ApplicationProcessStatusDeterminerTest extends TestCase {
+final class DefaultApplicationProcessStatusDeterminerTest extends TestCase {
 
-  private ApplicationProcessStatusDeterminer $statusDeterminer;
+  private DefaultApplicationProcessStatusDeterminer $statusDeterminer;
 
   protected function setUp(): void {
     parent::setUp();
-    $this->statusDeterminer = new ApplicationProcessStatusDeterminer();
+    $this->statusDeterminer = new DefaultApplicationProcessStatusDeterminer();
   }
 
   /**
-   * @dataProvider provideActionsForNew
+   * @dataProvider provideInitialActions
    */
-  public function testGetStatusForNew(string $action, string $expectedStatus): void {
-    static::assertSame($expectedStatus, $this->statusDeterminer->getStatusForNew($action));
+  public function testGetInitialStatus(string $action, string $expectedStatus): void {
+    static::assertSame($expectedStatus, $this->statusDeterminer->getInitialStatus($action));
   }
 
   /**
    * @phpstan-return iterable<array{string, string}>
    */
-  public function provideActionsForNew(): iterable {
+  public function provideInitialActions(): iterable {
     yield ['save', 'new'];
     yield ['apply', 'applied'];
   }
 
-  public function testGetStatusForNewInvalid(): void {
+  public function testGetInitialStatusInvalid(): void {
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage('Could not determine application process status for action "test"');
-    $this->statusDeterminer->getStatusForNew('test');
+    $this->statusDeterminer->getInitialStatus('test');
   }
 
   /**
@@ -69,9 +71,12 @@ final class ApplicationProcessStatusDeterminerTest extends TestCase {
     yield ['new', 'apply', 'applied'];
     yield ['applied', 'modify', 'draft'];
     yield ['applied', 'withdraw', 'withdrawn'];
+    yield ['applied', 'review', 'review'];
     yield ['draft', 'save', 'draft'];
     yield ['draft', 'apply', 'applied'];
     yield ['draft', 'withdraw', 'withdrawn'];
+    yield ['pre-approved', 'approve', 'approved'];
+    yield ['pre-approved', 'reject', 'draft'];
   }
 
   public function testGetStatusInvalid(): void {
