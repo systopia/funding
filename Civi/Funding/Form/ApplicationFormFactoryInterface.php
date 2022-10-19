@@ -33,6 +33,11 @@ use Civi\Funding\Form\Validation\ValidationResult;
 
 interface ApplicationFormFactoryInterface {
 
+  /**
+   * @phpstan-return array<string>
+   */
+  public static function getSupportedFundingCaseTypes(): array;
+
   public function createForm(
     ApplicationProcessEntity $applicationProcess,
     FundingProgramEntity $fundingProgram,

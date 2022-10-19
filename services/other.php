@@ -22,11 +22,14 @@ declare(strict_types = 1);
 
 use Civi\Funding\Contact\FundingRemoteContactIdResolver;
 use Civi\Funding\Contact\FundingRemoteContactIdResolverInterface;
+use Civi\Funding\DependencyInjection\FundingCaseTypeServiceLocatorPass;
 use Civi\Funding\EventSubscriber\Api\TransactionalApiRequestSubscriber;
 use Civi\Funding\EventSubscriber\FundingFilterPossiblePermissionsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingRequestInitSubscriber;
 use Civi\Funding\Remote\RemoteFundingEntityManager;
 use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
+
+$container->addCompilerPass(new FundingCaseTypeServiceLocatorPass());
 
 $container->autowire(RemoteFundingEntityManagerInterface::class, RemoteFundingEntityManager::class);
 $container->autowire(FundingRemoteContactIdResolverInterface::class, FundingRemoteContactIdResolver::class);

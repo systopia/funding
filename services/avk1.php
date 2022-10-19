@@ -35,6 +35,6 @@ $container->autowire(AVK1ApplicationResourcesItemSubscriber::class)
   ->setLazy(TRUE);
 
 $container->autowire(AVK1FormFactory::class)
-  ->addTag('funding.form_factory');
+  ->addTag('funding.application.form_factory');
 $container->autowire(AVK1ApplicationCostItemsFactory::class);
 $container->autowire(AVK1ApplicationResourcesItemsFactory::class);

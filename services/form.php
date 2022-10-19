@@ -23,42 +23,33 @@ declare(strict_types = 1);
 use Civi\Funding\EventSubscriber\Form\GetApplicationFormSubscriber;
 use Civi\Funding\EventSubscriber\Form\SubmitApplicationFormSubscriber;
 use Civi\Funding\EventSubscriber\Form\ValidateApplicationFormSubscriber;
-use Civi\Funding\Form\ApplicationFormFactoryCollection;
-use Civi\Funding\Form\ApplicationFormFactoryInterface;
 use Civi\Funding\Form\ApplicationSubmitActionsFactory;
 use Civi\Funding\Form\ApplicationSubmitActionsFactoryInterface;
 use Civi\Funding\Form\DefaultApplicationSubmitActionsContainerFactory;
-use Civi\Funding\Form\Handler\GetApplicationFormHandler;
+use Civi\Funding\Form\Handler\DefaultGetApplicationFormHandler;
+use Civi\Funding\Form\Handler\DefaultSubmitApplicationFormHandler;
+use Civi\Funding\Form\Handler\DefaultValidateApplicationFormHandler;
 use Civi\Funding\Form\Handler\GetApplicationFormHandlerInterface;
-use Civi\Funding\Form\Handler\SubmitApplicationFormHandler;
 use Civi\Funding\Form\Handler\SubmitApplicationFormHandlerInterface;
-use Civi\Funding\Form\Handler\ValidateApplicationFormHandler;
 use Civi\Funding\Form\Handler\ValidateApplicationFormHandlerInterface;
 use Civi\Funding\Form\SubmitActionsContainer;
 use Civi\Funding\Form\Validation\FormValidator;
 use Civi\Funding\Form\Validation\FormValidatorInterface;
 use Civi\Funding\Form\Validation\OpisValidatorFactory;
 use Opis\JsonSchema\Validator;
-use Symfony\Component\DependencyInjection\Argument\ServiceLocatorArgument;
-use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\Reference;
 
 $container->register(Validator::class)->setFactory([OpisValidatorFactory::class, 'getValidator']);
 $container->autowire(FormValidatorInterface::class, FormValidator::class);
-
-$container->register(ApplicationFormFactoryInterface::class, ApplicationFormFactoryCollection::class)
-  ->addArgument(new ServiceLocatorArgument(
-    new TaggedIteratorArgument('funding.form_factory', 'funding_case_type', 'getSupportedFundingCaseType', TRUE)
-  ));
 
 $container->register('funding.application.submit_actions_container', SubmitActionsContainer::class)
   ->setFactory([DefaultApplicationSubmitActionsContainerFactory::class, 'create']);
 $container->autowire(ApplicationSubmitActionsFactoryInterface::class, ApplicationSubmitActionsFactory::class)
   ->setArgument('$submitActionsContainer', new Reference('funding.application.submit_actions_container'));
 
-$container->autowire(GetApplicationFormHandlerInterface::class, GetApplicationFormHandler::class);
-$container->autowire(ValidateApplicationFormHandlerInterface::class, ValidateApplicationFormHandler::class);
-$container->autowire(SubmitApplicationFormHandlerInterface::class, SubmitApplicationFormHandler::class);
+$container->autowire(GetApplicationFormHandlerInterface::class, DefaultGetApplicationFormHandler::class);
+$container->autowire(ValidateApplicationFormHandlerInterface::class, DefaultValidateApplicationFormHandler::class);
+$container->autowire(SubmitApplicationFormHandlerInterface::class, DefaultSubmitApplicationFormHandler::class);
 
 $container->autowire(GetApplicationFormSubscriber::class)
   ->addTag('kernel.event_subscriber')
