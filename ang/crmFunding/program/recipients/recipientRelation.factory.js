@@ -1,4 +1,3 @@
-<?php
 /*
  * Copyright (C) 2022 SYSTOPIA GmbH
  *
@@ -15,16 +14,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+'use strict';
 
-namespace Civi\Funding\Contact;
-
-interface PossibleRecipientsLoaderInterface {
-
-  /**
-   * @phpstan-return array<int, string>
-   *   Contact ID mapped to display name.
-   */
-  public function getPossibleRecipients(int $contactId): array;
-
-}
+fundingModule.factory('recipientRelationService', ['crmApi4', function(crmApi4) {
+  return {
+    getAll: (fundingProgramId) => crmApi4('FundingRecipientContactRelation', 'get',
+        {where:[['funding_program_id', '=', fundingProgramId]]}),
+    replaceAll: (fundingProgramId, relations) => crmApi4('FundingRecipientContactRelation', 'replace',
+        {where: [['funding_program_id', '=', fundingProgramId]], records: relations }),
+  }
+}]);

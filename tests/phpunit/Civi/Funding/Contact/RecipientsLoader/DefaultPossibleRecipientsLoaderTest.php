@@ -32,10 +32,8 @@ use PHPUnit\Framework\TestCase;
  *
  * @phpstan-type contactRelationT array{
  *   id: int,
- *   entity_table: string,
- *   entity_id: int,
- *   parent_id: int|null,
- *   only_parent: bool,
+ *   type: string,
+ *   properties: array<string, mixed>,
  * }
  */
 final class DefaultPossibleRecipientsLoaderTest extends TestCase {
@@ -65,42 +63,14 @@ final class DefaultPossibleRecipientsLoaderTest extends TestCase {
   public function testGetPossibleRecipientsSimple(): void {
     $contactRelation = [
       'id' => 1,
-      'entity_table' => 'test',
-      'entity_id' => 2,
-      'parent_id' => NULL,
-      'only_parent' => FALSE,
+      'type' => 'test',
+      'properties' => ['foo' => 'bar'],
     ];
 
     $this->mockApiContactRelationGet([$contactRelation]);
 
     $this->relatedContactsLoaderMock->expects(static::once())->method('getRelatedContacts')
-      ->with(123, $contactRelation, NULL)
-      ->willReturn([2 => ['display_name' => 'Name']]);
-
-    static::assertSame([2 => 'Name'], $this->recipientsLoader->getPossibleRecipients(123));
-  }
-
-  public function testGetPossibleRecipientsWithParent(): void {
-    $parentContactRelation = [
-      'id' => 1,
-      'entity_table' => 'test1',
-      'entity_id' => 2,
-      'parent_id' => NULL,
-      'only_parent' => TRUE,
-
-    ];
-    $contactRelation = [
-      'id' => 2,
-      'entity_table' => 'test2',
-      'entity_id' => 3,
-      'parent_id' => 1,
-      'only_parent' => FALSE,
-    ];
-
-    $this->mockApiContactRelationGet([$contactRelation, $parentContactRelation]);
-
-    $this->relatedContactsLoaderMock->expects(static::once())->method('getRelatedContacts')
-      ->with(123, $contactRelation, $parentContactRelation)
+      ->with(123, 'test', ['foo' => 'bar'])
       ->willReturn([2 => ['display_name' => 'Name']]);
 
     static::assertSame([2 => 'Name'], $this->recipientsLoader->getPossibleRecipients(123));
@@ -109,26 +79,22 @@ final class DefaultPossibleRecipientsLoaderTest extends TestCase {
   public function testGetPossibleRecipientsMultipleRelations(): void {
     $contactRelation1 = [
       'id' => 1,
-      'entity_table' => 'test1',
-      'entity_id' => 2,
-      'parent_id' => NULL,
-      'only_parent' => FALSE,
+      'type' => 'test1',
+      'properties' => ['foo1' => 'bar1'],
 
     ];
     $contactRelation2 = [
       'id' => 2,
-      'entity_table' => 'test2',
-      'entity_id' => 3,
-      'parent_id' => NULL,
-      'only_parent' => FALSE,
+      'type' => 'test2',
+      'properties' => ['foo2' => 'bar2'],
     ];
 
     $this->mockApiContactRelationGet([$contactRelation1, $contactRelation2]);
 
     $this->relatedContactsLoaderMock->expects(static::exactly(2))->method('getRelatedContacts')
       ->withConsecutive(
-        [123, $contactRelation1, NULL],
-        [123, $contactRelation2, NULL],
+        [123, 'test1', ['foo1' => 'bar1']],
+        [123, 'test2', ['foo2' => 'bar2']],
       )
       ->willReturnOnConsecutiveCalls(
         [
@@ -150,16 +116,14 @@ final class DefaultPossibleRecipientsLoaderTest extends TestCase {
   public function testGetPossibleRecipientsIgnoresDisplayNameNull(): void {
     $contactRelation = [
       'id' => 1,
-      'entity_table' => 'test',
-      'entity_id' => 2,
-      'parent_id' => NULL,
-      'only_parent' => FALSE,
+      'type' => 'test',
+      'properties' => ['foo' => 'bar'],
     ];
 
     $this->mockApiContactRelationGet([$contactRelation]);
 
     $this->relatedContactsLoaderMock->expects(static::once())->method('getRelatedContacts')
-      ->with(123, $contactRelation, NULL)
+      ->with(123, 'test', ['foo' => 'bar'])
       ->willReturn([2 => ['display_name' => NULL]]);
 
     static::assertSame([], $this->recipientsLoader->getPossibleRecipients(123));

@@ -17,14 +17,21 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Contact;
+namespace Civi\Funding\Contact\Relation;
 
-interface PossibleRecipientsLoaderInterface {
+abstract class AbstractRelationType implements RelationTypeInterface {
 
   /**
-   * @phpstan-return array<int, string>
-   *   Contact ID mapped to display name.
+   * @inheritDoc
    */
-  public function getPossibleRecipients(int $contactId): array;
+  public function toArray(): array {
+    return [
+      'name' => $this->getName(),
+      'label' => $this->getLabel(),
+      'template' => $this->getTemplate(),
+      'help' => $this->getHelp(),
+      'extra' => $this->getExtra(),
+    ];
+  }
 
 }

@@ -21,6 +21,7 @@ namespace Civi\Funding\Contact\RelationLoader;
 
 use Civi\Api4\Relationship;
 use Civi\Api4\RelationshipType;
+use Civi\Funding\Contact\Relation\Loaders\ContactTypeAndRelationshipTypeLoader;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\ContactTypeFixture;
 use Civi\RemoteTools\Api4\Api4;
@@ -32,7 +33,7 @@ use PHPUnit\Framework\TestCase;
 
 // phpcs:disable Generic.Files.LineLength.TooLong
 /**
- * @covers \Civi\Funding\Contact\RelationLoader\ContactTypeAndRelationshipTypeLoader
+ * @covers \Civi\Funding\Contact\Relation\Loaders\ContactTypeAndRelationshipTypeLoader
  *
  * @group headless
  */
@@ -110,22 +111,13 @@ final class ContactTypeAndRelationshipTypeLoaderTest extends TestCase implements
         'relationship_type_id' => $relatedRelationshipTypeId,
       ])->execute();
 
-    $contactRelation = [
-      'id' => 2,
-      'entity_table' => 'civicrm_relationship_type',
-      'entity_id' => $relatedRelationshipTypeId,
-      'parent_id' => 1,
-    ];
-    $parentContactRelation = [
-      'id' => 1,
-      'entity_table' => 'civicrm_contact_type',
-      'entity_id' => $contactTypeId,
-      'parent_id' => NULL,
-    ];
     $relatedContacts = $this->relatedContactLoader->getRelatedContacts(
       $contact['id'],
-      $contactRelation,
-      $parentContactRelation
+      'ContactTypeAndRelationshipType',
+      [
+        'contactTypeId' => $contactTypeId,
+        'relationshipTypeId' => $relatedRelationshipTypeId,
+      ]
     );
     static::assertEquals([$relatedContact1['id'], $relatedContact2['id']], array_keys($relatedContacts));
     static::assertSame('Related 1', $relatedContacts[$relatedContact1['id']]['last_name']);
@@ -133,37 +125,8 @@ final class ContactTypeAndRelationshipTypeLoaderTest extends TestCase implements
   }
 
   public function testSupportsRelation(): void {
-    $contactRelation1 = [
-      'id' => 2,
-      'entity_table' => 'civicrm_relationship_type',
-      'entity_id' => 1,
-      'parent_id' => 1,
-    ];
-    $parentContactRelation = [
-      'id' => 1,
-      'entity_table' => 'civicrm_contact_type',
-      'entity_id' => 1,
-      'parent_id' => NULL,
-    ];
-    static::assertTrue($this->relatedContactLoader->supportsRelation($contactRelation1, $parentContactRelation));
-
-    $contactRelation2 = [
-      'id' => 3,
-      'entity_table' => 'civicrm_relationship_type',
-      'entity_id' => 1,
-      'parent_id' => NULL,
-    ];
-    static::assertFalse($this->relatedContactLoader->supportsRelation($contactRelation2, NULL));
-
-    $contactRelation3 = [
-      'id' => 4,
-      'entity_table' => 'civicrm_foo',
-      'entity_id' => 1,
-      'parent_id' => 1,
-    ];
-    static::assertFalse($this->relatedContactLoader->supportsRelation($contactRelation3, $parentContactRelation));
-    static::assertFalse($this->relatedContactLoader->supportsRelation($contactRelation1, $contactRelation2));
-
+    static::assertTrue($this->relatedContactLoader->supportsRelationType('ContactTypeAndRelationshipType'));
+    static::assertFalse($this->relatedContactLoader->supportsRelationType('Test'));
   }
 
 }

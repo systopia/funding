@@ -17,14 +17,13 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Contact;
+namespace Civi\Funding\Contact\Relation;
 
-interface PossibleRecipientsLoaderInterface {
+interface RelationTypeContainerInterface {
 
   /**
-   * @phpstan-return array<int, string>
-   *   Contact ID mapped to display name.
+   * @phpstan-return array<\Civi\Funding\Contact\Relation\RelationTypeInterface>
    */
-  public function getPossibleRecipients(int $contactId): array;
+  public function getRelationTypes(): array;
 
 }

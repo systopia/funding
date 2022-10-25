@@ -17,18 +17,19 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Contact\RelationLoader;
+namespace Civi\Funding\Contact\Relation\Loaders;
 
 use Civi\Api4\Contact;
 use Civi\Funding\Contact\RelatedContactsLoaderInterface;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
+use Webmozart\Assert\Assert;
 
 /**
- * Loads a contact itself if its contact type is equal to a given type.
+ * Loads all contacts to which a contact has a relation of a given type.
  */
-final class ContactTypeLoader implements RelatedContactsLoaderInterface {
+final class RelationshipTypeLoader implements RelatedContactsLoaderInterface {
 
   private Api4Interface $api4;
 
@@ -39,20 +40,25 @@ final class ContactTypeLoader implements RelatedContactsLoaderInterface {
   /**
    * @inheritDoc
    */
-  public function getRelatedContacts(int $contactId, array $contactRelation, ?array $parentContactRelation): array {
-    $contactTypeId = $contactRelation['entity_id'];
+  public function getRelatedContacts(int $contactId, string $relationType, array $relationProperties): array {
+    Assert::integer($relationProperties['relationshipTypeId']);
+    $relationshipTypeId = $relationProperties['relationshipTypeId'];
     $action = Contact::get()
-      ->addJoin('ContactType AS ct', 'INNER', NULL,
+      ->addJoin('Relationship AS r', 'INNER', NULL,
         CompositeCondition::new('AND',
-          Comparison::new('ct.id', '=', $contactTypeId),
-          CompositeCondition::new(
-            'OR',
-            Comparison::new('ct.name', '=', 'contact_type'),
-            Comparison::new('ct.name', '=', 'contact_sub_type'),
+          Comparison::new('r.relationship_type_id', '=', $relationshipTypeId),
+          CompositeCondition::new('OR',
+            CompositeCondition::new('AND',
+              Comparison::new('r.contact_id_a', '=', $contactId),
+              Comparison::new('r.contact_id_b', '=', 'id'),
+            ),
+            CompositeCondition::new('AND',
+              Comparison::new('r.contact_id_a', '=', 'id'),
+              Comparison::new('r.contact_id_b', '=', $contactId),
+            ),
           ),
-        )->toArray(),
-      )
-      ->addWhere('id', '=', $contactId);
+        )->toArray()
+      );
 
     /** @phpstan-var array<int, array<string, mixed>> $contacts */
     $contacts = $this->api4->executeAction($action)->indexBy('id')->getArrayCopy();
@@ -60,11 +66,8 @@ final class ContactTypeLoader implements RelatedContactsLoaderInterface {
     return $contacts;
   }
 
-  /**
-   * @inheritDoc
-   */
-  public function supportsRelation(array $contactRelation, ?array $parentContactRelation): bool {
-    return 'civicrm_contact_type' === $contactRelation['entity_table'] && NULL === $contactRelation['parent_id'];
+  public function supportsRelationType(string $relationType): bool {
+    return 'RelationshipType' === $relationType;
   }
 
 }

@@ -19,29 +19,17 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Contact;
 
-/**
- * @phpstan-type contactRelationT array{
- *   id: int,
- *   entity_table: string,
- *   entity_id: int,
- *   parent_id: int|null,
- * }
- */
 interface RelatedContactsLoaderInterface {
 
   /**
-   * @phpstan-param contactRelationT $contactRelation
-   * @phpstan-param contactRelationT|null $parentContactRelation
+   * @phpstan-param array<string, mixed> $relationProperties
+   *   JSON serializable array.
    *
    * @phpstan-return array<int, array<string, mixed>>
    *   Related contacts indexed by id.
    */
-  public function getRelatedContacts(int $contactId, array $contactRelation, ?array $parentContactRelation): array;
+  public function getRelatedContacts(int $contactId, string $relationType, array $relationProperties): array;
 
-  /**
-   * @phpstan-param contactRelationT $contactRelation
-   * @phpstan-param contactRelationT|null $parentContactRelation
-   */
-  public function supportsRelation(array $contactRelation, ?array $parentContactRelation): bool;
+  public function supportsRelationType(string $relationType): bool;
 
 }

@@ -36,31 +36,28 @@ final class RelatedContactsLoaderCollection implements RelatedContactsLoaderInte
   /**
    * @inheritDoc
    */
-  public function getRelatedContacts(int $contactId, array $contactRelation, ?array $parentContactRelation): array {
+  public function getRelatedContacts(int $contactId, string $relationType, array $relationProperties): array {
     $supportedLoaderFound = FALSE;
     $contacts = [];
     foreach ($this->relatedContactsLoaders as $relatedContactsLoader) {
-      if ($relatedContactsLoader->supportsRelation($contactRelation, $parentContactRelation)) {
+      if ($relatedContactsLoader->supportsRelationType($relationType)) {
         $supportedLoaderFound = TRUE;
-        $contacts += $relatedContactsLoader->getRelatedContacts($contactId, $contactRelation, $parentContactRelation);
+        $contacts += $relatedContactsLoader->getRelatedContacts($contactId, $relationType, $relationProperties);
       }
     }
 
     if (FALSE === $supportedLoaderFound) {
       throw new \InvalidArgumentException(
-        sprintf('No supported related contacts loaded found for contact relation with ID %d', $contactRelation['id'])
+        sprintf('No supported related contacts loader found for contact relation type "%s"', $relationType)
       );
     }
 
     return $contacts;
   }
 
-  /**
-   * @inheritDoc
-   */
-  public function supportsRelation(array $contactRelation, ?array $parentContactRelation): bool {
+  public function supportsRelationType(string $relationType): bool {
     foreach ($this->relatedContactsLoaders as $relatedContactsLoader) {
-      if ($relatedContactsLoader->supportsRelation($contactRelation, $parentContactRelation)) {
+      if ($relatedContactsLoader->supportsRelationType($relationType)) {
         return TRUE;
       }
     }

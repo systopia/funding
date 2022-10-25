@@ -17,14 +17,30 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Contact;
+namespace Civi\Funding\Contact\Relation;
 
-interface PossibleRecipientsLoaderInterface {
+/**
+ * @codeCoverageIgnore
+ */
+final class RelationTypeContainer implements RelationTypeContainerInterface {
 
   /**
-   * @phpstan-return array<int, string>
-   *   Contact ID mapped to display name.
+   * @phpstan-var iterable<\Civi\Funding\Contact\Relation\RelationTypeInterface>
    */
-  public function getPossibleRecipients(int $contactId): array;
+  private iterable $relationTypes;
+
+  /**
+   * @phpstan-param iterable<\Civi\Funding\Contact\Relation\RelationTypeInterface> $relationTypes
+   */
+  public function __construct(iterable $relationTypes) {
+    $this->relationTypes = $relationTypes;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getRelationTypes(): array {
+    return \iterator_to_array($this->relationTypes);
+  }
 
 }

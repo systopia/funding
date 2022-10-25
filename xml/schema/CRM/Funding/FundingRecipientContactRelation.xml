@@ -22,49 +22,42 @@
   </primaryKey>
 
   <field>
-    <name>entity_table</name>
-    <type>varchar</type>
-    <length>64</length>
+    <name>funding_program_id</name>
+    <type>int unsigned</type>
     <required>true</required>
-    <comment>Table referenced by ID in `entity_id</comment>
+    <comment>FK to FundingProgram</comment>
+    <html>
+      <type>EntityRef</type>
+    </html>
+    <pseudoconstant>
+      <table>civicrm_funding_program</table>
+      <keyColumn>id</keyColumn>
+      <labelColumn>title</labelColumn>
+      <prefetch>false</prefetch>
+    </pseudoconstant>
+  </field>
+  <foreignKey>
+    <name>funding_program_id</name>
+    <table>civicrm_funding_program</table>
+    <key>id</key>
+    <onDelete>CASCADE</onDelete>
+  </foreignKey>
+
+  <field>
+    <name>type</name>
+    <type>varchar</type>
+    <length>255</length>
+    <required>true</required>
     <html>
       <type>Text</type>
     </html>
   </field>
 
   <field>
-    <name>entity_id</name>
-    <type>int unsigned</type>
+    <name>properties</name>
+    <type>text</type>
     <required>true</required>
-    <comment>ID of entity in `entity_table`</comment>
-    <html>
-      <type>Number</type>
-    </html>
-  </field>
-
-  <field>
-    <name>parent_id</name>
-    <type>int unsigned</type>
-    <comment>FK to FundingProgramContactRelation</comment>
-    <html>
-      <type>EntityRef</type>
-    </html>
-  </field>
-  <foreignKey>
-    <name>parent_id</name>
-    <table>civicrm_funding_recipient_contact_relation</table>
-    <key>id</key>
-    <onDelete>RESTRICT</onDelete>
-  </foreignKey>
-
-  <field>
-    <name>only_parent</name>
-    <type>boolean</type>
-    <required>true</required>
-    <comment>If 1 an entry can only be used as parent</comment>
-    <html>
-      <type>CheckBox</type>
-    </html>
+    <serialize>JSON</serialize>
   </field>
 
 </table>

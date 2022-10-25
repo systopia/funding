@@ -27,10 +27,8 @@ use Civi\RemoteTools\Api4\Api4Interface;
 /**
  * @phpstan-type contactRelationT array{
  *   id: int,
- *   entity_table: string,
- *   entity_id: int,
- *   parent_id: int|null,
- *   only_parent: bool,
+ *   type: string,
+ *   properties: array<string, mixed>,
  * }
  */
 final class DefaultPossibleRecipientsLoader implements PossibleRecipientsLoaderInterface {
@@ -73,21 +71,10 @@ final class DefaultPossibleRecipientsLoader implements PossibleRecipientsLoaderI
 
     $relatedContacts = [];
     foreach ($contactRelations as $contactRelation) {
-      if ($contactRelation['only_parent']) {
-        continue;
-      }
-
-      if (NULL !== $contactRelation['parent_id']) {
-        $parentContactRelation = $contactRelations[$contactRelation['parent_id']];
-      }
-      else {
-        $parentContactRelation = NULL;
-      }
-
       $relatedContacts += $this->relatedContactsLoader->getRelatedContacts(
         $contactId,
-        $contactRelation,
-        $parentContactRelation,
+        $contactRelation['type'],
+        $contactRelation['properties'],
       );
     }
 

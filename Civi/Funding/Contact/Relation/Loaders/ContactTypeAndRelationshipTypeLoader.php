@@ -17,7 +17,7 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Contact\RelationLoader;
+namespace Civi\Funding\Contact\Relation\Loaders;
 
 use Civi\Api4\Contact;
 use Civi\Funding\Contact\RelatedContactsLoaderInterface;
@@ -41,10 +41,11 @@ final class ContactTypeAndRelationshipTypeLoader implements RelatedContactsLoade
   /**
    * @inheritDoc
    */
-  public function getRelatedContacts(int $contactId, array $contactRelation, ?array $parentContactRelation): array {
-    Assert::notNull($parentContactRelation);
-    $relationshipTypeId = $contactRelation['entity_id'];
-    $contactTypeId = $parentContactRelation['entity_id'];
+  public function getRelatedContacts(int $contactId, string $relationType, array $relationProperties): array {
+    Assert::integer($relationProperties['contactTypeId']);
+    Assert::integer($relationProperties['relationshipTypeId']);
+    $contactTypeId = $relationProperties['contactTypeId'];
+    $relationshipTypeId = $relationProperties['relationshipTypeId'];
     $action = Contact::get()
       ->addJoin('ContactType AS ct', 'INNER', NULL,
         CompositeCondition::new('AND',
@@ -80,10 +81,8 @@ final class ContactTypeAndRelationshipTypeLoader implements RelatedContactsLoade
   /**
    * @inheritDoc
    */
-  public function supportsRelation(array $contactRelation, ?array $parentContactRelation): bool {
-    return 'civicrm_relationship_type' === $contactRelation['entity_table']
-      && NULL !== $parentContactRelation
-      && 'civicrm_contact_type' === $parentContactRelation['entity_table'];
+  public function supportsRelationType(string $relationType): bool {
+    return 'ContactTypeAndRelationshipType' === $relationType;
   }
 
 }

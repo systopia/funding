@@ -17,14 +17,25 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Contact;
+namespace Civi\Api4;
 
-interface PossibleRecipientsLoaderInterface {
+use Civi\Funding\Api4\Action\RecipientContactRelationType\GetAction;
+use Civi\Funding\Api4\Action\RecipientContactRelationType\GetFieldsAction;
+use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
+
+final class FundingRecipientContactRelationType extends Generic\AbstractEntity {
+
+  use EntityNameTrait;
+
+  public static function get(): GetAction {
+    return \Civi::service(GetAction::class);
+  }
 
   /**
-   * @phpstan-return array<int, string>
-   *   Contact ID mapped to display name.
+   * @inheritDoc
    */
-  public function getPossibleRecipients(int $contactId): array;
+  public static function getFields() {
+    return new GetFieldsAction();
+  }
 
 }

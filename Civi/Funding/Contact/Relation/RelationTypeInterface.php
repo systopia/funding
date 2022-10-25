@@ -17,14 +17,33 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Contact;
+namespace Civi\Funding\Contact\Relation;
 
-interface PossibleRecipientsLoaderInterface {
+interface RelationTypeInterface {
+
+  public function getName(): string;
+
+  public function getLabel(): string;
+
+  public function getTemplate(): string;
+
+  public function getHelp(): string;
 
   /**
-   * @phpstan-return array<int, string>
-   *   Contact ID mapped to display name.
+   * @phpstan-return array<string, mixed>
+   *   JSON serializable.
    */
-  public function getPossibleRecipients(int $contactId): array;
+  public function getExtra(): array;
+
+  /**
+   * @phpstan-return array{
+   *   name: string,
+   *   label: string,
+   *   template: string,
+   *   help: string,
+   *   extra: array<string, mixed>,
+   * }
+   */
+  public function toArray(): array;
 
 }
