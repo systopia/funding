@@ -22,6 +22,7 @@ declare(strict_types = 1);
 
 use Civi\Funding\Contact\FundingRemoteContactIdResolver;
 use Civi\Funding\Contact\FundingRemoteContactIdResolverInterface;
+use Civi\Funding\EventSubscriber\Api\TransactionalApiRequestSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingRequestInitSubscriber;
 use Civi\Funding\Remote\RemoteFundingEntityManager;
 use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
@@ -32,3 +33,6 @@ $container->autowire(FundingRemoteContactIdResolverInterface::class, FundingRemo
 $container->autowire(FundingRequestInitSubscriber::class)
   ->addTag('kernel.event_subscriber')
   ->setLazy(TRUE);
+
+$container->autowire(TransactionalApiRequestSubscriber::class, TransactionalApiRequestSubscriber::class)
+  ->addTag('kernel.event_subscriber');
