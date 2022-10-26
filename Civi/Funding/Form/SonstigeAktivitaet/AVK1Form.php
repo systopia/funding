@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Form\SonstigeAktivitaet;
 
 use Civi\Funding\Form\AbstractApplicationForm;
+use Civi\Funding\Form\JsonSchema\JsonSchemaRecipient;
 use Civi\Funding\Form\SonstigeAktivitaet\JsonSchema\AVK1JsonSchema;
 use Civi\Funding\Form\SonstigeAktivitaet\UISchema\AVK1UiSchema;
 use Civi\RemoteTools\Form\JsonForms\Control\JsonFormsHidden;
@@ -39,6 +40,8 @@ class AVK1Form extends AbstractApplicationForm {
   /**
    * @phpstan-param array<string, string> $submitActions
    *   Map of action names to button labels.
+   * @phpstan-param array<int, string> $possibleRecipients
+   *   Map of contact IDs to names.
    * @phpstan-param array<string, \Civi\RemoteTools\Form\JsonSchema\JsonSchema> $hiddenProperties
    * @phpstan-param array<string, mixed> $data
    */
@@ -46,6 +49,7 @@ class AVK1Form extends AbstractApplicationForm {
     \DateTimeInterface $minBegin,
     \DateTimeInterface $maxEnd,
     string $currency,
+    array $possibleRecipients,
     array $submitActions,
     array $hiddenProperties,
     array $data
@@ -56,6 +60,9 @@ class AVK1Form extends AbstractApplicationForm {
     }
     $extraProperties = $hiddenProperties;
     $extraKeywords = ['required' => array_keys($hiddenProperties)];
+
+    $extraProperties['empfaenger'] = new JsonSchemaRecipient($possibleRecipients);
+    $extraKeywords['required'][] = 'empfaenger';
 
     $extraProperties['action'] = new JsonSchemaString(['enum' => array_keys($submitActions)]);
     $extraKeywords['required'][] = 'action';

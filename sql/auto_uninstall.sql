@@ -16,14 +16,15 @@
 SET FOREIGN_KEY_CHECKS=0;
 
 DROP TABLE IF EXISTS `civicrm_funding_app_cost_item`;
+DROP TABLE IF EXISTS `civicrm_funding_app_resources_item`;
+DROP TABLE IF EXISTS `civicrm_funding_application_process`;
+DROP TABLE IF EXISTS `civicrm_funding_case_type_program`;
+DROP TABLE IF EXISTS `civicrm_funding_case_contact_relation`;
+DROP TABLE IF EXISTS `civicrm_funding_case`;
+DROP TABLE IF EXISTS `civicrm_funding_recipient_contact_relation`;
 DROP TABLE IF EXISTS `civicrm_funding_program_relationship`;
 DROP TABLE IF EXISTS `civicrm_funding_program_contact_relation`;
 DROP TABLE IF EXISTS `civicrm_funding_program`;
-DROP TABLE IF EXISTS `civicrm_funding_case_type_program`;
 DROP TABLE IF EXISTS `civicrm_funding_case_type`;
-DROP TABLE IF EXISTS `civicrm_funding_case_contact_relation`;
-DROP TABLE IF EXISTS `civicrm_funding_case`;
-DROP TABLE IF EXISTS `civicrm_funding_app_resources_item`;
-DROP TABLE IF EXISTS `civicrm_funding_application_process`;
 
 SET FOREIGN_KEY_CHECKS=1;

@@ -27,6 +27,8 @@ interface ValidatedApplicationDataInterface {
 
   public function getShortDescription(): string;
 
+  public function getRecipientContactId(): int;
+
   public function getStartDate(): ?\DateTimeInterface;
 
   public function getEndDate(): ?\DateTimeInterface;

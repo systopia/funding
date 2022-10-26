@@ -26,6 +26,7 @@ use Civi\Funding\Form\ValidatedApplicationDataInterface;
  *   action: string,
  *   title: string,
  *   shortDescription: string,
+ *   recipientContactId: int,
  *   startDate: string,
  *   endDate: string,
  *   amountRequested: float,
@@ -35,6 +36,7 @@ use Civi\Funding\Form\ValidatedApplicationDataInterface;
  *   action?: string,
  *   title?: string,
  *   shortDescription?: string,
+ *   recipientContactId?: int,
  *   startDate?: string,
  *   endDate?: string,
  *   amountRequested?: float,
@@ -47,6 +49,8 @@ final class ValidatedApplicationDataMock implements ValidatedApplicationDataInte
   public const TITLE = 'Validated Title';
 
   public const SHORT_DESCRIPTION = 'Validated short description';
+
+  public const RECIPIENT_CONTACT_ID = 4711;
 
   public const START_DATE = '2022-10-04 01:02:03';
 
@@ -76,6 +80,7 @@ final class ValidatedApplicationDataMock implements ValidatedApplicationDataInte
       'action' => self::ACTION,
       'title' => self::TITLE,
       'shortDescription' => self::SHORT_DESCRIPTION,
+      'recipientContactId' => self::RECIPIENT_CONTACT_ID,
       'startDate' => self::START_DATE,
       'endDate' => self::END_DATE,
       'amountRequested' => self::AMOUNT_REQUESTED,
@@ -92,6 +97,10 @@ final class ValidatedApplicationDataMock implements ValidatedApplicationDataInte
 
   public function getShortDescription(): string {
     return $this->data['shortDescription'];
+  }
+
+  public function getRecipientContactId(): int {
+    return $this->data['recipientContactId'];
   }
 
   public function getStartDate(): \DateTimeInterface {

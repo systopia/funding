@@ -201,8 +201,7 @@ final class SubmitApplicationFormHandlerTest extends TestCase {
       ->with($event->getContactId(), [
         'funding_program' => $event->getFundingProgram(),
         'funding_case_type' => $event->getFundingCaseType(),
-        // TODO: This has to be adapted when fixed in the CUT.
-        'recipient_contact_id' => $event->getContactId(),
+        'recipient_contact_id' => ValidatedApplicationDataMock::RECIPIENT_CONTACT_ID,
       ])->willReturn($fundingCase);
 
     $applicationProcess = ApplicationProcessFactory::createApplicationProcess();

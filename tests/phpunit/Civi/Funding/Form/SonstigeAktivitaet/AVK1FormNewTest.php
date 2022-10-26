@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\SonstigeAktivitaet;
 
+use Civi\Funding\Form\JsonSchema\JsonSchemaRecipient;
 use Civi\Funding\Form\Traits\AssertFormTrait;
 use Civi\RemoteTools\Form\JsonForms\Control\JsonFormsHidden;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
@@ -35,11 +36,12 @@ final class AVK1FormNewTest extends TestCase {
 
   public function test(): void {
     $form = new AVK1FormNew(new \DateTime('2022-08-24'), new \DateTime('2022-08-25'),
-      '€', 2, 3, ['save' => 'Save'], []);
+      '€', 2, 3, [1 => 'Recipient'], ['save' => 'Save'], []);
 
     $jsonSchema = $form->getJsonSchema();
     $properties = $jsonSchema->getKeywordValue('properties');
     static::assertInstanceOf(JsonSchema::class, $properties);
+    static::assertEquals(new JsonSchemaRecipient([1 => 'Recipient']), $properties->getKeywordValue('empfaenger'));
     static::assertEquals(new JsonSchemaString(['enum' => ['save']]), $properties->getKeywordValue('action'));
     static::assertEquals(
       new JsonSchemaInteger(['const' => 2, 'readOnly' => TRUE]),

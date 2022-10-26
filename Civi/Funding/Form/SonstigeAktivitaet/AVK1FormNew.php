@@ -24,7 +24,8 @@ use Civi\RemoteTools\Form\JsonSchema\JsonSchemaInteger;
 final class AVK1FormNew extends AVK1Form {
 
   public function __construct(\DateTimeInterface $minBegin, \DateTimeInterface $maxEnd,
-    string $currency, int $fundingCaseTypeId, int $fundingProgramId, array $submitActions, array $data
+    string $currency, int $fundingCaseTypeId, int $fundingProgramId, array $possibleRecipients,
+    array $submitActions, array $data
   ) {
     $data['fundingCaseTypeId'] = $fundingCaseTypeId;
     $data['fundingProgramId'] = $fundingProgramId;
@@ -34,7 +35,7 @@ final class AVK1FormNew extends AVK1Form {
       'fundingProgramId' => new JsonSchemaInteger(['const' => $fundingProgramId, 'readOnly' => TRUE]),
     ];
 
-    parent::__construct($minBegin, $maxEnd, $currency, $submitActions, $hiddenProperties, $data);
+    parent::__construct($minBegin, $maxEnd, $currency, $possibleRecipients, $submitActions, $hiddenProperties, $data);
   }
 
 }

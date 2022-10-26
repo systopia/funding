@@ -26,6 +26,7 @@ use Civi\Funding\Form\ValidatedApplicationDataInterface;
  *   action: string,
  *   titel: string,
  *   kurzbezeichnungDesInhalts: string,
+ *   empfaenger: int,
  *   beginn: string,
  *   ende: string,
  *   finanzierung: array{beantragterZuschuss: float},
@@ -56,6 +57,10 @@ final class AVK1ValidatedData implements ValidatedApplicationDataInterface {
 
   public function getShortDescription(): string {
     return $this->data['kurzbezeichnungDesInhalts'];
+  }
+
+  public function getRecipientContactId(): int {
+    return $this->data['empfaenger'];
   }
 
   public function getStartDate(): \DateTimeInterface {

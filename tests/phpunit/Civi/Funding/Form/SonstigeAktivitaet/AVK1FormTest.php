@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\SonstigeAktivitaet;
 
+use Civi\Funding\Form\JsonSchema\JsonSchemaRecipient;
 use Civi\Funding\Form\Traits\AssertFormTrait;
 use Civi\Funding\Form\Validation\OpisValidatorFactory;
 use Civi\Funding\Util\FormTestUtil;
@@ -40,11 +41,16 @@ class AVK1FormTest extends TestCase {
   use AssertFormTrait;
 
   public function testJsonSchema(): void {
+    $possibleRecipients = [
+      1 => 'Organization 1',
+      2 => 'Organization 2',
+    ];
     $fooSchemaString = new JsonSchemaString();
     $form = new AVK1Form(
       new \DateTime('2022-08-24'),
       new \DateTime('2022-08-25'),
       '€',
+      $possibleRecipients,
       ['submitAction1' => 'Do Submit1', 'submitAction2' => 'Do Submit2'],
       ['foo' => $fooSchemaString],
       ['foo' => 'bar']
@@ -54,6 +60,7 @@ class AVK1FormTest extends TestCase {
     $properties = $jsonSchema->getKeywordValue('properties');
     static::assertInstanceOf(JsonSchema::class, $properties);
     static::assertSame($fooSchemaString, $properties->getKeywordValue('foo'));
+    static::assertEquals(new JsonSchemaRecipient($possibleRecipients), $properties->getKeywordValue('empfaenger'));
     static::assertEquals(
       new JsonSchemaString(['enum' => ['submitAction1', 'submitAction2']]),
       $properties->getKeywordValue('action')
@@ -64,6 +71,7 @@ class AVK1FormTest extends TestCase {
       'action' => 'submitAction1',
       'titel' => 'Test',
       'kurzbezeichnungDesInhalts' => 'foo bar',
+      'empfaenger' => 2,
       'beginn' => '2022-08-24',
       'ende' => '2022-08-25',
       'kosten' => (object) [
@@ -179,6 +187,7 @@ class AVK1FormTest extends TestCase {
       new \DateTime('2022-08-24'),
       new \DateTime('2022-08-25'),
       '€',
+      [],
       ['submitAction' => 'Do Submit'],
       [],
       [],
@@ -208,6 +217,7 @@ class AVK1FormTest extends TestCase {
       new \DateTime('2022-08-24'),
       new \DateTime('2022-08-25'),
       '€',
+      [],
       ['submitAction' => 'Do Submit'],
       [],
       []
@@ -234,6 +244,7 @@ class AVK1FormTest extends TestCase {
       new \DateTime('2022-08-24'),
       new \DateTime('2022-08-25'),
       '€',
+      [1 => 'Orgnization 1'],
       ['submitAction1' => 'Do Submit1', 'submitAction2' => 'Do Submit2'],
       ['hidden' => new JsonSchemaString()],
       ['foo' => 'bar']

@@ -33,6 +33,7 @@ final class AVK1UiSchema extends JsonFormsGroup {
     parent::__construct('Förderantrag für sonstige Aktivität', [
       new JsonFormsControl('#/properties/titel', 'Titel'),
       new JsonFormsControl('#/properties/kurzbezeichnungDesInhalts', 'Kurzbezeichnung des Inhalts'),
+      new JsonFormsControl('#/properties/empfaenger', 'Empfänger'),
       new JsonFormsControl('#/properties/beginn', 'Beginn'),
       new JsonFormsControl('#/properties/ende', 'Ende'),
       // Abschnitt I
