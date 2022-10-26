@@ -23,6 +23,7 @@ declare(strict_types = 1);
 use Civi\Funding\EventSubscriber\Form\GetApplicationFormSubscriber;
 use Civi\Funding\EventSubscriber\Form\SubmitApplicationFormSubscriber;
 use Civi\Funding\EventSubscriber\Form\ValidateApplicationFormSubscriber;
+use Civi\Funding\Form\AbstractApplicationFormFactory;
 use Civi\Funding\Form\ApplicationSubmitActionsFactory;
 use Civi\Funding\Form\ApplicationSubmitActionsFactoryInterface;
 use Civi\Funding\Form\Handler\DefaultGetApplicationFormHandler;
@@ -60,3 +61,6 @@ $container->autowire(ValidateApplicationFormSubscriber::class)
 $container->autowire(SubmitApplicationFormSubscriber::class)
   ->addTag('kernel.event_subscriber')
   ->setLazy(TRUE);
+
+$container->autowire(AbstractApplicationFormFactory::class)
+  ->setAbstract(TRUE);

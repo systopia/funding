@@ -101,7 +101,7 @@ final class RemoteFundingApplicationProcessAVK1FormTest extends TestCase impleme
     static::assertInstanceOf(AVK1UiSchema::class, $values['uiSchema']);
     static::assertTrue($values['uiSchema']->isReadonly());
     static::assertIsArray($values['data']);
-    static::assertSame('y', $values['data']['x']);
+    static::assertSame($this->applicationProcess->getTitle(), $values['data']['titel']);
 
     FundingCaseContactRelationFixture::addContact(
       $this->contact['id'],
@@ -115,7 +115,7 @@ final class RemoteFundingApplicationProcessAVK1FormTest extends TestCase impleme
     static::assertInstanceOf(AVK1UiSchema::class, $values['uiSchema']);
     static::assertFalse($values['uiSchema']->isReadonly() ?? FALSE);
     static::assertIsArray($values['data']);
-    static::assertSame('y', $values['data']['x']);
+    static::assertSame($this->applicationProcess->getTitle(), $values['data']['titel']);
   }
 
   public function testValidateForm(): void {
@@ -216,7 +216,11 @@ final class RemoteFundingApplicationProcessAVK1FormTest extends TestCase impleme
 
     $this->applicationProcess = ApplicationProcessFixture::addFixture(
       $this->fundingCase->getId(),
-      ['request_data' => ['x' => 'y']]
+      [
+        'start_date' => date('Y-m-d', time() - 86400),
+        'end_date' => date('Y-m-d', time() + 86400),
+        'request_data' => ['x' => 'y'],
+      ]
     );
   }
 

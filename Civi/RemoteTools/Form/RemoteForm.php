@@ -54,6 +54,15 @@ class RemoteForm implements RemoteFormInterface {
     return $this->data;
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function setData(array $data): RemoteFormInterface {
+    $this->data = $data;
+
+    return $this;
+  }
+
   public function getJsonSchema(): JsonSchema {
     return $this->jsonSchema;
   }

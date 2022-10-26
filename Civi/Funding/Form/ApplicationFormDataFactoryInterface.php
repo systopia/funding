@@ -17,27 +17,16 @@
 
 declare(strict_types = 1);
 
-namespace Civi\RemoteTools\Form;
+namespace Civi\Funding\Form;
 
-use Civi\RemoteTools\Form\JsonForms\JsonFormsElement;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
+use Civi\Funding\Entity\ApplicationProcessEntity;
+use Civi\Funding\Entity\FundingCaseEntity;
 
-interface RemoteFormInterface {
-
-  /**
-   * @return array<string, mixed>
-   */
-  public function getData(): array;
+interface ApplicationFormDataFactoryInterface {
 
   /**
-   * @phpstan-param array<string, mixed> $data JSON serializable.
-   *
-   * @return $this
+   * @phpstan-return array<string, mixed> JSON serializable.
    */
-  public function setData(array $data): self;
-
-  public function getJsonSchema(): JsonSchema;
-
-  public function getUiSchema(): JsonFormsElement;
+  public function createFormData(ApplicationProcessEntity $applicationProcess, FundingCaseEntity $fundingCase): array;
 
 }
