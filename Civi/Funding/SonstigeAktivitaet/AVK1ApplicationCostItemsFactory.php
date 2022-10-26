@@ -93,7 +93,7 @@ class AVK1ApplicationCostItemsFactory {
       $items[] = ApplicationCostItemEntity::fromArray([
         'application_process_id' => $applicationProcess->getId(),
         'identifier' => 'fahrtkosten/intern',
-        'type' => 'fahrtkosten',
+        'type' => 'fahrtkosten/intern',
         'amount' => $kosten['fahrtkosten']['intern'],
         'properties' => [],
       ]);
@@ -103,7 +103,7 @@ class AVK1ApplicationCostItemsFactory {
       $items[] = ApplicationCostItemEntity::fromArray([
         'application_process_id' => $applicationProcess->getId(),
         'identifier' => 'fahrtkosten/anTeilnehmerErstattet',
-        'type' => 'fahrtkosten',
+        'type' => 'fahrtkosten/anTeilnehmerErstattet',
         'amount' => $kosten['fahrtkosten']['anTeilnehmerErstattet'],
         'properties' => [],
       ]);
@@ -113,7 +113,7 @@ class AVK1ApplicationCostItemsFactory {
       $items[] = ApplicationCostItemEntity::fromArray([
         'application_process_id' => $applicationProcess->getId(),
         'identifier' => 'sachkosten/haftungKfz',
-        'type' => 'sachkosten',
+        'type' => 'sachkosten/haftungKfz',
         'amount' => $kosten['sachkosten']['haftungKfz'],
         'properties' => [],
       ]);
@@ -124,7 +124,7 @@ class AVK1ApplicationCostItemsFactory {
       $items[] = ApplicationCostItemEntity::fromArray([
         'application_process_id' => $applicationProcess->getId(),
         'identifier' => $ausstattung['_identifier'],
-        'type' => 'sachkosten',
+        'type' => 'sachkosten/ausstattung',
         'amount' => $ausstattung['betrag'],
         'properties' => [
           'gegenstand' => $ausstattung['gegenstand'],
@@ -137,7 +137,7 @@ class AVK1ApplicationCostItemsFactory {
       $items[] = ApplicationCostItemEntity::fromArray([
         'application_process_id' => $applicationProcess->getId(),
         'identifier' => $sonstigeAusgaben['_identifier'],
-        'type' => 'sonstigeAusgaben',
+        'type' => 'sonstigeAusgabe',
         'amount' => $sonstigeAusgaben['betrag'],
         'properties' => [
           'zweck' => $sonstigeAusgaben['zweck'],

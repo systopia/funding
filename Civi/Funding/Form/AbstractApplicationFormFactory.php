@@ -29,8 +29,21 @@ use Civi\Funding\Event\Remote\ApplicationProcess\ValidateApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingCase\GetNewApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingCase\ValidateNewApplicationFormEvent;
+use Civi\Funding\Form\Validation\FormValidatorInterface;
 
 abstract class AbstractApplicationFormFactory implements ApplicationFormFactoryInterface {
+
+  protected ApplicationFormDataFactoryInterface $applicationFormDataFactory;
+
+  protected FormValidatorInterface $formValidator;
+
+  public function __construct(
+    ApplicationFormDataFactoryInterface $applicationFormDataFactory,
+    FormValidatorInterface $formValidator
+  ) {
+    $this->applicationFormDataFactory = $applicationFormDataFactory;
+    $this->formValidator = $formValidator;
+  }
 
   public function createForm(
     ApplicationProcessEntity $applicationProcess,
@@ -39,12 +52,18 @@ abstract class AbstractApplicationFormFactory implements ApplicationFormFactoryI
     FundingCaseTypeEntity $fundingCaseType
   ): ApplicationFormInterface {
 
-    return $this->doCreateFormExisting(
+    $form = $this->doCreateFormExisting(
       $applicationProcess,
       $fundingProgram,
       $fundingCase,
-      $applicationProcess->getRequestData()
+      $this->applicationFormDataFactory->createFormData($applicationProcess, $fundingCase),
     );
+
+    // Perform calculations
+    $validationResult = $this->formValidator->validate($form);
+    $form->setData($validationResult->getData());
+
+    return $form;
   }
 
   public function createFormOnGet(GetApplicationFormEvent $event): ApplicationFormInterface {

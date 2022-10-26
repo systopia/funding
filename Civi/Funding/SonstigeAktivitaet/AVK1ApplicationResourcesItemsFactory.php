@@ -74,7 +74,7 @@ class AVK1ApplicationResourcesItemsFactory {
       $items[] = ApplicationResourcesItemEntity::fromArray([
         'application_process_id' => $applicationProcess->getId(),
         'identifier' => 'oeffentlicheMittel/europa',
-        'type' => 'oeffentlicheMittel',
+        'type' => 'oeffentlicheMittel/europa',
         'amount' => $finanzierung['oeffentlicheMittel']['europa'],
         'properties' => [],
       ]);
@@ -84,7 +84,7 @@ class AVK1ApplicationResourcesItemsFactory {
       $items[] = ApplicationResourcesItemEntity::fromArray([
         'application_process_id' => $applicationProcess->getId(),
         'identifier' => 'oeffentlicheMittel/bundeslaender',
-        'type' => 'oeffentlicheMittel',
+        'type' => 'oeffentlicheMittel/bundeslaender',
         'amount' => $finanzierung['oeffentlicheMittel']['bundeslaender'],
         'properties' => [],
       ]);
@@ -94,7 +94,7 @@ class AVK1ApplicationResourcesItemsFactory {
       $items[] = ApplicationResourcesItemEntity::fromArray([
         'application_process_id' => $applicationProcess->getId(),
         'identifier' => 'oeffentlicheMittel/staedteUndKreise',
-        'type' => 'oeffentlicheMittel',
+        'type' => 'oeffentlicheMittel/staedteUndKreise',
         'amount' => $finanzierung['oeffentlicheMittel']['staedteUndKreise'],
         'properties' => [],
       ]);

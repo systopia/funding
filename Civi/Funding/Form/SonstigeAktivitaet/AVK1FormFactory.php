@@ -29,6 +29,7 @@ use Civi\Funding\Form\AbstractApplicationFormFactory;
 use Civi\Funding\Form\ApplicationFormInterface;
 use Civi\Funding\Form\ApplicationSubmitActionsFactoryInterface;
 use Civi\Funding\Form\ValidatedApplicationDataInterface;
+use Civi\Funding\Form\Validation\FormValidatorInterface;
 use Civi\Funding\Form\Validation\ValidationResult;
 
 class AVK1FormFactory extends AbstractApplicationFormFactory {
@@ -44,10 +45,13 @@ class AVK1FormFactory extends AbstractApplicationFormFactory {
   }
 
   public function __construct(
+    AVK1FormDataFactory $applicationFormDataFactory,
+    FormValidatorInterface $formValidator,
     ApplicationSubmitActionsFactoryInterface $submitActionsFactory,
     FundingCaseRecipientLoaderInterface $existingCaseRecipientLoader,
     PossibleRecipientsLoaderInterface $possibleRecipientsLoader
   ) {
+    parent::__construct($applicationFormDataFactory, $formValidator);
     $this->submitActionsFactory = $submitActionsFactory;
     $this->existingCaseRecipientLoader = $existingCaseRecipientLoader;
     $this->possibleRecipientsLoader = $possibleRecipientsLoader;
