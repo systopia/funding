@@ -44,11 +44,11 @@ fundingModule.config(['$routeProvider', function($routeProvider) {
       $scope.types = types;
 
       $scope.add = function () {
-        relations.push({funding_program_id: fundingProgramId, properties: {}});
+        $scope.relations.push({funding_program_id: fundingProgramId, properties: {}});
       }
 
       $scope.remove = function (index) {
-        relations.splice(index, 1);
+        $scope.relations.splice(index, 1);
       }
 
       $scope.save = function () {
