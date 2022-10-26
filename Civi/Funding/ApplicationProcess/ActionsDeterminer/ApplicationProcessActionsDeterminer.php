@@ -49,7 +49,8 @@ class ApplicationProcessActionsDeterminer implements ApplicationProcessActionsDe
   }
 
   public function isEditAllowed(string $status, array $permissions): bool {
-    return $this->isActionAllowed('save', $status, $permissions);
+    return $this->isActionAllowed('save', $status, $permissions)
+      || $this->isActionAllowed('apply', $status, $permissions);
   }
 
   /**

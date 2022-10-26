@@ -17,9 +17,8 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\ApplicationProcess;
+namespace Civi\Funding\ApplicationProcess\StatusDeterminer;
 
-use Civi\Funding\ApplicationProcess\StatusDeterminer\DefaultApplicationProcessStatusDeterminer;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -75,6 +74,10 @@ final class DefaultApplicationProcessStatusDeterminerTest extends TestCase {
     yield ['draft', 'save', 'draft'];
     yield ['draft', 'apply', 'applied'];
     yield ['draft', 'withdraw', 'withdrawn'];
+    yield ['review', 'approve-calculative', 'review'];
+    yield ['review', 'approve-content', 'review'];
+    yield ['review', 'reject-calculative', 'draft'];
+    yield ['review', 'reject-content', 'draft'];
     yield ['pre-approved', 'approve', 'approved'];
     yield ['pre-approved', 'reject', 'draft'];
   }

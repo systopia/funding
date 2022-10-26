@@ -40,8 +40,8 @@ final class DefaultApplicationProcessStatusDeterminer extends ApplicationProcess
       'approve-calculative' => 'review',
       'approve-content' => 'review',
       // @todo When do we switch to "draft", when to "rejected"?
-      'reject-calculative' => 'review',
-      'reject-content' => 'review',
+      'reject-calculative' => 'draft',
+      'reject-content' => 'draft',
     ],
     'draft' => [
       'save' => 'draft',

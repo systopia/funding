@@ -17,9 +17,8 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\ApplicationProcess;
+namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
-use Civi\Funding\ApplicationProcess\ActionsDeterminer\DefaultApplicationProcessActionsDeterminer;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -131,11 +130,11 @@ final class DefaultApplicationProcessActionsDeterminerTest extends TestCase {
     static::assertFalse($this->actionsDeterminer->isActionAllowed('save', 'draft', ['application_apply']));
   }
 
-  public function testIsSaveAllowed(): void {
+  public function testIsEditAllowed(): void {
     foreach (self::STATUS_PERMISSION_ACTIONS_MAP as $status => $permissionActionsMap) {
       foreach ($permissionActionsMap as $permission => $actions) {
         static::assertSame(
-          in_array('save', $actions, TRUE),
+          in_array('save', $actions, TRUE) || in_array('apply', $actions, TRUE),
           $this->actionsDeterminer->isEditAllowed($status, [$permission])
         );
       }
