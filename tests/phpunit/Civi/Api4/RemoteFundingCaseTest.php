@@ -41,18 +41,6 @@ final class RemoteFundingCaseTest extends TestCase implements HeadlessInterface,
 
   use FundingCaseTestFixturesTrait;
 
-  protected int $associatedContactId;
-
-  protected int $associatedContactIdNoPermissions;
-
-  protected int $relatedABContactId;
-
-  protected int $relatedBAContactId;
-
-  protected int $permittedFundingCaseId;
-
-  protected int $notPermittedContactId;
-
   public function setUpHeadless(): CiviEnvBuilder {
     return Test::headless()
       ->installMe(__DIR__)
@@ -61,7 +49,7 @@ final class RemoteFundingCaseTest extends TestCase implements HeadlessInterface,
 
   protected function setUp(): void {
     parent::setUp();
-    $this->addFixtures();
+    $this->addRemoteFixtures();
   }
 
   public function testPermissions(): void {
@@ -71,9 +59,10 @@ final class RemoteFundingCaseTest extends TestCase implements HeadlessInterface,
       ->execute();
     static::assertSame(1, $permittedAssociatedResult->rowCount);
     static::assertSame($this->permittedFundingCaseId, $permittedAssociatedResult->first()['id']);
-    static::assertSame(['foo', 'bar'], $permittedAssociatedResult->first()['permissions']);
-    static::assertTrue($permittedAssociatedResult->first()['PERM_foo']);
-    static::assertTrue($permittedAssociatedResult->first()['PERM_bar']);
+    static::assertSame(['application_foo', 'application_bar'], $permittedAssociatedResult->first()['permissions']);
+    static::assertTrue($permittedAssociatedResult->first()['PERM_application_foo']);
+    static::assertTrue($permittedAssociatedResult->first()['PERM_application_bar']);
+    static::assertArrayNotHasKey('PERM_review_baz', $permittedAssociatedResult->first());
 
     // Contact has an a-b-relationship with an associated contact
     $permittedABResult = RemoteFundingCase::get()
@@ -81,9 +70,10 @@ final class RemoteFundingCaseTest extends TestCase implements HeadlessInterface,
       ->execute();
     static::assertSame(1, $permittedABResult->rowCount);
     static::assertSame($this->permittedFundingCaseId, $permittedABResult->first()['id']);
-    static::assertSame(['c', 'd'], $permittedABResult->first()['permissions']);
-    static::assertTrue($permittedABResult->first()['PERM_c']);
-    static::assertTrue($permittedABResult->first()['PERM_d']);
+    static::assertSame(['application_c', 'application_d'], $permittedABResult->first()['permissions']);
+    static::assertTrue($permittedABResult->first()['PERM_application_c']);
+    static::assertTrue($permittedABResult->first()['PERM_application_d']);
+    static::assertArrayNotHasKey('PERM_review_e', $permittedABResult->first());
 
     // Contact has an b-a-relationship with an associated contact
     $permittedBAResult = RemoteFundingCase::get()
@@ -91,9 +81,10 @@ final class RemoteFundingCaseTest extends TestCase implements HeadlessInterface,
       ->execute();
     static::assertSame(1, $permittedBAResult->rowCount);
     static::assertSame($this->permittedFundingCaseId, $permittedBAResult->first()['id']);
-    static::assertSame(['c', 'd'], $permittedBAResult->first()['permissions']);
-    static::assertTrue($permittedBAResult->first()['PERM_c']);
-    static::assertTrue($permittedBAResult->first()['PERM_d']);
+    static::assertSame(['application_c', 'application_d'], $permittedBAResult->first()['permissions']);
+    static::assertTrue($permittedBAResult->first()['PERM_application_c']);
+    static::assertTrue($permittedBAResult->first()['PERM_application_d']);
+    static::assertArrayNotHasKey('PERM_review_e', $permittedBAResult->first());
 
     // Contact has a not permitted relationship with an associated contact
     $notPermittedResult = RemoteFundingCase::get()

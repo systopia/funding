@@ -62,8 +62,12 @@ final class RemoteFundingCaseInfoTest extends TestCase implements HeadlessInterf
     );
 
     $contact = ContactFixture::addIndividual();
-    FundingProgramContactRelationFixture::addContact($contact['id'], $fundingProgram->getId(), ['program_perm']);
-    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['case_perm']);
+    FundingProgramContactRelationFixture::addContact(
+      $contact['id'],
+      $fundingProgram->getId(),
+      ['application_program_perm']
+    );
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['application_case_perm']);
 
     $action = RemoteFundingCaseInfo::get()
       ->setRemoteContactId((string) $contact['id']);
@@ -74,7 +78,7 @@ final class RemoteFundingCaseInfoTest extends TestCase implements HeadlessInterf
     $values = $result->first();
     $expected = [
       'funding_case_id' => $fundingCase->getId(),
-      'funding_case_permissions' => ['case_perm'],
+      'funding_case_permissions' => ['application_case_perm'],
       'funding_case_status' => $fundingCase->getStatus(),
       'funding_case_creation_date' => $fundingCase->getCreationDate()->format('Y-m-d H:i:s'),
       'funding_case_modification_date' => $fundingCase->getModificationDate()->format('Y-m-d H:i:s'),
@@ -95,7 +99,7 @@ final class RemoteFundingCaseInfoTest extends TestCase implements HeadlessInterf
       'application_process_modification_date' => $applicationProcess->getModificationDate()->format('Y-m-d H:i:s'),
       'application_process_start_date' => '2022-09-20 20:20:20',
       'application_process_end_date' => NULL,
-      'funding_case_PERM_case_perm' => TRUE,
+      'funding_case_PERM_application_case_perm' => TRUE,
     ];
     static::assertEquals($expected,
       // Not given, but possible permissions are part of the flattened permissions
@@ -115,7 +119,7 @@ final class RemoteFundingCaseInfoTest extends TestCase implements HeadlessInterf
     $result = $action->execute();
     static::assertCount(1, $result);
 
-    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase2->getId(), ['test']);
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase2->getId(), ['application_test']);
     $result = $action->execute();
     static::assertCount(2, $result);
 

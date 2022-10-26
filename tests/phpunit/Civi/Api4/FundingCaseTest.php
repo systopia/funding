@@ -24,6 +24,7 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\Api4\Traits\FundingCaseTestFixturesTrait;
+use Civi\Funding\Util\SessionTestUtil;
 use Civi\Test;
 use Civi\Test\CiviEnvBuilder;
 use Civi\Test\HeadlessInterface;
@@ -33,7 +34,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @group headless
  *
- * @covers \Civi\Api4\RemoteFundingCase
+ * @covers \Civi\Api4\FundingCase
  * @covers \Civi\Funding\Api4\Action\FundingCase\GetAction
  * @covers \Civi\Funding\EventSubscriber\FundingCase\FundingCasePermissionsGetSubscriber
  */
@@ -41,69 +42,103 @@ final class FundingCaseTest extends TestCase implements HeadlessInterface, Trans
 
   use FundingCaseTestFixturesTrait;
 
-  protected int $associatedContactId;
-
-  protected int $associatedContactIdNoPermissions;
-
-  protected int $relatedABContactId;
-
-  protected int $relatedBAContactId;
-
-  protected int $permittedFundingCaseId;
-
-  protected int $notPermittedContactId;
-
   public function setUpHeadless(): CiviEnvBuilder {
     return Test::headless()
       ->installMe(__DIR__)
       ->apply();
   }
 
-  protected function setUp(): void {
-    parent::setUp();
-    $this->addFixtures();
-  }
-
-  public function testPermissions(): void {
+  public function testPermissionsInternal(): void {
+    $this->addInternalFixtures();
     // Contact is directly associated
-    $permittedAssociatedResult = RemoteFundingCase::get()
-      ->setRemoteContactId((string) $this->associatedContactId)
-      ->execute();
+    SessionTestUtil::mockInternalRequestSession($this->associatedContactId);
+    $permittedAssociatedResult = FundingCase::get()->execute();
     static::assertSame(1, $permittedAssociatedResult->rowCount);
     static::assertSame($this->permittedFundingCaseId, $permittedAssociatedResult->first()['id']);
-    static::assertSame(['foo', 'bar'], $permittedAssociatedResult->first()['permissions']);
-    static::assertTrue($permittedAssociatedResult->first()['PERM_foo']);
-    static::assertTrue($permittedAssociatedResult->first()['PERM_bar']);
+    static::assertSame(['review_baz'], $permittedAssociatedResult->first()['permissions']);
+    static::assertTrue($permittedAssociatedResult->first()['PERM_review_baz']);
 
     // Contact has an a-b-relationship with an associated contact
-    $permittedABResult = RemoteFundingCase::get()
-      ->setRemoteContactId((string) $this->relatedABContactId)
-      ->execute();
+    SessionTestUtil::mockInternalRequestSession($this->relatedABContactId);
+    $permittedABResult = FundingCase::get()->execute();
     static::assertSame(1, $permittedABResult->rowCount);
     static::assertSame($this->permittedFundingCaseId, $permittedABResult->first()['id']);
-    static::assertSame(['c', 'd'], $permittedABResult->first()['permissions']);
-    static::assertTrue($permittedABResult->first()['PERM_c']);
-    static::assertTrue($permittedABResult->first()['PERM_d']);
+    static::assertSame(['review_e'], $permittedABResult->first()['permissions']);
+    static::assertTrue($permittedABResult->first()['PERM_review_e']);
 
     // Contact has an b-a-relationship with an associated contact
-    $permittedBAResult = RemoteFundingCase::get()
-      ->setRemoteContactId((string) $this->relatedBAContactId)
+    SessionTestUtil::mockInternalRequestSession($this->relatedBAContactId);
+    $permittedBAResult = FundingCase::get()
       ->execute();
     static::assertSame(1, $permittedBAResult->rowCount);
     static::assertSame($this->permittedFundingCaseId, $permittedBAResult->first()['id']);
-    static::assertSame(['c', 'd'], $permittedBAResult->first()['permissions']);
-    static::assertTrue($permittedBAResult->first()['PERM_c']);
-    static::assertTrue($permittedBAResult->first()['PERM_d']);
+    static::assertSame(['review_e'], $permittedBAResult->first()['permissions']);
+    static::assertTrue($permittedBAResult->first()['PERM_review_e']);
 
     // Contact has a not permitted relationship with an associated contact
-    $notPermittedResult = RemoteFundingCase::get()
-      ->setRemoteContactId((string) $this->notPermittedContactId)
+    SessionTestUtil::mockInternalRequestSession($this->notPermittedContactId);
+    $notPermittedResult = FundingCase::get()
       ->execute();
     static::assertSame(0, $notPermittedResult->rowCount);
 
     // Contact is directly associated, but has no permissions set
-    $permittedAssociatedResult = RemoteFundingCase::get()
-      ->setRemoteContactId((string) $this->associatedContactIdNoPermissions)
+    SessionTestUtil::mockInternalRequestSession($this->associatedContactIdNoPermissions);
+    $permittedAssociatedResult = FundingCase::get()
+      ->execute();
+    static::assertSame(0, $permittedAssociatedResult->rowCount);
+
+    // Contact is directly associated, but has application and review permissions
+    SessionTestUtil::mockInternalRequestSession($this->associatedContactIdApplicationAndReview);
+    $permittedAssociatedResult = FundingCase::get()
+      ->execute();
+    static::assertSame(0, $permittedAssociatedResult->rowCount);
+  }
+
+  public function testPermissionsRemote(): void {
+    $this->addRemoteFixtures();
+
+    // Contact is directly associated
+    SessionTestUtil::mockRemoteRequestSession((string) $this->associatedContactId);
+    $permittedAssociatedResult = FundingCase::get()
+      ->execute();
+    static::assertSame(1, $permittedAssociatedResult->rowCount);
+    static::assertSame($this->permittedFundingCaseId, $permittedAssociatedResult->first()['id']);
+    static::assertSame(['application_foo', 'application_bar'], $permittedAssociatedResult->first()['permissions']);
+    static::assertTrue($permittedAssociatedResult->first()['PERM_application_foo']);
+    static::assertTrue($permittedAssociatedResult->first()['PERM_application_bar']);
+    static::assertArrayNotHasKey('PERM_review_baz', $permittedAssociatedResult->first());
+
+    // Contact has an a-b-relationship with an associated contact
+    SessionTestUtil::mockRemoteRequestSession((string) $this->relatedABContactId);
+    $permittedABResult = FundingCase::get()
+      ->execute();
+    static::assertSame(1, $permittedABResult->rowCount);
+    static::assertSame($this->permittedFundingCaseId, $permittedABResult->first()['id']);
+    static::assertSame(['application_c', 'application_d'], $permittedABResult->first()['permissions']);
+    static::assertTrue($permittedABResult->first()['PERM_application_c']);
+    static::assertTrue($permittedABResult->first()['PERM_application_d']);
+    static::assertArrayNotHasKey('PERM_review_e', $permittedABResult->first());
+
+    // Contact has an b-a-relationship with an associated contact
+    SessionTestUtil::mockRemoteRequestSession((string) $this->relatedBAContactId);
+    $permittedBAResult = FundingCase::get()
+      ->execute();
+    static::assertSame(1, $permittedBAResult->rowCount);
+    static::assertSame($this->permittedFundingCaseId, $permittedBAResult->first()['id']);
+    static::assertSame(['application_c', 'application_d'], $permittedBAResult->first()['permissions']);
+    static::assertTrue($permittedBAResult->first()['PERM_application_c']);
+    static::assertTrue($permittedBAResult->first()['PERM_application_d']);
+    static::assertArrayNotHasKey('PERM_review_e', $permittedBAResult->first());
+
+    // Contact has a not permitted relationship with an associated contact
+    SessionTestUtil::mockRemoteRequestSession((string) $this->notPermittedContactId);
+    $notPermittedResult = FundingCase::get()
+      ->execute();
+    static::assertSame(0, $notPermittedResult->rowCount);
+
+    // Contact is directly associated, but has no permissions set
+    SessionTestUtil::mockRemoteRequestSession((string) $this->associatedContactIdNoPermissions);
+    $permittedAssociatedResult = FundingCase::get()
       ->execute();
     static::assertSame(0, $permittedAssociatedResult->rowCount);
   }

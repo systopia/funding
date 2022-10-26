@@ -51,7 +51,10 @@ class AVK1FormTest extends TestCase {
       new \DateTime('2022-08-25'),
       '€',
       $possibleRecipients,
-      ['submitAction1' => 'Do Submit1', 'submitAction2' => 'Do Submit2'],
+      [
+        'submitAction1' => ['label' => 'Do Submit1', 'confirm' => NULL],
+        'submitAction2' => ['label' => 'Do Submit2', 'confirm' => 'Proceed?'],
+      ],
       ['foo' => $fooSchemaString],
       ['foo' => 'bar']
     );
@@ -188,7 +191,7 @@ class AVK1FormTest extends TestCase {
       new \DateTime('2022-08-25'),
       '€',
       [],
-      ['submitAction' => 'Do Submit'],
+      ['submitAction' => ['label' => 'Do Submit']],
       [],
       [],
     );
@@ -218,7 +221,7 @@ class AVK1FormTest extends TestCase {
       new \DateTime('2022-08-25'),
       '€',
       [],
-      ['submitAction' => 'Do Submit'],
+      ['submitAction' => ['label' => 'Do Submit', 'confirm' => NULL]],
       [],
       []
     );
@@ -245,7 +248,10 @@ class AVK1FormTest extends TestCase {
       new \DateTime('2022-08-25'),
       '€',
       [1 => 'Orgnization 1'],
-      ['submitAction1' => 'Do Submit1', 'submitAction2' => 'Do Submit2'],
+      [
+        'submitAction1' => ['label' => 'Do Submit1'],
+        'submitAction2' => ['label' => 'Do Submit2', 'confirm' => 'Proceed?'],
+      ],
       ['hidden' => new JsonSchemaString()],
       ['foo' => 'bar']
     );
@@ -262,8 +268,8 @@ class AVK1FormTest extends TestCase {
 
     static::assertEquals(
       [
-        new JsonFormsSubmitButton('#/properties/action', 'Do Submit1', 'submitAction1'),
-        new JsonFormsSubmitButton('#/properties/action', 'Do Submit2', 'submitAction2'),
+        new JsonFormsSubmitButton('#/properties/action', 'submitAction1', 'Do Submit1'),
+        new JsonFormsSubmitButton('#/properties/action', 'submitAction2', 'Do Submit2', 'Proceed?'),
       ],
       FormTestUtil::getControlsWithScope('#/properties/action', $uiSchema)
     );

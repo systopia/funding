@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
+use Civi\API\Exception\UnauthorizedException;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Fixtures\ApplicationProcessFixture;
 use Civi\Funding\Fixtures\ContactFixture;
@@ -26,6 +27,7 @@ use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
+use Civi\Funding\Util\SessionTestUtil;
 use Civi\Test;
 use Civi\Test\CiviEnvBuilder;
 use Civi\Test\HeadlessInterface;
@@ -34,6 +36,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Civi\Api4\FundingApplicationProcess
+ * @covers \Civi\Funding\Api4\Action\FundingApplicationProcess\DeleteAction
  * @covers \Civi\Funding\Api4\Action\FundingApplicationProcess\GetAction
  *
  * @group headless
@@ -46,20 +49,58 @@ final class FundingApplicationProcessTest extends TestCase implements HeadlessIn
       ->apply();
   }
 
+  public function testDelete(): void {
+    $contact = ContactFixture::addIndividual();
+    $fundingCase = $this->createFundingCase();
+    $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId());
+
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['application_withdraw']);
+
+    SessionTestUtil::mockRemoteRequestSession((string) $contact['id']);
+    $result = FundingApplicationProcess::delete()->addWhere('id', '=', $applicationProcess->getId())->execute();
+    static::assertCount(1, $result);
+    static::assertSame(['id' => $applicationProcess->getId()], $result->first());
+  }
+
+  public function testDeleteMissingPermission(): void {
+    $contact = ContactFixture::addIndividual();
+    $fundingCase = $this->createFundingCase();
+    $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId());
+
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['application_permission']);
+
+    SessionTestUtil::mockRemoteRequestSession((string) $contact['id']);
+    $this->expectException(UnauthorizedException::class);
+    $this->expectExceptionMessage('Deletion is not allowed');
+
+    FundingApplicationProcess::delete()->addWhere('id', '=', $applicationProcess->getId())->execute();
+  }
+
+  public function testDeleteWithoutAnyPermission(): void {
+    $contact = ContactFixture::addIndividual();
+    $fundingCase = $this->createFundingCase();
+    $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId());
+
+    // Contact does not now that application process exists without any permission.
+    SessionTestUtil::mockRemoteRequestSession((string) $contact['id']);
+    $result = FundingApplicationProcess::delete()->addWhere('id', '=', $applicationProcess->getId())->execute();
+    static::assertCount(0, $result);
+  }
+
   public function testGet(): void {
     $contact = ContactFixture::addIndividual();
     $contactNotPermitted = ContactFixture::addIndividual();
     $fundingCase = $this->createFundingCase();
     $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId());
 
-    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['test_permission']);
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['application_permission']);
 
-    \CRM_Core_Session::singleton()->set('userID', $contact['id']);
+    SessionTestUtil::mockRemoteRequestSession((string) $contact['id']);
     $result = FundingApplicationProcess::get()->addSelect('id')->execute();
     static::assertCount(1, $result);
     static::assertSame(['id' => $applicationProcess->getId()], $result->first());
 
-    \CRM_Core_Session::singleton()->set('userID', $contactNotPermitted['id']);
+    SessionTestUtil::mockRemoteRequestSession((string) $contactNotPermitted['id']);
     static::assertCount(0, FundingApplicationProcess::get()
       ->addSelect('id')->execute());
   }

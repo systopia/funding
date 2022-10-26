@@ -74,7 +74,7 @@ abstract class AbstractNewApplicationFormActionTest extends TestCase {
       'id' => 33,
       'requests_start_date' => date('Y-m-d', time() - 86400),
       'requests_end_date' => date('Y-m-d', time() + 86400),
-      'permissions' => ['create_application'],
+      'permissions' => ['application_create'],
     ])->toArray();
 
     $this->remoteFundingEntityManagerMock->method('getById')->willReturnMap([

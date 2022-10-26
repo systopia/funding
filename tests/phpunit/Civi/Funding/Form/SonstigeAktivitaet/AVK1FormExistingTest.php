@@ -35,7 +35,7 @@ final class AVK1FormExistingTest extends TestCase {
 
   public function test(): void {
     $form = new AVK1FormExisting(new \DateTime('2022-08-24'), new \DateTime('2022-08-25'),
-      '€', 2, [1 => 'Recipient'], ['save' => 'Save'], FALSE, []);
+      '€', 2, [1 => 'Recipient'], ['save' => ['label' => 'Save']], FALSE, []);
 
     $jsonSchema = $form->getJsonSchema();
     $properties = $jsonSchema->getKeywordValue('properties');
@@ -57,7 +57,7 @@ final class AVK1FormExistingTest extends TestCase {
 
   public function testReadOnly(): void {
     $form = new AVK1FormExisting(new \DateTime('2022-08-24'), new \DateTime('2022-08-25'),
-      '€', 2, [1 => 'Recipient'], ['save' => 'Save'], TRUE, []);
+      '€', 2, [1 => 'Recipient'], ['save' => ['label' => 'Save']], TRUE, []);
 
     static::assertTrue($form->isReadOnly());
   }

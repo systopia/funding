@@ -50,7 +50,7 @@ final class AddPermissionsToRecordsTest extends TestCase {
 
   public function testRecordIsFilteredOut(): void {
 
-    $addPermissionsToRecords = new AddPermissionsToRecords(['foo'], fn () => NULL);
+    $addPermissionsToRecords = new AddPermissionsToRecords(['foo'], fn () => []);
     $result = new Result([['id' => 1, 'name' => 'Test']]);
     $addPermissionsToRecords($result);
 

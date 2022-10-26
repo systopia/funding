@@ -22,7 +22,7 @@ namespace Civi\Funding\Form\Handler;
 use Civi\Api4\RemoteFundingApplicationProcess;
 use Civi\Api4\RemoteFundingCase;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
-use Civi\Funding\ApplicationProcess\ApplicationProcessStatusDeterminer;
+use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
@@ -69,7 +69,7 @@ final class SubmitApplicationFormHandlerTest extends TestCase {
   private SubmitApplicationFormHandler $handler;
 
   /**
-   * @var \Civi\Funding\ApplicationProcess\ApplicationProcessStatusDeterminer&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $statusDeterminerMock;
 
@@ -83,7 +83,7 @@ final class SubmitApplicationFormHandlerTest extends TestCase {
     $this->applicationProcessManagerMock = $this->createMock(ApplicationProcessManager::class);
     $this->formFactoryMock = $this->createMock(ApplicationFormFactoryInterface::class);
     $this->fundingCaseManagerMock = $this->createMock(FundingCaseManager::class);
-    $this->statusDeterminerMock = $this->createMock(ApplicationProcessStatusDeterminer::class);
+    $this->statusDeterminerMock = $this->createMock(ApplicationProcessStatusDeterminerInterface::class);
     $this->validatorMock = $this->createMock(FormValidatorInterface::class);
     $this->handler = new SubmitApplicationFormHandler(
       $this->applicationProcessManagerMock,
@@ -120,14 +120,6 @@ final class SubmitApplicationFormHandlerTest extends TestCase {
     $this->applicationProcessManagerMock->expects(static::once())->method('update')
       ->with($event->getContactId(), $event->getApplicationProcess());
 
-    $expectedForm = new ApplicationFormMock();
-    $this->formFactoryMock->expects(static::once())->method('createForm')->with(
-      $event->getApplicationProcess(),
-      $event->getFundingProgram(),
-      $event->getFundingCase(),
-      $event->getFundingCaseType(),
-    )->willReturn($expectedForm);
-
     $this->handler->handleSubmitForm($event);
 
     $applicationProcess = $event->getApplicationProcess();
@@ -141,8 +133,77 @@ final class SubmitApplicationFormHandlerTest extends TestCase {
     static::assertSame(ValidatedApplicationDataMock::APPLICATION_DATA, $applicationProcess->getRequestData());
     static::assertSame('new_status', $applicationProcess->getStatus());
 
+    static::assertSame(SubmitApplicationFormEvent::ACTION_CLOSE_FORM, $event->getAction());
+  }
+
+  public function testHandleSubmitFormValidModify(): void {
+    $event = $this->createSubmitFormEvent();
+    $validatedForm = new ApplicationFormMock();
+    $validatedForm->getUiSchema()->setReadonly(TRUE);
+    $this->formFactoryMock->expects(static::once())->method('createFormOnSubmit')
+      ->with($event)
+      ->willReturn($validatedForm);
+
+    $validationResult = new ValidationResult([], new ErrorCollector());
+    $this->validatorMock->expects(static::once())->method('validate')
+      ->with($validatedForm)
+      ->willReturn($validationResult);
+
+    $validatedData = new ValidatedApplicationDataMock([], ['action' => 'modify']);
+    $this->formFactoryMock->expects(static::once())->method('createValidatedData')->with(
+      $event->getApplicationProcess(),
+      $event->getFundingCaseType(),
+      $validationResult
+    )->willReturn($validatedData);
+
+    $this->statusDeterminerMock->method('getStatus')
+      ->with($event->getApplicationProcess()->getStatus(), 'modify')
+      ->willReturn('new_status');
+
+    $this->applicationProcessManagerMock->expects(static::once())->method('update')
+      ->with($event->getContactId(), $event->getApplicationProcess());
+
+    $expectedForm = new ApplicationFormMock();
+    $this->formFactoryMock->expects(static::once())->method('createForm')->with(
+      $event->getApplicationProcess(),
+      $event->getFundingProgram(),
+      $event->getFundingCase(),
+      $event->getFundingCaseType(),
+    )->willReturn($expectedForm);
+
+    $this->handler->handleSubmitForm($event);
+
+    // only status should be changed because form is read only
+    $expectedApplicationProcess = ApplicationProcessFactory::createApplicationProcess(['status' => 'new_status']);
+    static::assertEquals($expectedApplicationProcess, $event->getApplicationProcess());
     static::assertSame(SubmitApplicationFormEvent::ACTION_SHOW_FORM, $event->getAction());
     static::assertSame($expectedForm, $event->getForm());
+  }
+
+  public function testHandleSubmitFormValidDelete(): void {
+    $event = $this->createSubmitFormEvent();
+    $validatedForm = new ApplicationFormMock();
+    $this->formFactoryMock->expects(static::once())->method('createFormOnSubmit')
+      ->with($event)
+      ->willReturn($validatedForm);
+
+    $validationResult = new ValidationResult([], new ErrorCollector());
+    $this->validatorMock->expects(static::once())->method('validate')
+      ->with($validatedForm)
+      ->willReturn($validationResult);
+
+    $validatedData = new ValidatedApplicationDataMock([], ['action' => 'delete']);
+    $this->formFactoryMock->expects(static::once())->method('createValidatedData')->with(
+      $event->getApplicationProcess(),
+      $event->getFundingCaseType(),
+      $validationResult
+    )->willReturn($validatedData);
+
+    $this->applicationProcessManagerMock->expects(static::once())->method('delete')
+      ->with($event->getApplicationProcess());
+
+    $this->handler->handleSubmitForm($event);
+    static::assertSame(SubmitApplicationFormEvent::ACTION_CLOSE_FORM, $event->getAction());
   }
 
   public function testHandleSubmitFormInvalid(): void {
@@ -192,7 +253,7 @@ final class SubmitApplicationFormHandlerTest extends TestCase {
       $validationResult
     )->willReturn($validatedData);
 
-    $this->statusDeterminerMock->expects(static::once())->method('getStatusForNew')
+    $this->statusDeterminerMock->expects(static::once())->method('getInitialStatus')
       ->with(ValidatedApplicationDataMock::ACTION)
       ->willReturn('test_status');
 

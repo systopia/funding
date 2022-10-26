@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
+use Civi\Funding\Api4\Action\FundingApplicationProcess\DeleteAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\GetAction;
 use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
 
@@ -50,6 +51,10 @@ use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
 class FundingApplicationProcess extends Generic\DAOEntity {
 
   use EntityNameTrait;
+
+  public static function delete($checkPermissions = TRUE) {
+    return \Civi::service(DeleteAction::class)->setCheckPermissions($checkPermissions);
+  }
 
   /**
    * @inheritDoc

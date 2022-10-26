@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess;
 
+use Civi\Api4\FundingApplicationProcess;
+use Civi\Api4\Generic\DAOGetAction;
 use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
@@ -81,6 +83,17 @@ final class ApplicationProcessManagerTest extends TestCase implements HeadlessIn
     );
   }
 
+  public function testCountByFundingCaseId(): void {
+    $contact = ContactFixture::addIndividual();
+    $fundingCase = $this->createFundingCase();
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['test_permission']);
+
+    static::assertSame(0, $this->applicationProcessManager->countByFundingCaseId($fundingCase->getId()));
+
+    ApplicationProcessFixture::addFixture($fundingCase->getId());
+    static::assertSame(1, $this->applicationProcessManager->countByFundingCaseId($fundingCase->getId()));
+  }
+
   public function testCreate(): void {
     $contact = ContactFixture::addIndividual();
     $fundingCase = $this->createFundingCase();
@@ -135,6 +148,21 @@ final class ApplicationProcessManagerTest extends TestCase implements HeadlessIn
       'is_review_calculative' => NULL,
       'reviewer_calc_contact_id' => NULL,
     ], TestUtil::filterCiviExtraFields($applicationProcess->toArray()));
+  }
+
+  public function testDelete(): void {
+    $fundingCase = $this->createFundingCase();
+    $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId());
+    // We need any permission so the get action automatically performed by CiviCRM will return the application process
+    $contact = ContactFixture::addIndividual();
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['test_permission']);
+
+    \CRM_Core_Session::singleton()->set('userID', $contact['id']);
+    $this->applicationProcessManager->delete($applicationProcess, $fundingCase);
+
+    $action = (new DAOGetAction(FundingApplicationProcess::_getEntityName(), 'delete'))
+      ->addWhere('id', '=', $applicationProcess->getId());
+    static::assertCount(0, $action->execute());
   }
 
   public function testGet(): void {

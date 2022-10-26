@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase;
 
+use Civi\Api4\Generic\DAODeleteAction;
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Api4\Action\FundingCase\GetAction;
@@ -116,6 +117,23 @@ final class FundingCaseManagerTest extends TestCase implements HeadlessInterface
       // Not given, but possible permissions are part of the flattened permissions
       TestUtil::filterFlattenedPermissions($fundingCase->toArray())
     );
+  }
+
+  public function testDelete(): void {
+    $fundingCase = $this->createFundingCase();
+
+    $api4Mock = $this->createMock(Api4Interface::class);
+    $this->fundingCaseManager = new FundingCaseManager($api4Mock, $this->eventDispatcherMock);
+
+    $api4Mock->expects(static::once())->method('executeAction')->with(static::callback(
+      function (DAODeleteAction $action) use ($fundingCase) {
+        static::assertSame([['id', '=', $fundingCase->getId()]], $action->getWhere());
+
+        return TRUE;
+      }
+    ))->willReturn(new Result([['id' => $fundingCase->getId()]]));
+
+    $this->fundingCaseManager->delete($fundingCase);
   }
 
   public function testGet(): void {

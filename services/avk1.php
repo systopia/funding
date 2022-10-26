@@ -20,11 +20,15 @@ declare(strict_types = 1);
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
+use Civi\Funding\ApplicationProcess\ActionsDeterminer\ReworkPossibleApplicationProcessActionsDeterminer;
+use Civi\Funding\ApplicationProcess\StatusDeterminer\ReworkPossibleApplicationProcessStatusDeterminer;
 use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1ApplicationCostItemSubscriber;
 use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1ApplicationResourcesItemSubscriber;
+use Civi\Funding\Form\ApplicationSubmitActionsFactory;
 use Civi\Funding\Form\SonstigeAktivitaet\AVK1FormFactory;
 use Civi\Funding\SonstigeAktivitaet\AVK1ApplicationCostItemsFactory;
 use Civi\Funding\SonstigeAktivitaet\AVK1ApplicationResourcesItemsFactory;
+use Symfony\Component\DependencyInjection\Reference;
 
 $container->autowire(AVK1ApplicationCostItemSubscriber::class)
   ->addTag('kernel.event_subscriber')
@@ -34,7 +38,15 @@ $container->autowire(AVK1ApplicationResourcesItemSubscriber::class)
   ->addTag('kernel.event_subscriber')
   ->setLazy(TRUE);
 
+$container->autowire('funding.avk1.application_submit_actions_factory', ApplicationSubmitActionsFactory::class)
+  ->setArgument('$actionsDeterminer', new Reference(ReworkPossibleApplicationProcessActionsDeterminer::class))
+  ->setArgument('$submitActionsContainer', new Reference('funding.application.submit_actions_container'));
+
 $container->autowire(AVK1FormFactory::class)
-  ->addTag('funding.form_factory');
+  ->setArgument('$submitActionsFactory', new Reference('funding.avk1.application_submit_actions_factory'))
+  ->addTag('funding.application.form_factory');
 $container->autowire(AVK1ApplicationCostItemsFactory::class);
 $container->autowire(AVK1ApplicationResourcesItemsFactory::class);
+
+$container->getDefinition(ReworkPossibleApplicationProcessStatusDeterminer::class)
+  ->addTag('funding.application.status_determiner', ['funding_case_type' => 'AVK1SonstigeAktivitaet']);

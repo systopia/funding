@@ -68,9 +68,9 @@ trait PermissionsGetActionTrait {
   /**
    * @param array{id: int} $record
    *
-   * @return array<int, string>|null
+   * @return array<string>
    */
-  abstract protected function getRecordPermissions(array $record): ?array;
+  abstract protected function getRecordPermissions(array $record): array;
 
   /**
    * @phpstan-return array<string>

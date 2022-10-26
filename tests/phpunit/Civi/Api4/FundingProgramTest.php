@@ -24,6 +24,7 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\Api4\Traits\FundingProgramTestFixturesTrait;
+use Civi\Funding\Util\SessionTestUtil;
 use Civi\Test;
 use Civi\Test\CiviEnvBuilder;
 use Civi\Test\HeadlessInterface;
@@ -60,35 +61,69 @@ final class FundingProgramTest extends TestCase implements HeadlessInterface, Tr
     $this->addFixtures();
   }
 
-  public function testPermissions(): void {
+  public function testPermissionsInternal(): void {
     // Contact has a permitted type
-    \CRM_Core_Session::singleton()->set('userID', $this->permittedOrganizationId);
+    SessionTestUtil::mockInternalRequestSession($this->permittedOrganizationId);
     $permittedOrganizationResult = FundingProgram::get()
       ->execute();
     static::assertSame(1, $permittedOrganizationResult->rowCount);
     static::assertSame('Foo', $permittedOrganizationResult->first()['title']);
-    static::assertSame(['foo', 'bar'], $permittedOrganizationResult->first()['permissions']);
-    static::assertTrue($permittedOrganizationResult->first()['PERM_foo']);
-    static::assertTrue($permittedOrganizationResult->first()['PERM_bar']);
+    static::assertSame(['review_bar'], $permittedOrganizationResult->first()['permissions']);
+    static::assertTrue($permittedOrganizationResult->first()['PERM_review_bar']);
+    static::assertArrayNotHasKey('PERM_application_foo', $permittedOrganizationResult->first());
 
     // Contact has a relation that has a permitted type with a contact that has a permitted type
-    \CRM_Core_Session::singleton()->set('userID', $this->permittedIndividualId);
+    SessionTestUtil::mockInternalRequestSession($this->permittedIndividualId);
     $permittedIndividualResult = FundingProgram::get()
       ->execute();
     static::assertSame(1, $permittedIndividualResult->rowCount);
     static::assertSame('Foo', $permittedIndividualResult->first()['title']);
-    static::assertSame(['a', 'b'], $permittedIndividualResult->first()['permissions']);
-    static::assertTrue($permittedIndividualResult->first()['PERM_a']);
-    static::assertTrue($permittedIndividualResult->first()['PERM_b']);
+    static::assertSame(['review_b'], $permittedIndividualResult->first()['permissions']);
+    static::assertTrue($permittedIndividualResult->first()['PERM_review_b']);
+    static::assertArrayNotHasKey('PERM_application_a', $permittedOrganizationResult->first());
 
     // Contact has a relation that has a not permitted type with a contact that has a permitted type
-    \CRM_Core_Session::singleton()->set('userID', $this->notPermittedContactId);
+    SessionTestUtil::mockInternalRequestSession($this->notPermittedContactId);
     $notPermittedResult = FundingProgram::get()
       ->execute();
     static::assertSame(0, $notPermittedResult->rowCount);
 
     // Contact has a permitted type, but the relation has no permissions set
-    \CRM_Core_Session::singleton()->set('userID', $this->permittedOrganizationIdNoPermissions);
+    SessionTestUtil::mockInternalRequestSession($this->permittedOrganizationIdNoPermissions);
+    $notPermittedResult = FundingProgram::get()
+      ->execute();
+    static::assertSame(0, $notPermittedResult->rowCount);
+  }
+
+  public function testPermissionsRemote(): void {
+    // Contact has a permitted type
+    SessionTestUtil::mockRemoteRequestSession((string) $this->permittedOrganizationId);
+    $permittedOrganizationResult = FundingProgram::get()
+      ->execute();
+    static::assertSame(1, $permittedOrganizationResult->rowCount);
+    static::assertSame('Foo', $permittedOrganizationResult->first()['title']);
+    static::assertSame(['application_foo'], $permittedOrganizationResult->first()['permissions']);
+    static::assertTrue($permittedOrganizationResult->first()['PERM_application_foo']);
+    static::assertArrayNotHasKey('PERM_review_bar', $permittedOrganizationResult->first());
+
+    // Contact has a relation that has a permitted type with a contact that has a permitted type
+    SessionTestUtil::mockRemoteRequestSession((string) $this->permittedIndividualId);
+    $permittedIndividualResult = FundingProgram::get()
+      ->execute();
+    static::assertSame(1, $permittedIndividualResult->rowCount);
+    static::assertSame('Foo', $permittedIndividualResult->first()['title']);
+    static::assertSame(['application_a'], $permittedIndividualResult->first()['permissions']);
+    static::assertTrue($permittedIndividualResult->first()['PERM_application_a']);
+    static::assertArrayNotHasKey('PERM_review_b', $permittedOrganizationResult->first());
+
+    // Contact has a relation that has a not permitted type with a contact that has a permitted type
+    SessionTestUtil::mockRemoteRequestSession((string) $this->notPermittedContactId);
+    $notPermittedResult = FundingProgram::get()
+      ->execute();
+    static::assertSame(0, $notPermittedResult->rowCount);
+
+    // Contact has a permitted type, but the relation has no permissions set
+    SessionTestUtil::mockRemoteRequestSession((string) $this->permittedOrganizationIdNoPermissions);
     $notPermittedResult = FundingProgram::get()
       ->execute();
     static::assertSame(0, $notPermittedResult->rowCount);

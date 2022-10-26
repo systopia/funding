@@ -30,7 +30,57 @@ use Civi\Funding\Fixtures\FundingProgramFixture;
 
 trait FundingCaseTestFixturesTrait {
 
-  private function addFixtures(): void {
+  protected int $associatedContactId = -1;
+
+  protected int $associatedContactIdApplicationAndReview = -1;
+
+  protected int $associatedContactIdNoPermissions = -1;
+
+  protected int $relatedABContactId = -1;
+
+  protected int $relatedBAContactId = -1;
+
+  protected int $permittedFundingCaseId = -1;
+
+  protected int $notPermittedContactId = -1;
+
+  /**
+   * @throws \API_Exception
+   */
+  protected function addRemoteFixtures(): void {
+    $this->addFixtures(
+      ['application_foo', 'application_bar', 'review_baz'],
+      ['application_c', 'application_d', 'review_e']
+    );
+  }
+
+  /**
+   * @throws \API_Exception
+   */
+  protected function addInternalFixtures(): void {
+    $this->addFixtures(['review_baz'], ['review_e']);
+
+    $this->associatedContactIdApplicationAndReview = Contact::create()
+      ->setValues([
+        'contact_type' => 'Individual',
+        'first_name' => 'Associated',
+        'last_name' => 'User',
+      ])->execute()->first()['id'];
+
+    FundingCaseContactRelationFixture::addContact(
+      $this->associatedContactIdApplicationAndReview,
+      $this->permittedFundingCaseId,
+      ['application_foo', 'review_bar']
+    );
+  }
+
+  /**
+   * @phpstan-param array<string> $associatedContactPermissions
+   * @phpstan-param array<string> $permittedRelationshipTypePermissions
+   *
+   * @throws \API_Exception
+   */
+  private function addFixtures(array $associatedContactPermissions, array $permittedRelationshipTypePermissions): void {
     $fundingProgramId = FundingProgramFixture::addFixture(['title' => 'Foo'])->getId();
 
     $fundingCaseTypeId = FundingCaseType::create()
@@ -103,7 +153,7 @@ trait FundingCaseTestFixturesTrait {
     FundingCaseContactRelationFixture::addContact(
       $this->associatedContactId,
       $this->permittedFundingCaseId,
-      ['foo', 'bar']);
+      $associatedContactPermissions);
 
     FundingCaseContactRelation::create()
       ->setValues([
@@ -111,7 +161,7 @@ trait FundingCaseTestFixturesTrait {
         'entity_table' => 'civicrm_relationship_type',
         'entity_id' => $permittedRelationshipTypeId,
         'parent_id' => $contactRelationId,
-        'permissions' => ['c', 'd'],
+        'permissions' => $permittedRelationshipTypePermissions,
       ])->execute();
 
     $this->relatedABContactId = Contact::create()

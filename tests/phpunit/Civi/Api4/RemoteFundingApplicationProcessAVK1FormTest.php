@@ -92,7 +92,7 @@ final class RemoteFundingApplicationProcessAVK1FormTest extends TestCase impleme
     FundingCaseContactRelationFixture::addContact(
       $this->contact['id'],
       $this->fundingCase->getId(),
-      ['some_permission'],
+      ['application_permission'],
     );
 
     $values = $action->execute()->getArrayCopy();
@@ -106,7 +106,7 @@ final class RemoteFundingApplicationProcessAVK1FormTest extends TestCase impleme
     FundingCaseContactRelationFixture::addContact(
       $this->contact['id'],
       $this->fundingCase->getId(),
-      ['modify_application'],
+      ['application_modify'],
     );
 
     $values = $action->execute()->getArrayCopy();
@@ -142,7 +142,7 @@ final class RemoteFundingApplicationProcessAVK1FormTest extends TestCase impleme
     FundingCaseContactRelationFixture::addContact(
       $this->contact['id'],
       $this->fundingCase->getId(),
-      ['modify_application'],
+      ['application_modify'],
     );
 
     $values = $action->execute()->getArrayCopy();
@@ -175,7 +175,7 @@ final class RemoteFundingApplicationProcessAVK1FormTest extends TestCase impleme
     FundingCaseContactRelationFixture::addContact(
       $this->contact['id'],
       $this->fundingCase->getId(),
-      ['modify_application'],
+      ['application_modify'],
     );
 
     $values = $action->execute()->getArrayCopy();
@@ -205,7 +205,7 @@ final class RemoteFundingApplicationProcessAVK1FormTest extends TestCase impleme
     FundingProgramContactRelationFixture::addContact(
       $this->contact['id'],
       $this->fundingProgram->getId(),
-      ['create_application']
+      ['application_create']
     );
 
     $this->fundingCase = FundingCaseFixture::addFixture(
