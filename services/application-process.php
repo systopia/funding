@@ -27,11 +27,13 @@ use Civi\Funding\Api4\Action\Remote\ApplicationProcess\SubmitFormAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\ValidateFormAction;
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerInterface;
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\DefaultApplicationProcessActionsDeterminer;
+use Civi\Funding\ApplicationProcess\ActionsDeterminer\ReworkPossibleApplicationProcessActionsDeterminer;
 use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\DefaultApplicationProcessStatusDeterminer;
+use Civi\Funding\ApplicationProcess\StatusDeterminer\ReworkPossibleApplicationProcessStatusDeterminer;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessModificationDateSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessGetFieldsSubscriber;
@@ -69,3 +71,6 @@ $container->autowire(ApplicationProcessActionsDeterminerInterface::class,
   DefaultApplicationProcessActionsDeterminer::class);
 $container->autowire(ApplicationProcessStatusDeterminerInterface::class,
   DefaultApplicationProcessStatusDeterminer::class);
+
+$container->autowire(ReworkPossibleApplicationProcessActionsDeterminer::class);
+$container->autowire(ReworkPossibleApplicationProcessStatusDeterminer::class);

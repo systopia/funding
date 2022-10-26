@@ -25,13 +25,13 @@ use Civi\Funding\EventSubscriber\Form\SubmitApplicationFormSubscriber;
 use Civi\Funding\EventSubscriber\Form\ValidateApplicationFormSubscriber;
 use Civi\Funding\Form\ApplicationSubmitActionsFactory;
 use Civi\Funding\Form\ApplicationSubmitActionsFactoryInterface;
-use Civi\Funding\Form\DefaultApplicationSubmitActionsContainerFactory;
 use Civi\Funding\Form\Handler\DefaultGetApplicationFormHandler;
 use Civi\Funding\Form\Handler\DefaultSubmitApplicationFormHandler;
 use Civi\Funding\Form\Handler\DefaultValidateApplicationFormHandler;
 use Civi\Funding\Form\Handler\GetApplicationFormHandlerInterface;
 use Civi\Funding\Form\Handler\SubmitApplicationFormHandlerInterface;
 use Civi\Funding\Form\Handler\ValidateApplicationFormHandlerInterface;
+use Civi\Funding\Form\ReworkPossibleApplicationSubmitActionsContainerFactory;
 use Civi\Funding\Form\SubmitActionsContainer;
 use Civi\Funding\Form\Validation\FormValidator;
 use Civi\Funding\Form\Validation\FormValidatorInterface;
@@ -43,7 +43,7 @@ $container->register(Validator::class)->setFactory([OpisValidatorFactory::class,
 $container->autowire(FormValidatorInterface::class, FormValidator::class);
 
 $container->register('funding.application.submit_actions_container', SubmitActionsContainer::class)
-  ->setFactory([DefaultApplicationSubmitActionsContainerFactory::class, 'create']);
+  ->setFactory([ReworkPossibleApplicationSubmitActionsContainerFactory::class, 'create']);
 $container->autowire(ApplicationSubmitActionsFactoryInterface::class, ApplicationSubmitActionsFactory::class)
   ->setArgument('$submitActionsContainer', new Reference('funding.application.submit_actions_container'));
 
