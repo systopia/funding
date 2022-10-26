@@ -124,9 +124,9 @@ final class DefaultPossibleRecipientsLoaderTest extends TestCase {
 
     $this->relatedContactsLoaderMock->expects(static::once())->method('getRelatedContacts')
       ->with(123, 'test', ['foo' => 'bar'])
-      ->willReturn([2 => ['display_name' => NULL]]);
+      ->willReturn([2 => ['id' => 2, 'display_name' => NULL]]);
 
-    static::assertSame([], $this->recipientsLoader->getPossibleRecipients(123));
+    static::assertSame([2 => 'Contact 2'], $this->recipientsLoader->getPossibleRecipients(123));
   }
 
   /**

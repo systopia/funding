@@ -40,9 +40,8 @@ final class FundingCaseRecipientLoader implements FundingCaseRecipientLoaderInte
     /** @phpstan-var array<string, mixed> $contact */
     $contact = $this->api4->executeAction($action)->first();
 
-    // @todo Do we have to take care of display_name set to NULL? See DefaultPossibleRecipientsLoader
     /** @var string $displayName */
-    $displayName = $contact['display_name'] ?? E::ts('Unknown');
+    $displayName = $contact['display_name'] ?? E::ts('Contact %1', [1 => $contact['id']]);
 
     return [$fundingCase->getRecipientContactId() => $displayName];
   }

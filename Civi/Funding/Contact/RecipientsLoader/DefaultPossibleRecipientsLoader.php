@@ -23,6 +23,7 @@ use Civi\Api4\FundingRecipientContactRelation;
 use Civi\Funding\Contact\PossibleRecipientsLoaderInterface;
 use Civi\Funding\Contact\RelatedContactsLoaderInterface;
 use Civi\RemoteTools\Api4\Api4Interface;
+use CRM_Funding_ExtensionUtil as E;
 
 /**
  * @phpstan-type contactRelationT array{
@@ -46,12 +47,8 @@ final class DefaultPossibleRecipientsLoader implements PossibleRecipientsLoaderI
     $contacts = $this->getRelatedContacts($contactId);
     $possibleRecipients = [];
     foreach ($contacts as $id => $contact) {
-      // @todo Do we have to build the name ourself if display_name is NULL?
-      /** @var string|null $displayName */
-      $displayName = $contact['display_name'];
-      if (NULL === $displayName) {
-        continue;
-      }
+      /** @var string $displayName */
+      $displayName = $contact['display_name'] ?? E::ts('Contact %1', [1 => $id]);
 
       $possibleRecipients[$id] = $displayName;
     }
