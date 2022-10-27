@@ -76,10 +76,16 @@ final class SubmitNewApplicationFormAction extends AbstractNewApplicationFormAct
     switch ($event->getAction()) {
       case SubmitNewApplicationFormEvent::ACTION_SHOW_FORM:
         Assert::notNull($event->getForm());
-        Assert::keyExists($event->getForm()->getData(), 'fundingCaseTypeId');
-        Assert::integer($event->getForm()->getData()['fundingCaseTypeId']);
-        Assert::keyExists($event->getForm()->getData(), 'fundingProgramId');
-        Assert::integer($event->getForm()->getData()['fundingProgramId']);
+        if (isset($event->getForm()->getData()['applicationProcessId'])) {
+          // Application is persisted
+          Assert::integer($event->getForm()->getData()['applicationProcessId']);
+        }
+        else {
+          Assert::keyExists($event->getForm()->getData(), 'fundingCaseTypeId');
+          Assert::integer($event->getForm()->getData()['fundingCaseTypeId']);
+          Assert::keyExists($event->getForm()->getData(), 'fundingProgramId');
+          Assert::integer($event->getForm()->getData()['fundingProgramId']);
+        }
         $result['jsonSchema'] = $event->getForm()->getJsonSchema();
         $result['uiSchema'] = $event->getForm()->getUiSchema();
         $result['data'] = $event->getForm()->getData();
