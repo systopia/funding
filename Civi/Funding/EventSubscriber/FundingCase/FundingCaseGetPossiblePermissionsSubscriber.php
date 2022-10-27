@@ -35,9 +35,11 @@ final class FundingCaseGetPossiblePermissionsSubscriber implements EventSubscrib
   public function onGetPossiblePermissions(GetPossiblePermissionsEvent $event): void {
     // TODO: Possible permissions for FundingCase
     $event->addPermissions([
+      'application_view',
       'application_modify',
       'application_apply',
       'application_withdraw',
+      'application_request_rework',
       'review_calculative',
       'review_content',
     ]);

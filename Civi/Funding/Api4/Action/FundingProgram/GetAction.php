@@ -61,7 +61,7 @@ final class GetAction extends DAOGetAction implements FundingContactIdSessionAwa
    * @phpstan-return array<string>
    */
   protected function getPossiblePermissions(): array {
-    return $this->_possiblePermissionsLoader->getPermissions($this->getEntityName());
+    return $this->_possiblePermissionsLoader->getFilteredPermissions($this->getEntityName());
   }
 
 }

@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\RemoteTools\Authorization;
 
 use Civi\Core\CiviEventDispatcher;
+use Civi\RemoteTools\Event\FilterPossiblePermissionsEvent;
 use Civi\RemoteTools\Event\GetPossiblePermissionsEvent;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -85,6 +86,25 @@ final class PossiblePermissionsLoaderTest extends TestCase {
     static::assertSame(['cached'], $this->possiblePermissionsLoader->getPermissions('test'));
     // second call uses internal cache
     static::assertSame(['cached'], $this->possiblePermissionsLoader->getPermissions('test'));
+  }
+
+  public function testGetPermissionsFiltered(): void {
+    $this->cacheMock->expects(static::once())->method('has')
+      ->with('possible-permissions.test')
+      ->willReturn(TRUE);
+
+    $this->cacheMock->expects(static::once())->method('get')
+      ->with('possible-permissions.test')
+      ->willReturn(['cached1', 'cached2']);
+
+    $event = new FilterPossiblePermissionsEvent('test', ['cached1', 'cached2']);
+    $this->eventDispatcherMock->expects(static::once())->method('dispatch')
+      ->with(FilterPossiblePermissionsEvent::getName('test'), $event)
+      ->willReturnCallback(function (string $eventName, FilterPossiblePermissionsEvent $event) {
+        $event->removePermission('cached1');
+      });
+
+    static::assertSame(['cached2'], $this->possiblePermissionsLoader->getFilteredPermissions('test'));
   }
 
 }

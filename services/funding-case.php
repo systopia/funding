@@ -46,6 +46,9 @@ $container->autowire(GetAction::class)
 $container->autowire(GetFieldsAction::class)
   ->setPublic(TRUE)
   ->setShared(FALSE);
+$container->autowire(\Civi\Funding\Api4\Action\FundingCaseContactRelation\GetFieldsAction::class)
+  ->setPublic(TRUE)
+  ->setShared(FALSE);
 
 $container->autowire(FundingCaseGetFieldsSubscriber::class)
   ->addTag('kernel.event_subscriber');

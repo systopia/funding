@@ -23,6 +23,12 @@ interface PossiblePermissionsLoaderInterface {
 
   /**
    * @phpstan-return array<string>
+   *  Permissions might be filtered (possibly depending on values in session.)
+   */
+  public function getFilteredPermissions(string $entityName): array;
+
+  /**
+   * @phpstan-return array<string>
    */
   public function getPermissions(string $entityName): array;
 

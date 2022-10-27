@@ -39,7 +39,7 @@ final class GetFieldsAction extends DAOGetFieldsAction {
    * @phpstan-return array<string>
    */
   protected function getPossiblePermissions(): array {
-    return $this->_possiblePermissionsLoader->getPermissions($this->getEntityName());
+    return $this->_possiblePermissionsLoader->getFilteredPermissions($this->getEntityName());
   }
 
 }

@@ -17,29 +17,30 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Api4\Action\FundingCase;
+namespace Civi\Funding\Api4\Action\FundingCaseContactRelation;
 
 use Civi\Api4\FundingCase;
+use Civi\Api4\FundingCaseContactRelation;
 use Civi\Api4\Generic\DAOGetFieldsAction;
-use Civi\RemoteTools\Api4\Action\Traits\PermissionsGetFieldsActionTrait;
+use Civi\Funding\Api4\Action\Traits\PermissionsSelectTrait;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
 
 final class GetFieldsAction extends DAOGetFieldsAction {
 
-  use PermissionsGetFieldsActionTrait;
+  use PermissionsSelectTrait;
 
-  protected PossiblePermissionsLoaderInterface $_possiblePermissionsLoader;
+  private PossiblePermissionsLoaderInterface $possiblePermissionsLoader;
 
   public function __construct(PossiblePermissionsLoaderInterface $possiblePermissionsLoader) {
-    parent::__construct(FundingCase::_getEntityName(), 'getFields');
-    $this->_possiblePermissionsLoader = $possiblePermissionsLoader;
+    parent::__construct(FundingCaseContactRelation::_getEntityName(), 'getFields');
+    $this->possiblePermissionsLoader = $possiblePermissionsLoader;
   }
 
   /**
    * @phpstan-return array<string>
    */
   protected function getPossiblePermissions(): array {
-    return $this->_possiblePermissionsLoader->getFilteredPermissions($this->getEntityName());
+    return $this->possiblePermissionsLoader->getPermissions(FundingCase::_getEntityName());
   }
 
 }
