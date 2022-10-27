@@ -20,8 +20,11 @@ declare(strict_types = 1);
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
+use Civi\Funding\Api4\Action\FundingApplicationProcess\CreateAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\DeleteAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\GetAction;
+use Civi\Funding\Api4\Action\FundingApplicationProcess\SaveAction;
+use Civi\Funding\Api4\Action\FundingApplicationProcess\UpdateAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetFormAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\SubmitFormAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\ValidateFormAction;
@@ -42,10 +45,19 @@ $container->autowire(ApplicationProcessManager::class);
 $container->autowire(ApplicationCostItemManager::class);
 $container->autowire(ApplicationResourcesItemManager::class);
 
+$container->autowire(CreateAction::class)
+  ->setPublic(TRUE)
+  ->setShared(FALSE);
 $container->autowire(DeleteAction::class)
   ->setPublic(TRUE)
   ->setShared(TRUE);
 $container->autowire(GetAction::class)
+  ->setPublic(TRUE)
+  ->setShared(FALSE);
+$container->autowire(SaveAction::class)
+  ->setPublic(TRUE)
+  ->setShared(FALSE);
+$container->autowire(UpdateAction::class)
   ->setPublic(TRUE)
   ->setShared(FALSE);
 

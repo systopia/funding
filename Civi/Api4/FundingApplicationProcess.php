@@ -19,8 +19,11 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
+use Civi\Funding\Api4\Action\FundingApplicationProcess\CreateAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\DeleteAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\GetAction;
+use Civi\Funding\Api4\Action\FundingApplicationProcess\SaveAction;
+use Civi\Funding\Api4\Action\FundingApplicationProcess\UpdateAction;
 use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
 
 /**
@@ -52,6 +55,10 @@ class FundingApplicationProcess extends Generic\DAOEntity {
 
   use EntityNameTrait;
 
+  public static function create($checkPermissions = TRUE) {
+    return \Civi::service(CreateAction::class)->setCheckPermissions($checkPermissions);
+  }
+
   public static function delete($checkPermissions = TRUE) {
     return \Civi::service(DeleteAction::class)->setCheckPermissions($checkPermissions);
   }
@@ -63,6 +70,14 @@ class FundingApplicationProcess extends Generic\DAOEntity {
    */
   public static function get($checkPermissions = TRUE) {
     return \Civi::service(GetAction::class)->setCheckPermissions($checkPermissions);
+  }
+
+  public static function update($checkPermissions = TRUE) {
+    return \Civi::service(UpdateAction::class)->setCheckPermissions($checkPermissions);
+  }
+
+  public static function save($checkPermissions = TRUE) {
+    return \Civi::service(SaveAction::class)->setCheckPermissions($checkPermissions);
   }
 
 }
