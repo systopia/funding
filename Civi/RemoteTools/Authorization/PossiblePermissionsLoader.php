@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\RemoteTools\Authorization;
 
 use Civi\Core\CiviEventDispatcher;
+use Civi\RemoteTools\Event\FilterPossiblePermissionsEvent;
 use Civi\RemoteTools\Event\GetPossiblePermissionsEvent;
 use Psr\SimpleCache\CacheInterface;
 
@@ -42,6 +43,14 @@ final class PossiblePermissionsLoader implements PossiblePermissionsLoaderInterf
   public function __construct(CiviEventDispatcher $eventDispatcher, CacheInterface $cache) {
     $this->eventDispatcher = $eventDispatcher;
     $this->cache = $cache;
+  }
+
+  public function getFilteredPermissions(string $entityName): array {
+    $permissions = $this->getPermissions($entityName);
+    $event = new FilterPossiblePermissionsEvent($entityName, $permissions);
+    $this->eventDispatcher->dispatch(FilterPossiblePermissionsEvent::getName($entityName), $event);
+
+    return $event->getPermissions();
   }
 
   /**

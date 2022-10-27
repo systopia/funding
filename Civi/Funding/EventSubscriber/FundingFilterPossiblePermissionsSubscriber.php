@@ -22,7 +22,7 @@ namespace Civi\Funding\EventSubscriber;
 use Civi\Api4\FundingCase;
 use Civi\Api4\FundingProgram;
 use Civi\Funding\Util\SessionUtil;
-use Civi\RemoteTools\Event\GetPossiblePermissionsEvent;
+use Civi\RemoteTools\Event\FilterPossiblePermissionsEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 final class FundingFilterPossiblePermissionsSubscriber implements EventSubscriberInterface {
@@ -34,13 +34,14 @@ final class FundingFilterPossiblePermissionsSubscriber implements EventSubscribe
    */
   public static function getSubscribedEvents(): array {
     return [
-      GetPossiblePermissionsEvent::getName(FundingCase::_getEntityName()) => ['onGetPossiblePermissions', PHP_INT_MIN],
-      GetPossiblePermissionsEvent::getName(FundingProgram::_getEntityName())
-      => ['onGetPossiblePermissions', PHP_INT_MIN],
+      FilterPossiblePermissionsEvent::getName(FundingCase::_getEntityName())
+      => ['onFilterPossiblePermissions', PHP_INT_MIN],
+      FilterPossiblePermissionsEvent::getName(FundingProgram::_getEntityName())
+      => ['onFilterPossiblePermissions', PHP_INT_MIN],
     ];
   }
 
-  public function onGetPossiblePermissions(GetPossiblePermissionsEvent $event): void {
+  public function onFilterPossiblePermissions(FilterPossiblePermissionsEvent $event): void {
     if (SessionUtil::isRemoteSession(\CRM_Core_Session::singleton())) {
       $this->excludeNonApplicationPermissions($event);
     }
@@ -49,20 +50,12 @@ final class FundingFilterPossiblePermissionsSubscriber implements EventSubscribe
     }
   }
 
-  private function excludeApplicationPermissions(GetPossiblePermissionsEvent $event): void {
-    $event->setPermissions(\array_filter(
-        $event->getPermissions(),
-        fn (string $permission) => !\str_starts_with($permission, self::APPLICATION_PERMISSION_PREFIX)
-      )
-    );
+  private function excludeApplicationPermissions(FilterPossiblePermissionsEvent $event): void {
+    $event->removePermissionsByPrefix(self::APPLICATION_PERMISSION_PREFIX);
   }
 
-  private function excludeNonApplicationPermissions(GetPossiblePermissionsEvent $event): void {
-    $event->setPermissions(\array_filter(
-        $event->getPermissions(),
-        fn (string $permission) => \str_starts_with($permission, self::APPLICATION_PERMISSION_PREFIX)
-      )
-    );
+  private function excludeNonApplicationPermissions(FilterPossiblePermissionsEvent $event): void {
+    $event->keepPermissionsByPrefix(self::APPLICATION_PERMISSION_PREFIX);
   }
 
 }

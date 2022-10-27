@@ -22,7 +22,7 @@ namespace Civi\Funding\EventSubscriber;
 use Civi\Api4\FundingCase;
 use Civi\Api4\FundingProgram;
 use Civi\Funding\Util\SessionTestUtil;
-use Civi\RemoteTools\Event\GetPossiblePermissionsEvent;
+use Civi\RemoteTools\Event\FilterPossiblePermissionsEvent;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -44,9 +44,10 @@ final class FundingFilterPossiblePermissionsSubscriberTest extends TestCase {
 
   public function testGetSubscribedEvents(): void {
     $expectedSubscriptions = [
-      GetPossiblePermissionsEvent::getName(FundingCase::_getEntityName()) => ['onGetPossiblePermissions', PHP_INT_MIN],
-      GetPossiblePermissionsEvent::getName(FundingProgram::_getEntityName())
-      => ['onGetPossiblePermissions', PHP_INT_MIN],
+      FilterPossiblePermissionsEvent::getName(FundingCase::_getEntityName())
+      => ['onFilterPossiblePermissions', PHP_INT_MIN],
+      FilterPossiblePermissionsEvent::getName(FundingProgram::_getEntityName())
+      => ['onFilterPossiblePermissions', PHP_INT_MIN],
     ];
 
     static::assertEquals($expectedSubscriptions, $this->subscriber::getSubscribedEvents());
@@ -56,26 +57,19 @@ final class FundingFilterPossiblePermissionsSubscriberTest extends TestCase {
     }
   }
 
-  public function testOnGetPossiblePermissionsInternal(): void {
-    $event = $this->createEvent();
+  public function testOnFilterPossiblePermissionsInternal(): void {
+    $event = new FilterPossiblePermissionsEvent('entity', ['application_foo', 'review_bar']);
 
-    $this->subscriber->onGetPossiblePermissions($event);
+    $this->subscriber->onFilterPossiblePermissions($event);
     static::assertSame(['review_bar'], $event->getPermissions());
   }
 
-  public function testOnGetPossiblePermissionsRemote(): void {
+  public function testOnFilterPossiblePermissionsRemote(): void {
     SessionTestUtil::mockRemoteRequestSession('2');
-    $event = $this->createEvent();
+    $event = new FilterPossiblePermissionsEvent('entity', ['application_foo', 'review_bar']);
 
-    $this->subscriber->onGetPossiblePermissions($event);
+    $this->subscriber->onFilterPossiblePermissions($event);
     static::assertSame(['application_foo'], $event->getPermissions());
-  }
-
-  private function createEvent(): GetPossiblePermissionsEvent {
-    $event = new GetPossiblePermissionsEvent('entity');
-    $event->setPermissions(['application_foo', 'review_bar']);
-
-    return $event;
   }
 
 }
