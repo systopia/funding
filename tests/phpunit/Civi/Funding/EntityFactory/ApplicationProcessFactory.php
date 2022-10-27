@@ -23,7 +23,7 @@ use Civi\Funding\Entity\ApplicationProcessEntity;
 
 /**
  * @phpstan-type applicationProcessValuesT array{
- *   id?: int,
+ *   id?: int|null,
  *   funding_case_id?: int,
  *   status?: string,
  *   creation_date?: string,
@@ -50,7 +50,7 @@ final class ApplicationProcessFactory {
    * @phpstan-param applicationProcessValuesT $values
    */
   public static function createApplicationProcess(array $values = []): ApplicationProcessEntity {
-    return ApplicationProcessEntity::fromArray($values + [
+    $values += [
       'id' => 2,
       'funding_case_id' => 3,
       'status' => 'new_status',
@@ -68,7 +68,12 @@ final class ApplicationProcessFactory {
       'reviewer_cont_contact_id' => NULL,
       'is_review_calculative' => NULL,
       'reviewer_calc_contact_id' => NULL,
-    ]);
+    ];
+    if (NULL === $values['id']) {
+      unset($values['id']);
+    }
+
+    return ApplicationProcessEntity::fromArray($values);
   }
 
 }
