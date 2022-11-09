@@ -17,48 +17,45 @@
 'use strict';
 
 fundingModule.config(['$routeProvider', function($routeProvider) {
-    $routeProvider.when('/funding/program/:fundingProgramId/recipients', {
-      controller: 'fundingRecipientRelationsCtrl',
-      controllerAs: '$ctrl',
-      templateUrl: '~/crmFunding/program/recipientRelations.html',
-      resolve: {
-        types: ['recipientRelationTypeService', function(recipientRelationTypeService) {
-          return recipientRelationTypeService.getAll();
-        }],
-        relations: ['$route', 'recipientRelationService', function($route, recipientRelationService) {
-          return recipientRelationService.getAll($route.current.params.fundingProgramId);
-        }],
-      }
-    });
-  }]
-);
-
-(function(angular, $, _) {
-  fundingModule.controller('fundingRecipientRelationsCtrl', [
-    '$scope', '$routeParams', 'recipientRelationService', 'crmStatus', 'types', 'relations',
-    function($scope, $routeParams, recipientRelationService, crmStatus, types, relations) {
-      const ts = $scope.ts = CRM.ts('funding');
-      const fundingProgramId = $routeParams.fundingProgramId;
-
-      $scope.relations = relations;
-      $scope.types = types;
-
-      $scope.add = function () {
-        $scope.relations.push({funding_program_id: fundingProgramId, properties: {}});
-      }
-
-      $scope.remove = function (index) {
-        $scope.relations.splice(index, 1);
-      }
-
-      $scope.save = function () {
-        return crmStatus(
-          {start: ts('Saving...'), success: ts('Saved')},
-          recipientRelationService.replaceAll(fundingProgramId, $scope.relations).then(function (relations) {
-            $scope.relations = relations;
-          })
-        );
-      };
+  $routeProvider.when('/funding/program/:fundingProgramId/recipients', {
+    controller: 'fundingRecipientRelationsCtrl',
+    controllerAs: '$ctrl',
+    templateUrl: '~/crmFunding/program/recipientRelations.html',
+    resolve: {
+      types: ['recipientRelationTypeService', function(recipientRelationTypeService) {
+        return recipientRelationTypeService.getAll();
+      }],
+      relations: ['$route', 'recipientRelationService', function($route, recipientRelationService) {
+        return recipientRelationService.getAll($route.current.params.fundingProgramId);
+      }],
     }
-  ]);
-})(angular, CRM.$, CRM._);
+  });
+}]);
+
+fundingModule.controller('fundingRecipientRelationsCtrl', [
+  '$scope', '$routeParams', 'recipientRelationService', 'crmStatus', 'types', 'relations',
+  function($scope, $routeParams, recipientRelationService, crmStatus, types, relations) {
+    $scope.ts = CRM.ts('funding');
+    const fundingProgramId = $routeParams.fundingProgramId;
+
+    $scope.relations = relations;
+    $scope.types = types;
+
+    $scope.add = function () {
+      $scope.relations.push({funding_program_id: fundingProgramId, properties: {}});
+    };
+
+    $scope.remove = function (index) {
+      $scope.relations.splice(index, 1);
+    };
+
+    $scope.save = function () {
+      return crmStatus(
+        {},
+        recipientRelationService.replaceAll(fundingProgramId, $scope.relations).then(function (relations) {
+          $scope.relations = relations;
+        })
+      );
+    };
+  }
+]);

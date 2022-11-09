@@ -2,5 +2,5 @@
 <select class="crm-form-select" ng-model="type" ng-change="clearProperties()" ng-required="true">
     <option ng-repeat="t in types track by $index" value="{{t.name}}">{{t.label}}</option>
 </select>
-<span class="funding-recipient-relation-properties"/>
+<span class="funding-recipient-relation-properties"></span>
 <a ng-if="typeSpecification.help" class="helpicon" title="{{typeSpecification.help}}"></a>

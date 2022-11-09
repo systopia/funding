@@ -16,11 +16,35 @@
 
 'use strict';
 
+/**
+ * Defines a service factory to access recipient relations via CiviCRM APIv4.
+ *
+ * @typedef {number} integer
+ * @typedef {id: integer, fundingProgramId: integer, type: string, properties: json} RecipientRelation
+ *   Value of "properties" depends on the type.
+ * @typedef {fundingProgramId: integer, type: string, properties: json} NewRecipientRelation
+ *   Newly added recipient relations do not have an id.
+ */
 fundingModule.factory('recipientRelationService', ['crmApi4', function(crmApi4) {
   return {
+    /**
+     * Get all configured recipient relations for the given funding program ID.
+     *
+     * @param {integer} fundingProgramId
+     * @returns {Promise<RecipientRelation[]>}
+     */
     getAll: (fundingProgramId) => crmApi4('FundingRecipientContactRelation', 'get',
         {where:[['funding_program_id', '=', fundingProgramId]]}),
+
+    /**
+     * Replaces all recipient relations for the given funding program ID with
+     * the given relations.
+     *
+     * @param {integer} fundingProgramId
+     * @param {(RecipientRelation|NewRecipientRelation)[]} relations
+     * @returns {Promise<RecipientRelation[]>}
+     */
     replaceAll: (fundingProgramId, relations) => crmApi4('FundingRecipientContactRelation', 'replace',
         {where: [['funding_program_id', '=', fundingProgramId]], records: relations }),
-  }
+  };
 }]);

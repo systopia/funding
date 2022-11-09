@@ -16,8 +16,22 @@
 
 'use strict';
 
+/**
+ * Defines a service factory to access recipient relation types via CiviCRM
+ * APIv4.
+ *
+ * @typedef {Object} RecipientRelationType
+ * @property {string} name
+ * @property {string} label
+ * @property {string} template AngularJS template to display the type specific properties.
+ * @property {string} help Help text for the type. Might be empty.
+ * @property {json} extra Possible type specific extra properties.
+ */
 fundingModule.factory('recipientRelationTypeService', ['crmApi4', function(crmApi4) {
   return {
+    /**
+     * @returns {Promise<RecipientRelationType[]>}
+     */
     getAll: () => crmApi4('FundingRecipientContactRelationType', 'get', {orderBy: {label: 'ASC'}}, 'name'),
-  }
+  };
 }]);
