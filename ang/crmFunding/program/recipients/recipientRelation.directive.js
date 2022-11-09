@@ -27,12 +27,6 @@ fundingModule.directive('fundingRecipientRelation', ['$compile', function($compi
       type: '=', // Name of relation type to display.
       properties: '=', // Properties of relation.
     },
-    link: function($scope, elem, attrs) {
-      $scope.$watch('type', function (newValue, oldValue) {
-        $scope.typeSpecification = $scope.types[newValue];
-        if ($scope.typeSpecification) {
-          const propertiesElem = angular.element(elem[0].querySelector('.funding-recipient-relation-properties'));
-          propertiesElem.html($compile($scope.typeSpecification.template)($scope));
     link: function(scope, element) {
       // Insert/update type specific template on type change.
       scope.$watch('type', function (newValue, oldValue) {
