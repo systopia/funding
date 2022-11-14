@@ -19,19 +19,28 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form;
 
-use Civi\Funding\Entity\ApplicationProcessEntity;
-use Civi\Funding\Entity\FundingCaseEntity;
+use Opis\JsonSchema\Errors\ValidationError;
+use Opis\JsonSchema\Info\DataInfo;
+use Opis\JsonSchema\Info\SchemaInfo;
+use Opis\JsonSchema\Schemas\EmptySchema;
 
-interface ApplicationFormDataFactoryInterface {
-
-  /**
-   * @phpstan-return array<string>
-   */
-  public static function getSupportedFundingCaseTypes(): array;
+final class ValidationErrorFactory {
 
   /**
-   * @phpstan-return array<string, mixed> JSON serializable.
+   * @phpstan-param array<int|string> $path
    */
-  public function createFormData(ApplicationProcessEntity $applicationProcess, FundingCaseEntity $fundingCase): array;
+  public static function createValidationError(
+    array $path = ['foo'],
+    string $data = 'bar',
+    string $message = 'Invalid value',
+    string $keyword = 'test'
+  ): ValidationError {
+    return new ValidationError(
+      $keyword,
+      new EmptySchema(new SchemaInfo(FALSE, NULL)),
+      new DataInfo($data, 'string', NULL, $path),
+      $message
+    );
+  }
 
 }

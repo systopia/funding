@@ -19,9 +19,20 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\DependencyInjection;
 
-use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
-use Civi\Funding\Form\ApplicationFormFactoryInterface;
-use Civi\Funding\Form\Validation\FormValidatorInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandler;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandler;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewCreateHandler;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewCreateHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewSubmitHandler;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewSubmitHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewValidateHandler;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewValidateHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandler;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandler;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterface;
 use Civi\Funding\FundingCaseTypeServiceLocator;
 use Civi\Funding\FundingCaseTypeServiceLocatorContainer;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -36,108 +47,194 @@ use Symfony\Component\DependencyInjection\Reference;
 final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
 
   /**
-   * @phpstan-var array<string, Reference>
+   * @phpstan-var array<string>
    */
-  private array $applicationFormFactoryServices = [];
-
-  /**
-   * @phpstan-var array<string, Reference>
-   */
-  private array $applicationStatusDeterminerServices = [];
-
-  /**
-   * @phpstan-var array<string, Reference>
-   */
-  private array $serviceLocatorServices = [];
+  private array $fundingCaseTypes = [];
 
   /**
    * @inheritDoc
+   *
+   * @throws \Symfony\Component\DependencyInjection\Exception\RuntimeException
    */
   public function process(ContainerBuilder $container): void {
-    $this->handleApplicationFormFactories($container);
-    $this->handleApplicationStatusDeterminers($container);
-    $this->handleFundingCaseTypeServiceLocators($container);
+    $applicationFormDataFactoryServices =
+      $this->getTaggedServices($container, 'funding.application.form_data_factory');
+    $applicationJsonSchemaFactoryServices =
+      $this->getTaggedServices($container, 'funding.application.json_schema_factory');
+    $applicationUiSchemaFactoryServices =
+      $this->getTaggedServices($container, 'funding.application.ui_schema_factory');
+    $applicationStatusDeterminerServices =
+      $this->getTaggedServices($container, 'funding.application.status_determiner');
 
-    $defaultStatusDeterminerService = new Reference(ApplicationProcessStatusDeterminerInterface::class);
-    $defaultFormValidatorService = new Reference(FormValidatorInterface::class);
+    $applicationFormNewCreateHandlerServices =
+      $this->getTaggedServices($container, 'funding.application.form_new_create_handler');
+    $applicationFormNewValidateHandlerServices =
+      $this->getTaggedServices($container, 'funding.application.form_new_validate_handler');
+    $applicationFormNewSubmitHandlerServices =
+      $this->getTaggedServices($container, 'funding.application.form_new_submit_handler');
 
-    foreach ($this->applicationFormFactoryServices as $fundingCaseType => $formFactoryService) {
-      if (isset($this->serviceLocatorServices[$fundingCaseType])) {
+    $applicationFormCreateHandlerServices =
+      $this->getTaggedServices($container, 'funding.application.form_create_handler');
+    $applicationFormDataGetHandlerServices =
+      $this->getTaggedServices($container, 'funding.application.form_data_get_handler');
+    $applicationFormValidateHandlerServices =
+      $this->getTaggedServices($container, 'funding.application.form_validate_handler');
+    $applicationFormSubmitHandlerServices =
+      $this->getTaggedServices($container, 'funding.application.form_submit_handler');
+
+    $serviceLocatorServices =
+      $this->getTaggedServices($container, 'funding.case.type.service_locator');
+
+    foreach ($this->fundingCaseTypes as $fundingCaseType) {
+      if (isset($serviceLocatorServices[$fundingCaseType])) {
         continue;
       }
 
+      $applicationFormNewCreateHandlerServices[$fundingCaseType] ??= $this->createService(
+        $container,
+        $fundingCaseType,
+        ApplicationFormNewCreateHandler::class,
+        [
+          '$jsonSchemaFactory' => $applicationJsonSchemaFactoryServices[$fundingCaseType],
+          '$uiSchemaFactory' => $applicationUiSchemaFactoryServices[$fundingCaseType],
+        ]
+      );
+
+      $applicationFormNewValidateHandlerServices[$fundingCaseType] ??= $this->createService(
+        $container,
+        $fundingCaseType,
+        ApplicationFormNewValidateHandler::class,
+        ['$jsonSchemaFactory' => $applicationJsonSchemaFactoryServices[$fundingCaseType]]
+      );
+
+      $applicationFormNewSubmitHandlerServices[$fundingCaseType] ??= $this->createService(
+        $container,
+        $fundingCaseType,
+        ApplicationFormNewSubmitHandler::class,
+        [
+          '$jsonSchemaFactory' => $applicationJsonSchemaFactoryServices[$fundingCaseType],
+          '$statusDeterminer' => $applicationStatusDeterminerServices[$fundingCaseType],
+        ]
+      );
+
+      $applicationFormValidateHandlerServices[$fundingCaseType] ??= $this->createService(
+        $container,
+        $fundingCaseType,
+        ApplicationFormValidateHandler::class,
+        ['$jsonSchemaFactory' => $applicationJsonSchemaFactoryServices[$fundingCaseType]]
+      );
+
+      $applicationFormDataGetHandlerServices[$fundingCaseType] ??= $this->createService(
+        $container,
+        $fundingCaseType,
+        ApplicationFormDataGetHandler::class,
+        [
+          '$formDataFactory' => $applicationFormDataFactoryServices[$fundingCaseType],
+          '$validateHandler' => $applicationFormValidateHandlerServices[$fundingCaseType],
+        ]
+      );
+
+      $applicationFormCreateHandlerServices[$fundingCaseType] ??= $this->createService(
+        $container,
+        $fundingCaseType,
+        ApplicationFormCreateHandler::class,
+        [
+          '$jsonSchemaFactory' => $applicationJsonSchemaFactoryServices[$fundingCaseType],
+          '$uiSchemaFactory' => $applicationUiSchemaFactoryServices[$fundingCaseType],
+          '$dataGetHandler' => $applicationFormDataGetHandlerServices[$fundingCaseType],
+        ]
+      );
+
+      $applicationFormSubmitHandlerServices[$fundingCaseType] ??= $this->createService(
+        $container,
+        $fundingCaseType,
+        ApplicationFormSubmitHandler::class,
+        [
+          '$jsonSchemaFactory' => $applicationJsonSchemaFactoryServices[$fundingCaseType],
+          '$statusDeterminer' => $applicationStatusDeterminerServices[$fundingCaseType],
+        ]
+      );
+
       $services = [
-        ApplicationFormFactoryInterface::class => $formFactoryService,
-        ApplicationProcessStatusDeterminerInterface::class =>
-        $this->applicationStatusDeterminerServices[$fundingCaseType] ?? $defaultStatusDeterminerService,
-        FormValidatorInterface::class => $defaultFormValidatorService,
+        ApplicationFormNewCreateHandlerInterface::class
+        => $applicationFormNewCreateHandlerServices[$fundingCaseType],
+        ApplicationFormNewValidateHandlerInterface::class
+        => $applicationFormNewValidateHandlerServices[$fundingCaseType],
+        ApplicationFormNewSubmitHandlerInterface::class
+        => $applicationFormNewSubmitHandlerServices[$fundingCaseType],
+        ApplicationFormCreateHandlerInterface::class
+        => $applicationFormCreateHandlerServices[$fundingCaseType],
+        ApplicationFormDataGetHandlerInterface::class => $applicationFormDataGetHandlerServices[$fundingCaseType],
+        ApplicationFormValidateHandlerInterface::class
+        => $applicationFormValidateHandlerServices[$fundingCaseType],
+        ApplicationFormSubmitHandlerInterface::class => $applicationFormSubmitHandlerServices[$fundingCaseType],
       ];
 
-      $serviceLocatorId = 'funding.case.type.service_locator.' . $fundingCaseType;
-      $container->register($serviceLocatorId, FundingCaseTypeServiceLocator::class)
-        ->addArgument(ServiceLocatorTagPass::register($container, $services));
-      $this->serviceLocatorServices[$fundingCaseType] = new Reference($serviceLocatorId);
+      $serviceLocatorServices[$fundingCaseType] = $this->createService(
+        $container,
+        $fundingCaseType,
+        FundingCaseTypeServiceLocator::class,
+        [ServiceLocatorTagPass::register($container, $services)]
+      );
     }
 
-    foreach (array_keys($this->applicationStatusDeterminerServices) as $fundingCaseType) {
-      if (!isset($this->serviceLocatorServices[$fundingCaseType])) {
+    foreach (array_keys($applicationStatusDeterminerServices) as $fundingCaseType) {
+      if (!isset($serviceLocatorServices[$fundingCaseType])) {
         throw new RuntimeException(sprintf('No form factory for funding case type "%s" defined', $fundingCaseType));
       }
     }
 
     $container->register(FundingCaseTypeServiceLocatorContainer::class, FundingCaseTypeServiceLocatorContainer::class)
-      ->addArgument(ServiceLocatorTagPass::register($container, $this->serviceLocatorServices));
+      ->addArgument(ServiceLocatorTagPass::register($container, $serviceLocatorServices));
   }
 
-  private function handleApplicationFormFactories(ContainerBuilder $container): void {
-    foreach ($container->findTaggedServiceIds('funding.application.form_factory') as $id => $tags) {
+  /**
+   * @phpstan-param array<string|int, Reference> $arguments
+   */
+  private function createService(
+    ContainerBuilder $container,
+    string $fundingCaseType,
+    string $class,
+    array $arguments
+  ): Reference {
+    $serviceId = $class . ':' . $fundingCaseType;
+    $container->autowire($serviceId, $class)->setArguments($arguments);
+
+    return new Reference($serviceId);
+  }
+
+  /**
+   * @phpstan-return array<string, Reference>
+   *
+   * @throws \Symfony\Component\DependencyInjection\Exception\RuntimeException
+   */
+  private function getTaggedServices(ContainerBuilder $container, string $tagName): array {
+    $services = [];
+    foreach ($container->findTaggedServiceIds($tagName) as $id => $tags) {
       foreach ($tags as $attributes) {
         foreach ($this->getFundingCaseTypes($container, $id, $attributes) as $fundingCaseType) {
-          if (isset($this->applicationFormFactoryServices[$fundingCaseType])) {
+          if (isset($services[$fundingCaseType])) {
             throw new RuntimeException(
-              sprintf('Duplicate application form factory definition for funding case type "%s"', $fundingCaseType)
+              sprintf('Duplicate service with tag "%s" and funding case type "%s"', $tagName, $fundingCaseType)
             );
           }
-          $this->applicationFormFactoryServices[$fundingCaseType] = new Reference($id);
+          $services[$fundingCaseType] = new Reference($id);
+          if (!in_array($fundingCaseType, $this->fundingCaseTypes, TRUE)) {
+            $this->fundingCaseTypes[] = $fundingCaseType;
+          }
         }
       }
     }
-  }
 
-  private function handleApplicationStatusDeterminers(ContainerBuilder $container): void {
-    foreach ($container->findTaggedServiceIds('funding.application.status_determiner') as $id => $tags) {
-      foreach ($tags as $attributes) {
-        foreach ($this->getFundingCaseTypes($container, $id, $attributes) as $fundingCaseType) {
-          if (isset($this->applicationStatusDeterminerServices[$fundingCaseType])) {
-            throw new RuntimeException(
-              sprintf('Duplicate application status determiner for funding case type "%s"', $fundingCaseType)
-            );
-          }
-          $this->applicationStatusDeterminerServices[$fundingCaseType] = new Reference($id);
-        }
-      }
-    }
-  }
-
-  private function handleFundingCaseTypeServiceLocators(ContainerBuilder $container): void {
-    foreach ($container->findTaggedServiceIds('funding.case.type.service_locator') as $id => $tags) {
-      foreach ($tags as $attributes) {
-        foreach ($this->getFundingCaseTypes($container, $id, $attributes) as $fundingCaseType) {
-          if (isset($this->serviceLocatorServices[$fundingCaseType])) {
-            throw new RuntimeException(
-              sprintf('Duplicate funding case type service locator for funding case type "%s"', $fundingCaseType)
-            );
-          }
-          $this->serviceLocatorServices[$fundingCaseType] = new Reference($id);
-        }
-      }
-    }
+    return $services;
   }
 
   /**
    * @phpstan-param array{funding_case_type?: string, funding_case_types?: array<string>} $attributes
    *
    * @phpstan-return array<string>
+   *
+   * @throws \Symfony\Component\DependencyInjection\Exception\RuntimeException
    */
   private function getFundingCaseTypes(ContainerBuilder $container, string $id, array $attributes): array {
     if (array_key_exists('funding_case_types', $attributes)) {

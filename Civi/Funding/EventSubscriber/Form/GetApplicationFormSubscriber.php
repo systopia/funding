@@ -19,18 +19,21 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\Form;
 
+use Civi\Funding\ApplicationProcess\Command\ApplicationFormCreateCommand;
+use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewCreateCommand;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewCreateHandlerInterface;
+use Civi\Funding\Event\Remote\AbstractFundingGetFormEvent;
 use Civi\Funding\Event\Remote\ApplicationProcess\GetApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingCase\GetNewApplicationFormEvent;
-use Civi\Funding\Form\Handler\GetApplicationFormHandlerInterface;
+use Civi\RemoteTools\Form\RemoteFormInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class GetApplicationFormSubscriber implements EventSubscriberInterface {
 
-  private GetApplicationFormHandlerInterface $formHandler;
+  private ApplicationFormCreateHandlerInterface $createHandler;
 
-  public function __construct(GetApplicationFormHandlerInterface $formHandler) {
-    $this->formHandler = $formHandler;
-  }
+  private ApplicationFormNewCreateHandlerInterface $newCreateHandler;
 
   /**
    * @inheritDoc
@@ -42,16 +45,41 @@ class GetApplicationFormSubscriber implements EventSubscriberInterface {
     ];
   }
 
+  public function __construct(
+    ApplicationFormCreateHandlerInterface $createHandler,
+    ApplicationFormNewCreateHandlerInterface $newCreateHandler
+  ) {
+    $this->createHandler = $createHandler;
+    $this->newCreateHandler = $newCreateHandler;
+  }
+
   public function onGetForm(GetApplicationFormEvent $event): void {
-    if ($this->formHandler->supportsFundingCaseType($event->getFundingCaseType()->getName())) {
-      $this->formHandler->handleGetForm($event);
-    }
+    $form = $this->createHandler->handle(
+      new ApplicationFormCreateCommand(
+        $event->getApplicationProcess(),
+        $event->getFundingCase(),
+        $event->getFundingCaseType(),
+        $event->getFundingProgram(),
+      )
+    );
+    $this->mapFormToEvent($form, $event);
   }
 
   public function onGetNewForm(GetNewApplicationFormEvent $event): void {
-    if ($this->formHandler->supportsFundingCaseType($event->getFundingCaseType()->getName())) {
-      $this->formHandler->handleGetNewForm($event);
-    }
+    $form = $this->newCreateHandler->handle(
+      new ApplicationFormNewCreateCommand(
+        $event->getContactId(),
+        $event->getFundingCaseType(),
+        $event->getFundingProgram(),
+      )
+    );
+    $this->mapFormToEvent($form, $event);
+  }
+
+  private function mapFormToEvent(RemoteFormInterface $form, AbstractFundingGetFormEvent $event): void {
+    $event->setData($form->getData());
+    $event->setJsonSchema($form->getJsonSchema());
+    $event->setUiSchema($form->getUiSchema());
   }
 
 }

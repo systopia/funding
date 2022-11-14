@@ -141,7 +141,7 @@ class JsonSchema implements \JsonSerializable {
   }
 
   public function hasKeyword(string $keyword): bool {
-    return isset($this->keywords[$keyword]);
+    return array_key_exists($keyword, $this->keywords);
   }
 
   /**
@@ -155,6 +155,15 @@ class JsonSchema implements \JsonSerializable {
     }
 
     return $this->keywords[$keyword];
+  }
+
+  /**
+   * @param mixed $default
+   *
+   * @return mixed
+   */
+  public function getKeywordValueOrDefault(string $keyword, $default) {
+    return $this->hasKeyword($keyword) ? $this->keywords[$keyword] : $default;
   }
 
   /**

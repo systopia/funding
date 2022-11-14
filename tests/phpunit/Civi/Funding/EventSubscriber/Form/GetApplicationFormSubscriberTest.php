@@ -21,13 +21,17 @@ namespace Civi\Funding\EventSubscriber\Form;
 
 use Civi\Api4\RemoteFundingApplicationProcess;
 use Civi\Api4\RemoteFundingCase;
+use Civi\Funding\ApplicationProcess\Command\ApplicationFormCreateCommand;
+use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewCreateCommand;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewCreateHandlerInterface;
 use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Event\Remote\ApplicationProcess\GetApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingCase\GetNewApplicationFormEvent;
-use Civi\Funding\Form\Handler\GetApplicationFormHandlerInterface;
+use Civi\Funding\Mock\Form\ApplicationFormMock;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -36,17 +40,26 @@ use PHPUnit\Framework\TestCase;
  */
 final class GetApplicationFormSubscriberTest extends TestCase {
 
-  /**
-   * @var \Civi\Funding\Form\Handler\GetApplicationFormHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $formHandlerMock;
-
   private GetApplicationFormSubscriber $subscriber;
+
+  /**
+   * @var \Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $createHandlerMock;
+
+  /**
+   * @var \Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewCreateHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $newCreateHandlerMock;
 
   protected function setUp(): void {
     parent::setUp();
-    $this->formHandlerMock = $this->createMock(GetApplicationFormHandlerInterface::class);
-    $this->subscriber = new GetApplicationFormSubscriber($this->formHandlerMock);
+    $this->createHandlerMock = $this->createMock(ApplicationFormCreateHandlerInterface::class);
+    $this->newCreateHandlerMock = $this->createMock(ApplicationFormNewCreateHandlerInterface::class);
+    $this->subscriber = new GetApplicationFormSubscriber(
+      $this->createHandlerMock,
+      $this->newCreateHandlerMock
+    );
   }
 
   public function testGetSubscribedEvents(): void {
@@ -64,52 +77,42 @@ final class GetApplicationFormSubscriberTest extends TestCase {
 
   public function testOnGetForm(): void {
     $event = $this->createGetFormEvent();
+    $command = new ApplicationFormCreateCommand(
+      $event->getApplicationProcess(),
+      $event->getFundingCase(),
+      $event->getFundingCaseType(),
+      $event->getFundingProgram()
+    );
 
-    $this->formHandlerMock->expects(static::once())->method('supportsFundingCaseType')
-      ->with($event->getFundingCaseType()->getName())
-      ->willReturn(TRUE);
-
-    $this->formHandlerMock->expects(static::once())->method('handleGetForm')
-      ->with($event);
-
-    $this->subscriber->onGetForm($event);
-  }
-
-  public function testOnGetFormNotSupported(): void {
-    $event = $this->createGetFormEvent();
-
-    $this->formHandlerMock->expects(static::once())->method('supportsFundingCaseType')
-      ->with($event->getFundingCaseType()->getName())
-      ->willReturn(FALSE);
-
-    $this->formHandlerMock->expects(static::never())->method('handleGetForm');
+    $form = new ApplicationFormMock();
+    $this->createHandlerMock->expects(static::once())->method('handle')
+      ->with($command)
+      ->willReturn($form);
 
     $this->subscriber->onGetForm($event);
+    static::assertSame($form->getJsonSchema(), $event->getJsonSchema());
+    static::assertSame($form->getUiSchema(), $event->getUiSchema());
+    static::assertSame($form->getData(), $event->getData());
   }
 
   public function testOnGetNewForm(): void {
     $event = $this->createGetNewFormEvent();
 
-    $this->formHandlerMock->expects(static::once())->method('supportsFundingCaseType')
-      ->with($event->getFundingCaseType()->getName())
-      ->willReturn(TRUE);
+    $command = new ApplicationFormNewCreateCommand(
+      $event->getContactId(),
+      $event->getFundingCaseType(),
+      $event->getFundingProgram()
+    );
 
-    $this->formHandlerMock->expects(static::once())->method('handleGetNewForm')
-      ->with($event);
-
-    $this->subscriber->onGetNewForm($event);
-  }
-
-  public function testOnGetNewFormNotSupported(): void {
-    $event = $this->createGetNewFormEvent();
-
-    $this->formHandlerMock->expects(static::once())->method('supportsFundingCaseType')
-      ->with($event->getFundingCaseType()->getName())
-      ->willReturn(FALSE);
-
-    $this->formHandlerMock->expects(static::never())->method('handleGetNewForm');
+    $form = new ApplicationFormMock();
+    $this->newCreateHandlerMock->expects(static::once())->method('handle')
+      ->with($command)
+      ->willReturn($form);
 
     $this->subscriber->onGetNewForm($event);
+    static::assertSame($form->getJsonSchema(), $event->getJsonSchema());
+    static::assertSame($form->getUiSchema(), $event->getUiSchema());
+    static::assertSame($form->getData(), $event->getData());
   }
 
   private function createGetNewFormEvent(): GetNewApplicationFormEvent {

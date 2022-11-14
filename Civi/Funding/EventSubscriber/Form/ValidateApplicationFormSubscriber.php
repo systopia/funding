@@ -19,17 +19,28 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\Form;
 
+use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewValidateCommand;
+use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateCommand;
+use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateResult;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewValidateHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterface;
+use Civi\Funding\Event\Remote\AbstractFundingValidateFormEvent;
 use Civi\Funding\Event\Remote\ApplicationProcess\ValidateApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingCase\ValidateNewApplicationFormEvent;
-use Civi\Funding\Form\Handler\ValidateApplicationFormHandlerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ValidateApplicationFormSubscriber implements EventSubscriberInterface {
 
-  private ValidateApplicationFormHandlerInterface $formHandler;
+  private ApplicationFormNewValidateHandlerInterface $newValidateHandler;
 
-  public function __construct(ValidateApplicationFormHandlerInterface $formHandler) {
-    $this->formHandler = $formHandler;
+  private ApplicationFormValidateHandlerInterface $validateHandler;
+
+  public function __construct(
+    ApplicationFormNewValidateHandlerInterface $newValidateHandler,
+    ApplicationFormValidateHandlerInterface $validateHandler
+  ) {
+    $this->newValidateHandler = $newValidateHandler;
+    $this->validateHandler = $validateHandler;
   }
 
   /**
@@ -43,14 +54,41 @@ class ValidateApplicationFormSubscriber implements EventSubscriberInterface {
   }
 
   public function onValidateForm(ValidateApplicationFormEvent $event): void {
-    if ($this->formHandler->supportsFundingCaseType($event->getFundingCaseType()->getName())) {
-      $this->formHandler->handleValidateForm($event);
-    }
+    $command = new ApplicationFormValidateCommand(
+      $event->getApplicationProcess(),
+      $event->getFundingProgram(),
+      $event->getFundingCase(),
+      $event->getFundingCaseType(),
+      $event->getData(),
+    );
+
+    $result = $this->validateHandler->handle($command);
+    $this->mapValidationResultToEvent($result, $event);
   }
 
   public function onValidateNewForm(ValidateNewApplicationFormEvent $event): void {
-    if ($this->formHandler->supportsFundingCaseType($event->getFundingCaseType()->getName())) {
-      $this->formHandler->handleValidateNewForm($event);
+    $command = new ApplicationFormNewValidateCommand(
+      $event->getContactId(),
+      $event->getFundingProgram(),
+      $event->getFundingCaseType(),
+      $event->getData()
+    );
+
+    $result = $this->newValidateHandler->handle($command);
+    $this->mapValidationResultToEvent($result, $event);
+  }
+
+  private function mapValidationResultToEvent(
+    ApplicationFormValidateResult $validationResult,
+    AbstractFundingValidateFormEvent $event
+  ): void {
+    if ($validationResult->isValid()) {
+      $event->setValid(TRUE);
+    }
+    else {
+      foreach ($validationResult->getErrors() as $jsonPointer => $messages) {
+        $event->addErrorsAt($jsonPointer, $messages);
+      }
     }
   }
 

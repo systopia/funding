@@ -19,18 +19,27 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\Form;
 
+use Civi\Funding\ApplicationProcess\Command\ApplicationFormCreateCommand;
+use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewSubmitCommand;
+use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitCommand;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewSubmitHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
+use Civi\Funding\Event\Remote\AbstractFundingSubmitFormEvent;
 use Civi\Funding\Event\Remote\ApplicationProcess\SubmitApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
-use Civi\Funding\Form\Handler\SubmitApplicationFormHandlerInterface;
+use Civi\Funding\Form\Validation\ValidationResult;
+use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Webmozart\Assert\Assert;
 
 class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
 
-  private SubmitApplicationFormHandlerInterface $formHandler;
+  private ApplicationFormCreateHandlerInterface $createHandler;
 
-  public function __construct(SubmitApplicationFormHandlerInterface $formHandler) {
-    $this->formHandler = $formHandler;
-  }
+  private ApplicationFormNewSubmitHandlerInterface $newSubmitHandler;
+
+  private ApplicationFormSubmitHandlerInterface $submitHandler;
 
   /**
    * @inheritDoc
@@ -42,15 +51,98 @@ class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
     ];
   }
 
+  public function __construct(
+    ApplicationFormCreateHandlerInterface $createHandler,
+    ApplicationFormNewSubmitHandlerInterface $newSubmitHandler,
+    ApplicationFormSubmitHandlerInterface $submitHandler
+  ) {
+    $this->createHandler = $createHandler;
+    $this->newSubmitHandler = $newSubmitHandler;
+    $this->submitHandler = $submitHandler;
+  }
+
   public function onSubmitForm(SubmitApplicationFormEvent $event): void {
-    if ($this->formHandler->supportsFundingCaseType($event->getFundingCaseType()->getName())) {
-      $this->formHandler->handleSubmitForm($event);
+    $command = new ApplicationFormSubmitCommand(
+      $event->getContactId(),
+      $event->getApplicationProcess(),
+      $event->getFundingProgram(),
+      $event->getFundingCase(),
+      $event->getFundingCaseType(),
+      $event->getData()
+    );
+
+    $result = $this->submitHandler->handle($command);
+    if ($result->isSuccess()) {
+      // TODO: Change message
+      $event->setMessage(E::ts('Success!'));
+      Assert::notNull($result->getValidatedData());
+      if ($this->isShouldShowForm($result->getValidatedData()->getAction())) {
+        $event->setForm(
+          $this->createHandler->handle(new ApplicationFormCreateCommand(
+            $event->getApplicationProcess(),
+            $event->getFundingCase(),
+            $event->getFundingCaseType(),
+            $event->getFundingProgram(),
+            $result->getValidationResult()->getData(),
+          ))
+        );
+      }
+      else {
+        $event->setAction($event::ACTION_CLOSE_FORM);
+      }
+    }
+    else {
+      $this->mapValidationErrorsToEvent($result->getValidationResult(), $event);
     }
   }
 
   public function onSubmitNewForm(SubmitNewApplicationFormEvent $event): void {
-    if ($this->formHandler->supportsFundingCaseType($event->getFundingCaseType()->getName())) {
-      $this->formHandler->handleSubmitNewForm($event);
+    $command = new ApplicationFormNewSubmitCommand(
+      $event->getContactId(),
+      $event->getFundingProgram(),
+      $event->getFundingCaseType(),
+      $event->getData()
+    );
+
+    $result = $this->newSubmitHandler->handle($command);
+    if ($result->isSuccess()) {
+      // TODO: Change message
+      $event->setMessage(E::ts('Success!'));
+      Assert::notNull($result->getValidatedData());
+      if ($this->isShouldShowForm($result->getValidatedData()->getAction())) {
+        Assert::notNull($result->getApplicationProcess());
+        Assert::notNull($result->getFundingCase());
+        $event->setForm(
+          $this->createHandler->handle(new ApplicationFormCreateCommand(
+            $result->getApplicationProcess(),
+            $result->getFundingCase(),
+            $event->getFundingCaseType(),
+            $event->getFundingProgram(),
+            $result->getValidationResult()->getData(),
+          ))
+        );
+      }
+      else {
+        $event->setAction($event::ACTION_CLOSE_FORM);
+      }
+    }
+    else {
+      $this->mapValidationErrorsToEvent($result->getValidationResult(), $event);
+    }
+  }
+
+  private function isShouldShowForm(string $action): bool {
+    return in_array($action, ['save', 'modify', 'update'], TRUE);
+  }
+
+  private function mapValidationErrorsToEvent(
+    ValidationResult $validationResult,
+    AbstractFundingSubmitFormEvent $event
+  ): void {
+    // TODO: Change message
+    $event->setMessage(E::ts('Validation failed'));
+    foreach ($validationResult->getLeafErrorMessages() as $jsonPointer => $messages) {
+      $event->addErrorsAt($jsonPointer, $messages);
     }
   }
 

@@ -34,6 +34,20 @@ use Civi\Funding\ApplicationProcess\ActionsDeterminer\ReworkPossibleApplicationP
 use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewCreateHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewSubmitHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewValidateHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormCreateHandler;
+use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormDataGetHandler;
+use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormNewCreateHandler;
+use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormNewSubmitHandler;
+use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormNewValidateHandler;
+use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormSubmitHandler;
+use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormValidateHandler;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\DefaultApplicationProcessStatusDeterminer;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ReworkPossibleApplicationProcessStatusDeterminer;
@@ -44,6 +58,18 @@ use Civi\Funding\EventSubscriber\Remote\ApplicationProcessGetFieldsSubscriber;
 $container->autowire(ApplicationProcessManager::class);
 $container->autowire(ApplicationCostItemManager::class);
 $container->autowire(ApplicationResourcesItemManager::class);
+
+$container->autowire(ApplicationFormNewCreateHandlerInterface::class, DefaultApplicationFormNewCreateHandler::class);
+$container->autowire(
+  ApplicationFormNewValidateHandlerInterface::class,
+  DefaultApplicationFormNewValidateHandler::class
+);
+$container->autowire(ApplicationFormNewSubmitHandlerInterface::class, DefaultApplicationFormNewSubmitHandler::class);
+
+$container->autowire(ApplicationFormDataGetHandlerInterface::class, DefaultApplicationFormDataGetHandler::class);
+$container->autowire(ApplicationFormCreateHandlerInterface::class, DefaultApplicationFormCreateHandler::class);
+$container->autowire(ApplicationFormValidateHandlerInterface::class, DefaultApplicationFormValidateHandler::class);
+$container->autowire(ApplicationFormSubmitHandlerInterface::class, DefaultApplicationFormSubmitHandler::class);
 
 $container->autowire(CreateAction::class)
   ->setPublic(TRUE)
