@@ -23,6 +23,7 @@ use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\DAOGetAction;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\RemoteTools\Api4\Api4Interface;
+use Webmozart\Assert\Assert;
 
 /**
  * This trait permits to set the review flags if permission is missing. To be
@@ -37,16 +38,23 @@ trait CheckReviewPermissionTrait {
   /**
    * @phpstan-param array<string, mixed>&array{
    *   id?: int,
-   *   funding_case_id: int,
+   *   funding_case_id?: int,
    *   is_review_calculative?: bool|null,
    *   is_review_content?: bool|null
    * } $record
+   *
+   * @throws \API_Exception
    *
    * @phpstan-ignore-next-line
    *   Ignore $record not being contravariant with array.
    */
   protected function formatWriteValues(&$record): void {
-    $fundingCase = $this->_fundingCaseManager->get($record['funding_case_id']);
+    if (!array_key_exists('is_review_calculative', $record) && !array_key_exists('is_review_content', $record)) {
+      return;
+    }
+
+    $fundingCaseId = $this->getFundingCaseId($record);
+    $fundingCase = $this->_fundingCaseManager->get($fundingCaseId);
     $permissions = NULL === $fundingCase ? [] : $fundingCase->getPermissions();
 
     if (array_key_exists('is_review_calculative', $record) && !in_array('review_calculative', $permissions, TRUE)) {
@@ -60,6 +68,46 @@ trait CheckReviewPermissionTrait {
     }
 
     parent::formatWriteValues($record);
+  }
+
+  /**
+   * @phpstan-param array<string, mixed>&array{
+   *   id?: int,
+   *   funding_case_id?: int,
+   *   is_review_calculative?: bool|null,
+   *   is_review_content?: bool|null
+   * } $record
+   *
+   * @throws \API_Exception
+   */
+  private function getFundingCaseId(array $record): int {
+    if (isset($record['funding_case_id'])) {
+      return $record['funding_case_id'];
+    }
+
+    $id = $record['id'] ?? $this->getApplicationProcessIdFromWhere();
+    if (NULL === $id) {
+      throw new \API_Exception('Neither funding case ID nor application process ID available');
+    }
+
+    $action = (new DAOGetAction(FundingApplicationProcess::_getEntityName(), 'get'))
+      ->addSelect('funding_case_id')
+      ->addWhere('id', '=', $id);
+
+    $firstResult = $this->_api4->executeAction($action)->first();
+    Assert::notNull($firstResult, sprintf('Invalid application process id %d', $id));
+
+    return $firstResult['funding_case_id'];
+  }
+
+  private function getApplicationProcessIdFromWhere(): ?int {
+    foreach ($this->where ?? [] as $clause) {
+      if ($clause[0] === 'id' && '=' === $clause[1] && is_numeric($clause[2])) {
+        return (int) $clause[2];
+      }
+    }
+
+    return NULL;
   }
 
   /**
