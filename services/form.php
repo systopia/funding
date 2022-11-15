@@ -23,34 +23,26 @@ declare(strict_types = 1);
 use Civi\Funding\EventSubscriber\Form\GetApplicationFormSubscriber;
 use Civi\Funding\EventSubscriber\Form\SubmitApplicationFormSubscriber;
 use Civi\Funding\EventSubscriber\Form\ValidateApplicationFormSubscriber;
-use Civi\Funding\Form\AbstractApplicationFormFactory;
 use Civi\Funding\Form\ApplicationSubmitActionsFactory;
 use Civi\Funding\Form\ApplicationSubmitActionsFactoryInterface;
-use Civi\Funding\Form\Handler\DefaultGetApplicationFormHandler;
-use Civi\Funding\Form\Handler\DefaultSubmitApplicationFormHandler;
-use Civi\Funding\Form\Handler\DefaultValidateApplicationFormHandler;
-use Civi\Funding\Form\Handler\GetApplicationFormHandlerInterface;
-use Civi\Funding\Form\Handler\SubmitApplicationFormHandlerInterface;
-use Civi\Funding\Form\Handler\ValidateApplicationFormHandlerInterface;
 use Civi\Funding\Form\ReworkPossibleApplicationSubmitActionsContainerFactory;
 use Civi\Funding\Form\SubmitActionsContainer;
 use Civi\Funding\Form\Validation\FormValidator;
 use Civi\Funding\Form\Validation\FormValidatorInterface;
 use Civi\Funding\Form\Validation\OpisValidatorFactory;
-use Opis\JsonSchema\Validator;
+use Civi\Funding\Form\Validation\Validator;
+use Civi\Funding\Form\Validation\ValidatorInterface;
+use Opis\JsonSchema\Validator as OpisValidator;
 use Symfony\Component\DependencyInjection\Reference;
 
-$container->register(Validator::class)->setFactory([OpisValidatorFactory::class, 'getValidator']);
+$container->register(OpisValidator::class)->setFactory([OpisValidatorFactory::class, 'getValidator']);
+$container->autowire(ValidatorInterface::class, Validator::class);
 $container->autowire(FormValidatorInterface::class, FormValidator::class);
 
 $container->register('funding.application.submit_actions_container', SubmitActionsContainer::class)
   ->setFactory([ReworkPossibleApplicationSubmitActionsContainerFactory::class, 'create']);
 $container->autowire(ApplicationSubmitActionsFactoryInterface::class, ApplicationSubmitActionsFactory::class)
   ->setArgument('$submitActionsContainer', new Reference('funding.application.submit_actions_container'));
-
-$container->autowire(GetApplicationFormHandlerInterface::class, DefaultGetApplicationFormHandler::class);
-$container->autowire(ValidateApplicationFormHandlerInterface::class, DefaultValidateApplicationFormHandler::class);
-$container->autowire(SubmitApplicationFormHandlerInterface::class, DefaultSubmitApplicationFormHandler::class);
 
 $container->autowire(GetApplicationFormSubscriber::class)
   ->addTag('kernel.event_subscriber')
@@ -61,6 +53,3 @@ $container->autowire(ValidateApplicationFormSubscriber::class)
 $container->autowire(SubmitApplicationFormSubscriber::class)
   ->addTag('kernel.event_subscriber')
   ->setLazy(TRUE);
-
-$container->autowire(AbstractApplicationFormFactory::class)
-  ->setAbstract(TRUE);

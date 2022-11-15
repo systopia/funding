@@ -22,14 +22,18 @@ namespace Civi\Funding\Form\SonstigeAktivitaet\UISchema;
 use Civi\RemoteTools\Form\JsonForms\JsonFormsControl;
 use Civi\RemoteTools\Form\JsonForms\Layout\JsonFormsGroup;
 
+/**
+ * This implements the UI schema for an "AV-K1" form to apply for a funding for
+ * a "Sonstige Aktivität" in the "Kinder- und Jugendplan des Bundes (KJP)".
+ * Because it is a specific German form strings are not translated.
+ */
 final class AVK1UiSchema extends JsonFormsGroup {
 
   /**
-   * @param string $currency
-   * @param array<int, \Civi\RemoteTools\Form\JsonForms\Control\JsonFormsSubmitButton> $submitButtons
-   * @param array<int, \Civi\RemoteTools\Form\JsonForms\Control\JsonFormsHidden> $hiddenFields
+   * @phpstan-param array<int, \Civi\RemoteTools\Form\JsonForms\Control\JsonFormsSubmitButton> $submitButtons
+   * @phpstan-param array<int, \Civi\RemoteTools\Form\JsonForms\Control\JsonFormsHidden> $hiddenFields
    */
-  public function __construct(string $currency, array $submitButtons, array $hiddenFields = []) {
+  public function __construct(string $currency, array $submitButtons = [], array $hiddenFields = []) {
     parent::__construct('Förderantrag für sonstige Aktivität', [
       new JsonFormsControl('#/properties/titel', 'Titel'),
       new JsonFormsControl('#/properties/kurzbezeichnungDesInhalts', 'Kurzbezeichnung des Inhalts'),

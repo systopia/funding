@@ -19,19 +19,27 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\SonstigeAktivitaet\JsonSchema;
 
+use Civi\Funding\Form\JsonSchema\JsonSchemaRecipient;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchemaDataPointer;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchemaDate;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchemaObject;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchemaString;
 use Webmozart\Assert\Assert;
 
+/**
+ * This implements the JSON schema for an "AV-K1" form to apply for a funding
+ * for a "Sonstige Aktivität" in the "Kinder- und Jugendplan des Bundes (KJP)".
+ * Because it is a specific German form strings are not translated.
+ */
 final class AVK1JsonSchema extends JsonSchemaObject {
 
   /**
+   * @phpstan-param array<int, string> $possibleRecipients
+   *   Map of contact IDs to names.
    * @phpstan-param array<string, \Civi\RemoteTools\Form\JsonSchema\JsonSchema> $extraProperties
    */
   public function __construct(\DateTimeInterface $applicationBegin, \DateTimeInterface $applicationEnd,
-    array $extraProperties, array $keywords = []
+    array $possibleRecipients, array $extraProperties = [], array $keywords = []
   ) {
     // TODO: Additional validations (required, length, min, max, ...)
     $required = $keywords['required'] ?? [];
@@ -39,6 +47,7 @@ final class AVK1JsonSchema extends JsonSchemaObject {
     $keywords['required'] = array_merge([
       'titel',
       'kurzbezeichnungDesInhalts',
+      'empfaenger',
       'beginn',
       'ende',
       'kosten',
@@ -48,6 +57,7 @@ final class AVK1JsonSchema extends JsonSchemaObject {
     parent::__construct([
       'titel' => new JsonSchemaString(),
       'kurzbezeichnungDesInhalts' => new JsonSchemaString(),
+      'empfaenger' => new JsonSchemaRecipient($possibleRecipients),
       'beginn' => new JsonSchemaDate([
         'minDate' => $applicationBegin->format('Y-m-d'),
         'maxDate' => $applicationEnd->format('Y-m-d'),

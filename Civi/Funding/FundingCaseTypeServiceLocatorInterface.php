@@ -19,16 +19,28 @@ declare(strict_types = 1);
 
 namespace Civi\Funding;
 
-use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
-use Civi\Funding\Form\ApplicationFormFactoryInterface;
-use Civi\Funding\Form\Validation\FormValidatorInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewCreateHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewSubmitHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewValidateHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterface;
 
 interface FundingCaseTypeServiceLocatorInterface {
 
-  public function getApplicationFormFactory(): ApplicationFormFactoryInterface;
+  public function getApplicationFormNewCreateHandler(): ApplicationFormNewCreateHandlerInterface;
 
-  public function getApplicationProcessStatusDeterminer(): ApplicationProcessStatusDeterminerInterface;
+  public function getApplicationFormNewValidateHandler(): ApplicationFormNewValidateHandlerInterface;
 
-  public function getFormValidator(): FormValidatorInterface;
+  public function getApplicationFormNewSubmitHandler(): ApplicationFormNewSubmitHandlerInterface;
+
+  public function getApplicationFormDataGetHandler(): ApplicationFormDataGetHandlerInterface;
+
+  public function getApplicationFormCreateHandler(): ApplicationFormCreateHandlerInterface;
+
+  public function getApplicationFormValidateHandler(): ApplicationFormValidateHandlerInterface;
+
+  public function getApplicationFormSubmitHandler(): ApplicationFormSubmitHandlerInterface;
 
 }

@@ -24,15 +24,14 @@ use Civi\Funding\ApplicationProcess\ActionsDeterminer\ReworkPossibleApplicationP
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ReworkPossibleApplicationProcessStatusDeterminer;
 use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1ApplicationCostItemSubscriber;
 use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1ApplicationResourcesItemSubscriber;
-use Civi\Funding\Form\AbstractApplicationFormFactory;
-use Civi\Funding\Form\SonstigeAktivitaet\AVK1FormDataFactory;
 use Civi\Funding\Form\ApplicationSubmitActionsFactory;
-use Civi\Funding\Form\SonstigeAktivitaet\AVK1FormFactory;
+use Civi\Funding\Form\SonstigeAktivitaet\AVK1FormDataFactory;
+use Civi\Funding\Form\SonstigeAktivitaet\AVK1JsonSchemaFactory;
+use Civi\Funding\Form\SonstigeAktivitaet\AVK1UiSchemaFactory;
 use Civi\Funding\SonstigeAktivitaet\AVK1ApplicationCostItemsFactory;
 use Civi\Funding\SonstigeAktivitaet\AVK1ApplicationResourcesItemsFactory;
 use Civi\Funding\SonstigeAktivitaet\AVK1FinanzierungFactory;
 use Civi\Funding\SonstigeAktivitaet\AVK1KostenFactory;
-use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Reference;
 
 $container->autowire(AVK1ApplicationCostItemSubscriber::class)
@@ -47,10 +46,14 @@ $container->autowire('funding.avk1.application_submit_actions_factory', Applicat
   ->setArgument('$actionsDeterminer', new Reference(ReworkPossibleApplicationProcessActionsDeterminer::class))
   ->setArgument('$submitActionsContainer', new Reference('funding.application.submit_actions_container'));
 
-$container->setDefinition(AVK1FormFactory::class, new ChildDefinition(AbstractApplicationFormFactory::class))
+$container->autowire(AVK1JsonSchemaFactory::class)
+  ->setArgument('$actionsDeterminer', new Reference(ReworkPossibleApplicationProcessActionsDeterminer::class))
+  ->addTag('funding.application.json_schema_factory');
+$container->autowire(AVK1UiSchemaFactory::class)
   ->setArgument('$submitActionsFactory', new Reference('funding.avk1.application_submit_actions_factory'))
-  ->addTag('funding.application.form_factory');
-$container->autowire(AVK1FormDataFactory::class);
+  ->addTag('funding.application.ui_schema_factory');
+$container->autowire(AVK1FormDataFactory::class)
+  ->addTag('funding.application.form_data_factory');
 $container->autowire(AVK1KostenFactory::class);
 $container->autowire(AVK1FinanzierungFactory::class);
 $container->autowire(AVK1ApplicationCostItemsFactory::class);

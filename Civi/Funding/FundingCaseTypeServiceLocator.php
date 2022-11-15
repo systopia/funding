@@ -19,9 +19,13 @@ declare(strict_types = 1);
 
 namespace Civi\Funding;
 
-use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
-use Civi\Funding\Form\ApplicationFormFactoryInterface;
-use Civi\Funding\Form\Validation\FormValidatorInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewCreateHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewSubmitHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewValidateHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterface;
 use Psr\Container\ContainerInterface;
 
 final class FundingCaseTypeServiceLocator implements FundingCaseTypeServiceLocatorInterface {
@@ -32,16 +36,32 @@ final class FundingCaseTypeServiceLocator implements FundingCaseTypeServiceLocat
     $this->locator = $locator;
   }
 
-  public function getApplicationFormFactory(): ApplicationFormFactoryInterface {
-    return $this->locator->get(ApplicationFormFactoryInterface::class);
+  public function getApplicationFormNewCreateHandler(): ApplicationFormNewCreateHandlerInterface {
+    return $this->locator->get(ApplicationFormNewCreateHandlerInterface::class);
   }
 
-  public function getApplicationProcessStatusDeterminer(): ApplicationProcessStatusDeterminerInterface {
-    return $this->locator->get(ApplicationProcessStatusDeterminerInterface::class);
+  public function getApplicationFormNewValidateHandler(): ApplicationFormNewValidateHandlerInterface {
+    return $this->locator->get(ApplicationFormNewValidateHandlerInterface::class);
   }
 
-  public function getFormValidator(): FormValidatorInterface {
-    return $this->locator->get(FormValidatorInterface::class);
+  public function getApplicationFormNewSubmitHandler(): ApplicationFormNewSubmitHandlerInterface {
+    return $this->locator->get(ApplicationFormNewSubmitHandlerInterface::class);
+  }
+
+  public function getApplicationFormDataGetHandler(): ApplicationFormDataGetHandlerInterface {
+    return $this->locator->get(ApplicationFormDataGetHandlerInterface::class);
+  }
+
+  public function getApplicationFormCreateHandler(): ApplicationFormCreateHandlerInterface {
+    return $this->locator->get(ApplicationFormCreateHandlerInterface::class);
+  }
+
+  public function getApplicationFormValidateHandler(): ApplicationFormValidateHandlerInterface {
+    return $this->locator->get(ApplicationFormValidateHandlerInterface::class);
+  }
+
+  public function getApplicationFormSubmitHandler(): ApplicationFormSubmitHandlerInterface {
+    return $this->locator->get(ApplicationFormSubmitHandlerInterface::class);
   }
 
 }

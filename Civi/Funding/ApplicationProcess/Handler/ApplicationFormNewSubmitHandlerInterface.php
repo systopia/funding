@@ -17,21 +17,13 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Form;
+namespace Civi\Funding\ApplicationProcess\Handler;
 
-use Civi\Funding\Entity\ApplicationProcessEntity;
-use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewSubmitCommand;
+use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewSubmitResult;
 
-interface ApplicationFormDataFactoryInterface {
+interface ApplicationFormNewSubmitHandlerInterface {
 
-  /**
-   * @phpstan-return array<string>
-   */
-  public static function getSupportedFundingCaseTypes(): array;
-
-  /**
-   * @phpstan-return array<string, mixed> JSON serializable.
-   */
-  public function createFormData(ApplicationProcessEntity $applicationProcess, FundingCaseEntity $fundingCase): array;
+  public function handle(ApplicationFormNewSubmitCommand $command): ApplicationFormNewSubmitResult;
 
 }

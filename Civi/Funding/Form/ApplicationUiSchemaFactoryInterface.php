@@ -21,17 +21,27 @@ namespace Civi\Funding\Form;
 
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
+use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\RemoteTools\Form\JsonForms\JsonFormsElement;
 
-interface ApplicationFormDataFactoryInterface {
+interface ApplicationUiSchemaFactoryInterface {
 
   /**
    * @phpstan-return array<string>
    */
   public static function getSupportedFundingCaseTypes(): array;
 
-  /**
-   * @phpstan-return array<string, mixed> JSON serializable.
-   */
-  public function createFormData(ApplicationProcessEntity $applicationProcess, FundingCaseEntity $fundingCase): array;
+  public function createUiSchemaExisting(
+    ApplicationProcessEntity $applicationProcess,
+    FundingProgramEntity $fundingProgram,
+    FundingCaseEntity $fundingCase,
+    FundingCaseTypeEntity $fundingCaseType
+  ): JsonFormsElement;
+
+  public function createUiSchemaNew(
+    FundingProgramEntity $fundingProgram,
+    FundingCaseTypeEntity $fundingCaseType
+  ): JsonFormsElement;
 
 }

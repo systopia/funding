@@ -19,15 +19,15 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Mock\Form;
 
-use Civi\Funding\Form\AbstractApplicationForm;
 use Civi\RemoteTools\Form\JsonForms\JsonFormsControl;
 use Civi\RemoteTools\Form\JsonForms\JsonFormsLayout;
 use Civi\RemoteTools\Form\JsonForms\Layout\JsonFormsGroup;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchemaObject;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchemaString;
+use Civi\RemoteTools\Form\RemoteForm;
 
-final class ApplicationFormMock extends AbstractApplicationForm {
+final class ApplicationFormMock extends RemoteForm {
 
   public function __construct(?JsonSchema $jsonSchema = NULL, ?JsonFormsLayout $uiSchema = NULL, array $data = []) {
     parent::__construct(

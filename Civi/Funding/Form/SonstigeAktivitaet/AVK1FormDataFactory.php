@@ -32,6 +32,10 @@ final class AVK1FormDataFactory implements ApplicationFormDataFactoryInterface {
 
   private AVK1KostenFactory $avk1KostenFactory;
 
+  public static function getSupportedFundingCaseTypes(): array {
+    return ['AVK1SonstigeAktivitaet'];
+  }
+
   public function __construct(AVK1FinanzierungFactory $avk1FinanzierungFactory, AVK1KostenFactory $avk1KostenFactory) {
     $this->avk1FinanzierungFactory = $avk1FinanzierungFactory;
     $this->avk1KostenFactory = $avk1KostenFactory;

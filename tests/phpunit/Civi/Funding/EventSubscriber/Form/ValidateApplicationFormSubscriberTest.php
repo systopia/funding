@@ -21,32 +21,48 @@ namespace Civi\Funding\EventSubscriber\Form;
 
 use Civi\Api4\RemoteFundingApplicationProcess;
 use Civi\Api4\RemoteFundingCase;
+use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewValidateCommand;
+use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateCommand;
+use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateResult;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewValidateHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterface;
 use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Event\Remote\ApplicationProcess\ValidateApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingCase\ValidateNewApplicationFormEvent;
-use Civi\Funding\Form\Handler\ValidateApplicationFormHandlerInterface;
+use Civi\Funding\Form\Validation\ValidationResult;
+use Civi\Funding\Form\ValidationErrorFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Systopia\JsonSchema\Errors\ErrorCollector;
 
 /**
  * @covers \Civi\Funding\EventSubscriber\Form\ValidateApplicationFormSubscriber
  */
 final class ValidateApplicationFormSubscriberTest extends TestCase {
 
-  /**
-   * @var \Civi\Funding\Form\Handler\ValidateApplicationFormHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $formHandlerMock;
-
   private ValidateApplicationFormSubscriber $subscriber;
+
+  /**
+   * @var \Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewValidateHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $newValidateHandlerMock;
+
+  /**
+   * @var \Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $validateHandlerMock;
 
   protected function setUp(): void {
     parent::setUp();
-    $this->formHandlerMock = $this->createMock(ValidateApplicationFormHandlerInterface::class);
-    $this->subscriber = new ValidateApplicationFormSubscriber($this->formHandlerMock);
+    $this->newValidateHandlerMock = $this->createMock(ApplicationFormNewValidateHandlerInterface::class);
+    $this->validateHandlerMock = $this->createMock(ApplicationFormValidateHandlerInterface::class);
+    $this->subscriber = new ValidateApplicationFormSubscriber(
+      $this->newValidateHandlerMock,
+      $this->validateHandlerMock
+    );
   }
 
   public function testValidateSubscribedEvents(): void {
@@ -64,52 +80,91 @@ final class ValidateApplicationFormSubscriberTest extends TestCase {
 
   public function testOnValidateForm(): void {
     $event = $this->createValidateFormEvent();
+    $command = new ApplicationFormValidateCommand(
+      $event->getApplicationProcess(),
+      $event->getFundingProgram(),
+      $event->getFundingCase(),
+      $event->getFundingCaseType(),
+      $event->getData()
+    );
 
-    $this->formHandlerMock->expects(static::once())->method('supportsFundingCaseType')
-      ->with($event->getFundingCaseType()->getName())
-      ->willReturn(TRUE);
-
-    $this->formHandlerMock->expects(static::once())->method('handleValidateForm')
-      ->with($event);
+    $validationResult = new ValidationResult([], new ErrorCollector());
+    $result = ApplicationFormValidateResult::create($validationResult);
+    $this->validateHandlerMock->expects(static::once())->method('handle')
+      ->with($command)
+      ->willReturn($result);
 
     $this->subscriber->onValidateForm($event);
+
+    static::assertTrue($event->isValid());
+    static::assertSame([], $event->getErrors());
   }
 
-  public function testOnValidateFormNotSupported(): void {
+  public function testOnValidateFormInvalid(): void {
     $event = $this->createValidateFormEvent();
+    $command = new ApplicationFormValidateCommand(
+      $event->getApplicationProcess(),
+      $event->getFundingProgram(),
+      $event->getFundingCase(),
+      $event->getFundingCaseType(),
+      $event->getData()
+    );
 
-    $this->formHandlerMock->expects(static::once())->method('supportsFundingCaseType')
-      ->with($event->getFundingCaseType()->getName())
-      ->willReturn(FALSE);
-
-    $this->formHandlerMock->expects(static::never())->method('handleValidateForm');
+    $errorCollector = new ErrorCollector();
+    $errorCollector->addError(ValidationErrorFactory::createValidationError());
+    $validationResult = new ValidationResult([], $errorCollector);
+    $result = ApplicationFormValidateResult::create($validationResult);
+    $this->validateHandlerMock->expects(static::once())->method('handle')
+      ->with($command)
+      ->willReturn($result);
 
     $this->subscriber->onValidateForm($event);
+
+    static::assertFalse($event->isValid());
+    static::assertSame(['/foo' => ['Invalid value']], $event->getErrors());
   }
 
   public function testOnValidateNewForm(): void {
     $event = $this->createValidateNewFormEvent();
-
-    $this->formHandlerMock->expects(static::once())->method('supportsFundingCaseType')
-      ->with($event->getFundingCaseType()->getName())
-      ->willReturn(TRUE);
-
-    $this->formHandlerMock->expects(static::once())->method('handleValidateNewForm')
-      ->with($event);
+    $command = new ApplicationFormNewValidateCommand(
+      $event->getContactId(),
+      $event->getFundingProgram(),
+      $event->getFundingCaseType(),
+      $event->getData()
+    );
+    $validationResult = new ValidationResult([], new ErrorCollector());
+    $result = ApplicationFormValidateResult::create($validationResult);
+    $this->newValidateHandlerMock->expects(static::once())->method('handle')
+      ->with($command)
+      ->willReturn($result);
 
     $this->subscriber->onValidateNewForm($event);
+
+    static::assertTrue($event->isValid());
+    static::assertSame([], $event->getErrors());
   }
 
-  public function testOnValidateNewFormNotSupported(): void {
+  public function testOnValidateNewFormInvalid(): void {
     $event = $this->createValidateNewFormEvent();
+    $command = new ApplicationFormNewValidateCommand(
+      $event->getContactId(),
+      $event->getFundingProgram(),
+      $event->getFundingCaseType(),
+      $event->getData()
+    );
 
-    $this->formHandlerMock->expects(static::once())->method('supportsFundingCaseType')
-      ->with($event->getFundingCaseType()->getName())
-      ->willReturn(FALSE);
-
-    $this->formHandlerMock->expects(static::never())->method('handleValidateNewForm');
+    $errorCollector = new ErrorCollector();
+    $errorCollector->addError(ValidationErrorFactory::createValidationError());
+    $validationResult = new ValidationResult([], $errorCollector);
+    $result = ApplicationFormValidateResult::create($validationResult);
+    $this->newValidateHandlerMock->expects(static::once())->method('handle')
+      ->with($command)
+      ->willReturn($result);
 
     $this->subscriber->onValidateNewForm($event);
+
+    static::assertFalse($event->isValid());
+    static::assertSame(['/foo' => ['Invalid value']], $event->getErrors());
   }
 
   private function createValidateNewFormEvent(): ValidateNewApplicationFormEvent {

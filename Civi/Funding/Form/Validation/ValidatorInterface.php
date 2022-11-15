@@ -17,21 +17,15 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Form;
+namespace Civi\Funding\Form\Validation;
 
-use Civi\Funding\Entity\ApplicationProcessEntity;
-use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
 
-interface ApplicationFormDataFactoryInterface {
-
-  /**
-   * @phpstan-return array<string>
-   */
-  public static function getSupportedFundingCaseTypes(): array;
+interface ValidatorInterface {
 
   /**
-   * @phpstan-return array<string, mixed> JSON serializable.
+   * @phpstan-param array<string, mixed> $data JSON serializable.
    */
-  public function createFormData(ApplicationProcessEntity $applicationProcess, FundingCaseEntity $fundingCase): array;
+  public function validate(JsonSchema $jsonSchema, array $data, int $maxErrors = 1): ValidationResult;
 
 }
