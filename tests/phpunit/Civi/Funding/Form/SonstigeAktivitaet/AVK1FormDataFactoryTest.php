@@ -76,6 +76,7 @@ final class AVK1FormDataFactoryTest extends TestCase {
     static::assertEquals([
       'titel' => $applicationProcess->getTitle(),
       'kurzbezeichnungDesInhalts' => $applicationProcess->getShortDescription(),
+      'empfaenger' => $fundingCase->getRecipientContactId(),
       'beginn' => date('Y-m-d', time() - 86400),
       'ende' => date('Y-m-d', time()),
       'kosten' => ['foo' => 12.3],

@@ -48,6 +48,7 @@ final class AVK1FormDataFactory implements ApplicationFormDataFactoryInterface {
     $data = [];
     $data['titel'] = $applicationProcess->getTitle();
     $data['kurzbezeichnungDesInhalts'] = $applicationProcess->getShortDescription();
+    $data['empfaenger'] = $fundingCase->getRecipientContactId();
     Assert::notNull($applicationProcess->getStartDate());
     $data['beginn'] = $applicationProcess->getStartDate()->format('Y-m-d');
     Assert::notNull($applicationProcess->getEndDate());
