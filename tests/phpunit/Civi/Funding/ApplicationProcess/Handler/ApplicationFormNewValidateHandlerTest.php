@@ -34,7 +34,7 @@ use Systopia\JsonSchema\Errors\ErrorCollector;
 /**
  * @covers \Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewValidateHandler
  * @covers \Civi\Funding\ApplicationProcess\Command\ApplicationFormNewValidateCommand
- * @covers \Civi\Funding\ApplicationProcess\Command\ApplicationFormNewValidateResult
+ * @covers \Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateResult
  */
 final class ApplicationFormNewValidateHandlerTest extends TestCase {
 

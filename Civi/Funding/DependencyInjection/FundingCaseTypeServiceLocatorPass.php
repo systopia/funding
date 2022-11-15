@@ -56,7 +56,9 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
    *
    * @throws \Symfony\Component\DependencyInjection\Exception\RuntimeException
    */
+  // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
   public function process(ContainerBuilder $container): void {
+  // phpcs:enable
     $applicationFormDataFactoryServices =
       $this->getTaggedServices($container, 'funding.application.form_data_factory');
     $applicationJsonSchemaFactoryServices =

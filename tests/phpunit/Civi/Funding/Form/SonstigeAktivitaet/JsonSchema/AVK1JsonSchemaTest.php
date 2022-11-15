@@ -50,6 +50,7 @@ class AVK1JsonSchemaTest extends TestCase {
     );
 
     $required = $jsonSchema->getKeywordValue('required');
+    static::assertIsArray($required);
     static::assertContains('beginn', $required);
     static::assertContains('action', $required);
     $properties = $jsonSchema->getKeywordValue('properties');
