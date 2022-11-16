@@ -65,6 +65,7 @@ final class CreateActionTest extends TestCase implements HeadlessInterface, Tran
       'funding_case_id' => $fundingCase->getId(),
     ])
       ->setTitle('Test 1')
+      ->setIdentifier('test1')
       ->setIsReviewCalculative(TRUE)
       ->setIsReviewContent(FALSE);
 
@@ -84,6 +85,7 @@ final class CreateActionTest extends TestCase implements HeadlessInterface, Tran
     SessionTestUtil::mockInternalRequestSession($contactIdReviewCalculative);
 
     $applicationProcess->setTitle('Test 2');
+    $applicationProcess->setIdentifier('test2');
     $record = FundingApplicationProcess::create()
       ->setValues($applicationProcess->toArray())
       ->execute()
@@ -96,6 +98,7 @@ final class CreateActionTest extends TestCase implements HeadlessInterface, Tran
     SessionTestUtil::mockInternalRequestSession($contactIdReviewContent);
 
     $applicationProcess->setTitle('Test 3');
+    $applicationProcess->setIdentifier('test3');
     $record = FundingApplicationProcess::create()
       ->setValues($applicationProcess->toArray())
       ->execute()

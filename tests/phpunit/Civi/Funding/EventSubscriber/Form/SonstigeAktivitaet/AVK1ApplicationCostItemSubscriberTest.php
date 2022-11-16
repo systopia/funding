@@ -25,6 +25,8 @@ use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
+use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
+use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreCreateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
@@ -92,6 +94,8 @@ final class AVK1ApplicationCostItemSubscriberTest extends TestCase {
   }
 
   public function testOnPreCreate(): void {
+    $fundingProgram = FundingProgramFactory::createFundingProgram();
+    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
     $fundingCase = $this->createFundingCase();
     $applicationProcess = $this->createApplicationProcess();
     $applicationProcess->setRequestData([
@@ -114,7 +118,13 @@ final class AVK1ApplicationCostItemSubscriberTest extends TestCase {
       ->with('AVK1SonstigeAktivitaet')
       ->willReturn($fundingCase->getFundingCaseTypeId());
 
-    $event = new ApplicationProcessPreCreateEvent(11, $applicationProcess, $fundingCase);
+    $event = new ApplicationProcessPreCreateEvent(
+      11,
+      $applicationProcess,
+      $fundingCase,
+      $fundingCaseType,
+      $fundingProgram
+    );
     $this->subscriber->onPreCreate($event);
     /** @phpstan-var kostenSimplifiedT $requestData */
     $requestData = $applicationProcess->getRequestData();
@@ -195,6 +205,8 @@ final class AVK1ApplicationCostItemSubscriberTest extends TestCase {
   }
 
   public function testOnCreated(): void {
+    $fundingProgram = FundingProgramFactory::createFundingProgram();
+    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
     $fundingCase = $this->createFundingCase();
     $applicationProcess = $this->createApplicationProcess();
     $applicationProcess->setRequestData([
@@ -213,7 +225,13 @@ final class AVK1ApplicationCostItemSubscriberTest extends TestCase {
     $this->applicationCostItemManagerMock->expects(static::once())->method('updateAll')
       ->with($applicationProcess->getId(), [$item]);
 
-    $event = new ApplicationProcessCreatedEvent(11, $applicationProcess, $fundingCase);
+    $event = new ApplicationProcessCreatedEvent(
+      11,
+      $applicationProcess,
+      $fundingCase,
+      $fundingCaseType,
+      $fundingProgram
+    );
     $this->subscriber->onCreated($event);
   }
 

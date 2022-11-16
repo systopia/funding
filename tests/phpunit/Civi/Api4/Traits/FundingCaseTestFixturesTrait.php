@@ -22,10 +22,10 @@ namespace Civi\Api4\Traits;
 use Civi\Api4\Contact;
 use Civi\Api4\FundingCase;
 use Civi\Api4\FundingCaseContactRelation;
-use Civi\Api4\FundingCaseType;
 use Civi\Api4\Relationship;
 use Civi\Api4\RelationshipType;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
+use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 
 trait FundingCaseTestFixturesTrait {
@@ -83,11 +83,7 @@ trait FundingCaseTestFixturesTrait {
   private function addFixtures(array $associatedContactPermissions, array $permittedRelationshipTypePermissions): void {
     $fundingProgramId = FundingProgramFixture::addFixture(['title' => 'Foo'])->getId();
 
-    $fundingCaseTypeId = FundingCaseType::create()
-      ->setValues([
-        'title' => 'Test Case Type',
-        'name' => 'TestCaseType',
-      ])->execute()->first()['id'];
+    $fundingCaseTypeId = FundingCaseTypeFixture::addFixture()->getId();
 
     $recipientContactId = Contact::create()
       ->setValues([

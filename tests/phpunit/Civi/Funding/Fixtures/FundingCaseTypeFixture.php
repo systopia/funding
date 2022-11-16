@@ -25,6 +25,7 @@ use Civi\Funding\Entity\FundingCaseTypeEntity;
 /**
  * @phpstan-type fundingCaseTypeT array{
  *   id: int,
+ *   abbreviation: string,
  *   title: string,
  *   name: string,
  *   properties: array<string, mixed>
@@ -42,6 +43,7 @@ final class FundingCaseTypeFixture {
     $fundingCaseTypeValues = FundingCaseType::create()
       ->setValues($values + [
         'title' => 'Test Case Type',
+        'abbreviation' => 'TCT',
         'name' => 'TestCaseType',
       ])->execute()->first();
 

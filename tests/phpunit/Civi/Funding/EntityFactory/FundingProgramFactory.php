@@ -43,6 +43,7 @@ final class FundingProgramFactory {
     return FundingProgramEntity::fromArray($values + [
       'id' => 4,
       'title' => 'TestFundingProgram',
+      'abbreviation' => 'TFP',
       'start_date' => '2022-10-22',
       'end_date' => '2023-10-22',
       'requests_start_date' => '2022-06-22',

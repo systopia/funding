@@ -33,6 +33,7 @@ use Civi\RemoteTools\Api4\Api4Interface;
 /**
  * @phpstan-type applicationProcessT array{
  *   id: int,
+ *   identifier: string,
  *   funding_case_id: int,
  *   status: string,
  *   creation_date: string,

@@ -23,6 +23,7 @@ namespace Civi\Funding\Entity;
  * @phpstan-type fundingProgramT array{
  *   id?: int,
  *   title: string,
+ *   abbreviation: string,
  *   start_date: string,
  *   end_date: string,
  *   requests_start_date: string,
@@ -32,22 +33,9 @@ namespace Civi\Funding\Entity;
  *   permissions?: array<string>,
  * }
  *
- * @phpstan-method fundingProgramT toArray()
- * @phpstan-method void setValues(fundingProgramT $values)
+ * @phpstan-extends AbstractEntity<fundingProgramT>
  */
 final class FundingProgramEntity extends AbstractEntity {
-
-  /**
-   * @phpstan-var fundingProgramT
-   */
-  protected array $values;
-
-  /**
-   * @phpstan-param fundingProgramT $values
-   */
-  public static function fromArray(array $values): self {
-    return new self($values);
-  }
 
   public function getTitle(): string {
     return $this->values['title'];
@@ -55,6 +43,16 @@ final class FundingProgramEntity extends AbstractEntity {
 
   public function setTitle(string $title): self {
     $this->values['title'] = $title;
+
+    return $this;
+  }
+
+  public function getAbbreviation(): string {
+    return $this->values['abbreviation'];
+  }
+
+  public function setAbbreviation(string $abbreviation): self {
+    $this->values['abbreviation'] = $abbreviation;
 
     return $this;
   }

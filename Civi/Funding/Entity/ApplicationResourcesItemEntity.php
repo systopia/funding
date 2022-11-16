@@ -29,30 +29,9 @@ namespace Civi\Funding\Entity;
  *   properties: array<int|string, mixed>,
  * }
  *
- * @phpstan-method applicationResourcesItemT toArray()
- * @phpstan-method void setValues(applicationResourcesItemT $values)
+ * @phpstan-extends AbstractEntity<applicationResourcesItemT>
  */
 final class ApplicationResourcesItemEntity extends AbstractEntity {
-
-  /**
-   * @var array
-   * @phpstan-var applicationResourcesItemT
-   */
-  protected array $values;
-
-  /**
-   * @phpstan-param applicationResourcesItemT $values
-   */
-  public static function fromArray(array $values): self {
-    return new self($values);
-  }
-
-  /**
-   * @phpstan-param applicationResourcesItemT $values
-   */
-  public function __construct(array $values) {
-    parent::__construct($values);
-  }
 
   public function getApplicationProcessId(): int {
     return $this->values['application_process_id'];

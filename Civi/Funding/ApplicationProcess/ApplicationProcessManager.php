@@ -24,6 +24,8 @@ use Civi\Api4\Generic\DAODeleteAction;
 use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
+use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessDeletedEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreCreateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
@@ -31,12 +33,14 @@ use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
 use Civi\Funding\Form\ValidatedApplicationDataInterface;
 use Civi\Funding\Util\DateTimeUtil;
+use Civi\Funding\Util\Uuid;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Webmozart\Assert\Assert;
 
 /**
  * @phpstan-type applicationProcessT array{
  *   id: int,
+ *   identifier: string,
  *   funding_case_id: int,
  *   status: string,
  *   creation_date: string,
@@ -77,12 +81,16 @@ class ApplicationProcessManager {
   public function create(
     int $contactId,
     FundingCaseEntity $fundingCase,
+    FundingCaseTypeEntity $fundingCaseType,
+    FundingProgramEntity $fundingProgram,
     string $status,
     ValidatedApplicationDataInterface $data
   ): ApplicationProcessEntity {
     /** @var string $now */
     $now = date('Y-m-d H:i:s');
     $applicationProcess = ApplicationProcessEntity::fromArray([
+      // Initialize with random UUID
+      'identifier' => Uuid::generateRandom(),
       'funding_case_id' => $fundingCase->getId(),
       'status' => $status,
       'title' => $data->getTitle(),
@@ -101,7 +109,8 @@ class ApplicationProcessManager {
       'reviewer_calc_contact_id' => NULL,
     ]);
 
-    $event = new ApplicationProcessPreCreateEvent($contactId, $applicationProcess, $fundingCase);
+    $event = new ApplicationProcessPreCreateEvent(
+      $contactId, $applicationProcess, $fundingCase, $fundingCaseType, $fundingProgram);
     $this->eventDispatcher->dispatch(ApplicationProcessPreCreateEvent::class, $event);
 
     $action = FundingApplicationProcess::create()->setValues($applicationProcess->toArray());
@@ -110,7 +119,8 @@ class ApplicationProcessManager {
     $applicationProcessValues = $this->api4->executeAction($action)->first();
     $applicationProcess = ApplicationProcessEntity::fromArray($applicationProcessValues)->reformatDates();
 
-    $event = new ApplicationProcessCreatedEvent($contactId, $applicationProcess, $fundingCase);
+    $event = new ApplicationProcessCreatedEvent(
+      $contactId, $applicationProcess, $fundingCase, $fundingCaseType, $fundingProgram);
     $this->eventDispatcher->dispatch(ApplicationProcessCreatedEvent::class, $event);
 
     return $applicationProcess;

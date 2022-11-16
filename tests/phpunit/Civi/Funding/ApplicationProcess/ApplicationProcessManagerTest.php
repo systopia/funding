@@ -96,15 +96,24 @@ final class ApplicationProcessManagerTest extends TestCase implements HeadlessIn
 
   public function testCreate(): void {
     $contact = ContactFixture::addIndividual();
-    $fundingCase = $this->createFundingCase();
+    $fundingProgram = FundingProgramFixture::addFixture();
+    $fundingCaseType = FundingCaseTypeFixture::addFixture();
+    $fundingCase = $this->createFundingCase($fundingProgram->getId(), $fundingCaseType->getId());
 
     $this->eventDispatcherMock->expects(static::exactly(2))->method('dispatch')->withConsecutive(
       [
         ApplicationProcessPreCreateEvent::class,
         static::callback(
-          function (ApplicationProcessPreCreateEvent $event) use ($contact, $fundingCase) {
+          function (ApplicationProcessPreCreateEvent $event) use (
+            $contact,
+            $fundingCase,
+            $fundingCaseType,
+            $fundingProgram
+          ) {
             static::assertSame($contact['id'], $event->getContactId());
             static::assertSame($fundingCase, $event->getFundingCase());
+            static::assertSame($fundingCaseType, $event->getFundingCaseType());
+            static::assertSame($fundingProgram, $event->getFundingProgram());
 
             return TRUE;
           }
@@ -113,9 +122,16 @@ final class ApplicationProcessManagerTest extends TestCase implements HeadlessIn
       [
         ApplicationProcessCreatedEvent::class,
         static::callback(
-          function (ApplicationProcessCreatedEvent $event) use ($contact, $fundingCase) {
+          function (ApplicationProcessCreatedEvent $event) use (
+            $contact,
+            $fundingCase,
+            $fundingCaseType,
+            $fundingProgram
+          ) {
             static::assertSame($contact['id'], $event->getContactId());
             static::assertSame($fundingCase, $event->getFundingCase());
+            static::assertSame($fundingCaseType, $event->getFundingCaseType());
+            static::assertSame($fundingProgram, $event->getFundingProgram());
 
             return TRUE;
           }
@@ -125,10 +141,13 @@ final class ApplicationProcessManagerTest extends TestCase implements HeadlessIn
 
     $validatedData = new ValidatedApplicationDataMock();
     $applicationProcess = $this->applicationProcessManager->create(
-      $contact['id'], $fundingCase, 'test_status', $validatedData
+      $contact['id'], $fundingCase, $fundingCaseType, $fundingProgram, 'test_status', $validatedData
     );
 
     static::assertGreaterThan(0, $applicationProcess->getId());
+    $applicationProcessValues = TestUtil::filterCiviExtraFields($applicationProcess->toArray());
+    static::assertNotEmpty($applicationProcessValues['identifier']);
+    unset($applicationProcessValues['identifier']);
     static::assertEquals([
       'id' => $applicationProcess->getId(),
       'funding_case_id' => $fundingCase->getId(),
@@ -147,7 +166,7 @@ final class ApplicationProcessManagerTest extends TestCase implements HeadlessIn
       'reviewer_cont_contact_id' => NULL,
       'is_review_calculative' => NULL,
       'reviewer_calc_contact_id' => NULL,
-    ], TestUtil::filterCiviExtraFields($applicationProcess->toArray()));
+    ], $applicationProcessValues);
   }
 
   public function testDelete(): void {
@@ -196,7 +215,7 @@ final class ApplicationProcessManagerTest extends TestCase implements HeadlessIn
       $firstApplicationProcess->toArray(),
     );
 
-    ApplicationProcessFixture::addFixture($fundingCase->getId(), ['title' => 'Title2']);
+    ApplicationProcessFixture::addFixture($fundingCase->getId(), ['title' => 'Title2', 'identifier' => 'test2']);
     $firstApplicationProcess = $this->applicationProcessManager->getFirstByFundingCaseId($fundingCase->getId());
     static::assertNotNull($firstApplicationProcess);
     static::assertEquals(
@@ -252,14 +271,14 @@ final class ApplicationProcessManagerTest extends TestCase implements HeadlessIn
     static::assertSame(time(), $applicationProcess->getModificationDate()->getTimestamp());
   }
 
-  private function createFundingCase(): FundingCaseEntity {
-    $fundingProgram = FundingProgramFixture::addFixture();
-    $fundingCaseType = FundingCaseTypeFixture::addFixture();
+  private function createFundingCase(int $fundingProgramId = NULL, int $fundingCaseTypeId = NULL): FundingCaseEntity {
+    $fundingProgramId ??= FundingProgramFixture::addFixture()->getId();
+    $fundingCaseTypeId ??= FundingCaseTypeFixture::addFixture()->getId();
     $recipientContact = ContactFixture::addOrganization();
 
     return FundingCaseFixture::addFixture(
-      $fundingProgram->getId(),
-      $fundingCaseType->getId(),
+      $fundingProgramId,
+      $fundingCaseTypeId,
       $recipientContact['id'],
     );
   }

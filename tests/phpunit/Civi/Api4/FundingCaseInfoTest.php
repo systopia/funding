@@ -85,6 +85,7 @@ final class FundingCaseInfoTest extends TestCase implements HeadlessInterface, T
       'funding_program_currency' => $fundingProgram->getCurrency(),
       'funding_program_title' => $fundingProgram->getTitle(),
       'application_process_id' => $applicationProcess->getId(),
+      'application_process_identifier' => $applicationProcess->getIdentifier(),
       'application_process_title' => $applicationProcess->getTitle(),
       'application_process_short_description' => $applicationProcess->getShortDescription(),
       'application_process_status' => $applicationProcess->getStatus(),
@@ -112,7 +113,7 @@ final class FundingCaseInfoTest extends TestCase implements HeadlessInterface, T
     );
     $applicationProcess2 = ApplicationProcessFixture::addFixture(
       $fundingCase2->getId(),
-      ['title' => 'Application 2', 'end_date' => '2022-09-21 21:21:21']
+      ['title' => 'Application 2', 'identifier' => 'app2', 'end_date' => '2022-09-21 21:21:21']
     );
     $result = $action->execute();
     static::assertCount(1, $result);
@@ -159,7 +160,7 @@ final class FundingCaseInfoTest extends TestCase implements HeadlessInterface, T
       }
     }
 
-    static::assertCount(22 + $permissionsCount, $result);
+    static::assertCount(23 + $permissionsCount, $result);
   }
 
 }
