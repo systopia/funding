@@ -36,6 +36,23 @@
   </index>
 
   <field>
+    <name>abbreviation</name>
+    <type>varchar</type>
+    <length>20</length>
+    <required>true</required>
+    <dataPattern>/^[\p{L}\p{N}\p{P}]+$/u</dataPattern>
+    <comment>Used in application process identifiers</comment>
+    <html>
+      <type>Text</type>
+    </html>
+  </field>
+  <index>
+    <name>index_abbreviation</name>
+    <fieldName>abbreviation</fieldName>
+    <unique>true</unique>
+  </index>
+
+  <field>
     <name>start_date</name>
     <type>date</type>
     <required>true</required>

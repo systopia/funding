@@ -26,6 +26,7 @@ use Civi\Funding\Entity\FundingProgramEntity;
  * @phpstan-type fundingProgramT array{
  *   id: int,
  *   title: string,
+ *   abbreviation: string,
  *   start_date: string,
  *   end_date: string,
  *   requests_start_date: string,
@@ -46,6 +47,7 @@ final class FundingProgramFixture {
     $fundingProgramValues = FundingProgram::create()
       ->setValues($values + [
         'title' => 'TestFundingProgram',
+        'abbreviation' => 'TFP',
         'start_date' => '2022-10-22',
         'end_date' => '2023-10-22',
         'requests_start_date' => '2022-06-22',

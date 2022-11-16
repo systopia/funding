@@ -178,6 +178,11 @@ final class GetFieldsAction extends BasicGetFieldsAction {
         'data_type' => 'Integer',
       ],
       [
+        'name' => 'application_process_identifier',
+        'title' => 'application_process_identifier',
+        'data_type' => 'String',
+      ],
+      [
         'name' => 'application_process_title',
         'title' => 'application_process_title',
         'data_type' => 'String',

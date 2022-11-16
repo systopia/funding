@@ -37,6 +37,7 @@ use Webmozart\Assert\Assert;
 /**
  * @phpstan-type applicationProcessT array{
  *   id: int,
+ *   identifier: string,
  *   funding_case_id: int,
  *   status: string,
  *   creation_date: string,
@@ -67,6 +68,7 @@ use Webmozart\Assert\Assert;
  *
  * @phpstan-type fundingCaseTypeT array{
  *   id: int,
+ *   abbreviation: string,
  *   title: string,
  *   name: string,
  *   properties: array<string, mixed>
@@ -75,6 +77,7 @@ use Webmozart\Assert\Assert;
  * @phpstan-type fundingProgramT array{
  *   id: int,
  *   title: string,
+ *   abbreviation: string,
  *   start_date: string,
  *   end_date: string,
  *   requests_start_date: string,

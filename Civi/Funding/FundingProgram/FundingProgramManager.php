@@ -27,6 +27,7 @@ use Civi\RemoteTools\Api4\Api4Interface;
  * @phpstan-type fundingProgramT array{
  *   id?: int,
  *   title: string,
+ *   abbreviation: string,
  *   start_date: string,
  *   end_date: string,
  *   requests_start_date: string,

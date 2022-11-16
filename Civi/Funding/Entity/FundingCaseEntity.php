@@ -33,30 +33,9 @@ use Civi\RemoteTools\Api4\RemoteApiConstants;
  *   permissions?: array<string>,
  * }
  *
- * @phpstan-method fundingCaseT toArray()
- * @phpstan-method void setValues(fundingCaseT $values)
+ * @phpstan-extends AbstractEntity<fundingCaseT>
  */
 final class FundingCaseEntity extends AbstractEntity {
-
-  /**
-   * @var array
-   * @phpstan-var fundingCaseT
-   */
-  protected array $values;
-
-  /**
-   * @phpstan-param fundingCaseT $values
-   */
-  public static function fromArray(array $values): self {
-    return new self($values);
-  }
-
-  /**
-   * @phpstan-param fundingCaseT $values
-   */
-  public function __construct(array $values) {
-    parent::__construct($values);
-  }
 
   public function getFundingProgramId(): int {
     return $this->values['funding_program_id'];

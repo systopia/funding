@@ -27,6 +27,7 @@ use Civi\RemoteTools\Api4\Api4Interface;
  * @phpstan-type fundingCaseTypeT array{
  *   id: int,
  *   title: string,
+ *   abbreviation: string,
  *   name: string,
  *   properties: array<string, mixed>,
  * }

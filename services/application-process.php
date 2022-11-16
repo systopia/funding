@@ -32,6 +32,8 @@ use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsD
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\DefaultApplicationProcessActionsDeterminer;
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\ReworkPossibleApplicationProcessActionsDeterminer;
 use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
+use Civi\Funding\ApplicationProcess\ApplicationIdentifierGenerator;
+use Civi\Funding\ApplicationProcess\ApplicationIdentifierGeneratorInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
@@ -51,6 +53,7 @@ use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormValidateHandle
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\DefaultApplicationProcessStatusDeterminer;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ReworkPossibleApplicationProcessStatusDeterminer;
+use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessIdentifierSubscriber;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessModificationDateSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessGetFieldsSubscriber;
@@ -58,6 +61,7 @@ use Civi\Funding\EventSubscriber\Remote\ApplicationProcessGetFieldsSubscriber;
 $container->autowire(ApplicationProcessManager::class);
 $container->autowire(ApplicationCostItemManager::class);
 $container->autowire(ApplicationResourcesItemManager::class);
+$container->autowire(ApplicationIdentifierGeneratorInterface::class, ApplicationIdentifierGenerator::class);
 
 $container->autowire(ApplicationFormNewCreateHandlerInterface::class, DefaultApplicationFormNewCreateHandler::class);
 $container->autowire(
@@ -99,6 +103,9 @@ $container->autowire(ValidateFormAction::class)
 
 $container->autowire(ApplicationProcessGetFieldsSubscriber::class)
   ->addTag('kernel.event_subscriber');
+$container->autowire(ApplicationProcessIdentifierSubscriber::class)
+  ->addTag('kernel.event_subscriber')
+  ->setLazy(TRUE);
 $container->autowire(ApplicationProcessModificationDateSubscriber::class)
   ->addTag('kernel.event_subscriber')
   ->setLazy(TRUE);

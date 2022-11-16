@@ -23,26 +23,14 @@ namespace Civi\Funding\Entity;
  * @phpstan-type fundingCaseTypeT array{
  *   id?: int,
  *   title: string,
+ *   abbreviation: string,
  *   name: string,
  *   properties: array<string, mixed>,
  * }
  *
- * @phpstan-method fundingCaseTypeT toArray()
- * @phpstan-method void setValues(fundingCaseTypeT $values)
+ * @phpstan-extends AbstractEntity<fundingCaseTypeT>
  */
 final class FundingCaseTypeEntity extends AbstractEntity {
-
-  /**
-   * @phpstan-var fundingCaseTypeT
-   */
-  protected array $values;
-
-  /**
-   * @phpstan-param fundingCaseTypeT $values
-   */
-  public static function fromArray(array $values): self {
-    return new self($values);
-  }
 
   public function getTitle(): string {
     return $this->values['title'];
@@ -50,6 +38,16 @@ final class FundingCaseTypeEntity extends AbstractEntity {
 
   public function setTitle(string $title): self {
     $this->values['title'] = $title;
+
+    return $this;
+  }
+
+  public function getAbbreviation(): string {
+    return $this->values['abbreviation'];
+  }
+
+  public function setAbbreviation(string $abbreviation): self {
+    $this->values['abbreviation'] = $abbreviation;
 
     return $this;
   }

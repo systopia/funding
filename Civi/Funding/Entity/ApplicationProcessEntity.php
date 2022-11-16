@@ -22,6 +22,7 @@ namespace Civi\Funding\Entity;
 /**
  * @phpstan-type applicationProcessT array{
  *   id?: int,
+ *   identifier: string,
  *   funding_case_id: int,
  *   status: string,
  *   creation_date: string,
@@ -42,29 +43,18 @@ namespace Civi\Funding\Entity;
  *   custom?: mixed,
  * }
  *
- * @phpstan-method applicationProcessT toArray()
- * @phpstan-method void setValues(applicationProcessT $values)
+ * @phpstan-extends AbstractEntity<applicationProcessT>
  */
 final class ApplicationProcessEntity extends AbstractEntity {
 
-  /**
-   * @var array
-   * @phpstan-var applicationProcessT
-   */
-  protected array $values;
-
-  /**
-   * @phpstan-param applicationProcessT $values
-   */
-  public static function fromArray(array $values): self {
-    return new self($values);
+  public function getIdentifier(): string {
+    return $this->values['identifier'];
   }
 
-  /**
-   * @phpstan-param applicationProcessT $values
-   */
-  public function __construct(array $values) {
-    parent::__construct($values);
+  public function setIdentifier(string $identifier): self {
+    $this->values['identifier'] = $identifier;
+
+    return $this;
   }
 
   public function getFundingCaseId(): int {

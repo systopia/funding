@@ -44,10 +44,12 @@ SET FOREIGN_KEY_CHECKS=1;
 CREATE TABLE `civicrm_funding_case_type` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique FundingCaseType ID',
   `title` varchar(255) NOT NULL,
+  `abbreviation` varchar(20) NOT NULL COMMENT 'Used in application process identifiers',
   `name` varchar(255) NOT NULL,
   `properties` text NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `index_title`(title)
+  UNIQUE INDEX `index_title`(title),
+  UNIQUE INDEX `index_abbreviation`(abbreviation)
 )
 ENGINE=InnoDB;
 
@@ -59,6 +61,7 @@ ENGINE=InnoDB;
 CREATE TABLE `civicrm_funding_program` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique FundingProgram ID',
   `title` varchar(255) NOT NULL,
+  `abbreviation` varchar(20) NOT NULL COMMENT 'Used in application process identifiers',
   `start_date` date NOT NULL,
   `end_date` date NOT NULL,
   `requests_start_date` date NOT NULL,
@@ -66,7 +69,8 @@ CREATE TABLE `civicrm_funding_program` (
   `currency` varchar(10) NOT NULL,
   `budget` decimal(10,2) NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `index_title`(title)
+  UNIQUE INDEX `index_title`(title),
+  UNIQUE INDEX `index_abbreviation`(abbreviation)
 )
 ENGINE=InnoDB;
 
@@ -189,6 +193,7 @@ ENGINE=InnoDB;
 -- *******************************************************/
 CREATE TABLE `civicrm_funding_application_process` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique FundingApplicationProcess ID',
+  `identifier` varchar(255) NOT NULL COMMENT 'Unique generated identifier',
   `funding_case_id` int unsigned COMMENT 'FK to FundingCase',
   `status` varchar(64) NOT NULL,
   `creation_date` timestamp NOT NULL,
@@ -206,6 +211,7 @@ CREATE TABLE `civicrm_funding_application_process` (
   `is_review_calculative` tinyint NULL,
   `reviewer_calc_contact_id` int unsigned NULL COMMENT 'FK to Contact',
   PRIMARY KEY (`id`),
+  UNIQUE INDEX `index_identifier`(identifier),
   UNIQUE INDEX `index_title`(title),
   CONSTRAINT FK_civicrm_funding_application_process_funding_case_id FOREIGN KEY (`funding_case_id`) REFERENCES `civicrm_funding_case`(`id`) ON DELETE CASCADE,
   CONSTRAINT FK_civicrm_funding_application_process_reviewer_cont_contact_id FOREIGN KEY (`reviewer_cont_contact_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE RESTRICT,

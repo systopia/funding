@@ -21,6 +21,23 @@
   </primaryKey>
 
   <field>
+    <name>identifier</name>
+    <type>varchar</type>
+    <length>255</length>
+    <required>true</required>
+    <dataPattern>/^[\p{L}\p{N}\p{P}]+$/u</dataPattern>
+    <comment>Unique generated identifier</comment>
+    <html>
+      <type>Text</type>
+    </html>
+  </field>
+  <index>
+    <name>index_identifier</name>
+    <fieldName>identifier</fieldName>
+    <unique>true</unique>
+  </index>
+
+  <field>
     <name>funding_case_id</name>
     <type>int unsigned</type>
     <comment>FK to FundingCase</comment>

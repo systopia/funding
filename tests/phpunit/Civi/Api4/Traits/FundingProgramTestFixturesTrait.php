@@ -48,8 +48,8 @@ trait FundingProgramTestFixturesTrait {
     array $permittedContactTypePermissions,
     array $permittedRelationshipTypePermissions
   ): void {
-    $fundingProgramId = FundingProgramFixture::addFixture(['title' => 'Foo'])->getId();
-    FundingProgramFixture::addFixture(['title' => 'Bar']);
+    $fundingProgramId = FundingProgramFixture::addFixture(['title' => 'Foo', 'abbreviation' => 'FOO'])->getId();
+    FundingProgramFixture::addFixture(['title' => 'Bar', 'abbreviation' => 'BAR']);
 
     $permittedContactTypeIdNoPermissions = ContactTypeFixture::addOrganizationFixture(
       'PermittedNoPermissions', 'permitted no permissions')['id'];

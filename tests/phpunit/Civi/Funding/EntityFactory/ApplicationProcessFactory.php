@@ -52,6 +52,7 @@ final class ApplicationProcessFactory {
   public static function createApplicationProcess(array $values = []): ApplicationProcessEntity {
     $values += [
       'id' => 2,
+      'identifier' => 'app2',
       'funding_case_id' => 3,
       'status' => 'new_status',
       'title' => 'Title',
@@ -71,6 +72,7 @@ final class ApplicationProcessFactory {
     ];
     if (NULL === $values['id']) {
       unset($values['id']);
+      $values['identifier'] = '';
     }
 
     return ApplicationProcessEntity::fromArray($values);

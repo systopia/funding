@@ -23,6 +23,7 @@ use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Api4\Action\FundingProgram\GetAction;
 use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -96,16 +97,7 @@ final class FundingProgramManagerTest extends TestCase {
   }
 
   protected function createFundingProgram(): FundingProgramEntity {
-    return FundingProgramEntity::fromArray([
-      'id' => 4,
-      'title' => 'TestFundingProgram',
-      'start_date' => '2022-10-22',
-      'end_date' => '2023-10-22',
-      'requests_start_date' => '2022-06-22',
-      'requests_end_date' => '2022-12-31',
-      'budget' => NULL,
-      'currency' => '€',
-    ]);
+    return FundingProgramFactory::createFundingProgram();
   }
 
 }

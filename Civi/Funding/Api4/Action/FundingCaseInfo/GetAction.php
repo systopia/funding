@@ -102,6 +102,7 @@ final class GetAction extends AbstractGetAction {
       'funding_program_currency' => $fundingProgram->getCurrency(),
       'funding_program_title' => $fundingProgram->getTitle(),
       'application_process_id' => $applicationProcess->getId(),
+      'application_process_identifier' => $applicationProcess->getIdentifier(),
       'application_process_title' => $applicationProcess->getTitle(),
       'application_process_short_description' => $applicationProcess->getShortDescription(),
       'application_process_status' => $applicationProcess->getStatus(),

@@ -41,7 +41,8 @@ trait FundingCaseTypeFixturesTrait {
    */
   protected function addFixtures(): void {
     $this->fundingProgramId = FundingProgramFixture::addFixture()->getId();
-    $this->fundingProgramIdWithoutFundingCaseType = FundingProgramFixture::addFixture(['title' => 'Foo'])->getId();
+    $this->fundingProgramIdWithoutFundingCaseType =
+      FundingProgramFixture::addFixture(['title' => 'Foo', 'abbreviation' => 'FOO'])->getId();
 
     $permittedContactType = ContactTypeFixture::addIndividualFixture(
       'Permitted', 'permitted');

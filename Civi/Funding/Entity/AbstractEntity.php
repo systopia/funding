@@ -27,24 +27,34 @@ use Civi\Funding\Util\DateTimeUtil;
  * "check_permissions" and "custom" are automatically added by CiviCRM since
  * version 5.53.
  *
- * @phpstan-type entityT array<string, mixed>&array{
- *   id?: int,
- *   check_permissions?: bool,
- *   custom?: mixed,
+ * @template T of array<string, mixed>
+ *
+ * T should contain `id?: int`, and optionally
+ * `check_permissions?: bool, custom?: mixed`
  * }
+ *
+ * @phpstan-consistent-constructor
  */
 abstract class AbstractEntity {
 
   /**
-   * @var array
-   * @phpstan-var entityT
+   * @phpstan-var T
    */
   protected array $values;
 
   /**
-   * @phpstan-param entityT $values
+   * @phpstan-param T $values
+   *
+   * @return static
    */
-  protected function __construct(array $values) {
+  public static function fromArray(array $values): self {
+    return new static($values);
+  }
+
+  /**
+   * @phpstan-param T $values
+   */
+  public function __construct(array $values) {
     $this->values = $values;
   }
 
@@ -62,6 +72,7 @@ abstract class AbstractEntity {
    * @return int Returns -1 for a new, unpersisted entity.
    */
   public function getId(): int {
+    /** @phpstan-ignore-next-line  */
     return $this->values['id'] ?? -1;
   }
 
@@ -70,7 +81,7 @@ abstract class AbstractEntity {
   }
 
   /**
-   * @phpstan-param entityT $values
+   * @phpstan-param T $values
    *
    * @internal
    */
@@ -79,7 +90,7 @@ abstract class AbstractEntity {
   }
 
   /**
-   * @phpstan-return entityT
+   * @phpstan-return T
    */
   public function toArray(): array {
     return $this->values;

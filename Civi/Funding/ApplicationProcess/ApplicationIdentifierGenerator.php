@@ -17,31 +17,31 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\EntityFactory;
+namespace Civi\Funding\ApplicationProcess;
 
+use Civi\Funding\Entity\ApplicationProcessEntity;
+use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
+use Civi\Funding\Entity\FundingProgramEntity;
 
 /**
- * @phpstan-type fundingCaseTypeValuesT array{
- *   id?: int,
- *   title?: string,
- *   name?: string,
- *   properties?: array<string, mixed>,
- * }
+ * @codeCoverageIgnore
  */
-final class FundingCaseTypeFactory {
+final class ApplicationIdentifierGenerator implements ApplicationIdentifierGeneratorInterface {
 
-  /**
-   * @phpstan-param fundingCaseTypeValuesT $values
-   */
-  public static function createFundingCaseType(array $values = []): FundingCaseTypeEntity {
-    return FundingCaseTypeEntity::fromArray([
-      'id' => 5,
-      'title' => 'Test Funding Case Type',
-      'abbreviation' => 'TFCT',
-      'name' => 'TestFundingCaseType',
-      'properties' => [],
-    ]);
+  public function generateIdentifier(
+    ApplicationProcessEntity $applicationProcess,
+    FundingCaseEntity $fundingCase,
+    FundingCaseTypeEntity $fundingCaseType,
+    FundingProgramEntity $fundingProgram
+  ): string {
+    return sprintf(
+      '%s-%s-%s-%s',
+      date('Y'),
+      $fundingProgram->getAbbreviation(),
+      $fundingCaseType->getAbbreviation(),
+      (string) $applicationProcess->getId(),
+    );
   }
 
 }

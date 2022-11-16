@@ -21,6 +21,8 @@ namespace Civi\Funding\Event\ApplicationProcess;
 
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
+use Civi\Funding\Entity\FundingProgramEntity;
 use Symfony\Component\EventDispatcher\Event;
 
 final class ApplicationProcessCreatedEvent extends Event {
@@ -31,12 +33,22 @@ final class ApplicationProcessCreatedEvent extends Event {
 
   private FundingCaseEntity $fundingCase;
 
-  public function __construct(int $contactId,
-    ApplicationProcessEntity $applicationProcess, FundingCaseEntity $fundingCase
+  private FundingCaseTypeEntity $fundingCaseTypeEntity;
+
+  private FundingProgramEntity $fundingProgramEntity;
+
+  public function __construct(
+    int $contactId,
+    ApplicationProcessEntity $applicationProcess,
+    FundingCaseEntity $fundingCase,
+    FundingCaseTypeEntity $fundingCaseTypeEntity,
+    FundingProgramEntity $fundingProgramEntity
   ) {
     $this->contactId = $contactId;
     $this->applicationProcess = $applicationProcess;
     $this->fundingCase = $fundingCase;
+    $this->fundingCaseTypeEntity = $fundingCaseTypeEntity;
+    $this->fundingProgramEntity = $fundingProgramEntity;
   }
 
   public function getContactId(): int {
@@ -49,6 +61,14 @@ final class ApplicationProcessCreatedEvent extends Event {
 
   public function getFundingCase(): FundingCaseEntity {
     return $this->fundingCase;
+  }
+
+  public function getFundingCaseType(): FundingCaseTypeEntity {
+    return $this->fundingCaseTypeEntity;
+  }
+
+  public function getFundingProgram(): FundingProgramEntity {
+    return $this->fundingProgramEntity;
   }
 
 }
