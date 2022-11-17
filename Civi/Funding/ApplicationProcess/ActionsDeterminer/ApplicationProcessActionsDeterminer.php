@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
+use Civi\Funding\Entity\FullApplicationProcessStatus;
+
 /**
  * @phpstan-type statusPermissionsActionMapT array<string|null, array<string, array<string>>>
  */
@@ -36,19 +38,19 @@ class ApplicationProcessActionsDeterminer implements ApplicationProcessActionsDe
     $this->statusPermissionActionsMap = $statusPermissionActionsMap;
   }
 
-  public function getActions(string $status, array $permissions): array {
-    return $this->doGetActions($status, $permissions);
+  public function getActions(FullApplicationProcessStatus $status, array $permissions): array {
+    return $this->doGetActions($status->getStatus(), $permissions);
   }
 
   public function getInitialActions(array $permissions): array {
     return $this->doGetActions(NULL, $permissions);
   }
 
-  public function isActionAllowed(string $action, string $status, array $permissions): bool {
+  public function isActionAllowed(string $action, FullApplicationProcessStatus $status, array $permissions): bool {
     return \in_array($action, $this->getActions($status, $permissions), TRUE);
   }
 
-  public function isEditAllowed(string $status, array $permissions): bool {
+  public function isEditAllowed(FullApplicationProcessStatus $status, array $permissions): bool {
     return $this->isActionAllowed('save', $status, $permissions)
       || $this->isActionAllowed('apply', $status, $permissions);
   }

@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
+use Civi\Funding\Entity\FullApplicationProcessStatus;
+
 final class DefaultApplicationProcessActionsDeterminer extends ApplicationProcessActionsDeterminer {
 
   private const STATUS_PERMISSION_ACTIONS_MAP = [
@@ -30,29 +32,56 @@ final class DefaultApplicationProcessActionsDeterminer extends ApplicationProces
       'application_modify' => ['save'],
       'application_apply' => ['apply'],
       'application_withdraw' => ['delete'],
+      'review_calculative' => ['update'],
+      'review_content' => ['update'],
     ],
     'applied' => [
       'application_modify' => ['modify'],
       'application_withdraw' => ['withdraw'],
-      'review_calculative' => ['review'],
-      'review_content' => ['review'],
+      'review_calculative' => ['review', 'update'],
+      'review_content' => ['review', 'update'],
     ],
     'review' => [
-      'review_calculative' => ['approve-calculative', 'reject-calculative'],
-      'review_content' => ['approve-content', 'reject-content'],
+      'review_calculative' => ['set-calculative-review-result', 'request-change', 'update'],
+      'review_content' => ['set-content-review-result', 'request-change', 'update'],
     ],
     'draft' => [
       'application_modify' => ['save'],
       'application_apply' => ['apply'],
       'application_withdraw' => ['withdraw'],
+      'review_calculative' => ['update'],
+      'review_content' => ['update'],
     ],
-    'pre-approved' => [
-      'application_apply' => ['approve', 'reject'],
+    'approved' => [
+      'review_calculative' => ['update'],
+      'review_content' => ['update'],
     ],
   ];
 
   public function __construct() {
     parent::__construct(self::STATUS_PERMISSION_ACTIONS_MAP);
+  }
+
+  public function getActions(FullApplicationProcessStatus $status, array $permissions): array {
+    $actions = parent::getActions($status, $permissions);
+    if ('review' === $status->getStatus() && $this->hasReviewPermission($permissions)) {
+      if (TRUE === $status->getIsReviewCalculative() && TRUE === $status->getIsReviewContent()) {
+        $actions[] = 'approve';
+      }
+      elseif (FALSE === $status->getIsReviewCalculative() || FALSE === $status->getIsReviewContent()) {
+        $actions[] = 'reject';
+      }
+    }
+
+    return $actions;
+  }
+
+  /**
+   * @phpstan-param array<string> $permissions
+   */
+  private function hasReviewPermission(array $permissions): bool {
+    return in_array('review_content', $permissions, TRUE)
+      || in_array('review_calculative', $permissions, TRUE);
   }
 
 }

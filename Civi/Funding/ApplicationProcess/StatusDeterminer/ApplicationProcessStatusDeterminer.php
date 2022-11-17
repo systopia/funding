@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\StatusDeterminer;
 
+use Civi\Funding\Entity\FullApplicationProcessStatus;
+
 /**
  * @phpstan-type statusActionStatusMapT array<string|null, array<string, string>>
  */
@@ -48,14 +50,14 @@ class ApplicationProcessStatusDeterminer implements ApplicationProcessStatusDete
     return $status;
   }
 
-  public function getStatus(string $currentStatus, string $action): string {
-    $status = $this->statusActionStatusMap[$currentStatus][$action] ?? NULL;
+  public function getStatus(FullApplicationProcessStatus $currentStatus, string $action): string {
+    $status = $this->statusActionStatusMap[$currentStatus->getStatus()][$action] ?? NULL;
     if (NULL === $status) {
       throw new \InvalidArgumentException(
         \sprintf(
           'Could not determine application process status for action "%s" and current status "%s"',
           $action,
-          $currentStatus,
+          $currentStatus->getStatus(),
         )
       );
     }

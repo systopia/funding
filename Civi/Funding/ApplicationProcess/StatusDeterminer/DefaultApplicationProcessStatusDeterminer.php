@@ -29,28 +29,27 @@ final class DefaultApplicationProcessStatusDeterminer extends ApplicationProcess
     'new' => [
       'save' => 'new',
       'apply' => 'applied',
+      'update' => 'new',
     ],
     'applied' => [
       'modify' => 'draft',
       'withdraw' => 'withdrawn',
       'review' => 'review',
+      'update' => 'applied',
     ],
     'review' => [
-      // @todo When do we switch to "approved"?
-      'approve-calculative' => 'review',
-      'approve-content' => 'review',
-      // @todo When do we switch to "draft", when to "rejected"?
-      'reject-calculative' => 'draft',
-      'reject-content' => 'draft',
+      'set-calculative-review-result' => 'review',
+      'set-content-review-result' => 'review',
+      'request-change' => 'draft',
+      'approve' => 'approved',
+      'reject' => 'rejected',
+      'update' => 'review',
     ],
     'draft' => [
       'save' => 'draft',
       'apply' => 'applied',
       'withdraw' => 'withdrawn',
-    ],
-    'pre-approved' => [
-      'approve' => 'approved',
-      'reject' => 'draft',
+      'update' => 'draft',
     ],
   ];
 

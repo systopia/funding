@@ -85,7 +85,7 @@ final class ApplicationFormSubmitHandler implements ApplicationFormSubmitHandler
     }
 
     $applicationProcess->setStatus(
-      $this->statusDeterminer->getStatus($applicationProcess->getStatus(), $validatedData->getAction())
+      $this->statusDeterminer->getStatus($applicationProcess->getFullStatus(), $validatedData->getAction())
     );
     if (FALSE === $jsonSchema->getKeywordValueOrDefault('readOnly', FALSE)) {
       $applicationProcess->setTitle($validatedData->getTitle());

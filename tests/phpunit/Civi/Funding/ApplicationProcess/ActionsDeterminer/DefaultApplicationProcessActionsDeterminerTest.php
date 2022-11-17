@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
+use Civi\Funding\Entity\FullApplicationProcessStatus;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -42,37 +43,61 @@ final class DefaultApplicationProcessActionsDeterminerTest extends TestCase {
       'application_modify' => ['save'],
       'application_apply' => ['apply'],
       'application_withdraw' => ['delete'],
-      'review_calculative' => [],
-      'review_content' => [],
+      'review_calculative' => ['update'],
+      'review_content' => ['update'],
     ],
     'applied' => [
       'application_create' => [],
       'application_modify' => ['modify'],
       'application_apply' => [],
       'application_withdraw' => ['withdraw'],
-      'review_calculative' => ['review'],
-      'review_content' => ['review'],
+      'review_calculative' => ['review', 'update'],
+      'review_content' => ['review', 'update'],
     ],
     'review' => [
       'application_create' => [],
       'application_modify' => [],
       'application_apply' => [],
       'application_withdraw' => [],
-      'review_calculative' => ['approve-calculative', 'reject-calculative'],
-      'review_content' => ['approve-content', 'reject-content'],
+      'review_calculative' => ['set-calculative-review-result', 'request-change', 'update'],
+      'review_content' => ['set-content-review-result', 'request-change', 'update'],
     ],
     'draft' => [
       'application_create' => [],
       'application_modify' => ['save'],
       'application_apply' => ['apply'],
       'application_withdraw' => ['withdraw'],
+      'review_calculative' => ['update'],
+      'review_content' => ['update'],
+    ],
+    'approved' => [
+      'application_create' => [],
+      'application_modify' => [],
+      'application_apply' => [],
+      'application_withdraw' => [],
+      'review_calculative' => ['update'],
+      'review_content' => ['update'],
+    ],
+    'withdrawn' => [
+      'application_create' => [],
+      'application_modify' => [],
+      'application_apply' => [],
+      'application_withdraw' => [],
       'review_calculative' => [],
       'review_content' => [],
     ],
-    'pre-approved' => [
+    'rejected' => [
       'application_create' => [],
       'application_modify' => [],
-      'application_apply' => ['approve', 'reject'],
+      'application_apply' => [],
+      'application_withdraw' => [],
+      'review_calculative' => [],
+      'review_content' => [],
+    ],
+    'final' => [
+      'application_create' => [],
+      'application_modify' => [],
+      'application_apply' => [],
       'application_withdraw' => [],
       'review_calculative' => [],
       'review_content' => [],
@@ -88,10 +113,11 @@ final class DefaultApplicationProcessActionsDeterminerTest extends TestCase {
 
   public function testGetActions(): void {
     foreach (self::STATUS_PERMISSION_ACTIONS_MAP as $status => $permissionActionsMap) {
+      $fullStatus = new FullApplicationProcessStatus($status, NULL, NULL);
       foreach ($permissionActionsMap as $permission => $actions) {
         static::assertSame(
           $actions,
-          $this->actionsDeterminer->getActions($status, [$permission]),
+          $this->actionsDeterminer->getActions($fullStatus, [$permission]),
           sprintf('Status: %s, permission: %s', $status, $permission)
         );
       }
@@ -100,13 +126,54 @@ final class DefaultApplicationProcessActionsDeterminerTest extends TestCase {
 
   public function testGetActionsAll(): void {
     foreach (self::STATUS_PERMISSION_ACTIONS_MAP as $status => $permissionActionsMap) {
+      $fullStatus = new FullApplicationProcessStatus($status, NULL, NULL);
       $actions = array_unique(array_merge(...array_values($permissionActionsMap)));
       $permissions = array_keys($permissionActionsMap);
       static::assertEquals(
         $actions,
-        $this->actionsDeterminer->getActions($status, $permissions),
+        $this->actionsDeterminer->getActions($fullStatus, $permissions),
         sprintf('Status: %s, permissions: %s', $status, var_export($permissions, TRUE))
       );
+    }
+  }
+
+  public function testGetActionsApprove(): void {
+    foreach (['review_calculative', 'review_content'] as $permission) {
+      $fullStatus = new FullApplicationProcessStatus('final', TRUE, TRUE);
+      static::assertSame([], $this->actionsDeterminer->getActions($fullStatus, [$permission]));
+
+      $actions = self::STATUS_PERMISSION_ACTIONS_MAP['review'][$permission];
+      $fullStatus = new FullApplicationProcessStatus('review', TRUE, NULL);
+      static::assertEquals($actions, $this->actionsDeterminer->getActions($fullStatus, [$permission]));
+      $fullStatus = new FullApplicationProcessStatus('review', NULL, TRUE);
+      static::assertEquals($actions, $this->actionsDeterminer->getActions($fullStatus, [$permission]));
+
+      $actions[] = 'approve';
+      $fullStatus = new FullApplicationProcessStatus('review', TRUE, TRUE);
+      static::assertEquals($actions, $this->actionsDeterminer->getActions($fullStatus, [$permission]));
+    }
+  }
+
+  public function testGetActionsReject(): void {
+    foreach (['review_calculative', 'review_content'] as $permission) {
+      $fullStatus = new FullApplicationProcessStatus('final', FALSE, FALSE);
+      static::assertSame([], $this->actionsDeterminer->getActions($fullStatus, [$permission]));
+
+      $actions = self::STATUS_PERMISSION_ACTIONS_MAP['review'][$permission];
+      $fullStatus = new FullApplicationProcessStatus('review', NULL, NULL);
+      static::assertEquals($actions, $this->actionsDeterminer->getActions($fullStatus, [$permission]));
+
+      $actions[] = 'reject';
+      $fullStatus = new FullApplicationProcessStatus('review', FALSE, FALSE);
+      static::assertEquals($actions, $this->actionsDeterminer->getActions($fullStatus, [$permission]));
+      $fullStatus = new FullApplicationProcessStatus('review', NULL, FALSE);
+      static::assertEquals($actions, $this->actionsDeterminer->getActions($fullStatus, [$permission]));
+      $fullStatus = new FullApplicationProcessStatus('review', TRUE, FALSE);
+      static::assertEquals($actions, $this->actionsDeterminer->getActions($fullStatus, [$permission]));
+      $fullStatus = new FullApplicationProcessStatus('review', FALSE, TRUE);
+      static::assertEquals($actions, $this->actionsDeterminer->getActions($fullStatus, [$permission]));
+      $fullStatus = new FullApplicationProcessStatus('review', FALSE, NULL);
+      static::assertEquals($actions, $this->actionsDeterminer->getActions($fullStatus, [$permission]));
     }
   }
 
@@ -123,19 +190,22 @@ final class DefaultApplicationProcessActionsDeterminerTest extends TestCase {
   }
 
   public function testIsActionAllowed(): void {
-    static::assertTrue($this->actionsDeterminer->isActionAllowed('save', 'new', ['application_modify']));
-    static::assertFalse($this->actionsDeterminer->isActionAllowed('apply', 'new', ['application_modify']));
+    $fullStatus = new FullApplicationProcessStatus('new', NULL, NULL);
+    static::assertTrue($this->actionsDeterminer->isActionAllowed('save', $fullStatus, ['application_modify']));
+    static::assertFalse($this->actionsDeterminer->isActionAllowed('apply', $fullStatus, ['application_modify']));
 
-    static::assertTrue($this->actionsDeterminer->isActionAllowed('apply', 'new', ['application_apply']));
-    static::assertFalse($this->actionsDeterminer->isActionAllowed('save', 'draft', ['application_apply']));
+    static::assertTrue($this->actionsDeterminer->isActionAllowed('apply', $fullStatus, ['application_apply']));
+    $fullStatus = new FullApplicationProcessStatus('draft', NULL, NULL);
+    static::assertFalse($this->actionsDeterminer->isActionAllowed('save', $fullStatus, ['application_apply']));
   }
 
   public function testIsEditAllowed(): void {
     foreach (self::STATUS_PERMISSION_ACTIONS_MAP as $status => $permissionActionsMap) {
+      $fullStatus = new FullApplicationProcessStatus($status, NULL, NULL);
       foreach ($permissionActionsMap as $permission => $actions) {
         static::assertSame(
           in_array('save', $actions, TRUE) || in_array('apply', $actions, TRUE),
-          $this->actionsDeterminer->isEditAllowed($status, [$permission])
+          $this->actionsDeterminer->isEditAllowed($fullStatus, [$permission])
         );
       }
     }

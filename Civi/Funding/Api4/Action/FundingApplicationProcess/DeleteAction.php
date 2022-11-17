@@ -112,7 +112,7 @@ final class DeleteAction extends AbstractBatchAction {
   private function isDeleteAllowed(ApplicationProcessEntity $applicationProcess, FundingCaseEntity $fundingCase): bool {
     return $this->actionsDeterminer->isActionAllowed(
       'delete',
-      $applicationProcess->getStatus(),
+      $applicationProcess->getFullStatus(),
       $fundingCase->getPermissions(),
     );
   }

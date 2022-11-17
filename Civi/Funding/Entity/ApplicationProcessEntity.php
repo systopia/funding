@@ -191,6 +191,14 @@ final class ApplicationProcessEntity extends AbstractEntity {
     return $this;
   }
 
+  public function getFullStatus(): FullApplicationProcessStatus {
+    return new FullApplicationProcessStatus(
+      $this->getStatus(),
+      $this->getIsReviewCalculative(),
+      $this->getIsReviewContent()
+    );
+  }
+
   /**
    * On create CiviCRM returns a different date format than on get. This method
    * reformats the dates in $values so that they are as on get.

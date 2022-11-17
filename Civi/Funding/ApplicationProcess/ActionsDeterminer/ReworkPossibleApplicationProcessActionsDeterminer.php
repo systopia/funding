@@ -19,28 +19,36 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
+use Civi\Funding\Entity\FullApplicationProcessStatus;
+
 final class ReworkPossibleApplicationProcessActionsDeterminer extends ApplicationProcessActionsDeterminer {
 
   private const STATUS_PERMISSIONS_ACTION_MAP = [
     'approved' => [
       'application_request_rework' => ['request-rework'],
+      'review_calculative' => ['update'],
+      'review_content' => ['update'],
     ],
     'rework-requested' => [
       'application_request_rework' => ['withdraw-rework-request'],
-      'review_calculative' => ['approve-rework-request', 'reject-rework-request'],
-      'review_content' => ['approve-rework-request', 'reject-rework-request'],
+      'review_calculative' => ['approve-rework-request', 'reject-rework-request', 'update'],
+      'review_content' => ['approve-rework-request', 'reject-rework-request', 'update'],
     ],
     'rework' => [
       'application_apply' => ['apply'],
+      'application_modify' => ['save'],
+      'application_withdraw' => ['withdraw-change'],
+      'review_calculative' => ['update'],
+      'review_content' => ['update'],
     ],
     'rework-review-requested' => [
-      'application_request_rework' => ['request-rework'],
-      'review_calculative' => ['review'],
-      'review_content' => ['review'],
+      'application_modify' => ['request-rework'],
+      'review_calculative' => ['review', 'update'],
+      'review_content' => ['review', 'update'],
     ],
     'rework-review' => [
-      'review_calculative' => ['approve-calculative', 'reject-calculative'],
-      'review_content' => ['approve-content', 'reject-content'],
+      'review_calculative' => ['set-calculative-review-result', 'request-change', 'update'],
+      'review_content' => ['set-content-review-result', 'request-change', 'update'],
     ],
   ];
 
@@ -51,11 +59,21 @@ final class ReworkPossibleApplicationProcessActionsDeterminer extends Applicatio
     parent::__construct(self::STATUS_PERMISSIONS_ACTION_MAP);
   }
 
-  public function getActions(string $status, array $permissions): array {
-    return \array_unique(\array_merge(
+  public function getActions(FullApplicationProcessStatus $status, array $permissions): array {
+    $actions = \array_unique(\array_merge(
       parent::getActions($status, $permissions),
       $this->actionsDeterminer->getActions($status, $permissions),
     ));
+    if ('rework-review' === $status->getStatus() && $this->hasReviewPermission($permissions)) {
+      if (TRUE === $status->getIsReviewCalculative() && TRUE === $status->getIsReviewContent()) {
+        $actions[] = 'approve-change';
+      }
+      elseif (FALSE === $status->getIsReviewCalculative() || FALSE === $status->getIsReviewContent()) {
+        $actions[] = 'reject-change';
+      }
+    }
+
+    return $actions;
   }
 
   public function getInitialActions(array $permissions): array {
@@ -63,6 +81,14 @@ final class ReworkPossibleApplicationProcessActionsDeterminer extends Applicatio
       parent::getInitialActions($permissions),
       $this->actionsDeterminer->getInitialActions($permissions),
     ));
+  }
+
+  /**
+   * @phpstan-param array<string> $permissions
+   */
+  private function hasReviewPermission(array $permissions): bool {
+    return in_array('review_content', $permissions, TRUE)
+      || in_array('review_calculative', $permissions, TRUE);
   }
 
 }
