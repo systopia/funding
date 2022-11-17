@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\StatusDeterminer;
 
+use Civi\Funding\Entity\FullApplicationProcessStatus;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -53,17 +54,23 @@ final class ReworkPossibleApplicationProcessStatusDeterminerTest extends TestCas
    * @dataProvider provideActions
    */
   public function testGetStatus(string $currentStatus, string $action, string $expectedStatus): void {
-    static::assertSame($expectedStatus, $this->statusDeterminer->getStatus($currentStatus, $action));
+    $fullStatus = new FullApplicationProcessStatus($currentStatus, NULL, NULL);
+    static::assertSame(
+      $expectedStatus,
+      $this->statusDeterminer->getStatus($fullStatus, $action),
+      sprintf('Current status: %s, Action: %s, Expected status: %s', $currentStatus, $action, $expectedStatus)
+    );
   }
 
   /**
    * @dataProvider provideActions
    */
   public function testGetStatusDecorated(): void {
+    $fullStatus = new FullApplicationProcessStatus('foo', NULL, NULL);
     $this->decoratedStatusDeterminerMock->method('getStatus')
-      ->with('foo', 'action')
+      ->with($fullStatus, 'action')
       ->willReturn('bar');
-    static::assertSame('bar', $this->statusDeterminer->getStatus('foo', 'action'));
+    static::assertSame('bar', $this->statusDeterminer->getStatus($fullStatus, 'action'));
   }
 
   /**
@@ -74,13 +81,18 @@ final class ReworkPossibleApplicationProcessStatusDeterminerTest extends TestCas
     yield ['rework-requested', 'withdraw-rework-request', 'approved'];
     yield ['rework-requested', 'approve-rework-request', 'rework'];
     yield ['rework-requested', 'reject-rework-request', 'approved'];
+    yield ['rework-requested', 'update', 'rework-requested'];
+    yield ['rework', 'save', 'rework'];
     yield ['rework', 'apply', 'rework-review-requested'];
+    yield ['rework', 'withdraw-change', 'applied'];
+    yield ['rework', 'update', 'rework'];
     yield ['rework-review-requested', 'request-rework', 'rework'];
     yield ['rework-review-requested', 'review', 'rework-review'];
-    yield ['rework-review', 'approve-calculative', 'rework-review'];
-    yield ['rework-review', 'approve-content', 'rework-review'];
-    yield ['rework-review', 'reject-calculative', 'rework'];
-    yield ['rework-review', 'reject-content', 'rework'];
+    yield ['rework-review', 'set-calculative-review-result', 'rework-review'];
+    yield ['rework-review', 'set-content-review-result', 'rework-review'];
+    yield ['rework-review', 'request-change', 'rework'];
+    yield ['rework-review', 'approve-change', 'approved'];
+    yield ['rework-review', 'reject-change', 'approved'];
   }
 
 }

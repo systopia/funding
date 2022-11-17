@@ -19,30 +19,40 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\StatusDeterminer;
 
+use Civi\Funding\Entity\FullApplicationProcessStatus;
+
 final class ReworkPossibleApplicationProcessStatusDeterminer implements ApplicationProcessStatusDeterminerInterface {
 
   private const STATUS_ACTION_STATUS_MAP = [
     'approved' => [
       'request-rework' => 'rework-requested',
+      'update' => 'approved',
     ],
     'rework-requested' => [
       'withdraw-rework-request' => 'approved',
       'approve-rework-request' => 'rework',
       'reject-rework-request' => 'approved',
+      'update' => 'rework-requested',
     ],
     'rework' => [
+      'save' => 'rework',
       'apply' => 'rework-review-requested',
+      'withdraw-change' => 'applied',
+      'revert-change' => 'applied',
+      'update' => 'rework',
     ],
     'rework-review-requested' => [
       'request-rework' => 'rework',
       'review' => 'rework-review',
+      'update' => 'rework-review-requested',
     ],
     'rework-review' => [
-      // @todo When to switch to "approved"
-      'approve-calculative' => 'rework-review',
-      'approve-content' => 'rework-review',
-      'reject-calculative' => 'rework',
-      'reject-content' => 'rework',
+      'set-calculative-review-result' => 'rework-review',
+      'set-content-review-result' => 'rework-review',
+      'request-change' => 'rework',
+      'approve-change' => 'approved',
+      'reject-change' => 'approved',
+      'update' => 'rework-review',
     ],
   ];
 
@@ -56,8 +66,8 @@ final class ReworkPossibleApplicationProcessStatusDeterminer implements Applicat
     return $this->statusDeterminer->getInitialStatus($action);
   }
 
-  public function getStatus(string $currentStatus, string $action): string {
-    return self::STATUS_ACTION_STATUS_MAP[$currentStatus][$action]
+  public function getStatus(FullApplicationProcessStatus $currentStatus, string $action): string {
+    return self::STATUS_ACTION_STATUS_MAP[$currentStatus->getStatus()][$action]
       ?? $this->statusDeterminer->getStatus($currentStatus, $action);
   }
 

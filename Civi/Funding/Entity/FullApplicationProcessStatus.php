@@ -17,17 +17,32 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\ApplicationProcess\StatusDeterminer;
+namespace Civi\Funding\Entity;
 
-use Civi\Funding\Entity\FullApplicationProcessStatus;
+final class FullApplicationProcessStatus {
 
-/**
- * Determines the status of an application process for a given action.
- */
-interface ApplicationProcessStatusDeterminerInterface {
+  private string $status;
 
-  public function getInitialStatus(string $action): string;
+  private ?bool $isReviewCalculative;
 
-  public function getStatus(FullApplicationProcessStatus $currentStatus, string $action): string;
+  private ?bool $isReviewContent;
+
+  public function __construct(string $status, ?bool $isReviewCalculative, ?bool $isReviewContent) {
+    $this->status = $status;
+    $this->isReviewCalculative = $isReviewCalculative;
+    $this->isReviewContent = $isReviewContent;
+  }
+
+  public function getStatus(): string {
+    return $this->status;
+  }
+
+  public function getIsReviewCalculative(): ?bool {
+    return $this->isReviewCalculative;
+  }
+
+  public function getIsReviewContent(): ?bool {
+    return $this->isReviewContent;
+  }
 
 }

@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\StatusDeterminer;
 
+use Civi\Funding\Entity\FullApplicationProcessStatus;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -59,7 +60,12 @@ final class DefaultApplicationProcessStatusDeterminerTest extends TestCase {
    * @dataProvider provideActions
    */
   public function testGetStatus(string $currentStatus, string $action, string $expectedStatus): void {
-    static::assertSame($expectedStatus, $this->statusDeterminer->getStatus($currentStatus, $action));
+    $fullStatus = new FullApplicationProcessStatus($currentStatus, NULL, NULL);
+    static::assertSame(
+      $expectedStatus,
+      $this->statusDeterminer->getStatus($fullStatus, $action),
+      sprintf('Current status: %s, Action: %s, Expected status: %s', $currentStatus, $action, $expectedStatus)
+    );
   }
 
   /**
@@ -68,26 +74,42 @@ final class DefaultApplicationProcessStatusDeterminerTest extends TestCase {
   public function provideActions(): iterable {
     yield ['new', 'save', 'new'];
     yield ['new', 'apply', 'applied'];
+    yield ['new', 'update', 'new'];
     yield ['applied', 'modify', 'draft'];
     yield ['applied', 'withdraw', 'withdrawn'];
     yield ['applied', 'review', 'review'];
+    yield ['applied', 'update', 'applied'];
     yield ['draft', 'save', 'draft'];
     yield ['draft', 'apply', 'applied'];
     yield ['draft', 'withdraw', 'withdrawn'];
-    yield ['review', 'approve-calculative', 'review'];
-    yield ['review', 'approve-content', 'review'];
-    yield ['review', 'reject-calculative', 'draft'];
-    yield ['review', 'reject-content', 'draft'];
-    yield ['pre-approved', 'approve', 'approved'];
-    yield ['pre-approved', 'reject', 'draft'];
+    yield ['draft', 'update', 'draft'];
+    yield ['review', 'set-calculative-review-result', 'review'];
+    yield ['review', 'set-calculative-review-result', 'review'];
+    yield ['review', 'request-change', 'draft'];
+    yield ['review', 'approve', 'approved'];
+    yield ['review', 'reject', 'rejected'];
+    yield ['review', 'update', 'review'];
   }
 
-  public function testGetStatusInvalid(): void {
+  /**
+   * @dataProvider provideFinalStatus
+   */
+  public function testGetStatusFinal(FullApplicationProcessStatus $fullCurrentStatus): void {
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage(
-      'Could not determine application process status for action "action" and current status "status"'
-    );
-    $this->statusDeterminer->getStatus('status', 'action');
+    $this->expectExceptionMessage(sprintf(
+      'Could not determine application process status for action "update" and current status "%s"',
+      $fullCurrentStatus->getStatus(),
+    ));
+    $this->statusDeterminer->getStatus($fullCurrentStatus, 'update');
+  }
+
+  /**
+   * @phpstan-return iterable<array{FullApplicationProcessStatus}>
+   */
+  public function provideFinalStatus(): iterable {
+    yield [new FullApplicationProcessStatus('withdrawn', NULL, NULL)];
+    yield [new FullApplicationProcessStatus('rejected', FALSE, NULL)];
+    yield [new FullApplicationProcessStatus('final', TRUE, TRUE)];
   }
 
 }

@@ -50,7 +50,7 @@ final class AVK1UiSchemaFactory implements ApplicationUiSchemaFactoryInterface {
   ): JsonFormsElement {
     $submitButtons = JsonFormsSubmitButtonsFactory::createButtons(
       $this->submitActionsFactory->createSubmitActions(
-        $applicationProcess->getStatus(),
+        $applicationProcess->getFullStatus(),
         $fundingCase->getPermissions()
       )
     );
@@ -59,7 +59,7 @@ final class AVK1UiSchemaFactory implements ApplicationUiSchemaFactoryInterface {
     $uiSchema = new AVK1UiSchema($fundingProgram->getCurrency(), $submitButtons, $hiddenFields);
 
     if (!$this->submitActionsFactory->isEditAllowed(
-      $applicationProcess->getStatus(),
+      $applicationProcess->getFullStatus(),
       $fundingCase->getPermissions()
     )) {
       $uiSchema->setReadonly(TRUE);

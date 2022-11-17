@@ -91,7 +91,7 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
     $this->mockCreateValidatedData($command, $validationResult, $validatedData);
 
     $this->statusDeterminerMock->method('getStatus')
-      ->with($command->getApplicationProcess()->getStatus(), ValidatedApplicationDataMock::ACTION)
+      ->with($command->getApplicationProcess()->getFullStatus(), ValidatedApplicationDataMock::ACTION)
       ->willReturn('new_status');
 
     $this->applicationProcessManagerMock->expects(static::once())->method('update')
@@ -127,7 +127,7 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
     $this->mockCreateValidatedData($command, $validationResult, $validatedData);
 
     $this->statusDeterminerMock->method('getStatus')
-      ->with($command->getApplicationProcess()->getStatus(), 'modify')
+      ->with($command->getApplicationProcess()->getFullStatus(), 'modify')
       ->willReturn('new_status');
 
     $this->applicationProcessManagerMock->expects(static::once())->method('update')

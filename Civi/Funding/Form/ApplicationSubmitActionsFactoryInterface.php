@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form;
 
+use Civi\Funding\Entity\FullApplicationProcessStatus;
+
 interface ApplicationSubmitActionsFactoryInterface {
 
   /**
@@ -35,7 +37,7 @@ interface ApplicationSubmitActionsFactoryInterface {
    * @phpstan-return array<string, array{label: string, confirm: string|null}>
    *   Map of action names to button labels and confirm messages.
    */
-  public function createSubmitActions(string $status, array $permissions): array;
+  public function createSubmitActions(FullApplicationProcessStatus $status, array $permissions): array;
 
   /**
    * @phpstan-param array<string> $permissions
@@ -44,6 +46,6 @@ interface ApplicationSubmitActionsFactoryInterface {
    *   true if an action that allows to edit the application details is
    *   available.
    */
-  public function isEditAllowed(string $status, array $permissions): bool;
+  public function isEditAllowed(FullApplicationProcessStatus $status, array $permissions): bool;
 
 }

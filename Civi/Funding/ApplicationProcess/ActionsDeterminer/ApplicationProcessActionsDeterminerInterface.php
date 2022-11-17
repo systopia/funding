@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
+use Civi\Funding\Entity\FullApplicationProcessStatus;
+
 interface ApplicationProcessActionsDeterminerInterface {
 
   /**
@@ -26,7 +28,7 @@ interface ApplicationProcessActionsDeterminerInterface {
    *
    * @phpstan-return array<string>
    */
-  public function getActions(string $status, array $permissions): array;
+  public function getActions(FullApplicationProcessStatus $status, array $permissions): array;
 
   /**
    * @phpstan-param array<string> $permissions
@@ -38,7 +40,7 @@ interface ApplicationProcessActionsDeterminerInterface {
   /**
    * @phpstan-param array<string> $permissions
    */
-  public function isActionAllowed(string $action, string $status, array $permissions): bool;
+  public function isActionAllowed(string $action, FullApplicationProcessStatus $status, array $permissions): bool;
 
   /**
    * @phpstan-param array<string> $permissions
@@ -47,6 +49,6 @@ interface ApplicationProcessActionsDeterminerInterface {
    *   true if an action that allows to edit the application details is
    *   available.
    */
-  public function isEditAllowed(string $status, array $permissions): bool;
+  public function isEditAllowed(FullApplicationProcessStatus $status, array $permissions): bool;
 
 }

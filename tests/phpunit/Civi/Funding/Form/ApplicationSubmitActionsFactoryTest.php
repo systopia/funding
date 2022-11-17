@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Form;
 
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerInterface;
+use Civi\Funding\Entity\FullApplicationProcessStatus;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -51,11 +52,12 @@ final class ApplicationSubmitActionsFactoryTest extends TestCase {
     $this->submitActionsContainer->add('test1', 'Test1');
     $this->submitActionsContainer->add('test2', 'Test2');
     $this->submitActionsContainer->add('test3', 'Test3', 'Really?');
+    $fullStatus = new FullApplicationProcessStatus('test', NULL, NULL);
     $this->actionsDeterminerMock->expects(static::once())->method('getActions')
-      ->with('test', ['permission'])
+      ->with($fullStatus, ['permission'])
       ->willReturn(['test3', 'test1']);
 
-    $submitActions = $this->submitActionsFactory->createSubmitActions('test', ['permission']);
+    $submitActions = $this->submitActionsFactory->createSubmitActions($fullStatus, ['permission']);
     // "test1" must be first
     static::assertSame([
       'test1' => ['label' => 'Test1', 'confirm' => NULL],
@@ -65,13 +67,14 @@ final class ApplicationSubmitActionsFactoryTest extends TestCase {
 
   public function testCreateSubmitActionsUnknownAction(): void {
     $this->submitActionsContainer->add('test1', 'Test1');
+    $fullStatus = new FullApplicationProcessStatus('test', NULL, NULL);
     $this->actionsDeterminerMock->expects(static::once())->method('getActions')
-      ->with('test', ['permission'])
+      ->with($fullStatus, ['permission'])
       ->willReturn(['test2']);
 
     $this->expectException(\RuntimeException::class);
     $this->expectExceptionMessage('Unknown action "test2"');
-    $this->submitActionsFactory->createSubmitActions('test', ['permission']);
+    $this->submitActionsFactory->createSubmitActions($fullStatus, ['permission']);
   }
 
   public function testCreateInitialSubmitActions(): void {
@@ -102,11 +105,12 @@ final class ApplicationSubmitActionsFactoryTest extends TestCase {
   }
 
   public function testIsEditAllowed(): void {
+    $fullStatus = new FullApplicationProcessStatus('test', NULL, NULL);
     $this->actionsDeterminerMock->expects(static::once())->method('isEditAllowed')
-      ->with('status', ['permission'])
+      ->with($fullStatus, ['permission'])
       ->willReturn(TRUE);
 
-    static::assertTrue($this->submitActionsFactory->isEditAllowed('status', ['permission']));
+    static::assertTrue($this->submitActionsFactory->isEditAllowed($fullStatus, ['permission']));
   }
 
 }

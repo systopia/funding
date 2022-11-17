@@ -78,7 +78,7 @@ class AVK1JsonSchemaFactory implements ApplicationJsonSchemaFactoryInterface {
     FundingCaseTypeEntity $fundingCaseType
   ): JsonSchema {
     $submitActions = $this->actionsDeterminer->getActions(
-      $applicationProcess->getStatus(),
+      $applicationProcess->getFullStatus(),
       $fundingCase->getPermissions()
     );
     $extraProperties = [
@@ -96,7 +96,10 @@ class AVK1JsonSchemaFactory implements ApplicationJsonSchemaFactoryInterface {
     );
 
     // The readOnly keyword is not inherited, though we use it for informational purposes.
-    if (!$this->actionsDeterminer->isEditAllowed($applicationProcess->getStatus(), $fundingCase->getPermissions())) {
+    if (!$this->actionsDeterminer->isEditAllowed(
+      $applicationProcess->getFullStatus(),
+      $fundingCase->getPermissions()
+    )) {
       $jsonSchema->addKeyword('readOnly', TRUE);
     }
 
