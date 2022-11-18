@@ -41,8 +41,8 @@ final class ApplicationFormNewValidateHandler implements ApplicationFormNewValid
   public function handle(ApplicationFormNewValidateCommand $command): ApplicationFormValidateResult {
     $jsonSchema = $this->jsonSchemaFactory->createJsonSchemaInitial(
       $command->getContactId(),
-      $command->getFundingProgram(),
       $command->getFundingCaseType(),
+      $command->getFundingProgram(),
     );
     $validationResult = $this->validator->validate($jsonSchema, $command->getData(), 20);
 

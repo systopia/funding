@@ -41,9 +41,9 @@ final class ApplicationFormValidateHandler implements ApplicationFormValidateHan
   public function handle(ApplicationFormValidateCommand $command): ApplicationFormValidateResult {
     $jsonSchema = $this->jsonSchemaFactory->createJsonSchemaExisting(
       $command->getApplicationProcess(),
-      $command->getFundingProgram(),
       $command->getFundingCase(),
       $command->getFundingCaseType(),
+      $command->getFundingProgram(),
     );
     $validationResult = $this->validator->validate($jsonSchema, $command->getData(), 20);
 

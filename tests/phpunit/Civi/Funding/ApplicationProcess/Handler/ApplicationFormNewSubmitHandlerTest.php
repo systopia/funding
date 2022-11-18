@@ -155,8 +155,8 @@ final class ApplicationFormNewSubmitHandlerTest extends TestCase {
   private function createCommand(): ApplicationFormNewSubmitCommand {
     return new ApplicationFormNewSubmitCommand(
       1,
-      FundingProgramFactory::createFundingProgram(),
       FundingCaseTypeFactory::createFundingCaseType(),
+      FundingProgramFactory::createFundingProgram(),
       ['test' => 'foo'],
     );
   }
@@ -165,8 +165,8 @@ final class ApplicationFormNewSubmitHandlerTest extends TestCase {
     $this->jsonSchemaFactoryMock->expects(static::once())->method('createJsonSchemaInitial')
       ->with(
         $command->getContactId(),
-        $command->getFundingProgram(),
         $command->getFundingCaseType(),
+        $command->getFundingProgram(),
       )->willReturn($jsonSchema);
   }
 

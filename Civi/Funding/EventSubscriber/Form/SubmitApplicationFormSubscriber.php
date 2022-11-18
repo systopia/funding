@@ -65,9 +65,9 @@ class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
     $command = new ApplicationFormSubmitCommand(
       $event->getContactId(),
       $event->getApplicationProcess(),
-      $event->getFundingProgram(),
       $event->getFundingCase(),
       $event->getFundingCaseType(),
+      $event->getFundingProgram(),
       $event->getData()
     );
 
@@ -99,8 +99,8 @@ class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
   public function onSubmitNewForm(SubmitNewApplicationFormEvent $event): void {
     $command = new ApplicationFormNewSubmitCommand(
       $event->getContactId(),
-      $event->getFundingProgram(),
       $event->getFundingCaseType(),
+      $event->getFundingProgram(),
       $event->getData()
     );
 

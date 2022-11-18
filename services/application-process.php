@@ -23,6 +23,8 @@ declare(strict_types = 1);
 use Civi\Funding\Api4\Action\FundingApplicationProcess\CreateAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\DeleteAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\GetAction;
+use Civi\Funding\Api4\Action\FundingApplicationProcess\GetFormDataAction;
+use Civi\Funding\Api4\Action\FundingApplicationProcess\GetJsonSchemaAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\SaveAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\UpdateAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetFormAction;
@@ -43,6 +45,7 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewSubmitHandlerInter
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewValidateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationJsonSchemaGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormCreateHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormDataGetHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormNewCreateHandler;
@@ -50,6 +53,7 @@ use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormNewSubmitHandl
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormNewValidateHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormSubmitHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormValidateHandler;
+use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationJsonSchemaGetHandler;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\DefaultApplicationProcessStatusDeterminer;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ReworkPossibleApplicationProcessStatusDeterminer;
@@ -74,6 +78,7 @@ $container->autowire(ApplicationFormDataGetHandlerInterface::class, DefaultAppli
 $container->autowire(ApplicationFormCreateHandlerInterface::class, DefaultApplicationFormCreateHandler::class);
 $container->autowire(ApplicationFormValidateHandlerInterface::class, DefaultApplicationFormValidateHandler::class);
 $container->autowire(ApplicationFormSubmitHandlerInterface::class, DefaultApplicationFormSubmitHandler::class);
+$container->autowire(ApplicationJsonSchemaGetHandlerInterface::class, DefaultApplicationJsonSchemaGetHandler::class);
 
 $container->autowire(CreateAction::class)
   ->setPublic(TRUE)
@@ -88,6 +93,19 @@ $container->autowire(SaveAction::class)
   ->setPublic(TRUE)
   ->setShared(FALSE);
 $container->autowire(UpdateAction::class)
+  ->setPublic(TRUE)
+  ->setShared(FALSE);
+
+$container->autowire(GetFormDataAction::class)
+  ->setPublic(TRUE)
+  ->setShared(FALSE);
+$container->autowire(\Civi\Funding\Api4\Action\FundingApplicationProcess\SubmitFormAction::class)
+  ->setPublic(TRUE)
+  ->setShared(FALSE);
+$container->autowire(\Civi\Funding\Api4\Action\FundingApplicationProcess\ValidateFormAction::class)
+  ->setPublic(TRUE)
+  ->setShared(FALSE);
+$container->autowire(GetJsonSchemaAction::class)
   ->setPublic(TRUE)
   ->setShared(FALSE);
 

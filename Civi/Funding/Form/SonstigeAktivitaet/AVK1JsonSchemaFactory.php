@@ -73,14 +73,18 @@ class AVK1JsonSchemaFactory implements ApplicationJsonSchemaFactoryInterface {
 
   public function createJsonSchemaExisting(
     ApplicationProcessEntity $applicationProcess,
-    FundingProgramEntity $fundingProgram,
     FundingCaseEntity $fundingCase,
-    FundingCaseTypeEntity $fundingCaseType
+    FundingCaseTypeEntity $fundingCaseType,
+    FundingProgramEntity $fundingProgram
   ): JsonSchema {
     $submitActions = $this->actionsDeterminer->getActions(
       $applicationProcess->getFullStatus(),
       $fundingCase->getPermissions()
     );
+    if ([] === $submitActions) {
+      // empty array is not allowed as enum
+      $submitActions = [NULL];
+    }
     $extraProperties = [
       'applicationProcessId' => new JsonSchemaInteger(['const' => $applicationProcess->getId(), 'readOnly' => TRUE]),
       'action' => new JsonSchemaString(['enum' => $submitActions]),
@@ -108,8 +112,8 @@ class AVK1JsonSchemaFactory implements ApplicationJsonSchemaFactoryInterface {
 
   public function createJsonSchemaInitial(
     int $contactId,
-    FundingProgramEntity $fundingProgram,
-    FundingCaseTypeEntity $fundingCaseType
+    FundingCaseTypeEntity $fundingCaseType,
+    FundingProgramEntity $fundingProgram
   ): JsonSchema {
     $submitActions = $this->actionsDeterminer->getInitialActions($fundingProgram->getPermissions());
     $extraProperties = [

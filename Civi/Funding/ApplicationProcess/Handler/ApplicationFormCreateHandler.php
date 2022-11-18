@@ -21,36 +21,36 @@ namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormCreateCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormDataGetCommand;
-use Civi\Funding\Form\ApplicationJsonSchemaFactoryInterface;
+use Civi\Funding\ApplicationProcess\Command\ApplicationJsonSchemaGetCommand;
 use Civi\Funding\Form\ApplicationUiSchemaFactoryInterface;
 use Civi\RemoteTools\Form\RemoteForm;
 use Civi\RemoteTools\Form\RemoteFormInterface;
 
 final class ApplicationFormCreateHandler implements ApplicationFormCreateHandlerInterface {
 
-  private ApplicationJsonSchemaFactoryInterface $jsonSchemaFactory;
+  private ApplicationJsonSchemaGetHandlerInterface $jsonSchemaGetHandler;
 
   private ApplicationUiSchemaFactoryInterface $uiSchemaFactory;
 
   private ApplicationFormDataGetHandlerInterface $dataGetHandler;
 
   public function __construct(
-    ApplicationJsonSchemaFactoryInterface $jsonSchemaFactory,
+    ApplicationJsonSchemaGetHandlerInterface $jsonSchemaGetHandler,
     ApplicationUiSchemaFactoryInterface $uiSchemaFactory,
     ApplicationFormDataGetHandlerInterface $dataGetHandler
   ) {
-    $this->jsonSchemaFactory = $jsonSchemaFactory;
+    $this->jsonSchemaGetHandler = $jsonSchemaGetHandler;
     $this->uiSchemaFactory = $uiSchemaFactory;
     $this->dataGetHandler = $dataGetHandler;
   }
 
   public function handle(ApplicationFormCreateCommand $command): RemoteFormInterface {
-    $jsonSchema = $this->jsonSchemaFactory->createJsonSchemaExisting(
+    $jsonSchema = $this->jsonSchemaGetHandler->handle(new ApplicationJsonSchemaGetCommand(
       $command->getApplicationProcess(),
-      $command->getFundingProgram(),
       $command->getFundingCase(),
       $command->getFundingCaseType(),
-    );
+      $command->getFundingProgram(),
+    ));
     $uiSchema = $this->uiSchemaFactory->createUiSchemaExisting(
       $command->getApplicationProcess(),
       $command->getFundingProgram(),

@@ -21,12 +21,15 @@ namespace Civi\Api4;
 
 use Civi\API\Exception\UnauthorizedException;
 use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Fixtures\ApplicationProcessFixture;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
+use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
+use Civi\Funding\Form\SonstigeAktivitaet\JsonSchema\AVK1JsonSchema;
 use Civi\Funding\Util\SessionTestUtil;
 use Civi\Test;
 use Civi\Test\CiviEnvBuilder;
@@ -38,10 +41,17 @@ use PHPUnit\Framework\TestCase;
  * @covers \Civi\Api4\FundingApplicationProcess
  * @covers \Civi\Funding\Api4\Action\FundingApplicationProcess\DeleteAction
  * @covers \Civi\Funding\Api4\Action\FundingApplicationProcess\GetAction
+ * @covers \Civi\Funding\Api4\Action\FundingApplicationProcess\GetFormDataAction
+ * @covers \Civi\Funding\Api4\Action\FundingApplicationProcess\GetJsonSchemaAction
  *
  * @group headless
  */
 final class FundingApplicationProcessTest extends TestCase implements HeadlessInterface, TransactionalInterface {
+
+  /**
+   * @phpstan-ignore-next-line
+   */
+  private FundingProgramEntity $fundingProgram;
 
   public function setUpHeadless(): CiviEnvBuilder {
     return Test::headless()
@@ -105,13 +115,112 @@ final class FundingApplicationProcessTest extends TestCase implements HeadlessIn
       ->addSelect('id')->execute());
   }
 
+  public function testGetFormData(): void {
+    $contact = ContactFixture::addIndividual();
+    $fundingCase = $this->createFundingCase();
+    $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId(), [
+      'start_date' => '2022-11-15',
+      'end_date' => '2022-11-16',
+    ]);
+
+    FundingProgramContactRelationFixture::addContact(
+      $contact['id'],
+      $this->fundingProgram->getId(),
+      ['review_permission']
+    );
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['review_permission']);
+    SessionTestUtil::mockInternalRequestSession($contact['id']);
+
+    $result = FundingApplicationProcess::getFormData()
+      ->setId($applicationProcess->getId())
+      ->execute();
+
+    static::assertIsArray($result['data']);
+    static::assertSame('2022-11-15', $result['data']['beginn']);
+  }
+
+  public function testGetJsonSchema(): void {
+    $contact = ContactFixture::addIndividual();
+    $fundingCase = $this->createFundingCase();
+    $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId());
+
+    FundingProgramContactRelationFixture::addContact(
+      $contact['id'],
+      $this->fundingProgram->getId(),
+      ['review_permission']
+    );
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['review_permission']);
+    SessionTestUtil::mockInternalRequestSession($contact['id']);
+
+    $result = FundingApplicationProcess::getJsonSchema()
+      ->setId($applicationProcess->getId())
+      ->execute();
+
+    static::assertInstanceOf(AVK1JsonSchema::class, $result['jsonSchema']);
+  }
+
+  public function testSubmitForm(): void {
+    $contact = ContactFixture::addIndividual();
+    $fundingCase = $this->createFundingCase();
+    $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId(), [
+      'start_date' => '2022-11-15',
+      'end_date' => '2022-11-16',
+    ]);
+
+    FundingProgramContactRelationFixture::addContact(
+      $contact['id'],
+      $this->fundingProgram->getId(),
+      ['review_permission']
+    );
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['review_permission']);
+    SessionTestUtil::mockInternalRequestSession($contact['id']);
+
+    $result = FundingApplicationProcess::submitForm()
+      ->setId($applicationProcess->getId())
+      ->setData(['action' => 'test'])
+      ->execute();
+
+    static::assertIsArray($result['errors']);
+    static::assertNotEmpty($result['errors']['/action']);
+    static::assertNotEmpty($result['data']);
+  }
+
+  public function testValidateForm(): void {
+    $contact = ContactFixture::addIndividual();
+    $fundingCase = $this->createFundingCase();
+    $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId(), [
+      'start_date' => '2022-11-15',
+      'end_date' => '2022-11-16',
+    ]);
+
+    FundingProgramContactRelationFixture::addContact(
+      $contact['id'],
+      $this->fundingProgram->getId(),
+      ['review_permission']
+    );
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['review_permission']);
+    SessionTestUtil::mockInternalRequestSession($contact['id']);
+
+    $result = FundingApplicationProcess::validateForm()
+      ->setId($applicationProcess->getId())
+      ->setData(['action' => 'test'])
+      ->execute();
+
+    static::assertFalse($result['valid']);
+    static::assertIsArray($result['errors']);
+    static::assertNotEmpty($result['errors']['/action']);
+    static::assertNotEmpty($result['data']);
+  }
+
   private function createFundingCase(): FundingCaseEntity {
-    $fundingProgram = FundingProgramFixture::addFixture();
-    $fundingCaseType = FundingCaseTypeFixture::addFixture();
+    $this->fundingProgram = FundingProgramFixture::addFixture();
+    $fundingCaseType = FundingCaseTypeFixture::addFixture([
+      'name' => 'AVK1SonstigeAktivitaet',
+    ]);
     $recipientContact = ContactFixture::addOrganization();
 
     return FundingCaseFixture::addFixture(
-      $fundingProgram->getId(),
+      $this->fundingProgram->getId(),
       $fundingCaseType->getId(),
       $recipientContact['id'],
     );

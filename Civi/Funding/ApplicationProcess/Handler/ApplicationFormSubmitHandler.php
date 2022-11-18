@@ -53,9 +53,9 @@ final class ApplicationFormSubmitHandler implements ApplicationFormSubmitHandler
   public function handle(ApplicationFormSubmitCommand $command): ApplicationFormSubmitResult {
     $jsonSchema = $this->jsonSchemaFactory->createJsonSchemaExisting(
       $command->getApplicationProcess(),
-      $command->getFundingProgram(),
       $command->getFundingCase(),
       $command->getFundingCaseType(),
+      $command->getFundingProgram(),
     );
     $validationResult = $this->validator->validate($jsonSchema, $command->getData());
 

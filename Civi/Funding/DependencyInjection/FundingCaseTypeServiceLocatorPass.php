@@ -33,6 +33,8 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandler;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandler;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationJsonSchemaGetHandler;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationJsonSchemaGetHandlerInterface;
 use Civi\Funding\FundingCaseTypeServiceLocator;
 use Civi\Funding\FundingCaseTypeServiceLocatorContainer;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -83,6 +85,8 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
       $this->getTaggedServices($container, 'funding.application.form_validate_handler');
     $applicationFormSubmitHandlerServices =
       $this->getTaggedServices($container, 'funding.application.form_submit_handler');
+    $applicationFormJsonSchemaGetHandlerServices =
+      $this->getTaggedServices($container, 'funding.application.json_schema_get_handler');
 
     $serviceLocatorServices =
       $this->getTaggedServices($container, 'funding.case.type.service_locator');
@@ -119,6 +123,13 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         ]
       );
 
+      $applicationFormJsonSchemaGetHandlerServices[$fundingCaseType] ??= $this->createService(
+        $container,
+        $fundingCaseType,
+        ApplicationJsonSchemaGetHandler::class,
+        ['$jsonSchemaFactory' => $applicationJsonSchemaFactoryServices[$fundingCaseType]]
+      );
+
       $applicationFormValidateHandlerServices[$fundingCaseType] ??= $this->createService(
         $container,
         $fundingCaseType,
@@ -141,7 +152,7 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         $fundingCaseType,
         ApplicationFormCreateHandler::class,
         [
-          '$jsonSchemaFactory' => $applicationJsonSchemaFactoryServices[$fundingCaseType],
+          '$jsonSchemaGetHandler' => $applicationFormJsonSchemaGetHandlerServices[$fundingCaseType],
           '$uiSchemaFactory' => $applicationUiSchemaFactoryServices[$fundingCaseType],
           '$dataGetHandler' => $applicationFormDataGetHandlerServices[$fundingCaseType],
         ]
@@ -170,6 +181,8 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         ApplicationFormValidateHandlerInterface::class
         => $applicationFormValidateHandlerServices[$fundingCaseType],
         ApplicationFormSubmitHandlerInterface::class => $applicationFormSubmitHandlerServices[$fundingCaseType],
+        ApplicationJsonSchemaGetHandlerInterface::class
+        => $applicationFormJsonSchemaGetHandlerServices[$fundingCaseType],
       ];
 
       $serviceLocatorServices[$fundingCaseType] = $this->createService(

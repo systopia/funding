@@ -67,7 +67,7 @@ final class ApplicationFormNewValidateHandlerTest extends TestCase {
 
     $jsonSchema = new JsonSchema([]);
     $this->jsonSchemaFactoryMock->expects(static::once())->method('createJsonSchemaInitial')
-      ->with(1, $fundingProgram, $fundingCaseType)
+      ->with($contactId, $fundingCaseType, $fundingProgram)
       ->willReturn($jsonSchema);
 
     $data = ['foo' => 'bar'];

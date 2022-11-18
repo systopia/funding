@@ -37,6 +37,10 @@ final class FundingProgramGetPossiblePermissionsSubscriber implements EventSubsc
     $event->addPermissions([
       'application_create',
       'application_apply',
+      'application_withdraw',
+      'application_request_rework',
+      'review_calculative',
+      'review_content',
     ]);
   }
 

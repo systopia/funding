@@ -1,0 +1,5 @@
+<button ng-if="isActionAllowed($ctrl.action)" type="button"
+        ng-click="performAction($ctrl.action)"
+        ng-disabled="isActionDisabled($ctrl.action)">
+    <ng-transclude></ng-transclude>
+</button>

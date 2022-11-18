@@ -65,12 +65,12 @@ final class ApplicationFormValidateHandlerTest extends TestCase {
   public function testHandle(): void {
     $applicationProcess = ApplicationProcessFactory::createApplicationProcess();
     $fundingCase = FundingCaseFactory::createFundingCase();
-    $fundingProgram = FundingProgramFactory::createFundingProgram();
     $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
+    $fundingProgram = FundingProgramFactory::createFundingProgram();
 
     $jsonSchema = new JsonSchema([]);
     $this->jsonSchemaFactoryMock->expects(static::once())->method('createJsonSchemaExisting')
-      ->with($applicationProcess, $fundingProgram, $fundingCase, $fundingCaseType)
+      ->with($applicationProcess, $fundingCase, $fundingCaseType, $fundingProgram)
       ->willReturn($jsonSchema);
 
     $data = ['foo' => 'bar'];
@@ -85,9 +85,9 @@ final class ApplicationFormValidateHandlerTest extends TestCase {
 
     $command = new ApplicationFormValidateCommand(
       $applicationProcess,
-      $fundingProgram,
       $fundingCase,
       $fundingCaseType,
+      $fundingProgram,
       $data
     );
     $result = $this->handler->handle($command);

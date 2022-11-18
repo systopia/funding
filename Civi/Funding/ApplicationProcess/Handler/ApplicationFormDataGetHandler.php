@@ -50,14 +50,14 @@ final class ApplicationFormDataGetHandler implements ApplicationFormDataGetHandl
     $result = $this->validateHandler->handle(
       new ApplicationFormValidateCommand(
         $command->getApplicationProcess(),
-        $command->getFundingProgram(),
         $command->getFundingCase(),
         $command->getFundingCaseType(),
+        $command->getFundingProgram(),
         $data
       )
     );
 
-    return $result->getData();
+    return $result->getData() + ['applicationProcessId' => $command->getApplicationProcess()->getId()];
   }
 
 }

@@ -1,0 +1,32 @@
+<td>
+    <span ng-show="$ctrl.editAllowed">
+        <form editable-form name="{{$ctrl.formName}}"
+              onshow="onStartEdit($ctrl.form())"
+              onbeforesave="onBeforeSave($ctrl.form())"
+              onaftersave="onAfterSave($ctrl.form())"
+              oncancel="onCancelEdit($ctrl.form())"
+              onhide="onEditFinished($ctrl.form())"
+              ng-show="$ctrl.form().$visible" class="form-buttons form-inline"
+              shown="$ctrl.insertedRow() === $ctrl.row">
+            <button type="submit" ng-disabled="$ctrl.form().$waiting"
+                    class="btn btn-sm btn-primary" crm-icon="fa-check"></button>
+            <button ng-if="$ctrl.insertedRow() !== $ctrl.row"
+                    type="button" ng-disabled="$ctrl.form().$waiting"
+                    ng-click="$ctrl.form().$cancel()"
+                    class="btn btn-sm btn-default" crm-icon="fa-times"></button>
+            <button ng-if="cancelInsertAt && $ctrl.path && $ctrl.insertedRow() === $ctrl.row"
+                    type="button" ng-disabled="$ctrl.form().$waiting"
+                    ng-click="cancelInsertAt($ctrl.path, $index, $ctrl.form())"
+                    class="btn btn-sm btn-default" crm-icon="fa-times"></button>
+        </form>
+        <div ng-show="!$ctrl.form().$visible">
+            <button type="button" ng-click="$ctrl.form().$show()"
+                    class="btn btn-sm btn-primary" crm-icon="fa-edit"></button>
+            <button ng-if="removeAt && $ctrl.path && $ctrl.row"
+                    type="button"
+                    ng-click="removeAt($ctrl.path, $index)"
+                    class="btn btn-sm btn-danger" crm-icon="fa-trash"></button>
+        </div>
+        <funding-validation-errors ng-if="$ctrl.jsonPointer" errors="errors[$ctrl.jsonPointer + '/' + $index]"></funding-validation-errors>
+    </span>
+</td>

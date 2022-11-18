@@ -95,9 +95,9 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
     $command = new ApplicationFormSubmitCommand(
       $event->getContactId(),
       $event->getApplicationProcess(),
-      $event->getFundingProgram(),
       $event->getFundingCase(),
       $event->getFundingCaseType(),
+      $event->getFundingProgram(),
       $event->getData()
     );
 
@@ -130,9 +130,9 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
     $command = new ApplicationFormSubmitCommand(
       $event->getContactId(),
       $event->getApplicationProcess(),
-      $event->getFundingProgram(),
       $event->getFundingCase(),
       $event->getFundingCaseType(),
+      $event->getFundingProgram(),
       $event->getData()
     );
 
@@ -156,8 +156,8 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
     $event = $this->createSubmitNewFormEvent();
     $command = new ApplicationFormNewSubmitCommand(
       $event->getContactId(),
-      $event->getFundingProgram(),
       $event->getFundingCaseType(),
+      $event->getFundingProgram(),
       $event->getData()
     );
 
@@ -196,8 +196,8 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
     $event = $this->createSubmitNewFormEvent();
     $command = new ApplicationFormNewSubmitCommand(
       $event->getContactId(),
-      $event->getFundingProgram(),
       $event->getFundingCaseType(),
+      $event->getFundingProgram(),
       $event->getData()
     );
 
