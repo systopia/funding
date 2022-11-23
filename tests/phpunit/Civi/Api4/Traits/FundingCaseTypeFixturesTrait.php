@@ -21,9 +21,9 @@ namespace Civi\Api4\Traits;
 
 use Civi\Api4\Contact;
 use Civi\Api4\FundingCaseTypeProgram;
-use Civi\Api4\FundingProgramContactRelation;
 use Civi\Funding\Fixtures\ContactTypeFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
+use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 
 trait FundingCaseTypeFixturesTrait {
@@ -48,21 +48,19 @@ trait FundingCaseTypeFixturesTrait {
       'Permitted', 'permitted');
     $permittedContactTypeId = $permittedContactType['id'];
 
-    FundingProgramContactRelation::create()
-      ->setValues([
-        'funding_program_id' => $this->fundingProgramId,
-        'entity_table' => 'civicrm_contact_type',
-        'entity_id' => $permittedContactTypeId,
-        'permissions' => ['application_foo', 'application_bar', 'review_baz'],
-      ])->execute();
+    FundingProgramContactRelationFixture::addFixture(
+      $this->fundingProgramId,
+      'ContactType',
+      ['contactTypeId' => $permittedContactTypeId],
+      ['application_foo', 'application_bar', 'review_baz'],
+    );
 
-    FundingProgramContactRelation::create()
-      ->setValues([
-        'funding_program_id' => $this->fundingProgramIdWithoutFundingCaseType,
-        'entity_table' => 'civicrm_contact_type',
-        'entity_id' => $permittedContactTypeId,
-        'permissions' => ['application_foo', 'application_bar', 'review_baz'],
-      ])->execute();
+    FundingProgramContactRelationFixture::addFixture(
+      $this->fundingProgramIdWithoutFundingCaseType,
+      'ContactType',
+      ['contactTypeId' => $permittedContactTypeId],
+      ['application_foo', 'application_bar', 'review_baz'],
+    );
 
     $permittedContact = Contact::create()
       ->setValues([

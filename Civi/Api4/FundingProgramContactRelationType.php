@@ -17,23 +17,26 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Permission;
+namespace Civi\Api4;
 
-/**
- * @phpstan-type ContactRelationT array{id: int, entity_table: string, entity_id: int, parent_id: int|null}
- */
-interface ContactRelationCheckerInterface {
+use Civi\Api4\Generic\AbstractEntity;
+use Civi\Funding\Api4\Action\FundingProgramContactRelationType\GetAction;
+use Civi\Funding\Api4\Action\FundingProgramContactRelationType\GetFieldsAction;
+use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
+
+final class FundingProgramContactRelationType extends AbstractEntity {
+
+  use EntityNameTrait;
+
+  public static function get(): GetAction {
+    return \Civi::service(GetAction::class);
+  }
 
   /**
-   * @phpstan-param ContactRelationT $contactRelation
-   * @phpstan-param ContactRelationT|null $parentContactRelation
+   * @inheritDoc
    */
-  public function hasRelation(int $contactId, array $contactRelation, ?array $parentContactRelation): bool;
-
-  /**
-   * @phpstan-param ContactRelationT $contactRelation
-   * @phpstan-param ContactRelationT|null $parentContactRelation
-   */
-  public function supportsRelation(array $contactRelation, ?array $parentContactRelation): bool;
+  public static function getFields() {
+    return new GetFieldsAction();
+  }
 
 }

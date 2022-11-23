@@ -26,7 +26,7 @@ class GetPossiblePermissionsEvent extends Event {
   private string $entityName;
 
   /**
-   * @phpstan-var array<string>
+   * @phpstan-var array<string, string>
    */
   private array $permissions = [];
 
@@ -42,33 +42,36 @@ class GetPossiblePermissionsEvent extends Event {
     return $this->entityName;
   }
 
-  public function addPermission(string $permission): self {
-    $this->addPermissions([$permission]);
+  public function addPermission(string $permission, string $label): self {
+    $this->permissions[$permission] = $label;
 
     return $this;
   }
 
   /**
-   * @phpstan-param array<string> $permissions
+   * @phpstan-param array<string, string> $permissions
+   *   Permissions mapped to labels.
    */
   public function addPermissions(array $permissions): self {
-    $this->permissions = \array_unique(\array_merge($this->permissions, $permissions));
+    $this->permissions = \array_merge($this->permissions, $permissions);
 
     return $this;
   }
 
   /**
-   * @phpstan-return array<string>
+   * @phpstan-return array<string, string>
+   *   Permissions mapped to labels.
    */
   public function getPermissions(): array {
     return $this->permissions;
   }
 
   /**
-   * @phpstan-param array<string> $permissions
+   * @phpstan-param array<string, string> $permissions
+   *   Permissions mapped to labels.
    */
   public function setPermissions(array $permissions): self {
-    $this->permissions = \array_values($permissions);
+    $this->permissions = $permissions;
 
     return $this;
   }

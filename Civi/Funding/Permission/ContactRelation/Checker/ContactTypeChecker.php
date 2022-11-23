@@ -17,13 +17,14 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Permission\ContactRelation;
+namespace Civi\Funding\Permission\ContactRelation\Checker;
 
 use Civi\Api4\ContactType;
-use Civi\Funding\Permission\ContactRelationCheckerInterface;
+use Civi\Funding\Permission\ContactRelation\ContactRelationCheckerInterface;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
+use Webmozart\Assert\Assert;
 
 /**
  * Checks if the type of a contact is equal to a given type.
@@ -39,10 +40,13 @@ final class ContactTypeChecker implements ContactRelationCheckerInterface {
   /**
    * @inheritDoc
    */
-  public function hasRelation(int $contactId, array $contactRelation, ?array $parentContactRelation): bool {
+  public function hasRelation(int $contactId, string $relationType, array $relationProperties): bool {
+    $contactTypeId = $relationProperties['contactTypeId'];
+    Assert::numeric($contactTypeId);
+
     $action = ContactType::get()
       ->addSelect('id')
-      ->addWhere('id', '=', $contactRelation['entity_id'])
+      ->addWhere('id', '=', $contactTypeId)
       ->addJoin('Contact AS c', 'INNER', NULL,
         CompositeCondition::new('AND',
           Comparison::new('c.id', '=', $contactId),
@@ -57,11 +61,8 @@ final class ContactTypeChecker implements ContactRelationCheckerInterface {
     return $this->api4->executeAction($action)->rowCount === 1;
   }
 
-  /**
-   * @inheritDoc
-   */
-  public function supportsRelation(array $contactRelation, ?array $parentContactRelation): bool {
-    return 'civicrm_contact_type' === $contactRelation['entity_table'] && NULL === $contactRelation['parent_id'];
+  public function supportsRelationType(string $relationType): bool {
+    return \Civi\Funding\Permission\ContactRelation\Types\ContactType::NAME === $relationType;
   }
 
 }

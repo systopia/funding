@@ -20,10 +20,10 @@ declare(strict_types = 1);
 namespace Civi\Api4\Traits;
 
 use Civi\Api4\Contact;
-use Civi\Api4\FundingProgramContactRelation;
 use Civi\Api4\Relationship;
 use Civi\Api4\RelationshipType;
 use Civi\Funding\Fixtures\ContactTypeFixture;
+use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 
 trait FundingProgramTestFixturesTrait {
@@ -57,13 +57,12 @@ trait FundingProgramTestFixturesTrait {
     $permittedContactTypeId = ContactTypeFixture::addOrganizationFixture(
       'Permitted', 'permitted')['id'];
 
-    FundingProgramContactRelation::create()
-      ->setValues([
-        'funding_program_id' => $fundingProgramId,
-        'entity_table' => 'civicrm_contact_type',
-        'entity_id' => $permittedContactTypeId,
-        'permissions' => $permittedContactTypePermissions,
-      ])->execute();
+    FundingProgramContactRelationFixture::addFixture(
+      $fundingProgramId,
+      'ContactType',
+      ['contactTypeId' => $permittedContactTypeId],
+      $permittedContactTypePermissions
+    );
 
     ContactTypeFixture::addOrganizationFixture('NotPermitted', 'not permitted');
 
@@ -85,21 +84,15 @@ trait FundingProgramTestFixturesTrait {
         'contact_sub_type_b' => 'PermittedNoPermissions',
       ])->execute()->first()['id'];
 
-    $permittedContactRelationId = FundingProgramContactRelation::create()
-      ->setValues([
-        'funding_program_id' => $fundingProgramId,
-        'entity_table' => 'civicrm_contact_type',
-        'entity_id' => $permittedContactTypeIdNoPermissions,
-      ])->execute()->first()['id'];
-
-    FundingProgramContactRelation::create()
-      ->setValues([
-        'funding_program_id' => $fundingProgramId,
-        'entity_table' => 'civicrm_relationship_type',
-        'entity_id' => $permittedRelationshipTypeId,
-        'parent_id' => $permittedContactRelationId,
-        'permissions' => $permittedRelationshipTypePermissions,
-      ])->execute();
+    FundingProgramContactRelationFixture::addFixture(
+      $fundingProgramId,
+      'ContactTypeRelationship',
+      [
+        'contactTypeId' => $permittedContactTypeIdNoPermissions,
+        'relationshipTypeId' => $permittedRelationshipTypeId,
+      ],
+      $permittedRelationshipTypePermissions
+    );
 
     $this->permittedOrganizationIdNoPermissions = Contact::create()->setValues([
       'contact_type' => 'Organization',

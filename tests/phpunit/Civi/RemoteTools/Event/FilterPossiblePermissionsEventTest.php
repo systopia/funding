@@ -34,33 +34,38 @@ final class FilterPossiblePermissionsEventTest extends TestCase {
   }
 
   public function testKeepPermissions(): void {
-    $event = new FilterPossiblePermissionsEvent('entity', ['foo1', 'foo2', 'bar1', 'bar2']);
+    $permissions = ['foo1' => 'Foo1', 'foo2' => 'Foo2', 'bar1' => 'Bar1', 'bar2' => 'Bar2'];
+    $event = new FilterPossiblePermissionsEvent('entity', $permissions);
     $event->keepPermissions(['foo2', 'bar1', 'baz']);
-    static::assertSame(['foo2', 'bar1'], $event->getPermissions());
+    static::assertSame(['foo2' => 'Foo2', 'bar1' => 'Bar1'], $event->getPermissions());
   }
 
   public function testKeepPermissionsByPrefix(): void {
-    $event = new FilterPossiblePermissionsEvent('entity', ['foo1', 'foo2', 'bar1', 'bar2']);
+    $permissions = ['foo1' => 'Foo1', 'foo2' => 'Foo2', 'bar1' => 'Bar1', 'bar2' => 'Bar2'];
+    $event = new FilterPossiblePermissionsEvent('entity', $permissions);
     $event->keepPermissionsByPrefix('b');
-    static::assertSame(['bar1', 'bar2'], $event->getPermissions());
+    static::assertSame(['bar1' => 'Bar1', 'bar2' => 'Bar2'], $event->getPermissions());
   }
 
   public function testRemovePermission(): void {
-    $event = new FilterPossiblePermissionsEvent('entity', ['foo1', 'foo2', 'bar1', 'bar2']);
+    $permissions = ['foo1' => 'Foo1', 'foo2' => 'Foo2', 'bar1' => 'Bar1', 'bar2' => 'Bar2'];
+    $event = new FilterPossiblePermissionsEvent('entity', $permissions);
     $event->removePermission('foo2');
-    static::assertSame(['foo1', 'bar1', 'bar2'], $event->getPermissions());
+    static::assertSame(['foo1' => 'Foo1', 'bar1' => 'Bar1', 'bar2' => 'Bar2'], $event->getPermissions());
   }
 
   public function testRemovePermissions(): void {
-    $event = new FilterPossiblePermissionsEvent('entity', ['foo1', 'foo2', 'bar1', 'bar2']);
+    $permissions = ['foo1' => 'Foo1', 'foo2' => 'Foo2', 'bar1' => 'Bar1', 'bar2' => 'Bar2'];
+    $event = new FilterPossiblePermissionsEvent('entity', $permissions);
     $event->removePermissions(['bar2', 'foo2', 'baz']);
-    static::assertSame(['foo1', 'bar1'], $event->getPermissions());
+    static::assertSame(['foo1' => 'Foo1', 'bar1' => 'Bar1'], $event->getPermissions());
   }
 
   public function testRemovePermissionsByPrefix(): void {
-    $event = new FilterPossiblePermissionsEvent('entity', ['foo1', 'foo2', 'bar1', 'bar2']);
+    $permissions = ['foo1' => 'Foo1', 'foo2' => 'Foo2', 'bar1' => 'Bar1', 'bar2' => 'Bar2'];
+    $event = new FilterPossiblePermissionsEvent('entity', $permissions);
     $event->removePermissionsByPrefix('b');
-    static::assertSame(['foo1', 'foo2'], $event->getPermissions());
+    static::assertSame(['foo1' => 'Foo1', 'foo2' => 'Foo2'], $event->getPermissions());
   }
 
 }

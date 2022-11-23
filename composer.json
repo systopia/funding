@@ -31,6 +31,16 @@
         "symfony/dependency-injection": ">=4.2"
     },
     "scripts": {
+        "post-install-or-update": [
+            "# Avoid redeclaration of method \\GuzzleHttp\\http_build_query",
+            "if [ -e vendor/civicrm/civicrm-core/guzzle_php81_shim.php ]; then echo '' >vendor/civicrm/civicrm-core/guzzle_php81_shim.php; fi"
+        ],
+        "post-install-cmd": [
+            "@post-install-or-update"
+        ],
+        "post-update-cmd": [
+            "@post-install-or-update"
+        ],
         "composer-phpcs": [
             "@composer --working-dir=tools/phpcs"
         ],

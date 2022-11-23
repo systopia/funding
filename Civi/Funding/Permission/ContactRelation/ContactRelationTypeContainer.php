@@ -19,25 +19,30 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Permission\ContactRelation;
 
-use Civi\Funding\Permission\ContactRelationCheckerInterface;
+use Civi\Funding\Contact\Relation\RelationTypeContainerInterface;
 
 /**
- * Checks if a contact is the same as a given one.
+ * @codeCoverageIgnore
  */
-final class ContactChecker implements ContactRelationCheckerInterface {
+final class ContactRelationTypeContainer implements RelationTypeContainerInterface {
 
   /**
-   * @inheritDoc
+   * @phpstan-var iterable<\Civi\Funding\Contact\Relation\RelationTypeInterface>
    */
-  public function hasRelation(int $contactId, array $contactRelation, ?array $parentContactRelation): bool {
-    return $contactId === $contactRelation['entity_id'];
+  private iterable $relationTypes;
+
+  /**
+   * @phpstan-param iterable<\Civi\Funding\Contact\Relation\RelationTypeInterface> $relationTypes
+   */
+  public function __construct(iterable $relationTypes) {
+    $this->relationTypes = $relationTypes;
   }
 
   /**
    * @inheritDoc
    */
-  public function supportsRelation(array $contactRelation, ?array $parentContactRelation): bool {
-    return 'civicrm_contact' === $contactRelation['entity_table'] && NULL === $contactRelation['parent_id'];
+  public function getRelationTypes(): array {
+    return \iterator_to_array($this->relationTypes);
   }
 
 }

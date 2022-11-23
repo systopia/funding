@@ -17,17 +17,17 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Permission;
+namespace Civi\Funding\Permission\ContactRelation;
 
 final class ContactRelationCheckerCollection implements ContactRelationCheckerInterface {
 
   /**
-   * @var iterable<\Civi\Funding\Permission\ContactRelationCheckerInterface>
+   * @var iterable<\Civi\Funding\Permission\ContactRelation\ContactRelationCheckerInterface>
    */
   private iterable $contactRelationCheckers;
 
   /**
-   * @param iterable<\Civi\Funding\Permission\ContactRelationCheckerInterface> $contactRelationCheckers
+   * @param iterable<\Civi\Funding\Permission\ContactRelation\ContactRelationCheckerInterface> $contactRelationCheckers
    */
   public function __construct(iterable $contactRelationCheckers) {
     $this->contactRelationCheckers = $contactRelationCheckers;
@@ -36,12 +36,12 @@ final class ContactRelationCheckerCollection implements ContactRelationCheckerIn
   /**
    * @inheritDoc
    */
-  public function hasRelation(int $contactId, array $contactRelation, ?array $parentContactRelation): bool {
+  public function hasRelation(int $contactId, string $relationType, array $relationProperties): bool {
     $supportedCheckerFound = FALSE;
     foreach ($this->contactRelationCheckers as $contactRelationChecker) {
-      if ($contactRelationChecker->supportsRelation($contactRelation, $parentContactRelation)) {
+      if ($contactRelationChecker->supportsRelationType($relationType)) {
         $supportedCheckerFound = TRUE;
-        if ($contactRelationChecker->hasRelation($contactId, $contactRelation, $parentContactRelation)) {
+        if ($contactRelationChecker->hasRelation($contactId, $relationType, $relationProperties)) {
           return TRUE;
         }
       }
@@ -49,19 +49,16 @@ final class ContactRelationCheckerCollection implements ContactRelationCheckerIn
 
     if (FALSE === $supportedCheckerFound) {
       throw new \InvalidArgumentException(
-        sprintf('No supported contact relation checker found for contact relation with ID %d', $contactRelation['id'])
+        \sprintf('No supported contact relation checker found for contact relation type "%s"', $relationType)
       );
     }
 
     return FALSE;
   }
 
-  /**
-   * @inheritDoc
-   */
-  public function supportsRelation(array $contactRelation, ?array $parentContactRelation): bool {
+  public function supportsRelationType(string $relationType): bool {
     foreach ($this->contactRelationCheckers as $contactRelationChecker) {
-      if ($contactRelationChecker->supportsRelation($contactRelation, $parentContactRelation)) {
+      if ($contactRelationChecker->supportsRelationType($relationType)) {
         return TRUE;
       }
     }

@@ -84,13 +84,11 @@ ENGINE=InnoDB;
 CREATE TABLE `civicrm_funding_program_contact_relation` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique FundingProgramContactRelation ID',
   `funding_program_id` int unsigned NOT NULL COMMENT 'FK to FundingProgram',
-  `entity_table` varchar(64) NOT NULL COMMENT 'Table referenced by ID in `entity_id',
-  `entity_id` int unsigned NOT NULL COMMENT 'ID of entity in `entity_table`',
-  `parent_id` int unsigned COMMENT 'FK to FundingProgramContactRelation',
-  `permissions` varchar(512) COMMENT 'Permissions as JSON array',
+  `type` varchar(255) NOT NULL,
+  `properties` text NOT NULL,
+  `permissions` varchar(512) NOT NULL COMMENT 'Permissions as JSON array',
   PRIMARY KEY (`id`),
-  CONSTRAINT FK_civicrm_funding_program_contact_relation_funding_program_id FOREIGN KEY (`funding_program_id`) REFERENCES `civicrm_funding_program`(`id`) ON DELETE CASCADE,
-  CONSTRAINT FK_civicrm_funding_program_contact_relation_parent_id FOREIGN KEY (`parent_id`) REFERENCES `civicrm_funding_program_contact_relation`(`id`) ON DELETE RESTRICT
+  CONSTRAINT FK_civicrm_funding_program_contact_relation_funding_program_id FOREIGN KEY (`funding_program_id`) REFERENCES `civicrm_funding_program`(`id`) ON DELETE CASCADE
 )
 ENGINE=InnoDB;
 
@@ -159,13 +157,11 @@ ENGINE=InnoDB;
 CREATE TABLE `civicrm_funding_case_contact_relation` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique FundingCaseContactRelation ID',
   `funding_case_id` int unsigned NOT NULL COMMENT 'FK to FundingCase',
-  `entity_table` varchar(64) NOT NULL COMMENT 'Table referenced by ID in `entity_id',
-  `entity_id` int unsigned NOT NULL COMMENT 'ID of entity in `entity_table`',
-  `parent_id` int unsigned COMMENT 'FK to FundingCaseContactRelation',
-  `permissions` varchar(512) COMMENT 'Permissions as JSON array',
+  `type` varchar(255) NOT NULL,
+  `properties` text NOT NULL,
+  `permissions` varchar(512) NOT NULL COMMENT 'Permissions as JSON array',
   PRIMARY KEY (`id`),
-  CONSTRAINT FK_civicrm_funding_case_contact_relation_funding_case_id FOREIGN KEY (`funding_case_id`) REFERENCES `civicrm_funding_case`(`id`) ON DELETE CASCADE,
-  CONSTRAINT FK_civicrm_funding_case_contact_relation_parent_id FOREIGN KEY (`parent_id`) REFERENCES `civicrm_funding_case_contact_relation`(`id`) ON DELETE RESTRICT
+  CONSTRAINT FK_civicrm_funding_case_contact_relation_funding_case_id FOREIGN KEY (`funding_case_id`) REFERENCES `civicrm_funding_case`(`id`) ON DELETE CASCADE
 )
 ENGINE=InnoDB;
 
