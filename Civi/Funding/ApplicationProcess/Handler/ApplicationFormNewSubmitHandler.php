@@ -57,8 +57,8 @@ final class ApplicationFormNewSubmitHandler implements ApplicationFormNewSubmitH
   public function handle(ApplicationFormNewSubmitCommand $command): ApplicationFormNewSubmitResult {
     $jsonSchema = $this->jsonSchemaFactory->createJsonSchemaInitial(
       $command->getContactId(),
-      $command->getFundingProgram(),
       $command->getFundingCaseType(),
+      $command->getFundingProgram(),
     );
     $validationResult = $this->validator->validate($jsonSchema, $command->getData());
 

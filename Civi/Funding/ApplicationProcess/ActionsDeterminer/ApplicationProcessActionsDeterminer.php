@@ -47,12 +47,15 @@ class ApplicationProcessActionsDeterminer implements ApplicationProcessActionsDe
   }
 
   public function isActionAllowed(string $action, FullApplicationProcessStatus $status, array $permissions): bool {
-    return \in_array($action, $this->getActions($status, $permissions), TRUE);
+    return $this->isAnyActionAllowed([$action], $status, $permissions);
+  }
+
+  public function isAnyActionAllowed(array $actions, FullApplicationProcessStatus $status, array $permissions): bool {
+    return [] !== array_intersect($this->getActions($status, $permissions), $actions);
   }
 
   public function isEditAllowed(FullApplicationProcessStatus $status, array $permissions): bool {
-    return $this->isActionAllowed('save', $status, $permissions)
-      || $this->isActionAllowed('apply', $status, $permissions);
+    return $this->isAnyActionAllowed(['save', 'apply', 'update'], $status, $permissions);
   }
 
   /**

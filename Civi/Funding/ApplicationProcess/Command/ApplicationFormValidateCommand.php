@@ -28,11 +28,11 @@ final class ApplicationFormValidateCommand {
 
   private ApplicationProcessEntity $applicationProcess;
 
-  private FundingProgramEntity $fundingProgram;
-
   private FundingCaseEntity $fundingCase;
 
   private FundingCaseTypeEntity $fundingCaseType;
+
+  private FundingProgramEntity $fundingProgram;
 
   /**
    * @phpstan-var array<string, mixed> JSON serializable.
@@ -44,15 +44,15 @@ final class ApplicationFormValidateCommand {
    */
   public function __construct(
     ApplicationProcessEntity $applicationProcess,
-    FundingProgramEntity $fundingProgram,
     FundingCaseEntity $fundingCase,
     FundingCaseTypeEntity $fundingCaseType,
+    FundingProgramEntity $fundingProgram,
     array $data
   ) {
     $this->applicationProcess = $applicationProcess;
-    $this->fundingProgram = $fundingProgram;
     $this->fundingCase = $fundingCase;
     $this->fundingCaseType = $fundingCaseType;
+    $this->fundingProgram = $fundingProgram;
     $this->data = $data;
   }
 

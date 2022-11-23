@@ -22,8 +22,12 @@ namespace Civi\Api4;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\CreateAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\DeleteAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\GetAction;
+use Civi\Funding\Api4\Action\FundingApplicationProcess\GetFormDataAction;
+use Civi\Funding\Api4\Action\FundingApplicationProcess\GetJsonSchemaAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\SaveAction;
+use Civi\Funding\Api4\Action\FundingApplicationProcess\SubmitFormAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\UpdateAction;
+use Civi\Funding\Api4\Action\FundingApplicationProcess\ValidateFormAction;
 use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
 
 /**
@@ -79,6 +83,22 @@ class FundingApplicationProcess extends Generic\DAOEntity {
 
   public static function save($checkPermissions = TRUE) {
     return \Civi::service(SaveAction::class)->setCheckPermissions($checkPermissions);
+  }
+
+  public static function getFormData(): GetFormDataAction {
+    return \Civi::service(GetFormDataAction::class);
+  }
+
+  public static function getJsonSchema(): GetJsonSchemaAction {
+    return \Civi::service(GetJsonSchemaAction::class);
+  }
+
+  public static function submitForm(): SubmitFormAction {
+    return \Civi::service(SubmitFormAction::class);
+  }
+
+  public static function validateForm(): ValidateFormAction {
+    return \Civi::service(ValidateFormAction::class);
   }
 
 }

@@ -26,6 +26,7 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewSubmitHandlerInter
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewValidateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationJsonSchemaGetHandlerInterface;
 
 interface FundingCaseTypeServiceLocatorInterface {
 
@@ -42,5 +43,7 @@ interface FundingCaseTypeServiceLocatorInterface {
   public function getApplicationFormValidateHandler(): ApplicationFormValidateHandlerInterface;
 
   public function getApplicationFormSubmitHandler(): ApplicationFormSubmitHandlerInterface;
+
+  public function getApplicationJsonSchemaGetHandler(): ApplicationJsonSchemaGetHandlerInterface;
 
 }

@@ -1,0 +1,26 @@
+{
+  "indent": 2,
+  "-W097": true,
+  "curly": true,
+  "esversion": 6,
+  "freeze": true,
+  "futurehostile": true,
+  "globals": {
+    "fundingModule": true,
+    "fundingIsEmpty": true,
+    "angular": false,
+    "CRM": false,
+    "_4": false,
+    "Element": false,
+    "window": false
+  },
+  "latedef": true,
+  "nocomma": true,
+  "nonew": true,
+  "shadow": true,
+  "singleGroups": true,
+  "strict": true,
+  "undef": true,
+  "unused": true,
+  "varstmt": true
+}

@@ -46,15 +46,15 @@ interface ApplicationJsonSchemaFactoryInterface {
 
   public function createJsonSchemaExisting(
     ApplicationProcessEntity $applicationProcess,
-    FundingProgramEntity $fundingProgram,
     FundingCaseEntity $fundingCase,
-    FundingCaseTypeEntity $fundingCaseType
+    FundingCaseTypeEntity $fundingCaseType,
+    FundingProgramEntity $fundingProgram
   ): JsonSchema;
 
   public function createJsonSchemaInitial(
     int $contactId,
-    FundingProgramEntity $fundingProgram,
-    FundingCaseTypeEntity $fundingCaseType
+    FundingCaseTypeEntity $fundingCaseType,
+    FundingProgramEntity $fundingProgram
   ): JsonSchema;
 
 }

@@ -19,6 +19,8 @@ return [
     'crmUi',
     'crmUtil',
     'ngRoute',
+    'xeditable',
+    'lodash4',
   ],
   'settings' => [],
 ];

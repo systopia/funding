@@ -43,6 +43,15 @@ interface ApplicationProcessActionsDeterminerInterface {
   public function isActionAllowed(string $action, FullApplicationProcessStatus $status, array $permissions): bool;
 
   /**
+   * @phpstan-param array<string> $actions
+   * @phpstan-param array<string> $permissions
+   *
+   * @return bool
+   *   true if one of the specified actions is allowed.
+   */
+  public function isAnyActionAllowed(array $actions, FullApplicationProcessStatus $status, array $permissions): bool;
+
+  /**
    * @phpstan-param array<string> $permissions
    *
    * @return bool

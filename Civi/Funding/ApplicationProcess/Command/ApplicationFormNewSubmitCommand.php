@@ -26,9 +26,9 @@ final class ApplicationFormNewSubmitCommand {
 
   private int $contactId;
 
-  private FundingProgramEntity $fundingProgram;
-
   private FundingCaseTypeEntity $fundingCaseType;
+
+  private FundingProgramEntity $fundingProgram;
 
   /**
    * @phpstan-var array<string, mixed> JSON serializable.
@@ -40,13 +40,13 @@ final class ApplicationFormNewSubmitCommand {
    */
   public function __construct(
     int $contactId,
-    FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType,
+    FundingProgramEntity $fundingProgram,
     array $data
   ) {
     $this->contactId = $contactId;
-    $this->fundingProgram = $fundingProgram;
     $this->fundingCaseType = $fundingCaseType;
+    $this->fundingProgram = $fundingProgram;
     $this->data = $data;
   }
 

@@ -42,8 +42,8 @@ final class ApplicationFormNewCreateHandler implements ApplicationFormNewCreateH
   public function handle(ApplicationFormNewCreateCommand $command): RemoteFormInterface {
     $jsonSchema = $this->jsonSchemaFactory->createJsonSchemaInitial(
       $command->getContactId(),
-      $command->getFundingProgram(),
       $command->getFundingCaseType(),
+      $command->getFundingProgram(),
     );
     $uiSchema = $this->uiSchemaFactory->createUiSchemaNew(
       $command->getFundingProgram(),

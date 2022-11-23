@@ -82,9 +82,9 @@ final class ValidateApplicationFormSubscriberTest extends TestCase {
     $event = $this->createValidateFormEvent();
     $command = new ApplicationFormValidateCommand(
       $event->getApplicationProcess(),
-      $event->getFundingProgram(),
       $event->getFundingCase(),
       $event->getFundingCaseType(),
+      $event->getFundingProgram(),
       $event->getData()
     );
 
@@ -104,9 +104,9 @@ final class ValidateApplicationFormSubscriberTest extends TestCase {
     $event = $this->createValidateFormEvent();
     $command = new ApplicationFormValidateCommand(
       $event->getApplicationProcess(),
-      $event->getFundingProgram(),
       $event->getFundingCase(),
       $event->getFundingCaseType(),
+      $event->getFundingProgram(),
       $event->getData()
     );
 

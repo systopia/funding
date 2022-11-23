@@ -26,6 +26,7 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewSubmitHandlerInter
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewValidateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationJsonSchemaGetHandlerInterface;
 use Psr\Container\ContainerInterface;
 
 final class FundingCaseTypeServiceLocator implements FundingCaseTypeServiceLocatorInterface {
@@ -62,6 +63,10 @@ final class FundingCaseTypeServiceLocator implements FundingCaseTypeServiceLocat
 
   public function getApplicationFormSubmitHandler(): ApplicationFormSubmitHandlerInterface {
     return $this->locator->get(ApplicationFormSubmitHandlerInterface::class);
+  }
+
+  public function getApplicationJsonSchemaGetHandler(): ApplicationJsonSchemaGetHandlerInterface {
+    return $this->locator->get(ApplicationJsonSchemaGetHandlerInterface::class);
   }
 
 }

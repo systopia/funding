@@ -199,12 +199,22 @@ final class DefaultApplicationProcessActionsDeterminerTest extends TestCase {
     static::assertFalse($this->actionsDeterminer->isActionAllowed('save', $fullStatus, ['application_apply']));
   }
 
+  public function testIsAnyActionAllowed(): void {
+    $fullStatus = new FullApplicationProcessStatus('new', NULL, NULL);
+    static::assertTrue(
+      $this->actionsDeterminer->isAnyActionAllowed(['save', 'modify'], $fullStatus, ['application_modify'])
+    );
+    static::assertFalse(
+      $this->actionsDeterminer->isAnyActionAllowed(['apply', 'modify'], $fullStatus, ['application_modify'])
+    );
+  }
+
   public function testIsEditAllowed(): void {
     foreach (self::STATUS_PERMISSION_ACTIONS_MAP as $status => $permissionActionsMap) {
       $fullStatus = new FullApplicationProcessStatus($status, NULL, NULL);
       foreach ($permissionActionsMap as $permission => $actions) {
         static::assertSame(
-          in_array('save', $actions, TRUE) || in_array('apply', $actions, TRUE),
+          in_array('save', $actions, TRUE) || in_array('apply', $actions, TRUE) || in_array('update', $actions, TRUE),
           $this->actionsDeterminer->isEditAllowed($fullStatus, [$permission])
         );
       }
