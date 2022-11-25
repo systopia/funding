@@ -27,7 +27,7 @@ use Civi\RemoteTools\Api4\RemoteApiConstants;
 trait PermissionsGetFieldsActionTrait {
 
   /**
-   * @phpstan-return array<string>
+   * @phpstan-return array<string, string>
    */
   abstract protected function getPossiblePermissions(): array;
 
@@ -54,7 +54,7 @@ trait PermissionsGetFieldsActionTrait {
         'data_type' => 'String',
         'readonly' => TRUE,
         'serialize' => 1,
-        'options' => array_combine($possiblePermissions, $possiblePermissions),
+        'options' => $possiblePermissions,
       ],
     ], $this->getFlattenedPermissionsFields($possiblePermissions));
   }
@@ -68,9 +68,10 @@ trait PermissionsGetFieldsActionTrait {
   private function getFlattenedPermissionsFields(array $possiblePermissions): array {
     $fields = [];
 
-    foreach ($possiblePermissions as $permission) {
+    foreach ($possiblePermissions as $permission => $label) {
       $fields[] = [
         'name' => RemoteApiConstants::PERMISSION_FIELD_PREFIX . $permission,
+        'description' => $label,
         'type' => 'Extra',
         'data_type' => 'Boolean',
         'readonly' => TRUE,

@@ -64,12 +64,18 @@ final class PossiblePermissionsLoaderTest extends TestCase {
     $this->eventDispatcherMock->expects(static::once())->method('dispatch')
       ->with(GetPossiblePermissionsEvent::getName('test'), $event)
       ->willReturnCallback(function (string $eventName, GetPossiblePermissionsEvent $event) {
-        $event->addPermission('foo')->addPermissions(['bar', 'baz']);
+        $event->addPermission('foo', 'Foo')->addPermissions(['bar' => 'Bar', 'baz' => 'Baz']);
       });
 
-    static::assertSame(['foo', 'bar', 'baz'], $this->possiblePermissionsLoader->getPermissions('test'));
+    static::assertSame(
+      ['foo' => 'Foo', 'bar' => 'Bar', 'baz' => 'Baz'],
+      $this->possiblePermissionsLoader->getPermissions('test')
+    );
     // second call uses internal cache
-    static::assertSame(['foo', 'bar', 'baz'], $this->possiblePermissionsLoader->getPermissions('test'));
+    static::assertSame(
+      ['foo' => 'Foo', 'bar' => 'Bar', 'baz' => 'Baz'],
+      $this->possiblePermissionsLoader->getPermissions('test')
+    );
   }
 
   public function testGetPermissionsCached(): void {
@@ -81,11 +87,11 @@ final class PossiblePermissionsLoaderTest extends TestCase {
 
     $this->cacheMock->expects(static::once())->method('get')
       ->with('possible-permissions.test')
-      ->willReturn(['cached']);
+      ->willReturn(['cached' => 'Label']);
 
-    static::assertSame(['cached'], $this->possiblePermissionsLoader->getPermissions('test'));
+    static::assertSame(['cached' => 'Label'], $this->possiblePermissionsLoader->getPermissions('test'));
     // second call uses internal cache
-    static::assertSame(['cached'], $this->possiblePermissionsLoader->getPermissions('test'));
+    static::assertSame(['cached' => 'Label'], $this->possiblePermissionsLoader->getPermissions('test'));
   }
 
   public function testGetPermissionsFiltered(): void {
@@ -93,18 +99,19 @@ final class PossiblePermissionsLoaderTest extends TestCase {
       ->with('possible-permissions.test')
       ->willReturn(TRUE);
 
+    $permissions = ['cached1' => 'Label1', 'cached2' => 'Label2'];
     $this->cacheMock->expects(static::once())->method('get')
       ->with('possible-permissions.test')
-      ->willReturn(['cached1', 'cached2']);
+      ->willReturn($permissions);
 
-    $event = new FilterPossiblePermissionsEvent('test', ['cached1', 'cached2']);
+    $event = new FilterPossiblePermissionsEvent('test', $permissions);
     $this->eventDispatcherMock->expects(static::once())->method('dispatch')
       ->with(FilterPossiblePermissionsEvent::getName('test'), $event)
       ->willReturnCallback(function (string $eventName, FilterPossiblePermissionsEvent $event) {
         $event->removePermission('cached1');
       });
 
-    static::assertSame(['cached2'], $this->possiblePermissionsLoader->getFilteredPermissions('test'));
+    static::assertSame(['cached2' => 'Label2'], $this->possiblePermissionsLoader->getFilteredPermissions('test'));
   }
 
 }

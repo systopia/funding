@@ -17,21 +17,26 @@
 
 declare(strict_types = 1);
 
-namespace Civi\RemoteTools\Authorization;
+namespace Civi\Api4;
 
-interface PossiblePermissionsLoaderInterface {
+use Civi\Api4\Generic\AbstractEntity;
+use Civi\Funding\Api4\Action\FundingCaseContactRelationType\GetAction;
+use Civi\Funding\Api4\Action\FundingCaseContactRelationType\GetFieldsAction;
+use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
+
+final class FundingCaseContactRelationType extends AbstractEntity {
+
+  use EntityNameTrait;
+
+  public static function get(): GetAction {
+    return \Civi::service(GetAction::class);
+  }
 
   /**
-   * @phpstan-return array<string, string>
-   *   Permissions mapped to labels. Permissions might be filtered (possibly
-   *   depending on values in session.)
+   * @inheritDoc
    */
-  public function getFilteredPermissions(string $entityName): array;
-
-  /**
-   * @phpstan-return array<string, string>
-   *   Permissions mapped to labels.
-   */
-  public function getPermissions(string $entityName): array;
+  public static function getFields() {
+    return new GetFieldsAction();
+  }
 
 }

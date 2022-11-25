@@ -21,10 +21,18 @@ namespace Civi\Funding\EventSubscriber\FundingProgram;
 
 use Civi\Api4\FundingProgramContactRelation;
 use Civi\Funding\Event\FundingProgram\GetPermissionsEvent;
-use Civi\Funding\Permission\ContactRelationCheckerInterface;
+use Civi\Funding\Permission\ContactRelation\ContactRelationCheckerInterface;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+/**
+ * @phpstan-type contactRelationT array{
+ *   id: int,
+ *   type: string,
+ *   properties: array<string, mixed>,
+ *   permissions: array<string>,
+ * }
+ */
 final class FundingProgramPermissionsGetSubscriber implements EventSubscriberInterface {
 
   private Api4Interface $api4;
@@ -50,25 +58,13 @@ final class FundingProgramPermissionsGetSubscriber implements EventSubscriberInt
     $action = FundingProgramContactRelation::get()
       ->addWhere('funding_program_id', '=', $event->getEntityId());
 
-    /** @var array<int, array{id: int, funding_program_id: int, entity_table: string, entity_id: int, parent_id: int|null, permissions: array<string>|null}> $contactRelations */
-    $contactRelations = $this->api4->executeAction($action)->indexBy('id')->getArrayCopy();
-
-    foreach ($contactRelations as $contactRelation) {
-      // A relation that is used as parent might not have permissions
-      if (NULL === $contactRelation['permissions']) {
-        continue;
-      }
-
-      if (NULL !== $contactRelation['parent_id']) {
-        $parentContactRelation = $contactRelations[$contactRelation['parent_id']];
-      }
-      else {
-        $parentContactRelation = NULL;
-      }
-
-      if ($this->contactRelationChecker->hasRelation($event->getContactId(),
-        $contactRelation, $parentContactRelation)
-      ) {
+    /** @phpstan-var contactRelationT $contactRelation */
+    foreach ($this->api4->executeAction($action) as $contactRelation) {
+      if ($this->contactRelationChecker->hasRelation(
+        $event->getContactId(),
+        $contactRelation['type'],
+        $contactRelation['properties']
+      )) {
         $event->addPermissions($contactRelation['permissions']);
       }
     }

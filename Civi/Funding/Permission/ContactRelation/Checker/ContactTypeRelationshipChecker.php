@@ -17,10 +17,11 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Permission\ContactRelation;
+namespace Civi\Funding\Permission\ContactRelation\Checker;
 
 use Civi\Api4\Relationship;
-use Civi\Funding\Permission\ContactRelationCheckerInterface;
+use Civi\Funding\Permission\ContactRelation\ContactRelationCheckerInterface;
+use Civi\Funding\Permission\ContactRelation\Types\ContactTypeRelationship;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
@@ -43,10 +44,11 @@ final class ContactTypeRelationshipChecker implements ContactRelationCheckerInte
    *
    * @throws \API_Exception
    */
-  public function hasRelation(int $contactId, array $contactRelation, ?array $parentContactRelation): bool {
-    Assert::notNull($parentContactRelation);
-    $relationshipTypeId = $contactRelation['entity_id'];
-    $contactTypeId = $parentContactRelation['entity_id'];
+  public function hasRelation(int $contactId, string $relationType, array $relationProperties): bool {
+    $relationshipTypeId = $relationProperties['relationshipTypeId'];
+    Assert::numeric($relationshipTypeId);
+    $contactTypeId = $relationProperties['contactTypeId'];
+    Assert::numeric($contactTypeId);
 
     $action = Relationship::get()
       ->addSelect('id')
@@ -83,14 +85,8 @@ final class ContactTypeRelationshipChecker implements ContactRelationCheckerInte
   /**
    * @inheritDoc
    */
-  public function supportsRelation(array $contactRelation, ?array $parentContactRelation): bool {
-    if ('civicrm_relationship_type' === $contactRelation['entity_table'] && NULL !== $contactRelation['parent_id']) {
-      Assert::notNull($parentContactRelation);
-
-      return 'civicrm_contact_type' === $parentContactRelation['entity_table'];
-    }
-
-    return FALSE;
+  public function supportsRelationType(string $relationType): bool {
+    return ContactTypeRelationship::NAME === $relationType;
   }
 
 }

@@ -26,7 +26,7 @@ final class FilterPossiblePermissionsEvent extends Event {
   private string $entityName;
 
   /**
-   * @phpstan-var array<string>
+   * @phpstan-var array<string, string>
    */
   private array $permissions;
 
@@ -35,7 +35,8 @@ final class FilterPossiblePermissionsEvent extends Event {
   }
 
   /**
-   * @phpstan-param array<string> $permissions
+   * @phpstan-param array<string, string> $permissions
+   *   Permissions mapped to labels.
    */
   public function __construct(string $entityName, array $permissions) {
     $this->entityName = $entityName;
@@ -47,7 +48,8 @@ final class FilterPossiblePermissionsEvent extends Event {
   }
 
   /**
-   * @phpstan-return array<string> $permissions
+   * @phpstan-return array<string, string> $permissions
+   *   Permissions mapped to labels.
    */
   public function getPermissions(): array {
     return $this->permissions;
@@ -57,17 +59,21 @@ final class FilterPossiblePermissionsEvent extends Event {
    * @phpstan-param array<string> $permissions
    */
   public function keepPermissions(array $permissions): self {
-    $this->permissions = array_values(array_filter(
-      $this->permissions, fn(string $permission) => in_array($permission, $permissions, TRUE)
-    ));
+    $this->permissions = array_filter(
+      $this->permissions,
+      fn(string $permission) => in_array($permission, $permissions, TRUE),
+      ARRAY_FILTER_USE_KEY
+    );
 
     return $this;
   }
 
   public function keepPermissionsByPrefix(string $prefix): self {
-    $this->permissions = array_values(array_filter(
-      $this->permissions, fn(string $permission) => str_starts_with($permission, $prefix)
-    ));
+    $this->permissions = array_filter(
+      $this->permissions,
+      fn(string $permission) => str_starts_with($permission, $prefix),
+      ARRAY_FILTER_USE_KEY
+    );
 
     return $this;
   }
@@ -82,17 +88,20 @@ final class FilterPossiblePermissionsEvent extends Event {
    * @phpstan-param array<string> $permissions
    */
   public function removePermissions(array $permissions): self {
-    $this->permissions = array_values(array_filter(
-      $this->permissions, fn(string $permission) => !in_array($permission, $permissions, TRUE)
-    ));
+    $this->permissions = array_filter(
+      $this->permissions,
+      fn(string $permission) => !in_array($permission, $permissions, TRUE),
+      ARRAY_FILTER_USE_KEY
+    );
 
     return $this;
   }
 
   public function removePermissionsByPrefix(string $prefix): self {
-    $this->permissions = array_values(array_filter(
-      $this->permissions, fn(string $permission) => !str_starts_with($permission, $prefix)
-    ));
+    $this->permissions = array_filter(
+      $this->permissions, fn(string $permission) => !str_starts_with($permission, $prefix),
+      ARRAY_FILTER_USE_KEY
+    );
 
     return $this;
   }

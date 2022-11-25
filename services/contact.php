@@ -32,11 +32,11 @@ use Civi\Funding\Contact\Relation\Loaders\ContactTypeAndRelationshipTypeLoader;
 use Civi\Funding\Contact\Relation\Loaders\RelationshipTypeLoader;
 use Civi\Funding\Contact\Relation\Loaders\SelfByContactTypeLoader;
 use Civi\Funding\Contact\Relation\RelationTypeContainer;
-use Civi\Funding\Contact\Relation\RelationTypeContainerInterface;
 use Civi\Funding\Contact\Relation\Types\ContactTypeAndRelationshipType;
 use Civi\Funding\Contact\Relation\Types\RelationshipType;
 use Civi\Funding\Contact\Relation\Types\SelfByContactType;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
+use Symfony\Component\DependencyInjection\Reference;
 
 $container->autowire(FundingCaseRecipientLoaderInterface::class, FundingCaseRecipientLoader::class);
 
@@ -46,9 +46,10 @@ $container->autowire(DefaultPossibleRecipientsLoader::class)
   ->addTag('funding.possible_recipients_loader');
 
 $container->autowire(GetAction::class)
+  ->setArgument('$relationTypeContainer', new Reference('funding.contact_relation_type_container'))
   ->setPublic(TRUE)
   ->setShared(TRUE);
-$container->register(RelationTypeContainerInterface::class, RelationTypeContainer::class)
+$container->register('funding.contact_relation_type_container', RelationTypeContainer::class)
   ->addArgument(new TaggedIteratorArgument('funding.contact_relation_type'));
 $container->autowire(ContactTypeAndRelationshipType::class)
   ->addTag('funding.contact_relation_type');

@@ -58,18 +58,18 @@ final class FundingFilterPossiblePermissionsSubscriberTest extends TestCase {
   }
 
   public function testOnFilterPossiblePermissionsInternal(): void {
-    $event = new FilterPossiblePermissionsEvent('entity', ['application_foo', 'review_bar']);
+    $event = new FilterPossiblePermissionsEvent('entity', ['application_foo' => 'Foo', 'review_bar' => 'Bar']);
 
     $this->subscriber->onFilterPossiblePermissions($event);
-    static::assertSame(['review_bar'], $event->getPermissions());
+    static::assertSame(['review_bar' => 'Bar'], $event->getPermissions());
   }
 
   public function testOnFilterPossiblePermissionsRemote(): void {
     SessionTestUtil::mockRemoteRequestSession('2');
-    $event = new FilterPossiblePermissionsEvent('entity', ['application_foo', 'review_bar']);
+    $event = new FilterPossiblePermissionsEvent('entity', ['application_foo' => 'Foo', 'review_bar' => 'Bar']);
 
     $this->subscriber->onFilterPossiblePermissions($event);
-    static::assertSame(['application_foo'], $event->getPermissions());
+    static::assertSame(['application_foo' => 'Foo'], $event->getPermissions());
   }
 
 }

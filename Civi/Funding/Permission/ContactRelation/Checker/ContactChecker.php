@@ -17,21 +17,25 @@
 
 declare(strict_types = 1);
 
-namespace Civi\RemoteTools\Authorization;
+namespace Civi\Funding\Permission\ContactRelation\Checker;
 
-interface PossiblePermissionsLoaderInterface {
+use Civi\Funding\Permission\ContactRelation\ContactRelationCheckerInterface;
+use Civi\Funding\Permission\ContactRelation\Types\Contact;
+
+/**
+ * Checks if a contact is the same as a given one.
+ */
+final class ContactChecker implements ContactRelationCheckerInterface {
 
   /**
-   * @phpstan-return array<string, string>
-   *   Permissions mapped to labels. Permissions might be filtered (possibly
-   *   depending on values in session.)
+   * @inheritDoc
    */
-  public function getFilteredPermissions(string $entityName): array;
+  public function hasRelation(int $contactId, string $relationType, array $relationProperties): bool {
+    return $contactId === $relationProperties['contactId'];
+  }
 
-  /**
-   * @phpstan-return array<string, string>
-   *   Permissions mapped to labels.
-   */
-  public function getPermissions(string $entityName): array;
+  public function supportsRelationType(string $relationType): bool {
+    return Contact::NAME === $relationType;
+  }
 
 }

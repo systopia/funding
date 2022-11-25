@@ -32,8 +32,7 @@ trait PermissionsSelectTrait {
         $field['input_type'] = 'Select';
         /** @phpstan-ignore-next-line */
         $field['input_attrs']['multiple'] = TRUE;
-        $permissions = $this->getPossiblePermissions();
-        $field['options'] = array_combine($permissions, $permissions);
+        $field['options'] = $this->getPossiblePermissions();
       }
     }
 

@@ -17,21 +17,16 @@
 
 declare(strict_types = 1);
 
-namespace Civi\RemoteTools\Authorization;
+namespace Civi\Funding\Permission\ContactRelation;
 
-interface PossiblePermissionsLoaderInterface {
-
-  /**
-   * @phpstan-return array<string, string>
-   *   Permissions mapped to labels. Permissions might be filtered (possibly
-   *   depending on values in session.)
-   */
-  public function getFilteredPermissions(string $entityName): array;
+interface ContactRelationCheckerInterface {
 
   /**
-   * @phpstan-return array<string, string>
-   *   Permissions mapped to labels.
+   * @phpstan-param array<string, mixed> $relationProperties
+   *   JSON serializable array.
    */
-  public function getPermissions(string $entityName): array;
+  public function hasRelation(int $contactId, string $relationType, array $relationProperties): bool;
+
+  public function supportsRelationType(string $relationType): bool;
 
 }

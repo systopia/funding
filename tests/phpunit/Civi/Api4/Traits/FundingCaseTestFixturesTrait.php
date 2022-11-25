@@ -21,7 +21,6 @@ namespace Civi\Api4\Traits;
 
 use Civi\Api4\Contact;
 use Civi\Api4\FundingCase;
-use Civi\Api4\FundingCaseContactRelation;
 use Civi\Api4\Relationship;
 use Civi\Api4\RelationshipType;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
@@ -134,11 +133,6 @@ trait FundingCaseTestFixturesTrait {
         'last_name' => 'User',
       ])->execute()->first()['id'];
 
-    $contactRelationId = FundingCaseContactRelationFixture::addContact(
-      $this->associatedContactIdNoPermissions,
-      $this->permittedFundingCaseId,
-      NULL)['id'];
-
     $this->associatedContactId = Contact::create()
       ->setValues([
         'contact_type' => 'Individual',
@@ -149,16 +143,18 @@ trait FundingCaseTestFixturesTrait {
     FundingCaseContactRelationFixture::addContact(
       $this->associatedContactId,
       $this->permittedFundingCaseId,
-      $associatedContactPermissions);
+      $associatedContactPermissions
+    );
 
-    FundingCaseContactRelation::create()
-      ->setValues([
-        'funding_case_id' => $this->permittedFundingCaseId,
-        'entity_table' => 'civicrm_relationship_type',
-        'entity_id' => $permittedRelationshipTypeId,
-        'parent_id' => $contactRelationId,
-        'permissions' => $permittedRelationshipTypePermissions,
-      ])->execute();
+    FundingCaseContactRelationFixture::addFixture(
+      $this->permittedFundingCaseId,
+      'ContactRelationship',
+      [
+        'contactId' => $this->associatedContactIdNoPermissions,
+        'relationshipTypeId' => $permittedRelationshipTypeId,
+      ],
+      $permittedRelationshipTypePermissions
+    );
 
     $this->relatedABContactId = Contact::create()
       ->setValues([

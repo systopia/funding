@@ -25,7 +25,7 @@ use Civi\RemoteTools\Event\GetPossiblePermissionsEvent;
 use Psr\SimpleCache\CacheInterface;
 
 /**
- * Gets possible permissions for an entity via a Symony event.
+ * Gets possible permissions for an entity via a Symfony event.
  *
  * @see GetPossiblePermissionsEvent
  */
@@ -36,7 +36,7 @@ final class PossiblePermissionsLoader implements PossiblePermissionsLoaderInterf
   private CiviEventDispatcher $eventDispatcher;
 
   /**
-   * @phpstan-var array<string, array<string>>
+   * @phpstan-var array<string, array<string, string>>
    */
   private array $permissions = [];
 
@@ -61,7 +61,7 @@ final class PossiblePermissionsLoader implements PossiblePermissionsLoaderInterf
   }
 
   /**
-   * @phpstan-return array<string>
+   * @phpstan-return array<string, string>
    */
   private function doGetPermissions(string $entityName): array {
     $cacheKey = 'possible-permissions.' . $entityName;

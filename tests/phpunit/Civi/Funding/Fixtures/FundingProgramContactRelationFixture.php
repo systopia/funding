@@ -24,18 +24,30 @@ use Civi\Api4\FundingProgramContactRelation;
 final class FundingProgramContactRelationFixture {
 
   /**
-   * @phpstan-param array<string>|null $permissions
+   * @phpstan-param array<string> $permissions
    *
    * @phpstan-return array<string, scalar|null>&array{id: int}
    *
    * @throws \API_Exception
    */
-  public static function addContact(int $contactId, int $fundingProgramId, ?array $permissions): array {
+  public static function addContact(int $contactId, int $fundingProgramId, array $permissions): array {
+    return self::addFixture($fundingProgramId, 'Contact', ['contactId' => $contactId], $permissions);
+  }
+
+  /**
+   * @phpstan-param array<string, mixed> $properties
+   * @phpstan-param array<string> $permissions
+   *
+   * @phpstan-return array<string, scalar|null>&array{id: int}
+   *
+   * @throws \API_Exception
+   */
+  public static function addFixture(int $fundingProgramId, string $type, array $properties, array $permissions): array {
     return FundingProgramContactRelation::create()
       ->setValues([
         'funding_program_id' => $fundingProgramId,
-        'entity_table' => 'civicrm_contact',
-        'entity_id' => $contactId,
+        'type' => $type,
+        'properties' => $properties,
         'permissions' => $permissions,
       ])->execute()->first();
   }

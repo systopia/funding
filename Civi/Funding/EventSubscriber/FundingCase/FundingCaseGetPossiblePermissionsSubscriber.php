@@ -22,6 +22,7 @@ namespace Civi\Funding\EventSubscriber\FundingCase;
 use Civi\Api4\FundingCase;
 use Civi\RemoteTools\Event\GetPossiblePermissionsEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use CRM_Funding_ExtensionUtil as E;
 
 final class FundingCaseGetPossiblePermissionsSubscriber implements EventSubscriberInterface {
 
@@ -35,13 +36,13 @@ final class FundingCaseGetPossiblePermissionsSubscriber implements EventSubscrib
   public function onGetPossiblePermissions(GetPossiblePermissionsEvent $event): void {
     // TODO: Possible permissions for FundingCase
     $event->addPermissions([
-      'application_view',
-      'application_modify',
-      'application_apply',
-      'application_withdraw',
-      'application_request_rework',
-      'review_calculative',
-      'review_content',
+      'application_view' => E::ts('Application: view'),
+      'application_modify' => E::ts('Application: modify'),
+      'application_apply' => E::ts('Application: apply'),
+      'application_withdraw' => E::ts('Application: withdraw'),
+      'application_request_rework' => E::ts('Application: request rework'),
+      'review_calculative' => E::ts('Review: calculative'),
+      'review_content' => E::ts('Review: content'),
     ]);
   }
 
