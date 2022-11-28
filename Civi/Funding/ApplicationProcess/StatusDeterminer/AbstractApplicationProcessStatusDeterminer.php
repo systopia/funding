@@ -24,7 +24,7 @@ use Civi\Funding\Entity\FullApplicationProcessStatus;
 /**
  * @phpstan-type statusActionStatusMapT array<string|null, array<string, string>>
  */
-class ApplicationProcessStatusDeterminer implements ApplicationProcessStatusDeterminerInterface {
+abstract class AbstractApplicationProcessStatusDeterminer implements ApplicationProcessStatusDeterminerInterface {
 
   /**
    * @phpstan-var statusActionStatusMapT
@@ -50,7 +50,7 @@ class ApplicationProcessStatusDeterminer implements ApplicationProcessStatusDete
     return $status;
   }
 
-  public function getStatus(FullApplicationProcessStatus $currentStatus, string $action): string {
+  public function getStatus(FullApplicationProcessStatus $currentStatus, string $action): FullApplicationProcessStatus {
     $status = $this->statusActionStatusMap[$currentStatus->getStatus()][$action] ?? NULL;
     if (NULL === $status) {
       throw new \InvalidArgumentException(
@@ -62,7 +62,18 @@ class ApplicationProcessStatusDeterminer implements ApplicationProcessStatusDete
       );
     }
 
-    return $status;
+    return new FullApplicationProcessStatus(
+      $status,
+      $this->getIsReviewCalculative($currentStatus, $action),
+      $this->getIsReviewContent($currentStatus, $action),
+    );
   }
+
+  abstract protected function getIsReviewCalculative(
+    FullApplicationProcessStatus $currentStatus,
+    string $action
+  ): ?bool;
+
+  abstract protected function getIsReviewContent(FullApplicationProcessStatus $currentStatus, string $action): ?bool;
 
 }

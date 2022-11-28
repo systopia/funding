@@ -84,7 +84,7 @@ final class ApplicationFormSubmitHandler implements ApplicationFormSubmitHandler
       return ApplicationFormSubmitResult::createSuccess($validationResult, $validatedData);
     }
 
-    $applicationProcess->setStatus(
+    $applicationProcess->setFullStatus(
       $this->statusDeterminer->getStatus($applicationProcess->getFullStatus(), $validatedData->getAction())
     );
     if (FALSE === $jsonSchema->getKeywordValueOrDefault('readOnly', FALSE)) {

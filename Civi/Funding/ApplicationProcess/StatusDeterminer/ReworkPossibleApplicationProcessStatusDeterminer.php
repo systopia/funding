@@ -32,14 +32,13 @@ final class ReworkPossibleApplicationProcessStatusDeterminer implements Applicat
       'withdraw-rework-request' => 'approved',
       'approve-rework-request' => 'rework',
       'reject-rework-request' => 'approved',
-      'update' => 'rework-requested',
     ],
     'rework' => [
       'save' => 'rework',
       'apply' => 'rework-review-requested',
       'withdraw-change' => 'applied',
       'revert-change' => 'applied',
-      'update' => 'rework',
+      'review' => 'rework-review',
     ],
     'rework-review-requested' => [
       'request-rework' => 'rework',
@@ -47,8 +46,10 @@ final class ReworkPossibleApplicationProcessStatusDeterminer implements Applicat
       'update' => 'rework-review-requested',
     ],
     'rework-review' => [
-      'set-calculative-review-result' => 'rework-review',
-      'set-content-review-result' => 'rework-review',
+      'approve-calculative' => 'rework-review',
+      'reject-calculative' => 'rework-review',
+      'approve-content' => 'rework-review',
+      'reject-content' => 'rework-review',
       'request-change' => 'rework',
       'approve-change' => 'approved',
       'reject-change' => 'approved',
@@ -66,9 +67,53 @@ final class ReworkPossibleApplicationProcessStatusDeterminer implements Applicat
     return $this->statusDeterminer->getInitialStatus($action);
   }
 
-  public function getStatus(FullApplicationProcessStatus $currentStatus, string $action): string {
-    return self::STATUS_ACTION_STATUS_MAP[$currentStatus->getStatus()][$action]
-      ?? $this->statusDeterminer->getStatus($currentStatus, $action);
+  public function getStatus(FullApplicationProcessStatus $currentStatus, string $action): FullApplicationProcessStatus {
+    return isset(self::STATUS_ACTION_STATUS_MAP[$currentStatus->getStatus()][$action])
+      ? new FullApplicationProcessStatus(
+          self::STATUS_ACTION_STATUS_MAP[$currentStatus->getStatus()][$action],
+          $this->getIsReviewCalculative($currentStatus, $action),
+          $this->getIsReviewContent($currentStatus, $action)
+      ) : $this->statusDeterminer->getStatus($currentStatus, $action);
+  }
+
+  private function getIsReviewCalculative(FullApplicationProcessStatus $currentStatus, string $action): ?bool {
+    if ('request-change' === $action) {
+      return NULL;
+    }
+
+    if ('reject-change' === $action) {
+      return TRUE;
+    }
+
+    if ('approve-calculative' === $action) {
+      return TRUE;
+    }
+
+    if ('reject-calculative' === $action) {
+      return FALSE;
+    }
+
+    return $currentStatus->getIsReviewCalculative();
+  }
+
+  private function getIsReviewContent(FullApplicationProcessStatus $currentStatus, string $action): ?bool {
+    if ('request-change' === $action) {
+      return NULL;
+    }
+
+    if ('reject-change' === $action) {
+      return TRUE;
+    }
+
+    if ('approve-content' === $action) {
+      return TRUE;
+    }
+
+    if ('reject-content' === $action) {
+      return FALSE;
+    }
+
+    return $currentStatus->getIsReviewContent();
   }
 
 }

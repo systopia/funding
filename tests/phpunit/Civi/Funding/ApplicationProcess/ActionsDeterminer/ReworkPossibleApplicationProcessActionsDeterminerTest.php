@@ -28,48 +28,50 @@ use PHPUnit\Framework\TestCase;
  */
 final class ReworkPossibleApplicationProcessActionsDeterminerTest extends TestCase {
 
+  // phpcs:disable Generic.Files.LineLength.TooLong
   private const STATUS_PERMISSION_ACTIONS_MAP = [
     'approved' => [
       'application_modify' => [],
       'application_request_rework' => ['request-rework'],
       'application_apply' => [],
       'application_withdraw' => [],
-      'review_calculative' => ['update'],
-      'review_content' => ['update'],
+      'review_calculative' => [],
+      'review_content' => [],
     ],
     'rework-requested' => [
       'application_modify' => [],
       'application_request_rework' => ['withdraw-rework-request'],
       'application_apply' => [],
       'application_withdraw' => [],
-      'review_calculative' => ['approve-rework-request', 'reject-rework-request', 'update'],
-      'review_content' => ['approve-rework-request', 'reject-rework-request', 'update'],
+      'review_calculative' => ['approve-rework-request', 'reject-rework-request'],
+      'review_content' => ['approve-rework-request', 'reject-rework-request'],
     ],
     'rework' => [
       'application_modify' => ['save'],
       'application_request_rework' => [],
       'application_apply' => ['apply'],
       'application_withdraw' => ['withdraw-change'],
-      'review_calculative' => ['update'],
-      'review_content' => ['update'],
+      'review_calculative' => ['review'],
+      'review_content' => ['review'],
     ],
     'rework-review-requested' => [
       'application_modify' => ['request-rework'],
       'application_request_rework' => [],
       'application_apply' => [],
       'application_withdraw' => [],
-      'review_calculative' => ['review', 'update'],
-      'review_content' => ['review', 'update'],
+      'review_calculative' => ['review'],
+      'review_content' => ['review'],
     ],
     'rework-review' => [
       'application_modify' => [],
       'application_request_rework' => [],
       'application_apply' => [],
       'application_withdraw' => [],
-      'review_calculative' => ['set-calculative-review-result', 'request-change', 'update'],
-      'review_content' => ['set-content-review-result', 'request-change', 'update'],
+      'review_calculative' => ['request-change', 'update', 'reject-change', 'approve-calculative', 'reject-calculative'],
+      'review_content' => ['request-change', 'update', 'reject-change', 'approve-content', 'reject-content'],
     ],
   ];
+  // phpcs:enable
 
   /**
    * @var \Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerInterface&\PHPUnit\Framework\MockObject\MockObject
@@ -104,7 +106,7 @@ final class ReworkPossibleApplicationProcessActionsDeterminerTest extends TestCa
     $this->decoratedActionsDeterminerMock->expects(static::atLeastOnce())->method('getActions')->willReturn([]);
     foreach (self::STATUS_PERMISSION_ACTIONS_MAP as $status => $permissionActionsMap) {
       $fullStatus = new FullApplicationProcessStatus($status, NULL, NULL);
-      $actions = array_unique(array_merge(...array_values($permissionActionsMap)));
+      $actions = array_values(array_unique(array_merge(...array_values($permissionActionsMap))));
       $permissions = array_keys($permissionActionsMap);
       static::assertEquals(
         $actions,
@@ -114,44 +116,56 @@ final class ReworkPossibleApplicationProcessActionsDeterminerTest extends TestCa
     }
   }
 
-  public function testGetActionsApprove(): void {
+  public function testGetActionsApproveChange(): void {
     foreach (['review_calculative', 'review_content'] as $permission) {
-      $fullStatus = new FullApplicationProcessStatus('approved', TRUE, TRUE);
-      static::assertSame(['update'], $this->actionsDeterminer->getActions($fullStatus, [$permission]));
-
-      $actions = self::STATUS_PERMISSION_ACTIONS_MAP['rework-review'][$permission];
+      $fullStatus = new FullApplicationProcessStatus('rework', TRUE, TRUE);
+      static::assertNotContains('approve-change', $this->actionsDeterminer->getActions($fullStatus, [$permission]));
       $fullStatus = new FullApplicationProcessStatus('rework-review', TRUE, NULL);
-      static::assertEquals($actions, $this->actionsDeterminer->getActions($fullStatus, [$permission]));
+      static::assertNotContains('approve-change', $this->actionsDeterminer->getActions($fullStatus, [$permission]));
       $fullStatus = new FullApplicationProcessStatus('rework-review', NULL, TRUE);
-      static::assertEquals($actions, $this->actionsDeterminer->getActions($fullStatus, [$permission]));
+      static::assertNotContains('approve-change', $this->actionsDeterminer->getActions($fullStatus, [$permission]));
 
-      $actions[] = 'approve-change';
       $fullStatus = new FullApplicationProcessStatus('rework-review', TRUE, TRUE);
-      static::assertEquals($actions, $this->actionsDeterminer->getActions($fullStatus, [$permission]));
+      static::assertContains('approve-change', $this->actionsDeterminer->getActions($fullStatus, [$permission]));
     }
   }
 
-  public function testGetActionsReject(): void {
-    foreach (['review_calculative', 'review_content'] as $permission) {
-      $fullStatus = new FullApplicationProcessStatus('approved', FALSE, FALSE);
-      static::assertSame(['update'], $this->actionsDeterminer->getActions($fullStatus, [$permission]));
+  public function testActionsReviewCalculative(): void {
+    $permissions = ['review_calculative'];
+    $fullStatus = new FullApplicationProcessStatus('rework-review', NULL, NULL);
+    static::assertContains('approve-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertContains('reject-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertNotContains('approve-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertNotContains('reject-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    $fullStatus = new FullApplicationProcessStatus('rework-review', FALSE, NULL);
+    static::assertContains('approve-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertNotContains('reject-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertNotContains('approve-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertNotContains('reject-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    $fullStatus = new FullApplicationProcessStatus('rework-review', TRUE, NULL);
+    static::assertNotContains('approve-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertContains('reject-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertNotContains('approve-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertNotContains('reject-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+  }
 
-      $actions = self::STATUS_PERMISSION_ACTIONS_MAP['rework-review'][$permission];
-      $fullStatus = new FullApplicationProcessStatus('rework-review', NULL, NULL);
-      static::assertEquals($actions, $this->actionsDeterminer->getActions($fullStatus, [$permission]));
-
-      $actions[] = 'reject-change';
-      $fullStatus = new FullApplicationProcessStatus('rework-review', FALSE, FALSE);
-      static::assertEquals($actions, $this->actionsDeterminer->getActions($fullStatus, [$permission]));
-      $fullStatus = new FullApplicationProcessStatus('rework-review', NULL, FALSE);
-      static::assertEquals($actions, $this->actionsDeterminer->getActions($fullStatus, [$permission]));
-      $fullStatus = new FullApplicationProcessStatus('rework-review', TRUE, FALSE);
-      static::assertEquals($actions, $this->actionsDeterminer->getActions($fullStatus, [$permission]));
-      $fullStatus = new FullApplicationProcessStatus('rework-review', FALSE, TRUE);
-      static::assertEquals($actions, $this->actionsDeterminer->getActions($fullStatus, [$permission]));
-      $fullStatus = new FullApplicationProcessStatus('rework-review', FALSE, NULL);
-      static::assertEquals($actions, $this->actionsDeterminer->getActions($fullStatus, [$permission]));
-    }
+  public function testActionsReviewContent(): void {
+    $permissions = ['review_content'];
+    $fullStatus = new FullApplicationProcessStatus('rework-review', NULL, NULL);
+    static::assertContains('approve-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertContains('reject-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertNotContains('approve-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertNotContains('reject-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    $fullStatus = new FullApplicationProcessStatus('rework-review', NULL, FALSE);
+    static::assertContains('approve-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertNotContains('reject-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertNotContains('approve-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertNotContains('reject-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    $fullStatus = new FullApplicationProcessStatus('rework-review', NULL, TRUE);
+    static::assertNotContains('approve-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertContains('reject-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertNotContains('approve-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertNotContains('reject-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
   }
 
   public function testGetActionsDecorated(): void {

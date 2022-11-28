@@ -3,26 +3,10 @@
 
     <div ng-if="!isChanged" class="review-buttons">
         <funding-action-button action="review" class="btn btn-primary" crm-icon="fa-eye">{{ts('Start review')}}</funding-action-button>
-        <span ng-if="isActionAllowed('set-content-review-result')">
-            <button ng-if="!applicationProcess.is_review_content"
-                    type="button" class="btn btn-success" crm-icon="fa-thumbs-up"
-                    ng-click="setReviewContent(true)"
-                    ng-disabled="isActionDisabled('set-content-review-result')">{{ts('Set content review succeeded')}}</button>
-            <button ng-if="applicationProcess.is_review_content !== false"
-                    type="button" class="btn btn-danger" crm-icon="fa-thumbs-down"
-                    ng-click="setReviewContent(false)"
-                    ng-disabled="isActionDisabled('set-content-review-result')">{{ts('Set content review rejected')}}</button>
-        </span>
-        <span ng-if="isActionAllowed('set-calculative-review-result')">
-            <button ng-if="!applicationProcess.is_review_calculative"
-                    type="button" class="btn btn-success" crm-icon="fa-thumbs-up"
-                    ng-click="setReviewCalculative(true)"
-                    ng-disabled="isActionDisabled('set-calculative-review-result')">{{ts('Set calculative review succeeded')}}</button>
-            <button ng-if="applicationProcess.is_review_calculative !== false"
-                    type="button" class="btn btn-danger" crm-icon="fa-thumbs-down"
-                    ng-click="setReviewCalculative(false)"
-                    ng-disabled="isActionDisabled('set-calculative-review-result')">{{ts('Set calculative review rejected')}}</button>
-        </span>
+        <funding-action-button action="approve-content" class="btn btn-success" crm-icon="fa-thumbs-up">{{ts('Set content review succeeded')}}</funding-action-button>
+        <funding-action-button action="reject-content" class="btn btn-danger" crm-icon="fa-thumbs-down">{{ts('Set content review rejected')}}</funding-action-button>
+        <funding-action-button action="approve-calculative" class="btn btn-success" crm-icon="fa-thumbs-up">{{ts('Set calculative review succeeded')}}</funding-action-button>
+        <funding-action-button action="reject-calculative" class="btn btn-danger" crm-icon="fa-thumbs-down">{{ts('Set calculative review rejected')}}</funding-action-button>
         <funding-action-button action="request-change" class="btn btn-warning" crm-icon="fa-arrow-left">{{ts('Request change')}}</funding-action-button>
         <funding-action-button action="approve" class="btn btn-success" crm-icon="fa-check">{{ts('Approve application')}}</funding-action-button>
         <funding-action-button action="reject" class="btn btn-danger" crm-icon="fa-ban">{{ts('Reject application')}}</funding-action-button>
