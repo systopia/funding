@@ -2,16 +2,16 @@
   <h1 crm-page-title>{{ts('Funding recipient relations')}}</h1>
 
   <form name="fundingRecipientRelations" ng-submit="save()">
-    <div>
+    <div class="form-group">
       <button type="button" class="btn btn-sm" crm-icon="fa-plus-circle" ng-click="add()">{{ts('Add relation')}}</button>
     </div>
-    <div ng-repeat="relation in relations track by $index" class="crm-form-block clear">
+    <div ng-repeat="relation in relations track by $index" class="form-group clear">
       <button type="button" class="btn btn-sm btn-danger" crm-icon="fa-remove" ng-click="remove($index)" title="{{ts('Remove relation')}}"></button>
       <span>
         <funding-recipient-relation types="types" type="relation.type" properties="relation.properties"/>
       </span>
     </div>
-    <div>
+    <div class="form-group">
       <button type="submit" class="btn btn-primary" crm-icon="fa-check">{{ts('Save')}}</button>
     </div>
   </form>

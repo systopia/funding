@@ -29,11 +29,12 @@ fundingModule.directive('fundingRecipientRelation', ['$compile', function($compi
     },
     link: function(scope, element) {
       // Insert/update type specific template on type change.
-      scope.$watch('type', function (newValue, oldValue) {
+      scope.$watch('type', function (newValue) {
         scope.typeSpecification = scope.types[newValue];
         if (scope.typeSpecification) {
           const propertiesElem = angular.element(element[0].querySelector('.funding-recipient-relation-properties'));
-          propertiesElem.html($compile(scope.typeSpecification.template)(scope));
+          propertiesElem.html(scope.typeSpecification.template);
+          $compile(propertiesElem.contents())(scope);
         }
       });
     },
