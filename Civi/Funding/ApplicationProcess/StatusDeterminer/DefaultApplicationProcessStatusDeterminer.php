@@ -19,7 +19,9 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\StatusDeterminer;
 
-final class DefaultApplicationProcessStatusDeterminer extends ApplicationProcessStatusDeterminer {
+use Civi\Funding\Entity\FullApplicationProcessStatus;
+
+final class DefaultApplicationProcessStatusDeterminer extends AbstractApplicationProcessStatusDeterminer {
 
   private const STATUS_ACTION_STATUS_MAP = [
     NULL => [
@@ -29,17 +31,17 @@ final class DefaultApplicationProcessStatusDeterminer extends ApplicationProcess
     'new' => [
       'save' => 'new',
       'apply' => 'applied',
-      'update' => 'new',
     ],
     'applied' => [
       'modify' => 'draft',
       'withdraw' => 'withdrawn',
       'review' => 'review',
-      'update' => 'applied',
     ],
     'review' => [
-      'set-calculative-review-result' => 'review',
-      'set-content-review-result' => 'review',
+      'approve-calculative' => 'review',
+      'reject-calculative' => 'review',
+      'approve-content' => 'review',
+      'reject-content' => 'review',
       'request-change' => 'draft',
       'approve' => 'approved',
       'reject' => 'rejected',
@@ -49,12 +51,47 @@ final class DefaultApplicationProcessStatusDeterminer extends ApplicationProcess
       'save' => 'draft',
       'apply' => 'applied',
       'withdraw' => 'withdrawn',
-      'update' => 'draft',
+      'review' => 'review',
+    ],
+    'approved' => [
+      'update' => 'approved',
     ],
   ];
 
   public function __construct() {
     parent::__construct(self::STATUS_ACTION_STATUS_MAP);
+  }
+
+  protected function getIsReviewCalculative(FullApplicationProcessStatus $currentStatus, string $action): ?bool {
+    if ('request-change' === $action) {
+      return NULL;
+    }
+
+    if ('approve-calculative' === $action) {
+      return TRUE;
+    }
+
+    if ('reject-calculative' === $action) {
+      return FALSE;
+    }
+
+    return $currentStatus->getIsReviewCalculative();
+  }
+
+  protected function getIsReviewContent(FullApplicationProcessStatus $currentStatus, string $action): ?bool {
+    if ('request-change' === $action) {
+      return NULL;
+    }
+
+    if ('approve-content' === $action) {
+      return TRUE;
+    }
+
+    if ('reject-content' === $action) {
+      return FALSE;
+    }
+
+    return $currentStatus->getIsReviewContent();
   }
 
 }

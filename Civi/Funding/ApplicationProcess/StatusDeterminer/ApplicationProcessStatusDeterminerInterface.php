@@ -28,6 +28,6 @@ interface ApplicationProcessStatusDeterminerInterface {
 
   public function getInitialStatus(string $action): string;
 
-  public function getStatus(FullApplicationProcessStatus $currentStatus, string $action): string;
+  public function getStatus(FullApplicationProcessStatus $currentStatus, string $action): FullApplicationProcessStatus;
 
 }

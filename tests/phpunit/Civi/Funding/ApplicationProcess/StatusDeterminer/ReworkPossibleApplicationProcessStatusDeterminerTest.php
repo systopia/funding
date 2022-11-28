@@ -55,22 +55,20 @@ final class ReworkPossibleApplicationProcessStatusDeterminerTest extends TestCas
    */
   public function testGetStatus(string $currentStatus, string $action, string $expectedStatus): void {
     $fullStatus = new FullApplicationProcessStatus($currentStatus, NULL, NULL);
-    static::assertSame(
-      $expectedStatus,
+    static::assertEquals(
+      new FullApplicationProcessStatus($expectedStatus, NULL, NULL),
       $this->statusDeterminer->getStatus($fullStatus, $action),
       sprintf('Current status: %s, Action: %s, Expected status: %s', $currentStatus, $action, $expectedStatus)
     );
   }
 
-  /**
-   * @dataProvider provideActions
-   */
   public function testGetStatusDecorated(): void {
     $fullStatus = new FullApplicationProcessStatus('foo', NULL, NULL);
+    $expectedFullStatus = new FullApplicationProcessStatus('bar', NULL, NULL);
     $this->decoratedStatusDeterminerMock->method('getStatus')
       ->with($fullStatus, 'action')
-      ->willReturn('bar');
-    static::assertSame('bar', $this->statusDeterminer->getStatus($fullStatus, 'action'));
+      ->willReturn($expectedFullStatus);
+    static::assertSame($expectedFullStatus, $this->statusDeterminer->getStatus($fullStatus, 'action'));
   }
 
   /**
@@ -81,18 +79,68 @@ final class ReworkPossibleApplicationProcessStatusDeterminerTest extends TestCas
     yield ['rework-requested', 'withdraw-rework-request', 'approved'];
     yield ['rework-requested', 'approve-rework-request', 'rework'];
     yield ['rework-requested', 'reject-rework-request', 'approved'];
-    yield ['rework-requested', 'update', 'rework-requested'];
     yield ['rework', 'save', 'rework'];
     yield ['rework', 'apply', 'rework-review-requested'];
     yield ['rework', 'withdraw-change', 'applied'];
-    yield ['rework', 'update', 'rework'];
+    yield ['rework', 'review', 'rework-review'];
     yield ['rework-review-requested', 'request-rework', 'rework'];
     yield ['rework-review-requested', 'review', 'rework-review'];
-    yield ['rework-review', 'set-calculative-review-result', 'rework-review'];
-    yield ['rework-review', 'set-content-review-result', 'rework-review'];
     yield ['rework-review', 'request-change', 'rework'];
     yield ['rework-review', 'approve-change', 'approved'];
-    yield ['rework-review', 'reject-change', 'approved'];
+    yield ['rework-review', 'update', 'rework-review'];
+  }
+
+  public function testApproveCalculative(): void {
+    $currentStatus = new FullApplicationProcessStatus('rework-review', NULL, NULL);
+    static::assertEquals(
+      new FullApplicationProcessStatus('rework-review', TRUE, NULL),
+      $this->statusDeterminer->getStatus($currentStatus, 'approve-calculative'),
+    );
+  }
+
+  public function testRejectCalculative(): void {
+    $currentStatus = new FullApplicationProcessStatus('rework-review', NULL, NULL);
+    static::assertEquals(
+      new FullApplicationProcessStatus('rework-review', FALSE, NULL),
+      $this->statusDeterminer->getStatus($currentStatus, 'reject-calculative'),
+    );
+  }
+
+  public function testApproveContent(): void {
+    $currentStatus = new FullApplicationProcessStatus('rework-review', NULL, NULL);
+    static::assertEquals(
+      new FullApplicationProcessStatus('rework-review', NULL, TRUE),
+      $this->statusDeterminer->getStatus($currentStatus, 'approve-content'),
+    );
+  }
+
+  public function testRejectContent(): void {
+    $currentStatus = new FullApplicationProcessStatus('rework-review', NULL, NULL);
+    static::assertEquals(
+      new FullApplicationProcessStatus('rework-review', NULL, FALSE),
+      $this->statusDeterminer->getStatus($currentStatus, 'reject-content'),
+    );
+  }
+
+  public function testResetReview(): void {
+    $currentStatus = new FullApplicationProcessStatus('rework-review', FALSE, TRUE);
+    static::assertEquals(
+      new FullApplicationProcessStatus('rework', NULL, NULL),
+      $this->statusDeterminer->getStatus($currentStatus, 'request-change'),
+    );
+
+    static::assertEquals(
+      new FullApplicationProcessStatus('rework-review', FALSE, TRUE),
+      $this->statusDeterminer->getStatus($currentStatus, 'update'),
+    );
+  }
+
+  public function testRejectChange(): void {
+    $currentStatus = new FullApplicationProcessStatus('rework-review', FALSE, FALSE);
+    static::assertEquals(
+      new FullApplicationProcessStatus('approved', TRUE, TRUE),
+      $this->statusDeterminer->getStatus($currentStatus, 'reject-change'),
+    );
   }
 
 }

@@ -32,25 +32,23 @@ final class DefaultApplicationProcessActionsDeterminer extends ApplicationProces
       'application_modify' => ['save'],
       'application_apply' => ['apply'],
       'application_withdraw' => ['delete'],
-      'review_calculative' => ['update'],
-      'review_content' => ['update'],
     ],
     'applied' => [
       'application_modify' => ['modify'],
       'application_withdraw' => ['withdraw'],
-      'review_calculative' => ['review', 'update'],
-      'review_content' => ['review', 'update'],
+      'review_calculative' => ['review'],
+      'review_content' => ['review'],
     ],
     'review' => [
-      'review_calculative' => ['set-calculative-review-result', 'request-change', 'update'],
-      'review_content' => ['set-content-review-result', 'request-change', 'update'],
+      'review_calculative' => ['request-change', 'update', 'reject'],
+      'review_content' => ['request-change', 'update', 'reject'],
     ],
     'draft' => [
       'application_modify' => ['save'],
       'application_apply' => ['apply'],
       'application_withdraw' => ['withdraw'],
-      'review_calculative' => ['update'],
-      'review_content' => ['update'],
+      'review_calculative' => ['review'],
+      'review_content' => ['review'],
     ],
     'approved' => [
       'review_calculative' => ['update'],
@@ -65,11 +63,24 @@ final class DefaultApplicationProcessActionsDeterminer extends ApplicationProces
   public function getActions(FullApplicationProcessStatus $status, array $permissions): array {
     $actions = parent::getActions($status, $permissions);
     if ('review' === $status->getStatus() && $this->hasReviewPermission($permissions)) {
+      if ($this->hasReviewCalculativePermission($permissions)) {
+        if (TRUE !== $status->getIsReviewCalculative()) {
+          $actions[] = 'approve-calculative';
+        }
+        if (FALSE !== $status->getIsReviewCalculative()) {
+          $actions[] = 'reject-calculative';
+        }
+      }
+      if ($this->hasReviewContentPermission($permissions)) {
+        if (TRUE !== $status->getIsReviewContent()) {
+          $actions[] = 'approve-content';
+        }
+        if (FALSE !== $status->getIsReviewContent()) {
+          $actions[] = 'reject-content';
+        }
+      }
       if (TRUE === $status->getIsReviewCalculative() && TRUE === $status->getIsReviewContent()) {
         $actions[] = 'approve';
-      }
-      elseif (FALSE === $status->getIsReviewCalculative() || FALSE === $status->getIsReviewContent()) {
-        $actions[] = 'reject';
       }
     }
 
@@ -82,6 +93,20 @@ final class DefaultApplicationProcessActionsDeterminer extends ApplicationProces
   private function hasReviewPermission(array $permissions): bool {
     return in_array('review_content', $permissions, TRUE)
       || in_array('review_calculative', $permissions, TRUE);
+  }
+
+  /**
+   * @phpstan-param array<string> $permissions
+   */
+  private function hasReviewCalculativePermission(array $permissions): bool {
+    return in_array('review_calculative', $permissions, TRUE);
+  }
+
+  /**
+   * @phpstan-param array<string> $permissions
+   */
+  private function hasReviewContentPermission(array $permissions): bool {
+    return in_array('review_content', $permissions, TRUE);
   }
 
 }

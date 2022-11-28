@@ -26,29 +26,27 @@ final class ReworkPossibleApplicationProcessActionsDeterminer extends Applicatio
   private const STATUS_PERMISSIONS_ACTION_MAP = [
     'approved' => [
       'application_request_rework' => ['request-rework'],
-      'review_calculative' => ['update'],
-      'review_content' => ['update'],
     ],
     'rework-requested' => [
       'application_request_rework' => ['withdraw-rework-request'],
-      'review_calculative' => ['approve-rework-request', 'reject-rework-request', 'update'],
-      'review_content' => ['approve-rework-request', 'reject-rework-request', 'update'],
+      'review_calculative' => ['approve-rework-request', 'reject-rework-request'],
+      'review_content' => ['approve-rework-request', 'reject-rework-request'],
     ],
     'rework' => [
       'application_apply' => ['apply'],
       'application_modify' => ['save'],
       'application_withdraw' => ['withdraw-change'],
-      'review_calculative' => ['update'],
-      'review_content' => ['update'],
+      'review_calculative' => ['review'],
+      'review_content' => ['review'],
     ],
     'rework-review-requested' => [
       'application_modify' => ['request-rework'],
-      'review_calculative' => ['review', 'update'],
-      'review_content' => ['review', 'update'],
+      'review_calculative' => ['review'],
+      'review_content' => ['review'],
     ],
     'rework-review' => [
-      'review_calculative' => ['set-calculative-review-result', 'request-change', 'update'],
-      'review_content' => ['set-content-review-result', 'request-change', 'update'],
+      'review_calculative' => ['request-change', 'update', 'reject-change'],
+      'review_content' => ['request-change', 'update', 'reject-change'],
     ],
   ];
 
@@ -60,16 +58,29 @@ final class ReworkPossibleApplicationProcessActionsDeterminer extends Applicatio
   }
 
   public function getActions(FullApplicationProcessStatus $status, array $permissions): array {
-    $actions = \array_unique(\array_merge(
+    $actions = \array_values(\array_unique(\array_merge(
       parent::getActions($status, $permissions),
       $this->actionsDeterminer->getActions($status, $permissions),
-    ));
+    )));
     if ('rework-review' === $status->getStatus() && $this->hasReviewPermission($permissions)) {
+      if ($this->hasReviewCalculativePermission($permissions)) {
+        if (TRUE !== $status->getIsReviewCalculative()) {
+          $actions[] = 'approve-calculative';
+        }
+        if (FALSE !== $status->getIsReviewCalculative()) {
+          $actions[] = 'reject-calculative';
+        }
+      }
+      if ($this->hasReviewContentPermission($permissions)) {
+        if (TRUE !== $status->getIsReviewContent()) {
+          $actions[] = 'approve-content';
+        }
+        if (FALSE !== $status->getIsReviewContent()) {
+          $actions[] = 'reject-content';
+        }
+      }
       if (TRUE === $status->getIsReviewCalculative() && TRUE === $status->getIsReviewContent()) {
         $actions[] = 'approve-change';
-      }
-      elseif (FALSE === $status->getIsReviewCalculative() || FALSE === $status->getIsReviewContent()) {
-        $actions[] = 'reject-change';
       }
     }
 
@@ -89,6 +100,20 @@ final class ReworkPossibleApplicationProcessActionsDeterminer extends Applicatio
   private function hasReviewPermission(array $permissions): bool {
     return in_array('review_content', $permissions, TRUE)
       || in_array('review_calculative', $permissions, TRUE);
+  }
+
+  /**
+   * @phpstan-param array<string> $permissions
+   */
+  private function hasReviewCalculativePermission(array $permissions): bool {
+    return in_array('review_calculative', $permissions, TRUE);
+  }
+
+  /**
+   * @phpstan-param array<string> $permissions
+   */
+  private function hasReviewContentPermission(array $permissions): bool {
+    return in_array('review_content', $permissions, TRUE);
   }
 
 }

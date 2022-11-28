@@ -23,7 +23,7 @@ use Civi\Funding\Entity\FullApplicationProcessStatus;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminer
+ * @covers \Civi\Funding\ApplicationProcess\StatusDeterminer\AbstractApplicationProcessStatusDeterminer
  * @covers \Civi\Funding\ApplicationProcess\StatusDeterminer\DefaultApplicationProcessStatusDeterminer
  */
 final class DefaultApplicationProcessStatusDeterminerTest extends TestCase {
@@ -60,10 +60,10 @@ final class DefaultApplicationProcessStatusDeterminerTest extends TestCase {
    * @dataProvider provideActions
    */
   public function testGetStatus(string $currentStatus, string $action, string $expectedStatus): void {
-    $fullStatus = new FullApplicationProcessStatus($currentStatus, NULL, NULL);
-    static::assertSame(
-      $expectedStatus,
-      $this->statusDeterminer->getStatus($fullStatus, $action),
+    $fullCurrentStatus = new FullApplicationProcessStatus($currentStatus, NULL, NULL);
+    static::assertEquals(
+      new FullApplicationProcessStatus($expectedStatus, NULL, NULL),
+      $this->statusDeterminer->getStatus($fullCurrentStatus, $action),
       sprintf('Current status: %s, Action: %s, Expected status: %s', $currentStatus, $action, $expectedStatus)
     );
   }
@@ -74,21 +74,63 @@ final class DefaultApplicationProcessStatusDeterminerTest extends TestCase {
   public function provideActions(): iterable {
     yield ['new', 'save', 'new'];
     yield ['new', 'apply', 'applied'];
-    yield ['new', 'update', 'new'];
     yield ['applied', 'modify', 'draft'];
     yield ['applied', 'withdraw', 'withdrawn'];
     yield ['applied', 'review', 'review'];
-    yield ['applied', 'update', 'applied'];
     yield ['draft', 'save', 'draft'];
     yield ['draft', 'apply', 'applied'];
     yield ['draft', 'withdraw', 'withdrawn'];
-    yield ['draft', 'update', 'draft'];
-    yield ['review', 'set-calculative-review-result', 'review'];
-    yield ['review', 'set-calculative-review-result', 'review'];
+    yield ['draft', 'review', 'review'];
     yield ['review', 'request-change', 'draft'];
     yield ['review', 'approve', 'approved'];
     yield ['review', 'reject', 'rejected'];
     yield ['review', 'update', 'review'];
+    yield ['approved', 'update', 'approved'];
+  }
+
+  public function testApproveCalculative(): void {
+    $currentStatus = new FullApplicationProcessStatus('review', NULL, NULL);
+    static::assertEquals(
+      new FullApplicationProcessStatus('review', TRUE, NULL),
+      $this->statusDeterminer->getStatus($currentStatus, 'approve-calculative'),
+    );
+  }
+
+  public function testRejectCalculative(): void {
+    $currentStatus = new FullApplicationProcessStatus('review', NULL, NULL);
+    static::assertEquals(
+      new FullApplicationProcessStatus('review', FALSE, NULL),
+      $this->statusDeterminer->getStatus($currentStatus, 'reject-calculative'),
+    );
+  }
+
+  public function testApproveContent(): void {
+    $currentStatus = new FullApplicationProcessStatus('review', NULL, NULL);
+    static::assertEquals(
+      new FullApplicationProcessStatus('review', NULL, TRUE),
+      $this->statusDeterminer->getStatus($currentStatus, 'approve-content'),
+    );
+  }
+
+  public function testRejectContent(): void {
+    $currentStatus = new FullApplicationProcessStatus('review', NULL, NULL);
+    static::assertEquals(
+      new FullApplicationProcessStatus('review', NULL, FALSE),
+      $this->statusDeterminer->getStatus($currentStatus, 'reject-content'),
+    );
+  }
+
+  public function testResetReview(): void {
+    $currentStatus = new FullApplicationProcessStatus('review', TRUE, TRUE);
+    static::assertEquals(
+      new FullApplicationProcessStatus('draft', NULL, NULL),
+      $this->statusDeterminer->getStatus($currentStatus, 'request-change'),
+    );
+
+    static::assertEquals(
+      new FullApplicationProcessStatus('rejected', TRUE, TRUE),
+      $this->statusDeterminer->getStatus($currentStatus, 'reject'),
+    );
   }
 
   /**

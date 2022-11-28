@@ -22,6 +22,7 @@ namespace Civi\Funding\ApplicationProcess\Handler;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitCommand;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
+use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
@@ -90,9 +91,10 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
     $validatedData = new ValidatedApplicationDataMock();
     $this->mockCreateValidatedData($command, $validationResult, $validatedData);
 
+    $newStatus = new FullApplicationProcessStatus('new_status', TRUE, FALSE);
     $this->statusDeterminerMock->method('getStatus')
       ->with($command->getApplicationProcess()->getFullStatus(), ValidatedApplicationDataMock::ACTION)
-      ->willReturn('new_status');
+      ->willReturn($newStatus);
 
     $this->applicationProcessManagerMock->expects(static::once())->method('update')
       ->with($command->getContactId(), $command->getApplicationProcess());
@@ -113,6 +115,8 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
     static::assertSame(ValidatedApplicationDataMock::AMOUNT_REQUESTED, $applicationProcess->getAmountRequested());
     static::assertSame(ValidatedApplicationDataMock::APPLICATION_DATA, $applicationProcess->getRequestData());
     static::assertSame('new_status', $applicationProcess->getStatus());
+    static::assertTrue($applicationProcess->getIsReviewCalculative());
+    static::assertFalse($applicationProcess->getIsReviewContent());
   }
 
   public function testHandleValidReadOnly(): void {
@@ -126,9 +130,10 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
     $validatedData = new ValidatedApplicationDataMock([], ['action' => 'modify']);
     $this->mockCreateValidatedData($command, $validationResult, $validatedData);
 
+    $newStatus = new FullApplicationProcessStatus('new_status', TRUE, FALSE);
     $this->statusDeterminerMock->method('getStatus')
       ->with($command->getApplicationProcess()->getFullStatus(), 'modify')
-      ->willReturn('new_status');
+      ->willReturn($newStatus);
 
     $this->applicationProcessManagerMock->expects(static::once())->method('update')
       ->with($command->getContactId(), $command->getApplicationProcess());
@@ -140,7 +145,11 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
     static::assertSame($validatedData, $result->getValidatedData());
 
     // only status should be changed because form is read only
-    $expectedApplicationProcess = ApplicationProcessFactory::createApplicationProcess(['status' => 'new_status']);
+    $expectedApplicationProcess = ApplicationProcessFactory::createApplicationProcess([
+      'status' => 'new_status',
+      'is_review_calculative' => TRUE,
+      'is_review_content' => FALSE,
+    ]);
     static::assertEquals($expectedApplicationProcess, $command->getApplicationProcess());
   }
 

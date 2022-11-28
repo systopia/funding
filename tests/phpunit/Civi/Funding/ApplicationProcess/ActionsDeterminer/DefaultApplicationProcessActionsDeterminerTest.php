@@ -43,32 +43,32 @@ final class DefaultApplicationProcessActionsDeterminerTest extends TestCase {
       'application_modify' => ['save'],
       'application_apply' => ['apply'],
       'application_withdraw' => ['delete'],
-      'review_calculative' => ['update'],
-      'review_content' => ['update'],
+      'review_calculative' => [],
+      'review_content' => [],
     ],
     'applied' => [
       'application_create' => [],
       'application_modify' => ['modify'],
       'application_apply' => [],
       'application_withdraw' => ['withdraw'],
-      'review_calculative' => ['review', 'update'],
-      'review_content' => ['review', 'update'],
+      'review_calculative' => ['review'],
+      'review_content' => ['review'],
     ],
     'review' => [
       'application_create' => [],
       'application_modify' => [],
       'application_apply' => [],
       'application_withdraw' => [],
-      'review_calculative' => ['set-calculative-review-result', 'request-change', 'update'],
-      'review_content' => ['set-content-review-result', 'request-change', 'update'],
+      'review_calculative' => ['request-change', 'update', 'reject', 'approve-calculative', 'reject-calculative'],
+      'review_content' => ['request-change', 'update', 'reject', 'approve-content', 'reject-content'],
     ],
     'draft' => [
       'application_create' => [],
       'application_modify' => ['save'],
       'application_apply' => ['apply'],
       'application_withdraw' => ['withdraw'],
-      'review_calculative' => ['update'],
-      'review_content' => ['update'],
+      'review_calculative' => ['review'],
+      'review_content' => ['review'],
     ],
     'approved' => [
       'application_create' => [],
@@ -127,7 +127,7 @@ final class DefaultApplicationProcessActionsDeterminerTest extends TestCase {
   public function testGetActionsAll(): void {
     foreach (self::STATUS_PERMISSION_ACTIONS_MAP as $status => $permissionActionsMap) {
       $fullStatus = new FullApplicationProcessStatus($status, NULL, NULL);
-      $actions = array_unique(array_merge(...array_values($permissionActionsMap)));
+      $actions = array_values(array_unique(array_merge(...array_values($permissionActionsMap))));
       $permissions = array_keys($permissionActionsMap);
       static::assertEquals(
         $actions,
@@ -140,41 +140,53 @@ final class DefaultApplicationProcessActionsDeterminerTest extends TestCase {
   public function testGetActionsApprove(): void {
     foreach (['review_calculative', 'review_content'] as $permission) {
       $fullStatus = new FullApplicationProcessStatus('final', TRUE, TRUE);
-      static::assertSame([], $this->actionsDeterminer->getActions($fullStatus, [$permission]));
-
-      $actions = self::STATUS_PERMISSION_ACTIONS_MAP['review'][$permission];
+      static::assertNotContains('approve', $this->actionsDeterminer->getActions($fullStatus, [$permission]));
       $fullStatus = new FullApplicationProcessStatus('review', TRUE, NULL);
-      static::assertEquals($actions, $this->actionsDeterminer->getActions($fullStatus, [$permission]));
+      static::assertNotContains('approve', $this->actionsDeterminer->getActions($fullStatus, [$permission]));
       $fullStatus = new FullApplicationProcessStatus('review', NULL, TRUE);
-      static::assertEquals($actions, $this->actionsDeterminer->getActions($fullStatus, [$permission]));
+      static::assertNotContains('approve', $this->actionsDeterminer->getActions($fullStatus, [$permission]));
 
-      $actions[] = 'approve';
       $fullStatus = new FullApplicationProcessStatus('review', TRUE, TRUE);
-      static::assertEquals($actions, $this->actionsDeterminer->getActions($fullStatus, [$permission]));
+      static::assertContains('approve', $this->actionsDeterminer->getActions($fullStatus, [$permission]));
     }
   }
 
-  public function testGetActionsReject(): void {
-    foreach (['review_calculative', 'review_content'] as $permission) {
-      $fullStatus = new FullApplicationProcessStatus('final', FALSE, FALSE);
-      static::assertSame([], $this->actionsDeterminer->getActions($fullStatus, [$permission]));
+  public function testActionsReviewCalculative(): void {
+    $permissions = ['review_calculative'];
+    $fullStatus = new FullApplicationProcessStatus('review', NULL, NULL);
+    static::assertContains('approve-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertContains('reject-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertNotContains('approve-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertNotContains('reject-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    $fullStatus = new FullApplicationProcessStatus('review', FALSE, NULL);
+    static::assertContains('approve-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertNotContains('reject-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertNotContains('approve-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertNotContains('reject-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    $fullStatus = new FullApplicationProcessStatus('review', TRUE, NULL);
+    static::assertNotContains('approve-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertContains('reject-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertNotContains('approve-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertNotContains('reject-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+  }
 
-      $actions = self::STATUS_PERMISSION_ACTIONS_MAP['review'][$permission];
-      $fullStatus = new FullApplicationProcessStatus('review', NULL, NULL);
-      static::assertEquals($actions, $this->actionsDeterminer->getActions($fullStatus, [$permission]));
-
-      $actions[] = 'reject';
-      $fullStatus = new FullApplicationProcessStatus('review', FALSE, FALSE);
-      static::assertEquals($actions, $this->actionsDeterminer->getActions($fullStatus, [$permission]));
-      $fullStatus = new FullApplicationProcessStatus('review', NULL, FALSE);
-      static::assertEquals($actions, $this->actionsDeterminer->getActions($fullStatus, [$permission]));
-      $fullStatus = new FullApplicationProcessStatus('review', TRUE, FALSE);
-      static::assertEquals($actions, $this->actionsDeterminer->getActions($fullStatus, [$permission]));
-      $fullStatus = new FullApplicationProcessStatus('review', FALSE, TRUE);
-      static::assertEquals($actions, $this->actionsDeterminer->getActions($fullStatus, [$permission]));
-      $fullStatus = new FullApplicationProcessStatus('review', FALSE, NULL);
-      static::assertEquals($actions, $this->actionsDeterminer->getActions($fullStatus, [$permission]));
-    }
+  public function testActionsReviewContent(): void {
+    $permissions = ['review_content'];
+    $fullStatus = new FullApplicationProcessStatus('review', NULL, NULL);
+    static::assertContains('approve-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertContains('reject-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertNotContains('approve-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertNotContains('reject-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    $fullStatus = new FullApplicationProcessStatus('review', NULL, FALSE);
+    static::assertContains('approve-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertNotContains('reject-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertNotContains('approve-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertNotContains('reject-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    $fullStatus = new FullApplicationProcessStatus('review', NULL, TRUE);
+    static::assertNotContains('approve-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertContains('reject-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertNotContains('approve-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertNotContains('reject-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
   }
 
   public function testGetInitialActions(): void {
