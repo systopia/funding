@@ -49,8 +49,8 @@ final class AddFundingCasePermissionsSubscriber implements EventSubscriberInterf
     // TODO: Which relations have to be set additionally?
     $action = FundingCaseContactRelation::create()->setValues([
       'funding_case_id' => $event->getFundingCase()->getId(),
-      'entity_table' => 'civicrm_contact',
-      'entity_id' => $event->getContactId(),
+      'type' => 'Contact',
+      'properties' => ['contactId' => $event->getContactId()],
       'permissions' => $this->getCreatingContactPermissions($event),
     ]);
     $this->api4->executeAction($action);
