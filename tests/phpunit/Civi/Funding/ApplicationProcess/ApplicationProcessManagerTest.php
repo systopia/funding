@@ -22,6 +22,7 @@ namespace Civi\Funding\ApplicationProcess;
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\DAOGetAction;
 use Civi\Core\CiviEventDispatcher;
+use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreCreateEvent;
@@ -36,12 +37,7 @@ use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
 use Civi\Funding\Util\TestUtil;
 use Civi\RemoteTools\Api4\Api4;
-use Civi\Test;
-use Civi\Test\CiviEnvBuilder;
-use Civi\Test\HeadlessInterface;
-use Civi\Test\TransactionalInterface;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ClockMock;
 
 /**
@@ -53,7 +49,7 @@ use Symfony\Bridge\PhpUnit\ClockMock;
  *
  * @group headless
  */
-final class ApplicationProcessManagerTest extends TestCase implements HeadlessInterface, TransactionalInterface {
+final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCase {
 
   private ApplicationProcessManager $applicationProcessManager;
 
@@ -66,12 +62,6 @@ final class ApplicationProcessManagerTest extends TestCase implements HeadlessIn
     parent::setUpBeforeClass();
     ClockMock::register(__CLASS__);
     ClockMock::withClockMock(1234567);
-  }
-
-  public function setUpHeadless(): CiviEnvBuilder {
-    return Test::headless()
-      ->installMe(__DIR__)
-      ->apply();
   }
 
   protected function setUp(): void {

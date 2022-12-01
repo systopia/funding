@@ -17,21 +17,26 @@
 
 declare(strict_types = 1);
 
-namespace Civi\RemoteTools\Api4;
+namespace Civi\Funding;
 
-interface OptionsLoaderInterface {
+final class ActivityTypeIds {
+
+  public const FUNDING_APPLICATION_CREATE = 63785200;
+
+  public const FUNDING_APPLICATION_STATUS_CHANGE = 63785201;
 
   /**
-   * @phpstan-return array<scalar|null, string>
-   *   Options in the form "value => label".
+   * @phpstan-return array<string, int>
    *
-   * @throws \API_Exception
+   * @codeCoverageIgnore
    */
-  public function getOptions(string $entityName, string $field): array;
+  public static function getIds(): array {
+    static $ids = NULL;
+    if (NULL === $ids) {
+      $ids = (new \ReflectionClass(__CLASS__))->getConstants();
+    }
 
-  /**
-   * @throws \API_Exception
-   */
-  public function getOptionLabel(string $entityName, string $field, string $value): ?string;
+    return $ids;
+  }
 
 }

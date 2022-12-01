@@ -24,6 +24,7 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\API\Exception\UnauthorizedException;
+use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Api4\Action\Remote\FundingCase\Traits\NewApplicationFormActionTrait;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
@@ -34,11 +35,6 @@ use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\Funding\Form\SonstigeAktivitaet\JsonSchema\AVK1JsonSchema;
 use Civi\Funding\Form\SonstigeAktivitaet\UISchema\AVK1UiSchema;
-use Civi\Test;
-use Civi\Test\CiviEnvBuilder;
-use Civi\Test\HeadlessInterface;
-use Civi\Test\TransactionalInterface;
-use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ClockMock;
 
 /**
@@ -46,7 +42,7 @@ use Symfony\Bridge\PhpUnit\ClockMock;
  *
  * @covers \Civi\Api4\RemoteFundingCase
  */
-final class RemoteFundingCaseAVK1FormTest extends TestCase implements HeadlessInterface, TransactionalInterface {
+final class RemoteFundingCaseAVK1FormTest extends AbstractFundingHeadlessTestCase {
 
   private FundingCaseTypeEntity $fundingCaseType;
 
@@ -62,12 +58,6 @@ final class RemoteFundingCaseAVK1FormTest extends TestCase implements HeadlessIn
     ClockMock::register(__CLASS__);
     ClockMock::register(NewApplicationFormActionTrait::class);
     ClockMock::withClockMock(strtotime('1970-01-02'));
-  }
-
-  public function setUpHeadless(): CiviEnvBuilder {
-    return Test::headless()
-      ->installMe(__DIR__)
-      ->apply();
   }
 
   protected function setUp(): void {

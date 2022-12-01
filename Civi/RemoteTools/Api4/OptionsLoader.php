@@ -48,4 +48,11 @@ final class OptionsLoader implements OptionsLoaderInterface {
     return $options;
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getOptionLabel(string $entityName, string $field, string $value): ?string {
+    return $this->getOptions($entityName, $field)[$value] ?? NULL;
+  }
+
 }

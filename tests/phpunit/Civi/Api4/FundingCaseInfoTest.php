@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
+use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Fixtures\ApplicationProcessFixture;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
@@ -28,11 +29,6 @@ use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\Funding\Util\TestUtil;
 use Civi\RemoteTools\Api4\RemoteApiConstants;
-use Civi\Test;
-use Civi\Test\CiviEnvBuilder;
-use Civi\Test\HeadlessInterface;
-use Civi\Test\TransactionalInterface;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @group headless
@@ -41,13 +37,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \Civi\Funding\Api4\Action\FundingCaseInfo\GetAction
  * @covers \Civi\Funding\Api4\Action\FundingCaseInfo\GetFieldsAction
  */
-final class FundingCaseInfoTest extends TestCase implements HeadlessInterface, TransactionalInterface {
-
-  public function setUpHeadless(): CiviEnvBuilder {
-    return Test::headless()
-      ->installMe(__DIR__)
-      ->apply();
-  }
+final class FundingCaseInfoTest extends AbstractFundingHeadlessTestCase {
 
   public function testGet(): void {
     $recipientContact = ContactFixture::addOrganization();

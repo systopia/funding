@@ -23,6 +23,7 @@ use Civi\Api4\FundingCase;
 use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent;
+use Civi\Funding\Event\FundingCase\FundingCaseDeletedEvent;
 use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
 use Civi\RemoteTools\Api4\Api4Interface;
 use CRM_Funding_ExtensionUtil as E;
@@ -92,6 +93,9 @@ class FundingCaseManager {
       ->addWhere('id', '=', $fundingCase->getId());
 
     $this->api4->executeAction($action);
+
+    $event = new FundingCaseDeletedEvent($fundingCase);
+    $this->eventDispatcher->dispatch(FundingCaseDeletedEvent::class, $event);
   }
 
   public function get(int $id): ?FundingCaseEntity {

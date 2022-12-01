@@ -21,31 +21,20 @@ namespace Civi\Funding\Contact\RelationLoader;
 
 use Civi\Api4\Relationship;
 use Civi\Api4\RelationshipType;
+use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Contact\Relation\Loaders\ContactTypeAndRelationshipTypeLoader;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\ContactTypeFixture;
 use Civi\RemoteTools\Api4\Api4;
-use Civi\Test;
-use Civi\Test\CiviEnvBuilder;
-use Civi\Test\HeadlessInterface;
-use Civi\Test\TransactionalInterface;
-use PHPUnit\Framework\TestCase;
 
-// phpcs:disable Generic.Files.LineLength.TooLong
 /**
  * @covers \Civi\Funding\Contact\Relation\Loaders\ContactTypeAndRelationshipTypeLoader
  *
  * @group headless
  */
-final class ContactTypeAndRelationshipTypeLoaderTest extends TestCase implements HeadlessInterface, TransactionalInterface {
-// phpcs:enable
-  private ContactTypeAndRelationshipTypeLoader $relatedContactLoader;
+final class ContactTypeAndRelationshipTypeLoaderTest extends AbstractFundingHeadlessTestCase {
 
-  public function setUpHeadless(): CiviEnvBuilder {
-    return Test::headless()
-      ->installMe(__DIR__)
-      ->apply();
-  }
+  private ContactTypeAndRelationshipTypeLoader $relatedContactLoader;
 
   protected function setUp(): void {
     parent::setUp();

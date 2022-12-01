@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\API\Exception\UnauthorizedException;
+use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Fixtures\ApplicationProcessFixture;
@@ -31,11 +32,6 @@ use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\Funding\Form\SonstigeAktivitaet\JsonSchema\AVK1JsonSchema;
 use Civi\Funding\Util\SessionTestUtil;
-use Civi\Test;
-use Civi\Test\CiviEnvBuilder;
-use Civi\Test\HeadlessInterface;
-use Civi\Test\TransactionalInterface;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Civi\Api4\FundingApplicationProcess
@@ -46,18 +42,12 @@ use PHPUnit\Framework\TestCase;
  *
  * @group headless
  */
-final class FundingApplicationProcessTest extends TestCase implements HeadlessInterface, TransactionalInterface {
+final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCase {
 
   /**
    * @phpstan-ignore-next-line
    */
   private FundingProgramEntity $fundingProgram;
-
-  public function setUpHeadless(): CiviEnvBuilder {
-    return Test::headless()
-      ->installMe(__DIR__)
-      ->apply();
-  }
 
   public function testDelete(): void {
     $contact = ContactFixture::addIndividual();

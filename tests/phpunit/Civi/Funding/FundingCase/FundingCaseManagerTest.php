@@ -22,6 +22,7 @@ namespace Civi\Funding\FundingCase;
 use Civi\Api4\Generic\DAODeleteAction;
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
+use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Api4\Action\FundingCase\GetAction;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent;
@@ -34,12 +35,7 @@ use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\Funding\Util\TestUtil;
 use Civi\RemoteTools\Api4\Api4;
 use Civi\RemoteTools\Api4\Api4Interface;
-use Civi\Test;
-use Civi\Test\CiviEnvBuilder;
-use Civi\Test\HeadlessInterface;
-use Civi\Test\TransactionalInterface;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ClockMock;
 
 /**
@@ -48,7 +44,7 @@ use Symfony\Bridge\PhpUnit\ClockMock;
  *
  * @group headless
  */
-final class FundingCaseManagerTest extends TestCase implements HeadlessInterface, TransactionalInterface {
+final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
 
   private FundingCaseManager $fundingCaseManager;
 
@@ -61,12 +57,6 @@ final class FundingCaseManagerTest extends TestCase implements HeadlessInterface
     parent::setUpBeforeClass();
     ClockMock::register(__CLASS__);
     ClockMock::withClockMock(1234567);
-  }
-
-  public function setUpHeadless(): CiviEnvBuilder {
-    return Test::headless()
-      ->installMe(__DIR__)
-      ->apply();
   }
 
   protected function setUp(): void {

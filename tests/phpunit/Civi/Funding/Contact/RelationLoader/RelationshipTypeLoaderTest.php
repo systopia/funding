@@ -21,29 +21,19 @@ namespace Civi\Funding\Contact\RelationLoader;
 
 use Civi\Api4\Relationship;
 use Civi\Api4\RelationshipType;
+use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Contact\Relation\Loaders\RelationshipTypeLoader;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\RemoteTools\Api4\Api4;
-use Civi\Test;
-use Civi\Test\CiviEnvBuilder;
-use Civi\Test\HeadlessInterface;
-use Civi\Test\TransactionalInterface;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Civi\Funding\Contact\Relation\Loaders\RelationshipTypeLoader
  *
  * @group headless
  */
-final class RelationshipTypeLoaderTest extends TestCase implements HeadlessInterface, TransactionalInterface {
+final class RelationshipTypeLoaderTest extends AbstractFundingHeadlessTestCase {
 
   private RelationshipTypeLoader $relatedContactLoader;
-
-  public function setUpHeadless(): CiviEnvBuilder {
-    return Test::headless()
-      ->installMe(__DIR__)
-      ->apply();
-  }
 
   protected function setUp(): void {
     parent::setUp();

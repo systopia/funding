@@ -24,11 +24,7 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\Api4\Traits\FundingProgramTestFixturesTrait;
-use Civi\Test;
-use Civi\Test\CiviEnvBuilder;
-use Civi\Test\HeadlessInterface;
-use Civi\Test\TransactionalInterface;
-use PHPUnit\Framework\TestCase;
+use Civi\Funding\AbstractFundingHeadlessTestCase;
 
 /**
  * @group headless
@@ -37,7 +33,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \Civi\Funding\Api4\Action\Remote\DAOGetAction
  * @covers \Civi\Funding\EventSubscriber\Remote\FundingProgramDAOGetSubscriber
  */
-final class RemoteFundingProgramTest extends TestCase implements HeadlessInterface, TransactionalInterface {
+final class RemoteFundingProgramTest extends AbstractFundingHeadlessTestCase {
 
   use FundingProgramTestFixturesTrait;
 
@@ -48,12 +44,6 @@ final class RemoteFundingProgramTest extends TestCase implements HeadlessInterfa
   protected int $permittedOrganizationIdNoPermissions;
 
   protected int $permittedOrganizationId;
-
-  public function setUpHeadless(): CiviEnvBuilder {
-    return Test::headless()
-      ->installMe(__DIR__)
-      ->apply();
-  }
 
   protected function setUp(): void {
     parent::setUp();

@@ -17,21 +17,22 @@
 
 declare(strict_types = 1);
 
-namespace Civi\RemoteTools\Api4;
+namespace Civi\Funding;
 
-interface OptionsLoaderInterface {
+use Civi\Test;
+use Civi\Test\CiviEnvBuilder;
+use Civi\Test\HeadlessInterface;
+use Civi\Test\TransactionalInterface;
+use PHPUnit\Framework\TestCase;
 
-  /**
-   * @phpstan-return array<scalar|null, string>
-   *   Options in the form "value => label".
-   *
-   * @throws \API_Exception
-   */
-  public function getOptions(string $entityName, string $field): array;
+abstract class AbstractFundingHeadlessTestCase extends TestCase implements HeadlessInterface, TransactionalInterface {
 
-  /**
-   * @throws \API_Exception
-   */
-  public function getOptionLabel(string $entityName, string $field, string $value): ?string;
+  public function setUpHeadless(): CiviEnvBuilder {
+    return Test::headless()
+      // Required for managed entities to be available
+      ->install('activity-entity')
+      ->installMe(__DIR__)
+      ->apply();
+  }
 
 }

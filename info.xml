@@ -24,6 +24,7 @@
   <requires>
     <ext>de.systopia.remotetools</ext>
     <ext>de.systopia.identitytracker</ext>
+    <ext>activity-entity</ext>
   </requires>
   <classloader>
     <psr4 prefix="Civi\" path="Civi"/>
@@ -35,6 +36,7 @@
     <angularModule>crmFunding</angularModule>
   </civix>
   <mixins>
+    <mixin>mgd-php@1.0.0</mixin>
     <mixin>setting-php@1.0.0</mixin>
     <mixin>ang-php@1.0.0</mixin>
   </mixins>

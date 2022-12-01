@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Api4\Action\FundingApplicationProcess;
 
 use Civi\Api4\FundingApplicationProcess;
+use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Fixtures\ApplicationProcessFixture;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
@@ -27,24 +28,13 @@ use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\Funding\Util\SessionTestUtil;
-use Civi\Test;
-use Civi\Test\CiviEnvBuilder;
-use Civi\Test\HeadlessInterface;
-use Civi\Test\TransactionalInterface;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Civi\Funding\Api4\Action\FundingApplicationProcess\SaveAction
  *
  * @group headless
  */
-final class SaveActionTest extends TestCase implements HeadlessInterface, TransactionalInterface {
-
-  public function setUpHeadless(): CiviEnvBuilder {
-    return Test::headless()
-      ->installMe(__DIR__)
-      ->apply();
-  }
+final class SaveActionTest extends AbstractFundingHeadlessTestCase {
 
   public function test(): void {
     $fundingProgram = FundingProgramFixture::addFixture();

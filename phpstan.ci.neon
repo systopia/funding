@@ -9,5 +9,7 @@ parameters:
 			# Depends on extension de.systopia.identitytracker
 			- Civi/RemoteTools/Contact/IdTrackerRemoteContactIdResolver.php
 	ignoreErrors:
+		# Depends on extension activity-entity
+		- '#^Call to static method connect\(\) on an unknown class Civi\\Api4\\EntityActivity.$#'
 		# Errors we get when using "prefer-lowest"
 		- '#::getSubscribedEvents\(\) return type has no value type specified in iterable type array.$#'
