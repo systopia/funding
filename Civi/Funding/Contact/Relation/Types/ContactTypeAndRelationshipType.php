@@ -57,7 +57,7 @@ TEMPLATE;
   public function getHelp(): string {
     return E::ts(<<<HELP
 Contacts of the specified type are available as recipients if a relationship of
-the specified type exists
+the specified type exists.
 HELP);
   }
 

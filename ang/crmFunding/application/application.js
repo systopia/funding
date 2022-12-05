@@ -105,8 +105,8 @@ fundingModule.controller('fundingApplicationCtrl', [
 
     $scope.reviewStatusList = {
       null: ts('Undecided'),
-      true: ts('Accepted'),
-      false: ts('Rejected'),
+      true: ts('Passed'),
+      false: ts('Failed'),
     };
 
     $scope.errors = {};
@@ -249,7 +249,7 @@ fundingModule.controller('fundingApplicationCtrl', [
     $scope.submit = function (action = 'update') {
       if ($scope.isActionDisabled(action)) {
         // Should not happen
-        window.alert(ts('The chosen action is disabled. Please report this issue'));
+        window.alert(ts('The chosen action is disabled. Please report this issue.'));
 
         return new Promise((resolve) => resolve(false));
       }

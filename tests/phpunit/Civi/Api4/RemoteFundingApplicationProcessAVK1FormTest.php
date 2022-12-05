@@ -85,7 +85,7 @@ final class RemoteFundingApplicationProcessAVK1FormTest extends TestCase impleme
     }
     static::assertNotNull($e);
     static::assertSame(
-      sprintf('Application process with ID %d not found', $this->applicationProcess->getId()),
+      sprintf('Application process with ID "%d" not found', $this->applicationProcess->getId()),
       $e->getMessage()
     );
 
@@ -135,7 +135,7 @@ final class RemoteFundingApplicationProcessAVK1FormTest extends TestCase impleme
     }
     static::assertNotNull($e);
     static::assertSame(
-      sprintf('Application process with ID %d not found', $this->applicationProcess->getId()),
+      sprintf('Application process with ID "%d" not found', $this->applicationProcess->getId()),
       $e->getMessage()
     );
 
@@ -168,7 +168,7 @@ final class RemoteFundingApplicationProcessAVK1FormTest extends TestCase impleme
     }
     static::assertNotNull($e);
     static::assertSame(
-      sprintf('Application process with ID %d not found', $this->applicationProcess->getId()),
+      sprintf('Application process with ID "%d" not found', $this->applicationProcess->getId()),
       $e->getMessage()
     );
 

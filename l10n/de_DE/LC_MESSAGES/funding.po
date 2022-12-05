@@ -1,0 +1,592 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.3\n"
+
+#: Civi/Funding/Api4/Action/FundingApplicationProcess/Traits/CheckReviewPermissionTrait.php
+#: Civi/Funding/Api4/Action/Remote/ApplicationProcess/AbstractFormAction.php
+#: Civi/Funding/Api4/Action/Remote/ApplicationProcess/GetFormAction.php
+msgid "Application process with ID \"%1\" not found"
+msgstr "Antragsprozess mit ID \"%1\" nicht gefunden"
+
+# Übersetzung nicht notwendig
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+msgid "Unique field identifier"
+msgstr ""
+
+# Übersetzung nicht notwendig
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+msgid "Technical name of field, shown in API and exports"
+msgstr ""
+
+# Übersetzung nicht notwendig
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+msgid "Primary Field"
+msgstr ""
+
+# Übersetzung nicht notwendig
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+msgid "Custom Field"
+msgstr ""
+
+# Übersetzung nicht notwendig
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+msgid "Search Filter"
+msgstr ""
+
+# Übersetzung nicht notwendig
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+msgid "Extra API Field"
+msgstr ""
+
+# Übersetzung nicht notwendig
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+msgid "Array"
+msgstr ""
+
+# Übersetzung nicht notwendig
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+msgid "Boolean"
+msgstr ""
+
+# Übersetzung nicht notwendig
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+msgid "Date"
+msgstr ""
+
+# Übersetzung nicht notwendig
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+msgid "Float"
+msgstr ""
+
+# Übersetzung nicht notwendig
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+msgid "Integer"
+msgstr ""
+
+# Übersetzung nicht notwendig
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+msgid "String"
+msgstr ""
+
+# Übersetzung nicht notwendig
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+msgid "Text"
+msgstr ""
+
+# Übersetzung nicht notwendig
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+msgid "Timestamp"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/Remote/ApplicationProcess/AbstractFormAction.php
+msgid "Funding case with ID \"%1\" not found"
+msgstr "Förderfall mit ID \"%1\" nicht gefunden"
+
+#: Civi/Funding/Api4/Action/Remote/ApplicationProcess/AbstractFormAction.php
+#: Civi/Funding/Api4/Action/Remote/FundingCase/AbstractNewApplicationFormAction.php
+msgid "Funding case type with ID \"%1\" not found"
+msgstr "Förderfalltyp mit ID \"%1\" nicht gefunden"
+
+#: Civi/Funding/Api4/Action/Remote/ApplicationProcess/AbstractFormAction.php
+#: Civi/Funding/Api4/Action/Remote/FundingCase/AbstractNewApplicationFormAction.php
+msgid "Funding program with ID \"%1\" not found"
+msgstr "Förderprogramm mit ID \"%1\" nicht gefunden"
+
+#: Civi/Funding/Api4/Action/Remote/FundingCase/GetNewApplicationFormAction.php
+msgid "Invalid funding program ID or funding case type ID"
+msgstr "Ungültige Förderprogramm ID oder Förderfalltyp ID"
+
+#: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php
+msgid "Required permission is missing"
+msgstr "Notwendige Berechtigung fehlt"
+
+#: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php
+msgid "Funding program and funding case type are not related"
+msgstr "Förderprogramm und Förderfalltyp sind nicht verknüpft"
+
+#: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php
+msgid "Funding program does not allow applications before %1"
+msgstr "Förderprogramm erlaubt keine Anträge vor %1"
+
+#: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php
+msgid "Y-m-d"
+msgstr "d.m.Y"
+
+#: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php
+msgid "Funding program does not allow applications after %1"
+msgstr "Förderprogramm erlaubt keine Anträge nach %1"
+
+#: Civi/Funding/Contact/FundingCaseRecipientLoader.php
+#: Civi/Funding/Contact/RecipientsLoader/DefaultPossibleRecipientsLoader.php
+msgid "Contact %1"
+msgstr "Kontakt %1"
+
+#: Civi/Funding/Contact/Relation/Types/ContactTypeAndRelationshipType.php
+msgid "Related contacts of a specific type"
+msgstr "In Beziehung stehende Kontakte einer bestimmten Art"
+
+#: Civi/Funding/Contact/Relation/Types/ContactTypeAndRelationshipType.php
+#: Civi/Funding/Contact/Relation/Types/SelfByContactType.php
+#: Civi/Funding/Permission/ContactRelation/Types/ContactType.php
+#: Civi/Funding/Permission/ContactRelation/Types/ContactTypeRelationship.php
+msgid "Contact type"
+msgstr "Konktaktart"
+
+#: Civi/Funding/Contact/Relation/Types/ContactTypeAndRelationshipType.php
+#: Civi/Funding/Contact/Relation/Types/RelationshipType.php
+#: Civi/Funding/Permission/ContactRelation/Types/ContactRelationship.php
+#: Civi/Funding/Permission/ContactRelation/Types/ContactTypeRelationship.php
+msgid "Relationship type"
+msgstr "Beziehungsart"
+
+#: Civi/Funding/Contact/Relation/Types/ContactTypeAndRelationshipType.php
+msgid ""
+"Contacts of the specified type are available as recipients if a relationship "
+"of\n"
+"the specified type exists."
+msgstr ""
+"Kontakte der gewählten Art sind als Empfänger verfügbar, wenn eine Beziehung "
+"der gewählten Art besteht."
+
+#: Civi/Funding/Contact/Relation/Types/RelationshipType.php
+msgid "Related contacts"
+msgstr "In Beziehung stehende Kontakte"
+
+#: Civi/Funding/Contact/Relation/Types/RelationshipType.php
+msgid ""
+"All contacts to which a relationship of the specified type exists are "
+"available\n"
+"as recipient."
+msgstr ""
+"Alle Kontakte, zu denen eine Beziehung der gewählten Art besteht, sind als "
+"Empfänger verfügbar."
+
+#: Civi/Funding/Contact/Relation/Types/SelfByContactType.php
+msgid "Applicant by contact type"
+msgstr "Antragssteller nach Kontaktart"
+
+#: Civi/Funding/Contact/Relation/Types/SelfByContactType.php
+msgid ""
+"The applying contact itself is available as recipient if the contact is of "
+"the\n"
+"specified type."
+msgstr ""
+"Der beantragende Kontakt selbst ist als Empfänger verfügbar, wenn er die "
+"gewählte Art hat."
+
+#: Civi/Funding/EventSubscriber/Form/SubmitApplicationFormSubscriber.php
+msgid "Saved"
+msgstr "Gespeichert"
+
+#: Civi/Funding/EventSubscriber/Form/SubmitApplicationFormSubscriber.php
+#: ang/crmFunding/application/application.js
+#: ang/crmFunding/application/application.template.html
+msgid "Validation failed"
+msgstr "Validierung fehlgeschlagen"
+
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
+msgid "Application: view"
+msgstr "Antrag: sehen"
+
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
+msgid "Application: modify"
+msgstr "Antrag: ändern"
+
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
+#: Civi/Funding/EventSubscriber/FundingProgram/FundingProgramGetPossiblePermissionsSubscriber.php
+msgid "Application: apply"
+msgstr "Antrag: beantragen"
+
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
+msgid "Application: withdraw"
+msgstr "Antrag: zurückziehen"
+
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
+msgid "Application: request rework"
+msgstr "Antrag: Überarbeitung beantragen"
+
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
+msgid "Review: calculative"
+msgstr "Prüfung: rechnerisch"
+
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
+msgid "Review: content"
+msgstr "Prüfung: fachlich"
+
+#: Civi/Funding/EventSubscriber/FundingProgram/FundingProgramGetPossiblePermissionsSubscriber.php
+msgid "Application: create"
+msgstr "Antrag: erstellen"
+
+#: Civi/Funding/EventSubscriber/FundingProgram/FundingProgramGetPossiblePermissionsSubscriber.php
+msgid "View"
+msgstr "Ansehen"
+
+#: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php
+#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/case/fundingCasePermissions.html
+#: ang/crmFunding/program/fundingProgramPermissions.html
+#: ang/crmFunding/program/recipientRelations.html
+msgid "Save"
+msgstr "Speichern"
+
+#: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php
+msgid "Modify"
+msgstr "Ändern"
+
+#: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php
+msgid "Apply"
+msgstr "Beantragen"
+
+#: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php
+msgid "Withdraw"
+msgstr "Zurückziehen"
+
+#: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php
+msgid "Do you really want to withdraw the application?"
+msgstr "Möchten Sie den Antrag wirklich zurückziehen?"
+
+#: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php
+msgid "Delete"
+msgstr "Löschen"
+
+#: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php
+msgid "Do you really want to delete the application?"
+msgstr "Möchten Sie den Antrag wirklich löschen?"
+
+#: Civi/Funding/Form/ReworkPossibleApplicationSubmitActionsContainerFactory.php
+msgid "Request rework"
+msgstr "Überarbeitung beantragen"
+
+#: Civi/Funding/Form/ReworkPossibleApplicationSubmitActionsContainerFactory.php
+msgid "Withdraw rework request"
+msgstr "Antrag zur Überarbeitung zurückziehen"
+
+#: Civi/Funding/Form/ReworkPossibleApplicationSubmitActionsContainerFactory.php
+msgid "Apply rework"
+msgstr "Überarbeitung beantragen"
+
+#: Civi/Funding/Form/ReworkPossibleApplicationSubmitActionsContainerFactory.php
+msgid "Withdraw rework"
+msgstr "Überarbeitung zurückziehen"
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "New"
+msgstr "Neu"
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Draft"
+msgstr "Entwurf"
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Withdrawn"
+msgstr "Zurückgezogen"
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Applied"
+msgstr "Beantragt"
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "In review"
+msgstr "In Prüfung"
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Rejected"
+msgstr "Abgelehent"
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Approved"
+msgstr "Bewilligt"
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Final"
+msgstr "Final"
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Rework requested"
+msgstr "Überarbeitung beantragt"
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "In rework"
+msgstr "In Überarbeitung"
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Rework review requested"
+msgstr "Prüfung der Überarbeitung beantragt"
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Rework in review"
+msgstr "Überarbeitung in Prüfung"
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Open"
+msgstr "Offen"
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Closed"
+msgstr "Geschlossen"
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Applications adoptable"
+msgstr "Anträge übernehmbar"
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Relationship from a to b"
+msgstr "Beziehung von a zu b"
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Relationship from b to a"
+msgstr "Beziehung von b zu a"
+
+#: Civi/Funding/Permission/ContactRelation/Types/Contact.php
+#: Civi/Funding/Permission/ContactRelation/Types/ContactRelationship.php
+msgid "Contact"
+msgstr "Kontakt"
+
+#: Civi/Funding/Permission/ContactRelation/Types/Contact.php
+msgid "Matches if a contact is equal to the specified one."
+msgstr "Zutreffend, wenn ein Kontakt ist gleich dem ausgewählten Kontakt."
+
+#: Civi/Funding/Permission/ContactRelation/Types/ContactRelationship.php
+msgid "Relationship to contact"
+msgstr "Beziehung zu Kontakt"
+
+#: Civi/Funding/Permission/ContactRelation/Types/ContactRelationship.php
+msgid ""
+"Matches if a contact has a relationship of the specified type to the "
+"specified contact."
+msgstr ""
+"Zutreffend, wenn ein Kontakt eine Beziehung der gewählten Art zum gewählten "
+"Kontakt hat."
+
+#: Civi/Funding/Permission/ContactRelation/Types/ContactType.php
+msgid "Matches if a contact has the specified contact type."
+msgstr "Zutreffend, wenn ein Kontakt die gewählte Art hat."
+
+#: Civi/Funding/Permission/ContactRelation/Types/ContactTypeRelationship.php
+msgid "Relationship to contact of specific type"
+msgstr "Beziehung zu einem Kontakt einer bestimmten Art"
+
+#: Civi/Funding/Permission/ContactRelation/Types/ContactTypeRelationship.php
+msgid ""
+"Matches a contact that has a relationship of the specified type to a contact "
+"of\n"
+"the specified type."
+msgstr ""
+"Zutreffend bei einem Kontakt, der eine Beziehung der gewählten Art zu einem "
+"Kontakt mit der gewählten Art hat."
+
+# Nicht benötigt, solange nur zur Initialisierung der ts Funktion in JavaScript verwendet.
+#: ang/crmFunding/application/application.js
+#: ang/crmFunding/case/fundingCasePermissions.js
+#: ang/crmFunding/case/permissions/fundingCaseContactRelation.directive.js
+#: ang/crmFunding/form/fundingAddRowButton.directive.js
+#: ang/crmFunding/form/fundingSelectPermissions.directive.js
+#: ang/crmFunding/form/fundingValidationErrors.directive.js
+#: ang/crmFunding/program/fundingProgramPermissions.js
+#: ang/crmFunding/program/permissions/fundingProgramContactRelation.directive.js
+#: ang/crmFunding/program/recipientRelations.js
+#: ang/crmFunding/program/recipients/recipientRelation.directive.js
+msgid "funding"
+msgstr "Förderung"
+
+#: ang/crmFunding/application/application.js
+msgid "Undecided"
+msgstr "Nicht entschieden"
+
+#: ang/crmFunding/application/application.js
+msgid "Passed"
+msgstr "Bestanden"
+
+#: ang/crmFunding/application/application.js
+msgid "Failed"
+msgstr "Nicht bestanden"
+
+#: ang/crmFunding/application/application.js
+msgid "The chosen action is disabled. Please report this issue."
+msgstr ""
+"Die gewählte Aktion ist nicht verfügbar. Bitte melden Sie diesen Fehler."
+
+#: ang/crmFunding/application/application.template.html
+msgid "Application %1"
+msgstr "Antrag %1"
+
+#: ang/crmFunding/application/application.template.html
+msgid "Start review"
+msgstr "Prüfung starten"
+
+#: ang/crmFunding/application/application.template.html
+msgid "Set content review to passed"
+msgstr "Setze fachliche Prüfung auf bestanden"
+
+#: ang/crmFunding/application/application.template.html
+msgid "Set content review to failed"
+msgstr "Setze fachliche Prüfung auf nicht bestanden"
+
+#: ang/crmFunding/application/application.template.html
+msgid "Set calculative review to passed"
+msgstr "Setze fachliche Prüfung auf bestanden"
+
+#: ang/crmFunding/application/application.template.html
+msgid "Set calculative review to failed"
+msgstr "Setze fachliche Prüfung auf nicht bestanden"
+
+#: ang/crmFunding/application/application.template.html
+msgid "Request change"
+msgstr "Änderung verlangen"
+
+#: ang/crmFunding/application/application.template.html
+msgid "Approve application"
+msgstr "Antrag bewilligen"
+
+#: ang/crmFunding/application/application.template.html
+msgid "Reject application"
+msgstr "Antrag ablehnen"
+
+#: ang/crmFunding/application/application.template.html
+msgid "Approve rework request"
+msgstr "Antrag zur Überarbeitung annehmen"
+
+#: ang/crmFunding/application/application.template.html
+msgid "Reject rework request"
+msgstr "Antrag zur Überarbeitung"
+
+#: ang/crmFunding/application/application.template.html
+msgid "Approve change"
+msgstr "Änderung bewilligen"
+
+#: ang/crmFunding/application/application.template.html
+msgid "Reject change"
+msgstr "Änderung ablehnen"
+
+#: ang/crmFunding/application/application.template.html
+msgid "Reset"
+msgstr "Zurücksetzen"
+
+#: ang/crmFunding/application/application.template.html
+msgid "General"
+msgstr "Allgemein"
+
+#: ang/crmFunding/application/application.template.html
+msgid "Status"
+msgstr "Status"
+
+#: ang/crmFunding/application/application.template.html
+msgid "Review content"
+msgstr "Fachliche Prüfung"
+
+#: ang/crmFunding/application/application.template.html
+msgid "Review calculative"
+msgstr "Rechnerische Prüfung"
+
+#: ang/crmFunding/application/application.template.html
+msgid "Creation date"
+msgstr "Erstellungsdatum"
+
+#: ang/crmFunding/application/application.template.html
+msgid "Modification date"
+msgstr "Änderungsdatum"
+
+#: ang/crmFunding/application/application.template.html
+msgid "Recipient"
+msgstr "Empfänger"
+
+#: ang/crmFunding/application/application.template.html
+msgid "Amount requested"
+msgstr "Beantragter Betrag"
+
+#: ang/crmFunding/application/application.template.html
+msgid "Amount granted"
+msgstr "Bewilligter Betrag"
+
+#: ang/crmFunding/case/fundingCasePermissions.html
+msgid "Funding case permissions"
+msgstr "Förderfallberechtigungen"
+
+#: ang/crmFunding/case/fundingCasePermissions.html
+#: ang/crmFunding/form/fundingAddRowButton.template.html
+#: ang/crmFunding/program/fundingProgramPermissions.html
+#: ang/crmFunding/program/recipientRelations.html
+msgid "Add"
+msgstr "Hinzufügen"
+
+#: ang/crmFunding/case/fundingCasePermissions.html
+#: ang/crmFunding/program/fundingProgramPermissions.html
+#: ang/crmFunding/program/recipientRelations.html
+msgid "Remove"
+msgstr "Entfernen"
+
+#: ang/crmFunding/case/permissions/fundingCaseContactRelation.template.html
+#: ang/crmFunding/program/permissions/fundingProgramContactRelation.template.html
+#: ang/crmFunding/program/recipients/recipientRelation.template.html
+msgid "Type"
+msgstr "Art"
+
+#: ang/crmFunding/case/permissions/fundingCaseContactRelation.template.html
+#: ang/crmFunding/program/permissions/fundingProgramContactRelation.template.html
+msgid "Permissions"
+msgstr "Berechtigungen"
+
+#: ang/crmFunding/form/fundingSelectPermissions.directive.js
+msgid "Combining application permissions with other ones is not possible."
+msgstr ""
+"Die Kombination von Antragsberechtigungen mit anderen Berechtigungen ist "
+"nicht möglich."
+
+#: ang/crmFunding/program/fundingProgramPermissions.html
+msgid "Funding program permissions"
+msgstr "Förderprogrammberechtigungen"
+
+#: ang/crmFunding/program/recipientRelations.html
+msgid "Possible funding recipients"
+msgstr "Mögliche Fördergeldempfänger"

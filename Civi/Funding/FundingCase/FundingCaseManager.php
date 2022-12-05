@@ -25,6 +25,7 @@ use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent;
 use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
 use Civi\RemoteTools\Api4\Api4Interface;
+use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
 
 /**

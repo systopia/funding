@@ -37,7 +37,7 @@ final class SelfByContactType extends AbstractRelationType {
   }
 
   public function getLabel(): string {
-    return E::ts('Self by contact type');
+    return E::ts('Applicant by contact type');
   }
 
   public function getTemplate(): string {

@@ -101,7 +101,7 @@ final class GetNewApplicationFormActionTest extends AbstractNewApplicationFormAc
       ->with(22, 33)->willReturn(TRUE);
 
     static::expectExceptionObject(new \API_Exception(
-      'Invalid fundingProgramId or fundingCaseTypeId',
+      'Invalid funding program ID or funding case type ID',
       'invalid_parameters'
     ));
 

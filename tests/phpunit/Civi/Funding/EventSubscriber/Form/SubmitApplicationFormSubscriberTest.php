@@ -122,7 +122,7 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
 
     static::assertSame(SubmitApplicationFormEvent::ACTION_SHOW_FORM, $event->getAction());
     static::assertSame($form, $event->getForm());
-    static::assertSame('Success!', $event->getMessage());
+    static::assertSame('Saved', $event->getMessage());
   }
 
   public function testOnSubmitFormInvalid(): void {
@@ -189,7 +189,7 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
 
     static::assertSame(SubmitApplicationFormEvent::ACTION_SHOW_FORM, $event->getAction());
     static::assertSame($form, $event->getForm());
-    static::assertSame('Success!', $event->getMessage());
+    static::assertSame('Saved', $event->getMessage());
   }
 
   public function testOnSubmitNewFormInvalid(): void {
