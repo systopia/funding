@@ -43,7 +43,6 @@ final class ReworkPossibleApplicationProcessStatusDeterminer implements Applicat
     'rework-review-requested' => [
       'request-rework' => 'rework',
       'review' => 'rework-review',
-      'update' => 'rework-review-requested',
     ],
     'rework-review' => [
       'approve-calculative' => 'rework-review',
