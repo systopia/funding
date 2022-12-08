@@ -75,9 +75,9 @@ final class ApplicationProcessStatusSubscriberTest extends TestCase {
       'activity_type_id' => ActivityTypeIds::FUNDING_APPLICATION_STATUS_CHANGE,
       'subject' => 'Funding application process status changed',
       'details'
-      => '<ul><li>Application process: Title (Identifier)</li><li>Old status: Old</li><li>New status: New</li></ul>',
-      'funding_application_status_change.old_status' => 'old-status',
-      'funding_application_status_change.new_status' => 'new-status',
+      => '<ul><li>Application process: Title (Identifier)</li><li>From status: Old</li><li>To status: New</li></ul>',
+      'funding_application_status_change.from_status' => 'old-status',
+      'funding_application_status_change.to_status' => 'new-status',
     ]);
 
     $this->optionsLoaderMock->expects(static::exactly(2))->method('getOptionLabel')

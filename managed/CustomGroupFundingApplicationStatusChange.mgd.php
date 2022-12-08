@@ -2,6 +2,8 @@
 
 declare(strict_types = 1);
 
+use CRM_Funding_ExtensionUtil as E;
+
 return [
   [
     'name' => 'CustomGroup_funding_application_status_change',
@@ -13,7 +15,7 @@ return [
       'values' => [
         'name' => 'funding_application_status_change',
         'table_name' => 'civicrm_value_funding_application_status_change',
-        'title' => 'Funding Application Status Change',
+        'title' => E::ts('Funding Application Status Change'),
         'extends' => 'Activity',
         'extends_entity_column_id' => NULL,
         'extends_entity_column_value:name' => [
@@ -37,7 +39,7 @@ return [
     ],
   ],
   [
-    'name' => 'CustomGroup_funding_application_status_change_CustomField_old_status',
+    'name' => 'CustomField_funding_application_status_change.from_status',
     'entity' => 'CustomField',
     'cleanup' => 'unused',
     'update' => 'always',
@@ -45,8 +47,8 @@ return [
       'version' => 4,
       'values' => [
         'custom_group_id.name' => 'funding_application_status_change',
-        'name' => 'old_status',
-        'label' => 'Old status',
+        'name' => 'from_status',
+        'label' => E::ts('From status'),
         'data_type' => 'String',
         'html_type' => 'Text',
         'default_value' => NULL,
@@ -68,7 +70,7 @@ return [
         'time_format' => NULL,
         'note_columns' => NULL,
         'note_rows' => NULL,
-        'column_name' => 'old_status',
+        'column_name' => 'from_status',
         'option_group_id' => NULL,
         'serialize' => 0,
         'filter' => NULL,
@@ -77,7 +79,7 @@ return [
     ],
   ],
   [
-    'name' => 'CustomGroup_funding_application_status_change_CustomField_new_status',
+    'name' => 'CustomField_funding_application_status_change.to_status',
     'entity' => 'CustomField',
     'cleanup' => 'unused',
     'update' => 'always',
@@ -85,8 +87,8 @@ return [
       'version' => 4,
       'values' => [
         'custom_group_id.name' => 'funding_application_status_change',
-        'name' => 'new_status',
-        'label' => 'New status',
+        'name' => 'to_status',
+        'label' => E::ts('To status'),
         'data_type' => 'String',
         'html_type' => 'Text',
         'default_value' => NULL,
@@ -108,7 +110,7 @@ return [
         'time_format' => NULL,
         'note_columns' => NULL,
         'note_rows' => NULL,
-        'column_name' => 'new_status',
+        'column_name' => 'to_status',
         'option_group_id' => NULL,
         'serialize' => 0,
         'filter' => NULL,

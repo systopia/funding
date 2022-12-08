@@ -54,7 +54,7 @@ class ApplicationProcessActivityManager {
       ->setValues($values);
 
     /** @phpstan-var array{id: int}&array<string, mixed> $activityValues */
-    $activityValues = $this->api4->executeAction($createAction)->first();
+    $activityValues = $this->api4->executeAction($createAction)->single();
     $connectAction = EntityActivity::connect()
       ->setActivityId($activityValues['id'])
       ->setEntity(FundingApplicationProcess::_getEntityName())
@@ -67,7 +67,7 @@ class ApplicationProcessActivityManager {
       ->addWhere('id', '=', $activityValues['id']);
 
     /** @phpstan-ignore-next-line */
-    $activity->setValues($this->api4->executeAction($getAction)->first());
+    $activity->setValues($this->api4->executeAction($getAction)->single());
   }
 
   /**

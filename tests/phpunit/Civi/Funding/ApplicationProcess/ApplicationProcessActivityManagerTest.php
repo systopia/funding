@@ -62,8 +62,8 @@ final class ApplicationProcessActivityManagerTest extends AbstractFundingHeadles
       'activity_type_id' => ActivityTypeIds::FUNDING_APPLICATION_STATUS_CHANGE,
       'subject' => 'Test subject',
       'details' => 'Test details',
-      'funding_application_status_change.old_status' => 'old-status',
-      'funding_application_status_change.new_status' => 'new-status',
+      'funding_application_status_change.from_status' => 'old-status',
+      'funding_application_status_change.to_status' => 'new-status',
     ]);
     $this->activityManager->addActivity($recipientContact['id'], $applicationProcess, $activity);
 
@@ -73,8 +73,8 @@ final class ApplicationProcessActivityManagerTest extends AbstractFundingHeadles
     static::assertSame(ActivityTypeIds::FUNDING_APPLICATION_STATUS_CHANGE, $activity->getActivityTypeId());
     // "Completed"
     static::assertSame(2, $activity->getStatusId());
-    static::assertSame('old-status', $activity->get('funding_application_status_change.old_status'));
-    static::assertSame('new-status', $activity->get('funding_application_status_change.new_status'));
+    static::assertSame('old-status', $activity->get('funding_application_status_change.from_status'));
+    static::assertSame('new-status', $activity->get('funding_application_status_change.to_status'));
 
     $activities = $this->activityManager->getByApplicationProcess($applicationProcess->getId());
     static::assertCount(1, $activities);
