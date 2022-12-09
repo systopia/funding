@@ -17,21 +17,21 @@
 
 declare(strict_types = 1);
 
-namespace Civi\RemoteTools\Api4;
+namespace Civi\Funding\Event\FundingCase;
 
-interface OptionsLoaderInterface {
+use Civi\Funding\Entity\FundingCaseEntity;
+use Symfony\Component\EventDispatcher\Event;
 
-  /**
-   * @phpstan-return array<scalar|null, string>
-   *   Options in the form "value => label".
-   *
-   * @throws \API_Exception
-   */
-  public function getOptions(string $entityName, string $field): array;
+final class FundingCaseDeletedEvent extends Event {
 
-  /**
-   * @throws \API_Exception
-   */
-  public function getOptionLabel(string $entityName, string $field, string $value): ?string;
+  private FundingCaseEntity $fundingCase;
+
+  public function __construct(FundingCaseEntity $fundingCase) {
+    $this->fundingCase = $fundingCase;
+  }
+
+  public function getFundingCase(): FundingCaseEntity {
+    return $this->fundingCase;
+  }
 
 }

@@ -20,12 +20,8 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\Api4\Traits\FundingCaseTypeFixturesTrait;
+use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Util\SessionTestUtil;
-use Civi\Test;
-use Civi\Test\CiviEnvBuilder;
-use Civi\Test\HeadlessInterface;
-use Civi\Test\TransactionalInterface;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @group headless
@@ -33,15 +29,9 @@ use PHPUnit\Framework\TestCase;
  * @covers \Civi\Api4\FundingCaseType
  * @covers \Civi\Funding\Api4\Action\FundingCaseType\GetByFundingProgramIdAction
  */
-final class FundingCaseTypeTest extends TestCase implements HeadlessInterface, TransactionalInterface {
+final class FundingCaseTypeTest extends AbstractFundingHeadlessTestCase {
 
   use FundingCaseTypeFixturesTrait;
-
-  public function setUpHeadless(): CiviEnvBuilder {
-    return Test::headless()
-      ->installMe(__DIR__)
-      ->apply();
-  }
 
   protected function setUp(): void {
     parent::setUp();

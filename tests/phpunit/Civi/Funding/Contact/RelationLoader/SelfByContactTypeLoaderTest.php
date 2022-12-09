@@ -19,30 +19,20 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Contact\RelationLoader;
 
+use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Contact\Relation\Loaders\SelfByContactTypeLoader;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\ContactTypeFixture;
 use Civi\RemoteTools\Api4\Api4;
-use Civi\Test;
-use Civi\Test\CiviEnvBuilder;
-use Civi\Test\HeadlessInterface;
-use Civi\Test\TransactionalInterface;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Civi\Funding\Contact\Relation\Loaders\SelfByContactTypeLoader
  *
  * @group headless
  */
-final class SelfByContactTypeLoaderTest extends TestCase implements HeadlessInterface, TransactionalInterface {
+final class SelfByContactTypeLoaderTest extends AbstractFundingHeadlessTestCase {
 
   private SelfByContactTypeLoader $relatedContactLoader;
-
-  public function setUpHeadless(): CiviEnvBuilder {
-    return Test::headless()
-      ->installMe(__DIR__)
-      ->apply();
-  }
 
   protected function setUp(): void {
     parent::setUp();

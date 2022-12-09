@@ -24,12 +24,8 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\Api4\Traits\FundingCaseTestFixturesTrait;
+use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Util\SessionTestUtil;
-use Civi\Test;
-use Civi\Test\CiviEnvBuilder;
-use Civi\Test\HeadlessInterface;
-use Civi\Test\TransactionalInterface;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @group headless
@@ -38,15 +34,9 @@ use PHPUnit\Framework\TestCase;
  * @covers \Civi\Funding\Api4\Action\FundingCase\GetAction
  * @covers \Civi\Funding\EventSubscriber\FundingCase\FundingCasePermissionsGetSubscriber
  */
-final class FundingCaseTest extends TestCase implements HeadlessInterface, TransactionalInterface {
+final class FundingCaseTest extends AbstractFundingHeadlessTestCase {
 
   use FundingCaseTestFixturesTrait;
-
-  public function setUpHeadless(): CiviEnvBuilder {
-    return Test::headless()
-      ->installMe(__DIR__)
-      ->apply();
-  }
 
   public function testPermissionsInternal(): void {
     $this->addInternalFixtures();

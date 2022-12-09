@@ -28,6 +28,7 @@ use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessDeletedEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreCreateEvent;
+use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreDeleteEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
@@ -181,12 +182,15 @@ class ApplicationProcessManager {
   }
 
   public function delete(ApplicationProcessEntity $applicationProcess, FundingCaseEntity $fundingCase): void {
+    $preDeleteEvent = new ApplicationProcessPreDeleteEvent($applicationProcess, $fundingCase);
+    $this->eventDispatcher->dispatch(ApplicationProcessPreDeleteEvent::class, $preDeleteEvent);
+
     $action = (new DAODeleteAction(FundingApplicationProcess::_getEntityName(), 'delete'))
       ->addWhere('id', '=', $applicationProcess->getId());
     $this->api4->executeAction($action);
 
-    $event = new ApplicationProcessDeletedEvent($applicationProcess, $fundingCase);
-    $this->eventDispatcher->dispatch(ApplicationProcessDeletedEvent::class, $event);
+    $deletedEvent = new ApplicationProcessDeletedEvent($applicationProcess, $fundingCase);
+    $this->eventDispatcher->dispatch(ApplicationProcessDeletedEvent::class, $deletedEvent);
   }
 
 }

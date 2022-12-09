@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
+use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
@@ -33,20 +34,14 @@ use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\Funding\Form\SonstigeAktivitaet\JsonSchema\AVK1JsonSchema;
 use Civi\Funding\Form\SonstigeAktivitaet\UISchema\AVK1UiSchema;
-use Civi\Test;
-use Civi\Test\CiviEnvBuilder;
-use Civi\Test\HeadlessInterface;
-use Civi\Test\TransactionalInterface;
-use PHPUnit\Framework\TestCase;
 
-// phpcs:disable Generic.Files.LineLength.TooLong
 /**
  * @group headless
  *
  * @covers \Civi\Api4\RemoteFundingApplicationProcess
  */
-final class RemoteFundingApplicationProcessAVK1FormTest extends TestCase implements HeadlessInterface, TransactionalInterface {
-// phpcs:enable
+final class RemoteFundingApplicationProcessAVK1FormTest extends AbstractFundingHeadlessTestCase {
+
   private ApplicationProcessEntity $applicationProcess;
 
   private FundingCaseEntity $fundingCase;
@@ -59,12 +54,6 @@ final class RemoteFundingApplicationProcessAVK1FormTest extends TestCase impleme
    * @phpstan-var array<string, mixed>&array{id: int}
    */
   private array $contact;
-
-  public function setUpHeadless(): CiviEnvBuilder {
-    return Test::headless()
-      ->installMe(__DIR__)
-      ->apply();
-  }
 
   protected function setUp(): void {
     parent::setUp();
