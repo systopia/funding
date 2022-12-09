@@ -225,6 +225,27 @@ msgstr ""
 "Der beantragende Kontakt selbst ist als Empfänger verfügbar, wenn er die "
 "gewählte Art hat."
 
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessCreatedSubscriber.php
+msgid "Funding application process created"
+msgstr "Förderfallprozess erstellt"
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessCreatedSubscriber.php
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriber.php
+msgid "Application process: %1 (%2)"
+msgstr "Förderfallprozess: %1 (%2)"
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriber.php
+msgid "Funding application process status changed"
+msgstr "Status von Förderfallprozess geändert"
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriber.php
+msgid "From status: %1"
+msgstr "Von Status: %1"
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriber.php
+msgid "To status: %1"
+msgstr "Zu Status: %1"
+
 #: Civi/Funding/EventSubscriber/Form/SubmitApplicationFormSubscriber.php
 msgid "Saved"
 msgstr "Gespeichert"
