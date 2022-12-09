@@ -23,6 +23,7 @@ use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\DAOGetAction;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\RemoteTools\Api4\Api4Interface;
+use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
 
 /**
@@ -95,7 +96,7 @@ trait CheckReviewPermissionTrait {
       ->addWhere('id', '=', $id);
 
     $firstResult = $this->_api4->executeAction($action)->first();
-    Assert::notNull($firstResult, sprintf('Invalid application process id %d', $id));
+    Assert::notNull($firstResult, E::ts('Application process with ID "%1" not found', [1 => $id]));
 
     return $firstResult['funding_case_id'];
   }

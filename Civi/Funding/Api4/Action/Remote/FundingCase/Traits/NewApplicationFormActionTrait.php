@@ -42,7 +42,7 @@ trait NewApplicationFormActionTrait {
    */
   protected function assertFundingCaseTypeAndProgramRelated(int $fundingCaseTypeId, int $fundingProgramId): void {
     if (!$this->_relationChecker->areFundingCaseTypeAndProgramRelated($fundingCaseTypeId, $fundingProgramId)) {
-      throw new \API_Exception('Funding program and funding case type are not related', 'invalid_arguments');
+      throw new \API_Exception(E::ts('Funding program and funding case type are not related'), 'invalid_arguments');
     }
   }
 
@@ -51,16 +51,16 @@ trait NewApplicationFormActionTrait {
    */
   protected function assertFundingProgramDates(FundingProgramEntity $fundingProgram): void {
     if (new \DateTime(date('Y-m-d')) < $fundingProgram->getRequestsStartDate()) {
-      throw new \API_Exception(sprintf(
-        'Funding program does not allow applications before %s',
-        $fundingProgram->getRequestsStartDate()->format('Y-m-d')
+      throw new \API_Exception(E::ts(
+        'Funding program does not allow applications before %1',
+        [1 => $fundingProgram->getRequestsStartDate()->format(E::ts('Y-m-d'))]
       ), 'invalid_arguments');
     }
 
     if (new \DateTime(date('Y-m-d')) > $fundingProgram->getRequestsEndDate()) {
-      throw new \API_Exception(sprintf(
-        'Funding program does not allow applications after %s',
-        $fundingProgram->getRequestsEndDate()->format('Y-m-d')
+      throw new \API_Exception(E::ts(
+        'Funding program does not allow applications after %1',
+        [1 => $fundingProgram->getRequestsEndDate()->format(E::ts('Y-m-d'))]
       ), 'invalid_arguments');
     }
   }

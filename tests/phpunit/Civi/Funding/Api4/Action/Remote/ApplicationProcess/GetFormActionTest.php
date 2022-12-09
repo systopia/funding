@@ -96,7 +96,7 @@ final class GetFormActionTest extends AbstractFormActionTest {
 
   public function testNoEventListener(): void {
     static::expectExceptionObject(new \API_Exception(
-      'Invalid applicationProcessId',
+      'Application process with ID "22" not found',
       'invalid_parameters'
     ));
 

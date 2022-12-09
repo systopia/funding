@@ -1,0 +1,460 @@
+#: Civi/Funding/Api4/Action/FundingApplicationProcess/Traits/CheckReviewPermissionTrait.php Civi/Funding/Api4/Action/Remote/ApplicationProcess/AbstractFormAction.php Civi/Funding/Api4/Action/Remote/ApplicationProcess/GetFormAction.php
+msgid "Application process with ID \"%1\" not found"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+msgid "Unique field identifier"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+msgid "Technical name of field, shown in API and exports"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+msgid "Primary Field"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+msgid "Custom Field"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+msgid "Search Filter"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+msgid "Extra API Field"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+msgid "Array"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+msgid "Boolean"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+msgid "Date"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+msgid "Float"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+msgid "Integer"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+msgid "String"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+msgid "Text"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+msgid "Timestamp"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/Remote/ApplicationProcess/AbstractFormAction.php
+msgid "Funding case with ID \"%1\" not found"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/Remote/ApplicationProcess/AbstractFormAction.php Civi/Funding/Api4/Action/Remote/FundingCase/AbstractNewApplicationFormAction.php
+msgid "Funding case type with ID \"%1\" not found"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/Remote/ApplicationProcess/AbstractFormAction.php Civi/Funding/Api4/Action/Remote/FundingCase/AbstractNewApplicationFormAction.php
+msgid "Funding program with ID \"%1\" not found"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/Remote/FundingCase/GetNewApplicationFormAction.php
+msgid "Invalid funding program ID or funding case type ID"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php
+msgid "Required permission is missing"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php
+msgid "Funding program and funding case type are not related"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php
+msgid "Funding program does not allow applications before %1"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php
+msgid "Y-m-d"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php
+msgid "Funding program does not allow applications after %1"
+msgstr ""
+
+#: Civi/Funding/Contact/FundingCaseRecipientLoader.php Civi/Funding/Contact/RecipientsLoader/DefaultPossibleRecipientsLoader.php
+msgid "Contact %1"
+msgstr ""
+
+#: Civi/Funding/Contact/Relation/Types/ContactTypeAndRelationshipType.php
+msgid "Related contacts of a specific type"
+msgstr ""
+
+#: Civi/Funding/Contact/Relation/Types/ContactTypeAndRelationshipType.php Civi/Funding/Contact/Relation/Types/SelfByContactType.php Civi/Funding/Permission/ContactRelation/Types/ContactType.php Civi/Funding/Permission/ContactRelation/Types/ContactTypeRelationship.php
+msgid "Contact type"
+msgstr ""
+
+#: Civi/Funding/Contact/Relation/Types/ContactTypeAndRelationshipType.php Civi/Funding/Contact/Relation/Types/RelationshipType.php Civi/Funding/Permission/ContactRelation/Types/ContactRelationship.php Civi/Funding/Permission/ContactRelation/Types/ContactTypeRelationship.php
+msgid "Relationship type"
+msgstr ""
+
+#: Civi/Funding/Contact/Relation/Types/ContactTypeAndRelationshipType.php
+msgid "Contacts of the specified type are available as recipients if a relationship of\nthe specified type exists."
+msgstr ""
+
+#: Civi/Funding/Contact/Relation/Types/RelationshipType.php
+msgid "Related contacts"
+msgstr ""
+
+#: Civi/Funding/Contact/Relation/Types/RelationshipType.php
+msgid "All contacts to which a relationship of the specified type exists are available\nas recipient."
+msgstr ""
+
+#: Civi/Funding/Contact/Relation/Types/SelfByContactType.php
+msgid "Applicant by contact type"
+msgstr ""
+
+#: Civi/Funding/Contact/Relation/Types/SelfByContactType.php
+msgid "The applying contact itself is available as recipient if the contact is of the\nspecified type."
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/Form/SubmitApplicationFormSubscriber.php
+msgid "Saved"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/Form/SubmitApplicationFormSubscriber.php ang/crmFunding/application/application.js ang/crmFunding/application/application.template.html
+msgid "Validation failed"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
+msgid "Application: view"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
+msgid "Application: modify"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php Civi/Funding/EventSubscriber/FundingProgram/FundingProgramGetPossiblePermissionsSubscriber.php
+msgid "Application: apply"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
+msgid "Application: withdraw"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
+msgid "Application: request rework"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
+msgid "Review: calculative"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
+msgid "Review: content"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/FundingProgram/FundingProgramGetPossiblePermissionsSubscriber.php
+msgid "Application: create"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/FundingProgram/FundingProgramGetPossiblePermissionsSubscriber.php
+msgid "View"
+msgstr ""
+
+#: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php ang/crmFunding/application/application.template.html ang/crmFunding/case/fundingCasePermissions.html ang/crmFunding/program/fundingProgramPermissions.html ang/crmFunding/program/recipientRelations.html
+msgid "Save"
+msgstr ""
+
+#: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php
+msgid "Modify"
+msgstr ""
+
+#: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php
+msgid "Apply"
+msgstr ""
+
+#: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php
+msgid "Withdraw"
+msgstr ""
+
+#: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php
+msgid "Do you really want to withdraw the application?"
+msgstr ""
+
+#: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php
+msgid "Delete"
+msgstr ""
+
+#: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php
+msgid "Do you really want to delete the application?"
+msgstr ""
+
+#: Civi/Funding/Form/ReworkPossibleApplicationSubmitActionsContainerFactory.php
+msgid "Request rework"
+msgstr ""
+
+#: Civi/Funding/Form/ReworkPossibleApplicationSubmitActionsContainerFactory.php
+msgid "Withdraw rework request"
+msgstr ""
+
+#: Civi/Funding/Form/ReworkPossibleApplicationSubmitActionsContainerFactory.php
+msgid "Apply rework"
+msgstr ""
+
+#: Civi/Funding/Form/ReworkPossibleApplicationSubmitActionsContainerFactory.php
+msgid "Withdraw rework"
+msgstr ""
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "New"
+msgstr ""
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Draft"
+msgstr ""
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Withdrawn"
+msgstr ""
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Applied"
+msgstr ""
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "In review"
+msgstr ""
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Rejected"
+msgstr ""
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Approved"
+msgstr ""
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Final"
+msgstr ""
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Rework requested"
+msgstr ""
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "In rework"
+msgstr ""
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Rework review requested"
+msgstr ""
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Rework in review"
+msgstr ""
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Open"
+msgstr ""
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Closed"
+msgstr ""
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Applications adoptable"
+msgstr ""
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Relationship from a to b"
+msgstr ""
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Relationship from b to a"
+msgstr ""
+
+#: Civi/Funding/Permission/ContactRelation/Types/Contact.php Civi/Funding/Permission/ContactRelation/Types/ContactRelationship.php
+msgid "Contact"
+msgstr ""
+
+#: Civi/Funding/Permission/ContactRelation/Types/Contact.php
+msgid "Matches if a contact is equal to the specified one."
+msgstr ""
+
+#: Civi/Funding/Permission/ContactRelation/Types/ContactRelationship.php
+msgid "Relationship to contact"
+msgstr ""
+
+#: Civi/Funding/Permission/ContactRelation/Types/ContactRelationship.php
+msgid "Matches if a contact has a relationship of the specified type to the specified contact."
+msgstr ""
+
+#: Civi/Funding/Permission/ContactRelation/Types/ContactType.php
+msgid "Matches if a contact has the specified contact type."
+msgstr ""
+
+#: Civi/Funding/Permission/ContactRelation/Types/ContactTypeRelationship.php
+msgid "Relationship to contact of specific type"
+msgstr ""
+
+#: Civi/Funding/Permission/ContactRelation/Types/ContactTypeRelationship.php
+msgid "Matches a contact that has a relationship of the specified type to a contact of\nthe specified type."
+msgstr ""
+
+#: ang/crmFunding/application/application.js ang/crmFunding/case/fundingCasePermissions.js ang/crmFunding/case/permissions/fundingCaseContactRelation.directive.js ang/crmFunding/form/fundingAddRowButton.directive.js ang/crmFunding/form/fundingSelectPermissions.directive.js ang/crmFunding/form/fundingValidationErrors.directive.js ang/crmFunding/program/fundingProgramPermissions.js ang/crmFunding/program/permissions/fundingProgramContactRelation.directive.js ang/crmFunding/program/recipientRelations.js ang/crmFunding/program/recipients/recipientRelation.directive.js
+msgid "funding"
+msgstr ""
+
+#: ang/crmFunding/application/application.js
+msgid "Undecided"
+msgstr ""
+
+#: ang/crmFunding/application/application.js
+msgid "Passed"
+msgstr ""
+
+#: ang/crmFunding/application/application.js
+msgid "Failed"
+msgstr ""
+
+#: ang/crmFunding/application/application.js
+msgid "The chosen action is disabled. Please report this issue."
+msgstr ""
+
+#: ang/crmFunding/application/application.template.html
+msgid "Application %1"
+msgstr ""
+
+#: ang/crmFunding/application/application.template.html
+msgid "Start review"
+msgstr ""
+
+#: ang/crmFunding/application/application.template.html
+msgid "Set content review to passed"
+msgstr ""
+
+#: ang/crmFunding/application/application.template.html
+msgid "Set content review to failed"
+msgstr ""
+
+#: ang/crmFunding/application/application.template.html
+msgid "Set calculative review to passed"
+msgstr ""
+
+#: ang/crmFunding/application/application.template.html
+msgid "Set calculative review to failed"
+msgstr ""
+
+#: ang/crmFunding/application/application.template.html
+msgid "Request change"
+msgstr ""
+
+#: ang/crmFunding/application/application.template.html
+msgid "Approve application"
+msgstr ""
+
+#: ang/crmFunding/application/application.template.html
+msgid "Reject application"
+msgstr ""
+
+#: ang/crmFunding/application/application.template.html
+msgid "Approve rework request"
+msgstr ""
+
+#: ang/crmFunding/application/application.template.html
+msgid "Reject rework request"
+msgstr ""
+
+#: ang/crmFunding/application/application.template.html
+msgid "Approve change"
+msgstr ""
+
+#: ang/crmFunding/application/application.template.html
+msgid "Reject change"
+msgstr ""
+
+#: ang/crmFunding/application/application.template.html
+msgid "Reset"
+msgstr ""
+
+#: ang/crmFunding/application/application.template.html
+msgid "General"
+msgstr ""
+
+#: ang/crmFunding/application/application.template.html
+msgid "Status"
+msgstr ""
+
+#: ang/crmFunding/application/application.template.html
+msgid "Review content"
+msgstr ""
+
+#: ang/crmFunding/application/application.template.html
+msgid "Review calculative"
+msgstr ""
+
+#: ang/crmFunding/application/application.template.html
+msgid "Creation date"
+msgstr ""
+
+#: ang/crmFunding/application/application.template.html
+msgid "Modification date"
+msgstr ""
+
+#: ang/crmFunding/application/application.template.html
+msgid "Recipient"
+msgstr ""
+
+#: ang/crmFunding/application/application.template.html
+msgid "Amount requested"
+msgstr ""
+
+#: ang/crmFunding/application/application.template.html
+msgid "Amount granted"
+msgstr ""
+
+#: ang/crmFunding/case/fundingCasePermissions.html
+msgid "Funding case permissions"
+msgstr ""
+
+#: ang/crmFunding/case/fundingCasePermissions.html ang/crmFunding/form/fundingAddRowButton.template.html ang/crmFunding/program/fundingProgramPermissions.html ang/crmFunding/program/recipientRelations.html
+msgid "Add"
+msgstr ""
+
+#: ang/crmFunding/case/fundingCasePermissions.html ang/crmFunding/program/fundingProgramPermissions.html ang/crmFunding/program/recipientRelations.html
+msgid "Remove"
+msgstr ""
+
+#: ang/crmFunding/case/permissions/fundingCaseContactRelation.template.html ang/crmFunding/program/permissions/fundingProgramContactRelation.template.html ang/crmFunding/program/recipients/recipientRelation.template.html
+msgid "Type"
+msgstr ""
+
+#: ang/crmFunding/case/permissions/fundingCaseContactRelation.template.html ang/crmFunding/program/permissions/fundingProgramContactRelation.template.html
+msgid "Permissions"
+msgstr ""
+
+#: ang/crmFunding/form/fundingSelectPermissions.directive.js
+msgid "Combining application permissions with other ones is not possible."
+msgstr ""
+
+#: ang/crmFunding/program/fundingProgramPermissions.html
+msgid "Funding program permissions"
+msgstr ""
+
+#: ang/crmFunding/program/recipientRelations.html
+msgid "Possible funding recipients"
+msgstr ""
+

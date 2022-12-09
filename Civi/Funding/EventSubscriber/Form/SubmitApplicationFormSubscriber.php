@@ -73,8 +73,7 @@ class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
 
     $result = $this->submitHandler->handle($command);
     if ($result->isSuccess()) {
-      // TODO: Change message
-      $event->setMessage(E::ts('Success!'));
+      $event->setMessage(E::ts('Saved'));
       Assert::notNull($result->getValidatedData());
       if ($this->isShouldShowForm($result->getValidatedData()->getAction())) {
         $event->setForm(
@@ -106,8 +105,7 @@ class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
 
     $result = $this->newSubmitHandler->handle($command);
     if ($result->isSuccess()) {
-      // TODO: Change message
-      $event->setMessage(E::ts('Success!'));
+      $event->setMessage(E::ts('Saved'));
       Assert::notNull($result->getValidatedData());
       if ($this->isShouldShowForm($result->getValidatedData()->getAction())) {
         Assert::notNull($result->getApplicationProcess());
@@ -139,7 +137,6 @@ class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
     ValidationResult $validationResult,
     AbstractFundingSubmitFormEvent $event
   ): void {
-    // TODO: Change message
     $event->setMessage(E::ts('Validation failed'));
     foreach ($validationResult->getLeafErrorMessages() as $jsonPointer => $messages) {
       $event->addErrorsAt($jsonPointer, $messages);

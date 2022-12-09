@@ -21,6 +21,7 @@ namespace Civi\Funding\Api4\Action\FundingProgramContactRelationType;
 
 use Civi\Api4\FundingProgramContactRelationType;
 use Civi\Api4\Generic\BasicGetFieldsAction;
+use CRM_Funding_ExtensionUtil as E;
 
 /**
  * @phpstan-type fieldT array<string, array<string, scalar>|scalar[]|scalar|null>&array{name: string}
@@ -43,22 +44,22 @@ final class GetFieldsAction extends BasicGetFieldsAction {
       [
         'name' => 'name',
         'data_type' => 'String',
-        'description' => ts('Unique field identifier'),
+        'description' => E::ts('Unique field identifier'),
       ],
       [
         'name' => 'title',
         'data_type' => 'String',
-        'description' => ts('Technical name of field, shown in API and exports'),
+        'description' => E::ts('Technical name of field, shown in API and exports'),
       ],
       [
         'name' => 'type',
         'data_type' => 'String',
         'default_value' => 'Extra',
         'options' => [
-          'Field' => ts('Primary Field'),
-          'Custom' => ts('Custom Field'),
-          'Filter' => ts('Search Filter'),
-          'Extra' => ts('Extra API Field'),
+          'Field' => E::ts('Primary Field'),
+          'Custom' => E::ts('Custom Field'),
+          'Filter' => E::ts('Search Filter'),
+          'Extra' => E::ts('Extra API Field'),
         ],
       ],
       [
@@ -81,14 +82,14 @@ final class GetFieldsAction extends BasicGetFieldsAction {
       [
         'name' => 'data_type',
         'options' => [
-          'Array' => ts('Array'),
-          'Boolean' => ts('Boolean'),
-          'Date' => ts('Date'),
-          'Float' => ts('Float'),
-          'Integer' => ts('Integer'),
-          'String' => ts('String'),
-          'Text' => ts('Text'),
-          'Timestamp' => ts('Timestamp'),
+          'Array' => E::ts('Array'),
+          'Boolean' => E::ts('Boolean'),
+          'Date' => E::ts('Date'),
+          'Float' => E::ts('Float'),
+          'Integer' => E::ts('Integer'),
+          'String' => E::ts('String'),
+          'Text' => E::ts('Text'),
+          'Timestamp' => E::ts('Timestamp'),
         ],
       ],
       [

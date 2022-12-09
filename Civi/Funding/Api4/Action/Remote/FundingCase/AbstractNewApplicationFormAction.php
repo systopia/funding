@@ -31,6 +31,7 @@ use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Event\Remote\FundingEvents;
 use Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker;
 use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
+use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
 
 /**
@@ -89,7 +90,10 @@ abstract class AbstractNewApplicationFormAction extends AbstractRemoteFundingAct
       $fundingCaseTypeId,
       $this->remoteContactId,
     );
-    Assert::notNull($fundingCaseTypeValues, sprintf('Funding case type with ID %d not found', $fundingCaseTypeId));
+    Assert::notNull(
+      $fundingCaseTypeValues,
+      E::ts('Funding case type with ID "%1" not found', [1 => $fundingCaseTypeId])
+    );
     $fundingCaseType = FundingCaseTypeEntity::fromArray($fundingCaseTypeValues);
 
     /** @var fundingProgramT|null $fundingProgramValues */
@@ -98,7 +102,7 @@ abstract class AbstractNewApplicationFormAction extends AbstractRemoteFundingAct
       $fundingProgramId,
       $this->remoteContactId,
     );
-    Assert::notNull($fundingProgramValues, sprintf('Funding program with ID %d not found', $fundingProgramId));
+    Assert::notNull($fundingProgramValues, E::ts('Funding program with ID "%1" not found', [1 => $fundingProgramId]));
     $fundingProgram = FundingProgramEntity::fromArray($fundingProgramValues);
     $this->assertFundingProgramDates($fundingProgram);
     $this->assertCreateApplicationPermission($fundingProgram);

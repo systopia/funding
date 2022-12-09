@@ -25,6 +25,7 @@ use Civi\Funding\Api4\Action\Remote\FundingCase\Traits\NewApplicationFormActionT
 use Civi\Funding\Event\Remote\FundingCase\GetNewApplicationFormEvent;
 use Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker;
 use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
+use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
 
 /**
@@ -72,7 +73,7 @@ final class GetNewApplicationFormAction extends AbstractNewApplicationFormAction
 
     $result->debug['event'] = $event->getDebugOutput();
     if (NULL === $event->getJsonSchema() || NULL === $event->getUiSchema()) {
-      throw new \API_Exception('Invalid fundingProgramId or fundingCaseTypeId', 'invalid_arguments');
+      throw new \API_Exception(E::ts('Invalid funding program ID or funding case type ID'), 'invalid_arguments');
     }
 
     Assert::keyExists($event->getData(), 'fundingCaseTypeId');

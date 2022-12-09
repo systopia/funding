@@ -32,6 +32,7 @@ use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Event\Remote\FundingEvents;
 use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
+use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
 
 /**
@@ -119,7 +120,7 @@ abstract class AbstractFormAction extends AbstractRemoteFundingAction {
       $this->remoteContactId,
     );
     Assert::notNull($applicationProcessValues,
-      sprintf('Application process with ID %d not found', $applicationProcessId));
+      E::ts('Application process with ID "%1" not found', [1 => $applicationProcessId]));
     $applicationProcess = ApplicationProcessEntity::fromArray($applicationProcessValues);
 
     /** @phpstan-var fundingCaseT|null $fundingCaseValues */
@@ -129,7 +130,7 @@ abstract class AbstractFormAction extends AbstractRemoteFundingAction {
       $this->remoteContactId,
     );
     Assert::notNull($fundingCaseValues,
-      sprintf('Funding case with ID %d not found', $applicationProcess->getFundingCaseId()));
+      E::ts('Funding case with ID "%1" not found', [1 => $applicationProcess->getFundingCaseId()]));
     $fundingCase = FundingCaseEntity::fromArray($fundingCaseValues);
 
     /** @phpstan-var fundingCaseTypeT|null $fundingCaseTypeValues */
@@ -138,7 +139,10 @@ abstract class AbstractFormAction extends AbstractRemoteFundingAction {
       $fundingCase->getFundingCaseTypeId(),
       $this->remoteContactId,
     );
-    Assert::notNull($fundingCaseTypeValues, sprintf('Funding case type with ID %d not found', $fundingCase->getId()));
+    Assert::notNull(
+      $fundingCaseTypeValues,
+      E::ts('Funding case type with ID "%1" not found', [1 => $fundingCase->getId()])
+    );
     $fundingCaseType = FundingCaseTypeEntity::fromArray($fundingCaseTypeValues);
 
     /** @var fundingProgramT|null $fundingProgramValues */
@@ -147,8 +151,10 @@ abstract class AbstractFormAction extends AbstractRemoteFundingAction {
       $fundingCase->getFundingProgramId(),
       $this->remoteContactId,
     );
-    Assert::notNull($fundingProgramValues,
-      sprintf('Funding program with ID %d not found', $fundingCase->getFundingProgramId()));
+    Assert::notNull(
+      $fundingProgramValues,
+      E::ts('Funding program with ID "%1" not found', [1 => $fundingCase->getFundingProgramId()])
+    );
     $fundingProgram = FundingProgramEntity::fromArray($fundingProgramValues);
 
     return $this->getExtraParams() + [
