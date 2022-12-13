@@ -17,30 +17,15 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Form;
+namespace Civi\RemoteTools\Form\JsonSchema;
 
-interface ValidatedApplicationDataInterface {
+/**
+ * @codeCoverageIgnore
+ */
+final class JsonSchemaNull extends JsonSchema {
 
-  public function getAction(): string;
-
-  public function getTitle(): string;
-
-  public function getShortDescription(): string;
-
-  public function getRecipientContactId(): int;
-
-  public function getStartDate(): ?\DateTimeInterface;
-
-  public function getEndDate(): ?\DateTimeInterface;
-
-  public function getAmountRequested(): float;
-
-  public function getComment(): ?string;
-
-  /**
-   * @phpstan-return array<string, mixed>
-   *   Application data without extra data like "action".
-   */
-  public function getApplicationData(): array;
+  public function __construct(array $keywords = []) {
+    parent::__construct(['type' => 'null'] + $keywords);
+  }
 
 }

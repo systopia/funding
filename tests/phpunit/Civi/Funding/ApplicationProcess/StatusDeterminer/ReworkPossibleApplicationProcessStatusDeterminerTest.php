@@ -79,15 +79,19 @@ final class ReworkPossibleApplicationProcessStatusDeterminerTest extends TestCas
     yield ['rework-requested', 'withdraw-rework-request', 'approved'];
     yield ['rework-requested', 'approve-rework-request', 'rework'];
     yield ['rework-requested', 'reject-rework-request', 'approved'];
+    yield ['rework-requested', 'add-comment', 'rework-requested'];
     yield ['rework', 'save', 'rework'];
     yield ['rework', 'apply', 'rework-review-requested'];
     yield ['rework', 'withdraw-change', 'applied'];
     yield ['rework', 'review', 'rework-review'];
+    yield ['rework', 'add-comment', 'rework'];
     yield ['rework-review-requested', 'request-rework', 'rework'];
     yield ['rework-review-requested', 'review', 'rework-review'];
+    yield ['rework-review-requested', 'add-comment', 'rework-review-requested'];
     yield ['rework-review', 'request-change', 'rework'];
     yield ['rework-review', 'approve-change', 'approved'];
     yield ['rework-review', 'update', 'rework-review'];
+    yield ['rework-review', 'add-comment', 'rework-review'];
   }
 
   public function testApproveCalculative(): void {

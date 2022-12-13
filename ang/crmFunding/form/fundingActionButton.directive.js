@@ -16,21 +16,25 @@
 
 'use strict';
 
-fundingModule.directive('fundingActionButton', function() {
+fundingModule.directive('fundingActionButton', ['$compile', function($compile) {
   return {
     restrict: 'E',
     transclude: true,
     scope: true,
     bindToController: {
       'action': '@',
+      'label': '@',
+      'withComment': '=?',
     },
     controllerAs: '$ctrl',
-    controller: function () {},
+    controller: function () {
+        this.withComment = true;
+    },
     compile: function(element, attrs) {
       // copy attributes to button element
       const button = angular.element(element[0].querySelector('button'));
       for (let attr of element[0].attributes) {
-        if (attr.name !== 'action') {
+        if (attr.name !== 'action' && attr.name !== 'label' && attr.name !== 'with-comment') {
           button.attr(attr.name, attr.value);
           // avoid handling of attributes such as crm-icon on custom button directive
           _4.unset(attrs, _4.camelCase(attr.name));
@@ -39,14 +43,30 @@ fundingModule.directive('fundingActionButton', function() {
         }
       }
 
-      return function(scope, element) {
+      return function (scope, element, attrs, controller, transcludeFn) {
         for (let attr of element[0].attributes) {
-          if (attr.name !== 'action') {
+          if (attr.name !== 'action' && attr.name !== 'label' && attr.name !== 'with-comment') {
             element.removeAttr(attr.name);
           }
         }
+
+        transcludeFn(function (clone) {
+          if (clone[0]) {
+            element.find('button').find('span.fu-label').html(clone);
+            if (!controller.label) {
+              const cloneText = clone.text();
+              const expressionMatch = cloneText.match(/^\{\{(.+)\}\}$/);
+              if (expressionMatch && expressionMatch[1]) {
+                controller.label = scope.$eval(expressionMatch[1]);
+              }
+              else {
+                controller.label = cloneText;
+              }
+            }
+          }
+        });
       };
     },
     templateUrl: '~/crmFunding/form/fundingActionButton.template.html',
   };
-});
+}]);

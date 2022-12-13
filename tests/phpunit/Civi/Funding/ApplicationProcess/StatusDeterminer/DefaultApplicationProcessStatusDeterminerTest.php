@@ -77,15 +77,19 @@ final class DefaultApplicationProcessStatusDeterminerTest extends TestCase {
     yield ['applied', 'modify', 'draft'];
     yield ['applied', 'withdraw', 'withdrawn'];
     yield ['applied', 'review', 'review'];
+    yield ['applied', 'add-comment', 'applied'];
     yield ['draft', 'save', 'draft'];
     yield ['draft', 'apply', 'applied'];
     yield ['draft', 'withdraw', 'withdrawn'];
     yield ['draft', 'review', 'review'];
+    yield ['draft', 'add-comment', 'draft'];
     yield ['review', 'request-change', 'draft'];
     yield ['review', 'approve', 'approved'];
     yield ['review', 'reject', 'rejected'];
     yield ['review', 'update', 'review'];
+    yield ['review', 'add-comment', 'review'];
     yield ['approved', 'update', 'approved'];
+    yield ['approved', 'add-comment', 'approved'];
   }
 
   public function testApproveCalculative(): void {

@@ -36,23 +36,23 @@ final class DefaultApplicationProcessActionsDeterminer extends ApplicationProces
     'applied' => [
       'application_modify' => ['modify'],
       'application_withdraw' => ['withdraw'],
-      'review_calculative' => ['review'],
-      'review_content' => ['review'],
+      'review_calculative' => ['review', 'add-comment'],
+      'review_content' => ['review', 'add-comment'],
     ],
     'review' => [
-      'review_calculative' => ['request-change', 'update', 'reject'],
-      'review_content' => ['request-change', 'update', 'reject'],
+      'review_calculative' => ['request-change', 'update', 'reject', 'add-comment'],
+      'review_content' => ['request-change', 'update', 'reject', 'add-comment'],
     ],
     'draft' => [
       'application_modify' => ['save'],
       'application_apply' => ['apply'],
       'application_withdraw' => ['withdraw'],
-      'review_calculative' => ['review'],
-      'review_content' => ['review'],
+      'review_calculative' => ['review', 'add-comment'],
+      'review_content' => ['review', 'add-comment'],
     ],
     'approved' => [
-      'review_calculative' => ['update'],
-      'review_content' => ['update'],
+      'review_calculative' => ['update', 'add-comment'],
+      'review_content' => ['update', 'add-comment'],
     ],
   ];
 

@@ -32,6 +32,7 @@ final class ReworkPossibleApplicationProcessStatusDeterminer implements Applicat
       'withdraw-rework-request' => 'approved',
       'approve-rework-request' => 'rework',
       'reject-rework-request' => 'approved',
+      'add-comment' => 'rework-requested',
     ],
     'rework' => [
       'save' => 'rework',
@@ -39,10 +40,12 @@ final class ReworkPossibleApplicationProcessStatusDeterminer implements Applicat
       'withdraw-change' => 'applied',
       'revert-change' => 'applied',
       'review' => 'rework-review',
+      'add-comment' => 'rework',
     ],
     'rework-review-requested' => [
       'request-rework' => 'rework',
       'review' => 'rework-review',
+      'add-comment' => 'rework-review-requested',
     ],
     'rework-review' => [
       'approve-calculative' => 'rework-review',
@@ -53,6 +56,7 @@ final class ReworkPossibleApplicationProcessStatusDeterminer implements Applicat
       'approve-change' => 'approved',
       'reject-change' => 'approved',
       'update' => 'rework-review',
+      'add-comment' => 'rework-review',
     ],
   ];
 

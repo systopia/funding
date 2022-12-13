@@ -37,6 +37,7 @@ final class DefaultApplicationProcessActionsDeterminerTest extends TestCase {
     'review_content' => [],
   ];
 
+  // phpcs:disable Generic.Files.LineLength.TooLong
   private const STATUS_PERMISSION_ACTIONS_MAP = [
     'new' => [
       'application_create' => [],
@@ -51,32 +52,32 @@ final class DefaultApplicationProcessActionsDeterminerTest extends TestCase {
       'application_modify' => ['modify'],
       'application_apply' => [],
       'application_withdraw' => ['withdraw'],
-      'review_calculative' => ['review'],
-      'review_content' => ['review'],
+      'review_calculative' => ['review', 'add-comment'],
+      'review_content' => ['review', 'add-comment'],
     ],
     'review' => [
       'application_create' => [],
       'application_modify' => [],
       'application_apply' => [],
       'application_withdraw' => [],
-      'review_calculative' => ['request-change', 'update', 'reject', 'approve-calculative', 'reject-calculative'],
-      'review_content' => ['request-change', 'update', 'reject', 'approve-content', 'reject-content'],
+      'review_calculative' => ['request-change', 'update', 'reject', 'add-comment', 'approve-calculative', 'reject-calculative'],
+      'review_content' => ['request-change', 'update', 'reject', 'add-comment', 'approve-content', 'reject-content'],
     ],
     'draft' => [
       'application_create' => [],
       'application_modify' => ['save'],
       'application_apply' => ['apply'],
       'application_withdraw' => ['withdraw'],
-      'review_calculative' => ['review'],
-      'review_content' => ['review'],
+      'review_calculative' => ['review', 'add-comment'],
+      'review_content' => ['review', 'add-comment'],
     ],
     'approved' => [
       'application_create' => [],
       'application_modify' => [],
       'application_apply' => [],
       'application_withdraw' => [],
-      'review_calculative' => ['update'],
-      'review_content' => ['update'],
+      'review_calculative' => ['update', 'add-comment'],
+      'review_content' => ['update', 'add-comment'],
     ],
     'withdrawn' => [
       'application_create' => [],
@@ -103,6 +104,7 @@ final class DefaultApplicationProcessActionsDeterminerTest extends TestCase {
       'review_content' => [],
     ],
   ];
+  // phpcs:enable
 
   private DefaultApplicationProcessActionsDeterminer $actionsDeterminer;
 

@@ -1,5 +1,5 @@
-<button ng-if="isActionAllowed($ctrl.action)" type="button"
-        ng-click="performAction($ctrl.action)"
+<button ng-show="isActionAllowed($ctrl.action)" type="button"
+        ng-click="performAction($ctrl.action, $ctrl.label, $ctrl.withComment)"
         ng-disabled="isActionDisabled($ctrl.action)">
-    <ng-transclude></ng-transclude>
+    <span class="fu-label">{{$ctrl.label}}</span>
 </button>

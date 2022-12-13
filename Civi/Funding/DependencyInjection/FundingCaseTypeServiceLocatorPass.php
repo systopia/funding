@@ -23,6 +23,7 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHa
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandler;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCommentPersistHandler;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandler;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandler;
@@ -97,6 +98,9 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
       $this->getTaggedServices($container, 'funding.application.form_validate_handler');
     $applicationFormSubmitHandlerServices =
       $this->getTaggedServices($container, 'funding.application.form_submit_handler');
+
+    $applicationFormCommentPersistHandlerServices =
+      $this->getTaggedServices($container, 'funding.application.form_comment_persist_handler');
     $applicationFormJsonSchemaGetHandlerServices =
       $this->getTaggedServices($container, 'funding.application.json_schema_get_handler');
 
@@ -180,11 +184,19 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         ]
       );
 
+      $applicationFormCommentPersistHandlerServices[$fundingCaseType] ??= $this->createService(
+        $container,
+        $fundingCaseType,
+        ApplicationFormCommentPersistHandler::class,
+        []
+      );
+
       $applicationFormSubmitHandlerServices[$fundingCaseType] ??= $this->createService(
         $container,
         $fundingCaseType,
         ApplicationFormSubmitHandler::class,
         [
+          '$commentPersistHandler' => $applicationFormCommentPersistHandlerServices[$fundingCaseType],
           '$jsonSchemaFactory' => $applicationJsonSchemaFactoryServices[$fundingCaseType],
           '$statusDeterminer' => $applicationStatusDeterminerServices[$fundingCaseType],
         ]
