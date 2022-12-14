@@ -488,19 +488,19 @@ msgstr "Prüfung starten"
 
 #: ang/crmFunding/application/application.template.html
 msgid "Set content review to passed"
-msgstr "Setze fachliche Prüfung auf bestanden"
+msgstr "Fachliche Prüfung bestanden"
 
 #: ang/crmFunding/application/application.template.html
 msgid "Set content review to failed"
-msgstr "Setze fachliche Prüfung auf nicht bestanden"
+msgstr "Fachliche Prüfung nicht bestanden"
 
 #: ang/crmFunding/application/application.template.html
 msgid "Set calculative review to passed"
-msgstr "Setze fachliche Prüfung auf bestanden"
+msgstr "Rechnerische Prüfung bestanden"
 
 #: ang/crmFunding/application/application.template.html
 msgid "Set calculative review to failed"
-msgstr "Setze fachliche Prüfung auf nicht bestanden"
+msgstr "Rechnerische Prüfung nicht bestanden"
 
 #: ang/crmFunding/application/application.template.html
 msgid "Request change"
