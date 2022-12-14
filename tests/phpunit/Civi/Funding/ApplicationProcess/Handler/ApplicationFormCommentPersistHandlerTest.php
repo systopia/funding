@@ -56,7 +56,7 @@ final class ApplicationFormCommentPersistHandlerTest extends TestCase {
       FundingCaseFactory::createFundingCase(),
       FundingCaseTypeFactory::createFundingCaseType(),
       FundingProgramFactory::createFundingProgram(),
-      new ValidatedApplicationDataMock([], ['comment' => 'Test > comment']),
+      new ValidatedApplicationDataMock([], ['comment' => "Test >\ncomment"]),
     );
 
     $this->activityManagerMock->expects(static::once())->method('addActivity')
@@ -65,7 +65,7 @@ final class ApplicationFormCommentPersistHandlerTest extends TestCase {
         $command->getApplicationProcess(),
         static::callback(function (ActivityEntity $activity) {
           static::assertSame(ActivityTypeIds::FUNDING_APPLICATION_COMMENT, $activity->getActivityTypeId());
-          static::assertSame('Test &gt; comment', $activity->getDetails());
+          static::assertSame('Test &gt;<br>comment', $activity->getDetails());
           static::assertSame('Application process comment', $activity->getSubject());
           static::assertSame(
             ValidatedApplicationDataMock::ACTION,

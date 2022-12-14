@@ -22,6 +22,7 @@ namespace Civi\Funding\ApplicationProcess;
 use Civi\Api4\Activity;
 use Civi\Api4\EntityActivity;
 use Civi\Api4\FundingApplicationProcess;
+use Civi\Api4\FundingApplicationProcessActivity;
 use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\RemoteTools\Api4\Api4Interface;
@@ -86,16 +87,8 @@ class ApplicationProcessActivityManager {
    * @throws \API_Exception
    */
   public function getByApplicationProcess(int $applicationProcessId): array {
-    $action = Activity::get()
-      ->addSelect(
-        '*',
-        'custom.*',
-      )->addJoin(
-        FundingApplicationProcess::_getEntityName() . ' AS ap',
-        'INNER',
-        'EntityActivity',
-        ['ap.id', '=' , $applicationProcessId]
-      );
+    $action = FundingApplicationProcessActivity::get()
+      ->setApplicationProcessId($applicationProcessId);
 
     return array_map(
       /** @phpstan-ignore-next-line */

@@ -16,3 +16,9 @@
   /* Modal dialog is partly covered by navbar otherwise. */
   top: 50px !important;
 }
+
+.fu-activity-title {
+  font-size: larger;
+  font-weight: bolder;
+  margin-bottom: 0px !important;
+}

@@ -130,6 +130,10 @@ $container->autowire(UpdateAction::class)
   ->setPublic(TRUE)
   ->setShared(FALSE);
 
+$container->autowire(\Civi\Funding\Api4\Action\FundingApplicationProcessActivity\GetAction::class)
+  ->setPublic(TRUE)
+  ->setShared(FALSE);
+
 $container->autowire(GetFormDataAction::class)
   ->setPublic(TRUE)
   ->setShared(FALSE);

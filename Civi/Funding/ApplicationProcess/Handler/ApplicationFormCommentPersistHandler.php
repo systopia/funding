@@ -45,7 +45,7 @@ final class ApplicationFormCommentPersistHandler implements ApplicationFormComme
     return ActivityEntity::fromArray([
       'activity_type_id' => ActivityTypeIds::FUNDING_APPLICATION_COMMENT,
       'subject' => E::ts('Application process comment'),
-      'details' => htmlentities($command->getComment(), ENT_SUBSTITUTE),
+      'details' => str_replace("\n", '<br>', htmlentities($command->getComment(), ENT_SUBSTITUTE)),
       'funding_application_comment.action' => $command->getValidatedData()->getAction(),
     ]);
   }

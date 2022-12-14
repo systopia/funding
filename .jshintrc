@@ -1,6 +1,7 @@
 {
   "indent": 2,
   "-W097": true,
+  "-W119": true,
   "curly": true,
   "esversion": 6,
   "freeze": true,
@@ -10,6 +11,7 @@
     "fundingIsEmpty": true,
     "enableOverlay": true,
     "disableOverlay": true,
+    "withOverlay": true,
     "angular": false,
     "CRM": false,
     "_4": false,
