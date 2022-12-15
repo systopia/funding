@@ -234,9 +234,45 @@ msgid "Funding application process created"
 msgstr "Förderfallprozess erstellt"
 
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessCreatedSubscriber.php
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriber.php
 msgid "Application process: %1 (%2)"
 msgstr "Förderfallprozess: %1 (%2)"
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
+msgid "Funding application process review status changed"
+msgstr "Prüfstatus von Förderfallprozess geändert"
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
+msgid "From review content: %1"
+msgstr "Von fachliche Prüfung: %1"
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
+msgid "To review content: %1"
+msgstr "Zu fachliche Prüfung: %1"
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
+msgid "From review calculative: %1"
+msgstr "Von rechnerische Prüfung: %1"
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
+msgid "To review calculative: %1"
+msgstr "Zu rechnerische Prüfung: %1"
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
+#: ang/crmFunding/application/application.js
+msgid "Passed"
+msgstr "Bestanden"
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
+#: ang/crmFunding/application/application.js
+msgid "Failed"
+msgstr "Nicht bestanden"
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
+#: ang/crmFunding/application/application.js
+msgid "Undecided"
+msgstr "Nicht entschieden"
 
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriber.php
 msgid "Funding application process status changed"
@@ -466,18 +502,6 @@ msgid "funding"
 msgstr "Förderung"
 
 #: ang/crmFunding/application/application.js
-msgid "Undecided"
-msgstr "Nicht entschieden"
-
-#: ang/crmFunding/application/application.js
-msgid "Passed"
-msgstr "Bestanden"
-
-#: ang/crmFunding/application/application.js
-msgid "Failed"
-msgstr "Nicht bestanden"
-
-#: ang/crmFunding/application/application.js
 msgid "The chosen action is disabled. Please report this issue."
 msgstr ""
 "Die gewählte Aktion ist nicht verfügbar. Bitte melden Sie diesen Fehler."
@@ -653,6 +677,15 @@ msgstr "Förderantrag erstellt"
 msgid "Activity type for funding application process creation"
 msgstr "Aktivitätsart für Förderantragsprozesserstellung"
 
+#: managed/ActivityTypeFundingApplicationReviewChange.mgd.php
+#: managed/CustomGroupFundingApplicationReviewStatusChange.mgd.php
+msgid "Funding Application Review Status Change"
+msgstr "Prüfstatus von Förderantrag geändert"
+
+#: managed/ActivityTypeFundingApplicationReviewChange.mgd.php
+msgid "Activity type for funding application process review status changes"
+msgstr "Aktivitätsart für Prüfstatusänderung eines Förderantragsprozesses"
+
 #: managed/ActivityTypeFundingApplicationStatusChange.mgd.php
 #: managed/CustomGroupFundingApplicationStatusChange.mgd.php
 msgid "Funding Application Status Change"
@@ -665,6 +698,22 @@ msgstr "Aktivitätsart für Statusänderung eines Förderantragsprozesses"
 #: managed/CustomGroupFundingApplicationComment.mgd.php
 msgid "Action"
 msgstr "Aktion"
+
+#: managed/CustomGroupFundingApplicationReviewStatusChange.mgd.php
+msgid "From review calculative"
+msgstr "Von rechnerische Prüfung"
+
+#: managed/CustomGroupFundingApplicationReviewStatusChange.mgd.php
+msgid "To review calculative"
+msgstr "Zu rechnerische Prüfung"
+
+#: managed/CustomGroupFundingApplicationReviewStatusChange.mgd.php
+msgid "From review content"
+msgstr "Von fachliche Prüfung"
+
+#: managed/CustomGroupFundingApplicationReviewStatusChange.mgd.php
+msgid "To review content"
+msgstr "Zu fachliche Prüfung"
 
 #: managed/CustomGroupFundingApplicationStatusChange.mgd.php
 msgid "From status"

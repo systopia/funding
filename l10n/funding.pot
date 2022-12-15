@@ -138,8 +138,40 @@ msgstr ""
 msgid "Funding application process created"
 msgstr ""
 
-#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessCreatedSubscriber.php Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriber.php
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessCreatedSubscriber.php Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriber.php
 msgid "Application process: %1 (%2)"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
+msgid "Funding application process review status changed"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
+msgid "From review content: %1"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
+msgid "To review content: %1"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
+msgid "From review calculative: %1"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
+msgid "To review calculative: %1"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php ang/crmFunding/application/application.js
+msgid "Passed"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php ang/crmFunding/application/application.js
+msgid "Failed"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php ang/crmFunding/application/application.js
+msgid "Undecided"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriber.php
@@ -343,18 +375,6 @@ msgid "funding"
 msgstr ""
 
 #: ang/crmFunding/application/application.js
-msgid "Undecided"
-msgstr ""
-
-#: ang/crmFunding/application/application.js
-msgid "Passed"
-msgstr ""
-
-#: ang/crmFunding/application/application.js
-msgid "Failed"
-msgstr ""
-
-#: ang/crmFunding/application/application.js
 msgid "The chosen action is disabled. Please report this issue."
 msgstr ""
 
@@ -518,6 +538,14 @@ msgstr ""
 msgid "Activity type for funding application process creation"
 msgstr ""
 
+#: managed/ActivityTypeFundingApplicationReviewChange.mgd.php managed/CustomGroupFundingApplicationReviewStatusChange.mgd.php
+msgid "Funding Application Review Status Change"
+msgstr ""
+
+#: managed/ActivityTypeFundingApplicationReviewChange.mgd.php
+msgid "Activity type for funding application process review status changes"
+msgstr ""
+
 #: managed/ActivityTypeFundingApplicationStatusChange.mgd.php managed/CustomGroupFundingApplicationStatusChange.mgd.php
 msgid "Funding Application Status Change"
 msgstr ""
@@ -528,6 +556,22 @@ msgstr ""
 
 #: managed/CustomGroupFundingApplicationComment.mgd.php
 msgid "Action"
+msgstr ""
+
+#: managed/CustomGroupFundingApplicationReviewStatusChange.mgd.php
+msgid "From review calculative"
+msgstr ""
+
+#: managed/CustomGroupFundingApplicationReviewStatusChange.mgd.php
+msgid "To review calculative"
+msgstr ""
+
+#: managed/CustomGroupFundingApplicationReviewStatusChange.mgd.php
+msgid "From review content"
+msgstr ""
+
+#: managed/CustomGroupFundingApplicationReviewStatusChange.mgd.php
+msgid "To review content"
 msgstr ""
 
 #: managed/CustomGroupFundingApplicationStatusChange.mgd.php
