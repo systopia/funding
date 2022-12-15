@@ -27,15 +27,17 @@
         "systopia/opis-json-schema-ext": "dev-main"
     },
     "require-dev": {
-        "civicrm/civicrm-core": "^5.50",
+        "civicrm/civicrm-core": "^5.53",
         "symfony/dependency-injection": ">=4.2"
     },
     "scripts": {
         "post-install-or-update": [
             "# Avoid redeclaration of method \\GuzzleHttp\\http_build_query",
             "if [ -e vendor/civicrm/civicrm-core/guzzle_php81_shim.php ]; then echo '' >vendor/civicrm/civicrm-core/guzzle_php81_shim.php; fi",
+            "# Avoid CiviCRM load extensions in vendor",
+            "if [ -e vendor/civicrm ]; then find vendor/civicrm -name 'info.xml' -delete; fi",
             "# Avoid Class 'CRM_AfformAdmin_ExtensionUtil' not found",
-            "find vendor -name '*.mgd.php' -delete"
+            "if [ -e vendor/civicrm ]; then find vendor/civicrm -name '*.mgd.php' -delete; fi"
         ],
         "post-install-cmd": [
             "@post-install-or-update"
