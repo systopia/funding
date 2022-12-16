@@ -102,9 +102,12 @@ trait CheckReviewPermissionTrait {
   }
 
   private function getApplicationProcessIdFromWhere(): ?int {
-    foreach ($this->where ?? [] as $clause) {
-      if ($clause[0] === 'id' && '=' === $clause[1] && is_numeric($clause[2])) {
-        return (int) $clause[2];
+    // @phpstan-ignore-next-line Depending on the class phpstan says this will always evaluate to true/false.
+    if (property_exists($this, 'where')) {
+      foreach ($this->where as $clause) {
+        if ($clause[0] === 'id' && '=' === $clause[1] && is_numeric($clause[2])) {
+          return (int) $clause[2];
+        }
       }
     }
 
