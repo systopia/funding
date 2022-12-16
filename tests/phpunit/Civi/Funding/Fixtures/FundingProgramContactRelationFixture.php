@@ -31,7 +31,9 @@ final class FundingProgramContactRelationFixture {
    * @throws \API_Exception
    */
   public static function addContact(int $contactId, int $fundingProgramId, array $permissions): array {
-    return self::addFixture($fundingProgramId, 'Contact', ['contactId' => $contactId], $permissions);
+    // Contact IDs are stored as string (see comment in ContactChecker), so we
+    // do the same here.
+    return self::addFixture($fundingProgramId, 'Contact', ['contactId' => (string) $contactId], $permissions);
   }
 
   /**

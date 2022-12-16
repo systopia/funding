@@ -31,7 +31,9 @@ final class ContactChecker implements ContactRelationCheckerInterface {
    * @inheritDoc
    */
   public function hasRelation(int $contactId, string $relationType, array $relationProperties): bool {
-    return $contactId === $relationProperties['contactId'];
+    // Input fields with "crm-entityref" return the IDs as strings, so we have
+    // to compare for equality instead of identity.
+    return $contactId == $relationProperties['contactId'];
   }
 
   public function supportsRelationType(string $relationType): bool {
