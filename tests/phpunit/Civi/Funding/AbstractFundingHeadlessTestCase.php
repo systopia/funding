@@ -19,13 +19,24 @@ declare(strict_types = 1);
 
 namespace Civi\Funding;
 
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
+use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Test;
 use Civi\Test\CiviEnvBuilder;
 use Civi\Test\HeadlessInterface;
 use Civi\Test\TransactionalInterface;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\PhpUnit\ClockMock;
 
 abstract class AbstractFundingHeadlessTestCase extends TestCase implements HeadlessInterface, TransactionalInterface {
+
+  public static function setUpBeforeClass(): void {
+    parent::setUpBeforeClass();
+    // A class has to be registered before being used in any test, otherwise
+    // ClockMock has no effect. Thus, we do it here when necessary.
+    ClockMock::register(FundingCaseManager::class);
+    ClockMock::register(ApplicationProcessManager::class);
+  }
 
   public function setUpHeadless(): CiviEnvBuilder {
     return Test::headless()
