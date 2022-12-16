@@ -82,7 +82,7 @@ class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
             $event->getFundingCase(),
             $event->getFundingCaseType(),
             $event->getFundingProgram(),
-            $result->getValidationResult()->getData(),
+            $result->getValidatedData()->getApplicationData(),
           ))
         );
       }
@@ -116,7 +116,7 @@ class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
             $result->getFundingCase(),
             $event->getFundingCaseType(),
             $event->getFundingProgram(),
-            $result->getValidationResult()->getData(),
+            $result->getValidatedData()->getApplicationData(),
           ))
         );
       }

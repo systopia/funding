@@ -32,15 +32,16 @@ use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeProgramFixture;
 use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
-use Civi\Funding\Form\SonstigeAktivitaet\JsonSchema\AVK1JsonSchema;
-use Civi\Funding\Form\SonstigeAktivitaet\UISchema\AVK1UiSchema;
+use Civi\Funding\Mock\Form\FundingCaseType\TestJsonSchema;
+use Civi\Funding\Mock\Form\FundingCaseType\TestJsonSchemaFactory;
+use Civi\Funding\Mock\Form\FundingCaseType\TestUiSchema;
 
 /**
  * @group headless
  *
  * @covers \Civi\Api4\RemoteFundingApplicationProcess
  */
-final class RemoteFundingApplicationProcessAVK1FormTest extends AbstractFundingHeadlessTestCase {
+final class RemoteFundingApplicationProcessTestFormTest extends AbstractFundingHeadlessTestCase {
 
   private ApplicationProcessEntity $applicationProcess;
 
@@ -86,25 +87,10 @@ final class RemoteFundingApplicationProcessAVK1FormTest extends AbstractFundingH
 
     $values = $action->execute()->getArrayCopy();
     static::assertEquals(['jsonSchema', 'uiSchema', 'data'], array_keys($values));
-    static::assertInstanceOf(AVK1JsonSchema::class, $values['jsonSchema']);
-    static::assertInstanceOf(AVK1UiSchema::class, $values['uiSchema']);
-    static::assertTrue($values['uiSchema']->isReadonly());
+    static::assertInstanceOf(TestJsonSchema::class, $values['jsonSchema']);
+    static::assertInstanceOf(TestUiSchema::class, $values['uiSchema']);
     static::assertIsArray($values['data']);
-    static::assertSame($this->applicationProcess->getTitle(), $values['data']['titel']);
-
-    FundingCaseContactRelationFixture::addContact(
-      $this->contact['id'],
-      $this->fundingCase->getId(),
-      ['application_modify'],
-    );
-
-    $values = $action->execute()->getArrayCopy();
-    static::assertEquals(['jsonSchema', 'uiSchema', 'data'], array_keys($values));
-    static::assertInstanceOf(AVK1JsonSchema::class, $values['jsonSchema']);
-    static::assertInstanceOf(AVK1UiSchema::class, $values['uiSchema']);
-    static::assertFalse($values['uiSchema']->isReadonly() ?? FALSE);
-    static::assertIsArray($values['data']);
-    static::assertSame($this->applicationProcess->getTitle(), $values['data']['titel']);
+    static::assertSame($this->applicationProcess->getTitle(), $values['data']['title']);
   }
 
   public function testValidateForm(): void {
@@ -138,6 +124,22 @@ final class RemoteFundingApplicationProcessAVK1FormTest extends AbstractFundingH
     static::assertEquals(['valid', 'errors'], array_keys($values));
     static::assertFalse($values['valid']);
     static::assertNotCount(0, $values['errors']);
+
+    $validData = [
+      'applicationProcessId' => $this->applicationProcess->getId(),
+      'title' => 'My Title',
+      'shortDescription' => 'My short description',
+      'recipient' => $this->fundingCase->getRecipientContactId(),
+      'startDate' => date('Y-m-d'),
+      'endDate' => date('Y-m-d'),
+      'amountRequested' => 123.45,
+    ];
+    $action->setData($validData + ['action' => 'save']);
+
+    $values = $action->execute()->getArrayCopy();
+    static::assertEquals(['valid', 'errors'], array_keys($values));
+    static::assertTrue($values['valid']);
+    static::assertCount(0, $values['errors']);
   }
 
   public function testSubmitForm(): void {
@@ -174,12 +176,31 @@ final class RemoteFundingApplicationProcessAVK1FormTest extends AbstractFundingH
     static::assertSame('showValidation', $values['action']);
     static::assertSame('Validation failed', $values['message']);
     static::assertNotCount(0, $values['errors']);
+
+    // Test with valid data
+    $validData = [
+      'applicationProcessId' => $this->applicationProcess->getId(),
+      'title' => 'My Title',
+      'shortDescription' => 'My short description',
+      'recipient' => $this->fundingCase->getRecipientContactId(),
+      'startDate' => date('Y-m-d'),
+      'endDate' => date('Y-m-d'),
+      'amountRequested' => 123.45,
+    ];
+    $action->setData($validData + ['action' => 'save']);
+
+    $values = $action->execute()->getArrayCopy();
+    static::assertEquals(['action', 'message', 'jsonSchema', 'uiSchema', 'data'], array_keys($values));
+    static::assertInstanceOf(TestJsonSchema::class, $values['jsonSchema']);
+    static::assertInstanceOf(TestUiSchema::class, $values['uiSchema']);
+    static::assertSame('showForm', $values['action']);
+    static::assertEquals($validData, $values['data']);
   }
 
   private function addFixtures(): void {
     $this->fundingCaseType = FundingCaseTypeFixture::addFixture([
-      'title' => 'AVK1 Test',
-      'name' => 'AVK1SonstigeAktivitaet',
+      'title' => 'Test',
+      'name' => TestJsonSchemaFactory::getSupportedFundingCaseTypes()[0],
     ]);
 
     $this->fundingProgram = FundingProgramFixture::addFixture([

@@ -33,8 +33,9 @@ use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeProgramFixture;
 use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
-use Civi\Funding\Form\SonstigeAktivitaet\JsonSchema\AVK1JsonSchema;
-use Civi\Funding\Form\SonstigeAktivitaet\UISchema\AVK1UiSchema;
+use Civi\Funding\Mock\Form\FundingCaseType\TestJsonSchema;
+use Civi\Funding\Mock\Form\FundingCaseType\TestJsonSchemaFactory;
+use Civi\Funding\Mock\Form\FundingCaseType\TestUiSchema;
 use Symfony\Bridge\PhpUnit\ClockMock;
 
 /**
@@ -42,7 +43,7 @@ use Symfony\Bridge\PhpUnit\ClockMock;
  *
  * @covers \Civi\Api4\RemoteFundingCase
  */
-final class RemoteFundingCaseAVK1FormTest extends AbstractFundingHeadlessTestCase {
+final class RemoteFundingCaseTestFormTest extends AbstractFundingHeadlessTestCase {
 
   private FundingCaseTypeEntity $fundingCaseType;
 
@@ -95,13 +96,66 @@ final class RemoteFundingCaseAVK1FormTest extends AbstractFundingHeadlessTestCas
 
     $values = $action->execute()->getArrayCopy();
     static::assertEquals(['jsonSchema', 'uiSchema', 'data'], array_keys($values));
-    static::assertInstanceOf(AVK1JsonSchema::class, $values['jsonSchema']);
-    static::assertInstanceOf(AVK1UiSchema::class, $values['uiSchema']);
+    static::assertInstanceOf(TestJsonSchema::class, $values['jsonSchema']);
+    static::assertInstanceOf(TestUiSchema::class, $values['uiSchema']);
     static::assertIsArray($values['data']);
   }
 
   public function testValidateNewForm(): void {
     $action = RemoteFundingCase::validateNewApplicationForm()
+      ->setRemoteContactId((string) $this->contact['id'])
+      ->setData([
+        'fundingProgramId' => $this->fundingProgram->getId(),
+        'fundingCaseTypeId' => $this->fundingCaseType->getId(),
+      ]);
+
+    FundingProgramContactRelationFixture::addContact(
+      $this->contact['id'],
+      $this->fundingProgram->getId(),
+      ['application_permission']
+    );
+
+    $e = NULL;
+    try {
+      $action->execute();
+    }
+    catch (UnauthorizedException $e) {
+      // @ignoreException
+    }
+    static::assertNotNull($e);
+    static::assertSame('Required permission is missing', $e->getMessage());
+
+    FundingProgramContactRelationFixture::addContact(
+      $this->contact['id'],
+      $this->fundingProgram->getId(),
+      ['application_create']
+    );
+
+    $values = $action->execute()->getArrayCopy();
+    static::assertEquals(['valid', 'errors'], array_keys($values));
+    static::assertFalse($values['valid']);
+    static::assertNotCount(0, $values['errors']);
+
+    $validData = [
+      'fundingProgramId' => $this->fundingProgram->getId(),
+      'fundingCaseTypeId' => $this->fundingCaseType->getId(),
+      'title' => 'My Title',
+      'shortDescription' => 'My short description',
+      'recipient' => $this->contact['id'],
+      'startDate' => date('Y-m-d'),
+      'endDate' => date('Y-m-d'),
+      'amountRequested' => 123.45,
+    ];
+    $action->setData($validData + ['action' => 'save']);
+
+    $values = $action->execute()->getArrayCopy();
+    static::assertEquals(['valid', 'errors'], array_keys($values));
+    static::assertTrue($values['valid']);
+    static::assertCount(0, $values['errors']);
+  }
+
+  public function testSubmitNewForm(): void {
+    $action = RemoteFundingCase::submitNewApplicationForm()
       ->setRemoteContactId((string) $this->contact['id'])
       ->setData([
         'fundingProgramId' => $this->fundingProgram->getId(),
@@ -133,52 +187,40 @@ final class RemoteFundingCaseAVK1FormTest extends AbstractFundingHeadlessTestCas
 
     // Test with invalid data
     $values = $action->execute()->getArrayCopy();
-    static::assertEquals(['valid', 'errors'], array_keys($values));
-    static::assertFalse($values['valid']);
-    static::assertNotCount(0, $values['errors']);
-  }
-
-  public function testSubmitNewForm(): void {
-    $action = RemoteFundingCase::submitNewApplicationForm()
-      ->setRemoteContactId((string) $this->contact['id'])
-      ->setData([
-        'fundingProgramId' => $this->fundingProgram->getId(),
-        'fundingCaseTypeId' => $this->fundingCaseType->getId(),
-      ]);
-
-    FundingProgramContactRelationFixture::addContact(
-      $this->contact['id'],
-      $this->fundingProgram->getId(),
-      ['application_permission']
-    );
-
-    $e = NULL;
-    try {
-      $action->execute();
-    }
-    catch (UnauthorizedException $e) {
-      // @ignoreException
-    }
-    static::assertNotNull($e);
-    static::assertSame('Required permission is missing', $e->getMessage());
-
-    FundingProgramContactRelationFixture::addContact(
-      $this->contact['id'],
-      $this->fundingProgram->getId(),
-      ['application_create']
-    );
-
-    $values = $action->execute()->getArrayCopy();
     static::assertEquals(['action', 'message', 'errors'], array_keys($values));
     static::assertSame('showValidation', $values['action']);
     static::assertSame('Validation failed', $values['message']);
     static::assertNotCount(0, $values['errors']);
+
+    // Test with valid data
+    $validData = [
+      'fundingProgramId' => $this->fundingProgram->getId(),
+      'fundingCaseTypeId' => $this->fundingCaseType->getId(),
+      'title' => 'My Title',
+      'shortDescription' => 'My short description',
+      'recipient' => $this->contact['id'],
+      'startDate' => date('Y-m-d'),
+      'endDate' => date('Y-m-d'),
+      'amountRequested' => 123.45,
+    ];
+    $action->setData($validData + ['action' => 'save']);
+
+    $values = $action->execute()->getArrayCopy();
+    static::assertEquals(['action', 'message', 'jsonSchema', 'uiSchema', 'data'], array_keys($values));
+    static::assertSame('showForm', $values['action']);
+    static::assertInstanceOf(TestJsonSchema::class, $values['jsonSchema']);
+    static::assertInstanceOf(TestUiSchema::class, $values['uiSchema']);
+    static::assertIsInt($values['data']['applicationProcessId']);
+    static::assertEquals(
+      $validData + ['applicationProcessId' => $values['data']['applicationProcessId']],
+      $values['data']
+    );
   }
 
   private function addFixtures(): void {
     $this->fundingCaseType = FundingCaseTypeFixture::addFixture([
-      'title' => 'AVK1 Test',
-      'name' => 'AVK1SonstigeAktivitaet',
+      'title' => 'Test',
+      'name' => TestJsonSchemaFactory::getSupportedFundingCaseTypes()[0],
     ]);
 
     $this->fundingProgram = FundingProgramFixture::addFixture([
