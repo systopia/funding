@@ -19,18 +19,18 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Handler;
 
-use Civi\Funding\ApplicationProcess\Command\ApplicationCostItemsAddIdentifiersCommand;
+use Civi\Funding\ApplicationProcess\Command\ApplicationResourcesItemsAddIdentifiersCommand;
 
-interface ApplicationCostItemsAddIdentifiersHandlerInterface {
+interface ApplicationResourcesItemsAddIdentifiersHandlerInterface {
 
   /**
-   * Adds identifiers to new cost items in request data of application process,
-   * where necessary. This identifiers can later be used when creating objects
-   * of type ApplicationCostItemEntity. These identifiers allow to make changes
-   * to already persisted cost items only where necessary.
+   * Adds identifiers to new resources items in request data of application
+   * process, where necessary. This identifiers can later be used when creating
+   * objects of type ApplicationResourcesItemEntity. These identifiers allow to
+   * make changes to already persisted resources items only where necessary.
    *
    * @return array<string, mixed> Request data with added identifiers.
    */
-  public function handle(ApplicationCostItemsAddIdentifiersCommand $command): array;
+  public function handle(ApplicationResourcesItemsAddIdentifiersCommand $command): array;
 
 }

@@ -36,6 +36,29 @@ final class AVK1ApplicationResourcesItemsFactoryTest extends TestCase {
     $this->resourcesItemsFactory = new AVK1ApplicationResourcesItemsFactory();
   }
 
+  public function testAddIdentifiers(): void {
+    $requestData = [
+      'finanzierung' => [
+        'sonstigeMittel' => [
+          ['_identifier' => '', 'quelle' => 'Test', 'betrag' => 1.23],
+        ],
+      ],
+    ];
+    $result = $this->resourcesItemsFactory->addIdentifiers($requestData);
+
+    // @phpstan-ignore-next-line
+    static::assertNotEmpty($result['finanzierung']['sonstigeMittel'][0]['_identifier']);
+  }
+
+  public function testAreIdentifiersChanged(): void {
+    static::assertTrue($this->resourcesItemsFactory->areResourcesItemsChanged(
+      ['finanzierung' => ['foo' => 1]], ['finanzierung' => ['foo' => 2]]
+    ));
+    static::assertFalse($this->resourcesItemsFactory->areResourcesItemsChanged(
+      ['finanzierung' => ['foo' => 1]], ['finanzierung' => ['foo' => 1]]
+    ));
+  }
+
   public function testCreateItems(): void {
     $expectedItems = [
       ApplicationResourcesItemEntity::fromArray([

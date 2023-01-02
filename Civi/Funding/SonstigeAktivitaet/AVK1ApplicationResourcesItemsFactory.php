@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\SonstigeAktivitaet;
 
+use Civi\Funding\ApplicationProcess\ApplicationResourcesItemsFactoryInterface;
+use Civi\Funding\ApplicationProcess\ItemsIdentifierUtil;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\ApplicationResourcesItemEntity;
 use Webmozart\Assert\Assert;
@@ -39,7 +41,29 @@ use Webmozart\Assert\Assert;
  *   }>,
  * }
  */
-class AVK1ApplicationResourcesItemsFactory {
+class AVK1ApplicationResourcesItemsFactory implements ApplicationResourcesItemsFactoryInterface {
+
+  public static function getSupportedFundingCaseTypes(): array {
+    return ['AVK1SonstigeAktivitaet'];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function addIdentifiers(array $requestData): array {
+    /** @phpstan-var finanzierungT $finanzierung */
+    $finanzierung = &$requestData['finanzierung'];
+    $finanzierung['sonstigeMittel'] = ItemsIdentifierUtil::addIdentifiers($finanzierung['sonstigeMittel']);
+
+    return $requestData;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function areResourcesItemsChanged(array $requestData, array $previousRequestData): bool {
+    return $requestData['finanzierung'] != $previousRequestData['finanzierung'];
+  }
 
   /**
    * @phpstan-return array<ApplicationResourcesItemEntity>
