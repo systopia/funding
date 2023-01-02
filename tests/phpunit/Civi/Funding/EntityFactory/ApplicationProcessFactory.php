@@ -46,12 +46,14 @@ use Civi\Funding\Entity\ApplicationProcessEntity;
  */
 final class ApplicationProcessFactory {
 
+  public const DEFAULT_ID = 2;
+
   /**
    * @phpstan-param applicationProcessValuesT $values
    */
   public static function createApplicationProcess(array $values = []): ApplicationProcessEntity {
     $values += [
-      'id' => 2,
+      'id' => self::DEFAULT_ID,
       'identifier' => 'app2',
       'funding_case_id' => 3,
       'status' => 'new_status',

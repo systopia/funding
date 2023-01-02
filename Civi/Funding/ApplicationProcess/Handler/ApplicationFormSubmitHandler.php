@@ -96,7 +96,12 @@ final class ApplicationFormSubmitHandler implements ApplicationFormSubmitHandler
       $applicationProcess->setRequestData($validatedData->getApplicationData());
     }
 
-    $this->applicationProcessManager->update($command->getContactId(), $applicationProcess, $command->getFundingCase());
+    $this->applicationProcessManager->update(
+      $command->getContactId(),
+      $applicationProcess,
+      $command->getFundingCase(),
+      $command->getFundingCaseType()
+    );
 
     return ApplicationFormSubmitResult::createSuccess($validationResult, $validatedData);
   }

@@ -116,6 +116,7 @@ final class AVK1ApplicationResourcesItemSubscriberTest extends TestCase {
   }
 
   public function testOnPreUpdate(): void {
+    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
     $fundingCase = $this->createFundingCase();
     $previousApplicationProcess = $this->createApplicationProcess();
     $previousApplicationProcess->setRequestData([
@@ -144,6 +145,7 @@ final class AVK1ApplicationResourcesItemSubscriberTest extends TestCase {
       $previousApplicationProcess,
       $applicationProcess,
       $fundingCase,
+      $fundingCaseType,
     );
     $this->subscriber->onPreUpdate($event);
 
@@ -187,6 +189,7 @@ final class AVK1ApplicationResourcesItemSubscriberTest extends TestCase {
   }
 
   public function testOnUpdated(): void {
+    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
     $fundingCase = $this->createFundingCase();
     $previousApplicationProcess = $this->createApplicationProcess();
     $previousApplicationProcess->setRequestData([
@@ -214,11 +217,13 @@ final class AVK1ApplicationResourcesItemSubscriberTest extends TestCase {
       $previousApplicationProcess,
       $applicationProcess,
       $fundingCase,
+      $fundingCaseType,
     );
     $this->subscriber->onUpdated($event);
   }
 
   public function testOnUpdatedFinanzierungUnchanged(): void {
+    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
     $fundingCase = $this->createFundingCase();
     $previousApplicationProcess = $this->createApplicationProcess();
     $previousApplicationProcess->setRequestData([
@@ -241,6 +246,7 @@ final class AVK1ApplicationResourcesItemSubscriberTest extends TestCase {
       $previousApplicationProcess,
       $applicationProcess,
       $fundingCase,
+      $fundingCaseType,
     );
     $this->subscriber->onUpdated($event);
   }

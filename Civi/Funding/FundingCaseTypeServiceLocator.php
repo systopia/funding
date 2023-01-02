@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding;
 
+use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewCreateHandlerInterface;
@@ -67,6 +69,14 @@ final class FundingCaseTypeServiceLocator implements FundingCaseTypeServiceLocat
 
   public function getApplicationJsonSchemaGetHandler(): ApplicationJsonSchemaGetHandlerInterface {
     return $this->locator->get(ApplicationJsonSchemaGetHandlerInterface::class);
+  }
+
+  public function getApplicationCostItemsAddIdentifiersHandler() : ApplicationCostItemsAddIdentifiersHandlerInterface {
+    return $this->locator->get(ApplicationCostItemsAddIdentifiersHandlerInterface::class);
+  }
+
+  public function getApplicationCostItemsPersistHandler(): ApplicationCostItemsPersistHandlerInterface {
+    return $this->locator->get(ApplicationCostItemsPersistHandlerInterface::class);
   }
 
 }

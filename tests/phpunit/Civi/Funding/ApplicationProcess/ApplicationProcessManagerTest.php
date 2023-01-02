@@ -216,7 +216,8 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
 
   public function testUpdate(): void {
     $contact = ContactFixture::addIndividual();
-    $fundingCase = $this->createFundingCase();
+    $fundingCaseType = FundingCaseTypeFixture::addFixture();
+    $fundingCase = $this->createFundingCase(NULL, $fundingCaseType->getId());
     \CRM_Core_Session::singleton()->set('userID', $contact['id']);
     FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['test_permission']);
 
@@ -228,12 +229,13 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
         ApplicationProcessPreUpdateEvent::class,
         static::callback(
           function (ApplicationProcessPreUpdateEvent $event) use ($contact, $previousTitle,
-            $applicationProcess, $fundingCase
+            $applicationProcess, $fundingCase, $fundingCaseType
           ) {
             static::assertSame($contact['id'], $event->getContactId());
             static::assertSame($previousTitle, $event->getPreviousApplicationProcess()->getTitle());
             static::assertSame($applicationProcess, $event->getApplicationProcess());
             static::assertSame($fundingCase, $event->getFundingCase());
+            static::assertSame($fundingCaseType, $event->getFundingCaseType());
 
             return TRUE;
           }
@@ -243,12 +245,13 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
         ApplicationProcessUpdatedEvent::class,
         static::callback(
           function (ApplicationProcessUpdatedEvent $event) use ($contact, $previousTitle,
-          $applicationProcess, $fundingCase
+          $applicationProcess, $fundingCase, $fundingCaseType
           ) {
             static::assertSame($contact['id'], $event->getContactId());
             static::assertSame($previousTitle, $event->getPreviousApplicationProcess()->getTitle());
             static::assertSame($applicationProcess, $event->getApplicationProcess());
             static::assertSame($fundingCase, $event->getFundingCase());
+            static::assertSame($fundingCaseType, $event->getFundingCaseType());
 
             return TRUE;
           }
@@ -257,7 +260,7 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
     );
 
     $applicationProcess->setTitle('New title');
-    $this->applicationProcessManager->update($contact['id'], $applicationProcess, $fundingCase);
+    $this->applicationProcessManager->update($contact['id'], $applicationProcess, $fundingCase, $fundingCaseType);
     static::assertSame(time(), $applicationProcess->getModificationDate()->getTimestamp());
   }
 

@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding;
 
+use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewCreateHandlerInterface;
@@ -45,5 +47,9 @@ interface FundingCaseTypeServiceLocatorInterface {
   public function getApplicationFormSubmitHandler(): ApplicationFormSubmitHandlerInterface;
 
   public function getApplicationJsonSchemaGetHandler(): ApplicationJsonSchemaGetHandlerInterface;
+
+  public function getApplicationCostItemsAddIdentifiersHandler() : ApplicationCostItemsAddIdentifiersHandlerInterface;
+
+  public function getApplicationCostItemsPersistHandler(): ApplicationCostItemsPersistHandlerInterface;
 
 }

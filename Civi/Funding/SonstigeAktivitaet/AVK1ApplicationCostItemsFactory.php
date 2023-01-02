@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\SonstigeAktivitaet;
 
+use Civi\Funding\ApplicationProcess\ApplicationCostItemsFactoryInterface;
+use Civi\Funding\ApplicationProcess\ItemsIdentifierUtil;
 use Civi\Funding\Entity\ApplicationCostItemEntity;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Webmozart\Assert\Assert;
@@ -53,10 +55,34 @@ use Webmozart\Assert\Assert;
  *   versicherungTeilnehmer: float,
  * }
  */
-class AVK1ApplicationCostItemsFactory {
+class AVK1ApplicationCostItemsFactory implements ApplicationCostItemsFactoryInterface {
+
+  public static function getSupportedFundingCaseTypes(): array {
+    return ['AVK1SonstigeAktivitaet'];
+  }
 
   /**
-   * @phpstan-return array<ApplicationCostItemEntity>
+   * @inheritDoc
+   */
+  public function addIdentifiers(array $requestData): array {
+    /** @phpstan-var kostenT $kosten */
+    $kosten = &$requestData['kosten'];
+    $kosten['honorare'] = ItemsIdentifierUtil::addIdentifiers($kosten['honorare']);
+    $kosten['sachkosten']['ausstattung'] = ItemsIdentifierUtil::addIdentifiers($kosten['sachkosten']['ausstattung']);
+    $kosten['sonstigeAusgaben'] = ItemsIdentifierUtil::addIdentifiers($kosten['sonstigeAusgaben']);
+
+    return $requestData;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function areCostItemsChanged(array $requestData, array $previousRequestData): bool {
+    return $requestData['kosten'] != $previousRequestData['kosten'];
+  }
+
+  /**
+   * @inheritDoc
    */
   public function createItems(ApplicationProcessEntity $applicationProcess): array {
     /** @phpstan-var kostenT $kosten */

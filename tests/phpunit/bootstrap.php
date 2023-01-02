@@ -4,6 +4,7 @@ declare(strict_types = 1);
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\Contact\DummyRemoteContactIdResolver;
 use Civi\Funding\Contact\FundingRemoteContactIdResolverInterface;
+use Civi\Funding\Mock\Form\FundingCaseType\TestApplicationCostItemsFactory;
 use Civi\Funding\Mock\Form\FundingCaseType\TestFormDataFactory;
 use Civi\Funding\Mock\Form\FundingCaseType\TestJsonSchemaFactory;
 use Civi\Funding\Mock\Form\FundingCaseType\TestUiSchemaFactory;
@@ -47,6 +48,8 @@ function _funding_test_civicrm_container(ContainerBuilder $container): void {
     ->addTag('funding.application.ui_schema_factory');
   $container->autowire(TestFormDataFactory::class)
     ->addTag('funding.application.form_data_factory');
+  $container->autowire(TestApplicationCostItemsFactory::class)
+    ->addTag('funding.application.cost_items_factory');
 }
 
 /**
