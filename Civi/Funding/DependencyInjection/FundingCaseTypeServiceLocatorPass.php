@@ -19,6 +19,10 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\DependencyInjection;
 
+use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandler;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandler;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandler;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandler;
@@ -35,6 +39,10 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandler;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationJsonSchemaGetHandler;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationJsonSchemaGetHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsAddIdentifiersHandler;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsAddIdentifiersHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandler;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandlerInterface;
 use Civi\Funding\FundingCaseTypeServiceLocator;
 use Civi\Funding\FundingCaseTypeServiceLocatorContainer;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -69,6 +77,10 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
       $this->getTaggedServices($container, 'funding.application.ui_schema_factory');
     $applicationStatusDeterminerServices =
       $this->getTaggedServices($container, 'funding.application.status_determiner');
+    $applicationCostItemsFactoryServices =
+      $this->getTaggedServices($container, 'funding.application.cost_items_factory');
+    $applicationResourcesItemsFactoryServices =
+      $this->getTaggedServices($container, 'funding.application.resources_items_factory');
 
     $applicationFormNewCreateHandlerServices =
       $this->getTaggedServices($container, 'funding.application.form_new_create_handler');
@@ -87,6 +99,16 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
       $this->getTaggedServices($container, 'funding.application.form_submit_handler');
     $applicationFormJsonSchemaGetHandlerServices =
       $this->getTaggedServices($container, 'funding.application.json_schema_get_handler');
+
+    $applicationCostItemsAddIdentifiersHandlerServices =
+      $this->getTaggedServices($container, 'funding.application.cost_items_add_identifiers_handler');
+    $applicationCostItemsPersistHandlerServices =
+      $this->getTaggedServices($container, 'funding.application.cost_items_persist_handler');
+
+    $applicationResourcesItemsAddIdentifiersHandlerServices =
+      $this->getTaggedServices($container, 'funding.application.resources_items_add_identifiers_handler');
+    $applicationResourcesItemsPersistHandlerServices =
+      $this->getTaggedServices($container, 'funding.application.resources_items_persist_handler');
 
     $serviceLocatorServices =
       $this->getTaggedServices($container, 'funding.case.type.service_locator');
@@ -168,6 +190,34 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         ]
       );
 
+      $applicationCostItemsAddIdentifiersHandlerServices[$fundingCaseType] ??= $this->createService(
+        $container,
+        $fundingCaseType,
+        ApplicationCostItemsAddIdentifiersHandler::class,
+        ['$costItemsFactory' => $applicationCostItemsFactoryServices[$fundingCaseType]]
+      );
+
+      $applicationCostItemsPersistHandlerServices[$fundingCaseType] ??= $this->createService(
+        $container,
+        $fundingCaseType,
+        ApplicationCostItemsPersistHandler::class,
+        ['$costItemsFactory' => $applicationCostItemsFactoryServices[$fundingCaseType]]
+      );
+
+      $applicationResourcesItemsAddIdentifiersHandlerServices[$fundingCaseType] ??= $this->createService(
+        $container,
+        $fundingCaseType,
+        ApplicationResourcesItemsAddIdentifiersHandler::class,
+        ['$resourcesItemsFactory' => $applicationResourcesItemsFactoryServices[$fundingCaseType]]
+      );
+
+      $applicationResourcesItemsPersistHandlerServices[$fundingCaseType] ??= $this->createService(
+        $container,
+        $fundingCaseType,
+        ApplicationResourcesItemsPersistHandler::class,
+        ['$resourcesItemsFactory' => $applicationResourcesItemsFactoryServices[$fundingCaseType]]
+      );
+
       $services = [
         ApplicationFormNewCreateHandlerInterface::class
         => $applicationFormNewCreateHandlerServices[$fundingCaseType],
@@ -183,6 +233,14 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         ApplicationFormSubmitHandlerInterface::class => $applicationFormSubmitHandlerServices[$fundingCaseType],
         ApplicationJsonSchemaGetHandlerInterface::class
         => $applicationFormJsonSchemaGetHandlerServices[$fundingCaseType],
+        ApplicationCostItemsAddIdentifiersHandlerInterface::class
+        => $applicationCostItemsAddIdentifiersHandlerServices[$fundingCaseType],
+        ApplicationCostItemsPersistHandlerInterface::class
+        => $applicationCostItemsPersistHandlerServices[$fundingCaseType],
+        ApplicationResourcesItemsAddIdentifiersHandlerInterface::class
+        => $applicationResourcesItemsAddIdentifiersHandlerServices[$fundingCaseType],
+        ApplicationResourcesItemsPersistHandlerInterface::class
+        => $applicationResourcesItemsPersistHandlerServices[$fundingCaseType],
       ];
 
       $serviceLocatorServices[$fundingCaseType] = $this->createService(

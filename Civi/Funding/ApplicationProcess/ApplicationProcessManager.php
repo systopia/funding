@@ -156,27 +156,31 @@ class ApplicationProcessManager {
   }
 
   public function update(int $contactId, ApplicationProcessEntity $applicationProcess,
-    FundingCaseEntity $fundingCase
+    FundingCaseEntity $fundingCase, FundingCaseTypeEntity $fundingCaseType
   ): void {
     $applicationProcess->setModificationDate(new \DateTime(date('YmdHis')));
 
     $previousApplicationProcess = $this->get($applicationProcess->getId());
     Assert::notNull($previousApplicationProcess, 'Application process could not be loaded');
 
-    $event = new ApplicationProcessPreUpdateEvent($contactId,
+    $event = new ApplicationProcessPreUpdateEvent(
+      $contactId,
       $previousApplicationProcess,
       $applicationProcess,
-      $fundingCase
+      $fundingCase,
+      $fundingCaseType,
     );
     $this->eventDispatcher->dispatch(ApplicationProcessPreUpdateEvent::class, $event);
 
     $action = FundingApplicationProcess::update()->setValues($applicationProcess->toArray());
     $this->api4->executeAction($action);
 
-    $event = new ApplicationProcessUpdatedEvent($contactId,
+    $event = new ApplicationProcessUpdatedEvent(
+      $contactId,
       $previousApplicationProcess,
       $applicationProcess,
-      $fundingCase
+      $fundingCase,
+      $fundingCaseType,
     );
     $this->eventDispatcher->dispatch(ApplicationProcessUpdatedEvent::class, $event);
   }

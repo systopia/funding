@@ -22,8 +22,6 @@ declare(strict_types = 1);
 
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\ReworkPossibleApplicationProcessActionsDeterminer;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ReworkPossibleApplicationProcessStatusDeterminer;
-use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1ApplicationCostItemSubscriber;
-use Civi\Funding\EventSubscriber\Form\SonstigeAktivitaet\AVK1ApplicationResourcesItemSubscriber;
 use Civi\Funding\Form\ApplicationSubmitActionsFactory;
 use Civi\Funding\Form\SonstigeAktivitaet\AVK1FormDataFactory;
 use Civi\Funding\Form\SonstigeAktivitaet\AVK1JsonSchemaFactory;
@@ -33,14 +31,6 @@ use Civi\Funding\SonstigeAktivitaet\AVK1ApplicationResourcesItemsFactory;
 use Civi\Funding\SonstigeAktivitaet\AVK1FinanzierungFactory;
 use Civi\Funding\SonstigeAktivitaet\AVK1KostenFactory;
 use Symfony\Component\DependencyInjection\Reference;
-
-$container->autowire(AVK1ApplicationCostItemSubscriber::class)
-  ->addTag('kernel.event_subscriber')
-  ->setLazy(TRUE);
-
-$container->autowire(AVK1ApplicationResourcesItemSubscriber::class)
-  ->addTag('kernel.event_subscriber')
-  ->setLazy(TRUE);
 
 $container->autowire('funding.avk1.application_submit_actions_factory', ApplicationSubmitActionsFactory::class)
   ->setArgument('$actionsDeterminer', new Reference(ReworkPossibleApplicationProcessActionsDeterminer::class))
@@ -56,8 +46,10 @@ $container->autowire(AVK1FormDataFactory::class)
   ->addTag('funding.application.form_data_factory');
 $container->autowire(AVK1KostenFactory::class);
 $container->autowire(AVK1FinanzierungFactory::class);
-$container->autowire(AVK1ApplicationCostItemsFactory::class);
-$container->autowire(AVK1ApplicationResourcesItemsFactory::class);
+$container->autowire(AVK1ApplicationCostItemsFactory::class)
+  ->addTag('funding.application.cost_items_factory');
+$container->autowire(AVK1ApplicationResourcesItemsFactory::class)
+  ->addTag('funding.application.resources_items_factory');
 
 $container->getDefinition(ReworkPossibleApplicationProcessStatusDeterminer::class)
   ->addTag('funding.application.status_determiner', ['funding_case_type' => 'AVK1SonstigeAktivitaet']);

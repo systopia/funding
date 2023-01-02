@@ -39,6 +39,8 @@ use Civi\Funding\ApplicationProcess\ApplicationIdentifierGeneratorInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewCreateHandlerInterface;
@@ -47,6 +49,10 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewValidateHandlerInt
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationJsonSchemaGetHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsAddIdentifiersHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationCostItemsAddIdentifiersHandler;
+use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationCostItemsPersistHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormCreateHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormDataGetHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormNewCreateHandler;
@@ -55,14 +61,18 @@ use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormNewValidateHan
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormSubmitHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormValidateHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationJsonSchemaGetHandler;
+use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationResourcesItemsAddIdentifiersHandler;
+use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationResourcesItemsPersistHandler;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\DefaultApplicationProcessStatusDeterminer;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ReworkPossibleApplicationProcessStatusDeterminer;
+use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationCostItemsSubscriber;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessCreatedSubscriber;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessIdentifierSubscriber;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessModificationDateSubscriber;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessPreDeleteSubscriber;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessStatusSubscriber;
+use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationResourcesItemsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessGetFieldsSubscriber;
 
@@ -84,6 +94,22 @@ $container->autowire(ApplicationFormCreateHandlerInterface::class, DefaultApplic
 $container->autowire(ApplicationFormValidateHandlerInterface::class, DefaultApplicationFormValidateHandler::class);
 $container->autowire(ApplicationFormSubmitHandlerInterface::class, DefaultApplicationFormSubmitHandler::class);
 $container->autowire(ApplicationJsonSchemaGetHandlerInterface::class, DefaultApplicationJsonSchemaGetHandler::class);
+$container->autowire(
+  ApplicationCostItemsAddIdentifiersHandlerInterface::class,
+  DefaultApplicationCostItemsAddIdentifiersHandler::class
+);
+$container->autowire(
+  ApplicationCostItemsPersistHandlerInterface::class,
+  DefaultApplicationCostItemsPersistHandler::class
+);
+$container->autowire(
+  ApplicationResourcesItemsAddIdentifiersHandlerInterface::class,
+  DefaultApplicationResourcesItemsAddIdentifiersHandler::class
+);
+$container->autowire(
+  ApplicationResourcesItemsPersistHandlerInterface::class,
+  DefaultApplicationResourcesItemsPersistHandler::class
+);
 
 $container->autowire(CreateAction::class)
   ->setPublic(TRUE)
@@ -140,6 +166,12 @@ $container->autowire(ApplicationProcessModificationDateSubscriber::class)
   ->setLazy(TRUE);
 $container->autowire(ApplicationProcessStatusSubscriber::class)
   ->addTag('kernel.event_subscriber');
+$container->autowire(ApplicationCostItemsSubscriber::class)
+  ->addTag('kernel.event_subscriber')
+  ->setLazy(TRUE);
+$container->autowire(ApplicationResourcesItemsSubscriber::class)
+  ->addTag('kernel.event_subscriber')
+  ->setLazy(TRUE);
 $container->autowire(ApplicationProcessDAOGetSubscriber::class)
   ->addTag('kernel.event_subscriber');
 

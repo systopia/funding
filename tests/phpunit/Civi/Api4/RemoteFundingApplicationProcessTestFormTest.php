@@ -186,6 +186,7 @@ final class RemoteFundingApplicationProcessTestFormTest extends AbstractFundingH
       'startDate' => date('Y-m-d'),
       'endDate' => date('Y-m-d'),
       'amountRequested' => 123.45,
+      'resources' => 0,
     ];
     $action->setData($validData + ['action' => 'save']);
 
@@ -231,7 +232,10 @@ final class RemoteFundingApplicationProcessTestFormTest extends AbstractFundingH
       [
         'start_date' => date('Y-m-d', time() - 86400),
         'end_date' => date('Y-m-d', time() + 86400),
-        'request_data' => ['x' => 'y'],
+        'request_data' => [
+          'amountRequested' => 0,
+          'resources' => 0,
+        ],
       ]
     );
   }

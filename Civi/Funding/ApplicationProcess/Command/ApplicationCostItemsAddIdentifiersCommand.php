@@ -17,40 +17,28 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Event\ApplicationProcess;
+namespace Civi\Funding\ApplicationProcess\Command;
 
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
-use Symfony\Component\EventDispatcher\Event;
 
-final class ApplicationProcessPreUpdateEvent extends Event {
-
-  private int $contactId;
+final class ApplicationCostItemsAddIdentifiersCommand {
 
   private ApplicationProcessEntity $applicationProcess;
 
   private FundingCaseEntity $fundingCase;
 
-  private ApplicationProcessEntity $previousApplicationProcess;
-
   private FundingCaseTypeEntity $fundingCaseType;
 
-  public function __construct(int $contactId,
-    ApplicationProcessEntity $previousApplicationProcess,
+  public function __construct(
     ApplicationProcessEntity $applicationProcess,
     FundingCaseEntity $fundingCase,
     FundingCaseTypeEntity $fundingCaseType
   ) {
-    $this->contactId = $contactId;
-    $this->previousApplicationProcess = $previousApplicationProcess;
     $this->applicationProcess = $applicationProcess;
     $this->fundingCase = $fundingCase;
     $this->fundingCaseType = $fundingCaseType;
-  }
-
-  public function getContactId(): int {
-    return $this->contactId;
   }
 
   public function getApplicationProcess(): ApplicationProcessEntity {
@@ -61,12 +49,15 @@ final class ApplicationProcessPreUpdateEvent extends Event {
     return $this->fundingCase;
   }
 
-  public function getPreviousApplicationProcess(): ApplicationProcessEntity {
-    return $this->previousApplicationProcess;
-  }
-
   public function getFundingCaseType(): FundingCaseTypeEntity {
     return $this->fundingCaseType;
+  }
+
+  /**
+   * @return array<string, mixed>
+   */
+  public function getRequestData(): array {
+    return $this->applicationProcess->getRequestData();
   }
 
 }

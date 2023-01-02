@@ -36,6 +36,41 @@ final class AVK1ApplicationCostItemsFactoryTest extends TestCase {
     $this->costItemsFactory = new AVK1ApplicationCostItemsFactory();
   }
 
+  public function testAddIdentifiers(): void {
+    $requestData = [
+      'kosten' => [
+        'honorare' => [
+          ['_identifier' => '', 'stunden' => 2, 'verguetung' => 3, 'zweck' => 'Test'],
+        ],
+        'sachkosten' => [
+          'ausstattung' => [
+            ['gegenstand' => 'Test', 'betrag' => 3],
+          ],
+        ],
+        'sonstigeAusgaben' => [
+          ['betrag' => 3, 'zweck' => 'Test'],
+        ],
+      ],
+    ];
+    $result = $this->costItemsFactory->addIdentifiers($requestData);
+
+    // @phpstan-ignore-next-line
+    static::assertNotEmpty($result['kosten']['honorare'][0]['_identifier']);
+    // @phpstan-ignore-next-line
+    static::assertNotEmpty($result['kosten']['sachkosten']['ausstattung'][0]['_identifier']);
+    // @phpstan-ignore-next-line
+    static::assertNotEmpty($result['kosten']['sonstigeAusgaben'][0]['_identifier']);
+  }
+
+  public function testAreIdentifiersChanged(): void {
+    static::assertTrue($this->costItemsFactory->areCostItemsChanged(
+      ['kosten' => ['foo' => 1]], ['kosten' => ['foo' => 2]]
+    ));
+    static::assertFalse($this->costItemsFactory->areCostItemsChanged(
+      ['kosten' => ['foo' => 1]], ['kosten' => ['foo' => 1]]
+    ));
+  }
+
   public function testCreateItems(): void {
     $expectedItems = [
       ApplicationCostItemEntity::fromArray([
