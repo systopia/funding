@@ -38,6 +38,7 @@ use Webmozart\Assert\Assert;
  *   creation_date: string,
  *   modification_date: string,
  *   recipient_contact_id: int,
+ *   creation_contact_id: int,
  * }
  */
 class FundingCaseManager {
@@ -69,6 +70,7 @@ class FundingCaseManager {
       'status' => 'open',
       'creation_date' => $now,
       'modification_date' => $now,
+      'creation_contact_id' => $contactId,
     ]);
     $action = FundingCase::create()->setValues($fundingCase->toArray());
 

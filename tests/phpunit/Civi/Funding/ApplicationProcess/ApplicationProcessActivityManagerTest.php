@@ -49,10 +49,12 @@ final class ApplicationProcessActivityManagerTest extends AbstractFundingHeadles
     $recipientContact = ContactFixture::addOrganization(['display_name' => 'Test']);
     $fundingProgram = FundingProgramFixture::addFixture();
     $fundingCaseType = FundingCaseTypeFixture::addFixture();
+    $creationContact = ContactFixture::addIndividual(['first_name' => 'creation', 'last_name' => 'contact']);
     $fundingCase = FundingCaseFixture::addFixture(
       $fundingProgram->getId(),
       $fundingCaseType->getId(),
       $recipientContact['id'],
+      $creationContact['id'],
     );
     FundingCaseContactRelationFixture::addContact($recipientContact['id'], $fundingCase->getId(), ['perm']);
     $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId(), [

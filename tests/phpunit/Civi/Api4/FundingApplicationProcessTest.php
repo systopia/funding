@@ -218,11 +218,13 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
       'name' => 'AVK1SonstigeAktivitaet',
     ]);
     $recipientContact = ContactFixture::addOrganization();
+    $creationContact = ContactFixture::addIndividual(['first_name' => 'creation', 'last_name' => 'contact']);
 
     return FundingCaseFixture::addFixture(
       $this->fundingProgram->getId(),
       $fundingCaseType->getId(),
       $recipientContact['id'],
+      $creationContact['id'],
     );
   }
 

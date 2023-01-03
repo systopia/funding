@@ -31,6 +31,7 @@ use Civi\Funding\Entity\FundingCaseEntity;
  *   recipient_contact_id: int,
  *   creation_date: string,
  *   modification_date: string,
+ *   creation_contact_id: int,
  * }
  */
 final class FundingCaseFixture {
@@ -41,7 +42,7 @@ final class FundingCaseFixture {
    * @throws \API_Exception
    */
   public static function addFixture(int $fundingProgramId, int $fundingCaseTypeId,
-    int $recipientContactId, array $values = []
+    int $recipientContactId, int $creationContactId, array $values = []
   ): FundingCaseEntity {
     $now = date('Y-m-d H:i:s');
 
@@ -54,6 +55,7 @@ final class FundingCaseFixture {
         'status' => 'open',
         'creation_date' => $now,
         'modification_date' => $now,
+        'creation_contact_id' => $creationContactId,
       ])->execute()->first();
 
     return FundingCaseEntity::fromArray($fundingCaseValues)->reformatDates();

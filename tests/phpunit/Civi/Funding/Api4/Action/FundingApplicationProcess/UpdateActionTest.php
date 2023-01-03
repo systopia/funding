@@ -40,10 +40,12 @@ final class UpdateActionTest extends AbstractFundingHeadlessTestCase {
     $fundingProgram = FundingProgramFixture::addFixture();
     $fundingCaseType = FundingCaseTypeFixture::addFixture();
     $recipientContact = ContactFixture::addOrganization();
+    $creationContact = ContactFixture::addIndividual(['first_name' => 'creation', 'last_name' => 'contact']);
     $fundingCase = FundingCaseFixture::addFixture(
       $fundingProgram->getId(),
       $fundingCaseType->getId(),
       $recipientContact['id'],
+      $creationContact['id'],
     );
 
     $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId(), [

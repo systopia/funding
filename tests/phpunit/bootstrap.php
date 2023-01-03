@@ -9,6 +9,7 @@ use Civi\Funding\Mock\Form\FundingCaseType\TestApplicationResourcesItemsFactory;
 use Civi\Funding\Mock\Form\FundingCaseType\TestFormDataFactory;
 use Civi\Funding\Mock\Form\FundingCaseType\TestJsonSchemaFactory;
 use Civi\Funding\Mock\Form\FundingCaseType\TestUiSchemaFactory;
+use Civi\Funding\Permission\FundingCase\RelationFactory\RelationPropertiesFactoryLocator;
 use Composer\Autoload\ClassLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -37,6 +38,9 @@ $loader->register();
 \CRM_Core_I18n::singleton();
 
 function _funding_test_civicrm_container(ContainerBuilder $container): void {
+  // For FundingCaseContactRelationPropertiesFactoryTypeTest
+  $container->getDefinition(RelationPropertiesFactoryLocator::class)->setPublic(TRUE);
+
   // overwrite remote contact ID resolver
   $container->autowire(FundingRemoteContactIdResolverInterface::class, DummyRemoteContactIdResolver::class);
 

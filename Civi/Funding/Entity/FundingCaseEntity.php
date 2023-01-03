@@ -30,6 +30,7 @@ use Civi\RemoteTools\Api4\RemoteApiConstants;
  *   recipient_contact_id: int,
  *   creation_date: string,
  *   modification_date: string,
+ *   creation_contact_id: int,
  *   permissions?: array<string>,
  * }
  *
@@ -80,6 +81,16 @@ final class FundingCaseEntity extends AbstractEntity {
 
   public function setRecipientContactId(int $recipientContactId): self {
     $this->values['recipient_contact_id'] = $recipientContactId;
+
+    return $this;
+  }
+
+  public function getCreationContactId(): int {
+    return $this->values['creation_contact_id'];
+  }
+
+  public function setCreationContactId(int $creationContactId): self {
+    $this->values['creation_contact_id'] = $creationContactId;
 
     return $this;
   }

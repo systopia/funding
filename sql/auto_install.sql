@@ -20,6 +20,7 @@ SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `civicrm_funding_app_cost_item`;
 DROP TABLE IF EXISTS `civicrm_funding_app_resources_item`;
 DROP TABLE IF EXISTS `civicrm_funding_application_process`;
+DROP TABLE IF EXISTS `civicrm_funding_new_case_permissions`;
 DROP TABLE IF EXISTS `civicrm_funding_case_type_program`;
 DROP TABLE IF EXISTS `civicrm_funding_case_contact_relation`;
 DROP TABLE IF EXISTS `civicrm_funding_case`;
@@ -139,10 +140,12 @@ CREATE TABLE `civicrm_funding_case` (
   `status` varchar(64) NOT NULL,
   `creation_date` timestamp NOT NULL,
   `modification_date` timestamp NOT NULL,
+  `creation_contact_id` int unsigned NOT NULL COMMENT 'FK to Contact',
   `recipient_contact_id` int unsigned NOT NULL COMMENT 'FK to Contact',
   PRIMARY KEY (`id`),
   CONSTRAINT FK_civicrm_funding_case_funding_program_id FOREIGN KEY (`funding_program_id`) REFERENCES `civicrm_funding_program`(`id`) ON DELETE RESTRICT,
   CONSTRAINT FK_civicrm_funding_case_funding_case_type_id FOREIGN KEY (`funding_case_type_id`) REFERENCES `civicrm_funding_case_type`(`id`) ON DELETE RESTRICT,
+  CONSTRAINT FK_civicrm_funding_case_creation_contact_id FOREIGN KEY (`creation_contact_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE RESTRICT,
   CONSTRAINT FK_civicrm_funding_case_recipient_contact_id FOREIGN KEY (`recipient_contact_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE RESTRICT
 )
 ENGINE=InnoDB;
@@ -179,6 +182,24 @@ CREATE TABLE `civicrm_funding_case_type_program` (
   PRIMARY KEY (`id`),
   CONSTRAINT FK_civicrm_funding_case_type_program_funding_program_id FOREIGN KEY (`funding_program_id`) REFERENCES `civicrm_funding_program`(`id`) ON DELETE CASCADE,
   CONSTRAINT FK_civicrm_funding_case_type_program_funding_case_type_id FOREIGN KEY (`funding_case_type_id`) REFERENCES `civicrm_funding_case_type`(`id`) ON DELETE RESTRICT
+)
+ENGINE=InnoDB;
+
+-- /*******************************************************
+-- *
+-- * civicrm_funding_new_case_permissions
+-- *
+-- * Defines the initial permissions for new funding cases
+-- *
+-- *******************************************************/
+CREATE TABLE `civicrm_funding_new_case_permissions` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique FundingNewCasePermissions ID',
+  `funding_program_id` int unsigned NOT NULL COMMENT 'FK to FundingProgram',
+  `type` varchar(255) NOT NULL,
+  `properties` text NOT NULL,
+  `permissions` varchar(512) NOT NULL COMMENT 'Permissions as JSON array',
+  PRIMARY KEY (`id`),
+  CONSTRAINT FK_civicrm_funding_new_case_permissions_funding_program_id FOREIGN KEY (`funding_program_id`) REFERENCES `civicrm_funding_program`(`id`) ON DELETE CASCADE
 )
 ENGINE=InnoDB;
 
