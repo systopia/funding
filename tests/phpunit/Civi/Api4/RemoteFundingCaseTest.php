@@ -25,11 +25,21 @@ namespace Civi\Api4;
 
 use Civi\Api4\Traits\FundingCaseTestFixturesTrait;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
+use Civi\Funding\Api4\Action\Remote\FundingCase\Traits\NewApplicationFormActionTrait;
+use Civi\Funding\Fixtures\ContactFixture;
+use Civi\Funding\Fixtures\FundingCaseTypeFixture;
+use Civi\Funding\Fixtures\FundingCaseTypeProgramFixture;
+use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
+use Civi\Funding\Fixtures\FundingProgramFixture;
+use Civi\Funding\Mock\Form\FundingCaseType\TestJsonSchema;
+use Civi\Funding\Mock\Form\FundingCaseType\TestUiSchema;
+use Symfony\Bridge\PhpUnit\ClockMock;
 
 /**
  * @group headless
  *
  * @covers \Civi\Api4\RemoteFundingCase
+ * @covers \Civi\Funding\Api4\Action\Remote\FundingCase\GetNewApplicationFormAction
  * @covers \Civi\Funding\Api4\Action\Remote\DAOGetAction
  * @covers \Civi\Funding\EventSubscriber\Remote\FundingCaseDAOGetSubscriber
  */
@@ -37,12 +47,111 @@ final class RemoteFundingCaseTest extends AbstractFundingHeadlessTestCase {
 
   use FundingCaseTestFixturesTrait;
 
-  protected function setUp(): void {
-    parent::setUp();
-    $this->addRemoteFixtures();
+  public static function setUpBeforeClass(): void {
+    parent::setUpBeforeClass();
+    ClockMock::register(NewApplicationFormActionTrait::class);
+  }
+
+  public function testGetNewApplicationForm(): void {
+    $contact = ContactFixture::addIndividual();
+    $fundingProgram = FundingProgramFixture::addFixture(['title' => 'Foo']);
+    $fundingCaseType = FundingCaseTypeFixture::addFixture();
+
+    ClockMock::withClockMock($fundingProgram->getRequestsStartDate()->getTimestamp());
+
+    // Funding case type and funding program not related
+    $e = NULL;
+    try {
+      RemoteFundingCase::getNewApplicationForm()
+        ->setRemoteContactId((string) $contact['id'])
+        ->setFundingCaseTypeId($fundingCaseType->getId())
+        ->setFundingProgramId($fundingProgram->getId())
+        ->execute();
+    }
+    catch (\API_Exception $e) {
+      static::assertSame('Funding program and funding case type are not related', $e->getMessage());
+    }
+    static::assertNotNull($e);
+
+    FundingCaseTypeProgramFixture::addFixture($fundingCaseType->getId(), $fundingProgram->getId());
+
+    // No permission
+    $e = NULL;
+    try {
+      RemoteFundingCase::getNewApplicationForm()
+        ->setRemoteContactId((string) $contact['id'])
+        ->setFundingCaseTypeId($fundingCaseType->getId())
+        ->setFundingProgramId($fundingProgram->getId())
+        ->execute();
+    }
+    catch (\Exception $e) {
+      static::assertSame(sprintf('Funding program with ID "%d" not found', $fundingProgram->getId()), $e->getMessage());
+    }
+    static::assertNotNull($e);
+
+    // No "application_create" permission
+    FundingProgramContactRelationFixture::addContact($contact['id'], $fundingProgram->getId(), ['application_test']);
+    $e = NULL;
+    try {
+      RemoteFundingCase::getNewApplicationForm()
+        ->setRemoteContactId((string) $contact['id'])
+        ->setFundingCaseTypeId($fundingCaseType->getId())
+        ->setFundingProgramId($fundingProgram->getId())
+        ->execute();
+    }
+    catch (\API_Exception $e) {
+      static::assertSame('Required permission is missing', $e->getMessage());
+    }
+    static::assertNotNull($e);
+
+    // Creating application allowed
+    FundingProgramContactRelationFixture::addContact($contact['id'], $fundingProgram->getId(), ['application_create']);
+    $values = RemoteFundingCase::getNewApplicationForm()
+      ->setRemoteContactId((string) $contact['id'])
+      ->setFundingCaseTypeId($fundingCaseType->getId())
+      ->setFundingProgramId($fundingProgram->getId())
+      ->execute()
+      ->getArrayCopy();
+
+    static::assertEquals(['jsonSchema', 'uiSchema', 'data'], array_keys($values));
+    static::assertInstanceOf(TestJsonSchema::class, $values['jsonSchema']);
+    static::assertInstanceOf(TestUiSchema::class, $values['uiSchema']);
+    static::assertIsArray($values['data']);
+
+    // Current date is before requests start date
+    ClockMock::withClockMock($fundingProgram->getRequestsStartDate()->getTimestamp() - 86400);
+    $e = NULL;
+    try {
+      RemoteFundingCase::getNewApplicationForm()
+        ->setRemoteContactId((string) $contact['id'])
+        ->setFundingCaseTypeId($fundingCaseType->getId())
+        ->setFundingProgramId($fundingProgram->getId())
+        ->execute();
+    }
+    catch (\API_Exception $e) {
+      static::assertSame('Funding program does not allow applications before 2022-06-22', $e->getMessage());
+    }
+    static::assertNotNull($e);
+
+    // Current date is after requests end date
+    ClockMock::withClockMock($fundingProgram->getRequestsEndDate()->getTimestamp() + 86400);
+    $e = NULL;
+    try {
+      RemoteFundingCase::getNewApplicationForm()
+        ->setRemoteContactId((string) $contact['id'])
+        ->setFundingCaseTypeId($fundingCaseType->getId())
+        ->setFundingProgramId($fundingProgram->getId())
+        ->execute();
+    }
+    catch (\API_Exception $e) {
+      static::assertSame('Funding program does not allow applications after 2022-12-31', $e->getMessage());
+    }
+    static::assertNotNull($e);
   }
 
   public function testPermissions(): void {
+    $this->addRemoteFixtures();
+
     // Contact is directly associated
     $permittedAssociatedResult = RemoteFundingCase::get()
       ->setRemoteContactId((string) $this->associatedContactId)

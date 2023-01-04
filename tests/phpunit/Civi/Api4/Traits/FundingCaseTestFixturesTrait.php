@@ -81,7 +81,6 @@ trait FundingCaseTestFixturesTrait {
    */
   private function addFixtures(array $associatedContactPermissions, array $permittedRelationshipTypePermissions): void {
     $fundingProgramId = FundingProgramFixture::addFixture(['title' => 'Foo'])->getId();
-
     $fundingCaseTypeId = FundingCaseTypeFixture::addFixture()->getId();
 
     $recipientContactId = Contact::create()
