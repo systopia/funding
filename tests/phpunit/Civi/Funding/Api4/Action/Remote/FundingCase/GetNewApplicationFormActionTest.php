@@ -41,7 +41,8 @@ final class GetNewApplicationFormActionTest extends AbstractNewApplicationFormAc
   protected function setUp(): void {
     parent::setUp();
     $this->action = new GetNewApplicationFormAction(
-      $this->remoteFundingEntityManagerMock,
+      $this->fundingCaseTypeManagerMock,
+      $this->fundingProgramManagerMock,
       $this->eventDispatcherMock,
       $this->relationCheckerMock,
     );
@@ -66,8 +67,8 @@ final class GetNewApplicationFormActionTest extends AbstractNewApplicationFormAc
           static::callback(
             function (GetNewApplicationFormEvent $event) use ($jsonSchema, $uiSchema): bool {
               static::assertSame(11, $event->getContactId());
-              static::assertSame($this->fundingCaseTypeValues, $event->getFundingCaseType()->toArray());
-              static::assertSame($this->fundingProgramValues, $event->getFundingProgram()->toArray());
+              static::assertSame($this->fundingCaseType, $event->getFundingCaseType());
+              static::assertSame($this->fundingProgram, $event->getFundingProgram());
 
               $event->setJsonSchema($jsonSchema);
               $event->setUiSchema($uiSchema);
@@ -123,7 +124,9 @@ final class GetNewApplicationFormActionTest extends AbstractNewApplicationFormAc
   }
 
   public function testPermissionMissing(): void {
-    $this->fundingProgramValues['permissions'] = ['some_permission'];
+    $this->fundingProgram->setValues(
+      ['permissions' => ['some_permission']] + $this->fundingProgram->toArray()
+    );
 
     $this->relationCheckerMock->expects(static::once())->method('areFundingCaseTypeAndProgramRelated')
       ->with(22, 33)->willReturn(TRUE);
@@ -138,7 +141,7 @@ final class GetNewApplicationFormActionTest extends AbstractNewApplicationFormAc
     $this->relationCheckerMock->expects(static::once())->method('areFundingCaseTypeAndProgramRelated')
       ->with(22, 33)->willReturn(TRUE);
 
-    $this->fundingProgramValues['requests_start_date'] = '1970-01-03';
+    $this->fundingProgram->setRequestsStartDate(new \DateTime('1970-01-03'));
 
     static::expectExceptionObject(new \API_Exception(
       'Funding program does not allow applications before 1970-01-03',
@@ -153,7 +156,7 @@ final class GetNewApplicationFormActionTest extends AbstractNewApplicationFormAc
     $this->relationCheckerMock->expects(static::once())->method('areFundingCaseTypeAndProgramRelated')
       ->with(22, 33)->willReturn(TRUE);
 
-    $this->fundingProgramValues['requests_end_date'] = '1970-01-01';
+    $this->fundingProgram->setRequestsEndDate(new \DateTime('1970-01-01'));
 
     static::expectExceptionObject(new \API_Exception(
       'Funding program does not allow applications after 1970-01-01',

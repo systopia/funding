@@ -22,8 +22,9 @@ namespace Civi\Funding\Api4\Action\Remote\FundingCase;
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
+use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker;
-use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
+use Civi\Funding\FundingProgram\FundingProgramManager;
 use Webmozart\Assert\Assert;
 
 /**
@@ -39,13 +40,15 @@ final class SubmitNewApplicationFormAction extends AbstractNewApplicationFormAct
   protected ?array $data = NULL;
 
   public function __construct(
-    RemoteFundingEntityManagerInterface $remoteFundingEntityManager,
+    FundingCaseTypeManager $fundingCaseTypeManager,
+    FundingProgramManager $fundingProgramManager,
     CiviEventDispatcher $eventDispatcher,
     FundingCaseTypeProgramRelationChecker $relationChecker
   ) {
     parent::__construct(
       'submitNewApplicationForm',
-      $remoteFundingEntityManager,
+      $fundingCaseTypeManager,
+      $fundingProgramManager,
       $eventDispatcher,
       $relationChecker,
     );
