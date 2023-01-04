@@ -21,10 +21,13 @@ namespace Civi\Funding\Api4\Action\Remote\FundingCase;
 
 use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Api4\Action\Remote\FundingCase\Traits\NewApplicationFormActionTrait;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
+use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
+use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker;
-use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
+use Civi\Funding\FundingProgram\FundingProgramManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ClockMock;
@@ -37,19 +40,18 @@ abstract class AbstractNewApplicationFormActionTest extends TestCase {
   protected MockObject $eventDispatcherMock;
 
   /**
-   * @var array<string, mixed>
+   * @var \Civi\Funding\FundingProgram\FundingCaseTypeManager&\PHPUnit\Framework\MockObject\MockObject
    */
-  protected array $fundingCaseTypeValues;
+  protected MockObject $fundingCaseTypeManagerMock;
+
+  protected FundingCaseTypeEntity $fundingCaseType;
 
   /**
-   * @var array<string, mixed>
+   * @var \Civi\Funding\FundingProgram\FundingProgramManager&\PHPUnit\Framework\MockObject\MockObject
    */
-  protected array $fundingProgramValues;
+  protected MockObject $fundingProgramManagerMock;
 
-  /**
-   * @var \Civi\Funding\Remote\RemoteFundingEntityManagerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  protected MockObject $remoteFundingEntityManagerMock;
+  protected FundingProgramEntity $fundingProgram;
 
   /**
    * @var \PHPUnit\Framework\MockObject\MockObject&\Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker
@@ -65,22 +67,21 @@ abstract class AbstractNewApplicationFormActionTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
-    $this->remoteFundingEntityManagerMock = $this->createMock(RemoteFundingEntityManagerInterface::class);
+    $this->fundingCaseTypeManagerMock = $this->createMock(FundingCaseTypeManager::class);
+    $this->fundingProgramManagerMock = $this->createMock(FundingProgramManager::class);
     $this->eventDispatcherMock = $this->createMock(CiviEventDispatcher::class);
     $this->relationCheckerMock = $this->createMock(FundingCaseTypeProgramRelationChecker::class);
 
-    $this->fundingCaseTypeValues = FundingCaseTypeFactory::createFundingCaseType(['id' => 22])->toArray();
-    $this->fundingProgramValues = FundingProgramFactory::createFundingProgram([
+    $this->fundingCaseType = FundingCaseTypeFactory::createFundingCaseType(['id' => 22]);
+    $this->fundingCaseTypeManagerMock->method('get')->with(22)->willReturn($this->fundingCaseType);
+
+    $this->fundingProgram = FundingProgramFactory::createFundingProgram([
       'id' => 33,
       'requests_start_date' => date('Y-m-d', time() - 86400),
       'requests_end_date' => date('Y-m-d', time() + 86400),
       'permissions' => ['application_create'],
-    ])->toArray();
-
-    $this->remoteFundingEntityManagerMock->method('getById')->willReturnMap([
-      ['FundingCaseType', 22, '00', &$this->fundingCaseTypeValues],
-      ['FundingProgram', 33, '00', &$this->fundingProgramValues],
     ]);
+    $this->fundingProgramManagerMock->method('get')->with(33)->willReturn($this->fundingProgram);
   }
 
 }
