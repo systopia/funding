@@ -19,8 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Command;
 
-use Civi\Funding\Entity\ApplicationProcessEntity;
-use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Form\ValidatedApplicationDataInterface;
 use Civi\Funding\Form\Validation\ValidationResult;
 
@@ -32,9 +31,7 @@ final class ApplicationFormNewSubmitResult {
 
   private ?ValidatedApplicationDataInterface $validatedData;
 
-  private ?ApplicationProcessEntity $applicationProcess;
-
-  private ?FundingCaseEntity $fundingCase;
+  private ?ApplicationProcessEntityBundle $applicationProcessBundle;
 
   public static function createError(ValidationResult $validationResult): self {
     return new self(FALSE, $validationResult);
@@ -43,24 +40,21 @@ final class ApplicationFormNewSubmitResult {
   public static function createSuccess(
     ValidationResult $validationResult,
     ValidatedApplicationDataInterface $validatedData,
-    ApplicationProcessEntity $applicationProcess,
-    FundingCaseEntity $fundingCase
+    ApplicationProcessEntityBundle $applicationProcessBundle
   ): self {
-    return new self(TRUE, $validationResult, $validatedData, $applicationProcess, $fundingCase);
+    return new self(TRUE, $validationResult, $validatedData, $applicationProcessBundle);
   }
 
   public function __construct(
     bool $success,
     ValidationResult $validationResult,
     ValidatedApplicationDataInterface $validatedData = NULL,
-    ApplicationProcessEntity $applicationProcess = NULL,
-    FundingCaseEntity $fundingCase = NULL
+    ApplicationProcessEntityBundle $applicationProcessBundle = NULL
   ) {
     $this->success = $success;
     $this->validationResult = $validationResult;
     $this->validatedData = $validatedData;
-    $this->applicationProcess = $applicationProcess;
-    $this->fundingCase = $fundingCase;
+    $this->applicationProcessBundle = $applicationProcessBundle;
   }
 
   public function isSuccess(): bool {
@@ -75,12 +69,8 @@ final class ApplicationFormNewSubmitResult {
     return $this->validatedData;
   }
 
-  public function getApplicationProcess(): ?ApplicationProcessEntity {
-    return $this->applicationProcess;
-  }
-
-  public function getFundingCase(): ?FundingCaseEntity {
-    return $this->fundingCase;
+  public function getApplicationProcessBundle(): ?ApplicationProcessEntityBundle {
+    return $this->applicationProcessBundle;
   }
 
 }

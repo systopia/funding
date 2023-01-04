@@ -19,20 +19,12 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Command;
 
-use Civi\Funding\Entity\ApplicationProcessEntity;
-use Civi\Funding\Entity\FundingCaseEntity;
-use Civi\Funding\Entity\FundingCaseTypeEntity;
-use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\Entity\Traits\ApplicationProcessEntityBundleTrait;
 
 final class ApplicationFormValidateCommand {
 
-  private ApplicationProcessEntity $applicationProcess;
-
-  private FundingCaseEntity $fundingCase;
-
-  private FundingCaseTypeEntity $fundingCaseType;
-
-  private FundingProgramEntity $fundingProgram;
+  use ApplicationProcessEntityBundleTrait;
 
   /**
    * @phpstan-var array<string, mixed> JSON serializable.
@@ -43,33 +35,11 @@ final class ApplicationFormValidateCommand {
    * @phpstan-param array<string, mixed> $data JSON serializable.
    */
   public function __construct(
-    ApplicationProcessEntity $applicationProcess,
-    FundingCaseEntity $fundingCase,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingProgramEntity $fundingProgram,
+    ApplicationProcessEntityBundle $applicationProcessBundle,
     array $data
   ) {
-    $this->applicationProcess = $applicationProcess;
-    $this->fundingCase = $fundingCase;
-    $this->fundingCaseType = $fundingCaseType;
-    $this->fundingProgram = $fundingProgram;
+    $this->applicationProcessBundle = $applicationProcessBundle;
     $this->data = $data;
-  }
-
-  public function getApplicationProcess(): ApplicationProcessEntity {
-    return $this->applicationProcess;
-  }
-
-  public function getFundingProgram(): FundingProgramEntity {
-    return $this->fundingProgram;
-  }
-
-  public function getFundingCase(): FundingCaseEntity {
-    return $this->fundingCase;
-  }
-
-  public function getFundingCaseType(): FundingCaseTypeEntity {
-    return $this->fundingCaseType;
   }
 
   /**

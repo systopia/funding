@@ -25,8 +25,7 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationFormCreateCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewCreateCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewCreateHandlerInterface;
-use Civi\Funding\EntityFactory\ApplicationProcessFactory;
-use Civi\Funding\EntityFactory\FundingCaseFactory;
+use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Event\Remote\ApplicationProcess\GetApplicationFormEvent;
@@ -77,12 +76,7 @@ final class GetApplicationFormSubscriberTest extends TestCase {
 
   public function testOnGetForm(): void {
     $event = $this->createGetFormEvent();
-    $command = new ApplicationFormCreateCommand(
-      $event->getApplicationProcess(),
-      $event->getFundingCase(),
-      $event->getFundingCaseType(),
-      $event->getFundingProgram()
-    );
+    $command = new ApplicationFormCreateCommand($event->getApplicationProcessBundle());
 
     $form = new ApplicationFormMock();
     $this->createHandlerMock->expects(static::once())->method('handle')
@@ -128,10 +122,7 @@ final class GetApplicationFormSubscriberTest extends TestCase {
     return new GetApplicationFormEvent(RemoteFundingApplicationProcess::_getEntityName(), 'GetForm', [
       'remoteContactId' => '00',
       'contactId' => 1,
-      'applicationProcess' => ApplicationProcessFactory::createApplicationProcess(),
-      'fundingCase' => FundingCaseFactory::createFundingCase(),
-      'fundingProgram' => FundingProgramFactory::createFundingProgram(),
-      'fundingCaseType' => FundingCaseTypeFactory::createFundingCaseType(),
+      'applicationProcessBundle' => ApplicationProcessBundleFactory::createApplicationProcessBundle(),
     ]);
   }
 

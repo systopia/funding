@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Mock\Form\FundingCaseType;
 
 use Civi\Funding\Entity\ApplicationProcessEntity;
-use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\ApplicationJsonSchemaFactoryInterface;
@@ -52,14 +52,14 @@ class TestJsonSchemaFactory implements ApplicationJsonSchemaFactoryInterface {
   }
 
   public function createJsonSchemaExisting(
-    ApplicationProcessEntity $applicationProcess,
-    FundingCaseEntity $fundingCase,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingProgramEntity $fundingProgram
+    ApplicationProcessEntityBundle $applicationProcessBundle
   ): JsonSchema {
     $submitActions = ['save'];
     $extraProperties = [
-      'applicationProcessId' => new JsonSchemaInteger(['const' => $applicationProcess->getId(), 'readOnly' => TRUE]),
+      'applicationProcessId' => new JsonSchemaInteger([
+        'const' => $applicationProcessBundle->getApplicationProcess()->getId(),
+        'readOnly' => TRUE,
+      ]),
       'action' => new JsonSchemaString(['enum' => $submitActions]),
     ];
     $extraKeywords = ['required' => array_keys($extraProperties)];

@@ -19,10 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess;
 
-use Civi\Funding\Entity\ApplicationProcessEntity;
-use Civi\Funding\Entity\FundingCaseEntity;
-use Civi\Funding\Entity\FundingCaseTypeEntity;
-use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 
 /**
  * @codeCoverageIgnore
@@ -30,17 +27,14 @@ use Civi\Funding\Entity\FundingProgramEntity;
 final class ApplicationIdentifierGenerator implements ApplicationIdentifierGeneratorInterface {
 
   public function generateIdentifier(
-    ApplicationProcessEntity $applicationProcess,
-    FundingCaseEntity $fundingCase,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingProgramEntity $fundingProgram
+    ApplicationProcessEntityBundle $applicationProcessBundle
   ): string {
     return sprintf(
       '%s-%s-%s-%s',
       date('Y'),
-      $fundingProgram->getAbbreviation(),
-      $fundingCaseType->getAbbreviation(),
-      (string) $applicationProcess->getId(),
+      $applicationProcessBundle->getFundingProgram()->getAbbreviation(),
+      $applicationProcessBundle->getFundingCaseType()->getAbbreviation(),
+      (string) $applicationProcessBundle->getApplicationProcess()->getId(),
     );
   }
 

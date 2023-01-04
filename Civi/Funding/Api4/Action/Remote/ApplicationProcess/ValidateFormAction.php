@@ -21,9 +21,9 @@ namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
+use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\Event\Remote\ApplicationProcess\ValidateApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingEvents;
-use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
 use Webmozart\Assert\Assert;
 
 /**
@@ -39,11 +39,10 @@ final class ValidateFormAction extends AbstractFormAction {
   protected ?array $data = NULL;
 
   public function __construct(
-    RemoteFundingEntityManagerInterface $remoteFundingEntityManager,
+    ApplicationProcessBundleLoader $applicationProcessBundleLoader,
     CiviEventDispatcher $eventDispatcher
   ) {
-    parent::__construct('validateForm', $remoteFundingEntityManager, $eventDispatcher);
-    $this->_remoteFundingEntityManager = $remoteFundingEntityManager;
+    parent::__construct('validateForm', $applicationProcessBundleLoader, $eventDispatcher);
     $this->_eventDispatcher = $eventDispatcher;
     $this->_authorizeRequestEventName = FundingEvents::REQUEST_AUTHORIZE_EVENT_NAME;
     $this->_initRequestEventName = FundingEvents::REQUEST_INIT_EVENT_NAME;

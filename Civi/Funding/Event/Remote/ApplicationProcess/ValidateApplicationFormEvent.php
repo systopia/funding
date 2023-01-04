@@ -19,44 +19,16 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Event\Remote\ApplicationProcess;
 
-use Civi\Funding\Entity\ApplicationProcessEntity;
-use Civi\Funding\Entity\FundingCaseEntity;
-use Civi\Funding\Entity\FundingCaseTypeEntity;
-use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\Entity\Traits\ApplicationProcessEntityBundleTrait;
 use Civi\Funding\Event\Remote\AbstractFundingValidateFormEvent;
 
 final class ValidateApplicationFormEvent extends AbstractFundingValidateFormEvent {
 
-  protected ApplicationProcessEntity $applicationProcess;
-
-  protected FundingCaseEntity $fundingCase;
-
-  protected FundingCaseTypeEntity $fundingCaseType;
-
-  protected FundingProgramEntity $fundingProgram;
-
-  public function getApplicationProcess(): ApplicationProcessEntity {
-    return $this->applicationProcess;
-  }
-
-  public function getFundingCase(): FundingCaseEntity {
-    return $this->fundingCase;
-  }
-
-  public function getFundingCaseType(): FundingCaseTypeEntity {
-    return $this->fundingCaseType;
-  }
-
-  public function getFundingProgram(): FundingProgramEntity {
-    return $this->fundingProgram;
-  }
+  use ApplicationProcessEntityBundleTrait;
 
   protected function getRequiredParams(): array {
     return array_merge(parent::getRequiredParams(), [
-      'applicationProcess',
-      'fundingCase',
-      'fundingCaseType',
-      'fundingProgram',
+      'applicationProcessBundle',
     ]);
   }
 

@@ -23,12 +23,9 @@ use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
 use Civi\Funding\Api4\Action\Traits\FundingActionContactIdSessionTrait;
-use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
+use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormDataGetCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandlerInterface;
-use Civi\Funding\FundingCase\FundingCaseManager;
-use Civi\Funding\FundingProgram\FundingCaseTypeManager;
-use Civi\Funding\FundingProgram\FundingProgramManager;
 use Webmozart\Assert\Assert;
 
 /**
@@ -44,29 +41,17 @@ final class GetFormDataAction extends AbstractAction {
    */
   protected ?int $id = NULL;
 
-  protected ApplicationProcessManager $_applicationProcessManager;
+  private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
 
-  protected FundingProgramManager $_fundingProgramManager;
-
-  protected FundingCaseManager $_fundingCaseManager;
-
-  protected FundingCaseTypeManager $_fundingCaseTypeManager;
-
-  protected ApplicationFormDataGetHandlerInterface $_formDataGetHandler;
+  private ApplicationFormDataGetHandlerInterface $formDataGetHandler;
 
   public function __construct(
-    ApplicationProcessManager $applicationProcessManager,
-    FundingProgramManager $fundingProgramManager,
-    FundingCaseManager $fundingCaseManager,
-    FundingCaseTypeManager $fundingCaseTypeManager,
+    ApplicationProcessBundleLoader $applicationProcessBundleLoader,
     ApplicationFormDataGetHandlerInterface $formDataGetHandler
   ) {
     parent::__construct(FundingApplicationProcess::_getEntityName(), 'getFormData');
-    $this->_applicationProcessManager = $applicationProcessManager;
-    $this->_fundingProgramManager = $fundingProgramManager;
-    $this->_fundingCaseManager = $fundingCaseManager;
-    $this->_fundingCaseTypeManager = $fundingCaseTypeManager;
-    $this->_formDataGetHandler = $formDataGetHandler;
+    $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
+    $this->formDataGetHandler = $formDataGetHandler;
   }
 
   /**
@@ -75,7 +60,7 @@ final class GetFormDataAction extends AbstractAction {
    * @throws \API_Exception
    */
   public function _run(Result $result): void {
-    $result['data'] = $this->_formDataGetHandler->handle($this->createCommand());
+    $result['data'] = $this->formDataGetHandler->handle($this->createCommand());
   }
 
   /**
@@ -83,21 +68,10 @@ final class GetFormDataAction extends AbstractAction {
    */
   protected function createCommand(): ApplicationFormDataGetCommand {
     Assert::notNull($this->id);
-    $applicationProcess = $this->_applicationProcessManager->get($this->id);
-    Assert::notNull($applicationProcess);
-    $fundingCase = $this->_fundingCaseManager->get($applicationProcess->getFundingCaseId());
-    Assert::notNull($fundingCase);
-    $fundingCaseType = $this->_fundingCaseTypeManager->get($fundingCase->getFundingCaseTypeId());
-    Assert::notNull($fundingCaseType);
-    $fundingProgram = $this->_fundingProgramManager->get($fundingCase->getFundingProgramId());
-    Assert::notNull($fundingProgram);
+    $applicationProcessBundle = $this->applicationProcessBundleLoader->get($this->id);
+    Assert::notNull($applicationProcessBundle);
 
-    return new ApplicationFormDataGetCommand(
-      $applicationProcess,
-      $fundingCase,
-      $fundingCaseType,
-      $fundingProgram,
-    );
+    return new ApplicationFormDataGetCommand($applicationProcessBundle);
   }
 
 }

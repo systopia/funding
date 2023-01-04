@@ -25,10 +25,9 @@ namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 
 use Civi\Api4\Generic\Result;
 use Civi\Funding\Event\Remote\ApplicationProcess\SubmitApplicationFormEvent;
-use Civi\RemoteTools\Form\RemoteForm;
 use Civi\RemoteTools\Form\JsonForms\JsonFormsElement;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
-use Webmozart\Assert\Assert;
+use Civi\RemoteTools\Form\RemoteForm;
 
 /**
  * @covers \Civi\Funding\Api4\Action\Remote\ApplicationProcess\SubmitFormAction
@@ -47,14 +46,13 @@ final class SubmitFormActionTest extends AbstractFormActionTest {
   protected function setUp(): void {
     parent::setUp();
     $this->action = new SubmitFormAction(
-      $this->remoteFundingEntityManagerMock,
+      $this->applicationProcessBundleLoaderMock,
       $this->eventDispatcherMock
     );
 
     $this->action->setRemoteContactId(static::REMOTE_CONTACT_ID);
     $this->action->setExtraParam('contactId', static::CONTACT_ID);
-    Assert::integer($this->applicationProcessValues['id']);
-    $this->data = ['applicationProcessId' => $this->applicationProcessValues['id']];
+    $this->data = ['applicationProcessId' => $this->applicationProcessBundle->getApplicationProcess()->getId()];
     $this->action->setData($this->data);
   }
 
@@ -70,10 +68,7 @@ final class SubmitFormActionTest extends AbstractFormActionTest {
             function (SubmitApplicationFormEvent $event): bool {
               static::assertSame(11, $event->getContactId());
               static::assertSame($this->data, $event->getData());
-              static::assertSame($this->applicationProcessValues, $event->getApplicationProcess()->toArray());
-              static::assertSame($this->fundingCaseValues, $event->getFundingCase()->toArray());
-              static::assertSame($this->fundingCaseTypeValues, $event->getFundingCaseType()->toArray());
-              static::assertSame($this->fundingProgramValues, $event->getFundingProgram()->toArray());
+              static::assertSame($this->applicationProcessBundle, $event->getApplicationProcessBundle());
 
               $event->addError('/foo', 'Bar');
 

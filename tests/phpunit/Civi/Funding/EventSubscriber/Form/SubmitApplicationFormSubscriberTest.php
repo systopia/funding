@@ -29,8 +29,7 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitResult;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewSubmitHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
-use Civi\Funding\EntityFactory\ApplicationProcessFactory;
-use Civi\Funding\EntityFactory\FundingCaseFactory;
+use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Event\Remote\ApplicationProcess\SubmitApplicationFormEvent;
@@ -93,12 +92,7 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
   public function testOnSubmitForm(): void {
     $event = $this->createSubmitFormEvent();
     $command = new ApplicationFormSubmitCommand(
-      $event->getContactId(),
-      $event->getApplicationProcess(),
-      $event->getFundingCase(),
-      $event->getFundingCaseType(),
-      $event->getFundingProgram(),
-      $event->getData()
+      $event->getContactId(), $event->getApplicationProcessBundle(), $event->getData()
     );
 
     $postValidationData = ['foo' => 'bar'];
@@ -111,11 +105,8 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
 
     $form = new ApplicationFormMock();
     $this->formCreateHandlerMock->expects(static::once())->method('handle')->with(new ApplicationFormCreateCommand(
-      $event->getApplicationProcess(),
-      $event->getFundingCase(),
-      $event->getFundingCaseType(),
-      $event->getFundingProgram(),
-      $postValidationData
+      $event->getApplicationProcessBundle(),
+      $postValidationData,
     ))->willReturn($form);
 
     $this->subscriber->onSubmitForm($event);
@@ -128,12 +119,7 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
   public function testOnSubmitFormInvalid(): void {
     $event = $this->createSubmitFormEvent();
     $command = new ApplicationFormSubmitCommand(
-      $event->getContactId(),
-      $event->getApplicationProcess(),
-      $event->getFundingCase(),
-      $event->getFundingCaseType(),
-      $event->getFundingProgram(),
-      $event->getData()
+      $event->getContactId(), $event->getApplicationProcessBundle(), $event->getData()
     );
 
     $postValidationData = ['foo' => 'baz'];
@@ -164,13 +150,11 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
     $postValidationData = ['foo' => 'bar'];
     $validationResult = new ValidationResult($postValidationData, new ErrorCollector());
     $validatedData = new ValidatedApplicationDataMock($postValidationData, ['action' => 'save']);
-    $applicationProcess = ApplicationProcessFactory::createApplicationProcess();
-    $fundingCase = FundingCaseFactory::createFundingCase();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
     $result = ApplicationFormNewSubmitResult::createSuccess(
       $validationResult,
       $validatedData,
-      $applicationProcess,
-      $fundingCase
+      $applicationProcessBundle,
     );
     $this->newSubmitHandlerMock->expects(static::once())->method('handle')
       ->with($command)
@@ -178,11 +162,8 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
 
     $form = new ApplicationFormMock();
     $this->formCreateHandlerMock->expects(static::once())->method('handle')->with(new ApplicationFormCreateCommand(
-      $applicationProcess,
-      $fundingCase,
-      $event->getFundingCaseType(),
-      $event->getFundingProgram(),
-      $postValidationData
+      $applicationProcessBundle,
+      $postValidationData,
     ))->willReturn($form);
 
     $this->subscriber->onSubmitNewForm($event);
@@ -231,10 +212,7 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
     return new SubmitApplicationFormEvent(RemoteFundingApplicationProcess::_getEntityName(), 'submitForm', [
       'remoteContactId' => '00',
       'contactId' => 1,
-      'applicationProcess' => ApplicationProcessFactory::createApplicationProcess(),
-      'fundingCase' => FundingCaseFactory::createFundingCase(),
-      'fundingProgram' => FundingProgramFactory::createFundingProgram(),
-      'fundingCaseType' => FundingCaseTypeFactory::createFundingCaseType(),
+      'applicationProcessBundle' => ApplicationProcessBundleFactory::createApplicationProcessBundle(),
       'data' => [],
     ]);
   }

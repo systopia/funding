@@ -55,10 +55,7 @@ class ValidateApplicationFormSubscriber implements EventSubscriberInterface {
 
   public function onValidateForm(ValidateApplicationFormEvent $event): void {
     $command = new ApplicationFormValidateCommand(
-      $event->getApplicationProcess(),
-      $event->getFundingCase(),
-      $event->getFundingCaseType(),
-      $event->getFundingProgram(),
+      $event->getApplicationProcessBundle(),
       $event->getData(),
     );
 

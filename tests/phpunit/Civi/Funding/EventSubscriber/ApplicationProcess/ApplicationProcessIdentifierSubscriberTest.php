@@ -21,10 +21,7 @@ namespace Civi\Funding\EventSubscriber\ApplicationProcess;
 
 use Civi\Api4\Generic\DAOUpdateAction;
 use Civi\Funding\ApplicationProcess\ApplicationIdentifierGeneratorInterface;
-use Civi\Funding\EntityFactory\ApplicationProcessFactory;
-use Civi\Funding\EntityFactory\FundingCaseFactory;
-use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
-use Civi\Funding\EntityFactory\FundingProgramFactory;
+use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
 use Civi\RemoteTools\Api4\Api4Interface;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -73,20 +70,11 @@ final class ApplicationProcessIdentifierSubscriberTest extends TestCase {
   }
 
   public function testOnCreated(): void {
-    $applicationProcess = ApplicationProcessFactory::createApplicationProcess(['id' => 2]);
-    $fundingCase = FundingCaseFactory::createFundingCase();
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
-    $fundingProgram = FundingProgramFactory::createFundingProgram();
-    $event = new ApplicationProcessCreatedEvent(
-      1,
-      $applicationProcess,
-      $fundingCase,
-      $fundingCaseType,
-      $fundingProgram,
-    );
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(['id' => 2]);
+    $event = new ApplicationProcessCreatedEvent(1, $applicationProcessBundle);
 
     $this->applicationIdentifierGeneratorMock->method('generateIdentifier')
-      ->with($applicationProcess, $fundingCase, $fundingCaseType, $fundingProgram)
+      ->with($applicationProcessBundle)
       ->willReturn('generated');
 
     $this->api4Mock->expects(static::once())->method('executeAction')
@@ -98,7 +86,7 @@ final class ApplicationProcessIdentifierSubscriberTest extends TestCase {
       }));
 
     $this->subscriber->onCreated($event);
-    static::assertSame('generated', $applicationProcess->getIdentifier());
+    static::assertSame('generated', $applicationProcessBundle->getApplicationProcess()->getIdentifier());
   }
 
 }

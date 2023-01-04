@@ -126,8 +126,8 @@ final class ApplicationFormNewSubmitHandlerTest extends TestCase {
     static::assertTrue($result->isSuccess());
     static::assertSame($validationResult, $result->getValidationResult());
     static::assertSame($validatedData, $result->getValidatedData());
-    static::assertSame($applicationProcess, $result->getApplicationProcess());
-    static::assertSame($fundingCase, $result->getFundingCase());
+    static::assertNotNull($result->getApplicationProcessBundle());
+    static::assertSame($applicationProcess, $result->getApplicationProcessBundle()->getApplicationProcess());
   }
 
   public function testHandleInvalid(): void {
@@ -148,8 +148,7 @@ final class ApplicationFormNewSubmitHandlerTest extends TestCase {
     static::assertFalse($result->isSuccess());
     static::assertSame($validationResult, $result->getValidationResult());
     static::assertNull($result->getValidatedData());
-    static::assertNull($result->getApplicationProcess());
-    static::assertNull($result->getFundingCase());
+    static::assertNull($result->getApplicationProcessBundle());
   }
 
   private function createCommand(): ApplicationFormNewSubmitCommand {

@@ -57,9 +57,7 @@ class ApplicationCostItemsSubscriber implements EventSubscriberInterface {
 
   public function onPreCreate(ApplicationProcessPreCreateEvent $event): void {
     $requestData = $this->costItemsAddIdentifiersHandler->handle(new ApplicationCostItemsAddIdentifiersCommand(
-      $event->getApplicationProcess(),
-      $event->getFundingCase(),
-      $event->getFundingCaseType()
+      $event->getApplicationProcessBundle(),
     ));
 
     $event->getApplicationProcess()->setRequestData($requestData);
@@ -67,18 +65,14 @@ class ApplicationCostItemsSubscriber implements EventSubscriberInterface {
 
   public function onCreated(ApplicationProcessCreatedEvent $event): void {
     $this->costItemsPersistHandler->handle(new ApplicationCostItemsPersistCommand(
-      $event->getApplicationProcess(),
-      $event->getFundingCase(),
-      $event->getFundingCaseType(),
-      NULL
+      $event->getApplicationProcessBundle(),
+      NULL,
     ));
   }
 
   public function onPreUpdate(ApplicationProcessPreUpdateEvent $event): void {
     $requestData = $this->costItemsAddIdentifiersHandler->handle(new ApplicationCostItemsAddIdentifiersCommand(
-      $event->getApplicationProcess(),
-      $event->getFundingCase(),
-      $event->getFundingCaseType()
+      $event->getApplicationProcessBundle(),
     ));
 
     $event->getApplicationProcess()->setRequestData($requestData);
@@ -86,10 +80,8 @@ class ApplicationCostItemsSubscriber implements EventSubscriberInterface {
 
   public function onUpdated(ApplicationProcessUpdatedEvent $event): void {
     $this->costItemsPersistHandler->handle(new ApplicationCostItemsPersistCommand(
-      $event->getApplicationProcess(),
-      $event->getFundingCase(),
-      $event->getFundingCaseType(),
-      $event->getPreviousApplicationProcess()
+      $event->getApplicationProcessBundle(),
+      $event->getPreviousApplicationProcess(),
     ));
   }
 

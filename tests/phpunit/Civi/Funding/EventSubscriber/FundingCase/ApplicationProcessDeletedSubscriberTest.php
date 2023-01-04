@@ -20,8 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\EventSubscriber\FundingCase;
 
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
-use Civi\Funding\EntityFactory\ApplicationProcessFactory;
-use Civi\Funding\EntityFactory\FundingCaseFactory;
+use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessDeletedEvent;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -90,8 +89,7 @@ final class ApplicationProcessDeletedSubscriberTest extends TestCase {
 
   private function createEvent(): ApplicationProcessDeletedEvent {
     return new ApplicationProcessDeletedEvent(
-      ApplicationProcessFactory::createApplicationProcess(),
-      FundingCaseFactory::createFundingCase(),
+      ApplicationProcessBundleFactory::createApplicationProcessBundle()
     );
   }
 

@@ -32,12 +32,7 @@ final class ApplicationJsonSchemaGetHandler implements ApplicationJsonSchemaGetH
   }
 
   public function handle(ApplicationJsonSchemaGetCommand $command): JsonSchema {
-    return $this->jsonSchemaFactory->createJsonSchemaExisting(
-      $command->getApplicationProcess(),
-      $command->getFundingCase(),
-      $command->getFundingCaseType(),
-      $command->getFundingProgram(),
-    );
+    return $this->jsonSchemaFactory->createJsonSchemaExisting($command->getApplicationProcessBundle());
   }
 
 }

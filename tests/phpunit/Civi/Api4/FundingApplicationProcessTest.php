@@ -54,6 +54,11 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
     $fundingCase = $this->createFundingCase();
     $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId());
 
+    FundingProgramContactRelationFixture::addContact(
+      $contact['id'],
+      $fundingCase->getFundingProgramId(),
+      ['application_create'],
+    );
     FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['application_withdraw']);
 
     SessionTestUtil::mockRemoteRequestSession((string) $contact['id']);
@@ -67,6 +72,11 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
     $fundingCase = $this->createFundingCase();
     $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId());
 
+    FundingProgramContactRelationFixture::addContact(
+      $contact['id'],
+      $fundingCase->getFundingProgramId(),
+      ['application_create'],
+    );
     FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['application_permission']);
 
     SessionTestUtil::mockRemoteRequestSession((string) $contact['id']);

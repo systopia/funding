@@ -23,12 +23,9 @@ use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
 use Civi\Funding\Api4\Action\Traits\FundingActionContactIdSessionTrait;
-use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
+use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterface;
-use Civi\Funding\FundingCase\FundingCaseManager;
-use Civi\Funding\FundingProgram\FundingCaseTypeManager;
-use Civi\Funding\FundingProgram\FundingProgramManager;
 use Webmozart\Assert\Assert;
 
 /**
@@ -52,29 +49,17 @@ final class ValidateFormAction extends AbstractAction {
    */
   protected ?int $id = NULL;
 
-  protected ApplicationProcessManager $_applicationProcessManager;
+  private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
 
-  protected FundingProgramManager $_fundingProgramManager;
-
-  protected FundingCaseManager $_fundingCaseManager;
-
-  protected FundingCaseTypeManager $_fundingCaseTypeManager;
-
-  protected ApplicationFormValidateHandlerInterface $_validateFormHandler;
+  private ApplicationFormValidateHandlerInterface $validateFormHandler;
 
   public function __construct(
-    ApplicationProcessManager $applicationProcessManager,
-    FundingProgramManager $fundingProgramManager,
-    FundingCaseManager $fundingCaseManager,
-    FundingCaseTypeManager $fundingCaseTypeManager,
+    ApplicationProcessBundleLoader $applicationProcessBundleLoader,
     ApplicationFormValidateHandlerInterface $validateFormHandler
   ) {
     parent::__construct(FundingApplicationProcess::_getEntityName(), 'validateForm');
-    $this->_applicationProcessManager = $applicationProcessManager;
-    $this->_fundingProgramManager = $fundingProgramManager;
-    $this->_fundingCaseManager = $fundingCaseManager;
-    $this->_fundingCaseTypeManager = $fundingCaseTypeManager;
-    $this->_validateFormHandler = $validateFormHandler;
+    $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
+    $this->validateFormHandler = $validateFormHandler;
   }
 
   /**
@@ -84,7 +69,7 @@ final class ValidateFormAction extends AbstractAction {
    */
   public function _run(Result $result): void {
     $command = $this->createCommand();
-    $commandResult = $this->_validateFormHandler->handle($command);
+    $commandResult = $this->validateFormHandler->handle($command);
 
     $result['valid'] = $commandResult->isValid();
     $result['data'] = $commandResult->getData();
@@ -98,18 +83,10 @@ final class ValidateFormAction extends AbstractAction {
   protected function createCommand(): ApplicationFormValidateCommand {
     Assert::notNull($this->id);
     Assert::notNull($this->data);
-    $applicationProcess = $this->_applicationProcessManager->get($this->id);
-    Assert::notNull($applicationProcess);
-    $fundingCase = $this->_fundingCaseManager->get($applicationProcess->getFundingCaseId());
-    Assert::notNull($fundingCase);
-    $fundingCaseType = $this->_fundingCaseTypeManager->get($fundingCase->getFundingCaseTypeId());
-    Assert::notNull($fundingCaseType);
-    $fundingProgram = $this->_fundingProgramManager->get($fundingCase->getFundingProgramId());
-    Assert::notNull($fundingProgram);
+    $applicationProcessBundle = $this->applicationProcessBundleLoader->get($this->id);
+    Assert::notNull($applicationProcessBundle);
 
-    return new ApplicationFormValidateCommand(
-      $applicationProcess, $fundingCase, $fundingCaseType, $fundingProgram, $this->data
-    );
+    return new ApplicationFormValidateCommand($applicationProcessBundle, $this->data);
   }
 
 }

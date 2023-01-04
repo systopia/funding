@@ -21,8 +21,8 @@ namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
+use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\Event\Remote\ApplicationProcess\GetApplicationFormEvent;
-use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
 use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
 
@@ -38,10 +38,10 @@ final class GetFormAction extends AbstractFormAction {
   protected ?int $applicationProcessId = NULL;
 
   public function __construct(
-    RemoteFundingEntityManagerInterface $remoteFundingEntityManager,
+    ApplicationProcessBundleLoader $applicationProcessBundleLoader,
     CiviEventDispatcher $eventDispatcher
   ) {
-    parent::__construct('getForm', $remoteFundingEntityManager, $eventDispatcher);
+    parent::__construct('getForm', $applicationProcessBundleLoader, $eventDispatcher);
   }
 
   /**

@@ -21,7 +21,9 @@ namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 
 use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Api4\Action\Remote\FundingCase\Traits\NewApplicationFormActionTrait;
-use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
+use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ClockMock;
@@ -32,35 +34,17 @@ abstract class AbstractFormActionTest extends TestCase {
 
   protected const CONTACT_ID = 11;
 
+  protected ApplicationProcessEntityBundle $applicationProcessBundle;
+
   /**
    * @var \Civi\Core\CiviEventDispatcher&\PHPUnit\Framework\MockObject\MockObject
    */
   protected $eventDispatcherMock;
 
   /**
-   * @phpstan-var array<string, mixed>
+   * @var \Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader&\PHPUnit\Framework\MockObject\MockObject
    */
-  protected array $applicationProcessValues;
-
-  /**
-   * @phpstan-var array<string, mixed>
-   */
-  protected array $fundingCaseValues;
-
-  /**
-   * @phpstan-var array<string, mixed>
-   */
-  protected array $fundingCaseTypeValues;
-
-  /**
-   * @phpstan-var array<string, mixed>
-   */
-  protected array $fundingProgramValues;
-
-  /**
-   * @var \Civi\Funding\Remote\RemoteFundingEntityManagerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  protected MockObject $remoteFundingEntityManagerMock;
+  protected MockObject $applicationProcessBundleLoaderMock;
 
   public static function setUpBeforeClass(): void {
     parent::setUpBeforeClass();
@@ -71,24 +55,20 @@ abstract class AbstractFormActionTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
-    $this->remoteFundingEntityManagerMock = $this->createMock(RemoteFundingEntityManagerInterface::class);
+    $this->applicationProcessBundleLoaderMock = $this->createMock(ApplicationProcessBundleLoader::class);
     $this->eventDispatcherMock = $this->createMock(CiviEventDispatcher::class);
 
-    $this->applicationProcessValues = ['id' => 22, 'funding_case_id' => 33];
-    $this->fundingCaseValues = ['id' => 33, 'funding_case_type_id' => 44, 'funding_program_id' => 55];
-    $this->fundingCaseTypeValues = ['id' => 44];
-    $this->fundingProgramValues = [
-      'id' => 55,
-      'requests_start_date' => date('Y-m-d', time() - 86400),
-      'requests_end_date' => date('Y-m-d', time() + 86400),
-    ];
+    $this->applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+      ['id' => 22],
+      [],
+      [],
+      [
+        'requests_start_date' => date('Y-m-d', time() - 86400),
+        'requests_end_date' => date('Y-m-d', time() + 86400),
+      ],
+    );
 
-    $this->remoteFundingEntityManagerMock->method('getById')->willReturnMap([
-      ['FundingApplicationProcess', 22, static::REMOTE_CONTACT_ID, $this->applicationProcessValues],
-      ['FundingCase', 33, static::REMOTE_CONTACT_ID, $this->fundingCaseValues],
-      ['FundingCaseType', 44, static::REMOTE_CONTACT_ID, $this->fundingCaseTypeValues],
-      ['FundingProgram', 55, static::REMOTE_CONTACT_ID, $this->fundingProgramValues],
-    ]);
+    $this->applicationProcessBundleLoaderMock->method('get')->with(22)->willReturn($this->applicationProcessBundle);
   }
 
 }

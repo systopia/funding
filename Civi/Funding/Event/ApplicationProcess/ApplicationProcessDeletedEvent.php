@@ -19,27 +19,16 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Event\ApplicationProcess;
 
-use Civi\Funding\Entity\ApplicationProcessEntity;
-use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\Entity\Traits\ApplicationProcessEntityBundleTrait;
 use Symfony\Component\EventDispatcher\Event;
 
 final class ApplicationProcessDeletedEvent extends Event {
 
-  private ApplicationProcessEntity $applicationProcess;
+  use ApplicationProcessEntityBundleTrait;
 
-  private FundingCaseEntity $fundingCase;
-
-  public function __construct(ApplicationProcessEntity $applicationProcess, FundingCaseEntity $fundingCase) {
-    $this->applicationProcess = $applicationProcess;
-    $this->fundingCase = $fundingCase;
-  }
-
-  public function getApplicationProcess(): ApplicationProcessEntity {
-    return $this->applicationProcess;
-  }
-
-  public function getFundingCase(): FundingCaseEntity {
-    return $this->fundingCase;
+  public function __construct(ApplicationProcessEntityBundle $applicationProcessBundle) {
+    $this->applicationProcessBundle = $applicationProcessBundle;
   }
 
 }

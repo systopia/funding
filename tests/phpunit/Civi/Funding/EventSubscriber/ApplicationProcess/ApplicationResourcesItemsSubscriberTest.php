@@ -23,10 +23,8 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationResourcesItemsAddIdentifi
 use Civi\Funding\ApplicationProcess\Command\ApplicationResourcesItemsPersistCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandlerInterface;
+use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ApplicationProcessFactory;
-use Civi\Funding\EntityFactory\FundingCaseFactory;
-use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
-use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreCreateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
@@ -81,87 +79,54 @@ final class ApplicationResourcesItemsSubscriberTest extends TestCase {
   }
 
   public function testOnPreCreate(): void {
-    $applicationProcess = ApplicationProcessFactory::createApplicationProcess();
-    $fundingCase = FundingCaseFactory::createFundingCase();
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
-    $fundingProgram = FundingProgramFactory::createFundingProgram();
-    $event = new ApplicationProcessPreCreateEvent(
-      2,
-      $applicationProcess,
-      $fundingCase,
-      $fundingCaseType,
-      $fundingProgram,
-    );
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $event = new ApplicationProcessPreCreateEvent(2, $applicationProcessBundle);
 
     $this->resourcesItemsAddIdentifiersHandlerMock->expects(static::once())->method('handle')
-      ->with(new ApplicationResourcesItemsAddIdentifiersCommand($applicationProcess, $fundingCase, $fundingCaseType))
+      ->with(new ApplicationResourcesItemsAddIdentifiersCommand($applicationProcessBundle))
       ->willReturn(['bar' => 'baz']);
     $this->subscriber->onPreCreate($event);
-    static::assertSame(['bar' => 'baz'], $applicationProcess->getRequestData());
+    static::assertSame(['bar' => 'baz'], $applicationProcessBundle->getApplicationProcess()->getRequestData());
   }
 
   public function testOnCreated(): void {
-    $applicationProcess = ApplicationProcessFactory::createApplicationProcess();
-    $fundingCase = FundingCaseFactory::createFundingCase();
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
-    $fundingProgram = FundingProgramFactory::createFundingProgram();
-    $event = new ApplicationProcessCreatedEvent(
-      2,
-      $applicationProcess,
-      $fundingCase,
-      $fundingCaseType,
-      $fundingProgram,
-    );
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $event = new ApplicationProcessCreatedEvent(2, $applicationProcessBundle);
 
     $this->resourcesItemsPersistHandlerMock->expects(static::once())->method('handle')
-      ->with(new ApplicationResourcesItemsPersistCommand(
-        $applicationProcess,
-        $fundingCase,
-        $fundingCaseType,
-        NULL,
-      )
+      ->with(new ApplicationResourcesItemsPersistCommand($applicationProcessBundle, NULL)
     );
     $this->subscriber->onCreated($event);
   }
 
   public function testOnPreUpdate(): void {
     $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess(['title' => 'Previous']);
-    $applicationProcess = ApplicationProcessFactory::createApplicationProcess();
-    $fundingCase = FundingCaseFactory::createFundingCase();
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
     $event = new ApplicationProcessPreUpdateEvent(
       2,
       $previousApplicationProcess,
-      $applicationProcess,
-      $fundingCase,
-      $fundingCaseType,
+      $applicationProcessBundle,
     );
 
     $this->resourcesItemsAddIdentifiersHandlerMock->expects(static::once())->method('handle')
-      ->with(new ApplicationResourcesItemsAddIdentifiersCommand($applicationProcess, $fundingCase, $fundingCaseType))
+      ->with(new ApplicationResourcesItemsAddIdentifiersCommand($applicationProcessBundle))
       ->willReturn(['bar' => 'baz']);
     $this->subscriber->onPreUpdate($event);
-    static::assertSame(['bar' => 'baz'], $applicationProcess->getRequestData());
+    static::assertSame(['bar' => 'baz'], $applicationProcessBundle->getApplicationProcess()->getRequestData());
   }
 
   public function testOnUpdated(): void {
     $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess(['title' => 'Previous']);
-    $applicationProcess = ApplicationProcessFactory::createApplicationProcess();
-    $fundingCase = FundingCaseFactory::createFundingCase();
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
     $event = new ApplicationProcessUpdatedEvent(
       2,
       $previousApplicationProcess,
-      $applicationProcess,
-      $fundingCase,
-      $fundingCaseType,
+      $applicationProcessBundle,
     );
 
     $this->resourcesItemsPersistHandlerMock->expects(static::once())->method('handle')
       ->with(new ApplicationResourcesItemsPersistCommand(
-        $applicationProcess,
-        $fundingCase,
-        $fundingCaseType,
+        $applicationProcessBundle,
         $previousApplicationProcess,
       )
     );

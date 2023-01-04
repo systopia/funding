@@ -64,11 +64,8 @@ class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
   public function onSubmitForm(SubmitApplicationFormEvent $event): void {
     $command = new ApplicationFormSubmitCommand(
       $event->getContactId(),
-      $event->getApplicationProcess(),
-      $event->getFundingCase(),
-      $event->getFundingCaseType(),
-      $event->getFundingProgram(),
-      $event->getData()
+      $event->getApplicationProcessBundle(),
+      $event->getData(),
     );
 
     $result = $this->submitHandler->handle($command);
@@ -78,10 +75,7 @@ class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
       if ($this->isShouldShowForm($result->getValidatedData()->getAction())) {
         $event->setForm(
           $this->createHandler->handle(new ApplicationFormCreateCommand(
-            $event->getApplicationProcess(),
-            $event->getFundingCase(),
-            $event->getFundingCaseType(),
-            $event->getFundingProgram(),
+            $event->getApplicationProcessBundle(),
             $result->getValidatedData()->getApplicationData(),
           ))
         );
@@ -108,14 +102,10 @@ class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
       $event->setMessage(E::ts('Saved'));
       Assert::notNull($result->getValidatedData());
       if ($this->isShouldShowForm($result->getValidatedData()->getAction())) {
-        Assert::notNull($result->getApplicationProcess());
-        Assert::notNull($result->getFundingCase());
+        Assert::notNull($result->getApplicationProcessBundle());
         $event->setForm(
           $this->createHandler->handle(new ApplicationFormCreateCommand(
-            $result->getApplicationProcess(),
-            $result->getFundingCase(),
-            $event->getFundingCaseType(),
-            $event->getFundingProgram(),
+            $result->getApplicationProcessBundle(),
             $result->getValidatedData()->getApplicationData(),
           ))
         );

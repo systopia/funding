@@ -19,8 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form;
 
-use Civi\Funding\Entity\ApplicationProcessEntity;
-use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\RemoteTools\Form\JsonForms\JsonFormsElement;
@@ -33,10 +32,7 @@ interface ApplicationUiSchemaFactoryInterface {
   public static function getSupportedFundingCaseTypes(): array;
 
   public function createUiSchemaExisting(
-    ApplicationProcessEntity $applicationProcess,
-    FundingProgramEntity $fundingProgram,
-    FundingCaseEntity $fundingCase,
-    FundingCaseTypeEntity $fundingCaseType
+    ApplicationProcessEntityBundle $applicationProcessBundle
   ): JsonFormsElement;
 
   public function createUiSchemaNew(

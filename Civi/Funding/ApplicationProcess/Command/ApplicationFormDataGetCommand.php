@@ -19,47 +19,15 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Command;
 
-use Civi\Funding\Entity\ApplicationProcessEntity;
-use Civi\Funding\Entity\FundingCaseEntity;
-use Civi\Funding\Entity\FundingCaseTypeEntity;
-use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\Entity\Traits\ApplicationProcessEntityBundleTrait;
 
 final class ApplicationFormDataGetCommand {
 
-  private ApplicationProcessEntity $applicationProcess;
+  use ApplicationProcessEntityBundleTrait;
 
-  private FundingCaseEntity $fundingCase;
-
-  private FundingCaseTypeEntity $fundingCaseType;
-
-  private FundingProgramEntity $fundingProgram;
-
-  public function __construct(
-    ApplicationProcessEntity $applicationProcess,
-    FundingCaseEntity $fundingCase,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingProgramEntity $fundingProgram
-  ) {
-    $this->applicationProcess = $applicationProcess;
-    $this->fundingCase = $fundingCase;
-    $this->fundingCaseType = $fundingCaseType;
-    $this->fundingProgram = $fundingProgram;
-  }
-
-  public function getApplicationProcess(): ApplicationProcessEntity {
-    return $this->applicationProcess;
-  }
-
-  public function getFundingCase(): FundingCaseEntity {
-    return $this->fundingCase;
-  }
-
-  public function getFundingCaseType(): FundingCaseTypeEntity {
-    return $this->fundingCaseType;
-  }
-
-  public function getFundingProgram(): FundingProgramEntity {
-    return $this->fundingProgram;
+  public function __construct(ApplicationProcessEntityBundle $applicationProcessBundle) {
+    $this->applicationProcessBundle = $applicationProcessBundle;
   }
 
 }
