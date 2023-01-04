@@ -23,6 +23,7 @@ use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\DAOGetAction;
 use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreCreateEvent;
@@ -160,17 +161,20 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
   }
 
   public function testDelete(): void {
-    $fundingCase = $this->createFundingCase();
-    $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId());
+    $applicationProcessBundle = $this->createApplicationProcessBundle();
     // We need any permission so the get action automatically performed by CiviCRM will return the application process
     $contact = ContactFixture::addIndividual();
-    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['test_permission']);
+    FundingCaseContactRelationFixture::addContact(
+      $contact['id'],
+      $applicationProcessBundle->getFundingCase()->getId(),
+      ['test_permission']
+    );
 
     \CRM_Core_Session::singleton()->set('userID', $contact['id']);
-    $this->applicationProcessManager->delete($applicationProcess, $fundingCase);
+    $this->applicationProcessManager->delete($applicationProcessBundle);
 
     $action = (new DAOGetAction(FundingApplicationProcess::_getEntityName(), 'delete'))
-      ->addWhere('id', '=', $applicationProcess->getId());
+      ->addWhere('id', '=', $applicationProcessBundle->getApplicationProcess()->getId());
     static::assertCount(0, $action->execute());
   }
 
@@ -216,26 +220,29 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
 
   public function testUpdate(): void {
     $contact = ContactFixture::addIndividual();
+    $fundingProgram = FundingProgramFixture::addFixture();
     $fundingCaseType = FundingCaseTypeFixture::addFixture();
-    $fundingCase = $this->createFundingCase(NULL, $fundingCaseType->getId());
+    $fundingCase = $this->createFundingCase($fundingProgram->getId(), $fundingCaseType->getId());
     \CRM_Core_Session::singleton()->set('userID', $contact['id']);
     FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['test_permission']);
 
     $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId());
+    $applicationProcessBundle = new ApplicationProcessEntityBundle(
+      $applicationProcess,
+      $fundingCase,
+      $fundingCaseType,
+      $fundingProgram
+    );
     $previousTitle = $applicationProcess->getTitle();
 
     $this->eventDispatcherMock->expects(static::exactly(2))->method('dispatch')->withConsecutive(
       [
         ApplicationProcessPreUpdateEvent::class,
         static::callback(
-          function (ApplicationProcessPreUpdateEvent $event) use ($contact, $previousTitle,
-            $applicationProcess, $fundingCase, $fundingCaseType
-          ) {
+          function (ApplicationProcessPreUpdateEvent $event) use ($contact, $previousTitle, $applicationProcessBundle) {
             static::assertSame($contact['id'], $event->getContactId());
             static::assertSame($previousTitle, $event->getPreviousApplicationProcess()->getTitle());
-            static::assertSame($applicationProcess, $event->getApplicationProcess());
-            static::assertSame($fundingCase, $event->getFundingCase());
-            static::assertSame($fundingCaseType, $event->getFundingCaseType());
+            static::assertSame($applicationProcessBundle, $event->getApplicationProcessBundle());
 
             return TRUE;
           }
@@ -244,14 +251,10 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
       [
         ApplicationProcessUpdatedEvent::class,
         static::callback(
-          function (ApplicationProcessUpdatedEvent $event) use ($contact, $previousTitle,
-          $applicationProcess, $fundingCase, $fundingCaseType
-          ) {
+          function (ApplicationProcessUpdatedEvent $event) use ($contact, $previousTitle, $applicationProcessBundle) {
             static::assertSame($contact['id'], $event->getContactId());
             static::assertSame($previousTitle, $event->getPreviousApplicationProcess()->getTitle());
-            static::assertSame($applicationProcess, $event->getApplicationProcess());
-            static::assertSame($fundingCase, $event->getFundingCase());
-            static::assertSame($fundingCaseType, $event->getFundingCaseType());
+            static::assertSame($applicationProcessBundle, $event->getApplicationProcessBundle());
 
             return TRUE;
           }
@@ -260,8 +263,17 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
     );
 
     $applicationProcess->setTitle('New title');
-    $this->applicationProcessManager->update($contact['id'], $applicationProcess, $fundingCase, $fundingCaseType);
+    $this->applicationProcessManager->update($contact['id'], $applicationProcessBundle);
     static::assertSame(time(), $applicationProcess->getModificationDate()->getTimestamp());
+  }
+
+  private function createApplicationProcessBundle(): ApplicationProcessEntityBundle {
+    $fundingProgram = FundingProgramFixture::addFixture();
+    $fundingCaseType = FundingCaseTypeFixture::addFixture();
+    $fundingCase = $this->createFundingCase($fundingProgram->getId(), $fundingCaseType->getId());
+    $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId());
+
+    return new ApplicationProcessEntityBundle($applicationProcess, $fundingCase, $fundingCaseType, $fundingProgram);
   }
 
   private function createFundingCase(int $fundingProgramId = NULL, int $fundingCaseTypeId = NULL): FundingCaseEntity {

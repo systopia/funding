@@ -19,8 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\SonstigeAktivitaet;
 
-use Civi\Funding\Entity\ApplicationProcessEntity;
-use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\ApplicationSubmitActionsFactoryInterface;
@@ -43,11 +42,12 @@ final class AVK1UiSchemaFactory implements ApplicationUiSchemaFactoryInterface {
   }
 
   public function createUiSchemaExisting(
-    ApplicationProcessEntity $applicationProcess,
-    FundingProgramEntity $fundingProgram,
-    FundingCaseEntity $fundingCase,
-    FundingCaseTypeEntity $fundingCaseType
+    ApplicationProcessEntityBundle $applicationProcessBundle
   ): JsonFormsElement {
+    $applicationProcess = $applicationProcessBundle->getApplicationProcess();
+    $fundingCase = $applicationProcessBundle->getFundingCase();
+    $fundingProgram = $applicationProcessBundle->getFundingProgram();
+
     $submitButtons = JsonFormsSubmitButtonsFactory::createButtons(
       $this->submitActionsFactory->createSubmitActions(
         $applicationProcess->getFullStatus(),

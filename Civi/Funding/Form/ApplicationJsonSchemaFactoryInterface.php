@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Form;
 
 use Civi\Funding\Entity\ApplicationProcessEntity;
-use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\Validation\ValidationResult;
@@ -44,12 +44,7 @@ interface ApplicationJsonSchemaFactoryInterface {
     ValidationResult $validationResult
   ): ValidatedApplicationDataInterface;
 
-  public function createJsonSchemaExisting(
-    ApplicationProcessEntity $applicationProcess,
-    FundingCaseEntity $fundingCase,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingProgramEntity $fundingProgram
-  ): JsonSchema;
+  public function createJsonSchemaExisting(ApplicationProcessEntityBundle $applicationProcessBundle): JsonSchema;
 
   public function createJsonSchemaInitial(
     int $contactId,

@@ -55,12 +55,7 @@ class GetApplicationFormSubscriber implements EventSubscriberInterface {
 
   public function onGetForm(GetApplicationFormEvent $event): void {
     $form = $this->createHandler->handle(
-      new ApplicationFormCreateCommand(
-        $event->getApplicationProcess(),
-        $event->getFundingCase(),
-        $event->getFundingCaseType(),
-        $event->getFundingProgram(),
-      )
+      new ApplicationFormCreateCommand($event->getApplicationProcessBundle())
     );
     $this->mapFormToEvent($form, $event);
   }

@@ -26,8 +26,7 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateResult;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewValidateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterface;
-use Civi\Funding\EntityFactory\ApplicationProcessFactory;
-use Civi\Funding\EntityFactory\FundingCaseFactory;
+use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Event\Remote\ApplicationProcess\ValidateApplicationFormEvent;
@@ -81,11 +80,8 @@ final class ValidateApplicationFormSubscriberTest extends TestCase {
   public function testOnValidateForm(): void {
     $event = $this->createValidateFormEvent();
     $command = new ApplicationFormValidateCommand(
-      $event->getApplicationProcess(),
-      $event->getFundingCase(),
-      $event->getFundingCaseType(),
-      $event->getFundingProgram(),
-      $event->getData()
+      $event->getApplicationProcessBundle(),
+      $event->getData(),
     );
 
     $validationResult = new ValidationResult([], new ErrorCollector());
@@ -103,11 +99,8 @@ final class ValidateApplicationFormSubscriberTest extends TestCase {
   public function testOnValidateFormInvalid(): void {
     $event = $this->createValidateFormEvent();
     $command = new ApplicationFormValidateCommand(
-      $event->getApplicationProcess(),
-      $event->getFundingCase(),
-      $event->getFundingCaseType(),
-      $event->getFundingProgram(),
-      $event->getData()
+      $event->getApplicationProcessBundle(),
+      $event->getData(),
     );
 
     $errorCollector = new ErrorCollector();
@@ -181,10 +174,7 @@ final class ValidateApplicationFormSubscriberTest extends TestCase {
     return new ValidateApplicationFormEvent(RemoteFundingApplicationProcess::_getEntityName(), 'ValidateForm', [
       'remoteContactId' => '00',
       'contactId' => 1,
-      'applicationProcess' => ApplicationProcessFactory::createApplicationProcess(),
-      'fundingCase' => FundingCaseFactory::createFundingCase(),
-      'fundingProgram' => FundingProgramFactory::createFundingProgram(),
-      'fundingCaseType' => FundingCaseTypeFactory::createFundingCaseType(),
+      'applicationProcessBundle' => ApplicationProcessBundleFactory::createApplicationProcessBundle(),
       'data' => [],
     ]);
   }

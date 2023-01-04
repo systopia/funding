@@ -58,9 +58,7 @@ class ApplicationResourcesItemsSubscriber implements EventSubscriberInterface {
   public function onPreCreate(ApplicationProcessPreCreateEvent $event): void {
     $requestData = $this->resourcesItemsAddIdentifiersHandler->handle(
       new ApplicationResourcesItemsAddIdentifiersCommand(
-        $event->getApplicationProcess(),
-        $event->getFundingCase(),
-        $event->getFundingCaseType()
+        $event->getApplicationProcessBundle(),
       )
     );
 
@@ -69,19 +67,15 @@ class ApplicationResourcesItemsSubscriber implements EventSubscriberInterface {
 
   public function onCreated(ApplicationProcessCreatedEvent $event): void {
     $this->resourcesItemsPersistHandler->handle(new ApplicationResourcesItemsPersistCommand(
-      $event->getApplicationProcess(),
-      $event->getFundingCase(),
-      $event->getFundingCaseType(),
-      NULL
+      $event->getApplicationProcessBundle(),
+      NULL,
     ));
   }
 
   public function onPreUpdate(ApplicationProcessPreUpdateEvent $event): void {
     $requestData = $this->resourcesItemsAddIdentifiersHandler->handle(
       new ApplicationResourcesItemsAddIdentifiersCommand(
-        $event->getApplicationProcess(),
-        $event->getFundingCase(),
-        $event->getFundingCaseType()
+        $event->getApplicationProcessBundle(),
       )
     );
 
@@ -90,10 +84,8 @@ class ApplicationResourcesItemsSubscriber implements EventSubscriberInterface {
 
   public function onUpdated(ApplicationProcessUpdatedEvent $event): void {
     $this->resourcesItemsPersistHandler->handle(new ApplicationResourcesItemsPersistCommand(
-      $event->getApplicationProcess(),
-      $event->getFundingCase(),
-      $event->getFundingCaseType(),
-      $event->getPreviousApplicationProcess()
+      $event->getApplicationProcessBundle(),
+      $event->getPreviousApplicationProcess(),
     ));
   }
 

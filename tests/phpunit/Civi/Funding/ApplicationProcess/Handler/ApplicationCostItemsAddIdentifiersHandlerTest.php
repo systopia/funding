@@ -21,9 +21,7 @@ namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\ApplicationCostItemsFactoryInterface;
 use Civi\Funding\ApplicationProcess\Command\ApplicationCostItemsAddIdentifiersCommand;
-use Civi\Funding\EntityFactory\ApplicationProcessFactory;
-use Civi\Funding\EntityFactory\FundingCaseFactory;
-use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
+use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -47,11 +45,11 @@ final class ApplicationCostItemsAddIdentifiersHandlerTest extends TestCase {
   }
 
   public function testHandle(): void {
-    $applicationProcess = ApplicationProcessFactory::createApplicationProcess(['request_data' => ['foo' => 'bar']]);
-    $fundingCase = FundingCaseFactory::createFundingCase();
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+      ['request_data' => ['foo' => 'bar']]
+    );
 
-    $command = new ApplicationCostItemsAddIdentifiersCommand($applicationProcess, $fundingCase, $fundingCaseType);
+    $command = new ApplicationCostItemsAddIdentifiersCommand($applicationProcessBundle);
     $this->costItemsFactoryMock->expects(static::once())->method('addIdentifiers')->with(['foo' => 'bar'])
       ->willReturn(['foo' => 'baz']);
     static::assertSame(['foo' => 'baz'], $this->handler->handle($command));

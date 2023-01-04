@@ -23,10 +23,8 @@ use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitCommand;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
+use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ApplicationProcessFactory;
-use Civi\Funding\EntityFactory\FundingCaseFactory;
-use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
-use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Form\ApplicationJsonSchemaFactoryInterface;
 use Civi\Funding\Form\Validation\ValidationResult;
 use Civi\Funding\Form\Validation\ValidatorInterface;
@@ -97,7 +95,7 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
       ->willReturn($newStatus);
 
     $this->applicationProcessManagerMock->expects(static::once())->method('update')
-      ->with($command->getContactId(), $command->getApplicationProcess());
+      ->with($command->getContactId(), $command->getApplicationProcessBundle());
 
     $result = $this->handler->handle($command);
 
@@ -136,7 +134,7 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
       ->willReturn($newStatus);
 
     $this->applicationProcessManagerMock->expects(static::once())->method('update')
-      ->with($command->getContactId(), $command->getApplicationProcess());
+      ->with($command->getContactId(), $command->getApplicationProcessBundle());
 
     $result = $this->handler->handle($command);
 
@@ -165,7 +163,7 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
     $this->mockCreateValidatedData($command, $validationResult, $validatedData);
 
     $this->applicationProcessManagerMock->expects(static::once())->method('delete')
-      ->with($command->getApplicationProcess());
+      ->with($command->getApplicationProcessBundle());
 
     $result = $this->handler->handle($command);
 
@@ -198,10 +196,7 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
   private function createCommand(): ApplicationFormSubmitCommand {
     return new ApplicationFormSubmitCommand(
       1,
-      ApplicationProcessFactory::createApplicationProcess(),
-      FundingCaseFactory::createFundingCase(),
-      FundingCaseTypeFactory::createFundingCaseType(),
-      FundingProgramFactory::createFundingProgram(),
+      ApplicationProcessBundleFactory::createApplicationProcessBundle(),
       ['test' => 'foo'],
     );
   }
@@ -209,10 +204,7 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
   private function mockCreateJsonSchema(ApplicationFormSubmitCommand $command, JsonSchema $jsonSchema): void {
     $this->jsonSchemaFactoryMock->expects(static::once())->method('createJsonSchemaExisting')
       ->with(
-        $command->getApplicationProcess(),
-        $command->getFundingCase(),
-        $command->getFundingCaseType(),
-        $command->getFundingProgram(),
+        $command->getApplicationProcessBundle(),
       )->willReturn($jsonSchema);
   }
 

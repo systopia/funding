@@ -46,25 +46,14 @@ final class ApplicationFormCreateHandler implements ApplicationFormCreateHandler
 
   public function handle(ApplicationFormCreateCommand $command): RemoteFormInterface {
     $jsonSchema = $this->jsonSchemaGetHandler->handle(new ApplicationJsonSchemaGetCommand(
-      $command->getApplicationProcess(),
-      $command->getFundingCase(),
-      $command->getFundingCaseType(),
-      $command->getFundingProgram(),
+      $command->getApplicationProcessBundle(),
     ));
-    $uiSchema = $this->uiSchemaFactory->createUiSchemaExisting(
-      $command->getApplicationProcess(),
-      $command->getFundingProgram(),
-      $command->getFundingCase(),
-      $command->getFundingCaseType(),
-    );
+    $uiSchema = $this->uiSchemaFactory->createUiSchemaExisting($command->getApplicationProcessBundle());
 
     $data = $command->getData();
     if (NULL === $data) {
       $data = $this->dataGetHandler->handle(new ApplicationFormDataGetCommand(
-        $command->getApplicationProcess(),
-        $command->getFundingCase(),
-        $command->getFundingCaseType(),
-        $command->getFundingProgram(),
+        $command->getApplicationProcessBundle(),
       ));
     }
 

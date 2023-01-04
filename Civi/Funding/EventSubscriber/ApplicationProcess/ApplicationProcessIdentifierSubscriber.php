@@ -51,13 +51,8 @@ class ApplicationProcessIdentifierSubscriber implements EventSubscriberInterface
    * @throws \API_Exception
    */
   public function onCreated(ApplicationProcessCreatedEvent $event): void {
+    $identifier = $this->applicationIdentifierGenerator->generateIdentifier($event->getApplicationProcessBundle());
     $applicationProcess = $event->getApplicationProcess();
-    $identifier = $this->applicationIdentifierGenerator->generateIdentifier(
-      $applicationProcess,
-      $event->getFundingCase(),
-      $event->getFundingCaseType(),
-      $event->getFundingProgram()
-    );
     $applicationProcess->setIdentifier($identifier);
     $action = (new DAOUpdateAction(FundingApplicationProcess::_getEntityName(), 'update'))
       ->addValue('identifier', $identifier)

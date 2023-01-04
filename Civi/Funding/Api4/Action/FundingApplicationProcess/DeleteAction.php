@@ -24,96 +24,79 @@ use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\AbstractBatchAction;
 use Civi\Api4\Generic\Result;
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerInterface;
+use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
-use Civi\Funding\Entity\ApplicationProcessEntity;
-use Civi\Funding\Entity\FundingCaseEntity;
-use Civi\Funding\FundingCase\FundingCaseManager;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\RemoteTools\Api4\Api4Interface;
+use Webmozart\Assert\Assert;
 
-/**
- * @phpstan-type applicationProcessT array{
- *   id: int,
- *   identifier: string,
- *   funding_case_id: int,
- *   status: string,
- *   creation_date: string,
- *   modification_date: string,
- *   title: string,
- *   short_description: string,
- *   start_date: string|null,
- *   end_date: string|null,
- *   request_data: array<string, mixed>,
- *   amount_requested: float,
- *   amount_granted: float|null,
- *   granted_budget: float|null,
- *   is_review_content: bool|null,
- *   reviewer_cont_contact_id: int|null,
- *   is_review_calculative: bool|null,
- *   reviewer_calc_contact_id: int|null,
- * }
- */
 final class DeleteAction extends AbstractBatchAction {
 
   private Api4Interface $api4;
+
+  private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
 
   private ApplicationProcessManager $applicationProcessManager;
 
   private ApplicationProcessActionsDeterminerInterface $actionsDeterminer;
 
-  private FundingCaseManager $fundingCaseManager;
-
   public function __construct(
     Api4Interface $api4,
+    ApplicationProcessBundleLoader $applicationProcessBundleLoader,
     ApplicationProcessManager $applicationProcessManager,
-    ApplicationProcessActionsDeterminerInterface $actionsDeterminer,
-    FundingCaseManager $fundingCaseManager
+    ApplicationProcessActionsDeterminerInterface $actionsDeterminer
   ) {
     parent::__construct(FundingApplicationProcess::_getEntityName(), 'delete');
     $this->api4 = $api4;
+    $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
     $this->applicationProcessManager = $applicationProcessManager;
     $this->actionsDeterminer = $actionsDeterminer;
-    $this->fundingCaseManager = $fundingCaseManager;
   }
 
+  /**
+   * @throws \API_Exception
+   */
   public function _run(Result $result): void {
-    $applicationProcesses = $this->getApplicationProcesses();
-    $fundingCases = [];
-    foreach ($applicationProcesses as $applicationProcess) {
-      /** @var \Civi\Funding\Entity\FundingCaseEntity $fundingCase */
-      $fundingCase = $this->fundingCaseManager->get($applicationProcess->getFundingCaseId());
-      $fundingCases[$applicationProcess->getId()] = $fundingCase;
-      if (!$this->isDeleteAllowed($applicationProcess, $fundingCase)) {
+    $applicationProcessBundles = $this->getApplicationProcessBundles();
+    foreach ($applicationProcessBundles as $applicationProcessBundle) {
+      if (!$this->isDeleteAllowed($applicationProcessBundle)) {
         throw new UnauthorizedException('Deletion is not allowed');
       }
     }
 
-    foreach ($applicationProcesses as $applicationProcess) {
-      $this->applicationProcessManager->delete($applicationProcess, $fundingCases[$applicationProcess->getId()]);
-      $result[] = ['id' => $applicationProcess->getId()];
+    foreach ($applicationProcessBundles as $applicationProcessBundle) {
+      $this->applicationProcessManager->delete($applicationProcessBundle);
+      $result[] = ['id' => $applicationProcessBundle->getApplicationProcess()->getId()];
     }
   }
 
   /**
-   * @phpstan-return array<ApplicationProcessEntity>
+   * @phpstan-return array<\Civi\Funding\Entity\ApplicationProcessEntityBundle>
    * @throws \API_Exception
    */
-  private function getApplicationProcesses(): array {
-    $action = FundingApplicationProcess::get()->setWhere($this->getWhere());
+  private function getApplicationProcessBundles(): array {
+    $action = FundingApplicationProcess::get()
+      ->addSelect('id')
+      ->setWhere($this->getWhere());
 
-    /** @var array<applicationProcessT> $records */
+    /** @var array<array{id: int}> $records */
     $records = $this->api4->executeAction($action)->getArrayCopy();
 
     return \array_map(
-      fn (array $values) => ApplicationProcessEntity::fromArray($values),
-      $records,
+      function (array $values): ApplicationProcessEntityBundle {
+        $applicationProcessBundle = $this->applicationProcessBundleLoader->get($values['id']);
+        Assert::notNull($applicationProcessBundle);
+
+        return $applicationProcessBundle;
+      }, $records,
     );
   }
 
-  private function isDeleteAllowed(ApplicationProcessEntity $applicationProcess, FundingCaseEntity $fundingCase): bool {
+  private function isDeleteAllowed(ApplicationProcessEntityBundle $applicationProcessBundle): bool {
     return $this->actionsDeterminer->isActionAllowed(
       'delete',
-      $applicationProcess->getFullStatus(),
-      $fundingCase->getPermissions(),
+      $applicationProcessBundle->getApplicationProcess()->getFullStatus(),
+      $applicationProcessBundle->getFundingCase()->getPermissions(),
     );
   }
 

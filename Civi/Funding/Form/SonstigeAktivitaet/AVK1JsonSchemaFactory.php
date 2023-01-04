@@ -23,7 +23,7 @@ use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsD
 use Civi\Funding\Contact\FundingCaseRecipientLoaderInterface;
 use Civi\Funding\Contact\PossibleRecipientsLoaderInterface;
 use Civi\Funding\Entity\ApplicationProcessEntity;
-use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\ApplicationJsonSchemaFactoryInterface;
@@ -72,11 +72,12 @@ class AVK1JsonSchemaFactory implements ApplicationJsonSchemaFactoryInterface {
   }
 
   public function createJsonSchemaExisting(
-    ApplicationProcessEntity $applicationProcess,
-    FundingCaseEntity $fundingCase,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingProgramEntity $fundingProgram
+    ApplicationProcessEntityBundle $applicationProcessBundle
   ): JsonSchema {
+    $applicationProcess = $applicationProcessBundle->getApplicationProcess();
+    $fundingCase = $applicationProcessBundle->getFundingCase();
+    $fundingProgram = $applicationProcessBundle->getFundingProgram();
+
     $submitActions = $this->actionsDeterminer->getActions(
       $applicationProcess->getFullStatus(),
       $fundingCase->getPermissions()

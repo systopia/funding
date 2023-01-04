@@ -22,10 +22,7 @@ namespace Civi\Funding\EventSubscriber\ApplicationProcess;
 use Civi\Funding\ActivityTypeIds;
 use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\Entity\ActivityEntity;
-use Civi\Funding\EntityFactory\ApplicationProcessFactory;
-use Civi\Funding\EntityFactory\FundingCaseFactory;
-use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
-use Civi\Funding\EntityFactory\FundingProgramFactory;
+use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -61,20 +58,11 @@ final class ApplicationProcessCreatedSubscriberTest extends TestCase {
   }
 
   public function testOnCreated(): void {
-    $applicationProcess = ApplicationProcessFactory::createApplicationProcess([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
       'title' => 'Title',
       'identifier' => 'Identifier',
     ]);
-    $fundingCase = FundingCaseFactory::createFundingCase();
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
-    $fundingProgram = FundingProgramFactory::createFundingProgram();
-    $event = new ApplicationProcessCreatedEvent(
-      2,
-      $applicationProcess,
-      $fundingCase,
-      $fundingCaseType,
-      $fundingProgram,
-    );
+    $event = new ApplicationProcessCreatedEvent(2, $applicationProcessBundle);
 
     $activity = ActivityEntity::fromArray([
       'activity_type_id' => ActivityTypeIds::FUNDING_APPLICATION_CREATE,
@@ -82,7 +70,7 @@ final class ApplicationProcessCreatedSubscriberTest extends TestCase {
       'details' => 'Application process: Title (Identifier)',
     ]);
     $this->activityManagerMock->expects(static::once())->method('addActivity')
-      ->with(2, $applicationProcess, $activity);
+      ->with(2, $applicationProcessBundle->getApplicationProcess(), $activity);
 
     $this->subscriber->onCreated($event);
   }

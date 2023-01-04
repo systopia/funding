@@ -23,15 +23,16 @@ use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\DAODeleteAction;
 use Civi\Core\CiviEventDispatcher;
 use Civi\Funding\Entity\ApplicationProcessEntity;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessDeletedEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreCreateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreDeleteEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
-use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
 use Civi\Funding\Form\ValidatedApplicationDataInterface;
 use Civi\Funding\Util\DateTimeUtil;
 use Civi\Funding\Util\Uuid;
@@ -111,7 +112,9 @@ class ApplicationProcessManager {
     ]);
 
     $event = new ApplicationProcessPreCreateEvent(
-      $contactId, $applicationProcess, $fundingCase, $fundingCaseType, $fundingProgram);
+      $contactId,
+      new ApplicationProcessEntityBundle($applicationProcess, $fundingCase, $fundingCaseType, $fundingProgram)
+    );
     $this->eventDispatcher->dispatch(ApplicationProcessPreCreateEvent::class, $event);
 
     $action = FundingApplicationProcess::create()->setValues($applicationProcess->toArray());
@@ -119,9 +122,14 @@ class ApplicationProcessManager {
     /** @phpstan-var applicationProcessT $applicationProcessValues */
     $applicationProcessValues = $this->api4->executeAction($action)->first();
     $applicationProcess = ApplicationProcessEntity::fromArray($applicationProcessValues)->reformatDates();
+    $applicationProcessBundle = new ApplicationProcessEntityBundle(
+      $applicationProcess,
+      $fundingCase,
+      $fundingCaseType,
+      $fundingProgram
+    );
 
-    $event = new ApplicationProcessCreatedEvent(
-      $contactId, $applicationProcess, $fundingCase, $fundingCaseType, $fundingProgram);
+    $event = new ApplicationProcessCreatedEvent($contactId, $applicationProcessBundle);
     $this->eventDispatcher->dispatch(ApplicationProcessCreatedEvent::class, $event);
 
     return $applicationProcess;
@@ -155,9 +163,8 @@ class ApplicationProcessManager {
     return ApplicationProcessEntity::fromArray($values);
   }
 
-  public function update(int $contactId, ApplicationProcessEntity $applicationProcess,
-    FundingCaseEntity $fundingCase, FundingCaseTypeEntity $fundingCaseType
-  ): void {
+  public function update(int $contactId, ApplicationProcessEntityBundle $applicationProcessBundle): void {
+    $applicationProcess = $applicationProcessBundle->getApplicationProcess();
     $applicationProcess->setModificationDate(new \DateTime(date('YmdHis')));
 
     $previousApplicationProcess = $this->get($applicationProcess->getId());
@@ -166,9 +173,7 @@ class ApplicationProcessManager {
     $event = new ApplicationProcessPreUpdateEvent(
       $contactId,
       $previousApplicationProcess,
-      $applicationProcess,
-      $fundingCase,
-      $fundingCaseType,
+      $applicationProcessBundle,
     );
     $this->eventDispatcher->dispatch(ApplicationProcessPreUpdateEvent::class, $event);
 
@@ -178,22 +183,20 @@ class ApplicationProcessManager {
     $event = new ApplicationProcessUpdatedEvent(
       $contactId,
       $previousApplicationProcess,
-      $applicationProcess,
-      $fundingCase,
-      $fundingCaseType,
+      $applicationProcessBundle,
     );
     $this->eventDispatcher->dispatch(ApplicationProcessUpdatedEvent::class, $event);
   }
 
-  public function delete(ApplicationProcessEntity $applicationProcess, FundingCaseEntity $fundingCase): void {
-    $preDeleteEvent = new ApplicationProcessPreDeleteEvent($applicationProcess, $fundingCase);
+  public function delete(ApplicationProcessEntityBundle $applicationProcessBundle): void {
+    $preDeleteEvent = new ApplicationProcessPreDeleteEvent($applicationProcessBundle);
     $this->eventDispatcher->dispatch(ApplicationProcessPreDeleteEvent::class, $preDeleteEvent);
 
     $action = (new DAODeleteAction(FundingApplicationProcess::_getEntityName(), 'delete'))
-      ->addWhere('id', '=', $applicationProcess->getId());
+      ->addWhere('id', '=', $applicationProcessBundle->getApplicationProcess()->getId());
     $this->api4->executeAction($action);
 
-    $deletedEvent = new ApplicationProcessDeletedEvent($applicationProcess, $fundingCase);
+    $deletedEvent = new ApplicationProcessDeletedEvent($applicationProcessBundle);
     $this->eventDispatcher->dispatch(ApplicationProcessDeletedEvent::class, $deletedEvent);
   }
 

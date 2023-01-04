@@ -20,10 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateCommand;
-use Civi\Funding\EntityFactory\ApplicationProcessFactory;
-use Civi\Funding\EntityFactory\FundingCaseFactory;
-use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
-use Civi\Funding\EntityFactory\FundingProgramFactory;
+use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\Form\ApplicationJsonSchemaFactoryInterface;
 use Civi\Funding\Form\Validation\ValidationResult;
 use Civi\Funding\Form\Validation\ValidatorInterface;
@@ -63,14 +60,11 @@ final class ApplicationFormValidateHandlerTest extends TestCase {
   }
 
   public function testHandle(): void {
-    $applicationProcess = ApplicationProcessFactory::createApplicationProcess();
-    $fundingCase = FundingCaseFactory::createFundingCase();
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
-    $fundingProgram = FundingProgramFactory::createFundingProgram();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
 
     $jsonSchema = new JsonSchema([]);
     $this->jsonSchemaFactoryMock->expects(static::once())->method('createJsonSchemaExisting')
-      ->with($applicationProcess, $fundingCase, $fundingCaseType, $fundingProgram)
+      ->with($applicationProcessBundle)
       ->willReturn($jsonSchema);
 
     $data = ['foo' => 'bar'];
@@ -83,13 +77,7 @@ final class ApplicationFormValidateHandlerTest extends TestCase {
       ->with($jsonSchema, $data)
       ->willReturn($validationResult);
 
-    $command = new ApplicationFormValidateCommand(
-      $applicationProcess,
-      $fundingCase,
-      $fundingCaseType,
-      $fundingProgram,
-      $data
-    );
+    $command = new ApplicationFormValidateCommand($applicationProcessBundle, $data);
     $result = $this->handler->handle($command);
     static::assertSame($postValidationData, $result->getData());
     static::assertSame($validationResult->getLeafErrorMessages(), $result->getErrors());

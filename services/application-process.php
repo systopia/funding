@@ -37,6 +37,7 @@ use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
 use Civi\Funding\ApplicationProcess\ApplicationIdentifierGenerator;
 use Civi\Funding\ApplicationProcess\ApplicationIdentifierGeneratorInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
+use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandlerInterface;
@@ -77,6 +78,7 @@ use Civi\Funding\EventSubscriber\Remote\ApplicationProcessDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessGetFieldsSubscriber;
 
 $container->autowire(ApplicationProcessManager::class);
+$container->autowire(ApplicationProcessBundleLoader::class);
 $container->autowire(ApplicationCostItemManager::class);
 $container->autowire(ApplicationResourcesItemManager::class);
 $container->autowire(ApplicationIdentifierGeneratorInterface::class, ApplicationIdentifierGenerator::class);

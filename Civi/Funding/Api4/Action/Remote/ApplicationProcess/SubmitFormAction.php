@@ -21,8 +21,8 @@ namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcher;
+use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\Event\Remote\ApplicationProcess\SubmitApplicationFormEvent;
-use Civi\Funding\Remote\RemoteFundingEntityManagerInterface;
 use Webmozart\Assert\Assert;
 
 /**
@@ -38,10 +38,10 @@ final class SubmitFormAction extends AbstractFormAction {
   protected ?array $data = NULL;
 
   public function __construct(
-    RemoteFundingEntityManagerInterface $remoteFundingEntityManager,
+    ApplicationProcessBundleLoader $applicationProcessBundleLoader,
     CiviEventDispatcher $eventDispatcher
   ) {
-    parent::__construct('submitForm', $remoteFundingEntityManager, $eventDispatcher);
+    parent::__construct('submitForm', $applicationProcessBundleLoader, $eventDispatcher);
   }
 
   /**

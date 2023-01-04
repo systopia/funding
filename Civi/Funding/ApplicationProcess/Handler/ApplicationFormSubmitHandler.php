@@ -51,12 +51,7 @@ final class ApplicationFormSubmitHandler implements ApplicationFormSubmitHandler
   }
 
   public function handle(ApplicationFormSubmitCommand $command): ApplicationFormSubmitResult {
-    $jsonSchema = $this->jsonSchemaFactory->createJsonSchemaExisting(
-      $command->getApplicationProcess(),
-      $command->getFundingCase(),
-      $command->getFundingCaseType(),
-      $command->getFundingProgram(),
-    );
+    $jsonSchema = $this->jsonSchemaFactory->createJsonSchemaExisting($command->getApplicationProcessBundle());
     $validationResult = $this->validator->validate($jsonSchema, $command->getData());
 
     if ($validationResult->isValid()) {
@@ -79,7 +74,7 @@ final class ApplicationFormSubmitHandler implements ApplicationFormSubmitHandler
     );
 
     if ('delete' === $validatedData->getAction()) {
-      $this->applicationProcessManager->delete($applicationProcess, $command->getFundingCase());
+      $this->applicationProcessManager->delete($command->getApplicationProcessBundle());
 
       return ApplicationFormSubmitResult::createSuccess($validationResult, $validatedData);
     }
@@ -98,9 +93,7 @@ final class ApplicationFormSubmitHandler implements ApplicationFormSubmitHandler
 
     $this->applicationProcessManager->update(
       $command->getContactId(),
-      $applicationProcess,
-      $command->getFundingCase(),
-      $command->getFundingCaseType()
+      $command->getApplicationProcessBundle(),
     );
 
     return ApplicationFormSubmitResult::createSuccess($validationResult, $validatedData);

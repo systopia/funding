@@ -19,8 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Mock\Form\FundingCaseType;
 
-use Civi\Funding\Entity\ApplicationProcessEntity;
-use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\ApplicationUiSchemaFactoryInterface;
@@ -33,10 +32,7 @@ final class TestUiSchemaFactory implements ApplicationUiSchemaFactoryInterface {
   }
 
   public function createUiSchemaExisting(
-    ApplicationProcessEntity $applicationProcess,
-    FundingProgramEntity $fundingProgram,
-    FundingCaseEntity $fundingCase,
-    FundingCaseTypeEntity $fundingCaseType
+    ApplicationProcessEntityBundle $applicationProcessBundle
   ): JsonFormsElement {
     return new TestUiSchema();
   }

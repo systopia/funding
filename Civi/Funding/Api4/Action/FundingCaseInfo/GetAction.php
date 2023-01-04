@@ -23,33 +23,25 @@ use Civi\Api4\FundingCaseInfo;
 use Civi\Api4\Generic\AbstractGetAction;
 use Civi\Api4\Generic\Result;
 use Civi\Api4\Generic\Traits\ArrayQueryActionTrait;
-use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
-use Civi\Funding\Entity\ApplicationProcessEntity;
-use Civi\Funding\Entity\FundingCaseEntity;
-use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\FundingCase\FundingCaseManager;
-use Civi\Funding\FundingProgram\FundingProgramManager;
-use Webmozart\Assert\Assert;
 
 final class GetAction extends AbstractGetAction {
 
   use ArrayQueryActionTrait;
 
-  private ApplicationProcessManager $applicationProcessManager;
+  private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
 
   private FundingCaseManager $fundingCaseManager;
 
-  private FundingProgramManager $fundingProgramManager;
-
   public function __construct(
-    ApplicationProcessManager $applicationProcessManager,
-    FundingCaseManager $fundingCaseManager,
-    FundingProgramManager $fundingProgramManager
+    ApplicationProcessBundleLoader $applicationProcessBundleLoader,
+    FundingCaseManager $fundingCaseManager
   ) {
     parent::__construct(FundingCaseInfo::_getEntityName(), 'get');
-    $this->applicationProcessManager = $applicationProcessManager;
+    $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
     $this->fundingCaseManager = $fundingCaseManager;
-    $this->fundingProgramManager = $fundingProgramManager;
   }
 
   /**
@@ -60,15 +52,12 @@ final class GetAction extends AbstractGetAction {
   public function _run(Result $result): void {
     $records = [];
     foreach ($this->getFundingCases() as $fundingCase) {
-      $applicationProcess = $this->applicationProcessManager->getFirstByFundingCaseId($fundingCase->getId());
-      if (NULL === $applicationProcess) {
+      $applicationProcessBundle = $this->applicationProcessBundleLoader->getFirstByFundingCaseId($fundingCase->getId());
+      if (NULL === $applicationProcessBundle) {
         continue;
       }
 
-      $fundingProgram = $this->fundingProgramManager->get($fundingCase->getFundingProgramId());
-      Assert::notNull($fundingProgram);
-
-      $records[] = $this->buildRecord($fundingCase, $fundingProgram, $applicationProcess);
+      $records[] = $this->buildRecord($applicationProcessBundle);
     }
 
     if ($this->isRowCountSelected()) {
@@ -86,11 +75,11 @@ final class GetAction extends AbstractGetAction {
   /**
    * @phpstan-return array<string, mixed>
    */
-  private function buildRecord(
-    FundingCaseEntity $fundingCase,
-    FundingProgramEntity $fundingProgram,
-    ApplicationProcessEntity $applicationProcess
-  ): array {
+  private function buildRecord(ApplicationProcessEntityBundle $applicationProcessBundle): array {
+    $applicationProcess = $applicationProcessBundle->getApplicationProcess();
+    $fundingCase = $applicationProcessBundle->getFundingCase();
+    $fundingProgram = $applicationProcessBundle->getFundingProgram();
+
     $record = [
       'funding_case_id' => $fundingCase->getId(),
       'funding_case_permissions' => $fundingCase->getPermissions(),
@@ -139,7 +128,7 @@ final class GetAction extends AbstractGetAction {
   }
 
   /**
-   * @return array<FundingCaseEntity>
+   * @return array<\Civi\Funding\Entity\FundingCaseEntity>
    *
    * @throws \API_Exception
    */

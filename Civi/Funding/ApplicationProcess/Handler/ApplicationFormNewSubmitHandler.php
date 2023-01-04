@@ -23,6 +23,7 @@ use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewSubmitCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewSubmitResult;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Form\ApplicationJsonSchemaFactoryInterface;
 use Civi\Funding\Form\Validation\ValidationResult;
 use Civi\Funding\Form\Validation\ValidatorInterface;
@@ -92,12 +93,17 @@ final class ApplicationFormNewSubmitHandler implements ApplicationFormNewSubmitH
       $this->statusDeterminer->getInitialStatus($validatedData->getAction()),
       $validatedData,
     );
+    $applicationProcessBundle = new ApplicationProcessEntityBundle(
+      $applicationProcess,
+      $fundingCase,
+      $command->getFundingCaseType(),
+      $command->getFundingProgram(),
+    );
 
     return ApplicationFormNewSubmitResult::createSuccess(
       $validationResult,
       $validatedData,
-      $applicationProcess,
-      $fundingCase
+      $applicationProcessBundle,
     );
   }
 

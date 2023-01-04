@@ -22,10 +22,9 @@ namespace Civi\Funding\ApplicationProcess\Handler;
 use Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager;
 use Civi\Funding\ApplicationProcess\ApplicationResourcesItemsFactoryInterface;
 use Civi\Funding\ApplicationProcess\Command\ApplicationResourcesItemsPersistCommand;
+use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ApplicationResourcesItemFactory;
 use Civi\Funding\EntityFactory\ApplicationProcessFactory;
-use Civi\Funding\EntityFactory\FundingCaseFactory;
-use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -57,47 +56,40 @@ final class ApplicationResourcesItemsPersistHandlerTest extends TestCase {
   }
 
   public function testHandleNew(): void {
-    $applicationProcess = ApplicationProcessFactory::createApplicationProcess(['request_data' => ['foo' => 'bar']]);
-    $fundingCase = FundingCaseFactory::createFundingCase();
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+      ['request_data' => ['foo' => 'bar']]
+    );
 
     $resourcesItems = [ApplicationResourcesItemFactory::createApplicationResourcesItem()];
     $this->resourcesItemsFactoryMock->expects(static::once())->method('createItems')
-      ->with($applicationProcess)
+      ->with($applicationProcessBundle->getApplicationProcess())
       ->willReturn($resourcesItems);
     $this->resourcesItemManagerMock->expects(static::once())->method('updateAll')
-      ->with($applicationProcess->getId(), $resourcesItems);
+      ->with($applicationProcessBundle->getApplicationProcess()->getId(), $resourcesItems);
 
-    $this->handler->handle(new ApplicationResourcesItemsPersistCommand(
-      $applicationProcess,
-      $fundingCase,
-      $fundingCaseType,
-      NULL,
-    ));
+    $this->handler->handle(new ApplicationResourcesItemsPersistCommand($applicationProcessBundle, NULL));
   }
 
   public function testHandleUpdate(): void {
     $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess(
       ['request_data' => ['foo' => 'bar']]
     );
-    $applicationProcess = ApplicationProcessFactory::createApplicationProcess(['request_data' => ['baz' => 'bar']]);
-    $fundingCase = FundingCaseFactory::createFundingCase();
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+      ['request_data' => ['baz' => 'bar']]
+    );
 
     $resourcesItems = [ApplicationResourcesItemFactory::createApplicationResourcesItem()];
     $this->resourcesItemsFactoryMock->expects(static::once())->method('areResourcesItemsChanged')
       ->with(['baz' => 'bar'], ['foo' => 'bar'])
       ->willReturn(TRUE);
     $this->resourcesItemsFactoryMock->expects(static::once())->method('createItems')
-      ->with($applicationProcess)
+      ->with($applicationProcessBundle->getApplicationProcess())
       ->willReturn($resourcesItems);
     $this->resourcesItemManagerMock->expects(static::once())->method('updateAll')
-      ->with($applicationProcess->getId(), $resourcesItems);
+      ->with($applicationProcessBundle->getApplicationProcess()->getId(), $resourcesItems);
 
     $this->handler->handle(new ApplicationResourcesItemsPersistCommand(
-      $applicationProcess,
-      $fundingCase,
-      $fundingCaseType,
+      $applicationProcessBundle,
       $previousApplicationProcess,
     ));
   }
@@ -106,9 +98,9 @@ final class ApplicationResourcesItemsPersistHandlerTest extends TestCase {
     $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess(
       ['request_data' => ['foo' => 'bar']]
     );
-    $applicationProcess = ApplicationProcessFactory::createApplicationProcess(['request_data' => ['baz' => 'bar']]);
-    $fundingCase = FundingCaseFactory::createFundingCase();
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+      ['request_data' => ['baz' => 'bar']]
+    );
 
     $this->resourcesItemsFactoryMock->expects(static::once())->method('areResourcesItemsChanged')
       ->with(['baz' => 'bar'], ['foo' => 'bar'])
@@ -117,9 +109,7 @@ final class ApplicationResourcesItemsPersistHandlerTest extends TestCase {
     $this->resourcesItemManagerMock->expects(static::never())->method('updateAll');
 
     $this->handler->handle(new ApplicationResourcesItemsPersistCommand(
-      $applicationProcess,
-      $fundingCase,
-      $fundingCaseType,
+      $applicationProcessBundle,
       $previousApplicationProcess,
     ));
   }

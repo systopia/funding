@@ -20,41 +20,21 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Command;
 
 use Civi\Funding\Entity\ApplicationProcessEntity;
-use Civi\Funding\Entity\FundingCaseEntity;
-use Civi\Funding\Entity\FundingCaseTypeEntity;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\Entity\Traits\ApplicationProcessEntityBundleTrait;
 
 final class ApplicationResourcesItemsPersistCommand {
 
-  private ApplicationProcessEntity $applicationProcess;
-
-  private FundingCaseEntity $fundingCase;
-
-  private FundingCaseTypeEntity $fundingCaseType;
+  use ApplicationProcessEntityBundleTrait;
 
   private ?ApplicationProcessEntity $previousApplicationProcess;
 
   public function __construct(
-    ApplicationProcessEntity $applicationProcess,
-    FundingCaseEntity $fundingCase,
-    FundingCaseTypeEntity $fundingCaseType,
+    ApplicationProcessEntityBundle $applicationProcessBundle,
     ?ApplicationProcessEntity $previousApplicationProcess
   ) {
-    $this->applicationProcess = $applicationProcess;
-    $this->fundingCase = $fundingCase;
-    $this->fundingCaseType = $fundingCaseType;
+    $this->applicationProcessBundle = $applicationProcessBundle;
     $this->previousApplicationProcess = $previousApplicationProcess;
-  }
-
-  public function getApplicationProcess(): ApplicationProcessEntity {
-    return $this->applicationProcess;
-  }
-
-  public function getFundingCase(): FundingCaseEntity {
-    return $this->fundingCase;
-  }
-
-  public function getFundingCaseType(): FundingCaseTypeEntity {
-    return $this->fundingCaseType;
   }
 
   public function getPreviousApplicationProcess(): ?ApplicationProcessEntity {
@@ -65,7 +45,7 @@ final class ApplicationResourcesItemsPersistCommand {
    * @phpstan-return array<string, mixed>
    */
   public function getRequestData(): array {
-    return $this->applicationProcess->getRequestData();
+    return $this->getApplicationProcess()->getRequestData();
   }
 
   /**
