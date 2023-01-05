@@ -16,6 +16,7 @@
  */
 
 use Civi\Core\Event\GenericHookEvent;
+use Civi\Funding\Event\FundingCase\GetPossibleFundingCaseStatusEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class CRM_Funding_BAO_FundingCase extends CRM_Funding_DAO_FundingCase implements EventSubscriberInterface {
@@ -48,6 +49,21 @@ class CRM_Funding_BAO_FundingCase extends CRM_Funding_DAO_FundingCase implements
       'civi.afform_admin.metadata' => 'afformAdminMetadata',
       'civi.afform.get' => 'afformGet',
     ];
+  }
+
+  // @phpstan-ignore-next-line
+  public static function buildOptions($fieldName, $context = NULL, $props = []) {
+    $options = parent::buildOptions($fieldName, $context, $props);
+    if ('status' === $fieldName && is_array($options)) {
+      // If FundingCase is limited to one via "id" in $props, we could
+      // determine the possible status depending on the funding case type...
+      $event = new GetPossibleFundingCaseStatusEvent($options);
+      \Civi::dispatcher()->dispatch(GetPossibleFundingCaseStatusEvent::class, $event);
+
+      return $event->getOptions();
+    }
+
+    return $options;
   }
 
   /**
