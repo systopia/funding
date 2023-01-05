@@ -16,6 +16,7 @@
  */
 
 use Civi\Core\Event\GenericHookEvent;
+use Civi\Funding\Event\ApplicationProcess\GetPossibleApplicationProcessStatusEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class CRM_Funding_BAO_ApplicationProcess extends CRM_Funding_DAO_ApplicationProcess implements EventSubscriberInterface {
@@ -63,6 +64,21 @@ class CRM_Funding_BAO_ApplicationProcess extends CRM_Funding_DAO_ApplicationProc
       'type' => 'primary',
       'defaults' => '{}',
     ];
+  }
+
+  // @phpstan-ignore-next-line
+  public static function buildOptions($fieldName, $context = NULL, $props = []) {
+    $options = parent::buildOptions($fieldName, $context, $props);
+    if ('status' === $fieldName && is_array($options)) {
+      // If ApplicationProcess is limited to one via "id" in $props, we could
+      // determine the possible status depending on the funding case type...
+      $event = new GetPossibleApplicationProcessStatusEvent($options);
+      \Civi::dispatcher()->dispatch(GetPossibleApplicationProcessStatusEvent::class, $event);
+
+      return $event->getOptions();
+    }
+
+    return $options;
   }
 
 }
