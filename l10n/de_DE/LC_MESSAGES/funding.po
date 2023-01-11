@@ -167,6 +167,10 @@ msgstr "d.m.Y"
 msgid "Funding program does not allow applications after %1"
 msgstr "Förderprogramm erlaubt keine Anträge nach %1"
 
+#: Civi/Funding/ApplicationProcess/Handler/ApplicationFormCommentPersistHandler.php
+msgid "Application process comment"
+msgstr "Förderfallprozesskommentar"
+
 #: Civi/Funding/Contact/FundingCaseRecipientLoader.php
 #: Civi/Funding/Contact/RecipientsLoader/DefaultPossibleRecipientsLoader.php
 msgid "Contact %1"
@@ -483,6 +487,22 @@ msgid "Application %1"
 msgstr "Antrag %1"
 
 #: ang/crmFunding/application/application.template.html
+msgid "Close"
+msgstr "Schließen"
+
+#: ang/crmFunding/application/application.template.html
+msgid "Comment"
+msgstr "Kommentar"
+
+#: ang/crmFunding/application/application.template.html
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: ang/crmFunding/application/application.template.html
+msgid "Submit"
+msgstr "Senden"
+
+#: ang/crmFunding/application/application.template.html
 msgid "Start review"
 msgstr "Prüfung starten"
 
@@ -529,6 +549,10 @@ msgstr "Änderung bewilligen"
 #: ang/crmFunding/application/application.template.html
 msgid "Reject change"
 msgstr "Änderung ablehnen"
+
+#: ang/crmFunding/application/application.template.html
+msgid "Add comment"
+msgstr "Kommentar hinzufügen"
 
 #: ang/crmFunding/application/application.template.html
 msgid "Reset"
@@ -611,3 +635,45 @@ msgstr "Förderprogrammberechtigungen"
 #: ang/crmFunding/program/recipientRelations.html
 msgid "Possible funding recipients"
 msgstr "Mögliche Fördergeldempfänger"
+
+#: managed/ActivityTypeFundingApplicationComment.mgd.php
+#: managed/CustomGroupFundingApplicationComment.mgd.php
+msgid "Funding Application Comment"
+msgstr "Förderantragskommentar"
+
+#: managed/ActivityTypeFundingApplicationComment.mgd.php
+msgid "Activity type for funding application process comments"
+msgstr "Aktivitätsart für Förderantragsprozesskommentare"
+
+#: managed/ActivityTypeFundingApplicationCreate.mgd.php
+msgid "Funding Application Created"
+msgstr "Förderantrag erstellt"
+
+#: managed/ActivityTypeFundingApplicationCreate.mgd.php
+msgid "Activity type for funding application process creation"
+msgstr "Aktivitätsart für Förderantragsprozesserstellung"
+
+#: managed/ActivityTypeFundingApplicationStatusChange.mgd.php
+#: managed/CustomGroupFundingApplicationStatusChange.mgd.php
+msgid "Funding Application Status Change"
+msgstr "Status von Förderantrag geändert"
+
+#: managed/ActivityTypeFundingApplicationStatusChange.mgd.php
+msgid "Activity type for funding application process status changes"
+msgstr "Aktivitätsart für Statusänderung eines Förderantragsprozesses"
+
+#: managed/CustomGroupFundingApplicationComment.mgd.php
+msgid "Action"
+msgstr "Aktion"
+
+#: managed/CustomGroupFundingApplicationStatusChange.mgd.php
+msgid "From status"
+msgstr "Von Status"
+
+#: managed/CustomGroupFundingApplicationStatusChange.mgd.php
+msgid "To status"
+msgstr "Zu Status"
+
+#: managed/OptionValueActivityUsedForApplicationProcess.mgd.php
+msgid "Funding application process"
+msgstr "Förderantragsprozess"

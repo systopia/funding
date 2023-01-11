@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
+use Civi\Funding\ApplicationProcess\Command\ApplicationFormCommentPersistCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitCommand;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
@@ -47,6 +48,11 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
    */
   private MockObject $applicationProcessManagerMock;
 
+  /**
+   * @var \Civi\Funding\ApplicationProcess\Handler\ApplicationFormCommentPersistHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $commentStoreHandlerMock;
+
   private ApplicationFormSubmitHandler $handler;
 
   /**
@@ -67,11 +73,13 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->applicationProcessManagerMock = $this->createMock(ApplicationProcessManager::class);
+    $this->commentStoreHandlerMock = $this->createMock(ApplicationFormCommentPersistHandlerInterface::class);
     $this->jsonSchemaFactoryMock = $this->createMock(ApplicationJsonSchemaFactoryInterface::class);
     $this->statusDeterminerMock = $this->createMock(ApplicationProcessStatusDeterminerInterface::class);
     $this->validatorMock = $this->createMock(ValidatorInterface::class);
     $this->handler = new ApplicationFormSubmitHandler(
       $this->applicationProcessManagerMock,
+      $this->commentStoreHandlerMock,
       $this->jsonSchemaFactoryMock,
       $this->statusDeterminerMock,
       $this->validatorMock
@@ -97,6 +105,8 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
     $this->applicationProcessManagerMock->expects(static::once())->method('update')
       ->with($command->getContactId(), $command->getApplicationProcessBundle());
 
+    $this->commentStoreHandlerMock->expects(static::never())->method('handle');
+
     $result = $this->handler->handle($command);
 
     static::assertTrue($result->isSuccess());
@@ -117,6 +127,37 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
     static::assertFalse($applicationProcess->getIsReviewContent());
   }
 
+  public function testHandleComment(): void {
+    $command = $this->createCommand();
+    $jsonSchema = new JsonSchema([]);
+    $this->mockCreateJsonSchema($command, $jsonSchema);
+
+    $validationResult = new ValidationResult([], new ErrorCollector());
+    $this->mockValidator($jsonSchema, $command->getData(), $validationResult);
+
+    $validatedData = new ValidatedApplicationDataMock([], ['comment' => 'test']);
+    $this->mockCreateValidatedData($command, $validationResult, $validatedData);
+
+    $newStatus = new FullApplicationProcessStatus('new_status', TRUE, FALSE);
+    $this->statusDeterminerMock->method('getStatus')->willReturn($newStatus);
+
+    $this->applicationProcessManagerMock->expects(static::once())->method('update');
+
+    $this->commentStoreHandlerMock->expects(static::once())->method('handle')
+      ->with(new ApplicationFormCommentPersistCommand(
+        $command->getContactId(),
+        $command->getApplicationProcess(),
+        $command->getFundingCase(),
+        $command->getFundingCaseType(),
+        $command->getFundingProgram(),
+        $validatedData
+      ));
+
+    $result = $this->handler->handle($command);
+
+    static::assertTrue($result->isSuccess());
+  }
+
   public function testHandleValidReadOnly(): void {
     $command = $this->createCommand();
     $jsonSchema = new JsonSchema(['readOnly' => TRUE]);
@@ -135,6 +176,8 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
 
     $this->applicationProcessManagerMock->expects(static::once())->method('update')
       ->with($command->getContactId(), $command->getApplicationProcessBundle());
+
+    $this->commentStoreHandlerMock->expects(static::never())->method('handle');
 
     $result = $this->handler->handle($command);
 
@@ -165,6 +208,8 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
     $this->applicationProcessManagerMock->expects(static::once())->method('delete')
       ->with($command->getApplicationProcessBundle());
 
+    $this->commentStoreHandlerMock->expects(static::never())->method('handle');
+
     $result = $this->handler->handle($command);
 
     static::assertTrue($result->isSuccess());
@@ -185,6 +230,8 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
     $this->mockValidator($jsonSchema, $command->getData(), $validationResult);
 
     $this->applicationProcessManagerMock->expects(static::never())->method('update');
+
+    $this->commentStoreHandlerMock->expects(static::never())->method('handle');
 
     $result = $this->handler->handle($command);
 

@@ -32,6 +32,7 @@ use Civi\Funding\Form\ValidatedApplicationDataInterface;
 use Civi\Funding\Form\Validation\ValidationResult;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchemaInteger;
+use Civi\RemoteTools\Form\JsonSchema\JsonSchemaNull;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchemaString;
 
 class AVK1JsonSchemaFactory implements ApplicationJsonSchemaFactoryInterface {
@@ -92,6 +93,14 @@ class AVK1JsonSchemaFactory implements ApplicationJsonSchemaFactoryInterface {
     ];
     $extraKeywords = ['required' => array_keys($extraProperties)];
 
+    if ($this->hasReviewPermission($fundingCase->getPermissions())) {
+      $extraProperties['comment'] = new JsonSchemaString();
+    }
+    else {
+      // Prevent adding a comment without permission
+      $extraProperties['comment'] = new JsonSchemaNull();
+    }
+
     $jsonSchema = new AVK1JsonSchema(
       $fundingProgram->getRequestsStartDate(),
       $fundingProgram->getRequestsEndDate(),
@@ -131,6 +140,14 @@ class AVK1JsonSchemaFactory implements ApplicationJsonSchemaFactoryInterface {
       $extraProperties,
       $extraKeywords,
     );
+  }
+
+  /**
+   * @phpstan-param array<string> $permissions
+   */
+  private function hasReviewPermission(array $permissions): bool {
+    return in_array('review_content', $permissions, TRUE)
+      || in_array('review_calculative', $permissions, TRUE);
   }
 
 }

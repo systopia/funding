@@ -8,10 +8,13 @@
   "globals": {
     "fundingModule": true,
     "fundingIsEmpty": true,
+    "enableOverlay": true,
+    "disableOverlay": true,
     "angular": false,
     "CRM": false,
     "_4": false,
     "Element": false,
+    "document": false,
     "window": false
   },
   "latedef": true,

@@ -22,6 +22,7 @@ namespace Civi\Funding\ApplicationProcess\Handler;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitResult;
+use Civi\Funding\ApplicationProcess\Command\ApplicationFormCommentPersistCommand;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\Form\ApplicationJsonSchemaFactoryInterface;
 use Civi\Funding\Form\Validation\ValidationResult;
@@ -32,6 +33,8 @@ final class ApplicationFormSubmitHandler implements ApplicationFormSubmitHandler
 
   private ApplicationProcessManager $applicationProcessManager;
 
+  private ApplicationFormCommentPersistHandlerInterface $commentPersistHandler;
+
   private ApplicationJsonSchemaFactoryInterface $jsonSchemaFactory;
 
   private ApplicationProcessStatusDeterminerInterface $statusDeterminer;
@@ -40,11 +43,13 @@ final class ApplicationFormSubmitHandler implements ApplicationFormSubmitHandler
 
   public function __construct(
     ApplicationProcessManager $applicationProcessManager,
+    ApplicationFormCommentPersistHandlerInterface $commentPersistHandler,
     ApplicationJsonSchemaFactoryInterface $jsonSchemaFactory,
     ApplicationProcessStatusDeterminerInterface $statusDeterminer,
     ValidatorInterface $validator
   ) {
     $this->applicationProcessManager = $applicationProcessManager;
+    $this->commentPersistHandler = $commentPersistHandler;
     $this->jsonSchemaFactory = $jsonSchemaFactory;
     $this->statusDeterminer = $statusDeterminer;
     $this->validator = $validator;
@@ -95,6 +100,17 @@ final class ApplicationFormSubmitHandler implements ApplicationFormSubmitHandler
       $command->getContactId(),
       $command->getApplicationProcessBundle(),
     );
+
+    if (NULL !== $validatedData->getComment() && '' !== $validatedData->getComment()) {
+      $this->commentPersistHandler->handle(new ApplicationFormCommentPersistCommand(
+        $command->getContactId(),
+        $command->getApplicationProcess(),
+        $command->getFundingCase(),
+        $command->getFundingCaseType(),
+        $command->getFundingProgram(),
+        $validatedData,
+      ));
+    }
 
     return ApplicationFormSubmitResult::createSuccess($validationResult, $validatedData);
   }

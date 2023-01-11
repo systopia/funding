@@ -85,6 +85,7 @@ fundingModule.controller('fundingApplicationCtrl', [
       }
     }
 
+    const $ = CRM.$;
     const ts = $scope.ts = CRM.ts('funding');
 
     fundingCaseService.get(applicationProcess.funding_case_id).then(function (fundingCase) {
@@ -110,17 +111,18 @@ fundingModule.controller('fundingApplicationCtrl', [
     };
 
     $scope.errors = {};
+    $scope.comment = {text: null};
     $scope.isChanged = false;
     $scope.editCount = 0;
 
     function reloadApplicationProcess() {
-      fundingApplicationProcessService.get($scope.applicationProcess.id).then(
+      return fundingApplicationProcessService.get($scope.applicationProcess.id).then(
           (applicationProcess) => $scope.applicationProcess = applicationProcess
       );
     }
 
     function reloadJsonSchema() {
-      fundingApplicationProcessService.getJsonSchema($scope.applicationProcess.id).then(
+      return fundingApplicationProcessService.getJsonSchema($scope.applicationProcess.id).then(
           (jsonSchema) => $scope.jsonSchema = jsonSchema
       );
     }
@@ -145,15 +147,36 @@ fundingModule.controller('fundingApplicationCtrl', [
     $scope.isActionDisabled = function (action) {
       return $scope.editCount > 0 ||
           !fundingIsEmpty($scope.errors) ||
-          ($scope.isChanged && action !== 'update');
+          $scope.isChanged && action !== 'update';
     };
 
     $scope.isEditAllowed = function () {
       return $scope.isActionAllowed('update');
     };
 
-    $scope.performAction = function (action) {
-      return $scope.submit(action);
+    let $submitModal = null;
+    $scope.performAction = function (action, label, withComment) {
+      if (withComment) {
+        if ($submitModal === null) {
+          $submitModal = $('#submit-modal');
+          $submitModal.on('hidden.bs.modal', function () {
+            // comment will be cleared if not submitted or on successful submit
+            if (!$scope.submitModal.submitted) {
+              $scope.comment.text = null;
+            }
+          });
+        }
+        $scope.submitModal = {action, title: label, submitted: false};
+        $submitModal.modal({backdrop: 'static'});
+      } else {
+        $scope.submit(action);
+      }
+    };
+
+    $scope.modalSubmit = function () {
+      $scope.submitModal.submitted = true;
+      $submitModal.modal('hide');
+      return $scope.submit($scope.submitModal.action);
     };
 
     $scope.setReviewCalculative = function (reviewCalculative) {
@@ -175,6 +198,7 @@ fundingModule.controller('fundingApplicationCtrl', [
 
     $scope.reset = function () {
       $scope.data = _4.cloneDeep(originalData);
+      $scope.comment = {text: null};
       $scope.isChanged = false;
       $scope.errors = {};
     };
@@ -254,7 +278,12 @@ fundingModule.controller('fundingApplicationCtrl', [
         return new Promise((resolve) => resolve(false));
       }
 
+      enableOverlay();
       const data = angular.extend({}, $scope.data, {action});
+      if ($scope.comment.text) {
+        data.comment = $scope.comment.text;
+      }
+
       return fundingApplicationProcessService.submitForm($scope.applicationProcess.id, data).then(function (result) {
         if (result.data) {
           $scope.data = result.data;
@@ -262,15 +291,18 @@ fundingModule.controller('fundingApplicationCtrl', [
         $scope.errors = result.errors;
 
         if (_4.isEmpty(result.errors)) {
-          reloadApplicationProcess();
-          reloadJsonSchema();
+          $scope.comment = {text: null};
+          enableOverlay();
+          reloadApplicationProcess().finally(() => disableOverlay());
+          enableOverlay();
+          reloadJsonSchema().finally(() => disableOverlay());
           $scope.isChanged = false;
 
           return true;
         }
 
         return false;
-      });
+      }).finally(() => disableOverlay());
     };
-  }
+  },
 ]);

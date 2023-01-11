@@ -17,30 +17,12 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Form;
+namespace Civi\Funding\ApplicationProcess\Handler;
 
-interface ValidatedApplicationDataInterface {
+use Civi\Funding\ApplicationProcess\Command\ApplicationFormCommentPersistCommand;
 
-  public function getAction(): string;
+interface ApplicationFormCommentPersistHandlerInterface {
 
-  public function getTitle(): string;
-
-  public function getShortDescription(): string;
-
-  public function getRecipientContactId(): int;
-
-  public function getStartDate(): ?\DateTimeInterface;
-
-  public function getEndDate(): ?\DateTimeInterface;
-
-  public function getAmountRequested(): float;
-
-  public function getComment(): ?string;
-
-  /**
-   * @phpstan-return array<string, mixed>
-   *   Application data without extra data like "action".
-   */
-  public function getApplicationData(): array;
+  public function handle(ApplicationFormCommentPersistCommand $command): void;
 
 }

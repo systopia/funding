@@ -29,24 +29,24 @@ final class ReworkPossibleApplicationProcessActionsDeterminer extends Applicatio
     ],
     'rework-requested' => [
       'application_request_rework' => ['withdraw-rework-request'],
-      'review_calculative' => ['approve-rework-request', 'reject-rework-request'],
-      'review_content' => ['approve-rework-request', 'reject-rework-request'],
+      'review_calculative' => ['approve-rework-request', 'reject-rework-request', 'add-comment'],
+      'review_content' => ['approve-rework-request', 'reject-rework-request', 'add-comment'],
     ],
     'rework' => [
       'application_apply' => ['apply'],
       'application_modify' => ['save'],
       'application_withdraw' => ['withdraw-change'],
-      'review_calculative' => ['review'],
-      'review_content' => ['review'],
+      'review_calculative' => ['review', 'add-comment'],
+      'review_content' => ['review', 'add-comment'],
     ],
     'rework-review-requested' => [
       'application_modify' => ['request-rework'],
-      'review_calculative' => ['review'],
-      'review_content' => ['review'],
+      'review_calculative' => ['review', 'add-comment'],
+      'review_content' => ['review', 'add-comment'],
     ],
     'rework-review' => [
-      'review_calculative' => ['request-change', 'update', 'reject-change'],
-      'review_content' => ['request-change', 'update', 'reject-change'],
+      'review_calculative' => ['request-change', 'update', 'reject-change', 'add-comment'],
+      'review_content' => ['request-change', 'update', 'reject-change', 'add-comment'],
     ],
   ];
 

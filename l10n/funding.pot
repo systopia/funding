@@ -94,6 +94,10 @@ msgstr ""
 msgid "Funding program does not allow applications after %1"
 msgstr ""
 
+#: Civi/Funding/ApplicationProcess/Handler/ApplicationFormCommentPersistHandler.php
+msgid "Application process comment"
+msgstr ""
+
 #: Civi/Funding/Contact/FundingCaseRecipientLoader.php Civi/Funding/Contact/RecipientsLoader/DefaultPossibleRecipientsLoader.php
 msgid "Contact %1"
 msgstr ""
@@ -359,6 +363,22 @@ msgid "Application %1"
 msgstr ""
 
 #: ang/crmFunding/application/application.template.html
+msgid "Close"
+msgstr ""
+
+#: ang/crmFunding/application/application.template.html
+msgid "Comment"
+msgstr ""
+
+#: ang/crmFunding/application/application.template.html
+msgid "Cancel"
+msgstr ""
+
+#: ang/crmFunding/application/application.template.html
+msgid "Submit"
+msgstr ""
+
+#: ang/crmFunding/application/application.template.html
 msgid "Start review"
 msgstr ""
 
@@ -404,6 +424,10 @@ msgstr ""
 
 #: ang/crmFunding/application/application.template.html
 msgid "Reject change"
+msgstr ""
+
+#: ang/crmFunding/application/application.template.html
+msgid "Add comment"
 msgstr ""
 
 #: ang/crmFunding/application/application.template.html
@@ -476,5 +500,45 @@ msgstr ""
 
 #: ang/crmFunding/program/recipientRelations.html
 msgid "Possible funding recipients"
+msgstr ""
+
+#: managed/ActivityTypeFundingApplicationComment.mgd.php managed/CustomGroupFundingApplicationComment.mgd.php
+msgid "Funding Application Comment"
+msgstr ""
+
+#: managed/ActivityTypeFundingApplicationComment.mgd.php
+msgid "Activity type for funding application process comments"
+msgstr ""
+
+#: managed/ActivityTypeFundingApplicationCreate.mgd.php
+msgid "Funding Application Created"
+msgstr ""
+
+#: managed/ActivityTypeFundingApplicationCreate.mgd.php
+msgid "Activity type for funding application process creation"
+msgstr ""
+
+#: managed/ActivityTypeFundingApplicationStatusChange.mgd.php managed/CustomGroupFundingApplicationStatusChange.mgd.php
+msgid "Funding Application Status Change"
+msgstr ""
+
+#: managed/ActivityTypeFundingApplicationStatusChange.mgd.php
+msgid "Activity type for funding application process status changes"
+msgstr ""
+
+#: managed/CustomGroupFundingApplicationComment.mgd.php
+msgid "Action"
+msgstr ""
+
+#: managed/CustomGroupFundingApplicationStatusChange.mgd.php
+msgid "From status"
+msgstr ""
+
+#: managed/CustomGroupFundingApplicationStatusChange.mgd.php
+msgid "To status"
+msgstr ""
+
+#: managed/OptionValueActivityUsedForApplicationProcess.mgd.php
+msgid "Funding application process"
 msgstr ""
 

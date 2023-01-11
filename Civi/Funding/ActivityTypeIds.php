@@ -25,6 +25,8 @@ final class ActivityTypeIds {
 
   public const FUNDING_APPLICATION_STATUS_CHANGE = 63785201;
 
+  public const FUNDING_APPLICATION_COMMENT = 63785202;
+
   /**
    * @phpstan-return array<string, int>
    *
