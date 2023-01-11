@@ -280,11 +280,13 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
     $fundingProgramId ??= FundingProgramFixture::addFixture()->getId();
     $fundingCaseTypeId ??= FundingCaseTypeFixture::addFixture()->getId();
     $recipientContact = ContactFixture::addOrganization();
+    $creationContact = ContactFixture::addIndividual(['first_name' => 'creation', 'last_name' => 'contact']);
 
     return FundingCaseFixture::addFixture(
       $fundingProgramId,
       $fundingCaseTypeId,
       $recipientContact['id'],
+      $creationContact['id'],
     );
   }
 

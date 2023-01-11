@@ -138,7 +138,7 @@ function _funding_civix_civicrm_postInstall() {
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_uninstall
  */
-function _funding_civix_civicrm_uninstall() {
+function _funding_civix_civicrm_uninstall(): void {
   _funding_civix_civicrm_config();
   if ($upgrader = _funding_civix_upgrader()) {
     $upgrader->onUninstall();
@@ -150,7 +150,7 @@ function _funding_civix_civicrm_uninstall() {
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_enable
  */
-function _funding_civix_civicrm_enable() {
+function _funding_civix_civicrm_enable(): void {
   _funding_civix_civicrm_config();
   if ($upgrader = _funding_civix_upgrader()) {
     if (is_callable([$upgrader, 'onEnable'])) {
@@ -165,7 +165,7 @@ function _funding_civix_civicrm_enable() {
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_disable
  * @return mixed
  */
-function _funding_civix_civicrm_disable() {
+function _funding_civix_civicrm_disable(): void {
   _funding_civix_civicrm_config();
   if ($upgrader = _funding_civix_upgrader()) {
     if (is_callable([$upgrader, 'onDisable'])) {
@@ -329,6 +329,11 @@ function _funding_civix_civicrm_entityTypes(&$entityTypes) {
       'name' => 'FundingCaseTypeProgram',
       'class' => 'CRM_Funding_DAO_FundingCaseTypeProgram',
       'table' => 'civicrm_funding_case_type_program',
+    ],
+    'CRM_Funding_DAO_FundingNewCasePermissions' => [
+      'name' => 'FundingNewCasePermissions',
+      'class' => 'CRM_Funding_DAO_FundingNewCasePermissions',
+      'table' => 'civicrm_funding_new_case_permissions',
     ],
     'CRM_Funding_DAO_FundingProgram' => [
       'name' => 'FundingProgram',

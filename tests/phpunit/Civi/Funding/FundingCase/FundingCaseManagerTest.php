@@ -101,6 +101,7 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
       'status' => 'open',
       'creation_date' => date('Y-m-d H:i:s'),
       'modification_date' => date('Y-m-d H:i:s'),
+      'creation_contact_id' => $contact['id'],
       'permissions' => ['test_permission'],
       'PERM_test_permission' => TRUE,
     ],
@@ -235,11 +236,13 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
     $fundingProgram = FundingProgramFixture::addFixture();
     $fundingCaseType = FundingCaseTypeFixture::addFixture();
     $recipientContact = ContactFixture::addOrganization();
+    $creationContact = ContactFixture::addIndividual(['first_name' => 'creation', 'last_name' => 'contact']);
 
     return FundingCaseFixture::addFixture(
       $fundingProgram->getId(),
       $fundingCaseType->getId(),
       $recipientContact['id'],
+      $creationContact['id'],
     );
   }
 

@@ -20,20 +20,28 @@ declare(strict_types = 1);
 namespace Civi\Funding\EventSubscriber\FundingCase;
 
 use Civi\Api4\FundingCaseContactRelation;
+use Civi\Api4\FundingNewCasePermissions;
+use Civi\Funding\Entity\FundingNewCasePermissionsEntity;
 use Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent;
+use Civi\Funding\Permission\FundingCase\RelationFactory\FundingCaseContactRelationFactory;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Adds permissions to newly created FundingCase.
+ *
+ * @phpstan-type newCasePermissionsT array{
+ *   id: int,
+ *   type: string,
+ *   properties: array<string, mixed>,
+ *   permissions: array<string>,
+ * }
  */
 final class AddFundingCasePermissionsSubscriber implements EventSubscriberInterface {
 
   private Api4Interface $api4;
 
-  public function __construct(Api4Interface $api4) {
-    $this->api4 = $api4;
-  }
+  private FundingCaseContactRelationFactory $relationFactory;
 
   /**
    * @inheritDoc
@@ -42,29 +50,27 @@ final class AddFundingCasePermissionsSubscriber implements EventSubscriberInterf
     return [FundingCaseCreatedEvent::class => 'onCreated'];
   }
 
+  public function __construct(Api4Interface $api4, FundingCaseContactRelationFactory $relationFactory) {
+    $this->api4 = $api4;
+    $this->relationFactory = $relationFactory;
+  }
+
   /**
    * @throws \API_Exception
    */
   public function onCreated(FundingCaseCreatedEvent $event): void {
-    // TODO: Which relations have to be set additionally?
-    $action = FundingCaseContactRelation::create()->setValues([
-      'funding_case_id' => $event->getFundingCase()->getId(),
-      'type' => 'Contact',
-      'properties' => ['contactId' => $event->getContactId()],
-      'permissions' => $this->getCreatingContactPermissions($event),
-    ]);
-    $this->api4->executeAction($action);
-  }
+    $action = FundingNewCasePermissions::get()
+      ->addWhere('funding_program_id', '=', $event->getFundingProgram()->getId());
 
-  /**
-   * @param \Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent $event
-   *
-   * @phpstan-return array<string>
-   */
-  private function getCreatingContactPermissions(FundingCaseCreatedEvent $event): array {
-    // TODO: Initial permissions of the creating contact?
-    return array_merge(['application_modify'], array_filter($event->getFundingProgram()->getPermissions(),
-      fn (string $permission) => 'application_create' !== $permission));
+    /** @phpstan-var newCasePermissionsT $newCasePermissions */
+    foreach ($this->api4->executeAction($action) as $newCasePermissions) {
+      $createAction = FundingCaseContactRelation::create();
+      $createAction->setValues($this->relationFactory->createFundingCaseContactRelation(
+        FundingNewCasePermissionsEntity::fromArray($newCasePermissions),
+        $event->getFundingCase(),
+      )->toArray());
+      $this->api4->executeAction($createAction);
+    }
   }
 
 }

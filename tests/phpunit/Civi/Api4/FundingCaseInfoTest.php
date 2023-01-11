@@ -41,12 +41,14 @@ final class FundingCaseInfoTest extends AbstractFundingHeadlessTestCase {
 
   public function testGet(): void {
     $recipientContact = ContactFixture::addOrganization();
+    $creationContact = ContactFixture::addIndividual(['first_name' => 'creation', 'last_name' => 'contact']);
     $fundingProgram = FundingProgramFixture::addFixture();
     $fundingCaseType = FundingCaseTypeFixture::addFixture();
     $fundingCase = FundingCaseFixture::addFixture(
       $fundingProgram->getId(),
       $fundingCaseType->getId(),
       $recipientContact['id'],
+      $creationContact['id'],
     );
     $applicationProcess = ApplicationProcessFixture::addFixture(
       $fundingCase->getId(),
@@ -99,7 +101,8 @@ final class FundingCaseInfoTest extends AbstractFundingHeadlessTestCase {
     $fundingCase2 = FundingCaseFixture::addFixture(
       $fundingProgram->getId(),
       $fundingCaseType->getId(),
-      $recipientContact['id']
+      $recipientContact['id'],
+      $creationContact['id'],
     );
     $applicationProcess2 = ApplicationProcessFixture::addFixture(
       $fundingCase2->getId(),

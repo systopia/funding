@@ -24,6 +24,7 @@ msgid "Contact %1"
 msgstr "Kontakt %1"
 
 # Übersetzung nicht notwendig
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php
@@ -32,6 +33,7 @@ msgid "Unique field identifier"
 msgstr ""
 
 # Übersetzung nicht notwendig
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php
@@ -40,6 +42,7 @@ msgid "Technical name of field, shown in API and exports"
 msgstr ""
 
 # Übersetzung nicht notwendig
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php
@@ -48,6 +51,7 @@ msgid "Primary Field"
 msgstr ""
 
 # Übersetzung nicht notwendig
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php
@@ -56,6 +60,7 @@ msgid "Custom Field"
 msgstr ""
 
 # Übersetzung nicht notwendig
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php
@@ -64,6 +69,7 @@ msgid "Search Filter"
 msgstr ""
 
 # Übersetzung nicht notwendig
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php
@@ -72,6 +78,7 @@ msgid "Extra API Field"
 msgstr ""
 
 # Übersetzung nicht notwendig
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php
@@ -80,6 +87,7 @@ msgid "Array"
 msgstr ""
 
 # Übersetzung nicht notwendig
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php
@@ -88,6 +96,7 @@ msgid "Boolean"
 msgstr ""
 
 # Übersetzung nicht notwendig
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php
@@ -96,6 +105,7 @@ msgid "Date"
 msgstr ""
 
 # Übersetzung nicht notwendig
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php
@@ -104,6 +114,7 @@ msgid "Float"
 msgstr ""
 
 # Übersetzung nicht notwendig
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php
@@ -112,6 +123,7 @@ msgid "Integer"
 msgstr ""
 
 # Übersetzung nicht notwendig
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php
@@ -120,6 +132,7 @@ msgid "String"
 msgstr ""
 
 # Übersetzung nicht notwendig
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php
@@ -128,6 +141,7 @@ msgid "Text"
 msgstr ""
 
 # Übersetzung nicht notwendig
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php
@@ -179,6 +193,7 @@ msgstr "In Beziehung stehende Kontakte einer bestimmten Art"
 #: Civi/Funding/Contact/Relation/Types/SelfByContactType.php
 #: Civi/Funding/Permission/ContactRelation/Types/ContactType.php
 #: Civi/Funding/Permission/ContactRelation/Types/ContactTypeRelationship.php
+#: Civi/Funding/Permission/FundingCase/RelationFactory/Types/ContactType.php
 msgid "Contact type"
 msgstr "Konktaktart"
 
@@ -186,6 +201,8 @@ msgstr "Konktaktart"
 #: Civi/Funding/Contact/Relation/Types/RelationshipType.php
 #: Civi/Funding/Permission/ContactRelation/Types/ContactRelationship.php
 #: Civi/Funding/Permission/ContactRelation/Types/ContactTypeRelationship.php
+#: Civi/Funding/Permission/FundingCase/RelationFactory/Types/CreationContactRelationship.php
+#: Civi/Funding/Permission/FundingCase/RelationFactory/Types/RecipientContactRelationship.php
 msgid "Relationship type"
 msgstr "Beziehungsart"
 
@@ -331,6 +348,7 @@ msgstr "Ansehen"
 #: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php
 #: ang/crmFunding/application/applicationEditor.template.html
 #: ang/crmFunding/case/fundingCasePermissions.html
+#: ang/crmFunding/program/fundingNewCasePermissions.html
 #: ang/crmFunding/program/fundingProgramPermissions.html
 #: ang/crmFunding/program/recipientRelations.html
 msgid "Save"
@@ -446,6 +464,7 @@ msgstr "Beziehung von b zu a"
 
 #: Civi/Funding/Permission/ContactRelation/Types/Contact.php
 #: Civi/Funding/Permission/ContactRelation/Types/ContactRelationship.php
+#: Civi/Funding/Permission/FundingCase/RelationFactory/Types/Contact.php
 msgid "Contact"
 msgstr "Kontakt"
 
@@ -482,6 +501,56 @@ msgstr ""
 "Zutreffend bei einem Kontakt, der eine Beziehung der gewählten Art zu einem "
 "Kontakt mit der gewählten Art hat."
 
+#: Civi/Funding/Permission/FundingCase/RelationFactory/Types/Contact.php
+msgid "Assign permissions for new funding cases to the specified contact."
+msgstr "Berechtigungen für neue Förderfalle an gewählten Kontakt zuweisen."
+
+#: Civi/Funding/Permission/FundingCase/RelationFactory/Types/ContactType.php
+msgid ""
+"Assign permissions for new funding cases to contacts with the specified "
+"contact type."
+msgstr ""
+"Berechtigungen für neue Förderfalle an Kontakte mit der gewählten Kontaktart "
+"zuweisen."
+
+#: Civi/Funding/Permission/FundingCase/RelationFactory/Types/CreationContact.php
+msgid "Creation contact"
+msgstr "Erstellerkontakt"
+
+#: Civi/Funding/Permission/FundingCase/RelationFactory/Types/CreationContact.php
+msgid ""
+"Assign permissions for new funding cases to the contact which created the "
+"funding case."
+msgstr ""
+"Berechtigungen für neue Förderfalle an Kontakt zuweisen, der den Förderfall "
+"erstellt hat."
+
+#: Civi/Funding/Permission/FundingCase/RelationFactory/Types/CreationContactRelationship.php
+msgid "Relationship to creation contact"
+msgstr "Beziehung zu Erstellerkontakt"
+
+#: Civi/Funding/Permission/FundingCase/RelationFactory/Types/CreationContactRelationship.php
+msgid ""
+"Assign permissions for new funding cases to contacts that have a "
+"relationship\n"
+"of the specified type to the creation contact."
+msgstr ""
+"Berechtigungen für neue Förderfalle an Kontakte zuweisen, die eine Beziehung "
+"vom gewählten Typ zum Erstellerkontakt haben."
+
+#: Civi/Funding/Permission/FundingCase/RelationFactory/Types/RecipientContactRelationship.php
+msgid "Relationship to recipient contact"
+msgstr "Beziehung zu Empfängerkontakt"
+
+#: Civi/Funding/Permission/FundingCase/RelationFactory/Types/RecipientContactRelationship.php
+msgid ""
+"Assign permissions for new funding cases to contacts that have a "
+"relationship\n"
+"of the specified type to the recipient contact."
+msgstr ""
+"Berechtigungen für neue Förderfalle an Kontakte zuweisen, die eine Beziehung "
+"vom gewählten Typ zum Empfängerkontakt haben."
+
 # Nicht benötigt, solange nur zur Initialisierung der ts Funktion in JavaScript verwendet.
 #: ang/crmFunding/application/application.js
 #: ang/crmFunding/application/applicationEditor.directive.js
@@ -493,7 +562,9 @@ msgstr ""
 #: ang/crmFunding/form/fundingSelectPermissions.directive.js
 #: ang/crmFunding/form/fundingValidationErrors.directive.js
 #: ang/crmFunding/fundingDate.filter.js
+#: ang/crmFunding/program/fundingNewCasePermissions.js
 #: ang/crmFunding/program/fundingProgramPermissions.js
+#: ang/crmFunding/program/newCasePermissions/fundingNewCasePermissions.directive.js
 #: ang/crmFunding/program/permissions/fundingProgramContactRelation.directive.js
 #: ang/crmFunding/program/recipientRelations.js
 #: ang/crmFunding/program/recipients/recipientRelation.directive.js
@@ -686,24 +757,28 @@ msgstr "Förderfallberechtigungen"
 
 #: ang/crmFunding/case/fundingCasePermissions.html
 #: ang/crmFunding/form/fundingAddRowButton.template.html
+#: ang/crmFunding/program/fundingNewCasePermissions.html
 #: ang/crmFunding/program/fundingProgramPermissions.html
 #: ang/crmFunding/program/recipientRelations.html
 msgid "Add"
 msgstr "Hinzufügen"
 
 #: ang/crmFunding/case/fundingCasePermissions.html
+#: ang/crmFunding/program/fundingNewCasePermissions.html
 #: ang/crmFunding/program/fundingProgramPermissions.html
 #: ang/crmFunding/program/recipientRelations.html
 msgid "Remove"
 msgstr "Entfernen"
 
 #: ang/crmFunding/case/permissions/fundingCaseContactRelation.template.html
+#: ang/crmFunding/program/newCasePermissions/fundingNewCasePermissions.template.html
 #: ang/crmFunding/program/permissions/fundingProgramContactRelation.template.html
 #: ang/crmFunding/program/recipients/recipientRelation.template.html
 msgid "Type"
 msgstr "Art"
 
 #: ang/crmFunding/case/permissions/fundingCaseContactRelation.template.html
+#: ang/crmFunding/program/newCasePermissions/fundingNewCasePermissions.template.html
 #: ang/crmFunding/program/permissions/fundingProgramContactRelation.template.html
 msgid "Permissions"
 msgstr "Berechtigungen"
@@ -717,6 +792,10 @@ msgstr ""
 #: ang/crmFunding/fundingDate.filter.js
 msgid "yyyy-MM-dd hh:mm:ss"
 msgstr "dd.MM.yyyy hh:mm:ss"
+
+#: ang/crmFunding/program/fundingNewCasePermissions.html
+msgid "New funding case permissions"
+msgstr "Berechtigungen für neuen Förderfall"
 
 #: ang/crmFunding/program/fundingProgramPermissions.html
 msgid "Funding program permissions"

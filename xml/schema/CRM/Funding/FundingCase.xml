@@ -90,6 +90,22 @@
   </field>
 
   <field>
+    <name>creation_contact_id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>FK to Contact</comment>
+    <html>
+      <type>EntityRef</type>
+    </html>
+  </field>
+  <foreignKey>
+    <name>creation_contact_id</name>
+    <table>civicrm_contact</table>
+    <key>id</key>
+    <onDelete>RESTRICT</onDelete>
+  </foreignKey>
+
+  <field>
     <name>recipient_contact_id</name>
     <type>int unsigned</type>
     <required>true</required>

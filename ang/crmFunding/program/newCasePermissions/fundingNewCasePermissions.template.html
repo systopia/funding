@@ -1,0 +1,8 @@
+<label>{{ts('Type')}}</label>
+<select class="crm-form-select" ng-model="type" ng-change="clearProperties()" ng-required="true">
+    <option ng-repeat="t in types track by $index" value="{{t.name}}">{{t.label}}</option>
+</select>
+<label>{{ts('Permissions')}}</label>
+<funding-select-permissions style="width: 30%;" permissions="permissions" possible-permissions="possiblePermissions"></funding-select-permissions>
+<span class="funding-new-case-permissions-properties"></span>
+<a ng-if="typeSpecification.help" class="helpicon" title="{{typeSpecification.help}}"></a>

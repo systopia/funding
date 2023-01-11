@@ -224,7 +224,8 @@ final class RemoteFundingApplicationProcessTestFormTest extends AbstractFundingH
     $this->fundingCase = FundingCaseFixture::addFixture(
       $this->fundingProgram->getId(),
       $this->fundingCaseType->getId(),
-      $this->contact['id']
+      $this->contact['id'],
+      $this->contact['id'],
     );
 
     $this->applicationProcess = ApplicationProcessFixture::addFixture(

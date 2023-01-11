@@ -35,6 +35,7 @@ use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
  *   status: string,
  *   creation_date: string,
  *   modification_date: string,
+ *   creation_contact_id: int,
  *   recipient_contact_id: int,
  * }
  */

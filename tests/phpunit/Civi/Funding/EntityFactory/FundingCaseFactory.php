@@ -30,6 +30,7 @@ use Civi\Funding\Entity\FundingCaseEntity;
  *   recipient_contact_id?: int,
  *   creation_date?: string,
  *   modification_date?: string,
+ *   creation_contact_id?: int,
  *   permissions?: array<string>,
  * }
  */
@@ -47,6 +48,7 @@ final class FundingCaseFactory {
       'status' => 'open',
       'creation_date' => date('Y-m-d H:i:s'),
       'modification_date' => date('Y-m-d H:i:s'),
+      'creation_contact_id' => 1,
       'permissions' => ['test_permission'],
     ]);
   }

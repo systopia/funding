@@ -6,59 +6,59 @@ msgstr ""
 msgid "Contact %1"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
 msgid "Unique field identifier"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
 msgid "Technical name of field, shown in API and exports"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
 msgid "Primary Field"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
 msgid "Custom Field"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
 msgid "Search Filter"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
 msgid "Extra API Field"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
 msgid "Array"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
 msgid "Boolean"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
 msgid "Date"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
 msgid "Float"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
 msgid "Integer"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
 msgid "String"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
 msgid "Text"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
 msgid "Timestamp"
 msgstr ""
 
@@ -102,11 +102,11 @@ msgstr ""
 msgid "Related contacts of a specific type"
 msgstr ""
 
-#: Civi/Funding/Contact/Relation/Types/ContactTypeAndRelationshipType.php Civi/Funding/Contact/Relation/Types/SelfByContactType.php Civi/Funding/Permission/ContactRelation/Types/ContactType.php Civi/Funding/Permission/ContactRelation/Types/ContactTypeRelationship.php
+#: Civi/Funding/Contact/Relation/Types/ContactTypeAndRelationshipType.php Civi/Funding/Contact/Relation/Types/SelfByContactType.php Civi/Funding/Permission/ContactRelation/Types/ContactType.php Civi/Funding/Permission/ContactRelation/Types/ContactTypeRelationship.php Civi/Funding/Permission/FundingCase/RelationFactory/Types/ContactType.php
 msgid "Contact type"
 msgstr ""
 
-#: Civi/Funding/Contact/Relation/Types/ContactTypeAndRelationshipType.php Civi/Funding/Contact/Relation/Types/RelationshipType.php Civi/Funding/Permission/ContactRelation/Types/ContactRelationship.php Civi/Funding/Permission/ContactRelation/Types/ContactTypeRelationship.php
+#: Civi/Funding/Contact/Relation/Types/ContactTypeAndRelationshipType.php Civi/Funding/Contact/Relation/Types/RelationshipType.php Civi/Funding/Permission/ContactRelation/Types/ContactRelationship.php Civi/Funding/Permission/ContactRelation/Types/ContactTypeRelationship.php Civi/Funding/Permission/FundingCase/RelationFactory/Types/CreationContactRelationship.php Civi/Funding/Permission/FundingCase/RelationFactory/Types/RecipientContactRelationship.php
 msgid "Relationship type"
 msgstr ""
 
@@ -226,7 +226,7 @@ msgstr ""
 msgid "View"
 msgstr ""
 
-#: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php ang/crmFunding/application/applicationEditor.template.html ang/crmFunding/case/fundingCasePermissions.html ang/crmFunding/program/fundingProgramPermissions.html ang/crmFunding/program/recipientRelations.html
+#: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php ang/crmFunding/application/applicationEditor.template.html ang/crmFunding/case/fundingCasePermissions.html ang/crmFunding/program/fundingNewCasePermissions.html ang/crmFunding/program/fundingProgramPermissions.html ang/crmFunding/program/recipientRelations.html
 msgid "Save"
 msgstr ""
 
@@ -338,7 +338,7 @@ msgstr ""
 msgid "Relationship from b to a"
 msgstr ""
 
-#: Civi/Funding/Permission/ContactRelation/Types/Contact.php Civi/Funding/Permission/ContactRelation/Types/ContactRelationship.php
+#: Civi/Funding/Permission/ContactRelation/Types/Contact.php Civi/Funding/Permission/ContactRelation/Types/ContactRelationship.php Civi/Funding/Permission/FundingCase/RelationFactory/Types/Contact.php
 msgid "Contact"
 msgstr ""
 
@@ -366,7 +366,39 @@ msgstr ""
 msgid "Matches a contact that has a relationship of the specified type to a contact of\nthe specified type."
 msgstr ""
 
-#: ang/crmFunding/application/application.js ang/crmFunding/application/applicationEditor.directive.js ang/crmFunding/application/history/applicationProcessActivity.directive.js ang/crmFunding/application/history/applicationProcessHistory.directive.js ang/crmFunding/case/fundingCasePermissions.js ang/crmFunding/case/permissions/fundingCaseContactRelation.directive.js ang/crmFunding/form/fundingAddRowButton.directive.js ang/crmFunding/form/fundingSelectPermissions.directive.js ang/crmFunding/form/fundingValidationErrors.directive.js ang/crmFunding/fundingDate.filter.js ang/crmFunding/program/fundingProgramPermissions.js ang/crmFunding/program/permissions/fundingProgramContactRelation.directive.js ang/crmFunding/program/recipientRelations.js ang/crmFunding/program/recipients/recipientRelation.directive.js
+#: Civi/Funding/Permission/FundingCase/RelationFactory/Types/Contact.php
+msgid "Assign permissions for new funding cases to the specified contact."
+msgstr ""
+
+#: Civi/Funding/Permission/FundingCase/RelationFactory/Types/ContactType.php
+msgid "Assign permissions for new funding cases to contacts with the specified contact type."
+msgstr ""
+
+#: Civi/Funding/Permission/FundingCase/RelationFactory/Types/CreationContact.php
+msgid "Creation contact"
+msgstr ""
+
+#: Civi/Funding/Permission/FundingCase/RelationFactory/Types/CreationContact.php
+msgid "Assign permissions for new funding cases to the contact which created the funding case."
+msgstr ""
+
+#: Civi/Funding/Permission/FundingCase/RelationFactory/Types/CreationContactRelationship.php
+msgid "Relationship to creation contact"
+msgstr ""
+
+#: Civi/Funding/Permission/FundingCase/RelationFactory/Types/CreationContactRelationship.php
+msgid "Assign permissions for new funding cases to contacts that have a relationship\nof the specified type to the creation contact."
+msgstr ""
+
+#: Civi/Funding/Permission/FundingCase/RelationFactory/Types/RecipientContactRelationship.php
+msgid "Relationship to recipient contact"
+msgstr ""
+
+#: Civi/Funding/Permission/FundingCase/RelationFactory/Types/RecipientContactRelationship.php
+msgid "Assign permissions for new funding cases to contacts that have a relationship\nof the specified type to the recipient contact."
+msgstr ""
+
+#: ang/crmFunding/application/application.js ang/crmFunding/application/applicationEditor.directive.js ang/crmFunding/application/history/applicationProcessActivity.directive.js ang/crmFunding/application/history/applicationProcessHistory.directive.js ang/crmFunding/case/fundingCasePermissions.js ang/crmFunding/case/permissions/fundingCaseContactRelation.directive.js ang/crmFunding/form/fundingAddRowButton.directive.js ang/crmFunding/form/fundingSelectPermissions.directive.js ang/crmFunding/form/fundingValidationErrors.directive.js ang/crmFunding/fundingDate.filter.js ang/crmFunding/program/fundingNewCasePermissions.js ang/crmFunding/program/fundingProgramPermissions.js ang/crmFunding/program/newCasePermissions/fundingNewCasePermissions.directive.js ang/crmFunding/program/permissions/fundingProgramContactRelation.directive.js ang/crmFunding/program/recipientRelations.js ang/crmFunding/program/recipients/recipientRelation.directive.js
 msgid "funding"
 msgstr ""
 
@@ -546,19 +578,19 @@ msgstr ""
 msgid "Funding case permissions"
 msgstr ""
 
-#: ang/crmFunding/case/fundingCasePermissions.html ang/crmFunding/form/fundingAddRowButton.template.html ang/crmFunding/program/fundingProgramPermissions.html ang/crmFunding/program/recipientRelations.html
+#: ang/crmFunding/case/fundingCasePermissions.html ang/crmFunding/form/fundingAddRowButton.template.html ang/crmFunding/program/fundingNewCasePermissions.html ang/crmFunding/program/fundingProgramPermissions.html ang/crmFunding/program/recipientRelations.html
 msgid "Add"
 msgstr ""
 
-#: ang/crmFunding/case/fundingCasePermissions.html ang/crmFunding/program/fundingProgramPermissions.html ang/crmFunding/program/recipientRelations.html
+#: ang/crmFunding/case/fundingCasePermissions.html ang/crmFunding/program/fundingNewCasePermissions.html ang/crmFunding/program/fundingProgramPermissions.html ang/crmFunding/program/recipientRelations.html
 msgid "Remove"
 msgstr ""
 
-#: ang/crmFunding/case/permissions/fundingCaseContactRelation.template.html ang/crmFunding/program/permissions/fundingProgramContactRelation.template.html ang/crmFunding/program/recipients/recipientRelation.template.html
+#: ang/crmFunding/case/permissions/fundingCaseContactRelation.template.html ang/crmFunding/program/newCasePermissions/fundingNewCasePermissions.template.html ang/crmFunding/program/permissions/fundingProgramContactRelation.template.html ang/crmFunding/program/recipients/recipientRelation.template.html
 msgid "Type"
 msgstr ""
 
-#: ang/crmFunding/case/permissions/fundingCaseContactRelation.template.html ang/crmFunding/program/permissions/fundingProgramContactRelation.template.html
+#: ang/crmFunding/case/permissions/fundingCaseContactRelation.template.html ang/crmFunding/program/newCasePermissions/fundingNewCasePermissions.template.html ang/crmFunding/program/permissions/fundingProgramContactRelation.template.html
 msgid "Permissions"
 msgstr ""
 
@@ -568,6 +600,10 @@ msgstr ""
 
 #: ang/crmFunding/fundingDate.filter.js
 msgid "yyyy-MM-dd hh:mm:ss"
+msgstr ""
+
+#: ang/crmFunding/program/fundingNewCasePermissions.html
+msgid "New funding case permissions"
 msgstr ""
 
 #: ang/crmFunding/program/fundingProgramPermissions.html

@@ -31,6 +31,7 @@ use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeProgramFixture;
+use Civi\Funding\Fixtures\FundingNewCasePermissionsFixture;
 use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\Funding\Mock\Form\FundingCaseType\TestJsonSchema;
@@ -167,6 +168,8 @@ final class RemoteFundingCaseTestFormTest extends AbstractFundingHeadlessTestCas
       $this->fundingProgram->getId(),
       ['application_permission']
     );
+
+    FundingNewCasePermissionsFixture::addCreationContact($this->fundingProgram->getId(), ['application_permission']);
 
     $e = NULL;
     try {

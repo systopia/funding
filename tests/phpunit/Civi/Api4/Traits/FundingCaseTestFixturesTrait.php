@@ -19,11 +19,11 @@ declare(strict_types = 1);
 
 namespace Civi\Api4\Traits;
 
-use Civi\Api4\Contact;
-use Civi\Api4\FundingCase;
 use Civi\Api4\Relationship;
 use Civi\Api4\RelationshipType;
+use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
+use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 
@@ -59,12 +59,10 @@ trait FundingCaseTestFixturesTrait {
   protected function addInternalFixtures(): void {
     $this->addFixtures(['review_baz'], ['review_e']);
 
-    $this->associatedContactIdApplicationAndReview = Contact::create()
-      ->setValues([
-        'contact_type' => 'Individual',
-        'first_name' => 'Associated',
-        'last_name' => 'User',
-      ])->execute()->first()['id'];
+    $this->associatedContactIdApplicationAndReview = ContactFixture::addIndividual([
+      'first_name' => 'Associated',
+      'last_name' => 'User',
+    ])['id'];
 
     FundingCaseContactRelationFixture::addContact(
       $this->associatedContactIdApplicationAndReview,
@@ -83,31 +81,32 @@ trait FundingCaseTestFixturesTrait {
     $fundingProgramId = FundingProgramFixture::addFixture(['title' => 'Foo'])->getId();
     $fundingCaseTypeId = FundingCaseTypeFixture::addFixture()->getId();
 
-    $recipientContactId = Contact::create()
-      ->setValues([
-        'contact_type' => 'Organization',
-        'legal_name' => 'Recipient Organization',
-      ])->execute()->first()['id'];
+    $recipientContactId = ContactFixture::addOrganization([
+      'legal_name' => 'Recipient Organization',
+    ])['id'];
+    $creationContact = ContactFixture::addIndividual(['first_name' => 'creation', 'last_name' => 'contact']);
 
-    $this->permittedFundingCaseId = FundingCase::create()
-      ->setValues([
-        'funding_program_id' => $fundingProgramId,
-        'funding_case_type_id' => $fundingCaseTypeId,
-        'status' => 'open',
+    $this->permittedFundingCaseId = FundingCaseFixture::addFixture(
+      $fundingProgramId,
+      $fundingCaseTypeId,
+      $recipientContactId,
+      $creationContact['id'],
+      [
         'creation_date' => '2022-06-23 10:00:00',
         'modification_date' => '2022-06-24 10:00:00',
-        'recipient_contact_id' => $recipientContactId,
-      ])->execute()->first()['id'];
+      ],
+    )->getId();
 
-    FundingCase::create()
-      ->setValues([
-        'funding_program_id' => $fundingProgramId,
-        'funding_case_type_id' => $fundingCaseTypeId,
-        'status' => 'open',
+    FundingCaseFixture::addFixture(
+      $fundingProgramId,
+      $fundingCaseTypeId,
+      $recipientContactId,
+      $creationContact['id'],
+      [
         'creation_date' => '2022-06-23 10:00:00',
         'modification_date' => '2022-06-24 10:00:00',
-        'recipient_contact_id' => $recipientContactId,
-      ])->execute();
+      ],
+    );
 
     $permittedRelationshipTypeId = RelationshipType::create()
       ->setValues([
@@ -125,19 +124,15 @@ trait FundingCaseTestFixturesTrait {
         'contact_type_b' => 'Individual',
       ])->execute()->first()['id'];
 
-    $this->associatedContactIdNoPermissions = Contact::create()
-      ->setValues([
-        'contact_type' => 'Individual',
-        'first_name' => 'Associated No Permissions',
-        'last_name' => 'User',
-      ])->execute()->first()['id'];
+    $this->associatedContactIdNoPermissions = ContactFixture::addIndividual([
+      'first_name' => 'Associated No Permissions',
+      'last_name' => 'User',
+    ])['id'];
 
-    $this->associatedContactId = Contact::create()
-      ->setValues([
-        'contact_type' => 'Individual',
-        'first_name' => 'Associated',
-        'last_name' => 'User',
-      ])->execute()->first()['id'];
+    $this->associatedContactId = ContactFixture::addIndividual([
+      'first_name' => 'Associated',
+      'last_name' => 'User',
+    ])['id'];
 
     FundingCaseContactRelationFixture::addContact(
       $this->associatedContactId,
@@ -155,13 +150,10 @@ trait FundingCaseTestFixturesTrait {
       $permittedRelationshipTypePermissions
     );
 
-    $this->relatedABContactId = Contact::create()
-      ->setValues([
-        'contact_type' => 'Individual',
-        'first_name' => 'RelatedAB',
-        'last_name' => 'User',
-      ])
-      ->execute()->first()['id'];
+    $this->relatedABContactId = ContactFixture::addIndividual([
+      'first_name' => 'RelatedAB',
+      'last_name' => 'User',
+    ])['id'];
 
     Relationship::create()
       ->setValues([
@@ -170,13 +162,10 @@ trait FundingCaseTestFixturesTrait {
         'relationship_type_id' => $permittedRelationshipTypeId,
       ])->execute();
 
-    $this->relatedBAContactId = Contact::create()
-      ->setValues([
-        'contact_type' => 'Individual',
-        'first_name' => 'RelatedBA',
-        'last_name' => 'User',
-      ])
-      ->execute()->first()['id'];
+    $this->relatedBAContactId = ContactFixture::addIndividual([
+      'first_name' => 'RelatedBA',
+      'last_name' => 'User',
+    ])['id'];
 
     Relationship::create()
       ->setValues([
@@ -185,13 +174,10 @@ trait FundingCaseTestFixturesTrait {
         'relationship_type_id' => $permittedRelationshipTypeId,
       ])->execute();
 
-    $this->notPermittedContactId = Contact::create()
-      ->setValues([
-        'contact_type' => 'Individual',
-        'first_name' => 'NotPermitted',
-        'last_name' => 'User',
-      ])
-      ->execute()->first()['id'];
+    $this->notPermittedContactId = ContactFixture::addIndividual([
+      'first_name' => 'NotPermitted',
+      'last_name' => 'User',
+    ])['id'];
 
     Relationship::create()
       ->setValues([
