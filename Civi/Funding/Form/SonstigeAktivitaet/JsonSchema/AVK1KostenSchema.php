@@ -50,7 +50,7 @@ final class AVK1KostenSchema extends JsonSchemaObject {
           ),
         ], ['required' => ['stunden', 'verguetung', 'zweck']])
       ),
-      'honorareGesamt' => new JsonSchemaCalculate('number', 'sum(map(honorare, "value.betrag"))', [
+      'honorareGesamt' => new JsonSchemaCalculate('number', 'round(sum(map(honorare, "value.betrag")), 2)', [
         'honorare' => new JsonSchemaDataPointer('1/honorare'),
       ]),
       // Abschnitt I.4
@@ -58,7 +58,7 @@ final class AVK1KostenSchema extends JsonSchemaObject {
         'intern' => new JsonSchemaMoney(['minimum' => 0]),
         'anTeilnehmerErstattet' => new JsonSchemaMoney(['minimum' => 0]),
       ], ['required' => ['intern', 'anTeilnehmerErstattet']]),
-      'fahrtkostenGesamt' => new JsonSchemaCalculate('number', 'intern + anTeilnehmerErstattet', [
+      'fahrtkostenGesamt' => new JsonSchemaCalculate('number', 'round(intern + anTeilnehmerErstattet, 2)', [
         'intern' => new JsonSchemaDataPointer('1/fahrtkosten/intern'),
         'anTeilnehmerErstattet' => new JsonSchemaDataPointer('1/fahrtkosten/anTeilnehmerErstattet'),
       ]),
@@ -73,7 +73,7 @@ final class AVK1KostenSchema extends JsonSchemaObject {
           ], ['required' => ['gegenstand', 'betrag']])
         ),
       ], ['required' => ['haftungKfz']]),
-      'sachkostenGesamt' => new JsonSchemaCalculate('number', 'haftungKfz + sum(map(ausstattung, "value.betrag"))', [
+      'sachkostenGesamt' => new JsonSchemaCalculate('number', 'round(haftungKfz + sum(map(ausstattung, "value.betrag")), 2)', [
         'haftungKfz' => new JsonSchemaDataPointer('1/sachkosten/haftungKfz'),
         'ausstattung' => new JsonSchemaDataPointer('1/sachkosten/ausstattung'),
       ]),
@@ -85,7 +85,7 @@ final class AVK1KostenSchema extends JsonSchemaObject {
           'zweck' => new JsonSchemaString(),
         ], ['required' => ['betrag', 'zweck']])
       ),
-      'sonstigeAusgabenGesamt' => new JsonSchemaCalculate('number', 'sum(map(sonstigeAusgaben, "value.betrag"))', [
+      'sonstigeAusgabenGesamt' => new JsonSchemaCalculate('number', 'round(sum(map(sonstigeAusgaben, "value.betrag")), 2)', [
         'sonstigeAusgaben' => new JsonSchemaDataPointer('1/sonstigeAusgaben'),
       ]),
       // Abschnitt I.7
@@ -93,8 +93,8 @@ final class AVK1KostenSchema extends JsonSchemaObject {
       // Gesamtkosten
       'gesamtkosten' => new JsonSchemaCalculate(
         'number',
-        'unterkunftUndVerpflegung + honorareGesamt + fahrtkostenGesamt + sachkostenGesamt
-        + sonstigeAusgabenGesamt + versicherungTeilnehmer',
+        'round(unterkunftUndVerpflegung + honorareGesamt + fahrtkostenGesamt + sachkostenGesamt
+        + sonstigeAusgabenGesamt + versicherungTeilnehmer, 2)',
         [
           'unterkunftUndVerpflegung' => new JsonSchemaDataPointer('1/unterkunftUndVerpflegung'),
           'honorareGesamt' => new JsonSchemaDataPointer('1/honorareGesamt'),

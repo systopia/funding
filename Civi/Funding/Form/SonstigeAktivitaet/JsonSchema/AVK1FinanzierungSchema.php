@@ -40,7 +40,7 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
         'bundeslaender' => new JsonSchemaMoney(['minimum' => 0]),
         'staedteUndKreise' => new JsonSchemaMoney(['minimum' => 0]),
       ], ['required' => ['europa', 'bundeslaender', 'staedteUndKreise']]),
-      'oeffentlicheMittelGesamt' => new JsonSchemaCalculate('number', 'europa + bundeslaender + staedteUndKreise', [
+      'oeffentlicheMittelGesamt' => new JsonSchemaCalculate('number', 'round(europa + bundeslaender + staedteUndKreise, 2)', [
         'europa' => new JsonSchemaDataPointer('1/oeffentlicheMittel/europa'),
         'bundeslaender' => new JsonSchemaDataPointer('1/oeffentlicheMittel/bundeslaender'),
         'staedteUndKreise' => new JsonSchemaDataPointer('1/oeffentlicheMittel/staedteUndKreise'),
@@ -53,13 +53,13 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
           'betrag' => new JsonSchemaMoney(['minimum' => 0]),
         ], ['required' => ['betrag', 'quelle']])
       ),
-      'sonstigeMittelGesamt' => new JsonSchemaCalculate('number', 'sum(map(sonstigeMittel, "value.betrag"))', [
+      'sonstigeMittelGesamt' => new JsonSchemaCalculate('number', 'round(sum(map(sonstigeMittel, "value.betrag")), 2)', [
         'sonstigeMittel' => new JsonSchemaDataPointer('1/sonstigeMittel'),
       ]),
       // Gesamtmittel ohne Zuschuss
       'gesamtmittel' => new JsonSchemaCalculate(
         'number',
-        'teilnehmerbeitraege + eigenmittel + oeffentlicheMittelGesamt + sonstigeMittelGesamt',
+        'round(teilnehmerbeitraege + eigenmittel + oeffentlicheMittelGesamt + sonstigeMittelGesamt, 2)',
         [
           'teilnehmerbeitraege' => new JsonSchemaDataPointer('1/teilnehmerbeitraege'),
           'eigenmittel' => new JsonSchemaDataPointer('1/eigenmittel'),
@@ -68,7 +68,7 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
         ]
       ),
       // Beantragter Zuschuss
-      'beantragterZuschuss' => new JsonSchemaCalculate('number', 'max(gesamtkosten - gesamtmittel, 0)', [
+      'beantragterZuschuss' => new JsonSchemaCalculate('number', 'round(max(gesamtkosten - gesamtmittel, 0), 2)', [
         'gesamtkosten' => new JsonSchemaDataPointer('/kosten/gesamtkosten'),
         'gesamtmittel' => new JsonSchemaDataPointer('1/gesamtmittel'),
       ]),
