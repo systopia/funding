@@ -135,16 +135,10 @@ msgstr ""
 msgid "Timestamp"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/Remote/ApplicationProcess/AbstractFormAction.php
-msgid "Funding case with ID \"%1\" not found"
-msgstr "Förderfall mit ID \"%1\" nicht gefunden"
-
-#: Civi/Funding/Api4/Action/Remote/ApplicationProcess/AbstractFormAction.php
 #: Civi/Funding/Api4/Action/Remote/FundingCase/AbstractNewApplicationFormAction.php
 msgid "Funding case type with ID \"%1\" not found"
 msgstr "Förderfalltyp mit ID \"%1\" nicht gefunden"
 
-#: Civi/Funding/Api4/Action/Remote/ApplicationProcess/AbstractFormAction.php
 #: Civi/Funding/Api4/Action/Remote/FundingCase/AbstractNewApplicationFormAction.php
 msgid "Funding program with ID \"%1\" not found"
 msgstr "Förderprogramm mit ID \"%1\" nicht gefunden"
