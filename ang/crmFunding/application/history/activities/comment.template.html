@@ -1,0 +1,11 @@
+<div class="fu-activity fu-application-comment panel panel-info">
+    <div class="fu-activity-title panel-heading">{{ts('Comment')}}</div>
+    <div class="panel-body">
+        <div class="fu-activity-date">{{ts('Date: %date', {date: (activity.created_date | fundingDate)})}}</div>
+        <div class="fu-activity-performed-by">{{ts('From: %name', {name: activity.source_contact_name})}}</div>
+        <div class="fu-activity-comment">
+            {{ts('Text:')}}<br>
+            <span ng-bind-html="activity.details"></span>
+        </div>
+    </div>
+</div>

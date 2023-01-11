@@ -1,0 +1,22 @@
+<div class="fu-activity fu-application-review-status-change panel panel-success">
+    <div class="fu-activity-title panel-heading">
+        {{
+            activity.from_is_review_content !== activity.to_is_review_content
+            ? ts('Content review: %status', {status: reviewStatusLabels[activity.to_is_review_content]})
+            : ''
+        }}
+        {{
+            activity.from_is_review_content !== activity.to_is_review_content && activity.from_is_review_calculative !== activity.to_is_review_calculative
+            ? ', ' : ''
+        }}
+        {{
+            activity.from_is_review_calculative !== activity.to_is_review_calculative
+            ? ts('Calculative review: %status', {status: reviewStatusLabels[activity.to_is_review_calculative]})
+            : ''
+        }}
+    </div>
+    <div class="panel-body">
+        <div class="fu-activity-date">{{ts('Date: %date', {date: (activity.created_date | fundingDate)})}}</div>
+        <div class="fu-activity-performed-by">{{ts('Performed by: %name', {name: activity.source_contact_name})}}</div>
+    </div>
+</div>

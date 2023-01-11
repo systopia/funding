@@ -17,6 +17,12 @@ msgstr ""
 msgid "Application process with ID \"%1\" not found"
 msgstr "Antragsprozess mit ID \"%1\" nicht gefunden"
 
+#: Civi/Funding/Api4/Action/FundingApplicationProcessActivity/GetAction.php
+#: Civi/Funding/Contact/FundingCaseRecipientLoader.php
+#: Civi/Funding/Contact/RecipientsLoader/DefaultPossibleRecipientsLoader.php
+msgid "Contact %1"
+msgstr "Kontakt %1"
+
 # Übersetzung nicht notwendig
 #: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
@@ -171,11 +177,6 @@ msgstr "Förderprogramm erlaubt keine Anträge nach %1"
 msgid "Application process comment"
 msgstr "Förderfallprozesskommentar"
 
-#: Civi/Funding/Contact/FundingCaseRecipientLoader.php
-#: Civi/Funding/Contact/RecipientsLoader/DefaultPossibleRecipientsLoader.php
-msgid "Contact %1"
-msgstr "Kontakt %1"
-
 #: Civi/Funding/Contact/Relation/Types/ContactTypeAndRelationshipType.php
 msgid "Related contacts of a specific type"
 msgstr "In Beziehung stehende Kontakte einer bestimmten Art"
@@ -234,9 +235,45 @@ msgid "Funding application process created"
 msgstr "Förderfallprozess erstellt"
 
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessCreatedSubscriber.php
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriber.php
 msgid "Application process: %1 (%2)"
 msgstr "Förderfallprozess: %1 (%2)"
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
+msgid "Funding application process review status changed"
+msgstr "Prüfstatus von Förderfallprozess geändert"
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
+msgid "From review content: %1"
+msgstr "Von fachliche Prüfung: %1"
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
+msgid "To review content: %1"
+msgstr "Zu fachliche Prüfung: %1"
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
+msgid "From review calculative: %1"
+msgstr "Von rechnerische Prüfung: %1"
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
+msgid "To review calculative: %1"
+msgstr "Zu rechnerische Prüfung: %1"
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
+#: ang/crmFunding/application/application.js
+msgid "Passed"
+msgstr "Bestanden"
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
+#: ang/crmFunding/application/application.js
+msgid "Failed"
+msgstr "Nicht bestanden"
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
+#: ang/crmFunding/application/application.js
+msgid "Undecided"
+msgstr "Nicht entschieden"
 
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriber.php
 msgid "Funding application process status changed"
@@ -255,8 +292,8 @@ msgid "Saved"
 msgstr "Gespeichert"
 
 #: Civi/Funding/EventSubscriber/Form/SubmitApplicationFormSubscriber.php
-#: ang/crmFunding/application/application.js
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.directive.js
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Validation failed"
 msgstr "Validierung fehlgeschlagen"
 
@@ -298,7 +335,7 @@ msgid "View"
 msgstr "Ansehen"
 
 #: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 #: ang/crmFunding/case/fundingCasePermissions.html
 #: ang/crmFunding/program/fundingProgramPermissions.html
 #: ang/crmFunding/program/recipientRelations.html
@@ -453,11 +490,15 @@ msgstr ""
 
 # Nicht benötigt, solange nur zur Initialisierung der ts Funktion in JavaScript verwendet.
 #: ang/crmFunding/application/application.js
+#: ang/crmFunding/application/applicationEditor.directive.js
+#: ang/crmFunding/application/history/applicationProcessActivity.directive.js
+#: ang/crmFunding/application/history/applicationProcessHistory.directive.js
 #: ang/crmFunding/case/fundingCasePermissions.js
 #: ang/crmFunding/case/permissions/fundingCaseContactRelation.directive.js
 #: ang/crmFunding/form/fundingAddRowButton.directive.js
 #: ang/crmFunding/form/fundingSelectPermissions.directive.js
 #: ang/crmFunding/form/fundingValidationErrors.directive.js
+#: ang/crmFunding/fundingDate.filter.js
 #: ang/crmFunding/program/fundingProgramPermissions.js
 #: ang/crmFunding/program/permissions/fundingProgramContactRelation.directive.js
 #: ang/crmFunding/program/recipientRelations.js
@@ -465,134 +506,185 @@ msgstr ""
 msgid "funding"
 msgstr "Förderung"
 
-#: ang/crmFunding/application/application.js
-msgid "Undecided"
-msgstr "Nicht entschieden"
-
-#: ang/crmFunding/application/application.js
-msgid "Passed"
-msgstr "Bestanden"
-
-#: ang/crmFunding/application/application.js
-msgid "Failed"
-msgstr "Nicht bestanden"
-
-#: ang/crmFunding/application/application.js
-msgid "The chosen action is disabled. Please report this issue."
-msgstr ""
-"Die gewählte Aktion ist nicht verfügbar. Bitte melden Sie diesen Fehler."
-
 #: ang/crmFunding/application/application.template.html
 msgid "Application %1"
 msgstr "Antrag %1"
 
 #: ang/crmFunding/application/application.template.html
+msgid "Application"
+msgstr "Antrag"
+
+#: ang/crmFunding/application/application.template.html
+msgid "History"
+msgstr "Verlauf"
+
+#: ang/crmFunding/application/applicationEditor.directive.js
+msgid "The chosen action is disabled. Please report this issue."
+msgstr ""
+"Die gewählte Aktion ist nicht verfügbar. Bitte melden Sie diesen Fehler."
+
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Close"
 msgstr "Schließen"
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
+#: ang/crmFunding/application/history/activities/comment.template.html
 msgid "Comment"
 msgstr "Kommentar"
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Submit"
 msgstr "Senden"
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Start review"
 msgstr "Prüfung starten"
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Set content review to passed"
 msgstr "Fachliche Prüfung bestanden"
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Set content review to failed"
 msgstr "Fachliche Prüfung nicht bestanden"
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Set calculative review to passed"
 msgstr "Rechnerische Prüfung bestanden"
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Set calculative review to failed"
 msgstr "Rechnerische Prüfung nicht bestanden"
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Request change"
 msgstr "Änderung verlangen"
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Approve application"
 msgstr "Antrag bewilligen"
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Reject application"
 msgstr "Antrag ablehnen"
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Approve rework request"
 msgstr "Antrag zur Überarbeitung annehmen"
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Reject rework request"
 msgstr "Antrag zur Überarbeitung"
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Approve change"
 msgstr "Änderung bewilligen"
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Reject change"
 msgstr "Änderung ablehnen"
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Add comment"
 msgstr "Kommentar hinzufügen"
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Reset"
 msgstr "Zurücksetzen"
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "General"
 msgstr "Allgemein"
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Status"
 msgstr "Status"
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
+#: ang/crmFunding/application/history/activities/statusChange.template.html
+msgid "Unknown"
+msgstr "Unbekannt"
+
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Review content"
 msgstr "Fachliche Prüfung"
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Review calculative"
 msgstr "Rechnerische Prüfung"
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Creation date"
 msgstr "Erstellungsdatum"
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Modification date"
 msgstr "Änderungsdatum"
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Recipient"
 msgstr "Empfänger"
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Amount requested"
 msgstr "Beantragter Betrag"
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Amount granted"
 msgstr "Bewilligter Betrag"
+
+#: ang/crmFunding/application/history/activities/comment.template.html
+#: ang/crmFunding/application/history/activities/create.template.html
+#: ang/crmFunding/application/history/activities/reviewStatusChange.template.html
+#: ang/crmFunding/application/history/activities/statusChange.template.html
+msgid "Date: %date"
+msgstr "Datum: %date"
+
+#: ang/crmFunding/application/history/activities/comment.template.html
+msgid "From: %name"
+msgstr "Von: %name"
+
+#: ang/crmFunding/application/history/activities/comment.template.html
+msgid "Text:"
+msgstr "Text:"
+
+#: ang/crmFunding/application/history/activities/create.template.html
+msgid "Created"
+msgstr "Angelegt"
+
+#: ang/crmFunding/application/history/activities/create.template.html
+#: ang/crmFunding/application/history/activities/reviewStatusChange.template.html
+#: ang/crmFunding/application/history/activities/statusChange.template.html
+msgid "Performed by: %name"
+msgstr "Durchgeführt von: %name"
+
+#: ang/crmFunding/application/history/activities/reviewStatusChange.template.html
+msgid "Content review: %status"
+msgstr "Inhaltliche Prüfung: %status"
+
+#: ang/crmFunding/application/history/activities/reviewStatusChange.template.html
+msgid "Calculative review: %status"
+msgstr "Rechnerische Prüfung: %status"
+
+#: ang/crmFunding/application/history/activities/statusChange.template.html
+msgid "Status: %status"
+msgstr "Status: %status"
+
+#: ang/crmFunding/application/history/applicationProcessHistory.template.html
+msgid "Filter"
+msgstr "Filter"
+
+#: ang/crmFunding/application/history/applicationProcessHistory.template.html
+msgid "Hide workflow actions"
+msgstr "Ablaufaktivitäten ausblenden"
+
+#: ang/crmFunding/application/history/applicationProcessHistory.template.html
+msgid "Hide comments"
+msgstr "Kommentare ausblenden"
 
 #: ang/crmFunding/case/fundingCasePermissions.html
 msgid "Funding case permissions"
@@ -628,6 +720,10 @@ msgstr ""
 "Die Kombination von Antragsberechtigungen mit anderen Berechtigungen ist "
 "nicht möglich."
 
+#: ang/crmFunding/fundingDate.filter.js
+msgid "yyyy-MM-dd hh:mm:ss"
+msgstr "dd.MM.yyyy hh:mm:ss"
+
 #: ang/crmFunding/program/fundingProgramPermissions.html
 msgid "Funding program permissions"
 msgstr "Förderprogrammberechtigungen"
@@ -653,6 +749,15 @@ msgstr "Förderantrag erstellt"
 msgid "Activity type for funding application process creation"
 msgstr "Aktivitätsart für Förderantragsprozesserstellung"
 
+#: managed/ActivityTypeFundingApplicationReviewChange.mgd.php
+#: managed/CustomGroupFundingApplicationReviewStatusChange.mgd.php
+msgid "Funding Application Review Status Change"
+msgstr "Prüfstatus von Förderantrag geändert"
+
+#: managed/ActivityTypeFundingApplicationReviewChange.mgd.php
+msgid "Activity type for funding application process review status changes"
+msgstr "Aktivitätsart für Prüfstatusänderung eines Förderantragsprozesses"
+
 #: managed/ActivityTypeFundingApplicationStatusChange.mgd.php
 #: managed/CustomGroupFundingApplicationStatusChange.mgd.php
 msgid "Funding Application Status Change"
@@ -665,6 +770,22 @@ msgstr "Aktivitätsart für Statusänderung eines Förderantragsprozesses"
 #: managed/CustomGroupFundingApplicationComment.mgd.php
 msgid "Action"
 msgstr "Aktion"
+
+#: managed/CustomGroupFundingApplicationReviewStatusChange.mgd.php
+msgid "From review calculative"
+msgstr "Von rechnerische Prüfung"
+
+#: managed/CustomGroupFundingApplicationReviewStatusChange.mgd.php
+msgid "To review calculative"
+msgstr "Zu rechnerische Prüfung"
+
+#: managed/CustomGroupFundingApplicationReviewStatusChange.mgd.php
+msgid "From review content"
+msgstr "Von fachliche Prüfung"
+
+#: managed/CustomGroupFundingApplicationReviewStatusChange.mgd.php
+msgid "To review content"
+msgstr "Zu fachliche Prüfung"
 
 #: managed/CustomGroupFundingApplicationStatusChange.mgd.php
 msgid "From status"

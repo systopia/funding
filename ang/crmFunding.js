@@ -11,7 +11,6 @@ fundingModule.run(['editableOptions', 'editableThemes', function(editableOptions
 }]);
 
 let overlayCount = 0;
-/* jshint unused:false */
 function enableOverlay() {
   ++overlayCount;
   document.getElementById('fu-overlay').style.display = 'block';
@@ -24,5 +23,11 @@ function disableOverlay() {
   if (overlayCount === 0) {
     document.getElementById('fu-overlay').style.display = 'none';
   }
+}
+
+/* jshint unused:false */
+function withOverlay(promise) {
+  enableOverlay();
+  promise.finally(disableOverlay);
 }
 /* jshint unused:true */

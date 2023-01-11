@@ -17,30 +17,25 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding;
+namespace Civi\Api4;
 
-final class ActivityTypeIds {
+use Civi\Api4\Generic\AbstractEntity;
+use Civi\Funding\Api4\Action\FundingApplicationProcessActivity\GetAction;
+use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
 
-  public const FUNDING_APPLICATION_CREATE = 63785200;
+final class FundingApplicationProcessActivity extends AbstractEntity {
 
-  public const FUNDING_APPLICATION_STATUS_CHANGE = 63785201;
-
-  public const FUNDING_APPLICATION_COMMENT = 63785202;
-
-  public const FUNDING_APPLICATION_REVIEW_STATUS_CHANGE = 63785203;
+  use EntityNameTrait;
 
   /**
-   * @phpstan-return array<string, int>
-   *
-   * @codeCoverageIgnore
+   * @inheritDoc
    */
-  public static function getIds(): array {
-    static $ids = NULL;
-    if (NULL === $ids) {
-      $ids = (new \ReflectionClass(__CLASS__))->getConstants();
-    }
+  public static function getFields() {
+    return Activity::getFields();
+  }
 
-    return $ids;
+  public static function get(): GetAction {
+    return \Civi::service(GetAction::class);
   }
 
 }

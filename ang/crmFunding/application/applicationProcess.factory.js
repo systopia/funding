@@ -35,12 +35,13 @@ fundingModule.factory('fundingApplicationProcessService', ['crmApi4', function(c
 
       return crmApi4('FundingApplicationProcess', 'update', params);
     },
-    submitForm: (id, data) => crmApi4('FundingApplicationProcess', 'submitForm', {id, data}).then(function (result) {
-      return result;
-    }),
-    // TODO validate
-    validateForm: (id, data) => crmApi4('FundingApplicationProcess', 'validateForm', {id, data}).then(function (result) {
-      return result;
-    }),
+    submitForm: (id, data) => crmApi4('FundingApplicationProcess', 'submitForm', {id, data}),
+    validateForm: (id, data) => crmApi4('FundingApplicationProcess', 'validateForm', {id, data}),
+    getStatusLabels: (id) => crmApi4('FundingApplicationProcess', 'getFields', {
+      loadOptions: true,
+      values: {id},
+      where: [['name', '=', 'status']],
+      select: ['options']
+    }).then((result) => result[0].options || {}),
   };
 }]);

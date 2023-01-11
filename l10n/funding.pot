@@ -2,6 +2,10 @@
 msgid "Application process with ID \"%1\" not found"
 msgstr ""
 
+#: Civi/Funding/Api4/Action/FundingApplicationProcessActivity/GetAction.php Civi/Funding/Contact/FundingCaseRecipientLoader.php Civi/Funding/Contact/RecipientsLoader/DefaultPossibleRecipientsLoader.php
+msgid "Contact %1"
+msgstr ""
+
 #: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
 msgid "Unique field identifier"
 msgstr ""
@@ -98,10 +102,6 @@ msgstr ""
 msgid "Application process comment"
 msgstr ""
 
-#: Civi/Funding/Contact/FundingCaseRecipientLoader.php Civi/Funding/Contact/RecipientsLoader/DefaultPossibleRecipientsLoader.php
-msgid "Contact %1"
-msgstr ""
-
 #: Civi/Funding/Contact/Relation/Types/ContactTypeAndRelationshipType.php
 msgid "Related contacts of a specific type"
 msgstr ""
@@ -138,8 +138,40 @@ msgstr ""
 msgid "Funding application process created"
 msgstr ""
 
-#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessCreatedSubscriber.php Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriber.php
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessCreatedSubscriber.php Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriber.php
 msgid "Application process: %1 (%2)"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
+msgid "Funding application process review status changed"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
+msgid "From review content: %1"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
+msgid "To review content: %1"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
+msgid "From review calculative: %1"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
+msgid "To review calculative: %1"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php ang/crmFunding/application/application.js
+msgid "Passed"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php ang/crmFunding/application/application.js
+msgid "Failed"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php ang/crmFunding/application/application.js
+msgid "Undecided"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriber.php
@@ -158,7 +190,7 @@ msgstr ""
 msgid "Saved"
 msgstr ""
 
-#: Civi/Funding/EventSubscriber/Form/SubmitApplicationFormSubscriber.php ang/crmFunding/application/application.js ang/crmFunding/application/application.template.html
+#: Civi/Funding/EventSubscriber/Form/SubmitApplicationFormSubscriber.php ang/crmFunding/application/applicationEditor.directive.js ang/crmFunding/application/applicationEditor.template.html
 msgid "Validation failed"
 msgstr ""
 
@@ -198,7 +230,7 @@ msgstr ""
 msgid "View"
 msgstr ""
 
-#: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php ang/crmFunding/application/application.template.html ang/crmFunding/case/fundingCasePermissions.html ang/crmFunding/program/fundingProgramPermissions.html ang/crmFunding/program/recipientRelations.html
+#: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php ang/crmFunding/application/applicationEditor.template.html ang/crmFunding/case/fundingCasePermissions.html ang/crmFunding/program/fundingProgramPermissions.html ang/crmFunding/program/recipientRelations.html
 msgid "Save"
 msgstr ""
 
@@ -338,24 +370,8 @@ msgstr ""
 msgid "Matches a contact that has a relationship of the specified type to a contact of\nthe specified type."
 msgstr ""
 
-#: ang/crmFunding/application/application.js ang/crmFunding/case/fundingCasePermissions.js ang/crmFunding/case/permissions/fundingCaseContactRelation.directive.js ang/crmFunding/form/fundingAddRowButton.directive.js ang/crmFunding/form/fundingSelectPermissions.directive.js ang/crmFunding/form/fundingValidationErrors.directive.js ang/crmFunding/program/fundingProgramPermissions.js ang/crmFunding/program/permissions/fundingProgramContactRelation.directive.js ang/crmFunding/program/recipientRelations.js ang/crmFunding/program/recipients/recipientRelation.directive.js
+#: ang/crmFunding/application/application.js ang/crmFunding/application/applicationEditor.directive.js ang/crmFunding/application/history/applicationProcessActivity.directive.js ang/crmFunding/application/history/applicationProcessHistory.directive.js ang/crmFunding/case/fundingCasePermissions.js ang/crmFunding/case/permissions/fundingCaseContactRelation.directive.js ang/crmFunding/form/fundingAddRowButton.directive.js ang/crmFunding/form/fundingSelectPermissions.directive.js ang/crmFunding/form/fundingValidationErrors.directive.js ang/crmFunding/fundingDate.filter.js ang/crmFunding/program/fundingProgramPermissions.js ang/crmFunding/program/permissions/fundingProgramContactRelation.directive.js ang/crmFunding/program/recipientRelations.js ang/crmFunding/program/recipients/recipientRelation.directive.js
 msgid "funding"
-msgstr ""
-
-#: ang/crmFunding/application/application.js
-msgid "Undecided"
-msgstr ""
-
-#: ang/crmFunding/application/application.js
-msgid "Passed"
-msgstr ""
-
-#: ang/crmFunding/application/application.js
-msgid "Failed"
-msgstr ""
-
-#: ang/crmFunding/application/application.js
-msgid "The chosen action is disabled. Please report this issue."
 msgstr ""
 
 #: ang/crmFunding/application/application.template.html
@@ -363,111 +379,171 @@ msgid "Application %1"
 msgstr ""
 
 #: ang/crmFunding/application/application.template.html
+msgid "Application"
+msgstr ""
+
+#: ang/crmFunding/application/application.template.html
+msgid "History"
+msgstr ""
+
+#: ang/crmFunding/application/applicationEditor.directive.js
+msgid "The chosen action is disabled. Please report this issue."
+msgstr ""
+
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Close"
 msgstr ""
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html ang/crmFunding/application/history/activities/comment.template.html
 msgid "Comment"
 msgstr ""
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Cancel"
 msgstr ""
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Submit"
 msgstr ""
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Start review"
 msgstr ""
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Set content review to passed"
 msgstr ""
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Set content review to failed"
 msgstr ""
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Set calculative review to passed"
 msgstr ""
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Set calculative review to failed"
 msgstr ""
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Request change"
 msgstr ""
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Approve application"
 msgstr ""
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Reject application"
 msgstr ""
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Approve rework request"
 msgstr ""
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Reject rework request"
 msgstr ""
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Approve change"
 msgstr ""
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Reject change"
 msgstr ""
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Add comment"
 msgstr ""
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Reset"
 msgstr ""
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "General"
 msgstr ""
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Status"
 msgstr ""
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html ang/crmFunding/application/history/activities/statusChange.template.html
+msgid "Unknown"
+msgstr ""
+
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Review content"
 msgstr ""
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Review calculative"
 msgstr ""
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Creation date"
 msgstr ""
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Modification date"
 msgstr ""
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Recipient"
 msgstr ""
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Amount requested"
 msgstr ""
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Amount granted"
+msgstr ""
+
+#: ang/crmFunding/application/history/activities/comment.template.html ang/crmFunding/application/history/activities/create.template.html ang/crmFunding/application/history/activities/reviewStatusChange.template.html ang/crmFunding/application/history/activities/statusChange.template.html
+msgid "Date: %date"
+msgstr ""
+
+#: ang/crmFunding/application/history/activities/comment.template.html
+msgid "From: %name"
+msgstr ""
+
+#: ang/crmFunding/application/history/activities/comment.template.html
+msgid "Text:"
+msgstr ""
+
+#: ang/crmFunding/application/history/activities/create.template.html
+msgid "Created"
+msgstr ""
+
+#: ang/crmFunding/application/history/activities/create.template.html ang/crmFunding/application/history/activities/reviewStatusChange.template.html ang/crmFunding/application/history/activities/statusChange.template.html
+msgid "Performed by: %name"
+msgstr ""
+
+#: ang/crmFunding/application/history/activities/reviewStatusChange.template.html
+msgid "Content review: %status"
+msgstr ""
+
+#: ang/crmFunding/application/history/activities/reviewStatusChange.template.html
+msgid "Calculative review: %status"
+msgstr ""
+
+#: ang/crmFunding/application/history/activities/statusChange.template.html
+msgid "Status: %status"
+msgstr ""
+
+#: ang/crmFunding/application/history/applicationProcessHistory.template.html
+msgid "Filter"
+msgstr ""
+
+#: ang/crmFunding/application/history/applicationProcessHistory.template.html
+msgid "Hide workflow actions"
+msgstr ""
+
+#: ang/crmFunding/application/history/applicationProcessHistory.template.html
+msgid "Hide comments"
 msgstr ""
 
 #: ang/crmFunding/case/fundingCasePermissions.html
@@ -494,6 +570,10 @@ msgstr ""
 msgid "Combining application permissions with other ones is not possible."
 msgstr ""
 
+#: ang/crmFunding/fundingDate.filter.js
+msgid "yyyy-MM-dd hh:mm:ss"
+msgstr ""
+
 #: ang/crmFunding/program/fundingProgramPermissions.html
 msgid "Funding program permissions"
 msgstr ""
@@ -518,6 +598,14 @@ msgstr ""
 msgid "Activity type for funding application process creation"
 msgstr ""
 
+#: managed/ActivityTypeFundingApplicationReviewChange.mgd.php managed/CustomGroupFundingApplicationReviewStatusChange.mgd.php
+msgid "Funding Application Review Status Change"
+msgstr ""
+
+#: managed/ActivityTypeFundingApplicationReviewChange.mgd.php
+msgid "Activity type for funding application process review status changes"
+msgstr ""
+
 #: managed/ActivityTypeFundingApplicationStatusChange.mgd.php managed/CustomGroupFundingApplicationStatusChange.mgd.php
 msgid "Funding Application Status Change"
 msgstr ""
@@ -528,6 +616,22 @@ msgstr ""
 
 #: managed/CustomGroupFundingApplicationComment.mgd.php
 msgid "Action"
+msgstr ""
+
+#: managed/CustomGroupFundingApplicationReviewStatusChange.mgd.php
+msgid "From review calculative"
+msgstr ""
+
+#: managed/CustomGroupFundingApplicationReviewStatusChange.mgd.php
+msgid "To review calculative"
+msgstr ""
+
+#: managed/CustomGroupFundingApplicationReviewStatusChange.mgd.php
+msgid "From review content"
+msgstr ""
+
+#: managed/CustomGroupFundingApplicationReviewStatusChange.mgd.php
+msgid "To review content"
 msgstr ""
 
 #: managed/CustomGroupFundingApplicationStatusChange.mgd.php

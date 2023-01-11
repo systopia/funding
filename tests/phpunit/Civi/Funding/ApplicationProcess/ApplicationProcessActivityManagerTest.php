@@ -24,9 +24,11 @@ use Civi\Funding\ActivityTypeIds;
 use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\Fixtures\ApplicationProcessFixture;
 use Civi\Funding\Fixtures\ContactFixture;
+use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
+use Civi\Funding\Util\SessionTestUtil;
 use Civi\RemoteTools\Api4\Api4;
 
 /**
@@ -44,7 +46,7 @@ final class ApplicationProcessActivityManagerTest extends AbstractFundingHeadles
   }
 
   public function test(): void {
-    $recipientContact = ContactFixture::addOrganization();
+    $recipientContact = ContactFixture::addOrganization(['display_name' => 'Test']);
     $fundingProgram = FundingProgramFixture::addFixture();
     $fundingCaseType = FundingCaseTypeFixture::addFixture();
     $fundingCase = FundingCaseFixture::addFixture(
@@ -52,6 +54,7 @@ final class ApplicationProcessActivityManagerTest extends AbstractFundingHeadles
       $fundingCaseType->getId(),
       $recipientContact['id'],
     );
+    FundingCaseContactRelationFixture::addContact($recipientContact['id'], $fundingCase->getId(), ['perm']);
     $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId(), [
       'title' => 'Foo',
       'identifier' => '22-bar',
@@ -76,9 +79,16 @@ final class ApplicationProcessActivityManagerTest extends AbstractFundingHeadles
     static::assertSame('old-status', $activity->get('funding_application_status_change.from_status'));
     static::assertSame('new-status', $activity->get('funding_application_status_change.to_status'));
 
+    SessionTestUtil::mockInternalRequestSession($recipientContact['id']);
     $activities = $this->activityManager->getByApplicationProcess($applicationProcess->getId());
     static::assertCount(1, $activities);
-    static::assertEquals($activity, $activities[0]);
+    static::assertEquals($activity->toArray() + [
+      'activity_type_id:name' => 'funding_application_status_change',
+      'source_contact_name' => 'Test',
+      'from_status' => 'old-status',
+      'to_status' => 'new-status',
+    ], $activities[0]->toArray()
+    );
 
     $this->activityManager->deleteByApplicationProcess($applicationProcess->getId());
     static::assertCount(0, $this->activityManager->getByApplicationProcess($applicationProcess->getId()));

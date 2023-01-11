@@ -1,0 +1,7 @@
+<div class="fu-activity fu-application-status-change panel panel-success">
+    <div class="fu-activity-title panel-heading">{{ts('Status: %status', {status: statusLabels[activity.to_status] || ts('Unknown')})}}</div>
+    <div class="panel-body">
+        <div class="fu-activity-date">{{ts('Date: %date', {date: (activity.created_date | fundingDate)})}}</div>
+        <div class="fu-activity-performed-by">{{ts('Performed by: %name', {name: activity.source_contact_name})}}</div>
+    </div>
+</div>

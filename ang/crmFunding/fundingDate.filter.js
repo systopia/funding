@@ -1,4 +1,3 @@
-<?php
 /*
  * Copyright (C) 2022 SYSTOPIA GmbH
  *
@@ -15,32 +14,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+'use strict';
 
-namespace Civi\Funding;
+fundingModule.filter('fundingDate', ['dateFilter', function (dateFilter) {
+  const ts = CRM.ts('funding');
 
-final class ActivityTypeIds {
-
-  public const FUNDING_APPLICATION_CREATE = 63785200;
-
-  public const FUNDING_APPLICATION_STATUS_CHANGE = 63785201;
-
-  public const FUNDING_APPLICATION_COMMENT = 63785202;
-
-  public const FUNDING_APPLICATION_REVIEW_STATUS_CHANGE = 63785203;
-
-  /**
-   * @phpstan-return array<string, int>
-   *
-   * @codeCoverageIgnore
-   */
-  public static function getIds(): array {
-    static $ids = NULL;
-    if (NULL === $ids) {
-      $ids = (new \ReflectionClass(__CLASS__))->getConstants();
-    }
-
-    return $ids;
-  }
-
-}
+  return function (value, format = ts('yyyy-MM-dd hh:mm:ss')) {
+    const date = new Date(value);
+    return dateFilter(date, format);
+  };
+}]);
