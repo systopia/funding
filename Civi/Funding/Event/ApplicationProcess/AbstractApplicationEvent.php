@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2023 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -19,23 +19,26 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Event\ApplicationProcess;
 
-use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\Entity\Traits\ApplicationProcessEntityBundleTrait;
+use Symfony\Component\EventDispatcher\Event;
 
-class ApplicationProcessUpdatedEvent extends AbstractApplicationEvent {
+abstract class AbstractApplicationEvent extends Event {
 
-  private ApplicationProcessEntity $previousApplicationProcess;
+  use ApplicationProcessEntityBundleTrait;
 
-  public function __construct(int $contactId,
-    ApplicationProcessEntity $previousApplicationProcess,
+  private int $contactId;
+
+  public function __construct(
+    int $contactId,
     ApplicationProcessEntityBundle $applicationProcessBundle
   ) {
-    parent::__construct($contactId, $applicationProcessBundle);
-    $this->previousApplicationProcess = $previousApplicationProcess;
+    $this->contactId = $contactId;
+    $this->applicationProcessBundle = $applicationProcessBundle;
   }
 
-  public function getPreviousApplicationProcess(): ApplicationProcessEntity {
-    return $this->previousApplicationProcess;
+  public function getContactId(): int {
+    return $this->contactId;
   }
 
 }
