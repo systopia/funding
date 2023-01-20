@@ -20,10 +20,10 @@ declare(strict_types = 1);
 namespace Civi\Funding\Contact\RecipientsLoader;
 
 use Civi\Api4\FundingRecipientContactRelation;
+use Civi\Funding\Api4\Util\ContactUtil;
 use Civi\Funding\Contact\PossibleRecipientsLoaderInterface;
 use Civi\Funding\Contact\RelatedContactsLoaderInterface;
 use Civi\RemoteTools\Api4\Api4Interface;
-use CRM_Funding_ExtensionUtil as E;
 
 /**
  * @phpstan-type contactRelationT array{
@@ -46,11 +46,9 @@ final class DefaultPossibleRecipientsLoader implements PossibleRecipientsLoaderI
   public function getPossibleRecipients(int $contactId): array {
     $contacts = $this->getRelatedContacts($contactId);
     $possibleRecipients = [];
+    /** @phpstan-var array{id: int, display_name: ?string} $contact */
     foreach ($contacts as $id => $contact) {
-      /** @var string $displayName */
-      $displayName = $contact['display_name'] ?? E::ts('Contact %1', [1 => $id]);
-
-      $possibleRecipients[$id] = $displayName;
+      $possibleRecipients[$id] = ContactUtil::getDisplayName($contact);
     }
 
     return $possibleRecipients;

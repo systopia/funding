@@ -20,9 +20,9 @@ declare(strict_types = 1);
 namespace Civi\Funding\Contact;
 
 use Civi\Api4\Contact;
+use Civi\Funding\Api4\Util\ContactUtil;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\RemoteTools\Api4\Api4Interface;
-use CRM_Funding_ExtensionUtil as E;
 
 final class FundingCaseRecipientLoader implements FundingCaseRecipientLoaderInterface {
 
@@ -36,14 +36,13 @@ final class FundingCaseRecipientLoader implements FundingCaseRecipientLoaderInte
    * @inheritDoc
    */
   public function getRecipient(FundingCaseEntity $fundingCase): array {
-    $action = Contact::get()->addWhere('id', '=', $fundingCase->getRecipientContactId());
-    /** @phpstan-var array<string, mixed> $contact */
+    $action = Contact::get()
+      ->addSelect('id', 'display_name')
+      ->addWhere('id', '=', $fundingCase->getRecipientContactId());
+    /** @phpstan-var array{id: int, display_name: ?string} $contact */
     $contact = $this->api4->executeAction($action)->first();
 
-    /** @var string $displayName */
-    $displayName = $contact['display_name'] ?? E::ts('Contact %1', [1 => $contact['id']]);
-
-    return [$fundingCase->getRecipientContactId() => $displayName];
+    return [$fundingCase->getRecipientContactId() => ContactUtil::getDisplayName($contact)];
   }
 
 }

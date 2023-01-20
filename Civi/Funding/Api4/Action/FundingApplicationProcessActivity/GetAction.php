@@ -25,9 +25,9 @@ use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\FundingApplicationProcessActivity;
 use Civi\Api4\Generic\AbstractGetAction;
 use Civi\Api4\Generic\Result;
+use Civi\Funding\Api4\Util\ContactUtil;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\RemoteTools\Api4\Api4Interface;
-use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
 
 /**
@@ -131,12 +131,13 @@ final class GetAction extends AbstractGetAction {
       ->addWhere('ac.activity_id', '=', $activity['id'])
       ->addWhere('ac.record_type_id:name', '=', 'Activity Source');
 
+    /** @phpstan-var array{id: int, display_name: ?string}|null $contact */
     $contact = $this->api4->executeAction($action)->first();
     if (NULL === $contact) {
       return '-';
     }
 
-    return $contact['display_name'] ?? E::ts('Contact %1', [1 => $contact['id']]);
+    return ContactUtil::getDisplayName($contact);
   }
 
 }
