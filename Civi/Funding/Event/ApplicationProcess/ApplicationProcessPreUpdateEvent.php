@@ -21,8 +21,6 @@ namespace Civi\Funding\Event\ApplicationProcess;
 
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
-use Civi\Funding\Entity\Traits\ApplicationProcessEntityBundleTrait;
-use Symfony\Component\EventDispatcher\Event;
 
 final class ApplicationProcessPreUpdateEvent extends AbstractApplicationEvent {
 
@@ -33,7 +31,7 @@ final class ApplicationProcessPreUpdateEvent extends AbstractApplicationEvent {
     ApplicationProcessEntityBundle $applicationProcessBundle
   ) {
     parent::__construct($contactId, $applicationProcessBundle);
-    $this->applicationProcessBundle = $applicationProcessBundle;
+    $this->previousApplicationProcess = $previousApplicationProcess;
   }
 
   public function getPreviousApplicationProcess(): ApplicationProcessEntity {
