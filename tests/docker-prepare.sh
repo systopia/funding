@@ -8,6 +8,11 @@ REMOTETOOLS_VERSION=0.4
 
 FUNDING_EXT_DIR=$(dirname "$(dirname "$(realpath "$0")")")
 
+if [ ! type git >/dev/null 2>&1 ]; then
+  apt -y update
+  apt -y install git
+fi
+
 i=0
 while ! mysql -h "$CIVICRM_DB_HOST" -P "$CIVICRM_DB_PORT" -u "$CIVICRM_DB_USER" --password="$CIVICRM_DB_PASS" -e 'SELECT 1;' >/dev/null 2>&1; do
   i=$((i+1))
