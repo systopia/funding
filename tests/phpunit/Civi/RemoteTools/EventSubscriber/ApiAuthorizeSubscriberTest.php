@@ -58,8 +58,7 @@ final class ApiAuthorizeSubscriberTest extends TestCase {
     $this->requestMock->method('getAuthorizeRequestEventName')->willReturn('test.request.authorize');
     $this->eventMock->method('getApiRequest')->willReturn($this->requestMock);
     $this->eventDispatcherMock = $this->createMock(CiviEventDispatcher::class);
-    $this->eventDispatcherMock = $this->createMock(CiviEventDispatcher::class);
-    $this->subscriber = new ApiAuthorizeSubscriber();
+    $this->subscriber = new ApiAuthorizeSubscriber($this->eventDispatcherMock);
   }
 
   public function testGetSubscribedEvents(): void {
@@ -87,7 +86,7 @@ final class ApiAuthorizeSubscriberTest extends TestCase {
 
     $this->eventMock->expects(static::once())->method('setAuthorized')->with($authorize);
     $this->eventMock->expects(static::once())->method('stopPropagation');
-    $this->subscriber->onApiAuthorize($this->eventMock, 'civi.api.authorize', $this->eventDispatcherMock);
+    $this->subscriber->onApiAuthorize($this->eventMock);
   }
 
   public function testOnApiAuthorizeNoListener(): void {
@@ -96,7 +95,7 @@ final class ApiAuthorizeSubscriberTest extends TestCase {
 
     $this->eventMock->expects(static::never())->method('setAuthorized');
     $this->eventMock->expects(static::never())->method('stopPropagation');
-    $this->subscriber->onApiAuthorize($this->eventMock, 'civi.api.authorize', $this->eventDispatcherMock);
+    $this->subscriber->onApiAuthorize($this->eventMock);
   }
 
   /**

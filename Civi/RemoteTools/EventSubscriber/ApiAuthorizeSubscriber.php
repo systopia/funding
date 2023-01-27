@@ -28,33 +28,45 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ApiAuthorizeSubscriber implements EventSubscriberInterface {
 
+  /**
+   * Note: We cannot use the event dispatcher given as third parameter of the
+   * listener method.
+   *
+   * @see https://lab.civicrm.org/dev/core/-/issues/2316#note_87197
+   */
+  protected CiviEventDispatcher $eventDispatcher;
+
   public static function getSubscribedEvents(): array {
     return [
       'civi.api.authorize' => ['onApiAuthorize', Events::W_EARLY],
     ];
   }
 
-  public function onApiAuthorize(AuthorizeEvent $event, string $eventName, CiviEventDispatcher $eventDispatcher): void {
+  public function __construct(CiviEventDispatcher $eventDispatcher) {
+    $this->eventDispatcher = $eventDispatcher;
+  }
+
+  public function onApiAuthorize(AuthorizeEvent $event): void {
     $request = $event->getApiRequest();
     if (!$request instanceof EventActionInterface) {
       return;
     }
 
-    $authorized = $this->isApiRequestAuthorized($request, $eventDispatcher);
+    $authorized = $this->isApiRequestAuthorized($request);
     if (NULL !== $authorized) {
       $event->setAuthorized($authorized);
       $event->stopPropagation();
     }
   }
 
-  protected function isApiRequestAuthorized(AbstractAction $request, CiviEventDispatcher $eventDispatcher): ?bool {
+  protected function isApiRequestAuthorized(AbstractAction $request): ?bool {
     if (!$request instanceof EventActionInterface) {
       return FALSE;
     }
 
     /** @var \Civi\RemoteTools\Event\AuthorizeApiRequestEvent $authorizeRequestEvent */
     $authorizeRequestEvent = $request->getAuthorizeRequestEventClass()::fromApiRequest($request);
-    $eventDispatcher->dispatch($request->getAuthorizeRequestEventName(), $authorizeRequestEvent);
+    $this->eventDispatcher->dispatch($request->getAuthorizeRequestEventName(), $authorizeRequestEvent);
 
     return $authorizeRequestEvent->isAuthorized();
   }

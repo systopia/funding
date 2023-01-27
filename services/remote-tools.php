@@ -48,9 +48,9 @@ $container->register(TransactionFactory::class);
 $container->autowire(OptionsLoaderInterface::class, OptionsLoader::class);
 $container->autowire(PossiblePermissionsLoaderInterface::class, PossiblePermissionsLoader::class);
 
-$container->register(ApiAuthorizeInitRequestSubscriber::class)
+$container->autowire(ApiAuthorizeInitRequestSubscriber::class)
   ->addTag('kernel.event_subscriber');
-$container->register(ApiAuthorizeSubscriber::class)
+$container->autowire(ApiAuthorizeSubscriber::class)
   ->addTag('kernel.event_subscriber');
 $container->autowire(CheckAccessSubscriber::class)
   ->addTag('kernel.event_subscriber');

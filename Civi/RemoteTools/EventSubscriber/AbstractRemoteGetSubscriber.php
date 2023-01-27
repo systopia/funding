@@ -20,7 +20,6 @@ declare(strict_types = 1);
 namespace Civi\RemoteTools\EventSubscriber;
 
 use Civi\Api4\Generic\AbstractAction;
-use Civi\Core\CiviEventDispatcher;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Event\GetEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -65,7 +64,7 @@ abstract class AbstractRemoteGetSubscriber implements EventSubscriberInterface {
   /**
    * @throws \API_Exception
    */
-  public function onGet(GetEvent $event, string $eventName, CiviEventDispatcher $eventDispatcher): void {
+  public function onGet(GetEvent $event): void {
     $result = $this->api4->executeAction($this->createAction($event));
 
     $event->setRowCount($result->rowCount ?? $result->count())

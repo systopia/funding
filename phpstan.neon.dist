@@ -22,8 +22,9 @@ parameters:
 		- phpstanBootstrap.php
 	stubFiles:
 		- stubs/AbstractAction.stub
-		- stubs/Civi.stub
-		- stubs/CiviEventDispatcher.stub
+		- stubs/CiviEventDispatcherInterface.stub
+		- vendor/symfony/event-dispatcher-contracts/Event.php
+		- vendor/symfony/event-dispatcher/Event.php
 	level: 9
 	checkTooWideReturnTypesInProtectedAndPublicMethods: true
 	checkUninitializedProperties: true
@@ -78,7 +79,7 @@ parameters:
 		- '#^Call to deprecated method stopPropagation\(\) of class Symfony\\Component\\EventDispatcher\\Event:#'
 		- '#^Method Civi\\RemoteTools\\Api4\\Query\\Comparison::toArray\(\) never returns array\{string, array<int, array>\} so it can be removed from the return type.$#'
 		- '#^Method Civi\\RemoteTools\\Api4\\Query\\CompositeCondition::toArray\(\) never returns array\{0: string, .+\} so it can be removed from the return type.$#'
-		- '/^Parameter #1 \$eventName of method Civi\\Core\\CiviEventDispatcher::dispatch\(\) expects object, string given.$/'
+		- '/^Property [^\s]+ \(Civi\\Core\\CiviEventDispatcher\) does not accept Civi\\Core\\CiviEventDispatcherInterface.$/'
 		- '/^Parameter #1 \$iterator of function iterator_to_array expects Traversable, iterable(<.+>)? given.$/' # false positive
 		-
 			message: '#^Call to function method_exists\(\) with .+ will always evaluate to true.$#'

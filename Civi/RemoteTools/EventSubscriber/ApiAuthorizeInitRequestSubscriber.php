@@ -36,17 +36,27 @@ final class ApiAuthorizeInitRequestSubscriber implements EventSubscriberInterfac
   }
 
   /**
+   * Note: We cannot use the event dispatcher given as third parameter of the
+   * listener method.
+   *
+   * @see https://lab.civicrm.org/dev/core/-/issues/2316#note_87197
+   */
+  private CiviEventDispatcher $eventDispatcher;
+
+  public function __construct(CiviEventDispatcher $eventDispatcher) {
+    $this->eventDispatcher = $eventDispatcher;
+  }
+
+  /**
    * @param \Civi\API\Event\AuthorizeEvent $event
-   * @param string $eventName
-   * @param \Civi\Core\CiviEventDispatcher $eventDispatcher
    *
    * @throws \API_Exception
    */
-  public function onApiAuthorize(AuthorizeEvent $event, string $eventName, CiviEventDispatcher $eventDispatcher): void {
+  public function onApiAuthorize(AuthorizeEvent $event): void {
     $request = $event->getApiRequest();
     if ($request instanceof EventActionInterface) {
       $initRequestEvent = $request->getInitRequestEventClass()::fromApiRequest($request);
-      $eventDispatcher->dispatch($request->getInitRequestEventName(), $initRequestEvent);
+      $this->eventDispatcher->dispatch($request->getInitRequestEventName(), $initRequestEvent);
       $this->assertExtraParams($request);
     }
   }
