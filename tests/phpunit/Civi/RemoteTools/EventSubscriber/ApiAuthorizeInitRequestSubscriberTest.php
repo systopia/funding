@@ -64,7 +64,7 @@ final class ApiAuthorizeInitRequestSubscriberTest extends TestCase {
     $this->eventMock->method('getApiRequest')->willReturn($this->requestMock);
     $this->eventDispatcherMock = $this->createMock(CiviEventDispatcher::class);
 
-    $this->subscriber = new ApiAuthorizeInitRequestSubscriber();
+    $this->subscriber = new ApiAuthorizeInitRequestSubscriber($this->eventDispatcherMock);
   }
 
   public function testGetSubscribedEvents(): void {
@@ -89,7 +89,7 @@ final class ApiAuthorizeInitRequestSubscriberTest extends TestCase {
         $this->requestMock->expects(static::once())->method('hasExtraParam')->with('foo')->willReturn(TRUE);
       });
 
-    $this->subscriber->onApiAuthorize($this->eventMock, 'civi.api.authorize', $this->eventDispatcherMock);
+    $this->subscriber->onApiAuthorize($this->eventMock);
   }
 
   public function testOnApiAuthorizeRequiredExtraParamMissing(): void {
@@ -105,7 +105,7 @@ final class ApiAuthorizeInitRequestSubscriberTest extends TestCase {
 
     static::expectException(\API_Exception::class);
     static::expectExceptionMessage('Required extra param "foo" is missing');
-    $this->subscriber->onApiAuthorize($this->eventMock, 'civi.api.authorize', $this->eventDispatcherMock);
+    $this->subscriber->onApiAuthorize($this->eventMock);
   }
 
 }

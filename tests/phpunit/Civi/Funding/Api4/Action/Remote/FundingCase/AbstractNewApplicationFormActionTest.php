@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\Remote\FundingCase;
 
-use Civi\Core\CiviEventDispatcher;
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Api4\Action\Remote\FundingCase\Traits\NewApplicationFormActionTrait;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
@@ -35,7 +35,7 @@ use Symfony\Bridge\PhpUnit\ClockMock;
 abstract class AbstractNewApplicationFormActionTest extends TestCase {
 
   /**
-   * @var \PHPUnit\Framework\MockObject\MockObject&\Civi\Core\CiviEventDispatcher
+   * @var \PHPUnit\Framework\MockObject\MockObject&\Civi\Core\CiviEventDispatcherInterface
    */
   protected MockObject $eventDispatcherMock;
 
@@ -69,7 +69,7 @@ abstract class AbstractNewApplicationFormActionTest extends TestCase {
     parent::setUp();
     $this->fundingCaseTypeManagerMock = $this->createMock(FundingCaseTypeManager::class);
     $this->fundingProgramManagerMock = $this->createMock(FundingProgramManager::class);
-    $this->eventDispatcherMock = $this->createMock(CiviEventDispatcher::class);
+    $this->eventDispatcherMock = $this->createMock(CiviEventDispatcherInterface::class);
     $this->relationCheckerMock = $this->createMock(FundingCaseTypeProgramRelationChecker::class);
 
     $this->fundingCaseType = FundingCaseTypeFactory::createFundingCaseType(['id' => 22]);

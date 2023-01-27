@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 
 use Civi\Api4\Generic\Result;
-use Civi\Core\CiviEventDispatcher;
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\Event\Remote\ApplicationProcess\ValidateApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingEvents;
@@ -40,7 +40,7 @@ final class ValidateFormAction extends AbstractFormAction {
 
   public function __construct(
     ApplicationProcessBundleLoader $applicationProcessBundleLoader,
-    CiviEventDispatcher $eventDispatcher
+    CiviEventDispatcherInterface $eventDispatcher
   ) {
     parent::__construct('validateForm', $applicationProcessBundleLoader, $eventDispatcher);
     $this->_eventDispatcher = $eventDispatcher;

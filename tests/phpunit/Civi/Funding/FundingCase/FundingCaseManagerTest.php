@@ -21,7 +21,7 @@ namespace Civi\Funding\FundingCase;
 
 use Civi\Api4\Generic\DAODeleteAction;
 use Civi\Api4\Generic\Result;
-use Civi\Core\CiviEventDispatcher;
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Api4\Action\FundingCase\GetAction;
 use Civi\Funding\Entity\FundingCaseEntity;
@@ -49,7 +49,7 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
   private FundingCaseManager $fundingCaseManager;
 
   /**
-   * @var \Civi\Core\CiviEventDispatcher&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Core\CiviEventDispatcherInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $eventDispatcherMock;
 
@@ -61,7 +61,7 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
 
   protected function setUp(): void {
     parent::setUp();
-    $this->eventDispatcherMock = $this->createMock(CiviEventDispatcher::class);
+    $this->eventDispatcherMock = $this->createMock(CiviEventDispatcherInterface::class);
     $this->fundingCaseManager = new FundingCaseManager(new Api4(), $this->eventDispatcherMock);
   }
 

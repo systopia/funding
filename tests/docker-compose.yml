@@ -1,7 +1,7 @@
 version: "3"
 services:
   civicrm:
-    image: michaelmcandrew/civicrm:${CIVICRM_IMAGE_TAG:-5-drupal-php7.4}
+    image: michaelmcandrew/civicrm:${CIVICRM_IMAGE_TAG:-5-drupal}
     environment:
       - PROJECT_NAME=test
       - BASE_URL=http://localhost

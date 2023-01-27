@@ -21,7 +21,7 @@ namespace Civi\Funding\Api4\Action\Remote\FundingCaseType;
 
 use Civi\Api4\Generic\Result;
 use Civi\Api4\RemoteFundingCaseType;
-use Civi\Core\CiviEventDispatcher;
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Api4\Action\Remote\RemoteFundingActionInterface;
 use Civi\Funding\Api4\Action\Remote\Traits\RemoteFundingActionContactIdRequiredTrait;
 use Civi\Funding\Event\Remote\FundingCaseType\GetByFundingProgramIdEvent;
@@ -42,7 +42,7 @@ final class GetByFundingProgramIdAction extends AbstractEventAction implements R
    */
   protected ?int $fundingProgramId = NULL;
 
-  public function __construct(CiviEventDispatcher $eventDispatcher = NULL) {
+  public function __construct(CiviEventDispatcherInterface $eventDispatcher = NULL) {
     parent::__construct(
       FundingEvents::REQUEST_INIT_EVENT_NAME,
       FundingEvents::REQUEST_AUTHORIZE_EVENT_NAME,

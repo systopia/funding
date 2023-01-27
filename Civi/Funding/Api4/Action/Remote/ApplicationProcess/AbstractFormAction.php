@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 
 use Civi\Api4\RemoteFundingApplicationProcess;
-use Civi\Core\CiviEventDispatcher;
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingAction;
 use Civi\Funding\Api4\Action\Remote\Traits\RemoteFundingActionContactIdRequiredTrait;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
@@ -37,7 +37,7 @@ abstract class AbstractFormAction extends AbstractRemoteFundingAction {
   public function __construct(
     string $actionName,
     ApplicationProcessBundleLoader $applicationProcessBundleLoader,
-    CiviEventDispatcher $eventDispatcher
+    CiviEventDispatcherInterface $eventDispatcher
   ) {
     parent::__construct(RemoteFundingApplicationProcess::_getEntityName(), $actionName);
     $this->_applicationProcessBundleLoader = $applicationProcessBundleLoader;

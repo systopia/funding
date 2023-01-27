@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\RemoteTools\Api4\Action\Traits;
 
-use Civi\Core\CiviEventDispatcher;
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\RemoteTools\Api4\Action\EventActionInterface;
 use Civi\RemoteTools\Event\AbstractRequestEvent;
 use Civi\RemoteTools\Event\AuthorizeApiRequestEvent;
@@ -34,7 +34,7 @@ trait EventActionTrait {
    */
   protected array $_extraParams = [];
 
-  protected CiviEventDispatcher $_eventDispatcher;
+  protected CiviEventDispatcherInterface $_eventDispatcher;
 
   protected string $_initRequestEventName;
 

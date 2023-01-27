@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\Remote;
 
-use Civi\Core\CiviEventDispatcher;
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Api4\Action\Remote\Traits\RemoteFundingActionContactIdTrait;
 use Civi\Funding\Event\Remote\FundingEvents;
 use Civi\Funding\Event\Remote\FundingGetFieldsEvent;
@@ -30,7 +30,7 @@ class GetFieldsAction extends EventGetFieldsAction implements RemoteFundingActio
   use RemoteFundingActionContactIdTrait;
 
   public function __construct(string $entityName, string $actionName = 'getFields',
-    CiviEventDispatcher $eventDispatcher = NULL
+    CiviEventDispatcherInterface $eventDispatcher = NULL
   ) {
     parent::__construct(FundingEvents::REQUEST_INIT_EVENT_NAME,
       FundingEvents::REQUEST_AUTHORIZE_EVENT_NAME,

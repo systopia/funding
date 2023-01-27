@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\RemoteTools\Api4\Action;
 
-use Civi\Core\CiviEventDispatcher;
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\RemoteTools\Event\GetFieldsEvent;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub\ReturnCallback;
@@ -33,7 +33,7 @@ use PHPUnit\Framework\TestCase;
 final class EventGetFieldsActionTest extends TestCase {
 
   /**
-   * @var \PHPUnit\Framework\MockObject\MockObject&\Civi\Core\CiviEventDispatcher
+   * @var \PHPUnit\Framework\MockObject\MockObject&\Civi\Core\CiviEventDispatcherInterface
    */
   private MockObject $eventDispatcherMock;
 
@@ -41,7 +41,7 @@ final class EventGetFieldsActionTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
-    $this->eventDispatcherMock = $this->createMock(CiviEventDispatcher::class);
+    $this->eventDispatcherMock = $this->createMock(CiviEventDispatcherInterface::class);
     $this->action = new EventGetFieldsAction(
       'test.request.init',
       'test.request.authorize',

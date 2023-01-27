@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\RemoteTools\Authorization;
 
-use Civi\Core\CiviEventDispatcher;
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\RemoteTools\Event\FilterPossiblePermissionsEvent;
 use Civi\RemoteTools\Event\GetPossiblePermissionsEvent;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -38,7 +38,7 @@ final class PossiblePermissionsLoaderTest extends TestCase {
   private MockObject $cacheMock;
 
   /**
-   * @var \Civi\Core\CiviEventDispatcher&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Core\CiviEventDispatcherInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $eventDispatcherMock;
 
@@ -47,7 +47,7 @@ final class PossiblePermissionsLoaderTest extends TestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->cacheMock = $this->createMock(CacheInterface::class);
-    $this->eventDispatcherMock = $this->createMock(CiviEventDispatcher::class);
+    $this->eventDispatcherMock = $this->createMock(CiviEventDispatcherInterface::class);
     $this->possiblePermissionsLoader = new PossiblePermissionsLoader(
       $this->eventDispatcherMock,
       $this->cacheMock,

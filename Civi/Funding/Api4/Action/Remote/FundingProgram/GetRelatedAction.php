@@ -21,7 +21,7 @@ namespace Civi\Funding\Api4\Action\Remote\FundingProgram;
 
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
-use Civi\Core\CiviEventDispatcher;
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Api4\Action\Remote\RemoteFundingActionInterface;
 use Civi\Funding\Api4\Action\Remote\Traits\RemoteFundingActionContactIdRequiredTrait;
 use Civi\Funding\Event\Remote\FundingDAOGetEvent;
@@ -54,7 +54,7 @@ final class GetRelatedAction extends AbstractAction implements RemoteFundingActi
    */
   protected ?string $type = NULL;
 
-  public function __construct(CiviEventDispatcher $eventDispatcher = NULL) {
+  public function __construct(CiviEventDispatcherInterface $eventDispatcher = NULL) {
     parent::__construct('RemoteFundingProgram', 'getRelated');
     $this->_eventDispatcher = $eventDispatcher ?? \Civi::dispatcher();
     $this->_authorizeRequestEventName = FundingEvents::REQUEST_AUTHORIZE_EVENT_NAME;

@@ -18,7 +18,7 @@
   <version>0.6.0-dev</version>
   <develStage>dev</develStage>
   <compatibility>
-    <ver>5.53</ver>
+    <ver>5.57</ver>
   </compatibility>
   <comments/>
   <requires>

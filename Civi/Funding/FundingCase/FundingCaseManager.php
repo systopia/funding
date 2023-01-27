@@ -20,13 +20,12 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase;
 
 use Civi\Api4\FundingCase;
-use Civi\Core\CiviEventDispatcher;
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent;
 use Civi\Funding\Event\FundingCase\FundingCaseDeletedEvent;
 use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
 use Civi\RemoteTools\Api4\Api4Interface;
-use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
 
 /**
@@ -45,9 +44,9 @@ class FundingCaseManager {
 
   private Api4Interface $api4;
 
-  private CiviEventDispatcher $eventDispatcher;
+  private CiviEventDispatcherInterface $eventDispatcher;
 
-  public function __construct(Api4Interface $api4, CiviEventDispatcher $eventDispatcher) {
+  public function __construct(Api4Interface $api4, CiviEventDispatcherInterface $eventDispatcher) {
     $this->api4 = $api4;
     $this->eventDispatcher = $eventDispatcher;
   }

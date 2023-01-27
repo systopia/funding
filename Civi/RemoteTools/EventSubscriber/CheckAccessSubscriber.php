@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\RemoteTools\EventSubscriber;
 
 use Civi\API\Events;
-use Civi\Core\CiviEventDispatcher;
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\RemoteTools\Api4\Action\EventActionInterface;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Event\CheckAccessEvent;
@@ -38,25 +38,24 @@ class CheckAccessSubscriber extends ApiAuthorizeSubscriber {
     ];
   }
 
-  public function __construct(Api4Interface $api4) {
+  public function __construct(Api4Interface $api4, CiviEventDispatcherInterface $eventDispatcher) {
+    parent::__construct($eventDispatcher);
     $this->api4 = $api4;
   }
 
   /**
    * @throws \Civi\API\Exception\NotImplementedException
    */
-  public function onCheckAccess(CheckAccessEvent $event, string $eventName,
-    CiviEventDispatcher $eventDispatcher
-  ): void {
+  public function onCheckAccess(CheckAccessEvent $event): void {
     $event->addDebugOutput(static::class, []);
     $apiRequest = $this->api4->createAction($event->getEntityName(), $event->getAction(), $event->getRequestParams());
 
     if ($apiRequest instanceof EventActionInterface) {
       $initRequestEvent = $apiRequest->getInitRequestEventClass()::fromApiRequest($apiRequest);
-      $eventDispatcher->dispatch($apiRequest->getInitRequestEventName(), $initRequestEvent);
+      $this->eventDispatcher->dispatch($apiRequest->getInitRequestEventName(), $initRequestEvent);
     }
 
-    if (FALSE === $this->isApiRequestAuthorized($apiRequest, $eventDispatcher)) {
+    if (FALSE === $this->isApiRequestAuthorized($apiRequest)) {
       $event->setAccessGranted(FALSE);
       $event->stopPropagation();
     }
