@@ -40,11 +40,15 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
         'bundeslaender' => new JsonSchemaMoney(['minimum' => 0]),
         'staedteUndKreise' => new JsonSchemaMoney(['minimum' => 0]),
       ], ['required' => ['europa', 'bundeslaender', 'staedteUndKreise']]),
-      'oeffentlicheMittelGesamt' => new JsonSchemaCalculate('number', 'round(europa + bundeslaender + staedteUndKreise, 2)', [
-        'europa' => new JsonSchemaDataPointer('1/oeffentlicheMittel/europa'),
-        'bundeslaender' => new JsonSchemaDataPointer('1/oeffentlicheMittel/bundeslaender'),
-        'staedteUndKreise' => new JsonSchemaDataPointer('1/oeffentlicheMittel/staedteUndKreise'),
-      ]),
+      'oeffentlicheMittelGesamt' => new JsonSchemaCalculate(
+        'number',
+        'round(europa + bundeslaender + staedteUndKreise, 2)',
+        [
+          'europa' => new JsonSchemaDataPointer('1/oeffentlicheMittel/europa'),
+          'bundeslaender' => new JsonSchemaDataPointer('1/oeffentlicheMittel/bundeslaender'),
+          'staedteUndKreise' => new JsonSchemaDataPointer('1/oeffentlicheMittel/staedteUndKreise'),
+        ]
+      ),
       // Abschnitt II.4
       'sonstigeMittel' => new JsonSchemaArray(
         new JsonSchemaObject([
@@ -53,9 +57,11 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
           'betrag' => new JsonSchemaMoney(['minimum' => 0]),
         ], ['required' => ['betrag', 'quelle']])
       ),
-      'sonstigeMittelGesamt' => new JsonSchemaCalculate('number', 'round(sum(map(sonstigeMittel, "value.betrag")), 2)', [
-        'sonstigeMittel' => new JsonSchemaDataPointer('1/sonstigeMittel'),
-      ]),
+      'sonstigeMittelGesamt' => new JsonSchemaCalculate(
+        'number',
+        'round(sum(map(sonstigeMittel, "value.betrag")), 2)',
+        ['sonstigeMittel' => new JsonSchemaDataPointer('1/sonstigeMittel')]
+      ),
       // Gesamtmittel ohne Zuschuss
       'gesamtmittel' => new JsonSchemaCalculate(
         'number',
