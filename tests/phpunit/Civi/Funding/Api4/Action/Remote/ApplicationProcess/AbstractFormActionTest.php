@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 
-use Civi\Core\CiviEventDispatcher;
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Api4\Action\Remote\FundingCase\Traits\NewApplicationFormActionTrait;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
@@ -37,7 +37,7 @@ abstract class AbstractFormActionTest extends TestCase {
   protected ApplicationProcessEntityBundle $applicationProcessBundle;
 
   /**
-   * @var \Civi\Core\CiviEventDispatcher&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Core\CiviEventDispatcherInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   protected $eventDispatcherMock;
 
@@ -56,7 +56,7 @@ abstract class AbstractFormActionTest extends TestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->applicationProcessBundleLoaderMock = $this->createMock(ApplicationProcessBundleLoader::class);
-    $this->eventDispatcherMock = $this->createMock(CiviEventDispatcher::class);
+    $this->eventDispatcherMock = $this->createMock(CiviEventDispatcherInterface::class);
 
     $this->applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
       ['id' => 22],

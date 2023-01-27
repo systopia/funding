@@ -21,7 +21,7 @@ namespace Civi\Funding\Api4\Action\FundingProgram;
 
 use Civi\Api4\FundingProgram;
 use Civi\Api4\Generic\DAOGetAction;
-use Civi\Core\CiviEventDispatcher;
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Api4\Action\FundingContactIdSessionAwareInterface;
 use Civi\Funding\Api4\Action\Traits\FundingActionContactIdSessionTrait;
 use Civi\Funding\Event\FundingProgram\GetPermissionsEvent;
@@ -33,11 +33,11 @@ final class GetAction extends DAOGetAction implements FundingContactIdSessionAwa
   use FundingActionContactIdSessionTrait;
   use PermissionsGetActionTrait;
 
-  private CiviEventDispatcher $_eventDispatcher;
+  private CiviEventDispatcherInterface $_eventDispatcher;
 
   private PossiblePermissionsLoaderInterface $_possiblePermissionsLoader;
 
-  public function __construct(CiviEventDispatcher $eventDispatcher,
+  public function __construct(CiviEventDispatcherInterface $eventDispatcher,
     PossiblePermissionsLoaderInterface $possiblePermissionsLoader
   ) {
     parent::__construct(FundingProgram::_getEntityName(), 'get');

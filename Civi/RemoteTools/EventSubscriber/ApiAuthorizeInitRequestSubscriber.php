@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\RemoteTools\EventSubscriber;
 
 use Civi\API\Event\AuthorizeEvent;
-use Civi\Core\CiviEventDispatcher;
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\RemoteTools\Api4\Action\EventActionInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -41,9 +41,9 @@ final class ApiAuthorizeInitRequestSubscriber implements EventSubscriberInterfac
    *
    * @see https://lab.civicrm.org/dev/core/-/issues/2316#note_87197
    */
-  private CiviEventDispatcher $eventDispatcher;
+  private CiviEventDispatcherInterface $eventDispatcher;
 
-  public function __construct(CiviEventDispatcher $eventDispatcher) {
+  public function __construct(CiviEventDispatcherInterface $eventDispatcher) {
     $this->eventDispatcher = $eventDispatcher;
   }
 

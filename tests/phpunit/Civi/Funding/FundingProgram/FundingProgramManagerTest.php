@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingProgram;
 
 use Civi\Api4\Generic\Result;
-use Civi\Core\CiviEventDispatcher;
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Api4\Action\FundingProgram\GetAction;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
@@ -63,7 +63,7 @@ final class FundingProgramManagerTest extends TestCase {
 
     \CRM_Core_Session::singleton()->set('userID', 11);
 
-    $eventDispatcherMock = $this->createMock(CiviEventDispatcher::class);
+    $eventDispatcherMock = $this->createMock(CiviEventDispatcherInterface::class);
     $possiblePermissionsLoaderMock = $this->createMock(PossiblePermissionsLoaderInterface::class);
     $this->containerMock->expects(static::exactly(2))->method('get')->with(GetAction::class)
       ->willReturnOnConsecutiveCalls(

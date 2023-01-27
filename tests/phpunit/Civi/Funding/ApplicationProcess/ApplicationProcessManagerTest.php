@@ -21,7 +21,7 @@ namespace Civi\Funding\ApplicationProcess;
 
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\DAOGetAction;
-use Civi\Core\CiviEventDispatcher;
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseEntity;
@@ -55,7 +55,7 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
   private ApplicationProcessManager $applicationProcessManager;
 
   /**
-   * @var \Civi\Core\CiviEventDispatcher&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Core\CiviEventDispatcherInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $eventDispatcherMock;
 
@@ -67,7 +67,7 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
 
   protected function setUp(): void {
     parent::setUp();
-    $this->eventDispatcherMock = $this->createMock(CiviEventDispatcher::class);
+    $this->eventDispatcherMock = $this->createMock(CiviEventDispatcherInterface::class);
     $this->applicationProcessManager = new ApplicationProcessManager(
       new Api4(),
       $this->eventDispatcherMock

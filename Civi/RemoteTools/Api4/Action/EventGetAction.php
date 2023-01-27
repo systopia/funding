@@ -21,7 +21,7 @@ namespace Civi\RemoteTools\Api4\Action;
 
 use Civi\Api4\Generic\AbstractGetAction;
 use Civi\Api4\Generic\Result;
-use Civi\Core\CiviEventDispatcher;
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\RemoteTools\Api4\Action\Traits\CreateActionEventTrait;
 use Civi\RemoteTools\Api4\Action\Traits\EventActionTrait;
 use Civi\RemoteTools\Event\GetEvent;
@@ -34,7 +34,7 @@ class EventGetAction extends AbstractGetAction implements EventActionInterface {
 
   public function __construct(string $initRequestEventName, string $authorizeRequestEventName,
                               string $entityName, string $actionName = 'get',
-                              CiviEventDispatcher $eventDispatcher = NULL) {
+                              CiviEventDispatcherInterface $eventDispatcher = NULL) {
     parent::__construct($entityName, $actionName);
     $this->_initRequestEventName = $initRequestEventName;
     $this->_authorizeRequestEventName = $authorizeRequestEventName;

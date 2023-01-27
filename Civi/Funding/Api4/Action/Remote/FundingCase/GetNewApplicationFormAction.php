@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Api4\Action\Remote\FundingCase;
 
 use Civi\Api4\Generic\Result;
-use Civi\Core\CiviEventDispatcher;
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Api4\Action\Remote\FundingCase\Traits\NewApplicationFormActionTrait;
 use Civi\Funding\Event\Remote\FundingCase\GetNewApplicationFormEvent;
 use Civi\Funding\FundingProgram\FundingCaseTypeManager;
@@ -52,7 +52,7 @@ final class GetNewApplicationFormAction extends AbstractNewApplicationFormAction
   public function __construct(
     FundingCaseTypeManager $fundingCaseTypeManager,
     FundingProgramManager $fundingProgramManager,
-    CiviEventDispatcher $eventDispatcher,
+    CiviEventDispatcherInterface $eventDispatcher,
     FundingCaseTypeProgramRelationChecker $relationChecker
   ) {
     parent::__construct(

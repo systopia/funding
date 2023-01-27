@@ -20,7 +20,7 @@ declare(strict_types = 1);
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
-use Civi\Core\CiviEventDispatcher;
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\RemoteTools\Api3\Api3;
 use Civi\RemoteTools\Api3\Api3Interface;
 use Civi\RemoteTools\Api4\Api4;
@@ -36,7 +36,7 @@ use Civi\RemoteTools\EventSubscriber\CheckAccessSubscriber;
 use Psr\Log\LoggerInterface;
 use Psr\SimpleCache\CacheInterface;
 
-$container->setAlias(CiviEventDispatcher::class, 'dispatcher.boot');
+$container->setAlias(CiviEventDispatcherInterface::class, 'dispatcher.boot');
 $container->setAlias(CacheInterface::class, 'cache.long');
 $container->setAlias(LoggerInterface::class, 'psr_log');
 

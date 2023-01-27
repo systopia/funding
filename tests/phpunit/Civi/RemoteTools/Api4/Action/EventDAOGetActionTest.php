@@ -25,7 +25,7 @@ declare(strict_types = 1);
 namespace Civi\RemoteTools\Api4\Action;
 
 use Civi\Api4\Generic\Result;
-use Civi\Core\CiviEventDispatcher;
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\RemoteTools\Event\DAOGetEvent;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub\ReturnCallback;
@@ -40,7 +40,7 @@ use PHPUnit\Framework\TestCase;
 final class EventDAOGetActionTest extends TestCase {
 
   /**
-   * @var \PHPUnit\Framework\MockObject\MockObject&\Civi\Core\CiviEventDispatcher
+   * @var \PHPUnit\Framework\MockObject\MockObject&\Civi\Core\CiviEventDispatcherInterface
    */
   private MockObject $eventDispatcherMock;
 
@@ -48,7 +48,7 @@ final class EventDAOGetActionTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
-    $this->eventDispatcherMock = $this->createMock(CiviEventDispatcher::class);
+    $this->eventDispatcherMock = $this->createMock(CiviEventDispatcherInterface::class);
     $this->eventGetAction = new EventDAOGetAction(
       'test.request.init',
       'test.request.authorize',

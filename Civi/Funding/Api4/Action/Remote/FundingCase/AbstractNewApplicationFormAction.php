@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Api4\Action\Remote\FundingCase;
 
 use Civi\Api4\RemoteFundingCase;
-use Civi\Core\CiviEventDispatcher;
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\Traits\NewApplicationFormActionTrait;
 use Civi\Funding\Api4\Action\Remote\Traits\RemoteFundingActionContactIdRequiredTrait;
@@ -44,7 +44,7 @@ abstract class AbstractNewApplicationFormAction extends AbstractRemoteFundingAct
     string $actionName,
     FundingCaseTypeManager $fundingCaseTypeManager,
     FundingProgramManager $fundingProgramManager,
-    CiviEventDispatcher $eventDispatcher,
+    CiviEventDispatcherInterface $eventDispatcher,
     FundingCaseTypeProgramRelationChecker $relationChecker
   ) {
     parent::__construct(RemoteFundingCase::_getEntityName(), $actionName);

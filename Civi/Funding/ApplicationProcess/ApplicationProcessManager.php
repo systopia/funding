@@ -21,7 +21,7 @@ namespace Civi\Funding\ApplicationProcess;
 
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\DAODeleteAction;
-use Civi\Core\CiviEventDispatcher;
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseEntity;
@@ -65,9 +65,9 @@ class ApplicationProcessManager {
 
   private Api4Interface $api4;
 
-  private CiviEventDispatcher $eventDispatcher;
+  private CiviEventDispatcherInterface $eventDispatcher;
 
-  public function __construct(Api4Interface $api4, CiviEventDispatcher $eventDispatcher) {
+  public function __construct(Api4Interface $api4, CiviEventDispatcherInterface $eventDispatcher) {
     $this->api4 = $api4;
     $this->eventDispatcher = $eventDispatcher;
   }

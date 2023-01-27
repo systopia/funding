@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\RemoteTools\Authorization;
 
-use Civi\Core\CiviEventDispatcher;
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\RemoteTools\Event\FilterPossiblePermissionsEvent;
 use Civi\RemoteTools\Event\GetPossiblePermissionsEvent;
 use Psr\SimpleCache\CacheInterface;
@@ -33,14 +33,14 @@ final class PossiblePermissionsLoader implements PossiblePermissionsLoaderInterf
 
   private CacheInterface $cache;
 
-  private CiviEventDispatcher $eventDispatcher;
+  private CiviEventDispatcherInterface $eventDispatcher;
 
   /**
    * @phpstan-var array<string, array<string, string>>
    */
   private array $permissions = [];
 
-  public function __construct(CiviEventDispatcher $eventDispatcher, CacheInterface $cache) {
+  public function __construct(CiviEventDispatcherInterface $eventDispatcher, CacheInterface $cache) {
     $this->eventDispatcher = $eventDispatcher;
     $this->cache = $cache;
   }

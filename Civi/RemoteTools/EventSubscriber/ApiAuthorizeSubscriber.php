@@ -22,7 +22,7 @@ namespace Civi\RemoteTools\EventSubscriber;
 use Civi\API\Event\AuthorizeEvent;
 use Civi\API\Events;
 use Civi\Api4\Generic\AbstractAction;
-use Civi\Core\CiviEventDispatcher;
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\RemoteTools\Api4\Action\EventActionInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -34,7 +34,7 @@ class ApiAuthorizeSubscriber implements EventSubscriberInterface {
    *
    * @see https://lab.civicrm.org/dev/core/-/issues/2316#note_87197
    */
-  protected CiviEventDispatcher $eventDispatcher;
+  protected CiviEventDispatcherInterface $eventDispatcher;
 
   public static function getSubscribedEvents(): array {
     return [
@@ -42,7 +42,7 @@ class ApiAuthorizeSubscriber implements EventSubscriberInterface {
     ];
   }
 
-  public function __construct(CiviEventDispatcher $eventDispatcher) {
+  public function __construct(CiviEventDispatcherInterface $eventDispatcher) {
     $this->eventDispatcher = $eventDispatcher;
   }
 

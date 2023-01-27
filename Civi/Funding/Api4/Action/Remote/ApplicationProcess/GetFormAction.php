@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 
 use Civi\Api4\Generic\Result;
-use Civi\Core\CiviEventDispatcher;
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\Event\Remote\ApplicationProcess\GetApplicationFormEvent;
 use CRM_Funding_ExtensionUtil as E;
@@ -39,7 +39,7 @@ final class GetFormAction extends AbstractFormAction {
 
   public function __construct(
     ApplicationProcessBundleLoader $applicationProcessBundleLoader,
-    CiviEventDispatcher $eventDispatcher
+    CiviEventDispatcherInterface $eventDispatcher
   ) {
     parent::__construct('getForm', $applicationProcessBundleLoader, $eventDispatcher);
   }
