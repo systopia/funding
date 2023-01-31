@@ -80,10 +80,16 @@ final class ApplicationFormCommentPersistCommand {
     return $this->validatedData;
   }
 
-  public function getComment(): string {
+  public function getCommentText(): string {
     Assert::notNull($this->validatedData->getComment());
 
-    return $this->validatedData->getComment();
+    return $this->validatedData->getComment()['text'];
+  }
+
+  public function getCommentType(): string {
+    Assert::notNull($this->validatedData->getComment());
+
+    return $this->validatedData->getComment()['type'];
   }
 
 }

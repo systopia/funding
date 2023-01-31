@@ -17,33 +17,17 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Form;
+namespace Civi\Funding\EventSubscriber\Remote;
 
-interface ValidatedApplicationDataInterface {
+use Civi\Funding\Event\Remote\FundingGetFieldsEvent;
+use Civi\RemoteTools\EventSubscriber\AbstractRemoteGetFieldsSubscriber;
 
-  public function getAction(): string;
+final class ApplicationProcessActivityGetFieldsSubscriber extends AbstractRemoteGetFieldsSubscriber {
 
-  public function getTitle(): string;
+  protected const BASIC_ENTITY_NAME = 'FundingApplicationProcessActivity';
 
-  public function getShortDescription(): string;
+  protected const ENTITY_NAME = 'RemoteFundingApplicationProcessActivity';
 
-  public function getRecipientContactId(): int;
-
-  public function getStartDate(): ?\DateTimeInterface;
-
-  public function getEndDate(): ?\DateTimeInterface;
-
-  public function getAmountRequested(): float;
-
-  /**
-   * @return array{text: string, type: string}|null
-   */
-  public function getComment(): ?array;
-
-  /**
-   * @phpstan-return array<string, mixed>
-   *   Application data without extra data like "action".
-   */
-  public function getApplicationData(): array;
+  protected const EVENT_CLASS = FundingGetFieldsEvent::class;
 
 }

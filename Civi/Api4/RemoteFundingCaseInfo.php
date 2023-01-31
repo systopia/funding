@@ -20,23 +20,12 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\Funding\Api4\AbstractRemoteFundingEntity;
-use Civi\Funding\Api4\Action\Remote\GetAction;
-use Civi\Funding\Api4\Action\Remote\GetFieldsAction;
-use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
+use Civi\Funding\Api4\Action\Remote\RemoteFundingGetAction;
 
 final class RemoteFundingCaseInfo extends AbstractRemoteFundingEntity {
 
-  use EntityNameTrait;
-
-  public static function get(): GetAction {
-    return new GetAction(static::getEntityName());
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public static function getFields() {
-    return new GetFieldsAction(static::getEntityName());
+  public static function get(): RemoteFundingGetAction {
+    return new RemoteFundingGetAction(static::getEntityName());
   }
 
 }

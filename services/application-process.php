@@ -75,6 +75,8 @@ use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessPreDeleteS
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessReviewStatusSubscriber;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessStatusSubscriber;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationResourcesItemsSubscriber;
+use Civi\Funding\EventSubscriber\Remote\ApplicationProcessActivityGetFieldsSubscriber;
+use Civi\Funding\EventSubscriber\Remote\ApplicationProcessActivityGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessGetFieldsSubscriber;
 
@@ -184,6 +186,11 @@ $container->autowire(ApplicationResourcesItemsSubscriber::class)
   ->addTag('kernel.event_subscriber')
   ->setLazy(TRUE);
 $container->autowire(ApplicationProcessDAOGetSubscriber::class)
+  ->addTag('kernel.event_subscriber');
+
+$container->autowire(ApplicationProcessActivityGetSubscriber::class)
+  ->addTag('kernel.event_subscriber');
+$container->autowire(ApplicationProcessActivityGetFieldsSubscriber::class)
   ->addTag('kernel.event_subscriber');
 
 $container->autowire(ApplicationProcessActionsDeterminerInterface::class,

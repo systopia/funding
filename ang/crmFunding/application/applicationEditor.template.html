@@ -6,8 +6,18 @@
                 <h4 class="modal-title">{{submitModal.title}}</h4>
             </div>
             <div class="modal-body">
-                <label for="comment">{{ts('Comment')}}</label>
-                <textarea id="comment" rows="5" cols="80" ng-model="comment.text"></textarea>
+                <div>
+                    <label for="commentText">{{ts('Comment')}}</label>
+                    <textarea id="commentText" rows="5" cols="80" ng-model="comment.text"></textarea>
+                </div>
+                <div>
+                    <label for="commentType">{{ts('Comment type')}}</label>
+                    <select id="commentType" ng-model="comment.type" ng-required="comment.text">
+                        <option disabled selected></option>
+                        <option value="internal">{{ts('internal')}}</option>
+                        <option value="external">{{ts('external')}}</option>
+                    </select>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">{{ts('Cancel')}}</button>

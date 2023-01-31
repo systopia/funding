@@ -30,7 +30,7 @@ use Civi\Funding\Form\ValidatedApplicationDataInterface;
  *   beginn: string,
  *   ende: string,
  *   finanzierung: array{beantragterZuschuss: float},
- *   comment?: string,
+ *   comment?: array{text: string, type: string},
  * }
  */
 final class AVK1ValidatedData implements ValidatedApplicationDataInterface {
@@ -76,7 +76,7 @@ final class AVK1ValidatedData implements ValidatedApplicationDataInterface {
     return $this->data['finanzierung']['beantragterZuschuss'];
   }
 
-  public function getComment(): ?string {
+  public function getComment(): ?array {
     return $this->data['comment'] ?? NULL;
   }
 

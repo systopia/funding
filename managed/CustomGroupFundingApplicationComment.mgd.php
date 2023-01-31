@@ -18,7 +18,8 @@ return [
         'title' => E::ts('Funding Application Comment'),
         'extends' => 'Activity',
         'extends_entity_column_value:name' => [
-          'funding_application_comment',
+          'funding_application_comment_external',
+          'funding_application_comment_internal',
         ],
         'style' => 'Inline',
         'collapse_display' => FALSE,

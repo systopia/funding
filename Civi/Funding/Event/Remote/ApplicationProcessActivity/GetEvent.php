@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2023 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,32 +17,20 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding;
+namespace Civi\Funding\Event\Remote\ApplicationProcessActivity;
 
-final class ActivityTypeIds {
+use Civi\Funding\Event\Remote\FundingGetEvent;
 
-  public const FUNDING_APPLICATION_CREATE = 63785200;
+final class GetEvent extends FundingGetEvent {
 
-  public const FUNDING_APPLICATION_STATUS_CHANGE = 63785201;
+  protected int $applicationProcessId;
 
-  public const FUNDING_APPLICATION_COMMENT_INTERNAL = 63785202;
+  public function getApplicationProcessId(): int {
+    return $this->applicationProcessId;
+  }
 
-  public const FUNDING_APPLICATION_REVIEW_STATUS_CHANGE = 63785203;
-
-  public const FUNDING_APPLICATION_COMMENT_EXTERNAL = 63785204;
-
-  /**
-   * @phpstan-return array<string, int>
-   *
-   * @codeCoverageIgnore
-   */
-  public static function getIds(): array {
-    static $ids = NULL;
-    if (NULL === $ids) {
-      $ids = (new \ReflectionClass(__CLASS__))->getConstants();
-    }
-
-    return $ids;
+  protected function getRequiredParams(): array {
+    return array_merge(parent::getRequiredParams(), ['applicationProcessId']);
   }
 
 }

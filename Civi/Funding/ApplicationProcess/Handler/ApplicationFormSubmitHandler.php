@@ -20,9 +20,9 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
+use Civi\Funding\ApplicationProcess\Command\ApplicationFormCommentPersistCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitResult;
-use Civi\Funding\ApplicationProcess\Command\ApplicationFormCommentPersistCommand;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\Form\ApplicationJsonSchemaFactoryInterface;
 use Civi\Funding\Form\Validation\ValidationResult;
@@ -101,7 +101,7 @@ final class ApplicationFormSubmitHandler implements ApplicationFormSubmitHandler
       $command->getApplicationProcessBundle(),
     );
 
-    if (NULL !== $validatedData->getComment() && '' !== $validatedData->getComment()) {
+    if (NULL !== $validatedData->getComment() && '' !== $validatedData->getComment()['text']) {
       $this->commentPersistHandler->handle(new ApplicationFormCommentPersistCommand(
         $command->getContactId(),
         $command->getApplicationProcess(),

@@ -47,7 +47,8 @@ fundingModule.directive('fundingApplicationProcessHistory', [function() {
             return $scope.workflowActivitiesHidden;
           case 'funding_application_create':
             return $scope.workflowActivitiesHidden;
-          case 'funding_application_comment':
+          case 'funding_application_comment_external':
+          case 'funding_application_comment_internal':
             return $scope.commentsHidden;
           default:
             return false;
