@@ -40,6 +40,7 @@
   <field>
     <name>funding_case_id</name>
     <type>int unsigned</type>
+    <required>true</required>
     <comment>FK to FundingCase</comment>
     <html>
       <type>EntityRef</type>
