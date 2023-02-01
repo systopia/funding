@@ -211,7 +211,7 @@ ENGINE=InnoDB;
 CREATE TABLE `civicrm_funding_application_process` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique FundingApplicationProcess ID',
   `identifier` varchar(255) NOT NULL COMMENT 'Unique generated identifier',
-  `funding_case_id` int unsigned COMMENT 'FK to FundingCase',
+  `funding_case_id` int unsigned NOT NULL COMMENT 'FK to FundingCase',
   `status` varchar(64) NOT NULL,
   `creation_date` timestamp NOT NULL,
   `modification_date` timestamp NOT NULL,
