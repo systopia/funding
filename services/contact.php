@@ -28,13 +28,9 @@ use Civi\Funding\Contact\PossibleRecipientsLoaderInterface;
 use Civi\Funding\Contact\RecipientsLoader\DefaultPossibleRecipientsLoader;
 use Civi\Funding\Contact\RelatedContactsLoaderCollection;
 use Civi\Funding\Contact\RelatedContactsLoaderInterface;
-use Civi\Funding\Contact\Relation\Loaders\ContactTypeAndRelationshipTypeLoader;
-use Civi\Funding\Contact\Relation\Loaders\RelationshipTypeLoader;
-use Civi\Funding\Contact\Relation\Loaders\SelfByContactTypeLoader;
 use Civi\Funding\Contact\Relation\RelationTypeContainer;
-use Civi\Funding\Contact\Relation\Types\ContactTypeAndRelationshipType;
-use Civi\Funding\Contact\Relation\Types\RelationshipType;
-use Civi\Funding\Contact\Relation\Types\SelfByContactType;
+use Civi\Funding\Contact\Relation\RelationTypeInterface;
+use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\Reference;
 
@@ -49,20 +45,25 @@ $container->autowire(GetAction::class)
   ->setArgument('$relationTypeContainer', new Reference('funding.contact_relation_type_container'))
   ->setPublic(TRUE)
   ->setShared(TRUE);
+
 $container->register('funding.contact_relation_type_container', RelationTypeContainer::class)
   ->addArgument(new TaggedIteratorArgument('funding.contact_relation_type'));
-$container->autowire(ContactTypeAndRelationshipType::class)
-  ->addTag('funding.contact_relation_type');
-$container->autowire(RelationshipType::class)
-  ->addTag('funding.contact_relation_type');
-$container->autowire(SelfByContactType::class)
-  ->addTag('funding.contact_relation_type');
+
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/Contact/Relation/Types',
+  'Civi\\Funding\\Contact\\Relation\\Types',
+  RelationTypeInterface::class,
+  ['funding.contact_relation_type' => []],
+);
 
 $container->register(RelatedContactsLoaderInterface::class, RelatedContactsLoaderCollection::class)
   ->addArgument(new TaggedIteratorArgument('funding.related_contacts_loader'));
-$container->autowire(ContactTypeAndRelationshipTypeLoader::class)
-  ->addTag('funding.related_contacts_loader');
-$container->autowire(RelationshipTypeLoader::class)
-  ->addTag('funding.related_contacts_loader');
-$container->autowire(SelfByContactTypeLoader::class)
-  ->addTag('funding.related_contacts_loader');
+
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/Contact/Relation/Loaders',
+  'Civi\\Funding\\Contact\\Relation\\Loaders',
+  RelationTypeInterface::class,
+  ['funding.related_contacts_loader' => []],
+);

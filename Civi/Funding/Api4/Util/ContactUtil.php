@@ -30,7 +30,7 @@ final class ContactUtil {
    * @phpstan-param array{id: int, display_name: ?string} $contact
    */
   public static function getDisplayName(array $contact): string {
-      return $contact['display_name'] ?? E::ts('Contact %1', [1 => $contact['id']]);
+    return $contact['display_name'] ?? E::ts('Contact %1', [1 => $contact['id']]);
   }
 
 }

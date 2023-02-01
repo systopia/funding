@@ -119,19 +119,6 @@ fundingModule.directive('fundingApplicationEditor', function() {
         await loadFormData();
         disableOverlay();
 
-        function handleSetValue(field, value) {
-          return function (result) {
-            if (result[0] && _4.isEqual(result[0][field], value)) {
-              $scope.applicationProcess[field] = value;
-              reloadJsonSchema();
-
-              return true;
-            }
-
-            return false;
-          };
-        }
-
         $scope.isActionAllowed = function (action) {
           return $scope.jsonSchema.properties.action.enum.includes(action);
         };
@@ -169,23 +156,6 @@ fundingModule.directive('fundingApplicationEditor', function() {
           $scope.submitModal.submitted = true;
           $submitModal.modal('hide');
           return $scope.submit($scope.submitModal.action);
-        };
-
-        $scope.setReviewCalculative = function (reviewCalculative) {
-          return $scope.updateApplicationProcessField('is_review_calculative', reviewCalculative);
-        };
-
-        $scope.setReviewContent = function (reviewContent) {
-          return $scope.updateApplicationProcessField('is_review_content', reviewContent);
-        };
-
-        $scope.updateApplicationProcessField = function (field, value) {
-          if (value === undefined) {
-            value = null;
-          }
-
-          return crmStatus({}, fundingApplicationProcessService.setValue($scope.applicationProcess.id, field, value))
-              .then(handleSetValue(field, value));
         };
 
         $scope.reset = function () {

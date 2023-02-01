@@ -36,12 +36,14 @@ use Civi\Funding\Entity\FundingCaseEntity;
  */
 final class FundingCaseFactory {
 
+  public const DEFAULT_ID = 3;
+
   /**
    * @phpstan-param fundingCaseValuesT $values
    */
   public static function createFundingCase(array $values = []): FundingCaseEntity {
     return FundingCaseEntity::fromArray($values + [
-      'id' => 3,
+      'id' => self::DEFAULT_ID,
       'funding_program_id' => 4,
       'funding_case_type_id' => 5,
       'recipient_contact_id' => 1,

@@ -58,6 +58,14 @@ final class Api4 implements Api4Interface {
   /**
    * @inheritDoc
    */
+  public function createGetAction(string $entityName): AbstractAction {
+    // @phpstan-ignore-next-line Does not return AbstractGetAction.
+    return $this->createAction($entityName, 'get');
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function executeAction(AbstractAction $action): Result {
     return $action->execute();
   }

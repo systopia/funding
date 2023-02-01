@@ -23,6 +23,7 @@ declare(strict_types = 1);
 use Civi\Funding\Api4\Action\FundingApplicationProcess\CreateAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\DeleteAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\GetAction;
+use Civi\Funding\Api4\Action\FundingApplicationProcess\GetFieldsAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\GetFormDataAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\GetJsonSchemaAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\SaveAction;
@@ -67,6 +68,7 @@ use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationResourcesItemsPers
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\DefaultApplicationProcessStatusDeterminer;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ReworkPossibleApplicationProcessStatusDeterminer;
+use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationCostItemsSubscriber;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessCreatedSubscriber;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessIdentifierSubscriber;
@@ -78,6 +80,7 @@ use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessStatusSubs
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationResourcesItemsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessGetFieldsSubscriber;
+use Civi\Funding\Validation\ConcreteEntityValidatorInterface;
 
 $container->autowire(ApplicationProcessManager::class);
 $container->autowire(ApplicationProcessBundleLoader::class);
@@ -85,6 +88,14 @@ $container->autowire(ApplicationCostItemManager::class);
 $container->autowire(ApplicationResourcesItemManager::class);
 $container->autowire(ApplicationIdentifierGeneratorInterface::class, ApplicationIdentifierGenerator::class);
 $container->autowire(ApplicationProcessActivityManager::class);
+
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/ApplicationProcess/Validator',
+  'Civi\\Funding\\ApplicationProcess\\Validator',
+  ConcreteEntityValidatorInterface::class,
+  ['funding.validator.entity' => []]
+);
 
 $container->autowire(ApplicationFormNewCreateHandlerInterface::class, DefaultApplicationFormNewCreateHandler::class);
 $container->autowire(
@@ -122,6 +133,9 @@ $container->autowire(DeleteAction::class)
   ->setPublic(TRUE)
   ->setShared(TRUE);
 $container->autowire(GetAction::class)
+  ->setPublic(TRUE)
+  ->setShared(FALSE);
+$container->autowire(GetFieldsAction::class)
   ->setPublic(TRUE)
   ->setShared(FALSE);
 $container->autowire(SaveAction::class)

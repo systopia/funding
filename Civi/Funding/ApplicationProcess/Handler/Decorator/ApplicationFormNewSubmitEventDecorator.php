@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Handler\Decorator;
 
-use Civi\Core\CiviEventDispatcher;
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewSubmitCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewSubmitResult;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewSubmitHandlerInterface;
@@ -30,9 +30,12 @@ final class ApplicationFormNewSubmitEventDecorator implements ApplicationFormNew
 
   private ApplicationFormNewSubmitHandlerInterface $handler;
 
-  private CiviEventDispatcher $eventDispatcher;
+  private CiviEventDispatcherInterface $eventDispatcher;
 
-  public function __construct(ApplicationFormNewSubmitHandlerInterface $handler, CiviEventDispatcher $eventDispatcher) {
+  public function __construct(
+    ApplicationFormNewSubmitHandlerInterface $handler,
+    CiviEventDispatcherInterface $eventDispatcher
+  ) {
     $this->handler = $handler;
     $this->eventDispatcher = $eventDispatcher;
   }

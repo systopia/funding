@@ -19,8 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Handler\Decorator;
 
-use Civi\Core\CiviEventDispatcher;
-use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewSubmitResult;
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitResult;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
@@ -43,7 +42,7 @@ final class ApplicationFormSubmitEventDecoratorTest extends TestCase {
   private MockObject $decoratedHandlerMock;
 
   /**
-   * @var \Civi\Core\CiviEventDispatcher&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Core\CiviEventDispatcherInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $eventDispatcherMock;
 
@@ -52,7 +51,7 @@ final class ApplicationFormSubmitEventDecoratorTest extends TestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->decoratedHandlerMock = $this->createMock(ApplicationFormSubmitHandlerInterface::class);
-    $this->eventDispatcherMock = $this->createMock(CiviEventDispatcher::class);
+    $this->eventDispatcherMock = $this->createMock(CiviEventDispatcherInterface::class);
     $this->handler = new ApplicationFormSubmitEventDecorator(
       $this->decoratedHandlerMock,
       $this->eventDispatcherMock,

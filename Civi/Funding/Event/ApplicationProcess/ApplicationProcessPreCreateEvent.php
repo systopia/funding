@@ -19,9 +19,6 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Event\ApplicationProcess;
 
-use Civi\Funding\Entity\ApplicationProcessEntityBundle;
-use Civi\Funding\Entity\Traits\ApplicationProcessEntityBundleTrait;
-
 final class ApplicationProcessPreCreateEvent extends AbstractApplicationEvent {
 
 }

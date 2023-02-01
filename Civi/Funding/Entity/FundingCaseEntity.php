@@ -116,6 +116,10 @@ final class FundingCaseEntity extends AbstractEntity {
     return $this->values['permissions'] ?? [];
   }
 
+  public function hasPermission(string $permission): bool {
+    return in_array($permission, $this->getPermissions(), TRUE);
+  }
+
   /**
    * On create CiviCRM returns a different date format than on get. This method
    * reformats the dates in $values so that they are as on get.

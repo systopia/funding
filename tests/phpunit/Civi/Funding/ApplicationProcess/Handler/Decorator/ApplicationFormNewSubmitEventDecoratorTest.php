@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Handler\Decorator;
 
-use Civi\Core\CiviEventDispatcher;
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewSubmitCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewSubmitResult;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewSubmitHandlerInterface;
@@ -46,7 +46,7 @@ final class ApplicationFormNewSubmitEventDecoratorTest extends TestCase {
   private MockObject $decoratedHandlerMock;
 
   /**
-   * @var \Civi\Core\CiviEventDispatcher&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Core\CiviEventDispatcherInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $eventDispatcherMock;
 
@@ -55,7 +55,7 @@ final class ApplicationFormNewSubmitEventDecoratorTest extends TestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->decoratedHandlerMock = $this->createMock(ApplicationFormNewSubmitHandlerInterface::class);
-    $this->eventDispatcherMock = $this->createMock(CiviEventDispatcher::class);
+    $this->eventDispatcherMock = $this->createMock(CiviEventDispatcherInterface::class);
     $this->handler = new ApplicationFormNewSubmitEventDecorator(
       $this->decoratedHandlerMock,
       $this->eventDispatcherMock,
@@ -78,7 +78,7 @@ final class ApplicationFormNewSubmitEventDecoratorTest extends TestCase {
     $this->decoratedHandlerMock->expects(static::once())->method('handle')
       ->with($command)
       ->willReturn($result);
-    
+
     $this->eventDispatcherMock->expects(static::once())->method('dispatch')
       ->with(ApplicationFormSubmitSuccessEvent::class, static::isInstanceOf(ApplicationFormSubmitSuccessEvent::class));
 

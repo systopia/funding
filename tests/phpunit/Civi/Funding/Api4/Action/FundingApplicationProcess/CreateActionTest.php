@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\FundingApplicationProcess;
 
+use Civi\API\Exception\UnauthorizedException;
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\EntityFactory\ApplicationProcessFactory;
@@ -57,16 +58,28 @@ final class CreateActionTest extends AbstractFundingHeadlessTestCase {
       'funding_case_id' => $fundingCase->getId(),
     ])
       ->setTitle('Test 1')
-      ->setIdentifier('test1')
-      ->setIsReviewCalculative(TRUE)
-      ->setIsReviewContent(FALSE);
+      ->setIdentifier('test1');
 
-    $record = FundingApplicationProcess::create()
-      ->setValues($applicationProcess->toArray())
-      ->execute()
-      ->first();
-    static::assertNull($record['is_review_calculative']);
-    static::assertNull($record['is_review_content']);
+    $applicationProcess->setIsReviewCalculative(TRUE);
+    $e = NULL;
+    try {
+      FundingApplicationProcess::create()->setValues($applicationProcess->toArray())->execute();
+    }
+    catch (UnauthorizedException $e) {
+      static::assertSame('Permission to change calculative review result is missing.', $e->getMessage());
+    }
+    static::assertNotNull($e);
+
+    $applicationProcess->setIsReviewCalculative(NULL);
+    $applicationProcess->setIsReviewContent(TRUE);
+    $e = NULL;
+    try {
+      FundingApplicationProcess::create()->setValues($applicationProcess->toArray())->execute();
+    }
+    catch (UnauthorizedException $e) {
+      static::assertSame('Permission to change content review result is missing.', $e->getMessage());
+    }
+    static::assertNotNull($e);
 
     $contactIdReviewCalculative = ContactFixture::addIndividual()['id'];
     FundingCaseContactRelationFixture::addContact(
@@ -76,26 +89,26 @@ final class CreateActionTest extends AbstractFundingHeadlessTestCase {
     );
     SessionTestUtil::mockInternalRequestSession($contactIdReviewCalculative);
 
-    $applicationProcess->setTitle('Test 2');
-    $applicationProcess->setIdentifier('test2');
+    $applicationProcess->setIsReviewCalculative(TRUE);
+    $applicationProcess->setIsReviewContent(NULL);
     $record = FundingApplicationProcess::create()
       ->setValues($applicationProcess->toArray())
       ->execute()
       ->first();
     static::assertTrue($record['is_review_calculative']);
-    static::assertNull($record['is_review_content']);
 
     $contactIdReviewContent = ContactFixture::addIndividual()['id'];
     FundingCaseContactRelationFixture::addContact($contactIdReviewContent, $fundingCase->getId(), ['review_content']);
     SessionTestUtil::mockInternalRequestSession($contactIdReviewContent);
 
-    $applicationProcess->setTitle('Test 3');
-    $applicationProcess->setIdentifier('test3');
+    $applicationProcess->setTitle('Test 2');
+    $applicationProcess->setIdentifier('test2');
+    $applicationProcess->setIsReviewCalculative(NULL);
+    $applicationProcess->setIsReviewContent(FALSE);
     $record = FundingApplicationProcess::create()
       ->setValues($applicationProcess->toArray())
       ->execute()
       ->first();
-    static::assertNull($record['is_review_calculative']);
     static::assertFalse($record['is_review_content']);
   }
 

@@ -17,6 +17,15 @@
 'use strict';
 
 fundingModule.factory('fundingApplicationProcessService', ['crmApi4', function(crmApi4) {
+  function getOptions(id, field) {
+    return crmApi4('FundingApplicationProcess', 'getFields', {
+      loadOptions: true,
+      values: {id},
+      where: [['name', '=', field]],
+      select: ['options']
+    }).then((result) => result[0].options || {});
+  }
+
   return {
     get: (id) => crmApi4('FundingApplicationProcess', 'get', {
       where: [['id', '=', id]],
@@ -37,11 +46,7 @@ fundingModule.factory('fundingApplicationProcessService', ['crmApi4', function(c
     },
     submitForm: (id, data) => crmApi4('FundingApplicationProcess', 'submitForm', {id, data}),
     validateForm: (id, data) => crmApi4('FundingApplicationProcess', 'validateForm', {id, data}),
-    getStatusLabels: (id) => crmApi4('FundingApplicationProcess', 'getFields', {
-      loadOptions: true,
-      values: {id},
-      where: [['name', '=', 'status']],
-      select: ['options']
-    }).then((result) => result[0].options || {}),
+    getStatusLabels: (id) => getOptions(id, 'status'),
+    getOptions: (id, field) => getOptions(id, field),
   };
 }]);

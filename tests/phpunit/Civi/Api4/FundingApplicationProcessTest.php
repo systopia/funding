@@ -37,6 +37,7 @@ use Civi\Funding\Util\SessionTestUtil;
  * @covers \Civi\Api4\FundingApplicationProcess
  * @covers \Civi\Funding\Api4\Action\FundingApplicationProcess\DeleteAction
  * @covers \Civi\Funding\Api4\Action\FundingApplicationProcess\GetAction
+ * @covers \Civi\Funding\Api4\Action\FundingApplicationProcess\GetFieldsAction
  * @covers \Civi\Funding\Api4\Action\FundingApplicationProcess\GetFormDataAction
  * @covers \Civi\Funding\Api4\Action\FundingApplicationProcess\GetJsonSchemaAction
  *
@@ -113,6 +114,73 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
     SessionTestUtil::mockRemoteRequestSession((string) $contactNotPermitted['id']);
     static::assertCount(0, FundingApplicationProcess::get()
       ->addSelect('id')->execute());
+  }
+
+  public function testGetFieldsAction(): void {
+    $fundingCase = $this->createFundingCase();
+    $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId());
+
+    $contactReviewCalculative = ContactFixture::addIndividual([
+      'first_name' => 'Calculative',
+      'last_name' => 'Reviewer',
+    ]);
+    FundingCaseContactRelationFixture::addContact(
+      $contactReviewCalculative['id'],
+      $fundingCase->getId(),
+      ['review_calculative'],
+    );
+    $contactReviewContent = ContactFixture::addIndividual(['first_name' => 'Content', 'last_name' => 'Reviewer']);
+    FundingCaseContactRelationFixture::addContact(
+      $contactReviewContent['id'],
+      $fundingCase->getId(),
+      ['review_content']
+    );
+
+    $contact = ContactFixture::addIndividual();
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['some_permission']);
+
+    $contactNotPermitted = ContactFixture::addIndividual();
+
+    SessionTestUtil::mockInternalRequestSession($contact['id']);
+    // No load options.
+    $result = FundingApplicationProcess::getFields()->execute()->indexBy('name');
+    static::assertFalse($result['reviewer_calc_contact_id']['options']);
+    static::assertFalse($result['reviewer_cont_contact_id']['options']);
+
+    // Load options without application process ID.
+    $result = FundingApplicationProcess::getFields()->setLoadOptions(TRUE)->execute()->indexBy('name');
+    static::assertTrue($result['reviewer_calc_contact_id']['options']);
+    static::assertTrue($result['reviewer_cont_contact_id']['options']);
+
+    // Load options with unknown application process ID.
+    $result = FundingApplicationProcess::getFields()
+      ->setLoadOptions(TRUE)
+      ->addValue('id', $applicationProcess->getId() + 1)
+      ->execute()
+      ->indexBy('name');
+    static::assertTrue($result['reviewer_calc_contact_id']['options']);
+    static::assertTrue($result['reviewer_cont_contact_id']['options']);
+
+    // Load options with known application process ID.
+    $result = FundingApplicationProcess::getFields()
+      ->setLoadOptions(TRUE)
+      ->addValue('id', $applicationProcess->getId())
+      ->execute()
+      ->indexBy('name');
+    $expectedReviewersCalculative = [$contactReviewCalculative['id'] => 'Calculative Reviewer'];
+    $expectedReviewersContent = [$contactReviewContent['id'] => 'Content Reviewer'];
+    static::assertSame($expectedReviewersCalculative, $result['reviewer_calc_contact_id']['options']);
+    static::assertSame($expectedReviewersContent, $result['reviewer_cont_contact_id']['options']);
+
+    // Load options without application process permission.
+    SessionTestUtil::mockInternalRequestSession($contactNotPermitted['id']);
+    $result = FundingApplicationProcess::getFields()
+      ->setLoadOptions(TRUE)
+      ->addValue('id', $applicationProcess->getId())
+      ->execute()
+      ->indexBy('name');
+    static::assertTrue($result['reviewer_calc_contact_id']['options']);
+    static::assertTrue($result['reviewer_cont_contact_id']['options']);
   }
 
   public function testGetFormData(): void {

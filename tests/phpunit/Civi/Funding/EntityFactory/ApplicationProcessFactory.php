@@ -55,7 +55,7 @@ final class ApplicationProcessFactory {
     $values += [
       'id' => self::DEFAULT_ID,
       'identifier' => 'app2',
-      'funding_case_id' => 3,
+      'funding_case_id' => FundingCaseFactory::DEFAULT_ID,
       'status' => 'new_status',
       'title' => 'Title',
       'short_description' => 'Description',

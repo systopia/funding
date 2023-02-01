@@ -21,18 +21,24 @@ namespace Civi\Funding\Api4\Action\FundingApplicationProcess;
 
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\DAOSaveAction;
-use Civi\Funding\Api4\Action\FundingApplicationProcess\Traits\CheckReviewPermissionTrait;
-use Civi\Funding\FundingCase\FundingCaseManager;
+use Civi\Funding\Api4\Action\Traits\ActionRecordValidationTrait;
+use Civi\Funding\Validation\EntityValidatorInterface;
 use Civi\RemoteTools\Api4\Api4Interface;
 
 final class SaveAction extends DAOSaveAction {
 
-  use CheckReviewPermissionTrait;
+  use ActionRecordValidationTrait;
 
-  public function __construct(Api4Interface $api4, FundingCaseManager $fundingCaseManager) {
-    parent::__construct(FundingApplicationProcess::_getEntityName(), 'save');
+  /**
+   * @phpstan-param EntityValidatorInterface<\Civi\Funding\Entity\ApplicationProcessEntity> $entityValidator
+   */
+  public function __construct(
+    Api4Interface $api4,
+    EntityValidatorInterface $entityValidator
+  ) {
+    parent::__construct(FundingApplicationProcess::_getEntityName(), 'create');
     $this->_api4 = $api4;
-    $this->_fundingCaseManager = $fundingCaseManager;
+    $this->_entityValidator = $entityValidator;
   }
 
 }

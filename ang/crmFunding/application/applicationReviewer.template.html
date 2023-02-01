@@ -1,0 +1,23 @@
+<div>
+    <label ng-if="label">{{label}}</label>
+    <span ng-show="editAllowed">
+        <span editable-ui-select="contactId" name="contact_id"
+              theme="bootstrap" data-e-ng-model="contactId"
+              onshow="onStartEdit()"
+              onbeforesave="setContact($data)"
+              onhide="onEditFinished()">
+            {{possibleContacts[contactId] || fallbackContactName}}
+            <editable-ui-select-match  class="ui-select-match" placeholder="Contact">
+                {{$select.selected.name}}
+            </editable-ui-select-match>
+            <editable-ui-select-choices class="ui-select-choices" repeat="contact.id as contact in contactChoices | filter: $select.search">
+                <div ng-bind-html="contact.name | highlight: $select.search"></div>
+            </editable-ui-select-choices>
+        </span>
+        <span ng-show="contactId !== loggedInContactId && !editorOpen" class="btn btn-link"
+             ng-click="setContact(loggedInContactId)">{{ts('Assign to me')}}</span>
+    </span>
+    <span ng-show="!editAllowed">
+        <span>{{possibleContacts[contactId] || fallbackContactName}}</span>
+    </span>
+</div>

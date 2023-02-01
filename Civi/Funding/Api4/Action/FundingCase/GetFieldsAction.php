@@ -28,18 +28,18 @@ final class GetFieldsAction extends DAOGetFieldsAction {
 
   use PermissionsGetFieldsActionTrait;
 
-  protected PossiblePermissionsLoaderInterface $_possiblePermissionsLoader;
+  private PossiblePermissionsLoaderInterface $possiblePermissionsLoader;
 
   public function __construct(PossiblePermissionsLoaderInterface $possiblePermissionsLoader) {
     parent::__construct(FundingCase::_getEntityName(), 'getFields');
-    $this->_possiblePermissionsLoader = $possiblePermissionsLoader;
+    $this->possiblePermissionsLoader = $possiblePermissionsLoader;
   }
 
   /**
    * @phpstan-return array<string, string>
    */
   protected function getPossiblePermissions(): array {
-    return $this->_possiblePermissionsLoader->getFilteredPermissions($this->getEntityName());
+    return $this->possiblePermissionsLoader->getFilteredPermissions($this->getEntityName());
   }
 
 }
