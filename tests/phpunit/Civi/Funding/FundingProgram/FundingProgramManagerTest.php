@@ -21,29 +21,23 @@ namespace Civi\Funding\FundingProgram;
 
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
+use Civi\Funding\AbstractContainerMockedTestCase;
 use Civi\Funding\Api4\Action\FundingProgram\GetAction;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
-use Psr\Container\ContainerInterface;
 
 /**
  * @covers \Civi\Funding\FundingProgram\FundingProgramManager
  */
-final class FundingProgramManagerTest extends TestCase {
+final class FundingProgramManagerTest extends AbstractContainerMockedTestCase {
 
   /**
    * @var \Civi\RemoteTools\Api4\Api4Interface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $api4Mock;
-
-  /**
-   * @var \Psr\Container\ContainerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $containerMock;
 
   /**
    * @var \Civi\Funding\FundingProgram\FundingProgramManager
@@ -53,8 +47,6 @@ final class FundingProgramManagerTest extends TestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->api4Mock = $this->createMock(Api4Interface::class);
-    \Civi::$statics[\Civi\Core\Container::class]['container'] = $this->containerMock
-      = $this->createMock(ContainerInterface::class);
     $this->fundingProgramManger = new FundingProgramManager($this->api4Mock);
   }
 
