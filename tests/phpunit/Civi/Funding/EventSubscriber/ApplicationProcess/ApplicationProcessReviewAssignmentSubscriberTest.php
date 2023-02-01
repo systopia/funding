@@ -77,7 +77,7 @@ final class ApplicationProcessReviewAssignmentSubscriberTest extends TestCase {
     static::assertNull($event->getApplicationProcess()->getReviewerContentContactId());
   }
 
-  public function testReviewerContactChange(): void {
+  public function testReviewerContentContactChange(): void {
     $event = new ApplicationFormSubmitSuccessEvent(
       1,
       ApplicationProcessBundleFactory::createApplicationProcessBundle(
@@ -112,27 +112,6 @@ final class ApplicationProcessReviewAssignmentSubscriberTest extends TestCase {
 
     static::assertNull($event->getApplicationProcess()->getReviewerCalculativeContactId());
     static::assertNull($event->getApplicationProcess()->getReviewerContentContactId());
-  }
-
-  public function testReviewerAlreadySet(): void {
-    $event = new ApplicationFormSubmitSuccessEvent(
-      1,
-      ApplicationProcessBundleFactory::createApplicationProcessBundle(
-        [
-          'reviewer_calc_contact_id' => 2,
-          'reviewer_cont_contact_id' => 3,
-        ],
-        ['permissions' => ['review_calculative', 'review_content']],
-      ),
-      [],
-      new TestValidatedData(['action' => 'review']),
-    );
-
-    $this->applicationProcessManagerMock->expects(static::never())->method('update');
-    $this->subscriber->onFormSubmitSuccess($event);
-
-    static::assertSame(2, $event->getApplicationProcess()->getReviewerCalculativeContactId());
-    static::assertSame(3, $event->getApplicationProcess()->getReviewerContentContactId());
   }
 
 }

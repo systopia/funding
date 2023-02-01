@@ -40,25 +40,18 @@ final class ApplicationProcessReviewAssignmentSubscriber implements EventSubscri
 
   public function onFormSubmitSuccess(ApplicationFormSubmitSuccessEvent $event): void {
     if ($this->isReviewStartAction($event->getAction())) {
-      $reviewerChanged = FALSE;
       $applicationProcess = $event->getApplicationProcess();
       $permissions = $event->getFundingCase()->getPermissions();
 
-      if (NULL === $applicationProcess->getReviewerCalculativeContactId()
-        && $this->hasPermissionReviewCalculative($permissions)) {
+      if ($this->hasPermissionReviewCalculative($permissions)) {
         $applicationProcess->setReviewerCalculativeContactId($event->getContactId());
-        $reviewerChanged = TRUE;
       }
 
-      if (NULL === $applicationProcess->getReviewerContentContactId()
-        && $this->hasPermissionReviewContent($permissions)) {
+      if ($this->hasPermissionReviewContent($permissions)) {
         $applicationProcess->setReviewerContentContactId($event->getContactId());
-        $reviewerChanged = TRUE;
       }
 
-      if ($reviewerChanged) {
-        $this->applicationProcessManager->update($event->getContactId(), $event->getApplicationProcessBundle());
-      }
+      $this->applicationProcessManager->update($event->getContactId(), $event->getApplicationProcessBundle());
     }
   }
 
