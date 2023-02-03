@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2023 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,7 +17,7 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\DependencyInjection;
+namespace Civi\Funding\DependencyInjection\Compiler;
 
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandler;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandlerInterface;
@@ -44,6 +44,8 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsAddIdentifi
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandler;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\Decorator\ApplicationFormNewSubmitEventDecorator;
+use Civi\Funding\ApplicationProcess\Handler\Decorator\ApplicationFormSubmitEventDecorator;
 use Civi\Funding\FundingCaseTypeServiceLocator;
 use Civi\Funding\FundingCaseTypeServiceLocatorContainer;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -146,7 +148,8 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         [
           '$jsonSchemaFactory' => $applicationJsonSchemaFactoryServices[$fundingCaseType],
           '$statusDeterminer' => $applicationStatusDeterminerServices[$fundingCaseType],
-        ]
+        ],
+        [ApplicationFormNewSubmitEventDecorator::class => []],
       );
 
       $applicationFormJsonSchemaGetHandlerServices[$fundingCaseType] ??= $this->createService(
@@ -199,7 +202,8 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
           '$commentPersistHandler' => $applicationFormCommentPersistHandlerServices[$fundingCaseType],
           '$jsonSchemaFactory' => $applicationJsonSchemaFactoryServices[$fundingCaseType],
           '$statusDeterminer' => $applicationStatusDeterminerServices[$fundingCaseType],
-        ]
+        ],
+        [ApplicationFormSubmitEventDecorator::class => []],
       );
 
       $applicationCostItemsAddIdentifiersHandlerServices[$fundingCaseType] ??= $this->createService(
@@ -275,15 +279,26 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
 
   /**
    * @phpstan-param array<string|int, Reference> $arguments
+   * @phpstan-param array<string, array<string|int, Reference>> $decorators
+   *   Class names mapped to arguments. The handler to decorate has to be the
+   *   first argument in the decorator class constructor.
    */
   private function createService(
     ContainerBuilder $container,
     string $fundingCaseType,
     string $class,
-    array $arguments
+    array $arguments,
+    array $decorators = []
   ): Reference {
     $serviceId = $class . ':' . $fundingCaseType;
     $container->autowire($serviceId, $class)->setArguments($arguments);
+
+    foreach ($decorators as $decoratorClass => $decoratorArguments) {
+      $decoratorServiceId = $decoratorClass . ':' . $fundingCaseType;
+      array_unshift($decoratorArguments, new Reference($serviceId));
+      $container->autowire($decoratorServiceId, $decoratorClass)->setArguments($decoratorArguments);
+      $serviceId = $decoratorServiceId;
+    }
 
     return new Reference($serviceId);
   }

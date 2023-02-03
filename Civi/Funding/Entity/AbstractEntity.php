@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Entity;
 
+use Civi\Api4\Generic\Result;
 use Civi\Funding\Util\DateTimeUtil;
 
 /**
@@ -41,6 +42,15 @@ abstract class AbstractEntity {
    * @phpstan-var T
    */
   protected array $values;
+
+  /**
+   * @phpstan-return array<int|string, static>
+   *   The keys of the given result are preserved.
+   */
+  public static function allFromApiResult(Result $result): array {
+    // @phpstan-ignore-next-line
+    return array_map(fn (array $record) => static::fromArray($record), $result->getArrayCopy());
+  }
 
   /**
    * @phpstan-param T $values

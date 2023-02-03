@@ -36,6 +36,10 @@ use Civi\Funding\EventSubscriber\Remote\FundingCaseGetFieldsSubscriber;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\FundingCaseStatusDeterminer;
 use Civi\Funding\FundingCase\FundingCaseStatusDeterminerInterface;
+use Civi\Funding\Permission\FundingCase\ContactsWithPermissionLoader;
+use Civi\Funding\Permission\FundingCase\FundingCaseContactsLoader;
+use Civi\Funding\Permission\FundingCase\FundingCaseContactsLoaderCollection;
+use Civi\Funding\Permission\FundingCase\FundingCaseContactsLoaderInterface;
 use Civi\Funding\Permission\FundingCase\RelationFactory\FundingCaseContactRelationFactory;
 use Civi\Funding\Permission\FundingCase\RelationFactory\RelationPropertiesFactoryLocator;
 use Civi\Funding\Permission\FundingCase\RelationFactory\RelationPropertiesFactoryTypeContainer;
@@ -87,6 +91,12 @@ foreach (glob(__DIR__ . '/../Civi/Funding/Permission/FundingCase/RelationFactory
   $container->autowire('Civi\\Funding\\Permission\\FundingCase\\RelationFactory\\Factory\\' . $class)
     ->addTag('funding.case.contact_relation_properties_factory');
 }
+
+$container->register(FundingCaseContactsLoaderInterface::class, FundingCaseContactsLoaderCollection::class)
+  ->addArgument(new TaggedIteratorArgument('funding.case.contacts_loader'));
+$container->autowire(FundingCaseContactsLoader::class)
+  ->addTag('funding.case.contacts_loader');
+$container->autowire(ContactsWithPermissionLoader::class);
 
 $container->autowire(FundingCaseGetFieldsSubscriber::class)
   ->addTag('kernel.event_subscriber');

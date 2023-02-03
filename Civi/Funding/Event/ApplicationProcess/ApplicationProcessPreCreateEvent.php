@@ -19,26 +19,6 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Event\ApplicationProcess;
 
-use Civi\Funding\Entity\ApplicationProcessEntityBundle;
-use Civi\Funding\Entity\Traits\ApplicationProcessEntityBundleTrait;
-use Symfony\Component\EventDispatcher\Event;
-
-final class ApplicationProcessPreCreateEvent extends Event {
-
-  use ApplicationProcessEntityBundleTrait;
-
-  private int $contactId;
-
-  public function __construct(
-    int $contactId,
-    ApplicationProcessEntityBundle $applicationProcessBundle
-  ) {
-    $this->contactId = $contactId;
-    $this->applicationProcessBundle = $applicationProcessBundle;
-  }
-
-  public function getContactId(): int {
-    return $this->contactId;
-  }
+final class ApplicationProcessPreCreateEvent extends AbstractApplicationEvent {
 
 }

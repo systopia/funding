@@ -25,15 +25,20 @@ use Civi\Api4\Generic\Result;
 interface Api4Interface {
 
   /**
-   * @param string $entityName
-   * @param string $action
    * @param array<string, mixed|ApiParameterInterface> $params
-   *
-   * @return \Civi\Api4\Generic\AbstractAction
    *
    * @throws \Civi\API\Exception\NotImplementedException
    */
   public function createAction(string $entityName, string $action, array $params = []): AbstractAction;
+
+  /**
+   * @return \Civi\Api4\Generic\AbstractGetAction
+   *   It's possible that the returned action does not extend this class, but
+   *   (most probably) provides the same methods. So the type is not enforced.
+   *
+   * @throws \Civi\API\Exception\NotImplementedException
+   */
+  public function createGetAction(string $entityName): AbstractAction;
 
   /**
    * @throws \API_Exception

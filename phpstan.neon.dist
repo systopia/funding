@@ -91,4 +91,7 @@ parameters:
 			path : */tests/phpunit/Civi/Funding/Mock/**/*.php
 		- '#^Method Civi\\Funding\\Fixtures\\[^\s]+Fixture::[^\s]+\(\) should return array{[^}]+} but returns array\|null.$#'
 		- '#^In method "Civi\\[^\s]+Test::[^\s]+", caught "Exception" must be rethrown.#'
+		-
+			message: "#^Cannot access offset '.+' on mixed.$#"
+			path: */tests/phpunit/Civi/**/*Test.php
 	tmpDir: .phpstan

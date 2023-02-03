@@ -21,16 +21,12 @@ declare(strict_types = 1);
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
 use Civi\Funding\Contact\Relation\RelationTypeContainer;
-use Civi\Funding\Permission\ContactRelation\Checker\ContactChecker;
-use Civi\Funding\Permission\ContactRelation\Checker\ContactRelationshipChecker;
-use Civi\Funding\Permission\ContactRelation\Checker\ContactTypeChecker;
-use Civi\Funding\Permission\ContactRelation\Checker\ContactTypeRelationshipChecker;
+use Civi\Funding\Contact\Relation\RelationTypeInterface;
+use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\Permission\ContactRelation\ContactRelationCheckerCollection;
 use Civi\Funding\Permission\ContactRelation\ContactRelationCheckerInterface;
-use Civi\Funding\Permission\ContactRelation\Types\Contact;
-use Civi\Funding\Permission\ContactRelation\Types\ContactRelationship;
-use Civi\Funding\Permission\ContactRelation\Types\ContactType;
-use Civi\Funding\Permission\ContactRelation\Types\ContactTypeRelationship;
+use Civi\Funding\Permission\ContactRelation\ContactRelationLoaderCollection;
+use Civi\Funding\Permission\ContactRelation\ContactRelationLoaderInterface;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\Reference;
 
@@ -48,22 +44,33 @@ $container->autowire(\Civi\Funding\Api4\Action\FundingProgramContactRelationType
 
 $container->register('funding.permission.contact_relation_type_container', RelationTypeContainer::class)
   ->addArgument(new TaggedIteratorArgument('funding.permission.contact_relation_type'));
-$container->autowire(Contact::class)
-  ->addTag('funding.permission.contact_relation_type');
-$container->autowire(ContactRelationship::class)
-  ->addTag('funding.permission.contact_relation_type');
-$container->autowire(ContactType::class)
-  ->addTag('funding.permission.contact_relation_type');
-$container->autowire(ContactTypeRelationship::class)
-  ->addTag('funding.permission.contact_relation_type');
+
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/Permission/ContactRelation/Types',
+  'Civi\\Funding\\Permission\\ContactRelation\\Types',
+  RelationTypeInterface::class,
+  ['funding.permission.contact_relation_type' => []],
+);
 
 $container->register(ContactRelationCheckerInterface::class, ContactRelationCheckerCollection::class)
   ->addArgument(new TaggedIteratorArgument('funding.permission.contact_relation_checker'));
-$container->autowire(ContactChecker::class)
-  ->addTag('funding.permission.contact_relation_checker');
-$container->autowire(ContactRelationshipChecker::class)
-  ->addTag('funding.permission.contact_relation_checker');
-$container->autowire(ContactTypeChecker::class)
-  ->addTag('funding.permission.contact_relation_checker');
-$container->autowire(ContactTypeRelationshipChecker::class)
-  ->addTag('funding.permission.contact_relation_checker');
+
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/Permission/ContactRelation/Checker',
+  'Civi\\Funding\\Permission\\ContactRelation\\Checker',
+  ContactRelationCheckerInterface::class,
+  ['funding.permission.contact_relation_checker' => []],
+);
+
+$container->register(ContactRelationLoaderInterface::class, ContactRelationLoaderCollection::class)
+  ->addArgument(new TaggedIteratorArgument('funding.permission.contact_relation_loader'));
+
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/Permission/ContactRelation/Loader',
+  'Civi\\Funding\\Permission\\ContactRelation\\Loader',
+  ContactRelationLoaderInterface::class,
+  ['funding.permission.contact_relation_loader' => []],
+);

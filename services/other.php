@@ -22,10 +22,13 @@ declare(strict_types = 1);
 
 use Civi\Funding\Contact\FundingRemoteContactIdResolver;
 use Civi\Funding\Contact\FundingRemoteContactIdResolverInterface;
-use Civi\Funding\DependencyInjection\FundingCaseTypeServiceLocatorPass;
+use Civi\Funding\DependencyInjection\Compiler\EntityValidatorPass;
+use Civi\Funding\DependencyInjection\Compiler\FundingCaseTypeServiceLocatorPass;
 use Civi\Funding\EventSubscriber\Api\TransactionalApiRequestSubscriber;
 use Civi\Funding\EventSubscriber\FundingFilterPossiblePermissionsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingRequestInitSubscriber;
+use Civi\Funding\Validation\EntityValidator;
+use Civi\Funding\Validation\EntityValidatorInterface;
 
 $container->addCompilerPass(new FundingCaseTypeServiceLocatorPass());
 
@@ -40,3 +43,6 @@ $container->autowire(TransactionalApiRequestSubscriber::class, TransactionalApiR
 
 $container->autowire(FundingFilterPossiblePermissionsSubscriber::class)
   ->addTag('kernel.event_subscriber');
+
+$container->autowire(EntityValidatorInterface::class, EntityValidator::class);
+$container->addCompilerPass(new EntityValidatorPass());

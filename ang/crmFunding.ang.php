@@ -21,6 +21,7 @@ return [
     'ngRoute',
     'xeditable',
     'lodash4',
+    'ui.select',
   ],
   'settings' => [],
 ];

@@ -181,12 +181,32 @@ final class ApplicationProcessEntity extends AbstractEntity {
     return $this;
   }
 
+  public function getReviewerContentContactId(): ?int {
+    return $this->values['reviewer_cont_contact_id'];
+  }
+
+  public function setReviewerContentContactId(?int $reviewerContentContactId): self {
+    $this->values['reviewer_cont_contact_id'] = $reviewerContentContactId;
+
+    return $this;
+  }
+
   public function getIsReviewCalculative(): ?bool {
     return $this->values['is_review_calculative'];
   }
 
   public function setIsReviewCalculative(?bool $isReviewCalculative): self {
     $this->values['is_review_calculative'] = $isReviewCalculative;
+
+    return $this;
+  }
+
+  public function getReviewerCalculativeContactId(): ?int {
+    return $this->values['reviewer_calc_contact_id'];
+  }
+
+  public function setReviewerCalculativeContactId(?int $reviewerCalculativeContactId): self {
+    $this->values['reviewer_calc_contact_id'] = $reviewerCalculativeContactId;
 
     return $this;
   }

@@ -23,6 +23,7 @@ use Civi\Api4\FundingCaseInfo;
 use Civi\Api4\Generic\AbstractGetAction;
 use Civi\Api4\Generic\Result;
 use Civi\Api4\Generic\Traits\ArrayQueryActionTrait;
+use Civi\Funding\Api4\Util\WhereUtil;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\FundingCase\FundingCaseManager;
@@ -118,13 +119,7 @@ final class GetAction extends AbstractGetAction {
   }
 
   private function getFundingCaseIdFromWhere(): ?int {
-    foreach ($this->where as $clause) {
-      if ($clause[0] === 'funding_case_id' && '=' === $clause[1] && is_int($clause[2])) {
-        return $clause[2];
-      }
-    }
-
-    return NULL;
+    return WhereUtil::getInt($this->where, 'funding_case_id');
   }
 
   /**
