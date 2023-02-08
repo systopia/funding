@@ -11,17 +11,23 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.3\n"
 
-#: Civi/Funding/Api4/Action/FundingApplicationProcess/Traits/CheckReviewPermissionTrait.php
+#: Civi/Funding/Api4/Action/FundingApplicationProcess/AssignReviewerCalculativeAction.php
+#: Civi/Funding/Api4/Action/FundingApplicationProcess/AssignReviewerContentAction.php
 #: Civi/Funding/Api4/Action/Remote/ApplicationProcess/AbstractFormAction.php
 #: Civi/Funding/Api4/Action/Remote/ApplicationProcess/GetFormAction.php
 msgid "Application process with ID \"%1\" not found"
 msgstr "Antragsprozess mit ID \"%1\" nicht gefunden"
 
-#: Civi/Funding/Api4/Action/FundingApplicationProcessActivity/GetAction.php
-#: Civi/Funding/Contact/FundingCaseRecipientLoader.php
-#: Civi/Funding/Contact/RecipientsLoader/DefaultPossibleRecipientsLoader.php
-msgid "Contact %1"
-msgstr "Kontakt %1"
+#: Civi/Funding/Api4/Action/FundingApplicationProcess/AssignReviewerCalculativeAction.php
+#: Civi/Funding/Api4/Action/FundingApplicationProcess/AssignReviewerContentAction.php
+#: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php
+msgid "Required permission is missing"
+msgstr "Notwendige Berechtigung fehlt"
+
+#: Civi/Funding/Api4/Action/FundingApplicationProcess/AssignReviewerCalculativeAction.php
+#: Civi/Funding/Api4/Action/FundingApplicationProcess/AssignReviewerContentAction.php
+msgid "Contact %1 is not allowed as reviewer"
+msgstr "Kontakt %1 ist nicht als Prüfkontakt erlaubt"
 
 # Übersetzung nicht notwendig
 #: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php
@@ -162,10 +168,6 @@ msgid "Invalid funding program ID or funding case type ID"
 msgstr "Ungültige Förderprogramm ID oder Förderfalltyp ID"
 
 #: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php
-msgid "Required permission is missing"
-msgstr "Notwendige Berechtigung fehlt"
-
-#: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php
 msgid "Funding program and funding case type are not related"
 msgstr "Förderprogramm und Förderfalltyp sind nicht verknüpft"
 
@@ -181,9 +183,45 @@ msgstr "d.m.Y"
 msgid "Funding program does not allow applications after %1"
 msgstr "Förderprogramm erlaubt keine Anträge nach %1"
 
+#: Civi/Funding/Api4/Util/ContactUtil.php
+#: ang/crmFunding/application/applicationReviewer.directive.js
+msgid "Contact %1"
+msgstr "Kontakt %1"
+
+#: Civi/Funding/ApplicationProcess/ApplicationProcessTaskManager.php
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessCreatedSubscriber.php
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriber.php
+msgid "Application process: %1 (%2)"
+msgstr "Förderfallprozess: %1 (%2)"
+
 #: Civi/Funding/ApplicationProcess/Handler/ApplicationFormCommentPersistHandler.php
 msgid "Application process comment"
 msgstr "Förderfallprozesskommentar"
+
+#: Civi/Funding/ApplicationProcess/Validator/IsReviewCalculativeValidator.php
+msgid "Permission to change calculative review result is missing."
+msgstr "Berechtigung zur Änderung des rechnerischen Prüfergebnisses fehlt."
+
+#: Civi/Funding/ApplicationProcess/Validator/IsReviewContentValidator.php
+msgid "Permission to change content review result is missing."
+msgstr "Berechtigung zur Änderung des fachlichen Prüfergebnisses fehlt."
+
+#: Civi/Funding/ApplicationProcess/Validator/ReviewerCalculativeContactValidator.php
+msgid "Permission to change calculative reviewer is missing."
+msgstr "Berechtigung zur Änderung des rechnerischen Prüfers fehlt."
+
+#: Civi/Funding/ApplicationProcess/Validator/ReviewerCalculativeContactValidator.php
+msgid "Contact %1 is not allowed as calculative reviewer."
+msgstr "Kontakt %1 ist nicht als rechnerischer Prüfer erlaubt."
+
+#: Civi/Funding/ApplicationProcess/Validator/ReviewerContentContactValidator.php
+msgid "Permission to change content reviewer is missing."
+msgstr "Berechtigung zur Änderung des fachlichen Prüfers fehlt."
+
+#: Civi/Funding/ApplicationProcess/Validator/ReviewerContentContactValidator.php
+msgid "Contact %1 is not allowed as content reviewer."
+msgstr "Kontakt %1 ist nicht als fachlicher Prüfer erlaubt."
 
 #: Civi/Funding/Contact/Relation/Types/ContactTypeAndRelationshipType.php
 msgid "Related contacts of a specific type"
@@ -245,12 +283,6 @@ msgstr ""
 msgid "Funding application process created"
 msgstr "Förderfallprozess erstellt"
 
-#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessCreatedSubscriber.php
-#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
-#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriber.php
-msgid "Application process: %1 (%2)"
-msgstr "Förderfallprozess: %1 (%2)"
-
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
 msgid "Funding application process review status changed"
 msgstr "Prüfstatus von Förderfallprozess geändert"
@@ -285,6 +317,18 @@ msgstr "Nicht bestanden"
 #: ang/crmFunding/application/application.js
 msgid "Undecided"
 msgstr "Nicht entschieden"
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewTaskSubscriber.php
+msgid "Review funding application (calculative)"
+msgstr "Förderantrag prüfen (rechnerisch)"
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewTaskSubscriber.php
+msgid "Review funding application (content)"
+msgstr "Förderantrag prüfen (fachlich)"
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReworkTaskSubscriber.php
+msgid "Rework funding application"
+msgstr "Förderantrag überarbeiten"
 
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriber.php
 msgid "Funding application process status changed"
@@ -377,6 +421,16 @@ msgstr "Löschen"
 #: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php
 msgid "Do you really want to delete the application?"
 msgstr "Möchten Sie den Antrag wirklich löschen?"
+
+#: Civi/Funding/Form/JsonSchema/JsonSchemaComment.php
+#: ang/crmFunding/application/applicationEditor.template.html
+msgid "internal"
+msgstr "intern"
+
+#: Civi/Funding/Form/JsonSchema/JsonSchemaComment.php
+#: ang/crmFunding/application/applicationEditor.template.html
+msgid "external"
+msgstr "extern"
 
 #: Civi/Funding/Form/ReworkPossibleApplicationSubmitActionsContainerFactory.php
 msgid "Request rework"
@@ -551,9 +605,15 @@ msgstr ""
 "Berechtigungen für neue Förderfalle an Kontakte zuweisen, die eine Beziehung "
 "vom gewählten Typ zum Empfängerkontakt haben."
 
+#: Civi/Funding/Validation/EntityValidationResult.php
+msgid "Validation failed: %1"
+msgstr "Validierung fehlgeschlagen: %1"
+
 # Nicht benötigt, solange nur zur Initialisierung der ts Funktion in JavaScript verwendet.
 #: ang/crmFunding/application/application.js
 #: ang/crmFunding/application/applicationEditor.directive.js
+#: ang/crmFunding/application/applicationReviewer.directive.js
+#: ang/crmFunding/application/applicationReviewers.directive.js
 #: ang/crmFunding/application/history/applicationProcessActivity.directive.js
 #: ang/crmFunding/application/history/applicationProcessHistory.directive.js
 #: ang/crmFunding/case/fundingCasePermissions.js
@@ -593,9 +653,12 @@ msgid "Close"
 msgstr "Schließen"
 
 #: ang/crmFunding/application/applicationEditor.template.html
-#: ang/crmFunding/application/history/activities/comment.template.html
 msgid "Comment"
 msgstr "Kommentar"
+
+#: ang/crmFunding/application/applicationEditor.template.html
+msgid "Comment type"
+msgstr "Kommentarart"
 
 #: ang/crmFunding/application/applicationEditor.template.html
 msgid "Cancel"
@@ -662,6 +725,10 @@ msgid "Reset"
 msgstr "Zurücksetzen"
 
 #: ang/crmFunding/application/applicationEditor.template.html
+msgid "Reviewers"
+msgstr "Prüfer"
+
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "General"
 msgstr "Allgemein"
 
@@ -675,10 +742,12 @@ msgid "Unknown"
 msgstr "Unbekannt"
 
 #: ang/crmFunding/application/applicationEditor.template.html
+#: managed/CustomGroupFundingApplicationTask.mgd.php
 msgid "Review content"
 msgstr "Fachliche Prüfung"
 
 #: ang/crmFunding/application/applicationEditor.template.html
+#: managed/CustomGroupFundingApplicationTask.mgd.php
 msgid "Review calculative"
 msgstr "Rechnerische Prüfung"
 
@@ -701,6 +770,30 @@ msgstr "Beantragter Betrag"
 #: ang/crmFunding/application/applicationEditor.template.html
 msgid "Amount granted"
 msgstr "Bewilligter Betrag"
+
+#: ang/crmFunding/application/applicationReviewer.directive.js
+msgid "not assigned"
+msgstr "nicht zugewiesen"
+
+#: ang/crmFunding/application/applicationReviewer.template.html
+msgid "Assign to me"
+msgstr "Mir zuweisen"
+
+#: ang/crmFunding/application/applicationReviewers.template.html
+msgid "Calculative reviewer"
+msgstr "Rechnerischer Prüfer"
+
+#: ang/crmFunding/application/applicationReviewers.template.html
+msgid "Content reviewer"
+msgstr "Fachlicher Prüfer"
+
+#: ang/crmFunding/application/history/activities/comment.template.html
+msgid "Internal comment"
+msgstr "Interner Kommentar"
+
+#: ang/crmFunding/application/history/activities/comment.template.html
+msgid "External comment"
+msgstr "Externer Kommentar"
 
 #: ang/crmFunding/application/history/activities/comment.template.html
 #: ang/crmFunding/application/history/activities/create.template.html
@@ -774,6 +867,7 @@ msgstr "Entfernen"
 #: ang/crmFunding/program/newCasePermissions/fundingNewCasePermissions.template.html
 #: ang/crmFunding/program/permissions/fundingProgramContactRelation.template.html
 #: ang/crmFunding/program/recipients/recipientRelation.template.html
+#: managed/CustomGroupFundingApplicationTask.mgd.php
 msgid "Type"
 msgstr "Art"
 
@@ -805,14 +899,21 @@ msgstr "Förderprogrammberechtigungen"
 msgid "Possible funding recipients"
 msgstr "Mögliche Fördergeldempfänger"
 
-#: managed/ActivityTypeFundingApplicationComment.mgd.php
-#: managed/CustomGroupFundingApplicationComment.mgd.php
-msgid "Funding Application Comment"
-msgstr "Förderantragskommentar"
+#: managed/ActivityTypeFundingApplicationCommentExternal.mgd.php
+msgid "External Funding Application Comment"
+msgstr "Externer Förderantragskommentar"
 
-#: managed/ActivityTypeFundingApplicationComment.mgd.php
-msgid "Activity type for funding application process comments"
-msgstr "Aktivitätsart für Förderantragsprozesskommentare"
+#: managed/ActivityTypeFundingApplicationCommentExternal.mgd.php
+msgid "Activity type for external funding application process comments"
+msgstr "Aktivitätsart für externe Förderantragsprozesskommentare"
+
+#: managed/ActivityTypeFundingApplicationCommentInternal.mgd.php
+msgid "Internal Funding Application Comment"
+msgstr "Interner Förderantragskommentar"
+
+#: managed/ActivityTypeFundingApplicationCommentInternal.mgd.php
+msgid "Activity type for internal funding application process comments"
+msgstr "Aktivitätsart für interne Förderantragsprozesskommentare"
 
 #: managed/ActivityTypeFundingApplicationCreate.mgd.php
 msgid "Funding Application Created"
@@ -839,6 +940,26 @@ msgstr "Status von Förderantrag geändert"
 #: managed/ActivityTypeFundingApplicationStatusChange.mgd.php
 msgid "Activity type for funding application process status changes"
 msgstr "Aktivitätsart für Statusänderung eines Förderantragsprozesses"
+
+#: managed/ActivityTypeFundingApplicationTaskExternal.mgd.php
+msgid "External Funding Application Task"
+msgstr "Externe Förderantragsaufgabe"
+
+#: managed/ActivityTypeFundingApplicationTaskExternal.mgd.php
+msgid "Activity type for external funding application process tasks"
+msgstr "Aktivitätsart für externe Förderantragsprozesskommentare"
+
+#: managed/ActivityTypeFundingApplicationTaskInternal.mgd.php
+msgid "Internal Funding Application Task"
+msgstr "Interne Förderantragsaufgabe"
+
+#: managed/ActivityTypeFundingApplicationTaskInternal.mgd.php
+msgid "Activity type for internal funding application process tasks"
+msgstr "Aktivitätsart für interne Förderantragsprozesskommentare"
+
+#: managed/CustomGroupFundingApplicationComment.mgd.php
+msgid "Funding Application Comment"
+msgstr "Förderantragskommentar"
 
 #: managed/CustomGroupFundingApplicationComment.mgd.php
 msgid "Action"
@@ -867,6 +988,18 @@ msgstr "Von Status"
 #: managed/CustomGroupFundingApplicationStatusChange.mgd.php
 msgid "To status"
 msgstr "Zu Status"
+
+#: managed/CustomGroupFundingApplicationTask.mgd.php
+msgid "Funding Application Task"
+msgstr "Förderantragsaufgabe"
+
+#: managed/CustomGroupFundingApplicationTask.mgd.php
+msgid "Funding application task type"
+msgstr "Förderantragsaufgabenart"
+
+#: managed/CustomGroupFundingApplicationTask.mgd.php
+msgid "Rework application"
+msgstr "Antrag überarbeiten"
 
 #: managed/OptionValueActivityUsedForApplicationProcess.mgd.php
 msgid "Funding application process"

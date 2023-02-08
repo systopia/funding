@@ -36,12 +36,14 @@ use Civi\Funding\Entity\FundingProgramEntity;
  */
 final class FundingProgramFactory {
 
+  public const DEFAULT_ID = 4;
+
   /**
    * @phpstan-param fundingProgramValuesT $values
    */
   public static function createFundingProgram(array $values = []): FundingProgramEntity {
     return FundingProgramEntity::fromArray($values + [
-      'id' => 4,
+      'id' => self::DEFAULT_ID,
       'title' => 'TestFundingProgram',
       'abbreviation' => 'TFP',
       'start_date' => '2022-10-22',

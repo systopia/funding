@@ -28,6 +28,24 @@ final class CompositeCondition implements ConditionInterface {
    */
   private array $conditions;
 
+  /**
+   * @param array<string, scalar|non-empty-array<int, scalar>|null> $fieldValuePairs
+   *
+   * @return static
+   */
+  public static function fromFieldValuePairs(
+    array $fieldValuePairs,
+    string $compositeOperation = 'AND',
+    string $operator = '='
+  ): self {
+    $conditions = [];
+    foreach ($fieldValuePairs as $key => $value) {
+      $conditions[] = Comparison::new($key, $operator, $value);
+    }
+
+    return new self($compositeOperation, ...$conditions);
+  }
+
   public static function new(string $operation, ConditionInterface ...$conditions): self {
     return new self($operation, ...$conditions);
   }

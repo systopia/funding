@@ -44,8 +44,8 @@ final class FundingCaseFactory {
   public static function createFundingCase(array $values = []): FundingCaseEntity {
     return FundingCaseEntity::fromArray($values + [
       'id' => self::DEFAULT_ID,
-      'funding_program_id' => 4,
-      'funding_case_type_id' => 5,
+      'funding_program_id' => FundingProgramFactory::DEFAULT_ID,
+      'funding_case_type_id' => FundingCaseTypeFactory::DEFAULT_ID,
       'recipient_contact_id' => 1,
       'status' => 'open',
       'creation_date' => date('Y-m-d H:i:s'),

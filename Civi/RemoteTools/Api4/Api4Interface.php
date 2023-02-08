@@ -56,4 +56,11 @@ interface Api4Interface {
    */
   public function execute(string $entityName, string $actionName, array $params = []): Result;
 
+  /**
+   * @phpstan-param array<string, mixed> $values
+   *
+   * @throws \API_Exception
+   */
+  public function updateEntity(string $entityName, int $id, array $values): Result;
+
 }
