@@ -21,6 +21,7 @@ namespace Civi\Api4;
 
 use Civi\Api4\Generic\AbstractEntity;
 use Civi\Funding\Api4\Action\FundingApplicationProcessActivity\GetAction;
+use Civi\Funding\Api4\Action\FundingApplicationProcessActivity\GetFieldsAction;
 use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
 
 final class FundingApplicationProcessActivity extends AbstractEntity {
@@ -31,7 +32,7 @@ final class FundingApplicationProcessActivity extends AbstractEntity {
    * @inheritDoc
    */
   public static function getFields() {
-    return Activity::getFields();
+    return new GetFieldsAction();
   }
 
   public static function get(): GetAction {
