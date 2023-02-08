@@ -30,7 +30,7 @@ use Civi\Funding\Form\ValidatedApplicationDataInterface;
  *   startDate: string,
  *   endDate: string,
  *   amountRequested: float,
- *   comment?: string,
+ *   comment?: array{text: string, type: string},
  * }
  *
  * @phpstan-type mockValidatedDataValuesT array{
@@ -41,7 +41,7 @@ use Civi\Funding\Form\ValidatedApplicationDataInterface;
  *   startDate?: string,
  *   endDate?: string,
  *   amountRequested?: float,
- *   comment?: string,
+ *   comment?: array{text: string, type: string},
  * }
  */
 final class ValidatedApplicationDataMock implements ValidatedApplicationDataInterface {
@@ -117,7 +117,7 @@ final class ValidatedApplicationDataMock implements ValidatedApplicationDataInte
     return $this->data['amountRequested'];
   }
 
-  public function getComment(): ?string {
+  public function getComment(): ?array {
     return $this->data['comment'] ?? NULL;
   }
 

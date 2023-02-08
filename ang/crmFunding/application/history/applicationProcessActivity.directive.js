@@ -34,7 +34,8 @@ fundingModule.directive('fundingApplicationProcessActivity', [function() {
             return '~/crmFunding/application/history/activities/statusChange.template.html';
           case 'funding_application_create':
             return '~/crmFunding/application/history/activities/create.template.html';
-          case 'funding_application_comment':
+          case 'funding_application_comment_external':
+          case 'funding_application_comment_internal':
             return '~/crmFunding/application/history/activities/comment.template.html';
           case 'funding_application_review_status_change':
             return '~/crmFunding/application/history/activities/reviewStatusChange.template.html';

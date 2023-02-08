@@ -27,6 +27,7 @@ use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\ApplicationJsonSchemaFactoryInterface;
+use Civi\Funding\Form\JsonSchema\JsonSchemaComment;
 use Civi\Funding\Form\SonstigeAktivitaet\JsonSchema\AVK1JsonSchema;
 use Civi\Funding\Form\ValidatedApplicationDataInterface;
 use Civi\Funding\Form\Validation\ValidationResult;
@@ -94,7 +95,7 @@ class AVK1JsonSchemaFactory implements ApplicationJsonSchemaFactoryInterface {
     $extraKeywords = ['required' => array_keys($extraProperties)];
 
     if ($this->hasReviewPermission($fundingCase->getPermissions())) {
-      $extraProperties['comment'] = new JsonSchemaString();
+      $extraProperties['comment'] = new JsonSchemaComment();
     }
     else {
       // Prevent adding a comment without permission

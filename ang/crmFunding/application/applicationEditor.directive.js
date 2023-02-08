@@ -153,6 +153,10 @@ fundingModule.directive('fundingApplicationEditor', function() {
         };
 
         $scope.modalSubmit = function () {
+          if (!document.getElementById('commentType').reportValidity()) {
+            return new Promise((resolve) => resolve(false));
+          }
+
           $scope.submitModal.submitted = true;
           $submitModal.modal('hide');
           return $scope.submit($scope.submitModal.action);
@@ -243,7 +247,7 @@ fundingModule.directive('fundingApplicationEditor', function() {
           enableOverlay();
           const data = angular.extend({}, $scope.data, {action});
           if ($scope.comment.text) {
-            data.comment = $scope.comment.text;
+            data.comment = $scope.comment;
           }
 
           return fundingApplicationProcessService.submitForm($scope.applicationProcess.id, data).then(function (result) {

@@ -135,7 +135,7 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
     $validationResult = new ValidationResult([], new ErrorCollector());
     $this->mockValidator($jsonSchema, $command->getData(), $validationResult);
 
-    $validatedData = new ValidatedApplicationDataMock([], ['comment' => 'test']);
+    $validatedData = new ValidatedApplicationDataMock([], ['comment' => ['text' => 'test', 'type' => 'internal']]);
     $this->mockCreateValidatedData($command, $validationResult, $validatedData);
 
     $newStatus = new FullApplicationProcessStatus('new_status', TRUE, FALSE);

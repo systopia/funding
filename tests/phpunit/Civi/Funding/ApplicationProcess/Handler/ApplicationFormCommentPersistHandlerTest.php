@@ -49,14 +49,14 @@ final class ApplicationFormCommentPersistHandlerTest extends TestCase {
     $this->handler = new ApplicationFormCommentPersistHandler($this->activityManagerMock);
   }
 
-  public function testHandle(): void {
+  public function testHandleInternal(): void {
     $command = new ApplicationFormCommentPersistCommand(
       1,
       ApplicationProcessFactory::createApplicationProcess(),
       FundingCaseFactory::createFundingCase(),
       FundingCaseTypeFactory::createFundingCaseType(),
       FundingProgramFactory::createFundingProgram(),
-      new ValidatedApplicationDataMock([], ['comment' => "Test >\ncomment"]),
+      new ValidatedApplicationDataMock([], ['comment' => ['text' => "Test >\ncomment", 'type' => 'internal']]),
     );
 
     $this->activityManagerMock->expects(static::once())->method('addActivity')
@@ -64,7 +64,37 @@ final class ApplicationFormCommentPersistHandlerTest extends TestCase {
         $command->getContactId(),
         $command->getApplicationProcess(),
         static::callback(function (ActivityEntity $activity) {
-          static::assertSame(ActivityTypeIds::FUNDING_APPLICATION_COMMENT, $activity->getActivityTypeId());
+          static::assertSame(ActivityTypeIds::FUNDING_APPLICATION_COMMENT_INTERNAL, $activity->getActivityTypeId());
+          static::assertSame('Test &gt;<br>comment', $activity->getDetails());
+          static::assertSame('Application process comment', $activity->getSubject());
+          static::assertSame(
+            ValidatedApplicationDataMock::ACTION,
+            $activity->get('funding_application_comment.action')
+          );
+
+          return TRUE;
+        })
+      );
+
+    $this->handler->handle($command);
+  }
+
+  public function testHandleExternal(): void {
+    $command = new ApplicationFormCommentPersistCommand(
+      1,
+      ApplicationProcessFactory::createApplicationProcess(),
+      FundingCaseFactory::createFundingCase(),
+      FundingCaseTypeFactory::createFundingCaseType(),
+      FundingProgramFactory::createFundingProgram(),
+      new ValidatedApplicationDataMock([], ['comment' => ['text' => "Test >\ncomment", 'type' => 'external']]),
+    );
+
+    $this->activityManagerMock->expects(static::once())->method('addActivity')
+      ->with(
+        $command->getContactId(),
+        $command->getApplicationProcess(),
+        static::callback(function (ActivityEntity $activity) {
+          static::assertSame(ActivityTypeIds::FUNDING_APPLICATION_COMMENT_EXTERNAL, $activity->getActivityTypeId());
           static::assertSame('Test &gt;<br>comment', $activity->getDetails());
           static::assertSame('Application process comment', $activity->getSubject());
           static::assertSame(

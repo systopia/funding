@@ -30,7 +30,7 @@ use Civi\Funding\Form\ValidatedApplicationDataInterface;
  *   startDate: string,
  *   endDate: string,
  *   amountRequested: float,
- *   comment?: string,
+ *   comment?: array{text: string, type: string},
  * }
  */
 final class TestValidatedData implements ValidatedApplicationDataInterface {
@@ -76,7 +76,7 @@ final class TestValidatedData implements ValidatedApplicationDataInterface {
     return $this->data['amountRequested'];
   }
 
-  public function getComment(): ?string {
+  public function getComment(): ?array {
     return $this->data['comment'] ?? NULL;
   }
 

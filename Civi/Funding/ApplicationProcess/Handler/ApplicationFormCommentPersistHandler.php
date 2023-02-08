@@ -43,11 +43,17 @@ final class ApplicationFormCommentPersistHandler implements ApplicationFormComme
 
   private function createActivity(ApplicationFormCommentPersistCommand $command): ActivityEntity {
     return ActivityEntity::fromArray([
-      'activity_type_id' => ActivityTypeIds::FUNDING_APPLICATION_COMMENT,
+      'activity_type_id' => $this->getActivityTypeId($command),
       'subject' => E::ts('Application process comment'),
-      'details' => str_replace("\n", '<br>', htmlentities($command->getComment(), ENT_SUBSTITUTE)),
+      'details' => str_replace("\n", '<br>', htmlentities($command->getCommentText(), ENT_SUBSTITUTE)),
       'funding_application_comment.action' => $command->getValidatedData()->getAction(),
     ]);
+  }
+
+  private function getActivityTypeId(ApplicationFormCommentPersistCommand $command): int {
+    return 'external' === $command->getCommentType()
+      ? ActivityTypeIds::FUNDING_APPLICATION_COMMENT_EXTERNAL
+      : ActivityTypeIds::FUNDING_APPLICATION_COMMENT_INTERNAL;
   }
 
 }

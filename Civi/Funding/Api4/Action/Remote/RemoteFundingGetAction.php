@@ -25,7 +25,7 @@ use Civi\Funding\Event\Remote\FundingEvents;
 use Civi\Funding\Event\Remote\FundingGetEvent;
 use Civi\RemoteTools\Api4\Action\EventGetAction;
 
-class GetAction extends EventGetAction implements RemoteFundingActionInterface {
+class RemoteFundingGetAction extends EventGetAction implements RemoteFundingActionInterface {
 
   use RemoteFundingActionContactIdRequiredTrait;
 
