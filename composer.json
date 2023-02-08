@@ -8,7 +8,8 @@
             "civicrm/composer-downloads-plugin": false,
             "cweagans/composer-patches": false,
             "civicrm/civicrm-asset-plugin": false
-        }
+        },
+        "sort-packages": true
     },
     "repositories": [
         {
