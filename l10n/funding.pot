@@ -1,9 +1,13 @@
-#: Civi/Funding/Api4/Action/FundingApplicationProcess/Traits/CheckReviewPermissionTrait.php Civi/Funding/Api4/Action/Remote/ApplicationProcess/AbstractFormAction.php Civi/Funding/Api4/Action/Remote/ApplicationProcess/GetFormAction.php
+#: Civi/Funding/Api4/Action/FundingApplicationProcess/AssignReviewerCalculativeAction.php Civi/Funding/Api4/Action/FundingApplicationProcess/AssignReviewerContentAction.php Civi/Funding/Api4/Action/Remote/ApplicationProcess/AbstractFormAction.php Civi/Funding/Api4/Action/Remote/ApplicationProcess/GetFormAction.php
 msgid "Application process with ID \"%1\" not found"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingApplicationProcessActivity/GetAction.php Civi/Funding/Contact/FundingCaseRecipientLoader.php Civi/Funding/Contact/RecipientsLoader/DefaultPossibleRecipientsLoader.php
-msgid "Contact %1"
+#: Civi/Funding/Api4/Action/FundingApplicationProcess/AssignReviewerCalculativeAction.php Civi/Funding/Api4/Action/FundingApplicationProcess/AssignReviewerContentAction.php Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php
+msgid "Required permission is missing"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingApplicationProcess/AssignReviewerCalculativeAction.php Civi/Funding/Api4/Action/FundingApplicationProcess/AssignReviewerContentAction.php
+msgid "Contact %1 is not allowed as reviewer"
 msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
@@ -75,10 +79,6 @@ msgid "Invalid funding program ID or funding case type ID"
 msgstr ""
 
 #: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php
-msgid "Required permission is missing"
-msgstr ""
-
-#: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php
 msgid "Funding program and funding case type are not related"
 msgstr ""
 
@@ -94,8 +94,40 @@ msgstr ""
 msgid "Funding program does not allow applications after %1"
 msgstr ""
 
+#: Civi/Funding/Api4/Util/ContactUtil.php ang/crmFunding/application/applicationReviewer.directive.js
+msgid "Contact %1"
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/ApplicationProcessTaskManager.php Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessCreatedSubscriber.php Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriber.php
+msgid "Application process: %1 (%2)"
+msgstr ""
+
 #: Civi/Funding/ApplicationProcess/Handler/ApplicationFormCommentPersistHandler.php
 msgid "Application process comment"
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/Validator/IsReviewCalculativeValidator.php
+msgid "Permission to change calculative review result is missing."
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/Validator/IsReviewContentValidator.php
+msgid "Permission to change content review result is missing."
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/Validator/ReviewerCalculativeContactValidator.php
+msgid "Permission to change calculative reviewer is missing."
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/Validator/ReviewerCalculativeContactValidator.php
+msgid "Contact %1 is not allowed as calculative reviewer."
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/Validator/ReviewerContentContactValidator.php
+msgid "Permission to change content reviewer is missing."
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/Validator/ReviewerContentContactValidator.php
+msgid "Contact %1 is not allowed as content reviewer."
 msgstr ""
 
 #: Civi/Funding/Contact/Relation/Types/ContactTypeAndRelationshipType.php
@@ -134,10 +166,6 @@ msgstr ""
 msgid "Funding application process created"
 msgstr ""
 
-#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessCreatedSubscriber.php Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriber.php
-msgid "Application process: %1 (%2)"
-msgstr ""
-
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
 msgid "Funding application process review status changed"
 msgstr ""
@@ -168,6 +196,18 @@ msgstr ""
 
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php ang/crmFunding/application/application.js
 msgid "Undecided"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewTaskSubscriber.php
+msgid "Review funding application (calculative)"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewTaskSubscriber.php
+msgid "Review funding application (content)"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReworkTaskSubscriber.php
+msgid "Rework funding application"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriber.php
@@ -252,6 +292,14 @@ msgstr ""
 
 #: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php
 msgid "Do you really want to delete the application?"
+msgstr ""
+
+#: Civi/Funding/Form/JsonSchema/JsonSchemaComment.php ang/crmFunding/application/applicationEditor.template.html
+msgid "internal"
+msgstr ""
+
+#: Civi/Funding/Form/JsonSchema/JsonSchemaComment.php ang/crmFunding/application/applicationEditor.template.html
+msgid "external"
 msgstr ""
 
 #: Civi/Funding/Form/ReworkPossibleApplicationSubmitActionsContainerFactory.php
@@ -398,7 +446,11 @@ msgstr ""
 msgid "Assign permissions for new funding cases to contacts that have a relationship\nof the specified type to the recipient contact."
 msgstr ""
 
-#: ang/crmFunding/application/application.js ang/crmFunding/application/applicationEditor.directive.js ang/crmFunding/application/history/applicationProcessActivity.directive.js ang/crmFunding/application/history/applicationProcessHistory.directive.js ang/crmFunding/case/fundingCasePermissions.js ang/crmFunding/case/permissions/fundingCaseContactRelation.directive.js ang/crmFunding/form/fundingAddRowButton.directive.js ang/crmFunding/form/fundingSelectPermissions.directive.js ang/crmFunding/form/fundingValidationErrors.directive.js ang/crmFunding/fundingDate.filter.js ang/crmFunding/program/fundingNewCasePermissions.js ang/crmFunding/program/fundingProgramPermissions.js ang/crmFunding/program/newCasePermissions/fundingNewCasePermissions.directive.js ang/crmFunding/program/permissions/fundingProgramContactRelation.directive.js ang/crmFunding/program/recipientRelations.js ang/crmFunding/program/recipients/recipientRelation.directive.js
+#: Civi/Funding/Validation/EntityValidationResult.php
+msgid "Validation failed: %1"
+msgstr ""
+
+#: ang/crmFunding/application/application.js ang/crmFunding/application/applicationEditor.directive.js ang/crmFunding/application/applicationReviewer.directive.js ang/crmFunding/application/applicationReviewers.directive.js ang/crmFunding/application/history/applicationProcessActivity.directive.js ang/crmFunding/application/history/applicationProcessHistory.directive.js ang/crmFunding/case/fundingCasePermissions.js ang/crmFunding/case/permissions/fundingCaseContactRelation.directive.js ang/crmFunding/form/fundingAddRowButton.directive.js ang/crmFunding/form/fundingSelectPermissions.directive.js ang/crmFunding/form/fundingValidationErrors.directive.js ang/crmFunding/fundingDate.filter.js ang/crmFunding/program/fundingNewCasePermissions.js ang/crmFunding/program/fundingProgramPermissions.js ang/crmFunding/program/newCasePermissions/fundingNewCasePermissions.directive.js ang/crmFunding/program/permissions/fundingProgramContactRelation.directive.js ang/crmFunding/program/recipientRelations.js ang/crmFunding/program/recipients/recipientRelation.directive.js
 msgid "funding"
 msgstr ""
 
@@ -422,8 +474,12 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: ang/crmFunding/application/applicationEditor.template.html ang/crmFunding/application/history/activities/comment.template.html
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Comment"
+msgstr ""
+
+#: ang/crmFunding/application/applicationEditor.template.html
+msgid "Comment type"
 msgstr ""
 
 #: ang/crmFunding/application/applicationEditor.template.html
@@ -491,6 +547,10 @@ msgid "Reset"
 msgstr ""
 
 #: ang/crmFunding/application/applicationEditor.template.html
+msgid "Reviewers"
+msgstr ""
+
+#: ang/crmFunding/application/applicationEditor.template.html
 msgid "General"
 msgstr ""
 
@@ -502,11 +562,11 @@ msgstr ""
 msgid "Unknown"
 msgstr ""
 
-#: ang/crmFunding/application/applicationEditor.template.html
+#: ang/crmFunding/application/applicationEditor.template.html managed/CustomGroupFundingApplicationTask.mgd.php
 msgid "Review content"
 msgstr ""
 
-#: ang/crmFunding/application/applicationEditor.template.html
+#: ang/crmFunding/application/applicationEditor.template.html managed/CustomGroupFundingApplicationTask.mgd.php
 msgid "Review calculative"
 msgstr ""
 
@@ -528,6 +588,30 @@ msgstr ""
 
 #: ang/crmFunding/application/applicationEditor.template.html
 msgid "Amount granted"
+msgstr ""
+
+#: ang/crmFunding/application/applicationReviewer.directive.js
+msgid "not assigned"
+msgstr ""
+
+#: ang/crmFunding/application/applicationReviewer.template.html
+msgid "Assign to me"
+msgstr ""
+
+#: ang/crmFunding/application/applicationReviewers.template.html
+msgid "Calculative reviewer"
+msgstr ""
+
+#: ang/crmFunding/application/applicationReviewers.template.html
+msgid "Content reviewer"
+msgstr ""
+
+#: ang/crmFunding/application/history/activities/comment.template.html
+msgid "Internal comment"
+msgstr ""
+
+#: ang/crmFunding/application/history/activities/comment.template.html
+msgid "External comment"
 msgstr ""
 
 #: ang/crmFunding/application/history/activities/comment.template.html ang/crmFunding/application/history/activities/create.template.html ang/crmFunding/application/history/activities/reviewStatusChange.template.html ang/crmFunding/application/history/activities/statusChange.template.html
@@ -586,7 +670,7 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: ang/crmFunding/case/permissions/fundingCaseContactRelation.template.html ang/crmFunding/program/newCasePermissions/fundingNewCasePermissions.template.html ang/crmFunding/program/permissions/fundingProgramContactRelation.template.html ang/crmFunding/program/recipients/recipientRelation.template.html
+#: ang/crmFunding/case/permissions/fundingCaseContactRelation.template.html ang/crmFunding/program/newCasePermissions/fundingNewCasePermissions.template.html ang/crmFunding/program/permissions/fundingProgramContactRelation.template.html ang/crmFunding/program/recipients/recipientRelation.template.html managed/CustomGroupFundingApplicationTask.mgd.php
 msgid "Type"
 msgstr ""
 
@@ -614,12 +698,20 @@ msgstr ""
 msgid "Possible funding recipients"
 msgstr ""
 
-#: managed/ActivityTypeFundingApplicationComment.mgd.php managed/CustomGroupFundingApplicationComment.mgd.php
-msgid "Funding Application Comment"
+#: managed/ActivityTypeFundingApplicationCommentExternal.mgd.php
+msgid "External Funding Application Comment"
 msgstr ""
 
-#: managed/ActivityTypeFundingApplicationComment.mgd.php
-msgid "Activity type for funding application process comments"
+#: managed/ActivityTypeFundingApplicationCommentExternal.mgd.php
+msgid "Activity type for external funding application process comments"
+msgstr ""
+
+#: managed/ActivityTypeFundingApplicationCommentInternal.mgd.php
+msgid "Internal Funding Application Comment"
+msgstr ""
+
+#: managed/ActivityTypeFundingApplicationCommentInternal.mgd.php
+msgid "Activity type for internal funding application process comments"
 msgstr ""
 
 #: managed/ActivityTypeFundingApplicationCreate.mgd.php
@@ -644,6 +736,26 @@ msgstr ""
 
 #: managed/ActivityTypeFundingApplicationStatusChange.mgd.php
 msgid "Activity type for funding application process status changes"
+msgstr ""
+
+#: managed/ActivityTypeFundingApplicationTaskExternal.mgd.php
+msgid "External Funding Application Task"
+msgstr ""
+
+#: managed/ActivityTypeFundingApplicationTaskExternal.mgd.php
+msgid "Activity type for external funding application process tasks"
+msgstr ""
+
+#: managed/ActivityTypeFundingApplicationTaskInternal.mgd.php
+msgid "Internal Funding Application Task"
+msgstr ""
+
+#: managed/ActivityTypeFundingApplicationTaskInternal.mgd.php
+msgid "Activity type for internal funding application process tasks"
+msgstr ""
+
+#: managed/CustomGroupFundingApplicationComment.mgd.php
+msgid "Funding Application Comment"
 msgstr ""
 
 #: managed/CustomGroupFundingApplicationComment.mgd.php
@@ -672,6 +784,18 @@ msgstr ""
 
 #: managed/CustomGroupFundingApplicationStatusChange.mgd.php
 msgid "To status"
+msgstr ""
+
+#: managed/CustomGroupFundingApplicationTask.mgd.php
+msgid "Funding Application Task"
+msgstr ""
+
+#: managed/CustomGroupFundingApplicationTask.mgd.php
+msgid "Funding application task type"
+msgstr ""
+
+#: managed/CustomGroupFundingApplicationTask.mgd.php
+msgid "Rework application"
 msgstr ""
 
 #: managed/OptionValueActivityUsedForApplicationProcess.mgd.php

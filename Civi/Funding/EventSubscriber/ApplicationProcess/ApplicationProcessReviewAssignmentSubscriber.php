@@ -19,13 +19,18 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\ApplicationProcess;
 
+use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoContainer;
+use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Event\ApplicationProcess\ApplicationFormSubmitSuccessEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 final class ApplicationProcessReviewAssignmentSubscriber implements EventSubscriberInterface {
 
   private ApplicationProcessManager $applicationProcessManager;
+
+  private ApplicationProcessActionStatusInfoContainer $infoContainer;
 
   /**
    * @inheritDoc
@@ -34,12 +39,16 @@ final class ApplicationProcessReviewAssignmentSubscriber implements EventSubscri
     return [ApplicationFormSubmitSuccessEvent::class => 'onFormSubmitSuccess'];
   }
 
-  public function __construct(ApplicationProcessManager $applicationProcessManager) {
+  public function __construct(
+    ApplicationProcessManager $applicationProcessManager,
+    ApplicationProcessActionStatusInfoContainer $infoContainer
+  ) {
     $this->applicationProcessManager = $applicationProcessManager;
+    $this->infoContainer = $infoContainer;
   }
 
   public function onFormSubmitSuccess(ApplicationFormSubmitSuccessEvent $event): void {
-    if ($this->isReviewStartAction($event->getAction())) {
+    if ($this->getInfo($event->getFundingCaseType())->isReviewStartAction($event->getAction())) {
       $applicationProcess = $event->getApplicationProcess();
       $permissions = $event->getFundingCase()->getPermissions();
 
@@ -55,6 +64,10 @@ final class ApplicationProcessReviewAssignmentSubscriber implements EventSubscri
     }
   }
 
+  private function getInfo(FundingCaseTypeEntity $fundingCaseType): ApplicationProcessActionStatusInfoInterface {
+    return $this->infoContainer->get($fundingCaseType->getName());
+  }
+
   /**
    * @phpstan-param array<string> $permissions
    */
@@ -67,10 +80,6 @@ final class ApplicationProcessReviewAssignmentSubscriber implements EventSubscri
    */
   private function hasPermissionReviewContent(array $permissions): bool {
     return in_array('review_content', $permissions, TRUE);
-  }
-
-  private function isReviewStartAction(string $action): bool {
-    return 'review' === $action;
   }
 
 }

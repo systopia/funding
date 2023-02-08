@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess;
 
+use Civi\Api4\ActivityContact;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\ActivityTypeIds;
 use Civi\Funding\Entity\ActivityEntity;
@@ -30,6 +31,7 @@ use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\Funding\Util\SessionTestUtil;
 use Civi\RemoteTools\Api4\Api4;
+use Civi\RemoteTools\Api4\Query\Comparison;
 
 /**
  * @group headless
@@ -63,6 +65,7 @@ final class ApplicationProcessActivityManagerTest extends AbstractFundingHeadles
       'status' => 'draft',
     ]);
 
+    // Test addActivity
     $activity = ActivityEntity::fromArray([
       'activity_type_id' => ActivityTypeIds::FUNDING_APPLICATION_STATUS_CHANGE,
       'subject' => 'Test subject',
@@ -81,6 +84,7 @@ final class ApplicationProcessActivityManagerTest extends AbstractFundingHeadles
     static::assertSame('old-status', $activity->get('funding_application_status_change.from_status'));
     static::assertSame('new-status', $activity->get('funding_application_status_change.to_status'));
 
+    // Test getByApplicationProcess
     SessionTestUtil::mockInternalRequestSession($recipientContact['id']);
     $activities = $this->activityManager->getByApplicationProcess($applicationProcess->getId());
     static::assertCount(1, $activities);
@@ -91,7 +95,53 @@ final class ApplicationProcessActivityManagerTest extends AbstractFundingHeadles
       'to_status' => 'new-status',
     ], $activities[0]->toArray()
     );
+    static::assertCount(1, $this->activityManager->getByApplicationProcess(
+      $applicationProcess->getId(),
+      Comparison::new('subject', '=', $activity->getSubject())
+    ));
+    static::assertCount(0, $this->activityManager->getByApplicationProcess(
+      $applicationProcess->getId(),
+      Comparison::new('subject', '!=', $activity->getSubject())
+    ));
 
+    // Test assignActivity
+    $this->activityManager->assignActivity($activity, $recipientContact['id']);
+    static::assertCount(1, ActivityContact::get()
+      ->addWhere('activity_id', '=', $activity->getId())
+      ->addWhere('contact_id', '=', $recipientContact['id'])
+      ->addWhere('record_type_id:name', '=', 'Activity Assignees')
+      ->execute()
+    );
+
+    // Test cancelActivity
+    $this->activityManager->cancelActivity($activity);
+    static::assertSame(3, $activity->getStatusId());
+
+    // Test getOpenByApplicationProcess
+    static::assertCount(0, $this->activityManager->getOpenByApplicationProcess($applicationProcess->getId()));
+
+    // Test completeActivity
+    $this->activityManager->completeActivity($activity);
+    static::assertSame(2, $activity->getStatusId());
+
+    // Test getOpenByApplicationProcess and changeActivityStatus
+    static::assertCount(0, $this->activityManager->getOpenByApplicationProcess($applicationProcess->getId()));
+    $this->activityManager->changeActivityStatus($activity, 'Scheduled');
+    static::assertSame(1, $activity->getStatusId());
+    static::assertCount(1, $this->activityManager->getOpenByApplicationProcess($applicationProcess->getId()));
+    $this->activityManager->changeActivityStatus($activity, 'Available');
+    static::assertSame(7, $activity->getStatusId());
+    static::assertCount(1, $this->activityManager->getOpenByApplicationProcess($applicationProcess->getId()));
+    static::assertCount(1, $this->activityManager->getOpenByApplicationProcess(
+      $applicationProcess->getId(),
+      Comparison::new('subject', '=', $activity->getSubject())
+    ));
+    static::assertCount(0, $this->activityManager->getOpenByApplicationProcess(
+      $applicationProcess->getId(),
+      Comparison::new('subject', '!=', $activity->getSubject())
+    ));
+
+    // Test deleteByApplicationProcess
     $this->activityManager->deleteByApplicationProcess($applicationProcess->getId());
     static::assertCount(0, $this->activityManager->getByApplicationProcess($applicationProcess->getId()));
   }

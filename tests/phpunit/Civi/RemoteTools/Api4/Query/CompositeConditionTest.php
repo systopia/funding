@@ -36,4 +36,17 @@ final class CompositeConditionTest extends TestCase {
     static::assertSame(['AND', [$comparisonA->toArray(), $comparisonB->toArray()]], $compositeCondition->toArray());
   }
 
+  public function testFromFieldValuePairs(): void {
+    $condition = CompositeCondition::fromFieldValuePairs([
+      'fieldA' => 'valueA',
+      'fieldB' => 'valueB',
+    ], 'OR', '!=');
+
+    static::assertSame('OR', $condition->getOperator());
+    static::assertEquals([
+      Comparison::new('fieldA', '!=', 'valueA'),
+      Comparison::new('fieldB', '!=', 'valueB'),
+    ], $condition->getConditions());
+  }
+
 }

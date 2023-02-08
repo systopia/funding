@@ -31,6 +31,10 @@ final class ActivityTypeIds {
 
   public const FUNDING_APPLICATION_COMMENT_EXTERNAL = 63785204;
 
+  public const FUNDING_APPLICATION_TASK_INTERNAL = 63785205;
+
+  public const FUNDING_APPLICATION_TASK_EXTERNAL = 63785206;
+
   /**
    * @phpstan-return array<string, int>
    *

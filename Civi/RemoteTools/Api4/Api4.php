@@ -77,4 +77,11 @@ final class Api4 implements Api4Interface {
     return $this->createAction($entityName, $actionName, $params)->execute();
   }
 
+  public function updateEntity(string $entityName, int $id, array $values): Result {
+    return $this->execute($entityName, 'update', [
+      'where' => [['id', '=', $id]],
+      'values' => $values,
+    ]);
+  }
+
 }

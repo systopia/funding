@@ -26,6 +26,8 @@ use Civi\Api4\FundingApplicationProcessActivity;
 use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\RemoteTools\Api4\Api4Interface;
+use Civi\RemoteTools\Api4\Query\ConditionInterface;
+use Webmozart\Assert\Assert;
 
 class ApplicationProcessActivityManager {
 
@@ -48,7 +50,6 @@ class ApplicationProcessActivityManager {
       'source_record_id' => $applicationProcess->getFundingCaseId(),
     ];
     if (!array_key_exists('status_id', $values)) {
-      /** @phpstan-ignore-next-line */
       $values['status_id:name'] ??= 'Completed';
     }
     $createAction = Activity::create()
@@ -86,15 +87,71 @@ class ApplicationProcessActivityManager {
    *
    * @throws \API_Exception
    */
-  public function getByApplicationProcess(int $applicationProcessId): array {
+  public function getByApplicationProcess(int $applicationProcessId, ?ConditionInterface $condition = NULL): array {
     $action = FundingApplicationProcessActivity::get()
       ->setApplicationProcessId($applicationProcessId);
 
-    return array_map(
-      /** @phpstan-ignore-next-line */
-      fn ($values) => ActivityEntity::fromArray($values),
-      $this->api4->executeAction($action)->getArrayCopy()
-    );
+    if (NULL !== $condition) {
+      $action->setWhere([$condition->toArray()]);
+    }
+
+    return ActivityEntity::allFromApiResult($this->api4->executeAction($action));
+  }
+
+  /**
+   * @phpstan-return array<ActivityEntity>
+   *
+   * @throws \API_Exception
+   */
+  public function getOpenByApplicationProcess(int $applicationProcessId, ?ConditionInterface $condition = NULL): array {
+    $action = FundingApplicationProcessActivity::get()
+      ->setApplicationProcessId($applicationProcessId);
+
+    if (NULL !== $condition) {
+      $action->setWhere([$condition->toArray()]);
+    }
+    $action->addWhere('status_id:name', 'IN', ['Scheduled', 'Available']);
+
+    return ActivityEntity::allFromApiResult($this->api4->executeAction($action));
+  }
+
+  /**
+   * @param int|null $contactId NULL to unassign.
+   *
+   * @throws \API_Exception
+   */
+  public function assignActivity(ActivityEntity $activity, ?int $contactId): void {
+    Assert::false($activity->isNew(), 'Activity is not persisted');
+
+    $this->api4->updateEntity('Activity', $activity->getId(), [
+      'assignee_contact_id' => $contactId,
+    ]);
+  }
+
+  /**
+   * @throws \API_Exception
+   */
+  public function cancelActivity(ActivityEntity $activity): void {
+    $this->changeActivityStatus($activity, 'Cancelled');
+  }
+
+  /**
+   * @throws \API_Exception
+   */
+  public function completeActivity(ActivityEntity $activity): void {
+    $this->changeActivityStatus($activity, 'Completed');
+  }
+
+  /**
+   * @throws \API_Exception
+   */
+  public function changeActivityStatus(ActivityEntity $activity, string $status): void {
+    $result = $this->api4->updateEntity('Activity', $activity->getId(), [
+      'status_id:name' => $status,
+    ]);
+
+    $statusId = $result->single()['status_id'];
+    $activity->setStatusId($statusId);
   }
 
 }

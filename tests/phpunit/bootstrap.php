@@ -1,7 +1,8 @@
 <?php
 declare(strict_types = 1);
 
-use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
+use Civi\Funding\ApplicationProcess\ActionStatusInfo\DefaultApplicationProcessActionStatusInfo;
+use Civi\Funding\ApplicationProcess\StatusDeterminer\DefaultApplicationProcessStatusDeterminer;
 use Civi\Funding\Contact\DummyRemoteContactIdResolver;
 use Civi\Funding\Contact\FundingRemoteContactIdResolverInterface;
 use Civi\Funding\Mock\Form\FundingCaseType\TestApplicationCostItemsFactory;
@@ -44,9 +45,13 @@ function _funding_test_civicrm_container(ContainerBuilder $container): void {
   // overwrite remote contact ID resolver
   $container->autowire(FundingRemoteContactIdResolverInterface::class, DummyRemoteContactIdResolver::class);
 
-  $container->getDefinition(ApplicationProcessStatusDeterminerInterface::class)
+  $container->getDefinition(DefaultApplicationProcessStatusDeterminer::class)
     ->addTag('funding.application.status_determiner',
       ['funding_case_type' => TestJsonSchemaFactory::getSupportedFundingCaseTypes()[0]]);
+  $container->getDefinition(DefaultApplicationProcessActionStatusInfo::class)
+    ->addTag('funding.application.action_status_info',
+      ['funding_case_type' => TestJsonSchemaFactory::getSupportedFundingCaseTypes()[0]]);
+
   $container->autowire(TestJsonSchemaFactory::class)
     ->addTag('funding.application.json_schema_factory');
   $container->autowire(TestUiSchemaFactory::class)

@@ -34,12 +34,15 @@ use Civi\Funding\Api4\Action\Remote\ApplicationProcess\ValidateFormAction;
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerInterface;
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\DefaultApplicationProcessActionsDeterminer;
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\ReworkPossibleApplicationProcessActionsDeterminer;
+use Civi\Funding\ApplicationProcess\ActionStatusInfo\DefaultApplicationProcessActionStatusInfo;
+use Civi\Funding\ApplicationProcess\ActionStatusInfo\ReworkPossibleApplicationProcessActionStatusInfo;
 use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
 use Civi\Funding\ApplicationProcess\ApplicationIdentifierGenerator;
 use Civi\Funding\ApplicationProcess\ApplicationIdentifierGeneratorInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
+use Civi\Funding\ApplicationProcess\ApplicationProcessTaskManager;
 use Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandlerInterface;
@@ -65,7 +68,6 @@ use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormValidateHandle
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationJsonSchemaGetHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationResourcesItemsAddIdentifiersHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationResourcesItemsPersistHandler;
-use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\DefaultApplicationProcessStatusDeterminer;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ReworkPossibleApplicationProcessStatusDeterminer;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
@@ -76,6 +78,8 @@ use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessModificati
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessPreDeleteSubscriber;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessReviewAssignmentSubscriber;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessReviewStatusSubscriber;
+use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessReviewTaskSubscriber;
+use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessReworkTaskSubscriber;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessStatusSubscriber;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationResourcesItemsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessActivityGetFieldsSubscriber;
@@ -83,6 +87,7 @@ use Civi\Funding\EventSubscriber\Remote\ApplicationProcessActivityGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessGetFieldsSubscriber;
 use Civi\Funding\Validation\ConcreteEntityValidatorInterface;
+use Symfony\Component\DependencyInjection\Reference;
 
 $container->autowire(ApplicationProcessManager::class);
 $container->autowire(ApplicationProcessBundleLoader::class);
@@ -90,6 +95,7 @@ $container->autowire(ApplicationCostItemManager::class);
 $container->autowire(ApplicationResourcesItemManager::class);
 $container->autowire(ApplicationIdentifierGeneratorInterface::class, ApplicationIdentifierGenerator::class);
 $container->autowire(ApplicationProcessActivityManager::class);
+$container->autowire(ApplicationProcessTaskManager::class);
 
 ServiceRegistrator::autowireAllImplementing(
   $container,
@@ -197,6 +203,12 @@ $container->autowire(ApplicationProcessReviewAssignmentSubscriber::class)
 $container->autowire(ApplicationProcessReviewStatusSubscriber::class)
   ->addTag('kernel.event_subscriber')
   ->setLazy(TRUE);
+$container->autowire(ApplicationProcessReviewTaskSubscriber::class)
+  ->addTag('kernel.event_subscriber')
+  ->setLazy(TRUE);
+$container->autowire(ApplicationProcessReworkTaskSubscriber::class)
+  ->addTag('kernel.event_subscriber')
+  ->setLazy(TRUE);
 $container->autowire(ApplicationCostItemsSubscriber::class)
   ->addTag('kernel.event_subscriber')
   ->setLazy(TRUE);
@@ -211,10 +223,19 @@ $container->autowire(ApplicationProcessActivityGetSubscriber::class)
 $container->autowire(ApplicationProcessActivityGetFieldsSubscriber::class)
   ->addTag('kernel.event_subscriber');
 
-$container->autowire(ApplicationProcessActionsDeterminerInterface::class,
-  DefaultApplicationProcessActionsDeterminer::class);
-$container->autowire(ApplicationProcessStatusDeterminerInterface::class,
-  DefaultApplicationProcessStatusDeterminer::class);
+$container->autowire(DefaultApplicationProcessActionsDeterminer::class);
+// @todo Get rid of alias (see \Civi\Funding\Api4\Action\FundingApplicationProcess\DeleteAction).
+$container->setAlias(
+  ApplicationProcessActionsDeterminerInterface::class,
+  DefaultApplicationProcessActionsDeterminer::class
+);
+$container->autowire(DefaultApplicationProcessStatusDeterminer::class);
+$container->autowire(DefaultApplicationProcessActionStatusInfo::class);
 
-$container->autowire(ReworkPossibleApplicationProcessActionsDeterminer::class);
-$container->autowire(ReworkPossibleApplicationProcessStatusDeterminer::class);
+$container->autowire(ReworkPossibleApplicationProcessActionsDeterminer::class)
+  ->addArgument(new Reference(DefaultApplicationProcessActionsDeterminer::class));
+$container->autowire(ReworkPossibleApplicationProcessStatusDeterminer::class)
+  ->addArgument(new Reference(DefaultApplicationProcessStatusDeterminer::class));
+;
+$container->autowire(ReworkPossibleApplicationProcessActionStatusInfo::class)
+  ->addArgument(new Reference(DefaultApplicationProcessActionStatusInfo::class));

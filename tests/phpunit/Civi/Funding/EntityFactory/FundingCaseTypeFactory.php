@@ -31,15 +31,19 @@ use Civi\Funding\Entity\FundingCaseTypeEntity;
  */
 final class FundingCaseTypeFactory {
 
+  public const DEFAULT_ID = 5;
+
+  public const DEFAULT_NAME = 'TestFundingCaseType';
+
   /**
    * @phpstan-param fundingCaseTypeValuesT $values
    */
   public static function createFundingCaseType(array $values = []): FundingCaseTypeEntity {
     return FundingCaseTypeEntity::fromArray([
-      'id' => 5,
+      'id' => self::DEFAULT_ID,
       'title' => 'Test Funding Case Type',
       'abbreviation' => 'TFCT',
-      'name' => 'TestFundingCaseType',
+      'name' => self::DEFAULT_NAME,
       'properties' => [],
     ]);
   }

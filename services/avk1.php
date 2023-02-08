@@ -21,6 +21,7 @@ declare(strict_types = 1);
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\ReworkPossibleApplicationProcessActionsDeterminer;
+use Civi\Funding\ApplicationProcess\ActionStatusInfo\ReworkPossibleApplicationProcessActionStatusInfo;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ReworkPossibleApplicationProcessStatusDeterminer;
 use Civi\Funding\Form\ApplicationSubmitActionsFactory;
 use Civi\Funding\Form\SonstigeAktivitaet\AVK1FormDataFactory;
@@ -53,3 +54,5 @@ $container->autowire(AVK1ApplicationResourcesItemsFactory::class)
 
 $container->getDefinition(ReworkPossibleApplicationProcessStatusDeterminer::class)
   ->addTag('funding.application.status_determiner', ['funding_case_type' => 'AVK1SonstigeAktivitaet']);
+$container->getDefinition(ReworkPossibleApplicationProcessActionStatusInfo::class)
+  ->addTag('funding.application.action_status_info', ['funding_case_type' => 'AVK1SonstigeAktivitaet']);

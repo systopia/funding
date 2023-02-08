@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\DependencyInjection\Compiler;
 
+use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoContainer;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandler;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandler;
@@ -72,6 +73,9 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
   // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
   public function process(ContainerBuilder $container): void {
   // phpcs:enable
+    $applicationActionStatusInfoServices =
+      $this->getTaggedServices($container, 'funding.application.action_status_info');
+
     $applicationFormDataFactoryServices =
       $this->getTaggedServices($container, 'funding.application.form_data_factory');
     $applicationJsonSchemaFactoryServices =
@@ -120,6 +124,12 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
       $this->getTaggedServices($container, 'funding.case.type.service_locator');
 
     foreach ($this->fundingCaseTypes as $fundingCaseType) {
+      if (!isset($applicationActionStatusInfoServices[$fundingCaseType])) {
+        throw new RuntimeException(
+          sprintf('Application action status info for funding case type "%s" missing', $fundingCaseType)
+        );
+      }
+
       if (isset($serviceLocatorServices[$fundingCaseType])) {
         continue;
       }
@@ -272,6 +282,11 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         throw new RuntimeException(sprintf('No form factory for funding case type "%s" defined', $fundingCaseType));
       }
     }
+
+    $container->register(
+      ApplicationProcessActionStatusInfoContainer::class,
+      ApplicationProcessActionStatusInfoContainer::class
+    )->addArgument(ServiceLocatorTagPass::register($container, $applicationActionStatusInfoServices));
 
     $container->register(FundingCaseTypeServiceLocatorContainer::class, FundingCaseTypeServiceLocatorContainer::class)
       ->addArgument(ServiceLocatorTagPass::register($container, $serviceLocatorServices));

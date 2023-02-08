@@ -45,7 +45,15 @@ namespace Civi\Funding\Entity;
  *   is_star?: bool,
  *   created_date?: ?string,
  *   modified_date?: ?string,
+ *   'status_id:name'?: ?string,
+ *   assignee_contact_id?: ?int,
  * }
+ *
+ * status_id:name can be used on create or update, but is normally not returned
+ * on get.
+ *
+ * assignee_contact_id can be used on create or update, but is not returned on
+ * get.
  *
  * @phpstan-extends AbstractEntity<activityT>
  *
