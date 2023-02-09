@@ -1,6 +1,7 @@
 <?php
 declare(strict_types = 1);
 
+use Civi\Funding\ApplicationProcess\ActionsDeterminer\DefaultApplicationProcessActionsDeterminer;
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\DefaultApplicationProcessActionStatusInfo;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\DefaultApplicationProcessStatusDeterminer;
 use Civi\Funding\Contact\DummyRemoteContactIdResolver;
@@ -45,6 +46,9 @@ function _funding_test_civicrm_container(ContainerBuilder $container): void {
   // overwrite remote contact ID resolver
   $container->autowire(FundingRemoteContactIdResolverInterface::class, DummyRemoteContactIdResolver::class);
 
+  $container->getDefinition(DefaultApplicationProcessActionsDeterminer::class)
+    ->addTag('funding.application.actions_determiner',
+      ['funding_case_type' => TestJsonSchemaFactory::getSupportedFundingCaseTypes()[0]]);
   $container->getDefinition(DefaultApplicationProcessStatusDeterminer::class)
     ->addTag('funding.application.status_determiner',
       ['funding_case_type' => TestJsonSchemaFactory::getSupportedFundingCaseTypes()[0]]);

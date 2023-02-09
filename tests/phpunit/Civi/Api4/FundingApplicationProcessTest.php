@@ -82,7 +82,7 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
 
     SessionTestUtil::mockRemoteRequestSession((string) $contact['id']);
     $this->expectException(UnauthorizedException::class);
-    $this->expectExceptionMessage('Deletion is not allowed');
+    $this->expectExceptionMessage('Permission to delete application is missing.');
 
     FundingApplicationProcess::delete()->addWhere('id', '=', $applicationProcess->getId())->execute();
   }

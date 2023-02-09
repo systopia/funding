@@ -19,13 +19,12 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\FundingApplicationProcess;
 
-use Civi\API\Exception\UnauthorizedException;
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\AbstractBatchAction;
 use Civi\Api4\Generic\Result;
-use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
-use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
+use Civi\Funding\ApplicationProcess\Command\ApplicationDeleteCommand;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationDeleteHandlerInterface;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Webmozart\Assert\Assert;
@@ -34,23 +33,19 @@ final class DeleteAction extends AbstractBatchAction {
 
   private Api4Interface $api4;
 
+  private ApplicationDeleteHandlerInterface $applicationDeleteHandler;
+
   private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
-
-  private ApplicationProcessManager $applicationProcessManager;
-
-  private ApplicationProcessActionsDeterminerInterface $actionsDeterminer;
 
   public function __construct(
     Api4Interface $api4,
-    ApplicationProcessBundleLoader $applicationProcessBundleLoader,
-    ApplicationProcessManager $applicationProcessManager,
-    ApplicationProcessActionsDeterminerInterface $actionsDeterminer
+    ApplicationDeleteHandlerInterface $applicationDeleteHandler,
+    ApplicationProcessBundleLoader $applicationProcessBundleLoader
   ) {
     parent::__construct(FundingApplicationProcess::_getEntityName(), 'delete');
     $this->api4 = $api4;
+    $this->applicationDeleteHandler = $applicationDeleteHandler;
     $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
-    $this->applicationProcessManager = $applicationProcessManager;
-    $this->actionsDeterminer = $actionsDeterminer;
   }
 
   /**
@@ -59,13 +54,7 @@ final class DeleteAction extends AbstractBatchAction {
   public function _run(Result $result): void {
     $applicationProcessBundles = $this->getApplicationProcessBundles();
     foreach ($applicationProcessBundles as $applicationProcessBundle) {
-      if (!$this->isDeleteAllowed($applicationProcessBundle)) {
-        throw new UnauthorizedException('Deletion is not allowed');
-      }
-    }
-
-    foreach ($applicationProcessBundles as $applicationProcessBundle) {
-      $this->applicationProcessManager->delete($applicationProcessBundle);
+      $this->applicationDeleteHandler->handle(new ApplicationDeleteCommand($applicationProcessBundle));
       $result[] = ['id' => $applicationProcessBundle->getApplicationProcess()->getId()];
     }
   }
@@ -89,14 +78,6 @@ final class DeleteAction extends AbstractBatchAction {
 
         return $applicationProcessBundle;
       }, $records,
-    );
-  }
-
-  private function isDeleteAllowed(ApplicationProcessEntityBundle $applicationProcessBundle): bool {
-    return $this->actionsDeterminer->isActionAllowed(
-      'delete',
-      $applicationProcessBundle->getApplicationProcess()->getFullStatus(),
-      $applicationProcessBundle->getFundingCase()->getPermissions(),
     );
   }
 

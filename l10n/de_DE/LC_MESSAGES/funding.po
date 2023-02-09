@@ -195,6 +195,10 @@ msgstr "Kontakt %1"
 msgid "Application process: %1 (%2)"
 msgstr "Förderfallprozess: %1 (%2)"
 
+#: Civi/Funding/ApplicationProcess/Handler/ApplicationDeleteHandler.php
+msgid "Permission to delete application is missing."
+msgstr "Berechtigung zum Löschen des Antrags fehlt."
+
 #: Civi/Funding/ApplicationProcess/Handler/ApplicationFormCommentPersistHandler.php
 msgid "Application process comment"
 msgstr "Förderfallprozesskommentar"

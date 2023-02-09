@@ -31,7 +31,6 @@ use Civi\Funding\Api4\Action\FundingApplicationProcess\UpdateAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetFormAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\SubmitFormAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\ValidateFormAction;
-use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerInterface;
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\DefaultApplicationProcessActionsDeterminer;
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\ReworkPossibleApplicationProcessActionsDeterminer;
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\DefaultApplicationProcessActionStatusInfo;
@@ -46,6 +45,7 @@ use Civi\Funding\ApplicationProcess\ApplicationProcessTaskManager;
 use Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationDeleteHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewCreateHandlerInterface;
@@ -58,6 +58,7 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsAddIdentifi
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationCostItemsAddIdentifiersHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationCostItemsPersistHandler;
+use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationDeleteHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormCreateHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormDataGetHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormNewCreateHandler;
@@ -104,6 +105,8 @@ ServiceRegistrator::autowireAllImplementing(
   ConcreteEntityValidatorInterface::class,
   ['funding.validator.entity' => []]
 );
+
+$container->autowire(ApplicationDeleteHandlerInterface::class, DefaultApplicationDeleteHandler::class);
 
 $container->autowire(ApplicationFormNewCreateHandlerInterface::class, DefaultApplicationFormNewCreateHandler::class);
 $container->autowire(
@@ -224,11 +227,6 @@ $container->autowire(ApplicationProcessActivityGetFieldsSubscriber::class)
   ->addTag('kernel.event_subscriber');
 
 $container->autowire(DefaultApplicationProcessActionsDeterminer::class);
-// @todo Get rid of alias (see \Civi\Funding\Api4\Action\FundingApplicationProcess\DeleteAction).
-$container->setAlias(
-  ApplicationProcessActionsDeterminerInterface::class,
-  DefaultApplicationProcessActionsDeterminer::class
-);
 $container->autowire(DefaultApplicationProcessStatusDeterminer::class);
 $container->autowire(DefaultApplicationProcessActionStatusInfo::class);
 
