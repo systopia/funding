@@ -21,6 +21,7 @@ namespace Civi\Funding;
 
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationDeleteHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewCreateHandlerInterface;
@@ -39,6 +40,10 @@ final class FundingCaseTypeServiceLocator implements FundingCaseTypeServiceLocat
 
   public function __construct(ContainerInterface $locator) {
     $this->locator = $locator;
+  }
+
+  public function getApplicationDeleteHandler(): ApplicationDeleteHandlerInterface {
+    return $this->locator->get(ApplicationDeleteHandlerInterface::class);
   }
 
   public function getApplicationFormNewCreateHandler(): ApplicationFormNewCreateHandlerInterface {

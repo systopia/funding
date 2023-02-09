@@ -24,6 +24,8 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHa
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandler;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationDeleteHandler;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationDeleteHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCommentPersistHandler;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandler;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
@@ -82,12 +84,17 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
       $this->getTaggedServices($container, 'funding.application.json_schema_factory');
     $applicationUiSchemaFactoryServices =
       $this->getTaggedServices($container, 'funding.application.ui_schema_factory');
+    $applicationActionsDeterminerServices =
+      $this->getTaggedServices($container, 'funding.application.actions_determiner');
     $applicationStatusDeterminerServices =
       $this->getTaggedServices($container, 'funding.application.status_determiner');
     $applicationCostItemsFactoryServices =
       $this->getTaggedServices($container, 'funding.application.cost_items_factory');
     $applicationResourcesItemsFactoryServices =
       $this->getTaggedServices($container, 'funding.application.resources_items_factory');
+
+    $applicationDeleteHandlerServices =
+      $this->getTaggedServices($container, 'funding.application.delete_handler');
 
     $applicationFormNewCreateHandlerServices =
       $this->getTaggedServices($container, 'funding.application.form_new_create_handler');
@@ -133,6 +140,15 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
       if (isset($serviceLocatorServices[$fundingCaseType])) {
         continue;
       }
+
+      $applicationDeleteHandlerServices[$fundingCaseType] ??= $this->createService(
+        $container,
+        $fundingCaseType,
+        ApplicationDeleteHandler::class,
+        [
+          '$actionsDeterminer' => $applicationActionsDeterminerServices[$fundingCaseType],
+        ]
+      );
 
       $applicationFormNewCreateHandlerServices[$fundingCaseType] ??= $this->createService(
         $container,
@@ -245,6 +261,7 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
       );
 
       $services = [
+        ApplicationDeleteHandlerInterface::class => $applicationDeleteHandlerServices[$fundingCaseType],
         ApplicationFormNewCreateHandlerInterface::class
         => $applicationFormNewCreateHandlerServices[$fundingCaseType],
         ApplicationFormNewValidateHandlerInterface::class

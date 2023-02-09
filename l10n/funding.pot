@@ -102,6 +102,10 @@ msgstr ""
 msgid "Application process: %1 (%2)"
 msgstr ""
 
+#: Civi/Funding/ApplicationProcess/Handler/ApplicationDeleteHandler.php
+msgid "Permission to delete application is missing."
+msgstr ""
+
 #: Civi/Funding/ApplicationProcess/Handler/ApplicationFormCommentPersistHandler.php
 msgid "Application process comment"
 msgstr ""

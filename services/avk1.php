@@ -52,6 +52,8 @@ $container->autowire(AVK1ApplicationCostItemsFactory::class)
 $container->autowire(AVK1ApplicationResourcesItemsFactory::class)
   ->addTag('funding.application.resources_items_factory');
 
+$container->getDefinition(ReworkPossibleApplicationProcessActionsDeterminer::class)
+  ->addTag('funding.application.actions_determiner', ['funding_case_type' => 'AVK1SonstigeAktivitaet']);
 $container->getDefinition(ReworkPossibleApplicationProcessStatusDeterminer::class)
   ->addTag('funding.application.status_determiner', ['funding_case_type' => 'AVK1SonstigeAktivitaet']);
 $container->getDefinition(ReworkPossibleApplicationProcessActionStatusInfo::class)
