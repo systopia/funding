@@ -1,15 +1,3 @@
-#: Civi/Funding/Api4/Action/FundingApplicationProcess/AssignReviewerCalculativeAction.php Civi/Funding/Api4/Action/FundingApplicationProcess/AssignReviewerContentAction.php Civi/Funding/Api4/Action/Remote/ApplicationProcess/AbstractFormAction.php Civi/Funding/Api4/Action/Remote/ApplicationProcess/GetFormAction.php
-msgid "Application process with ID \"%1\" not found"
-msgstr ""
-
-#: Civi/Funding/Api4/Action/FundingApplicationProcess/AssignReviewerCalculativeAction.php Civi/Funding/Api4/Action/FundingApplicationProcess/AssignReviewerContentAction.php Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php
-msgid "Required permission is missing"
-msgstr ""
-
-#: Civi/Funding/Api4/Action/FundingApplicationProcess/AssignReviewerCalculativeAction.php Civi/Funding/Api4/Action/FundingApplicationProcess/AssignReviewerContentAction.php
-msgid "Contact %1 is not allowed as reviewer"
-msgstr ""
-
 #: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
 msgid "Unique field identifier"
 msgstr ""
@@ -66,6 +54,10 @@ msgstr ""
 msgid "Timestamp"
 msgstr ""
 
+#: Civi/Funding/Api4/Action/Remote/ApplicationProcess/AbstractFormAction.php Civi/Funding/Api4/Action/Remote/ApplicationProcess/GetFormAction.php
+msgid "Application process with ID \"%1\" not found"
+msgstr ""
+
 #: Civi/Funding/Api4/Action/Remote/FundingCase/AbstractNewApplicationFormAction.php
 msgid "Funding case type with ID \"%1\" not found"
 msgstr ""
@@ -76,6 +68,10 @@ msgstr ""
 
 #: Civi/Funding/Api4/Action/Remote/FundingCase/GetNewApplicationFormAction.php
 msgid "Invalid funding program ID or funding case type ID"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php
+msgid "Required permission is missing"
 msgstr ""
 
 #: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php
@@ -312,6 +308,10 @@ msgstr ""
 
 #: Civi/Funding/Form/ReworkPossibleApplicationSubmitActionsContainerFactory.php
 msgid "Withdraw rework request"
+msgstr ""
+
+#: Civi/Funding/Form/ReworkPossibleApplicationSubmitActionsContainerFactory.php
+msgid "Withdraw change"
 msgstr ""
 
 #: Civi/Funding/Form/ReworkPossibleApplicationSubmitActionsContainerFactory.php

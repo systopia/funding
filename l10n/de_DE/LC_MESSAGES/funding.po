@@ -11,24 +11,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.3\n"
 
-#: Civi/Funding/Api4/Action/FundingApplicationProcess/AssignReviewerCalculativeAction.php
-#: Civi/Funding/Api4/Action/FundingApplicationProcess/AssignReviewerContentAction.php
-#: Civi/Funding/Api4/Action/Remote/ApplicationProcess/AbstractFormAction.php
-#: Civi/Funding/Api4/Action/Remote/ApplicationProcess/GetFormAction.php
-msgid "Application process with ID \"%1\" not found"
-msgstr "Antragsprozess mit ID \"%1\" nicht gefunden"
-
-#: Civi/Funding/Api4/Action/FundingApplicationProcess/AssignReviewerCalculativeAction.php
-#: Civi/Funding/Api4/Action/FundingApplicationProcess/AssignReviewerContentAction.php
-#: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php
-msgid "Required permission is missing"
-msgstr "Notwendige Berechtigung fehlt"
-
-#: Civi/Funding/Api4/Action/FundingApplicationProcess/AssignReviewerCalculativeAction.php
-#: Civi/Funding/Api4/Action/FundingApplicationProcess/AssignReviewerContentAction.php
-msgid "Contact %1 is not allowed as reviewer"
-msgstr "Kontakt %1 ist nicht als Prüfkontakt erlaubt"
-
 # Übersetzung nicht notwendig
 #: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php
@@ -155,6 +137,11 @@ msgstr ""
 msgid "Timestamp"
 msgstr ""
 
+#: Civi/Funding/Api4/Action/Remote/ApplicationProcess/AbstractFormAction.php
+#: Civi/Funding/Api4/Action/Remote/ApplicationProcess/GetFormAction.php
+msgid "Application process with ID \"%1\" not found"
+msgstr "Antragsprozess mit ID \"%1\" nicht gefunden"
+
 #: Civi/Funding/Api4/Action/Remote/FundingCase/AbstractNewApplicationFormAction.php
 msgid "Funding case type with ID \"%1\" not found"
 msgstr "Förderfalltyp mit ID \"%1\" nicht gefunden"
@@ -166,6 +153,10 @@ msgstr "Förderprogramm mit ID \"%1\" nicht gefunden"
 #: Civi/Funding/Api4/Action/Remote/FundingCase/GetNewApplicationFormAction.php
 msgid "Invalid funding program ID or funding case type ID"
 msgstr "Ungültige Förderprogramm ID oder Förderfalltyp ID"
+
+#: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php
+msgid "Required permission is missing"
+msgstr "Notwendige Berechtigung fehlt"
 
 #: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php
 msgid "Funding program and funding case type are not related"
@@ -443,6 +434,10 @@ msgstr "Überarbeitung beantragen"
 #: Civi/Funding/Form/ReworkPossibleApplicationSubmitActionsContainerFactory.php
 msgid "Withdraw rework request"
 msgstr "Antrag zur Überarbeitung zurückziehen"
+
+#: Civi/Funding/Form/ReworkPossibleApplicationSubmitActionsContainerFactory.php
+msgid "Withdraw change"
+msgstr "Änderung zurückziehen"
 
 #: Civi/Funding/Form/ReworkPossibleApplicationSubmitActionsContainerFactory.php
 msgid "Apply rework"
@@ -1008,3 +1003,6 @@ msgstr "Antrag überarbeiten"
 #: managed/OptionValueActivityUsedForApplicationProcess.mgd.php
 msgid "Funding application process"
 msgstr "Förderantragsprozess"
+
+#~ msgid "Contact %1 is not allowed as reviewer"
+#~ msgstr "Kontakt %1 ist nicht als Prüfkontakt erlaubt"
