@@ -83,6 +83,7 @@ final class TestValidatedData implements ValidatedApplicationDataInterface {
   public function getApplicationData(): array {
     $data = $this->data;
     unset($data['action']);
+    unset($data['comment']);
 
     return $data;
   }
