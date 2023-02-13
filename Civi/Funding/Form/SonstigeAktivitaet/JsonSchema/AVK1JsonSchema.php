@@ -70,7 +70,6 @@ final class AVK1JsonSchema extends JsonSchemaObject {
       'kosten' => new AVK1KostenSchema(),
       // Abschnitt II
       'finanzierung' => new AVK1FinanzierungSchema(),
-      'file' => new JsonSchemaString(['format' => 'uri']),
     ] + $extraProperties, $keywords);
   }
 
