@@ -146,6 +146,7 @@ final class RemoteFundingCaseTestFormTest extends AbstractRemoteFundingHeadlessT
       'startDate' => date('Y-m-d'),
       'endDate' => date('Y-m-d'),
       'amountRequested' => 123.45,
+      'resources' => 12.34,
     ];
     $action->setData($validData + ['action' => 'save']);
 

@@ -43,6 +43,7 @@ use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\ApplicationProcessTaskManager;
 use Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager;
+use Civi\Funding\ApplicationProcess\ApplicationSnapshotManager;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationDeleteHandlerInterface;
@@ -56,6 +57,7 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterf
 use Civi\Funding\ApplicationProcess\Handler\ApplicationJsonSchemaGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationCostItemsAddIdentifiersHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationCostItemsPersistHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationDeleteHandler;
@@ -69,8 +71,11 @@ use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormValidateHandle
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationJsonSchemaGetHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationResourcesItemsAddIdentifiersHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationResourcesItemsPersistHandler;
+use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationSnapshotCreateHandler;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\DefaultApplicationProcessStatusDeterminer;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ReworkPossibleApplicationProcessStatusDeterminer;
+use Civi\Funding\ApplicationProcess\Snapshot\ApplicationSnapshotRestorer;
+use Civi\Funding\ApplicationProcess\Snapshot\ApplicationSnapshotRestorerInterface;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationCostItemsSubscriber;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessCreatedSubscriber;
@@ -83,6 +88,8 @@ use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessReviewTask
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessReworkTaskSubscriber;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessStatusSubscriber;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationResourcesItemsSubscriber;
+use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationSnapshotCreateSubscriber;
+use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationSnapshotRestoreSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessActivityGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessActivityGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessDAOGetSubscriber;
@@ -97,6 +104,7 @@ $container->autowire(ApplicationResourcesItemManager::class);
 $container->autowire(ApplicationIdentifierGeneratorInterface::class, ApplicationIdentifierGenerator::class);
 $container->autowire(ApplicationProcessActivityManager::class);
 $container->autowire(ApplicationProcessTaskManager::class);
+$container->autowire(ApplicationSnapshotManager::class);
 
 ServiceRegistrator::autowireAllImplementing(
   $container,
@@ -136,6 +144,7 @@ $container->autowire(
   ApplicationResourcesItemsPersistHandlerInterface::class,
   DefaultApplicationResourcesItemsPersistHandler::class
 );
+$container->autowire(ApplicationSnapshotCreateHandlerInterface::class, DefaultApplicationSnapshotCreateHandler::class);
 
 $container->autowire(CreateAction::class)
   ->setPublic(TRUE)
@@ -218,6 +227,13 @@ $container->autowire(ApplicationCostItemsSubscriber::class)
 $container->autowire(ApplicationResourcesItemsSubscriber::class)
   ->addTag('kernel.event_subscriber')
   ->setLazy(TRUE);
+$container->autowire(ApplicationSnapshotCreateSubscriber::class)
+  ->addTag('kernel.event_subscriber')
+  ->setLazy(TRUE);
+$container->autowire(ApplicationSnapshotRestoreSubscriber::class)
+  ->addTag('kernel.event_subscriber')
+  ->setLazy(TRUE);
+
 $container->autowire(ApplicationProcessDAOGetSubscriber::class)
   ->addTag('kernel.event_subscriber');
 
@@ -225,6 +241,8 @@ $container->autowire(ApplicationProcessActivityGetSubscriber::class)
   ->addTag('kernel.event_subscriber');
 $container->autowire(ApplicationProcessActivityGetFieldsSubscriber::class)
   ->addTag('kernel.event_subscriber');
+
+$container->autowire(ApplicationSnapshotRestorerInterface::class, ApplicationSnapshotRestorer::class);
 
 $container->autowire(DefaultApplicationProcessActionsDeterminer::class);
 $container->autowire(DefaultApplicationProcessStatusDeterminer::class);

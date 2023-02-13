@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\ActionStatusInfo;
 
+use Civi\Funding\Entity\FullApplicationProcessStatus;
+
 interface ApplicationProcessActionStatusInfoInterface {
 
   /**
@@ -33,8 +35,14 @@ interface ApplicationProcessActionStatusInfoInterface {
 
   public function isChangeRequiredStatus(string $status): bool;
 
+  public function isDeleteAction(string $action): bool;
+
+  public function isRestoreAction(string $action): bool;
+
   public function isReviewStartAction(string $action): bool;
 
   public function isReviewStatus(string $status): bool;
+
+  public function isSnapshotRequiredStatus(FullApplicationProcessStatus $status): bool;
 
 }

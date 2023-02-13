@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\ActionStatusInfo;
 
+use Civi\Funding\Entity\FullApplicationProcessStatus;
+
 /**
  * @codeCoverageIgnore
  */
@@ -45,12 +47,25 @@ final class ReworkPossibleApplicationProcessActionStatusInfo implements Applicat
     return 'rework' === $status || $this->info->isChangeRequiredStatus($status);
   }
 
+  public function isDeleteAction(string $action): bool {
+    return $this->info->isDeleteAction($action);
+  }
+
+  public function isRestoreAction(string $action): bool {
+    return in_array($action, ['withdraw-change', 'revert-change', 'reject-change'], TRUE)
+      || $this->info->isRestoreAction($action);
+  }
+
   public function isReviewStartAction(string $action): bool {
     return 'review' === $action || $this->info->isReviewStartAction($action);
   }
 
   public function isReviewStatus(string $status): bool {
     return 'rework-review' === $status || $this->info->isReviewStatus($status);
+  }
+
+  public function isSnapshotRequiredStatus(FullApplicationProcessStatus $status): bool {
+    return $this->info->isSnapshotRequiredStatus($status);
   }
 
 }

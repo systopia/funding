@@ -32,6 +32,7 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterf
 use Civi\Funding\ApplicationProcess\Handler\ApplicationJsonSchemaGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandlerInterface;
 use Civi\Funding\FundingCase\FundingCaseStatusDeterminerInterface;
 
 interface FundingCaseTypeServiceLocatorInterface {
@@ -64,6 +65,8 @@ interface FundingCaseTypeServiceLocatorInterface {
   // phpcs:enable
 
   public function getApplicationResourcesItemsPersistHandler(): ApplicationResourcesItemsPersistHandlerInterface;
+
+  public function getApplicationSnapshotCreateHandler(): ApplicationSnapshotCreateHandlerInterface;
 
   public function getFundingCaseStatusDeterminer(): FundingCaseStatusDeterminerInterface;
 

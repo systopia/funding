@@ -39,6 +39,7 @@ final class TestJsonSchema extends JsonSchemaObject {
       'startDate',
       'endDate',
       'amountRequested',
+      'resources',
     ], $required);
 
     parent::__construct([
@@ -48,6 +49,7 @@ final class TestJsonSchema extends JsonSchemaObject {
       'startDate' => new JsonSchemaString(),
       'endDate' => new JsonSchemaString(),
       'amountRequested' => new JsonSchemaMoney(),
+      'resources' => new JsonSchemaMoney(),
     ] + $extraProperties, $keywords);
   }
 

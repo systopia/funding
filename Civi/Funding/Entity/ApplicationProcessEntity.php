@@ -47,6 +47,8 @@ namespace Civi\Funding\Entity;
  */
 final class ApplicationProcessEntity extends AbstractEntity {
 
+  private ?ApplicationSnapshotEntity $restoredSnapshot = NULL;
+
   public function getIdentifier(): string {
     return $this->values['identifier'];
   }
@@ -223,6 +225,25 @@ final class ApplicationProcessEntity extends AbstractEntity {
     $this->setStatus($fullStatus->getStatus());
     $this->setIsReviewCalculative($fullStatus->getIsReviewCalculative());
     $this->setIsReviewContent($fullStatus->getIsReviewContent());
+
+    return $this;
+  }
+
+  /**
+   * @return \Civi\Funding\Entity\ApplicationSnapshotEntity|null
+   *   The application snapshot this application process is currently restored
+   *   to. If NULL, it is not in the process of restoring.
+   */
+  public function getRestoredSnapshot(): ?ApplicationSnapshotEntity {
+    return $this->restoredSnapshot;
+  }
+
+  /**
+   * Sets the application snapshot this application process is currently restored
+   * to.
+   */
+  public function setRestoredSnapshot(?ApplicationSnapshotEntity $restoredSnapshot): self {
+    $this->restoredSnapshot = $restoredSnapshot;
 
     return $this;
   }

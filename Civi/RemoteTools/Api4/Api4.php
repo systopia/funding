@@ -67,6 +67,16 @@ final class Api4 implements Api4Interface {
   /**
    * @inheritDoc
    */
+  public function createEntity(string $entityName, array $values, array $options = []): Result {
+    return $this->execute($entityName, 'create', [
+      'checkPermissions' => $options['checkPermissions'] ?? TRUE,
+      'values' => $values,
+    ]);
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function createGetAction(string $entityName): AbstractAction {
     // @phpstan-ignore-next-line Does not return AbstractGetAction.
     return $this->createAction($entityName, 'get');
@@ -86,6 +96,9 @@ final class Api4 implements Api4Interface {
     return $this->createAction($entityName, $actionName, $params)->execute();
   }
 
+  /**
+   * @inheritDoc
+   */
   public function getEntities(
     string $entityName,
     ?ConditionInterface $where = NULL,

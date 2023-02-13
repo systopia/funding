@@ -54,7 +54,12 @@ class TestJsonSchemaFactory implements ApplicationJsonSchemaFactoryInterface {
   public function createJsonSchemaExisting(
     ApplicationProcessEntityBundle $applicationProcessBundle
   ): JsonSchema {
-    $submitActions = ['save'];
+    if ($this->hasReviewPermission($applicationProcessBundle->getFundingCase()->getPermissions())) {
+      $submitActions = ['update', 'approve'];
+    }
+    else {
+      $submitActions = ['save', 'withdraw-change'];
+    }
     $extraProperties = [
       'applicationProcessId' => new JsonSchemaInteger([
         'const' => $applicationProcessBundle->getApplicationProcess()->getId(),
@@ -81,6 +86,14 @@ class TestJsonSchemaFactory implements ApplicationJsonSchemaFactoryInterface {
     $extraKeywords = ['required' => array_keys($extraProperties)];
 
     return new TestJsonSchema($extraProperties, $extraKeywords);
+  }
+
+  /**
+   * @phpstan-param array<string> $permissions
+   */
+  private function hasReviewPermission(array $permissions): bool {
+    return in_array('review_content', $permissions, TRUE)
+      || in_array('review_calculative', $permissions, TRUE);
   }
 
 }

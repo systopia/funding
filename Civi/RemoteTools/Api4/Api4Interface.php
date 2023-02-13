@@ -41,6 +41,15 @@ interface Api4Interface {
   public function createAction(string $entityName, string $action, array $params = []): AbstractAction;
 
   /**
+   * @phpstan-param array<string, mixed> $values
+   * @phpstan-param array{checkPermissions?: bool} $options
+   *   checkPermissions defaults to TRUE.
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function createEntity(string $entityName, array $values, array $options = []): Result;
+
+  /**
    * @return \Civi\Api4\Generic\AbstractGetAction
    *   It's possible that the returned action does not extend this class, but
    *   (most probably) provides the same methods. So the type is not enforced.
@@ -50,20 +59,16 @@ interface Api4Interface {
   public function createGetAction(string $entityName): AbstractAction;
 
   /**
-   * @throws \CRM_Core_Exception
-   */
-  public function executeAction(AbstractAction $action): Result;
-
-  /**
-   * @param string $entityName
-   * @param string $actionName
    * @param array<string, mixed|ApiParameterInterface> $params
-   *
-   * @return \Civi\Api4\Generic\Result
    *
    * @throws \CRM_Core_Exception
    */
   public function execute(string $entityName, string $actionName, array $params = []): Result;
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function executeAction(AbstractAction $action): Result;
 
   /**
    * @phpstan-param array<string, 'ASC'|'DESC'> $orderBy

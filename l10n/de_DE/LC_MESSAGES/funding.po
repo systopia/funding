@@ -11,6 +11,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.3\n"
 
+#: Civi/Funding/Api4/Action/FundingApplicationProcess/GetJsonSchemaAction.php
+msgid "No such application or missing permission."
+msgstr ""
+
 # Übersetzung nicht notwendig
 #: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php
@@ -336,6 +340,18 @@ msgstr "Von Status: %1"
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriber.php
 msgid "To status: %1"
 msgstr "Zu Status: %1"
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationSnapshotRestoreSubscriber.php
+msgid "Funding application process restored"
+msgstr "Förderfallprozess wiederhergestellt"
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationSnapshotRestoreSubscriber.php
+msgid "Application process \"%1\" (%2) restored to version from %3."
+msgstr "Förderfallprozess \"%1\" (%2) wiederhergestellt auf Version vom %3."
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationSnapshotRestoreSubscriber.php
+msgid "Y-m-d H:i:s"
+msgstr "d.m.Y H:i:s"
 
 #: Civi/Funding/EventSubscriber/Form/SubmitApplicationFormSubscriber.php
 msgid "Saved"
@@ -950,6 +966,15 @@ msgstr "Förderantrag erstellt"
 msgid "Activity type for funding application process creation"
 msgstr "Aktivitätsart für Förderantragsprozesserstellung"
 
+#: managed/ActivityTypeFundingApplicationRestore.mgd.php
+#: managed/CustomGroupFundingApplicationRestore.mgd.php
+msgid "Funding Application Restore"
+msgstr "Förderantragswiederherstellung"
+
+#: managed/ActivityTypeFundingApplicationRestore.mgd.php
+msgid "Activity type for funding application restore"
+msgstr "Aktivitätsart für Förderantragswiederherstellung"
+
 #: managed/ActivityTypeFundingApplicationReviewChange.mgd.php
 #: managed/CustomGroupFundingApplicationReviewStatusChange.mgd.php
 msgid "Funding Application Review Status Change"
@@ -991,6 +1016,10 @@ msgstr "Förderantragskommentar"
 #: managed/CustomGroupFundingApplicationComment.mgd.php
 msgid "Action"
 msgstr "Aktion"
+
+#: managed/CustomGroupFundingApplicationRestore.mgd.php
+msgid "Application snapshot ID"
+msgstr "Antragssnapshot ID"
 
 #: managed/CustomGroupFundingApplicationReviewStatusChange.mgd.php
 msgid "From review calculative"
