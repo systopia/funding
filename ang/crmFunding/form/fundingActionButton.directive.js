@@ -52,7 +52,7 @@ fundingModule.directive('fundingActionButton', ['$compile', function($compile) {
 
         transcludeFn(function (clone) {
           if (clone[0]) {
-            element.find('button').find('span.fu-label').html(clone);
+            element.find('button').find('span.funding-label').html(clone);
             if (!controller.label) {
               const cloneText = clone.text();
               const expressionMatch = cloneText.match(/^\{\{(.+)\}\}$/);
