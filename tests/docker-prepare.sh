@@ -8,7 +8,7 @@ REMOTETOOLS_VERSION=0.4
 
 FUNDING_EXT_DIR=$(dirname "$(dirname "$(realpath "$0")")")
 
-if [ ! type git >/dev/null 2>&1 ]; then
+if ! type git >/dev/null 2>&1; then
   apt -y update
   apt -y install git
 fi
