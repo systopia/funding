@@ -1,4 +1,4 @@
-#fu-overlay {
+#funding-overlay {
   position: fixed;
   display: none;
   width: 100%;
@@ -12,12 +12,12 @@
   cursor: wait;
 }
 
-.fu-modal {
+.funding-modal {
   /* Modal dialog is partly covered by navbar otherwise. */
   top: 50px !important;
 }
 
-.fu-activity-title {
+.funding-activity-title {
   font-size: larger;
   font-weight: bolder;
   margin-bottom: 0px !important;

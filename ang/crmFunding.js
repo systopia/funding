@@ -13,7 +13,7 @@ fundingModule.run(['editableOptions', 'editableThemes', function(editableOptions
 let overlayCount = 0;
 function enableOverlay() {
   ++overlayCount;
-  document.getElementById('fu-overlay').style.display = 'block';
+  document.getElementById('funding-overlay').style.display = 'block';
 }
 
 function disableOverlay() {
@@ -21,7 +21,7 @@ function disableOverlay() {
     --overlayCount;
   }
   if (overlayCount === 0) {
-    document.getElementById('fu-overlay').style.display = 'none';
+    document.getElementById('funding-overlay').style.display = 'none';
   }
 }
 
