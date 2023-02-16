@@ -64,6 +64,6 @@ ServiceRegistrator::autowireAllImplementing(
   $container,
   __DIR__ . '/../Civi/Funding/Contact/Relation/Loaders',
   'Civi\\Funding\\Contact\\Relation\\Loaders',
-  RelationTypeInterface::class,
+  RelatedContactsLoaderInterface::class,
   ['funding.related_contacts_loader' => []],
 );
