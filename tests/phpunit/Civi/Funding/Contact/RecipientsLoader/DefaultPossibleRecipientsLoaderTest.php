@@ -23,6 +23,7 @@ use Civi\Api4\FundingRecipientContactRelation;
 use Civi\Api4\Generic\AbstractGetAction;
 use Civi\Api4\Generic\Result;
 use Civi\Funding\Contact\RelatedContactsLoaderInterface;
+use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\RemoteTools\Api4\Api4Interface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -67,13 +68,14 @@ final class DefaultPossibleRecipientsLoaderTest extends TestCase {
       'properties' => ['foo' => 'bar'],
     ];
 
-    $this->mockApiContactRelationGet([$contactRelation]);
+    $fundingProgram = FundingProgramFactory::createFundingProgram();
+    $this->mockApiContactRelationGet([$contactRelation], $fundingProgram->getId());
 
     $this->relatedContactsLoaderMock->expects(static::once())->method('getRelatedContacts')
       ->with(123, 'test', ['foo' => 'bar'])
       ->willReturn([2 => ['display_name' => 'Name']]);
 
-    static::assertSame([2 => 'Name'], $this->recipientsLoader->getPossibleRecipients(123));
+    static::assertSame([2 => 'Name'], $this->recipientsLoader->getPossibleRecipients(123, $fundingProgram));
   }
 
   public function testGetPossibleRecipientsMultipleRelations(): void {
@@ -89,7 +91,8 @@ final class DefaultPossibleRecipientsLoaderTest extends TestCase {
       'properties' => ['foo2' => 'bar2'],
     ];
 
-    $this->mockApiContactRelationGet([$contactRelation1, $contactRelation2]);
+    $fundingProgram = FundingProgramFactory::createFundingProgram();
+    $this->mockApiContactRelationGet([$contactRelation1, $contactRelation2], $fundingProgram->getId());
 
     $this->relatedContactsLoaderMock->expects(static::exactly(2))->method('getRelatedContacts')
       ->withConsecutive(
@@ -109,7 +112,7 @@ final class DefaultPossibleRecipientsLoaderTest extends TestCase {
 
     static::assertSame(
       [1 => 'Name1' , 2 => 'Name2', 3 => 'Name3'],
-      $this->recipientsLoader->getPossibleRecipients(123)
+      $this->recipientsLoader->getPossibleRecipients(123, $fundingProgram)
     );
   }
 
@@ -120,22 +123,24 @@ final class DefaultPossibleRecipientsLoaderTest extends TestCase {
       'properties' => ['foo' => 'bar'],
     ];
 
-    $this->mockApiContactRelationGet([$contactRelation]);
+    $fundingProgram = FundingProgramFactory::createFundingProgram();
+    $this->mockApiContactRelationGet([$contactRelation], $fundingProgram->getId());
 
     $this->relatedContactsLoaderMock->expects(static::once())->method('getRelatedContacts')
       ->with(123, 'test', ['foo' => 'bar'])
       ->willReturn([2 => ['id' => 2, 'display_name' => NULL]]);
 
-    static::assertSame([2 => 'Contact 2'], $this->recipientsLoader->getPossibleRecipients(123));
+    static::assertSame([2 => 'Contact 2'], $this->recipientsLoader->getPossibleRecipients(123, $fundingProgram));
   }
 
   /**
    * @phpstan-param array<contactRelationT> $contactRelations
    */
-  private function mockApiContactRelationGet(array $contactRelations): void {
+  private function mockApiContactRelationGet(array $contactRelations, int $fundingProgramId): void {
     $this->api4Mock->expects(static::once())->method('executeAction')
-      ->with(static::callback(function (AbstractGetAction $action) {
+      ->with(static::callback(function (AbstractGetAction $action) use ($fundingProgramId) {
         static::assertSame(FundingRecipientContactRelation::_getEntityName(), $action->getEntityName());
+        static::assertSame([['funding_program_id', '=', $fundingProgramId, FALSE]], $action->getWhere());
 
         return TRUE;
       }))->willReturn(new Result($contactRelations));

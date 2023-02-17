@@ -137,7 +137,7 @@ class AVK1JsonSchemaFactory implements ApplicationJsonSchemaFactoryInterface {
     return new AVK1JsonSchema(
       $fundingProgram->getRequestsStartDate(),
       $fundingProgram->getRequestsEndDate(),
-      $this->possibleRecipientsLoader->getPossibleRecipients($contactId),
+      $this->possibleRecipientsLoader->getPossibleRecipients($contactId, $fundingProgram),
       $extraProperties,
       $extraKeywords,
     );

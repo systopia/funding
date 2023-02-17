@@ -19,12 +19,14 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Contact;
 
+use Civi\Funding\Entity\FundingProgramEntity;
+
 interface PossibleRecipientsLoaderInterface {
 
   /**
    * @phpstan-return array<int, string>
    *   Contact ID mapped to display name.
    */
-  public function getPossibleRecipients(int $contactId): array;
+  public function getPossibleRecipients(int $contactId, FundingProgramEntity $fundingProgram): array;
 
 }

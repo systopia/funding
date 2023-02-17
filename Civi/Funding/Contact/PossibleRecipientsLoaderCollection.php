@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Contact;
 
+use Civi\Funding\Entity\FundingProgramEntity;
+
 final class PossibleRecipientsLoaderCollection implements PossibleRecipientsLoaderInterface {
 
   /**
@@ -36,10 +38,10 @@ final class PossibleRecipientsLoaderCollection implements PossibleRecipientsLoad
   /**
    * @inheritDoc
    */
-  public function getPossibleRecipients(int $contactId): array {
+  public function getPossibleRecipients(int $contactId, FundingProgramEntity $fundingProgram): array {
     $possibleRecipients = [];
     foreach ($this->possibleRecipientsLoaders as $possibleRecipientsLoader) {
-      $possibleRecipients += $possibleRecipientsLoader->getPossibleRecipients($contactId);
+      $possibleRecipients += $possibleRecipientsLoader->getPossibleRecipients($contactId, $fundingProgram);
     }
 
     return $possibleRecipients;

@@ -23,6 +23,7 @@ use Civi\Api4\FundingRecipientContactRelation;
 use Civi\Funding\Api4\Util\ContactUtil;
 use Civi\Funding\Contact\PossibleRecipientsLoaderInterface;
 use Civi\Funding\Contact\RelatedContactsLoaderInterface;
+use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\RemoteTools\Api4\Api4Interface;
 
 /**
@@ -43,8 +44,8 @@ final class DefaultPossibleRecipientsLoader implements PossibleRecipientsLoaderI
     $this->relatedContactsLoader = $relatedContactsLoader;
   }
 
-  public function getPossibleRecipients(int $contactId): array {
-    $contacts = $this->getRelatedContacts($contactId);
+  public function getPossibleRecipients(int $contactId, FundingProgramEntity $fundingProgram): array {
+    $contacts = $this->getRelatedContacts($contactId, $fundingProgram);
     $possibleRecipients = [];
     /** @phpstan-var array{id: int, display_name: ?string} $contact */
     foreach ($contacts as $id => $contact) {
@@ -59,8 +60,9 @@ final class DefaultPossibleRecipientsLoader implements PossibleRecipientsLoaderI
    *
    * @throws \API_Exception
    */
-  private function getRelatedContacts(int $contactId): array {
-    $action = FundingRecipientContactRelation::get();
+  private function getRelatedContacts(int $contactId, FundingProgramEntity $fundingProgram): array {
+    $action = FundingRecipientContactRelation::get()
+      ->addWhere('funding_program_id', '=', $fundingProgram->getId());
     /** @phpstan-var array<int, contactRelationT> $contactRelations */
     $contactRelations = $this->api4->executeAction($action)->indexBy('id')->getArrayCopy();
 
