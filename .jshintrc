@@ -17,7 +17,8 @@
     "_4": false,
     "Element": false,
     "document": false,
-    "window": false
+    "window": false,
+    "History": false
   },
   "latedef": true,
   "nocomma": true,

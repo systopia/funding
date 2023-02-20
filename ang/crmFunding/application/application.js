@@ -60,5 +60,7 @@ fundingModule.controller('fundingApplicationCtrl', [
     $scope.tab = 'application';
     $scope.applicationProcess = applicationProcess;
     $scope.jsonSchema = jsonSchema;
+
+    $scope.canGoBack = History.length > 0;
   },
 ]);

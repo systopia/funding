@@ -9,6 +9,9 @@
         <li role="presentation" ng-class="{active: tab === 'history'}">
             <a role="tab" ng-click="tab='history'">{{ts('History')}}</a>
         </li>
+        <li ng-if="canGoBack" role="presentation" class="pull-right">
+            <a href="javascript:history.back()" crm-icon="fa-times">{{ ts('Close') }}</a>
+        </li>
     </ul>
 
     <div class="tab-content">
