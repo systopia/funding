@@ -52,25 +52,11 @@ final class GetAction extends AbstractGetAction {
    */
   public function _run(Result $result): void {
     $records = [];
-    foreach ($this->getFundingCases() as $fundingCase) {
-      $applicationProcessBundle = $this->applicationProcessBundleLoader->getFirstByFundingCaseId($fundingCase->getId());
-      if (NULL === $applicationProcessBundle) {
-        continue;
-      }
-
+    foreach ($this->getApplicationProcessBundles() as $applicationProcessBundle) {
       $records[] = $this->buildRecord($applicationProcessBundle);
     }
 
-    if ($this->isRowCountSelected()) {
-      $result->setCountMatched(count($records));
-    }
-
-    if (!$this->isRowCountSelectedOnly()) {
-      $records = $this->sortArray($records);
-      $records = $this->limitArray($records);
-      $records = $this->selectArray($records);
-      $result->exchangeArray($records);
-    }
+    $this->queryArray($records, $result);
   }
 
   /**
@@ -116,6 +102,30 @@ final class GetAction extends AbstractGetAction {
 
   private static function toFormattedDateOrNull(?\DateTimeInterface $date): ?string {
     return NULL === $date ? NULL : $date->format('Y-m-d H:i:s');
+  }
+
+  /**
+   * @phpstan-return iterable<ApplicationProcessEntityBundle>
+   *
+   * @throws \API_Exception
+   */
+  private function getApplicationProcessBundles(): iterable {
+    $applicationProcessId = WhereUtil::getInt($this->where, 'application_process_id');
+    if (NULL !== $applicationProcessId) {
+      $applicationProcessBundle = $this->applicationProcessBundleLoader->get($applicationProcessId);
+      if (NULL !== $applicationProcessBundle) {
+        yield $applicationProcessBundle;
+      }
+    }
+    else {
+      foreach ($this->getFundingCases() as $fundingCase) {
+        $applicationProcessBundle =
+          $this->applicationProcessBundleLoader->getFirstByFundingCaseId($fundingCase->getId());
+        if (NULL !== $applicationProcessBundle) {
+          yield $applicationProcessBundle;
+        }
+      }
+    }
   }
 
   private function getFundingCaseIdFromWhere(): ?int {
