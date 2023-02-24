@@ -120,6 +120,12 @@ final class FundingCaseInfoTest extends AbstractFundingHeadlessTestCase {
     static::assertCount(1, $result);
     static::assertSame($fundingCase2->getId(), $result->first()['funding_case_id']);
     static::assertSame($applicationProcess2->getId(), $result->first()['application_process_id']);
+
+    $action->setWhere([])->addWhere('application_process_id', '=', $applicationProcess->getId());
+    $result = $action->execute();
+    static::assertCount(1, $result);
+    static::assertSame($fundingCase->getId(), $result->first()['funding_case_id']);
+    static::assertSame($applicationProcess->getId(), $result->first()['application_process_id']);
   }
 
   public function testGetFields(): void {
