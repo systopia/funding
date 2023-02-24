@@ -61,8 +61,7 @@ final class DefaultPossibleRecipientsLoader implements PossibleRecipientsLoaderI
    * @throws \API_Exception
    */
   private function getRelatedContacts(int $contactId, FundingProgramEntity $fundingProgram): array {
-    $action = FundingRecipientContactRelation::get()
-      ->setCheckPermissions(FALSE)
+    $action = FundingRecipientContactRelation::get(FALSE)
       ->addWhere('funding_program_id', '=', $fundingProgram->getId());
     /** @phpstan-var array<int, contactRelationT> $contactRelations */
     $contactRelations = $this->api4->executeAction($action)->indexBy('id')->getArrayCopy();

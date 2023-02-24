@@ -49,8 +49,7 @@ class FundingProgramManager {
    * @throws \API_Exception
    */
   public function get(int $id): ?FundingProgramEntity {
-    $action = FundingProgram::get()
-      ->setCheckPermissions(FALSE)
+    $action = FundingProgram::get(FALSE)
       ->addWhere('id', '=', $id);
 
     /** @var fundingProgramT|null $values */

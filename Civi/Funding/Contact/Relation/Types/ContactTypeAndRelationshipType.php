@@ -74,8 +74,7 @@ HELP);
    * @throws \API_Exception
    */
   private function getContactTypes(): iterable {
-    $action = ContactType::get()
-      ->setCheckPermissions(FALSE)
+    $action = ContactType::get(FALSE)
       ->addSelect('id', 'label')
       ->addOrderBy('label');
 
@@ -91,8 +90,7 @@ HELP);
    * @throws \API_Exception
    */
   private function getRelationshipTypes(): iterable {
-    $action = \Civi\Api4\RelationshipType::get()
-      ->setCheckPermissions(FALSE)
+    $action = \Civi\Api4\RelationshipType::get(FALSE)
       ->addSelect('id', 'label_a_b', 'label_b_a')
       ->addOrderBy('label_a_b');
 

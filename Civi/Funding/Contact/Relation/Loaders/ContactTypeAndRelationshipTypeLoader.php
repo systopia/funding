@@ -46,8 +46,7 @@ final class ContactTypeAndRelationshipTypeLoader implements RelatedContactsLoade
     Assert::integer($relationProperties['relationshipTypeId']);
     $contactTypeId = $relationProperties['contactTypeId'];
     $relationshipTypeId = $relationProperties['relationshipTypeId'];
-    $action = Contact::get()
-      ->setCheckPermissions(FALSE)
+    $action = Contact::get(FALSE)
       ->addJoin('ContactType AS ct', 'INNER', NULL,
         CompositeCondition::new('AND',
           Comparison::new('ct.id', '=', $contactTypeId),

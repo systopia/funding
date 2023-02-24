@@ -52,22 +52,19 @@ class ApplicationProcessActivityManager {
     if (!array_key_exists('status_id', $values)) {
       $values['status_id:name'] ??= 'Completed';
     }
-    $createAction = Activity::create()
-      ->setCheckPermissions(FALSE)
+    $createAction = Activity::create(FALSE)
       ->setValues($values);
 
     /** @phpstan-var array{id: int}&array<string, mixed> $activityValues */
     $activityValues = $this->api4->executeAction($createAction)->single();
-    $connectAction = EntityActivity::connect()
-      ->setCheckPermissions(FALSE)
+    $connectAction = EntityActivity::connect(FALSE)
       ->setActivityId($activityValues['id'])
       ->setEntity(FundingApplicationProcess::_getEntityName())
       ->setEntityId($applicationProcess->getId());
 
     $this->api4->executeAction($connectAction);
 
-    $getAction = Activity::get()
-      ->setCheckPermissions(FALSE)
+    $getAction = Activity::get(FALSE)
       ->addSelect('*', 'custom.*')
       ->addWhere('id', '=', $activityValues['id']);
 
@@ -80,8 +77,7 @@ class ApplicationProcessActivityManager {
    */
   public function deleteByApplicationProcess(int $applicationProcessId): void {
     foreach ($this->getByApplicationProcess($applicationProcessId) as $activity) {
-      $action = Activity::delete()
-        ->setCheckPermissions(FALSE)
+      $action = Activity::delete(FALSE)
         ->addWhere('id', '=', $activity->getId());
       $this->api4->executeAction($action);
     }
@@ -93,8 +89,7 @@ class ApplicationProcessActivityManager {
    * @throws \API_Exception
    */
   public function getByApplicationProcess(int $applicationProcessId, ?ConditionInterface $condition = NULL): array {
-    $action = FundingApplicationProcessActivity::get()
-      ->setCheckPermissions(FALSE)
+    $action = FundingApplicationProcessActivity::get(FALSE)
       ->setApplicationProcessId($applicationProcessId);
 
     if (NULL !== $condition) {
@@ -110,8 +105,7 @@ class ApplicationProcessActivityManager {
    * @throws \API_Exception
    */
   public function getOpenByApplicationProcess(int $applicationProcessId, ?ConditionInterface $condition = NULL): array {
-    $action = FundingApplicationProcessActivity::get()
-      ->setCheckPermissions(FALSE)
+    $action = FundingApplicationProcessActivity::get(FALSE)
       ->setApplicationProcessId($applicationProcessId);
 
     if (NULL !== $condition) {

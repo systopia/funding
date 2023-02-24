@@ -34,12 +34,12 @@ final class FundingApplicationProcessActivity extends AbstractEntity {
   /**
    * @inheritDoc
    */
-  public static function getFields() {
-    return new GetFieldsAction();
+  public static function getFields(bool $checkPermissions = TRUE) {
+    return (new GetFieldsAction())->setCheckPermissions($checkPermissions);
   }
 
-  public static function get(): GetAction {
-    return \Civi::service(GetAction::class);
+  public static function get(bool $checkPermissions = TRUE): GetAction {
+    return \Civi::service(GetAction::class)->setCheckPermissions($checkPermissions);
   }
 
 }

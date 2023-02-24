@@ -50,8 +50,7 @@ final class ContactTypeRelationshipChecker implements ContactRelationCheckerInte
     $contactTypeId = $relationProperties['contactTypeId'];
     Assert::numeric($contactTypeId);
 
-    $action = Relationship::get()
-      ->setCheckPermissions(FALSE)
+    $action = Relationship::get(FALSE)
       ->addSelect('id')
       ->addWhere('relationship_type_id', '=', $relationshipTypeId)
       ->addClause('OR',

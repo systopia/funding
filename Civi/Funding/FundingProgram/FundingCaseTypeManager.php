@@ -46,8 +46,7 @@ class FundingCaseTypeManager {
   }
 
   public function get(int $id): ?FundingCaseTypeEntity {
-    $action = FundingCaseType::get()
-      ->setCheckPermissions(FALSE)
+    $action = FundingCaseType::get(FALSE)
       ->addWhere('id', '=', $id);
 
     /** @var fundingCaseTypeT|null $values */

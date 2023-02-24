@@ -71,8 +71,7 @@ class FundingCaseManager {
       'modification_date' => $now,
       'creation_contact_id' => $contactId,
     ]);
-    $action = FundingCase::create()
-      ->setCheckPermissions(FALSE)
+    $action = FundingCase::create(FALSE)
       ->setValues($fundingCase->toArray());
 
     /** @phpstan-var fundingCaseT $fundingCaseValues */
@@ -92,8 +91,7 @@ class FundingCaseManager {
   }
 
   public function delete(FundingCaseEntity $fundingCase): void {
-    $action = FundingCase::delete()
-      ->setCheckPermissions(FALSE)
+    $action = FundingCase::delete(FALSE)
       ->addWhere('id', '=', $fundingCase->getId());
 
     $this->api4->executeAction($action);
@@ -103,8 +101,7 @@ class FundingCaseManager {
   }
 
   public function get(int $id): ?FundingCaseEntity {
-    $action = FundingCase::get()
-      ->setCheckPermissions(FALSE)
+    $action = FundingCase::get(FALSE)
       ->addWhere('id', '=', $id);
     /** @phpstan-var fundingCaseT|null $values */
     $values = $this->api4->executeAction($action)->first();
@@ -122,8 +119,7 @@ class FundingCaseManager {
    * @throws \API_Exception
    */
   public function getAll(): array {
-    $action = FundingCase::get()
-      ->setCheckPermissions(FALSE);
+    $action = FundingCase::get(FALSE);
 
     /** @var array<fundingCaseT> $records */
     $records = $this->api4->executeAction($action)->getArrayCopy();
@@ -137,8 +133,7 @@ class FundingCaseManager {
   public function update(FundingCaseEntity $fundingCase): void {
     $previousFundingCase = $this->get($fundingCase->getId());
     Assert::notNull($previousFundingCase, 'Funding case could not be loaded');
-    $action = FundingCase::update()
-      ->setCheckPermissions(FALSE)
+    $action = FundingCase::update(FALSE)
       ->setValues($fundingCase->toArray());
     $this->api4->executeAction($action);
 
@@ -154,8 +149,7 @@ class FundingCaseManager {
    * @throws \API_Exception
    */
   public function hasAccess(int $id): bool {
-    $action = FundingCase::get()
-      ->setCheckPermissions(FALSE)
+    $action = FundingCase::get(FALSE)
       ->addSelect('id')
       ->addWhere('id', '=', $id);
 

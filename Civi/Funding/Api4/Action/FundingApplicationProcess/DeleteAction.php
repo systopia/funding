@@ -64,8 +64,7 @@ final class DeleteAction extends AbstractBatchAction {
    * @throws \API_Exception
    */
   private function getApplicationProcessBundles(): array {
-    $action = FundingApplicationProcess::get()
-      ->setCheckPermissions($this->getCheckPermissions())
+    $action = FundingApplicationProcess::get($this->getCheckPermissions())
       ->addSelect('id')
       ->setWhere($this->getWhere());
 

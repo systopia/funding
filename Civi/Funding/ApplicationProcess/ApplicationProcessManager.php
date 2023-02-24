@@ -73,8 +73,7 @@ class ApplicationProcessManager {
   }
 
   public function countByFundingCaseId(int $fundingCaseId): int {
-    $action = FundingApplicationProcess::get()
-      ->setCheckPermissions(FALSE)
+    $action = FundingApplicationProcess::get(FALSE)
       ->addWhere('funding_case_id', '=', $fundingCaseId)
       ->selectRowCount();
 
@@ -118,8 +117,7 @@ class ApplicationProcessManager {
     );
     $this->eventDispatcher->dispatch(ApplicationProcessPreCreateEvent::class, $event);
 
-    $action = FundingApplicationProcess::create()
-      ->setCheckPermissions(FALSE)
+    $action = FundingApplicationProcess::create(FALSE)
       ->setValues($applicationProcess->toArray());
 
     /** @phpstan-var applicationProcessT $applicationProcessValues */
@@ -139,8 +137,7 @@ class ApplicationProcessManager {
   }
 
   public function get(int $id): ?ApplicationProcessEntity {
-    $action = FundingApplicationProcess::get()
-      ->setCheckPermissions(FALSE)
+    $action = FundingApplicationProcess::get(FALSE)
       ->addWhere('id', '=', $id);
     /** @phpstan-var applicationProcessT|null $values */
     $values = $this->api4->executeAction($action)->first();
@@ -153,8 +150,7 @@ class ApplicationProcessManager {
   }
 
   public function getFirstByFundingCaseId(int $fundingCaseId): ?ApplicationProcessEntity {
-    $action = FundingApplicationProcess::get()
-      ->setCheckPermissions(FALSE)
+    $action = FundingApplicationProcess::get(FALSE)
       ->addWhere('funding_case_id', '=', $fundingCaseId)
       ->addOrderBy('id')
       ->setLimit(1);
@@ -183,8 +179,7 @@ class ApplicationProcessManager {
     );
     $this->eventDispatcher->dispatch(ApplicationProcessPreUpdateEvent::class, $event);
 
-    $action = FundingApplicationProcess::update()
-      ->setCheckPermissions(FALSE)
+    $action = FundingApplicationProcess::update(FALSE)
       ->setValues($applicationProcess->toArray());
     $this->api4->executeAction($action);
 

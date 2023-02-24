@@ -42,8 +42,8 @@ class FundingCaseTypeProgram extends Generic\DAOEntity {
    *
    * @return \Civi\Funding\Api4\Action\FundingCaseTypeProgram\GetRelationAction
    */
-  public static function getRelation(): GetRelationAction {
-    return new GetRelationAction(static::get());
+  public static function getRelation(bool $checkPermissions = TRUE): GetRelationAction {
+    return (new GetRelationAction(static::get()))->setCheckPermissions($checkPermissions);
   }
 
 }

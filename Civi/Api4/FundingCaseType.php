@@ -36,8 +36,8 @@ class FundingCaseType extends Generic\DAOEntity {
 
   use EntityNameTrait;
 
-  public static function getByFundingProgramId(): GetByFundingProgramIdAction {
-    return \Civi::service(GetByFundingProgramIdAction::class);
+  public static function getByFundingProgramId(bool $checkPermissions = TRUE): GetByFundingProgramIdAction {
+    return \Civi::service(GetByFundingProgramIdAction::class)->setCheckPermissions($checkPermissions);
   }
 
 }

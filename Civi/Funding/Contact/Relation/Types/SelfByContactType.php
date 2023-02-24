@@ -69,8 +69,7 @@ HELP);
    * @throws \API_Exception
    */
   private function getContactTypes(): iterable {
-    $action = ContactType::get()
-      ->setCheckPermissions(FALSE)
+    $action = ContactType::get(FALSE)
       ->addSelect('id', 'label')
       ->addOrderBy('label');
 

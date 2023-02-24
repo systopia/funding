@@ -43,8 +43,7 @@ final class ContactTypeLoaderTest extends AbstractFundingHeadlessTestCase {
   }
 
   public function testGetContacts(): void {
-    Contact::delete()
-      ->setCheckPermissions(FALSE)
+    Contact::delete(FALSE)
       ->addWhere('id', '>', 0)
       ->execute();
 

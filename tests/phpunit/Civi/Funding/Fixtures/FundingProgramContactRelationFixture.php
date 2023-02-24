@@ -45,8 +45,7 @@ final class FundingProgramContactRelationFixture {
    * @throws \API_Exception
    */
   public static function addFixture(int $fundingProgramId, string $type, array $properties, array $permissions): array {
-    return FundingProgramContactRelation::create()
-      ->setCheckPermissions(FALSE)
+    return FundingProgramContactRelation::create(FALSE)
       ->setValues([
         'funding_program_id' => $fundingProgramId,
         'type' => $type,

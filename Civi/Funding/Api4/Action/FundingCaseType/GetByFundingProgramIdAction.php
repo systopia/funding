@@ -62,8 +62,7 @@ final class GetByFundingProgramIdAction extends AbstractAction {
       $this->logger->debug(sprintf('Contact has no access to funding program with id "%d"', $this->fundingProgramId));
     }
     else {
-      $action = FundingCaseType::get()
-        ->setCheckPermissions($this->getCheckPermissions())
+      $action = FundingCaseType::get($this->getCheckPermissions())
         ->setDebug($this->getDebug())
         ->addJoin(
           FundingCaseTypeProgram::_getEntityName() . ' AS cp', 'INNER', NULL,
@@ -94,8 +93,7 @@ final class GetByFundingProgramIdAction extends AbstractAction {
    * @throws \API_Exception
    */
   private function hasFundingProgramAccess(): bool {
-    $action = FundingProgram::get()
-      ->setCheckPermissions($this->getCheckPermissions())
+    $action = FundingProgram::get($this->getCheckPermissions())
       ->setDebug($this->getDebug())
       ->addSelect('id')
       ->addWhere('id', '=', $this->fundingProgramId);

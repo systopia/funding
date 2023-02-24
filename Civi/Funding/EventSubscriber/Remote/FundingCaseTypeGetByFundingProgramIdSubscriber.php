@@ -45,8 +45,7 @@ final class FundingCaseTypeGetByFundingProgramIdSubscriber implements EventSubsc
    * @throws \API_Exception
    */
   public function onGetByFundingProgramId(GetByFundingProgramIdEvent $event): void {
-    $action = FundingCaseType::getByFundingProgramId()
-      ->setCheckPermissions($event->isCheckPermissions())
+    $action = FundingCaseType::getByFundingProgramId($event->isCheckPermissions())
       ->setDebug($event->isDebug())
       ->setFundingProgramId($event->getFundingProgramId());
 
