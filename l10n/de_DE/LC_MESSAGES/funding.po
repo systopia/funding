@@ -899,31 +899,32 @@ msgid "Possible funding recipients"
 msgstr "Mögliche Fördergeldempfänger"
 
 #: funding.php
-msgid "CiviCRM: access funding"
-msgstr "CiviCRM: funding Zugriff"
+msgid "CiviCRM: access Funding Program Manager"
+msgstr "CiviCRM: Funding Program Manager Zugriff"
 
 #: funding.php
-msgid "Access non-administrative API of the funding extension"
-msgstr "Zugriff auf nicht-administrative API der funding Erweiterung"
+msgid "Access non-administrative API of the Funding Program Manager"
+msgstr "Zugriff auf nicht-administrative API des Funding Program Managers"
 
 #: funding.php
-msgid "CiviCRM: access remote funding"
-msgstr "CiviCRM: Remote funding Zugriff"
+msgid "CiviCRM: remote access to Funding Program Manager"
+msgstr "CiviCRM: Remote Funding Program Manager Zugriff"
 
 #: funding.php
-msgid "Access remote API of the funding extension"
-msgstr "Zugriff auf Remote API der funding Erweiterung"
+msgid "Access remote API of the Funding Program Manager"
+msgstr "Zugriff auf Remote API des Funding Program Managers"
 
 #: funding.php
-msgid "CiviCRM: administer funding"
-msgstr "CiviCRM: funding Administration"
+msgid "CiviCRM: administer Funding Program Manager"
+msgstr "CiviCRM: Funding Program Manager Administration"
 
 #: funding.php
 msgid ""
-"Access administrative and non-administrative API of the funding extension"
+"Access administrative and non-administrative API of the Funding Program "
+"Manager"
 msgstr ""
-"Zugriff auf administrative und nicht-administrative API der funding "
-"Erweiterung"
+"Zugriff auf administrative und nicht-administrative API des Funding Program "
+"Managers"
 
 #: managed/ActivityTypeFundingApplicationCommentExternal.mgd.php
 msgid "External Funding Application Comment"
