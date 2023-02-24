@@ -48,6 +48,7 @@ final class ContactTypeLoader implements ContactRelationLoaderInterface {
     Assert::integerish($contactTypeId);
 
     $action = Contact::get()
+      ->setCheckPermissions(FALSE)
       ->addJoin('ContactType AS ct', 'INNER', NULL, CompositeCondition::new('OR',
         Comparison::new('contact_type', '=', 'ct.name'),
         Comparison::new('contact_sub_type', '=', 'ct.name'),

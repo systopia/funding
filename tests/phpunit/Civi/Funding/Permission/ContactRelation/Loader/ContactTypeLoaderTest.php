@@ -43,7 +43,10 @@ final class ContactTypeLoaderTest extends AbstractFundingHeadlessTestCase {
   }
 
   public function testGetContacts(): void {
-    Contact::delete()->addWhere('id', '>', 0)->execute();
+    Contact::delete()
+      ->setCheckPermissions(FALSE)
+      ->addWhere('id', '>', 0)
+      ->execute();
 
     $contactType = ContactTypeFixture::addIndividualFixture('testType');
     $contact = ContactFixture::addIndividual();

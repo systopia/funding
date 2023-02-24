@@ -24,7 +24,7 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\Api4\Traits\FundingProgramTestFixturesTrait;
-use Civi\Funding\AbstractFundingHeadlessTestCase;
+use Civi\Funding\AbstractRemoteFundingHeadlessTestCase;
 
 /**
  * @group headless
@@ -33,7 +33,7 @@ use Civi\Funding\AbstractFundingHeadlessTestCase;
  * @covers \Civi\Funding\Api4\Action\Remote\DAOGetAction
  * @covers \Civi\Funding\EventSubscriber\Remote\FundingProgramDAOGetSubscriber
  */
-final class RemoteFundingProgramTest extends AbstractFundingHeadlessTestCase {
+final class RemoteFundingProgramTest extends AbstractRemoteFundingHeadlessTestCase {
 
   use FundingProgramTestFixturesTrait;
 

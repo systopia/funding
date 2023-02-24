@@ -47,6 +47,7 @@ final class ContactTypeAndRelationshipTypeLoader implements RelatedContactsLoade
     $contactTypeId = $relationProperties['contactTypeId'];
     $relationshipTypeId = $relationProperties['relationshipTypeId'];
     $action = Contact::get()
+      ->setCheckPermissions(FALSE)
       ->addJoin('ContactType AS ct', 'INNER', NULL,
         CompositeCondition::new('AND',
           Comparison::new('ct.id', '=', $contactTypeId),

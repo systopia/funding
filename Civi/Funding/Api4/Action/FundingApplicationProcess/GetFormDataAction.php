@@ -22,7 +22,6 @@ namespace Civi\Funding\Api4\Action\FundingApplicationProcess;
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
-use Civi\Funding\Api4\Action\Traits\FundingActionContactIdSessionTrait;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormDataGetCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandlerInterface;
@@ -32,8 +31,6 @@ use Webmozart\Assert\Assert;
  * @method $this setId(int $id)
  */
 final class GetFormDataAction extends AbstractAction {
-
-  use FundingActionContactIdSessionTrait;
 
   /**
    * @var int

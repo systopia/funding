@@ -37,6 +37,7 @@ final class FundingCaseContactsLoader implements FundingCaseContactsLoaderInterf
 
   public function getContactsWithPermission(FundingCaseEntity $fundingCase, string $permission): array {
     $action = $this->api4->createGetAction(FundingCaseContactRelation::_getEntityName())
+      ->setCheckPermissions(FALSE)
       ->addWhere('funding_case_id', '=', $fundingCase->getId());
     $result = $this->api4->executeAction($action);
     $contactRelations = FundingCaseContactRelationEntity::allFromApiResult($result);

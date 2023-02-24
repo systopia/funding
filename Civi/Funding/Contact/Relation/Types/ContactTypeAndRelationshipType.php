@@ -75,6 +75,7 @@ HELP);
    */
   private function getContactTypes(): iterable {
     $action = ContactType::get()
+      ->setCheckPermissions(FALSE)
       ->addSelect('id', 'label')
       ->addOrderBy('label');
 
@@ -91,6 +92,7 @@ HELP);
    */
   private function getRelationshipTypes(): iterable {
     $action = \Civi\Api4\RelationshipType::get()
+      ->setCheckPermissions(FALSE)
       ->addSelect('id', 'label_a_b', 'label_b_a')
       ->addOrderBy('label_a_b');
 

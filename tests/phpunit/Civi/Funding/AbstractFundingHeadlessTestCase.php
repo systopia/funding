@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding;
 
+use Civi\Funding\Api4\Permissions;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Test;
@@ -44,6 +45,20 @@ abstract class AbstractFundingHeadlessTestCase extends TestCase implements Headl
       ->install('activity-entity')
       ->installMe(__DIR__)
       ->apply();
+  }
+
+  protected function setUp(): void {
+    parent::setUp();
+    $this->setUserPermissions([Permissions::ACCESS_CIVICRM, Permissions::ACCESS_FUNDING]);
+  }
+
+  /**
+   * @phpstan-param array<string>|null $permissions
+   */
+  protected function setUserPermissions(?array $permissions): void {
+    $userPermissions = \CRM_Core_Config::singleton()->userPermissionClass;
+    // @phpstan-ignore-next-line
+    $userPermissions->permissions = $permissions;
   }
 
 }

@@ -56,6 +56,7 @@ final class ApplicationProcessFixture {
 
     /** @phpstan-var applicationProcessT $applicationProcessValues */
     $applicationProcessValues = FundingApplicationProcess::create()
+      ->setCheckPermissions(FALSE)
       ->setValues($values + [
         'identifier' => 'test',
         'funding_case_id' => $fundingCaseId,

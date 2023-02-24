@@ -5,6 +5,7 @@ declare(strict_types = 1);
 require_once 'funding.civix.php';
 // phpcs:enable
 
+use Civi\Funding\Api4\Permissions;
 use CRM_Funding_ExtensionUtil as E;
 use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
 use Symfony\Component\Config\Resource\FileResource;
@@ -39,6 +40,26 @@ function funding_civicrm_container(ContainerBuilder $container): void {
     // Allow to use different services in tests.
     _funding_test_civicrm_container($container);
   }
+}
+
+/**
+ * Implements hook_civicrm_permission().
+ *
+ * @phpstan-param array<string, string|array{string, string}> $permissions
+ */
+function funding_civicrm_permission(array &$permissions): void {
+  $permissions[Permissions::ACCESS_FUNDING] = [
+    E::ts('CiviCRM: access funding'),
+    E::ts('Access non-administrative API of the funding extension'),
+  ];
+  $permissions[Permissions::ACCESS_REMOTE_FUNDING] = [
+    E::ts('CiviCRM: access remote funding'),
+    E::ts('Access remote API of the funding extension'),
+  ];
+  $permissions[Permissions::ADMINISTER_FUNDING] = [
+    E::ts('CiviCRM: administer funding'),
+    E::ts('Access administrative and non-administrative API of the funding extension'),
+  ];
 }
 
 /**
@@ -104,9 +125,4 @@ function funding_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
  */
 function funding_civicrm_entityTypes(&$entityTypes): void {
   _funding_civix_civicrm_entityTypes($entityTypes);
-}
-
-function funding_civicrm_permission(array &$permissions): void {
-  $permissions['apply Funding'] = E::ts('Funding: make applications');
-  $permissions['access Remote Funding'] = E::ts('Funding: access remote API');
 }

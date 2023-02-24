@@ -273,7 +273,8 @@ final class GetFieldsAction extends BasicGetFieldsAction {
    * @throws \API_Exception
    */
   private function getPermissionFields(): iterable {
-    $action = FundingCase::getFields();
+    $action = FundingCase::getFields()
+      ->setCheckPermissions($this->getCheckPermissions());
     $result = $this->api4->executeAction($action);
 
     /** @var array<string, mixed>&array{name: string} $field */

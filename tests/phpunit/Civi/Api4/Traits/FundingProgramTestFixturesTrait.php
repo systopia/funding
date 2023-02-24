@@ -67,6 +67,7 @@ trait FundingProgramTestFixturesTrait {
     ContactTypeFixture::addOrganizationFixture('NotPermitted', 'not permitted');
 
     $permittedRelationshipTypeId = RelationshipType::create()
+      ->setCheckPermissions(FALSE)
       ->setValues([
         'name_a_b' => 'permitted',
         'name_b_a' => 'permitted',
@@ -76,6 +77,7 @@ trait FundingProgramTestFixturesTrait {
       ])->execute()->first()['id'];
 
     $notPermittedRelationshipTypeId = RelationshipType::create()
+      ->setCheckPermissions(FALSE)
       ->setValues([
         'name_a_b' => 'not permitted',
         'name_b_a' => 'not permitted',
@@ -94,19 +96,24 @@ trait FundingProgramTestFixturesTrait {
       $permittedRelationshipTypePermissions
     );
 
-    $this->permittedOrganizationIdNoPermissions = Contact::create()->setValues([
-      'contact_type' => 'Organization',
-      'contact_sub_type' => 'PermittedNoPermissions',
-      'legal_name' => 'Permitted Organization No Permissions',
-    ])->execute()->first()['id'];
+    $this->permittedOrganizationIdNoPermissions = Contact::create()
+      ->setCheckPermissions(FALSE)
+      ->setValues([
+        'contact_type' => 'Organization',
+        'contact_sub_type' => 'PermittedNoPermissions',
+        'legal_name' => 'Permitted Organization No Permissions',
+      ])->execute()->first()['id'];
 
-    $this->permittedOrganizationId = Contact::create()->setValues([
-      'contact_type' => 'Organization',
-      'contact_sub_type' => 'Permitted',
-      'legal_name' => 'Permitted Organization',
-    ])->execute()->first()['id'];
+    $this->permittedOrganizationId = Contact::create()
+      ->setCheckPermissions(FALSE)
+      ->setValues([
+        'contact_type' => 'Organization',
+        'contact_sub_type' => 'Permitted',
+        'legal_name' => 'Permitted Organization',
+      ])->execute()->first()['id'];
 
     $this->permittedIndividualId = Contact::create()
+      ->setCheckPermissions(FALSE)
       ->setValues([
         'contact_type' => 'Individual',
         'first_name' => 'Permitted',
@@ -115,6 +122,7 @@ trait FundingProgramTestFixturesTrait {
       ->execute()->first()['id'];
 
     Relationship::create()
+      ->setCheckPermissions(FALSE)
       ->setValues([
         'contact_id_a' => $this->permittedIndividualId,
         'contact_id_b' => $this->permittedOrganizationIdNoPermissions,
@@ -122,6 +130,7 @@ trait FundingProgramTestFixturesTrait {
       ])->execute();
 
     $this->notPermittedContactId = Contact::create()
+      ->setCheckPermissions(FALSE)
       ->setValues([
         'contact_type' => 'Individual',
         'first_name' => 'NotPermitted',
@@ -130,6 +139,7 @@ trait FundingProgramTestFixturesTrait {
       ->execute()->first()['id'];
 
     Relationship::create()
+      ->setCheckPermissions(FALSE)
       ->setValues([
         'contact_id_a' => $this->notPermittedContactId,
         'contact_id_b' => $this->permittedOrganizationIdNoPermissions,

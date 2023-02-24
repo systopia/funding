@@ -25,6 +25,7 @@ namespace Civi\Api4;
 
 use Civi\Api4\Traits\FundingProgramTestFixturesTrait;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
+use Civi\Funding\Api4\Permissions;
 use Civi\Funding\Util\SessionTestUtil;
 
 /**
@@ -52,6 +53,17 @@ final class FundingProgramTest extends AbstractFundingHeadlessTestCase {
   }
 
   public function testPermissionsInternal(): void {
+
+    // Admin gets view permissions for all programs.
+    $this->setUserPermissions([Permissions::ACCESS_CIVICRM, Permissions::ADMINISTER_FUNDING]);
+    $adminResult = FundingProgram::get()
+      ->execute();
+    static::assertSame(2, $adminResult->rowCount);
+    static::assertSame('Foo', $adminResult->first()['title']);
+    static::assertSame(['view'], $adminResult->first()['permissions']);
+    static::assertTrue($adminResult->first()['PERM_view']);
+    $this->setUserPermissions([Permissions::ACCESS_CIVICRM, Permissions::ACCESS_FUNDING]);
+
     // Contact has a permitted type
     SessionTestUtil::mockInternalRequestSession($this->permittedOrganizationId);
     $permittedOrganizationResult = FundingProgram::get()

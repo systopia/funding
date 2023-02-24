@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
-use Civi\Funding\AbstractFundingHeadlessTestCase;
+use Civi\Funding\AbstractRemoteFundingHeadlessTestCase;
 use Civi\Funding\ActivityTypeIds;
 use Civi\Funding\Fixtures\ActivityFixture;
 use Civi\Funding\Fixtures\ApplicationProcessFixture;
@@ -37,7 +37,7 @@ use Civi\PHPUnit\Traits\ArrayAssertTrait;
  *
  * @group headless
  */
-final class RemoteFundingApplicationProcessActivityTest extends AbstractFundingHeadlessTestCase {
+final class RemoteFundingApplicationProcessActivityTest extends AbstractRemoteFundingHeadlessTestCase {
 
   use ArrayAssertTrait;
 

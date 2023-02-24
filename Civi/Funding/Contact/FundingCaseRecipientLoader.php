@@ -37,6 +37,7 @@ final class FundingCaseRecipientLoader implements FundingCaseRecipientLoaderInte
    */
   public function getRecipient(FundingCaseEntity $fundingCase): array {
     $action = Contact::get()
+      ->setCheckPermissions(FALSE)
       ->addSelect('id', 'display_name')
       ->addWhere('id', '=', $fundingCase->getRecipientContactId());
     /** @phpstan-var array{id: int, display_name: ?string} $contact */

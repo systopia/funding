@@ -58,9 +58,11 @@ interface Api4Interface {
 
   /**
    * @phpstan-param array<string, mixed> $values
+   * @phpstan-param array{checkPermissions?: bool} $options
+   *   checkPermissions defaults to TRUE.
    *
    * @throws \API_Exception
    */
-  public function updateEntity(string $entityName, int $id, array $values): Result;
+  public function updateEntity(string $entityName, int $id, array $values, array $options = []): Result;
 
 }

@@ -69,7 +69,7 @@ final class GetAction extends AbstractGetAction {
     }
 
     $action = Activity::get()
-      ->setCheckPermissions($this->getCheckPermissions())
+      ->setCheckPermissions(FALSE)
       ->addJoin(
         FundingApplicationProcess::_getEntityName() . ' AS ap', 'INNER', 'EntityActivity',
         ['ap.id', '=', $this->applicationProcessId]
@@ -126,6 +126,7 @@ final class GetAction extends AbstractGetAction {
    */
   private function getSourceContactName(array $activity): string {
     $action = Contact::get()
+      ->setCheckPermissions(FALSE)
       ->addJoin('ActivityContact AS ac', 'INNER', NULL, ['id', '=', 'ac.contact_id'])
       ->addSelect('id', 'display_name')
       ->addWhere('ac.activity_id', '=', $activity['id'])

@@ -22,13 +22,9 @@ namespace Civi\Funding\Api4\Action\FundingApplicationProcess;
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\DAOGetAction;
 use Civi\Api4\Generic\Result;
-use Civi\Funding\Api4\Action\FundingContactIdSessionAwareInterface;
-use Civi\Funding\Api4\Action\Traits\FundingActionContactIdSessionTrait;
 use Civi\Funding\FundingCase\FundingCaseManager;
 
-final class GetAction extends DAOGetAction implements FundingContactIdSessionAwareInterface {
-
-  use FundingActionContactIdSessionTrait;
+final class GetAction extends DAOGetAction {
 
   private FundingCaseManager $fundingCaseManager;
 

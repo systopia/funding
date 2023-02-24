@@ -109,6 +109,7 @@ trait FundingCaseTestFixturesTrait {
     );
 
     $permittedRelationshipTypeId = RelationshipType::create()
+      ->setCheckPermissions(FALSE)
       ->setValues([
         'name_a_b' => 'permitted',
         'name_b_a' => 'permitted',
@@ -117,6 +118,7 @@ trait FundingCaseTestFixturesTrait {
       ])->execute()->first()['id'];
 
     $notPermittedRelationshipTypeId = RelationshipType::create()
+      ->setCheckPermissions(FALSE)
       ->setValues([
         'name_b_a' => 'foo',
         'name_a_b' => 'bar',
@@ -156,6 +158,7 @@ trait FundingCaseTestFixturesTrait {
     ])['id'];
 
     Relationship::create()
+      ->setCheckPermissions(FALSE)
       ->setValues([
         'contact_id_a' => $this->associatedContactIdNoPermissions,
         'contact_id_b' => $this->relatedABContactId,
@@ -168,6 +171,7 @@ trait FundingCaseTestFixturesTrait {
     ])['id'];
 
     Relationship::create()
+      ->setCheckPermissions(FALSE)
       ->setValues([
         'contact_id_a' => $this->relatedBAContactId,
         'contact_id_b' => $this->associatedContactIdNoPermissions,
@@ -180,6 +184,7 @@ trait FundingCaseTestFixturesTrait {
     ])['id'];
 
     Relationship::create()
+      ->setCheckPermissions(FALSE)
       ->setValues([
         'contact_id_a' => $this->notPermittedContactId,
         'contact_id_b' => $this->associatedContactIdNoPermissions,

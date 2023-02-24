@@ -48,6 +48,7 @@ final class FundingCaseFixture {
 
     /** @phpstan-var fundingCaseT $fundingCaseValues */
     $fundingCaseValues = FundingCase::create()
+      ->setCheckPermissions(FALSE)
       ->setValues($values + [
         'funding_program_id' => $fundingProgramId,
         'funding_case_type_id' => $fundingCaseTypeId,

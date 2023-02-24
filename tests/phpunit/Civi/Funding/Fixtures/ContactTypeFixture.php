@@ -37,6 +37,7 @@ final class ContactTypeFixture {
    */
   public static function addFixture(array $values = []): array {
     return ContactType::create()
+      ->setCheckPermissions(FALSE)
       ->setValues($values + [
         'name' => 'TestContactType',
         'label' => 'test contact type',

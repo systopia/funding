@@ -45,6 +45,7 @@ final class ContactLoader implements ContactRelationLoaderInterface {
     Assert::integerish($contactId);
 
     $action = $this->api4->createGetAction('Contact')
+      ->setCheckPermissions(FALSE)
       ->addWhere('id', '=', $contactId);
 
     /** @phpstan-var array<int, array<string, mixed>> $contacts */

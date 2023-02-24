@@ -47,6 +47,7 @@ final class ContactTypeChecker implements ContactRelationCheckerInterface {
     Assert::numeric($contactTypeId);
 
     $action = ContactType::get()
+      ->setCheckPermissions(FALSE)
       ->addSelect('id')
       ->addWhere('id', '=', $contactTypeId)
       ->addJoin('Contact AS c', 'INNER', NULL,

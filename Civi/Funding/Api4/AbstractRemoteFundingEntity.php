@@ -52,9 +52,8 @@ class AbstractRemoteFundingEntity extends AbstractEntity {
    */
   public static function permissions(): array {
     return [
-      'meta' => ['access CiviCRM', 'access Remote Funding'],
-      'default' => ['administer CiviCRM'],
-      'get' => ['access CiviCRM', 'access Remote Funding'],
+      'meta' => [Permissions::ACCESS_REMOTE_FUNDING],
+      'default' => [Permissions::ACCESS_REMOTE_FUNDING],
     ];
   }
 

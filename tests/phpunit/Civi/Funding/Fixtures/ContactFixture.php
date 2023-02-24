@@ -32,11 +32,13 @@ final class ContactFixture {
    * @throws \API_Exception
    */
   public static function addIndividual(array $values = []): array {
-    return Contact::create()->setValues($values + [
-      'contact_type' => 'Individual',
-      'first_name' => 'Some',
-      'last_name' => 'Individual',
-    ])->execute()->first();
+    return Contact::create()
+      ->setCheckPermissions(FALSE)
+      ->setValues($values + [
+        'contact_type' => 'Individual',
+        'first_name' => 'Some',
+        'last_name' => 'Individual',
+      ])->execute()->first();
   }
 
   /**
@@ -48,10 +50,12 @@ final class ContactFixture {
    * @throws \API_Exception
    */
   public static function addOrganization(array $values = []): array {
-    return Contact::create()->setValues($values + [
-      'contact_type' => 'Organization',
-      'legal_name' => 'Test organization',
-    ])->execute()->first();
+    return Contact::create()
+      ->setCheckPermissions(FALSE)
+      ->setValues($values + [
+        'contact_type' => 'Organization',
+        'legal_name' => 'Test organization',
+      ])->execute()->first();
   }
 
 }

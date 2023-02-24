@@ -45,6 +45,7 @@ final class FundingProgramFixture {
   public static function addFixture(array $values = []): FundingProgramEntity {
     /** @phpstan-var fundingProgramT $fundingProgramValues */
     $fundingProgramValues = FundingProgram::create()
+      ->setCheckPermissions(FALSE)
       ->setValues($values + [
         'title' => 'TestFundingProgram',
         'abbreviation' => 'TFP',

@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\Funding\AbstractFundingHeadlessTestCase;
+use Civi\Funding\Api4\Permissions;
 use Civi\Funding\Permission\FundingCase\RelationFactory\RelationPropertiesFactoryLocator;
 use Civi\PHPUnit\Traits\ArrayAssertTrait;
 
@@ -37,6 +38,8 @@ final class FundingCaseContactRelationPropertiesFactoryTypeTest extends Abstract
   private const FIELD_NAMES = ['name', 'label', 'template', 'help', 'extra'];
 
   public function testGet(): void {
+    $this->setUserPermissions([Permissions::ACCESS_CIVICRM, Permissions::ADMINISTER_FUNDING]);
+
     /** @var \Civi\Funding\Permission\FundingCase\RelationFactory\RelationPropertiesFactoryLocator $factoryLocator */
     $factoryLocator = \Civi::service(RelationPropertiesFactoryLocator::class);
     /** @phpstan-var array<array<string, mixed>> $factoryTypes */

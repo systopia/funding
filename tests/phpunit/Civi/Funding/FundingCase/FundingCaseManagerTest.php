@@ -137,7 +137,6 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
     $api4Mock->expects(static::exactly(2))->method('executeAction')->withConsecutive(
       [
         static::callback(function (GetAction $action) {
-          static::assertSame(11, $action->getContactId());
           static::assertSame([['id', '=', 13, FALSE]], $action->getWhere());
 
           return TRUE;
@@ -145,7 +144,6 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
       ],
       [
         static::callback(function (GetAction $action) {
-          static::assertSame(11, $action->getContactId());
           static::assertSame([['id', '=', 12, FALSE]], $action->getWhere());
 
           return TRUE;
@@ -170,7 +168,6 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
     \CRM_Core_Session::singleton()->set('userID', 11);
     $api4Mock->expects(static::once())->method('executeAction')->with(
       static::callback(function (GetAction $action) {
-        static::assertSame(11, $action->getContactId());
         static::assertSame([], $action->getWhere());
 
         return TRUE;
@@ -186,7 +183,6 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
 
     \CRM_Core_Session::singleton()->set('userID', 11);
     $api4Mock->expects(static::once())->method('executeAction')->with(static::callback(function (GetAction $action) {
-      static::assertSame(11, $action->getContactId());
       static::assertSame([['id', '=', 12, FALSE]], $action->getWhere());
 
       return TRUE;
@@ -201,7 +197,6 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
 
     \CRM_Core_Session::singleton()->set('userID', 11);
     $api4Mock->expects(static::once())->method('executeAction')->with(static::callback(function (GetAction $action) {
-      static::assertSame(11, $action->getContactId());
       static::assertSame([['id', '=', 12, FALSE]], $action->getWhere());
 
       return TRUE;

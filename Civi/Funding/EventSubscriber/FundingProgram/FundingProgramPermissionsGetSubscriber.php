@@ -56,6 +56,7 @@ final class FundingProgramPermissionsGetSubscriber implements EventSubscriberInt
    */
   public function onPermissionsGet(GetPermissionsEvent $event): void {
     $action = FundingProgramContactRelation::get()
+      ->setCheckPermissions(FALSE)
       ->addWhere('funding_program_id', '=', $event->getEntityId());
 
     /** @phpstan-var contactRelationT $contactRelation */

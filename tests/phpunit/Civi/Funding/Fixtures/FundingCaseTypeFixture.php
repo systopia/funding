@@ -41,6 +41,7 @@ final class FundingCaseTypeFixture {
   public static function addFixture(array $values = []): FundingCaseTypeEntity {
     /** @phpstan-var fundingCaseTypeT $fundingCaseTypeValues */
     $fundingCaseTypeValues = FundingCaseType::create()
+      ->setCheckPermissions(FALSE)
       ->setValues($values + [
         'title' => 'Test Case Type',
         'abbreviation' => 'TCT',

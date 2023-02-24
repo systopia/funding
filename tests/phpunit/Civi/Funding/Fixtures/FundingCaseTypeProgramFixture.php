@@ -30,6 +30,7 @@ final class FundingCaseTypeProgramFixture {
    */
   public static function addFixture(int $fundingCaseTypeId, int $fundingProgramId): array {
     return FundingCaseTypeProgram::create()
+      ->setCheckPermissions(FALSE)
       ->setValues([
         'funding_case_type_id' => $fundingCaseTypeId,
         'funding_program_id' => $fundingProgramId,

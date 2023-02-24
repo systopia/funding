@@ -898,6 +898,33 @@ msgstr "Förderprogrammberechtigungen"
 msgid "Possible funding recipients"
 msgstr "Mögliche Fördergeldempfänger"
 
+#: funding.php
+msgid "CiviCRM: access funding"
+msgstr "CiviCRM: funding Zugriff"
+
+#: funding.php
+msgid "Access non-administrative API of the funding extension"
+msgstr "Zugriff auf nicht-administrative API der funding Erweiterung"
+
+#: funding.php
+msgid "CiviCRM: access remote funding"
+msgstr "CiviCRM: Remote funding Zugriff"
+
+#: funding.php
+msgid "Access remote API of the funding extension"
+msgstr "Zugriff auf Remote API der funding Erweiterung"
+
+#: funding.php
+msgid "CiviCRM: administer funding"
+msgstr "CiviCRM: funding Administration"
+
+#: funding.php
+msgid ""
+"Access administrative and non-administrative API of the funding extension"
+msgstr ""
+"Zugriff auf administrative und nicht-administrative API der funding "
+"Erweiterung"
+
 #: managed/ActivityTypeFundingApplicationCommentExternal.mgd.php
 msgid "External Funding Application Comment"
 msgstr "Externer Förderantragskommentar"
@@ -1003,6 +1030,3 @@ msgstr "Antrag überarbeiten"
 #: managed/OptionValueActivityUsedForApplicationProcess.mgd.php
 msgid "Funding application process"
 msgstr "Förderantragsprozess"
-
-#~ msgid "Contact %1 is not allowed as reviewer"
-#~ msgstr "Kontakt %1 ist nicht als Prüfkontakt erlaubt"

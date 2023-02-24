@@ -46,6 +46,7 @@ final class FundingCaseContactRelationFixture {
    */
   public static function addFixture(int $fundingCaseId, string $type, array $properties, array $permissions): array {
     return FundingCaseContactRelation::create()
+      ->setCheckPermissions(FALSE)
       ->setValues([
         'funding_case_id' => $fundingCaseId,
         'type' => $type,

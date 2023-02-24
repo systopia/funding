@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
+use Civi\Funding\Api4\Traits\AccessROAdministerRWPermissionsTrait;
+
 /**
  * FundingProgramRelationship entity.
  *
@@ -27,5 +29,7 @@ namespace Civi\Api4;
  * @package Civi\Api4
  */
 class FundingProgramRelationship extends Generic\DAOEntity {
+
+  use AccessROAdministerRWPermissionsTrait;
 
 }

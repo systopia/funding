@@ -44,6 +44,7 @@ final class SelfByContactTypeLoader implements RelatedContactsLoaderInterface {
     Assert::integer($relationProperties['contactTypeId']);
     $contactTypeId = $relationProperties['contactTypeId'];
     $action = Contact::get()
+      ->setCheckPermissions(FALSE)
       ->addJoin('ContactType AS ct', 'INNER', NULL,
         CompositeCondition::new('AND',
           Comparison::new('ct.id', '=', $contactTypeId),

@@ -46,6 +46,7 @@ class ApplicationCostItemManager {
     Assert::false($applicationResourcesItem->isNew(), 'Application resources item is not persisted');
 
     $action = FundingApplicationCostItem::delete()
+      ->setCheckPermissions(FALSE)
       ->addWhere('id', '=', $applicationResourcesItem->getId());
     $this->api4->executeAction($action);
   }
@@ -58,6 +59,7 @@ class ApplicationCostItemManager {
    */
   public function getByApplicationProcessId(int $applicationProcessId): array {
     $action = FundingApplicationCostItem::get()
+      ->setCheckPermissions(FALSE)
       ->addWhere('application_process_id', '=', $applicationProcessId);
     /** @phpstan-var iterable<applicationCostItemT> $result */
     $result = $this->api4->executeAction($action)->indexBy('identifier');
@@ -73,6 +75,7 @@ class ApplicationCostItemManager {
       $action = FundingApplicationCostItem::update()->setValues($applicationResourcesItem->toArray());
     }
 
+    $action->setCheckPermissions(FALSE);
     /** @phpstan-var applicationCostItemT $values */
     $values = $this->api4->executeAction($action)->first();
     $applicationResourcesItem->setValues($values);

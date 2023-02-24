@@ -62,7 +62,9 @@ final class GetByFundingProgramIdAction extends AbstractAction {
       $this->logger->debug(sprintf('Contact has no access to funding program with id "%d"', $this->fundingProgramId));
     }
     else {
-      $action = FundingCaseType::get()->setDebug($this->getDebug())
+      $action = FundingCaseType::get()
+        ->setCheckPermissions($this->getCheckPermissions())
+        ->setDebug($this->getDebug())
         ->addJoin(
           FundingCaseTypeProgram::_getEntityName() . ' AS cp', 'INNER', NULL,
           ['cp.funding_case_type_id', '=', 'id']
@@ -76,6 +78,7 @@ final class GetByFundingProgramIdAction extends AbstractAction {
 
   private function fundingProgramExists(): bool {
     $action = (new DAOGetAction(FundingProgram::_getEntityName(), 'get'))
+      ->setCheckPermissions($this->getCheckPermissions())
       ->selectRowCount()
       ->addWhere('id', '=', $this->fundingProgramId);
 
@@ -92,6 +95,7 @@ final class GetByFundingProgramIdAction extends AbstractAction {
    */
   private function hasFundingProgramAccess(): bool {
     $action = FundingProgram::get()
+      ->setCheckPermissions($this->getCheckPermissions())
       ->setDebug($this->getDebug())
       ->addSelect('id')
       ->addWhere('id', '=', $this->fundingProgramId);

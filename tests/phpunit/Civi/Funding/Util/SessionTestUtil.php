@@ -24,6 +24,7 @@ use Webmozart\Assert\Assert;
 final class SessionTestUtil {
 
   public static function mockInternalRequestSession(int $contactId): void {
+    static::resetSession();
     \CRM_Core_Session::singleton()->set('userID', $contactId);
   }
 

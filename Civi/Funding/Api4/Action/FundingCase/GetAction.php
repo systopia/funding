@@ -22,27 +22,29 @@ namespace Civi\Funding\Api4\Action\FundingCase;
 use Civi\Api4\FundingCase;
 use Civi\Api4\Generic\DAOGetAction;
 use Civi\Core\CiviEventDispatcherInterface;
-use Civi\Funding\Api4\Action\FundingContactIdSessionAwareInterface;
-use Civi\Funding\Api4\Action\Traits\FundingActionContactIdSessionTrait;
 use Civi\Funding\Event\FundingCase\GetPermissionsEvent;
+use Civi\Funding\Session\FundingSessionInterface;
 use Civi\RemoteTools\Api4\Action\Traits\PermissionsGetActionTrait;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
 
-final class GetAction extends DAOGetAction implements FundingContactIdSessionAwareInterface {
+final class GetAction extends DAOGetAction {
 
-  use FundingActionContactIdSessionTrait;
   use PermissionsGetActionTrait;
 
   private CiviEventDispatcherInterface $_eventDispatcher;
 
   private PossiblePermissionsLoaderInterface $_possiblePermissionsLoader;
 
+  private FundingSessionInterface $session;
+
   public function __construct(CiviEventDispatcherInterface $eventDispatcher,
-    PossiblePermissionsLoaderInterface $possiblePermissionsLoader
+    PossiblePermissionsLoaderInterface $possiblePermissionsLoader,
+    FundingSessionInterface $session
   ) {
     parent::__construct(FundingCase::_getEntityName(), 'get');
     $this->_eventDispatcher = $eventDispatcher;
     $this->_possiblePermissionsLoader = $possiblePermissionsLoader;
+    $this->session = $session;
   }
 
   /**
@@ -51,7 +53,7 @@ final class GetAction extends DAOGetAction implements FundingContactIdSessionAwa
    * @return array<string>
    */
   protected function getRecordPermissions(array $record): array {
-    $permissionsGetEvent = new GetPermissionsEvent($record['id'], $this->getContactId());
+    $permissionsGetEvent = new GetPermissionsEvent($record['id'], $this->session->getContactId());
     $this->_eventDispatcher->dispatch(GetPermissionsEvent::class, $permissionsGetEvent);
 
     return $permissionsGetEvent->getPermissions();

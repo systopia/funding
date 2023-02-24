@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2023 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,17 +17,24 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Mock\Api4\Action;
+namespace Civi\Funding\Session;
 
-use Civi\Funding\Api4\Action\FundingContactIdSessionAwareInterface;
-use Civi\Funding\Api4\Action\Traits\FundingActionContactIdSessionTrait;
+interface FundingSessionInterface {
 
-class StandardWithContactIdActionMock extends StandardActionMock implements FundingContactIdSessionAwareInterface {
+  /**
+   * @return int
+   *   The resolved contact ID for remote sessions, the logged-in user's contact
+   *   ID, or 0 on CLI.
+   */
+  public function getContactId(): int;
 
-  use FundingActionContactIdSessionTrait;
+  /**
+   * @param int $contactId
+   */
+  public function setResolvedContactId(int $contactId): void;
 
-  public function __construct(string $entityName = 'TestEntityWithContactId', string $actionName = 'get') {
-    parent::__construct($entityName, $actionName);
-  }
+  public function isRemote(): bool;
+
+  public function setRemote(bool $remote): void;
 
 }

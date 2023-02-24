@@ -70,6 +70,7 @@ HELP);
    */
   private function getContactTypes(): iterable {
     $action = \Civi\Api4\ContactType::get()
+      ->setCheckPermissions(FALSE)
       ->addSelect('id', 'label')
       ->addOrderBy('label');
 

@@ -70,6 +70,7 @@ HELP);
    */
   private function getContactTypes(): iterable {
     $action = ContactType::get()
+      ->setCheckPermissions(FALSE)
       ->addSelect('id', 'label')
       ->addOrderBy('label');
 

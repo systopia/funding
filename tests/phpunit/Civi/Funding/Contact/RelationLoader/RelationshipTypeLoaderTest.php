@@ -50,6 +50,7 @@ final class RelationshipTypeLoaderTest extends AbstractFundingHeadlessTestCase {
     $notRelatedContact = ContactFixture::addIndividual(['last_name' => 'Not Related']);
 
     $relatedRelationshipTypeId = RelationshipType::create()
+      ->setCheckPermissions(FALSE)
       ->setValues([
         'name_a_b' => 'related',
         'name_b_a' => 'related',
@@ -58,6 +59,7 @@ final class RelationshipTypeLoaderTest extends AbstractFundingHeadlessTestCase {
       ])->execute()->first()['id'];
 
     $notRelatedRelationshipTypeId = RelationshipType::create()
+      ->setCheckPermissions(FALSE)
       ->setValues([
         'name_b_a' => 'foo',
         'name_a_b' => 'bar',
@@ -66,6 +68,7 @@ final class RelationshipTypeLoaderTest extends AbstractFundingHeadlessTestCase {
       ])->execute()->first()['id'];
 
     Relationship::create()
+      ->setCheckPermissions(FALSE)
       ->setValues([
         'contact_id_a' => $contact['id'],
         'contact_id_b' => $relatedContact1['id'],
@@ -73,6 +76,7 @@ final class RelationshipTypeLoaderTest extends AbstractFundingHeadlessTestCase {
       ])->execute();
 
     Relationship::create()
+      ->setCheckPermissions(FALSE)
       ->setValues([
         'contact_id_a' => $relatedContact2['id'],
         'contact_id_b' => $contact['id'],
@@ -80,6 +84,7 @@ final class RelationshipTypeLoaderTest extends AbstractFundingHeadlessTestCase {
       ])->execute();
 
     Relationship::create()
+      ->setCheckPermissions(FALSE)
       ->setValues([
         'contact_id_a' => $contact['id'],
         'contact_id_b' => $notRelatedContact['id'],
