@@ -69,7 +69,7 @@ HELP);
    * @throws \API_Exception
    */
   private function getContactTypes(): iterable {
-    $action = \Civi\Api4\ContactType::get()
+    $action = \Civi\Api4\ContactType::get(FALSE)
       ->addSelect('id', 'label')
       ->addOrderBy('label');
 

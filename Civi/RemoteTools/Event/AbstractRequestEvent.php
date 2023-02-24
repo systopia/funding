@@ -31,7 +31,7 @@ abstract class AbstractRequestEvent extends Event {
 
   private string $actionName;
 
-  protected bool $checkPermissions = TRUE;
+  protected bool $checkPermissions;
 
   protected bool $debug = FALSE;
 
@@ -48,7 +48,9 @@ abstract class AbstractRequestEvent extends Event {
    */
   public static function fromApiRequest(AbstractAction $apiRequest, array $extraParams = []): self {
     return new static($apiRequest->getEntityName(), $apiRequest->getActionName(),
-      $apiRequest->getParams() + $extraParams
+      // Normally the remote API requester should only have permission to access
+      // the remote API, so permission checks for other APIs would fail.
+      ['checkPermissions' => FALSE] + $apiRequest->getParams() + $extraParams
     );
   }
 
@@ -94,8 +96,20 @@ abstract class AbstractRequestEvent extends Event {
     return $this->actionName;
   }
 
+  /**
+   * @return bool Defaults to FALSE.
+   */
   public function isCheckPermissions(): bool {
     return $this->checkPermissions;
+  }
+
+  /**
+   * @return $this
+   */
+  public function setCheckPermissions(bool $checkPermissions): self {
+    $this->checkPermissions = $checkPermissions;
+
+    return $this;
   }
 
   public function isDebug(): bool {

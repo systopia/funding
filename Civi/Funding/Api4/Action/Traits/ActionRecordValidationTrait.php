@@ -131,6 +131,7 @@ trait ActionRecordValidationTrait {
   protected function _validateRecordUpdate(array $record): EntityValidationResult {
     $id = $record[$this->_getIdFieldName()];
     $currentRecord = $this->_api4->execute($this->getEntityName(), 'get', [
+      'checkPermissions' => FALSE,
       'where' => [['id', '=', $id]],
     ])->single();
 

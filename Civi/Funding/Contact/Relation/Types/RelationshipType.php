@@ -68,7 +68,7 @@ HELP);
    * @throws \API_Exception
    */
   private function getRelationshipTypes(): iterable {
-    $action = \Civi\Api4\RelationshipType::get()
+    $action = \Civi\Api4\RelationshipType::get(FALSE)
       ->addSelect('id', 'label_a_b', 'label_b_a')
       ->addOrderBy('label_a_b');
 

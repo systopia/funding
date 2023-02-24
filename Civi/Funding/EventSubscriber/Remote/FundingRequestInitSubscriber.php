@@ -23,6 +23,7 @@ use Civi\Funding\Api4\Action\Remote\GetFieldsAction;
 use Civi\Funding\Api4\Action\Remote\RemoteFundingActionInterface;
 use Civi\Funding\Contact\FundingRemoteContactIdResolverInterface;
 use Civi\Funding\Event\Remote\FundingEvents;
+use Civi\Funding\Session\FundingSessionInterface;
 use Civi\RemoteTools\Event\InitApiRequestEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Webmozart\Assert\Assert;
@@ -31,8 +32,14 @@ class FundingRequestInitSubscriber implements EventSubscriberInterface {
 
   private FundingRemoteContactIdResolverInterface $remoteContactIdResolver;
 
-  public function __construct(FundingRemoteContactIdResolverInterface $remoteContactIdResolver) {
+  private FundingSessionInterface $session;
+
+  public function __construct(
+    FundingRemoteContactIdResolverInterface $remoteContactIdResolver,
+    FundingSessionInterface $session
+  ) {
     $this->remoteContactIdResolver = $remoteContactIdResolver;
+    $this->session = $session;
   }
 
   /**
@@ -43,7 +50,6 @@ class FundingRequestInitSubscriber implements EventSubscriberInterface {
   }
 
   public function onRemoteRequestInit(InitApiRequestEvent $event): void {
-    $session = \CRM_Core_Session::singleton();
     $request = $event->getApiRequest();
     Assert::isInstanceOf($request, RemoteFundingActionInterface::class);
     /** @var \Civi\Funding\Api4\Action\Remote\RemoteFundingActionInterface $request */
@@ -51,12 +57,12 @@ class FundingRequestInitSubscriber implements EventSubscriberInterface {
     // GetFieldsAction is called in API explorer, though in that case it's no
     // remote session. Thus, the condition.
     if (!$request instanceof GetFieldsAction || NULL !== $remoteContactId) {
-      $session->set('isRemote', TRUE, 'funding');
+      $this->session->setRemote(TRUE);
     }
     if (NULL !== $remoteContactId) {
       $contactId = $this->remoteContactIdResolver->getContactId($remoteContactId);
       $request->setExtraParam('contactId', $contactId);
-      $session->set('contactId', $contactId, 'funding');
+      $this->session->setResolvedContactId($contactId);
     }
   }
 

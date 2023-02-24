@@ -39,12 +39,13 @@ final class ActivityFixture {
     array $values = []
   ): array {
     /** @phpstan-var array{id: int} $activityValues */
-    $activityValues = Activity::create()->setValues([
-      'activity_type_id' => $activityTypeId,
-      'source_contact_id' => $sourceContactId,
-    ] + $values)->execute()->single();
+    $activityValues = Activity::create(FALSE)
+      ->setValues([
+        'activity_type_id' => $activityTypeId,
+        'source_contact_id' => $sourceContactId,
+      ] + $values)->execute()->single();
 
-    EntityActivity::connect()
+    EntityActivity::connect(FALSE)
       ->setActivityId($activityValues['id'])
       ->setEntity(FundingApplicationProcess::_getEntityName())
       ->setEntityId($applicationProcessId)

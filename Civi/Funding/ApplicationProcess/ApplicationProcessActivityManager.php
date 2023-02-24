@@ -52,19 +52,19 @@ class ApplicationProcessActivityManager {
     if (!array_key_exists('status_id', $values)) {
       $values['status_id:name'] ??= 'Completed';
     }
-    $createAction = Activity::create()
+    $createAction = Activity::create(FALSE)
       ->setValues($values);
 
     /** @phpstan-var array{id: int}&array<string, mixed> $activityValues */
     $activityValues = $this->api4->executeAction($createAction)->single();
-    $connectAction = EntityActivity::connect()
+    $connectAction = EntityActivity::connect(FALSE)
       ->setActivityId($activityValues['id'])
       ->setEntity(FundingApplicationProcess::_getEntityName())
       ->setEntityId($applicationProcess->getId());
 
     $this->api4->executeAction($connectAction);
 
-    $getAction = Activity::get()
+    $getAction = Activity::get(FALSE)
       ->addSelect('*', 'custom.*')
       ->addWhere('id', '=', $activityValues['id']);
 
@@ -77,7 +77,8 @@ class ApplicationProcessActivityManager {
    */
   public function deleteByApplicationProcess(int $applicationProcessId): void {
     foreach ($this->getByApplicationProcess($applicationProcessId) as $activity) {
-      $action = Activity::delete()->addWhere('id', '=', $activity->getId());
+      $action = Activity::delete(FALSE)
+        ->addWhere('id', '=', $activity->getId());
       $this->api4->executeAction($action);
     }
   }
@@ -88,7 +89,7 @@ class ApplicationProcessActivityManager {
    * @throws \API_Exception
    */
   public function getByApplicationProcess(int $applicationProcessId, ?ConditionInterface $condition = NULL): array {
-    $action = FundingApplicationProcessActivity::get()
+    $action = FundingApplicationProcessActivity::get(FALSE)
       ->setApplicationProcessId($applicationProcessId);
 
     if (NULL !== $condition) {
@@ -104,7 +105,7 @@ class ApplicationProcessActivityManager {
    * @throws \API_Exception
    */
   public function getOpenByApplicationProcess(int $applicationProcessId, ?ConditionInterface $condition = NULL): array {
-    $action = FundingApplicationProcessActivity::get()
+    $action = FundingApplicationProcessActivity::get(FALSE)
       ->setApplicationProcessId($applicationProcessId);
 
     if (NULL !== $condition) {
@@ -123,9 +124,12 @@ class ApplicationProcessActivityManager {
   public function assignActivity(ActivityEntity $activity, ?int $contactId): void {
     Assert::false($activity->isNew(), 'Activity is not persisted');
 
-    $this->api4->updateEntity('Activity', $activity->getId(), [
-      'assignee_contact_id' => $contactId,
-    ]);
+    $this->api4->updateEntity(
+      'Activity',
+      $activity->getId(),
+      ['assignee_contact_id' => $contactId],
+      ['checkPermissions' => FALSE],
+    );
   }
 
   /**
@@ -146,9 +150,12 @@ class ApplicationProcessActivityManager {
    * @throws \API_Exception
    */
   public function changeActivityStatus(ActivityEntity $activity, string $status): void {
-    $result = $this->api4->updateEntity('Activity', $activity->getId(), [
-      'status_id:name' => $status,
-    ]);
+    $result = $this->api4->updateEntity(
+      'Activity',
+      $activity->getId(),
+      ['status_id:name' => $status],
+      ['checkPermissions' => FALSE],
+    );
 
     $statusId = $result->single()['status_id'];
     $activity->setStatusId($statusId);

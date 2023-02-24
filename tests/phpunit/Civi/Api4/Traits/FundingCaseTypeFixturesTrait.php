@@ -62,7 +62,7 @@ trait FundingCaseTypeFixturesTrait {
       ['application_foo', 'application_bar', 'review_baz'],
     );
 
-    $permittedContact = Contact::create()
+    $permittedContact = Contact::create(FALSE)
       ->setValues([
         'contact_type' => 'Individual',
         'contact_sub_type' => 'Permitted',
@@ -72,7 +72,7 @@ trait FundingCaseTypeFixturesTrait {
       ->execute()->first();
     $this->permittedContactId = $permittedContact['id'];
 
-    $this->notPermittedContactId = Contact::create()
+    $this->notPermittedContactId = Contact::create(FALSE)
       ->setValues([
         'contact_type' => 'Individual',
         'first_name' => 'NotPermitted',
@@ -81,7 +81,7 @@ trait FundingCaseTypeFixturesTrait {
       ->execute()->first()['id'];
 
     $fundingCaseType = FundingCaseTypeFixture::addFixture();
-    FundingCaseTypeProgram::create()
+    FundingCaseTypeProgram::create(FALSE)
       ->setValues([
         'funding_program_id' => $this->fundingProgramId,
         'funding_case_type_id' => $fundingCaseType->getId(),

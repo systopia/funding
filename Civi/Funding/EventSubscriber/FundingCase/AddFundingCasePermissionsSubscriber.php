@@ -59,16 +59,18 @@ final class AddFundingCasePermissionsSubscriber implements EventSubscriberInterf
    * @throws \API_Exception
    */
   public function onCreated(FundingCaseCreatedEvent $event): void {
-    $action = FundingNewCasePermissions::get()
+    $action = FundingNewCasePermissions::get(FALSE)
       ->addWhere('funding_program_id', '=', $event->getFundingProgram()->getId());
 
     /** @phpstan-var newCasePermissionsT $newCasePermissions */
     foreach ($this->api4->executeAction($action) as $newCasePermissions) {
-      $createAction = FundingCaseContactRelation::create();
-      $createAction->setValues($this->relationFactory->createFundingCaseContactRelation(
-        FundingNewCasePermissionsEntity::fromArray($newCasePermissions),
-        $event->getFundingCase(),
-      )->toArray());
+      $createAction = FundingCaseContactRelation::create(FALSE)
+        ->setValues(
+          $this->relationFactory->createFundingCaseContactRelation(
+            FundingNewCasePermissionsEntity::fromArray($newCasePermissions),
+            $event->getFundingCase(),
+          )->toArray()
+        );
       $this->api4->executeAction($createAction);
     }
   }

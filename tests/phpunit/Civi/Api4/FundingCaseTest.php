@@ -25,6 +25,7 @@ namespace Civi\Api4;
 
 use Civi\Api4\Traits\FundingCaseTestFixturesTrait;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
+use Civi\Funding\Api4\Permissions;
 use Civi\Funding\Util\SessionTestUtil;
 
 /**
@@ -40,6 +41,16 @@ final class FundingCaseTest extends AbstractFundingHeadlessTestCase {
 
   public function testPermissionsInternal(): void {
     $this->addInternalFixtures();
+
+    // Admin gets view permissions for all cases.
+    $this->setUserPermissions([Permissions::ACCESS_CIVICRM, Permissions::ADMINISTER_FUNDING]);
+    $adminResult = FundingCase::get()->execute();
+    static::assertSame(2, $adminResult->rowCount);
+    static::assertSame($this->permittedFundingCaseId, $adminResult->first()['id']);
+    static::assertSame(['view'], $adminResult->first()['permissions']);
+    static::assertTrue($adminResult->first()['PERM_view']);
+    $this->setUserPermissions([Permissions::ACCESS_CIVICRM, Permissions::ACCESS_FUNDING]);
+
     // Contact is directly associated
     SessionTestUtil::mockInternalRequestSession($this->associatedContactId);
     $permittedAssociatedResult = FundingCase::get()->execute();

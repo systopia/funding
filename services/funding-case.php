@@ -25,12 +25,10 @@ use Civi\Funding\Api4\Action\FundingCase\GetFieldsAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\GetNewApplicationFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\SubmitNewApplicationFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\ValidateNewApplicationFormAction;
-use Civi\Funding\EventSubscriber\FundingCase\AddFundingCasePermissionsSubscriber;
-use Civi\Funding\EventSubscriber\FundingCase\ApplicationProcessDeletedSubscriber;
-use Civi\Funding\EventSubscriber\FundingCase\ApplicationProcessStatusSubscriber;
+use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\EventSubscriber\FundingCase\FundingCaseFilterPermissionsSubscriber;
 use Civi\Funding\EventSubscriber\FundingCase\FundingCaseGetPossiblePermissionsSubscriber;
-use Civi\Funding\EventSubscriber\FundingCase\FundingCasePermissionsGetSubscriber;
+use Civi\Funding\EventSubscriber\FundingCase\FundingCasePermissionsGetAdminSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseGetFieldsSubscriber;
 use Civi\Funding\FundingCase\FundingCaseManager;
@@ -41,10 +39,13 @@ use Civi\Funding\Permission\FundingCase\FundingCaseContactsLoader;
 use Civi\Funding\Permission\FundingCase\FundingCaseContactsLoaderCollection;
 use Civi\Funding\Permission\FundingCase\FundingCaseContactsLoaderInterface;
 use Civi\Funding\Permission\FundingCase\RelationFactory\FundingCaseContactRelationFactory;
+use Civi\Funding\Permission\FundingCase\RelationFactory\RelationPropertiesFactoryInterface;
 use Civi\Funding\Permission\FundingCase\RelationFactory\RelationPropertiesFactoryLocator;
 use Civi\Funding\Permission\FundingCase\RelationFactory\RelationPropertiesFactoryTypeContainer;
+use Civi\Funding\Permission\FundingCase\RelationFactory\RelationPropertiesFactoryTypeInterface;
 use Symfony\Component\DependencyInjection\Argument\ServiceLocatorArgument;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 $container->autowire(FundingCaseManager::class);
 $container->autowire(FundingCaseStatusDeterminerInterface::class, FundingCaseStatusDeterminer::class);
@@ -75,22 +76,24 @@ $container->autowire(RelationPropertiesFactoryLocator::class)
     new TaggedIteratorArgument('funding.case.contact_relation_properties_factory', NULL, 'getSupportedFactoryType')
   ));
 
-// @phpstan-ignore-next-line
-foreach (glob(__DIR__ . '/../Civi/Funding/Permission/FundingCase/RelationFactory/Types/*.php') as $file) {
-  $class = basename($file, '.php');
-  $container->autowire('Civi\\Funding\\Permission\\FundingCase\\RelationFactory\\Types\\' . $class)
-    ->addTag('funding.case.contact_relation_properties_factory_type');
-}
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/Permission/FundingCase/RelationFactory/Types',
+  'Civi\\Funding\\Permission\\FundingCase\\RelationFactory\\Types',
+  RelationPropertiesFactoryTypeInterface::class,
+  ['funding.case.contact_relation_properties_factory_type' => []],
+);
 
 $container->autowire(RelationPropertiesFactoryTypeContainer::class)
   ->addArgument(new TaggedIteratorArgument('funding.case.contact_relation_properties_factory_type'));
 
-// @phpstan-ignore-next-line
-foreach (glob(__DIR__ . '/../Civi/Funding/Permission/FundingCase/RelationFactory/Factory/*.php') as $file) {
-  $class = basename($file, '.php');
-  $container->autowire('Civi\\Funding\\Permission\\FundingCase\\RelationFactory\\Factory\\' . $class)
-    ->addTag('funding.case.contact_relation_properties_factory');
-}
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/Permission/FundingCase/RelationFactory/Factory',
+  'Civi\\Funding\\Permission\\FundingCase\\RelationFactory\\Factory',
+  RelationPropertiesFactoryInterface::class,
+  ['funding.case.contact_relation_properties_factory' => []],
+);
 
 $container->register(FundingCaseContactsLoaderInterface::class, FundingCaseContactsLoaderCollection::class)
   ->addArgument(new TaggedIteratorArgument('funding.case.contacts_loader'));
@@ -102,21 +105,30 @@ $container->autowire(FundingCaseGetFieldsSubscriber::class)
   ->addTag('kernel.event_subscriber');
 $container->autowire(FundingCaseDAOGetSubscriber::class)
   ->addTag('kernel.event_subscriber');
-$container->autowire(FundingCasePermissionsGetSubscriber::class)
-  ->addTag('kernel.event_subscriber');
-$container->autowire(FundingCaseFilterPermissionsSubscriber::class)
-  ->addTag('kernel.event_subscriber');
-$container->autowire(FundingCaseGetPossiblePermissionsSubscriber::class)
-  ->addTag('kernel.event_subscriber');
-$container->autowire(AddFundingCasePermissionsSubscriber::class)
-  ->addTag('kernel.event_subscriber');
 
-$container->autowire(ApplicationProcessStatusSubscriber::class)
-  ->addTag('kernel.event_subscriber')
-  ->setLazy(TRUE);
-$container->autowire(ApplicationProcessDeletedSubscriber::class)
-  ->addTag('kernel.event_subscriber')
-  ->setLazy(TRUE);
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/EventSubscriber/FundingCase',
+  'Civi\\Funding\\EventSubscriber\\FundingCase',
+  EventSubscriberInterface::class,
+  ['kernel.event_subscriber' => []],
+  ['lazy' => TRUE],
+);
+
+/*
+ * Subscriber services are created every time (even when not used), so in
+ * general only those subscribers that do not depend on any other service or
+ * only on services that are created anyway or are cheap to create should not be
+ * lazy.
+ */
+$nonLazySubscribers = [
+  FundingCaseFilterPermissionsSubscriber::class,
+  FundingCaseGetPossiblePermissionsSubscriber::class,
+  FundingCasePermissionsGetAdminSubscriber::class,
+];
+foreach ($nonLazySubscribers as $serviceId) {
+  $container->getDefinition($serviceId)->setLazy(FALSE);
+}
 
 $container->autowire(GetNewApplicationFormAction::class)
   ->setPublic(TRUE)

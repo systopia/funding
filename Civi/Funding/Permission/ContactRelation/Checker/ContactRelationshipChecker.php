@@ -49,7 +49,7 @@ final class ContactRelationshipChecker implements ContactRelationCheckerInterfac
     $relatedContactId = $relationProperties['contactId'];
     Assert::numeric($relatedContactId);
 
-    $action = Relationship::get()
+    $action = Relationship::get(FALSE)
       ->addSelect('id')
       ->addWhere('relationship_type_id', '=', $relationshipTypeId)
       ->addClause('OR',

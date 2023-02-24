@@ -32,12 +32,13 @@ final class FundingNewCasePermissionsFixture {
    * @throws \API_Exception
    */
   public static function addCreationContact(int $fundingProgramId, array $permissions): array {
-    return FundingNewCasePermissions::create()->setValues([
-      'funding_program_id' => $fundingProgramId,
-      'type' => CreationContact::NAME,
-      'properties' => [],
-      'permissions' => $permissions,
-    ])->execute()->first();
+    return FundingNewCasePermissions::create(FALSE)
+      ->setValues([
+        'funding_program_id' => $fundingProgramId,
+        'type' => CreationContact::NAME,
+        'properties' => [],
+        'permissions' => $permissions,
+      ])->execute()->first();
   }
 
 }

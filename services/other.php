@@ -27,8 +27,16 @@ use Civi\Funding\DependencyInjection\Compiler\FundingCaseTypeServiceLocatorPass;
 use Civi\Funding\EventSubscriber\Api\TransactionalApiRequestSubscriber;
 use Civi\Funding\EventSubscriber\FundingFilterPossiblePermissionsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingRequestInitSubscriber;
+use Civi\Funding\Session\FundingSession;
+use Civi\Funding\Session\FundingSessionInterface;
 use Civi\Funding\Validation\EntityValidator;
 use Civi\Funding\Validation\EntityValidatorInterface;
+
+if (!$container->has(\CRM_Core_Session::class)) {
+  $container->register(\CRM_Core_Session::class, \CRM_Core_Session::class)
+    ->setFactory([\CRM_Core_Session::class, 'singleton']);
+}
+$container->autowire(FundingSessionInterface::class, FundingSession::class);
 
 $container->addCompilerPass(new FundingCaseTypeServiceLocatorPass());
 

@@ -106,7 +106,7 @@ final class ApplicationProcessActivityManagerTest extends AbstractFundingHeadles
 
     // Test assignActivity
     $this->activityManager->assignActivity($activity, $recipientContact['id']);
-    static::assertCount(1, ActivityContact::get()
+    static::assertCount(1, ActivityContact::get(FALSE)
       ->addWhere('activity_id', '=', $activity->getId())
       ->addWhere('contact_id', '=', $recipientContact['id'])
       ->addWhere('record_type_id:name', '=', 'Activity Assignees')

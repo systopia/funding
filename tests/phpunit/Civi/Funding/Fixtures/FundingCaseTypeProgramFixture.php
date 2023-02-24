@@ -29,7 +29,7 @@ final class FundingCaseTypeProgramFixture {
    * @throws \API_Exception
    */
   public static function addFixture(int $fundingCaseTypeId, int $fundingProgramId): array {
-    return FundingCaseTypeProgram::create()
+    return FundingCaseTypeProgram::create(FALSE)
       ->setValues([
         'funding_case_type_id' => $fundingCaseTypeId,
         'funding_program_id' => $fundingProgramId,

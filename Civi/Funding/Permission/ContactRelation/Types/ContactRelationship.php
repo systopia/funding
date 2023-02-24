@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Permission\ContactRelation\Types;
 
+use Civi\Api4\RelationshipType;
 use Civi\Funding\Contact\Relation\AbstractRelationType;
 use Civi\RemoteTools\Api4\Api4Interface;
 use CRM_Funding_ExtensionUtil as E;
@@ -73,7 +74,7 @@ HELP);
    * @throws \API_Exception
    */
   private function getRelationshipTypes(): iterable {
-    $action = \Civi\Api4\RelationshipType::get()
+    $action = RelationshipType::get(FALSE)
       ->addSelect('id', 'label_a_b', 'label_b_a')
       ->addOrderBy('label_a_b');
 

@@ -21,7 +21,7 @@ namespace Civi\Funding\EventSubscriber;
 
 use Civi\Api4\FundingCase;
 use Civi\Api4\FundingProgram;
-use Civi\Funding\Util\SessionTestUtil;
+use Civi\Funding\Mock\Session\TestFundingSession;
 use Civi\RemoteTools\Event\FilterPossiblePermissionsEvent;
 use PHPUnit\Framework\TestCase;
 
@@ -32,14 +32,12 @@ final class FundingFilterPossiblePermissionsSubscriberTest extends TestCase {
 
   private FundingFilterPossiblePermissionsSubscriber $subscriber;
 
+  private TestFundingSession $session;
+
   protected function setUp(): void {
     parent::setUp();
-    $this->subscriber = new FundingFilterPossiblePermissionsSubscriber();
-  }
-
-  protected function tearDown(): void {
-    parent::tearDown();
-    SessionTestUtil::resetSession();
+    $this->session = TestFundingSession::newInternal();
+    $this->subscriber = new FundingFilterPossiblePermissionsSubscriber($this->session);
   }
 
   public function testGetSubscribedEvents(): void {
@@ -65,7 +63,7 @@ final class FundingFilterPossiblePermissionsSubscriberTest extends TestCase {
   }
 
   public function testOnFilterPossiblePermissionsRemote(): void {
-    SessionTestUtil::mockRemoteRequestSession('2');
+    $this->session->setRemote(TRUE);
     $event = new FilterPossiblePermissionsEvent('entity', ['application_foo' => 'Foo', 'review_bar' => 'Bar']);
 
     $this->subscriber->onFilterPossiblePermissions($event);

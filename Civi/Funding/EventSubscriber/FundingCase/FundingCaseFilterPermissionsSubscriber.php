@@ -20,12 +20,14 @@ declare(strict_types = 1);
 namespace Civi\Funding\EventSubscriber\FundingCase;
 
 use Civi\Funding\Event\FundingCase\GetPermissionsEvent;
-use Civi\Funding\Util\SessionUtil;
+use Civi\Funding\Session\FundingSessionInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 final class FundingCaseFilterPermissionsSubscriber implements EventSubscriberInterface {
 
   private const APPLICATION_PERMISSION_PREFIX = 'application_';
+
+  private FundingSessionInterface $session;
 
   /**
    * @inheritDoc
@@ -36,8 +38,12 @@ final class FundingCaseFilterPermissionsSubscriber implements EventSubscriberInt
     ];
   }
 
+  public function __construct(FundingSessionInterface $session) {
+    $this->session = $session;
+  }
+
   public function onPermissionsGet(GetPermissionsEvent $event): void {
-    if (SessionUtil::isRemoteSession(\CRM_Core_Session::singleton())) {
+    if ($this->session->isRemote()) {
       $this->provideOnlyApplicationPermissions($event);
     }
     else {

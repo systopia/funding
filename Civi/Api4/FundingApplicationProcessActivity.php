@@ -22,21 +22,24 @@ namespace Civi\Api4;
 use Civi\Api4\Generic\AbstractEntity;
 use Civi\Funding\Api4\Action\FundingApplicationProcessActivity\GetAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcessActivity\GetFieldsAction;
+use Civi\Funding\Api4\Traits\AccessPermissionsTrait;
 use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
 
 final class FundingApplicationProcessActivity extends AbstractEntity {
+
+  use AccessPermissionsTrait;
 
   use EntityNameTrait;
 
   /**
    * @inheritDoc
    */
-  public static function getFields() {
-    return new GetFieldsAction();
+  public static function getFields(bool $checkPermissions = TRUE) {
+    return (new GetFieldsAction())->setCheckPermissions($checkPermissions);
   }
 
-  public static function get(): GetAction {
-    return \Civi::service(GetAction::class);
+  public static function get(bool $checkPermissions = TRUE): GetAction {
+    return \Civi::service(GetAction::class)->setCheckPermissions($checkPermissions);
   }
 
 }

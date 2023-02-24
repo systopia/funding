@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2023 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,16 +17,26 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Api4\Action;
+namespace Civi\Funding\Api4\Traits;
 
 /**
- * Marker for actions that fetch the contact ID from the session. Either the
- * resolved remote contact ID or the logged-in user's contact ID.
- *
- * @see \Civi\Funding\Api4\Action\Traits\FundingActionContactIdSessionTrait
+ * Permissions for funding entities that may only be changed with administer
+ * permissions, but are allowed to be read without.
  */
-interface FundingContactIdSessionAwareInterface {
+trait AccessROAdministerRWPermissionsTrait {
 
-  public function getContactId(): int;
+  /**
+   * @return array<string, array<string|string[]>>
+   */
+  public static function permissions(): array {
+    $accessPermissions = AccessPermissionsTrait::permissions();
+    $administerPermissions = AdministerPermissionsTrait::permissions();
+
+    return [
+      'meta' => $accessPermissions['meta'],
+      'default' => $administerPermissions['default'],
+      'get' => $accessPermissions['default'],
+    ];
+  }
 
 }

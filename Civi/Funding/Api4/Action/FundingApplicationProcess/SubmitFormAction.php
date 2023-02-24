@@ -22,10 +22,10 @@ namespace Civi\Funding\Api4\Action\FundingApplicationProcess;
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
-use Civi\Funding\Api4\Action\Traits\FundingActionContactIdSessionTrait;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
+use Civi\Funding\Session\FundingSessionInterface;
 use Webmozart\Assert\Assert;
 
 /**
@@ -33,8 +33,6 @@ use Webmozart\Assert\Assert;
  * @method $this setId(int $id)
  */
 final class SubmitFormAction extends AbstractAction {
-
-  use FundingActionContactIdSessionTrait;
 
   /**
    * @var array
@@ -53,13 +51,17 @@ final class SubmitFormAction extends AbstractAction {
 
   private ApplicationFormSubmitHandlerInterface $submitFormHandler;
 
+  private FundingSessionInterface $session;
+
   public function __construct(
     ApplicationProcessBundleLoader $applicationProcessBundleLoader,
-    ApplicationFormSubmitHandlerInterface $submitFormHandler
+    ApplicationFormSubmitHandlerInterface $submitFormHandler,
+    FundingSessionInterface $session
   ) {
     parent::__construct(FundingApplicationProcess::_getEntityName(), 'submitForm');
     $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
     $this->submitFormHandler = $submitFormHandler;
+    $this->session = $session;
   }
 
   /**
@@ -90,7 +92,7 @@ final class SubmitFormAction extends AbstractAction {
     Assert::notNull($applicationProcessBundle);
 
     return new ApplicationFormSubmitCommand(
-      $this->getContactId(),
+      $this->session->getContactId(),
       $applicationProcessBundle,
       $this->data
     );

@@ -55,7 +55,7 @@ final class FundingCasePermissionsGetSubscriber implements EventSubscriberInterf
    * @throws \API_Exception
    */
   public function onPermissionsGet(GetPermissionsEvent $event): void {
-    $action = FundingCaseContactRelation::get()
+    $action = FundingCaseContactRelation::get(FALSE)
       ->addWhere('funding_case_id', '=', $event->getEntityId());
 
     /** @phpstan-var contactRelationT $contactRelation */

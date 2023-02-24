@@ -31,7 +31,7 @@ class FundingCaseTypeProgramRelationChecker {
   }
 
   public function areFundingCaseTypeAndProgramRelated(int $fundingCaseTypeId, int $fundingProgramId): bool {
-    $action = FundingCaseTypeProgram::getRelation()
+    $action = FundingCaseTypeProgram::getRelation(FALSE)
       ->setFundingCaseTypeId($fundingCaseTypeId)
       ->setFundingProgramId($fundingProgramId);
 

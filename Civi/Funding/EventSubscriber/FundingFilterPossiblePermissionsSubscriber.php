@@ -21,13 +21,15 @@ namespace Civi\Funding\EventSubscriber;
 
 use Civi\Api4\FundingCase;
 use Civi\Api4\FundingProgram;
-use Civi\Funding\Util\SessionUtil;
+use Civi\Funding\Session\FundingSessionInterface;
 use Civi\RemoteTools\Event\FilterPossiblePermissionsEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 final class FundingFilterPossiblePermissionsSubscriber implements EventSubscriberInterface {
 
   private const APPLICATION_PERMISSION_PREFIX = 'application_';
+
+  private FundingSessionInterface $session;
 
   /**
    * @inheritDoc
@@ -41,8 +43,12 @@ final class FundingFilterPossiblePermissionsSubscriber implements EventSubscribe
     ];
   }
 
+  public function __construct(FundingSessionInterface $session) {
+    $this->session = $session;
+  }
+
   public function onFilterPossiblePermissions(FilterPossiblePermissionsEvent $event): void {
-    if (SessionUtil::isRemoteSession(\CRM_Core_Session::singleton())) {
+    if ($this->session->isRemote()) {
       $this->excludeNonApplicationPermissions($event);
     }
     else {

@@ -68,8 +68,7 @@ final class GetAction extends AbstractGetAction {
       return;
     }
 
-    $action = Activity::get()
-      ->setCheckPermissions($this->getCheckPermissions())
+    $action = Activity::get(FALSE)
       ->addJoin(
         FundingApplicationProcess::_getEntityName() . ' AS ap', 'INNER', 'EntityActivity',
         ['ap.id', '=', $this->applicationProcessId]
@@ -125,7 +124,7 @@ final class GetAction extends AbstractGetAction {
    * @throws \API_Exception
    */
   private function getSourceContactName(array $activity): string {
-    $action = Contact::get()
+    $action = Contact::get(FALSE)
       ->addJoin('ActivityContact AS ac', 'INNER', NULL, ['id', '=', 'ac.contact_id'])
       ->addSelect('id', 'display_name')
       ->addWhere('ac.activity_id', '=', $activity['id'])

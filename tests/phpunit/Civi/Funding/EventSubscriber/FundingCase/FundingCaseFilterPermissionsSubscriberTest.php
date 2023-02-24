@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\EventSubscriber\FundingCase;
 
 use Civi\Funding\Event\FundingCase\GetPermissionsEvent;
-use Civi\Funding\Util\SessionTestUtil;
+use Civi\Funding\Mock\Session\TestFundingSession;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -30,14 +30,12 @@ final class FundingCaseFilterPermissionsSubscriberTest extends TestCase {
 
   private FundingCaseFilterPermissionsSubscriber $subscriber;
 
+  private TestFundingSession $session;
+
   protected function setUp(): void {
     parent::setUp();
-    $this->subscriber = new FundingCaseFilterPermissionsSubscriber();
-  }
-
-  protected function tearDown(): void {
-    parent::tearDown();
-    SessionTestUtil::resetSession();
+    $this->session = TestFundingSession::newInternal();
+    $this->subscriber = new FundingCaseFilterPermissionsSubscriber($this->session);
   }
 
   public function testGetSubscribedEvents(): void {
@@ -53,7 +51,7 @@ final class FundingCaseFilterPermissionsSubscriberTest extends TestCase {
   }
 
   public function testExcludesNonApplicationPermissionsRemoteRequest(): void {
-    SessionTestUtil::mockRemoteRequestSession('2');
+    $this->session->setRemote(TRUE);
     $event = $this->createEvent(['application_foo', 'review_bar']);
 
     $this->subscriber->onPermissionsGet($event);

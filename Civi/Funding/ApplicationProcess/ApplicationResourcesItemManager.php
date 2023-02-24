@@ -45,7 +45,7 @@ class ApplicationResourcesItemManager {
   public function delete(ApplicationResourcesItemEntity $applicationResourcesItem): void {
     Assert::false($applicationResourcesItem->isNew(), 'Application resources item is not persisted');
 
-    $action = FundingApplicationResourcesItem::delete()
+    $action = FundingApplicationResourcesItem::delete(FALSE)
       ->addWhere('id', '=', $applicationResourcesItem->getId());
     $this->api4->executeAction($action);
   }
@@ -57,7 +57,7 @@ class ApplicationResourcesItemManager {
    * @throws \API_Exception
    */
   public function getByApplicationProcessId(int $applicationProcessId): array {
-    $action = FundingApplicationResourcesItem::get()
+    $action = FundingApplicationResourcesItem::get(FALSE)
       ->addWhere('application_process_id', '=', $applicationProcessId);
     /** @phpstan-var iterable<applicationResourcesItemT> $result */
     $result = $this->api4->executeAction($action)->indexBy('identifier');
@@ -67,10 +67,10 @@ class ApplicationResourcesItemManager {
 
   public function save(ApplicationResourcesItemEntity $applicationResourcesItem): void {
     if ($applicationResourcesItem->isNew()) {
-      $action = FundingApplicationResourcesItem::create()->setValues($applicationResourcesItem->toArray());
+      $action = FundingApplicationResourcesItem::create(FALSE)->setValues($applicationResourcesItem->toArray());
     }
     else {
-      $action = FundingApplicationResourcesItem::update()->setValues($applicationResourcesItem->toArray());
+      $action = FundingApplicationResourcesItem::update(FALSE)->setValues($applicationResourcesItem->toArray());
     }
 
     /** @phpstan-var applicationResourcesItemT $values */

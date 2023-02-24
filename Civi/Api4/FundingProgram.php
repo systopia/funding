@@ -21,6 +21,7 @@ namespace Civi\Api4;
 
 use Civi\Funding\Api4\Action\FundingProgram\GetAction;
 use Civi\Funding\Api4\Action\FundingProgram\GetFieldsAction;
+use Civi\Funding\Api4\Traits\AccessPermissionsTrait;
 use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
 
 /**
@@ -31,6 +32,8 @@ use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
  * @package Civi\Api4
  */
 final class FundingProgram extends Generic\DAOEntity {
+
+  use AccessPermissionsTrait;
 
   use EntityNameTrait;
 

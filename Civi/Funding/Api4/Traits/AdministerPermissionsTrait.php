@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2023 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,15 +17,29 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Util;
+namespace Civi\Funding\Api4\Traits;
+
+use Civi\Funding\Api4\Permissions;
 
 /**
- * @codeCoverageIgnore
+ * Permissions for funding entities related to administration.
  */
-final class SessionUtil {
+trait AdministerPermissionsTrait {
 
-  public static function isRemoteSession(\CRM_Core_Session $session): bool {
-    return (bool) $session->get('isRemote', 'funding');
+  /**
+   * @return array<string, array<string|string[]>>
+   */
+  public static function permissions(): array {
+    return [
+      'meta' => [
+        Permissions::ACCESS_CIVICRM,
+        [
+          Permissions::ACCESS_FUNDING,
+          Permissions::ADMINISTER_FUNDING,
+        ],
+      ],
+      'default' => [Permissions::ACCESS_CIVICRM, Permissions::ADMINISTER_FUNDING],
+    ];
   }
 
 }

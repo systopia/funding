@@ -46,7 +46,8 @@ class FundingCaseTypeManager {
   }
 
   public function get(int $id): ?FundingCaseTypeEntity {
-    $action = FundingCaseType::get()->addWhere('id', '=', $id);
+    $action = FundingCaseType::get(FALSE)
+      ->addWhere('id', '=', $id);
 
     /** @var fundingCaseTypeT|null $values */
     $values = $this->api4->executeAction($action)->first();

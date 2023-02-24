@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
-use Civi\Funding\AbstractFundingHeadlessTestCase;
+use Civi\Funding\AbstractRemoteFundingHeadlessTestCase;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
@@ -41,7 +41,7 @@ use Civi\Funding\Mock\Form\FundingCaseType\TestUiSchema;
  *
  * @covers \Civi\Api4\RemoteFundingApplicationProcess
  */
-final class RemoteFundingApplicationProcessTestFormTest extends AbstractFundingHeadlessTestCase {
+final class RemoteFundingApplicationProcessTestFormTest extends AbstractRemoteFundingHeadlessTestCase {
 
   private ApplicationProcessEntity $applicationProcess;
 

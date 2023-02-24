@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\Funding\Api4\Action\FundingCaseTypeProgram\GetRelationAction;
+use Civi\Funding\Api4\Traits\AccessPermissionsTrait;
 use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
 
 /**
@@ -31,6 +32,8 @@ use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
  */
 class FundingCaseTypeProgram extends Generic\DAOEntity {
 
+  use AccessPermissionsTrait;
+
   use EntityNameTrait;
 
   /**
@@ -39,8 +42,8 @@ class FundingCaseTypeProgram extends Generic\DAOEntity {
    *
    * @return \Civi\Funding\Api4\Action\FundingCaseTypeProgram\GetRelationAction
    */
-  public static function getRelation(): GetRelationAction {
-    return new GetRelationAction(static::get());
+  public static function getRelation(bool $checkPermissions = TRUE): GetRelationAction {
+    return (new GetRelationAction(static::get()))->setCheckPermissions($checkPermissions);
   }
 
 }

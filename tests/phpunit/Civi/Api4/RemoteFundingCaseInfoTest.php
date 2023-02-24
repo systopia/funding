@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
-use Civi\Funding\AbstractFundingHeadlessTestCase;
+use Civi\Funding\AbstractRemoteFundingHeadlessTestCase;
 use Civi\Funding\Fixtures\ApplicationProcessFixture;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
@@ -35,7 +35,7 @@ use Civi\RemoteTools\Api4\RemoteApiConstants;
  *
  * @covers \Civi\Api4\RemoteFundingCaseInfo
  */
-final class RemoteFundingCaseInfoTest extends AbstractFundingHeadlessTestCase {
+final class RemoteFundingCaseInfoTest extends AbstractRemoteFundingHeadlessTestCase {
 
   public function testGet(): void {
     $recipientContact = ContactFixture::addOrganization();

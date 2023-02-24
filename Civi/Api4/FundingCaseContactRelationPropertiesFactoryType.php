@@ -22,9 +22,12 @@ namespace Civi\Api4;
 use Civi\Api4\Generic\AbstractEntity;
 use Civi\Funding\Api4\Action\FundingCaseContactRelationPropertiesFactoryType\GetAction;
 use Civi\Funding\Api4\Action\FundingCaseContactRelationPropertiesFactoryType\GetFieldsAction;
+use Civi\Funding\Api4\Traits\AdministerPermissionsTrait;
 use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
 
 final class FundingCaseContactRelationPropertiesFactoryType extends AbstractEntity {
+
+  use AdministerPermissionsTrait;
 
   use EntityNameTrait;
 

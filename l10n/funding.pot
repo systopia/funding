@@ -702,6 +702,30 @@ msgstr ""
 msgid "Possible funding recipients"
 msgstr ""
 
+#: funding.php
+msgid "CiviCRM: access Funding Program Manager"
+msgstr ""
+
+#: funding.php
+msgid "Access non-administrative API of the Funding Program Manager"
+msgstr ""
+
+#: funding.php
+msgid "CiviCRM: remote access to Funding Program Manager"
+msgstr ""
+
+#: funding.php
+msgid "Access remote API of the Funding Program Manager"
+msgstr ""
+
+#: funding.php
+msgid "CiviCRM: administer Funding Program Manager"
+msgstr ""
+
+#: funding.php
+msgid "Access administrative and non-administrative API of the Funding Program Manager"
+msgstr ""
+
 #: managed/ActivityTypeFundingApplicationCommentExternal.mgd.php
 msgid "External Funding Application Comment"
 msgstr ""

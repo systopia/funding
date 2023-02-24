@@ -49,7 +49,7 @@ final class ContactRelationshipLoader implements ContactRelationLoaderInterface 
     $relatedContactId = $relationProperties['contactId'];
     Assert::integerish($relatedContactId);
 
-    $action = Contact::get()
+    $action = Contact::get(FALSE)
       ->addJoin('Relationship AS r', 'INNER', NULL, CompositeCondition::new('OR',
         CompositeCondition::new('AND',
           Comparison::new('r.contact_id_a', '=', 'id'),

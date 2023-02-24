@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\Api4\Traits\FundingCaseTypeFixturesTrait;
-use Civi\Funding\AbstractFundingHeadlessTestCase;
+use Civi\Funding\AbstractRemoteFundingHeadlessTestCase;
 
 /**
  * @group headless
@@ -29,7 +29,7 @@ use Civi\Funding\AbstractFundingHeadlessTestCase;
  * @covers \Civi\Funding\Api4\Action\Remote\FundingCaseType\GetByFundingProgramIdAction
  * @covers \Civi\Funding\EventSubscriber\Remote\FundingCaseTypeGetByFundingProgramIdSubscriber
  */
-final class RemoteFundingCaseTypeTest extends AbstractFundingHeadlessTestCase {
+final class RemoteFundingCaseTypeTest extends AbstractRemoteFundingHeadlessTestCase {
 
   use FundingCaseTypeFixturesTrait;
 

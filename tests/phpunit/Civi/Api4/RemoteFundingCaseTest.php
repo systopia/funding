@@ -24,7 +24,7 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\Api4\Traits\FundingCaseTestFixturesTrait;
-use Civi\Funding\AbstractFundingHeadlessTestCase;
+use Civi\Funding\AbstractRemoteFundingHeadlessTestCase;
 use Civi\Funding\Api4\Action\Remote\FundingCase\Traits\NewApplicationFormActionTrait;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
@@ -43,7 +43,7 @@ use Symfony\Bridge\PhpUnit\ClockMock;
  * @covers \Civi\Funding\Api4\Action\Remote\DAOGetAction
  * @covers \Civi\Funding\EventSubscriber\Remote\FundingCaseDAOGetSubscriber
  */
-final class RemoteFundingCaseTest extends AbstractFundingHeadlessTestCase {
+final class RemoteFundingCaseTest extends AbstractRemoteFundingHeadlessTestCase {
 
   use FundingCaseTestFixturesTrait;
 

@@ -37,15 +37,18 @@ final class ServiceRegistrator {
    * @phpstan-param class-string $classOrInterface
    * @phpstan-param array<string, array<string, scalar>> $tags
    *   Tag names mapped to attributes.
+   * @phpstan-param array{lazy?: bool, shared?: bool, public?: bool} $options
    *
-   * @phpstan-return array<\Symfony\Component\DependencyInjection\Definition>
+   * @phpstan-return array<string, \Symfony\Component\DependencyInjection\Definition>
+   *   Service ID mapped to definition.
    */
   public static function autowireAllImplementing(
     ContainerBuilder $container,
     string $dir,
     string $namespace,
     string $classOrInterface,
-    array $tags = []
+    array $tags = [],
+    array $options = []
   ): array {
     $container->addResource(new GlobResource($dir, '/*.php', TRUE));
 
@@ -55,14 +58,17 @@ final class ServiceRegistrator {
       if ($it->isFile() && 'php' === $it->getFileInfo()->getExtension()) {
         // @phpstan-ignore-next-line
         $class = static::getClass($namespace, $it->getInnerIterator());
-        if (static::isServiceClass($class, $classOrInterface)) {
+        if (static::isServiceClass($class, $classOrInterface) && !$container->has($class)) {
           /** @phpstan-var class-string $class */
           $definition = $container->autowire($class);
+          $definition->setLazy($options['lazy'] ?? FALSE);
+          $definition->setShared($options['shared'] ?? FALSE);
+          $definition->setPublic($options['public'] ?? FALSE);
           foreach ($tags as $tagName => $tagAttributes) {
             $definition->addTag($tagName, $tagAttributes);
           }
 
-          $definitions[] = $definition;
+          $definitions[$class] = $definition;
         }
       }
 

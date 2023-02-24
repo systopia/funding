@@ -56,7 +56,7 @@ final class ContactTypeAndRelationshipTypeLoaderTest extends AbstractFundingHead
     // Wrong contact type
     $notRelatedContact2 = ContactFixture::addIndividual(['last_name' => 'Not Related 2']);
 
-    $relatedRelationshipTypeId = RelationshipType::create()
+    $relatedRelationshipTypeId = RelationshipType::create(FALSE)
       ->setValues([
         'name_a_b' => 'related',
         'name_b_a' => 'related',
@@ -64,7 +64,7 @@ final class ContactTypeAndRelationshipTypeLoaderTest extends AbstractFundingHead
         'contact_type_b' => 'Individual',
       ])->execute()->first()['id'];
 
-    $notRelatedRelationshipTypeId = RelationshipType::create()
+    $notRelatedRelationshipTypeId = RelationshipType::create(FALSE)
       ->setValues([
         'name_b_a' => 'foo',
         'name_a_b' => 'bar',
@@ -72,28 +72,28 @@ final class ContactTypeAndRelationshipTypeLoaderTest extends AbstractFundingHead
         'contact_type_b' => 'Individual',
       ])->execute()->first()['id'];
 
-    Relationship::create()
+    Relationship::create(FALSE)
       ->setValues([
         'contact_id_a' => $contact['id'],
         'contact_id_b' => $relatedContact1['id'],
         'relationship_type_id' => $relatedRelationshipTypeId,
       ])->execute();
 
-    Relationship::create()
+    Relationship::create(FALSE)
       ->setValues([
         'contact_id_a' => $relatedContact2['id'],
         'contact_id_b' => $contact['id'],
         'relationship_type_id' => $relatedRelationshipTypeId,
       ])->execute();
 
-    Relationship::create()
+    Relationship::create(FALSE)
       ->setValues([
         'contact_id_a' => $contact['id'],
         'contact_id_b' => $notRelatedContact1['id'],
         'relationship_type_id' => $notRelatedRelationshipTypeId,
       ])->execute();
 
-    Relationship::create()
+    Relationship::create(FALSE)
       ->setValues([
         'contact_id_a' => $notRelatedContact2['id'],
         'contact_id_b' => $contact['id'],

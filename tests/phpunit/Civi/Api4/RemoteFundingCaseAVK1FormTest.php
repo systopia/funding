@@ -24,7 +24,7 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\API\Exception\UnauthorizedException;
-use Civi\Funding\AbstractFundingHeadlessTestCase;
+use Civi\Funding\AbstractRemoteFundingHeadlessTestCase;
 use Civi\Funding\Api4\Action\Remote\FundingCase\Traits\NewApplicationFormActionTrait;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
@@ -42,7 +42,7 @@ use Symfony\Bridge\PhpUnit\ClockMock;
  *
  * @covers \Civi\Api4\RemoteFundingCase
  */
-final class RemoteFundingCaseAVK1FormTest extends AbstractFundingHeadlessTestCase {
+final class RemoteFundingCaseAVK1FormTest extends AbstractRemoteFundingHeadlessTestCase {
 
   private FundingCaseTypeEntity $fundingCaseType;
 
