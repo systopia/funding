@@ -22,6 +22,7 @@ namespace Civi\RemoteTools\Api4;
 use Civi\API\Request;
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
+use Civi\RemoteTools\Api4\Query\ConditionInterface;
 use Webmozart\Assert\Assert;
 
 /**
@@ -37,6 +38,14 @@ final class Api4 implements Api4Interface {
 
   public function __construct() {
     self::$instance = $this;
+  }
+
+  public function countEntities(string $entityName, ConditionInterface $where, array $options): int {
+    return $this->execute($entityName, 'get', [
+      'checkPermissions' => $options['checkPermissions'] ?? TRUE,
+      'select' => ['row_count'],
+      'where' => [$where->toArray()],
+    ])->countMatched();
   }
 
   /**
@@ -75,6 +84,22 @@ final class Api4 implements Api4Interface {
    */
   public function execute(string $entityName, string $actionName, array $params = []): Result {
     return $this->createAction($entityName, $actionName, $params)->execute();
+  }
+
+  public function getEntities(
+    string $entityName,
+    ?ConditionInterface $where = NULL,
+    array $orderBy = [],
+    int $limit = 0,
+    int $offset = 0,
+    array $extraParams = []
+  ): Result {
+    return $this->execute($entityName, 'get', [
+      'where' => NULL === $where ? [] : [$where->toArray()],
+      'orderBy' => $orderBy,
+      'limit' => $limit,
+      'offset' => $offset,
+    ] + $extraParams);
   }
 
   public function updateEntity(string $entityName, int $id, array $values, array $options = []): Result {

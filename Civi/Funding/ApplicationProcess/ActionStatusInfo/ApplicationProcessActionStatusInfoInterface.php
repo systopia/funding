@@ -21,6 +21,13 @@ namespace Civi\Funding\ApplicationProcess\ActionStatusInfo;
 
 interface ApplicationProcessActionStatusInfoInterface {
 
+  /**
+   * @phpstan-return array<string>
+   *   All status that are final states and reject any changes excluding
+   *   approved status. Usually withdrawn and rejected.
+   */
+  public function getSealedUnapprovedStatusList(): array;
+
   public function isApplyAction(string $action): bool;
 
   public function isChangeRequiredStatus(string $status): bool;

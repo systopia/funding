@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase;
 
+use Civi\Api4\FundingCase;
 use Civi\Api4\Generic\DAODeleteAction;
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
@@ -32,6 +33,7 @@ use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
+use Civi\Funding\Util\SessionTestUtil;
 use Civi\Funding\Util\TestUtil;
 use Civi\RemoteTools\Api4\Api4;
 use Civi\RemoteTools\Api4\Api4Interface;
@@ -108,6 +110,47 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
       // Not given, but possible permissions are part of the flattened permissions
       TestUtil::filterFlattenedPermissions($fundingCase->toArray())
     );
+  }
+
+  public function testGetOpenOrCreate(): void {
+    $contact = ContactFixture::addIndividual();
+    $fundingProgram = FundingProgramFixture::addFixture();
+    $fundingCaseType = FundingCaseTypeFixture::addFixture();
+    $recipientContact = ContactFixture::addOrganization();
+
+    $this->eventDispatcherMock->expects(static::exactly(2))->method('dispatch')->with(
+      FundingCaseCreatedEvent::class,
+      static::isInstanceOf(FundingCaseCreatedEvent::class)
+    )->willReturnCallback(function (string $eventName, FundingCaseCreatedEvent $event): void {
+      FundingCaseContactRelationFixture::addContact($event->getContactId(),
+        $event->getFundingCase()->getId(),
+        ['test_permission'],
+      );
+    });
+
+    SessionTestUtil::mockInternalRequestSession($contact['id']);
+    $fundingCase = $this->fundingCaseManager->getOpenOrCreate($contact['id'], [
+      'funding_program' => $fundingProgram,
+      'funding_case_type' => $fundingCaseType,
+      'recipient_contact_id' => $recipientContact['id'],
+    ]);
+
+    static::assertSame('open', $fundingCase->getStatus());
+    static::assertEquals($fundingCase, $this->fundingCaseManager->getOpenOrCreate($contact['id'], [
+      'funding_program' => $fundingProgram,
+      'funding_case_type' => $fundingCaseType,
+      'recipient_contact_id' => $recipientContact['id'],
+    ]));
+
+    $fundingCase->setStatus('test');
+    FundingCase::update()->setValues($fundingCase->toArray())->execute();
+
+    $fundingCase2 = $this->fundingCaseManager->getOpenOrCreate($contact['id'], [
+      'funding_program' => $fundingProgram,
+      'funding_case_type' => $fundingCaseType,
+      'recipient_contact_id' => $recipientContact['id'],
+    ]);
+    static::assertNotSame($fundingCase->getId(), $fundingCase2->getId());
   }
 
   public function testDelete(): void {

@@ -36,11 +36,17 @@ final class CompositeCondition implements ConditionInterface {
   public static function fromFieldValuePairs(
     array $fieldValuePairs,
     string $compositeOperation = 'AND',
-    string $operator = '='
+    string $operator = '=',
+    string $arrayOperator = 'IN'
   ): self {
     $conditions = [];
     foreach ($fieldValuePairs as $key => $value) {
-      $conditions[] = Comparison::new($key, $operator, $value);
+      if (is_array($value)) {
+        $conditions[] = Comparison::new($key, $arrayOperator, $value);
+      }
+      else {
+        $conditions[] = Comparison::new($key, $operator, $value);
+      }
     }
 
     return new self($compositeOperation, ...$conditions);

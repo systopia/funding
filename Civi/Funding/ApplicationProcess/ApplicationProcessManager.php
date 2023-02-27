@@ -37,6 +37,8 @@ use Civi\Funding\Form\ValidatedApplicationDataInterface;
 use Civi\Funding\Util\DateTimeUtil;
 use Civi\Funding\Util\Uuid;
 use Civi\RemoteTools\Api4\Api4Interface;
+use Civi\RemoteTools\Api4\Query\Comparison;
+use Civi\RemoteTools\Api4\Query\CompositeCondition;
 use Webmozart\Assert\Assert;
 
 /**
@@ -72,6 +74,20 @@ class ApplicationProcessManager {
     $this->eventDispatcher = $eventDispatcher;
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function countBy(CompositeCondition $where): int {
+    return $this->api4->countEntities(
+      FundingApplicationProcess::_getEntityName(),
+      $where,
+      ['checkPermissions' => FALSE],
+    );
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function countByFundingCaseId(int $fundingCaseId): int {
     $action = FundingApplicationProcess::get(FALSE)
       ->addWhere('funding_case_id', '=', $fundingCaseId)
@@ -80,6 +96,9 @@ class ApplicationProcessManager {
     return $this->api4->executeAction($action)->countMatched();
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function create(
     int $contactId,
     FundingCaseEntity $fundingCase,
@@ -136,6 +155,9 @@ class ApplicationProcessManager {
     return $applicationProcess;
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function get(int $id): ?ApplicationProcessEntity {
     $action = FundingApplicationProcess::get(FALSE)
       ->addWhere('id', '=', $id);
@@ -149,6 +171,27 @@ class ApplicationProcessManager {
     return ApplicationProcessEntity::fromArray($values);
   }
 
+  /**
+   * @phpstan-return array<ApplicationProcessEntity>
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function getByFundingCaseId(int $fundingCaseId): array {
+    return ApplicationProcessEntity::allFromApiResult(
+      $this->api4->getEntities(
+        FundingApplicationProcess::_getEntityName(),
+        Comparison::new('funding_case_id', '=', $fundingCaseId),
+        [],
+        0,
+        0,
+        ['checkPermissions' => FALSE],
+      )
+    );
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function getFirstByFundingCaseId(int $fundingCaseId): ?ApplicationProcessEntity {
     $action = FundingApplicationProcess::get(FALSE)
       ->addWhere('funding_case_id', '=', $fundingCaseId)
@@ -165,6 +208,9 @@ class ApplicationProcessManager {
     return ApplicationProcessEntity::fromArray($values);
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function update(int $contactId, ApplicationProcessEntityBundle $applicationProcessBundle): void {
     $applicationProcess = $applicationProcessBundle->getApplicationProcess();
     $applicationProcess->setModificationDate(new \DateTime(date('YmdHis')));
@@ -191,6 +237,9 @@ class ApplicationProcessManager {
     $this->eventDispatcher->dispatch(ApplicationProcessUpdatedEvent::class, $event);
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function delete(ApplicationProcessEntityBundle $applicationProcessBundle): void {
     $preDeleteEvent = new ApplicationProcessPreDeleteEvent($applicationProcessBundle);
     $this->eventDispatcher->dispatch(ApplicationProcessPreDeleteEvent::class, $preDeleteEvent);

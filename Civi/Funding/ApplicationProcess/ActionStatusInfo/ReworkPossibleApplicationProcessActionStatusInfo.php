@@ -30,6 +30,13 @@ final class ReworkPossibleApplicationProcessActionStatusInfo implements Applicat
     $this->info = $metaInfo;
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getSealedUnapprovedStatusList(): array {
+    return $this->info->getSealedUnapprovedStatusList();
+  }
+
   public function isApplyAction(string $action): bool {
     return 'apply' === $action || $this->info->isApplyAction($action);
   }

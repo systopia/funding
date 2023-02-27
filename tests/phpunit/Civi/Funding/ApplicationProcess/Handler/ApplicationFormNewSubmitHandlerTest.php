@@ -103,7 +103,7 @@ final class ApplicationFormNewSubmitHandlerTest extends TestCase {
       ->willReturn('test_status');
 
     $fundingCase = FundingCaseFactory::createFundingCase();
-    $this->fundingCaseManagerMock->expects(static::once())->method('create')
+    $this->fundingCaseManagerMock->expects(static::once())->method('getOpenOrCreate')
       ->with($command->getContactId(), [
         'funding_program' => $command->getFundingProgram(),
         'funding_case_type' => $command->getFundingCaseType(),

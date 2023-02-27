@@ -19,8 +19,18 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase;
 
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+
 interface FundingCaseStatusDeterminerInterface {
 
-  public function isClosedByApplicationProcess(string $applicationProcessStatus): bool;
+  /**
+   * @return bool
+   *   TRUE when a funding case shall be closed after the status change of the
+   *   given application process.
+   */
+  public function isClosedByApplicationProcess(
+    ApplicationProcessEntityBundle $applicationProcessBundle,
+    string $previousStatus
+  ): bool;
 
 }

@@ -19,6 +19,12 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase;
 
+use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
+use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
+use Civi\RemoteTools\Api4\Query\Comparison;
+use Civi\RemoteTools\Api4\Query\CompositeCondition;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -26,44 +32,71 @@ use PHPUnit\Framework\TestCase;
  */
 final class FundingCaseStatusDeterminerTest extends TestCase {
 
+  /**
+   * @var \Civi\Funding\ApplicationProcess\ApplicationProcessManager|(\Civi\Funding\ApplicationProcess\ApplicationProcessManager&\PHPUnit\Framework\MockObject\MockObject)|\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $applicationProcessManagerMock;
+
+  /**
+   * @var \PHPUnit\Framework\MockObject\MockObject|\Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface|(\Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface&\PHPUnit\Framework\MockObject\MockObject)
+   */
+  private MockObject $infoMock;
+
   private FundingCaseStatusDeterminer $statusDeterminer;
 
   protected function setUp(): void {
     parent::setUp();
-    $this->statusDeterminer = new FundingCaseStatusDeterminer();
+    $this->applicationProcessManagerMock = $this->createMock(ApplicationProcessManager::class);
+    $this->infoMock = $this->createMock(ApplicationProcessActionStatusInfoInterface::class);
+    $this->statusDeterminer = new FundingCaseStatusDeterminer(
+      $this->applicationProcessManagerMock,
+      $this->infoMock,
+    );
   }
 
-  /**
-   * @dataProvider provideNonFinalApplicationProcessStatus
-   */
-  public function testIsClosedByApplicationProcessFalse(string $applicationProcessStatus): void {
-    static::assertFalse($this->statusDeterminer->isClosedByApplicationProcess($applicationProcessStatus));
+  public function testIsClosedByApplicationProcessTrue(): void {
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(['status' => 'sealed']);
+    $this->infoMock->method('getSealedUnapprovedStatusList')->willReturn(['sealed', 'also_sealed']);
+    $this->applicationProcessManagerMock->method('countBy')
+      ->with(CompositeCondition::new('AND',
+        Comparison::new('funding_case_id', '=', $applicationProcessBundle->getFundingCase()->getId()),
+        Comparison::new('status', 'NOT IN', ['sealed', 'also_sealed']),
+      ))->willReturn(0);
+
+    static::assertTrue($this->statusDeterminer->isClosedByApplicationProcess($applicationProcessBundle, 'previous'));
   }
 
-  /**
-   * @dataProvider provideFinalApplicationProcessStatus
-   */
-  public function testIsClosedByApplicationProcessTrue(string $applicationProcessStatus): void {
-    static::assertTrue($this->statusDeterminer->isClosedByApplicationProcess($applicationProcessStatus));
+  public function testIsClosedByApplicationProcessWithRemainingApplications(): void {
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(['status' => 'sealed']);
+    $this->infoMock->method('getSealedUnapprovedStatusList')->willReturn(['sealed', 'also_sealed']);
+    $this->applicationProcessManagerMock->method('countBy')
+      ->with(CompositeCondition::new('AND',
+        Comparison::new('funding_case_id', '=', $applicationProcessBundle->getFundingCase()->getId()),
+        Comparison::new('status', 'NOT IN', ['sealed', 'also_sealed']),
+      ))->willReturn(1);
+
+    static::assertFalse($this->statusDeterminer->isClosedByApplicationProcess($applicationProcessBundle, 'previous'));
   }
 
-  /**
-   * @phpstan-return iterable<array{string}>
-   */
-  public function provideFinalApplicationProcessStatus(): iterable {
-    yield ['withdrawn'];
-    yield ['rejected'];
+  public function testIsClosedByApplicationProcessUnsealedStatus(): void {
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+      ['status' => 'unsealed']
+    );
+    $this->infoMock->method('getSealedUnapprovedStatusList')->willReturn(['sealed', 'also_sealed']);
+    $this->applicationProcessManagerMock->expects(static::never())->method('countBy');
+
+    static::assertFalse($this->statusDeterminer->isClosedByApplicationProcess($applicationProcessBundle, 'previous'));
   }
 
-  /**
-   * @phpstan-return iterable<array{string}>
-   */
-  public function provideNonFinalApplicationProcessStatus(): iterable {
-    yield ['new'];
-    yield ['draft'];
-    yield ['applied'];
-    yield ['review'];
-    yield ['eligible'];
+  public function testIsClosedByApplicationProcessFundingCaseNotOpen(): void {
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+      ['status' => 'sealed'],
+      ['status' => 'funding_case_not_closed'],
+    );
+    $this->infoMock->method('getSealedUnapprovedStatusList')->willReturn(['sealed', 'also_sealed']);
+    $this->applicationProcessManagerMock->expects(static::never())->method('countBy');
+
+    static::assertFalse($this->statusDeterminer->isClosedByApplicationProcess($applicationProcessBundle, 'previous'));
   }
 
 }

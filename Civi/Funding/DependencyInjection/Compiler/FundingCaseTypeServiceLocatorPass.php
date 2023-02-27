@@ -49,6 +49,8 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHand
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\Decorator\ApplicationFormNewSubmitEventDecorator;
 use Civi\Funding\ApplicationProcess\Handler\Decorator\ApplicationFormSubmitEventDecorator;
+use Civi\Funding\FundingCase\FundingCaseStatusDeterminer;
+use Civi\Funding\FundingCase\FundingCaseStatusDeterminerInterface;
 use Civi\Funding\FundingCaseTypeServiceLocator;
 use Civi\Funding\FundingCaseTypeServiceLocatorContainer;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -72,7 +74,7 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
    *
    * @throws \Symfony\Component\DependencyInjection\Exception\RuntimeException
    */
-  // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
+  // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh, Generic.Metrics.CyclomaticComplexity.MaxExceeded
   public function process(ContainerBuilder $container): void {
   // phpcs:enable
     $applicationActionStatusInfoServices =
@@ -92,6 +94,9 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
       $this->getTaggedServices($container, 'funding.application.cost_items_factory');
     $applicationResourcesItemsFactoryServices =
       $this->getTaggedServices($container, 'funding.application.resources_items_factory');
+
+    $fundingCaseStatusDeterminerServices =
+      $this->getTaggedServices($container, 'funding.case.status_determiner');
 
     $applicationDeleteHandlerServices =
       $this->getTaggedServices($container, 'funding.application.delete_handler');
@@ -140,6 +145,15 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
       if (isset($serviceLocatorServices[$fundingCaseType])) {
         continue;
       }
+
+      $fundingCaseStatusDeterminerServices[$fundingCaseType] ??= $this->createService(
+        $container,
+        $fundingCaseType,
+        FundingCaseStatusDeterminer::class,
+        [
+          '$info' => $applicationActionStatusInfoServices[$fundingCaseType],
+        ]
+      );
 
       $applicationDeleteHandlerServices[$fundingCaseType] ??= $this->createService(
         $container,
@@ -284,6 +298,7 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         => $applicationResourcesItemsAddIdentifiersHandlerServices[$fundingCaseType],
         ApplicationResourcesItemsPersistHandlerInterface::class
         => $applicationResourcesItemsPersistHandlerServices[$fundingCaseType],
+        FundingCaseStatusDeterminerInterface::class => $fundingCaseStatusDeterminerServices[$fundingCaseType],
       ];
 
       $serviceLocatorServices[$fundingCaseType] = $this->createService(

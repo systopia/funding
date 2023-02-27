@@ -21,9 +21,13 @@ namespace Civi\Funding\EventSubscriber\FundingCase;
 
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ApplicationProcessFactory;
+use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\FundingCaseStatusDeterminerInterface;
+use Civi\Funding\FundingCaseTypeServiceLocator;
+use Civi\Funding\FundingCaseTypeServiceLocatorContainer;
+use Civi\Funding\Mock\Psr\PsrContainer;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -48,9 +52,14 @@ final class ApplicationProcessStatusSubscriberTest extends TestCase {
     parent::setUp();
     $this->fundingCaseManagerMock = $this->createMock(FundingCaseManager::class);
     $this->statusDeterminerMock = $this->createMock(FundingCaseStatusDeterminerInterface::class);
+    $serviceLocatorContainer = new FundingCaseTypeServiceLocatorContainer(new PsrContainer([
+      FundingCaseTypeFactory::DEFAULT_NAME => new FundingCaseTypeServiceLocator(new PsrContainer([
+        FundingCaseStatusDeterminerInterface::class => $this->statusDeterminerMock,
+      ])),
+    ]));
     $this->subscriber = new ApplicationProcessStatusSubscriber(
       $this->fundingCaseManagerMock,
-      $this->statusDeterminerMock,
+      $serviceLocatorContainer,
     );
   }
 
@@ -67,10 +76,10 @@ final class ApplicationProcessStatusSubscriberTest extends TestCase {
   }
 
   public function testOnUpdatedClosed(): void {
-    $event = $this->createEvent('open', 'final_status');
+    $event = $this->createEvent('open', 'sealed');
 
     $this->statusDeterminerMock->expects(static::once())->method('isClosedByApplicationProcess')
-      ->with('final_status')
+      ->with($event->getApplicationProcessBundle(), 'previous_status')
       ->willReturn(TRUE);
 
     $this->fundingCaseManagerMock->expects(static::once())->method('update')
@@ -81,7 +90,7 @@ final class ApplicationProcessStatusSubscriberTest extends TestCase {
   }
 
   public function testOnUpdatedAlreadyClosed(): void {
-    $event = $this->createEvent('closed', 'final_status');
+    $event = $this->createEvent('closed', 'sealed');
 
     $this->statusDeterminerMock->expects(static::never())->method('isClosedByApplicationProcess');
     $this->fundingCaseManagerMock->expects(static::never())->method('update');
@@ -94,7 +103,7 @@ final class ApplicationProcessStatusSubscriberTest extends TestCase {
     $event = $this->createEvent('open', 'some_status');
 
     $this->statusDeterminerMock->expects(static::once())->method('isClosedByApplicationProcess')
-      ->with('some_status')
+      ->with($event->getApplicationProcessBundle(), 'previous_status')
       ->willReturn(FALSE);
 
     $this->fundingCaseManagerMock->expects(static::never())->method('update');
@@ -109,7 +118,7 @@ final class ApplicationProcessStatusSubscriberTest extends TestCase {
   ): ApplicationProcessUpdatedEvent {
     return new ApplicationProcessUpdatedEvent(
       11,
-      ApplicationProcessFactory::createApplicationProcess(),
+      ApplicationProcessFactory::createApplicationProcess(['status' => 'previous_status']),
       ApplicationProcessBundleFactory::createApplicationProcessBundle(
         ['status' => $applicationProcessStatus],
         ['status' => $fundingCaseStatus]
