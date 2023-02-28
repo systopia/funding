@@ -22,7 +22,7 @@ namespace Civi\Funding\Event\FundingCase;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 final class FundingCaseCreatedEvent extends Event {
 

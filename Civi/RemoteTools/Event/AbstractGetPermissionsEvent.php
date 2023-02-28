@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\RemoteTools\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 abstract class AbstractGetPermissionsEvent extends Event {
 

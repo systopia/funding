@@ -22,7 +22,7 @@ namespace Civi\RemoteTools\Event;
 use Civi\API\Event\RequestTrait;
 use Civi\Api4\Generic\AbstractAction;
 use Civi\RemoteTools\Api4\Action\EventActionInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 use Webmozart\Assert\Assert;
 
 /**
