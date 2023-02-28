@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * @codeCoverageIgnore

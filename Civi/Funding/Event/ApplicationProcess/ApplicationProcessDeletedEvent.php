@@ -21,7 +21,7 @@ namespace Civi\Funding\Event\ApplicationProcess;
 
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\Traits\ApplicationProcessEntityBundleTrait;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 final class ApplicationProcessDeletedEvent extends Event {
 

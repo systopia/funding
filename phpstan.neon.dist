@@ -23,7 +23,6 @@ parameters:
 		- stubs/AbstractAction.stub
 		- stubs/CiviEventDispatcherInterface.stub
 		- vendor/symfony/event-dispatcher-contracts/Event.php
-		- vendor/symfony/event-dispatcher/Event.php
 	level: 9
 	checkTooWideReturnTypesInProtectedAndPublicMethods: true
 	checkUninitializedProperties: true
@@ -74,8 +73,6 @@ parameters:
 		- '#^Method Civi\\RemoteTools\\Api4\\Query\\[^\\]+::toArray\(\) return type has no value type specified in iterable type array.$#'
 		- '#^Property Civi\\Api4\\Generic\\Result::\$debug \(array\) on left side of \?\? is not nullable.$#'
 		- '#^Method Civi\\RemoteTools\\Api4\\Api4::createAction\(\) should return Civi\\Api4\\Generic\\AbstractAction but returns array|Civi\Api4\Generic\AbstractAction.$#'
-		- '#extends deprecated class Symfony\\Component\\EventDispatcher\\Event:#'
-		- '#^Call to deprecated method stopPropagation\(\) of class Symfony\\Component\\EventDispatcher\\Event:#'
 		- '#^Method Civi\\RemoteTools\\Api4\\Query\\Comparison::toArray\(\) never returns array\{string, array<int, array>\} so it can be removed from the return type.$#'
 		- '#^Method Civi\\RemoteTools\\Api4\\Query\\CompositeCondition::toArray\(\) never returns array\{0: string, .+\} so it can be removed from the return type.$#'
 		- '/^Parameter #1 \$iterator of function iterator_to_array expects Traversable, iterable(<.+>)? given.$/' # false positive

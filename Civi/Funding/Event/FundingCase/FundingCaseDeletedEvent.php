@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Event\FundingCase;
 
 use Civi\Funding\Entity\FundingCaseEntity;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 final class FundingCaseDeletedEvent extends Event {
 

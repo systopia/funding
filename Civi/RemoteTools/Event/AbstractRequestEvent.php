@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\RemoteTools\Event;
 
 use Civi\Api4\Generic\AbstractAction;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * @phpstan-consistent-constructor
