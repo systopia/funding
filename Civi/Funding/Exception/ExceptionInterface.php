@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2023 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,7 +17,7 @@
 
 declare(strict_types = 1);
 
-// Prevent error "Class \API_Exception not found".
-// (Seems to happen because of class aliases not detected in scanned files.)
-require_once __DIR__ . '/vendor/civicrm/civicrm-core/CRM/Core/Exception.php';
-require_once __DIR__ . '/vendor/civicrm/civicrm-core/api/Exception.php';
+namespace Civi\Funding\Exception;
+
+interface ExceptionInterface extends \Throwable {
+}

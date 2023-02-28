@@ -65,7 +65,7 @@ abstract class AbstractRemoteGetFieldsSubscriber implements EventSubscriberInter
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function onGetFields(GetFieldsEvent $event): void {
     /** @var iterable<FieldT> $result */

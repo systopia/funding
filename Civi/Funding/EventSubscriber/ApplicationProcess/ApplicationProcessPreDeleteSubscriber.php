@@ -39,7 +39,7 @@ final class ApplicationProcessPreDeleteSubscriber implements EventSubscriberInte
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function onPreDelete(ApplicationProcessPreDeleteEvent $event): void {
     $this->activityManager->deleteByApplicationProcess($event->getApplicationProcess()->getId());

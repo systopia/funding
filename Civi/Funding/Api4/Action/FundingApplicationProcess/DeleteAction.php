@@ -49,7 +49,7 @@ final class DeleteAction extends AbstractBatchAction {
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function _run(Result $result): void {
     $applicationProcessBundles = $this->getApplicationProcessBundles();
@@ -61,7 +61,7 @@ final class DeleteAction extends AbstractBatchAction {
 
   /**
    * @phpstan-return array<\Civi\Funding\Entity\ApplicationProcessEntityBundle>
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   private function getApplicationProcessBundles(): array {
     $action = FundingApplicationProcess::get($this->getCheckPermissions())

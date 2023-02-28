@@ -28,7 +28,7 @@ final class FundingProgramContactRelationFixture {
    *
    * @phpstan-return array<string, scalar|null>&array{id: int}
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public static function addContact(int $contactId, int $fundingProgramId, array $permissions): array {
     // Contact IDs are stored as string (see comment in ContactChecker), so we
@@ -42,7 +42,7 @@ final class FundingProgramContactRelationFixture {
    *
    * @phpstan-return array<string, scalar|null>&array{id: int}
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public static function addFixture(int $fundingProgramId, string $type, array $properties, array $permissions): array {
     return FundingProgramContactRelation::create(FALSE)

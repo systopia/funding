@@ -68,7 +68,7 @@ final class IdentityTrackerRemoteContactIdResolverTest extends TestCase {
         'identifier' => 'test',
         'identifier_type' => 'test_identifier_type',
       ])
-      ->willThrowException(new \CiviCRM_API3_Exception('Test'));
+      ->willThrowException(new \CRM_Core_Exception('Test'));
 
     $this->expectException(ResolveContactIdFailedException::class);
     $this->expectExceptionMessage('Test');

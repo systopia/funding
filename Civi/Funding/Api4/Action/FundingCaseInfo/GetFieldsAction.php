@@ -118,7 +118,7 @@ final class GetFieldsAction extends BasicGetFieldsAction {
    *
    * @return array<array<string, array<string, scalar>|scalar[]|scalar|null>>
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    *
    * @noinspection PhpMissingParentCallCommonInspection
    */
@@ -257,7 +257,7 @@ final class GetFieldsAction extends BasicGetFieldsAction {
    * @return bool|array
    * @phpstan-return bool|array<scalar|null, string>
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   private function getOptions(string $entityName, string $field) {
     if (FALSE === $this->loadOptions) {
@@ -270,7 +270,7 @@ final class GetFieldsAction extends BasicGetFieldsAction {
   /**
    * @phpstan-return iterable<array<string, mixed>&array{name: string}>
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   private function getPermissionFields(): iterable {
     $action = FundingCase::getFields($this->getCheckPermissions());

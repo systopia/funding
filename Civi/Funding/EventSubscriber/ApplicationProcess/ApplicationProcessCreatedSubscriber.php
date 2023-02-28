@@ -42,7 +42,7 @@ final class ApplicationProcessCreatedSubscriber implements EventSubscriberInterf
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function onCreated(ApplicationProcessCreatedEvent $event): void {
     $applicationProcess = $event->getApplicationProcess();

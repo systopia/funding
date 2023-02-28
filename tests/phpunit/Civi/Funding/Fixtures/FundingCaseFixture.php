@@ -39,7 +39,7 @@ final class FundingCaseFixture {
   /**
    * @phpstan-param array<string, scalar> $values
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public static function addFixture(int $fundingProgramId, int $fundingCaseTypeId,
     int $recipientContactId, int $creationContactId, array $values = []

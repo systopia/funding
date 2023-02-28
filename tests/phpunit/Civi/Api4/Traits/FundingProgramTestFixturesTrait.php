@@ -29,7 +29,7 @@ use Civi\Funding\Fixtures\FundingProgramFixture;
 trait FundingProgramTestFixturesTrait {
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   protected function addFixtures(): void {
     $this->doAddFixtures(
@@ -42,7 +42,7 @@ trait FundingProgramTestFixturesTrait {
    * @phpstan-param array<string> $permittedContactTypePermissions
    * @phpstan-param array<string> $permittedRelationshipTypePermissions
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   private function doAddFixtures(
     array $permittedContactTypePermissions,

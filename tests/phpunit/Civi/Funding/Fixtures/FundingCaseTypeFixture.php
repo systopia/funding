@@ -36,7 +36,7 @@ final class FundingCaseTypeFixture {
   /**
    * @param array<string, scalar> $values
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public static function addFixture(array $values = []): FundingCaseTypeEntity {
     /** @phpstan-var fundingCaseTypeT $fundingCaseTypeValues */

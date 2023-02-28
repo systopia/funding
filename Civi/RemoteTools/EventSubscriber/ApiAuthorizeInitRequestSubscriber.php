@@ -50,7 +50,7 @@ final class ApiAuthorizeInitRequestSubscriber implements EventSubscriberInterfac
   /**
    * @param \Civi\API\Event\AuthorizeEvent $event
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function onApiAuthorize(AuthorizeEvent $event): void {
     $request = $event->getApiRequest();
@@ -64,12 +64,12 @@ final class ApiAuthorizeInitRequestSubscriber implements EventSubscriberInterfac
   /**
    * @param \Civi\RemoteTools\Api4\Action\EventActionInterface $request
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   private function assertExtraParams(EventActionInterface $request): void {
     foreach ($request->getRequiredExtraParams() as $key) {
       if (!$request->hasExtraParam($key)) {
-        throw new \API_Exception(sprintf('Required extra param "%s" is missing', $key));
+        throw new \CRM_Core_Exception(sprintf('Required extra param "%s" is missing', $key));
       }
     }
   }

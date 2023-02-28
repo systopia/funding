@@ -54,7 +54,7 @@ final class ApplicationProcessReworkTaskSubscriber implements EventSubscriberInt
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function onFormSubmitSuccess(ApplicationFormSubmitSuccessEvent $event): void {
     $applicationProcess = $event->getApplicationProcess();
@@ -74,7 +74,7 @@ final class ApplicationProcessReworkTaskSubscriber implements EventSubscriberInt
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function onUpdated(ApplicationProcessUpdatedEvent $event): void {
     $applicationProcess = $event->getApplicationProcess();

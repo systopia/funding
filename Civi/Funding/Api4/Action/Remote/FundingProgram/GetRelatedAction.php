@@ -64,7 +64,7 @@ final class GetRelatedAction extends AbstractAction implements RemoteFundingActi
   /**
    * @inheritDoc
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function _run(Result $result): void {
     $event = $this->createEvent();
@@ -79,7 +79,7 @@ final class GetRelatedAction extends AbstractAction implements RemoteFundingActi
   /**
    * @return \Civi\Funding\Event\Remote\FundingDAOGetEvent
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   private function createEvent(): FundingDAOGetEvent {
     $event = FundingDAOGetEvent::fromApiRequest($this, $this->getExtraParams());

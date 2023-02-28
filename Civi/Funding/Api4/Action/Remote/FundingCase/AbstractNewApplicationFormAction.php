@@ -59,7 +59,7 @@ abstract class AbstractNewApplicationFormAction extends AbstractRemoteFundingAct
   /**
    * @phpstan-return array<string, mixed>
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   protected function createEventParams(int $fundingCaseTypeId, int $fundingProgramId): array {
     Assert::notNull($this->remoteContactId);

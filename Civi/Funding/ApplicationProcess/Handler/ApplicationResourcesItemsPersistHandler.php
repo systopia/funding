@@ -38,7 +38,7 @@ final class ApplicationResourcesItemsPersistHandler implements ApplicationResour
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function handle(ApplicationResourcesItemsPersistCommand $command): void {
     if (NULL === $command->getPreviousRequestData()

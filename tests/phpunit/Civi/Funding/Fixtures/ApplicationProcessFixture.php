@@ -49,7 +49,7 @@ final class ApplicationProcessFixture {
   /**
    * @phpstan-param array<string, mixed> $values
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public static function addFixture(int $fundingCaseId, array $values = []): ApplicationProcessEntity {
     $now = date('Y-m-d H:i:s');

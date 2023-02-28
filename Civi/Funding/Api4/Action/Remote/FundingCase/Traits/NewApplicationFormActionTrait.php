@@ -21,6 +21,7 @@ namespace Civi\Funding\Api4\Action\Remote\FundingCase\Traits;
 
 use Civi\API\Exception\UnauthorizedException;
 use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\Exception\FundingException;
 use Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker;
 use CRM_Funding_ExtensionUtil as E;
 
@@ -38,27 +39,27 @@ trait NewApplicationFormActionTrait {
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   protected function assertFundingCaseTypeAndProgramRelated(int $fundingCaseTypeId, int $fundingProgramId): void {
     if (!$this->_relationChecker->areFundingCaseTypeAndProgramRelated($fundingCaseTypeId, $fundingProgramId)) {
-      throw new \API_Exception(E::ts('Funding program and funding case type are not related'), 'invalid_arguments');
+      throw new FundingException(E::ts('Funding program and funding case type are not related'), 'invalid_arguments');
     }
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   protected function assertFundingProgramDates(FundingProgramEntity $fundingProgram): void {
     if (new \DateTime(date('Y-m-d')) < $fundingProgram->getRequestsStartDate()) {
-      throw new \API_Exception(E::ts(
+      throw new FundingException(E::ts(
         'Funding program does not allow applications before %1',
         [1 => $fundingProgram->getRequestsStartDate()->format(E::ts('Y-m-d'))]
       ), 'invalid_arguments');
     }
 
     if (new \DateTime(date('Y-m-d')) > $fundingProgram->getRequestsEndDate()) {
-      throw new \API_Exception(E::ts(
+      throw new FundingException(E::ts(
         'Funding program does not allow applications after %1',
         [1 => $fundingProgram->getRequestsEndDate()->format(E::ts('Y-m-d'))]
       ), 'invalid_arguments');

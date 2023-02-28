@@ -25,6 +25,7 @@ namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 
 use Civi\Api4\Generic\Result;
 use Civi\Funding\Event\Remote\ApplicationProcess\SubmitApplicationFormEvent;
+use Civi\Funding\Exception\FundingException;
 use Civi\RemoteTools\Form\JsonForms\JsonFormsElement;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
 use Civi\RemoteTools\Form\RemoteForm;
@@ -171,7 +172,7 @@ final class SubmitFormActionTest extends AbstractFormActionTest {
   }
 
   public function testNoAction(): void {
-    $this->expectException(\API_Exception::class);
+    $this->expectException(FundingException::class);
     $this->expectExceptionMessage('Form not handled');
 
     $result = new Result();

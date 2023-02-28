@@ -52,7 +52,7 @@ final class GetByFundingProgramIdAction extends AbstractAction {
   /**
    * @inheritDoc
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function _run(Result $result): void {
     if (!$this->fundingProgramExists()) {
@@ -90,7 +90,7 @@ final class GetByFundingProgramIdAction extends AbstractAction {
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   private function hasFundingProgramAccess(): bool {
     $action = FundingProgram::get($this->getCheckPermissions())

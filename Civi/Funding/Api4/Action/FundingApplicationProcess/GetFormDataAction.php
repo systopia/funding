@@ -54,14 +54,14 @@ final class GetFormDataAction extends AbstractAction {
   /**
    * @inheritDoc
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function _run(Result $result): void {
     $result['data'] = $this->formDataGetHandler->handle($this->createCommand());
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   protected function createCommand(): ApplicationFormDataGetCommand {
     Assert::notNull($this->id);

@@ -40,7 +40,7 @@ class ApplicationProcessTaskManager {
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function addExternalTask(
     int $contactId,
@@ -69,7 +69,7 @@ class ApplicationProcessTaskManager {
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function addOrAssignInternalTask(
     int $contactId,
@@ -108,7 +108,7 @@ class ApplicationProcessTaskManager {
    *
    * @param int|null $assigneeContactId NULL to unassign.
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function assignInternalTask(
     int $applicationProcessId,
@@ -122,7 +122,7 @@ class ApplicationProcessTaskManager {
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function cancelExternalTask(int $applicationProcessId, string $type): void {
     $task = $this->getOpenExternalTask($applicationProcessId, $type);
@@ -132,7 +132,7 @@ class ApplicationProcessTaskManager {
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function cancelInternalTask(int $applicationProcessId, string $type): void {
     $task = $this->getOpenInternalTask($applicationProcessId, $type);
@@ -142,7 +142,7 @@ class ApplicationProcessTaskManager {
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function completeExternalTask(int $applicationProcessId, string $type): void {
     $task = $this->getOpenExternalTask($applicationProcessId, $type);
@@ -152,7 +152,7 @@ class ApplicationProcessTaskManager {
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function completeInternalTask(int $applicationProcessId, string $type): void {
     $task = $this->getOpenInternalTask($applicationProcessId, $type);
@@ -164,7 +164,7 @@ class ApplicationProcessTaskManager {
   /**
    * @phpstan-return array<ActivityEntity>
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function getExternalTasks(int $applicationProcessId): array {
     return $this->activityManager->getByApplicationProcess(
@@ -174,7 +174,7 @@ class ApplicationProcessTaskManager {
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function getOpenExternalTask(int $applicationProcessId, string $type): ?ActivityEntity {
     $tasks = $this->activityManager->getOpenByApplicationProcess(
@@ -191,7 +191,7 @@ class ApplicationProcessTaskManager {
   /**
    * @phpstan-return array<ActivityEntity>
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function getOpenExternalTasks(int $applicationProcessId): array {
     return $this->activityManager->getOpenByApplicationProcess(
@@ -201,7 +201,7 @@ class ApplicationProcessTaskManager {
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function getOpenInternalTask(int $applicationProcessId, string $type): ?ActivityEntity {
     $tasks = $this->activityManager->getOpenByApplicationProcess(

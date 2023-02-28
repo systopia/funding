@@ -23,9 +23,11 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
+use Civi\API\Exception\UnauthorizedException;
 use Civi\Api4\Traits\FundingCaseTestFixturesTrait;
 use Civi\Funding\AbstractRemoteFundingHeadlessTestCase;
 use Civi\Funding\Api4\Action\Remote\FundingCase\Traits\NewApplicationFormActionTrait;
+use Civi\Funding\Exception\FundingException;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeProgramFixture;
@@ -68,7 +70,7 @@ final class RemoteFundingCaseTest extends AbstractRemoteFundingHeadlessTestCase 
         ->setFundingProgramId($fundingProgram->getId())
         ->execute();
     }
-    catch (\API_Exception $e) {
+    catch (FundingException $e) {
       static::assertSame('Funding program and funding case type are not related', $e->getMessage());
     }
     static::assertNotNull($e);
@@ -99,7 +101,7 @@ final class RemoteFundingCaseTest extends AbstractRemoteFundingHeadlessTestCase 
         ->setFundingProgramId($fundingProgram->getId())
         ->execute();
     }
-    catch (\API_Exception $e) {
+    catch (UnauthorizedException $e) {
       static::assertSame('Required permission is missing', $e->getMessage());
     }
     static::assertNotNull($e);
@@ -128,7 +130,7 @@ final class RemoteFundingCaseTest extends AbstractRemoteFundingHeadlessTestCase 
         ->setFundingProgramId($fundingProgram->getId())
         ->execute();
     }
-    catch (\API_Exception $e) {
+    catch (FundingException $e) {
       static::assertSame('Funding program does not allow applications before 2022-06-22', $e->getMessage());
     }
     static::assertNotNull($e);
@@ -143,7 +145,7 @@ final class RemoteFundingCaseTest extends AbstractRemoteFundingHeadlessTestCase 
         ->setFundingProgramId($fundingProgram->getId())
         ->execute();
     }
-    catch (\API_Exception $e) {
+    catch (FundingException $e) {
       static::assertSame('Funding program does not allow applications after 2022-12-31', $e->getMessage());
     }
     static::assertNotNull($e);

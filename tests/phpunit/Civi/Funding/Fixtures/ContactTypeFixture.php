@@ -33,7 +33,7 @@ final class ContactTypeFixture {
    * @return array
    * @phpstan-return array<string, scalar|null>&array{id: int}
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public static function addFixture(array $values = []): array {
     return ContactType::create(FALSE)
@@ -47,7 +47,7 @@ final class ContactTypeFixture {
   /**
    * @return array<string, scalar|null>&array{id: int}
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public static function addIndividualFixture(string $name = 'TestIndividualContactType',
     string $label = 'test individual contact type'
@@ -58,7 +58,7 @@ final class ContactTypeFixture {
   /**
    * @return array<string, scalar|null>&array{id: int}
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public static function addOrganizationFixture(string $name = 'TestOrganizationContactType',
     string $label = 'test organization contact type'

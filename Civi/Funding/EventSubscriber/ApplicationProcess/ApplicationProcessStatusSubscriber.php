@@ -50,7 +50,7 @@ final class ApplicationProcessStatusSubscriber implements EventSubscriberInterfa
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function onUpdated(ApplicationProcessUpdatedEvent $event): void {
     if ($event->getPreviousApplicationProcess()->getStatus() !== $event->getApplicationProcess()->getStatus()) {
@@ -77,7 +77,7 @@ final class ApplicationProcessStatusSubscriber implements EventSubscriberInterfa
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   private function getStatusLabel(string $status): string {
     return $this->optionsLoader->getOptionLabel(

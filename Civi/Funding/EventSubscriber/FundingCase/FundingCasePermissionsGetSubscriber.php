@@ -52,7 +52,7 @@ final class FundingCasePermissionsGetSubscriber implements EventSubscriberInterf
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function onPermissionsGet(GetPermissionsEvent $event): void {
     $action = FundingCaseContactRelation::get(FALSE)

@@ -62,7 +62,7 @@ final class ValidateFormAction extends AbstractAction {
   /**
    * @inheritDoc
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function _run(Result $result): void {
     $command = $this->createCommand();
@@ -75,7 +75,7 @@ final class ValidateFormAction extends AbstractAction {
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   protected function createCommand(): ApplicationFormValidateCommand {
     Assert::notNull($this->id);

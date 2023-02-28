@@ -25,6 +25,7 @@ namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 
 use Civi\Api4\Generic\Result;
 use Civi\Funding\Event\Remote\ApplicationProcess\GetApplicationFormEvent;
+use Civi\Funding\Exception\FundingException;
 use Civi\RemoteTools\Form\JsonForms\JsonFormsElement;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
 
@@ -90,7 +91,7 @@ final class GetFormActionTest extends AbstractFormActionTest {
   }
 
   public function testNoEventListener(): void {
-    static::expectExceptionObject(new \API_Exception(
+    static::expectExceptionObject(new FundingException(
       'Application process with ID "22" not found',
       'invalid_parameters'
     ));

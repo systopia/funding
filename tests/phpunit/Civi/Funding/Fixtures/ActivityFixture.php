@@ -30,7 +30,7 @@ final class ActivityFixture {
    *
    * @phpstan-return array{id: int}&array<string, scalar|null>
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public static function addApplicationProcessFixture(
     int $applicationProcessId,

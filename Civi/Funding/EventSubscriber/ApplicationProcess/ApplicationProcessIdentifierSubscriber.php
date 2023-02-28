@@ -48,7 +48,7 @@ class ApplicationProcessIdentifierSubscriber implements EventSubscriberInterface
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function onCreated(ApplicationProcessCreatedEvent $event): void {
     $identifier = $this->applicationIdentifierGenerator->generateIdentifier($event->getApplicationProcessBundle());
