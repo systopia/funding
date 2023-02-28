@@ -42,7 +42,7 @@ final class FundingCaseTypeGetByFundingProgramIdSubscriber implements EventSubsc
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function onGetByFundingProgramId(GetByFundingProgramIdEvent $event): void {
     $action = FundingCaseType::getByFundingProgramId($event->isCheckPermissions())

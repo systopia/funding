@@ -44,7 +44,7 @@ trait FundingCaseTestFixturesTrait {
   protected int $notPermittedContactId = -1;
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   protected function addRemoteFixtures(): void {
     $this->addFixtures(
@@ -54,7 +54,7 @@ trait FundingCaseTestFixturesTrait {
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   protected function addInternalFixtures(): void {
     $this->addFixtures(['review_baz'], ['review_e']);
@@ -75,7 +75,7 @@ trait FundingCaseTestFixturesTrait {
    * @phpstan-param array<string> $associatedContactPermissions
    * @phpstan-param array<string> $permittedRelationshipTypePermissions
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   private function addFixtures(array $associatedContactPermissions, array $permittedRelationshipTypePermissions): void {
     $fundingProgramId = FundingProgramFixture::addFixture(['title' => 'Foo'])->getId();

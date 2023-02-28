@@ -50,7 +50,7 @@ final class GetRelationAction extends AbstractAction {
 
   /**
    * @inheritDoc
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function _run(Result $result): void {
     $this->getAction

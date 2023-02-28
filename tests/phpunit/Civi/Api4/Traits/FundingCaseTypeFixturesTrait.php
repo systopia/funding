@@ -37,7 +37,7 @@ trait FundingCaseTypeFixturesTrait {
   protected int $notPermittedContactId;
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   protected function addFixtures(): void {
     $this->fundingProgramId = FundingProgramFixture::addFixture()->getId();

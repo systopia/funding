@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2023 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,21 +17,7 @@
 
 declare(strict_types = 1);
 
-namespace Civi\RemoteTools\Api4;
+namespace Civi\Funding\Exception;
 
-interface OptionsLoaderInterface {
-
-  /**
-   * @phpstan-return array<scalar|null, string>
-   *   Options in the form "value => label".
-   *
-   * @throws \CRM_Core_Exception
-   */
-  public function getOptions(string $entityName, string $field): array;
-
-  /**
-   * @throws \CRM_Core_Exception
-   */
-  public function getOptionLabel(string $entityName, string $field, string $value): ?string;
-
+class FundingException extends \CRM_Core_Exception implements ExceptionInterface {
 }

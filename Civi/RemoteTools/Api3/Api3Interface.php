@@ -30,7 +30,7 @@ interface Api3Interface {
    *
    * @return array<string, mixed>
    *
-   * @throws \CiviCRM_API3_Exception
+   * @throws \CRM_Core_Exception
    */
   public function execute(string $entityName, string $action, array $params = []): array;
 
@@ -43,7 +43,7 @@ interface Api3Interface {
    *
    * @return int
    *
-   * @throws \CiviCRM_API3_Exception
+   * @throws \CRM_Core_Exception
    */
   public function executeInt(string $entityName, string $action, array $params = []): int;
 

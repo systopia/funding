@@ -24,6 +24,7 @@ use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\Event\Remote\ApplicationProcess\ValidateApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingEvents;
+use Civi\Funding\Exception\FundingException;
 use Webmozart\Assert\Assert;
 
 /**
@@ -51,7 +52,7 @@ final class ValidateFormAction extends AbstractFormAction {
   /**
    * @inheritDoc
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function _run(Result $result): void {
     $event = $this->createEvent();
@@ -60,7 +61,7 @@ final class ValidateFormAction extends AbstractFormAction {
     $result->debug['event'] = $event->getDebugOutput();
 
     if (NULL === $event->isValid()) {
-      throw new \API_Exception('Form not validated');
+      throw new FundingException('Form not validated');
     }
 
     $result->rowCount = 1;
@@ -71,7 +72,7 @@ final class ValidateFormAction extends AbstractFormAction {
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   private function createEvent(): ValidateApplicationFormEvent {
     return ValidateApplicationFormEvent::fromApiRequest(

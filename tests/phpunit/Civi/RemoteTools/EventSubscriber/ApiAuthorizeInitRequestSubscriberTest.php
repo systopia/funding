@@ -103,7 +103,7 @@ final class ApiAuthorizeInitRequestSubscriberTest extends TestCase {
 
     $this->requestMock->expects(static::once())->method('hasExtraParam')->with('foo')->willReturn(FALSE);
 
-    static::expectException(\API_Exception::class);
+    static::expectException(\CRM_Core_Exception::class);
     static::expectExceptionMessage('Required extra param "foo" is missing');
     $this->subscriber->onApiAuthorize($this->eventMock);
   }

@@ -65,7 +65,7 @@ HELP);
   /**
    * @return iterable<string, int>
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   private function getRelationshipTypes(): iterable {
     $action = \Civi\Api4\RelationshipType::get(FALSE)

@@ -42,7 +42,7 @@ final class ApplicationProcessReviewStatusSubscriber implements EventSubscriberI
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function onUpdated(ApplicationProcessUpdatedEvent $event): void {
     $fromIsReviewContent = $event->getPreviousApplicationProcess()->getIsReviewContent();

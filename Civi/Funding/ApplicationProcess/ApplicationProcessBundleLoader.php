@@ -49,7 +49,7 @@ class ApplicationProcessBundleLoader {
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function get(int $applicationProcessId): ?ApplicationProcessEntityBundle {
     $applicationProcess = $this->applicationProcessManager->get($applicationProcessId);
@@ -58,7 +58,7 @@ class ApplicationProcessBundleLoader {
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function getFirstByFundingCaseId(int $fundingCaseId): ?ApplicationProcessEntityBundle {
     $applicationProcess = $this->applicationProcessManager->getFirstByFundingCaseId($fundingCaseId);
@@ -67,7 +67,7 @@ class ApplicationProcessBundleLoader {
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   private function createFromApplicationProcess(
     ApplicationProcessEntity $applicationProcess

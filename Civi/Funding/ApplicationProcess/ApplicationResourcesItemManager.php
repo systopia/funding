@@ -54,7 +54,7 @@ class ApplicationResourcesItemManager {
    * @phpstan-return array<string, ApplicationResourcesItemEntity>
    *   Application resources items indexed by "identifier".
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function getByApplicationProcessId(int $applicationProcessId): array {
     $action = FundingApplicationResourcesItem::get(FALSE)
@@ -81,7 +81,7 @@ class ApplicationResourcesItemManager {
   /**
    * @phpstan-param array<ApplicationResourcesItemEntity> $items
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function updateAll(int $applicationProcessId, array $items): void {
     $currentItems = $this->getByApplicationProcessId($applicationProcessId);

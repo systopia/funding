@@ -38,7 +38,7 @@ class ApplicationProcessActivityManager {
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function addActivity(
     int $contactId,
@@ -73,7 +73,7 @@ class ApplicationProcessActivityManager {
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function deleteByApplicationProcess(int $applicationProcessId): void {
     foreach ($this->getByApplicationProcess($applicationProcessId) as $activity) {
@@ -86,7 +86,7 @@ class ApplicationProcessActivityManager {
   /**
    * @phpstan-return array<ActivityEntity>
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function getByApplicationProcess(int $applicationProcessId, ?ConditionInterface $condition = NULL): array {
     $action = FundingApplicationProcessActivity::get(FALSE)
@@ -102,7 +102,7 @@ class ApplicationProcessActivityManager {
   /**
    * @phpstan-return array<ActivityEntity>
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function getOpenByApplicationProcess(int $applicationProcessId, ?ConditionInterface $condition = NULL): array {
     $action = FundingApplicationProcessActivity::get(FALSE)
@@ -119,7 +119,7 @@ class ApplicationProcessActivityManager {
   /**
    * @param int|null $contactId NULL to unassign.
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function assignActivity(ActivityEntity $activity, ?int $contactId): void {
     Assert::false($activity->isNew(), 'Activity is not persisted');
@@ -133,21 +133,21 @@ class ApplicationProcessActivityManager {
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function cancelActivity(ActivityEntity $activity): void {
     $this->changeActivityStatus($activity, 'Cancelled');
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function completeActivity(ActivityEntity $activity): void {
     $this->changeActivityStatus($activity, 'Completed');
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function changeActivityStatus(ActivityEntity $activity, string $status): void {
     $result = $this->api4->updateEntity(

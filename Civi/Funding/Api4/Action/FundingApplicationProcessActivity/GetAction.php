@@ -57,7 +57,7 @@ final class GetAction extends AbstractGetAction {
   /**
    * @inheritDoc
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function _run(Result $result): void {
     Assert::notNull($this->applicationProcessId);
@@ -121,7 +121,7 @@ final class GetAction extends AbstractGetAction {
   /**
    * @phpstan-param array{id: int} $activity
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   private function getSourceContactName(array $activity): string {
     $action = Contact::get(FALSE)

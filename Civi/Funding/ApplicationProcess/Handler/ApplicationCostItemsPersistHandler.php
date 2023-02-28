@@ -38,7 +38,7 @@ final class ApplicationCostItemsPersistHandler implements ApplicationCostItemsPe
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function handle(ApplicationCostItemsPersistCommand $command): void {
     if (NULL === $command->getPreviousRequestData()

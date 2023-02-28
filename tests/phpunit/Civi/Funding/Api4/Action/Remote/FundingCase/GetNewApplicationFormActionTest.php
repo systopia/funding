@@ -26,6 +26,7 @@ namespace Civi\Funding\Api4\Action\Remote\FundingCase;
 use Civi\API\Exception\UnauthorizedException;
 use Civi\Api4\Generic\Result;
 use Civi\Funding\Event\Remote\FundingCase\GetNewApplicationFormEvent;
+use Civi\Funding\Exception\FundingException;
 use Civi\RemoteTools\Form\JsonForms\JsonFormsElement;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
 
@@ -101,7 +102,7 @@ final class GetNewApplicationFormActionTest extends AbstractNewApplicationFormAc
     $this->relationCheckerMock->expects(static::once())->method('areFundingCaseTypeAndProgramRelated')
       ->with(22, 33)->willReturn(TRUE);
 
-    static::expectExceptionObject(new \API_Exception(
+    static::expectExceptionObject(new FundingException(
       'Invalid funding program ID or funding case type ID',
       'invalid_parameters'
     ));
@@ -114,7 +115,7 @@ final class GetNewApplicationFormActionTest extends AbstractNewApplicationFormAc
     $this->relationCheckerMock->expects(static::once())->method('areFundingCaseTypeAndProgramRelated')
       ->with(22, 33)->willReturn(FALSE);
 
-    static::expectExceptionObject(new \API_Exception(
+    static::expectExceptionObject(new FundingException(
       'Funding program and funding case type are not related',
       'invalid_parameters'
     ));
@@ -143,7 +144,7 @@ final class GetNewApplicationFormActionTest extends AbstractNewApplicationFormAc
 
     $this->fundingProgram->setRequestsStartDate(new \DateTime('1970-01-03'));
 
-    static::expectExceptionObject(new \API_Exception(
+    static::expectExceptionObject(new FundingException(
       'Funding program does not allow applications before 1970-01-03',
       'invalid_parameters'
     ));
@@ -158,7 +159,7 @@ final class GetNewApplicationFormActionTest extends AbstractNewApplicationFormAc
 
     $this->fundingProgram->setRequestsEndDate(new \DateTime('1970-01-01'));
 
-    static::expectExceptionObject(new \API_Exception(
+    static::expectExceptionObject(new FundingException(
       'Funding program does not allow applications after 1970-01-01',
       'invalid_parameters'
     ));

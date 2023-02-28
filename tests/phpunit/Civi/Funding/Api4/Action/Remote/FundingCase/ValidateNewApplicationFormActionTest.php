@@ -27,6 +27,7 @@ use Civi\API\Exception\UnauthorizedException;
 use Civi\Api4\Generic\Result;
 use Civi\Funding\Api4\Action\Remote\FundingCase\Traits\NewApplicationFormActionTrait;
 use Civi\Funding\Event\Remote\FundingCase\ValidateNewApplicationFormEvent;
+use Civi\Funding\Exception\FundingException;
 use Symfony\Bridge\PhpUnit\ClockMock;
 
 /**
@@ -151,7 +152,7 @@ final class ValidateNewApplicationFormActionTest extends AbstractNewApplicationF
     $this->relationCheckerMock->expects(static::once())->method('areFundingCaseTypeAndProgramRelated')
       ->with(22, 33)->willReturn(TRUE);
 
-    $this->expectException(\API_Exception::class);
+    $this->expectException(FundingException::class);
     $this->expectExceptionMessage('Form not validated');
     $result = new Result();
     $this->action->_run($result);
@@ -161,7 +162,7 @@ final class ValidateNewApplicationFormActionTest extends AbstractNewApplicationF
     $this->relationCheckerMock->expects(static::once())->method('areFundingCaseTypeAndProgramRelated')
       ->with(22, 33)->willReturn(FALSE);
 
-    static::expectExceptionObject(new \API_Exception(
+    static::expectExceptionObject(new FundingException(
       'Funding program and funding case type are not related',
       'invalid_parameters'
     ));
@@ -190,7 +191,7 @@ final class ValidateNewApplicationFormActionTest extends AbstractNewApplicationF
 
     $this->fundingProgram->setRequestsStartDate(new \DateTime('1970-01-03'));
 
-    static::expectExceptionObject(new \API_Exception(
+    static::expectExceptionObject(new FundingException(
       'Funding program does not allow applications before 1970-01-03',
       'invalid_parameters'
     ));
@@ -205,7 +206,7 @@ final class ValidateNewApplicationFormActionTest extends AbstractNewApplicationF
 
     $this->fundingProgram->setRequestsEndDate(new \DateTime('1970-01-01'));
 
-    static::expectExceptionObject(new \API_Exception(
+    static::expectExceptionObject(new FundingException(
       'Funding program does not allow applications after 1970-01-01',
       'invalid_parameters'
     ));

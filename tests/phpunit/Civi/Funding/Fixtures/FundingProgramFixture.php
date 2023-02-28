@@ -40,7 +40,7 @@ final class FundingProgramFixture {
   /**
    * @param array<string, scalar|null> $values
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public static function addFixture(array $values = []): FundingProgramEntity {
     /** @phpstan-var fundingProgramT $fundingProgramValues */

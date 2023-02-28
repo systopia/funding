@@ -25,6 +25,7 @@ namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 
 use Civi\Api4\Generic\Result;
 use Civi\Funding\Event\Remote\ApplicationProcess\ValidateApplicationFormEvent;
+use Civi\Funding\Exception\FundingException;
 
 /**
  * @covers \Civi\Funding\Api4\Action\Remote\ApplicationProcess\ValidateFormAction
@@ -126,7 +127,7 @@ final class ValidateFormActionTest extends AbstractFormActionTest {
   }
 
   public function testNoValidation(): void {
-    $this->expectException(\API_Exception::class);
+    $this->expectException(FundingException::class);
     $this->expectExceptionMessage('Form not validated');
     $result = new Result();
     $this->action->_run($result);

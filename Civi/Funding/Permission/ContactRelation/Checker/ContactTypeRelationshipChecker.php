@@ -42,7 +42,7 @@ final class ContactTypeRelationshipChecker implements ContactRelationCheckerInte
   /**
    * @inheritDoc
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function hasRelation(int $contactId, string $relationType, array $relationProperties): bool {
     $relationshipTypeId = $relationProperties['relationshipTypeId'];

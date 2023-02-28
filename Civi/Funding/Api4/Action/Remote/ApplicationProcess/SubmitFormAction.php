@@ -23,6 +23,7 @@ use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\Event\Remote\ApplicationProcess\SubmitApplicationFormEvent;
+use Civi\Funding\Exception\FundingException;
 use Webmozart\Assert\Assert;
 
 /**
@@ -47,7 +48,7 @@ final class SubmitFormAction extends AbstractFormAction {
   /**
    * @inheritDoc
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function _run(Result $result): void {
     $event = $this->createEvent();
@@ -56,7 +57,7 @@ final class SubmitFormAction extends AbstractFormAction {
     $result->debug['event'] = $event->getDebugOutput();
 
     if (NULL === $event->getAction()) {
-      throw new \API_Exception('Form not handled');
+      throw new FundingException('Form not handled');
     }
 
     $result->rowCount = 1;
@@ -84,7 +85,7 @@ final class SubmitFormAction extends AbstractFormAction {
         break;
 
       default:
-        throw new \API_Exception(sprintf('Unknown action "%s"', $event->getAction()));
+        throw new FundingException(sprintf('Unknown action "%s"', $event->getAction()));
     }
   }
 
@@ -93,7 +94,7 @@ final class SubmitFormAction extends AbstractFormAction {
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   private function createEvent(): SubmitApplicationFormEvent {
     return SubmitApplicationFormEvent::fromApiRequest(

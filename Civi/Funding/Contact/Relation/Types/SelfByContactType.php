@@ -66,7 +66,7 @@ HELP);
   /**
    * @phpstan-return iterable<string, int>
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   private function getContactTypes(): iterable {
     $action = ContactType::get(FALSE)

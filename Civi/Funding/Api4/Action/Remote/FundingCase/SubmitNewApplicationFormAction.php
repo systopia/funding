@@ -22,6 +22,7 @@ namespace Civi\Funding\Api4\Action\Remote\FundingCase;
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
+use Civi\Funding\Exception\FundingException;
 use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker;
 use Civi\Funding\FundingProgram\FundingProgramManager;
@@ -57,7 +58,7 @@ final class SubmitNewApplicationFormAction extends AbstractNewApplicationFormAct
   /**
    * @inheritDoc
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function _run(Result $result): void {
     $this->assertFundingCaseTypeAndProgramRelated($this->getFundingCaseTypeId(), $this->getFundingProgramId());
@@ -67,7 +68,7 @@ final class SubmitNewApplicationFormAction extends AbstractNewApplicationFormAct
     $result->debug['event'] = $event->getDebugOutput();
 
     if (NULL === $event->getAction()) {
-      throw new \API_Exception('Form not handled');
+      throw new FundingException('Form not handled');
     }
 
     $result->rowCount = 1;
@@ -103,12 +104,12 @@ final class SubmitNewApplicationFormAction extends AbstractNewApplicationFormAct
         break;
 
       default:
-        throw new \API_Exception(sprintf('Unknown action "%s"', $event->getAction()));
+        throw new FundingException(sprintf('Unknown action "%s"', $event->getAction()));
     }
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   private function createEvent(): SubmitNewApplicationFormEvent {
     return SubmitNewApplicationFormEvent::fromApiRequest(

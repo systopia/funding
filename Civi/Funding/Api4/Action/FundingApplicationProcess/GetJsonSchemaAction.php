@@ -54,14 +54,14 @@ final class GetJsonSchemaAction extends AbstractAction {
   /**
    * @inheritDoc
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function _run(Result $result): void {
     $result['jsonSchema'] = $this->jsonSchemaGetHandler->handle($this->createCommand());
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   protected function createCommand(): ApplicationJsonSchemaGetCommand {
     Assert::notNull($this->id);

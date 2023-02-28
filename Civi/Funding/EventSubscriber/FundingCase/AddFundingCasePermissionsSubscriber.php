@@ -56,7 +56,7 @@ final class AddFundingCasePermissionsSubscriber implements EventSubscriberInterf
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function onCreated(FundingCaseCreatedEvent $event): void {
     $action = FundingNewCasePermissions::get(FALSE)

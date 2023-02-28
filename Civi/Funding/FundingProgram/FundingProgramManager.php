@@ -46,7 +46,7 @@ class FundingProgramManager {
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function get(int $id): ?FundingProgramEntity {
     $action = FundingProgram::get(FALSE)

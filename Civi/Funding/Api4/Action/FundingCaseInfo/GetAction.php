@@ -48,7 +48,7 @@ final class GetAction extends AbstractGetAction {
   /**
    * @inheritDoc
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function _run(Result $result): void {
     $records = [];
@@ -107,7 +107,7 @@ final class GetAction extends AbstractGetAction {
   /**
    * @phpstan-return iterable<ApplicationProcessEntityBundle>
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   private function getApplicationProcessBundles(): iterable {
     $applicationProcessId = WhereUtil::getInt($this->where, 'application_process_id');
@@ -135,7 +135,7 @@ final class GetAction extends AbstractGetAction {
   /**
    * @return array<\Civi\Funding\Entity\FundingCaseEntity>
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   private function getFundingCases(): array {
     $fundingCaseId = $this->getFundingCaseIdFromWhere();

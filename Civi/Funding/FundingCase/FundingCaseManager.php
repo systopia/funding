@@ -58,7 +58,7 @@ class FundingCaseManager {
    *   recipient_contact_id: int,
    * } $values
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function create(int $contactId, array $values): FundingCaseEntity {
     $now = date('Y-m-d H:i:s');
@@ -116,7 +116,7 @@ class FundingCaseManager {
   /**
    * @phpstan-return array<FundingCaseEntity>
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function getAll(): array {
     $action = FundingCase::get(FALSE);
@@ -146,7 +146,7 @@ class FundingCaseManager {
    *   TRUE if the current contact (either remote or local) has access to the
    *   FundingCase with the given ID.
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function hasAccess(int $id): bool {
     $action = FundingCase::get(FALSE)

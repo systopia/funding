@@ -58,7 +58,7 @@ final class DefaultPossibleRecipientsLoader implements PossibleRecipientsLoaderI
   /**
    * @return array<int, array<string, mixed>>
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   private function getRelatedContacts(int $contactId, FundingProgramEntity $fundingProgram): array {
     $action = FundingRecipientContactRelation::get(FALSE)

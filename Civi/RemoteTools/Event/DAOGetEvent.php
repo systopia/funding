@@ -57,13 +57,13 @@ class DAOGetEvent extends GetEvent {
    *
    * @return $this
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    *
    * @noinspection PhpMissingParentCallCommonInspection
    */
   public function addWhere(string $fieldName, string $op, $value = NULL, bool $isExpression = FALSE): GetEvent {
     if (!in_array($op, CoreUtil::getOperators(), TRUE)) {
-      throw new \API_Exception('Unsupported operator');
+      throw new \CRM_Core_Exception('Unsupported operator');
     }
     $this->where[] = [$fieldName, $op, $value, $isExpression];
 
@@ -95,11 +95,11 @@ class DAOGetEvent extends GetEvent {
    *
    * @return $this
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function addHaving(string $expr, string $op, $value = NULL): self {
     if (!in_array($op, CoreUtil::getOperators(), TRUE)) {
-      throw new \API_Exception('Unsupported operator');
+      throw new \CRM_Core_Exception('Unsupported operator');
     }
     $this->having[] = [$expr, $op, $value];
 

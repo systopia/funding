@@ -26,7 +26,7 @@ final class FundingCaseTypeProgramFixture {
   /**
    * @phpstan-return array<string, scalar|null>&array{id: int}
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public static function addFixture(int $fundingCaseTypeId, int $fundingProgramId): array {
     return FundingCaseTypeProgram::create(FALSE)

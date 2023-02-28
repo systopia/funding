@@ -22,6 +22,7 @@ namespace Civi\Funding\Api4\Action\Remote\FundingCase;
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Event\Remote\FundingCase\ValidateNewApplicationFormEvent;
+use Civi\Funding\Exception\FundingException;
 use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker;
 use Civi\Funding\FundingProgram\FundingProgramManager;
@@ -57,7 +58,7 @@ final class ValidateNewApplicationFormAction extends AbstractNewApplicationFormA
   /**
    * @inheritDoc
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function _run(Result $result): void {
     $this->assertFundingCaseTypeAndProgramRelated($this->getFundingCaseTypeId(), $this->getFundingProgramId());
@@ -67,7 +68,7 @@ final class ValidateNewApplicationFormAction extends AbstractNewApplicationFormA
     $result->debug['event'] = $event->getDebugOutput();
 
     if (NULL === $event->isValid()) {
-      throw new \API_Exception('Form not validated');
+      throw new FundingException('Form not validated');
     }
 
     $result->rowCount = 1;
@@ -78,7 +79,7 @@ final class ValidateNewApplicationFormAction extends AbstractNewApplicationFormA
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   private function createEvent(): ValidateNewApplicationFormEvent {
     return ValidateNewApplicationFormEvent::fromApiRequest(

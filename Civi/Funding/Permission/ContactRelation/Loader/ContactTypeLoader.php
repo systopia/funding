@@ -41,7 +41,7 @@ final class ContactTypeLoader implements ContactRelationLoaderInterface {
   /**
    * @inheritDoc
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function getContacts(string $relationType, array $relationProperties): array {
     $contactTypeId = $relationProperties['contactTypeId'];

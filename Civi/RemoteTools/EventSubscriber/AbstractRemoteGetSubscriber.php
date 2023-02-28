@@ -62,7 +62,7 @@ abstract class AbstractRemoteGetSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function onGet(GetEvent $event): void {
     $result = $this->api4->executeAction($this->createAction($event));

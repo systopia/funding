@@ -23,6 +23,7 @@ use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Api4\Action\Remote\FundingCase\Traits\NewApplicationFormActionTrait;
 use Civi\Funding\Event\Remote\FundingCase\GetNewApplicationFormEvent;
+use Civi\Funding\Exception\FundingException;
 use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker;
 use Civi\Funding\FundingProgram\FundingProgramManager;
@@ -67,7 +68,7 @@ final class GetNewApplicationFormAction extends AbstractNewApplicationFormAction
   /**
    * @inheritDoc
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function _run(Result $result): void {
     $this->assertFundingCaseTypeAndProgramRelated($this->getFundingCaseTypeId(), $this->getFundingProgramId());
@@ -76,7 +77,7 @@ final class GetNewApplicationFormAction extends AbstractNewApplicationFormAction
 
     $result->debug['event'] = $event->getDebugOutput();
     if (NULL === $event->getJsonSchema() || NULL === $event->getUiSchema()) {
-      throw new \API_Exception(E::ts('Invalid funding program ID or funding case type ID'), 'invalid_arguments');
+      throw new FundingException(E::ts('Invalid funding program ID or funding case type ID'), 'invalid_arguments');
     }
 
     Assert::keyExists($event->getData(), 'fundingCaseTypeId');
@@ -93,7 +94,7 @@ final class GetNewApplicationFormAction extends AbstractNewApplicationFormAction
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   private function createEvent(): GetNewApplicationFormEvent {
     return GetNewApplicationFormEvent::fromApiRequest(

@@ -23,6 +23,7 @@ use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\Event\Remote\ApplicationProcess\GetApplicationFormEvent;
+use Civi\Funding\Exception\FundingException;
 use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
 
@@ -47,7 +48,7 @@ final class GetFormAction extends AbstractFormAction {
   /**
    * @inheritDoc
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function _run(Result $result): void {
     $event = $this->createEvent();
@@ -55,7 +56,7 @@ final class GetFormAction extends AbstractFormAction {
 
     $result->debug['event'] = $event->getDebugOutput();
     if (NULL === $event->getJsonSchema() || NULL === $event->getUiSchema()) {
-      throw new \API_Exception(
+      throw new FundingException(
         E::ts('Application process with ID "%1" not found', [1 => $this->applicationProcessId]),
         'invalid_arguments'
       );
@@ -73,7 +74,7 @@ final class GetFormAction extends AbstractFormAction {
   }
 
   /**
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   private function createEvent(): GetApplicationFormEvent {
     Assert::notNull($this->applicationProcessId);

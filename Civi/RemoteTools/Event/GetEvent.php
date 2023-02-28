@@ -76,11 +76,11 @@ class GetEvent extends AbstractRequestEvent {
    *
    * @return $this
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public function addWhere(string $fieldName, string $op, $value = NULL): self {
     if (!in_array($op, CoreUtil::getOperators(), TRUE)) {
-      throw new \API_Exception('Unsupported operator');
+      throw new \CRM_Core_Exception('Unsupported operator');
     }
 
     $this->where[] = [$fieldName, $op, $value];

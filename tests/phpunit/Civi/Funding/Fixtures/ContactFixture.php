@@ -29,7 +29,7 @@ final class ContactFixture {
    * @return array
    * @phpstan-return array<string, scalar|null>&array{id: int}
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public static function addIndividual(array $values = []): array {
     return Contact::create(FALSE)
@@ -46,7 +46,7 @@ final class ContactFixture {
    * @return array
    * @phpstan-return array<string, scalar|null>&array{id: int}
    *
-   * @throws \API_Exception
+   * @throws \CRM_Core_Exception
    */
   public static function addOrganization(array $values = []): array {
     return Contact::create(FALSE)
