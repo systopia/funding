@@ -50,7 +50,7 @@ final class DefaultApplicationProcessActionsDeterminer extends ApplicationProces
       'review_calculative' => ['review', 'add-comment'],
       'review_content' => ['review', 'add-comment'],
     ],
-    'approved' => [
+    'eligible' => [
       'review_calculative' => ['update', 'add-comment'],
       'review_content' => ['update', 'add-comment'],
     ],

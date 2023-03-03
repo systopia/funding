@@ -34,7 +34,7 @@ final class FundingPseudoConstants {
       'applied' => E::ts('Applied'),
       'review' => E::ts('In review'),
       'rejected' => E::ts('Rejected'),
-      'approved' => E::ts('Approved'),
+      'eligible' => E::ts('Eligible'),
       'final' => E::ts('Final'),
       'rework-requested' => E::ts('Rework requested'),
       'rework' => E::ts('In rework'),

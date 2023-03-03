@@ -44,7 +44,7 @@ final class DefaultApplicationProcessStatusDeterminer extends AbstractApplicatio
       'approve-content' => 'review',
       'reject-content' => 'review',
       'request-change' => 'draft',
-      'approve' => 'approved',
+      'approve' => 'eligible',
       'reject' => 'rejected',
       'update' => 'review',
       'add-comment' => 'review',
@@ -56,9 +56,9 @@ final class DefaultApplicationProcessStatusDeterminer extends AbstractApplicatio
       'review' => 'review',
       'add-comment' => 'draft',
     ],
-    'approved' => [
-      'update' => 'approved',
-      'add-comment' => 'approved',
+    'eligible' => [
+      'update' => 'eligible',
+      'add-comment' => 'eligible',
     ],
   ];
 

@@ -30,7 +30,7 @@ final class ReworkPossibleApplicationProcessActionsDeterminerTest extends TestCa
 
   // phpcs:disable Generic.Files.LineLength.TooLong
   private const STATUS_PERMISSION_ACTIONS_MAP = [
-    'approved' => [
+    'eligible' => [
       'application_modify' => [],
       'application_request_rework' => ['request-rework'],
       'application_apply' => [],

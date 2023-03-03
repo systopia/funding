@@ -24,14 +24,14 @@ use Civi\Funding\Entity\FullApplicationProcessStatus;
 final class ReworkPossibleApplicationProcessStatusDeterminer implements ApplicationProcessStatusDeterminerInterface {
 
   private const STATUS_ACTION_STATUS_MAP = [
-    'approved' => [
+    'eligible' => [
       'request-rework' => 'rework-requested',
-      'update' => 'approved',
+      'update' => 'eligible',
     ],
     'rework-requested' => [
-      'withdraw-rework-request' => 'approved',
+      'withdraw-rework-request' => 'eligible',
       'approve-rework-request' => 'rework',
-      'reject-rework-request' => 'approved',
+      'reject-rework-request' => 'eligible',
       'add-comment' => 'rework-requested',
     ],
     'rework' => [
@@ -53,8 +53,8 @@ final class ReworkPossibleApplicationProcessStatusDeterminer implements Applicat
       'approve-content' => 'rework-review',
       'reject-content' => 'rework-review',
       'request-change' => 'rework',
-      'approve-change' => 'approved',
-      'reject-change' => 'approved',
+      'approve-change' => 'eligible',
+      'reject-change' => 'eligible',
       'update' => 'rework-review',
       'add-comment' => 'rework-review',
     ],

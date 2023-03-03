@@ -472,8 +472,8 @@ msgid "Rejected"
 msgstr "Abgelehent"
 
 #: Civi/Funding/FundingPseudoConstants.php
-msgid "Approved"
-msgstr "Bewilligt"
+msgid "Eligible"
+msgstr "Förderfähig"
 
 #: Civi/Funding/FundingPseudoConstants.php
 msgid "Final"
@@ -693,7 +693,7 @@ msgstr "Änderung verlangen"
 
 #: ang/crmFunding/application/applicationEditor.template.html
 msgid "Approve application"
-msgstr "Antrag bewilligen"
+msgstr "Antrag annehmen"
 
 #: ang/crmFunding/application/applicationEditor.template.html
 msgid "Reject application"
@@ -709,7 +709,7 @@ msgstr "Antrag zur Überarbeitung"
 
 #: ang/crmFunding/application/applicationEditor.template.html
 msgid "Approve change"
-msgstr "Änderung bewilligen"
+msgstr "Änderung annehmen"
 
 #: ang/crmFunding/application/applicationEditor.template.html
 msgid "Reject change"
@@ -768,7 +768,7 @@ msgstr "Beantragter Betrag"
 
 #: ang/crmFunding/application/applicationEditor.template.html
 msgid "Amount granted"
-msgstr "Bewilligter Betrag"
+msgstr "Genehmigter Betrag"
 
 #: ang/crmFunding/application/applicationReviewer.directive.js
 msgid "not assigned"
