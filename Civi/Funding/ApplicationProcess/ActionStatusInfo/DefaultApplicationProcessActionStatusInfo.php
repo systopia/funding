@@ -24,7 +24,7 @@ namespace Civi\Funding\ApplicationProcess\ActionStatusInfo;
  */
 final class DefaultApplicationProcessActionStatusInfo implements ApplicationProcessActionStatusInfoInterface {
 
-  public function getSealedUnapprovedStatusList(): array {
+  public function getFinalIneligibleStatusList(): array {
     return [
       'rejected',
       'withdrawn',

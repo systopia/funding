@@ -33,8 +33,8 @@ final class ReworkPossibleApplicationProcessActionStatusInfo implements Applicat
   /**
    * @inheritDoc
    */
-  public function getSealedUnapprovedStatusList(): array {
-    return $this->info->getSealedUnapprovedStatusList();
+  public function getFinalIneligibleStatusList(): array {
+    return $this->info->getFinalIneligibleStatusList();
   }
 
   public function isApplyAction(string $action): bool {

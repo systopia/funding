@@ -43,16 +43,16 @@ final class FundingCaseStatusDeterminer implements FundingCaseStatusDeterminerIn
     ApplicationProcessEntityBundle $applicationProcessBundle,
     string $previousStatus
   ): bool {
-    $sealedUnapprovedStatusList = $this->info->getSealedUnapprovedStatusList();
+    $ineligibleStatusList = $this->info->getFinalIneligibleStatusList();
 
     return 'open' === $applicationProcessBundle->getFundingCase()->getStatus() && in_array(
       $applicationProcessBundle->getApplicationProcess()->getStatus(),
-      $sealedUnapprovedStatusList,
+      $ineligibleStatusList,
       TRUE
     ) && 0 === $this->applicationProcessManager->countBy(
         CompositeCondition::new('AND',
           Comparison::new('funding_case_id', '=', $applicationProcessBundle->getFundingCase()->getId()),
-          Comparison::new('status', 'NOT IN', $sealedUnapprovedStatusList),
+          Comparison::new('status', 'NOT IN', $ineligibleStatusList),
         ),
       );
   }
