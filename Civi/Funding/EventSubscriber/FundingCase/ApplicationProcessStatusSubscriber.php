@@ -19,24 +19,18 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\FundingCase;
 
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\FundingCaseStatusDeterminerInterface;
+use Civi\Funding\FundingCaseTypeServiceLocatorContainer;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ApplicationProcessStatusSubscriber implements EventSubscriberInterface {
 
   private FundingCaseManager $fundingCaseManager;
 
-  private FundingCaseStatusDeterminerInterface $statusDeterminer;
-
-  public function __construct(
-    FundingCaseManager $fundingCaseManager,
-    FundingCaseStatusDeterminerInterface $statusDeterminer
-  ) {
-    $this->fundingCaseManager = $fundingCaseManager;
-    $this->statusDeterminer = $statusDeterminer;
-  }
+  private FundingCaseTypeServiceLocatorContainer $serviceLocatorContainer;
 
   /**
    * @inheritDoc
@@ -45,20 +39,40 @@ class ApplicationProcessStatusSubscriber implements EventSubscriberInterface {
     return [ApplicationProcessUpdatedEvent::class => 'onUpdated'];
   }
 
+  public function __construct(
+    FundingCaseManager $fundingCaseManager,
+    FundingCaseTypeServiceLocatorContainer $serviceLocatorContainer
+  ) {
+    $this->fundingCaseManager = $fundingCaseManager;
+    $this->serviceLocatorContainer = $serviceLocatorContainer;
+  }
+
   public function onUpdated(ApplicationProcessUpdatedEvent $event): void {
     $fundingCase = $event->getFundingCase();
     if ('closed' === $fundingCase->getStatus()) {
       return;
     }
 
-    if ($event->getPreviousApplicationProcess()->getStatus() === $event->getApplicationProcess()->getStatus()) {
+    $previousStatus = $event->getPreviousApplicationProcess()->getStatus();
+    if ($previousStatus === $event->getApplicationProcess()->getStatus()) {
       return;
     }
 
-    if ($this->statusDeterminer->isClosedByApplicationProcess($event->getApplicationProcess()->getStatus())) {
+    $applicationProcessBundle = $event->getApplicationProcessBundle();
+    if ($this->getStatusDeterminer($applicationProcessBundle)
+      ->isClosedByApplicationProcess($applicationProcessBundle, $previousStatus)
+    ) {
       $fundingCase->setStatus('closed');
       $this->fundingCaseManager->update($fundingCase);
     }
+  }
+
+  private function getStatusDeterminer(
+    ApplicationProcessEntityBundle $applicationProcessBundle
+  ): FundingCaseStatusDeterminerInterface {
+    return $this->serviceLocatorContainer
+      ->get($applicationProcessBundle->getFundingCaseType()->getName())
+      ->getFundingCaseStatusDeterminer();
   }
 
 }

@@ -19,15 +19,42 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase;
 
+use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\RemoteTools\Api4\Query\Comparison;
+use Civi\RemoteTools\Api4\Query\CompositeCondition;
+
 final class FundingCaseStatusDeterminer implements FundingCaseStatusDeterminerInterface {
 
-  private const APPLICATION_PROCESS_FINAL_STATES = [
-    'rejected',
-    'withdrawn',
-  ];
+  private ApplicationProcessManager $applicationProcessManager;
 
-  public function isClosedByApplicationProcess(string $applicationProcessStatus): bool {
-    return in_array($applicationProcessStatus, self::APPLICATION_PROCESS_FINAL_STATES, TRUE);
+  private ApplicationProcessActionStatusInfoInterface $info;
+
+  public function __construct(
+    ApplicationProcessManager $applicationProcessManager,
+    ApplicationProcessActionStatusInfoInterface $info
+  ) {
+    $this->applicationProcessManager = $applicationProcessManager;
+    $this->info = $info;
+  }
+
+  public function isClosedByApplicationProcess(
+    ApplicationProcessEntityBundle $applicationProcessBundle,
+    string $previousStatus
+  ): bool {
+    $ineligibleStatusList = $this->info->getFinalIneligibleStatusList();
+
+    return 'open' === $applicationProcessBundle->getFundingCase()->getStatus() && in_array(
+      $applicationProcessBundle->getApplicationProcess()->getStatus(),
+      $ineligibleStatusList,
+      TRUE
+    ) && 0 === $this->applicationProcessManager->countBy(
+        CompositeCondition::new('AND',
+          Comparison::new('funding_case_id', '=', $applicationProcessBundle->getFundingCase()->getId()),
+          Comparison::new('status', 'NOT IN', $ineligibleStatusList),
+        ),
+      );
   }
 
 }

@@ -36,6 +36,7 @@ use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
+use Civi\Funding\Util\SessionTestUtil;
 use Civi\Funding\Util\TestUtil;
 use Civi\RemoteTools\Api4\Api4;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -190,6 +191,41 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
     static::assertNotNull($this->applicationProcessManager->get($applicationProcess->getId()));
 
     static::assertNull($this->applicationProcessManager->get($applicationProcess->getId() + 1));
+  }
+
+  public function testGetByFundingCaseId(): void {
+    $contact = ContactFixture::addIndividual();
+    SessionTestUtil::mockInternalRequestSession($contact['id']);
+    $fundingCase1 = $this->createFundingCase();
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase1->getId(), ['test_permission']);
+    $fundingCase2 = $this->createFundingCase(
+      $fundingCase1->getFundingProgramId(),
+      $fundingCase1->getFundingCaseTypeId(),
+    );
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase2->getId(), ['test_permission']);
+
+    $applicationProcess1 = ApplicationProcessFixture::addFixture(
+      $fundingCase1->getId(),
+      ['identifier' => 'test1', 'title' => 'Application1'],
+    );
+    // @phpstan-ignore-next-line
+    $applicationProcess1->setValues(TestUtil::filterCiviExtraFields($applicationProcess1->toArray()));
+    $applicationProcess2 = ApplicationProcessFixture::addFixture(
+      $fundingCase2->getId(),
+      ['identifier' => 'test2', 'title' => 'Application2'],
+    );
+    // @phpstan-ignore-next-line
+    $applicationProcess2->setValues(TestUtil::filterCiviExtraFields($applicationProcess2->toArray()));
+
+    static::assertEquals(
+      [$applicationProcess1],
+      $this->applicationProcessManager->getByFundingCaseId($fundingCase1->getId())
+    );
+    static::assertEquals(
+      [$applicationProcess2],
+      $this->applicationProcessManager->getByFundingCaseId($fundingCase2->getId())
+    );
+    static::assertSame([], $this->applicationProcessManager->getByFundingCaseId($fundingCase2->getId() + 1));
   }
 
   public function testGetFirstByFundingCaseId(): void {

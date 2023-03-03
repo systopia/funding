@@ -24,6 +24,13 @@ namespace Civi\Funding\ApplicationProcess\ActionStatusInfo;
  */
 final class DefaultApplicationProcessActionStatusInfo implements ApplicationProcessActionStatusInfoInterface {
 
+  public function getFinalIneligibleStatusList(): array {
+    return [
+      'rejected',
+      'withdrawn',
+    ];
+  }
+
   public function isApplyAction(string $action): bool {
     return 'apply' === $action;
   }

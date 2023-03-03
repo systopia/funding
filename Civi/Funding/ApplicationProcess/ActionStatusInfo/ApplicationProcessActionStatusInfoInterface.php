@@ -21,6 +21,14 @@ namespace Civi\Funding\ApplicationProcess\ActionStatusInfo;
 
 interface ApplicationProcessActionStatusInfoInterface {
 
+  /**
+   * @phpstan-return array<string>
+   *   All status that are final states excluding those dedicated for eligible
+   *   applications, i.e. applications in such a status cannot become eligible
+   *   anymore. Usually withdrawn and rejected.
+   */
+  public function getFinalIneligibleStatusList(): array;
+
   public function isApplyAction(string $action): bool;
 
   public function isChangeRequiredStatus(string $status): bool;

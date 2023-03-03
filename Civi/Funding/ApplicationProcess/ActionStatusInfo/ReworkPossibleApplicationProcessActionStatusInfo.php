@@ -30,6 +30,13 @@ final class ReworkPossibleApplicationProcessActionStatusInfo implements Applicat
     $this->info = $metaInfo;
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getFinalIneligibleStatusList(): array {
+    return $this->info->getFinalIneligibleStatusList();
+  }
+
   public function isApplyAction(string $action): bool {
     return 'apply' === $action || $this->info->isApplyAction($action);
   }

@@ -119,9 +119,9 @@ final class GetAction extends AbstractGetAction {
     }
     else {
       foreach ($this->getFundingCases() as $fundingCase) {
-        $applicationProcessBundle =
-          $this->applicationProcessBundleLoader->getFirstByFundingCaseId($fundingCase->getId());
-        if (NULL !== $applicationProcessBundle) {
+        foreach (
+          $this->applicationProcessBundleLoader->getByFundingCaseId($fundingCase->getId()) as $applicationProcessBundle
+        ) {
           yield $applicationProcessBundle;
         }
       }
@@ -146,14 +146,6 @@ final class GetAction extends AbstractGetAction {
     $fundingCase = $this->fundingCaseManager->get($fundingCaseId);
 
     return NULL === $fundingCase ? [] : [$fundingCase];
-  }
-
-  private function isRowCountSelected(): bool {
-    return in_array('row_count', $this->getSelect(), TRUE);
-  }
-
-  private function isRowCountSelectedOnly(): bool {
-    return ['row_count'] === $this->getSelect();
   }
 
 }

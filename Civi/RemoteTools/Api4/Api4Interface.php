@@ -21,8 +21,17 @@ namespace Civi\RemoteTools\Api4;
 
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
+use Civi\RemoteTools\Api4\Query\ConditionInterface;
 
 interface Api4Interface {
+
+  /**
+   * @phpstan-param array{checkPermissions?: bool} $options
+   *   checkPermissions defaults to TRUE.
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function countEntities(string $entityName, ConditionInterface $where, array $options): int;
 
   /**
    * @param array<string, mixed|ApiParameterInterface> $params
@@ -55,6 +64,21 @@ interface Api4Interface {
    * @throws \CRM_Core_Exception
    */
   public function execute(string $entityName, string $actionName, array $params = []): Result;
+
+  /**
+   * @phpstan-param array<string, 'ASC'|'DESC'> $orderBy
+   * @phpstan-param array<string, mixed> $extraParams
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function getEntities(
+    string $entityName,
+    ?ConditionInterface $where = NULL,
+    array $orderBy = [],
+    int $limit = 0,
+    int $offset = 0,
+    array $extraParams = []
+  ): Result;
 
   /**
    * @phpstan-param array<string, mixed> $values

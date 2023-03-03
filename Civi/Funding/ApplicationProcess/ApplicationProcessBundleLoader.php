@@ -58,6 +58,16 @@ class ApplicationProcessBundleLoader {
   }
 
   /**
+   * @phpstan-return array<ApplicationProcessEntityBundle>
+   */
+  public function getByFundingCaseId(int $fundingCaseId): array {
+    return array_map(
+      [$this, 'createFromApplicationProcess'],
+      $this->applicationProcessManager->getByFundingCaseId($fundingCaseId),
+    );
+  }
+
+  /**
    * @throws \CRM_Core_Exception
    */
   public function getFirstByFundingCaseId(int $fundingCaseId): ?ApplicationProcessEntityBundle {

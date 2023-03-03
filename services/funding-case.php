@@ -32,8 +32,6 @@ use Civi\Funding\EventSubscriber\FundingCase\FundingCasePermissionsGetAdminSubsc
 use Civi\Funding\EventSubscriber\Remote\FundingCaseDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseGetFieldsSubscriber;
 use Civi\Funding\FundingCase\FundingCaseManager;
-use Civi\Funding\FundingCase\FundingCaseStatusDeterminer;
-use Civi\Funding\FundingCase\FundingCaseStatusDeterminerInterface;
 use Civi\Funding\Permission\FundingCase\ContactsWithPermissionLoader;
 use Civi\Funding\Permission\FundingCase\FundingCaseContactsLoader;
 use Civi\Funding\Permission\FundingCase\FundingCaseContactsLoaderCollection;
@@ -48,7 +46,6 @@ use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 $container->autowire(FundingCaseManager::class);
-$container->autowire(FundingCaseStatusDeterminerInterface::class, FundingCaseStatusDeterminer::class);
 
 $container->autowire(GetAction::class)
   ->setPublic(TRUE)

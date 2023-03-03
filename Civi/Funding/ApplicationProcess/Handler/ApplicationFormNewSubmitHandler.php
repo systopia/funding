@@ -79,7 +79,7 @@ final class ApplicationFormNewSubmitHandler implements ApplicationFormNewSubmitH
       $command->getFundingCaseType(),
       $validationResult
     );
-    $fundingCase = $this->fundingCaseManager->create($command->getContactId(), [
+    $fundingCase = $this->fundingCaseManager->getOpenOrCreate($command->getContactId(), [
       'funding_program' => $command->getFundingProgram(),
       'funding_case_type' => $command->getFundingCaseType(),
       'recipient_contact_id' => $validatedData->getRecipientContactId(),

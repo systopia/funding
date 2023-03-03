@@ -26,6 +26,8 @@ use Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent;
 use Civi\Funding\Event\FundingCase\FundingCaseDeletedEvent;
 use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
 use Civi\RemoteTools\Api4\Api4Interface;
+use Civi\RemoteTools\Api4\Query\CompositeCondition;
+use Civi\RemoteTools\Api4\Query\ConditionInterface;
 use Webmozart\Assert\Assert;
 
 /**
@@ -130,6 +132,29 @@ class FundingCaseManager {
     );
   }
 
+  /**
+   * Returns a funding case in status open with the given funding program,
+   * funding case type, and recipient contact. If no such funding case exists,
+   * a new one will be created.
+   *
+   * @phpstan-param array{
+   *   funding_program: \Civi\Funding\Entity\FundingProgramEntity,
+   *   funding_case_type: \Civi\Funding\Entity\FundingCaseTypeEntity,
+   *   recipient_contact_id: int,
+   * } $values
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function getOpenOrCreate(int $contactId, array $values): FundingCaseEntity {
+    $fundingCase = $this->getLastBy(CompositeCondition::fromFieldValuePairs([
+      'funding_program_id' => $values['funding_program']->getId(),
+      'recipient_contact_id' => $values['recipient_contact_id'],
+      'status' => 'open',
+    ]));
+
+    return $fundingCase ?? $this->create($contactId, $values);
+  }
+
   public function update(FundingCaseEntity $fundingCase): void {
     $previousFundingCase = $this->get($fundingCase->getId());
     Assert::notNull($previousFundingCase, 'Funding case could not be loaded');
@@ -154,6 +179,24 @@ class FundingCaseManager {
       ->addWhere('id', '=', $id);
 
     return 1 === $this->api4->executeAction($action)->count();
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  private function getLastBy(ConditionInterface $condition): ?FundingCaseEntity {
+    $result = $this->api4->getEntities(
+      FundingCase::_getEntityName(),
+      $condition,
+      ['id' => 'DESC'],
+      1,
+      0,
+      ['checkPermissions' => FALSE],
+    );
+    $values = $result->first();
+
+    // @phpstan-ignore-next-line
+    return NULL === $values ? NULL : FundingCaseEntity::fromArray($values);
   }
 
 }
