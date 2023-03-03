@@ -24,7 +24,7 @@ use Civi\Funding\Entity\FullApplicationProcessStatus;
 final class ReworkPossibleApplicationProcessActionsDeterminer extends ApplicationProcessActionsDeterminer {
 
   private const STATUS_PERMISSIONS_ACTION_MAP = [
-    'approved' => [
+    'eligible' => [
       'application_request_rework' => ['request-rework'],
     ],
     'rework-requested' => [

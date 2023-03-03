@@ -347,7 +347,7 @@ msgid "Rejected"
 msgstr ""
 
 #: Civi/Funding/FundingPseudoConstants.php
-msgid "Approved"
+msgid "Eligible"
 msgstr ""
 
 #: Civi/Funding/FundingPseudoConstants.php

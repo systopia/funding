@@ -71,7 +71,7 @@ final class DefaultApplicationProcessActionsDeterminerTest extends TestCase {
       'review_calculative' => ['review', 'add-comment'],
       'review_content' => ['review', 'add-comment'],
     ],
-    'approved' => [
+    'eligible' => [
       'application_create' => [],
       'application_modify' => [],
       'application_apply' => [],

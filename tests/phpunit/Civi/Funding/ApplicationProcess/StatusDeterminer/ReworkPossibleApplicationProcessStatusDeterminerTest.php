@@ -75,10 +75,10 @@ final class ReworkPossibleApplicationProcessStatusDeterminerTest extends TestCas
    * @phpstan-return iterable<array{string, string, string}>
    */
   public function provideActions(): iterable {
-    yield ['approved', 'request-rework', 'rework-requested'];
-    yield ['rework-requested', 'withdraw-rework-request', 'approved'];
+    yield ['eligible', 'request-rework', 'rework-requested'];
+    yield ['rework-requested', 'withdraw-rework-request', 'eligible'];
     yield ['rework-requested', 'approve-rework-request', 'rework'];
-    yield ['rework-requested', 'reject-rework-request', 'approved'];
+    yield ['rework-requested', 'reject-rework-request', 'eligible'];
     yield ['rework-requested', 'add-comment', 'rework-requested'];
     yield ['rework', 'save', 'rework'];
     yield ['rework', 'apply', 'rework-review-requested'];
@@ -89,7 +89,7 @@ final class ReworkPossibleApplicationProcessStatusDeterminerTest extends TestCas
     yield ['rework-review-requested', 'review', 'rework-review'];
     yield ['rework-review-requested', 'add-comment', 'rework-review-requested'];
     yield ['rework-review', 'request-change', 'rework'];
-    yield ['rework-review', 'approve-change', 'approved'];
+    yield ['rework-review', 'approve-change', 'eligible'];
     yield ['rework-review', 'update', 'rework-review'];
     yield ['rework-review', 'add-comment', 'rework-review'];
   }
@@ -142,7 +142,7 @@ final class ReworkPossibleApplicationProcessStatusDeterminerTest extends TestCas
   public function testRejectChange(): void {
     $currentStatus = new FullApplicationProcessStatus('rework-review', FALSE, FALSE);
     static::assertEquals(
-      new FullApplicationProcessStatus('approved', TRUE, TRUE),
+      new FullApplicationProcessStatus('eligible', TRUE, TRUE),
       $this->statusDeterminer->getStatus($currentStatus, 'reject-change'),
     );
   }

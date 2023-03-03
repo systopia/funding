@@ -63,7 +63,7 @@ final class FundingCaseStatusDeterminerTest extends TestCase {
     yield ['draft'];
     yield ['applied'];
     yield ['review'];
-    yield ['approved'];
+    yield ['eligible'];
   }
 
 }
