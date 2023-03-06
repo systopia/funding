@@ -25,12 +25,19 @@ namespace Civi\Funding\Api4\Traits;
  */
 trait AccessROAdministerRWPermissionsTrait {
 
+  use AccessPermissionsTrait {
+    AccessPermissionsTrait::permissions as accessPermissions;
+  }
+  use AdministerPermissionsTrait {
+    AdministerPermissionsTrait::permissions as administerPermissions;
+  }
+
   /**
    * @return array<string, array<string|string[]>>
    */
   public static function permissions(): array {
-    $accessPermissions = AccessPermissionsTrait::permissions();
-    $administerPermissions = AdministerPermissionsTrait::permissions();
+    $accessPermissions = self::accessPermissions();
+    $administerPermissions = self::administerPermissions();
 
     return [
       'meta' => $accessPermissions['meta'],
