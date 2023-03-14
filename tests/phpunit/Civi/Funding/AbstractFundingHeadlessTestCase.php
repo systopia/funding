@@ -21,6 +21,7 @@ namespace Civi\Funding;
 
 use Civi\Funding\Api4\Permissions;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandler;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Test;
 use Civi\Test\CiviEnvBuilder;
@@ -37,6 +38,12 @@ abstract class AbstractFundingHeadlessTestCase extends TestCase implements Headl
     // ClockMock has no effect. Thus, we do it here when necessary.
     ClockMock::register(FundingCaseManager::class);
     ClockMock::register(ApplicationProcessManager::class);
+    ClockMock::register(ApplicationSnapshotCreateHandler::class);
+  }
+
+  public static function tearDownAfterClass(): void {
+    parent::tearDownAfterClass();
+    ClockMock::withClockMock(FALSE);
   }
 
   public function setUpHeadless(): CiviEnvBuilder {

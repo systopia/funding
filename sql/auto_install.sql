@@ -18,6 +18,7 @@
 SET FOREIGN_KEY_CHECKS=0;
 
 DROP TABLE IF EXISTS `civicrm_funding_app_cost_item`;
+DROP TABLE IF EXISTS `civicrm_funding_application_snapshot`;
 DROP TABLE IF EXISTS `civicrm_funding_app_resources_item`;
 DROP TABLE IF EXISTS `civicrm_funding_application_process`;
 DROP TABLE IF EXISTS `civicrm_funding_new_case_permissions`;
@@ -251,6 +252,34 @@ CREATE TABLE `civicrm_funding_app_resources_item` (
   PRIMARY KEY (`id`),
   UNIQUE INDEX `index_identifier_application_process_id`(identifier, application_process_id),
   CONSTRAINT FK_civicrm_funding_app_resources_item_application_process_id FOREIGN KEY (`application_process_id`) REFERENCES `civicrm_funding_application_process`(`id`) ON DELETE CASCADE
+)
+ENGINE=InnoDB;
+
+-- /*******************************************************
+-- *
+-- * civicrm_funding_application_snapshot
+-- *
+-- * Snapshots of application versions that need to be preserved
+-- *
+-- *******************************************************/
+CREATE TABLE `civicrm_funding_application_snapshot` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique FundingApplicationSnapshot ID',
+  `application_process_id` int unsigned NOT NULL COMMENT 'FK to FundingApplicationProcess',
+  `status` varchar(64) NOT NULL,
+  `creation_date` timestamp NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `short_description` varchar(255) NOT NULL,
+  `start_date` timestamp NULL,
+  `end_date` timestamp NULL,
+  `request_data` text NOT NULL,
+  `amount_requested` decimal(10,2) NOT NULL,
+  `amount_granted` decimal(10,2) NULL,
+  `granted_budget` decimal(10,2) NULL,
+  `is_review_content` tinyint NULL,
+  `is_review_calculative` tinyint NULL,
+  PRIMARY KEY (`id`),
+  INDEX `index_title`(title),
+  CONSTRAINT FK_civicrm_funding_application_snapshot_application_process_id FOREIGN KEY (`application_process_id`) REFERENCES `civicrm_funding_application_process`(`id`) ON DELETE RESTRICT
 )
 ENGINE=InnoDB;
 

@@ -35,6 +35,8 @@ final class ActivityTypeIds {
 
   public const FUNDING_APPLICATION_TASK_EXTERNAL = 63785206;
 
+  public const FUNDING_APPLICATION_RESTORE = 63785207;
+
   /**
    * @phpstan-return array<string, int>
    *

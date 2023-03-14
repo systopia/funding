@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\ActionStatusInfo;
 
+use Civi\Funding\Entity\FullApplicationProcessStatus;
+
 /**
  * @codeCoverageIgnore
  */
@@ -39,12 +41,24 @@ final class DefaultApplicationProcessActionStatusInfo implements ApplicationProc
     return 'draft' === $status;
   }
 
+  public function isDeleteAction(string $action): bool {
+    return 'delete' === $action;
+  }
+
+  public function isRestoreAction(string $action): bool {
+    return FALSE;
+  }
+
   public function isReviewStartAction(string $action): bool {
     return 'review' === $action;
   }
 
   public function isReviewStatus(string $status): bool {
     return 'review' === $status;
+  }
+
+  public function isSnapshotRequiredStatus(FullApplicationProcessStatus $status): bool {
+    return in_array($status->getStatus(), ['approved', 'complete'], TRUE);
   }
 
 }

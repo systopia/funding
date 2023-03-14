@@ -32,6 +32,7 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterf
 use Civi\Funding\ApplicationProcess\Handler\ApplicationJsonSchemaGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandlerInterface;
 use Civi\Funding\FundingCase\FundingCaseStatusDeterminerInterface;
 use Psr\Container\ContainerInterface;
 
@@ -96,6 +97,10 @@ final class FundingCaseTypeServiceLocator implements FundingCaseTypeServiceLocat
 
   public function getApplicationResourcesItemsPersistHandler(): ApplicationResourcesItemsPersistHandlerInterface {
     return $this->locator->get(ApplicationResourcesItemsPersistHandlerInterface::class);
+  }
+
+  public function getApplicationSnapshotCreateHandler(): ApplicationSnapshotCreateHandlerInterface {
+    return $this->locator->get(ApplicationSnapshotCreateHandlerInterface::class);
   }
 
   public function getFundingCaseStatusDeterminer(): FundingCaseStatusDeterminerInterface {

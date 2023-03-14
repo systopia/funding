@@ -24,6 +24,7 @@ use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Fixtures\ApplicationProcessFixture;
+use Civi\Funding\Fixtures\ApplicationSnapshotFixture;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\FundingCaseFixture;
@@ -31,6 +32,7 @@ use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\Funding\Form\SonstigeAktivitaet\JsonSchema\AVK1JsonSchema;
+use Civi\Funding\Mock\Form\FundingCaseType\TestJsonSchemaFactory;
 use Civi\Funding\Util\SessionTestUtil;
 
 /**
@@ -253,6 +255,115 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
     static::assertNotEmpty($result['data']);
   }
 
+  public function testSubmitFormApprove(): void {
+    // This test will create an application snapshot.
+    $contact = ContactFixture::addIndividual();
+    $fundingCase = $this->createFundingCase(TestJsonSchemaFactory::getSupportedFundingCaseTypes()[0]);
+
+    FundingProgramContactRelationFixture::addContact(
+      $contact['id'],
+      $this->fundingProgram->getId(),
+      ['view']
+    );
+    FundingCaseContactRelationFixture::addContact(
+      $contact['id'],
+      $fundingCase->getId(),
+      ['review_content', 'review_calculative']
+    );
+    SessionTestUtil::mockInternalRequestSession($contact['id']);
+
+    $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId(), [
+      'status' => 'review',
+      'is_review_content' => TRUE,
+      'is_review_calculative' => TRUE,
+      'start_date' => '2022-11-15',
+      'end_date' => '2022-11-16',
+      'request_data' => ['amountRequested' => 10, 'resources' => 20],
+    ]);
+
+    $result = FundingApplicationProcess::submitForm()
+      ->setId($applicationProcess->getId())
+      ->setData([
+        'applicationProcessId' => $applicationProcess->getId(),
+        'action' => 'approve',
+        'title' => 'Title',
+        'recipient' => $fundingCase->getRecipientContactId(),
+        'startDate' => '2022-11-15',
+        'endDate' => '2022-11-16',
+        'amountRequested' => 10,
+        'resources' => 20,
+      ])
+      ->execute();
+
+    static::assertEquals(new \stdClass(), $result['errors']);
+    static::assertNotEmpty($result['data']);
+  }
+
+  public function testSubmitFormWithdrawChange(): void {
+    // This test will perform an application restore.
+    // Reviewer contact required to set review flags.
+    $reviewerContact = ContactFixture::addIndividual();
+    $contact = ContactFixture::addIndividual();
+    $fundingCase = $this->createFundingCase(TestJsonSchemaFactory::getSupportedFundingCaseTypes()[0]);
+
+    FundingProgramContactRelationFixture::addContact(
+      $reviewerContact['id'],
+      $this->fundingProgram->getId(),
+      ['view']
+    );
+    FundingCaseContactRelationFixture::addContact(
+      $reviewerContact['id'],
+      $fundingCase->getId(),
+      ['review_content', 'review_calculative']
+    );
+
+    SessionTestUtil::mockInternalRequestSession($reviewerContact['id']);
+    $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId(), [
+      'status' => 'rework',
+      'is_review_content' => TRUE,
+      'is_review_calculative' => TRUE,
+      'start_date' => '2022-11-15',
+      'end_date' => '2022-11-16',
+      'request_data' => ['amountRequested' => 10, 'resources' => 20],
+    ]);
+
+    ApplicationSnapshotFixture::addFixture($applicationProcess->getId(), [
+      'amount_requested' => 11,
+      'request_data' => ['amountRequested' => 11, 'resources' => 22],
+    ]);
+
+    FundingProgramContactRelationFixture::addContact(
+      $contact['id'],
+      $this->fundingProgram->getId(),
+      ['application_create']
+    );
+    FundingCaseContactRelationFixture::addContact(
+      $contact['id'],
+      $fundingCase->getId(),
+      ['application_withdraw']
+    );
+
+    SessionTestUtil::mockRemoteRequestSession((string) $contact['id']);
+    $result = FundingApplicationProcess::submitForm()
+      ->setId($applicationProcess->getId())
+      ->setData([
+        'applicationProcessId' => $applicationProcess->getId(),
+        'action' => 'withdraw-change',
+        'title' => 'Title',
+        'recipient' => $fundingCase->getRecipientContactId(),
+        'startDate' => '2022-11-15',
+        'endDate' => '2022-11-16',
+        'amountRequested' => 10,
+        'resources' => 20,
+      ])
+      ->execute();
+
+    static::assertEquals(new \stdClass(), $result['errors']);
+    static::assertNotEmpty($result['data']);
+    static::assertSame(11, $result['data']['amountRequested']);
+    static::assertSame(22, $result['data']['resources']);
+  }
+
   public function testValidateForm(): void {
     $contact = ContactFixture::addIndividual();
     $fundingCase = $this->createFundingCase();
@@ -280,10 +391,10 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
     static::assertNotEmpty($result['data']);
   }
 
-  private function createFundingCase(): FundingCaseEntity {
+  private function createFundingCase(string $name = 'AVK1SonstigeAktivitaet'): FundingCaseEntity {
     $this->fundingProgram = FundingProgramFixture::addFixture();
     $fundingCaseType = FundingCaseTypeFixture::addFixture([
-      'name' => 'AVK1SonstigeAktivitaet',
+      'name' => $name,
     ]);
     $recipientContact = ContactFixture::addOrganization();
     $creationContact = ContactFixture::addIndividual(['first_name' => 'creation', 'last_name' => 'contact']);

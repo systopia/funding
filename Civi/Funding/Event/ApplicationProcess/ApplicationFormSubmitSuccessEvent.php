@@ -50,12 +50,19 @@ final class ApplicationFormSubmitSuccessEvent extends AbstractApplicationEvent {
   }
 
   /**
+   * The returned data might not contain the actual application data if the
+   * requested action resulted in a restore of a previous snapshot.
+   *
    * @phpstan-return array<string, mixed>
    */
   public function getSubmittedData(): array {
     return $this->submittedData;
   }
 
+  /**
+   * The returned data might not contain the actual application data if the
+   * requested action resulted in a restore of a previous snapshot.
+   */
   public function getValidatedData(): ValidatedApplicationDataInterface {
     return $this->validatedData;
   }

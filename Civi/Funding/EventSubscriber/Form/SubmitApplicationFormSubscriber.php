@@ -76,7 +76,7 @@ class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
         $event->setForm(
           $this->createHandler->handle(new ApplicationFormCreateCommand(
             $event->getApplicationProcessBundle(),
-            $result->getValidatedData()->getApplicationData(),
+            $event->getApplicationProcess()->getRequestData(),
           ))
         );
       }
@@ -106,7 +106,7 @@ class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
         $event->setForm(
           $this->createHandler->handle(new ApplicationFormCreateCommand(
             $result->getApplicationProcessBundle(),
-            $result->getValidatedData()->getApplicationData(),
+            $result->getApplicationProcessBundle()->getApplicationProcess()->getRequestData(),
           ))
         );
       }

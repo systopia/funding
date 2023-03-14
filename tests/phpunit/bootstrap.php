@@ -1,9 +1,9 @@
 <?php
 declare(strict_types = 1);
 
-use Civi\Funding\ApplicationProcess\ActionsDeterminer\DefaultApplicationProcessActionsDeterminer;
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\DefaultApplicationProcessActionStatusInfo;
-use Civi\Funding\ApplicationProcess\StatusDeterminer\DefaultApplicationProcessStatusDeterminer;
+use Civi\Funding\ApplicationProcess\ActionsDeterminer\ReworkPossibleApplicationProcessActionsDeterminer;
+use Civi\Funding\ApplicationProcess\ActionStatusInfo\ReworkPossibleApplicationProcessActionStatusInfo;
+use Civi\Funding\ApplicationProcess\StatusDeterminer\ReworkPossibleApplicationProcessStatusDeterminer;
 use Civi\Funding\Contact\DummyRemoteContactIdResolver;
 use Civi\Funding\Contact\FundingRemoteContactIdResolverInterface;
 use Civi\Funding\Mock\Form\FundingCaseType\TestApplicationCostItemsFactory;
@@ -46,13 +46,13 @@ function _funding_test_civicrm_container(ContainerBuilder $container): void {
   // overwrite remote contact ID resolver
   $container->autowire(FundingRemoteContactIdResolverInterface::class, DummyRemoteContactIdResolver::class);
 
-  $container->getDefinition(DefaultApplicationProcessActionsDeterminer::class)
+  $container->getDefinition(ReworkPossibleApplicationProcessActionsDeterminer::class)
     ->addTag('funding.application.actions_determiner',
       ['funding_case_type' => TestJsonSchemaFactory::getSupportedFundingCaseTypes()[0]]);
-  $container->getDefinition(DefaultApplicationProcessStatusDeterminer::class)
+  $container->getDefinition(ReworkPossibleApplicationProcessStatusDeterminer::class)
     ->addTag('funding.application.status_determiner',
       ['funding_case_type' => TestJsonSchemaFactory::getSupportedFundingCaseTypes()[0]]);
-  $container->getDefinition(DefaultApplicationProcessActionStatusInfo::class)
+  $container->getDefinition(ReworkPossibleApplicationProcessActionStatusInfo::class)
     ->addTag('funding.application.action_status_info',
       ['funding_case_type' => TestJsonSchemaFactory::getSupportedFundingCaseTypes()[0]]);
 

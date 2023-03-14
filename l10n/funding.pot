@@ -1,3 +1,7 @@
+#: Civi/Funding/Api4/Action/FundingApplicationProcess/GetJsonSchemaAction.php
+msgid "No such application or missing permission."
+msgstr ""
+
 #: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
 msgid "Unique field identifier"
 msgstr ""
@@ -220,6 +224,18 @@ msgstr ""
 
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriber.php
 msgid "To status: %1"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationSnapshotRestoreSubscriber.php
+msgid "Funding application process restored"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationSnapshotRestoreSubscriber.php
+msgid "Application process \"%1\" (%2) restored to version from %3."
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationSnapshotRestoreSubscriber.php
+msgid "Y-m-d H:i:s"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/Form/SubmitApplicationFormSubscriber.php
@@ -750,6 +766,14 @@ msgstr ""
 msgid "Activity type for funding application process creation"
 msgstr ""
 
+#: managed/ActivityTypeFundingApplicationRestore.mgd.php managed/CustomGroupFundingApplicationRestore.mgd.php
+msgid "Funding Application Restore"
+msgstr ""
+
+#: managed/ActivityTypeFundingApplicationRestore.mgd.php
+msgid "Activity type for funding application restore"
+msgstr ""
+
 #: managed/ActivityTypeFundingApplicationReviewChange.mgd.php managed/CustomGroupFundingApplicationReviewStatusChange.mgd.php
 msgid "Funding Application Review Status Change"
 msgstr ""
@@ -788,6 +812,10 @@ msgstr ""
 
 #: managed/CustomGroupFundingApplicationComment.mgd.php
 msgid "Action"
+msgstr ""
+
+#: managed/CustomGroupFundingApplicationRestore.mgd.php
+msgid "Application snapshot ID"
 msgstr ""
 
 #: managed/CustomGroupFundingApplicationReviewStatusChange.mgd.php

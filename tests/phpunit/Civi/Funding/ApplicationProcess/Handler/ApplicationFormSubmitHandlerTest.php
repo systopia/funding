@@ -19,10 +19,13 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Handler;
 
+use Civi\Funding\ApplicationProcess\ActionStatusInfo\DefaultApplicationProcessActionStatusInfo;
+use Civi\Funding\ApplicationProcess\ActionStatusInfo\ReworkPossibleApplicationProcessActionStatusInfo;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormCommentPersistCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitCommand;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
+use Civi\Funding\ApplicationProcess\Snapshot\ApplicationSnapshotRestorerInterface;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ApplicationProcessFactory;
@@ -49,6 +52,11 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
   private MockObject $applicationProcessManagerMock;
 
   /**
+   * @var \Civi\Funding\ApplicationProcess\Snapshot\ApplicationSnapshotRestorerInterface&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $applicationSnapshotRestorerMock;
+
+  /**
    * @var \Civi\Funding\ApplicationProcess\Handler\ApplicationFormCommentPersistHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $commentStoreHandlerMock;
@@ -72,14 +80,20 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
+    $info = new ReworkPossibleApplicationProcessActionStatusInfo(
+      new DefaultApplicationProcessActionStatusInfo()
+    );
     $this->applicationProcessManagerMock = $this->createMock(ApplicationProcessManager::class);
+    $this->applicationSnapshotRestorerMock = $this->createMock(ApplicationSnapshotRestorerInterface::class);
     $this->commentStoreHandlerMock = $this->createMock(ApplicationFormCommentPersistHandlerInterface::class);
     $this->jsonSchemaFactoryMock = $this->createMock(ApplicationJsonSchemaFactoryInterface::class);
     $this->statusDeterminerMock = $this->createMock(ApplicationProcessStatusDeterminerInterface::class);
     $this->validatorMock = $this->createMock(ValidatorInterface::class);
     $this->handler = new ApplicationFormSubmitHandler(
       $this->applicationProcessManagerMock,
+      $this->applicationSnapshotRestorerMock,
       $this->commentStoreHandlerMock,
+      $info,
       $this->jsonSchemaFactoryMock,
       $this->statusDeterminerMock,
       $this->validatorMock
@@ -152,6 +166,26 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
         $command->getFundingProgram(),
         $validatedData
       ));
+
+    $result = $this->handler->handle($command);
+
+    static::assertTrue($result->isSuccess());
+  }
+
+  public function testHandleRestore(): void {
+    $command = $this->createCommand();
+    $jsonSchema = new JsonSchema([]);
+    $this->mockCreateJsonSchema($command, $jsonSchema);
+
+    $validationResult = new ValidationResult([], new ErrorCollector());
+    $this->mockValidator($jsonSchema, $command->getData(), $validationResult);
+
+    $validatedData = new ValidatedApplicationDataMock([], ['action' => 'withdraw-change']);
+    $this->mockCreateValidatedData($command, $validationResult, $validatedData);
+
+    $this->applicationSnapshotRestorerMock->expects(static::once())->method('restoreLastSnapshot')
+      ->with($command->getContactId(), $command->getApplicationProcessBundle());
+    $this->applicationProcessManagerMock->expects(static::never())->method('update');
 
     $result = $this->handler->handle($command);
 

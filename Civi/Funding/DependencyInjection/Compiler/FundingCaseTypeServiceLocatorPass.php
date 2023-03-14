@@ -47,6 +47,8 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsAddIdentifi
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandler;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandler;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\Decorator\ApplicationFormNewSubmitEventDecorator;
 use Civi\Funding\ApplicationProcess\Handler\Decorator\ApplicationFormSubmitEventDecorator;
 use Civi\Funding\FundingCase\FundingCaseStatusDeterminer;
@@ -240,6 +242,7 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         ApplicationFormSubmitHandler::class,
         [
           '$commentPersistHandler' => $applicationFormCommentPersistHandlerServices[$fundingCaseType],
+          '$info' => $applicationActionStatusInfoServices[$fundingCaseType],
           '$jsonSchemaFactory' => $applicationJsonSchemaFactoryServices[$fundingCaseType],
           '$statusDeterminer' => $applicationStatusDeterminerServices[$fundingCaseType],
         ],
@@ -274,6 +277,13 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         ['$resourcesItemsFactory' => $applicationResourcesItemsFactoryServices[$fundingCaseType]]
       );
 
+      $applicationSnapshotCreateHandlerServices[$fundingCaseType] ??= $this->createService(
+        $container,
+        $fundingCaseType,
+        ApplicationSnapshotCreateHandler::class,
+        []
+      );
+
       $services = [
         ApplicationDeleteHandlerInterface::class => $applicationDeleteHandlerServices[$fundingCaseType],
         ApplicationFormNewCreateHandlerInterface::class
@@ -298,6 +308,7 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         => $applicationResourcesItemsAddIdentifiersHandlerServices[$fundingCaseType],
         ApplicationResourcesItemsPersistHandlerInterface::class
         => $applicationResourcesItemsPersistHandlerServices[$fundingCaseType],
+        ApplicationSnapshotCreateHandlerInterface::class => $applicationSnapshotCreateHandlerServices[$fundingCaseType],
         FundingCaseStatusDeterminerInterface::class => $fundingCaseStatusDeterminerServices[$fundingCaseType],
       ];
 
@@ -337,7 +348,10 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
     array $arguments,
     array $decorators = []
   ): Reference {
-    $serviceId = $class . ':' . $fundingCaseType;
+    $serviceId = $class;
+    if ([] !== $arguments) {
+      $serviceId .= ':' . $fundingCaseType;
+    }
     $container->autowire($serviceId, $class)->setArguments($arguments);
 
     foreach ($decorators as $decoratorClass => $decoratorArguments) {

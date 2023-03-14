@@ -40,6 +40,7 @@ final class TestFormDataFactory implements ApplicationFormDataFactoryInterface {
       'startDate' => $applicationProcess->getStartDate(),
       'endDate' => $applicationProcess->getEndDate(),
       'amountRequested' => $applicationProcess->getAmountRequested(),
+      'resources' => $applicationProcess->getRequestData()['resources'],
     ];
   }
 

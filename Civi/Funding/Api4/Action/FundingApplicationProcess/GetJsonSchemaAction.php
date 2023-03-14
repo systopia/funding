@@ -26,6 +26,7 @@ use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ApplicationProcess\Command\ApplicationJsonSchemaGetCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationJsonSchemaGetHandlerInterface;
 use Webmozart\Assert\Assert;
+use CRM_Funding_ExtensionUtil as E;
 
 /**
  * @method $this setId(int $id)
@@ -66,7 +67,7 @@ final class GetJsonSchemaAction extends AbstractAction {
   protected function createCommand(): ApplicationJsonSchemaGetCommand {
     Assert::notNull($this->id);
     $applicationProcessBundle = $this->applicationProcessBundleLoader->get($this->id);
-    Assert::notNull($applicationProcessBundle);
+    Assert::notNull($applicationProcessBundle, E::ts('No such application or missing permission.'));
 
     return new ApplicationJsonSchemaGetCommand($applicationProcessBundle);
   }

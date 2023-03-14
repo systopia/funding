@@ -23,7 +23,9 @@ use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
+use Civi\Funding\ApplicationProcess\Command\ApplicationFormDataGetCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitCommand;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
 use Civi\Funding\Session\FundingSessionInterface;
 use Webmozart\Assert\Assert;
@@ -49,17 +51,21 @@ final class SubmitFormAction extends AbstractAction {
 
   private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
 
+  private ApplicationFormDataGetHandlerInterface $formDataGetHandler;
+
   private ApplicationFormSubmitHandlerInterface $submitFormHandler;
 
   private FundingSessionInterface $session;
 
   public function __construct(
     ApplicationProcessBundleLoader $applicationProcessBundleLoader,
+    ApplicationFormDataGetHandlerInterface $formDataGetHandler,
     ApplicationFormSubmitHandlerInterface $submitFormHandler,
     FundingSessionInterface $session
   ) {
     parent::__construct(FundingApplicationProcess::_getEntityName(), 'submitForm');
     $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
+    $this->formDataGetHandler = $formDataGetHandler;
     $this->submitFormHandler = $submitFormHandler;
     $this->session = $session;
   }
@@ -73,11 +79,14 @@ final class SubmitFormAction extends AbstractAction {
     $command = $this->createCommand();
     $commandResult = $this->submitFormHandler->handle($command);
 
-    $result['data'] = $commandResult->getValidationResult()->getData();
     if ([] === $commandResult->getValidationResult()->getLeafErrorMessages()) {
+      $result['data'] = $this->formDataGetHandler->handle(
+        new ApplicationFormDataGetCommand($command->getApplicationProcessBundle())
+      );
       $result['errors'] = new \stdClass();
     }
     else {
+      $result['data'] = $commandResult->getValidationResult()->getData();
       $result['errors'] = $commandResult->getValidationResult()->getLeafErrorMessages();
     }
   }
