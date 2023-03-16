@@ -53,7 +53,7 @@ final class FundingProgramFixture {
         'requests_start_date' => '2022-06-22',
         'requests_end_date' => '2022-12-31',
         'budget' => NULL,
-        'currency' => '€',
+        'currency' => 'EUR',
       ])->execute()->first();
 
     return FundingProgramEntity::fromArray($fundingProgramValues);
