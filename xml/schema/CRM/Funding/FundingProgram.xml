@@ -93,8 +93,15 @@
     <type>varchar</type>
     <length>10</length>
     <required>true</required>
+    <pseudoconstant>
+      <table>civicrm_currency</table>
+      <keyColumn>name</keyColumn>
+      <labelColumn>full_name</labelColumn>
+      <nameColumn>name</nameColumn>
+      <abbrColumn>symbol</abbrColumn>
+    </pseudoconstant>
     <html>
-      <type>Text</type>
+      <type>Select</type>
     </html>
   </field>
 
