@@ -67,6 +67,9 @@ fundingModule.controller('fundingCaseCtrl', [
         (contact) => $scope.recipientContact = contact
     );
 
+    if (!fundingCase.title) {
+      fundingCase.title = ts('Untitled');
+    }
     $scope.fundingCase = fundingCase;
     $scope.statusLabels = statusLabels;
     $scope.applicationProcesses = applicationProcesses;
