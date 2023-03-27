@@ -23,7 +23,6 @@
   <comments/>
   <requires>
     <ext>de.systopia.remotetools</ext>
-    <ext>de.systopia.identitytracker</ext>
     <ext>de.systopia.civioffice</ext>
     <ext>activity-entity</ext>
     <ext>org.civicrm.search_kit</ext>
