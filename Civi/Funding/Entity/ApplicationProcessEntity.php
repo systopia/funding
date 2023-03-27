@@ -33,12 +33,11 @@ namespace Civi\Funding\Entity;
  *   end_date: string|null,
  *   request_data: array<string, mixed>,
  *   amount_requested: float,
- *   amount_granted: float|null,
- *   granted_budget: float|null,
  *   is_review_content: bool|null,
  *   reviewer_cont_contact_id: int|null,
  *   is_review_calculative: bool|null,
  *   reviewer_calc_contact_id: int|null,
+ *   is_eligible: bool|null,
  *   check_permissions?: bool,
  *   custom?: mixed,
  * }
@@ -153,26 +152,6 @@ final class ApplicationProcessEntity extends AbstractEntity {
     return $this;
   }
 
-  public function getAmountGranted(): ?float {
-    return $this->values['amount_granted'];
-  }
-
-  public function setAmountGranted(?float $amountGranted): self {
-    $this->values['amount_granted'] = $amountGranted;
-
-    return $this;
-  }
-
-  public function getGrantedBudget(): ?float {
-    return $this->values['granted_budget'];
-  }
-
-  public function setGrantedBudget(?float $grantedBudget): self {
-    $this->values['granted_budget'] = $grantedBudget;
-
-    return $this;
-  }
-
   public function getIsReviewContent(): ?bool {
     return $this->values['is_review_content'];
   }
@@ -209,6 +188,16 @@ final class ApplicationProcessEntity extends AbstractEntity {
 
   public function setReviewerCalculativeContactId(?int $reviewerCalculativeContactId): self {
     $this->values['reviewer_calc_contact_id'] = $reviewerCalculativeContactId;
+
+    return $this;
+  }
+
+  public function getIsEligible(): ?bool {
+    return $this->values['is_eligible'];
+  }
+
+  public function setIsEligible(?bool $isEligibleStatus): self {
+    $this->values['is_eligible'] = $isEligibleStatus;
 
     return $this;
   }

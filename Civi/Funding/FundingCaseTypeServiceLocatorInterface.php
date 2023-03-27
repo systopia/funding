@@ -34,6 +34,10 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsAddIdentifi
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandlerInterface;
 use Civi\Funding\FundingCase\FundingCaseStatusDeterminerInterface;
+use Civi\Funding\FundingCase\Handler\FundingCaseApproveHandlerInterface;
+use Civi\Funding\FundingCase\Handler\FundingCasePossibleActionsGetHandlerInterface;
+use Civi\Funding\FundingCase\Handler\TransferContractRecreateHandlerInterface;
+use Civi\Funding\TransferContract\Handler\TransferContractRenderHandlerInterface;
 
 interface FundingCaseTypeServiceLocatorInterface {
 
@@ -68,6 +72,14 @@ interface FundingCaseTypeServiceLocatorInterface {
 
   public function getApplicationSnapshotCreateHandler(): ApplicationSnapshotCreateHandlerInterface;
 
+  public function getFundingCaseApproveHandler(): FundingCaseApproveHandlerInterface;
+
+  public function getFundingCasePossibleActionsGetHandler(): FundingCasePossibleActionsGetHandlerInterface;
+
   public function getFundingCaseStatusDeterminer(): FundingCaseStatusDeterminerInterface;
+
+  public function getTransferContractRecreateHandler(): TransferContractRecreateHandlerInterface;
+
+  public function getTransferContractRenderHandler(): TransferContractRenderHandlerInterface;
 
 }

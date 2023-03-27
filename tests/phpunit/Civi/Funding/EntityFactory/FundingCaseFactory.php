@@ -27,10 +27,12 @@ use Civi\Funding\Entity\FundingCaseEntity;
  *   funding_program_id?: int,
  *   funding_case_type_id?: int,
  *   status?: string,
+ *   title?: string,
  *   recipient_contact_id?: int,
  *   creation_date?: string,
  *   modification_date?: string,
  *   creation_contact_id?: int,
+ *   amount_approved?: ?float,
  *   permissions?: array<string>,
  * }
  */
@@ -48,9 +50,11 @@ final class FundingCaseFactory {
       'funding_case_type_id' => FundingCaseTypeFactory::DEFAULT_ID,
       'recipient_contact_id' => 1,
       'status' => 'open',
+      'title' => 'Funding Case Title',
       'creation_date' => date('Y-m-d H:i:s'),
       'modification_date' => date('Y-m-d H:i:s'),
       'creation_contact_id' => 1,
+      'amount_approved' => NULL,
       'permissions' => ['test_permission'],
     ]);
   }

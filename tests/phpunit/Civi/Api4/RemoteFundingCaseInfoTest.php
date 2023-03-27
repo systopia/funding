@@ -20,7 +20,9 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\Funding\AbstractRemoteFundingHeadlessTestCase;
+use Civi\Funding\FileTypeIds;
 use Civi\Funding\Fixtures\ApplicationProcessFixture;
+use Civi\Funding\Fixtures\AttachmentFixture;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\FundingCaseFixture;
@@ -29,6 +31,7 @@ use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\Funding\Util\TestUtil;
 use Civi\RemoteTools\Api4\RemoteApiConstants;
+use CRM_Funding_ExtensionUtil as E;
 
 /**
  * @group headless
@@ -47,6 +50,13 @@ final class RemoteFundingCaseInfoTest extends AbstractRemoteFundingHeadlessTestC
       $fundingCaseType->getId(),
       $recipientContact['id'],
       $creationContact['id'],
+      ['amount_approved' => 12.34],
+    );
+    AttachmentFixture::addFixture(
+      'civicrm_funding_case',
+      $fundingCase->getId(),
+      E::path('tests/phpunit/resources/FundingCaseDocumentTemplate.docx'),
+      ['file_type_id' => FileTypeIds::TRANSFER_CONTRACT],
     );
     $applicationProcess = ApplicationProcessFixture::addFixture(
       $fundingCase->getId(),
@@ -74,6 +84,10 @@ final class RemoteFundingCaseInfoTest extends AbstractRemoteFundingHeadlessTestC
       'funding_case_status' => $fundingCase->getStatus(),
       'funding_case_creation_date' => $fundingCase->getCreationDate()->format('Y-m-d H:i:s'),
       'funding_case_modification_date' => $fundingCase->getModificationDate()->format('Y-m-d H:i:s'),
+      'funding_case_title' => 'Funding Case Title',
+      'funding_case_amount_approved' => 12.34,
+      'funding_case_transfer_contract_uri'
+      => 'http://localhost/civicrm/funding/remote/transfer-contract/download?fundingCaseId=' . $fundingCase->getId(),
       'funding_case_type_id' => $fundingCaseType->getId(),
       'funding_program_id' => $fundingProgram->getId(),
       'funding_program_currency' => $fundingProgram->getCurrency(),
@@ -86,12 +100,11 @@ final class RemoteFundingCaseInfoTest extends AbstractRemoteFundingHeadlessTestC
       'application_process_is_review_calculative' => $applicationProcess->getIsReviewCalculative(),
       'application_process_is_review_content' => $applicationProcess->getIsReviewContent(),
       'application_process_amount_requested' => $applicationProcess->getAmountRequested(),
-      'application_process_amount_granted' => $applicationProcess->getAmountGranted(),
-      'application_process_granted_budget' => $applicationProcess->getGrantedBudget(),
       'application_process_creation_date' => $applicationProcess->getCreationDate()->format('Y-m-d H:i:s'),
       'application_process_modification_date' => $applicationProcess->getModificationDate()->format('Y-m-d H:i:s'),
       'application_process_start_date' => '2022-09-20 20:20:20',
       'application_process_end_date' => NULL,
+      'application_process_is_eligible' => $applicationProcess->getIsEligible(),
       'funding_case_PERM_application_case_perm' => TRUE,
     ];
     static::assertEquals($expected,
@@ -154,7 +167,7 @@ final class RemoteFundingCaseInfoTest extends AbstractRemoteFundingHeadlessTestC
       }
     }
 
-    static::assertCount(23 + $permissionsCount, $result);
+    static::assertCount(25 + $permissionsCount, $result);
   }
 
 }

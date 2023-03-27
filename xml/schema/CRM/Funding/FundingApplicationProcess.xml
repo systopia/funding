@@ -134,28 +134,6 @@
   </field>
 
   <field>
-    <name>amount_granted</name>
-    <type>decimal(10,2)</type>
-    <required>false</required>
-    <crmType>CRM_Utils_Type::T_MONEY</crmType>
-    <dataPattern>/^\d{1,10}(\.\d{2})?$/</dataPattern>
-    <html>
-      <type>Text</type>
-    </html>
-  </field>
-
-  <field>
-    <name>granted_budget</name>
-    <type>decimal(10,2)</type>
-    <required>false</required>
-    <crmType>CRM_Utils_Type::T_MONEY</crmType>
-    <dataPattern>/^\d{1,10}(\.\d{2})?$/</dataPattern>
-    <html>
-      <type>Text</type>
-    </html>
-  </field>
-
-  <field>
     <name>is_review_content</name>
     <type>boolean</type>
     <required>false</required>
@@ -206,4 +184,13 @@
     <key>id</key>
     <onDelete>RESTRICT</onDelete>
   </foreignKey>
+
+  <field>
+    <name>is_eligible</name>
+    <type>boolean</type>
+    <required>false</required>
+    <html>
+      <type>CheckBox</type>
+    </html>
+  </field>
 </table>

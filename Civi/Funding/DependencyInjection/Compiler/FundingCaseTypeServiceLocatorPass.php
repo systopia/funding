@@ -51,10 +51,20 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandler;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\Decorator\ApplicationFormNewSubmitEventDecorator;
 use Civi\Funding\ApplicationProcess\Handler\Decorator\ApplicationFormSubmitEventDecorator;
+use Civi\Funding\FundingCase\FundingCaseActionsDeterminerInterface;
 use Civi\Funding\FundingCase\FundingCaseStatusDeterminer;
 use Civi\Funding\FundingCase\FundingCaseStatusDeterminerInterface;
+use Civi\Funding\FundingCase\Handler\Decorator\FundingCaseApproveEventDecorator;
+use Civi\Funding\FundingCase\Handler\FundingCaseApproveHandler;
+use Civi\Funding\FundingCase\Handler\FundingCaseApproveHandlerInterface;
+use Civi\Funding\FundingCase\Handler\FundingCasePossibleActionsGetHandler;
+use Civi\Funding\FundingCase\Handler\FundingCasePossibleActionsGetHandlerInterface;
+use Civi\Funding\FundingCase\Handler\TransferContractRecreateHandler;
+use Civi\Funding\FundingCase\Handler\TransferContractRecreateHandlerInterface;
 use Civi\Funding\FundingCaseTypeServiceLocator;
 use Civi\Funding\FundingCaseTypeServiceLocatorContainer;
+use Civi\Funding\TransferContract\Handler\TransferContractRenderHandler;
+use Civi\Funding\TransferContract\Handler\TransferContractRenderHandlerInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -97,6 +107,8 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
     $applicationResourcesItemsFactoryServices =
       $this->getTaggedServices($container, 'funding.application.resources_items_factory');
 
+    $fundingCaseActionsDeterminerServices =
+      $this->getTaggedServices($container, FundingCaseActionsDeterminerInterface::TAG);
     $fundingCaseStatusDeterminerServices =
       $this->getTaggedServices($container, 'funding.case.status_determiner');
 
@@ -133,6 +145,15 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
       $this->getTaggedServices($container, 'funding.application.resources_items_add_identifiers_handler');
     $applicationResourcesItemsPersistHandlerServices =
       $this->getTaggedServices($container, 'funding.application.resources_items_persist_handler');
+
+    $fundingCaseApproveHandlerServices = $this->getTaggedServices($container, FundingCaseApproveHandlerInterface::TAG);
+    $fundingCasePossibleActionsGetHandlerServices =
+      $this->getTaggedServices($container, FundingCasePossibleActionsGetHandlerInterface::TAG);
+    $transferContractRecreateHandlerServices =
+      $this->getTaggedServices($container, TransferContractRecreateHandlerInterface::TAG);
+
+    $transferContractRenderHandlerServices =
+      $this->getTaggedServices($container, TransferContractRenderHandlerInterface::TAG);
 
     $serviceLocatorServices =
       $this->getTaggedServices($container, 'funding.case.type.service_locator');
@@ -284,6 +305,38 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         []
       );
 
+      $fundingCaseApproveHandlerServices[$fundingCaseType] ??= $this->createService(
+        $container,
+        $fundingCaseType,
+        FundingCaseApproveHandler::class,
+        [
+          '$actionsDeterminer' => $fundingCaseActionsDeterminerServices[$fundingCaseType],
+          '$statusDeterminer' => $fundingCaseStatusDeterminerServices[$fundingCaseType],
+        ],
+        [FundingCaseApproveEventDecorator::class => []],
+      );
+
+      $fundingCasePossibleActionsGetHandlerServices[$fundingCaseType] ??= $this->createService(
+        $container,
+        $fundingCaseType,
+        FundingCasePossibleActionsGetHandler::class,
+        ['$actionsDeterminer' => $fundingCaseActionsDeterminerServices[$fundingCaseType]],
+      );
+
+      $transferContractRecreateHandlerServices[$fundingCaseType] ??= $this->createService(
+        $container,
+        $fundingCaseType,
+        TransferContractRecreateHandler::class,
+        ['$actionsDeterminer' => $fundingCaseActionsDeterminerServices[$fundingCaseType]]
+      );
+
+      $transferContractRenderHandlerServices[$fundingCaseType] ??= $this->createService(
+        $container,
+        $fundingCaseType,
+        TransferContractRenderHandler::class,
+        [],
+      );
+
       $services = [
         ApplicationDeleteHandlerInterface::class => $applicationDeleteHandlerServices[$fundingCaseType],
         ApplicationFormNewCreateHandlerInterface::class
@@ -309,7 +362,12 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         ApplicationResourcesItemsPersistHandlerInterface::class
         => $applicationResourcesItemsPersistHandlerServices[$fundingCaseType],
         ApplicationSnapshotCreateHandlerInterface::class => $applicationSnapshotCreateHandlerServices[$fundingCaseType],
+        FundingCaseApproveHandlerInterface::class => $fundingCaseApproveHandlerServices[$fundingCaseType],
         FundingCaseStatusDeterminerInterface::class => $fundingCaseStatusDeterminerServices[$fundingCaseType],
+        FundingCasePossibleActionsGetHandlerInterface::class
+        => $fundingCasePossibleActionsGetHandlerServices[$fundingCaseType],
+        TransferContractRecreateHandlerInterface::class => $transferContractRecreateHandlerServices[$fundingCaseType],
+        TransferContractRenderHandlerInterface::class => $transferContractRenderHandlerServices[$fundingCaseType],
       ];
 
       $serviceLocatorServices[$fundingCaseType] = $this->createService(

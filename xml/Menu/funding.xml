@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<menu>
+  <item>
+    <path>civicrm/funding/transfer-contract/download</path>
+    <page_callback>CRM_Funding_Page_TransferContractDownload</page_callback>
+    <title>TransferContractDownload</title>
+    <access_arguments>access Funding;administer Funding</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/funding/remote/transfer-contract/download</path>
+    <page_callback>CRM_Funding_Page_RemoteTransferContractDownload</page_callback>
+    <title>RemoteTransferContractDownload</title>
+    <access_arguments>access Remote Funding</access_arguments>
+  </item>
+</menu>

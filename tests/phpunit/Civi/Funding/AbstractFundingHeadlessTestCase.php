@@ -50,12 +50,18 @@ abstract class AbstractFundingHeadlessTestCase extends TestCase implements Headl
     return Test::headless()
       // Required for managed entities to be available
       ->install('activity-entity')
+      ->install('org.civicrm.search_kit')
+      ->install('de.systopia.civioffice')
       ->installMe(__DIR__)
       ->apply();
   }
 
   protected function setUp(): void {
     parent::setUp();
+    // @phpstan-ignore-next-line
+    \CRM_Core_Config::singleton()->userFrameworkBaseURL = 'http://localhost/';
+    // @phpstan-ignore-next-line
+    \CRM_Core_Config::singleton()->cleanURL = 1;
     $this->setUserPermissions([Permissions::ACCESS_CIVICRM, Permissions::ACCESS_FUNDING]);
   }
 

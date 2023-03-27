@@ -24,7 +24,9 @@
   <requires>
     <ext>de.systopia.remotetools</ext>
     <ext>de.systopia.identitytracker</ext>
+    <ext>de.systopia.civioffice</ext>
     <ext>activity-entity</ext>
+    <ext>org.civicrm.search_kit</ext>
   </requires>
   <classloader>
     <psr4 prefix="Civi\" path="Civi"/>
@@ -41,6 +43,7 @@
     <mixin>ang-php@1.0.0</mixin>
     <mixin>smarty-v2@1.0.0</mixin>
     <mixin>entity-types-php@1.0.0</mixin>
+    <mixin>menu-xml@1.0.0</mixin>
   </mixins>
   <upgrader>CRM_Funding_Upgrader</upgrader>
 </extension>

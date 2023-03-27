@@ -39,6 +39,10 @@ final class FundingCaseStatusDeterminer implements FundingCaseStatusDeterminerIn
     $this->info = $info;
   }
 
+  public function getStatus(string $currentStatus, string $action): string {
+    return 'approve' === $action ? 'ongoing' : $currentStatus;
+  }
+
   public function isClosedByApplicationProcess(
     ApplicationProcessEntityBundle $applicationProcessBundle,
     string $previousStatus

@@ -23,10 +23,15 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
+use Civi\API\Exception\UnauthorizedException;
 use Civi\Api4\Traits\FundingCaseTestFixturesTrait;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Api4\Permissions;
+use Civi\Funding\FileTypeIds;
+use Civi\Funding\Fixtures\AttachmentFixture;
+use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Util\SessionTestUtil;
+use CRM_Funding_ExtensionUtil as E;
 
 /**
  * @group headless
@@ -38,6 +43,99 @@ use Civi\Funding\Util\SessionTestUtil;
 final class FundingCaseTest extends AbstractFundingHeadlessTestCase {
 
   use FundingCaseTestFixturesTrait;
+
+  public function testApprove(): void {
+    $this->addInternalFixtures();
+
+    SessionTestUtil::mockInternalRequestSession($this->associatedContactId);
+
+    $e = NULL;
+    try {
+      FundingCase::approve()
+        ->setId($this->permittedFundingCaseId)
+        ->setTitle('title')
+        ->setAmount(123.45)
+        ->execute();
+    }
+    catch (UnauthorizedException $e) {
+      static::assertSame('Permission to approve funding case is missing.', $e->getMessage());
+    }
+    static::assertNotNull($e);
+
+    FundingCaseContactRelationFixture::addContact(
+      $this->associatedContactId,
+      $this->permittedFundingCaseId,
+      ['review_calculative'],
+    );
+
+    AttachmentFixture::addFixture(
+      'civicrm_funding_case_type',
+      $this->fundingCaseTypeId,
+      E::path('tests/phpunit/resources/FundingCaseDocumentTemplate.docx'),
+      ['file_type_id' => FileTypeIds::TRANSFER_CONTRACT_TEMPLATE],
+    );
+
+    $result = FundingCase::approve()
+      ->setId($this->permittedFundingCaseId)
+      ->setTitle('title')
+      ->setAmount(123.45)
+      ->execute();
+
+    static::assertSame('title', $result['title']);
+    static::assertSame(123.45, $result['amount_approved']);
+    static::assertSame('ongoing', $result['status']);
+  }
+
+  public function testRecreateTransferContract(): void {
+    $this->addInternalFixtures();
+
+    SessionTestUtil::mockInternalRequestSession($this->associatedContactId);
+
+    FundingCase::update(FALSE)
+      ->addWhere('id', '=', $this->permittedFundingCaseId)
+      ->addValue('status', 'ongoing')
+      ->addValue('amount_approved', 1.23)
+      ->execute();
+
+    $e = NULL;
+    try {
+      FundingCase::recreateTransferContract()
+        ->setId($this->permittedFundingCaseId)
+        ->execute();
+    }
+    catch (UnauthorizedException $e) {
+      static::assertSame('Permission to recreate transfer contract is missing.', $e->getMessage());
+    }
+    static::assertNotNull($e);
+
+    FundingCaseContactRelationFixture::addContact(
+      $this->associatedContactId,
+      $this->permittedFundingCaseId,
+      ['review_calculative'],
+    );
+
+    AttachmentFixture::addFixture(
+      'civicrm_funding_case_type',
+      $this->fundingCaseTypeId,
+      E::path('tests/phpunit/resources/FundingCaseDocumentTemplate.docx'),
+      ['file_type_id' => FileTypeIds::TRANSFER_CONTRACT_TEMPLATE],
+    );
+
+    $transferContractAttachment = AttachmentFixture::addFixture(
+      'civicrm_funding_case',
+      $this->permittedFundingCaseId,
+      E::path('tests/phpunit/resources/FundingCaseDocumentTemplate.docx'),
+      ['file_type_id' => FileTypeIds::TRANSFER_CONTRACT],
+    );
+
+    $result = FundingCase::recreateTransferContract()
+      ->setId($this->permittedFundingCaseId)
+      ->execute();
+    static::assertSame($this->permittedFundingCaseId, $result['id']);
+
+    // Previous transfer contract should have been removed.
+    static::assertFileDoesNotExist($transferContractAttachment->getPath());
+  }
 
   public function testPermissionsInternal(): void {
     $this->addInternalFixtures();
@@ -58,6 +156,7 @@ final class FundingCaseTest extends AbstractFundingHeadlessTestCase {
     static::assertSame($this->permittedFundingCaseId, $permittedAssociatedResult->first()['id']);
     static::assertSame(['review_baz'], $permittedAssociatedResult->first()['permissions']);
     static::assertTrue($permittedAssociatedResult->first()['PERM_review_baz']);
+    static::assertNull($permittedAssociatedResult->first()['transfer_contract_uri']);
 
     // Contact has an a-b-relationship with an associated contact
     SessionTestUtil::mockInternalRequestSession($this->relatedABContactId);
@@ -66,6 +165,7 @@ final class FundingCaseTest extends AbstractFundingHeadlessTestCase {
     static::assertSame($this->permittedFundingCaseId, $permittedABResult->first()['id']);
     static::assertSame(['review_e'], $permittedABResult->first()['permissions']);
     static::assertTrue($permittedABResult->first()['PERM_review_e']);
+    static::assertNull($permittedABResult->first()['transfer_contract_uri']);
 
     // Contact has an b-a-relationship with an associated contact
     SessionTestUtil::mockInternalRequestSession($this->relatedBAContactId);
@@ -75,6 +175,7 @@ final class FundingCaseTest extends AbstractFundingHeadlessTestCase {
     static::assertSame($this->permittedFundingCaseId, $permittedBAResult->first()['id']);
     static::assertSame(['review_e'], $permittedBAResult->first()['permissions']);
     static::assertTrue($permittedBAResult->first()['PERM_review_e']);
+    static::assertNull($permittedBAResult->first()['transfer_contract_uri']);
 
     // Contact has a not permitted relationship with an associated contact
     SessionTestUtil::mockInternalRequestSession($this->notPermittedContactId);
@@ -108,6 +209,7 @@ final class FundingCaseTest extends AbstractFundingHeadlessTestCase {
     static::assertTrue($permittedAssociatedResult->first()['PERM_application_foo']);
     static::assertTrue($permittedAssociatedResult->first()['PERM_application_bar']);
     static::assertArrayNotHasKey('PERM_review_baz', $permittedAssociatedResult->first());
+    static::assertNull($permittedAssociatedResult->first()['transfer_contract_uri']);
 
     // Contact has an a-b-relationship with an associated contact
     SessionTestUtil::mockRemoteRequestSession((string) $this->relatedABContactId);
@@ -119,6 +221,7 @@ final class FundingCaseTest extends AbstractFundingHeadlessTestCase {
     static::assertTrue($permittedABResult->first()['PERM_application_c']);
     static::assertTrue($permittedABResult->first()['PERM_application_d']);
     static::assertArrayNotHasKey('PERM_review_e', $permittedABResult->first());
+    static::assertNull($permittedABResult->first()['transfer_contract_uri']);
 
     // Contact has an b-a-relationship with an associated contact
     SessionTestUtil::mockRemoteRequestSession((string) $this->relatedBAContactId);
@@ -130,6 +233,7 @@ final class FundingCaseTest extends AbstractFundingHeadlessTestCase {
     static::assertTrue($permittedBAResult->first()['PERM_application_c']);
     static::assertTrue($permittedBAResult->first()['PERM_application_d']);
     static::assertArrayNotHasKey('PERM_review_e', $permittedBAResult->first());
+    static::assertNull($permittedBAResult->first()['transfer_contract_uri']);
 
     // Contact has a not permitted relationship with an associated contact
     SessionTestUtil::mockRemoteRequestSession((string) $this->notPermittedContactId);

@@ -25,31 +25,28 @@ use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent;
 use Civi\Funding\Event\FundingCase\FundingCaseDeletedEvent;
 use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
+use Civi\Funding\FileTypeIds;
+use Civi\Funding\FundingAttachmentManagerInterface;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
 use Civi\RemoteTools\Api4\Query\ConditionInterface;
 use Webmozart\Assert\Assert;
 
-/**
- * @phpstan-type fundingCaseT array{
- *   id: int,
- *   funding_program_id: int,
- *   funding_case_type_id: int,
- *   status: string,
- *   creation_date: string,
- *   modification_date: string,
- *   recipient_contact_id: int,
- *   creation_contact_id: int,
- * }
- */
 class FundingCaseManager {
 
   private Api4Interface $api4;
 
+  private FundingAttachmentManagerInterface $attachmentManager;
+
   private CiviEventDispatcherInterface $eventDispatcher;
 
-  public function __construct(Api4Interface $api4, CiviEventDispatcherInterface $eventDispatcher) {
+  public function __construct(
+    Api4Interface $api4,
+    FundingAttachmentManagerInterface $attachmentManager,
+    CiviEventDispatcherInterface $eventDispatcher
+  ) {
     $this->api4 = $api4;
+    $this->attachmentManager = $attachmentManager;
     $this->eventDispatcher = $eventDispatcher;
   }
 
@@ -58,6 +55,7 @@ class FundingCaseManager {
    *   funding_program: \Civi\Funding\Entity\FundingProgramEntity,
    *   funding_case_type: \Civi\Funding\Entity\FundingCaseTypeEntity,
    *   recipient_contact_id: int,
+   *   title?: string|null,
    * } $values
    *
    * @throws \CRM_Core_Exception
@@ -69,16 +67,16 @@ class FundingCaseManager {
       'funding_case_type_id' => $values['funding_case_type']->getId(),
       'recipient_contact_id' => $values['recipient_contact_id'],
       'status' => 'open',
+      'title' => $values['title'] ?? NULL,
       'creation_date' => $now,
       'modification_date' => $now,
       'creation_contact_id' => $contactId,
+      'amount_approved' => NULL,
     ]);
     $action = FundingCase::create(FALSE)
       ->setValues($fundingCase->toArray());
 
-    /** @phpstan-var fundingCaseT $fundingCaseValues */
-    $fundingCaseValues = $this->api4->executeAction($action)->first();
-    $fundingCase = FundingCaseEntity::fromArray($fundingCaseValues)->reformatDates();
+    $fundingCase = FundingCaseEntity::singleFromApiResult($this->api4->executeAction($action))->reformatDates();
 
     $event = new FundingCaseCreatedEvent($contactId, $fundingCase,
       $values['funding_program'], $values['funding_case_type']);
@@ -102,17 +100,14 @@ class FundingCaseManager {
     $this->eventDispatcher->dispatch(FundingCaseDeletedEvent::class, $event);
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function get(int $id): ?FundingCaseEntity {
     $action = FundingCase::get(FALSE)
       ->addWhere('id', '=', $id);
-    /** @phpstan-var fundingCaseT|null $values */
-    $values = $this->api4->executeAction($action)->first();
 
-    if (NULL === $values) {
-      return NULL;
-    }
-
-    return FundingCaseEntity::fromArray($values);
+    return FundingCaseEntity::singleOrNullFromApiResult($this->api4->executeAction($action));
   }
 
   /**
@@ -123,13 +118,7 @@ class FundingCaseManager {
   public function getAll(): array {
     $action = FundingCase::get(FALSE);
 
-    /** @var array<fundingCaseT> $records */
-    $records = $this->api4->executeAction($action)->getArrayCopy();
-
-    return array_map(
-      fn (array $values) => FundingCaseEntity::fromArray($values),
-      $records,
-    );
+    return FundingCaseEntity::allFromApiResult($this->api4->executeAction($action));
   }
 
   /**
@@ -141,6 +130,7 @@ class FundingCaseManager {
    *   funding_program: \Civi\Funding\Entity\FundingProgramEntity,
    *   funding_case_type: \Civi\Funding\Entity\FundingCaseTypeEntity,
    *   recipient_contact_id: int,
+   *   title?: string|null,
    * } $values
    *
    * @throws \CRM_Core_Exception
@@ -158,6 +148,9 @@ class FundingCaseManager {
   public function update(FundingCaseEntity $fundingCase): void {
     $previousFundingCase = $this->get($fundingCase->getId());
     Assert::notNull($previousFundingCase, 'Funding case could not be loaded');
+    if ($fundingCase->getModificationDate() == $previousFundingCase->getModificationDate()) {
+      $fundingCase->setModificationDate(new \DateTime(date('Y-m-d H:i:s')));
+    }
     $action = FundingCase::update(FALSE)
       ->setValues($fundingCase->toArray());
     $this->api4->executeAction($action);
@@ -182,6 +175,16 @@ class FundingCaseManager {
   }
 
   /**
+   * @return bool
+   *   TRUE if the funding case with the given ID has a transfer contract.
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function hasTransferContract(int $id): bool {
+    return $this->attachmentManager->has('civicrm_funding_case', $id, FileTypeIds::TRANSFER_CONTRACT);
+  }
+
+  /**
    * @throws \CRM_Core_Exception
    */
   private function getLastBy(ConditionInterface $condition): ?FundingCaseEntity {
@@ -193,10 +196,8 @@ class FundingCaseManager {
       0,
       ['checkPermissions' => FALSE],
     );
-    $values = $result->first();
 
-    // @phpstan-ignore-next-line
-    return NULL === $values ? NULL : FundingCaseEntity::fromArray($values);
+    return FundingCaseEntity::singleOrNullFromApiResult($result);
   }
 
 }

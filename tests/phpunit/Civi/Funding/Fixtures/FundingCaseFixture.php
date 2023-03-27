@@ -22,18 +22,6 @@ namespace Civi\Funding\Fixtures;
 use Civi\Api4\FundingCase;
 use Civi\Funding\Entity\FundingCaseEntity;
 
-/**
- * @phpstan-type fundingCaseT array{
- *   id?: int,
- *   funding_program_id: int,
- *   funding_case_type_id: int,
- *   status: string,
- *   recipient_contact_id: int,
- *   creation_date: string,
- *   modification_date: string,
- *   creation_contact_id: int,
- * }
- */
 final class FundingCaseFixture {
 
   /**
@@ -46,19 +34,20 @@ final class FundingCaseFixture {
   ): FundingCaseEntity {
     $now = date('Y-m-d H:i:s');
 
-    /** @phpstan-var fundingCaseT $fundingCaseValues */
-    $fundingCaseValues = FundingCase::create(FALSE)
+    $result = FundingCase::create(FALSE)
       ->setValues($values + [
         'funding_program_id' => $fundingProgramId,
         'funding_case_type_id' => $fundingCaseTypeId,
         'recipient_contact_id' => $recipientContactId,
         'status' => 'open',
+        'title' => 'Funding Case Title',
         'creation_date' => $now,
         'modification_date' => $now,
         'creation_contact_id' => $creationContactId,
-      ])->execute()->first();
+        'amount_approved' => NULL,
+      ])->execute();
 
-    return FundingCaseEntity::fromArray($fundingCaseValues)->reformatDates();
+    return FundingCaseEntity::singleFromApiResult($result)->reformatDates();
   }
 
 }

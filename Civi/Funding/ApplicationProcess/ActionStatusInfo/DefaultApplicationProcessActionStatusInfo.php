@@ -24,7 +24,11 @@ use Civi\Funding\Entity\FullApplicationProcessStatus;
 /**
  * @codeCoverageIgnore
  */
-final class DefaultApplicationProcessActionStatusInfo implements ApplicationProcessActionStatusInfoInterface {
+final class DefaultApplicationProcessActionStatusInfo extends AbstractApplicationProcessActionStatusInfo {
+
+  public function getEligibleStatusList(): array {
+    return ['eligible', 'complete'];
+  }
 
   public function getFinalIneligibleStatusList(): array {
     return [

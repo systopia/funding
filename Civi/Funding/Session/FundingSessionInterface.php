@@ -25,6 +25,8 @@ interface FundingSessionInterface {
    * @return int
    *   The resolved contact ID for remote sessions, the logged-in user's contact
    *   ID, or 0 on CLI.
+   *
+   * @throws \Exception If remote session, but resolved contact ID not set.
    */
   public function getContactId(): int;
 

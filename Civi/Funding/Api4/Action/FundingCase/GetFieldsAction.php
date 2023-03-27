@@ -26,13 +26,31 @@ use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
 
 final class GetFieldsAction extends DAOGetFieldsAction {
 
-  use PermissionsGetFieldsActionTrait;
+  use PermissionsGetFieldsActionTrait {
+    PermissionsGetFieldsActionTrait::getRecords as getRecordsWithPermissions;
+  }
 
   private PossiblePermissionsLoaderInterface $possiblePermissionsLoader;
 
   public function __construct(PossiblePermissionsLoaderInterface $possiblePermissionsLoader) {
     parent::__construct(FundingCase::_getEntityName(), 'getFields');
     $this->possiblePermissionsLoader = $possiblePermissionsLoader;
+  }
+
+  /**
+   * @phpstan-return array<array<string, array<string, scalar>|array<scalar>|scalar|null>&array{name: string}>
+   */
+  protected function getRecords(): array {
+    return array_merge($this->getRecordsWithPermissions(), [
+      [
+        'name' => 'transfer_contract_uri',
+        'description' => 'URI to download the transfer contract or null if no transfer contract exists.',
+        'type' => 'Custom',
+        'data_type' => 'String',
+        'readonly' => TRUE,
+        'required' => FALSE,
+      ],
+    ]);
   }
 
   /**

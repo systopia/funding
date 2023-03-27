@@ -53,6 +53,30 @@ abstract class AbstractEntity {
   }
 
   /**
+   * @return static
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public static function singleFromApiResult(Result $result): self {
+    return static::fromArray($result->single());
+  }
+
+  /**
+   * @return static|null
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public static function singleOrNullFromApiResult(Result $result): ?self {
+    if ($result->count() > 1) {
+      throw new \CRM_Core_Exception(sprintf('Expected zero or one record, got %d.', $result->count()));
+    }
+
+    $values = $result->first();
+
+    return NULL === $values ? NULL : static::fromArray($values);
+  }
+
+  /**
    * @phpstan-param T $values
    *
    * @return static
@@ -84,6 +108,10 @@ abstract class AbstractEntity {
   public function getId(): int {
     /** @phpstan-ignore-next-line  */
     return $this->values['id'] ?? -1;
+  }
+
+  public function has(string $key): bool {
+    return array_key_exists($key, $this->values);
   }
 
   public function isNew(): bool {

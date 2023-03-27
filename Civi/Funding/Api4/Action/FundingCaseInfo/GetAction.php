@@ -73,7 +73,10 @@ final class GetAction extends AbstractGetAction {
       'funding_case_status' => $fundingCase->getStatus(),
       'funding_case_creation_date' => $fundingCase->getCreationDate()->format('Y-m-d H:i:s'),
       'funding_case_modification_date' => $fundingCase->getModificationDate()->format('Y-m-d H:i:s'),
+      'funding_case_title' => $fundingCase->getTitle(),
+      'funding_case_amount_approved' => $fundingCase->getAmountApproved(),
       'funding_case_type_id' => $fundingCase->getFundingCaseTypeId(),
+      'funding_case_transfer_contract_uri' => $fundingCase->getTransferContractUri(),
       'funding_program_id' => $fundingProgram->getId(),
       'funding_program_currency' => $fundingProgram->getCurrency(),
       'funding_program_title' => $fundingProgram->getTitle(),
@@ -85,12 +88,11 @@ final class GetAction extends AbstractGetAction {
       'application_process_is_review_calculative' => $applicationProcess->getIsReviewContent(),
       'application_process_is_review_content' => $applicationProcess->getIsReviewContent(),
       'application_process_amount_requested' => $applicationProcess->getAmountRequested(),
-      'application_process_amount_granted' => $applicationProcess->getAmountGranted(),
-      'application_process_granted_budget' => $applicationProcess->getGrantedBudget(),
       'application_process_creation_date' => $applicationProcess->getCreationDate()->format('Y-m-d H:i:s'),
       'application_process_modification_date' => $applicationProcess->getModificationDate()->format('Y-m-d H:i:s'),
       'application_process_start_date' => self::toFormattedDateOrNull($applicationProcess->getStartDate()),
       'application_process_end_date' => self::toFormattedDateOrNull($applicationProcess->getEndDate()),
+      'application_process_is_eligible' => $applicationProcess->getIsEligible(),
     ];
 
     foreach ($fundingCase->getFlattenedPermissions() as $permission => $active) {

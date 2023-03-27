@@ -152,12 +152,11 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
       'modification_date' => date('Y-m-d H:i:s'),
       'start_date' => ValidatedApplicationDataMock::START_DATE,
       'end_date' => ValidatedApplicationDataMock::END_DATE,
-      'amount_granted' => NULL,
-      'granted_budget' => NULL,
       'is_review_content' => NULL,
       'reviewer_cont_contact_id' => NULL,
       'is_review_calculative' => NULL,
       'reviewer_calc_contact_id' => NULL,
+      'is_eligible' => NULL,
     ], $applicationProcessValues);
   }
 

@@ -17,7 +17,30 @@
 'use strict';
 
 fundingModule.factory('fundingCaseService', ['crmApi4', function(crmApi4) {
+  /**
+   * @param {integer} id
+   * @param {string} field
+   * @returns {Promise}
+   */
+  function getOptions(id, field) {
+    return crmApi4('FundingCase', 'getFields', {
+      loadOptions: true,
+      values: {id},
+      where: [['name', '=', field]],
+      select: ['options']
+    }).then((result) => result[0].options || {});
+  }
+
   return {
+    /**
+     * @param {integer} id
+     * @param {string} title
+     * @param {number} amount
+     * @returns {Promise}
+     */
+    approve: (id, title, amount) => crmApi4('FundingCase', 'approve', {id, title, amount})
+        .then((result) => result),
+
     /**
      * @param {integer} id
      * @returns {Promise}
@@ -27,5 +50,39 @@ fundingModule.factory('fundingCaseService', ['crmApi4', function(crmApi4) {
     }).then(function (result) {
       return result[0] || null;
     }),
+
+
+    /**
+     * @param {integer} id
+     * @returns {Promise<string[]>}
+     */
+    getPossibleActions: (id) => crmApi4('FundingCase', 'getPossibleActions', {id}),
+
+    /**
+     * @param {integer} id
+     * @returns {Promise<string[]>}
+     */
+    getStatusLabels: (id) => getOptions(id, 'status'),
+
+    /**
+     * @param {integer} id
+     * @param {string} field
+     * @param value
+     * @returns {Promise}
+     */
+    setValue: (id, field, value) => {
+      let params = {where: [['id', '=', id]], values: {}};
+      params.values[field] = value;
+
+      return crmApi4('FundingCase', 'update', params);
+    },
+
+    /**
+     * @param {integer} id
+     *
+     * @returns {Promise}
+     */
+    recreateTransferContract:
+        (id) => crmApi4('FundingCase', 'recreateTransferContract', {id}),
   };
 }]);

@@ -1,0 +1,75 @@
+<div id="funding-overlay"></div>
+
+<div id ="bootstrap-theme">
+
+    <div class="modal fade funding-modal" id="approve-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="{{ts('Close')}}"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">{{ ts('Approve') }}</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <label for="approve-title">{{ ts('Title') }}</label>
+                        <input id="approve-title" type="text" ng-maxlength="255" ng-model="approve.title" ng-required="true"/>
+                    </div>
+                    <div>
+                        <label for="approve-amount">{{ ts('Amount') }}</label>
+                        <input id="approve-amount" type="number" min="0.01" step="0.01" ng-model="approve.amount" ng-required="true"/>
+                        {{ currencySymbol }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ ts('Cancel') }}</button>
+                    <button type="button" class="btn btn-primary" ng-click="approveSubmit()">{{ ts('Submit') }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h1 crm-page-title>{{ts('Funding case: %1', {1: fundingCase.title || ts('Untitled')})}}</h1>
+
+    <div>
+        <label>{{ ts('Status' )}}</label>
+        {{ statusLabels[fundingCase.status] || ts('Unknown') }}
+    </div>
+    <div>
+        <label>{{ ts('Creation date') }}</label>
+        {{ fundingCase.creation_date }}
+    </div>
+    <div>
+        <label>{{ ts('Modification date') }}</label>
+        {{ fundingCase.modification_date }}
+    </div>
+    <div>
+        <label>{{ ts('Recipient') }}</label>
+        {{ recipientContact.display_name }}
+    </div>
+    <div>
+        <editable-field label="ts('Title')" type="text"
+                        value="fundingCase.title"
+                        empty-value-display="{{ ts('Untitled') }}"
+                        e-ng-required="true"></editable-field>
+    </div>
+    <div>
+        <label>{{ ts('Amount requested eligible') }}</label>
+        {{ amountRequestedEligible|number:2 }} {{ currencySymbol }}
+    </div>
+    <div ng-show="fundingCase.transfer_contract_uri">
+        <a href="{{ fundingCase.transfer_contract_uri }}" target="_blank" crm-icon="fa-external-link">{{ ts('Transfer contract') }}</a>
+    </div>
+
+    <sk-application-process-table options="{filters: {funding_case_id: fundingCase.id}}"></sk-application-process-table>
+
+    <button ng-show="possibleActions.includes('approve')" type="button"
+            ng-click="approvePrepare()">
+        <span class="funding-label">{{ ts('Approve') }}</span>
+    </button>
+
+    <button ng-show="possibleActions.includes('recreate-transfer-contract')" type="button"
+            ng-click="recreateTransferContract()">
+        <span class="funding-label">{{ ts('Recreate transfer contract') }}</span>
+    </button>
+
+</div>

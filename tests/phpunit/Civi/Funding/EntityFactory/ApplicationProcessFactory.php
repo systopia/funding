@@ -34,12 +34,11 @@ use Civi\Funding\Entity\ApplicationProcessEntity;
  *   end_date?: string|null,
  *   request_data?: array<string, mixed>,
  *   amount_requested?: float,
- *   amount_granted?: float|null,
- *   granted_budget?: float|null,
  *   is_review_content?: bool|null,
  *   reviewer_cont_contact_id?: int|null,
  *   is_review_calculative?: bool|null,
  *   reviewer_calc_contact_id?: int|null,
+ *   is_eligible?: bool|null,
  *   check_permissions?: bool,
  *   custom?: mixed,
  * }
@@ -65,12 +64,11 @@ final class ApplicationProcessFactory {
       'modification_date' => '2023-01-02 02:02:02',
       'start_date' => NULL,
       'end_date' => NULL,
-      'amount_granted' => NULL,
-      'granted_budget' => NULL,
       'is_review_content' => NULL,
       'reviewer_cont_contact_id' => NULL,
       'is_review_calculative' => NULL,
       'reviewer_calc_contact_id' => NULL,
+      'is_eligible' => NULL,
     ];
     if (NULL === $values['id']) {
       unset($values['id']);

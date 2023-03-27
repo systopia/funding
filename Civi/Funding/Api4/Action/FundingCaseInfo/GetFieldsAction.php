@@ -154,9 +154,27 @@ final class GetFieldsAction extends BasicGetFieldsAction {
         'data_type' => 'Date',
       ],
       [
+        'name' => 'funding_case_title',
+        'title' => 'funding_case_title',
+        'data_type' => 'String',
+        'nullable' => TRUE,
+      ],
+      [
+        'name' => 'funding_case_amount_approved',
+        'title' => 'funding_case_amount_approved',
+        'data_type' => 'Float',
+        'nullable' => TRUE,
+      ],
+      [
         'name' => 'funding_case_type_id',
         'title' => 'funding_case_type_id',
         'data_type' => 'Integer',
+      ],
+      [
+        'name' => 'funding_case_transfer_contract_uri',
+        'title' => 'funding_case_transfer_contract_uri',
+        'data_type' => 'String',
+        'nullable' => TRUE,
       ],
       [
         'name' => 'funding_program_id',
@@ -217,18 +235,6 @@ final class GetFieldsAction extends BasicGetFieldsAction {
         'data_type' => 'Float',
       ],
       [
-        'name' => 'application_process_amount_granted',
-        'title' => 'application_process_amount_granted',
-        'data_type' => 'Float',
-        'nullable' => TRUE,
-      ],
-      [
-        'name' => 'application_process_granted_budget',
-        'title' => 'application_process_granted_budget',
-        'data_type' => 'Float',
-        'nullable' => TRUE,
-      ],
-      [
         'name' => 'application_process_creation_date',
         'title' => 'application_process_creation_date',
         'data_type' => 'Date',
@@ -248,6 +254,12 @@ final class GetFieldsAction extends BasicGetFieldsAction {
         'name' => 'application_process_end_date',
         'title' => 'application_process_end_date',
         'data_type' => 'Date',
+        'nullable' => TRUE,
+      ],
+      [
+        'name' => 'application_process_is_eligible',
+        'title' => 'application_process_is_eligible',
+        'data_type' => 'Boolean',
         'nullable' => TRUE,
       ],
     ], iterator_to_array($this->getPermissionFields()));

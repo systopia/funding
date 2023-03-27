@@ -19,53 +19,30 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\ActionStatusInfo;
 
-use Civi\Funding\Entity\FullApplicationProcessStatus;
-
 /**
  * @codeCoverageIgnore
  */
-final class ReworkPossibleApplicationProcessActionStatusInfo implements ApplicationProcessActionStatusInfoInterface {
-
-  private ApplicationProcessActionStatusInfoInterface $info;
-
-  public function __construct(ApplicationProcessActionStatusInfoInterface $metaInfo) {
-    $this->info = $metaInfo;
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public function getFinalIneligibleStatusList(): array {
-    return $this->info->getFinalIneligibleStatusList();
-  }
+final class ReworkPossibleApplicationProcessActionStatusInfo extends ApplicationProcessActionStatusInfoDecorator {
 
   public function isApplyAction(string $action): bool {
-    return 'apply' === $action || $this->info->isApplyAction($action);
+    return 'apply' === $action || parent::isApplyAction($action);
   }
 
   public function isChangeRequiredStatus(string $status): bool {
-    return 'rework' === $status || $this->info->isChangeRequiredStatus($status);
-  }
-
-  public function isDeleteAction(string $action): bool {
-    return $this->info->isDeleteAction($action);
+    return 'rework' === $status || parent::isChangeRequiredStatus($status);
   }
 
   public function isRestoreAction(string $action): bool {
     return in_array($action, ['withdraw-change', 'revert-change', 'reject-change'], TRUE)
-      || $this->info->isRestoreAction($action);
+      || parent::isRestoreAction($action);
   }
 
   public function isReviewStartAction(string $action): bool {
-    return 'review' === $action || $this->info->isReviewStartAction($action);
+    return 'review' === $action || parent::isReviewStartAction($action);
   }
 
   public function isReviewStatus(string $status): bool {
-    return 'rework-review' === $status || $this->info->isReviewStatus($status);
-  }
-
-  public function isSnapshotRequiredStatus(FullApplicationProcessStatus $status): bool {
-    return $this->info->isSnapshotRequiredStatus($status);
+    return 'rework-review' === $status || parent::isReviewStatus($status);
   }
 
 }

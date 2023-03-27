@@ -44,6 +44,7 @@ use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\ApplicationProcessTaskManager;
 use Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager;
 use Civi\Funding\ApplicationProcess\ApplicationSnapshotManager;
+use Civi\Funding\ApplicationProcess\EligibleApplicationProcessesLoader;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationDeleteHandlerInterface;
@@ -72,13 +73,14 @@ use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationJsonSchemaGetHandl
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationResourcesItemsAddIdentifiersHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationResourcesItemsPersistHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationSnapshotCreateHandler;
-use Civi\Funding\ApplicationProcess\StatusDeterminer\DefaultApplicationProcessStatusDeterminer;
-use Civi\Funding\ApplicationProcess\StatusDeterminer\ReworkPossibleApplicationProcessStatusDeterminer;
 use Civi\Funding\ApplicationProcess\Snapshot\ApplicationSnapshotRestorer;
 use Civi\Funding\ApplicationProcess\Snapshot\ApplicationSnapshotRestorerInterface;
+use Civi\Funding\ApplicationProcess\StatusDeterminer\DefaultApplicationProcessStatusDeterminer;
+use Civi\Funding\ApplicationProcess\StatusDeterminer\ReworkPossibleApplicationProcessStatusDeterminer;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationCostItemsSubscriber;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessCreatedSubscriber;
+use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessEligibleSubscriber;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessIdentifierSubscriber;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessModificationDateSubscriber;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessPreDeleteSubscriber;
@@ -104,6 +106,7 @@ $container->autowire(ApplicationResourcesItemManager::class);
 $container->autowire(ApplicationIdentifierGeneratorInterface::class, ApplicationIdentifierGenerator::class);
 $container->autowire(ApplicationProcessActivityManager::class);
 $container->autowire(ApplicationProcessTaskManager::class);
+$container->autowire(EligibleApplicationProcessesLoader::class);
 $container->autowire(ApplicationSnapshotManager::class);
 
 ServiceRegistrator::autowireAllImplementing(
@@ -193,6 +196,8 @@ $container->autowire(ValidateFormAction::class)
   ->setShared(FALSE);
 
 $container->autowire(ApplicationProcessGetFieldsSubscriber::class)
+  ->addTag('kernel.event_subscriber');
+$container->autowire(ApplicationProcessEligibleSubscriber::class)
   ->addTag('kernel.event_subscriber');
 $container->autowire(ApplicationProcessIdentifierSubscriber::class)
   ->addTag('kernel.event_subscriber')

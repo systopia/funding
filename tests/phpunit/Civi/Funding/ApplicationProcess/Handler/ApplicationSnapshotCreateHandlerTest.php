@@ -65,8 +65,6 @@ final class ApplicationSnapshotCreateHandlerTest extends TestCase {
         static::assertEquals($applicationProcess->getEndDate(), $applicationSnapshot->getEndDate());
         static::assertSame($applicationProcess->getRequestData(), $applicationSnapshot->getRequestData());
         static::assertSame($applicationProcess->getAmountRequested(), $applicationSnapshot->getAmountRequested());
-        static::assertSame($applicationProcess->getAmountGranted(), $applicationSnapshot->getAmountGranted());
-        static::assertSame($applicationProcess->getGrantedBudget(), $applicationSnapshot->getGrantedBudget());
         static::assertSame($applicationProcess->getIsReviewContent(), $applicationSnapshot->getIsReviewContent());
         static::assertSame(
           $applicationProcess->getIsReviewCalculative(),

@@ -50,8 +50,6 @@ use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
  *   end_date: string|null,
  *   request_data: array<string, mixed>,
  *   amount_requested: float,
- *   amount_granted: float|null,
- *   granted_budget: float|null,
  *   is_review_content: bool|null,
  *   reviewer_cont_contact_id: int|null,
  *   is_review_calculative: bool|null,
