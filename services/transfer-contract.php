@@ -20,9 +20,33 @@ declare(strict_types = 1);
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
+use Civi\Api4\Generic\AbstractAction;
+use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\TransferContract\Handler\DefaultTransferContractRenderHandler;
 use Civi\Funding\TransferContract\Handler\TransferContractRenderHandlerInterface;
 use Civi\Funding\TransferContract\TransferContractCreator;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 $container->autowire(TransferContractCreator::class);
 $container->autowire(TransferContractRenderHandlerInterface::class, DefaultTransferContractRenderHandler::class);
+
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/Api4/Action/FundingTransferContract',
+  'Civi\\Funding\\Api4\\Action\\FundingTransferContract',
+  AbstractAction::class,
+  [],
+  [
+    'public' => TRUE,
+    'shared' => FALSE,
+  ]
+);
+
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/EventSubscriber/Remote/TransferContract',
+  'Civi\\Funding\\EventSubscriber\\Remote\\TransferContract',
+  EventSubscriberInterface::class,
+  ['kernel.event_subscriber' => []],
+  ['lazy' => TRUE],
+);

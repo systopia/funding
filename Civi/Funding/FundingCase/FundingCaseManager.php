@@ -51,6 +51,18 @@ class FundingCaseManager {
   }
 
   /**
+   * @phpstan-return array<FundingCaseEntity>
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function getBy(ConditionInterface $condition): array {
+    $action = FundingCase::get(FALSE)
+      ->setWhere([$condition->toArray()]);
+
+    return FundingCaseEntity::allFromApiResult($this->api4->executeAction($action));
+  }
+
+  /**
    * @phpstan-param array{
    *   funding_program: \Civi\Funding\Entity\FundingProgramEntity,
    *   funding_case_type: \Civi\Funding\Entity\FundingCaseTypeEntity,
