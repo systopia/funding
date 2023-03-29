@@ -116,7 +116,7 @@ return [
                 [
                   'path' => 'civicrm/a#/funding/application/[id]',
                   'icon' => 'fa-external-link',
-                  'text' => E::ts('Open'),
+                  'text' => E::ts('Open application'),
                   'style' => 'default',
                   'condition' => [],
                   'entity' => '',

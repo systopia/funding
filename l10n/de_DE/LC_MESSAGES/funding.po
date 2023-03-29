@@ -547,16 +547,16 @@ msgid "Rework in review"
 msgstr "Überarbeitung in Prüfung"
 
 #: Civi/Funding/FundingPseudoConstants.php
-msgid "open"
-msgstr "offen"
+msgid "Open"
+msgstr "Offen"
 
 #: Civi/Funding/FundingPseudoConstants.php
-msgid "ongoing"
-msgstr "laufend"
+msgid "Ongoing"
+msgstr "Laufend"
 
 #: Civi/Funding/FundingPseudoConstants.php
-msgid "closed"
-msgstr "geschlossen"
+msgid "Closed"
+msgstr "Geschlossen"
 
 #: Civi/Funding/FundingPseudoConstants.php
 msgid "Applications adoptable"
@@ -1177,9 +1177,8 @@ msgid "Identifier"
 msgstr "Bezeichner"
 
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
-#: managed/SavedSearchFundingCases.mgd.php
-msgid "Open"
-msgstr "Öffnen"
+msgid "Open application"
+msgstr "Antrag öffnen"
 
 #: managed/SavedSearchFundingCases.mgd.php
 msgid "Funding cases"
@@ -1196,3 +1195,7 @@ msgstr "Förderfalltyp"
 #: managed/SavedSearchFundingCases.mgd.php
 msgid "Amount approved"
 msgstr "Bewilligter Betrag"
+
+#: managed/SavedSearchFundingCases.mgd.php
+msgid "Open case"
+msgstr "Fall öffnen"

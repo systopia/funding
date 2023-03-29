@@ -415,15 +415,15 @@ msgid "Rework in review"
 msgstr ""
 
 #: Civi/Funding/FundingPseudoConstants.php
-msgid "open"
+msgid "Open"
 msgstr ""
 
 #: Civi/Funding/FundingPseudoConstants.php
-msgid "ongoing"
+msgid "Ongoing"
 msgstr ""
 
 #: Civi/Funding/FundingPseudoConstants.php
-msgid "closed"
+msgid "Closed"
 msgstr ""
 
 #: Civi/Funding/FundingPseudoConstants.php
@@ -946,8 +946,8 @@ msgstr ""
 msgid "Identifier"
 msgstr ""
 
-#: managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCases.mgd.php
-msgid "Open"
+#: managed/SavedSearchFundingApplicationProcesses.mgd.php
+msgid "Open application"
 msgstr ""
 
 #: managed/SavedSearchFundingCases.mgd.php
@@ -964,5 +964,9 @@ msgstr ""
 
 #: managed/SavedSearchFundingCases.mgd.php
 msgid "Amount approved"
+msgstr ""
+
+#: managed/SavedSearchFundingCases.mgd.php
+msgid "Open case"
 msgstr ""
 

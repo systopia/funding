@@ -48,9 +48,9 @@ final class FundingPseudoConstants {
    */
   public static function getFundingCaseStatus(): array {
     return [
-      'open' => E::ts('open'),
-      'ongoing' => E::ts('ongoing'),
-      'closed' => E::ts('closed'),
+      'open' => E::ts('Open'),
+      'ongoing' => E::ts('Ongoing'),
+      'closed' => E::ts('Closed'),
     ];
   }
 

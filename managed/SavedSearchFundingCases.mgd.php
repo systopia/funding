@@ -141,7 +141,7 @@ return [
                 [
                   'path' => 'civicrm/a#funding/case/[id]',
                   'icon' => 'fa-external-link',
-                  'text' => E::ts('Open'),
+                  'text' => E::ts('Open case'),
                   'style' => 'default',
                   'condition' => [],
                   'entity' => '',
