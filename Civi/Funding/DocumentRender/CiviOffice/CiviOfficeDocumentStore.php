@@ -42,7 +42,7 @@ final class CiviOfficeDocumentStore extends \CRM_Civioffice_DocumentStore implem
   }
 
   public function __construct() {
-    parent::__construct('funding', E::ts('Files in filesystem'));
+    parent::__construct('funding', E::ts('Files in filesystem (Funding Program Manager)'));
   }
 
   public function onRegister(GenericHookEvent $event): void {
