@@ -48,7 +48,7 @@ final class TransferContractRenderHandler implements TransferContractRenderHandl
     return new TransferContractRenderResult(
       $this->documentRenderer->render(
         $this->getTemplateFile($command->getFundingCaseType()),
-        FundingCase::_getEntityName(),
+        'TransferContract',
         $command->getFundingCase()->getId(),
         [
           'fundingCase' => $command->getFundingCase(),

@@ -75,7 +75,7 @@ final class TransferContractRenderHandlerTest extends TestCase {
     $this->documentRendererMock->expects(static::once())->method('render')
       ->with(
         $transferContractAttachment->getPath(),
-        FundingCase::_getEntityName(),
+        'TransferContract',
         FundingCaseFactory::DEFAULT_ID,
         [
           'fundingCase' => $command->getFundingCase(),
