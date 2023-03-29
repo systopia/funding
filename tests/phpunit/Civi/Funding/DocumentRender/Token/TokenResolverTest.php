@@ -62,7 +62,7 @@ final class TokenResolverTest extends TestCase {
     );
 
     static::assertEquals(
-      new ResolvedToken('<p>    - foo</p>', 'text/html'),
+      new ResolvedToken("    - foo<br />\n", 'text/html'),
       $this->tokenResolver->resolveToken('EntityName', $fundingProgram, '_extra')
     );
 

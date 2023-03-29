@@ -19,6 +19,9 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\DocumentRender\Token;
 
+use Brick\Math\BigDecimal;
+use Brick\Money\Currency;
+use Brick\Money\Money;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -53,13 +56,13 @@ final class ValueConverterTest extends TestCase {
     );
 
     static::assertEquals(
-      new ResolvedToken('1234-05-06 07:08:09', 'text/plain'),
+      new ResolvedToken(new \DateTime('1234-05-06 07:08:09'), 'text/plain'),
       ValueConverter::toResolvedToken(new \DateTime('1234-05-06 07:08:09'))
     );
 
     static::assertEquals(
       new ResolvedToken(
-        '<p>    - foo<br/>        - bar<br/>        - baz</p>',
+        "    - foo<br />\n        - bar<br />\n        - baz<br />\n",
         'text/html'),
       ValueConverter::toResolvedToken(['foo', ['bar', 'baz']])
     );

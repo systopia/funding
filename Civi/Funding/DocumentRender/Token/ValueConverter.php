@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\DocumentRender\Token;
 
+use Brick\Money\Money;
 use CRM_Funding_ExtensionUtil as E;
 
 final class ValueConverter {
@@ -27,10 +28,14 @@ final class ValueConverter {
    * @param mixed $value
    */
   public static function toResolvedToken($value): ResolvedToken {
+    if (self::isValueConvertedByTokenProcessor($value)) {
+      return new ResolvedToken($value, 'text/plain');
+    }
+
     $string = self::valueToString($value);
     if (\is_array($value) || is_object($value) && \str_contains($string, "\n")) {
       return new ResolvedToken(
-        '<p>' . \str_replace("\n", '<br/>', \htmlentities($string)) . '</p>',
+        \nl2br(\htmlentities($string)),
         'text/html',
       );
     }
@@ -56,7 +61,10 @@ final class ValueConverter {
           return str_repeat(' ', $listIndent) . '- ' . self::valueToString($item, $listIndent + 4);
         }, $value
       );
-      return implode("\n", $items);
+      $string = implode("\n", $items);
+
+      // Ensure there's one, but only one "\n" at the end.
+      return str_ends_with($string, "\n") ? $string : $string . "\n";
     }
 
     if (\is_object($value)) {
@@ -77,6 +85,17 @@ final class ValueConverter {
 
     // @phpstan-ignore-next-line
     return (string) $value;
+  }
+
+  /**
+   * @param mixed $value
+   *
+   * @return bool TRUE, if $value is converted to string by TokenProcessor.
+   *
+   * @see \Civi\Token\TokenProcessor::filterTokenValue()
+   */
+  private static function isValueConvertedByTokenProcessor($value): bool {
+    return $value instanceof \DateTime || $value instanceof Money;
   }
 
 }
