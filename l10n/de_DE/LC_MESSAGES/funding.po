@@ -307,7 +307,7 @@ msgstr ""
 
 #: Civi/Funding/Controller/TransferContractDownloadController.php
 msgid "transfer-contract"
-msgstr "weiterleitungsvertrag"
+msgstr "Weiterleitungsvertrag"
 
 #: Civi/Funding/DocumentRender/CiviOffice/CiviOfficeDocumentStore.php
 msgid "Files in filesystem"
@@ -944,7 +944,7 @@ msgstr "Förderfall: %1"
 
 #: ang/crmFunding/case/fundingCase.template.html
 msgid "Untitled"
-msgstr "Ohne Titel"
+msgstr "Unbenannt"
 
 #: ang/crmFunding/case/fundingCase.template.html
 msgid "Amount requested eligible"
@@ -1171,7 +1171,7 @@ msgstr "Förderfälle"
 
 #: managed/OptionGroupFundingFileType.mgd.php
 msgid "Transfer contract template"
-msgstr "Weiterleitungsvertragsvorlage"
+msgstr "Vorlage für Weiterleitungsvertrag"
 
 #: managed/OptionValueActivityUsedForApplicationProcess.mgd.php
 msgid "Funding application process"
