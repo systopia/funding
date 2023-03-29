@@ -114,7 +114,7 @@ final class FundingProgramTokenSubscriberTest extends TestCase {
 
     $fundingProgram = FundingProgramFactory::createFundingProgram();
     $this->fundingProgramManagerMock->expects(static::never())->method('get');
-    $this->contextDataHolder->add('EntityName', 1, ['fundingProgram' => $fundingProgram]);
+    $this->contextDataHolder->addEntityData('EntityName', 1, ['fundingProgram' => $fundingProgram]);
 
     $this->subscriber->onCiviOfficeTokenContext($event);
     // @phpstan-ignore-next-line
