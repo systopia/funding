@@ -55,7 +55,7 @@ class CiviOfficeDocumentRenderer implements DocumentRendererInterface {
     int $entityId,
     array $data = []
   ): string {
-    $this->contextDataHolder->add($entityName, $entityId, $data);
+    $this->contextDataHolder->addEntityData($entityName, $entityId, $data);
 
     try {
       /** @phpstan-var array{values: array{string}} $result */
@@ -68,7 +68,7 @@ class CiviOfficeDocumentRenderer implements DocumentRendererInterface {
       ]);
     }
     finally {
-      $this->contextDataHolder->remove($entityName, $entityId);
+      $this->contextDataHolder->removeEntityData($entityName, $entityId);
     }
 
     $documentStoreUri = $result['values'][0];

@@ -71,7 +71,7 @@ abstract class AbstractCiviOfficeTokenSubscriber extends AbstractTokenSubscriber
       );
     }
     else {
-      $entity = $this->contextDataHolder->getValue($event->entity_type, $event->entity_id, $this->getContextKey());
+      $entity = $this->contextDataHolder->getEntityDataValue($event->entity_type, $event->entity_id, $this->getContextKey());
       $entityClass = $this->getEntityClass();
       if ($entity instanceof $entityClass) {
         $event->context[$this->getContextKey()] = $entity;

@@ -68,7 +68,7 @@ abstract class AbstractEntity {
    */
   public static function singleOrNullFromApiResult(Result $result): ?self {
     if ($result->count() > 1) {
-      throw new \CRM_Core_Exception(sprintf('Expected zero or one record, got %d.', $result->count()));
+      throw new \CRM_Core_Exception(sprintf('Expected zero or one record, got %d records.', $result->count()));
     }
 
     $values = $result->first();

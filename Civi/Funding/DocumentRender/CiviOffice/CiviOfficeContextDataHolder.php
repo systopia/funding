@@ -33,14 +33,14 @@ class CiviOfficeContextDataHolder {
   /**
    * @phpstan-param array<mixed> $data
    */
-  public function add(string $entityType, int $entityId, array $data): void {
+  public function addEntityData(string $entityType, int $entityId, array $data): void {
     $this->data[$entityType][$entityId] = $data;
   }
 
   /**
    * @phpstan-return array<mixed>
    */
-  public function get(string $entityType, int $entityId): array {
+  public function getEntityData(string $entityType, int $entityId): array {
     return $this->data[$entityType][$entityId] ?? [];
   }
 
@@ -49,11 +49,11 @@ class CiviOfficeContextDataHolder {
    *
    * @return mixed
    */
-  public function getValue(string $entityType, int $entityId, string $key, $default = NULL) {
-    return $this->get($entityType, $entityId)[$key] ?? $default;
+  public function getEntityDataValue(string $entityType, int $entityId, string $key, $default = NULL) {
+    return $this->getEntityData($entityType, $entityId)[$key] ?? $default;
   }
 
-  public function remove(string $entityType, int $entityId): void {
+  public function removeEntityData(string $entityType, int $entityId): void {
     unset($this->data[$entityType][$entityId]);
   }
 

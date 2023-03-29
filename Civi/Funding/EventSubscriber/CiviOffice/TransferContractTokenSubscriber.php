@@ -53,7 +53,7 @@ final class TransferContractTokenSubscriber extends AbstractTokenSubscriber {
        *   eligibleApplicationProcesses: array<\Civi\Funding\Entity\ApplicationProcessEntity>,
        * } $data
        */
-      $data = $this->contextDataHolder->get($event->entity_type, $event->entity_id);
+      $data = $this->contextDataHolder->getEntityData($event->entity_type, $event->entity_id);
       $event->context['transferContract'] = [
         'eligibleApplicationProcesses' => $data['eligibleApplicationProcesses'],
       ];

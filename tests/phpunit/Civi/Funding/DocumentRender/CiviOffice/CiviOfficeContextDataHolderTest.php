@@ -28,16 +28,16 @@ final class CiviOfficeContextDataHolderTest extends TestCase {
 
   public function test(): void {
     $contextDataHolder = new CiviOfficeContextDataHolder();
-    static::assertSame([], $contextDataHolder->get('Entity', 1));
-    static::assertSame('default', $contextDataHolder->getValue('Entity', 1, 'key', 'default'));
+    static::assertSame([], $contextDataHolder->getEntityData('Entity', 1));
+    static::assertSame('default', $contextDataHolder->getEntityDataValue('Entity', 1, 'key', 'default'));
 
-    $contextDataHolder->add('Entity', 1, ['key' => 'value']);
-    static::assertSame(['key' => 'value'], $contextDataHolder->get('Entity', 1));
-    static::assertSame('value', $contextDataHolder->getValue('Entity', 1, 'key'));
-    static::assertNull($contextDataHolder->getValue('Entity', 1, 'key2'));
+    $contextDataHolder->addEntityData('Entity', 1, ['key' => 'value']);
+    static::assertSame(['key' => 'value'], $contextDataHolder->getEntityData('Entity', 1));
+    static::assertSame('value', $contextDataHolder->getEntityDataValue('Entity', 1, 'key'));
+    static::assertNull($contextDataHolder->getEntityDataValue('Entity', 1, 'key2'));
 
-    $contextDataHolder->remove('Entity', 1);
-    static::assertSame([], $contextDataHolder->get('Entity', 1));
+    $contextDataHolder->removeEntityData('Entity', 1);
+    static::assertSame([], $contextDataHolder->getEntityData('Entity', 1));
   }
 
 }
