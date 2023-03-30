@@ -22,6 +22,13 @@ function funding_civicrm_config(&$config): void {
 }
 
 function funding_civicrm_container(ContainerBuilder $container): void {
+  if (!interface_exists(\Civi\RemoteTools\Api4\Api4Interface::class)) {
+    // Don't register any service if Remote Tools are not available.
+    // We'd get class not found errors from subscribers that depend on classes
+    // in Remote Tools.
+    return;
+  }
+
   // Allow lazy service instantiation (requires symfony/proxy-manager-bridge)
   if (class_exists(\ProxyManager\Configuration::class) && class_exists(RuntimeInstantiator::class)) {
     $container->setProxyInstantiator(new RuntimeInstantiator());

@@ -36,6 +36,8 @@ jobs:
 
     - name: Install dependencies
       run: |
+        git clone --depth=1 https://github.com/systopia/de.systopia.remotetools.git --branch=remoteToolsInfrastructure &&
+        git clone --depth=1 https://github.com/systopia/de.systopia.civioffice.git &&
         composer update --no-progress --prefer-dist --${{ matrix.prefer }} --optimize-autoloader --ignore-platform-req=ext-gd &&
         composer composer-phpunit -- update --no-progress --prefer-dist &&
         composer composer-phpstan -- update --no-progress --prefer-dist --optimize-autoloader

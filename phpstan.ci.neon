@@ -2,12 +2,11 @@ includes:
 	- phpstan.neon.dist
 
 parameters:
+	scanDirectories:
+		- de.systopia.civioffice/CRM/
+		- de.systopia.remotetools/Civi/RemoteTools/
 	# Because we test with different versions in CI we have unmatched errors
 	reportUnmatchedIgnoredErrors: false
-	excludePaths:
-		analyse:
-			# Depends on extension de.systopia.identitytracker
-			- Civi/RemoteTools/Contact/IdTrackerRemoteContactIdResolver.php
 	ignoreErrors:
 		# Depends on extension activity-entity
 		- '#^Call to static method connect\(\) on an unknown class Civi\\Api4\\EntityActivity.$#'

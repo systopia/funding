@@ -44,10 +44,6 @@ parameters:
 			message: '#has an uninitialized property#'
 			paths:
 				- */Civi/Funding/Event/*.php
-				- */Civi/RemoteTools/Event/*.php
-		-
-			message: '#^Access to an undefined property Civi\\Api4\\Generic\\AbstractAction::\$_eventDispatcher.$#'
-			path: */Civi/RemoteTools/Api4/Action/Traits/EventActionTrait.php
 		- '#^Class Civi\\Funding\\Api4\\Action\\[^\s]+Action has an uninitialized property \$[^\s]+\. Give it default value or assign it in the constructor.$#'
 		# For actions that are fetched from container
 		-
@@ -56,26 +52,7 @@ parameters:
 		- '#^Method Civi\\Api4\\[^\\]+::[^(]+\(\) should return Civi\\[^\s]+\\[^\s]+Action but returns mixed.$#'
 		- '#^Access to an uninitialized property Civi\\Funding\\Event\\[^\s]+Event::\$[^\s]+.$#'
 		- '#^Access to an undefined property Civi\\Core\\Event\\GenericHookEvent::#'
-		-
-			message: '#^PHPDoc tag @var for constant [^\s]+::[^\s]+ with type string is incompatible with value null.$#'
-			path: */Civi/RemoteTools/EventSubscriber/Abstract*.php
-		- # false positive
-			message: '#^Variable \$granted might not be defined.$#'
-			path: */Civi/RemoteTools/Authorization/PermissionChecker.php
-		-
-			message: '#^Variable property access on \$this\(Civi\\RemoteTools\\Event\\AbstractRequestEvent\).$#'
-			path: */Civi/RemoteTools/Event/AbstractRequestEvent.php
-		# Wrong type hint
-		- '#^Property Civi\\Api4\\Generic\\Result::\$rowCount \(int\) on left side of \?\? is not nullable.$#'
-		- '#^Method Civi\\RemoteTools\\Event\\GetEvent::addClause\(\) has parameter \$conditions with no value type specified in iterable type array.$#'
-		- '#^Property Civi\\RemoteTools\\Event\\DAOGetEvent::\$join type has no value type specified in iterable type array.$#'
-		- '#^Method Civi\\RemoteTools\\Event\\DAOGetEvent::addJoin\(\) has parameter \$conditions with no value type specified in iterable type array.$#'
-		- '#^Method Civi\\RemoteTools\\Event\\DAOGetEvent::getJoin\(\) return type has no value type specified in iterable type array.$#'
-		- '#^Method Civi\\RemoteTools\\Api4\\Query\\[^\\]+::toArray\(\) return type has no value type specified in iterable type array.$#'
 		- '#^Property Civi\\Api4\\Generic\\Result::\$debug \(array\) on left side of \?\? is not nullable.$#'
-		- '#^Method Civi\\RemoteTools\\Api4\\Api4::createAction\(\) should return Civi\\Api4\\Generic\\AbstractAction but returns array|Civi\Api4\Generic\AbstractAction.$#'
-		- '#^Method Civi\\RemoteTools\\Api4\\Query\\Comparison::toArray\(\) never returns array\{string, array<int, array>\} so it can be removed from the return type.$#'
-		- '#^Method Civi\\RemoteTools\\Api4\\Query\\CompositeCondition::toArray\(\) never returns array\{0: string, .+\} so it can be removed from the return type.$#'
 		- '/^Parameter #1 \$iterator of function iterator_to_array expects Traversable, iterable(<.+>)? given.$/' # false positive
 		-
 			message: '#^Call to function method_exists\(\) with .+ will always evaluate to true.$#'
@@ -83,9 +60,6 @@ parameters:
 		- # Accessing results of API requests
 			message: "#^Offset '[^']+' does not exist on array\\|null.$#"
 			path: */tests/phpunit/Civi/**/*Test.php
-		-
-			message: '#^Class [^\s]+ has an uninitialized property#'
-			path : */tests/phpunit/Civi/Funding/Mock/**/*.php
 		- '#^Method Civi\\Funding\\Fixtures\\[^\s]+Fixture::[^\s]+\(\) should return array{[^}]+} but returns array\|null.$#'
 		- '#^In method "Civi\\[^\s]+Test::[^\s]+", caught "Exception" must be rethrown.#'
 		-
