@@ -26,6 +26,7 @@ use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Api4\Action\FundingCase\GetAction;
 use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent;
 use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
 use Civi\Funding\FileTypeIds;
@@ -39,6 +40,7 @@ use Civi\Funding\Util\SessionTestUtil;
 use Civi\Funding\Util\TestUtil;
 use Civi\RemoteTools\Api4\Api4;
 use Civi\RemoteTools\Api4\Api4Interface;
+use Civi\RemoteTools\Api4\Query\Comparison;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ClockMock;
 
@@ -76,6 +78,24 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
       new Api4(),
       $this->attachmentManagerMock,
       $this->eventDispatcherMock,
+    );
+  }
+
+  public function testGetBy(): void {
+    $api4Mock = $this->createMock(Api4Interface::class);
+    $this->makeFullyMocked($api4Mock);
+
+    $fundingCase = FundingCaseFactory::createFundingCase();
+
+    $action = FundingCase::get(FALSE)
+      ->setWhere([['title', '=', 'test']]);
+    $api4Mock->expects(static::once())->method('executeAction')
+      ->with($action)
+      ->willReturn(new Result([$fundingCase->toArray()]));
+
+    static::assertEquals(
+      [$fundingCase],
+      $this->fundingCaseManager->getBy(Comparison::new('title', '=', 'test'))
     );
   }
 

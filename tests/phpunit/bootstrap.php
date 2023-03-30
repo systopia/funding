@@ -18,7 +18,9 @@ use Civi\Funding\Mock\Form\FundingCaseType\TestJsonSchemaFactory;
 use Civi\Funding\Mock\Form\FundingCaseType\TestUiSchemaFactory;
 use Civi\Funding\Permission\FundingCase\RelationFactory\RelationPropertiesFactoryLocator;
 use Civi\Funding\TestAttachmentManager;
+use Civi\PHPUnit\Comparator\ApiActionComparator;
 use Composer\Autoload\ClassLoader;
+use SebastianBergmann\Comparator\Factory;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 ini_set('memory_limit', '2G');
@@ -44,6 +46,9 @@ $loader->register();
 
 // Ensure function ts() is available - it's declared in the same file as CRM_Core_I18n
 \CRM_Core_I18n::singleton();
+
+$comparatorFactory = Factory::getInstance();
+$comparatorFactory->register(new ApiActionComparator());
 
 function _funding_test_civicrm_container(ContainerBuilder $container): void {
   $container->autowire(TestAttachmentManager::class)
