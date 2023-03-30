@@ -55,6 +55,7 @@ final class ApplicationSnapshotRestorer implements ApplicationSnapshotRestorerIn
     $applicationProcess->setAmountRequested($applicationSnapshot->getAmountRequested());
     $applicationProcess->setIsReviewCalculative($applicationSnapshot->getIsReviewCalculative());
     $applicationProcess->setIsReviewContent($applicationSnapshot->getIsReviewContent());
+    $applicationProcess->setIsEligible($applicationSnapshot->getIsEligible());
     $applicationProcess->setRestoredSnapshot($applicationSnapshot);
 
     $this->applicationProcessManager->update($contactId, $applicationProcessBundle);

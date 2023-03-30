@@ -22,32 +22,13 @@ namespace Civi\Funding\Fixtures;
 use Civi\Api4\FundingApplicationSnapshot;
 use Civi\Funding\Entity\ApplicationSnapshotEntity;
 
-/**
- * @phpstan-type applicationSnapshotT array{
- *   id: int,
- *   application_process_id: int,
- *   status: string,
- *   creation_date: string,
- *   title: string,
- *   short_description: string,
- *   start_date: ?string,
- *   end_date: ?string,
- *   request_data: array<string, mixed>,
- *   amount_requested: double,
- *   amount_granted: ?double,
- *   granted_budget: ?double,
- *   is_review_content: ?bool,
- *   is_review_calculative: ?bool,
- * }
- */
 final class ApplicationSnapshotFixture {
 
   /**
    * @phpstan-param array<string, mixed> $values
    */
   public static function addFixture(int $applicationProcessId, array $values = []): ApplicationSnapshotEntity {
-    /** @phpstan-var applicationSnapshotT $applicationSnapshotValues */
-    $applicationSnapshotValues = FundingApplicationSnapshot::create(FALSE)
+    $result = FundingApplicationSnapshot::create(FALSE)
       ->setValues($values + [
         'application_process_id' => $applicationProcessId,
         'identifier' => 'test',
@@ -63,9 +44,10 @@ final class ApplicationSnapshotFixture {
         'granted_budget' => NULL,
         'is_review_content' => TRUE,
         'is_review_calculative' => TRUE,
-      ])->execute()->first();
+        'is_eligible' => NULL,
+      ])->execute();
 
-    return ApplicationSnapshotEntity::fromArray($applicationSnapshotValues);
+    return ApplicationSnapshotEntity::singleFromApiResult($result);
   }
 
 }

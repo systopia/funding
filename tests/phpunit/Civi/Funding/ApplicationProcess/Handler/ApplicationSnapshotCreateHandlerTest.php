@@ -52,7 +52,9 @@ final class ApplicationSnapshotCreateHandlerTest extends TestCase {
   }
 
   public function testHandle(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+      'is_eligible' => TRUE,
+    ]);
     $applicationProcess = $applicationProcessBundle->getApplicationProcess();
     $this->applicationSnapshotManagerMock->expects(static::once())->method('add')
       ->with(static::callback(function (ApplicationSnapshotEntity $applicationSnapshot) use ($applicationProcess) {
@@ -70,6 +72,7 @@ final class ApplicationSnapshotCreateHandlerTest extends TestCase {
           $applicationProcess->getIsReviewCalculative(),
           $applicationSnapshot->getIsReviewCalculative()
         );
+        static::assertSame($applicationProcess->getIsEligible(), $applicationSnapshot->getIsEligible());
 
         return TRUE;
       }));

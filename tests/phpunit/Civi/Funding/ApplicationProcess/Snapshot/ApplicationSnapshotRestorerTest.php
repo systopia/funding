@@ -75,6 +75,7 @@ final class ApplicationSnapshotRestorerTest extends TestCase {
     static::assertSame($applicationSnapshot->getAmountRequested(), $applicationProcess->getAmountRequested());
     static::assertSame($applicationSnapshot->getIsReviewContent(), $applicationProcess->getIsReviewContent());
     static::assertSame($applicationSnapshot->getIsReviewCalculative(), $applicationProcess->getIsReviewCalculative());
+    static::assertSame($applicationSnapshot->getIsEligible(), $applicationProcess->getIsEligible());
     static::assertSame($applicationSnapshot, $applicationProcess->getRestoredSnapshot());
   }
 

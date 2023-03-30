@@ -49,6 +49,7 @@ final class ApplicationSnapshotCreateHandler implements ApplicationSnapshotCreat
       'amount_requested' => $applicationProcess->getAmountRequested(),
       'is_review_content' => $applicationProcess->getIsReviewContent(),
       'is_review_calculative' => $applicationProcess->getIsReviewCalculative(),
+      'is_eligible' => $applicationProcess->getIsEligible(),
     ]);
 
     $this->applicationSnapshotManager->add($applicationSnapshot);

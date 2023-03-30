@@ -33,6 +33,7 @@ namespace Civi\Funding\Entity;
  *   amount_requested: double,
  *   is_review_content: ?bool,
  *   is_review_calculative: ?bool,
+ *   is_eligible: ?bool,
  * }
  *
  * @extends AbstractEntity<applicationSnapshotT>
@@ -84,6 +85,16 @@ final class ApplicationSnapshotEntity extends AbstractEntity {
 
   public function getIsReviewCalculative(): ?bool {
     return $this->values['is_review_calculative'];
+  }
+
+  public function getIsEligible(): ?bool {
+    return $this->values['is_eligible'];
+  }
+
+  public function setIsEligible(?bool $isEligibleStatus): self {
+    $this->values['is_eligible'] = $isEligibleStatus;
+
+    return $this;
   }
 
 }
