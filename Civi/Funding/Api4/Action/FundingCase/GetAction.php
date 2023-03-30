@@ -21,15 +21,19 @@ namespace Civi\Funding\Api4\Action\FundingCase;
 
 use Civi\Api4\FundingCase;
 use Civi\Api4\Generic\DAOGetAction;
+use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Event\FundingCase\GetPermissionsEvent;
+use Civi\Funding\FundingCase\TransferContractRouter;
 use Civi\Funding\Session\FundingSessionInterface;
 use Civi\RemoteTools\Api4\Action\Traits\PermissionsGetActionTrait;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
 
 final class GetAction extends DAOGetAction {
 
-  use PermissionsGetActionTrait;
+  use PermissionsGetActionTrait {
+    PermissionsGetActionTrait::_run as permissionsGetRun;
+  }
 
   private CiviEventDispatcherInterface $_eventDispatcher;
 
@@ -37,14 +41,27 @@ final class GetAction extends DAOGetAction {
 
   private FundingSessionInterface $session;
 
+  private TransferContractRouter $transferContractRouter;
+
   public function __construct(CiviEventDispatcherInterface $eventDispatcher,
     PossiblePermissionsLoaderInterface $possiblePermissionsLoader,
-    FundingSessionInterface $session
+    FundingSessionInterface $session,
+    TransferContractRouter $transferContractRouterRecreate
   ) {
     parent::__construct(FundingCase::_getEntityName(), 'get');
     $this->_eventDispatcher = $eventDispatcher;
     $this->_possiblePermissionsLoader = $possiblePermissionsLoader;
     $this->session = $session;
+    $this->transferContractRouter = $transferContractRouterRecreate;
+  }
+
+  public function _run(Result $result): void {
+    $this->permissionsGetRun($result);
+    /** @phpstan-var array{id?: int} $record */
+    foreach ($result as &$record) {
+      $record['transfer_contract_uri'] = isset($record['id'])
+        ? $this->transferContractRouter->generate($record['id']) : NULL;
+    }
   }
 
   /**

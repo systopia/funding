@@ -25,6 +25,7 @@ use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
+use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 
 trait FundingCaseTestFixturesTrait {
@@ -34,6 +35,8 @@ trait FundingCaseTestFixturesTrait {
   protected int $associatedContactIdApplicationAndReview = -1;
 
   protected int $associatedContactIdNoPermissions = -1;
+
+  protected int $fundingCaseTypeId = -1;
 
   protected int $relatedABContactId = -1;
 
@@ -79,7 +82,7 @@ trait FundingCaseTestFixturesTrait {
    */
   private function addFixtures(array $associatedContactPermissions, array $permittedRelationshipTypePermissions): void {
     $fundingProgramId = FundingProgramFixture::addFixture(['title' => 'Foo'])->getId();
-    $fundingCaseTypeId = FundingCaseTypeFixture::addFixture()->getId();
+    $this->fundingCaseTypeId = FundingCaseTypeFixture::addFixture()->getId();
 
     $recipientContactId = ContactFixture::addOrganization([
       'legal_name' => 'Recipient Organization',
@@ -88,7 +91,7 @@ trait FundingCaseTestFixturesTrait {
 
     $this->permittedFundingCaseId = FundingCaseFixture::addFixture(
       $fundingProgramId,
-      $fundingCaseTypeId,
+      $this->fundingCaseTypeId,
       $recipientContactId,
       $creationContact['id'],
       [
@@ -99,7 +102,7 @@ trait FundingCaseTestFixturesTrait {
 
     FundingCaseFixture::addFixture(
       $fundingProgramId,
-      $fundingCaseTypeId,
+      $this->fundingCaseTypeId,
       $recipientContactId,
       $creationContact['id'],
       [
@@ -134,10 +137,22 @@ trait FundingCaseTestFixturesTrait {
       'last_name' => 'User',
     ])['id'];
 
+    FundingProgramContactRelationFixture::addContact(
+      $this->associatedContactId,
+      $fundingProgramId,
+      ['view'],
+    );
+
     FundingCaseContactRelationFixture::addContact(
       $this->associatedContactId,
       $this->permittedFundingCaseId,
       $associatedContactPermissions
+    );
+
+    FundingProgramContactRelationFixture::addContact(
+      $this->associatedContactIdNoPermissions,
+      $fundingProgramId,
+      ['view'],
     );
 
     FundingCaseContactRelationFixture::addFixture(

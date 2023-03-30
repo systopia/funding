@@ -22,6 +22,7 @@ return [
     'xeditable',
     'lodash4',
     'ui.select',
+    'skApplicationProcessTable',
   ],
   'settings' => [],
 ];

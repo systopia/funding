@@ -20,8 +20,7 @@ declare(strict_types = 1);
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
-use Civi\Funding\Api4\Action\FundingCase\GetAction;
-use Civi\Funding\Api4\Action\FundingCase\GetFieldsAction;
+use Civi\Api4\Generic\AbstractAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\GetNewApplicationFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\SubmitNewApplicationFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\ValidateNewApplicationFormAction;
@@ -31,7 +30,15 @@ use Civi\Funding\EventSubscriber\FundingCase\FundingCaseGetPossiblePermissionsSu
 use Civi\Funding\EventSubscriber\FundingCase\FundingCasePermissionsGetAdminSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseGetFieldsSubscriber;
+use Civi\Funding\FundingCase\DefaultFundingCaseActionsDeterminer;
 use Civi\Funding\FundingCase\FundingCaseManager;
+use Civi\Funding\FundingCase\Handler\DefaultFundingCaseApproveHandler;
+use Civi\Funding\FundingCase\Handler\DefaultFundingCasePossibleActionsGetHandler;
+use Civi\Funding\FundingCase\Handler\DefaultTransferContractRecreateHandler;
+use Civi\Funding\FundingCase\Handler\FundingCaseApproveHandlerInterface;
+use Civi\Funding\FundingCase\Handler\FundingCasePossibleActionsGetHandlerInterface;
+use Civi\Funding\FundingCase\Handler\TransferContractRecreateHandlerInterface;
+use Civi\Funding\FundingCase\TransferContractRouter;
 use Civi\Funding\Permission\FundingCase\ContactsWithPermissionLoader;
 use Civi\Funding\Permission\FundingCase\FundingCaseContactsLoader;
 use Civi\Funding\Permission\FundingCase\FundingCaseContactsLoaderCollection;
@@ -46,25 +53,63 @@ use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 $container->autowire(FundingCaseManager::class);
+$container->autowire(TransferContractRouter::class);
 
-$container->autowire(GetAction::class)
-  ->setPublic(TRUE)
-  ->setShared(FALSE);
-$container->autowire(GetFieldsAction::class)
-  ->setPublic(TRUE)
-  ->setShared(FALSE);
-$container->autowire(\Civi\Funding\Api4\Action\FundingCaseContactRelation\GetFieldsAction::class)
-  ->setPublic(TRUE)
-  ->setShared(FALSE);
-$container->autowire(Civi\Funding\Api4\Action\FundingCaseContactRelationPropertiesFactoryType\GetAction::class)
-  ->setPublic(TRUE)
-  ->setShared(FALSE);
-$container->autowire(Civi\Funding\Api4\Action\FundingCaseContactRelationPropertiesFactoryType\GetFieldsAction::class)
-  ->setPublic(TRUE)
-  ->setShared(FALSE);
-$container->autowire(\Civi\Funding\Api4\Action\FundingNewCasePermissions\GetFieldsAction::class)
-  ->setPublic(TRUE)
-  ->setShared(FALSE);
+$container->autowire(DefaultFundingCaseActionsDeterminer::class);
+$container->autowire(FundingCaseApproveHandlerInterface::class, DefaultFundingCaseApproveHandler::class);
+$container->autowire(
+  FundingCasePossibleActionsGetHandlerInterface::class,
+  DefaultFundingCasePossibleActionsGetHandler::class
+);
+$container->autowire(TransferContractRecreateHandlerInterface::class, DefaultTransferContractRecreateHandler::class);
+
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/Api4/Action/FundingCase',
+  'Civi\\Funding\\Api4\\Action\\FundingCase',
+  AbstractAction::class,
+  [],
+  [
+    'public' => TRUE,
+    'shared' => FALSE,
+  ]
+);
+
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/Api4/Action/FundingCaseContactRelation',
+  'Civi\\Funding\\Api4\\Action\\FundingCaseContactRelation',
+  AbstractAction::class,
+  [],
+  [
+    'public' => TRUE,
+    'shared' => FALSE,
+  ]
+);
+
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType',
+  'Civi\\Funding\\Api4\\Action\\FundingCaseContactRelationPropertiesFactoryType',
+  AbstractAction::class,
+  [],
+  [
+    'public' => TRUE,
+    'shared' => FALSE,
+  ]
+);
+
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/Api4/Action/FundingNewCasePermissions',
+  'Civi\\Funding\\Api4\\Action\\FundingNewCasePermissions',
+  AbstractAction::class,
+  [],
+  [
+    'public' => TRUE,
+    'shared' => FALSE,
+  ]
+);
 
 $container->autowire(FundingCaseContactRelationFactory::class);
 

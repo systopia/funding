@@ -13,7 +13,13 @@ msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingApplicationProcess/GetJsonSchemaAction.php
 msgid "No such application or missing permission."
-msgstr ""
+msgstr "Kein passender Antrag oder fehlende Berechtigung."
+
+#: Civi/Funding/Api4/Action/FundingCase/ApproveAction.php
+#: Civi/Funding/Api4/Action/FundingCase/GetPossibleActionsAction.php
+#: Civi/Funding/Api4/Action/FundingCase/RecreateTransferContractAction.php
+msgid "Funding case with ID \"%1\" not found"
+msgstr "Förderfall mit ID \"%1\" nicht gefunden"
 
 # Übersetzung nicht notwendig
 #: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php
@@ -190,6 +196,13 @@ msgstr "Kontakt %1"
 msgid "Application process: %1 (%2)"
 msgstr "Förderfallprozess: %1 (%2)"
 
+#: Civi/Funding/ApplicationProcess/EligibleApplicationProcessesLoader.php
+msgid ""
+"The eligibility of application \"%1\" is not decided (current status: %2)."
+msgstr ""
+"Die Förderfähigkeit von Antrag \"%1\" ist nicht entschieden (aktueller "
+"Status: %2)."
+
 #: Civi/Funding/ApplicationProcess/Handler/ApplicationDeleteHandler.php
 msgid "Permission to delete application is missing."
 msgstr "Berechtigung zum Löschen des Antrags fehlt."
@@ -278,6 +291,19 @@ msgstr ""
 "Der beantragende Kontakt selbst ist als Empfänger verfügbar, wenn er die "
 "gewählte Art hat."
 
+#: Civi/Funding/Controller/TransferContractDownloadController.php
+msgid "transfer-contract"
+msgstr "Weiterleitungsvertrag"
+
+#: Civi/Funding/DocumentRender/CiviOffice/CiviOfficeDocumentStore.php
+msgid "Files in filesystem (Funding Program Manager)"
+msgstr "Dateien im Dateisystem (Funding Program Manager)"
+
+#: Civi/Funding/DocumentRender/Token/ValueConverter.php
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationSnapshotRestoreSubscriber.php
+msgid "Y-m-d H:i:s"
+msgstr "d.m.Y H:i:s"
+
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessCreatedSubscriber.php
 msgid "Funding application process created"
 msgstr "Förderfallprozess erstellt"
@@ -349,9 +375,9 @@ msgstr "Förderfallprozess wiederhergestellt"
 msgid "Application process \"%1\" (%2) restored to version from %3."
 msgstr "Förderfallprozess \"%1\" (%2) wiederhergestellt auf Version vom %3."
 
-#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationSnapshotRestoreSubscriber.php
-msgid "Y-m-d H:i:s"
-msgstr "d.m.Y H:i:s"
+#: Civi/Funding/EventSubscriber/CiviOffice/TransferContractTokenSubscriber.php
+msgid "Titles of eligible applications"
+msgstr "Titel förderfähiger Anträge"
 
 #: Civi/Funding/EventSubscriber/Form/SubmitApplicationFormSubscriber.php
 msgid "Saved"
@@ -360,6 +386,7 @@ msgstr "Gespeichert"
 #: Civi/Funding/EventSubscriber/Form/SubmitApplicationFormSubscriber.php
 #: ang/crmFunding/application/applicationEditor.directive.js
 #: ang/crmFunding/application/applicationEditor.template.html
+#: ang/crmFunding/case/fundingCase.js
 msgid "Validation failed"
 msgstr "Validierung fehlgeschlagen"
 
@@ -463,6 +490,14 @@ msgstr "Überarbeitung beantragen"
 msgid "Withdraw rework"
 msgstr "Überarbeitung zurückziehen"
 
+#: Civi/Funding/FundingCase/Handler/FundingCaseApproveHandler.php
+msgid "Permission to approve funding case is missing."
+msgstr "Berechtigung zum Bewilligen des Förderfalls fehlt."
+
+#: Civi/Funding/FundingCase/Handler/TransferContractRecreateHandler.php
+msgid "Permission to recreate transfer contract is missing."
+msgstr "Berechtigung zum Erstellen des Weiterleitungsvertrags fehlt."
+
 #: Civi/Funding/FundingPseudoConstants.php
 msgid "New"
 msgstr "Neu"
@@ -514,6 +549,10 @@ msgstr "Überarbeitung in Prüfung"
 #: Civi/Funding/FundingPseudoConstants.php
 msgid "Open"
 msgstr "Offen"
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Ongoing"
+msgstr "Laufend"
 
 #: Civi/Funding/FundingPseudoConstants.php
 msgid "Closed"
@@ -631,8 +670,10 @@ msgstr "Validierung fehlgeschlagen: %1"
 #: ang/crmFunding/application/applicationReviewers.directive.js
 #: ang/crmFunding/application/history/applicationProcessActivity.directive.js
 #: ang/crmFunding/application/history/applicationProcessHistory.directive.js
+#: ang/crmFunding/case/fundingCase.js
 #: ang/crmFunding/case/fundingCasePermissions.js
 #: ang/crmFunding/case/permissions/fundingCaseContactRelation.directive.js
+#: ang/crmFunding/form/editableField.directive.js
 #: ang/crmFunding/form/fundingAddRowButton.directive.js
 #: ang/crmFunding/form/fundingSelectPermissions.directive.js
 #: ang/crmFunding/form/fundingValidationErrors.directive.js
@@ -664,6 +705,7 @@ msgstr ""
 "Die gewählte Aktion ist nicht verfügbar. Bitte melden Sie diesen Fehler."
 
 #: ang/crmFunding/application/applicationEditor.template.html
+#: ang/crmFunding/case/fundingCase.template.html
 msgid "Close"
 msgstr "Schließen"
 
@@ -676,10 +718,12 @@ msgid "Comment type"
 msgstr "Kommentarart"
 
 #: ang/crmFunding/application/applicationEditor.template.html
+#: ang/crmFunding/case/fundingCase.template.html
 msgid "Cancel"
 msgstr "Abbrechen"
 
 #: ang/crmFunding/application/applicationEditor.template.html
+#: ang/crmFunding/case/fundingCase.template.html
 msgid "Submit"
 msgstr "Senden"
 
@@ -748,11 +792,15 @@ msgid "General"
 msgstr "Allgemein"
 
 #: ang/crmFunding/application/applicationEditor.template.html
+#: ang/crmFunding/case/fundingCase.template.html
+#: managed/SavedSearchFundingApplicationProcesses.mgd.php
+#: managed/SavedSearchFundingCases.mgd.php
 msgid "Status"
 msgstr "Status"
 
 #: ang/crmFunding/application/applicationEditor.template.html
 #: ang/crmFunding/application/history/activities/statusChange.template.html
+#: ang/crmFunding/case/fundingCase.template.html
 msgid "Unknown"
 msgstr "Unbekannt"
 
@@ -767,24 +815,27 @@ msgid "Review calculative"
 msgstr "Rechnerische Prüfung"
 
 #: ang/crmFunding/application/applicationEditor.template.html
+#: ang/crmFunding/case/fundingCase.template.html
+#: managed/SavedSearchFundingCases.mgd.php
 msgid "Creation date"
 msgstr "Erstellungsdatum"
 
 #: ang/crmFunding/application/applicationEditor.template.html
+#: ang/crmFunding/case/fundingCase.template.html
+#: managed/SavedSearchFundingCases.mgd.php
 msgid "Modification date"
 msgstr "Änderungsdatum"
 
 #: ang/crmFunding/application/applicationEditor.template.html
+#: ang/crmFunding/case/fundingCase.template.html
+#: managed/SavedSearchFundingCases.mgd.php
 msgid "Recipient"
 msgstr "Empfänger"
 
 #: ang/crmFunding/application/applicationEditor.template.html
+#: managed/SavedSearchFundingApplicationProcesses.mgd.php
 msgid "Amount requested"
 msgstr "Beantragter Betrag"
-
-#: ang/crmFunding/application/applicationEditor.template.html
-msgid "Amount granted"
-msgstr "Genehmigter Betrag"
 
 #: ang/crmFunding/application/applicationReviewer.directive.js
 msgid "not assigned"
@@ -859,6 +910,41 @@ msgstr "Ablaufaktivitäten ausblenden"
 msgid "Hide comments"
 msgstr "Kommentare ausblenden"
 
+#: ang/crmFunding/case/fundingCase.template.html
+msgid "Approve"
+msgstr "Bewilligen"
+
+#: ang/crmFunding/case/fundingCase.template.html
+#: managed/SavedSearchFundingApplicationProcesses.mgd.php
+#: managed/SavedSearchFundingCases.mgd.php
+msgid "Title"
+msgstr ""
+
+#: ang/crmFunding/case/fundingCase.template.html
+msgid "Amount"
+msgstr ""
+
+#: ang/crmFunding/case/fundingCase.template.html
+msgid "Funding case: %1"
+msgstr "Förderfall: %1"
+
+#: ang/crmFunding/case/fundingCase.template.html
+msgid "Untitled"
+msgstr "Unbenannt"
+
+#: ang/crmFunding/case/fundingCase.template.html
+msgid "Amount requested eligible"
+msgstr "Förderfähiger Betrag"
+
+#: ang/crmFunding/case/fundingCase.template.html
+#: managed/OptionGroupFundingFileType.mgd.php
+msgid "Transfer contract"
+msgstr "Weiterleitungsvertrag"
+
+#: ang/crmFunding/case/fundingCase.template.html
+msgid "Recreate transfer contract"
+msgstr "Weiterleitungsvertrag erneut erstellen"
+
 #: ang/crmFunding/case/fundingCasePermissions.html
 msgid "Funding case permissions"
 msgstr "Förderfallberechtigungen"
@@ -891,6 +977,10 @@ msgstr "Art"
 #: ang/crmFunding/program/permissions/fundingProgramContactRelation.template.html
 msgid "Permissions"
 msgstr "Berechtigungen"
+
+#: ang/crmFunding/form/editableField.directive.js
+msgid "empty"
+msgstr "leer"
 
 #: ang/crmFunding/form/fundingSelectPermissions.directive.js
 msgid "Combining application permissions with other ones is not possible."
@@ -1057,6 +1147,55 @@ msgstr "Förderantragsaufgabenart"
 msgid "Rework application"
 msgstr "Antrag überarbeiten"
 
+#: managed/NavigationFunding.mgd.php
+msgid "Funding Program Manager"
+msgstr "Funding Program Manager"
+
+#: managed/NavigationFunding.mgd.php
+msgid "Funding Cases"
+msgstr "Förderfälle"
+
+#: managed/OptionGroupFundingFileType.mgd.php
+msgid "Transfer contract template"
+msgstr "Vorlage für Weiterleitungsvertrag"
+
 #: managed/OptionValueActivityUsedForApplicationProcess.mgd.php
 msgid "Funding application process"
 msgstr "Förderantragsprozess"
+
+#: managed/SavedSearchFundingApplicationProcesses.mgd.php
+msgid "Funding applications"
+msgstr "Förderanträge"
+
+#: managed/SavedSearchFundingApplicationProcesses.mgd.php
+#: managed/SavedSearchFundingCases.mgd.php
+msgid "Table"
+msgstr "Tabelle"
+
+#: managed/SavedSearchFundingApplicationProcesses.mgd.php
+msgid "Identifier"
+msgstr "Bezeichner"
+
+#: managed/SavedSearchFundingApplicationProcesses.mgd.php
+msgid "Open application"
+msgstr "Antrag öffnen"
+
+#: managed/SavedSearchFundingCases.mgd.php
+msgid "Funding cases"
+msgstr "Förderfälle"
+
+#: managed/SavedSearchFundingCases.mgd.php
+msgid "Funding program"
+msgstr "Förderprogramm"
+
+#: managed/SavedSearchFundingCases.mgd.php
+msgid "Funding case type"
+msgstr "Förderfalltyp"
+
+#: managed/SavedSearchFundingCases.mgd.php
+msgid "Amount approved"
+msgstr "Bewilligter Betrag"
+
+#: managed/SavedSearchFundingCases.mgd.php
+msgid "Open case"
+msgstr "Fall öffnen"

@@ -54,6 +54,11 @@ final class FundingCaseStatusDeterminerTest extends TestCase {
     );
   }
 
+  public function testGetStatus(): void {
+    static::assertSame('test', $this->statusDeterminer->getStatus('test', 'do_something'));
+    static::assertSame('ongoing', $this->statusDeterminer->getStatus('test', 'approve'));
+  }
+
   public function testIsClosedByApplicationProcessTrue(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(['status' => 'sealed']);
     $this->infoMock->method('getFinalIneligibleStatusList')->willReturn(['sealed', 'also_sealed']);

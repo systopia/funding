@@ -6,12 +6,18 @@ use Civi\Funding\ApplicationProcess\ActionStatusInfo\ReworkPossibleApplicationPr
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ReworkPossibleApplicationProcessStatusDeterminer;
 use Civi\Funding\Contact\DummyRemoteContactIdResolver;
 use Civi\Funding\Contact\FundingRemoteContactIdResolverInterface;
+use Civi\Funding\DocumentRender\CiviOffice\CiviOfficeContextDataHolder;
+use Civi\Funding\DocumentRender\DocumentRendererInterface;
+use Civi\Funding\FundingAttachmentManagerInterface;
+use Civi\Funding\FundingCase\DefaultFundingCaseActionsDeterminer;
+use Civi\Funding\Mock\DocumentRender\MockDocumentRenderer;
 use Civi\Funding\Mock\Form\FundingCaseType\TestApplicationCostItemsFactory;
 use Civi\Funding\Mock\Form\FundingCaseType\TestApplicationResourcesItemsFactory;
 use Civi\Funding\Mock\Form\FundingCaseType\TestFormDataFactory;
 use Civi\Funding\Mock\Form\FundingCaseType\TestJsonSchemaFactory;
 use Civi\Funding\Mock\Form\FundingCaseType\TestUiSchemaFactory;
 use Civi\Funding\Permission\FundingCase\RelationFactory\RelationPropertiesFactoryLocator;
+use Civi\Funding\TestAttachmentManager;
 use Composer\Autoload\ClassLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -40,8 +46,17 @@ $loader->register();
 \CRM_Core_I18n::singleton();
 
 function _funding_test_civicrm_container(ContainerBuilder $container): void {
+  $container->autowire(TestAttachmentManager::class)
+    ->setDecoratedService(FundingAttachmentManagerInterface::class);
+
   // For FundingCaseContactRelationPropertiesFactoryTypeTest
   $container->getDefinition(RelationPropertiesFactoryLocator::class)->setPublic(TRUE);
+
+  // For FundingCaseTest
+  $container->autowire(DocumentRendererInterface::class, MockDocumentRenderer::class);
+
+  // For CiviOfficeRendererTest
+  $container->getDefinition(CiviOfficeContextDataHolder::class)->setPublic(TRUE);
 
   // overwrite remote contact ID resolver
   $container->autowire(FundingRemoteContactIdResolverInterface::class, DummyRemoteContactIdResolver::class);
@@ -54,6 +69,10 @@ function _funding_test_civicrm_container(ContainerBuilder $container): void {
       ['funding_case_type' => TestJsonSchemaFactory::getSupportedFundingCaseTypes()[0]]);
   $container->getDefinition(ReworkPossibleApplicationProcessActionStatusInfo::class)
     ->addTag('funding.application.action_status_info',
+      ['funding_case_type' => TestJsonSchemaFactory::getSupportedFundingCaseTypes()[0]]);
+
+  $container->getDefinition(DefaultFundingCaseActionsDeterminer::class)
+    ->addTag(DefaultFundingCaseActionsDeterminer::TAG,
       ['funding_case_type' => TestJsonSchemaFactory::getSupportedFundingCaseTypes()[0]]);
 
   $container->autowire(TestJsonSchemaFactory::class)

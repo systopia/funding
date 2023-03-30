@@ -19,8 +19,11 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
+use Civi\Funding\Api4\Action\FundingCase\ApproveAction;
 use Civi\Funding\Api4\Action\FundingCase\GetAction;
 use Civi\Funding\Api4\Action\FundingCase\GetFieldsAction;
+use Civi\Funding\Api4\Action\FundingCase\GetPossibleActionsAction;
+use Civi\Funding\Api4\Action\FundingCase\RecreateTransferContractAction;
 use Civi\Funding\Api4\Traits\AccessPermissionsTrait;
 use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
 
@@ -28,23 +31,16 @@ use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
  * FundingCase entity.
  *
  * Provided by the Funding Program Manager extension.
- *
- * @phpstan-type fundingCaseT array{
- *   id: int,
- *   funding_program_id: int,
- *   funding_case_type_id: int,
- *   status: string,
- *   creation_date: string,
- *   modification_date: string,
- *   creation_contact_id: int,
- *   recipient_contact_id: int,
- * }
  */
 final class FundingCase extends Generic\DAOEntity {
 
   use AccessPermissionsTrait;
 
   use EntityNameTrait;
+
+  public static function approve(bool $checkPermissions = TRUE): ApproveAction {
+    return \Civi::service(ApproveAction::class)->setCheckPermissions($checkPermissions);
+  }
 
   /**
    * @inheritDoc
@@ -62,6 +58,14 @@ final class FundingCase extends Generic\DAOEntity {
    */
   public static function getFields($checkPermissions = TRUE) {
     return \Civi::service(GetFieldsAction::class)->setCheckPermissions($checkPermissions);
+  }
+
+  public static function getPossibleActions(bool $checkPermissions = TRUE): GetPossibleActionsAction {
+    return \Civi::service(GetPossibleActionsAction::class)->setCheckPermissions($checkPermissions);
+  }
+
+  public static function recreateTransferContract(bool $checkPermissions = TRUE): RecreateTransferContractAction {
+    return \Civi::service(RecreateTransferContractAction::class)->setCheckPermissions($checkPermissions);
   }
 
 }

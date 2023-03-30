@@ -31,10 +31,9 @@ namespace Civi\Funding\Entity;
  *   end_date: ?string,
  *   request_data: array<string, mixed>,
  *   amount_requested: double,
- *   amount_granted: ?double,
- *   granted_budget: ?double,
  *   is_review_content: ?bool,
  *   is_review_calculative: ?bool,
+ *   is_eligible: ?bool,
  * }
  *
  * @extends AbstractEntity<applicationSnapshotT>
@@ -80,20 +79,22 @@ final class ApplicationSnapshotEntity extends AbstractEntity {
     return $this->values['amount_requested'];
   }
 
-  public function getAmountGranted(): ?float {
-    return $this->values['amount_granted'];
-  }
-
-  public function getGrantedBudget(): ?float {
-    return $this->values['granted_budget'];
-  }
-
   public function getIsReviewContent(): ?bool {
     return $this->values['is_review_content'];
   }
 
   public function getIsReviewCalculative(): ?bool {
     return $this->values['is_review_calculative'];
+  }
+
+  public function getIsEligible(): ?bool {
+    return $this->values['is_eligible'];
+  }
+
+  public function setIsEligible(?bool $isEligibleStatus): self {
+    $this->values['is_eligible'] = $isEligibleStatus;
+
+    return $this;
   }
 
 }

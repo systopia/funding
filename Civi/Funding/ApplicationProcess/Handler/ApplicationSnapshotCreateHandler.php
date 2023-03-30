@@ -47,10 +47,9 @@ final class ApplicationSnapshotCreateHandler implements ApplicationSnapshotCreat
       'end_date' => DateTimeUtil::toDateTimeStrOrNull($applicationProcess->getEndDate()),
       'request_data' => $applicationProcess->getRequestData(),
       'amount_requested' => $applicationProcess->getAmountRequested(),
-      'amount_granted' => $applicationProcess->getAmountGranted(),
-      'granted_budget' => $applicationProcess->getGrantedBudget(),
       'is_review_content' => $applicationProcess->getIsReviewContent(),
       'is_review_calculative' => $applicationProcess->getIsReviewCalculative(),
+      'is_eligible' => $applicationProcess->getIsEligible(),
     ]);
 
     $this->applicationSnapshotManager->add($applicationSnapshot);

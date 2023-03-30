@@ -34,6 +34,10 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsAddIdentifi
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandlerInterface;
 use Civi\Funding\FundingCase\FundingCaseStatusDeterminerInterface;
+use Civi\Funding\FundingCase\Handler\FundingCaseApproveHandlerInterface;
+use Civi\Funding\FundingCase\Handler\FundingCasePossibleActionsGetHandlerInterface;
+use Civi\Funding\FundingCase\Handler\TransferContractRecreateHandlerInterface;
+use Civi\Funding\TransferContract\Handler\TransferContractRenderHandlerInterface;
 use Psr\Container\ContainerInterface;
 
 final class FundingCaseTypeServiceLocator implements FundingCaseTypeServiceLocatorInterface {
@@ -103,8 +107,24 @@ final class FundingCaseTypeServiceLocator implements FundingCaseTypeServiceLocat
     return $this->locator->get(ApplicationSnapshotCreateHandlerInterface::class);
   }
 
+  public function getFundingCaseApproveHandler(): FundingCaseApproveHandlerInterface {
+    return $this->locator->get(FundingCaseApproveHandlerInterface::class);
+  }
+
   public function getFundingCaseStatusDeterminer(): FundingCaseStatusDeterminerInterface {
     return $this->locator->get(FundingCaseStatusDeterminerInterface::class);
+  }
+
+  public function getFundingCasePossibleActionsGetHandler(): FundingCasePossibleActionsGetHandlerInterface {
+    return $this->locator->get(FundingCasePossibleActionsGetHandlerInterface::class);
+  }
+
+  public function getTransferContractRecreateHandler(): TransferContractRecreateHandlerInterface {
+    return $this->locator->get(TransferContractRecreateHandlerInterface::class);
+  }
+
+  public function getTransferContractRenderHandler(): TransferContractRenderHandlerInterface {
+    return $this->locator->get(TransferContractRenderHandlerInterface::class);
   }
 
 }

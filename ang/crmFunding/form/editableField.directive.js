@@ -45,12 +45,18 @@ fundingModule.directive('editableField', [function() {
       'path': '@?',
       'type': '@',
       'value': '@',
+      // Will be displayed if model value is empty.
+      'emptyValueDisplay': '@',
       'formName': '@?',
       'label': '=?',
       'editAllowed': '=?',
     },
     controllerAs: '$ctrl',
     controller: ['$scope', '$attrs', function ($scope, $attrs) {
+      const ts = CRM.ts('funding');
+      if ($attrs.emptyValueDisplay === undefined) {
+        this.emptyValueDisplay = $attrs.emptyValueDisplay = ts('empty');
+      }
       if ($attrs.formName === undefined && $scope.$parent.formName) {
         this.formName = $scope.$parent.formName;
       }
@@ -79,7 +85,7 @@ fundingModule.directive('editableField', [function() {
         template += '<label>{{' + attrs.label + '}}</label> ';
       }
 
-      const editSpan = angular.element('<span>{{' + attrs.value + '}}</span>');
+      const editSpan = angular.element('<span>{{ ' + attrs.value + ' || $ctrl.emptyValueDisplay }}</span>');
       editSpan.attr('ng-show', '$ctrl.editAllowed');
       editSpan.attr('editable-' + attrs.type, attrs.value);
       editSpan.attr('e-name', attrs.path);
@@ -97,7 +103,7 @@ fundingModule.directive('editableField', [function() {
       }
       template += editSpan[0].outerHTML;
 
-      const viewOnlySpan = angular.element('<span>{{' + attrs.value + '}}</span>');
+      const viewOnlySpan = angular.element('<span>{{ ' + attrs.value + ' || $ctrl.emptyValueDisplay }}</span>');
       viewOnlySpan.attr('ng-show', '!$ctrl.editAllowed');
       template += viewOnlySpan[0].outerHTML;
 

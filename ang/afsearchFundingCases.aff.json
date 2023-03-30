@@ -1,0 +1,18 @@
+{
+    "type": "search",
+    "requires": [],
+    "entity_type": null,
+    "join_entity": null,
+    "title": "Funding Cases",
+    "description": "",
+    "is_dashlet": false,
+    "is_public": false,
+    "is_token": false,
+    "contact_summary": null,
+    "summary_contact_type": null,
+    "icon": "fa-list-alt",
+    "server_route": "civicrm/funding/case/list",
+    "permission": "access Funding",
+    "redirect": null,
+    "create_submission": false
+}

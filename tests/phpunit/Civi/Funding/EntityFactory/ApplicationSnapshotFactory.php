@@ -37,6 +37,7 @@ use Civi\Funding\Entity\ApplicationSnapshotEntity;
  *   granted_budget?: ?double,
  *   is_review_content?: ?bool,
  *   is_review_calculative?: ?bool,
+ *   is_eligible?: ?bool,
  * }
  */
 final class ApplicationSnapshotFactory {
@@ -62,6 +63,7 @@ final class ApplicationSnapshotFactory {
       'granted_budget' => 122.22,
       'is_review_content' => TRUE,
       'is_review_calculative' => TRUE,
+      'is_eligible' => FALSE,
     ]);
   }
 

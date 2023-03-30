@@ -25,6 +25,12 @@ interface ApplicationProcessActionStatusInfoInterface {
 
   /**
    * @phpstan-return array<string>
+   *   Status of applications that are eligible.
+   */
+  public function getEligibleStatusList(): array;
+
+  /**
+   * @phpstan-return array<string>
    *   All status that are final states excluding those dedicated for eligible
    *   applications, i.e. applications in such a status cannot become eligible
    *   anymore. Usually withdrawn and rejected.
@@ -36,6 +42,12 @@ interface ApplicationProcessActionStatusInfoInterface {
   public function isChangeRequiredStatus(string $status): bool;
 
   public function isDeleteAction(string $action): bool;
+
+  /**
+   * @return bool|null
+   *   TRUE if eligible, FALSE if ineligible, NULL if not decided, yet.
+   */
+  public function isEligibleStatus(string $status): ?bool;
 
   public function isRestoreAction(string $action): bool;
 

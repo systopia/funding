@@ -23,6 +23,8 @@ use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 
 interface FundingCaseStatusDeterminerInterface {
 
+  public function getStatus(string $currentStatus, string $action): string;
+
   /**
    * @return bool
    *   TRUE when a funding case shall be closed after the status change of the

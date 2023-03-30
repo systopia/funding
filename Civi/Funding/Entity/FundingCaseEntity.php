@@ -27,11 +27,14 @@ use Civi\RemoteTools\Api4\RemoteApiConstants;
  *   funding_program_id: int,
  *   funding_case_type_id: int,
  *   status: string,
+ *   title: ?string,
  *   recipient_contact_id: int,
  *   creation_date: string,
  *   modification_date: string,
  *   creation_contact_id: int,
+ *   amount_approved: ?float,
  *   permissions?: array<string>,
+ *   transfer_contract_uri?: ?string,
  * }
  *
  * @phpstan-extends AbstractEntity<fundingCaseT>
@@ -57,6 +60,16 @@ final class FundingCaseEntity extends AbstractEntity {
    */
   public function setStatus(string $status): self {
     $this->values['status'] = $status;
+
+    return $this;
+  }
+
+  public function getTitle(): ?string {
+    return $this->values['title'];
+  }
+
+  public function setTitle(?string $title): self {
+    $this->values['title'] = $title;
 
     return $this;
   }
@@ -95,6 +108,16 @@ final class FundingCaseEntity extends AbstractEntity {
     return $this;
   }
 
+  public function getAmountApproved(): ?float {
+    return $this->values['amount_approved'];
+  }
+
+  public function setAmountApproved(?float $amountApproved): self {
+    $this->values['amount_approved'] = $amountApproved;
+
+    return $this;
+  }
+
   /**
    * @phpstan-return array<string, bool>
    *   Permissions with key as permission prefixed by
@@ -118,6 +141,16 @@ final class FundingCaseEntity extends AbstractEntity {
 
   public function hasPermission(string $permission): bool {
     return in_array($permission, $this->getPermissions(), TRUE);
+  }
+
+  public function getTransferContractUri(): ?string {
+    return $this->values['transfer_contract_uri'] ?? NULL;
+  }
+
+  public function setTransferContractUri(?string $transferContractUri): self {
+    $this->values['transfer_contract_uri'] = $transferContractUri;
+
+    return $this;
   }
 
   /**

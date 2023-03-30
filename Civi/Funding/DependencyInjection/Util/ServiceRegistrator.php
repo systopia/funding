@@ -29,6 +29,26 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 final class ServiceRegistrator {
 
   /**
+   * Autowires all PSR conform classes below the given directory (recursively).
+   *
+   * @phpstan-param array<string, array<string, scalar>> $tags
+   *   Tag names mapped to attributes.
+   * @phpstan-param array{lazy?: bool, shared?: bool, public?: bool} $options
+   *
+   * @phpstan-return array<string, \Symfony\Component\DependencyInjection\Definition>
+   *   Service ID mapped to definition.
+   */
+  public static function autowireAll(
+    ContainerBuilder $container,
+    string $dir,
+    string $namespace,
+    array $tags = [],
+    array $options = []
+  ): array {
+    return self::doAutowireAll($container, $dir, $namespace, NULL, $tags, $options);
+  }
+
+  /**
    * Autowires all implementations of the given class or interface.
    *
    * All PSR conform classes below the given directory (recursively) are
@@ -49,6 +69,31 @@ final class ServiceRegistrator {
     string $classOrInterface,
     array $tags = [],
     array $options = []
+  ): array {
+    return self::doAutowireAll($container, $dir, $namespace, $classOrInterface, $tags, $options);
+  }
+
+  /**
+   * Autowires all PSR conform classes below the given directory (recursively).
+   *
+   * If $classOrInterface is given only those classes are autowrired that
+   * implement the class/interface.
+   *
+   * @phpstan-param class-string|null $classOrInterface
+   * @phpstan-param array<string, array<string, scalar>> $tags
+   *   Tag names mapped to attributes.
+   * @phpstan-param array{lazy?: bool, shared?: bool, public?: bool} $options
+   *
+   * @phpstan-return array<string, \Symfony\Component\DependencyInjection\Definition>
+   *   Service ID mapped to definition.
+   */
+  private static function doAutowireAll(
+    ContainerBuilder $container,
+    string $dir,
+    string $namespace,
+    ?string $classOrInterface,
+    array $tags,
+    array $options
   ): array {
     $container->addResource(new GlobResource($dir, '/*.php', TRUE));
 
@@ -88,16 +133,17 @@ final class ServiceRegistrator {
   }
 
   /**
-   * @phpstan-param class-string $classOrInterface
+   * @phpstan-param class-string|NULL $classOrInterface
    */
-  private static function isServiceClass(string $class, string $classOrInterface): bool {
+  private static function isServiceClass(string $class, ?string $classOrInterface): bool {
     if (!class_exists($class)) {
       return FALSE;
     }
 
     $reflClass = new \ReflectionClass($class);
 
-    return $reflClass->isSubclassOf($classOrInterface) && !$reflClass->isAbstract();
+    return (NULL === $classOrInterface || $reflClass->isSubclassOf($classOrInterface))
+      && !$reflClass->isAbstract();
   }
 
 }

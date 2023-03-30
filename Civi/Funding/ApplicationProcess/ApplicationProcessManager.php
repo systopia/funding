@@ -41,28 +41,6 @@ use Civi\RemoteTools\Api4\Query\Comparison;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
 use Webmozart\Assert\Assert;
 
-/**
- * @phpstan-type applicationProcessT array{
- *   id: int,
- *   identifier: string,
- *   funding_case_id: int,
- *   status: string,
- *   creation_date: string,
- *   modification_date: string,
- *   title: string,
- *   short_description: string,
- *   start_date: string|null,
- *   end_date: string|null,
- *   request_data: array<string, mixed>,
- *   amount_requested: float,
- *   amount_granted: float|null,
- *   granted_budget: float|null,
- *   is_review_content: bool|null,
- *   reviewer_cont_contact_id: int|null,
- *   is_review_calculative: bool|null,
- *   reviewer_calc_contact_id: int|null,
- * }
- */
 class ApplicationProcessManager {
 
   private Api4Interface $api4;
@@ -122,12 +100,11 @@ class ApplicationProcessManager {
       'modification_date' => $now,
       'start_date' => DateTimeUtil::toDateTimeStrOrNull($data->getStartDate()),
       'end_date' => DateTimeUtil::toDateTimeStrOrNull($data->getEndDate()),
-      'amount_granted' => NULL,
-      'granted_budget' => NULL,
       'is_review_content' => NULL,
       'reviewer_cont_contact_id' => NULL,
       'is_review_calculative' => NULL,
       'reviewer_calc_contact_id' => NULL,
+      'is_eligible' => NULL,
     ]);
 
     $event = new ApplicationProcessPreCreateEvent(
@@ -139,9 +116,8 @@ class ApplicationProcessManager {
     $action = FundingApplicationProcess::create(FALSE)
       ->setValues($applicationProcess->toArray());
 
-    /** @phpstan-var applicationProcessT $applicationProcessValues */
-    $applicationProcessValues = $this->api4->executeAction($action)->first();
-    $applicationProcess = ApplicationProcessEntity::fromArray($applicationProcessValues)->reformatDates();
+    $applicationProcess = ApplicationProcessEntity::singleFromApiResult($this->api4->executeAction($action))
+      ->reformatDates();
     $applicationProcessBundle = new ApplicationProcessEntityBundle(
       $applicationProcess,
       $fundingCase,
@@ -161,14 +137,8 @@ class ApplicationProcessManager {
   public function get(int $id): ?ApplicationProcessEntity {
     $action = FundingApplicationProcess::get(FALSE)
       ->addWhere('id', '=', $id);
-    /** @phpstan-var applicationProcessT|null $values */
-    $values = $this->api4->executeAction($action)->first();
 
-    if (NULL === $values) {
-      return NULL;
-    }
-
-    return ApplicationProcessEntity::fromArray($values);
+    return ApplicationProcessEntity::singleOrNullFromApiResult($this->api4->executeAction($action));
   }
 
   /**
@@ -198,14 +168,7 @@ class ApplicationProcessManager {
       ->addOrderBy('id')
       ->setLimit(1);
 
-    /** @phpstan-var applicationProcessT|null $values */
-    $values = $this->api4->executeAction($action)->first();
-
-    if (NULL === $values) {
-      return NULL;
-    }
-
-    return ApplicationProcessEntity::fromArray($values);
+    return ApplicationProcessEntity::singleOrNullFromApiResult($this->api4->executeAction($action));
   }
 
   /**

@@ -27,6 +27,8 @@ use Civi\RemoteTools\Api4\Api4;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\OptionsLoader;
 use Civi\RemoteTools\Api4\OptionsLoaderInterface;
+use Civi\RemoteTools\Api4\OptionValueLoader;
+use Civi\RemoteTools\Api4\OptionValueLoaderInterface;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoader;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
 use Civi\RemoteTools\Database\TransactionFactory;
@@ -46,6 +48,7 @@ $container->register(Api3Interface::class, Api3::class);
 $container->register(TransactionFactory::class);
 
 $container->autowire(OptionsLoaderInterface::class, OptionsLoader::class);
+$container->autowire(OptionValueLoaderInterface::class, OptionValueLoader::class);
 $container->autowire(PossiblePermissionsLoaderInterface::class, PossiblePermissionsLoader::class);
 
 $container->autowire(ApiAuthorizeInitRequestSubscriber::class)

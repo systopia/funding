@@ -17,6 +17,8 @@
 
 declare(strict_types = 1);
 
+// This file is prefix by "z_" so it is loaded as last one.
+
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
@@ -27,6 +29,7 @@ use Civi\Funding\Form\ApplicationSubmitActionsFactory;
 use Civi\Funding\Form\SonstigeAktivitaet\AVK1FormDataFactory;
 use Civi\Funding\Form\SonstigeAktivitaet\AVK1JsonSchemaFactory;
 use Civi\Funding\Form\SonstigeAktivitaet\AVK1UiSchemaFactory;
+use Civi\Funding\FundingCase\DefaultFundingCaseActionsDeterminer;
 use Civi\Funding\SonstigeAktivitaet\AVK1ApplicationCostItemsFactory;
 use Civi\Funding\SonstigeAktivitaet\AVK1ApplicationResourcesItemsFactory;
 use Civi\Funding\SonstigeAktivitaet\AVK1FinanzierungFactory;
@@ -58,3 +61,6 @@ $container->getDefinition(ReworkPossibleApplicationProcessStatusDeterminer::clas
   ->addTag('funding.application.status_determiner', ['funding_case_type' => 'AVK1SonstigeAktivitaet']);
 $container->getDefinition(ReworkPossibleApplicationProcessActionStatusInfo::class)
   ->addTag('funding.application.action_status_info', ['funding_case_type' => 'AVK1SonstigeAktivitaet']);
+
+$container->getDefinition(DefaultFundingCaseActionsDeterminer::class)
+  ->addTag(DefaultFundingCaseActionsDeterminer::TAG, ['funding_case_type' => 'AVK1SonstigeAktivitaet']);

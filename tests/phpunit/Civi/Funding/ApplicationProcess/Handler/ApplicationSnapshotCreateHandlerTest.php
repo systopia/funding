@@ -52,7 +52,9 @@ final class ApplicationSnapshotCreateHandlerTest extends TestCase {
   }
 
   public function testHandle(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+      'is_eligible' => TRUE,
+    ]);
     $applicationProcess = $applicationProcessBundle->getApplicationProcess();
     $this->applicationSnapshotManagerMock->expects(static::once())->method('add')
       ->with(static::callback(function (ApplicationSnapshotEntity $applicationSnapshot) use ($applicationProcess) {
@@ -65,13 +67,12 @@ final class ApplicationSnapshotCreateHandlerTest extends TestCase {
         static::assertEquals($applicationProcess->getEndDate(), $applicationSnapshot->getEndDate());
         static::assertSame($applicationProcess->getRequestData(), $applicationSnapshot->getRequestData());
         static::assertSame($applicationProcess->getAmountRequested(), $applicationSnapshot->getAmountRequested());
-        static::assertSame($applicationProcess->getAmountGranted(), $applicationSnapshot->getAmountGranted());
-        static::assertSame($applicationProcess->getGrantedBudget(), $applicationSnapshot->getGrantedBudget());
         static::assertSame($applicationProcess->getIsReviewContent(), $applicationSnapshot->getIsReviewContent());
         static::assertSame(
           $applicationProcess->getIsReviewCalculative(),
           $applicationSnapshot->getIsReviewCalculative()
         );
+        static::assertSame($applicationProcess->getIsEligible(), $applicationSnapshot->getIsEligible());
 
         return TRUE;
       }));

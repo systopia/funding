@@ -34,12 +34,11 @@ use Civi\Funding\Entity\ApplicationProcessEntityBundle;
  *   end_date?: string|null,
  *   request_data?: array<string, mixed>,
  *   amount_requested?: float,
- *   amount_granted?: float|null,
- *   granted_budget?: float|null,
  *   is_review_content?: bool|null,
  *   reviewer_cont_contact_id?: int|null,
  *   is_review_calculative?: bool|null,
  *   reviewer_calc_contact_id?: int|null,
+ *   is_eligible?: bool|null,
  *   check_permissions?: bool,
  *   custom?: mixed,
  * }
@@ -49,10 +48,13 @@ use Civi\Funding\Entity\ApplicationProcessEntityBundle;
  *   funding_program_id?: int,
  *   funding_case_type_id?: int,
  *   status?: string,
+ *   title?: string,
  *   recipient_contact_id?: int,
  *   creation_date?: string,
  *   modification_date?: string,
+ *   amount_approved?: float|null,
  *   permissions?: array<string>,
+ *   transfer_contract_uri?: string|null,
  * }
  *
  * @phpstan-type fundingCaseTypeValuesT array{

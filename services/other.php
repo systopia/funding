@@ -22,21 +22,34 @@ declare(strict_types = 1);
 
 use Civi\Funding\Contact\FundingRemoteContactIdResolver;
 use Civi\Funding\Contact\FundingRemoteContactIdResolverInterface;
+use Civi\Funding\Controller\PageControllerInterface;
 use Civi\Funding\DependencyInjection\Compiler\EntityValidatorPass;
 use Civi\Funding\DependencyInjection\Compiler\FundingCaseTypeServiceLocatorPass;
+use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\EventSubscriber\Api\TransactionalApiRequestSubscriber;
 use Civi\Funding\EventSubscriber\FundingFilterPossiblePermissionsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingRequestInitSubscriber;
+use Civi\Funding\EventSubscriber\Remote\RemotePageRequestSubscriber;
+use Civi\Funding\FundingAttachmentManager;
+use Civi\Funding\FundingAttachmentManagerInterface;
 use Civi\Funding\Session\FundingSession;
 use Civi\Funding\Session\FundingSessionInterface;
 use Civi\Funding\Validation\EntityValidator;
 use Civi\Funding\Validation\EntityValidatorInterface;
+use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+
+if (!$container->has(PropertyAccessorInterface::class)) {
+  $container->register(PropertyAccessorInterface::class, PropertyAccess::class)
+    ->setFactory([PropertyAccess::class, 'createPropertyAccessor']);
+}
 
 if (!$container->has(\CRM_Core_Session::class)) {
   $container->register(\CRM_Core_Session::class, \CRM_Core_Session::class)
     ->setFactory([\CRM_Core_Session::class, 'singleton']);
 }
-$container->autowire(FundingSessionInterface::class, FundingSession::class);
+$container->autowire(FundingSessionInterface::class, FundingSession::class)
+  ->setPublic(TRUE);
 
 $container->addCompilerPass(new FundingCaseTypeServiceLocatorPass());
 
@@ -46,6 +59,9 @@ $container->autowire(FundingRequestInitSubscriber::class)
   ->addTag('kernel.event_subscriber')
   ->setLazy(TRUE);
 
+$container->autowire(RemotePageRequestSubscriber::class)
+  ->addTag('kernel.event_subscriber');
+
 $container->autowire(TransactionalApiRequestSubscriber::class, TransactionalApiRequestSubscriber::class)
   ->addTag('kernel.event_subscriber');
 
@@ -54,3 +70,14 @@ $container->autowire(FundingFilterPossiblePermissionsSubscriber::class)
 
 $container->autowire(EntityValidatorInterface::class, EntityValidator::class);
 $container->addCompilerPass(new EntityValidatorPass());
+
+$container->autowire(FundingAttachmentManagerInterface::class, FundingAttachmentManager::class);
+
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/Controller',
+  'Civi\\Funding\\Controller',
+  PageControllerInterface::class,
+  [],
+  ['public' => TRUE],
+);
