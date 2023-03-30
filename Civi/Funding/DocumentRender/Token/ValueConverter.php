@@ -20,7 +20,6 @@ declare(strict_types = 1);
 namespace Civi\Funding\DocumentRender\Token;
 
 use Brick\Money\Money;
-use CRM_Funding_ExtensionUtil as E;
 
 final class ValueConverter {
 
@@ -68,10 +67,6 @@ final class ValueConverter {
     }
 
     if (\is_object($value)) {
-      if ($value instanceof \DateTimeInterface) {
-        return $value->format(E::ts('Y-m-d H:i:s'));
-      }
-
       if (\method_exists($value, '__toString')) {
         $value->__toString();
       }

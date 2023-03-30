@@ -19,9 +19,6 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\DocumentRender\Token;
 
-use Brick\Math\BigDecimal;
-use Brick\Money\Currency;
-use Brick\Money\Money;
 use PHPUnit\Framework\TestCase;
 
 /**

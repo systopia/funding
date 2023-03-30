@@ -19,7 +19,6 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\TransferContract\Handler;
 
-use Civi\Api4\FundingCase;
 use Civi\Funding\DocumentRender\DocumentRendererInterface;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\AttachmentFactory;
