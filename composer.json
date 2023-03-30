@@ -30,7 +30,7 @@
         "symfony/property-info": "^5||^6",
         "systopia/expression-language-ext": "dev-main",
         "systopia/opis-json-schema-ext": "dev-main",
-        "webmozart/assert": "^1.2"
+        "webmozart/assert": "^1.10"
     },
     "require-dev": {
         "civicrm/civicrm-core": "^5.57",
