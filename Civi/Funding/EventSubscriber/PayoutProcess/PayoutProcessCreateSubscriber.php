@@ -17,11 +17,14 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\EventSubscriber\FundingCase;
+namespace Civi\Funding\EventSubscriber\PayoutProcess;
 
 use Civi\Funding\Event\FundingCase\FundingCaseApprovedEvent;
+use Civi\Funding\PayoutProcess\PayoutProcessManager;
 
 final class PayoutProcessCreateSubscriber implements \Symfony\Component\EventDispatcher\EventSubscriberInterface {
+
+  private PayoutProcessManager $payoutProcessManager;
 
   /**
    * @inheritDoc
@@ -30,8 +33,12 @@ final class PayoutProcessCreateSubscriber implements \Symfony\Component\EventDis
     return [FundingCaseApprovedEvent::class => 'onApproved'];
   }
 
+  public function __construct(PayoutProcessManager $payoutProcessManager) {
+    $this->payoutProcessManager = $payoutProcessManager;
+  }
+
   public function onApproved(FundingCaseApprovedEvent $event): void {
-    // @todo: Create payout process.
+    $this->payoutProcessManager->create($event->getFundingCase(), $event->getAmount());
   }
 
 }
