@@ -53,7 +53,7 @@ final class GetAction extends DAOGetAction {
     }
 
     $result->exchangeArray($records);
-    $result->rowCount = count($records);
+    $result->setCountMatched(count($records));
   }
 
   private function isFundingCaseIdSelected(): bool {

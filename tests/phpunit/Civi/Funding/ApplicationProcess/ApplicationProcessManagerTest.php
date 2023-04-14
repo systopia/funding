@@ -80,9 +80,10 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
     $fundingCase = $this->createFundingCase();
     FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['test_permission']);
 
+    ApplicationProcessFixture::addFixture($fundingCase->getId());
     static::assertSame(0, $this->applicationProcessManager->countByFundingCaseId($fundingCase->getId()));
 
-    ApplicationProcessFixture::addFixture($fundingCase->getId());
+    SessionTestUtil::mockInternalRequestSession($contact['id']);
     static::assertSame(1, $this->applicationProcessManager->countByFundingCaseId($fundingCase->getId()));
   }
 
