@@ -18,6 +18,7 @@
 SET FOREIGN_KEY_CHECKS=0;
 
 DROP TABLE IF EXISTS `civicrm_funding_app_cost_item`;
+DROP TABLE IF EXISTS `civicrm_funding_drawdown`;
 DROP TABLE IF EXISTS `civicrm_funding_application_snapshot`;
 DROP TABLE IF EXISTS `civicrm_funding_app_resources_item`;
 DROP TABLE IF EXISTS `civicrm_funding_application_process`;
@@ -297,6 +298,29 @@ CREATE TABLE `civicrm_funding_application_snapshot` (
   PRIMARY KEY (`id`),
   INDEX `index_title`(title),
   CONSTRAINT FK_civicrm_funding_application_snapshot_application_process_id FOREIGN KEY (`application_process_id`) REFERENCES `civicrm_funding_application_process`(`id`) ON DELETE RESTRICT
+)
+ENGINE=InnoDB;
+
+-- /*******************************************************
+-- *
+-- * civicrm_funding_drawdown
+-- *
+-- * Drawdowns in a payout process
+-- *
+-- *******************************************************/
+CREATE TABLE `civicrm_funding_drawdown` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique FundingDrawdown ID',
+  `payout_process_id` int unsigned NOT NULL COMMENT 'FK to FundingPayoutProcess',
+  `status` varchar(64) NOT NULL,
+  `creation_date` timestamp NOT NULL,
+  `amount` decimal(10,2),
+  `acception_date` timestamp,
+  `requester_contact_id` int unsigned NOT NULL COMMENT 'FK to Contact',
+  `reviewer_contact_id` int unsigned COMMENT 'FK to Contact',
+  PRIMARY KEY (`id`),
+  CONSTRAINT FK_civicrm_funding_drawdown_payout_process_id FOREIGN KEY (`payout_process_id`) REFERENCES `civicrm_funding_payout_process`(`id`) ON DELETE CASCADE,
+  CONSTRAINT FK_civicrm_funding_drawdown_requester_contact_id FOREIGN KEY (`requester_contact_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE RESTRICT,
+  CONSTRAINT FK_civicrm_funding_drawdown_reviewer_contact_id FOREIGN KEY (`reviewer_contact_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE RESTRICT
 )
 ENGINE=InnoDB;
 
