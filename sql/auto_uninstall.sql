@@ -19,6 +19,7 @@ DROP TABLE IF EXISTS `civicrm_funding_app_cost_item`;
 DROP TABLE IF EXISTS `civicrm_funding_application_snapshot`;
 DROP TABLE IF EXISTS `civicrm_funding_app_resources_item`;
 DROP TABLE IF EXISTS `civicrm_funding_application_process`;
+DROP TABLE IF EXISTS `civicrm_payout_process`;
 DROP TABLE IF EXISTS `civicrm_funding_new_case_permissions`;
 DROP TABLE IF EXISTS `civicrm_funding_case_type_program`;
 DROP TABLE IF EXISTS `civicrm_funding_case_contact_relation`;

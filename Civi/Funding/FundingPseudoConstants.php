@@ -44,6 +44,16 @@ final class FundingPseudoConstants {
   }
 
   /**
+   * @phpstan-return array<string, string>
+   */
+  public static function getPayoutProcessStatus(): array {
+    return [
+      'open' => E::ts('Open'),
+      'closed' => E::ts('Closed'),
+    ];
+  }
+
+  /**
    * @return array<string, string>
    */
   public static function getFundingCaseStatus(): array {

@@ -21,6 +21,7 @@ DROP TABLE IF EXISTS `civicrm_funding_app_cost_item`;
 DROP TABLE IF EXISTS `civicrm_funding_application_snapshot`;
 DROP TABLE IF EXISTS `civicrm_funding_app_resources_item`;
 DROP TABLE IF EXISTS `civicrm_funding_application_process`;
+DROP TABLE IF EXISTS `civicrm_payout_process`;
 DROP TABLE IF EXISTS `civicrm_funding_new_case_permissions`;
 DROP TABLE IF EXISTS `civicrm_funding_case_type_program`;
 DROP TABLE IF EXISTS `civicrm_funding_case_contact_relation`;
@@ -203,6 +204,22 @@ CREATE TABLE `civicrm_funding_new_case_permissions` (
   `permissions` varchar(512) NOT NULL COMMENT 'Permissions as JSON array',
   PRIMARY KEY (`id`),
   CONSTRAINT FK_civicrm_funding_new_case_permissions_funding_program_id FOREIGN KEY (`funding_program_id`) REFERENCES `civicrm_funding_program`(`id`) ON DELETE CASCADE
+)
+ENGINE=InnoDB;
+
+-- /*******************************************************
+-- *
+-- * civicrm_payout_process
+-- *
+-- *******************************************************/
+CREATE TABLE `civicrm_payout_process` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique PayoutProcess ID',
+  `funding_case_id` int unsigned NOT NULL COMMENT 'FK to FundingCase',
+  `status` varchar(64) NOT NULL,
+  `amount_total` decimal(10,2),
+  `amount_paid_out` decimal(10,2),
+  PRIMARY KEY (`id`),
+  CONSTRAINT FK_civicrm_payout_process_funding_case_id FOREIGN KEY (`funding_case_id`) REFERENCES `civicrm_funding_case`(`id`) ON DELETE CASCADE
 )
 ENGINE=InnoDB;
 
