@@ -52,7 +52,7 @@ final class ApproveAction extends AbstractAction {
 
   /**
    * @var mixed
-   * @reuired
+   * @required
    * @phpstan-ignore-next-line CiviCRM (v5.59) does not know float/double in @var.
    */
   protected ?float $amount = NULL;
