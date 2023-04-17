@@ -22,9 +22,12 @@ declare(strict_types = 1);
 
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
+use Civi\Funding\PayoutProcess\DrawdownManager;
 use Civi\Funding\PayoutProcess\PayoutProcessManager;
+use Civi\Funding\Validation\ConcreteEntityValidatorInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+$container->autowire(DrawdownManager::class);
 $container->autowire(PayoutProcessManager::class);
 
 ServiceRegistrator::autowireAllImplementing(
@@ -58,4 +61,12 @@ ServiceRegistrator::autowireAllImplementing(
   EventSubscriberInterface::class,
   ['kernel.event_subscriber' => []],
   ['lazy' => TRUE],
+);
+
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/PayoutProcess/Validator',
+  'Civi\\Funding\\PayoutProcess\\Validator',
+  ConcreteEntityValidatorInterface::class,
+  ['funding.validator.entity' => []]
 );
