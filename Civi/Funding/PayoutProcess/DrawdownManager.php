@@ -23,6 +23,7 @@ use Civi\Api4\FundingDrawdown;
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Entity\DrawdownEntity;
 use Civi\Funding\Event\PayoutProcess\DrawdownAcceptedEvent;
+use Civi\Funding\Event\PayoutProcess\DrawdownDeletedEvent;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
 
@@ -37,6 +38,9 @@ class DrawdownManager {
     $this->eventDispatcher = $eventDispatcher;
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function accept(DrawdownEntity $drawdown, int $contactId): void {
     $drawdown
       ->setReviewerContactId($contactId)
@@ -54,6 +58,22 @@ class DrawdownManager {
     $this->eventDispatcher->dispatch(DrawdownAcceptedEvent::class, $event);
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function delete(DrawdownEntity $drawdown): void {
+    $this->api4->execute(FundingDrawdown::_getEntityName(), 'delete', [
+      'where' => [['id', '=', $drawdown->getId()]],
+      'checkPermissions' => FALSE,
+    ]);
+
+    $event = new DrawdownDeletedEvent($drawdown);
+    $this->eventDispatcher->dispatch(DrawdownDeletedEvent::class, $event);
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function get(int $id): ?DrawdownEntity {
     $result = $this->api4->getEntities(
       FundingDrawdown::_getEntityName(),
