@@ -63,8 +63,8 @@ final class DrawdownEntity extends AbstractEntity {
     return static::toDateTimeOrNull($this->values['acception_date']);
   }
 
-  public function setAcceptionDate(\DateTimeInterface $acceptionDate): self {
-    $this->values['acception_date'] = static::toDateTimeStr($acceptionDate);
+  public function setAcceptionDate(?\DateTimeInterface $acceptionDate): self {
+    $this->values['acception_date'] = static::toDateTimeStrOrNull($acceptionDate);
 
     return $this;
   }
@@ -79,6 +79,19 @@ final class DrawdownEntity extends AbstractEntity {
 
   public function setReviewerContactId(?int $reviewerContactId): self {
     $this->values['reviewer_contact_id'] = $reviewerContactId;
+
+    return $this;
+  }
+
+  /**
+   * On create CiviCRM returns a different date format than on get. This method
+   * reformats the dates in $values so that they are as on get.
+   *
+   * @internal
+   */
+  public function reformatDates(): self {
+    $this->values['creation_date'] = static::toDateTimeStr($this->getCreationDate());
+    $this->setAcceptionDate($this->getAcceptionDate());
 
     return $this;
   }

@@ -50,12 +50,12 @@ final class FundingCaseFilterPermissionsSubscriberTest extends TestCase {
     }
   }
 
-  public function testExcludesNonApplicationPermissionsRemoteRequest(): void {
+  public function testExcludesNonApplicantPermissionsRemoteRequest(): void {
     $this->session->setRemote(TRUE);
-    $event = $this->createEvent(['application_foo', 'review_bar']);
+    $event = $this->createEvent(['application_foo', 'drawdown_foo', 'review_bar']);
 
     $this->subscriber->onPermissionsGet($event);
-    static::assertSame(['application_foo'], $event->getPermissions());
+    static::assertSame(['application_foo', 'drawdown_foo'], $event->getPermissions());
   }
 
   public function testPreventAccessInternalRequest(): void {

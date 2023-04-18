@@ -25,6 +25,7 @@ use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\PayoutProcessEntity;
 use Civi\Funding\Event\PayoutProcess\PayoutProcessCreatedEvent;
 use Civi\RemoteTools\Api4\Api4Interface;
+use Civi\RemoteTools\Api4\Query\Comparison;
 
 class PayoutProcessManager {
 
@@ -53,6 +54,27 @@ class PayoutProcessManager {
     $this->eventDispatcher->dispatch(PayoutProcessCreatedEvent::class, $event);
 
     return $payoutProcess;
+  }
+
+  public function get(int $id): ?PayoutProcessEntity {
+    $result = $this->api4->getEntities(
+      FundingPayoutProcess::_getEntityName(),
+      Comparison::new('id', '=', $id),
+      [],
+      1,
+      0,
+      ['checkPermissions' => FALSE],
+    );
+
+    return PayoutProcessEntity::singleOrNullFromApiResult($result);
+  }
+
+  public function hasAccess(int $id): bool {
+    return $this->api4->countEntities(
+      FundingPayoutProcess::_getEntityName(),
+      Comparison::new('id', '=', $id),
+      ['checkPermissions' => FALSE],
+    ) === 1;
   }
 
 }

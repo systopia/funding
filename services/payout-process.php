@@ -20,11 +20,36 @@ declare(strict_types = 1);
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
+use Civi\Api4\Generic\AbstractAction;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\PayoutProcess\PayoutProcessManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 $container->autowire(PayoutProcessManager::class);
+
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/Api4/Action/FundingPayoutProcess',
+  'Civi\\Funding\\Api4\\Action\\FundingPayoutProcess',
+  AbstractAction::class,
+  [],
+  [
+    'public' => TRUE,
+    'shared' => FALSE,
+  ]
+);
+
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/Api4/Action/FundingDrawdown',
+  'Civi\\Funding\\Api4\\Action\\FundingDrawdown',
+  AbstractAction::class,
+  [],
+  [
+    'public' => TRUE,
+    'shared' => FALSE,
+  ]
+);
 
 ServiceRegistrator::autowireAllImplementing(
   $container,

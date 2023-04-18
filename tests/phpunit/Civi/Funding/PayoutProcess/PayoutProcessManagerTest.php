@@ -26,6 +26,7 @@ use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\PayoutProcessFactory;
 use Civi\Funding\Event\PayoutProcess\PayoutProcessCreatedEvent;
 use Civi\RemoteTools\Api4\Api4Interface;
+use Civi\RemoteTools\Api4\Query\Comparison;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -73,6 +74,47 @@ final class PayoutProcessManagerTest extends TestCase {
       ->with(PayoutProcessCreatedEvent::class, new PayoutProcessCreatedEvent($fundingCase, $payoutProcess));
 
     static::assertEquals($payoutProcess, $this->payoutProcessManager->create($fundingCase, 12.34));
+  }
+
+  public function testGet(): void {
+    $payoutProcess = PayoutProcessFactory::create();
+
+    $this->api4Mock->expects(static::once())->method('getEntities')
+      ->with(
+        FundingPayoutProcess::_getEntityName(),
+        Comparison::new('id', '=', $payoutProcess->getId()),
+        [],
+        1,
+        0,
+        ['checkPermissions' => FALSE],
+      )->willReturn(new Result([$payoutProcess->toArray()]));
+
+    static::assertEquals($payoutProcess, $this->payoutProcessManager->get($payoutProcess->getId()));
+  }
+
+  public function testGetNull(): void {
+    $this->api4Mock->expects(static::once())->method('getEntities')
+      ->with(
+        FundingPayoutProcess::_getEntityName(),
+        Comparison::new('id', '=', 12),
+        [],
+        1,
+        0,
+        ['checkPermissions' => FALSE],
+      )->willReturn(new Result());
+
+    static::assertNull($this->payoutProcessManager->get(12));
+  }
+
+  public function testHasAccess(): void {
+    $this->api4Mock->method('countEntities')
+      ->with(
+        FundingPayoutProcess::_getEntityName(),
+        Comparison::new('id', '=', 12),
+        ['checkPermissions' => FALSE],
+      )->willReturn(1);
+
+    static::assertTrue($this->payoutProcessManager->hasAccess(12));
   }
 
 }
