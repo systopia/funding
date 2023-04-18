@@ -314,7 +314,7 @@ CREATE TABLE `civicrm_funding_drawdown` (
   `status` varchar(64) NOT NULL,
   `creation_date` timestamp NOT NULL,
   `amount` decimal(10,2),
-  `acception_date` timestamp,
+  `acception_date` timestamp NULL,
   `requester_contact_id` int unsigned NOT NULL COMMENT 'FK to Contact',
   `reviewer_contact_id` int unsigned COMMENT 'FK to Contact',
   PRIMARY KEY (`id`),
