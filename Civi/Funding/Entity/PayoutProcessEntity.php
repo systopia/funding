@@ -21,6 +21,7 @@ namespace Civi\Funding\Entity;
 
 /**
  * @phpstan-type payoutProcessT array{
+ *   id?: int,
  *   funding_case_id: int,
  *   status: string,
  *   amount_total: float,
