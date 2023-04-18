@@ -49,7 +49,7 @@ trait PermissionsGetActionTrait {
       $this->getPossiblePermissions(),
       fn (array $record) => $this->getRecordPermissions($record)
     );
-    ($this->_addPermissionsToRecords)($result);
+    ($this->_addPermissionsToRecords)($result, $this->isAllowEmptyRecordPermissions());
 
     if ($countSelectedOnly) {
       $result->setCountMatched($result->count());
@@ -83,6 +83,14 @@ trait PermissionsGetActionTrait {
    */
   protected function getFieldsRequiredToGetPermissions(): array {
     return ['id'];
+  }
+
+  /**
+   * @return bool
+   *   Records without permissions are filtered from result, if not TRUE.
+   */
+  protected function isAllowEmptyRecordPermissions(): bool {
+    return FALSE;
   }
 
   private function isFieldSelected(string $field): bool {

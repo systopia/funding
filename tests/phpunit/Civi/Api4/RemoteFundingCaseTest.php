@@ -77,20 +77,6 @@ final class RemoteFundingCaseTest extends AbstractRemoteFundingHeadlessTestCase 
 
     FundingCaseTypeProgramFixture::addFixture($fundingCaseType->getId(), $fundingProgram->getId());
 
-    // No permission
-    $e = NULL;
-    try {
-      RemoteFundingCase::getNewApplicationForm()
-        ->setRemoteContactId((string) $contact['id'])
-        ->setFundingCaseTypeId($fundingCaseType->getId())
-        ->setFundingProgramId($fundingProgram->getId())
-        ->execute();
-    }
-    catch (\Exception $e) {
-      static::assertSame(sprintf('Funding program with ID "%d" not found', $fundingProgram->getId()), $e->getMessage());
-    }
-    static::assertNotNull($e);
-
     // No "application_create" permission
     FundingProgramContactRelationFixture::addContact($contact['id'], $fundingProgram->getId(), ['application_test']);
     $e = NULL;

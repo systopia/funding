@@ -26,6 +26,7 @@ namespace Civi\Api4;
 use Civi\Api4\Traits\FundingProgramTestFixturesTrait;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Api4\Permissions;
+use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Util\SessionTestUtil;
 
 /**
@@ -95,6 +96,14 @@ final class FundingProgramTest extends AbstractFundingHeadlessTestCase {
     $notPermittedResult = FundingProgram::get()
       ->execute();
     static::assertSame(0, $notPermittedResult->rowCount);
+
+    // Unrelated contact has access, if empty permissions are allowed.
+    $unrelatedContact = ContactFixture::addIndividual();
+    SessionTestUtil::mockInternalRequestSession($unrelatedContact['id']);
+    static::assertCount(2, FundingProgram::get()
+      ->setAllowEmptyRecordPermissions(TRUE)
+      ->execute(),
+    );
   }
 
   public function testPermissionsRemote(): void {

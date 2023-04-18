@@ -37,6 +37,8 @@ final class GetAction extends DAOGetAction {
 
   private FundingSessionInterface $session;
 
+  private bool $allowEmptyRecordPermissions = FALSE;
+
   public function __construct(CiviEventDispatcherInterface $eventDispatcher,
     PossiblePermissionsLoaderInterface $possiblePermissionsLoader,
     FundingSessionInterface $session
@@ -45,6 +47,22 @@ final class GetAction extends DAOGetAction {
     $this->_eventDispatcher = $eventDispatcher;
     $this->_possiblePermissionsLoader = $possiblePermissionsLoader;
     $this->session = $session;
+  }
+
+  public function isAllowEmptyRecordPermissions(): bool {
+    return $this->allowEmptyRecordPermissions;
+  }
+
+  /**
+   * @param bool $allowEmptyRecordPermissions
+   *   If TRUE, records without permissions are not filtered from result.
+   *
+   * @return $this
+   */
+  public function setAllowEmptyRecordPermissions(bool $allowEmptyRecordPermissions): self {
+    $this->allowEmptyRecordPermissions = $allowEmptyRecordPermissions;
+
+    return $this;
   }
 
   /**
