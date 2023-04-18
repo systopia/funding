@@ -41,8 +41,10 @@ final class FundingCaseGetPossiblePermissionsSubscriber implements EventSubscrib
       'application_apply' => E::ts('Application: apply'),
       'application_withdraw' => E::ts('Application: withdraw'),
       'application_request_rework' => E::ts('Application: request rework'),
+      'drawdown_create' => E::ts('Drawdown: create'),
       'review_calculative' => E::ts('Review: calculative'),
       'review_content' => E::ts('Review: content'),
+      'review_drawdown' => E::ts('Review: drawdown'),
     ]);
   }
 

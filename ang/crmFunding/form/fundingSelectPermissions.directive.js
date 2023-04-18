@@ -41,7 +41,7 @@ fundingModule.directive('fundingSelectPermissions', [function() {
           let containsApplication = false;
 
           for (let permission of newValue || []) {
-            if (permission.startsWith('application_')) {
+            if (permission.startsWith('application_') || permission.startsWith('drawdown_')) {
               containsApplication = true;
             } else {
               containsNonApplication = true;
