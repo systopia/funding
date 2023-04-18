@@ -208,6 +208,7 @@ class ApplicationProcessManager {
     $this->eventDispatcher->dispatch(ApplicationProcessPreDeleteEvent::class, $preDeleteEvent);
 
     $action = (new DAODeleteAction(FundingApplicationProcess::_getEntityName(), 'delete'))
+      ->setCheckPermissions(FALSE)
       ->addWhere('id', '=', $applicationProcessBundle->getApplicationProcess()->getId());
     $this->api4->executeAction($action);
 
