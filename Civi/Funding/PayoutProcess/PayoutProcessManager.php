@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\PayoutProcess;
 
+use Civi\Api4\FundingDrawdown;
 use Civi\Api4\FundingPayoutProcess;
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Entity\FundingCaseEntity;
@@ -61,6 +62,32 @@ class PayoutProcessManager {
       FundingPayoutProcess::_getEntityName(),
       Comparison::new('id', '=', $id),
       [],
+      1,
+      0,
+      ['checkPermissions' => FALSE],
+    );
+
+    return PayoutProcessEntity::singleOrNullFromApiResult($result);
+  }
+
+  public function getAmountAvailable(PayoutProcessEntity $payoutProcess): float {
+    return $payoutProcess->getAmountTotal() - $this->getAmountRequested($payoutProcess);
+  }
+
+  public function getAmountRequested(PayoutProcessEntity $payoutProcess): float {
+    $action = FundingDrawdown::get()
+      ->setCheckPermissions(FALSE)
+      ->addSelect('SUM(amount) AS amountSum')
+      ->addWhere('payout_process_id', '=', $payoutProcess->getId());
+
+    return $this->api4->executeAction($action)->first()['amountSum'] ?? 0.0;
+  }
+
+  public function getLastByFundingCaseId(int $fundingCaseId): ?PayoutProcessEntity {
+    $result = $this->api4->getEntities(
+      FundingPayoutProcess::_getEntityName(),
+      Comparison::new('funding_case_id', '=', $fundingCaseId),
+      ['id' => 'DESC'],
       1,
       0,
       ['checkPermissions' => FALSE],

@@ -106,6 +106,22 @@ final class PayoutProcessManagerTest extends TestCase {
     static::assertNull($this->payoutProcessManager->get(12));
   }
 
+  public function testGetLastByFundingCaseId(): void {
+    $payoutProcess = PayoutProcessFactory::create();
+
+    $this->api4Mock->method('getEntities')
+      ->with(
+        FundingPayoutProcess::_getEntityName(),
+        Comparison::new('funding_case_id', '=', $payoutProcess->getId()),
+        ['id' => 'DESC'],
+        1,
+        0,
+        ['checkPermissions' => FALSE],
+      )->willReturn(new Result([$payoutProcess->toArray()]));
+
+    static::assertEquals($payoutProcess, $this->payoutProcessManager->getLastByFundingCaseId($payoutProcess->getId()));
+  }
+
   public function testHasAccess(): void {
     $this->api4Mock->method('countEntities')
       ->with(

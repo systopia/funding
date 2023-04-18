@@ -37,6 +37,8 @@ use Civi\Funding\Entity\FundingProgramEntity;
  */
 final class FundingProgramFixture {
 
+  public const DEFAULT_CURRENCY = 'EUR';
+
   /**
    * @param array<string, scalar|null> $values
    *
@@ -53,7 +55,7 @@ final class FundingProgramFixture {
         'requests_start_date' => '2022-06-22',
         'requests_end_date' => '2022-12-31',
         'budget' => NULL,
-        'currency' => 'EUR',
+        'currency' => self::DEFAULT_CURRENCY,
       ])->execute()->first();
 
     return FundingProgramEntity::fromArray($fundingProgramValues);
