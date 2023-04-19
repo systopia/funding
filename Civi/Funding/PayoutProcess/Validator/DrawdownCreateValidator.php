@@ -23,6 +23,7 @@ use Civi\API\Exception\UnauthorizedException;
 use Civi\Funding\Entity\AbstractEntity;
 use Civi\Funding\Entity\DrawdownEntity;
 use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\PayoutProcessEntity;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\PayoutProcess\PayoutProcessManager;
 use Civi\Funding\Validation\ConcreteEntityValidatorInterface;
@@ -69,27 +70,56 @@ final class DrawdownCreateValidator implements ConcreteEntityValidatorInterface 
    * @inheritDoc
    *
    * @param \Civi\Funding\Entity\DrawdownEntity $new
+   *
+   * @throws \Civi\API\Exception\UnauthorizedException
+   * @throws \CRM_Core_Exception
    */
   public function validateNew(AbstractEntity $new): EntityValidationResult {
-    $fundingCase = $this->getFundingCase($new);
+    $payoutProcess = $this->getPayoutProcess($new);
+    $this->assertNotClosed($payoutProcess);
+
+    $fundingCase = $this->getFundingCase($payoutProcess);
     $this->assertPermission($fundingCase);
 
     return EntityValidationResult::new();
   }
 
+  /**
+   * @throws \Civi\API\Exception\UnauthorizedException
+   */
+  private function assertNotClosed(PayoutProcessEntity $payoutProcess): void {
+    if ('closed' === $payoutProcess->getStatus()) {
+      throw new UnauthorizedException(E::ts('Payout process is closed.'));
+    }
+  }
+
+  /**
+   * @throws \Civi\API\Exception\UnauthorizedException
+   */
   private function assertPermission(FundingCaseEntity $fundingCase): void {
     if (!$fundingCase->hasPermission('drawdown_create')) {
       throw new UnauthorizedException(E::ts('Permission to create drawdown is missing.'));
     }
   }
 
-  private function getFundingCase(DrawdownEntity $drawdown): FundingCaseEntity {
-    $payoutProcess = $this->payoutProcessManager->get($drawdown->getPayoutProcessId());
-    Assert::notNull($payoutProcess);
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  private function getFundingCase(PayoutProcessEntity $payoutProcess): FundingCaseEntity {
     $fundingCase = $this->fundingCaseManager->get($payoutProcess->getFundingCaseId());
     Assert::notNull($fundingCase);
 
     return $fundingCase;
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  private function getPayoutProcess(DrawdownEntity $drawdown): PayoutProcessEntity {
+    $payoutProcess = $this->payoutProcessManager->get($drawdown->getPayoutProcessId());
+    Assert::notNull($payoutProcess);
+
+    return $payoutProcess;
   }
 
 }
