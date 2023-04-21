@@ -66,6 +66,7 @@ final class FundingProgramManagerTest extends AbstractContainerMockedTestCase {
     $this->api4Mock->expects(static::exactly(2))->method('executeAction')->withConsecutive(
       [
         static::callback(function (GetAction $action) {
+          static::assertTrue($action->isAllowEmptyRecordPermissions());
           static::assertSame([['id', '=', 13, FALSE]], $action->getWhere());
 
           return TRUE;
@@ -73,6 +74,7 @@ final class FundingProgramManagerTest extends AbstractContainerMockedTestCase {
       ],
       [
         static::callback(function (GetAction $action) {
+          static::assertTrue($action->isAllowEmptyRecordPermissions());
           static::assertSame([['id', '=', 12, FALSE]], $action->getWhere());
 
           return TRUE;

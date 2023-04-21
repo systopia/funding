@@ -46,12 +46,16 @@ final class AddPermissionsToRecords {
     $this->getRecordPermissions = $getRecordPermissions;
   }
 
-  public function __invoke(Result $result): void {
+  /**
+   * @param bool $allowEmptyPermissions
+   *   Records without permissions are filtered from result, if not TRUE.
+   */
+  public function __invoke(Result $result, bool $allowEmptyPermissions = FALSE): void {
     $records = [];
     /** @phpstan-var array<string, mixed>&array{id: int} $record */
     foreach ($result as $record) {
       $record['permissions'] = $permissions = ($this->getRecordPermissions)($record);
-      if ([] === $permissions) {
+      if ([] === $permissions && !$allowEmptyPermissions) {
         continue;
       }
 

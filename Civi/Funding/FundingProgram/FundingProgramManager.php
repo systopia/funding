@@ -46,10 +46,13 @@ class FundingProgramManager {
   }
 
   /**
+   * This method also returns a funding program if a user has no permissions.
+   *
    * @throws \CRM_Core_Exception
    */
   public function get(int $id): ?FundingProgramEntity {
     $action = FundingProgram::get(FALSE)
+      ->setAllowEmptyRecordPermissions(TRUE)
       ->addWhere('id', '=', $id);
 
     /** @var fundingProgramT|null $values */
