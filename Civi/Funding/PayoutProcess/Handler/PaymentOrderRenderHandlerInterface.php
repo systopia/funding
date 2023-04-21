@@ -17,16 +17,13 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding;
+namespace Civi\Funding\PayoutProcess\Handler;
 
-final class FileTypeNames {
+use Civi\Funding\PayoutProcess\Command\PaymentOrderRenderCommand;
+use Civi\Funding\PayoutProcess\Command\PaymentOrderRenderResult;
 
-  public const PAYMENT_ORDER = 'funding_payment_order';
+interface PaymentOrderRenderHandlerInterface {
 
-  public const PAYMENT_ORDER_TEMPLATE = 'funding_payment_order_template';
-
-  public const TRANSFER_CONTRACT = 'transfer_contract';
-
-  public const TRANSFER_CONTRACT_TEMPLATE = 'transfer_contract_template';
+  public function handle(PaymentOrderRenderCommand $command): PaymentOrderRenderResult;
 
 }

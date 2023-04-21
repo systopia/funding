@@ -27,6 +27,7 @@
     <ext>de.systopia.civioffice</ext>
     <ext>activity-entity</ext>
     <ext>org.civicrm.search_kit</ext>
+    <ext>org.project60.banking</ext>
   </requires>
   <classloader>
     <psr4 prefix="Civi\" path="Civi"/>

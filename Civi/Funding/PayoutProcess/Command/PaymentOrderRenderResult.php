@@ -17,16 +17,25 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding;
+namespace Civi\Funding\PayoutProcess\Command;
 
-final class FileTypeNames {
+final class PaymentOrderRenderResult {
 
-  public const PAYMENT_ORDER = 'funding_payment_order';
+  private string $filename;
 
-  public const PAYMENT_ORDER_TEMPLATE = 'funding_payment_order_template';
+  private string $mimeType;
 
-  public const TRANSFER_CONTRACT = 'transfer_contract';
+  public function __construct(string $filename, string $mimeType) {
+    $this->filename = $filename;
+    $this->mimeType = $mimeType;
+  }
 
-  public const TRANSFER_CONTRACT_TEMPLATE = 'transfer_contract_template';
+  public function getFilename(): string {
+    return $this->filename;
+  }
+
+  public function getMimeType(): string {
+    return $this->mimeType;
+  }
 
 }

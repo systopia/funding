@@ -17,16 +17,25 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding;
+use CRM_Funding_ExtensionUtil as E;
 
-final class FileTypeNames {
-
-  public const PAYMENT_ORDER = 'funding_payment_order';
-
-  public const PAYMENT_ORDER_TEMPLATE = 'funding_payment_order_template';
-
-  public const TRANSFER_CONTRACT = 'transfer_contract';
-
-  public const TRANSFER_CONTRACT_TEMPLATE = 'transfer_contract_template';
-
-}
+// Allow custom fields for FundingProgram
+return [
+  [
+    'name' => 'OptionValue_cg_extend_objects.civicrm_funding_program',
+    'entity' => 'OptionValue',
+    'cleanup' => 'unused',
+    'update' => 'always',
+    'params' => [
+      'version' => 4,
+      'values' => [
+        'option_group_id.name' => 'cg_extend_objects',
+        'label' => E::ts('Funding Program'),
+        'value' => 'FundingProgram',
+        'name' => 'civicrm_funding_program',
+        'is_reserved' => TRUE,
+        'is_active' => TRUE,
+      ],
+    ],
+  ],
+];

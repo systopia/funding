@@ -53,6 +53,27 @@ final class TestAttachmentManager implements FundingAttachmentManagerInterface {
   /**
    * @inheritDoc
    */
+  public function attachFileUniqueByFileType(
+    string $entityTable,
+    int $entityId,
+    int $fileTypeId,
+    string $filename,
+    string $mimeType,
+    array $optional = []
+  ): AttachmentEntity {
+    return $this->attachmentManager->attachFileUniqueByFileType(
+      $entityTable,
+      $entityId,
+      $fileTypeId,
+      $filename,
+      $mimeType,
+      $optional,
+    );
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function delete(AttachmentEntity $attachment): void {
     $this->attachmentManager->delete($attachment);
   }
@@ -62,6 +83,13 @@ final class TestAttachmentManager implements FundingAttachmentManagerInterface {
    */
   public function get(int $id, string $entityTable, int $entityId): ?AttachmentEntity {
     return $this->attachmentManager->get($id, $entityTable, $entityId);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getByFileType(string $entityTable, int $entityId, int $fileTypeId): array {
+    return $this->attachmentManager->getByFileType($entityTable, $entityId, $fileTypeId);
   }
 
   /**

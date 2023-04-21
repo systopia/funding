@@ -17,16 +17,28 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding;
+namespace Civi\Funding\PayoutProcess;
 
-final class FileTypeNames {
+/**
+ * @codeCoverageIgnore
+ */
+final class BankAccount {
 
-  public const PAYMENT_ORDER = 'funding_payment_order';
+  private string $bic;
 
-  public const PAYMENT_ORDER_TEMPLATE = 'funding_payment_order_template';
+  private string $reference;
 
-  public const TRANSFER_CONTRACT = 'transfer_contract';
+  public function __construct(string $bic, string $reference) {
+    $this->bic = $bic;
+    $this->reference = $reference;
+  }
 
-  public const TRANSFER_CONTRACT_TEMPLATE = 'transfer_contract_template';
+  public function getBic(): string {
+    return $this->bic;
+  }
+
+  public function getReference(): string {
+    return $this->reference;
+  }
 
 }

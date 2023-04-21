@@ -21,6 +21,10 @@ namespace Civi\Funding;
 
 final class FileTypeIds {
 
+  public const PAYMENT_ORDER = 63785202;
+
+  public const PAYMENT_ORDER_TEMPLATE = 63785203;
+
   public const TRANSFER_CONTRACT = 63785200;
 
   public const TRANSFER_CONTRACT_TEMPLATE = 63785201;

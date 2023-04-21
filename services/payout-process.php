@@ -22,17 +22,21 @@ declare(strict_types = 1);
 
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
-use Civi\Funding\EventSubscriber\Remote\Drawdown\DrawdownCreateSubscriber;
+use Civi\Funding\PayoutProcess\BankAccountManager;
 use Civi\Funding\PayoutProcess\DrawdownManager;
+use Civi\Funding\PayoutProcess\Handler\PaymentOrderRenderHandler;
+use Civi\Funding\PayoutProcess\Handler\PaymentOrderRenderHandlerInterface;
+use Civi\Funding\PayoutProcess\PaymentOrderCreator;
 use Civi\Funding\PayoutProcess\PayoutProcessManager;
 use Civi\Funding\Validation\ConcreteEntityValidatorInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 $container->autowire(DrawdownManager::class);
 $container->autowire(PayoutProcessManager::class);
+$container->autowire(BankAccountManager::class);
 
-$container->autowire(DrawdownCreateSubscriber::class)
-  ->addTag('kernel.event_subscriber');
+$container->autowire(PaymentOrderCreator::class);
+$container->autowire(PaymentOrderRenderHandlerInterface::class, PaymentOrderRenderHandler::class);
 
 ServiceRegistrator::autowireAllImplementing(
   $container,

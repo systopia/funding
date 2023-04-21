@@ -19,27 +19,27 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\PayoutProcess;
 
-use Civi\Funding\Event\FundingCase\FundingCaseApprovedEvent;
-use Civi\Funding\PayoutProcess\PayoutProcessManager;
+use Civi\Funding\Event\PayoutProcess\DrawdownAcceptedEvent;
+use Civi\Funding\PayoutProcess\PaymentOrderCreator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-final class PayoutProcessCreateSubscriber implements EventSubscriberInterface {
+final class PaymentOrderSubscriber implements EventSubscriberInterface {
 
-  private PayoutProcessManager $payoutProcessManager;
+  private PaymentOrderCreator $paymentOrderCreator;
 
   /**
    * @inheritDoc
    */
   public static function getSubscribedEvents(): array {
-    return [FundingCaseApprovedEvent::class => 'onApproved'];
+    return [DrawdownAcceptedEvent::class => 'onAccepted'];
   }
 
-  public function __construct(PayoutProcessManager $payoutProcessManager) {
-    $this->payoutProcessManager = $payoutProcessManager;
+  public function __construct(PaymentOrderCreator $paymentOrderCreator) {
+    $this->paymentOrderCreator = $paymentOrderCreator;
   }
 
-  public function onApproved(FundingCaseApprovedEvent $event): void {
-    $this->payoutProcessManager->create($event->getFundingCase(), $event->getAmount());
+  public function onAccepted(DrawdownAcceptedEvent $event): void {
+    $this->paymentOrderCreator->createPaymentOrder($event->getDrawdown());
   }
 
 }
