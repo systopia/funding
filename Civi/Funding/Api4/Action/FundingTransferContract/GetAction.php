@@ -89,7 +89,7 @@ final class GetAction extends AbstractGetAction {
       'title' => $fundingCase->getTitle(),
       'amount_approved' => $fundingCase->getAmountApproved(),
       'payout_process_id' => $payoutProcess->getId(),
-      'amount_paid_out' => $payoutProcess->getAmountPaidOut(),
+      'amount_paid_out' => $this->payoutProcessManager->getAmountAccepted($payoutProcess),
       'amount_available' => $amountAvailable,
       'transfer_contract_uri' => $fundingCase->getTransferContractUri(),
       'funding_case_type_id' => $fundingCase->getFundingCaseTypeId(),
@@ -97,7 +97,7 @@ final class GetAction extends AbstractGetAction {
       'currency' => $fundingProgram->getCurrency(),
       'funding_program_title' => $fundingProgram->getTitle(),
       'CAN_create_drawdown'
-      => in_array('drawdown_create', $fundingCase->getPermissions(), TRUE) && $amountAvailable > 0,
+      => in_array('drawdown_create', $fundingCase->getPermissions(), TRUE) && 'closed' !== $payoutProcess->getStatus(),
     ];
   }
 

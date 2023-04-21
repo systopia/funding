@@ -57,6 +57,20 @@ final class PayoutProcessManagerTest extends TestCase {
     );
   }
 
+  public function testClose(): void {
+    $payoutProcess = PayoutProcessFactory::create();
+    $this->api4Mock->expects(static::once())->method('updateEntity')
+      ->with(
+        FundingPayoutProcess::_getEntityName(),
+        $payoutProcess->getId(),
+        ['status' => 'closed'] + $payoutProcess->toArray(),
+        ['checkPermissions' => FALSE],
+      );
+
+    $this->payoutProcessManager->close($payoutProcess);
+    static::assertSame('closed', $payoutProcess->getStatus());
+  }
+
   public function testCreate(): void {
     $fundingCase = FundingCaseFactory::createFundingCase(['amount_approved' => 12.34]);
     $payoutProcess = PayoutProcessFactory::create(['amount_total' => 12.34]);
@@ -66,7 +80,6 @@ final class PayoutProcessManagerTest extends TestCase {
         'funding_case_id' => FundingCaseFactory::DEFAULT_ID,
         'status' => 'open',
         'amount_total' => 12.34,
-        'amount_paid_out' => 0.0,
       ])
       ->willReturn(new Result([$payoutProcess->toArray()]));
 

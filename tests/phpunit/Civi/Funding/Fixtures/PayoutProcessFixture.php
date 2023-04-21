@@ -35,7 +35,6 @@ final class PayoutProcessFixture {
         'funding_case_id' => $fundingCaseId,
         'status' => 'new',
         'amount_total' => 1.2,
-        'amount_paid_out' => '0.0',
       ])->execute();
 
     return PayoutProcessEntity::singleFromApiResult($result);

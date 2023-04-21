@@ -59,14 +59,4 @@
     </html>
   </field>
 
-  <field>
-    <name>amount_paid_out</name>
-    <type>decimal(10,2)</type>
-    <crmType>CRM_Utils_Type::T_MONEY</crmType>
-    <dataPattern>/^\d{1,10}(\.\d{2})?$/</dataPattern>
-    <html>
-      <type>Text</type>
-    </html>
-  </field>
-
 </table>

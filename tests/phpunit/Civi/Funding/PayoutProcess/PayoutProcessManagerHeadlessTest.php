@@ -77,6 +77,36 @@ final class PayoutProcessManagerHeadlessTest extends AbstractFundingHeadlessTest
     static::assertSame(100.0 - 22.34, $this->payoutProcessManager->getAmountAvailable($payoutProcess));
   }
 
+  public function testGetAmountAccepted(): void {
+    $payoutProcess = $this->createPayoutProcess(['amount_total' => 100.0]);
+    $requesterContactId = ContactFixture::addIndividual()['id'];
+
+    FundingCaseContactRelationFixture::addContact(
+      $requesterContactId,
+      $payoutProcess->getFundingCaseId(),
+      ['drawdown_create'],
+    );
+
+    SessionTestUtil::mockRemoteRequestSession((string) $requesterContactId);
+    static::assertSame(0.0, $this->payoutProcessManager->getAmountAccepted($payoutProcess));
+
+    DrawdownFixture::addFixture($payoutProcess->getId(), $requesterContactId, [
+      'amount' => 12.34,
+      'status' => 'accepted',
+    ]);
+    DrawdownFixture::addFixture($payoutProcess->getId(), $requesterContactId, [
+      'amount' => 11.0,
+      'status' => 'new',
+    ]);
+    static::assertSame(12.34, $this->payoutProcessManager->getAmountAccepted($payoutProcess));
+
+    DrawdownFixture::addFixture($payoutProcess->getId(), $requesterContactId, [
+      'amount' => 10,
+      'status' => 'accepted',
+    ]);
+    static::assertSame(22.34, $this->payoutProcessManager->getAmountAccepted($payoutProcess));
+  }
+
   public function testGetAmountRequested(): void {
     $payoutProcess = $this->createPayoutProcess(['amount_total' => 100.0]);
     $requesterContactId = ContactFixture::addIndividual()['id'];

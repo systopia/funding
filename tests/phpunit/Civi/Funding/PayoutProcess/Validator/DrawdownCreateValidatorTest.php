@@ -84,4 +84,15 @@ final class DrawdownCreateValidatorTest extends TestCase {
     static::assertTrue($this->validator->validateNew($new)->isValid());
   }
 
+  public function testValidateNewClosed(): void {
+    $new = DrawdownFactory::create();
+    $this->payoutProcess->setValues(['status' => 'closed'] + $this->payoutProcess->toArray());
+    $this->fundingCase->setValues(['permissions' => ['drawdown_create']] + $this->fundingCase->toArray());
+
+    $this->expectException(UnauthorizedException::class);
+    $this->expectExceptionMessage('Payout process is closed.');
+
+    static::assertTrue($this->validator->validateNew($new)->isValid());
+  }
+
 }
