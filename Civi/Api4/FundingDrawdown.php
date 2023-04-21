@@ -23,7 +23,7 @@ use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
 final class FundingDrawdown extends Generic\DAOEntity {
 
   use AccessPermissionsTrait {
-    permissions as traitPermissions;
+    permissions as private traitPermissions;
   }
 
   use EntityNameTrait;
