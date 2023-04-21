@@ -44,6 +44,13 @@ final class GetFieldsAction extends DAOGetFieldsAction {
         'data_type' => 'String',
         'readonly' => TRUE,
       ],
+      [
+        'name' => 'CAN_review',
+        'type' => 'Custom',
+        'data_type' => 'Boolean',
+        'readonly' => TRUE,
+        'required' => FALSE,
+      ],
     ]);
   }
 

@@ -23,6 +23,7 @@ declare(strict_types = 1);
 use Civi\Funding\Contact\FundingRemoteContactIdResolver;
 use Civi\Funding\Contact\FundingRemoteContactIdResolverInterface;
 use Civi\Funding\Controller\PageControllerInterface;
+use Civi\Funding\ControllerDectorator\TransactionalPageController;
 use Civi\Funding\DependencyInjection\Compiler\EntityValidatorPass;
 use Civi\Funding\DependencyInjection\Compiler\FundingCaseTypeServiceLocatorPass;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
@@ -34,8 +35,11 @@ use Civi\Funding\FundingAttachmentManager;
 use Civi\Funding\FundingAttachmentManagerInterface;
 use Civi\Funding\Session\FundingSession;
 use Civi\Funding\Session\FundingSessionInterface;
+use Civi\Funding\Util\MoneyFactory;
+use Civi\Funding\Util\UrlGenerator;
 use Civi\Funding\Validation\EntityValidator;
 use Civi\Funding\Validation\EntityValidatorInterface;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
@@ -50,6 +54,9 @@ if (!$container->has(\CRM_Core_Session::class)) {
 }
 $container->autowire(FundingSessionInterface::class, FundingSession::class)
   ->setPublic(TRUE);
+
+$container->autowire(UrlGenerator::class);
+$container->autowire(MoneyFactory::class);
 
 $container->addCompilerPass(new FundingCaseTypeServiceLocatorPass());
 
@@ -73,7 +80,7 @@ $container->addCompilerPass(new EntityValidatorPass());
 
 $container->autowire(FundingAttachmentManagerInterface::class, FundingAttachmentManager::class);
 
-ServiceRegistrator::autowireAllImplementing(
+$controllerDefinitions = ServiceRegistrator::autowireAllImplementing(
   $container,
   __DIR__ . '/../Civi/Funding/Controller',
   'Civi\\Funding\\Controller',
@@ -81,3 +88,10 @@ ServiceRegistrator::autowireAllImplementing(
   [],
   ['public' => TRUE],
 );
+
+// Make controllers run in database transaction.
+foreach (array_keys($controllerDefinitions) as $serviceId) {
+  $container->autowire($serviceId . '.transactional', TransactionalPageController::class)
+    ->setDecoratedService($serviceId)
+    ->setArgument('$controller', new Reference($serviceId . '.transactional.inner'));
+}

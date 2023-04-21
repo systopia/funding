@@ -19,8 +19,10 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\DocumentRender\Token;
 
+use Brick\Money\Money;
 use Civi\Api4\Generic\Result;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
+use Civi\Funding\Util\MoneyFactory;
 use Civi\RemoteTools\Api4\Api4Interface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -46,6 +48,7 @@ final class TokenResolverTest extends TestCase {
     $this->api4Mock = $this->createMock(Api4Interface::class);
     $this->tokenResolver = new TokenResolver(
       $this->api4Mock,
+      new MoneyFactory(),
       PropertyAccess::createPropertyAccessor(),
     );
   }
@@ -81,6 +84,45 @@ final class TokenResolverTest extends TestCase {
     static::expectException(\RuntimeException::class);
     static::expectExceptionMessage('Unknown token "unknown" for "EntityName"');
     $this->tokenResolver->resolveToken('EntityName', $fundingProgram, 'unknown');
+  }
+
+  public function testResolveTokenWithFloat(): void {
+    $fundingProgram = FundingProgramFactory::createFundingProgram([
+      'budget' => 12345.67,
+      'currency' => 'EUR',
+      'nonMoneyFloat' => 1.23,
+    ]);
+
+    $this->api4Mock->method('execute')
+      ->withConsecutive(
+        [
+          'FundingProgram', 'getFields', [
+            'select' => ['data_type'],
+            'where' => [['name', '=', 'budget']],
+            'checkPermissions' => FALSE,
+          ],
+        ],
+        [
+          'FundingProgram', 'getFields', [
+            'select' => ['data_type'],
+            'where' => [['name', '=', 'nonMoneyFloat']],
+            'checkPermissions' => FALSE,
+          ],
+        ],
+      )->willReturnOnConsecutiveCalls(
+        new Result([['data_type' => 'Money']]),
+        new Result([['data_type' => 'Float']]),
+      );
+
+    $resolvedBudget = $this->tokenResolver->resolveToken('FundingProgram', $fundingProgram, 'budget');
+    static::assertInstanceOf(Money::class, $resolvedBudget->value);
+    static::assertSame(12345.67, $resolvedBudget->value->getAmount()->toFloat());
+    static::assertSame('EUR', $resolvedBudget->value->getCurrency()->getCurrencyCode());
+
+    static::assertEquals(
+      new ResolvedToken(1.23, 'text/plain'),
+      $this->tokenResolver->resolveToken('FundingProgram', $fundingProgram, 'nonMoneyFloat'),
+    );
   }
 
 }
