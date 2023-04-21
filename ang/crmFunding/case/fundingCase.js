@@ -31,6 +31,9 @@ fundingModule.config(['$routeProvider', function ($routeProvider) {
         applicationProcesses: ['$route', 'fundingApplicationProcessService', function ($route, fundingApplicationProcessService) {
           return fundingApplicationProcessService.getByFundingCaseId($route.current.params.id);
         }],
+        payoutProcesses: ['$route', 'fundingPayoutProcessService', function ($route, fundingPayoutProcessService) {
+          return fundingPayoutProcessService.getByFundingCaseId($route.current.params.id);
+        }],
         possibleActions: ['$route', 'fundingCaseService', function ($route, fundingCaseService) {
           return fundingCaseService.getPossibleActions($route.current.params.id);
         }],
@@ -41,9 +44,9 @@ fundingModule.config(['$routeProvider', function ($routeProvider) {
 
 fundingModule.controller('fundingCaseCtrl', [
   '$scope', 'crmStatus', 'fundingProgramService', 'fundingCaseService', 'fundingContactService',
-  'fundingCase', 'statusLabels', 'applicationProcesses', 'possibleActions',
+  'fundingCase', 'statusLabels', 'applicationProcesses', 'payoutProcesses', 'possibleActions',
   function ($scope, crmStatus, fundingProgramService, fundingCaseService, fundingContactService,
-            fundingCase, statusLabels, applicationProcesses, possibleActions) {
+            fundingCase, statusLabels, applicationProcesses, payoutProcesses, possibleActions) {
     const $ = CRM.$;
     const ts = $scope.ts = CRM.ts('funding');
 
@@ -70,6 +73,7 @@ fundingModule.controller('fundingCaseCtrl', [
     $scope.fundingCase = fundingCase;
     $scope.statusLabels = statusLabels;
     $scope.applicationProcesses = applicationProcesses;
+    $scope.payoutProcesses = payoutProcesses;
     $scope.possibleActions = possibleActions;
     $scope.amountRequestedEligible = applicationProcesses
         .filter((applicationProcess) => applicationProcess.is_eligible)

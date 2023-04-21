@@ -23,6 +23,7 @@ return [
     'lodash4',
     'ui.select',
     'skApplicationProcessTable',
+    'skDrawdownTable',
   ],
   'settings' => [],
 ];

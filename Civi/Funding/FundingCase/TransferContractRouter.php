@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase;
 
 use Civi\Funding\Session\FundingSessionInterface;
+use Civi\Funding\Util\UrlGenerator;
 
 /**
  * @codeCoverageIgnore
@@ -30,9 +31,16 @@ class TransferContractRouter {
 
   private FundingSessionInterface $session;
 
-  public function __construct(FundingCaseManager $fundingCaseManager, FundingSessionInterface $session) {
+  private UrlGenerator $urlGenerator;
+
+  public function __construct(
+    FundingCaseManager $fundingCaseManager,
+    FundingSessionInterface $session,
+    UrlGenerator $urlGenerator
+  ) {
     $this->fundingCaseManager = $fundingCaseManager;
     $this->session = $session;
+    $this->urlGenerator = $urlGenerator;
   }
 
   /**
@@ -54,7 +62,7 @@ class TransferContractRouter {
       $path = 'civicrm/funding/transfer-contract/download';
     }
 
-    return \CRM_Utils_System::url($path, ['fundingCaseId' => $fundingCaseId], TRUE, NULL, FALSE);
+    return $this->urlGenerator->generate($path, ['fundingCaseId' => (string) $fundingCaseId]);
   }
 
 }
