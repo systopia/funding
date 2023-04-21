@@ -28,6 +28,7 @@ use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
+use Civi\Funding\Fixtures\PayoutProcessFixture;
 use Civi\Funding\Util\SessionTestUtil;
 use CRM_Funding_ExtensionUtil as E;
 
@@ -52,6 +53,7 @@ final class FundingTransferContractTest extends AbstractFundingHeadlessTestCase 
       $creationContact['id'],
       ['amount_approved' => 12.34],
     );
+    $payoutProcess = PayoutProcessFixture::addFixture($fundingCase->getId(), ['amount_total' => 12.34]);
     AttachmentFixture::addFixture(
       'civicrm_funding_case',
       $fundingCase->getId(),
@@ -78,7 +80,8 @@ final class FundingTransferContractTest extends AbstractFundingHeadlessTestCase 
       'funding_case_id' => $fundingCase->getId(),
       'title' => 'Funding Case Title',
       'amount_approved' => 12.34,
-      'amount_payed_out' => 0.0,
+      'payout_process_id' => $payoutProcess->getId(),
+      'amount_paid_out' => 0.0,
       'amount_available' => 12.34,
       'transfer_contract_uri'
       => 'http://localhost/civicrm/funding/transfer-contract/download?fundingCaseId=' . $fundingCase->getId(),
@@ -86,6 +89,7 @@ final class FundingTransferContractTest extends AbstractFundingHeadlessTestCase 
       'funding_program_id' => $fundingProgram->getId(),
       'currency' => $fundingProgram->getCurrency(),
       'funding_program_title' => $fundingProgram->getTitle(),
+      'CAN_create_drawdown' => FALSE,
     ];
     static::assertEquals($expected, $values);
 
@@ -97,6 +101,7 @@ final class FundingTransferContractTest extends AbstractFundingHeadlessTestCase 
       $creationContact['id'],
       ['amount_approved' => 12.34],
     );
+    $payoutProcess2 = PayoutProcessFixture::addFixture($fundingCase2->getId(), ['amount_total' => 12.34]);
     $result = $action->execute();
     static::assertCount(1, $result);
 
@@ -125,7 +130,7 @@ final class FundingTransferContractTest extends AbstractFundingHeadlessTestCase 
       static::assertTrue($field['readonly'], $message);
     }
 
-    static::assertCount(10, $result);
+    static::assertCount(12, $result);
   }
 
 }

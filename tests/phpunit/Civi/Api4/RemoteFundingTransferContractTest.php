@@ -23,11 +23,13 @@ use Civi\Funding\AbstractRemoteFundingHeadlessTestCase;
 use Civi\Funding\FileTypeIds;
 use Civi\Funding\Fixtures\AttachmentFixture;
 use Civi\Funding\Fixtures\ContactFixture;
+use Civi\Funding\Fixtures\DrawdownFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
+use Civi\Funding\Fixtures\PayoutProcessFixture;
 use CRM_Funding_ExtensionUtil as E;
 
 /**
@@ -49,6 +51,7 @@ final class RemoteFundingTransferContractTest extends AbstractRemoteFundingHeadl
       $creationContact['id'],
       ['amount_approved' => 12.34],
     );
+    $payoutProcess = PayoutProcessFixture::addFixture($fundingCase->getId(), ['amount_total' => 12.34]);
     AttachmentFixture::addFixture(
       'civicrm_funding_case',
       $fundingCase->getId(),
@@ -75,7 +78,8 @@ final class RemoteFundingTransferContractTest extends AbstractRemoteFundingHeadl
       'funding_case_id' => $fundingCase->getId(),
       'title' => 'Funding Case Title',
       'amount_approved' => 12.34,
-      'amount_payed_out' => 0,
+      'payout_process_id' => $payoutProcess->getId(),
+      'amount_paid_out' => 0.0,
       'amount_available' => 12.34,
       'transfer_contract_uri'
       => 'http://localhost/civicrm/funding/remote/transfer-contract/download?fundingCaseId=' . $fundingCase->getId(),
@@ -83,8 +87,27 @@ final class RemoteFundingTransferContractTest extends AbstractRemoteFundingHeadl
       'funding_program_id' => $fundingProgram->getId(),
       'currency' => $fundingProgram->getCurrency(),
       'funding_program_title' => $fundingProgram->getTitle(),
+      'CAN_create_drawdown' => FALSE,
     ];
     static::assertEquals($expected, $values);
+
+    // Test CAN_create_drawdown with drawdown_create permission
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['drawdown_create']);
+    static::assertTrue(
+      RemoteFundingTransferContract::get()
+        ->setRemoteContactId((string) $contact['id'])
+        ->execute()
+        ->first()['CAN_create_drawdown']
+    );
+
+    // Test CAN_create_drawdown with complete amount already requested
+    DrawdownFixture::addFixture($payoutProcess->getId(), $contact['id'], ['amount' => 12.34]);
+    static::assertFalse(
+      RemoteFundingTransferContract::get()
+        ->setRemoteContactId((string) $contact['id'])
+        ->execute()
+        ->first()['CAN_create_drawdown']
+    );
 
     // Add second funding case.
     $fundingCase2 = FundingCaseFixture::addFixture(
@@ -94,6 +117,7 @@ final class RemoteFundingTransferContractTest extends AbstractRemoteFundingHeadl
       $creationContact['id'],
       ['amount_approved' => 12.34],
     );
+    PayoutProcessFixture::addFixture($fundingCase2->getId());
     $result = $action->execute();
     static::assertCount(1, $result);
 
@@ -122,7 +146,7 @@ final class RemoteFundingTransferContractTest extends AbstractRemoteFundingHeadl
       static::assertTrue($field['readonly'], $message);
     }
 
-    static::assertCount(10, $result);
+    static::assertCount(12, $result);
   }
 
 }

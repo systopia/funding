@@ -6,6 +6,7 @@ namespace Civi\Api4;
 use Civi\Funding\Api4\Action\FundingDrawdown\AcceptAction;
 use Civi\Funding\Api4\Action\FundingDrawdown\CreateAction;
 use Civi\Funding\Api4\Action\FundingDrawdown\GetAction;
+use Civi\Funding\Api4\Action\FundingDrawdown\GetFieldsAction;
 use Civi\Funding\Api4\Action\FundingDrawdown\RejectAction;
 use Civi\Funding\Api4\Action\FundingDrawdown\SaveAction;
 use Civi\Funding\Api4\Action\FundingDrawdown\UpdateAction;
@@ -38,6 +39,10 @@ final class FundingDrawdown extends Generic\DAOEntity {
 
   public static function get($checkPermissions = TRUE) {
     return \Civi::service(GetAction::class)->setCheckPermissions($checkPermissions);
+  }
+
+  public static function getFields($checkPermissions = TRUE) {
+    return \Civi::service(GetFieldsAction::class)->setCheckPermissions($checkPermissions);
   }
 
   public static function reject(bool $checkPermissions = TRUE): RejectAction {

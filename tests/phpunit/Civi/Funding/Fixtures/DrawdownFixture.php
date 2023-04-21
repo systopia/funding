@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Fixtures;
 
 use Civi\Api4\FundingDrawdown;
+use Civi\Api4\Generic\DAOCreateAction;
 use Civi\Funding\Entity\DrawdownEntity;
 
 final class DrawdownFixture {
@@ -30,7 +31,8 @@ final class DrawdownFixture {
    * @throws \CRM_Core_Exception
    */
   public static function addFixture(int $payoutProcessId, int $requesterContactId, array $values = []): DrawdownEntity {
-    $result = FundingDrawdown::create(FALSE)
+    $result = (new DAOCreateAction(FundingDrawdown::_getEntityName(), 'create'))
+      ->setCheckPermissions(FALSE)
       ->setValues($values + [
         'payout_process_id' => $payoutProcessId,
         'status' => 'new',
