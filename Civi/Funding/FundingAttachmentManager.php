@@ -89,6 +89,35 @@ final class FundingAttachmentManager implements FundingAttachmentManagerInterfac
     return AttachmentEntity::fromApi3Values($resultValues);
   }
 
+  public function attachFileUniqueByFileType(
+    string $entityTable,
+    int $entityId,
+    int $fileTypeId,
+    string $filename,
+    string $mimeType,
+    array $optional = []
+  ): AttachmentEntity {
+    $previousAttachments = $this->getByFileType(
+      $entityTable,
+      $entityId,
+      $fileTypeId,
+    );
+
+    $attachment = $this->attachFile(
+      $entityTable,
+      $entityId,
+      $filename,
+      $mimeType,
+      ['file_type_id' => $fileTypeId] + $optional,
+    );
+
+    foreach ($previousAttachments as $previousAttachment) {
+      $this->delete($previousAttachment);
+    }
+
+    return $attachment;
+  }
+
   /**
    * @inheritDoc
    */
@@ -112,6 +141,33 @@ final class FundingAttachmentManager implements FundingAttachmentManagerInterfac
     ]);
 
     return $this->createFirstAttachmentFromResultOrNull($result);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getByFileType(string $entityTable, int $entityId, int $fileTypeId): array {
+    $attachments = [];
+    /** @phpstan-var array{count: int, values: array<int, array<string, mixed>>} $result */
+    $result = $this->api3->execute('Attachment', 'get', [
+      'entity_table' => $entityTable,
+      'entity_id' => $entityId,
+      'file_type_id' => $fileTypeId,
+      'sequential' => 1,
+      // Ensure path is returned.
+      'check_permissions' => FALSE,
+    ]);
+
+    // Attachment API ignores file_type_id.
+    foreach ($result['values'] as $values) {
+      // @phpstan-ignore-next-line
+      if ($this->getFileTypeIdForFile((int) $values['id']) === $fileTypeId) {
+        // @phpstan-ignore-next-line
+        $attachments[] = AttachmentEntity::fromApi3Values($values);
+      }
+    }
+
+    return $attachments;
   }
 
   /**

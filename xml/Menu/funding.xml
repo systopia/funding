@@ -12,4 +12,10 @@
     <title>RemoteTransferContractDownload</title>
     <access_arguments>access Remote Funding</access_arguments>
   </item>
+  <item>
+    <path>civicrm/funding/payment-order/download</path>
+    <page_callback>CRM_Funding_Page_PaymentOrderDownload</page_callback>
+    <title>PaymentOrderDownload</title>
+    <access_arguments>access Funding;administer Funding</access_arguments>
+  </item>
 </menu>

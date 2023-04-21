@@ -38,9 +38,6 @@ final class PayoutProcessCreateSubscriberTest extends TestCase {
    */
   private MockObject $payoutProcessManagerMock;
 
-  /**
-   * @var \Civi\Funding\EventSubscriber\PayoutProcess\PayoutProcessCreateSubscriber
-   */
   private PayoutProcessCreateSubscriber $subscriber;
 
   protected function setUp(): void {
