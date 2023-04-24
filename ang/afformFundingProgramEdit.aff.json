@@ -1,0 +1,18 @@
+{
+  "type": "form",
+  "requires": [],
+  "entity_type": null,
+  "join_entity": null,
+  "title": "Edit Funding Program",
+  "description": "",
+  "is_dashlet": false,
+  "is_public": false,
+  "is_token": false,
+  "contact_summary": null,
+  "summary_contact_type": null,
+  "icon": "fa-pencil",
+  "server_route": "civicrm/funding/program/edit",
+  "permission": "administer Funding",
+  "redirect": "civicrm/funding/program/list",
+  "create_submission": true
+}
