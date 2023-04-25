@@ -8,7 +8,7 @@
             <div class="modal-body">
                 <div>
                     <label for="commentText">{{ts('Comment')}}</label>
-                    <textarea id="commentText" rows="5" cols="80" ng-model="comment.text"></textarea>
+                    <textarea id="commentText" rows="5" cols="80" style="max-width: 100%;" ng-model="comment.text"></textarea>
                 </div>
                 <div>
                     <label for="commentType">{{ts('Comment type')}}</label>
@@ -20,8 +20,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">{{ts('Cancel')}}</button>
-                <button type="button" class="btn btn-primary" ng-click="modalSubmit()">{{ts('Submit')}}</button>
+                <button type="button" class="btn btn-success" crm-icon="fa-check" ng-click="modalSubmit()">{{ts('Submit')}}</button>
+                <button type="button" class="btn btn-default" crm-icon="fa-times" data-dismiss="modal">{{ts('Cancel')}}</button>
             </div>
         </div>
     </div>
@@ -29,7 +29,7 @@
 
 <div class="funding-review-buttons">
     <span ng-if="!isChanged">
-        <funding-action-button action="review" with-comment="false" class="btn btn-primary" crm-icon="fa-eye">{{ts('Start review')}}</funding-action-button>
+        <funding-action-button action="review" with-comment="false" class="btn btn-info" crm-icon="fa-eye">{{ts('Start review')}}</funding-action-button>
         <funding-action-button action="approve-content" class="btn btn-success" crm-icon="fa-thumbs-up">{{ts('Set content review to passed')}}</funding-action-button>
         <funding-action-button action="reject-content" class="btn btn-danger" crm-icon="fa-thumbs-down">{{ts('Set content review to failed')}}</funding-action-button>
         <funding-action-button action="approve-calculative" class="btn btn-success" crm-icon="fa-thumbs-up">{{ts('Set calculative review to passed')}}</funding-action-button>
@@ -45,7 +45,7 @@
     </span>
 
     <span ng-if="isChanged">
-        <funding-action-button action="update" class="btn btn-primary" crm-icon="fa-check">{{ts('Save')}}</funding-action-button>
+        <funding-action-button action="update" class="btn btn-success" crm-icon="fa-check">{{ts('Save')}}</funding-action-button>
         <button type="button" class="btn btn-danger" ng-click="reset()" ng-disabled="editCount > 0" crm-icon="fa-times">{{ts('Reset')}}</button>
     </span>
 </div>
