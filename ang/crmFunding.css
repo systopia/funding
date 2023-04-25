@@ -36,3 +36,8 @@
 .editable-controls .ui-select-container {
   vertical-align: middle;
 }
+
+/* don't let textarea grow out of a modal */
+.modal textarea {
+  max-width: 100%;
+}
