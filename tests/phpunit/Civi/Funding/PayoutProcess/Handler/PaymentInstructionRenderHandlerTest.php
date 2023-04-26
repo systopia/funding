@@ -29,15 +29,15 @@ use Civi\Funding\EntityFactory\PayoutProcessFactory;
 use Civi\Funding\FileTypeIds;
 use Civi\Funding\FundingAttachmentManagerInterface;
 use Civi\Funding\PayoutProcess\BankAccount;
-use Civi\Funding\PayoutProcess\Command\PaymentOrderRenderCommand;
+use Civi\Funding\PayoutProcess\Command\PaymentInstructionRenderCommand;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Civi\Funding\PayoutProcess\Handler\PaymentOrderRenderHandler
- * @covers \Civi\Funding\PayoutProcess\Command\PaymentOrderRenderCommand
+ * @covers \Civi\Funding\PayoutProcess\Handler\PaymentInstructionRenderHandler
+ * @covers \Civi\Funding\PayoutProcess\Command\PaymentInstructionRenderCommand
  */
-final class PaymentOrderRenderHandlerTest extends TestCase {
+final class PaymentInstructionRenderHandlerTest extends TestCase {
 
   /**
    * @var \Civi\Funding\FundingAttachmentManagerInterface&\PHPUnit\Framework\MockObject\MockObject
@@ -49,13 +49,13 @@ final class PaymentOrderRenderHandlerTest extends TestCase {
    */
   private MockObject $documentRendererMock;
 
-  private PaymentOrderRenderHandler $handler;
+  private PaymentInstructionRenderHandler $handler;
 
   protected function setUp(): void {
     parent::setUp();
     $this->attachmentManagerMock = $this->createMock(FundingAttachmentManagerInterface::class);
     $this->documentRendererMock = $this->createMock(DocumentRendererInterface::class);
-    $this->handler = new PaymentOrderRenderHandler(
+    $this->handler = new PaymentInstructionRenderHandler(
       $this->attachmentManagerMock,
       $this->documentRendererMock,
     );
@@ -63,18 +63,18 @@ final class PaymentOrderRenderHandlerTest extends TestCase {
 
   public function testHandle(): void {
     $command = $this->createCommand();
-    $paymentOrderAttachment = AttachmentFactory::create([
+    $paymentInstructionAttachment = AttachmentFactory::create([
       'entity_table' => 'civicrm_funding_case_type',
       'entity_id' => FundingCaseTypeFactory::DEFAULT_ID,
     ]);
     $this->attachmentManagerMock->method('getLastByFileType')
-      ->with('civicrm_funding_case_type', FundingCaseTypeFactory::DEFAULT_ID, FileTypeIds::PAYMENT_ORDER_TEMPLATE)
-      ->willReturn($paymentOrderAttachment);
+      ->with('civicrm_funding_case_type', FundingCaseTypeFactory::DEFAULT_ID, FileTypeIds::PAYMENT_INSTRUCTION_TEMPLATE)
+      ->willReturn($paymentInstructionAttachment);
 
     $this->documentRendererMock->expects(static::once())->method('render')
       ->with(
-        $paymentOrderAttachment->getPath(),
-        'FundingPaymentOrder',
+        $paymentInstructionAttachment->getPath(),
+        'FundingPaymentInstruction',
         DrawdownFactory::DEFAULT_ID,
         [
           'drawdown' => $command->getDrawdown(),
@@ -91,18 +91,18 @@ final class PaymentOrderRenderHandlerTest extends TestCase {
   public function testHandleNoTemplate(): void {
     $command = $this->createCommand();
     $this->attachmentManagerMock->method('getLastByFileType')
-      ->with('civicrm_funding_case_type', FundingCaseTypeFactory::DEFAULT_ID, FileTypeIds::PAYMENT_ORDER_TEMPLATE)
+      ->with('civicrm_funding_case_type', FundingCaseTypeFactory::DEFAULT_ID, FileTypeIds::PAYMENT_INSTRUCTION_TEMPLATE)
       ->willReturn(NULL);
 
     $this->expectException(\RuntimeException::class);
     $this->expectExceptionMessage(sprintf(
-      'No payment order template for funding case type "%s" found.',
+      'No payment instruction template for funding case type "%s" found.',
       FundingCaseTypeFactory::DEFAULT_NAME,
     ));
     $this->handler->handle($command);
   }
 
-  private function createCommand(): PaymentOrderRenderCommand {
+  private function createCommand(): PaymentInstructionRenderCommand {
     $fundingProgram = FundingProgramFactory::createFundingProgram();
     $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
     $fundingCase = FundingCaseFactory::createFundingCase();
@@ -110,7 +110,7 @@ final class PaymentOrderRenderHandlerTest extends TestCase {
     $bankAccount = new BankAccount('BIC', 'reference');
     $drawdown = DrawdownFactory::create();
 
-    return new PaymentOrderRenderCommand(
+    return new PaymentInstructionRenderCommand(
       $drawdown,
       $bankAccount,
       $payoutProcess,

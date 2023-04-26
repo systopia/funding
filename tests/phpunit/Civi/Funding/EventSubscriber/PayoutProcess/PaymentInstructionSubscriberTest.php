@@ -21,26 +21,26 @@ namespace Civi\Funding\EventSubscriber\PayoutProcess;
 
 use Civi\Funding\EntityFactory\DrawdownFactory;
 use Civi\Funding\Event\PayoutProcess\DrawdownAcceptedEvent;
-use Civi\Funding\PayoutProcess\PaymentOrderCreator;
+use Civi\Funding\PayoutProcess\PaymentInstructionCreator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Civi\Funding\EventSubscriber\PayoutProcess\PaymentOrderSubscriber
+ * @covers \Civi\Funding\EventSubscriber\PayoutProcess\PaymentInstructionSubscriber
  */
-final class PaymentOrderSubscriberTest extends TestCase {
+final class PaymentInstructionSubscriberTest extends TestCase {
 
   /**
-   * @var \Civi\Funding\PayoutProcess\PaymentOrderCreator&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\PayoutProcess\PaymentInstructionCreator&\PHPUnit\Framework\MockObject\MockObject
    */
-  private MockObject $paymentOrderCreatorMock;
+  private MockObject $paymentInstructionCreatorMock;
 
-  private PaymentOrderSubscriber $subscriber;
+  private PaymentInstructionSubscriber $subscriber;
 
   protected function setUp(): void {
     parent::setUp();
-    $this->paymentOrderCreatorMock = $this->createMock(PaymentOrderCreator::class);
-    $this->subscriber = new PaymentOrderSubscriber($this->paymentOrderCreatorMock);
+    $this->paymentInstructionCreatorMock = $this->createMock(PaymentInstructionCreator::class);
+    $this->subscriber = new PaymentInstructionSubscriber($this->paymentInstructionCreatorMock);
   }
 
   public function testGetSubscribedEvents(): void {
@@ -58,7 +58,7 @@ final class PaymentOrderSubscriberTest extends TestCase {
   public function testOnAccepted(): void {
     $drawdown = DrawdownFactory::create(['status' => 'accepted']);
 
-    $this->paymentOrderCreatorMock->expects(static::once())->method('createPaymentOrder')
+    $this->paymentInstructionCreatorMock->expects(static::once())->method('createPaymentInstruction')
       ->with($drawdown);
     $this->subscriber->onAccepted(new DrawdownAcceptedEvent($drawdown));
   }

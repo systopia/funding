@@ -155,9 +155,9 @@ return [
                   'target' => '',
                 ],
                 [
-                  'path' => 'civicrm/funding/payment-order/download?drawdownId=[id]',
+                  'path' => 'civicrm/funding/payment-instruction/download?drawdownId=[id]',
                   'icon' => 'fa-external-link',
-                  'text' => E::ts('Download Payment Order'),
+                  'text' => E::ts('Download Payment Instruction'),
                   'style' => 'default',
                   'condition' => [
                     'acception_date',

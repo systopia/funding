@@ -23,10 +23,10 @@ use Civi\Funding\DocumentRender\DocumentRendererInterface;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\FileTypeIds;
 use Civi\Funding\FundingAttachmentManagerInterface;
-use Civi\Funding\PayoutProcess\Command\PaymentOrderRenderCommand;
-use Civi\Funding\PayoutProcess\Command\PaymentOrderRenderResult;
+use Civi\Funding\PayoutProcess\Command\PaymentInstructionRenderCommand;
+use Civi\Funding\PayoutProcess\Command\PaymentInstructionRenderResult;
 
-final class PaymentOrderRenderHandler implements PaymentOrderRenderHandlerInterface {
+final class PaymentInstructionRenderHandler implements PaymentInstructionRenderHandlerInterface {
 
   private FundingAttachmentManagerInterface $attachmentManager;
 
@@ -43,11 +43,11 @@ final class PaymentOrderRenderHandler implements PaymentOrderRenderHandlerInterf
   /**
    * @throws \CRM_Core_Exception
    */
-  public function handle(PaymentOrderRenderCommand $command): PaymentOrderRenderResult {
-    return new PaymentOrderRenderResult(
+  public function handle(PaymentInstructionRenderCommand $command): PaymentInstructionRenderResult {
+    return new PaymentInstructionRenderResult(
       $this->documentRenderer->render(
         $this->getTemplateFile($command->getFundingCaseType()),
-        'FundingPaymentOrder',
+        'FundingPaymentInstruction',
         $command->getDrawdown()->getId(),
         [
           'drawdown' => $command->getDrawdown(),
@@ -68,12 +68,12 @@ final class PaymentOrderRenderHandler implements PaymentOrderRenderHandlerInterf
     $attachment = $this->attachmentManager->getLastByFileType(
       'civicrm_funding_case_type',
       $fundingCaseType->getId(),
-      FileTypeIds::PAYMENT_ORDER_TEMPLATE,
+      FileTypeIds::PAYMENT_INSTRUCTION_TEMPLATE,
     );
 
     if (NULL === $attachment) {
       throw new \RuntimeException(sprintf(
-        'No payment order template for funding case type "%s" found.',
+        'No payment instruction template for funding case type "%s" found.',
         $fundingCaseType->getName()
       ));
     }

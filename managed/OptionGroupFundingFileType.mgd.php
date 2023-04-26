@@ -75,7 +75,7 @@ return [
     ],
   ],
   [
-    'name' => 'OptionValue_funding_file_type.payment_order',
+    'name' => 'OptionValue_funding_file_type.payment_instruction',
     'entity' => 'OptionValue',
     'cleanup' => 'unused',
     'update' => 'always',
@@ -83,9 +83,9 @@ return [
       'version' => 4,
       'values' => [
         'option_group_id.name' => 'funding_file_type',
-        'label' => E::ts('Payment order'),
-        'value' => FileTypeIds::PAYMENT_ORDER,
-        'name' => FileTypeNames::PAYMENT_ORDER,
+        'label' => E::ts('Payment Instruction'),
+        'value' => FileTypeIds::PAYMENT_INSTRUCTION,
+        'name' => FileTypeNames::PAYMENT_INSTRUCTION,
         'grouping' => 'funding',
         'filter' => 0,
         'is_default' => FALSE,
@@ -97,7 +97,7 @@ return [
     ],
   ],
   [
-    'name' => 'OptionValue_funding_file_type.payment_order_template',
+    'name' => 'OptionValue_funding_file_type.payment_instruction_template',
     'entity' => 'OptionValue',
     'cleanup' => 'unused',
     'update' => 'always',
@@ -105,9 +105,9 @@ return [
       'version' => 4,
       'values' => [
         'option_group_id.name' => 'funding_file_type',
-        'label' => E::ts('Payment order template'),
-        'value' => FileTypeIds::PAYMENT_ORDER_TEMPLATE,
-        'name' => FileTypeNames::PAYMENT_ORDER_TEMPLATE,
+        'label' => E::ts('Payment Instruction Template'),
+        'value' => FileTypeIds::PAYMENT_INSTRUCTION_TEMPLATE,
+        'name' => FileTypeNames::PAYMENT_INSTRUCTION_TEMPLATE,
         'grouping' => 'funding',
         'filter' => 0,
         'is_default' => FALSE,

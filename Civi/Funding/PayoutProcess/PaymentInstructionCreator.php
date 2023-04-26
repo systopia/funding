@@ -26,12 +26,12 @@ use Civi\Funding\FundingAttachmentManagerInterface;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\Funding\FundingProgram\FundingProgramManager;
-use Civi\Funding\PayoutProcess\Command\PaymentOrderRenderCommand;
-use Civi\Funding\PayoutProcess\Handler\PaymentOrderRenderHandlerInterface;
+use Civi\Funding\PayoutProcess\Command\PaymentInstructionRenderCommand;
+use Civi\Funding\PayoutProcess\Handler\PaymentInstructionRenderHandlerInterface;
 use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
 
-class PaymentOrderCreator {
+class PaymentInstructionCreator {
 
   private FundingAttachmentManagerInterface $attachmentManager;
 
@@ -43,7 +43,7 @@ class PaymentOrderCreator {
 
   private FundingProgramManager $fundingProgramManager;
 
-  private PaymentOrderRenderHandlerInterface $paymentOrderRenderHandler;
+  private PaymentInstructionRenderHandlerInterface $paymentInstructionRenderHandler;
 
   private PayoutProcessManager $payoutProcessManager;
 
@@ -53,7 +53,7 @@ class PaymentOrderCreator {
     FundingCaseManager $fundingCaseManager,
     FundingCaseTypeManager $fundingCaseTypeManager,
     FundingProgramManager $fundingProgramManager,
-    PaymentOrderRenderHandlerInterface $paymentOrderRenderHandler,
+    PaymentInstructionRenderHandlerInterface $paymentInstructionRenderHandler,
     PayoutProcessManager $payoutProcessManager
   ) {
     $this->attachmentManager = $attachmentManager;
@@ -61,7 +61,7 @@ class PaymentOrderCreator {
     $this->fundingCaseManager = $fundingCaseManager;
     $this->fundingCaseTypeManager = $fundingCaseTypeManager;
     $this->fundingProgramManager = $fundingProgramManager;
-    $this->paymentOrderRenderHandler = $paymentOrderRenderHandler;
+    $this->paymentInstructionRenderHandler = $paymentInstructionRenderHandler;
     $this->payoutProcessManager = $payoutProcessManager;
   }
 
@@ -69,7 +69,7 @@ class PaymentOrderCreator {
    * @throws \Civi\Funding\Exception\FundingException
    * @throws \CRM_Core_Exception
    */
-  public function createPaymentOrder(DrawdownEntity $drawdown): void {
+  public function createPaymentInstruction(DrawdownEntity $drawdown): void {
     $payoutProcess = $this->payoutProcessManager->get($drawdown->getPayoutProcessId());
     Assert::notNull($payoutProcess);
     $fundingCase = $this->fundingCaseManager->get($payoutProcess->getFundingCaseId());
@@ -86,7 +86,7 @@ class PaymentOrderCreator {
     Assert::notNull($fundingCaseType);
     $fundingProgram = $this->fundingProgramManager->get($fundingCase->getFundingProgramId());
     Assert::notNull($fundingProgram);
-    $command = new PaymentOrderRenderCommand(
+    $command = new PaymentInstructionRenderCommand(
       $drawdown,
       $bankAccount,
       $payoutProcess,
@@ -94,18 +94,18 @@ class PaymentOrderCreator {
       $fundingCaseType,
       $fundingProgram,
     );
-    $result = $this->paymentOrderRenderHandler->handle($command);
+    $result = $this->paymentInstructionRenderHandler->handle($command);
 
-    // There might be only one payment order for a drawdown.
+    // There might be only one payment instruction for a drawdown.
     $this->attachmentManager->attachFileUniqueByFileType(
       'civicrm_funding_drawdown',
       $drawdown->getId(),
-      FileTypeIds::PAYMENT_ORDER,
+      FileTypeIds::PAYMENT_INSTRUCTION,
       $result->getFilename(),
       $result->getMimeType(),
       [
         'name' => sprintf(
-          'payment-order.%d.%s',
+          'payment-instruction.%d.%s',
           $drawdown->getId(),
           pathinfo($result->getFilename(), PATHINFO_EXTENSION)
         ),

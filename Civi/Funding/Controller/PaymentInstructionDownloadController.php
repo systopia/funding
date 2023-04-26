@@ -31,7 +31,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-final class PaymentOrderDownloadController implements PageControllerInterface {
+final class PaymentInstructionDownloadController implements PageControllerInterface {
 
   private FundingAttachmentManagerInterface $attachmentManager;
 
@@ -69,17 +69,17 @@ final class PaymentOrderDownloadController implements PageControllerInterface {
     $attachment = $this->attachmentManager->getLastByFileType(
       'civicrm_funding_drawdown',
       $drawdownId,
-      FileTypeIds::PAYMENT_ORDER,
+      FileTypeIds::PAYMENT_INSTRUCTION,
     );
 
     if (NULL === $attachment) {
-      throw new NotFoundHttpException('Payment order does not exist');
+      throw new NotFoundHttpException('Payment instruction does not exist');
     }
 
     $headers = [
       'Content-Type' => $attachment->getMimeType(),
     ];
-    $filename = E::ts('payment-order') . '.' . pathinfo($attachment->getPath(), PATHINFO_EXTENSION);
+    $filename = E::ts('payment-instruction') . '.' . pathinfo($attachment->getPath(), PATHINFO_EXTENSION);
 
     return (new BinaryFileResponse(
       $attachment->getPath(),

@@ -26,7 +26,7 @@ use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Entity\PayoutProcessEntity;
 use Civi\Funding\PayoutProcess\BankAccount;
 
-final class PaymentOrderRenderCommand {
+final class PaymentInstructionRenderCommand {
 
   private DrawdownEntity $drawdown;
 

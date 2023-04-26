@@ -26,7 +26,7 @@ use Civi\Token\TokenProcessor;
 use Civi\Token\TokenRow;
 use CRM_Funding_ExtensionUtil as E;
 
-final class PaymentOrderTokenSubscriber extends AbstractTokenSubscriber {
+final class PaymentInstructionTokenSubscriber extends AbstractTokenSubscriber {
 
   private CiviOfficeContextDataHolder $contextDataHolder;
 
@@ -37,7 +37,7 @@ final class PaymentOrderTokenSubscriber extends AbstractTokenSubscriber {
   }
 
   public function __construct(CiviOfficeContextDataHolder $contextDataHolder) {
-    parent::__construct('funding_payment_order', [
+    parent::__construct('funding_payment_instruction', [
       'bank_account_reference' => E::ts('Bank account reference (e.g. IBAN)'),
       'bic' => E::ts('BIC (maybe empty)'),
     ]);
@@ -45,7 +45,7 @@ final class PaymentOrderTokenSubscriber extends AbstractTokenSubscriber {
   }
 
   public function onCiviOfficeTokenContext(GenericHookEvent $event): void {
-    if ('FundingPaymentOrder' === $event->entity_type) {
+    if ('FundingPaymentInstruction' === $event->entity_type) {
       /**
        * @phpstan-var array{
        *   drawdown: \Civi\Funding\Entity\DrawdownEntity,
@@ -57,7 +57,7 @@ final class PaymentOrderTokenSubscriber extends AbstractTokenSubscriber {
        * } $data
        */
       $data = $this->contextDataHolder->getEntityData($event->entity_type, $event->entity_id);
-      $event->context['fundingPaymentOrder'] = [
+      $event->context['fundingPaymentInstruction'] = [
         'bankAccount' => $data['bankAccount'],
       ];
       $event->context['contactId'] = $data['fundingCase']->getRecipientContactId();
@@ -67,8 +67,8 @@ final class PaymentOrderTokenSubscriber extends AbstractTokenSubscriber {
   }
 
   public function checkActive(TokenProcessor $processor): bool {
-    return in_array('fundingPaymentOrder', $processor->context['schema'] ?? [], TRUE)
-      || [] !== $processor->getContextValues('fundingPaymentOrder');
+    return in_array('fundingPaymentInstruction', $processor->context['schema'] ?? [], TRUE)
+      || [] !== $processor->getContextValues('fundingPaymentInstruction');
   }
 
   /**
@@ -76,7 +76,7 @@ final class PaymentOrderTokenSubscriber extends AbstractTokenSubscriber {
    */
   public function evaluateToken(TokenRow $row, $entity, $field, $prefetch = NULL): void {
     /** @var \Civi\Funding\PayoutProcess\BankAccount $bankAccount */
-    $bankAccount = $row->context['fundingPaymentOrder']['bankAccount'];
+    $bankAccount = $row->context['fundingPaymentInstruction']['bankAccount'];
 
     if ('bic' === $field) {
       $row->format('text/plain');

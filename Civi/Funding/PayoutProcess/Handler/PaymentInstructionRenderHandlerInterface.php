@@ -19,11 +19,11 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\PayoutProcess\Handler;
 
-use Civi\Funding\PayoutProcess\Command\PaymentOrderRenderCommand;
-use Civi\Funding\PayoutProcess\Command\PaymentOrderRenderResult;
+use Civi\Funding\PayoutProcess\Command\PaymentInstructionRenderCommand;
+use Civi\Funding\PayoutProcess\Command\PaymentInstructionRenderResult;
 
-interface PaymentOrderRenderHandlerInterface {
+interface PaymentInstructionRenderHandlerInterface {
 
-  public function handle(PaymentOrderRenderCommand $command): PaymentOrderRenderResult;
+  public function handle(PaymentInstructionRenderCommand $command): PaymentInstructionRenderResult;
 
 }

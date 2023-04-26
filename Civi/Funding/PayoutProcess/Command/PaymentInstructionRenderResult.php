@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\PayoutProcess\Command;
 
-final class PaymentOrderRenderResult {
+final class PaymentInstructionRenderResult {
 
   private string $filename;
 
