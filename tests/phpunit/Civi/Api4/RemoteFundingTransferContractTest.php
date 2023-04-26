@@ -23,7 +23,6 @@ use Civi\Funding\AbstractRemoteFundingHeadlessTestCase;
 use Civi\Funding\FileTypeIds;
 use Civi\Funding\Fixtures\AttachmentFixture;
 use Civi\Funding\Fixtures\ContactFixture;
-use Civi\Funding\Fixtures\DrawdownFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
@@ -100,8 +99,12 @@ final class RemoteFundingTransferContractTest extends AbstractRemoteFundingHeadl
         ->first()['CAN_create_drawdown']
     );
 
-    // Test CAN_create_drawdown with complete amount already requested
-    DrawdownFixture::addFixture($payoutProcess->getId(), $contact['id'], ['amount' => 12.34]);
+    // Test CAN_create_drawdown with payout process closed
+    $payoutProcess->setStatus('closed');
+    FundingPayoutProcess::update(FALSE)
+      ->addValue('status', 'closed')
+      ->addWhere('id', '=', $payoutProcess->getId())
+      ->execute();
     static::assertFalse(
       RemoteFundingTransferContract::get()
         ->setRemoteContactId((string) $contact['id'])
