@@ -21,6 +21,10 @@ namespace Civi\Funding;
 
 final class FileTypeNames {
 
+  public const PAYMENT_INSTRUCTION = 'funding_payment_instruction';
+
+  public const PAYMENT_INSTRUCTION_TEMPLATE = 'funding_payment_instruction_template';
+
   public const TRANSFER_CONTRACT = 'transfer_contract';
 
   public const TRANSFER_CONTRACT_TEMPLATE = 'transfer_contract_template';

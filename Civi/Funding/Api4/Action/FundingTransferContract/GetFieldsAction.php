@@ -124,8 +124,13 @@ final class GetFieldsAction extends BasicGetFieldsAction {
         'data_type' => 'Float',
       ],
       [
-        'name' => 'amount_payed_out',
-        'title' => E::ts('Amount payed out'),
+        'name' => 'payout_process_id',
+        'title' => 'payout_process_id',
+        'data_type' => 'Integer',
+      ],
+      [
+        'name' => 'amount_paid_out',
+        'title' => E::ts('Amount paid out'),
         'data_type' => 'Float',
       ],
       [
@@ -157,6 +162,11 @@ final class GetFieldsAction extends BasicGetFieldsAction {
         'name' => 'funding_program_title',
         'title' => E::ts('Funding program title'),
         'data_type' => 'String',
+      ],
+      [
+        'name' => 'CAN_create_drawdown',
+        'title' => 'CAN_create_drawdown',
+        'data_type' => 'Boolean',
       ],
     ];
   }

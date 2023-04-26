@@ -31,7 +31,7 @@ abstract class AbstractRequestEvent extends Event {
 
   private string $actionName;
 
-  protected bool $checkPermissions;
+  protected bool $checkPermissions = FALSE;
 
   protected bool $debug = FALSE;
 

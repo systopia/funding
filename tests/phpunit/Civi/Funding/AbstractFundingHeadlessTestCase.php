@@ -52,6 +52,7 @@ abstract class AbstractFundingHeadlessTestCase extends TestCase implements Headl
       ->install('activity-entity')
       ->install('org.civicrm.search_kit')
       ->install('de.systopia.civioffice')
+      ->install('org.project60.banking')
       ->installMe(__DIR__)
       ->apply();
   }

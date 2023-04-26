@@ -25,7 +25,10 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 final class FundingCaseFilterPermissionsSubscriber implements EventSubscriberInterface {
 
-  private const APPLICATION_PERMISSION_PREFIX = 'application_';
+  private const APPLICANT_PERMISSION_PREFIXES = [
+    'application_',
+    'drawdown_',
+  ];
 
   private FundingSessionInterface $session;
 
@@ -44,23 +47,33 @@ final class FundingCaseFilterPermissionsSubscriber implements EventSubscriberInt
 
   public function onPermissionsGet(GetPermissionsEvent $event): void {
     if ($this->session->isRemote()) {
-      $this->provideOnlyApplicationPermissions($event);
+      $this->provideOnlyApplicantPermissions($event);
     }
     else {
-      $this->preventAccessIfHasApplicationPermission($event);
+      $this->preventAccessIfHasApplicantPermission($event);
     }
   }
 
-  private function provideOnlyApplicationPermissions(GetPermissionsEvent $event): void {
+  private function isApplicantPermission(string $permission): bool {
+    foreach (self::APPLICANT_PERMISSION_PREFIXES as $permissionPrefix) {
+      if (\str_starts_with($permission, $permissionPrefix)) {
+        return TRUE;
+      }
+    }
+
+    return FALSE;
+  }
+
+  private function provideOnlyApplicantPermissions(GetPermissionsEvent $event): void {
     $event->setPermissions(\array_filter(
       $event->getPermissions(),
-      fn (string $permission) => \str_starts_with($permission, self::APPLICATION_PERMISSION_PREFIX),
+      fn (string $permission) => $this->isApplicantPermission($permission),
     ));
   }
 
-  private function preventAccessIfHasApplicationPermission(GetPermissionsEvent $event): void {
+  private function preventAccessIfHasApplicantPermission(GetPermissionsEvent $event): void {
     foreach ($event->getPermissions() as $permission) {
-      if (\str_starts_with($permission, self::APPLICATION_PERMISSION_PREFIX)) {
+      if ($this->isApplicantPermission($permission)) {
         $event->setPermissions([]);
 
         return;

@@ -43,6 +43,28 @@ interface FundingAttachmentManagerInterface {
   ): AttachmentEntity;
 
   /**
+   * Attaches the given file to the given entity. Previous files attached to the
+   * entity with the same file type will be removed, if existing.
+   *
+   * @phpstan-param array{
+   *   name?: string,
+   *   description?: string,
+   *   created_id?: int,
+   * } $optional
+   *  "name" defaults to basename of $filename.
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function attachFileUniqueByFileType(
+    string $entityTable,
+    int $entityId,
+    int $fileTypeId,
+    string $filename,
+    string $mimeType,
+    array $optional = []
+  ): AttachmentEntity;
+
+  /**
    * @throws \CRM_Core_Exception
    */
   public function delete(AttachmentEntity $attachment): void;
@@ -51,6 +73,13 @@ interface FundingAttachmentManagerInterface {
    * @throws \CRM_Core_Exception
    */
   public function get(int $id, string $entityTable, int $entityId): ?AttachmentEntity;
+
+  /**
+   * @phpstan-return array<AttachmentEntity>
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function getByFileType(string $entityTable, int $entityId, int $fileTypeId): array;
 
   /**
    * @throws \CRM_Core_Exception

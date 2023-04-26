@@ -20,8 +20,8 @@ declare(strict_types = 1);
 namespace Civi\Funding\DocumentRender\Token;
 
 use Civi\Funding\Entity\AbstractEntity;
+use Civi\Funding\Util\MoneyFactory;
 use Civi\RemoteTools\Api4\Api4Interface;
-use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
@@ -31,10 +31,17 @@ final class TokenResolver implements TokenResolverInterface {
 
   private Api4Interface $api4;
 
+  private MoneyFactory $moneyFactory;
+
   private PropertyAccessorInterface $propertyAccessor;
 
-  public function __construct(Api4Interface $api4, PropertyAccessorInterface $propertyAccessor) {
+  public function __construct(
+    Api4Interface $api4,
+    MoneyFactory $moneyFactory,
+    PropertyAccessorInterface $propertyAccessor
+  ) {
     $this->api4 = $api4;
+    $this->moneyFactory = $moneyFactory;
     $this->propertyAccessor = $propertyAccessor;
   }
 
@@ -42,7 +49,9 @@ final class TokenResolver implements TokenResolverInterface {
    * @phpstan-ignore-next-line Generic argument of AbstractEntity not defined.
    */
   public function resolveToken(string $entityName, AbstractEntity $entity, string $tokenName): ResolvedToken {
-    return ValueConverter::toResolvedToken($this->getValue($entityName, $entity, $tokenName));
+    $value = $this->getValue($entityName, $entity, $tokenName);
+
+    return ValueConverter::toResolvedToken($this->convertMoneyValue($value, $entity, $entityName, $tokenName));
   }
 
   /**
@@ -61,7 +70,7 @@ final class TokenResolver implements TokenResolverInterface {
       return $entity->get($tokenName);
     }
 
-    // Fallback to APIv4. Should not be necessary, though.
+    // Fallback to APIv4. Should not be necessary, but for custom fields.
     $values = $this->api4->execute($entityName, 'get', [
       'select' => [$tokenName],
       'where' => [['id', '=', $entity->getId()]],
@@ -73,6 +82,36 @@ final class TokenResolver implements TokenResolverInterface {
     }
 
     throw new \RuntimeException(\sprintf('Unknown token "%s" for "%s"', $tokenName, $entityName));
+  }
+
+  /**
+   * @param mixed $value
+   *
+   * @return mixed
+   *
+   * @throws \CRM_Core_Exception
+   *
+   * @phpstan-ignore-next-line Generic argument of AbstractEntity not defined.
+   */
+  private function convertMoneyValue($value, AbstractEntity $entity, string $entityName, string $tokenName) {
+    if (!is_float($value)) {
+      return $value;
+    }
+
+    $result = $this->api4->execute($entityName, 'getFields', [
+      'select' => ['data_type'],
+      'where' => [['name', '=', $tokenName]],
+      'checkPermissions' => FALSE,
+    ]);
+
+    if ('Money' === ($result->first()['data_type'] ?? NULL)) {
+      /** @var string|null $currency */
+      $currency = $entity->get('currency');
+
+      return $this->moneyFactory->createMoney($value, $currency);
+    }
+
+    return $value;
   }
 
 }

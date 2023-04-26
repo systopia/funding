@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\FundingTransferContract;
 
-use Civi\Api4\FundingCaseInfo;
+use Civi\Api4\FundingTransferContract;
 use Civi\Api4\Generic\AbstractGetAction;
 use Civi\Api4\Generic\Result;
 use Civi\Api4\Generic\Traits\ArrayQueryActionTrait;
@@ -27,6 +27,7 @@ use Civi\Funding\Api4\Util\WhereUtil;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingProgram\FundingProgramManager;
+use Civi\Funding\PayoutProcess\PayoutProcessManager;
 use Civi\RemoteTools\Api4\Query\Comparison;
 use Webmozart\Assert\Assert;
 
@@ -38,13 +39,17 @@ final class GetAction extends AbstractGetAction {
 
   private FundingProgramManager $fundingProgramManager;
 
+  private PayoutProcessManager $payoutProcessManager;
+
   public function __construct(
     FundingCaseManager $fundingCaseManager,
-    FundingProgramManager $fundingProgramManager
+    FundingProgramManager $fundingProgramManager,
+    PayoutProcessManager $payoutProcessManager
   ) {
-    parent::__construct(FundingCaseInfo::_getEntityName(), 'get');
+    parent::__construct(FundingTransferContract::_getEntityName(), 'get');
     $this->fundingCaseManager = $fundingCaseManager;
     $this->fundingProgramManager = $fundingProgramManager;
+    $this->payoutProcessManager = $payoutProcessManager;
   }
 
   /**
@@ -72,20 +77,27 @@ final class GetAction extends AbstractGetAction {
       'No permission to access funding program with ID "%d"',
       $fundingCase->getFundingProgramId()
     ));
+    $payoutProcess = $this->payoutProcessManager->getLastByFundingCaseId($fundingCase->getId());
+    Assert::notNull($payoutProcess, sprintf(
+      'Payout process with funding case ID "%d" not found',
+      $fundingCase->getId()
+    ));
+    $amountAvailable = $this->payoutProcessManager->getAmountAvailable($payoutProcess);
 
     return [
       'funding_case_id' => $fundingCase->getId(),
       'title' => $fundingCase->getTitle(),
       'amount_approved' => $fundingCase->getAmountApproved(),
-      // @todo: Load from payout process.
-      'amount_payed_out' => 0.0,
-      // @todo: Subtract amount payed out.
-      'amount_available' => $fundingCase->getAmountApproved(),
+      'payout_process_id' => $payoutProcess->getId(),
+      'amount_paid_out' => $this->payoutProcessManager->getAmountAccepted($payoutProcess),
+      'amount_available' => $amountAvailable,
       'transfer_contract_uri' => $fundingCase->getTransferContractUri(),
       'funding_case_type_id' => $fundingCase->getFundingCaseTypeId(),
       'funding_program_id' => $fundingProgram->getId(),
       'currency' => $fundingProgram->getCurrency(),
       'funding_program_title' => $fundingProgram->getTitle(),
+      'CAN_create_drawdown'
+      => in_array('drawdown_create', $fundingCase->getPermissions(), TRUE) && 'closed' !== $payoutProcess->getStatus(),
     ];
   }
 

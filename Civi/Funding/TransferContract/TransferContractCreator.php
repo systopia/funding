@@ -64,15 +64,10 @@ class TransferContractCreator {
     $result = $this->transferContractRenderHandler->handle($createTransferContractCommand);
 
     // There might be only one transfer contract for a funding case.
-    $previousAttachment = $this->attachmentManager->getLastByFileType(
+    $this->attachmentManager->attachFileUniqueByFileType(
       'civicrm_funding_case',
       $fundingCase->getId(),
       FileTypeIds::TRANSFER_CONTRACT,
-    );
-
-    $this->attachmentManager->attachFile(
-      'civicrm_funding_case',
-      $fundingCase->getId(),
       $result->getFilename(),
       $result->getMimeType(),
       [
@@ -81,14 +76,8 @@ class TransferContractCreator {
           $fundingCase->getId(),
           pathinfo($result->getFilename(), PATHINFO_EXTENSION)
         ),
-        'file_type_id' => FileTypeIds::TRANSFER_CONTRACT,
       ],
     );
-
-    if (NULL !== $previousAttachment) {
-      // There might be only one transfer contract for a funding case.
-      $this->attachmentManager->delete($previousAttachment);
-    }
   }
 
 }

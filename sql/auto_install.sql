@@ -218,7 +218,6 @@ CREATE TABLE `civicrm_funding_payout_process` (
   `funding_case_id` int unsigned NOT NULL COMMENT 'FK to FundingCase',
   `status` varchar(64) NOT NULL,
   `amount_total` decimal(10,2),
-  `amount_paid_out` decimal(10,2),
   PRIMARY KEY (`id`),
   CONSTRAINT FK_civicrm_funding_payout_process_funding_case_id FOREIGN KEY (`funding_case_id`) REFERENCES `civicrm_funding_case`(`id`) ON DELETE CASCADE
 )

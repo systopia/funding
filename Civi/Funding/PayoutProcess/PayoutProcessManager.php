@@ -19,12 +19,14 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\PayoutProcess;
 
+use Civi\Api4\FundingDrawdown;
 use Civi\Api4\FundingPayoutProcess;
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\PayoutProcessEntity;
 use Civi\Funding\Event\PayoutProcess\PayoutProcessCreatedEvent;
 use Civi\RemoteTools\Api4\Api4Interface;
+use Civi\RemoteTools\Api4\Query\Comparison;
 
 class PayoutProcessManager {
 
@@ -37,12 +39,22 @@ class PayoutProcessManager {
     $this->eventDispatcher = $eventDispatcher;
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function close(PayoutProcessEntity $payoutProcess): void {
+    $payoutProcess->setStatus('closed');
+    $this->update($payoutProcess);
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function create(FundingCaseEntity $fundingCase, float $amountTotal): PayoutProcessEntity {
     $result = $this->api4->createEntity(FundingPayoutProcess::_getEntityName(), [
       'funding_case_id' => $fundingCase->getId(),
       'status' => 'open',
       'amount_total' => $amountTotal,
-      'amount_paid_out' => 0.0,
     ], [
       'checkPermissions' => FALSE,
     ]);
@@ -53,6 +65,93 @@ class PayoutProcessManager {
     $this->eventDispatcher->dispatch(PayoutProcessCreatedEvent::class, $event);
 
     return $payoutProcess;
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function get(int $id): ?PayoutProcessEntity {
+    $result = $this->api4->getEntities(
+      FundingPayoutProcess::_getEntityName(),
+      Comparison::new('id', '=', $id),
+      [],
+      1,
+      0,
+      ['checkPermissions' => FALSE],
+    );
+
+    return PayoutProcessEntity::singleOrNullFromApiResult($result);
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function getAmountAccepted(PayoutProcessEntity $payoutProcess): float {
+    $action = FundingDrawdown::get()
+      ->setCheckPermissions(FALSE)
+      ->addSelect('SUM(amount) AS amountSum')
+      ->addWhere('payout_process_id', '=', $payoutProcess->getId())
+      ->addWhere('status', '=', 'accepted');
+
+    return round($this->api4->executeAction($action)->first()['amountSum'] ?? 0.0, 2);
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function getAmountAvailable(PayoutProcessEntity $payoutProcess): float {
+    return $payoutProcess->getAmountTotal() - $this->getAmountRequested($payoutProcess);
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function getAmountRequested(PayoutProcessEntity $payoutProcess): float {
+    $action = FundingDrawdown::get()
+      ->setCheckPermissions(FALSE)
+      ->addSelect('SUM(amount) AS amountSum')
+      ->addWhere('payout_process_id', '=', $payoutProcess->getId());
+
+    return round($this->api4->executeAction($action)->first()['amountSum'] ?? 0.0, 2);
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function getLastByFundingCaseId(int $fundingCaseId): ?PayoutProcessEntity {
+    $result = $this->api4->getEntities(
+      FundingPayoutProcess::_getEntityName(),
+      Comparison::new('funding_case_id', '=', $fundingCaseId),
+      ['id' => 'DESC'],
+      1,
+      0,
+      ['checkPermissions' => FALSE],
+    );
+
+    return PayoutProcessEntity::singleOrNullFromApiResult($result);
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function hasAccess(int $id): bool {
+    return $this->api4->countEntities(
+      FundingPayoutProcess::_getEntityName(),
+      Comparison::new('id', '=', $id),
+      ['checkPermissions' => FALSE],
+    ) === 1;
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  private function update(PayoutProcessEntity $payoutProcess): void {
+    $this->api4->updateEntity(
+      FundingPayoutProcess::_getEntityName(),
+      $payoutProcess->getId(),
+      $payoutProcess->toArray(),
+      ['checkPermissions' => FALSE],
+    );
   }
 
 }

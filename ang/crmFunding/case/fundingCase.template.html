@@ -60,6 +60,7 @@
         <a href="{{ fundingCase.transfer_contract_uri }}" target="_blank" crm-icon="fa-external-link">{{ ts('Transfer contract') }}</a>
     </div>
 
+    <h2>{{ ts('Applications') }}</h2>
     <sk-application-process-table options="{filters: {funding_case_id: fundingCase.id}}"></sk-application-process-table>
 
     <button ng-show="possibleActions.includes('approve')" type="button"
@@ -71,5 +72,11 @@
             ng-click="recreateTransferContract()">
         <span class="funding-label">{{ ts('Recreate transfer contract') }}</span>
     </button>
+
+    <h2 ng-show="payoutProcesses.length > 0">{{ ts('Drawdowns') }}</h2>
+    <div ng-repeat="payoutProcess in payoutProcesses">
+      <sk-drawdown-table options="{filters: {payout_process_id: payoutProcess.id}}"></sk-drawdown-table>
+    </div>
+
 
 </div>

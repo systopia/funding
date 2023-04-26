@@ -42,7 +42,6 @@ final class PayoutProcessFactory {
       'funding_case_id' => FundingCaseFactory::DEFAULT_ID,
       'status' => 'open',
       'amount_total' => 12.34,
-      'amount_paid_out' => 0.0,
     ]);
   }
 

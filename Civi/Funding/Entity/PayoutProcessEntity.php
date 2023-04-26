@@ -25,7 +25,6 @@ namespace Civi\Funding\Entity;
  *   funding_case_id: int,
  *   status: string,
  *   amount_total: float,
- *   amount_paid_out: float,
  * }
  *
  * @phpstan-extends AbstractEntity<payoutProcessT>
@@ -50,16 +49,6 @@ final class PayoutProcessEntity extends AbstractEntity {
 
   public function getAmountTotal(): float {
     return $this->values['amount_total'];
-  }
-
-  public function getAmountPaidOut(): float {
-    return $this->values['amount_paid_out'];
-  }
-
-  public function setAmountPaidOut(float $amountPaidOut): self {
-    $this->values['amount_paid_out'] = $amountPaidOut;
-
-    return $this;
   }
 
 }
