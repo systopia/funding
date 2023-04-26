@@ -22,3 +22,22 @@
   font-weight: bolder;
   margin-bottom: 0px !important;
 }
+
+#bootstrap-theme .tab-pane {
+  padding:15px 20px
+}
+
+/* fix padding issue in date field */
+.editable-date input {
+  white-space: nowrap;
+}
+
+/* fix position of select container */
+.editable-controls .ui-select-container {
+  vertical-align: middle;
+}
+
+/* don't let textarea grow out of a modal */
+.modal textarea {
+  max-width: 100%;
+}
