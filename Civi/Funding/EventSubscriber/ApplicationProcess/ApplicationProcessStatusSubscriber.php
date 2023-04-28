@@ -58,10 +58,10 @@ final class ApplicationProcessStatusSubscriber implements EventSubscriberInterfa
       $oldStatus = $event->getPreviousApplicationProcess()->getStatus();
       $activity = ActivityEntity::fromArray([
         'activity_type_id' => ActivityTypeIds::FUNDING_APPLICATION_STATUS_CHANGE,
-        'subject' => E::ts('Funding application process status changed'),
+        'subject' => E::ts('Funding Application Status Changed'),
         'details' => sprintf(
           '<ul><li>%s</li><li>%s</li><li>%s</li></ul>',
-          E::ts('Application process: %1 (%2)', [
+          E::ts('Application: %1 (%2)', [
             1 => $applicationProcess->getTitle(),
             2 => $applicationProcess->getIdentifier(),
           ]),

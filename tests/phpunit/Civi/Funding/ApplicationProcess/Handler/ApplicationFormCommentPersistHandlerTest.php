@@ -66,7 +66,7 @@ final class ApplicationFormCommentPersistHandlerTest extends TestCase {
         static::callback(function (ActivityEntity $activity) {
           static::assertSame(ActivityTypeIds::FUNDING_APPLICATION_COMMENT_INTERNAL, $activity->getActivityTypeId());
           static::assertSame('Test &gt;<br>comment', $activity->getDetails());
-          static::assertSame('Application process comment', $activity->getSubject());
+          static::assertSame('Funding Application Comment', $activity->getSubject());
           static::assertSame(
             ValidatedApplicationDataMock::ACTION,
             $activity->get('funding_application_comment.action')
@@ -96,7 +96,7 @@ final class ApplicationFormCommentPersistHandlerTest extends TestCase {
         static::callback(function (ActivityEntity $activity) {
           static::assertSame(ActivityTypeIds::FUNDING_APPLICATION_COMMENT_EXTERNAL, $activity->getActivityTypeId());
           static::assertSame('Test &gt;<br>comment', $activity->getDetails());
-          static::assertSame('Application process comment', $activity->getSubject());
+          static::assertSame('Funding Application Comment', $activity->getSubject());
           static::assertSame(
             ValidatedApplicationDataMock::ACTION,
             $activity->get('funding_application_comment.action')

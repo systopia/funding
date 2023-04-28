@@ -44,7 +44,7 @@ return [
       'values' => [
         'custom_group_id.name' => 'funding_application_status_change',
         'name' => 'from_status',
-        'label' => E::ts('From status'),
+        'label' => E::ts('From Status'),
         'data_type' => 'String',
         'html_type' => 'Text',
         'is_required' => TRUE,
@@ -69,7 +69,7 @@ return [
       'values' => [
         'custom_group_id.name' => 'funding_application_status_change',
         'name' => 'to_status',
-        'label' => E::ts('To status'),
+        'label' => E::ts('To Status'),
         'data_type' => 'String',
         'html_type' => 'Text',
         'is_required' => TRUE,

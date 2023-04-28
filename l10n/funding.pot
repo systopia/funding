@@ -6,60 +6,92 @@ msgstr ""
 msgid "Funding case with ID \"%1\" not found"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
 msgid "Unique field identifier"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
 msgid "Technical name of field, shown in API and exports"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
 msgid "Primary Field"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
 msgid "Custom Field"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
 msgid "Search Filter"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
 msgid "Extra API Field"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
 msgid "Array"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
 msgid "Boolean"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
 msgid "Date"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
 msgid "Float"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
 msgid "Integer"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
 msgid "String"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
 msgid "Text"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
 msgid "Timestamp"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php managed/SavedSearchFundingPrograms.mgd.php
+msgid "Currency"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingDrawdown/RejectAction.php
+msgid "Permission to reject drawdown is missing."
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php ang/crmFunding/case/fundingCase.template.html managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingPrograms.mgd.php
+msgid "Title"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php managed/SavedSearchFundingCases.mgd.php
+msgid "Amount Approved"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
+msgid "Amount Paid Out"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
+msgid "Amount Available"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
+msgid "URI to Transfer Contract"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
+msgid "Funding Program Title"
 msgstr ""
 
 #: Civi/Funding/Api4/Action/Remote/ApplicationProcess/AbstractFormAction.php Civi/Funding/Api4/Action/Remote/ApplicationProcess/GetFormAction.php
@@ -102,7 +134,7 @@ msgstr ""
 msgid "Contact %1"
 msgstr ""
 
-#: Civi/Funding/ApplicationProcess/ApplicationProcessTaskManager.php Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessCreatedSubscriber.php Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriber.php
+#: Civi/Funding/ApplicationProcess/ApplicationProcessTaskManager.php
 msgid "Application process: %1 (%2)"
 msgstr ""
 
@@ -114,8 +146,8 @@ msgstr ""
 msgid "Permission to delete application is missing."
 msgstr ""
 
-#: Civi/Funding/ApplicationProcess/Handler/ApplicationFormCommentPersistHandler.php
-msgid "Application process comment"
+#: Civi/Funding/ApplicationProcess/Handler/ApplicationFormCommentPersistHandler.php managed/CustomGroupFundingApplicationComment.mgd.php
+msgid "Funding Application Comment"
 msgstr ""
 
 #: Civi/Funding/ApplicationProcess/Validator/IsReviewCalculativeValidator.php
@@ -174,6 +206,10 @@ msgstr ""
 msgid "The applying contact itself is available as recipient if the contact is of the\nspecified type."
 msgstr ""
 
+#: Civi/Funding/Controller/PaymentInstructionDownloadController.php
+msgid "payment-instruction"
+msgstr ""
+
 #: Civi/Funding/Controller/TransferContractDownloadController.php
 msgid "transfer-contract"
 msgstr ""
@@ -182,16 +218,16 @@ msgstr ""
 msgid "Files in filesystem (Funding Program Manager)"
 msgstr ""
 
-#: Civi/Funding/DocumentRender/Token/ValueConverter.php Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationSnapshotRestoreSubscriber.php
-msgid "Y-m-d H:i:s"
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessCreatedSubscriber.php managed/ActivityTypeFundingApplicationCreate.mgd.php
+msgid "Funding Application Created"
 msgstr ""
 
-#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessCreatedSubscriber.php
-msgid "Funding application process created"
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessCreatedSubscriber.php Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriber.php
+msgid "Application: %1 (%2)"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
-msgid "Funding application process review status changed"
+msgid "Funding Application Review Status Changed"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
@@ -223,19 +259,19 @@ msgid "Undecided"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewTaskSubscriber.php
-msgid "Review funding application (calculative)"
+msgid "Review Funding Application (calculative)"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewTaskSubscriber.php
-msgid "Review funding application (content)"
+msgid "Review Funding Application (content)"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReworkTaskSubscriber.php
-msgid "Rework funding application"
+msgid "Rework Funding Application"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriber.php
-msgid "Funding application process status changed"
+msgid "Funding Application Status Changed"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriber.php
@@ -247,15 +283,27 @@ msgid "To status: %1"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationSnapshotRestoreSubscriber.php
-msgid "Funding application process restored"
+msgid "Funding Application Restored"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationSnapshotRestoreSubscriber.php
-msgid "Application process \"%1\" (%2) restored to version from %3."
+msgid "Application \"%1\" (%2) restored to version from %3."
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationSnapshotRestoreSubscriber.php
+msgid "Y-m-d H:i:s"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/CiviOffice/PaymentInstructionTokenSubscriber.php
+msgid "Bank Account Reference (e.g. IBAN)"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/CiviOffice/PaymentInstructionTokenSubscriber.php
+msgid "BIC (maybe empty)"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/CiviOffice/TransferContractTokenSubscriber.php
-msgid "Titles of eligible applications"
+msgid "Titles of Eligible Applications"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/Form/SubmitApplicationFormSubscriber.php
@@ -287,11 +335,19 @@ msgid "Application: request rework"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
+msgid "Drawdown: create"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
 msgid "Review: calculative"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
 msgid "Review: content"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
+msgid "Review: drawdown"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/FundingProgram/FundingProgramGetPossiblePermissionsSubscriber.php
@@ -415,15 +471,19 @@ msgid "Rework in review"
 msgstr ""
 
 #: Civi/Funding/FundingPseudoConstants.php
+msgid "Accepted"
+msgstr ""
+
+#: Civi/Funding/FundingPseudoConstants.php
 msgid "Open"
 msgstr ""
 
 #: Civi/Funding/FundingPseudoConstants.php
-msgid "Ongoing"
+msgid "Closed"
 msgstr ""
 
 #: Civi/Funding/FundingPseudoConstants.php
-msgid "Closed"
+msgid "Ongoing"
 msgstr ""
 
 #: Civi/Funding/FundingPseudoConstants.php
@@ -436,6 +496,26 @@ msgstr ""
 
 #: Civi/Funding/FundingPseudoConstants.php
 msgid "Relationship from b to a"
+msgstr ""
+
+#: Civi/Funding/PayoutProcess/PaymentInstructionCreator.php
+msgid "No bank account for contact with ID \"%1\" available."
+msgstr ""
+
+#: Civi/Funding/PayoutProcess/Validator/DrawdownAmountValidator.php
+msgid "Requested amount is greater than available amount."
+msgstr ""
+
+#: Civi/Funding/PayoutProcess/Validator/DrawdownCreateValidator.php
+msgid "Payout process is closed."
+msgstr ""
+
+#: Civi/Funding/PayoutProcess/Validator/DrawdownCreateValidator.php
+msgid "Permission to create drawdown is missing."
+msgstr ""
+
+#: Civi/Funding/PayoutProcess/Validator/DrawdownReviewValidator.php
+msgid "Permission to change drawdown status is missing."
 msgstr ""
 
 #: Civi/Funding/Permission/ContactRelation/Types/Contact.php Civi/Funding/Permission/ContactRelation/Types/ContactRelationship.php Civi/Funding/Permission/FundingCase/RelationFactory/Types/Contact.php
@@ -510,7 +590,7 @@ msgstr ""
 msgid "Application %1"
 msgstr ""
 
-#: ang/crmFunding/application/application.template.html
+#: ang/crmFunding/application/application.template.html managed/SavedSearchFundingTasksMy.mgd.php
 msgid "Application"
 msgstr ""
 
@@ -531,67 +611,67 @@ msgid "Comment"
 msgstr ""
 
 #: ang/crmFunding/application/applicationEditor.template.html
-msgid "Comment type"
-msgstr ""
-
-#: ang/crmFunding/application/applicationEditor.template.html ang/crmFunding/case/fundingCase.template.html
-msgid "Cancel"
+msgid "Comment Type"
 msgstr ""
 
 #: ang/crmFunding/application/applicationEditor.template.html ang/crmFunding/case/fundingCase.template.html
 msgid "Submit"
 msgstr ""
 
-#: ang/crmFunding/application/applicationEditor.template.html
-msgid "Start review"
+#: ang/crmFunding/application/applicationEditor.template.html ang/crmFunding/case/fundingCase.template.html
+msgid "Cancel"
 msgstr ""
 
 #: ang/crmFunding/application/applicationEditor.template.html
-msgid "Set content review to passed"
+msgid "Start Review"
 msgstr ""
 
 #: ang/crmFunding/application/applicationEditor.template.html
-msgid "Set content review to failed"
+msgid "Set Content Review to Passed"
 msgstr ""
 
 #: ang/crmFunding/application/applicationEditor.template.html
-msgid "Set calculative review to passed"
+msgid "Set Content Review to Failed"
 msgstr ""
 
 #: ang/crmFunding/application/applicationEditor.template.html
-msgid "Set calculative review to failed"
+msgid "Set Calculative Review to Passed"
 msgstr ""
 
 #: ang/crmFunding/application/applicationEditor.template.html
-msgid "Request change"
+msgid "Set Calculative Review to Failed"
 msgstr ""
 
 #: ang/crmFunding/application/applicationEditor.template.html
-msgid "Approve application"
+msgid "Request Change"
 msgstr ""
 
 #: ang/crmFunding/application/applicationEditor.template.html
-msgid "Reject application"
+msgid "Approve Application"
 msgstr ""
 
 #: ang/crmFunding/application/applicationEditor.template.html
-msgid "Approve rework request"
+msgid "Reject Application"
 msgstr ""
 
 #: ang/crmFunding/application/applicationEditor.template.html
-msgid "Reject rework request"
+msgid "Approve Rework Request"
 msgstr ""
 
 #: ang/crmFunding/application/applicationEditor.template.html
-msgid "Approve change"
+msgid "Reject Rework Request"
 msgstr ""
 
 #: ang/crmFunding/application/applicationEditor.template.html
-msgid "Reject change"
+msgid "Approve Change"
 msgstr ""
 
 #: ang/crmFunding/application/applicationEditor.template.html
-msgid "Add comment"
+msgid "Reject Change"
+msgstr ""
+
+#: ang/crmFunding/application/applicationEditor.template.html
+msgid "Add Comment"
 msgstr ""
 
 #: ang/crmFunding/application/applicationEditor.template.html
@@ -606,7 +686,7 @@ msgstr ""
 msgid "General"
 msgstr ""
 
-#: ang/crmFunding/application/applicationEditor.template.html ang/crmFunding/case/fundingCase.template.html managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCases.mgd.php
+#: ang/crmFunding/application/applicationEditor.template.html ang/crmFunding/case/fundingCase.template.html managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingDrawdowns.mgd.php
 msgid "Status"
 msgstr ""
 
@@ -615,27 +695,27 @@ msgid "Unknown"
 msgstr ""
 
 #: ang/crmFunding/application/applicationEditor.template.html managed/CustomGroupFundingApplicationTask.mgd.php
-msgid "Review content"
+msgid "Review Content"
 msgstr ""
 
 #: ang/crmFunding/application/applicationEditor.template.html managed/CustomGroupFundingApplicationTask.mgd.php
-msgid "Review calculative"
+msgid "Review Calculative"
 msgstr ""
 
-#: ang/crmFunding/application/applicationEditor.template.html ang/crmFunding/case/fundingCase.template.html managed/SavedSearchFundingCases.mgd.php
-msgid "Creation date"
+#: ang/crmFunding/application/applicationEditor.template.html ang/crmFunding/case/fundingCase.template.html managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingDrawdowns.mgd.php
+msgid "Creation Date"
 msgstr ""
 
-#: ang/crmFunding/application/applicationEditor.template.html ang/crmFunding/case/fundingCase.template.html managed/SavedSearchFundingCases.mgd.php
-msgid "Modification date"
+#: ang/crmFunding/application/applicationEditor.template.html ang/crmFunding/case/fundingCase.template.html managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingTasksMy.mgd.php
+msgid "Modification Date"
 msgstr ""
 
-#: ang/crmFunding/application/applicationEditor.template.html ang/crmFunding/case/fundingCase.template.html managed/SavedSearchFundingCases.mgd.php
+#: ang/crmFunding/application/applicationEditor.template.html ang/crmFunding/case/fundingCase.template.html managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingTasksMy.mgd.php
 msgid "Recipient"
 msgstr ""
 
 #: ang/crmFunding/application/applicationEditor.template.html managed/SavedSearchFundingApplicationProcesses.mgd.php
-msgid "Amount requested"
+msgid "Amount Requested"
 msgstr ""
 
 #: ang/crmFunding/application/applicationReviewer.directive.js
@@ -647,19 +727,19 @@ msgid "Assign to me"
 msgstr ""
 
 #: ang/crmFunding/application/applicationReviewers.template.html
-msgid "Calculative reviewer"
+msgid "Calculative Reviewer"
 msgstr ""
 
 #: ang/crmFunding/application/applicationReviewers.template.html
-msgid "Content reviewer"
+msgid "Content Reviewer"
 msgstr ""
 
 #: ang/crmFunding/application/history/activities/comment.template.html
-msgid "Internal comment"
+msgid "Internal Comment"
 msgstr ""
 
 #: ang/crmFunding/application/history/activities/comment.template.html
-msgid "External comment"
+msgid "External Comment"
 msgstr ""
 
 #: ang/crmFunding/application/history/activities/comment.template.html ang/crmFunding/application/history/activities/create.template.html ang/crmFunding/application/history/activities/reviewStatusChange.template.html ang/crmFunding/application/history/activities/statusChange.template.html
@@ -699,22 +779,18 @@ msgid "Filter"
 msgstr ""
 
 #: ang/crmFunding/application/history/applicationProcessHistory.template.html
-msgid "Hide workflow actions"
+msgid "Hide Workflow Actions"
 msgstr ""
 
 #: ang/crmFunding/application/history/applicationProcessHistory.template.html
-msgid "Hide comments"
+msgid "Hide Comments"
 msgstr ""
 
 #: ang/crmFunding/case/fundingCase.template.html
 msgid "Approve"
 msgstr ""
 
-#: ang/crmFunding/case/fundingCase.template.html managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCases.mgd.php
-msgid "Title"
-msgstr ""
-
-#: ang/crmFunding/case/fundingCase.template.html
+#: ang/crmFunding/case/fundingCase.template.html managed/SavedSearchFundingDrawdowns.mgd.php
 msgid "Amount"
 msgstr ""
 
@@ -727,19 +803,27 @@ msgid "Untitled"
 msgstr ""
 
 #: ang/crmFunding/case/fundingCase.template.html
-msgid "Amount requested eligible"
+msgid "Amount Requested Eligible"
 msgstr ""
 
 #: ang/crmFunding/case/fundingCase.template.html managed/OptionGroupFundingFileType.mgd.php
-msgid "Transfer contract"
+msgid "Transfer Contract"
+msgstr ""
+
+#: ang/crmFunding/case/fundingCase.template.html managed/NavigationFunding.mgd.php
+msgid "Applications"
 msgstr ""
 
 #: ang/crmFunding/case/fundingCase.template.html
-msgid "Recreate transfer contract"
+msgid "Recreate Transfer Contract"
+msgstr ""
+
+#: ang/crmFunding/case/fundingCase.template.html managed/SavedSearchFundingDrawdowns.mgd.php
+msgid "Drawdowns"
 msgstr ""
 
 #: ang/crmFunding/case/fundingCasePermissions.html
-msgid "Funding case permissions"
+msgid "Funding Case Permissions"
 msgstr ""
 
 #: ang/crmFunding/case/fundingCasePermissions.html ang/crmFunding/form/fundingAddRowButton.template.html ang/crmFunding/program/fundingNewCasePermissions.html ang/crmFunding/program/fundingProgramPermissions.html ang/crmFunding/program/recipientRelations.html
@@ -771,15 +855,15 @@ msgid "yyyy-MM-dd hh:mm:ss"
 msgstr ""
 
 #: ang/crmFunding/program/fundingNewCasePermissions.html
-msgid "New funding case permissions"
+msgid "Initial Funding Case Permissions"
 msgstr ""
 
 #: ang/crmFunding/program/fundingProgramPermissions.html
-msgid "Funding program permissions"
+msgid "Funding Program Permissions"
 msgstr ""
 
 #: ang/crmFunding/program/recipientRelations.html
-msgid "Possible funding recipients"
+msgid "Possible Funding Recipients"
 msgstr ""
 
 #: funding.php
@@ -811,7 +895,7 @@ msgid "External Funding Application Comment"
 msgstr ""
 
 #: managed/ActivityTypeFundingApplicationCommentExternal.mgd.php
-msgid "Activity type for external funding application process comments"
+msgid "Activity type for external funding application comments"
 msgstr ""
 
 #: managed/ActivityTypeFundingApplicationCommentInternal.mgd.php
@@ -819,15 +903,11 @@ msgid "Internal Funding Application Comment"
 msgstr ""
 
 #: managed/ActivityTypeFundingApplicationCommentInternal.mgd.php
-msgid "Activity type for internal funding application process comments"
+msgid "Activity type for internal funding application comments"
 msgstr ""
 
 #: managed/ActivityTypeFundingApplicationCreate.mgd.php
-msgid "Funding Application Created"
-msgstr ""
-
-#: managed/ActivityTypeFundingApplicationCreate.mgd.php
-msgid "Activity type for funding application process creation"
+msgid "Activity type for funding application creation"
 msgstr ""
 
 #: managed/ActivityTypeFundingApplicationRestore.mgd.php managed/CustomGroupFundingApplicationRestore.mgd.php
@@ -843,7 +923,7 @@ msgid "Funding Application Review Status Change"
 msgstr ""
 
 #: managed/ActivityTypeFundingApplicationReviewChange.mgd.php
-msgid "Activity type for funding application process review status changes"
+msgid "Activity type for funding application review status changes"
 msgstr ""
 
 #: managed/ActivityTypeFundingApplicationStatusChange.mgd.php managed/CustomGroupFundingApplicationStatusChange.mgd.php
@@ -851,7 +931,7 @@ msgid "Funding Application Status Change"
 msgstr ""
 
 #: managed/ActivityTypeFundingApplicationStatusChange.mgd.php
-msgid "Activity type for funding application process status changes"
+msgid "Activity type for funding application status changes"
 msgstr ""
 
 #: managed/ActivityTypeFundingApplicationTaskExternal.mgd.php
@@ -859,7 +939,7 @@ msgid "External Funding Application Task"
 msgstr ""
 
 #: managed/ActivityTypeFundingApplicationTaskExternal.mgd.php
-msgid "Activity type for external funding application process tasks"
+msgid "Activity type for external funding application tasks"
 msgstr ""
 
 #: managed/ActivityTypeFundingApplicationTaskInternal.mgd.php
@@ -867,11 +947,7 @@ msgid "Internal Funding Application Task"
 msgstr ""
 
 #: managed/ActivityTypeFundingApplicationTaskInternal.mgd.php
-msgid "Activity type for internal funding application process tasks"
-msgstr ""
-
-#: managed/CustomGroupFundingApplicationComment.mgd.php
-msgid "Funding Application Comment"
+msgid "Activity type for internal funding application tasks"
 msgstr ""
 
 #: managed/CustomGroupFundingApplicationComment.mgd.php
@@ -883,27 +959,27 @@ msgid "Application snapshot ID"
 msgstr ""
 
 #: managed/CustomGroupFundingApplicationReviewStatusChange.mgd.php
-msgid "From review calculative"
+msgid "From Review Calculative"
 msgstr ""
 
 #: managed/CustomGroupFundingApplicationReviewStatusChange.mgd.php
-msgid "To review calculative"
+msgid "To Review Calculative"
 msgstr ""
 
 #: managed/CustomGroupFundingApplicationReviewStatusChange.mgd.php
-msgid "From review content"
+msgid "From Review Content"
 msgstr ""
 
 #: managed/CustomGroupFundingApplicationReviewStatusChange.mgd.php
-msgid "To review content"
+msgid "To Review Content"
 msgstr ""
 
 #: managed/CustomGroupFundingApplicationStatusChange.mgd.php
-msgid "From status"
+msgid "From Status"
 msgstr ""
 
 #: managed/CustomGroupFundingApplicationStatusChange.mgd.php
-msgid "To status"
+msgid "To Status"
 msgstr ""
 
 #: managed/CustomGroupFundingApplicationTask.mgd.php
@@ -915,58 +991,158 @@ msgid "Funding application task type"
 msgstr ""
 
 #: managed/CustomGroupFundingApplicationTask.mgd.php
-msgid "Rework application"
+msgid "Rework Application"
 msgstr ""
 
 #: managed/NavigationFunding.mgd.php
 msgid "Funding Program Manager"
 msgstr ""
 
-#: managed/NavigationFunding.mgd.php
+#: managed/NavigationFunding.mgd.php managed/SavedSearchFundingCases.mgd.php
 msgid "Funding Cases"
 msgstr ""
 
+#: managed/NavigationFunding.mgd.php managed/SavedSearchFundingPrograms.mgd.php
+msgid "Funding Programs"
+msgstr ""
+
+#: managed/NavigationFunding.mgd.php
+msgid "Add Funding Program"
+msgstr ""
+
+#: managed/NavigationFunding.mgd.php
+msgid "My Tasks"
+msgstr ""
+
 #: managed/OptionGroupFundingFileType.mgd.php
-msgid "Transfer contract template"
+msgid "Transfer Contract Template"
+msgstr ""
+
+#: managed/OptionGroupFundingFileType.mgd.php
+msgid "Payment Instruction"
+msgstr ""
+
+#: managed/OptionGroupFundingFileType.mgd.php
+msgid "Payment Instruction Template"
 msgstr ""
 
 #: managed/OptionValueActivityUsedForApplicationProcess.mgd.php
-msgid "Funding application process"
+msgid "Funding Application"
+msgstr ""
+
+#: managed/OptionValueCgExtendsFundingProgram.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCases.mgd.php
+msgid "Funding Program"
 msgstr ""
 
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
-msgid "Funding applications"
+msgid "Funding Applications"
 msgstr ""
 
-#: managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCases.mgd.php
+#: managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingDrawdowns.mgd.php managed/SavedSearchFundingTasksMy.mgd.php
 msgid "Table"
 msgstr ""
 
-#: managed/SavedSearchFundingApplicationProcesses.mgd.php
+#: managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
 msgid "Identifier"
 msgstr ""
 
-#: managed/SavedSearchFundingApplicationProcesses.mgd.php
+#: managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingTasksMy.mgd.php
 msgid "Open application"
 msgstr ""
 
-#: managed/SavedSearchFundingCases.mgd.php
-msgid "Funding cases"
+#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
+msgid "Funding Case Applications"
 msgstr ""
 
-#: managed/SavedSearchFundingCases.mgd.php
-msgid "Funding program"
+#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
+msgid "List of all applications"
 msgstr ""
 
-#: managed/SavedSearchFundingCases.mgd.php
-msgid "Funding case type"
+#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCases.mgd.php
+msgid "Funding Case Type"
 msgstr ""
 
-#: managed/SavedSearchFundingCases.mgd.php
-msgid "Amount approved"
+#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingDrawdowns.mgd.php managed/SavedSearchFundingPrograms.mgd.php
+msgid "Actions"
+msgstr ""
+
+#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingPrograms.mgd.php
+msgid "Edit permissions"
 msgstr ""
 
 #: managed/SavedSearchFundingCases.mgd.php
 msgid "Open case"
+msgstr ""
+
+#: managed/SavedSearchFundingDrawdowns.mgd.php
+msgid "Requester"
+msgstr ""
+
+#: managed/SavedSearchFundingDrawdowns.mgd.php
+msgid "Acception Date"
+msgstr ""
+
+#: managed/SavedSearchFundingDrawdowns.mgd.php
+msgid "Reviewer"
+msgstr ""
+
+#: managed/SavedSearchFundingDrawdowns.mgd.php
+msgid "Accept"
+msgstr ""
+
+#: managed/SavedSearchFundingDrawdowns.mgd.php
+msgid "Reject"
+msgstr ""
+
+#: managed/SavedSearchFundingDrawdowns.mgd.php
+msgid "Download Payment Instruction"
+msgstr ""
+
+#: managed/SavedSearchFundingPrograms.mgd.php
+msgid "Abbreviation"
+msgstr ""
+
+#: managed/SavedSearchFundingPrograms.mgd.php
+msgid "Start Date"
+msgstr ""
+
+#: managed/SavedSearchFundingPrograms.mgd.php
+msgid "End Date"
+msgstr ""
+
+#: managed/SavedSearchFundingPrograms.mgd.php
+msgid "Requests Start Date"
+msgstr ""
+
+#: managed/SavedSearchFundingPrograms.mgd.php
+msgid "Requests End Date"
+msgstr ""
+
+#: managed/SavedSearchFundingPrograms.mgd.php
+msgid "Budget"
+msgstr ""
+
+#: managed/SavedSearchFundingPrograms.mgd.php
+msgid "Edit recipients"
+msgstr ""
+
+#: managed/SavedSearchFundingPrograms.mgd.php
+msgid "Edit initial funding case permissions"
+msgstr ""
+
+#: managed/SavedSearchFundingPrograms.mgd.php
+msgid "Edit basic values"
+msgstr ""
+
+#: managed/SavedSearchFundingTasksMy.mgd.php
+msgid "My Funding Tasks"
+msgstr ""
+
+#: managed/SavedSearchFundingTasksMy.mgd.php
+msgid "Funding tasks of logged in user"
+msgstr ""
+
+#: managed/SavedSearchFundingTasksMy.mgd.php
+msgid "Subject"
 msgstr ""
 

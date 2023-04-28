@@ -79,9 +79,9 @@ final class ApplicationSnapshotRestoreSubscriberTest extends TestCase {
             ApplicationSnapshotFactory::DEFAULT_ID,
             $activity->get('funding_application_restore.application_snapshot_id')
           );
-          static::assertSame('Funding application process restored', $activity->getSubject());
+          static::assertSame('Funding Application Restored', $activity->getSubject());
           static::assertSame(
-            'Application process "Test Title" (Identifier) restored to version from 2023-02-10 10:10:10.',
+            'Application "Test Title" (Identifier) restored to version from 2023-02-10 10:10:10.',
             $activity->getDetails()
           );
 

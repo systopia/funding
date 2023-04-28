@@ -29,7 +29,7 @@ return [
       'version' => 4,
       'values' => [
         'name' => 'funding_application_processes',
-        'label' => E::ts('Funding applications'),
+        'label' => E::ts('Funding Applications'),
         'form_values' => NULL,
         'mapping_id' => NULL,
         'search_custom_id' => NULL,
@@ -93,7 +93,7 @@ return [
               'type' => 'field',
               'key' => 'amount_requested',
               'dataType' => 'Money',
-              'label' => E::ts('Amount requested'),
+              'label' => E::ts('Amount Requested'),
               'sortable' => TRUE,
             ],
             [
@@ -107,7 +107,7 @@ return [
               'type' => 'field',
               'key' => 'modification_date',
               'dataType' => 'Timestamp',
-              'label' => 'Modification date',
+              'label' => E::ts('Modification Date'),
               'sortable' => TRUE,
             ],
             [

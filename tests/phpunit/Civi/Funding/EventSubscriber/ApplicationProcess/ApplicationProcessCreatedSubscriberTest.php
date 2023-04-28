@@ -66,8 +66,8 @@ final class ApplicationProcessCreatedSubscriberTest extends TestCase {
 
     $activity = ActivityEntity::fromArray([
       'activity_type_id' => ActivityTypeIds::FUNDING_APPLICATION_CREATE,
-      'subject' => 'Funding application process created',
-      'details' => 'Application process: Title (Identifier)',
+      'subject' => 'Funding Application Created',
+      'details' => 'Application: Title (Identifier)',
     ]);
     $this->activityManagerMock->expects(static::once())->method('addActivity')
       ->with(2, $applicationProcessBundle->getApplicationProcess(), $activity);

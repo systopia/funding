@@ -39,7 +39,7 @@ return [
       'version' => 4,
       'values' => [
         'option_group_id.name' => 'funding_file_type',
-        'label' => E::ts('Transfer contract'),
+        'label' => E::ts('Transfer Contract'),
         'value' => FileTypeIds::TRANSFER_CONTRACT,
         'name' => FileTypeNames::TRANSFER_CONTRACT,
         'grouping' => 'funding',
@@ -61,7 +61,7 @@ return [
       'version' => 4,
       'values' => [
         'option_group_id.name' => 'funding_file_type',
-        'label' => E::ts('Transfer contract template'),
+        'label' => E::ts('Transfer Contract Template'),
         'value' => FileTypeIds::TRANSFER_CONTRACT_TEMPLATE,
         'name' => FileTypeNames::TRANSFER_CONTRACT_TEMPLATE,
         'grouping' => 'funding',

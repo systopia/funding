@@ -95,8 +95,8 @@ final class ApplicationProcessReviewTaskSubscriberTest extends TestCase {
 
     $this->taskManagerMock->expects(static::exactly(2))->method('addOrAssignInternalTask')
       ->withConsecutive(
-        [1, $applicationProcess, 2, TaskType::REVIEW_CALCULATIVE, 'Review funding application (calculative)'],
-        [1, $applicationProcess, 3, TaskType::REVIEW_CONTENT, 'Review funding application (content)'],
+        [1, $applicationProcess, 2, TaskType::REVIEW_CALCULATIVE, 'Review Funding Application (calculative)'],
+        [1, $applicationProcess, 3, TaskType::REVIEW_CONTENT, 'Review Funding Application (content)'],
       )->willReturnOnConsecutiveCalls($task1, $task2);
     $this->subscriber->onFormSubmitSuccess($event);
   }

@@ -48,8 +48,8 @@ final class ApplicationProcessCreatedSubscriber implements EventSubscriberInterf
     $applicationProcess = $event->getApplicationProcess();
     $activity = ActivityEntity::fromArray([
       'activity_type_id' => ActivityTypeIds::FUNDING_APPLICATION_CREATE,
-      'subject' => E::ts('Funding application process created'),
-      'details' => E::ts('Application process: %1 (%2)',
+      'subject' => E::ts('Funding Application Created'),
+      'details' => E::ts('Application: %1 (%2)',
         [
           1 => $applicationProcess->getTitle(),
           2 => $applicationProcess->getIdentifier(),

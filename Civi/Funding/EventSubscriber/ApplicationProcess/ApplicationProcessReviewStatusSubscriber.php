@@ -54,10 +54,10 @@ final class ApplicationProcessReviewStatusSubscriber implements EventSubscriberI
       $applicationProcess = $event->getApplicationProcess();
       $activity = ActivityEntity::fromArray([
         'activity_type_id' => ActivityTypeIds::FUNDING_APPLICATION_REVIEW_STATUS_CHANGE,
-        'subject' => E::ts('Funding application process review status changed'),
+        'subject' => E::ts('Funding Application Review Status Changed'),
         'details' => sprintf(
           '<ul><li>%s</li><li>%s</li><li>%s</li><li>%s</li><li>%s</li></ul>',
-          E::ts('Application process: %1 (%2)', [
+          E::ts('Application: %1 (%2)', [
             1 => $applicationProcess->getTitle(),
             2 => $applicationProcess->getIdentifier(),
           ]),

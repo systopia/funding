@@ -22,7 +22,7 @@ return [
         'filter' => 0,
         'is_default' => FALSE,
         'weight' => 100,
-        'description' => E::ts('Activity type for funding application process review status changes'),
+        'description' => E::ts('Activity type for funding application review status changes'),
         'is_optgroup' => FALSE,
         'is_reserved' => TRUE,
         'is_active' => TRUE,

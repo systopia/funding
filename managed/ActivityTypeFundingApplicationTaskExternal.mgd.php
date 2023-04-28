@@ -22,7 +22,7 @@ return [
         'filter' => 0,
         'is_default' => FALSE,
         'weight' => 100,
-        'description' => E::ts('Activity type for external funding application process tasks'),
+        'description' => E::ts('Activity type for external funding application tasks'),
         'is_optgroup' => FALSE,
         'is_reserved' => TRUE,
         'is_active' => TRUE,

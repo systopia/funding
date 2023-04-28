@@ -120,7 +120,7 @@ final class GetFieldsAction extends BasicGetFieldsAction {
       ],
       [
         'name' => 'amount_approved',
-        'title' => E::ts('Amount approved'),
+        'title' => E::ts('Amount Approved'),
         'data_type' => 'Float',
       ],
       [
@@ -130,17 +130,17 @@ final class GetFieldsAction extends BasicGetFieldsAction {
       ],
       [
         'name' => 'amount_paid_out',
-        'title' => E::ts('Amount paid out'),
+        'title' => E::ts('Amount Paid Out'),
         'data_type' => 'Float',
       ],
       [
         'name' => 'amount_available',
-        'title' => E::ts('Amount available'),
+        'title' => E::ts('Amount Available'),
         'data_type' => 'Float',
       ],
       [
         'name' => 'uri',
-        'title' => 'URI to transfer contract',
+        'title' => E::ts('URI to Transfer Contract'),
         'data_type' => 'String',
       ],
       [
@@ -160,7 +160,7 @@ final class GetFieldsAction extends BasicGetFieldsAction {
       ],
       [
         'name' => 'funding_program_title',
-        'title' => E::ts('Funding program title'),
+        'title' => E::ts('Funding Program Title'),
         'data_type' => 'String',
       ],
       [

@@ -65,7 +65,7 @@ final class ApplicationProcessReviewTaskSubscriber implements EventSubscriberInt
         $applicationProcess,
         $applicationProcess->getReviewerCalculativeContactId(),
         TaskType::REVIEW_CALCULATIVE,
-        E::ts('Review funding application (calculative)'),
+        E::ts('Review Funding Application (calculative)'),
       );
 
       $this->taskManager->addOrAssignInternalTask(
@@ -73,7 +73,7 @@ final class ApplicationProcessReviewTaskSubscriber implements EventSubscriberInt
         $applicationProcess,
         $applicationProcess->getReviewerContentContactId(),
         TaskType::REVIEW_CONTENT,
-        E::ts('Review funding application (content)'),
+        E::ts('Review Funding Application (content)'),
       );
     }
   }

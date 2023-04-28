@@ -38,7 +38,7 @@ final class PaymentInstructionTokenSubscriber extends AbstractTokenSubscriber {
 
   public function __construct(CiviOfficeContextDataHolder $contextDataHolder) {
     parent::__construct('funding_payment_instruction', [
-      'bank_account_reference' => E::ts('Bank account reference (e.g. IBAN)'),
+      'bank_account_reference' => E::ts('Bank Account Reference (e.g. IBAN)'),
       'bic' => E::ts('BIC (maybe empty)'),
     ]);
     $this->contextDataHolder = $contextDataHolder;

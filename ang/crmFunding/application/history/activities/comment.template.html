@@ -1,7 +1,7 @@
 <div class="funding-activity funding-application-comment panel panel-info">
     <div class="funding-activity-title panel-heading">
         {{activity['activity_type_id:name'] === 'funding_application_comment_internal'
-                ? ts('Internal comment') : ts('External comment')}}
+                ? ts('Internal Comment') : ts('External Comment')}}
     </div>
     <div class="panel-body">
         <div class="funding-activity-date">{{ts('Date: %date', {date: (activity.created_date | fundingDate)})}}</div>

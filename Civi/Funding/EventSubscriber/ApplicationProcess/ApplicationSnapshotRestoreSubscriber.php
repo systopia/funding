@@ -50,9 +50,9 @@ final class ApplicationSnapshotRestoreSubscriber implements EventSubscriberInter
     if (NULL !== $applicationProcess->getRestoredSnapshot()) {
       $activity = ActivityEntity::fromArray([
         'activity_type_id' => ActivityTypeIds::FUNDING_APPLICATION_RESTORE,
-        'subject' => E::ts('Funding application process restored'),
+        'subject' => E::ts('Funding Application Restored'),
         'details' => sprintf(
-          E::ts('Application process "%1" (%2) restored to version from %3.', [
+          E::ts('Application "%1" (%2) restored to version from %3.', [
             1 => $applicationProcess->getTitle(),
             2 => $applicationProcess->getIdentifier(),
             3 => $applicationProcess->getRestoredSnapshot()->getCreationDate()->format(E::ts('Y-m-d H:i:s')),

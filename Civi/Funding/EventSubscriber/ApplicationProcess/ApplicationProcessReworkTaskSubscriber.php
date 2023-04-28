@@ -86,7 +86,7 @@ final class ApplicationProcessReworkTaskSubscriber implements EventSubscriberInt
           $event->getContactId(),
           $applicationProcess,
           TaskType::REWORK,
-          E::ts('Rework funding application'),
+          E::ts('Rework Funding Application'),
         );
       }
     }

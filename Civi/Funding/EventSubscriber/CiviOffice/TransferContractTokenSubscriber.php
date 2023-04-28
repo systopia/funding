@@ -40,7 +40,7 @@ final class TransferContractTokenSubscriber extends AbstractTokenSubscriber {
 
   public function __construct(CiviOfficeContextDataHolder $contextDataHolder) {
     parent::__construct('transfer_contract', [
-      'eligible_application_titles' => E::ts('Titles of eligible applications'),
+      'eligible_application_titles' => E::ts('Titles of Eligible Applications'),
     ]);
     $this->contextDataHolder = $contextDataHolder;
   }

@@ -44,7 +44,7 @@ return [
       'values' => [
         'custom_group_id.name' => 'funding_application_review_status_change',
         'name' => 'from_is_review_calculative',
-        'label' => E::ts('From review calculative'),
+        'label' => E::ts('From Review Calculative'),
         'data_type' => 'Boolean',
         // When using CheckBox the field serialize is set to 1...
         'html_type' => 'Select',
@@ -69,7 +69,7 @@ return [
       'values' => [
         'custom_group_id.name' => 'funding_application_review_status_change',
         'name' => 'to_is_review_calculative',
-        'label' => E::ts('To review calculative'),
+        'label' => E::ts('To Review Calculative'),
         'data_type' => 'Boolean',
         // When using CheckBox the field serialize is set to 1...
         'html_type' => 'Select',
@@ -94,7 +94,7 @@ return [
       'values' => [
         'custom_group_id.name' => 'funding_application_review_status_change',
         'name' => 'from_is_review_content',
-        'label' => E::ts('From review content'),
+        'label' => E::ts('From Review Content'),
         'data_type' => 'Boolean',
         // When using CheckBox the field serialize is set to 1..
         'html_type' => 'Select',
@@ -119,7 +119,7 @@ return [
       'values' => [
         'custom_group_id.name' => 'funding_application_review_status_change',
         'name' => 'to_is_review_content',
-        'label' => E::ts('To review content'),
+        'label' => E::ts('To Review Content'),
         'data_type' => 'Boolean',
         // When using CheckBox the field serialize is set to 1...
         'html_type' => 'Select',

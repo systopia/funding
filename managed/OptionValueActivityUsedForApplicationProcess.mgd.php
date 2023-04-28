@@ -14,7 +14,7 @@ return [
       'version' => 4,
       'values' => [
         'option_group_id.name' => 'activity_used_for',
-        'label' => E::ts('Funding application process'),
+        'label' => E::ts('Funding Application'),
         'value' => 'civicrm_funding_application_process',
         'name' => 'FundingApplicationProcess',
         'grouping' => 'funding',

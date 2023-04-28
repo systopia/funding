@@ -66,7 +66,7 @@ return [
       'version' => 4,
       'values' => [
         'option_group_id.name' => 'funding_application_task_type',
-        'label' => E::ts('Review content'),
+        'label' => E::ts('Review Content'),
         'value' => TaskType::REVIEW_CONTENT,
         'name' => TaskType::REVIEW_CONTENT,
         'filter' => 0,
@@ -86,7 +86,7 @@ return [
       'version' => 4,
       'values' => [
         'option_group_id.name' => 'funding_application_task_type',
-        'label' => E::ts('Review calculative'),
+        'label' => E::ts('Review Calculative'),
         'value' => TaskType::REVIEW_CALCULATIVE,
         'name' => TaskType::REVIEW_CALCULATIVE,
         'is_default' => FALSE,
@@ -105,7 +105,7 @@ return [
       'version' => 4,
       'values' => [
         'option_group_id.name' => 'funding_application_task_type',
-        'label' => E::ts('Rework application'),
+        'label' => E::ts('Rework Application'),
         'value' => TaskType::REWORK,
         'name' => TaskType::REWORK,
         'is_default' => FALSE,

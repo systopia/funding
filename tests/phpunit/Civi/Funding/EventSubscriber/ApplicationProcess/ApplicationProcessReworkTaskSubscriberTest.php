@@ -122,7 +122,7 @@ final class ApplicationProcessReworkTaskSubscriberTest extends TestCase {
     ]);
 
     $this->taskManagerMock->expects(static::once())->method('addExternalTask')
-      ->with($event->getContactId(), $event->getApplicationProcess(), TaskType::REWORK, 'Rework funding application')
+      ->with($event->getContactId(), $event->getApplicationProcess(), TaskType::REWORK, 'Rework Funding Application')
       ->willReturn($task);
     $this->subscriber->onUpdated($event);
   }

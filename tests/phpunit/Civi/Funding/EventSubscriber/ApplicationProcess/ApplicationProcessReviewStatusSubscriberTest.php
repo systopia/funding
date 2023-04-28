@@ -64,8 +64,8 @@ final class ApplicationProcessReviewStatusSubscriberTest extends TestCase {
     $event = $this->createEvent(NULL, FALSE, TRUE, TRUE);
     $activity = ActivityEntity::fromArray([
       'activity_type_id' => ActivityTypeIds::FUNDING_APPLICATION_REVIEW_STATUS_CHANGE,
-      'subject' => 'Funding application process review status changed',
-      'details' => '<ul><li>Application process: Title (Identifier)</li>'
+      'subject' => 'Funding Application Review Status Changed',
+      'details' => '<ul><li>Application: Title (Identifier)</li>'
       . '<li>From review content: Passed</li><li>To review content: Passed</li>'
       . '<li>From review calculative: Undecided</li><li>To review calculative: Failed</li></ul>',
       'funding_application_review_status_change.from_is_review_calculative' => NULL,
@@ -84,8 +84,8 @@ final class ApplicationProcessReviewStatusSubscriberTest extends TestCase {
     $event = $this->createEvent(FALSE, FALSE, NULL, TRUE);
     $activity = ActivityEntity::fromArray([
       'activity_type_id' => ActivityTypeIds::FUNDING_APPLICATION_REVIEW_STATUS_CHANGE,
-      'subject' => 'Funding application process review status changed',
-      'details' => '<ul><li>Application process: Title (Identifier)</li>'
+      'subject' => 'Funding Application Review Status Changed',
+      'details' => '<ul><li>Application: Title (Identifier)</li>'
       . '<li>From review content: Undecided</li><li>To review content: Passed</li>'
       . '<li>From review calculative: Failed</li><li>To review calculative: Failed</li></ul>',
       'funding_application_review_status_change.from_is_review_calculative' => FALSE,

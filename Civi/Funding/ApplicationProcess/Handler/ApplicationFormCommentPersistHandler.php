@@ -44,7 +44,7 @@ final class ApplicationFormCommentPersistHandler implements ApplicationFormComme
   private function createActivity(ApplicationFormCommentPersistCommand $command): ActivityEntity {
     return ActivityEntity::fromArray([
       'activity_type_id' => $this->getActivityTypeId($command),
-      'subject' => E::ts('Application process comment'),
+      'subject' => E::ts('Funding Application Comment'),
       'details' => str_replace("\n", '<br>', htmlentities($command->getCommentText(), ENT_SUBSTITUTE)),
       'funding_application_comment.action' => $command->getValidatedData()->getAction(),
     ]);

@@ -35,11 +35,11 @@
         {{ statusLabels[fundingCase.status] || ts('Unknown') }}
     </div>
     <div>
-        <label>{{ ts('Creation date') }}</label>
+        <label>{{ ts('Creation Date') }}</label>
         {{ fundingCase.creation_date }}
     </div>
     <div>
-        <label>{{ ts('Modification date') }}</label>
+        <label>{{ ts('Modification Date') }}</label>
         {{ fundingCase.modification_date }}
     </div>
     <div>
@@ -53,11 +53,11 @@
                         e-ng-required="true"></editable-field>
     </div>
     <div>
-        <label>{{ ts('Amount requested eligible') }}</label>
+        <label>{{ ts('Amount Requested Eligible') }}</label>
         {{ amountRequestedEligible|number:2 }} {{ currencySymbol }}
     </div>
     <div ng-show="fundingCase.transfer_contract_uri">
-        <a href="{{ fundingCase.transfer_contract_uri }}" target="_blank" crm-icon="fa-external-link">{{ ts('Transfer contract') }}</a>
+        <a href="{{ fundingCase.transfer_contract_uri }}" target="_blank" crm-icon="fa-external-link">{{ ts('Transfer Contract') }}</a>
     </div>
 
     <h2>{{ ts('Applications') }}</h2>
@@ -70,7 +70,7 @@
 
     <button ng-show="possibleActions.includes('recreate-transfer-contract')" type="button"
             ng-click="recreateTransferContract()">
-        <span class="funding-label">{{ ts('Recreate transfer contract') }}</span>
+        <span class="funding-label">{{ ts('Recreate Transfer Contract') }}</span>
     </button>
 
     <h2 ng-show="payoutProcesses.length > 0">{{ ts('Drawdowns') }}</h2>

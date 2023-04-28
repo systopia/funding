@@ -73,9 +73,9 @@ final class ApplicationProcessStatusSubscriberTest extends TestCase {
     $event = $this->createEvent('old-status', 'new-status');
     $activity = ActivityEntity::fromArray([
       'activity_type_id' => ActivityTypeIds::FUNDING_APPLICATION_STATUS_CHANGE,
-      'subject' => 'Funding application process status changed',
+      'subject' => 'Funding Application Status Changed',
       'details'
-      => '<ul><li>Application process: Title (Identifier)</li><li>From status: Old</li><li>To status: New</li></ul>',
+      => '<ul><li>Application: Title (Identifier)</li><li>From status: Old</li><li>To status: New</li></ul>',
       'funding_application_status_change.from_status' => 'old-status',
       'funding_application_status_change.to_status' => 'new-status',
     ]);
