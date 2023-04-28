@@ -1,4 +1,4 @@
 <select style="min-width: 180px;" crm-ui-select="{allowClear: true}" ng-model="permissions" ng-required="true" multiple>
-    <option ng-repeat="(permission, label) in possiblePermissions" value="{{permission}}">{{label}}</option>
+    <option ng-repeat="(permission, label) in possiblePermissions" value="{{ permission }}">{{ label }}</option>
 </select>
-<span ng-show="$ctrl.errorMessage" class="has-error">{{$ctrl.errorMessage}}</span>
+<span ng-show="$ctrl.errorMessage" class="has-error">{{ $ctrl.errorMessage }}</span>
