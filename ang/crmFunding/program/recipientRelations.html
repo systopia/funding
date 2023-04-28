@@ -1,18 +1,18 @@
 <div id="bootstrap-theme" class="crm-container">
-  <h1 crm-page-title>{{ts('Possible Funding Recipients')}}</h1>
+  <h1 crm-page-title>{{ ts('Possible Funding Recipients') }}</h1>
 
   <form name="fundingRecipientRelations" ng-submit="save()">
     <div class="form-group">
-      <button type="button" class="btn btn-sm" crm-icon="fa-plus-circle" ng-click="add()">{{ts('Add')}}</button>
+      <button type="button" class="btn btn-sm" crm-icon="fa-plus-circle" ng-click="add()">{{ ts('Add') }}</button>
     </div>
     <div ng-repeat="relation in relations track by $index" class="form-group clear">
-      <button type="button" class="btn btn-sm btn-danger" crm-icon="fa-remove" ng-click="remove($index)" title="{{ts('Remove')}}"></button>
+      <button type="button" class="btn btn-sm btn-danger" crm-icon="fa-remove" ng-click="remove($index)" title="{{ ts('Remove') }}"></button>
       <span>
         <funding-recipient-relation types="types" type="relation.type" properties="relation.properties"/>
       </span>
     </div>
     <div class="form-group">
-      <button type="submit" class="btn btn-success" crm-icon="fa-check">{{ts('Save')}}</button>
+      <button type="submit" class="btn btn-success" crm-icon="fa-check">{{ ts('Save') }}</button>
     </div>
   </form>
 

@@ -1,6 +1,6 @@
 <td>
     <span ng-show="$ctrl.editAllowed">
-        <form editable-form name="{{$ctrl.formName}}"
+        <form editable-form name="{{ $ctrl.formName }}"
               onshow="onStartEdit($ctrl.form())"
               onbeforesave="onBeforeSave($ctrl.form())"
               onaftersave="onAfterSave($ctrl.form())"

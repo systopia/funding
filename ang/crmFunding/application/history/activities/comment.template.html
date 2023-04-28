@@ -1,13 +1,13 @@
 <div class="funding-activity funding-application-comment panel panel-info">
     <div class="funding-activity-title panel-heading">
-        {{activity['activity_type_id:name'] === 'funding_application_comment_internal'
-                ? ts('Internal Comment') : ts('External Comment')}}
+        {{ activity['activity_type_id:name'] === 'funding_application_comment_internal'
+                ? ts('Internal Comment') : ts('External Comment') }}
     </div>
     <div class="panel-body">
-        <div class="funding-activity-date">{{ts('Date: %date', {date: (activity.created_date | fundingDate)})}}</div>
-        <div class="funding-activity-performed-by">{{ts('From: %name', {name: activity.source_contact_name})}}</div>
+        <div class="funding-activity-date">{{ ts('Date: %date', {date: (activity.created_date | fundingDate)}) }}</div>
+        <div class="funding-activity-performed-by">{{ ts('From: %name', {name: activity.source_contact_name}) }}</div>
         <div class="funding-activity-comment">
-            {{ts('Text:')}}<br>
+            {{ ts('Text:') }}<br>
             <span ng-bind-html="activity.details"></span>
         </div>
     </div>
