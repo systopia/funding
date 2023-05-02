@@ -94,9 +94,6 @@ fundingModule.directive('fundingApplicationEditor', function() {
         $scope.isChanged = false;
         $scope.editCount = 0;
 
-        let originalData = _4.cloneDeep($scope.data);
-        let originalDataString = JSON.stringify(originalData);
-
         function reloadApplicationProcess() {
           return fundingApplicationProcessService.get($scope.applicationProcess.id).then(
               (applicationProcess) => $scope.applicationProcess = applicationProcess
@@ -117,6 +114,8 @@ fundingModule.directive('fundingApplicationEditor', function() {
 
         enableOverlay();
         await loadFormData();
+        let originalData = _4.cloneDeep($scope.data);
+        let originalDataString = JSON.stringify(originalData);
         disableOverlay();
 
         $scope.isActionAllowed = function (action) {
