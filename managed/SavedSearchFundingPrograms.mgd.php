@@ -185,7 +185,7 @@ return [
                   'target' => '_blank',
                 ],
                 [
-                  'path' => '/funding/en/civicrm/funding/program/edit#?FundingProgram1=[id]',
+                  'path' => 'civicrm/funding/program/edit#?FundingProgram1=[id]',
                   'icon' => 'fa-pencil',
                   'text' => E::ts('Edit basic values'),
                   'style' => 'default',
