@@ -36,19 +36,20 @@ final class EntityValidatorPass implements CompilerPassInterface {
    */
   public function process(ContainerBuilder $container): void {
     $validators = [];
-    foreach ($container->findTaggedServiceIds('funding.validator.entity') as $id => $attributes) {
-      $entityClass = $this->getEntityClass($container, $id, $attributes);
-      if (isset($validators[$entityClass])) {
-        $validators[$entityClass][] = new Reference($id);
-      }
-      else {
-        $validators[$entityClass] = [new Reference($id)];
+    foreach ($container->findTaggedServiceIds('funding.validator.entity') as $id => $tags) {
+      foreach ($tags as $attributes) {
+        $entityClass = $this->getEntityClass($container, $id, $attributes);
+        if (isset($validators[$entityClass])) {
+          $validators[$entityClass][] = new Reference($id);
+        }
+        else {
+          $validators[$entityClass] = [new Reference($id)];
+        }
       }
     }
 
-    $validatorsArg = array_map(fn (array $refs) => new IteratorArgument($refs), $validators);
-    $container->register(EntityValidatorLoader::class, EntityValidatorLoader::class)
-      ->addArgument($validatorsArg);
+    $validatorsArg = array_map(fn(array $refs) => new IteratorArgument($refs), $validators);
+    $container->register(EntityValidatorLoader::class, EntityValidatorLoader::class)->addArgument($validatorsArg);
   }
 
   /**
