@@ -24,7 +24,7 @@ use Civi\Api4\Generic\DAOGetAction;
 use Civi\Api4\Generic\Result;
 use Civi\Funding\FundingCase\FundingCaseManager;
 
-final class GetAction extends daogetaction {
+final class GetAction extends DAOGetAction {
 
   private FundingCaseManager $fundingCaseManager;
 
