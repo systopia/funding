@@ -46,9 +46,9 @@ fundingModule.controller('fundingApplicationCtrl', [
       false: ts('Failed'),
     };
 
-    $scope.statusLabels = {};
-    fundingApplicationProcessService.getStatusLabels(applicationProcess.id)
-        .then((labels) => $scope.statusLabels = labels);
+    $scope.statusOptions = {};
+    fundingApplicationProcessService.getStatusOptions(applicationProcess.id)
+      .then((options) => $scope.statusOptions = options);
 
     $scope.activities = {};
     $scope.loadActivities = function () {

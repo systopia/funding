@@ -16,14 +16,14 @@
             <funding-application-editor ng-show="tab === 'application'"
                                         application-process="applicationProcess"
                                         json-schema="jsonSchema"
-                                        status-labels="statusLabels"
+                                        status-options="statusOptions"
                                         review-status-labels="reviewStatusLabels"
                                         on-post-submit="loadActivities()"></funding-application-editor>
         </div>
         <div role="tabpanel" class="tab-pane" ng-class="{active: tab === 'history'}">
             <funding-application-process-history ng-show="tab === 'history'"
                                                  activities="activities"
-                                                 status-labels="statusLabels"
+                                                 status-options="statusOptions"
                                                  review-status-labels="reviewStatusLabels"></funding-application-process-history>
         </div>
     </div>

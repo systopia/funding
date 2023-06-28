@@ -1,5 +1,8 @@
 <div class="funding-activity funding-application-create panel panel-primary">
-    <div class="funding-activity-title panel-heading">{{ ts('Created') }}</div>
+    <div class="funding-activity-title panel-heading">
+      {{ ts('Created') }}
+      <i ng-class="[{fa: statusOption.icon}, statusOption.icon]" ng-style="{color: statusOption.color };"></i>
+    </div>
     <div class="panel-body">
         <div class="funding-activity-date">{{ ts('Date: %date', {date: (activity.created_date | fundingDate)}) }}</div>
         <div class="funding-activity-performed-by">{{ ts('Performed by: %name', {name: activity.source_contact_name}) }}</div>

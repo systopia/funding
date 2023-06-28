@@ -23,39 +23,104 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * @codeCoverageIgnore
+ *
+ * @phpstan-type optionParamT array{
+ *   id: int|string,
+ *   name: string,
+ *   label: string,
+ *   abbr?: ?string,
+ *   description?: ?string,
+ *   icon?: ?string,
+ *   color?: ?string,
+ * }
+ *
+ * @phpstan-type optionT array{
+ *   id: int|string,
+ *   name: string,
+ *   label: string,
+ *   abbr: ?string,
+ *   description: ?string,
+ *   icon: ?string,
+ *   color: ?string,
+ * }
  */
 abstract class AbstractGetOptionsEvent extends Event {
 
   /**
-   * @phpstan-var array<string, string>
+   * @phpstan-var array<string, optionT>
+   *   Options with option name as key.
    */
-  private array $options;
+  private array $options = [];
 
   /**
-   * @phpstan-param array<string, string> $options
+   * @phpstan-param array<optionParamT>|array<string, string> $options
    */
   public function __construct(array $options) {
-    $this->options = $options;
+    $this->setOptions($options);
   }
 
   /**
-   * @phpstan-return array<string, string>
+   * @phpstan-return optionT|null
    */
-  public function getOptions(): array {
-    return $this->options;
+  public function getOption(string $name): ?array {
+    return $this->options[$name] ?? NULL;
   }
 
-  public function setOption(string $name, string $label): self {
-    $this->options[$name] = $label;
+  public function hasOption(string $name): bool {
+    return isset($this->options[$name]);
+  }
+
+  /**
+   * @phpstan-return array<int, optionT>
+   */
+  public function getOptions(): array {
+    return array_values($this->options);
+  }
+
+  /**
+   * @phpstan-param array<optionParamT>|array<string, string> $options
+   */
+  public function setOptions(array $options): self {
+    $this->options = [];
+    foreach ($options as $key => $value) {
+      if (is_array($value)) {
+        $this->addOption($value);
+      }
+      else {
+        $this->addSimpleOption($key, $value);
+      }
+    }
 
     return $this;
   }
 
   /**
-   * @phpstan-param array<string, string> $options
+   * A possible option with the same name will be overridden.
+   *
+   * @phpstan-param optionParamT $option
    */
-  public function setOptions(array $options): self {
-    $this->options = $options;
+  public function addOption(array $option): self {
+    $option += [
+      'abbr' => NULL,
+      'description' => NULL,
+      'icon' => NULL,
+      'color' => NULL,
+    ];
+
+    $this->options[$option['name']] = $option;
+
+    return $this;
+  }
+
+  /**
+   * A possible option with the same name will be overridden.
+   */
+  public function addSimpleOption(string $name, string $label): self {
+    $this->addOption([
+      'id' => $name,
+      'name' => $name,
+      'label' => $label,
+    ]);
 
     return $this;
   }

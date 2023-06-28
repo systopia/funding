@@ -23,7 +23,7 @@ fundingModule.directive('fundingApplicationEditor', function() {
       applicationProcess: '=',
       // Buttons are not shown initially if JSON schema is loaded in controller.
       jsonSchema: '=',
-      statusLabels: '=',
+      statusOptions: '=',
       reviewStatusLabels: '=',
       onPostSubmit: '&',
     },

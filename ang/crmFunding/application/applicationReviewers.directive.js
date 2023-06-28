@@ -27,10 +27,10 @@ fundingModule.directive('fundingApplicationReviewers', function() {
     controller: ['$scope', 'crmStatus', 'fundingApplicationProcessService',
       function($scope, crmStatus, fundingApplicationProcessService) {
         $scope.ts = CRM.ts('funding');
-        fundingApplicationProcessService.getOptions($scope.applicationProcess.id, 'reviewer_calc_contact_id')
+        fundingApplicationProcessService.getOptionLabels($scope.applicationProcess.id, 'reviewer_calc_contact_id')
           .then((options) => $scope.possibleReviewersCalculative = options);
 
-        fundingApplicationProcessService.getOptions($scope.applicationProcess.id, 'reviewer_cont_contact_id')
+        fundingApplicationProcessService.getOptionLabels($scope.applicationProcess.id, 'reviewer_cont_contact_id')
           .then((options) => $scope.possibleReviewersContent = options);
 
         function hasPermission(permission) {

@@ -51,21 +51,6 @@ class CRM_Funding_BAO_FundingCase extends CRM_Funding_DAO_FundingCase implements
     ];
   }
 
-  // @phpstan-ignore-next-line
-  public static function buildOptions($fieldName, $context = NULL, $props = []) {
-    $options = parent::buildOptions($fieldName, $context, $props);
-    if ('status' === $fieldName && is_array($options)) {
-      // If FundingCase is limited to one via "id" in $props, we could
-      // determine the possible status depending on the funding case type...
-      $event = new GetPossibleFundingCaseStatusEvent($options);
-      \Civi::dispatcher()->dispatch(GetPossibleFundingCaseStatusEvent::class, $event);
-
-      return $event->getOptions();
-    }
-
-    return $options;
-  }
-
   /**
    * Provides Afform metadata about this entity.
    *

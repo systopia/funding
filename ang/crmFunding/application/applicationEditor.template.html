@@ -63,7 +63,9 @@
     <h2>{{ ts('General') }}</h2>
     <div>
         <label>{{ ts('Status') }}</label>
-        {{ statusLabels[applicationProcess.status] || ts('Unknown') }}
+        {{ statusOptions[applicationProcess.status].label || ts('Unknown') }}
+        <i ng-class="[{fa: statusOptions[applicationProcess.status].icon}, statusOptions[applicationProcess.status].icon]"
+           ng-style="{color: statusOptions[applicationProcess.status].color };"></i>
     </div>
     <div>
         <label>{{ ts('Review Content') }}</label>
