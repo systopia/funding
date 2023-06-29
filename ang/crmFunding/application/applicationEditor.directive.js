@@ -94,6 +94,20 @@ fundingModule.directive('fundingApplicationEditor', function() {
         $scope.isChanged = false;
         $scope.editCount = 0;
 
+        $scope.isActionAllowed = function (action) {
+          return $scope.jsonSchema.properties.action.enum.includes(action);
+        };
+
+        $scope.isActionDisabled = function (action) {
+          return $scope.editCount > 0 ||
+            !fundingIsEmpty($scope.errors) ||
+            $scope.isChanged && action !== 'update';
+        };
+
+        $scope.isEditAllowed = function () {
+          return $scope.isActionAllowed('update');
+        };
+
         function reloadApplicationProcess() {
           return fundingApplicationProcessService.get($scope.applicationProcess.id).then(
               (applicationProcess) => $scope.applicationProcess = applicationProcess
@@ -117,20 +131,6 @@ fundingModule.directive('fundingApplicationEditor', function() {
         let originalData = _4.cloneDeep($scope.data);
         let originalDataString = JSON.stringify(originalData);
         disableOverlay();
-
-        $scope.isActionAllowed = function (action) {
-          return $scope.jsonSchema.properties.action.enum.includes(action);
-        };
-
-        $scope.isActionDisabled = function (action) {
-          return $scope.editCount > 0 ||
-              !fundingIsEmpty($scope.errors) ||
-              $scope.isChanged && action !== 'update';
-        };
-
-        $scope.isEditAllowed = function () {
-          return $scope.isActionAllowed('update');
-        };
 
         let $submitModal = null;
         $scope.performAction = function (action, label, withComment) {
