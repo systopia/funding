@@ -32,7 +32,8 @@ use Webmozart\Assert\Assert;
  *     _identifier?: string,
  *     stunden: float,
  *     verguetung: float,
- *     zweck: string,
+ *     leistung: string,
+ *     qualifikation: string,
  *     betrag: float,
  *   }>,
  *   fahrtkosten: array{
@@ -40,7 +41,6 @@ use Webmozart\Assert\Assert;
  *     anTeilnehmerErstattet: float,
  *   },
  *   sachkosten: array{
- *     haftungKfz: float,
  *     ausstattung: array<array{
  *       _identifier?: string,
  *       gegenstand: string,
@@ -52,7 +52,9 @@ use Webmozart\Assert\Assert;
  *     betrag: float,
  *     zweck: string,
  *   }>,
- *   versicherungTeilnehmer: float,
+ *   versicherung: array{
+ *     teilnehmer: float,
+ *   }
  * }
  */
 class AVK1ApplicationCostItemsFactory implements ApplicationCostItemsFactoryInterface {
@@ -110,7 +112,8 @@ class AVK1ApplicationCostItemsFactory implements ApplicationCostItemsFactoryInte
         'properties' => [
           'stunden' => $honorar['stunden'],
           'verguetung' => $honorar['verguetung'],
-          'zweck' => $honorar['zweck'],
+          'leistung' => $honorar['leistung'],
+          'qualifikation' => $honorar['qualifikation'],
         ],
       ]);
     }
@@ -131,16 +134,6 @@ class AVK1ApplicationCostItemsFactory implements ApplicationCostItemsFactoryInte
         'identifier' => 'fahrtkosten/anTeilnehmerErstattet',
         'type' => 'fahrtkosten/anTeilnehmerErstattet',
         'amount' => $kosten['fahrtkosten']['anTeilnehmerErstattet'],
-        'properties' => [],
-      ]);
-    }
-
-    if ($kosten['sachkosten']['haftungKfz'] > 0) {
-      $items[] = ApplicationCostItemEntity::fromArray([
-        'application_process_id' => $applicationProcess->getId(),
-        'identifier' => 'sachkosten/haftungKfz',
-        'type' => 'sachkosten/haftungKfz',
-        'amount' => $kosten['sachkosten']['haftungKfz'],
         'properties' => [],
       ]);
     }
@@ -171,12 +164,12 @@ class AVK1ApplicationCostItemsFactory implements ApplicationCostItemsFactoryInte
       ]);
     }
 
-    if ($kosten['versicherungTeilnehmer'] > 0) {
+    if ($kosten['versicherung']['teilnehmer'] > 0) {
       $items[] = ApplicationCostItemEntity::fromArray([
         'application_process_id' => $applicationProcess->getId(),
-        'identifier' => 'versicherungTeilnehmer',
-        'type' => 'versicherungTeilnehmer',
-        'amount' => $kosten['versicherungTeilnehmer'],
+        'identifier' => 'versicherung/teilnehmer',
+        'type' => 'versicherung/teilnehmer',
+        'amount' => $kosten['versicherung']['teilnehmer'],
         'properties' => [],
       ]);
     }

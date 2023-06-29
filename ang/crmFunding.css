@@ -41,3 +41,8 @@
 .modal textarea {
   max-width: 100%;
 }
+
+/* align checkboxes in checklist vertically */
+.editable-checklist label {
+  display: block !important;
+}

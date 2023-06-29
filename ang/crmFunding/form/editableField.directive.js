@@ -47,6 +47,9 @@ fundingModule.directive('editableField', [function() {
       'value': '@',
       // Will be displayed if model value is empty.
       'emptyValueDisplay': '@',
+      // The "oneOf" attribute from JSON schema for fields with options to
+      // select from.
+      'optionsOneOf': '=?',
       'formName': '@?',
       'label': '=?',
       'editAllowed': '=?',
@@ -66,6 +69,26 @@ fundingModule.directive('editableField', [function() {
           this.editAllowed = true;
         }
       }
+
+      /**
+       * @param {array} selected
+       * @param {object[]} oneOf
+       * @returns {string}
+       */
+      $scope.showChecklist = function(selected, oneOf) {
+        if (selected === undefined || selected === null) {
+          return $attrs.emptyValueDisplay;
+        }
+
+        let labels = [];
+        oneOf.forEach(function (value) {
+          if (selected.includes(value.const)) {
+            labels.push(value.title);
+          }
+        });
+
+        return labels.join(', ');
+      };
     }],
     link: function (scope, element, attrs, controller, transcludeFn) {
       transcludeFn(function (clone) {
@@ -85,7 +108,19 @@ fundingModule.directive('editableField', [function() {
         template += '<label>{{' + attrs.label + '}}</label> ';
       }
 
-      const editSpan = angular.element('<span>{{ ' + attrs.value + ' || $ctrl.emptyValueDisplay }}</span>');
+      let displayValueExpression;
+      if (attrs.type === 'checklist') {
+        displayValueExpression = 'showChecklist(' + attrs.value + ', ' + attrs.optionsOneOf + ')';
+      } else {
+        displayValueExpression = 'null === ' + attrs.value + ' ? $ctrl.emptyValueDisplay : ' + attrs.value;
+      }
+
+      const editSpan = angular.element('<span>{{ ' + displayValueExpression + ' }}</span>');
+
+      if (attrs.optionsOneOf) {
+        editSpan.attr('e-ng-options', 'o.const as o.title for o in ' + attrs.optionsOneOf);
+      }
+
       editSpan.attr('ng-show', '$ctrl.editAllowed');
       editSpan.attr('editable-' + attrs.type, attrs.value);
       editSpan.attr('e-name', attrs.path);
@@ -96,14 +131,15 @@ fundingModule.directive('editableField', [function() {
       editSpan.attr('oncancel', 'onCancelEdit(this)');
       editSpan.attr('onhide', 'onEditFinished(this)');
       for (let [key, value] of Object.entries(attrs)) {
-        if (key === 'path' || key === 'type' || key === 'value' || key === 'formName' || key.startsWith('$')) {
+        if (['path', 'type', 'value', 'formName', 'optionsOneOf'].includes(key) ||
+          key.startsWith('$')) {
           continue;
         }
         editSpan.attr(_4.kebabCase(key), value);
       }
       template += editSpan[0].outerHTML;
 
-      const viewOnlySpan = angular.element('<span>{{ ' + attrs.value + ' || $ctrl.emptyValueDisplay }}</span>');
+      const viewOnlySpan = angular.element('<span>{{ ' + displayValueExpression + ' }}</span>');
       viewOnlySpan.attr('ng-show', '!$ctrl.editAllowed');
       template += viewOnlySpan[0].outerHTML;
 

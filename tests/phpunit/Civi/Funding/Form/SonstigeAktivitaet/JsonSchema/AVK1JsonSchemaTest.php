@@ -61,22 +61,30 @@ class AVK1JsonSchemaTest extends TestCase {
     $data = (object) [
       'action' => 'submitAction1',
       'titel' => 'Test',
-      'kurzbezeichnungDesInhalts' => 'foo bar',
+      'kurzbeschreibungDesInhalts' => 'foo bar',
       'empfaenger' => 2,
       'beginn' => '2022-08-24',
       'ende' => '2022-08-25',
+      'teilnehmer' => (object) [
+        'gesamt' => 4,
+        'weiblich' => 3,
+        'divers' => 2,
+        'inJugendarbeitTaetig' => 1,
+      ],
       'kosten' => (object) [
         'unterkunftUndVerpflegung' => 222.22,
         'honorare' => [
           (object) [
             'stunden' => 11.1,
             'verguetung' => 22.22,
-            'zweck' => 'Honorar 1',
+            'leistung' => 'Leistung 1',
+            'qualifikation' => 'Qualifikation 1',
           ],
           (object) [
             'stunden' => 9.9,
             'verguetung' => 10,
-            'zweck' => 'Honorar 2',
+            'leistung' => 'Leistung 2',
+            'qualifikation' => 'Qualifikation 2',
           ],
         ],
         'fahrtkosten' => (object) [
@@ -84,7 +92,6 @@ class AVK1JsonSchemaTest extends TestCase {
           'anTeilnehmerErstattet' => 3.3,
         ],
         'sachkosten' => (object) [
-          'haftungKfz' => 4.4,
           'ausstattung' => [
             (object) [
               'gegenstand' => 'Thing1',
@@ -106,7 +113,7 @@ class AVK1JsonSchemaTest extends TestCase {
             'zweck' => 'Sonstige Ausgaben 2',
           ],
         ],
-        'versicherungTeilnehmer' => 9.9,
+        'versicherung' => (object) ['teilnehmer' => 9.9],
       ],
       'finanzierung' => (object) [
         'teilnehmerbeitraege' => 100.00,
@@ -126,6 +133,19 @@ class AVK1JsonSchemaTest extends TestCase {
             'quelle' => 'Quelle 2',
           ],
         ],
+      ],
+      'beschreibung' => (object) [
+        'thematischeSchwerpunkte' => 'Schwerpunkte',
+        'geplanterAblauf' => 'Ablauf',
+        'beitragZuPolitischerJugendbildung' => 'Beitrag',
+        'zielgruppe' => 'Zielgruppe',
+        'ziele' => [
+          'persoenlichkeitsbildung',
+          'internationaleBegegnungen',
+        ],
+        'bildungsanteil' => 22,
+        'veranstaltungsort' => 'Veranstaltungsort',
+        'partner' => 'Partner',
       ],
       'foo' => 'baz',
     ];
@@ -148,7 +168,7 @@ class AVK1JsonSchemaTest extends TestCase {
     static::assertSame($honorareGesamt, $data->kosten->honorareGesamt);
     $fahrtkostenGesamt = 2.2 + 3.3;
     static::assertSame($fahrtkostenGesamt, $data->kosten->fahrtkostenGesamt);
-    $sachkostenGesamt = 4.4 + 5.5 + 6.6;
+    $sachkostenGesamt = 5.5 + 6.6;
     static::assertSame($sachkostenGesamt, $data->kosten->sachkostenGesamt);
     $sonstigeAusgabenGesamt = 12.34 + 56.78;
     static::assertSame($sonstigeAusgabenGesamt, $data->kosten->sonstigeAusgabenGesamt);

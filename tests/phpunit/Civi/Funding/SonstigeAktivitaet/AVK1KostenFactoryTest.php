@@ -39,11 +39,12 @@ final class AVK1KostenFactoryTest extends TestCase {
       'anTeilnehmerErstattet' => 0.0,
     ],
     'sachkosten' => [
-      'haftungKfz' => 0.0,
       'ausstattung' => [],
     ],
     'sonstigeAusgaben' => [],
-    'versicherungTeilnehmer' => 0.0,
+    'versicherung' => [
+      'teilnehmer' => 0.0,
+    ],
   ];
 
   /**
@@ -110,7 +111,8 @@ final class AVK1KostenFactoryTest extends TestCase {
         'properties' => [
           'stunden' => 2,
           'verguetung' => 22,
-          'zweck' => 'foo',
+          'leistung' => 'foo',
+          'qualifikation' => 'bar',
         ],
       ]),
       [
@@ -119,7 +121,8 @@ final class AVK1KostenFactoryTest extends TestCase {
             '_identifier' => 'test',
             'stunden' => 2.0,
             'verguetung' => 22.0,
-            'zweck' => 'foo',
+            'leistung' => 'foo',
+            'qualifikation' => 'bar',
             'betrag' => 44.0,
           ],
         ],
@@ -146,17 +149,6 @@ final class AVK1KostenFactoryTest extends TestCase {
         'properties' => [],
       ]),
       ['fahrtkosten' => ['anTeilnehmerErstattet' => 123.0]],
-    ];
-
-    yield [
-      ApplicationCostItemEntity::fromArray([
-        'application_process_id' => 1,
-        'identifier' => 'sachkosten/haftungKfz',
-        'type' => 'sachkosten/haftungKfz',
-        'amount' => 123,
-        'properties' => [],
-      ]),
-      ['sachkosten' => ['haftungKfz' => 123.0]],
     ];
 
     yield [
@@ -206,12 +198,12 @@ final class AVK1KostenFactoryTest extends TestCase {
     yield [
       ApplicationCostItemEntity::fromArray([
         'application_process_id' => 1,
-        'identifier' => 'versicherungTeilnehmer',
-        'type' => 'versicherungTeilnehmer',
+        'identifier' => 'versicherung/teilnehmer',
+        'type' => 'versicherung/teilnehmer',
         'amount' => 123,
         'properties' => [],
       ]),
-      ['versicherungTeilnehmer' => 123.0],
+      ['versicherung' => ['teilnehmer' => 123.0]],
     ];
   }
 

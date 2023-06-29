@@ -20,6 +20,7 @@ return [
     'crmUtil',
     'ngRoute',
     'xeditable',
+    'checklist-model',
     'lodash4',
     'ui.select',
     'skApplicationProcessTable',

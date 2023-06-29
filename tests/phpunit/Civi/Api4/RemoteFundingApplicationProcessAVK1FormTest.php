@@ -211,7 +211,10 @@ final class RemoteFundingApplicationProcessAVK1FormTest extends AbstractRemoteFu
       [
         'start_date' => date('Y-m-d', time() - 86400),
         'end_date' => date('Y-m-d', time() + 86400),
-        'request_data' => ['x' => 'y'],
+        'request_data' => [
+          'teilnehmer' => [],
+          'beschreibung' => [],
+        ],
       ]
     );
   }

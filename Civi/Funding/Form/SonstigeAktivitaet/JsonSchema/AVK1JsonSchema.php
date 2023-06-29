@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Form\SonstigeAktivitaet\JsonSchema;
 
 use Civi\Funding\Form\JsonSchema\JsonSchemaRecipient;
+use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchemaDataPointer;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchemaDate;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchemaObject;
@@ -46,17 +47,18 @@ final class AVK1JsonSchema extends JsonSchemaObject {
     Assert::isArray($required);
     $keywords['required'] = array_merge([
       'titel',
-      'kurzbezeichnungDesInhalts',
+      'kurzbeschreibungDesInhalts',
       'empfaenger',
       'beginn',
       'ende',
       'kosten',
       'finanzierung',
+      'beschreibung',
     ], $required);
 
     parent::__construct([
       'titel' => new JsonSchemaString(),
-      'kurzbezeichnungDesInhalts' => new JsonSchemaString(),
+      'kurzbeschreibungDesInhalts' => new JsonSchemaString(),
       'empfaenger' => new JsonSchemaRecipient($possibleRecipients),
       'beginn' => new JsonSchemaDate([
         'minDate' => $applicationBegin->format('Y-m-d'),
@@ -66,10 +68,18 @@ final class AVK1JsonSchema extends JsonSchemaObject {
         'minDate' => new JsonSchemaDataPointer('1/beginn', '0000-00-00'),
         'maxDate' => $applicationEnd->format('Y-m-d'),
       ]),
+      'teilnehmer' => new JsonSchemaObject([
+        'gesamt' => new JsonSchema(['type' => ['integer', 'null']]),
+        'weiblich' => new JsonSchema(['type' => ['integer', 'null']]),
+        'divers' => new JsonSchema(['type' => ['integer', 'null']]),
+        'inJugendarbeitTaetig' => new JsonSchema(['type' => ['integer', 'null']]),
+      ]),
       // Abschnitt I
       'kosten' => new AVK1KostenSchema(),
       // Abschnitt II
       'finanzierung' => new AVK1FinanzierungSchema(),
+      // Beschreibung des Vorhabens (not part of default "AV-K1")
+      'beschreibung' => new AVK1BeschreibungSchema(),
     ] + $extraProperties, $keywords);
   }
 

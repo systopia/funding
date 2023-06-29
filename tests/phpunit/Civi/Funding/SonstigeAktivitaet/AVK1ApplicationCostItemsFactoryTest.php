@@ -88,7 +88,8 @@ final class AVK1ApplicationCostItemsFactoryTest extends TestCase {
         'properties' => [
           'stunden' => 11.1,
           'verguetung' => 22.22,
-          'zweck' => 'Honorar 1',
+          'leistung' => 'Leistung 1',
+          'qualifikation' => 'Qualifikation 1',
         ],
       ]),
       ApplicationCostItemEntity::fromArray([
@@ -99,7 +100,8 @@ final class AVK1ApplicationCostItemsFactoryTest extends TestCase {
         'properties' => [
           'stunden' => 9.9,
           'verguetung' => 10,
-          'zweck' => 'Honorar 2',
+          'leistung' => 'Leistung 2',
+          'qualifikation' => 'Qualifikation 2',
         ],
       ]),
       ApplicationCostItemEntity::fromArray([
@@ -114,13 +116,6 @@ final class AVK1ApplicationCostItemsFactoryTest extends TestCase {
         'identifier' => 'fahrtkosten/anTeilnehmerErstattet',
         'type' => 'fahrtkosten/anTeilnehmerErstattet',
         'amount' => 3.3,
-        'properties' => [],
-      ]),
-      ApplicationCostItemEntity::fromArray([
-        'application_process_id' => 2,
-        'identifier' => 'sachkosten/haftungKfz',
-        'type' => 'sachkosten/haftungKfz',
-        'amount' => 4.4,
         'properties' => [],
       ]),
       ApplicationCostItemEntity::fromArray([
@@ -153,8 +148,8 @@ final class AVK1ApplicationCostItemsFactoryTest extends TestCase {
       ]),
       ApplicationCostItemEntity::fromArray([
         'application_process_id' => 2,
-        'identifier' => 'versicherungTeilnehmer',
-        'type' => 'versicherungTeilnehmer',
+        'identifier' => 'versicherung/teilnehmer',
+        'type' => 'versicherung/teilnehmer',
         'amount' => 9.9,
         'properties' => [],
       ]),
@@ -174,14 +169,16 @@ final class AVK1ApplicationCostItemsFactoryTest extends TestCase {
           '_identifier' => 'h1',
           'stunden' => 11.1,
           'verguetung' => 22.22,
-          'zweck' => 'Honorar 1',
+          'leistung' => 'Leistung 1',
+          'qualifikation' => 'Qualifikation 1',
           'betrag' => 246.64,
         ],
         [
           '_identifier' => 'h2',
           'stunden' => 9.9,
           'verguetung' => 10,
-          'zweck' => 'Honorar 2',
+          'leistung' => 'Leistung 2',
+          'qualifikation' => 'Qualifikation 2',
           'betrag' => 99.0,
         ],
       ],
@@ -190,7 +187,6 @@ final class AVK1ApplicationCostItemsFactoryTest extends TestCase {
         'anTeilnehmerErstattet' => 3.3,
       ],
       'sachkosten' => [
-        'haftungKfz' => 4.4,
         'ausstattung' => [
           [
             '_identifier' => 'a1',
@@ -216,7 +212,9 @@ final class AVK1ApplicationCostItemsFactoryTest extends TestCase {
           'zweck' => 'Sonstige Ausgabe 2',
         ],
       ],
-      'versicherungTeilnehmer' => 9.9,
+      'versicherung' => [
+        'teilnehmer' => 9.9,
+      ],
     ];
 
     return ApplicationProcessFactory::createApplicationProcess([

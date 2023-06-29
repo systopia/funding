@@ -28,7 +28,7 @@ final class AVK1SonstigeMittelUiSchema extends JsonFormsGroup {
 
   public function __construct(string $currency) {
     $elements = [
-      new JsonFormsArray('#/properties/finanzierung/properties/sonstigeMittel', 'Sonstige Mittel', NULL, [
+      new JsonFormsArray('#/properties/finanzierung/properties/sonstigeMittel', '', NULL, [
         new JsonFormsHidden('#/properties/_identifier'),
         new JsonFormsControl('#/properties/quelle', 'Quelle'),
         new JsonFormsControl('#/properties/betrag', 'Betrag', NULL, NULL, $currency),
@@ -40,7 +40,10 @@ final class AVK1SonstigeMittelUiSchema extends JsonFormsGroup {
     parent::__construct(
       'Sonstige Mittel',
       $elements,
-      'Bitte geben Sie hier alle Mittel an, die keiner der anderen Kategorien zuzuordnen sind.'
+      <<<EOD
+Bitte geben Sie hier alle weiteren Mittel an, die für das Vorhaben verwendet
+werden sollen. Auch Spenden können hier angegeben werden.
+EOD
     );
   }
 
