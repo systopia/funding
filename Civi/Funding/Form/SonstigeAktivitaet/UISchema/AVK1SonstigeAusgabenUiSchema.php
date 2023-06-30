@@ -32,6 +32,9 @@ final class AVK1SonstigeAusgabenUiSchema extends JsonFormsGroup {
         new JsonFormsHidden('#/properties/_identifier'),
         new JsonFormsControl('#/properties/betrag', 'Betrag', NULL, NULL, $currency),
         new JsonFormsControl('#/properties/zweck', 'Zweck'),
+      ], [
+        'addButtonLabel' => 'Ausgabe hinzufügen',
+        'removeButtonLabel' => 'Ausgabe entfernen',
       ]),
       new JsonFormsControl('#/properties/kosten/properties/sonstigeAusgabenGesamt',
         'Sonstige Ausgaben gesamt', NULL, NULL, $currency),

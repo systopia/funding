@@ -25,21 +25,26 @@ use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
 class JsonFormsArray extends JsonFormsControl {
 
   /**
-   * @param string $scope
-   * @param string $label
-   * @param string|null $description
-   * @param array<int, JsonFormsControl>|null $elements
+   * @phpstan-param array<int, JsonFormsControl>|null $elements
+   *   The elements of each array entry to display. If NULL, all elements are
+   *   shown based on the JSON schema.
+   * @phpstan-param array{
+   *   addButtonLabel?: string,
+   *   removeButtonLabel?: string,
+   *   detail?: array{type: string},
+   * }|null $options
+   *   "type" in "detail" is the layout type, e.g. HorizontalLayout.
    */
-  public function __construct(string $scope, string $label, ?string $description = NULL, ?array $elements = NULL) {
+  public function __construct(
+    string $scope,
+    string $label,
+    ?string $description = NULL,
+    ?array $elements = NULL,
+    ?array $options = NULL
+  ) {
     if (NULL !== $elements) {
-      $options = [
-        'detail' => [
-          'elements' => $elements,
-        ],
-      ];
-    }
-    else {
-      $options = NULL;
+      $options['detail'] ??= [];
+      $options['detail']['elements'] = $elements;
     }
 
     parent::__construct($scope, $label, $description, NULL, NULL, $options);
