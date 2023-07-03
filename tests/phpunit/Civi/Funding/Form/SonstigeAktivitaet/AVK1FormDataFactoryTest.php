@@ -65,6 +65,10 @@ final class AVK1FormDataFactoryTest extends TestCase {
     $applicationProcess = ApplicationProcessFactory::createApplicationProcess([
       'start_date' => date('Y-m-d', time() - 86400),
       'end_date' => date('Y-m-d', time()),
+      'request_data' => [
+        'teilnehmer' => ['gesamt' => 100],
+        'beschreibung' => ['veranstaltungsort' => 'dort'],
+      ],
     ]);
 
     $this->kostenFactoryMock->method('createKosten')->with($applicationProcess)
@@ -75,12 +79,14 @@ final class AVK1FormDataFactoryTest extends TestCase {
     $data = $this->formDataFactory->createFormData($applicationProcess, $fundingCase);
     static::assertEquals([
       'titel' => $applicationProcess->getTitle(),
-      'kurzbezeichnungDesInhalts' => $applicationProcess->getShortDescription(),
+      'kurzbeschreibungDesInhalts' => $applicationProcess->getShortDescription(),
       'empfaenger' => $fundingCase->getRecipientContactId(),
       'beginn' => date('Y-m-d', time() - 86400),
       'ende' => date('Y-m-d', time()),
       'kosten' => ['foo' => 12.3],
       'finanzierung' => ['bar' => 1.23],
+      'teilnehmer' => ['gesamt' => 100],
+      'beschreibung' => ['veranstaltungsort' => 'dort'],
     ], $data);
   }
 

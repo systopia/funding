@@ -47,7 +47,8 @@ final class AVK1FormDataFactory implements ApplicationFormDataFactoryInterface {
   public function createFormData(ApplicationProcessEntity $applicationProcess, FundingCaseEntity $fundingCase): array {
     $data = [];
     $data['titel'] = $applicationProcess->getTitle();
-    $data['kurzbezeichnungDesInhalts'] = $applicationProcess->getShortDescription();
+    $data['kurzbeschreibungDesInhalts'] = $applicationProcess->getShortDescription();
+    $data['teilnehmer'] = $applicationProcess->getRequestData()['teilnehmer'];
     $data['empfaenger'] = $fundingCase->getRecipientContactId();
     Assert::notNull($applicationProcess->getStartDate());
     $data['beginn'] = $applicationProcess->getStartDate()->format('Y-m-d');
@@ -55,6 +56,7 @@ final class AVK1FormDataFactory implements ApplicationFormDataFactoryInterface {
     $data['ende'] = $applicationProcess->getEndDate()->format('Y-m-d');
     $data['kosten'] = $this->avk1KostenFactory->createKosten($applicationProcess);
     $data['finanzierung'] = $this->avk1FinanzierungFactory->createFinanzierung($applicationProcess);
+    $data['beschreibung'] = $applicationProcess->getRequestData()['beschreibung'];
 
     return $data;
   }

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright (C) 2022 SYSTOPIA GmbH
  *
@@ -32,14 +33,15 @@ final class AVK1KostenSchema extends JsonSchemaObject {
   public function __construct() {
     parent::__construct([
       // Abschnitt I.1
-      'unterkunftUndVerpflegung' => new JsonSchemaMoney(['minimum' => 0]),
+      'unterkunftUndVerpflegung' => new JsonSchemaMoney(['minimum' => 0, 'default' => 0]),
       // Abschnitt I.2
       'honorare' => new JsonSchemaArray(
         new JsonSchemaObject([
           '_identifier' => new JsonSchemaString(['readonly' => TRUE]),
           'stunden' => new JsonSchemaNumber(['precision' => 2]),
           'verguetung' => new JsonSchemaMoney(['minimum' => 0]),
-          'zweck' => new JsonSchemaString(),
+          'leistung' => new JsonSchemaString(),
+          'qualifikation' => new JsonSchemaString(),
           'betrag' => new JsonSchemaCalculate(
             'number',
             'round(stunden * verguetung, 2)',
@@ -48,23 +50,22 @@ final class AVK1KostenSchema extends JsonSchemaObject {
               'verguetung' => new JsonSchemaDataPointer('1/verguetung'),
             ]
           ),
-        ], ['required' => ['stunden', 'verguetung', 'zweck']])
+        ], ['required' => ['stunden', 'verguetung', 'leistung', 'qualifikation']])
       ),
       'honorareGesamt' => new JsonSchemaCalculate('number', 'round(sum(map(honorare, "value.betrag")), 2)', [
         'honorare' => new JsonSchemaDataPointer('1/honorare'),
       ]),
       // Abschnitt I.4
       'fahrtkosten' => new JsonSchemaObject([
-        'intern' => new JsonSchemaMoney(['minimum' => 0]),
-        'anTeilnehmerErstattet' => new JsonSchemaMoney(['minimum' => 0]),
-      ], ['required' => ['intern', 'anTeilnehmerErstattet']]),
+        'intern' => new JsonSchemaMoney(['minimum' => 0, 'default' => 0]),
+        'anTeilnehmerErstattet' => new JsonSchemaMoney(['minimum' => 0, 'default' => 0]),
+      ]),
       'fahrtkostenGesamt' => new JsonSchemaCalculate('number', 'round(intern + anTeilnehmerErstattet, 2)', [
         'intern' => new JsonSchemaDataPointer('1/fahrtkosten/intern'),
         'anTeilnehmerErstattet' => new JsonSchemaDataPointer('1/fahrtkosten/anTeilnehmerErstattet'),
       ]),
       // Abschnitt I.5
       'sachkosten' => new JsonSchemaObject([
-        'haftungKfz' => new JsonSchemaMoney(['minimum' => 0]),
         'ausstattung' => new JsonSchemaArray(
           new JsonSchemaObject([
             '_identifier' => new JsonSchemaString(['readonly' => TRUE]),
@@ -72,12 +73,11 @@ final class AVK1KostenSchema extends JsonSchemaObject {
             'betrag' => new JsonSchemaMoney(['minimum' => 0]),
           ], ['required' => ['gegenstand', 'betrag']])
         ),
-      ], ['required' => ['haftungKfz']]),
+      ], ['required' => ['ausstattung']]),
       'sachkostenGesamt' => new JsonSchemaCalculate(
         'number',
-        'round(haftungKfz + sum(map(ausstattung, "value.betrag")), 2)',
+        'round(sum(map(ausstattung, "value.betrag")), 2)',
         [
-          'haftungKfz' => new JsonSchemaDataPointer('1/sachkosten/haftungKfz'),
           'ausstattung' => new JsonSchemaDataPointer('1/sachkosten/ausstattung'),
         ]
       ),
@@ -95,7 +95,9 @@ final class AVK1KostenSchema extends JsonSchemaObject {
         ['sonstigeAusgaben' => new JsonSchemaDataPointer('1/sonstigeAusgaben')]
       ),
       // Abschnitt I.7
-      'versicherungTeilnehmer' => new JsonSchemaMoney(['minimum' => 0, 'default' => 0]),
+      'versicherung' => new JsonSchemaObject([
+        'teilnehmer' => new JsonSchemaMoney(['minimum' => 0, 'default' => 0]),
+      ]),
       // Gesamtkosten
       'gesamtkosten' => new JsonSchemaCalculate(
         'number',
@@ -107,12 +109,16 @@ final class AVK1KostenSchema extends JsonSchemaObject {
           'fahrtkostenGesamt' => new JsonSchemaDataPointer('1/fahrtkostenGesamt'),
           'sachkostenGesamt' => new JsonSchemaDataPointer('1/sachkostenGesamt'),
           'sonstigeAusgabenGesamt' => new JsonSchemaDataPointer('1/sonstigeAusgabenGesamt'),
-          'versicherungTeilnehmer' => new JsonSchemaDataPointer('1/versicherungTeilnehmer'),
+          'versicherungTeilnehmer' => new JsonSchemaDataPointer('1/versicherung/teilnehmer'),
         ]
       ),
     ], [
       'required' => [
-        'unterkunftUndVerpflegung',
+        'honorare',
+        'fahrtkosten',
+        'sachkosten',
+        'sonstigeAusgaben',
+        'versicherung',
       ],
     ]);
   }

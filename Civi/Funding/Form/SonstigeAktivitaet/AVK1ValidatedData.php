@@ -25,7 +25,7 @@ use Civi\Funding\Form\ValidatedApplicationDataInterface;
  * @phpstan-type avk1ValidatedDataT array<string, mixed>&array{
  *   action: string,
  *   titel: string,
- *   kurzbezeichnungDesInhalts: string,
+ *   kurzbeschreibungDesInhalts: string,
  *   empfaenger: int,
  *   beginn: string,
  *   ende: string,
@@ -57,7 +57,7 @@ final class AVK1ValidatedData implements ValidatedApplicationDataInterface {
   }
 
   public function getShortDescription(): string {
-    return $this->data['kurzbezeichnungDesInhalts'];
+    return $this->data['kurzbeschreibungDesInhalts'];
   }
 
   public function getRecipientContactId(): int {

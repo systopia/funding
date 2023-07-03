@@ -30,7 +30,8 @@ use Webmozart\Assert\Assert;
  *     _identifier: string,
  *     stunden: float,
  *     verguetung: float,
- *     zweck: string,
+ *     leistung: string,
+ *     qualifikation: string,
  *     betrag: float,
  *   }>,
  *   fahrtkosten: array{
@@ -38,7 +39,6 @@ use Webmozart\Assert\Assert;
  *     anTeilnehmerErstattet: float,
  *   },
  *   sachkosten: array{
- *     haftungKfz: float,
  *     ausstattung: array<array{
  *       _identifier: string,
  *       gegenstand: string,
@@ -50,7 +50,9 @@ use Webmozart\Assert\Assert;
  *     betrag: float,
  *     zweck: string,
  *   }>,
- *   versicherungTeilnehmer: float,
+ *   versicherung: array{
+ *     teilnehmer: float,
+ *   }
  * }
  */
 class AVK1KostenFactory {
@@ -75,11 +77,12 @@ class AVK1KostenFactory {
         'intern' => 0.0,
       ],
       'sachkosten' => [
-        'haftungKfz' => 0.0,
         'ausstattung' => [],
       ],
       'sonstigeAusgaben' => [],
-      'versicherungTeilnehmer' => 0.0,
+      'versicherung' => [
+        'teilnehmer' => 0.0,
+      ],
     ];
 
     $items = $this->costItemManager->getByApplicationProcessId($applicationProcess->getId());
@@ -93,14 +96,17 @@ class AVK1KostenFactory {
         Assert::numeric($stunden);
         $verguetung = $item->getProperties()['verguetung'];
         Assert::numeric($verguetung);
-        $zweck = $item->getProperties()['zweck'];
-        Assert::string($zweck);
+        $leistung = $item->getProperties()['leistung'];
+        Assert::string($leistung);
+        $qualifikation = $item->getProperties()['qualifikation'];
+        Assert::string($qualifikation);
         $kosten['honorare'][] = [
           '_identifier' => $item->getIdentifier(),
           'betrag' => $item->getAmount(),
           'stunden' => (float) $stunden,
           'verguetung' => (float) $verguetung,
-          'zweck' => $zweck,
+          'leistung' => $leistung,
+          'qualifikation' => $qualifikation,
         ];
       }
       elseif ('fahrtkosten' === $type) {
@@ -109,10 +115,7 @@ class AVK1KostenFactory {
         }
       }
       elseif ('sachkosten' === $type) {
-        if ('haftungKfz' === $subType) {
-          $kosten['sachkosten']['haftungKfz'] = $item->getAmount();
-        }
-        elseif ('ausstattung' === $subType) {
+        if ('ausstattung' === $subType) {
           $gegenstand = $item->getProperties()['gegenstand'];
           Assert::string($gegenstand);
           $kosten['sachkosten']['ausstattung'][] = [
@@ -123,16 +126,18 @@ class AVK1KostenFactory {
         }
       }
       elseif ('sonstigeAusgabe' === $type) {
-        $zweck = $item->getProperties()['zweck'];
-        Assert::string($zweck);
+        $leistung = $item->getProperties()['zweck'];
+        Assert::string($leistung);
         $kosten['sonstigeAusgaben'][] = [
           '_identifier' => $item->getIdentifier(),
           'betrag' => $item->getAmount(),
-          'zweck' => $zweck,
+          'zweck' => $leistung,
         ];
       }
-      elseif ('versicherungTeilnehmer' === $type) {
-        $kosten['versicherungTeilnehmer'] = $item->getAmount();
+      elseif ('versicherung' === $type) {
+        if ('teilnehmer' === $subType) {
+          $kosten['versicherung']['teilnehmer'] = $item->getAmount();
+        }
       }
     }
 

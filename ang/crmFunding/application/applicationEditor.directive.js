@@ -179,8 +179,18 @@ fundingModule.directive('fundingApplicationEditor', function() {
 
         $scope.onBeforeSave = function (formOrField) {
           if (formOrField.$editable) {
-            if (!formOrField.$editable.inputEl[0].checkValidity()) {
-              return formOrField.$editable.inputEl[0].validationMessage || ts('Validation failed');
+            // inputEl[0] might not be the actual field, but a wrapper around
+            // one or multiple (e.g. in checklist).
+            let fields;
+            if (formOrField.$editable.inputEl[0].checkValidity) {
+              fields = [formOrField.$editable.inputEl[0]];
+            } else {
+              fields = formOrField.$editable.inputEl[0].querySelectorAll('input, textarea').values();
+            }
+            for (const field of fields) {
+              if (!field.checkValidity()) {
+                return field.validationMessage || ts('Validation failed');
+              }
             }
           }
 

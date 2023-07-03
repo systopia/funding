@@ -28,7 +28,7 @@ final class AVK1SonstigeAusgabenUiSchema extends JsonFormsGroup {
 
   public function __construct(string $currency) {
     $elements = [
-      new JsonFormsArray('#/properties/kosten/properties/sonstigeAusgaben', 'Sonstige Ausgaben', NULL, [
+      new JsonFormsArray('#/properties/kosten/properties/sonstigeAusgaben', '', NULL, [
         new JsonFormsHidden('#/properties/_identifier'),
         new JsonFormsControl('#/properties/betrag', 'Betrag', NULL, NULL, $currency),
         new JsonFormsControl('#/properties/zweck', 'Zweck'),
@@ -43,7 +43,7 @@ final class AVK1SonstigeAusgabenUiSchema extends JsonFormsGroup {
     parent::__construct(
       'Sonstige Ausgaben',
       $elements,
-      'Bitte geben Sie hier alle weiteren Kosten an. Bitte führen Sie jede Position einzeln auf.'
+      'Bitte geben Sie hier alle weiteren Kosten an. Bitte führen Sie jede Position einzeln auf'
     );
   }
 

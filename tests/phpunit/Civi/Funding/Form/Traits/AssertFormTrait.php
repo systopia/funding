@@ -46,17 +46,20 @@ trait AssertFormTrait {
       Assert::assertInstanceOf(\stdClass::class, $data,
         sprintf('Expected instanceof \\stdClass at path "%s"', $path));
       foreach ($jsonSchema->properties as $key => $childSchema) {
-        $path = $path . '/' . $key;
-        Assert::assertObjectHasAttribute($key, $data, sprintf('No value at path "%s"', $path));
-        self::assertAllPropertiesSet($childSchema, $data->{$key}, $path);
+        $subPath = $path . '/' . $key;
+        Assert::assertObjectHasAttribute($key, $data, sprintf('No value at path "%s"', $subPath));
+        self::assertAllPropertiesSet($childSchema, $data->{$key}, $subPath);
       }
     }
     elseif ('array' === $jsonSchema->type) {
       Assert::assertIsArray($data, sprintf('Expected array at path "%s"', $path));
       Assert::assertNotEmpty($data, sprintf('Expected non-empty array at path "%s"', $path));
-      foreach ($data as $key => $value) {
-        Assert::assertIsInt($key, sprintf('Expected non-associative array at path "%s"', $path));
-        static::assertAllPropertiesSet($value, $jsonSchema->items, $path . '/' . $key);
+      if (TRUE !== ($jsonSchema->uniqueItems ?? NULL)) {
+        foreach ($data as $key => $value) {
+          Assert::assertIsInt($key, sprintf('Expected non-associative array at path "%s"', $path));
+          Assert::assertInstanceOf(\stdClass::class, $value, sprintf('Expected \stdClass at path "%s"', $path));
+          static::assertAllPropertiesSet($value, $jsonSchema->items, $path . '/' . $key);
+        }
       }
     }
     else {

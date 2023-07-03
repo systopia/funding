@@ -22,6 +22,7 @@ namespace Civi\Funding\Mock\Form\FundingCaseType;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Form\ApplicationFormDataFactoryInterface;
+use Webmozart\Assert\Assert;
 
 final class TestFormDataFactory implements ApplicationFormDataFactoryInterface {
 
@@ -33,12 +34,15 @@ final class TestFormDataFactory implements ApplicationFormDataFactoryInterface {
    * @inheritDoc
    */
   public function createFormData(ApplicationProcessEntity $applicationProcess, FundingCaseEntity $fundingCase): array {
+    Assert::notNull($applicationProcess->getStartDate());
+    Assert::notNull($applicationProcess->getEndDate());
+
     return [
       'title' => $applicationProcess->getTitle(),
       'shortDescription' => $applicationProcess->getShortDescription(),
       'recipient' => $fundingCase->getRecipientContactId(),
-      'startDate' => $applicationProcess->getStartDate(),
-      'endDate' => $applicationProcess->getEndDate(),
+      'startDate' => $applicationProcess->getStartDate()->format('Y-m-d'),
+      'endDate' => $applicationProcess->getEndDate()->format('Y-m-d'),
       'amountRequested' => $applicationProcess->getAmountRequested(),
       'resources' => $applicationProcess->getRequestData()['resources'],
     ];

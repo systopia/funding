@@ -26,15 +26,20 @@ final class AVK1FahrtkostenUiSchema extends JsonFormsGroup {
 
   public function __construct(string $currency) {
     $elements = [
-      new JsonFormsControl('#/properties/kosten/properties/fahrtkosten/properties/intern',
+      new JsonFormsControl(
+        '#/properties/kosten/properties/fahrtkosten/properties/intern',
         'Interne Fahrtkosten',
-        'Bitte geben Sie hier die Fahrtkosten an, die innerhalb der '
-        . 'Veranstaltung anfallen und nicht an Teilnehmende erstattet werden.',
-        NULL, $currency),
-      new JsonFormsControl('#/properties/kosten/properties/fahrtkosten/properties/anTeilnehmerErstattet',
-        'An Teilnehmende erstattete Fahrtkosten',
-        'Bitte geben Sie die Fahrtkosten an, die den Teilnehmern und Teilnehmerinnen erstattet werden.',
-        NULL, $currency),
+        NULL,
+        NULL,
+        $currency
+      ),
+      new JsonFormsControl(
+        '#/properties/kosten/properties/fahrtkosten/properties/anTeilnehmerErstattet',
+        'An Teilnehmer*innen erstattete Fahrtkosten',
+        NULL,
+        NULL,
+        $currency
+      ),
       new JsonFormsControl('#/properties/kosten/properties/fahrtkostenGesamt',
         'Fahrtkosten gesamt', NULL, NULL, $currency),
     ];
@@ -42,6 +47,7 @@ final class AVK1FahrtkostenUiSchema extends JsonFormsGroup {
     parent::__construct(
       'Fahrtkosten',
       $elements,
+      'Bitte geben Sie hier die Fahrtkosten an, die innerhalb der Veranstaltung anfallen.',
     );
   }
 

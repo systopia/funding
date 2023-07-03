@@ -28,11 +28,10 @@ final class AVK1SachkostenUiSchema extends JsonFormsGroup {
 
   public function __construct(string $currency) {
     $elements = [
-      new JsonFormsControl('#/properties/kosten/properties/sachkosten/properties/haftungKfz',
-        'Haftung von Kraftfahrzeugen', NULL, NULL, $currency),
       new JsonFormsArray('#/properties/kosten/properties/sachkosten/properties/ausstattung',
-        'Geräte, Ausstattungs- und Ausrüstungsgegenstände',
-        '(Gegenstände mit einem Wert von über 800 € (ohne Umsatzsteuer) einzeln aufführen)', [
+        '',
+        NULL,
+        [
           new JsonFormsHidden('#/properties/_identifier'),
           new JsonFormsControl('#/properties/gegenstand', 'Gegenstand'),
           new JsonFormsControl('#/properties/betrag', 'Betrag', NULL, NULL, $currency),
@@ -48,6 +47,7 @@ final class AVK1SachkostenUiSchema extends JsonFormsGroup {
     parent::__construct(
       'Sachkosten',
       $elements,
+      'Ausstattungs- und Ausrüstungsgegenstände',
     );
   }
 

@@ -95,8 +95,8 @@
                         e-ng-required="true"></editable-field>
     </div>
     <div>
-        <editable-field label="'Kurzbezeichnung des Inhalts'" type="text"
-                        value="data.kurzbezeichnungDesInhalts"
+        <editable-field label="'Kurzbeschreibung des Inhalts'" type="textarea"
+                        value="data.kurzbeschreibungDesInhalts"
                         e-ng-required="true"></editable-field>
     </div>
     <div>
@@ -108,6 +108,27 @@
         <editable-field label="'Ende'" type="date"
                         value="data.ende"
                         e-ng-required="true"></editable-field>
+    </div>
+    <h3>Teilnehmer*innen</h3>
+    <div>
+        <editable-field label="'Gesamtanzahl der Teilnehmer*innen'" type="number"
+                        value="data.teilnehmer.gesamt"
+                        e-step="1" e-ng-required="false"></editable-field>
+    </div>
+    <div>
+        <editable-field label="'davon weiblich'" type="number"
+                        value="data.teilnehmer.weiblich"
+                        e-step="1" e-ng-required="false"></editable-field>
+    </div>
+    <div>
+        <editable-field label="'davon divers'" type="number"
+                        value="data.teilnehmer.divers"
+                        e-step="1" e-ng-required="false"></editable-field>
+    </div>
+    <div>
+        <editable-field label="'davon in der Jugendarbeit tätig'" type="number"
+                        value="data.teilnehmer.inJugendarbeitTaetig"
+                        e-step="1" e-ng-required="false"></editable-field>
     </div>
 
     <h2>Kosten</h2>
@@ -137,7 +158,8 @@
             <tr>
                 <th style="width: 10%;">Stunden</th>
                 <th style="width: 10%;">Vergütung</th>
-                <th style="width: 40%;">Zweck</th>
+                <th style="width: 30%;">Leistung</th>
+                <th style="width: 30%;">Qualifikation</th>
                 <th style="width: 10%;">Beantragt</th>
                 <th style="width: 10%;">Aktionen</th>
             </tr>
@@ -153,9 +175,14 @@
                                     e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
                 </td>
                 <td>
-                    <editable-field type="text" value="honorar.zweck"
-                                    path="kosten.honorare[{{ $index }}].zweck"
+                    <editable-field type="text" value="honorar.leistung"
+                                    path="kosten.honorare[{{ $index }}].leistung"
                                     e-ng-required="true"></editable-field>
+                </td>
+                <td>
+                  <editable-field type="text" value="honorar.qualifikation"
+                                  path="kosten.honorare[{{ $index }}].qualifikation"
+                                  e-ng-required="true"></editable-field>
                 </td>
                 <td>
                     <span>{{ honorar.betrag }} {{ currency }}</span>
@@ -186,7 +213,7 @@
                 <td class="editable-table-row-actions"></td>
             </tr>
             <tr funding-editable-table-row form-name="fahrtkostenAnTeilnehmerErstattetForm">
-                <td>An Teilnehmer erstattet</td>
+                <td>An Teilnehmer*innen erstattete Fahrtkosten</td>
                 <td>
                     <editable-field type="number" value="data.kosten.fahrtkosten.anTeilnehmerErstattet"
                                     e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
@@ -197,21 +224,6 @@
     </div>
     <div>
         <h3>Sachkosten</h3>
-        <table>
-            <tr>
-                <th style="width: 40%;">Position</th>
-                <th style="width: 10%;">Beantragt</th>
-                <th style="width: 10%;">Aktionen</th>
-            </tr>
-            <tr funding-editable-table-row form-name="sachkostenHaftungKfzForm">
-                <td>Haftung KFZ</td>
-                <td>
-                    <editable-field type="number" value="data.kosten.sachkosten.haftungKfz"
-                                    e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
-                </td>
-                <td class="editable-table-row-actions"></td>
-            </tr>
-        </table>
         <h4>Ausstattung</h4>
         <table>
             <tr>
@@ -269,8 +281,8 @@
     </div>
     <div>
         <h3>Nur bei internationalen Maßnahmen</h3>
-        <editable-field label="'Versicherung Teilnehmer'"
-                        type="number" value="data.kosten.versicherungTeilnehmer"
+        <editable-field label="'Kosten der Versicherung der Teilnehmer*innen'"
+                        type="number" value="data.kosten.versicherung.teilnehmer"
                         e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
     </div>
 
@@ -279,9 +291,9 @@
         {{ data.kosten.gesamtkosten }} {{ currency }}
     </div>
 
-    <h2>Mittel</h2>
+    <h2>Finanzierung</h2>
     <div>
-        <editable-field label="'Teilnehmerbeiträge'" type="number"
+        <editable-field label="'Teilnehmer*innenbeiträge'" type="number"
                         value="data.finanzierung.teilnehmerbeitraege"
                         e-step="0.01" e-ng-required="true"></editable-field>
         {{ currency }}
@@ -342,4 +354,47 @@
 
     <h3>Beantragter Zuschuss</h3>
     {{ data.finanzierung.beantragterZuschuss }} {{ currency }}
+
+    <h2>Beschreibung des Vorhabens</h2>
+    <div>
+        <editable-field label="'Thematische Schwerpunkte'"
+                        type="textarea" value="data.beschreibung.thematischeSchwerpunkte"
+                        e-ng-required="false"></editable-field>
+    </div>
+  <div>
+      <editable-field label="'Geplanter Ablauf'"
+                      type="textarea" value="data.beschreibung.geplanterAblauf"
+                      e-ng-required="false"></editable-field>
+  </div>
+  <div>
+      <editable-field label="'Beitrag zu politischer Jugendbildung'"
+                      type="textarea" value="data.beschreibung.beitragZuPolitischerJugendbildung"
+                      e-ng-required="false"></editable-field>
+  </div>
+  <div>
+      <editable-field label="'Zielgruppe'"
+                      type="textarea" value="data.beschreibung.zielgruppe"
+                      e-ng-required="false"></editable-field>
+  </div>
+  <div>
+      <editable-field label="'Ziele'"
+                      type="checklist" value="data.beschreibung.ziele"
+                      options-one-of="jsonSchema.properties.beschreibung.properties.ziele.items.oneOf"
+                      e-ng-required="false"></editable-field>
+  </div>
+  <div>
+      <editable-field label="'Bildungsanteil'"
+                      type="number" value="data.beschreibung.bildungsanteil"
+                      e-step="1" e-ng-required="false"></editable-field> %
+  </div>
+  <div>
+      <editable-field label="'Veranstaltungsort'"
+                      type="text" value="data.beschreibung.veranstaltungsort"
+                      e-ng-required="false"></editable-field>
+  </div>
+  <div>
+      <editable-field label="'Partner'"
+                      type="text" value="data.beschreibung.partner"
+                      e-ng-required="false"></editable-field>
+  </div>
 </div>

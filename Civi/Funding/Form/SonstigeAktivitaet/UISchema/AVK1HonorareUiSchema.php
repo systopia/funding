@@ -28,11 +28,12 @@ final class AVK1HonorareUiSchema extends JsonFormsGroup {
 
   public function __construct(string $currency) {
     $elements = [
-      new JsonFormsArray('#/properties/kosten/properties/honorare', 'Honorare', NULL, [
+      new JsonFormsArray('#/properties/kosten/properties/honorare', '', NULL, [
         new JsonFormsHidden('#/properties/_identifier'),
         new JsonFormsControl('#/properties/stunden', 'Stunden'),
         new JsonFormsControl('#/properties/verguetung', 'Vergütung', NULL, NULL, $currency),
-        new JsonFormsControl('#/properties/zweck', 'Zweck'),
+        new JsonFormsControl('#/properties/leistung', 'Vereinbarte Leistung'),
+        new JsonFormsControl('#/properties/qualifikation', 'Qualifikation der Honorarkraft'),
         new JsonFormsControl('#/properties/betrag', 'Betrag', NULL, NULL, $currency),
       ], [
         'addButtonLabel' => 'Honorar hinzufügen',
@@ -46,9 +47,9 @@ final class AVK1HonorareUiSchema extends JsonFormsGroup {
       'Honorare',
       $elements,
       <<<EOD
-  Bitte geben Sie die Kosten für Honorare für Referenten an. Bitte geben Sie
-  ebenfalls die Qualifikation der Honorarkraft an (Bsp.: Sozialpädagoge,
-  Wissenschaftler, Student Politikwissenschaften).
+  Bitte geben Sie die Kosten für Honorare für Referent*innen an. Bitte geben Sie
+ebenfalls die Qualikation der Honorarkraft an (Bsp.: Sozialpädagog*in,
+Wissenschaftler*in, Student*in Politikwissenschaften)
 EOD
     );
   }

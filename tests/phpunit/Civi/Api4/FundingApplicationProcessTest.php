@@ -31,7 +31,7 @@ use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
-use Civi\Funding\Form\SonstigeAktivitaet\JsonSchema\AVK1JsonSchema;
+use Civi\Funding\Mock\Form\FundingCaseType\TestJsonSchema;
 use Civi\Funding\Mock\Form\FundingCaseType\TestJsonSchemaFactory;
 use Civi\Funding\Util\SessionTestUtil;
 
@@ -191,6 +191,7 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
     $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId(), [
       'start_date' => '2022-11-15',
       'end_date' => '2022-11-16',
+      'request_data' => ['amountRequested' => 10, 'resources' => 20],
     ]);
 
     FundingProgramContactRelationFixture::addContact(
@@ -206,7 +207,7 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
       ->execute();
 
     static::assertIsArray($result['data']);
-    static::assertSame('2022-11-15', $result['data']['beginn']);
+    static::assertSame('2022-11-15', $result['data']['startDate']);
   }
 
   public function testGetJsonSchema(): void {
@@ -226,7 +227,7 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
       ->setId($applicationProcess->getId())
       ->execute();
 
-    static::assertInstanceOf(AVK1JsonSchema::class, $result['jsonSchema']);
+    static::assertInstanceOf(TestJsonSchema::class, $result['jsonSchema']);
   }
 
   public function testSubmitForm(): void {
@@ -328,6 +329,8 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
     ]);
 
     ApplicationSnapshotFixture::addFixture($applicationProcess->getId(), [
+      'start_date' => '2022-11-13',
+      'end_date' => '2022-11-14',
       'amount_requested' => 11,
       'request_data' => ['amountRequested' => 11, 'resources' => 22],
     ]);
@@ -391,7 +394,7 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
     static::assertNotEmpty($result['data']);
   }
 
-  private function createFundingCase(string $name = 'AVK1SonstigeAktivitaet'): FundingCaseEntity {
+  private function createFundingCase(string $name = 'TestCaseType'): FundingCaseEntity {
     $this->fundingProgram = FundingProgramFixture::addFixture();
     $fundingCaseType = FundingCaseTypeFixture::addFixture([
       'name' => $name,

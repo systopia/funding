@@ -28,14 +28,24 @@ class JsonFormsLayout extends JsonFormsElement {
    * @param string $label
    * @param array<int, JsonFormsElement> $elements
    * @param string|null $description
+   * @param array<string, mixed>|null $options
    */
-  public function __construct(string $type, string $label, array $elements, ?string $description = NULL) {
+  public function __construct(
+    string $type,
+    string $label,
+    array $elements,
+    ?string $description = NULL,
+    ?array $options = NULL
+  ) {
     $keywords = [
       'label' => $label,
       'elements' => JsonSchema::convertToJsonSchemaArray($elements),
     ];
     if (NULL !== $description) {
       $keywords['description'] = $description;
+    }
+    if (NULL !== $options) {
+      $keywords['options'] = JsonSchema::fromArray($options);
     }
 
     parent::__construct($type, $keywords);

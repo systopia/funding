@@ -31,15 +31,15 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
   public function __construct() {
     parent::__construct([
       // Abschnitt II.1
-      'teilnehmerbeitraege' => new JsonSchemaMoney(['minimum' => 0]),
+      'teilnehmerbeitraege' => new JsonSchemaMoney(['minimum' => 0, 'default' => 0]),
       // Abschnitt II.2
       'eigenmittel' => new JsonSchemaMoney(['minimum' => 0]),
       // Abschnitt II.3
       'oeffentlicheMittel' => new JsonSchemaObject([
-        'europa' => new JsonSchemaMoney(['minimum' => 0]),
-        'bundeslaender' => new JsonSchemaMoney(['minimum' => 0]),
-        'staedteUndKreise' => new JsonSchemaMoney(['minimum' => 0]),
-      ], ['required' => ['europa', 'bundeslaender', 'staedteUndKreise']]),
+        'europa' => new JsonSchemaMoney(['minimum' => 0, 'default' => 0]),
+        'bundeslaender' => new JsonSchemaMoney(['minimum' => 0, 'default' => 0]),
+        'staedteUndKreise' => new JsonSchemaMoney(['minimum' => 0, 'default' => 0]),
+      ]),
       'oeffentlicheMittelGesamt' => new JsonSchemaCalculate(
         'number',
         'round(europa + bundeslaender + staedteUndKreise, 2)',
@@ -68,7 +68,7 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
         'round(teilnehmerbeitraege + eigenmittel + oeffentlicheMittelGesamt + sonstigeMittelGesamt, 2)',
         [
           'teilnehmerbeitraege' => new JsonSchemaDataPointer('1/teilnehmerbeitraege'),
-          'eigenmittel' => new JsonSchemaDataPointer('1/eigenmittel'),
+          'eigenmittel' => new JsonSchemaDataPointer('1/eigenmittel', 0),
           'oeffentlicheMittelGesamt' => new JsonSchemaDataPointer('1/oeffentlicheMittelGesamt'),
           'sonstigeMittelGesamt' => new JsonSchemaDataPointer('1/sonstigeMittelGesamt'),
         ]
@@ -80,9 +80,9 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
       ]),
     ], [
       'required' => [
-        'teilnehmerbeitraege',
         'eigenmittel',
         'oeffentlicheMittel',
+        'sonstigeMittel',
       ],
     ]);
   }
