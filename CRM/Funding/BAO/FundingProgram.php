@@ -17,6 +17,7 @@
 
 use Civi\Core\Event\GenericHookEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use CRM_Funding_ExtensionUtil as E;
 
 class CRM_Funding_BAO_FundingProgram extends CRM_Funding_DAO_FundingProgram implements EventSubscriberInterface {
 
@@ -61,7 +62,7 @@ class CRM_Funding_BAO_FundingProgram extends CRM_Funding_DAO_FundingProgram impl
   public static function afformAdminMetadata(GenericHookEvent $event): void {
     $event->entities['FundingProgram'] = [
       'entity' => 'FundingProgram',
-      'label' => 'Funding Program',
+      'label' => E::ts('Funding Program'),
       'icon' => NULL, // TODO.
       'type' => 'primary',
       'defaults' => '{}',

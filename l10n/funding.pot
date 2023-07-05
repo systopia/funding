@@ -582,7 +582,7 @@ msgstr ""
 msgid "Validation failed: %1"
 msgstr ""
 
-#: ang/crmFunding/application/application.js ang/crmFunding/application/applicationEditor.directive.js ang/crmFunding/application/applicationReviewer.directive.js ang/crmFunding/application/applicationReviewers.directive.js ang/crmFunding/application/history/applicationProcessActivity.directive.js ang/crmFunding/application/history/applicationProcessHistory.directive.js ang/crmFunding/case/fundingCase.js ang/crmFunding/case/fundingCasePermissions.js ang/crmFunding/case/permissions/fundingCaseContactRelation.directive.js ang/crmFunding/form/editableField.directive.js ang/crmFunding/form/fundingAddRowButton.directive.js ang/crmFunding/form/fundingSelectPermissions.directive.js ang/crmFunding/form/fundingValidationErrors.directive.js ang/crmFunding/fundingDate.filter.js ang/crmFunding/program/fundingNewCasePermissions.js ang/crmFunding/program/fundingProgramPermissions.js ang/crmFunding/program/newCasePermissions/fundingNewCasePermissions.directive.js ang/crmFunding/program/permissions/fundingProgramContactRelation.directive.js ang/crmFunding/program/recipientRelations.js ang/crmFunding/program/recipients/recipientRelation.directive.js
+#: ang/crmFunding/application/application.js ang/crmFunding/application/applicationEditor.directive.js ang/crmFunding/application/applicationReviewer.directive.js ang/crmFunding/application/applicationReviewers.directive.js ang/crmFunding/application/history/applicationProcessActivity.directive.js ang/crmFunding/application/history/applicationProcessHistory.directive.js ang/crmFunding/case/fundingCase.js ang/crmFunding/case/fundingCasePermissions.js ang/crmFunding/case/permissions/fundingCaseContactRelation.directive.js ang/crmFunding/form/editableField.directive.js ang/crmFunding/form/fundingAddRowButton.directive.js ang/crmFunding/form/fundingSelectPermissions.directive.js ang/crmFunding/form/fundingValidationErrors.directive.js ang/crmFunding/form/jsonFormsControl.directive.js ang/crmFunding/fundingDate.filter.js ang/crmFunding/program/fundingNewCasePermissions.js ang/crmFunding/program/fundingProgramPermissions.js ang/crmFunding/program/newCasePermissions/fundingNewCasePermissions.directive.js ang/crmFunding/program/permissions/fundingProgramContactRelation.directive.js ang/crmFunding/program/recipientRelations.js ang/crmFunding/program/recipients/recipientRelation.directive.js
 msgid "funding"
 msgstr ""
 
@@ -842,7 +842,7 @@ msgstr ""
 msgid "Permissions"
 msgstr ""
 
-#: ang/crmFunding/form/editableField.directive.js
+#: ang/crmFunding/form/editableField.directive.js ang/crmFunding/form/jsonFormsControl.directive.js
 msgid "empty"
 msgstr ""
 
@@ -1068,6 +1068,10 @@ msgstr ""
 
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingPrograms.mgd.php
 msgid "Edit permissions"
+msgstr ""
+
+#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
+msgid "Search Applications"
 msgstr ""
 
 #: managed/SavedSearchFundingCases.mgd.php
