@@ -18,6 +18,7 @@
 use Civi\Core\Event\GenericHookEvent;
 use Civi\Funding\Event\FundingCase\GetPossibleFundingCaseStatusEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use CRM_Funding_ExtensionUtil as E;
 
 class CRM_Funding_BAO_FundingCase extends CRM_Funding_DAO_FundingCase implements EventSubscriberInterface {
 
@@ -77,7 +78,7 @@ class CRM_Funding_BAO_FundingCase extends CRM_Funding_DAO_FundingCase implements
   public static function afformAdminMetadata(GenericHookEvent $event): void {
     $event->entities['FundingCase'] = [
       'entity' => 'FundingCase',
-      'label' => 'Funding Case',
+      'label' => E::ts('Funding Case'),
       'icon' => NULL, // TODO.
       'type' => 'primary',
       'defaults' => '{}',

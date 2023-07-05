@@ -210,7 +210,7 @@ return [
               'alignment' => 'text-right',
             ],
           ],
-          'button' => 'Search',
+          'button' => ts('Search Applications'),
         ],
         'acl_bypass' => FALSE,
       ],

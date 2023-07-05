@@ -779,6 +779,7 @@ msgstr "Validierung fehlgeschlagen: %1"
 #: ang/crmFunding/form/fundingAddRowButton.directive.js
 #: ang/crmFunding/form/fundingSelectPermissions.directive.js
 #: ang/crmFunding/form/fundingValidationErrors.directive.js
+#: ang/crmFunding/form/jsonFormsControl.directive.js
 #: ang/crmFunding/fundingDate.filter.js
 #: ang/crmFunding/program/fundingNewCasePermissions.js
 #: ang/crmFunding/program/fundingProgramPermissions.js
@@ -888,7 +889,7 @@ msgstr "Zurücksetzen"
 
 #: ang/crmFunding/application/applicationEditor.template.html
 msgid "Reviewers"
-msgstr "Prüfer"
+msgstr "Prüfer*innen"
 
 #: ang/crmFunding/application/applicationEditor.template.html
 msgid "General"
@@ -959,11 +960,11 @@ msgstr "Mir zuweisen"
 
 #: ang/crmFunding/application/applicationReviewers.template.html
 msgid "Calculative Reviewer"
-msgstr "Rechnerischer Prüfer"
+msgstr "Rechnerische*r Prüfer*in"
 
 #: ang/crmFunding/application/applicationReviewers.template.html
 msgid "Content Reviewer"
-msgstr "Fachlicher Prüfer"
+msgstr "Fachliche*r Prüfer*in"
 
 #: ang/crmFunding/application/history/activities/comment.template.html
 msgid "Internal Comment"
@@ -1096,6 +1097,7 @@ msgid "Permissions"
 msgstr "Berechtigungen"
 
 #: ang/crmFunding/form/editableField.directive.js
+#: ang/crmFunding/form/jsonFormsControl.directive.js
 msgid "empty"
 msgstr "leer"
 
@@ -1345,6 +1347,10 @@ msgstr "Aktionen"
 msgid "Edit permissions"
 msgstr "Berechtigungen bearbeiten"
 
+#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
+msgid "Search Applications"
+msgstr "Anträge suchen"
+
 #: managed/SavedSearchFundingCases.mgd.php
 msgid "Open case"
 msgstr "Fall öffnen"
@@ -1359,7 +1365,7 @@ msgstr "Annahmedatum"
 
 #: managed/SavedSearchFundingDrawdowns.mgd.php
 msgid "Reviewer"
-msgstr "Prüfer"
+msgstr "Prüfer*in"
 
 #: managed/SavedSearchFundingDrawdowns.mgd.php
 msgid "Accept"
