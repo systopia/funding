@@ -30,7 +30,7 @@ use Webmozart\Assert\Assert;
 /**
  * @method $this setApplicationProcessId(int $applicationProcessId)
  */
-final class GetFormAction extends AbstractFormAction {
+class GetFormAction extends AbstractFormAction {
 
   /**
    * @var int

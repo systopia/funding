@@ -29,6 +29,7 @@ use Civi\Funding\FundingCase\Handler\FundingCaseApproveHandlerInterface;
 use Civi\Funding\FundingCase\TransferContractRouter;
 use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\Funding\FundingProgram\FundingProgramManager;
+use Civi\Funding\Traits\CreateMockTrait;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -36,6 +37,8 @@ use PHPUnit\Framework\TestCase;
  * @covers \Civi\Funding\Api4\Action\FundingCase\ApproveAction
  */
 final class ApproveActionTest extends TestCase {
+
+  use CreateMockTrait;
 
   private ApproveAction $action;
 
@@ -71,7 +74,8 @@ final class ApproveActionTest extends TestCase {
     $this->fundingCaseTypeManagerMock = $this->createMock(FundingCaseTypeManager::class);
     $this->fundingProgramManagerMock = $this->createMock(FundingProgramManager::class);
     $this->transferContractRouterMock = $this->createMock(TransferContractRouter::class);
-    $this->action = new ApproveAction(
+    $this->action = $this->createApi4ActionMock(
+      ApproveAction::class,
       $this->approveHandlerMock,
       $this->fundingCaseManagerMock,
       $this->fundingCaseTypeManagerMock,

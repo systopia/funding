@@ -28,6 +28,7 @@ use Civi\Api4\Generic\Result;
 use Civi\Funding\Api4\Action\Remote\FundingCase\Traits\NewApplicationFormActionTrait;
 use Civi\Funding\Event\Remote\FundingCase\ValidateNewApplicationFormEvent;
 use Civi\Funding\Exception\FundingException;
+use Civi\Funding\Traits\CreateMockTrait;
 use Symfony\Bridge\PhpUnit\ClockMock;
 
 /**
@@ -36,6 +37,8 @@ use Symfony\Bridge\PhpUnit\ClockMock;
  * @covers \Civi\Funding\Event\Remote\AbstractFundingValidateFormEvent
  */
 final class ValidateNewApplicationFormActionTest extends AbstractNewApplicationFormActionTest {
+
+  use CreateMockTrait;
 
   private ValidateNewApplicationFormAction $action;
 
@@ -53,7 +56,8 @@ final class ValidateNewApplicationFormActionTest extends AbstractNewApplicationF
 
   protected function setUp(): void {
     parent::setUp();
-    $this->action = new ValidateNewApplicationFormAction(
+    $this->action = $this->createApi4ActionMock(
+      ValidateNewApplicationFormAction::class,
       $this->fundingCaseTypeManagerMock,
       $this->fundingProgramManagerMock,
       $this->eventDispatcherMock,

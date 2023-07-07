@@ -27,6 +27,7 @@ namespace Civi\Funding\Api4\Action\Remote\FundingProgram;
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Event\Remote\FundingDAOGetEvent;
+use Civi\Funding\Traits\CreateMockTrait;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -34,6 +35,8 @@ use PHPUnit\Framework\TestCase;
  * @covers \Civi\Funding\Api4\Action\Remote\FundingProgram\GetRelatedAction
  */
 final class GetRelatedActionTest extends TestCase {
+
+  use CreateMockTrait;
 
   /**
    * @var \PHPUnit\Framework\MockObject\MockObject&\Civi\Core\CiviEventDispatcherInterface
@@ -45,7 +48,7 @@ final class GetRelatedActionTest extends TestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->eventDispatcherMock = $this->createMock(CiviEventDispatcherInterface::class);
-    $this->action = new GetRelatedAction($this->eventDispatcherMock);
+    $this->action = $this->createApi4ActionMock(GetRelatedAction::class, $this->eventDispatcherMock);
   }
 
   public function testRun(): void {

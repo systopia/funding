@@ -30,6 +30,24 @@ use PHPUnit\Framework\MockObject\MockObject;
 trait CreateMockTrait {
 
   /**
+   * Creates an APIv4 action mock that behaves (mostly) like the mocked class
+   * itself. However, getParamInfo() is mocked because otherwise option
+   * callbacks would be called that (might) require a complete Civi env.
+   *
+   * @template RealInstanceType of \Civi\Api4\Generic\AbstractAction
+   * @phpstan-param class-string<RealInstanceType> $className
+   * @phpstan-param mixed ...$constructorArgs
+   *
+   * @return \PHPUnit\Framework\MockObject\MockObject&RealInstanceType
+   */
+  public function createApi4ActionMock(string $className, ...$constructorArgs): MockObject {
+    return $this->getMockBuilder($className)
+      ->onlyMethods(['getParamInfo'])
+      ->setConstructorArgs($constructorArgs)
+      ->getMock();
+  }
+
+  /**
    * @template RealInstanceType of object
    * @param class-string<RealInstanceType> $originalClassName
    * @param array<string> $extraMethods

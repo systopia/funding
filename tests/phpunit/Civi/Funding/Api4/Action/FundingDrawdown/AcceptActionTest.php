@@ -23,12 +23,15 @@ use Civi\Api4\Generic\Result;
 use Civi\Funding\EntityFactory\DrawdownFactory;
 use Civi\Funding\Mock\Session\TestFundingSession;
 use Civi\Funding\PayoutProcess\DrawdownManager;
+use Civi\Funding\Traits\CreateMockTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Civi\Funding\Api4\Action\FundingDrawdown\AcceptAction
  */
 final class AcceptActionTest extends TestCase {
+
+  use CreateMockTrait;
 
   private AcceptAction $action;
 
@@ -40,7 +43,8 @@ final class AcceptActionTest extends TestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->drawdownManagerMock = $this->createMock(DrawdownManager::class);
-    $this->action = new AcceptAction(
+    $this->action = $this->createApi4ActionMock(
+      AcceptAction::class,
       $this->drawdownManagerMock,
       TestFundingSession::newInternal(2),
     );

@@ -34,7 +34,7 @@ use Webmozart\Assert\Assert;
  * @method $this setFundingProgramId(int $fundingProgramId)
  * @method $this setFundingCaseTypeId(int $fundingCaseTypeId)
  */
-final class GetNewApplicationFormAction extends AbstractNewApplicationFormAction {
+class GetNewApplicationFormAction extends AbstractNewApplicationFormAction {
 
   use NewApplicationFormActionTrait;
 

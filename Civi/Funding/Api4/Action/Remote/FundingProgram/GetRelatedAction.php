@@ -32,7 +32,7 @@ use Civi\RemoteTools\Api4\Action\Traits\EventActionTrait;
  * @method void setId(int $id)
  * @method void setType(string $type)
  */
-final class GetRelatedAction extends AbstractAction implements RemoteFundingActionInterface {
+class GetRelatedAction extends AbstractAction implements RemoteFundingActionInterface {
 
   use EventActionTrait;
 

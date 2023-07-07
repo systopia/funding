@@ -27,6 +27,7 @@ use Civi\API\Exception\UnauthorizedException;
 use Civi\Api4\Generic\Result;
 use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
 use Civi\Funding\Exception\FundingException;
+use Civi\Funding\Traits\CreateMockTrait;
 use Civi\RemoteTools\Form\JsonForms\JsonFormsElement;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
 use Civi\RemoteTools\Form\RemoteForm;
@@ -38,6 +39,8 @@ use Civi\RemoteTools\Form\RemoteForm;
  */
 final class SubmitNewApplicationFormActionTest extends AbstractNewApplicationFormActionTest {
 
+  use CreateMockTrait;
+
   private SubmitNewApplicationFormAction $action;
 
   /**
@@ -47,7 +50,8 @@ final class SubmitNewApplicationFormActionTest extends AbstractNewApplicationFor
 
   protected function setUp(): void {
     parent::setUp();
-    $this->action = new SubmitNewApplicationFormAction(
+    $this->action = $this->createApi4ActionMock(
+      SubmitNewApplicationFormAction::class,
       $this->fundingCaseTypeManagerMock,
       $this->fundingProgramManagerMock,
       $this->eventDispatcherMock,

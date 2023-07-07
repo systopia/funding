@@ -27,7 +27,7 @@ use Civi\Api4\Generic\Result;
  * @method int getFundingCaseTypeId()
  * @method int getFundingProgramId()
  */
-final class GetRelationAction extends AbstractAction {
+class GetRelationAction extends AbstractAction {
 
   /**
    * @var int
