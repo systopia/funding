@@ -26,6 +26,7 @@ namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 use Civi\Api4\Generic\Result;
 use Civi\Funding\Event\Remote\ApplicationProcess\SubmitApplicationFormEvent;
 use Civi\Funding\Exception\FundingException;
+use Civi\Funding\Traits\CreateMockTrait;
 use Civi\RemoteTools\Form\JsonForms\JsonFormsElement;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
 use Civi\RemoteTools\Form\RemoteForm;
@@ -37,6 +38,8 @@ use Civi\RemoteTools\Form\RemoteForm;
  */
 final class SubmitFormActionTest extends AbstractFormActionTest {
 
+  use CreateMockTrait;
+
   private SubmitFormAction $action;
 
   /**
@@ -46,7 +49,8 @@ final class SubmitFormActionTest extends AbstractFormActionTest {
 
   protected function setUp(): void {
     parent::setUp();
-    $this->action = new SubmitFormAction(
+    $this->action = $this->createApi4ActionMock(
+      SubmitFormAction::class,
       $this->applicationProcessBundleLoaderMock,
       $this->eventDispatcherMock
     );

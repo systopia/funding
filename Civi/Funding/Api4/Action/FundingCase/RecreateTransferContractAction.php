@@ -33,7 +33,7 @@ use Webmozart\Assert\Assert;
 /**
  * @method $this setId(int $id)
  */
-final class RecreateTransferContractAction extends AbstractAction {
+class RecreateTransferContractAction extends AbstractAction {
 
   /**
    * @var int

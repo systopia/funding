@@ -32,7 +32,7 @@ use Webmozart\Assert\Assert;
 /**
  * @method $this setId(int $id)
  */
-final class GetPossibleActionsAction extends AbstractAction {
+class GetPossibleActionsAction extends AbstractAction {
 
   /**
    * @var int

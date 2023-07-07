@@ -29,7 +29,7 @@ use Webmozart\Assert\Assert;
 /**
  * @method $this setData(array $data)
  */
-final class SubmitFormAction extends AbstractFormAction {
+class SubmitFormAction extends AbstractFormAction {
 
   /**
    * @var array

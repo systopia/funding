@@ -30,7 +30,7 @@ use Webmozart\Assert\Assert;
 /**
  * @method $this setData(array $data)
  */
-final class ValidateFormAction extends AbstractFormAction {
+class ValidateFormAction extends AbstractFormAction {
 
   /**
    * @var array

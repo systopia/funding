@@ -26,6 +26,7 @@ namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 use Civi\Api4\Generic\Result;
 use Civi\Funding\Event\Remote\ApplicationProcess\ValidateApplicationFormEvent;
 use Civi\Funding\Exception\FundingException;
+use Civi\Funding\Traits\CreateMockTrait;
 
 /**
  * @covers \Civi\Funding\Api4\Action\Remote\ApplicationProcess\ValidateFormAction
@@ -33,6 +34,8 @@ use Civi\Funding\Exception\FundingException;
  * @covers \Civi\Funding\Event\Remote\AbstractFundingValidateFormEvent
  */
 final class ValidateFormActionTest extends AbstractFormActionTest {
+
+  use CreateMockTrait;
 
   private ValidateFormAction $action;
 
@@ -43,7 +46,8 @@ final class ValidateFormActionTest extends AbstractFormActionTest {
 
   protected function setUp(): void {
     parent::setUp();
-    $this->action = new ValidateFormAction(
+    $this->action = $this->createApi4ActionMock(
+      ValidateFormAction::class,
       $this->applicationProcessBundleLoaderMock,
       $this->eventDispatcherMock
     );

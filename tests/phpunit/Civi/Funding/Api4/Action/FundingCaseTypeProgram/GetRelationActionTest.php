@@ -47,7 +47,7 @@ final class GetRelationActionTest extends TestCase {
     parent::setUp();
     $this->getActionMock = $this->createMockWithExtraMethods(BasicGetAction::class, ['setDebug']);
     $this->getActionMock->method('getEntityName')->willReturn('TestEntity');
-    $this->action = new GetRelationAction($this->getActionMock);
+    $this->action = $this->createApi4ActionMock(GetRelationAction::class, $this->getActionMock);
   }
 
   public function testRun(): void {

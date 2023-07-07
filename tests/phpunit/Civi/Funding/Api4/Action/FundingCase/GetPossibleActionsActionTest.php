@@ -26,6 +26,7 @@ use Civi\Funding\FundingCase\Command\FundingCasePossibleActionsGetCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\Handler\FundingCasePossibleActionsGetHandlerInterface;
 use Civi\Funding\FundingProgram\FundingCaseTypeManager;
+use Civi\Funding\Traits\CreateMockTrait;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -33,6 +34,8 @@ use PHPUnit\Framework\TestCase;
  * @covers \Civi\Funding\Api4\Action\FundingCase\GetPossibleActionsAction
  */
 final class GetPossibleActionsActionTest extends TestCase {
+
+  use CreateMockTrait;
 
   private GetPossibleActionsAction $action;
 
@@ -56,7 +59,8 @@ final class GetPossibleActionsActionTest extends TestCase {
     $this->fundingCaseManagerMock = $this->createMock(FundingCaseManager::class);
     $this->fundingCaseTypeManagerMock = $this->createMock(FundingCaseTypeManager::class);
     $this->possibleActionsGetHandlerMock = $this->createMock(FundingCasePossibleActionsGetHandlerInterface::class);
-    $this->action = new GetPossibleActionsAction(
+    $this->action = $this->createApi4ActionMock(
+      GetPossibleActionsAction::class,
       $this->fundingCaseManagerMock,
       $this->fundingCaseTypeManagerMock,
       $this->possibleActionsGetHandlerMock,

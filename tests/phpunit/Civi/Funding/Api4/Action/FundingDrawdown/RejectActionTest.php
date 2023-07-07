@@ -27,6 +27,7 @@ use Civi\Funding\EntityFactory\PayoutProcessFactory;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\PayoutProcess\DrawdownManager;
 use Civi\Funding\PayoutProcess\PayoutProcessManager;
+use Civi\Funding\Traits\CreateMockTrait;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -34,6 +35,8 @@ use PHPUnit\Framework\TestCase;
  * @covers \Civi\Funding\Api4\Action\FundingDrawdown\RejectAction
  */
 final class RejectActionTest extends TestCase {
+
+  use CreateMockTrait;
 
   /**
    * @var \Civi\Funding\Api4\Action\FundingDrawdown\RejectAction
@@ -60,7 +63,8 @@ final class RejectActionTest extends TestCase {
     $this->drawdownManagerMock = $this->createMock(DrawdownManager::class);
     $this->fundingCaseManagerMock = $this->createMock(FundingCaseManager::class);
     $this->payoutProcessManagerMock = $this->createMock(PayoutProcessManager::class);
-    $this->action = new RejectAction(
+    $this->action = $this->createApi4ActionMock(
+      RejectAction::class,
       $this->drawdownManagerMock,
       $this->fundingCaseManagerMock,
       $this->payoutProcessManagerMock,

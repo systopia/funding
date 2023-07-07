@@ -28,6 +28,7 @@ use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\Handler\TransferContractRecreateHandlerInterface;
 use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\Funding\FundingProgram\FundingProgramManager;
+use Civi\Funding\Traits\CreateMockTrait;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -35,6 +36,8 @@ use PHPUnit\Framework\TestCase;
  * @covers \Civi\Funding\Api4\Action\FundingCase\RecreateTransferContractAction
  */
 final class RecreateTransferContractActionTest extends TestCase {
+
+  use CreateMockTrait;
 
   private RecreateTransferContractAction $action;
 
@@ -65,7 +68,8 @@ final class RecreateTransferContractActionTest extends TestCase {
     $this->fundingCaseTypeManagerMock = $this->createMock(FundingCaseTypeManager::class);
     $this->fundingProgramManagerMock = $this->createMock(FundingProgramManager::class);
     $this->transferContractRecreateHandlerMock = $this->createMock(TransferContractRecreateHandlerInterface::class);
-    $this->action = new RecreateTransferContractAction(
+    $this->action = $this->createApi4ActionMock(
+      RecreateTransferContractAction::class,
       $this->fundingCaseManagerMock,
       $this->fundingCaseTypeManagerMock,
       $this->fundingProgramManagerMock,

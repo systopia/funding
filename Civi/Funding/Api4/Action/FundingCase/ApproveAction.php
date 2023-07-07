@@ -36,7 +36,7 @@ use Webmozart\Assert\Assert;
  * @method $this setId(int $id)
  * @method $this setTitle(string $title)
  */
-final class ApproveAction extends AbstractAction {
+class ApproveAction extends AbstractAction {
 
   /**
    * @var int
