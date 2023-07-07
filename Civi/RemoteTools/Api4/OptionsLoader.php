@@ -42,10 +42,10 @@ final class OptionsLoader implements OptionsLoaderInterface {
       ],
     ]);
 
-    /** @var array<scalar|null, string> $options */
+    /** @var array<scalar|null, string>|bool $options */
     $options = $result->first()['options'] ?? [];
 
-    return $options;
+    return is_bool($options) ? [] : $options;
   }
 
   /**

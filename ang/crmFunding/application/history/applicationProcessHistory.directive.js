@@ -21,7 +21,7 @@ fundingModule.directive('fundingApplicationProcessHistory', [function() {
     restrict: 'E',
     scope: {
       activities: '=',
-      statusLabels: '=',
+      statusOptions: '=',
       reviewStatusLabels: '=',
     },
     templateUrl: '~/crmFunding/application/history/applicationProcessHistory.template.html',

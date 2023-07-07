@@ -21,12 +21,27 @@ fundingModule.directive('fundingApplicationProcessActivity', [function() {
     restrict: 'E',
     scope: {
       activity: '=',
-      statusLabels: '=',
+      statusOptions: '=',
       reviewStatusLabels: '=',
     },
     templateUrl: '~/crmFunding/application/history/applicationProcessActivity.template.html',
     controller: function($scope) {
-      $scope.ts = CRM.ts('funding');
+      const ts = $scope.ts = CRM.ts('funding');
+
+      if ($scope.activity['activity_type_id:name'] === 'funding_application_status_change') {
+        $scope.statusOption = $scope.statusOptions[$scope.activity.to_status] || {
+          id: 'unknown',
+          name: 'unknown',
+          label: ts('Unknown'),
+        };
+      } else if ($scope.activity['activity_type_id:name'] === 'funding_application_create') {
+        $scope.statusOption = $scope.statusOptions['new'];
+      }
+
+      if ($scope.statusOption && $scope.statusOption.icon) {
+        $scope.iconClass = 'fa ' + $scope.statusOption.icon;
+        $scope.statusOption.icon = null;
+      }
 
       function getActivityTemplateUrl(activity) {
         switch (activity['activity_type_id:name']) {

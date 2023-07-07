@@ -17,13 +17,45 @@
 'use strict';
 
 fundingModule.factory('fundingApplicationProcessService', ['crmApi4', function(crmApi4) {
-  function getOptions(id, field) {
+  function getOptionLabels(id, field) {
     return crmApi4('FundingApplicationProcess', 'getFields', {
       loadOptions: true,
       values: {id},
       where: [['name', '=', field]],
       select: ['options']
     }).then((result) => result[0].options || {});
+  }
+
+  /**
+   * @param {integer} id
+   * @param {string} field
+   *
+   * @returns {Promise<object[]>}
+   *   Options with option name as index.
+   */
+  function getOptions(id, field) {
+    return crmApi4('FundingApplicationProcess', 'getFields', {
+      loadOptions: [
+        'id',
+        'name',
+        'label',
+        'abbr',
+        'description',
+        'color',
+        'icon',
+      ],
+      values: {id},
+      where: [['name', '=', field]],
+      select: ['options']
+    }).then(function (result) {
+      const options = result[0].options || [];
+      const optionsByName = {};
+      options.forEach((option) => {
+        optionsByName[option.name] = option;
+      });
+
+      return optionsByName;
+    });
   }
 
   return {
@@ -54,7 +86,14 @@ fundingModule.factory('fundingApplicationProcessService', ['crmApi4', function(c
     },
     submitForm: (id, data) => crmApi4('FundingApplicationProcess', 'submitForm', {id, data}),
     validateForm: (id, data) => crmApi4('FundingApplicationProcess', 'validateForm', {id, data}),
-    getStatusLabels: (id) => getOptions(id, 'status'),
-    getOptions: (id, field) => getOptions(id, field),
+
+    /**
+     * @param {integer} id
+     *
+     * @returns {Promise<object[]>}
+     *   Options with option name as index.
+     */
+    getStatusOptions: (id) => getOptions(id, 'status'),
+    getOptionLabels: (id, field) => getOptionLabels(id, field),
   };
 }]);
