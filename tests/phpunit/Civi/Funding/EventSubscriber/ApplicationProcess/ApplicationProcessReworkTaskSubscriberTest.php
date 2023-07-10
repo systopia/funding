@@ -23,6 +23,7 @@ use Civi\Funding\ActivityTypeIds;
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoContainer;
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\DefaultApplicationProcessActionStatusInfo;
 use Civi\Funding\ApplicationProcess\ApplicationProcessTaskManager;
+use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitResult;
 use Civi\Funding\ApplicationProcess\TaskType;
 use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
@@ -30,10 +31,12 @@ use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationFormSubmitSuccessEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
+use Civi\Funding\Form\Validation\ValidationResult;
 use Civi\Funding\Mock\Form\FundingCaseType\TestValidatedData;
 use Civi\Funding\Mock\Psr\PsrContainer;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Systopia\JsonSchema\Errors\ErrorCollector;
 
 /**
  * @covers \Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessReworkTaskSubscriber
@@ -77,7 +80,10 @@ final class ApplicationProcessReworkTaskSubscriberTest extends TestCase {
       1,
       ApplicationProcessBundleFactory::createApplicationProcessBundle(),
       [],
-      new TestValidatedData(['action' => 'apply']),
+      ApplicationFormSubmitResult::createSuccess(
+        new ValidationResult([], new ErrorCollector()),
+        new TestValidatedData(['action' => 'apply']),
+      ),
     );
     $applicationProcess = $event->getApplicationProcess();
 
@@ -91,7 +97,10 @@ final class ApplicationProcessReworkTaskSubscriberTest extends TestCase {
       1,
       ApplicationProcessBundleFactory::createApplicationProcessBundle(['status' => 'foo']),
       [],
-      new TestValidatedData(['action' => 'some-action']),
+      ApplicationFormSubmitResult::createSuccess(
+        new ValidationResult([], new ErrorCollector()),
+        new TestValidatedData(['action' => 'some-action']),
+      ),
     );
     $applicationProcess = $event->getApplicationProcess();
 
@@ -105,7 +114,10 @@ final class ApplicationProcessReworkTaskSubscriberTest extends TestCase {
       1,
       ApplicationProcessBundleFactory::createApplicationProcessBundle(['status' => 'draft']),
       [],
-      new TestValidatedData(['action' => 'some-action']),
+      ApplicationFormSubmitResult::createSuccess(
+        new ValidationResult([], new ErrorCollector()),
+        new TestValidatedData(['action' => 'some-action']),
+      ),
     );
     $applicationProcess = $event->getApplicationProcess();
 

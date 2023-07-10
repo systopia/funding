@@ -24,6 +24,7 @@ use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Form\ApplicationFormDataFactoryInterface;
 use Civi\Funding\SonstigeAktivitaet\AVK1FinanzierungFactory;
 use Civi\Funding\SonstigeAktivitaet\AVK1KostenFactory;
+use Civi\Funding\SonstigeAktivitaet\AVK1ProjektunterlagenFactory;
 use Webmozart\Assert\Assert;
 
 final class AVK1FormDataFactory implements ApplicationFormDataFactoryInterface {
@@ -32,13 +33,20 @@ final class AVK1FormDataFactory implements ApplicationFormDataFactoryInterface {
 
   private AVK1KostenFactory $avk1KostenFactory;
 
+  private AVK1ProjektunterlagenFactory $avk1ProjektunterlagenFactory;
+
   public static function getSupportedFundingCaseTypes(): array {
     return ['AVK1SonstigeAktivitaet'];
   }
 
-  public function __construct(AVK1FinanzierungFactory $avk1FinanzierungFactory, AVK1KostenFactory $avk1KostenFactory) {
+  public function __construct(
+    AVK1FinanzierungFactory $avk1FinanzierungFactory,
+    AVK1KostenFactory $avk1KostenFactory,
+    AVK1ProjektunterlagenFactory $avk1ProjektunterlagenFactory
+  ) {
     $this->avk1FinanzierungFactory = $avk1FinanzierungFactory;
     $this->avk1KostenFactory = $avk1KostenFactory;
+    $this->avk1ProjektunterlagenFactory = $avk1ProjektunterlagenFactory;
   }
 
   /**
@@ -57,6 +65,7 @@ final class AVK1FormDataFactory implements ApplicationFormDataFactoryInterface {
     $data['kosten'] = $this->avk1KostenFactory->createKosten($applicationProcess);
     $data['finanzierung'] = $this->avk1FinanzierungFactory->createFinanzierung($applicationProcess);
     $data['beschreibung'] = $applicationProcess->getRequestData()['beschreibung'];
+    $data['projektunterlagen'] = $this->avk1ProjektunterlagenFactory->createProjektunterlagen($applicationProcess);
 
     return $data;
   }

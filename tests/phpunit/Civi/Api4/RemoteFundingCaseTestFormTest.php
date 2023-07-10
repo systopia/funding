@@ -147,6 +147,7 @@ final class RemoteFundingCaseTestFormTest extends AbstractRemoteFundingHeadlessT
       'endDate' => date('Y-m-d'),
       'amountRequested' => 123.45,
       'resources' => 12.34,
+      'file' => 'https://example.org/test.txt',
     ];
     $action->setData($validData + ['action' => 'save']);
 
@@ -207,19 +208,25 @@ final class RemoteFundingCaseTestFormTest extends AbstractRemoteFundingHeadlessT
       'endDate' => date('Y-m-d'),
       'amountRequested' => 123.45,
       'resources' => 0,
+      'file' => 'https://example.org/test.txt',
     ];
     $action->setData($validData + ['action' => 'save']);
 
     $values = $action->execute()->getArrayCopy();
-    static::assertEquals(['action', 'message', 'jsonSchema', 'uiSchema', 'data'], array_keys($values));
+    static::assertEquals(['action', 'message', 'jsonSchema', 'uiSchema', 'data', 'files'], array_keys($values));
     static::assertSame('showForm', $values['action']);
+    $fileCiviUri = $values['files']['https://example.org/test.txt'];
+    static::assertStringStartsWith('http://localhost/', $fileCiviUri);
     static::assertInstanceOf(TestJsonSchema::class, $values['jsonSchema']);
     static::assertInstanceOf(TestUiSchema::class, $values['uiSchema']);
     static::assertIsInt($values['data']['applicationProcessId']);
-    static::assertEquals(
-      $validData + ['applicationProcessId' => $values['data']['applicationProcessId']],
-      $values['data']
-    );
+    $expectedData = [
+      'applicationProcessId' => $values['data']['applicationProcessId'],
+      'file' => $fileCiviUri,
+    ] + $validData;
+    unset($expectedData['fundingProgramId']);
+    unset($expectedData['fundingCaseTypeId']);
+    static::assertEquals($expectedData, $values['data']);
   }
 
   private function addFixtures(): void {

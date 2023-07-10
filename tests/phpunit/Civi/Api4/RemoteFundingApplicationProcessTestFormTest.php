@@ -26,6 +26,8 @@ use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Fixtures\ApplicationProcessFixture;
 use Civi\Funding\Fixtures\ContactFixture;
+use Civi\Funding\Fixtures\EntityFileFixture;
+use Civi\Funding\Fixtures\ExternalFileFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
@@ -85,6 +87,15 @@ final class RemoteFundingApplicationProcessTestFormTest extends AbstractRemoteFu
       ['application_permission'],
     );
 
+    $externalFile = ExternalFileFixture::addFixture([
+      'identifier' => 'file',
+    ]);
+    EntityFileFixture::addFixture(
+      'civicrm_application_process',
+      $this->applicationProcess->getId(),
+      $externalFile->getFileId(),
+    );
+
     $values = $action->execute()->getArrayCopy();
     static::assertEquals(['jsonSchema', 'uiSchema', 'data'], array_keys($values));
     static::assertInstanceOf(TestJsonSchema::class, $values['jsonSchema']);
@@ -134,6 +145,7 @@ final class RemoteFundingApplicationProcessTestFormTest extends AbstractRemoteFu
       'endDate' => date('Y-m-d'),
       'amountRequested' => 123.45,
       'resources' => 12.34,
+      'file' => 'https://example.org/test.txt',
     ];
     $action->setData($validData + ['action' => 'save']);
 
@@ -188,15 +200,18 @@ final class RemoteFundingApplicationProcessTestFormTest extends AbstractRemoteFu
       'endDate' => date('Y-m-d'),
       'amountRequested' => 123.45,
       'resources' => 0,
+      'file' => 'https://example.org/test.txt',
     ];
     $action->setData($validData + ['action' => 'save']);
 
     $values = $action->execute()->getArrayCopy();
-    static::assertEquals(['action', 'message', 'jsonSchema', 'uiSchema', 'data'], array_keys($values));
+    static::assertEquals(['action', 'message', 'jsonSchema', 'uiSchema', 'data', 'files'], array_keys($values));
     static::assertInstanceOf(TestJsonSchema::class, $values['jsonSchema']);
     static::assertInstanceOf(TestUiSchema::class, $values['uiSchema']);
     static::assertSame('showForm', $values['action']);
-    static::assertEquals($validData, $values['data']);
+    $fileCiviUri = $values['files']['https://example.org/test.txt'];
+    static::assertStringStartsWith('http://localhost/', $fileCiviUri);
+    static::assertEquals(['file' => $fileCiviUri] + $validData, $values['data']);
   }
 
   private function addFixtures(): void {

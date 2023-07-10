@@ -49,7 +49,7 @@ final class ApplicationFormNewSubmitEventDecorator implements ApplicationFormNew
         $command->getContactId(),
         $result->getApplicationProcessBundle(),
         $command->getData(),
-        $result->getValidatedData(),
+        $result,
       );
 
       $this->eventDispatcher->dispatch(ApplicationFormSubmitSuccessEvent::class, $event);

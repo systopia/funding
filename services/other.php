@@ -33,6 +33,8 @@ use Civi\Funding\EventSubscriber\Remote\FundingRequestInitSubscriber;
 use Civi\Funding\EventSubscriber\Remote\RemotePageRequestSubscriber;
 use Civi\Funding\FundingAttachmentManager;
 use Civi\Funding\FundingAttachmentManagerInterface;
+use Civi\Funding\FundingExternalFileManager;
+use Civi\Funding\FundingExternalFileManagerInterface;
 use Civi\Funding\Session\FundingSession;
 use Civi\Funding\Session\FundingSessionInterface;
 use Civi\Funding\Util\MoneyFactory;
@@ -40,6 +42,7 @@ use Civi\Funding\Util\UrlGenerator;
 use Civi\Funding\Validation\EntityValidator;
 use Civi\Funding\Validation\EntityValidatorInterface;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
@@ -79,6 +82,16 @@ $container->autowire(EntityValidatorInterface::class, EntityValidator::class);
 $container->addCompilerPass(new EntityValidatorPass());
 
 $container->autowire(FundingAttachmentManagerInterface::class, FundingAttachmentManager::class);
+$container->autowire(FundingExternalFileManagerInterface::class, FundingExternalFileManager::class);
+
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/EventSubscriber/ExternalFile',
+  'Civi\\Funding\\EventSubscriber\\ExternalFile',
+  EventSubscriberInterface::class,
+  ['kernel.event_subscriber' => []],
+  ['lazy' => TRUE],
+);
 
 $controllerDefinitions = ServiceRegistrator::autowireAllImplementing(
   $container,

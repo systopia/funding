@@ -20,12 +20,17 @@ declare(strict_types = 1);
 namespace Civi\Funding\DependencyInjection\Compiler;
 
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoContainer;
+use Civi\Funding\ApplicationProcess\ApplicationFormFilesFactoryInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandler;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandler;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationDeleteHandler;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationDeleteHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesAddIdentifiersHandler;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesAddIdentifiersHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesPersistHandler;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCommentPersistHandler;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandler;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
@@ -106,6 +111,8 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
       $this->getTaggedServices($container, 'funding.application.cost_items_factory');
     $applicationResourcesItemsFactoryServices =
       $this->getTaggedServices($container, 'funding.application.resources_items_factory');
+    $applicationFormFilesFactoryServices =
+      $this->getTaggedServices($container, ApplicationFormFilesFactoryInterface::SERVICE_TAG);
 
     $fundingCaseActionsDeterminerServices =
       $this->getTaggedServices($container, FundingCaseActionsDeterminerInterface::TAG);
@@ -145,6 +152,11 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
       $this->getTaggedServices($container, 'funding.application.resources_items_add_identifiers_handler');
     $applicationResourcesItemsPersistHandlerServices =
       $this->getTaggedServices($container, 'funding.application.resources_items_persist_handler');
+
+    $applicationFilesAddIdentifiersHandlerServices =
+      $this->getTaggedServices($container, ApplicationFilesAddIdentifiersHandlerInterface::SERVICE_TAG);
+    $applicationFilesPersistHandlerServices =
+      $this->getTaggedServices($container, ApplicationFilesPersistHandlerInterface::SERVICE_TAG);
 
     $fundingCaseApproveHandlerServices = $this->getTaggedServices($container, FundingCaseApproveHandlerInterface::TAG);
     $fundingCasePossibleActionsGetHandlerServices =
@@ -298,6 +310,20 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         ['$resourcesItemsFactory' => $applicationResourcesItemsFactoryServices[$fundingCaseType]]
       );
 
+      $applicationFilesAddIdentifiersHandlerServices[$fundingCaseType] ??= $this->createService(
+        $container,
+        $fundingCaseType,
+        ApplicationFilesAddIdentifiersHandler::class,
+        ['$formFilesFactory' => $applicationFormFilesFactoryServices[$fundingCaseType]]
+      );
+
+      $applicationFilesPersistHandlerServices[$fundingCaseType] ??= $this->createService(
+        $container,
+        $fundingCaseType,
+        ApplicationFilesPersistHandler::class,
+        ['$formFilesFactory' => $applicationFormFilesFactoryServices[$fundingCaseType]]
+      );
+
       $applicationSnapshotCreateHandlerServices[$fundingCaseType] ??= $this->createService(
         $container,
         $fundingCaseType,
@@ -339,6 +365,9 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
 
       $services = [
         ApplicationDeleteHandlerInterface::class => $applicationDeleteHandlerServices[$fundingCaseType],
+        ApplicationFilesAddIdentifiersHandlerInterface::class
+        => $applicationFilesAddIdentifiersHandlerServices[$fundingCaseType],
+        ApplicationFilesPersistHandlerInterface::class => $applicationFilesPersistHandlerServices[$fundingCaseType],
         ApplicationFormNewCreateHandlerInterface::class
         => $applicationFormNewCreateHandlerServices[$fundingCaseType],
         ApplicationFormNewValidateHandlerInterface::class

@@ -22,6 +22,8 @@ namespace Civi\Funding;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationDeleteHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesAddIdentifiersHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewCreateHandlerInterface;
@@ -42,6 +44,10 @@ use Civi\Funding\TransferContract\Handler\TransferContractRenderHandlerInterface
 interface FundingCaseTypeServiceLocatorInterface {
 
   public function getApplicationDeleteHandler(): ApplicationDeleteHandlerInterface;
+
+  public function getApplicationFilesAddIdentifiersHandler(): ApplicationFilesAddIdentifiersHandlerInterface;
+
+  public function getApplicationFilesPersistHandler(): ApplicationFilesPersistHandlerInterface;
 
   public function getApplicationFormNewCreateHandler(): ApplicationFormNewCreateHandlerInterface;
 

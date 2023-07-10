@@ -12,6 +12,7 @@ use Civi\Funding\FundingAttachmentManagerInterface;
 use Civi\Funding\FundingCase\DefaultFundingCaseActionsDeterminer;
 use Civi\Funding\Mock\DocumentRender\MockDocumentRenderer;
 use Civi\Funding\Mock\Form\FundingCaseType\TestApplicationCostItemsFactory;
+use Civi\Funding\Mock\Form\FundingCaseType\TestApplicationFormFilesFactory;
 use Civi\Funding\Mock\Form\FundingCaseType\TestApplicationResourcesItemsFactory;
 use Civi\Funding\Mock\Form\FundingCaseType\TestFormDataFactory;
 use Civi\Funding\Mock\Form\FundingCaseType\TestJsonSchemaFactory;
@@ -46,6 +47,9 @@ $loader->register();
 
 // Ensure function ts() is available - it's declared in the same file as CRM_Core_I18n
 \CRM_Core_I18n::singleton();
+
+// For tests without Civi environment.
+addExtensionToClassLoader('external-file');
 
 $comparatorFactory = Factory::getInstance();
 $comparatorFactory->register(new ApiActionComparator());
@@ -90,6 +94,18 @@ function _funding_test_civicrm_container(ContainerBuilder $container): void {
     ->addTag('funding.application.cost_items_factory');
   $container->autowire(TestApplicationResourcesItemsFactory::class)
     ->addTag('funding.application.resources_items_factory');
+  $container->autowire(TestApplicationFormFilesFactory::class)
+    ->addTag(TestApplicationFormFilesFactory::SERVICE_TAG);
+}
+
+function addExtensionToClassLoader(string $extension) {
+  $extensionDir = __DIR__ . '/../../../' . $extension;
+  $loader = new ClassLoader();
+  $loader->add('CRM_', [$extensionDir]);
+  $loader->addPsr4('Civi\\', [$extensionDir . '/Civi']);
+  $loader->add('api_', [$extensionDir]);
+  $loader->addPsr4('api\\', [$extensionDir . '/api']);
+  $loader->register();
 }
 
 /**

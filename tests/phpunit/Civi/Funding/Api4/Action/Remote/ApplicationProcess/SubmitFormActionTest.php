@@ -114,6 +114,7 @@ final class SubmitFormActionTest extends AbstractFormActionTest {
               $data = ['applicationProcessId' => 22, 'foo' => 'bar'];
               $event->setForm(new RemoteForm($jsonSchema, $uiSchema, $data));
               $event->setMessage('Test');
+              $event->setFiles(['https://example.org/test.txt' => 'https://example.net/test,txt']);
 
               return TRUE;
             }),
@@ -137,6 +138,7 @@ final class SubmitFormActionTest extends AbstractFormActionTest {
       'jsonSchema' => $jsonSchema,
       'uiSchema' => $uiSchema,
       'data' => ['applicationProcessId' => 22, 'foo' => 'bar'],
+      'files' => ['https://example.org/test.txt' => 'https://example.net/test,txt'],
     ], $result->getArrayCopy());
   }
 
@@ -152,6 +154,7 @@ final class SubmitFormActionTest extends AbstractFormActionTest {
             function (SubmitApplicationFormEvent $event): bool {
               $event->setAction(SubmitApplicationFormEvent::ACTION_CLOSE_FORM);
               $event->setMessage('Test');
+              $event->setFiles(['https://example.org/test.txt' => 'https://example.net/test,txt']);
 
               return TRUE;
             }),
@@ -172,6 +175,7 @@ final class SubmitFormActionTest extends AbstractFormActionTest {
     static::assertSame([
       'action' => 'closeForm',
       'message' => 'Test',
+      'files' => ['https://example.org/test.txt' => 'https://example.net/test,txt'],
     ], $result->getArrayCopy());
   }
 

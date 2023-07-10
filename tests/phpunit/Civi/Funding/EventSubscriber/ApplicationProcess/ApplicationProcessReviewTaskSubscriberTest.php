@@ -23,6 +23,7 @@ use Civi\Funding\ActivityTypeIds;
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoContainer;
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\DefaultApplicationProcessActionStatusInfo;
 use Civi\Funding\ApplicationProcess\ApplicationProcessTaskManager;
+use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitResult;
 use Civi\Funding\ApplicationProcess\TaskType;
 use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
@@ -30,10 +31,12 @@ use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationFormSubmitSuccessEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
+use Civi\Funding\Form\Validation\ValidationResult;
 use Civi\Funding\Mock\Form\FundingCaseType\TestValidatedData;
 use Civi\Funding\Mock\Psr\PsrContainer;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Systopia\JsonSchema\Errors\ErrorCollector;
 
 /**
  * @covers \Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessReviewTaskSubscriber
@@ -80,7 +83,10 @@ final class ApplicationProcessReviewTaskSubscriberTest extends TestCase {
         'reviewer_cont_contact_id' => 3,
       ]),
       [],
-      new TestValidatedData(['action' => 'review']),
+      ApplicationFormSubmitResult::createSuccess(
+        new ValidationResult([], new ErrorCollector()),
+        new TestValidatedData(['action' => 'review']),
+      ),
     );
     $applicationProcess = $event->getApplicationProcess();
 

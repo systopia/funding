@@ -48,7 +48,7 @@ final class ApplicationFormSubmitEventDecorator implements ApplicationFormSubmit
         $command->getContactId(),
         $command->getApplicationProcessBundle(),
         $command->getData(),
-        $result->getValidatedData(),
+        $result,
       );
 
       $this->eventDispatcher->dispatch(ApplicationFormSubmitSuccessEvent::class, $event);

@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\SonstigeAktivitaet\UISchema;
 
+use Civi\RemoteTools\Form\JsonForms\Control\JsonFormsArray;
+use Civi\RemoteTools\Form\JsonForms\Control\JsonFormsHidden;
 use Civi\RemoteTools\Form\JsonForms\JsonFormsControl;
 use Civi\RemoteTools\Form\JsonForms\Layout\JsonFormsCloseableGroup;
 use Civi\RemoteTools\Form\JsonForms\Layout\JsonFormsGroup;
@@ -118,6 +120,20 @@ final class AVK1UiSchema extends JsonFormsGroup {
           'Wo findet die Veranstaltung statt?'),
         new JsonFormsControl('#/properties/beschreibung/properties/partner',
           'Mit welcher Schule oder Organisation wird kooperiert?'),
+      ]),
+      new JsonFormsGroup('Projektunterlagen', [
+        new JsonFormsArray('#/properties/projektunterlagen', '',
+          'Hier können Unterlagen wie das geplante Programm mit Zeitangaben oder die Ausschreibung' .
+          ' hochgeladen werden.',
+          [
+            new JsonFormsHidden('#/properties/_identifier'),
+            new JsonFormsControl('#/properties/datei', 'Datei', NULL, NULL, NULL, ['format' => 'file']),
+            new JsonFormsControl('#/properties/beschreibung', 'Beschreibung'),
+          ],
+          [
+            'addButtonLabel' => 'Dokument hinzufügen',
+            'removeButtonLabel' => 'Dokument entfernen',
+          ]),
       ]),
       ...$submitButtons,
       ...$hiddenFields,

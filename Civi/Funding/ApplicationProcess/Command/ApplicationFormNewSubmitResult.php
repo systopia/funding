@@ -23,13 +23,7 @@ use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Form\ValidatedApplicationDataInterface;
 use Civi\Funding\Form\Validation\ValidationResult;
 
-final class ApplicationFormNewSubmitResult {
-
-  private bool $success;
-
-  private ValidationResult $validationResult;
-
-  private ?ValidatedApplicationDataInterface $validatedData;
+final class ApplicationFormNewSubmitResult extends AbstractApplicationFormSubmitResult {
 
   private ?ApplicationProcessEntityBundle $applicationProcessBundle;
 
@@ -45,28 +39,14 @@ final class ApplicationFormNewSubmitResult {
     return new self(TRUE, $validationResult, $validatedData, $applicationProcessBundle);
   }
 
-  public function __construct(
+  protected function __construct(
     bool $success,
     ValidationResult $validationResult,
     ValidatedApplicationDataInterface $validatedData = NULL,
-    ApplicationProcessEntityBundle $applicationProcessBundle = NULL
+    ApplicationProcessEntityBundle $applicationProcessBundle = NULL,
   ) {
-    $this->success = $success;
-    $this->validationResult = $validationResult;
-    $this->validatedData = $validatedData;
+    parent::__construct($success, $validationResult, $validatedData);
     $this->applicationProcessBundle = $applicationProcessBundle;
-  }
-
-  public function isSuccess(): bool {
-    return $this->success;
-  }
-
-  public function getValidationResult(): ValidationResult {
-    return $this->validationResult;
-  }
-
-  public function getValidatedData(): ?ValidatedApplicationDataInterface {
-    return $this->validatedData;
   }
 
   public function getApplicationProcessBundle(): ?ApplicationProcessEntityBundle {

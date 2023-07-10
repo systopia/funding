@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Mock\Form\FundingCaseType;
 
+use Civi\Funding\ApplicationProcess\ApplicationExternalFileManagerInterface;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Form\ApplicationFormDataFactoryInterface;
@@ -26,8 +27,14 @@ use Webmozart\Assert\Assert;
 
 final class TestFormDataFactory implements ApplicationFormDataFactoryInterface {
 
+  private ApplicationExternalFileManagerInterface $externalFileManager;
+
   public static function getSupportedFundingCaseTypes(): array {
     return ['TestCaseType'];
+  }
+
+  public function __construct(ApplicationExternalFileManagerInterface $externalFileManager) {
+    $this->externalFileManager = $externalFileManager;
   }
 
   /**
@@ -37,7 +44,7 @@ final class TestFormDataFactory implements ApplicationFormDataFactoryInterface {
     Assert::notNull($applicationProcess->getStartDate());
     Assert::notNull($applicationProcess->getEndDate());
 
-    return [
+    $data = [
       'title' => $applicationProcess->getTitle(),
       'shortDescription' => $applicationProcess->getShortDescription(),
       'recipient' => $fundingCase->getRecipientContactId(),
@@ -46,6 +53,12 @@ final class TestFormDataFactory implements ApplicationFormDataFactoryInterface {
       'amountRequested' => $applicationProcess->getAmountRequested(),
       'resources' => $applicationProcess->getRequestData()['resources'],
     ];
+
+    /** @var \Civi\Funding\Entity\ExternalFileEntity $file */
+    $file = $this->externalFileManager->getFile('file', $applicationProcess->getId());
+    $data['file'] = $file->getUri();
+
+    return $data;
   }
 
 }

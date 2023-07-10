@@ -26,27 +26,8 @@ final class ApplicationFormCreateCommand {
 
   use ApplicationProcessEntityBundleTrait;
 
-  /**
-   * @phpstan-var array<string, mixed>|null JSON serializable.
-   */
-  private ?array $data;
-
-  /**
-   * @phpstan-param array<string, mixed>|null $data  JSON serializable.
-   */
-  public function __construct(
-    ApplicationProcessEntityBundle $applicationProcessBundle,
-    ?array $data = NULL
-  ) {
+  public function __construct(ApplicationProcessEntityBundle $applicationProcessBundle) {
     $this->applicationProcessBundle = $applicationProcessBundle;
-    $this->data = $data;
-  }
-
-  /**
-   * @phpstan-return array<string, mixed>|null JSON serializable.
-   */
-  public function getData(): ?array {
-    return $this->data;
   }
 
 }

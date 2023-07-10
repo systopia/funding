@@ -51,6 +51,7 @@ final class ApplicationSnapshotCreateHandler implements ApplicationSnapshotCreat
       'is_review_calculative' => $applicationProcess->getIsReviewCalculative(),
       'is_eligible' => $applicationProcess->getIsEligible(),
     ]);
+    // @todo: External files
 
     $this->applicationSnapshotManager->add($applicationSnapshot);
   }

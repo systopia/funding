@@ -50,6 +50,7 @@ abstract class AbstractFundingHeadlessTestCase extends TestCase implements Headl
     return Test::headless()
       // Required for managed entities to be available
       ->install('activity-entity')
+      ->install('external-file')
       ->install('org.civicrm.search_kit')
       ->install('de.systopia.civioffice')
       ->install('org.project60.banking')

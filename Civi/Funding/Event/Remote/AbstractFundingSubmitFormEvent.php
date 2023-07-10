@@ -44,6 +44,12 @@ abstract class AbstractFundingSubmitFormEvent extends AbstractFundingRequestEven
    */
   private array $errors = [];
 
+  /**
+   * @phpstan-var array<string, string>
+   *   Mapping of file URIs from request to Civi download URIs.
+   */
+  private array $files = [];
+
   private ?RemoteFormInterface $form = NULL;
 
   private ?string $message = NULL;
@@ -85,6 +91,24 @@ abstract class AbstractFundingSubmitFormEvent extends AbstractFundingRequestEven
    */
   public function getErrors(): array {
     return $this->errors;
+  }
+
+  /**
+   * @phpstan-return array<string, string>
+   *   Mapping of file URIs from request to Civi download URIs.
+   */
+  public function getFiles(): array {
+    return $this->files;
+  }
+
+  /**
+   * @phpstan-param array<string, string> $files
+   *   Mapping of file URIs from request to Civi download URIs.
+   */
+  public function setFiles(array $files): self {
+    $this->files = $files;
+
+    return $this;
   }
 
   public function getForm(): ?RemoteFormInterface {

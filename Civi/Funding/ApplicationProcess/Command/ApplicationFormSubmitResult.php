@@ -22,13 +22,7 @@ namespace Civi\Funding\ApplicationProcess\Command;
 use Civi\Funding\Form\ValidatedApplicationDataInterface;
 use Civi\Funding\Form\Validation\ValidationResult;
 
-final class ApplicationFormSubmitResult {
-
-  private bool $success;
-
-  private ?ValidatedApplicationDataInterface $validatedData;
-
-  private ValidationResult $validationResult;
+final class ApplicationFormSubmitResult extends AbstractApplicationFormSubmitResult {
 
   public static function createError(ValidationResult $validationResult): self {
     return new self(FALSE, $validationResult);
@@ -39,32 +33,6 @@ final class ApplicationFormSubmitResult {
     ValidatedApplicationDataInterface $validatedData
   ): self {
     return new self(TRUE, $validationResult, $validatedData);
-  }
-
-  private function __construct(
-    bool $success,
-    ValidationResult $validationResult,
-    ?ValidatedApplicationDataInterface $validatedData = NULL
-  ) {
-    $this->success = $success;
-    $this->validationResult = $validationResult;
-    $this->validatedData = $validatedData;
-  }
-
-  public function isSuccess(): bool {
-    return $this->success;
-  }
-
-  /**
-   * The returned data might not contain the actual application data if the
-   * requested action resulted in a restore of a previous snapshot.
-   */
-  public function getValidatedData(): ?ValidatedApplicationDataInterface {
-    return $this->validatedData;
-  }
-
-  public function getValidationResult(): ValidationResult {
-    return $this->validationResult;
   }
 
 }

@@ -57,6 +57,7 @@ final class ApplicationSnapshotRestorer implements ApplicationSnapshotRestorerIn
     $applicationProcess->setIsReviewContent($applicationSnapshot->getIsReviewContent());
     $applicationProcess->setIsEligible($applicationSnapshot->getIsEligible());
     $applicationProcess->setRestoredSnapshot($applicationSnapshot);
+    // @todo: External files
 
     $this->applicationProcessManager->update($contactId, $applicationProcessBundle);
   }

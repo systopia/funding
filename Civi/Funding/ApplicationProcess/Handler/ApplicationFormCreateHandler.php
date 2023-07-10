@@ -50,12 +50,9 @@ final class ApplicationFormCreateHandler implements ApplicationFormCreateHandler
     ));
     $uiSchema = $this->uiSchemaFactory->createUiSchemaExisting($command->getApplicationProcessBundle());
 
-    $data = $command->getData();
-    if (NULL === $data) {
-      $data = $this->dataGetHandler->handle(new ApplicationFormDataGetCommand(
-        $command->getApplicationProcessBundle(),
-      ));
-    }
+    $data = $this->dataGetHandler->handle(new ApplicationFormDataGetCommand(
+      $command->getApplicationProcessBundle(),
+    ));
 
     $data['applicationProcessId'] = $command->getApplicationProcess()->getId();
 
