@@ -108,7 +108,7 @@ final class AVK1UiSchema extends JsonFormsGroup {
           'Welchen Beitrag leistet die Veranstaltung zur Politischen Jugendbildung?',
           NULL, NULL, NULL, ['multi' => TRUE]),
         new JsonFormsControl('#/properties/beschreibung/properties/zielgruppe',
-          'Welche Zielgruppe soll mit der Veranstaltung erreicht warden (Zusammensetzung, Alter)?',
+          'Welche Zielgruppe soll mit der Veranstaltung erreicht werden (Zusammensetzung, Alter)?',
           NULL, NULL, NULL, ['multi' => TRUE]),
         new JsonFormsControl('#/properties/beschreibung/properties/ziele',
           'Welche Ziele hat die Veranstaltung? (Mehrfachauswahl möglich)'),
