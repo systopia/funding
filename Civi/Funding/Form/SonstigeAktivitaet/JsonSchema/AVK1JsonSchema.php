@@ -69,10 +69,10 @@ final class AVK1JsonSchema extends JsonSchemaObject {
         'maxDate' => $applicationEnd->format('Y-m-d'),
       ]),
       'teilnehmer' => new JsonSchemaObject([
-        'gesamt' => new JsonSchema(['type' => ['integer', 'null']]),
-        'weiblich' => new JsonSchema(['type' => ['integer', 'null']]),
-        'divers' => new JsonSchema(['type' => ['integer', 'null']]),
-        'inJugendarbeitTaetig' => new JsonSchema(['type' => ['integer', 'null']]),
+        'gesamt' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 1]),
+        'weiblich' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0]),
+        'divers' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0]),
+        'inJugendarbeitTaetig' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0]),
       ]),
       // Abschnitt I
       'kosten' => new AVK1KostenSchema(),
