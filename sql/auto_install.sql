@@ -236,7 +236,7 @@ CREATE TABLE `civicrm_funding_application_process` (
   `creation_date` timestamp NOT NULL,
   `modification_date` timestamp NOT NULL,
   `title` varchar(255) NOT NULL,
-  `short_description` varchar(255) NOT NULL,
+  `short_description` varchar(500) NOT NULL,
   `start_date` timestamp NULL,
   `end_date` timestamp NULL,
   `request_data` text NOT NULL,
