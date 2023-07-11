@@ -58,7 +58,7 @@ final class AVK1JsonSchema extends JsonSchemaObject {
 
     parent::__construct([
       'titel' => new JsonSchemaString(),
-      'kurzbeschreibungDesInhalts' => new JsonSchemaString(),
+      'kurzbeschreibungDesInhalts' => new JsonSchemaString(['maxLength' => 500]),
       'empfaenger' => new JsonSchemaRecipient($possibleRecipients),
       'beginn' => new JsonSchemaDate([
         'minDate' => $applicationBegin->format('Y-m-d'),

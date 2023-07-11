@@ -96,7 +96,7 @@
   <field>
     <name>short_description</name>
     <type>varchar</type>
-    <length>255</length>
+    <length>500</length>
     <required>true</required>
     <html>
       <type>Text</type>
