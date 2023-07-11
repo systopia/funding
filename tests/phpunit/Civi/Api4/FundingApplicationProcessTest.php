@@ -207,7 +207,7 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
       'identifier' => 'file',
     ]);
     EntityFileFixture::addFixture(
-      'civicrm_application_process',
+      'civicrm_funding_application_process',
       $applicationProcess->getId(),
       $externalFile->getFileId(),
     );
@@ -348,7 +348,7 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
       ],
     ]);
 
-    ApplicationSnapshotFixture::addFixture($applicationProcess->getId(), [
+    $applicationSnapshot = ApplicationSnapshotFixture::addFixture($applicationProcess->getId(), [
       'start_date' => '2022-11-13',
       'end_date' => '2022-11-14',
       'amount_requested' => 11,
@@ -358,6 +358,26 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
         'file' => 'https://example.net/test1.txt',
       ],
     ]);
+
+    $externalFileSnapshot = ExternalFileFixture::addFixture([
+      'source' => 'https://example.org/test1.txt',
+      'identifier' => 'snapshot:1689078247:file',
+    ]);
+    EntityFileFixture::addFixture(
+      'civicrm_funding_application_snapshot',
+      $applicationSnapshot->getId(),
+      $externalFileSnapshot->getFileId(),
+    );
+
+    $externalFile = ExternalFileFixture::addFixture([
+      'source' => 'https://example.org/test2.txt',
+      'identifier' => 'file',
+    ]);
+    EntityFileFixture::addFixture(
+      'civicrm_funding_application_process',
+      $applicationProcess->getId(),
+      $externalFile->getFileId(),
+    );
 
     FundingProgramContactRelationFixture::addContact(
       $contact['id'],
@@ -390,7 +410,8 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
     static::assertNotEmpty($result['data']);
     static::assertSame(11, $result['data']['amountRequested']);
     static::assertSame(22, $result['data']['resources']);
-    // @todo: Restore external files
+    static::assertStringStartsWith('http://localhost/', $result['data']['file']);
+    static::assertStringEndsWith('/test1.txt', $result['data']['file']);
   }
 
   public function testValidateForm(): void {

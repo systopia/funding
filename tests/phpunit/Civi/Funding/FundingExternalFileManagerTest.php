@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding;
 
+use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\RemoteTools\Api4\Api4;
 
@@ -39,24 +40,26 @@ final class FundingExternalFileManagerTest extends AbstractFundingHeadlessTestCa
     $this->externalFileManager = new FundingExternalFileManager(new Api4());
   }
 
-  public function testAddFile(): void {
+  public function test(): void {
     $fundingProgram = FundingProgramFixture::addFixture();
+    $fundingCaseType = FundingCaseTypeFixture::addFixture();
+
     $externalFile1 = $this->externalFileManager->addFile(
       'https://example.org/test1.txt',
-      '00112233-4455-6677-8899-aabbccddeeff',
+      'identifier1',
       'civicrm_funding_program',
       $fundingProgram->getId(),
     );
 
     static::assertGreaterThan(0, $externalFile1->getId());
     static::assertSame('https://example.org/test1.txt', $externalFile1->getSource());
-    static::assertSame('00112233-4455-6677-8899-aabbccddeeff', $externalFile1->getIdentifier());
+    static::assertSame('identifier1', $externalFile1->getIdentifier());
     static::assertStringStartsWith('http://', $externalFile1->getUri());
 
     static::assertEquals(
       $externalFile1,
       $this->externalFileManager->getFile(
-        '00112233-4455-6677-8899-aabbccddeeff',
+        'identifier1',
         'civicrm_funding_program',
         $fundingProgram->getId()
       )
@@ -72,7 +75,7 @@ final class FundingExternalFileManagerTest extends AbstractFundingHeadlessTestCa
 
     static::assertNull(
       $this->externalFileManager->getFile(
-        '00112233-4455-6677-8899-aabbccddeeff',
+        'identifier1',
         'civicrm_funding_program',
         $fundingProgram->getId() + 1
       )
@@ -86,12 +89,29 @@ final class FundingExternalFileManagerTest extends AbstractFundingHeadlessTestCa
       )
     );
 
+    static::assertFalse($this->externalFileManager->isAttachedToTable($externalFile1, 'civicrm_funding_case_type'));
+    $this->externalFileManager->attachFile($externalFile1, 'civicrm_funding_case_type', $fundingCaseType->getId());
+    static::assertTrue($this->externalFileManager->isAttachedToTable($externalFile1, 'civicrm_funding_case_type'));
+    $this->externalFileManager->detachFile($externalFile1, 'civicrm_funding_case_type', $fundingCaseType->getId());
+    static::assertFalse($this->externalFileManager->isAttachedToTable($externalFile1, 'civicrm_funding_case_type'));
+
     $this->externalFileManager->updateCustomData($externalFile1, ['foo' => 'bar']);
     static::assertSame(['foo' => 'bar'], $externalFile1->getCustomData());
     static::assertEquals(
       $externalFile1,
       $this->externalFileManager->getFile(
-        '00112233-4455-6677-8899-aabbccddeeff',
+        'identifier1',
+        'civicrm_funding_program',
+        $fundingProgram->getId()
+      )
+    );
+
+    $this->externalFileManager->updateIdentifier($externalFile1, 'newIdentifier1');
+    static::assertSame('newIdentifier1', $externalFile1->getIdentifier());
+    static::assertEquals(
+      $externalFile1,
+      $this->externalFileManager->getFile(
+        'newIdentifier1',
         'civicrm_funding_program',
         $fundingProgram->getId()
       )
@@ -99,7 +119,7 @@ final class FundingExternalFileManagerTest extends AbstractFundingHeadlessTestCa
 
     $externalFile2 = $this->externalFileManager->addFile(
       'https://example.org/test2.txt',
-      '10112233-4455-6677-8899-aabbccddeeff',
+      'identifier2',
       'civicrm_funding_program',
       $fundingProgram->getId(),
     );
@@ -114,7 +134,7 @@ final class FundingExternalFileManagerTest extends AbstractFundingHeadlessTestCa
     $this->externalFileManager->deleteFile($externalFile1);
     static::assertNull(
       $this->externalFileManager->getFile(
-        '00112233-4455-6677-8899-aabbccddeeff',
+        'identifier1',
         'civicrm_funding_program',
         $fundingProgram->getId()
       )
@@ -123,7 +143,7 @@ final class FundingExternalFileManagerTest extends AbstractFundingHeadlessTestCa
     $this->externalFileManager->deleteFiles(
       'civicrm_funding_program',
       $fundingProgram->getId(),
-      ['10112233-4455-6677-8899-aabbccddeeff'],
+      ['identifier2'],
     );
     static::assertEquals(
       [$externalFile2],
@@ -136,7 +156,7 @@ final class FundingExternalFileManagerTest extends AbstractFundingHeadlessTestCa
     $this->externalFileManager->deleteFiles(
       'civicrm_funding_program',
       $fundingProgram->getId(),
-      ['99112233-4455-6677-8899-aabbccddeeff'],
+      ['excludedIdentifier'],
     );
     static::assertEquals(
       [],

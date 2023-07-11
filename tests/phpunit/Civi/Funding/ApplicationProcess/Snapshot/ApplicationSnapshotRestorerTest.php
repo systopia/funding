@@ -19,10 +19,12 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Snapshot;
 
+use Civi\Funding\ApplicationProcess\ApplicationExternalFileManagerInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\ApplicationSnapshotManager;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ApplicationSnapshotFactory;
+use Civi\Funding\EntityFactory\ExternalFileFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -43,13 +45,20 @@ final class ApplicationSnapshotRestorerTest extends TestCase {
 
   private ApplicationSnapshotRestorer $applicationSnapshotRestorer;
 
+  /**
+   * @var \Civi\Funding\ApplicationProcess\ApplicationExternalFileManagerInterface&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $externalFileManagerMock;
+
   protected function setUp(): void {
     parent::setUp();
     $this->applicationProcessManagerMock = $this->createMock(ApplicationProcessManager::class);
     $this->applicationSnapshotManagerMock = $this->createMock(ApplicationSnapshotManager::class);
+    $this->externalFileManagerMock = $this->createMock(ApplicationExternalFileManagerInterface::class);
     $this->applicationSnapshotRestorer = new ApplicationSnapshotRestorer(
       $this->applicationProcessManagerMock,
       $this->applicationSnapshotManagerMock,
+      $this->externalFileManagerMock,
     );
   }
 
@@ -64,6 +73,16 @@ final class ApplicationSnapshotRestorerTest extends TestCase {
 
     $this->applicationProcessManagerMock->expects(static::once())->method('update')
       ->with(11, $applicationProcessBundle);
+
+    $externalFile = ExternalFileFactory::create(['identifier' => 'testIdentifier']);
+    $this->externalFileManagerMock->method('getFilesForSnapshot')
+      ->with($applicationSnapshot->getId())
+      ->willReturn([$externalFile]);
+    $this->externalFileManagerMock->expects(static::once())->method('restoreSnapshot')
+      ->with($externalFile);
+    $this->externalFileManagerMock->expects(static::once())->method('deleteFiles')
+      ->with($applicationProcess->getId(), ['testIdentifier']);
+
     $this->applicationSnapshotRestorer->restoreLastSnapshot(11, $applicationProcessBundle);
 
     static::assertSame($applicationSnapshot->getStatus(), $applicationProcess->getStatus());

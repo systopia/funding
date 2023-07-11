@@ -63,7 +63,7 @@ final class FundingExternalFileManager implements FundingExternalFileManagerInte
   ): ExternalFileEntity {
     $externalFile = $this->getFile($identifier, $entityTable, $entityId);
     if (NULL !== $externalFile) {
-      if ($externalFile->getUri() !== $uri) {
+      if ($this->isFileChanged($externalFile, $uri)) {
         $this->deleteFile($externalFile);
       }
       else {
@@ -90,6 +90,14 @@ final class FundingExternalFileManager implements FundingExternalFileManagerInte
         $this->deleteFile($externalFile);
       }
     }
+  }
+
+  public function detachFile(ExternalFileEntity $externalFile, string $entityTable, int $entityId): void {
+    $entityFileAction = _EntityFile::delete(FALSE)
+      ->addWhere('file_id', '=', $externalFile->getFileId())
+      ->addWhere('entity_table', '=', $entityTable)
+      ->addWhere('entity_id', '=', $entityId);
+    $this->api4->executeAction($entityFileAction);
   }
 
   public function getFile(string $identifier, string $entityTable, int $entityId): ?ExternalFileEntity {
@@ -135,6 +143,19 @@ final class FundingExternalFileManager implements FundingExternalFileManagerInte
     return ExternalFileEntity::allFromApiResult($result);
   }
 
+  public function isAttachedToTable(ExternalFileEntity $externalFile, string $table): bool {
+    $action = _EntityFile::get(FALSE)
+      ->selectRowCount()
+      ->addWhere('file_id', '=', $externalFile->getFileId())
+      ->addWhere('entity_table', '=', $table);
+
+    return 0 < $this->api4->executeAction($action)->countMatched();
+  }
+
+  public function isFileChanged(ExternalFileEntity $externalFile, string $newUri): bool {
+    return $externalFile->getUri() !== $newUri;
+  }
+
   public function updateCustomData(ExternalFileEntity $externalFile, ?array $customData): void {
     if ($externalFile->getCustomData() != $customData) {
       $externalFile->setCustomData($customData);
@@ -142,6 +163,18 @@ final class FundingExternalFileManager implements FundingExternalFileManagerInte
         'ExternalFile',
         $externalFile->getId(),
         ['custom_data' => $customData],
+        ['checkPermissions' => FALSE],
+      );
+    }
+  }
+
+  public function updateIdentifier(ExternalFileEntity $externalFile, string $identifier): void {
+    if ($externalFile->getIdentifier() !== $identifier) {
+      $externalFile->setIdentifier($identifier);
+      $this->api4->updateEntity(
+        'ExternalFile',
+        $externalFile->getId(),
+        ['identifier' => $identifier],
         ['checkPermissions' => FALSE],
       );
     }

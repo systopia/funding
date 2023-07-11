@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Snapshot;
 
+use Civi\Funding\ApplicationProcess\ApplicationExternalFileManagerInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\ApplicationSnapshotManager;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
@@ -30,14 +31,21 @@ final class ApplicationSnapshotRestorer implements ApplicationSnapshotRestorerIn
 
   private ApplicationSnapshotManager $applicationSnapshotManager;
 
+  private ApplicationExternalFileManagerInterface $externalFileManager;
+
   public function __construct(
     ApplicationProcessManager $applicationProcessManager,
-    ApplicationSnapshotManager $applicationSnapshotManager
+    ApplicationSnapshotManager $applicationSnapshotManager,
+    ApplicationExternalFileManagerInterface $externalFileManager
   ) {
     $this->applicationProcessManager = $applicationProcessManager;
     $this->applicationSnapshotManager = $applicationSnapshotManager;
+    $this->externalFileManager = $externalFileManager;
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function restoreLastSnapshot(int $contactId, ApplicationProcessEntityBundle $applicationProcessBundle): void {
     $applicationProcess = $applicationProcessBundle->getApplicationProcess();
 
@@ -57,9 +65,17 @@ final class ApplicationSnapshotRestorer implements ApplicationSnapshotRestorerIn
     $applicationProcess->setIsReviewContent($applicationSnapshot->getIsReviewContent());
     $applicationProcess->setIsEligible($applicationSnapshot->getIsEligible());
     $applicationProcess->setRestoredSnapshot($applicationSnapshot);
-    // @todo: External files
 
     $this->applicationProcessManager->update($contactId, $applicationProcessBundle);
+
+    $usedIdentifiers = [];
+    $externalFiles = $this->externalFileManager->getFilesForSnapshot($applicationSnapshot->getId());
+    foreach ($externalFiles as $externalFile) {
+      $this->externalFileManager->restoreSnapshot($externalFile, $applicationProcess->getId());
+      $usedIdentifiers[] = $externalFile->getIdentifier();
+    }
+
+    $this->externalFileManager->deleteFiles($applicationProcess->getId(), $usedIdentifiers);
   }
 
 }

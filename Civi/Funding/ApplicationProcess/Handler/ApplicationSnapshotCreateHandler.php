@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Handler;
 
+use Civi\Funding\ApplicationProcess\ApplicationExternalFileManagerInterface;
 use Civi\Funding\ApplicationProcess\ApplicationSnapshotManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationSnapshotCreateCommand;
 use Civi\Funding\Entity\ApplicationSnapshotEntity;
@@ -28,8 +29,14 @@ final class ApplicationSnapshotCreateHandler implements ApplicationSnapshotCreat
 
   private ApplicationSnapshotManager $applicationSnapshotManager;
 
-  public function __construct(ApplicationSnapshotManager $applicationSnapshotManager) {
+  private ApplicationExternalFileManagerInterface $externalFileManager;
+
+  public function __construct(
+    ApplicationSnapshotManager $applicationSnapshotManager,
+    ApplicationExternalFileManagerInterface $externalFileManager
+  ) {
     $this->applicationSnapshotManager = $applicationSnapshotManager;
+    $this->externalFileManager = $externalFileManager;
   }
 
   /**
@@ -51,9 +58,13 @@ final class ApplicationSnapshotCreateHandler implements ApplicationSnapshotCreat
       'is_review_calculative' => $applicationProcess->getIsReviewCalculative(),
       'is_eligible' => $applicationProcess->getIsEligible(),
     ]);
-    // @todo: External files
 
     $this->applicationSnapshotManager->add($applicationSnapshot);
+
+    $externalFiles = $this->externalFileManager->getFiles($applicationProcess->getId());
+    foreach ($externalFiles as $externalFile) {
+      $this->externalFileManager->attachFileToSnapshot($externalFile, $applicationSnapshot->getId());
+    }
   }
 
 }

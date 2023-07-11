@@ -42,6 +42,11 @@ interface ApplicationExternalFileManagerInterface {
   /**
    * @throws \CRM_Core_Exception
    */
+  public function attachFileToSnapshot(ExternalFileEntity $externalFile, int $snapshotId): void;
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function deleteFile(ExternalFileEntity $externalFile): void;
 
   /**
@@ -62,5 +67,17 @@ interface ApplicationExternalFileManagerInterface {
    * @throws \CRM_Core_Exception
    */
   public function getFiles(int $applicationProcessId): array;
+
+  /**
+   * @phpstan-return array<ExternalFileEntity>
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function getFilesForSnapshot(int $snapshotId): array;
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function restoreSnapshot(ExternalFileEntity $externalFile, int $applicationProcessId): void;
 
 }

@@ -73,6 +73,11 @@ interface FundingExternalFileManagerInterface {
   /**
    * @throws \CRM_Core_Exception
    */
+  public function detachFile(ExternalFileEntity $externalFile, string $entityTable, int $entityId): void;
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function getFile(string $identifier, string $entityTable, int $entityId): ?ExternalFileEntity;
 
   /**
@@ -83,10 +88,22 @@ interface FundingExternalFileManagerInterface {
   public function getFiles(string $entityTable, int $entityId): array;
 
   /**
+   * @throws \CRM_Core_Exception
+   */
+  public function isAttachedToTable(ExternalFileEntity $externalFile, string $table): bool;
+
+  public function isFileChanged(ExternalFileEntity $externalFile, string $newUri): bool;
+
+  /**
    * @phpstan-param array<int|string, mixed>|null $customData JSON serializable.
    *
    * @throws \CRM_Core_Exception
    */
   public function updateCustomData(ExternalFileEntity $externalFile, ?array $customData): void;
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function updateIdentifier(ExternalFileEntity $externalFile, string $identifier): void;
 
 }

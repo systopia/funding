@@ -19,10 +19,12 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Handler;
 
+use Civi\Funding\ApplicationProcess\ApplicationExternalFileManagerInterface;
 use Civi\Funding\ApplicationProcess\ApplicationSnapshotManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationSnapshotCreateCommand;
 use Civi\Funding\Entity\ApplicationSnapshotEntity;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
+use Civi\Funding\EntityFactory\ExternalFileFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ClockMock;
@@ -37,6 +39,11 @@ final class ApplicationSnapshotCreateHandlerTest extends TestCase {
    */
   private MockObject $applicationSnapshotManagerMock;
 
+  /**
+   * @var \Civi\Funding\ApplicationProcess\ApplicationExternalFileManagerInterface&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $externalFileManagerMock;
+
   private ApplicationSnapshotCreateHandler $handler;
 
   public static function setUpBeforeClass(): void {
@@ -48,7 +55,11 @@ final class ApplicationSnapshotCreateHandlerTest extends TestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->applicationSnapshotManagerMock = $this->createMock(ApplicationSnapshotManager::class);
-    $this->handler = new ApplicationSnapshotCreateHandler($this->applicationSnapshotManagerMock);
+    $this->externalFileManagerMock = $this->createMock(ApplicationExternalFileManagerInterface::class);
+    $this->handler = new ApplicationSnapshotCreateHandler(
+      $this->applicationSnapshotManagerMock,
+      $this->externalFileManagerMock,
+    );
   }
 
   public function testHandle(): void {
@@ -74,8 +85,17 @@ final class ApplicationSnapshotCreateHandlerTest extends TestCase {
         );
         static::assertSame($applicationProcess->getIsEligible(), $applicationSnapshot->getIsEligible());
 
+        $applicationSnapshot->setValues($applicationSnapshot->toArray() + ['id' => 123]);
+
         return TRUE;
       }));
+
+    $externalFile = ExternalFileFactory::create();
+    $this->externalFileManagerMock->method('getFiles')
+      ->with($applicationProcess->getId())
+      ->willReturn([$externalFile]);
+    $this->externalFileManagerMock->expects(static::once())->method('attachFileToSnapshot')
+      ->with($externalFile, 123);
 
     $this->handler->handle(new ApplicationSnapshotCreateCommand(11, $applicationProcessBundle));
   }
