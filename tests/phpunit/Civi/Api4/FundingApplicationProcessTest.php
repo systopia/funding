@@ -410,6 +410,7 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
     static::assertNotEmpty($result['data']);
     static::assertSame(11, $result['data']['amountRequested']);
     static::assertSame(22, $result['data']['resources']);
+    static::assertIsString($result['data']['file']);
     static::assertStringStartsWith('http://localhost/', $result['data']['file']);
     static::assertStringEndsWith('/test1.txt', $result['data']['file']);
   }
