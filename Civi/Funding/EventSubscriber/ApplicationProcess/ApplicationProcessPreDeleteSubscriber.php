@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\ApplicationProcess;
 
+use Civi\Funding\ApplicationProcess\ApplicationExternalFileManagerInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreDeleteEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -27,6 +28,8 @@ final class ApplicationProcessPreDeleteSubscriber implements EventSubscriberInte
 
   private ApplicationProcessActivityManager $activityManager;
 
+  private ApplicationExternalFileManagerInterface $externalFileManager;
+
   /**
    * @inheritDoc
    */
@@ -34,8 +37,12 @@ final class ApplicationProcessPreDeleteSubscriber implements EventSubscriberInte
     return [ApplicationProcessPreDeleteEvent::class => 'onPreDelete'];
   }
 
-  public function __construct(ApplicationProcessActivityManager $activityManager) {
+  public function __construct(
+    ApplicationProcessActivityManager $activityManager,
+    ApplicationExternalFileManagerInterface $externalFileManager
+  ) {
     $this->activityManager = $activityManager;
+    $this->externalFileManager = $externalFileManager;
   }
 
   /**
@@ -43,6 +50,7 @@ final class ApplicationProcessPreDeleteSubscriber implements EventSubscriberInte
    */
   public function onPreDelete(ApplicationProcessPreDeleteEvent $event): void {
     $this->activityManager->deleteByApplicationProcess($event->getApplicationProcess()->getId());
+    $this->externalFileManager->deleteFiles($event->getApplicationProcess()->getId(), []);
   }
 
 }
