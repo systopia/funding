@@ -38,11 +38,6 @@ fundingModule.directive('fundingApplicationProcessActivity', [function() {
         $scope.statusOption = $scope.statusOptions['new'];
       }
 
-      if ($scope.statusOption && $scope.statusOption.icon) {
-        $scope.iconClass = 'fa ' + $scope.statusOption.icon;
-        $scope.statusOption.icon = null;
-      }
-
       function getActivityTemplateUrl(activity) {
         switch (activity['activity_type_id:name']) {
           case 'funding_application_status_change':
