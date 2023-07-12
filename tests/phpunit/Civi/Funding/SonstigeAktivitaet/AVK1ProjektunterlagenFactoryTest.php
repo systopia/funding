@@ -45,14 +45,16 @@ final class AVK1ProjektunterlagenFactoryTest extends TestCase {
 
   public function testCreateProjektunterlagen(): void {
     $applicationProcess = ApplicationProcessFactory::createApplicationProcess();
+    $identifier1 = 'FundingApplicationProcess.' . $applicationProcess->getId() . ':projektunterlage/123';
+    $identifier2 = 'FundingApplicationProcess.' . $applicationProcess->getId() . ':foo';
     $this->externalFileManagerMock->method('getFiles')->with($applicationProcess->getId())
       ->willReturn([
-        ExternalFileFactory::create([
-          'identifier' => 'projektunterlage/123',
+        'projektunterlage/123' => ExternalFileFactory::create([
+          'identifier' => $identifier1,
           'custom_data' => ['beschreibung' => 'test'],
           'uri' => 'https://example.net/test.txt',
         ]),
-        ExternalFileFactory::create(),
+        'foo' => ExternalFileFactory::create(['identifier' => $identifier2]),
       ]);
 
     static::assertEquals(

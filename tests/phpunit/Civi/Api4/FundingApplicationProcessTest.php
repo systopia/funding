@@ -204,7 +204,7 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
     FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['review_permission']);
 
     $externalFile = ExternalFileFixture::addFixture([
-      'identifier' => 'file',
+      'identifier' => 'FundingApplicationProcess.' . $applicationProcess->getId() . ':file',
     ]);
     EntityFileFixture::addFixture(
       'civicrm_funding_application_process',
@@ -361,7 +361,7 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
 
     $externalFileSnapshot = ExternalFileFixture::addFixture([
       'source' => 'https://example.org/test1.txt',
-      'identifier' => 'snapshot:1689078247:file',
+      'identifier' => 'snapshot@1689078247:FundingApplicationProcess.' . $applicationProcess->getId() . ':file',
     ]);
     EntityFileFixture::addFixture(
       'civicrm_funding_application_snapshot',
@@ -371,7 +371,7 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
 
     $externalFile = ExternalFileFixture::addFixture([
       'source' => 'https://example.org/test2.txt',
-      'identifier' => 'file',
+      'identifier' => 'FundingApplicationProcess.' . $applicationProcess->getId() . ':file',
     ]);
     EntityFileFixture::addFixture(
       'civicrm_funding_application_process',

@@ -88,7 +88,7 @@ final class RemoteFundingApplicationProcessTestFormTest extends AbstractRemoteFu
     );
 
     $externalFile = ExternalFileFixture::addFixture([
-      'identifier' => 'file',
+      'identifier' => 'FundingApplicationProcess.' . $this->applicationProcess->getId() . ':file',
     ]);
     EntityFileFixture::addFixture(
       'civicrm_funding_application_process',

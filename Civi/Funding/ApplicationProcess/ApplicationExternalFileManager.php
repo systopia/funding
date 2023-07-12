@@ -41,12 +41,11 @@ final class ApplicationExternalFileManager implements ApplicationExternalFileMan
     int $applicationProcessId,
     ?array $customData = NULL
   ): ExternalFileEntity {
+    $identifier = $this->addIdentifierPrefix($applicationProcessId, $identifier);
     $externalFile = $this->getFile($identifier, $applicationProcessId);
     if (NULL !== $externalFile
-      && $this->externalFileManager->isFileChanged($externalFile, $uri)
-      && $this->isUsedInSnapshot($externalFile)
-    ) {
-      $this->makeSnapshot($externalFile, $applicationProcessId);
+      && $this->externalFileManager->isFileChanged($externalFile, $uri)) {
+      $this->deleteFile($externalFile, $applicationProcessId);
 
       return $this->externalFileManager->addFile(
         $uri,
@@ -70,38 +69,54 @@ final class ApplicationExternalFileManager implements ApplicationExternalFileMan
     $this->externalFileManager->attachFile($externalFile, self::SNAPSHOT_TABLE, $snapshotId);
   }
 
-  public function deleteFile(ExternalFileEntity $externalFile): void {
-    $this->externalFileManager->deleteFile($externalFile);
-  }
-
   public function deleteFiles(int $applicationProcessId, array $excludedIdentifiers): void {
-    $this->externalFileManager->deleteFiles(self::TABLE, $applicationProcessId, $excludedIdentifiers);
+    $excludedIdentifiers = array_map(
+      fn (string $identifier) => $this->addIdentifierPrefix($applicationProcessId, $identifier),
+      $excludedIdentifiers,
+    );
+
+    foreach ($this->getFiles($applicationProcessId) as $externalFile) {
+      if (!in_array($externalFile->getIdentifier(), $excludedIdentifiers, TRUE)) {
+        $this->deleteFile($externalFile, $applicationProcessId);
+      }
+    }
   }
 
   public function getFile(string $identifier, int $applicationProcessId): ?ExternalFileEntity {
+    $identifier = $this->addIdentifierPrefix($applicationProcessId, $identifier);
+
     return $this->externalFileManager->getFile($identifier, self::TABLE, $applicationProcessId);
   }
 
   public function getFiles(int $applicationProcessId): array {
-    return $this->externalFileManager->getFiles(self::TABLE, $applicationProcessId);
+    return $this->buildExternalFilesMap(
+      $this->externalFileManager->getFiles(self::TABLE, $applicationProcessId),
+      $applicationProcessId,
+    );
   }
 
-  public function getFilesForSnapshot(int $snapshotId): array {
+  public function getFilesAttachedToSnapshot(int $snapshotId): array {
     return $this->externalFileManager->getFiles(self::SNAPSHOT_TABLE, $snapshotId);
   }
 
-  public function restoreSnapshot(ExternalFileEntity $externalFile, int $applicationProcessId): void {
+  public function restoreFileSnapshot(ExternalFileEntity $externalFile, int $applicationProcessId): void {
     /** @var string $identifier */
-    $identifier = preg_replace('/^snapshot:[0-9]+:/', '', $externalFile->getIdentifier());
+    $identifier = preg_replace('/^snapshot@[0-9]+:/', '', $externalFile->getIdentifier());
     if ($externalFile->getIdentifier() !== $identifier) {
       $currentExternalFile = $this->getFile($identifier, $applicationProcessId);
       if (NULL !== $currentExternalFile) {
-        $this->deleteFile($currentExternalFile);
+        $this->externalFileManager->deleteFile($currentExternalFile);
       }
       $this->externalFileManager->updateIdentifier($externalFile, $identifier);
     }
 
     $this->attachFile($externalFile, $applicationProcessId);
+  }
+
+  private function addIdentifierPrefix(int $applicationProcessId, string $identifier): string {
+    $prefix = $this->getIdentifierPrefix($applicationProcessId);
+
+    return str_starts_with($identifier, $prefix) ? $identifier : ($prefix . $identifier);
   }
 
   /**
@@ -124,6 +139,37 @@ final class ApplicationExternalFileManager implements ApplicationExternalFileMan
   }
 
   /**
+   * @phpstan-param array<ExternalFileEntity> $externalFiles
+   *
+   * @phpstan-return array<string, ExternalFileEntity>
+   *   Key is the identifier without prefix.
+   *
+   * @see addIdentifierPrefix()
+   */
+  private function buildExternalFilesMap(array $externalFiles, int $applicationProcessId): array {
+    $externalFilesMap = [];
+    foreach ($externalFiles as $externalFile) {
+      $prefixlessIdentifier = $this->stripIdentifierPrefix($externalFile->getIdentifier(), $applicationProcessId);
+      $externalFilesMap[$prefixlessIdentifier] = $externalFile;
+    }
+
+    return $externalFilesMap;
+  }
+
+  private function deleteFile(ExternalFileEntity $externalFile, int $applicationProcessId): void {
+    if ($this->isUsedInSnapshot($externalFile)) {
+      $this->makeSnapshot($externalFile, $applicationProcessId);
+    }
+    else {
+      $this->externalFileManager->deleteFile($externalFile);
+    }
+  }
+
+  private function getIdentifierPrefix(int $applicationProcessId): string {
+    return FundingApplicationProcess::_getEntityName() . '.' . $applicationProcessId . ':';
+  }
+
+  /**
    * @throws \CRM_Core_Exception
    */
   private function isUsedInSnapshot(ExternalFileEntity $externalFile): bool {
@@ -134,9 +180,16 @@ final class ApplicationExternalFileManager implements ApplicationExternalFileMan
    * @throws \CRM_Core_Exception
    */
   private function makeSnapshot(ExternalFileEntity $externalFile, int $applicationProcessId): void {
-    $identifier = 'snapshot:' . time() . ':' . $externalFile->getIdentifier();
+    $identifier = 'snapshot@' . time() . ':' . $externalFile->getIdentifier();
     $this->externalFileManager->updateIdentifier($externalFile, $identifier);
     $this->externalFileManager->detachFile($externalFile, self::TABLE, $applicationProcessId);
+  }
+
+  private function stripIdentifierPrefix(string $identifier, int $applicationProcessId): string {
+    $prefix = $this->getIdentifierPrefix($applicationProcessId);
+
+    // @phpstan-ignore-next-line
+    return preg_replace('/^' . $prefix . '/', '', $identifier);
   }
 
 }

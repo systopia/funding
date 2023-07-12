@@ -69,9 +69,9 @@ final class ApplicationSnapshotRestorer implements ApplicationSnapshotRestorerIn
     $this->applicationProcessManager->update($contactId, $applicationProcessBundle);
 
     $usedIdentifiers = [];
-    $externalFiles = $this->externalFileManager->getFilesForSnapshot($applicationSnapshot->getId());
+    $externalFiles = $this->externalFileManager->getFilesAttachedToSnapshot($applicationSnapshot->getId());
     foreach ($externalFiles as $externalFile) {
-      $this->externalFileManager->restoreSnapshot($externalFile, $applicationProcess->getId());
+      $this->externalFileManager->restoreFileSnapshot($externalFile, $applicationProcess->getId());
       $usedIdentifiers[] = $externalFile->getIdentifier();
     }
 

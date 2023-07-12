@@ -25,8 +25,9 @@ interface ApplicationExternalFileManagerInterface {
 
   /**
    * If the URI of an existing file is changed, the corresponding database
-   * records will be deleted new ones created. EntityFile relations will get
-   * lost.
+   * records will be deleted and new ones created. EntityFile relations will get
+   * lost. If such a file is used in a snapshot, its identifier will be changed
+   * instead, and it will be detached from the application process.
    *
    * @phpstan-param array<int|string, mixed>|null $customData JSON serializable.
    *
@@ -45,24 +46,32 @@ interface ApplicationExternalFileManagerInterface {
   public function attachFileToSnapshot(ExternalFileEntity $externalFile, int $snapshotId): void;
 
   /**
-   * @throws \CRM_Core_Exception
-   */
-  public function deleteFile(ExternalFileEntity $externalFile): void;
-
-  /**
+   * Deletes all files attached to the application process, if the identifier is
+   * not part of the excluded ones. In case a file is used in a snapshot, its
+   * identifier will be changed instead, and it will be detached from the
+   * application process
+   *
    * @phpstan-param array<string> $excludedIdentifiers
+   *   May already contain the identifier prefix that was added to the entities'
+   *   identifier.
    *
    * @throws \CRM_Core_Exception
    */
   public function deleteFiles(int $applicationProcessId, array $excludedIdentifiers): void;
 
   /**
+   * @param string $identifier
+   *   May already contain the identifier prefix that was added to the entity's
+   *   identifier.
+   *
    * @throws \CRM_Core_Exception
    */
   public function getFile(string $identifier, int $applicationProcessId): ?ExternalFileEntity;
 
   /**
-   * @phpstan-return array<ExternalFileEntity>
+   * @phpstan-return array<string, ExternalFileEntity>
+   *   The key contains the identifier used when the file was added. The
+   *   identifier of the value object has an additional prefix.
    *
    * @throws \CRM_Core_Exception
    */
@@ -73,11 +82,17 @@ interface ApplicationExternalFileManagerInterface {
    *
    * @throws \CRM_Core_Exception
    */
-  public function getFilesForSnapshot(int $snapshotId): array;
+  public function getFilesAttachedToSnapshot(int $snapshotId): array;
 
   /**
+   * Restores the identifier if it was changed to a snapshot identifier and
+   * (re-)attaches the file to the application process.
+   *
+   * @param \Civi\Funding\Entity\ExternalFileEntity $externalFile
+   *   A file attached to a snapshot.
+   *
    * @throws \CRM_Core_Exception
    */
-  public function restoreSnapshot(ExternalFileEntity $externalFile, int $applicationProcessId): void;
+  public function restoreFileSnapshot(ExternalFileEntity $externalFile, int $applicationProcessId): void;
 
 }

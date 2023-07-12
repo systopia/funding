@@ -44,12 +44,12 @@ class AVK1ProjektunterlagenFactory {
    */
   public function createProjektunterlagen(ApplicationProcessEntity $applicationProcess): array {
     $projektunterlagen = [];
-    foreach ($this->externalFileManager->getFiles($applicationProcess->getId()) as $file) {
-      if (str_starts_with($file->getIdentifier(), 'projektunterlage/')) {
+    foreach ($this->externalFileManager->getFiles($applicationProcess->getId()) as $identifier => $file) {
+      if (str_starts_with($identifier, 'projektunterlage/')) {
         /** @var string $beschreibung */
         $beschreibung = $file->getCustomData()['beschreibung'] ?? '';
         $projektunterlagen[] = [
-          '_identifier' => $file->getIdentifier(),
+          '_identifier' => $identifier,
           'datei' => $file->getUri(),
           'beschreibung' => $beschreibung,
         ];

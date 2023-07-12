@@ -75,10 +75,10 @@ final class ApplicationSnapshotRestorerTest extends TestCase {
       ->with(11, $applicationProcessBundle);
 
     $externalFile = ExternalFileFactory::create(['identifier' => 'testIdentifier']);
-    $this->externalFileManagerMock->method('getFilesForSnapshot')
+    $this->externalFileManagerMock->method('getFilesAttachedToSnapshot')
       ->with($applicationSnapshot->getId())
       ->willReturn([$externalFile]);
-    $this->externalFileManagerMock->expects(static::once())->method('restoreSnapshot')
+    $this->externalFileManagerMock->expects(static::once())->method('restoreFileSnapshot')
       ->with($externalFile);
     $this->externalFileManagerMock->expects(static::once())->method('deleteFiles')
       ->with($applicationProcess->getId(), ['testIdentifier']);

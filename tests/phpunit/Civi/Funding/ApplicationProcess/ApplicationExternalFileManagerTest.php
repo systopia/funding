@@ -53,13 +53,13 @@ final class ApplicationExternalFileManagerTest extends TestCase {
   public function testAddOrUpdateFileNew(): void {
     $externalFile = ExternalFileFactory::create();
     $this->externalFileManagerMock->method('getFile')
-      ->with('identifier', 'civicrm_funding_application_process', 12)
+      ->with('FundingApplicationProcess.12:identifier', 'civicrm_funding_application_process', 12)
       ->willReturn(NULL);
 
     $this->externalFileManagerMock->method('addOrUpdateFile')
       ->with(
         'https://example.org/test.txt',
-        'identifier',
+        'FundingApplicationProcess.12:identifier',
         'civicrm_funding_application_process',
         12,
         [
@@ -80,18 +80,18 @@ final class ApplicationExternalFileManagerTest extends TestCase {
   public function testAddOrUpdateFileUnchanged(): void {
     $externalFile = ExternalFileFactory::create();
     $this->externalFileManagerMock->method('getFile')
-      ->with('identifier', 'civicrm_funding_application_process', 12)
+      ->with('FundingApplicationProcess.12:identifier', 'civicrm_funding_application_process', 12)
       ->willReturn($externalFile);
     $this->externalFileManagerMock->method('isFileChanged')
       ->with($externalFile, 'https://example.org/test.txt')
       ->willReturn(FALSE);
     $this->externalFileManagerMock->expects(static::never())->method('updateIdentifier');
 
-    $externalFileUpdated = ExternalFileFactory::create();
+    $externalFileNew = ExternalFileFactory::create();
     $this->externalFileManagerMock->method('addOrUpdateFile')
       ->with(
         'https://example.org/test.txt',
-        'identifier',
+        'FundingApplicationProcess.12:identifier',
         'civicrm_funding_application_process',
         12,
         [
@@ -99,9 +99,9 @@ final class ApplicationExternalFileManagerTest extends TestCase {
           'entityName' => 'FundingApplicationProcess',
           'entityId' => 12,
         ]
-      )->willReturn($externalFileUpdated);
+      )->willReturn($externalFileNew);
 
-    static::assertSame($externalFileUpdated, $this->applicationExternalFileManager->addOrUpdateFile(
+    static::assertSame($externalFileNew, $this->applicationExternalFileManager->addOrUpdateFile(
       'https://example.org/test.txt',
       'identifier',
       12,
@@ -112,7 +112,7 @@ final class ApplicationExternalFileManagerTest extends TestCase {
   public function testAddOrUpdateFileChangedWithoutSnapshot(): void {
     $externalFile = ExternalFileFactory::create();
     $this->externalFileManagerMock->method('getFile')
-      ->with('identifier', 'civicrm_funding_application_process', 12)
+      ->with('FundingApplicationProcess.12:identifier', 'civicrm_funding_application_process', 12)
       ->willReturn($externalFile);
     $this->externalFileManagerMock->method('isFileChanged')
       ->with($externalFile, 'https://example.org/test.txt')
@@ -120,13 +120,15 @@ final class ApplicationExternalFileManagerTest extends TestCase {
     $this->externalFileManagerMock->method('isAttachedToTable')
       ->with($externalFile, 'civicrm_funding_application_snapshot')
       ->willReturn(FALSE);
-    $this->externalFileManagerMock->expects(static::never())->method('updateIdentifier');
+
+    $this->externalFileManagerMock->expects(static::once())->method('deleteFile')
+      ->with($externalFile);
 
     $externalFileUpdated = ExternalFileFactory::create();
-    $this->externalFileManagerMock->method('addOrUpdateFile')
+    $this->externalFileManagerMock->method('addFile')
       ->with(
         'https://example.org/test.txt',
-        'identifier',
+        'FundingApplicationProcess.12:identifier',
         'civicrm_funding_application_process',
         12,
         [
@@ -145,9 +147,9 @@ final class ApplicationExternalFileManagerTest extends TestCase {
   }
 
   public function testAddOrUpdateFileChangedWithSnapshot(): void {
-    $externalFileExisting = ExternalFileFactory::create(['identifier' => 'identifier']);
+    $externalFileExisting = ExternalFileFactory::create(['identifier' => 'FundingApplicationProcess.12:identifier']);
     $this->externalFileManagerMock->method('getFile')
-      ->with('identifier', 'civicrm_funding_application_process', 12)
+      ->with('FundingApplicationProcess.12:identifier', 'civicrm_funding_application_process', 12)
       ->willReturn($externalFileExisting);
     $this->externalFileManagerMock->method('isFileChanged')
       ->with($externalFileExisting, 'https://example.org/test.txt')
@@ -157,13 +159,15 @@ final class ApplicationExternalFileManagerTest extends TestCase {
       ->willReturn(TRUE);
 
     $this->externalFileManagerMock->expects(static::once())->method('updateIdentifier')
-      ->with($externalFileExisting, 'snapshot:123456789:identifier');
+      ->with($externalFileExisting, 'snapshot@123456789:FundingApplicationProcess.12:identifier');
+    $this->externalFileManagerMock->expects(static::once())->method('detachFile')
+      ->with($externalFileExisting, 'civicrm_funding_application_process', 12);
 
     $externalFileNew = ExternalFileFactory::create();
     $this->externalFileManagerMock->method('addFile')
       ->with(
         'https://example.org/test.txt',
-        'identifier',
+        'FundingApplicationProcess.12:identifier',
         'civicrm_funding_application_process',
         12,
         [
@@ -181,25 +185,61 @@ final class ApplicationExternalFileManagerTest extends TestCase {
     ));
   }
 
-  public function testDeleteFile(): void {
-    $externalFile = ExternalFileFactory::create();
+  public function testDeleteFiles(): void {
+    $externalFile = ExternalFileFactory::create(['identifier' => 'FundingApplicationProcess.12:identifier']);
+    $this->externalFileManagerMock->method('getFiles')
+      ->with('civicrm_funding_application_process', 12)
+      ->willReturn([$externalFile]);
+
     $this->externalFileManagerMock->expects(static::once())->method('deleteFile')
       ->with($externalFile);
 
-    $this->applicationExternalFileManager->deleteFile($externalFile);
+    $this->applicationExternalFileManager->deleteFiles(12, [
+      'excluded_identifier',
+    ]);
   }
 
-  public function testDeleteFiles(): void {
-    $this->externalFileManagerMock->expects(static::once())->method('deleteFiles')
-      ->with('civicrm_funding_application_process', 12, ['excluded_identifier']);
+  public function testDeleteFilesExcluded(): void {
+    $externalFile1 = ExternalFileFactory::create(['identifier' => 'FundingApplicationProcess.12:excluded_identifier1']);
+    $externalFile2 = ExternalFileFactory::create(['identifier' => 'FundingApplicationProcess.12:excluded_identifier2']);
+    $this->externalFileManagerMock->method('getFiles')
+      ->with('civicrm_funding_application_process', 12)
+      ->willReturn([$externalFile1, $externalFile2]);
 
-    $this->applicationExternalFileManager->deleteFiles(12, ['excluded_identifier']);
+    $this->externalFileManagerMock->expects(static::never())->method('deleteFile');
+
+    $this->applicationExternalFileManager->deleteFiles(12, [
+      'excluded_identifier1',
+      'FundingApplicationProcess.12:excluded_identifier2',
+    ]);
+  }
+
+  public function testDeleteFilesWithSnapshot(): void {
+    $externalFile = ExternalFileFactory::create(['identifier' => 'FundingApplicationProcess.12:identifier']);
+    $this->externalFileManagerMock->method('getFiles')
+      ->with('civicrm_funding_application_process', 12)
+      ->willReturn([$externalFile]);
+
+    $this->externalFileManagerMock->method('isAttachedToTable')
+      ->with($externalFile, 'civicrm_funding_application_snapshot')
+      ->willReturn(TRUE);
+
+    $this->externalFileManagerMock->expects(static::once())->method('updateIdentifier')
+      ->with($externalFile, 'snapshot@123456789:FundingApplicationProcess.12:identifier');
+    $this->externalFileManagerMock->expects(static::once())->method('detachFile')
+      ->with($externalFile, 'civicrm_funding_application_process', 12);
+
+    $this->externalFileManagerMock->expects(static::never())->method('deleteFile');
+
+    $this->applicationExternalFileManager->deleteFiles(12, [
+      'excluded_identifier',
+    ]);
   }
 
   public function testGetFile(): void {
     $externalFile = ExternalFileFactory::create();
     $this->externalFileManagerMock->method('getFile')
-      ->with('identifier', 'civicrm_funding_application_process', 12)
+      ->with('FundingApplicationProcess.12:identifier', 'civicrm_funding_application_process', 12)
       ->willReturn($externalFile);
 
     static::assertSame(
@@ -209,12 +249,15 @@ final class ApplicationExternalFileManagerTest extends TestCase {
   }
 
   public function testGetFiles(): void {
-    $externalFile = ExternalFileFactory::create();
+    $externalFile = ExternalFileFactory::create(['identifier' => 'FundingApplicationProcess.12:identifier']);
     $this->externalFileManagerMock->method('getFiles')
       ->with('civicrm_funding_application_process', 12)
       ->willReturn([$externalFile]);
 
-    static::assertSame([$externalFile], $this->applicationExternalFileManager->getFiles(12));
+    static::assertSame(
+      ['identifier' => $externalFile],
+      $this->applicationExternalFileManager->getFiles(12),
+    );
   }
 
 }
