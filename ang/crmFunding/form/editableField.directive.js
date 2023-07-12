@@ -64,10 +64,7 @@ fundingModule.directive('editableField', [function() {
         this.formName = $scope.$parent.formName;
       }
       if ($attrs.editAllowed === undefined) {
-        this.editAllowed = $scope.$parent.$eval('isEditAllowed()');
-        if (typeof this.editAllowed !== 'boolean') {
-          this.editAllowed = true;
-        }
+        $attrs.editAllowed = 'isEditAllowed()';
       }
 
       /**
@@ -76,7 +73,7 @@ fundingModule.directive('editableField', [function() {
        * @returns {string}
        */
       $scope.showChecklist = function(selected, oneOf) {
-        if (selected === undefined || selected === null) {
+        if (selected === undefined || selected === null || selected.length === 0) {
           return $attrs.emptyValueDisplay;
         }
 
@@ -112,7 +109,7 @@ fundingModule.directive('editableField', [function() {
       if (attrs.type === 'checklist') {
         displayValueExpression = 'showChecklist(' + attrs.value + ', ' + attrs.optionsOneOf + ')';
       } else {
-        displayValueExpression = 'null === ' + attrs.value + ' ? $ctrl.emptyValueDisplay : ' + attrs.value;
+        displayValueExpression = '(null === ' + attrs.value + ' || "" === ' + attrs.value + ') ? $ctrl.emptyValueDisplay : ' + attrs.value;
       }
 
       const editSpan = angular.element('<span>{{ ' + displayValueExpression + ' }}</span>');
