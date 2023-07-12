@@ -35,6 +35,9 @@ final class ApplicationExternalFileManager implements ApplicationExternalFileMan
     $this->externalFileManager = $externalFileManager;
   }
 
+  /**
+   * @inheritDoc
+   */
   public function addOrUpdateFile(
     string $uri,
     string $identifier,
@@ -65,10 +68,16 @@ final class ApplicationExternalFileManager implements ApplicationExternalFileMan
     );
   }
 
+  /**
+   * @inheritDoc
+   */
   public function attachFileToSnapshot(ExternalFileEntity $externalFile, int $snapshotId): void {
     $this->externalFileManager->attachFile($externalFile, self::SNAPSHOT_TABLE, $snapshotId);
   }
 
+  /**
+   * @inheritDoc
+   */
   public function deleteFiles(int $applicationProcessId, array $excludedIdentifiers): void {
     $excludedIdentifiers = array_map(
       fn (string $identifier) => $this->addIdentifierPrefix($applicationProcessId, $identifier),
@@ -82,12 +91,18 @@ final class ApplicationExternalFileManager implements ApplicationExternalFileMan
     }
   }
 
+  /**
+   * @inheritDoc
+   */
   public function getFile(string $identifier, int $applicationProcessId): ?ExternalFileEntity {
     $identifier = $this->addIdentifierPrefix($applicationProcessId, $identifier);
 
     return $this->externalFileManager->getFile($identifier, self::TABLE, $applicationProcessId);
   }
 
+  /**
+   * @inheritDoc
+   */
   public function getFiles(int $applicationProcessId): array {
     return $this->buildExternalFilesMap(
       $this->externalFileManager->getFiles(self::TABLE, $applicationProcessId),
@@ -95,10 +110,16 @@ final class ApplicationExternalFileManager implements ApplicationExternalFileMan
     );
   }
 
+  /**
+   * @inheritDoc
+   */
   public function getFilesAttachedToSnapshot(int $snapshotId): array {
     return $this->externalFileManager->getFiles(self::SNAPSHOT_TABLE, $snapshotId);
   }
 
+  /**
+   * @inheritDoc
+   */
   public function restoreFileSnapshot(ExternalFileEntity $externalFile, int $applicationProcessId): void {
     /** @var string $identifier */
     $identifier = preg_replace('/^snapshot@[0-9]+:/', '', $externalFile->getIdentifier());

@@ -34,6 +34,9 @@ final class FundingExternalFileManager implements FundingExternalFileManagerInte
     $this->api4 = $api4;
   }
 
+  /**
+   * @inheritDoc
+   */
   public function addFile(
     string $uri,
     string $identifier,
@@ -54,6 +57,9 @@ final class FundingExternalFileManager implements FundingExternalFileManagerInte
     return $externalFile;
   }
 
+  /**
+   * @inheritDoc
+   */
   public function addOrUpdateFile(
     string $uri,
     string $identifier,
@@ -76,14 +82,23 @@ final class FundingExternalFileManager implements FundingExternalFileManagerInte
     return $this->addFile($uri, $identifier, $entityTable, $entityId, $customData);
   }
 
+  /**
+   * @inheritDoc
+   */
   public function attachFile(ExternalFileEntity $externalFile, string $entityTable, int $entityId): void {
     $this->attachCiviFile($externalFile->getFileId(), $entityTable, $entityId);
   }
 
+  /**
+   * @inheritDoc
+   */
   public function deleteFile(ExternalFileEntity $externalFile): void {
     $this->api4->deleteEntity('ExternalFile', $externalFile->getId(), ['checkPermissions' => FALSE]);
   }
 
+  /**
+   * @inheritDoc
+   */
   public function deleteFiles(string $entityTable, int $entityId, array $excludedIdentifiers): void {
     foreach ($this->getFiles($entityTable, $entityId) as $externalFile) {
       if (!in_array($externalFile->getIdentifier(), $excludedIdentifiers, TRUE)) {
@@ -92,6 +107,9 @@ final class FundingExternalFileManager implements FundingExternalFileManagerInte
     }
   }
 
+  /**
+   * @inheritDoc
+   */
   public function detachFile(ExternalFileEntity $externalFile, string $entityTable, int $entityId): void {
     $entityFileAction = _EntityFile::delete(FALSE)
       ->addWhere('file_id', '=', $externalFile->getFileId())
@@ -100,6 +118,9 @@ final class FundingExternalFileManager implements FundingExternalFileManagerInte
     $this->api4->executeAction($entityFileAction);
   }
 
+  /**
+   * @inheritDoc
+   */
   public function getFile(string $identifier, string $entityTable, int $entityId): ?ExternalFileEntity {
     $action = ExternalFile::get(FALSE)
       ->addWhere('extension', '=', E::SHORT_NAME)
@@ -122,6 +143,9 @@ final class FundingExternalFileManager implements FundingExternalFileManagerInte
     return $externalFile;
   }
 
+  /**
+   * @inheritDoc
+   */
   public function getFiles(string $entityTable, int $entityId): array {
     $fileIds = $this->getFileIdsByEntity($entityTable, $entityId);
     if ([] === $fileIds) {
@@ -143,6 +167,9 @@ final class FundingExternalFileManager implements FundingExternalFileManagerInte
     return ExternalFileEntity::allFromApiResult($result);
   }
 
+  /**
+   * @inheritDoc
+   */
   public function isAttachedToTable(ExternalFileEntity $externalFile, string $table): bool {
     $action = _EntityFile::get(FALSE)
       ->selectRowCount()
@@ -152,10 +179,16 @@ final class FundingExternalFileManager implements FundingExternalFileManagerInte
     return 0 < $this->api4->executeAction($action)->countMatched();
   }
 
+  /**
+   * @inheritDoc
+   */
   public function isFileChanged(ExternalFileEntity $externalFile, string $newUri): bool {
     return $externalFile->getUri() !== $newUri;
   }
 
+  /**
+   * @inheritDoc
+   */
   public function updateCustomData(ExternalFileEntity $externalFile, ?array $customData): void {
     if ($externalFile->getCustomData() != $customData) {
       $externalFile->setCustomData($customData);
@@ -168,6 +201,9 @@ final class FundingExternalFileManager implements FundingExternalFileManagerInte
     }
   }
 
+  /**
+   * @inheritDoc
+   */
   public function updateIdentifier(ExternalFileEntity $externalFile, string $identifier): void {
     if ($externalFile->getIdentifier() !== $identifier) {
       $externalFile->setIdentifier($identifier);
