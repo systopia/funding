@@ -64,8 +64,8 @@
     <div>
         <label>{{ ts('Status') }}</label>
         {{ statusOptions[applicationProcess.status].label || ts('Unknown') }}
-        <i ng-class="[{fa: statusOptions[applicationProcess.status].icon}, statusOptions[applicationProcess.status].icon]"
-           ng-style="{color: statusOptions[applicationProcess.status].color };"></i>
+        <funding-fa icon="statusOptions[applicationProcess.status].icon"
+                    ng-style="{color: statusOptions[applicationProcess.status].color };"></funding-fa>
     </div>
     <div>
         <label>{{ ts('Review Content') }}</label>
