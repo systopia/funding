@@ -278,7 +278,7 @@
         <funding-add-row-button path="kosten.sonstigeAusgaben" ng-if="isEditAllowed()"></funding-add-row-button>
         <div>
             <label>Sonstige Ausgaben gesamt</label>
-            <span>{{ data.kosten.sachkostenGesamt }} {{ currency }}</span>
+            <span>{{ data.kosten.sonstigeAusgabenGesamt }} {{ currency }}</span>
         </div>
     </div>
     <div>
@@ -337,8 +337,8 @@
         </tr>
         <tr ng-repeat="sonstigesMittel in data.finanzierung.sonstigeMittel track by $index" funding-editable-table-row>
             <td>
-                <editable-field type="text" value="sonstigesMittel.zweck"
-                                path="finanzierung.sonstigeMittel[{{ $index }}].zweck"
+                <editable-field type="text" value="sonstigesMittel.quelle"
+                                path="finanzierung.sonstigeMittel[{{ $index }}].quelle"
                                 e-step="0.01" e-ng-required="true"></editable-field>
             </td>
             <td>

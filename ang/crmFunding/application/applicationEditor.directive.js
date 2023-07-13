@@ -226,11 +226,13 @@ fundingModule.directive('fundingApplicationEditor', function() {
           $scope.isChanged = true;
           const array = _4.get($scope.data, path);
           _4.pullAt(array, index);
+          $scope.validate();
         };
 
         $scope.remove = function (path) {
           $scope.isChanged = true;
           _4.unset($scope.data, path);
+          $scope.validate();
         };
 
         $scope.validate = function () {
