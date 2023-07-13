@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 use CRM_Funding_ExtensionUtil as E;
 
+$weight = 0;
+
 return [
   [
     'name' => 'Navigation_Funding',
@@ -32,7 +34,7 @@ return [
         'label' => E::ts('Funding Program Manager'),
         'name' => 'funding',
         'url' => NULL,
-        'icon' => NULL,
+        'icon' => 'crm-i fa-money',
         'permission' => [
           'administer Funding',
           'access Funding',
@@ -57,7 +59,7 @@ return [
         'label' => E::ts('Funding Cases'),
         'name' => 'afsearchFundingCases',
         'url' => 'civicrm/funding/case/list',
-        'icon' => 'crm-i fa-list-alt',
+        'icon' => 'crm-i fa-folder-open-o',
         'permission' => [
           'administer Funding',
           'access Funding',
@@ -66,6 +68,7 @@ return [
         'parent_id.name' => 'funding',
         'is_active' => TRUE,
         'has_separator' => 0,
+        'weight' => ++$weight,
       ],
     ],
   ],
@@ -81,7 +84,7 @@ return [
         'label' => E::ts('Applications'),
         'name' => 'afsearchFundingCaseApplicationProcesses',
         'url' => 'civicrm/funding/application/list',
-        'icon' => 'crm-i fa-list-alt',
+        'icon' => 'crm-i fa-files-o',
         'permission' => [
           'administer Funding',
           'access Funding',
@@ -90,53 +93,7 @@ return [
         'parent_id.name' => 'funding',
         'is_active' => TRUE,
         'has_separator' => 0,
-      ],
-    ],
-  ],
-  [
-    'name' => 'Navigation_Funding.FundingPrograms',
-    'entity' => 'Navigation',
-    'cleanup' => 'always',
-    'update' => 'unmodified',
-    'params' => [
-      'version' => 4,
-      'values' => [
-        'domain_id' => 'current_domain',
-        'label' => E::ts('Funding Programs'),
-        'name' => 'afsearchFundingPrograms',
-        'url' => 'civicrm/funding/program/list',
-        'icon' => 'crm-i fa-list-alt',
-        'permission' => [
-          'administer Funding',
-          'access Funding',
-        ],
-        'permission_operator' => 'OR',
-        'parent_id.name' => 'funding',
-        'is_active' => TRUE,
-        'has_separator' => 0,
-      ],
-    ],
-  ],
-  [
-    'name' => 'Navigation_Funding.FundingProgramAdd',
-    'entity' => 'Navigation',
-    'cleanup' => 'always',
-    'update' => 'unmodified',
-    'params' => [
-      'version' => 4,
-      'values' => [
-        'domain_id' => 'current_domain',
-        'label' => E::ts('Add Funding Program'),
-        'name' => 'afformFundingProgramAdd',
-        'url' => 'civicrm/funding/program/add',
-        'icon' => 'crm-i fa-plus-circle',
-        'permission' => [
-          'administer Funding',
-        ],
-        'permission_operator' => 'OR',
-        'parent_id.name' => 'funding',
-        'is_active' => TRUE,
-        'has_separator' => 0,
+        'weight' => ++$weight,
       ],
     ],
   ],
@@ -161,6 +118,56 @@ return [
         'parent_id.name' => 'funding',
         'is_active' => TRUE,
         'has_separator' => 0,
+        'weight' => ++$weight,
+      ],
+    ],
+  ],
+  [
+    'name' => 'Navigation_Funding.FundingPrograms',
+    'entity' => 'Navigation',
+    'cleanup' => 'always',
+    'update' => 'unmodified',
+    'params' => [
+      'version' => 4,
+      'values' => [
+        'domain_id' => 'current_domain',
+        'label' => E::ts('Funding Programs'),
+        'name' => 'afsearchFundingPrograms',
+        'url' => 'civicrm/funding/program/list',
+        'icon' => 'crm-i fa-list-alt',
+        'permission' => [
+          'administer Funding',
+          'access Funding',
+        ],
+        'permission_operator' => 'OR',
+        'parent_id.name' => 'funding',
+        'is_active' => TRUE,
+        'has_separator' => 0,
+        'weight' => ++$weight,
+      ],
+    ],
+  ],
+  [
+    'name' => 'Navigation_Funding.FundingProgramAdd',
+    'entity' => 'Navigation',
+    'cleanup' => 'always',
+    'update' => 'unmodified',
+    'params' => [
+      'version' => 4,
+      'values' => [
+        'domain_id' => 'current_domain',
+        'label' => E::ts('Add Funding Program'),
+        'name' => 'afformFundingProgramAdd',
+        'url' => 'civicrm/funding/program/add',
+        'icon' => 'crm-i fa-plus-circle',
+        'permission' => [
+          'administer Funding',
+        ],
+        'permission_operator' => 'OR',
+        'parent_id.name' => 'funding',
+        'is_active' => TRUE,
+        'has_separator' => 0,
+        'weight' => ++$weight,
       ],
     ],
   ],
