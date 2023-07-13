@@ -53,7 +53,7 @@ final class ApplicationExternalFileManager implements ApplicationExternalFileMan
       return $this->externalFileManager->addFile(
         $uri,
         $identifier,
-      self::TABLE,
+        self::TABLE,
         $applicationProcessId,
         $this->buildCustomData($applicationProcessId, $customData)
       );
