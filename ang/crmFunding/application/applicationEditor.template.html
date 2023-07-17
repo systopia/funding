@@ -7,8 +7,8 @@
             </div>
             <div class="modal-body">
                 <div>
-                    <label for="commentText">{{ ts('Comment') }}</label>
-                    <textarea id="commentText" rows="5" cols="80" ng-model="comment.text"></textarea>
+                    <label for="commentText">{{ ts('Comment') }}{{ submitModal.commentRequired ? ' *' : '' }}</label>
+                    <textarea id="commentText" rows="5" cols="80" ng-model="comment.text" ng-required="submitModal.commentRequired"></textarea>
                 </div>
                 <div>
                     <label for="commentType">{{ ts('Comment Type') }}</label>
@@ -45,7 +45,7 @@
     </span>
 
     <span ng-if="isChanged">
-        <funding-action-button action="update" class="btn btn-success" crm-icon="fa-check">{{ ts('Save') }}</funding-action-button>
+        <funding-action-button action="update" with-comment="'required'" class="btn btn-success" crm-icon="fa-check">{{ ts('Save') }}</funding-action-button>
         <button type="button" class="btn btn-danger" ng-click="reset()" ng-disabled="editCount > 0" crm-icon="fa-times">{{ ts('Reset') }}</button>
     </span>
 </div>

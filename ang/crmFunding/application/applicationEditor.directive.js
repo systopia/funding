@@ -135,6 +135,7 @@ fundingModule.directive('fundingApplicationEditor', function() {
         let $submitModal = null;
         $scope.performAction = function (action, label, withComment) {
           if (withComment) {
+            const commentRequired = withComment === 'required';
             if ($submitModal === null) {
               $submitModal = $('#submit-modal');
               $submitModal.on('hidden.bs.modal', function () {
@@ -144,7 +145,12 @@ fundingModule.directive('fundingApplicationEditor', function() {
                 }
               });
             }
-            $scope.submitModal = {action, title: label, submitted: false};
+            $scope.submitModal = {
+              action,
+              title: label,
+              commentRequired,
+              submitted: false,
+            };
             $submitModal.modal({backdrop: 'static'});
           } else {
             $scope.submit(action);
@@ -152,6 +158,9 @@ fundingModule.directive('fundingApplicationEditor', function() {
         };
 
         $scope.modalSubmit = function () {
+          if (!document.getElementById('commentText').reportValidity()) {
+            return new Promise((resolve) => resolve(false));
+          }
           if (!document.getElementById('commentType').reportValidity()) {
             return new Promise((resolve) => resolve(false));
           }
