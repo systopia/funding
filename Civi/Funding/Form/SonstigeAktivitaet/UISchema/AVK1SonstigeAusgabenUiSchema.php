@@ -30,14 +30,14 @@ final class AVK1SonstigeAusgabenUiSchema extends JsonFormsGroup {
     $elements = [
       new JsonFormsArray('#/properties/kosten/properties/sonstigeAusgaben', '', NULL, [
         new JsonFormsHidden('#/properties/_identifier'),
-        new JsonFormsControl('#/properties/betrag', 'Betrag', NULL, NULL, $currency),
+        new JsonFormsControl('#/properties/betrag', 'Betrag in ' . $currency),
         new JsonFormsControl('#/properties/zweck', 'Zweck'),
       ], [
         'addButtonLabel' => 'Ausgabe hinzufügen',
         'removeButtonLabel' => 'Ausgabe entfernen',
       ]),
       new JsonFormsControl('#/properties/kosten/properties/sonstigeAusgabenGesamt',
-        'Sonstige Ausgaben gesamt', NULL, NULL, $currency),
+        'Sonstige Ausgaben gesamt in ' . $currency),
     ];
 
     parent::__construct(

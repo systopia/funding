@@ -31,16 +31,16 @@ final class AVK1HonorareUiSchema extends JsonFormsGroup {
       new JsonFormsArray('#/properties/kosten/properties/honorare', '', NULL, [
         new JsonFormsHidden('#/properties/_identifier'),
         new JsonFormsControl('#/properties/stunden', 'Stunden'),
-        new JsonFormsControl('#/properties/verguetung', 'Vergütung', NULL, NULL, $currency),
+        new JsonFormsControl('#/properties/verguetung', 'Vergütung in ' . $currency),
         new JsonFormsControl('#/properties/leistung', 'Vereinbarte Leistung'),
         new JsonFormsControl('#/properties/qualifikation', 'Qualifikation der Honorarkraft'),
-        new JsonFormsControl('#/properties/betrag', 'Betrag', NULL, NULL, $currency),
+        new JsonFormsControl('#/properties/betrag', 'Betrag in ' . $currency),
       ], [
         'addButtonLabel' => 'Honorar hinzufügen',
         'removeButtonLabel' => 'Honorar entfernen',
       ]),
-      new JsonFormsControl('#/properties/kosten/properties/honorareGesamt', 'Honorarkosten gesamt',
-        NULL, NULL, $currency),
+      new JsonFormsControl('#/properties/kosten/properties/honorareGesamt',
+        'Honorarkosten gesamt in ' . $currency),
     ];
 
     parent::__construct(

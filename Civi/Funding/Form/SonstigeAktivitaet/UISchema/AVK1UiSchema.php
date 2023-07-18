@@ -47,7 +47,7 @@ final class AVK1UiSchema extends JsonFormsGroup {
           new JsonFormsGroup('Unterkunft und Verpflegung', [
             new JsonFormsControl(
               '#/properties/kosten/properties/unterkunftUndVerpflegung',
-              'Unterkunft und Verpflegung', NULL, NULL, $currency
+              'Unterkunft und Verpflegung in ' . $currency
             ),
           ], 'Hier können Sie die Kosten für Unterbringung und Verpflegung angeben.'),
           // Abschnitt I.2
@@ -62,11 +62,13 @@ final class AVK1UiSchema extends JsonFormsGroup {
           new JsonFormsGroup('Nur bei internationalen Maßnahmen', [
             new JsonFormsControl(
               '#/properties/kosten/properties/versicherung/properties/teilnehmer',
-              'Kosten der Versicherung der Teilnehmer*innen', NULL, NULL, $currency
+              'Kosten der Versicherung der Teilnehmer*innen in ' . $currency
             ),
           ], 'Nur bei internationalen Maßnahmen'),
-          new JsonFormsControl('#/properties/kosten/properties/gesamtkosten',
-            'Gesamtkosten', NULL, NULL, $currency),
+          new JsonFormsGroup('Gesamtkosten', [
+            new JsonFormsControl('#/properties/kosten/properties/gesamtkosten',
+              'Gesamtkosten in ' . $currency),
+          ]),
         ]),
         // Abschnitt II
         new JsonFormsGroup('Finanzierung', [
@@ -74,26 +76,28 @@ final class AVK1UiSchema extends JsonFormsGroup {
           new JsonFormsGroup('Teilnehmer*innenbeiträge', [
             new JsonFormsControl(
               '#/properties/finanzierung/properties/teilnehmerbeitraege',
-              'Teilnehmer*innenbeiträge', NULL, NULL, $currency
+              'Teilnehmer*innenbeiträge in ' . $currency
             ),
           ], 'Bitte geben Sie an, wie viel durch die Teilnehmer*innenbeiträge eingenommen wird'),
           // Abschnitt II.2
           new JsonFormsGroup('Eigenmittel', [
             new JsonFormsControl(
               '#/properties/finanzierung/properties/eigenmittel',
-              'Eigenmittel', NULL, NULL, $currency
+              'Eigenmittel in ' . $currency
             ),
           ], 'Bitte geben Sie hier die Eigenmittel an, die Sie für Ihr Vorhaben aufbringen können.'),
           // Abschnitt II.3
           new AVK1OeffentlicheMittelUiSchema($currency),
           // Abschnitt II.4
           new AVK1SonstigeMittelUiSchema($currency),
-          // Gesamtmittel ohne Zuschuss
-          new JsonFormsControl('#/properties/finanzierung/properties/gesamtmittel',
-            'Gesamtmittel', NULL, NULL, $currency),
-          // Abschnitt II.5
-          new JsonFormsControl('#/properties/finanzierung/properties/beantragterZuschuss',
-            'Beantragter Zuschuss', NULL, NULL, $currency),
+          new JsonFormsGroup('Gesamtfinanzierung und beantragter Zuschuss', [
+            // Gesamtmittel ohne Zuschuss
+            new JsonFormsControl('#/properties/finanzierung/properties/gesamtmittel',
+              'Gesamtfinanzierung in ' . $currency),
+            // Abschnitt II.5
+            new JsonFormsControl('#/properties/finanzierung/properties/beantragterZuschuss',
+              'Beantragter Zuschuss in ' . $currency),
+          ]),
         ]),
       ]),
       // Beschreibung des Vorhabens (not part of default "AV-K1")
@@ -113,7 +117,7 @@ final class AVK1UiSchema extends JsonFormsGroup {
         new JsonFormsControl('#/properties/beschreibung/properties/ziele',
           'Welche Ziele hat die Veranstaltung? (Mehrfachauswahl möglich)'),
         new JsonFormsControl('#/properties/beschreibung/properties/bildungsanteil',
-          'Wie hoch ist der Bildungsanteil des Vorhabens?', NULL, NULL, '%'),
+          'Wie hoch ist der Bildungsanteil des Vorhabens in %?'),
         new JsonFormsControl('#/properties/beschreibung/properties/veranstaltungsort',
           'Wo findet die Veranstaltung statt?'),
         new JsonFormsControl('#/properties/beschreibung/properties/partner',

@@ -31,13 +31,13 @@ final class AVK1SonstigeMittelUiSchema extends JsonFormsGroup {
       new JsonFormsArray('#/properties/finanzierung/properties/sonstigeMittel', '', NULL, [
         new JsonFormsHidden('#/properties/_identifier'),
         new JsonFormsControl('#/properties/quelle', 'Quelle'),
-        new JsonFormsControl('#/properties/betrag', 'Betrag', NULL, NULL, $currency),
+        new JsonFormsControl('#/properties/betrag', 'Betrag in ' . $currency),
       ], [
         'addButtonLabel' => 'Sonstige Mittel hinzufügen',
         'removeButtonLabel' => 'Sonstige Mittel entfernen',
       ]),
       new JsonFormsControl('#/properties/finanzierung/properties/sonstigeMittelGesamt',
-        'Sonstige Mittel gesamt', NULL, NULL, $currency),
+        'Sonstige Mittel gesamt in ' . $currency),
     ];
 
     parent::__construct(
