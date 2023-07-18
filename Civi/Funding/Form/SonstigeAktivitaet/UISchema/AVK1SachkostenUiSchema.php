@@ -34,14 +34,14 @@ final class AVK1SachkostenUiSchema extends JsonFormsGroup {
         [
           new JsonFormsHidden('#/properties/_identifier'),
           new JsonFormsControl('#/properties/gegenstand', 'Gegenstand'),
-          new JsonFormsControl('#/properties/betrag', 'Betrag', NULL, NULL, $currency),
+          new JsonFormsControl('#/properties/betrag', 'Betrag in ' . $currency),
         ], [
           'addButtonLabel' => 'Sachkosten hinzufügen',
           'removeButtonLabel' => 'Sachkosten entfernen',
         ]
       ),
       new JsonFormsControl('#/properties/kosten/properties/sachkostenGesamt',
-        'Sachkosten gesamt', NULL, NULL, $currency),
+        'Sachkosten gesamt in ' . $currency),
     ];
 
     parent::__construct(
