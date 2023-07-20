@@ -34,3 +34,19 @@ function withOverlay(promise) {
   promise.finally(disableOverlay);
 }
 /* jshint unused:true */
+
+function fixHeight(selector) {
+  // Make element filling remaining window height when main scrollbar is at the top.
+  const $element = CRM.$(selector);
+  const height = CRM.$(window).height() - $element.offset().top;
+  $element.height(Math.floor(height));
+}
+
+function fixHeights() {
+  CRM.$('.funding-resize-height:visible').each((index, element) => fixHeight(element));
+}
+
+CRM.$(document).ready(() => {
+  CRM.$(window).on('resize', fixHeights);
+  window.setTimeout(fixHeights, 1200);
+});

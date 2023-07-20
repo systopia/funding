@@ -388,11 +388,13 @@ msgstr "Zu rechnerische Prüfung: %1"
 
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
 #: ang/crmFunding/application/application.js
+#: ang/crmFunding/application/applicationSidebar.template.html
 msgid "Passed"
 msgstr "Bestanden"
 
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
 #: ang/crmFunding/application/application.js
+#: ang/crmFunding/application/applicationSidebar.template.html
 msgid "Failed"
 msgstr "Nicht bestanden"
 
@@ -506,7 +508,7 @@ msgid "View"
 msgstr "Ansehen"
 
 #: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php
-#: ang/crmFunding/application/applicationEditor.template.html
+#: ang/crmFunding/application/applicationSidebar.template.html
 #: ang/crmFunding/case/fundingCasePermissions.html
 #: ang/crmFunding/program/fundingNewCasePermissions.html
 #: ang/crmFunding/program/fundingProgramPermissions.html
@@ -832,62 +834,6 @@ msgid "Cancel"
 msgstr "Abbrechen"
 
 #: ang/crmFunding/application/applicationEditor.template.html
-msgid "Start Review"
-msgstr "Prüfung starten"
-
-#: ang/crmFunding/application/applicationEditor.template.html
-msgid "Set Content Review to Passed"
-msgstr "Fachliche Prüfung bestanden"
-
-#: ang/crmFunding/application/applicationEditor.template.html
-msgid "Set Content Review to Failed"
-msgstr "Fachliche Prüfung nicht bestanden"
-
-#: ang/crmFunding/application/applicationEditor.template.html
-msgid "Set Calculative Review to Passed"
-msgstr "Rechnerische Prüfung bestanden"
-
-#: ang/crmFunding/application/applicationEditor.template.html
-msgid "Set Calculative Review to Failed"
-msgstr "Rechnerische Prüfung nicht bestanden"
-
-#: ang/crmFunding/application/applicationEditor.template.html
-msgid "Request Change"
-msgstr "Änderung verlangen"
-
-#: ang/crmFunding/application/applicationEditor.template.html
-msgid "Approve Application"
-msgstr "Antrag annehmen"
-
-#: ang/crmFunding/application/applicationEditor.template.html
-msgid "Reject Application"
-msgstr "Antrag ablehnen"
-
-#: ang/crmFunding/application/applicationEditor.template.html
-msgid "Approve Rework Request"
-msgstr "Antrag zur Überarbeitung annehmen"
-
-#: ang/crmFunding/application/applicationEditor.template.html
-msgid "Reject Rework Request"
-msgstr "Antrag zur Überarbeitung"
-
-#: ang/crmFunding/application/applicationEditor.template.html
-msgid "Approve Change"
-msgstr "Änderung annehmen"
-
-#: ang/crmFunding/application/applicationEditor.template.html
-msgid "Reject Change"
-msgstr "Änderung ablehnen"
-
-#: ang/crmFunding/application/applicationEditor.template.html
-msgid "Add Comment"
-msgstr "Kommentar hinzufügen"
-
-#: ang/crmFunding/application/applicationEditor.template.html
-msgid "Reset"
-msgstr "Zurücksetzen"
-
-#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Reviewers"
 msgstr "Prüfer*innen"
 
@@ -905,7 +851,7 @@ msgid "Status"
 msgstr "Status"
 
 #: ang/crmFunding/application/applicationEditor.template.html
-#: ang/crmFunding/application/history/activities/statusChange.template.html
+#: ang/crmFunding/application/history/applicationProcessActivity.directive.js
 #: ang/crmFunding/case/fundingCase.template.html
 msgid "Unknown"
 msgstr "Unbekannt"
@@ -966,6 +912,76 @@ msgstr "Rechnerische*r Prüfer*in"
 msgid "Content Reviewer"
 msgstr "Fachliche*r Prüfer*in"
 
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "Review"
+msgstr "Prüfung"
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "Start Review"
+msgstr "Prüfung starten"
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "Content Review"
+msgstr "Fachliche Prüfung"
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "The aim intended by the funding can be achieved."
+msgstr "Der mit der Zuwendung beabsichtigte Zweck kann erreicht werden."
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "Calculative Review"
+msgstr "Rechnerische Prüfung"
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "The calculation is correct."
+msgstr "Die Kalkulation ist richtig."
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "Change Review"
+msgstr "Änderungsprüfung"
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+#: ang/crmFunding/case/fundingCase.template.html
+msgid "Approve"
+msgstr "Bewilligen"
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+#: managed/SavedSearchFundingDrawdowns.mgd.php
+msgid "Reject"
+msgstr "Ablehnen"
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "Add Comment"
+msgstr "Kommentar hinzufügen"
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "Request Change"
+msgstr "Änderung verlangen"
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "Reject Application"
+msgstr "Antrag ablehnen"
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "Approve Application"
+msgstr "Antrag annehmen"
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "The application can be approved once the review was successful."
+msgstr "Der Antrag kann angenommen, wenn die Prüfung erfolgreich war."
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "Approve Rework Request"
+msgstr "Antrag zur Überarbeitung annehmen"
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "Reject Rework Request"
+msgstr "Antrag zur Überarbeitung"
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "Reset"
+msgstr "Zurücksetzen"
+
 #: ang/crmFunding/application/history/activities/comment.template.html
 msgid "Internal Comment"
 msgstr "Interner Kommentar"
@@ -1022,10 +1038,6 @@ msgstr "Ablaufaktivitäten ausblenden"
 #: ang/crmFunding/application/history/applicationProcessHistory.template.html
 msgid "Hide Comments"
 msgstr "Kommentare ausblenden"
-
-#: ang/crmFunding/case/fundingCase.template.html
-msgid "Approve"
-msgstr "Bewilligen"
 
 #: ang/crmFunding/case/fundingCase.template.html
 #: managed/SavedSearchFundingDrawdowns.mgd.php
@@ -1266,6 +1278,10 @@ msgstr "Funding Program Manager"
 msgid "Funding Cases"
 msgstr "Förderfälle"
 
+#: managed/NavigationFunding.mgd.php
+msgid "My Tasks"
+msgstr "Meine Aufgaben"
+
 #: managed/NavigationFunding.mgd.php managed/SavedSearchFundingPrograms.mgd.php
 msgid "Funding Programs"
 msgstr "Förderprogramme"
@@ -1273,10 +1289,6 @@ msgstr "Förderprogramme"
 #: managed/NavigationFunding.mgd.php
 msgid "Add Funding Program"
 msgstr "Förderprogramm hinzufügen"
-
-#: managed/NavigationFunding.mgd.php
-msgid "My Tasks"
-msgstr "Meine Aufgaben"
 
 #: managed/OptionGroupFundingFileType.mgd.php
 msgid "Transfer Contract Template"
@@ -1372,10 +1384,6 @@ msgid "Accept"
 msgstr "Annehmen"
 
 #: managed/SavedSearchFundingDrawdowns.mgd.php
-msgid "Reject"
-msgstr "Ablehnen"
-
-#: managed/SavedSearchFundingDrawdowns.mgd.php
 msgid "Download Payment Instruction"
 msgstr "Zahlungsanweisung herunterladen"
 
@@ -1426,3 +1434,21 @@ msgstr "Förderverwaltungsaufgaben des angemeldeten Nutzers"
 #: managed/SavedSearchFundingTasksMy.mgd.php
 msgid "Subject"
 msgstr "Betreff"
+
+#~ msgid "Set Content Review to Passed"
+#~ msgstr "Fachliche Prüfung bestanden"
+
+#~ msgid "Set Content Review to Failed"
+#~ msgstr "Fachliche Prüfung nicht bestanden"
+
+#~ msgid "Set Calculative Review to Passed"
+#~ msgstr "Rechnerische Prüfung bestanden"
+
+#~ msgid "Set Calculative Review to Failed"
+#~ msgstr "Rechnerische Prüfung nicht bestanden"
+
+#~ msgid "Approve Change"
+#~ msgstr "Änderung annehmen"
+
+#~ msgid "Reject Change"
+#~ msgstr "Änderung ablehnen"

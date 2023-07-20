@@ -40,6 +40,8 @@ fundingModule.controller('fundingApplicationCtrl', [
            applicationProcess, jsonSchema) {
     const ts = $scope.ts = CRM.ts('funding');
 
+    $scope.$watch('tab', () => window.setTimeout(fixHeights, 100));
+
     $scope.reviewStatusLabels = {
       null: ts('Undecided'),
       true: ts('Passed'),

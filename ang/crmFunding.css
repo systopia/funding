@@ -17,10 +17,54 @@
   top: 50px !important;
 }
 
+.funding-resize-height {
+  overflow-y: scroll;
+}
+
+.funding-application-sidebar {
+  height: 100%;
+  width: 370px;
+  position: absolute;
+  z-index: 1;
+  right: 0;
+  overflow: scroll;
+  padding: 0;
+}
+
+.funding-application-sidebar-element {
+  width: 100%;
+}
+
+.funding-application-sidebar-element.panel-group {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.funding-application-main {
+  margin-right: 370px;
+}
+
 .funding-activity-title {
   font-size: larger;
   font-weight: bolder;
   margin-bottom: 0px !important;
+}
+
+.btn-group > funding-action-button {
+  position: relative;
+  float: left;
+}
+
+funding-action-button .btn {
+  border: 1px solid #ccc !important;
+}
+
+:not(.btn-group) > funding-action-button .btn {
+  background-color: #e8eef0 !important;
+}
+
+.funding-application-sidebar-element .btn-group {
+  margin-bottom: 10px;
 }
 
 #bootstrap-theme .tab-pane {
