@@ -344,48 +344,49 @@
                           type="textarea" value="data.beschreibung.thematischeSchwerpunkte"
                           e-ng-required="false"></editable-field>
       </div>
-    <div>
-        <editable-field label="'Geplanter Ablauf'"
+      <div>
+          <editable-field label="'Geplanter Ablauf'"
                         type="textarea" value="data.beschreibung.geplanterAblauf"
                         e-ng-required="false"></editable-field>
-    </div>
-    <div>
-        <editable-field label="'Beitrag zu politischer Jugendbildung'"
+      </div>
+      <div>
+          <editable-field label="'Beitrag zu politischer Jugendbildung'"
                         type="textarea" value="data.beschreibung.beitragZuPolitischerJugendbildung"
                         e-ng-required="false"></editable-field>
-    </div>
-    <div>
-        <editable-field label="'Zielgruppe'"
-                        type="textarea" value="data.beschreibung.zielgruppe"
-                        e-ng-required="false"></editable-field>
-    </div>
-    <div>
-        <editable-field label="'Ziele'"
-                        type="checklist" value="data.beschreibung.ziele"
-                        options-one-of="jsonSchema.properties.beschreibung.properties.ziele.items.oneOf"
-                        e-ng-required="false"></editable-field>
-    </div>
-    <div>
-        <editable-field label="'Bildungsanteil'"
-                        type="number" value="data.beschreibung.bildungsanteil"
-                        e-step="1" e-ng-required="false"></editable-field> %
-    </div>
-    <div>
-        <editable-field label="'Veranstaltungsort'"
-                        type="text" value="data.beschreibung.veranstaltungsort"
-                        e-ng-required="false"></editable-field>
-    </div>
-    <div>
-        <editable-field label="'Partner'"
-                        type="text" value="data.beschreibung.partner"
-                        e-ng-required="false"></editable-field>
-    </div>
+      </div>
+      <div>
+          <editable-field label="'Zielgruppe'"
+                          type="textarea" value="data.beschreibung.zielgruppe"
+                          e-ng-required="false"></editable-field>
+      </div>
+      <div>
+          <editable-field label="'Ziele'"
+                          type="checklist" value="data.beschreibung.ziele"
+                          options-one-of="jsonSchema.properties.beschreibung.properties.ziele.items.oneOf"
+                          e-ng-required="false"></editable-field>
+      </div>
+      <div>
+          <editable-field label="'Bildungsanteil'"
+                          type="number" value="data.beschreibung.bildungsanteil"
+                          e-step="1" e-ng-required="false"></editable-field> %
+      </div>
+      <div>
+          <editable-field label="'Veranstaltungsort'"
+                          type="text" value="data.beschreibung.veranstaltungsort"
+                          e-ng-required="false"></editable-field>
+      </div>
+      <div>
+          <editable-field label="'Partner'"
+                          type="text" value="data.beschreibung.partner"
+                          e-ng-required="false"></editable-field>
+      </div>
+
+      <h3>Projektunterlagen</h3>
+      <ul ng-repeat="projektunterlage in data.projektunterlagen track by $index">
+        <li>
+          <a href="{{ projektunterlage.datei }}" target="_blank">{{ projektunterlage.beschreibung }}</a>
+        </li>
+      </ul>
   </div>
 
-  <h3>Projektunterlagen</h3>
-  <ul ng-repeat="projektunterlage in data.projektunterlagen track by $index">
-    <li>
-      <a href="{{ projektunterlage.datei }}" target="_blank">{{ projektunterlage.beschreibung }}</a>
-    </li>
-  </ul>
 </div>
