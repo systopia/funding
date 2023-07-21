@@ -968,7 +968,7 @@ msgstr "Antrag annehmen"
 
 #: ang/crmFunding/application/applicationSidebar.template.html
 msgid "The application can be approved once the review was successful."
-msgstr "Der Antrag kann angenommen, wenn die Prüfung erfolgreich war."
+msgstr "Der Antrag kann angenommen werden, wenn die Prüfung erfolgreich war."
 
 #: ang/crmFunding/application/applicationSidebar.template.html
 msgid "Approve Rework Request"
