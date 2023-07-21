@@ -40,6 +40,8 @@ use Civi\Funding\ApplicationProcess\ApplicationIdentifierGenerator;
 use Civi\Funding\ApplicationProcess\ApplicationIdentifierGeneratorInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
+use Civi\Funding\ApplicationProcess\ApplicationExternalFileManager;
+use Civi\Funding\ApplicationProcess\ApplicationExternalFileManagerInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\ApplicationProcessTaskManager;
 use Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager;
@@ -48,6 +50,8 @@ use Civi\Funding\ApplicationProcess\EligibleApplicationProcessesLoader;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationDeleteHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesAddIdentifiersHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewCreateHandlerInterface;
@@ -62,6 +66,8 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandlerInte
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationCostItemsAddIdentifiersHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationCostItemsPersistHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationDeleteHandler;
+use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFilesAddIdentifiersHandler;
+use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFilesPersistHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormCreateHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormDataGetHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormNewCreateHandler;
@@ -79,6 +85,7 @@ use Civi\Funding\ApplicationProcess\StatusDeterminer\DefaultApplicationProcessSt
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ReworkPossibleApplicationProcessStatusDeterminer;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationCostItemsSubscriber;
+use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationFilesSubscriber;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessCreatedSubscriber;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessEligibleSubscriber;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessIdentifierSubscriber;
@@ -103,6 +110,7 @@ $container->autowire(ApplicationProcessManager::class);
 $container->autowire(ApplicationProcessBundleLoader::class);
 $container->autowire(ApplicationCostItemManager::class);
 $container->autowire(ApplicationResourcesItemManager::class);
+$container->autowire(ApplicationExternalFileManagerInterface::class, ApplicationExternalFileManager::class);
 $container->autowire(ApplicationIdentifierGeneratorInterface::class, ApplicationIdentifierGenerator::class);
 $container->autowire(ApplicationProcessActivityManager::class);
 $container->autowire(ApplicationProcessTaskManager::class);
@@ -147,6 +155,11 @@ $container->autowire(
   ApplicationResourcesItemsPersistHandlerInterface::class,
   DefaultApplicationResourcesItemsPersistHandler::class
 );
+$container->autowire(
+  ApplicationFilesAddIdentifiersHandlerInterface::class,
+  DefaultApplicationFilesAddIdentifiersHandler::class
+);
+$container->autowire(ApplicationFilesPersistHandlerInterface::class, DefaultApplicationFilesPersistHandler::class);
 $container->autowire(ApplicationSnapshotCreateHandlerInterface::class, DefaultApplicationSnapshotCreateHandler::class);
 
 $container->autowire(CreateAction::class)
@@ -232,6 +245,9 @@ $container->autowire(ApplicationCostItemsSubscriber::class)
 $container->autowire(ApplicationResourcesItemsSubscriber::class)
   ->addTag('kernel.event_subscriber')
   ->setLazy(TRUE);
+$container->autowire(ApplicationFilesSubscriber::class)
+  ->addTag('kernel.event_subscriber')
+  ->setLazy(TRUE);
 $container->autowire(ApplicationSnapshotCreateSubscriber::class)
   ->addTag('kernel.event_subscriber')
   ->setLazy(TRUE);
@@ -257,6 +273,5 @@ $container->autowire(ReworkPossibleApplicationProcessActionsDeterminer::class)
   ->addArgument(new Reference(DefaultApplicationProcessActionsDeterminer::class));
 $container->autowire(ReworkPossibleApplicationProcessStatusDeterminer::class)
   ->addArgument(new Reference(DefaultApplicationProcessStatusDeterminer::class));
-;
 $container->autowire(ReworkPossibleApplicationProcessActionStatusInfo::class)
   ->addArgument(new Reference(DefaultApplicationProcessActionStatusInfo::class));

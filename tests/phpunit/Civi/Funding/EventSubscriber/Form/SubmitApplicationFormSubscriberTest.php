@@ -30,6 +30,7 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterfac
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewSubmitHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
+use Civi\Funding\EntityFactory\ExternalFileFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Event\Remote\ApplicationProcess\SubmitApplicationFormEvent;
@@ -44,6 +45,9 @@ use Systopia\JsonSchema\Errors\ErrorCollector;
 
 /**
  * @covers \Civi\Funding\EventSubscriber\Form\SubmitApplicationFormSubscriber
+ * @covers \Civi\Funding\Event\Remote\ApplicationProcess\SubmitApplicationFormEvent
+ * @covers \Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent
+ * @covers \Civi\Funding\Event\Remote\AbstractFundingSubmitFormEvent
  */
 final class SubmitApplicationFormSubscriberTest extends TestCase {
 
@@ -99,6 +103,11 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
     $validationResult = new ValidationResult($postValidationData, new ErrorCollector());
     $validatedData = new ValidatedApplicationDataMock($postValidationData, ['action' => 'save']);
     $result = ApplicationFormSubmitResult::createSuccess($validationResult, $validatedData);
+    $result->setFiles([
+      'https://example.org/test.txt' => ExternalFileFactory::create(
+        ['uri' => 'https://example.net/test.txt'],
+      ),
+    ]);
     $this->submitHandlerMock->expects(static::once())->method('handle')
       ->with($command)
       ->willReturn($result);
@@ -106,7 +115,6 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
     $form = new ApplicationFormMock();
     $this->formCreateHandlerMock->expects(static::once())->method('handle')->with(new ApplicationFormCreateCommand(
       $event->getApplicationProcessBundle(),
-      $postValidationData,
     ))->willReturn($form);
 
     $this->subscriber->onSubmitForm($event);
@@ -114,6 +122,7 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
     static::assertSame(SubmitApplicationFormEvent::ACTION_SHOW_FORM, $event->getAction());
     static::assertSame($form, $event->getForm());
     static::assertSame('Saved', $event->getMessage());
+    static::assertSame(['https://example.org/test.txt' => 'https://example.net/test.txt'], $event->getFiles());
   }
 
   public function testOnSubmitFormInvalid(): void {
@@ -156,6 +165,11 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
       $validatedData,
       $applicationProcessBundle,
     );
+    $result->setFiles([
+      'https://example.org/test.txt' => ExternalFileFactory::create(
+        ['uri' => 'https://example.net/test.txt'],
+      ),
+    ]);
     $this->newSubmitHandlerMock->expects(static::once())->method('handle')
       ->with($command)
       ->willReturn($result);
@@ -163,7 +177,6 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
     $form = new ApplicationFormMock();
     $this->formCreateHandlerMock->expects(static::once())->method('handle')->with(new ApplicationFormCreateCommand(
       $applicationProcessBundle,
-      $postValidationData,
     ))->willReturn($form);
 
     $this->subscriber->onSubmitNewForm($event);
@@ -171,6 +184,7 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
     static::assertSame(SubmitApplicationFormEvent::ACTION_SHOW_FORM, $event->getAction());
     static::assertSame($form, $event->getForm());
     static::assertSame('Saved', $event->getMessage());
+    static::assertSame(['https://example.org/test.txt' => 'https://example.net/test.txt'], $event->getFiles());
   }
 
   public function testOnSubmitNewFormInvalid(): void {

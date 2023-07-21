@@ -30,9 +30,7 @@ use Civi\Funding\Util\DateTimeUtil;
  *
  * @template T of array<string, mixed>
  *
- * T should contain `id?: int`, and optionally
- * `check_permissions?: bool, custom?: mixed`
- * }
+ * T should contain `id?: int`.
  *
  * @phpstan-consistent-constructor
  */
@@ -89,6 +87,10 @@ abstract class AbstractEntity {
    * @phpstan-param T $values
    */
   public function __construct(array $values) {
+    // Unset extra values returned on create action since CiviCRM 5.53.
+    unset($values['custom']);
+    unset($values['check_permissions']);
+
     $this->values = $values;
   }
 

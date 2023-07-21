@@ -31,9 +31,11 @@ use Civi\Funding\Form\SonstigeAktivitaet\AVK1JsonSchemaFactory;
 use Civi\Funding\Form\SonstigeAktivitaet\AVK1UiSchemaFactory;
 use Civi\Funding\FundingCase\DefaultFundingCaseActionsDeterminer;
 use Civi\Funding\SonstigeAktivitaet\AVK1ApplicationCostItemsFactory;
+use Civi\Funding\SonstigeAktivitaet\AVK1ApplicationFormFilesFactory;
 use Civi\Funding\SonstigeAktivitaet\AVK1ApplicationResourcesItemsFactory;
 use Civi\Funding\SonstigeAktivitaet\AVK1FinanzierungFactory;
 use Civi\Funding\SonstigeAktivitaet\AVK1KostenFactory;
+use Civi\Funding\SonstigeAktivitaet\AVK1ProjektunterlagenFactory;
 use Symfony\Component\DependencyInjection\Reference;
 
 $container->autowire('funding.avk1.application_submit_actions_factory', ApplicationSubmitActionsFactory::class)
@@ -50,10 +52,13 @@ $container->autowire(AVK1FormDataFactory::class)
   ->addTag('funding.application.form_data_factory');
 $container->autowire(AVK1KostenFactory::class);
 $container->autowire(AVK1FinanzierungFactory::class);
+$container->autowire(AVK1ProjektunterlagenFactory::class);
 $container->autowire(AVK1ApplicationCostItemsFactory::class)
   ->addTag('funding.application.cost_items_factory');
 $container->autowire(AVK1ApplicationResourcesItemsFactory::class)
   ->addTag('funding.application.resources_items_factory');
+$container->autowire(AVK1ApplicationFormFilesFactory::class)
+  ->addTag(AVK1ApplicationFormFilesFactory::SERVICE_TAG);
 
 $container->getDefinition(ReworkPossibleApplicationProcessActionsDeterminer::class)
   ->addTag('funding.application.actions_determiner', ['funding_case_type' => 'AVK1SonstigeAktivitaet']);

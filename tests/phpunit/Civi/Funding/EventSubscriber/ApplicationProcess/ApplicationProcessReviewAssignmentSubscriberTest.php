@@ -22,13 +22,16 @@ namespace Civi\Funding\EventSubscriber\ApplicationProcess;
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoContainer;
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\DefaultApplicationProcessActionStatusInfo;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
+use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitResult;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationFormSubmitSuccessEvent;
+use Civi\Funding\Form\Validation\ValidationResult;
 use Civi\Funding\Mock\Form\FundingCaseType\TestValidatedData;
 use Civi\Funding\Mock\Psr\PsrContainer;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Systopia\JsonSchema\Errors\ErrorCollector;
 
 /**
  * @covers \Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessReviewAssignmentSubscriber
@@ -74,7 +77,10 @@ final class ApplicationProcessReviewAssignmentSubscriberTest extends TestCase {
         ['permissions' => ['review_calculative']],
       ),
       [],
-      new TestValidatedData(['action' => 'review']),
+      ApplicationFormSubmitResult::createSuccess(
+        new ValidationResult([], new ErrorCollector()),
+        new TestValidatedData(['action' => 'review']),
+      ),
     );
 
     $this->applicationProcessManagerMock->expects(static::once())->method('update')
@@ -93,7 +99,10 @@ final class ApplicationProcessReviewAssignmentSubscriberTest extends TestCase {
         ['permissions' => ['review_content']],
       ),
       [],
-      new TestValidatedData(['action' => 'review']),
+      ApplicationFormSubmitResult::createSuccess(
+        new ValidationResult([], new ErrorCollector()),
+        new TestValidatedData(['action' => 'review']),
+      ),
     );
 
     $this->applicationProcessManagerMock->expects(static::once())->method('update')
@@ -112,7 +121,10 @@ final class ApplicationProcessReviewAssignmentSubscriberTest extends TestCase {
         ['permissions' => ['review_calculative', 'review_content']],
       ),
       [],
-      new TestValidatedData(['action' => 'some-action']),
+      ApplicationFormSubmitResult::createSuccess(
+        new ValidationResult([], new ErrorCollector()),
+        new TestValidatedData(['action' => 'some-action']),
+      ),
     );
 
     $this->applicationProcessManagerMock->expects(static::never())->method('update');

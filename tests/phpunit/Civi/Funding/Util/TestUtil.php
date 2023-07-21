@@ -24,21 +24,6 @@ use Civi\RemoteTools\Api4\RemoteApiConstants;
 final class TestUtil {
 
   /**
-   * Filters out extra entity fields added on create action since CiviCRM 5.53.
-   *
-   * @phpstan-param array<string, mixed> $values
-   *
-   * @phpstan-return array<string, mixed>
-   */
-  public static function filterCiviExtraFields(array $values): array {
-    return array_filter(
-      $values,
-      fn (string $key) => 'custom' !== $key && 'check_permissions' !== $key,
-      ARRAY_FILTER_USE_KEY
-    );
-  }
-
-  /**
    * Filters flattened permissions that are not TRUE.
    *
    * @phpstan-param array<string, mixed> $values

@@ -23,6 +23,7 @@ use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\SonstigeAktivitaet\AVK1FinanzierungFactory;
 use Civi\Funding\SonstigeAktivitaet\AVK1KostenFactory;
+use Civi\Funding\SonstigeAktivitaet\AVK1ProjektunterlagenFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ClockMock;
@@ -44,6 +45,11 @@ final class AVK1FormDataFactoryTest extends TestCase {
    */
   private MockObject $kostenFactoryMock;
 
+  /**
+   * @var \Civi\Funding\SonstigeAktivitaet\AVK1ProjektunterlagenFactory&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $projektunterlagenFactoryMock;
+
   public static function setUpBeforeClass(): void {
     parent::setUpBeforeClass();
     ClockMock::register(__CLASS__);
@@ -54,9 +60,11 @@ final class AVK1FormDataFactoryTest extends TestCase {
     parent::setUp();
     $this->finanzierungFactoryMock = $this->createMock(AVK1FinanzierungFactory::class);
     $this->kostenFactoryMock = $this->createMock(AVK1KostenFactory::class);
+    $this->projektunterlagenFactoryMock = $this->createMock(AVK1ProjektunterlagenFactory::class);
     $this->formDataFactory = new AVK1FormDataFactory(
       $this->finanzierungFactoryMock,
-      $this->kostenFactoryMock
+      $this->kostenFactoryMock,
+      $this->projektunterlagenFactoryMock,
     );
   }
 
@@ -75,6 +83,8 @@ final class AVK1FormDataFactoryTest extends TestCase {
       ->willReturn(['foo' => 12.3]);
     $this->finanzierungFactoryMock->method('createFinanzierung')->with($applicationProcess)
       ->willReturn(['bar' => 1.23]);
+    $this->projektunterlagenFactoryMock->method('createProjektunterlagen')->with($applicationProcess)
+      ->willReturn(['baz' => 'abc']);
 
     $data = $this->formDataFactory->createFormData($applicationProcess, $fundingCase);
     static::assertEquals([
@@ -87,6 +97,7 @@ final class AVK1FormDataFactoryTest extends TestCase {
       'finanzierung' => ['bar' => 1.23],
       'teilnehmer' => ['gesamt' => 100],
       'beschreibung' => ['veranstaltungsort' => 'dort'],
+      'projektunterlagen' => ['baz' => 'abc'],
     ], $data);
   }
 

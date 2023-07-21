@@ -37,7 +37,6 @@ use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
 use Civi\Funding\Util\SessionTestUtil;
-use Civi\Funding\Util\TestUtil;
 use Civi\RemoteTools\Api4\Api4;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ClockMock;
@@ -138,7 +137,7 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
     );
 
     static::assertGreaterThan(0, $applicationProcess->getId());
-    $applicationProcessValues = TestUtil::filterCiviExtraFields($applicationProcess->toArray());
+    $applicationProcessValues = $applicationProcess->toArray();
     static::assertNotEmpty($applicationProcessValues['identifier']);
     unset($applicationProcessValues['identifier']);
     static::assertEquals([
@@ -208,14 +207,12 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
       $fundingCase1->getId(),
       ['identifier' => 'test1', 'title' => 'Application1'],
     );
-    // @phpstan-ignore-next-line
-    $applicationProcess1->setValues(TestUtil::filterCiviExtraFields($applicationProcess1->toArray()));
+    $applicationProcess1->setValues($applicationProcess1->toArray());
     $applicationProcess2 = ApplicationProcessFixture::addFixture(
       $fundingCase2->getId(),
       ['identifier' => 'test2', 'title' => 'Application2'],
     );
-    // @phpstan-ignore-next-line
-    $applicationProcess2->setValues(TestUtil::filterCiviExtraFields($applicationProcess2->toArray()));
+    $applicationProcess2->setValues($applicationProcess2->toArray());
 
     static::assertEquals(
       [$applicationProcess1],
@@ -240,18 +237,12 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
     $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId());
     $firstApplicationProcess = $this->applicationProcessManager->getFirstByFundingCaseId($fundingCase->getId());
     static::assertNotNull($firstApplicationProcess);
-    static::assertEquals(
-      TestUtil::filterCiviExtraFields($applicationProcess->toArray()),
-      $firstApplicationProcess->toArray(),
-    );
+    static::assertEquals($applicationProcess, $firstApplicationProcess);
 
     ApplicationProcessFixture::addFixture($fundingCase->getId(), ['title' => 'Title2', 'identifier' => 'test2']);
     $firstApplicationProcess = $this->applicationProcessManager->getFirstByFundingCaseId($fundingCase->getId());
     static::assertNotNull($firstApplicationProcess);
-    static::assertEquals(
-      TestUtil::filterCiviExtraFields($applicationProcess->toArray()),
-      $firstApplicationProcess->toArray(),
-    );
+    static::assertEquals($applicationProcess->toArray(), $firstApplicationProcess->toArray());
   }
 
   public function testUpdate(): void {

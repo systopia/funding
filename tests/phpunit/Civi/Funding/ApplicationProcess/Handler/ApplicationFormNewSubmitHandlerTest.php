@@ -41,6 +41,7 @@ use Systopia\JsonSchema\Errors\ErrorCollector;
  * @covers \Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewSubmitHandler
  * @covers \Civi\Funding\ApplicationProcess\Command\ApplicationFormNewSubmitCommand
  * @covers \Civi\Funding\ApplicationProcess\Command\ApplicationFormNewSubmitResult
+ * @covers \Civi\Funding\ApplicationProcess\Command\AbstractApplicationFormSubmitResult
  */
 final class ApplicationFormNewSubmitHandlerTest extends TestCase {
 

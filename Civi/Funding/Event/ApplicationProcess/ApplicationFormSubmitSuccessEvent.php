@@ -19,17 +19,18 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Event\ApplicationProcess;
 
+use Civi\Funding\ApplicationProcess\Command\AbstractApplicationFormSubmitResult;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Form\ValidatedApplicationDataInterface;
 
 final class ApplicationFormSubmitSuccessEvent extends AbstractApplicationEvent {
 
+  private AbstractApplicationFormSubmitResult $result;
+
   /**
    * @phpstan-var array<string, mixed>
    */
   private array $submittedData;
-
-  private ValidatedApplicationDataInterface $validatedData;
 
   /**
    * @phpstan-param array<string, mixed> $submittedData
@@ -38,15 +39,19 @@ final class ApplicationFormSubmitSuccessEvent extends AbstractApplicationEvent {
     int $contactId,
     ApplicationProcessEntityBundle $applicationProcessBundle,
     array $submittedData,
-    ValidatedApplicationDataInterface $validatedData
+    AbstractApplicationFormSubmitResult $result
   ) {
     parent::__construct($contactId, $applicationProcessBundle);
     $this->submittedData = $submittedData;
-    $this->validatedData = $validatedData;
+    $this->result = $result;
   }
 
   public function getAction(): string {
-    return $this->validatedData->getAction();
+    return $this->getValidatedData()->getAction();
+  }
+
+  public  function getResult(): AbstractApplicationFormSubmitResult {
+    return $this->result;
   }
 
   /**
@@ -64,7 +69,8 @@ final class ApplicationFormSubmitSuccessEvent extends AbstractApplicationEvent {
    * requested action resulted in a restore of a previous snapshot.
    */
   public function getValidatedData(): ValidatedApplicationDataInterface {
-    return $this->validatedData;
+    /** @phpstan-ignore-next-line  */
+    return $this->result->getValidatedData();
   }
 
 }

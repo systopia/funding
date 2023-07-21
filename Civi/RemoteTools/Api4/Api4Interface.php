@@ -59,6 +59,14 @@ interface Api4Interface {
   public function createGetAction(string $entityName): AbstractAction;
 
   /**
+   * @phpstan-param array{checkPermissions?: bool} $options
+   *   checkPermissions defaults to TRUE.
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function deleteEntity(string $entityName, int $id, array $options = []): Result;
+
+  /**
    * @param array<string, mixed|ApiParameterInterface> $params
    *
    * @throws \CRM_Core_Exception
@@ -84,6 +92,14 @@ interface Api4Interface {
     int $offset = 0,
     array $extraParams = []
   ): Result;
+
+  /**
+   * @phpstan-param array{checkPermissions?: bool} $options
+   *   checkPermissions defaults to TRUE.
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function getEntity(string $entityName, int $id, array $options = []): Result;
 
   /**
    * @phpstan-param array<string, mixed> $values

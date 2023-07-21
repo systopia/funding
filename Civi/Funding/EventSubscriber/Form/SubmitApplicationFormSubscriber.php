@@ -25,6 +25,7 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewSubmitHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
+use Civi\Funding\Entity\ExternalFileEntity;
 use Civi\Funding\Event\Remote\AbstractFundingSubmitFormEvent;
 use Civi\Funding\Event\Remote\ApplicationProcess\SubmitApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
@@ -71,12 +72,12 @@ class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
     $result = $this->submitHandler->handle($command);
     if ($result->isSuccess()) {
       $event->setMessage(E::ts('Saved'));
+      $this->addFilesToEvent($result->getFiles(), $event);
       Assert::notNull($result->getValidatedData());
       if ($this->isShouldShowForm($result->getValidatedData()->getAction())) {
         $event->setForm(
           $this->createHandler->handle(new ApplicationFormCreateCommand(
             $event->getApplicationProcessBundle(),
-            $event->getApplicationProcess()->getRequestData(),
           ))
         );
       }
@@ -100,13 +101,13 @@ class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
     $result = $this->newSubmitHandler->handle($command);
     if ($result->isSuccess()) {
       $event->setMessage(E::ts('Saved'));
+      $this->addFilesToEvent($result->getFiles(), $event);
       Assert::notNull($result->getValidatedData());
       if ($this->isShouldShowForm($result->getValidatedData()->getAction())) {
         Assert::notNull($result->getApplicationProcessBundle());
         $event->setForm(
           $this->createHandler->handle(new ApplicationFormCreateCommand(
             $result->getApplicationProcessBundle(),
-            $result->getApplicationProcessBundle()->getApplicationProcess()->getRequestData(),
           ))
         );
       }
@@ -131,6 +132,16 @@ class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
     foreach ($validationResult->getLeafErrorMessages() as $jsonPointer => $messages) {
       $event->addErrorsAt($jsonPointer, $messages);
     }
+  }
+
+  /**
+   * @phpstan-param array<string, \Civi\Funding\Entity\ExternalFileEntity> $files
+   */
+  private function addFilesToEvent(array $files, AbstractFundingSubmitFormEvent $event): void {
+    $event->setFiles(array_map(
+      fn (ExternalFileEntity $file) => $file->getUri(),
+      $files,
+    ));
   }
 
 }

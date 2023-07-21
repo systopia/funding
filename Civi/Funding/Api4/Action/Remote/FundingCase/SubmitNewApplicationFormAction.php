@@ -93,6 +93,7 @@ class SubmitNewApplicationFormAction extends AbstractNewApplicationFormAction {
         $result['jsonSchema'] = $event->getForm()->getJsonSchema();
         $result['uiSchema'] = $event->getForm()->getUiSchema();
         $result['data'] = $event->getForm()->getData();
+        $result['files'] = $event->getFiles();
         break;
 
       case SubmitNewApplicationFormEvent::ACTION_SHOW_VALIDATION:
@@ -101,6 +102,7 @@ class SubmitNewApplicationFormAction extends AbstractNewApplicationFormAction {
         break;
 
       case SubmitNewApplicationFormEvent::ACTION_CLOSE_FORM:
+        $result['files'] = $event->getFiles();
         break;
 
       default:

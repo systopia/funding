@@ -21,6 +21,7 @@ namespace Civi\Funding\Form\SonstigeAktivitaet\JsonSchema;
 
 use Civi\Funding\Form\JsonSchema\JsonSchemaRecipient;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
+use Civi\RemoteTools\Form\JsonSchema\JsonSchemaArray;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchemaDataPointer;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchemaDate;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchemaObject;
@@ -51,9 +52,11 @@ final class AVK1JsonSchema extends JsonSchemaObject {
       'empfaenger',
       'beginn',
       'ende',
+      'teilnehmer',
       'kosten',
       'finanzierung',
       'beschreibung',
+      //'projektunterlagen',
     ], $required);
 
     parent::__construct([
@@ -80,6 +83,11 @@ final class AVK1JsonSchema extends JsonSchemaObject {
       'finanzierung' => new AVK1FinanzierungSchema(),
       // Beschreibung des Vorhabens (not part of default "AV-K1")
       'beschreibung' => new AVK1BeschreibungSchema(),
+      'projektunterlagen' => new JsonSchemaArray(new JsonSchemaObject([
+        '_identifier' => new JsonSchemaString(['readonly' => TRUE]),
+        'datei' => new JsonSchemaString(['format' => 'uri']),
+        'beschreibung' => new JsonSchemaString(),
+      ], ['required' => ['datei', 'beschreibung']])),
     ] + $extraProperties, $keywords);
   }
 

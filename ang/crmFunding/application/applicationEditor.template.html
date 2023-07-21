@@ -399,4 +399,11 @@
                       type="text" value="data.beschreibung.partner"
                       e-ng-required="false"></editable-field>
   </div>
+
+  <h3>Projektunterlagen</h3>
+  <ul ng-repeat="projektunterlage in data.projektunterlagen track by $index">
+    <li>
+      <a href="{{ projektunterlage.datei }}" target="_blank">{{ projektunterlage.beschreibung }}</a>
+    </li>
+  </ul>
 </div>

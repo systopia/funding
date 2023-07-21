@@ -85,6 +85,16 @@ final class Api4 implements Api4Interface {
   /**
    * @inheritDoc
    */
+  public function deleteEntity(string $entityName, int $id, array $options = []): Result {
+    return $this->execute($entityName, 'delete', [
+      'checkPermissions' => $options['checkPermissions'] ?? TRUE,
+      'where' => [['id', '=', $id]],
+    ]);
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function executeAction(AbstractAction $action): Result {
     return $action->execute();
   }
@@ -113,6 +123,16 @@ final class Api4 implements Api4Interface {
       'limit' => $limit,
       'offset' => $offset,
     ] + $extraParams);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getEntity(string $entityName, int $id, array $options = []): Result {
+    return $this->execute($entityName, 'get', [
+      'checkPermissions' => $options['checkPermissions'] ?? TRUE,
+      'where' => [['id', '=', $id]],
+    ]);
   }
 
   public function updateEntity(string $entityName, int $id, array $values, array $options = []): Result {

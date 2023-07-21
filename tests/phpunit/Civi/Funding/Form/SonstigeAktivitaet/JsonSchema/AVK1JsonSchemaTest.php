@@ -147,6 +147,12 @@ class AVK1JsonSchemaTest extends TestCase {
         'veranstaltungsort' => 'Veranstaltungsort',
         'partner' => 'Partner',
       ],
+      'projektunterlagen' => [
+        (object) [
+          'datei' => 'https://example.org/test.txt',
+          'beschreibung' => 'Test',
+        ],
+      ],
       'foo' => 'baz',
     ];
 

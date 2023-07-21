@@ -26,6 +26,8 @@ use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Fixtures\ApplicationProcessFixture;
 use Civi\Funding\Fixtures\ApplicationSnapshotFixture;
 use Civi\Funding\Fixtures\ContactFixture;
+use Civi\Funding\Fixtures\EntityFileFixture;
+use Civi\Funding\Fixtures\ExternalFileFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
@@ -200,6 +202,16 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
       ['review_permission']
     );
     FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['review_permission']);
+
+    $externalFile = ExternalFileFixture::addFixture([
+      'identifier' => 'FundingApplicationProcess.' . $applicationProcess->getId() . ':file',
+    ]);
+    EntityFileFixture::addFixture(
+      'civicrm_funding_application_process',
+      $applicationProcess->getId(),
+      $externalFile->getFileId(),
+    );
+
     SessionTestUtil::mockInternalRequestSession($contact['id']);
 
     $result = FundingApplicationProcess::getFormData()
@@ -293,11 +305,15 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
         'endDate' => '2022-11-16',
         'amountRequested' => 10,
         'resources' => 20,
+        'file' => 'https://example.org/test.txt',
       ])
       ->execute();
 
     static::assertEquals(new \stdClass(), $result['errors']);
     static::assertNotEmpty($result['data']);
+    // Should contain download URI at CiviCRM.
+    static::assertIsString($result['data']['file']);
+    static::assertStringStartsWith('http://localhost/', $result['data']['file']);
   }
 
   public function testSubmitFormWithdrawChange(): void {
@@ -325,15 +341,43 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
       'is_review_calculative' => TRUE,
       'start_date' => '2022-11-15',
       'end_date' => '2022-11-16',
-      'request_data' => ['amountRequested' => 10, 'resources' => 20],
+      'request_data' => [
+        'amountRequested' => 10,
+        'resources' => 20,
+        'file' => 'https://example.net/test2.txt',
+      ],
     ]);
 
-    ApplicationSnapshotFixture::addFixture($applicationProcess->getId(), [
+    $applicationSnapshot = ApplicationSnapshotFixture::addFixture($applicationProcess->getId(), [
       'start_date' => '2022-11-13',
       'end_date' => '2022-11-14',
       'amount_requested' => 11,
-      'request_data' => ['amountRequested' => 11, 'resources' => 22],
+      'request_data' => [
+        'amountRequested' => 11,
+        'resources' => 22,
+        'file' => 'https://example.net/test1.txt',
+      ],
     ]);
+
+    $externalFileSnapshot = ExternalFileFixture::addFixture([
+      'source' => 'https://example.org/test1.txt',
+      'identifier' => 'snapshot@1689078247:FundingApplicationProcess.' . $applicationProcess->getId() . ':file',
+    ]);
+    EntityFileFixture::addFixture(
+      'civicrm_funding_application_snapshot',
+      $applicationSnapshot->getId(),
+      $externalFileSnapshot->getFileId(),
+    );
+
+    $externalFile = ExternalFileFixture::addFixture([
+      'source' => 'https://example.org/test2.txt',
+      'identifier' => 'FundingApplicationProcess.' . $applicationProcess->getId() . ':file',
+    ]);
+    EntityFileFixture::addFixture(
+      'civicrm_funding_application_process',
+      $applicationProcess->getId(),
+      $externalFile->getFileId(),
+    );
 
     FundingProgramContactRelationFixture::addContact(
       $contact['id'],
@@ -358,6 +402,7 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
         'endDate' => '2022-11-16',
         'amountRequested' => 10,
         'resources' => 20,
+        'file' => 'https://example.net/test2.txt',
       ])
       ->execute();
 
@@ -365,6 +410,9 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
     static::assertNotEmpty($result['data']);
     static::assertSame(11, $result['data']['amountRequested']);
     static::assertSame(22, $result['data']['resources']);
+    static::assertIsString($result['data']['file']);
+    static::assertStringStartsWith('http://localhost/', $result['data']['file']);
+    static::assertStringEndsWith('/test1.txt', $result['data']['file']);
   }
 
   public function testValidateForm(): void {

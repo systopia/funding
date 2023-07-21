@@ -96,9 +96,9 @@ class AVK1KostenFactory {
         Assert::numeric($stunden);
         $verguetung = $item->getProperties()['verguetung'];
         Assert::numeric($verguetung);
-        $leistung = $item->getProperties()['leistung'];
+        $leistung = $item->getProperties()['leistung'] ?? '';
         Assert::string($leistung);
-        $qualifikation = $item->getProperties()['qualifikation'];
+        $qualifikation = $item->getProperties()['qualifikation'] ?? '';
         Assert::string($qualifikation);
         $kosten['honorare'][] = [
           '_identifier' => $item->getIdentifier(),

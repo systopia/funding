@@ -74,6 +74,7 @@ class SubmitFormAction extends AbstractFormAction {
         $result['jsonSchema'] = $event->getForm()->getJsonSchema();
         $result['uiSchema'] = $event->getForm()->getUiSchema();
         $result['data'] = $event->getForm()->getData();
+        $result['files'] = $event->getFiles();
         break;
 
       case SubmitApplicationFormEvent::ACTION_SHOW_VALIDATION:
@@ -82,6 +83,7 @@ class SubmitFormAction extends AbstractFormAction {
         break;
 
       case SubmitApplicationFormEvent::ACTION_CLOSE_FORM:
+        $result['files'] = $event->getFiles();
         break;
 
       default:
