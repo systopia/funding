@@ -9,9 +9,11 @@
         </label>
     </div>
 </div>
-<div ng-repeat="activity in activities">
-    <funding-application-process-activity ng-hide="isActivityHidden(activity)"
-                                          activity="activity"
-                                          status-options="statusOptions"
-                                          review-status-labels="reviewStatusLabels"></funding-application-process-activity>
+<div class="funding-resize-height">
+  <div ng-repeat="activity in activities">
+      <funding-application-process-activity ng-hide="isActivityHidden(activity)"
+                                            activity="activity"
+                                            status-options="statusOptions"
+                                            review-status-labels="reviewStatusLabels"></funding-application-process-activity>
+  </div>
 </div>

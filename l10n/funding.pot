@@ -246,11 +246,11 @@ msgstr ""
 msgid "To review calculative: %1"
 msgstr ""
 
-#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php ang/crmFunding/application/application.js
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php ang/crmFunding/application/application.js ang/crmFunding/application/applicationSidebar.template.html
 msgid "Passed"
 msgstr ""
 
-#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php ang/crmFunding/application/application.js
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php ang/crmFunding/application/application.js ang/crmFunding/application/applicationSidebar.template.html
 msgid "Failed"
 msgstr ""
 
@@ -358,7 +358,7 @@ msgstr ""
 msgid "View"
 msgstr ""
 
-#: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php ang/crmFunding/application/applicationEditor.template.html ang/crmFunding/case/fundingCasePermissions.html ang/crmFunding/program/fundingNewCasePermissions.html ang/crmFunding/program/fundingProgramPermissions.html ang/crmFunding/program/recipientRelations.html
+#: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php ang/crmFunding/application/applicationSidebar.template.html ang/crmFunding/case/fundingCasePermissions.html ang/crmFunding/program/fundingNewCasePermissions.html ang/crmFunding/program/fundingProgramPermissions.html ang/crmFunding/program/recipientRelations.html
 msgid "Save"
 msgstr ""
 
@@ -623,62 +623,6 @@ msgid "Cancel"
 msgstr ""
 
 #: ang/crmFunding/application/applicationEditor.template.html
-msgid "Start Review"
-msgstr ""
-
-#: ang/crmFunding/application/applicationEditor.template.html
-msgid "Set Content Review to Passed"
-msgstr ""
-
-#: ang/crmFunding/application/applicationEditor.template.html
-msgid "Set Content Review to Failed"
-msgstr ""
-
-#: ang/crmFunding/application/applicationEditor.template.html
-msgid "Set Calculative Review to Passed"
-msgstr ""
-
-#: ang/crmFunding/application/applicationEditor.template.html
-msgid "Set Calculative Review to Failed"
-msgstr ""
-
-#: ang/crmFunding/application/applicationEditor.template.html
-msgid "Request Change"
-msgstr ""
-
-#: ang/crmFunding/application/applicationEditor.template.html
-msgid "Approve Application"
-msgstr ""
-
-#: ang/crmFunding/application/applicationEditor.template.html
-msgid "Reject Application"
-msgstr ""
-
-#: ang/crmFunding/application/applicationEditor.template.html
-msgid "Approve Rework Request"
-msgstr ""
-
-#: ang/crmFunding/application/applicationEditor.template.html
-msgid "Reject Rework Request"
-msgstr ""
-
-#: ang/crmFunding/application/applicationEditor.template.html
-msgid "Approve Change"
-msgstr ""
-
-#: ang/crmFunding/application/applicationEditor.template.html
-msgid "Reject Change"
-msgstr ""
-
-#: ang/crmFunding/application/applicationEditor.template.html
-msgid "Add Comment"
-msgstr ""
-
-#: ang/crmFunding/application/applicationEditor.template.html
-msgid "Reset"
-msgstr ""
-
-#: ang/crmFunding/application/applicationEditor.template.html
 msgid "Reviewers"
 msgstr ""
 
@@ -690,7 +634,7 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: ang/crmFunding/application/applicationEditor.template.html ang/crmFunding/application/history/activities/statusChange.template.html ang/crmFunding/case/fundingCase.template.html
+#: ang/crmFunding/application/applicationEditor.template.html ang/crmFunding/application/history/applicationProcessActivity.directive.js ang/crmFunding/case/fundingCase.template.html
 msgid "Unknown"
 msgstr ""
 
@@ -732,6 +676,74 @@ msgstr ""
 
 #: ang/crmFunding/application/applicationReviewers.template.html
 msgid "Content Reviewer"
+msgstr ""
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "Review"
+msgstr ""
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "Start Review"
+msgstr ""
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "Content Review"
+msgstr ""
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "The aim intended by the funding can be achieved."
+msgstr ""
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "Calculative Review"
+msgstr ""
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "The calculation is correct."
+msgstr ""
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "Change Review"
+msgstr ""
+
+#: ang/crmFunding/application/applicationSidebar.template.html ang/crmFunding/case/fundingCase.template.html
+msgid "Approve"
+msgstr ""
+
+#: ang/crmFunding/application/applicationSidebar.template.html managed/SavedSearchFundingDrawdowns.mgd.php
+msgid "Reject"
+msgstr ""
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "Add Comment"
+msgstr ""
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "Request Change"
+msgstr ""
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "Reject Application"
+msgstr ""
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "Approve Application"
+msgstr ""
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "The application can be approved once the review was successful."
+msgstr ""
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "Approve Rework Request"
+msgstr ""
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "Reject Rework Request"
+msgstr ""
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "Reset"
 msgstr ""
 
 #: ang/crmFunding/application/history/activities/comment.template.html
@@ -784,10 +796,6 @@ msgstr ""
 
 #: ang/crmFunding/application/history/applicationProcessHistory.template.html
 msgid "Hide Comments"
-msgstr ""
-
-#: ang/crmFunding/case/fundingCase.template.html
-msgid "Approve"
 msgstr ""
 
 #: ang/crmFunding/case/fundingCase.template.html managed/SavedSearchFundingDrawdowns.mgd.php
@@ -1002,16 +1010,16 @@ msgstr ""
 msgid "Funding Cases"
 msgstr ""
 
+#: managed/NavigationFunding.mgd.php
+msgid "My Tasks"
+msgstr ""
+
 #: managed/NavigationFunding.mgd.php managed/SavedSearchFundingPrograms.mgd.php
 msgid "Funding Programs"
 msgstr ""
 
 #: managed/NavigationFunding.mgd.php
 msgid "Add Funding Program"
-msgstr ""
-
-#: managed/NavigationFunding.mgd.php
-msgid "My Tasks"
 msgstr ""
 
 #: managed/OptionGroupFundingFileType.mgd.php
@@ -1092,10 +1100,6 @@ msgstr ""
 
 #: managed/SavedSearchFundingDrawdowns.mgd.php
 msgid "Accept"
-msgstr ""
-
-#: managed/SavedSearchFundingDrawdowns.mgd.php
-msgid "Reject"
 msgstr ""
 
 #: managed/SavedSearchFundingDrawdowns.mgd.php

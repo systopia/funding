@@ -16,7 +16,7 @@
 
 'use strict';
 
-fundingModule.directive('fundingActionButton', ['$compile', function($compile) {
+fundingModule.directive('fundingActionButton', [function() {
   return {
     restrict: 'E',
     transclude: true,
@@ -24,17 +24,20 @@ fundingModule.directive('fundingActionButton', ['$compile', function($compile) {
     bindToController: {
       'action': '@',
       'label': '@',
+      // Hide button if action is not allowed. (Default: true).
+      'hideDisabled': '=?',
       'withComment': '=?',
     },
     controllerAs: '$ctrl',
     controller: function () {
+        this.hideDisabled = true;
         this.withComment = true;
     },
     compile: function(element, attrs) {
       // copy attributes to button element
       const button = angular.element(element[0].querySelector('button'));
       for (let attr of element[0].attributes) {
-        if (attr.name !== 'action' && attr.name !== 'label' && attr.name !== 'with-comment') {
+        if (attr.name !== 'action' && attr.name !== 'label' && attr.name !== 'hide-disabled' && attr.name !== 'with-comment') {
           button.attr(attr.name, attr.value);
           // avoid handling of attributes such as crm-icon on custom button directive
           _4.unset(attrs, _4.camelCase(attr.name));
@@ -45,7 +48,7 @@ fundingModule.directive('fundingActionButton', ['$compile', function($compile) {
 
       return function (scope, element, attrs, controller, transcludeFn) {
         for (let attr of element[0].attributes) {
-          if (attr.name !== 'action' && attr.name !== 'label' && attr.name !== 'with-comment') {
+          if (attr.name !== 'action' && attr.name !== 'label' && attr.name !== 'hide-disabled' && attr.name !== 'with-comment') {
             element.removeAttr(attr.name);
           }
         }

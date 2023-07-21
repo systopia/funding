@@ -98,6 +98,16 @@ fundingModule.directive('fundingApplicationEditor', function() {
           return $scope.jsonSchema.properties.action.enum.includes(action);
         };
 
+        $scope.isAnyActionAllowed = function (...actions) {
+          for (const action of actions) {
+            if ($scope.isActionAllowed(action)) {
+              return true;
+            }
+          }
+
+          return false;
+        };
+
         $scope.isActionDisabled = function (action) {
           return $scope.editCount > 0 ||
             !fundingIsEmpty($scope.errors) ||
