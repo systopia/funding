@@ -125,7 +125,7 @@ final class AVK1UiSchema extends JsonFormsGroup {
         new JsonFormsControl('#/properties/beschreibung/properties/partner',
           'Mit welcher Schule oder Organisation wird kooperiert?'),
       ]),
-      new JsonFormsGroup('Projektunterlagen', [
+      new JsonFormsCloseableGroup('Projektunterlagen', [
         new JsonFormsArray('#/properties/projektunterlagen', '',
           'Hier können Unterlagen wie das geplante Programm mit Zeitangaben oder die Ausschreibung' .
           ' hochgeladen werden.',
