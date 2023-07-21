@@ -43,7 +43,7 @@ final class ApplicationFormNewSubmitResult extends AbstractApplicationFormSubmit
     bool $success,
     ValidationResult $validationResult,
     ValidatedApplicationDataInterface $validatedData = NULL,
-    ApplicationProcessEntityBundle $applicationProcessBundle = NULL,
+    ApplicationProcessEntityBundle $applicationProcessBundle = NULL
   ) {
     parent::__construct($success, $validationResult, $validatedData);
     $this->applicationProcessBundle = $applicationProcessBundle;
