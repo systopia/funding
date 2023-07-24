@@ -29,7 +29,7 @@ final class ReworkPossibleApplicationSubmitActionsContainerFactory {
   public static function create(): SubmitActionsContainer {
     return DefaultApplicationSubmitActionsContainerFactory::create()
       ->add('request-rework', E::ts('Request rework'))
-      ->add('withdraw-request-rework', E::ts('Withdraw rework request'))
+      ->add('withdraw-rework-request', E::ts('Withdraw rework request'))
       ->add('withdraw-change', E::ts('Withdraw change'))
       ->add('apply-rework', E::ts('Apply rework'))
       ->add('withdraw-rework', E::ts('Withdraw rework'));
