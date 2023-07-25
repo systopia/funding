@@ -248,7 +248,6 @@ CREATE TABLE `civicrm_funding_application_process` (
   `is_eligible` tinyint NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `index_identifier`(identifier),
-  UNIQUE INDEX `index_title`(title),
   CONSTRAINT FK_civicrm_funding_application_process_funding_case_id FOREIGN KEY (`funding_case_id`) REFERENCES `civicrm_funding_case`(`id`) ON DELETE CASCADE,
   CONSTRAINT FK_civicrm_funding_application_process_reviewer_cont_contact_id FOREIGN KEY (`reviewer_cont_contact_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE RESTRICT,
   CONSTRAINT FK_civicrm_funding_application_process_reviewer_calc_contact_id FOREIGN KEY (`reviewer_calc_contact_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE RESTRICT
