@@ -56,7 +56,7 @@ final class TestAttachmentManager implements FundingAttachmentManagerInterface {
   public function attachFileUniqueByFileType(
     string $entityTable,
     int $entityId,
-    int $fileTypeId,
+    string $fileTypeName,
     string $filename,
     string $mimeType,
     array $optional = []
@@ -64,7 +64,7 @@ final class TestAttachmentManager implements FundingAttachmentManagerInterface {
     return $this->attachmentManager->attachFileUniqueByFileType(
       $entityTable,
       $entityId,
-      $fileTypeId,
+      $fileTypeName,
       $filename,
       $mimeType,
       $optional,
@@ -88,22 +88,22 @@ final class TestAttachmentManager implements FundingAttachmentManagerInterface {
   /**
    * @inheritDoc
    */
-  public function getByFileType(string $entityTable, int $entityId, int $fileTypeId): array {
-    return $this->attachmentManager->getByFileType($entityTable, $entityId, $fileTypeId);
+  public function getByFileType(string $entityTable, int $entityId, string $fileTypeName): array {
+    return $this->attachmentManager->getByFileType($entityTable, $entityId, $fileTypeName);
   }
 
   /**
    * @inheritDoc
    */
-  public function getLastByFileType(string $entityTable, int $entityId, int $fileTypeId): ?AttachmentEntity {
-    return $this->attachmentManager->getLastByFileType($entityTable, $entityId, $fileTypeId);
+  public function getLastByFileType(string $entityTable, int $entityId, string $fileTypeName): ?AttachmentEntity {
+    return $this->attachmentManager->getLastByFileType($entityTable, $entityId, $fileTypeName);
   }
 
   /**
    * @inheritDoc
    */
-  public function has(string $entityTable, int $entityId, int $fileTypeId): bool {
-    return $this->attachmentManager->has($entityTable, $entityId, $fileTypeId);
+  public function has(string $entityTable, int $entityId, string $fileTypeName): bool {
+    return $this->attachmentManager->has($entityTable, $entityId, $fileTypeName);
   }
 
   /**

@@ -21,7 +21,7 @@ namespace Civi\Funding\PayoutProcess\Handler;
 
 use Civi\Funding\DocumentRender\DocumentRendererInterface;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
-use Civi\Funding\FileTypeIds;
+use Civi\Funding\FileTypeNames;
 use Civi\Funding\FundingAttachmentManagerInterface;
 use Civi\Funding\PayoutProcess\Command\PaymentInstructionRenderCommand;
 use Civi\Funding\PayoutProcess\Command\PaymentInstructionRenderResult;
@@ -68,7 +68,7 @@ final class PaymentInstructionRenderHandler implements PaymentInstructionRenderH
     $attachment = $this->attachmentManager->getLastByFileType(
       'civicrm_funding_case_type',
       $fundingCaseType->getId(),
-      FileTypeIds::PAYMENT_INSTRUCTION_TEMPLATE,
+      FileTypeNames::PAYMENT_INSTRUCTION_TEMPLATE,
     );
 
     if (NULL === $attachment) {

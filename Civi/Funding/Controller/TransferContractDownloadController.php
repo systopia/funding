@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Controller;
 
-use Civi\Funding\FileTypeIds;
+use Civi\Funding\FileTypeNames;
 use Civi\Funding\FundingAttachmentManagerInterface;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use CRM_Funding_ExtensionUtil as E;
@@ -72,7 +72,7 @@ final class TransferContractDownloadController implements PageControllerInterfac
     $attachment = $this->attachmentManager->getLastByFileType(
       'civicrm_funding_case',
       $fundingCaseId,
-      FileTypeIds::TRANSFER_CONTRACT,
+      FileTypeNames::TRANSFER_CONTRACT,
     );
 
     if (NULL === $attachment) {

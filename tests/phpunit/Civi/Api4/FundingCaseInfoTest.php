@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\Funding\AbstractFundingHeadlessTestCase;
-use Civi\Funding\FileTypeIds;
+use Civi\Funding\FileTypeNames;
 use Civi\Funding\Fixtures\ApplicationProcessFixture;
 use Civi\Funding\Fixtures\AttachmentFixture;
 use Civi\Funding\Fixtures\ContactFixture;
@@ -58,7 +58,7 @@ final class FundingCaseInfoTest extends AbstractFundingHeadlessTestCase {
       'civicrm_funding_case',
       $fundingCase->getId(),
       E::path('tests/phpunit/resources/FundingCaseDocumentTemplate.docx'),
-      ['file_type_id' => FileTypeIds::TRANSFER_CONTRACT],
+      ['file_type_id:name' => FileTypeNames::TRANSFER_CONTRACT],
     );
     $applicationProcess = ApplicationProcessFixture::addFixture(
       $fundingCase->getId(),

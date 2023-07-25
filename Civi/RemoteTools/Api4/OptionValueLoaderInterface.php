@@ -17,16 +17,13 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding;
+namespace Civi\RemoteTools\Api4;
 
-final class FileTypeIds {
+interface OptionValueLoaderInterface {
 
-  public const PAYMENT_INSTRUCTION = 63785202;
-
-  public const PAYMENT_INSTRUCTION_TEMPLATE = 63785203;
-
-  public const TRANSFER_CONTRACT = 63785200;
-
-  public const TRANSFER_CONTRACT_TEMPLATE = 63785201;
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function getOptionValue(string $groupName, string $optionName): ?string;
 
 }

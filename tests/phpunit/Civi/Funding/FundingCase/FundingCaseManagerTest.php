@@ -29,7 +29,7 @@ use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent;
 use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
-use Civi\Funding\FileTypeIds;
+use Civi\Funding\FileTypeNames;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\FundingCaseFixture;
@@ -289,7 +289,7 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
 
   public function testHasTransferContract(): void {
     $this->attachmentManagerMock->expects(static::once())->method('has')
-      ->with('civicrm_funding_case', 12, FileTypeIds::TRANSFER_CONTRACT)
+      ->with('civicrm_funding_case', 12, FileTypeNames::TRANSFER_CONTRACT)
       ->willReturn(TRUE);
 
     static::assertTrue($this->fundingCaseManager->hasTransferContract(12));

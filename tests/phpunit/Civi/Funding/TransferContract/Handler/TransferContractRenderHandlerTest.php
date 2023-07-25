@@ -24,7 +24,7 @@ use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\AttachmentFactory;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
-use Civi\Funding\FileTypeIds;
+use Civi\Funding\FileTypeNames;
 use Civi\Funding\FundingAttachmentManagerInterface;
 use Civi\Funding\TransferContract\Command\TransferContractRenderCommand;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -68,7 +68,7 @@ final class TransferContractRenderHandlerTest extends TestCase {
       'entity_id' => FundingCaseTypeFactory::DEFAULT_ID,
     ]);
     $this->attachmentManagerMock->method('getLastByFileType')
-      ->with('civicrm_funding_case_type', FundingCaseTypeFactory::DEFAULT_ID, FileTypeIds::TRANSFER_CONTRACT_TEMPLATE)
+      ->with('civicrm_funding_case_type', FundingCaseTypeFactory::DEFAULT_ID, FileTypeNames::TRANSFER_CONTRACT_TEMPLATE)
       ->willReturn($transferContractAttachment);
 
     $this->documentRendererMock->expects(static::once())->method('render')
@@ -89,7 +89,7 @@ final class TransferContractRenderHandlerTest extends TestCase {
   public function testHandleNoTemplate(): void {
     $command = $this->createCommand();
     $this->attachmentManagerMock->method('getLastByFileType')
-      ->with('civicrm_funding_case_type', FundingCaseTypeFactory::DEFAULT_ID, FileTypeIds::TRANSFER_CONTRACT_TEMPLATE)
+      ->with('civicrm_funding_case_type', FundingCaseTypeFactory::DEFAULT_ID, FileTypeNames::TRANSFER_CONTRACT_TEMPLATE)
       ->willReturn(NULL);
 
     $this->expectException(\RuntimeException::class);

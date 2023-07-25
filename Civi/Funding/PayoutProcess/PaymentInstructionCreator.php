@@ -21,7 +21,7 @@ namespace Civi\Funding\PayoutProcess;
 
 use Civi\Funding\Entity\DrawdownEntity;
 use Civi\Funding\Exception\FundingException;
-use Civi\Funding\FileTypeIds;
+use Civi\Funding\FileTypeNames;
 use Civi\Funding\FundingAttachmentManagerInterface;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingProgram\FundingCaseTypeManager;
@@ -100,7 +100,7 @@ class PaymentInstructionCreator {
     $this->attachmentManager->attachFileUniqueByFileType(
       'civicrm_funding_drawdown',
       $drawdown->getId(),
-      FileTypeIds::PAYMENT_INSTRUCTION,
+      FileTypeNames::PAYMENT_INSTRUCTION,
       $result->getFilename(),
       $result->getMimeType(),
       [

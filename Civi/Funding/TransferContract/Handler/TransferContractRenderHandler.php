@@ -21,7 +21,7 @@ namespace Civi\Funding\TransferContract\Handler;
 
 use Civi\Funding\DocumentRender\DocumentRendererInterface;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
-use Civi\Funding\FileTypeIds;
+use Civi\Funding\FileTypeNames;
 use Civi\Funding\FundingAttachmentManagerInterface;
 use Civi\Funding\TransferContract\Command\TransferContractRenderCommand;
 use Civi\Funding\TransferContract\Command\TransferContractRenderResult;
@@ -66,7 +66,7 @@ final class TransferContractRenderHandler implements TransferContractRenderHandl
     $attachment = $this->attachmentManager->getLastByFileType(
       'civicrm_funding_case_type',
       $fundingCaseType->getId(),
-      FileTypeIds::TRANSFER_CONTRACT_TEMPLATE,
+      FileTypeNames::TRANSFER_CONTRACT_TEMPLATE,
     );
 
     if (NULL === $attachment) {
