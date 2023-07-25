@@ -71,10 +71,6 @@
       <type>Text</type>
     </html>
   </field>
-  <index>
-    <name>index_title</name>
-    <fieldName>title</fieldName>
-  </index>
 
   <field>
     <name>short_description</name>

@@ -87,11 +87,6 @@
       <type>Text</type>
     </html>
   </field>
-  <index>
-    <name>index_title</name>
-    <fieldName>title</fieldName>
-    <unique>true</unique>
-  </index>
 
   <field>
     <name>short_description</name>
