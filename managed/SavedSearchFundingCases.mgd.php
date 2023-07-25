@@ -136,7 +136,10 @@ return [
               'sortable' => TRUE,
             ],
             [
-              'size' => 'btn-xs',
+              'text' => E::ts('Actions'),
+              'style' => 'default',
+              'size' => 'btn-sm',
+              'icon' => 'fa-bars',
               'links' => [
                 [
                   'path' => 'civicrm/a#funding/case/[id]',
@@ -149,8 +152,23 @@ return [
                   'join' => '',
                   'target' => '_blank',
                 ],
+                [
+                  'path' => 'civicrm/a/#/funding/case/[id]/permissions',
+                  'icon' => 'fa-external-link',
+                  'text' => E::ts('Edit permissions'),
+                  'style' => 'default',
+                  'condition' => [
+                    'check user permission',
+                    '=',
+                    'administer Funding',
+                  ],
+                  'entity' => '',
+                  'action' => '',
+                  'join' => '',
+                  'target' => '_blank',
+                ],
               ],
-              'type' => 'buttons',
+              'type' => 'menu',
               'alignment' => 'text-right',
             ],
           ],
