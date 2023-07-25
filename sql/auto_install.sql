@@ -294,7 +294,6 @@ CREATE TABLE `civicrm_funding_application_snapshot` (
   `is_review_calculative` tinyint NULL,
   `is_eligible` tinyint NULL,
   PRIMARY KEY (`id`),
-  INDEX `index_title`(title),
   CONSTRAINT FK_civicrm_funding_application_snapshot_application_process_id FOREIGN KEY (`application_process_id`) REFERENCES `civicrm_funding_application_process`(`id`) ON DELETE RESTRICT
 )
 ENGINE=InnoDB;
