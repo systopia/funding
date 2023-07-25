@@ -94,6 +94,22 @@ final class PossiblePermissionsLoaderTest extends TestCase {
     static::assertSame(['cached' => 'Label'], $this->possiblePermissionsLoader->getPermissions('test'));
   }
 
+  public function testGetPermissionsCacheClear(): void {
+    $this->eventDispatcherMock->expects(static::never())->method('dispatch');
+
+    $this->cacheMock->expects(static::exactly(2))->method('has')
+      ->with('possible-permissions.test')
+      ->willReturn(TRUE);
+
+    $this->cacheMock->expects(static::exactly(2))->method('get')
+      ->with('possible-permissions.test')
+      ->willReturn(['cached' => 'Label']);
+
+    static::assertSame(['cached' => 'Label'], $this->possiblePermissionsLoader->getPermissions('test'));
+    $this->possiblePermissionsLoader->clearCache('test');
+    static::assertSame(['cached' => 'Label'], $this->possiblePermissionsLoader->getPermissions('test'));
+  }
+
   public function testGetPermissionsFiltered(): void {
     $this->cacheMock->expects(static::once())->method('has')
       ->with('possible-permissions.test')

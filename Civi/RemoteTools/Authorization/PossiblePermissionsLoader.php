@@ -38,6 +38,11 @@ final class PossiblePermissionsLoader implements PossiblePermissionsLoaderInterf
   /**
    * @phpstan-var array<string, array<string, string>>
    */
+  private array $filteredPermissions = [];
+
+  /**
+   * @phpstan-var array<string, array<string, string>>
+   */
   private array $permissions = [];
 
   public function __construct(CiviEventDispatcherInterface $eventDispatcher, CacheInterface $cache) {
@@ -45,12 +50,14 @@ final class PossiblePermissionsLoader implements PossiblePermissionsLoaderInterf
     $this->cache = $cache;
   }
 
-  public function getFilteredPermissions(string $entityName): array {
-    $permissions = $this->getPermissions($entityName);
-    $event = new FilterPossiblePermissionsEvent($entityName, $permissions);
-    $this->eventDispatcher->dispatch(FilterPossiblePermissionsEvent::getName($entityName), $event);
+  public function clearCache(string $entityName): void {
+    $this->cache->delete($this->getCacheKey($entityName));
+    unset($this->permissions[$entityName]);
+    unset($this->filteredPermissions[$entityName]);
+  }
 
-    return $event->getPermissions();
+  public function getFilteredPermissions(string $entityName): array {
+    return $this->filteredPermissions[$entityName] ??= $this->doGetFilteredPermissions($entityName);
   }
 
   /**
@@ -63,8 +70,19 @@ final class PossiblePermissionsLoader implements PossiblePermissionsLoaderInterf
   /**
    * @phpstan-return array<string, string>
    */
+  private function doGetFilteredPermissions(string $entityName): array {
+    $permissions = $this->getPermissions($entityName);
+    $event = new FilterPossiblePermissionsEvent($entityName, $permissions);
+    $this->eventDispatcher->dispatch(FilterPossiblePermissionsEvent::getName($entityName), $event);
+
+    return $event->getPermissions();
+  }
+
+  /**
+   * @phpstan-return array<string, string>
+   */
   private function doGetPermissions(string $entityName): array {
-    $cacheKey = 'possible-permissions.' . $entityName;
+    $cacheKey = $this->getCacheKey($entityName);
     if ($this->cache->has($cacheKey)) {
       /** @phpstan-var array<string> */
       return $this->cache->get($cacheKey);
@@ -75,6 +93,11 @@ final class PossiblePermissionsLoader implements PossiblePermissionsLoaderInterf
     $this->cache->set($cacheKey, $event->getPermissions());
 
     return $event->getPermissions();
+  }
+
+  private function getCacheKey(string $entityName): string {
+    return 'possible-permissions.' . $entityName;
+    ;
   }
 
 }

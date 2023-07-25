@@ -21,6 +21,8 @@ namespace Civi\RemoteTools\Authorization;
 
 interface PossiblePermissionsLoaderInterface {
 
+  public function clearCache(string $entityName): void;
+
   /**
    * @phpstan-return array<string, string>
    *   Permissions mapped to labels. Permissions might be filtered (possibly
