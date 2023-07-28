@@ -23,7 +23,7 @@ use Civi\Funding\ApplicationProcess\EligibleApplicationProcessesLoader;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
-use Civi\Funding\FileTypeIds;
+use Civi\Funding\FileTypeNames;
 use Civi\Funding\FundingAttachmentManagerInterface;
 use Civi\Funding\TransferContract\Command\TransferContractRenderCommand;
 use Civi\Funding\TransferContract\Handler\TransferContractRenderHandlerInterface;
@@ -67,7 +67,7 @@ class TransferContractCreator {
     $this->attachmentManager->attachFileUniqueByFileType(
       'civicrm_funding_case',
       $fundingCase->getId(),
-      FileTypeIds::TRANSFER_CONTRACT,
+      FileTypeNames::TRANSFER_CONTRACT,
       $result->getFilename(),
       $result->getMimeType(),
       [

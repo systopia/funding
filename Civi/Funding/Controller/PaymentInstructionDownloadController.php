@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Controller;
 
-use Civi\Funding\FileTypeIds;
+use Civi\Funding\FileTypeNames;
 use Civi\Funding\FundingAttachmentManagerInterface;
 use Civi\Funding\PayoutProcess\DrawdownManager;
 use CRM_Funding_ExtensionUtil as E;
@@ -69,7 +69,7 @@ final class PaymentInstructionDownloadController implements PageControllerInterf
     $attachment = $this->attachmentManager->getLastByFileType(
       'civicrm_funding_drawdown',
       $drawdownId,
-      FileTypeIds::PAYMENT_INSTRUCTION,
+      FileTypeNames::PAYMENT_INSTRUCTION,
     );
 
     if (NULL === $attachment) {

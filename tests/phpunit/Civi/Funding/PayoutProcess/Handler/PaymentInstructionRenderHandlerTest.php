@@ -26,7 +26,7 @@ use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\EntityFactory\PayoutProcessFactory;
-use Civi\Funding\FileTypeIds;
+use Civi\Funding\FileTypeNames;
 use Civi\Funding\FundingAttachmentManagerInterface;
 use Civi\Funding\PayoutProcess\BankAccount;
 use Civi\Funding\PayoutProcess\Command\PaymentInstructionRenderCommand;
@@ -68,8 +68,11 @@ final class PaymentInstructionRenderHandlerTest extends TestCase {
       'entity_id' => FundingCaseTypeFactory::DEFAULT_ID,
     ]);
     $this->attachmentManagerMock->method('getLastByFileType')
-      ->with('civicrm_funding_case_type', FundingCaseTypeFactory::DEFAULT_ID, FileTypeIds::PAYMENT_INSTRUCTION_TEMPLATE)
-      ->willReturn($paymentInstructionAttachment);
+      ->with(
+        'civicrm_funding_case_type',
+        FundingCaseTypeFactory::DEFAULT_ID,
+        FileTypeNames::PAYMENT_INSTRUCTION_TEMPLATE
+      )->willReturn($paymentInstructionAttachment);
 
     $this->documentRendererMock->expects(static::once())->method('render')
       ->with(
@@ -91,8 +94,11 @@ final class PaymentInstructionRenderHandlerTest extends TestCase {
   public function testHandleNoTemplate(): void {
     $command = $this->createCommand();
     $this->attachmentManagerMock->method('getLastByFileType')
-      ->with('civicrm_funding_case_type', FundingCaseTypeFactory::DEFAULT_ID, FileTypeIds::PAYMENT_INSTRUCTION_TEMPLATE)
-      ->willReturn(NULL);
+      ->with(
+        'civicrm_funding_case_type',
+        FundingCaseTypeFactory::DEFAULT_ID,
+        FileTypeNames::PAYMENT_INSTRUCTION_TEMPLATE
+      )->willReturn(NULL);
 
     $this->expectException(\RuntimeException::class);
     $this->expectExceptionMessage(sprintf(

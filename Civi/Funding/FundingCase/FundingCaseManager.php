@@ -25,7 +25,7 @@ use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent;
 use Civi\Funding\Event\FundingCase\FundingCaseDeletedEvent;
 use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
-use Civi\Funding\FileTypeIds;
+use Civi\Funding\FileTypeNames;
 use Civi\Funding\FundingAttachmentManagerInterface;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
@@ -193,7 +193,7 @@ class FundingCaseManager {
    * @throws \CRM_Core_Exception
    */
   public function hasTransferContract(int $id): bool {
-    return $this->attachmentManager->has('civicrm_funding_case', $id, FileTypeIds::TRANSFER_CONTRACT);
+    return $this->attachmentManager->has('civicrm_funding_case', $id, FileTypeNames::TRANSFER_CONTRACT);
   }
 
   /**

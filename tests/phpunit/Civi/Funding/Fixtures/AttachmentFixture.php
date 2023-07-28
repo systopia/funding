@@ -40,7 +40,6 @@ final class AttachmentFixture {
       'entity_id' => $entityId,
       'name' => basename($filename),
       'mime_type' => mime_content_type($filename),
-      'file_type_id' => NULL,
       'content' => file_get_contents($filename),
       'sequential' => 1,
       // Ensure path is returned.
@@ -64,6 +63,13 @@ final class AttachmentFixture {
       File::update()
         ->setCheckPermissions(FALSE)
         ->addValue('file_type_id', $values['file_type_id'])
+        ->addWhere('id', '=', $attachment->getId())
+        ->execute();
+    }
+    if (isset($values['file_type_id:name'])) {
+      File::update()
+        ->setCheckPermissions(FALSE)
+        ->addValue('file_type_id:name', $values['file_type_id:name'])
         ->addWhere('id', '=', $attachment->getId())
         ->execute();
     }

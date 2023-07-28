@@ -27,7 +27,7 @@ use Civi\API\Exception\UnauthorizedException;
 use Civi\Api4\Traits\FundingCaseTestFixturesTrait;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Api4\Permissions;
-use Civi\Funding\FileTypeIds;
+use Civi\Funding\FileTypeNames;
 use Civi\Funding\Fixtures\AttachmentFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Util\SessionTestUtil;
@@ -72,7 +72,7 @@ final class FundingCaseTest extends AbstractFundingHeadlessTestCase {
       'civicrm_funding_case_type',
       $this->fundingCaseTypeId,
       E::path('tests/phpunit/resources/FundingCaseDocumentTemplate.docx'),
-      ['file_type_id' => FileTypeIds::TRANSFER_CONTRACT_TEMPLATE],
+      ['file_type_id:name' => FileTypeNames::TRANSFER_CONTRACT_TEMPLATE],
     );
 
     $result = FundingCase::approve()
@@ -118,14 +118,14 @@ final class FundingCaseTest extends AbstractFundingHeadlessTestCase {
       'civicrm_funding_case_type',
       $this->fundingCaseTypeId,
       E::path('tests/phpunit/resources/FundingCaseDocumentTemplate.docx'),
-      ['file_type_id' => FileTypeIds::TRANSFER_CONTRACT_TEMPLATE],
+      ['file_type_id:name' => FileTypeNames::TRANSFER_CONTRACT_TEMPLATE],
     );
 
     $transferContractAttachment = AttachmentFixture::addFixture(
       'civicrm_funding_case',
       $this->permittedFundingCaseId,
       E::path('tests/phpunit/resources/FundingCaseDocumentTemplate.docx'),
-      ['file_type_id' => FileTypeIds::TRANSFER_CONTRACT],
+      ['file_type_id:name' => FileTypeNames::TRANSFER_CONTRACT],
     );
 
     $result = FundingCase::recreateTransferContract()

@@ -58,7 +58,7 @@ interface FundingAttachmentManagerInterface {
   public function attachFileUniqueByFileType(
     string $entityTable,
     int $entityId,
-    int $fileTypeId,
+    string $fileTypeName,
     string $filename,
     string $mimeType,
     array $optional = []
@@ -79,12 +79,12 @@ interface FundingAttachmentManagerInterface {
    *
    * @throws \CRM_Core_Exception
    */
-  public function getByFileType(string $entityTable, int $entityId, int $fileTypeId): array;
+  public function getByFileType(string $entityTable, int $entityId, string $fileTypeName): array;
 
   /**
    * @throws \CRM_Core_Exception
    */
-  public function getLastByFileType(string $entityTable, int $entityId, int $fileTypeId): ?AttachmentEntity;
+  public function getLastByFileType(string $entityTable, int $entityId, string $fileTypeName): ?AttachmentEntity;
 
   /**
    * @return bool
@@ -92,7 +92,7 @@ interface FundingAttachmentManagerInterface {
    *
    * @throws \CRM_Core_Exception
    */
-  public function has(string $entityTable, int $entityId, int $fileTypeId): bool;
+  public function has(string $entityTable, int $entityId, string $fileTypeName): bool;
 
   /**
    * @throws \CRM_Core_Exception

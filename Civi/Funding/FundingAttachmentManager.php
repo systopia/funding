@@ -22,6 +22,7 @@ namespace Civi\Funding;
 use Civi\Funding\Entity\AttachmentEntity;
 use Civi\RemoteTools\Api3\Api3Interface;
 use Civi\RemoteTools\Api4\Api4Interface;
+use Civi\RemoteTools\Api4\OptionValueLoaderInterface;
 
 final class FundingAttachmentManager implements FundingAttachmentManagerInterface {
 
@@ -29,12 +30,16 @@ final class FundingAttachmentManager implements FundingAttachmentManagerInterfac
 
   private Api4Interface $api4;
 
+  private OptionValueLoaderInterface $optionValueLoader;
+
   public function __construct(
     Api3Interface $api3,
-    Api4Interface $api4
+    Api4Interface $api4,
+    OptionValueLoaderInterface $optionValueLoader
   ) {
     $this->api3 = $api3;
     $this->api4 = $api4;
+    $this->optionValueLoader = $optionValueLoader;
   }
 
   /**
@@ -92,7 +97,7 @@ final class FundingAttachmentManager implements FundingAttachmentManagerInterfac
   public function attachFileUniqueByFileType(
     string $entityTable,
     int $entityId,
-    int $fileTypeId,
+    string $fileTypeName,
     string $filename,
     string $mimeType,
     array $optional = []
@@ -100,7 +105,7 @@ final class FundingAttachmentManager implements FundingAttachmentManagerInterfac
     $previousAttachments = $this->getByFileType(
       $entityTable,
       $entityId,
-      $fileTypeId,
+      $fileTypeName,
     );
 
     $attachment = $this->attachFile(
@@ -108,7 +113,7 @@ final class FundingAttachmentManager implements FundingAttachmentManagerInterfac
       $entityId,
       $filename,
       $mimeType,
-      ['file_type_id' => $fileTypeId] + $optional,
+      ['file_type_id' => $this->getFileTypeId($fileTypeName)] + $optional,
     );
 
     foreach ($previousAttachments as $previousAttachment) {
@@ -146,7 +151,8 @@ final class FundingAttachmentManager implements FundingAttachmentManagerInterfac
   /**
    * @inheritDoc
    */
-  public function getByFileType(string $entityTable, int $entityId, int $fileTypeId): array {
+  public function getByFileType(string $entityTable, int $entityId, string $fileTypeName): array {
+    $fileTypeId = $this->getFileTypeId($fileTypeName);
     $attachments = [];
     /** @phpstan-var array{count: int, values: array<int, array<string, mixed>>} $result */
     $result = $this->api3->execute('Attachment', 'get', [
@@ -173,7 +179,8 @@ final class FundingAttachmentManager implements FundingAttachmentManagerInterfac
   /**
    * @inheritDoc
    */
-  public function getLastByFileType(string $entityTable, int $entityId, int $fileTypeId): ?AttachmentEntity {
+  public function getLastByFileType(string $entityTable, int $entityId, string $fileTypeName): ?AttachmentEntity {
+    $fileTypeId = $this->getFileTypeId($fileTypeName);
     /** @phpstan-var array{count: int, values: array<int, array<string, mixed>>} $result */
     $result = $this->api3->execute('Attachment', 'get', [
       'entity_table' => $entityTable,
@@ -197,8 +204,8 @@ final class FundingAttachmentManager implements FundingAttachmentManagerInterfac
     return NULL;
   }
 
-  public function has(string $entityTable, int $entityId, int $fileTypeId): bool {
-    return NULL !== $this->getLastByFileType($entityTable, $entityId, $fileTypeId);
+  public function has(string $entityTable, int $entityId, string $fileTypeName): bool {
+    return NULL !== $this->getLastByFileType($entityTable, $entityId, $fileTypeName);
   }
 
   /**
@@ -232,6 +239,18 @@ final class FundingAttachmentManager implements FundingAttachmentManagerInterfac
       ->addWhere('id', '=', $fileId);
 
     return $this->api4->executeAction($action)->first()['file_type_id'] ?? NULL;
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  private function getFileTypeId(string $fileTypeName): int {
+    $fileTypeId = $this->optionValueLoader->getOptionValue('file_type', $fileTypeName);
+    if (NULL === $fileTypeId) {
+      throw new \InvalidArgumentException(sprintf('Unknwon file type name "%s"', $fileTypeName));
+    }
+
+    return (int) $fileTypeId;
   }
 
 }

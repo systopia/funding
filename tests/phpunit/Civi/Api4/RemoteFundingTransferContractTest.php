@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\Funding\AbstractRemoteFundingHeadlessTestCase;
-use Civi\Funding\FileTypeIds;
+use Civi\Funding\FileTypeNames;
 use Civi\Funding\Fixtures\AttachmentFixture;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
@@ -55,7 +55,7 @@ final class RemoteFundingTransferContractTest extends AbstractRemoteFundingHeadl
       'civicrm_funding_case',
       $fundingCase->getId(),
       E::path('tests/phpunit/resources/FundingCaseDocumentTemplate.docx'),
-      ['file_type_id' => FileTypeIds::TRANSFER_CONTRACT],
+      ['file_type_id:name' => FileTypeNames::TRANSFER_CONTRACT],
     );
 
     $contact = ContactFixture::addIndividual();
