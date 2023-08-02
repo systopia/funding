@@ -27,11 +27,11 @@ use Civi\Funding\Form\ValidatedApplicationDataInterface;
  *   titel: string,
  *   kurzbeschreibungDesInhalts: string,
  *   empfaenger: int,
- *   beginn: string,
- *   ende: string,
+ *   zeitraeume: non-empty-array<array{beginn: string, ende: string}>,
  *   finanzierung: array{beantragterZuschuss: float},
  *   comment?: array{text: string, type: string},
  * }
+ * zeitraeume: Entries ordered ascending by "beginn".
  */
 final class AVK1ValidatedData implements ValidatedApplicationDataInterface {
 
@@ -65,11 +65,11 @@ final class AVK1ValidatedData implements ValidatedApplicationDataInterface {
   }
 
   public function getStartDate(): \DateTimeInterface {
-    return new \DateTime($this->data['beginn']);
+    return new \DateTime($this->data['zeitraeume'][0]['beginn']);
   }
 
   public function getEndDate(): \DateTimeInterface {
-    return new \DateTime($this->data['ende']);
+    return new \DateTime($this->data['zeitraeume'][count($this->data['zeitraeume']) - 1]['ende']);
   }
 
   public function getAmountRequested(): float {
@@ -86,6 +86,10 @@ final class AVK1ValidatedData implements ValidatedApplicationDataInterface {
     unset($data['comment']);
 
     return $data;
+  }
+
+  public function getRawData(): array {
+    return $this->data;
   }
 
 }

@@ -19,17 +19,17 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Command;
 
-use Civi\Funding\Form\Validation\ValidationResult;
+use Civi\Funding\Form\ApplicationValidationResult;
 
 final class ApplicationFormValidateResult {
 
-  private ValidationResult $validationResult;
+  private ApplicationValidationResult $validationResult;
 
-  public static function create(ValidationResult $validationResult): self {
+  public static function create(ApplicationValidationResult $validationResult): self {
     return new self($validationResult);
   }
 
-  private function __construct(ValidationResult $validationResult) {
+  private function __construct(ApplicationValidationResult $validationResult) {
     $this->validationResult = $validationResult;
   }
 
@@ -37,7 +37,7 @@ final class ApplicationFormValidateResult {
    * @phpstan-return array<string, mixed> JSON serializable.
    */
   public function getData(): array {
-    return $this->validationResult->getData();
+    return $this->validationResult->getValidatedData()->getRawData();
   }
 
   /**
@@ -45,7 +45,7 @@ final class ApplicationFormValidateResult {
    *   JSON pointers mapped to error messages.
    */
   public function getErrors(): array {
-    return $this->validationResult->getLeafErrorMessages();
+    return $this->validationResult->getErrorMessages();
   }
 
   public function isValid(): bool {

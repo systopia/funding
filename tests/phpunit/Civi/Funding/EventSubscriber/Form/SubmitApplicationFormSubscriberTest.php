@@ -35,13 +35,11 @@ use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Event\Remote\ApplicationProcess\SubmitApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
-use Civi\Funding\Form\Validation\ValidationResult;
-use Civi\Funding\Form\ValidationErrorFactory;
+use Civi\Funding\Form\ApplicationValidationResult;
 use Civi\Funding\Mock\Form\ApplicationFormMock;
 use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Systopia\JsonSchema\Errors\ErrorCollector;
 
 /**
  * @covers \Civi\Funding\EventSubscriber\Form\SubmitApplicationFormSubscriber
@@ -100,9 +98,9 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
     );
 
     $postValidationData = ['foo' => 'bar'];
-    $validationResult = new ValidationResult($postValidationData, new ErrorCollector());
     $validatedData = new ValidatedApplicationDataMock($postValidationData, ['action' => 'save']);
-    $result = ApplicationFormSubmitResult::createSuccess($validationResult, $validatedData);
+    $validationResult = ApplicationValidationResult::newValid($validatedData, FALSE);
+    $result = ApplicationFormSubmitResult::createSuccess($validationResult);
     $result->setFiles([
       'https://example.org/test.txt' => ExternalFileFactory::create(
         ['uri' => 'https://example.net/test.txt'],
@@ -132,9 +130,9 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
     );
 
     $postValidationData = ['foo' => 'baz'];
-    $errorCollector = new ErrorCollector();
-    $errorCollector->addError(ValidationErrorFactory::createValidationError());
-    $validationResult = new ValidationResult($postValidationData, $errorCollector);
+    $validatedData = new ValidatedApplicationDataMock($postValidationData, ['action' => 'save']);
+    $errorMessages = ['/a/b' => ['error']];
+    $validationResult = ApplicationValidationResult::newInvalid($errorMessages, $validatedData);
     $result = ApplicationFormSubmitResult::createError($validationResult);
     $this->submitHandlerMock->expects(static::once())->method('handle')
       ->with($command)
@@ -143,7 +141,7 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
     $this->subscriber->onSubmitForm($event);
 
     static::assertSame(SubmitApplicationFormEvent::ACTION_SHOW_VALIDATION, $event->getAction());
-    static::assertSame(['/foo' => ['Invalid value']], $event->getErrors());
+    static::assertSame($errorMessages, $event->getErrors());
     static::assertSame('Validation failed', $event->getMessage());
   }
 
@@ -157,12 +155,11 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
     );
 
     $postValidationData = ['foo' => 'bar'];
-    $validationResult = new ValidationResult($postValidationData, new ErrorCollector());
     $validatedData = new ValidatedApplicationDataMock($postValidationData, ['action' => 'save']);
+    $validationResult = ApplicationValidationResult::newValid($validatedData, FALSE);
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
     $result = ApplicationFormNewSubmitResult::createSuccess(
       $validationResult,
-      $validatedData,
       $applicationProcessBundle,
     );
     $result->setFiles([
@@ -197,9 +194,9 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
     );
 
     $postValidationData = ['foo' => 'bar'];
-    $errorCollector = new ErrorCollector();
-    $errorCollector->addError(ValidationErrorFactory::createValidationError());
-    $validationResult = new ValidationResult($postValidationData, $errorCollector);
+    $validatedData = new ValidatedApplicationDataMock($postValidationData);
+    $errorMessages = ['/a/b' => ['error']];
+    $validationResult = ApplicationValidationResult::newInvalid($errorMessages, $validatedData);
     $result = ApplicationFormNewSubmitResult::createError($validationResult);
     $this->newSubmitHandlerMock->expects(static::once())->method('handle')
       ->with($command)
@@ -208,7 +205,7 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
     $this->subscriber->onSubmitNewForm($event);
 
     static::assertSame(SubmitApplicationFormEvent::ACTION_SHOW_VALIDATION, $event->getAction());
-    static::assertSame(['/foo' => ['Invalid value']], $event->getErrors());
+    static::assertSame($errorMessages, $event->getErrors());
     static::assertSame('Validation failed', $event->getMessage());
   }
 

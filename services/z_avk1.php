@@ -29,6 +29,7 @@ use Civi\Funding\Form\ApplicationSubmitActionsFactory;
 use Civi\Funding\Form\SonstigeAktivitaet\AVK1FormDataFactory;
 use Civi\Funding\Form\SonstigeAktivitaet\AVK1JsonSchemaFactory;
 use Civi\Funding\Form\SonstigeAktivitaet\AVK1UiSchemaFactory;
+use Civi\Funding\Form\SonstigeAktivitaet\AVK1Validator;
 use Civi\Funding\FundingCase\DefaultFundingCaseActionsDeterminer;
 use Civi\Funding\SonstigeAktivitaet\AVK1ApplicationCostItemsFactory;
 use Civi\Funding\SonstigeAktivitaet\AVK1ApplicationFormFilesFactory;
@@ -50,6 +51,9 @@ $container->autowire(AVK1UiSchemaFactory::class)
   ->addTag('funding.application.ui_schema_factory');
 $container->autowire(AVK1FormDataFactory::class)
   ->addTag('funding.application.form_data_factory');
+$container->autowire(AVK1Validator::class)
+  ->setArgument('$jsonSchemaFactory', new Reference(AVK1JsonSchemaFactory::class))
+  ->addTag(AVK1Validator::SERVICE_TAG);
 $container->autowire(AVK1KostenFactory::class);
 $container->autowire(AVK1FinanzierungFactory::class);
 $container->autowire(AVK1ProjektunterlagenFactory::class);

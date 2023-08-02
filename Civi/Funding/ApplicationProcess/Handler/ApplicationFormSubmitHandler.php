@@ -24,14 +24,11 @@ use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormCommentPersistCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitResult;
-use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\ApplicationProcess\Snapshot\ApplicationSnapshotRestorerInterface;
+use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\Entity\ApplicationProcessEntity;
-use Civi\Funding\Form\ApplicationJsonSchemaFactoryInterface;
-use Civi\Funding\Form\ValidatedApplicationDataInterface;
-use Civi\Funding\Form\Validation\ValidationResult;
-use Civi\Funding\Form\Validation\ValidatorInterface;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
+use Civi\Funding\Form\ApplicationValidationResult;
+use Civi\Funding\Form\ApplicationValidatorInterface;
 
 final class ApplicationFormSubmitHandler implements ApplicationFormSubmitHandlerInterface {
 
@@ -43,36 +40,33 @@ final class ApplicationFormSubmitHandler implements ApplicationFormSubmitHandler
 
   private ApplicationProcessActionStatusInfoInterface $info;
 
-  private ApplicationJsonSchemaFactoryInterface $jsonSchemaFactory;
-
   private ApplicationProcessStatusDeterminerInterface $statusDeterminer;
 
-  private ValidatorInterface $validator;
+  private ApplicationValidatorInterface $validator;
 
   public function __construct(
     ApplicationProcessManager $applicationProcessManager,
     ApplicationSnapshotRestorerInterface $applicationSnapshotRestorer,
     ApplicationFormCommentPersistHandlerInterface $commentPersistHandler,
     ApplicationProcessActionStatusInfoInterface $info,
-    ApplicationJsonSchemaFactoryInterface $jsonSchemaFactory,
     ApplicationProcessStatusDeterminerInterface $statusDeterminer,
-    ValidatorInterface $validator
+    ApplicationValidatorInterface $validator
   ) {
     $this->applicationProcessManager = $applicationProcessManager;
     $this->applicationSnapshotRestorer = $applicationSnapshotRestorer;
     $this->commentPersistHandler = $commentPersistHandler;
     $this->info = $info;
-    $this->jsonSchemaFactory = $jsonSchemaFactory;
     $this->statusDeterminer = $statusDeterminer;
     $this->validator = $validator;
   }
 
   public function handle(ApplicationFormSubmitCommand $command): ApplicationFormSubmitResult {
-    $jsonSchema = $this->jsonSchemaFactory->createJsonSchemaExisting($command->getApplicationProcessBundle());
-    $validationResult = $this->validator->validate($jsonSchema, $command->getData());
-
+    $validationResult = $this->validator->validateExisting(
+      $command->getApplicationProcessBundle(),
+      $command->getData()
+    );
     if ($validationResult->isValid()) {
-      return $this->handleValid($command, $jsonSchema, $validationResult);
+      return $this->handleValid($command, $validationResult);
     }
 
     return ApplicationFormSubmitResult::createError($validationResult);
@@ -80,20 +74,14 @@ final class ApplicationFormSubmitHandler implements ApplicationFormSubmitHandler
 
   private function handleValid(
     ApplicationFormSubmitCommand $command,
-    JsonSchema $jsonSchema,
-    ValidationResult $validationResult
+    ApplicationValidationResult $validationResult
   ): ApplicationFormSubmitResult {
-    $applicationProcess = $command->getApplicationProcess();
-    $validatedData = $this->jsonSchemaFactory->createValidatedData(
-      $applicationProcess,
-      $command->getFundingCaseType(),
-      $validationResult
-    );
+    $validatedData = $validationResult->getValidatedData();
 
     if ($this->info->isDeleteAction($validatedData->getAction())) {
       $this->applicationProcessManager->delete($command->getApplicationProcessBundle());
 
-      return ApplicationFormSubmitResult::createSuccess($validationResult, $validatedData);
+      return ApplicationFormSubmitResult::createSuccess($validationResult);
     }
 
     if ($this->info->isRestoreAction($validatedData->getAction())) {
@@ -103,7 +91,7 @@ final class ApplicationFormSubmitHandler implements ApplicationFormSubmitHandler
       );
     }
     else {
-      $this->mapValidatedDataIntoApplicationProcess($command->getApplicationProcess(), $validatedData, $jsonSchema);
+      $this->mapValidatedDataIntoApplicationProcess($command->getApplicationProcess(), $validationResult);
       $this->applicationProcessManager->update(
         $command->getContactId(),
         $command->getApplicationProcessBundle(),
@@ -121,19 +109,19 @@ final class ApplicationFormSubmitHandler implements ApplicationFormSubmitHandler
       ));
     }
 
-    return ApplicationFormSubmitResult::createSuccess($validationResult, $validatedData);
+    return ApplicationFormSubmitResult::createSuccess($validationResult);
   }
 
   private function mapValidatedDataIntoApplicationProcess(
     ApplicationProcessEntity $applicationProcess,
-    ValidatedApplicationDataInterface $validatedData,
-    JsonSchema $jsonSchema
+    ApplicationValidationResult $validationResult
   ): void {
+    $validatedData = $validationResult->getValidatedData();
     $applicationProcess->setFullStatus(
       $this->statusDeterminer->getStatus($applicationProcess->getFullStatus(), $validatedData->getAction())
     );
 
-    if (FALSE === $jsonSchema->getKeywordValueOrDefault('readOnly', FALSE)) {
+    if (!$validationResult->isReadOnly()) {
       $applicationProcess->setTitle($validatedData->getTitle());
       $applicationProcess->setShortDescription($validatedData->getShortDescription());
       $applicationProcess->setStartDate($validatedData->getStartDate());

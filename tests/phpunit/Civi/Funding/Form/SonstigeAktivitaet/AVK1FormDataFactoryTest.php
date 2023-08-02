@@ -70,10 +70,15 @@ final class AVK1FormDataFactoryTest extends TestCase {
 
   public function testCreateFormData(): void {
     $fundingCase = FundingCaseFactory::createFundingCase();
+    $startDate = date('Y-m-d', time() - 86400);
+    $endDate = date('Y-m-d', time());
     $applicationProcess = ApplicationProcessFactory::createApplicationProcess([
-      'start_date' => date('Y-m-d', time() - 86400),
-      'end_date' => date('Y-m-d', time()),
+      'start_date' => $startDate,
+      'end_date' => $endDate,
       'request_data' => [
+        'zeitraeume' => [
+          ['beginn' => $startDate, 'ende' => $endDate],
+        ],
         'teilnehmer' => ['gesamt' => 100],
         'beschreibung' => ['veranstaltungsort' => 'dort'],
       ],
@@ -91,8 +96,9 @@ final class AVK1FormDataFactoryTest extends TestCase {
       'titel' => $applicationProcess->getTitle(),
       'kurzbeschreibungDesInhalts' => $applicationProcess->getShortDescription(),
       'empfaenger' => $fundingCase->getRecipientContactId(),
-      'beginn' => date('Y-m-d', time() - 86400),
-      'ende' => date('Y-m-d', time()),
+      'zeitraeume' => [
+        ['beginn' => $startDate, 'ende' => $endDate],
+      ],
       'kosten' => ['foo' => 12.3],
       'finanzierung' => ['bar' => 1.23],
       'teilnehmer' => ['gesamt' => 100],

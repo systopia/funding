@@ -69,7 +69,6 @@ final class ApplicationFormSubmitSuccessEvent extends AbstractApplicationEvent {
    * requested action resulted in a restore of a previous snapshot.
    */
   public function getValidatedData(): ValidatedApplicationDataInterface {
-    /** @phpstan-ignore-next-line  */
     return $this->result->getValidatedData();
   }
 

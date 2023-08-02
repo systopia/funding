@@ -41,9 +41,16 @@ interface ValidatedApplicationDataInterface {
   public function getComment(): ?array;
 
   /**
-   * @phpstan-return array<string, mixed>
-   *   Application data without extra data like "action".
+   * @phpstan-return array<string, mixed> JSON serializable.
+   *   Request data without extra data like "action".
    */
   public function getApplicationData(): array;
+
+  /**
+   * @phpstan-return array<string, mixed> JSON serializable.
+   *   The request data (after JSON schema validation) from which data is
+   *   extracted.
+   */
+  public function getRawData(): array;
 
 }

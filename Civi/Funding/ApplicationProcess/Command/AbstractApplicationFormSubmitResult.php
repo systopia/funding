@@ -19,8 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Command;
 
+use Civi\Funding\Form\ApplicationValidationResult;
 use Civi\Funding\Form\ValidatedApplicationDataInterface;
-use Civi\Funding\Form\Validation\ValidationResult;
 
 abstract class AbstractApplicationFormSubmitResult {
 
@@ -31,9 +31,7 @@ abstract class AbstractApplicationFormSubmitResult {
 
   protected bool $success;
 
-  protected ?ValidatedApplicationDataInterface $validatedData;
-
-  protected ValidationResult $validationResult;
+  protected ApplicationValidationResult $validationResult;
 
   /**
    * @phpstan-param array<string, \Civi\Funding\Entity\ExternalFileEntity> $files
@@ -41,13 +39,11 @@ abstract class AbstractApplicationFormSubmitResult {
    */
   protected function __construct(
     bool $success,
-    ValidationResult $validationResult,
-    ?ValidatedApplicationDataInterface $validatedData = NULL,
+    ApplicationValidationResult $validationResult,
     array $files = []
   ) {
     $this->success = $success;
     $this->validationResult = $validationResult;
-    $this->validatedData = $validatedData;
     $this->files = $files;
   }
 
@@ -77,11 +73,11 @@ abstract class AbstractApplicationFormSubmitResult {
    * The returned data might not contain the actual application data if the
    * requested action resulted in a restore of a previous snapshot.
    */
-  public function getValidatedData(): ?ValidatedApplicationDataInterface {
-    return $this->validatedData;
+  public function getValidatedData(): ValidatedApplicationDataInterface {
+    return $this->validationResult->getValidatedData();
   }
 
-  public function getValidationResult(): ValidationResult {
+  public function getValidationResult(): ApplicationValidationResult {
     return $this->validationResult;
   }
 

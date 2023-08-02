@@ -21,14 +21,11 @@ namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateCommand;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
-use Civi\Funding\Form\ApplicationJsonSchemaFactoryInterface;
-use Civi\Funding\Form\Validation\ValidationResult;
-use Civi\Funding\Form\Validation\ValidatorInterface;
-use Civi\Funding\Form\ValidationErrorFactory;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
+use Civi\Funding\Form\ApplicationValidationResult;
+use Civi\Funding\Form\ApplicationValidatorInterface;
+use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Systopia\JsonSchema\Errors\ErrorCollector;
 
 /**
  * @covers \Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandler
@@ -40,21 +37,14 @@ final class ApplicationFormValidateHandlerTest extends TestCase {
   private ApplicationFormValidateHandler $handler;
 
   /**
-   * @var \Civi\Funding\Form\ApplicationJsonSchemaFactoryInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $jsonSchemaFactoryMock;
-
-  /**
-   * @var \Civi\Funding\Form\Validation\ValidatorInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\Form\ApplicationValidatorInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $validatorMock;
 
   protected function setUp(): void {
     parent::setUp();
-    $this->jsonSchemaFactoryMock = $this->createMock(ApplicationJsonSchemaFactoryInterface::class);
-    $this->validatorMock = $this->createMock(ValidatorInterface::class);
+    $this->validatorMock = $this->createMock(ApplicationValidatorInterface::class);
     $this->handler = new ApplicationFormValidateHandler(
-      $this->jsonSchemaFactoryMock,
       $this->validatorMock
     );
   }
@@ -62,25 +52,19 @@ final class ApplicationFormValidateHandlerTest extends TestCase {
   public function testHandle(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
 
-    $jsonSchema = new JsonSchema([]);
-    $this->jsonSchemaFactoryMock->expects(static::once())->method('createJsonSchemaExisting')
-      ->with($applicationProcessBundle)
-      ->willReturn($jsonSchema);
-
     $data = ['foo' => 'bar'];
-    $postValidationData = ['foo' => 'baz'];
-    $errorCollector = new ErrorCollector();
-    $errorCollector->addError(ValidationErrorFactory::createValidationError());
-    $validationResult = new ValidationResult($postValidationData, $errorCollector);
+    $validatedData = new ValidatedApplicationDataMock();
+    $errorMessages = ['/a/b' => ['error']];
+    $validationResult = ApplicationValidationResult::newInvalid($errorMessages, $validatedData);
 
-    $this->validatorMock->expects(static::once())->method('validate')
-      ->with($jsonSchema, $data)
+    $this->validatorMock->expects(static::once())->method('validateExisting')
+      ->with($applicationProcessBundle, $data)
       ->willReturn($validationResult);
 
     $command = new ApplicationFormValidateCommand($applicationProcessBundle, $data);
     $result = $this->handler->handle($command);
-    static::assertSame($postValidationData, $result->getData());
-    static::assertSame($validationResult->getLeafErrorMessages(), $result->getErrors());
+    static::assertSame($validatedData->getRawData(), $result->getData());
+    static::assertSame($validationResult->getErrorMessages(), $result->getErrors());
     static::assertFalse($validationResult->isValid());
   }
 

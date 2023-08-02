@@ -206,13 +206,18 @@ final class RemoteFundingApplicationProcessAVK1FormTest extends AbstractRemoteFu
       $this->contact['id'],
     );
 
+    $startDate = date('Y-m-d', time() - 86400);
+    $endDate = date('Y-m-d', time() + 86400);
     $this->applicationProcess = ApplicationProcessFixture::addFixture(
       $this->fundingCase->getId(),
       [
-        'start_date' => date('Y-m-d', time() - 86400),
-        'end_date' => date('Y-m-d', time() + 86400),
+        'start_date' => $startDate,
+        'end_date' => $endDate,
         'request_data' => [
           'teilnehmer' => [],
+          'zeitraeume' => [
+            ['beginn' => $startDate, 'ende' => $endDate],
+          ],
           'beschreibung' => [],
         ],
       ]

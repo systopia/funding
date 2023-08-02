@@ -79,15 +79,15 @@ final class SubmitFormAction extends AbstractAction {
     $command = $this->createCommand();
     $commandResult = $this->submitFormHandler->handle($command);
 
-    if ([] === $commandResult->getValidationResult()->getLeafErrorMessages()) {
+    if ([] === $commandResult->getValidationResult()->getErrorMessages()) {
       $result['data'] = $this->formDataGetHandler->handle(
         new ApplicationFormDataGetCommand($command->getApplicationProcessBundle())
       );
       $result['errors'] = new \stdClass();
     }
     else {
-      $result['data'] = $commandResult->getValidationResult()->getData();
-      $result['errors'] = $commandResult->getValidationResult()->getLeafErrorMessages();
+      $result['data'] = $commandResult->getValidatedData()->getRawData();
+      $result['errors'] = $commandResult->getValidationResult()->getErrorMessages();
     }
   }
 

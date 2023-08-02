@@ -56,6 +56,7 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandler;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\Decorator\ApplicationFormNewSubmitEventDecorator;
 use Civi\Funding\ApplicationProcess\Handler\Decorator\ApplicationFormSubmitEventDecorator;
+use Civi\Funding\Form\ApplicationValidatorInterface;
 use Civi\Funding\FundingCase\FundingCaseActionsDeterminerInterface;
 use Civi\Funding\FundingCase\FundingCaseStatusDeterminer;
 use Civi\Funding\FundingCase\FundingCaseStatusDeterminerInterface;
@@ -103,6 +104,7 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
       $this->getTaggedServices($container, 'funding.application.json_schema_factory');
     $applicationUiSchemaFactoryServices =
       $this->getTaggedServices($container, 'funding.application.ui_schema_factory');
+    $applicationValidator = $this->getTaggedServices($container, ApplicationValidatorInterface::SERVICE_TAG);
     $applicationActionsDeterminerServices =
       $this->getTaggedServices($container, 'funding.application.actions_determiner');
     $applicationStatusDeterminerServices =
@@ -213,7 +215,7 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         $container,
         $fundingCaseType,
         ApplicationFormNewValidateHandler::class,
-        ['$jsonSchemaFactory' => $applicationJsonSchemaFactoryServices[$fundingCaseType]]
+        ['$validator' => $applicationValidator[$fundingCaseType]]
       );
 
       $applicationFormNewSubmitHandlerServices[$fundingCaseType] ??= $this->createService(
@@ -221,8 +223,8 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         $fundingCaseType,
         ApplicationFormNewSubmitHandler::class,
         [
-          '$jsonSchemaFactory' => $applicationJsonSchemaFactoryServices[$fundingCaseType],
           '$statusDeterminer' => $applicationStatusDeterminerServices[$fundingCaseType],
+          '$validator' => $applicationValidator[$fundingCaseType],
         ],
         [ApplicationFormNewSubmitEventDecorator::class => []],
       );
@@ -238,7 +240,7 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         $container,
         $fundingCaseType,
         ApplicationFormValidateHandler::class,
-        ['$jsonSchemaFactory' => $applicationJsonSchemaFactoryServices[$fundingCaseType]]
+        ['$validator' => $applicationValidator[$fundingCaseType]]
       );
 
       $applicationFormDataGetHandlerServices[$fundingCaseType] ??= $this->createService(
@@ -276,8 +278,8 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         [
           '$commentPersistHandler' => $applicationFormCommentPersistHandlerServices[$fundingCaseType],
           '$info' => $applicationActionStatusInfoServices[$fundingCaseType],
-          '$jsonSchemaFactory' => $applicationJsonSchemaFactoryServices[$fundingCaseType],
           '$statusDeterminer' => $applicationStatusDeterminerServices[$fundingCaseType],
+          '$validator' => $applicationValidator[$fundingCaseType],
         ],
         [ApplicationFormSubmitEventDecorator::class => []],
       );

@@ -25,7 +25,6 @@ use Civi\Funding\Form\ApplicationFormDataFactoryInterface;
 use Civi\Funding\SonstigeAktivitaet\AVK1FinanzierungFactory;
 use Civi\Funding\SonstigeAktivitaet\AVK1KostenFactory;
 use Civi\Funding\SonstigeAktivitaet\AVK1ProjektunterlagenFactory;
-use Webmozart\Assert\Assert;
 
 final class AVK1FormDataFactory implements ApplicationFormDataFactoryInterface {
 
@@ -58,10 +57,7 @@ final class AVK1FormDataFactory implements ApplicationFormDataFactoryInterface {
     $data['kurzbeschreibungDesInhalts'] = $applicationProcess->getShortDescription();
     $data['teilnehmer'] = $applicationProcess->getRequestData()['teilnehmer'];
     $data['empfaenger'] = $fundingCase->getRecipientContactId();
-    Assert::notNull($applicationProcess->getStartDate());
-    $data['beginn'] = $applicationProcess->getStartDate()->format('Y-m-d');
-    Assert::notNull($applicationProcess->getEndDate());
-    $data['ende'] = $applicationProcess->getEndDate()->format('Y-m-d');
+    $data['zeitraeume'] = $applicationProcess->getRequestData()['zeitraeume'];
     $data['kosten'] = $this->avk1KostenFactory->createKosten($applicationProcess);
     $data['finanzierung'] = $this->avk1FinanzierungFactory->createFinanzierung($applicationProcess);
     $data['beschreibung'] = $applicationProcess->getRequestData()['beschreibung'];

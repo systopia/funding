@@ -26,16 +26,12 @@ use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
-use Civi\Funding\Form\ApplicationJsonSchemaFactoryInterface;
-use Civi\Funding\Form\Validation\ValidationResult;
-use Civi\Funding\Form\Validation\ValidatorInterface;
-use Civi\Funding\Form\ValidationErrorFactory;
+use Civi\Funding\Form\ApplicationValidationResult;
+use Civi\Funding\Form\ApplicationValidatorInterface;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Systopia\JsonSchema\Errors\ErrorCollector;
 
 /**
  * @covers \Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewSubmitHandler
@@ -58,30 +54,23 @@ final class ApplicationFormNewSubmitHandlerTest extends TestCase {
   private ApplicationFormNewSubmitHandler $handler;
 
   /**
-   * @var \Civi\Funding\Form\ApplicationJsonSchemaFactoryInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $jsonSchemaFactoryMock;
-
-  /**
    * @var \Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $statusDeterminerMock;
 
   /**
-   * @var \Civi\Funding\Form\Validation\ValidatorInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\Form\ApplicationValidatorInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $validatorMock;
 
   protected function setUp(): void {
     parent::setUp();
     $this->applicationProcessManagerMock = $this->createMock(ApplicationProcessManager::class);
-    $this->jsonSchemaFactoryMock = $this->createMock(ApplicationJsonSchemaFactoryInterface::class);
     $this->fundingCaseManagerMock = $this->createMock(FundingCaseManager::class);
     $this->statusDeterminerMock = $this->createMock(ApplicationProcessStatusDeterminerInterface::class);
-    $this->validatorMock = $this->createMock(ValidatorInterface::class);
+    $this->validatorMock = $this->createMock(ApplicationValidatorInterface::class);
     $this->handler = new ApplicationFormNewSubmitHandler(
       $this->applicationProcessManagerMock,
-      $this->jsonSchemaFactoryMock,
       $this->fundingCaseManagerMock,
       $this->statusDeterminerMock,
       $this->validatorMock
@@ -90,14 +79,15 @@ final class ApplicationFormNewSubmitHandlerTest extends TestCase {
 
   public function testHandle(): void {
     $command = $this->createCommand();
-    $jsonSchema = new JsonSchema([]);
-    $this->mockCreateJsonSchema($command, $jsonSchema);
-
-    $validationResult = new ValidationResult([], new ErrorCollector());
-    $this->mockValidator($jsonSchema, $command->getData(), $validationResult);
 
     $validatedData = new ValidatedApplicationDataMock();
-    $this->mockCreateNewValidatedData($command, $validationResult, $validatedData);
+    $validationResult = ApplicationValidationResult::newValid($validatedData, FALSE);
+    $this->validatorMock->method('validateInitial')->with(
+      $command->getContactId(),
+      $command->getFundingProgram(),
+      $command->getFundingCaseType(),
+      $command->getData()
+    )->willReturn($validationResult);
 
     $this->statusDeterminerMock->expects(static::once())->method('getInitialStatus')
       ->with(ValidatedApplicationDataMock::ACTION)
@@ -133,14 +123,16 @@ final class ApplicationFormNewSubmitHandlerTest extends TestCase {
 
   public function testHandleInvalid(): void {
     $command = $this->createCommand();
-    $jsonSchema = new JsonSchema([]);
-    $this->mockCreateJsonSchema($command, $jsonSchema);
 
-    $postValidationData = ['foo' => 'baz'];
-    $errorCollector = new ErrorCollector();
-    $errorCollector->addError(ValidationErrorFactory::createValidationError());
-    $validationResult = new ValidationResult($postValidationData, $errorCollector);
-    $this->mockValidator($jsonSchema, $command->getData(), $validationResult);
+    $validatedData = new ValidatedApplicationDataMock();
+    $errorMessages = ['/field' => ['error']];
+    $validationResult = ApplicationValidationResult::newInvalid($errorMessages, $validatedData);
+    $this->validatorMock->method('validateInitial')->with(
+      $command->getContactId(),
+      $command->getFundingProgram(),
+      $command->getFundingCaseType(),
+      $command->getData()
+    )->willReturn($validationResult);
 
     $this->applicationProcessManagerMock->expects(static::never())->method('update');
 
@@ -148,7 +140,7 @@ final class ApplicationFormNewSubmitHandlerTest extends TestCase {
 
     static::assertFalse($result->isSuccess());
     static::assertSame($validationResult, $result->getValidationResult());
-    static::assertNull($result->getValidatedData());
+    static::assertSame($validatedData, $result->getValidatedData());
     static::assertNull($result->getApplicationProcessBundle());
   }
 
@@ -159,35 +151,6 @@ final class ApplicationFormNewSubmitHandlerTest extends TestCase {
       FundingProgramFactory::createFundingProgram(),
       ['test' => 'foo'],
     );
-  }
-
-  private function mockCreateJsonSchema(ApplicationFormNewSubmitCommand $command, JsonSchema $jsonSchema): void {
-    $this->jsonSchemaFactoryMock->expects(static::once())->method('createJsonSchemaInitial')
-      ->with(
-        $command->getContactId(),
-        $command->getFundingCaseType(),
-        $command->getFundingProgram(),
-      )->willReturn($jsonSchema);
-  }
-
-  /**
-   * @phpstan-param array<string, mixed> $data
-   */
-  private function mockValidator(JsonSchema $jsonSchema, array $data, ValidationResult $validationResult): void {
-    $this->validatorMock->expects(static::once())->method('validate')
-      ->with($jsonSchema, $data)
-      ->willReturn($validationResult);
-  }
-
-  private function mockCreateNewValidatedData(
-    ApplicationFormNewSubmitCommand $command,
-    ValidationResult $validationResult,
-    ValidatedApplicationDataMock $validatedData
-  ): void {
-    $this->jsonSchemaFactoryMock->expects(static::once())->method('createNewValidatedData')->with(
-      $command->getFundingCaseType(),
-      $validationResult
-    )->willReturn($validatedData);
   }
 
 }

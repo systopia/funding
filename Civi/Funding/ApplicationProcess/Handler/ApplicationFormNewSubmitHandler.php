@@ -24,44 +24,42 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewSubmitCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewSubmitResult;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
-use Civi\Funding\Form\ApplicationJsonSchemaFactoryInterface;
-use Civi\Funding\Form\Validation\ValidationResult;
-use Civi\Funding\Form\Validation\ValidatorInterface;
+use Civi\Funding\Form\ApplicationValidationResult;
+use Civi\Funding\Form\ApplicationValidatorInterface;
 use Civi\Funding\FundingCase\FundingCaseManager;
 
 final class ApplicationFormNewSubmitHandler implements ApplicationFormNewSubmitHandlerInterface {
 
   private ApplicationProcessManager $applicationProcessManager;
 
-  private ApplicationJsonSchemaFactoryInterface $jsonSchemaFactory;
-
   private FundingCaseManager $fundingCaseManager;
 
   private ApplicationProcessStatusDeterminerInterface $statusDeterminer;
 
-  private ValidatorInterface $validator;
+  private ApplicationValidatorInterface $validator;
 
   public function __construct(
     ApplicationProcessManager $applicationProcessManager,
-    ApplicationJsonSchemaFactoryInterface $jsonSchemaFactory,
     FundingCaseManager $fundingCaseManager,
     ApplicationProcessStatusDeterminerInterface $statusDeterminer,
-    ValidatorInterface $validator
+    ApplicationValidatorInterface $validator
   ) {
     $this->applicationProcessManager = $applicationProcessManager;
-    $this->jsonSchemaFactory = $jsonSchemaFactory;
     $this->fundingCaseManager = $fundingCaseManager;
     $this->statusDeterminer = $statusDeterminer;
     $this->validator = $validator;
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function handle(ApplicationFormNewSubmitCommand $command): ApplicationFormNewSubmitResult {
-    $jsonSchema = $this->jsonSchemaFactory->createJsonSchemaInitial(
+    $validationResult = $this->validator->validateInitial(
       $command->getContactId(),
-      $command->getFundingCaseType(),
       $command->getFundingProgram(),
+      $command->getFundingCaseType(),
+      $command->getData(),
     );
-    $validationResult = $this->validator->validate($jsonSchema, $command->getData());
 
     if ($validationResult->isValid()) {
       return $this->handleValid($command, $validationResult);
@@ -71,14 +69,14 @@ final class ApplicationFormNewSubmitHandler implements ApplicationFormNewSubmitH
     }
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   */
   private function handleValid(
     ApplicationFormNewSubmitCommand $command,
-    ValidationResult $validationResult
+    ApplicationValidationResult $validationResult
   ): ApplicationFormNewSubmitResult {
-    $validatedData = $this->jsonSchemaFactory->createNewValidatedData(
-      $command->getFundingCaseType(),
-      $validationResult
-    );
+    $validatedData = $validationResult->getValidatedData();
     $fundingCase = $this->fundingCaseManager->getOpenOrCreate($command->getContactId(), [
       'funding_program' => $command->getFundingProgram(),
       'funding_case_type' => $command->getFundingCaseType(),
@@ -102,7 +100,6 @@ final class ApplicationFormNewSubmitHandler implements ApplicationFormNewSubmitH
 
     return ApplicationFormNewSubmitResult::createSuccess(
       $validationResult,
-      $validatedData,
       $applicationProcessBundle,
     );
   }
