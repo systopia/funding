@@ -23,6 +23,8 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationSnapshotCreateCommand;
 
 interface ApplicationSnapshotCreateHandlerInterface {
 
+  public const SERVICE_TAG = 'funding.application.snapshot_create_handler';
+
   public function handle(ApplicationSnapshotCreateCommand $command): void;
 
 }

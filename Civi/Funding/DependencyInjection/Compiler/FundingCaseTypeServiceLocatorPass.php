@@ -158,6 +158,9 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
     $applicationFilesPersistHandlerServices =
       $this->getTaggedServices($container, ApplicationFilesPersistHandlerInterface::SERVICE_TAG);
 
+    $applicationSnapshotCreateHandlerServices =
+      $this->getTaggedServices($container, ApplicationSnapshotCreateHandlerInterface::SERVICE_TAG);
+
     $fundingCaseApproveHandlerServices = $this->getTaggedServices($container, FundingCaseApproveHandlerInterface::TAG);
     $fundingCasePossibleActionsGetHandlerServices =
       $this->getTaggedServices($container, FundingCasePossibleActionsGetHandlerInterface::TAG);
