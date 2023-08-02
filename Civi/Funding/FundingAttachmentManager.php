@@ -22,7 +22,6 @@ namespace Civi\Funding;
 use Civi\Funding\Entity\AttachmentEntity;
 use Civi\RemoteTools\Api3\Api3Interface;
 use Civi\RemoteTools\Api4\Api4Interface;
-use Civi\RemoteTools\Api4\OptionValueLoaderInterface;
 
 final class FundingAttachmentManager implements FundingAttachmentManagerInterface {
 
@@ -30,16 +29,12 @@ final class FundingAttachmentManager implements FundingAttachmentManagerInterfac
 
   private Api4Interface $api4;
 
-  private OptionValueLoaderInterface $optionValueLoader;
-
   public function __construct(
     Api3Interface $api3,
-    Api4Interface $api4,
-    OptionValueLoaderInterface $optionValueLoader
+    Api4Interface $api4
   ) {
     $this->api3 = $api3;
     $this->api4 = $api4;
-    $this->optionValueLoader = $optionValueLoader;
   }
 
   /**
@@ -60,7 +55,6 @@ final class FundingAttachmentManager implements FundingAttachmentManagerInterfac
       'mime_type' => $mimeType,
       'description' => $optional['description'] ?? NULL,
       'created_id' => $optional['created_id'] ?? NULL,
-      'file_type_id' => $optional['file_type_id'] ?? NULL,
       'options' => [
         'move-file' => $filename,
       ],
@@ -76,8 +70,11 @@ final class FundingAttachmentManager implements FundingAttachmentManagerInterfac
 
     $fileUpdateValues = [];
     // Attachment API ignores file_type_id.
-    if ($values['file_type_id'] !== ($resultValues['file_type_id'] ?? NULL)) {
-      $fileUpdateValues['file_type_id'] = $values['file_type_id'];
+    if (isset($optional['file_type_id'])) {
+      $fileUpdateValues['file_type_id'] = $optional['file_type_id'];
+    }
+    if (isset($optional['file_type_id:name'])) {
+      $fileUpdateValues['file_type_id:name'] = $optional['file_type_id:name'];
     }
     // Attachment API returns created_id, but does not use provided value.
     if (isset($values['created_id']) && $values['created_id'] !== $resultValues['created_id']) {
@@ -113,7 +110,7 @@ final class FundingAttachmentManager implements FundingAttachmentManagerInterfac
       $entityId,
       $filename,
       $mimeType,
-      ['file_type_id' => $this->getFileTypeId($fileTypeName)] + $optional,
+      ['file_type_id:name' => $fileTypeName] + $optional,
     );
 
     foreach ($previousAttachments as $previousAttachment) {
@@ -152,13 +149,11 @@ final class FundingAttachmentManager implements FundingAttachmentManagerInterfac
    * @inheritDoc
    */
   public function getByFileType(string $entityTable, int $entityId, string $fileTypeName): array {
-    $fileTypeId = $this->getFileTypeId($fileTypeName);
     $attachments = [];
     /** @phpstan-var array{count: int, values: array<int, array<string, mixed>>} $result */
     $result = $this->api3->execute('Attachment', 'get', [
       'entity_table' => $entityTable,
       'entity_id' => $entityId,
-      'file_type_id' => $fileTypeId,
       'sequential' => 1,
       // Ensure path is returned.
       'check_permissions' => FALSE,
@@ -167,7 +162,7 @@ final class FundingAttachmentManager implements FundingAttachmentManagerInterfac
     // Attachment API ignores file_type_id.
     foreach ($result['values'] as $values) {
       // @phpstan-ignore-next-line
-      if ($this->getFileTypeIdForFile((int) $values['id']) === $fileTypeId) {
+      if ($this->getFileTypeNameForFile((int) $values['id']) === $fileTypeName) {
         // @phpstan-ignore-next-line
         $attachments[] = AttachmentEntity::fromApi3Values($values);
       }
@@ -180,12 +175,10 @@ final class FundingAttachmentManager implements FundingAttachmentManagerInterfac
    * @inheritDoc
    */
   public function getLastByFileType(string $entityTable, int $entityId, string $fileTypeName): ?AttachmentEntity {
-    $fileTypeId = $this->getFileTypeId($fileTypeName);
     /** @phpstan-var array{count: int, values: array<int, array<string, mixed>>} $result */
     $result = $this->api3->execute('Attachment', 'get', [
       'entity_table' => $entityTable,
       'entity_id' => $entityId,
-      'file_type_id' => $fileTypeId,
       'sequential' => 1,
       'options' => ['sort' => ['id DESC']],
       // Ensure path is returned.
@@ -195,7 +188,7 @@ final class FundingAttachmentManager implements FundingAttachmentManagerInterfac
     // Attachment API ignores file_type_id.
     foreach ($result['values'] as $values) {
       // @phpstan-ignore-next-line
-      if ($this->getFileTypeIdForFile((int) $values['id']) === $fileTypeId) {
+      if ($this->getFileTypeNameForFile((int) $values['id']) === $fileTypeName) {
         // @phpstan-ignore-next-line
         return AttachmentEntity::fromApi3Values($values);
       }
@@ -232,25 +225,13 @@ final class FundingAttachmentManager implements FundingAttachmentManagerInterfac
   /**
    * @throws \CRM_Core_Exception
    */
-  private function getFileTypeIdForFile(int $fileId): ?int {
+  private function getFileTypeNameForFile(int $fileId): ?string {
     $action = $this->api4->createGetAction('File')
       ->setCheckPermissions(FALSE)
-      ->addSelect('file_type_id')
+      ->addSelect('file_type_id:name')
       ->addWhere('id', '=', $fileId);
 
-    return $this->api4->executeAction($action)->first()['file_type_id'] ?? NULL;
-  }
-
-  /**
-   * @throws \CRM_Core_Exception
-   */
-  private function getFileTypeId(string $fileTypeName): int {
-    $fileTypeId = $this->optionValueLoader->getOptionValue('file_type', $fileTypeName);
-    if (NULL === $fileTypeId) {
-      throw new \InvalidArgumentException(sprintf('Unknwon file type name "%s"', $fileTypeName));
-    }
-
-    return (int) $fileTypeId;
+    return $this->api4->executeAction($action)->first()['file_type_id:name'] ?? NULL;
   }
 
 }
