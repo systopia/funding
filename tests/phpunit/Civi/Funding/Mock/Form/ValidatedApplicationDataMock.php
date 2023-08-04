@@ -125,4 +125,8 @@ final class ValidatedApplicationDataMock implements ValidatedApplicationDataInte
     return $this->applicationData;
   }
 
+  public function getRawData(): array {
+    return $this->data;
+  }
+
 }

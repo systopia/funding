@@ -25,11 +25,10 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitResult;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationFormSubmitSuccessEvent;
-use Civi\Funding\Form\Validation\ValidationResult;
+use Civi\Funding\Form\ApplicationValidationResult;
 use Civi\Funding\Mock\Form\FundingCaseType\TestValidatedData;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Systopia\JsonSchema\Errors\ErrorCollector;
 
 /**
  * @covers \Civi\Funding\ApplicationProcess\Handler\Decorator\ApplicationFormSubmitEventDecorator
@@ -60,10 +59,8 @@ final class ApplicationFormSubmitEventDecoratorTest extends TestCase {
 
   public function testHandle(): void {
     $command = $this->createCommand();
-    $result = ApplicationFormSubmitResult::createSuccess(
-      new ValidationResult([], new ErrorCollector()),
-      new TestValidatedData([]),
-    );
+    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([]), FALSE);
+    $result = ApplicationFormSubmitResult::createSuccess($validationResult);
 
     $this->decoratedHandlerMock->expects(static::once())->method('handle')
       ->with($command)
@@ -77,7 +74,12 @@ final class ApplicationFormSubmitEventDecoratorTest extends TestCase {
 
   public function testHandleInvalid(): void {
     $command = $this->createCommand();
-    $result = ApplicationFormSubmitResult::createError(new ValidationResult([], new ErrorCollector()));
+    $errorMessages = ['/a/b' => ['error']];
+    $validationResult = ApplicationValidationResult::newInvalid(
+      $errorMessages,
+      new TestValidatedData([])
+    );
+    $result = ApplicationFormSubmitResult::createError($validationResult);
 
     $this->decoratedHandlerMock->expects(static::once())->method('handle')
       ->with($command)

@@ -17,12 +17,14 @@ use Civi\Funding\Mock\Form\FundingCaseType\TestApplicationResourcesItemsFactory;
 use Civi\Funding\Mock\Form\FundingCaseType\TestFormDataFactory;
 use Civi\Funding\Mock\Form\FundingCaseType\TestJsonSchemaFactory;
 use Civi\Funding\Mock\Form\FundingCaseType\TestUiSchemaFactory;
+use Civi\Funding\Mock\Form\FundingCaseType\TestValidator;
 use Civi\Funding\Permission\FundingCase\RelationFactory\RelationPropertiesFactoryLocator;
 use Civi\Funding\TestAttachmentManager;
 use Civi\PHPUnit\Comparator\ApiActionComparator;
 use Composer\Autoload\ClassLoader;
 use SebastianBergmann\Comparator\Factory;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 
 ini_set('memory_limit', '2G');
 
@@ -88,6 +90,9 @@ function _funding_test_civicrm_container(ContainerBuilder $container): void {
     ->addTag('funding.application.json_schema_factory');
   $container->autowire(TestUiSchemaFactory::class)
     ->addTag('funding.application.ui_schema_factory');
+  $container->autowire(TestValidator::class)
+    ->setArgument('$jsonSchemaFactory', new Reference(TestJsonSchemaFactory::class))
+    ->addTag(TestValidator::SERVICE_TAG);
   $container->autowire(TestFormDataFactory::class)
     ->addTag('funding.application.form_data_factory');
   $container->autowire(TestApplicationCostItemsFactory::class)

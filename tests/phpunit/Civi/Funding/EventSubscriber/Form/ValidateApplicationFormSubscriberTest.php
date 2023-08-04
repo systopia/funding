@@ -31,11 +31,10 @@ use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Event\Remote\ApplicationProcess\ValidateApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingCase\ValidateNewApplicationFormEvent;
-use Civi\Funding\Form\Validation\ValidationResult;
-use Civi\Funding\Form\ValidationErrorFactory;
+use Civi\Funding\Form\ApplicationValidationResult;
+use Civi\Funding\Mock\Form\FundingCaseType\TestValidatedData;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Systopia\JsonSchema\Errors\ErrorCollector;
 
 /**
  * @covers \Civi\Funding\EventSubscriber\Form\ValidateApplicationFormSubscriber
@@ -84,7 +83,7 @@ final class ValidateApplicationFormSubscriberTest extends TestCase {
       $event->getData(),
     );
 
-    $validationResult = new ValidationResult([], new ErrorCollector());
+    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([]), FALSE);
     $result = ApplicationFormValidateResult::create($validationResult);
     $this->validateHandlerMock->expects(static::once())->method('handle')
       ->with($command)
@@ -103,9 +102,11 @@ final class ValidateApplicationFormSubscriberTest extends TestCase {
       $event->getData(),
     );
 
-    $errorCollector = new ErrorCollector();
-    $errorCollector->addError(ValidationErrorFactory::createValidationError());
-    $validationResult = new ValidationResult([], $errorCollector);
+    $errorMessages = ['/a/b' => ['error']];
+    $validationResult = ApplicationValidationResult::newInvalid(
+      $errorMessages,
+      new TestValidatedData([])
+    );
     $result = ApplicationFormValidateResult::create($validationResult);
     $this->validateHandlerMock->expects(static::once())->method('handle')
       ->with($command)
@@ -114,7 +115,7 @@ final class ValidateApplicationFormSubscriberTest extends TestCase {
     $this->subscriber->onValidateForm($event);
 
     static::assertFalse($event->isValid());
-    static::assertSame(['/foo' => ['Invalid value']], $event->getErrors());
+    static::assertSame($errorMessages, $event->getErrors());
   }
 
   public function testOnValidateNewForm(): void {
@@ -125,7 +126,7 @@ final class ValidateApplicationFormSubscriberTest extends TestCase {
       $event->getFundingCaseType(),
       $event->getData()
     );
-    $validationResult = new ValidationResult([], new ErrorCollector());
+    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([]), FALSE);
     $result = ApplicationFormValidateResult::create($validationResult);
     $this->newValidateHandlerMock->expects(static::once())->method('handle')
       ->with($command)
@@ -146,9 +147,11 @@ final class ValidateApplicationFormSubscriberTest extends TestCase {
       $event->getData()
     );
 
-    $errorCollector = new ErrorCollector();
-    $errorCollector->addError(ValidationErrorFactory::createValidationError());
-    $validationResult = new ValidationResult([], $errorCollector);
+    $errorMessages = ['/a/b' => ['error']];
+    $validationResult = ApplicationValidationResult::newInvalid(
+      $errorMessages,
+      new TestValidatedData([])
+    );
     $result = ApplicationFormValidateResult::create($validationResult);
     $this->newValidateHandlerMock->expects(static::once())->method('handle')
       ->with($command)
@@ -157,7 +160,7 @@ final class ValidateApplicationFormSubscriberTest extends TestCase {
     $this->subscriber->onValidateNewForm($event);
 
     static::assertFalse($event->isValid());
-    static::assertSame(['/foo' => ['Invalid value']], $event->getErrors());
+    static::assertSame($errorMessages, $event->getErrors());
   }
 
   private function createValidateNewFormEvent(): ValidateNewApplicationFormEvent {

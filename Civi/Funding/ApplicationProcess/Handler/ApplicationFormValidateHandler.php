@@ -21,26 +21,22 @@ namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateResult;
-use Civi\Funding\Form\ApplicationJsonSchemaFactoryInterface;
-use Civi\Funding\Form\Validation\ValidatorInterface;
+use Civi\Funding\Form\ApplicationValidatorInterface;
 
 final class ApplicationFormValidateHandler implements ApplicationFormValidateHandlerInterface {
 
-  private ApplicationJsonSchemaFactoryInterface $jsonSchemaFactory;
+  private ApplicationValidatorInterface $validator;
 
-  private ValidatorInterface $validator;
-
-  public function __construct(
-    ApplicationJsonSchemaFactoryInterface $jsonSchemaFactory,
-    ValidatorInterface $validator
-  ) {
-    $this->jsonSchemaFactory = $jsonSchemaFactory;
+  public function __construct(ApplicationValidatorInterface $validator) {
     $this->validator = $validator;
   }
 
   public function handle(ApplicationFormValidateCommand $command): ApplicationFormValidateResult {
-    $jsonSchema = $this->jsonSchemaFactory->createJsonSchemaExisting($command->getApplicationProcessBundle());
-    $validationResult = $this->validator->validate($jsonSchema, $command->getData(), 20);
+    $validationResult = $this->validator->validateExisting(
+      $command->getApplicationProcessBundle(),
+      $command->getData(),
+      20
+    );
 
     return ApplicationFormValidateResult::create($validationResult);
   }

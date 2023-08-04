@@ -88,4 +88,8 @@ final class TestValidatedData implements ValidatedApplicationDataInterface {
     return $data;
   }
 
+  public function getRawData(): array {
+    return $this->data;
+  }
+
 }

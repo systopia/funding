@@ -24,7 +24,6 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitResult;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
 use Civi\Funding\Event\ApplicationProcess\ApplicationFormSubmitSuccessEvent;
-use Webmozart\Assert\Assert;
 
 final class ApplicationFormSubmitEventDecorator implements ApplicationFormSubmitHandlerInterface {
 
@@ -43,7 +42,6 @@ final class ApplicationFormSubmitEventDecorator implements ApplicationFormSubmit
   public function handle(ApplicationFormSubmitCommand $command): ApplicationFormSubmitResult {
     $result = $this->handler->handle($command);
     if ($result->isSuccess()) {
-      Assert::notNull($result->getValidatedData());
       $event = new ApplicationFormSubmitSuccessEvent(
         $command->getContactId(),
         $command->getApplicationProcessBundle(),

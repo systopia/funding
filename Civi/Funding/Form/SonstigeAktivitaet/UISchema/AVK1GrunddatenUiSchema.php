@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\SonstigeAktivitaet\UISchema;
 
+use Civi\RemoteTools\Form\JsonForms\Control\JsonFormsArray;
 use Civi\RemoteTools\Form\JsonForms\JsonFormsControl;
 use Civi\RemoteTools\Form\JsonForms\Layout\JsonFormsCloseableGroup;
 use Civi\RemoteTools\Form\JsonForms\Layout\JsonFormsGroup;
@@ -39,8 +40,13 @@ final class AVK1GrunddatenUiSchema extends JsonFormsCloseableGroup {
           'placeholder' => 'Maximal 500 Zeichen',
         ]
       ),
-      new JsonFormsControl('#/properties/beginn', 'Beginn'),
-      new JsonFormsControl('#/properties/ende', 'Ende'),
+      new JsonFormsArray('#/properties/zeitraeume', 'Zeiträume', NULL, [
+        new JsonFormsControl('#/properties/beginn', 'Beginn'),
+        new JsonFormsControl('#/properties/ende', 'Ende'),
+      ], [
+        'addButtonLabel' => 'Zeitraum hinzufügen',
+        'removeButtonLabel' => 'Zeitraum entfernen',
+      ]),
       new JsonFormsGroup('Teilnehmer*innen', [
         new JsonFormsControl('#/properties/teilnehmer/properties/gesamt', 'Gesamtanzahl der Teilnehmer*innen'),
         new JsonFormsControl('#/properties/teilnehmer/properties/weiblich', 'davon weiblich'),

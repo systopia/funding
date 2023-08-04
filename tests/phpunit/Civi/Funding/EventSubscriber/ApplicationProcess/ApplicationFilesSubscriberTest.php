@@ -22,7 +22,6 @@ namespace Civi\Funding\EventSubscriber\ApplicationProcess;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFilesAddIdentifiersCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFilesPersistCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewSubmitResult;
-use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitResult;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesPersistHandlerInterface;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
@@ -33,11 +32,10 @@ use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreCreateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
-use Civi\Funding\Form\Validation\ValidationResult;
+use Civi\Funding\Form\ApplicationValidationResult;
 use Civi\Funding\Mock\Form\FundingCaseType\TestValidatedData;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Systopia\JsonSchema\Errors\ErrorCollector;
 
 /**
  * @covers \Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationFilesSubscriber
@@ -91,11 +89,8 @@ final class ApplicationFilesSubscriberTest extends TestCase {
 
     $this->subscriber->onCreated(new ApplicationProcessCreatedEvent(2, $applicationProcessBundle));
 
-    $submitResult = ApplicationFormNewSubmitResult::createSuccess(
-      new ValidationResult([], new ErrorCollector()),
-      new TestValidatedData([]),
-      $applicationProcessBundle,
-    );
+    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([]), FALSE);
+    $submitResult = ApplicationFormNewSubmitResult::createSuccess($validationResult, $applicationProcessBundle);
     $formSuccessEvent = new ApplicationFormSubmitSuccessEvent(2, $applicationProcessBundle, [], $submitResult);
     $this->subscriber->onSubmitSuccess($formSuccessEvent);
     static::assertSame(['https://example.org' => $externalFile], $formSuccessEvent->getResult()->getFiles());
@@ -136,10 +131,8 @@ final class ApplicationFilesSubscriberTest extends TestCase {
       $applicationProcessBundle,
     ));
 
-    $submitResult = ApplicationFormSubmitResult::createSuccess(
-      new ValidationResult([], new ErrorCollector()),
-      new TestValidatedData([]),
-    );
+    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([]), FALSE);
+    $submitResult = ApplicationFormNewSubmitResult::createSuccess($validationResult, $applicationProcessBundle);
     $formSuccessEvent = new ApplicationFormSubmitSuccessEvent(2, $applicationProcessBundle, [], $submitResult);
     $this->subscriber->onSubmitSuccess($formSuccessEvent);
     static::assertSame(['https://example.org' => $externalFile], $formSuccessEvent->getResult()->getFiles());

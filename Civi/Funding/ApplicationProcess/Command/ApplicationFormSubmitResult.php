@@ -19,20 +19,18 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Command;
 
-use Civi\Funding\Form\ValidatedApplicationDataInterface;
-use Civi\Funding\Form\Validation\ValidationResult;
+use Civi\Funding\Form\ApplicationValidationResult;
 
 final class ApplicationFormSubmitResult extends AbstractApplicationFormSubmitResult {
 
-  public static function createError(ValidationResult $validationResult): self {
+  public static function createError(ApplicationValidationResult $validationResult): self {
     return new self(FALSE, $validationResult);
   }
 
   public static function createSuccess(
-    ValidationResult $validationResult,
-    ValidatedApplicationDataInterface $validatedData
+    ApplicationValidationResult $validationResult
   ): self {
-    return new self(TRUE, $validationResult, $validatedData);
+    return new self(TRUE, $validationResult);
   }
 
 }

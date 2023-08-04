@@ -50,27 +50,34 @@ final class AVK1JsonSchema extends JsonSchemaObject {
       'titel',
       'kurzbeschreibungDesInhalts',
       'empfaenger',
-      'beginn',
-      'ende',
+      'zeitraeume',
       'teilnehmer',
       'kosten',
       'finanzierung',
       'beschreibung',
-      //'projektunterlagen',
+      'projektunterlagen',
     ], $required);
 
     parent::__construct([
       'titel' => new JsonSchemaString(),
       'kurzbeschreibungDesInhalts' => new JsonSchemaString(['maxLength' => 500]),
       'empfaenger' => new JsonSchemaRecipient($possibleRecipients),
-      'beginn' => new JsonSchemaDate([
-        'minDate' => $applicationBegin->format('Y-m-d'),
-        'maxDate' => $applicationEnd->format('Y-m-d'),
-      ]),
-      'ende' => new JsonSchemaDate([
-        'minDate' => new JsonSchemaDataPointer('1/beginn', '0000-00-00'),
-        'maxDate' => $applicationEnd->format('Y-m-d'),
-      ]),
+      'zeitraeume' => new JsonSchemaArray(
+        new JsonSchemaObject([
+          'beginn' => new JsonSchemaDate([
+            'minDate' => $applicationBegin->format('Y-m-d'),
+            'maxDate' => $applicationEnd->format('Y-m-d'),
+          ]),
+          'ende' => new JsonSchemaDate([
+            'minDate' => new JsonSchemaDataPointer('1/beginn', '0000-00-00'),
+            'maxDate' => $applicationEnd->format('Y-m-d'),
+          ]),
+        ],
+        [
+          'required' => ['beginn', 'ende'],
+        ]),
+        ['minItems' => 1]
+      ),
       'teilnehmer' => new JsonSchemaObject([
         'gesamt' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 1]),
         'weiblich' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0]),

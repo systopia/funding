@@ -20,32 +20,29 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Command;
 
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
-use Civi\Funding\Form\ValidatedApplicationDataInterface;
-use Civi\Funding\Form\Validation\ValidationResult;
+use Civi\Funding\Form\ApplicationValidationResult;
 
 final class ApplicationFormNewSubmitResult extends AbstractApplicationFormSubmitResult {
 
   private ?ApplicationProcessEntityBundle $applicationProcessBundle;
 
-  public static function createError(ValidationResult $validationResult): self {
+  public static function createError(ApplicationValidationResult $validationResult): self {
     return new self(FALSE, $validationResult);
   }
 
   public static function createSuccess(
-    ValidationResult $validationResult,
-    ValidatedApplicationDataInterface $validatedData,
+    ApplicationValidationResult $validationResult,
     ApplicationProcessEntityBundle $applicationProcessBundle
   ): self {
-    return new self(TRUE, $validationResult, $validatedData, $applicationProcessBundle);
+    return new self(TRUE, $validationResult, $applicationProcessBundle);
   }
 
   protected function __construct(
     bool $success,
-    ValidationResult $validationResult,
-    ValidatedApplicationDataInterface $validatedData = NULL,
+    ApplicationValidationResult $validationResult,
     ApplicationProcessEntityBundle $applicationProcessBundle = NULL
   ) {
-    parent::__construct($success, $validationResult, $validatedData);
+    parent::__construct($success, $validationResult);
     $this->applicationProcessBundle = $applicationProcessBundle;
   }
 

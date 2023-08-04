@@ -29,7 +29,7 @@ use Civi\Funding\Entity\ExternalFileEntity;
 use Civi\Funding\Event\Remote\AbstractFundingSubmitFormEvent;
 use Civi\Funding\Event\Remote\ApplicationProcess\SubmitApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
-use Civi\Funding\Form\Validation\ValidationResult;
+use Civi\Funding\Form\ApplicationValidationResult;
 use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Webmozart\Assert\Assert;
@@ -73,7 +73,6 @@ class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
     if ($result->isSuccess()) {
       $event->setMessage(E::ts('Saved'));
       $this->addFilesToEvent($result->getFiles(), $event);
-      Assert::notNull($result->getValidatedData());
       if ($this->isShouldShowForm($result->getValidatedData()->getAction())) {
         $event->setForm(
           $this->createHandler->handle(new ApplicationFormCreateCommand(
@@ -102,7 +101,6 @@ class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
     if ($result->isSuccess()) {
       $event->setMessage(E::ts('Saved'));
       $this->addFilesToEvent($result->getFiles(), $event);
-      Assert::notNull($result->getValidatedData());
       if ($this->isShouldShowForm($result->getValidatedData()->getAction())) {
         Assert::notNull($result->getApplicationProcessBundle());
         $event->setForm(
@@ -125,11 +123,11 @@ class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
   }
 
   private function mapValidationErrorsToEvent(
-    ValidationResult $validationResult,
+    ApplicationValidationResult $validationResult,
     AbstractFundingSubmitFormEvent $event
   ): void {
     $event->setMessage(E::ts('Validation failed'));
-    foreach ($validationResult->getLeafErrorMessages() as $jsonPointer => $messages) {
+    foreach ($validationResult->getErrorMessages() as $jsonPointer => $messages) {
       $event->addErrorsAt($jsonPointer, $messages);
     }
   }

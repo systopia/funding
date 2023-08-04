@@ -29,11 +29,10 @@ use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationFormSubmitSuccessEvent;
-use Civi\Funding\Form\Validation\ValidationResult;
+use Civi\Funding\Form\ApplicationValidationResult;
 use Civi\Funding\Mock\Form\FundingCaseType\TestValidatedData;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Systopia\JsonSchema\Errors\ErrorCollector;
 
 /**
  * @covers \Civi\Funding\ApplicationProcess\Handler\Decorator\ApplicationFormNewSubmitEventDecorator
@@ -64,9 +63,9 @@ final class ApplicationFormNewSubmitEventDecoratorTest extends TestCase {
 
   public function testHandle(): void {
     $command = $this->createCommand();
+    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([]), FALSE);
     $result = ApplicationFormNewSubmitResult::createSuccess(
-      new ValidationResult([], new ErrorCollector()),
-      new TestValidatedData([]),
+      $validationResult,
       new ApplicationProcessEntityBundle(
         ApplicationProcessFactory::createApplicationProcess(),
         FundingCaseFactory::createFundingCase(),
@@ -87,7 +86,12 @@ final class ApplicationFormNewSubmitEventDecoratorTest extends TestCase {
 
   public function testHandleInvalid(): void {
     $command = $this->createCommand();
-    $result = ApplicationFormNewSubmitResult::createError(new ValidationResult([], new ErrorCollector()));
+    $errorMessages = ['/a/b' => ['error']];
+    $validationResult = ApplicationValidationResult::newInvalid(
+      $errorMessages,
+      new TestValidatedData([])
+    );
+    $result = ApplicationFormNewSubmitResult::createError($validationResult);
 
     $this->decoratedHandlerMock->expects(static::once())->method('handle')
       ->with($command)
