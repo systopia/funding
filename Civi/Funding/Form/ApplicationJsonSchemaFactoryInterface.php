@@ -19,11 +19,9 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form;
 
-use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
-use Civi\Funding\Form\Validation\ValidationResult;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
 
 interface ApplicationJsonSchemaFactoryInterface {
