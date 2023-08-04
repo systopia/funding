@@ -33,17 +33,6 @@ interface ApplicationJsonSchemaFactoryInterface {
    */
   public static function getSupportedFundingCaseTypes(): array;
 
-  public function createValidatedData(
-    ApplicationProcessEntity $applicationProcess,
-    FundingCaseTypeEntity $fundingCaseType,
-    ValidationResult $validationResult
-  ): ValidatedApplicationDataInterface;
-
-  public function createNewValidatedData(
-    FundingCaseTypeEntity $fundingCaseType,
-    ValidationResult $validationResult
-  ): ValidatedApplicationDataInterface;
-
   public function createJsonSchemaExisting(ApplicationProcessEntityBundle $applicationProcessBundle): JsonSchema;
 
   public function createJsonSchemaInitial(

@@ -22,14 +22,12 @@ namespace Civi\Funding\Form\SonstigeAktivitaet;
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerInterface;
 use Civi\Funding\Contact\FundingCaseRecipientLoaderInterface;
 use Civi\Funding\Contact\PossibleRecipientsLoaderInterface;
-use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\ApplicationJsonSchemaFactoryInterface;
 use Civi\Funding\Form\JsonSchema\JsonSchemaComment;
 use Civi\Funding\Form\SonstigeAktivitaet\JsonSchema\AVK1JsonSchema;
-use Civi\Funding\Form\ValidatedApplicationDataInterface;
 use Civi\Funding\Form\Validation\ValidationResult;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchemaInteger;
@@ -56,21 +54,6 @@ class AVK1JsonSchemaFactory implements ApplicationJsonSchemaFactoryInterface {
     $this->actionsDeterminer = $actionsDeterminer;
     $this->existingCaseRecipientLoader = $existingCaseRecipientLoader;
     $this->possibleRecipientsLoader = $possibleRecipientsLoader;
-  }
-
-  public function createValidatedData(
-    ApplicationProcessEntity $applicationProcess,
-    FundingCaseTypeEntity $fundingCaseType,
-    ValidationResult $validationResult
-  ): ValidatedApplicationDataInterface {
-    return new AVK1ValidatedData($validationResult->getData());
-  }
-
-  public function createNewValidatedData(
-    FundingCaseTypeEntity $fundingCaseType,
-    ValidationResult $validationResult
-  ): ValidatedApplicationDataInterface {
-    return new AVK1ValidatedData($validationResult->getData());
   }
 
   public function createJsonSchemaExisting(

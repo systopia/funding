@@ -19,12 +19,10 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Mock\Form\FundingCaseType;
 
-use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\ApplicationJsonSchemaFactoryInterface;
-use Civi\Funding\Form\ValidatedApplicationDataInterface;
 use Civi\Funding\Form\Validation\ValidationResult;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
 use Civi\RemoteTools\Form\JsonSchema\JsonSchemaInteger;
@@ -34,21 +32,6 @@ class TestJsonSchemaFactory implements ApplicationJsonSchemaFactoryInterface {
 
   public static function getSupportedFundingCaseTypes(): array {
     return ['TestCaseType'];
-  }
-
-  public function createValidatedData(
-    ApplicationProcessEntity $applicationProcess,
-    FundingCaseTypeEntity $fundingCaseType,
-    ValidationResult $validationResult
-  ): ValidatedApplicationDataInterface {
-    return new TestValidatedData($validationResult->getData());
-  }
-
-  public function createNewValidatedData(
-    FundingCaseTypeEntity $fundingCaseType,
-    ValidationResult $validationResult
-  ): ValidatedApplicationDataInterface {
-    return new TestValidatedData($validationResult->getData());
   }
 
   public function createJsonSchemaExisting(
