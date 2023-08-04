@@ -25,9 +25,9 @@ use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Event\FundingCase\GetPermissionsEvent;
 use Civi\Funding\FundingCase\TransferContractRouter;
-use Civi\Funding\Session\FundingSessionInterface;
 use Civi\RemoteTools\Api4\Action\Traits\PermissionsGetActionTrait;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 
 final class GetAction extends DAOGetAction {
 
@@ -39,19 +39,19 @@ final class GetAction extends DAOGetAction {
 
   private PossiblePermissionsLoaderInterface $_possiblePermissionsLoader;
 
-  private FundingSessionInterface $session;
+  private RequestContextInterface $requestContext;
 
   private TransferContractRouter $transferContractRouter;
 
   public function __construct(CiviEventDispatcherInterface $eventDispatcher,
     PossiblePermissionsLoaderInterface $possiblePermissionsLoader,
-    FundingSessionInterface $session,
+    RequestContextInterface $requestContext,
     TransferContractRouter $transferContractRouterRecreate
   ) {
     parent::__construct(FundingCase::_getEntityName(), 'get');
     $this->_eventDispatcher = $eventDispatcher;
     $this->_possiblePermissionsLoader = $possiblePermissionsLoader;
-    $this->session = $session;
+    $this->requestContext = $requestContext;
     $this->transferContractRouter = $transferContractRouterRecreate;
   }
 
@@ -70,7 +70,7 @@ final class GetAction extends DAOGetAction {
    * @return array<string>
    */
   protected function getRecordPermissions(array $record): array {
-    $permissionsGetEvent = new GetPermissionsEvent($record['id'], $this->session->getContactId());
+    $permissionsGetEvent = new GetPermissionsEvent($record['id'], $this->requestContext->getContactId());
     $this->_eventDispatcher->dispatch(GetPermissionsEvent::class, $permissionsGetEvent);
 
     return $permissionsGetEvent->getPermissions();

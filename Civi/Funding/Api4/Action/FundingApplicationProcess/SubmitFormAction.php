@@ -27,7 +27,7 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationFormDataGetCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
-use Civi\Funding\Session\FundingSessionInterface;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Webmozart\Assert\Assert;
 
 /**
@@ -55,19 +55,19 @@ final class SubmitFormAction extends AbstractAction {
 
   private ApplicationFormSubmitHandlerInterface $submitFormHandler;
 
-  private FundingSessionInterface $session;
+  private RequestContextInterface $requestContext;
 
   public function __construct(
     ApplicationProcessBundleLoader $applicationProcessBundleLoader,
     ApplicationFormDataGetHandlerInterface $formDataGetHandler,
     ApplicationFormSubmitHandlerInterface $submitFormHandler,
-    FundingSessionInterface $session
+    RequestContextInterface $requestContext
   ) {
     parent::__construct(FundingApplicationProcess::_getEntityName(), 'submitForm');
     $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
     $this->formDataGetHandler = $formDataGetHandler;
     $this->submitFormHandler = $submitFormHandler;
-    $this->session = $session;
+    $this->requestContext = $requestContext;
   }
 
   /**
@@ -101,7 +101,7 @@ final class SubmitFormAction extends AbstractAction {
     Assert::notNull($applicationProcessBundle);
 
     return new ApplicationFormSubmitCommand(
-      $this->session->getContactId(),
+      $this->requestContext->getContactId(),
       $applicationProcessBundle,
       $this->data
     );

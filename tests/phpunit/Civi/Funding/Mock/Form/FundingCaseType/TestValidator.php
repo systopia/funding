@@ -24,7 +24,7 @@ use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\AbstractApplicationValidator;
 use Civi\Funding\Form\ApplicationValidationResult;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 
 final class TestValidator extends AbstractApplicationValidator {
 

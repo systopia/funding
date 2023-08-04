@@ -25,7 +25,7 @@ use Civi\Funding\AbstractContainerMockedTestCase;
 use Civi\Funding\Api4\Action\FundingProgram\GetAction;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
-use Civi\Funding\Mock\Session\TestFundingSession;
+use Civi\Funding\Mock\RequestContext\TestRequestContext;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -56,11 +56,11 @@ final class FundingProgramManagerTest extends AbstractContainerMockedTestCase {
 
     $eventDispatcherMock = $this->createMock(CiviEventDispatcherInterface::class);
     $possiblePermissionsLoaderMock = $this->createMock(PossiblePermissionsLoaderInterface::class);
-    $session = TestFundingSession::newInternal();
+    $requestContext = TestRequestContext::newInternal();
     $this->containerMock->expects(static::exactly(2))->method('get')->with(GetAction::class)
       ->willReturnOnConsecutiveCalls(
-        new GetAction($eventDispatcherMock, $possiblePermissionsLoaderMock, $session),
-        new GetAction($eventDispatcherMock, $possiblePermissionsLoaderMock, $session),
+        new GetAction($eventDispatcherMock, $possiblePermissionsLoaderMock, $requestContext),
+        new GetAction($eventDispatcherMock, $possiblePermissionsLoaderMock, $requestContext),
 
       );
     $this->api4Mock->expects(static::exactly(2))->method('executeAction')->withConsecutive(

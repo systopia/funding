@@ -36,7 +36,7 @@ use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
-use Civi\Funding\Util\SessionTestUtil;
+use Civi\Funding\Util\RequestTestUtil;
 use Civi\RemoteTools\Api4\Api4;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ClockMock;
@@ -82,7 +82,7 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
     ApplicationProcessFixture::addFixture($fundingCase->getId());
     static::assertSame(0, $this->applicationProcessManager->countByFundingCaseId($fundingCase->getId()));
 
-    SessionTestUtil::mockInternalRequestSession($contact['id']);
+    RequestTestUtil::mockInternalRequest($contact['id']);
     static::assertSame(1, $this->applicationProcessManager->countByFundingCaseId($fundingCase->getId()));
   }
 
@@ -194,7 +194,7 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
 
   public function testGetByFundingCaseId(): void {
     $contact = ContactFixture::addIndividual();
-    SessionTestUtil::mockInternalRequestSession($contact['id']);
+    RequestTestUtil::mockInternalRequest($contact['id']);
     $fundingCase1 = $this->createFundingCase();
     FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase1->getId(), ['test_permission']);
     $fundingCase2 = $this->createFundingCase(

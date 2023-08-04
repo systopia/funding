@@ -30,7 +30,7 @@ use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\Funding\Fixtures\PayoutProcessFixture;
-use Civi\Funding\Util\SessionTestUtil;
+use Civi\Funding\Util\RequestTestUtil;
 use Civi\RemoteTools\Api4\Api4;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -67,7 +67,7 @@ final class PayoutProcessManagerHeadlessTest extends AbstractFundingHeadlessTest
       ['drawdown_create'],
     );
 
-    SessionTestUtil::mockRemoteRequestSession((string) $requesterContactId);
+    RequestTestUtil::mockRemoteRequest((string) $requesterContactId);
     static::assertSame(100.0, $this->payoutProcessManager->getAmountAvailable($payoutProcess));
 
     DrawdownFixture::addFixture($payoutProcess->getId(), $requesterContactId, ['amount' => 12.34]);
@@ -87,7 +87,7 @@ final class PayoutProcessManagerHeadlessTest extends AbstractFundingHeadlessTest
       ['drawdown_create'],
     );
 
-    SessionTestUtil::mockRemoteRequestSession((string) $requesterContactId);
+    RequestTestUtil::mockRemoteRequest((string) $requesterContactId);
     static::assertSame(0.0, $this->payoutProcessManager->getAmountAccepted($payoutProcess));
 
     DrawdownFixture::addFixture($payoutProcess->getId(), $requesterContactId, [
@@ -117,7 +117,7 @@ final class PayoutProcessManagerHeadlessTest extends AbstractFundingHeadlessTest
       ['drawdown_create'],
     );
 
-    SessionTestUtil::mockRemoteRequestSession((string) $requesterContactId);
+    RequestTestUtil::mockRemoteRequest((string) $requesterContactId);
     static::assertSame(0.0, $this->payoutProcessManager->getAmountRequested($payoutProcess));
 
     DrawdownFixture::addFixture($payoutProcess->getId(), $requesterContactId, ['amount' => 12.34]);

@@ -4,6 +4,7 @@ includes:
 parameters:
 	scanDirectories:
 		- de.systopia.civioffice/CRM/
+		- de.systopia.remotetools/Civi/
 		- external-file/Civi/
 	# Because we test with different versions in CI we have unmatched errors
 	reportUnmatchedIgnoredErrors: false

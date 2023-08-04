@@ -35,7 +35,7 @@ use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\Funding\Mock\Form\FundingCaseType\TestJsonSchema;
 use Civi\Funding\Mock\Form\FundingCaseType\TestJsonSchemaFactory;
-use Civi\Funding\Util\SessionTestUtil;
+use Civi\Funding\Util\RequestTestUtil;
 
 /**
  * @covers \Civi\Api4\FundingApplicationProcess
@@ -66,7 +66,7 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
     );
     FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['application_withdraw']);
 
-    SessionTestUtil::mockRemoteRequestSession((string) $contact['id']);
+    RequestTestUtil::mockRemoteRequest((string) $contact['id']);
     $result = FundingApplicationProcess::delete()->addWhere('id', '=', $applicationProcess->getId())->execute();
     static::assertCount(1, $result);
     static::assertSame(['id' => $applicationProcess->getId()], $result->first());
@@ -84,7 +84,7 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
     );
     FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['application_permission']);
 
-    SessionTestUtil::mockRemoteRequestSession((string) $contact['id']);
+    RequestTestUtil::mockRemoteRequest((string) $contact['id']);
     $this->expectException(UnauthorizedException::class);
     $this->expectExceptionMessage('Permission to delete application is missing.');
 
@@ -97,7 +97,7 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
     $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId());
 
     // Contact does not now that application process exists without any permission.
-    SessionTestUtil::mockRemoteRequestSession((string) $contact['id']);
+    RequestTestUtil::mockRemoteRequest((string) $contact['id']);
     $result = FundingApplicationProcess::delete()->addWhere('id', '=', $applicationProcess->getId())->execute();
     static::assertCount(0, $result);
   }
@@ -110,12 +110,12 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
 
     FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['application_permission']);
 
-    SessionTestUtil::mockRemoteRequestSession((string) $contact['id']);
+    RequestTestUtil::mockRemoteRequest((string) $contact['id']);
     $result = FundingApplicationProcess::get()->addSelect('id')->execute();
     static::assertCount(1, $result);
     static::assertSame(['id' => $applicationProcess->getId()], $result->first());
 
-    SessionTestUtil::mockRemoteRequestSession((string) $contactNotPermitted['id']);
+    RequestTestUtil::mockRemoteRequest((string) $contactNotPermitted['id']);
     static::assertCount(0, FundingApplicationProcess::get()
       ->addSelect('id')->execute());
   }
@@ -145,7 +145,7 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
 
     $contactNotPermitted = ContactFixture::addIndividual();
 
-    SessionTestUtil::mockInternalRequestSession($contact['id']);
+    RequestTestUtil::mockInternalRequest($contact['id']);
     // No load options.
     $result = FundingApplicationProcess::getFields()->execute()->indexBy('name');
     static::assertFalse($result['reviewer_calc_contact_id']['options']);
@@ -177,7 +177,7 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
     static::assertSame($expectedReviewersContent, $result['reviewer_cont_contact_id']['options']);
 
     // Load options without application process permission.
-    SessionTestUtil::mockInternalRequestSession($contactNotPermitted['id']);
+    RequestTestUtil::mockInternalRequest($contactNotPermitted['id']);
     $result = FundingApplicationProcess::getFields()
       ->setLoadOptions(TRUE)
       ->addValue('id', $applicationProcess->getId())
@@ -212,7 +212,7 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
       $externalFile->getFileId(),
     );
 
-    SessionTestUtil::mockInternalRequestSession($contact['id']);
+    RequestTestUtil::mockInternalRequest($contact['id']);
 
     $result = FundingApplicationProcess::getFormData()
       ->setId($applicationProcess->getId())
@@ -233,7 +233,7 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
       ['review_permission']
     );
     FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['review_permission']);
-    SessionTestUtil::mockInternalRequestSession($contact['id']);
+    RequestTestUtil::mockInternalRequest($contact['id']);
 
     $result = FundingApplicationProcess::getJsonSchema()
       ->setId($applicationProcess->getId())
@@ -256,7 +256,7 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
       ['review_permission']
     );
     FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['review_permission']);
-    SessionTestUtil::mockInternalRequestSession($contact['id']);
+    RequestTestUtil::mockInternalRequest($contact['id']);
 
     $result = FundingApplicationProcess::submitForm()
       ->setId($applicationProcess->getId())
@@ -283,7 +283,7 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
       $fundingCase->getId(),
       ['review_content', 'review_calculative']
     );
-    SessionTestUtil::mockInternalRequestSession($contact['id']);
+    RequestTestUtil::mockInternalRequest($contact['id']);
 
     $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId(), [
       'status' => 'review',
@@ -334,7 +334,7 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
       ['review_content', 'review_calculative']
     );
 
-    SessionTestUtil::mockInternalRequestSession($reviewerContact['id']);
+    RequestTestUtil::mockInternalRequest($reviewerContact['id']);
     $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId(), [
       'status' => 'rework',
       'is_review_content' => TRUE,
@@ -390,7 +390,7 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
       ['application_withdraw']
     );
 
-    SessionTestUtil::mockRemoteRequestSession((string) $contact['id']);
+    RequestTestUtil::mockRemoteRequest((string) $contact['id']);
     $result = FundingApplicationProcess::submitForm()
       ->setId($applicationProcess->getId())
       ->setData([
@@ -429,7 +429,7 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
       ['review_permission']
     );
     FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['review_permission']);
-    SessionTestUtil::mockInternalRequestSession($contact['id']);
+    RequestTestUtil::mockInternalRequest($contact['id']);
 
     $result = FundingApplicationProcess::validateForm()
       ->setId($applicationProcess->getId())

@@ -3,9 +3,9 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\JsonSchema;
 
-use Civi\RemoteTools\Form\JsonSchema\JsonSchemaObject;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchemaString;
-use Civi\RemoteTools\Form\JsonSchema\Util\JsonSchemaUtil;
+use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
+use Civi\RemoteTools\JsonSchema\JsonSchemaString;
+use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
 use CRM_Funding_ExtensionUtil as E;
 
 final class JsonSchemaComment extends JsonSchemaObject {

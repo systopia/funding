@@ -23,8 +23,8 @@ use Civi\Funding\Form\JsonSchema\JsonFormsSubmitButtonsFactory;
 use Civi\Funding\Form\SonstigeAktivitaet\JsonSchema\AVK1JsonSchema;
 use Civi\Funding\Form\Traits\AssertFormTrait;
 use Civi\Funding\Util\FormTestUtil;
-use Civi\RemoteTools\Form\JsonForms\Control\JsonFormsSubmitButton;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchemaString;
+use Civi\RemoteTools\JsonForms\Control\JsonFormsSubmitButton;
+use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 use PHPUnit\Framework\TestCase;
 
 /**

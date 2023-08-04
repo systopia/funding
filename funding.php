@@ -6,6 +6,7 @@ require_once 'funding.civix.php';
 // phpcs:enable
 
 use Civi\Funding\Api4\Permissions;
+use Civi\RemoteTools\Api4\Api4Interface;
 use CRM_Funding_ExtensionUtil as E;
 use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
 use Symfony\Component\Config\Resource\FileResource;
@@ -22,6 +23,11 @@ function funding_civicrm_config(&$config): void {
 }
 
 function funding_civicrm_container(ContainerBuilder $container): void {
+  if (!interface_exists(Api4Interface::class)) {
+    // Extension de.systopia.remotetools is not loaded, yet.
+    return;
+  }
+
   // Allow lazy service instantiation (requires symfony/proxy-manager-bridge)
   if (class_exists(\ProxyManager\Configuration::class) && class_exists(RuntimeInstantiator::class)) {
     $container->setProxyInstantiator(new RuntimeInstantiator());

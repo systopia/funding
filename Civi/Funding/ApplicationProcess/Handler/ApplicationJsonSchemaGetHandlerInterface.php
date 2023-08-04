@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationJsonSchemaGetCommand;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 
 interface ApplicationJsonSchemaGetHandlerInterface {
 

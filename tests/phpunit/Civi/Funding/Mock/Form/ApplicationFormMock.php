@@ -19,12 +19,12 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Mock\Form;
 
-use Civi\RemoteTools\Form\JsonForms\JsonFormsControl;
-use Civi\RemoteTools\Form\JsonForms\JsonFormsLayout;
-use Civi\RemoteTools\Form\JsonForms\Layout\JsonFormsGroup;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchemaObject;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchemaString;
+use Civi\RemoteTools\JsonForms\JsonFormsControl;
+use Civi\RemoteTools\JsonForms\JsonFormsLayout;
+use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
+use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 use Civi\RemoteTools\Form\RemoteForm;
 
 final class ApplicationFormMock extends RemoteForm {

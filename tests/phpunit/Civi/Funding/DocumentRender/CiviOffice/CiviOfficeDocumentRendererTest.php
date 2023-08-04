@@ -26,7 +26,7 @@ use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
-use Civi\Funding\Util\SessionTestUtil;
+use Civi\Funding\Util\RequestTestUtil;
 use Civi\RemoteTools\Api3\Api3;
 use CRM_Funding_ExtensionUtil as E;
 
@@ -78,7 +78,7 @@ EOT
 
     UnoconvLocalTestConfigurator::configure();
 
-    SessionTestUtil::mockInternalRequestSession($creationContact['id']);
+    RequestTestUtil::mockInternalRequest($creationContact['id']);
     $filename = $this->documentRenderer->render(
       E::path('tests/phpunit/resources/FundingCaseDocumentTemplate.docx'),
       'TransferContract',

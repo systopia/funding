@@ -22,7 +22,7 @@ namespace Civi\Funding\Form;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
-use Civi\RemoteTools\Form\JsonForms\JsonFormsElement;
+use Civi\RemoteTools\JsonForms\JsonFormsElement;
 
 interface ApplicationUiSchemaFactoryInterface {
 

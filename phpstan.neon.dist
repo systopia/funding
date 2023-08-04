@@ -74,11 +74,7 @@ parameters:
 		- '#^Property Civi\\RemoteTools\\Event\\DAOGetEvent::\$join type has no value type specified in iterable type array.$#'
 		- '#^Method Civi\\RemoteTools\\Event\\DAOGetEvent::addJoin\(\) has parameter \$conditions with no value type specified in iterable type array.$#'
 		- '#^Method Civi\\RemoteTools\\Event\\DAOGetEvent::getJoin\(\) return type has no value type specified in iterable type array.$#'
-		- '#^Method Civi\\RemoteTools\\Api4\\Query\\[^\\]+::toArray\(\) return type has no value type specified in iterable type array.$#'
 		- '#^Property Civi\\Api4\\Generic\\Result::\$debug \(array\) on left side of \?\? is not nullable.$#'
-		- '#^Method Civi\\RemoteTools\\Api4\\Api4::createAction\(\) should return Civi\\Api4\\Generic\\AbstractAction but returns array|Civi\Api4\Generic\AbstractAction.$#'
-		- '#^Method Civi\\RemoteTools\\Api4\\Query\\Comparison::toArray\(\) never returns array\{string, array<int, array>\} so it can be removed from the return type.$#'
-		- '#^Method Civi\\RemoteTools\\Api4\\Query\\CompositeCondition::toArray\(\) never returns array\{0: string, .+\} so it can be removed from the return type.$#'
 		- '/^Parameter #1 \$iterator of function iterator_to_array expects Traversable, iterable(<.+>)? given.$/' # false positive
 		-
 			message: '#^Call to function method_exists\(\) with .+ will always evaluate to true.$#'

@@ -19,8 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\JsonSchema;
 
-use Civi\RemoteTools\Form\JsonSchema\JsonSchemaInteger;
-use Civi\RemoteTools\Form\JsonSchema\Util\JsonSchemaUtil;
+use Civi\RemoteTools\JsonSchema\JsonSchemaInteger;
+use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
 
 /**
  * JSON schema for funding recipient.

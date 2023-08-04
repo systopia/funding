@@ -21,8 +21,8 @@ namespace Civi\Funding\EventSubscriber\Remote;
 
 use Civi\Funding\Contact\FundingRemoteContactIdResolverInterface;
 use Civi\Funding\Event\Remote\RemotePageRequestEvent;
-use Civi\Funding\Session\FundingSessionInterface;
 use Civi\RemoteTools\Exception\ResolveContactIdFailedException;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
@@ -31,14 +31,14 @@ class RemotePageRequestSubscriber implements EventSubscriberInterface {
 
   private FundingRemoteContactIdResolverInterface $remoteContactIdResolver;
 
-  private FundingSessionInterface $session;
+  private RequestContextInterface $requestContext;
 
   public function __construct(
     FundingRemoteContactIdResolverInterface $remoteContactIdResolver,
-    FundingSessionInterface $session
+    RequestContextInterface $requestContext
   ) {
     $this->remoteContactIdResolver = $remoteContactIdResolver;
-    $this->session = $session;
+    $this->requestContext = $requestContext;
   }
 
   /**
@@ -61,7 +61,7 @@ class RemotePageRequestSubscriber implements EventSubscriberInterface {
 
     try {
       $contactId = $this->remoteContactIdResolver->getContactId($remoteContactId);
-      $this->session->setResolvedContactId($contactId);
+      $this->requestContext->setResolvedContactId($contactId);
     }
     catch (ResolveContactIdFailedException $e) {
       throw new UnauthorizedHttpException('funding-remote', 'Unknown remote contact ID', $e);

@@ -20,12 +20,12 @@ declare(strict_types = 1);
 namespace Civi\Funding\Form\SonstigeAktivitaet\JsonSchema;
 
 use Civi\Funding\Form\JsonSchema\JsonSchemaRecipient;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchemaArray;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchemaDataPointer;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchemaDate;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchemaObject;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchemaString;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
+use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
+use Civi\RemoteTools\JsonSchema\JsonSchemaDate;
+use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
+use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 use Webmozart\Assert\Assert;
 
 /**
@@ -38,7 +38,7 @@ final class AVK1JsonSchema extends JsonSchemaObject {
   /**
    * @phpstan-param array<int, string> $possibleRecipients
    *   Map of contact IDs to names.
-   * @phpstan-param array<string, \Civi\RemoteTools\Form\JsonSchema\JsonSchema> $extraProperties
+   * @phpstan-param array<string, \Civi\RemoteTools\JsonSchema\JsonSchema> $extraProperties
    */
   public function __construct(\DateTimeInterface $applicationBegin, \DateTimeInterface $applicationEnd,
     array $possibleRecipients, array $extraProperties = [], array $keywords = []

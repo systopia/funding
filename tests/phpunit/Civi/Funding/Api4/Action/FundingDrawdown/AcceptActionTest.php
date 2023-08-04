@@ -21,7 +21,7 @@ namespace Civi\Funding\Api4\Action\FundingDrawdown;
 
 use Civi\Api4\Generic\Result;
 use Civi\Funding\EntityFactory\DrawdownFactory;
-use Civi\Funding\Mock\Session\TestFundingSession;
+use Civi\Funding\Mock\RequestContext\TestRequestContext;
 use Civi\Funding\PayoutProcess\DrawdownManager;
 use Civi\Funding\Traits\CreateMockTrait;
 use PHPUnit\Framework\TestCase;
@@ -46,7 +46,7 @@ final class AcceptActionTest extends TestCase {
     $this->action = $this->createApi4ActionMock(
       AcceptAction::class,
       $this->drawdownManagerMock,
-      TestFundingSession::newInternal(2),
+      TestRequestContext::newInternal(2),
     );
   }
 

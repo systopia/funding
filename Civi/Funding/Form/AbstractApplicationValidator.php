@@ -22,8 +22,8 @@ namespace Civi\Funding\Form;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
-use Civi\Funding\Form\Validation\ValidatorInterface;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonSchema\Validation\ValidatorInterface;
 
 abstract class AbstractApplicationValidator implements ApplicationValidatorInterface {
 
@@ -100,8 +100,6 @@ abstract class AbstractApplicationValidator implements ApplicationValidatorInter
   /**
    * Called after successful JSON schema validation.
    *
-   * @param \Civi\RemoteTools\Form\JsonSchema\JsonSchema $jsonSchema *
-   *
    * @phpstan-param array<string, mixed> $formData JSON serializable.
    * @phpstan-param array<string, mixed> $validatedData JSON serializable.
    *   Data returned by JSON schema validator.
@@ -116,8 +114,6 @@ abstract class AbstractApplicationValidator implements ApplicationValidatorInter
 
   /**
    * Called after successful JSON schema validation.
-   *
-   * @param \Civi\RemoteTools\Form\JsonSchema\JsonSchema $jsonSchema *
    *
    * @phpstan-param array<string, mixed> $formData JSON serializable.
    * @phpstan-param array<string, mixed> $validatedData JSON serializable.

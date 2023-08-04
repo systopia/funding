@@ -21,10 +21,6 @@ declare(strict_types = 1);
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
 use Civi\Core\CiviEventDispatcherInterface;
-use Civi\RemoteTools\Api3\Api3;
-use Civi\RemoteTools\Api3\Api3Interface;
-use Civi\RemoteTools\Api4\Api4;
-use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\OptionsLoader;
 use Civi\RemoteTools\Api4\OptionsLoaderInterface;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoader;
@@ -39,9 +35,6 @@ use Psr\SimpleCache\CacheInterface;
 $container->setAlias(CiviEventDispatcherInterface::class, 'dispatcher.boot');
 $container->setAlias(CacheInterface::class, 'cache.long');
 $container->setAlias(LoggerInterface::class, 'psr_log');
-
-$container->register(Api4Interface::class, Api4::class);
-$container->register(Api3Interface::class, Api3::class);
 
 $container->register(TransactionFactory::class);
 

@@ -29,14 +29,8 @@ use Civi\Funding\Form\ReworkPossibleApplicationSubmitActionsContainerFactory;
 use Civi\Funding\Form\SubmitActionsContainer;
 use Civi\Funding\Form\Validation\FormValidator;
 use Civi\Funding\Form\Validation\FormValidatorInterface;
-use Civi\Funding\Form\Validation\OpisValidatorFactory;
-use Civi\Funding\Form\Validation\Validator;
-use Civi\Funding\Form\Validation\ValidatorInterface;
-use Opis\JsonSchema\Validator as OpisValidator;
 use Symfony\Component\DependencyInjection\Reference;
 
-$container->register(OpisValidator::class)->setFactory([OpisValidatorFactory::class, 'getValidator']);
-$container->autowire(ValidatorInterface::class, Validator::class);
 $container->autowire(FormValidatorInterface::class, FormValidator::class);
 
 $container->register('funding.application.submit_actions_container', SubmitActionsContainer::class)

@@ -27,8 +27,8 @@ use Civi\Api4\Generic\Result;
 use Civi\Funding\Event\Remote\ApplicationProcess\GetApplicationFormEvent;
 use Civi\Funding\Exception\FundingException;
 use Civi\Funding\Traits\CreateMockTrait;
-use Civi\RemoteTools\Form\JsonForms\JsonFormsElement;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonForms\JsonFormsElement;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 
 /**
  * @covers \Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetFormAction

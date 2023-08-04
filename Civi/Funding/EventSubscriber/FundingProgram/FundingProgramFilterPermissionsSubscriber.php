@@ -20,14 +20,14 @@ declare(strict_types = 1);
 namespace Civi\Funding\EventSubscriber\FundingProgram;
 
 use Civi\Funding\Event\FundingProgram\GetPermissionsEvent;
-use Civi\Funding\Session\FundingSessionInterface;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 final class FundingProgramFilterPermissionsSubscriber implements EventSubscriberInterface {
 
   private const APPLICATION_PERMISSION_PREFIX = 'application_';
 
-  private FundingSessionInterface $session;
+  private RequestContextInterface $requestContext;
 
   /**
    * @inheritDoc
@@ -38,12 +38,12 @@ final class FundingProgramFilterPermissionsSubscriber implements EventSubscriber
     ];
   }
 
-  public function __construct(FundingSessionInterface $session) {
-    $this->session = $session;
+  public function __construct(RequestContextInterface $requestContext) {
+    $this->requestContext = $requestContext;
   }
 
   public function onPermissionsGet(GetPermissionsEvent $event): void {
-    if ($this->session->isRemote()) {
+    if ($this->requestContext->isRemote()) {
       $this->excludeNonApplicationPermissions($event);
     }
     else {

@@ -21,7 +21,7 @@ namespace Civi\Funding\EventSubscriber\Remote;
 
 use Civi\Funding\Contact\FundingRemoteContactIdResolverInterface;
 use Civi\Funding\Event\Remote\RemotePageRequestEvent;
-use Civi\Funding\Mock\Session\TestFundingSession;
+use Civi\Funding\Mock\RequestContext\TestRequestContext;
 use Civi\RemoteTools\Exception\ResolveContactIdFailedException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -39,17 +39,17 @@ final class RemotePageRequestSubscriberTest extends TestCase {
    */
   private MockObject $remoteContactIdResolverMock;
 
-  private TestFundingSession $session;
+  private TestRequestContext $requestContext;
 
   private RemotePageRequestSubscriber $subscriber;
 
   protected function setUp(): void {
     $this->remoteContactIdResolverMock = $this->createMock(FundingRemoteContactIdResolverInterface::class);
-    $this->session = TestFundingSession::newRemote(0);
+    $this->requestContext = TestRequestContext::newRemote(0);
     parent::setUp();
     $this->subscriber = new RemotePageRequestSubscriber(
       $this->remoteContactIdResolverMock,
-      $this->session,
+      $this->requestContext,
     );
   }
 
@@ -75,7 +75,7 @@ final class RemotePageRequestSubscriberTest extends TestCase {
       ->with('abc')
       ->willReturn(123);
     $this->subscriber->onRemotePageRequest($event);
-    static::assertSame(123, $this->session->getContactId());
+    static::assertSame(123, $this->requestContext->getContactId());
   }
 
   public function testRemoteContactIdMissing(): void {

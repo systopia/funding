@@ -27,7 +27,7 @@ use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\Funding\Fixtures\PayoutProcessFixture;
-use Civi\Funding\Util\SessionTestUtil;
+use Civi\Funding\Util\RequestTestUtil;
 
 /**
  * @covers \Civi\Api4\FundingPayoutProcess
@@ -45,12 +45,12 @@ final class FundingPayoutProcessTest extends AbstractFundingHeadlessTestCase {
 
     FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['application_permission']);
 
-    SessionTestUtil::mockRemoteRequestSession((string) $contact['id']);
+    RequestTestUtil::mockRemoteRequest((string) $contact['id']);
     $result = FundingPayoutProcess::get()->addSelect('id')->execute();
     static::assertCount(1, $result);
     static::assertSame(['id' => $payoutProcess->getId()], $result->first());
 
-    SessionTestUtil::mockRemoteRequestSession((string) $contactNotPermitted['id']);
+    RequestTestUtil::mockRemoteRequest((string) $contactNotPermitted['id']);
     static::assertCount(0, FundingPayoutProcess::get()
       ->addSelect('id')->execute());
   }

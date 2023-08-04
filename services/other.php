@@ -35,8 +35,6 @@ use Civi\Funding\FundingAttachmentManager;
 use Civi\Funding\FundingAttachmentManagerInterface;
 use Civi\Funding\FundingExternalFileManager;
 use Civi\Funding\FundingExternalFileManagerInterface;
-use Civi\Funding\Session\FundingSession;
-use Civi\Funding\Session\FundingSessionInterface;
 use Civi\Funding\Util\MoneyFactory;
 use Civi\Funding\Util\UrlGenerator;
 use Civi\Funding\Validation\EntityValidator;
@@ -50,13 +48,6 @@ if (!$container->has(PropertyAccessorInterface::class)) {
   $container->register(PropertyAccessorInterface::class, PropertyAccess::class)
     ->setFactory([PropertyAccess::class, 'createPropertyAccessor']);
 }
-
-if (!$container->has(\CRM_Core_Session::class)) {
-  $container->register(\CRM_Core_Session::class, \CRM_Core_Session::class)
-    ->setFactory([\CRM_Core_Session::class, 'singleton']);
-}
-$container->autowire(FundingSessionInterface::class, FundingSession::class)
-  ->setPublic(TRUE);
 
 $container->autowire(UrlGenerator::class);
 $container->autowire(MoneyFactory::class);

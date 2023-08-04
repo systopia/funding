@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\EventSubscriber\FundingCase;
 
 use Civi\Funding\Event\FundingCase\GetPermissionsEvent;
-use Civi\Funding\Session\FundingSessionInterface;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 final class FundingCaseFilterPermissionsSubscriber implements EventSubscriberInterface {
@@ -30,7 +30,7 @@ final class FundingCaseFilterPermissionsSubscriber implements EventSubscriberInt
     'drawdown_',
   ];
 
-  private FundingSessionInterface $session;
+  private RequestContextInterface $requestContext;
 
   /**
    * @inheritDoc
@@ -41,12 +41,12 @@ final class FundingCaseFilterPermissionsSubscriber implements EventSubscriberInt
     ];
   }
 
-  public function __construct(FundingSessionInterface $session) {
-    $this->session = $session;
+  public function __construct(RequestContextInterface $requestContext) {
+    $this->requestContext = $requestContext;
   }
 
   public function onPermissionsGet(GetPermissionsEvent $event): void {
-    if ($this->session->isRemote()) {
+    if ($this->requestContext->isRemote()) {
       $this->provideOnlyApplicantPermissions($event);
     }
     else {

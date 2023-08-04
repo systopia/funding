@@ -19,16 +19,16 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Mock\Form\FundingCaseType;
 
-use Civi\RemoteTools\Form\JsonSchema\JsonSchemaInteger;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchemaMoney;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchemaObject;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchemaString;
+use Civi\RemoteTools\JsonSchema\JsonSchemaInteger;
+use Civi\RemoteTools\JsonSchema\JsonSchemaMoney;
+use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
+use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 use Webmozart\Assert\Assert;
 
 final class TestJsonSchema extends JsonSchemaObject {
 
   /**
-   * @phpstan-param array<string, \Civi\RemoteTools\Form\JsonSchema\JsonSchema> $extraProperties
+   * @phpstan-param array<string, \Civi\RemoteTools\JsonSchema\JsonSchema> $extraProperties
    */
   public function __construct(array $extraProperties = [], array $keywords = []) {
     $required = $keywords['required'] ?? [];

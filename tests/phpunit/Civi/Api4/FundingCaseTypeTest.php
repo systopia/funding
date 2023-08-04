@@ -21,7 +21,7 @@ namespace Civi\Api4;
 
 use Civi\Api4\Traits\FundingCaseTypeFixturesTrait;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
-use Civi\Funding\Util\SessionTestUtil;
+use Civi\Funding\Util\RequestTestUtil;
 
 /**
  * @group headless
@@ -39,7 +39,7 @@ final class FundingCaseTypeTest extends AbstractFundingHeadlessTestCase {
   }
 
   public function testGetByFundingProgramId(): void {
-    SessionTestUtil::mockRemoteRequestSession((string) $this->permittedContactId);
+    RequestTestUtil::mockRemoteRequest((string) $this->permittedContactId);
     static::assertCount(1, FundingCaseType::getByFundingProgramId()
       ->setFundingProgramId($this->fundingProgramId)
       ->execute());
@@ -48,7 +48,7 @@ final class FundingCaseTypeTest extends AbstractFundingHeadlessTestCase {
       ->setFundingProgramId($this->fundingProgramIdWithoutFundingCaseType)
       ->execute());
 
-    SessionTestUtil::mockRemoteRequestSession((string) $this->notPermittedContactId);
+    RequestTestUtil::mockRemoteRequest((string) $this->notPermittedContactId);
     static::assertCount(0, FundingCaseType::getByFundingProgramId()
       ->setFundingProgramId($this->fundingProgramId)
       ->execute());

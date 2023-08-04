@@ -19,10 +19,10 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\SonstigeAktivitaet\UISchema;
 
-use Civi\RemoteTools\Form\JsonForms\Control\JsonFormsArray;
-use Civi\RemoteTools\Form\JsonForms\Control\JsonFormsHidden;
-use Civi\RemoteTools\Form\JsonForms\JsonFormsControl;
-use Civi\RemoteTools\Form\JsonForms\Layout\JsonFormsGroup;
+use Civi\RemoteTools\JsonForms\Control\JsonFormsArray;
+use Civi\RemoteTools\JsonForms\Control\JsonFormsHidden;
+use Civi\RemoteTools\JsonForms\JsonFormsControl;
+use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 
 final class AVK1SonstigeMittelUiSchema extends JsonFormsGroup {
 
