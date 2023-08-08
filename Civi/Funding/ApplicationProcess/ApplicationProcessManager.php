@@ -24,6 +24,7 @@ use Civi\Api4\Generic\DAODeleteAction;
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
@@ -142,11 +143,37 @@ class ApplicationProcessManager {
   }
 
   /**
-   * @phpstan-return array<ApplicationProcessEntity>
+   * @throws \CRM_Core_Exception
+   *
+   * @phpstan-return array<int, FullApplicationProcessStatus>
+   *   Status of other application processes in same funding case indexed by ID.
+   */
+  public function getStatusListByFundingCaseId(int $fundingCaseId): array {
+    $action = $this->api4->createGetAction(FundingApplicationProcess::_getEntityName())
+      ->setCheckPermissions(FALSE)
+      ->addSelect('id', 'status', 'is_review_calculative', 'is_review_content')
+      ->addWhere('funding_case_id', '=', $fundingCaseId);
+
+    $statusList = [];
+    $result = $this->api4->executeAction($action);
+    /** @phpstan-var array{id: int, status: string, is_review_calculative: bool|null, is_review_content: bool|null} $values */
+    foreach ($result as $values) {
+      $statusList[$values['id']] = new FullApplicationProcessStatus(
+        $values['status'], $values['is_review_calculative'], $values['is_review_content']
+      );
+    }
+
+    return $statusList;
+  }
+
+  /**
+   * @phpstan-return array<int, ApplicationProcessEntity>
+   *   Indexed by id.
    *
    * @throws \CRM_Core_Exception
    */
   public function getByFundingCaseId(int $fundingCaseId): array {
+    // @phpstan-ignore-next-line
     return ApplicationProcessEntity::allFromApiResult(
       $this->api4->getEntities(
         FundingApplicationProcess::_getEntityName(),
@@ -155,7 +182,7 @@ class ApplicationProcessManager {
         0,
         0,
         ['checkPermissions' => FALSE],
-      )
+      )->indexBy('id')
     );
   }
 

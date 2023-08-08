@@ -22,12 +22,11 @@ namespace Civi\Funding\Mock\Form\FundingCaseType;
 use Civi\Funding\ApplicationProcess\ApplicationCostItemsFactoryInterface;
 use Civi\Funding\Entity\ApplicationCostItemEntity;
 use Civi\Funding\Entity\ApplicationProcessEntity;
+use Civi\Funding\Mock\Form\FundingCaseType\Traits\TestSupportedFundingCaseTypesTrait;
 
 final class TestApplicationCostItemsFactory implements ApplicationCostItemsFactoryInterface {
 
-  public static function getSupportedFundingCaseTypes(): array {
-    return ['TestCaseType'];
-  }
+  use TestSupportedFundingCaseTypesTrait;
 
   public function addIdentifiers(array $requestData): array {
     return $requestData;

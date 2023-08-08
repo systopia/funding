@@ -21,22 +21,18 @@ namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
+use Civi\Funding\Api4\Action\Traits\ApplicationProcessIdParameterTrait;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\Event\Remote\ApplicationProcess\SubmitApplicationFormEvent;
 use Civi\Funding\Exception\FundingException;
+use Civi\RemoteTools\Api4\Action\Traits\DataParameterTrait;
 use Webmozart\Assert\Assert;
 
-/**
- * @method $this setData(array $data)
- */
 class SubmitFormAction extends AbstractFormAction {
 
-  /**
-   * @var array
-   * @phpstan-var array<string, mixed>
-   * @required
-   */
-  protected ?array $data = NULL;
+  use ApplicationProcessIdParameterTrait;
+
+  use DataParameterTrait;
 
   public function __construct(
     ApplicationProcessBundleLoader $applicationProcessBundleLoader,
@@ -67,16 +63,6 @@ class SubmitFormAction extends AbstractFormAction {
     }
 
     switch ($event->getAction()) {
-      case SubmitApplicationFormEvent::ACTION_SHOW_FORM:
-        Assert::notNull($event->getForm());
-        Assert::keyExists($event->getForm()->getData(), 'applicationProcessId');
-        Assert::integer($event->getForm()->getData()['applicationProcessId']);
-        $result['jsonSchema'] = $event->getForm()->getJsonSchema();
-        $result['uiSchema'] = $event->getForm()->getUiSchema();
-        $result['data'] = $event->getForm()->getData();
-        $result['files'] = $event->getFiles();
-        break;
-
       case SubmitApplicationFormEvent::ACTION_SHOW_VALIDATION:
         Assert::notEmpty($event->getErrors());
         $result['errors'] = $event->getErrors();
@@ -103,14 +89,6 @@ class SubmitFormAction extends AbstractFormAction {
       $this,
       $this->createEventParams($this->getApplicationProcessId())
     );
-  }
-
-  public function getApplicationProcessId(): int {
-    Assert::notNull($this->data);
-    Assert::keyExists($this->data, 'applicationProcessId');
-    Assert::integer($this->data['applicationProcessId']);
-
-    return $this->data['applicationProcessId'];
   }
 
 }

@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateCommand;
+use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\Form\ApplicationValidationResult;
 use Civi\Funding\Form\ApplicationValidatorInterface;
@@ -51,6 +52,7 @@ final class ApplicationFormValidateHandlerTest extends TestCase {
 
   public function testHandle(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $statusList = [23 => new FullApplicationProcessStatus('status', NULL, NULL)];
 
     $data = ['foo' => 'bar'];
     $validatedData = new ValidatedApplicationDataMock();
@@ -58,10 +60,10 @@ final class ApplicationFormValidateHandlerTest extends TestCase {
     $validationResult = ApplicationValidationResult::newInvalid($errorMessages, $validatedData);
 
     $this->validatorMock->expects(static::once())->method('validateExisting')
-      ->with($applicationProcessBundle, $data)
+      ->with($applicationProcessBundle, $statusList, $data)
       ->willReturn($validationResult);
 
-    $command = new ApplicationFormValidateCommand($applicationProcessBundle, $data);
+    $command = new ApplicationFormValidateCommand($applicationProcessBundle, $statusList, $data);
     $result = $this->handler->handle($command);
     static::assertSame($validatedData->getRawData(), $result->getData());
     static::assertSame($validationResult->getErrorMessages(), $result->getErrors());

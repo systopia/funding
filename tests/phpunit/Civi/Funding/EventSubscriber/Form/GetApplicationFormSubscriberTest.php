@@ -21,10 +21,12 @@ namespace Civi\Funding\EventSubscriber\Form;
 
 use Civi\Api4\RemoteFundingApplicationProcess;
 use Civi\Api4\RemoteFundingCase;
+use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormCreateCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewCreateCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewCreateHandlerInterface;
+use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
@@ -38,6 +40,11 @@ use PHPUnit\Framework\TestCase;
  * @covers \Civi\Funding\EventSubscriber\Form\GetApplicationFormSubscriber
  */
 final class GetApplicationFormSubscriberTest extends TestCase {
+
+  /**
+   * @var \Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $applicationProcessBundleLoaderMock;
 
   private GetApplicationFormSubscriber $subscriber;
 
@@ -53,9 +60,11 @@ final class GetApplicationFormSubscriberTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
+    $this->applicationProcessBundleLoaderMock = $this->createMock(ApplicationProcessBundleLoader::class);
     $this->createHandlerMock = $this->createMock(ApplicationFormCreateHandlerInterface::class);
     $this->newCreateHandlerMock = $this->createMock(ApplicationFormNewCreateHandlerInterface::class);
     $this->subscriber = new GetApplicationFormSubscriber(
+      $this->applicationProcessBundleLoaderMock,
       $this->createHandlerMock,
       $this->newCreateHandlerMock
     );
@@ -76,7 +85,14 @@ final class GetApplicationFormSubscriberTest extends TestCase {
 
   public function testOnGetForm(): void {
     $event = $this->createGetFormEvent();
-    $command = new ApplicationFormCreateCommand($event->getApplicationProcessBundle());
+    $this->applicationProcessBundleLoaderMock->method('getStatusList')
+      ->with($event->getApplicationProcessBundle())
+      ->willReturn([23 => new FullApplicationProcessStatus('status', NULL, NULL)]);
+
+    $command = new ApplicationFormCreateCommand(
+      $event->getApplicationProcessBundle(),
+      [23 => new FullApplicationProcessStatus('status', NULL, NULL)]
+    );
 
     $form = new ApplicationFormMock();
     $this->createHandlerMock->expects(static::once())->method('handle')

@@ -23,6 +23,7 @@ use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitResult;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
+use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationFormSubmitSuccessEvent;
 use Civi\Funding\Form\ApplicationValidationResult;
@@ -94,6 +95,7 @@ final class ApplicationFormSubmitEventDecoratorTest extends TestCase {
     return new ApplicationFormSubmitCommand(
       1,
       ApplicationProcessBundleFactory::createApplicationProcessBundle(),
+      [23 => new FullApplicationProcessStatus('status', NULL, NULL)],
       ['test' => 'foo'],
     );
   }

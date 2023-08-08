@@ -49,10 +49,11 @@ final class ApplicationFormDataGetHandler implements ApplicationFormDataGetHandl
     // Perform calculations
     $result = $this->validateHandler->handle(new ApplicationFormValidateCommand(
       $command->getApplicationProcessBundle(),
+      $command->getApplicationProcessStatusList(),
       $data
     ));
 
-    return $result->getData() + ['applicationProcessId' => $command->getApplicationProcess()->getId()];
+    return $result->getData();
   }
 
 }

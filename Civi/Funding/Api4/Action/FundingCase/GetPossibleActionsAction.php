@@ -22,6 +22,7 @@ namespace Civi\Funding\Api4\Action\FundingCase;
 use Civi\Api4\FundingCase;
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\FundingCase\Command\FundingCasePossibleActionsGetCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\Handler\FundingCasePossibleActionsGetHandlerInterface;
@@ -34,6 +35,8 @@ class GetPossibleActionsAction extends AbstractAction {
 
   use IdParameterTrait;
 
+  private ApplicationProcessManager $applicationProcessManager;
+
   private FundingCaseManager $fundingCaseManager;
 
   private FundingCaseTypeManager $fundingCaseTypeManager;
@@ -41,11 +44,13 @@ class GetPossibleActionsAction extends AbstractAction {
   private FundingCasePossibleActionsGetHandlerInterface $possibleActionsGetHandler;
 
   public function __construct(
+    ApplicationProcessManager $applicationProcessManager,
     FundingCaseManager $fundingCaseManager,
     FundingCaseTypeManager $fundingCaseTypeManager,
     FundingCasePossibleActionsGetHandlerInterface $possibleActionsGetHandler
   ) {
     parent::__construct(FundingCase::_getEntityName(), 'getPossibleActions');
+    $this->applicationProcessManager = $applicationProcessManager;
     $this->fundingCaseManager = $fundingCaseManager;
     $this->fundingCaseTypeManager = $fundingCaseTypeManager;
     $this->possibleActionsGetHandler = $possibleActionsGetHandler;
@@ -61,7 +66,11 @@ class GetPossibleActionsAction extends AbstractAction {
     Assert::notNull($fundingCaseType);
 
     $actions = $this->possibleActionsGetHandler->handle(
-      new FundingCasePossibleActionsGetCommand($fundingCase, $fundingCaseType)
+      new FundingCasePossibleActionsGetCommand(
+        $fundingCase,
+        $this->applicationProcessManager->getStatusListByFundingCaseId($fundingCase->getId()),
+        $fundingCaseType,
+      )
     );
 
     $result->exchangeArray($actions);

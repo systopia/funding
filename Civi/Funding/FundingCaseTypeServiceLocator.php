@@ -24,6 +24,9 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandlerIn
 use Civi\Funding\ApplicationProcess\Handler\ApplicationDeleteHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesPersistHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddCreateHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddSubmitHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddValidateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewCreateHandlerInterface;
@@ -37,6 +40,13 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHand
 use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandlerInterface;
 use Civi\Funding\FundingCase\FundingCaseStatusDeterminerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseApproveHandlerInterface;
+use Civi\Funding\FundingCase\Handler\FundingCaseFormDataGetHandlerInterface;
+use Civi\Funding\FundingCase\Handler\FundingCaseFormNewGetHandlerInterface;
+use Civi\Funding\FundingCase\Handler\FundingCaseFormNewSubmitHandlerInterface;
+use Civi\Funding\FundingCase\Handler\FundingCaseFormNewValidateHandlerInterface;
+use Civi\Funding\FundingCase\Handler\FundingCaseFormUpdateGetHandlerInterface;
+use Civi\Funding\FundingCase\Handler\FundingCaseFormUpdateSubmitHandlerInterface;
+use Civi\Funding\FundingCase\Handler\FundingCaseFormUpdateValidateHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCasePossibleActionsGetHandlerInterface;
 use Civi\Funding\FundingCase\Handler\TransferContractRecreateHandlerInterface;
 use Civi\Funding\TransferContract\Handler\TransferContractRenderHandlerInterface;
@@ -62,15 +72,27 @@ final class FundingCaseTypeServiceLocator implements FundingCaseTypeServiceLocat
     return $this->locator->get(ApplicationFilesPersistHandlerInterface::class);
   }
 
-  public function getApplicationFormNewCreateHandler(): ApplicationFormNewCreateHandlerInterface {
+  public function getApplicationFormAddCreateHandler(): ?ApplicationFormAddCreateHandlerInterface {
+    return $this->getOrNull(ApplicationFormAddCreateHandlerInterface::class);
+  }
+
+  public function getApplicationFormAddSubmitHandler(): ?ApplicationFormAddSubmitHandlerInterface {
+    return $this->getOrNull(ApplicationFormAddSubmitHandlerInterface::class);
+  }
+
+  public function getApplicationFormAddValidateHandler(): ?ApplicationFormAddValidateHandlerInterface {
+    return $this->getOrNull(ApplicationFormAddValidateHandlerInterface::class);
+  }
+
+  public function getApplicationFormNewCreateHandler(): ?ApplicationFormNewCreateHandlerInterface {
     return $this->locator->get(ApplicationFormNewCreateHandlerInterface::class);
   }
 
-  public function getApplicationFormNewValidateHandler(): ApplicationFormNewValidateHandlerInterface {
+  public function getApplicationFormNewValidateHandler(): ?ApplicationFormNewValidateHandlerInterface {
     return $this->locator->get(ApplicationFormNewValidateHandlerInterface::class);
   }
 
-  public function getApplicationFormNewSubmitHandler(): ApplicationFormNewSubmitHandlerInterface {
+  public function getApplicationFormNewSubmitHandler(): ?ApplicationFormNewSubmitHandlerInterface {
     return $this->locator->get(ApplicationFormNewSubmitHandlerInterface::class);
   }
 
@@ -121,6 +143,34 @@ final class FundingCaseTypeServiceLocator implements FundingCaseTypeServiceLocat
     return $this->locator->get(FundingCaseApproveHandlerInterface::class);
   }
 
+  public function getFundingCaseFormDataGetHandler(): ?FundingCaseFormDataGetHandlerInterface {
+    return $this->getOrNull(FundingCaseFormDataGetHandlerInterface::class);
+  }
+
+  public function getFundingCaseFormNewGetHandler(): ?FundingCaseFormNewGetHandlerInterface {
+    return $this->getOrNull(FundingCaseFormNewGetHandlerInterface::class);
+  }
+
+  public function getFundingCaseFormNewSubmitHandler(): ?FundingCaseFormNewSubmitHandlerInterface {
+    return $this->getOrNull(FundingCaseFormNewSubmitHandlerInterface::class);
+  }
+
+  public function getFundingCaseFormNewValidateHandler(): ?FundingCaseFormNewValidateHandlerInterface {
+    return $this->getOrNull(FundingCaseFormNewValidateHandlerInterface::class);
+  }
+
+  public function getFundingCaseFormUpdateGetHandler(): ?FundingCaseFormUpdateGetHandlerInterface {
+    return $this->getOrNull(FundingCaseFormUpdateGetHandlerInterface::class);
+  }
+
+  public function getFundingCaseFormUpdateSubmitHandler(): ?FundingCaseFormUpdateSubmitHandlerInterface {
+    return $this->getOrNull(FundingCaseFormUpdateSubmitHandlerInterface::class);
+  }
+
+  public function getFundingCaseFormUpdateValidateHandler(): ?FundingCaseFormUpdateValidateHandlerInterface {
+    return $this->getOrNull(FundingCaseFormUpdateValidateHandlerInterface::class);
+  }
+
   public function getFundingCaseStatusDeterminer(): FundingCaseStatusDeterminerInterface {
     return $this->locator->get(FundingCaseStatusDeterminerInterface::class);
   }
@@ -135,6 +185,18 @@ final class FundingCaseTypeServiceLocator implements FundingCaseTypeServiceLocat
 
   public function getTransferContractRenderHandler(): TransferContractRenderHandlerInterface {
     return $this->locator->get(TransferContractRenderHandlerInterface::class);
+  }
+
+  /**
+   * @template T of object
+   *
+   * @phpstan-param class-string<T> $id
+   *
+   * @phpstan-return T|null
+   */
+  private function getOrNull(string $id): ?object {
+    // @phpstan-ignore-next-line
+    return $this->locator->has($id) ? $this->locator->get($id) : NULL;
   }
 
 }

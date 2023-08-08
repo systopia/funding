@@ -95,7 +95,7 @@ final class ReworkPossibleApplicationProcessActionsDeterminerTest extends TestCa
       foreach ($permissionActionsMap as $permission => $actions) {
         static::assertSame(
           $actions,
-          $this->actionsDeterminer->getActions($fullStatus, [$permission]),
+          $this->actionsDeterminer->getActions($fullStatus, [], [$permission]),
           sprintf('Status: %s, permission: %s', $status, $permission)
         );
       }
@@ -110,7 +110,7 @@ final class ReworkPossibleApplicationProcessActionsDeterminerTest extends TestCa
       $permissions = array_keys($permissionActionsMap);
       static::assertEquals(
         $actions,
-        $this->actionsDeterminer->getActions($fullStatus, $permissions),
+        $this->actionsDeterminer->getActions($fullStatus, [], $permissions),
         sprintf('Status: %s, permissions: %s', $status, var_export($permissions, TRUE))
       );
     }
@@ -119,61 +119,88 @@ final class ReworkPossibleApplicationProcessActionsDeterminerTest extends TestCa
   public function testGetActionsApproveChange(): void {
     foreach (['review_calculative', 'review_content'] as $permission) {
       $fullStatus = new FullApplicationProcessStatus('rework', TRUE, TRUE);
-      static::assertNotContains('approve-change', $this->actionsDeterminer->getActions($fullStatus, [$permission]));
+      static::assertNotContains('approve-change', $this->actionsDeterminer->getActions($fullStatus, [], [$permission]));
       $fullStatus = new FullApplicationProcessStatus('rework-review', TRUE, NULL);
-      static::assertNotContains('approve-change', $this->actionsDeterminer->getActions($fullStatus, [$permission]));
+      static::assertNotContains('approve-change', $this->actionsDeterminer->getActions($fullStatus, [], [$permission]));
       $fullStatus = new FullApplicationProcessStatus('rework-review', NULL, TRUE);
-      static::assertNotContains('approve-change', $this->actionsDeterminer->getActions($fullStatus, [$permission]));
+      static::assertNotContains('approve-change', $this->actionsDeterminer->getActions($fullStatus, [], [$permission]));
 
       $fullStatus = new FullApplicationProcessStatus('rework-review', TRUE, TRUE);
-      static::assertContains('approve-change', $this->actionsDeterminer->getActions($fullStatus, [$permission]));
+      static::assertContains('approve-change', $this->actionsDeterminer->getActions($fullStatus, [], [$permission]));
     }
   }
 
   public function testActionsReviewCalculative(): void {
     $permissions = ['review_calculative'];
     $fullStatus = new FullApplicationProcessStatus('rework-review', NULL, NULL);
-    static::assertContains('approve-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
-    static::assertContains('reject-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
-    static::assertNotContains('approve-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
-    static::assertNotContains('reject-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertContains('approve-calculative', $this->actionsDeterminer->getActions($fullStatus, [], $permissions));
+    static::assertContains('reject-calculative', $this->actionsDeterminer->getActions($fullStatus, [], $permissions));
+    static::assertNotContains('approve-content', $this->actionsDeterminer->getActions($fullStatus, [], $permissions));
+    static::assertNotContains('reject-content', $this->actionsDeterminer->getActions($fullStatus, [], $permissions));
     $fullStatus = new FullApplicationProcessStatus('rework-review', FALSE, NULL);
-    static::assertContains('approve-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
-    static::assertNotContains('reject-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
-    static::assertNotContains('approve-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
-    static::assertNotContains('reject-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertContains('approve-calculative', $this->actionsDeterminer->getActions($fullStatus, [], $permissions));
+    static::assertNotContains('reject-calculative', $this->actionsDeterminer->getActions(
+      $fullStatus,
+      [],
+      $permissions
+    ));
+    static::assertNotContains('approve-content', $this->actionsDeterminer->getActions($fullStatus, [], $permissions));
+    static::assertNotContains('reject-content', $this->actionsDeterminer->getActions($fullStatus, [], $permissions));
     $fullStatus = new FullApplicationProcessStatus('rework-review', TRUE, NULL);
-    static::assertNotContains('approve-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
-    static::assertContains('reject-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
-    static::assertNotContains('approve-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
-    static::assertNotContains('reject-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertNotContains('approve-calculative', $this->actionsDeterminer->getActions(
+      $fullStatus,
+      [],
+      $permissions
+    ));
+    static::assertContains('reject-calculative', $this->actionsDeterminer->getActions($fullStatus, [], $permissions));
+    static::assertNotContains('approve-content', $this->actionsDeterminer->getActions($fullStatus, [], $permissions));
+    static::assertNotContains('reject-content', $this->actionsDeterminer->getActions($fullStatus, [], $permissions));
   }
 
   public function testActionsReviewContent(): void {
     $permissions = ['review_content'];
     $fullStatus = new FullApplicationProcessStatus('rework-review', NULL, NULL);
-    static::assertContains('approve-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
-    static::assertContains('reject-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
-    static::assertNotContains('approve-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
-    static::assertNotContains('reject-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertContains('approve-content', $this->actionsDeterminer->getActions($fullStatus, [], $permissions));
+    static::assertContains('reject-content', $this->actionsDeterminer->getActions($fullStatus, [], $permissions));
+    static::assertNotContains('approve-calculative', $this->actionsDeterminer->getActions(
+      $fullStatus,
+      [],
+      $permissions
+    ));
+    static::assertNotContains(
+      'reject-calculative',
+      $this->actionsDeterminer->getActions($fullStatus, [], $permissions)
+    );
     $fullStatus = new FullApplicationProcessStatus('rework-review', NULL, FALSE);
-    static::assertContains('approve-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
-    static::assertNotContains('reject-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
-    static::assertNotContains('approve-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
-    static::assertNotContains('reject-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertContains('approve-content', $this->actionsDeterminer->getActions($fullStatus, [], $permissions));
+    static::assertNotContains('reject-content', $this->actionsDeterminer->getActions($fullStatus, [], $permissions));
+    static::assertNotContains(
+      'approve-calculative',
+      $this->actionsDeterminer->getActions($fullStatus, [], $permissions)
+    );
+    static::assertNotContains(
+      'reject-calculative',
+      $this->actionsDeterminer->getActions($fullStatus, [], $permissions)
+    );
     $fullStatus = new FullApplicationProcessStatus('rework-review', NULL, TRUE);
-    static::assertNotContains('approve-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
-    static::assertContains('reject-content', $this->actionsDeterminer->getActions($fullStatus, $permissions));
-    static::assertNotContains('approve-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
-    static::assertNotContains('reject-calculative', $this->actionsDeterminer->getActions($fullStatus, $permissions));
+    static::assertNotContains('approve-content', $this->actionsDeterminer->getActions($fullStatus, [], $permissions));
+    static::assertContains('reject-content', $this->actionsDeterminer->getActions($fullStatus, [], $permissions));
+    static::assertNotContains(
+      'approve-calculative',
+      $this->actionsDeterminer->getActions($fullStatus, [], $permissions)
+    );
+    static::assertNotContains(
+      'reject-calculative',
+      $this->actionsDeterminer->getActions($fullStatus, [], $permissions)
+    );
   }
 
   public function testGetActionsDecorated(): void {
     $fullStatus = new FullApplicationProcessStatus('foo', NULL, NULL);
     $this->decoratedActionsDeterminerMock->expects(static::once())->method('getActions')
-      ->with($fullStatus, ['permission'])
+      ->with($fullStatus, [], ['permission'])
       ->willReturn(['bar']);
-    static::assertSame(['bar'], $this->actionsDeterminer->getActions($fullStatus, ['permission']));
+    static::assertSame(['bar'], $this->actionsDeterminer->getActions($fullStatus, [], ['permission']));
   }
 
 }

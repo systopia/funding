@@ -24,6 +24,8 @@ use Civi\Funding\Entity\FundingCaseEntity;
 
 interface ApplicationFormDataFactoryInterface {
 
+  public const SERVICE_TAG = 'funding.application.form_data_factory';
+
   /**
    * @phpstan-return array<string>
    */

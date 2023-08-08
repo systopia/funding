@@ -20,6 +20,8 @@ declare(strict_types = 1);
 namespace Civi\Funding\Api4\Action\FundingCase;
 
 use Civi\Api4\Generic\Result;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
+use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
@@ -41,6 +43,11 @@ final class ApproveActionTest extends TestCase {
   use CreateMockTrait;
 
   private ApproveAction $action;
+
+  /**
+   * @var \Civi\Funding\ApplicationProcess\ApplicationProcessManager&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $applicationProcessManagerMock;
 
   /**
    * @var \Civi\Funding\FundingCase\Handler\FundingCaseApproveHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
@@ -69,6 +76,7 @@ final class ApproveActionTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
+    $this->applicationProcessManagerMock = $this->createMock(ApplicationProcessManager::class);
     $this->approveHandlerMock = $this->createMock(FundingCaseApproveHandlerInterface::class);
     $this->fundingCaseManagerMock = $this->createMock(FundingCaseManager::class);
     $this->fundingCaseTypeManagerMock = $this->createMock(FundingCaseTypeManager::class);
@@ -76,6 +84,7 @@ final class ApproveActionTest extends TestCase {
     $this->transferContractRouterMock = $this->createMock(TransferContractRouter::class);
     $this->action = $this->createApi4ActionMock(
       ApproveAction::class,
+      $this->applicationProcessManagerMock,
       $this->approveHandlerMock,
       $this->fundingCaseManagerMock,
       $this->fundingCaseTypeManagerMock,
@@ -105,17 +114,20 @@ final class ApproveActionTest extends TestCase {
       ->with($fundingCase->getFundingProgramId())
       ->willReturn($fundingProgram);
 
-    $this->approveHandlerMock->method('handle')
-      ->with(static::callback(function (FundingCaseApproveCommand $command)
-        use ($fundingCase, $fundingCaseType, $fundingProgram) {
-        static::assertSame('title', $command->getTitle());
-        static::assertSame(12.34, $command->getAmount());
-        static::assertSame($fundingCase, $command->getFundingCase());
-        static::assertSame($fundingCaseType, $command->getFundingCaseType());
-        static::assertSame($fundingProgram, $command->getFundingProgram());
+    $statusList = [22 => new FullApplicationProcessStatus('new', FALSE, FALSE)];
+    $this->applicationProcessManagerMock->method('getStatusListByFundingCaseId')
+      ->with($fundingCase->getId())
+      ->willReturn($statusList);
 
-        return TRUE;
-      }));
+    $this->approveHandlerMock->expects(static::once())->method('handle')
+      ->with(new FundingCaseApproveCommand(
+        $fundingCase,
+        'title',
+        12.34,
+        $statusList,
+        $fundingCaseType,
+        $fundingProgram
+      ));
 
     $this->transferContractRouterMock->method('generate')
       ->with(FundingCaseFactory::DEFAULT_ID)

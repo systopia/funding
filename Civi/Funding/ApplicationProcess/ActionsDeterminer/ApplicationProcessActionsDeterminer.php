@@ -38,7 +38,7 @@ class ApplicationProcessActionsDeterminer implements ApplicationProcessActionsDe
     $this->statusPermissionActionsMap = $statusPermissionActionsMap;
   }
 
-  public function getActions(FullApplicationProcessStatus $status, array $permissions): array {
+  public function getActions(FullApplicationProcessStatus $status, array $statusList, array $permissions): array {
     return $this->doGetActions($status->getStatus(), $permissions);
   }
 
@@ -46,16 +46,26 @@ class ApplicationProcessActionsDeterminer implements ApplicationProcessActionsDe
     return $this->doGetActions(NULL, $permissions);
   }
 
-  public function isActionAllowed(string $action, FullApplicationProcessStatus $status, array $permissions): bool {
-    return $this->isAnyActionAllowed([$action], $status, $permissions);
+  public function isActionAllowed(
+    string $action,
+    FullApplicationProcessStatus $status,
+    array $statusList,
+    array $permissions
+  ): bool {
+    return $this->isAnyActionAllowed([$action], $status, $statusList, $permissions);
   }
 
-  public function isAnyActionAllowed(array $actions, FullApplicationProcessStatus $status, array $permissions): bool {
-    return [] !== array_intersect($this->getActions($status, $permissions), $actions);
+  public function isAnyActionAllowed(
+    array $actions,
+    FullApplicationProcessStatus $status,
+    array $statusList,
+    array $permissions
+  ): bool {
+    return [] !== array_intersect($this->getActions($status, $statusList, $permissions), $actions);
   }
 
-  public function isEditAllowed(FullApplicationProcessStatus $status, array $permissions): bool {
-    return $this->isAnyActionAllowed(['save', 'apply', 'update'], $status, $permissions);
+  public function isEditAllowed(FullApplicationProcessStatus $status, array $statusList, array $permissions): bool {
+    return $this->isAnyActionAllowed(['save', 'apply', 'update'], $status, $statusList, $permissions);
   }
 
   /**

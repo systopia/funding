@@ -63,6 +63,7 @@ final class ApplicationFormSubmitHandler implements ApplicationFormSubmitHandler
   public function handle(ApplicationFormSubmitCommand $command): ApplicationFormSubmitResult {
     $validationResult = $this->validator->validateExisting(
       $command->getApplicationProcessBundle(),
+      $command->getApplicationProcessStatusList(),
       $command->getData()
     );
     if ($validationResult->isValid()) {

@@ -23,6 +23,8 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationResourcesItemsAddIdentifi
 
 interface ApplicationResourcesItemsAddIdentifiersHandlerInterface {
 
+  public const SERVICE_TAG = 'funding.application.resources_items_add_identifiers_handler';
+
   /**
    * Adds identifiers to new resources items in request data of application
    * process, where necessary. This identifiers can later be used when creating

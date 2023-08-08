@@ -20,8 +20,11 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
 use Civi\Funding\Entity\FullApplicationProcessStatus;
+use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
 
 final class ReworkPossibleApplicationProcessActionsDeterminer extends ApplicationProcessActionsDeterminer {
+
+  use HasReviewPermissionTrait;
 
   private const STATUS_PERMISSIONS_ACTION_MAP = [
     'eligible' => [
@@ -57,10 +60,10 @@ final class ReworkPossibleApplicationProcessActionsDeterminer extends Applicatio
     parent::__construct(self::STATUS_PERMISSIONS_ACTION_MAP);
   }
 
-  public function getActions(FullApplicationProcessStatus $status, array $permissions): array {
+  public function getActions(FullApplicationProcessStatus $status, array $statusList, array $permissions): array {
     $actions = \array_values(\array_unique(\array_merge(
-      parent::getActions($status, $permissions),
-      $this->actionsDeterminer->getActions($status, $permissions),
+      parent::getActions($status, $statusList, $permissions),
+      $this->actionsDeterminer->getActions($status, $statusList, $permissions),
     )));
     if ('rework-review' === $status->getStatus() && $this->hasReviewPermission($permissions)) {
       if ($this->hasReviewCalculativePermission($permissions)) {
@@ -92,28 +95,6 @@ final class ReworkPossibleApplicationProcessActionsDeterminer extends Applicatio
       parent::getInitialActions($permissions),
       $this->actionsDeterminer->getInitialActions($permissions),
     ));
-  }
-
-  /**
-   * @phpstan-param array<string> $permissions
-   */
-  private function hasReviewPermission(array $permissions): bool {
-    return in_array('review_content', $permissions, TRUE)
-      || in_array('review_calculative', $permissions, TRUE);
-  }
-
-  /**
-   * @phpstan-param array<string> $permissions
-   */
-  private function hasReviewCalculativePermission(array $permissions): bool {
-    return in_array('review_calculative', $permissions, TRUE);
-  }
-
-  /**
-   * @phpstan-param array<string> $permissions
-   */
-  private function hasReviewContentPermission(array $permissions): bool {
-    return in_array('review_content', $permissions, TRUE);
   }
 
 }

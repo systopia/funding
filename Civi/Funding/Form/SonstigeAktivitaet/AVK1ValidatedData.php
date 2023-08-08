@@ -41,10 +41,9 @@ final class AVK1ValidatedData implements ValidatedApplicationDataInterface {
   private array $data;
 
   /**
-   * @phpstan-param array<string, mixed> $validatedData
+   * @phpstan-param avk1ValidatedDataT $validatedData
    */
   public function __construct(array $validatedData) {
-    /** @phpstan-var avk1ValidatedDataT $validatedData */
     $this->data = $validatedData;
   }
 

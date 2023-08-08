@@ -24,6 +24,8 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateResult;
 
 interface ApplicationFormValidateHandlerInterface {
 
+  public const SERVICE_TAG = 'funding.application.form_new_validate_handler';
+
   public function handle(ApplicationFormValidateCommand $command): ApplicationFormValidateResult;
 
 }

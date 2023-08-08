@@ -27,7 +27,7 @@ trait FundingCaseTypeSubscriberTrait {
    * @return string[]
    */
   protected function getIncludedFields(AbstractRequestEvent $event): array {
-    return ['id', 'title'];
+    return ['id', 'title', 'is_summary_application', 'application_process_label'];
   }
 
 }

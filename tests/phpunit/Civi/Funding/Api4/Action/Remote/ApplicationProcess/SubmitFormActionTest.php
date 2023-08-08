@@ -27,9 +27,6 @@ use Civi\Api4\Generic\Result;
 use Civi\Funding\Event\Remote\ApplicationProcess\SubmitApplicationFormEvent;
 use Civi\Funding\Exception\FundingException;
 use Civi\Funding\Traits\CreateMockTrait;
-use Civi\RemoteTools\JsonForms\JsonFormsElement;
-use Civi\RemoteTools\JsonSchema\JsonSchema;
-use Civi\RemoteTools\Form\RemoteForm;
 
 /**
  * @covers \Civi\Funding\Api4\Action\Remote\ApplicationProcess\SubmitFormAction
@@ -56,8 +53,9 @@ final class SubmitFormActionTest extends AbstractFormActionTest {
     );
 
     $this->action->setRemoteContactId(static::REMOTE_CONTACT_ID);
+    $this->action->setApplicationProcessId($this->applicationProcessBundle->getApplicationProcess()->getId());
     $this->action->setExtraParam('contactId', static::CONTACT_ID);
-    $this->data = ['applicationProcessId' => $this->applicationProcessBundle->getApplicationProcess()->getId()];
+    $this->data = ['foo' => 'bar'];
     $this->action->setData($this->data);
   }
 
@@ -96,49 +94,6 @@ final class SubmitFormActionTest extends AbstractFormActionTest {
     static::assertSame([
       'action' => 'showValidation',
       'errors' => ['/foo' => ['Bar']],
-    ], $result->getArrayCopy());
-  }
-
-  public function testShowForm(): void {
-    $jsonSchema = new JsonSchema(['foo' => 'test']);
-    $uiSchema = new JsonFormsElement('Test');
-    $this->eventDispatcherMock->expects(static::exactly(3))
-      ->method('dispatch')
-      ->withConsecutive(
-        [
-          SubmitApplicationFormEvent::getEventName(
-            'RemoteFundingApplicationProcess', 'submitForm'
-          ),
-          static::callback(
-            function (SubmitApplicationFormEvent $event) use ($jsonSchema, $uiSchema): bool {
-              $data = ['applicationProcessId' => 22, 'foo' => 'bar'];
-              $event->setForm(new RemoteForm($jsonSchema, $uiSchema, $data));
-              $event->setMessage('Test');
-              $event->setFiles(['https://example.org/test.txt' => 'https://example.net/test,txt']);
-
-              return TRUE;
-            }),
-        ],
-        [
-          SubmitApplicationFormEvent::getEventName('RemoteFundingApplicationProcess'),
-          static::isInstanceOf(SubmitApplicationFormEvent::class),
-        ],
-        [
-          SubmitApplicationFormEvent::getEventName(),
-          static::isInstanceOf(SubmitApplicationFormEvent::class),
-        ]
-      );
-
-    $result = new Result();
-    $this->action->_run($result);
-    static::assertSame(1, $result->rowCount);
-    static::assertSame([
-      'action' => 'showForm',
-      'message' => 'Test',
-      'jsonSchema' => $jsonSchema,
-      'uiSchema' => $uiSchema,
-      'data' => ['applicationProcessId' => 22, 'foo' => 'bar'],
-      'files' => ['https://example.org/test.txt' => 'https://example.net/test,txt'],
     ], $result->getArrayCopy());
   }
 

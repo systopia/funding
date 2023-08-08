@@ -103,10 +103,9 @@ final class RemoteFundingCaseAVK1FormTest extends AbstractRemoteFundingHeadlessT
   public function testValidateNewForm(): void {
     $action = RemoteFundingCase::validateNewApplicationForm()
       ->setRemoteContactId((string) $this->contact['id'])
-      ->setData([
-        'fundingProgramId' => $this->fundingProgram->getId(),
-        'fundingCaseTypeId' => $this->fundingCaseType->getId(),
-      ]);
+      ->setFundingProgramId($this->fundingProgram->getId())
+      ->setFundingCaseTypeId($this->fundingCaseType->getId())
+      ->setData(['foo' => 'bar']);
 
     FundingProgramContactRelationFixture::addContact(
       $this->contact['id'],
@@ -141,10 +140,9 @@ final class RemoteFundingCaseAVK1FormTest extends AbstractRemoteFundingHeadlessT
   public function testSubmitNewForm(): void {
     $action = RemoteFundingCase::submitNewApplicationForm()
       ->setRemoteContactId((string) $this->contact['id'])
-      ->setData([
-        'fundingProgramId' => $this->fundingProgram->getId(),
-        'fundingCaseTypeId' => $this->fundingCaseType->getId(),
-      ]);
+      ->setFundingProgramId($this->fundingProgram->getId())
+      ->setFundingCaseTypeId($this->fundingCaseType->getId())
+      ->setData(['foo' => 'bar']);
 
     FundingProgramContactRelationFixture::addContact(
       $this->contact['id'],

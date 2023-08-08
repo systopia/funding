@@ -9,8 +9,13 @@ use Civi\Funding\Contact\FundingRemoteContactIdResolverInterface;
 use Civi\Funding\DocumentRender\CiviOffice\CiviOfficeContextDataHolder;
 use Civi\Funding\DocumentRender\DocumentRendererInterface;
 use Civi\Funding\FundingAttachmentManagerInterface;
-use Civi\Funding\FundingCase\DefaultFundingCaseActionsDeterminer;
+use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\Mock\DocumentRender\MockDocumentRenderer;
+use Civi\Funding\Mock\Form\FundingCaseType\FundingCase\TestCaseActionsDeterminer;
+use Civi\Funding\Mock\Form\FundingCaseType\FundingCase\TestFundingCaseFormDataFactory;
+use Civi\Funding\Mock\Form\FundingCaseType\FundingCase\TestFundingCaseJsonSchemaFactory;
+use Civi\Funding\Mock\Form\FundingCaseType\FundingCase\TestFundingCaseUiSchemaFactory;
+use Civi\Funding\Mock\Form\FundingCaseType\FundingCase\TestFundingCaseValidator;
 use Civi\Funding\Mock\Form\FundingCaseType\TestApplicationCostItemsFactory;
 use Civi\Funding\Mock\Form\FundingCaseType\TestApplicationFormFilesFactory;
 use Civi\Funding\Mock\Form\FundingCaseType\TestApplicationResourcesItemsFactory;
@@ -21,6 +26,7 @@ use Civi\Funding\Mock\Form\FundingCaseType\TestValidator;
 use Civi\Funding\Permission\FundingCase\RelationFactory\RelationPropertiesFactoryLocator;
 use Civi\Funding\TestAttachmentManager;
 use Civi\PHPUnit\Comparator\ApiActionComparator;
+use Civi\RemoteTools\Contact\RemoteContactIdResolverInterface;
 use Composer\Autoload\ClassLoader;
 use SebastianBergmann\Comparator\Factory;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -61,6 +67,9 @@ function _funding_test_civicrm_container(ContainerBuilder $container): void {
   $container->autowire(TestAttachmentManager::class)
     ->setDecoratedService(FundingAttachmentManagerInterface::class);
 
+  // To clear cache
+  $container->getDefinition(FundingCaseManager::class)->setPublic(TRUE);
+
   // For FundingCaseContactRelationPropertiesFactoryTypeTest
   $container->getDefinition(RelationPropertiesFactoryLocator::class)->setPublic(TRUE);
 
@@ -72,6 +81,7 @@ function _funding_test_civicrm_container(ContainerBuilder $container): void {
 
   // overwrite remote contact ID resolver
   $container->autowire(FundingRemoteContactIdResolverInterface::class, DummyRemoteContactIdResolver::class);
+  $container->setAlias(RemoteContactIdResolverInterface::class, FundingRemoteContactIdResolverInterface::class);
 
   $container->getDefinition(ReworkPossibleApplicationProcessActionsDeterminer::class)
     ->addTag('funding.application.actions_determiner',
@@ -83,25 +93,35 @@ function _funding_test_civicrm_container(ContainerBuilder $container): void {
     ->addTag('funding.application.action_status_info',
       ['funding_case_type' => TestJsonSchemaFactory::getSupportedFundingCaseTypes()[0]]);
 
-  $container->getDefinition(DefaultFundingCaseActionsDeterminer::class)
-    ->addTag(DefaultFundingCaseActionsDeterminer::TAG,
-      ['funding_case_type' => TestJsonSchemaFactory::getSupportedFundingCaseTypes()[0]]);
+  $container->autowire(TestCaseActionsDeterminer::class)
+    ->addArgument(new Reference(ReworkPossibleApplicationProcessActionStatusInfo::class))
+    ->addTag(TestCaseActionsDeterminer::SERVICE_TAG);
 
   $container->autowire(TestJsonSchemaFactory::class)
-    ->addTag('funding.application.json_schema_factory');
+    ->addTag(TestJsonSchemaFactory::SERVICE_TAG);
   $container->autowire(TestUiSchemaFactory::class)
-    ->addTag('funding.application.ui_schema_factory');
+    ->addTag(TestUiSchemaFactory::SERVICE_TAG);
   $container->autowire(TestValidator::class)
     ->setArgument('$jsonSchemaFactory', new Reference(TestJsonSchemaFactory::class))
     ->addTag(TestValidator::SERVICE_TAG);
   $container->autowire(TestFormDataFactory::class)
-    ->addTag('funding.application.form_data_factory');
+    ->addTag(TestFormDataFactory::SERVICE_TAG);
   $container->autowire(TestApplicationCostItemsFactory::class)
-    ->addTag('funding.application.cost_items_factory');
+    ->addTag(TestApplicationCostItemsFactory::SERVICE_TAG);
   $container->autowire(TestApplicationResourcesItemsFactory::class)
-    ->addTag('funding.application.resources_items_factory');
+    ->addTag(TestApplicationResourcesItemsFactory::SERVICE_TAG);
   $container->autowire(TestApplicationFormFilesFactory::class)
     ->addTag(TestApplicationFormFilesFactory::SERVICE_TAG);
+
+  $container->autowire(TestFundingCaseFormDataFactory::class)
+    ->addTag(TestFundingCaseFormDataFactory::SERVICE_TAG);
+  $container->autowire(TestFundingCaseJsonSchemaFactory::class)
+    ->addTag(TestFundingCaseJsonSchemaFactory::SERVICE_TAG);
+  $container->autowire(TestFundingCaseUiSchemaFactory::class)
+    ->addTag(TestFundingCaseUiSchemaFactory::SERVICE_TAG);
+  $container->autowire(TestFundingCaseValidator::class)
+    ->setArgument('$jsonSchemaFactory', new Reference(TestFundingCaseJsonSchemaFactory::class))
+    ->addTag(TestFundingCaseValidator::SERVICE_TAG);
 }
 
 function addExtensionToClassLoader(string $extension) {

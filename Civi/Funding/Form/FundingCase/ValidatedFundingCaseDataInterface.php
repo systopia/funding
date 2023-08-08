@@ -17,31 +17,27 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\FundingCase;
+namespace Civi\Funding\Form\FundingCase;
 
-interface FundingCaseActionsDeterminerInterface {
+interface ValidatedFundingCaseDataInterface {
 
-  public const TAG = 'funding.case.actionss_determiner';
+  public function getAction(): string;
 
-  /**
-   * @phpstan-param array<string> $permissions
-   *
-   * @phpstan-return array<string>
-   */
-  public function getActions(string $status, array $permissions): array;
+  public function getTitle(): string;
+
+  public function getRecipientContactId(): int;
 
   /**
-   * @phpstan-param array<string> $permissions
+   * @phpstan-return array<string, mixed> JSON serializable.
+   *   Request data without extra data like "action".
    */
-  public function isActionAllowed(string $action, string $status, array $permissions): bool;
+  public function getFundingCaseData(): array;
 
   /**
-   * @phpstan-param array<string> $actions
-   * @phpstan-param array<string> $permissions
-   *
-   * @return bool
-   *   true if one of the specified actions is allowed.
+   * @phpstan-return array<string, mixed> JSON serializable.
+   *   The request data (after JSON schema validation) from which data is
+   *   extracted.
    */
-  public function isAnyActionAllowed(array $actions, string $status, array $permissions): bool;
+  public function getRawData(): array;
 
 }

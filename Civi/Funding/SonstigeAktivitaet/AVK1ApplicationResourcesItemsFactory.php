@@ -23,6 +23,7 @@ use Civi\Funding\ApplicationProcess\ApplicationResourcesItemsFactoryInterface;
 use Civi\Funding\ApplicationProcess\ItemsIdentifierUtil;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\ApplicationResourcesItemEntity;
+use Civi\Funding\SonstigeAktivitaet\Traits\AVK1SupportedFundingCaseTypesTrait;
 use Webmozart\Assert\Assert;
 
 /**
@@ -43,9 +44,7 @@ use Webmozart\Assert\Assert;
  */
 class AVK1ApplicationResourcesItemsFactory implements ApplicationResourcesItemsFactoryInterface {
 
-  public static function getSupportedFundingCaseTypes(): array {
-    return ['AVK1SonstigeAktivitaet'];
-  }
+  use AVK1SupportedFundingCaseTypesTrait;
 
   /**
    * @inheritDoc

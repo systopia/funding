@@ -40,6 +40,11 @@ class FundingCaseManager {
 
   private CiviEventDispatcherInterface $eventDispatcher;
 
+  /**
+   * @phpstan-var array<int, bool>
+   */
+  private array $accessAllowed = [];
+
   public function __construct(
     Api4Interface $api4,
     FundingAttachmentManagerInterface $attachmentManager,
@@ -60,6 +65,10 @@ class FundingCaseManager {
       ->setWhere([$condition->toArray()]);
 
     return FundingCaseEntity::allFromApiResult($this->api4->executeAction($action));
+  }
+
+  public function clearCache(): void {
+    $this->accessAllowed = [];
   }
 
   /**
@@ -179,11 +188,15 @@ class FundingCaseManager {
    * @throws \CRM_Core_Exception
    */
   public function hasAccess(int $id): bool {
-    $action = FundingCase::get(FALSE)
-      ->addSelect('id')
-      ->addWhere('id', '=', $id);
+    if (!isset($this->accessAllowed[$id])) {
+      $action = FundingCase::get(FALSE)
+        ->addSelect('id')
+        ->addWhere('id', '=', $id);
 
-    return 1 === $this->api4->executeAction($action)->count();
+      $this->accessAllowed[$id] = 1 === $this->api4->executeAction($action)->count();
+    }
+
+    return $this->accessAllowed[$id];
   }
 
   /**

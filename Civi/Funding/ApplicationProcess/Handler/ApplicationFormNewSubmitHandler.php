@@ -25,7 +25,7 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewSubmitResult;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Form\ApplicationValidationResult;
-use Civi\Funding\Form\ApplicationValidatorInterface;
+use Civi\Funding\Form\NonSummaryApplicationValidatorInterface;
 use Civi\Funding\FundingCase\FundingCaseManager;
 
 final class ApplicationFormNewSubmitHandler implements ApplicationFormNewSubmitHandlerInterface {
@@ -36,13 +36,13 @@ final class ApplicationFormNewSubmitHandler implements ApplicationFormNewSubmitH
 
   private ApplicationProcessStatusDeterminerInterface $statusDeterminer;
 
-  private ApplicationValidatorInterface $validator;
+  private NonSummaryApplicationValidatorInterface $validator;
 
   public function __construct(
     ApplicationProcessManager $applicationProcessManager,
     FundingCaseManager $fundingCaseManager,
     ApplicationProcessStatusDeterminerInterface $statusDeterminer,
-    ApplicationValidatorInterface $validator
+    NonSummaryApplicationValidatorInterface $validator
   ) {
     $this->applicationProcessManager = $applicationProcessManager;
     $this->fundingCaseManager = $fundingCaseManager;

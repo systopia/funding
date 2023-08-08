@@ -53,8 +53,9 @@ final class ValidateFormActionTest extends AbstractFormActionTest {
     );
 
     $this->action->setRemoteContactId(static::REMOTE_CONTACT_ID);
+    $this->action->setApplicationProcessId($this->applicationProcessBundle->getApplicationProcess()->getId());
     $this->action->setExtraParam('contactId', static::CONTACT_ID);
-    $this->data = ['applicationProcessId' => $this->applicationProcessBundle->getApplicationProcess()->getId()];
+    $this->data = ['foo' => 'bar'];
     $this->action->setData($this->data);
   }
 

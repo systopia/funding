@@ -21,24 +21,25 @@ namespace Civi\Funding\Api4\Action\Remote\FundingCase;
 
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
+use Civi\Funding\Api4\Action\Traits\FundingCaseTypeIdParameterTrait;
+use Civi\Funding\Api4\Action\Traits\FundingProgramIdParameterTrait;
 use Civi\Funding\Event\Remote\FundingCase\ValidateNewApplicationFormEvent;
 use Civi\Funding\Exception\FundingException;
 use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker;
 use Civi\Funding\FundingProgram\FundingProgramManager;
-use Webmozart\Assert\Assert;
+use Civi\RemoteTools\Api4\Action\Traits\DataParameterTrait;
 
 /**
  * @method $this setData(array $data)
  */
 class ValidateNewApplicationFormAction extends AbstractNewApplicationFormAction {
 
-  /**
-   * @var array
-   * @phpstan-var array<string, mixed>
-   * @required
-   */
-  protected ?array $data = NULL;
+  use DataParameterTrait;
+
+  use FundingCaseTypeIdParameterTrait;
+
+  use FundingProgramIdParameterTrait;
 
   public function __construct(
     FundingCaseTypeManager $fundingCaseTypeManager,
@@ -86,22 +87,6 @@ class ValidateNewApplicationFormAction extends AbstractNewApplicationFormAction 
       $this,
       $this->createEventParams($this->getFundingCaseTypeId(), $this->getFundingProgramId()),
     );
-  }
-
-  public function getFundingProgramId(): int {
-    Assert::notNull($this->data);
-    Assert::keyExists($this->data, 'fundingProgramId');
-    Assert::integer($this->data['fundingProgramId']);
-
-    return $this->data['fundingProgramId'];
-  }
-
-  public function getFundingCaseTypeId(): int {
-    Assert::notNull($this->data);
-    Assert::keyExists($this->data, 'fundingCaseTypeId');
-    Assert::integer($this->data['fundingCaseTypeId']);
-
-    return $this->data['fundingCaseTypeId'];
   }
 
 }

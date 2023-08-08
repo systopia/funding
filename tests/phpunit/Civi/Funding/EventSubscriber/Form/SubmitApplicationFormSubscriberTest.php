@@ -21,14 +21,14 @@ namespace Civi\Funding\EventSubscriber\Form;
 
 use Civi\Api4\RemoteFundingApplicationProcess;
 use Civi\Api4\RemoteFundingCase;
-use Civi\Funding\ApplicationProcess\Command\ApplicationFormCreateCommand;
+use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewSubmitCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewSubmitResult;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitResult;
-use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewSubmitHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
+use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ExternalFileFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
@@ -36,7 +36,6 @@ use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Event\Remote\ApplicationProcess\SubmitApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
 use Civi\Funding\Form\ApplicationValidationResult;
-use Civi\Funding\Mock\Form\ApplicationFormMock;
 use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -50,9 +49,9 @@ use PHPUnit\Framework\TestCase;
 final class SubmitApplicationFormSubscriberTest extends TestCase {
 
   /**
-   * @var \Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader&\PHPUnit\Framework\MockObject\MockObject
    */
-  private MockObject $formCreateHandlerMock;
+  private MockObject $applicationProcessBundleLoaderMock;
 
   /**
    * @var \Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewSubmitHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
@@ -66,16 +65,23 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
 
   private SubmitApplicationFormSubscriber $subscriber;
 
+  /**
+   * @phpstan-var array<int, FullApplicationProcessStatus>
+   */
+  private array $statusList;
+
   protected function setUp(): void {
     parent::setUp();
-    $this->formCreateHandlerMock = $this->createMock(ApplicationFormCreateHandlerInterface::class);
+    $this->applicationProcessBundleLoaderMock = $this->createMock(ApplicationProcessBundleLoader::class);
     $this->newSubmitHandlerMock = $this->createMock(ApplicationFormNewSubmitHandlerInterface::class);
     $this->submitHandlerMock = $this->createMock(ApplicationFormSubmitHandlerInterface::class);
     $this->subscriber = new SubmitApplicationFormSubscriber(
-      $this->formCreateHandlerMock,
+      $this->applicationProcessBundleLoaderMock,
       $this->newSubmitHandlerMock,
       $this->submitHandlerMock,
     );
+
+    $this->statusList = [23 => new FullApplicationProcessStatus('status', NULL, NULL)];
   }
 
   public function testSubmitSubscribedEvents(): void {
@@ -94,7 +100,7 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
   public function testOnSubmitForm(): void {
     $event = $this->createSubmitFormEvent();
     $command = new ApplicationFormSubmitCommand(
-      $event->getContactId(), $event->getApplicationProcessBundle(), $event->getData()
+      $event->getContactId(), $event->getApplicationProcessBundle(), $this->statusList, $event->getData(),
     );
 
     $postValidationData = ['foo' => 'bar'];
@@ -110,15 +116,9 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
       ->with($command)
       ->willReturn($result);
 
-    $form = new ApplicationFormMock();
-    $this->formCreateHandlerMock->expects(static::once())->method('handle')->with(new ApplicationFormCreateCommand(
-      $event->getApplicationProcessBundle(),
-    ))->willReturn($form);
-
     $this->subscriber->onSubmitForm($event);
 
-    static::assertSame(SubmitApplicationFormEvent::ACTION_SHOW_FORM, $event->getAction());
-    static::assertSame($form, $event->getForm());
+    static::assertSame(SubmitApplicationFormEvent::ACTION_CLOSE_FORM, $event->getAction());
     static::assertSame('Saved', $event->getMessage());
     static::assertSame(['https://example.org/test.txt' => 'https://example.net/test.txt'], $event->getFiles());
   }
@@ -126,7 +126,7 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
   public function testOnSubmitFormInvalid(): void {
     $event = $this->createSubmitFormEvent();
     $command = new ApplicationFormSubmitCommand(
-      $event->getContactId(), $event->getApplicationProcessBundle(), $event->getData()
+      $event->getContactId(), $event->getApplicationProcessBundle(), $this->statusList, $event->getData(),
     );
 
     $postValidationData = ['foo' => 'baz'];
@@ -171,15 +171,9 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
       ->with($command)
       ->willReturn($result);
 
-    $form = new ApplicationFormMock();
-    $this->formCreateHandlerMock->expects(static::once())->method('handle')->with(new ApplicationFormCreateCommand(
-      $applicationProcessBundle,
-    ))->willReturn($form);
-
     $this->subscriber->onSubmitNewForm($event);
 
-    static::assertSame(SubmitApplicationFormEvent::ACTION_SHOW_FORM, $event->getAction());
-    static::assertSame($form, $event->getForm());
+    static::assertSame(SubmitApplicationFormEvent::ACTION_CLOSE_FORM, $event->getAction());
     static::assertSame('Saved', $event->getMessage());
     static::assertSame(['https://example.org/test.txt' => 'https://example.net/test.txt'], $event->getFiles());
   }
@@ -220,12 +214,18 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
   }
 
   private function createSubmitFormEvent(): SubmitApplicationFormEvent {
-    return new SubmitApplicationFormEvent(RemoteFundingApplicationProcess::_getEntityName(), 'submitForm', [
+    $event = new SubmitApplicationFormEvent(RemoteFundingApplicationProcess::_getEntityName(), 'submitForm', [
       'remoteContactId' => '00',
       'contactId' => 1,
       'applicationProcessBundle' => ApplicationProcessBundleFactory::createApplicationProcessBundle(),
       'data' => [],
     ]);
+
+    $this->applicationProcessBundleLoaderMock->method('getStatusList')
+      ->with($event->getApplicationProcessBundle())
+      ->willReturn($this->statusList);
+
+    return $event;
   }
 
 }

@@ -19,23 +19,14 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase\Handler;
 
-use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
-use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
 use Civi\Funding\FundingCase\Command\FundingCasePossibleActionsGetCommand;
-use Civi\Funding\FundingCase\FundingCaseActionsDeterminerInterface;
-use Civi\RemoteTools\Api4\Query\CompositeCondition;
 
 final class FundingCasePossibleActionsGetHandler implements FundingCasePossibleActionsGetHandlerInterface {
 
-  private ApplicationProcessManager $applicationProcessManager;
-
   private FundingCaseActionsDeterminerInterface $actionsDeterminer;
 
-  public function __construct(
-    ApplicationProcessManager $applicationProcessManager,
-    FundingCaseActionsDeterminerInterface $actionsDeterminer
-  ) {
-    $this->applicationProcessManager = $applicationProcessManager;
+  public function __construct(FundingCaseActionsDeterminerInterface $actionsDeterminer) {
     $this->actionsDeterminer = $actionsDeterminer;
   }
 
@@ -43,26 +34,11 @@ final class FundingCasePossibleActionsGetHandler implements FundingCasePossibleA
    * @inheritDoc
    */
   public function handle(FundingCasePossibleActionsGetCommand $command): array {
-    $fundingCase = $command->getFundingCase();
-    $actions = $this->actionsDeterminer->getActions($fundingCase->getStatus(), $fundingCase->getPermissions());
-    $posApprove = array_search('approve', $actions, TRUE);
-    if (FALSE !== $posApprove && !$this->isApprovePossible($fundingCase)) {
-      unset($actions[$posApprove]);
-      $actions = array_values($actions);
-    }
-
-    return $actions;
-  }
-
-  private function isApprovePossible(FundingCaseEntity $fundingCase): bool {
-    return $this->applicationProcessManager->countBy(CompositeCondition::fromFieldValuePairs([
-      'funding_case_id' => $fundingCase->getId(),
-      'is_eligible' => NULL,
-    ])) === 0
-    && $this->applicationProcessManager->countBy(CompositeCondition::fromFieldValuePairs([
-      'funding_case_id' => $fundingCase->getId(),
-      'is_eligible' => TRUE,
-    ])) > 0;
+    return $this->actionsDeterminer->getActions(
+      $command->getFundingCase()->getStatus(),
+      $command->getApplicationProcessStatusList(),
+      $command->getFundingCase()->getPermissions(),
+    );
   }
 
 }

@@ -77,7 +77,7 @@ final class GetNewApplicationFormActionTest extends AbstractNewApplicationFormAc
 
               $event->setJsonSchema($jsonSchema);
               $event->setUiSchema($uiSchema);
-              $event->setData(['fundingCaseTypeId' => 22, 'fundingProgramId' => 33, 'foo' => 'bar']);
+              $event->setData(['foo' => 'bar']);
 
               return TRUE;
             }),
@@ -98,7 +98,7 @@ final class GetNewApplicationFormActionTest extends AbstractNewApplicationFormAc
     static::assertSame([
       'jsonSchema' => $jsonSchema,
       'uiSchema' => $uiSchema,
-      'data' => ['fundingCaseTypeId' => 22, 'fundingProgramId' => 33, 'foo' => 'bar'],
+      'data' => ['foo' => 'bar'],
     ], $result->getArrayCopy());
   }
 

@@ -62,7 +62,7 @@ msgstr ""
 msgid "Timestamp"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php managed/SavedSearchFundingPrograms.mgd.php
+#: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php Civi/Funding/EventSubscriber/Remote/FundingCaseGetFieldsSubscriber.php managed/SavedSearchFundingPrograms.mgd.php
 msgid "Currency"
 msgstr ""
 
@@ -148,6 +148,14 @@ msgstr ""
 
 #: Civi/Funding/ApplicationProcess/Handler/ApplicationFormCommentPersistHandler.php managed/CustomGroupFundingApplicationComment.mgd.php
 msgid "Funding Application Comment"
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/Remote/Api4/ActionHandler/SubmitAddFormActionHandler.php Civi/Funding/EventSubscriber/Form/SubmitApplicationFormSubscriber.php Civi/Funding/FundingCase/Remote/Api4/ActionHandler/SubmitNewFormActionHandler.php Civi/Funding/FundingCase/Remote/Api4/ActionHandler/SubmitUpdateFormActionHandler.php ang/crmFunding/application/applicationEditor.directive.js ang/crmFunding/application/applicationEditor.template.html ang/crmFunding/case/fundingCase.js
+msgid "Validation failed"
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/Remote/Api4/ActionHandler/SubmitAddFormActionHandler.php Civi/Funding/EventSubscriber/Form/SubmitApplicationFormSubscriber.php Civi/Funding/FundingCase/Remote/Api4/ActionHandler/SubmitNewFormActionHandler.php Civi/Funding/FundingCase/Remote/Api4/ActionHandler/SubmitUpdateFormActionHandler.php
+msgid "Saved"
 msgstr ""
 
 #: Civi/Funding/ApplicationProcess/Validator/IsReviewCalculativeValidator.php
@@ -306,14 +314,6 @@ msgstr ""
 msgid "Titles of Eligible Applications"
 msgstr ""
 
-#: Civi/Funding/EventSubscriber/Form/SubmitApplicationFormSubscriber.php
-msgid "Saved"
-msgstr ""
-
-#: Civi/Funding/EventSubscriber/Form/SubmitApplicationFormSubscriber.php ang/crmFunding/application/applicationEditor.directive.js ang/crmFunding/application/applicationEditor.template.html ang/crmFunding/case/fundingCase.js
-msgid "Validation failed"
-msgstr ""
-
 #: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
 msgid "Application: view"
 msgstr ""
@@ -356,6 +356,14 @@ msgstr ""
 
 #: Civi/Funding/EventSubscriber/FundingProgram/FundingProgramGetPossiblePermissionsSubscriber.php
 msgid "View"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/Remote/FundingCaseGetFieldsSubscriber.php
+msgid "Is Summary Application"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/Remote/FundingCaseGetFieldsSubscriber.php
+msgid "Application Process Label"
 msgstr ""
 
 #: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php ang/crmFunding/application/applicationSidebar.template.html ang/crmFunding/case/fundingCasePermissions.html ang/crmFunding/program/fundingNewCasePermissions.html ang/crmFunding/program/fundingProgramPermissions.html ang/crmFunding/program/recipientRelations.html
@@ -415,7 +423,7 @@ msgid "Withdraw rework"
 msgstr ""
 
 #: Civi/Funding/FundingCase/Handler/FundingCaseApproveHandler.php
-msgid "Permission to approve funding case is missing."
+msgid "Approving this funding case is not allowed."
 msgstr ""
 
 #: Civi/Funding/FundingCase/Handler/TransferContractRecreateHandler.php
@@ -814,7 +822,7 @@ msgstr ""
 msgid "Amount Requested Eligible"
 msgstr ""
 
-#: ang/crmFunding/case/fundingCase.template.html managed/OptionGroupFundingFileType.mgd.php
+#: ang/crmFunding/case/fundingCase.template.html managed/OptionValuesFileType.mgd.php
 msgid "Transfer Contract"
 msgstr ""
 
@@ -1022,24 +1030,24 @@ msgstr ""
 msgid "Add Funding Program"
 msgstr ""
 
-#: managed/OptionGroupFundingFileType.mgd.php
-msgid "Transfer Contract Template"
-msgstr ""
-
-#: managed/OptionGroupFundingFileType.mgd.php
-msgid "Payment Instruction"
-msgstr ""
-
-#: managed/OptionGroupFundingFileType.mgd.php
-msgid "Payment Instruction Template"
-msgstr ""
-
 #: managed/OptionValueActivityUsedForApplicationProcess.mgd.php
 msgid "Funding Application"
 msgstr ""
 
 #: managed/OptionValueCgExtendsFundingProgram.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCases.mgd.php
 msgid "Funding Program"
+msgstr ""
+
+#: managed/OptionValuesFileType.mgd.php
+msgid "Transfer Contract Template"
+msgstr ""
+
+#: managed/OptionValuesFileType.mgd.php
+msgid "Payment Instruction"
+msgstr ""
+
+#: managed/OptionValuesFileType.mgd.php
+msgid "Payment Instruction Template"
 msgstr ""
 
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
@@ -1070,11 +1078,11 @@ msgstr ""
 msgid "Funding Case Type"
 msgstr ""
 
-#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingDrawdowns.mgd.php managed/SavedSearchFundingPrograms.mgd.php
+#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingDrawdowns.mgd.php managed/SavedSearchFundingPrograms.mgd.php
 msgid "Actions"
 msgstr ""
 
-#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingPrograms.mgd.php
+#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingPrograms.mgd.php
 msgid "Edit permissions"
 msgstr ""
 

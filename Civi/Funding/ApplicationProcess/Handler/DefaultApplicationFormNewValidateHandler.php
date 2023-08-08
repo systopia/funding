@@ -35,8 +35,16 @@ final class DefaultApplicationFormNewValidateHandler implements ApplicationFormN
   }
 
   public function handle(ApplicationFormNewValidateCommand $command): ApplicationFormValidateResult {
-    return $this->serviceLocatorContainer->get($command->getFundingCaseType()->getName())
-      ->getApplicationFormNewValidateHandler()->handle($command);
+    $handler = $this->serviceLocatorContainer->get($command->getFundingCaseType()->getName())
+      ->getApplicationFormNewValidateHandler();
+    if (NULL === $handler) {
+      throw new \RuntimeException(sprintf(
+        'Funding case type "%s" does not support non-summary applications',
+        $command->getFundingCaseType()->getName()
+      ));
+    }
+
+    return $handler->handle($command);
   }
 
 }

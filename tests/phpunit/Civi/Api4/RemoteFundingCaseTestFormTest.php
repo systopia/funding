@@ -105,10 +105,9 @@ final class RemoteFundingCaseTestFormTest extends AbstractRemoteFundingHeadlessT
   public function testValidateNewForm(): void {
     $action = RemoteFundingCase::validateNewApplicationForm()
       ->setRemoteContactId((string) $this->contact['id'])
-      ->setData([
-        'fundingProgramId' => $this->fundingProgram->getId(),
-        'fundingCaseTypeId' => $this->fundingCaseType->getId(),
-      ]);
+      ->setFundingProgramId($this->fundingProgram->getId())
+      ->setFundingCaseTypeId($this->fundingCaseType->getId())
+      ->setData(['foo' => 'bar']);
 
     FundingProgramContactRelationFixture::addContact(
       $this->contact['id'],
@@ -138,8 +137,6 @@ final class RemoteFundingCaseTestFormTest extends AbstractRemoteFundingHeadlessT
     static::assertNotCount(0, $values['errors']);
 
     $validData = [
-      'fundingProgramId' => $this->fundingProgram->getId(),
-      'fundingCaseTypeId' => $this->fundingCaseType->getId(),
       'title' => 'My Title',
       'shortDescription' => 'My short description',
       'recipient' => $this->contact['id'],
@@ -160,10 +157,9 @@ final class RemoteFundingCaseTestFormTest extends AbstractRemoteFundingHeadlessT
   public function testSubmitNewForm(): void {
     $action = RemoteFundingCase::submitNewApplicationForm()
       ->setRemoteContactId((string) $this->contact['id'])
-      ->setData([
-        'fundingProgramId' => $this->fundingProgram->getId(),
-        'fundingCaseTypeId' => $this->fundingCaseType->getId(),
-      ]);
+      ->setFundingProgramId($this->fundingProgram->getId())
+      ->setFundingCaseTypeId($this->fundingCaseType->getId())
+      ->setData(['foo' => 'bar']);
 
     FundingProgramContactRelationFixture::addContact(
       $this->contact['id'],
@@ -199,8 +195,6 @@ final class RemoteFundingCaseTestFormTest extends AbstractRemoteFundingHeadlessT
 
     // Test with valid data
     $validData = [
-      'fundingProgramId' => $this->fundingProgram->getId(),
-      'fundingCaseTypeId' => $this->fundingCaseType->getId(),
       'title' => 'My Title',
       'shortDescription' => 'My short description',
       'recipient' => $this->contact['id'],
@@ -213,20 +207,10 @@ final class RemoteFundingCaseTestFormTest extends AbstractRemoteFundingHeadlessT
     $action->setData($validData + ['action' => 'save']);
 
     $values = $action->execute()->getArrayCopy();
-    static::assertEquals(['action', 'message', 'jsonSchema', 'uiSchema', 'data', 'files'], array_keys($values));
-    static::assertSame('showForm', $values['action']);
+    static::assertEquals(['action', 'message', 'files'], array_keys($values));
+    static::assertSame('closeForm', $values['action']);
     $fileCiviUri = $values['files']['https://example.org/test.txt'];
     static::assertStringStartsWith('http://localhost/', $fileCiviUri);
-    static::assertInstanceOf(TestJsonSchema::class, $values['jsonSchema']);
-    static::assertInstanceOf(TestUiSchema::class, $values['uiSchema']);
-    static::assertIsInt($values['data']['applicationProcessId']);
-    $expectedData = [
-      'applicationProcessId' => $values['data']['applicationProcessId'],
-      'file' => $fileCiviUri,
-    ] + $validData;
-    unset($expectedData['fundingProgramId']);
-    unset($expectedData['fundingCaseTypeId']);
-    static::assertEquals($expectedData, $values['data']);
   }
 
   private function addFixtures(): void {

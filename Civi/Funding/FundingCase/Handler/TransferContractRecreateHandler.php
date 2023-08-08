@@ -20,9 +20,8 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase\Handler;
 
 use Civi\API\Exception\UnauthorizedException;
-use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\FundingCase\Command\TransferContractRecreateCommand;
-use Civi\Funding\FundingCase\FundingCaseActionsDeterminerInterface;
+use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
 use Civi\Funding\TransferContract\TransferContractCreator;
 use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
@@ -47,7 +46,7 @@ final class TransferContractRecreateHandler implements TransferContractRecreateH
    */
   public function handle(TransferContractRecreateCommand $command): void {
     $fundingCase = $command->getFundingCase();
-    $this->assertAuthorized($fundingCase);
+    $this->assertAuthorized($command);
     Assert::notNull($fundingCase->getAmountApproved(), 'Funding case has no approved amount.');
 
     $this->transferContractCreator->createTransferContract(
@@ -60,11 +59,12 @@ final class TransferContractRecreateHandler implements TransferContractRecreateH
   /**
    * @throws \Civi\API\Exception\UnauthorizedException
    */
-  private function assertAuthorized(FundingCaseEntity $fundingCase): void {
+  private function assertAuthorized(TransferContractRecreateCommand $command): void {
     if (!$this->actionsDeterminer->isActionAllowed(
       'recreate-transfer-contract',
-      $fundingCase->getStatus(),
-      $fundingCase->getPermissions()
+      $command->getFundingCase()->getStatus(),
+      $command->getApplicationProcessStatusList(),
+      $command->getFundingCase()->getPermissions(),
     )) {
       throw new UnauthorizedException(E::ts('Permission to recreate transfer contract is missing.'));
     }

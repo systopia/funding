@@ -26,6 +26,11 @@ final class ApplicationFormSubmitCommand {
 
   use ApplicationProcessEntityBundleTrait;
 
+  /**
+   * @phpstan-var array<int, \Civi\Funding\Entity\FullApplicationProcessStatus>
+   */
+  private array $applicationProcessStatusList;
+
   private int $contactId;
 
   /**
@@ -34,16 +39,28 @@ final class ApplicationFormSubmitCommand {
   private array $data;
 
   /**
+   * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $applicationProcessStatusList
+   *     Status of other application processes in same funding case indexed by ID.
    * @phpstan-param array<string, mixed> $data JSON serializable.
    */
   public function __construct(
     int $contactId,
     ApplicationProcessEntityBundle $applicationProcessBundle,
+    array $applicationProcessStatusList,
     array $data
   ) {
     $this->contactId = $contactId;
     $this->applicationProcessBundle = $applicationProcessBundle;
+    $this->applicationProcessStatusList = $applicationProcessStatusList;
     $this->data = $data;
+  }
+
+  /**
+   * @phpstan-return array<int, \Civi\Funding\Entity\FullApplicationProcessStatus>
+   *   Status of other application processes in same funding case indexed by ID.
+   */
+  public function getApplicationProcessStatusList(): array {
+    return $this->applicationProcessStatusList;
   }
 
   public function getContactId(): int {

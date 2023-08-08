@@ -20,9 +20,8 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase\Handler;
 
 use Civi\API\Exception\UnauthorizedException;
-use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
 use Civi\Funding\FundingCase\Command\FundingCaseApproveCommand;
-use Civi\Funding\FundingCase\FundingCaseActionsDeterminerInterface;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\FundingCaseStatusDeterminerInterface;
 use Civi\Funding\TransferContract\TransferContractCreator;
@@ -56,7 +55,7 @@ final class FundingCaseApproveHandler implements FundingCaseApproveHandlerInterf
    */
   public function handle(FundingCaseApproveCommand $command): void {
     $fundingCase = $command->getFundingCase();
-    $this->assertAuthorized($fundingCase);
+    $this->assertAuthorized($command);
 
     $fundingCase->setTitle($command->getTitle());
     $fundingCase->setAmountApproved($command->getAmount());
@@ -74,13 +73,14 @@ final class FundingCaseApproveHandler implements FundingCaseApproveHandlerInterf
   /**
    * @throws \Civi\API\Exception\UnauthorizedException
    */
-  private function assertAuthorized(FundingCaseEntity $fundingCase): void {
+  private function assertAuthorized(FundingCaseApproveCommand $command): void {
     if (!$this->actionsDeterminer->isActionAllowed(
-        'approve',
-        $fundingCase->getStatus(),
-        $fundingCase->getPermissions()
+      'approve',
+      $command->getFundingCase()->getStatus(),
+      $command->getApplicationProcessStatusList(),
+      $command->getFundingCase()->getPermissions(),
     )) {
-      throw new UnauthorizedException(E::ts('Permission to approve funding case is missing.'));
+      throw new UnauthorizedException(E::ts('Approving this funding case is not allowed.'));
     }
   }
 

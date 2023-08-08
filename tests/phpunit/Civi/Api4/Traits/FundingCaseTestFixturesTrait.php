@@ -21,6 +21,7 @@ namespace Civi\Api4\Traits;
 
 use Civi\Api4\Relationship;
 use Civi\Api4\RelationshipType;
+use Civi\Funding\Fixtures\ApplicationProcessFixture;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\FundingCaseFixture;
@@ -109,6 +110,14 @@ trait FundingCaseTestFixturesTrait {
         'creation_date' => '2022-06-23 10:00:00',
         'modification_date' => '2022-06-24 10:00:00',
       ],
+    );
+
+    ApplicationProcessFixture::addFixture(
+      $this->permittedFundingCaseId,
+      [
+        'status' => 'eligible',
+        'is_eligible' => TRUE,
+      ]
     );
 
     $permittedRelationshipTypeId = RelationshipType::create(FALSE)

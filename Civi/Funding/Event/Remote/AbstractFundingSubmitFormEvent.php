@@ -19,15 +19,14 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Event\Remote;
 
+use Civi\Funding\Form\RemoteSubmitResponseActions;
 use Civi\RemoteTools\Form\RemoteFormInterface;
 
 abstract class AbstractFundingSubmitFormEvent extends AbstractFundingRequestEvent {
 
-  public const ACTION_CLOSE_FORM = 'closeForm';
+  public const ACTION_CLOSE_FORM = RemoteSubmitResponseActions::CLOSE_FORM;
 
-  public const ACTION_SHOW_FORM = 'showForm';
-
-  public const ACTION_SHOW_VALIDATION = 'showValidation';
+  public const ACTION_SHOW_VALIDATION = RemoteSubmitResponseActions::SHOW_VALIDATION;
 
   /**
    * @var array<string, mixed>
@@ -113,13 +112,6 @@ abstract class AbstractFundingSubmitFormEvent extends AbstractFundingRequestEven
 
   public function getForm(): ?RemoteFormInterface {
     return $this->form;
-  }
-
-  public function setForm(RemoteFormInterface $form): self {
-    $this->form = $form;
-    $this->action = self::ACTION_SHOW_FORM;
-
-    return $this;
   }
 
   public function getMessage(): ?string {

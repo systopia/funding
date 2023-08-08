@@ -40,6 +40,10 @@ abstract class AbstractApplicationProcessStatusDeterminer implements Application
 
   public function getInitialStatus(string $action): string {
     $status = $this->statusActionStatusMap[NULL][$action] ?? NULL;
+    if (NULL === $status && str_ends_with($action, '&new')) {
+      $status = $this->statusActionStatusMap[NULL][substr($action, 0, -4)] ?? NULL;
+    }
+
     if (NULL === $status) {
       throw new \InvalidArgumentException(\sprintf(
         'Could not determine application process status for action "%s"',

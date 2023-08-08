@@ -69,7 +69,7 @@ final class GetFormActionTest extends AbstractFormActionTest {
 
               $event->setJsonSchema($jsonSchema);
               $event->setUiSchema($uiSchema);
-              $event->setData(['applicationProcessId' => 22, 'foo' => 'bar']);
+              $event->setData(['foo' => 'bar']);
 
               return TRUE;
             }),
@@ -90,7 +90,7 @@ final class GetFormActionTest extends AbstractFormActionTest {
     static::assertSame([
       'jsonSchema' => $jsonSchema,
       'uiSchema' => $uiSchema,
-      'data' => ['applicationProcessId' => 22, 'foo' => 'bar'],
+      'data' => ['foo' => 'bar'],
     ], $result->getArrayCopy());
   }
 

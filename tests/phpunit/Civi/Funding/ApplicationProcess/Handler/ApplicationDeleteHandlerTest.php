@@ -23,6 +23,7 @@ use Civi\API\Exception\UnauthorizedException;
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationDeleteCommand;
+use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -56,32 +57,36 @@ final class ApplicationDeleteHandlerTest extends TestCase {
 
   public function testHandle(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $statusList = [23 => new FullApplicationProcessStatus('status', NULL, NULL)];
     $this->actionsDeterminerMock->method('isActionAllowed')
       ->with(
         'delete',
         $applicationProcessBundle->getApplicationProcess()->getFullStatus(),
+        $statusList,
         $applicationProcessBundle->getFundingCase()->getPermissions()
       )->willReturn(TRUE);
 
     $this->applicationProcessManagerMock->expects(static::once())->method('delete')
       ->with($applicationProcessBundle);
 
-    $this->handler->handle(new ApplicationDeleteCommand($applicationProcessBundle));
+    $this->handler->handle(new ApplicationDeleteCommand($applicationProcessBundle, $statusList));
   }
 
   public function testHandlePermissionMissing(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $statusList = [23 => new FullApplicationProcessStatus('status', NULL, NULL)];
     $this->actionsDeterminerMock->method('isActionAllowed')
       ->with(
         'delete',
         $applicationProcessBundle->getApplicationProcess()->getFullStatus(),
+        $statusList,
         $applicationProcessBundle->getFundingCase()->getPermissions()
       )->willReturn(FALSE);
 
     $this->expectException(UnauthorizedException::class);
     $this->expectExceptionMessage('Permission to delete application is missing.');
 
-    $this->handler->handle(new ApplicationDeleteCommand($applicationProcessBundle));
+    $this->handler->handle(new ApplicationDeleteCommand($applicationProcessBundle, $statusList));
   }
 
 }

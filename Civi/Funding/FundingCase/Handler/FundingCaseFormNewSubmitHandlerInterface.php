@@ -17,23 +17,15 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\FundingCase;
+namespace Civi\Funding\FundingCase\Handler;
 
-final class DefaultFundingCaseActionsDeterminer extends FundingCaseActionsDeterminer {
+use Civi\Funding\FundingCase\Command\FundingCaseFormNewSubmitCommand;
+use Civi\Funding\FundingCase\Command\FundingCaseFormNewSubmitResult;
 
-  private const STATUS_PERMISSIONS_ACTION_MAP = [
-    'open' => [
-      'review_calculative' => ['approve'],
-      'review_content' => ['approve'],
-    ],
-    'ongoing' => [
-      'review_calculative' => ['recreate-transfer-contract'],
-      'review_content' => ['recreate-transfer-contract'],
-    ],
-  ];
+interface FundingCaseFormNewSubmitHandlerInterface {
 
-  public function __construct() {
-    parent::__construct(self::STATUS_PERMISSIONS_ACTION_MAP);
-  }
+  public const SERVICE_TAG = 'funding.case.form_new_submit_handler';
+
+  public function handle(FundingCaseFormNewSubmitCommand $command): FundingCaseFormNewSubmitResult;
 
 }

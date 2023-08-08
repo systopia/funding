@@ -58,6 +58,21 @@ class ApplicationProcessBundleLoader {
   }
 
   /**
+   * @phpstan-return array<int, \Civi\Funding\Entity\FullApplicationProcessStatus>
+   *   Status of other application processes in same funding case indexed by ID.
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function getStatusList(ApplicationProcessEntityBundle $applicationProcessBundle): array {
+    $statusList = $this->applicationProcessManager->getStatusListByFundingCaseId(
+      $applicationProcessBundle->getFundingCase()->getId()
+    );
+    unset($statusList[$applicationProcessBundle->getApplicationProcess()->getId()]);
+
+    return $statusList;
+  }
+
+  /**
    * @phpstan-return array<ApplicationProcessEntityBundle>
    */
   public function getByFundingCaseId(int $fundingCaseId): array {

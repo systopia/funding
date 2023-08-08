@@ -20,11 +20,12 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase\Handler;
 
 use Civi\API\Exception\UnauthorizedException;
+use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
+use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
 use Civi\Funding\FundingCase\Command\TransferContractRecreateCommand;
-use Civi\Funding\FundingCase\FundingCaseActionsDeterminerInterface;
 use Civi\Funding\TransferContract\TransferContractCreator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -36,7 +37,7 @@ use PHPUnit\Framework\TestCase;
 final class TransferContractRecreateHandlerTest extends TestCase {
 
   /**
-   * @var \Civi\Funding\FundingCase\FundingCaseActionsDeterminerInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $actionsDeterminerMock;
 
@@ -63,6 +64,7 @@ final class TransferContractRecreateHandlerTest extends TestCase {
       ->with(
         'recreate-transfer-contract',
         $command->getFundingCase()->getStatus(),
+        $command->getApplicationProcessStatusList(),
         $command->getFundingCase()->getPermissions(),
       )->willReturn(TRUE);
 
@@ -82,6 +84,7 @@ final class TransferContractRecreateHandlerTest extends TestCase {
       ->with(
         'recreate-transfer-contract',
         $command->getFundingCase()->getStatus(),
+        $command->getApplicationProcessStatusList(),
         $command->getFundingCase()->getPermissions(),
       )->willReturn(FALSE);
 
@@ -92,10 +95,11 @@ final class TransferContractRecreateHandlerTest extends TestCase {
 
   private function createCommand(float $amountApproved = 12.34): TransferContractRecreateCommand {
     $fundingCase = FundingCaseFactory::createFundingCase(['amount_approved' => $amountApproved]);
+    $statusList = [22 => new FullApplicationProcessStatus('eligible', TRUE, TRUE)];
     $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
     $fundingProgram = FundingProgramFactory::createFundingProgram();
 
-    return new TransferContractRecreateCommand($fundingCase, $fundingCaseType, $fundingProgram);
+    return new TransferContractRecreateCommand($fundingCase, $statusList, $fundingCaseType, $fundingProgram);
   }
 
 }

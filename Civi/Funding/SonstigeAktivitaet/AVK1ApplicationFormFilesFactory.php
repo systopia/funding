@@ -21,6 +21,7 @@ namespace Civi\Funding\SonstigeAktivitaet;
 
 use Civi\Funding\ApplicationProcess\ApplicationFormFilesFactoryInterface;
 use Civi\Funding\Form\FundingFormFile;
+use Civi\Funding\SonstigeAktivitaet\Traits\AVK1SupportedFundingCaseTypesTrait;
 use Civi\Funding\Util\Uuid;
 use Webmozart\Assert\Assert;
 
@@ -33,12 +34,7 @@ use Webmozart\Assert\Assert;
  */
 final class AVK1ApplicationFormFilesFactory implements ApplicationFormFilesFactoryInterface {
 
-  /**
-   * @inheritDoc
-   */
-  public static function getSupportedFundingCaseTypes(): array {
-    return ['AVK1SonstigeAktivitaet'];
-  }
+  use AVK1SupportedFundingCaseTypesTrait;
 
   /**
    * @inheritDoc

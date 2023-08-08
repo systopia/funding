@@ -69,8 +69,9 @@ final class ValidateFormAction extends AbstractAction {
   protected function createCommand(): ApplicationFormValidateCommand {
     $applicationProcessBundle = $this->applicationProcessBundleLoader->get($this->getId());
     Assert::notNull($applicationProcessBundle);
+    $statusList = $this->applicationProcessBundleLoader->getStatusList($applicationProcessBundle);
 
-    return new ApplicationFormValidateCommand($applicationProcessBundle, $this->getData());
+    return new ApplicationFormValidateCommand($applicationProcessBundle, $statusList, $this->getData());
   }
 
 }

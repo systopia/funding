@@ -23,6 +23,8 @@ use Civi\Funding\Entity\ApplicationProcessEntity;
 
 interface ApplicationCostItemsFactoryInterface {
 
+  public const SERVICE_TAG = 'funding.application.cost_items_factory';
+
   /**
    * @phpstan-return array<string>
    */

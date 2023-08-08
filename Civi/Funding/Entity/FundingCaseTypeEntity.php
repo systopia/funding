@@ -25,6 +25,8 @@ namespace Civi\Funding\Entity;
  *   title: string,
  *   abbreviation: string,
  *   name: string,
+ *   is_summary_application: bool,
+ *   application_process_label: string|null,
  *   properties: array<string, mixed>,
  * }
  *
@@ -58,6 +60,26 @@ final class FundingCaseTypeEntity extends AbstractEntity {
 
   public function setName(string $name): self {
     $this->values['name'] = $name;
+
+    return $this;
+  }
+
+  public function getIsSummaryApplication(): bool {
+    return $this->values['is_summary_application'];
+  }
+
+  public function setIsSummaryApplication(bool $isSummaryApplication): self {
+    $this->values['is_summary_application'] = $isSummaryApplication;
+
+    return $this;
+  }
+
+  public function getApplicationProcessLabel(): ?string {
+    return $this->values['application_process_label'];
+  }
+
+  public function setApplicationProcessLabel(?string $applicationProcessLabel): self {
+    $this->values['application_process_label'] = $applicationProcessLabel;
 
     return $this;
   }

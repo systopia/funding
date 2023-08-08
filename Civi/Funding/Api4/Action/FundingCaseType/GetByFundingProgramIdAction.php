@@ -25,19 +25,13 @@ use Civi\Api4\FundingProgram;
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\DAOGetAction;
 use Civi\Api4\Generic\Result;
+use Civi\Funding\Api4\Action\Traits\FundingProgramIdParameterTrait;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Psr\Log\LoggerInterface;
 
-/**
- * @method $this setFundingProgramId(int $fundingProgramId)
- */
 final class GetByFundingProgramIdAction extends AbstractAction {
 
-  /**
-   * @var int
-   * @required
-   */
-  protected ?int $fundingProgramId = NULL;
+  use FundingProgramIdParameterTrait;
 
   private Api4Interface $api4;
 
@@ -67,7 +61,7 @@ final class GetByFundingProgramIdAction extends AbstractAction {
         ->addJoin(
           FundingCaseTypeProgram::_getEntityName() . ' AS cp', 'INNER', NULL,
           ['cp.funding_case_type_id', '=', 'id']
-        )->addWhere('cp.funding_program_id', '=', $this->fundingProgramId);
+        )->addWhere('cp.funding_program_id', '=', $this->getFundingProgramId());
       $action->_run($result);
       if ($this->getDebug()) {
         $this->_debugOutput['get'] = $action->_debugOutput;
@@ -79,7 +73,7 @@ final class GetByFundingProgramIdAction extends AbstractAction {
     $action = (new DAOGetAction(FundingProgram::_getEntityName(), 'get'))
       ->setCheckPermissions($this->getCheckPermissions())
       ->selectRowCount()
-      ->addWhere('id', '=', $this->fundingProgramId);
+      ->addWhere('id', '=', $this->getFundingProgramId());
 
     $result = $this->api4->executeAction($action);
     if ($this->getDebug()) {
@@ -96,7 +90,7 @@ final class GetByFundingProgramIdAction extends AbstractAction {
     $action = FundingProgram::get($this->getCheckPermissions())
       ->setDebug($this->getDebug())
       ->addSelect('id')
-      ->addWhere('id', '=', $this->fundingProgramId);
+      ->addWhere('id', '=', $this->getFundingProgramId());
 
     $result = $this->api4->executeAction($action);
     if ($this->getDebug()) {

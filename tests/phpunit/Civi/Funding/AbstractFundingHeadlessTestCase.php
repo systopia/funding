@@ -70,6 +70,17 @@ abstract class AbstractFundingHeadlessTestCase extends TestCase implements Headl
     $this->setUserPermissions([Permissions::ACCESS_CIVICRM, Permissions::ACCESS_FUNDING]);
   }
 
+  protected function tearDown(): void {
+    parent::tearDown();
+    $this->clearCache();
+
+  }
+
+  protected function clearCache(): void {
+    // @phpstan-ignore-next-line
+    \Civi::service(FundingCaseManager::class)->clearCache();
+  }
+
   /**
    * @phpstan-param array<string>|null $permissions
    */

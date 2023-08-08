@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2023 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,12 +17,12 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\FundingCase;
+namespace Civi\Funding\FundingCase\Actions;
 
 /**
  * @phpstan-type statusPermissionsActionMapT array<string|null, array<string, array<string>>>
  */
-class FundingCaseActionsDeterminer implements FundingCaseActionsDeterminerInterface {
+class FundingCaseActionsDeterminer extends AbstractFundingCaseActionsDeterminer {
 
   /**
    * @phpstan-var statusPermissionsActionMapT
@@ -36,16 +36,18 @@ class FundingCaseActionsDeterminer implements FundingCaseActionsDeterminerInterf
     $this->statusPermissionActionsMap = $statusPermissionActionsMap;
   }
 
-  public function getActions(string $status, array $permissions): array {
+  /**
+   * @inheritDoc
+   */
+  public function getActions(string $status, array $applicationProcessStatusList, array $permissions): array {
     return $this->doGetActions($status, $permissions);
   }
 
-  public function isActionAllowed(string $action, string $status, array $permissions): bool {
-    return $this->isAnyActionAllowed([$action], $status, $permissions);
-  }
-
-  public function isAnyActionAllowed(array $actions, string $status, array $permissions): bool {
-    return [] !== array_intersect($this->getActions($status, $permissions), $actions);
+  /**
+   * @inheritDoc
+   */
+  public function getInitialActions(array $permissions): array {
+    return $this->doGetActions(NULL, $permissions);
   }
 
   /**

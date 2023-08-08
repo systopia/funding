@@ -54,7 +54,10 @@ final class DeleteAction extends AbstractBatchAction {
   public function _run(Result $result): void {
     $applicationProcessBundles = $this->getApplicationProcessBundles();
     foreach ($applicationProcessBundles as $applicationProcessBundle) {
-      $this->applicationDeleteHandler->handle(new ApplicationDeleteCommand($applicationProcessBundle));
+      $statusList = $this->applicationProcessBundleLoader->getStatusList($applicationProcessBundle);
+      unset($statusList[$applicationProcessBundle->getApplicationProcess()->getId()]);
+
+      $this->applicationDeleteHandler->handle(new ApplicationDeleteCommand($applicationProcessBundle, $statusList));
       $result[] = ['id' => $applicationProcessBundle->getApplicationProcess()->getId()];
     }
   }

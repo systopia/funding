@@ -21,8 +21,9 @@ namespace Civi\Funding\ApplicationProcess\StatusDeterminer;
 
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 
-final class ReworkPossibleApplicationProcessStatusDeterminer implements ApplicationProcessStatusDeterminerInterface {
-
+// phpcs:disable Generic.Files.LineLength.TooLong
+final class ReworkPossibleApplicationProcessStatusDeterminer extends ApplicationProcessStatusDeterminerDecorator {
+// phpcs:enable
   private const STATUS_ACTION_STATUS_MAP = [
     'eligible' => [
       'request-rework' => 'rework-requested',
@@ -60,23 +61,13 @@ final class ReworkPossibleApplicationProcessStatusDeterminer implements Applicat
     ],
   ];
 
-  private ApplicationProcessStatusDeterminerInterface $statusDeterminer;
-
-  public function __construct(ApplicationProcessStatusDeterminerInterface $statusDeterminer) {
-    $this->statusDeterminer = $statusDeterminer;
-  }
-
-  public function getInitialStatus(string $action): string {
-    return $this->statusDeterminer->getInitialStatus($action);
-  }
-
   public function getStatus(FullApplicationProcessStatus $currentStatus, string $action): FullApplicationProcessStatus {
     return isset(self::STATUS_ACTION_STATUS_MAP[$currentStatus->getStatus()][$action])
       ? new FullApplicationProcessStatus(
           self::STATUS_ACTION_STATUS_MAP[$currentStatus->getStatus()][$action],
           $this->getIsReviewCalculative($currentStatus, $action),
           $this->getIsReviewContent($currentStatus, $action)
-      ) : $this->statusDeterminer->getStatus($currentStatus, $action);
+      ) : parent::getStatus($currentStatus, $action);
   }
 
   private function getIsReviewCalculative(FullApplicationProcessStatus $currentStatus, string $action): ?bool {

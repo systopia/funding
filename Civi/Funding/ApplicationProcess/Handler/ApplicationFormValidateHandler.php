@@ -34,6 +34,7 @@ final class ApplicationFormValidateHandler implements ApplicationFormValidateHan
   public function handle(ApplicationFormValidateCommand $command): ApplicationFormValidateResult {
     $validationResult = $this->validator->validateExisting(
       $command->getApplicationProcessBundle(),
+      $command->getApplicationProcessStatusList(),
       $command->getData(),
       20
     );

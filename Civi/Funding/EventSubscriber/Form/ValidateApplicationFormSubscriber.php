@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\Form;
 
+use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewValidateCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateResult;
@@ -31,14 +32,18 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ValidateApplicationFormSubscriber implements EventSubscriberInterface {
 
+  private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
+
   private ApplicationFormNewValidateHandlerInterface $newValidateHandler;
 
   private ApplicationFormValidateHandlerInterface $validateHandler;
 
   public function __construct(
+    ApplicationProcessBundleLoader $applicationProcessBundleLoader,
     ApplicationFormNewValidateHandlerInterface $newValidateHandler,
     ApplicationFormValidateHandlerInterface $validateHandler
   ) {
+    $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
     $this->newValidateHandler = $newValidateHandler;
     $this->validateHandler = $validateHandler;
   }
@@ -54,8 +59,11 @@ class ValidateApplicationFormSubscriber implements EventSubscriberInterface {
   }
 
   public function onValidateForm(ValidateApplicationFormEvent $event): void {
+    $statusList = $this->applicationProcessBundleLoader->getStatusList($event->getApplicationProcessBundle());
+
     $command = new ApplicationFormValidateCommand(
       $event->getApplicationProcessBundle(),
+      $statusList,
       $event->getData(),
     );
 

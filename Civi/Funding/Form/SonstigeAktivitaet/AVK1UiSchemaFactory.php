@@ -23,22 +23,20 @@ use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\ApplicationSubmitActionsFactoryInterface;
-use Civi\Funding\Form\ApplicationUiSchemaFactoryInterface;
 use Civi\Funding\Form\JsonSchema\JsonFormsSubmitButtonsFactory;
+use Civi\Funding\Form\NonSummaryApplicationUiSchemaFactoryInterface;
 use Civi\Funding\Form\SonstigeAktivitaet\UISchema\AVK1UiSchema;
-use Civi\RemoteTools\JsonForms\Control\JsonFormsHidden;
+use Civi\Funding\SonstigeAktivitaet\Traits\AVK1SupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonForms\JsonFormsElement;
 use Civi\RemoteTools\JsonForms\JsonFormsMarkup;
 
-final class AVK1UiSchemaFactory implements ApplicationUiSchemaFactoryInterface {
+final class AVK1UiSchemaFactory implements NonSummaryApplicationUiSchemaFactoryInterface {
+
+  use AVK1SupportedFundingCaseTypesTrait;
 
   private ApplicationSubmitActionsFactoryInterface $submitActionsFactory;
 
   private AVK1StatusMarkupFactory $statusMarkupFactory;
-
-  public static function getSupportedFundingCaseTypes(): array {
-    return ['AVK1SonstigeAktivitaet'];
-  }
 
   public function __construct(
     ApplicationSubmitActionsFactoryInterface $submitActionsFactory,
@@ -49,7 +47,8 @@ final class AVK1UiSchemaFactory implements ApplicationUiSchemaFactoryInterface {
   }
 
   public function createUiSchemaExisting(
-    ApplicationProcessEntityBundle $applicationProcessBundle
+    ApplicationProcessEntityBundle $applicationProcessBundle,
+    array $applicationProcessStatusList
   ): JsonFormsElement {
     $applicationProcess = $applicationProcessBundle->getApplicationProcess();
     $fundingCase = $applicationProcessBundle->getFundingCase();
@@ -58,16 +57,17 @@ final class AVK1UiSchemaFactory implements ApplicationUiSchemaFactoryInterface {
     $submitButtons = JsonFormsSubmitButtonsFactory::createButtons(
       $this->submitActionsFactory->createSubmitActions(
         $applicationProcess->getFullStatus(),
+        $applicationProcessStatusList,
         $fundingCase->getPermissions()
       )
     );
-    $hiddenFields = [new JsonFormsHidden('#/properties/applicationProcessId')];
     $statusMarkup = new JsonFormsMarkup($this->statusMarkupFactory->buildStatusMarkup($applicationProcessBundle));
 
-    $uiSchema = new AVK1UiSchema($fundingProgram->getCurrency(), $submitButtons, $hiddenFields, [$statusMarkup]);
+    $uiSchema = new AVK1UiSchema($fundingProgram->getCurrency(), $submitButtons, [$statusMarkup]);
 
     if (!$this->submitActionsFactory->isEditAllowed(
       $applicationProcess->getFullStatus(),
+      $applicationProcessStatusList,
       $fundingCase->getPermissions()
     )) {
       $uiSchema->setReadonly(TRUE);
@@ -83,12 +83,8 @@ final class AVK1UiSchemaFactory implements ApplicationUiSchemaFactoryInterface {
     $submitButtons = JsonFormsSubmitButtonsFactory::createButtons(
       $this->submitActionsFactory->createInitialSubmitActions($fundingProgram->getPermissions()),
     );
-    $hiddenFields = [
-      new JsonFormsHidden('#/properties/fundingCaseTypeId'),
-      new JsonFormsHidden('#/properties/fundingProgramId'),
-    ];
 
-    return new AVK1UiSchema($fundingProgram->getCurrency(), $submitButtons, $hiddenFields);
+    return new AVK1UiSchema($fundingProgram->getCurrency(), $submitButtons);
   }
 
 }

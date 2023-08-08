@@ -27,6 +27,7 @@ use Civi\Funding\Api4\Util\WhereUtil;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\FundingCase\FundingCaseManager;
+use Civi\RemoteTools\Api4\Query\Comparison;
 
 final class GetAction extends AbstractGetAction {
 
@@ -65,6 +66,7 @@ final class GetAction extends AbstractGetAction {
   private function buildRecord(ApplicationProcessEntityBundle $applicationProcessBundle): array {
     $applicationProcess = $applicationProcessBundle->getApplicationProcess();
     $fundingCase = $applicationProcessBundle->getFundingCase();
+    $fundingCaseType = $applicationProcessBundle->getFundingCaseType();
     $fundingProgram = $applicationProcessBundle->getFundingProgram();
 
     $record = [
@@ -75,7 +77,8 @@ final class GetAction extends AbstractGetAction {
       'funding_case_modification_date' => $fundingCase->getModificationDate()->format('Y-m-d H:i:s'),
       'funding_case_title' => $fundingCase->getTitle(),
       'funding_case_amount_approved' => $fundingCase->getAmountApproved(),
-      'funding_case_type_id' => $fundingCase->getFundingCaseTypeId(),
+      'funding_case_type_id' => $fundingCaseType->getId(),
+      'funding_case_type_is_summary_application' => $fundingCaseType->getIsSummaryApplication(),
       'funding_case_transfer_contract_uri' => $fundingCase->getTransferContractUri(),
       'funding_program_id' => $fundingProgram->getId(),
       'funding_program_currency' => $fundingProgram->getCurrency(),
@@ -142,6 +145,15 @@ final class GetAction extends AbstractGetAction {
   private function getFundingCases(): array {
     $fundingCaseId = $this->getFundingCaseIdFromWhere();
     if (NULL === $fundingCaseId) {
+      $withSummaryApplication = WhereUtil::getBool($this->where, 'funding_case_type_is_summary_application');
+      if (NULL !== $withSummaryApplication) {
+        return $this->fundingCaseManager->getBy(Comparison::new(
+          'funding_case_type_id.is_summary_application',
+          '=',
+          $withSummaryApplication
+        ));
+      }
+
       return $this->fundingCaseManager->getAll();
     }
 

@@ -21,15 +21,11 @@ namespace Civi\Funding\Mock\Form\FundingCaseType;
 
 use Civi\Funding\ApplicationProcess\ApplicationFormFilesFactoryInterface;
 use Civi\Funding\Form\FundingFormFile;
+use Civi\Funding\Mock\Form\FundingCaseType\Traits\TestSupportedFundingCaseTypesTrait;
 
 final class TestApplicationFormFilesFactory implements ApplicationFormFilesFactoryInterface {
 
-  /**
-   * @inheritDoc
-   */
-  public static function getSupportedFundingCaseTypes(): array {
-    return ['TestCaseType'];
-  }
+  use TestSupportedFundingCaseTypesTrait;
 
   /**
    * @inheritDoc

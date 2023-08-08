@@ -26,26 +26,30 @@ final class ApplicationSubmitActionsFactory implements ApplicationSubmitActionsF
 
   private ApplicationProcessActionsDeterminerInterface $actionsDeterminer;
 
-  private SubmitActionsContainer $submitActionsContainer;
+  private SubmitActionsContainerInterface $submitActionsContainer;
 
   public function __construct(
     ApplicationProcessActionsDeterminerInterface $actionsDeterminer,
-    SubmitActionsContainer $submitActionsContainer
+    SubmitActionsContainerInterface $submitActionsContainer
   ) {
     $this->actionsDeterminer = $actionsDeterminer;
     $this->submitActionsContainer = $submitActionsContainer;
   }
 
-  public function createSubmitActions(FullApplicationProcessStatus $status, array $permissions): array {
-    return $this->doCreateSubmitActions($this->actionsDeterminer->getActions($status, $permissions));
+  public function createSubmitActions(
+    FullApplicationProcessStatus $status,
+    array $statusList,
+    array $permissions
+  ): array {
+    return $this->doCreateSubmitActions($this->actionsDeterminer->getActions($status, $statusList, $permissions));
   }
 
   public function createInitialSubmitActions(array $permissions): array {
     return $this->doCreateSubmitActions($this->actionsDeterminer->getInitialActions($permissions));
   }
 
-  public function isEditAllowed(FullApplicationProcessStatus $status, array $permissions): bool {
-    return $this->actionsDeterminer->isEditAllowed($status, $permissions);
+  public function isEditAllowed(FullApplicationProcessStatus $status, array $statusList, array $permissions): bool {
+    return $this->actionsDeterminer->isEditAllowed($status, $statusList, $permissions);
   }
 
   /**

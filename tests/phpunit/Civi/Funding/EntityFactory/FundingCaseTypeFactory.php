@@ -44,6 +44,8 @@ final class FundingCaseTypeFactory {
       'title' => 'Test Funding Case Type',
       'abbreviation' => 'TFCT',
       'name' => self::DEFAULT_NAME,
+      'is_summary_application' => TRUE,
+      'application_process_label' => 'Test',
       'properties' => [],
     ]);
   }

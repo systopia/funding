@@ -23,7 +23,7 @@ use Civi\Funding\FundingCase\Command\FundingCaseApproveCommand;
 
 interface FundingCaseApproveHandlerInterface {
 
-  public const TAG = 'funding.case.approve_handler';
+  public const SERVICE_TAG = 'funding.case.approve_handler';
 
   public function handle(FundingCaseApproveCommand $command): void;
 

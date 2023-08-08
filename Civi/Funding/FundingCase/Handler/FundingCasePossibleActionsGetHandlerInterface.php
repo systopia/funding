@@ -23,7 +23,7 @@ use Civi\Funding\FundingCase\Command\FundingCasePossibleActionsGetCommand;
 
 interface FundingCasePossibleActionsGetHandlerInterface {
 
-  public const TAG = 'funding.case.possible_actions_get_handler';
+  public const SERVICE_TAG = 'funding.case.possible_actions_get_handler';
 
   /**
    * @phpstan-return array<string>

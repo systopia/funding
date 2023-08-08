@@ -163,6 +163,7 @@ msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
+#: Civi/Funding/EventSubscriber/Remote/FundingCaseGetFieldsSubscriber.php
 #: managed/SavedSearchFundingPrograms.mgd.php
 msgid "Currency"
 msgstr "Währung"
@@ -262,6 +263,23 @@ msgstr "Berechtigung zum Löschen des Antrags fehlt."
 #: managed/CustomGroupFundingApplicationComment.mgd.php
 msgid "Funding Application Comment"
 msgstr "Förderantragskommentar"
+
+#: Civi/Funding/ApplicationProcess/Remote/Api4/ActionHandler/SubmitAddFormActionHandler.php
+#: Civi/Funding/EventSubscriber/Form/SubmitApplicationFormSubscriber.php
+#: Civi/Funding/FundingCase/Remote/Api4/ActionHandler/SubmitNewFormActionHandler.php
+#: Civi/Funding/FundingCase/Remote/Api4/ActionHandler/SubmitUpdateFormActionHandler.php
+#: ang/crmFunding/application/applicationEditor.directive.js
+#: ang/crmFunding/application/applicationEditor.template.html
+#: ang/crmFunding/case/fundingCase.js
+msgid "Validation failed"
+msgstr "Validierung fehlgeschlagen"
+
+#: Civi/Funding/ApplicationProcess/Remote/Api4/ActionHandler/SubmitAddFormActionHandler.php
+#: Civi/Funding/EventSubscriber/Form/SubmitApplicationFormSubscriber.php
+#: Civi/Funding/FundingCase/Remote/Api4/ActionHandler/SubmitNewFormActionHandler.php
+#: Civi/Funding/FundingCase/Remote/Api4/ActionHandler/SubmitUpdateFormActionHandler.php
+msgid "Saved"
+msgstr "Gespeichert"
 
 #: Civi/Funding/ApplicationProcess/Validator/IsReviewCalculativeValidator.php
 msgid "Permission to change calculative review result is missing."
@@ -451,17 +469,6 @@ msgstr "BIC (kann leer sein)"
 msgid "Titles of Eligible Applications"
 msgstr "Titel förderfähiger Anträge"
 
-#: Civi/Funding/EventSubscriber/Form/SubmitApplicationFormSubscriber.php
-msgid "Saved"
-msgstr "Gespeichert"
-
-#: Civi/Funding/EventSubscriber/Form/SubmitApplicationFormSubscriber.php
-#: ang/crmFunding/application/applicationEditor.directive.js
-#: ang/crmFunding/application/applicationEditor.template.html
-#: ang/crmFunding/case/fundingCase.js
-msgid "Validation failed"
-msgstr "Validierung fehlgeschlagen"
-
 #: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
 msgid "Application: view"
 msgstr "Antrag: sehen"
@@ -506,6 +513,14 @@ msgstr "Antrag: erstellen"
 #: Civi/Funding/EventSubscriber/FundingProgram/FundingProgramGetPossiblePermissionsSubscriber.php
 msgid "View"
 msgstr "Ansehen"
+
+#: Civi/Funding/EventSubscriber/Remote/FundingCaseGetFieldsSubscriber.php
+msgid "Is Summary Application"
+msgstr "Ist Sammelantrag"
+
+#: Civi/Funding/EventSubscriber/Remote/FundingCaseGetFieldsSubscriber.php
+msgid "Application Process Label"
+msgstr "Antragsprozesslabel"
 
 #: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php
 #: ang/crmFunding/application/applicationSidebar.template.html
@@ -571,8 +586,8 @@ msgid "Withdraw rework"
 msgstr "Überarbeitung zurückziehen"
 
 #: Civi/Funding/FundingCase/Handler/FundingCaseApproveHandler.php
-msgid "Permission to approve funding case is missing."
-msgstr "Berechtigung zum Bewilligen des Förderfalls fehlt."
+msgid "Approving this funding case is not allowed."
+msgstr "Diesen Förderfall zu bewilligen ist nicht erlaubt."
 
 #: Civi/Funding/FundingCase/Handler/TransferContractRecreateHandler.php
 msgid "Permission to recreate transfer contract is missing."
@@ -1057,7 +1072,7 @@ msgid "Amount Requested Eligible"
 msgstr "Förderfähiger Betrag"
 
 #: ang/crmFunding/case/fundingCase.template.html
-#: managed/OptionGroupFundingFileType.mgd.php
+#: managed/OptionValuesFileType.mgd.php
 msgid "Transfer Contract"
 msgstr "Weiterleitungsvertrag"
 
@@ -1290,18 +1305,6 @@ msgstr "Förderprogramme"
 msgid "Add Funding Program"
 msgstr "Förderprogramm hinzufügen"
 
-#: managed/OptionGroupFundingFileType.mgd.php
-msgid "Transfer Contract Template"
-msgstr "Vorlage für Weiterleitungsvertrag"
-
-#: managed/OptionGroupFundingFileType.mgd.php
-msgid "Payment Instruction"
-msgstr "Zahlungsanweisung"
-
-#: managed/OptionGroupFundingFileType.mgd.php
-msgid "Payment Instruction Template"
-msgstr "Vorlage für Zahlungsanweisung"
-
 #: managed/OptionValueActivityUsedForApplicationProcess.mgd.php
 msgid "Funding Application"
 msgstr "Förderantrag"
@@ -1311,6 +1314,18 @@ msgstr "Förderantrag"
 #: managed/SavedSearchFundingCases.mgd.php
 msgid "Funding Program"
 msgstr "Förderprogramm"
+
+#: managed/OptionValuesFileType.mgd.php
+msgid "Transfer Contract Template"
+msgstr "Vorlage für Weiterleitungsvertrag"
+
+#: managed/OptionValuesFileType.mgd.php
+msgid "Payment Instruction"
+msgstr "Zahlungsanweisung"
+
+#: managed/OptionValuesFileType.mgd.php
+msgid "Payment Instruction Template"
+msgstr "Vorlage für Zahlungsanweisung"
 
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
 msgid "Funding Applications"
@@ -1349,12 +1364,14 @@ msgid "Funding Case Type"
 msgstr "Förderfalltyp"
 
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
+#: managed/SavedSearchFundingCases.mgd.php
 #: managed/SavedSearchFundingDrawdowns.mgd.php
 #: managed/SavedSearchFundingPrograms.mgd.php
 msgid "Actions"
 msgstr "Aktionen"
 
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
+#: managed/SavedSearchFundingCases.mgd.php
 #: managed/SavedSearchFundingPrograms.mgd.php
 msgid "Edit permissions"
 msgstr "Berechtigungen bearbeiten"
@@ -1434,21 +1451,3 @@ msgstr "Förderverwaltungsaufgaben des angemeldeten Nutzers"
 #: managed/SavedSearchFundingTasksMy.mgd.php
 msgid "Subject"
 msgstr "Betreff"
-
-#~ msgid "Set Content Review to Passed"
-#~ msgstr "Fachliche Prüfung bestanden"
-
-#~ msgid "Set Content Review to Failed"
-#~ msgstr "Fachliche Prüfung nicht bestanden"
-
-#~ msgid "Set Calculative Review to Passed"
-#~ msgstr "Rechnerische Prüfung bestanden"
-
-#~ msgid "Set Calculative Review to Failed"
-#~ msgstr "Rechnerische Prüfung nicht bestanden"
-
-#~ msgid "Approve Change"
-#~ msgstr "Änderung annehmen"
-
-#~ msgid "Reject Change"
-#~ msgstr "Änderung ablehnen"

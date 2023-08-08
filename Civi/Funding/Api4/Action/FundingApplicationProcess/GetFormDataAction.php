@@ -60,8 +60,9 @@ final class GetFormDataAction extends AbstractAction {
   protected function createCommand(): ApplicationFormDataGetCommand {
     $applicationProcessBundle = $this->applicationProcessBundleLoader->get($this->getId());
     Assert::notNull($applicationProcessBundle);
+    $statusList = $this->applicationProcessBundleLoader->getStatusList($applicationProcessBundle);
 
-    return new ApplicationFormDataGetCommand($applicationProcessBundle);
+    return new ApplicationFormDataGetCommand($applicationProcessBundle, $statusList);
   }
 
 }

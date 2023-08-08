@@ -23,7 +23,7 @@ use Civi\Funding\FundingCase\Command\TransferContractRecreateCommand;
 
 interface TransferContractRecreateHandlerInterface {
 
-  public const TAG = 'funding.case.transfer_contract_recreate_handler';
+  public const SERVICE_TAG = 'funding.case.transfer_contract_recreate_handler';
 
   public function handle(TransferContractRecreateCommand $command): void;
 

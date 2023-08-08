@@ -51,6 +51,7 @@ final class ApplicationDeleteHandler implements ApplicationDeleteHandlerInterfac
     return $this->actionsDeterminer->isActionAllowed(
       'delete',
       $command->getApplicationProcess()->getFullStatus(),
+      $command->getApplicationProcessStatusList(),
       $command->getFundingCase()->getPermissions()
     );
   }

@@ -20,21 +20,40 @@ declare(strict_types = 1);
 namespace Civi\Funding\Mock\Form\FundingCaseType;
 
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
-use Civi\Funding\Form\ApplicationJsonSchemaFactoryInterface;
+use Civi\Funding\Form\NonSummaryApplicationJsonSchemaFactoryInterface;
+use Civi\Funding\Form\SummaryApplicationJsonSchemaFactoryInterface;
+use Civi\Funding\Mock\Form\FundingCaseType\Traits\TestSupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
-use Civi\RemoteTools\JsonSchema\JsonSchemaInteger;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 
-class TestJsonSchemaFactory implements ApplicationJsonSchemaFactoryInterface {
+// phpcs:disable Generic.Files.LineLength.TooLong
+class TestJsonSchemaFactory implements SummaryApplicationJsonSchemaFactoryInterface, NonSummaryApplicationJsonSchemaFactoryInterface {
+// phpcs:enable
+  use TestSupportedFundingCaseTypesTrait;
 
-  public static function getSupportedFundingCaseTypes(): array {
-    return ['TestCaseType'];
+  /**
+   * @inheritDoc
+   */
+  public function createJsonSchemaAdd(
+    FundingProgramEntity $fundingProgram,
+    FundingCaseTypeEntity $fundingCaseType,
+    FundingCaseEntity $fundingCase
+  ): JsonSchema {
+    $submitActions = ['save', 'save&new'];
+    $extraProperties = [
+      'action' => new JsonSchemaString(['enum' => $submitActions]),
+    ];
+    $extraKeywords = ['required' => array_keys($extraProperties)];
+
+    return new TestJsonSchema($extraProperties, $extraKeywords);
   }
 
   public function createJsonSchemaExisting(
-    ApplicationProcessEntityBundle $applicationProcessBundle
+    ApplicationProcessEntityBundle $applicationProcessBundle,
+    array $applicationProcessStatusList
   ): JsonSchema {
     if ($this->hasReviewPermission($applicationProcessBundle->getFundingCase()->getPermissions())) {
       $submitActions = ['update', 'approve'];
@@ -43,10 +62,6 @@ class TestJsonSchemaFactory implements ApplicationJsonSchemaFactoryInterface {
       $submitActions = ['save', 'withdraw-change'];
     }
     $extraProperties = [
-      'applicationProcessId' => new JsonSchemaInteger([
-        'const' => $applicationProcessBundle->getApplicationProcess()->getId(),
-        'readOnly' => TRUE,
-      ]),
       'action' => new JsonSchemaString(['enum' => $submitActions]),
     ];
     $extraKeywords = ['required' => array_keys($extraProperties)];
@@ -61,8 +76,6 @@ class TestJsonSchemaFactory implements ApplicationJsonSchemaFactoryInterface {
   ): JsonSchema {
     $submitActions = ['save'];
     $extraProperties = [
-      'fundingCaseTypeId' => new JsonSchemaInteger(['const' => $fundingCaseType->getId(), 'readOnly' => TRUE]),
-      'fundingProgramId' => new JsonSchemaInteger(['const' => $fundingProgram->getId(), 'readOnly' => TRUE]),
       'action' => new JsonSchemaString(['enum' => $submitActions]),
     ];
     $extraKeywords = ['required' => array_keys($extraProperties)];

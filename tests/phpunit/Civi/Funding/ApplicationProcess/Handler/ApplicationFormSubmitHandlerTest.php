@@ -30,7 +30,7 @@ use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\Form\ApplicationValidationResult;
-use Civi\Funding\Form\ApplicationValidatorInterface;
+use Civi\Funding\Form\NonSummaryApplicationValidatorInterface;
 use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -66,7 +66,7 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
   private MockObject $statusDeterminerMock;
 
   /**
-   * @var \Civi\Funding\Form\ApplicationValidatorInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\Form\NonSummaryApplicationValidatorInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $validatorMock;
 
@@ -79,7 +79,7 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
     $this->applicationSnapshotRestorerMock = $this->createMock(ApplicationSnapshotRestorerInterface::class);
     $this->commentStoreHandlerMock = $this->createMock(ApplicationFormCommentPersistHandlerInterface::class);
     $this->statusDeterminerMock = $this->createMock(ApplicationProcessStatusDeterminerInterface::class);
-    $this->validatorMock = $this->createMock(ApplicationValidatorInterface::class);
+    $this->validatorMock = $this->createMock(NonSummaryApplicationValidatorInterface::class);
     $this->handler = new ApplicationFormSubmitHandler(
       $this->applicationProcessManagerMock,
       $this->applicationSnapshotRestorerMock,
@@ -96,6 +96,7 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
     $validationResult = ApplicationValidationResult::newValid($validatedData, FALSE);
     $this->validatorMock->method('validateExisting')->with(
       $command->getApplicationProcessBundle(),
+      $command->getApplicationProcessStatusList(),
       $command->getData()
     )->willReturn($validationResult);
 
@@ -135,6 +136,7 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
     $validationResult = ApplicationValidationResult::newValid($validatedData, FALSE);
     $this->validatorMock->method('validateExisting')->with(
       $command->getApplicationProcessBundle(),
+      $command->getApplicationProcessStatusList(),
       $command->getData()
     )->willReturn($validationResult);
 
@@ -164,6 +166,7 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
     $validationResult = ApplicationValidationResult::newValid($validatedData, FALSE);
     $this->validatorMock->method('validateExisting')->with(
       $command->getApplicationProcessBundle(),
+      $command->getApplicationProcessStatusList(),
       $command->getData()
     )->willReturn($validationResult);
 
@@ -182,6 +185,7 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
     $validationResult = ApplicationValidationResult::newValid($validatedData, TRUE);
     $this->validatorMock->method('validateExisting')->with(
       $command->getApplicationProcessBundle(),
+      $command->getApplicationProcessStatusList(),
       $command->getData()
     )->willReturn($validationResult);
 
@@ -216,6 +220,7 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
     $validationResult = ApplicationValidationResult::newValid($validatedData, FALSE);
     $this->validatorMock->method('validateExisting')->with(
       $command->getApplicationProcessBundle(),
+      $command->getApplicationProcessStatusList(),
       $command->getData()
     )->willReturn($validationResult);
 
@@ -238,6 +243,7 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
     $validationResult = ApplicationValidationResult::newInvalid($errorMessages, $validatedData);
     $this->validatorMock->method('validateExisting')->with(
       $command->getApplicationProcessBundle(),
+      $command->getApplicationProcessStatusList(),
       $command->getData()
     )->willReturn($validationResult);
 
@@ -256,6 +262,7 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
     return new ApplicationFormSubmitCommand(
       1,
       ApplicationProcessBundleFactory::createApplicationProcessBundle(),
+      [23 => new FullApplicationProcessStatus('status', NULL, NULL)],
       ['test' => 'foo'],
     );
   }

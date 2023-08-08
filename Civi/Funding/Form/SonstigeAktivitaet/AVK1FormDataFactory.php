@@ -25,18 +25,17 @@ use Civi\Funding\Form\ApplicationFormDataFactoryInterface;
 use Civi\Funding\SonstigeAktivitaet\AVK1FinanzierungFactory;
 use Civi\Funding\SonstigeAktivitaet\AVK1KostenFactory;
 use Civi\Funding\SonstigeAktivitaet\AVK1ProjektunterlagenFactory;
+use Civi\Funding\SonstigeAktivitaet\Traits\AVK1SupportedFundingCaseTypesTrait;
 
 final class AVK1FormDataFactory implements ApplicationFormDataFactoryInterface {
+
+  use AVK1SupportedFundingCaseTypesTrait;
 
   private AVK1FinanzierungFactory $avk1FinanzierungFactory;
 
   private AVK1KostenFactory $avk1KostenFactory;
 
   private AVK1ProjektunterlagenFactory $avk1ProjektunterlagenFactory;
-
-  public static function getSupportedFundingCaseTypes(): array {
-    return ['AVK1SonstigeAktivitaet'];
-  }
 
   public function __construct(
     AVK1FinanzierungFactory $avk1FinanzierungFactory,

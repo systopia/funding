@@ -20,20 +20,20 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewCreateCommand;
-use Civi\Funding\Form\ApplicationJsonSchemaFactoryInterface;
-use Civi\Funding\Form\ApplicationUiSchemaFactoryInterface;
+use Civi\Funding\Form\NonSummaryApplicationJsonSchemaFactoryInterface;
+use Civi\Funding\Form\NonSummaryApplicationUiSchemaFactoryInterface;
 use Civi\RemoteTools\Form\RemoteForm;
 use Civi\RemoteTools\Form\RemoteFormInterface;
 
 final class ApplicationFormNewCreateHandler implements ApplicationFormNewCreateHandlerInterface {
 
-  private ApplicationJsonSchemaFactoryInterface $jsonSchemaFactory;
+  private NonSummaryApplicationJsonSchemaFactoryInterface $jsonSchemaFactory;
 
-  private ApplicationUiSchemaFactoryInterface $uiSchemaFactory;
+  private NonSummaryApplicationUiSchemaFactoryInterface $uiSchemaFactory;
 
   public function __construct(
-    ApplicationJsonSchemaFactoryInterface $jsonSchemaFactory,
-    ApplicationUiSchemaFactoryInterface $uiSchemaFactory
+    NonSummaryApplicationJsonSchemaFactoryInterface $jsonSchemaFactory,
+    NonSummaryApplicationUiSchemaFactoryInterface $uiSchemaFactory
   ) {
     $this->jsonSchemaFactory = $jsonSchemaFactory;
     $this->uiSchemaFactory = $uiSchemaFactory;
@@ -50,12 +50,7 @@ final class ApplicationFormNewCreateHandler implements ApplicationFormNewCreateH
       $command->getFundingCaseType(),
     );
 
-    $data = [
-      'fundingCaseTypeId' => $command->getFundingCaseType()->getId(),
-      'fundingProgramId' => $command->getFundingProgram()->getId(),
-    ];
-
-    return new RemoteForm($jsonSchema, $uiSchema, $data);
+    return new RemoteForm($jsonSchema, $uiSchema);
   }
 
 }

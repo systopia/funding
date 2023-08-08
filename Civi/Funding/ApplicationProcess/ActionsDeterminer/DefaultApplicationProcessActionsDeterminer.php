@@ -20,8 +20,11 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
 use Civi\Funding\Entity\FullApplicationProcessStatus;
+use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
 
 final class DefaultApplicationProcessActionsDeterminer extends ApplicationProcessActionsDeterminer {
+
+  use HasReviewPermissionTrait;
 
   private const STATUS_PERMISSION_ACTIONS_MAP = [
     NULL => [
@@ -60,8 +63,8 @@ final class DefaultApplicationProcessActionsDeterminer extends ApplicationProces
     parent::__construct(self::STATUS_PERMISSION_ACTIONS_MAP);
   }
 
-  public function getActions(FullApplicationProcessStatus $status, array $permissions): array {
-    $actions = parent::getActions($status, $permissions);
+  public function getActions(FullApplicationProcessStatus $status, array $statusList, array $permissions): array {
+    $actions = parent::getActions($status, $statusList, $permissions);
     if ('review' === $status->getStatus() && $this->hasReviewPermission($permissions)) {
       if ($this->hasReviewCalculativePermission($permissions)) {
         if (TRUE !== $status->getIsReviewCalculative()) {
@@ -85,28 +88,6 @@ final class DefaultApplicationProcessActionsDeterminer extends ApplicationProces
     }
 
     return $actions;
-  }
-
-  /**
-   * @phpstan-param array<string> $permissions
-   */
-  private function hasReviewPermission(array $permissions): bool {
-    return in_array('review_content', $permissions, TRUE)
-      || in_array('review_calculative', $permissions, TRUE);
-  }
-
-  /**
-   * @phpstan-param array<string> $permissions
-   */
-  private function hasReviewCalculativePermission(array $permissions): bool {
-    return in_array('review_calculative', $permissions, TRUE);
-  }
-
-  /**
-   * @phpstan-param array<string> $permissions
-   */
-  private function hasReviewContentPermission(array $permissions): bool {
-    return in_array('review_content', $permissions, TRUE);
   }
 
 }
