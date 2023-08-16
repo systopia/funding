@@ -47,7 +47,7 @@ trait AssertFormTrait {
         sprintf('Expected instanceof \\stdClass at path "%s"', $path));
       foreach ($jsonSchema->properties as $key => $childSchema) {
         $subPath = $path . '/' . $key;
-        Assert::assertObjectHasAttribute($key, $data, sprintf('No value at path "%s"', $subPath));
+        Assert::assertTrue(property_exists($data, $key), sprintf('No value at path "%s"', $subPath));
         self::assertAllPropertiesSet($childSchema, $data->{$key}, $subPath);
       }
     }
