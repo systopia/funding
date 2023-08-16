@@ -27,24 +27,18 @@ use Civi\Funding\Api4\Action\Remote\Traits\RemoteFundingActionContactIdRequiredT
 use Civi\Funding\Event\Remote\FundingDAOGetEvent;
 use Civi\Funding\Event\Remote\FundingEvents;
 use Civi\RemoteTools\Api4\Action\Traits\EventActionTrait;
+use Civi\RemoteTools\Api4\Action\Traits\IdParameterTrait;
 
 /**
- * @method void setId(int $id)
  * @method void setType(string $type)
  */
 class GetRelatedAction extends AbstractAction implements RemoteFundingActionInterface {
 
   use EventActionTrait;
 
-  use RemoteFundingActionContactIdRequiredTrait;
+  use IdParameterTrait;
 
-  /**
-   * Must be initialized because it is directly accessed in AbstractAction.
-   *
-   * @var int|null
-   * @required
-   */
-  protected ?int $id = NULL;
+  use RemoteFundingActionContactIdRequiredTrait;
 
   /**
    * Must be initialized because it is directly accessed in AbstractAction.
@@ -86,7 +80,7 @@ class GetRelatedAction extends AbstractAction implements RemoteFundingActionInte
     $event->addJoin('FundingProgramRelationship AS relationship', 'INNER', NULL,
       ['id', '=', 'relationship.id_b'],
       ['relationship.type', '=', "'" . $this->type . "'"]);
-    $event->addWhere('relationship.id_a', '=', $this->id);
+    $event->addWhere('relationship.id_a', '=', $this->getId());
 
     return $event;
   }

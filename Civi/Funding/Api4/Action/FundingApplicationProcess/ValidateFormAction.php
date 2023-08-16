@@ -25,26 +25,15 @@ use Civi\Api4\Generic\Result;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterface;
+use Civi\RemoteTools\Api4\Action\Traits\DataParameterTrait;
+use Civi\RemoteTools\Api4\Action\Traits\IdParameterTrait;
 use Webmozart\Assert\Assert;
 
-/**
- * @method $this setData(array $data)
- * @method $this setId(int $id)
- */
 final class ValidateFormAction extends AbstractAction {
 
-  /**
-   * @var array
-   * @phpstan-var array<string, mixed>
-   * @required
-   */
-  protected ?array $data = NULL;
+  use DataParameterTrait;
 
-  /**
-   * @var int
-   * @required
-   */
-  protected ?int $id = NULL;
+  use IdParameterTrait;
 
   private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
 
@@ -78,12 +67,10 @@ final class ValidateFormAction extends AbstractAction {
    * @throws \CRM_Core_Exception
    */
   protected function createCommand(): ApplicationFormValidateCommand {
-    Assert::notNull($this->id);
-    Assert::notNull($this->data);
-    $applicationProcessBundle = $this->applicationProcessBundleLoader->get($this->id);
+    $applicationProcessBundle = $this->applicationProcessBundleLoader->get($this->getId());
     Assert::notNull($applicationProcessBundle);
 
-    return new ApplicationFormValidateCommand($applicationProcessBundle, $this->data);
+    return new ApplicationFormValidateCommand($applicationProcessBundle, $this->getData());
   }
 
 }

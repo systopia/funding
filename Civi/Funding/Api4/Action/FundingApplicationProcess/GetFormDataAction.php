@@ -25,18 +25,12 @@ use Civi\Api4\Generic\Result;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormDataGetCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandlerInterface;
+use Civi\RemoteTools\Api4\Action\Traits\IdParameterTrait;
 use Webmozart\Assert\Assert;
 
-/**
- * @method $this setId(int $id)
- */
 final class GetFormDataAction extends AbstractAction {
 
-  /**
-   * @var int
-   * @required
-   */
-  protected ?int $id = NULL;
+  use IdParameterTrait;
 
   private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
 
@@ -64,8 +58,7 @@ final class GetFormDataAction extends AbstractAction {
    * @throws \CRM_Core_Exception
    */
   protected function createCommand(): ApplicationFormDataGetCommand {
-    Assert::notNull($this->id);
-    $applicationProcessBundle = $this->applicationProcessBundleLoader->get($this->id);
+    $applicationProcessBundle = $this->applicationProcessBundleLoader->get($this->getId());
     Assert::notNull($applicationProcessBundle);
 
     return new ApplicationFormDataGetCommand($applicationProcessBundle);

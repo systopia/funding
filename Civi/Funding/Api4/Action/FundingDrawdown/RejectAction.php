@@ -26,19 +26,13 @@ use Civi\Api4\Generic\Result;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\PayoutProcess\DrawdownManager;
 use Civi\Funding\PayoutProcess\PayoutProcessManager;
+use Civi\RemoteTools\Api4\Action\Traits\IdParameterTrait;
 use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
 
-/**
- * @method $this setId(int $int)
- */
 class RejectAction extends AbstractAction {
 
-  /**
-   * @var int
-   * @required
-   */
-  protected ?int $id = NULL;
+  use IdParameterTrait;
 
   private DrawdownManager $drawdownManager;
 
@@ -61,9 +55,8 @@ class RejectAction extends AbstractAction {
    * @inheritDoc
    */
   public function _run(Result $result): void {
-    Assert::notNull($this->id);
-    $drawdown = $this->drawdownManager->get($this->id);
-    Assert::notNull($drawdown, sprintf('Drawdown with ID "%d" not found', $this->id));
+    $drawdown = $this->drawdownManager->get($this->getId());
+    Assert::notNull($drawdown, sprintf('Drawdown with ID "%d" not found', $this->getId()));
     $payoutProcess = $this->payoutProcessManager->get($drawdown->getPayoutProcessId());
     Assert::notNull($payoutProcess, sprintf('Payout process with ID "%d" not found', $drawdown->getPayoutProcessId()));
     $fundingCase = $this->fundingCaseManager->get($payoutProcess->getFundingCaseId());
