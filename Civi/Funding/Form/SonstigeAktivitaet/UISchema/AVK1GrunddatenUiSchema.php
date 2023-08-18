@@ -51,10 +51,12 @@ final class AVK1GrunddatenUiSchema extends JsonFormsCloseableGroup {
         new JsonFormsControl('#/properties/teilnehmer/properties/gesamt', 'Gesamtanzahl der Teilnehmer*innen'),
         new JsonFormsControl('#/properties/teilnehmer/properties/weiblich', 'davon weiblich'),
         new JsonFormsControl('#/properties/teilnehmer/properties/divers', 'davon divers'),
+        new JsonFormsControl('#/properties/teilnehmer/properties/unter27', 'davon U27'),
         new JsonFormsControl(
-          '#/properties/teilnehmer/properties/inJugendarbeitTaetig',
-          'davon in der Jugendarbeit tätig'
+          '#/properties/teilnehmer/properties/inJugendhilfeTaetig',
+          'davon in der Kinder- und Jugendhilfe (Multiplikator*innen-Seminare) tätig'
         ),
+        new JsonFormsControl('#/properties/teilnehmer/properties/referenten', 'davon Referent*innen'),
       ], 'Wie viele Teilnehmer*innen werden für die Veranstaltung erwartet?'),
     ];
 

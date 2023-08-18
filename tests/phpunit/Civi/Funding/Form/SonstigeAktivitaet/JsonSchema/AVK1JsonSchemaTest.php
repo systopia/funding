@@ -70,10 +70,12 @@ class AVK1JsonSchemaTest extends TestCase {
         ],
       ],
       'teilnehmer' => (object) [
-        'gesamt' => 4,
-        'weiblich' => 3,
-        'divers' => 2,
-        'inJugendarbeitTaetig' => 1,
+        'gesamt' => 5,
+        'weiblich' => 4,
+        'divers' => 3,
+        'unter27' => 2,
+        'inJugendhilfeTaetig' => 1,
+        'referenten' => 0,
       ],
       'kosten' => (object) [
         'unterkunftUndVerpflegung' => 222.22,

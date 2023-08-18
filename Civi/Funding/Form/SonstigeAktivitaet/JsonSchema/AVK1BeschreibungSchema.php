@@ -38,10 +38,13 @@ final class AVK1BeschreibungSchema extends JsonSchemaObject {
           'oneOf' => JsonSchemaUtil::buildTitledOneOf([
             'persoenlichkeitsbildung' => 'Persönlichkeitsbildung',
             'toleranzRespektDemokratie' => 'Förderung von Toleranz, Respekt und Demokratie',
-            'diskriminierungSozialeUngerechtigkeit' => 'Abbau von Diskriminierungen und sozialer Ungerechtigkeit',
-            'beteiligungJungerMenschen' => 'Stärkung der Beteiligung junger Menschen',
-            'migrantisierteMenschen' => 'Verbesserung der Bedingungen für migrantisierte Menschen',
-            'gefaehrdungMissbrauchGewalt' => 'Schutz vor Gefährdungen, Missbrauch und Gewalt',
+            'chancengleichheit' => 'Chancengleichheit, Abbau von Diskriminierungen und sozialer Ungerechtigkeit',
+            'jungeMenschen' => 'Stärkung der Beteiligung junger Menschen',
+            'migrantisierteMenschen'
+            => 'Stärkung der Teilhabe, Verbesserung der Bedingungen für migrantisierte Menschen',
+            'gefaehrdungMissbrauchGewalt'
+            => 'Schutz vor Gefährdungen, Missbrauch und Gewalt und Befähigung zum kritischen Umgang mit Risiken',
+            'jugendpolitischeAnliegen' => 'Stärkung jugendpolitischer Anliegen auf nationaler und europäischer Ebene',
             'internationaleBegegnungen' => 'Stärkung europäischer und internationaler Begegnungen und Erfahrungen',
             'qualitaetsentwicklung' => 'Qualitätsentwicklung / Teamendenfortbildung',
             'kinderJugendhilfe' => 'Weiterentwicklung der Kinder- und Jugendhilfe',

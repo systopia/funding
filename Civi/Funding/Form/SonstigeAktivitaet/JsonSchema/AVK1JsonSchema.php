@@ -82,7 +82,9 @@ final class AVK1JsonSchema extends JsonSchemaObject {
         'gesamt' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 1]),
         'weiblich' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0]),
         'divers' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0]),
-        'inJugendarbeitTaetig' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0]),
+        'unter27' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0]),
+        'inJugendhilfeTaetig' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0]),
+        'referenten' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0]),
       ]),
       // Abschnitt I
       'kosten' => new AVK1KostenSchema(),
