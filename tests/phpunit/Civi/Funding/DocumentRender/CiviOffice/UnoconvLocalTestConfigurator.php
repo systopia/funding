@@ -39,7 +39,6 @@ final class UnoconvLocalTestConfigurator {
       'type' => 'unoconv-local',
       \CRM_Civioffice_DocumentRendererType_LocalUnoconv::UNOCONV_BINARY_PATH_SETTINGS_KEY => self::getUnoconv(),
       \CRM_Civioffice_DocumentRendererType_LocalUnoconv::UNOCONV_LOCK_FILE_PATH_SETTINGS_KEY => $unoconvLockFile,
-      \CRM_Civioffice_DocumentRendererType_LocalUnoconv::TEMP_FOLDER_PATH_SETTINGS_KEY => $tmpDir,
       \CRM_Civioffice_DocumentRendererType_LocalUnoconv::PHPWORD_TOKENS_SETTINGS_KEY => TRUE,
     ]);
     touch($unoconvLockFile);
