@@ -28,21 +28,17 @@ use Civi\Funding\FundingCase\Handler\FundingCaseApproveHandlerInterface;
 use Civi\Funding\FundingCase\TransferContractRouter;
 use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\Funding\FundingProgram\FundingProgramManager;
+use Civi\RemoteTools\Api4\Action\Traits\IdParameterTrait;
 use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
 
 /**
  * @method $this setAmount(float $amount)
- * @method $this setId(int $id)
  * @method $this setTitle(string $title)
  */
 class ApproveAction extends AbstractAction {
 
-  /**
-   * @var int
-   * @reuired
-   */
-  protected ?int $id = NULL;
+  use IdParameterTrait;
 
   /**
    * @var string
@@ -86,11 +82,10 @@ class ApproveAction extends AbstractAction {
    * @inheritDoc
    */
   public function _run(Result $result): void {
-    Assert::notNull($this->id);
     Assert::notNull($this->title);
     Assert::greaterThan($this->amount, 0);
-    $fundingCase = $this->fundingCaseManager->get($this->id);
-    Assert::notNull($fundingCase, E::ts('Funding case with ID "%1" not found', [1 => $this->id]));
+    $fundingCase = $this->fundingCaseManager->get($this->getId());
+    Assert::notNull($fundingCase, E::ts('Funding case with ID "%1" not found', [1 => $this->getId()]));
     $fundingCaseType = $this->fundingCaseTypeManager->get($fundingCase->getFundingCaseTypeId());
     Assert::notNull($fundingCaseType);
     $fundingProgram = $this->fundingProgramManager->get($fundingCase->getFundingProgramId());

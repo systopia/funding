@@ -23,9 +23,9 @@ use Civi\Api4\FundingProgram;
 use Civi\Api4\Generic\DAOGetAction;
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Event\FundingProgram\GetPermissionsEvent;
-use Civi\Funding\Session\FundingSessionInterface;
 use Civi\RemoteTools\Api4\Action\Traits\PermissionsGetActionTrait;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 
 final class GetAction extends DAOGetAction {
 
@@ -35,18 +35,18 @@ final class GetAction extends DAOGetAction {
 
   private PossiblePermissionsLoaderInterface $_possiblePermissionsLoader;
 
-  private FundingSessionInterface $session;
+  private RequestContextInterface $requestContext;
 
   private bool $allowEmptyRecordPermissions = FALSE;
 
   public function __construct(CiviEventDispatcherInterface $eventDispatcher,
     PossiblePermissionsLoaderInterface $possiblePermissionsLoader,
-    FundingSessionInterface $session
+    RequestContextInterface $requestContext
   ) {
     parent::__construct(FundingProgram::_getEntityName(), 'get');
     $this->_eventDispatcher = $eventDispatcher;
     $this->_possiblePermissionsLoader = $possiblePermissionsLoader;
-    $this->session = $session;
+    $this->requestContext = $requestContext;
   }
 
   public function isAllowEmptyRecordPermissions(): bool {
@@ -71,7 +71,7 @@ final class GetAction extends DAOGetAction {
    * @return array<string>
    */
   protected function getRecordPermissions(array $record): array {
-    $permissionsGetEvent = new GetPermissionsEvent($record['id'], $this->session->getContactId());
+    $permissionsGetEvent = new GetPermissionsEvent($record['id'], $this->requestContext->getContactId());
     $this->_eventDispatcher->dispatch(GetPermissionsEvent::class, $permissionsGetEvent);
 
     return $permissionsGetEvent->getPermissions();

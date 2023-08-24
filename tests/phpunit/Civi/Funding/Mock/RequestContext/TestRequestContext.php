@@ -17,11 +17,17 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Mock\Session;
+namespace Civi\Funding\Mock\RequestContext;
 
-use Civi\Funding\Session\FundingSessionInterface;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
+use Webmozart\Assert\Assert;
 
-final class TestFundingSession implements FundingSessionInterface {
+final class TestRequestContext implements RequestContextInterface {
+
+  /**
+   * @phpstan-var array<string, mixed>
+   */
+  private array $data = [];
 
   private int $contactId;
 
@@ -43,14 +49,23 @@ final class TestFundingSession implements FundingSessionInterface {
   /**
    * @inheritDoc
    */
-  public function getContactId(): int {
-    return $this->contactId;
+  public function get(string $key, $default = NULL) {
+    return $this->data[$key] ?? $default;
   }
 
   /**
    * @inheritDoc
    */
-  public function setResolvedContactId(int $contactId): void {
+  public function set(string $key, $value): void {
+    $this->data[$key] = $value;
+  }
+
+  public function getContactId(): int {
+    return $this->contactId;
+  }
+
+  public function setResolvedContactId(?int $contactId): void {
+    Assert::notNull($contactId);
     $this->contactId = $contactId;
   }
 
@@ -60,6 +75,23 @@ final class TestFundingSession implements FundingSessionInterface {
 
   public function setRemote(bool $remote): void {
     $this->remote = $remote;
+  }
+
+  public function getLoggedInContactId(): int {
+    return $this->contactId;
+  }
+
+  public function getRemoteContactId(): string {
+    return (string) $this->contactId;
+  }
+
+  public function setRemoteContactId(?string $remoteContactId): void {
+    Assert::integerish($remoteContactId);
+    $this->contactId = (int) $remoteContactId;
+  }
+
+  public function getResolvedContactId(): int {
+    return $this->contactId;
   }
 
 }

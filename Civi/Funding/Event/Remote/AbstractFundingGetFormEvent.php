@@ -19,8 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Event\Remote;
 
-use Civi\RemoteTools\Form\JsonForms\JsonFormsElement;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonForms\JsonFormsElement;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 
 abstract class AbstractFundingGetFormEvent extends AbstractFundingRequestEvent {
 

@@ -19,9 +19,9 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Util;
 
-use Civi\RemoteTools\Form\JsonForms\JsonFormsControl;
-use Civi\RemoteTools\Form\JsonForms\JsonFormsElement;
-use Civi\RemoteTools\Form\JsonForms\JsonFormsLayout;
+use Civi\RemoteTools\JsonForms\JsonFormsControl;
+use Civi\RemoteTools\JsonForms\JsonFormsElement;
+use Civi\RemoteTools\JsonForms\JsonFormsLayout;
 
 final class FormTestUtil {
 

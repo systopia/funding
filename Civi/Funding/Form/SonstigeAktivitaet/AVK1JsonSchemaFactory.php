@@ -28,10 +28,10 @@ use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\ApplicationJsonSchemaFactoryInterface;
 use Civi\Funding\Form\JsonSchema\JsonSchemaComment;
 use Civi\Funding\Form\SonstigeAktivitaet\JsonSchema\AVK1JsonSchema;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchemaInteger;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchemaNull;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchemaString;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonSchema\JsonSchemaInteger;
+use Civi\RemoteTools\JsonSchema\JsonSchemaNull;
+use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 
 class AVK1JsonSchemaFactory implements ApplicationJsonSchemaFactoryInterface {
 

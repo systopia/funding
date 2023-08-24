@@ -23,38 +23,31 @@ use Civi\Api4\FundingDrawdown;
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
 use Civi\Funding\PayoutProcess\DrawdownManager;
-use Civi\Funding\Session\FundingSessionInterface;
+use Civi\RemoteTools\Api4\Action\Traits\IdParameterTrait;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Webmozart\Assert\Assert;
 
-/**
- * @method $this setId(int $int)
- */
 class AcceptAction extends AbstractAction {
 
-  /**
-   * @var int
-   * @required
-   */
-  protected ?int $id = NULL;
+  use IdParameterTrait;
 
   private DrawdownManager $drawdownManager;
 
-  private FundingSessionInterface $fundingSession;
+  private RequestContextInterface $requestContext;
 
-  public function __construct(DrawdownManager $drawdownManager, FundingSessionInterface $fundingSession) {
+  public function __construct(DrawdownManager $drawdownManager, RequestContextInterface $requestContext) {
     parent::__construct(FundingDrawdown::_getEntityName(), 'accept');
     $this->drawdownManager = $drawdownManager;
-    $this->fundingSession = $fundingSession;
+    $this->requestContext = $requestContext;
   }
 
   /**
    * @inheritDoc
    */
   public function _run(Result $result): void {
-    Assert::notNull($this->id);
-    $drawdown = $this->drawdownManager->get($this->id);
-    Assert::notNull($drawdown, sprintf('Drawdown with ID "%d" not found', $this->id));
-    $this->drawdownManager->accept($drawdown, $this->fundingSession->getContactId());
+    $drawdown = $this->drawdownManager->get($this->getId());
+    Assert::notNull($drawdown, sprintf('Drawdown with ID "%d" not found', $this->getId()));
+    $this->drawdownManager->accept($drawdown, $this->requestContext->getContactId());
 
     $result->exchangeArray([$drawdown->toArray()]);
   }

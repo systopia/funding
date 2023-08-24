@@ -23,7 +23,7 @@ use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\ApplicationUiSchemaFactoryInterface;
-use Civi\RemoteTools\Form\JsonForms\JsonFormsElement;
+use Civi\RemoteTools\JsonForms\JsonFormsElement;
 
 final class TestUiSchemaFactory implements ApplicationUiSchemaFactoryInterface {
 

@@ -52,6 +52,7 @@ $loader->register();
 
 // For tests without Civi environment.
 addExtensionToClassLoader('external-file');
+addExtensionToClassLoader('de.systopia.remotetools');
 
 $comparatorFactory = Factory::getInstance();
 $comparatorFactory->register(new ApiActionComparator());

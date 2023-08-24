@@ -27,27 +27,16 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationFormDataGetCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
-use Civi\Funding\Session\FundingSessionInterface;
+use Civi\RemoteTools\Api4\Action\Traits\DataParameterTrait;
+use Civi\RemoteTools\Api4\Action\Traits\IdParameterTrait;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Webmozart\Assert\Assert;
 
-/**
- * @method $this setData(array $data)
- * @method $this setId(int $id)
- */
 final class SubmitFormAction extends AbstractAction {
 
-  /**
-   * @var array
-   * @phpstan-var array<string, mixed>
-   * @required
-   */
-  protected ?array $data = NULL;
+  use DataParameterTrait;
 
-  /**
-   * @var int
-   * @required
-   */
-  protected ?int $id = NULL;
+  use IdParameterTrait;
 
   private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
 
@@ -55,19 +44,19 @@ final class SubmitFormAction extends AbstractAction {
 
   private ApplicationFormSubmitHandlerInterface $submitFormHandler;
 
-  private FundingSessionInterface $session;
+  private RequestContextInterface $requestContext;
 
   public function __construct(
     ApplicationProcessBundleLoader $applicationProcessBundleLoader,
     ApplicationFormDataGetHandlerInterface $formDataGetHandler,
     ApplicationFormSubmitHandlerInterface $submitFormHandler,
-    FundingSessionInterface $session
+    RequestContextInterface $requestContext
   ) {
     parent::__construct(FundingApplicationProcess::_getEntityName(), 'submitForm');
     $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
     $this->formDataGetHandler = $formDataGetHandler;
     $this->submitFormHandler = $submitFormHandler;
-    $this->session = $session;
+    $this->requestContext = $requestContext;
   }
 
   /**
@@ -95,15 +84,13 @@ final class SubmitFormAction extends AbstractAction {
    * @throws \CRM_Core_Exception
    */
   protected function createCommand(): ApplicationFormSubmitCommand {
-    Assert::notNull($this->id);
-    Assert::notNull($this->data);
-    $applicationProcessBundle = $this->applicationProcessBundleLoader->get($this->id);
+    $applicationProcessBundle = $this->applicationProcessBundleLoader->get($this->getId());
     Assert::notNull($applicationProcessBundle);
 
     return new ApplicationFormSubmitCommand(
-      $this->session->getContactId(),
+      $this->requestContext->getContactId(),
       $applicationProcessBundle,
-      $this->data
+      $this->getData()
     );
   }
 

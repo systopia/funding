@@ -18,7 +18,7 @@
 declare(strict_types = 1);
 
 use Civi\Funding\Controller\PageControllerInterface;
-use Civi\Funding\Session\FundingSessionInterface;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
@@ -45,7 +45,7 @@ abstract class CRM_Funding_Page_AbstractPage extends \CRM_Core_Page {
         ),
         [
           'exception' => $e,
-          'sessionContactId' => $this->getSessionContactId(),
+          'requestContactId' => $this->getRequestContactId(),
         ],
       );
 
@@ -66,15 +66,15 @@ abstract class CRM_Funding_Page_AbstractPage extends \CRM_Core_Page {
     return $this->getController()->handle($request);
   }
 
-  private function getSessionContactId(): ?int {
-    /** @var \Civi\Funding\Session\FundingSessionInterface $session */
-    $session = \Civi::service(FundingSessionInterface::class);
+  private function getRequestContactId(): ?int {
+    /** @var \Civi\RemoteTools\RequestContext\RequestContextInterface $requestContext */
+    $requestContext = \Civi::service(RequestContextInterface::class);
 
     try {
-      return $session->getContactId();
+      return $requestContext->getContactId();
     }
     catch (\Exception $e) {
-      if ($session->isRemote()) {
+      if ($requestContext->isRemote()) {
         // Resolving remote contact ID failed.
         return NULL;
       }

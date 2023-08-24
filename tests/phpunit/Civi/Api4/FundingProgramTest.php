@@ -27,7 +27,7 @@ use Civi\Api4\Traits\FundingProgramTestFixturesTrait;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Api4\Permissions;
 use Civi\Funding\Fixtures\ContactFixture;
-use Civi\Funding\Util\SessionTestUtil;
+use Civi\Funding\Util\RequestTestUtil;
 
 /**
  * @group headless
@@ -66,7 +66,7 @@ final class FundingProgramTest extends AbstractFundingHeadlessTestCase {
     $this->setUserPermissions([Permissions::ACCESS_CIVICRM, Permissions::ACCESS_FUNDING]);
 
     // Contact has a permitted type
-    SessionTestUtil::mockInternalRequestSession($this->permittedOrganizationId);
+    RequestTestUtil::mockInternalRequest($this->permittedOrganizationId);
     $permittedOrganizationResult = FundingProgram::get()
       ->execute();
     static::assertSame(1, $permittedOrganizationResult->rowCount);
@@ -76,7 +76,7 @@ final class FundingProgramTest extends AbstractFundingHeadlessTestCase {
     static::assertArrayNotHasKey('PERM_application_foo', $permittedOrganizationResult->first());
 
     // Contact has a relation that has a permitted type with a contact that has a permitted type
-    SessionTestUtil::mockInternalRequestSession($this->permittedIndividualId);
+    RequestTestUtil::mockInternalRequest($this->permittedIndividualId);
     $permittedIndividualResult = FundingProgram::get()
       ->execute();
     static::assertSame(1, $permittedIndividualResult->rowCount);
@@ -86,20 +86,20 @@ final class FundingProgramTest extends AbstractFundingHeadlessTestCase {
     static::assertArrayNotHasKey('PERM_application_a', $permittedOrganizationResult->first());
 
     // Contact has a relation that has a not permitted type with a contact that has a permitted type
-    SessionTestUtil::mockInternalRequestSession($this->notPermittedContactId);
+    RequestTestUtil::mockInternalRequest($this->notPermittedContactId);
     $notPermittedResult = FundingProgram::get()
       ->execute();
     static::assertSame(0, $notPermittedResult->rowCount);
 
     // Contact has a permitted type, but the relation has no permissions set
-    SessionTestUtil::mockInternalRequestSession($this->permittedOrganizationIdNoPermissions);
+    RequestTestUtil::mockInternalRequest($this->permittedOrganizationIdNoPermissions);
     $notPermittedResult = FundingProgram::get()
       ->execute();
     static::assertSame(0, $notPermittedResult->rowCount);
 
     // Unrelated contact has access, if empty permissions are allowed.
     $unrelatedContact = ContactFixture::addIndividual();
-    SessionTestUtil::mockInternalRequestSession($unrelatedContact['id']);
+    RequestTestUtil::mockInternalRequest($unrelatedContact['id']);
     static::assertCount(2, FundingProgram::get()
       ->setAllowEmptyRecordPermissions(TRUE)
       ->execute(),
@@ -108,7 +108,7 @@ final class FundingProgramTest extends AbstractFundingHeadlessTestCase {
 
   public function testPermissionsRemote(): void {
     // Contact has a permitted type
-    SessionTestUtil::mockRemoteRequestSession((string) $this->permittedOrganizationId);
+    RequestTestUtil::mockRemoteRequest((string) $this->permittedOrganizationId);
     $permittedOrganizationResult = FundingProgram::get()
       ->execute();
     static::assertSame(1, $permittedOrganizationResult->rowCount);
@@ -118,7 +118,7 @@ final class FundingProgramTest extends AbstractFundingHeadlessTestCase {
     static::assertArrayNotHasKey('PERM_review_bar', $permittedOrganizationResult->first());
 
     // Contact has a relation that has a permitted type with a contact that has a permitted type
-    SessionTestUtil::mockRemoteRequestSession((string) $this->permittedIndividualId);
+    RequestTestUtil::mockRemoteRequest((string) $this->permittedIndividualId);
     $permittedIndividualResult = FundingProgram::get()
       ->execute();
     static::assertSame(1, $permittedIndividualResult->rowCount);
@@ -128,13 +128,13 @@ final class FundingProgramTest extends AbstractFundingHeadlessTestCase {
     static::assertArrayNotHasKey('PERM_review_b', $permittedOrganizationResult->first());
 
     // Contact has a relation that has a not permitted type with a contact that has a permitted type
-    SessionTestUtil::mockRemoteRequestSession((string) $this->notPermittedContactId);
+    RequestTestUtil::mockRemoteRequest((string) $this->notPermittedContactId);
     $notPermittedResult = FundingProgram::get()
       ->execute();
     static::assertSame(0, $notPermittedResult->rowCount);
 
     // Contact has a permitted type, but the relation has no permissions set
-    SessionTestUtil::mockRemoteRequestSession((string) $this->permittedOrganizationIdNoPermissions);
+    RequestTestUtil::mockRemoteRequest((string) $this->permittedOrganizationIdNoPermissions);
     $notPermittedResult = FundingProgram::get()
       ->execute();
     static::assertSame(0, $notPermittedResult->rowCount);

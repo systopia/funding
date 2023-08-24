@@ -28,7 +28,7 @@ use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
-use Civi\Funding\Util\SessionTestUtil;
+use Civi\Funding\Util\RequestTestUtil;
 
 /**
  * @covers \Civi\Funding\Api4\Action\FundingApplicationProcess\UpdateAction
@@ -56,7 +56,7 @@ final class UpdateActionTest extends AbstractFundingHeadlessTestCase {
 
     $contactIdNoReview = ContactFixture::addIndividual()['id'];
     FundingCaseContactRelationFixture::addContact($contactIdNoReview, $fundingCase->getId(), ['test']);
-    SessionTestUtil::mockInternalRequestSession($contactIdNoReview);
+    RequestTestUtil::mockInternalRequest($contactIdNoReview);
 
     $applicationProcess->setIsReviewCalculative(TRUE);
     $e = NULL;
@@ -85,7 +85,7 @@ final class UpdateActionTest extends AbstractFundingHeadlessTestCase {
       $fundingCase->getId(),
       ['review_calculative']
     );
-    SessionTestUtil::mockInternalRequestSession($contactIdReviewCalculative);
+    RequestTestUtil::mockInternalRequest($contactIdReviewCalculative);
 
     $applicationProcess->setIsReviewCalculative(TRUE);
     $applicationProcess->setIsReviewContent(NULL);
@@ -98,7 +98,7 @@ final class UpdateActionTest extends AbstractFundingHeadlessTestCase {
 
     $contactIdReviewContent = ContactFixture::addIndividual()['id'];
     FundingCaseContactRelationFixture::addContact($contactIdReviewContent, $fundingCase->getId(), ['review_content']);
-    SessionTestUtil::mockInternalRequestSession($contactIdReviewContent);
+    RequestTestUtil::mockInternalRequest($contactIdReviewContent);
 
     $applicationProcess->setIsReviewContent(FALSE);
     $record = FundingApplicationProcess::update()

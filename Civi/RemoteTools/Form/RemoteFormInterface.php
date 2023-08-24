@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2023 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -19,8 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\RemoteTools\Form;
 
-use Civi\RemoteTools\Form\JsonForms\JsonFormsElement;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonForms\JsonFormsElement;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 
 interface RemoteFormInterface {
 

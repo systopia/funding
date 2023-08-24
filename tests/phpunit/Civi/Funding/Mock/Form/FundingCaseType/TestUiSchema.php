@@ -19,14 +19,14 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Mock\Form\FundingCaseType;
 
-use Civi\RemoteTools\Form\JsonForms\JsonFormsControl;
-use Civi\RemoteTools\Form\JsonForms\Layout\JsonFormsGroup;
+use Civi\RemoteTools\JsonForms\JsonFormsControl;
+use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 
 final class TestUiSchema extends JsonFormsGroup {
 
   /**
-   * @phpstan-param array<int, \Civi\RemoteTools\Form\JsonForms\Control\JsonFormsSubmitButton> $submitButtons
-   * @phpstan-param array<int, \Civi\RemoteTools\Form\JsonForms\Control\JsonFormsHidden> $hiddenFields
+   * @phpstan-param array<int, \Civi\RemoteTools\JsonForms\Control\JsonFormsSubmitButton> $submitButtons
+   * @phpstan-param array<int, \Civi\RemoteTools\JsonForms\Control\JsonFormsHidden> $hiddenFields
    */
   public function __construct(array $submitButtons = [], array $hiddenFields = []) {
     parent::__construct('Test', [

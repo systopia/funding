@@ -26,7 +26,7 @@ interface PossiblePermissionsLoaderInterface {
   /**
    * @phpstan-return array<string, string>
    *   Permissions mapped to labels. Permissions might be filtered (possibly
-   *   depending on values in session.)
+   *   depending on request context.)
    */
   public function getFilteredPermissions(string $entityName): array;
 

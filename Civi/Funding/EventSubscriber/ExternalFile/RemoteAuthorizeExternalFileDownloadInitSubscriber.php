@@ -22,15 +22,15 @@ namespace Civi\Funding\EventSubscriber\ExternalFile;
 use Civi\ExternalFile\Event\AuthorizeFileDownloadEvent;
 use Civi\Funding\Api4\Permissions;
 use Civi\Funding\Contact\FundingRemoteContactIdResolverInterface;
-use Civi\Funding\Session\FundingSessionInterface;
 use Civi\RemoteTools\Exception\ResolveContactIdFailedException;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 final class RemoteAuthorizeExternalFileDownloadInitSubscriber implements EventSubscriberInterface {
 
-  private FundingSessionInterface $session;
+  private RequestContextInterface $requestContext;
 
   private FundingRemoteContactIdResolverInterface $remoteContactIdResolver;
 
@@ -42,10 +42,10 @@ final class RemoteAuthorizeExternalFileDownloadInitSubscriber implements EventSu
   }
 
   public function __construct(
-    FundingSessionInterface $session,
+    RequestContextInterface $requestContext,
     FundingRemoteContactIdResolverInterface $remoteContactIdResolver
   ) {
-    $this->session = $session;
+    $this->requestContext = $requestContext;
     $this->remoteContactIdResolver = $remoteContactIdResolver;
   }
 
@@ -62,12 +62,12 @@ final class RemoteAuthorizeExternalFileDownloadInitSubscriber implements EventSu
       throw new UnauthorizedHttpException('funding-remote', 'Permission to use remote contact ID is missing');
     }
 
-    $this->session->setRemote(TRUE);
+    $this->requestContext->setRemote(TRUE);
     /** @var string $remoteContactId */
     $remoteContactId = $event->getRequest()->headers->get('X-Civi-Remote-Contact-Id');
     try {
       $contactId = $this->remoteContactIdResolver->getContactId($remoteContactId);
-      $this->session->setResolvedContactId($contactId);
+      $this->requestContext->setResolvedContactId($contactId);
     }
     catch (ResolveContactIdFailedException $e) {
       throw new UnauthorizedHttpException('funding-remote', 'Unknown remote contact ID', $e);

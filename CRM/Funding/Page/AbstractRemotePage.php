@@ -18,7 +18,7 @@
 declare(strict_types = 1);
 
 use Civi\Funding\Event\Remote\RemotePageRequestEvent;
-use Civi\Funding\Session\FundingSessionInterface;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -30,9 +30,9 @@ use Symfony\Component\HttpFoundation\Response;
 abstract class CRM_Funding_Page_AbstractRemotePage extends CRM_Funding_Page_AbstractPage {
 
   protected function handle(Request $request): Response {
-    /** @var \Civi\Funding\Session\FundingSessionInterface $session */
-    $session = \Civi::service(FundingSessionInterface::class);
-    $session->setRemote(TRUE);
+    /** @var \Civi\RemoteTools\RequestContext\RequestContextInterface $requestContext */
+    $requestContext = \Civi::service(RequestContextInterface::class);
+    $requestContext->setRemote(TRUE);
     $event = new RemotePageRequestEvent($this, $request);
     \Civi::dispatcher()->dispatch(RemotePageRequestEvent::class, $event);
 

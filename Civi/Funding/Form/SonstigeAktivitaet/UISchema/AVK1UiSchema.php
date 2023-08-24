@@ -19,11 +19,11 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\SonstigeAktivitaet\UISchema;
 
-use Civi\RemoteTools\Form\JsonForms\Control\JsonFormsArray;
-use Civi\RemoteTools\Form\JsonForms\Control\JsonFormsHidden;
-use Civi\RemoteTools\Form\JsonForms\JsonFormsControl;
-use Civi\RemoteTools\Form\JsonForms\Layout\JsonFormsCloseableGroup;
-use Civi\RemoteTools\Form\JsonForms\Layout\JsonFormsGroup;
+use Civi\RemoteTools\JsonForms\Control\JsonFormsArray;
+use Civi\RemoteTools\JsonForms\Control\JsonFormsHidden;
+use Civi\RemoteTools\JsonForms\JsonFormsControl;
+use Civi\RemoteTools\JsonForms\Layout\JsonFormsCloseableGroup;
+use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 
 /**
  * This implements the UI schema for an "AV-K1" form to apply for a funding for
@@ -33,8 +33,8 @@ use Civi\RemoteTools\Form\JsonForms\Layout\JsonFormsGroup;
 final class AVK1UiSchema extends JsonFormsGroup {
 
   /**
-   * @phpstan-param array<int, \Civi\RemoteTools\Form\JsonForms\Control\JsonFormsSubmitButton> $submitButtons
-   * @phpstan-param array<int, \Civi\RemoteTools\Form\JsonForms\Control\JsonFormsHidden> $hiddenFields
+   * @phpstan-param array<int, \Civi\RemoteTools\JsonForms\Control\JsonFormsSubmitButton> $submitButtons
+   * @phpstan-param array<int, \Civi\RemoteTools\JsonForms\Control\JsonFormsHidden> $hiddenFields
    */
   public function __construct(string $currency, array $submitButtons = [], array $hiddenFields = []) {
     parent::__construct('Förderantrag für sonstige Aktivität', [

@@ -23,8 +23,8 @@ use Civi\Funding\Api4\Action\Remote\GetFieldsAction;
 use Civi\Funding\Api4\Action\Remote\RemoteFundingActionInterface;
 use Civi\Funding\Contact\FundingRemoteContactIdResolverInterface;
 use Civi\Funding\Event\Remote\FundingEvents;
-use Civi\Funding\Session\FundingSessionInterface;
 use Civi\RemoteTools\Event\InitApiRequestEvent;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Webmozart\Assert\Assert;
 
@@ -32,14 +32,14 @@ class FundingRequestInitSubscriber implements EventSubscriberInterface {
 
   private FundingRemoteContactIdResolverInterface $remoteContactIdResolver;
 
-  private FundingSessionInterface $session;
+  private RequestContextInterface $requestContext;
 
   public function __construct(
     FundingRemoteContactIdResolverInterface $remoteContactIdResolver,
-    FundingSessionInterface $session
+    RequestContextInterface $requestContext
   ) {
     $this->remoteContactIdResolver = $remoteContactIdResolver;
-    $this->session = $session;
+    $this->requestContext = $requestContext;
   }
 
   /**
@@ -55,14 +55,15 @@ class FundingRequestInitSubscriber implements EventSubscriberInterface {
     /** @var \Civi\Funding\Api4\Action\Remote\RemoteFundingActionInterface $request */
     $remoteContactId = $request->getRemoteContactId();
     // GetFieldsAction is called in API explorer, though in that case it's no
-    // remote session. Thus, the condition.
+    // remote request. Thus, the condition.
     if (!$request instanceof GetFieldsAction || NULL !== $remoteContactId) {
-      $this->session->setRemote(TRUE);
+      $this->requestContext->setRemote(TRUE);
     }
     if (NULL !== $remoteContactId) {
       $contactId = $this->remoteContactIdResolver->getContactId($remoteContactId);
       $request->setExtraParam('contactId', $contactId);
-      $this->session->setResolvedContactId($contactId);
+      $this->requestContext->setRemoteContactId($remoteContactId);
+      $this->requestContext->setResolvedContactId($contactId);
     }
   }
 

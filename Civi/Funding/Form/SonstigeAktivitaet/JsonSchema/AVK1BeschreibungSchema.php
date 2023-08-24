@@ -19,11 +19,11 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\SonstigeAktivitaet\JsonSchema;
 
-use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchemaArray;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchemaObject;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchemaString;
-use Civi\RemoteTools\Form\JsonSchema\Util\JsonSchemaUtil;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
+use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
+use Civi\RemoteTools\JsonSchema\JsonSchemaString;
+use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
 
 final class AVK1BeschreibungSchema extends JsonSchemaObject {
 

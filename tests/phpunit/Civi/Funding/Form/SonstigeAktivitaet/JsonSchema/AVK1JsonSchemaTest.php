@@ -21,9 +21,9 @@ namespace Civi\Funding\Form\SonstigeAktivitaet\JsonSchema;
 
 use Civi\Funding\Form\JsonSchema\JsonSchemaRecipient;
 use Civi\Funding\Form\Traits\AssertFormTrait;
-use Civi\Funding\Form\Validation\OpisValidatorFactory;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchemaString;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonSchema\JsonSchemaString;
+use Civi\RemoteTools\JsonSchema\Validation\OpisValidatorFactory;
 use Opis\JsonSchema\Errors\ErrorFormatter;
 use PHPUnit\Framework\TestCase;
 use Systopia\JsonSchema\Errors\ErrorCollector;

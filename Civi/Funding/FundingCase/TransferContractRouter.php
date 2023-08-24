@@ -19,8 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase;
 
-use Civi\Funding\Session\FundingSessionInterface;
 use Civi\Funding\Util\UrlGenerator;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 
 /**
  * @codeCoverageIgnore
@@ -29,17 +29,17 @@ class TransferContractRouter {
 
   private FundingCaseManager $fundingCaseManager;
 
-  private FundingSessionInterface $session;
+  private RequestContextInterface $requestContext;
 
   private UrlGenerator $urlGenerator;
 
   public function __construct(
     FundingCaseManager $fundingCaseManager,
-    FundingSessionInterface $session,
+    RequestContextInterface $requestContext,
     UrlGenerator $urlGenerator
   ) {
     $this->fundingCaseManager = $fundingCaseManager;
-    $this->session = $session;
+    $this->requestContext = $requestContext;
     $this->urlGenerator = $urlGenerator;
   }
 
@@ -55,7 +55,7 @@ class TransferContractRouter {
       return NULL;
     }
 
-    if ($this->session->isRemote()) {
+    if ($this->requestContext->isRemote()) {
       $path = 'civicrm/funding/remote/transfer-contract/download';
     }
     else {

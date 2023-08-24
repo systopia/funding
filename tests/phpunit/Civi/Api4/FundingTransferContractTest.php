@@ -29,7 +29,7 @@ use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\Funding\Fixtures\PayoutProcessFixture;
-use Civi\Funding\Util\SessionTestUtil;
+use Civi\Funding\Util\RequestTestUtil;
 use CRM_Funding_ExtensionUtil as E;
 
 /**
@@ -69,7 +69,7 @@ final class FundingTransferContractTest extends AbstractFundingHeadlessTestCase 
     );
     FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['review_test']);
 
-    SessionTestUtil::mockInternalRequestSession($contact['id']);
+    RequestTestUtil::mockInternalRequest($contact['id']);
     $action = FundingTransferContract::get();
     $result = $action->execute();
     static::assertCount(1, $result);

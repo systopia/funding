@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\JsonSchema;
 
-use Civi\RemoteTools\Form\JsonForms\Control\JsonFormsSubmitButton;
+use Civi\RemoteTools\JsonForms\Control\JsonFormsSubmitButton;
 
 /**
  * @phpstan-type submitActionT array{label: string, confirm?: string|null}

@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\EventSubscriber\FundingProgram;
 
 use Civi\Funding\Event\FundingProgram\GetPermissionsEvent;
-use Civi\Funding\Mock\Session\TestFundingSession;
+use Civi\Funding\Mock\RequestContext\TestRequestContext;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -30,12 +30,12 @@ final class FundingProgramFilterPermissionsSubscriberTest extends TestCase {
 
   private FundingProgramFilterPermissionsSubscriber $subscriber;
 
-  private TestFundingSession $session;
+  private TestRequestContext $requestContext;
 
   protected function setUp(): void {
     parent::setUp();
-    $this->session = TestFundingSession::newInternal();
-    $this->subscriber = new FundingProgramFilterPermissionsSubscriber($this->session);
+    $this->requestContext = TestRequestContext::newInternal();
+    $this->subscriber = new FundingProgramFilterPermissionsSubscriber($this->requestContext);
   }
 
   public function testGetSubscribedEvents(): void {
@@ -58,7 +58,7 @@ final class FundingProgramFilterPermissionsSubscriberTest extends TestCase {
   }
 
   public function testOnPermissionsGetRemote(): void {
-    $this->session->setRemote(TRUE);
+    $this->requestContext->setRemote(TRUE);
     $event = $this->createEvent();
 
     $this->subscriber->onPermissionsGet($event);

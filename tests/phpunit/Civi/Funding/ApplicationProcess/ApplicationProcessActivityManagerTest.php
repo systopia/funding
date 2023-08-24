@@ -29,7 +29,7 @@ use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
-use Civi\Funding\Util\SessionTestUtil;
+use Civi\Funding\Util\RequestTestUtil;
 use Civi\RemoteTools\Api4\Api4;
 use Civi\RemoteTools\Api4\Query\Comparison;
 
@@ -85,7 +85,7 @@ final class ApplicationProcessActivityManagerTest extends AbstractFundingHeadles
     static::assertSame('new-status', $activity->get('funding_application_status_change.to_status'));
 
     // Test getByApplicationProcess
-    SessionTestUtil::mockInternalRequestSession($recipientContact['id']);
+    RequestTestUtil::mockInternalRequest($recipientContact['id']);
     $activities = $this->activityManager->getByApplicationProcess($applicationProcess->getId());
     static::assertCount(1, $activities);
     static::assertEquals($activity->toArray() + [

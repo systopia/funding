@@ -23,9 +23,9 @@ use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Form\ApplicationJsonSchemaFactoryInterface;
-use Civi\Funding\Form\Validation\ValidationResult;
-use Civi\Funding\Form\Validation\ValidatorInterface;
-use Civi\RemoteTools\Form\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonSchema\Validation\ValidationResult;
+use Civi\RemoteTools\JsonSchema\Validation\ValidatorInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Systopia\JsonSchema\Errors\ErrorCollector;
@@ -41,7 +41,7 @@ final class AVK1ValidatorTest extends TestCase {
   private MockObject $jsonSchemaFactoryMock;
 
   /**
-   * @var \Civi\Funding\Form\Validation\ValidatorInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\RemoteTools\JsonSchema\Validation\ValidatorInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $jsonSchemaValidatorMock;
 

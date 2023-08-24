@@ -36,7 +36,7 @@ use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\Funding\FundingAttachmentManagerInterface;
-use Civi\Funding\Util\SessionTestUtil;
+use Civi\Funding\Util\RequestTestUtil;
 use Civi\Funding\Util\TestUtil;
 use Civi\RemoteTools\Api4\Api4;
 use Civi\RemoteTools\Api4\Api4Interface;
@@ -164,7 +164,7 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
       );
     });
 
-    SessionTestUtil::mockInternalRequestSession($contact['id']);
+    RequestTestUtil::mockInternalRequest($contact['id']);
     $fundingCase = $this->fundingCaseManager->getOpenOrCreate($contact['id'], [
       'funding_program' => $fundingProgram,
       'funding_case_type' => $fundingCaseType,

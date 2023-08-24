@@ -21,7 +21,7 @@ namespace Civi\Funding\EventSubscriber\FundingProgram;
 
 use Civi\Funding\Api4\Permissions;
 use Civi\Funding\Event\FundingProgram\GetPermissionsEvent;
-use Civi\Funding\Session\FundingSessionInterface;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -32,7 +32,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 final class FundingProgramPermissionsGetAdminSubscriber implements EventSubscriberInterface {
 
-  private FundingSessionInterface $session;
+  private RequestContextInterface $requestContext;
 
   /**
    * @inheritDoc
@@ -41,13 +41,13 @@ final class FundingProgramPermissionsGetAdminSubscriber implements EventSubscrib
     return [GetPermissionsEvent::class => 'onPermissionsGet'];
   }
 
-  public function __construct(FundingSessionInterface $session) {
-    $this->session = $session;
+  public function __construct(RequestContextInterface $requestContext) {
+    $this->requestContext = $requestContext;
   }
 
   public function onPermissionsGet(GetPermissionsEvent $event): void {
-    if (!$this->session->isRemote()
-      && \CRM_Core_Permission::check(Permissions::ADMINISTER_FUNDING, $this->session->getContactId())
+    if (!$this->requestContext->isRemote()
+      && \CRM_Core_Permission::check(Permissions::ADMINISTER_FUNDING, $this->requestContext->getContactId())
     ) {
       $event->addPermissions(['view']);
     }

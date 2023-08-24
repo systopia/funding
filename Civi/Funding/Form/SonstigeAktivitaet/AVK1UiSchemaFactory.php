@@ -26,8 +26,8 @@ use Civi\Funding\Form\ApplicationSubmitActionsFactoryInterface;
 use Civi\Funding\Form\ApplicationUiSchemaFactoryInterface;
 use Civi\Funding\Form\JsonSchema\JsonFormsSubmitButtonsFactory;
 use Civi\Funding\Form\SonstigeAktivitaet\UISchema\AVK1UiSchema;
-use Civi\RemoteTools\Form\JsonForms\Control\JsonFormsHidden;
-use Civi\RemoteTools\Form\JsonForms\JsonFormsElement;
+use Civi\RemoteTools\JsonForms\Control\JsonFormsHidden;
+use Civi\RemoteTools\JsonForms\JsonFormsElement;
 
 final class AVK1UiSchemaFactory implements ApplicationUiSchemaFactoryInterface {
 

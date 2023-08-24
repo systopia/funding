@@ -20,10 +20,10 @@ declare(strict_types = 1);
 namespace Civi\Funding\Form\Traits;
 
 use Civi\Funding\Util\FormTestUtil;
-use Civi\RemoteTools\Form\JsonForms\Control\JsonFormsArray;
-use Civi\RemoteTools\Form\JsonForms\JsonFormsControl;
-use Civi\RemoteTools\Form\JsonForms\JsonFormsElement;
-use Civi\RemoteTools\Form\JsonForms\JsonFormsLayout;
+use Civi\RemoteTools\JsonForms\Control\JsonFormsArray;
+use Civi\RemoteTools\JsonForms\JsonFormsControl;
+use Civi\RemoteTools\JsonForms\JsonFormsElement;
+use Civi\RemoteTools\JsonForms\JsonFormsLayout;
 use Opis\JsonSchema\JsonPointer;
 use PHPUnit\Framework\Assert;
 
@@ -82,9 +82,6 @@ trait AssertFormTrait {
   /**
    * Asserts that all scopes specified in UI schema have a corresponding
    * definition in JSON schema.
-   *
-   * @param \stdClass $jsonSchema
-   * @param \Civi\RemoteTools\Form\JsonForms\JsonFormsElement $uiSchema
    */
   public static function assertScopesExist(\stdClass $jsonSchema, JsonFormsElement $uiSchema): void {
     if ($uiSchema instanceof JsonFormsControl) {
