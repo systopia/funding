@@ -140,7 +140,10 @@ fundingModule.directive('editableField', [function() {
       viewOnlySpan.attr('ng-show', '!$ctrl.editAllowed');
       template += viewOnlySpan[0].outerHTML;
 
-      template += ' <funding-validation-errors errors="errors[\'' + toJsonPointer(attrs.path) + '\']"></funding-validation-errors>';
+      // Expression "{{ $index }}" has to be replaced by concatenation
+      // "' + $index + '" because we use the string in an expression.
+      const errorsKey = "'" + toJsonPointer(attrs.path).replace(/{{( )*\$index( )*}}/, '\' + $$index + \'') + "'";
+      template += ' <funding-validation-errors errors="errors[' + errorsKey + ']"></funding-validation-errors>';
 
       return template;
     },

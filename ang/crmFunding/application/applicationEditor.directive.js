@@ -47,7 +47,12 @@ fundingModule.directive('fundingApplicationEditor', function() {
               if (formOrField.$editables) {
                 formOrField.$data[editable.name] = new Date(formOrField.$data[editable.name]);
               } else {
-                formOrField.$form.$data = formOrField.$data = new Date(formOrField.$data);
+                formOrField.$data = new Date(formOrField.$data);
+                if (formOrField.$form.$editables) {
+                  formOrField.$form.$data[editable.name] = formOrField.$data;
+                } else {
+                  formOrField.$form.$data = formOrField.$data;
+                }
               }
             }
           }
@@ -67,10 +72,19 @@ fundingModule.directive('fundingApplicationEditor', function() {
             if (editable.attrs.editableDate) {
               if (formOrField.$editables) {
                 const date = formOrField.$data[editable.name];
-                formOrField.$data[editable.name] = date.toJSON().slice(0, 10);
+                if (date instanceof Date) {
+                  formOrField.$data[editable.name] = date.toJSON().slice(0, 10);
+                }
               } else {
                 const date = formOrField.$data;
-                formOrField.$form.$data = formOrField.$data = date.toJSON().slice(0, 10);
+                if (date instanceof Date) {
+                  formOrField.$data = date.toJSON().slice(0, 10);
+                }
+                if (formOrField.$form.$editables) {
+                  formOrField.$form.$data[editable.name] = formOrField.$data;
+                } else {
+                  formOrField.$form.$data = formOrField.$data;
+                }
               }
             }
           }

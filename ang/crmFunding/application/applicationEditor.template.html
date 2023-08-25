@@ -82,16 +82,33 @@
                           value="data.kurzbeschreibungDesInhalts"
                           e-ng-required="true"></editable-field>
       </div>
+
       <div>
-          <editable-field label="'Beginn'" type="date"
-                          value="data.beginn"
-                          e-ng-required="true"></editable-field>
+        <h3>Zeiträume <funding-validation-errors errors="errors['/zeitraeume']"></funding-validation-errors></h3>
+        <table>
+          <tr>
+            <th style="width: 45%;">Beginn</th>
+            <th style="width: 45%;">Ende</th>
+            <th style="width: 10%;">Aktionen</th>
+          </tr>
+          </tr>
+          <tr ng-repeat="zeitraum in data.zeitraeume track by $index" funding-editable-table-row>
+            <td>
+              <editable-field type="date" value="zeitraum.beginn"
+                              path="zeitraeume[{{ $index }}].beginn"
+                              e-ng-required="true"></editable-field>
+            </td>
+            <td>
+              <editable-field type="date" value="zeitraum.ende"
+                              path="zeitraeume[{{ $index }}].ende"
+                              e-ng-required="true"></editable-field>
+            </td>
+            <td class="editable-table-row-actions"></td>
+          </tr>
+        </table>
+        <funding-add-row-button path="zeitraeume" ng-if="isEditAllowed()"></funding-add-row-button>
       </div>
-      <div>
-          <editable-field label="'Ende'" type="date"
-                          value="data.ende"
-                          e-ng-required="true"></editable-field>
-      </div>
+
       <h3>Teilnehmer*innen</h3>
       <div>
           <editable-field label="'Gesamtanzahl der Teilnehmer*innen'" type="number"
@@ -109,8 +126,18 @@
                           e-step="1" e-ng-required="false"></editable-field>
       </div>
       <div>
-          <editable-field label="'davon in der Jugendarbeit tätig'" type="number"
-                          value="data.teilnehmer.inJugendarbeitTaetig"
+          <editable-field label="'davon U27'" type="number"
+                          value="data.teilnehmer.unter27"
+                          e-step="1" e-ng-required="false"></editable-field>
+      </div>
+      <div>
+          <editable-field label="'davon in der Kinder- und Jugendhilfe (Multiplikator*innen-Seminare) tätig'" type="number"
+                          value="data.teilnehmer.inJugendhilfeTaetig"
+                          e-step="1" e-ng-required="false"></editable-field>
+      </div>
+      <div>
+          <editable-field label="'davon Referent*innen'" type="number"
+                          value="data.teilnehmer.referenten"
                           e-step="1" e-ng-required="false"></editable-field>
       </div>
 
