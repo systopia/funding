@@ -39,7 +39,7 @@ final class FundingCaseTypeFactory {
    * @phpstan-param fundingCaseTypeValuesT $values
    */
   public static function createFundingCaseType(array $values = []): FundingCaseTypeEntity {
-    return FundingCaseTypeEntity::fromArray([
+    return FundingCaseTypeEntity::fromArray($values + [
       'id' => self::DEFAULT_ID,
       'title' => 'Test Funding Case Type',
       'abbreviation' => 'TFCT',

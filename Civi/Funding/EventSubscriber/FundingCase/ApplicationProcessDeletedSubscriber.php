@@ -46,7 +46,8 @@ final class ApplicationProcessDeletedSubscriber implements EventSubscriberInterf
   }
 
   public function onDeleted(ApplicationProcessDeletedEvent $event): void {
-    if (0 === $this->applicationProcessManager->countByFundingCaseId($event->getFundingCase()->getId())) {
+    if (!$event->getFundingCaseType()->getIsSummaryApplication() &&
+      0 === $this->applicationProcessManager->countByFundingCaseId($event->getFundingCase()->getId())) {
       $this->fundingCaseManager->delete($event->getFundingCase());
     }
   }

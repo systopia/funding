@@ -25,7 +25,7 @@ use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\RemoteTools\Api4\Query\Comparison;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
 
-final class FundingCaseStatusDeterminer implements FundingCaseStatusDeterminerInterface {
+final class NonSummaryFundingCaseStatusDeterminer implements FundingCaseStatusDeterminerInterface {
 
   private ApplicationProcessManager $applicationProcessManager;
 
