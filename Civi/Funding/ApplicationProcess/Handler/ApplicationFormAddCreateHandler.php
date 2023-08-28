@@ -20,20 +20,20 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormAddCreateCommand;
-use Civi\Funding\Form\SummaryApplicationJsonSchemaFactoryInterface;
-use Civi\Funding\Form\SummaryApplicationUiSchemaFactoryInterface;
+use Civi\Funding\Form\CombinedApplicationJsonSchemaFactoryInterface;
+use Civi\Funding\Form\CombinedApplicationUiSchemaFactoryInterface;
 use Civi\RemoteTools\Form\RemoteForm;
 use Civi\RemoteTools\Form\RemoteFormInterface;
 
 final class ApplicationFormAddCreateHandler implements ApplicationFormAddCreateHandlerInterface {
 
-  private SummaryApplicationJsonSchemaFactoryInterface $jsonSchemaFactory;
+  private CombinedApplicationJsonSchemaFactoryInterface $jsonSchemaFactory;
 
-  private SummaryApplicationUiSchemaFactoryInterface $uiSchemaFactory;
+  private CombinedApplicationUiSchemaFactoryInterface $uiSchemaFactory;
 
   public function __construct(
-    SummaryApplicationJsonSchemaFactoryInterface $jsonSchemaFactory,
-    SummaryApplicationUiSchemaFactoryInterface $uiSchemaFactory
+    CombinedApplicationJsonSchemaFactoryInterface $jsonSchemaFactory,
+    CombinedApplicationUiSchemaFactoryInterface $uiSchemaFactory
   ) {
     $this->jsonSchemaFactory = $jsonSchemaFactory;
     $this->uiSchemaFactory = $uiSchemaFactory;

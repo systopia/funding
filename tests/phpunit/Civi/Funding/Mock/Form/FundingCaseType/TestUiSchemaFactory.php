@@ -23,13 +23,13 @@ use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
-use Civi\Funding\Form\NonSummaryApplicationUiSchemaFactoryInterface;
-use Civi\Funding\Form\SummaryApplicationUiSchemaFactoryInterface;
+use Civi\Funding\Form\NonCombinedApplicationUiSchemaFactoryInterface;
+use Civi\Funding\Form\CombinedApplicationUiSchemaFactoryInterface;
 use Civi\Funding\Mock\Form\FundingCaseType\Traits\TestSupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonForms\JsonFormsElement;
 
 // phpcs:disable Generic.Files.LineLength.TooLong
-final class TestUiSchemaFactory implements SummaryApplicationUiSchemaFactoryInterface, NonSummaryApplicationUiSchemaFactoryInterface {
+final class TestUiSchemaFactory implements CombinedApplicationUiSchemaFactoryInterface, NonCombinedApplicationUiSchemaFactoryInterface {
 // phpcs:enable
   use TestSupportedFundingCaseTypesTrait;
 

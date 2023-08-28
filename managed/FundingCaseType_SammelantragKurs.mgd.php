@@ -23,7 +23,9 @@ return [
   [
     'name' => 'FundingCaseType_SammelantragKurs',
     'entity' => 'FundingCaseType',
-    'cleanup' => 'unused',
+    // "never" because the FundingCaseType entity itself is removed when this
+    // extension is uninstalled.
+    'cleanup' => 'never',
     'update' => 'unmodified',
     'params' => [
       'match' => ['name'],
@@ -32,7 +34,7 @@ return [
         'title' => 'Sammelantrag Kurs',
         'abbreviation' => 'SK1',
         'name' => KursConstants::FUNDING_CASE_TYPE_NAME,
-        'is_summary_application' => TRUE,
+        'is_combined_application' => TRUE,
         'application_process_label' => 'Kurs',
         'properties' => NULL,
       ],

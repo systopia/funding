@@ -27,7 +27,7 @@ use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Form\ApplicationValidationResult;
-use Civi\Funding\Form\NonSummaryApplicationValidatorInterface;
+use Civi\Funding\Form\NonCombinedApplicationValidatorInterface;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -59,7 +59,7 @@ final class ApplicationFormNewSubmitHandlerTest extends TestCase {
   private MockObject $statusDeterminerMock;
 
   /**
-   * @var \Civi\Funding\Form\NonSummaryApplicationValidatorInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\Form\NonCombinedApplicationValidatorInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $validatorMock;
 
@@ -68,7 +68,7 @@ final class ApplicationFormNewSubmitHandlerTest extends TestCase {
     $this->applicationProcessManagerMock = $this->createMock(ApplicationProcessManager::class);
     $this->fundingCaseManagerMock = $this->createMock(FundingCaseManager::class);
     $this->statusDeterminerMock = $this->createMock(ApplicationProcessStatusDeterminerInterface::class);
-    $this->validatorMock = $this->createMock(NonSummaryApplicationValidatorInterface::class);
+    $this->validatorMock = $this->createMock(NonCombinedApplicationValidatorInterface::class);
     $this->handler = new ApplicationFormNewSubmitHandler(
       $this->applicationProcessManagerMock,
       $this->fundingCaseManagerMock,

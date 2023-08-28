@@ -24,13 +24,13 @@ use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\ApplicationSubmitActionsFactoryInterface;
 use Civi\Funding\Form\JsonSchema\JsonFormsSubmitButtonsFactory;
-use Civi\Funding\Form\NonSummaryApplicationUiSchemaFactoryInterface;
+use Civi\Funding\Form\NonCombinedApplicationUiSchemaFactoryInterface;
 use Civi\Funding\Form\SonstigeAktivitaet\UISchema\AVK1UiSchema;
 use Civi\Funding\SonstigeAktivitaet\Traits\AVK1SupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonForms\JsonFormsElement;
 use Civi\RemoteTools\JsonForms\JsonFormsMarkup;
 
-final class AVK1UiSchemaFactory implements NonSummaryApplicationUiSchemaFactoryInterface {
+final class AVK1UiSchemaFactory implements NonCombinedApplicationUiSchemaFactoryInterface {
 
   use AVK1SupportedFundingCaseTypesTrait;
 

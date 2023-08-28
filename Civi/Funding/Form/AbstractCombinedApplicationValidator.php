@@ -19,19 +19,21 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form;
 
+use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\Validation\ValidatorInterface;
 
 /**
- * @property NonSummaryApplicationJsonSchemaFactoryInterface $jsonSchemaFactory
+ * @property \Civi\Funding\Form\CombinedApplicationJsonSchemaFactoryInterface $jsonSchemaFactory
+ *
+ * phpcs:disable Generic.Files.LineLength.TooLong
  */
-// phpcs:disable Generic.Files.LineLength.TooLong
-abstract class AbstractNonSummaryApplicationValidator extends AbstractApplicationValidator implements NonSummaryApplicationValidatorInterface {
+abstract class AbstractCombinedApplicationValidator extends AbstractApplicationValidator implements CombinedApplicationValidatorInterface {
 // phpcs:enable
   public function __construct(
-    NonSummaryApplicationJsonSchemaFactoryInterface $jsonSchemaFactory,
+    CombinedApplicationJsonSchemaFactoryInterface $jsonSchemaFactory,
     ValidatorInterface $jsonSchemaValidator
   ) {
     parent::__construct($jsonSchemaFactory, $jsonSchemaValidator);
@@ -40,31 +42,35 @@ abstract class AbstractNonSummaryApplicationValidator extends AbstractApplicatio
   /**
    * @inheritDoc
    */
-  public function validateInitial(
-    int $contactId,
+  public function validateAdd(
     FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType,
+    FundingCaseEntity $fundingCase,
     array $data,
     int $maxErrors = 1
   ): ApplicationValidationResult {
-    $jsonSchema = $this->jsonSchemaFactory->createJsonSchemaInitial($contactId, $fundingCaseType, $fundingProgram);
+    $jsonSchema = $this->jsonSchemaFactory->createJsonSchemaAdd(
+      $fundingProgram,
+      $fundingCaseType,
+      $fundingCase,
+    );
     $jsonSchemaValidationResult = $this->jsonSchemaValidator->validate($jsonSchema, $data, $maxErrors);
     if (!$jsonSchemaValidationResult->isValid()) {
       return ApplicationValidationResult::newInvalid(
-        // @phpstan-ignore-next-line leaf error messages are not empty.
+      // @phpstan-ignore-next-line leaf error messages are not empty.
         $jsonSchemaValidationResult->getLeafErrorMessages(),
         new ValidatedApplicationDataInvalid($jsonSchemaValidationResult->getData()),
       );
     }
 
-    return $this->getValidationResultInitial(
-      $contactId,
+    return $this->getValidationResultAdd(
       $fundingProgram,
       $fundingCaseType,
+      $fundingCase,
       $data,
       $jsonSchema,
       $jsonSchemaValidationResult->getData(),
-      $maxErrors,
+      $maxErrors
     );
   }
 
@@ -75,10 +81,10 @@ abstract class AbstractNonSummaryApplicationValidator extends AbstractApplicatio
    * @phpstan-param array<string, mixed> $validatedData JSON serializable.
    *   Data returned by JSON schema validator.
    */
-  abstract protected function getValidationResultInitial(
-    int $contactId,
+  abstract protected function getValidationResultAdd(
     FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType,
+    FundingCaseEntity $fundingCase,
     array $formData,
     JsonSchema $jsonSchema,
     array $validatedData,

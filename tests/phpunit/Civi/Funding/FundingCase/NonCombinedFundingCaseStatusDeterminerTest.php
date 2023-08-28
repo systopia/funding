@@ -28,9 +28,9 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Civi\Funding\FundingCase\NonSummaryFundingCaseStatusDeterminer
+ * @covers \Civi\Funding\FundingCase\NonCombinedFundingCaseStatusDeterminer
  */
-final class NonSummaryFundingCaseStatusDeterminerTest extends TestCase {
+final class NonCombinedFundingCaseStatusDeterminerTest extends TestCase {
 
   /**
    * @var \Civi\Funding\ApplicationProcess\ApplicationProcessManager|(\Civi\Funding\ApplicationProcess\ApplicationProcessManager&\PHPUnit\Framework\MockObject\MockObject)|\PHPUnit\Framework\MockObject\MockObject
@@ -42,13 +42,13 @@ final class NonSummaryFundingCaseStatusDeterminerTest extends TestCase {
    */
   private MockObject $infoMock;
 
-  private NonSummaryFundingCaseStatusDeterminer $statusDeterminer;
+  private NonCombinedFundingCaseStatusDeterminer $statusDeterminer;
 
   protected function setUp(): void {
     parent::setUp();
     $this->applicationProcessManagerMock = $this->createMock(ApplicationProcessManager::class);
     $this->infoMock = $this->createMock(ApplicationProcessActionStatusInfoInterface::class);
-    $this->statusDeterminer = new NonSummaryFundingCaseStatusDeterminer(
+    $this->statusDeterminer = new NonCombinedFundingCaseStatusDeterminer(
       $this->applicationProcessManagerMock,
       $this->infoMock,
     );

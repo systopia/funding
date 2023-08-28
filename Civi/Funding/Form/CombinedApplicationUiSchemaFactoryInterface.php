@@ -17,21 +17,22 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\FundingCase;
+namespace Civi\Funding\Form;
 
-use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
+use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\RemoteTools\JsonForms\JsonFormsElement;
 
-final class SummaryFundingCaseStatusDeterminer implements FundingCaseStatusDeterminerInterface {
+interface CombinedApplicationUiSchemaFactoryInterface extends ApplicationUiSchemaFactoryInterface {
 
-  public function getStatus(string $currentStatus, string $action): string {
-    return 'approve' === $action ? 'ongoing' : $currentStatus;
-  }
-
-  public function isClosedByApplicationProcess(
-    ApplicationProcessEntityBundle $applicationProcessBundle,
-    string $previousStatus
-  ): bool {
-    return FALSE;
-  }
+  /**
+   * Called when adding an application to an existing funding case.
+   */
+  public function createUiSchemaAdd(
+    FundingProgramEntity $fundingProgram,
+    FundingCaseTypeEntity $fundingCaseType,
+    FundingCaseEntity $fundingCase
+  ): JsonFormsElement;
 
 }

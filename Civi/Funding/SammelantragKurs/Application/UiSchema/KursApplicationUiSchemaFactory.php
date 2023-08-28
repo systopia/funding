@@ -24,12 +24,12 @@ use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\JsonSchema\JsonFormsSubmitButtonsFactory;
-use Civi\Funding\Form\SummaryApplicationUiSchemaFactoryInterface;
+use Civi\Funding\Form\CombinedApplicationUiSchemaFactoryInterface;
 use Civi\Funding\SammelantragKurs\Application\Actions\KursApplicationSubmitActionsFactory;
 use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonForms\JsonFormsElement;
 
-final class KursApplicationUiSchemaFactory implements SummaryApplicationUiSchemaFactoryInterface {
+final class KursApplicationUiSchemaFactory implements CombinedApplicationUiSchemaFactoryInterface {
 
   use KursSupportedFundingCaseTypesTrait;
 

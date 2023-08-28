@@ -26,14 +26,14 @@ use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\JsonSchema\JsonSchemaComment;
-use Civi\Funding\Form\NonSummaryApplicationJsonSchemaFactoryInterface;
+use Civi\Funding\Form\NonCombinedApplicationJsonSchemaFactoryInterface;
 use Civi\Funding\Form\SonstigeAktivitaet\JsonSchema\AVK1JsonSchema;
 use Civi\Funding\SonstigeAktivitaet\Traits\AVK1SupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaNull;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 
-class AVK1JsonSchemaFactory implements NonSummaryApplicationJsonSchemaFactoryInterface {
+class AVK1JsonSchemaFactory implements NonCombinedApplicationJsonSchemaFactoryInterface {
 
   use AVK1SupportedFundingCaseTypesTrait;
 

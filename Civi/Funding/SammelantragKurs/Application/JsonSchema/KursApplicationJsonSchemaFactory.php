@@ -24,14 +24,14 @@ use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\JsonSchema\JsonSchemaComment;
-use Civi\Funding\Form\SummaryApplicationJsonSchemaFactoryInterface;
+use Civi\Funding\Form\CombinedApplicationJsonSchemaFactoryInterface;
 use Civi\Funding\SammelantragKurs\Application\Actions\KursApplicationActionsDeterminer;
 use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaNull;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 
-final class KursApplicationJsonSchemaFactory implements SummaryApplicationJsonSchemaFactoryInterface {
+final class KursApplicationJsonSchemaFactory implements CombinedApplicationJsonSchemaFactoryInterface {
 
   use KursSupportedFundingCaseTypesTrait;
 

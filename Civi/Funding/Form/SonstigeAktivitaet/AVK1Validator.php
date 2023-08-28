@@ -22,12 +22,12 @@ namespace Civi\Funding\Form\SonstigeAktivitaet;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
-use Civi\Funding\Form\AbstractNonSummaryApplicationValidator;
+use Civi\Funding\Form\AbstractNonCombinedApplicationValidator;
 use Civi\Funding\Form\ApplicationValidationResult;
 use Civi\Funding\SonstigeAktivitaet\Traits\AVK1SupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 
-final class AVK1Validator extends AbstractNonSummaryApplicationValidator {
+final class AVK1Validator extends AbstractNonCombinedApplicationValidator {
 
   use AVK1SupportedFundingCaseTypesTrait;
 

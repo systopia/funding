@@ -23,8 +23,8 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationFormAddCreateCommand;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
-use Civi\Funding\Form\SummaryApplicationJsonSchemaFactoryInterface;
-use Civi\Funding\Form\SummaryApplicationUiSchemaFactoryInterface;
+use Civi\Funding\Form\CombinedApplicationJsonSchemaFactoryInterface;
+use Civi\Funding\Form\CombinedApplicationUiSchemaFactoryInterface;
 use Civi\RemoteTools\JsonForms\JsonFormsElement;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -42,19 +42,19 @@ final class ApplicationFormAddCreateHandlerTest extends TestCase {
   private ApplicationFormAddCreateHandler $handler;
 
   /**
-   * @var \Civi\Funding\Form\SummaryApplicationJsonSchemaFactoryInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\Form\CombinedApplicationJsonSchemaFactoryInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $jsonSchemaFactoryMock;
 
   /**
-   * @var \Civi\Funding\Form\SummaryApplicationUiSchemaFactoryInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\Form\CombinedApplicationUiSchemaFactoryInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $uiSchemaFactoryMock;
 
   protected function setUp(): void {
     parent::setUp();
-    $this->jsonSchemaFactoryMock = $this->createMock(SummaryApplicationJsonSchemaFactoryInterface::class);
-    $this->uiSchemaFactoryMock = $this->createMock(SummaryApplicationUiSchemaFactoryInterface::class);
+    $this->jsonSchemaFactoryMock = $this->createMock(CombinedApplicationJsonSchemaFactoryInterface::class);
+    $this->uiSchemaFactoryMock = $this->createMock(CombinedApplicationUiSchemaFactoryInterface::class);
     $this->handler = new ApplicationFormAddCreateHandler(
       $this->jsonSchemaFactoryMock,
       $this->uiSchemaFactoryMock,

@@ -23,12 +23,12 @@ use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
-use Civi\Funding\Form\AbstractSummaryApplicationValidator;
+use Civi\Funding\Form\AbstractCombinedApplicationValidator;
 use Civi\Funding\Form\ApplicationValidationResult;
 use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 
-final class KursApplicationValidator extends AbstractSummaryApplicationValidator {
+final class KursApplicationValidator extends AbstractCombinedApplicationValidator {
 
   use KursSupportedFundingCaseTypesTrait;
 

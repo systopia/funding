@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2023 SYSTOPIA GmbH
+ * Copyright (C) 2022 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -19,22 +19,20 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form;
 
+use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 
-interface NonSummaryApplicationValidatorInterface extends ApplicationValidatorInterface {
+interface CombinedApplicationJsonSchemaFactoryInterface extends ApplicationJsonSchemaFactoryInterface {
 
   /**
-   * Called when no funding case exists.
-   *
-   * @phpstan-param array<string, mixed> $data JSON serializable.
+   * Called when adding an application to an existing funding case.
    */
-  public function validateInitial(
-    int $contactId,
+  public function createJsonSchemaAdd(
     FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType,
-    array $data,
-    int $maxErrors = 1
-  ): ApplicationValidationResult;
+    FundingCaseEntity $fundingCase
+  ): JsonSchema;
 
 }

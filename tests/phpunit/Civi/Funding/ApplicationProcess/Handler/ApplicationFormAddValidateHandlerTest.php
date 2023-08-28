@@ -24,7 +24,7 @@ use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Form\ApplicationValidationResult;
-use Civi\Funding\Form\SummaryApplicationValidatorInterface;
+use Civi\Funding\Form\CombinedApplicationValidatorInterface;
 use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -38,13 +38,13 @@ final class ApplicationFormAddValidateHandlerTest extends TestCase {
   private ApplicationFormAddValidateHandler $handler;
 
   /**
-   * @var \Civi\Funding\Form\SummaryApplicationValidatorInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\Form\CombinedApplicationValidatorInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $validatorMock;
 
   protected function setUp(): void {
     parent::setUp();
-    $this->validatorMock = $this->createMock(SummaryApplicationValidatorInterface::class);
+    $this->validatorMock = $this->createMock(CombinedApplicationValidatorInterface::class);
     $this->handler = new ApplicationFormAddValidateHandler($this->validatorMock);
   }
 

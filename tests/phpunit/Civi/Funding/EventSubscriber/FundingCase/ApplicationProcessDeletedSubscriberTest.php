@@ -76,7 +76,7 @@ final class ApplicationProcessDeletedSubscriberTest extends TestCase {
     $this->subscriber->onDeleted($event);
   }
 
-  public function testOnDeletedSummaryApplication(): void {
+  public function testOnDeletedCombinedApplication(): void {
     $event = $this->createEvent(TRUE);
     $this->applicationProcessManagerMock->method('countByFundingCaseId')
       ->with($event->getFundingCase()->getId())
@@ -98,12 +98,12 @@ final class ApplicationProcessDeletedSubscriberTest extends TestCase {
     $this->subscriber->onDeleted($event);
   }
 
-  private function createEvent(bool $summaryApplication = FALSE): ApplicationProcessDeletedEvent {
+  private function createEvent(bool $combinedApplication = FALSE): ApplicationProcessDeletedEvent {
     return new ApplicationProcessDeletedEvent(
       ApplicationProcessBundleFactory::createApplicationProcessBundle(
         [],
         [],
-        ['is_summary_application' => $summaryApplication],
+        ['is_combined_application' => $combinedApplication],
       )
     );
   }

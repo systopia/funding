@@ -21,17 +21,16 @@ namespace Civi\Funding\Form;
 
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
-use Civi\RemoteTools\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonForms\JsonFormsElement;
 
-interface NonSummaryApplicationJsonSchemaFactoryInterface extends ApplicationJsonSchemaFactoryInterface {
+interface NonCombinedApplicationUiSchemaFactoryInterface extends ApplicationUiSchemaFactoryInterface {
 
   /**
    * Called when no funding case exists.
    */
-  public function createJsonSchemaInitial(
-    int $contactId,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingProgramEntity $fundingProgram
-  ): JsonSchema;
+  public function createUiSchemaNew(
+    FundingProgramEntity $fundingProgram,
+    FundingCaseTypeEntity $fundingCaseType
+  ): JsonFormsElement;
 
 }

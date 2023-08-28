@@ -39,7 +39,7 @@ final class DefaultApplicationFormNewSubmitHandler implements ApplicationFormNew
       ->getApplicationFormNewSubmitHandler();
     if (NULL === $handler) {
       throw new \RuntimeException(sprintf(
-        'Funding case type "%s" does not support non-summary applications',
+        'Funding case type "%s" does not support non-combined applications',
         $command->getFundingCaseType()->getName()
       ));
     }

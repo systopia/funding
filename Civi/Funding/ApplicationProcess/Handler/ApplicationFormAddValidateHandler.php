@@ -21,13 +21,13 @@ namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormAddValidateCommand;
 use Civi\Funding\Form\ApplicationValidationResult;
-use Civi\Funding\Form\SummaryApplicationValidatorInterface;
+use Civi\Funding\Form\CombinedApplicationValidatorInterface;
 
 final class ApplicationFormAddValidateHandler implements ApplicationFormAddValidateHandlerInterface {
 
-  private SummaryApplicationValidatorInterface $validator;
+  private CombinedApplicationValidatorInterface $validator;
 
-  public function __construct(SummaryApplicationValidatorInterface $validator) {
+  public function __construct(CombinedApplicationValidatorInterface $validator) {
     $this->validator = $validator;
   }
 

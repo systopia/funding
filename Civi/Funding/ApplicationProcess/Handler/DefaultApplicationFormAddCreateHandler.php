@@ -39,7 +39,7 @@ final class DefaultApplicationFormAddCreateHandler implements ApplicationFormAdd
       ->getApplicationFormAddCreateHandler();
     if (NULL === $handler) {
       throw new \RuntimeException(sprintf(
-        'Funding case type "%s" does not support summary applications',
+        'Funding case type "%s" does not support combined applications',
         $command->getFundingCaseType()->getName()
       ));
     }

@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2023 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -22,17 +22,20 @@ namespace Civi\Funding\Form;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
-use Civi\RemoteTools\JsonForms\JsonFormsElement;
 
-interface SummaryApplicationUiSchemaFactoryInterface extends ApplicationUiSchemaFactoryInterface {
+interface CombinedApplicationValidatorInterface extends ApplicationValidatorInterface {
 
   /**
    * Called when adding an application to an existing funding case.
+   *
+   * @phpstan-param array<string, mixed> $data JSON serializable.
    */
-  public function createUiSchemaAdd(
+  public function validateAdd(
     FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType,
-    FundingCaseEntity $fundingCase
-  ): JsonFormsElement;
+    FundingCaseEntity $fundingCase,
+    array $data,
+    int $maxErrors = 1
+  ): ApplicationValidationResult;
 
 }

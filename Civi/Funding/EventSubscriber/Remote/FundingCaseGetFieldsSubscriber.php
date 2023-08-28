@@ -47,12 +47,12 @@ final class FundingCaseGetFieldsSubscriber extends AbstractRemoteGetFieldsSubscr
 
     $event->addField([
       'nullable' => FALSE,
-      'name' => 'funding_case_type_id.is_summary_application',
-      'title' => E::ts('Is Summary Application'),
+      'name' => 'funding_case_type_id.is_combined_application',
+      'title' => E::ts('Is Combined Application'),
       'data_type' => 'Boolean',
       'serialize' => NULL,
       'options' => FALSE,
-      'label' => E::ts('Is Summary Application'),
+      'label' => E::ts('Is Combined Application'),
       'operators' => NULL,
     ]);
 

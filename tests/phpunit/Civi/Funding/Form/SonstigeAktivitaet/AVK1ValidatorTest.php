@@ -22,7 +22,7 @@ namespace Civi\Funding\Form\SonstigeAktivitaet;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
-use Civi\Funding\Form\NonSummaryApplicationJsonSchemaFactoryInterface;
+use Civi\Funding\Form\NonCombinedApplicationJsonSchemaFactoryInterface;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\Validation\ValidationResult;
 use Civi\RemoteTools\JsonSchema\Validation\ValidatorInterface;
@@ -36,7 +36,7 @@ use Systopia\JsonSchema\Errors\ErrorCollector;
 final class AVK1ValidatorTest extends TestCase {
 
   /**
-   * @var \Civi\Funding\Form\NonSummaryApplicationJsonSchemaFactoryInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\Form\NonCombinedApplicationJsonSchemaFactoryInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $jsonSchemaFactoryMock;
 
@@ -49,7 +49,7 @@ final class AVK1ValidatorTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
-    $this->jsonSchemaFactoryMock = $this->createMock(NonSummaryApplicationJsonSchemaFactoryInterface::class);
+    $this->jsonSchemaFactoryMock = $this->createMock(NonCombinedApplicationJsonSchemaFactoryInterface::class);
     $this->jsonSchemaValidatorMock = $this->createMock(ValidatorInterface::class);
     $this->validator = new AVK1Validator(
       $this->jsonSchemaFactoryMock,

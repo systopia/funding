@@ -35,7 +35,7 @@ final class FundingCaseTypeFixture {
         'title' => 'Test Case Type',
         'abbreviation' => 'TCT',
         'name' => 'TestCaseType',
-        'is_summary_application' => TRUE,
+        'is_combined_application' => TRUE,
       ])->execute();
 
     return FundingCaseTypeEntity::singleFromApiResult($result);

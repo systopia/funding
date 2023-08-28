@@ -23,14 +23,14 @@ use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
-use Civi\Funding\Form\NonSummaryApplicationJsonSchemaFactoryInterface;
-use Civi\Funding\Form\SummaryApplicationJsonSchemaFactoryInterface;
+use Civi\Funding\Form\NonCombinedApplicationJsonSchemaFactoryInterface;
+use Civi\Funding\Form\CombinedApplicationJsonSchemaFactoryInterface;
 use Civi\Funding\Mock\Form\FundingCaseType\Traits\TestSupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 
 // phpcs:disable Generic.Files.LineLength.TooLong
-class TestJsonSchemaFactory implements SummaryApplicationJsonSchemaFactoryInterface, NonSummaryApplicationJsonSchemaFactoryInterface {
+class TestJsonSchemaFactory implements CombinedApplicationJsonSchemaFactoryInterface, NonCombinedApplicationJsonSchemaFactoryInterface {
 // phpcs:enable
   use TestSupportedFundingCaseTypesTrait;
 

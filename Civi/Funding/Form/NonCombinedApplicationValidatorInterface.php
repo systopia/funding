@@ -19,21 +19,20 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form;
 
-use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 
-interface SummaryApplicationValidatorInterface extends ApplicationValidatorInterface {
+interface NonCombinedApplicationValidatorInterface extends ApplicationValidatorInterface {
 
   /**
-   * Called when adding an application to an existing funding case.
+   * Called when no funding case exists.
    *
    * @phpstan-param array<string, mixed> $data JSON serializable.
    */
-  public function validateAdd(
+  public function validateInitial(
+    int $contactId,
     FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType,
-    FundingCaseEntity $fundingCase,
     array $data,
     int $maxErrors = 1
   ): ApplicationValidationResult;

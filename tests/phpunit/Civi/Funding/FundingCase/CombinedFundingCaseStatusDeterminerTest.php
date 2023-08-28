@@ -23,15 +23,15 @@ use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Civi\Funding\FundingCase\SummaryFundingCaseStatusDeterminer
+ * @covers \Civi\Funding\FundingCase\CombinedFundingCaseStatusDeterminer
  */
-final class SummaryFundingCaseStatusDeterminerTest extends TestCase {
+final class CombinedFundingCaseStatusDeterminerTest extends TestCase {
 
-  private SummaryFundingCaseStatusDeterminer $statusDeterminer;
+  private CombinedFundingCaseStatusDeterminer $statusDeterminer;
 
   protected function setUp(): void {
     parent::setUp();
-    $this->statusDeterminer = new SummaryFundingCaseStatusDeterminer();
+    $this->statusDeterminer = new CombinedFundingCaseStatusDeterminer();
   }
 
   public function testGetStatus(): void {
@@ -43,7 +43,7 @@ final class SummaryFundingCaseStatusDeterminerTest extends TestCase {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
       ['status' => 'sealed'],
       [],
-      ['is_summary_application' => TRUE],
+      ['is_combined_application' => TRUE],
     );
     static::assertFalse($this->statusDeterminer->isClosedByApplicationProcess($applicationProcessBundle, 'previous'));
   }

@@ -21,13 +21,13 @@ namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewValidateCommand;
 use Civi\Funding\Form\ApplicationValidationResult;
-use Civi\Funding\Form\NonSummaryApplicationValidatorInterface;
+use Civi\Funding\Form\NonCombinedApplicationValidatorInterface;
 
 final class ApplicationFormNewValidateHandler implements ApplicationFormNewValidateHandlerInterface {
 
-  private NonSummaryApplicationValidatorInterface $validator;
+  private NonCombinedApplicationValidatorInterface $validator;
 
-  public function __construct(NonSummaryApplicationValidatorInterface $validator) {
+  public function __construct(NonCombinedApplicationValidatorInterface $validator) {
     $this->validator = $validator;
   }
 

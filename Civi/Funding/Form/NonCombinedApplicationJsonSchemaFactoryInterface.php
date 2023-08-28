@@ -19,20 +19,19 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form;
 
-use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 
-interface SummaryApplicationJsonSchemaFactoryInterface extends ApplicationJsonSchemaFactoryInterface {
+interface NonCombinedApplicationJsonSchemaFactoryInterface extends ApplicationJsonSchemaFactoryInterface {
 
   /**
-   * Called when adding an application to an existing funding case.
+   * Called when no funding case exists.
    */
-  public function createJsonSchemaAdd(
-    FundingProgramEntity $fundingProgram,
+  public function createJsonSchemaInitial(
+    int $contactId,
     FundingCaseTypeEntity $fundingCaseType,
-    FundingCaseEntity $fundingCase
+    FundingProgramEntity $fundingProgram
   ): JsonSchema;
 
 }

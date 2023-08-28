@@ -23,18 +23,18 @@ use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
-use Civi\Funding\Form\AbstractSummaryApplicationValidator;
+use Civi\Funding\Form\AbstractCombinedApplicationValidator;
 use Civi\Funding\Form\ApplicationValidationResult;
-use Civi\Funding\Form\NonSummaryApplicationValidatorInterface;
+use Civi\Funding\Form\NonCombinedApplicationValidatorInterface;
 use Civi\Funding\Form\ValidatedApplicationDataInvalid;
 use Civi\Funding\Mock\Form\FundingCaseType\Traits\TestSupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 
 // phpcs:disable Generic.Files.LineLength.TooLong
 /**
- * @property \Civi\Funding\Form\SummaryApplicationJsonSchemaFactoryInterface&\Civi\Funding\Form\NonSummaryApplicationJsonSchemaFactoryInterface $jsonSchemaFactory
+ * @property \Civi\Funding\Form\CombinedApplicationJsonSchemaFactoryInterface&\Civi\Funding\Form\NonCombinedApplicationJsonSchemaFactoryInterface $jsonSchemaFactory
  */
-final class TestValidator extends AbstractSummaryApplicationValidator implements NonSummaryApplicationValidatorInterface {
+final class TestValidator extends AbstractCombinedApplicationValidator implements NonCombinedApplicationValidatorInterface {
 // phpcs:enable
   use TestSupportedFundingCaseTypesTrait;
 

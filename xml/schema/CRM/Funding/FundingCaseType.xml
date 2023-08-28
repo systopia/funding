@@ -63,7 +63,7 @@
   </field>
 
   <field>
-    <name>is_summary_application</name>
+    <name>is_combined_application</name>
     <type>boolean</type>
     <required>true</required>
     <html>
@@ -75,7 +75,7 @@
     <name>application_process_label</name>
     <type>varchar</type>
     <length>255</length>
-    <comment>Used for summary applications</comment>
+    <comment>Used for combined applications</comment>
     <html>
       <type>Text</type>
     </html>

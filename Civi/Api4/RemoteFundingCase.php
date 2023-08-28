@@ -33,7 +33,7 @@ use Civi\Funding\Api4\Action\Remote\FundingCase\ValidateNewApplicationFormAction
 
 /**
  * The new application form actions are used to create a funding case together
- * with an application. The other new form actions are used for summary
+ * with an application. The other new form actions are used for combined
  * applications to create a funding case without an application.
  */
 final class RemoteFundingCase extends AbstractRemoteFundingEntity {

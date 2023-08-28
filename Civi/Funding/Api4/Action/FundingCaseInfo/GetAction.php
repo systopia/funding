@@ -78,7 +78,7 @@ final class GetAction extends AbstractGetAction {
       'funding_case_title' => $fundingCase->getTitle(),
       'funding_case_amount_approved' => $fundingCase->getAmountApproved(),
       'funding_case_type_id' => $fundingCaseType->getId(),
-      'funding_case_type_is_summary_application' => $fundingCaseType->getIsSummaryApplication(),
+      'funding_case_type_is_combined_application' => $fundingCaseType->getIsCombinedApplication(),
       'funding_case_transfer_contract_uri' => $fundingCase->getTransferContractUri(),
       'funding_program_id' => $fundingProgram->getId(),
       'funding_program_currency' => $fundingProgram->getCurrency(),
@@ -145,12 +145,12 @@ final class GetAction extends AbstractGetAction {
   private function getFundingCases(): array {
     $fundingCaseId = $this->getFundingCaseIdFromWhere();
     if (NULL === $fundingCaseId) {
-      $withSummaryApplication = WhereUtil::getBool($this->where, 'funding_case_type_is_summary_application');
-      if (NULL !== $withSummaryApplication) {
+      $withCombinedApplication = WhereUtil::getBool($this->where, 'funding_case_type_is_combined_application');
+      if (NULL !== $withCombinedApplication) {
         return $this->fundingCaseManager->getBy(Comparison::new(
-          'funding_case_type_id.is_summary_application',
+          'funding_case_type_id.is_combined_application',
           '=',
-          $withSummaryApplication
+          $withCombinedApplication
         ));
       }
 
