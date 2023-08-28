@@ -31,7 +31,6 @@ use PHPUnit\Framework\TestCase;
 /**
  * @covers \Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewValidateHandler
  * @covers \Civi\Funding\ApplicationProcess\Command\ApplicationFormNewValidateCommand
- * @covers \Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateResult
  */
 final class ApplicationFormNewValidateHandlerTest extends TestCase {
 
@@ -64,9 +63,7 @@ final class ApplicationFormNewValidateHandlerTest extends TestCase {
 
     $command = new ApplicationFormNewValidateCommand($contactId, $fundingProgram, $fundingCaseType, $data);
     $result = $this->handler->handle($command);
-    static::assertSame($validatedData->getRawData(), $result->getData());
-    static::assertSame($errorMessages, $result->getErrors());
-    static::assertFalse($result->isValid());
+    static::assertSame($validationResult, $result);
   }
 
 }

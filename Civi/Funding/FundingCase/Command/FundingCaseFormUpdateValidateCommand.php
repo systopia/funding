@@ -36,6 +36,8 @@ final class FundingCaseFormUpdateValidateCommand {
    */
   private array $data;
 
+  private int $maxErrors;
+
   /**
    * @phpstan-param array<string, mixed> $data
    */
@@ -43,12 +45,14 @@ final class FundingCaseFormUpdateValidateCommand {
     FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType,
     FundingCaseEntity $fundingCase,
-    array $data
+    array $data,
+    int $maxErrors = 1
   ) {
     $this->fundingProgram = $fundingProgram;
     $this->fundingCaseType = $fundingCaseType;
     $this->fundingCase = $fundingCase;
     $this->data = $data;
+    $this->maxErrors = $maxErrors;
   }
 
   public function getFundingProgram(): FundingProgramEntity {
@@ -68,6 +72,10 @@ final class FundingCaseFormUpdateValidateCommand {
    */
   public function getData(): array {
     return $this->data;
+  }
+
+  public function getMaxErrors(): int {
+    return $this->maxErrors;
   }
 
 }

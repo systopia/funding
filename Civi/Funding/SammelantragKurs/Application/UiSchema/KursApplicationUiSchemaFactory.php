@@ -51,12 +51,10 @@ final class KursApplicationUiSchemaFactory implements SummaryApplicationUiSchema
     $fundingProgram = $applicationProcessBundle->getFundingProgram();
 
     $submitButtons = JsonFormsSubmitButtonsFactory::createButtons(
-      $this->filterSubmitActions(
-        $this->submitActionsFactory->createSubmitActions(
-          $applicationProcess->getFullStatus(),
-          $applicationProcessStatusList,
-          $fundingCase->getPermissions()
-        ),
+      $this->submitActionsFactory->createSubmitActions(
+        $applicationProcess->getFullStatus(),
+        $applicationProcessStatusList,
+        $fundingCase->getPermissions()
       ),
     );
 
@@ -86,25 +84,10 @@ final class KursApplicationUiSchemaFactory implements SummaryApplicationUiSchema
     FundingCaseEntity $fundingCase
   ): JsonFormsElement {
     $submitButtons = JsonFormsSubmitButtonsFactory::createButtons(
-      $this->filterSubmitActions(
-        $this->submitActionsFactory->createInitialSubmitActions($fundingProgram->getPermissions()),
-      ),
+      $this->submitActionsFactory->createInitialSubmitActions($fundingProgram->getPermissions())
     );
 
     return new KursApplicationUiSchema('Neuer Kurs', $fundingProgram->getCurrency(), $submitButtons);
-  }
-
-  /**
-   * @phpstan-param array<string, array{label: string, confirm: string|null}> $submitActions
-   *
-   * @phpstan-return array<string, array{label: string, confirm: string|null}>
-   */
-  private function filterSubmitActions(array $submitActions): array {
-    return array_filter(
-      $submitActions,
-      fn (string $action) => 'save' === $action || 'save&new' === $action,
-      ARRAY_FILTER_USE_KEY,
-    );
   }
 
 }

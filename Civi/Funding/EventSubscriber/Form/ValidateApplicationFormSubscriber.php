@@ -22,12 +22,12 @@ namespace Civi\Funding\EventSubscriber\Form;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewValidateCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateCommand;
-use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateResult;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewValidateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterface;
 use Civi\Funding\Event\Remote\AbstractFundingValidateFormEvent;
 use Civi\Funding\Event\Remote\ApplicationProcess\ValidateApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingCase\ValidateNewApplicationFormEvent;
+use Civi\Funding\Form\ApplicationValidationResult;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ValidateApplicationFormSubscriber implements EventSubscriberInterface {
@@ -65,6 +65,7 @@ class ValidateApplicationFormSubscriber implements EventSubscriberInterface {
       $event->getApplicationProcessBundle(),
       $statusList,
       $event->getData(),
+      20,
     );
 
     $result = $this->validateHandler->handle($command);
@@ -84,14 +85,14 @@ class ValidateApplicationFormSubscriber implements EventSubscriberInterface {
   }
 
   private function mapValidationResultToEvent(
-    ApplicationFormValidateResult $validationResult,
+    ApplicationValidationResult $validationResult,
     AbstractFundingValidateFormEvent $event
   ): void {
     if ($validationResult->isValid()) {
       $event->setValid(TRUE);
     }
     else {
-      foreach ($validationResult->getErrors() as $jsonPointer => $messages) {
+      foreach ($validationResult->getErrorMessages() as $jsonPointer => $messages) {
         $event->addErrorsAt($jsonPointer, $messages);
       }
     }

@@ -19,117 +19,44 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Handler;
 
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface;
-use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
-use Civi\Funding\ApplicationProcess\Command\ApplicationFormCommentPersistCommand;
+use Civi\Funding\ApplicationProcess\Command\ApplicationActionApplyCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitResult;
-use Civi\Funding\ApplicationProcess\Snapshot\ApplicationSnapshotRestorerInterface;
-use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
-use Civi\Funding\Entity\ApplicationProcessEntity;
-use Civi\Funding\Form\ApplicationValidationResult;
-use Civi\Funding\Form\ApplicationValidatorInterface;
+use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateCommand;
 
 final class ApplicationFormSubmitHandler implements ApplicationFormSubmitHandlerInterface {
 
-  private ApplicationProcessManager $applicationProcessManager;
+  private ApplicationActionApplyHandlerInterface $actionApplyHandler;
 
-  private ApplicationSnapshotRestorerInterface $applicationSnapshotRestorer;
-
-  private ApplicationFormCommentPersistHandlerInterface $commentPersistHandler;
-
-  private ApplicationProcessActionStatusInfoInterface $info;
-
-  private ApplicationProcessStatusDeterminerInterface $statusDeterminer;
-
-  private ApplicationValidatorInterface $validator;
+  private ApplicationFormValidateHandlerInterface $validateHandler;
 
   public function __construct(
-    ApplicationProcessManager $applicationProcessManager,
-    ApplicationSnapshotRestorerInterface $applicationSnapshotRestorer,
-    ApplicationFormCommentPersistHandlerInterface $commentPersistHandler,
-    ApplicationProcessActionStatusInfoInterface $info,
-    ApplicationProcessStatusDeterminerInterface $statusDeterminer,
-    ApplicationValidatorInterface $validator
+    ApplicationActionApplyHandlerInterface $actionApplyHandler,
+    ApplicationFormValidateHandlerInterface $validateHandler
   ) {
-    $this->applicationProcessManager = $applicationProcessManager;
-    $this->applicationSnapshotRestorer = $applicationSnapshotRestorer;
-    $this->commentPersistHandler = $commentPersistHandler;
-    $this->info = $info;
-    $this->statusDeterminer = $statusDeterminer;
-    $this->validator = $validator;
+    $this->actionApplyHandler = $actionApplyHandler;
+    $this->validateHandler = $validateHandler;
   }
 
   public function handle(ApplicationFormSubmitCommand $command): ApplicationFormSubmitResult {
-    $validationResult = $this->validator->validateExisting(
+    $validationResult = $this->validateHandler->handle(new ApplicationFormValidateCommand(
       $command->getApplicationProcessBundle(),
       $command->getApplicationProcessStatusList(),
-      $command->getData()
-    );
-    if ($validationResult->isValid()) {
-      return $this->handleValid($command, $validationResult);
+      $command->getData(),
+    ));
+
+    if (!$validationResult->isValid()) {
+      return ApplicationFormSubmitResult::createError($validationResult);
     }
 
-    return ApplicationFormSubmitResult::createError($validationResult);
-  }
-
-  private function handleValid(
-    ApplicationFormSubmitCommand $command,
-    ApplicationValidationResult $validationResult
-  ): ApplicationFormSubmitResult {
-    $validatedData = $validationResult->getValidatedData();
-
-    if ($this->info->isDeleteAction($validatedData->getAction())) {
-      $this->applicationProcessManager->delete($command->getApplicationProcessBundle());
-
-      return ApplicationFormSubmitResult::createSuccess($validationResult);
-    }
-
-    if ($this->info->isRestoreAction($validatedData->getAction())) {
-      $this->applicationSnapshotRestorer->restoreLastSnapshot(
-        $command->getContactId(),
-        $command->getApplicationProcessBundle()
-      );
-    }
-    else {
-      $this->mapValidatedDataIntoApplicationProcess($command->getApplicationProcess(), $validationResult);
-      $this->applicationProcessManager->update(
-        $command->getContactId(),
-        $command->getApplicationProcessBundle(),
-      );
-    }
-
-    if (NULL !== $validatedData->getComment() && '' !== $validatedData->getComment()['text']) {
-      $this->commentPersistHandler->handle(new ApplicationFormCommentPersistCommand(
-        $command->getContactId(),
-        $command->getApplicationProcess(),
-        $command->getFundingCase(),
-        $command->getFundingCaseType(),
-        $command->getFundingProgram(),
-        $validatedData,
-      ));
-    }
+    $this->actionApplyHandler->handle(new ApplicationActionApplyCommand(
+      $command->getContactId(),
+      $validationResult->getValidatedData()->getAction(),
+      $command->getApplicationProcessBundle(),
+      $validationResult,
+    ));
 
     return ApplicationFormSubmitResult::createSuccess($validationResult);
-  }
-
-  private function mapValidatedDataIntoApplicationProcess(
-    ApplicationProcessEntity $applicationProcess,
-    ApplicationValidationResult $validationResult
-  ): void {
-    $validatedData = $validationResult->getValidatedData();
-    $applicationProcess->setFullStatus(
-      $this->statusDeterminer->getStatus($applicationProcess->getFullStatus(), $validatedData->getAction())
-    );
-
-    if (!$validationResult->isReadOnly()) {
-      $applicationProcess->setTitle($validatedData->getTitle());
-      $applicationProcess->setShortDescription($validatedData->getShortDescription());
-      $applicationProcess->setStartDate($validatedData->getStartDate());
-      $applicationProcess->setEndDate($validatedData->getEndDate());
-      $applicationProcess->setAmountRequested($validatedData->getAmountRequested());
-      $applicationProcess->setRequestData($validatedData->getApplicationData());
-    }
   }
 
 }

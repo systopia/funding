@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewValidateCommand;
-use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateResult;
+use Civi\Funding\Form\ApplicationValidationResult;
 use Civi\Funding\FundingCaseTypeServiceLocatorContainer;
 
 /**
@@ -34,7 +34,7 @@ final class DefaultApplicationFormNewValidateHandler implements ApplicationFormN
     $this->serviceLocatorContainer = $serviceLocatorContainer;
   }
 
-  public function handle(ApplicationFormNewValidateCommand $command): ApplicationFormValidateResult {
+  public function handle(ApplicationFormNewValidateCommand $command): ApplicationValidationResult {
     $handler = $this->serviceLocatorContainer->get($command->getFundingCaseType()->getName())
       ->getApplicationFormNewValidateHandler();
     if (NULL === $handler) {

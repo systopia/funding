@@ -19,13 +19,23 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Handler;
 
-use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateCommand;
-use Civi\Funding\Form\ApplicationValidationResult;
+use Civi\Funding\ApplicationProcess\Command\ApplicationActionApplyCommand;
+use Civi\Funding\FundingCaseTypeServiceLocatorContainer;
 
-interface ApplicationFormValidateHandlerInterface {
+/**
+ * @codeCoverageIgnore
+ */
+final class DefaultApplicationActionApplyHandler implements ApplicationActionApplyHandlerInterface {
 
-  public const SERVICE_TAG = 'funding.application.form_new_validate_handler';
+  private FundingCaseTypeServiceLocatorContainer $serviceLocatorContainer;
 
-  public function handle(ApplicationFormValidateCommand $command): ApplicationValidationResult;
+  public function __construct(FundingCaseTypeServiceLocatorContainer $serviceLocatorContainer) {
+    $this->serviceLocatorContainer = $serviceLocatorContainer;
+  }
+
+  public function handle(ApplicationActionApplyCommand $command): void {
+    $this->serviceLocatorContainer->get($command->getFundingCaseType()->getName())
+      ->getApplicationActionApplyHandler()->handle($command);
+  }
 
 }

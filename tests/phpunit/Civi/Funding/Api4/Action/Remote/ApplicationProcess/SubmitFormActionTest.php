@@ -26,6 +26,7 @@ namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 use Civi\Api4\Generic\Result;
 use Civi\Funding\Event\Remote\ApplicationProcess\SubmitApplicationFormEvent;
 use Civi\Funding\Exception\FundingException;
+use Civi\Funding\Form\RemoteSubmitResponseActions;
 use Civi\Funding\Traits\CreateMockTrait;
 
 /**
@@ -107,7 +108,7 @@ final class SubmitFormActionTest extends AbstractFormActionTest {
           ),
           static::callback(
             function (SubmitApplicationFormEvent $event): bool {
-              $event->setAction(SubmitApplicationFormEvent::ACTION_CLOSE_FORM);
+              $event->setAction(RemoteSubmitResponseActions::CLOSE_FORM);
               $event->setMessage('Test');
               $event->setFiles(['https://example.org/test.txt' => 'https://example.net/test,txt']);
 

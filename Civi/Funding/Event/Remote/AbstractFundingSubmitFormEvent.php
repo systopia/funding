@@ -24,17 +24,13 @@ use Civi\RemoteTools\Form\RemoteFormInterface;
 
 abstract class AbstractFundingSubmitFormEvent extends AbstractFundingRequestEvent {
 
-  public const ACTION_CLOSE_FORM = RemoteSubmitResponseActions::CLOSE_FORM;
-
-  public const ACTION_SHOW_VALIDATION = RemoteSubmitResponseActions::SHOW_VALIDATION;
-
   /**
    * @var array<string, mixed>
    */
   protected array $data;
 
   /**
-   * @var string|null|self::ACTION_*
+   * @phpstan-var RemoteSubmitResponseActions::*|null
    */
   private ?string $action = NULL;
 
@@ -53,20 +49,21 @@ abstract class AbstractFundingSubmitFormEvent extends AbstractFundingRequestEven
 
   private ?string $message = NULL;
 
+  /**
+   * @phpstan-return RemoteSubmitResponseActions::*|null
+   */
   public function getAction(): ?string {
     return $this->action;
   }
 
-  // phpcs:disable Drupal.Commenting.FunctionComment,Squiz.WhiteSpace.FunctionSpacing
   /**
-   * @param string&self::ACTION_* $action
+   * @phpstan-param RemoteSubmitResponseActions::* $action
    */
   public function setAction(string $action): self {
     $this->action = $action;
 
     return $this;
   }
-  // phpcs:enable
 
   public function addError(string $jsonPointer, string $message): self {
     $this->addErrorsAt($jsonPointer, [$message]);
@@ -80,7 +77,7 @@ abstract class AbstractFundingSubmitFormEvent extends AbstractFundingRequestEven
    */
   public function addErrorsAt(string $jsonPointer, array $messages): self {
     $this->errors[$jsonPointer] = array_merge($this->errors[$jsonPointer] ?? [], $messages);
-    $this->action = self::ACTION_SHOW_VALIDATION;
+    $this->action = RemoteSubmitResponseActions::SHOW_VALIDATION;
 
     return $this;
   }

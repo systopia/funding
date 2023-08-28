@@ -32,7 +32,6 @@ use PHPUnit\Framework\TestCase;
 /**
  * @covers \Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddValidateHandler
  * @covers \Civi\Funding\ApplicationProcess\Command\ApplicationFormAddValidateCommand
- * @covers \Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateResult
  */
 final class ApplicationFormAddValidateHandlerTest extends TestCase {
 

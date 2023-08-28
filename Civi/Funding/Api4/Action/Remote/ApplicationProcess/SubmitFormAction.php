@@ -25,6 +25,7 @@ use Civi\Funding\Api4\Action\Traits\ApplicationProcessIdParameterTrait;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\Event\Remote\ApplicationProcess\SubmitApplicationFormEvent;
 use Civi\Funding\Exception\FundingException;
+use Civi\Funding\Form\RemoteSubmitResponseActions;
 use Civi\RemoteTools\Api4\Action\Traits\DataParameterTrait;
 use Webmozart\Assert\Assert;
 
@@ -63,12 +64,14 @@ class SubmitFormAction extends AbstractFormAction {
     }
 
     switch ($event->getAction()) {
-      case SubmitApplicationFormEvent::ACTION_SHOW_VALIDATION:
+      case RemoteSubmitResponseActions::SHOW_VALIDATION:
         Assert::notEmpty($event->getErrors());
         $result['errors'] = $event->getErrors();
         break;
 
-      case SubmitApplicationFormEvent::ACTION_CLOSE_FORM:
+      case RemoteSubmitResponseActions::RELOAD_FORM:
+        // fall through
+      case RemoteSubmitResponseActions::CLOSE_FORM:
         $result['files'] = $event->getFiles();
         break;
 

@@ -21,6 +21,7 @@ namespace Civi\Funding\FundingCase\Remote\Api4\ActionHandler;
 
 use Civi\Funding\Api4\Action\Remote\FundingCase\SubmitUpdateFormAction;
 use Civi\Funding\Form\RemoteSubmitResponseActions;
+use Civi\Funding\FundingCase\Actions\FundingCaseActions;
 use Civi\Funding\FundingCase\Command\FundingCaseFormUpdateSubmitCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\Handler\FundingCaseFormUpdateSubmitHandlerInterface;
@@ -56,7 +57,7 @@ final class SubmitUpdateFormActionHandler implements ActionHandlerInterface {
 
   /**
    * @phpstan-return array{
-   *    action: string,
+   *    action: RemoteSubmitResponseActions::*,
    *    message: string,
    *    errors?: array<string, non-empty-array<string>>,
    *    entity_name?: string,
@@ -95,8 +96,15 @@ final class SubmitUpdateFormActionHandler implements ActionHandlerInterface {
       ];
     }
 
+    if (FundingCaseActions::DELETE === $submitResult->getValidatedData()->getAction()) {
+      return [
+        'action' => RemoteSubmitResponseActions::CLOSE_FORM,
+        'message' => E::ts('Deleted'),
+      ];
+    }
+
     return [
-      'action' => RemoteSubmitResponseActions::CLOSE_FORM,
+      'action' => RemoteSubmitResponseActions::RELOAD_FORM,
       'message' => E::ts('Saved'),
     ];
   }

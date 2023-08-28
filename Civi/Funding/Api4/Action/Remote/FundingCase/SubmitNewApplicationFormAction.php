@@ -25,6 +25,7 @@ use Civi\Funding\Api4\Action\Traits\FundingCaseTypeIdParameterTrait;
 use Civi\Funding\Api4\Action\Traits\FundingProgramIdParameterTrait;
 use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
 use Civi\Funding\Exception\FundingException;
+use Civi\Funding\Form\RemoteSubmitResponseActions;
 use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker;
 use Civi\Funding\FundingProgram\FundingProgramManager;
@@ -77,12 +78,14 @@ class SubmitNewApplicationFormAction extends AbstractNewApplicationFormAction {
     }
 
     switch ($event->getAction()) {
-      case SubmitNewApplicationFormEvent::ACTION_SHOW_VALIDATION:
+      case RemoteSubmitResponseActions::SHOW_VALIDATION:
         Assert::notEmpty($event->getErrors());
         $result['errors'] = $event->getErrors();
         break;
 
-      case SubmitNewApplicationFormEvent::ACTION_CLOSE_FORM:
+      case RemoteSubmitResponseActions::RELOAD_FORM:
+        // fall through
+      case RemoteSubmitResponseActions::CLOSE_FORM:
         $result['files'] = $event->getFiles();
         break;
 

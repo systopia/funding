@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewValidateCommand;
-use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateResult;
+use Civi\Funding\Form\ApplicationValidationResult;
 use Civi\Funding\Form\NonSummaryApplicationValidatorInterface;
 
 final class ApplicationFormNewValidateHandler implements ApplicationFormNewValidateHandlerInterface {
@@ -31,16 +31,14 @@ final class ApplicationFormNewValidateHandler implements ApplicationFormNewValid
     $this->validator = $validator;
   }
 
-  public function handle(ApplicationFormNewValidateCommand $command): ApplicationFormValidateResult {
-    $validationResult = $this->validator->validateInitial(
+  public function handle(ApplicationFormNewValidateCommand $command): ApplicationValidationResult {
+    return $this->validator->validateInitial(
       $command->getContactId(),
       $command->getFundingProgram(),
       $command->getFundingCaseType(),
       $command->getData(),
       20
     );
-
-    return ApplicationFormValidateResult::create($validationResult);
   }
 
 }

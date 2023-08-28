@@ -27,6 +27,7 @@ use Civi\API\Exception\UnauthorizedException;
 use Civi\Api4\Generic\Result;
 use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
 use Civi\Funding\Exception\FundingException;
+use Civi\Funding\Form\RemoteSubmitResponseActions;
 use Civi\Funding\Traits\CreateMockTrait;
 
 /**
@@ -119,7 +120,7 @@ final class SubmitNewApplicationFormActionTest extends AbstractNewApplicationFor
           ),
           static::callback(
             function (SubmitNewApplicationFormEvent $event): bool {
-              $event->setAction(SubmitNewApplicationFormEvent::ACTION_CLOSE_FORM);
+              $event->setAction(RemoteSubmitResponseActions::CLOSE_FORM);
               $event->setMessage('Test');
               $event->setFiles(['https://example.org/test.txt' => 'https://example.net/test,txt']);
 

@@ -19,12 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase;
 
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface;
-use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
-use Civi\RemoteTools\Api4\Query\Comparison;
-use Civi\RemoteTools\Api4\Query\CompositeCondition;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**

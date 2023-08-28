@@ -36,6 +36,8 @@ final class ApplicationFormValidateCommand {
    */
   private array $data;
 
+  private int $maxErrors;
+
   /**
    * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $applicationProcessStatusList
    *   Status of other application processes in same funding case indexed by ID.
@@ -44,11 +46,13 @@ final class ApplicationFormValidateCommand {
   public function __construct(
     ApplicationProcessEntityBundle $applicationProcessBundle,
     array $applicationProcessStatusList,
-    array $data
+    array $data,
+    int $maxErrors = 1
   ) {
     $this->applicationProcessBundle = $applicationProcessBundle;
     $this->applicationProcessStatusList = $applicationProcessStatusList;
     $this->data = $data;
+    $this->maxErrors = $maxErrors;
   }
 
   /**
@@ -64,6 +68,10 @@ final class ApplicationFormValidateCommand {
    */
   public function getData(): array {
     return $this->data;
+  }
+
+  public function getMaxErrors(): int {
+    return $this->maxErrors;
   }
 
 }

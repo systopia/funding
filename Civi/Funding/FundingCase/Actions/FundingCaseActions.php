@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2023 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,15 +17,10 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\ApplicationProcess\Handler;
+namespace Civi\Funding\FundingCase\Actions;
 
-use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateCommand;
-use Civi\Funding\Form\ApplicationValidationResult;
+final class FundingCaseActions {
 
-interface ApplicationFormValidateHandlerInterface {
-
-  public const SERVICE_TAG = 'funding.application.form_new_validate_handler';
-
-  public function handle(ApplicationFormValidateCommand $command): ApplicationValidationResult;
+  public const DELETE = 'delete';
 
 }

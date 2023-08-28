@@ -48,11 +48,14 @@ final class KursCaseActionsDeterminer extends FundingCaseActionsDeterminerDecora
     array $permissions
   ): array {
     $actions = [];
-    foreach ($applicationProcessStatusList as $applicationProcessStatus) {
+
+    foreach ($applicationProcessStatusList as $id => $applicationProcessStatus) {
+      $curStatusList = $applicationProcessStatusList;
+      unset($curStatusList[$id]);
       if ($this->applicationActionsDeterminer->isActionAllowed(
         'apply',
         $applicationProcessStatus,
-        $applicationProcessStatusList,
+        $curStatusList,
         $permissions
       )) {
         $actions[] = 'apply';
@@ -61,12 +64,16 @@ final class KursCaseActionsDeterminer extends FundingCaseActionsDeterminerDecora
       elseif ($this->applicationActionsDeterminer->isActionAllowed(
         'review',
         $applicationProcessStatus,
-        $applicationProcessStatusList,
+        $curStatusList,
         $permissions
       )) {
         $actions[] = 'review';
         break;
       }
+    }
+
+    if ($this->isActionAllowedForAllApplications('delete', $applicationProcessStatusList, $permissions)) {
+      $actions[] = 'delete';
     }
 
     return array_unique(array_merge(
@@ -84,6 +91,31 @@ final class KursCaseActionsDeterminer extends FundingCaseActionsDeterminerDecora
     }
 
     return [];
+  }
+
+  /**
+   * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $applicationProcessStatusList
+   * @phpstan-param array<string> $permissions
+   */
+  private function isActionAllowedForAllApplications(
+    string $action,
+    array $applicationProcessStatusList,
+    array $permissions
+  ): bool {
+    foreach ($applicationProcessStatusList as $id => $applicationProcessStatus) {
+      $curStatusList = $applicationProcessStatusList;
+      unset($curStatusList[$id]);
+      if (!$this->applicationActionsDeterminer->isActionAllowed(
+        $action,
+        $applicationProcessStatus,
+        $curStatusList,
+        $permissions
+      )) {
+        return FALSE;
+      }
+    }
+
+    return TRUE;
   }
 
 }

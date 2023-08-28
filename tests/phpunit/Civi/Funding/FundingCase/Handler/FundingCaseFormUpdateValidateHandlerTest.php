@@ -69,6 +69,7 @@ final class FundingCaseFormUpdateValidateHandlerTest extends TestCase {
       $fundingCaseType,
       $fundingCase,
       $data,
+      20,
     );
     $result = $this->handler->handle($command);
     static::assertSame($validatedData, $result->getValidatedData());

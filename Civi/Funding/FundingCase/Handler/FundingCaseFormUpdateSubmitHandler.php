@@ -19,17 +19,33 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase\Handler;
 
+use Civi\Funding\FundingCase\Actions\FundingCaseActions;
 use Civi\Funding\FundingCase\Command\FundingCaseFormUpdateSubmitCommand;
 use Civi\Funding\FundingCase\Command\FundingCaseFormUpdateSubmitResult;
 use Civi\Funding\FundingCase\Command\FundingCaseFormUpdateValidateCommand;
+use Civi\Funding\FundingCase\FundingCaseManager;
+use Civi\Funding\FundingCase\FundingCaseStatusDeterminerInterface;
+use Civi\Funding\FundingCase\Handler\Helper\ApplicationAllowedActionApplier;
 
 final class FundingCaseFormUpdateSubmitHandler implements FundingCaseFormUpdateSubmitHandlerInterface {
+
+  private ApplicationAllowedActionApplier $applicationAllowedActionApplier;
+
+  private FundingCaseManager $fundingCaseManager;
+
+  private FundingCaseStatusDeterminerInterface $statusDeterminer;
 
   private FundingCaseFormUpdateValidateHandlerInterface $validateHandler;
 
   public function __construct(
+    ApplicationAllowedActionApplier $applicationAllowedActionApplier,
+    FundingCaseManager $fundingCaseManager,
+    FundingCaseStatusDeterminerInterface $statusDeterminer,
     FundingCaseFormUpdateValidateHandlerInterface $validateHandler
   ) {
+    $this->applicationAllowedActionApplier = $applicationAllowedActionApplier;
+    $this->fundingCaseManager = $fundingCaseManager;
+    $this->statusDeterminer = $statusDeterminer;
     $this->validateHandler = $validateHandler;
   }
 
@@ -42,7 +58,21 @@ final class FundingCaseFormUpdateSubmitHandler implements FundingCaseFormUpdateS
       return FundingCaseFormUpdateSubmitResult::createError($validationResult, $command->getFundingCase());
     }
 
-    // @todo Handle submit
+    $action = $validationResult->getValidatedData()->getAction();
+    $fundingCase = $command->getFundingCase();
+    $this->applicationAllowedActionApplier->applyAllowedActionsByFundingCase(
+      $command->getContactId(),
+      $fundingCase,
+      $action
+    );
+
+    if (FundingCaseActions::DELETE === $action) {
+      $this->fundingCaseManager->delete($fundingCase);
+    }
+    else {
+      $fundingCase->setStatus($this->statusDeterminer->getStatus($fundingCase->getStatus(), $action));
+      $this->fundingCaseManager->update($fundingCase);
+    }
 
     return FundingCaseFormUpdateSubmitResult::createSuccess(
       $validationResult,

@@ -29,7 +29,10 @@ final class KursApplicationSubmitActionsContainer extends AbstractSubmitActionsC
   public function __construct() {
     $this
       ->add('save&new', 'Speichern und neu')
-      ->add('save', 'Speichern');
+      ->add('save', 'Speichern')
+      ->add('modify', 'Bearbeiten')
+      ->add('withdraw', 'Zurückziehen', 'Möchten Sie diesen Kurs wirklich zurückziehen?')
+      ->add('delete', 'Löschen', 'Möchten Sie diesen Kurs wirklich löschen?');
   }
 
 }

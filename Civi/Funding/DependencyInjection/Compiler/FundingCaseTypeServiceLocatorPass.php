@@ -25,6 +25,8 @@ use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionSta
 use Civi\Funding\ApplicationProcess\ApplicationCostItemsFactoryInterface;
 use Civi\Funding\ApplicationProcess\ApplicationFormFilesFactoryInterface;
 use Civi\Funding\ApplicationProcess\ApplicationResourcesItemsFactoryInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationActionApplyHandler;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationActionApplyHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandler;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandler;
@@ -81,6 +83,7 @@ use Civi\Funding\Form\NonSummaryApplicationJsonSchemaFactoryInterface;
 use Civi\Funding\Form\NonSummaryApplicationValidatorInterface;
 use Civi\Funding\Form\SummaryApplicationJsonSchemaFactoryInterface;
 use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
+use Civi\Funding\FundingCase\Handler\Helper\ApplicationAllowedActionApplier;
 use Civi\Funding\FundingCase\NonSummaryFundingCaseStatusDeterminer;
 use Civi\Funding\FundingCase\FundingCaseStatusDeterminerInterface;
 use Civi\Funding\FundingCase\Handler\Decorator\FundingCaseApproveEventDecorator;
@@ -180,6 +183,9 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
       $this->getTaggedServices($container, ApplicationFormValidateHandlerInterface::SERVICE_TAG);
     $applicationFormSubmitHandlerServices =
       $this->getTaggedServices($container, ApplicationFormSubmitHandlerInterface::SERVICE_TAG);
+
+    $applicationActionApplyHandlerServices =
+      $this->getTaggedServices($container, ApplicationActionApplyHandlerInterface::SERVICE_TAG);
 
     $applicationFormCommentPersistHandlerServices =
       $this->getTaggedServices($container, ApplicationFormCommentPersistHandlerInterface::SERVICE_TAG);
@@ -397,7 +403,15 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
           $container,
           $fundingCaseType,
           FundingCaseFormUpdateSubmitHandler::class,
-          [],
+          [
+            '$applicationAllowedActionApplier' => $this->createService(
+              $container,
+              $fundingCaseType,
+              ApplicationAllowedActionApplier::class,
+              ['$actionsDeterminer' => $applicationActionsDeterminerServices[$fundingCaseType]],
+            ),
+            '$statusDeterminer' => $fundingCaseStatusDeterminerServices[$fundingCaseType],
+          ],
         );
 
         $fundingCaseFormUpdateValidateHandlerServices[$fundingCaseType] ??= $this->createService(
@@ -456,13 +470,19 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         $container,
         $fundingCaseType,
         ApplicationFormSubmitHandler::class,
+        [],
+        [ApplicationFormSubmitEventDecorator::class => []],
+      );
+
+      $applicationActionApplyHandlerServices[$fundingCaseType] ??= $this->createService(
+        $container,
+        $fundingCaseType,
+        ApplicationActionApplyHandler::class,
         [
           '$commentPersistHandler' => $applicationFormCommentPersistHandlerServices[$fundingCaseType],
           '$info' => $applicationActionStatusInfoServices[$fundingCaseType],
           '$statusDeterminer' => $applicationStatusDeterminerServices[$fundingCaseType],
-          '$validator' => $applicationValidator[$fundingCaseType],
-        ],
-        [ApplicationFormSubmitEventDecorator::class => []],
+        ]
       );
 
       $applicationCostItemsAddIdentifiersHandlerServices[$fundingCaseType] ??= $this->createService(
@@ -547,6 +567,7 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
       );
 
       $services = [
+        ApplicationActionApplyHandlerInterface::class => $applicationActionApplyHandlerServices[$fundingCaseType],
         ApplicationDeleteHandlerInterface::class => $applicationDeleteHandlerServices[$fundingCaseType],
         ApplicationFilesAddIdentifiersHandlerInterface::class
         => $applicationFilesAddIdentifiersHandlerServices[$fundingCaseType],

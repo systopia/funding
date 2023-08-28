@@ -49,7 +49,7 @@ final class SubmitUpdateFormActionTest extends AbstractUpdateFormActionTestCase 
 
     $result = $action->execute();
     static::assertArrayHasSameKeys(['action', 'message'], $result->getArrayCopy());
-    static::assertSame('closeForm', $result['action']);
+    static::assertSame('reloadForm', $result['action']);
     static::assertSame('Saved', $result['message']);
   }
 

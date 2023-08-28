@@ -50,7 +50,7 @@ final class KursApplicationActionsDeterminer extends ApplicationProcessActionsDe
       'review_content' => ['request-change', 'update', 'reject', 'add-comment'],
     ],
     'draft' => [
-      'application_modify' => ['save', 'save&new'],
+      'application_modify' => ['save'],
       'application_apply' => ['apply'],
       'application_withdraw' => ['withdraw'],
       'review_calculative' => ['review', 'add-comment'],

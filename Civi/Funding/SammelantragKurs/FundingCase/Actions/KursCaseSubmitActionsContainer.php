@@ -29,7 +29,8 @@ final class KursCaseSubmitActionsContainer extends AbstractSubmitActionsContaine
   public function __construct() {
     $this
       ->add('save', 'Speichern')
-      ->add('apply', 'Beantragen');
+      ->add('apply', 'Beantragen')
+      ->add('delete', 'Löschen', 'Wollen Sie diesen Sammelantrag wirklich löschen?');
   }
 
 }

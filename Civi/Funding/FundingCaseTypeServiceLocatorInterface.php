@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding;
 
+use Civi\Funding\ApplicationProcess\Handler\ApplicationActionApplyHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationDeleteHandlerInterface;
@@ -54,6 +55,8 @@ use Civi\Funding\TransferContract\Handler\TransferContractRenderHandlerInterface
 interface FundingCaseTypeServiceLocatorInterface {
 
   public const SERVICE_TAG = 'funding.case.type.service_locator';
+
+  public function getApplicationActionApplyHandler(): ApplicationActionApplyHandlerInterface;
 
   public function getApplicationDeleteHandler(): ApplicationDeleteHandlerInterface;
 

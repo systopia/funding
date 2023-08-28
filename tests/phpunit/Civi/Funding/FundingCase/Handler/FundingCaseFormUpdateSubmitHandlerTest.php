@@ -26,6 +26,9 @@ use Civi\Funding\Form\FundingCase\FundingCaseValidationResult;
 use Civi\Funding\Form\FundingCase\ValidatedFundingCaseDataInvalid;
 use Civi\Funding\FundingCase\Command\FundingCaseFormUpdateSubmitCommand;
 use Civi\Funding\FundingCase\Command\FundingCaseFormUpdateValidateCommand;
+use Civi\Funding\FundingCase\FundingCaseManager;
+use Civi\Funding\FundingCase\FundingCaseStatusDeterminerInterface;
+use Civi\Funding\FundingCase\Handler\Helper\ApplicationAllowedActionApplier;
 use Civi\Funding\Mock\Form\FundingCaseType\FundingCase\TestFundingCaseValidatedData;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -37,7 +40,22 @@ use PHPUnit\Framework\TestCase;
  */
 final class FundingCaseFormUpdateSubmitHandlerTest extends TestCase {
 
+  /**
+   * @var \Civi\Funding\FundingCase\Handler\Helper\ApplicationAllowedActionApplier&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $applicationAllowedActionApplierMock;
+
+  /**
+   * @var \Civi\Funding\FundingCase\FundingCaseManager&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $fundingCaseManagerMock;
+
   private FundingCaseFormUpdateSubmitHandler $handler;
+
+  /**
+   * @var \Civi\Funding\FundingCase\FundingCaseStatusDeterminerInterface&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $statusDeterminerMock;
 
   /**
    * @var \Civi\Funding\FundingCase\Handler\FundingCaseFormUpdateValidateHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
@@ -46,8 +64,14 @@ final class FundingCaseFormUpdateSubmitHandlerTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
+    $this->applicationAllowedActionApplierMock = $this->createMock(ApplicationAllowedActionApplier::class);
+    $this->fundingCaseManagerMock = $this->createMock(FundingCaseManager::class);
+    $this->statusDeterminerMock = $this->createMock(FundingCaseStatusDeterminerInterface::class);
     $this->validateHandlerMock = $this->createMock(FundingCaseFormUpdateValidateHandlerInterface::class);
     $this->handler = new FundingCaseFormUpdateSubmitHandler(
+      $this->applicationAllowedActionApplierMock,
+      $this->fundingCaseManagerMock,
+      $this->statusDeterminerMock,
       $this->validateHandlerMock,
     );
   }
@@ -57,7 +81,7 @@ final class FundingCaseFormUpdateSubmitHandlerTest extends TestCase {
 
     $recipientContactId = 123;
     $validatedData = new TestFundingCaseValidatedData([
-      'action' => 'save',
+      'action' => 'apply',
       'title' => 'Test',
       'recipient' => $recipientContactId,
     ]);
@@ -69,12 +93,22 @@ final class FundingCaseFormUpdateSubmitHandlerTest extends TestCase {
       $command->getData(),
     ))->willReturn($validationResult);
 
+    $this->applicationAllowedActionApplierMock->expects(static::once())->method('applyAllowedActionsByFundingCase')
+      ->with($command->getContactId(), $command->getFundingCase(), 'apply');
+
+    $this->statusDeterminerMock->method('getStatus')
+      ->with($command->getFundingCase()->getStatus(), 'apply')
+      ->willReturn('new_status');
+    $this->fundingCaseManagerMock->expects(static::once())->method('update')
+      ->with($command->getFundingCase());
+
     $result = $this->handler->handle($command);
 
     static::assertTrue($result->isSuccess());
     static::assertSame($validationResult, $result->getValidationResult());
     static::assertSame($validatedData, $result->getValidatedData());
     static::assertSame($command->getFundingCase(), $result->getFundingCase());
+    static::assertSame('new_status', $command->getFundingCase()->getStatus());
   }
 
   public function testHandleInvalid(): void {
@@ -89,6 +123,10 @@ final class FundingCaseFormUpdateSubmitHandlerTest extends TestCase {
       $command->getFundingCase(),
       $command->getData(),
     ))->willReturn($validationResult);
+
+    $this->applicationAllowedActionApplierMock->expects(static::never())->method('applyAllowedActionsByFundingCase');
+    $this->statusDeterminerMock->expects(static::never())->method('getStatus');
+    $this->fundingCaseManagerMock->expects(static::never())->method('update');
 
     $result = $this->handler->handle($command);
 

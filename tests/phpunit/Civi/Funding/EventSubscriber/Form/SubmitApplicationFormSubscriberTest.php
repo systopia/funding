@@ -36,6 +36,7 @@ use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Event\Remote\ApplicationProcess\SubmitApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
 use Civi\Funding\Form\ApplicationValidationResult;
+use Civi\Funding\Form\RemoteSubmitResponseActions;
 use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -118,7 +119,7 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
 
     $this->subscriber->onSubmitForm($event);
 
-    static::assertSame(SubmitApplicationFormEvent::ACTION_CLOSE_FORM, $event->getAction());
+    static::assertSame(RemoteSubmitResponseActions::CLOSE_FORM, $event->getAction());
     static::assertSame('Saved', $event->getMessage());
     static::assertSame(['https://example.org/test.txt' => 'https://example.net/test.txt'], $event->getFiles());
   }
@@ -140,7 +141,7 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
 
     $this->subscriber->onSubmitForm($event);
 
-    static::assertSame(SubmitApplicationFormEvent::ACTION_SHOW_VALIDATION, $event->getAction());
+    static::assertSame(RemoteSubmitResponseActions::SHOW_VALIDATION, $event->getAction());
     static::assertSame($errorMessages, $event->getErrors());
     static::assertSame('Validation failed', $event->getMessage());
   }
@@ -173,7 +174,7 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
 
     $this->subscriber->onSubmitNewForm($event);
 
-    static::assertSame(SubmitApplicationFormEvent::ACTION_CLOSE_FORM, $event->getAction());
+    static::assertSame(RemoteSubmitResponseActions::CLOSE_FORM, $event->getAction());
     static::assertSame('Saved', $event->getMessage());
     static::assertSame(['https://example.org/test.txt' => 'https://example.net/test.txt'], $event->getFiles());
   }
@@ -198,7 +199,7 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
 
     $this->subscriber->onSubmitNewForm($event);
 
-    static::assertSame(SubmitApplicationFormEvent::ACTION_SHOW_VALIDATION, $event->getAction());
+    static::assertSame(RemoteSubmitResponseActions::SHOW_VALIDATION, $event->getAction());
     static::assertSame($errorMessages, $event->getErrors());
     static::assertSame('Validation failed', $event->getMessage());
   }

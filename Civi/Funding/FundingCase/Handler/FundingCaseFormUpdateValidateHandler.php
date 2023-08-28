@@ -37,7 +37,7 @@ final class FundingCaseFormUpdateValidateHandler implements FundingCaseFormUpdat
       $command->getFundingCaseType(),
       $command->getFundingCase(),
       $command->getData(),
-      20
+      $command->getMaxErrors(),
     );
   }
 

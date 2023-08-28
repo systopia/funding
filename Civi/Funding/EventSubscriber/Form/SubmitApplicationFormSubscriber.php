@@ -29,6 +29,7 @@ use Civi\Funding\Event\Remote\AbstractFundingSubmitFormEvent;
 use Civi\Funding\Event\Remote\ApplicationProcess\SubmitApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
 use Civi\Funding\Form\ApplicationValidationResult;
+use Civi\Funding\Form\RemoteSubmitResponseActions;
 use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -74,7 +75,12 @@ class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
     if ($result->isSuccess()) {
       $event->setMessage(E::ts('Saved'));
       $this->addFilesToEvent($result->getFiles(), $event);
-      $event->setAction($event::ACTION_CLOSE_FORM);
+      if ($result->getValidationResult()->isReadOnly() && 'delete' !== $result->getValidatedData()->getAction()) {
+        $event->setAction(RemoteSubmitResponseActions::RELOAD_FORM);
+      }
+      else {
+        $event->setAction(RemoteSubmitResponseActions::CLOSE_FORM);
+      }
     }
     else {
       $this->mapValidationErrorsToEvent($result->getValidationResult(), $event);
@@ -93,7 +99,7 @@ class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
     if ($result->isSuccess()) {
       $event->setMessage(E::ts('Saved'));
       $this->addFilesToEvent($result->getFiles(), $event);
-      $event->setAction($event::ACTION_CLOSE_FORM);
+      $event->setAction(RemoteSubmitResponseActions::CLOSE_FORM);
     }
     else {
       $this->mapValidationErrorsToEvent($result->getValidationResult(), $event);
