@@ -35,8 +35,14 @@ final class AVK1UiSchema extends JsonFormsGroup {
   /**
    * @phpstan-param array<int, \Civi\RemoteTools\JsonForms\Control\JsonFormsSubmitButton> $submitButtons
    * @phpstan-param array<int, \Civi\RemoteTools\JsonForms\Control\JsonFormsHidden> $hiddenFields
+   * @phpstan-param array<int, \Civi\RemoteTools\JsonForms\JsonFormsElement> $preSubmitButtonElements
    */
-  public function __construct(string $currency, array $submitButtons = [], array $hiddenFields = []) {
+  public function __construct(
+    string $currency,
+    array $submitButtons = [],
+    array $hiddenFields = [],
+    array $preSubmitButtonElements = []
+  ) {
     parent::__construct('Förderantrag für sonstige Aktivität', [
       new AVK1GrunddatenUiSchema(),
       new JsonFormsCloseableGroup('Antragstellende Organisation', [
@@ -139,6 +145,7 @@ final class AVK1UiSchema extends JsonFormsGroup {
             'removeButtonLabel' => 'Dokument entfernen',
           ]),
       ]),
+      ...$preSubmitButtonElements,
       ...$submitButtons,
       ...$hiddenFields,
     ]);

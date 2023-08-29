@@ -28,6 +28,7 @@ use Civi\Funding\ApplicationProcess\StatusDeterminer\ReworkPossibleApplicationPr
 use Civi\Funding\Form\ApplicationSubmitActionsFactory;
 use Civi\Funding\Form\SonstigeAktivitaet\AVK1FormDataFactory;
 use Civi\Funding\Form\SonstigeAktivitaet\AVK1JsonSchemaFactory;
+use Civi\Funding\Form\SonstigeAktivitaet\AVK1StatusMarkupFactory;
 use Civi\Funding\Form\SonstigeAktivitaet\AVK1UiSchemaFactory;
 use Civi\Funding\Form\SonstigeAktivitaet\AVK1Validator;
 use Civi\Funding\FundingCase\DefaultFundingCaseActionsDeterminer;
@@ -43,6 +44,7 @@ $container->autowire('funding.avk1.application_submit_actions_factory', Applicat
   ->setArgument('$actionsDeterminer', new Reference(ReworkPossibleApplicationProcessActionsDeterminer::class))
   ->setArgument('$submitActionsContainer', new Reference('funding.application.submit_actions_container'));
 
+$container->autowire(AVK1StatusMarkupFactory::class);
 $container->autowire(AVK1JsonSchemaFactory::class)
   ->setArgument('$actionsDeterminer', new Reference(ReworkPossibleApplicationProcessActionsDeterminer::class))
   ->addTag('funding.application.json_schema_factory');
