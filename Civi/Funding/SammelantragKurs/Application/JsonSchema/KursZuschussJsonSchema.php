@@ -47,9 +47,9 @@ final class KursZuschussJsonSchema extends JsonSchemaObject {
       ], TRUE),
       'fahrtkostenMax' => new JsonSchemaCalculate(
         'number',
-        'teilnehmertage * festbetrag',
+        'teilnehmerGesamt * festbetrag',
         [
-          'teilnehmertage' => new JsonSchemaDataPointer('/grunddaten/teilnehmertage'),
+          'teilnehmerGesamt' => new JsonSchemaDataPointer('/grunddaten/teilnehmer/gesamt'),
           'festbetrag' => self::FAHRTKOSTENFESTBETRAG,
         ],
       ),

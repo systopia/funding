@@ -50,9 +50,12 @@ final class KursApplicationJsonSchemaTest extends TestCase {
     static::assertInstanceOf(JsonSchema::class, $properties);
     static::assertSame($actionSchema, $properties->getKeywordValue('action'));
 
-    $teilnehmerkosten = 222.22;
-    $fahrtkosten = 333.33;
-    $honorarkosten = 444.44;
+    $programmtage = 3;
+    $teilnehmerGesamt = 5;
+    $referenten = 2;
+    $teilnehmerkosten = $programmtage * $teilnehmerGesamt * 40;
+    $fahrtkosten = $teilnehmerGesamt * 60;
+    $honorarkosten = $programmtage * $referenten * 305;
 
     $data = (object) [
       'action' => 'submitAction1',
@@ -70,12 +73,12 @@ final class KursApplicationJsonSchemaTest extends TestCase {
           ],
         ],
         'teilnehmer' => (object) [
-          'gesamt' => 5,
+          'gesamt' => $teilnehmerGesamt,
           'weiblich' => 4,
           'divers' => 3,
           'unter27' => 2,
           'inJugendhilfeTaetig' => 1,
-          'referenten' => 1,
+          'referenten' => $referenten,
         ],
       ],
       'zuschuss' => (object) [
@@ -102,9 +105,9 @@ final class KursApplicationJsonSchemaTest extends TestCase {
       static::assertSame([], $errorFormatter->formatKeyed($result->error()));
     }
 
-    $beantragterZuschuss = $teilnehmerkosten + $fahrtkosten + $honorarkosten;
+    $beantragterZuschuss = (float) $teilnehmerkosten + $fahrtkosten + $honorarkosten;
     static::assertSame($beantragterZuschuss, $data->zuschuss->gesamt);
-    static::assertSame(3, $data->grunddaten->programmtage);
+    static::assertSame($programmtage, $data->grunddaten->programmtage);
 
     static::assertAllPropertiesSet($jsonSchema->toStdClass(), $data);
   }
