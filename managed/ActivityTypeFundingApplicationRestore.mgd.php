@@ -3,6 +3,7 @@
 declare(strict_types = 1);
 
 use Civi\Funding\ActivityTypeIds;
+use Civi\Funding\ActivityTypeNames;
 use CRM_Funding_ExtensionUtil as E;
 
 return [
@@ -17,7 +18,7 @@ return [
         'option_group_id.name' => 'activity_type',
         'label' => E::ts('Funding Application Restore'),
         'value' => ActivityTypeIds::FUNDING_APPLICATION_RESTORE,
-        'name' => 'funding_application_restore',
+        'name' => ActivityTypeNames::FUNDING_APPLICATION_RESTORE,
         'grouping' => 'funding',
         'filter' => 0,
         'is_default' => FALSE,

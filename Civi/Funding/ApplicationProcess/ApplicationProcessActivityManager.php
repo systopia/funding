@@ -26,6 +26,7 @@ use Civi\Api4\FundingApplicationProcessActivity;
 use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\RemoteTools\Api4\Api4Interface;
+use Civi\RemoteTools\Api4\Query\Comparison;
 use Civi\RemoteTools\Api4\Query\ConditionInterface;
 use Webmozart\Assert\Assert;
 
@@ -84,19 +85,41 @@ class ApplicationProcessActivityManager {
   }
 
   /**
+   * @phpstan-param array<string, 'ASC'|'DESC'> $orderBy
+   *
    * @phpstan-return array<ActivityEntity>
    *
    * @throws \CRM_Core_Exception
    */
-  public function getByApplicationProcess(int $applicationProcessId, ?ConditionInterface $condition = NULL): array {
+  public function getByApplicationProcess(
+    int $applicationProcessId,
+    ?ConditionInterface $condition = NULL,
+    array $orderBy = []
+  ): array {
     $action = FundingApplicationProcessActivity::get(FALSE)
-      ->setApplicationProcessId($applicationProcessId);
+      ->setApplicationProcessId($applicationProcessId)
+      ->setOrderBy($orderBy);
 
     if (NULL !== $condition) {
       $action->setWhere([$condition->toArray()]);
     }
 
     return ActivityEntity::allFromApiResult($this->api4->executeAction($action));
+  }
+
+  /**
+   * @phpstan-param array<string, 'ASC'|'DESC'> $orderBy
+   *
+   * @phpstan-return array<ActivityEntity>
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function getByApplicationProcessAndType(int $applicationProcessId, string $type, array $orderBy = []): array {
+    return $this->getByApplicationProcess(
+      $applicationProcessId,
+      Comparison::new('activity_type_id:name', '=', $type),
+      $orderBy
+    );
   }
 
   /**
