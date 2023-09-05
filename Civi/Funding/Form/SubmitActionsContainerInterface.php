@@ -24,16 +24,27 @@ interface SubmitActionsContainerInterface {
   /**
    * If no priority is given, the order of adding determines the priority, i.e.
    * the priority is one less than the previous least priority.
+   *
+   * @phpstan-param array<string, mixed>&array{needsFormData?: bool} $properties
+   *   needsFormData is FALSE if the action is applicable without form data.
+   *
+   * @return $this
    */
   public function add(
     string $action,
     string $label,
     ?string $confirm = NULL,
+    array $properties = [],
     int $priority = NULL
   ): self;
 
   /**
-   * @phpstan-return array{label: string, confirm: string|null}
+   * @phpstan-return array{
+   *   label: string,
+   *   confirm: string|null,
+   *   properties: array<string, mixed>&array{needsFormData?: bool},
+   * }
+   *   needsFormData is FALSE if the action is applicable without form data.
    */
   public function get(string $action): array;
 

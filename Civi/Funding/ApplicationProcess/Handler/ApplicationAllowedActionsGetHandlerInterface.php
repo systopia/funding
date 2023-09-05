@@ -17,20 +17,22 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\SammelantragKurs\Application\Actions;
+namespace Civi\Funding\ApplicationProcess\Handler;
 
-use Civi\Funding\Form\ApplicationSubmitActionsFactory;
-use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
+use Civi\Funding\ApplicationProcess\Command\ApplicationAllowedActionsGetCommand;
 
-final class KursApplicationSubmitActionsFactory extends ApplicationSubmitActionsFactory {
+interface ApplicationAllowedActionsGetHandlerInterface {
 
-  use KursSupportedFundingCaseTypesTrait;
+  public const SERVICE_TAG = 'funding.application.allowed_actions_get_handler';
 
-  public function __construct(
-    KursApplicationActionsDeterminer $actionsDeterminer,
-    KursApplicationSubmitActionsContainer $submitActionsContainer
-  ) {
-    parent::__construct($actionsDeterminer, $submitActionsContainer);
-  }
+  /**
+   * @phpstan-return array<string, array{
+   *    label: string,
+   *    confirm: string|null,
+   *    properties: array<string, mixed>&array{needsFormData?: bool},
+   *  }>
+   *    needsFormData is FALSE if the action is applicable without form data.
+   */
+  public function handle(ApplicationAllowedActionsGetCommand $command): array;
 
 }

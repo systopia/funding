@@ -17,20 +17,12 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\SammelantragKurs\Application\Actions;
+namespace Civi\Funding\ApplicationProcess\ActionsContainer;
 
-use Civi\Funding\Form\ApplicationSubmitActionsFactory;
-use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
+use Civi\Funding\Form\SubmitActionsContainerInterface;
 
-final class KursApplicationSubmitActionsFactory extends ApplicationSubmitActionsFactory {
+interface ApplicationSubmitActionsContainerInterface extends SubmitActionsContainerInterface {
 
-  use KursSupportedFundingCaseTypesTrait;
-
-  public function __construct(
-    KursApplicationActionsDeterminer $actionsDeterminer,
-    KursApplicationSubmitActionsContainer $submitActionsContainer
-  ) {
-    parent::__construct($actionsDeterminer, $submitActionsContainer);
-  }
+  public const SERVICE_TAG = 'funding.application.actions_container';
 
 }

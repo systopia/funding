@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2023 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,8 +17,30 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Form;
+namespace Civi\Funding\Api4\Action\Traits;
 
-final class SubmitActionsContainer extends AbstractSubmitActionsContainer {
+use Webmozart\Assert\Assert;
+
+/**
+ * @phpstan-method array<int> getIds()
+ */
+trait IdsParameterTrait {
+
+  /**
+   * @var array
+   * @phpstan-var array<int>
+   * @required
+   */
+  protected array $ids = [];
+
+  /**
+   * @phpstan-param array<int> $ids
+   */
+  public function setIds(array $ids): self {
+    Assert::allInteger($ids);
+    $this->ids = $ids;
+
+    return $this;
+  }
 
 }

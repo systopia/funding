@@ -19,9 +19,11 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
+use Civi\Funding\Api4\Action\FundingApplicationProcess\ApplyActionMultipleAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\CreateAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\DeleteAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\GetAction;
+use Civi\Funding\Api4\Action\FundingApplicationProcess\GetAllowedActionsMultipleAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\GetFieldsAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\GetFormDataAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\GetJsonSchemaAction;
@@ -89,6 +91,14 @@ class FundingApplicationProcess extends Generic\DAOEntity {
 
   public static function save($checkPermissions = TRUE) {
     return \Civi::service(SaveAction::class)->setCheckPermissions($checkPermissions);
+  }
+
+  public static function applyActionMultiple(bool $checkPermissions = TRUE): ApplyActionMultipleAction {
+    return new ApplyActionMultipleAction();
+  }
+
+  public static function getAllowedActionsMultiple(bool $checkPermissions = TRUE): GetAllowedActionsMultipleAction {
+    return new GetAllowedActionsMultipleAction();
   }
 
   public static function getFormData(): GetFormDataAction {

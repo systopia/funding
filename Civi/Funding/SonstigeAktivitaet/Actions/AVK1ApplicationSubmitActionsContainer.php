@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2023 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,22 +17,18 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Form;
+namespace Civi\Funding\SonstigeAktivitaet\Actions;
 
-use CRM_Funding_ExtensionUtil as E;
+use Civi\Funding\ApplicationProcess\ActionsContainer\AbstractApplicationSubmitActionsContainerDecorator;
+use Civi\Funding\ApplicationProcess\ActionsContainer\ReworkPossibleApplicationSubmitActionsContainerFactory;
+use Civi\Funding\SonstigeAktivitaet\Traits\AVK1SupportedFundingCaseTypesTrait;
 
-/**
- * @codeCoverageIgnore
- */
-final class ReworkPossibleApplicationSubmitActionsContainerFactory {
+final class AVK1ApplicationSubmitActionsContainer extends AbstractApplicationSubmitActionsContainerDecorator {
 
-  public static function create(): SubmitActionsContainerInterface {
-    return DefaultApplicationSubmitActionsContainerFactory::create()
-      ->add('request-rework', E::ts('Request rework'))
-      ->add('withdraw-rework-request', E::ts('Withdraw rework request'))
-      ->add('withdraw-change', E::ts('Withdraw change'))
-      ->add('apply-rework', E::ts('Apply rework'))
-      ->add('withdraw-rework', E::ts('Withdraw rework'));
+  use AVK1SupportedFundingCaseTypesTrait;
+
+  public function __construct() {
+    parent::__construct(ReworkPossibleApplicationSubmitActionsContainerFactory::create());
   }
 
 }

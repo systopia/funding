@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form;
 
+use Civi\Funding\ApplicationProcess\ActionsContainer\ApplicationSubmitActionsContainer;
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerInterface;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -34,14 +35,14 @@ final class ApplicationSubmitActionsFactoryTest extends TestCase {
    */
   private MockObject $actionsDeterminerMock;
 
-  private SubmitActionsContainer $submitActionsContainer;
+  private ApplicationSubmitActionsContainer $submitActionsContainer;
 
   private ApplicationSubmitActionsFactory $submitActionsFactory;
 
   protected function setUp(): void {
     parent::setUp();
     $this->actionsDeterminerMock = $this->createMock(ApplicationProcessActionsDeterminerInterface::class);
-    $this->submitActionsContainer = new SubmitActionsContainer();
+    $this->submitActionsContainer = new ApplicationSubmitActionsContainer();
     $this->submitActionsFactory = new ApplicationSubmitActionsFactory(
       $this->actionsDeterminerMock,
       $this->submitActionsContainer,
@@ -61,8 +62,8 @@ final class ApplicationSubmitActionsFactoryTest extends TestCase {
     $submitActions = $this->submitActionsFactory->createSubmitActions($fullStatus, $statusList, ['permission']);
     // "test1" must be first
     static::assertSame([
-      'test1' => ['label' => 'Test1', 'confirm' => NULL],
-      'test3' => ['label' => 'Test3', 'confirm' => 'Really?'],
+      'test1' => ['label' => 'Test1', 'confirm' => NULL, 'properties' => []],
+      'test3' => ['label' => 'Test3', 'confirm' => 'Really?', 'properties' => []],
     ], $submitActions);
   }
 
@@ -74,9 +75,7 @@ final class ApplicationSubmitActionsFactoryTest extends TestCase {
       ->with($fullStatus, $statusList, ['permission'])
       ->willReturn(['test2']);
 
-    $this->expectException(\RuntimeException::class);
-    $this->expectExceptionMessage('Unknown action "test2"');
-    $this->submitActionsFactory->createSubmitActions($fullStatus, $statusList, ['permission']);
+    static::assertSame([], $this->submitActionsFactory->createSubmitActions($fullStatus, $statusList, ['permission']));
   }
 
   public function testCreateInitialSubmitActions(): void {
@@ -90,8 +89,8 @@ final class ApplicationSubmitActionsFactoryTest extends TestCase {
     $submitActions = $this->submitActionsFactory->createInitialSubmitActions(['permission']);
     // "test1" must be first
     static::assertSame([
-      'test1' => ['label' => 'Test1', 'confirm' => NULL],
-      'test3' => ['label' => 'Test3', 'confirm' => 'Really?'],
+      'test1' => ['label' => 'Test1', 'confirm' => NULL, 'properties' => []],
+      'test3' => ['label' => 'Test3', 'confirm' => 'Really?', 'properties' => []],
     ], $submitActions);
   }
 
@@ -101,9 +100,7 @@ final class ApplicationSubmitActionsFactoryTest extends TestCase {
       ->with(['permission'])
       ->willReturn(['test2']);
 
-    $this->expectException(\RuntimeException::class);
-    $this->expectExceptionMessage('Unknown action "test2"');
-    $this->submitActionsFactory->createInitialSubmitActions(['permission']);
+    static::assertSame([], $this->submitActionsFactory->createInitialSubmitActions(['permission']));
   }
 
   public function testIsEditAllowed(): void {

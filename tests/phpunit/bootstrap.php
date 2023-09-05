@@ -1,7 +1,6 @@
 <?php
 declare(strict_types = 1);
 
-use Civi\Funding\ApplicationProcess\ActionsDeterminer\ReworkPossibleApplicationProcessActionsDeterminer;
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\ReworkPossibleApplicationProcessActionStatusInfo;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ReworkPossibleApplicationProcessStatusDeterminer;
 use Civi\Funding\Contact\DummyRemoteContactIdResolver;
@@ -11,6 +10,8 @@ use Civi\Funding\DocumentRender\DocumentRendererInterface;
 use Civi\Funding\FundingAttachmentManagerInterface;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\Mock\DocumentRender\MockDocumentRenderer;
+use Civi\Funding\Mock\Form\FundingCaseType\Application\Actions\TestApplicationActionsDeterminer;
+use Civi\Funding\Mock\Form\FundingCaseType\Application\Actions\TestApplicationSubmitActionsContainer;
 use Civi\Funding\Mock\Form\FundingCaseType\FundingCase\TestCaseActionsDeterminer;
 use Civi\Funding\Mock\Form\FundingCaseType\FundingCase\TestFundingCaseFormDataFactory;
 use Civi\Funding\Mock\Form\FundingCaseType\FundingCase\TestFundingCaseJsonSchemaFactory;
@@ -83,15 +84,17 @@ function _funding_test_civicrm_container(ContainerBuilder $container): void {
   $container->autowire(FundingRemoteContactIdResolverInterface::class, DummyRemoteContactIdResolver::class);
   $container->setAlias(RemoteContactIdResolverInterface::class, FundingRemoteContactIdResolverInterface::class);
 
-  $container->getDefinition(ReworkPossibleApplicationProcessActionsDeterminer::class)
-    ->addTag('funding.application.actions_determiner',
-      ['funding_case_type' => TestJsonSchemaFactory::getSupportedFundingCaseTypes()[0]]);
   $container->getDefinition(ReworkPossibleApplicationProcessStatusDeterminer::class)
     ->addTag('funding.application.status_determiner',
       ['funding_case_type' => TestJsonSchemaFactory::getSupportedFundingCaseTypes()[0]]);
   $container->getDefinition(ReworkPossibleApplicationProcessActionStatusInfo::class)
     ->addTag('funding.application.action_status_info',
       ['funding_case_type' => TestJsonSchemaFactory::getSupportedFundingCaseTypes()[0]]);
+
+  $container->autowire(TestApplicationActionsDeterminer::class)
+    ->addTag(TestApplicationActionsDeterminer::SERVICE_TAG);
+  $container->autowire(TestApplicationSubmitActionsContainer::class)
+    ->addTag(TestApplicationSubmitActionsContainer::SERVICE_TAG);
 
   $container->autowire(TestCaseActionsDeterminer::class)
     ->addArgument(new Reference(ReworkPossibleApplicationProcessActionStatusInfo::class))

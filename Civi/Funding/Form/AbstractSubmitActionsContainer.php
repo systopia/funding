@@ -24,7 +24,11 @@ use Webmozart\Assert\Assert;
 abstract class AbstractSubmitActionsContainer implements SubmitActionsContainerInterface {
 
   /**
-   * @phpstan-var array<string, array{label: string, confirm: string|null}>
+   * @phpstan-var array<string, array{
+   *   label: string,
+   *   confirm: string|null,
+   *   properties: array<string, mixed>&array{needsFormData?: bool},
+   * }>
    */
   private array $actions = [];
 
@@ -42,9 +46,10 @@ abstract class AbstractSubmitActionsContainer implements SubmitActionsContainerI
     string $action,
     string $label,
     ?string $confirm = NULL,
+    array $properties = [],
     int $priority = NULL
   ): SubmitActionsContainerInterface {
-    $this->actions[$action] = ['label' => $label, 'confirm' => $confirm];
+    $this->actions[$action] = ['label' => $label, 'confirm' => $confirm, 'properties' => $properties];
     $priority ??= $this->nextPriority;
     $this->priorities[$action] = $this->nextPriority;
     $this->nextPriority = min($priority - 1, $this->nextPriority);

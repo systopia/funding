@@ -23,18 +23,10 @@ declare(strict_types = 1);
 use Civi\Funding\EventSubscriber\Form\GetApplicationFormSubscriber;
 use Civi\Funding\EventSubscriber\Form\SubmitApplicationFormSubscriber;
 use Civi\Funding\EventSubscriber\Form\ValidateApplicationFormSubscriber;
-use Civi\Funding\Form\DefaultApplicationSubmitActionsContainerFactory;
-use Civi\Funding\Form\ReworkPossibleApplicationSubmitActionsContainerFactory;
-use Civi\Funding\Form\SubmitActionsContainer;
 use Civi\Funding\Form\Validation\FormValidator;
 use Civi\Funding\Form\Validation\FormValidatorInterface;
 
 $container->autowire(FormValidatorInterface::class, FormValidator::class);
-
-$container->register('funding.application.submit_actions_container', SubmitActionsContainer::class)
-  ->setFactory([DefaultApplicationSubmitActionsContainerFactory::class, 'create']);
-$container->register('funding.rework_possible_application.submit_actions_container', SubmitActionsContainer::class)
-  ->setFactory([ReworkPossibleApplicationSubmitActionsContainerFactory::class, 'create']);
 
 $container->autowire(GetApplicationFormSubscriber::class)
   ->addTag('kernel.event_subscriber')

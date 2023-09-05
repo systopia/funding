@@ -17,20 +17,21 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\SammelantragKurs\Application\Actions;
+namespace Civi\Funding\Api4\Action\FundingApplicationProcess;
 
-use Civi\Funding\Form\ApplicationSubmitActionsFactory;
-use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
+use Civi\Api4\FundingApplicationProcess;
+use Civi\Api4\Generic\AbstractAction;
+use Civi\Funding\Api4\Action\Traits\IdsParameterTrait;
+use Civi\RemoteTools\Api4\Action\Traits\ActionHandlerRunTrait;
 
-final class KursApplicationSubmitActionsFactory extends ApplicationSubmitActionsFactory {
+final class GetAllowedActionsMultipleAction extends AbstractAction {
 
-  use KursSupportedFundingCaseTypesTrait;
+  use ActionHandlerRunTrait;
 
-  public function __construct(
-    KursApplicationActionsDeterminer $actionsDeterminer,
-    KursApplicationSubmitActionsContainer $submitActionsContainer
-  ) {
-    parent::__construct($actionsDeterminer, $submitActionsContainer);
+  use IdsParameterTrait;
+
+  public function __construct() {
+    parent::__construct(FundingApplicationProcess::_getEntityName(), 'getAllowedActionsMultiple');
   }
 
 }

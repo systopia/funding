@@ -19,7 +19,6 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\SonstigeAktivitaet;
 
-use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerInterface;
 use Civi\Funding\Contact\FundingCaseRecipientLoaderInterface;
 use Civi\Funding\Contact\PossibleRecipientsLoaderInterface;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
@@ -28,6 +27,7 @@ use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\JsonSchema\JsonSchemaComment;
 use Civi\Funding\Form\NonCombinedApplicationJsonSchemaFactoryInterface;
 use Civi\Funding\Form\SonstigeAktivitaet\JsonSchema\AVK1JsonSchema;
+use Civi\Funding\SonstigeAktivitaet\Actions\AVK1ApplicationActionsDeterminer;
 use Civi\Funding\SonstigeAktivitaet\Traits\AVK1SupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaNull;
@@ -37,14 +37,14 @@ class AVK1JsonSchemaFactory implements NonCombinedApplicationJsonSchemaFactoryIn
 
   use AVK1SupportedFundingCaseTypesTrait;
 
-  private ApplicationProcessActionsDeterminerInterface $actionsDeterminer;
+  private AVK1ApplicationActionsDeterminer $actionsDeterminer;
 
   private FundingCaseRecipientLoaderInterface $existingCaseRecipientLoader;
 
   private PossibleRecipientsLoaderInterface $possibleRecipientsLoader;
 
   public function __construct(
-    ApplicationProcessActionsDeterminerInterface $actionsDeterminer,
+    AVK1ApplicationActionsDeterminer $actionsDeterminer,
     FundingCaseRecipientLoaderInterface $existingCaseRecipientLoader,
     PossibleRecipientsLoaderInterface $possibleRecipientsLoader
   ) {
