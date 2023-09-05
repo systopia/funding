@@ -20,8 +20,6 @@ declare(strict_types = 1);
 namespace Civi\Funding\Form;
 
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
-use Civi\Funding\Entity\FundingCaseTypeEntity;
-use Civi\Funding\Entity\FundingProgramEntity;
 
 interface ApplicationValidatorInterface {
 
@@ -33,21 +31,15 @@ interface ApplicationValidatorInterface {
   public static function getSupportedFundingCaseTypes(): array;
 
   /**
+   * Called for an existing application process.
+   *
+   * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $applicationProcessStatusList
+   *   Status of other application processes in same funding case indexed by ID.
    * @phpstan-param array<string, mixed> $data JSON serializable.
    */
   public function validateExisting(
     ApplicationProcessEntityBundle $applicationProcessBundle,
-    array $data,
-    int $maxErrors = 1
-  ): ApplicationValidationResult;
-
-  /**
-   * @phpstan-param array<string, mixed> $data JSON serializable.
-   */
-  public function validateInitial(
-    int $contactId,
-    FundingProgramEntity $fundingProgram,
-    FundingCaseTypeEntity $fundingCaseType,
+    array $applicationProcessStatusList,
     array $data,
     int $maxErrors = 1
   ): ApplicationValidationResult;

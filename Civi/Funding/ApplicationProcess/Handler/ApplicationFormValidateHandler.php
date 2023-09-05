@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateCommand;
-use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateResult;
+use Civi\Funding\Form\ApplicationValidationResult;
 use Civi\Funding\Form\ApplicationValidatorInterface;
 
 final class ApplicationFormValidateHandler implements ApplicationFormValidateHandlerInterface {
@@ -31,14 +31,13 @@ final class ApplicationFormValidateHandler implements ApplicationFormValidateHan
     $this->validator = $validator;
   }
 
-  public function handle(ApplicationFormValidateCommand $command): ApplicationFormValidateResult {
-    $validationResult = $this->validator->validateExisting(
+  public function handle(ApplicationFormValidateCommand $command): ApplicationValidationResult {
+    return $this->validator->validateExisting(
       $command->getApplicationProcessBundle(),
+      $command->getApplicationProcessStatusList(),
       $command->getData(),
-      20
+      $command->getMaxErrors(),
     );
-
-    return ApplicationFormValidateResult::create($validationResult);
   }
 
 }

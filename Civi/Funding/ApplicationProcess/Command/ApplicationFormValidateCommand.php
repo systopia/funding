@@ -27,19 +27,40 @@ final class ApplicationFormValidateCommand {
   use ApplicationProcessEntityBundleTrait;
 
   /**
+   * @phpstan-var array<int, \Civi\Funding\Entity\FullApplicationProcessStatus>
+   */
+  private array $applicationProcessStatusList;
+
+  /**
    * @phpstan-var array<string, mixed> JSON serializable.
    */
   private array $data;
 
+  private int $maxErrors;
+
   /**
+   * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $applicationProcessStatusList
+   *   Status of other application processes in same funding case indexed by ID.
    * @phpstan-param array<string, mixed> $data JSON serializable.
    */
   public function __construct(
     ApplicationProcessEntityBundle $applicationProcessBundle,
-    array $data
+    array $applicationProcessStatusList,
+    array $data,
+    int $maxErrors = 1
   ) {
     $this->applicationProcessBundle = $applicationProcessBundle;
+    $this->applicationProcessStatusList = $applicationProcessStatusList;
     $this->data = $data;
+    $this->maxErrors = $maxErrors;
+  }
+
+  /**
+   * @phpstan-return array<int, \Civi\Funding\Entity\FullApplicationProcessStatus>
+   *   Status of other application processes in same funding case indexed by ID.
+   */
+  public function getApplicationProcessStatusList(): array {
+    return $this->applicationProcessStatusList;
   }
 
   /**
@@ -47,6 +68,10 @@ final class ApplicationFormValidateCommand {
    */
   public function getData(): array {
     return $this->data;
+  }
+
+  public function getMaxErrors(): int {
+    return $this->maxErrors;
   }
 
 }

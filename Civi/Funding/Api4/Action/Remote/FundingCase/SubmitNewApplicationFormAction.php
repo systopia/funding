@@ -21,24 +21,24 @@ namespace Civi\Funding\Api4\Action\Remote\FundingCase;
 
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
+use Civi\Funding\Api4\Action\Traits\FundingCaseTypeIdParameterTrait;
+use Civi\Funding\Api4\Action\Traits\FundingProgramIdParameterTrait;
 use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
 use Civi\Funding\Exception\FundingException;
+use Civi\Funding\Form\RemoteSubmitResponseActions;
 use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker;
 use Civi\Funding\FundingProgram\FundingProgramManager;
+use Civi\RemoteTools\Api4\Action\Traits\DataParameterTrait;
 use Webmozart\Assert\Assert;
 
-/**
- * @method $this setData(array $data)
- */
 class SubmitNewApplicationFormAction extends AbstractNewApplicationFormAction {
 
-  /**
-   * @var array
-   * @phpstan-var array<string, mixed>
-   * @required
-   */
-  protected ?array $data = NULL;
+  use DataParameterTrait;
+
+  use FundingCaseTypeIdParameterTrait;
+
+  use FundingProgramIdParameterTrait;
 
   public function __construct(
     FundingCaseTypeManager $fundingCaseTypeManager,
@@ -78,30 +78,14 @@ class SubmitNewApplicationFormAction extends AbstractNewApplicationFormAction {
     }
 
     switch ($event->getAction()) {
-      case SubmitNewApplicationFormEvent::ACTION_SHOW_FORM:
-        Assert::notNull($event->getForm());
-        if (isset($event->getForm()->getData()['applicationProcessId'])) {
-          // Application is persisted
-          Assert::integer($event->getForm()->getData()['applicationProcessId']);
-        }
-        else {
-          Assert::keyExists($event->getForm()->getData(), 'fundingCaseTypeId');
-          Assert::integer($event->getForm()->getData()['fundingCaseTypeId']);
-          Assert::keyExists($event->getForm()->getData(), 'fundingProgramId');
-          Assert::integer($event->getForm()->getData()['fundingProgramId']);
-        }
-        $result['jsonSchema'] = $event->getForm()->getJsonSchema();
-        $result['uiSchema'] = $event->getForm()->getUiSchema();
-        $result['data'] = $event->getForm()->getData();
-        $result['files'] = $event->getFiles();
-        break;
-
-      case SubmitNewApplicationFormEvent::ACTION_SHOW_VALIDATION:
+      case RemoteSubmitResponseActions::SHOW_VALIDATION:
         Assert::notEmpty($event->getErrors());
         $result['errors'] = $event->getErrors();
         break;
 
-      case SubmitNewApplicationFormEvent::ACTION_CLOSE_FORM:
+      case RemoteSubmitResponseActions::RELOAD_FORM:
+        // fall through
+      case RemoteSubmitResponseActions::CLOSE_FORM:
         $result['files'] = $event->getFiles();
         break;
 
@@ -118,22 +102,6 @@ class SubmitNewApplicationFormAction extends AbstractNewApplicationFormAction {
       $this,
       $this->createEventParams($this->getFundingCaseTypeId(), $this->getFundingProgramId()),
     );
-  }
-
-  public function getFundingProgramId(): int {
-    Assert::notNull($this->data);
-    Assert::keyExists($this->data, 'fundingProgramId');
-    Assert::integer($this->data['fundingProgramId']);
-
-    return $this->data['fundingProgramId'];
-  }
-
-  public function getFundingCaseTypeId(): int {
-    Assert::notNull($this->data);
-    Assert::keyExists($this->data, 'fundingCaseTypeId');
-    Assert::integer($this->data['fundingCaseTypeId']);
-
-    return $this->data['fundingCaseTypeId'];
   }
 
 }

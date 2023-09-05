@@ -22,18 +22,14 @@ namespace Civi\Funding\Form\SonstigeAktivitaet;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
-use Civi\Funding\Form\AbstractApplicationValidator;
+use Civi\Funding\Form\AbstractNonCombinedApplicationValidator;
 use Civi\Funding\Form\ApplicationValidationResult;
+use Civi\Funding\SonstigeAktivitaet\Traits\AVK1SupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 
-final class AVK1Validator extends AbstractApplicationValidator {
+final class AVK1Validator extends AbstractNonCombinedApplicationValidator {
 
-  /**
-   * @inheritDoc
-   */
-  public static function getSupportedFundingCaseTypes(): array {
-    return ['AVK1SonstigeAktivitaet'];
-  }
+  use AVK1SupportedFundingCaseTypesTrait;
 
   /**
    * @inheritDoc
@@ -87,10 +83,12 @@ final class AVK1Validator extends AbstractApplicationValidator {
     if ([] !== $errorMessages) {
       return ApplicationValidationResult::newInvalid(
         $errorMessages,
+        // @phpstan-ignore-next-line
         new AVK1ValidatedData($validatedData),
       );
     }
 
+    // @phpstan-ignore-next-line
     return $this->createValidationResultValid(new AVK1ValidatedData($validatedData), $jsonSchema);
   }
 

@@ -61,8 +61,9 @@ final class GetJsonSchemaAction extends AbstractAction {
   protected function createCommand(): ApplicationJsonSchemaGetCommand {
     $applicationProcessBundle = $this->applicationProcessBundleLoader->get($this->getId());
     Assert::notNull($applicationProcessBundle, E::ts('No such application or missing permission.'));
+    $statusList = $this->applicationProcessBundleLoader->getStatusList($applicationProcessBundle);
 
-    return new ApplicationJsonSchemaGetCommand($applicationProcessBundle);
+    return new ApplicationJsonSchemaGetCommand($applicationProcessBundle, $statusList);
   }
 
 }

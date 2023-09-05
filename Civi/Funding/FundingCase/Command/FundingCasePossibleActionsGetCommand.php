@@ -24,13 +24,35 @@ use Civi\Funding\Entity\FundingCaseTypeEntity;
 
 final class FundingCasePossibleActionsGetCommand {
 
+  /**
+   * @phpstan-var array<int, \Civi\Funding\Entity\FullApplicationProcessStatus>
+   */
+  private array $applicationProcessStatusList;
+
   private FundingCaseEntity $fundingCase;
 
   private FundingCaseTypeEntity $fundingCaseType;
 
-  public function __construct(FundingCaseEntity $fundingCase, FundingCaseTypeEntity $fundingCaseType) {
+  /**
+   * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $applicationProcessStatusList
+   *   Indexed by application process ID.
+   */
+  public function __construct(
+    FundingCaseEntity $fundingCase,
+    array $applicationProcessStatusList,
+    FundingCaseTypeEntity $fundingCaseType
+  ) {
     $this->fundingCase = $fundingCase;
+    $this->applicationProcessStatusList = $applicationProcessStatusList;
     $this->fundingCaseType = $fundingCaseType;
+  }
+
+  /**
+   * @phpstan-return array<int, \Civi\Funding\Entity\FullApplicationProcessStatus>
+   *    Indexed by application process ID.
+   */
+  public function getApplicationProcessStatusList(): array {
+    return $this->applicationProcessStatusList;
   }
 
   public function getFundingCase(): FundingCaseEntity {

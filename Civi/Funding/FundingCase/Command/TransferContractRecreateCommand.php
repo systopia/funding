@@ -25,20 +25,39 @@ use Civi\Funding\Entity\FundingProgramEntity;
 
 final class TransferContractRecreateCommand {
 
+  /**
+   * @phpstan-var array<int, \Civi\Funding\Entity\FullApplicationProcessStatus>
+   */
+  private array $applicationProcessStatusList;
+
   private FundingCaseEntity $fundingCase;
 
   private FundingCaseTypeEntity $fundingCaseType;
 
   private FundingProgramEntity $fundingProgram;
 
+  /**
+   * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $applicationProcessStatusList
+   *   Indexed by application process ID.
+   */
   public function __construct(
     FundingCaseEntity $fundingCase,
+    array $applicationProcessStatusList,
     FundingCaseTypeEntity $fundingCaseType,
     FundingProgramEntity $fundingProgram
   ) {
     $this->fundingCase = $fundingCase;
+    $this->applicationProcessStatusList = $applicationProcessStatusList;
     $this->fundingCaseType = $fundingCaseType;
     $this->fundingProgram = $fundingProgram;
+  }
+
+  /**
+   * @phpstan-return array<int, \Civi\Funding\Entity\FullApplicationProcessStatus>
+   *    Indexed by application process ID.
+   */
+  public function getApplicationProcessStatusList(): array {
+    return $this->applicationProcessStatusList;
   }
 
   public function getFundingCase(): FundingCaseEntity {

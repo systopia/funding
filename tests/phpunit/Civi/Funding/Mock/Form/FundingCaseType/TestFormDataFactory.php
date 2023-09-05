@@ -23,15 +23,14 @@ use Civi\Funding\ApplicationProcess\ApplicationExternalFileManagerInterface;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Form\ApplicationFormDataFactoryInterface;
+use Civi\Funding\Mock\Form\FundingCaseType\Traits\TestSupportedFundingCaseTypesTrait;
 use Webmozart\Assert\Assert;
 
 final class TestFormDataFactory implements ApplicationFormDataFactoryInterface {
 
-  private ApplicationExternalFileManagerInterface $externalFileManager;
+  use TestSupportedFundingCaseTypesTrait;
 
-  public static function getSupportedFundingCaseTypes(): array {
-    return ['TestCaseType'];
-  }
+  private ApplicationExternalFileManagerInterface $externalFileManager;
 
   public function __construct(ApplicationExternalFileManagerInterface $externalFileManager) {
     $this->externalFileManager = $externalFileManager;

@@ -21,14 +21,49 @@ namespace Civi\Api4;
 
 use Civi\Funding\Api4\AbstractRemoteFundingEntity;
 use Civi\Funding\Api4\Action\Remote\DAOGetAction;
+use Civi\Funding\Api4\Action\Remote\FundingCase\GetUpdateFormAction;
+use Civi\Funding\Api4\Action\Remote\FundingCase\GetNewFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\GetNewApplicationFormAction;
+use Civi\Funding\Api4\Action\Remote\FundingCase\SubmitUpdateFormAction;
+use Civi\Funding\Api4\Action\Remote\FundingCase\SubmitNewFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\SubmitNewApplicationFormAction;
+use Civi\Funding\Api4\Action\Remote\FundingCase\ValidateUpdateFormAction;
+use Civi\Funding\Api4\Action\Remote\FundingCase\ValidateNewFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\ValidateNewApplicationFormAction;
 
+/**
+ * The new application form actions are used to create a funding case together
+ * with an application. The other new form actions are used for combined
+ * applications to create a funding case without an application.
+ */
 final class RemoteFundingCase extends AbstractRemoteFundingEntity {
 
   public static function get(): DAOGetAction {
     return new DAOGetAction(static::getEntityName());
+  }
+
+  public static function getUpdateForm(): GetUpdateFormAction {
+    return new GetUpdateFormAction();
+  }
+
+  public static function submitUpdateForm(): SubmitUpdateFormAction {
+    return new SubmitUpdateFormAction();
+  }
+
+  public static function validateUpdateForm(): ValidateUpdateFormAction {
+    return new ValidateUpdateFormAction();
+  }
+
+  public static function getNewForm(): GetNewFormAction {
+    return new GetNewFormAction();
+  }
+
+  public static function submitNewForm(): SubmitNewFormAction {
+    return new SubmitNewFormAction();
+  }
+
+  public static function validateNewForm(): ValidateNewFormAction {
+    return new ValidateNewFormAction();
   }
 
   public static function getNewApplicationForm(): GetNewApplicationFormAction {

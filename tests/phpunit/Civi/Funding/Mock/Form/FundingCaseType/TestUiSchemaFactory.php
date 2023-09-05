@@ -20,19 +20,33 @@ declare(strict_types = 1);
 namespace Civi\Funding\Mock\Form\FundingCaseType;
 
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
-use Civi\Funding\Form\ApplicationUiSchemaFactoryInterface;
+use Civi\Funding\Form\NonCombinedApplicationUiSchemaFactoryInterface;
+use Civi\Funding\Form\CombinedApplicationUiSchemaFactoryInterface;
+use Civi\Funding\Mock\Form\FundingCaseType\Traits\TestSupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonForms\JsonFormsElement;
 
-final class TestUiSchemaFactory implements ApplicationUiSchemaFactoryInterface {
+// phpcs:disable Generic.Files.LineLength.TooLong
+final class TestUiSchemaFactory implements CombinedApplicationUiSchemaFactoryInterface, NonCombinedApplicationUiSchemaFactoryInterface {
+// phpcs:enable
+  use TestSupportedFundingCaseTypesTrait;
 
-  public static function getSupportedFundingCaseTypes(): array {
-    return ['TestCaseType'];
+  /**
+   * @inheritDoc
+   */
+  public function createUiSchemaAdd(
+    FundingProgramEntity $fundingProgram,
+    FundingCaseTypeEntity $fundingCaseType,
+    FundingCaseEntity $fundingCase
+  ): JsonFormsElement {
+    return new TestUiSchema();
   }
 
   public function createUiSchemaExisting(
-    ApplicationProcessEntityBundle $applicationProcessBundle
+    ApplicationProcessEntityBundle $applicationProcessBundle,
+    array $applicationProcessStatusList
   ): JsonFormsElement {
     return new TestUiSchema();
   }

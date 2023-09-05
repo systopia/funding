@@ -23,6 +23,8 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationCostItemsPersistCommand;
 
 interface ApplicationCostItemsPersistHandlerInterface {
 
+  public const SERVICE_TAG = 'funding.application.cost_items_persist_handler';
+
   public function handle(ApplicationCostItemsPersistCommand $command): void;
 
 }

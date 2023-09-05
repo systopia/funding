@@ -25,6 +25,8 @@ namespace Civi\Funding\Entity;
  *   title: string,
  *   abbreviation: string,
  *   name: string,
+ *   is_combined_application: bool,
+ *   application_process_label: string|null,
  *   properties: array<string, mixed>,
  * }
  *
@@ -58,6 +60,26 @@ final class FundingCaseTypeEntity extends AbstractEntity {
 
   public function setName(string $name): self {
     $this->values['name'] = $name;
+
+    return $this;
+  }
+
+  public function getIsCombinedApplication(): bool {
+    return $this->values['is_combined_application'];
+  }
+
+  public function setIsCombinedApplication(bool $isCombinedApplication): self {
+    $this->values['is_combined_application'] = $isCombinedApplication;
+
+    return $this;
+  }
+
+  public function getApplicationProcessLabel(): ?string {
+    return $this->values['application_process_label'];
+  }
+
+  public function setApplicationProcessLabel(?string $applicationProcessLabel): self {
+    $this->values['application_process_label'] = $applicationProcessLabel;
 
     return $this;
   }

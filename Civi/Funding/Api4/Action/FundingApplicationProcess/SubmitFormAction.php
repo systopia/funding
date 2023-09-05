@@ -70,7 +70,9 @@ final class SubmitFormAction extends AbstractAction {
 
     if ([] === $commandResult->getValidationResult()->getErrorMessages()) {
       $result['data'] = $this->formDataGetHandler->handle(
-        new ApplicationFormDataGetCommand($command->getApplicationProcessBundle())
+        new ApplicationFormDataGetCommand(
+          $command->getApplicationProcessBundle(), $command->getApplicationProcessStatusList()
+        )
       );
       $result['errors'] = new \stdClass();
     }
@@ -86,10 +88,12 @@ final class SubmitFormAction extends AbstractAction {
   protected function createCommand(): ApplicationFormSubmitCommand {
     $applicationProcessBundle = $this->applicationProcessBundleLoader->get($this->getId());
     Assert::notNull($applicationProcessBundle);
+    $statusList = $this->applicationProcessBundleLoader->getStatusList($applicationProcessBundle);
 
     return new ApplicationFormSubmitCommand(
       $this->requestContext->getContactId(),
       $applicationProcessBundle,
+      $statusList,
       $this->getData()
     );
   }

@@ -20,27 +20,25 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewValidateCommand;
-use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateResult;
-use Civi\Funding\Form\ApplicationValidatorInterface;
+use Civi\Funding\Form\ApplicationValidationResult;
+use Civi\Funding\Form\NonCombinedApplicationValidatorInterface;
 
 final class ApplicationFormNewValidateHandler implements ApplicationFormNewValidateHandlerInterface {
 
-  private ApplicationValidatorInterface $validator;
+  private NonCombinedApplicationValidatorInterface $validator;
 
-  public function __construct(ApplicationValidatorInterface $validator) {
+  public function __construct(NonCombinedApplicationValidatorInterface $validator) {
     $this->validator = $validator;
   }
 
-  public function handle(ApplicationFormNewValidateCommand $command): ApplicationFormValidateResult {
-    $validationResult = $this->validator->validateInitial(
+  public function handle(ApplicationFormNewValidateCommand $command): ApplicationValidationResult {
+    return $this->validator->validateInitial(
       $command->getContactId(),
       $command->getFundingProgram(),
       $command->getFundingCaseType(),
       $command->getData(),
       20
     );
-
-    return ApplicationFormValidateResult::create($validationResult);
   }
 
 }

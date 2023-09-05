@@ -26,7 +26,7 @@ use CRM_Funding_ExtensionUtil as E;
  */
 final class ReworkPossibleApplicationSubmitActionsContainerFactory {
 
-  public static function create(): SubmitActionsContainer {
+  public static function create(): SubmitActionsContainerInterface {
     return DefaultApplicationSubmitActionsContainerFactory::create()
       ->add('request-rework', E::ts('Request rework'))
       ->add('withdraw-rework-request', E::ts('Withdraw rework request'))

@@ -83,6 +83,7 @@ final class RemoteFundingApplicationProcessAVK1FormTest extends AbstractRemoteFu
       $this->fundingCase->getId(),
       ['application_permission'],
     );
+    $this->clearCache();
 
     $values = $action->execute()->getArrayCopy();
     static::assertEquals(['jsonSchema', 'uiSchema', 'data'], array_keys($values));
@@ -110,8 +111,8 @@ final class RemoteFundingApplicationProcessAVK1FormTest extends AbstractRemoteFu
   public function testValidateForm(): void {
     $action = RemoteFundingApplicationProcess::validateForm()
       ->setRemoteContactId((string) $this->contact['id'])
+      ->setApplicationProcessId($this->applicationProcess->getId())
       ->setData([
-        'applicationProcessId' => $this->applicationProcess->getId(),
         'y' => 'z',
       ]);
 
@@ -133,6 +134,7 @@ final class RemoteFundingApplicationProcessAVK1FormTest extends AbstractRemoteFu
       $this->fundingCase->getId(),
       ['application_modify'],
     );
+    $this->clearCache();
 
     $values = $action->execute()->getArrayCopy();
     static::assertEquals(['valid', 'errors'], array_keys($values));
@@ -143,8 +145,8 @@ final class RemoteFundingApplicationProcessAVK1FormTest extends AbstractRemoteFu
   public function testSubmitForm(): void {
     $action = RemoteFundingApplicationProcess::submitForm()
       ->setRemoteContactId((string) $this->contact['id'])
+      ->setApplicationProcessId($this->applicationProcess->getId())
       ->setData([
-        'applicationProcessId' => $this->applicationProcess->getId(),
         'y' => 'z',
       ]);
 
@@ -167,6 +169,7 @@ final class RemoteFundingApplicationProcessAVK1FormTest extends AbstractRemoteFu
       $this->fundingCase->getId(),
       ['application_modify'],
     );
+    $this->clearCache();
 
     // Test with invalid data
     $values = $action->execute()->getArrayCopy();

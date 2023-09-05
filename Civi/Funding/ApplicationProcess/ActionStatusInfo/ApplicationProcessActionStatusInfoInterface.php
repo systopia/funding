@@ -23,6 +23,8 @@ use Civi\Funding\Entity\FullApplicationProcessStatus;
 
 interface ApplicationProcessActionStatusInfoInterface {
 
+  public const SERVICE_TAG = 'funding.application.action_status_info';
+
   /**
    * @phpstan-return array<string>
    *   Status of applications that are eligible.

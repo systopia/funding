@@ -20,11 +20,12 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase\Handler;
 
 use Civi\API\Exception\UnauthorizedException;
+use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
+use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
 use Civi\Funding\FundingCase\Command\FundingCaseApproveCommand;
-use Civi\Funding\FundingCase\FundingCaseActionsDeterminerInterface;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\FundingCaseStatusDeterminerInterface;
 use Civi\Funding\TransferContract\TransferContractCreator;
@@ -38,7 +39,7 @@ use PHPUnit\Framework\TestCase;
 final class FundingCaseApproveHandlerTest extends TestCase {
 
   /**
-   * @var \Civi\Funding\FundingCase\FundingCaseActionsDeterminerInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $actionsDeterminerMock;
 
@@ -76,7 +77,12 @@ final class FundingCaseApproveHandlerTest extends TestCase {
   public function testHandle(): void {
     $command = $this->createCommand();
     $this->actionsDeterminerMock->method('isActionAllowed')
-      ->with('approve', $command->getFundingCase()->getStatus(), $command->getFundingCase()->getPermissions())
+      ->with(
+        'approve',
+        $command->getFundingCase()->getStatus(),
+        $command->getApplicationProcessStatusList(),
+        $command->getFundingCase()->getPermissions()
+      )
       ->willReturn(TRUE);
 
     $this->transferContractCreatorMock->expects(static::once())->method('createTransferContract')
@@ -102,11 +108,16 @@ final class FundingCaseApproveHandlerTest extends TestCase {
   public function testHandleUnauthorized(): void {
     $command = $this->createCommand();
     $this->actionsDeterminerMock->method('isActionAllowed')
-      ->with('approve', $command->getFundingCase()->getStatus(), $command->getFundingCase()->getPermissions())
+      ->with(
+        'approve',
+        $command->getFundingCase()->getStatus(),
+        $command->getApplicationProcessStatusList(),
+        $command->getFundingCase()->getPermissions()
+      )
       ->willReturn(FALSE);
 
     $this->expectException(UnauthorizedException::class);
-    $this->expectExceptionMessage('Permission to approve funding case is missing.');
+    $this->expectExceptionMessage('Approving this funding case is not allowed.');
     $this->handler->handle($command);
   }
 
@@ -116,7 +127,14 @@ final class FundingCaseApproveHandlerTest extends TestCase {
     $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
     $fundingProgram = FundingProgramFactory::createFundingProgram();
 
-    return new FundingCaseApproveCommand($fundingCase, 'title', $amount, $fundingCaseType, $fundingProgram);
+    return new FundingCaseApproveCommand(
+      $fundingCase,
+      'title',
+      $amount,
+      [22 => new FullApplicationProcessStatus('eligible', TRUE, TRUE)],
+      $fundingCaseType,
+      $fundingProgram
+    );
   }
 
 }

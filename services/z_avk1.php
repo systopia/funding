@@ -31,28 +31,32 @@ use Civi\Funding\Form\SonstigeAktivitaet\AVK1JsonSchemaFactory;
 use Civi\Funding\Form\SonstigeAktivitaet\AVK1StatusMarkupFactory;
 use Civi\Funding\Form\SonstigeAktivitaet\AVK1UiSchemaFactory;
 use Civi\Funding\Form\SonstigeAktivitaet\AVK1Validator;
-use Civi\Funding\FundingCase\DefaultFundingCaseActionsDeterminer;
 use Civi\Funding\SonstigeAktivitaet\AVK1ApplicationCostItemsFactory;
 use Civi\Funding\SonstigeAktivitaet\AVK1ApplicationFormFilesFactory;
 use Civi\Funding\SonstigeAktivitaet\AVK1ApplicationResourcesItemsFactory;
+use Civi\Funding\SonstigeAktivitaet\AVK1Constants;
 use Civi\Funding\SonstigeAktivitaet\AVK1FinanzierungFactory;
 use Civi\Funding\SonstigeAktivitaet\AVK1KostenFactory;
 use Civi\Funding\SonstigeAktivitaet\AVK1ProjektunterlagenFactory;
+use Civi\Funding\SonstigeAktivitaet\FundingCase\AVK1CaseActionsDeterminer;
 use Symfony\Component\DependencyInjection\Reference;
 
 $container->autowire('funding.avk1.application_submit_actions_factory', ApplicationSubmitActionsFactory::class)
   ->setArgument('$actionsDeterminer', new Reference(ReworkPossibleApplicationProcessActionsDeterminer::class))
-  ->setArgument('$submitActionsContainer', new Reference('funding.application.submit_actions_container'));
+  ->setArgument(
+    '$submitActionsContainer',
+    new Reference('funding.rework_possible_application.submit_actions_container')
+  );
 
 $container->autowire(AVK1StatusMarkupFactory::class);
 $container->autowire(AVK1JsonSchemaFactory::class)
   ->setArgument('$actionsDeterminer', new Reference(ReworkPossibleApplicationProcessActionsDeterminer::class))
-  ->addTag('funding.application.json_schema_factory');
+  ->addTag(AVK1JsonSchemaFactory::SERVICE_TAG);
 $container->autowire(AVK1UiSchemaFactory::class)
   ->setArgument('$submitActionsFactory', new Reference('funding.avk1.application_submit_actions_factory'))
-  ->addTag('funding.application.ui_schema_factory');
+  ->addTag(AVK1UiSchemaFactory::SERVICE_TAG);
 $container->autowire(AVK1FormDataFactory::class)
-  ->addTag('funding.application.form_data_factory');
+  ->addTag(AVK1FormDataFactory::SERVICE_TAG);
 $container->autowire(AVK1Validator::class)
   ->setArgument('$jsonSchemaFactory', new Reference(AVK1JsonSchemaFactory::class))
   ->addTag(AVK1Validator::SERVICE_TAG);
@@ -60,18 +64,28 @@ $container->autowire(AVK1KostenFactory::class);
 $container->autowire(AVK1FinanzierungFactory::class);
 $container->autowire(AVK1ProjektunterlagenFactory::class);
 $container->autowire(AVK1ApplicationCostItemsFactory::class)
-  ->addTag('funding.application.cost_items_factory');
+  ->addTag(AVK1ApplicationCostItemsFactory::SERVICE_TAG);
 $container->autowire(AVK1ApplicationResourcesItemsFactory::class)
-  ->addTag('funding.application.resources_items_factory');
+  ->addTag(AVK1ApplicationResourcesItemsFactory::SERVICE_TAG);
 $container->autowire(AVK1ApplicationFormFilesFactory::class)
   ->addTag(AVK1ApplicationFormFilesFactory::SERVICE_TAG);
 
 $container->getDefinition(ReworkPossibleApplicationProcessActionsDeterminer::class)
-  ->addTag('funding.application.actions_determiner', ['funding_case_type' => 'AVK1SonstigeAktivitaet']);
+  ->addTag(
+    ReworkPossibleApplicationProcessActionsDeterminer::SERVICE_TAG,
+    ['funding_case_type' => AVK1Constants::FUNDING_CASE_TYPE_NAME]
+  );
 $container->getDefinition(ReworkPossibleApplicationProcessStatusDeterminer::class)
-  ->addTag('funding.application.status_determiner', ['funding_case_type' => 'AVK1SonstigeAktivitaet']);
+  ->addTag(
+    ReworkPossibleApplicationProcessStatusDeterminer::SERVICE_TAG,
+    ['funding_case_type' => AVK1Constants::FUNDING_CASE_TYPE_NAME]
+  );
 $container->getDefinition(ReworkPossibleApplicationProcessActionStatusInfo::class)
-  ->addTag('funding.application.action_status_info', ['funding_case_type' => 'AVK1SonstigeAktivitaet']);
+  ->addTag(
+    ReworkPossibleApplicationProcessActionStatusInfo::SERVICE_TAG,
+    ['funding_case_type' => AVK1Constants::FUNDING_CASE_TYPE_NAME]
+  );
 
-$container->getDefinition(DefaultFundingCaseActionsDeterminer::class)
-  ->addTag(DefaultFundingCaseActionsDeterminer::TAG, ['funding_case_type' => 'AVK1SonstigeAktivitaet']);
+$container->autowire(AVK1CaseActionsDeterminer::class)
+  ->addArgument(new Reference(ReworkPossibleApplicationProcessActionStatusInfo::class))
+  ->addTag(AVK1CaseActionsDeterminer::SERVICE_TAG);

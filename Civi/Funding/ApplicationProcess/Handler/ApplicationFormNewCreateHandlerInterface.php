@@ -24,6 +24,8 @@ use Civi\RemoteTools\Form\RemoteFormInterface;
 
 interface ApplicationFormNewCreateHandlerInterface {
 
+  public const SERVICE_TAG = 'funding.application.form_new_create_handler';
+
   public function handle(ApplicationFormNewCreateCommand $command): RemoteFormInterface;
 
 }

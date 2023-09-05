@@ -22,6 +22,7 @@ namespace Civi\Funding\Api4\Action\FundingCase;
 use Civi\Api4\FundingCase;
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\FundingCase\Command\TransferContractRecreateCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\Handler\TransferContractRecreateHandlerInterface;
@@ -35,6 +36,8 @@ class RecreateTransferContractAction extends AbstractAction {
 
   use IdParameterTrait;
 
+  private ApplicationProcessManager $applicationProcessManager;
+
   private FundingCaseManager $fundingCaseManager;
 
   private FundingCaseTypeManager $fundingCaseTypeManager;
@@ -44,12 +47,14 @@ class RecreateTransferContractAction extends AbstractAction {
   private TransferContractRecreateHandlerInterface $transferContractRecreateHandler;
 
   public function __construct(
+    ApplicationProcessManager $applicationProcessManager,
     FundingCaseManager $fundingCaseManager,
     FundingCaseTypeManager $fundingCaseTypeManager,
     FundingProgramManager $fundingProgramManager,
     TransferContractRecreateHandlerInterface $transferContractRecreateHandler
   ) {
     parent::__construct(FundingCase::_getEntityName(), 'recreateTransferContract');
+    $this->applicationProcessManager = $applicationProcessManager;
     $this->fundingCaseManager = $fundingCaseManager;
     $this->fundingCaseTypeManager = $fundingCaseTypeManager;
     $this->fundingProgramManager = $fundingProgramManager;
@@ -72,6 +77,7 @@ class RecreateTransferContractAction extends AbstractAction {
 
     $this->transferContractRecreateHandler->handle(new TransferContractRecreateCommand(
       $fundingCase,
+      $this->applicationProcessManager->getStatusListByFundingCaseId($fundingCase->getId()),
       $fundingCaseType,
       $fundingProgram,
     ));

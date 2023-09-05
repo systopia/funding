@@ -24,7 +24,7 @@ use Civi\Funding\TransferContract\Command\TransferContractRenderResult;
 
 interface TransferContractRenderHandlerInterface {
 
-  public const TAG = 'funding.transfer_contract.render_handler';
+  public const SERVICE_TAG = 'funding.transfer_contract.render_handler';
 
   public function handle(TransferContractRenderCommand $command): TransferContractRenderResult;
 

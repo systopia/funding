@@ -23,6 +23,8 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationFormDataGetCommand;
 
 interface ApplicationFormDataGetHandlerInterface {
 
+  public const SERVICE_TAG = 'funding.application.form_data_get_handler';
+
   /**
    * @phpstan-return array<string, mixed> JSON serializable.
    */

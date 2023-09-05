@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
+use Civi\Api4\Generic\Traits\ManagedEntity;
 use Civi\Funding\Api4\Action\FundingCaseType\GetByFundingProgramIdAction;
 use Civi\Funding\Api4\Traits\AccessPermissionsTrait;
 use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
@@ -35,6 +36,8 @@ class FundingCaseType extends Generic\DAOEntity {
   use AccessPermissionsTrait;
 
   use EntityNameTrait;
+
+  use ManagedEntity;
 
   public static function getByFundingProgramId(bool $checkPermissions = TRUE): GetByFundingProgramIdAction {
     return \Civi::service(GetByFundingProgramIdAction::class)->setCheckPermissions($checkPermissions);

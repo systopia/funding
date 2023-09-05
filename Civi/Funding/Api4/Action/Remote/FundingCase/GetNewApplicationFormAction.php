@@ -22,33 +22,22 @@ namespace Civi\Funding\Api4\Action\Remote\FundingCase;
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Api4\Action\Remote\FundingCase\Traits\NewApplicationFormActionTrait;
+use Civi\Funding\Api4\Action\Traits\FundingCaseTypeIdParameterTrait;
+use Civi\Funding\Api4\Action\Traits\FundingProgramIdParameterTrait;
 use Civi\Funding\Event\Remote\FundingCase\GetNewApplicationFormEvent;
 use Civi\Funding\Exception\FundingException;
 use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker;
 use Civi\Funding\FundingProgram\FundingProgramManager;
 use CRM_Funding_ExtensionUtil as E;
-use Webmozart\Assert\Assert;
 
-/**
- * @method $this setFundingProgramId(int $fundingProgramId)
- * @method $this setFundingCaseTypeId(int $fundingCaseTypeId)
- */
 class GetNewApplicationFormAction extends AbstractNewApplicationFormAction {
 
+  use FundingCaseTypeIdParameterTrait;
+
+  use FundingProgramIdParameterTrait;
+
   use NewApplicationFormActionTrait;
-
-  /**
-   * @var int
-   * @required
-   */
-  protected ?int $fundingProgramId = NULL;
-
-  /**
-   * @var int
-   * @required
-   */
-  protected ?int $fundingCaseTypeId = NULL;
 
   public function __construct(
     FundingCaseTypeManager $fundingCaseTypeManager,
@@ -80,11 +69,6 @@ class GetNewApplicationFormAction extends AbstractNewApplicationFormAction {
       throw new FundingException(E::ts('Invalid funding program ID or funding case type ID'), 'invalid_arguments');
     }
 
-    Assert::keyExists($event->getData(), 'fundingCaseTypeId');
-    Assert::same($event->getData()['fundingCaseTypeId'], $this->getFundingCaseTypeId());
-    Assert::keyExists($event->getData(), 'fundingProgramId');
-    Assert::same($event->getData()['fundingProgramId'], $this->getFundingProgramId());
-
     $result->rowCount = 1;
     $result->exchangeArray([
       'jsonSchema' => $event->getJsonSchema(),
@@ -101,18 +85,6 @@ class GetNewApplicationFormAction extends AbstractNewApplicationFormAction {
       $this,
       $this->createEventParams($this->getFundingCaseTypeId(), $this->getFundingProgramId()),
     );
-  }
-
-  private function getFundingCaseTypeId(): int {
-    Assert::notNull($this->fundingCaseTypeId);
-
-    return $this->fundingCaseTypeId;
-  }
-
-  private function getFundingProgramId(): int {
-    Assert::notNull($this->fundingProgramId);
-
-    return $this->fundingProgramId;
   }
 
 }

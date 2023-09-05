@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewValidateCommand;
-use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateResult;
+use Civi\Funding\Form\ApplicationValidationResult;
 use Civi\Funding\FundingCaseTypeServiceLocatorContainer;
 
 /**
@@ -34,9 +34,17 @@ final class DefaultApplicationFormNewValidateHandler implements ApplicationFormN
     $this->serviceLocatorContainer = $serviceLocatorContainer;
   }
 
-  public function handle(ApplicationFormNewValidateCommand $command): ApplicationFormValidateResult {
-    return $this->serviceLocatorContainer->get($command->getFundingCaseType()->getName())
-      ->getApplicationFormNewValidateHandler()->handle($command);
+  public function handle(ApplicationFormNewValidateCommand $command): ApplicationValidationResult {
+    $handler = $this->serviceLocatorContainer->get($command->getFundingCaseType()->getName())
+      ->getApplicationFormNewValidateHandler();
+    if (NULL === $handler) {
+      throw new \RuntimeException(sprintf(
+        'Funding case type "%s" does not support non-combined applications',
+        $command->getFundingCaseType()->getName()
+      ));
+    }
+
+    return $handler->handle($command);
   }
 
 }

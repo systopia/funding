@@ -24,23 +24,17 @@ use Civi\Api4\RemoteFundingCaseType;
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Api4\Action\Remote\RemoteFundingActionInterface;
 use Civi\Funding\Api4\Action\Remote\Traits\RemoteFundingActionContactIdRequiredTrait;
+use Civi\Funding\Api4\Action\Traits\FundingProgramIdParameterTrait;
 use Civi\Funding\Event\Remote\FundingCaseType\GetByFundingProgramIdEvent;
 use Civi\Funding\Event\Remote\FundingEvents;
 use Civi\RemoteTools\Api4\Action\AbstractEventAction;
 use Civi\RemoteTools\Event\AbstractRequestEvent;
 
-/**
- * @method $this setFundingProgramId(int $fundingProgramId)
- */
 final class GetByFundingProgramIdAction extends AbstractEventAction implements RemoteFundingActionInterface {
 
-  use RemoteFundingActionContactIdRequiredTrait;
+  use FundingProgramIdParameterTrait;
 
-  /**
-   * @var int
-   * @required
-   */
-  protected ?int $fundingProgramId = NULL;
+  use RemoteFundingActionContactIdRequiredTrait;
 
   public function __construct(CiviEventDispatcherInterface $eventDispatcher = NULL) {
     parent::__construct(

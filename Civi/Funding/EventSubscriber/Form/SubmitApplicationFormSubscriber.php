@@ -19,10 +19,9 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\Form;
 
-use Civi\Funding\ApplicationProcess\Command\ApplicationFormCreateCommand;
+use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewSubmitCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitCommand;
-use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewSubmitHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
 use Civi\Funding\Entity\ExternalFileEntity;
@@ -30,13 +29,13 @@ use Civi\Funding\Event\Remote\AbstractFundingSubmitFormEvent;
 use Civi\Funding\Event\Remote\ApplicationProcess\SubmitApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
 use Civi\Funding\Form\ApplicationValidationResult;
+use Civi\Funding\Form\RemoteSubmitResponseActions;
 use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Webmozart\Assert\Assert;
 
 class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
 
-  private ApplicationFormCreateHandlerInterface $createHandler;
+  private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
 
   private ApplicationFormNewSubmitHandlerInterface $newSubmitHandler;
 
@@ -53,19 +52,22 @@ class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
   }
 
   public function __construct(
-    ApplicationFormCreateHandlerInterface $createHandler,
+    ApplicationProcessBundleLoader $applicationProcessBundleLoader,
     ApplicationFormNewSubmitHandlerInterface $newSubmitHandler,
     ApplicationFormSubmitHandlerInterface $submitHandler
   ) {
-    $this->createHandler = $createHandler;
+    $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
     $this->newSubmitHandler = $newSubmitHandler;
     $this->submitHandler = $submitHandler;
   }
 
   public function onSubmitForm(SubmitApplicationFormEvent $event): void {
+    $statusList = $this->applicationProcessBundleLoader->getStatusList($event->getApplicationProcessBundle());
+
     $command = new ApplicationFormSubmitCommand(
       $event->getContactId(),
       $event->getApplicationProcessBundle(),
+      $statusList,
       $event->getData(),
     );
 
@@ -73,15 +75,11 @@ class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
     if ($result->isSuccess()) {
       $event->setMessage(E::ts('Saved'));
       $this->addFilesToEvent($result->getFiles(), $event);
-      if ($this->isShouldShowForm($result->getValidatedData()->getAction())) {
-        $event->setForm(
-          $this->createHandler->handle(new ApplicationFormCreateCommand(
-            $event->getApplicationProcessBundle(),
-          ))
-        );
+      if ($result->getValidationResult()->isReadOnly() && 'delete' !== $result->getValidatedData()->getAction()) {
+        $event->setAction(RemoteSubmitResponseActions::RELOAD_FORM);
       }
       else {
-        $event->setAction($event::ACTION_CLOSE_FORM);
+        $event->setAction(RemoteSubmitResponseActions::CLOSE_FORM);
       }
     }
     else {
@@ -101,25 +99,11 @@ class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
     if ($result->isSuccess()) {
       $event->setMessage(E::ts('Saved'));
       $this->addFilesToEvent($result->getFiles(), $event);
-      if ($this->isShouldShowForm($result->getValidatedData()->getAction())) {
-        Assert::notNull($result->getApplicationProcessBundle());
-        $event->setForm(
-          $this->createHandler->handle(new ApplicationFormCreateCommand(
-            $result->getApplicationProcessBundle(),
-          ))
-        );
-      }
-      else {
-        $event->setAction($event::ACTION_CLOSE_FORM);
-      }
+      $event->setAction(RemoteSubmitResponseActions::CLOSE_FORM);
     }
     else {
       $this->mapValidationErrorsToEvent($result->getValidationResult(), $event);
     }
-  }
-
-  private function isShouldShowForm(string $action): bool {
-    return in_array($action, ['save', 'modify', 'update'], TRUE);
   }
 
   private function mapValidationErrorsToEvent(

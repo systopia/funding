@@ -89,6 +89,7 @@ final class RemoteFundingCaseInfoTest extends AbstractRemoteFundingHeadlessTestC
       'funding_case_transfer_contract_uri'
       => 'http://localhost/civicrm/funding/remote/transfer-contract/download?fundingCaseId=' . $fundingCase->getId(),
       'funding_case_type_id' => $fundingCaseType->getId(),
+      'funding_case_type_is_combined_application' => $fundingCaseType->getIsCombinedApplication(),
       'funding_program_id' => $fundingProgram->getId(),
       'funding_program_currency' => $fundingProgram->getCurrency(),
       'funding_program_title' => $fundingProgram->getTitle(),
@@ -167,7 +168,7 @@ final class RemoteFundingCaseInfoTest extends AbstractRemoteFundingHeadlessTestC
       }
     }
 
-    static::assertCount(25 + $permissionsCount, $result);
+    static::assertCount(26 + $permissionsCount, $result);
   }
 
 }

@@ -35,8 +35,16 @@ final class DefaultApplicationFormNewCreateHandler implements ApplicationFormNew
   }
 
   public function handle(ApplicationFormNewCreateCommand $command): RemoteFormInterface {
-    return $this->serviceLocatorContainer->get($command->getFundingCaseType()->getName())
-      ->getApplicationFormNewCreateHandler()->handle($command);
+    $handler = $this->serviceLocatorContainer->get($command->getFundingCaseType()->getName())
+      ->getApplicationFormNewCreateHandler();
+    if (NULL === $handler) {
+      throw new \RuntimeException(sprintf(
+        'Funding case type "%s" does not support non-combined applications',
+        $command->getFundingCaseType()->getName()
+      ));
+    }
+
+    return $handler->handle($command);
   }
 
 }

@@ -24,6 +24,8 @@ use Civi\RemoteTools\JsonSchema\JsonSchema;
 
 interface ApplicationJsonSchemaGetHandlerInterface {
 
+  public const SERVICE_TAG = 'funding.application.json_schema_get_handler';
+
   public function handle(ApplicationJsonSchemaGetCommand $command): JsonSchema;
 
 }

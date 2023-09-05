@@ -36,22 +36,26 @@ use Civi\Funding\ApplicationProcess\ActionsDeterminer\ReworkPossibleApplicationP
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\DefaultApplicationProcessActionStatusInfo;
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\ReworkPossibleApplicationProcessActionStatusInfo;
 use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
+use Civi\Funding\ApplicationProcess\ApplicationExternalFileManager;
+use Civi\Funding\ApplicationProcess\ApplicationExternalFileManagerInterface;
 use Civi\Funding\ApplicationProcess\ApplicationIdentifierGenerator;
 use Civi\Funding\ApplicationProcess\ApplicationIdentifierGeneratorInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
-use Civi\Funding\ApplicationProcess\ApplicationExternalFileManager;
-use Civi\Funding\ApplicationProcess\ApplicationExternalFileManagerInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\ApplicationProcessTaskManager;
 use Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager;
 use Civi\Funding\ApplicationProcess\ApplicationSnapshotManager;
 use Civi\Funding\ApplicationProcess\EligibleApplicationProcessesLoader;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationActionApplyHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationDeleteHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesPersistHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddCreateHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddSubmitHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddValidateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewCreateHandlerInterface;
@@ -63,11 +67,15 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationJsonSchemaGetHandlerInter
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationActionApplyHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationCostItemsAddIdentifiersHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationCostItemsPersistHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationDeleteHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFilesAddIdentifiersHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFilesPersistHandler;
+use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormAddCreateHandler;
+use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormAddSubmitHandler;
+use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormAddValidateHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormCreateHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormDataGetHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormNewCreateHandler;
@@ -104,6 +112,7 @@ use Civi\Funding\EventSubscriber\Remote\ApplicationProcessActivityGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessGetFieldsSubscriber;
 use Civi\Funding\Validation\ConcreteEntityValidatorInterface;
+use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Symfony\Component\DependencyInjection\Reference;
 
 $container->autowire(ApplicationProcessManager::class);
@@ -125,6 +134,7 @@ ServiceRegistrator::autowireAllImplementing(
   ['funding.validator.entity' => []]
 );
 
+$container->autowire(ApplicationActionApplyHandlerInterface::class, DefaultApplicationActionApplyHandler::class);
 $container->autowire(ApplicationDeleteHandlerInterface::class, DefaultApplicationDeleteHandler::class);
 
 $container->autowire(ApplicationFormNewCreateHandlerInterface::class, DefaultApplicationFormNewCreateHandler::class);
@@ -134,10 +144,18 @@ $container->autowire(
 );
 $container->autowire(ApplicationFormNewSubmitHandlerInterface::class, DefaultApplicationFormNewSubmitHandler::class);
 
+$container->autowire(ApplicationFormAddCreateHandlerInterface::class, DefaultApplicationFormAddCreateHandler::class);
+$container->autowire(
+  ApplicationFormAddValidateHandlerInterface::class,
+  DefaultApplicationFormAddValidateHandler::class
+);
+$container->autowire(ApplicationFormAddSubmitHandlerInterface::class, DefaultApplicationFormAddSubmitHandler::class);
+
 $container->autowire(ApplicationFormDataGetHandlerInterface::class, DefaultApplicationFormDataGetHandler::class);
 $container->autowire(ApplicationFormCreateHandlerInterface::class, DefaultApplicationFormCreateHandler::class);
 $container->autowire(ApplicationFormValidateHandlerInterface::class, DefaultApplicationFormValidateHandler::class);
 $container->autowire(ApplicationFormSubmitHandlerInterface::class, DefaultApplicationFormSubmitHandler::class);
+
 $container->autowire(ApplicationJsonSchemaGetHandlerInterface::class, DefaultApplicationJsonSchemaGetHandler::class);
 $container->autowire(
   ApplicationCostItemsAddIdentifiersHandlerInterface::class,
@@ -161,6 +179,14 @@ $container->autowire(
 );
 $container->autowire(ApplicationFilesPersistHandlerInterface::class, DefaultApplicationFilesPersistHandler::class);
 $container->autowire(ApplicationSnapshotCreateHandlerInterface::class, DefaultApplicationSnapshotCreateHandler::class);
+
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/ApplicationProcess/Remote/Api4/ActionHandler',
+  'Civi\\Funding\\ApplicationProcess\\Remote\\Api4\\ActionHandler',
+  ActionHandlerInterface::class,
+  [ActionHandlerInterface::SERVICE_TAG => []],
+);
 
 $container->autowire(CreateAction::class)
   ->setPublic(TRUE)

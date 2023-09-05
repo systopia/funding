@@ -21,23 +21,21 @@ namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
+use Civi\Funding\Api4\Action\Traits\ApplicationProcessIdParameterTrait;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\Event\Remote\ApplicationProcess\ValidateApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingEvents;
 use Civi\Funding\Exception\FundingException;
-use Webmozart\Assert\Assert;
+use Civi\RemoteTools\Api4\Action\Traits\DataParameterTrait;
 
 /**
  * @method $this setData(array $data)
  */
 class ValidateFormAction extends AbstractFormAction {
 
-  /**
-   * @var array
-   * @phpstan-var array<string, mixed>
-   * @required
-   */
-  protected ?array $data = NULL;
+  use ApplicationProcessIdParameterTrait;
+
+  use DataParameterTrait;
 
   public function __construct(
     ApplicationProcessBundleLoader $applicationProcessBundleLoader,
@@ -79,14 +77,6 @@ class ValidateFormAction extends AbstractFormAction {
       $this,
       $this->createEventParams($this->getApplicationProcessId())
     );
-  }
-
-  public function getApplicationProcessId(): int {
-    Assert::notNull($this->data);
-    Assert::keyExists($this->data, 'applicationProcessId');
-    Assert::integer($this->data['applicationProcessId']);
-
-    return $this->data['applicationProcessId'];
   }
 
 }

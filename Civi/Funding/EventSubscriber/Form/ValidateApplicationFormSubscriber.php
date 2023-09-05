@@ -19,26 +19,31 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\Form;
 
+use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewValidateCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateCommand;
-use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateResult;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewValidateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterface;
 use Civi\Funding\Event\Remote\AbstractFundingValidateFormEvent;
 use Civi\Funding\Event\Remote\ApplicationProcess\ValidateApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingCase\ValidateNewApplicationFormEvent;
+use Civi\Funding\Form\ApplicationValidationResult;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ValidateApplicationFormSubscriber implements EventSubscriberInterface {
+
+  private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
 
   private ApplicationFormNewValidateHandlerInterface $newValidateHandler;
 
   private ApplicationFormValidateHandlerInterface $validateHandler;
 
   public function __construct(
+    ApplicationProcessBundleLoader $applicationProcessBundleLoader,
     ApplicationFormNewValidateHandlerInterface $newValidateHandler,
     ApplicationFormValidateHandlerInterface $validateHandler
   ) {
+    $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
     $this->newValidateHandler = $newValidateHandler;
     $this->validateHandler = $validateHandler;
   }
@@ -54,9 +59,13 @@ class ValidateApplicationFormSubscriber implements EventSubscriberInterface {
   }
 
   public function onValidateForm(ValidateApplicationFormEvent $event): void {
+    $statusList = $this->applicationProcessBundleLoader->getStatusList($event->getApplicationProcessBundle());
+
     $command = new ApplicationFormValidateCommand(
       $event->getApplicationProcessBundle(),
+      $statusList,
       $event->getData(),
+      20,
     );
 
     $result = $this->validateHandler->handle($command);
@@ -76,14 +85,14 @@ class ValidateApplicationFormSubscriber implements EventSubscriberInterface {
   }
 
   private function mapValidationResultToEvent(
-    ApplicationFormValidateResult $validationResult,
+    ApplicationValidationResult $validationResult,
     AbstractFundingValidateFormEvent $event
   ): void {
     if ($validationResult->isValid()) {
       $event->setValid(TRUE);
     }
     else {
-      foreach ($validationResult->getErrors() as $jsonPointer => $messages) {
+      foreach ($validationResult->getErrorMessages() as $jsonPointer => $messages) {
         $event->addErrorsAt($jsonPointer, $messages);
       }
     }

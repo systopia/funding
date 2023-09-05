@@ -23,7 +23,7 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewValidateCommand;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Form\ApplicationValidationResult;
-use Civi\Funding\Form\ApplicationValidatorInterface;
+use Civi\Funding\Form\NonCombinedApplicationValidatorInterface;
 use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -31,20 +31,19 @@ use PHPUnit\Framework\TestCase;
 /**
  * @covers \Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewValidateHandler
  * @covers \Civi\Funding\ApplicationProcess\Command\ApplicationFormNewValidateCommand
- * @covers \Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateResult
  */
 final class ApplicationFormNewValidateHandlerTest extends TestCase {
 
   private ApplicationFormNewValidateHandler $handler;
 
   /**
-   * @var \Civi\Funding\Form\ApplicationValidatorInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\Form\NonCombinedApplicationValidatorInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $validatorMock;
 
   protected function setUp(): void {
     parent::setUp();
-    $this->validatorMock = $this->createMock(ApplicationValidatorInterface::class);
+    $this->validatorMock = $this->createMock(NonCombinedApplicationValidatorInterface::class);
     $this->handler = new ApplicationFormNewValidateHandler($this->validatorMock);
   }
 
@@ -64,9 +63,7 @@ final class ApplicationFormNewValidateHandlerTest extends TestCase {
 
     $command = new ApplicationFormNewValidateCommand($contactId, $fundingProgram, $fundingCaseType, $data);
     $result = $this->handler->handle($command);
-    static::assertSame($validatedData->getRawData(), $result->getData());
-    static::assertSame($errorMessages, $result->getErrors());
-    static::assertFalse($result->isValid());
+    static::assertSame($validationResult, $result);
   }
 
 }

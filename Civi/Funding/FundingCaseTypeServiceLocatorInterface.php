@@ -19,11 +19,15 @@ declare(strict_types = 1);
 
 namespace Civi\Funding;
 
+use Civi\Funding\ApplicationProcess\Handler\ApplicationActionApplyHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationDeleteHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesPersistHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddCreateHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddSubmitHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddValidateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewCreateHandlerInterface;
@@ -37,11 +41,22 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHand
 use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandlerInterface;
 use Civi\Funding\FundingCase\FundingCaseStatusDeterminerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseApproveHandlerInterface;
+use Civi\Funding\FundingCase\Handler\FundingCaseFormDataGetHandlerInterface;
+use Civi\Funding\FundingCase\Handler\FundingCaseFormNewGetHandlerInterface;
+use Civi\Funding\FundingCase\Handler\FundingCaseFormNewSubmitHandlerInterface;
+use Civi\Funding\FundingCase\Handler\FundingCaseFormNewValidateHandlerInterface;
+use Civi\Funding\FundingCase\Handler\FundingCaseFormUpdateGetHandlerInterface;
+use Civi\Funding\FundingCase\Handler\FundingCaseFormUpdateSubmitHandlerInterface;
+use Civi\Funding\FundingCase\Handler\FundingCaseFormUpdateValidateHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCasePossibleActionsGetHandlerInterface;
 use Civi\Funding\FundingCase\Handler\TransferContractRecreateHandlerInterface;
 use Civi\Funding\TransferContract\Handler\TransferContractRenderHandlerInterface;
 
 interface FundingCaseTypeServiceLocatorInterface {
+
+  public const SERVICE_TAG = 'funding.case.type.service_locator';
+
+  public function getApplicationActionApplyHandler(): ApplicationActionApplyHandlerInterface;
 
   public function getApplicationDeleteHandler(): ApplicationDeleteHandlerInterface;
 
@@ -49,11 +64,17 @@ interface FundingCaseTypeServiceLocatorInterface {
 
   public function getApplicationFilesPersistHandler(): ApplicationFilesPersistHandlerInterface;
 
-  public function getApplicationFormNewCreateHandler(): ApplicationFormNewCreateHandlerInterface;
+  public function getApplicationFormAddCreateHandler(): ?ApplicationFormAddCreateHandlerInterface;
 
-  public function getApplicationFormNewValidateHandler(): ApplicationFormNewValidateHandlerInterface;
+  public function getApplicationFormAddSubmitHandler(): ?ApplicationFormAddSubmitHandlerInterface;
 
-  public function getApplicationFormNewSubmitHandler(): ApplicationFormNewSubmitHandlerInterface;
+  public function getApplicationFormAddValidateHandler(): ?ApplicationFormAddValidateHandlerInterface;
+
+  public function getApplicationFormNewCreateHandler(): ?ApplicationFormNewCreateHandlerInterface;
+
+  public function getApplicationFormNewValidateHandler(): ?ApplicationFormNewValidateHandlerInterface;
+
+  public function getApplicationFormNewSubmitHandler(): ?ApplicationFormNewSubmitHandlerInterface;
 
   public function getApplicationFormDataGetHandler(): ApplicationFormDataGetHandlerInterface;
 
@@ -79,6 +100,20 @@ interface FundingCaseTypeServiceLocatorInterface {
   public function getApplicationSnapshotCreateHandler(): ApplicationSnapshotCreateHandlerInterface;
 
   public function getFundingCaseApproveHandler(): FundingCaseApproveHandlerInterface;
+
+  public function getFundingCaseFormDataGetHandler(): ?FundingCaseFormDataGetHandlerInterface;
+
+  public function getFundingCaseFormNewGetHandler(): ?FundingCaseFormNewGetHandlerInterface;
+
+  public function getFundingCaseFormNewSubmitHandler(): ?FundingCaseFormNewSubmitHandlerInterface;
+
+  public function getFundingCaseFormNewValidateHandler(): ?FundingCaseFormNewValidateHandlerInterface;
+
+  public function getFundingCaseFormUpdateGetHandler(): ?FundingCaseFormUpdateGetHandlerInterface;
+
+  public function getFundingCaseFormUpdateSubmitHandler(): ?FundingCaseFormUpdateSubmitHandlerInterface;
+
+  public function getFundingCaseFormUpdateValidateHandler(): ?FundingCaseFormUpdateValidateHandlerInterface;
 
   public function getFundingCasePossibleActionsGetHandler(): FundingCasePossibleActionsGetHandlerInterface;
 

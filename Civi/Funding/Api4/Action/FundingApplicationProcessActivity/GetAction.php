@@ -25,21 +25,15 @@ use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\FundingApplicationProcessActivity;
 use Civi\Api4\Generic\AbstractGetAction;
 use Civi\Api4\Generic\Result;
+use Civi\Funding\Api4\Action\Traits\ApplicationProcessIdParameterTrait;
 use Civi\Funding\Api4\Util\ContactUtil;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Webmozart\Assert\Assert;
 
-/**
- * @method $this setApplicationProcessId(int $applicationProcessId)
- */
 final class GetAction extends AbstractGetAction {
 
-  /**
-   * @var int
-   * @required
-   */
-  protected ?int $applicationProcessId = NULL;
+  use ApplicationProcessIdParameterTrait;
 
   private Api4Interface $api4;
 

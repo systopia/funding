@@ -64,13 +64,13 @@ final class ValidateNewApplicationFormActionTest extends AbstractNewApplicationF
       $this->relationCheckerMock,
     );
 
-    $this->action->setRemoteContactId('00');
-    $this->action->setExtraParam('contactId', 11);
-    $this->data = [
-      'fundingCaseTypeId' => 22,
-      'fundingProgramId' => 33,
-    ];
-    $this->action->setData($this->data);
+    $this->data = ['foo' => 'bar'];
+    $this->action
+      ->setRemoteContactId('00')
+      ->setExtraParam('contactId', 11)
+      ->setFundingProgramId(33)
+      ->setFundingCaseTypeId(22)
+      ->setData($this->data);
   }
 
   public function testValid(): void {

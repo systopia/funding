@@ -30,12 +30,25 @@ use Civi\Funding\EventSubscriber\FundingCase\FundingCaseGetPossiblePermissionsSu
 use Civi\Funding\EventSubscriber\FundingCase\FundingCasePermissionsGetAdminSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseGetFieldsSubscriber;
-use Civi\Funding\FundingCase\DefaultFundingCaseActionsDeterminer;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\Handler\DefaultFundingCaseApproveHandler;
+use Civi\Funding\FundingCase\Handler\DefaultFundingCaseFormDataGetHandler;
+use Civi\Funding\FundingCase\Handler\DefaultFundingCaseFormNewGetHandler;
+use Civi\Funding\FundingCase\Handler\DefaultFundingCaseFormNewSubmitHandler;
+use Civi\Funding\FundingCase\Handler\DefaultFundingCaseFormNewValidateHandler;
+use Civi\Funding\FundingCase\Handler\DefaultFundingCaseFormUpdateGetHandler;
+use Civi\Funding\FundingCase\Handler\DefaultFundingCaseFormUpdateSubmitHandler;
+use Civi\Funding\FundingCase\Handler\DefaultFundingCaseFormUpdateValidateHandler;
 use Civi\Funding\FundingCase\Handler\DefaultFundingCasePossibleActionsGetHandler;
 use Civi\Funding\FundingCase\Handler\DefaultTransferContractRecreateHandler;
 use Civi\Funding\FundingCase\Handler\FundingCaseApproveHandlerInterface;
+use Civi\Funding\FundingCase\Handler\FundingCaseFormDataGetHandlerInterface;
+use Civi\Funding\FundingCase\Handler\FundingCaseFormNewGetHandlerInterface;
+use Civi\Funding\FundingCase\Handler\FundingCaseFormNewSubmitHandlerInterface;
+use Civi\Funding\FundingCase\Handler\FundingCaseFormNewValidateHandlerInterface;
+use Civi\Funding\FundingCase\Handler\FundingCaseFormUpdateGetHandlerInterface;
+use Civi\Funding\FundingCase\Handler\FundingCaseFormUpdateSubmitHandlerInterface;
+use Civi\Funding\FundingCase\Handler\FundingCaseFormUpdateValidateHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCasePossibleActionsGetHandlerInterface;
 use Civi\Funding\FundingCase\Handler\TransferContractRecreateHandlerInterface;
 use Civi\Funding\FundingCase\TransferContractRouter;
@@ -48,6 +61,7 @@ use Civi\Funding\Permission\FundingCase\RelationFactory\RelationPropertiesFactor
 use Civi\Funding\Permission\FundingCase\RelationFactory\RelationPropertiesFactoryLocator;
 use Civi\Funding\Permission\FundingCase\RelationFactory\RelationPropertiesFactoryTypeContainer;
 use Civi\Funding\Permission\FundingCase\RelationFactory\RelationPropertiesFactoryTypeInterface;
+use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Symfony\Component\DependencyInjection\Argument\ServiceLocatorArgument;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -55,7 +69,32 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 $container->autowire(FundingCaseManager::class);
 $container->autowire(TransferContractRouter::class);
 
-$container->autowire(DefaultFundingCaseActionsDeterminer::class);
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/FundingCase/Remote/Api4/ActionHandler',
+  'Civi\\Funding\\FundingCase\\Remote\\Api4\\ActionHandler',
+  ActionHandlerInterface::class,
+  [ActionHandlerInterface::SERVICE_TAG => []],
+);
+
+$container->autowire(FundingCaseFormNewGetHandlerInterface::class, DefaultFundingCaseFormNewGetHandler::class);
+$container->autowire(FundingCaseFormNewSubmitHandlerInterface::class, DefaultFundingCaseFormNewSubmitHandler::class);
+$container->autowire(
+  FundingCaseFormNewValidateHandlerInterface::class,
+  DefaultFundingCaseFormNewValidateHandler::class
+);
+
+$container->autowire(FundingCaseFormDataGetHandlerInterface::class, DefaultFundingCaseFormDataGetHandler::class);
+$container->autowire(FundingCaseFormUpdateGetHandlerInterface::class, DefaultFundingCaseFormUpdateGetHandler::class);
+$container->autowire(
+  FundingCaseFormUpdateSubmitHandlerInterface::class,
+  DefaultFundingCaseFormUpdateSubmitHandler::class
+);
+$container->autowire(
+  FundingCaseFormUpdateValidateHandlerInterface::class,
+  DefaultFundingCaseFormUpdateValidateHandler::class
+);
+
 $container->autowire(FundingCaseApproveHandlerInterface::class, DefaultFundingCaseApproveHandler::class);
 $container->autowire(
   FundingCasePossibleActionsGetHandlerInterface::class,

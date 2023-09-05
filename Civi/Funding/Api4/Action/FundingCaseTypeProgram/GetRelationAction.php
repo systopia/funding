@@ -22,24 +22,14 @@ namespace Civi\Funding\Api4\Action\FundingCaseTypeProgram;
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\AbstractGetAction;
 use Civi\Api4\Generic\Result;
+use Civi\Funding\Api4\Action\Traits\FundingCaseTypeIdParameterTrait;
+use Civi\Funding\Api4\Action\Traits\FundingProgramIdParameterTrait;
 
-/**
- * @method int getFundingCaseTypeId()
- * @method int getFundingProgramId()
- */
 class GetRelationAction extends AbstractAction {
 
-  /**
-   * @var int
-   * @required
-   */
-  protected ?int $fundingCaseTypeId = NULL;
+  use FundingCaseTypeIdParameterTrait;
 
-  /**
-   * @var int
-   * @required
-   */
-  protected ?int $fundingProgramId = NULL;
+  use FundingProgramIdParameterTrait;
 
   private AbstractGetAction $getAction;
 
@@ -60,18 +50,6 @@ class GetRelationAction extends AbstractAction {
       ->addWhere('funding_program_id', '=', $this->fundingProgramId);
     $this->getAction->_run($result);
     $this->_debugOutput = $this->getAction->_debugOutput;
-  }
-
-  public function setFundingCaseTypeId(int $fundingCaseTypeId): self {
-    $this->fundingCaseTypeId = $fundingCaseTypeId;
-
-    return $this;
-  }
-
-  public function setFundingProgramId(int $fundingProgramId): self {
-    $this->fundingProgramId = $fundingProgramId;
-
-    return $this;
   }
 
 }

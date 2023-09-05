@@ -58,9 +58,9 @@ final class ValidateFormAction extends AbstractAction {
     $commandResult = $this->validateFormHandler->handle($command);
 
     $result['valid'] = $commandResult->isValid();
-    $result['data'] = $commandResult->getData();
-    $result['errors'] = [] === $commandResult->getErrors()
-      ? new \stdClass() : $commandResult->getErrors();
+    $result['data'] = $commandResult->getValidatedData()->getRawData();
+    $result['errors'] = [] === $commandResult->getErrorMessages()
+      ? new \stdClass() : $commandResult->getErrorMessages();
   }
 
   /**
@@ -69,8 +69,9 @@ final class ValidateFormAction extends AbstractAction {
   protected function createCommand(): ApplicationFormValidateCommand {
     $applicationProcessBundle = $this->applicationProcessBundleLoader->get($this->getId());
     Assert::notNull($applicationProcessBundle);
+    $statusList = $this->applicationProcessBundleLoader->getStatusList($applicationProcessBundle);
 
-    return new ApplicationFormValidateCommand($applicationProcessBundle, $this->getData());
+    return new ApplicationFormValidateCommand($applicationProcessBundle, $statusList, $this->getData(), 20);
   }
 
 }

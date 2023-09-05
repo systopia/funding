@@ -22,6 +22,7 @@ namespace Civi\Funding\Api4\Action\FundingCase;
 use Civi\Api4\FundingCase;
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\FundingCase\Command\FundingCaseApproveCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\Handler\FundingCaseApproveHandlerInterface;
@@ -53,6 +54,8 @@ class ApproveAction extends AbstractAction {
    */
   protected ?float $amount = NULL;
 
+  private ApplicationProcessManager $applicationProcessManager;
+
   private FundingCaseApproveHandlerInterface $approveHandler;
 
   private FundingCaseManager $fundingCaseManager;
@@ -64,6 +67,7 @@ class ApproveAction extends AbstractAction {
   private TransferContractRouter $transferContractRouter;
 
   public function __construct(
+    ApplicationProcessManager $applicationProcessManager,
     FundingCaseApproveHandlerInterface $approveHandler,
     FundingCaseManager $fundingCaseManager,
     FundingCaseTypeManager $fundingCaseTypeManager,
@@ -71,6 +75,7 @@ class ApproveAction extends AbstractAction {
     TransferContractRouter $transferContractRouter
   ) {
     parent::__construct(FundingCase::_getEntityName(), 'approve');
+    $this->applicationProcessManager = $applicationProcessManager;
     $this->approveHandler = $approveHandler;
     $this->fundingCaseManager = $fundingCaseManager;
     $this->fundingCaseTypeManager = $fundingCaseTypeManager;
@@ -98,6 +103,7 @@ class ApproveAction extends AbstractAction {
       $fundingCase,
       $this->title,
       $this->amount,
+      $this->applicationProcessManager->getStatusListByFundingCaseId($fundingCase->getId()),
       $fundingCaseType,
       $fundingProgram,
     );

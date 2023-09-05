@@ -25,10 +25,24 @@ namespace Civi\Funding\Api4\Util;
 final class WhereUtil {
 
   /**
-   * @param array<array{string, string|mixed[], 2?: mixed}> $where
-   * @param string $field
-   *
-   * @return int|null
+   * @phpstan-param array<array{string, string|mixed[], 2?: mixed}> $where
+   */
+  public static function getBool(array $where, string $field): ?bool {
+    foreach ($where as $clause) {
+      if ($clause[0] === $field && '=' === $clause[1] && is_scalar($clause[2] ?? NULL)) {
+        return (bool) $clause[2];
+      }
+
+      if ($clause[0] === $field && '!=' === $clause[1] && is_scalar($clause[2] ?? NULL)) {
+        return !(bool) $clause[2];
+      }
+    }
+
+    return NULL;
+  }
+
+  /**
+   * @phpstan-param array<array{string, string|mixed[], 2?: mixed}> $where
    */
   public static function getInt(array $where, string $field): ?int {
     foreach ($where as $clause) {

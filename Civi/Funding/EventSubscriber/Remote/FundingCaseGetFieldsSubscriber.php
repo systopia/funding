@@ -20,7 +20,9 @@ declare(strict_types = 1);
 namespace Civi\Funding\EventSubscriber\Remote;
 
 use Civi\Funding\Event\Remote\FundingGetFieldsEvent;
+use Civi\RemoteTools\Event\GetFieldsEvent;
 use Civi\RemoteTools\EventSubscriber\AbstractRemoteGetFieldsSubscriber;
+use CRM_Funding_ExtensionUtil as E;
 
 final class FundingCaseGetFieldsSubscriber extends AbstractRemoteGetFieldsSubscriber {
 
@@ -29,5 +31,41 @@ final class FundingCaseGetFieldsSubscriber extends AbstractRemoteGetFieldsSubscr
   protected const ENTITY_NAME = 'RemoteFundingCase';
 
   protected const EVENT_CLASS = FundingGetFieldsEvent::class;
+
+  public function onGetFields(GetFieldsEvent $event): void {
+    parent::onGetFields($event);
+    $event->addField([
+      'nullable' => FALSE,
+      'name' => 'funding_program_id.currency',
+      'title' => E::ts('Currency'),
+      'data_type' => 'String',
+      'serialize' => NULL,
+      'options' => FALSE,
+      'label' => E::ts('Currency'),
+      'operators' => NULL,
+    ]);
+
+    $event->addField([
+      'nullable' => FALSE,
+      'name' => 'funding_case_type_id.is_combined_application',
+      'title' => E::ts('Is Combined Application'),
+      'data_type' => 'Boolean',
+      'serialize' => NULL,
+      'options' => FALSE,
+      'label' => E::ts('Is Combined Application'),
+      'operators' => NULL,
+    ]);
+
+    $event->addField([
+      'nullable' => TRUE,
+      'name' => 'funding_case_type_id.application_process_label',
+      'title' => E::ts('Application Process Label'),
+      'data_type' => 'String',
+      'serialize' => NULL,
+      'options' => FALSE,
+      'label' => E::ts('Application Process Label'),
+      'operators' => NULL,
+    ]);
+  }
 
 }

@@ -26,8 +26,29 @@ final class ApplicationDeleteCommand {
 
   use ApplicationProcessEntityBundleTrait;
 
-  public function __construct(ApplicationProcessEntityBundle $applicationProcessBundle) {
+  /**
+   * @phpstan-var array<int, \Civi\Funding\Entity\FullApplicationProcessStatus>
+   */
+  private array $applicationProcessStatusList;
+
+  /**
+   * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $applicationProcessStatusList
+   *    Status of other application processes in same funding case indexed by ID.
+   */
+  public function __construct(
+    ApplicationProcessEntityBundle $applicationProcessBundle,
+    array $applicationProcessStatusList
+  ) {
     $this->applicationProcessBundle = $applicationProcessBundle;
+    $this->applicationProcessStatusList = $applicationProcessStatusList;
+  }
+
+  /**
+   * @phpstan-return array<int, \Civi\Funding\Entity\FullApplicationProcessStatus>
+   *   Status of other application processes in same funding case indexed by ID.
+   */
+  public function getApplicationProcessStatusList(): array {
+    return $this->applicationProcessStatusList;
   }
 
 }

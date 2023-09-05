@@ -24,6 +24,8 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewSubmitResult;
 
 interface ApplicationFormNewSubmitHandlerInterface {
 
+  public const SERVICE_TAG = 'funding.application.form_new_submit_handler';
+
   public function handle(ApplicationFormNewSubmitCommand $command): ApplicationFormNewSubmitResult;
 
 }

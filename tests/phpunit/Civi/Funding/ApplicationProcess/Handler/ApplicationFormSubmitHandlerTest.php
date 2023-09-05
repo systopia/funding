@@ -21,16 +21,12 @@ namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\DefaultApplicationProcessActionStatusInfo;
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\ReworkPossibleApplicationProcessActionStatusInfo;
-use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
-use Civi\Funding\ApplicationProcess\Command\ApplicationFormCommentPersistCommand;
+use Civi\Funding\ApplicationProcess\Command\ApplicationActionApplyCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitCommand;
-use Civi\Funding\ApplicationProcess\Snapshot\ApplicationSnapshotRestorerInterface;
-use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
+use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateCommand;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
-use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\Form\ApplicationValidationResult;
-use Civi\Funding\Form\ApplicationValidatorInterface;
 use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -44,49 +40,27 @@ use PHPUnit\Framework\TestCase;
 final class ApplicationFormSubmitHandlerTest extends TestCase {
 
   /**
-   * @var \Civi\Funding\ApplicationProcess\ApplicationProcessManager&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\ApplicationProcess\Handler\ApplicationActionApplyHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
    */
-  private MockObject $applicationProcessManagerMock;
-
-  /**
-   * @var \Civi\Funding\ApplicationProcess\Snapshot\ApplicationSnapshotRestorerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $applicationSnapshotRestorerMock;
-
-  /**
-   * @var \Civi\Funding\ApplicationProcess\Handler\ApplicationFormCommentPersistHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $commentStoreHandlerMock;
+  private MockObject $actionApplyHandlerMock;
 
   private ApplicationFormSubmitHandler $handler;
 
   /**
-   * @var \Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
    */
-  private MockObject $statusDeterminerMock;
-
-  /**
-   * @var \Civi\Funding\Form\ApplicationValidatorInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $validatorMock;
+  private MockObject $validateHandlerMock;
 
   protected function setUp(): void {
     parent::setUp();
     $info = new ReworkPossibleApplicationProcessActionStatusInfo(
       new DefaultApplicationProcessActionStatusInfo()
     );
-    $this->applicationProcessManagerMock = $this->createMock(ApplicationProcessManager::class);
-    $this->applicationSnapshotRestorerMock = $this->createMock(ApplicationSnapshotRestorerInterface::class);
-    $this->commentStoreHandlerMock = $this->createMock(ApplicationFormCommentPersistHandlerInterface::class);
-    $this->statusDeterminerMock = $this->createMock(ApplicationProcessStatusDeterminerInterface::class);
-    $this->validatorMock = $this->createMock(ApplicationValidatorInterface::class);
+    $this->actionApplyHandlerMock = $this->createMock(ApplicationActionApplyHandlerInterface::class);
+    $this->validateHandlerMock = $this->createMock(ApplicationFormValidateHandlerInterface::class);
     $this->handler = new ApplicationFormSubmitHandler(
-      $this->applicationProcessManagerMock,
-      $this->applicationSnapshotRestorerMock,
-      $this->commentStoreHandlerMock,
-      $info,
-      $this->statusDeterminerMock,
-      $this->validatorMock
+      $this->actionApplyHandlerMock,
+      $this->validateHandlerMock,
     );
   }
 
@@ -94,135 +68,18 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
     $command = $this->createCommand();
     $validatedData = new ValidatedApplicationDataMock();
     $validationResult = ApplicationValidationResult::newValid($validatedData, FALSE);
-    $this->validatorMock->method('validateExisting')->with(
+    $this->validateHandlerMock->method('handle')->with(new ApplicationFormValidateCommand(
       $command->getApplicationProcessBundle(),
+      $command->getApplicationProcessStatusList(),
       $command->getData()
-    )->willReturn($validationResult);
+    ))->willReturn($validationResult);
 
-    $newStatus = new FullApplicationProcessStatus('new_status', TRUE, FALSE);
-    $this->statusDeterminerMock->method('getStatus')
-      ->with($command->getApplicationProcess()->getFullStatus(), ValidatedApplicationDataMock::ACTION)
-      ->willReturn($newStatus);
-
-    $this->applicationProcessManagerMock->expects(static::once())->method('update')
-      ->with($command->getContactId(), $command->getApplicationProcessBundle());
-
-    $this->commentStoreHandlerMock->expects(static::never())->method('handle');
-
-    $result = $this->handler->handle($command);
-
-    static::assertTrue($result->isSuccess());
-    static::assertSame($validationResult, $result->getValidationResult());
-    static::assertSame($validatedData, $result->getValidatedData());
-
-    $applicationProcess = $command->getApplicationProcess();
-    static::assertSame(ValidatedApplicationDataMock::TITLE, $applicationProcess->getTitle());
-    static::assertSame(ValidatedApplicationDataMock::SHORT_DESCRIPTION, $applicationProcess->getShortDescription());
-    static::assertEquals(new \DateTime(ValidatedApplicationDataMock::START_DATE),
-      $applicationProcess->getStartDate());
-    static::assertEquals(new \DateTime(ValidatedApplicationDataMock::END_DATE),
-      $applicationProcess->getEndDate());
-    static::assertSame(ValidatedApplicationDataMock::AMOUNT_REQUESTED, $applicationProcess->getAmountRequested());
-    static::assertSame(ValidatedApplicationDataMock::APPLICATION_DATA, $applicationProcess->getRequestData());
-    static::assertSame('new_status', $applicationProcess->getStatus());
-    static::assertTrue($applicationProcess->getIsReviewCalculative());
-    static::assertFalse($applicationProcess->getIsReviewContent());
-  }
-
-  public function testHandleComment(): void {
-    $command = $this->createCommand();
-    $validatedData = new ValidatedApplicationDataMock([], ['comment' => ['text' => 'test', 'type' => 'internal']]);
-    $validationResult = ApplicationValidationResult::newValid($validatedData, FALSE);
-    $this->validatorMock->method('validateExisting')->with(
+    $this->actionApplyHandlerMock->expects(static::once())->method('handle')->with(new ApplicationActionApplyCommand(
+      $command->getContactId(),
+      $validatedData->getAction(),
       $command->getApplicationProcessBundle(),
-      $command->getData()
-    )->willReturn($validationResult);
-
-    $newStatus = new FullApplicationProcessStatus('new_status', TRUE, FALSE);
-    $this->statusDeterminerMock->method('getStatus')->willReturn($newStatus);
-
-    $this->applicationProcessManagerMock->expects(static::once())->method('update');
-
-    $this->commentStoreHandlerMock->expects(static::once())->method('handle')
-      ->with(new ApplicationFormCommentPersistCommand(
-        $command->getContactId(),
-        $command->getApplicationProcess(),
-        $command->getFundingCase(),
-        $command->getFundingCaseType(),
-        $command->getFundingProgram(),
-        $validatedData
-      ));
-
-    $result = $this->handler->handle($command);
-
-    static::assertTrue($result->isSuccess());
-  }
-
-  public function testHandleRestore(): void {
-    $command = $this->createCommand();
-    $validatedData = new ValidatedApplicationDataMock([], ['action' => 'withdraw-change']);
-    $validationResult = ApplicationValidationResult::newValid($validatedData, FALSE);
-    $this->validatorMock->method('validateExisting')->with(
-      $command->getApplicationProcessBundle(),
-      $command->getData()
-    )->willReturn($validationResult);
-
-    $this->applicationSnapshotRestorerMock->expects(static::once())->method('restoreLastSnapshot')
-      ->with($command->getContactId(), $command->getApplicationProcessBundle());
-    $this->applicationProcessManagerMock->expects(static::never())->method('update');
-
-    $result = $this->handler->handle($command);
-
-    static::assertTrue($result->isSuccess());
-  }
-
-  public function testHandleValidReadOnly(): void {
-    $command = $this->createCommand();
-    $validatedData = new ValidatedApplicationDataMock([], ['action' => 'modify']);
-    $validationResult = ApplicationValidationResult::newValid($validatedData, TRUE);
-    $this->validatorMock->method('validateExisting')->with(
-      $command->getApplicationProcessBundle(),
-      $command->getData()
-    )->willReturn($validationResult);
-
-    $newStatus = new FullApplicationProcessStatus('new_status', TRUE, FALSE);
-    $this->statusDeterminerMock->method('getStatus')
-      ->with($command->getApplicationProcess()->getFullStatus(), 'modify')
-      ->willReturn($newStatus);
-
-    $this->applicationProcessManagerMock->expects(static::once())->method('update')
-      ->with($command->getContactId(), $command->getApplicationProcessBundle());
-
-    $this->commentStoreHandlerMock->expects(static::never())->method('handle');
-
-    $result = $this->handler->handle($command);
-
-    static::assertTrue($result->isSuccess());
-    static::assertSame($validationResult, $result->getValidationResult());
-    static::assertSame($validatedData, $result->getValidatedData());
-
-    // only status should be changed because validation result contains read only
-    $expectedApplicationProcess = ApplicationProcessFactory::createApplicationProcess([
-      'status' => 'new_status',
-      'is_review_calculative' => TRUE,
-      'is_review_content' => FALSE,
-    ]);
-    static::assertEquals($expectedApplicationProcess, $command->getApplicationProcess());
-  }
-
-  public function testHandleValidDelete(): void {
-    $command = $this->createCommand();
-    $validatedData = new ValidatedApplicationDataMock([], ['action' => 'delete']);
-    $validationResult = ApplicationValidationResult::newValid($validatedData, FALSE);
-    $this->validatorMock->method('validateExisting')->with(
-      $command->getApplicationProcessBundle(),
-      $command->getData()
-    )->willReturn($validationResult);
-
-    $this->applicationProcessManagerMock->expects(static::once())->method('delete')
-      ->with($command->getApplicationProcessBundle());
-
-    $this->commentStoreHandlerMock->expects(static::never())->method('handle');
+      $validationResult,
+    ));
 
     $result = $this->handler->handle($command);
 
@@ -236,14 +93,13 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
     $validatedData = new ValidatedApplicationDataMock();
     $errorMessages = ['/field' => ['error']];
     $validationResult = ApplicationValidationResult::newInvalid($errorMessages, $validatedData);
-    $this->validatorMock->method('validateExisting')->with(
+    $this->validateHandlerMock->method('handle')->with(new ApplicationFormValidateCommand(
       $command->getApplicationProcessBundle(),
-      $command->getData()
-    )->willReturn($validationResult);
+      $command->getApplicationProcessStatusList(),
+      $command->getData(),
+    ))->willReturn($validationResult);
 
-    $this->applicationProcessManagerMock->expects(static::never())->method('update');
-
-    $this->commentStoreHandlerMock->expects(static::never())->method('handle');
+    $this->actionApplyHandlerMock->expects(static::never())->method('handle');
 
     $result = $this->handler->handle($command);
 
@@ -256,6 +112,7 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
     return new ApplicationFormSubmitCommand(
       1,
       ApplicationProcessBundleFactory::createApplicationProcessBundle(),
+      [23 => new FullApplicationProcessStatus('status', NULL, NULL)],
       ['test' => 'foo'],
     );
   }

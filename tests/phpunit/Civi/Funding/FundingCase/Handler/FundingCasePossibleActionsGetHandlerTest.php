@@ -19,12 +19,11 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase\Handler;
 
-use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
+use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\FundingCase\Command\FundingCasePossibleActionsGetCommand;
-use Civi\Funding\FundingCase\FundingCaseActionsDeterminerInterface;
-use Civi\RemoteTools\Api4\Query\CompositeCondition;
+use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -35,23 +34,16 @@ use PHPUnit\Framework\TestCase;
 final class FundingCasePossibleActionsGetHandlerTest extends TestCase {
 
   /**
-   * @var \Civi\Funding\FundingCase\FundingCaseActionsDeterminerInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $actionsDeterminerMock;
-
-  /**
-   * @var \Civi\Funding\ApplicationProcess\ApplicationProcessManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $applicationProcessManagerMock;
 
   private FundingCasePossibleActionsGetHandler $handler;
 
   protected function setUp(): void {
     parent::setUp();
-    $this->applicationProcessManagerMock = $this->createMock(ApplicationProcessManager::class);
     $this->actionsDeterminerMock = $this->createMock(FundingCaseActionsDeterminerInterface::class);
     $this->handler = new FundingCasePossibleActionsGetHandler(
-      $this->applicationProcessManagerMock,
       $this->actionsDeterminerMock,
     );
   }
@@ -60,49 +52,21 @@ final class FundingCasePossibleActionsGetHandlerTest extends TestCase {
     $command = $this->createCommand();
     $fundingCase = $command->getFundingCase();
     $this->actionsDeterminerMock->method('getActions')
-      ->with($fundingCase->getStatus(), $fundingCase->getPermissions())
+      ->with($fundingCase->getStatus(), $command->getApplicationProcessStatusList(), $fundingCase->getPermissions())
       ->willReturn(['permitted_action']);
 
     static::assertSame(['permitted_action'], $this->handler->handle($command));
-  }
-
-  public function testHandleApprove(): void {
-    $command = $this->createCommand();
-    $fundingCase = $command->getFundingCase();
-    $this->actionsDeterminerMock->method('getActions')
-      ->with($fundingCase->getStatus(), $fundingCase->getPermissions())
-      ->willReturn(['approve']);
-
-    $this->applicationProcessManagerMock->expects(static::exactly(2))->method('countBy')
-      ->withConsecutive(
-        [CompositeCondition::fromFieldValuePairs(['funding_case_id' => $fundingCase->getId(), 'is_eligible' => NULL])],
-        [CompositeCondition::fromFieldValuePairs(['funding_case_id' => $fundingCase->getId(), 'is_eligible' => TRUE])],
-      )->willReturnOnConsecutiveCalls(0, 1);
-
-    static::assertSame(['approve'], $this->handler->handle($command));
-  }
-
-  public function testHandleApproveNoEligibleApplication(): void {
-    $command = $this->createCommand();
-    $fundingCase = $command->getFundingCase();
-    $this->actionsDeterminerMock->method('getActions')
-      ->with($fundingCase->getStatus(), $fundingCase->getPermissions())
-      ->willReturn(['approve']);
-
-    $this->applicationProcessManagerMock->expects(static::exactly(2))->method('countBy')
-      ->withConsecutive(
-        [CompositeCondition::fromFieldValuePairs(['funding_case_id' => $fundingCase->getId(), 'is_eligible' => NULL])],
-        [CompositeCondition::fromFieldValuePairs(['funding_case_id' => $fundingCase->getId(), 'is_eligible' => TRUE])],
-      )->willReturnOnConsecutiveCalls(0, 0);
-
-    static::assertSame([], $this->handler->handle($command));
   }
 
   private function createCommand(): FundingCasePossibleActionsGetCommand {
     $fundingCase = FundingCaseFactory::createFundingCase();
     $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
 
-    return new FundingCasePossibleActionsGetCommand($fundingCase, $fundingCaseType);
+    return new FundingCasePossibleActionsGetCommand(
+      $fundingCase,
+      [22 => new FullApplicationProcessStatus('eligible', TRUE, TRUE)],
+      $fundingCaseType
+    );
   }
 
 }

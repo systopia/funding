@@ -22,6 +22,9 @@ namespace Civi\Funding\FundingProgram;
 use Civi\Api4\FundingCaseTypeProgram;
 use Civi\RemoteTools\Api4\Api4Interface;
 
+/**
+ * @codeCoverageIgnore
+ */
 class FundingCaseTypeProgramRelationChecker {
 
   private Api4Interface $api4;

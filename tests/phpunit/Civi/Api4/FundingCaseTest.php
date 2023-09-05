@@ -58,7 +58,7 @@ final class FundingCaseTest extends AbstractFundingHeadlessTestCase {
         ->execute();
     }
     catch (UnauthorizedException $e) {
-      static::assertSame('Permission to approve funding case is missing.', $e->getMessage());
+      static::assertSame('Approving this funding case is not allowed.', $e->getMessage());
     }
     static::assertNotNull($e);
 

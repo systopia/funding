@@ -23,6 +23,8 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationDeleteCommand;
 
 interface ApplicationDeleteHandlerInterface {
 
+  public const SERVICE_TAG = 'funding.application.delete_handler';
+
   public function handle(ApplicationDeleteCommand $command): void;
 
 }

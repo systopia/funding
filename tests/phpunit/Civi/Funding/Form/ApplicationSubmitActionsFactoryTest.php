@@ -53,11 +53,12 @@ final class ApplicationSubmitActionsFactoryTest extends TestCase {
     $this->submitActionsContainer->add('test2', 'Test2');
     $this->submitActionsContainer->add('test3', 'Test3', 'Really?');
     $fullStatus = new FullApplicationProcessStatus('test', NULL, NULL);
+    $statusList = [23 => new FullApplicationProcessStatus('status', NULL, NULL)];
     $this->actionsDeterminerMock->expects(static::once())->method('getActions')
-      ->with($fullStatus, ['permission'])
+      ->with($fullStatus, $statusList, ['permission'])
       ->willReturn(['test3', 'test1']);
 
-    $submitActions = $this->submitActionsFactory->createSubmitActions($fullStatus, ['permission']);
+    $submitActions = $this->submitActionsFactory->createSubmitActions($fullStatus, $statusList, ['permission']);
     // "test1" must be first
     static::assertSame([
       'test1' => ['label' => 'Test1', 'confirm' => NULL],
@@ -68,13 +69,14 @@ final class ApplicationSubmitActionsFactoryTest extends TestCase {
   public function testCreateSubmitActionsUnknownAction(): void {
     $this->submitActionsContainer->add('test1', 'Test1');
     $fullStatus = new FullApplicationProcessStatus('test', NULL, NULL);
+    $statusList = [23 => new FullApplicationProcessStatus('status', NULL, NULL)];
     $this->actionsDeterminerMock->expects(static::once())->method('getActions')
-      ->with($fullStatus, ['permission'])
+      ->with($fullStatus, $statusList, ['permission'])
       ->willReturn(['test2']);
 
     $this->expectException(\RuntimeException::class);
     $this->expectExceptionMessage('Unknown action "test2"');
-    $this->submitActionsFactory->createSubmitActions($fullStatus, ['permission']);
+    $this->submitActionsFactory->createSubmitActions($fullStatus, $statusList, ['permission']);
   }
 
   public function testCreateInitialSubmitActions(): void {
@@ -106,11 +108,12 @@ final class ApplicationSubmitActionsFactoryTest extends TestCase {
 
   public function testIsEditAllowed(): void {
     $fullStatus = new FullApplicationProcessStatus('test', NULL, NULL);
+    $statusList = [23 => new FullApplicationProcessStatus('status', NULL, NULL)];
     $this->actionsDeterminerMock->expects(static::once())->method('isEditAllowed')
-      ->with($fullStatus, ['permission'])
+      ->with($fullStatus, $statusList, ['permission'])
       ->willReturn(TRUE);
 
-    static::assertTrue($this->submitActionsFactory->isEditAllowed($fullStatus, ['permission']));
+    static::assertTrue($this->submitActionsFactory->isEditAllowed($fullStatus, $statusList, ['permission']));
   }
 
 }

@@ -22,15 +22,6 @@ namespace Civi\Funding\Fixtures;
 use Civi\Api4\FundingCaseType;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 
-/**
- * @phpstan-type fundingCaseTypeT array{
- *   id: int,
- *   abbreviation: string,
- *   title: string,
- *   name: string,
- *   properties: array<string, mixed>
- * }
- */
 final class FundingCaseTypeFixture {
 
   /**
@@ -39,15 +30,15 @@ final class FundingCaseTypeFixture {
    * @throws \CRM_Core_Exception
    */
   public static function addFixture(array $values = []): FundingCaseTypeEntity {
-    /** @phpstan-var fundingCaseTypeT $fundingCaseTypeValues */
-    $fundingCaseTypeValues = FundingCaseType::create(FALSE)
+    $result = FundingCaseType::create(FALSE)
       ->setValues($values + [
         'title' => 'Test Case Type',
         'abbreviation' => 'TCT',
         'name' => 'TestCaseType',
-      ])->execute()->first();
+        'is_combined_application' => TRUE,
+      ])->execute();
 
-    return FundingCaseTypeEntity::fromArray($fundingCaseTypeValues);
+    return FundingCaseTypeEntity::singleFromApiResult($result);
   }
 
 }

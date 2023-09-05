@@ -95,6 +95,7 @@ final class RemoteFundingApplicationProcessTestFormTest extends AbstractRemoteFu
       $this->applicationProcess->getId(),
       $externalFile->getFileId(),
     );
+    $this->clearCache();
 
     $values = $action->execute()->getArrayCopy();
     static::assertEquals(['jsonSchema', 'uiSchema', 'data'], array_keys($values));
@@ -107,8 +108,8 @@ final class RemoteFundingApplicationProcessTestFormTest extends AbstractRemoteFu
   public function testValidateForm(): void {
     $action = RemoteFundingApplicationProcess::validateForm()
       ->setRemoteContactId((string) $this->contact['id'])
+      ->setApplicationProcessId($this->applicationProcess->getId())
       ->setData([
-        'applicationProcessId' => $this->applicationProcess->getId(),
         'y' => 'z',
       ]);
 
@@ -130,6 +131,7 @@ final class RemoteFundingApplicationProcessTestFormTest extends AbstractRemoteFu
       $this->fundingCase->getId(),
       ['application_modify'],
     );
+    $this->clearCache();
 
     $values = $action->execute()->getArrayCopy();
     static::assertEquals(['valid', 'errors'], array_keys($values));
@@ -137,7 +139,6 @@ final class RemoteFundingApplicationProcessTestFormTest extends AbstractRemoteFu
     static::assertNotCount(0, $values['errors']);
 
     $validData = [
-      'applicationProcessId' => $this->applicationProcess->getId(),
       'title' => 'My Title',
       'shortDescription' => 'My short description',
       'recipient' => $this->fundingCase->getRecipientContactId(),
@@ -158,8 +159,8 @@ final class RemoteFundingApplicationProcessTestFormTest extends AbstractRemoteFu
   public function testSubmitForm(): void {
     $action = RemoteFundingApplicationProcess::submitForm()
       ->setRemoteContactId((string) $this->contact['id'])
+      ->setApplicationProcessId($this->applicationProcess->getId())
       ->setData([
-        'applicationProcessId' => $this->applicationProcess->getId(),
         'y' => 'z',
       ]);
 
@@ -182,6 +183,7 @@ final class RemoteFundingApplicationProcessTestFormTest extends AbstractRemoteFu
       $this->fundingCase->getId(),
       ['application_modify'],
     );
+    $this->clearCache();
 
     // Test with invalid data
     $values = $action->execute()->getArrayCopy();
@@ -192,7 +194,6 @@ final class RemoteFundingApplicationProcessTestFormTest extends AbstractRemoteFu
 
     // Test with valid data
     $validData = [
-      'applicationProcessId' => $this->applicationProcess->getId(),
       'title' => 'My Title',
       'shortDescription' => 'My short description',
       'recipient' => $this->fundingCase->getRecipientContactId(),
@@ -205,13 +206,10 @@ final class RemoteFundingApplicationProcessTestFormTest extends AbstractRemoteFu
     $action->setData($validData + ['action' => 'save']);
 
     $values = $action->execute()->getArrayCopy();
-    static::assertEquals(['action', 'message', 'jsonSchema', 'uiSchema', 'data', 'files'], array_keys($values));
-    static::assertInstanceOf(TestJsonSchema::class, $values['jsonSchema']);
-    static::assertInstanceOf(TestUiSchema::class, $values['uiSchema']);
-    static::assertSame('showForm', $values['action']);
+    static::assertEquals(['action', 'message', 'files'], array_keys($values));
+    static::assertSame('closeForm', $values['action']);
     $fileCiviUri = $values['files']['https://example.org/test.txt'];
     static::assertStringStartsWith('http://localhost/', $fileCiviUri);
-    static::assertEquals(['file' => $fileCiviUri] + $validData, $values['data']);
   }
 
   private function addFixtures(): void {

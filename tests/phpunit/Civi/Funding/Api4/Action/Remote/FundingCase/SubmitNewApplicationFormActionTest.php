@@ -27,10 +27,8 @@ use Civi\API\Exception\UnauthorizedException;
 use Civi\Api4\Generic\Result;
 use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
 use Civi\Funding\Exception\FundingException;
+use Civi\Funding\Form\RemoteSubmitResponseActions;
 use Civi\Funding\Traits\CreateMockTrait;
-use Civi\RemoteTools\JsonForms\JsonFormsElement;
-use Civi\RemoteTools\JsonSchema\JsonSchema;
-use Civi\RemoteTools\Form\RemoteForm;
 
 /**
  * @covers \Civi\Funding\Api4\Action\Remote\FundingCase\SubmitNewApplicationFormAction
@@ -58,13 +56,13 @@ final class SubmitNewApplicationFormActionTest extends AbstractNewApplicationFor
       $this->relationCheckerMock,
     );
 
-    $this->action->setRemoteContactId('00');
-    $this->action->setExtraParam('contactId', 11);
-    $this->data = [
-      'fundingCaseTypeId' => 22,
-      'fundingProgramId' => 33,
-    ];
-    $this->action->setData($this->data);
+    $this->data = ['foo' => 'bar'];
+    $this->action
+      ->setRemoteContactId('00')
+      ->setExtraParam('contactId', 11)
+      ->setFundingProgramId(33)
+      ->setFundingCaseTypeId(22)
+      ->setData($this->data);
   }
 
   public function testShowValidation(): void {
@@ -109,52 +107,6 @@ final class SubmitNewApplicationFormActionTest extends AbstractNewApplicationFor
     ], $result->getArrayCopy());
   }
 
-  public function testShowForm(): void {
-    $this->relationCheckerMock->expects(static::once())->method('areFundingCaseTypeAndProgramRelated')
-      ->with(22, 33)->willReturn(TRUE);
-
-    $jsonSchema = new JsonSchema(['foo' => 'test']);
-    $uiSchema = new JsonFormsElement('Test');
-    $this->eventDispatcherMock->expects(static::exactly(3))
-      ->method('dispatch')
-      ->withConsecutive(
-        [
-          SubmitNewApplicationFormEvent::getEventName(
-            'RemoteFundingCase', 'submitNewApplicationForm'
-          ),
-          static::callback(
-            function (SubmitNewApplicationFormEvent $event) use ($jsonSchema, $uiSchema): bool {
-              $data = ['fundingCaseTypeId' => 22, 'fundingProgramId' => 33, 'foo' => 'bar'];
-              $event->setForm(new RemoteForm($jsonSchema, $uiSchema, $data));
-              $event->setMessage('Test');
-              $event->setFiles(['https://example.org/test.txt' => 'https://example.net/test,txt']);
-
-              return TRUE;
-            }),
-        ],
-        [
-          SubmitNewApplicationFormEvent::getEventName('RemoteFundingCase'),
-          static::isInstanceOf(SubmitNewApplicationFormEvent::class),
-        ],
-        [
-          SubmitNewApplicationFormEvent::getEventName(),
-          static::isInstanceOf(SubmitNewApplicationFormEvent::class),
-        ]
-      );
-
-    $result = new Result();
-    $this->action->_run($result);
-    static::assertSame(1, $result->rowCount);
-    static::assertSame([
-      'action' => 'showForm',
-      'message' => 'Test',
-      'jsonSchema' => $jsonSchema,
-      'uiSchema' => $uiSchema,
-      'data' => ['fundingCaseTypeId' => 22, 'fundingProgramId' => 33, 'foo' => 'bar'],
-      'files' => ['https://example.org/test.txt' => 'https://example.net/test,txt'],
-    ], $result->getArrayCopy());
-  }
-
   public function testCloseForm(): void {
     $this->relationCheckerMock->expects(static::once())->method('areFundingCaseTypeAndProgramRelated')
       ->with(22, 33)->willReturn(TRUE);
@@ -168,7 +120,7 @@ final class SubmitNewApplicationFormActionTest extends AbstractNewApplicationFor
           ),
           static::callback(
             function (SubmitNewApplicationFormEvent $event): bool {
-              $event->setAction(SubmitNewApplicationFormEvent::ACTION_CLOSE_FORM);
+              $event->setAction(RemoteSubmitResponseActions::CLOSE_FORM);
               $event->setMessage('Test');
               $event->setFiles(['https://example.org/test.txt' => 'https://example.net/test,txt']);
 

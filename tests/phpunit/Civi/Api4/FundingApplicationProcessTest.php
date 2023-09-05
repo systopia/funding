@@ -297,7 +297,6 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
     $result = FundingApplicationProcess::submitForm()
       ->setId($applicationProcess->getId())
       ->setData([
-        'applicationProcessId' => $applicationProcess->getId(),
         'action' => 'approve',
         'title' => 'Title',
         'recipient' => $fundingCase->getRecipientContactId(),
@@ -394,7 +393,6 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
     $result = FundingApplicationProcess::submitForm()
       ->setId($applicationProcess->getId())
       ->setData([
-        'applicationProcessId' => $applicationProcess->getId(),
         'action' => 'withdraw-change',
         'title' => 'Title',
         'recipient' => $fundingCase->getRecipientContactId(),

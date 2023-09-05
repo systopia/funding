@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\Form;
 
+use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormCreateCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewCreateCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
@@ -30,6 +31,8 @@ use Civi\RemoteTools\Form\RemoteFormInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class GetApplicationFormSubscriber implements EventSubscriberInterface {
+
+  private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
 
   private ApplicationFormCreateHandlerInterface $createHandler;
 
@@ -46,16 +49,23 @@ class GetApplicationFormSubscriber implements EventSubscriberInterface {
   }
 
   public function __construct(
+    ApplicationProcessBundleLoader $applicationProcessBundleLoader,
     ApplicationFormCreateHandlerInterface $createHandler,
     ApplicationFormNewCreateHandlerInterface $newCreateHandler
   ) {
+    $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
     $this->createHandler = $createHandler;
     $this->newCreateHandler = $newCreateHandler;
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function onGetForm(GetApplicationFormEvent $event): void {
+    $statusList = $this->applicationProcessBundleLoader->getStatusList($event->getApplicationProcessBundle());
+
     $form = $this->createHandler->handle(
-      new ApplicationFormCreateCommand($event->getApplicationProcessBundle())
+      new ApplicationFormCreateCommand($event->getApplicationProcessBundle(), $statusList)
     );
     $this->mapFormToEvent($form, $event);
   }

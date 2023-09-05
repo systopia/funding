@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Util;
 
+use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Webmozart\Assert\Assert;
 
@@ -40,6 +41,8 @@ final class RequestTestUtil {
   }
 
   private static function reset(): void {
+    // @phpstan-ignore-next-line
+    \Civi::service(FundingCaseManager::class)->clearCache();
     \CRM_Core_Session::singleton()->reset();
     /** @var \Civi\RemoteTools\RequestContext\RequestContextInterface $requestContext */
     $requestContext = \Civi::service(RequestContextInterface::class);

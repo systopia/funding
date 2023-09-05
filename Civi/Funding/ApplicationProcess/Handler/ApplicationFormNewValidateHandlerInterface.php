@@ -20,10 +20,10 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewValidateCommand;
-use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateResult;
+use Civi\Funding\Form\ApplicationValidationResult;
 
 interface ApplicationFormNewValidateHandlerInterface {
 
-  public function handle(ApplicationFormNewValidateCommand $command): ApplicationFormValidateResult;
+  public function handle(ApplicationFormNewValidateCommand $command): ApplicationValidationResult;
 
 }

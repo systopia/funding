@@ -20,6 +20,8 @@ declare(strict_types = 1);
 namespace Civi\Funding\Api4\Action\FundingCase;
 
 use Civi\Api4\Generic\Result;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
+use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\FundingCase\Command\FundingCasePossibleActionsGetCommand;
@@ -40,6 +42,11 @@ final class GetPossibleActionsActionTest extends TestCase {
   private GetPossibleActionsAction $action;
 
   /**
+   * @var \Civi\Funding\ApplicationProcess\ApplicationProcessManager&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $applicationProcessManagerMock;
+
+  /**
    * @var \Civi\Funding\FundingCase\FundingCaseManager&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $fundingCaseManagerMock;
@@ -56,11 +63,13 @@ final class GetPossibleActionsActionTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
+    $this->applicationProcessManagerMock = $this->createMock(ApplicationProcessManager::class);
     $this->fundingCaseManagerMock = $this->createMock(FundingCaseManager::class);
     $this->fundingCaseTypeManagerMock = $this->createMock(FundingCaseTypeManager::class);
     $this->possibleActionsGetHandlerMock = $this->createMock(FundingCasePossibleActionsGetHandlerInterface::class);
     $this->action = $this->createApi4ActionMock(
       GetPossibleActionsAction::class,
+      $this->applicationProcessManagerMock,
       $this->fundingCaseManagerMock,
       $this->fundingCaseTypeManagerMock,
       $this->possibleActionsGetHandlerMock,
@@ -70,14 +79,18 @@ final class GetPossibleActionsActionTest extends TestCase {
   public function testRun(): void {
     $fundingCase = FundingCaseFactory::createFundingCase();
     $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
+    $statusList = [22 => new FullApplicationProcessStatus('new', FALSE, FALSE)];
     $this->fundingCaseManagerMock->method('get')
       ->with($fundingCase->getId())
       ->willReturn($fundingCase);
     $this->fundingCaseTypeManagerMock->method('get')
       ->with($fundingCaseType->getId())
       ->willReturn($fundingCaseType);
+    $this->applicationProcessManagerMock->method('getStatusListByFundingCaseId')
+      ->with($fundingCase->getId())
+      ->willReturn($statusList);
 
-    $command = new FundingCasePossibleActionsGetCommand($fundingCase, $fundingCaseType);
+    $command = new FundingCasePossibleActionsGetCommand($fundingCase, $statusList, $fundingCaseType);
     $this->possibleActionsGetHandlerMock->method('handle')
       ->with($command)
       ->willReturn(['possible_action']);

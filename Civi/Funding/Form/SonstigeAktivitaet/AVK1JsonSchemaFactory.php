@@ -25,25 +25,23 @@ use Civi\Funding\Contact\PossibleRecipientsLoaderInterface;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
-use Civi\Funding\Form\ApplicationJsonSchemaFactoryInterface;
 use Civi\Funding\Form\JsonSchema\JsonSchemaComment;
+use Civi\Funding\Form\NonCombinedApplicationJsonSchemaFactoryInterface;
 use Civi\Funding\Form\SonstigeAktivitaet\JsonSchema\AVK1JsonSchema;
+use Civi\Funding\SonstigeAktivitaet\Traits\AVK1SupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
-use Civi\RemoteTools\JsonSchema\JsonSchemaInteger;
 use Civi\RemoteTools\JsonSchema\JsonSchemaNull;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 
-class AVK1JsonSchemaFactory implements ApplicationJsonSchemaFactoryInterface {
+class AVK1JsonSchemaFactory implements NonCombinedApplicationJsonSchemaFactoryInterface {
+
+  use AVK1SupportedFundingCaseTypesTrait;
 
   private ApplicationProcessActionsDeterminerInterface $actionsDeterminer;
 
   private FundingCaseRecipientLoaderInterface $existingCaseRecipientLoader;
 
   private PossibleRecipientsLoaderInterface $possibleRecipientsLoader;
-
-  public static function getSupportedFundingCaseTypes(): array {
-    return ['AVK1SonstigeAktivitaet'];
-  }
 
   public function __construct(
     ApplicationProcessActionsDeterminerInterface $actionsDeterminer,
@@ -56,7 +54,8 @@ class AVK1JsonSchemaFactory implements ApplicationJsonSchemaFactoryInterface {
   }
 
   public function createJsonSchemaExisting(
-    ApplicationProcessEntityBundle $applicationProcessBundle
+    ApplicationProcessEntityBundle $applicationProcessBundle,
+    array $applicationProcessStatusList
   ): JsonSchema {
     $applicationProcess = $applicationProcessBundle->getApplicationProcess();
     $fundingCase = $applicationProcessBundle->getFundingCase();
@@ -64,6 +63,7 @@ class AVK1JsonSchemaFactory implements ApplicationJsonSchemaFactoryInterface {
 
     $submitActions = $this->actionsDeterminer->getActions(
       $applicationProcess->getFullStatus(),
+      $applicationProcessStatusList,
       $fundingCase->getPermissions()
     );
     if ([] === $submitActions) {
@@ -71,7 +71,6 @@ class AVK1JsonSchemaFactory implements ApplicationJsonSchemaFactoryInterface {
       $submitActions = [NULL];
     }
     $extraProperties = [
-      'applicationProcessId' => new JsonSchemaInteger(['const' => $applicationProcess->getId(), 'readOnly' => TRUE]),
       'action' => new JsonSchemaString(['enum' => $submitActions]),
     ];
     $extraKeywords = ['required' => array_keys($extraProperties)];
@@ -95,6 +94,7 @@ class AVK1JsonSchemaFactory implements ApplicationJsonSchemaFactoryInterface {
     // The readOnly keyword is not inherited, though we use it for informational purposes.
     if (!$this->actionsDeterminer->isEditAllowed(
       $applicationProcess->getFullStatus(),
+      $applicationProcessStatusList,
       $fundingCase->getPermissions()
     )) {
       $jsonSchema->addKeyword('readOnly', TRUE);
@@ -110,8 +110,6 @@ class AVK1JsonSchemaFactory implements ApplicationJsonSchemaFactoryInterface {
   ): JsonSchema {
     $submitActions = $this->actionsDeterminer->getInitialActions($fundingProgram->getPermissions());
     $extraProperties = [
-      'fundingCaseTypeId' => new JsonSchemaInteger(['const' => $fundingCaseType->getId(), 'readOnly' => TRUE]),
-      'fundingProgramId' => new JsonSchemaInteger(['const' => $fundingProgram->getId(), 'readOnly' => TRUE]),
       'action' => new JsonSchemaString(['enum' => $submitActions]),
     ];
     $extraKeywords = ['required' => array_keys($extraProperties)];

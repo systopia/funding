@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Mock\Form\FundingCaseType;
 
+use Civi\RemoteTools\JsonSchema\JsonSchemaDate;
 use Civi\RemoteTools\JsonSchema\JsonSchemaInteger;
 use Civi\RemoteTools\JsonSchema\JsonSchemaMoney;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
@@ -47,8 +48,8 @@ final class TestJsonSchema extends JsonSchemaObject {
       'title' => new JsonSchemaString(),
       'shortDescription' => new JsonSchemaString(['default' => 'Default description']),
       'recipient' => new JsonSchemaInteger(),
-      'startDate' => new JsonSchemaString(),
-      'endDate' => new JsonSchemaString(),
+      'startDate' => new JsonSchemaDate(),
+      'endDate' => new JsonSchemaDate(),
       'amountRequested' => new JsonSchemaMoney(),
       'resources' => new JsonSchemaMoney(),
       'file' => new JsonSchemaString(['format' => 'uri']),

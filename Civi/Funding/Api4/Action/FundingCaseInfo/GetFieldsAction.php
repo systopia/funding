@@ -171,6 +171,12 @@ final class GetFieldsAction extends BasicGetFieldsAction {
         'data_type' => 'Integer',
       ],
       [
+        'name' => 'funding_case_type_is_combined_application',
+        'title' => 'funding_case_type_is_combined_application',
+        'data_type' => 'Boolean',
+        'operators' => ['=', '!='],
+      ],
+      [
         'name' => 'funding_case_transfer_contract_uri',
         'title' => 'funding_case_transfer_contract_uri',
         'data_type' => 'String',

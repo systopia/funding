@@ -23,6 +23,8 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationCostItemsAddIdentifiersCo
 
 interface ApplicationCostItemsAddIdentifiersHandlerInterface {
 
+  public const SERVICE_TAG = 'funding.application.cost_items_add_identifiers_handler';
+
   /**
    * Adds identifiers to new cost items in request data of application process,
    * where necessary. This identifiers can later be used when creating objects

@@ -32,20 +32,28 @@ interface ApplicationSubmitActionsFactoryInterface {
   public function createInitialSubmitActions(array $permissions): array;
 
   /**
+   * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $statusList
+   *     Status of other application processes in same funding case indexed by ID.
    * @phpstan-param array<string> $permissions
    *
    * @phpstan-return array<string, array{label: string, confirm: string|null}>
    *   Map of action names to button labels and confirm messages.
    */
-  public function createSubmitActions(FullApplicationProcessStatus $status, array $permissions): array;
+  public function createSubmitActions(
+    FullApplicationProcessStatus $status,
+    array $statusList,
+    array $permissions
+  ): array;
 
   /**
+   * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $statusList
+   *     Status of other application processes in same funding case indexed by ID.
    * @phpstan-param array<string> $permissions
    *
    * @return bool
    *   true if an action that allows to edit the application details is
    *   available.
    */
-  public function isEditAllowed(FullApplicationProcessStatus $status, array $permissions): bool;
+  public function isEditAllowed(FullApplicationProcessStatus $status, array $statusList, array $permissions): bool;
 
 }

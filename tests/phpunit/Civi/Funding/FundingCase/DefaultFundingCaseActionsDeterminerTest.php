@@ -19,11 +19,14 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase;
 
+use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface;
+use Civi\Funding\Entity\FullApplicationProcessStatus;
+use Civi\Funding\FundingCase\Actions\DefaultFundingCaseActionsDeterminer;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Civi\Funding\FundingCase\DefaultFundingCaseActionsDeterminer
- * @covers \Civi\Funding\FundingCase\FundingCaseActionsDeterminer
+ * @covers \Civi\Funding\FundingCase\Actions\DefaultFundingCaseActionsDeterminer
+ * @covers \Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminer
  */
 final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
 
@@ -44,9 +47,19 @@ final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
 
   private DefaultFundingCaseActionsDeterminer $actionsDeterminer;
 
+  /**
+   * @phpstan-var array<int, FullApplicationProcessStatus>
+   */
+  private array $statusList;
+
   protected function setUp(): void {
     parent::setUp();
-    $this->actionsDeterminer = new DefaultFundingCaseActionsDeterminer();
+    $statusInfoMock = $this->createMock(ApplicationProcessActionStatusInfoInterface::class);
+    $this->actionsDeterminer = new DefaultFundingCaseActionsDeterminer($statusInfoMock);
+    $this->statusList = [22 => new FullApplicationProcessStatus('eligible', TRUE, TRUE)];
+
+    $statusInfoMock->method('isEligibleStatus')
+      ->willReturnCallback(fn (string $status) => 'eligible' === $status);
   }
 
   public function testGetActions(): void {
@@ -54,7 +67,7 @@ final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
       foreach ($permissionActionsMap as $permission => $actions) {
         static::assertSame(
           $actions,
-          $this->actionsDeterminer->getActions($status, [$permission]),
+          $this->actionsDeterminer->getActions($status, $this->statusList, [$permission]),
           sprintf('Status: %s, permission: %s', $status, $permission)
         );
       }
@@ -67,28 +80,81 @@ final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
       $permissions = array_keys($permissionActionsMap);
       static::assertEquals(
         $actions,
-        $this->actionsDeterminer->getActions($status, $permissions),
+        $this->actionsDeterminer->getActions($status, $this->statusList, $permissions),
         sprintf('Status: %s, permissions: %s', $status, var_export($permissions, TRUE))
       );
     }
   }
 
   public function testIsActionAllowed(): void {
-    static::assertTrue($this->actionsDeterminer->isActionAllowed('approve', 'open', ['review_calculative']));
-    static::assertFalse($this->actionsDeterminer->isActionAllowed('some_action', 'open', ['review_calculative']));
-    static::assertFalse($this->actionsDeterminer->isActionAllowed('approve', 'ongoing', ['review_calculative']));
+    static::assertTrue($this->actionsDeterminer->isActionAllowed(
+      'approve',
+      'open',
+      $this->statusList,
+      ['review_calculative']
+    ));
+    static::assertFalse($this->actionsDeterminer->isActionAllowed(
+      'some_action',
+      'open',
+      $this->statusList,
+      ['review_calculative']
+    ));
+    static::assertFalse($this->actionsDeterminer->isActionAllowed(
+      'approve',
+      'ongoing',
+      $this->statusList,
+      ['review_calculative']
+    ));
   }
 
   public function testIsAnyActionAllowed(): void {
     static::assertTrue(
-      $this->actionsDeterminer->isAnyActionAllowed(['some_action', 'approve'], 'open', ['review_calculative'])
+      $this->actionsDeterminer->isAnyActionAllowed(
+        ['some_action', 'approve'],
+        'open',
+        $this->statusList,
+        ['review_calculative'])
     );
     static::assertFalse(
-      $this->actionsDeterminer->isAnyActionAllowed(['some_action', 'another_action'], 'open', ['review_calculative'])
+      $this->actionsDeterminer->isAnyActionAllowed(
+        ['some_action', 'another_action'],
+        'open',
+        $this->statusList,
+        ['review_calculative'])
     );
     static::assertFalse(
-      $this->actionsDeterminer->isAnyActionAllowed(['some_action', 'approve'], 'ongoing', ['review_calculative'])
+      $this->actionsDeterminer->isAnyActionAllowed(
+        ['some_action', 'approve'],
+        'ongoing',
+        $this->statusList,
+        ['review_calculative'])
     );
+  }
+
+  public function testApprove(): void {
+    static::assertFalse($this->actionsDeterminer->isActionAllowed(
+      'approve',
+      'open',
+      [22 => new FullApplicationProcessStatus('review', TRUE, TRUE)],
+      ['review_calculative']
+    ));
+
+    static::assertFalse($this->actionsDeterminer->isActionAllowed(
+      'approve',
+      'open',
+      [
+        22 => new FullApplicationProcessStatus('eligible', TRUE, TRUE),
+        23 => new FullApplicationProcessStatus('review', TRUE, TRUE),
+      ],
+      ['review_calculative']
+    ));
+
+    static::assertFalse($this->actionsDeterminer->isActionAllowed(
+      'approve',
+      'open',
+      [],
+      ['review_calculative']
+    ));
   }
 
 }

@@ -23,15 +23,6 @@ use Civi\Api4\FundingCaseType;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\RemoteTools\Api4\Api4Interface;
 
-/**
- * @phpstan-type fundingCaseTypeT array{
- *   id: int,
- *   title: string,
- *   abbreviation: string,
- *   name: string,
- *   properties: array<string, mixed>,
- * }
- */
 class FundingCaseTypeManager {
 
   private Api4Interface $api4;
@@ -48,11 +39,9 @@ class FundingCaseTypeManager {
   public function get(int $id): ?FundingCaseTypeEntity {
     $action = FundingCaseType::get(FALSE)
       ->addWhere('id', '=', $id);
+    $result = $this->api4->executeAction($action);
 
-    /** @var fundingCaseTypeT|null $values */
-    $values = $this->api4->executeAction($action)->first();
-
-    return NULL === $values ? NULL : FundingCaseTypeEntity::fromArray($values);
+    return FundingCaseTypeEntity::singleOrNullFromApiResult($result);
   }
 
   public function getIdByName(string $name): ?int {

@@ -23,6 +23,8 @@ use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 
 interface FundingCaseStatusDeterminerInterface {
 
+  public const SERVICE_TAG = 'funding.case.status_determiner';
+
   public function getStatus(string $currentStatus, string $action): string;
 
   /**

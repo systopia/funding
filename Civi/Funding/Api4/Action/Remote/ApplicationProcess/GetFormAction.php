@@ -21,22 +21,15 @@ namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
+use Civi\Funding\Api4\Action\Traits\ApplicationProcessIdParameterTrait;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\Event\Remote\ApplicationProcess\GetApplicationFormEvent;
 use Civi\Funding\Exception\FundingException;
 use CRM_Funding_ExtensionUtil as E;
-use Webmozart\Assert\Assert;
 
-/**
- * @method $this setApplicationProcessId(int $applicationProcessId)
- */
 class GetFormAction extends AbstractFormAction {
 
-  /**
-   * @var int
-   * @required
-   */
-  protected ?int $applicationProcessId = NULL;
+  use ApplicationProcessIdParameterTrait;
 
   public function __construct(
     ApplicationProcessBundleLoader $applicationProcessBundleLoader,
@@ -62,9 +55,6 @@ class GetFormAction extends AbstractFormAction {
       );
     }
 
-    Assert::keyExists($event->getData(), 'applicationProcessId');
-    Assert::same($event->getData()['applicationProcessId'], $this->applicationProcessId);
-
     $result->rowCount = 1;
     $result->exchangeArray([
       'jsonSchema' => $event->getJsonSchema(),
@@ -77,9 +67,7 @@ class GetFormAction extends AbstractFormAction {
    * @throws \CRM_Core_Exception
    */
   private function createEvent(): GetApplicationFormEvent {
-    Assert::notNull($this->applicationProcessId);
-
-    return GetApplicationFormEvent::fromApiRequest($this, $this->createEventParams($this->applicationProcessId));
+    return GetApplicationFormEvent::fromApiRequest($this, $this->createEventParams($this->getApplicationProcessId()));
   }
 
 }

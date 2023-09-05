@@ -23,6 +23,8 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationFormCommentPersistCommand
 
 interface ApplicationFormCommentPersistHandlerInterface {
 
+  public const SERVICE_TAG = 'funding.application.form_comment_persist_handler';
+
   public function handle(ApplicationFormCommentPersistCommand $command): void;
 
 }

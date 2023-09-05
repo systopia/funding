@@ -21,11 +21,12 @@ namespace Civi\Funding\EventSubscriber\Form;
 
 use Civi\Api4\RemoteFundingApplicationProcess;
 use Civi\Api4\RemoteFundingCase;
+use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewValidateCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateCommand;
-use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateResult;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewValidateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterface;
+use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
@@ -41,6 +42,11 @@ use PHPUnit\Framework\TestCase;
  */
 final class ValidateApplicationFormSubscriberTest extends TestCase {
 
+  /**
+   * @var \Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $applicationProcessBundleLoaderMock;
+
   private ValidateApplicationFormSubscriber $subscriber;
 
   /**
@@ -53,14 +59,23 @@ final class ValidateApplicationFormSubscriberTest extends TestCase {
    */
   private MockObject $validateHandlerMock;
 
+  /**
+   * @phpstan-var array<int, FullApplicationProcessStatus>
+   */
+  private array $statusList;
+
   protected function setUp(): void {
     parent::setUp();
+    $this->applicationProcessBundleLoaderMock = $this->createMock(ApplicationProcessBundleLoader::class);
     $this->newValidateHandlerMock = $this->createMock(ApplicationFormNewValidateHandlerInterface::class);
     $this->validateHandlerMock = $this->createMock(ApplicationFormValidateHandlerInterface::class);
     $this->subscriber = new ValidateApplicationFormSubscriber(
+      $this->applicationProcessBundleLoaderMock,
       $this->newValidateHandlerMock,
       $this->validateHandlerMock
     );
+
+    $this->statusList = [23 => new FullApplicationProcessStatus('status', NULL, NULL)];
   }
 
   public function testValidateSubscribedEvents(): void {
@@ -80,14 +95,15 @@ final class ValidateApplicationFormSubscriberTest extends TestCase {
     $event = $this->createValidateFormEvent();
     $command = new ApplicationFormValidateCommand(
       $event->getApplicationProcessBundle(),
+      $this->statusList,
       $event->getData(),
+      20,
     );
 
     $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([]), FALSE);
-    $result = ApplicationFormValidateResult::create($validationResult);
     $this->validateHandlerMock->expects(static::once())->method('handle')
       ->with($command)
-      ->willReturn($result);
+      ->willReturn($validationResult);
 
     $this->subscriber->onValidateForm($event);
 
@@ -99,7 +115,9 @@ final class ValidateApplicationFormSubscriberTest extends TestCase {
     $event = $this->createValidateFormEvent();
     $command = new ApplicationFormValidateCommand(
       $event->getApplicationProcessBundle(),
+      $this->statusList,
       $event->getData(),
+      20,
     );
 
     $errorMessages = ['/a/b' => ['error']];
@@ -107,10 +125,9 @@ final class ValidateApplicationFormSubscriberTest extends TestCase {
       $errorMessages,
       new TestValidatedData([])
     );
-    $result = ApplicationFormValidateResult::create($validationResult);
     $this->validateHandlerMock->expects(static::once())->method('handle')
       ->with($command)
-      ->willReturn($result);
+      ->willReturn($validationResult);
 
     $this->subscriber->onValidateForm($event);
 
@@ -127,10 +144,9 @@ final class ValidateApplicationFormSubscriberTest extends TestCase {
       $event->getData()
     );
     $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([]), FALSE);
-    $result = ApplicationFormValidateResult::create($validationResult);
     $this->newValidateHandlerMock->expects(static::once())->method('handle')
       ->with($command)
-      ->willReturn($result);
+      ->willReturn($validationResult);
 
     $this->subscriber->onValidateNewForm($event);
 
@@ -152,10 +168,9 @@ final class ValidateApplicationFormSubscriberTest extends TestCase {
       $errorMessages,
       new TestValidatedData([])
     );
-    $result = ApplicationFormValidateResult::create($validationResult);
     $this->newValidateHandlerMock->expects(static::once())->method('handle')
       ->with($command)
-      ->willReturn($result);
+      ->willReturn($validationResult);
 
     $this->subscriber->onValidateNewForm($event);
 
@@ -174,12 +189,18 @@ final class ValidateApplicationFormSubscriberTest extends TestCase {
   }
 
   private function createValidateFormEvent(): ValidateApplicationFormEvent {
-    return new ValidateApplicationFormEvent(RemoteFundingApplicationProcess::_getEntityName(), 'ValidateForm', [
+    $event = new ValidateApplicationFormEvent(RemoteFundingApplicationProcess::_getEntityName(), 'ValidateForm', [
       'remoteContactId' => '00',
       'contactId' => 1,
       'applicationProcessBundle' => ApplicationProcessBundleFactory::createApplicationProcessBundle(),
       'data' => [],
     ]);
+
+    $this->applicationProcessBundleLoaderMock->method('getStatusList')
+      ->with($event->getApplicationProcessBundle())
+      ->willReturn($this->statusList);
+
+    return $event;
   }
 
 }

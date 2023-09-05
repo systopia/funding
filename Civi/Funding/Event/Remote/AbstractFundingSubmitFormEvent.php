@@ -19,15 +19,10 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Event\Remote;
 
+use Civi\Funding\Form\RemoteSubmitResponseActions;
 use Civi\RemoteTools\Form\RemoteFormInterface;
 
 abstract class AbstractFundingSubmitFormEvent extends AbstractFundingRequestEvent {
-
-  public const ACTION_CLOSE_FORM = 'closeForm';
-
-  public const ACTION_SHOW_FORM = 'showForm';
-
-  public const ACTION_SHOW_VALIDATION = 'showValidation';
 
   /**
    * @var array<string, mixed>
@@ -35,7 +30,7 @@ abstract class AbstractFundingSubmitFormEvent extends AbstractFundingRequestEven
   protected array $data;
 
   /**
-   * @var string|null|self::ACTION_*
+   * @phpstan-var RemoteSubmitResponseActions::*|null
    */
   private ?string $action = NULL;
 
@@ -54,20 +49,21 @@ abstract class AbstractFundingSubmitFormEvent extends AbstractFundingRequestEven
 
   private ?string $message = NULL;
 
+  /**
+   * @phpstan-return RemoteSubmitResponseActions::*|null
+   */
   public function getAction(): ?string {
     return $this->action;
   }
 
-  // phpcs:disable Drupal.Commenting.FunctionComment,Squiz.WhiteSpace.FunctionSpacing
   /**
-   * @param string&self::ACTION_* $action
+   * @phpstan-param RemoteSubmitResponseActions::* $action
    */
   public function setAction(string $action): self {
     $this->action = $action;
 
     return $this;
   }
-  // phpcs:enable
 
   public function addError(string $jsonPointer, string $message): self {
     $this->addErrorsAt($jsonPointer, [$message]);
@@ -81,7 +77,7 @@ abstract class AbstractFundingSubmitFormEvent extends AbstractFundingRequestEven
    */
   public function addErrorsAt(string $jsonPointer, array $messages): self {
     $this->errors[$jsonPointer] = array_merge($this->errors[$jsonPointer] ?? [], $messages);
-    $this->action = self::ACTION_SHOW_VALIDATION;
+    $this->action = RemoteSubmitResponseActions::SHOW_VALIDATION;
 
     return $this;
   }
@@ -113,13 +109,6 @@ abstract class AbstractFundingSubmitFormEvent extends AbstractFundingRequestEven
 
   public function getForm(): ?RemoteFormInterface {
     return $this->form;
-  }
-
-  public function setForm(RemoteFormInterface $form): self {
-    $this->form = $form;
-    $this->action = self::ACTION_SHOW_FORM;
-
-    return $this;
   }
 
   public function getMessage(): ?string {
