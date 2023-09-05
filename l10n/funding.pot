@@ -134,6 +134,98 @@ msgstr ""
 msgid "Contact %1"
 msgstr ""
 
+#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php ang/crmFunding/application/applicationSidebar.template.html ang/crmFunding/case/fundingCasePermissions.html ang/crmFunding/program/fundingNewCasePermissions.html ang/crmFunding/program/fundingProgramPermissions.html ang/crmFunding/program/recipientRelations.html
+msgid "Save"
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
+msgid "Modify"
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
+msgid "Apply"
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
+msgid "Withdraw"
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
+msgid "Do you really want to withdraw the application?"
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
+msgid "Delete"
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
+msgid "Do you really want to delete the application?"
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php ang/crmFunding/application/applicationSidebar.template.html
+msgid "Start Review"
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
+msgid "Approve Calculative"
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
+msgid "Reject Calculative"
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
+msgid "Approve Content"
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
+msgid "Reject Content"
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php ang/crmFunding/application/applicationSidebar.template.html
+msgid "Request Change"
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php ang/crmFunding/application/applicationSidebar.template.html managed/SavedSearchFundingDrawdowns.mgd.php
+msgid "Reject"
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/ActionsContainer/ReworkPossibleApplicationSubmitActionsContainerFactory.php
+msgid "Request rework"
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/ActionsContainer/ReworkPossibleApplicationSubmitActionsContainerFactory.php
+msgid "Withdraw rework request"
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/ActionsContainer/ReworkPossibleApplicationSubmitActionsContainerFactory.php
+msgid "Withdraw change"
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/ActionsContainer/ReworkPossibleApplicationSubmitActionsContainerFactory.php
+msgid "Apply rework"
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/ActionsContainer/ReworkPossibleApplicationSubmitActionsContainerFactory.php
+msgid "Withdraw rework"
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/ActionsContainer/ReworkPossibleApplicationSubmitActionsContainerFactory.php ang/crmFunding/application/applicationSidebar.template.html
+msgid "Approve Rework Request"
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/ActionsContainer/ReworkPossibleApplicationSubmitActionsContainerFactory.php ang/crmFunding/application/applicationSidebar.template.html
+msgid "Reject Rework Request"
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/Api4/ActionHandler/ApplyActionMultipleActionHandler.php
+msgid "Application process with ID %1 not found."
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/Api4/ActionHandler/ApplyActionMultipleActionHandler.php
+msgid "Performing action %1 on application process %2 is not allowed."
+msgstr ""
+
 #: Civi/Funding/ApplicationProcess/ApplicationProcessTaskManager.php
 msgid "Application process: %1 (%2)"
 msgstr ""
@@ -314,6 +406,10 @@ msgstr ""
 msgid "Titles of Eligible Applications"
 msgstr ""
 
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php Civi/Funding/EventSubscriber/FundingProgram/FundingProgramGetPossiblePermissionsSubscriber.php
+msgid "Application: create"
+msgstr ""
+
 #: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
 msgid "Application: view"
 msgstr ""
@@ -351,47 +447,15 @@ msgid "Review: drawdown"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/FundingProgram/FundingProgramGetPossiblePermissionsSubscriber.php
-msgid "Application: create"
-msgstr ""
-
-#: Civi/Funding/EventSubscriber/FundingProgram/FundingProgramGetPossiblePermissionsSubscriber.php
 msgid "View"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/Remote/FundingCaseGetFieldsSubscriber.php
-msgid "Is Summary Application"
+msgid "Is Combined Application"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/Remote/FundingCaseGetFieldsSubscriber.php
 msgid "Application Process Label"
-msgstr ""
-
-#: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php ang/crmFunding/application/applicationSidebar.template.html ang/crmFunding/case/fundingCasePermissions.html ang/crmFunding/program/fundingNewCasePermissions.html ang/crmFunding/program/fundingProgramPermissions.html ang/crmFunding/program/recipientRelations.html
-msgid "Save"
-msgstr ""
-
-#: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php
-msgid "Modify"
-msgstr ""
-
-#: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php
-msgid "Apply"
-msgstr ""
-
-#: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php
-msgid "Withdraw"
-msgstr ""
-
-#: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php
-msgid "Do you really want to withdraw the application?"
-msgstr ""
-
-#: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php
-msgid "Delete"
-msgstr ""
-
-#: Civi/Funding/Form/DefaultApplicationSubmitActionsContainerFactory.php
-msgid "Do you really want to delete the application?"
 msgstr ""
 
 #: Civi/Funding/Form/JsonSchema/JsonSchemaComment.php ang/crmFunding/application/applicationEditor.template.html
@@ -402,32 +466,16 @@ msgstr ""
 msgid "external"
 msgstr ""
 
-#: Civi/Funding/Form/ReworkPossibleApplicationSubmitActionsContainerFactory.php
-msgid "Request rework"
-msgstr ""
-
-#: Civi/Funding/Form/ReworkPossibleApplicationSubmitActionsContainerFactory.php
-msgid "Withdraw rework request"
-msgstr ""
-
-#: Civi/Funding/Form/ReworkPossibleApplicationSubmitActionsContainerFactory.php
-msgid "Withdraw change"
-msgstr ""
-
-#: Civi/Funding/Form/ReworkPossibleApplicationSubmitActionsContainerFactory.php
-msgid "Apply rework"
-msgstr ""
-
-#: Civi/Funding/Form/ReworkPossibleApplicationSubmitActionsContainerFactory.php
-msgid "Withdraw rework"
-msgstr ""
-
 #: Civi/Funding/FundingCase/Handler/FundingCaseApproveHandler.php
 msgid "Approving this funding case is not allowed."
 msgstr ""
 
 #: Civi/Funding/FundingCase/Handler/TransferContractRecreateHandler.php
 msgid "Permission to recreate transfer contract is missing."
+msgstr ""
+
+#: Civi/Funding/FundingCase/Remote/Api4/ActionHandler/SubmitUpdateFormActionHandler.php
+msgid "Deleted"
 msgstr ""
 
 #: Civi/Funding/FundingPseudoConstants.php
@@ -590,7 +638,7 @@ msgstr ""
 msgid "Validation failed: %1"
 msgstr ""
 
-#: ang/crmFunding/application/application.js ang/crmFunding/application/applicationEditor.directive.js ang/crmFunding/application/applicationReviewer.directive.js ang/crmFunding/application/applicationReviewers.directive.js ang/crmFunding/application/history/applicationProcessActivity.directive.js ang/crmFunding/application/history/applicationProcessHistory.directive.js ang/crmFunding/case/fundingCase.js ang/crmFunding/case/fundingCasePermissions.js ang/crmFunding/case/permissions/fundingCaseContactRelation.directive.js ang/crmFunding/form/editableField.directive.js ang/crmFunding/form/fundingAddRowButton.directive.js ang/crmFunding/form/fundingSelectPermissions.directive.js ang/crmFunding/form/fundingValidationErrors.directive.js ang/crmFunding/form/jsonFormsControl.directive.js ang/crmFunding/fundingDate.filter.js ang/crmFunding/program/fundingNewCasePermissions.js ang/crmFunding/program/fundingProgramPermissions.js ang/crmFunding/program/newCasePermissions/fundingNewCasePermissions.directive.js ang/crmFunding/program/permissions/fundingProgramContactRelation.directive.js ang/crmFunding/program/recipientRelations.js ang/crmFunding/program/recipients/recipientRelation.directive.js
+#: ang/crmFunding/application/application.js ang/crmFunding/application/applicationEditor.directive.js ang/crmFunding/application/applicationReviewer.directive.js ang/crmFunding/application/applicationReviewers.directive.js ang/crmFunding/application/applicationSearchTasks.decorator.js ang/crmFunding/application/history/applicationProcessActivity.directive.js ang/crmFunding/application/history/applicationProcessHistory.directive.js ang/crmFunding/case/fundingCase.js ang/crmFunding/case/fundingCasePermissions.js ang/crmFunding/case/permissions/fundingCaseContactRelation.directive.js ang/crmFunding/form/editableField.directive.js ang/crmFunding/form/fundingAddRowButton.directive.js ang/crmFunding/form/fundingSelectPermissions.directive.js ang/crmFunding/form/fundingValidationErrors.directive.js ang/crmFunding/form/jsonFormsControl.directive.js ang/crmFunding/fundingDate.filter.js ang/crmFunding/program/fundingNewCasePermissions.js ang/crmFunding/program/fundingProgramPermissions.js ang/crmFunding/program/newCasePermissions/fundingNewCasePermissions.directive.js ang/crmFunding/program/permissions/fundingProgramContactRelation.directive.js ang/crmFunding/program/recipientRelations.js ang/crmFunding/program/recipients/recipientRelation.directive.js
 msgid "funding"
 msgstr ""
 
@@ -598,7 +646,7 @@ msgstr ""
 msgid "Application %1"
 msgstr ""
 
-#: ang/crmFunding/application/application.template.html managed/SavedSearchFundingTasksMy.mgd.php
+#: ang/crmFunding/application/application.template.html ang/crmFunding/application/applicationSearchTasks.decorator.js managed/SavedSearchFundingTasksMy.mgd.php
 msgid "Application"
 msgstr ""
 
@@ -686,12 +734,12 @@ msgstr ""
 msgid "Content Reviewer"
 msgstr ""
 
-#: ang/crmFunding/application/applicationSidebar.template.html
-msgid "Review"
+#: ang/crmFunding/application/applicationSearchTasks.decorator.js ang/crmFunding/case/fundingCase.template.html managed/NavigationFunding.mgd.php
+msgid "Applications"
 msgstr ""
 
 #: ang/crmFunding/application/applicationSidebar.template.html
-msgid "Start Review"
+msgid "Review"
 msgstr ""
 
 #: ang/crmFunding/application/applicationSidebar.template.html
@@ -718,16 +766,8 @@ msgstr ""
 msgid "Approve"
 msgstr ""
 
-#: ang/crmFunding/application/applicationSidebar.template.html managed/SavedSearchFundingDrawdowns.mgd.php
-msgid "Reject"
-msgstr ""
-
 #: ang/crmFunding/application/applicationSidebar.template.html
 msgid "Add Comment"
-msgstr ""
-
-#: ang/crmFunding/application/applicationSidebar.template.html
-msgid "Request Change"
 msgstr ""
 
 #: ang/crmFunding/application/applicationSidebar.template.html
@@ -740,14 +780,6 @@ msgstr ""
 
 #: ang/crmFunding/application/applicationSidebar.template.html
 msgid "The application can be approved once the review was successful."
-msgstr ""
-
-#: ang/crmFunding/application/applicationSidebar.template.html
-msgid "Approve Rework Request"
-msgstr ""
-
-#: ang/crmFunding/application/applicationSidebar.template.html
-msgid "Reject Rework Request"
 msgstr ""
 
 #: ang/crmFunding/application/applicationSidebar.template.html
@@ -824,10 +856,6 @@ msgstr ""
 
 #: ang/crmFunding/case/fundingCase.template.html managed/OptionValuesFileType.mgd.php
 msgid "Transfer Contract"
-msgstr ""
-
-#: ang/crmFunding/case/fundingCase.template.html managed/NavigationFunding.mgd.php
-msgid "Applications"
 msgstr ""
 
 #: ang/crmFunding/case/fundingCase.template.html
