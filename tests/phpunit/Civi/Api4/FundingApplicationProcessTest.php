@@ -120,7 +120,7 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
       ->addSelect('id')->execute());
   }
 
-  public function testGetFieldsAction(): void {
+  public function testGetFields(): void {
     $fundingCase = $this->createFundingCase();
     $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId());
 
