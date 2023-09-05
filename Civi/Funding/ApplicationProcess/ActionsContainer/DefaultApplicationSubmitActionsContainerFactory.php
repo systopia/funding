@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2023 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,7 +17,7 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Form;
+namespace Civi\Funding\ApplicationProcess\ActionsContainer;
 
 use CRM_Funding_ExtensionUtil as E;
 
@@ -26,14 +26,23 @@ use CRM_Funding_ExtensionUtil as E;
  */
 final class DefaultApplicationSubmitActionsContainerFactory {
 
-  public static function create(): SubmitActionsContainer {
-    $submitActionsContainer = new SubmitActionsContainer();
+  public static function create(): ApplicationSubmitActionsContainer {
+    $submitActionsContainer = new ApplicationSubmitActionsContainer();
     $submitActionsContainer
+      // Applicant actions.
       ->add('save', E::ts('Save'))
       ->add('modify', E::ts('Modify'))
       ->add('apply', E::ts('Apply'))
       ->add('withdraw', E::ts('Withdraw'), E::ts('Do you really want to withdraw the application?'))
-      ->add('delete', E::ts('Delete'), E::ts('Do you really want to delete the application?'));
+      ->add('delete', E::ts('Delete'), E::ts('Do you really want to delete the application?'))
+      // Reviewer actions.
+      ->add('review', E::ts('Start Review'), NULL, ['needsFormData' => FALSE])
+      ->add('approve-calculative', E::ts('Approve Calculative'), NULL, ['needsFormData' => FALSE])
+      ->add('reject-calculative', E::ts('Reject Calculative'), NULL, ['needsFormData' => FALSE])
+      ->add('approve-content', E::ts('Approve Content'), NULL, ['needsFormData' => FALSE])
+      ->add('reject-content', E::ts('Reject Content'), NULL, ['needsFormData' => FALSE])
+      ->add('request-change', E::ts('Request Change'), NULL, ['needsFormData' => FALSE])
+      ->add('reject', E::ts('Reject'), NULL, ['needsFormData' => FALSE]);
 
     return $submitActionsContainer;
   }

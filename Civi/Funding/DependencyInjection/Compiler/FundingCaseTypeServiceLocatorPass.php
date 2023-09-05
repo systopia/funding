@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\DependencyInjection\Compiler;
 
+use Civi\Funding\ApplicationProcess\ActionsContainer\ApplicationSubmitActionsContainerInterface;
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerInterface;
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoContainer;
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface;
@@ -27,6 +28,8 @@ use Civi\Funding\ApplicationProcess\ApplicationFormFilesFactoryInterface;
 use Civi\Funding\ApplicationProcess\ApplicationResourcesItemsFactoryInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationActionApplyHandler;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationActionApplyHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationAllowedActionsGetHandler;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationAllowedActionsGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandler;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandler;
@@ -73,6 +76,8 @@ use Civi\Funding\ApplicationProcess\Handler\Decorator\ApplicationFormSubmitEvent
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\Form\ApplicationFormDataFactoryInterface;
 use Civi\Funding\Form\ApplicationJsonSchemaFactoryInterface;
+use Civi\Funding\Form\ApplicationSubmitActionsFactory;
+use Civi\Funding\Form\ApplicationSubmitActionsFactoryInterface;
 use Civi\Funding\Form\ApplicationUiSchemaFactoryInterface;
 use Civi\Funding\Form\ApplicationValidatorInterface;
 use Civi\Funding\Form\FundingCase\FundingCaseFormDataFactoryInterface;
@@ -137,6 +142,10 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
   // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh, Generic.Metrics.CyclomaticComplexity.MaxExceeded
   public function process(ContainerBuilder $container): void {
   // phpcs:enable
+    $applicationActionsContainerServices =
+      $this->getTaggedServices($container, ApplicationSubmitActionsContainerInterface::SERVICE_TAG);
+    $applicationSubmitActionsFactoryServices =
+      $this->getTaggedServices($container, ApplicationSubmitActionsFactoryInterface::SERVICE_TAG);
     $applicationActionStatusInfoServices =
       $this->getTaggedServices($container, ApplicationProcessActionStatusInfoInterface::SERVICE_TAG);
 
@@ -157,6 +166,9 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
       $this->getTaggedServices($container, ApplicationResourcesItemsFactoryInterface::SERVICE_TAG);
     $applicationFormFilesFactoryServices =
       $this->getTaggedServices($container, ApplicationFormFilesFactoryInterface::SERVICE_TAG);
+
+    $applicationAllowedActionsGetHandlerServices =
+      $this->getTaggedServices($container, ApplicationAllowedActionsGetHandlerInterface::SERVICE_TAG);
 
     $applicationDeleteHandlerServices =
       $this->getTaggedServices($container, ApplicationDeleteHandlerInterface::SERVICE_TAG);
@@ -262,6 +274,24 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
       if (isset($serviceLocatorServices[$fundingCaseType])) {
         continue;
       }
+
+      $applicationAllowedActionsGetHandlerServices[$fundingCaseType] ??= $this->createService(
+        $container,
+        $fundingCaseType,
+        ApplicationAllowedActionsGetHandler::class,
+        [
+          '$submitActionsFactory' => $applicationSubmitActionsFactoryServices[$fundingCaseType] ??=
+          $this->createService(
+            $container,
+            $fundingCaseType,
+            ApplicationSubmitActionsFactory::class,
+            [
+              '$actionsDeterminer' => $applicationActionsDeterminerServices[$fundingCaseType],
+              '$submitActionsContainer' => $applicationActionsContainerServices[$fundingCaseType],
+            ],
+          ),
+        ],
+      );
 
       $applicationDeleteHandlerServices[$fundingCaseType] ??= $this->createService(
         $container,
@@ -567,6 +597,8 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
       );
 
       $services = [
+        ApplicationAllowedActionsGetHandlerInterface::class
+        => $applicationAllowedActionsGetHandlerServices[$fundingCaseType],
         ApplicationActionApplyHandlerInterface::class => $applicationActionApplyHandlerServices[$fundingCaseType],
         ApplicationDeleteHandlerInterface::class => $applicationDeleteHandlerServices[$fundingCaseType],
         ApplicationFilesAddIdentifiersHandlerInterface::class

@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2023 SYSTOPIA GmbH
+ * Copyright (C) 2022 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,20 +17,11 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\SammelantragKurs\Application\Actions;
+namespace Civi\Funding\ApplicationProcess\ActionsContainer;
 
-use Civi\Funding\Form\ApplicationSubmitActionsFactory;
-use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
+use Civi\Funding\Form\AbstractSubmitActionsContainer;
 
-final class KursApplicationSubmitActionsFactory extends ApplicationSubmitActionsFactory {
-
-  use KursSupportedFundingCaseTypesTrait;
-
-  public function __construct(
-    KursApplicationActionsDeterminer $actionsDeterminer,
-    KursApplicationSubmitActionsContainer $submitActionsContainer
-  ) {
-    parent::__construct($actionsDeterminer, $submitActionsContainer);
-  }
-
+// phpcs:disable Generic.Files.LineLength.TooLong
+abstract class AbstractApplicationSubmitActionsContainer extends AbstractSubmitActionsContainer implements ApplicationSubmitActionsContainerInterface {
+// phpcs:enable
 }

@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding;
 
 use Civi\Funding\ApplicationProcess\Handler\ApplicationActionApplyHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationAllowedActionsGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationDeleteHandlerInterface;
@@ -63,6 +64,10 @@ final class FundingCaseTypeServiceLocator implements FundingCaseTypeServiceLocat
 
   public function getApplicationActionApplyHandler(): ApplicationActionApplyHandlerInterface {
     return $this->locator->get(ApplicationActionApplyHandlerInterface::class);
+  }
+
+  public function getApplicationAllowedActionsGetHandler(): ApplicationAllowedActionsGetHandlerInterface {
+    return $this->locator->get(ApplicationAllowedActionsGetHandlerInterface::class);
   }
 
   public function getApplicationDeleteHandler(): ApplicationDeleteHandlerInterface {

@@ -49,8 +49,10 @@ $container->autowire(KursApplicationActionStatusInfo::class)
   ->addTag(KursApplicationActionStatusInfo::SERVICE_TAG);
 $container->autowire(KursApplicationStatusDeterminer::class)
   ->addTag(KursApplicationStatusDeterminer::SERVICE_TAG);
-$container->autowire(KursApplicationSubmitActionsContainer::class);
-$container->autowire(KursApplicationSubmitActionsFactory::class);
+$container->autowire(KursApplicationSubmitActionsContainer::class)
+  ->addTag(KursApplicationSubmitActionsContainer::SERVICE_TAG);
+$container->autowire(KursApplicationSubmitActionsFactory::class)
+  ->addTag(KursApplicationSubmitActionsFactory::SERVICE_TAG);
 
 $container->autowire(KursCaseActionsDeterminer::class)
   ->addTag(KursCaseActionsDeterminer::SERVICE_TAG);

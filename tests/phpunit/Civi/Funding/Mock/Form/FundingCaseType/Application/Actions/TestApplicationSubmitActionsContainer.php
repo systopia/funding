@@ -17,20 +17,18 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\SammelantragKurs\Application\Actions;
+namespace Civi\Funding\Mock\Form\FundingCaseType\Application\Actions;
 
-use Civi\Funding\Form\ApplicationSubmitActionsFactory;
-use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
+use Civi\Funding\ApplicationProcess\ActionsContainer\AbstractApplicationSubmitActionsContainerDecorator;
+use Civi\Funding\ApplicationProcess\ActionsContainer\ReworkPossibleApplicationSubmitActionsContainerFactory;
+use Civi\Funding\Mock\Form\FundingCaseType\Traits\TestSupportedFundingCaseTypesTrait;
 
-final class KursApplicationSubmitActionsFactory extends ApplicationSubmitActionsFactory {
+final class TestApplicationSubmitActionsContainer extends AbstractApplicationSubmitActionsContainerDecorator {
 
-  use KursSupportedFundingCaseTypesTrait;
+  use TestSupportedFundingCaseTypesTrait;
 
-  public function __construct(
-    KursApplicationActionsDeterminer $actionsDeterminer,
-    KursApplicationSubmitActionsContainer $submitActionsContainer
-  ) {
-    parent::__construct($actionsDeterminer, $submitActionsContainer);
+  public function __construct() {
+    parent::__construct(ReworkPossibleApplicationSubmitActionsContainerFactory::create());
   }
 
 }

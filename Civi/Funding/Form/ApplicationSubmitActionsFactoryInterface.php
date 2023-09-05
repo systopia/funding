@@ -23,11 +23,17 @@ use Civi\Funding\Entity\FullApplicationProcessStatus;
 
 interface ApplicationSubmitActionsFactoryInterface {
 
+  public const SERVICE_TAG = 'funding.application.submit_actions_factory';
+
   /**
    * @phpstan-param array<string> $permissions
    *
-   * @phpstan-return array<string, array{label: string, confirm: string|null}>
-   *   Map of action names to button labels and confirm messages.
+   * @phpstan-return array<string, array{
+   *   label: string,
+   *   confirm: string|null,
+   *   properties: array<string, mixed>,
+   * }>
+   *   Map of action names to button labels, confirm messages, and properties.
    */
   public function createInitialSubmitActions(array $permissions): array;
 
@@ -36,8 +42,13 @@ interface ApplicationSubmitActionsFactoryInterface {
    *     Status of other application processes in same funding case indexed by ID.
    * @phpstan-param array<string> $permissions
    *
-   * @phpstan-return array<string, array{label: string, confirm: string|null}>
-   *   Map of action names to button labels and confirm messages.
+   * @phpstan-return array<string, array{
+   *   label: string,
+   *   confirm: string|null,
+   *   properties: array<string, mixed>&array{needsFormData?: bool},
+   * }>
+   *   Map of action names to button labels, confirm messages, and properties.
+   *   needsFormData is FALSE if the action is applicable without form data.
    */
   public function createSubmitActions(
     FullApplicationProcessStatus $status,

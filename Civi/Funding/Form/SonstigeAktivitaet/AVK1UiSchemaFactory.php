@@ -22,10 +22,10 @@ namespace Civi\Funding\Form\SonstigeAktivitaet;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
-use Civi\Funding\Form\ApplicationSubmitActionsFactoryInterface;
 use Civi\Funding\Form\JsonSchema\JsonFormsSubmitButtonsFactory;
 use Civi\Funding\Form\NonCombinedApplicationUiSchemaFactoryInterface;
 use Civi\Funding\Form\SonstigeAktivitaet\UISchema\AVK1UiSchema;
+use Civi\Funding\SonstigeAktivitaet\Actions\AVK1ApplicationSubmitActionsFactory;
 use Civi\Funding\SonstigeAktivitaet\Traits\AVK1SupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonForms\JsonFormsElement;
 use Civi\RemoteTools\JsonForms\JsonFormsMarkup;
@@ -34,12 +34,12 @@ final class AVK1UiSchemaFactory implements NonCombinedApplicationUiSchemaFactory
 
   use AVK1SupportedFundingCaseTypesTrait;
 
-  private ApplicationSubmitActionsFactoryInterface $submitActionsFactory;
+  private AVK1ApplicationSubmitActionsFactory $submitActionsFactory;
 
   private AVK1StatusMarkupFactory $statusMarkupFactory;
 
   public function __construct(
-    ApplicationSubmitActionsFactoryInterface $submitActionsFactory,
+    AVK1ApplicationSubmitActionsFactory $submitActionsFactory,
     AVK1StatusMarkupFactory $statusMarkupFactory
   ) {
     $this->submitActionsFactory = $submitActionsFactory;

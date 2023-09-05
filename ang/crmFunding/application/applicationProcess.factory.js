@@ -75,6 +75,13 @@ fundingModule.factory('fundingApplicationProcessService', ['crmApi4', function(c
     getFormData: (id) => crmApi4('FundingApplicationProcess', 'getFormData', {id}).then(function (result) {
       return result.data || null;
     }),
+
+    /**
+     * @param {array<integer>} ids
+     * @returns {Promise}
+     */
+    getAllowedActionsMultiple: (ids) => crmApi4('FundingApplicationProcess', 'getAllowedActionsMultiple', {ids}),
+
     getJsonSchema: (id) => crmApi4('FundingApplicationProcess', 'getJsonSchema', {id}).then(function (result) {
       return result.jsonSchema || null;
     }),
@@ -86,6 +93,13 @@ fundingModule.factory('fundingApplicationProcessService', ['crmApi4', function(c
     },
     submitForm: (id, data) => crmApi4('FundingApplicationProcess', 'submitForm', {id, data}),
     validateForm: (id, data) => crmApi4('FundingApplicationProcess', 'validateForm', {id, data}),
+
+    /**
+     * @param {array<integer>} ids
+     * @param {string} action
+     * @returns {Promise}
+     */
+    applyActionMultiple: (ids, action) => crmApi4('FundingApplicationProcess', 'applyActionMultiple', {ids, action}),
 
     /**
      * @param {integer} id

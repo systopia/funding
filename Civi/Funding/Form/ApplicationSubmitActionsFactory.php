@@ -19,18 +19,19 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form;
 
+use Civi\Funding\ApplicationProcess\ActionsContainer\ApplicationSubmitActionsContainerInterface;
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerInterface;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 
-final class ApplicationSubmitActionsFactory implements ApplicationSubmitActionsFactoryInterface {
+class ApplicationSubmitActionsFactory implements ApplicationSubmitActionsFactoryInterface {
 
   private ApplicationProcessActionsDeterminerInterface $actionsDeterminer;
 
-  private SubmitActionsContainerInterface $submitActionsContainer;
+  private ApplicationSubmitActionsContainerInterface $submitActionsContainer;
 
   public function __construct(
     ApplicationProcessActionsDeterminerInterface $actionsDeterminer,
-    SubmitActionsContainerInterface $submitActionsContainer
+    ApplicationSubmitActionsContainerInterface $submitActionsContainer
   ) {
     $this->actionsDeterminer = $actionsDeterminer;
     $this->submitActionsContainer = $submitActionsContainer;
@@ -55,18 +56,20 @@ final class ApplicationSubmitActionsFactory implements ApplicationSubmitActionsF
   /**
    * @phpstan-param array<string> $actions
    *
-   * @phpstan-return array<string, array{label: string, confirm: string|null}>
-   *   Map of action names to button labels and confirm messages.
+   * @phpstan-return array<string, array{
+   *   label: string,
+   *   confirm: string|null,
+   *   properties: array<string, mixed>&array{needsFormData?: bool}
+   * }>
+   *   Map of action names to button labels, confirm messages, and properties.
    */
   private function doCreateSubmitActions(array $actions): array {
     /** @phpstan-var \SplPriorityQueue<int, string> $sortedActions */
     $sortedActions = new \SplPriorityQueue();
     foreach ($actions as $action) {
-      if (!$this->submitActionsContainer->has($action)) {
-        throw new \RuntimeException(sprintf('Unknown action "%s"', $action));
+      if ($this->submitActionsContainer->has($action)) {
+        $sortedActions->insert($action, $this->submitActionsContainer->getPriority($action));
       }
-
-      $sortedActions->insert($action, $this->submitActionsContainer->getPriority($action));
     }
 
     $submitActions = [];

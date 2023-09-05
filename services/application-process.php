@@ -31,8 +31,6 @@ use Civi\Funding\Api4\Action\FundingApplicationProcess\UpdateAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetFormAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\SubmitFormAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\ValidateFormAction;
-use Civi\Funding\ApplicationProcess\ActionsDeterminer\DefaultApplicationProcessActionsDeterminer;
-use Civi\Funding\ApplicationProcess\ActionsDeterminer\ReworkPossibleApplicationProcessActionsDeterminer;
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\DefaultApplicationProcessActionStatusInfo;
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\ReworkPossibleApplicationProcessActionStatusInfo;
 use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
@@ -48,6 +46,7 @@ use Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager;
 use Civi\Funding\ApplicationProcess\ApplicationSnapshotManager;
 use Civi\Funding\ApplicationProcess\EligibleApplicationProcessesLoader;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationActionApplyHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationAllowedActionsGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationDeleteHandlerInterface;
@@ -68,6 +67,7 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsAddIdentifi
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationActionApplyHandler;
+use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationAllowedActionsGetHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationCostItemsAddIdentifiersHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationCostItemsPersistHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationDeleteHandler;
@@ -134,7 +134,19 @@ ServiceRegistrator::autowireAllImplementing(
   ['funding.validator.entity' => []]
 );
 
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/ApplicationProcess/Api4/ActionHandler',
+  'Civi\\Funding\\ApplicationProcess\\Api4\\ActionHandler',
+  ActionHandlerInterface::class,
+  [ActionHandlerInterface::SERVICE_TAG => []],
+);
+
 $container->autowire(ApplicationActionApplyHandlerInterface::class, DefaultApplicationActionApplyHandler::class);
+$container->autowire(
+  ApplicationAllowedActionsGetHandlerInterface::class,
+  DefaultApplicationAllowedActionsGetHandler::class
+);
 $container->autowire(ApplicationDeleteHandlerInterface::class, DefaultApplicationDeleteHandler::class);
 
 $container->autowire(ApplicationFormNewCreateHandlerInterface::class, DefaultApplicationFormNewCreateHandler::class);
@@ -291,12 +303,9 @@ $container->autowire(ApplicationProcessActivityGetFieldsSubscriber::class)
 
 $container->autowire(ApplicationSnapshotRestorerInterface::class, ApplicationSnapshotRestorer::class);
 
-$container->autowire(DefaultApplicationProcessActionsDeterminer::class);
 $container->autowire(DefaultApplicationProcessStatusDeterminer::class);
 $container->autowire(DefaultApplicationProcessActionStatusInfo::class);
 
-$container->autowire(ReworkPossibleApplicationProcessActionsDeterminer::class)
-  ->addArgument(new Reference(DefaultApplicationProcessActionsDeterminer::class));
 $container->autowire(ReworkPossibleApplicationProcessStatusDeterminer::class)
   ->addArgument(new Reference(DefaultApplicationProcessStatusDeterminer::class));
 $container->autowire(ReworkPossibleApplicationProcessActionStatusInfo::class)

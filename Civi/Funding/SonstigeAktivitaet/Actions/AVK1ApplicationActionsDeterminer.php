@@ -17,25 +17,21 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\SammelantragKurs\Application\Actions;
+namespace Civi\Funding\SonstigeAktivitaet\Actions;
 
-use Civi\Funding\ApplicationProcess\ActionsContainer\AbstractApplicationSubmitActionsContainer;
-use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
+use Civi\Funding\ApplicationProcess\ActionsDeterminer\AbstractApplicationActionsDeterminerDecorator;
+use Civi\Funding\ApplicationProcess\ActionsDeterminer\DefaultApplicationProcessActionsDeterminer;
+use Civi\Funding\ApplicationProcess\ActionsDeterminer\ReworkPossibleApplicationProcessActionsDeterminer;
+use Civi\Funding\SonstigeAktivitaet\Traits\AVK1SupportedFundingCaseTypesTrait;
 
-/**
- * @codeCoverageIgnore
- */
-final class KursApplicationSubmitActionsContainer extends AbstractApplicationSubmitActionsContainer {
+final class AVK1ApplicationActionsDeterminer extends AbstractApplicationActionsDeterminerDecorator {
 
-  use KursSupportedFundingCaseTypesTrait;
+  use AVK1SupportedFundingCaseTypesTrait;
 
   public function __construct() {
-    $this
-      ->add('save&new', 'Speichern und neu')
-      ->add('save', 'Speichern')
-      ->add('modify', 'Bearbeiten')
-      ->add('withdraw', 'Zurückziehen', 'Möchten Sie diesen Kurs wirklich zurückziehen?')
-      ->add('delete', 'Löschen', 'Möchten Sie diesen Kurs wirklich löschen?');
+    parent::__construct(
+      new ReworkPossibleApplicationProcessActionsDeterminer(new DefaultApplicationProcessActionsDeterminer())
+    );
   }
 
 }

@@ -17,18 +17,18 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\SammelantragKurs\Application\Actions;
+namespace Civi\Funding\SonstigeAktivitaet\Actions;
 
 use Civi\Funding\Form\ApplicationSubmitActionsFactory;
-use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
+use Civi\Funding\SonstigeAktivitaet\Traits\AVK1SupportedFundingCaseTypesTrait;
 
-final class KursApplicationSubmitActionsFactory extends ApplicationSubmitActionsFactory {
+final class AVK1ApplicationSubmitActionsFactory extends ApplicationSubmitActionsFactory {
 
-  use KursSupportedFundingCaseTypesTrait;
+  use AVK1SupportedFundingCaseTypesTrait;
 
   public function __construct(
-    KursApplicationActionsDeterminer $actionsDeterminer,
-    KursApplicationSubmitActionsContainer $submitActionsContainer
+    AVK1ApplicationActionsDeterminer $actionsDeterminer,
+    AVK1ApplicationSubmitActionsContainer $submitActionsContainer
   ) {
     parent::__construct($actionsDeterminer, $submitActionsContainer);
   }
