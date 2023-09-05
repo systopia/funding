@@ -45,7 +45,9 @@ return [
             'is_eligible',
             'funding_case_id',
           ],
-          'orderBy' => ['id' => 'ASC'],
+          'orderBy' => [
+            'id' => 'ASC',
+          ],
           'where' => [],
           'groupBy' => [],
           'join' => [],
@@ -104,13 +106,6 @@ return [
               'sortable' => TRUE,
             ],
             [
-              'type' => 'field',
-              'key' => 'modification_date',
-              'dataType' => 'Timestamp',
-              'label' => E::ts('Modification Date'),
-              'sortable' => TRUE,
-            ],
-            [
               'size' => 'btn-xs',
               'links' => [
                 [
@@ -129,7 +124,7 @@ return [
               'alignment' => 'text-right',
             ],
           ],
-          'actions' => FALSE,
+          'actions' => [],
           'classes' => [
             'table',
             'table-striped',
