@@ -16,15 +16,16 @@
 
 'use strict';
 
-fundingModule.directive('fundingApplicationSidebar', function() {
+fundingModule.factory('fundingCaseTypeService', ['crmApi4', function(crmApi4) {
   return {
-    restrict: 'AE',
-    scope: false,
-    templateUrl: '~/crmFunding/application/applicationSidebar.template.html',
-    controllerAs: '$ctrl',
-    controller: ['$scope', function ($scope) {
-      this.ts = CRM.ts('funding');
-      this.applicationProcessLabel = $scope.fundingCaseType.application_process_label || this.ts('Application');
-    }],
+    /**
+     * @param {integer} id
+     * @returns {Promise}
+     */
+    get: (id) => crmApi4('FundingCaseType', 'get', {
+      where: [['id', '=', id]],
+    }).then(function (result) {
+      return result[0] || null;
+    }),
   };
-});
+}]);

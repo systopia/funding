@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2023 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -16,15 +16,16 @@
 
 'use strict';
 
-fundingModule.directive('fundingApplicationSidebar', function() {
-  return {
-    restrict: 'AE',
-    scope: false,
-    templateUrl: '~/crmFunding/application/applicationSidebar.template.html',
-    controllerAs: '$ctrl',
-    controller: ['$scope', function ($scope) {
-      this.ts = CRM.ts('funding');
-      this.applicationProcessLabel = $scope.fundingCaseType.application_process_label || this.ts('Application');
-    }],
-  };
+fundingModule.component('fundingApplicationSubmitModal', {
+  templateUrl: '~/crmFunding/application/applicationSubmitModal.template.html',
+  bindings: {
+    title: '=',
+    commentRequired: '=',
+    commentText: '=',
+    commentType: '=',
+    submit: '=',
+  },
+  controller: ['$scope', function ($scope) {
+    $scope.ts = CRM.ts('funding');
+  }],
 });

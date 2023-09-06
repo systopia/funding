@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
+use Civi\Funding\ApplicationProcess\ActionsDeterminer\Helper\DetermineApproveRejectActionsHelper;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
 
@@ -59,35 +60,22 @@ final class DefaultApplicationProcessActionsDeterminer extends ApplicationProces
     ],
   ];
 
+  private DetermineApproveRejectActionsHelper $determineApproveRejectActionsHelper;
+
   public function __construct() {
     parent::__construct(self::STATUS_PERMISSION_ACTIONS_MAP);
+    $this->determineApproveRejectActionsHelper = new DetermineApproveRejectActionsHelper();
   }
 
   public function getActions(FullApplicationProcessStatus $status, array $statusList, array $permissions): array {
-    $actions = parent::getActions($status, $statusList, $permissions);
-    if ('review' === $status->getStatus() && $this->hasReviewPermission($permissions)) {
-      if ($this->hasReviewCalculativePermission($permissions)) {
-        if (TRUE !== $status->getIsReviewCalculative()) {
-          $actions[] = 'approve-calculative';
-        }
-        if (FALSE !== $status->getIsReviewCalculative()) {
-          $actions[] = 'reject-calculative';
-        }
-      }
-      if ($this->hasReviewContentPermission($permissions)) {
-        if (TRUE !== $status->getIsReviewContent()) {
-          $actions[] = 'approve-content';
-        }
-        if (FALSE !== $status->getIsReviewContent()) {
-          $actions[] = 'reject-content';
-        }
-      }
-      if (TRUE === $status->getIsReviewCalculative() && TRUE === $status->getIsReviewContent()) {
-        $actions[] = 'approve';
-      }
-    }
-
-    return $actions;
+    return array_merge(
+      parent::getActions($status, $statusList, $permissions),
+      $this->determineApproveRejectActionsHelper->getActions(
+        $status,
+        $this->hasReviewCalculativePermission($permissions),
+        $this->hasReviewContentPermission($permissions)
+      ),
+    );
   }
 
 }

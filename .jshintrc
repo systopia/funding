@@ -12,6 +12,7 @@
     "enableOverlay": true,
     "disableOverlay": true,
     "withOverlay": true,
+    "fixHeights": true,
     "angular": false,
     "CRM": false,
     "_4": false,

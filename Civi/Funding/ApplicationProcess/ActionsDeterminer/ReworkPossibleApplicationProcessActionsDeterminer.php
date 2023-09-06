@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
+use Civi\Funding\ApplicationProcess\ActionsDeterminer\Helper\DetermineApproveRejectActionsHelper;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
 
@@ -55,39 +56,27 @@ final class ReworkPossibleApplicationProcessActionsDeterminer extends Applicatio
 
   private ApplicationProcessActionsDeterminerInterface $actionsDeterminer;
 
+  private DetermineApproveRejectActionsHelper $determineApproveRejectActionsHelper;
+
   public function __construct(ApplicationProcessActionsDeterminerInterface $actionsDeterminer) {
     $this->actionsDeterminer = $actionsDeterminer;
+    $this->determineApproveRejectActionsHelper = new DetermineApproveRejectActionsHelper(
+      ['rework-review'],
+      ['approve' => 'approve-change']
+    );
     parent::__construct(self::STATUS_PERMISSIONS_ACTION_MAP);
   }
 
   public function getActions(FullApplicationProcessStatus $status, array $statusList, array $permissions): array {
-    $actions = \array_values(\array_unique(\array_merge(
+    return \array_values(\array_unique(\array_merge(
       parent::getActions($status, $statusList, $permissions),
       $this->actionsDeterminer->getActions($status, $statusList, $permissions),
+      $this->determineApproveRejectActionsHelper->getActions(
+        $status,
+        $this->hasReviewCalculativePermission($permissions),
+        $this->hasReviewContentPermission($permissions)
+      ),
     )));
-    if ('rework-review' === $status->getStatus() && $this->hasReviewPermission($permissions)) {
-      if ($this->hasReviewCalculativePermission($permissions)) {
-        if (TRUE !== $status->getIsReviewCalculative()) {
-          $actions[] = 'approve-calculative';
-        }
-        if (FALSE !== $status->getIsReviewCalculative()) {
-          $actions[] = 'reject-calculative';
-        }
-      }
-      if ($this->hasReviewContentPermission($permissions)) {
-        if (TRUE !== $status->getIsReviewContent()) {
-          $actions[] = 'approve-content';
-        }
-        if (FALSE !== $status->getIsReviewContent()) {
-          $actions[] = 'reject-content';
-        }
-      }
-      if (TRUE === $status->getIsReviewCalculative() && TRUE === $status->getIsReviewContent()) {
-        $actions[] = 'approve-change';
-      }
-    }
-
-    return $actions;
   }
 
   public function getInitialActions(array $permissions): array {
