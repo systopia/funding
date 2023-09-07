@@ -38,7 +38,7 @@ return [
           'version' => 4,
           'select' => [
             'id',
-            'title',
+            'identifier',
             'status:label',
             'funding_program_id.title',
             'funding_case_type_id.title',
@@ -81,9 +81,9 @@ return [
           'columns' => [
             [
               'type' => 'field',
-              'key' => 'title',
+              'key' => 'identifier',
               'dataType' => 'String',
-              'label' => E::ts('Title'),
+              'label' => E::ts('Identifier'),
               'sortable' => TRUE,
             ],
             [

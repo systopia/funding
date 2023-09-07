@@ -70,8 +70,8 @@ msgstr ""
 msgid "Permission to reject drawdown is missing."
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php ang/crmFunding/case/fundingCase.template.html managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingPrograms.mgd.php
-msgid "Title"
+#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCases.mgd.php
+msgid "Identifier"
 msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php managed/SavedSearchFundingCases.mgd.php
@@ -706,7 +706,7 @@ msgstr ""
 msgid "Creation Date"
 msgstr ""
 
-#: ang/crmFunding/application/applicationEditor.template.html ang/crmFunding/case/fundingCase.template.html managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingTasksMy.mgd.php
+#: ang/crmFunding/application/applicationEditor.template.html ang/crmFunding/case/fundingCase.template.html managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingTasksMy.mgd.php
 msgid "Modification Date"
 msgstr ""
 
@@ -843,11 +843,7 @@ msgid "Amount"
 msgstr ""
 
 #: ang/crmFunding/case/fundingCase.template.html
-msgid "Funding case: %1"
-msgstr ""
-
-#: ang/crmFunding/case/fundingCase.template.html
-msgid "Untitled"
+msgid "Funding Case: %1"
 msgstr ""
 
 #: ang/crmFunding/case/fundingCase.template.html
@@ -1086,8 +1082,8 @@ msgstr ""
 msgid "Table"
 msgstr ""
 
-#: managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
-msgid "Identifier"
+#: managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingPrograms.mgd.php
+msgid "Title"
 msgstr ""
 
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingTasksMy.mgd.php
