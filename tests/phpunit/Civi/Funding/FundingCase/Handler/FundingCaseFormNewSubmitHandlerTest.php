@@ -85,7 +85,6 @@ final class FundingCaseFormNewSubmitHandlerTest extends TestCase {
           'funding_program' => $command->getFundingProgram(),
           'funding_case_type' => $command->getFundingCaseType(),
           'recipient_contact_id' => $recipientContactId,
-          'title' => 'Test',
         ]
       )->willReturn($fundingCase);
 

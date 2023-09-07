@@ -57,7 +57,6 @@ final class FundingCaseApproveHandler implements FundingCaseApproveHandlerInterf
     $fundingCase = $command->getFundingCase();
     $this->assertAuthorized($command);
 
-    $fundingCase->setTitle($command->getTitle());
     $fundingCase->setAmountApproved($command->getAmount());
 
     $this->transferContractCreator->createTransferContract(

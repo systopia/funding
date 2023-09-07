@@ -34,11 +34,10 @@ fundingModule.factory('fundingCaseService', ['crmApi4', function(crmApi4) {
   return {
     /**
      * @param {integer} id
-     * @param {string} title
      * @param {number} amount
      * @returns {Promise}
      */
-    approve: (id, title, amount) => crmApi4('FundingCase', 'approve', {id, title, amount})
+    approve: (id, amount) => crmApi4('FundingCase', 'approve', {id, amount})
         .then((result) => result),
 
     /**

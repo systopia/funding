@@ -32,20 +32,24 @@ final class FundingCaseFixture {
   public static function addFixture(int $fundingProgramId, int $fundingCaseTypeId,
     int $recipientContactId, int $creationContactId, array $values = []
   ): FundingCaseEntity {
+    static $count = 1;
+
     $now = date('Y-m-d H:i:s');
 
     $result = FundingCase::create(FALSE)
       ->setValues($values + [
+        'identifier' => 'test' . $count,
         'funding_program_id' => $fundingProgramId,
         'funding_case_type_id' => $fundingCaseTypeId,
         'recipient_contact_id' => $recipientContactId,
         'status' => 'open',
-        'title' => 'Funding Case Title',
         'creation_date' => $now,
         'modification_date' => $now,
         'creation_contact_id' => $creationContactId,
         'amount_approved' => NULL,
       ])->execute();
+
+    ++$count;
 
     return FundingCaseEntity::singleFromApiResult($result)->reformatDates();
   }

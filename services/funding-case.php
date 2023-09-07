@@ -30,6 +30,8 @@ use Civi\Funding\EventSubscriber\FundingCase\FundingCaseGetPossiblePermissionsSu
 use Civi\Funding\EventSubscriber\FundingCase\FundingCasePermissionsGetAdminSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseGetFieldsSubscriber;
+use Civi\Funding\FundingCase\FundingCaseIdentifierGenerator;
+use Civi\Funding\FundingCase\FundingCaseIdentifierGeneratorInterface;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\Handler\DefaultFundingCaseApproveHandler;
 use Civi\Funding\FundingCase\Handler\DefaultFundingCaseFormDataGetHandler;
@@ -68,6 +70,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 $container->autowire(FundingCaseManager::class);
 $container->autowire(TransferContractRouter::class);
+$container->autowire(FundingCaseIdentifierGeneratorInterface::class, FundingCaseIdentifierGenerator::class);
 
 ServiceRegistrator::autowireAllImplementing(
   $container,

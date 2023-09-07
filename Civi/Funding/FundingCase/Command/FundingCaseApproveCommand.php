@@ -35,8 +35,6 @@ final class FundingCaseApproveCommand {
 
   private FundingCaseEntity $fundingCase;
 
-  private string $title;
-
   private float $amount;
 
   private FundingCaseTypeEntity $fundingCaseType;
@@ -49,14 +47,12 @@ final class FundingCaseApproveCommand {
    */
   public function __construct(
     FundingCaseEntity $fundingCase,
-    string $title,
     float $amount,
     array $applicationProcessStatusList,
     FundingCaseTypeEntity $fundingCaseType,
     FundingProgramEntity $fundingProgram
   ) {
     $this->fundingCase = $fundingCase;
-    $this->title = $title;
     $this->amount = $amount;
     $this->applicationProcessStatusList = $applicationProcessStatusList;
     $this->fundingCaseType = $fundingCaseType;
@@ -73,10 +69,6 @@ final class FundingCaseApproveCommand {
 
   public function getFundingCase(): FundingCaseEntity {
     return $this->fundingCase;
-  }
-
-  public function getTitle(): string {
-    return $this->title;
   }
 
   public function getAmount(): float {

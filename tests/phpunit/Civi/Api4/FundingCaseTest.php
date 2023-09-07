@@ -53,7 +53,6 @@ final class FundingCaseTest extends AbstractFundingHeadlessTestCase {
     try {
       FundingCase::approve()
         ->setId($this->permittedFundingCaseId)
-        ->setTitle('title')
         ->setAmount(123.45)
         ->execute();
     }
@@ -77,11 +76,9 @@ final class FundingCaseTest extends AbstractFundingHeadlessTestCase {
 
     $result = FundingCase::approve()
       ->setId($this->permittedFundingCaseId)
-      ->setTitle('title')
       ->setAmount(123.45)
       ->execute();
 
-    static::assertSame('title', $result['title']);
     static::assertSame(123.45, $result['amount_approved']);
     static::assertSame('ongoing', $result['status']);
   }

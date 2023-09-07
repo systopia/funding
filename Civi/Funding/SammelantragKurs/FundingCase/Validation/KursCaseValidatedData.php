@@ -34,22 +34,15 @@ final class KursCaseValidatedData implements ValidatedFundingCaseDataInterface {
    */
   private array $data;
 
-  private string $title;
-
   /**
    * @phpstan-param kursValidatedDataT $data
    */
-  public function __construct(array $data, string $title) {
+  public function __construct(array $data) {
     $this->data = $data;
-    $this->title = $title;
   }
 
   public function getAction(): string {
     return $this->data['action'];
-  }
-
-  public function getTitle(): string {
-    return $this->title;
   }
 
   public function getRecipientContactId(): int {

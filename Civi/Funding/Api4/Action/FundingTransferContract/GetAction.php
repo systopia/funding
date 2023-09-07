@@ -86,7 +86,7 @@ final class GetAction extends AbstractGetAction {
 
     return [
       'funding_case_id' => $fundingCase->getId(),
-      'title' => $fundingCase->getTitle(),
+      'identifier' => $fundingCase->getIdentifier(),
       'amount_approved' => $fundingCase->getAmountApproved(),
       'payout_process_id' => $payoutProcess->getId(),
       'amount_paid_out' => $this->payoutProcessManager->getAmountAccepted($payoutProcess),

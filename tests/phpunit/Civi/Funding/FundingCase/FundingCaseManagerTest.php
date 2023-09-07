@@ -130,11 +130,11 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
     static::assertGreaterThan(0, $fundingCase->getId());
     static::assertEquals([
       'id' => $fundingCase->getId(),
+      'identifier' => $fundingCase->getIdentifier(),
       'funding_program_id' => $fundingProgram->getId(),
       'funding_case_type_id' => $fundingCaseType->getId(),
       'recipient_contact_id' => $recipientContact['id'],
       'status' => 'open',
-      'title' => 'Title',
       'creation_date' => date('Y-m-d H:i:s'),
       'modification_date' => date('Y-m-d H:i:s'),
       'creation_contact_id' => $contact['id'],

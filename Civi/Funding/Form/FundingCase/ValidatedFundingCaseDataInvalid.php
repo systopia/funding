@@ -40,10 +40,6 @@ final class ValidatedFundingCaseDataInvalid implements ValidatedFundingCaseDataI
     return '';
   }
 
-  public function getTitle(): string {
-    return '';
-  }
-
   public function getRecipientContactId(): int {
     return -1;
   }

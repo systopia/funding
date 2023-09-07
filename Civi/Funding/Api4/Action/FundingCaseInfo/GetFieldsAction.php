@@ -131,6 +131,11 @@ final class GetFieldsAction extends BasicGetFieldsAction {
         'operators' => ['='],
       ],
       [
+        'name' => 'funding_case_identifier',
+        'title' => 'funding_case_identifier',
+        'data_type' => 'String',
+      ],
+      [
         'name' => 'funding_case_permissions',
         'title' => 'funding_case_permissions',
         'data_type' => 'String',
@@ -152,12 +157,6 @@ final class GetFieldsAction extends BasicGetFieldsAction {
         'name' => 'funding_case_modification_date',
         'title' => 'funding_case_modification_date',
         'data_type' => 'Date',
-      ],
-      [
-        'name' => 'funding_case_title',
-        'title' => 'funding_case_title',
-        'data_type' => 'String',
-        'nullable' => TRUE,
       ],
       [
         'name' => 'funding_case_amount_approved',

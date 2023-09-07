@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2023 SYSTOPIA GmbH
+ * Copyright (C) 2022 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,23 +17,18 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Mock\Form\FundingCaseType\FundingCase;
+namespace Civi\Funding\FundingCase;
 
 use Civi\Funding\Entity\FundingCaseEntity;
-use Civi\Funding\Form\FundingCase\FundingCaseFormDataFactoryInterface;
-use Civi\Funding\Mock\Form\FundingCaseType\Traits\TestSupportedFundingCaseTypesTrait;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
+use Civi\Funding\Entity\FundingProgramEntity;
 
-final class TestFundingCaseFormDataFactory implements FundingCaseFormDataFactoryInterface {
+interface FundingCaseIdentifierGeneratorInterface {
 
-  use TestSupportedFundingCaseTypesTrait;
-
-  /**
-   * @inheritDoc
-   */
-  public function createFormData(FundingCaseEntity $fundingCase): array {
-    return [
-      'recipient' => $fundingCase->getRecipientContactId(),
-    ];
-  }
+  public function generateIdentifier(
+    FundingCaseEntity $fundingCase,
+    FundingCaseTypeEntity $fundingCaseType,
+    FundingProgramEntity $fundingProgram
+  ): string;
 
 }

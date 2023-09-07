@@ -24,10 +24,10 @@ use Civi\RemoteTools\Api4\RemoteApiConstants;
 /**
  * @phpstan-type fundingCaseT array{
  *   id?: int,
+ *   identifier: string,
  *   funding_program_id: int,
  *   funding_case_type_id: int,
  *   status: string,
- *   title: ?string,
  *   recipient_contact_id: int,
  *   creation_date: string,
  *   modification_date: string,
@@ -40,6 +40,16 @@ use Civi\RemoteTools\Api4\RemoteApiConstants;
  * @phpstan-extends AbstractEntity<fundingCaseT>
  */
 final class FundingCaseEntity extends AbstractEntity {
+
+  public function getIdentifier(): string {
+    return $this->values['identifier'];
+  }
+
+  public function setIdentifier(string $identifier): self {
+    $this->values['identifier'] = $identifier;
+
+    return $this;
+  }
 
   public function getFundingProgramId(): int {
     return $this->values['funding_program_id'];
@@ -60,16 +70,6 @@ final class FundingCaseEntity extends AbstractEntity {
    */
   public function setStatus(string $status): self {
     $this->values['status'] = $status;
-
-    return $this;
-  }
-
-  public function getTitle(): ?string {
-    return $this->values['title'];
-  }
-
-  public function setTitle(?string $title): self {
-    $this->values['title'] = $title;
 
     return $this;
   }

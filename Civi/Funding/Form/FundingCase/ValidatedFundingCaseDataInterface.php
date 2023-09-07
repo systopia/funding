@@ -23,8 +23,6 @@ interface ValidatedFundingCaseDataInterface {
 
   public function getAction(): string;
 
-  public function getTitle(): string;
-
   public function getRecipientContactId(): int;
 
   /**
