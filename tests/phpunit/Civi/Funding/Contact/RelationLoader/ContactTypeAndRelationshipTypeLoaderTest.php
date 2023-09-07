@@ -53,6 +53,11 @@ final class ContactTypeAndRelationshipTypeLoaderTest extends AbstractFundingHead
       'last_name' => 'Not Related 1',
       'contact_sub_type' => 'testSubType',
     ]);
+    // Inactive relationship
+    $inactiveRelationContact = ContactFixture::addIndividual([
+      'last_name' => 'Inactive Relationship',
+      'contact_sub_type' => 'testSubType',
+    ]);
     // Wrong contact type
     $notRelatedContact2 = ContactFixture::addIndividual(['last_name' => 'Not Related 2']);
 
@@ -98,6 +103,14 @@ final class ContactTypeAndRelationshipTypeLoaderTest extends AbstractFundingHead
         'contact_id_a' => $notRelatedContact2['id'],
         'contact_id_b' => $contact['id'],
         'relationship_type_id' => $relatedRelationshipTypeId,
+      ])->execute();
+
+    Relationship::create(FALSE)
+      ->setValues([
+        'contact_id_a' => $contact['id'],
+        'contact_id_b' => $inactiveRelationContact['id'],
+        'relationship_type_id' => $relatedRelationshipTypeId,
+        'is_active' => FALSE,
       ])->execute();
 
     $relatedContacts = $this->relatedContactLoader->getRelatedContacts(

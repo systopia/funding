@@ -53,6 +53,7 @@ final class ContactTypeRelationshipChecker implements ContactRelationCheckerInte
     $action = Relationship::get(FALSE)
       ->addSelect('id')
       ->addWhere('relationship_type_id', '=', $relationshipTypeId)
+      ->addWhere('is_active', '=', TRUE)
       ->addClause('OR',
         ['contact_id_a', '=', $contactId],
         ['contact_id_b', '=', $contactId],
