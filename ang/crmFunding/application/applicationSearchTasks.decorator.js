@@ -55,7 +55,7 @@ fundingModule.directive('fundingApplicationTasksDecorator', function() {
         const ctrl = $scope.$ctrl;
         const entityName = ctrl.entity;
 
-        const allowedActionsByApplication = {};
+        let allowedActionsByApplication = {};
 
         if (entityName !== 'FundingApplicationProcess') {
           return;
@@ -64,22 +64,29 @@ fundingModule.directive('fundingApplicationTasksDecorator', function() {
         const ts = CRM.ts('funding');
 
         function updateAvailableTasks() {
-          ctrl.tasks = [];
-          const labels = [];
-          for (const id of ctrl.ids) {
-            const actions = allowedActionsByApplication[id] || {};
-            for (const [actionName, {label, confirm}] of Object.entries(actions)) {
-              // In case there are different actions with the same label only the first one is shown.
-              if (!labels.includes(label)) {
-                labels.push(label);
-                ctrl.tasks.push({
-                  name: actionName,
-                  title: label,
-                  confirm: confirm,
-                });
-              }
-            }
+          if (ctrl.ids.length === 0) {
+            ctrl.tasks = [];
+            return;
           }
+
+          let tasks = {};
+          const firstActions = allowedActionsByApplication[ctrl.ids[0]] || {};
+          for (const [actionName, {label, confirm}] of Object.entries(firstActions)) {
+            tasks[actionName] = {
+              name: actionName,
+              title: label,
+              confirm: confirm,
+            };
+          }
+
+          // Filter out tasks that are not available in all selected application
+          // processes or have a different label.
+          for (let i = 1; i < ctrl.ids.length; ++i) {
+            const actions = allowedActionsByApplication[ctrl.ids[i]] || {};
+            tasks = _4.pickBy(tasks, (task, actionName) => actions[actionName] && actions[actionName].label === task.title);
+          }
+
+          ctrl.tasks = Object.values(tasks);
         }
 
         ctrl.entityInfo = {
@@ -126,7 +133,11 @@ fundingModule.directive('fundingApplicationTasksDecorator', function() {
             crmStatus(
               {},
               fundingApplicationProcessService.applyActionMultiple(ctrl.ids, action.name)
-            ).then(ctrl.refresh);
+            ).then(() => {
+              allowedActionsByApplication = _4.pickBy(allowedActionsByApplication,
+                (actions, id) => !ctrl.ids.includes(parseInt(id)));
+              ctrl.refresh();
+            });
           }
         };
       }
