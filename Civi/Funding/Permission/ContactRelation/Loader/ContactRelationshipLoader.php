@@ -55,11 +55,13 @@ final class ContactRelationshipLoader implements ContactRelationLoaderInterface 
           Comparison::new('r.contact_id_a', '=', 'id'),
           Comparison::new('r.contact_id_b', '=', $relatedContactId),
           Comparison::new('r.relationship_type_id', '=', $relationshipTypeId),
+          Comparison::new('r.is_active', '=', TRUE),
         ),
         CompositeCondition::new('AND',
           Comparison::new('r.contact_id_a', '=', $relatedContactId),
           Comparison::new('r.contact_id_b', '=', 'id'),
           Comparison::new('r.relationship_type_id', '=', $relationshipTypeId),
+          Comparison::new('r.is_active', '=', TRUE),
         ),
       )->toArray());
 

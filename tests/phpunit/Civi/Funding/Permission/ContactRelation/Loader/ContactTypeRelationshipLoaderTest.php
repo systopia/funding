@@ -68,6 +68,8 @@ final class ContactTypeRelationshipLoaderTest extends AbstractFundingHeadlessTes
 
     // Wrong relationship type
     $notRelatedContact = ContactFixture::addIndividual(['last_name' => 'Not Related']);
+    // Inactive relationship
+    $inactiveRelationContact = ContactFixture::addIndividual(['last_name' => 'Inactive Relationship']);
 
     $relatedRelationshipTypeId = RelationshipType::create(FALSE)
       ->setValues([
@@ -108,7 +110,7 @@ final class ContactTypeRelationshipLoaderTest extends AbstractFundingHeadlessTes
 
     Relationship::create(FALSE)
       ->setValues([
-        'contact_id_a' => $relatedContact3['id'],
+        'contact_id_a' => $relatedContact4['id'],
         'contact_id_b' => $contact['id'],
         'relationship_type_id' => $relatedRelationshipTypeId,
       ])->execute();
@@ -118,6 +120,14 @@ final class ContactTypeRelationshipLoaderTest extends AbstractFundingHeadlessTes
         'contact_id_a' => $contactWithSubType1['id'],
         'contact_id_b' => $notRelatedContact['id'],
         'relationship_type_id' => $notRelatedRelationshipTypeId,
+      ])->execute();
+
+    Relationship::create(FALSE)
+      ->setValues([
+        'contact_id_a' => $contact['id'],
+        'contact_id_b' => $inactiveRelationContact['id'],
+        'relationship_type_id' => $relatedRelationshipTypeId,
+        'is_active' => FALSE,
       ])->execute();
 
     static::assertArrayHasSameKeys([

@@ -59,6 +59,7 @@ final class ContactTypeAndRelationshipTypeLoader implements RelatedContactsLoade
       )->addJoin('Relationship AS r', 'INNER', NULL,
         CompositeCondition::new('AND',
           Comparison::new('r.relationship_type_id', '=', $relationshipTypeId),
+          Comparison::new('r.is_active', '=', TRUE),
           CompositeCondition::new('OR',
             CompositeCondition::new('AND',
               Comparison::new('r.contact_id_a', '=', $contactId),
