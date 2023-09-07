@@ -60,7 +60,6 @@ final class FundingCaseFormNewSubmitHandler implements FundingCaseFormNewSubmitH
         'funding_program' => $command->getFundingProgram(),
         'funding_case_type' => $command->getFundingCaseType(),
         'recipient_contact_id' => $validatedData->getRecipientContactId(),
-        'title' => $validatedData->getTitle(),
       ],
     );
 

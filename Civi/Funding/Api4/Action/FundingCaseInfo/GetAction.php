@@ -71,11 +71,11 @@ final class GetAction extends AbstractGetAction {
 
     $record = [
       'funding_case_id' => $fundingCase->getId(),
+      'funding_case_identifier' => $fundingCase->getIdentifier(),
       'funding_case_permissions' => $fundingCase->getPermissions(),
       'funding_case_status' => $fundingCase->getStatus(),
       'funding_case_creation_date' => $fundingCase->getCreationDate()->format('Y-m-d H:i:s'),
       'funding_case_modification_date' => $fundingCase->getModificationDate()->format('Y-m-d H:i:s'),
-      'funding_case_title' => $fundingCase->getTitle(),
       'funding_case_amount_approved' => $fundingCase->getAmountApproved(),
       'funding_case_type_id' => $fundingCaseType->getId(),
       'funding_case_type_is_combined_application' => $fundingCaseType->getIsCombinedApplication(),

@@ -101,7 +101,6 @@ final class FundingCaseApproveHandlerTest extends TestCase {
 
     $this->handler->handle($command);
     static::assertSame('new_status', $command->getFundingCase()->getStatus());
-    static::assertSame('title', $command->getFundingCase()->getTitle());
     static::assertSame(12.34, $command->getFundingCase()->getAmountApproved());
   }
 
@@ -129,7 +128,6 @@ final class FundingCaseApproveHandlerTest extends TestCase {
 
     return new FundingCaseApproveCommand(
       $fundingCase,
-      'title',
       $amount,
       [22 => new FullApplicationProcessStatus('eligible', TRUE, TRUE)],
       $fundingCaseType,

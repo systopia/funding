@@ -114,8 +114,8 @@ final class GetFieldsAction extends BasicGetFieldsAction {
         'operators' => ['='],
       ],
       [
-        'name' => 'title',
-        'title' => E::ts('Title'),
+        'name' => 'identifier',
+        'title' => E::ts('Identifier'),
         'data_type' => 'String',
       ],
       [

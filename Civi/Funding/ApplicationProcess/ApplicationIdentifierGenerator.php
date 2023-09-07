@@ -30,11 +30,9 @@ final class ApplicationIdentifierGenerator implements ApplicationIdentifierGener
     ApplicationProcessEntityBundle $applicationProcessBundle
   ): string {
     return sprintf(
-      '%s-%s-%s-%s',
-      date('Y'),
-      $applicationProcessBundle->getFundingProgram()->getAbbreviation(),
-      $applicationProcessBundle->getFundingCaseType()->getAbbreviation(),
-      (string) $applicationProcessBundle->getApplicationProcess()->getId(),
+      '%s-%d',
+      $applicationProcessBundle->getFundingCase()->getIdentifier(),
+      $applicationProcessBundle->getApplicationProcess()->getId(),
     );
   }
 

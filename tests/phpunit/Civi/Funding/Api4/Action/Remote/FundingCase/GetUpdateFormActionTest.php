@@ -44,7 +44,7 @@ final class GetUpdateFormActionTest extends AbstractUpdateFormActionTestCase {
     static::assertArrayHasSameKeys(['jsonSchema', 'uiSchema', 'data'], $result->getArrayCopy());
     static::assertIsArray($result['jsonSchema']);
     static::assertIsArray($result['uiSchema']);
-    static::assertSame(['title' => 'Test Title'], $result['data']);
+    static::assertSame(['recipient' => $this->fundingCase->getRecipientContactId()], $result['data']);
   }
 
   public function testInvalidFundingCaseId(): void {

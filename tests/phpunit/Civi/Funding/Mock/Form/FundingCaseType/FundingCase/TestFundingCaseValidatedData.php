@@ -24,7 +24,6 @@ use Civi\Funding\Form\FundingCase\ValidatedFundingCaseDataInterface;
 /**
  * @phpstan-type testValidatedDataT array<string, mixed>&array{
  *   action: string,
- *   title: string,
  *   recipient: int,
  * }
  */
@@ -45,10 +44,6 @@ final class TestFundingCaseValidatedData implements ValidatedFundingCaseDataInte
 
   public function getAction(): string {
     return $this->data['action'];
-  }
-
-  public function getTitle(): string {
-    return $this->data['title'];
   }
 
   public function getRecipientContactId(): int {

@@ -140,9 +140,9 @@ ENGINE=InnoDB;
 -- *******************************************************/
 CREATE TABLE `civicrm_funding_case` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique FundingCase ID',
+  `identifier` varchar(255) NOT NULL COMMENT 'Unique generated identifier',
   `funding_program_id` int unsigned NOT NULL COMMENT 'FK to FundingProgram',
   `funding_case_type_id` int unsigned NOT NULL COMMENT 'FK to FundingCaseType',
-  `title` varchar(255),
   `status` varchar(64) NOT NULL,
   `creation_date` timestamp NOT NULL,
   `modification_date` timestamp NOT NULL,
@@ -150,6 +150,7 @@ CREATE TABLE `civicrm_funding_case` (
   `recipient_contact_id` int unsigned NOT NULL COMMENT 'FK to Contact',
   `amount_approved` decimal(10,2),
   PRIMARY KEY (`id`),
+  UNIQUE INDEX `UI_identifier`(identifier),
   CONSTRAINT FK_civicrm_funding_case_funding_program_id FOREIGN KEY (`funding_program_id`) REFERENCES `civicrm_funding_program`(`id`) ON DELETE RESTRICT,
   CONSTRAINT FK_civicrm_funding_case_funding_case_type_id FOREIGN KEY (`funding_case_type_id`) REFERENCES `civicrm_funding_case_type`(`id`) ON DELETE RESTRICT,
   CONSTRAINT FK_civicrm_funding_case_creation_contact_id FOREIGN KEY (`creation_contact_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE RESTRICT,

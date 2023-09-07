@@ -96,7 +96,6 @@ final class ApproveActionTest extends TestCase {
   public function test(): void {
     $this->action
       ->setId(FundingCaseFactory::DEFAULT_ID)
-      ->setTitle('title')
       ->setAmount(12.34);
 
     $fundingCase = FundingCaseFactory::createFundingCase();
@@ -122,7 +121,6 @@ final class ApproveActionTest extends TestCase {
     $this->approveHandlerMock->expects(static::once())->method('handle')
       ->with(new FundingCaseApproveCommand(
         $fundingCase,
-        'title',
         12.34,
         $statusList,
         $fundingCaseType,

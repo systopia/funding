@@ -75,7 +75,7 @@ final class RemoteFundingTransferContractTest extends AbstractRemoteFundingHeadl
     $values = $result->first();
     $expected = [
       'funding_case_id' => $fundingCase->getId(),
-      'title' => 'Funding Case Title',
+      'identifier' => $fundingCase->getIdentifier(),
       'amount_approved' => 12.34,
       'payout_process_id' => $payoutProcess->getId(),
       'amount_paid_out' => 0.0,

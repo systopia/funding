@@ -35,17 +35,10 @@ use Webmozart\Assert\Assert;
 
 /**
  * @method $this setAmount(float $amount)
- * @method $this setTitle(string $title)
  */
 class ApproveAction extends AbstractAction {
 
   use IdParameterTrait;
-
-  /**
-   * @var string
-   * @required
-   */
-  protected ?string $title = NULL;
 
   /**
    * @var mixed
@@ -87,7 +80,6 @@ class ApproveAction extends AbstractAction {
    * @inheritDoc
    */
   public function _run(Result $result): void {
-    Assert::notNull($this->title);
     Assert::greaterThan($this->amount, 0);
     $fundingCase = $this->fundingCaseManager->get($this->getId());
     Assert::notNull($fundingCase, E::ts('Funding case with ID "%1" not found', [1 => $this->getId()]));
@@ -101,7 +93,6 @@ class ApproveAction extends AbstractAction {
 
     $command = new FundingCaseApproveCommand(
       $fundingCase,
-      $this->title,
       $this->amount,
       $this->applicationProcessManager->getStatusListByFundingCaseId($fundingCase->getId()),
       $fundingCaseType,

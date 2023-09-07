@@ -123,7 +123,6 @@ fundingModule.controller('fundingCaseCtrl', [
     }
 
     $scope.approve = {
-      title: fundingCase.title,
       amount: $scope.amountRequestedEligible,
     };
     let $approveModal = null;
@@ -134,13 +133,12 @@ fundingModule.controller('fundingCaseCtrl', [
       $approveModal.modal({backdrop: 'static'});
     };
     $scope.approveSubmit = function () {
-      if (!document.getElementById('approve-title').reportValidity() ||
-          !document.getElementById('approve-amount').reportValidity()) {
+      if (!document.getElementById('approve-amount').reportValidity()) {
         return new Promise((resolve) => resolve(false));
       }
 
       $approveModal.modal('hide');
-      return withOverlay(crmStatus({}, fundingCaseService.approve(fundingCase.id, $scope.approve.title, $scope.approve.amount)
+      return withOverlay(crmStatus({}, fundingCaseService.approve(fundingCase.id, $scope.approve.amount)
           .then(onFundingCaseUpdate)
       ));
     };

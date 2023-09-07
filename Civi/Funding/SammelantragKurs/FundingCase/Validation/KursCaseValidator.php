@@ -46,7 +46,6 @@ final class KursCaseValidator extends AbstractFundingCaseValidator {
     return FundingCaseValidationResult::newValid(new KursCaseValidatedData(
       // @phpstan-ignore-next-line
       $validatedData,
-      $fundingCase->getTitle() ?? '',
     ));
   }
 
@@ -64,20 +63,7 @@ final class KursCaseValidator extends AbstractFundingCaseValidator {
     return FundingCaseValidationResult::newValid(new KursCaseValidatedData(
       // @phpstan-ignore-next-line
       $validatedData,
-      $this->generateTitle($fundingProgram, $fundingCaseType),
     ));
-  }
-
-  private function generateTitle(
-    FundingProgramEntity $fundingProgram,
-    FundingCaseTypeEntity $fundingCaseType
-  ): string {
-    return sprintf(
-      '%s-%s-%s',
-      date('Y'),
-      $fundingProgram->getAbbreviation(),
-      $fundingCaseType->getAbbreviation(),
-    );
   }
 
 }

@@ -80,11 +80,11 @@ final class RemoteFundingCaseInfoTest extends AbstractRemoteFundingHeadlessTestC
     $values = $result->first();
     $expected = [
       'funding_case_id' => $fundingCase->getId(),
+      'funding_case_identifier' => $fundingCase->getIdentifier(),
       'funding_case_permissions' => ['application_case_perm'],
       'funding_case_status' => $fundingCase->getStatus(),
       'funding_case_creation_date' => $fundingCase->getCreationDate()->format('Y-m-d H:i:s'),
       'funding_case_modification_date' => $fundingCase->getModificationDate()->format('Y-m-d H:i:s'),
-      'funding_case_title' => 'Funding Case Title',
       'funding_case_amount_approved' => 12.34,
       'funding_case_transfer_contract_uri'
       => 'http://localhost/civicrm/funding/remote/transfer-contract/download?fundingCaseId=' . $fundingCase->getId(),

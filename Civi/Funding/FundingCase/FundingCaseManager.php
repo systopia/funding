@@ -27,6 +27,7 @@ use Civi\Funding\Event\FundingCase\FundingCaseDeletedEvent;
 use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
 use Civi\Funding\FileTypeNames;
 use Civi\Funding\FundingAttachmentManagerInterface;
+use Civi\Funding\Util\Uuid;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
 use Civi\RemoteTools\Api4\Query\ConditionInterface;
@@ -76,7 +77,6 @@ class FundingCaseManager {
    *   funding_program: \Civi\Funding\Entity\FundingProgramEntity,
    *   funding_case_type: \Civi\Funding\Entity\FundingCaseTypeEntity,
    *   recipient_contact_id: int,
-   *   title?: string|null,
    * } $values
    *
    * @throws \CRM_Core_Exception
@@ -84,11 +84,12 @@ class FundingCaseManager {
   public function create(int $contactId, array $values): FundingCaseEntity {
     $now = date('Y-m-d H:i:s');
     $fundingCase = FundingCaseEntity::fromArray([
+      // Initialize with random UUID
+      'identifier' => Uuid::generateRandom(),
       'funding_program_id' => $values['funding_program']->getId(),
       'funding_case_type_id' => $values['funding_case_type']->getId(),
       'recipient_contact_id' => $values['recipient_contact_id'],
       'status' => 'open',
-      'title' => $values['title'] ?? NULL,
       'creation_date' => $now,
       'modification_date' => $now,
       'creation_contact_id' => $contactId,

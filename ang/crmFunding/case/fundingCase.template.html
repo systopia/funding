@@ -11,10 +11,6 @@
                 </div>
                 <div class="modal-body">
                     <div>
-                        <label for="approve-title">{{ ts('Title') }}</label>
-                        <input id="approve-title" type="text" ng-maxlength="255" ng-model="approve.title" ng-required="true"/>
-                    </div>
-                    <div>
                         <label for="approve-amount">{{ ts('Amount') }}</label>
                         <input id="approve-amount" type="number" min="0.01" step="0.01" ng-model="approve.amount" ng-required="true"/>
                         {{ currencySymbol }}
@@ -28,7 +24,7 @@
         </div>
     </div>
 
-    <h1 crm-page-title>{{ ts('Funding case: %1', {1: fundingCase.title || ts('Untitled')}) }}</h1>
+    <h1 crm-page-title>{{ ts('Funding Case: %1', {1: fundingCase.identifier}) }}</h1>
 
     <div>
         <label>{{ ts('Status' )}}</label>
@@ -45,12 +41,6 @@
     <div>
         <label>{{ ts('Recipient') }}</label>
         {{ recipientContact.display_name }}
-    </div>
-    <div>
-        <editable-field label="ts('Title')" type="text"
-                        value="fundingCase.title"
-                        empty-value-display="{{ ts('Untitled') }}"
-                        e-ng-required="true"></editable-field>
     </div>
     <div>
         <label>{{ ts('Amount Requested Eligible') }}</label>
