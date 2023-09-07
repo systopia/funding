@@ -244,7 +244,11 @@ fundingModule.directive('fundingApplicationEditor', function() {
 
         $scope.addTo = function (path, initialData = {}) {
           $scope.inserted = _4.cloneDeep(initialData);
-          const array = _4.get($scope.data, path);
+          let array = _4.get($scope.data, path);
+          if (!array) {
+            array = [];
+            _4.set($scope.data, path, array);
+          }
           array.push($scope.inserted);
         };
 
