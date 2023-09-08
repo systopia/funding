@@ -32,7 +32,7 @@ final class KursApplicationActionsDeterminer extends ApplicationProcessActionsDe
 
   private const STATUS_PERMISSION_ACTIONS_MAP = [
     NULL => [
-      'application_create' => ['save', 'save&new'],
+      'application_create' => ['save', 'save&new', 'save&copy'],
     ],
     'new' => [
       'application_modify' => ['save'],

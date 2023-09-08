@@ -64,4 +64,16 @@ final class KursApplicationFormDataFactory implements ApplicationFormDataFactory
     return $data;
   }
 
+  /**
+   * @inheritDoc
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function createFormDataForCopy(
+    ApplicationProcessEntity $applicationProcess,
+    FundingCaseEntity $fundingCase
+  ): array {
+    return $this->createFormData($applicationProcess, $fundingCase);
+  }
+
 }

@@ -49,6 +49,8 @@ final class AVK1FormDataFactory implements ApplicationFormDataFactoryInterface {
 
   /**
    * @inheritDoc
+   *
+   * @throws \CRM_Core_Exception
    */
   public function createFormData(ApplicationProcessEntity $applicationProcess, FundingCaseEntity $fundingCase): array {
     $data = [];
@@ -63,6 +65,18 @@ final class AVK1FormDataFactory implements ApplicationFormDataFactoryInterface {
     $data['projektunterlagen'] = $this->avk1ProjektunterlagenFactory->createProjektunterlagen($applicationProcess);
 
     return $data;
+  }
+
+  /**
+   * @inheritDoc
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function createFormDataForCopy(
+    ApplicationProcessEntity $applicationProcess,
+    FundingCaseEntity $fundingCase
+  ): array {
+    return $this->createFormData($applicationProcess, $fundingCase);
   }
 
 }

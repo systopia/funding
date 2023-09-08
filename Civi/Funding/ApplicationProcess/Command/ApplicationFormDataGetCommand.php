@@ -27,9 +27,16 @@ final class ApplicationFormDataGetCommand {
   use ApplicationProcessEntityBundleTrait;
 
   /**
+   * Data is going to be used as initial data for a new application.
+   */
+  public const FLAG_COPY = 1;
+
+  /**
    * @phpstan-var array<int, \Civi\Funding\Entity\FullApplicationProcessStatus>
    */
   private array $applicationProcessStatusList;
+
+  private int $flags;
 
   /**
    * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $applicationProcessStatusList
@@ -37,10 +44,12 @@ final class ApplicationFormDataGetCommand {
    */
   public function __construct(
     ApplicationProcessEntityBundle $applicationProcessBundle,
-    array $applicationProcessStatusList
+    array $applicationProcessStatusList,
+    int $flags = 0
   ) {
     $this->applicationProcessBundle = $applicationProcessBundle;
     $this->applicationProcessStatusList = $applicationProcessStatusList;
+    $this->flags = $flags;
   }
 
   /**
@@ -49,6 +58,10 @@ final class ApplicationFormDataGetCommand {
    */
   public function getApplicationProcessStatusList(): array {
     return $this->applicationProcessStatusList;
+  }
+
+  public function hasFlag(int $flag): bool {
+    return 0 !== ($this->flags & $flag);
   }
 
 }

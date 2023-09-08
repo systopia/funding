@@ -77,4 +77,33 @@ final class ApplicationProcessFixture {
     return ApplicationProcessEntity::fromArray($applicationProcessValues)->reformatDates();
   }
 
+  /**
+   * @phpstan-param array<string, mixed> $values
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public static function addFixtureForTestFundingCaseType(
+    int $fundingCaseId,
+    array $values = []
+  ): ApplicationProcessEntity {
+    $values += [
+      'start_date' => '2023-04-05',
+      'end_date' => '2023-04-06',
+      'request_data' => ['resources' => 123.45],
+    ];
+
+    $applicationProcess = self::addFixture($fundingCaseId, $values);
+
+    $externalFile = ExternalFileFixture::addFixture([
+      'identifier' => 'FundingApplicationProcess.' . $applicationProcess->getId() . ':file',
+    ]);
+    EntityFileFixture::addFixture(
+      'civicrm_funding_application_process',
+      $applicationProcess->getId(),
+      $externalFile->getFileId(),
+    );
+
+    return $applicationProcess;
+  }
+
 }

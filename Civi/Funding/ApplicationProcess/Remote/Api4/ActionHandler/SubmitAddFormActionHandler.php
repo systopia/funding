@@ -90,20 +90,33 @@ final class SubmitAddFormActionHandler implements ActionHandlerInterface {
       ];
     }
 
-    return [
-      'action' => $this->isShouldAddNext($submitResult->getValidatedData()->getAction())
-      ? RemoteSubmitResponseActions::RELOAD_FORM
-      : RemoteSubmitResponseActions::CLOSE_FORM,
+    Assert::notNull($submitResult->getApplicationProcessBundle());
+    $result = [
+      'action' => RemoteSubmitResponseActions::CLOSE_FORM,
       'message' => E::ts('Saved'),
       'files' => array_map(
         fn (ExternalFileEntity $file) => $file->getUri(),
         $submitResult->getFiles(),
       ),
     ];
+
+    if ($this->isShouldAddNext($submitResult->getValidatedData()->getAction())) {
+      $result['action'] = RemoteSubmitResponseActions::RELOAD_FORM;
+    }
+    elseif ($this->isShouldAddNextAsCopy($submitResult->getValidatedData()->getAction())) {
+      $result['action'] = RemoteSubmitResponseActions::RELOAD_FORM;
+      $result['copyDataFromId'] = $submitResult->getApplicationProcessBundle()->getApplicationProcess()->getId();
+    }
+
+    return $result;
   }
 
   private function isShouldAddNext(string $action): bool {
     return str_ends_with($action, '&new');
+  }
+
+  private function isShouldAddNextAsCopy(string $action): bool {
+    return str_ends_with($action, '&copy');
   }
 
 }

@@ -36,4 +36,13 @@ interface ApplicationFormDataFactoryInterface {
    */
   public function createFormData(ApplicationProcessEntity $applicationProcess, FundingCaseEntity $fundingCase): array;
 
+  /**
+   * @phpstan-return array<string, mixed> JSON serializable.
+   *   Form data to use when creating an application as copy of an existing one.
+   */
+  public function createFormDataForCopy(
+    ApplicationProcessEntity $applicationProcess,
+    FundingCaseEntity $fundingCase
+  ): array;
+
 }
