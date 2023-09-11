@@ -195,6 +195,7 @@ final class GetFieldsAction extends BasicGetFieldsAction {
         'name' => 'funding_program_title',
         'title' => 'funding_program_title',
         'data_type' => 'String',
+        'operators' => ['=', '!=', 'LIKE', 'CONTAINS'],
       ],
       [
         'name' => 'application_process_id',

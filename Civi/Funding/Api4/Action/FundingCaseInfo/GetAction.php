@@ -31,11 +31,37 @@ use Civi\RemoteTools\Api4\Query\Comparison;
 
 final class GetAction extends AbstractGetAction {
 
-  use ArrayQueryActionTrait;
+  use ArrayQueryActionTrait {
+    ArrayQueryActionTrait::filterCompare as traitFilterCompare;
+  }
 
   private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
 
   private FundingCaseManager $fundingCaseManager;
+
+  /**
+   * @phpstan-param array<string, mixed> $row
+   * @phpstan-param array<mixed> $condition
+   *
+   * @return bool
+   *
+   * @throws \Civi\API\Exception\NotImplementedException
+   *
+   * @see ArrayQueryActionTrait::filterCompare()
+   */
+  public static function filterCompare($row, $condition) {
+    if (is_string($row[$condition[0] ?? NULL] ?? NULL) && 'LIKE' === ($condition[1] ?? NULL)) {
+      $expected = $condition[2] ?? NULL;
+      if (is_string($expected) && str_starts_with($expected, '%') && str_ends_with($expected, '%')) {
+        // Make case-insensitive comparison if we're looking for "%<something>%".
+        // This makes searching (in Drupal Views) behaving as accustomed to users.
+        $condition[1] = 'CONTAINS';
+        $condition[2] = trim($expected, '%');
+      }
+    }
+
+    return static::traitFilterCompare($row, $condition);
+  }
 
   public function __construct(
     ApplicationProcessBundleLoader $applicationProcessBundleLoader,
