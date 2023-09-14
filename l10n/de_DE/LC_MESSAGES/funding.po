@@ -380,6 +380,7 @@ msgstr "Förderantragskommentar"
 #: ang/crmFunding/application/applicationEditor.template.html
 #: ang/crmFunding/case/fundingCase.js
 #: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingIJB/ijbApplicationEditor.template.html
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 msgid "Validation failed"
 msgstr "Validierung fehlgeschlagen"
@@ -924,12 +925,14 @@ msgstr "Abbrechen"
 
 #: ang/crmFunding/application/applicationEditor.template.html
 #: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingIJB/ijbApplicationEditor.template.html
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 msgid "Reviewers"
 msgstr "Prüfer*innen"
 
 #: ang/crmFunding/application/applicationEditor.template.html
 #: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingIJB/ijbApplicationEditor.template.html
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 msgid "General"
 msgstr "Allgemein"
@@ -937,6 +940,7 @@ msgstr "Allgemein"
 #: ang/crmFunding/application/applicationEditor.template.html
 #: ang/crmFunding/case/fundingCase.template.html
 #: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingIJB/ijbApplicationEditor.template.html
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
@@ -949,12 +953,14 @@ msgstr "Status"
 #: ang/crmFunding/application/history/applicationProcessActivity.directive.js
 #: ang/crmFunding/case/fundingCase.template.html
 #: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingIJB/ijbApplicationEditor.template.html
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 msgid "Unknown"
 msgstr "Unbekannt"
 
 #: ang/crmFunding/application/applicationEditor.template.html
 #: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingIJB/ijbApplicationEditor.template.html
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 #: managed/CustomGroupFundingApplicationTask.mgd.php
 msgid "Review Content"
@@ -962,6 +968,7 @@ msgstr "Fachliche Prüfung"
 
 #: ang/crmFunding/application/applicationEditor.template.html
 #: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingIJB/ijbApplicationEditor.template.html
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 #: managed/CustomGroupFundingApplicationTask.mgd.php
 msgid "Review Calculative"
@@ -970,6 +977,7 @@ msgstr "Rechnerische Prüfung"
 #: ang/crmFunding/application/applicationEditor.template.html
 #: ang/crmFunding/case/fundingCase.template.html
 #: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingIJB/ijbApplicationEditor.template.html
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCases.mgd.php
@@ -980,6 +988,7 @@ msgstr "Erstellungsdatum"
 #: ang/crmFunding/application/applicationEditor.template.html
 #: ang/crmFunding/case/fundingCase.template.html
 #: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingIJB/ijbApplicationEditor.template.html
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCases.mgd.php
@@ -990,6 +999,7 @@ msgstr "Änderungsdatum"
 #: ang/crmFunding/application/applicationEditor.template.html
 #: ang/crmFunding/case/fundingCase.template.html
 #: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingIJB/ijbApplicationEditor.template.html
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCases.mgd.php
@@ -999,6 +1009,7 @@ msgstr "Empfänger"
 
 #: ang/crmFunding/application/applicationEditor.template.html
 #: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingIJB/ijbApplicationEditor.template.html
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
 msgid "Amount Requested"
@@ -1196,6 +1207,14 @@ msgstr "Berechtigungen"
 #: ang/crmFunding/form/jsonFormsControl.directive.js
 msgid "empty"
 msgstr "leer"
+
+#: ang/crmFunding/form/editableField.directive.js
+msgid "Yes"
+msgstr "Ja"
+
+#: ang/crmFunding/form/editableField.directive.js
+msgid "No"
+msgstr "Nein"
 
 #: ang/crmFunding/form/fundingSelectPermissions.directive.js
 msgid "Combining application permissions with other ones is not possible."
