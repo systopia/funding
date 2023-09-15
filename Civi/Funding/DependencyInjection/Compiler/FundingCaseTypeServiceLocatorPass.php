@@ -729,7 +729,13 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         foreach ($this->getFundingCaseTypes($container, $id, $attributes) as $fundingCaseType) {
           if (isset($services[$fundingCaseType])) {
             throw new RuntimeException(
-              sprintf('Duplicate service with tag "%s" and funding case type "%s"', $tagName, $fundingCaseType)
+              sprintf(
+                'Duplicate service with tag "%s" and funding case type "%s" (IDs: %s, %s)',
+                $tagName,
+                $fundingCaseType,
+                (string) $services[$fundingCaseType],
+                $id,
+              )
             );
           }
           $services[$fundingCaseType] = new Reference($id);
