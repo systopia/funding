@@ -27,6 +27,7 @@ use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\JsonSchema\JsonSchemaComment;
 use Civi\Funding\Form\NonCombinedApplicationJsonSchemaFactoryInterface;
 use Civi\Funding\Form\SonstigeAktivitaet\JsonSchema\AVK1JsonSchema;
+use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
 use Civi\Funding\SonstigeAktivitaet\Actions\AVK1ApplicationActionsDeterminer;
 use Civi\Funding\SonstigeAktivitaet\Traits\AVK1SupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
@@ -36,6 +37,8 @@ use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 class AVK1JsonSchemaFactory implements NonCombinedApplicationJsonSchemaFactoryInterface {
 
   use AVK1SupportedFundingCaseTypesTrait;
+
+  use HasReviewPermissionTrait;
 
   private AVK1ApplicationActionsDeterminer $actionsDeterminer;
 
@@ -121,14 +124,6 @@ class AVK1JsonSchemaFactory implements NonCombinedApplicationJsonSchemaFactoryIn
       $extraProperties,
       $extraKeywords,
     );
-  }
-
-  /**
-   * @phpstan-param array<string> $permissions
-   */
-  private function hasReviewPermission(array $permissions): bool {
-    return in_array('review_content', $permissions, TRUE)
-      || in_array('review_calculative', $permissions, TRUE);
   }
 
 }

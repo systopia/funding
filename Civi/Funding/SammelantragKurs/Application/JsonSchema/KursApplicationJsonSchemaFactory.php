@@ -25,6 +25,7 @@ use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\JsonSchema\JsonSchemaComment;
 use Civi\Funding\Form\CombinedApplicationJsonSchemaFactoryInterface;
+use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
 use Civi\Funding\SammelantragKurs\Application\Actions\KursApplicationActionsDeterminer;
 use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
@@ -32,6 +33,8 @@ use Civi\RemoteTools\JsonSchema\JsonSchemaNull;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 
 final class KursApplicationJsonSchemaFactory implements CombinedApplicationJsonSchemaFactoryInterface {
+
+  use HasReviewPermissionTrait;
 
   use KursSupportedFundingCaseTypesTrait;
 
@@ -119,14 +122,6 @@ final class KursApplicationJsonSchemaFactory implements CombinedApplicationJsonS
       $extraProperties,
       $extraKeywords,
     );
-  }
-
-  /**
-   * @phpstan-param array<string> $permissions
-   */
-  private function hasReviewPermission(array $permissions): bool {
-    return in_array('review_content', $permissions, TRUE)
-      || in_array('review_calculative', $permissions, TRUE);
   }
 
 }

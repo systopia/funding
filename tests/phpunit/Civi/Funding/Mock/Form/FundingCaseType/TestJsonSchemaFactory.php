@@ -26,12 +26,15 @@ use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\NonCombinedApplicationJsonSchemaFactoryInterface;
 use Civi\Funding\Form\CombinedApplicationJsonSchemaFactoryInterface;
 use Civi\Funding\Mock\Form\FundingCaseType\Traits\TestSupportedFundingCaseTypesTrait;
+use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 
 // phpcs:disable Generic.Files.LineLength.TooLong
 class TestJsonSchemaFactory implements CombinedApplicationJsonSchemaFactoryInterface, NonCombinedApplicationJsonSchemaFactoryInterface {
 // phpcs:enable
+  use HasReviewPermissionTrait;
+
   use TestSupportedFundingCaseTypesTrait;
 
   /**
@@ -81,14 +84,6 @@ class TestJsonSchemaFactory implements CombinedApplicationJsonSchemaFactoryInter
     $extraKeywords = ['required' => array_keys($extraProperties)];
 
     return new TestJsonSchema($extraProperties, $extraKeywords);
-  }
-
-  /**
-   * @phpstan-param array<string> $permissions
-   */
-  private function hasReviewPermission(array $permissions): bool {
-    return in_array('review_content', $permissions, TRUE)
-      || in_array('review_calculative', $permissions, TRUE);
   }
 
 }
