@@ -40,8 +40,10 @@ final class AVK1SachkostenUiSchema extends JsonFormsGroup {
           'removeButtonLabel' => 'Sachkosten entfernen',
         ]
       ),
-      new JsonFormsControl('#/properties/kosten/properties/sachkostenGesamt',
-        'Sachkosten gesamt in ' . $currency),
+      new JsonFormsControl(
+        '#/properties/kosten/properties/sachkostenGesamt',
+        'Sachkosten gesamt in ' . $currency
+      ),
     ];
 
     parent::__construct(

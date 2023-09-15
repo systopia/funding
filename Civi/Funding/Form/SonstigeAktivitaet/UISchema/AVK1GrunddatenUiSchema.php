@@ -30,12 +30,7 @@ final class AVK1GrunddatenUiSchema extends JsonFormsCloseableGroup {
     $elements = [
       new JsonFormsControl('#/properties/titel', 'Titel'),
       new JsonFormsControl(
-        '#/properties/kurzbeschreibungDesInhalts',
-        'Kurzbeschreibung des Inhalts',
-        NULL,
-        NULL,
-        NULL,
-        [
+        '#/properties/kurzbeschreibungDesInhalts', 'Kurzbeschreibung des Inhalts', NULL, [
           'multi' => TRUE,
           'placeholder' => 'Maximal 500 Zeichen',
         ]

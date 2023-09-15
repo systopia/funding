@@ -26,12 +26,15 @@ final class KursBeschreibungUiSchema extends JsonFormsCloseableGroup {
 
   public function __construct() {
     parent::__construct('Beschreibung des Vorhabens', [
-      new JsonFormsControl('#/properties/beschreibung/properties/ziele',
-        'Welche Ziele hat die Veranstaltung? (Mehrfachauswahl möglich)'),
-      new JsonFormsControl('#/properties/beschreibung/properties/bildungsanteil',
-        'Wie hoch ist der Bildungsanteil des Vorhabens in %?'),
-      new JsonFormsControl('#/properties/beschreibung/properties/veranstaltungsort',
-        'Wo findet die Veranstaltung statt?'),
+      new JsonFormsControl(
+        '#/properties/beschreibung/properties/ziele', 'Welche Ziele hat die Veranstaltung? (Mehrfachauswahl möglich)'
+      ),
+      new JsonFormsControl(
+        '#/properties/beschreibung/properties/bildungsanteil', 'Wie hoch ist der Bildungsanteil des Vorhabens in %?'
+      ),
+      new JsonFormsControl(
+        '#/properties/beschreibung/properties/veranstaltungsort', 'Wo findet die Veranstaltung statt?'
+      ),
     ]);
   }
 

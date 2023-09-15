@@ -48,8 +48,7 @@ final class AVK1UiSchema extends JsonFormsGroup {
           // Abschnitt I.1
           new JsonFormsGroup('Unterkunft und Verpflegung', [
             new JsonFormsControl(
-              '#/properties/kosten/properties/unterkunftUndVerpflegung',
-              'Unterkunft und Verpflegung in ' . $currency
+              '#/properties/kosten/properties/unterkunftUndVerpflegung', 'Unterkunft und Verpflegung in ' . $currency
             ),
           ], 'Hier können Sie die Kosten für Unterbringung und Verpflegung angeben.'),
           // Abschnitt I.2
@@ -68,8 +67,9 @@ final class AVK1UiSchema extends JsonFormsGroup {
             ),
           ], 'Nur bei internationalen Maßnahmen'),
           new JsonFormsGroup('Gesamtkosten', [
-            new JsonFormsControl('#/properties/kosten/properties/gesamtkosten',
-              'Gesamtkosten in ' . $currency),
+            new JsonFormsControl(
+              '#/properties/kosten/properties/gesamtkosten', 'Gesamtkosten in ' . $currency
+            ),
           ]),
         ]),
         // Abschnitt II
@@ -77,15 +77,13 @@ final class AVK1UiSchema extends JsonFormsGroup {
           // Abschnitt II.2
           new JsonFormsGroup('Teilnehmer*innenbeiträge', [
             new JsonFormsControl(
-              '#/properties/finanzierung/properties/teilnehmerbeitraege',
-              'Teilnehmer*innenbeiträge in ' . $currency
+              '#/properties/finanzierung/properties/teilnehmerbeitraege', 'Teilnehmer*innenbeiträge in ' . $currency
             ),
           ], 'Bitte geben Sie an, wie viel durch die Teilnehmer*innenbeiträge eingenommen wird'),
           // Abschnitt II.2
           new JsonFormsGroup('Eigenmittel', [
             new JsonFormsControl(
-              '#/properties/finanzierung/properties/eigenmittel',
-              'Eigenmittel in ' . $currency
+              '#/properties/finanzierung/properties/eigenmittel', 'Eigenmittel in ' . $currency
             ),
           ], 'Bitte geben Sie hier die Eigenmittel an, die Sie für Ihr Vorhaben aufbringen können.'),
           // Abschnitt II.3
@@ -94,36 +92,54 @@ final class AVK1UiSchema extends JsonFormsGroup {
           new AVK1SonstigeMittelUiSchema($currency),
           new JsonFormsGroup('Gesamtfinanzierung und beantragter Zuschuss', [
             // Gesamtmittel ohne Zuschuss
-            new JsonFormsControl('#/properties/finanzierung/properties/gesamtmittel',
-              'Gesamtfinanzierung in ' . $currency),
+            new JsonFormsControl(
+              '#/properties/finanzierung/properties/gesamtmittel', 'Gesamtfinanzierung in ' . $currency
+            ),
             // Abschnitt II.5
-            new JsonFormsControl('#/properties/finanzierung/properties/beantragterZuschuss',
-              'Beantragter Zuschuss in ' . $currency),
+            new JsonFormsControl(
+              '#/properties/finanzierung/properties/beantragterZuschuss', 'Beantragter Zuschuss in ' . $currency
+            ),
           ]),
         ]),
       ]),
       // Beschreibung des Vorhabens (not part of default "AV-K1")
       new JsonFormsCloseableGroup('Beschreibung des Vorhabens', [
-        new JsonFormsControl('#/properties/beschreibung/properties/thematischeSchwerpunkte',
+        new JsonFormsControl(
+          '#/properties/beschreibung/properties/thematischeSchwerpunkte',
           'Welche thematischen Schwerpunkte hat die Veranstaltung?',
-          NULL, NULL, NULL, ['multi' => TRUE]),
-        new JsonFormsControl('#/properties/beschreibung/properties/geplanterAblauf',
-        'Wie ist der Ablauf der Veranstaltung geplant?',
-          NULL, NULL, NULL, ['multi' => TRUE]),
-        new JsonFormsControl('#/properties/beschreibung/properties/beitragZuPolitischerJugendbildung',
+          NULL,
+          ['multi' => TRUE]
+        ),
+        new JsonFormsControl(
+          '#/properties/beschreibung/properties/geplanterAblauf',
+          'Wie ist der Ablauf der Veranstaltung geplant?',
+          NULL,
+          ['multi' => TRUE]
+        ),
+        new JsonFormsControl(
+          '#/properties/beschreibung/properties/beitragZuPolitischerJugendbildung',
           'Welchen Beitrag leistet die Veranstaltung zur Politischen Jugendbildung?',
-          NULL, NULL, NULL, ['multi' => TRUE]),
-        new JsonFormsControl('#/properties/beschreibung/properties/zielgruppe',
+          NULL,
+          ['multi' => TRUE]
+        ),
+        new JsonFormsControl(
+          '#/properties/beschreibung/properties/zielgruppe',
           'Welche Zielgruppe soll mit der Veranstaltung erreicht werden (Zusammensetzung, Alter)?',
-          NULL, NULL, NULL, ['multi' => TRUE]),
-        new JsonFormsControl('#/properties/beschreibung/properties/ziele',
-          'Welche Ziele hat die Veranstaltung? (Mehrfachauswahl möglich)'),
-        new JsonFormsControl('#/properties/beschreibung/properties/bildungsanteil',
-          'Wie hoch ist der Bildungsanteil des Vorhabens in %?'),
-        new JsonFormsControl('#/properties/beschreibung/properties/veranstaltungsort',
-          'Wo findet die Veranstaltung statt?'),
-        new JsonFormsControl('#/properties/beschreibung/properties/partner',
-          'Mit welcher Schule oder Organisation wird kooperiert?'),
+          NULL,
+          ['multi' => TRUE]
+        ),
+        new JsonFormsControl(
+          '#/properties/beschreibung/properties/ziele', 'Welche Ziele hat die Veranstaltung? (Mehrfachauswahl möglich)'
+        ),
+        new JsonFormsControl(
+          '#/properties/beschreibung/properties/bildungsanteil', 'Wie hoch ist der Bildungsanteil des Vorhabens in %?'
+        ),
+        new JsonFormsControl(
+          '#/properties/beschreibung/properties/veranstaltungsort', 'Wo findet die Veranstaltung statt?'
+        ),
+        new JsonFormsControl(
+          '#/properties/beschreibung/properties/partner', 'Mit welcher Schule oder Organisation wird kooperiert?'
+        ),
       ]),
       new JsonFormsCloseableGroup('Projektunterlagen', [
         new JsonFormsArray('#/properties/projektunterlagen', 'Dokumente',
@@ -131,7 +147,7 @@ final class AVK1UiSchema extends JsonFormsGroup {
           ' hochgeladen werden.',
           [
             new JsonFormsHidden('#/properties/_identifier'),
-            new JsonFormsControl('#/properties/datei', 'Datei', NULL, NULL, NULL, ['format' => 'file']),
+            new JsonFormsControl('#/properties/datei', 'Datei', NULL, ['format' => 'file']),
             new JsonFormsControl('#/properties/beschreibung', 'Beschreibung'),
           ],
           [

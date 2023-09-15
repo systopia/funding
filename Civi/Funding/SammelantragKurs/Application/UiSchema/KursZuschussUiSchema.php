@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\SammelantragKurs\Application\UiSchema;
 
+use Civi\Funding\SammelantragKurs\Application\JsonSchema\KursZuschussJsonSchema;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
 use Civi\RemoteTools\JsonForms\JsonFormsMarkup;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCloseableGroup;
@@ -35,14 +36,16 @@ wird lediglich der benötigte Zuschuss für den Antrag übernommen.
 EOD
       ),
       new JsonFormsGroup('Teilnehmendenkosten', [
-        new JsonFormsMarkup('Teilnehmendenfestbetrag: 40 ' . $currency),
+        new JsonFormsMarkup(sprintf(
+          'Teilnehmendenfestbetrag: %s %s',
+          KursZuschussJsonSchema::TEILNEHMERFESTBETRAG,
+          $currency
+        )),
         new JsonFormsControl(
-          '#/properties/zuschuss/properties/teilnehmerkostenMax',
-          'Maximaler Zuschuss in ' . $currency,
+          '#/properties/zuschuss/properties/teilnehmerkostenMax', 'Maximaler Zuschuss in ' . $currency,
         ),
         new JsonFormsControl(
-          '#/properties/zuschuss/properties/teilnehmerkosten',
-          'Benötigter Zuschuss in ' . $currency,
+          '#/properties/zuschuss/properties/teilnehmerkosten', 'Benötigter Zuschuss in ' . $currency,
         ),
       ], <<<EOD
 An jedem Programmtag kann je Teilnehmer*in der Teilnehmendenfestbetrag
@@ -53,7 +56,11 @@ Programmtage.
 EOD
       ),
       new JsonFormsGroup('Fahrtkosten', [
-        new JsonFormsMarkup('Fahrtkostenfestbetrag: 60 ' . $currency),
+        new JsonFormsMarkup(sprintf(
+          'Fahrtkostenfestbetrag: %s %s',
+          KursZuschussJsonSchema::FAHRTKOSTENFESTBETRAG,
+          $currency
+        )),
         new JsonFormsControl('#/properties/zuschuss/properties/fahrtkostenMax', 'Maximaler Zuschuss in ' . $currency),
         new JsonFormsControl('#/properties/zuschuss/properties/fahrtkosten', 'Benötigter Zuschuss in ' . $currency),
       ], <<<EOD
@@ -63,7 +70,11 @@ anfallen. Dieser Festbetrag ist für jede*n Teilnehmer*in nur einmal anwendbar.
 EOD
       ),
       new JsonFormsGroup('Honorarkosten', [
-        new JsonFormsMarkup('Honorarkostenfestbetrag: 305 ' . $currency),
+        new JsonFormsMarkup(sprintf(
+          'Honorarkostenfestbetrag: %s %s',
+          KursZuschussJsonSchema::HONORARKOSTENFESTBETRAG,
+          $currency
+        )),
         new JsonFormsControl('#/properties/zuschuss/properties/honorarkostenMax', 'Maximaler Zuschuss in ' . $currency),
         new JsonFormsControl('#/properties/zuschuss/properties/honorarkosten', 'Benötigter Zuschuss in ' . $currency),
       ], <<<EOD

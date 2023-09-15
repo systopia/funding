@@ -39,8 +39,10 @@ final class AVK1HonorareUiSchema extends JsonFormsGroup {
         'addButtonLabel' => 'Honorar hinzufügen',
         'removeButtonLabel' => 'Honorar entfernen',
       ]),
-      new JsonFormsControl('#/properties/kosten/properties/honorareGesamt',
-        'Honorarkosten gesamt in ' . $currency),
+      new JsonFormsControl(
+        '#/properties/kosten/properties/honorareGesamt',
+        'Honorarkosten gesamt in ' . $currency
+      ),
     ];
 
     parent::__construct(

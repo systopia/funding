@@ -22,11 +22,6 @@ namespace Civi\Funding\SammelantragKurs\Application\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 use Webmozart\Assert\Assert;
 
-/**
- * This implements the JSON schema for an "AV-K1" form to apply for a funding
- * for a "Sonstige Aktivität" in the "Kinder- und Jugendplan des Bundes (KJP)".
- * Because it is a specific German form strings are not translated.
- */
 final class KursApplicationJsonSchema extends JsonSchemaObject {
 
   /**

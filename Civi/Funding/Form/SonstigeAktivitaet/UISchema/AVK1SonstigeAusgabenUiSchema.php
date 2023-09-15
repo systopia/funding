@@ -36,8 +36,9 @@ final class AVK1SonstigeAusgabenUiSchema extends JsonFormsGroup {
         'addButtonLabel' => 'Ausgabe hinzufügen',
         'removeButtonLabel' => 'Ausgabe entfernen',
       ]),
-      new JsonFormsControl('#/properties/kosten/properties/sonstigeAusgabenGesamt',
-        'Sonstige Ausgaben gesamt in ' . $currency),
+      new JsonFormsControl(
+        '#/properties/kosten/properties/sonstigeAusgabenGesamt', 'Sonstige Ausgaben gesamt in ' . $currency
+      ),
     ];
 
     parent::__construct(

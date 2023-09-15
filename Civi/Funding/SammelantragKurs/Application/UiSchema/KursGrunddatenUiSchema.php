@@ -30,15 +30,9 @@ final class KursGrunddatenUiSchema extends JsonFormsCloseableGroup {
     parent::__construct('Grunddaten', [
       new JsonFormsControl('#/properties/grunddaten/properties/titel', 'Titel'),
       new JsonFormsControl(
-        '#/properties/grunddaten/properties/kurzbeschreibungDerInhalte',
-        'Kurzbeschreibung der Kursinhalte',
-        NULL,
-        NULL,
-        NULL,
-        [
+        '#/properties/grunddaten/properties/kurzbeschreibungDerInhalte', 'Kurzbeschreibung der Kursinhalte', NULL, [
           'multi' => TRUE,
-          'placeholder'
-          => 'Kurzbeschreibung der Kursinhalte (maximal 500 Zeichen)',
+          'placeholder' => 'Kurzbeschreibung der Kursinhalte (maximal 500 Zeichen)',
         ]
       ),
       new JsonFormsArray('#/properties/grunddaten/properties/zeitraeume', 'Zeiträume', NULL, [
@@ -51,8 +45,7 @@ final class KursGrunddatenUiSchema extends JsonFormsCloseableGroup {
       new JsonFormsControl('#/properties/grunddaten/properties/programmtage', 'Programmtage'),
       new JsonFormsGroup('Teilnehmer*innen', [
         new JsonFormsControl(
-          '#/properties/grunddaten/properties/teilnehmer/properties/gesamt',
-          'Gesamtanzahl der Teilnehmer*innen',
+          '#/properties/grunddaten/properties/teilnehmer/properties/gesamt', 'Gesamtanzahl der Teilnehmer*innen',
         ),
         new JsonFormsControl('#/properties/grunddaten/properties/teilnehmer/properties/weiblich', 'davon weiblich'),
         new JsonFormsControl('#/properties/grunddaten/properties/teilnehmer/properties/divers', 'davon divers'),
@@ -62,8 +55,7 @@ final class KursGrunddatenUiSchema extends JsonFormsCloseableGroup {
           'davon in der Kinder- und Jugendhilfe (Multiplikator*innen-Seminare) tätig',
         ),
         new JsonFormsControl(
-          '#/properties/grunddaten/properties/teilnehmer/properties/referenten',
-          'davon Referent*innen',
+          '#/properties/grunddaten/properties/teilnehmer/properties/referenten', 'davon Referent*innen',
         ),
       ]),
       new JsonFormsControl('#/properties/grunddaten/properties/teilnehmertage', 'Teilnehmendentage'),
