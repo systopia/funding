@@ -41,10 +41,18 @@ final class ApplicationFormDataGetHandler implements ApplicationFormDataGetHandl
    * @inheritDoc
    */
   public function handle(ApplicationFormDataGetCommand $command): array {
-    $data = $this->formDataFactory->createFormData(
-      $command->getApplicationProcess(),
-      $command->getFundingCase(),
-    );
+    if ($command->hasFlag(ApplicationFormDataGetCommand::FLAG_COPY)) {
+      $data = $this->formDataFactory->createFormDataForCopy(
+        $command->getApplicationProcess(),
+        $command->getFundingCase(),
+      );
+    }
+    else {
+      $data = $this->formDataFactory->createFormData(
+        $command->getApplicationProcess(),
+        $command->getFundingCase(),
+      );
+    }
 
     // Perform calculations
     $result = $this->validateHandler->handle(new ApplicationFormValidateCommand(

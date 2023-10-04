@@ -48,6 +48,7 @@ final class DefaultApplicationProcessStatusDeterminerTest extends TestCase {
   public function provideInitialActions(): iterable {
     yield ['save', 'new'];
     yield ['save&new', 'new'];
+    yield ['save&copy', 'new'];
     yield ['apply', 'applied'];
   }
 

@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 
 use Civi\Api4\RemoteFundingApplicationProcess;
+use Civi\Funding\Fixtures\ApplicationProcessFixture;
 use Civi\PHPUnit\Traits\ArrayAssertTrait;
 
 /**
@@ -45,6 +46,22 @@ final class GetAddFormActionTest extends AbstractAddFormActionTestCase {
     static::assertIsArray($result['jsonSchema']);
     static::assertIsArray($result['uiSchema']);
     static::assertSame([], $result['data']);
+  }
+
+  public function testCopy(): void {
+    $this->initFixtures();
+    $applicationProcess = ApplicationProcessFixture::addFixtureForTestFundingCaseType($this->fundingCase->getId());
+
+    $action = RemoteFundingApplicationProcess::getAddForm()
+      ->setRemoteContactId($this->remoteContactId)
+      ->setFundingCaseId($this->fundingCase->getId())
+      ->setCopyDataFromId($applicationProcess->getId());
+
+    $result = $action->execute();
+    static::assertArrayHasSameKeys(['jsonSchema', 'uiSchema', 'data'], $result->getArrayCopy());
+    static::assertIsArray($result['jsonSchema']);
+    static::assertIsArray($result['uiSchema']);
+    static::assertSame($applicationProcess->getTitle(), $result['data']['title']);
   }
 
   public function testInvalidFundingCaseId(): void {

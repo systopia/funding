@@ -60,4 +60,14 @@ final class TestFormDataFactory implements ApplicationFormDataFactoryInterface {
     return $data;
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function createFormDataForCopy(
+    ApplicationProcessEntity $applicationProcess,
+    FundingCaseEntity $fundingCase
+  ): array {
+    return $this->createFormData($applicationProcess, $fundingCase);
+  }
+
 }
