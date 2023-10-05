@@ -38,8 +38,9 @@ return [
           'version' => 4,
           'select' => [
             'id',
-            'title',
             'identifier',
+            'title',
+            'short_description',
             'amount_requested',
             'status:label',
             'is_eligible',
@@ -90,6 +91,13 @@ return [
               'dataType' => 'String',
               'label' => E::ts('Title'),
               'sortable' => TRUE,
+            ],
+            [
+              'type' => 'field',
+              'key' => 'short_description',
+              'dataType' => 'String',
+              'label' => E::ts('Short Description'),
+              'sortable' => FALSE,
             ],
             [
               'type' => 'field',
