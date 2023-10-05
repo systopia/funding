@@ -12,6 +12,18 @@
   cursor: wait;
 }
 
+/* Revert Drupal theme settings */
+#bootstrap-theme .table th {
+  position: initial;
+  height: initial;
+}
+
+/* Revert Drupal theme settings */
+#bootstrap-theme .table td {
+  position: initial;
+  height: initial;
+}
+
 .funding-modal {
   /* Modal dialog is partly covered by navbar otherwise. */
   top: 50px !important;
