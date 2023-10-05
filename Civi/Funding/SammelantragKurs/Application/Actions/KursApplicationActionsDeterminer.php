@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\SammelantragKurs\Application\Actions;
 
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminer;
+use Civi\Funding\ApplicationProcess\ActionsDeterminer\Helper\DetermineApproveRejectActionsHelper;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
 use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
@@ -79,10 +80,13 @@ final class KursApplicationActionsDeterminer extends ApplicationProcessActionsDe
     ],
   ];
 
+  private DetermineApproveRejectActionsHelper $determineApproveRejectActionsHelper;
+
   private KursApplicationActionStatusInfo $statusInfo;
 
   public function __construct(KursApplicationActionStatusInfo $statusInfo) {
     parent::__construct(self::STATUS_PERMISSION_ACTIONS_MAP);
+    $this->determineApproveRejectActionsHelper = new DetermineApproveRejectActionsHelper();
     $this->statusInfo = $statusInfo;
   }
 
@@ -91,7 +95,14 @@ final class KursApplicationActionsDeterminer extends ApplicationProcessActionsDe
       return [];
     }
 
-    return parent::getActions($status, $statusList, $permissions);
+    return array_merge(
+      parent::getActions($status, $statusList, $permissions),
+      $this->determineApproveRejectActionsHelper->getActions(
+        $status,
+        $this->hasReviewCalculativePermission($permissions),
+        $this->hasReviewContentPermission($permissions)
+      ),
+    );
   }
 
   /**

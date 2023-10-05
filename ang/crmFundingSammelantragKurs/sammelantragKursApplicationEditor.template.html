@@ -1,0 +1,196 @@
+<funding-application-submit-modal
+  title="submitModal.title"
+  comment-required="submitModal.commentRequired"
+  comment-text="comment.text"
+  comment-type="comment.type"
+  submit="modalSubmit"></funding-application-submit-modal>
+
+<div class="funding-application-sidebar funding-resize-height" funding-application-sidebar>
+</div>
+
+<div class="funding-application-main">
+  <div ng-if="errors | fundingIsNotEmpty" class="alert alert-danger">
+    {{ ts('Validation failed') }}
+    <funding-validation-errors errors="errors['/']"></funding-validation-errors>
+    <funding-validation-errors errors="errors['/action']"></funding-validation-errors>
+  </div>
+
+  <div class="funding-resize-height">
+    <h2>{{ ts('Reviewers') }}</h2>
+    <funding-application-reviewers application-process="applicationProcess" permissions="permissions"></funding-application-reviewers>
+
+    <h2>{{ ts('General') }}</h2>
+    <div>
+      <label>{{ ts('Status') }}</label>
+      {{ statusOptions[applicationProcess.status].label || ts('Unknown') }}
+      <funding-fa icon="statusOptions[applicationProcess.status].icon"
+                  ng-style="{color: statusOptions[applicationProcess.status].color };"></funding-fa>
+    </div>
+    <div>
+      <label>{{ ts('Review Content') }}</label>
+      {{ reviewStatusLabels[applicationProcess.is_review_content] }}
+    </div>
+    <div>
+      <label>{{ ts('Review Calculative') }}</label>
+      {{ reviewStatusLabels[applicationProcess.is_review_calculative] }}
+    </div>
+    <div>
+      <label>{{ ts('Creation Date') }}</label>
+      {{ applicationProcess.creation_date|fundingDate }}
+    </div>
+    <div>
+      <label>{{ ts('Modification Date') }}</label>
+      {{ applicationProcess.modification_date|fundingDate }}
+    </div>
+    <div>
+      <label>{{ ts('Recipient') }}</label>
+      {{ recipientContact.display_name }}
+    </div>
+    <div>
+      <label>{{ ts('Amount Requested') }}</label>
+      {{ applicationProcess.amount_requested }} {{ currency }}
+    </div>
+    <div>
+      <editable-field label="'Titel'" type="text"
+                      value="data.grunddaten.titel"
+                      e-ng-required="true"></editable-field>
+    </div>
+    <div>
+      <editable-field label="'Kurzbeschreibung des Inhalts'" type="textarea"
+                      value="data.grunddaten.kurzbeschreibungDerInhalte"
+                      e-ng-required="true"></editable-field>
+    </div>
+
+    <div>
+      <h3>Zeiträume <funding-validation-errors errors="errors['/grunddaten/zeitraeume']"></funding-validation-errors></h3>
+      <table>
+        <tr>
+          <th style="width: 45%;">Beginn</th>
+          <th style="width: 45%;">Ende</th>
+          <th style="width: 10%;">Aktionen</th>
+        </tr>
+        <tr ng-repeat="zeitraum in data.grunddaten.zeitraeume track by $index" funding-editable-table-row>
+          <td>
+            <editable-field type="date" value="zeitraum.beginn"
+                            path="grunddaten.zeitraeume[{{ $index }}].beginn"
+                            e-ng-required="true"></editable-field>
+          </td>
+          <td>
+            <editable-field type="date" value="zeitraum.ende"
+                            path="grunddaten.zeitraeume[{{ $index }}].ende"
+                            e-ng-required="true"></editable-field>
+          </td>
+          <td class="editable-table-row-actions"></td>
+        </tr>
+      </table>
+      <funding-add-row-button path="grunddaten.zeitraeume" ng-if="isEditAllowed()"></funding-add-row-button>
+    </div>
+
+    <div>
+      <label>Programmtage</label>
+      {{ data.grunddaten.programmtage }}
+    </div>
+
+    <h3>Teilnehmer*innen</h3>
+    <div>
+      <editable-field label="'Gesamtanzahl der Teilnehmer*innen'" type="number"
+                      value="data.grunddaten.teilnehmer.gesamt"
+                      e-step="1" e-ng-required="true"></editable-field>
+    </div>
+    <div>
+      <editable-field label="'davon weiblich'" type="number"
+                      value="data.grunddaten.teilnehmer.weiblich"
+                      e-step="1" e-ng-required="false"></editable-field>
+    </div>
+    <div>
+      <editable-field label="'davon divers'" type="number"
+                      value="data.grunddaten.teilnehmer.divers"
+                      e-step="1" e-ng-required="false"></editable-field>
+    </div>
+    <div>
+      <editable-field label="'davon U27'" type="number"
+                      value="data.grunddaten.teilnehmer.unter27"
+                      e-step="1" e-ng-required="false"></editable-field>
+    </div>
+    <div>
+      <editable-field label="'davon in der Kinder- und Jugendhilfe (Multiplikator*innen-Seminare) tätig'" type="number"
+                      value="data.grunddaten.teilnehmer.inJugendhilfeTaetig"
+                      e-step="1" e-ng-required="false"></editable-field>
+    </div>
+    <div>
+      <editable-field label="'davon Referent*innen'" type="number"
+                      value="data.grunddaten.teilnehmer.referenten"
+                      e-step="1" e-ng-required="true"></editable-field>
+    </div>
+
+    <div>
+      <label>Teilnehmertage</label>
+      {{ data.grunddaten.teilnehmertage }}
+    </div>
+
+    <h2>Zuschussberechnung</h2>
+
+    <div>
+      <h3>Teilnehmendenkosten</h3>
+      <div>
+        <label>Maximaler Zuschuss</label>
+        {{ data.zuschuss.teilnehmerkostenMax }} {{ currency }}
+      </div>
+      <div>
+        <editable-field label="'Benötigter Zuschuss'" type="number"
+                        value="data.zuschuss.teilnehmerkosten"
+                        e-step="0.01" e-ng-required="false"></editable-field>
+        {{ currency }}
+      </div>
+    </div>
+    <div>
+      <h3>Fahrtkosten</h3>
+      <div>
+        <label>Maximaler Zuschuss</label>
+        {{ data.zuschuss.fahrtkostenMax }} {{ currency }}
+      </div>
+      <div>
+        <editable-field label="'Benötigter Zuschuss'" type="number"
+                        value="data.zuschuss.fahrtkosten"
+                        e-step="0.01" e-ng-required="false"></editable-field>
+        {{ currency }}
+      </div>
+    </div>
+    <div>
+      <h3>Honorarkosten</h3>
+      <div>
+        <label>Maximaler Zuschuss</label>
+        {{ data.zuschuss.honorarkostenMax }} {{ currency }}
+      </div>
+      <div>
+        <editable-field label="'Benötigter Zuschuss'" type="number"
+                        value="data.zuschuss.honorarkosten"
+                        e-step="0.01" e-ng-required="false"></editable-field>
+        {{ currency }}
+      </div>
+    </div>
+    <div>
+      <h3>Beantragter Zuschuss</h3>
+      {{ data.zuschuss.gesamt }} {{ currency }}
+    </div>
+
+    <h2>Beschreibung des Vorhabens</h2>
+    <div>
+      <editable-field label="'Ziele'"
+                      type="checklist" value="data.beschreibung.ziele"
+                      options-one-of="jsonSchema.properties.beschreibung.properties.ziele.items.oneOf"
+                      e-ng-required="true"></editable-field>
+    </div>
+    <div>
+      <editable-field label="'Bildungsanteil'"
+                      type="number" value="data.beschreibung.bildungsanteil"
+                      e-step="1" e-ng-required="true"></editable-field> %
+    </div>
+    <div>
+      <editable-field label="'Veranstaltungsort'"
+                      type="text" value="data.beschreibung.veranstaltungsort"
+                      e-ng-required="true"></editable-field>
+    </div>
+  </div>
+
+</div>

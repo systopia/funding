@@ -16,7 +16,7 @@
 
 'use strict';
 
-fundingModule.directive('fundingApplicationEditor', function() {
+fundingModule.directive('fundingApplicationEditor', ['$compile', function($compile) {
   return {
     restrict: 'E',
     scope: {
@@ -27,11 +27,37 @@ fundingModule.directive('fundingApplicationEditor', function() {
       reviewStatusLabels: '=',
       onPostSubmit: '&',
     },
-    templateUrl: '~/crmFunding/application/applicationEditor.template.html',
-    controller: ['$scope', 'crmStatus', 'fundingContactService', 'fundingCaseService', 'fundingProgramService',
-      'fundingApplicationProcessService',
-      async function($scope, crmStatus, fundingContactService, fundingCaseService, fundingProgramService,
-               fundingApplicationProcessService) {
+    template: '',
+    // Insert the editor tag for the current funding case type.
+    link: function (scope, element) {
+      /**
+       * Copied from AngularJS. (The lodash analog behaves differently with
+       * consecutive upper case letters.)
+       * https://github.com/angular/angular.js/blob/47bf11ee94664367a26ed8c91b9b586d3dd420f5/src/Angular.js#L1893
+       */
+      const SNAKE_CASE_REGEXP = /[A-Z]/g;
+      function snake_case(name, separator) {
+        separator = separator || '_';
+        return name.replace(SNAKE_CASE_REGEXP, function(letter, pos) {
+          return (pos ? separator : '') + letter.toLowerCase();
+        });
+      }
+
+      const unwatch = scope.$watch('fundingCaseType', function (fundingCaseType) {
+        if (fundingCaseType) {
+          const directiveName = 'funding' + _4.upperFirst(fundingCaseType.name) + 'ApplicationEditor';
+          const tagName = snake_case(directiveName, '-');
+          const template = '<' + tagName + '></' + tagName + '>';
+          element.append($compile(template)(scope));
+          window.setTimeout(fixHeights, 100);
+          unwatch();
+        }
+      });
+    },
+    controller: ['$scope', 'crmStatus', 'fundingContactService', 'fundingCaseService',
+      'fundingCaseTypeService', 'fundingProgramService', 'fundingApplicationProcessService',
+      async function($scope, crmStatus, fundingContactService, fundingCaseService,
+                     fundingCaseTypeService, fundingProgramService, fundingApplicationProcessService) {
         function convertStringsToDates(formOrField) {
           // If we ensure that this function is called for every single field via
           // onStartEdit() we would not need to take care of forms, i.e.
@@ -100,6 +126,9 @@ fundingModule.directive('fundingApplicationEditor', function() {
           );
           fundingContactService.get(fundingCase.recipient_contact_id).then(
               (contact) => $scope.recipientContact = contact
+          );
+          fundingCaseTypeService.get(fundingCase.funding_case_type_id).then(
+            (fundingCaseType) => $scope.fundingCaseType = fundingCaseType
           );
         });
 
@@ -233,7 +262,7 @@ fundingModule.directive('fundingApplicationEditor', function() {
         $scope.onAfterSave = function (formOrField) {
           $scope.isChanged = $scope.isChanged || JSON.stringify($scope.data) !== originalDataString;
           // don't validate single fields that are part of multi field form
-          if (!formOrField.$form || _4.isEqual(formOrField.$data, formOrField.$form.$data)) {
+          if (!formOrField.$form || 1 === formOrField.$form.$editables.length) {
             $scope.validate();
           }
         };
@@ -325,4 +354,4 @@ fundingModule.directive('fundingApplicationEditor', function() {
       },
     ],
   };
-});
+}]);

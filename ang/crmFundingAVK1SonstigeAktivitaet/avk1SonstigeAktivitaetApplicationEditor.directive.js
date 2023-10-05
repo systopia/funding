@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2023 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -16,15 +16,11 @@
 
 'use strict';
 
-fundingModule.directive('fundingApplicationSidebar', function() {
+fundingAVK1SonstigeAktivitaetModule.directive('fundingAVK1SonstigeAktivitaetApplicationEditor', function() {
   return {
     restrict: 'AE',
     scope: false,
-    templateUrl: '~/crmFunding/application/applicationSidebar.template.html',
-    controllerAs: '$ctrl',
-    controller: ['$scope', function ($scope) {
-      this.ts = CRM.ts('funding');
-      this.applicationProcessLabel = $scope.fundingCaseType.application_process_label || this.ts('Application');
-    }],
+    templateUrl: '~/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html',
+    controller: function () {},
   };
 });
