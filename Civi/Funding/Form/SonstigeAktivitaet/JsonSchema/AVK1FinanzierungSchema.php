@@ -33,7 +33,7 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
       // Abschnitt II.1
       'teilnehmerbeitraege' => new JsonSchemaMoney(['minimum' => 0, 'default' => 0]),
       // Abschnitt II.2
-      'eigenmittel' => new JsonSchemaMoney(['minimum' => 0]),
+      'eigenmittel' => new JsonSchemaMoney(['minimum' => 0, 'default' => 0]),
       // Abschnitt II.3
       'oeffentlicheMittel' => new JsonSchemaObject([
         'europa' => new JsonSchemaMoney(['minimum' => 0, 'default' => 0]),
@@ -71,7 +71,9 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
           'eigenmittel' => new JsonSchemaDataPointer('1/eigenmittel', 0),
           'oeffentlicheMittelGesamt' => new JsonSchemaDataPointer('1/oeffentlicheMittelGesamt'),
           'sonstigeMittelGesamt' => new JsonSchemaDataPointer('1/sonstigeMittelGesamt'),
-        ]
+        ],
+        NULL,
+        ['minimum' => 0.01],
       ),
       // Beantragter Zuschuss
       'beantragterZuschuss' => new JsonSchemaCalculate('number', 'round(max(gesamtkosten - gesamtmittel, 0), 2)', [
@@ -80,7 +82,6 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
       ]),
     ], [
       'required' => [
-        'eigenmittel',
         'oeffentlicheMittel',
         'sonstigeMittel',
       ],
