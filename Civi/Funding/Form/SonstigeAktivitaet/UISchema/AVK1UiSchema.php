@@ -117,7 +117,10 @@ EOD
         new JsonFormsControl(
           '#/properties/beschreibung/properties/geplanterAblauf',
           'Wie ist der Ablauf der Veranstaltung geplant?',
-          NULL,
+          <<<EOD
+Bei den Projektunterlagen unten können auch Dokumente hochgeladen werden, die
+den Ablauf beschreiben
+EOD,
           ['multi' => TRUE]
         ),
         new JsonFormsControl(
