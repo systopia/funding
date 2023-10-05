@@ -276,32 +276,39 @@ msgid "Do you really want to delete the application?"
 msgstr "Möchten Sie den Antrag wirklich löschen?"
 
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
+#: Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
 #: ang/crmFunding/application/applicationSidebar.template.html
 msgid "Start Review"
 msgstr "Prüfung starten"
 
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
+#: Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
 msgid "Approve Calculative"
 msgstr "Rechnerisch genehmigen"
 
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
+#: Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
 msgid "Reject Calculative"
 msgstr "Rechnerisch ablehnen"
 
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
+#: Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
 msgid "Approve Content"
 msgstr "Inhaltlich genehmigen"
 
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
+#: Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
 msgid "Reject Content"
 msgstr "Inhaltlich ablehnen"
 
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
+#: Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
 #: ang/crmFunding/application/applicationSidebar.template.html
 msgid "Request Change"
 msgstr "Änderung verlangen"
 
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
+#: Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
 #: ang/crmFunding/application/applicationSidebar.template.html
 #: managed/SavedSearchFundingDrawdowns.mgd.php
 msgid "Reject"
@@ -1131,8 +1138,6 @@ msgid "Amount"
 msgstr "Betrag"
 
 #: ang/crmFunding/case/fundingCase.template.html
-#, fuzzy
-#| msgid "Funding case: %1"
 msgid "Funding Case: %1"
 msgstr "Förderfall: %1"
 
@@ -1410,6 +1415,10 @@ msgid "Title"
 msgstr "Titel"
 
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
+msgid "Short Description"
+msgstr "Kurzbeschreibung"
+
+#: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingTasksMy.mgd.php
 msgid "Open application"
@@ -1512,6 +1521,3 @@ msgstr "Förderverwaltungsaufgaben des angemeldeten Nutzers"
 #: managed/SavedSearchFundingTasksMy.mgd.php
 msgid "Subject"
 msgstr "Betreff"
-
-#~ msgid "Search Applications"
-#~ msgstr "Anträge suchen"
