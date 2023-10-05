@@ -21,6 +21,7 @@ namespace Civi\Funding\SammelantragKurs\Application\Actions;
 
 use Civi\Funding\ApplicationProcess\ActionsContainer\AbstractApplicationSubmitActionsContainer;
 use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
+use CRM_Funding_ExtensionUtil as E;
 
 /**
  * @codeCoverageIgnore
@@ -36,7 +37,14 @@ final class KursApplicationSubmitActionsContainer extends AbstractApplicationSub
       ->add('save', 'Speichern')
       ->add('modify', 'Bearbeiten')
       ->add('withdraw', 'Zurückziehen', 'Möchten Sie diesen Kurs wirklich zurückziehen?')
-      ->add('delete', 'Löschen', 'Möchten Sie diesen Kurs wirklich löschen?');
+      ->add('delete', 'Löschen', 'Möchten Sie diesen Kurs wirklich löschen?')
+      ->add('review', E::ts('Start Review'), NULL, ['needsFormData' => FALSE])
+      ->add('approve-calculative', E::ts('Approve Calculative'), NULL, ['needsFormData' => FALSE])
+      ->add('reject-calculative', E::ts('Reject Calculative'), NULL, ['needsFormData' => FALSE])
+      ->add('approve-content', E::ts('Approve Content'), NULL, ['needsFormData' => FALSE])
+      ->add('reject-content', E::ts('Reject Content'), NULL, ['needsFormData' => FALSE])
+      ->add('request-change', E::ts('Request Change'), NULL, ['needsFormData' => FALSE])
+      ->add('reject', E::ts('Reject'), NULL, ['needsFormData' => FALSE]);
   }
 
 }
