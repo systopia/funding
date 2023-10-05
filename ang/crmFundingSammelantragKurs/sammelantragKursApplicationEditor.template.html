@@ -63,25 +63,29 @@
 
     <div>
       <h3>Zeiträume <funding-validation-errors errors="errors['/grunddaten/zeitraeume']"></funding-validation-errors></h3>
-      <table>
-        <tr>
-          <th style="width: 45%;">Beginn</th>
-          <th style="width: 45%;">Ende</th>
-          <th style="width: 10%;">Aktionen</th>
-        </tr>
-        <tr ng-repeat="zeitraum in data.grunddaten.zeitraeume track by $index" funding-editable-table-row>
-          <td>
-            <editable-field type="date" value="zeitraum.beginn"
-                            path="grunddaten.zeitraeume[{{ $index }}].beginn"
-                            e-ng-required="true"></editable-field>
-          </td>
-          <td>
-            <editable-field type="date" value="zeitraum.ende"
-                            path="grunddaten.zeitraeume[{{ $index }}].ende"
-                            e-ng-required="true"></editable-field>
-          </td>
-          <td class="editable-table-row-actions"></td>
-        </tr>
+      <table class="table table-condensed table-striped table-hover">
+        <thead>
+          <tr>
+            <th style="width: 45%;">Beginn</th>
+            <th style="width: 45%;">Ende</th>
+            <th style="width: 10%;">Aktionen</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="zeitraum in data.grunddaten.zeitraeume track by $index" funding-editable-table-row>
+            <td>
+              <editable-field type="date" value="zeitraum.beginn"
+                              path="grunddaten.zeitraeume[{{ $index }}].beginn"
+                              e-ng-required="true"></editable-field>
+            </td>
+            <td>
+              <editable-field type="date" value="zeitraum.ende"
+                              path="grunddaten.zeitraeume[{{ $index }}].ende"
+                              e-ng-required="true"></editable-field>
+            </td>
+            <td class="editable-table-row-actions"></td>
+          </tr>
+        </tbody>
       </table>
       <funding-add-row-button path="grunddaten.zeitraeume" ng-if="isEditAllowed()"></funding-add-row-button>
     </div>
