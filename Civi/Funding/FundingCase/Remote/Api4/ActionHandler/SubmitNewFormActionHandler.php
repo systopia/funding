@@ -54,8 +54,8 @@ final class SubmitNewFormActionHandler implements ActionHandlerInterface {
    *    action: string,
    *    message: string,
    *    errors?: array<string, non-empty-array<string>>,
-   *    entity_name?: string,
-   *    entity_id?: int,
+   *    entityType?: string,
+   *    entityId?: int,
    *  }
    *
    * @throws \CRM_Core_Exception
@@ -88,8 +88,8 @@ final class SubmitNewFormActionHandler implements ActionHandlerInterface {
     return [
       'action' => RemoteSubmitResponseActions::LOAD_ENTITY,
       'message' => E::ts('Saved'),
-      'entity_type' => 'FundingCase',
-      'entity_id' => $submitResult->getFundingCase()->getId(),
+      'entityType' => 'FundingCase',
+      'entityId' => $submitResult->getFundingCase()->getId(),
     ];
   }
 

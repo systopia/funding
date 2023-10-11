@@ -60,8 +60,6 @@ final class SubmitUpdateFormActionHandler implements ActionHandlerInterface {
    *    action: RemoteSubmitResponseActions::*,
    *    message: string,
    *    errors?: array<string, non-empty-array<string>>,
-   *    entity_name?: string,
-   *    entity_id?: int,
    *  }
    *
    * @throws \CRM_Core_Exception
