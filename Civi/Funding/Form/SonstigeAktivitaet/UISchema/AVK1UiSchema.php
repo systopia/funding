@@ -104,7 +104,7 @@ final class AVK1UiSchema extends JsonFormsGroup {
 Eine Vollförderung ist bei den Sonstigen Aktivitäten nicht möglich. Bitte geben
 Sie deswegen bei mindestens einer der folgenden Kategorien Mittel an.
 EOD
-),
+        ),
       ]),
       // Beschreibung des Vorhabens (not part of default "AV-K1")
       new JsonFormsCloseableGroup('Beschreibung des Vorhabens', [
