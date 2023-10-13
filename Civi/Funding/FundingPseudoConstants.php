@@ -86,9 +86,9 @@ final class FundingPseudoConstants {
         'color' => '#56ab41',
       ],
       [
-        'id' => 'final',
-        'name' => 'final',
-        'label' => E::ts('Final'),
+        'id' => 'complete',
+        'name' => 'complete',
+        'label' => E::ts('Complete'),
         'icon' => 'fa-check-circle',
       ],
       [

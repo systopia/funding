@@ -51,7 +51,7 @@ final class ApplicationSnapshotFactory {
     return ApplicationSnapshotEntity::fromArray($values + [
       'id' => self::DEFAULT_ID,
       'application_process_id' => ApplicationProcessFactory::DEFAULT_ID,
-      'status' => 'approved',
+      'status' => 'eligible',
       'creation_date' => '2023-03-03 03:03:03',
       'title' => 'Title snapshot',
       'short_description' => 'Short description snapshot',

@@ -157,7 +157,7 @@ final class DefaultApplicationProcessStatusDeterminerTest extends TestCase {
   public function provideFinalStatus(): iterable {
     yield [new FullApplicationProcessStatus('withdrawn', NULL, NULL)];
     yield [new FullApplicationProcessStatus('rejected', FALSE, NULL)];
-    yield [new FullApplicationProcessStatus('final', TRUE, TRUE)];
+    yield [new FullApplicationProcessStatus('complete', TRUE, TRUE)];
   }
 
 }

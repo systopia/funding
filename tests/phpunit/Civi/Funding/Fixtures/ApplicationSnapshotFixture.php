@@ -32,7 +32,7 @@ final class ApplicationSnapshotFixture {
       ->setValues($values + [
         'application_process_id' => $applicationProcessId,
         'identifier' => 'test',
-        'status' => 'approved',
+        'status' => 'eligible',
         'title' => 'Title',
         'short_description' => 'Description',
         'request_data' => ['foo' => 'bar'],

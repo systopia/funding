@@ -71,7 +71,7 @@ final class ApplicationSnapshotCreateSubscriberTest extends TestCase {
 
   public function testOnPreUpdateWithDataChange(): void {
     $event = $this->createPreUpdateEvent([
-      'status' => ['approved', 'approved'],
+      'status' => ['eligible', 'eligible'],
       'request_data' => [['foo' => 'bar'], ['foo' => 'baz']],
     ]);
 
@@ -90,7 +90,7 @@ final class ApplicationSnapshotCreateSubscriberTest extends TestCase {
 
   public function testOnPreUpdateWithStatusChange(): void {
     $event = $this->createPreUpdateEvent([
-      'status' => ['old-status', 'approved'],
+      'status' => ['old-status', 'eligible'],
       'request_data' => [['foo' => 'bar'], ['foo' => 'bar']],
     ]);
 
@@ -109,7 +109,7 @@ final class ApplicationSnapshotCreateSubscriberTest extends TestCase {
 
   public function testOnPreUpdateNoSnapshotRequiredStatus(): void {
     $event = $this->createPreUpdateEvent([
-      'status' => ['approved', 'new-status'],
+      'status' => ['eligible', 'new-status'],
       'request_data' => [['foo' => 'bar'], ['foo' => 'baz']],
     ]);
 
@@ -119,7 +119,7 @@ final class ApplicationSnapshotCreateSubscriberTest extends TestCase {
 
   public function testOnPreUpdateWhileRestore(): void {
     $event = $this->createPreUpdateEvent([
-      'status' => ['old-status', 'approved'],
+      'status' => ['old-status', 'eligible'],
       'request_data' => [['foo' => 'bar'], ['foo' => 'baz']],
     ]);
     $event->getApplicationProcess()->setRestoredSnapshot(ApplicationSnapshotFactory::createApplicationSnapshot());

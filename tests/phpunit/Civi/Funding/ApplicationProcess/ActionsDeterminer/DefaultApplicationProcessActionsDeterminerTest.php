@@ -95,7 +95,7 @@ final class DefaultApplicationProcessActionsDeterminerTest extends TestCase {
       'review_calculative' => [],
       'review_content' => [],
     ],
-    'final' => [
+    'complete' => [
       'application_create' => [],
       'application_modify' => [],
       'application_apply' => [],
@@ -141,7 +141,7 @@ final class DefaultApplicationProcessActionsDeterminerTest extends TestCase {
 
   public function testGetActionsApprove(): void {
     foreach (['review_calculative', 'review_content'] as $permission) {
-      $fullStatus = new FullApplicationProcessStatus('final', TRUE, TRUE);
+      $fullStatus = new FullApplicationProcessStatus('complete', TRUE, TRUE);
       static::assertNotContains('approve', $this->actionsDeterminer->getActions($fullStatus, [], [$permission]));
       $fullStatus = new FullApplicationProcessStatus('review', TRUE, NULL);
       static::assertNotContains('approve', $this->actionsDeterminer->getActions($fullStatus, [], [$permission]));
