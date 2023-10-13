@@ -59,7 +59,17 @@ final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
     $this->statusList = [22 => new FullApplicationProcessStatus('eligible', TRUE, TRUE)];
 
     $statusInfoMock->method('isEligibleStatus')
-      ->willReturnCallback(fn (string $status) => 'eligible' === $status);
+      ->willReturnCallback(function (string $status): ?bool {
+        if ('eligible' === $status) {
+          return TRUE;
+        }
+
+        if ('withdrawn' === $status) {
+          return FALSE;
+        }
+
+        return NULL;
+      });
   }
 
   public function testGetActions(): void {
@@ -153,6 +163,16 @@ final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
       'approve',
       'open',
       [],
+      ['review_calculative']
+    ));
+
+    static::assertTrue($this->actionsDeterminer->isActionAllowed(
+      'approve',
+      'open',
+      [
+        22 => new FullApplicationProcessStatus('eligible', TRUE, TRUE),
+        23 => new FullApplicationProcessStatus('withdrawn', TRUE, TRUE),
+      ],
       ['review_calculative']
     ));
   }

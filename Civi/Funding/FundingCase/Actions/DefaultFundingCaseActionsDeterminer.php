@@ -67,16 +67,13 @@ final class DefaultFundingCaseActionsDeterminer extends FundingCaseActionsDeterm
   private function isApprovePossible(array $applicationProcessStatusList): bool {
     $eligibleCount = 0;
     foreach ($applicationProcessStatusList as $applicationProcessStatus) {
-      switch ($this->statusInfo->isEligibleStatus($applicationProcessStatus->getStatus())) {
-        case NULL:
-          return FALSE;
+      $eligible = $this->statusInfo->isEligibleStatus($applicationProcessStatus->getStatus());
+      if (NULL === $eligible) {
+        return FALSE;
+      }
 
-        case TRUE:
-          ++$eligibleCount;
-          break;
-
-        case FALSE:
-          // fall through
+      if ($eligible) {
+        ++$eligibleCount;
       }
     }
 
