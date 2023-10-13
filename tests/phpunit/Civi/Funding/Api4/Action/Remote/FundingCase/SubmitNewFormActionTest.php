@@ -49,11 +49,11 @@ final class SubmitNewFormActionTest extends AbstractNewFormActionTestCase {
       ]);
 
     $result = $action->execute();
-    static::assertArrayHasSameKeys(['action', 'message', 'entity_type', 'entity_id'], $result->getArrayCopy());
+    static::assertArrayHasSameKeys(['action', 'message', 'entityType', 'entityId'], $result->getArrayCopy());
     static::assertSame('loadEntity', $result['action']);
     static::assertSame('Saved', $result['message']);
-    static::assertSame('FundingCase', $result['entity_type']);
-    static::assertIsInt($result['entity_id']);
+    static::assertSame('FundingCase', $result['entityType']);
+    static::assertIsInt($result['entityId']);
   }
 
   public function testInvalidData(): void {
