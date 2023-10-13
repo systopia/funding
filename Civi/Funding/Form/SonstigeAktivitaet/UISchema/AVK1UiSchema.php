@@ -37,7 +37,7 @@ final class AVK1UiSchema extends JsonFormsGroup {
    * @phpstan-param array<int, \Civi\RemoteTools\JsonForms\JsonFormsElement> $preSubmitButtonElements
    */
   public function __construct(string $currency, array $submitButtons, array $preSubmitButtonElements = []) {
-    parent::__construct('Förderantrag für sonstige Aktivität', [
+    parent::__construct('Förderantrag für Sonstige Aktivitäten (SoA)/ Virtuelle Kurse', [
       new AVK1GrunddatenUiSchema(),
       new JsonFormsCloseableGroup('Antragstellende Organisation', [
         new JsonFormsControl('#/properties/empfaenger', ''),
