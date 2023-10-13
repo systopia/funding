@@ -26,15 +26,30 @@ use Civi\Funding\Entity\FullApplicationProcessStatus;
  */
 final class DetermineApproveRejectActionsHelper {
 
-  private string $approveAction;
+  /**
+   * @phpstan-var array<string, string> Mapping of status to action name.
+   */
+  private array $approveActions;
 
-  private string $approveCalculativeAction;
+  /**
+   * @phpstan-var array<string, string> Mapping of status to action name.
+   */
+  private array $approveCalculativeActions;
 
-  private string $approveContentAction;
+  /**
+   * @phpstan-var array<string, string> Mapping of status to action name.
+   */
+  private array $approveContentActions;
 
-  private string $rejectCalculativeAction;
+  /**
+   * @phpstan-var array<string, string> Mapping of status to action name.
+   */
+  private array $rejectCalculativeActions;
 
-  private string $rejectContentAction;
+  /**
+   * @phpstan-var array<string, string> Mapping of status to action name.
+   */
+  private array $rejectContentActions;
 
   /**
    * @phpstan-var array<string>
@@ -45,20 +60,28 @@ final class DetermineApproveRejectActionsHelper {
    * @phpstan-param array<string> $reviewStatusList
    *   If an application is in one of these status it is in review.
    * @phpstan-param array{
-   *   approve?: string,
-   *   approve-calculative?: string,
-   *   approve-content?: string,
-   *   reject-calculative?: string,
-   *   reject-content?: string,
-   * } $actionNames Allows to specify custom action names.
+   *   approve?: string|array<string, string>,
+   *   approve-calculative?: string|array<string, string>,
+   *   approve-content?: string|array<string, string>,
+   *   reject-calculative?: string|array<string, string>,
+   *   reject-content?: string|array<string, string>,
+   * } $actionNames
+   *   Allows to specify custom action names either as simple string to use for
+   *   every review status, or as mapping of status to action name.
    */
   public function __construct(array $reviewStatusList = ['review'], array $actionNames = []) {
-    $this->approveAction = $actionNames['approve'] ?? 'approve';
-    $this->approveCalculativeAction = $actionNames['approve-calculative'] ?? 'approve-calculative';
-    $this->approveContentAction = $actionNames['approve-content'] ?? 'approve-content';
-    $this->rejectCalculativeAction = $actionNames['reject-calculative'] ?? 'reject-calculative';
-    $this->rejectContentAction = $actionNames['reject-content'] ?? 'reject-content';
     $this->reviewStatusList = $reviewStatusList;
+    $this->approveActions = $this->buildActionList($actionNames['approve'] ?? NULL, 'approve');
+    $this->approveCalculativeActions = $this->buildActionList(
+      $actionNames['approve-calculative'] ?? NULL,
+      'approve-calculative'
+    );
+    $this->approveContentActions = $this->buildActionList($actionNames['approve-content'] ?? NULL, 'approve-content');
+    $this->rejectCalculativeActions = $this->buildActionList(
+      $actionNames['reject-calculative'] ?? NULL,
+      'reject-calculative'
+    );
+    $this->rejectContentActions = $this->buildActionList($actionNames['reject-content'] ?? NULL, 'reject-content');
   }
 
   /**
@@ -75,26 +98,47 @@ final class DetermineApproveRejectActionsHelper {
     ) {
       if ($hasReviewCalculativePermission) {
         if (TRUE !== $status->getIsReviewCalculative()) {
-          $actions[] = $this->approveCalculativeAction;
+          $actions[] = $this->approveCalculativeActions[$status->getStatus()];
         }
         if (FALSE !== $status->getIsReviewCalculative()) {
-          $actions[] = $this->rejectCalculativeAction;
+          $actions[] = $this->rejectCalculativeActions[$status->getStatus()];
         }
       }
       if ($hasReviewContentPermission) {
         if (TRUE !== $status->getIsReviewContent()) {
-          $actions[] = $this->approveContentAction;
+          $actions[] = $this->approveContentActions[$status->getStatus()];
         }
         if (FALSE !== $status->getIsReviewContent()) {
-          $actions[] = $this->rejectContentAction;
+          $actions[] = $this->rejectContentActions[$status->getStatus()];
         }
       }
       if (TRUE === $status->getIsReviewCalculative() && TRUE === $status->getIsReviewContent()) {
-        $actions[] = $this->approveAction;
+        $actions[] = $this->approveActions[$status->getStatus()];
       }
     }
 
     return $actions;
+  }
+
+  /**
+   * @phpstan-param array<string, string>|string|null $param
+   *
+   * @phpstan-return array<string, string> Mapping of status to action name.
+   */
+  private function buildActionList($param, string $default): array {
+    $actionList = [];
+    if (is_string($param)) {
+      $default = $param;
+    }
+    elseif (is_array($param)) {
+      $actionList = $param;
+    }
+
+    foreach ($this->reviewStatusList as $status) {
+      $actionList[$status] ??= $default;
+    }
+
+    return $actionList;
   }
 
 }

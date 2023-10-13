@@ -86,7 +86,10 @@ final class KursApplicationActionsDeterminer extends ApplicationProcessActionsDe
 
   public function __construct(KursApplicationActionStatusInfo $statusInfo) {
     parent::__construct(self::STATUS_PERMISSION_ACTIONS_MAP);
-    $this->determineApproveRejectActionsHelper = new DetermineApproveRejectActionsHelper();
+    $this->determineApproveRejectActionsHelper = new DetermineApproveRejectActionsHelper(
+      ['review', 'rework-review'],
+      ['approve' => ['review' => 'approve', 'rework-review' => 'approve-change']]
+    );
     $this->statusInfo = $statusInfo;
   }
 
