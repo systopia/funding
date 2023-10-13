@@ -30,7 +30,13 @@ final class KursBeschreibungUiSchema extends JsonFormsCloseableGroup {
         '#/properties/beschreibung/properties/ziele', 'Welche Ziele hat die Veranstaltung? (Mehrfachauswahl möglich)'
       ),
       new JsonFormsControl(
-        '#/properties/beschreibung/properties/bildungsanteil', 'Wie hoch ist der Bildungsanteil des Vorhabens in %?'
+        '#/properties/beschreibung/properties/bildungsanteil',
+        'Wie hoch ist der Bildungsanteil des Vorhabens in %?',
+        <<<'EOD'
+Der KJP fördert nur Seminare mit <strong>überwiegendem</strong> Lehr- und
+Fortbildungscharakter. Nicht förderbar sind beispielsweise Projekte, die
+überwiegend der Erholung und Touristik dienen.
+EOD
       ),
       new JsonFormsControl(
         '#/properties/beschreibung/properties/veranstaltungsort', 'Wo findet die Veranstaltung statt?'

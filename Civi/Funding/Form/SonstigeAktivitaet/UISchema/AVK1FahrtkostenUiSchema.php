@@ -28,11 +28,11 @@ final class AVK1FahrtkostenUiSchema extends JsonFormsGroup {
     $elements = [
       new JsonFormsControl(
         '#/properties/kosten/properties/fahrtkosten/properties/intern',
-        'Interne Fahrtkosten in ' . $currency,
+        'Fahrtkosten innerhalb des Programms in ' . $currency,
       ),
       new JsonFormsControl(
         '#/properties/kosten/properties/fahrtkosten/properties/anTeilnehmerErstattet',
-        'An Teilnehmer*innen erstattete Fahrtkosten in ' . $currency
+        'An Teilnehmer*innen/Referent*innen erstattete Fahrtkosten in ' . $currency
       ),
       new JsonFormsControl(
         '#/properties/kosten/properties/fahrtkostenGesamt',
