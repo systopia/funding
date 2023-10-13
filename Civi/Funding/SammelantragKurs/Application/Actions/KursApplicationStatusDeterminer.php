@@ -34,6 +34,7 @@ final class KursApplicationStatusDeterminer extends ApplicationProcessStatusDete
 
   private const STATUS_ACTION_STATUS_MAP = [
     'eligible' => [
+      'modify' => 'rework',
       'update' => 'eligible',
     ],
     'rework' => [
