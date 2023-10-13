@@ -59,6 +59,12 @@ fundingModule.controller('fundingCaseCtrl', [
           .find(part => part.type = 'currency').value;
     }
 
+    document.addEventListener('applicationSearchTaskExecuted', (event) => {
+      fundingCaseService.getPossibleActions(fundingCase.id).then(
+        (possibleActions) => $scope.possibleActions = possibleActions
+      );
+    });
+
     fundingProgramService.get(fundingCase.funding_program_id).then(
         (result) => {
           $scope.fundingProgram = result;

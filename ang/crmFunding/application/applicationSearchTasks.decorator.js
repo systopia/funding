@@ -137,6 +137,16 @@ fundingModule.directive('fundingApplicationTasksDecorator', function() {
               allowedActionsByApplication = _4.pickBy(allowedActionsByApplication,
                 (actions, id) => !ctrl.ids.includes(parseInt(id)));
               ctrl.refresh();
+              const event = new CustomEvent('applicationSearchTaskExecuted', {
+                detail: {
+                  entity: ctrl.entity,
+                  search: ctrl.search,
+                  display: ctrl.display,
+                  ids: ctrl.ids,
+                  action: action.name,
+                },
+              });
+              document.dispatchEvent(event);
             });
           }
         };
