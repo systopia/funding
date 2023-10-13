@@ -19,7 +19,8 @@
     "Element": false,
     "document": false,
     "window": false,
-    "Intl": false
+    "Intl": false,
+    "CustomEvent": false
   },
   "latedef": true,
   "nocomma": true,
