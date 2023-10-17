@@ -21,7 +21,7 @@ namespace Civi\Funding\Event\ApplicationProcess;
 
 use Civi\Funding\ApplicationProcess\Command\AbstractApplicationFormSubmitResult;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
-use Civi\Funding\Form\ValidatedApplicationDataInterface;
+use Civi\Funding\Form\Application\ValidatedApplicationDataInterface;
 
 final class ApplicationFormSubmitSuccessEvent extends AbstractApplicationEvent {
 

@@ -27,7 +27,7 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterf
 use Civi\Funding\Event\Remote\AbstractFundingValidateFormEvent;
 use Civi\Funding\Event\Remote\ApplicationProcess\ValidateApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingCase\ValidateNewApplicationFormEvent;
-use Civi\Funding\Form\ApplicationValidationResult;
+use Civi\Funding\Form\Application\ApplicationValidationResult;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ValidateApplicationFormSubscriber implements EventSubscriberInterface {

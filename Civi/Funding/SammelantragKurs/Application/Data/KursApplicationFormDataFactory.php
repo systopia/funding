@@ -22,7 +22,7 @@ namespace Civi\Funding\SammelantragKurs\Application\Data;
 use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\FundingCaseEntity;
-use Civi\Funding\Form\ApplicationFormDataFactoryInterface;
+use Civi\Funding\Form\Application\ApplicationFormDataFactoryInterface;
 use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
 
 final class KursApplicationFormDataFactory implements ApplicationFormDataFactoryInterface {

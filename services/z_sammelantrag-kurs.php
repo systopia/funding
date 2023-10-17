@@ -33,7 +33,7 @@ use Civi\Funding\SammelantragKurs\Application\Data\KursApplicationFormFilesFacto
 use Civi\Funding\SammelantragKurs\Application\Data\KursApplicationResourcesItemsFactory;
 use Civi\Funding\SammelantragKurs\Application\JsonSchema\KursApplicationJsonSchemaFactory;
 use Civi\Funding\SammelantragKurs\Application\UiSchema\KursApplicationUiSchemaFactory;
-use Civi\Funding\SammelantragKurs\Application\Validator\KursApplicationValidator;
+use Civi\Funding\SammelantragKurs\Application\Validation\KursApplicationValidator;
 use Civi\Funding\SammelantragKurs\FundingCase\Actions\KursCaseActionsDeterminer;
 use Civi\Funding\SammelantragKurs\FundingCase\Actions\KursCaseSubmitActionsContainer;
 use Civi\Funding\SammelantragKurs\FundingCase\Actions\KursCaseSubmitActionsFactory;

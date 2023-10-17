@@ -27,7 +27,7 @@ use Civi\Funding\Form\FundingCase\ValidatedFundingCaseDataInvalid;
 use Civi\Funding\FundingCase\Command\FundingCaseFormNewSubmitCommand;
 use Civi\Funding\FundingCase\Command\FundingCaseFormNewValidateCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
-use Civi\Funding\Mock\Form\FundingCaseType\FundingCase\TestFundingCaseValidatedData;
+use Civi\Funding\Mock\FundingCaseType\FundingCase\Validation\TestFundingCaseValidatedData;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

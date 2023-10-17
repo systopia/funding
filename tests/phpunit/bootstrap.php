@@ -1,8 +1,6 @@
 <?php
 declare(strict_types = 1);
 
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\ReworkPossibleApplicationProcessActionStatusInfo;
-use Civi\Funding\ApplicationProcess\StatusDeterminer\ReworkPossibleApplicationProcessStatusDeterminer;
 use Civi\Funding\Contact\DummyRemoteContactIdResolver;
 use Civi\Funding\Contact\FundingRemoteContactIdResolverInterface;
 use Civi\Funding\DocumentRender\CiviOffice\CiviOfficeContextDataHolder;
@@ -10,20 +8,22 @@ use Civi\Funding\DocumentRender\DocumentRendererInterface;
 use Civi\Funding\FundingAttachmentManagerInterface;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\Mock\DocumentRender\MockDocumentRenderer;
-use Civi\Funding\Mock\Form\FundingCaseType\Application\Actions\TestApplicationActionsDeterminer;
-use Civi\Funding\Mock\Form\FundingCaseType\Application\Actions\TestApplicationSubmitActionsContainer;
-use Civi\Funding\Mock\Form\FundingCaseType\FundingCase\TestCaseActionsDeterminer;
-use Civi\Funding\Mock\Form\FundingCaseType\FundingCase\TestFundingCaseFormDataFactory;
-use Civi\Funding\Mock\Form\FundingCaseType\FundingCase\TestFundingCaseJsonSchemaFactory;
-use Civi\Funding\Mock\Form\FundingCaseType\FundingCase\TestFundingCaseUiSchemaFactory;
-use Civi\Funding\Mock\Form\FundingCaseType\FundingCase\TestFundingCaseValidator;
-use Civi\Funding\Mock\Form\FundingCaseType\TestApplicationCostItemsFactory;
-use Civi\Funding\Mock\Form\FundingCaseType\TestApplicationFormFilesFactory;
-use Civi\Funding\Mock\Form\FundingCaseType\TestApplicationResourcesItemsFactory;
-use Civi\Funding\Mock\Form\FundingCaseType\TestFormDataFactory;
-use Civi\Funding\Mock\Form\FundingCaseType\TestJsonSchemaFactory;
-use Civi\Funding\Mock\Form\FundingCaseType\TestUiSchemaFactory;
-use Civi\Funding\Mock\Form\FundingCaseType\TestValidator;
+use Civi\Funding\Mock\FundingCaseType\Application\Actions\TestApplicationActionsDeterminer;
+use Civi\Funding\Mock\FundingCaseType\Application\Actions\TestApplicationActionStatusInfo;
+use Civi\Funding\Mock\FundingCaseType\Application\Actions\TestApplicationStatusDeterminer;
+use Civi\Funding\Mock\FundingCaseType\Application\Actions\TestApplicationSubmitActionsContainer;
+use Civi\Funding\Mock\FundingCaseType\Application\Data\TestApplicationCostItemsFactory;
+use Civi\Funding\Mock\FundingCaseType\Application\Data\TestApplicationFormFilesFactory;
+use Civi\Funding\Mock\FundingCaseType\Application\Data\TestApplicationResourcesItemsFactory;
+use Civi\Funding\Mock\FundingCaseType\Application\Data\TestFormDataFactory;
+use Civi\Funding\Mock\FundingCaseType\Application\JsonSchema\TestJsonSchemaFactory;
+use Civi\Funding\Mock\FundingCaseType\Application\UiSchema\TestUiSchemaFactory;
+use Civi\Funding\Mock\FundingCaseType\Application\Validation\TestValidator;
+use Civi\Funding\Mock\FundingCaseType\FundingCase\Actions\TestCaseActionsDeterminer;
+use Civi\Funding\Mock\FundingCaseType\FundingCase\Data\TestFundingCaseFormDataFactory;
+use Civi\Funding\Mock\FundingCaseType\FundingCase\JsonSchema\TestFundingCaseJsonSchemaFactory;
+use Civi\Funding\Mock\FundingCaseType\FundingCase\UiSchema\TestFundingCaseUiSchemaFactory;
+use Civi\Funding\Mock\FundingCaseType\FundingCase\Validation\TestFundingCaseValidator;
 use Civi\Funding\Permission\FundingCase\RelationFactory\RelationPropertiesFactoryLocator;
 use Civi\Funding\TestAttachmentManager;
 use Civi\PHPUnit\Comparator\ApiActionComparator;
@@ -84,12 +84,10 @@ function _funding_test_civicrm_container(ContainerBuilder $container): void {
   $container->autowire(FundingRemoteContactIdResolverInterface::class, DummyRemoteContactIdResolver::class);
   $container->setAlias(RemoteContactIdResolverInterface::class, FundingRemoteContactIdResolverInterface::class);
 
-  $container->getDefinition(ReworkPossibleApplicationProcessStatusDeterminer::class)
-    ->addTag('funding.application.status_determiner',
-      ['funding_case_type' => TestJsonSchemaFactory::getSupportedFundingCaseTypes()[0]]);
-  $container->getDefinition(ReworkPossibleApplicationProcessActionStatusInfo::class)
-    ->addTag('funding.application.action_status_info',
-      ['funding_case_type' => TestJsonSchemaFactory::getSupportedFundingCaseTypes()[0]]);
+  $container->autowire(TestApplicationStatusDeterminer::class)
+    ->addTag(TestApplicationStatusDeterminer::SERVICE_TAG);
+  $container->autowire(TestApplicationActionStatusInfo::class)
+    ->addTag(TestApplicationActionStatusInfo::SERVICE_TAG);
 
   $container->autowire(TestApplicationActionsDeterminer::class)
     ->addTag(TestApplicationActionsDeterminer::SERVICE_TAG);
@@ -97,7 +95,6 @@ function _funding_test_civicrm_container(ContainerBuilder $container): void {
     ->addTag(TestApplicationSubmitActionsContainer::SERVICE_TAG);
 
   $container->autowire(TestCaseActionsDeterminer::class)
-    ->addArgument(new Reference(ReworkPossibleApplicationProcessActionStatusInfo::class))
     ->addTag(TestCaseActionsDeterminer::SERVICE_TAG);
 
   $container->autowire(TestJsonSchemaFactory::class)

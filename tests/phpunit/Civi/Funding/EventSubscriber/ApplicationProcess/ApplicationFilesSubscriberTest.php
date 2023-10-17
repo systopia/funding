@@ -32,8 +32,8 @@ use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreCreateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
-use Civi\Funding\Form\ApplicationValidationResult;
-use Civi\Funding\Mock\Form\FundingCaseType\TestValidatedData;
+use Civi\Funding\Form\Application\ApplicationValidationResult;
+use Civi\Funding\Mock\FundingCaseType\Application\Validation\TestValidatedData;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

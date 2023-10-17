@@ -30,6 +30,13 @@ class FundingCaseActionsDeterminer extends AbstractFundingCaseActionsDeterminer 
   private array $statusPermissionActionsMap;
 
   /**
+   * @inheritDoc
+   */
+  public static function getSupportedFundingCaseTypes(): array {
+    return [];
+  }
+
+  /**
    * @phpstan-param statusPermissionsActionMapT $statusPermissionActionsMap
    */
   public function __construct(array $statusPermissionActionsMap) {

@@ -22,8 +22,8 @@ namespace Civi\Funding\ApplicationProcess\Handler;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateCommand;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
-use Civi\Funding\Form\ApplicationValidationResult;
-use Civi\Funding\Form\ApplicationValidatorInterface;
+use Civi\Funding\Form\Application\ApplicationValidationResult;
+use Civi\Funding\Form\Application\ApplicationValidatorInterface;
 use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -37,7 +37,7 @@ final class ApplicationFormValidateHandlerTest extends TestCase {
   private ApplicationFormValidateHandler $handler;
 
   /**
-   * @var \Civi\Funding\Form\ApplicationValidatorInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\Form\Application\ApplicationValidatorInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $validatorMock;
 

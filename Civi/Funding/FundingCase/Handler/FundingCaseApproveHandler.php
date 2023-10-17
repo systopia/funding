@@ -23,7 +23,7 @@ use Civi\API\Exception\UnauthorizedException;
 use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
 use Civi\Funding\FundingCase\Command\FundingCaseApproveCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
-use Civi\Funding\FundingCase\FundingCaseStatusDeterminerInterface;
+use Civi\Funding\FundingCase\StatusDeterminer\FundingCaseStatusDeterminerInterface;
 use Civi\Funding\TransferContract\TransferContractCreator;
 use CRM_Funding_ExtensionUtil as E;
 

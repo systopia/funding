@@ -35,7 +35,7 @@ use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Event\Remote\ApplicationProcess\SubmitApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
-use Civi\Funding\Form\ApplicationValidationResult;
+use Civi\Funding\Form\Application\ApplicationValidationResult;
 use Civi\Funding\Form\RemoteSubmitResponseActions;
 use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
 use PHPUnit\Framework\MockObject\MockObject;

@@ -28,7 +28,7 @@ use Civi\Funding\Entity\ExternalFileEntity;
 use Civi\Funding\Event\Remote\AbstractFundingSubmitFormEvent;
 use Civi\Funding\Event\Remote\ApplicationProcess\SubmitApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
-use Civi\Funding\Form\ApplicationValidationResult;
+use Civi\Funding\Form\Application\ApplicationValidationResult;
 use Civi\Funding\Form\RemoteSubmitResponseActions;
 use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

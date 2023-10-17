@@ -19,12 +19,12 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\SammelantragKurs\Application\Actions;
 
-use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerDecorator;
+use Civi\Funding\ApplicationProcess\StatusDeterminer\AbstractApplicationProcessStatusDeterminerDecorator;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\DefaultApplicationProcessStatusDeterminer;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
 
-final class KursApplicationStatusDeterminer extends ApplicationProcessStatusDeterminerDecorator {
+final class KursApplicationStatusDeterminer extends AbstractApplicationProcessStatusDeterminerDecorator {
 
   use KursSupportedFundingCaseTypesTrait;
 

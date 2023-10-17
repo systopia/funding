@@ -22,7 +22,7 @@ namespace Civi\Funding\ApplicationProcess\StatusDeterminer;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 
 // phpcs:disable Generic.Files.LineLength.TooLong
-final class ReworkPossibleApplicationProcessStatusDeterminer extends ApplicationProcessStatusDeterminerDecorator {
+final class ReworkPossibleApplicationProcessStatusDeterminer extends AbstractApplicationProcessStatusDeterminerDecorator {
 // phpcs:enable
   private const STATUS_ACTION_STATUS_MAP = [
     'eligible' => [
@@ -60,6 +60,13 @@ final class ReworkPossibleApplicationProcessStatusDeterminer extends Application
       'add-comment' => 'rework-review',
     ],
   ];
+
+  /**
+   * @inheritDoc
+   */
+  public static function getSupportedFundingCaseTypes(): array {
+    return [];
+  }
 
   public function getStatus(FullApplicationProcessStatus $currentStatus, string $action): FullApplicationProcessStatus {
     return isset(self::STATUS_ACTION_STATUS_MAP[$currentStatus->getStatus()][$action])

@@ -33,8 +33,8 @@ use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
-use Civi\Funding\Mock\Form\FundingCaseType\TestJsonSchema;
-use Civi\Funding\Mock\Form\FundingCaseType\TestJsonSchemaFactory;
+use Civi\Funding\Mock\FundingCaseType\Application\JsonSchema\TestJsonSchema;
+use Civi\Funding\Mock\FundingCaseType\Application\JsonSchema\TestJsonSchemaFactory;
 use Civi\Funding\Util\RequestTestUtil;
 
 /**

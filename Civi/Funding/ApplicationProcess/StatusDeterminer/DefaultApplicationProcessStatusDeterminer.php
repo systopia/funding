@@ -62,6 +62,13 @@ final class DefaultApplicationProcessStatusDeterminer extends AbstractApplicatio
     ],
   ];
 
+  /**
+   * @inheritDoc
+   */
+  public static function getSupportedFundingCaseTypes(): array {
+    return [];
+  }
+
   public function __construct() {
     parent::__construct(self::STATUS_ACTION_STATUS_MAP);
   }

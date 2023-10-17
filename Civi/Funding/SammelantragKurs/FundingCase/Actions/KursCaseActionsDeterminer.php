@@ -19,13 +19,13 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\SammelantragKurs\FundingCase\Actions;
 
-use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerDecorator;
+use Civi\Funding\FundingCase\Actions\AbstractFundingCaseActionsDeterminerDecorator;
 use Civi\Funding\FundingCase\Actions\DefaultFundingCaseActionsDeterminer;
 use Civi\Funding\SammelantragKurs\Application\Actions\KursApplicationActionsDeterminer;
 use Civi\Funding\SammelantragKurs\Application\Actions\KursApplicationActionStatusInfo;
 use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
 
-final class KursCaseActionsDeterminer extends FundingCaseActionsDeterminerDecorator {
+final class KursCaseActionsDeterminer extends AbstractFundingCaseActionsDeterminerDecorator {
 
   use KursSupportedFundingCaseTypesTrait;
 

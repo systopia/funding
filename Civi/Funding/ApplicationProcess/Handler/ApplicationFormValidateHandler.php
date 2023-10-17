@@ -20,8 +20,8 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateCommand;
-use Civi\Funding\Form\ApplicationValidationResult;
-use Civi\Funding\Form\ApplicationValidatorInterface;
+use Civi\Funding\Form\Application\ApplicationValidationResult;
+use Civi\Funding\Form\Application\ApplicationValidatorInterface;
 
 final class ApplicationFormValidateHandler implements ApplicationFormValidateHandlerInterface {
 

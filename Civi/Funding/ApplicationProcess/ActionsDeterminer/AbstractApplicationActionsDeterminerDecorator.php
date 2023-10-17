@@ -21,6 +21,9 @@ namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 
+/**
+ * @codeCoverageIgnore
+ */
 abstract class AbstractApplicationActionsDeterminerDecorator implements ApplicationProcessActionsDeterminerInterface {
 
   private ApplicationProcessActionsDeterminerInterface $actionsDeterminer;

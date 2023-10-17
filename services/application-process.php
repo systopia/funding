@@ -31,8 +31,6 @@ use Civi\Funding\Api4\Action\FundingApplicationProcess\UpdateAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetFormAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\SubmitFormAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\ValidateFormAction;
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\DefaultApplicationProcessActionStatusInfo;
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\ReworkPossibleApplicationProcessActionStatusInfo;
 use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
 use Civi\Funding\ApplicationProcess\ApplicationExternalFileManager;
 use Civi\Funding\ApplicationProcess\ApplicationExternalFileManagerInterface;
@@ -89,8 +87,6 @@ use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationResourcesItemsPers
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationSnapshotCreateHandler;
 use Civi\Funding\ApplicationProcess\Snapshot\ApplicationSnapshotRestorer;
 use Civi\Funding\ApplicationProcess\Snapshot\ApplicationSnapshotRestorerInterface;
-use Civi\Funding\ApplicationProcess\StatusDeterminer\DefaultApplicationProcessStatusDeterminer;
-use Civi\Funding\ApplicationProcess\StatusDeterminer\ReworkPossibleApplicationProcessStatusDeterminer;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationCostItemsSubscriber;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationFilesSubscriber;
@@ -113,7 +109,6 @@ use Civi\Funding\EventSubscriber\Remote\ApplicationProcessDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessGetFieldsSubscriber;
 use Civi\Funding\Validation\ConcreteEntityValidatorInterface;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
-use Symfony\Component\DependencyInjection\Reference;
 
 $container->autowire(ApplicationProcessManager::class);
 $container->autowire(ApplicationProcessBundleLoader::class);
@@ -302,11 +297,3 @@ $container->autowire(ApplicationProcessActivityGetFieldsSubscriber::class)
   ->addTag('kernel.event_subscriber');
 
 $container->autowire(ApplicationSnapshotRestorerInterface::class, ApplicationSnapshotRestorer::class);
-
-$container->autowire(DefaultApplicationProcessStatusDeterminer::class);
-$container->autowire(DefaultApplicationProcessActionStatusInfo::class);
-
-$container->autowire(ReworkPossibleApplicationProcessStatusDeterminer::class)
-  ->addArgument(new Reference(DefaultApplicationProcessStatusDeterminer::class));
-$container->autowire(ReworkPossibleApplicationProcessActionStatusInfo::class)
-  ->addArgument(new Reference(DefaultApplicationProcessActionStatusInfo::class));

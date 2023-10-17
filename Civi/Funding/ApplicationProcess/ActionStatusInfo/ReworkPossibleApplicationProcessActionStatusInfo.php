@@ -21,8 +21,18 @@ namespace Civi\Funding\ApplicationProcess\ActionStatusInfo;
 
 /**
  * @codeCoverageIgnore
+ *
+ * phpcs:disable Generic.Files.LineLength.TooLong
  */
-final class ReworkPossibleApplicationProcessActionStatusInfo extends ApplicationProcessActionStatusInfoDecorator {
+final class ReworkPossibleApplicationProcessActionStatusInfo extends AbstractApplicationProcessActionStatusInfoDecorator {
+// phpcs:enable
+
+  /**
+   * @inheritDoc
+   */
+  public static function getSupportedFundingCaseTypes(): array {
+    return [];
+  }
 
   public function isApplyAction(string $action): bool {
     return 'apply' === $action || parent::isApplyAction($action);

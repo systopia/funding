@@ -29,7 +29,7 @@ use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDet
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ApplicationProcessFactory;
-use Civi\Funding\Form\ApplicationValidationResult;
+use Civi\Funding\Form\Application\ApplicationValidationResult;
 use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

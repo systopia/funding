@@ -23,7 +23,14 @@ use Civi\Funding\ApplicationProcess\ActionsDeterminer\Helper\DetermineApproveRej
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
 
-final class DefaultApplicationProcessActionsDeterminer extends ApplicationProcessActionsDeterminer {
+final class DefaultApplicationProcessActionsDeterminer extends AbstractApplicationProcessActionsDeterminer {
+
+  /**
+   * @inheritDoc
+   */
+  public static function getSupportedFundingCaseTypes(): array {
+    return [];
+  }
 
   use HasReviewPermissionTrait;
 

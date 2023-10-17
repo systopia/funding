@@ -20,8 +20,8 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewValidateCommand;
-use Civi\Funding\Form\ApplicationValidationResult;
-use Civi\Funding\Form\NonCombinedApplicationValidatorInterface;
+use Civi\Funding\Form\Application\ApplicationValidationResult;
+use Civi\Funding\Form\Application\NonCombinedApplicationValidatorInterface;
 
 final class ApplicationFormNewValidateHandler implements ApplicationFormNewValidateHandlerInterface {
 

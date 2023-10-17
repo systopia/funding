@@ -19,13 +19,13 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\SammelantragKurs\Application\Actions;
 
-use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminer;
+use Civi\Funding\ApplicationProcess\ActionsDeterminer\AbstractApplicationProcessActionsDeterminer;
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\Helper\DetermineApproveRejectActionsHelper;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
 use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
 
-final class KursApplicationActionsDeterminer extends ApplicationProcessActionsDeterminer {
+final class KursApplicationActionsDeterminer extends AbstractApplicationProcessActionsDeterminer {
 
   use HasReviewPermissionTrait;
 

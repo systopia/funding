@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationAllowedActionsGetCommand;
-use Civi\Funding\Form\ApplicationSubmitActionsFactoryInterface;
+use Civi\Funding\Form\Application\ApplicationSubmitActionsFactoryInterface;
 
 /**
  * @codeCoverageIgnore

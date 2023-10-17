@@ -29,8 +29,8 @@ use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationFormSubmitSuccessEvent;
-use Civi\Funding\Form\ApplicationValidationResult;
-use Civi\Funding\Mock\Form\FundingCaseType\TestValidatedData;
+use Civi\Funding\Form\Application\ApplicationValidationResult;
+use Civi\Funding\Mock\FundingCaseType\Application\Validation\TestValidatedData;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
