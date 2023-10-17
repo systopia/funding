@@ -31,7 +31,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @covers \Civi\Funding\FundingCase\Handler\FundingCaseFormNewValidateHandler
  * @covers \Civi\Funding\FundingCase\Command\FundingCaseFormNewValidateCommand
- * @covers \Civi\Funding\FundingCase\Command\FundingCaseFormValidateResult
+ * @covers \Civi\Funding\Form\FundingCase\FundingCaseValidationResult
  */
 final class FundingCaseFormNewValidateHandlerTest extends TestCase {
 

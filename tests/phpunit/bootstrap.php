@@ -124,7 +124,7 @@ function _funding_test_civicrm_container(ContainerBuilder $container): void {
     ->addTag(TestFundingCaseValidator::SERVICE_TAG);
 }
 
-function addExtensionToClassLoader(string $extension) {
+function addExtensionToClassLoader(string $extension): void {
   $extensionDir = __DIR__ . '/../../../' . $extension;
   $loader = new ClassLoader();
   $loader->add('CRM_', [$extensionDir]);
