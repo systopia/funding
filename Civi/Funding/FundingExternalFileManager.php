@@ -158,7 +158,7 @@ final class FundingExternalFileManager implements FundingExternalFileManagerInte
         'file_id' => $fileIds,
         'extension' => E::SHORT_NAME,
       ]),
-      [],
+      ['id' => 'ASC'],
       0,
       0,
       ['checkPermissions' => FALSE]

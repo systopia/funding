@@ -3,6 +3,8 @@ set -eu -o pipefail
 
 ACTIVITY_ENTITY_BRANCH=main
 EXTERNAL_FILE_BRANCH=main
+CIVIBANKING_VERSION=0.8.3
+CIVIOFFICE_VERSION=1.0-beta1
 XCM_VERSION=1.12.0
 #IDENTITYTRACKER_VERSION=1.3
 IDENTITYTRACKER_BRANCH=master
@@ -13,7 +15,7 @@ FUNDING_EXT_DIR=$(dirname "$(dirname "$(realpath "$0")")")
 
 if ! type git >/dev/null 2>&1; then
   apt -y update
-  apt -y install git
+  apt -y install git unoconv
 fi
 
 i=0
@@ -39,6 +41,12 @@ else
     -i /var/www/html/sites/default/civicrm.settings.php
   civicrm-docker-install
 
+  # Avoid this error:
+  # The autoloader expected class "Civi\ActionSchedule\Mapping" to be defined in
+  # file "[...]/Civi/ActionSchedule/Mapping.php". The file was found but the
+  # class was not in it, the class name or namespace probably has a typo.
+  rm -f /var/www/html/sites/all/modules/civicrm/Civi/ActionSchedule/Mapping.php
+
   # Ensure we have at least symfony/dependency-injection:~4 which is mandatory
   # for service locators. At least in Docker container with CiviCRM 5.50 there's
   # symfony/dependency-injection:~3 installed.
@@ -49,6 +57,10 @@ else
 
   cv ext:download "activity-entity@https://github.com/systopia/activity-entity/archive/refs/heads/$ACTIVITY_ENTITY_BRANCH.zip"
   cv ext:download "external-file@https://github.com/systopia/external-file/archive/refs/heads/$EXTERNAL_FILE_BRANCH.zip"
+  cv ext:download "org.project60.banking@https://github.com/Project60/org.project60.banking/releases/download/$CIVIBANKING_VERSION/org.project60.banking-$CIVIBANKING_VERSION.zip"
+  # For some reason fails with this error: Class "CRM_Civioffice_Upgrader" not found
+  cv ext:download "de.systopia.civioffice@https://github.com/systopia/de.systopia.civioffice/archive/refs/tags/$CIVIOFFICE_VERSION.zip" ||:
+  cv ext:enable de.systopia.civioffice
   cv ext:download "de.systopia.xcm@https://github.com/systopia/de.systopia.xcm/releases/download/$XCM_VERSION/de.systopia.xcm-$XCM_VERSION.zip"
   #cv ext:download "de.systopia.identitytracker@https://github.com/systopia/de.systopia.identitytracker/releases/download/$IDENTITYTRACKER_VERSION/de.systopia.identitytracker-$IDENTITYTRACKER_VERSION.zip"
   cv ext:download "de.systopia.identitytracker@https://github.com/systopia/de.systopia.identitytracker/archive/refs/heads/$IDENTITYTRACKER_BRANCH.zip"

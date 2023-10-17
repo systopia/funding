@@ -47,7 +47,8 @@ final class CiviOfficeDocumentTest extends AbstractFundingHeadlessTestCase {
     $document->updateFileContent('changed');
     static::assertSame('changed', file_get_contents($tmpFile));
     chmod($tmpFile, 0);
-    static::assertFalse($document->isEditable());
+    // If running as root the file is still writeable.
+    static::assertSame(0 === posix_geteuid(), $document->isEditable());
     unlink($tmpFile);
   }
 
