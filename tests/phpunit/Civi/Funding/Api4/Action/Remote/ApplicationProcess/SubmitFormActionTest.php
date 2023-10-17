@@ -34,7 +34,7 @@ use Civi\Funding\Traits\CreateMockTrait;
  * @covers \Civi\Funding\Event\Remote\ApplicationProcess\SubmitApplicationFormEvent
  * @covers \Civi\Funding\Event\Remote\AbstractFundingSubmitFormEvent
  */
-final class SubmitFormActionTest extends AbstractFormActionTest {
+final class SubmitFormActionTest extends AbstractFormActionTestCase {
 
   use CreateMockTrait;
 

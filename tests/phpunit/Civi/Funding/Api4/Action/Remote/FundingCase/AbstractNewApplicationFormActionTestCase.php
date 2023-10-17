@@ -32,7 +32,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ClockMock;
 
-abstract class AbstractNewApplicationFormActionTest extends TestCase {
+abstract class AbstractNewApplicationFormActionTestCase extends TestCase {
 
   /**
    * @var \PHPUnit\Framework\MockObject\MockObject&\Civi\Core\CiviEventDispatcherInterface

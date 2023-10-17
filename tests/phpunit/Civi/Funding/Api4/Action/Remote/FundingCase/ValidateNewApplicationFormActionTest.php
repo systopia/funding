@@ -36,7 +36,7 @@ use Symfony\Bridge\PhpUnit\ClockMock;
  * @covers \Civi\Funding\Event\Remote\FundingCase\ValidateNewApplicationFormEvent
  * @covers \Civi\Funding\Event\Remote\AbstractFundingValidateFormEvent
  */
-final class ValidateNewApplicationFormActionTest extends AbstractNewApplicationFormActionTest {
+final class ValidateNewApplicationFormActionTest extends AbstractNewApplicationFormActionTestCase {
 
   use CreateMockTrait;
 

@@ -36,7 +36,7 @@ use Civi\RemoteTools\JsonSchema\JsonSchema;
  * @covers \Civi\Funding\Event\Remote\FundingCase\GetNewApplicationFormEvent
  * @covers \Civi\Funding\Event\Remote\AbstractFundingGetFormEvent
  */
-final class GetNewApplicationFormActionTest extends AbstractNewApplicationFormActionTest {
+final class GetNewApplicationFormActionTest extends AbstractNewApplicationFormActionTestCase {
 
   use CreateMockTrait;
 

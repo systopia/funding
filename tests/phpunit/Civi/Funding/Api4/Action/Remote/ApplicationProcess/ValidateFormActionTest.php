@@ -33,7 +33,7 @@ use Civi\Funding\Traits\CreateMockTrait;
  * @covers \Civi\Funding\Event\Remote\ApplicationProcess\ValidateApplicationFormEvent
  * @covers \Civi\Funding\Event\Remote\AbstractFundingValidateFormEvent
  */
-final class ValidateFormActionTest extends AbstractFormActionTest {
+final class ValidateFormActionTest extends AbstractFormActionTestCase {
 
   use CreateMockTrait;
 

@@ -28,7 +28,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ClockMock;
 
-abstract class AbstractFormActionTest extends TestCase {
+abstract class AbstractFormActionTestCase extends TestCase {
 
   protected const REMOTE_CONTACT_ID = '00';
 
