@@ -26,6 +26,11 @@ interface ApplicationProcessActionsDeterminerInterface {
   public const SERVICE_TAG = 'funding.application.actions_determiner';
 
   /**
+   * @phpstan-return array<string>
+   */
+  public static function getSupportedFundingCaseTypes(): array;
+
+  /**
    * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $statusList
    *    Status of other application processes in same funding case indexed by ID.
    * @phpstan-param array<string> $permissions

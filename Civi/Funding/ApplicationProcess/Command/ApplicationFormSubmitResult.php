@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Command;
 
-use Civi\Funding\Form\ApplicationValidationResult;
+use Civi\Funding\Form\Application\ApplicationValidationResult;
 
 final class ApplicationFormSubmitResult extends AbstractApplicationFormSubmitResult {
 

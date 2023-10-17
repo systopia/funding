@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Mock\Form;
 
-use Civi\Funding\Form\ValidatedApplicationDataInterface;
+use Civi\Funding\Form\Application\ValidatedApplicationDataInterface;
 
 /**
  * @phpstan-type mockValidatedDataT array<string, mixed>&array{

@@ -21,7 +21,7 @@ namespace Civi\Funding\ApplicationProcess\Command;
 
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\Traits\ApplicationProcessEntityBundleTrait;
-use Civi\Funding\Form\ApplicationValidationResult;
+use Civi\Funding\Form\Application\ApplicationValidationResult;
 use Webmozart\Assert\Assert;
 
 final class ApplicationActionApplyCommand {
@@ -35,7 +35,7 @@ final class ApplicationActionApplyCommand {
   private ?ApplicationValidationResult $validationResult;
 
   /**
-   * @param \Civi\Funding\Form\ApplicationValidationResult|null $validationResult
+   * @param \Civi\Funding\Form\Application\ApplicationValidationResult|null $validationResult
    *   A valid result or NULL.
    */
   public function __construct(

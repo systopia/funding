@@ -22,6 +22,9 @@ namespace Civi\Funding\ApplicationProcess\ActionsContainer;
 use Civi\Funding\Form\SubmitActionsContainerInterface;
 
 // phpcs:disable Generic.Files.LineLength.TooLong
+/**
+ * @codeCoverageIgnore
+ */
 abstract class AbstractApplicationSubmitActionsContainerDecorator implements ApplicationSubmitActionsContainerInterface {
 // phpcs:enable
   protected ApplicationSubmitActionsContainerInterface $submitActionsContainer;

@@ -21,4 +21,11 @@ namespace Civi\Funding\ApplicationProcess\ActionsContainer;
 
 final class ApplicationSubmitActionsContainer extends AbstractApplicationSubmitActionsContainer {
 
+  /**
+   * @inheritDoc
+   */
+  public static function getSupportedFundingCaseTypes(): array {
+    return [];
+  }
+
 }

@@ -24,8 +24,8 @@ use Civi\Funding\FundingCase\Command\FundingCaseFormUpdateSubmitCommand;
 use Civi\Funding\FundingCase\Command\FundingCaseFormUpdateSubmitResult;
 use Civi\Funding\FundingCase\Command\FundingCaseFormUpdateValidateCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
-use Civi\Funding\FundingCase\FundingCaseStatusDeterminerInterface;
 use Civi\Funding\FundingCase\Handler\Helper\ApplicationAllowedActionApplier;
+use Civi\Funding\FundingCase\StatusDeterminer\FundingCaseStatusDeterminerInterface;
 
 final class FundingCaseFormUpdateSubmitHandler implements FundingCaseFormUpdateSubmitHandlerInterface {
 

@@ -24,7 +24,7 @@ use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
 use Civi\Funding\FundingCase\FundingCaseManager;
-use Civi\Funding\FundingCase\FundingCaseStatusDeterminerInterface;
+use Civi\Funding\FundingCase\StatusDeterminer\FundingCaseStatusDeterminerInterface;
 use Civi\Funding\FundingCaseTypeServiceLocator;
 use Civi\Funding\FundingCaseTypeServiceLocatorContainer;
 use Civi\Funding\Mock\Psr\PsrContainer;
@@ -42,7 +42,7 @@ final class ApplicationProcessStatusSubscriberTest extends TestCase {
   private MockObject $fundingCaseManagerMock;
 
   /**
-   * @var \Civi\Funding\FundingCase\FundingCaseStatusDeterminerInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\FundingCase\StatusDeterminer\FundingCaseStatusDeterminerInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $statusDeterminerMock;
 

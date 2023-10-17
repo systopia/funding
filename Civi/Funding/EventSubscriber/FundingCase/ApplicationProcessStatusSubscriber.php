@@ -22,7 +22,7 @@ namespace Civi\Funding\EventSubscriber\FundingCase;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
 use Civi\Funding\FundingCase\FundingCaseManager;
-use Civi\Funding\FundingCase\FundingCaseStatusDeterminerInterface;
+use Civi\Funding\FundingCase\StatusDeterminer\FundingCaseStatusDeterminerInterface;
 use Civi\Funding\FundingCaseTypeServiceLocatorContainer;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 

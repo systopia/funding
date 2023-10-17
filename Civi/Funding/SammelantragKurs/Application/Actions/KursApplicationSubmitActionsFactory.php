@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\SammelantragKurs\Application\Actions;
 
-use Civi\Funding\Form\ApplicationSubmitActionsFactory;
+use Civi\Funding\Form\Application\ApplicationSubmitActionsFactory;
 use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
 
 final class KursApplicationSubmitActionsFactory extends ApplicationSubmitActionsFactory {

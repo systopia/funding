@@ -20,8 +20,8 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormAddCreateCommand;
-use Civi\Funding\Form\CombinedApplicationJsonSchemaFactoryInterface;
-use Civi\Funding\Form\CombinedApplicationUiSchemaFactoryInterface;
+use Civi\Funding\Form\Application\CombinedApplicationJsonSchemaFactoryInterface;
+use Civi\Funding\Form\Application\CombinedApplicationUiSchemaFactoryInterface;
 use Civi\RemoteTools\Form\RemoteForm;
 use Civi\RemoteTools\Form\RemoteFormInterface;
 

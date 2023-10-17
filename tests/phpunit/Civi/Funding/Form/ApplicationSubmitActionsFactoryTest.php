@@ -22,11 +22,12 @@ namespace Civi\Funding\Form;
 use Civi\Funding\ApplicationProcess\ActionsContainer\ApplicationSubmitActionsContainer;
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerInterface;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
+use Civi\Funding\Form\Application\ApplicationSubmitActionsFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Civi\Funding\Form\ApplicationSubmitActionsFactory
+ * @covers \Civi\Funding\Form\Application\ApplicationSubmitActionsFactory
  */
 final class ApplicationSubmitActionsFactoryTest extends TestCase {
 

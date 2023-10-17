@@ -25,7 +25,7 @@ use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Form\FundingCase\FundingCaseValidationResult;
 use Civi\Funding\Form\FundingCase\FundingCaseValidatorInterface;
 use Civi\Funding\FundingCase\Command\FundingCaseFormUpdateValidateCommand;
-use Civi\Funding\Mock\Form\FundingCaseType\FundingCase\TestFundingCaseValidatedData;
+use Civi\Funding\Mock\FundingCaseType\FundingCase\Validation\TestFundingCaseValidatedData;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

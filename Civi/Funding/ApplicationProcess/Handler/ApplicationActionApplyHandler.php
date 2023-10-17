@@ -26,7 +26,7 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationFormCommentPersistCommand
 use Civi\Funding\ApplicationProcess\Snapshot\ApplicationSnapshotRestorerInterface;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\Entity\ApplicationProcessEntity;
-use Civi\Funding\Form\ApplicationValidationResult;
+use Civi\Funding\Form\Application\ApplicationValidationResult;
 
 final class ApplicationActionApplyHandler implements ApplicationActionApplyHandlerInterface {
 

@@ -23,7 +23,16 @@ use Civi\Funding\ApplicationProcess\ActionsDeterminer\Helper\DetermineApproveRej
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
 
-final class ReworkPossibleApplicationProcessActionsDeterminer extends ApplicationProcessActionsDeterminer {
+// phpcs:disable Generic.Files.LineLength.TooLong
+final class ReworkPossibleApplicationProcessActionsDeterminer extends AbstractApplicationProcessActionsDeterminer {
+// phpcs:enable
+
+  /**
+   * @inheritDoc
+   */
+  public static function getSupportedFundingCaseTypes(): array {
+    return [];
+  }
 
   use HasReviewPermissionTrait;
 

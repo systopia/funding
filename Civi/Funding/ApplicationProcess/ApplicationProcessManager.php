@@ -34,7 +34,7 @@ use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreCreateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreDeleteEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
-use Civi\Funding\Form\ValidatedApplicationDataInterface;
+use Civi\Funding\Form\Application\ValidatedApplicationDataInterface;
 use Civi\Funding\Util\DateTimeUtil;
 use Civi\Funding\Util\Uuid;
 use Civi\RemoteTools\Api4\Api4Interface;

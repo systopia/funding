@@ -21,7 +21,7 @@ namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormDataGetCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateCommand;
-use Civi\Funding\Form\ApplicationFormDataFactoryInterface;
+use Civi\Funding\Form\Application\ApplicationFormDataFactoryInterface;
 
 final class ApplicationFormDataGetHandler implements ApplicationFormDataGetHandlerInterface {
 

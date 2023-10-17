@@ -26,8 +26,8 @@ use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
-use Civi\Funding\Form\ApplicationValidationResult;
-use Civi\Funding\Form\NonCombinedApplicationValidatorInterface;
+use Civi\Funding\Form\Application\ApplicationValidationResult;
+use Civi\Funding\Form\Application\NonCombinedApplicationValidatorInterface;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -59,7 +59,7 @@ final class ApplicationFormNewSubmitHandlerTest extends TestCase {
   private MockObject $statusDeterminerMock;
 
   /**
-   * @var \Civi\Funding\Form\NonCombinedApplicationValidatorInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\Form\Application\NonCombinedApplicationValidatorInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $validatorMock;
 

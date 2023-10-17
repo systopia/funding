@@ -27,9 +27,9 @@ use Civi\Funding\Form\FundingCase\ValidatedFundingCaseDataInvalid;
 use Civi\Funding\FundingCase\Command\FundingCaseFormUpdateSubmitCommand;
 use Civi\Funding\FundingCase\Command\FundingCaseFormUpdateValidateCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
-use Civi\Funding\FundingCase\FundingCaseStatusDeterminerInterface;
 use Civi\Funding\FundingCase\Handler\Helper\ApplicationAllowedActionApplier;
-use Civi\Funding\Mock\Form\FundingCaseType\FundingCase\TestFundingCaseValidatedData;
+use Civi\Funding\FundingCase\StatusDeterminer\FundingCaseStatusDeterminerInterface;
+use Civi\Funding\Mock\FundingCaseType\FundingCase\Validation\TestFundingCaseValidatedData;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -53,7 +53,7 @@ final class FundingCaseFormUpdateSubmitHandlerTest extends TestCase {
   private FundingCaseFormUpdateSubmitHandler $handler;
 
   /**
-   * @var \Civi\Funding\FundingCase\FundingCaseStatusDeterminerInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\FundingCase\StatusDeterminer\FundingCaseStatusDeterminerInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $statusDeterminerMock;
 

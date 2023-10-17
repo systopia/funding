@@ -27,6 +27,11 @@ interface ApplicationProcessActionStatusInfoInterface {
 
   /**
    * @phpstan-return array<string>
+   */
+  public static function getSupportedFundingCaseTypes(): array;
+
+  /**
+   * @phpstan-return array<string>
    *   Status of applications that are eligible.
    */
   public function getEligibleStatusList(): array;

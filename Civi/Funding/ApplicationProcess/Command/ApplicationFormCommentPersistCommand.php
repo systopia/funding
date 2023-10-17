@@ -23,7 +23,7 @@ use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
-use Civi\Funding\Form\ValidatedApplicationDataInterface;
+use Civi\Funding\Form\Application\ValidatedApplicationDataInterface;
 use Webmozart\Assert\Assert;
 
 final class ApplicationFormCommentPersistCommand {

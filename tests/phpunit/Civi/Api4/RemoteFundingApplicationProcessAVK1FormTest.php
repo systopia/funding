@@ -32,8 +32,8 @@ use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeProgramFixture;
 use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
-use Civi\Funding\Form\SonstigeAktivitaet\JsonSchema\AVK1JsonSchema;
-use Civi\Funding\Form\SonstigeAktivitaet\UISchema\AVK1UiSchema;
+use Civi\Funding\SonstigeAktivitaet\Application\JsonSchema\AVK1JsonSchema;
+use Civi\Funding\SonstigeAktivitaet\Application\UISchema\AVK1UiSchema;
 
 /**
  * @group headless

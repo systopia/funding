@@ -24,8 +24,8 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewSubmitCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewSubmitResult;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
-use Civi\Funding\Form\ApplicationValidationResult;
-use Civi\Funding\Form\NonCombinedApplicationValidatorInterface;
+use Civi\Funding\Form\Application\ApplicationValidationResult;
+use Civi\Funding\Form\Application\NonCombinedApplicationValidatorInterface;
 use Civi\Funding\FundingCase\FundingCaseManager;
 
 final class ApplicationFormNewSubmitHandler implements ApplicationFormNewSubmitHandlerInterface {

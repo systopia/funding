@@ -26,6 +26,13 @@ use Civi\Funding\Entity\FullApplicationProcessStatus;
  */
 final class DefaultApplicationProcessActionStatusInfo extends AbstractApplicationProcessActionStatusInfo {
 
+  /**
+   * @inheritDoc
+   */
+  public static function getSupportedFundingCaseTypes(): array {
+    return [];
+  }
+
   public function getEligibleStatusList(): array {
     return ['eligible', 'complete'];
   }

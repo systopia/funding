@@ -19,12 +19,12 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\SammelantragKurs\Application\Actions;
 
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoDecorator;
+use Civi\Funding\ApplicationProcess\ActionStatusInfo\AbstractApplicationProcessActionStatusInfoDecorator;
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\DefaultApplicationProcessActionStatusInfo;
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\ReworkPossibleApplicationProcessActionStatusInfo;
 use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
 
-final class KursApplicationActionStatusInfo extends ApplicationProcessActionStatusInfoDecorator {
+final class KursApplicationActionStatusInfo extends AbstractApplicationProcessActionStatusInfoDecorator {
 
   use KursSupportedFundingCaseTypesTrait;
 

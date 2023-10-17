@@ -25,7 +25,7 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationFormAddSubmitResult;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormAddValidateCommand;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
-use Civi\Funding\Form\ApplicationValidationResult;
+use Civi\Funding\Form\Application\ApplicationValidationResult;
 
 final class ApplicationFormAddSubmitHandler implements ApplicationFormAddSubmitHandlerInterface {
 
