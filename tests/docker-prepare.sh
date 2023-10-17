@@ -2,9 +2,12 @@
 set -eu -o pipefail
 
 ACTIVITY_ENTITY_BRANCH=main
-XCM_VERSION=1.8
-IDENTITYTRACKER_VERSION=1.3
-REMOTETOOLS_VERSION=0.4
+EXTERNAL_FILE_BRANCH=main
+XCM_VERSION=1.12.0
+#IDENTITYTRACKER_VERSION=1.3
+IDENTITYTRACKER_BRANCH=master
+#REMOTETOOLS_VERSION=0.4
+REMOTETOOLS_BRANCH=remote-tools-api4
 
 FUNDING_EXT_DIR=$(dirname "$(dirname "$(realpath "$0")")")
 
@@ -45,9 +48,12 @@ else
   fi
 
   cv ext:download "activity-entity@https://github.com/systopia/activity-entity/archive/refs/heads/$ACTIVITY_ENTITY_BRANCH.zip"
+  cv ext:download "external-file@https://github.com/systopia/external-file/archive/refs/heads/$EXTERNAL_FILE_BRANCH.zip"
   cv ext:download "de.systopia.xcm@https://github.com/systopia/de.systopia.xcm/releases/download/$XCM_VERSION/de.systopia.xcm-$XCM_VERSION.zip"
-  cv ext:download "de.systopia.identitytracker@https://github.com/systopia/de.systopia.identitytracker/releases/download/$IDENTITYTRACKER_VERSION/de.systopia.identitytracker-$IDENTITYTRACKER_VERSION.zip"
-  cv ext:download "de.systopia.remotetools@https://github.com/systopia/de.systopia.remotetools/archive/refs/tags/$REMOTETOOLS_VERSION.zip"
+  #cv ext:download "de.systopia.identitytracker@https://github.com/systopia/de.systopia.identitytracker/releases/download/$IDENTITYTRACKER_VERSION/de.systopia.identitytracker-$IDENTITYTRACKER_VERSION.zip"
+  cv ext:download "de.systopia.identitytracker@https://github.com/systopia/de.systopia.identitytracker/archive/refs/heads/$IDENTITYTRACKER_BRANCH.zip"
+  #cv ext:download "de.systopia.remotetools@https://github.com/systopia/de.systopia.remotetools/archive/refs/tags/$REMOTETOOLS_VERSION.zip"
+  cv ext:download "de.systopia.remotetools@https://github.com/systopia/de.systopia.remotetools/archive/refs/heads/$REMOTETOOLS_BRANCH.zip"
   cv ext:enable funding
 
   # For headless tests these files need to exist.
