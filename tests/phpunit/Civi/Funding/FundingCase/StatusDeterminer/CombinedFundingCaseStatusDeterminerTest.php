@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2023 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,10 +17,9 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\FundingCase;
+namespace Civi\Funding\FundingCase\StatusDeterminer;
 
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
-use Civi\Funding\FundingCase\StatusDeterminer\CombinedFundingCaseStatusDeterminer;
 use PHPUnit\Framework\TestCase;
 
 /**

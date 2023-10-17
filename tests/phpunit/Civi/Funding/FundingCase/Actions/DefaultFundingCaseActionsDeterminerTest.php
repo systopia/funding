@@ -17,11 +17,10 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\FundingCase;
+namespace Civi\Funding\FundingCase\Actions;
 
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
-use Civi\Funding\FundingCase\Actions\DefaultFundingCaseActionsDeterminer;
 use PHPUnit\Framework\TestCase;
 
 /**
