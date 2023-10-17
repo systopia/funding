@@ -18,7 +18,7 @@
   <version>0.8.0</version>
   <develStage>dev</develStage>
   <compatibility>
-    <ver>5.62</ver>
+    <ver>5.66</ver>
   </compatibility>
   <comments/>
   <requires>
@@ -27,6 +27,7 @@
     <ext>de.systopia.identitytracker</ext>
     <ext>de.systopia.civioffice</ext>
     <ext>activity-entity</ext>
+    <ext>external-file</ext>
     <ext>org.civicrm.search_kit</ext>
     <ext>org.project60.banking</ext>
   </requires>
