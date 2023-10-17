@@ -52,7 +52,7 @@ final class CreateAction extends AbstractRemoteFundingAction {
   protected ?float $amount = NULL;
 
   public function __construct(CiviEventDispatcherInterface $eventDispatcher) {
-    parent::__construct(RemoteFundingDrawdown::_getEntityName(), 'create');
+    parent::__construct(RemoteFundingDrawdown::getEntityName(), 'create');
     $this->_eventDispatcher = $eventDispatcher;
     $this->_authorizeRequestEventName = FundingEvents::REQUEST_AUTHORIZE_EVENT_NAME;
     $this->_initRequestEventName = FundingEvents::REQUEST_INIT_EVENT_NAME;
@@ -75,7 +75,7 @@ final class CreateAction extends AbstractRemoteFundingAction {
     Assert::notNull($this->amount);
 
     return new CreateEvent(
-      FundingDrawdown::_getEntityName(),
+      FundingDrawdown::getEntityName(),
       'create',
       [
         'values' => DrawdownEntity::fromArray([

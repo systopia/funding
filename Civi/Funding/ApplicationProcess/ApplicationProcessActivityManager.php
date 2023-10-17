@@ -60,7 +60,7 @@ class ApplicationProcessActivityManager {
     $activityValues = $this->api4->executeAction($createAction)->single();
     $connectAction = EntityActivity::connect(FALSE)
       ->setActivityId($activityValues['id'])
-      ->setEntity(FundingApplicationProcess::_getEntityName())
+      ->setEntity(FundingApplicationProcess::getEntityName())
       ->setEntityId($applicationProcess->getId());
 
     $this->api4->executeAction($connectAction);

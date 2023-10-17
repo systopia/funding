@@ -43,7 +43,7 @@ final class GetAction extends AbstractGetAction {
     Api4Interface $api4,
     ApplicationProcessManager $applicationProcessManager
   ) {
-    parent::__construct(FundingApplicationProcessActivity::_getEntityName(), 'get');
+    parent::__construct(FundingApplicationProcessActivity::getEntityName(), 'get');
     $this->api4 = $api4;
     $this->applicationProcessManager = $applicationProcessManager;
   }
@@ -64,7 +64,7 @@ final class GetAction extends AbstractGetAction {
 
     $action = Activity::get(FALSE)
       ->addJoin(
-        FundingApplicationProcess::_getEntityName() . ' AS ap', 'INNER', 'EntityActivity',
+        FundingApplicationProcess::getEntityName() . ' AS ap', 'INNER', 'EntityActivity',
         ['ap.id', '=', $this->applicationProcessId]
       )->setWhere($this->getWhere())
       ->setLimit($this->getLimit())

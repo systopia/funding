@@ -39,7 +39,7 @@ abstract class AbstractFormAction extends AbstractRemoteFundingAction {
     ApplicationProcessBundleLoader $applicationProcessBundleLoader,
     CiviEventDispatcherInterface $eventDispatcher
   ) {
-    parent::__construct(RemoteFundingApplicationProcess::_getEntityName(), $actionName);
+    parent::__construct(RemoteFundingApplicationProcess::getEntityName(), $actionName);
     $this->_applicationProcessBundleLoader = $applicationProcessBundleLoader;
     $this->_eventDispatcher = $eventDispatcher;
     $this->_authorizeRequestEventName = FundingEvents::REQUEST_AUTHORIZE_EVENT_NAME;

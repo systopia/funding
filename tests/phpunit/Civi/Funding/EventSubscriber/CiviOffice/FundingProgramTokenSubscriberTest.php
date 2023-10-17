@@ -63,7 +63,7 @@ final class FundingProgramTokenSubscriberTest extends TestCase {
 
     $tokenNameExtractorMock = $this->createMock(TokenNameExtractorInterface::class);
     $tokenNameExtractorMock->method('getTokenNames')
-      ->with(FundingProgram::_getEntityName(), FundingProgramEntity::class)
+      ->with(FundingProgram::getEntityName(), FundingProgramEntity::class)
       ->willReturn(['my_field' => 'Label']);
 
     $this->subscriber = new FundingProgramTokenSubscriber(
@@ -147,7 +147,7 @@ final class FundingProgramTokenSubscriberTest extends TestCase {
     $tokenProcessor->addRow(['fundingProgram' => $fundingProgram]);
 
     $this->tokenResolverMock->method('resolveToken')
-      ->with(FundingProgram::_getEntityName(), $fundingProgram, 'my_field')
+      ->with(FundingProgram::getEntityName(), $fundingProgram, 'my_field')
       ->willReturn(new ResolvedToken('foo', 'text/html'));
 
     $event = new TokenValueEvent($tokenProcessor);

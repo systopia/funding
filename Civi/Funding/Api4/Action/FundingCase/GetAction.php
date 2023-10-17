@@ -48,7 +48,7 @@ final class GetAction extends DAOGetAction {
     RequestContextInterface $requestContext,
     TransferContractRouter $transferContractRouterRecreate
   ) {
-    parent::__construct(FundingCase::_getEntityName(), 'get');
+    parent::__construct(FundingCase::getEntityName(), 'get');
     $this->_eventDispatcher = $eventDispatcher;
     $this->_possiblePermissionsLoader = $possiblePermissionsLoader;
     $this->requestContext = $requestContext;

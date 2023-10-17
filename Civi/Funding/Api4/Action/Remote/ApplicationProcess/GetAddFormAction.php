@@ -48,7 +48,7 @@ final class GetAddFormAction extends AbstractAction implements RemoteActionInter
   protected ?int $copyDataFromId = NULL;
 
   public function __construct(ActionHandlerInterface $actionHandler = NULL) {
-    parent::__construct(RemoteFundingApplicationProcess::_getEntityName(), 'getAddForm');
+    parent::__construct(RemoteFundingApplicationProcess::getEntityName(), 'getAddForm');
     $this->initActionHandler($actionHandler);
   }
 

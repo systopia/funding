@@ -53,7 +53,7 @@ class RecreateTransferContractAction extends AbstractAction {
     FundingProgramManager $fundingProgramManager,
     TransferContractRecreateHandlerInterface $transferContractRecreateHandler
   ) {
-    parent::__construct(FundingCase::_getEntityName(), 'recreateTransferContract');
+    parent::__construct(FundingCase::getEntityName(), 'recreateTransferContract');
     $this->applicationProcessManager = $applicationProcessManager;
     $this->fundingCaseManager = $fundingCaseManager;
     $this->fundingCaseTypeManager = $fundingCaseTypeManager;

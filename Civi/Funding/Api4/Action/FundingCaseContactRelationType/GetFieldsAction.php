@@ -29,7 +29,7 @@ use CRM_Funding_ExtensionUtil as E;
 final class GetFieldsAction extends BasicGetFieldsAction {
 
   public function __construct() {
-    parent::__construct(FundingCaseContactRelationType::_getEntityName(), 'getFields');
+    parent::__construct(FundingCaseContactRelationType::getEntityName(), 'getFields');
   }
 
   /**

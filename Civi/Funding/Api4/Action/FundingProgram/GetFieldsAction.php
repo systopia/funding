@@ -31,7 +31,7 @@ final class GetFieldsAction extends DAOGetFieldsAction {
   protected PossiblePermissionsLoaderInterface $_possiblePermissionsLoader;
 
   public function __construct(PossiblePermissionsLoaderInterface $possiblePermissionsLoader) {
-    parent::__construct(FundingProgram::_getEntityName(), 'getFields');
+    parent::__construct(FundingProgram::getEntityName(), 'getFields');
     $this->_possiblePermissionsLoader = $possiblePermissionsLoader;
   }
 

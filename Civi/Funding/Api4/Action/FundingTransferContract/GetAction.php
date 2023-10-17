@@ -46,7 +46,7 @@ final class GetAction extends AbstractGetAction {
     FundingProgramManager $fundingProgramManager,
     PayoutProcessManager $payoutProcessManager
   ) {
-    parent::__construct(FundingTransferContract::_getEntityName(), 'get');
+    parent::__construct(FundingTransferContract::getEntityName(), 'get');
     $this->fundingCaseManager = $fundingCaseManager;
     $this->fundingProgramManager = $fundingProgramManager;
     $this->payoutProcessManager = $payoutProcessManager;

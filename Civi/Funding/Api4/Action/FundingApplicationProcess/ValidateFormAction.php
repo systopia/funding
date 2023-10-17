@@ -43,7 +43,7 @@ final class ValidateFormAction extends AbstractAction {
     ApplicationProcessBundleLoader $applicationProcessBundleLoader,
     ApplicationFormValidateHandlerInterface $validateFormHandler
   ) {
-    parent::__construct(FundingApplicationProcess::_getEntityName(), 'validateForm');
+    parent::__construct(FundingApplicationProcess::getEntityName(), 'validateForm');
     $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
     $this->validateFormHandler = $validateFormHandler;
   }

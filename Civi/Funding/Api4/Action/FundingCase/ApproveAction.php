@@ -67,7 +67,7 @@ class ApproveAction extends AbstractAction {
     FundingProgramManager $fundingProgramManager,
     TransferContractRouter $transferContractRouter
   ) {
-    parent::__construct(FundingCase::_getEntityName(), 'approve');
+    parent::__construct(FundingCase::getEntityName(), 'approve');
     $this->applicationProcessManager = $applicationProcessManager;
     $this->approveHandler = $approveHandler;
     $this->fundingCaseManager = $fundingCaseManager;

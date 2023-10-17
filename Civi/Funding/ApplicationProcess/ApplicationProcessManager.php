@@ -58,7 +58,7 @@ class ApplicationProcessManager {
    */
   public function countBy(CompositeCondition $where): int {
     return $this->api4->countEntities(
-      FundingApplicationProcess::_getEntityName(),
+      FundingApplicationProcess::getEntityName(),
       $where,
       ['checkPermissions' => FALSE],
     );
@@ -149,7 +149,7 @@ class ApplicationProcessManager {
    *   Status of other application processes in same funding case indexed by ID.
    */
   public function getStatusListByFundingCaseId(int $fundingCaseId): array {
-    $action = $this->api4->createGetAction(FundingApplicationProcess::_getEntityName())
+    $action = $this->api4->createGetAction(FundingApplicationProcess::getEntityName())
       ->setCheckPermissions(FALSE)
       ->addSelect('id', 'status', 'is_review_calculative', 'is_review_content')
       ->addWhere('funding_case_id', '=', $fundingCaseId);
@@ -176,7 +176,7 @@ class ApplicationProcessManager {
     // @phpstan-ignore-next-line
     return ApplicationProcessEntity::allFromApiResult(
       $this->api4->getEntities(
-        FundingApplicationProcess::_getEntityName(),
+        FundingApplicationProcess::getEntityName(),
         Comparison::new('funding_case_id', '=', $fundingCaseId),
         [],
         0,
@@ -234,7 +234,7 @@ class ApplicationProcessManager {
     $preDeleteEvent = new ApplicationProcessPreDeleteEvent($applicationProcessBundle);
     $this->eventDispatcher->dispatch(ApplicationProcessPreDeleteEvent::class, $preDeleteEvent);
 
-    $action = (new DAODeleteAction(FundingApplicationProcess::_getEntityName(), 'delete'))
+    $action = (new DAODeleteAction(FundingApplicationProcess::getEntityName(), 'delete'))
       ->setCheckPermissions(FALSE)
       ->addWhere('id', '=', $applicationProcessBundle->getApplicationProcess()->getId());
     $this->api4->executeAction($action);

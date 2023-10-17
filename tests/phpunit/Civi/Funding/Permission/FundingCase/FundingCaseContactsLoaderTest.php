@@ -59,9 +59,9 @@ final class FundingCaseContactsLoaderTest extends TestCase {
   }
 
   public function testGetContactsWithPermission(): void {
-    $actionMock = new BasicGetAction(FundingCaseContactRelation::_getEntityName(), 'get');
+    $actionMock = new BasicGetAction(FundingCaseContactRelation::getEntityName(), 'get');
     $this->api4Mock->method('createGetAction')
-      ->with(FundingCaseContactRelation::_getEntityName())
+      ->with(FundingCaseContactRelation::getEntityName())
       ->willReturn($actionMock);
 
     $contactRelations = [

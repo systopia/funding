@@ -80,7 +80,7 @@ final class DrawdownRejectController implements PageControllerInterface {
     $payoutProcess = $this->payoutProcessManager->get($drawdown->getPayoutProcessId());
     Assert::notNull($payoutProcess, sprintf('Payout process with ID "%d" not found', $drawdown->getPayoutProcessId()));
 
-    $this->api4->execute(FundingDrawdown::_getEntityName(), 'reject', [
+    $this->api4->execute(FundingDrawdown::getEntityName(), 'reject', [
       'id' => $drawdownId,
     ]);
 

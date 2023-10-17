@@ -47,7 +47,7 @@ final class GetFieldsAction extends DAOGetFieldsAction {
     FundingCaseContactsLoader $contactsLoader,
     FundingCaseManager $fundingCaseManager
   ) {
-    parent::__construct(FundingApplicationProcess::_getEntityName(), 'getFields');
+    parent::__construct(FundingApplicationProcess::getEntityName(), 'getFields');
     $this->applicationProcessManager = $applicationProcessManager;
     $this->contactsLoader = $contactsLoader;
     $this->fundingCaseManager = $fundingCaseManager;

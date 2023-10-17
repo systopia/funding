@@ -20,7 +20,6 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\Funding\Api4\Traits\AccessPermissionsTrait;
-use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
 
 /**
  * FundingApplicationCostItem entity.
@@ -32,7 +31,5 @@ use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
 class FundingApplicationCostItem extends Generic\DAOEntity {
 
   use AccessPermissionsTrait;
-
-  use EntityNameTrait;
 
 }

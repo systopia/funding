@@ -3,8 +3,6 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
-use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
-
 /**
  * FundingApplicationSnapshot entity.
  *
@@ -13,7 +11,5 @@ use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
  * @package Civi\Api4
  */
 final class FundingApplicationSnapshot extends Generic\DAOEntity {
-
-  use EntityNameTrait;
 
 }

@@ -43,7 +43,7 @@ final class GetAction extends DAOGetAction {
     PossiblePermissionsLoaderInterface $possiblePermissionsLoader,
     RequestContextInterface $requestContext
   ) {
-    parent::__construct(FundingProgram::_getEntityName(), 'get');
+    parent::__construct(FundingProgram::getEntityName(), 'get');
     $this->_eventDispatcher = $eventDispatcher;
     $this->_possiblePermissionsLoader = $possiblePermissionsLoader;
     $this->requestContext = $requestContext;

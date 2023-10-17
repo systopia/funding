@@ -23,13 +23,10 @@ use Civi\Api4\Generic\AbstractEntity;
 use Civi\Funding\Api4\Action\FundingTransferContract\GetAction;
 use Civi\Funding\Api4\Action\FundingTransferContract\GetFieldsAction;
 use Civi\Funding\Api4\Traits\AccessPermissionsTrait;
-use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
 
 final class FundingTransferContract extends AbstractEntity {
 
   use AccessPermissionsTrait;
-
-  use EntityNameTrait;
 
   public static function get(): GetAction {
     return \Civi::service(GetAction::class);

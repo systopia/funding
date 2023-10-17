@@ -42,7 +42,7 @@ final class DeleteAction extends AbstractBatchAction {
     ApplicationDeleteHandlerInterface $applicationDeleteHandler,
     ApplicationProcessBundleLoader $applicationProcessBundleLoader
   ) {
-    parent::__construct(FundingApplicationProcess::_getEntityName(), 'delete');
+    parent::__construct(FundingApplicationProcess::getEntityName(), 'delete');
     $this->api4 = $api4;
     $this->applicationDeleteHandler = $applicationDeleteHandler;
     $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;

@@ -47,7 +47,7 @@ abstract class AbstractNewApplicationFormAction extends AbstractRemoteFundingAct
     CiviEventDispatcherInterface $eventDispatcher,
     FundingCaseTypeProgramRelationChecker $relationChecker
   ) {
-    parent::__construct(RemoteFundingCase::_getEntityName(), $actionName);
+    parent::__construct(RemoteFundingCase::getEntityName(), $actionName);
     $this->_fundingCaseTypeManager = $fundingCaseTypeManager;
     $this->_fundingProgramManager = $fundingProgramManager;
     $this->_eventDispatcher = $eventDispatcher;

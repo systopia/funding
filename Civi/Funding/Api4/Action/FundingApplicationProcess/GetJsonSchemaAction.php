@@ -41,7 +41,7 @@ final class GetJsonSchemaAction extends AbstractAction {
     ApplicationProcessBundleLoader $applicationProcessBundleLoader,
     ApplicationJsonSchemaGetHandlerInterface $jsonSchemaGetHandler
   ) {
-    parent::__construct(FundingApplicationProcess::_getEntityName(), 'getJsonSchema');
+    parent::__construct(FundingApplicationProcess::getEntityName(), 'getJsonSchema');
     $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
     $this->jsonSchemaGetHandler = $jsonSchemaGetHandler;
   }

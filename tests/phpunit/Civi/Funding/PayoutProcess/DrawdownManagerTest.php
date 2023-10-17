@@ -70,7 +70,7 @@ final class DrawdownManagerTest extends TestCase {
 
     $this->api4Mock->expects(static::once())->method('updateEntity')
       ->with(
-        FundingDrawdown::_getEntityName(),
+        FundingDrawdown::getEntityName(),
         $drawdown->getId(),
         [
           'status' => 'accepted',
@@ -94,7 +94,7 @@ final class DrawdownManagerTest extends TestCase {
 
     $this->api4Mock->expects(static::once())->method('execute')
       ->with(
-        FundingDrawdown::_getEntityName(),
+        FundingDrawdown::getEntityName(),
         'delete',
         [
           'where' => [['id', '=', $drawdown->getId()]],
@@ -113,7 +113,7 @@ final class DrawdownManagerTest extends TestCase {
 
     $this->api4Mock->expects(static::once())->method('getEntities')
       ->with(
-        FundingDrawdown::_getEntityName(),
+        FundingDrawdown::getEntityName(),
         Comparison::new('id', '=', $drawdown->getId()),
         [],
         1,
@@ -127,7 +127,7 @@ final class DrawdownManagerTest extends TestCase {
   public function testGetNull(): void {
     $this->api4Mock->expects(static::once())->method('getEntities')
       ->with(
-        FundingDrawdown::_getEntityName(),
+        FundingDrawdown::getEntityName(),
         Comparison::new('id', '=', 12),
         [],
         1,

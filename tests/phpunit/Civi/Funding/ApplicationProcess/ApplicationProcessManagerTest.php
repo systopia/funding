@@ -173,7 +173,7 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
     RequestTestUtil::mockInternalRequest($contact['id']);
     $this->applicationProcessManager->delete($applicationProcessBundle);
 
-    $action = (new DAOGetAction(FundingApplicationProcess::_getEntityName(), 'delete'))
+    $action = (new DAOGetAction(FundingApplicationProcess::getEntityName(), 'delete'))
       ->addWhere('id', '=', $applicationProcessBundle->getApplicationProcess()->getId());
     static::assertCount(0, $action->execute());
   }

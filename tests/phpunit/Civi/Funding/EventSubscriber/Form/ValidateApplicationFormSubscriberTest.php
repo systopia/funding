@@ -179,7 +179,7 @@ final class ValidateApplicationFormSubscriberTest extends TestCase {
   }
 
   private function createValidateNewFormEvent(): ValidateNewApplicationFormEvent {
-    return new ValidateNewApplicationFormEvent(RemoteFundingCase::_getEntityName(), 'ValidateNewApplicationForm', [
+    return new ValidateNewApplicationFormEvent(RemoteFundingCase::getEntityName(), 'ValidateNewApplicationForm', [
       'remoteContactId' => '00',
       'contactId' => 1,
       'fundingProgram' => FundingProgramFactory::createFundingProgram(),
@@ -189,7 +189,7 @@ final class ValidateApplicationFormSubscriberTest extends TestCase {
   }
 
   private function createValidateFormEvent(): ValidateApplicationFormEvent {
-    $event = new ValidateApplicationFormEvent(RemoteFundingApplicationProcess::_getEntityName(), 'ValidateForm', [
+    $event = new ValidateApplicationFormEvent(RemoteFundingApplicationProcess::getEntityName(), 'ValidateForm', [
       'remoteContactId' => '00',
       'contactId' => 1,
       'applicationProcessBundle' => ApplicationProcessBundleFactory::createApplicationProcessBundle(),

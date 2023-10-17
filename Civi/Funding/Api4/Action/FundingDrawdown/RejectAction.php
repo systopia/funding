@@ -45,7 +45,7 @@ class RejectAction extends AbstractAction {
     FundingCaseManager $fundingCaseManager,
     PayoutProcessManager $payoutProcessManager
   ) {
-    parent::__construct(FundingDrawdown::_getEntityName(), 'reject');
+    parent::__construct(FundingDrawdown::getEntityName(), 'reject');
     $this->drawdownManager = $drawdownManager;
     $this->fundingCaseManager = $fundingCaseManager;
     $this->payoutProcessManager = $payoutProcessManager;

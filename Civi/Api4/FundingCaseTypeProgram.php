@@ -21,7 +21,6 @@ namespace Civi\Api4;
 
 use Civi\Funding\Api4\Action\FundingCaseTypeProgram\GetRelationAction;
 use Civi\Funding\Api4\Traits\AccessPermissionsTrait;
-use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
 
 /**
  * FundingCaseTypeProgram entity.
@@ -33,8 +32,6 @@ use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
 class FundingCaseTypeProgram extends Generic\DAOEntity {
 
   use AccessPermissionsTrait;
-
-  use EntityNameTrait;
 
   /**
    * Returns the entity that has the given funding case type ID and the given

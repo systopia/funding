@@ -38,7 +38,7 @@ final class GetByFundingProgramIdAction extends AbstractAction {
   private LoggerInterface $logger;
 
   public function __construct(Api4Interface $api4, LoggerInterface $logger) {
-    parent::__construct(FundingCaseType::_getEntityName(), 'getByFundingProgramId');
+    parent::__construct(FundingCaseType::getEntityName(), 'getByFundingProgramId');
     $this->api4 = $api4;
     $this->logger = $logger;
   }
@@ -59,7 +59,7 @@ final class GetByFundingProgramIdAction extends AbstractAction {
       $action = FundingCaseType::get($this->getCheckPermissions())
         ->setDebug($this->getDebug())
         ->addJoin(
-          FundingCaseTypeProgram::_getEntityName() . ' AS cp', 'INNER', NULL,
+          FundingCaseTypeProgram::getEntityName() . ' AS cp', 'INNER', NULL,
           ['cp.funding_case_type_id', '=', 'id']
         )->addWhere('cp.funding_program_id', '=', $this->getFundingProgramId());
       $action->_run($result);
@@ -70,7 +70,7 @@ final class GetByFundingProgramIdAction extends AbstractAction {
   }
 
   private function fundingProgramExists(): bool {
-    $action = (new DAOGetAction(FundingProgram::_getEntityName(), 'get'))
+    $action = (new DAOGetAction(FundingProgram::getEntityName(), 'get'))
       ->setCheckPermissions($this->getCheckPermissions())
       ->selectRowCount()
       ->addWhere('id', '=', $this->getFundingProgramId());

@@ -29,7 +29,7 @@ final class GetAction extends DAOGetAction {
   private FundingCaseManager $fundingCaseManager;
 
   public function __construct(FundingCaseManager $fundingCaseManager) {
-    parent::__construct(FundingApplicationProcess::_getEntityName(), 'get');
+    parent::__construct(FundingApplicationProcess::getEntityName(), 'get');
     $this->fundingCaseManager = $fundingCaseManager;
   }
 

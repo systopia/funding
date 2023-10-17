@@ -31,7 +31,7 @@ final class DrawdownFixture {
    * @throws \CRM_Core_Exception
    */
   public static function addFixture(int $payoutProcessId, int $requesterContactId, array $values = []): DrawdownEntity {
-    $result = (new DAOCreateAction(FundingDrawdown::_getEntityName(), 'create'))
+    $result = (new DAOCreateAction(FundingDrawdown::getEntityName(), 'create'))
       ->setCheckPermissions(FALSE)
       ->setValues($values + [
         'payout_process_id' => $payoutProcessId,

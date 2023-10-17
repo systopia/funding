@@ -61,7 +61,7 @@ final class PayoutProcessManagerTest extends TestCase {
     $payoutProcess = PayoutProcessFactory::create();
     $this->api4Mock->expects(static::once())->method('updateEntity')
       ->with(
-        FundingPayoutProcess::_getEntityName(),
+        FundingPayoutProcess::getEntityName(),
         $payoutProcess->getId(),
         ['status' => 'closed'] + $payoutProcess->toArray(),
         ['checkPermissions' => FALSE],
@@ -76,7 +76,7 @@ final class PayoutProcessManagerTest extends TestCase {
     $payoutProcess = PayoutProcessFactory::create(['amount_total' => 12.34]);
 
     $this->api4Mock->expects(static::once())->method('createEntity')
-      ->with(FundingPayoutProcess::_getEntityName(), [
+      ->with(FundingPayoutProcess::getEntityName(), [
         'funding_case_id' => FundingCaseFactory::DEFAULT_ID,
         'status' => 'open',
         'amount_total' => 12.34,
@@ -94,7 +94,7 @@ final class PayoutProcessManagerTest extends TestCase {
 
     $this->api4Mock->expects(static::once())->method('getEntities')
       ->with(
-        FundingPayoutProcess::_getEntityName(),
+        FundingPayoutProcess::getEntityName(),
         Comparison::new('id', '=', $payoutProcess->getId()),
         [],
         1,
@@ -108,7 +108,7 @@ final class PayoutProcessManagerTest extends TestCase {
   public function testGetNull(): void {
     $this->api4Mock->expects(static::once())->method('getEntities')
       ->with(
-        FundingPayoutProcess::_getEntityName(),
+        FundingPayoutProcess::getEntityName(),
         Comparison::new('id', '=', 12),
         [],
         1,
@@ -124,7 +124,7 @@ final class PayoutProcessManagerTest extends TestCase {
 
     $this->api4Mock->method('getEntities')
       ->with(
-        FundingPayoutProcess::_getEntityName(),
+        FundingPayoutProcess::getEntityName(),
         Comparison::new('funding_case_id', '=', $payoutProcess->getId()),
         ['id' => 'DESC'],
         1,
@@ -138,7 +138,7 @@ final class PayoutProcessManagerTest extends TestCase {
   public function testHasAccess(): void {
     $this->api4Mock->method('countEntities')
       ->with(
-        FundingPayoutProcess::_getEntityName(),
+        FundingPayoutProcess::getEntityName(),
         Comparison::new('id', '=', 12),
         ['checkPermissions' => FALSE],
       )->willReturn(1);

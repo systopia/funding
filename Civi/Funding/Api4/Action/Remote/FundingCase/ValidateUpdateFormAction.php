@@ -42,7 +42,7 @@ final class ValidateUpdateFormAction extends AbstractAction implements RemoteAct
   use ResolvedContactIdTrait;
 
   public function __construct(ActionHandlerInterface $actionHandler = NULL) {
-    parent::__construct(RemoteFundingCase::_getEntityName(), 'validateUpdateForm');
+    parent::__construct(RemoteFundingCase::getEntityName(), 'validateUpdateForm');
     $this->initActionHandler($actionHandler);
   }
 

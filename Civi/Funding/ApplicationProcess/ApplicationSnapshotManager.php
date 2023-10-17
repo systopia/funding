@@ -37,7 +37,7 @@ class ApplicationSnapshotManager {
    */
   public function add(ApplicationSnapshotEntity $applicationSnapshot): void {
     $result = $this->api4->createEntity(
-      FundingApplicationSnapshot::_getEntityName(),
+      FundingApplicationSnapshot::getEntityName(),
       $applicationSnapshot->toArray(),
       ['checkPermissions' => FALSE],
     );
@@ -51,7 +51,7 @@ class ApplicationSnapshotManager {
    * @throws \CRM_Core_Exception
    */
   public function getByApplicationProcessId(int $applicationProcessId): array {
-    $result = $this->api4->getEntities(FundingApplicationSnapshot::_getEntityName(),
+    $result = $this->api4->getEntities(FundingApplicationSnapshot::getEntityName(),
       Comparison::new('application_process_id', '=', $applicationProcessId),
       ['id' => 'DESC']
     );
@@ -64,7 +64,7 @@ class ApplicationSnapshotManager {
    */
   public function getLastByApplicationProcessId(int $applicationProcessId): ?ApplicationSnapshotEntity {
     $result = $this->api4->getEntities(
-      FundingApplicationSnapshot::_getEntityName(),
+      FundingApplicationSnapshot::getEntityName(),
       Comparison::new('application_process_id', '=', $applicationProcessId),
       ['id' => 'DESC'],
       1,

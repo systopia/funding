@@ -205,7 +205,7 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
   }
 
   private function createSubmitNewFormEvent(): SubmitNewApplicationFormEvent {
-    return new SubmitNewApplicationFormEvent(RemoteFundingCase::_getEntityName(), 'SubmitNewApplicationForm', [
+    return new SubmitNewApplicationFormEvent(RemoteFundingCase::getEntityName(), 'SubmitNewApplicationForm', [
       'remoteContactId' => '00',
       'contactId' => 1,
       'fundingProgram' => FundingProgramFactory::createFundingProgram(),
@@ -215,7 +215,7 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
   }
 
   private function createSubmitFormEvent(): SubmitApplicationFormEvent {
-    $event = new SubmitApplicationFormEvent(RemoteFundingApplicationProcess::_getEntityName(), 'submitForm', [
+    $event = new SubmitApplicationFormEvent(RemoteFundingApplicationProcess::getEntityName(), 'submitForm', [
       'remoteContactId' => '00',
       'contactId' => 1,
       'applicationProcessBundle' => ApplicationProcessBundleFactory::createApplicationProcessBundle(),

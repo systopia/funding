@@ -36,7 +36,7 @@ class AcceptAction extends AbstractAction {
   private RequestContextInterface $requestContext;
 
   public function __construct(DrawdownManager $drawdownManager, RequestContextInterface $requestContext) {
-    parent::__construct(FundingDrawdown::_getEntityName(), 'accept');
+    parent::__construct(FundingDrawdown::getEntityName(), 'accept');
     $this->drawdownManager = $drawdownManager;
     $this->requestContext = $requestContext;
   }

@@ -22,13 +22,10 @@ namespace Civi\Api4;
 use Civi\Funding\Api4\Action\RecipientContactRelationType\GetAction;
 use Civi\Funding\Api4\Action\RecipientContactRelationType\GetFieldsAction;
 use Civi\Funding\Api4\Traits\AdministerPermissionsTrait;
-use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
 
 final class FundingRecipientContactRelationType extends Generic\AbstractEntity {
 
   use AdministerPermissionsTrait;
-
-  use EntityNameTrait;
 
   public static function get(): GetAction {
     return \Civi::service(GetAction::class);

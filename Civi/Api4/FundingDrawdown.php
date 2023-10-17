@@ -12,7 +12,6 @@ use Civi\Funding\Api4\Action\FundingDrawdown\SaveAction;
 use Civi\Funding\Api4\Action\FundingDrawdown\UpdateAction;
 use Civi\Funding\Api4\Permissions;
 use Civi\Funding\Api4\Traits\AccessPermissionsTrait;
-use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
 
 /**
  * FundingDrawdown entity.
@@ -26,8 +25,6 @@ final class FundingDrawdown extends Generic\DAOEntity {
   use AccessPermissionsTrait {
     permissions as private traitPermissions;
   }
-
-  use EntityNameTrait;
 
   public static function accept(bool $checkPermissions = TRUE): AcceptAction {
     return \Civi::service(AcceptAction::class)->setCheckPermissions($checkPermissions);

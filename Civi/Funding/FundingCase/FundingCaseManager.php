@@ -215,7 +215,7 @@ class FundingCaseManager {
    */
   private function getLastBy(ConditionInterface $condition): ?FundingCaseEntity {
     $result = $this->api4->getEntities(
-      FundingCase::_getEntityName(),
+      FundingCase::getEntityName(),
       $condition,
       ['id' => 'DESC'],
       1,

@@ -30,7 +30,7 @@ final class FundingCaseGetPossiblePermissionsSubscriber implements EventSubscrib
    * @inheritDoc
    */
   public static function getSubscribedEvents(): array {
-    return [GetPossiblePermissionsEvent::getName(FundingCase::_getEntityName()) => 'onGetPossiblePermissions'];
+    return [GetPossiblePermissionsEvent::getName(FundingCase::getEntityName()) => 'onGetPossiblePermissions'];
   }
 
   public function onGetPossiblePermissions(GetPossiblePermissionsEvent $event): void {

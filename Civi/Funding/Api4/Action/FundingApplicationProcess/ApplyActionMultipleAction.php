@@ -41,7 +41,7 @@ final class ApplyActionMultipleAction extends AbstractAction {
   protected ?string $action = NULL;
 
   public function __construct() {
-    parent::__construct(FundingApplicationProcess::_getEntityName(), 'applyActionMultiple');
+    parent::__construct(FundingApplicationProcess::getEntityName(), 'applyActionMultiple');
   }
 
 }

@@ -139,7 +139,7 @@ final class DefaultPossibleRecipientsLoaderTest extends TestCase {
   private function mockApiContactRelationGet(array $contactRelations, int $fundingProgramId): void {
     $this->api4Mock->expects(static::once())->method('executeAction')
       ->with(static::callback(function (AbstractGetAction $action) use ($fundingProgramId) {
-        static::assertSame(FundingRecipientContactRelation::_getEntityName(), $action->getEntityName());
+        static::assertSame(FundingRecipientContactRelation::getEntityName(), $action->getEntityName());
         static::assertSame([['funding_program_id', '=', $fundingProgramId, FALSE]], $action->getWhere());
 
         return TRUE;

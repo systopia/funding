@@ -76,7 +76,7 @@ final class AVK1StatusMarkupFactory {
     $content[] = sprintf(
       'Aktueller Status: %s',
       $this->optionsLoader->getOptionLabel(
-        FundingApplicationProcess::_getEntityName(),
+        FundingApplicationProcess::getEntityName(),
         'status',
         $applicationProcess->getStatus()
       )

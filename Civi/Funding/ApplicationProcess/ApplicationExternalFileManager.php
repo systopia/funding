@@ -154,7 +154,7 @@ final class ApplicationExternalFileManager implements ApplicationExternalFileMan
    */
   private function buildCustomData(int $applicationProcessId, ?array $customData): array {
     return [
-      'entityName' => FundingApplicationProcess::_getEntityName(),
+      'entityName' => FundingApplicationProcess::getEntityName(),
       'entityId' => $applicationProcessId,
     ] + ($customData ?? []);
   }
@@ -187,7 +187,7 @@ final class ApplicationExternalFileManager implements ApplicationExternalFileMan
   }
 
   private function getIdentifierPrefix(int $applicationProcessId): string {
-    return FundingApplicationProcess::_getEntityName() . '.' . $applicationProcessId . ':';
+    return FundingApplicationProcess::getEntityName() . '.' . $applicationProcessId . ':';
   }
 
   /**

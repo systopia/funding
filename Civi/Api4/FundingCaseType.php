@@ -22,7 +22,6 @@ namespace Civi\Api4;
 use Civi\Api4\Generic\Traits\ManagedEntity;
 use Civi\Funding\Api4\Action\FundingCaseType\GetByFundingProgramIdAction;
 use Civi\Funding\Api4\Traits\AccessPermissionsTrait;
-use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
 
 /**
  * FundingCaseType entity.
@@ -34,8 +33,6 @@ use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
 class FundingCaseType extends Generic\DAOEntity {
 
   use AccessPermissionsTrait;
-
-  use EntityNameTrait;
 
   use ManagedEntity;
 

@@ -25,7 +25,7 @@ use Civi\RemoteTools\Event\AbstractGetPermissionsEvent;
 final class GetPermissionsEvent extends AbstractGetPermissionsEvent {
 
   public function __construct(int $entityId, int $contactId) {
-    parent::__construct(RemoteFundingProgram::_getEntityName(), $entityId, $contactId);
+    parent::__construct(RemoteFundingProgram::getEntityName(), $entityId, $contactId);
   }
 
 }

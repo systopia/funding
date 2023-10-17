@@ -48,7 +48,7 @@ class DrawdownManager {
       ->setAcceptionDate(new \DateTime(date('Y-m-d H:i:s')));
 
     $this->api4->updateEntity(
-      FundingDrawdown::_getEntityName(),
+      FundingDrawdown::getEntityName(),
       $drawdown->getId(),
       $drawdown->toArray(),
       ['checkPermissions' => FALSE],
@@ -62,7 +62,7 @@ class DrawdownManager {
    * @throws \CRM_Core_Exception
    */
   public function delete(DrawdownEntity $drawdown): void {
-    $this->api4->execute(FundingDrawdown::_getEntityName(), 'delete', [
+    $this->api4->execute(FundingDrawdown::getEntityName(), 'delete', [
       'where' => [['id', '=', $drawdown->getId()]],
       'checkPermissions' => FALSE,
     ]);
@@ -76,7 +76,7 @@ class DrawdownManager {
    */
   public function get(int $id): ?DrawdownEntity {
     $result = $this->api4->getEntities(
-      FundingDrawdown::_getEntityName(),
+      FundingDrawdown::getEntityName(),
       Comparison::new('id', '=', $id),
       [],
       1,
