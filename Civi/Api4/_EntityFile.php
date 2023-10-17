@@ -36,7 +36,7 @@ else {
 
     use Generic\Traits\EntityBridge;
 
-    protected static function getEntityName() {
+    public static function getEntityName(): string {
       return 'EntityFile';
     }
 
