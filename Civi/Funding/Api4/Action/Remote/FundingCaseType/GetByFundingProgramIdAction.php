@@ -40,7 +40,7 @@ final class GetByFundingProgramIdAction extends AbstractEventAction implements R
     parent::__construct(
       FundingEvents::REQUEST_INIT_EVENT_NAME,
       FundingEvents::REQUEST_AUTHORIZE_EVENT_NAME,
-      RemoteFundingCaseType::_getEntityName(),
+      RemoteFundingCaseType::getEntityName(),
       'getByFundingProgramId',
       $eventDispatcher
     );

@@ -32,7 +32,7 @@ final class GetFieldsAction extends DAOGetFieldsAction {
   private PossiblePermissionsLoaderInterface $possiblePermissionsLoader;
 
   public function __construct(PossiblePermissionsLoaderInterface $possiblePermissionsLoader) {
-    parent::__construct(FundingProgramContactRelation::_getEntityName(), 'getFields');
+    parent::__construct(FundingProgramContactRelation::getEntityName(), 'getFields');
     $this->possiblePermissionsLoader = $possiblePermissionsLoader;
   }
 
@@ -40,7 +40,7 @@ final class GetFieldsAction extends DAOGetFieldsAction {
    * @phpstan-return array<string>
    */
   protected function getPossiblePermissions(): array {
-    return $this->possiblePermissionsLoader->getPermissions(FundingProgram::_getEntityName());
+    return $this->possiblePermissionsLoader->getPermissions(FundingProgram::getEntityName());
   }
 
 }

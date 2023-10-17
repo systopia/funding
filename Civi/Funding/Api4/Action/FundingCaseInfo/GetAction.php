@@ -67,7 +67,7 @@ final class GetAction extends AbstractGetAction {
     ApplicationProcessBundleLoader $applicationProcessBundleLoader,
     FundingCaseManager $fundingCaseManager
   ) {
-    parent::__construct(FundingCaseInfo::_getEntityName(), 'get');
+    parent::__construct(FundingCaseInfo::getEntityName(), 'get');
     $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
     $this->fundingCaseManager = $fundingCaseManager;
   }

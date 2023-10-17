@@ -57,7 +57,7 @@ final class FundingCaseTypeTokenSubscriber extends AbstractCiviOfficeTokenSubscr
   }
 
   protected function getApiEntityName(): string {
-    return FundingCaseType::_getEntityName();
+    return FundingCaseType::getEntityName();
   }
 
 }

@@ -25,7 +25,6 @@ use Civi\Funding\Api4\Action\FundingCase\GetFieldsAction;
 use Civi\Funding\Api4\Action\FundingCase\GetPossibleActionsAction;
 use Civi\Funding\Api4\Action\FundingCase\RecreateTransferContractAction;
 use Civi\Funding\Api4\Traits\AccessPermissionsTrait;
-use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
 
 /**
  * FundingCase entity.
@@ -35,8 +34,6 @@ use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
 final class FundingCase extends Generic\DAOEntity {
 
   use AccessPermissionsTrait;
-
-  use EntityNameTrait;
 
   public static function approve(bool $checkPermissions = TRUE): ApproveAction {
     return \Civi::service(ApproveAction::class)->setCheckPermissions($checkPermissions);

@@ -36,7 +36,7 @@ final class UpdateAction extends DAOUpdateAction {
     Api4Interface $api4,
     EntityValidatorInterface $entityValidator
   ) {
-    parent::__construct(FundingApplicationProcess::_getEntityName(), 'update');
+    parent::__construct(FundingApplicationProcess::getEntityName(), 'update');
     $this->_api4 = $api4;
     $this->_entityValidator = $entityValidator;
   }

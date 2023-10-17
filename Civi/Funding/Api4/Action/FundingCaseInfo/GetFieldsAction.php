@@ -35,7 +35,7 @@ final class GetFieldsAction extends BasicGetFieldsAction {
   private OptionsLoaderInterface $optionsLoader;
 
   public function __construct(Api4Interface $api4, OptionsLoaderInterface $optionsLoader) {
-    parent::__construct(FundingCaseInfo::_getEntityName(), 'getFields');
+    parent::__construct(FundingCaseInfo::getEntityName(), 'getFields');
     $this->api4 = $api4;
     $this->optionsLoader = $optionsLoader;
   }
@@ -146,7 +146,7 @@ final class GetFieldsAction extends BasicGetFieldsAction {
         'name' => 'funding_case_status',
         'title' => 'funding_case_status',
         'data_type' => 'String',
-        'options' => $this->getOptions(FundingCase::_getEntityName(), 'status'),
+        'options' => $this->getOptions(FundingCase::getEntityName(), 'status'),
       ],
       [
         'name' => 'funding_case_creation_date',
@@ -221,7 +221,7 @@ final class GetFieldsAction extends BasicGetFieldsAction {
         'name' => 'application_process_status',
         'title' => 'application_process_status',
         'data_type' => 'String',
-        'options' => $this->getOptions(FundingApplicationProcess::_getEntityName(), 'status'),
+        'options' => $this->getOptions(FundingApplicationProcess::getEntityName(), 'status'),
       ],
       [
         'name' => 'application_process_is_review_calculative',

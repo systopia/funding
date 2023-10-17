@@ -22,11 +22,8 @@ namespace Civi\Funding\Api4;
 use Civi\Api4\Generic\AbstractEntity;
 use Civi\Funding\Api4\Action\Remote\CheckAccessAction;
 use Civi\Funding\Api4\Action\Remote\GetFieldsAction;
-use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
 
 class AbstractRemoteFundingEntity extends AbstractEntity {
-
-  use EntityNameTrait;
 
   /**
    * @inerhitDoc

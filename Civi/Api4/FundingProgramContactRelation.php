@@ -21,7 +21,6 @@ namespace Civi\Api4;
 
 use Civi\Funding\Api4\Action\FundingProgramContactRelation\GetFieldsAction;
 use Civi\Funding\Api4\Traits\AdministerPermissionsTrait;
-use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
 
 /**
  * FundingProgramContactRelation entity.
@@ -33,8 +32,6 @@ use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
 class FundingProgramContactRelation extends Generic\DAOEntity {
 
   use AdministerPermissionsTrait;
-
-  use EntityNameTrait;
 
   public static function getFields($checkPermissions = TRUE) {
     return \Civi::service(GetFieldsAction::class)->setCheckPermissions($checkPermissions);

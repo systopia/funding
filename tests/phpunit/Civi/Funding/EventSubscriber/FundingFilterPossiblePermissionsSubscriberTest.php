@@ -42,9 +42,9 @@ final class FundingFilterPossiblePermissionsSubscriberTest extends TestCase {
 
   public function testGetSubscribedEvents(): void {
     $expectedSubscriptions = [
-      FilterPossiblePermissionsEvent::getName(FundingCase::_getEntityName())
+      FilterPossiblePermissionsEvent::getName(FundingCase::getEntityName())
       => ['onFilterPossiblePermissions', PHP_INT_MIN],
-      FilterPossiblePermissionsEvent::getName(FundingProgram::_getEntityName())
+      FilterPossiblePermissionsEvent::getName(FundingProgram::getEntityName())
       => ['onFilterPossiblePermissions', PHP_INT_MIN],
     ];
 

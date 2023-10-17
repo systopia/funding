@@ -36,9 +36,9 @@ final class FundingFilterPossiblePermissionsSubscriber implements EventSubscribe
    */
   public static function getSubscribedEvents(): array {
     return [
-      FilterPossiblePermissionsEvent::getName(FundingCase::_getEntityName())
+      FilterPossiblePermissionsEvent::getName(FundingCase::getEntityName())
       => ['onFilterPossiblePermissions', PHP_INT_MIN],
-      FilterPossiblePermissionsEvent::getName(FundingProgram::_getEntityName())
+      FilterPossiblePermissionsEvent::getName(FundingProgram::getEntityName())
       => ['onFilterPossiblePermissions', PHP_INT_MIN],
     ];
   }

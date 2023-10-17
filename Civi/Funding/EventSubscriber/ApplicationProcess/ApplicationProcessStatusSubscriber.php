@@ -81,7 +81,7 @@ final class ApplicationProcessStatusSubscriber implements EventSubscriberInterfa
    */
   private function getStatusLabel(string $status): string {
     return $this->optionsLoader->getOptionLabel(
-      FundingApplicationProcess::_getEntityName(),
+      FundingApplicationProcess::getEntityName(),
       'status',
       $status
     ) ?? $status;

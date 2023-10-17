@@ -36,7 +36,7 @@ final class CreateAction extends DAOCreateAction {
     Api4Interface $api4,
     EntityValidatorInterface $entityValidator
   ) {
-    parent::__construct(FundingDrawdown::_getEntityName(), 'create');
+    parent::__construct(FundingDrawdown::getEntityName(), 'create');
     $this->_api4 = $api4;
     $this->_entityValidator = $entityValidator;
   }

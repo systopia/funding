@@ -32,7 +32,7 @@ final class GetAction extends AbstractGetAction {
   private RelationTypeContainerInterface $relationTypeContainer;
 
   public function __construct(RelationTypeContainerInterface $relationTypeContainer) {
-    parent::__construct(FundingRecipientContactRelationType::_getEntityName(), 'get');
+    parent::__construct(FundingRecipientContactRelationType::getEntityName(), 'get');
     $this->relationTypeContainer = $relationTypeContainer;
   }
 

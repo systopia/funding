@@ -60,7 +60,7 @@ final class GetAction extends DAOGetAction {
     FundingProgramManager $fundingProgramManager,
     PayoutProcessManager $payoutProcessManager
   ) {
-    parent::__construct(FundingDrawdown::_getEntityName(), 'get');
+    parent::__construct(FundingDrawdown::getEntityName(), 'get');
     $this->fundingCaseManager = $fundingCaseManager;
     $this->fundingProgramManager = $fundingProgramManager;
     $this->payoutProcessManager = $payoutProcessManager;

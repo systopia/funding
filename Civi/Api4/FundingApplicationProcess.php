@@ -32,7 +32,6 @@ use Civi\Funding\Api4\Action\FundingApplicationProcess\SubmitFormAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\UpdateAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\ValidateFormAction;
 use Civi\Funding\Api4\Traits\AccessPermissionsTrait;
-use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
 
 /**
  * FundingApplicationProcess entity.
@@ -61,8 +60,6 @@ use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
 class FundingApplicationProcess extends Generic\DAOEntity {
 
   use AccessPermissionsTrait;
-
-  use EntityNameTrait;
 
   public static function create($checkPermissions = TRUE) {
     return \Civi::service(CreateAction::class)->setCheckPermissions($checkPermissions);

@@ -42,7 +42,7 @@ final class SubmitAddFormAction extends AbstractAction implements RemoteActionIn
   use ResolvedContactIdTrait;
 
   public function __construct(ActionHandlerInterface $actionHandler = NULL) {
-    parent::__construct(RemoteFundingApplicationProcess::_getEntityName(), 'submitAddForm');
+    parent::__construct(RemoteFundingApplicationProcess::getEntityName(), 'submitAddForm');
     $this->initActionHandler($actionHandler);
   }
 

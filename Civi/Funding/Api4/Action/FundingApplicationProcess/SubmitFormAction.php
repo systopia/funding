@@ -52,7 +52,7 @@ final class SubmitFormAction extends AbstractAction {
     ApplicationFormSubmitHandlerInterface $submitFormHandler,
     RequestContextInterface $requestContext
   ) {
-    parent::__construct(FundingApplicationProcess::_getEntityName(), 'submitForm');
+    parent::__construct(FundingApplicationProcess::getEntityName(), 'submitForm');
     $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
     $this->formDataGetHandler = $formDataGetHandler;
     $this->submitFormHandler = $submitFormHandler;

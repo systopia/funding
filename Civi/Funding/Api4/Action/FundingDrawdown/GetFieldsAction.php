@@ -29,7 +29,7 @@ use CRM_Funding_ExtensionUtil as E;
 final class GetFieldsAction extends DAOGetFieldsAction {
 
   public function __construct() {
-    parent::__construct(FundingDrawdown::_getEntityName(), 'getFields');
+    parent::__construct(FundingDrawdown::getEntityName(), 'getFields');
   }
 
   /**

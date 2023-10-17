@@ -47,7 +47,7 @@ final class ActivityFixture {
 
     EntityActivity::connect(FALSE)
       ->setActivityId($activityValues['id'])
-      ->setEntity(FundingApplicationProcess::_getEntityName())
+      ->setEntity(FundingApplicationProcess::getEntityName())
       ->setEntityId($applicationProcessId)
       ->execute();
 

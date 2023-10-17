@@ -32,7 +32,7 @@ final class GetAction extends AbstractGetAction {
   private RelationPropertiesFactoryTypeContainer $factoryTypeContainer;
 
   public function __construct(RelationPropertiesFactoryTypeContainer $factoryTypeContainer) {
-    parent::__construct(FundingCaseContactRelationPropertiesFactoryType::_getEntityName(), 'get');
+    parent::__construct(FundingCaseContactRelationPropertiesFactoryType::getEntityName(), 'get');
     $this->factoryTypeContainer = $factoryTypeContainer;
   }
 

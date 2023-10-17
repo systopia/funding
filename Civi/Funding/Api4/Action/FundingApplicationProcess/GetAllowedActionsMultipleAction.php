@@ -31,7 +31,7 @@ final class GetAllowedActionsMultipleAction extends AbstractAction {
   use IdsParameterTrait;
 
   public function __construct() {
-    parent::__construct(FundingApplicationProcess::_getEntityName(), 'getAllowedActionsMultiple');
+    parent::__construct(FundingApplicationProcess::getEntityName(), 'getAllowedActionsMultiple');
   }
 
 }

@@ -58,7 +58,7 @@ final class PayoutProcessTokenSubscriber extends AbstractCiviOfficeTokenSubscrib
   }
 
   protected function getApiEntityName(): string {
-    return FundingPayoutProcess::_getEntityName();
+    return FundingPayoutProcess::getEntityName();
   }
 
   protected function getEntityClass(): string {

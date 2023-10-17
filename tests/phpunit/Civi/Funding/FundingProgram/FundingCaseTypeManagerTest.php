@@ -47,7 +47,7 @@ final class FundingCaseTypeManagerTest extends TestCase {
   public function testGetIdByName(): void {
     $this->api4Mock->expects(static::once())->method('executeAction')
       ->willReturnCallback(function (DAOGetAction $action): Result {
-        static::assertSame(FundingCaseType::_getEntityName(), $action->getEntityName());
+        static::assertSame(FundingCaseType::getEntityName(), $action->getEntityName());
         static::assertSame(['id'], $action->getSelect());
         static::assertSame([['name', '=', 'test', FALSE]], $action->getWhere());
 
@@ -64,7 +64,7 @@ final class FundingCaseTypeManagerTest extends TestCase {
   public function testGetIdByNameNotFound(): void {
     $this->api4Mock->expects(static::once())->method('executeAction')
       ->willReturnCallback(function (DAOGetAction $action): Result {
-        static::assertSame(FundingCaseType::_getEntityName(), $action->getEntityName());
+        static::assertSame(FundingCaseType::getEntityName(), $action->getEntityName());
         static::assertSame(['id'], $action->getSelect());
         static::assertSame([['name', '=', 'test', FALSE]], $action->getWhere());
 

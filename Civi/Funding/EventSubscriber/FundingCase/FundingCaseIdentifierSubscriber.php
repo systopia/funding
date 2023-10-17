@@ -59,7 +59,7 @@ class FundingCaseIdentifierSubscriber implements EventSubscriberInterface {
 
     $fundingCase->setIdentifier($identifier);
     $this->api4->updateEntity(
-      FundingCase::_getEntityName(),
+      FundingCase::getEntityName(),
       $fundingCase->getId(),
       ['identifier' => $identifier],
       ['checkPermissions' => FALSE],

@@ -22,11 +22,8 @@ namespace Civi\Api4;
 use Civi\Funding\Api4\AbstractRemoteFundingEntity;
 use Civi\Funding\Api4\Action\Remote\DAOGetAction;
 use Civi\Funding\Api4\Action\Remote\Drawdown\CreateAction;
-use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
 
 final class RemoteFundingDrawdown extends AbstractRemoteFundingEntity {
-
-  use EntityNameTrait;
 
   public static function get(): DAOGetAction {
     return new DAOGetAction(static::getEntityName());

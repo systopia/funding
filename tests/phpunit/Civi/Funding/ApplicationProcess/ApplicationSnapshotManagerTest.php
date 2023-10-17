@@ -49,7 +49,7 @@ final class ApplicationSnapshotManagerTest extends TestCase {
     $applicationSnapshot = ApplicationSnapshotFactory::createApplicationSnapshot();
 
     $this->api4Mock->expects(static::once())->method('createEntity')
-      ->with(FundingApplicationSnapshot::_getEntityName(), $applicationSnapshot->toArray())
+      ->with(FundingApplicationSnapshot::getEntityName(), $applicationSnapshot->toArray())
       ->willReturn(new Result([['id' => 135] + $applicationSnapshot->toArray()]));
 
     $this->applicationSnapshotManager->add($applicationSnapshot);
@@ -60,7 +60,7 @@ final class ApplicationSnapshotManagerTest extends TestCase {
     $applicationSnapshot = ApplicationSnapshotFactory::createApplicationSnapshot();
 
     $this->api4Mock->method('getEntities')->with(
-      FundingApplicationSnapshot::_getEntityName(),
+      FundingApplicationSnapshot::getEntityName(),
       Comparison::new('application_process_id', '=', 12),
       ['id' => 'DESC'],
     )->willReturn(new Result([$applicationSnapshot->toArray()]));
@@ -72,7 +72,7 @@ final class ApplicationSnapshotManagerTest extends TestCase {
     $applicationSnapshot = ApplicationSnapshotFactory::createApplicationSnapshot();
 
     $this->api4Mock->method('getEntities')->with(
-      FundingApplicationSnapshot::_getEntityName(),
+      FundingApplicationSnapshot::getEntityName(),
       Comparison::new('application_process_id', '=', 12),
       ['id' => 'DESC'],
       1,
@@ -85,7 +85,7 @@ final class ApplicationSnapshotManagerTest extends TestCase {
     $applicationSnapshot = ApplicationSnapshotFactory::createApplicationSnapshot();
 
     $this->api4Mock->method('getEntities')->with(
-      FundingApplicationSnapshot::_getEntityName(),
+      FundingApplicationSnapshot::getEntityName(),
       Comparison::new('application_process_id', '=', 12),
       ['id' => 'DESC'],
       1,

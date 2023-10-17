@@ -49,7 +49,7 @@ class GetPossibleActionsAction extends AbstractAction {
     FundingCaseTypeManager $fundingCaseTypeManager,
     FundingCasePossibleActionsGetHandlerInterface $possibleActionsGetHandler
   ) {
-    parent::__construct(FundingCase::_getEntityName(), 'getPossibleActions');
+    parent::__construct(FundingCase::getEntityName(), 'getPossibleActions');
     $this->applicationProcessManager = $applicationProcessManager;
     $this->fundingCaseManager = $fundingCaseManager;
     $this->fundingCaseTypeManager = $fundingCaseTypeManager;

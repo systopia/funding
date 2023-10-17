@@ -58,7 +58,7 @@ final class DrawdownTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
   }
 
   protected function getApiEntityName(): string {
-    return FundingDrawdown::_getEntityName();
+    return FundingDrawdown::getEntityName();
   }
 
   protected function getEntityClass(): string {

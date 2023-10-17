@@ -83,7 +83,7 @@ final class FundingCaseIdentifierSubscriberTest extends TestCase {
 
     $this->api4Mock->expects(static::once())->method('updateEntity')
       ->with(
-        FundingCase::_getEntityName(),
+        FundingCase::getEntityName(),
         $fundingCase->getId(),
         ['identifier' => 'generated'],
         ['checkPermissions' => FALSE],

@@ -86,7 +86,7 @@ final class DrawdownRejectControllerTest extends TestCase {
       ->willReturn($payoutProcess);
 
     $this->api4MockMock->expects(static::once())->method('execute')
-      ->with(FundingDrawdown::_getEntityName(), 'reject', [
+      ->with(FundingDrawdown::getEntityName(), 'reject', [
         'id' => $drawdown->getId(),
       ])->willReturn(new Result([]));
 

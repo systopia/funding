@@ -53,7 +53,7 @@ final class ApplicationCostItemManagerTest extends TestCase {
 
     $this->api4Mock->expects(static::once())->method('executeAction')
       ->willReturnCallback(function (DAOGetAction $action) use ($item) {
-        static::assertSame(FundingApplicationCostItem::_getEntityName(), $action->getEntityName());
+        static::assertSame(FundingApplicationCostItem::getEntityName(), $action->getEntityName());
         static::assertSame([['application_process_id', '=', 2, FALSE]], $action->getWhere());
 
         return new Result([$item->toArray()]);
@@ -67,7 +67,7 @@ final class ApplicationCostItemManagerTest extends TestCase {
 
     $this->api4Mock->expects(static::once())->method('executeAction')
       ->willReturnCallback(function (DAODeleteAction $action) {
-          static::assertSame(FundingApplicationCostItem::_getEntityName(), $action->getEntityName());
+          static::assertSame(FundingApplicationCostItem::getEntityName(), $action->getEntityName());
           static::assertSame([['id', '=', 12]], $action->getWhere());
 
           return new Result();
@@ -87,7 +87,7 @@ final class ApplicationCostItemManagerTest extends TestCase {
       ->withConsecutive(
         [
           static::callback(function (DAOGetAction $action) {
-            static::assertSame(FundingApplicationCostItem::_getEntityName(), $action->getEntityName());
+            static::assertSame(FundingApplicationCostItem::getEntityName(), $action->getEntityName());
             static::assertSame([['application_process_id', '=', 2, FALSE]], $action->getWhere());
 
             return TRUE;
@@ -95,7 +95,7 @@ final class ApplicationCostItemManagerTest extends TestCase {
         ],
         [
           static::callback(function (DAOUpdateAction $action) use ($updatedItem) {
-            static::assertSame(FundingApplicationCostItem::_getEntityName(), $action->getEntityName());
+            static::assertSame(FundingApplicationCostItem::getEntityName(), $action->getEntityName());
             static::assertSame($updatedItem->toArray(), $action->getValues());
 
             return TRUE;
@@ -106,7 +106,7 @@ final class ApplicationCostItemManagerTest extends TestCase {
             // Callbacks are executed twice. On second call $newItem has attribute 'id'.
             static $values;
             $values ??= $newItem->toArray();
-            static::assertSame(FundingApplicationCostItem::_getEntityName(), $action->getEntityName());
+            static::assertSame(FundingApplicationCostItem::getEntityName(), $action->getEntityName());
             static::assertSame($values, $action->getValues());
 
             return TRUE;
@@ -114,7 +114,7 @@ final class ApplicationCostItemManagerTest extends TestCase {
         ],
         [
           static::callback(function (DAODeleteAction $action) {
-            static::assertSame(FundingApplicationCostItem::_getEntityName(), $action->getEntityName());
+            static::assertSame(FundingApplicationCostItem::getEntityName(), $action->getEntityName());
             static::assertSame([['id', '=', 11]], $action->getWhere());
 
             return TRUE;
@@ -136,7 +136,7 @@ final class ApplicationCostItemManagerTest extends TestCase {
     $item = $this->createApplicationCostItem(NULL);
     $this->api4Mock->expects(static::once())->method('executeAction')
       ->willReturnCallback(function (DAOCreateAction $action) use ($item) {
-        static::assertSame(FundingApplicationCostItem::_getEntityName(), $action->getEntityName());
+        static::assertSame(FundingApplicationCostItem::getEntityName(), $action->getEntityName());
         static::assertSame($item->toArray(), $action->getValues());
 
         return new Result([$item->toArray() + ['id' => 11]]);
@@ -150,7 +150,7 @@ final class ApplicationCostItemManagerTest extends TestCase {
     $item = $this->createApplicationCostItem();
     $this->api4Mock->expects(static::once())->method('executeAction')
       ->willReturnCallback(function (DAOUpdateAction $action) use ($item) {
-        static::assertSame(FundingApplicationCostItem::_getEntityName(), $action->getEntityName());
+        static::assertSame(FundingApplicationCostItem::getEntityName(), $action->getEntityName());
         static::assertSame($item->toArray(), $action->getValues());
 
         return new Result([$item->toArray()]);

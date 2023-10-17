@@ -40,7 +40,7 @@ final class GetFormDataAction extends AbstractAction {
     ApplicationProcessBundleLoader $applicationProcessBundleLoader,
     ApplicationFormDataGetHandlerInterface $formDataGetHandler
   ) {
-    parent::__construct(FundingApplicationProcess::_getEntityName(), 'getFormData');
+    parent::__construct(FundingApplicationProcess::getEntityName(), 'getFormData');
     $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
     $this->formDataGetHandler = $formDataGetHandler;
   }

@@ -126,7 +126,7 @@ final class GetApplicationFormSubscriberTest extends TestCase {
   }
 
   private function createGetNewFormEvent(): GetNewApplicationFormEvent {
-    return new GetNewApplicationFormEvent(RemoteFundingCase::_getEntityName(), 'GetNewApplicationForm', [
+    return new GetNewApplicationFormEvent(RemoteFundingCase::getEntityName(), 'GetNewApplicationForm', [
       'remoteContactId' => '00',
       'contactId' => 1,
       'fundingProgram' => FundingProgramFactory::createFundingProgram(),
@@ -135,7 +135,7 @@ final class GetApplicationFormSubscriberTest extends TestCase {
   }
 
   private function createGetFormEvent(): GetApplicationFormEvent {
-    return new GetApplicationFormEvent(RemoteFundingApplicationProcess::_getEntityName(), 'GetForm', [
+    return new GetApplicationFormEvent(RemoteFundingApplicationProcess::getEntityName(), 'GetForm', [
       'remoteContactId' => '00',
       'contactId' => 1,
       'applicationProcessBundle' => ApplicationProcessBundleFactory::createApplicationProcessBundle(),

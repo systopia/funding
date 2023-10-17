@@ -51,7 +51,7 @@ class PayoutProcessManager {
    * @throws \CRM_Core_Exception
    */
   public function create(FundingCaseEntity $fundingCase, float $amountTotal): PayoutProcessEntity {
-    $result = $this->api4->createEntity(FundingPayoutProcess::_getEntityName(), [
+    $result = $this->api4->createEntity(FundingPayoutProcess::getEntityName(), [
       'funding_case_id' => $fundingCase->getId(),
       'status' => 'open',
       'amount_total' => $amountTotal,
@@ -72,7 +72,7 @@ class PayoutProcessManager {
    */
   public function get(int $id): ?PayoutProcessEntity {
     $result = $this->api4->getEntities(
-      FundingPayoutProcess::_getEntityName(),
+      FundingPayoutProcess::getEntityName(),
       Comparison::new('id', '=', $id),
       [],
       1,
@@ -120,7 +120,7 @@ class PayoutProcessManager {
    */
   public function getLastByFundingCaseId(int $fundingCaseId): ?PayoutProcessEntity {
     $result = $this->api4->getEntities(
-      FundingPayoutProcess::_getEntityName(),
+      FundingPayoutProcess::getEntityName(),
       Comparison::new('funding_case_id', '=', $fundingCaseId),
       ['id' => 'DESC'],
       1,
@@ -136,7 +136,7 @@ class PayoutProcessManager {
    */
   public function hasAccess(int $id): bool {
     return $this->api4->countEntities(
-      FundingPayoutProcess::_getEntityName(),
+      FundingPayoutProcess::getEntityName(),
       Comparison::new('id', '=', $id),
       ['checkPermissions' => FALSE],
     ) === 1;
@@ -147,7 +147,7 @@ class PayoutProcessManager {
    */
   private function update(PayoutProcessEntity $payoutProcess): void {
     $this->api4->updateEntity(
-      FundingPayoutProcess::_getEntityName(),
+      FundingPayoutProcess::getEntityName(),
       $payoutProcess->getId(),
       $payoutProcess->toArray(),
       ['checkPermissions' => FALSE],

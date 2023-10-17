@@ -23,13 +23,10 @@ use Civi\Api4\Generic\AbstractEntity;
 use Civi\Funding\Api4\Action\FundingApplicationProcessActivity\GetAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcessActivity\GetFieldsAction;
 use Civi\Funding\Api4\Traits\AccessPermissionsTrait;
-use Civi\RemoteTools\Api4\Traits\EntityNameTrait;
 
 final class FundingApplicationProcessActivity extends AbstractEntity {
 
   use AccessPermissionsTrait;
-
-  use EntityNameTrait;
 
   /**
    * @inheritDoc

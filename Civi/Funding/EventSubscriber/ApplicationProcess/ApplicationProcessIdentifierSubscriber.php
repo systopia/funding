@@ -54,7 +54,7 @@ class ApplicationProcessIdentifierSubscriber implements EventSubscriberInterface
     $identifier = $this->applicationIdentifierGenerator->generateIdentifier($event->getApplicationProcessBundle());
     $applicationProcess = $event->getApplicationProcess();
     $applicationProcess->setIdentifier($identifier);
-    $action = (new DAOUpdateAction(FundingApplicationProcess::_getEntityName(), 'update'))
+    $action = (new DAOUpdateAction(FundingApplicationProcess::getEntityName(), 'update'))
       ->setCheckPermissions(FALSE)
       ->addValue('identifier', $identifier)
       ->addWhere('id', '=', $applicationProcess->getId());

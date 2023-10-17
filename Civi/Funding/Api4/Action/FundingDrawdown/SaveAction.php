@@ -36,7 +36,7 @@ final class SaveAction extends DAOSaveAction {
     Api4Interface $api4,
     EntityValidatorInterface $entityValidator
   ) {
-    parent::__construct(FundingDrawdown::_getEntityName(), 'save');
+    parent::__construct(FundingDrawdown::getEntityName(), 'save');
     $this->_api4 = $api4;
     $this->_entityValidator = $entityValidator;
   }

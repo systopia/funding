@@ -13,7 +13,7 @@ final class GetAction extends RemoteFundingGetAction {
   use ApplicationProcessIdParameterTrait;
 
   public function __construct() {
-    parent::__construct(RemoteFundingApplicationProcessActivity::_getEntityName(), 'get');
+    parent::__construct(RemoteFundingApplicationProcessActivity::getEntityName(), 'get');
   }
 
   protected function getEventClass(): string {

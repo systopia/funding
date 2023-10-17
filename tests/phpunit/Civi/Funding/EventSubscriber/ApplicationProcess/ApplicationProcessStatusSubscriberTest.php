@@ -82,8 +82,8 @@ final class ApplicationProcessStatusSubscriberTest extends TestCase {
 
     $this->optionsLoaderMock->expects(static::exactly(2))->method('getOptionLabel')
       ->withConsecutive(
-        [FundingApplicationProcess::_getEntityName(), 'status', 'old-status'],
-        [FundingApplicationProcess::_getEntityName(), 'status', 'new-status'],
+        [FundingApplicationProcess::getEntityName(), 'status', 'old-status'],
+        [FundingApplicationProcess::getEntityName(), 'status', 'new-status'],
       )->willReturnOnConsecutiveCalls('Old', 'New');
     $this->activityManagerMock->expects(static::once())->method('addActivity')
       ->with($event->getContactId(), $event->getApplicationProcess(), $activity);
