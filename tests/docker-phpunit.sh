@@ -16,4 +16,4 @@ export XDEBUG_MODE=coverage
 # tests to pass (if baselineFile does not contain all deprecations).
 export SYMFONY_DEPRECATIONS_HELPER="max[total]=99999&baselineFile=./tests/ignored-deprecations.json"
 
-composer phpunit -- --cache-result-file=/tmp/.phpunit.result.cache "$@"
+composer run --timeout=600 phpunit --cache-result-file=/tmp/.phpunit.result.cache "$@"
