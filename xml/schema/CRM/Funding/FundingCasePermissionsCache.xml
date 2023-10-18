@@ -50,8 +50,7 @@
 
   <field>
     <name>permissions</name>
-    <type>varchar</type>
-    <length>512</length>
+    <type>text</type>
     <comment>Permissions as JSON array. If NULL they have to be determined.</comment>
     <serialize>JSON</serialize>
     <html>
