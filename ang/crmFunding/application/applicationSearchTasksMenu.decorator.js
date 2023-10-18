@@ -18,11 +18,11 @@
 
 /*
  * This decorator adds the fundingApplicationTasksDecorator directive if the
- * crmSearchTasks component is used. fundingApplicationTasksDecorator has the
- * same scope as crmSearchTasks and so can modify its controller.
+ * crmSearchTasksMenu component is used. fundingApplicationTasksDecorator has
+ * the same scope as crmSearchTasksMenu and so can modify its controller.
  */
 fundingModule.config(['$provide', function($provide) {
-  $provide.decorator('crmSearchTasksDirective', ['$delegate', function ($delegate) {
+  $provide.decorator('crmSearchTasksMenuDirective', ['$delegate', function ($delegate) {
     const templateUrl = $delegate[0].templateUrl;
     const template = $delegate[0].template;
 
@@ -53,9 +53,10 @@ fundingModule.directive('fundingApplicationTasksDecorator', function() {
     controller: ['$scope', 'fundingApplicationProcessService', 'crmStatus',
       function ($scope, fundingApplicationProcessService, crmStatus) {
         const ctrl = $scope.$ctrl;
-        const entityName = ctrl.entity;
 
-        let allowedActionsByApplication = {};
+        // See TaskManager in searchDisplayTasksTrait
+        const taskManager = ctrl.taskManager;
+        const entityName = taskManager.getEntityName();
 
         if (entityName !== 'FundingApplicationProcess') {
           return;
@@ -63,9 +64,16 @@ fundingModule.directive('fundingApplicationTasksDecorator', function() {
 
         const ts = CRM.ts('funding');
 
+        let allowedActionsByApplication = {};
+
+        taskManager.entityInfo = {
+          title: ts('Application'),
+          title_plural: ts('Applications'),
+        };
+
         function updateAvailableTasks() {
           if (ctrl.ids.length === 0) {
-            ctrl.tasks = [];
+            taskManager.tasks = [];
             return;
           }
 
@@ -86,15 +94,16 @@ fundingModule.directive('fundingApplicationTasksDecorator', function() {
             tasks = _4.pickBy(tasks, (task, actionName) => actions[actionName] && actions[actionName].label === task.title);
           }
 
-          ctrl.tasks = Object.values(tasks);
+          taskManager.tasks = Object.values(tasks);
         }
 
-        ctrl.entityInfo = {
-          title: ts('Application'),
-          title_plural: ts('Applications'),
-        };
+        let lastIds;
+        function updateTasks() {
+          if (_4.isEqual(lastIds, ctrl.ids)) {
+            return;
+          }
 
-        ctrl.getTasks = function() {
+          lastIds = _4.clone(ctrl.ids);
           const idsToGetActions = [];
           ctrl.ids.forEach((id) => {
             if (!allowedActionsByApplication[id]) {
@@ -103,46 +112,39 @@ fundingModule.directive('fundingApplicationTasksDecorator', function() {
           });
 
           if (idsToGetActions.length > 0) {
-            ctrl.tasks = [];
+            taskManager.tasks = [];
             fundingApplicationProcessService.getAllowedActionsMultiple(idsToGetActions)
               .then((allowedActions) => _4.extend(allowedActionsByApplication, allowedActions))
               .then(updateAvailableTasks);
           } else {
             updateAvailableTasks();
           }
+        }
+
+        // Only triggered if a new ID is selected, not un deselect.
+        $scope.$watch('$ctrl.ids', () => updateTasks());
+
+        taskManager.getMetadata = () => {
+          updateTasks();
+
+          return new Promise((resolve) => resolve([]));
         };
 
-        ctrl.isActionAllowed = function(action) {
-          for (const id of ctrl.ids) {
-            if (allowedActionsByApplication[id] && allowedActionsByApplication[id][action.name] &&
-              allowedActionsByApplication[id][action.name].label !== action.title
-            ) {
-              return false;
-            }
-          }
-
-          return true;
-        };
-
-        ctrl.doAction = function(action) {
-          if (!ctrl.isActionAllowed(action)) {
-            return;
-          }
-
+        taskManager.doTask = function(action, ids) {
           if (!action.confirm || window.confirm(action.confirm)) {
             crmStatus(
               {},
-              fundingApplicationProcessService.applyActionMultiple(ctrl.ids, action.name)
+              fundingApplicationProcessService.applyActionMultiple(ids, action.name)
             ).then(() => {
               allowedActionsByApplication = _4.pickBy(allowedActionsByApplication,
-                (actions, id) => !ctrl.ids.includes(parseInt(id)));
-              ctrl.refresh();
+                (actions, id) => !ids.includes(parseInt(id)));
+
+              this.refreshAfterTask();
+
               const event = new CustomEvent('applicationSearchTaskExecuted', {
                 detail: {
-                  entity: ctrl.entity,
-                  search: ctrl.search,
-                  display: ctrl.display,
-                  ids: ctrl.ids,
+                  entity: entityName,
+                  ids: ids,
                   action: action.name,
                 },
               });
@@ -150,6 +152,10 @@ fundingModule.directive('fundingApplicationTasksDecorator', function() {
             });
           }
         };
+
+        // Only allowed actions are in the menu.
+        ctrl.isActionAllowed = () => true;
+
       }
     ],
   };
