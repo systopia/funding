@@ -91,7 +91,8 @@ class PayoutProcessManager {
       ->setCheckPermissions(FALSE)
       ->addSelect('SUM(amount) AS amountSum')
       ->addWhere('payout_process_id', '=', $payoutProcess->getId())
-      ->addWhere('status', '=', 'accepted');
+      ->addWhere('status', '=', 'accepted')
+      ->addGroupBy('payout_process_id');
 
     return round($this->api4->executeAction($action)->first()['amountSum'] ?? 0.0, 2);
   }
@@ -110,7 +111,8 @@ class PayoutProcessManager {
     $action = FundingDrawdown::get()
       ->setCheckPermissions(FALSE)
       ->addSelect('SUM(amount) AS amountSum')
-      ->addWhere('payout_process_id', '=', $payoutProcess->getId());
+      ->addWhere('payout_process_id', '=', $payoutProcess->getId())
+      ->addGroupBy('payout_process_id');
 
     return round($this->api4->executeAction($action)->first()['amountSum'] ?? 0.0, 2);
   }

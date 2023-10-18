@@ -33,6 +33,7 @@ use Civi\Funding\EventSubscriber\Remote\FundingCaseGetFieldsSubscriber;
 use Civi\Funding\FundingCase\FundingCaseIdentifierGenerator;
 use Civi\Funding\FundingCase\FundingCaseIdentifierGeneratorInterface;
 use Civi\Funding\FundingCase\FundingCaseManager;
+use Civi\Funding\FundingCase\FundingCasePermissionsCacheManager;
 use Civi\Funding\FundingCase\Handler\DefaultFundingCaseApproveHandler;
 use Civi\Funding\FundingCase\Handler\DefaultFundingCaseFormDataGetHandler;
 use Civi\Funding\FundingCase\Handler\DefaultFundingCaseFormNewGetHandler;
@@ -69,6 +70,7 @@ use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 $container->autowire(FundingCaseManager::class);
+$container->autowire(FundingCasePermissionsCacheManager::class);
 $container->autowire(TransferContractRouter::class);
 $container->autowire(FundingCaseIdentifierGeneratorInterface::class, FundingCaseIdentifierGenerator::class);
 

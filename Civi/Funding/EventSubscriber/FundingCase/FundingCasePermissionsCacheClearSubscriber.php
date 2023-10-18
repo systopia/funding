@@ -1,0 +1,160 @@
+<?php
+/*
+ * Copyright (C) 2023 SYSTOPIA GmbH
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as published by
+ *  the Free Software Foundation in version 3.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+declare(strict_types = 1);
+
+namespace Civi\Funding\EventSubscriber\FundingCase;
+
+use Civi\Api4\FundingCaseContactRelation;
+use Civi\Core\Event\PreEvent;
+use Civi\Funding\Database\ChangeSetFactory;
+use Civi\Funding\FundingCase\FundingCasePermissionsCacheManager;
+use Civi\RemoteTools\Api4\Api4Interface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Webmozart\Assert\Assert;
+
+/**
+ * Clears cached funding case permissions, if an entity is
+ * created/updated/deleted that might affect the permissions.
+ */
+final class FundingCasePermissionsCacheClearSubscriber implements EventSubscriberInterface {
+
+  private Api4Interface $api4;
+
+  private ChangeSetFactory $changeSetFactory;
+
+  private FundingCasePermissionsCacheManager $permissionsCacheManager;
+
+  /**
+   * @inheritDoc
+   */
+  public static function getSubscribedEvents(): array {
+    // Use minimum priority, so we also get possible changes by previous event listeners.
+    return [
+      'hook_civicrm_pre::Individual' => ['preContact', PHP_INT_MIN],
+      'hook_civicrm_pre::Organization' => ['preContact', PHP_INT_MIN],
+      'hook_civicrm_pre::Household' => ['preContact', PHP_INT_MIN],
+      'hook_civicrm_pre::Relationship' => ['preRelationship', PHP_INT_MIN],
+      'hook_civicrm_pre::FundingCaseContactRelation' => ['preFundingCaseContactRelation', PHP_INT_MIN],
+    ];
+  }
+
+  public function __construct(
+    Api4Interface $api4,
+    ChangeSetFactory $changeSetFactory,
+    FundingCasePermissionsCacheManager $permissionsCacheManager
+  ) {
+    $this->api4 = $api4;
+    $this->changeSetFactory = $changeSetFactory;
+    $this->permissionsCacheManager = $permissionsCacheManager;
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function preContact(PreEvent $event): void {
+    $changeSet = $this->changeSetFactory->createChangeSetForPreEvent(
+      $event,
+      ['contact_type', 'contact_sub_type', 'is_deleted']
+    );
+
+    if (isset($changeSet['is_deleted']) || 'delete' === $event->action) {
+      $this->permissionsCacheManager->deleteByContactId((int) $event->id);
+    }
+    elseif (isset($changeSet['contact_type']) || isset($changeSet['contact_sub_type'])) {
+      $this->permissionsCacheManager->clearByContactId((int) $event->id);
+    }
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   *
+   * phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
+   */
+  public function preRelationship(PreEvent $event): void {
+  // phpcs:enable
+    $params = $event->params;
+    // Contact ID in $params might be a string.
+    if (isset($params['contact_id_a'])) {
+      $params['contact_id_a'] = (int) $params['contact_id_a'];
+    }
+    if (isset($params['contact_id_b'])) {
+      $params['contact_id_b'] = (int) $params['contact_id_b'];
+    }
+
+    if (NULL === $event->id) {
+      if ('create' === $event->action) {
+        $this->permissionsCacheManager->clearByContactId(
+          $params['contact_id_a'],
+          $params['contact_id_b']
+        );
+      }
+
+      return;
+    }
+
+    $oldValues = $this->api4->getEntity('Relationship', (int) $event->id, ['checkPermissions' => FALSE]);
+    Assert::notNull($oldValues);
+    $newValues = $params + $oldValues;
+
+    if ('delete' === $event->action) {
+      $this->permissionsCacheManager->clearByContactId($oldValues['contact_id_a'], $oldValues['contact_id_b']);
+    }
+    elseif ($oldValues['is_active'] !== $newValues['is_active']) {
+      if ($newValues['is_active']) {
+        $this->permissionsCacheManager->clearByContactId($newValues['contact_id_a'], $newValues['contact_id_b']);
+      }
+      else {
+        $this->permissionsCacheManager->clearByContactId($oldValues['contact_id_a'], $oldValues['contact_id_b']);
+      }
+    }
+    elseif ($oldValues['relationship_type_id'] !== $newValues['relationship_type_id']) {
+      $this->permissionsCacheManager->clearByContactId(
+        $oldValues['contact_id_a'],
+        $oldValues['contact_id_b'],
+        $newValues['contact_id_a'],
+        $newValues['contact_id_b'],
+      );
+    }
+    else {
+      if ($oldValues['contact_id_a'] !== $newValues['contact_id_a']) {
+        $this->permissionsCacheManager->clearByContactId($newValues['contact_id_a'], $oldValues['contact_id_a']);
+      }
+      if ($oldValues['contact_id_b'] !== $newValues['contact_id_b']) {
+        $this->permissionsCacheManager->clearByContactId($newValues['contact_id_b'], $oldValues['contact_id_b']);
+      }
+    }
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function preFundingCaseContactRelation(PreEvent $event): void {
+    if (isset($event->params['funding_case_id'])) {
+      $this->permissionsCacheManager->clearByFundingCaseId((int) $event->params['funding_case_id']);
+    }
+    elseif (NULL !== $event->id) {
+      $fundingCaseId = $this->api4->execute(FundingCaseContactRelation::getEntityName(), 'get', [
+        'select' => ['funding_case_id'],
+        'where' => [['id', '=', $event->id]],
+        'checkPermissions' => FALSE,
+      ])->single()['funding_case_id'];
+      $this->permissionsCacheManager->clearByFundingCaseId($fundingCaseId);
+    }
+  }
+
+}

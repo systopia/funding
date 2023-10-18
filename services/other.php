@@ -24,6 +24,7 @@ use Civi\Funding\Contact\FundingRemoteContactIdResolver;
 use Civi\Funding\Contact\FundingRemoteContactIdResolverInterface;
 use Civi\Funding\Controller\PageControllerInterface;
 use Civi\Funding\ControllerDectorator\TransactionalPageController;
+use Civi\Funding\Database\ChangeSetFactory;
 use Civi\Funding\DependencyInjection\Compiler\EntityValidatorPass;
 use Civi\Funding\DependencyInjection\Compiler\FundingCaseTypeServiceLocatorPass;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
@@ -51,6 +52,7 @@ if (!$container->has(PropertyAccessorInterface::class)) {
 
 $container->autowire(UrlGenerator::class);
 $container->autowire(MoneyFactory::class);
+$container->autowire(ChangeSetFactory::class);
 
 $container->addCompilerPass(new FundingCaseTypeServiceLocatorPass());
 

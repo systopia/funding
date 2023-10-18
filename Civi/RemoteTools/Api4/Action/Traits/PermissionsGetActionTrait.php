@@ -20,28 +20,41 @@ declare(strict_types = 1);
 namespace Civi\RemoteTools\Api4\Action\Traits;
 
 use Civi\Api4\Generic\Result;
-use Civi\RemoteTools\Api4\Action\Helper\AddPermissionsToRecords;
+use Civi\Api4\Generic\Traits\ArrayQueryActionTrait;
+use Civi\Funding\Api4\Action\Traits\IsFieldSelectedTrait;
+use Civi\Funding\Permission\Helper\AddPermissionsToRecords;
 
 /**
  * Adds permissions to records in GetAction.
+ *
+ * To make pagination possible all records are loaded and offset and limit are
+ * applied afterwords. For this reason this trait should only be used in cases
+ * where this operation doesn't take much time.
  */
 trait PermissionsGetActionTrait {
+
+  use ArrayQueryActionTrait;
+
+  use IsFieldSelectedTrait;
 
   private AddPermissionsToRecords $_addPermissionsToRecords;
 
   public function _run(Result $result): void {
-    $additionallySelectedFields = [];
-    $countSelectedOnly = $this->isRowCountSelectedOnly();
-    if ($countSelectedOnly) {
-      $this->addSelect(...$this->getFieldsRequiredToGetPermissions());
-    }
-    else {
-      foreach ($this->getFieldsRequiredToGetPermissions() as $field) {
-        if (!$this->isFieldSelected($field)) {
-          $additionallySelectedFields[] = $field;
-          $this->addSelect($field);
-        }
+    $limit = $this->getLimit();
+    $offset = $this->getOffset();
+    $select = $this->getSelect();
+
+    foreach ($this->getFieldsRequiredToGetPermissions() as $field) {
+      if (!$this->isFieldSelected($field)) {
+        $this->addSelect($field);
       }
+    }
+
+    // We initially select all records (if records without permissions are
+    // filtered) so pagination is possible.
+    if (!$this->isAllowEmptyRecordPermissions()) {
+      $this->setLimit(0);
+      $this->setOffset(0);
     }
 
     parent::_run($result);
@@ -51,18 +64,19 @@ trait PermissionsGetActionTrait {
     );
     ($this->_addPermissionsToRecords)($result, $this->isAllowEmptyRecordPermissions());
 
-    if ($countSelectedOnly) {
-      $result->setCountMatched($result->count());
-      $result->exchangeArray([]);
+    $this->setLimit($limit);
+    $this->setOffset($offset);
+
+    $records = $result->getArrayCopy();
+    if (!$this->isAllowEmptyRecordPermissions()) {
+      $records = $this->limitArray($records);
     }
-    elseif ([] !== $additionallySelectedFields) {
-      /** @var array<string, mixed> $record */
-      foreach ($result as &$record) {
-        foreach ($additionallySelectedFields as $field) {
-          unset($record[$field]);
-        }
-      }
+    if ($this->getSelect() !== $select) {
+      $this->setSelect($select);
+      $records = $this->selectArray($records);
     }
+
+    $result->exchangeArray($records);
   }
 
   /**
@@ -91,18 +105,6 @@ trait PermissionsGetActionTrait {
    */
   protected function isAllowEmptyRecordPermissions(): bool {
     return FALSE;
-  }
-
-  private function isFieldSelected(string $field): bool {
-    $select = $this->getSelect();
-
-    return [] === $select
-      || \in_array('*', $select, TRUE)
-      || \in_array($field, $select, TRUE);
-  }
-
-  private function isRowCountSelectedOnly(): bool {
-    return ['row_count'] === $this->getSelect();
   }
 
 }

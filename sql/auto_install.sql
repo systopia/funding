@@ -25,6 +25,7 @@ DROP TABLE IF EXISTS `civicrm_funding_application_process`;
 DROP TABLE IF EXISTS `civicrm_funding_payout_process`;
 DROP TABLE IF EXISTS `civicrm_funding_new_case_permissions`;
 DROP TABLE IF EXISTS `civicrm_funding_case_type_program`;
+DROP TABLE IF EXISTS `civicrm_funding_case_permissions_cache`;
 DROP TABLE IF EXISTS `civicrm_funding_case_contact_relation`;
 DROP TABLE IF EXISTS `civicrm_funding_case`;
 DROP TABLE IF EXISTS `civicrm_funding_recipient_contact_relation`;
@@ -173,6 +174,25 @@ CREATE TABLE `civicrm_funding_case_contact_relation` (
   `permissions` varchar(512) NOT NULL COMMENT 'Permissions as JSON array',
   PRIMARY KEY (`id`),
   CONSTRAINT FK_civicrm_funding_case_contact_relation_funding_case_id FOREIGN KEY (`funding_case_id`) REFERENCES `civicrm_funding_case`(`id`) ON DELETE CASCADE
+)
+ENGINE=InnoDB;
+
+-- /*******************************************************
+-- *
+-- * civicrm_funding_case_permissions_cache
+-- *
+-- * Cache for FundingCase permissions
+-- *
+-- *******************************************************/
+CREATE TABLE `civicrm_funding_case_permissions_cache` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique FundingCasePermissionsCache ID',
+  `funding_case_id` int unsigned NOT NULL COMMENT 'FK to FundingCase',
+  `contact_id` int unsigned NOT NULL COMMENT 'No FK to contact to work with 0 (contact ID on CLI), too',
+  `is_remote` tinyint NOT NULL COMMENT 'Indicates whether the permissions are for internal or remote requests',
+  `permissions` varchar(512) COMMENT 'Permissions as JSON array. If NULL they have to be determined.',
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `UI_funding_case_id_contact_id_is_remote`(funding_case_id, contact_id, is_remote),
+  CONSTRAINT FK_civicrm_funding_case_permissions_cache_funding_case_id FOREIGN KEY (`funding_case_id`) REFERENCES `civicrm_funding_case`(`id`) ON DELETE CASCADE
 )
 ENGINE=InnoDB;
 

@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2023 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,10 +17,10 @@
 
 declare(strict_types = 1);
 
-namespace Civi\RemoteTools\Api4\Action\Helper;
+namespace Civi\Funding\Permission\Helper;
 
 use Civi\Api4\Generic\Result;
-use Civi\RemoteTools\Api4\RemoteApiConstants;
+use Civi\Funding\Permission\Util\FlattenedPermissionsUtil;
 
 final class AddPermissionsToRecords {
 
@@ -52,26 +52,32 @@ final class AddPermissionsToRecords {
    */
   public function __invoke(Result $result, bool $allowEmptyPermissions = FALSE): void {
     $records = [];
+    $filteredRecordsCount = 0;
     /** @phpstan-var array<string, mixed>&array{id: int} $record */
     foreach ($result as $record) {
       $record['permissions'] = $permissions = ($this->getRecordPermissions)($record);
       if ([] === $permissions && !$allowEmptyPermissions) {
+        ++$filteredRecordsCount;
         continue;
       }
 
-      // Flattened permissions might be useful for some frontends (e.g. Drupal Views).
-      foreach ($this->possiblePermissions as $permission) {
-        $record[RemoteApiConstants::PERMISSION_FIELD_PREFIX . $permission] = FALSE;
-      }
-      foreach ($permissions as $permission) {
-        $record[RemoteApiConstants::PERMISSION_FIELD_PREFIX . $permission] = TRUE;
-      }
+      FlattenedPermissionsUtil::addFlattenedPermissions($record, $permissions, $this->possiblePermissions);
 
       $records[] = $record;
     }
 
-    $result->rowCount = \count($records);
     $result->exchangeArray($records);
+
+    if ($filteredRecordsCount > 0) {
+      try {
+        $result->setCountMatched($result->countMatched() - $filteredRecordsCount);
+      }
+      // @phpstan-ignore-next-line Exception might be thrown by countMatched().
+      catch (\CRM_Core_Exception $e) {
+        // row_count was not selected.
+        $result->rowCount = count($records);
+      }
+    }
   }
 
 }

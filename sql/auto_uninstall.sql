@@ -23,6 +23,7 @@ DROP TABLE IF EXISTS `civicrm_funding_application_process`;
 DROP TABLE IF EXISTS `civicrm_funding_payout_process`;
 DROP TABLE IF EXISTS `civicrm_funding_new_case_permissions`;
 DROP TABLE IF EXISTS `civicrm_funding_case_type_program`;
+DROP TABLE IF EXISTS `civicrm_funding_case_permissions_cache`;
 DROP TABLE IF EXISTS `civicrm_funding_case_contact_relation`;
 DROP TABLE IF EXISTS `civicrm_funding_case`;
 DROP TABLE IF EXISTS `civicrm_funding_recipient_contact_relation`;

@@ -20,10 +20,11 @@ declare(strict_types = 1);
 namespace Civi\RemoteTools\Api4\Action\Helper;
 
 use Civi\Api4\Generic\Result;
+use Civi\Funding\Permission\Helper\AddPermissionsToRecords;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Civi\RemoteTools\Api4\Action\Helper\AddPermissionsToRecords
+ * @covers \Civi\Funding\Permission\Helper\AddPermissionsToRecords
  */
 final class AddPermissionsToRecordsTest extends TestCase {
 
@@ -35,7 +36,7 @@ final class AddPermissionsToRecordsTest extends TestCase {
     $result = new Result([['id' => 1, 'name' => 'Test']]);
     $addPermissionsToRecords($result);
 
-    static::assertSame(1, $result->rowCount);
+    static::assertSame(1, $result->countFetched());
     $expectedRecord = [
       'id' => 1,
       'name' => 'Test',
@@ -52,9 +53,11 @@ final class AddPermissionsToRecordsTest extends TestCase {
 
     $addPermissionsToRecords = new AddPermissionsToRecords(['foo'], fn () => []);
     $result = new Result([['id' => 1, 'name' => 'Test']]);
+    $result->setCountMatched(2);
     $addPermissionsToRecords($result);
 
-    static::assertSame(0, $result->rowCount);
+    static::assertSame(0, $result->countFetched());
+    static::assertSame(1, $result->countMatched());
     static::assertSame([], $result->getArrayCopy());
 
   }

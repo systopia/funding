@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Util;
 
+use Civi\Api4\FundingCasePermissionsCache;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Webmozart\Assert\Assert;
@@ -41,6 +42,9 @@ final class RequestTestUtil {
   }
 
   private static function reset(): void {
+    FundingCasePermissionsCache::delete(FALSE)
+      ->addWhere('id', 'IS NOT NULL')
+      ->execute();
     // @phpstan-ignore-next-line
     \Civi::service(FundingCaseManager::class)->clearCache();
     \CRM_Core_Session::singleton()->reset();

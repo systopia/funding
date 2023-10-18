@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2023 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,22 +17,22 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Event\FundingCase;
+namespace Civi\Funding\Permission\Util;
 
-use Civi\Api4\FundingCase;
-use Civi\RemoteTools\Event\AbstractGetPermissionsEvent;
+use PHPUnit\Framework\TestCase;
 
 /**
- * Note: The result is cached. This means that permissions may not be fully
- * dynamic, and it has to be assured that the cache is cleared if necessary.
- *
- * @see \Civi\Api4\FundingCasePermissionsCache
- * @see \Civi\Funding\EventSubscriber\FundingCase\FundingCasePermissionsCacheClearSubscriber
+ * @covers \Civi\Funding\Permission\Util\FlattenedPermissionsUtil
  */
-final class GetPermissionsEvent extends AbstractGetPermissionsEvent {
+final class FlattenedPermissionsUtilTest extends TestCase {
 
-  public function __construct(int $entityId, int $contactId) {
-    parent::__construct(FundingCase::getEntityName(), $entityId, $contactId);
+  public function testAddFlattenedPermissions(): void {
+    $permissions = ['foo'];
+    $possiblePermissions = ['foo', 'bar'];
+
+    $record = [];
+    FlattenedPermissionsUtil::addFlattenedPermissions($record, $permissions, $possiblePermissions);
+    static::assertSame(['PERM_foo' => TRUE, 'PERM_bar' => FALSE], $record);
   }
 
 }
