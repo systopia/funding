@@ -29,6 +29,8 @@ use Civi\RemoteTools\RequestContext\RequestContextInterface;
 
 final class GetAction extends DAOGetAction {
 
+  // The number of funding programs is usually not large, otherwise a permission
+  // caching like for funding cases would be necessary.
   use PermissionsGetActionTrait;
 
   private CiviEventDispatcherInterface $_eventDispatcher;

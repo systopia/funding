@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Funding</base>
+  <class>FundingCasePermissionsCache</class>
+  <name>civicrm_funding_case_permissions_cache</name>
+  <comment>Cache for FundingCase permissions</comment>
+  <log>true</log>
+
+  <field>
+    <name>id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>Unique FundingCasePermissionsCache ID</comment>
+    <html>
+      <type>Number</type>
+    </html>
+  </field>
+  <primaryKey>
+    <name>id</name>
+    <autoincrement>true</autoincrement>
+  </primaryKey>
+
+  <field>
+    <name>funding_case_id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>FK to FundingCase</comment>
+  </field>
+  <foreignKey>
+    <name>funding_case_id</name>
+    <table>civicrm_funding_case</table>
+    <key>id</key>
+    <onDelete>CASCADE</onDelete>
+  </foreignKey>
+
+  <field>
+    <name>contact_id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>No FK to contact to work with 0 (contact ID on CLI), too</comment>
+  </field>
+
+  <field>
+    <name>is_remote</name>
+    <type>boolean</type>
+    <required>true</required>
+    <comment>Indicates whether the permissions are for internal or remote requests</comment>
+  </field>
+
+  <field>
+    <name>permissions</name>
+    <type>text</type>
+    <comment>Permissions as JSON array. If NULL they have to be determined.</comment>
+    <serialize>JSON</serialize>
+    <html>
+      <type>Text</type>
+    </html>
+  </field>
+
+  <index>
+    <name>UI_funding_case_id_contact_id_is_remote</name>
+    <fieldName>funding_case_id</fieldName>
+    <fieldName>contact_id</fieldName>
+    <fieldName>is_remote</fieldName>
+    <unique>true</unique>
+  </index>
+
+</table>

@@ -19,10 +19,13 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\FundingDrawdown;
 
+use Civi\Api4\FundingCase;
 use Civi\Api4\FundingDrawdown;
+use Civi\Api4\FundingPayoutProcess;
 use Civi\Api4\Generic\DAOGetAction;
 use Civi\Api4\Generic\Result;
-use Civi\Funding\Api4\Util\SelectUtil;
+use Civi\Funding\Api4\Action\Traits\IsFieldSelectedTrait;
+use Civi\Funding\Api4\Util\FundingCasePermissionsUtil;
 use Civi\Funding\Api4\Util\WhereUtil;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
@@ -30,9 +33,15 @@ use Civi\Funding\Entity\PayoutProcessEntity;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\Funding\PayoutProcess\PayoutProcessManager;
+use Civi\RemoteTools\Api4\Api4Interface;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Webmozart\Assert\Assert;
 
 final class GetAction extends DAOGetAction {
+
+  use IsFieldSelectedTrait;
+
+  private Api4Interface $api4;
 
   private FundingCaseManager $fundingCaseManager;
 
@@ -55,25 +64,98 @@ final class GetAction extends DAOGetAction {
    */
   private array $payoutProcesses = [];
 
+  private RequestContextInterface $requestContext;
+
   public function __construct(
+    Api4Interface $api4,
     FundingCaseManager $fundingCaseManager,
     FundingProgramManager $fundingProgramManager,
-    PayoutProcessManager $payoutProcessManager
+    PayoutProcessManager $payoutProcessManager,
+    RequestContextInterface $requestContext
   ) {
     parent::__construct(FundingDrawdown::getEntityName(), 'get');
+    $this->api4 = $api4;
     $this->fundingCaseManager = $fundingCaseManager;
     $this->fundingProgramManager = $fundingProgramManager;
     $this->payoutProcessManager = $payoutProcessManager;
+    $this->requestContext = $requestContext;
   }
 
+  // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
   public function _run(Result $result): void {
+  // phpcs:enable
+    $rowCountSelected = $this->isRowCountSelected();
+    if ($rowCountSelected) {
+      $this->ensureFundingCasePermissions();
+    }
+
+    FundingCasePermissionsUtil::addPermissionsCacheJoin(
+      $this,
+      'payout_process_id.funding_case_id',
+      $this->requestContext->getContactId(),
+      $this->requestContext->isRemote()
+    );
+    FundingCasePermissionsUtil::addPermissionsRestriction($this);
+
+    $currencySelected = $this->isFieldSelected('currency');
+    $canReviewSelected = $this->isFieldSelected('CAN_review');
+    $payoutProcessIdSelected = $this->isFieldSelected('payout_process_id');
+
+    if ($canReviewSelected && !$this->isFieldSelected('status')) {
+      $this->addSelect('status');
+    }
+
+    if (!$payoutProcessIdSelected) {
+      $this->addSelect('payout_process_id');
+    }
+
+    $limit = $this->getLimit();
+    $offset = $this->getOffset();
+    $records = [];
+    do {
+      parent::_run($result);
+
+      /** @phpstan-var array<string, mixed>&array{payout_process_id: int, status: string} $record */
+      foreach ($result as $record) {
+        $payoutProcess = $this->getPayoutProcess($record['payout_process_id']);
+        if (NULL !== $payoutProcess) {
+          if ($currencySelected) {
+            $record['currency'] = $this->getCurrency($payoutProcess);
+          }
+          if ($canReviewSelected) {
+            $record['CAN_review'] = $this->getCanReview($record['status'], $payoutProcess);
+          }
+          if (!$payoutProcessIdSelected) {
+            unset($record['payout_process_id']);
+          }
+
+          $records[] = $record;
+        }
+      }
+
+      $limitBefore = $this->getLimit();
+      $this->setOffset($offset + count($records));
+      $this->setLimit($limit - count($records));
+    } while ($this->getLimit() > 0 && count($result) === $limitBefore);
+
+    $result->exchangeArray($records);
+    if (!$rowCountSelected) {
+      $result->rowCount = count($records);
+    }
+  }
+
+  private function ensureFundingCasePermissions(): void {
+    // Ensure permissions for all funding cases with payout process are determined.
+    $action = FundingCase::get(FALSE)
+      ->addSelect('DISTINCT id')
+      ->addJoin(FundingPayoutProcess::getEntityName() . ' AS pp', 'INNER', NULL, ['pp.funding_case_id', '=', 'id']);
+
     $payoutProcessId = WhereUtil::getInt($this->getWhere(), 'payout_process_id');
-    if (NULL === $payoutProcessId) {
-      $this->runDefault($result);
+    if (NULL !== $payoutProcessId) {
+      $action->addWhere('pp.id', '=', $payoutProcessId);
     }
-    else {
-      $this->runWithSinglePayoutProcessId($result, $payoutProcessId);
-    }
+
+    $this->api4->executeAction($action);
   }
 
   /**
@@ -127,75 +209,6 @@ final class GetAction extends DAOGetAction {
     return 'new' === $drawdownStatus
       && 'open' === $payoutProcess->getStatus()
       && $this->getFundingCase($payoutProcess->getFundingCaseId())->hasPermission('review_drawdown');
-  }
-
-  private function isFieldSelected(string $field): bool {
-    return SelectUtil::isFieldSelected($field, $this->select);
-  }
-
-  /**
-   * @throws \CRM_Core_Exception
-   */
-  private function runDefault(Result $result): void {
-    $currencySelected = $this->isFieldSelected('currency');
-    $canReviewSelected = $this->isFieldSelected('CAN_review');
-    $payoutProcessIdSelected = $this->isFieldSelected('payout_process_id');
-
-    if ($canReviewSelected && !$this->isFieldSelected('status')) {
-      $this->addSelect('status');
-    }
-
-    if (!$payoutProcessIdSelected) {
-      $this->addSelect('payout_process_id');
-    }
-    parent::_run($result);
-
-    $records = [];
-    /** @phpstan-var array<string, mixed>&array{payout_process_id: int, status: string} $record */
-    foreach ($result as $record) {
-      $payoutProcess = $this->getPayoutProcess($record['payout_process_id']);
-      if (NULL !== $payoutProcess) {
-        if ($currencySelected) {
-          $record['currency'] = $this->getCurrency($payoutProcess);
-        }
-        if ($canReviewSelected) {
-          $record['CAN_review'] = $this->getCanReview($record['status'], $payoutProcess);
-        }
-        if (!$payoutProcessIdSelected) {
-          unset($record['payout_process_id']);
-        }
-
-        $records[] = $record;
-      }
-    }
-
-    $result->exchangeArray($records);
-    $result->setCountMatched(count($records));
-  }
-
-  /**
-   * @throws \CRM_Core_Exception
-   */
-  private function runWithSinglePayoutProcessId(Result $result, int $payoutProcessId): void {
-    $payoutProcess = $this->getPayoutProcess($payoutProcessId);
-    if (NULL !== $payoutProcess) {
-      if ($this->isFieldSelected('CAN_review') && !$this->isFieldSelected('status')) {
-        $this->addSelect('status');
-      }
-      parent::_run($result);
-      if ($this->isFieldSelected('currency')) {
-        /** @phpstan-var array<string, mixed> $record */
-        foreach ($result as &$record) {
-          $record['currency'] = $this->getCurrency($payoutProcess);
-        }
-      }
-      if ($this->isFieldSelected('CAN_review')) {
-        /** @phpstan-var array<string, mixed>&array{status: string} $record */
-        foreach ($result as &$record) {
-          $record['CAN_review'] = $this->getCanReview($record['status'], $payoutProcess);
-        }
-      }
-    }
   }
 
 }

@@ -17,22 +17,32 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Event\FundingCase;
+namespace Civi\Funding\Fixtures;
 
-use Civi\Api4\FundingCase;
-use Civi\RemoteTools\Event\AbstractGetPermissionsEvent;
+use Civi\Api4\FundingCasePermissionsCache;
 
-/**
- * Note: The result is cached. This means that permissions may not be fully
- * dynamic, and it has to be assured that the cache is cleared if necessary.
- *
- * @see \Civi\Api4\FundingCasePermissionsCache
- * @see \Civi\Funding\EventSubscriber\FundingCase\FundingCasePermissionsCacheClearSubscriber
- */
-final class GetPermissionsEvent extends AbstractGetPermissionsEvent {
+final class FundingCasePermissionsCacheFixture {
 
-  public function __construct(int $entityId, int $contactId) {
-    parent::__construct(FundingCase::getEntityName(), $entityId, $contactId);
+  /**
+   * @phpstan-param array<string> $permissions
+   *
+   * @phpstan-return array<string, scalar|null>&array{id: int}
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public static function add(
+    int $fundingCaseId,
+    int $contactId,
+    bool $remote = FALSE,
+    array $permissions = ['test']
+  ): array {
+    return FundingCasePermissionsCache::create(FALSE)
+      ->setValues([
+        'funding_case_id' => $fundingCaseId,
+        'contact_id' => $contactId,
+        'is_remote' => $remote,
+        'permissions' => $permissions,
+      ])->execute()->first();
   }
 
 }
