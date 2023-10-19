@@ -1,0 +1,772 @@
+<funding-application-submit-modal
+  title="submitModal.title"
+  comment-required="submitModal.commentRequired"
+  comment-text="comment.text"
+  comment-type="comment.type"
+  submit="modalSubmit"></funding-application-submit-modal>
+
+<div class="funding-application-sidebar funding-resize-height" funding-application-sidebar>
+</div>
+
+<div class="funding-application-main">
+  <div ng-if="errors | fundingIsNotEmpty" class="alert alert-danger">
+    {{ ts('Validation failed') }}
+    <funding-validation-errors errors="errors['/']"></funding-validation-errors>
+    <funding-validation-errors errors="errors['/action']"></funding-validation-errors>
+  </div>
+
+  <div class="funding-resize-height">
+    <h2>{{ ts('Reviewers') }}</h2>
+    <funding-application-reviewers application-process="applicationProcess" permissions="permissions"></funding-application-reviewers>
+
+    <h2>{{ ts('General') }}</h2>
+    <div>
+      <label>{{ ts('Identifier') }}</label>
+      {{ applicationProcess.identifier }}
+    </div>
+    <div>
+      <label>{{ ts('Status') }}</label>
+      {{ statusOptions[applicationProcess.status].label || ts('Unknown') }}
+      <funding-fa icon="statusOptions[applicationProcess.status].icon"
+                  ng-style="{color: statusOptions[applicationProcess.status].color };"></funding-fa>
+    </div>
+    <div>
+      <label>{{ ts('Review Content') }}</label>
+      {{ reviewStatusLabels[applicationProcess.is_review_content] }}
+    </div>
+    <div>
+      <label>{{ ts('Review Calculative') }}</label>
+      {{ reviewStatusLabels[applicationProcess.is_review_calculative] }}
+    </div>
+    <div>
+      <label>{{ ts('Creation Date') }}</label>
+      {{ applicationProcess.creation_date|fundingDate }}
+    </div>
+    <div>
+      <label>{{ ts('Modification Date') }}</label>
+      {{ applicationProcess.modification_date|fundingDate }}
+    </div>
+    <div>
+      <label>{{ ts('Recipient') }}</label>
+      {{ recipientContact.display_name }}
+    </div>
+    <div>
+      <label>{{ ts('Amount Requested') }}</label>
+      {{ applicationProcess.amount_requested }} {{ currency }}
+    </div>
+
+    <h2>Grunddaten</h2>
+    <div>
+      <editable-field label="'Titel'" type="text"
+                      value="data.grunddaten.titel"
+                      e-ng-required="true"></editable-field>
+    </div>
+    <div>
+      <editable-field label="'Kurzbeschreibung des Inhalts'" type="textarea"
+                      value="data.grunddaten.kurzbeschreibungDesInhalts"
+                      e-ng-required="true"></editable-field>
+    </div>
+    <div>
+      <h3>Zeiträume <funding-validation-errors errors="errors['/grunddaten/zeitraeume']"></funding-validation-errors></h3>
+      <table class="table table-condensed table-striped table-hover">
+        <thead>
+          <tr>
+            <th style="width: 45%;">Beginn</th>
+            <th style="width: 45%;">Ende</th>
+            <th style="width: 10%;">Aktionen</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="zeitraum in data.grunddaten.zeitraeume track by $index" funding-editable-table-row>
+            <td>
+              <editable-field type="date" value="zeitraum.beginn"
+                              path="zeitraeume[{{ $index }}].beginn"
+                              e-ng-required="true"></editable-field>
+            </td>
+            <td>
+              <editable-field type="date" value="zeitraum.ende"
+                              path="zeitraeume[{{ $index }}].ende"
+                              e-ng-required="true"></editable-field>
+            </td>
+            <td class="editable-table-row-actions"></td>
+          </tr>
+        </tbody>
+      </table>
+      <funding-add-row-button path="grunddaten.zeitraeume" ng-if="isEditAllowed()"></funding-add-row-button>
+    </div>
+    <div>
+      <label>Programmtage</label>
+      {{ data.grunddaten.programmtage }}
+    </div>
+    <div>
+      <editable-field label="'Art der Maßnahme'" type="select"
+                      value="data.grunddaten.artDerMassnahme"
+                      options-one-of="jsonSchema.properties.grunddaten.properties.artDerMassnahme.oneOf"
+                      e-ng-required="true"></editable-field>
+    </div>
+    <div>
+      <editable-field label="'Begegnungsland'" type="select"
+                      value="data.grunddaten.begegnungsland"
+                      options-one-of="jsonSchema.properties.grunddaten.properties.begegnungsland.oneOf"
+                      e-ng-required="true"></editable-field>
+    </div>
+    <div>
+      <editable-field label="'Stadt'" type="text" value="data.grunddaten.stadt"
+                      e-ng-required="true"></editable-field>
+    </div>
+    <div>
+      <editable-field label="'Land'" type="text" value="data.grunddaten.land"
+                      e-ng-required="true"></editable-field>
+    </div>
+    <div>
+      <editable-field label="'Fahrtstrecke in km (bei Maßnahme im Ausland)'" type="number"
+                      value="data.grunddaten.fahrtstreckeInKm"
+                      e-step="1" e-ng-required="true"></editable-field>
+    </div>
+
+    <h3>Teilnehmer*innen</h3>
+    <h4>Deutschland</h4>
+    <div>
+      <editable-field label="'Gesamtanzahl der Teilnehmer*innen'" type="number"
+                      value="data.teilnehmer.deutschland.gesamt"
+                      e-step="1" e-ng-required="false"></editable-field>
+    </div>
+    <div>
+      <editable-field label="'davon weiblich'" type="number"
+                      value="data.teilnehmer.deutschland.weiblich"
+                      e-step="1" e-ng-required="false"></editable-field>
+    </div>
+    <div>
+      <editable-field label="'davon divers'" type="number"
+                      value="data.teilnehmer.deutschland.divers"
+                      e-step="1" e-ng-required="false"></editable-field>
+    </div>
+    <div>
+      <editable-field label="'davon U27'" type="number"
+                      value="data.teilnehmer.deutschland.unter27"
+                      e-step="1" e-ng-required="false"></editable-field>
+    </div>
+    <div>
+      <editable-field label="'davon in der Kinder- und Jugendhilfe (Multiplikator*innen-Seminare) tätig'" type="number"
+                      value="data.teilnehmer.deutschland.inJugendhilfeTaetig"
+                      e-step="1" e-ng-required="false"></editable-field>
+    </div>
+    <div>
+      <editable-field label="'davon Referent*innen'" type="number"
+                      value="data.teilnehmer.deutschland.referenten"
+                      e-step="1" e-ng-required="false"></editable-field>
+    </div>
+    <h4>Partnerland</h4>
+    <div>
+      <editable-field label="'Gesamtanzahl der Teilnehmer*innen'" type="number"
+                      value="data.teilnehmer.partnerland.gesamt"
+                      e-step="1" e-ng-required="false"></editable-field>
+    </div>
+    <div>
+      <editable-field label="'davon weiblich'" type="number"
+                      value="data.teilnehmer.partnerland.weiblich"
+                      e-step="1" e-ng-required="false"></editable-field>
+    </div>
+    <div>
+      <editable-field label="'davon divers'" type="number"
+                      value="data.teilnehmer.partnerland.divers"
+                      e-step="1" e-ng-required="false"></editable-field>
+    </div>
+    <div>
+      <editable-field label="'davon U27'" type="number"
+                      value="data.teilnehmer.partnerland.unter27"
+                      e-step="1" e-ng-required="false"></editable-field>
+    </div>
+    <div>
+      <editable-field label="'davon in der Kinder- und Jugendhilfe (Multiplikator*innen-Seminare) tätig'" type="number"
+                      value="data.teilnehmer.partnerland.inJugendhilfeTaetig"
+                      e-step="1" e-ng-required="false"></editable-field>
+    </div>
+    <div>
+      <editable-field label="'davon Referent*innen'" type="number"
+                      value="data.teilnehmer.partnerland.referenten"
+                      e-step="1" e-ng-required="false"></editable-field>
+    </div>
+    <div>
+      <label>Gesamt</label>
+      {{ data.teilnehmer.gesamt }}
+    </div>
+    <div>
+      <label>Teilnehmertage</label>
+      {{ data.teilnehmer.teilnehmertage }}
+    </div>
+
+    <h2>Partnerorganisation</h2>
+    <div>
+      <editable-field label="'Name'" type="text"
+                      value="data.partnerorganisation.name"
+                      e-ng-required="true"></editable-field>
+    </div>
+    <div>
+      <editable-field label="'Adresse'" type="text"
+                      value="data.partnerorganisation.adresse"
+                      e-ng-required="true"></editable-field>
+    </div>
+    <div>
+      <editable-field label="'Land'" type="text"
+                      value="data.partnerorganisation.land"
+                      e-ng-required="true"></editable-field>
+    </div>
+    <div>
+      <editable-field label="'E-Mail'" type="text"
+                      value="data.partnerorganisation.email"
+                      e-ng-required="true"></editable-field>
+    </div>
+    <div>
+      <editable-field label="'Telefon'" type="text"
+                      value="data.partnerorganisation.telefon"
+                      e-ng-required="true"></editable-field>
+    </div>
+    <div>
+      <editable-field label="'Kontaktperson'" type="text"
+                      value="data.partnerorganisation.kontaktperson"
+                      e-ng-required="true"></editable-field>
+    </div>
+    <div>
+      <editable-field label="'Fortsetzungsmaßnahme'" type="checkbox"
+                      value="data.partnerorganisation.fortsetzungsmassnahme"
+                      e-ng-required="true"></editable-field>
+    </div>
+    <div ng-show="data.partnerorganisation.fortsetzungsmassnahme">
+      <div>
+        <editable-field label="'konzeptionell neu'" type="checkbox"
+                        value="data.partnerorganisation.konzeptionellNeu"
+                        e-ng-required="true"></editable-field>
+      </div>
+      <div>
+        <editable-field label="'Austausch mit dieser Partnerorganisation seit'" type="text"
+                        value="data.partnerorganisation.austauschSeit"
+                        e-ng-required="true"></editable-field>
+      </div>
+      <p>
+        Bisherige Begegnungen mit dieser Partnerorganisation in den letzten fünf Jahren (Zeitraum und Ort)
+      </p>
+      <div>
+        <editable-field label="'In Deutschland'" type="text"
+                        value="data.partnerorganisation.bisherigeBegegnungenInDeutschland"
+                        e-ng-required="true"></editable-field>
+      </div>
+      <div>
+        <editable-field label="'Im Partnerland'" type="text"
+                        value="data.partnerorganisation.bisherigeBegegnungenImPartnerland"
+                        e-ng-required="true"></editable-field>
+      </div>
+    </div>
+
+    <h2>Kosten</h2>
+    <div>
+      <h3>Unterkunft und Verpflegung</h3>
+      <table class="table table-condensed table-striped table-hover">
+        <thead>
+          <tr>
+            <th style="width: 80%;">Position</th>
+            <th style="width: 10%;">Betrag</th>
+            <th style="width: 10%;">Aktionen</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr funding-editable-table-row form-name="unterkunftUndVerpflegungForm">
+            <td>Unterkunft und Verpflegung</td>
+            <td>
+              <editable-field type="number" value="data.kosten.unterkunftUndVerpflegung"
+                              e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+            </td>
+            <td class="editable-table-row-actions"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div>
+      <h3>Honorare <funding-validation-errors errors="errors['/kosten.honorare']"></funding-validation-errors></h3>
+      <table class="table table-condensed table-striped table-hover">
+        <thead>
+          <tr>
+            <th style="width: 12%;">Berechnungsgrundlage</th>
+            <th style="width: 10%;">Stunden/Tage</th>
+            <th style="width: 10%;">Vergütung</th>
+            <th style="width: 24%;">Leistung</th>
+            <th style="width: 24%;">Qualifikation</th>
+            <th style="width: 10%;">Betrag</th>
+            <th style="width: 10%;">Aktionen</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="honorar in data.kosten.honorare track by $index" funding-editable-table-row>
+            <td>
+              <editable-field type="select" value="honorar.berechnungsgrundlage"
+                              options-one-of="jsonSchema.properties.kosten.properties.honorare.items.properties.berechnungsgrundlage.oneOf"
+                              e-ng-required="true"></editable-field>
+            </td>
+            <td>
+              <editable-field type="number" value="honorar.dauer"
+                              path="kosten.honorare[{{ $index }}].dauer"
+                              e-step="0.01" e-ng-required="true"></editable-field>
+            </td>
+            <td>
+              <editable-field type="number" value="honorar.verguetung"
+                              path="kosten.honorare[{{ $index }}].verguetung"
+                              e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+            </td>
+            <td>
+              <editable-field type="text" value="honorar.leistung"
+                              path="kosten.honorare[{{ $index }}].leistung"
+                              e-ng-required="true"></editable-field>
+            </td>
+            <td>
+              <editable-field type="text" value="honorar.qualifikation"
+                              path="kosten.honorare[{{ $index }}].qualifikation"
+                              e-ng-required="true"></editable-field>
+            </td>
+            <td>
+              <span>{{ honorar.betrag }} {{ currency }}</span>
+            </td>
+            <td class="editable-table-row-actions"></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="5">Honorarkosten gesamt</td>
+            <td>{{ data.kosten.honorareGesamt }} {{ currency }}</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+      <funding-add-row-button path="kosten.honorare" ng-if="isEditAllowed()"></funding-add-row-button>
+    </div>
+    <div>
+      <h3>Fahrtkosten</h3>
+      <table class="table table-condensed table-striped table-hover">
+        <thead>
+          <tr>
+            <th style="width: 80%;">Typ</th>
+            <th style="width: 10%;">Betrag</th>
+            <th style="width: 10%;">Aktionen</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr funding-editable-table-row form-name="fahrtkostenFlugForm">
+            <td>Flugkosten</td>
+            <td>
+              <editable-field type="number" value="data.kosten.fahrtkosten.flug"
+                              e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+            </td>
+            <td class="editable-table-row-actions"></td>
+          </tr>
+          <tr funding-editable-table-row form-name="fahrtkostenFlugForm">
+            <td>Programmfahrtkosten</td>
+            <td>
+              <editable-field type="number" value="data.kosten.fahrtkosten.programm"
+                              e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+            </td>
+            <td class="editable-table-row-actions"></td>
+          </tr>
+          <tr funding-editable-table-row form-name="fahrtkostenAnTeilnehmerErstattetForm">
+            <td>An Teilnehmer*innen erstattete Fahrtkosten</td>
+            <td>
+              <editable-field type="number" value="data.kosten.fahrtkosten.anTeilnehmerErstattet"
+                              e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+            </td>
+            <td class="editable-table-row-actions"></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>Fahrtkosten gesamt</td>
+            <td>{{ data.kosten.fahrtkostenGesamt }} {{ currency }}</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div>
+      <h3>Programmkosten</h3>
+      <table class="table table-condensed table-striped table-hover">
+        <thead>
+          <tr>
+            <th style="width: 80%;">Typ</th>
+            <th style="width: 10%;">Betrag</th>
+            <th style="width: 10%;">Aktionen</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr funding-editable-table-row form-name="programmkostenProgrammkostenForm">
+            <td>Programmkosten</td>
+            <td>
+              <editable-field type="number" value="data.kosten.programmkosten.programmkosten"
+                              e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+            </td>
+            <td class="editable-table-row-actions"></td>
+          </tr>
+          <tr funding-editable-table-row form-name="fahrtkostenFlugForm">
+            <td>Arbeitsmaterial</td>
+            <td>
+              <editable-field type="number" value="data.kosten.programmkosten.arbeitsmaterial"
+                              e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+            </td>
+            <td class="editable-table-row-actions"></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>Programmkosten gesamt</td>
+            <td>{{ data.kosten.programmkostenGesamt }} {{ currency }}</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div>
+      <h3>Sonstige Kosten</h3>
+      <table class="table table-condensed table-striped table-hover">
+        <thead>
+          <tr>
+            <th style="width: 80%;">Gegenstand</th>
+            <th style="width: 10%;">Betrag</th>
+            <th style="width: 10%;">Aktionen</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="sonstigeKosten in data.kosten.sonstigeKosten track by $index" funding-editable-table-row>
+            <td>
+              <editable-field type="text" value="sonstigeKosten.gegenstand"
+                              path="kosten.sonstigeKosten[{{ $index }}].gegenstand"
+                              e-ng-required="true"></editable-field>
+            </td>
+            <td>
+              <editable-field type="number" value="sonstigeKosten.betrag"
+                              path="kosten.sonstigeKosten[{{ $index }}].betrag"
+                              e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+            </td>
+            <td class="editable-table-row-actions"></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>Sonstige Kosten gesamt</td>
+            <td>{{ data.kosten.sonstigeKostenGesamt }} {{ currency }}</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+      <funding-add-row-button path="kosten.sonstigeKosten" ng-if="isEditAllowed()"></funding-add-row-button>
+    </div>
+    <div>
+      <h3>Sonstige Ausgaben</h3>
+      <table class="table table-condensed table-striped table-hover">
+        <thead>
+          <tr>
+            <th style="width: 80%;">Zweck</th>
+            <th style="width: 10%;">Betrag</th>
+            <th style="width: 10%;">Aktionen</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="sonstigeAusgabe in data.kosten.sonstigeAusgaben track by $index" funding-editable-table-row>
+            <td>
+              <editable-field type="text" value="sonstigeAusgabe.zweck"
+                              path="kosten.sonstigeAusgaben[{{ $index }}].zweck"
+                              e-ng-required="true"></editable-field>
+            </td>
+            <td>
+              <editable-field type="number" value="sonstigeAusgabe.betrag"
+                              path="kosten.sonstigeAusgaben[{{ $index }}].betrag"
+                              e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+            </td>
+            <td class="editable-table-row-actions"></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>Sonstige Ausgaben gesamt</td>
+            <td>{{ data.kosten.sonstigeAusgabenGesamt }} {{ currency }}</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+      <funding-add-row-button path="kosten.sonstigeAusgaben" ng-if="isEditAllowed()"></funding-add-row-button>
+    </div>
+    <div>
+      <h3>Zuschlagsrelevante Kosten</h3>
+      <table class="table table-condensed table-striped table-hover">
+        <thead>
+          <tr>
+            <th style="width: 80%;">Typ</th>
+            <th style="width: 10%;">Betrag</th>
+            <th style="width: 10%;">Aktionen</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr funding-editable-table-row form-name="zuschlagsrelevanteKostenProgrammabsprachenForm">
+            <td>Programmabsprachen</td>
+            <td>
+              <editable-field type="number" value="data.kosten.zuschlagsrelevanteKosten.programmabsprachen"
+                              e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+            </td>
+            <td class="editable-table-row-actions"></td>
+          </tr>
+          <tr funding-editable-table-row form-name="zuschlagsrelevanteKostenVorbereitungsmaterialForm">
+            <td>Erstellung von VVorbereitungsmaterial</td>
+            <td>
+              <editable-field type="number" value="data.kosten.zuschlagsrelevanteKosten.vorbereitungsmaterial"
+                              e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+            </td>
+            <td class="editable-table-row-actions"></td>
+          </tr>
+          <tr funding-editable-table-row form-name="zuschlagsrelevanteKostenVeroeffentlichungenForm">
+            <td>Veröffentlichungen</td>
+            <td>
+              <editable-field type="number" value="data.kosten.zuschlagsrelevanteKosten.veroeffentlichungen"
+                              e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+            </td>
+            <td class="editable-table-row-actions"></td>
+          </tr>
+          <tr funding-editable-table-row form-name="zuschlagsrelevanteKostenHonorareForm">
+            <td>Honorare für Vorträge zur Vorbereitung</td>
+            <td>
+              <editable-field type="number" value="data.kosten.zuschlagsrelevanteKosten.honorare"
+                              e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+            </td>
+            <td class="editable-table-row-actions"></td>
+          </tr>
+          <tr funding-editable-table-row form-name="zuschlagsrelevanteKostenFahrtkostenUndVerpflegungForm">
+            <td>Fahrtkosten und Verpflegung</td>
+            <td>
+              <editable-field type="number" value="data.kosten.zuschlagsrelevanteKosten.fahrtkostenUndVerpflegung"
+                              e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+            </td>
+            <td class="editable-table-row-actions"></td>
+          </tr>
+          <tr funding-editable-table-row form-name="zuschlagsrelevanteKostenReisekostenForm">
+            <td>Interne Reise-/Fahrtkosten für Vor- und Nachbereitung</td>
+            <td>
+              <editable-field type="number" value="data.kosten.zuschlagsrelevanteKosten.reisekosten"
+                              e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+            </td>
+            <td class="editable-table-row-actions"></td>
+          </tr>
+          <tr funding-editable-table-row form-name="zuschlagsrelevanteKostenMieteForm">
+            <td>Raum-, Materialmiete</td>
+            <td>
+              <editable-field type="number" value="data.kosten.zuschlagsrelevanteKosten.miete"
+                              e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+            </td>
+            <td class="editable-table-row-actions"></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>Zuschlagsrevelante Kosten gesamt</td>
+            <td>{{ data.kosten.zuschlagsrelevanteKostenGesamt }} {{ currency }}</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div>
+      <h3>Gesamtkosten</h3>
+      {{ data.kosten.kostenGesamt }} {{ currency }}
+    </div>
+
+    <h2>Finanzierung</h2>
+    <table class="table table-condensed table-striped table-hover">
+      <thead>
+      <tr>
+        <th style="width: 80%;">Quelle</th>
+        <th style="width: 10%;">Betrag</th>
+        <th style="width: 10%;">Aktionen</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr funding-editable-table-row form-name="teilnehmerbeitraegeForm">
+        <td>Teilnehmer*innenbeiträge</td>
+        <td>
+          <editable-field type="number" value="data.finanzierung.teilnehmerbeitraege"
+                          e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+        </td>
+        <td class="editable-table-row-actions"></td>
+      </tr>
+      <tr funding-editable-table-row form-name="eigenmittelForm">
+        <td>Eigenmittel</td>
+        <td>
+          <editable-field type="number" value="data.finanzierung.eigenmittel"
+                          e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+        </td>
+        <td class="editable-table-row-actions"></td>
+      </tr>
+      </tbody>
+    </table>
+
+    <h3>Öffentliche Mittel</h3>
+    <table class="table table-condensed table-striped table-hover">
+      <thead>
+      <tr>
+        <th style="width: 80%;">Quelle</th>
+        <th style="width: 10%;">Betrag</th>
+        <th style="width: 10%;">Aktionen</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr funding-editable-table-row form-name="oeffentlicheMittelEuropaForm">
+        <td>Europa</td>
+        <td>
+          <editable-field type="number" value="data.finanzierung.oeffentlicheMittel.europa"
+                          e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+        </td>
+        <td class="editable-table-row-actions"></td>
+      </tr>
+      <tr funding-editable-table-row form-name="oeffentlicheMittelBundeslaenderForm">
+        <td>Bundesländer</td>
+        <td>
+          <editable-field type="number" value="data.finanzierung.oeffentlicheMittel.bundeslaender"
+                          e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+        </td>
+        <td class="editable-table-row-actions"></td>
+      </tr>
+      <tr funding-editable-table-row form-name="oeffentlicheMittelStaedteUndKreiseForm">
+        <td>Städte und Kreise</td>
+        <td>
+          <editable-field type="number" value="data.finanzierung.oeffentlicheMittel.staedteUndKreise"
+                          e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+        </td>
+        <td class="editable-table-row-actions"></td>
+      </tr>
+      </tbody>
+    </table>
+
+    <h3>Sonstige Mittel</h3>
+    <table class="table table-condensed table-striped table-hover">
+      <thead>
+        <tr>
+          <th style="width: 80%;">Quelle</th>
+          <th style="width: 10%;">Betrag</th>
+          <th style="width: 10%;">Aktionen</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="sonstigesMittel in data.finanzierung.sonstigeMittel track by $index" funding-editable-table-row>
+          <td>
+            <editable-field type="text" value="sonstigesMittel.quelle"
+                            path="finanzierung.sonstigeMittel[{{ $index }}].quelle"
+                            e-step="0.01" e-ng-required="true"></editable-field>
+          </td>
+          <td>
+            <editable-field type="number" value="sonstigesMittel.betrag"
+                            path="finanzierung.sonstigeMittel[{{ $index }}].betrag"
+                            e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+          </td>
+          <td class="editable-table-row-actions"></td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td>Sonstige Mittel gesamt</td>
+          <td>{{ data.finanzierung.sonstigeMittelGesamt }} {{ currency }}</td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+    <funding-add-row-button path="finanzierung.sonstigeMittel" ng-if="isEditAllowed()"></funding-add-row-button>
+
+    <h3>Gesamtmittel</h3>
+    {{ data.finanzierung.mittelGesamt }} {{ currency }}
+
+    <h2>Zuschuss</h2>
+    <div>
+      <h3>Teilnehmendenkosten</h3>
+      <div>
+        <label>Maximaler Zuschuss</label>
+        {{ data.zuschuss.teilnehmerkostenMax }} {{ currency }}
+      </div>
+      <div>
+        <editable-field label="'Benötigter Zuschuss'" type="number"
+                        value="data.zuschuss.teilnehmerkosten"
+                        e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+      </div>
+    </div>
+    <div>
+      <h3>Honorarkosten</h3>
+      <div>
+        <label>Maximaler Zuschuss</label>
+        {{ data.zuschuss.honorarkostenMax }} {{ currency }}
+      </div>
+      <div>
+        <editable-field label="'Benötigter Zuschuss'" type="number"
+                        value="data.zuschuss.honorarkosten"
+                        e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+      </div>
+    </div>
+    <div>
+      <h3>Fahrtkosten</h3>
+      <div>
+        <label>Maximaler Zuschuss im europäischen Ausland</label>
+        {{ data.zuschuss.fahrtkostenAuslandEuropaMax }} {{ currency }}
+      </div>
+      <div>
+        <label>Maximaler Zuschuss im außereuropäischen Ausland</label>
+        {{ data.zuschuss.fahrtkostenNichtEuropaMax }} {{ currency }}
+      </div>
+      <div>
+        <editable-field label="'Benötigter Zuschuss'" type="number"
+                        value="data.zuschuss.fahrtkosten"
+                        e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+      </div>
+    </div>
+    <div>
+      <h3>Zuschlag für Vor- und Nachbereitung der Maßnahme, Qualifizierung und Auswertung</h3>
+      <div>
+        <label>Maximaler Zuschuss</label>
+        {{ data.zuschuss.zuschlagMax }} {{ currency }}
+      </div>
+      <div>
+        <editable-field label="'Benötigter Zuschuss'" type="number"
+                        value="data.zuschuss.zuschlag"
+                        e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+      </div>
+    </div>
+    <div>
+      <h3>Beantragte KJP-Mittel gesamt</h3>
+      {{ data.zuschuss.gesamt }} {{ currency }}
+    </div>
+    <div>
+      <h3>Gesamtfinanzierung</h3>
+      {{ data.zuschuss.finanzierungGesamt }} {{ currency }}
+      <funding-validation-errors errors="errors['/zuschuss/finanzierungGesamt']"></funding-validation-errors>
+    </div>
+
+    <h2>Beschreibung des Vorhabens</h2>
+    <div>
+      <editable-field label="'Ziele'"
+                      type="checklist" value="data.beschreibung.ziele"
+                      options-one-of="jsonSchema.properties.beschreibung.properties.ziele.items.oneOf"
+                      e-ng-required="true"></editable-field>
+    </div>
+    <div>
+      <editable-field label="'Bildungs- und Begegnungsanteil'"
+                      type="number" value="data.beschreibung.bildungsanteil"
+                      e-step="1" e-ng-required="true"></editable-field> %
+    </div>
+    <div>
+      <editable-field label="'Inhalt und Ziel'"
+                      type="text" value="data.beschreibung.inhalt"
+                      e-ng-required="true"></editable-field>
+    </div>
+    <div>
+      <editable-field label="'Erläuterungen zur Vor- und Nachbereitung, sprachlichen Verständigung und Öffentlichkeitsarbeit'"
+                      type="text" value="data.beschreibung.erlaeuterungen"
+                      e-ng-required="true"></editable-field>
+    </div>
+    <div>
+      <editable-field label="'Qualifikation der Leitungs- und Begleitpersonen'"
+                      type="text" value="data.beschreibung.qualifikation"
+                      e-ng-required="true"></editable-field>
+    </div>
+
+  </div>
+</div>

@@ -22,10 +22,10 @@ namespace Civi\Funding\SonstigeAktivitaet\JsonSchema;
 use Civi\Funding\Form\JsonSchema\JsonSchemaRecipient;
 use Civi\Funding\Form\Traits\AssertFormTrait;
 use Civi\Funding\SonstigeAktivitaet\Application\JsonSchema\AVK1JsonSchema;
+use Civi\Funding\Validation\Traits\AssertValidationResultTrait;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 use Civi\RemoteTools\JsonSchema\Validation\OpisValidatorFactory;
-use Opis\JsonSchema\Errors\ErrorFormatter;
 use PHPUnit\Framework\TestCase;
 use Systopia\JsonSchema\Errors\ErrorCollector;
 
@@ -35,6 +35,8 @@ use Systopia\JsonSchema\Errors\ErrorCollector;
 class AVK1JsonSchemaTest extends TestCase {
 
   use AssertFormTrait;
+
+  use AssertValidationResultTrait;
 
   public function testJsonSchema(): void {
     $possibleRecipients = [
@@ -167,12 +169,7 @@ class AVK1JsonSchemaTest extends TestCase {
 
     $validator = OpisValidatorFactory::getValidator();
     $result = $validator->validate($data, \json_encode($jsonSchema));
-    if (NULL !== $result->error()) {
-      // Should not happen
-      $errorFormatter = new ErrorFormatter();
-      // Will fail, but we'll know why
-      static::assertSame([], $errorFormatter->formatKeyed($result->error()));
-    }
+    static::assertValidationValid($result);
 
     $unterkunftUndVerpflegung = 222.22;
     $honorar1 = round(11.1 * 22.22, 2);

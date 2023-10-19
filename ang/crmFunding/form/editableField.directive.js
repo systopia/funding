@@ -67,6 +67,14 @@ fundingModule.directive('editableField', [function() {
         $attrs.editAllowed = 'isEditAllowed()';
       }
 
+      $scope.showCheckbox = function (checked) {
+        if (checked === undefined || checked === null) {
+          return $attrs.emptyValueDisplay;
+        }
+
+        return checked ? ts('Yes') : ts('No');
+      }
+
       /**
        * @param {array} selected
        * @param {object[]} oneOf
@@ -85,6 +93,25 @@ fundingModule.directive('editableField', [function() {
         });
 
         return labels.join(', ');
+      };
+
+      /**
+       * @param {string} selected
+       * @param {object[]} oneOf
+       * @returns {string}
+       */
+      $scope.showSelect = function(selected, oneOf) {
+        if (selected === undefined || selected === null) {
+          return $attrs.emptyValueDisplay;
+        }
+
+        for (let value of oneOf) {
+          if (selected === value.const) {
+            return value.title;
+          }
+        }
+
+        return selected;
       };
     }],
     link: function (scope, element, attrs, controller, transcludeFn) {
@@ -106,9 +133,14 @@ fundingModule.directive('editableField', [function() {
       }
 
       let displayValueExpression;
-      if (attrs.type === 'checklist') {
+      if (attrs.type === 'checkbox') {
+        displayValueExpression = `showCheckbox(${attrs.value})`;
+      } else if (attrs.type === 'checklist') {
         displayValueExpression = 'showChecklist(' + attrs.value + ', ' + attrs.optionsOneOf + ')';
-      } else {
+      } else if (attrs.type === 'select') {
+        displayValueExpression = 'showSelect(' + attrs.value + ', ' + attrs.optionsOneOf + ')';
+      }
+      else {
         displayValueExpression = '(null === ' + attrs.value + ' || "" === ' + attrs.value + ') ? $ctrl.emptyValueDisplay : ' + attrs.value;
       }
 
