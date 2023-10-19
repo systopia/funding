@@ -41,7 +41,7 @@
     <length>20</length>
     <required>true</required>
     <dataPattern>/^[\p{L}\p{N}\p{P}]+$/u</dataPattern>
-    <comment>Used in application process identifiers</comment>
+    <comment></comment>
     <html>
       <type>Text</type>
     </html>

@@ -22,19 +22,6 @@ namespace Civi\Funding\Fixtures;
 use Civi\Api4\FundingProgram;
 use Civi\Funding\Entity\FundingProgramEntity;
 
-/**
- * @phpstan-type fundingProgramT array{
- *   id: int,
- *   title: string,
- *   abbreviation: string,
- *   start_date: string,
- *   end_date: string,
- *   requests_start_date: string,
- *   requests_end_date: string,
- *   currency: string,
- *   budget: float|null,
- * }
- */
 final class FundingProgramFixture {
 
   public const DEFAULT_CURRENCY = 'EUR';
@@ -45,20 +32,20 @@ final class FundingProgramFixture {
    * @throws \CRM_Core_Exception
    */
   public static function addFixture(array $values = []): FundingProgramEntity {
-    /** @phpstan-var fundingProgramT $fundingProgramValues */
-    $fundingProgramValues = FundingProgram::create(FALSE)
+    $result = FundingProgram::create(FALSE)
       ->setValues($values + [
         'title' => 'TestFundingProgram',
         'abbreviation' => 'TFP',
+        'identifier_prefix' => 'TFP-',
         'start_date' => '2022-10-22',
         'end_date' => '2023-10-22',
         'requests_start_date' => '2022-06-22',
         'requests_end_date' => '2022-12-31',
         'budget' => NULL,
         'currency' => self::DEFAULT_CURRENCY,
-      ])->execute()->first();
+      ])->execute();
 
-    return FundingProgramEntity::fromArray($fundingProgramValues);
+    return FundingProgramEntity::singleFromApiResult($result);
   }
 
 }

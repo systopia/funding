@@ -25,6 +25,8 @@ use Civi\Funding\Entity\FundingProgramEntity;
  * @phpstan-type fundingProgramValuesT array{
  *   id?: int,
  *   title?: string,
+ *   abbreviation?: string,
+ *   identifier_prefix?: string,
  *   start_date?: string,
  *   end_date?: string,
  *   requests_start_date?: string,
@@ -46,6 +48,7 @@ final class FundingProgramFactory {
       'id' => self::DEFAULT_ID,
       'title' => 'TestFundingProgram',
       'abbreviation' => 'TFP',
+      'identifier_prefix' => 'TFP-',
       'start_date' => '2022-10-22',
       'end_date' => '2023-10-22',
       'requests_start_date' => '2022-06-22',
