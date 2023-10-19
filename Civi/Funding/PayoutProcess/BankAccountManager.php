@@ -87,7 +87,6 @@ class BankAccountManager {
     }
 
     /** @phpstan-var array{id: string, data_parsed: string} $values */
-    // @phpstan-ignore-next-line
     $values = $result['values'][0];
 
     // @phpstan-ignore-next-line

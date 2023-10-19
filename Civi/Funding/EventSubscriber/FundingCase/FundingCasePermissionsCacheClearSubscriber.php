@@ -25,7 +25,6 @@ use Civi\Funding\Database\ChangeSetFactory;
 use Civi\Funding\FundingCase\FundingCasePermissionsCacheManager;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Webmozart\Assert\Assert;
 
 /**
  * Clears cached funding case permissions, if an entity is
@@ -107,8 +106,15 @@ final class FundingCasePermissionsCacheClearSubscriber implements EventSubscribe
       return;
     }
 
+    /**
+     * @phpstan-var array{
+     *   contact_id_a: int,
+     *   contact_id_b: int,
+     *   relationship_type_id: int,
+     *   is_active: bool,
+     * } $oldValues
+     */
     $oldValues = $this->api4->getEntity('Relationship', (int) $event->id, ['checkPermissions' => FALSE]);
-    Assert::notNull($oldValues);
     $newValues = $params + $oldValues;
 
     if ('delete' === $event->action) {
