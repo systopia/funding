@@ -20,10 +20,10 @@ declare(strict_types = 1);
 namespace Civi\Funding\IJB\Application\UiSchema;
 
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
-use Civi\RemoteTools\JsonForms\Layout\JsonFormsCloseableGroup;
+use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 
-final class IJBTeilnehmerUiSchema extends JsonFormsCloseableGroup {
+final class IJBTeilnehmerUiSchema extends JsonFormsCategory {
 
   public function __construct() {
     parent::__construct('Teilnehmer*innen', [

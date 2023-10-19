@@ -21,10 +21,10 @@ namespace Civi\Funding\SonstigeAktivitaet\Application\UISchema;
 
 use Civi\RemoteTools\JsonForms\Control\JsonFormsArray;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
-use Civi\RemoteTools\JsonForms\Layout\JsonFormsCloseableGroup;
+use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 
-final class AVK1GrunddatenUiSchema extends JsonFormsCloseableGroup {
+final class AVK1GrunddatenUiSchema extends JsonFormsCategory {
 
   public function __construct() {
     $elements = [

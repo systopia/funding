@@ -19,9 +19,9 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\IJB\Application\UiSchema;
 
-use Civi\RemoteTools\JsonForms\Layout\JsonFormsCloseableGroup;
+use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
 
-final class IJBKostenUndFinanzierungUiSchema extends JsonFormsCloseableGroup {
+final class IJBKostenUndFinanzierungUiSchema extends JsonFormsCategory {
 
   public function __construct(string $currency) {
     parent::__construct('Geplante Kosten & Finanzierung',

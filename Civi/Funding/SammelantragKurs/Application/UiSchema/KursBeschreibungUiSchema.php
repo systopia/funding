@@ -20,9 +20,9 @@ declare(strict_types = 1);
 namespace Civi\Funding\SammelantragKurs\Application\UiSchema;
 
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
-use Civi\RemoteTools\JsonForms\Layout\JsonFormsCloseableGroup;
+use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
 
-final class KursBeschreibungUiSchema extends JsonFormsCloseableGroup {
+final class KursBeschreibungUiSchema extends JsonFormsCategory {
 
   public function __construct() {
     parent::__construct('Beschreibung des Vorhabens', [

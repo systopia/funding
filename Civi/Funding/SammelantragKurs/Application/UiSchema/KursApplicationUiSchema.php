@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\SammelantragKurs\Application\UiSchema;
 
+use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategorization;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 
 final class KursApplicationUiSchema extends JsonFormsGroup {
@@ -28,9 +29,11 @@ final class KursApplicationUiSchema extends JsonFormsGroup {
    */
   public function __construct(string $title, string $currency, array $submitButtons) {
     $elements = [
-      new KursGrunddatenUiSchema(),
-      new KursZuschussUiSchema($currency),
-      new KursBeschreibungUiSchema(),
+      new JsonFormsCategorization([
+        new KursGrunddatenUiSchema(),
+        new KursZuschussUiSchema($currency),
+        new KursBeschreibungUiSchema(),
+      ]),
       ...$submitButtons,
     ];
     parent::__construct($title, $elements);
