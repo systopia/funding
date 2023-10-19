@@ -22,11 +22,11 @@ namespace Civi\Funding\IJB\Application\UiSchema;
 use Civi\RemoteTools\JsonForms\Control\JsonFormsArray;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
 use Civi\RemoteTools\JsonForms\JsonFormsRule;
-use Civi\RemoteTools\JsonForms\Layout\JsonFormsCloseableGroup;
+use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 
-final class IJBGrunddatenUiSchema extends JsonFormsCloseableGroup {
+final class IJBGrunddatenUiSchema extends JsonFormsCategory {
 
   public function __construct() {
     parent::__construct('Grunddaten', [

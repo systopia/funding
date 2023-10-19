@@ -21,10 +21,10 @@ namespace Civi\Funding\SammelantragKurs\Application\UiSchema;
 
 use Civi\RemoteTools\JsonForms\Control\JsonFormsArray;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
-use Civi\RemoteTools\JsonForms\Layout\JsonFormsCloseableGroup;
+use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 
-final class KursGrunddatenUiSchema extends JsonFormsCloseableGroup {
+final class KursGrunddatenUiSchema extends JsonFormsCategory {
 
   public function __construct() {
     parent::__construct('Grunddaten', [

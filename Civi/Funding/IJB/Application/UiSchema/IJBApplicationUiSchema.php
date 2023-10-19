@@ -20,7 +20,8 @@ declare(strict_types = 1);
 namespace Civi\Funding\IJB\Application\UiSchema;
 
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
-use Civi\RemoteTools\JsonForms\Layout\JsonFormsCloseableGroup;
+use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategorization;
+use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 
 final class IJBApplicationUiSchema extends JsonFormsGroup {
@@ -30,15 +31,17 @@ final class IJBApplicationUiSchema extends JsonFormsGroup {
    */
   public function __construct(string $currency, array $submitButtons) {
     $elements = [
-      new IJBGrunddatenUiSchema(),
-      new IJBTeilnehmerUiSchema(),
-      new JsonFormsCloseableGroup('Antragstellende Organisation', [
-        new JsonFormsControl('#/properties/empfaenger', ''),
+      new JsonFormsCategorization([
+        new IJBGrunddatenUiSchema(),
+        new IJBTeilnehmerUiSchema(),
+        new JsonFormsCategory('Antragstellende Organisation', [
+          new JsonFormsControl('#/properties/empfaenger', ''),
+        ]),
+        new IJBPartnerorganisationUiSchema(),
+        new IJBKostenUndFinanzierungUiSchema($currency),
+        new IJBZuschussUiSchema($currency),
+        new IJBBeschreibungUiSchema(),
       ]),
-      new IJBPartnerorganisationUiSchema(),
-      new IJBKostenUndFinanzierungUiSchema($currency),
-      new IJBZuschussUiSchema($currency),
-      new IJBBeschreibungUiSchema(),
       ...$submitButtons,
     ];
     parent::__construct('Förderantrag für Jugend- und Fachkräftebegegnungen', $elements);

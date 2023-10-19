@@ -22,10 +22,10 @@ namespace Civi\Funding\IJB\Application\UiSchema;
 use Civi\Funding\IJB\Application\JsonSchema\IJBZuschussJsonSchema;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
 use Civi\RemoteTools\JsonForms\JsonFormsMarkup;
-use Civi\RemoteTools\JsonForms\Layout\JsonFormsCloseableGroup;
+use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 
-final class IJBZuschussUiSchema extends JsonFormsCloseableGroup {
+final class IJBZuschussUiSchema extends JsonFormsCategory {
 
   public function __construct(string $currency) {
     $elements = [

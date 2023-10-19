@@ -22,10 +22,10 @@ namespace Civi\Funding\SammelantragKurs\Application\UiSchema;
 use Civi\Funding\SammelantragKurs\Application\JsonSchema\KursZuschussJsonSchema;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
 use Civi\RemoteTools\JsonForms\JsonFormsMarkup;
-use Civi\RemoteTools\JsonForms\Layout\JsonFormsCloseableGroup;
+use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 
-final class KursZuschussUiSchema extends JsonFormsCloseableGroup {
+final class KursZuschussUiSchema extends JsonFormsCategory {
 
   public function __construct(string $currency) {
     $elements = [

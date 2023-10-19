@@ -22,10 +22,10 @@ namespace Civi\Funding\IJB\Application\UiSchema;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
 use Civi\RemoteTools\JsonForms\JsonFormsMarkup;
 use Civi\RemoteTools\JsonForms\JsonFormsRule;
-use Civi\RemoteTools\JsonForms\Layout\JsonFormsCloseableGroup;
+use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 
-final class IJBPartnerorganisationUiSchema extends JsonFormsCloseableGroup {
+final class IJBPartnerorganisationUiSchema extends JsonFormsCategory {
 
   public function __construct() {
     $fortsetzungsMassnahmeRule = new JsonFormsRule(
