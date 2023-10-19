@@ -27,6 +27,7 @@ use Civi\RemoteTools\JsonSchema\JsonSchemaMoney;
 use Civi\RemoteTools\JsonSchema\JsonSchemaNumber;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
+use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
 
 final class AVK1KostenSchema extends JsonSchemaObject {
 
@@ -38,19 +39,25 @@ final class AVK1KostenSchema extends JsonSchemaObject {
       'honorare' => new JsonSchemaArray(
         new JsonSchemaObject([
           '_identifier' => new JsonSchemaString(['readonly' => TRUE]),
-          'stunden' => new JsonSchemaNumber(['precision' => 2]),
+          'berechnungsgrundlage' => new JsonSchemaString([
+            'oneOf' => JsonSchemaUtil::buildTitledOneOf([
+              'stundensatz' => 'Stundensatz',
+              'tagessatz' => 'Tagessatz',
+            ]),
+          ]),
+          'dauer' => new JsonSchemaNumber(['precision' => 2]),
           'verguetung' => new JsonSchemaMoney(['minimum' => 0]),
           'leistung' => new JsonSchemaString(),
           'qualifikation' => new JsonSchemaString(),
           'betrag' => new JsonSchemaCalculate(
             'number',
-            'round(stunden * verguetung, 2)',
+            'round(dauer * verguetung, 2)',
             [
-              'stunden' => new JsonSchemaDataPointer('1/stunden'),
+              'dauer' => new JsonSchemaDataPointer('1/dauer'),
               'verguetung' => new JsonSchemaDataPointer('1/verguetung'),
             ]
           ),
-        ], ['required' => ['stunden', 'verguetung', 'leistung', 'qualifikation']])
+        ], ['required' => ['berechnungsgrundlage', 'dauer', 'verguetung', 'leistung', 'qualifikation']])
       ),
       'honorareGesamt' => new JsonSchemaCalculate('number', 'round(sum(map(honorare, "value.betrag")), 2)', [
         'honorare' => new JsonSchemaDataPointer('1/honorare'),

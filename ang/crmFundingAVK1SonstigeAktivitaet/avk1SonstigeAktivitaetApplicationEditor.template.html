@@ -156,10 +156,11 @@
       <table class="table table-condensed table-striped table-hover">
         <thead>
           <tr>
-            <th style="width: 10%;">Stunden</th>
+            <th style="width: 12%;">Berechnungsgrundlage</th>
+            <th style="width: 10%;">Stunden/Tage</th>
             <th style="width: 10%;">Vergütung</th>
-            <th style="width: 30%;">Leistung</th>
-            <th style="width: 30%;">Qualifikation</th>
+            <th style="width: 24%;">Leistung</th>
+            <th style="width: 24%;">Qualifikation</th>
             <th style="width: 10%;">Betrag</th>
             <th style="width: 10%;">Aktionen</th>
           </tr>
@@ -167,8 +168,13 @@
         <tbody>
           <tr ng-repeat="honorar in data.kosten.honorare track by $index" funding-editable-table-row>
             <td>
-              <editable-field type="number" value="honorar.stunden"
-                              path="kosten.honorare[{{ $index }}].stunden"
+              <editable-field type="select" value="honorar.berechnungsgrundlage"
+                              options-one-of="jsonSchema.properties.kosten.properties.honorare.items.properties.berechnungsgrundlage.oneOf"
+                              e-ng-required="true"></editable-field>
+            </td>
+            <td>
+              <editable-field type="number" value="honorar.dauer"
+                              path="kosten.honorare[{{ $index }}].dauer"
                               e-step="0.01" e-ng-required="true"></editable-field>
             </td>
             <td>
@@ -194,7 +200,7 @@
         </tbody>
         <tfoot>
           <tr>
-            <td colspan="4">Honorarkosten gesamt</td>
+            <td colspan="5">Honorarkosten gesamt</td>
             <td>{{ data.kosten.honorareGesamt }} {{ currency }}</td>
             <td></td>
           </tr>

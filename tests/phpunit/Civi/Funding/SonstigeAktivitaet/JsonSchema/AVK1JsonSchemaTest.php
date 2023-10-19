@@ -82,13 +82,15 @@ class AVK1JsonSchemaTest extends TestCase {
         'unterkunftUndVerpflegung' => 222.22,
         'honorare' => [
           (object) [
-            'stunden' => 11.1,
+            'berechnungsgrundlage' => 'tagessatz',
+            'dauer' => 11.1,
             'verguetung' => 22.22,
             'leistung' => 'Leistung 1',
             'qualifikation' => 'Qualifikation 1',
           ],
           (object) [
-            'stunden' => 9.9,
+            'berechnungsgrundlage' => 'stundensatz',
+            'dauer' => 9.9,
             'verguetung' => 10,
             'leistung' => 'Leistung 2',
             'qualifikation' => 'Qualifikation 2',

@@ -27,17 +27,20 @@ use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 final class AVK1HonorareUiSchema extends JsonFormsGroup {
 
   public function __construct(string $currency) {
+    // \u{AD} is used to allow hyphenation at this position.
+    // \u{200B} is used to allow line break at this position.
     $elements = [
       new JsonFormsArray('#/properties/kosten/properties/honorare', '', NULL, [
         new JsonFormsHidden('#/properties/_identifier'),
-        new JsonFormsControl('#/properties/stunden', 'Stunden'),
-        new JsonFormsControl('#/properties/verguetung', 'Vergütung pro Stunde in ' . $currency),
+        new JsonFormsControl('#/properties/berechnungsgrundlage', "Berechnungs\u{AD}grundlage"),
+        new JsonFormsControl('#/properties/dauer', "Stunden/\u{200B}Tage"),
+        new JsonFormsControl('#/properties/verguetung', "Vergütung pro Stunde/\u{200B}Tag in " . $currency),
         new JsonFormsControl('#/properties/leistung', 'Vereinbarte Leistung'),
         new JsonFormsControl('#/properties/qualifikation', 'Qualifikation der Honorarkraft'),
         new JsonFormsControl('#/properties/betrag', 'Betrag in ' . $currency),
       ], [
         'addButtonLabel' => 'Honorar hinzufügen',
-        'removeButtonLabel' => 'Honorar entfernen',
+        'removeButtonLabel' => 'Entfernen',
       ]),
       new JsonFormsControl(
         '#/properties/kosten/properties/honorareGesamt',
