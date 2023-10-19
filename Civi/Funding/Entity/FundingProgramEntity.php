@@ -24,6 +24,7 @@ namespace Civi\Funding\Entity;
  *   id?: int,
  *   title: string,
  *   abbreviation: string,
+ *   identifier_prefix: string,
  *   start_date: string,
  *   end_date: string,
  *   requests_start_date: string,
@@ -53,6 +54,16 @@ final class FundingProgramEntity extends AbstractEntity {
 
   public function setAbbreviation(string $abbreviation): self {
     $this->values['abbreviation'] = $abbreviation;
+
+    return $this;
+  }
+
+  public function getIdentifierPrefix(): string {
+    return $this->values['identifier_prefix'];
+  }
+
+  public function setIdentifierPrefix(string $identifierPrefix): self {
+    $this->values['identifier_prefix'] = $identifierPrefix;
 
     return $this;
   }

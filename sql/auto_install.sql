@@ -49,7 +49,7 @@ SET FOREIGN_KEY_CHECKS=1;
 CREATE TABLE `civicrm_funding_case_type` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique FundingCaseType ID',
   `title` varchar(255) NOT NULL,
-  `abbreviation` varchar(20) NOT NULL COMMENT 'Used in application process identifiers',
+  `abbreviation` varchar(20) NOT NULL,
   `name` varchar(255) NOT NULL,
   `is_combined_application` tinyint NOT NULL,
   `application_process_label` varchar(255) COMMENT 'Used for combined applications',
@@ -68,7 +68,8 @@ ENGINE=InnoDB;
 CREATE TABLE `civicrm_funding_program` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique FundingProgram ID',
   `title` varchar(255) NOT NULL,
-  `abbreviation` varchar(20) NOT NULL COMMENT 'Used in application process identifiers',
+  `abbreviation` varchar(20) NOT NULL,
+  `identifier_prefix` varchar(100) NOT NULL COMMENT 'The database ID of a funding case will be appended to this prefix and forms its identifier',
   `start_date` date NOT NULL,
   `end_date` date NOT NULL,
   `requests_start_date` date NOT NULL,

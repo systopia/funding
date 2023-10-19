@@ -40,6 +40,7 @@ return [
             'id',
             'title',
             'abbreviation',
+            'identifier_prefix',
             'start_date',
             'end_date',
             'requests_start_date',
@@ -89,6 +90,13 @@ return [
               'key' => 'abbreviation',
               'dataType' => 'String',
               'label' => E::ts('Abbreviation'),
+              'sortable' => TRUE,
+            ],
+            [
+              'type' => 'field',
+              'key' => 'identifier_prefix',
+              'dataType' => 'String',
+              'label' => E::ts('Identifier Prefix'),
               'sortable' => TRUE,
             ],
             [
@@ -153,6 +161,7 @@ return [
                   'action' => '',
                   'join' => '',
                   'target' => '_blank',
+                  'task' => '',
                 ],
                 [
                   'path' => 'civicrm/a/#/funding/program/[id]/permissions',
@@ -168,6 +177,7 @@ return [
                   'action' => '',
                   'join' => '',
                   'target' => '_blank',
+                  'task' => '',
                 ],
                 [
                   'path' => 'civicrm/a/#/funding/program/[id]/new-case-permissions',
@@ -183,6 +193,7 @@ return [
                   'action' => '',
                   'join' => '',
                   'target' => '_blank',
+                  'task' => '',
                 ],
                 [
                   'path' => 'civicrm/funding/program/edit#?FundingProgram1=[id]',
@@ -198,6 +209,7 @@ return [
                   'action' => '',
                   'join' => '',
                   'target' => '',
+                  'task' => '',
                 ],
               ],
               'type' => 'menu',

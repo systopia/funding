@@ -33,13 +33,7 @@ final class FundingCaseIdentifierGenerator implements FundingCaseIdentifierGener
     FundingCaseTypeEntity $fundingCaseType,
     FundingProgramEntity $fundingProgram
   ): string {
-    return sprintf(
-      '%s-%s-%s-%d',
-      date('Y'),
-      $fundingProgram->getAbbreviation(),
-      $fundingCaseType->getAbbreviation(),
-      $fundingCase->getId(),
-    );
+    return $fundingProgram->getIdentifierPrefix() . $fundingCase->getId();
   }
 
 }
