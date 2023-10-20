@@ -77,8 +77,10 @@ final class AVK1FormDataFactoryTest extends TestCase {
       'start_date' => $startDate,
       'end_date' => $endDate,
       'request_data' => [
-        'zeitraeume' => [
-          ['beginn' => $startDate, 'ende' => $endDate],
+        'grunddaten' => [
+          'zeitraeume' => [
+            ['beginn' => $startDate, 'ende' => $endDate],
+          ],
         ],
         'teilnehmer' => ['gesamt' => 100],
         'beschreibung' => ['veranstaltungsort' => 'dort'],
@@ -94,12 +96,14 @@ final class AVK1FormDataFactoryTest extends TestCase {
 
     $data = $this->formDataFactory->createFormData($applicationProcess, $fundingCase);
     static::assertEquals([
-      'titel' => $applicationProcess->getTitle(),
-      'kurzbeschreibungDesInhalts' => $applicationProcess->getShortDescription(),
-      'empfaenger' => $fundingCase->getRecipientContactId(),
-      'zeitraeume' => [
-        ['beginn' => $startDate, 'ende' => $endDate],
+      'grunddaten' => [
+        'titel' => $applicationProcess->getTitle(),
+        'kurzbeschreibungDesInhalts' => $applicationProcess->getShortDescription(),
+        'zeitraeume' => [
+          ['beginn' => $startDate, 'ende' => $endDate],
+        ],
       ],
+      'empfaenger' => $fundingCase->getRecipientContactId(),
       'kosten' => ['foo' => 12.3],
       'finanzierung' => ['bar' => 1.23],
       'teilnehmer' => ['gesamt' => 100],

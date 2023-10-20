@@ -72,7 +72,9 @@ final class AVK1ValidatorTest extends TestCase {
   public function testValidateExisting(array $zeitraeume, array $errorMessages, array $expectedZeitraeume): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
     $formData = ['foo' => 'bar'];
-    $jsonSchemaValidatedData = ['zeitraeume' => $zeitraeume];
+    $jsonSchemaValidatedData = [
+      'grunddaten' => ['zeitraeume' => $zeitraeume],
+    ];
 
     $jsonSchema = new JsonSchema([]);
     $this->jsonSchemaFactoryMock->method('createJsonSchemaExisting')
@@ -85,7 +87,10 @@ final class AVK1ValidatorTest extends TestCase {
     $validationResult = $this->validator->validateExisting($applicationProcessBundle, [], $formData, 2);
     static::assertSame($errorMessages, $validationResult->getErrorMessages());
     static::assertSame([] === $errorMessages, $validationResult->isValid());
-    static::assertEquals(['zeitraeume' => $expectedZeitraeume], $validationResult->getValidatedData()->getRawData());
+    static::assertEquals(
+      ['zeitraeume' => $expectedZeitraeume],
+      $validationResult->getValidatedData()->getRawData()['grunddaten']
+    );
   }
 
   /**
@@ -97,7 +102,9 @@ final class AVK1ValidatorTest extends TestCase {
    */
   public function testValidateInitial(array $zeitraeume, array $errorMessages, array $expectedZeitraeume): void {
     $formData = ['foo' => 'bar'];
-    $jsonSchemaValidatedData = ['zeitraeume' => $zeitraeume];
+    $jsonSchemaValidatedData = [
+      'grunddaten' => ['zeitraeume' => $zeitraeume],
+    ];
 
     $contactId = 12;
     $fundingProgram = FundingProgramFactory::createFundingProgram();
@@ -113,7 +120,10 @@ final class AVK1ValidatorTest extends TestCase {
     $validationResult = $this->validator->validateInitial($contactId, $fundingProgram, $fundingCaseType, $formData, 2);
     static::assertSame($errorMessages, $validationResult->getErrorMessages());
     static::assertSame([] === $errorMessages, $validationResult->isValid());
-    static::assertEquals(['zeitraeume' => $expectedZeitraeume], $validationResult->getValidatedData()->getRawData());
+    static::assertEquals(
+      ['zeitraeume' => $expectedZeitraeume],
+      $validationResult->getValidatedData()->getRawData()['grunddaten']
+    );
   }
 
   /**
@@ -134,7 +144,7 @@ final class AVK1ValidatorTest extends TestCase {
         ['beginn' => '2023-08-02', 'ende' => '2023-08-02'],
         ['beginn' => '2023-08-01', 'ende' => '2023-08-02'],
       ],
-      ['/zeitraeume' => ['Die Zeiträume dürfen sich nicht überschneiden.']],
+      ['/grunddaten/zeitraeume' => ['Die Zeiträume dürfen sich nicht überschneiden.']],
       [
         ['beginn' => '2023-08-01', 'ende' => '2023-08-02'],
         ['beginn' => '2023-08-02', 'ende' => '2023-08-02'],
@@ -146,7 +156,7 @@ final class AVK1ValidatorTest extends TestCase {
         ['beginn' => '2023-08-02', 'ende' => '2023-08-02'],
         ['beginn' => '2023-08-01', 'ende' => '2023-08-03'],
       ],
-      ['/zeitraeume' => ['Die Zeiträume dürfen sich nicht überschneiden.']],
+      ['/grunddaten/zeitraeume' => ['Die Zeiträume dürfen sich nicht überschneiden.']],
       [
         ['beginn' => '2023-08-01', 'ende' => '2023-08-03'],
         ['beginn' => '2023-08-02', 'ende' => '2023-08-02'],

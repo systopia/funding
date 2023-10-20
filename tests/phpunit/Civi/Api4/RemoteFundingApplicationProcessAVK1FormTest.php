@@ -91,7 +91,14 @@ final class RemoteFundingApplicationProcessAVK1FormTest extends AbstractRemoteFu
     static::assertInstanceOf(AVK1UiSchema::class, $values['uiSchema']);
     static::assertTrue($values['uiSchema']->isReadonly());
     static::assertIsArray($values['data']);
-    static::assertSame($this->applicationProcess->getTitle(), $values['data']['titel']);
+    static::assertEquals(
+      [
+        'titel' => $this->applicationProcess->getTitle(),
+        'kurzbeschreibungDesInhalts' => $this->applicationProcess->getShortDescription(),
+        'foo' => 'bar',
+      ],
+      $values['data']['grunddaten']
+    );
 
     FundingCaseContactRelationFixture::addContact(
       $this->contact['id'],
@@ -105,7 +112,7 @@ final class RemoteFundingApplicationProcessAVK1FormTest extends AbstractRemoteFu
     static::assertInstanceOf(AVK1UiSchema::class, $values['uiSchema']);
     static::assertFalse($values['uiSchema']->isReadonly() ?? FALSE);
     static::assertIsArray($values['data']);
-    static::assertSame($this->applicationProcess->getTitle(), $values['data']['titel']);
+    static::assertSame($this->applicationProcess->getTitle(), $values['data']['grunddaten']['titel']);
   }
 
   public function testValidateForm(): void {
@@ -217,11 +224,9 @@ final class RemoteFundingApplicationProcessAVK1FormTest extends AbstractRemoteFu
         'start_date' => $startDate,
         'end_date' => $endDate,
         'request_data' => [
-          'teilnehmer' => [],
-          'zeitraeume' => [
-            ['beginn' => $startDate, 'ende' => $endDate],
+          'grunddaten' => [
+            'foo' => 'bar',
           ],
-          'beschreibung' => [],
         ],
       ]
     );

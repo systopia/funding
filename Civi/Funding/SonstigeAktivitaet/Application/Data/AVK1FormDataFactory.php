@@ -50,15 +50,14 @@ final class AVK1FormDataFactory implements ApplicationFormDataFactoryInterface {
    * @throws \CRM_Core_Exception
    */
   public function createFormData(ApplicationProcessEntity $applicationProcess, FundingCaseEntity $fundingCase): array {
-    $data = [];
-    $data['titel'] = $applicationProcess->getTitle();
-    $data['kurzbeschreibungDesInhalts'] = $applicationProcess->getShortDescription();
-    $data['teilnehmer'] = $applicationProcess->getRequestData()['teilnehmer'];
+    $data = $applicationProcess->getRequestData();
+    // @phpstan-ignore-next-line
+    $data['grunddaten']['titel'] = $applicationProcess->getTitle();
+    // @phpstan-ignore-next-line
+    $data['grunddaten']['kurzbeschreibungDesInhalts'] = $applicationProcess->getShortDescription();
     $data['empfaenger'] = $fundingCase->getRecipientContactId();
-    $data['zeitraeume'] = $applicationProcess->getRequestData()['zeitraeume'];
     $data['kosten'] = $this->avk1KostenFactory->createKosten($applicationProcess);
     $data['finanzierung'] = $this->avk1FinanzierungFactory->createFinanzierung($applicationProcess);
-    $data['beschreibung'] = $applicationProcess->getRequestData()['beschreibung'];
     $data['projektunterlagen'] = $this->avk1ProjektunterlagenFactory->createProjektunterlagen($applicationProcess);
 
     return $data;

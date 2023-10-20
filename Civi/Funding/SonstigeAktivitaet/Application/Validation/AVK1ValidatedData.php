@@ -24,10 +24,12 @@ use Civi\Funding\Form\Application\ValidatedApplicationDataInterface;
 /**
  * @phpstan-type avk1ValidatedDataT array<string, mixed>&array{
  *   action: string,
- *   titel: string,
- *   kurzbeschreibungDesInhalts: string,
+ *   grunddaten: array{
+ *      titel: string,
+ *      kurzbeschreibungDesInhalts: string,
+ *      zeitraeume: non-empty-array<array{beginn: string, ende: string}>,
+ *    },
  *   empfaenger: int,
- *   zeitraeume: non-empty-array<array{beginn: string, ende: string}>,
  *   finanzierung: array{beantragterZuschuss: float},
  *   comment?: array{text: string, type: string},
  * }
@@ -52,11 +54,11 @@ final class AVK1ValidatedData implements ValidatedApplicationDataInterface {
   }
 
   public function getTitle(): string {
-    return $this->data['titel'];
+    return $this->data['grunddaten']['titel'];
   }
 
   public function getShortDescription(): string {
-    return $this->data['kurzbeschreibungDesInhalts'];
+    return $this->data['grunddaten']['kurzbeschreibungDesInhalts'];
   }
 
   public function getRecipientContactId(): int {
@@ -64,11 +66,13 @@ final class AVK1ValidatedData implements ValidatedApplicationDataInterface {
   }
 
   public function getStartDate(): \DateTimeInterface {
-    return new \DateTime($this->data['zeitraeume'][0]['beginn']);
+    return new \DateTime($this->data['grunddaten']['zeitraeume'][0]['beginn']);
   }
 
   public function getEndDate(): \DateTimeInterface {
-    return new \DateTime($this->data['zeitraeume'][count($this->data['zeitraeume']) - 1]['ende']);
+    $zeitraeume = $this->data['grunddaten']['zeitraeume'];
+
+    return new \DateTime($zeitraeume[count($zeitraeume) - 1]['ende']);
   }
 
   public function getAmountRequested(): float {

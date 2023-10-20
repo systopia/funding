@@ -54,7 +54,6 @@ class AVK1JsonSchemaTest extends TestCase {
 
     $required = $jsonSchema->getKeywordValue('required');
     static::assertIsArray($required);
-    static::assertContains('zeitraeume', $required);
     static::assertContains('action', $required);
     $properties = $jsonSchema->getKeywordValue('properties');
     static::assertInstanceOf(JsonSchema::class, $properties);
@@ -63,23 +62,25 @@ class AVK1JsonSchemaTest extends TestCase {
 
     $data = (object) [
       'action' => 'submitAction1',
-      'titel' => 'Test',
-      'kurzbeschreibungDesInhalts' => 'foo bar',
-      'empfaenger' => 2,
-      'zeitraeume' => [
-        (object) [
-          'beginn' => '2022-08-24',
-          'ende' => '2022-08-25',
+      'grunddaten' => (object) [
+        'titel' => 'Test',
+        'kurzbeschreibungDesInhalts' => 'foo bar',
+        'zeitraeume' => [
+          (object) [
+            'beginn' => '2022-08-24',
+            'ende' => '2022-08-25',
+          ],
+        ],
+        'teilnehmer' => (object) [
+          'gesamt' => 5,
+          'weiblich' => 4,
+          'divers' => 3,
+          'unter27' => 2,
+          'inJugendhilfeTaetig' => 1,
+          'referenten' => 0,
         ],
       ],
-      'teilnehmer' => (object) [
-        'gesamt' => 5,
-        'weiblich' => 4,
-        'divers' => 3,
-        'unter27' => 2,
-        'inJugendhilfeTaetig' => 1,
-        'referenten' => 0,
-      ],
+      'empfaenger' => 2,
       'kosten' => (object) [
         'unterkunftUndVerpflegung' => 222.22,
         'honorare' => [
@@ -218,10 +219,12 @@ class AVK1JsonSchemaTest extends TestCase {
     );
 
     $data = (object) [
-      'zeitraeume' => [
-        (object) [
-          'beginn' => '2022-08-23',
-          'ende' => '2022-08-26',
+      'grunddaten' => (object) [
+        'zeitraeume' => [
+          (object) [
+            'beginn' => '2022-08-23',
+            'ende' => '2022-08-26',
+          ],
         ],
       ],
     ];
@@ -231,10 +234,10 @@ class AVK1JsonSchemaTest extends TestCase {
     $errorCollector = new ErrorCollector();
     $validator->validate($data, \json_encode($jsonSchema), ['errorCollector' => $errorCollector]);
 
-    $beginnErrors = $errorCollector->getErrorsAt('/zeitraeume/0/beginn');
+    $beginnErrors = $errorCollector->getErrorsAt('/grunddaten/zeitraeume/0/beginn');
     static::assertCount(1, $beginnErrors);
     static::assertSame('minDate', $beginnErrors[0]->keyword());
-    $endeErrors = $errorCollector->getErrorsAt('/zeitraeume/0/ende');
+    $endeErrors = $errorCollector->getErrorsAt('/grunddaten/zeitraeume/0/ende');
     static::assertCount(1, $endeErrors);
     static::assertSame('maxDate', $endeErrors[0]->keyword());
   }
@@ -247,10 +250,12 @@ class AVK1JsonSchemaTest extends TestCase {
     );
 
     $data = (object) [
-      'zeitraeume' => [
-        (object) [
-          'beginn' => '2022-08-25',
-          'ende' => '2022-08-24',
+      'grunddaten' => (object) [
+        'zeitraeume' => [
+          (object) [
+            'beginn' => '2022-08-25',
+            'ende' => '2022-08-24',
+          ],
         ],
       ],
     ];
@@ -259,8 +264,8 @@ class AVK1JsonSchemaTest extends TestCase {
     $errorCollector = new ErrorCollector();
     $validator->validate($data, \json_encode($jsonSchema), ['errorCollector' => $errorCollector]);
 
-    static::assertFalse($errorCollector->hasErrorAt('/zeitraeume/0/beginn'));
-    $endeErrors = $errorCollector->getErrorsAt('/zeitraeume/0/ende');
+    static::assertFalse($errorCollector->hasErrorAt('/grunddaten/zeitraeume/0/beginn'));
+    $endeErrors = $errorCollector->getErrorsAt('/grunddaten/zeitraeume/0/ende');
     static::assertCount(1, $endeErrors);
     static::assertSame('minDate', $endeErrors[0]->keyword());
   }

@@ -20,10 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\SonstigeAktivitaet\Application\JsonSchema;
 
 use Civi\Funding\Form\JsonSchema\JsonSchemaRecipient;
-use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
-use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
-use Civi\RemoteTools\JsonSchema\JsonSchemaDate;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 use Webmozart\Assert\Assert;
@@ -44,48 +41,9 @@ final class AVK1JsonSchema extends JsonSchemaObject {
     array $possibleRecipients, array $extraProperties = [], array $keywords = []
   ) {
     // TODO: Additional validations (required, length, min, max, ...)
-    $required = $keywords['required'] ?? [];
-    Assert::isArray($required);
-    $keywords['required'] = array_merge([
-      'titel',
-      'kurzbeschreibungDesInhalts',
-      'empfaenger',
-      'zeitraeume',
-      'teilnehmer',
-      'kosten',
-      'finanzierung',
-      'beschreibung',
-      'projektunterlagen',
-    ], $required);
-
-    parent::__construct([
-      'titel' => new JsonSchemaString(),
-      'kurzbeschreibungDesInhalts' => new JsonSchemaString(['maxLength' => 500]),
+    $properties = [
+      'grunddaten' => new AVK1GrunddatenSchema($applicationBegin, $applicationEnd),
       'empfaenger' => new JsonSchemaRecipient($possibleRecipients),
-      'zeitraeume' => new JsonSchemaArray(
-        new JsonSchemaObject([
-          'beginn' => new JsonSchemaDate([
-            'minDate' => $applicationBegin->format('Y-m-d'),
-            'maxDate' => $applicationEnd->format('Y-m-d'),
-          ]),
-          'ende' => new JsonSchemaDate([
-            'minDate' => new JsonSchemaDataPointer('1/beginn', '0000-00-00'),
-            'maxDate' => $applicationEnd->format('Y-m-d'),
-          ]),
-        ],
-        [
-          'required' => ['beginn', 'ende'],
-        ]),
-        ['minItems' => 1]
-      ),
-      'teilnehmer' => new JsonSchemaObject([
-        'gesamt' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 1]),
-        'weiblich' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0]),
-        'divers' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0]),
-        'unter27' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0]),
-        'inJugendhilfeTaetig' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0]),
-        'referenten' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0]),
-      ]),
       // Abschnitt I
       'kosten' => new AVK1KostenSchema(),
       // Abschnitt II
@@ -97,7 +55,13 @@ final class AVK1JsonSchema extends JsonSchemaObject {
         'datei' => new JsonSchemaString(['format' => 'uri']),
         'beschreibung' => new JsonSchemaString(),
       ], ['required' => ['datei', 'beschreibung']])),
-    ] + $extraProperties, $keywords);
+    ];
+
+    $required = $keywords['required'] ?? [];
+    Assert::isArray($required);
+    $keywords['required'] = array_merge(array_keys($properties), $required);
+
+    parent::__construct($properties + $extraProperties, $keywords);
   }
 
 }
