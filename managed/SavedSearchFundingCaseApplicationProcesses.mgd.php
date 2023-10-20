@@ -103,12 +103,15 @@ return [
         'type' => 'table',
         'settings' => [
           'actions' => FALSE,
-          'limit' => 50,
+          'limit' => 10,
           'classes' => [
             'table',
             'table-striped',
           ],
-          'pager' => [],
+          'pager' => [
+            'show_count' => FALSE,
+            'expose_limit' => TRUE,
+          ],
           'placeholder' => 5,
           'sort' => [
             [
@@ -189,6 +192,7 @@ return [
                   'action' => '',
                   'join' => '',
                   'target' => '_blank',
+                  'task' => '',
                 ],
                 [
                   'path' => 'civicrm/a/#/funding/case/[id]/permissions',
@@ -204,6 +208,7 @@ return [
                   'action' => '',
                   'join' => '',
                   'target' => '_blank',
+                  'task' => '',
                 ],
               ],
               'type' => 'menu',

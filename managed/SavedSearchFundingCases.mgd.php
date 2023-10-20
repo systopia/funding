@@ -75,8 +75,11 @@ return [
         'settings' => [
           'description' => NULL,
           'sort' => [],
-          'limit' => 50,
-          'pager' => [],
+          'limit' => 10,
+          'pager' => [
+            'show_count' => FALSE,
+            'expose_limit' => TRUE,
+          ],
           'placeholder' => 5,
           'columns' => [
             [

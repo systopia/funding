@@ -68,14 +68,17 @@ return [
       'version' => 4,
       'values' => [
         'name' => 'table',
-        'label' => 'table',
+        'label' => E::ts('Table'),
         'saved_search_id.name' => 'funding_programs',
         'type' => 'table',
         'settings' => [
           'description' => NULL,
           'sort' => [],
-          'limit' => 0,
-          'pager' => FALSE,
+          'limit' => 10,
+          'pager' => [
+            'show_count' => FALSE,
+            'expose_limit' => TRUE,
+          ],
           'placeholder' => 5,
           'columns' => [
             [
