@@ -75,8 +75,11 @@ return [
         'settings' => [
           'description' => NULL,
           'sort' => [],
-          'limit' => 0,
-          'pager' => FALSE,
+          'limit' => 10,
+          'pager' => [
+            'show_count' => FALSE,
+            'expose_limit' => TRUE,
+          ],
           'placeholder' => 5,
           'columns' => [
             [
@@ -138,6 +141,7 @@ return [
                   'action' => '',
                   'join' => '',
                   'target' => '',
+                  'task' => '',
                 ],
                 [
                   'path' => 'civicrm/funding/drawdown/reject?drawdownId=[id]',
@@ -153,6 +157,7 @@ return [
                   'action' => '',
                   'join' => '',
                   'target' => '',
+                  'task' => '',
                 ],
                 [
                   'path' => 'civicrm/funding/payment-instruction/download?drawdownId=[id]',
@@ -167,6 +172,7 @@ return [
                   'action' => '',
                   'join' => '',
                   'target' => '_blank',
+                  'task' => '',
                 ],
               ],
               'type' => 'buttons',
