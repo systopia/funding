@@ -47,6 +47,7 @@ final class IJBApplicationJsonSchema extends JsonSchemaObject {
       'finanzierung' => new IJBFinanzierungJsonSchema(),
       'zuschuss' => new IJBZuschussJsonSchema(),
       'beschreibung' => new IJBBeschreibungJsonSchema(),
+      'projektunterlagen' => new IJBProjektunterlagenJsonSchema(),
     ];
 
     $required = $keywords['required'] ?? [];

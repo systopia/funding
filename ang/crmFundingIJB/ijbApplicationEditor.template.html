@@ -768,5 +768,12 @@
                       e-ng-required="true"></editable-field>
     </div>
 
+    <h2>Projektunterlagen</h2>
+    <ul ng-repeat="projektunterlage in data.projektunterlagen track by $index">
+      <li>
+        <a href="{{ projektunterlage.datei }}" target="_blank">{{ projektunterlage.beschreibung }}</a>
+      </li>
+    </ul>
+
   </div>
 </div>

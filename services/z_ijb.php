@@ -34,6 +34,7 @@ use Civi\Funding\IJB\Application\Data\IJBApplicationResourcesItemsFactory;
 use Civi\Funding\IJB\Application\Data\IJBFormDataFinanzierungFactory;
 use Civi\Funding\IJB\Application\Data\IJBFormDataKostenFactory;
 use Civi\Funding\IJB\Application\Data\IJBFormDataZuschussFactory;
+use Civi\Funding\IJB\Application\Data\IJBProjektunterlagenFactory;
 use Civi\Funding\IJB\Application\JsonSchema\IJBApplicationJsonSchemaFactory;
 use Civi\Funding\IJB\Application\UiSchema\IJBApplicationUiSchemaFactory;
 use Civi\Funding\IJB\Application\Validator\IJBApplicationValidator;
@@ -56,6 +57,7 @@ $container->autowire(IJBApplicationFormDataFactory::class)
   ->addTag(IJBApplicationFormDataFactory::SERVICE_TAG);
 $container->autowire(IJBFormDataFinanzierungFactory::class);
 $container->autowire(IJBFormDataKostenFactory::class);
+$container->autowire(IJBProjektunterlagenFactory::class);
 $container->autowire(IJBFormDataZuschussFactory::class);
 
 $container->autowire(IJBApplicationValidator::class)

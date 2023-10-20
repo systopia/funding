@@ -32,15 +32,19 @@ final class IJBApplicationFormDataFactory implements ApplicationFormDataFactoryI
 
   private IJBFormDataKostenFactory $kostenFactory;
 
+  private IJBProjektunterlagenFactory $projektunterlagenFactory;
+
   private IJBFormDataZuschussFactory $zuschussFactory;
 
   public function __construct(
     IJBFormDataFinanzierungFactory $finanzierungFactory,
     IJBFormDataKostenFactory $kostenFactory,
+    IJBProjektunterlagenFactory $projektunterlagenFactory,
     IJBFormDataZuschussFactory $zuschussFactory
   ) {
     $this->finanzierungFactory = $finanzierungFactory;
     $this->kostenFactory = $kostenFactory;
+    $this->projektunterlagenFactory = $projektunterlagenFactory;
     $this->zuschussFactory = $zuschussFactory;
   }
 
@@ -59,6 +63,7 @@ final class IJBApplicationFormDataFactory implements ApplicationFormDataFactoryI
     $data['kosten'] = $this->kostenFactory->createKosten($applicationProcess);
     $data['finanzierung'] = $this->finanzierungFactory->createFinanzierung($applicationProcess);
     $data['zuschuss'] = $this->zuschussFactory->createZuschuss($applicationProcess);
+    $data['projektunterlagen'] = $this->projektunterlagenFactory->createProjektunterlagen($applicationProcess);
 
     return $data;
   }
