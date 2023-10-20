@@ -56,17 +56,17 @@
     </div>
     <div>
       <editable-field label="'Titel'" type="text"
-                      value="data.titel"
+                      value="data.grunddaten.titel"
                       e-ng-required="true"></editable-field>
     </div>
     <div>
       <editable-field label="'Kurzbeschreibung des Inhalts'" type="textarea"
-                      value="data.kurzbeschreibungDesInhalts"
+                      value="data.grunddaten.kurzbeschreibungDesInhalts"
                       e-ng-required="true"></editable-field>
     </div>
 
     <div>
-      <h3>Zeiträume <funding-validation-errors errors="errors['/zeitraeume']"></funding-validation-errors></h3>
+      <h3>Zeiträume <funding-validation-errors errors="errors['/grunddaten/zeitraeume']"></funding-validation-errors></h3>
       <table class="table table-condensed table-striped table-hover">
         <thead>
           <tr>
@@ -76,7 +76,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="zeitraum in data.zeitraeume track by $index" funding-editable-table-row>
+          <tr ng-repeat="zeitraum in data.grunddaten.zeitraeume track by $index" funding-editable-table-row>
             <td>
               <editable-field type="date" value="zeitraum.beginn"
                               path="zeitraeume[{{ $index }}].beginn"
@@ -91,38 +91,38 @@
           </tr>
         </tbody>
       </table>
-      <funding-add-row-button path="zeitraeume" ng-if="isEditAllowed()"></funding-add-row-button>
+      <funding-add-row-button path="grunddaten.zeitraeume" ng-if="isEditAllowed()"></funding-add-row-button>
     </div>
 
     <h3>Teilnehmer*innen</h3>
     <div>
       <editable-field label="'Gesamtanzahl der Teilnehmer*innen'" type="number"
-                      value="data.teilnehmer.gesamt"
+                      value="data.grunddaten.teilnehmer.gesamt"
                       e-step="1" e-ng-required="false"></editable-field>
     </div>
     <div>
       <editable-field label="'davon weiblich'" type="number"
-                      value="data.teilnehmer.weiblich"
+                      value="data.grunddaten.teilnehmer.weiblich"
                       e-step="1" e-ng-required="false"></editable-field>
     </div>
     <div>
       <editable-field label="'davon divers'" type="number"
-                      value="data.teilnehmer.divers"
+                      value="data.grunddaten.teilnehmer.divers"
                       e-step="1" e-ng-required="false"></editable-field>
     </div>
     <div>
       <editable-field label="'davon U27'" type="number"
-                      value="data.teilnehmer.unter27"
+                      value="data.grunddaten.teilnehmer.unter27"
                       e-step="1" e-ng-required="false"></editable-field>
     </div>
     <div>
       <editable-field label="'davon in der Kinder- und Jugendhilfe (Multiplikator*innen-Seminare) tätig'" type="number"
-                      value="data.teilnehmer.inJugendhilfeTaetig"
+                      value="data.grunddaten.teilnehmer.inJugendhilfeTaetig"
                       e-step="1" e-ng-required="false"></editable-field>
     </div>
     <div>
       <editable-field label="'davon Referent*innen'" type="number"
-                      value="data.teilnehmer.referenten"
+                      value="data.grunddaten.teilnehmer.referenten"
                       e-step="1" e-ng-required="false"></editable-field>
     </div>
 
