@@ -28,7 +28,7 @@ final class IJBBeschreibungUiSchema extends JsonFormsCategory {
     parent::__construct('Beschreibung des Vorhabens', [
       new JsonFormsControl(
         '#/properties/beschreibung/properties/ziele',
-        'Welche Ziele hat die Veranstaltung? (Mehrfachauswahl möglich)',
+        'Welche Ziele hat die Veranstaltung? (Mehrfachauswahl möglich)'
       ),
       new JsonFormsControl(
         '#/properties/beschreibung/properties/bildungsanteil',
@@ -46,6 +46,8 @@ EOD
 Bitte beschreiben Sie hier die fachliche Zielstellung der Maßnahme, die
 Themenbereiche und Programmschwerpunkte; gibt es dabei Unterschiede bezüglich
 der unterschiedlichen Geschlechter der Teilnehmenden?
+Das Freitextfeld hat keine Zeichenbeschränkung und kann mit der Maus in der
+schraffierten Ecke unten rechts größer gezogen werden.
 EOD,
         ['multi' => TRUE],
       ),
@@ -56,13 +58,18 @@ EOD,
 Bitte erläutern Sie hier Inhalt und Form der Vor- und Nachbereitung sowie die
 geplanten Maßnahmen zur Sicherstellung der sprachlichen Verständigung sowie die geplante Öffentlichkeitsarbeit, mit der
 auch auf die Förderung hingewiesen wird.
+Das Freitextfeld hat keine Zeichenbeschränkung und kann mit der Maus in der
+schraffierten Ecke unten rechts größer gezogen werden.
 EOD,
         ['multi' => TRUE],
       ),
       new JsonFormsControl(
         '#/properties/beschreibung/properties/qualifikation',
         'Qualifikation der Leitungs- und Begleitpersonen',
-        NULL,
+        <<<EOD
+Das Freitextfeld hat keine Zeichenbeschränkung und kann mit der Maus in der
+schraffierten Ecke unten rechts größer gezogen werden.
+EOD,
         ['multi' => TRUE],
       ),
     ]);

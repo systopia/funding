@@ -22,12 +22,25 @@ namespace Civi\Funding\IJB\Application\UiSchema;
 use Civi\Funding\IJB\Application\JsonSchema\IJBZuschussJsonSchema;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
 use Civi\RemoteTools\JsonForms\JsonFormsMarkup;
+use Civi\RemoteTools\JsonForms\JsonFormsRule;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 
 final class IJBZuschussUiSchema extends JsonFormsCategory {
 
   public function __construct(string $currency) {
+    $deutschlandRule = new JsonFormsRule(
+      'SHOW',
+      '#/properties/grunddaten/properties/begegnungsland',
+      JsonSchema::fromArray(['const' => 'deutschland'])
+    );
+    $partnerlandRule = new JsonFormsRule(
+      'SHOW',
+      '#/properties/grunddaten/properties/begegnungsland',
+      JsonSchema::fromArray(['const' => 'partnerland'])
+    );
+
     $elements = [
       new JsonFormsMarkup(<<<EOD
 Anhand der Veranstaltungsdaten wird hier der maximal mögliche KJP-Zuschuss
@@ -36,18 +49,30 @@ wird lediglich der benötigte Zuschuss für den Antrag übernommen.
 EOD
       ),
       new JsonFormsGroup('Teilnehmendenkosten', [
-        new JsonFormsMarkup(sprintf(<<<EOD
+        new JsonFormsMarkup(
+          sprintf(<<<EOD
 Teilnehmendenfestbetrag Fachkräfte im Inland: %s $currency<br>
 Teilnehmendenfestbetrag Jugendliche im Inland: %s $currency
 EOD,
-          IJBZuschussJsonSchema::TEILNEHMER_FESTBETRAG_FACHKRAEFTE,
-          IJBZuschussJsonSchema::TEILNEHMER_FESTBETRAG_JUGENDLICHE,
-        )),
-        new JsonFormsControl(
-          '#/properties/zuschuss/properties/teilnehmerkostenMax', 'Maximaler Zuschuss in ' . $currency,
+            IJBZuschussJsonSchema::TEILNEHMER_FESTBETRAG_FACHKRAEFTE,
+            IJBZuschussJsonSchema::TEILNEHMER_FESTBETRAG_JUGENDLICHE,
+          ),
+          'text/html',
+          ['rule' => $deutschlandRule]
         ),
         new JsonFormsControl(
-          '#/properties/zuschuss/properties/teilnehmerkosten', 'Benötigter Zuschuss in ' . $currency,
+          '#/properties/zuschuss/properties/teilnehmerkostenMax',
+          'Maximaler Zuschuss in ' . $currency,
+          NULL,
+          NULL,
+          ['rule' => $deutschlandRule]
+        ),
+        new JsonFormsControl(
+          '#/properties/zuschuss/properties/teilnehmerkosten',
+          'Benötigter Zuschuss in ' . $currency,
+          NULL,
+          NULL,
+          ['rule' => $deutschlandRule]
         ),
       ], <<<EOD
 Die Anzahl der Teilnehmendentage ergibt sich aus der Anzahl der Teilnehmer*innen
@@ -59,13 +84,29 @@ gibt es keine Tagessätze.
 EOD
       ),
       new JsonFormsGroup('Honorarkosten', [
-        new JsonFormsMarkup(sprintf(
-          'Honorarkostenfestbetrag: %s %s',
-          IJBZuschussJsonSchema::HONORARKOSTEN_FESTBETRAG,
-          $currency,
-        )),
-        new JsonFormsControl('#/properties/zuschuss/properties/honorarkostenMax', 'Maximaler Zuschuss in ' . $currency),
-        new JsonFormsControl('#/properties/zuschuss/properties/honorarkosten', 'Benötigter Zuschuss in ' . $currency),
+        new JsonFormsMarkup(
+          sprintf(
+            'Honorarkostenfestbetrag: %s %s',
+            IJBZuschussJsonSchema::HONORARKOSTEN_FESTBETRAG,
+            $currency,
+          ),
+          'text/html',
+          ['rule' => $deutschlandRule]
+        ),
+        new JsonFormsControl(
+          '#/properties/zuschuss/properties/honorarkostenMax',
+          'Maximaler Zuschuss in ' . $currency,
+        NULL,
+        NULL,
+          ['rule' => $deutschlandRule]
+        ),
+        new JsonFormsControl(
+          '#/properties/zuschuss/properties/honorarkosten',
+          'Benötigter Zuschuss in ' . $currency,
+        NULL,
+        NULL,
+          ['rule' => $deutschlandRule]
+        ),
       ], sprintf(<<<EOD
 Für jeden Veranstaltungstag, an dem bei Maßnahmen im Inland Honorare für
 Sprachmittlung/Dolmetschung ausgezahlt wird, kann ein Festbetrag von %s $currency
@@ -74,22 +115,38 @@ EOD,
         IJBZuschussJsonSchema::HONORARKOSTEN_FESTBETRAG)
       ),
       new JsonFormsGroup('Fahrtkosten', [
-        new JsonFormsMarkup(sprintf(<<<EOD
+        new JsonFormsMarkup(
+          sprintf(<<<EOD
 Fahrtkostenfestbetrag ins europäische Ausland: %s $currency<br>
 Fahrtkostenfestbetrag ins außereuropäische Ausland: %s $currency
 EOD,
-          IJBZuschussJsonSchema::FAHRTKOSTEN_FESTBETRAG_AUSLAND_EUROPA,
-          IJBZuschussJsonSchema::FAHRTKOSTEN_FESTBETRAG_NICHT_EUROPA,
-        )),
+            IJBZuschussJsonSchema::FAHRTKOSTEN_FESTBETRAG_AUSLAND_EUROPA,
+            IJBZuschussJsonSchema::FAHRTKOSTEN_FESTBETRAG_NICHT_EUROPA,
+          ),
+          'text/html',
+          ['rule' => $partnerlandRule]
+        ),
         new JsonFormsControl(
           '#/properties/zuschuss/properties/fahrtkostenAuslandEuropaMax',
-          'Maximaler Zuschuss im europäischen Ausland in ' . $currency
+          'Maximaler Zuschuss im europäischen Ausland in ' . $currency,
+          NULL,
+          NULL,
+          ['rule' => $partnerlandRule]
         ),
         new JsonFormsControl(
           '#/properties/zuschuss/properties/fahrtkostenNichtEuropaMax',
-          'Maximaler Zuschuss im außereuropäischen Ausland in ' . $currency
+          'Maximaler Zuschuss im außereuropäischen Ausland in ' . $currency,
+          NULL,
+          NULL,
+          ['rule' => $partnerlandRule]
         ),
-        new JsonFormsControl('#/properties/zuschuss/properties/fahrtkosten', 'Benötigter Zuschuss in ' . $currency),
+        new JsonFormsControl(
+          '#/properties/zuschuss/properties/fahrtkosten',
+          'Benötigter Zuschuss in ' . $currency,
+          NULL,
+        NULL,
+          ['rule' => $partnerlandRule]
+        ),
       ], sprintf(<<<EOD
 Für Reisekosten ab dem Sammel- bzw. Heimatort zum Zielort kann bei Maßnahmen im
 Ausland eine Reisekostenpauschale beantragt werden. Dieser Festbetrag ist für
@@ -104,8 +161,20 @@ EOD,
       new JsonFormsGroup(
         'Zuschlag für Vor- und Nachbereitung der Maßnahme, Qualifizierung und Auswertung',
         [
-          new JsonFormsControl('#/properties/zuschuss/properties/zuschlagMax', 'Maximaler Zuschuss in ' . $currency),
-          new JsonFormsControl('#/properties/zuschuss/properties/zuschlag', 'Benötigter Zuschuss in ' . $currency),
+          new JsonFormsControl(
+            '#/properties/zuschuss/properties/zuschlagMax',
+            'Maximaler Zuschuss in ' . $currency,
+          NULL,
+          NULL,
+            ['rule' => $partnerlandRule]
+          ),
+          new JsonFormsControl(
+            '#/properties/zuschuss/properties/zuschlag',
+            'Benötigter Zuschuss in ' . $currency,
+            NULL,
+            NULL,
+            ['rule' => $partnerlandRule]
+          ),
         ],
         sprintf(<<<EOD
 <p>Für Fachkräftemaßnahmen im Ausland kann ein Zuschlag in Höhe von %s $currency
