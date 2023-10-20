@@ -20,8 +20,18 @@ declare(strict_types = 1);
 namespace Civi\Funding\IJB\Application\Data;
 
 use Civi\Funding\ApplicationProcess\ApplicationFormFilesFactoryInterface;
+use Civi\Funding\Form\FundingFormFile;
 use Civi\Funding\IJB\Traits\IJBSupportedFundingCaseTypesTrait;
+use Civi\Funding\Util\Uuid;
+use Webmozart\Assert\Assert;
 
+/**
+ * @phpstan-type projektunterlagenT array<array{
+ *   _identifier?: string,
+ *   datei: string,
+ *   beschreibung: string,
+ * }>
+ */
 final class IJBApplicationFormFilesFactory implements ApplicationFormFilesFactoryInterface {
 
   use IJBSupportedFundingCaseTypesTrait;
@@ -30,6 +40,14 @@ final class IJBApplicationFormFilesFactory implements ApplicationFormFilesFactor
    * @inheritDoc
    */
   public function addIdentifiers(array $requestData): array {
+    /** @phpstan-var projektunterlagenT $projektunterlagen */
+    $projektunterlagen = &$requestData['projektunterlagen'];
+    foreach ($projektunterlagen as &$projektunterlage) {
+      if ('' === ($projektunterlage['_identifier'] ?? '')) {
+        $projektunterlage['_identifier'] = 'projektunterlage/' . Uuid::generateRandom();
+      }
+    }
+
     return $requestData;
   }
 
@@ -37,7 +55,19 @@ final class IJBApplicationFormFilesFactory implements ApplicationFormFilesFactor
    * @inheritDoc
    */
   public function createFormFiles(array $requestData): array {
-    return [];
+    $files = [];
+    /** @phpstan-var projektunterlagenT $projektunterlagen */
+    $projektunterlagen = $requestData['projektunterlagen'];
+    foreach ($projektunterlagen as $projektunterlage) {
+      Assert::keyExists($projektunterlage, '_identifier');
+      $files[] = new FundingFormFile(
+        $projektunterlage['datei'],
+        $projektunterlage['_identifier'],
+        ['beschreibung' => $projektunterlage['beschreibung']],
+      );
+    }
+
+    return $files;
   }
 
 }

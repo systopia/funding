@@ -41,6 +41,7 @@ final class IJBApplicationUiSchema extends JsonFormsGroup {
         new IJBKostenUndFinanzierungUiSchema($currency),
         new IJBZuschussUiSchema($currency),
         new IJBBeschreibungUiSchema(),
+        new IJBProjektunterlagenUiSchema(),
       ]),
       ...$submitButtons,
     ];

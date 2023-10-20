@@ -268,6 +268,12 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
         'erlaeuterungen' => 'Erläuterungen',
         'qualifikation' => 'Qualifikation',
       ],
+      'projektunterlagen' => [
+        (object) [
+          'datei' => 'https://example.org/test.txt',
+          'beschreibung' => 'Test',
+        ],
+      ],
     ];
 
     $validator = OpisValidatorFactory::getValidator();
@@ -546,6 +552,12 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
         'erlaeuterungen' => 'Erläuterungen',
         'qualifikation' => 'Qualifikation',
       ],
+      'projektunterlagen' => [
+        (object) [
+          'datei' => 'https://example.org/test.txt',
+          'beschreibung' => 'Test',
+        ],
+      ],
     ];
 
     $validator = OpisValidatorFactory::getValidator();
@@ -816,6 +828,12 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
         'inhalt' => 'Inhalt',
         'erlaeuterungen' => 'Erläuterungen',
         'qualifikation' => 'Qualifikation',
+      ],
+      'projektunterlagen' => [
+        (object) [
+          'datei' => 'https://example.org/test.txt',
+          'beschreibung' => 'Test',
+        ],
       ],
     ];
 
@@ -1093,6 +1111,12 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
         'erlaeuterungen' => 'Erläuterungen',
         'qualifikation' => 'Qualifikation',
       ],
+      'projektunterlagen' => [
+        (object) [
+          'datei' => 'https://example.org/test.txt',
+          'beschreibung' => 'Test',
+        ],
+      ],
     ];
 
     $validator = OpisValidatorFactory::getValidator();
@@ -1361,6 +1385,12 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
         'inhalt' => 'Inhalt',
         'erlaeuterungen' => 'Erläuterungen',
         'qualifikation' => 'Qualifikation',
+      ],
+      'projektunterlagen' => [
+        (object) [
+          'datei' => 'https://example.org/test.txt',
+          'beschreibung' => 'Test',
+        ],
       ],
     ];
 
