@@ -173,6 +173,9 @@ msgid "Permission to reject drawdown is missing."
 msgstr "Berechtigung zum Ablehnen des Mittelabrufs fehlt."
 
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
+#: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingIJB/ijbApplicationEditor.template.html
+#: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCases.mgd.php
@@ -377,7 +380,6 @@ msgstr "Förderantragskommentar"
 #: Civi/Funding/FundingCase/Remote/Api4/ActionHandler/SubmitNewFormActionHandler.php
 #: Civi/Funding/FundingCase/Remote/Api4/ActionHandler/SubmitUpdateFormActionHandler.php
 #: ang/crmFunding/application/applicationEditor.directive.js
-#: ang/crmFunding/application/applicationEditor.template.html
 #: ang/crmFunding/case/fundingCase.js
 #: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
 #: ang/crmFundingIJB/ijbApplicationEditor.template.html
@@ -635,13 +637,11 @@ msgid "Application Process Label"
 msgstr "Antragsprozesslabel"
 
 #: Civi/Funding/Form/JsonSchema/JsonSchemaComment.php
-#: ang/crmFunding/application/applicationEditor.template.html
 #: ang/crmFunding/application/applicationSubmitModal.template.html
 msgid "internal"
 msgstr "intern"
 
 #: Civi/Funding/Form/JsonSchema/JsonSchemaComment.php
-#: ang/crmFunding/application/applicationEditor.template.html
 #: ang/crmFunding/application/applicationSubmitModal.template.html
 msgid "external"
 msgstr "extern"
@@ -687,8 +687,8 @@ msgid "Eligible"
 msgstr "Förderfähig"
 
 #: Civi/Funding/FundingPseudoConstants.php
-msgid "Final"
-msgstr "Final"
+msgid "Complete"
+msgstr "Vollständig"
 
 #: Civi/Funding/FundingPseudoConstants.php
 msgid "Rework requested"
@@ -843,6 +843,12 @@ msgstr ""
 "Berechtigungen für neue Förderfalle an Kontakte zuweisen, die eine Beziehung "
 "vom gewählten Typ zum Empfängerkontakt haben."
 
+#: Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
+#: ang/crmFunding/application/applicationSidebar.template.html
+#: ang/crmFunding/case/fundingCase.template.html
+msgid "Approve"
+msgstr "Bewilligen"
+
 #: Civi/Funding/Validation/EntityValidationResult.php
 msgid "Validation failed: %1"
 msgstr "Validierung fehlgeschlagen: %1"
@@ -852,7 +858,7 @@ msgstr "Validierung fehlgeschlagen: %1"
 #: ang/crmFunding/application/applicationEditor.directive.js
 #: ang/crmFunding/application/applicationReviewer.directive.js
 #: ang/crmFunding/application/applicationReviewers.directive.js
-#: ang/crmFunding/application/applicationSearchTasks.decorator.js
+#: ang/crmFunding/application/applicationSearchTasksMenu.decorator.js
 #: ang/crmFunding/application/applicationSidebar.directive.js
 #: ang/crmFunding/application/applicationSubmitModal.component.js
 #: ang/crmFunding/application/history/applicationProcessActivity.directive.js
@@ -880,7 +886,7 @@ msgid "Application %1"
 msgstr "Antrag %1"
 
 #: ang/crmFunding/application/application.template.html
-#: ang/crmFunding/application/applicationSearchTasks.decorator.js
+#: ang/crmFunding/application/applicationSearchTasksMenu.decorator.js
 #: ang/crmFunding/application/applicationSidebar.directive.js
 #: managed/SavedSearchFundingTasksMy.mgd.php
 msgid "Application"
@@ -894,126 +900,6 @@ msgstr "Verlauf"
 msgid "The chosen action is disabled. Please report this issue."
 msgstr ""
 "Die gewählte Aktion ist nicht verfügbar. Bitte melden Sie diesen Fehler."
-
-#: ang/crmFunding/application/applicationEditor.template.html
-#: ang/crmFunding/application/applicationSubmitModal.template.html
-#: ang/crmFunding/case/fundingCase.template.html
-msgid "Close"
-msgstr "Schließen"
-
-#: ang/crmFunding/application/applicationEditor.template.html
-#: ang/crmFunding/application/applicationSubmitModal.template.html
-msgid "Comment"
-msgstr "Kommentar"
-
-#: ang/crmFunding/application/applicationEditor.template.html
-#: ang/crmFunding/application/applicationSubmitModal.template.html
-msgid "Comment Type"
-msgstr "Kommentarart"
-
-#: ang/crmFunding/application/applicationEditor.template.html
-#: ang/crmFunding/application/applicationSubmitModal.template.html
-#: ang/crmFunding/case/fundingCase.template.html
-msgid "Submit"
-msgstr "Senden"
-
-#: ang/crmFunding/application/applicationEditor.template.html
-#: ang/crmFunding/application/applicationSubmitModal.template.html
-#: ang/crmFunding/case/fundingCase.template.html
-msgid "Cancel"
-msgstr "Abbrechen"
-
-#: ang/crmFunding/application/applicationEditor.template.html
-#: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
-#: ang/crmFundingIJB/ijbApplicationEditor.template.html
-#: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
-msgid "Reviewers"
-msgstr "Prüfer*innen"
-
-#: ang/crmFunding/application/applicationEditor.template.html
-#: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
-#: ang/crmFundingIJB/ijbApplicationEditor.template.html
-#: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
-msgid "General"
-msgstr "Allgemein"
-
-#: ang/crmFunding/application/applicationEditor.template.html
-#: ang/crmFunding/case/fundingCase.template.html
-#: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
-#: ang/crmFundingIJB/ijbApplicationEditor.template.html
-#: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
-#: managed/SavedSearchFundingApplicationProcesses.mgd.php
-#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
-#: managed/SavedSearchFundingCases.mgd.php
-#: managed/SavedSearchFundingDrawdowns.mgd.php
-msgid "Status"
-msgstr "Status"
-
-#: ang/crmFunding/application/applicationEditor.template.html
-#: ang/crmFunding/application/history/applicationProcessActivity.directive.js
-#: ang/crmFunding/case/fundingCase.template.html
-#: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
-#: ang/crmFundingIJB/ijbApplicationEditor.template.html
-#: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
-msgid "Unknown"
-msgstr "Unbekannt"
-
-#: ang/crmFunding/application/applicationEditor.template.html
-#: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
-#: ang/crmFundingIJB/ijbApplicationEditor.template.html
-#: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
-#: managed/CustomGroupFundingApplicationTask.mgd.php
-msgid "Review Content"
-msgstr "Fachliche Prüfung"
-
-#: ang/crmFunding/application/applicationEditor.template.html
-#: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
-#: ang/crmFundingIJB/ijbApplicationEditor.template.html
-#: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
-#: managed/CustomGroupFundingApplicationTask.mgd.php
-msgid "Review Calculative"
-msgstr "Rechnerische Prüfung"
-
-#: ang/crmFunding/application/applicationEditor.template.html
-#: ang/crmFunding/case/fundingCase.template.html
-#: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
-#: ang/crmFundingIJB/ijbApplicationEditor.template.html
-#: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
-#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
-#: managed/SavedSearchFundingCases.mgd.php
-#: managed/SavedSearchFundingDrawdowns.mgd.php
-msgid "Creation Date"
-msgstr "Erstellungsdatum"
-
-#: ang/crmFunding/application/applicationEditor.template.html
-#: ang/crmFunding/case/fundingCase.template.html
-#: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
-#: ang/crmFundingIJB/ijbApplicationEditor.template.html
-#: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
-#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
-#: managed/SavedSearchFundingCases.mgd.php
-#: managed/SavedSearchFundingTasksMy.mgd.php
-msgid "Modification Date"
-msgstr "Änderungsdatum"
-
-#: ang/crmFunding/application/applicationEditor.template.html
-#: ang/crmFunding/case/fundingCase.template.html
-#: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
-#: ang/crmFundingIJB/ijbApplicationEditor.template.html
-#: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
-#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
-#: managed/SavedSearchFundingCases.mgd.php
-#: managed/SavedSearchFundingTasksMy.mgd.php
-msgid "Recipient"
-msgstr "Empfänger"
-
-#: ang/crmFunding/application/applicationEditor.template.html
-#: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
-#: ang/crmFundingIJB/ijbApplicationEditor.template.html
-#: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
-#: managed/SavedSearchFundingApplicationProcesses.mgd.php
-msgid "Amount Requested"
-msgstr "Beantragter Betrag"
 
 #: ang/crmFunding/application/applicationReviewer.directive.js
 msgid "not assigned"
@@ -1031,7 +917,7 @@ msgstr "Rechnerische*r Prüfer*in"
 msgid "Content Reviewer"
 msgstr "Fachliche*r Prüfer*in"
 
-#: ang/crmFunding/application/applicationSearchTasks.decorator.js
+#: ang/crmFunding/application/applicationSearchTasksMenu.decorator.js
 #: ang/crmFunding/case/fundingCase.template.html
 #: managed/NavigationFunding.mgd.php
 msgid "Applications"
@@ -1062,11 +948,6 @@ msgid "Change Review"
 msgstr "Änderungsprüfung"
 
 #: ang/crmFunding/application/applicationSidebar.template.html
-#: ang/crmFunding/case/fundingCase.template.html
-msgid "Approve"
-msgstr "Bewilligen"
-
-#: ang/crmFunding/application/applicationSidebar.template.html
 msgid "Add Comment"
 msgstr "Kommentar hinzufügen"
 
@@ -1085,6 +966,29 @@ msgstr "Annahme ist möglich, wenn die Prüfung erfolgreich war."
 #: ang/crmFunding/application/applicationSidebar.template.html
 msgid "Reset"
 msgstr "Zurücksetzen"
+
+#: ang/crmFunding/application/applicationSubmitModal.template.html
+#: ang/crmFunding/case/fundingCase.template.html
+msgid "Close"
+msgstr "Schließen"
+
+#: ang/crmFunding/application/applicationSubmitModal.template.html
+msgid "Comment"
+msgstr "Kommentar"
+
+#: ang/crmFunding/application/applicationSubmitModal.template.html
+msgid "Comment Type"
+msgstr "Kommentarart"
+
+#: ang/crmFunding/application/applicationSubmitModal.template.html
+#: ang/crmFunding/case/fundingCase.template.html
+msgid "Submit"
+msgstr "Senden"
+
+#: ang/crmFunding/application/applicationSubmitModal.template.html
+#: ang/crmFunding/case/fundingCase.template.html
+msgid "Cancel"
+msgstr "Abbrechen"
 
 #: ang/crmFunding/application/history/activities/comment.template.html
 msgid "Internal Comment"
@@ -1131,6 +1035,14 @@ msgstr "Rechnerische Prüfung: %status"
 msgid "Status: %status"
 msgstr "Status: %status"
 
+#: ang/crmFunding/application/history/applicationProcessActivity.directive.js
+#: ang/crmFunding/case/fundingCase.template.html
+#: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingIJB/ijbApplicationEditor.template.html
+#: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
+msgid "Unknown"
+msgstr "Unbekannt"
+
 #: ang/crmFunding/application/history/applicationProcessHistory.template.html
 msgid "Filter"
 msgstr "Filter"
@@ -1151,6 +1063,47 @@ msgstr "Betrag"
 #: ang/crmFunding/case/fundingCase.template.html
 msgid "Funding Case: %1"
 msgstr "Förderfall: %1"
+
+#: ang/crmFunding/case/fundingCase.template.html
+#: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingIJB/ijbApplicationEditor.template.html
+#: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
+#: managed/SavedSearchFundingApplicationProcesses.mgd.php
+#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
+#: managed/SavedSearchFundingCases.mgd.php
+#: managed/SavedSearchFundingDrawdowns.mgd.php
+msgid "Status"
+msgstr "Status"
+
+#: ang/crmFunding/case/fundingCase.template.html
+#: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingIJB/ijbApplicationEditor.template.html
+#: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
+#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
+#: managed/SavedSearchFundingCases.mgd.php
+#: managed/SavedSearchFundingDrawdowns.mgd.php
+msgid "Creation Date"
+msgstr "Erstellungsdatum"
+
+#: ang/crmFunding/case/fundingCase.template.html
+#: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingIJB/ijbApplicationEditor.template.html
+#: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
+#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
+#: managed/SavedSearchFundingCases.mgd.php
+#: managed/SavedSearchFundingTasksMy.mgd.php
+msgid "Modification Date"
+msgstr "Änderungsdatum"
+
+#: ang/crmFunding/case/fundingCase.template.html
+#: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingIJB/ijbApplicationEditor.template.html
+#: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
+#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
+#: managed/SavedSearchFundingCases.mgd.php
+#: managed/SavedSearchFundingTasksMy.mgd.php
+msgid "Recipient"
+msgstr "Empfänger"
 
 #: ang/crmFunding/case/fundingCase.template.html
 msgid "Amount Requested Eligible"
@@ -1237,6 +1190,39 @@ msgstr "Förderprogrammberechtigungen"
 #: ang/crmFunding/program/recipientRelations.html
 msgid "Possible Funding Recipients"
 msgstr "Mögliche Fördergeldempfänger"
+
+#: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingIJB/ijbApplicationEditor.template.html
+#: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
+msgid "Reviewers"
+msgstr "Prüfer*innen"
+
+#: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingIJB/ijbApplicationEditor.template.html
+#: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
+msgid "General"
+msgstr "Allgemein"
+
+#: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingIJB/ijbApplicationEditor.template.html
+#: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
+#: managed/CustomGroupFundingApplicationTask.mgd.php
+msgid "Review Content"
+msgstr "Fachliche Prüfung"
+
+#: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingIJB/ijbApplicationEditor.template.html
+#: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
+#: managed/CustomGroupFundingApplicationTask.mgd.php
+msgid "Review Calculative"
+msgstr "Rechnerische Prüfung"
+
+#: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingIJB/ijbApplicationEditor.template.html
+#: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
+#: managed/SavedSearchFundingApplicationProcesses.mgd.php
+msgid "Amount Requested"
+msgstr "Beantragter Betrag"
 
 #: funding.php
 msgid "CiviCRM: access Funding Program Manager"
@@ -1423,6 +1409,7 @@ msgstr "Förderanträge"
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCases.mgd.php
 #: managed/SavedSearchFundingDrawdowns.mgd.php
+#: managed/SavedSearchFundingPrograms.mgd.php
 #: managed/SavedSearchFundingTasksMy.mgd.php
 msgid "Table"
 msgstr "Tabelle"
@@ -1496,6 +1483,10 @@ msgstr "Zahlungsanweisung herunterladen"
 #: managed/SavedSearchFundingPrograms.mgd.php
 msgid "Abbreviation"
 msgstr "Abkürzung"
+
+#: managed/SavedSearchFundingPrograms.mgd.php
+msgid "Identifier Prefix"
+msgstr "Bezeichnerpräfix"
 
 #: managed/SavedSearchFundingPrograms.mgd.php
 msgid "Start Date"
