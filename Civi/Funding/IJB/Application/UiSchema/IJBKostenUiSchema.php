@@ -41,6 +41,12 @@ final class IJBKostenUiSchema extends JsonFormsGroup {
           '#/properties/kosten/properties/programmkosten/properties/arbeitsmaterial', 'Arbeitsmaterial in ' . $currency,
         ),
         new JsonFormsControl(
+          '#/properties/kosten/properties/programmkosten/properties/fahrt',
+          'Programmfahrtkosten in ' . $currency,
+          'Bitte geben Sie hier die Fahrtkosten an, die innerhalb der
+        Veranstaltung anfallen und nicht an Teilnehmende erstattet werden.'
+        ),
+        new JsonFormsControl(
           '#/properties/kosten/properties/programmkostenGesamt', 'Programmkosten gesamt in ' . $currency,
         ),
       ]),

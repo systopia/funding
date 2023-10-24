@@ -33,12 +33,6 @@ final class IJBFahrtkostenUiSchema extends JsonFormsGroup {
         Veranstaltung anfallen und nicht an Teilnehmende erstattet werden.'
       ),
       new JsonFormsControl(
-        '#/properties/kosten/properties/fahrtkosten/properties/programm',
-        'Programmfahrtkosten in ' . $currency,
-        'Bitte geben Sie hier die Fahrtkosten an, die innerhalb der
-        Veranstaltung anfallen und nicht an Teilnehmende erstattet werden.'
-      ),
-      new JsonFormsControl(
         '#/properties/kosten/properties/fahrtkosten/properties/anTeilnehmerErstattet',
         'An Teilnehmer*innen erstattete Fahrtkosten in ' . $currency,
         'Bitte geben Sie die Fahrtkosten an, die an Teilnehmer*innen erstattet werden.'

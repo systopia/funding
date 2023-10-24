@@ -23,11 +23,10 @@ use Civi\Funding\IJB\Application\JsonSchema\IJBZuschussJsonSchema;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
 use Civi\RemoteTools\JsonForms\JsonFormsMarkup;
 use Civi\RemoteTools\JsonForms\JsonFormsRule;
-use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 
-final class IJBZuschussUiSchema extends JsonFormsCategory {
+final class IJBZuschussUiSchema extends JsonFormsGroup {
 
   public function __construct(string $currency) {
     $deutschlandRule = new JsonFormsRule(

@@ -39,7 +39,6 @@ final class IJBApplicationUiSchema extends JsonFormsGroup {
         ]),
         new IJBPartnerorganisationUiSchema(),
         new IJBKostenUndFinanzierungUiSchema($currency),
-        new IJBZuschussUiSchema($currency),
         new IJBBeschreibungUiSchema(),
         new IJBProjektunterlagenUiSchema(),
       ]),

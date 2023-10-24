@@ -62,22 +62,26 @@ final class IJBKostenJsonSchema extends JsonSchemaObject {
       ]),
       'fahrtkosten' => new JsonSchemaObject([
         'flug' => new JsonSchemaMoney(['minimum' => 0, 'default' => 0]),
-        'programm' => new JsonSchemaMoney(['minimum' => 0, 'default' => 0]),
         'anTeilnehmerErstattet' => new JsonSchemaMoney(['minimum' => 0, 'default' => 0]),
       ]),
-      'fahrtkostenGesamt' => new JsonSchemaCalculate('number', 'round(flug + programm + anTeilnehmerErstattet, 2)', [
+      'fahrtkostenGesamt' => new JsonSchemaCalculate('number', 'round(flug + anTeilnehmerErstattet, 2)', [
         'flug' => new JsonSchemaDataPointer('1/fahrtkosten/flug'),
-        'programm' => new JsonSchemaDataPointer('1/fahrtkosten/programm'),
         'anTeilnehmerErstattet' => new JsonSchemaDataPointer('1/fahrtkosten/anTeilnehmerErstattet'),
       ]),
       'programmkosten' => new JsonSchemaObject([
         'programmkosten' => new JsonSchemaMoney(['minimum' => 0, 'default' => 0]),
         'arbeitsmaterial' => new JsonSchemaMoney(['minimum' => 0, 'default' => 0]),
-      ], ['required' => ['programmkosten', 'arbeitsmaterial']]),
-      'programmkostenGesamt' => new JsonSchemaCalculate('number', 'round(programmkosten + arbeitsmaterial, 2)', [
-        'programmkosten' => new JsonSchemaDataPointer('1/programmkosten/programmkosten'),
-        'arbeitsmaterial' => new JsonSchemaDataPointer('1/programmkosten/arbeitsmaterial'),
+        'fahrt' => new JsonSchemaMoney(['minimum' => 0, 'default' => 0]),
       ]),
+      'programmkostenGesamt' => new JsonSchemaCalculate(
+        'number',
+        'round(programmkosten + arbeitsmaterial + fahrt, 2)',
+        [
+          'programmkosten' => new JsonSchemaDataPointer('1/programmkosten/programmkosten'),
+          'arbeitsmaterial' => new JsonSchemaDataPointer('1/programmkosten/arbeitsmaterial'),
+          'fahrt' => new JsonSchemaDataPointer('1/programmkosten/fahrt'),
+        ]
+      ),
       'sonstigeKosten' => new JsonSchemaArray(
         new JsonSchemaObject([
           '_identifier' => new JsonSchemaString(['readonly' => TRUE]),

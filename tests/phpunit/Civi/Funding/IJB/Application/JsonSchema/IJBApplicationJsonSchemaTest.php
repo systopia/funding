@@ -73,12 +73,12 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
     $honorarVerguetung2 = 22.23;
     $honorareGesamt = round($honorarDauer1 * $honorarVerguetung1 + $honorarDauer2 * $honorarVerguetung2, 2);
     $fahrtkostenFlug = 333.33;
-    $fahrtkostenProgramm = 444.44;
     $fahrtkostenAnTeilnehmerErstattet = 555.55;
-    $fahrtkostenGesamt = round($fahrtkostenFlug + $fahrtkostenProgramm + $fahrtkostenAnTeilnehmerErstattet, 2);
+    $fahrtkostenGesamt = round($fahrtkostenFlug + $fahrtkostenAnTeilnehmerErstattet, 2);
     $programmkosten = 111.11;
     $kostenArbeitsmaterial = 222.22;
-    $programmkostenGesamt = round($programmkosten + $kostenArbeitsmaterial, 2);
+    $programmfahrtkosten = 444.44;
+    $programmkostenGesamt = round($programmkosten + $kostenArbeitsmaterial + $programmfahrtkosten, 2);
     $sonstigeKosten1 = 12.34;
     $sonstigeKosten2 = 12.35;
     $sonstigeKostenGesamt = round($sonstigeKosten1 + $sonstigeKosten2, 2);
@@ -196,12 +196,12 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
         ],
         'fahrtkosten' => (object) [
           'flug' => $fahrtkostenFlug,
-          'programm' => $fahrtkostenProgramm,
           'anTeilnehmerErstattet' => $fahrtkostenAnTeilnehmerErstattet,
         ],
         'programmkosten' => (object) [
           'programmkosten' => $programmkosten,
           'arbeitsmaterial' => $kostenArbeitsmaterial,
+          'fahrt' => $programmfahrtkosten,
         ],
         'sonstigeKosten' => [
           (object) [
@@ -360,12 +360,12 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
     $honorarVerguetung2 = 22.23;
     $honorareGesamt = round($honorarDauer1 * $honorarVerguetung1 + $honorarDauer2 * $honorarVerguetung2, 2);
     $fahrtkostenFlug = 333.33;
-    $fahrtkostenProgramm = 444.44;
     $fahrtkostenAnTeilnehmerErstattet = 555.55;
-    $fahrtkostenGesamt = round($fahrtkostenFlug + $fahrtkostenProgramm + $fahrtkostenAnTeilnehmerErstattet, 2);
+    $fahrtkostenGesamt = round($fahrtkostenFlug + $fahrtkostenAnTeilnehmerErstattet, 2);
     $programmkosten = 111.11;
     $kostenArbeitsmaterial = 222.22;
-    $programmkostenGesamt = round($programmkosten + $kostenArbeitsmaterial, 2);
+    $programmfahrtkosten = 444.44;
+    $programmkostenGesamt = round($programmkosten + $kostenArbeitsmaterial + $programmfahrtkosten, 2);
     $sonstigeKosten1 = 12.34;
     $sonstigeKosten2 = 12.35;
     $sonstigeKostenGesamt = round($sonstigeKosten1 + $sonstigeKosten2, 2);
@@ -481,12 +481,12 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
         ],
         'fahrtkosten' => (object) [
           'flug' => $fahrtkostenFlug,
-          'programm' => $fahrtkostenProgramm,
           'anTeilnehmerErstattet' => $fahrtkostenAnTeilnehmerErstattet,
         ],
         'programmkosten' => (object) [
           'programmkosten' => $programmkosten,
           'arbeitsmaterial' => $kostenArbeitsmaterial,
+          'fahrt' => $programmfahrtkosten,
         ],
         'sonstigeKosten' => [
           (object) [
@@ -637,12 +637,12 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
     $honorarVerguetung2 = 22.23;
     $honorareGesamt = round($honorarDauer1 * $honorarVerguetung1 + $honorarDauer2 * $honorarVerguetung2, 2);
     $fahrtkostenFlug = 333.33;
-    $fahrtkostenProgramm = 444.44;
     $fahrtkostenAnTeilnehmerErstattet = 555.55;
-    $fahrtkostenGesamt = round($fahrtkostenFlug + $fahrtkostenProgramm + $fahrtkostenAnTeilnehmerErstattet, 2);
+    $fahrtkostenGesamt = round($fahrtkostenFlug + $fahrtkostenAnTeilnehmerErstattet, 2);
     $programmkosten = 111.11;
     $kostenArbeitsmaterial = 222.22;
-    $programmkostenGesamt = round($programmkosten + $kostenArbeitsmaterial, 2);
+    $programmfahrtkosten = 444.44;
+    $programmkostenGesamt = round($programmkosten + $kostenArbeitsmaterial + $programmfahrtkosten, 2);
     $sonstigeKosten1 = 12.34;
     $sonstigeKosten2 = 12.35;
     $sonstigeKostenGesamt = round($sonstigeKosten1 + $sonstigeKosten2, 2);
@@ -758,12 +758,12 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
         ],
         'fahrtkosten' => (object) [
           'flug' => $fahrtkostenFlug,
-          'programm' => $fahrtkostenProgramm,
           'anTeilnehmerErstattet' => $fahrtkostenAnTeilnehmerErstattet,
         ],
         'programmkosten' => (object) [
           'programmkosten' => $programmkosten,
           'arbeitsmaterial' => $kostenArbeitsmaterial,
+          'fahrt' => $programmfahrtkosten,
         ],
         'sonstigeKosten' => [
           (object) [
@@ -919,12 +919,12 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
     $honorarVerguetung2 = 22.23;
     $honorareGesamt = round($honorarDauer1 * $honorarVerguetung1 + $honorarDauer2 * $honorarVerguetung2, 2);
     $fahrtkostenFlug = 333.33;
-    $fahrtkostenProgramm = 444.44;
     $fahrtkostenAnTeilnehmerErstattet = 555.55;
-    $fahrtkostenGesamt = round($fahrtkostenFlug + $fahrtkostenProgramm + $fahrtkostenAnTeilnehmerErstattet, 2);
+    $fahrtkostenGesamt = round($fahrtkostenFlug + $fahrtkostenAnTeilnehmerErstattet, 2);
     $programmkosten = 111.11;
     $kostenArbeitsmaterial = 222.22;
-    $programmkostenGesamt = round($programmkosten + $kostenArbeitsmaterial, 2);
+    $programmfahrtkosten = 444.44;
+    $programmkostenGesamt = round($programmkosten + $kostenArbeitsmaterial + $programmfahrtkosten, 2);
     $sonstigeKosten1 = 12.34;
     $sonstigeKosten2 = 12.35;
     $sonstigeKostenGesamt = round($sonstigeKosten1 + $sonstigeKosten2, 2);
@@ -1040,12 +1040,12 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
         ],
         'fahrtkosten' => (object) [
           'flug' => $fahrtkostenFlug,
-          'programm' => $fahrtkostenProgramm,
           'anTeilnehmerErstattet' => $fahrtkostenAnTeilnehmerErstattet,
         ],
         'programmkosten' => (object) [
           'programmkosten' => $programmkosten,
           'arbeitsmaterial' => $kostenArbeitsmaterial,
+          'fahrt' => $programmfahrtkosten,
         ],
         'sonstigeKosten' => [
           (object) [
@@ -1195,12 +1195,12 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
     $honorarVerguetung2 = 22.23;
     $honorareGesamt = round($honorarDauer1 * $honorarVerguetung1 + $honorarDauer2 * $honorarVerguetung2, 2);
     $fahrtkostenFlug = 333.33;
-    $fahrtkostenProgramm = 444.44;
     $fahrtkostenAnTeilnehmerErstattet = 555.55;
-    $fahrtkostenGesamt = round($fahrtkostenFlug + $fahrtkostenProgramm + $fahrtkostenAnTeilnehmerErstattet, 2);
+    $fahrtkostenGesamt = round($fahrtkostenFlug + $fahrtkostenAnTeilnehmerErstattet, 2);
     $programmkosten = 111.11;
     $kostenArbeitsmaterial = 222.22;
-    $programmkostenGesamt = round($programmkosten + $kostenArbeitsmaterial, 2);
+    $programmfahrtkosten = 444.44;
+    $programmkostenGesamt = round($programmkosten + $kostenArbeitsmaterial + $programmfahrtkosten, 2);
     $sonstigeKosten1 = 12.34;
     $sonstigeKosten2 = 12.35;
     $sonstigeKostenGesamt = round($sonstigeKosten1 + $sonstigeKosten2, 2);
@@ -1315,12 +1315,12 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
         ],
         'fahrtkosten' => (object) [
           'flug' => $fahrtkostenFlug,
-          'programm' => $fahrtkostenProgramm,
           'anTeilnehmerErstattet' => $fahrtkostenAnTeilnehmerErstattet,
         ],
         'programmkosten' => (object) [
           'programmkosten' => $programmkosten,
           'arbeitsmaterial' => $kostenArbeitsmaterial,
+          'fahrt' => $programmfahrtkosten,
         ],
         'sonstigeKosten' => [
           (object) [
