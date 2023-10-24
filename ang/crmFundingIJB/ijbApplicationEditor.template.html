@@ -571,7 +571,15 @@
 
     <div>
       <h3>Gesamtkosten</h3>
-      {{ data.kosten.kostenGesamt }} {{ currency }}
+      <table class="table table-condensed table-striped table-hover">
+        <tbody>
+          <tr>
+            <td style="width: 80%;"></td>
+            <td style="width: 10%;">{{ data.kosten.kostenGesamt }} {{ currency }}</td>
+            <td style="width: 10%;"></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <h2>Finanzierung</h2>
@@ -675,68 +683,129 @@
     <funding-add-row-button path="finanzierung.sonstigeMittel" ng-if="isEditAllowed()"></funding-add-row-button>
 
     <h3>Gesamtmittel</h3>
-    {{ data.finanzierung.mittelGesamt }} {{ currency }}
+    <table class="table table-condensed table-striped table-hover">
+      <tbody>
+        <tr>
+          <td style="width: 80%;"></td>
+          <td style="width: 10%;">{{ data.finanzierung.mittelGesamt }} {{ currency }}</td>
+          <td style="width: 10%;"></td>
+        </tr>
+      </tbody>
+    </table>
 
     <h2>Zuschuss</h2>
     <div>
       <h3>Teilnehmendenkosten</h3>
-      <div>
-        <label>Maximaler Zuschuss</label>
-        {{ data.zuschuss.teilnehmerkostenMax }} {{ currency }}
-      </div>
-      <div>
-        <editable-field label="'Benötigter Zuschuss'" type="number"
-                        value="data.zuschuss.teilnehmerkosten"
-                        e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
-      </div>
+      <table class="table table-condensed table-striped table-hover">
+        <tbody>
+          <tr>
+            <td style="width: 80%;">Maximaler Zuschuss</td>
+            <td style="width: 10%;">{{ data.zuschuss.teilnehmerkostenMax }} {{ currency }}</td>
+            <td style="width: 10%;"></td>
+          </tr>
+          <tr funding-editable-table-row form-name="zuschussTeilnehmerkostenForm">
+            <td style="width: 80%;">Benötigter Zuschuss</td>
+            <td style="width: 10%;">
+              <editable-field type="number"
+                              value="data.zuschuss.teilnehmerkosten"
+                              e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+            </td>
+            <td class="editable-table-row-actions" style="width: 10%;"></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <div>
       <h3>Honorarkosten</h3>
-      <div>
-        <label>Maximaler Zuschuss</label>
-        {{ data.zuschuss.honorarkostenMax }} {{ currency }}
-      </div>
-      <div>
-        <editable-field label="'Benötigter Zuschuss'" type="number"
-                        value="data.zuschuss.honorarkosten"
-                        e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
-      </div>
+      <table class="table table-condensed table-striped table-hover">
+        <tbody>
+          <tr>
+            <td style="width: 80%;">Maximaler Zuschuss</td>
+            <td style="width: 10%;">{{ data.zuschuss.honorarkostenMax }} {{ currency }}</td>
+            <td style="width: 10%;"></td>
+          </tr>
+          <tr funding-editable-table-row form-name="zuschussHonorarkostenForm">
+            <td style="width: 80%;">Benötigter Zuschuss</td>
+            <td style="width: 10%;">
+              <editable-field type="number"
+                              value="data.zuschuss.honorarkosten"
+                              e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+            </td>
+            <td class="editable-table-row-actions" style="width: 10%;"></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <div>
       <h3>Fahrtkosten</h3>
-      <div>
-        <label>Maximaler Zuschuss im europäischen Ausland</label>
-        {{ data.zuschuss.fahrtkostenAuslandEuropaMax }} {{ currency }}
-      </div>
-      <div>
-        <label>Maximaler Zuschuss im außereuropäischen Ausland</label>
-        {{ data.zuschuss.fahrtkostenNichtEuropaMax }} {{ currency }}
-      </div>
-      <div>
-        <editable-field label="'Benötigter Zuschuss'" type="number"
-                        value="data.zuschuss.fahrtkosten"
-                        e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
-      </div>
+      <table class="table table-condensed table-striped table-hover">
+        <tbody>
+          <tr>
+            <td style="width: 80%;">Maximaler Zuschuss im europäischen Ausland</td>
+            <td style="width: 10%;">{{ data.zuschuss.fahrtkostenAuslandEuropaMax }} {{ currency }}</td>
+            <td style="width: 10%;"></td>
+          </tr>
+          <tr>
+            <td style="width: 80%;">Maximaler Zuschuss im außereuropäischen Ausland</td>
+            <td style="width: 10%;">{{ data.zuschuss.fahrtkostenNichtEuropaMax }} {{ currency }}</td>
+            <td style="width: 10%;"></td>
+          </tr>
+          <tr funding-editable-table-row form-name="zuschussFahrtkostenForm">
+            <td style="width: 80%;">Benötigter Zuschuss</td>
+            <td style="width: 10%;">
+              <editable-field type="number"
+                              value="data.zuschuss.fahrtkosten"
+                              e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+            </td>
+            <td class="editable-table-row-actions" style="width: 10%;"></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <div>
       <h3>Zuschlag für Vor- und Nachbereitung der Maßnahme, Qualifizierung und Auswertung</h3>
-      <div>
-        <label>Maximaler Zuschuss</label>
-        {{ data.zuschuss.zuschlagMax }} {{ currency }}
-      </div>
-      <div>
-        <editable-field label="'Benötigter Zuschuss'" type="number"
-                        value="data.zuschuss.zuschlag"
-                        e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
-      </div>
+      <table class="table table-condensed table-striped table-hover">
+        <tbody>
+          <tr>
+            <td style="width: 80%;">Maximaler Zuschuss</td>
+            <td style="width: 10%;">{{ data.zuschuss.zuschlagMax }} {{ currency }}</td>
+            <td style="width: 10%;"></td>
+          </tr>
+          <tr funding-editable-table-row form-name="zuschussZuschlagForm">
+            <td style="width: 80%;">Benötigter Zuschuss</td>
+            <td style="width: 10%;">
+              <editable-field type="number"
+                              value="data.zuschuss.zuschlag"
+                              e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+            </td>
+            <td class="editable-table-row-actions" style="width: 10%;"></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <div>
       <h3>Beantragte KJP-Mittel gesamt</h3>
-      {{ data.zuschuss.gesamt }} {{ currency }}
+      <table class="table table-condensed table-striped table-hover">
+        <tbody>
+          <tr>
+            <td style="width: 80%;"></td>
+            <td style="width: 10%;">{{ data.zuschuss.gesamt }} {{ currency }}</td>
+            <td style="width: 10%;"></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <div>
       <h3>Gesamtfinanzierung</h3>
-      {{ data.zuschuss.finanzierungGesamt }} {{ currency }}
+      <table class="table table-condensed table-striped table-hover">
+        <tbody>
+          <tr>
+            <td style="width: 80%;"></td>
+            <td style="width: 10%;">{{ data.zuschuss.finanzierungGesamt }} {{ currency }}</td>
+            <td style="width: 10%;"></td>
+          </tr>
+        </tbody>
+      </table>
       <funding-validation-errors errors="errors['/zuschuss/finanzierungGesamt']"></funding-validation-errors>
     </div>
 

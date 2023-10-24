@@ -56,6 +56,10 @@
   margin-right: 370px;
 }
 
+#bootstrap-theme .funding-application-main table {
+  max-width: 1200px;
+}
+
 .funding-activity-title {
   font-size: larger;
   font-weight: bolder;

@@ -341,7 +341,15 @@
 
     <div>
       <h3>Gesamtkosten</h3>
-      {{ data.kosten.gesamtkosten }} {{ currency }}
+      <table class="table table-condensed table-striped table-hover">
+        <tbody>
+          <tr>
+            <td style="width: 80%;"></td>
+            <td style="width: 10%;">{{ data.kosten.gesamtkosten }} {{ currency }}</td>
+            <td style="width: 10%;"></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <h2>Finanzierung</h2>
@@ -445,10 +453,26 @@
     <funding-add-row-button path="finanzierung.sonstigeMittel" ng-if="isEditAllowed()"></funding-add-row-button>
 
     <h3>Gesamtfinanzierung</h3>
-    {{ data.finanzierung.gesamtmittel }} {{ currency }}
+    <table class="table table-condensed table-striped table-hover">
+      <tbody>
+        <tr>
+          <td style="width: 80%;"></td>
+          <td style="width: 10%;">{{ data.finanzierung.gesamtmittel }} {{ currency }}</td>
+          <td style="width: 10%;"></td>
+        </tr>
+      </tbody>
+    </table>
 
     <h3>Beantragter Zuschuss</h3>
-    {{ data.finanzierung.beantragterZuschuss }} {{ currency }}
+    <table class="table table-condensed table-striped table-hover">
+      <tbody>
+        <tr>
+          <td style="width: 80%;"></td>
+          <td style="width: 10%;">{{ data.finanzierung.beantragterZuschuss }} {{ currency }}</td>
+          <td style="width: 10%;"></td>
+        </tr>
+      </tbody>
+    </table>
 
     <h2>Beschreibung des Vorhabens</h2>
     <div>
