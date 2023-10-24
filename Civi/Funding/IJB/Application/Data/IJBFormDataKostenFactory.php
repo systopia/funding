@@ -25,43 +25,44 @@ use Webmozart\Assert\Assert;
 
 /**
  * @phpstan-type kostenT array{
- *    unterkunftUndVerpflegung: float,
- *    honorare: array<array{
- *       _identifier?: string,
- *       stunden: float,
- *       verguetung: float,
- *       leistung: string,
- *       qualifikation: string,
- *       betrag: float,
- *     }>,
- *     fahrtkosten: array{
- *       flug: float,
- *       programm: float,
- *       anTeilnehmerErstattet: float,
- *     },
- *     programmkosten: array{
- *       programmkosten: float,
- *       arbeitsmaterial: float,
- *     },
- *     sonstigeKosten: array<array{
- *       _identifier?: string,
- *       gegenstand: string,
- *       betrag: float,
- *     }>,
- *     sonstigeAusgaben: array<array{
- *       _identifier?: string,
- *       zweck: string,
- *       betrag: float,
- *     }>,
- *     zuschlagsrelevanteKosten: array{
- *       programmabsprachen: float,
- *       vorbereitungsmaterial: float,
- *       veroeffentlichungen: float,
- *       honorare: float,
- *       fahrtkostenUndVerpflegung: float,
- *       reisekosten: float,
- *       miete: float,
- *     },
+ *   unterkunftUndVerpflegung: float,
+ *   honorare: array<array{
+ *      _identifier?: string,
+ *      berechnungsgrundlage: string,
+ *      dauer: float,
+ *      verguetung: float,
+ *      leistung: string,
+ *      qualifikation: string,
+ *      betrag: float,
+ *    }>,
+ *    fahrtkosten: array{
+ *      flug: float,
+ *      programm: float,
+ *      anTeilnehmerErstattet: float,
+ *    },
+ *    programmkosten: array{
+ *      programmkosten: float,
+ *      arbeitsmaterial: float,
+ *    },
+ *    sonstigeKosten: array<array{
+ *      _identifier?: string,
+ *      gegenstand: string,
+ *      betrag: float,
+ *    }>,
+ *    sonstigeAusgaben: array<array{
+ *      _identifier?: string,
+ *      zweck: string,
+ *      betrag: float,
+ *    }>,
+ *    zuschlagsrelevanteKosten: array{
+ *      programmabsprachen: float,
+ *      vorbereitungsmaterial: float,
+ *      veroeffentlichungen: float,
+ *      honorare: float,
+ *      fahrtkostenUndVerpflegung: float,
+ *      reisekosten: float,
+ *      miete: float,
+ *    },
  *  }
  */
 class IJBFormDataKostenFactory {
@@ -117,8 +118,10 @@ class IJBFormDataKostenFactory {
         /** @phpstan-var kostenT $kosten */
       }
       elseif ('honorar' === $type) {
-        $stunden = $item->getProperties()['stunden'];
-        Assert::numeric($stunden);
+        $berechnungsgrundlage = $item->getProperties()['berechnungsgrundlage'];
+        Assert::string($berechnungsgrundlage);
+        $dauer = $item->getProperties()['dauer'];
+        Assert::numeric($dauer);
         $verguetung = $item->getProperties()['verguetung'];
         Assert::numeric($verguetung);
         $leistung = $item->getProperties()['leistung'] ?? '';
@@ -127,8 +130,9 @@ class IJBFormDataKostenFactory {
         Assert::string($qualifikation);
         $kosten['honorare'][] = [
           '_identifier' => $item->getIdentifier(),
+          'berechnungsgrundlage' => $berechnungsgrundlage,
           'betrag' => $item->getAmount(),
-          'stunden' => (float) $stunden,
+          'dauer' => (float) $dauer,
           'verguetung' => (float) $verguetung,
           'leistung' => $leistung,
           'qualifikation' => $qualifikation,

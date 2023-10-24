@@ -30,41 +30,42 @@ use Webmozart\Assert\Assert;
  * @phpstan-type kostenT array{
  *   unterkunftUndVerpflegung: float,
  *   honorare: array<array{
- *      _identifier?: string,
- *      stunden: float,
- *      verguetung: float,
- *      leistung: string,
- *      qualifikation: string,
- *      betrag: float,
- *    }>,
- *    fahrtkosten: array{
- *      flug: float,
- *      programm: float,
- *      anTeilnehmerErstattet: float,
- *    },
- *    programmkosten: array{
- *      programmkosten: float,
- *      arbeitsmaterial: float,
- *    },
- *    sonstigeKosten: array<array{
- *      _identifier?: string,
- *      gegenstand: string,
- *      betrag: float,
- *    }>,
- *    sonstigeAusgaben: array<array{
- *      _identifier?: string,
- *      zweck: string,
- *      betrag: float,
- *    }>,
- *    zuschlagsrelevanteKosten: array{
- *      programmabsprachen: float,
- *      vorbereitungsmaterial: float,
- *      veroeffentlichungen: float,
- *      honorare: float,
- *      fahrtkostenUndVerpflegung: float,
- *      reisekosten: float,
- *      miete: float,
- *    },
+ *     _identifier?: string,
+ *     berechnungsgrundlage: string,
+ *     dauer: float,
+ *     verguetung: float,
+ *     leistung: string,
+ *     qualifikation: string,
+ *     betrag: float,
+ *   }>,
+ *   fahrtkosten: array{
+ *     flug: float,
+ *     programm: float,
+ *     anTeilnehmerErstattet: float,
+ *   },
+ *   programmkosten: array{
+ *     programmkosten: float,
+ *     arbeitsmaterial: float,
+ *   },
+ *   sonstigeKosten: array<array{
+ *     _identifier?: string,
+ *     gegenstand: string,
+ *     betrag: float,
+ *   }>,
+ *   sonstigeAusgaben: array<array{
+ *     _identifier?: string,
+ *     zweck: string,
+ *     betrag: float,
+ *   }>,
+ *   zuschlagsrelevanteKosten: array{
+ *     programmabsprachen: float,
+ *     vorbereitungsmaterial: float,
+ *     veroeffentlichungen: float,
+ *     honorare: float,
+ *     fahrtkostenUndVerpflegung: float,
+ *     reisekosten: float,
+ *     miete: float,
+ *   },
  * }
  */
 final class IJBApplicationCostItemsFactory implements ApplicationCostItemsFactoryInterface {
@@ -162,7 +163,8 @@ final class IJBApplicationCostItemsFactory implements ApplicationCostItemsFactor
         'type' => 'honorar',
         'amount' => $honorar['betrag'],
         'properties' => [
-          'stunden' => $honorar['stunden'],
+          'berechnungsgrundlage' => $honorar['berechnungsgrundlage'],
+          'dauer' => $honorar['dauer'],
           'verguetung' => $honorar['verguetung'],
           'leistung' => $honorar['leistung'],
           'qualifikation' => $honorar['qualifikation'],

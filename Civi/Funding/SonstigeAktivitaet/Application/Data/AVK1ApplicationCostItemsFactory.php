@@ -31,7 +31,8 @@ use Webmozart\Assert\Assert;
  *   unterkunftUndVerpflegung: float,
  *   honorare: array<array{
  *     _identifier?: string,
- *     stunden: float,
+ *     berechnungsgrundlage: string,
+ *     dauer: float,
  *     verguetung: float,
  *     leistung: string,
  *     qualifikation: string,
@@ -109,7 +110,8 @@ class AVK1ApplicationCostItemsFactory implements ApplicationCostItemsFactoryInte
         'type' => 'honorar',
         'amount' => $honorar['betrag'],
         'properties' => [
-          'stunden' => $honorar['stunden'],
+          'berechnungsgrundlage' => $honorar['berechnungsgrundlage'],
+          'dauer' => $honorar['dauer'],
           'verguetung' => $honorar['verguetung'],
           'leistung' => $honorar['leistung'],
           'qualifikation' => $honorar['qualifikation'],

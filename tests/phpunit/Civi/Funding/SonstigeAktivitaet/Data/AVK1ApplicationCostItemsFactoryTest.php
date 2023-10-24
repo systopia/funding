@@ -41,7 +41,7 @@ final class AVK1ApplicationCostItemsFactoryTest extends TestCase {
     $requestData = [
       'kosten' => [
         'honorare' => [
-          ['_identifier' => '', 'stunden' => 2, 'verguetung' => 3, 'zweck' => 'Test'],
+          ['_identifier' => '', 'dauer' => 2, 'verguetung' => 3, 'zweck' => 'Test'],
         ],
         'sachkosten' => [
           'ausstattung' => [
@@ -87,7 +87,8 @@ final class AVK1ApplicationCostItemsFactoryTest extends TestCase {
         'type' => 'honorar',
         'amount' => 246.64,
         'properties' => [
-          'stunden' => 11.1,
+          'berechnungsgrundlage' => 'tagessatz',
+          'dauer' => 11.1,
           'verguetung' => 22.22,
           'leistung' => 'Leistung 1',
           'qualifikation' => 'Qualifikation 1',
@@ -99,7 +100,8 @@ final class AVK1ApplicationCostItemsFactoryTest extends TestCase {
         'type' => 'honorar',
         'amount' => 99.0,
         'properties' => [
-          'stunden' => 9.9,
+          'berechnungsgrundlage' => 'stundensatz',
+          'dauer' => 9.9,
           'verguetung' => 10,
           'leistung' => 'Leistung 2',
           'qualifikation' => 'Qualifikation 2',
@@ -168,7 +170,8 @@ final class AVK1ApplicationCostItemsFactoryTest extends TestCase {
       'honorare' => [
         [
           '_identifier' => 'h1',
-          'stunden' => 11.1,
+          'berechnungsgrundlage' => 'tagessatz',
+          'dauer' => 11.1,
           'verguetung' => 22.22,
           'leistung' => 'Leistung 1',
           'qualifikation' => 'Qualifikation 1',
@@ -176,7 +179,8 @@ final class AVK1ApplicationCostItemsFactoryTest extends TestCase {
         ],
         [
           '_identifier' => 'h2',
-          'stunden' => 9.9,
+          'berechnungsgrundlage' => 'stundensatz',
+          'dauer' => 9.9,
           'verguetung' => 10,
           'leistung' => 'Leistung 2',
           'qualifikation' => 'Qualifikation 2',

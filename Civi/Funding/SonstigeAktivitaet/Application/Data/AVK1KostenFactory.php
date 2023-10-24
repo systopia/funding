@@ -28,7 +28,8 @@ use Webmozart\Assert\Assert;
  *   unterkunftUndVerpflegung: float,
  *   honorare: array<array{
  *     _identifier: string,
- *     stunden: float,
+ *     berechnungsgrundlage: string,
+ *     dauer: float,
  *     verguetung: float,
  *     leistung: string,
  *     qualifikation: string,
@@ -92,8 +93,10 @@ class AVK1KostenFactory {
         $kosten['unterkunftUndVerpflegung'] = $item->getAmount();
       }
       elseif ('honorar' === $type) {
-        $stunden = $item->getProperties()['stunden'];
-        Assert::numeric($stunden);
+        $berechnungsgrundlage = $item->getProperties()['berechnungsgrundlage'];
+        Assert::string($berechnungsgrundlage);
+        $dauer = $item->getProperties()['dauer'];
+        Assert::numeric($dauer);
         $verguetung = $item->getProperties()['verguetung'];
         Assert::numeric($verguetung);
         $leistung = $item->getProperties()['leistung'] ?? '';
@@ -103,7 +106,8 @@ class AVK1KostenFactory {
         $kosten['honorare'][] = [
           '_identifier' => $item->getIdentifier(),
           'betrag' => $item->getAmount(),
-          'stunden' => (float) $stunden,
+          'berechnungsgrundlage' => $berechnungsgrundlage,
+          'dauer' => (float) $dauer,
           'verguetung' => (float) $verguetung,
           'leistung' => $leistung,
           'qualifikation' => $qualifikation,

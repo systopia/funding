@@ -110,7 +110,8 @@ final class AVK1KostenFactoryTest extends TestCase {
         'type' => 'honorar',
         'amount' => 44,
         'properties' => [
-          'stunden' => 2,
+          'berechnungsgrundlage' => 'stundensatz',
+          'dauer' => 2,
           'verguetung' => 22,
           'leistung' => 'foo',
           'qualifikation' => 'bar',
@@ -120,7 +121,8 @@ final class AVK1KostenFactoryTest extends TestCase {
         'honorare' => [
           [
             '_identifier' => 'test',
-            'stunden' => 2.0,
+            'berechnungsgrundlage' => 'stundensatz',
+            'dauer' => 2.0,
             'verguetung' => 22.0,
             'leistung' => 'foo',
             'qualifikation' => 'bar',
