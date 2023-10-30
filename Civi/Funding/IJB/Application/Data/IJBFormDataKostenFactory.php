@@ -37,12 +37,12 @@ use Webmozart\Assert\Assert;
  *    }>,
  *    fahrtkosten: array{
  *      flug: float,
- *      programm: float,
  *      anTeilnehmerErstattet: float,
  *    },
  *    programmkosten: array{
  *      programmkosten: float,
  *      arbeitsmaterial: float,
+ *      fahrt: float,
  *    },
  *    sonstigeKosten: array<array{
  *      _identifier?: string,
@@ -86,12 +86,12 @@ class IJBFormDataKostenFactory {
       'honorare' => [],
       'fahrtkosten' => [
         'flug' => 0.0,
-        'programm' => 0.0,
         'anTeilnehmerErstattet' => 0.0,
       ],
       'programmkosten' => [
         'programmkosten' => 0.0,
         'arbeitsmaterial' => 0.0,
+        'fahrt' => 0.0,
       ],
       'sonstigeKosten' => [],
       'sonstigeAusgaben' => [],
