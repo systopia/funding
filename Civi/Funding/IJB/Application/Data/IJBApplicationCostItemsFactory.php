@@ -40,12 +40,12 @@ use Webmozart\Assert\Assert;
  *   }>,
  *   fahrtkosten: array{
  *     flug: float,
- *     programm: float,
  *     anTeilnehmerErstattet: float,
  *   },
  *   programmkosten: array{
  *     programmkosten: float,
  *     arbeitsmaterial: float,
+ *     fahrt: float,
  *   },
  *   sonstigeKosten: array<array{
  *     _identifier?: string,
@@ -105,12 +105,12 @@ final class IJBApplicationCostItemsFactory implements ApplicationCostItemsFactor
       'unterkunftUndVerpflegung' => NULL,
       'fahrtkosten' => [
         'flug',
-        'programm',
         'anTeilnehmerErstattet',
       ],
       'programmkosten' => [
         'programmkosten',
         'arbeitsmaterial',
+        'fahrt',
       ],
       'zuschlagsrelevanteKosten' => [
         'programmabsprachen',
