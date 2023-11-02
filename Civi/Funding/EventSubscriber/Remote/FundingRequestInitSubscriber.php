@@ -59,10 +59,10 @@ class FundingRequestInitSubscriber implements EventSubscriberInterface {
     if (!$request instanceof GetFieldsAction || NULL !== $remoteContactId) {
       $this->requestContext->setRemote(TRUE);
     }
-    if (NULL !== $remoteContactId) {
+    $this->requestContext->setRemoteContactId($remoteContactId);
+    if (NULL !== $remoteContactId && '' !== $remoteContactId) {
       $contactId = $this->remoteContactIdResolver->getContactId($remoteContactId);
       $request->setExtraParam('contactId', $contactId);
-      $this->requestContext->setRemoteContactId($remoteContactId);
       $this->requestContext->setResolvedContactId($contactId);
     }
   }
