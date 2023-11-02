@@ -47,6 +47,9 @@ require_once __DIR__ . '/../../funding.civix.php';
  *
  * Patch applied by CiviCRM containing strftime():
  * https://patch-diff.githubusercontent.com/raw/pear/Log/pull/23.patch
+ *
+ * https://lab.civicrm.org/dev/core/-/issues/4739
+ * Fixed in 5.67.0 https://github.com/civicrm/civicrm-core/pull/27981
  */
 if ('C' === setlocale(LC_TIME, '0')) {
   setlocale(LC_TIME, 'en_US.UTF-8');
