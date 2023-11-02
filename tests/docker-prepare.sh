@@ -39,6 +39,11 @@ else
   # For headless tests it is required that CIVICRM_UF is defined using the corresponding env variable.
   sed -E "s/define\('CIVICRM_UF', '([^']+)'\);/define('CIVICRM_UF', getenv('CIVICRM_UF') ?: '\1');/g" \
     -i /var/www/html/sites/default/civicrm.settings.php
+
+  # Required with PHP 8.1.25 and CiviCRM <5.67
+  # https://lab.civicrm.org/dev/core/-/issues/4739
+  echo "setlocale(LC_TIME, 'en_US.UTF-8');" >> /var/www/html/sites/default/civicrm.settings.php
+
   civicrm-docker-install
 
   # Avoid this error:
