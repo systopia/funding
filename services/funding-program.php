@@ -31,6 +31,7 @@ use Civi\Funding\EventSubscriber\Remote\FundingProgramGetFieldsSubscriber;
 use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker;
 use Civi\Funding\FundingProgram\FundingProgramManager;
+use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 $container->autowire(FundingProgramManager::class);
@@ -46,6 +47,14 @@ $container->autowire(GetFieldsAction::class)
 $container->autowire(\Civi\Funding\Api4\Action\FundingProgramContactRelation\GetFieldsAction::class)
   ->setPublic(TRUE)
   ->setShared(FALSE);
+
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/FundingProgram/Api4/ActionHandler',
+  'Civi\\Funding\\FundingProgram\\Api4\\ActionHandler',
+  ActionHandlerInterface::class,
+  [ActionHandlerInterface::SERVICE_TAG => []],
+);
 
 $container->autowire(FundingProgramGetFieldsSubscriber::class)
   ->addTag('kernel.event_subscriber');

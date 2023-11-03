@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
+use Civi\Funding\Api4\Action\FundingProgram\GetAmountApprovedAction;
 use Civi\Funding\Api4\Action\FundingProgram\GetAction;
 use Civi\Funding\Api4\Action\FundingProgram\GetFieldsAction;
 use Civi\Funding\Api4\Traits\AccessPermissionsTrait;
@@ -41,6 +42,10 @@ final class FundingProgram extends Generic\DAOEntity {
    */
   public static function get($checkPermissions = TRUE) {
     return \Civi::service(GetAction::class)->setCheckPermissions($checkPermissions);
+  }
+
+  public static function getAmountApproved(bool $checkPermissions = TRUE): GetAmountApprovedAction {
+    return new GetAmountApprovedAction();
   }
 
   /**

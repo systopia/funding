@@ -20,6 +20,8 @@ declare(strict_types = 1);
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
+use Civi\Funding\Api4\DAOActionFactory;
+use Civi\Funding\Api4\DAOActionFactoryInterface;
 use Civi\Funding\Contact\FundingRemoteContactIdResolver;
 use Civi\Funding\Contact\FundingRemoteContactIdResolverInterface;
 use Civi\Funding\Controller\PageControllerInterface;
@@ -49,6 +51,8 @@ if (!$container->has(PropertyAccessorInterface::class)) {
   $container->register(PropertyAccessorInterface::class, PropertyAccess::class)
     ->setFactory([PropertyAccess::class, 'createPropertyAccessor']);
 }
+
+$container->autowire(DAOActionFactoryInterface::class, DAOActionFactory::class);
 
 $container->autowire(UrlGenerator::class);
 $container->autowire(MoneyFactory::class);

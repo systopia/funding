@@ -19,10 +19,14 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingProgram;
 
+use Civi\Api4\FundingCase;
+use Civi\Api4\FundingProgram;
+use Civi\Api4\Generic\DAOGetAction;
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\AbstractContainerMockedTestCase;
 use Civi\Funding\Api4\Action\FundingProgram\GetAction;
+use Civi\Funding\Api4\DAOActionFactoryInterface;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Mock\RequestContext\TestRequestContext;
@@ -41,6 +45,11 @@ final class FundingProgramManagerTest extends AbstractContainerMockedTestCase {
   private MockObject $api4Mock;
 
   /**
+   * @var \Civi\Funding\Api4\DAOActionFactoryInterface&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $daoActionFactoryMock;
+
+  /**
    * @var \Civi\Funding\FundingProgram\FundingProgramManager
    */
   private FundingProgramManager $fundingProgramManger;
@@ -48,7 +57,8 @@ final class FundingProgramManagerTest extends AbstractContainerMockedTestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->api4Mock = $this->createMock(Api4Interface::class);
-    $this->fundingProgramManger = new FundingProgramManager($this->api4Mock);
+    $this->daoActionFactoryMock = $this->createMock(DAOActionFactoryInterface::class);
+    $this->fundingProgramManger = new FundingProgramManager($this->api4Mock, $this->daoActionFactoryMock);
   }
 
   public function testGet(): void {
@@ -87,6 +97,36 @@ final class FundingProgramManagerTest extends AbstractContainerMockedTestCase {
 
     $fundingCaseLoaded = $this->fundingProgramManger->get(12);
     static::assertEquals($fundingProgram, $fundingCaseLoaded);
+  }
+
+  public function testGetIfAllowed(): void {
+    $fundingProgram = FundingProgramFactory::createFundingProgram();
+    $this->api4Mock->method('getEntity')->with(FundingProgram::getEntityName(), $fundingProgram->getId())
+      ->willReturn($fundingProgram->toArray());
+
+    static::assertEquals($fundingProgram, $this->fundingProgramManger->getIfAllowed($fundingProgram->getId()));
+  }
+
+  public function testGetIfAllowedNull(): void {
+    static::assertNull($this->fundingProgramManger->getIfAllowed(123));
+  }
+
+  public function testGetAmountApproved(): void {
+    $action = new DAOGetAction(FundingCase::getEntityName(), 'get');
+    $this->daoActionFactoryMock->expects(static::once())->method('get')
+      ->with(FundingCase::getEntityName())
+      ->willReturn($action);
+
+    $this->api4Mock->expects(static::once())->method('executeAction')
+      ->with(static::identicalTo($action))
+      ->willReturnCallback(function (DAOGetAction $action) {
+        static::assertSame(['SUM(amount_approved)'], $action->getSelect());
+        static::assertSame([['funding_program_id', '=', 12, FALSE]], $action->getWhere());
+
+        return new Result([['SUM:amount_approved' => 123]]);
+      });
+
+    static::assertSame(123.0, $this->fundingProgramManger->getAmountApproved(12));
   }
 
   protected function createFundingProgram(): FundingProgramEntity {

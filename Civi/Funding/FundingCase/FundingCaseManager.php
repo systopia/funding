@@ -68,6 +68,17 @@ class FundingCaseManager {
     return FundingCaseEntity::allFromApiResult($this->api4->executeAction($action));
   }
 
+  /**
+   * @phpstan-param array<string, 'ASC'|'DESC'> $orderBy
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function getFirstBy(ConditionInterface $condition, array $orderBy = ['id' => 'ASC']): ?FundingCaseEntity {
+    $result = $this->api4->getEntities(FundingCase::getEntityName(), $condition, $orderBy, 1);
+
+    return FundingCaseEntity::singleOrNullFromApiResult($result);
+  }
+
   public function clearCache(): void {
     $this->accessAllowed = [];
   }
