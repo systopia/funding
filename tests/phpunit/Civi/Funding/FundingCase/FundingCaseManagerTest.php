@@ -241,6 +241,33 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
     static::assertSame($fundingCase->toArray(), $fundingCaseLoaded->toArray());
   }
 
+  public function testGetFirstBy(): void {
+    $api4Mock = $this->createMock(Api4Interface::class);
+    $this->makeFullyMocked($api4Mock);
+
+    $fundingCase = FundingCaseFactory::createFundingCase();
+    $condition = Comparison::new('funding_program_id', '=', $fundingCase->getFundingProgramId());
+
+    $api4Mock->method('getEntities')
+      ->with(FundingCase::getEntityName(), $condition, ['id' => 'ASC'], 1)
+      ->willReturn(new Result([$fundingCase->toArray()]));
+
+    static::assertEquals($fundingCase, $this->fundingCaseManager->getFirstBy($condition));
+  }
+
+  public function testGetFirstByNull(): void {
+    $api4Mock = $this->createMock(Api4Interface::class);
+    $this->makeFullyMocked($api4Mock);
+
+    $condition = Comparison::new('funding_program_id', '=', 12);
+
+    $api4Mock->method('getEntities')
+      ->with(FundingCase::getEntityName(), $condition, ['id' => 'DESC'], 1)
+      ->willReturn(new Result());
+
+    static::assertNull($this->fundingCaseManager->getFirstBy($condition, ['id' => 'DESC']));
+  }
+
   public function testGetAll(): void {
     $fundingCase = $this->createFundingCase();
 

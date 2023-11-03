@@ -1056,6 +1056,10 @@ msgid "Hide Comments"
 msgstr "Kommentare ausblenden"
 
 #: ang/crmFunding/case/fundingCase.template.html
+msgid "Available budget"
+msgstr "Verfügbares Budget"
+
+#: ang/crmFunding/case/fundingCase.template.html
 #: managed/SavedSearchFundingDrawdowns.mgd.php
 msgid "Amount"
 msgstr "Betrag"

@@ -133,6 +133,12 @@ fundingModule.controller('fundingCaseCtrl', [
     };
     let $approveModal = null;
     $scope.approvePrepare = function () {
+      if ($scope.fundingProgram.budget !== null) {
+        fundingProgramService.getAmountApproved(fundingCase.funding_program_id).then((amountApproved) => {
+          $scope.availableBudget = $scope.fundingProgram.budget - amountApproved;
+        });
+      }
+
       if ($approveModal === null) {
         $approveModal = $('#approve-modal');
       }

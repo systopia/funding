@@ -802,6 +802,10 @@ msgstr ""
 msgid "Hide Comments"
 msgstr ""
 
+#: ang/crmFunding/case/fundingCase.template.html
+msgid "Available budget"
+msgstr ""
+
 #: ang/crmFunding/case/fundingCase.template.html managed/SavedSearchFundingDrawdowns.mgd.php
 msgid "Amount"
 msgstr ""
