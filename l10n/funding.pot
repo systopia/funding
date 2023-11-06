@@ -1047,7 +1047,7 @@ msgid "Rework Application"
 msgstr ""
 
 #: managed/NavigationFunding.mgd.php
-msgid "Funding Program Manager"
+msgid "Funding"
 msgstr ""
 
 #: managed/NavigationFunding.mgd.php managed/SavedSearchFundingCases.mgd.php

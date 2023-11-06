@@ -31,7 +31,7 @@ return [
       'version' => 4,
       'values' => [
         'domain_id' => 'current_domain',
-        'label' => E::ts('Funding Program Manager'),
+        'label' => E::ts('Funding'),
         'name' => 'funding',
         'url' => NULL,
         'icon' => 'crm-i fa-money',

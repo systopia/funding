@@ -1364,8 +1364,8 @@ msgid "Rework Application"
 msgstr "Antrag überarbeiten"
 
 #: managed/NavigationFunding.mgd.php
-msgid "Funding Program Manager"
-msgstr "Funding Program Manager"
+msgid "Funding"
+msgstr "Fördermittel"
 
 #: managed/NavigationFunding.mgd.php managed/SavedSearchFundingCases.mgd.php
 msgid "Funding Cases"
