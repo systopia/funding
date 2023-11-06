@@ -12,7 +12,7 @@
                 <div class="modal-body">
                     <div ng-show="fundingProgram.budget !== null">
                       <label>{{ ts('Available budget') }}</label>
-                      {{ availableBudget }} {{ currencySymbol }}
+                      {{ availableBudget|fundingCurrency:fundingProgram.currency }}
                     </div>
                     <div>
                         <label for="approve-amount">{{ ts('Amount') }}</label>
@@ -48,7 +48,7 @@
     </div>
     <div>
         <label>{{ ts('Amount Requested Eligible') }}</label>
-        {{ amountRequestedEligible|number:2 }} {{ currencySymbol }}
+        {{ amountRequestedEligible|fundingCurrency:fundingProgram.currency }}
     </div>
     <div ng-show="fundingCase.transfer_contract_uri">
         <a href="{{ fundingCase.transfer_contract_uri }}" target="_blank" crm-icon="fa-external-link">{{ ts('Transfer Contract') }}</a>
