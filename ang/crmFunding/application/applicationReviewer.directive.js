@@ -46,11 +46,11 @@ fundingModule.directive('fundingApplicationReviewer', function() {
 
         $scope.onStartEdit = function () {
           $scope.editorOpen = true;
-        }
+        };
 
         $scope.onEditFinished = function () {
           $scope.editorOpen = false;
-        }
+        };
 
         $scope.loggedInContactId = CRM.config.cid;
         if (null === $scope.contactId) {
