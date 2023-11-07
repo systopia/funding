@@ -280,7 +280,6 @@ msgstr "Möchten Sie den Antrag wirklich löschen?"
 
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
 #: Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
-#: ang/crmFunding/application/applicationSidebar.template.html
 msgid "Start Review"
 msgstr "Prüfung starten"
 
@@ -926,6 +925,14 @@ msgstr "Anträge"
 #: ang/crmFunding/application/applicationSidebar.template.html
 msgid "Review"
 msgstr "Prüfung"
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "Start Calculative Review"
+msgstr "Rechnerische Prüfung starten"
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "Start Content Review"
+msgstr "Fachliche Prüfung starten"
 
 #: ang/crmFunding/application/applicationSidebar.template.html
 msgid "Content Review"

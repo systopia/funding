@@ -24,7 +24,6 @@ use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionSta
 use Civi\Funding\ApplicationProcess\ApplicationProcessTaskManager;
 use Civi\Funding\ApplicationProcess\TaskType;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
-use Civi\Funding\Event\ApplicationProcess\ApplicationFormSubmitSuccessEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
 use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -40,7 +39,6 @@ final class ApplicationProcessReviewTaskSubscriber implements EventSubscriberInt
    */
   public static function getSubscribedEvents(): array {
     return [
-      ApplicationFormSubmitSuccessEvent::class => ['onFormSubmitSuccess', -10],
       ApplicationProcessUpdatedEvent::class => ['onUpdated'],
     ];
   }
@@ -56,34 +54,57 @@ final class ApplicationProcessReviewTaskSubscriber implements EventSubscriberInt
   /**
    * @throws \CRM_Core_Exception
    */
-  public function onFormSubmitSuccess(ApplicationFormSubmitSuccessEvent $event): void {
-    $applicationProcess = $event->getApplicationProcess();
-
-    if ($this->getInfo($event->getFundingCaseType())->isReviewStartAction($event->getAction())) {
-      $this->taskManager->addOrAssignInternalTask(
-        $event->getContactId(),
-        $applicationProcess,
-        $applicationProcess->getReviewerCalculativeContactId(),
-        TaskType::REVIEW_CALCULATIVE,
-        E::ts('Review Funding Application (calculative)'),
-      );
-
-      $this->taskManager->addOrAssignInternalTask(
-        $event->getContactId(),
-        $applicationProcess,
-        $applicationProcess->getReviewerContentContactId(),
-        TaskType::REVIEW_CONTENT,
-        E::ts('Review Funding Application (content)'),
-      );
-    }
-  }
-
-  /**
-   * @throws \CRM_Core_Exception
-   */
   public function onUpdated(ApplicationProcessUpdatedEvent $event): void {
     $applicationProcess = $event->getApplicationProcess();
     $previousApplicationProcess = $event->getPreviousApplicationProcess();
+
+    $statusChanged = $applicationProcess->getStatus() !== $previousApplicationProcess->getStatus();
+    $info = $this->getInfo($event->getFundingCaseType());
+
+    if ($statusChanged) {
+      if ($info->isReviewStatus($applicationProcess->getStatus())) {
+        if (!$info->isReviewStatus($previousApplicationProcess->getStatus())) {
+          $this->taskManager->addOrAssignInternalTask(
+            $event->getContactId(),
+            $applicationProcess,
+            $applicationProcess->getReviewerCalculativeContactId(),
+            TaskType::REVIEW_CALCULATIVE,
+            E::ts('Review Funding Application (calculative)'),
+          );
+
+          $this->taskManager->addOrAssignInternalTask(
+            $event->getContactId(),
+            $applicationProcess,
+            $applicationProcess->getReviewerContentContactId(),
+            TaskType::REVIEW_CONTENT,
+            E::ts('Review Funding Application (content)'),
+          );
+        }
+      }
+      else {
+        $this->taskManager->cancelInternalTask($applicationProcess->getId(), TaskType::REVIEW_CALCULATIVE);
+        $this->taskManager->cancelInternalTask($applicationProcess->getId(), TaskType::REVIEW_CONTENT);
+      }
+    }
+    else {
+      if ($applicationProcess->getReviewerCalculativeContactId() !==
+        $previousApplicationProcess->getReviewerCalculativeContactId()) {
+        $this->taskManager->assignInternalTask(
+          $applicationProcess->getId(),
+          $applicationProcess->getReviewerCalculativeContactId(),
+          TaskType::REVIEW_CALCULATIVE,
+        );
+      }
+
+      if ($applicationProcess->getReviewerContentContactId() !==
+        $previousApplicationProcess->getReviewerContentContactId()) {
+        $this->taskManager->assignInternalTask(
+          $applicationProcess->getId(),
+          $applicationProcess->getReviewerContentContactId(),
+          TaskType::REVIEW_CONTENT,
+        );
+      }
+    }
 
     if ($applicationProcess->getIsReviewCalculative() !== $previousApplicationProcess->getIsReviewCalculative()) {
       if (NULL !== $applicationProcess->getIsReviewCalculative()) {
@@ -95,31 +116,6 @@ final class ApplicationProcessReviewTaskSubscriber implements EventSubscriberInt
       if (NULL !== $applicationProcess->getIsReviewContent()) {
         $this->taskManager->completeInternalTask($applicationProcess->getId(), TaskType::REVIEW_CONTENT);
       }
-    }
-
-    if ($applicationProcess->getStatus() !== $previousApplicationProcess->getStatus()) {
-      if (!$this->getInfo($event->getFundingCaseType())->isReviewStatus($applicationProcess->getStatus())) {
-        $this->taskManager->cancelInternalTask($applicationProcess->getId(), TaskType::REVIEW_CALCULATIVE);
-        $this->taskManager->cancelInternalTask($applicationProcess->getId(), TaskType::REVIEW_CONTENT);
-      }
-    }
-
-    if ($applicationProcess->getReviewerCalculativeContactId() !==
-      $previousApplicationProcess->getReviewerCalculativeContactId()) {
-      $this->taskManager->assignInternalTask(
-        $applicationProcess->getId(),
-        $applicationProcess->getReviewerCalculativeContactId(),
-        TaskType::REVIEW_CALCULATIVE,
-      );
-    }
-
-    if ($applicationProcess->getReviewerContentContactId() !==
-      $previousApplicationProcess->getReviewerContentContactId()) {
-      $this->taskManager->assignInternalTask(
-        $applicationProcess->getId(),
-        $applicationProcess->getReviewerContentContactId(),
-        TaskType::REVIEW_CONTENT,
-      );
     }
   }
 

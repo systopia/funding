@@ -185,6 +185,67 @@ fundingModule.directive('fundingApplicationEditor', ['$compile', function($compi
         let originalDataString = JSON.stringify(originalData);
         disableOverlay();
 
+        function handleSetValue(field, value) {
+          return function (result) {
+            if (result[0] && _4.isEqual(result[0][field], value)) {
+              $scope.applicationProcess[field] = value;
+
+              return true;
+            }
+
+            return false;
+          };
+        }
+
+        $scope.updateApplicationProcessField = function (field, value) {
+          if ($scope.applicationProcess[field] === value) {
+            return;
+          }
+
+          if (value === undefined) {
+            value = null;
+          }
+
+          return crmStatus({}, fundingApplicationProcessService.setValue($scope.applicationProcess.id, field, value))
+            .then(handleSetValue(field, value));
+        };
+
+        $scope.setReviewerCalculative = function (contactId) {
+          return $scope.updateApplicationProcessField('reviewer_calc_contact_id', contactId);
+        };
+
+        $scope.setReviewerContent = function (contactId) {
+          return $scope.updateApplicationProcessField('reviewer_cont_contact_id', contactId);
+        };
+
+        $scope.hasPermission = function (permission) {
+          return $scope.permissions && $scope.permissions.includes(permission);
+        };
+
+        $scope.hasReviewCalculativePermission = function () {
+          return $scope.hasPermission('review_calculative');
+        };
+
+        $scope.hasReviewContentPermission = function () {
+          return $scope.hasPermission('review_content');
+        };
+
+        $scope.startReviewCalculative = function () {
+          if ($scope.isActionAllowed('review')) {
+            $scope.submit('review').then(() => $scope.setReviewerCalculative(CRM.config.cid));
+          } else {
+            $scope.setReviewerCalculative(CRM.config.cid);
+          }
+        };
+
+        $scope.startReviewContent = function () {
+          if ($scope.isActionAllowed('review')) {
+            $scope.submit('review').then(() => $scope.setReviewerContent(CRM.config.cid));
+          } else {
+            $scope.setReviewerContent(CRM.config.cid);
+          }
+        };
+
         let $submitModal = null;
         $scope.performAction = function (action, label, withComment) {
           if (withComment) {
