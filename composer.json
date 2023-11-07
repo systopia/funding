@@ -2,56 +2,17 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
-        "allow-plugins": {
-            "composer/installers": false,
-            "civicrm/composer-compile-plugin": false,
-            "civicrm/composer-downloads-plugin": false,
-            "cweagans/composer-patches": false,
-            "civicrm/civicrm-asset-plugin": false
-        },
         "sort-packages": true
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/systopia/opis-json-schema-ext"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/systopia/expression-language-ext"
-        }
-    ],
     "require": {
         "symfony/cache": "^5",
         "symfony/http-foundation": " ^4 || ^5 || ^6",
         "symfony/http-kernel": " ^4 || ^5 || ^6",
         "symfony/polyfill-php80": ">=1",
         "symfony/property-access": "^5||^6",
-        "symfony/property-info": "^5||^6",
-        "systopia/expression-language-ext": "~0.1",
-        "systopia/opis-json-schema-ext": "~0.1",
         "webmozart/assert": "^1.10"
     },
-    "require-dev": {
-        "civicrm/civicrm-core": "^5.66",
-        "psr/container": ">=1.1.0",
-        "symfony/dependency-injection": ">=4.2"
-    },
     "scripts": {
-        "post-install-or-update": [
-            "# Avoid redeclaration of method \\GuzzleHttp\\http_build_query",
-            "if [ -e vendor/civicrm/civicrm-core/guzzle_php81_shim.php ]; then echo '' >vendor/civicrm/civicrm-core/guzzle_php81_shim.php; fi",
-            "# Avoid CiviCRM load extensions in vendor",
-            "if [ -e vendor/civicrm ]; then find vendor/civicrm -name 'info.xml' -delete; fi",
-            "# Avoid Class 'CRM_AfformAdmin_ExtensionUtil' not found",
-            "if [ -e vendor/civicrm ]; then find vendor/civicrm -name '*.mgd.php' -delete; fi"
-        ],
-        "post-install-cmd": [
-            "@post-install-or-update"
-        ],
-        "post-update-cmd": [
-            "@post-install-or-update"
-        ],
         "composer-phpcs": [
             "@composer --working-dir=tools/phpcs"
         ],

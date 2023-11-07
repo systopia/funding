@@ -3,9 +3,13 @@ includes:
 
 parameters:
 	scanDirectories:
+		- ci/vendor/civicrm/civicrm-core/
 		- de.systopia.civioffice/CRM/
 		- de.systopia.remotetools/Civi/
 		- external-file/Civi/
+	bootstrapFiles:
+		- ci/vendor/autoload.php
+		- de.systopia.remotetools/vendor/autoload.php
 	# Because we test with different versions in CI we have unmatched errors
 	reportUnmatchedIgnoredErrors: false
 	ignoreErrors:
