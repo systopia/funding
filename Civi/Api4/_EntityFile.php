@@ -20,8 +20,8 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 // phpcs:disable PSR1.Files.SideEffects
-if (class_exists(EntityFile::class)) {
-  class_alias(EntityFile::class, _EntityFile::class);
+if (class_exists('Civi\Api4\EntityFile')) {
+  class_alias('Civi\Api4\EntityFile', 'Civi\Api4\_EntityFile');
 }
 else {
   /**
