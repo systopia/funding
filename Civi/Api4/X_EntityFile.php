@@ -21,18 +21,18 @@ namespace Civi\Api4;
 
 // phpcs:disable PSR1.Files.SideEffects
 if (class_exists('Civi\Api4\EntityFile')) {
-  class_alias('Civi\Api4\EntityFile', 'Civi\Api4\_EntityFile');
+  class_alias('Civi\Api4\EntityFile', 'Civi\Api4\X_EntityFile');
 }
 else {
   /**
-   * In core there's no EntityFile entity, yet. So this class is used as
-   * replacement.
+   * This class is used as replacement for EntityFile which is only available in
+   * CiviCRM >=5.67.
+   *
+   * @todo Remove when minimal supported CiviCRM version is at least 5.67.
    *
    * @searchable bridge
-   *
-   * @see https://github.com/civicrm/civicrm-core/pull/25845
    */
-  final class _EntityFile extends Generic\DAOEntity {
+  final class X_EntityFile extends Generic\DAOEntity {
 
     use Generic\Traits\EntityBridge;
 
