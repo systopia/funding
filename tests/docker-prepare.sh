@@ -12,6 +12,7 @@ IDENTITYTRACKER_BRANCH=master
 REMOTETOOLS_BRANCH=remote-tools-api4
 
 FUNDING_EXT_DIR=$(dirname "$(dirname "$(realpath "$0")")")
+EXT_DIR=$(dirname "$FUNDING_EXT_DIR")
 
 if ! type git >/dev/null 2>&1; then
   apt -y update
@@ -71,6 +72,7 @@ else
   cv ext:download "de.systopia.identitytracker@https://github.com/systopia/de.systopia.identitytracker/archive/refs/heads/$IDENTITYTRACKER_BRANCH.zip"
   #cv ext:download "de.systopia.remotetools@https://github.com/systopia/de.systopia.remotetools/archive/refs/tags/$REMOTETOOLS_VERSION.zip"
   cv ext:download "de.systopia.remotetools@https://github.com/systopia/de.systopia.remotetools/archive/refs/heads/$REMOTETOOLS_BRANCH.zip"
+  composer --working-dir="$EXT_DIR/de.systopia.remotetools" update --no-dev --no-progress --prefer-dist --optimize-autoloader
   cv ext:enable funding
 
   # For headless tests these files need to exist.
