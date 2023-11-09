@@ -95,7 +95,6 @@ use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessEligibleSu
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessIdentifierSubscriber;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessModificationDateSubscriber;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessPreDeleteSubscriber;
-use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessReviewAssignmentSubscriber;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessReviewStatusSubscriber;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessReviewTaskSubscriber;
 use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessReworkTaskSubscriber;
@@ -258,9 +257,6 @@ $container->autowire(ApplicationProcessModificationDateSubscriber::class)
   ->addTag('kernel.event_subscriber')
   ->setLazy(TRUE);
 $container->autowire(ApplicationProcessStatusSubscriber::class)
-  ->addTag('kernel.event_subscriber')
-  ->setLazy(TRUE);
-$container->autowire(ApplicationProcessReviewAssignmentSubscriber::class)
   ->addTag('kernel.event_subscriber')
   ->setLazy(TRUE);
 $container->autowire(ApplicationProcessReviewStatusSubscriber::class)
