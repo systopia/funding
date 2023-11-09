@@ -19,10 +19,7 @@
 fundingModule.directive('fundingApplicationReviewers', function() {
   return {
     restrict: 'E',
-    scope: {
-      applicationProcess: '=',
-      permissions: '=',
-    },
+    scope: false,
     templateUrl: '~/crmFunding/application/applicationReviewers.template.html',
     controller: ['$scope', 'crmStatus', 'fundingApplicationProcessService',
       function($scope, crmStatus, fundingApplicationProcessService) {
@@ -32,51 +29,6 @@ fundingModule.directive('fundingApplicationReviewers', function() {
 
         fundingApplicationProcessService.getOptionLabels($scope.applicationProcess.id, 'reviewer_cont_contact_id')
           .then((options) => $scope.possibleReviewersContent = options);
-
-        function hasPermission(permission) {
-          return $scope.permissions && $scope.permissions.includes(permission);
-        }
-
-        $scope.hasReviewCalculativePermission = function () {
-          return hasPermission('review_calculative');
-        };
-
-        $scope.hasReviewContentPermission = function () {
-          return hasPermission('review_content');
-        };
-
-        function handleSetValue(field, value) {
-          return function (result) {
-            if (result[0] && _4.isEqual(result[0][field], value)) {
-              $scope.applicationProcess[field] = value;
-
-              return true;
-            }
-
-            return false;
-          };
-        }
-
-        $scope.updateApplicationProcessField = function (field, value) {
-          if ($scope.applicationProcess[field] === value) {
-            return;
-          }
-
-          if (value === undefined) {
-            value = null;
-          }
-
-          return crmStatus({}, fundingApplicationProcessService.setValue($scope.applicationProcess.id, field, value))
-              .then(handleSetValue(field, value));
-        };
-
-        $scope.setReviewerCalculative = function (contactId) {
-          return $scope.updateApplicationProcessField('reviewer_calc_contact_id', contactId);
-        };
-
-        $scope.setReviewerContent = function (contactId) {
-          return $scope.updateApplicationProcessField('reviewer_cont_contact_id', contactId);
-        };
       },
     ],
   };

@@ -23,16 +23,12 @@ use Civi\Funding\ActivityTypeIds;
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoContainer;
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\DefaultApplicationProcessActionStatusInfo;
 use Civi\Funding\ApplicationProcess\ApplicationProcessTaskManager;
-use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitResult;
 use Civi\Funding\ApplicationProcess\TaskType;
 use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
-use Civi\Funding\Event\ApplicationProcess\ApplicationFormSubmitSuccessEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
-use Civi\Funding\Form\Application\ApplicationValidationResult;
-use Civi\Funding\Mock\FundingCaseType\Application\Validation\TestValidatedData;
 use Civi\Funding\Mock\Psr\PsrContainer;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -63,7 +59,6 @@ final class ApplicationProcessReviewTaskSubscriberTest extends TestCase {
 
   public function testGetSubscribedEvents(): void {
     $expectedSubscriptions = [
-      ApplicationFormSubmitSuccessEvent::class => ['onFormSubmitSuccess', -10],
       ApplicationProcessUpdatedEvent::class => ['onUpdated'],
     ];
 
@@ -74,19 +69,15 @@ final class ApplicationProcessReviewTaskSubscriberTest extends TestCase {
     }
   }
 
-  public function testOnFormSubmitSuccess(): void {
-    $event = new ApplicationFormSubmitSuccessEvent(
-      1,
-      ApplicationProcessBundleFactory::createApplicationProcessBundle([
-        'reviewer_calc_contact_id' => 2,
-        'reviewer_cont_contact_id' => 3,
-      ]),
-      [],
-      ApplicationFormSubmitResult::createSuccess(
-        ApplicationValidationResult::newValid(new TestValidatedData(['action' => 'review']), FALSE)
-      ),
-    );
+  public function testOnUpdatedReviewStatus(): void {
+    $event = $this->createUpdatedEvent(['status' => ['applied', 'review']]);
     $applicationProcess = $event->getApplicationProcess();
+    $applicationProcess
+      ->setReviewerCalculativeContactId(2)
+      ->setReviewerContentContactId(3);
+    $event->getPreviousApplicationProcess()
+      ->setReviewerCalculativeContactId(2)
+      ->setReviewerContentContactId(3);
 
     $task1 = ActivityEntity::fromArray([
       'activity_type_id' => ActivityTypeIds::FUNDING_APPLICATION_TASK_INTERNAL,
@@ -102,7 +93,7 @@ final class ApplicationProcessReviewTaskSubscriberTest extends TestCase {
         [1, $applicationProcess, 2, TaskType::REVIEW_CALCULATIVE, 'Review Funding Application (calculative)'],
         [1, $applicationProcess, 3, TaskType::REVIEW_CONTENT, 'Review Funding Application (content)'],
       )->willReturnOnConsecutiveCalls($task1, $task2);
-    $this->subscriber->onFormSubmitSuccess($event);
+    $this->subscriber->onUpdated($event);
   }
 
   public function testOnUpdatedReviewerCalculativeContactId(): void {

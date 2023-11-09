@@ -66,16 +66,16 @@
   margin-bottom: 0px !important;
 }
 
-.btn-group > funding-action-button {
+.btn-group > .funding-action-button {
   position: relative;
   float: left;
 }
 
-funding-action-button .btn {
+.funding-action-button {
   border: 1px solid #ccc !important;
 }
 
-:not(.btn-group) > funding-action-button .btn {
+:not(.btn-group) > .funding-action-button {
   background-color: #e8eef0 !important;
 }
 

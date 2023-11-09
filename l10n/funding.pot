@@ -162,7 +162,7 @@ msgstr ""
 msgid "Do you really want to delete the application?"
 msgstr ""
 
-#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php ang/crmFunding/application/applicationSidebar.template.html
+#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
 msgid "Start Review"
 msgstr ""
 
@@ -684,6 +684,14 @@ msgstr ""
 
 #: ang/crmFunding/application/applicationSidebar.template.html
 msgid "Review"
+msgstr ""
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "Start Calculative Review"
+msgstr ""
+
+#: ang/crmFunding/application/applicationSidebar.template.html
+msgid "Start Content Review"
 msgstr ""
 
 #: ang/crmFunding/application/applicationSidebar.template.html

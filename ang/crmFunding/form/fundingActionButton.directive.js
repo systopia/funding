@@ -46,6 +46,9 @@ fundingModule.directive('fundingActionButton', [function() {
         }
       }
 
+      // Always add class
+      button.attr('class', button.attr('class') + ' funding-action-button');
+
       return function (scope, element, attrs, controller, transcludeFn) {
         for (let attr of element[0].attributes) {
           if (attr.name !== 'action' && attr.name !== 'label' && attr.name !== 'hide-disabled' && attr.name !== 'with-comment') {
