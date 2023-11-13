@@ -23,8 +23,18 @@ use Civi\RemoteTools\Api4\Util\SelectUtil;
 
 trait IsFieldSelectedTrait {
 
+  /**
+   * For DAO entities isFieldExplicitlySelected() has to be used for fields of
+   * type "Extra". Those fields are not part of the result if "*" is selected.
+   *
+   * @see isFieldExplicitlySelected()
+   */
   protected function isFieldSelected(string $field): bool {
     return SelectUtil::isFieldSelected($field, $this->getSelect());
+  }
+
+  protected function isFieldExplicitlySelected(string $field): bool {
+    return in_array($field, $this->getSelect(), TRUE);
   }
 
   protected function isRowCountSelected(): bool {
