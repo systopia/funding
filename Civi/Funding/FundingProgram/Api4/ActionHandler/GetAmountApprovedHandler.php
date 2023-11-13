@@ -48,7 +48,10 @@ final class GetAmountApprovedHandler implements ActionHandlerInterface {
    */
   public function getAmountApproved(GetAmountApprovedAction $action): array {
     if ($this->isAllowed($action)) {
-      return [$this->fundingProgramManager->getAmountApproved($action->getId())];
+      /** @var float $amountApproved */
+      $amountApproved = $this->fundingProgramManager->getAmountApproved($action->getId());
+
+      return [$amountApproved];
     }
 
     throw new UnauthorizedException(

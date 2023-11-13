@@ -19,9 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingProgram;
 
-use Civi\Api4\FundingCase;
 use Civi\Api4\FundingProgram;
-use Civi\Funding\Api4\DAOActionFactoryInterface;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\RemoteTools\Api4\Api4Interface;
 
@@ -29,11 +27,8 @@ class FundingProgramManager {
 
   private Api4Interface $api4;
 
-  private DAOActionFactoryInterface $daoActionFactory;
-
-  public function __construct(Api4Interface $api4, DAOActionFactoryInterface $daoActionFactory) {
+  public function __construct(Api4Interface $api4) {
     $this->api4 = $api4;
-    $this->daoActionFactory = $daoActionFactory;
   }
 
   /**
@@ -67,18 +62,21 @@ class FundingProgramManager {
   }
 
   /**
-   * @return float
+   * @return float|null
    *   The amount that has been approved for funding cases with the given
-   *   funding program.
+   *   funding program. The method returns a value even if a user has no
+   *   permission to that funding program.
    *
    * @throws \CRM_Core_Exception
    */
-  public function getAmountApproved(int $id): float {
-    $action = $this->daoActionFactory->get(FundingCase::getEntityName())
-      ->addSelect('SUM(amount_approved)')
-      ->addWhere('funding_program_id', '=', $id);
+  public function getAmountApproved(int $id): ?float {
+    $action = FundingProgram::get(FALSE)
+      ->setAllowEmptyRecordPermissions(TRUE)
+      ->addSelect('amount_approved')
+      ->addWhere('id', '=', $id);
+    $result = $this->api4->executeAction($action);
 
-    return $this->api4->executeAction($action)->first()['SUM:amount_approved'] ?? 0;
+    return $result->first()['amount_approved'] ?? NULL;
   }
 
 }
