@@ -3,6 +3,7 @@ includes:
 
 parameters:
 	scanDirectories:
+		- ci/vendor/civicrm/api/
 		- ci/vendor/civicrm/civicrm-core/
 		- de.systopia.civioffice/CRM/
 		- de.systopia.remotetools/Civi/
