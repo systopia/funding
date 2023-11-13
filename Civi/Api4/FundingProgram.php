@@ -44,6 +44,11 @@ final class FundingProgram extends Generic\DAOEntity {
     return \Civi::service(GetAction::class)->setCheckPermissions($checkPermissions);
   }
 
+  /**
+   * This action will return a value even if the permissions do not allow to
+   * access the funding program itself, if there's at least one case allowed to
+   * access with the given funding program.
+   */
   public static function getAmountApproved(bool $checkPermissions = TRUE): GetAmountApprovedAction {
     return new GetAmountApprovedAction();
   }
