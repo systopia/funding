@@ -55,6 +55,10 @@
       <type>Select</type>
     </html>
   </field>
+  <index>
+    <name>index_status</name>
+    <fieldName>status</fieldName>
+  </index>
 
   <field>
     <name>creation_date</name>

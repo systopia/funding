@@ -71,7 +71,7 @@ trait PermissionsGetActionTrait {
     if (!$this->isAllowEmptyRecordPermissions()) {
       $records = $this->limitArray($records);
     }
-    if ($this->getSelect() !== $select) {
+    if ($this->getSelect() !== $select && !in_array('*', $select, TRUE)) {
       $this->setSelect($select);
       $records = $this->selectArray($records);
     }

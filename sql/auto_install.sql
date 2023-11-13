@@ -339,6 +339,7 @@ CREATE TABLE `civicrm_funding_drawdown` (
   `requester_contact_id` int unsigned NOT NULL COMMENT 'FK to Contact',
   `reviewer_contact_id` int unsigned COMMENT 'FK to Contact',
   PRIMARY KEY (`id`),
+  INDEX `index_status`(status),
   CONSTRAINT FK_civicrm_funding_drawdown_payout_process_id FOREIGN KEY (`payout_process_id`) REFERENCES `civicrm_funding_payout_process`(`id`) ON DELETE CASCADE,
   CONSTRAINT FK_civicrm_funding_drawdown_requester_contact_id FOREIGN KEY (`requester_contact_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE RESTRICT,
   CONSTRAINT FK_civicrm_funding_drawdown_reviewer_contact_id FOREIGN KEY (`reviewer_contact_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE RESTRICT

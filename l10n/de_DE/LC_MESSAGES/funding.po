@@ -172,6 +172,33 @@ msgstr "Währung"
 msgid "Permission to reject drawdown is missing."
 msgstr "Berechtigung zum Ablehnen des Mittelabrufs fehlt."
 
+#: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
+#: managed/SavedSearchFundingCases.mgd.php
+#: managed/SavedSearchFundingProgramControlling.mgd.php
+msgid "Amount Approved"
+msgstr "Bewilligter Betrag"
+
+#: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
+#: managed/SavedSearchFundingProgramControlling.mgd.php
+msgid "Amount Available"
+msgstr "Verfügbarer Betrag"
+
+#: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
+msgid "The difference between the budget and the amount approved."
+msgstr "Die Differenz zwischen Budget und bewilligtem Betrag."
+
+#: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
+#: managed/SavedSearchFundingProgramControlling.mgd.php
+msgid "Amount Paid Out"
+msgstr "Ausbezahlter Betrag"
+
+#: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
+msgid "The sum of the amounts of accepted drawdowns."
+msgstr "Die Summe der Beträge der akzeptierten Mittelabrufe."
+
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
 #: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
 #: ang/crmFundingIJB/ijbApplicationEditor.template.html
@@ -181,19 +208,6 @@ msgstr "Berechtigung zum Ablehnen des Mittelabrufs fehlt."
 #: managed/SavedSearchFundingCases.mgd.php
 msgid "Identifier"
 msgstr "Bezeichner"
-
-#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
-#: managed/SavedSearchFundingCases.mgd.php
-msgid "Amount Approved"
-msgstr "Bewilligter Betrag"
-
-#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
-msgid "Amount Paid Out"
-msgstr "Ausbezahlter Betrag"
-
-#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
-msgid "Amount Available"
-msgstr "Verfügbarer Betrag"
 
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
 msgid "URI to Transfer Contract"
@@ -1387,6 +1401,11 @@ msgid "Funding Programs"
 msgstr "Förderprogramme"
 
 #: managed/NavigationFunding.mgd.php
+#: managed/SavedSearchFundingProgramControlling.mgd.php
+msgid "Funding Program Controlling"
+msgstr "Controlling Förderprogramme"
+
+#: managed/NavigationFunding.mgd.php
 msgid "Add Funding Program"
 msgstr "Förderprogramm hinzufügen"
 
@@ -1420,6 +1439,7 @@ msgstr "Förderanträge"
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCases.mgd.php
 #: managed/SavedSearchFundingDrawdowns.mgd.php
+#: managed/SavedSearchFundingProgramControlling.mgd.php
 #: managed/SavedSearchFundingPrograms.mgd.php
 #: managed/SavedSearchFundingTasksMy.mgd.php
 msgid "Table"
@@ -1427,6 +1447,7 @@ msgstr "Tabelle"
 
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
+#: managed/SavedSearchFundingProgramControlling.mgd.php
 #: managed/SavedSearchFundingPrograms.mgd.php
 msgid "Title"
 msgstr "Titel"
@@ -1491,6 +1512,16 @@ msgstr "Annehmen"
 msgid "Download Payment Instruction"
 msgstr "Zahlungsanweisung herunterladen"
 
+#: managed/SavedSearchFundingProgramControlling.mgd.php
+#: managed/SavedSearchFundingPrograms.mgd.php
+msgid "Budget"
+msgstr "Budget"
+
+#: managed/SavedSearchFundingProgramControlling.mgd.php
+#: managed/SavedSearchFundingPrograms.mgd.php
+msgid "End Date"
+msgstr "Enddatum"
+
 #: managed/SavedSearchFundingPrograms.mgd.php
 msgid "Abbreviation"
 msgstr "Abkürzung"
@@ -1504,20 +1535,12 @@ msgid "Start Date"
 msgstr "Startdatum"
 
 #: managed/SavedSearchFundingPrograms.mgd.php
-msgid "End Date"
-msgstr "Enddatum"
-
-#: managed/SavedSearchFundingPrograms.mgd.php
 msgid "Requests Start Date"
 msgstr "Startdatum für Anträge"
 
 #: managed/SavedSearchFundingPrograms.mgd.php
 msgid "Requests End Date"
 msgstr "Enddatum für Anträge"
-
-#: managed/SavedSearchFundingPrograms.mgd.php
-msgid "Budget"
-msgstr "Budget"
 
 #: managed/SavedSearchFundingPrograms.mgd.php
 msgid "Edit recipients"

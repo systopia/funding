@@ -19,14 +19,11 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingProgram;
 
-use Civi\Api4\FundingCase;
 use Civi\Api4\FundingProgram;
-use Civi\Api4\Generic\DAOGetAction;
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\AbstractContainerMockedTestCase;
 use Civi\Funding\Api4\Action\FundingProgram\GetAction;
-use Civi\Funding\Api4\DAOActionFactoryInterface;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Mock\RequestContext\TestRequestContext;
@@ -45,11 +42,6 @@ final class FundingProgramManagerTest extends AbstractContainerMockedTestCase {
   private MockObject $api4Mock;
 
   /**
-   * @var \Civi\Funding\Api4\DAOActionFactoryInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $daoActionFactoryMock;
-
-  /**
    * @var \Civi\Funding\FundingProgram\FundingProgramManager
    */
   private FundingProgramManager $fundingProgramManger;
@@ -57,8 +49,7 @@ final class FundingProgramManagerTest extends AbstractContainerMockedTestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->api4Mock = $this->createMock(Api4Interface::class);
-    $this->daoActionFactoryMock = $this->createMock(DAOActionFactoryInterface::class);
-    $this->fundingProgramManger = new FundingProgramManager($this->api4Mock, $this->daoActionFactoryMock);
+    $this->fundingProgramManger = new FundingProgramManager($this->api4Mock);
   }
 
   public function testGet(): void {
@@ -112,18 +103,20 @@ final class FundingProgramManagerTest extends AbstractContainerMockedTestCase {
   }
 
   public function testGetAmountApproved(): void {
-    $action = new DAOGetAction(FundingCase::getEntityName(), 'get');
-    $this->daoActionFactoryMock->expects(static::once())->method('get')
-      ->with(FundingCase::getEntityName())
-      ->willReturn($action);
+    $eventDispatcherMock = $this->createMock(CiviEventDispatcherInterface::class);
+    $possiblePermissionsLoaderMock = $this->createMock(PossiblePermissionsLoaderInterface::class);
+    $requestContext = TestRequestContext::newInternal();
+    $this->containerMock->expects(static::once())->method('get')
+      ->with(GetAction::class)
+      ->willReturn(new GetAction($eventDispatcherMock, $possiblePermissionsLoaderMock, $requestContext));
 
     $this->api4Mock->expects(static::once())->method('executeAction')
-      ->with(static::identicalTo($action))
-      ->willReturnCallback(function (DAOGetAction $action) {
-        static::assertSame(['SUM(amount_approved)'], $action->getSelect());
-        static::assertSame([['funding_program_id', '=', 12, FALSE]], $action->getWhere());
+      ->willReturnCallback(function (GetAction $action) {
+        static::assertSame(['amount_approved'], $action->getSelect());
+        static::assertSame([['id', '=', 12, FALSE]], $action->getWhere());
+        static::assertTrue($action->isAllowEmptyRecordPermissions());
 
-        return new Result([['SUM:amount_approved' => 123]]);
+        return new Result([['amount_approved' => 123]]);
       });
 
     static::assertSame(123.0, $this->fundingProgramManger->getAmountApproved(12));

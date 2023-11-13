@@ -32,11 +32,13 @@ final class FundingProgramFixture {
    * @throws \CRM_Core_Exception
    */
   public static function addFixture(array $values = []): FundingProgramEntity {
+    static $count = 1;
+
     $result = FundingProgram::create(FALSE)
       ->setValues($values + [
-        'title' => 'TestFundingProgram',
-        'abbreviation' => 'TFP',
-        'identifier_prefix' => 'TFP-',
+        'title' => 'TestFundingProgram' . $count,
+        'abbreviation' => 'TFP' . $count,
+        'identifier_prefix' => 'TFP' . $count . '-',
         'start_date' => '2022-10-22',
         'end_date' => '2023-10-22',
         'requests_start_date' => '2022-06-22',
@@ -44,6 +46,8 @@ final class FundingProgramFixture {
         'budget' => NULL,
         'currency' => self::DEFAULT_CURRENCY,
       ])->execute();
+
+    ++$count;
 
     return FundingProgramEntity::singleFromApiResult($result);
   }

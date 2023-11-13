@@ -148,6 +148,31 @@ return [
     ],
   ],
   [
+    'name' => 'Navigation_Funding.FundingProgramControlling',
+    'entity' => 'Navigation',
+    'cleanup' => 'always',
+    'update' => 'unmodified',
+    'params' => [
+      'version' => 4,
+      'values' => [
+        'domain_id' => 'current_domain',
+        'label' => E::ts('Funding Program Controlling'),
+        'name' => 'afsearchFundingProgramControlling',
+        'url' => 'civicrm/funding/program/controlling',
+        'icon' => 'crm-i fa-list-alt',
+        'permission' => [
+          'administer Funding',
+          'access Funding',
+        ],
+        'permission_operator' => 'OR',
+        'parent_id.name' => 'funding',
+        'is_active' => TRUE,
+        'has_separator' => 0,
+        'weight' => ++$weight,
+      ],
+    ],
+  ],
+  [
     'name' => 'Navigation_Funding.FundingProgramAdd',
     'entity' => 'Navigation',
     'cleanup' => 'always',
