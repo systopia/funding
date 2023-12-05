@@ -147,14 +147,64 @@ See [https://docs.civicrm.org/civioffice/en/latest/](https://docs.civicrm.org/ci
 
 The option "Use PHPWord macros for token replacement" needs to be activated.
 
+## Create funding program
 
+Add a funding program via the web interface.
 
+Define permissions for the CiviCRM users.
 
+## Create templates
 
+## transfer contract template
 
+Copy the template file to a temporary location (e.g. `/tmp/transfer-contract-template.docx`). Determine the ID of the funding case type.
 
+```shell
+cv cli civicrm_api3('Attachment', 'create', [
+  'name' => "transfer-contract-template.docx",
+  'mime_type' => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  'entity_id' => {FUNDING_CASE_TYPE_ID},
+  'entity_table' => "civicrm_funding_case_type",
+  'options' => ['move-file' => "/tmp/transfer-contract-template.docx"],
+]);
 
+exit
+```
+Set the `file_type_id` (not possible with Attachment API):
 
+```shell
+cv api4 File.update +v file_type_id:name=transfer_contract_template +w 'id = {FILE_ID}'
+```
+
+### payment instruction template
+
+Copy the template file to a temporary location (e.g. `/tmp/payment-instruction-template.docx`). Determine the ID of the funding case type.
+
+```shell
+cv cvli civicrm_api3('Attachment', 'create', [
+  'name' => "payment-instruction-template.docx",
+  'mime_type' => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  'entity_id' => "{FUNDING_CASE_TYPE_ID}",
+  'entity_table' => "civicrm_funding_case_type",
+  'options' => ['move-file' => "/tmp/payment-instruction-template.docx"],
+]);
+
+exit
+```
+Set the `file_type_id` (not possible with Attachment API):
+
+```shell
+cv api4 File.update +v file_type_id:name=funding_payment_instruction_template +w 'id = {FILE_ID}'
+```
+## Remote Contact Matching
+
+Activate the option **Remote Contact Matching Enabled** at `/civicrm/admin/remotetools`.
+
+## Remote role `CiviRemote Funding`
+
+Assign the remote role **CiviRemote Funding** to contacts who should be able to create applications. The roles are automatically synchronized at login.
+
+The role must be created once in Drupal under `/admin/people` via **Sync users with contacts** and the authorization **CiviRemote: CiviRemote Funding** must be assigned.
 
 
 
