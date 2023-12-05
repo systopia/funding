@@ -4,6 +4,18 @@ The installation described below assumes that CiviCRM and the funding portal run
 
 In the following, `$ENV` refers to the drupal installation root, for example `/var/www/web`.
 
+## Status of this document
+
+This status of this document is **work in progress**.
+
+I tried to install it on a system with
+
+- CiviCRM 5.67.3
+- Drupal 10.1.6
+- PHP 8.1
+
+I currently face the same issue as described [here](https://github.com/systopia/funding/issues/176).
+
 ## Configure upload of private files
 
 ```bash
