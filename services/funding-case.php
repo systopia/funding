@@ -25,9 +25,6 @@ use Civi\Funding\Api4\Action\Remote\FundingCase\GetNewApplicationFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\SubmitNewApplicationFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\ValidateNewApplicationFormAction;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
-use Civi\Funding\EventSubscriber\FundingCase\FundingCaseFilterPermissionsSubscriber;
-use Civi\Funding\EventSubscriber\FundingCase\FundingCaseGetPossiblePermissionsSubscriber;
-use Civi\Funding\EventSubscriber\FundingCase\FundingCasePermissionsGetAdminSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseGetFieldsSubscriber;
 use Civi\Funding\FundingCase\FundingCaseIdentifierGenerator;
@@ -198,23 +195,8 @@ ServiceRegistrator::autowireAllImplementing(
   'Civi\\Funding\\EventSubscriber\\FundingCase',
   EventSubscriberInterface::class,
   ['kernel.event_subscriber' => []],
-  ['lazy' => TRUE],
+  ['lazy' => 'auto'],
 );
-
-/*
- * Subscriber services are created every time (even when not used), so in
- * general only those subscribers that do not depend on any other service or
- * only on services that are created anyway or are cheap to create should not be
- * lazy.
- */
-$nonLazySubscribers = [
-  FundingCaseFilterPermissionsSubscriber::class,
-  FundingCaseGetPossiblePermissionsSubscriber::class,
-  FundingCasePermissionsGetAdminSubscriber::class,
-];
-foreach ($nonLazySubscribers as $serviceId) {
-  $container->getDefinition($serviceId)->setLazy(FALSE);
-}
 
 $container->autowire(GetNewApplicationFormAction::class)
   ->setPublic(TRUE)

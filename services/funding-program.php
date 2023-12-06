@@ -23,9 +23,6 @@ declare(strict_types = 1);
 use Civi\Funding\Api4\Action\FundingProgram\GetAction;
 use Civi\Funding\Api4\Action\FundingProgram\GetFieldsAction;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
-use Civi\Funding\EventSubscriber\FundingProgram\FundingProgramFilterPermissionsSubscriber;
-use Civi\Funding\EventSubscriber\FundingProgram\FundingProgramGetPossiblePermissionsSubscriber;
-use Civi\Funding\EventSubscriber\FundingProgram\FundingProgramPermissionsGetAdminSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingProgramDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingProgramGetFieldsSubscriber;
 use Civi\Funding\FundingProgram\FundingCaseTypeManager;
@@ -67,20 +64,5 @@ ServiceRegistrator::autowireAllImplementing(
   'Civi\\Funding\\EventSubscriber\\FundingProgram',
   EventSubscriberInterface::class,
   ['kernel.event_subscriber' => []],
-  ['lazy' => TRUE],
+  ['lazy' => 'auto'],
 );
-
-/*
- * Subscriber services are created every time (even when not used), so in
- * general only those subscribers that do not depend on any other service or
- * only on services that are created anyway or are cheap to create should not be
- * lazy.
- */
-$nonLazySubscribers = [
-  FundingProgramFilterPermissionsSubscriber::class,
-  FundingProgramGetPossiblePermissionsSubscriber::class,
-  FundingProgramPermissionsGetAdminSubscriber::class,
-];
-foreach ($nonLazySubscribers as $serviceId) {
-  $container->getDefinition($serviceId)->setLazy(FALSE);
-}

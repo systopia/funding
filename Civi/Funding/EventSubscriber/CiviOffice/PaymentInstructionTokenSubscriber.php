@@ -26,7 +26,7 @@ use Civi\Token\TokenProcessor;
 use Civi\Token\TokenRow;
 use CRM_Funding_ExtensionUtil as E;
 
-final class PaymentInstructionTokenSubscriber extends AbstractTokenSubscriber {
+class PaymentInstructionTokenSubscriber extends AbstractTokenSubscriber {
 
   private CiviOfficeContextDataHolder $contextDataHolder;
 

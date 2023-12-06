@@ -24,7 +24,7 @@ use Civi\Funding\PayoutProcess\PayoutProcessManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Webmozart\Assert\Assert;
 
-final class PayoutProcessCloseSubscriber implements EventSubscriberInterface {
+class PayoutProcessCloseSubscriber implements EventSubscriberInterface {
 
   private PayoutProcessManager $payoutProcessManager;
 

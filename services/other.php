@@ -87,7 +87,7 @@ ServiceRegistrator::autowireAllImplementing(
   'Civi\\Funding\\EventSubscriber\\ExternalFile',
   EventSubscriberInterface::class,
   ['kernel.event_subscriber' => []],
-  ['lazy' => TRUE],
+  ['lazy' => 'auto'],
 );
 
 $controllerDefinitions = ServiceRegistrator::autowireAllImplementing(

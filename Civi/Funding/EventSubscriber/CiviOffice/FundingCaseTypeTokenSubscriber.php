@@ -29,9 +29,9 @@ use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 
 /**
  * @phpstan-extends AbstractCiviOfficeTokenSubscriber<\Civi\Funding\Entity\FundingCaseTypeEntity>
- *   @codeCoverageIgnore
+ * @codeCoverageIgnore
  */
-final class FundingCaseTypeTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
+class FundingCaseTypeTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
 
   private FundingCaseTypeManager $fundingCaseTypeManager;
 

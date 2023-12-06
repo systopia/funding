@@ -24,7 +24,7 @@ use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreDeleteEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-final class ApplicationProcessPreDeleteSubscriber implements EventSubscriberInterface {
+class ApplicationProcessPreDeleteSubscriber implements EventSubscriberInterface {
 
   private ApplicationProcessActivityManager $activityManager;
 

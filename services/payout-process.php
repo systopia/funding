@@ -77,7 +77,7 @@ ServiceRegistrator::autowireAllImplementing(
   'Civi\\Funding\\EventSubscriber\\Remote\\Drawdown',
   EventSubscriberInterface::class,
   ['kernel.event_subscriber' => []],
-  ['lazy' => TRUE],
+  ['lazy' => 'auto'],
 );
 
 ServiceRegistrator::autowireAllImplementing(
@@ -86,7 +86,7 @@ ServiceRegistrator::autowireAllImplementing(
   'Civi\\Funding\\EventSubscriber\\Remote\\PayoutProcess',
   EventSubscriberInterface::class,
   ['kernel.event_subscriber' => []],
-  ['lazy' => TRUE],
+  ['lazy' => 'auto'],
 );
 
 ServiceRegistrator::autowireAllImplementing(

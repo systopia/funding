@@ -28,7 +28,7 @@ use Civi\RemoteTools\Api4\OptionsLoaderInterface;
 use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-final class ApplicationProcessStatusSubscriber implements EventSubscriberInterface {
+class ApplicationProcessStatusSubscriber implements EventSubscriberInterface {
 
   private ApplicationProcessActivityManager $activityManager;
 
