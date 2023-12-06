@@ -27,6 +27,7 @@ use Civi\Funding\Contact\FundingRemoteContactIdResolverInterface;
 use Civi\Funding\Controller\PageControllerInterface;
 use Civi\Funding\ControllerDectorator\TransactionalPageController;
 use Civi\Funding\Database\ChangeSetFactory;
+use Civi\Funding\DependencyInjection\Compiler\ActionPropertyAutowireFixPass;
 use Civi\Funding\DependencyInjection\Compiler\EntityValidatorPass;
 use Civi\Funding\DependencyInjection\Compiler\FundingCaseTypeServiceLocatorPass;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
@@ -42,6 +43,7 @@ use Civi\Funding\Util\MoneyFactory;
 use Civi\Funding\Util\UrlGenerator;
 use Civi\Funding\Validation\EntityValidator;
 use Civi\Funding\Validation\EntityValidatorInterface;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -58,6 +60,7 @@ $container->autowire(UrlGenerator::class);
 $container->autowire(MoneyFactory::class);
 $container->autowire(ChangeSetFactory::class);
 
+$container->addCompilerPass(new ActionPropertyAutowireFixPass(), PassConfig::TYPE_BEFORE_REMOVING);
 $container->addCompilerPass(new FundingCaseTypeServiceLocatorPass());
 
 $container->autowire(FundingRemoteContactIdResolverInterface::class, FundingRemoteContactIdResolver::class);
