@@ -41,7 +41,9 @@ fundingModule.directive('fundingSelectPermissions', [function() {
           let containsApplication = false;
 
           for (let permission of newValue || []) {
-            if (permission.startsWith('application_') || permission.startsWith('drawdown_')) {
+            if (permission.startsWith('application_') || permission.startsWith('drawdown_') ||
+              permission.startsWith('clearing_')
+            ) {
               containsApplication = true;
             } else {
               containsNonApplication = true;
@@ -57,27 +59,5 @@ fundingModule.directive('fundingSelectPermissions', [function() {
         });
       };
     },
-    /*link: function (scope, element, attr, mCtrl) {
-      const ts = CRM.ts('funding');
-      scope.$watch('permissions', function (newValue) {
-        let containsNonApplication = false;
-        let containsApplication = false;
-
-        for (let permission of newValue || []) {
-          if (permission.startsWith('application_')) {
-            containsApplication = true;
-          } else {
-            containsNonApplication = true;
-          }
-        }
-
-        const invalid = containsApplication && containsNonApplication;
-        const message = invalid ? ts('Combining application permissions with other ones is not possible.') : '';
-        mCtrl.errorMessage = message;
-        const select = element[0].querySelector('select');
-        // prevent form from being submitted (though select element is hidden)
-        select.setCustomValidity(message);
-      });
-    }*/
   };
 }]);

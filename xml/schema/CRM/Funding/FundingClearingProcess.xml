@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Funding</base>
+  <class>ClearingProcess</class>
+  <name>civicrm_funding_clearing_process</name>
+  <comment/>
+  <log>true</log>
+
+  <field>
+    <name>id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>Unique FundingClearingProcess ID</comment>
+    <html>
+      <type>Number</type>
+    </html>
+  </field>
+  <primaryKey>
+    <name>id</name>
+    <autoincrement>true</autoincrement>
+  </primaryKey>
+
+  <field>
+    <name>funding_case_id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>FK to FundingCase</comment>
+  </field>
+  <foreignKey>
+    <name>funding_case_id</name>
+    <table>civicrm_funding_case</table>
+    <key>id</key>
+    <onDelete>CASCADE</onDelete>
+  </foreignKey>
+
+  <field>
+    <name>status</name>
+    <type>varchar</type>
+    <length>64</length>
+    <required>true</required>
+    <pseudoconstant>
+      <callback>Civi\Funding\FundingPseudoConstants::getClearingProcessStatus</callback>
+    </pseudoconstant>
+    <html>
+      <type>Select</type>
+    </html>
+  </field>
+
+  <field>
+    <name>creation_date</name>
+    <type>timestamp</type>
+    <required>true</required>
+  </field>
+
+  <field>
+    <name>modification_date</name>
+    <type>timestamp</type>
+    <required>true</required>
+    <html>
+      <type>Select Date</type>
+      <formatType>activityDateTime</formatType>
+    </html>
+  </field>
+
+  <field>
+    <name>report_data</name>
+    <type>text</type>
+    <required>true</required>
+    <serialize>JSON</serialize>
+  </field>
+
+</table>

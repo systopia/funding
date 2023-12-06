@@ -164,6 +164,7 @@ msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/Generic/ClearingItem/GetFieldsAction.php
 #: Civi/Funding/EventSubscriber/Remote/FundingCaseGetFieldsSubscriber.php
 #: managed/SavedSearchFundingPrograms.mgd.php
 msgid "Currency"
@@ -628,6 +629,14 @@ msgid "Drawdown: create"
 msgstr "Mittelabruf: erstellen"
 
 #: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
+msgid "Clearing: modify"
+msgstr "Verwendungsnachweis: ändern"
+
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
+msgid "Clearing: apply"
+msgstr "Verwendungsnachweis: beantragen"
+
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
 msgid "Review: calculative"
 msgstr "Prüfung: rechnerisch"
 
@@ -638,6 +647,14 @@ msgstr "Prüfung: fachlich"
 #: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
 msgid "Review: drawdown"
 msgstr "Prüfung: Mittelabruf"
+
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
+msgid "Review: clearing calculative"
+msgstr "Prüfung: Verwendungsnachweis rechnerisch"
+
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
+msgid "Review: clearing content"
+msgstr "Prüfung: Verwendungsnachweis fachlich"
 
 #: Civi/Funding/EventSubscriber/FundingProgram/FundingProgramGetPossiblePermissionsSubscriber.php
 msgid "View"
@@ -729,6 +746,10 @@ msgstr "Überarbeitung in Prüfung"
 #: Civi/Funding/FundingPseudoConstants.php
 msgid "Accepted"
 msgstr "Angenommen"
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Review Requested"
+msgstr "Prüfung beantragt"
 
 #: Civi/Funding/FundingPseudoConstants.php
 msgid "Open"

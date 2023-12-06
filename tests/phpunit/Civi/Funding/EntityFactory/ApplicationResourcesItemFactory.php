@@ -33,11 +33,16 @@ use Civi\Funding\Entity\ApplicationResourcesItemEntity;
  */
 final class ApplicationResourcesItemFactory {
 
+  public const DEFAULT_ID = 55;
+
+  private static int $id = self::DEFAULT_ID;
+
   /**
    * @phpstan-param applicationResourcesItemT $values
    */
   public static function createApplicationResourcesItem(array $values = []): ApplicationResourcesItemEntity {
     $values += [
+      'id' => self::$id++,
       'application_process_id' => ApplicationProcessFactory::DEFAULT_ID,
       'identifier' => 'test-resources-item',
       'type' => 'test',

@@ -62,7 +62,7 @@ msgstr ""
 msgid "Timestamp"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php Civi/Funding/EventSubscriber/Remote/FundingCaseGetFieldsSubscriber.php managed/SavedSearchFundingPrograms.mgd.php
+#: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php Civi/Funding/Api4/Action/Generic/ClearingItem/GetFieldsAction.php Civi/Funding/EventSubscriber/Remote/FundingCaseGetFieldsSubscriber.php managed/SavedSearchFundingPrograms.mgd.php
 msgid "Currency"
 msgstr ""
 
@@ -443,6 +443,14 @@ msgid "Drawdown: create"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
+msgid "Clearing: modify"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
+msgid "Clearing: apply"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
 msgid "Review: calculative"
 msgstr ""
 
@@ -452,6 +460,14 @@ msgstr ""
 
 #: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
 msgid "Review: drawdown"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
+msgid "Review: clearing calculative"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
+msgid "Review: clearing content"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/FundingProgram/FundingProgramGetPossiblePermissionsSubscriber.php
@@ -540,6 +556,10 @@ msgstr ""
 
 #: Civi/Funding/FundingPseudoConstants.php
 msgid "Accepted"
+msgstr ""
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Review Requested"
 msgstr ""
 
 #: Civi/Funding/FundingPseudoConstants.php

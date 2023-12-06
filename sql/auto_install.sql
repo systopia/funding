@@ -17,13 +17,16 @@
 
 SET FOREIGN_KEY_CHECKS=0;
 
+DROP TABLE IF EXISTS `civicrm_funding_clearing_cost_item`;
 DROP TABLE IF EXISTS `civicrm_funding_app_cost_item`;
 DROP TABLE IF EXISTS `civicrm_funding_drawdown`;
+DROP TABLE IF EXISTS `civicrm_funding_clearing_resources_item`;
 DROP TABLE IF EXISTS `civicrm_funding_application_snapshot`;
 DROP TABLE IF EXISTS `civicrm_funding_app_resources_item`;
 DROP TABLE IF EXISTS `civicrm_funding_application_process`;
 DROP TABLE IF EXISTS `civicrm_funding_payout_process`;
 DROP TABLE IF EXISTS `civicrm_funding_new_case_permissions`;
+DROP TABLE IF EXISTS `civicrm_funding_clearing_process`;
 DROP TABLE IF EXISTS `civicrm_funding_case_type_program`;
 DROP TABLE IF EXISTS `civicrm_funding_case_permissions_cache`;
 DROP TABLE IF EXISTS `civicrm_funding_case_contact_relation`;
@@ -216,6 +219,23 @@ ENGINE=InnoDB;
 
 -- /*******************************************************
 -- *
+-- * civicrm_funding_clearing_process
+-- *
+-- *******************************************************/
+CREATE TABLE `civicrm_funding_clearing_process` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique FundingClearingProcess ID',
+  `funding_case_id` int unsigned NOT NULL COMMENT 'FK to FundingCase',
+  `status` varchar(64) NOT NULL,
+  `creation_date` timestamp NOT NULL,
+  `modification_date` timestamp NOT NULL,
+  `report_data` text NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT FK_civicrm_funding_clearing_process_funding_case_id FOREIGN KEY (`funding_case_id`) REFERENCES `civicrm_funding_case`(`id`) ON DELETE CASCADE
+)
+ENGINE=InnoDB;
+
+-- /*******************************************************
+-- *
 -- * civicrm_funding_new_case_permissions
 -- *
 -- * Defines the initial permissions for new funding cases
@@ -324,6 +344,29 @@ ENGINE=InnoDB;
 
 -- /*******************************************************
 -- *
+-- * civicrm_funding_clearing_resources_item
+-- *
+-- * Clearing for an application resources item
+-- *
+-- *******************************************************/
+CREATE TABLE `civicrm_funding_clearing_resources_item` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique FundingClearingResourcesItem ID',
+  `clearing_process_id` int unsigned NOT NULL COMMENT 'FK to FundingClearingProcess',
+  `app_resources_item_id` int unsigned NOT NULL COMMENT 'FK to FundingApplicationResourcesItem',
+  `status` varchar(64) NOT NULL,
+  `file_id` int unsigned NULL COMMENT 'FK to File',
+  `amount` decimal(10,2) NOT NULL,
+  `amount_admitted` decimal(10,2),
+  `description` Text NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT FK_civicrm_funding_clearing_resources_item_clearing_process_id FOREIGN KEY (`clearing_process_id`) REFERENCES `civicrm_funding_clearing_process`(`id`) ON DELETE RESTRICT,
+  CONSTRAINT FK_civicrm_funding_clearing_resources_item_app_resources_item_id FOREIGN KEY (`app_resources_item_id`) REFERENCES `civicrm_funding_app_resources_item`(`id`) ON DELETE CASCADE,
+  CONSTRAINT FK_civicrm_funding_clearing_resources_item_file_id FOREIGN KEY (`file_id`) REFERENCES `civicrm_file`(`id`) ON DELETE RESTRICT
+)
+ENGINE=InnoDB;
+
+-- /*******************************************************
+-- *
 -- * civicrm_funding_drawdown
 -- *
 -- * Drawdowns in a payout process
@@ -361,5 +404,28 @@ CREATE TABLE `civicrm_funding_app_cost_item` (
   PRIMARY KEY (`id`),
   UNIQUE INDEX `index_identifier_application_process_id`(identifier, application_process_id),
   CONSTRAINT FK_civicrm_funding_app_cost_item_application_process_id FOREIGN KEY (`application_process_id`) REFERENCES `civicrm_funding_application_process`(`id`) ON DELETE CASCADE
+)
+ENGINE=InnoDB;
+
+-- /*******************************************************
+-- *
+-- * civicrm_funding_clearing_cost_item
+-- *
+-- * Clearing for an application cost item
+-- *
+-- *******************************************************/
+CREATE TABLE `civicrm_funding_clearing_cost_item` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique FundingClearingCostItem ID',
+  `clearing_process_id` int unsigned NOT NULL COMMENT 'FK to FundingClearingProcess',
+  `application_cost_item_id` int unsigned NOT NULL COMMENT 'FK to FundingApplicationResourcesItem',
+  `status` varchar(64) NOT NULL,
+  `file_id` int unsigned NULL COMMENT 'FK to File',
+  `amount` decimal(10,2) NOT NULL,
+  `amount_admitted` decimal(10,2),
+  `description` Text NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT FK_civicrm_funding_clearing_cost_item_clearing_process_id FOREIGN KEY (`clearing_process_id`) REFERENCES `civicrm_funding_clearing_process`(`id`) ON DELETE RESTRICT,
+  CONSTRAINT FK_civicrm_funding_clearing_cost_item_application_cost_item_id FOREIGN KEY (`application_cost_item_id`) REFERENCES `civicrm_funding_app_cost_item`(`id`) ON DELETE CASCADE,
+  CONSTRAINT FK_civicrm_funding_clearing_cost_item_file_id FOREIGN KEY (`file_id`) REFERENCES `civicrm_file`(`id`) ON DELETE RESTRICT
 )
 ENGINE=InnoDB;

@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2023 SYSTOPIA GmbH
+ * Copyright (C) 2024 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -19,38 +19,37 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EntityFactory;
 
-use Civi\Funding\Entity\ApplicationCostItemEntity;
+use Civi\Funding\Entity\ClearingCostItemEntity;
 
 /**
- * @phpstan-type applicationCostItemT array{
+ * @phpstan-type clearingCostItemT array{
  *   id?: int,
- *   application_process_id?: int,
- *   identifier?: string,
- *   type?: string,
+ *   clearing_process_id?: int,
+ *   application_cost_item_id?: int,
+ *   status?: string,
+ *   file_id?: ?int,
  *   amount?: float,
- *   properties?: array<int|string, mixed>,
+ *   amount_admitted?: ?float,
+ *   description?: string,
  * }
  */
-final class ApplicationCostItemFactory {
-
-  public const DEFAULT_ID = 44;
-
-  private static int $id = self::DEFAULT_ID;
+final class ClearingCostItemFactory {
 
   /**
-   * @phpstan-param applicationCostItemT $values
+   * @phpstan-param clearingCostItemT $values
    */
-  public static function createApplicationCostItem(array $values = []): ApplicationCostItemEntity {
+  public static function create(array $values = []): ClearingCostItemEntity {
     $values += [
-      'id' => self::$id++,
-      'application_process_id' => ApplicationProcessFactory::DEFAULT_ID,
-      'identifier' => 'test-cost-item',
-      'type' => 'test',
+      'clearing_process_id' => ClearingProcessFactory::DEFAULT_ID,
+      'application_cost_item_id' => ApplicationCostItemFactory::DEFAULT_ID,
+      'status' => 'new',
+      'file_id' => NULL,
       'amount' => 1.23,
-      'properties' => [],
+      'amount_admitted' => NULL,
+      'description' => 'TestClearingCostItem',
     ];
 
-    return ApplicationCostItemEntity::fromArray($values);
+    return ClearingCostItemEntity::fromArray($values);
   }
 
 }

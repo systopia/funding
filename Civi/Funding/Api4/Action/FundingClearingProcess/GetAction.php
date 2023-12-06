@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2023 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,9 +17,9 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Api4\Action\FundingApplicationProcess;
+namespace Civi\Funding\Api4\Action\FundingClearingProcess;
 
-use Civi\Api4\FundingApplicationProcess;
+use Civi\Api4\FundingClearingProcess;
 use Civi\Funding\Api4\Action\FundingCase\AbstractReferencingDAOGetAction;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\RemoteTools\Api4\Api4Interface;
@@ -33,7 +33,7 @@ final class GetAction extends AbstractReferencingDAOGetAction {
     RequestContextInterface $requestContext
   ) {
     parent::__construct(
-      FundingApplicationProcess::getEntityName(),
+      FundingClearingProcess::getEntityName(),
       $api4,
       $fundingCaseManager,
       $requestContext
