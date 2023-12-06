@@ -17,9 +17,8 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Api4\Action\FundingDrawdown;
+namespace Civi\Funding\Api4\Action\Generic\ClearingItem;
 
-use Civi\Api4\FundingDrawdown;
 use Civi\Api4\Generic\DAOGetFieldsAction;
 use Civi\Funding\Api4\Query\AliasSqlRenderer;
 use CRM_Funding_ExtensionUtil as E;
@@ -29,12 +28,12 @@ use CRM_Funding_ExtensionUtil as E;
  */
 final class GetFieldsAction extends DAOGetFieldsAction {
 
-  public function __construct() {
-    parent::__construct(FundingDrawdown::getEntityName(), 'getFields');
+  public function __construct(string $entityName) {
+    parent::__construct($entityName, 'getFields');
   }
 
   /**
-   * @phpstan-return array<array<string, array<string, scalar>|array<scalar>|scalar|null>&array{name: string}>
+   * @phpstan-return list<array<string, array<string, scalar>|array<scalar>|scalar|null>&array{name: string}>
    */
   protected function getRecords(): array {
     return array_merge(parent::getRecords(), [
@@ -44,7 +43,7 @@ final class GetFieldsAction extends DAOGetFieldsAction {
         'type' => 'Extra',
         'data_type' => 'String',
         'readonly' => TRUE,
-        'sql_renderer' => new AliasSqlRenderer('payout_process_id.funding_case_id.funding_program_id.currency'),
+        'sql_renderer' => new AliasSqlRenderer('clearing_process_id.funding_case_id.funding_program_id.currency'),
       ],
       [
         'name' => 'CAN_review',

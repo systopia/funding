@@ -36,6 +36,8 @@ final class GetAction extends DAOGetAction {
 
   use IsFieldSelectedTrait;
 
+  private bool $cachePermissionsOnly = FALSE;
+
   private CiviEventDispatcherInterface $eventDispatcher;
 
   private FundingCasePermissionsCacheManager $permissionsCacheManager;
@@ -65,8 +67,12 @@ final class GetAction extends DAOGetAction {
   public function _run(Result $result): void {
   // phpcs:enable
     $rowCountSelected = $this->isRowCountSelected();
-    if ($rowCountSelected) {
+    if ($rowCountSelected || $this->cachePermissionsOnly) {
       $this->ensurePermissions();
+    }
+
+    if ($this->cachePermissionsOnly) {
+      return;
     }
 
     FundingCasePermissionsUtil::addPermissionsCacheJoin(
@@ -76,6 +82,12 @@ final class GetAction extends DAOGetAction {
       $this->requestContext->isRemote()
     );
     FundingCasePermissionsUtil::addPermissionsRestriction($this);
+
+    if ($this->isRowCountSelectedOnly()) {
+      parent::_run($result);
+
+      return;
+    }
 
     if ([] === $this->getSelect()) {
       $this->addSelect('*');
@@ -129,6 +141,21 @@ final class GetAction extends DAOGetAction {
     if (!$rowCountSelected) {
       $result->rowCount = count($records);
     }
+  }
+
+  public function isCachePermissionsOnly(): bool {
+    return $this->cachePermissionsOnly;
+  }
+
+  /**
+   * @param bool $cachePermissionsOnly
+   *   If TRUE it is ensured that for all queried funding cases the permissions
+   *   are cached without returning any data.
+   */
+  public function setCachePermissionsOnly(bool $cachePermissionsOnly): self {
+    $this->cachePermissionsOnly = $cachePermissionsOnly;
+
+    return $this;
   }
 
   /**

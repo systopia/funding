@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2023 SYSTOPIA GmbH
+ * Copyright (C) 2024 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,21 +17,21 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Api4\Action\FundingDrawdown;
+namespace Civi\Funding\Api4\Action\Generic\ClearingItem;
 
 use Civi\Api4\FundingCase;
-use Civi\Api4\FundingDrawdown;
-use Civi\Api4\FundingPayoutProcess;
+use Civi\Api4\FundingClearingProcess;
 use Civi\Api4\Generic\Result;
 use Civi\Funding\Api4\Action\FundingCase\AbstractReferencingDAOGetAction;
 use Civi\Funding\Api4\Util\WhereUtil;
+use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Webmozart\Assert\Assert;
 
-final class GetAction extends AbstractReferencingDAOGetAction {
+class GetAction extends AbstractReferencingDAOGetAction {
 
   private bool $canReviewSelected;
 
@@ -41,17 +41,18 @@ final class GetAction extends AbstractReferencingDAOGetAction {
   private array $fundingCases = [];
 
   public function __construct(
+    string $entityName,
     Api4Interface $api4,
     FundingCaseManager $fundingCaseManager,
     RequestContextInterface $requestContext
   ) {
     parent::__construct(
-      FundingDrawdown::getEntityName(),
+      $entityName,
       $api4,
       $fundingCaseManager,
       $requestContext
     );
-    $this->_fundingCaseIdFieldName = 'payout_process_id.funding_case_id';
+    $this->_fundingCaseIdFieldName = 'clearing_process_id.funding_case_id';
   }
 
   public function _run(Result $result): void {
@@ -63,11 +64,8 @@ final class GetAction extends AbstractReferencingDAOGetAction {
     }
 
     if ($this->canReviewSelected) {
-      if (!$this->isFieldSelected('status')) {
-        $this->addSelect('status');
-      }
-      if (!$this->isFieldSelected('payout_process_id.status')) {
-        $this->addSelect('payout_process_id.status');
+      if (!$this->isFieldSelected('clearing_process_id.status')) {
+        $this->addSelect('clearing_process_id.status');
       }
     }
 
@@ -75,14 +73,14 @@ final class GetAction extends AbstractReferencingDAOGetAction {
   }
 
   protected function ensureFundingCasePermissions(): void {
-    // Ensure permissions for all funding cases with payout process are determined.
+    // Ensure permissions for all funding cases with clearing process are determined.
     $action = FundingCase::get(FALSE)
       ->setCachePermissionsOnly(TRUE)
-      ->addJoin(FundingPayoutProcess::getEntityName() . ' AS pp', 'INNER', NULL, ['pp.funding_case_id', '=', 'id']);
+      ->addJoin(FundingClearingProcess::getEntityName() . ' AS cp', 'INNER', NULL, ['cp.funding_case_id', '=', 'id']);
 
-    $payoutProcessId = WhereUtil::getInt($this->getWhere(), 'payout_process_id');
-    if (NULL !== $payoutProcessId) {
-      $action->addWhere('pp.id', '=', $payoutProcessId);
+    $clearingProcessId = WhereUtil::getInt($this->getWhere(), 'clearing_process_id');
+    if (NULL !== $clearingProcessId) {
+      $action->addWhere('cp.id', '=', $clearingProcessId);
     }
 
     $this->_api4->executeAction($action);
@@ -95,12 +93,10 @@ final class GetAction extends AbstractReferencingDAOGetAction {
 
     if ($this->canReviewSelected) {
       $record['CAN_review'] = $this->getCanReview(
-        $record['status'],
-        $record['payout_process_id.status'],
+        $record['clearing_process_id.status'],
         $record[$this->_fundingCaseIdFieldName]
       );
-      $this->unsetIfNotSelected($record, 'status');
-      $this->unsetIfNotSelected($record, 'payout_process_id.status');
+      $this->unsetIfNotSelected($record, 'clearing_process_id.status');
     }
 
     return TRUE;
@@ -122,10 +118,9 @@ final class GetAction extends AbstractReferencingDAOGetAction {
   /**
    * @throws \CRM_Core_Exception
    */
-  private function getCanReview(string $drawdownStatus, string $payoutProcessStatus, int $fundingCaseId): bool {
-    return 'new' === $drawdownStatus
-      && 'open' === $payoutProcessStatus
-      && $this->getFundingCase($fundingCaseId)->hasPermission('review_drawdown');
+  private function getCanReview(string $clearingProcessStatus, int $fundingCaseId): bool {
+    return 'review' === $clearingProcessStatus
+      && $this->getFundingCase($fundingCaseId)->hasPermission(ClearingProcessPermissions::REVIEW_CALCULATIVE);
   }
 
 }

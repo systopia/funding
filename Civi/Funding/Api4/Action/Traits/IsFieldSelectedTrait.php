@@ -29,16 +29,20 @@ trait IsFieldSelectedTrait {
    *
    * @see isFieldExplicitlySelected()
    */
-  protected function isFieldSelected(string $field): bool {
-    return SelectUtil::isFieldSelected($field, $this->getSelect());
+  protected function isFieldSelected(string $fieldName): bool {
+    return SelectUtil::isFieldSelected($fieldName, $this->getSelect());
   }
 
-  protected function isFieldExplicitlySelected(string $field): bool {
-    return in_array($field, $this->getSelect(), TRUE);
+  protected function isFieldExplicitlySelected(string $fieldName): bool {
+    return in_array($fieldName, $this->getSelect(), TRUE);
   }
 
   protected function isRowCountSelected(): bool {
-    return in_array('row_count', $this->getSelect(), TRUE);
+    return $this->isFieldExplicitlySelected('row_count');
+  }
+
+  protected function isRowCountSelectedOnly(): bool {
+    return ['row_count'] === $this->getSelect();
   }
 
 }

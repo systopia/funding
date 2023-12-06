@@ -33,11 +33,16 @@ use Civi\Funding\Entity\ApplicationCostItemEntity;
  */
 final class ApplicationCostItemFactory {
 
+  public const DEFAULT_ID = 44;
+
+  private static int $id = self::DEFAULT_ID;
+
   /**
    * @phpstan-param applicationCostItemT $values
    */
   public static function createApplicationCostItem(array $values = []): ApplicationCostItemEntity {
     $values += [
+      'id' => self::$id++,
       'application_process_id' => ApplicationProcessFactory::DEFAULT_ID,
       'identifier' => 'test-cost-item',
       'type' => 'test',

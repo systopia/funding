@@ -128,6 +128,29 @@ final class FundingPseudoConstants {
   /**
    * @phpstan-return array<string, string>
    */
+  public static function getClearingItemStatus(): array {
+    return [
+      'new' => E::ts('New'),
+      'accepted' => E::ts('Accepted'),
+      'rejected' => E::ts('Rejected'),
+    ];
+  }
+
+  /**
+   * @phpstan-return array<string, string>
+   */
+  public static function getClearingProcessStatus(): array {
+    return [
+      'draft' => E::ts('Draft'),
+      'review-requested' => E::ts('Review Requested'),
+      'review' => E::ts('In review'),
+      'accepted' => E::ts('Accepted'),
+    ];
+  }
+
+  /**
+   * @phpstan-return array<string, string>
+   */
   public static function getDrawdownStatus(): array {
     return [
       'new' => E::ts('New'),
