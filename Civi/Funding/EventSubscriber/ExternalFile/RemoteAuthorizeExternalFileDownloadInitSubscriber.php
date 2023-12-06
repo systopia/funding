@@ -28,7 +28,7 @@ use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
-final class RemoteAuthorizeExternalFileDownloadInitSubscriber implements EventSubscriberInterface {
+class RemoteAuthorizeExternalFileDownloadInitSubscriber implements EventSubscriberInterface {
 
   private RequestContextInterface $requestContext;
 

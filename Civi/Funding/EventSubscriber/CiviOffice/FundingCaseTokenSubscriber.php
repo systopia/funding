@@ -31,7 +31,7 @@ use Civi\Funding\FundingCase\FundingCaseManager;
  * @phpstan-extends AbstractCiviOfficeTokenSubscriber<\Civi\Funding\Entity\FundingCaseEntity>
  * @codeCoverageIgnore
  */
-final class FundingCaseTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
+class FundingCaseTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
 
   private FundingCaseManager $fundingCaseManager;
 

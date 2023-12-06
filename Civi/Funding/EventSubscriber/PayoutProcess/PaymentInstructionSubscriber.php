@@ -23,7 +23,7 @@ use Civi\Funding\Event\PayoutProcess\DrawdownAcceptedEvent;
 use Civi\Funding\PayoutProcess\PaymentInstructionCreator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-final class PaymentInstructionSubscriber implements EventSubscriberInterface {
+class PaymentInstructionSubscriber implements EventSubscriberInterface {
 
   private PaymentInstructionCreator $paymentInstructionCreator;
 

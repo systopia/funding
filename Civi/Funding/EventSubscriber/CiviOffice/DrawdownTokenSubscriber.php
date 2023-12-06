@@ -32,7 +32,7 @@ use Civi\Funding\PayoutProcess\DrawdownManager;
  * @phpstan-extends AbstractCiviOfficeTokenSubscriber<\Civi\Funding\Entity\DrawdownEntity>
  * @codeCoverageIgnore
  */
-final class DrawdownTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
+class DrawdownTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
 
   private DrawdownManager $drawdownManager;
 

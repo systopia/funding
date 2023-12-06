@@ -28,7 +28,7 @@ use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
 use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-final class ApplicationProcessReviewTaskSubscriber implements EventSubscriberInterface {
+class ApplicationProcessReviewTaskSubscriber implements EventSubscriberInterface {
 
   private ApplicationProcessActionStatusInfoContainer $infoContainer;
 

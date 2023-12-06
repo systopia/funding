@@ -28,7 +28,7 @@ use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-final class ApplicationSnapshotCreateSubscriber implements EventSubscriberInterface {
+class ApplicationSnapshotCreateSubscriber implements EventSubscriberInterface {
 
   private ApplicationProcessActionStatusInfoContainer $infoContainer;
 

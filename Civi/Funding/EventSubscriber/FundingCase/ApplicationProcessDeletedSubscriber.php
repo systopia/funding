@@ -24,7 +24,7 @@ use Civi\Funding\Event\ApplicationProcess\ApplicationProcessDeletedEvent;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-final class ApplicationProcessDeletedSubscriber implements EventSubscriberInterface {
+class ApplicationProcessDeletedSubscriber implements EventSubscriberInterface {
 
   private ApplicationProcessManager $applicationProcessManager;
 

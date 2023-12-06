@@ -37,7 +37,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  *   permissions: array<string>,
  * }
  */
-final class AddFundingCasePermissionsSubscriber implements EventSubscriberInterface {
+class AddFundingCasePermissionsSubscriber implements EventSubscriberInterface {
 
   private Api4Interface $api4;
 

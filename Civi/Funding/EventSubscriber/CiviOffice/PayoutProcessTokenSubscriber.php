@@ -32,7 +32,7 @@ use Civi\Funding\PayoutProcess\PayoutProcessManager;
  * @phpstan-extends AbstractCiviOfficeTokenSubscriber<\Civi\Funding\Entity\PayoutProcessEntity>
  * @codeCoverageIgnore
  */
-final class PayoutProcessTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
+class PayoutProcessTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
 
   private PayoutProcessManager $payoutProcessManager;
 

@@ -23,7 +23,7 @@ use Civi\Funding\Event\FundingCase\FundingCaseApprovedEvent;
 use Civi\Funding\PayoutProcess\PayoutProcessManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-final class PayoutProcessCreateSubscriber implements EventSubscriberInterface {
+class PayoutProcessCreateSubscriber implements EventSubscriberInterface {
 
   private PayoutProcessManager $payoutProcessManager;
 

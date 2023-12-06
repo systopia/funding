@@ -48,5 +48,5 @@ ServiceRegistrator::autowireAllImplementing(
   'Civi\\Funding\\EventSubscriber\\Remote\\TransferContract',
   EventSubscriberInterface::class,
   ['kernel.event_subscriber' => []],
-  ['lazy' => TRUE],
+  ['lazy' => 'auto'],
 );

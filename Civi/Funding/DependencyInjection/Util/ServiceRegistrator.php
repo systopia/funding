@@ -25,6 +25,17 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * @codeCoverageIgnore
+ *
+ * @phpstan-type optionsT array{
+ *   lazy?: bool|'auto',
+ *   shared?: bool,
+ *   public?: bool,
+ * }
+ * If lazy is 'auto', a service is lazy if the class is non-final. This
+ * might be used for event subscribers. Event subscriber services are
+ * created every time (even when not used), so in general it makes sense to
+ * make those services lazy, unless they do not depend on any other service
+ * or only on services that are created anyway or are cheap to create.
  */
 final class ServiceRegistrator {
 
@@ -33,7 +44,7 @@ final class ServiceRegistrator {
    *
    * @phpstan-param array<string, array<string, scalar>> $tags
    *   Tag names mapped to attributes.
-   * @phpstan-param array{lazy?: bool, shared?: bool, public?: bool} $options
+   * @phpstan-param optionsT $options
    *
    * @phpstan-return array<string, \Symfony\Component\DependencyInjection\Definition>
    *   Service ID mapped to definition.
@@ -57,7 +68,7 @@ final class ServiceRegistrator {
    * @phpstan-param class-string $classOrInterface
    * @phpstan-param array<string, array<string, scalar>> $tags
    *   Tag names mapped to attributes.
-   * @phpstan-param array{lazy?: bool, shared?: bool, public?: bool} $options
+   * @phpstan-param optionsT $options
    *
    * @phpstan-return array<string, \Symfony\Component\DependencyInjection\Definition>
    *   Service ID mapped to definition.
@@ -82,7 +93,7 @@ final class ServiceRegistrator {
    * @phpstan-param class-string|null $classOrInterface
    * @phpstan-param array<string, array<string, scalar>> $tags
    *   Tag names mapped to attributes.
-   * @phpstan-param array{lazy?: bool, shared?: bool, public?: bool} $options
+   * @phpstan-param optionsT $options
    *
    * @phpstan-return array<string, \Symfony\Component\DependencyInjection\Definition>
    *   Service ID mapped to definition.
@@ -106,7 +117,7 @@ final class ServiceRegistrator {
         if (static::isServiceClass($class, $classOrInterface) && !$container->has($class)) {
           /** @phpstan-var class-string $class */
           $definition = $container->autowire($class);
-          $definition->setLazy($options['lazy'] ?? FALSE);
+          $definition->setLazy(self::isServiceLazy($class, $options));
           $definition->setShared($options['shared'] ?? FALSE);
           $definition->setPublic($options['public'] ?? FALSE);
           foreach ($tags as $tagName => $tagAttributes) {
@@ -144,6 +155,22 @@ final class ServiceRegistrator {
 
     return (NULL === $classOrInterface || $reflClass->isSubclassOf($classOrInterface))
       && !$reflClass->isAbstract();
+  }
+
+  /**
+   * @phpstan-param class-string $class
+   * @phpstan-param optionsT $options
+   */
+  private static function isServiceLazy(string $class, array $options): bool {
+    if (!isset($options['lazy'])) {
+      return FALSE;
+    }
+
+    if ('auto' === $options['lazy']) {
+      return !(new \ReflectionClass($class))->isFinal();
+    }
+
+    return $options['lazy'];
   }
 
 }

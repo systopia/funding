@@ -30,7 +30,7 @@ use Civi\Funding\FundingProgram\FundingProgramManager;
 /**
  * @phpstan-extends AbstractCiviOfficeTokenSubscriber<\Civi\Funding\Entity\FundingProgramEntity>
  */
-final class FundingProgramTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
+class FundingProgramTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
 
   private FundingProgramManager $fundingProgramManager;
 
