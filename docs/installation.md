@@ -2,19 +2,19 @@
 
 The installation described below assumes that CiviCRM and the funding portal run on the same Drupal and that Drupal is installed with composer. It is also possible to install the funding portal on a separate Drupal instance. In this case, the instructions have to be adapted accordingly.
 
+The funding extension is still under development and there exists no stable release yet.
+
 In the following, `$ENV` refers to the drupal installation root, for example `/var/www/web`.
 
 ## Status of this document
 
-This status of this document is **work in progress**.
+The status of this document is **work in progress**.
 
-I tried to install it on a system with
+The installation instructions were used on a system with
 
 - CiviCRM 5.67.3
 - Drupal 10.1.6
 - PHP 8.1
-
-I currently face the same issue as described [here](https://github.com/systopia/funding/issues/176).
 
 ## Configure upload of private files
 
@@ -151,7 +151,7 @@ Install the following extensions, use the newest release if not otherwise indica
 - [org.project60.banking](https://github.com/Project60/org.project60.banking). The  _CiviContribute_ component needs to be activated for this extension.
 - [activity-entity](https://github.com/systopia/activity-entity)
 - [external-file](https://github.com/systopia/external-file)
-- [funding](https://github.com/systopia/funding)
+- [funding](https://github.com/systopia/funding) - Main branch ≥ commit e5750a01a92048fe12d1034f48ab9676e4d2081d or a (not yet existing) relase after this commit
 
 ## Configure CiviOffice
 
