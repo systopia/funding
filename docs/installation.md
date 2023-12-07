@@ -159,11 +159,46 @@ See [https://docs.civicrm.org/civioffice/en/latest/](https://docs.civicrm.org/ci
 
 The option "Use PHPWord macros for token replacement" needs to be activated.
 
-## Create funding program
+## Create a funding program
 
-Add a funding program via the web interface.
+Add a funding program via the web interface: Go to **Funding** → **Add Funding Program** or open `civicrm/funding/program/add`.
 
-Define permissions for the CiviCRM users.
+There are several fields to be entered:
+
+- **Title**: The title of the program
+- **Abbreviation**: A short abbreviation of the program title
+- **Identifier Prefix**: The database ID of a funding case will be appended to this prefix and forms its identifier.
+- **Start Date**:
+- **End Date**:
+- **Requests Start Date**:
+- **Requests End Date**:
+- **Currency**: The currency for your budget
+- **Budget**: The amount of money that your organisation can distribute across the various funding applications
+- **Funding Case Type**: The type of this funding program. The available case types are
+    - Sonstige Aktivität (AVK1)
+    - Internationale Jugendbegegnung
+    - Sammelantrag Kurs
+  
+- !!! question
+    - What is the maximal recommended length of the abbreviation? In which situations is the abbreviation used?
+    - Example for abbreviation and identifier prefix?
+    - Can the Funding Case Types configured?
+
+## Define permissions for the CiviCRM users
+
+Open the funding programs overview at **Funding** → **Funding Programs** and choose the Action **Edit permissions** for your funding program.
+
+Add permissions for CiviCRM users or user groups.
+
+- Contacts with the permission **Application: create** will be able to create and edit an application for this funding program
+- Contacts with the permission **Application: apply** will be able to send the finalized application to your organization
+- Contacts with the permission **View** can view all applications of this funding program
+
+You can define permissions for specific contacts, contact types or contacts that have a relationship to a specific contact or contact type. In the last case, you need to specify the relationship type.
+
+This could be an example for the permission configuration:
+
+TODO: Add Screenshot
 
 ## Create templates
 
@@ -217,8 +252,3 @@ Activate the option **Remote Contact Matching Enabled** at `/civicrm/admin/remot
 Assign the remote role **CiviRemote Funding** to contacts who should be able to create applications. The roles are automatically synchronized at login.
 
 The role must be created once in Drupal under `/admin/people` via **Sync users with contacts** and the authorization **CiviRemote: CiviRemote Funding** must be assigned.
-
-
-
-
-
