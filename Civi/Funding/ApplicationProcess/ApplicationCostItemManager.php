@@ -65,17 +65,17 @@ class ApplicationCostItemManager {
     return self::toEntities($result);
   }
 
-  public function save(ApplicationCostItemEntity $applicationResourcesItem): void {
-    if ($applicationResourcesItem->isNew()) {
-      $action = FundingApplicationCostItem::create(FALSE)->setValues($applicationResourcesItem->toArray());
+  public function save(ApplicationCostItemEntity $applicationCostItem): void {
+    if ($applicationCostItem->isNew()) {
+      $action = FundingApplicationCostItem::create(FALSE)->setValues($applicationCostItem->toArray());
     }
     else {
-      $action = FundingApplicationCostItem::update(FALSE)->setValues($applicationResourcesItem->toArray());
+      $action = FundingApplicationCostItem::update(FALSE)->setValues($applicationCostItem->toArray());
     }
 
     /** @phpstan-var applicationCostItemT $values */
     $values = $this->api4->executeAction($action)->first();
-    $applicationResourcesItem->setValues($values);
+    $applicationCostItem->setValues($values);
   }
 
   /**
