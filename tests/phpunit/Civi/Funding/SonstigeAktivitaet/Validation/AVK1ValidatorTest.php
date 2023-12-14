@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\SonstigeAktivitaet\Validation;
 
+use Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidationResult;
+use Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidatorInterface;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
@@ -26,7 +28,6 @@ use Civi\Funding\Form\Application\NonCombinedApplicationJsonSchemaFactoryInterfa
 use Civi\Funding\SonstigeAktivitaet\Application\Validation\AVK1Validator;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\Validation\ValidationResult;
-use Civi\RemoteTools\JsonSchema\Validation\ValidatorInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Systopia\JsonSchema\Errors\ErrorCollector;
@@ -42,7 +43,7 @@ final class AVK1ValidatorTest extends TestCase {
   private MockObject $jsonSchemaFactoryMock;
 
   /**
-   * @var \Civi\RemoteTools\JsonSchema\Validation\ValidatorInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidatorInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $jsonSchemaValidatorMock;
 
@@ -51,7 +52,7 @@ final class AVK1ValidatorTest extends TestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->jsonSchemaFactoryMock = $this->createMock(NonCombinedApplicationJsonSchemaFactoryInterface::class);
-    $this->jsonSchemaValidatorMock = $this->createMock(ValidatorInterface::class);
+    $this->jsonSchemaValidatorMock = $this->createMock(ApplicationSchemaValidatorInterface::class);
     $this->validator = new AVK1Validator(
       $this->jsonSchemaFactoryMock,
       $this->jsonSchemaValidatorMock
@@ -82,7 +83,10 @@ final class AVK1ValidatorTest extends TestCase {
       ->willReturn($jsonSchema);
     $this->jsonSchemaValidatorMock->method('validate')
       ->with($jsonSchema, $formData, 2)
-      ->willReturn(new ValidationResult($jsonSchemaValidatedData, new ErrorCollector()));
+      ->willReturn(new ApplicationSchemaValidationResult(
+        new ValidationResult($jsonSchemaValidatedData, new ErrorCollector()),
+        []
+      ));
 
     $validationResult = $this->validator->validateExisting($applicationProcessBundle, [], $formData, 2);
     static::assertSame($errorMessages, $validationResult->getErrorMessages());
@@ -115,7 +119,10 @@ final class AVK1ValidatorTest extends TestCase {
       ->willReturn($jsonSchema);
     $this->jsonSchemaValidatorMock->method('validate')
       ->with($jsonSchema, $formData, 2)
-      ->willReturn(new ValidationResult($jsonSchemaValidatedData, new ErrorCollector()));
+      ->willReturn(new ApplicationSchemaValidationResult(
+        new ValidationResult($jsonSchemaValidatedData, new ErrorCollector()),
+        []
+      ));
 
     $validationResult = $this->validator->validateInitial($contactId, $fundingProgram, $fundingCaseType, $formData, 2);
     static::assertSame($errorMessages, $validationResult->getErrorMessages());

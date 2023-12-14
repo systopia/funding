@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Mock\FundingCaseType\Application\Validation;
 
+use Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidationResult;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
@@ -65,7 +66,7 @@ final class TestValidator extends AbstractCombinedApplicationValidator implement
       $fundingCaseType,
       $data,
       $jsonSchema,
-      $jsonSchemaValidationResult->getData(),
+      $jsonSchemaValidationResult,
       $maxErrors,
     );
   }
@@ -79,10 +80,13 @@ final class TestValidator extends AbstractCombinedApplicationValidator implement
     FundingCaseEntity $fundingCase,
     array $formData,
     JsonSchema $jsonSchema,
-    array $validatedData,
+    ApplicationSchemaValidationResult $jsonSchemaValidationResult,
     int $maxErrors
   ): ApplicationValidationResult {
-    return $this->createValidationResultValid(new TestValidatedData($validatedData), $jsonSchema);
+    return $this->createValidationResultValid(
+      new TestValidatedData($jsonSchemaValidationResult->getData(), $jsonSchemaValidationResult->getCostItemsData()),
+      $jsonSchema
+    );
   }
 
   /**
@@ -92,18 +96,19 @@ final class TestValidator extends AbstractCombinedApplicationValidator implement
     ApplicationProcessEntityBundle $applicationProcessBundle,
     array $formData,
     JsonSchema $jsonSchema,
-    array $validatedData,
+    ApplicationSchemaValidationResult $jsonSchemaValidationResult,
     int $maxErrors
   ): ApplicationValidationResult {
-    return $this->createValidationResultValid(new TestValidatedData($validatedData), $jsonSchema);
+    return $this->createValidationResultValid(
+      new TestValidatedData($jsonSchemaValidationResult->getData(), $jsonSchemaValidationResult->getCostItemsData()),
+      $jsonSchema
+    );
   }
 
   /**
    * Called after successful JSON schema validation.
    *
    * @phpstan-param array<string, mixed> $formData JSON serializable.
-   * @phpstan-param array<string, mixed> $validatedData JSON serializable.
-   *   Data returned by JSON schema validator.
    */
   protected function getValidationResultInitial(
     int $contactId,
@@ -111,10 +116,13 @@ final class TestValidator extends AbstractCombinedApplicationValidator implement
     FundingCaseTypeEntity $fundingCaseType,
     array $formData,
     JsonSchema $jsonSchema,
-    array $validatedData,
+    ApplicationSchemaValidationResult $jsonSchemaValidationResult,
     int $maxErrors
   ): ApplicationValidationResult {
-    return $this->createValidationResultValid(new TestValidatedData($validatedData), $jsonSchema);
+    return $this->createValidationResultValid(
+      new TestValidatedData($jsonSchemaValidationResult->getData(), $jsonSchemaValidationResult->getCostItemsData()),
+      $jsonSchema
+    );
   }
 
 }

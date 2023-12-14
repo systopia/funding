@@ -43,10 +43,17 @@ final class AVK1ValidatedData implements ValidatedApplicationDataInterface {
   private array $data;
 
   /**
-   * @phpstan-param avk1ValidatedDataT $validatedData
+   * @phpstan-var array<string, \Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemData>
    */
-  public function __construct(array $validatedData) {
+  private array $costItemsData;
+
+  /**
+   * @phpstan-param avk1ValidatedDataT $validatedData
+   * @phpstan-param array<\Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemData> $costItemsData
+   */
+  public function __construct(array $validatedData, array $costItemsData) {
     $this->data = $validatedData;
+    $this->costItemsData = $costItemsData;
   }
 
   public function getAction(): string {
@@ -77,6 +84,13 @@ final class AVK1ValidatedData implements ValidatedApplicationDataInterface {
 
   public function getAmountRequested(): float {
     return $this->data['finanzierung']['beantragterZuschuss'];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getCostItemsData(): array {
+    return $this->costItemsData;
   }
 
   public function getComment(): ?array {

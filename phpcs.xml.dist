@@ -12,8 +12,6 @@
     <file>funding.php</file>
 
     <exclude-pattern>/CRM/Funding/DAO/.*\.php$</exclude-pattern>
-    <exclude-pattern>/CRM/Funding/Upgrader\.php$</exclude-pattern>
-    <exclude-pattern>/CRM/Funding/Upgrader/Base\.php$</exclude-pattern>
 
     <arg name="extensions" value="php"/>
     <arg name="cache" value=".phpcs.cache"/>

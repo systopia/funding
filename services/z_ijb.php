@@ -27,12 +27,10 @@ use Civi\Funding\IJB\Application\Actions\IJBApplicationActionStatusInfo;
 use Civi\Funding\IJB\Application\Actions\IJBApplicationStatusDeterminer;
 use Civi\Funding\IJB\Application\Actions\IJBApplicationSubmitActionsContainer;
 use Civi\Funding\IJB\Application\Actions\IJBApplicationSubmitActionsFactory;
-use Civi\Funding\IJB\Application\Data\IJBApplicationCostItemsFactory;
 use Civi\Funding\IJB\Application\Data\IJBApplicationFormDataFactory;
 use Civi\Funding\IJB\Application\Data\IJBApplicationFormFilesFactory;
 use Civi\Funding\IJB\Application\Data\IJBApplicationResourcesItemsFactory;
 use Civi\Funding\IJB\Application\Data\IJBFormDataFinanzierungFactory;
-use Civi\Funding\IJB\Application\Data\IJBFormDataKostenFactory;
 use Civi\Funding\IJB\Application\Data\IJBFormDataZuschussFactory;
 use Civi\Funding\IJB\Application\Data\IJBProjektunterlagenFactory;
 use Civi\Funding\IJB\Application\JsonSchema\IJBApplicationJsonSchemaFactory;
@@ -56,15 +54,12 @@ $container->autowire(IJBApplicationUiSchemaFactory::class)
 $container->autowire(IJBApplicationFormDataFactory::class)
   ->addTag(IJBApplicationFormDataFactory::SERVICE_TAG);
 $container->autowire(IJBFormDataFinanzierungFactory::class);
-$container->autowire(IJBFormDataKostenFactory::class);
 $container->autowire(IJBProjektunterlagenFactory::class);
 $container->autowire(IJBFormDataZuschussFactory::class);
 
 $container->autowire(IJBApplicationValidator::class)
   ->setArgument('$jsonSchemaFactory', new Reference(IJBApplicationJsonSchemaFactory::class))
   ->addTag(IJBApplicationValidator::SERVICE_TAG);
-$container->autowire(IJBApplicationCostItemsFactory::class)
-  ->addTag(IJBApplicationCostItemsFactory::SERVICE_TAG);
 $container->autowire(IJBApplicationResourcesItemsFactory::class)
   ->addTag(IJBApplicationResourcesItemsFactory::SERVICE_TAG);
 $container->autowire(IJBApplicationFormFilesFactory::class)

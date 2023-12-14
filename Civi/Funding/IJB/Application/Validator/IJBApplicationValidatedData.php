@@ -43,10 +43,17 @@ final class IJBApplicationValidatedData implements ValidatedApplicationDataInter
   private array $data;
 
   /**
-   * @phpstan-param kursValidatedDataT $validatedData
+   * @phpstan-var array<string, \Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemData>
    */
-  public function __construct(array $validatedData) {
+  private array $costItemsData;
+
+  /**
+   * @phpstan-param kursValidatedDataT $validatedData
+   * @phpstan-param array<string, \Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemData> $costItemsData
+   */
+  public function __construct(array $validatedData, array $costItemsData) {
     $this->data = $validatedData;
+    $this->costItemsData = $costItemsData;
   }
 
   public function getAction(): string {
@@ -77,6 +84,13 @@ final class IJBApplicationValidatedData implements ValidatedApplicationDataInter
 
   public function getAmountRequested(): float {
     return $this->data['zuschuss']['gesamt'];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getCostItemsData(): array {
+    return $this->costItemsData;
   }
 
   public function getComment(): ?array {

@@ -69,6 +69,13 @@ final class ValidatedApplicationDataInvalid implements ValidatedApplicationDataI
   /**
    * @inheritDoc
    */
+  public function getCostItemsData(): array {
+    return [];
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function getComment(): ?array {
     return NULL;
   }

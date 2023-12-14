@@ -30,6 +30,7 @@ use Civi\Funding\Form\Application\ValidatedApplicationDataInterface;
  *   startDate: string,
  *   endDate: string,
  *   amountRequested: float,
+ *   costItemsData: array<string, \Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemData>,
  *   comment?: array{text: string, type: string},
  * }
  *
@@ -41,6 +42,7 @@ use Civi\Funding\Form\Application\ValidatedApplicationDataInterface;
  *   startDate?: string,
  *   endDate?: string,
  *   amountRequested?: float,
+ *   costItemsData?: array<string, \Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemData>,
  *   comment?: array{text: string, type: string},
  * }
  */
@@ -86,6 +88,7 @@ final class ValidatedApplicationDataMock implements ValidatedApplicationDataInte
       'startDate' => self::START_DATE,
       'endDate' => self::END_DATE,
       'amountRequested' => self::AMOUNT_REQUESTED,
+      'costItemsData' => [],
     ];
   }
 
@@ -115,6 +118,13 @@ final class ValidatedApplicationDataMock implements ValidatedApplicationDataInte
 
   public function getAmountRequested(): float {
     return $this->data['amountRequested'];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getCostItemsData(): array {
+    return $this->data['costItemsData'];
   }
 
   public function getComment(): ?array {

@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Mock\FundingCaseType\Application\JsonSchema;
 
+use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\JsonSchemaCostItem;
 use Civi\RemoteTools\JsonSchema\JsonSchemaDate;
 use Civi\RemoteTools\JsonSchema\JsonSchemaInteger;
 use Civi\RemoteTools\JsonSchema\JsonSchemaMoney;
@@ -50,7 +51,15 @@ final class TestJsonSchema extends JsonSchemaObject {
       'recipient' => new JsonSchemaInteger(),
       'startDate' => new JsonSchemaDate(),
       'endDate' => new JsonSchemaDate(),
-      'amountRequested' => new JsonSchemaMoney(),
+      'amountRequested' => new JsonSchemaMoney([
+        '$costItem' => new JsonSchemaCostItem([
+          'type' => 'amount',
+          'identifier' => 'amountRequested',
+          'clearing' => [
+            'itemLabel' => 'Amount requested',
+          ],
+        ]),
+      ]),
       'resources' => new JsonSchemaMoney(),
       'file' => new JsonSchemaString(['format' => 'uri']),
     ] + $extraProperties, $keywords);

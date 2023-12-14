@@ -27,6 +27,7 @@ namespace Civi\Funding\Entity;
  *   type: string,
  *   amount: float,
  *   properties: array<int|string, mixed>,
+ *   data_pointer: string,
  * }
  *
  * @phpstan-extends AbstractEntity<applicationCostItemT>
@@ -74,6 +75,16 @@ final class ApplicationCostItemEntity extends AbstractEntity {
    */
   public function setProperties(array $properties): self {
     $this->values['properties'] = $properties;
+
+    return $this;
+  }
+
+  public function getDataPointer(): string {
+    return $this->values['data_pointer'];
+  }
+
+  public function setDataPointer(string $dataPointer): self {
+    $this->values['data_pointer'] = $dataPointer;
 
     return $this;
   }

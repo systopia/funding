@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\IJB\Application\Validator;
 
+use Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidationResult;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
@@ -38,10 +39,10 @@ final class IJBApplicationValidator extends AbstractNonCombinedApplicationValida
     ApplicationProcessEntityBundle $applicationProcessBundle,
     array $formData,
     JsonSchema $jsonSchema,
-    array $validatedData,
+    ApplicationSchemaValidationResult $jsonSchemaValidationResult,
     int $maxErrors
   ): ApplicationValidationResult {
-    return $this->validateIJB($validatedData, $jsonSchema);
+    return $this->validateIJB($jsonSchemaValidationResult, $jsonSchema);
   }
 
   /**
@@ -53,19 +54,17 @@ final class IJBApplicationValidator extends AbstractNonCombinedApplicationValida
     FundingCaseTypeEntity $fundingCaseType,
     array $formData,
     JsonSchema $jsonSchema,
-    array $validatedData,
+    ApplicationSchemaValidationResult $jsonSchemaValidationResult,
     int $maxErrors
   ): ApplicationValidationResult {
-    return $this->validateIJB($validatedData, $jsonSchema);
+    return $this->validateIJB($jsonSchemaValidationResult, $jsonSchema);
   }
 
-  /**
-   * @phpstan-param array<string, mixed> $validatedData
-   */
   private function validateIJB(
-    array $validatedData,
+    ApplicationSchemaValidationResult $jsonSchemaValidationResult,
     JsonSchema $jsonSchema
   ): ApplicationValidationResult {
+    $validatedData = $jsonSchemaValidationResult->getData();
     /** @phpstan-var array<array{beginn: string, ende: string}> $zeitraeume */
     // @phpstan-ignore-next-line
     $zeitraeume = &$validatedData['grunddaten']['zeitraeume'];
@@ -85,13 +84,13 @@ final class IJBApplicationValidator extends AbstractNonCombinedApplicationValida
       return ApplicationValidationResult::newInvalid(
         $errorMessages,
         // @phpstan-ignore-next-line
-        new IJBApplicationValidatedData($validatedData),
+        new IJBApplicationValidatedData($validatedData, $jsonSchemaValidationResult->getCostItemsData()),
       );
     }
 
     return $this->createValidationResultValid(
       // @phpstan-ignore-next-line
-      new IJBApplicationValidatedData($validatedData),
+      new IJBApplicationValidatedData($validatedData, $jsonSchemaValidationResult->getCostItemsData()),
       $jsonSchema
     );
   }

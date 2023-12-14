@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\SammelantragKurs\Application\Validation;
 
+use Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidationResult;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
@@ -39,10 +40,10 @@ final class KursApplicationValidator extends AbstractCombinedApplicationValidato
     ApplicationProcessEntityBundle $applicationProcessBundle,
     array $formData,
     JsonSchema $jsonSchema,
-    array $validatedData,
+    ApplicationSchemaValidationResult $jsonSchemaValidationResult,
     int $maxErrors
   ): ApplicationValidationResult {
-    return $this->validateKurs($applicationProcessBundle->getFundingCase(), $validatedData, $jsonSchema);
+    return $this->validateKurs($applicationProcessBundle->getFundingCase(), $jsonSchemaValidationResult, $jsonSchema);
   }
 
   /**
@@ -54,20 +55,18 @@ final class KursApplicationValidator extends AbstractCombinedApplicationValidato
     FundingCaseEntity $fundingCase,
     array $formData,
     JsonSchema $jsonSchema,
-    array $validatedData,
+    ApplicationSchemaValidationResult $jsonSchemaValidationResult,
     int $maxErrors
   ): ApplicationValidationResult {
-    return $this->validateKurs($fundingCase, $validatedData, $jsonSchema);
+    return $this->validateKurs($fundingCase, $jsonSchemaValidationResult, $jsonSchema);
   }
 
-  /**
-   * @phpstan-param array<string, mixed> $validatedData
-   */
   private function validateKurs(
     FundingCaseEntity $fundingCase,
-    array $validatedData,
+    ApplicationSchemaValidationResult $jsonSchemaValidationResult,
     JsonSchema $jsonSchema
   ): ApplicationValidationResult {
+    $validatedData = $jsonSchemaValidationResult->getData();
     /** @phpstan-var array<array{beginn: string, ende: string}> $zeitraeume */
     // @phpstan-ignore-next-line
     $zeitraeume = &$validatedData['grunddaten']['zeitraeume'];
@@ -83,19 +82,18 @@ final class KursApplicationValidator extends AbstractCombinedApplicationValidato
       }
     }
 
+    $validatedApplicationData = new KursApplicationValidatedData(
+      // @phpstan-ignore-next-line
+      $validatedData,
+      $jsonSchemaValidationResult->getCostItemsData(),
+      $fundingCase->getRecipientContactId()
+    );
+
     if ([] !== $errorMessages) {
-      return ApplicationValidationResult::newInvalid(
-        $errorMessages,
-        // @phpstan-ignore-next-line
-        new KursApplicationValidatedData($validatedData, $fundingCase->getRecipientContactId()),
-      );
+      return ApplicationValidationResult::newInvalid($errorMessages, $validatedApplicationData);
     }
 
-    return $this->createValidationResultValid(
-      // @phpstan-ignore-next-line
-      new KursApplicationValidatedData($validatedData, $fundingCase->getRecipientContactId()),
-      $jsonSchema
-    );
+    return $this->createValidationResultValid($validatedApplicationData, $jsonSchema);
   }
 
 }

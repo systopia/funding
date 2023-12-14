@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\SammelantragKurs\Application\JsonSchema;
 
+use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\JsonSchemaCostItem;
 use Civi\RemoteTools\JsonSchema\JsonSchemaCalculate;
 use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
 use Civi\RemoteTools\JsonSchema\JsonSchemaMoney;
@@ -44,6 +45,13 @@ final class KursZuschussJsonSchema extends JsonSchemaObject {
       ),
       'teilnehmerkosten' => new JsonSchemaMoney([
         'maximum' => new JsonSchemaDataPointer('1/teilnehmerkostenMax'),
+        '$costItem' => new JsonSchemaCostItem([
+          'type' => 'teilnehmerkosten',
+          'identifier' => 'teilnehmerkosten',
+          'clearing' => [
+            'itemLabel' => 'Teilnehmendenkosten',
+          ],
+        ]),
       ], TRUE),
       'fahrtkostenMax' => new JsonSchemaCalculate(
         'number',
@@ -55,6 +63,13 @@ final class KursZuschussJsonSchema extends JsonSchemaObject {
       ),
       'fahrtkosten' => new JsonSchemaMoney([
         'maximum' => new JsonSchemaDataPointer('1/fahrtkostenMax'),
+        '$costItem' => new JsonSchemaCostItem([
+          'type' => 'fahrtkosten',
+          'identifier' => 'fahrtkosten',
+          'clearing' => [
+            'itemLabel' => 'Fahrtkosten',
+          ],
+        ]),
       ], TRUE),
       'honorarkostenMax' => new JsonSchemaCalculate(
         'number',
@@ -67,6 +82,13 @@ final class KursZuschussJsonSchema extends JsonSchemaObject {
       ),
       'honorarkosten' => new JsonSchemaMoney([
         'maximum' => new JsonSchemaDataPointer('1/honorarkostenMax'),
+        '$costItem' => new JsonSchemaCostItem([
+          'type' => 'honorarkosten',
+          'identifier' => 'honorarkosten',
+          'clearing' => [
+            'itemLabel' => 'Honorarkosten',
+          ],
+        ]),
       ], TRUE),
       'gesamt' => new JsonSchemaCalculate(
         'number',

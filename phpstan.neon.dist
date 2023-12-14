@@ -13,7 +13,6 @@ parameters:
 	excludePaths:
 		analyse:
 			- CRM/Funding/DAO/*
-			- CRM/Funding/Upgrader/Base.php
 			- tests/phpunit/bootstrap.php
 	scanFiles:
 		- funding.civix.php

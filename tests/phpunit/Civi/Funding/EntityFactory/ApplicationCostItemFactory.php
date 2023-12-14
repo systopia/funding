@@ -43,6 +43,7 @@ final class ApplicationCostItemFactory {
       'type' => 'test',
       'amount' => 1.23,
       'properties' => [],
+      'data_pointer' => '/amount',
     ];
 
     return ApplicationCostItemEntity::fromArray($values);

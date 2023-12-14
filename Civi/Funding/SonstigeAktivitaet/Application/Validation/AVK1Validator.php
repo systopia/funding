@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\SonstigeAktivitaet\Application\Validation;
 
+use Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidationResult;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
@@ -38,10 +39,10 @@ final class AVK1Validator extends AbstractNonCombinedApplicationValidator {
     ApplicationProcessEntityBundle $applicationProcessBundle,
     array $formData,
     JsonSchema $jsonSchema,
-    array $validatedData,
+    ApplicationSchemaValidationResult $jsonSchemaValidationResult,
     int $maxErrors
   ): ApplicationValidationResult {
-    return $this->validateAVK1($validatedData, $jsonSchema);
+    return $this->validateAVK1($jsonSchemaValidationResult, $jsonSchema);
   }
 
   /**
@@ -53,19 +54,17 @@ final class AVK1Validator extends AbstractNonCombinedApplicationValidator {
     FundingCaseTypeEntity $fundingCaseType,
     array $formData,
     JsonSchema $jsonSchema,
-    array $validatedData,
+    ApplicationSchemaValidationResult $jsonSchemaValidationResult,
     int $maxErrors
   ): ApplicationValidationResult {
-    return $this->validateAVK1($validatedData, $jsonSchema);
+    return $this->validateAVK1($jsonSchemaValidationResult, $jsonSchema);
   }
 
-  /**
-   * @phpstan-param array<string, mixed> $validatedData
-   */
   private function validateAVK1(
-    array $validatedData,
+    ApplicationSchemaValidationResult $jsonSchemaValidationResult,
     JsonSchema $jsonSchema
   ): ApplicationValidationResult {
+    $validatedData = $jsonSchemaValidationResult->getData();
     /** @phpstan-var array<array{beginn: string, ende: string}> $zeitraeume */
     // @phpstan-ignore-next-line
     $zeitraeume = &$validatedData['grunddaten']['zeitraeume'];
@@ -85,12 +84,15 @@ final class AVK1Validator extends AbstractNonCombinedApplicationValidator {
       return ApplicationValidationResult::newInvalid(
         $errorMessages,
         // @phpstan-ignore-next-line
-        new AVK1ValidatedData($validatedData),
+        new AVK1ValidatedData($validatedData, $jsonSchemaValidationResult->getCostItemsData()),
       );
     }
 
-    // @phpstan-ignore-next-line
-    return $this->createValidationResultValid(new AVK1ValidatedData($validatedData), $jsonSchema);
+    return $this->createValidationResultValid(
+      // @phpstan-ignore-next-line
+      new AVK1ValidatedData($validatedData, $jsonSchemaValidationResult->getCostItemsData()),
+      $jsonSchema
+    );
   }
 
 }

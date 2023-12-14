@@ -100,7 +100,7 @@ final class ValidateApplicationFormSubscriberTest extends TestCase {
       20,
     );
 
-    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([]), FALSE);
+    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([], []), FALSE);
     $this->validateHandlerMock->expects(static::once())->method('handle')
       ->with($command)
       ->willReturn($validationResult);
@@ -123,7 +123,7 @@ final class ValidateApplicationFormSubscriberTest extends TestCase {
     $errorMessages = ['/a/b' => ['error']];
     $validationResult = ApplicationValidationResult::newInvalid(
       $errorMessages,
-      new TestValidatedData([])
+      new TestValidatedData([], [])
     );
     $this->validateHandlerMock->expects(static::once())->method('handle')
       ->with($command)
@@ -143,7 +143,7 @@ final class ValidateApplicationFormSubscriberTest extends TestCase {
       $event->getFundingCaseType(),
       $event->getData()
     );
-    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([]), FALSE);
+    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([], []), FALSE);
     $this->newValidateHandlerMock->expects(static::once())->method('handle')
       ->with($command)
       ->willReturn($validationResult);
@@ -166,7 +166,7 @@ final class ValidateApplicationFormSubscriberTest extends TestCase {
     $errorMessages = ['/a/b' => ['error']];
     $validationResult = ApplicationValidationResult::newInvalid(
       $errorMessages,
-      new TestValidatedData([])
+      new TestValidatedData([], [])
     );
     $this->newValidateHandlerMock->expects(static::once())->method('handle')
       ->with($command)

@@ -19,10 +19,11 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\Application;
 
+use Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidationResult;
+use Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidatorInterface;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
-use Civi\RemoteTools\JsonSchema\Validation\ValidatorInterface;
 
 /**
  * @property NonCombinedApplicationJsonSchemaFactoryInterface $jsonSchemaFactory
@@ -32,7 +33,7 @@ abstract class AbstractNonCombinedApplicationValidator extends AbstractApplicati
 // phpcs:enable
   public function __construct(
     NonCombinedApplicationJsonSchemaFactoryInterface $jsonSchemaFactory,
-    ValidatorInterface $jsonSchemaValidator
+    ApplicationSchemaValidatorInterface $jsonSchemaValidator
   ) {
     parent::__construct($jsonSchemaFactory, $jsonSchemaValidator);
   }
@@ -63,7 +64,7 @@ abstract class AbstractNonCombinedApplicationValidator extends AbstractApplicati
       $fundingCaseType,
       $data,
       $jsonSchema,
-      $jsonSchemaValidationResult->getData(),
+      $jsonSchemaValidationResult,
       $maxErrors,
     );
   }
@@ -72,8 +73,6 @@ abstract class AbstractNonCombinedApplicationValidator extends AbstractApplicati
    * Called after successful JSON schema validation.
    *
    * @phpstan-param array<string, mixed> $formData JSON serializable.
-   * @phpstan-param array<string, mixed> $validatedData JSON serializable.
-   *   Data returned by JSON schema validator.
    */
   abstract protected function getValidationResultInitial(
     int $contactId,
@@ -81,7 +80,7 @@ abstract class AbstractNonCombinedApplicationValidator extends AbstractApplicati
     FundingCaseTypeEntity $fundingCaseType,
     array $formData,
     JsonSchema $jsonSchema,
-    array $validatedData,
+    ApplicationSchemaValidationResult $jsonSchemaValidationResult,
     int $maxErrors
   ): ApplicationValidationResult;
 

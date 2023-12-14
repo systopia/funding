@@ -41,13 +41,20 @@ final class KursApplicationValidatedData implements ValidatedApplicationDataInte
    */
   private array $data;
 
+  /**
+   * @phpstan-var array<string, \Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemData>
+   */
+  private array $costItemsData;
+
   private int $recipientContactId;
 
   /**
    * @phpstan-param kursValidatedDataT $validatedData
+   * @phpstan-param array<string, \Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemData> $costItemsData
    */
-  public function __construct(array $validatedData, int $recipientContactId) {
+  public function __construct(array $validatedData, array $costItemsData, int $recipientContactId) {
     $this->data = $validatedData;
+    $this->costItemsData = $costItemsData;
     $this->recipientContactId = $recipientContactId;
   }
 
@@ -79,6 +86,13 @@ final class KursApplicationValidatedData implements ValidatedApplicationDataInte
 
   public function getAmountRequested(): float {
     return $this->data['zuschuss']['gesamt'];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getCostItemsData(): array {
+    return $this->costItemsData;
   }
 
   public function getComment(): ?array {

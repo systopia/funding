@@ -45,7 +45,6 @@ use Civi\Funding\ApplicationProcess\ApplicationSnapshotManager;
 use Civi\Funding\ApplicationProcess\EligibleApplicationProcessesLoader;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationActionApplyHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationAllowedActionsGetHandlerInterface;
-use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationDeleteHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesAddIdentifiersHandlerInterface;
@@ -66,7 +65,6 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHand
 use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationActionApplyHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationAllowedActionsGetHandler;
-use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationCostItemsAddIdentifiersHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationCostItemsPersistHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationDeleteHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFilesAddIdentifiersHandler;
@@ -85,6 +83,10 @@ use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationJsonSchemaGetHandl
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationResourcesItemsAddIdentifiersHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationResourcesItemsPersistHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationSnapshotCreateHandler;
+use Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidator;
+use Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidatorInterface;
+use Civi\Funding\ApplicationProcess\JsonSchema\Validator\OpisApplicationValidator;
+use Civi\Funding\ApplicationProcess\JsonSchema\Validator\OpisApplicationValidatorFactory;
 use Civi\Funding\ApplicationProcess\Snapshot\ApplicationSnapshotRestorer;
 use Civi\Funding\ApplicationProcess\Snapshot\ApplicationSnapshotRestorerInterface;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
@@ -106,6 +108,8 @@ use Civi\Funding\EventSubscriber\Remote\ApplicationProcessActivityGetFieldsSubsc
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessActivityGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessGetFieldsSubscriber;
+use Civi\Funding\Form\Application\ApplicationCostItemsFormDataLoader;
+use Civi\Funding\Form\Application\ApplicationCostItemsFormDataLoaderInterface;
 use Civi\Funding\Validation\ConcreteEntityValidatorInterface;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 
@@ -119,6 +123,8 @@ $container->autowire(ApplicationProcessActivityManager::class);
 $container->autowire(ApplicationProcessTaskManager::class);
 $container->autowire(EligibleApplicationProcessesLoader::class);
 $container->autowire(ApplicationSnapshotManager::class);
+
+$container->autowire(ApplicationCostItemsFormDataLoaderInterface::class, ApplicationCostItemsFormDataLoader::class);
 
 ServiceRegistrator::autowireAllImplementing(
   $container,
@@ -135,6 +141,10 @@ ServiceRegistrator::autowireAllImplementing(
   ActionHandlerInterface::class,
   [ActionHandlerInterface::SERVICE_TAG => []],
 );
+
+$container->register(OpisApplicationValidator::class, OpisApplicationValidator::class)
+  ->setFactory([OpisApplicationValidatorFactory::class, 'getValidator']);
+$container->autowire(ApplicationSchemaValidatorInterface::class, ApplicationSchemaValidator::class);
 
 $container->autowire(ApplicationActionApplyHandlerInterface::class, DefaultApplicationActionApplyHandler::class);
 $container->autowire(
@@ -163,10 +173,6 @@ $container->autowire(ApplicationFormValidateHandlerInterface::class, DefaultAppl
 $container->autowire(ApplicationFormSubmitHandlerInterface::class, DefaultApplicationFormSubmitHandler::class);
 
 $container->autowire(ApplicationJsonSchemaGetHandlerInterface::class, DefaultApplicationJsonSchemaGetHandler::class);
-$container->autowire(
-  ApplicationCostItemsAddIdentifiersHandlerInterface::class,
-  DefaultApplicationCostItemsAddIdentifiersHandler::class
-);
 $container->autowire(
   ApplicationCostItemsPersistHandlerInterface::class,
   DefaultApplicationCostItemsPersistHandler::class

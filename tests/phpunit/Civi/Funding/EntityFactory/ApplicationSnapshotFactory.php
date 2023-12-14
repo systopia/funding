@@ -22,6 +22,8 @@ namespace Civi\Funding\EntityFactory;
 use Civi\Funding\Entity\ApplicationSnapshotEntity;
 
 /**
+ * @phpstan-import-type applicationCostItemT from \Civi\Funding\Entity\ApplicationCostItemEntity
+ *
  * @phpstan-type applicationSnapshotT array{
  *   id?: int,
  *   application_process_id?: int,
@@ -32,6 +34,7 @@ use Civi\Funding\Entity\ApplicationSnapshotEntity;
  *   start_date?: ?string,
  *   end_date?: ?string,
  *   request_data?: array<string, mixed>,
+ *   cost_items?: array<applicationCostItemT>,
  *   amount_requested?: double,
  *   amount_granted?: ?double,
  *   granted_budget?: ?double,
@@ -58,6 +61,7 @@ final class ApplicationSnapshotFactory {
       'start_date' => '2023-04-04',
       'end_date' => '2023-05-05',
       'request_data' => ['foo' => 'baz'],
+      'cost_items' => [],
       'amount_requested' => 123.45,
       'amount_granted' => 111.11,
       'granted_budget' => 122.22,

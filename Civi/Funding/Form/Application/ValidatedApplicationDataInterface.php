@@ -36,6 +36,11 @@ interface ValidatedApplicationDataInterface {
   public function getAmountRequested(): float;
 
   /**
+   * @phpstan-return array<string, \Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemData>
+   */
+  public function getCostItemsData(): array;
+
+  /**
    * @return array{text: string, type: string}|null
    */
   public function getComment(): ?array;

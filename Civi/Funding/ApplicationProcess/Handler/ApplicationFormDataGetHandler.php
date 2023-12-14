@@ -21,18 +21,23 @@ namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormDataGetCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateCommand;
+use Civi\Funding\Form\Application\ApplicationCostItemsFormDataLoaderInterface;
 use Civi\Funding\Form\Application\ApplicationFormDataFactoryInterface;
 
 final class ApplicationFormDataGetHandler implements ApplicationFormDataGetHandlerInterface {
+
+  private ApplicationCostItemsFormDataLoaderInterface $costItemsFormDataLoader;
 
   private ApplicationFormDataFactoryInterface $formDataFactory;
 
   private ApplicationFormValidateHandlerInterface $validateHandler;
 
   public function __construct(
+    ApplicationCostItemsFormDataLoaderInterface $costItemsFormDataLoader,
     ApplicationFormDataFactoryInterface $formDataFactory,
     ApplicationFormValidateHandlerInterface $validateHandler
   ) {
+    $this->costItemsFormDataLoader = $costItemsFormDataLoader;
     $this->formDataFactory = $formDataFactory;
     $this->validateHandler = $validateHandler;
   }
@@ -53,6 +58,8 @@ final class ApplicationFormDataGetHandler implements ApplicationFormDataGetHandl
         $command->getFundingCase(),
       );
     }
+
+    $this->costItemsFormDataLoader->addCostItemsFormData($command->getApplicationProcess(), $data);
 
     // Perform calculations
     $result = $this->validateHandler->handle(new ApplicationFormValidateCommand(

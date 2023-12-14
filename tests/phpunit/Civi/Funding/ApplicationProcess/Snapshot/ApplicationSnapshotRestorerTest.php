@@ -19,9 +19,11 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Snapshot;
 
+use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
 use Civi\Funding\ApplicationProcess\ApplicationExternalFileManagerInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\ApplicationSnapshotManager;
+use Civi\Funding\EntityFactory\ApplicationCostItemFactory;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ApplicationSnapshotFactory;
 use Civi\Funding\EntityFactory\ExternalFileFactory;
@@ -46,6 +48,11 @@ final class ApplicationSnapshotRestorerTest extends TestCase {
   private ApplicationSnapshotRestorer $applicationSnapshotRestorer;
 
   /**
+   * @var \Civi\Funding\ApplicationProcess\ApplicationCostItemManager&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $costItemManagerMock;
+
+  /**
    * @var \Civi\Funding\ApplicationProcess\ApplicationExternalFileManagerInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $externalFileManagerMock;
@@ -54,10 +61,12 @@ final class ApplicationSnapshotRestorerTest extends TestCase {
     parent::setUp();
     $this->applicationProcessManagerMock = $this->createMock(ApplicationProcessManager::class);
     $this->applicationSnapshotManagerMock = $this->createMock(ApplicationSnapshotManager::class);
+    $this->costItemManagerMock = $this->createMock(ApplicationCostItemManager::class);
     $this->externalFileManagerMock = $this->createMock(ApplicationExternalFileManagerInterface::class);
     $this->applicationSnapshotRestorer = new ApplicationSnapshotRestorer(
       $this->applicationProcessManagerMock,
       $this->applicationSnapshotManagerMock,
+      $this->costItemManagerMock,
       $this->externalFileManagerMock,
     );
   }
@@ -65,7 +74,10 @@ final class ApplicationSnapshotRestorerTest extends TestCase {
   public function testRestoreLastSnapshot(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
     $applicationProcess = $applicationProcessBundle->getApplicationProcess();
-    $applicationSnapshot = ApplicationSnapshotFactory::createApplicationSnapshot();
+    $costItem = ApplicationCostItemFactory::createApplicationCostItem();
+    $applicationSnapshot = ApplicationSnapshotFactory::createApplicationSnapshot([
+      'cost_items' => [$costItem->toArray()],
+    ]);
 
     $this->applicationSnapshotManagerMock->method('getLastByApplicationProcessId')
       ->with($applicationProcess->getId())
@@ -73,6 +85,9 @@ final class ApplicationSnapshotRestorerTest extends TestCase {
 
     $this->applicationProcessManagerMock->expects(static::once())->method('update')
       ->with(11, $applicationProcessBundle);
+
+    $this->costItemManagerMock->expects(static::once())->method('updateAll')
+      ->with($applicationProcess->getId(), [$costItem]);
 
     $externalFile = ExternalFileFactory::create(['identifier' => 'testIdentifier']);
     $this->externalFileManagerMock->method('getFilesAttachedToSnapshot')
