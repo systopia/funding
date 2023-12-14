@@ -106,26 +106,6 @@ Then adjust the configuration under `/admin/config/content/fontawesome` accordin
 !!! question
     What does this mean specifically?
 
-## Set up API User
-
- - add a role `CiviCRM API` with the following permissions:
-   - AuthX: Authenticate to services with API key
-   - CiviCRM: Access CiviCRM Funding
-   - CiviCRM: access CiviCRM Backend und API
-   - CiviCRM: view debug output
-   - RemoteContacts: match and link
-   - RemoteContacts: retrieve
- - add a drupal user `api` with the role `CiviCRM API`
- - generate an [API key](https://docs.civicrm.org/sysadmin/en/latest/setup/api-keys/) for the corresponding CiviCRM contact `api`
-
-!!! question
-    I did not find `CiviCRM: Remote Funding Program Manager Zugriff` but `CiviCRM: Access CiviCRM Funding`. I did not find the permissions for RemoteContacts.
-
-## Configure civiremote
-
-- Activate `Acquire CiviRemote ID` under `/admin/config/services/civiremote.` with Parameter mapping: Email → email
-- Set up CMRF profile under `/admin/config/cmrf/profiles` (the site key can be found in `civicrm.settings.php`).
-
 ## Configure formtips
 
 Set the following under `/admin/config/user-interface/formtips` (adjust times if necessary):
@@ -159,46 +139,34 @@ See [https://docs.civicrm.org/civioffice/en/latest/](https://docs.civicrm.org/ci
 
 The option "Use PHPWord macros for token replacement" needs to be activated.
 
-## Create a funding program
+## Configure CiviRemote
 
-Add a funding program via the web interface: Go to **Funding** → **Add Funding Program** or open `civicrm/funding/program/add`.
+- Activate **Acquire CiviRemote ID** at `/admin/config/services/civiremote.` with Parameter mapping: **Email** → **email**
+- Activate the option **Remote Contact Matching Enabled** at `/civicrm/admin/remotetools`.
 
-There are several fields to be entered:
+!!! question
+What is the best order between this and the following paragraph? Remote Contact Matching needs to be enabled in order to create / synchronise the Drupal roles "RemoteContacts: match and link" and "RemoteContacts: retrieve". The API key needs to be set to configure the CMRF profile. Does synchronising of the roles work before the configuration of the CMRF profile is finished?
 
-- **Title**: The title of the program
-- **Abbreviation**: A short abbreviation of the program title
-- **Identifier Prefix**: The database ID of a funding case will be appended to this prefix and forms its identifier.
-- **Start Date**:
-- **End Date**:
-- **Requests Start Date**:
-- **Requests End Date**:
-- **Currency**: The currency for your budget
-- **Budget**: The amount of money that your organisation can distribute across the various funding applications
-- **Funding Case Type**: The type of this funding program. The available case types are
-    - Sonstige Aktivität (AVK1)
-    - Internationale Jugendbegegnung
-    - Sammelantrag Kurs
-  
-- !!! question
-    - What is the maximal recommended length of the abbreviation? In which situations is the abbreviation used?
-    - Example for abbreviation and identifier prefix?
-    - Can the Funding Case Types configured?
+## Configure CiviMRF
 
-## Define permissions for the CiviCRM users
+Set up an API User:
+- add a role **CiviCRM API** with the following permissions:
+  - AuthX: Authenticate to services with API key
+  - CiviCRM: access CiviCRM Backend und API
+  - CiviCRM: remote access to Funding Program Manager
+  - CiviCRM: view debug output
+  - RemoteContacts: match and link
+  - RemoteContacts: retrieve
+- add a drupal user **api** with the role **CiviCRM API**
+- generate an [API key](https://docs.civicrm.org/sysadmin/en/latest/setup/api-keys/) for the corresponding CiviCRM contact **api**
 
-Open the funding programs overview at **Funding** → **Funding Programs** and choose the Action **Edit permissions** for your funding program.
+Set up a CiviMRF profile under `/admin/config/cmrf/profiles` or edit the default profile:
+- The Site Key can be found in your civicrm.settings.php
+- The URL is something of the form https://myCiviCRMWebsite/civicrm/ajax/rest
+- Insert the API Key you just created.
 
-Add permissions for CiviCRM users or user groups.
-
-- Contacts with the permission **Application: create** will be able to create and edit an application for this funding program
-- Contacts with the permission **Application: apply** will be able to send the finalized application to your organization
-- Contacts with the permission **View** can view all applications of this funding program
-
-You can define permissions for specific contacts, contact types or contacts that have a relationship to a specific contact or contact type. In the last case, you need to specify the relationship type.
-
-This could be an example for the permission configuration:
-
-TODO: Add Screenshot
+[Optional] Activate **CiviMRF Call Report** at `/admin/modules`.
+This helps with debugging by showing a report about all API calls sent to CiviCRM and the corresponding results. The report can be found at `admin/reports/cmrfcalls`.
 
 ## Create templates
 
@@ -243,10 +211,6 @@ Set the `file_type_id` (not possible with Attachment API):
 ```shell
 cv api4 File.update +v file_type_id:name=funding_payment_instruction_template +w 'id = {FILE_ID}'
 ```
-## Remote Contact Matching
-
-Activate the option **Remote Contact Matching Enabled** at `/civicrm/admin/remotetools`.
-
 ## Remote role `CiviRemote Funding`
 
 Assign the remote role **CiviRemote Funding** to contacts who should be able to create applications. The roles are automatically synchronized at login.
