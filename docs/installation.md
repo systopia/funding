@@ -23,8 +23,7 @@ mkdir $ENV/drupal/web/sites/default/files/private
 chmod g+w $ENV/drupal/web/sites/default/files/private
 ```
 
-!!! question
-    User `www-data` oder ein anderer user als owner?
+Grant read and write permissions for the directory `private` to the webserver user.
 
 Set the following setting in `$ENV/drupal/web/sites/default/settings.php`:
 
@@ -41,14 +40,6 @@ Edit `$ENV/drupal/composer.json` and add the following to repositories:
             "type": "vcs",
             "url": "git@github.com:systopia/drupal-json_forms.git"
         },
-        "opis-json-schema-ext": {
-            "type": "vcs",
-            "url": "git@github.com:systopia/opis-json-schema-ext"
-        },
-        "expression-language-ext": {
-            "type": "vcs",
-            "url": "git@github.com:systopia/expression-language-ext"
-        },
         "custom/civiremote_funding": {
             "type": "vcs",
             "url": "git@github.com:systopia/drupal-civiremote_funding.git"
@@ -63,24 +54,25 @@ Edit `$ENV/drupal/composer.json` and add the following to repositories:
         },
 ```
 
-Install CMRF Core in the required version
-
-!!! note
-    If CMRF Core is published as stable, this is no longer required.
+Open a terminal at `$ENV` and enter
 
 ```bash
-composer require drupal/cmrf_core:^2.1
+composer require drupal/cmrf_core:^2.1  custom/civiremote_funding
+drush pm:enable civiremote_funding
 ```
 
-Further modules/dependencies:
+!!! note
+    If CMRF Core is published as stable, `composer require drupal/cmrf_core:^2.1` is no longer required.
+
+## Further modules/dependencies
 
 - `fontawesome` not required if Font Awesome provided by other means.
 - `formtips` not required, but recommended.
 - `symfony/property-access` is dependency of funding extension.
 
 ```
-composer require custom/civiremote_funding drupal/fontawesome drupal/formtips symfony/property-access
-drush pm:enable civiremote_funding fontawesome formtips
+composer require drupal/fontawesome drupal/formtips symfony/property-access
+drush pm:enable fontawesome formtips
 ```
 
 So that changes to views etc. can be applied:
@@ -93,20 +85,18 @@ drush pm:enable config_update
 !!! note
     The last step is longer necessary as soon as we have releases of `civiremote_funding` with update routines.
 
-## Configure fontawesome
+### Configure fontawesome
 
-Provide Font Awesome files locally:
+You can optionally change the settings to provide Font Awesome files locally:
 
 ```
 drush fa:download
 ```
 
-Then adjust the configuration under `/admin/config/content/fontawesome` accordingly.
+Open `/admin/config/content/fontawesome` and uncheck the option **Use external file (CDN) / local file?**
 
-!!! question
-    What does this mean specifically?
 
-## Configure formtips
+### Configure formtips
 
 Set the following under `/admin/config/user-interface/formtips` (adjust times if necessary):
 
@@ -125,19 +115,19 @@ Install the following extensions, use the newest release if not otherwise indica
 
 - [de.systopia.xcm](https://github.com/systopia/de.systopia.xcm)
 - [de.systopia.identitytracker](https://github.com/systopia/de.systopia.identitytracker).
-  _Note (4.12.2023): I installed version 1.3.1 with the hotfix described [here](https://github.com/systopia/de.systopia.identitytracker/issues/19#issuecomment-1764529122)._
+  _Note (18.12.2023): I installed the master branch.
 - The branch `remote-tools-api4` of [de.systopia.remotetools](https://github.com/systopia/de.systopia.remotetools)
-- [de.systopia.civioffice](https://github.com/systopia/de.systopia.civioffice) **TODO: 1.0-beta2 statt 1.0-beta1**
+- [de.systopia.civioffice](https://github.com/systopia/de.systopia.civioffice)
 - [org.project60.banking](https://github.com/Project60/org.project60.banking). The  _CiviContribute_ component needs to be activated for this extension.
 - [activity-entity](https://github.com/systopia/activity-entity)
 - [external-file](https://github.com/systopia/external-file)
-- [funding](https://github.com/systopia/funding) - Main branch ≥ commit e5750a01a92048fe12d1034f48ab9676e4d2081d or a (not yet existing) relase after this commit
+- [funding](https://github.com/systopia/funding) - version 0.9.2 or later
 
 ## Configure CiviOffice
 
 See [https://docs.civicrm.org/civioffice/en/latest/](https://docs.civicrm.org/civioffice/en/latest/).
 
-The option "Use PHPWord macros for token replacement" needs to be activated.
+The option **Use PHPWord macros for token replacement** needs to be activated.
 
 ## Configure CiviRemote
 
@@ -150,6 +140,7 @@ What is the best order between this and the following paragraph? Remote Contact 
 ## Configure CiviMRF
 
 Set up an API User:
+
 - add a role **CiviCRM API** with the following permissions:
   - AuthX: Authenticate to services with API key
   - CiviCRM: access CiviCRM Backend und API
@@ -161,12 +152,25 @@ Set up an API User:
 - generate an [API key](https://docs.civicrm.org/sysadmin/en/latest/setup/api-keys/) for the corresponding CiviCRM contact **api**
 
 Set up a CiviMRF profile under `/admin/config/cmrf/profiles` or edit the default profile:
+
 - The Site Key can be found in your civicrm.settings.php
 - The URL is something of the form https://myCiviCRMWebsite/civicrm/ajax/rest
 - Insert the API Key you just created.
 
 [Optional] Activate **CiviMRF Call Report** at `/admin/modules`.
 This helps with debugging by showing a report about all API calls sent to CiviCRM and the corresponding results. The report can be found at `admin/reports/cmrfcalls`.
+
+## Synchronise user roles
+
+CiviRemote will synchronise permissions that are set for a CiviCRM contact with the associated user in Drupal. For the funding extension, the roles **CiviRemote: CiviRemote User** and **CiviRemote: CiviRemote Funding** are used. During the synchronisation of user roles, these roles are automatically created in Drupal if they don't exist yet. Because of this, we create a test user, synchronise/create the roles and delete the user afterward. You can also create a regular user that you would need to create anyway.
+
+- Create a new user **Test User** in Drupal
+- Open the associated CiviCRM Contact, scroll down in the summary page and edit the custom field set **RemoteContact Information**. Add the two roles **CiviRemote User** and **CiviRemote Funding**.
+- Open the user list of Drupal (`admin/people`) and select the test user you created
+- Perform the action **CiviRemote: Match contacts** and afterward **CiviRemote: Synchronise CiviRemote Roles**
+
+You should now see the roles listed for the test user. You can delete the test user if you don't need it anymore.
+For any other users you create, the roles selected in CiviCRM at **RemoteContact Information** will be automatically synchronised during the login of that user.
 
 ## Create templates
 
@@ -195,8 +199,12 @@ cv api4 File.update +v file_type_id:name=transfer_contract_template +w 'id = {FI
 
 Copy the template file to a temporary location (e.g. `/tmp/payment-instruction-template.docx`). Determine the ID of the funding case type.
 
+```cv cli```
+
+in the following prompt you can enter
+
 ```shell
-cv cvli civicrm_api3('Attachment', 'create', [
+civicrm_api3('Attachment', 'create', [
   'name' => "payment-instruction-template.docx",
   'mime_type' => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
   'entity_id' => "{FUNDING_CASE_TYPE_ID}",
@@ -211,8 +219,3 @@ Set the `file_type_id` (not possible with Attachment API):
 ```shell
 cv api4 File.update +v file_type_id:name=funding_payment_instruction_template +w 'id = {FILE_ID}'
 ```
-## Remote role `CiviRemote Funding`
-
-Assign the remote role **CiviRemote Funding** to contacts who should be able to create applications. The roles are automatically synchronized at login.
-
-The role must be created once in Drupal under `/admin/people` via **Sync users with contacts** and the authorization **CiviRemote: CiviRemote Funding** must be assigned.
