@@ -9,7 +9,6 @@
     <file>services</file>
     <file>tests</file>
 
-    <exclude-pattern>/CRM/Funding/BAO/.*\.php$</exclude-pattern>
     <exclude-pattern>/CRM/Funding/DAO/.*\.php$</exclude-pattern>
     <exclude-pattern>/CRM/Funding/Upgrader\.php$</exclude-pattern>
     <exclude-pattern>/CRM/Funding/Upgrader/Base\.php$</exclude-pattern>

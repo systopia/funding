@@ -15,31 +15,14 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types = 1);
+
 use Civi\Core\Event\GenericHookEvent;
-use Civi\Funding\Event\ApplicationProcess\GetPossibleApplicationProcessStatusEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class CRM_Funding_BAO_ApplicationProcess extends CRM_Funding_DAO_ApplicationProcess implements EventSubscriberInterface {
-
-  /**
-   * Create a new ApplicationProcess based on array-data
-   *
-   * @param array $params key-value pairs
-   * @return CRM_Funding_DAO_ApplicationProcess|NULL
-   *
-  public static function create($params) {
-    $className = 'CRM_Funding_DAO_ApplicationProcess';
-    $entityName = 'ApplicationProcess';
-    $hook = empty($params['id']) ? 'create' : 'edit';
-
-    CRM_Utils_Hook::pre($hook, $entityName, CRM_Utils_Array::value('id', $params), $params);
-    $instance = new $className();
-    $instance->copyValues($params);
-    $instance->save();
-    CRM_Utils_Hook::post($hook, $entityName, $instance->id, $instance);
-
-    return $instance;
-  } */
+// phpcs:disable Generic.Files.LineLength.TooLong
+final class CRM_Funding_BAO_ApplicationProcess extends CRM_Funding_DAO_ApplicationProcess implements EventSubscriberInterface {
+//phpcs:enable
 
   /**
    * @inheritDoc
@@ -53,14 +36,15 @@ class CRM_Funding_BAO_ApplicationProcess extends CRM_Funding_DAO_ApplicationProc
   /**
    * Provides Afform metadata about this entity.
    *
-   * @see \Civi\AfformAdmin\AfformAdminMeta::getMetadata().
+   * @see \Civi\AfformAdmin\AfformAdminMeta::getMetadata()
    */
   public static function afformAdminMetadata(GenericHookEvent $event): void {
     $entity = 'Funding' . pathinfo(__FILE__, PATHINFO_FILENAME);
     $event->entities[$entity] = [
       'entity' => $entity,
       'label' => $entity,
-      'icon' => NULL, // TODO.
+      // TODO.
+      'icon' => NULL,
       'type' => 'primary',
       'defaults' => '{}',
     ];

@@ -15,31 +15,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types = 1);
+
 use Civi\Core\Event\GenericHookEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use CRM_Funding_ExtensionUtil as E;
 
-class CRM_Funding_BAO_FundingProgram extends CRM_Funding_DAO_FundingProgram implements EventSubscriberInterface {
-
-  /**
-   * Create a new FundingProgram based on array-data
-   *
-   * @param array $params key-value pairs
-   * @return CRM_Funding_DAO_FundingProgram|NULL
-   *
-  public static function create($params) {
-    $className = 'CRM_Funding_DAO_FundingProgram';
-    $entityName = 'FundingProgram';
-    $hook = empty($params['id']) ? 'create' : 'edit';
-
-    CRM_Utils_Hook::pre($hook, $entityName, CRM_Utils_Array::value('id', $params), $params);
-    $instance = new $className();
-    $instance->copyValues($params);
-    $instance->save();
-    CRM_Utils_Hook::post($hook, $entityName, $instance->id, $instance);
-
-    return $instance;
-  } */
+final class CRM_Funding_BAO_FundingProgram extends CRM_Funding_DAO_FundingProgram implements EventSubscriberInterface {
 
   /**
    * @inheritDoc
@@ -54,7 +36,7 @@ class CRM_Funding_BAO_FundingProgram extends CRM_Funding_DAO_FundingProgram impl
   /**
    * Provides Afform metadata about this entity.
    *
-   * @see \Civi\AfformAdmin\AfformAdminMeta::getMetadata().
+   * @see \Civi\AfformAdmin\AfformAdminMeta::getMetadata()
    *
    * TODO: Replace with "afformEntities/*.php" files?
    *       See civicrm/civicrm-core/mixin/afform-entity-php@1/mixin.php.
@@ -63,7 +45,8 @@ class CRM_Funding_BAO_FundingProgram extends CRM_Funding_DAO_FundingProgram impl
     $event->entities['FundingProgram'] = [
       'entity' => 'FundingProgram',
       'label' => E::ts('Funding Program'),
-      'icon' => NULL, // TODO.
+      // TODO.
+      'icon' => NULL,
       'type' => 'primary',
       'defaults' => '{}',
     ];

@@ -15,32 +15,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types = 1);
+
 use Civi\Core\Event\GenericHookEvent;
-use Civi\Funding\Event\FundingCase\GetPossibleFundingCaseStatusEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use CRM_Funding_ExtensionUtil as E;
 
-class CRM_Funding_BAO_FundingCase extends CRM_Funding_DAO_FundingCase implements EventSubscriberInterface {
-
-  /**
-   * Create a new FundingCase based on array-data
-   *
-   * @param array $params key-value pairs
-   * @return CRM_Funding_DAO_FundingCase|NULL
-   *
-  public static function create($params) {
-    $className = 'CRM_Funding_DAO_FundingCase';
-    $entityName = 'FundingCase';
-    $hook = empty($params['id']) ? 'create' : 'edit';
-
-    CRM_Utils_Hook::pre($hook, $entityName, CRM_Utils_Array::value('id', $params), $params);
-    $instance = new $className();
-    $instance->copyValues($params);
-    $instance->save();
-    CRM_Utils_Hook::post($hook, $entityName, $instance->id, $instance);
-
-    return $instance;
-  } */
+final class CRM_Funding_BAO_FundingCase extends CRM_Funding_DAO_FundingCase implements EventSubscriberInterface {
 
   /**
    * @inheritDoc
@@ -48,14 +29,13 @@ class CRM_Funding_BAO_FundingCase extends CRM_Funding_DAO_FundingCase implements
   public static function getSubscribedEvents(): array {
     return [
       'civi.afform_admin.metadata' => 'afformAdminMetadata',
-      'civi.afform.get' => 'afformGet',
     ];
   }
 
   /**
    * Provides Afform metadata about this entity.
    *
-   * @see \Civi\AfformAdmin\AfformAdminMeta::getMetadata().
+   * @see \Civi\AfformAdmin\AfformAdminMeta::getMetadata()
    *
    * TODO: Replace with "afformEntities/*.php" files?
    *       See civicrm/civicrm-core/mixin/afform-entity-php@1/mixin.php.
@@ -64,22 +44,11 @@ class CRM_Funding_BAO_FundingCase extends CRM_Funding_DAO_FundingCase implements
     $event->entities['FundingCase'] = [
       'entity' => 'FundingCase',
       'label' => E::ts('Funding Case'),
-      'icon' => NULL, // TODO.
+      // TODO.
+      'icon' => NULL,
       'type' => 'primary',
       'defaults' => '{}',
     ];
-  }
-
-  /**
-   * Provides Afform(s) for this entity.
-   */
-  public static function afformGet(GenericHookEvent $event): void {
-    // Early return if forms are not requested.
-    if (is_array($event->getTypes) && !in_array('form', $event->getTypes, TRUE)) {
-      return;
-    }
-
-    // TODO: Provide Afform for a funding case.
   }
 
 }
