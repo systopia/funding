@@ -1,9 +1,13 @@
 <?php
 
+declare(strict_types = 1);
+
 use Civi\Core\Event\GenericHookEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class CRM_Funding_BAO_FundingRecipientContactRelation extends CRM_Funding_DAO_FundingRecipientContactRelation implements EventSubscriberInterface {
+// phpcs:disable Generic.Files.LineLength.TooLong
+final class CRM_Funding_BAO_FundingRecipientContactRelation extends CRM_Funding_DAO_FundingRecipientContactRelation implements EventSubscriberInterface {
+// phpcs:enable
 
   /**
    * @inheritDoc
@@ -17,7 +21,7 @@ class CRM_Funding_BAO_FundingRecipientContactRelation extends CRM_Funding_DAO_Fu
   /**
    * Provides Afform metadata about this entity.
    *
-   * @see \Civi\AfformAdmin\AfformAdminMeta::getMetadata().
+   * @see \Civi\AfformAdmin\AfformAdminMeta::getMetadata()
    */
   public static function afformAdminMetadata(GenericHookEvent $event): void {
     $entity = pathinfo(__FILE__, PATHINFO_FILENAME);
