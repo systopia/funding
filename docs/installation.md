@@ -172,6 +172,10 @@ CiviRemote will synchronise permissions that are set for a CiviCRM contact with 
 You should now see the roles listed for the test user. You can delete the test user if you don't need it anymore.
 For any other users you create, the roles selected in CiviCRM at **RemoteContact Information** will be automatically synchronised during the login of that user.
 
+## Configure Dashboard
+
+Open the basic site settings at `admin/config/system/site-information` and enter `/civiremote/funding` in the field for the default front page.
+
 ## Create templates
 
 ## transfer contract template
