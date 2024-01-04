@@ -22,13 +22,13 @@ namespace Civi\Funding\FundingCase\Handler;
 use Civi\API\Exception\UnauthorizedException;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions;
 use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
-use Civi\Funding\FundingCase\Command\FundingCaseApproveCommand;
+use Civi\Funding\FundingCase\Command\FundingCaseUpdateAmountApprovedCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\StatusDeterminer\FundingCaseStatusDeterminerInterface;
 use Civi\Funding\TransferContract\TransferContractCreator;
 use CRM_Funding_ExtensionUtil as E;
 
-final class FundingCaseApproveHandler implements FundingCaseApproveHandlerInterface {
+final class FundingCaseUpdateAmountApprovedHandler implements FundingCaseUpdateAmountApprovedHandlerInterface {
 
   private FundingCaseActionsDeterminerInterface $actionsDeterminer;
 
@@ -54,11 +54,16 @@ final class FundingCaseApproveHandler implements FundingCaseApproveHandlerInterf
    * @throws \Civi\Funding\Exception\FundingException
    * @throws \CRM_Core_Exception
    */
-  public function handle(FundingCaseApproveCommand $command): void {
+  public function handle(FundingCaseUpdateAmountApprovedCommand $command): void {
     $fundingCase = $command->getFundingCase();
     $this->assertAuthorized($command);
 
     $fundingCase->setAmountApproved($command->getAmount());
+
+    $fundingCase->setStatus($this->statusDeterminer->getStatus(
+      $fundingCase->getStatus(),
+      FundingCaseActions::UPDATE_AMOUNT_APPROVED
+    ));
 
     $this->transferContractCreator->createTransferContract(
       $fundingCase,
@@ -66,24 +71,20 @@ final class FundingCaseApproveHandler implements FundingCaseApproveHandlerInterf
       $command->getFundingProgram(),
     );
 
-    $fundingCase->setStatus($this->statusDeterminer->getStatus(
-      $fundingCase->getStatus(),
-      FundingCaseActions::APPROVE
-    ));
     $this->fundingCaseManager->update($fundingCase);
   }
 
   /**
    * @throws \Civi\API\Exception\UnauthorizedException
    */
-  private function assertAuthorized(FundingCaseApproveCommand $command): void {
+  private function assertAuthorized(FundingCaseUpdateAmountApprovedCommand $command): void {
     if (!$this->actionsDeterminer->isActionAllowed(
-      FundingCaseActions::APPROVE,
+      FundingCaseActions::UPDATE_AMOUNT_APPROVED,
       $command->getFundingCase()->getStatus(),
       $command->getApplicationProcessStatusList(),
       $command->getFundingCase()->getPermissions(),
     )) {
-      throw new UnauthorizedException(E::ts('Approving this funding case is not allowed.'));
+      throw new UnauthorizedException(E::ts('Updating the approved amount of this funding case is not allowed.'));
     }
   }
 

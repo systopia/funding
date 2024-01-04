@@ -107,6 +107,8 @@ use Civi\Funding\FundingCase\Handler\FundingCaseFormUpdateValidateHandler;
 use Civi\Funding\FundingCase\Handler\FundingCaseFormUpdateValidateHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCasePossibleActionsGetHandler;
 use Civi\Funding\FundingCase\Handler\FundingCasePossibleActionsGetHandlerInterface;
+use Civi\Funding\FundingCase\Handler\FundingCaseUpdateAmountApprovedHandler;
+use Civi\Funding\FundingCase\Handler\FundingCaseUpdateAmountApprovedHandlerInterface;
 use Civi\Funding\FundingCase\Handler\Helper\ApplicationAllowedActionApplier;
 use Civi\Funding\FundingCase\Handler\TransferContractRecreateHandler;
 use Civi\Funding\FundingCase\Handler\TransferContractRecreateHandlerInterface;
@@ -255,6 +257,8 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
       $this->getTaggedServices($container, FundingCaseApproveHandlerInterface::SERVICE_TAG);
     $fundingCasePossibleActionsGetHandlerServices =
       $this->getTaggedServices($container, FundingCasePossibleActionsGetHandlerInterface::SERVICE_TAG);
+    $fundingCaseUpdateAmountApprovedHandlerServices =
+      $this->getTaggedServices($container, FundingCaseUpdateAmountApprovedHandlerInterface::SERVICE_TAG);
 
     $transferContractRecreateHandlerServices =
       $this->getTaggedServices($container, TransferContractRecreateHandlerInterface::SERVICE_TAG);
@@ -582,6 +586,16 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         ['$actionsDeterminer' => $fundingCaseActionsDeterminerServices[$fundingCaseType]],
       );
 
+      $fundingCaseUpdateAmountApprovedHandlerServices[$fundingCaseType] ??= $this->createService(
+        $container,
+        $fundingCaseType,
+        FundingCaseUpdateAmountApprovedHandler::class,
+        [
+          '$actionsDeterminer' => $fundingCaseActionsDeterminerServices[$fundingCaseType],
+          '$statusDeterminer' => $fundingCaseStatusDeterminerServices[$fundingCaseType],
+        ],
+      );
+
       $transferContractRecreateHandlerServices[$fundingCaseType] ??= $this->createService(
         $container,
         $fundingCaseType,
@@ -625,6 +639,8 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         FundingCaseStatusDeterminerInterface::class => $fundingCaseStatusDeterminerServices[$fundingCaseType],
         FundingCasePossibleActionsGetHandlerInterface::class
         => $fundingCasePossibleActionsGetHandlerServices[$fundingCaseType],
+        FundingCaseUpdateAmountApprovedHandlerInterface::class
+        => $fundingCaseUpdateAmountApprovedHandlerServices[$fundingCaseType],
         TransferContractRecreateHandlerInterface::class => $transferContractRecreateHandlerServices[$fundingCaseType],
         TransferContractRenderHandlerInterface::class => $transferContractRenderHandlerServices[$fundingCaseType],
       ];

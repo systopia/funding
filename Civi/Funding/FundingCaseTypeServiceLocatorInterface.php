@@ -49,6 +49,7 @@ use Civi\Funding\FundingCase\Handler\FundingCaseFormUpdateGetHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseFormUpdateSubmitHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseFormUpdateValidateHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCasePossibleActionsGetHandlerInterface;
+use Civi\Funding\FundingCase\Handler\FundingCaseUpdateAmountApprovedHandlerInterface;
 use Civi\Funding\FundingCase\Handler\TransferContractRecreateHandlerInterface;
 use Civi\Funding\FundingCase\StatusDeterminer\FundingCaseStatusDeterminerInterface;
 use Civi\Funding\TransferContract\Handler\TransferContractRenderHandlerInterface;
@@ -121,6 +122,8 @@ interface FundingCaseTypeServiceLocatorInterface {
   public function getFundingCasePossibleActionsGetHandler(): FundingCasePossibleActionsGetHandlerInterface;
 
   public function getFundingCaseStatusDeterminer(): FundingCaseStatusDeterminerInterface;
+
+  public function getFundingCaseUpdateAmountApprovedHandler(): FundingCaseUpdateAmountApprovedHandlerInterface;
 
   public function getTransferContractRecreateHandler(): TransferContractRecreateHandlerInterface;
 

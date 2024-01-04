@@ -2,7 +2,7 @@
 msgid "No such application or missing permission."
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCase/ApproveAction.php Civi/Funding/Api4/Action/FundingCase/GetPossibleActionsAction.php Civi/Funding/Api4/Action/FundingCase/RecreateTransferContractAction.php
+#: Civi/Funding/Api4/Action/FundingCase/ApproveAction.php Civi/Funding/Api4/Action/FundingCase/GetPossibleActionsAction.php Civi/Funding/Api4/Action/FundingCase/RecreateTransferContractAction.php Civi/Funding/FundingCase/Api4/ActionHandler/UpdateAmountApprovedActionHandler.php
 msgid "Funding case with ID \"%1\" not found"
 msgstr ""
 
@@ -70,7 +70,7 @@ msgstr ""
 msgid "Permission to reject drawdown is missing."
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingProgramControlling.mgd.php
+#: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php ang/crmFunding/case/fundingCase.template.html managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingProgramControlling.mgd.php
 msgid "Amount Approved"
 msgstr ""
 
@@ -478,6 +478,10 @@ msgstr ""
 msgid "Approving this funding case is not allowed."
 msgstr ""
 
+#: Civi/Funding/FundingCase/Handler/FundingCaseUpdateAmountApprovedHandler.php
+msgid "Updating the approved amount of this funding case is not allowed."
+msgstr ""
+
 #: Civi/Funding/FundingCase/Handler/TransferContractRecreateHandler.php
 msgid "Permission to recreate transfer contract is missing."
 msgstr ""
@@ -824,6 +828,10 @@ msgstr ""
 
 #: ang/crmFunding/case/fundingCase.template.html managed/SavedSearchFundingDrawdowns.mgd.php
 msgid "Amount"
+msgstr ""
+
+#: ang/crmFunding/case/fundingCase.template.html
+msgid "Update Amount Approved"
 msgstr ""
 
 #: ang/crmFunding/case/fundingCase.template.html

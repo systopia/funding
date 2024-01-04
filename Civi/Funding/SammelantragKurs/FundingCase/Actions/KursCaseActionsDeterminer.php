@@ -21,6 +21,7 @@ namespace Civi\Funding\SammelantragKurs\FundingCase\Actions;
 
 use Civi\Funding\FundingCase\Actions\AbstractFundingCaseActionsDeterminerDecorator;
 use Civi\Funding\FundingCase\Actions\DefaultFundingCaseActionsDeterminer;
+use Civi\Funding\FundingCase\Actions\FundingCaseActions;
 use Civi\Funding\SammelantragKurs\Application\Actions\KursApplicationActionsDeterminer;
 use Civi\Funding\SammelantragKurs\Application\Actions\KursApplicationActionStatusInfo;
 use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
@@ -28,6 +29,13 @@ use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
 final class KursCaseActionsDeterminer extends AbstractFundingCaseActionsDeterminerDecorator {
 
   use KursSupportedFundingCaseTypesTrait;
+
+  private const EXTRA_STATUS_PERMISSIONS_ACTION_MAP = [
+    'ongoing' => [
+      'review_calculative' => [FundingCaseActions::UPDATE_AMOUNT_APPROVED],
+      'review_content' => [FundingCaseActions::UPDATE_AMOUNT_APPROVED],
+    ],
+  ];
 
   private KursApplicationActionsDeterminer $applicationActionsDeterminer;
 
@@ -74,6 +82,10 @@ final class KursCaseActionsDeterminer extends AbstractFundingCaseActionsDetermin
 
     if ($this->isActionAllowedForAllApplications('delete', $applicationProcessStatusList, $permissions)) {
       $actions[] = 'delete';
+    }
+
+    foreach ($permissions as $permission) {
+      $actions = array_merge($actions, self::EXTRA_STATUS_PERMISSIONS_ACTION_MAP[$status][$permission] ?? []);
     }
 
     return array_values(array_unique(array_merge(

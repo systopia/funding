@@ -28,6 +28,32 @@
         </div>
     </div>
 
+  <div class="modal fade funding-modal" id="update-amount-approved-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="{{ ts('Close') }}"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">{{ ts('Update Amount Approved') }}</h4>
+        </div>
+        <div class="modal-body">
+          <div ng-show="fundingProgram.budget !== null">
+            <label>{{ ts('Available budget') }}</label>
+            {{ availableBudget|fundingCurrency:fundingProgram.currency }}
+          </div>
+          <div>
+            <label for="amount-approved">{{ ts('Amount') }}</label>
+            <input id="amount-approved" type="number" min="0.01" step="0.01" ng-model="updateAmountApproved.amount" ng-required="true"/>
+            {{ currencySymbol }}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" crm-icon="fa-check" ng-click="updateAmountApprovedSubmit()">{{ ts('Submit') }}</button>
+          <button type="button" class="btn btn-default" crm-icon="fa-times" data-dismiss="modal">{{ ts('Cancel') }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
     <h1 crm-page-title>{{ ts('Funding Case: %1', {1: fundingCase.identifier}) }}</h1>
 
     <div>
@@ -47,6 +73,10 @@
         {{ recipientContact.display_name }}
     </div>
     <div>
+      <label>{{ ts('Amount Approved')}}</label>
+      {{ fundingCase.amount_approved|fundingCurrency:fundingProgram.currency }}
+    </div>
+    <div>
         <label>{{ ts('Amount Requested Eligible') }}</label>
         {{ amountRequestedEligible|fundingCurrency:fundingProgram.currency }}
     </div>
@@ -60,6 +90,11 @@
     <button ng-show="possibleActions.includes('approve')" type="button"
             ng-click="approvePrepare()">
         <span class="funding-label">{{ ts('Approve') }}</span>
+    </button>
+
+    <button ng-show="possibleActions.includes('update-amount-approved')" type="button"
+            ng-click="updateAmountApprovedPrepare()">
+      <span class="funding-label">{{ ts('Update Amount Approved') }}</span>
     </button>
 
     <button ng-show="possibleActions.includes('recreate-transfer-contract')" type="button"
