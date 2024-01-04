@@ -34,6 +34,7 @@ use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
 
 /**
+ * @method float getAmount()
  * @method $this setAmount(float $amount)
  */
 class ApproveAction extends AbstractAction {
