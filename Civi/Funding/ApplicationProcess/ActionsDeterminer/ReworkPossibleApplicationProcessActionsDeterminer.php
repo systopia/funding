@@ -89,10 +89,10 @@ final class ReworkPossibleApplicationProcessActionsDeterminer extends AbstractAp
   }
 
   public function getInitialActions(array $permissions): array {
-    return \array_unique(\array_merge(
+    return \array_values(\array_unique(\array_merge(
       parent::getInitialActions($permissions),
       $this->actionsDeterminer->getInitialActions($permissions),
-    ));
+    )));
   }
 
 }
