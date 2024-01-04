@@ -23,6 +23,8 @@ parameters:
 		- vendor/autoload.php
 		- phpstanBootstrap.php
 	level: 9
+	universalObjectCratesClasses:
+		- Civi\Core\Event\GenericHookEvent
 	checkTooWideReturnTypesInProtectedAndPublicMethods: true
 	checkUninitializedProperties: true
 	checkMissingCallableSignature: true
@@ -54,7 +56,6 @@ parameters:
 			path: */Civi/Api4/*.php
 		- '#^Method Civi\\Api4\\[^\\]+::[^(]+\(\) should return Civi\\[^\s]+\\[^\s]+Action but returns mixed.$#'
 		- '#^Access to an uninitialized property Civi\\Funding\\Event\\[^\s]+Event::\$[^\s]+.$#'
-		- '#^Access to an undefined property Civi\\Core\\Event\\GenericHookEvent::#'
 		-
 			message: '#^PHPDoc tag @var for constant [^\s]+::[^\s]+ with type string is incompatible with value null.$#'
 			path: */Civi/RemoteTools/EventSubscriber/Abstract*.php
