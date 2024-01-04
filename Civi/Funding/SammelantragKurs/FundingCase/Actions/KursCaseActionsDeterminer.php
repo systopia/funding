@@ -76,10 +76,10 @@ final class KursCaseActionsDeterminer extends AbstractFundingCaseActionsDetermin
       $actions[] = 'delete';
     }
 
-    return array_unique(array_merge(
+    return array_values(array_unique(array_merge(
       $actions,
       parent::getActions($status, $applicationProcessStatusList, $permissions)
-    ));
+    )));
   }
 
   /**

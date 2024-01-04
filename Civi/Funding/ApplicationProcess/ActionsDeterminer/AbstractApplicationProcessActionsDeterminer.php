@@ -79,7 +79,7 @@ abstract class AbstractApplicationProcessActionsDeterminer implements Applicatio
       $actions = \array_merge($actions, $this->statusPermissionActionsMap[$status][$permission] ?? []);
     }
 
-    return \array_unique($actions);
+    return \array_values(\array_unique($actions));
   }
 
 }
