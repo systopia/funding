@@ -19,7 +19,6 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Command;
 
-use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\Traits\ApplicationProcessEntityBundleTrait;
 
@@ -27,18 +26,24 @@ final class ApplicationResourcesItemsPersistCommand {
 
   use ApplicationProcessEntityBundleTrait;
 
-  private ?ApplicationProcessEntity $previousApplicationProcess;
+  /**
+   * @phpstan-var array<\Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemData>
+   */
+  private array $resourcesItemsData;
 
+  /**
+   * phpcs:disable Generic.Files.LineLength.TooLong
+   *
+   * @phpstan-param array<\Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemData> $resourcesItemsData
+   *
+   * phpcs:enable
+   */
   public function __construct(
     ApplicationProcessEntityBundle $applicationProcessBundle,
-    ?ApplicationProcessEntity $previousApplicationProcess
+    array $resourcesItemsData
   ) {
     $this->applicationProcessBundle = $applicationProcessBundle;
-    $this->previousApplicationProcess = $previousApplicationProcess;
-  }
-
-  public function getPreviousApplicationProcess(): ?ApplicationProcessEntity {
-    return $this->previousApplicationProcess;
+    $this->resourcesItemsData = $resourcesItemsData;
   }
 
   /**
@@ -49,10 +54,10 @@ final class ApplicationResourcesItemsPersistCommand {
   }
 
   /**
-   * @phpstan-return ?array<string, mixed> The previous request data or null.
+   * @phpstan-return array<\Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemData>
    */
-  public function getPreviousRequestData(): ?array {
-    return NULL === $this->previousApplicationProcess ? NULL : $this->previousApplicationProcess->getRequestData();
+  public function getResourcesItemsData(): array {
+    return $this->resourcesItemsData;
   }
 
 }

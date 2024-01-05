@@ -29,7 +29,6 @@ use Civi\Funding\SammelantragKurs\Application\Actions\KursApplicationSubmitActio
 use Civi\Funding\SammelantragKurs\Application\Actions\KursApplicationSubmitActionsFactory;
 use Civi\Funding\SammelantragKurs\Application\Data\KursApplicationFormDataFactory;
 use Civi\Funding\SammelantragKurs\Application\Data\KursApplicationFormFilesFactory;
-use Civi\Funding\SammelantragKurs\Application\Data\KursApplicationResourcesItemsFactory;
 use Civi\Funding\SammelantragKurs\Application\JsonSchema\KursApplicationJsonSchemaFactory;
 use Civi\Funding\SammelantragKurs\Application\UiSchema\KursApplicationUiSchemaFactory;
 use Civi\Funding\SammelantragKurs\Application\Validation\KursApplicationValidator;
@@ -78,8 +77,6 @@ $container->autowire(KursApplicationFormDataFactory::class)
 $container->autowire(KursApplicationValidator::class)
   ->setArgument('$jsonSchemaFactory', new Reference(KursApplicationJsonSchemaFactory::class))
   ->addTag(KursApplicationValidator::SERVICE_TAG);
-$container->autowire(KursApplicationResourcesItemsFactory::class)
-  ->addTag(KursApplicationResourcesItemsFactory::SERVICE_TAG);
 $container->autowire(KursApplicationFormFilesFactory::class)
   ->addTag(KursApplicationFormFilesFactory::SERVICE_TAG);
 

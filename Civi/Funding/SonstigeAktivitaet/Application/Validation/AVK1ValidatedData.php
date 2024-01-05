@@ -48,12 +48,23 @@ final class AVK1ValidatedData implements ValidatedApplicationDataInterface {
   private array $costItemsData;
 
   /**
-   * @phpstan-param avk1ValidatedDataT $validatedData
-   * @phpstan-param array<\Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemData> $costItemsData
+   * @phpstan-var array<string, \Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemData>
    */
-  public function __construct(array $validatedData, array $costItemsData) {
+  private array $resourcesItemsData;
+
+  /**
+   * phpcs:disable Generic.Files.LineLength.TooLong
+   *
+   * @phpstan-param avk1ValidatedDataT $validatedData
+   * @phpstan-param array<string, \Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemData> $costItemsData
+   * @phpstan-param array<string, \Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemData> $resourcesItemsData
+   *
+   * phpcs:enable
+   */
+  public function __construct(array $validatedData, array $costItemsData, array $resourcesItemsData) {
     $this->data = $validatedData;
     $this->costItemsData = $costItemsData;
+    $this->resourcesItemsData = $resourcesItemsData;
   }
 
   public function getAction(): string {
@@ -91,6 +102,13 @@ final class AVK1ValidatedData implements ValidatedApplicationDataInterface {
    */
   public function getCostItemsData(): array {
     return $this->costItemsData;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getResourcesItemsData(): array {
+    return $this->resourcesItemsData;
   }
 
   public function getComment(): ?array {

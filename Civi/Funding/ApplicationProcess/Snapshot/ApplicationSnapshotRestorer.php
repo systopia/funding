@@ -22,9 +22,11 @@ namespace Civi\Funding\ApplicationProcess\Snapshot;
 use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
 use Civi\Funding\ApplicationProcess\ApplicationExternalFileManagerInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
+use Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager;
 use Civi\Funding\ApplicationProcess\ApplicationSnapshotManager;
 use Civi\Funding\Entity\ApplicationCostItemEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\Entity\ApplicationResourcesItemEntity;
 use Civi\Funding\Entity\ApplicationSnapshotEntity;
 use Webmozart\Assert\Assert;
 
@@ -38,16 +40,20 @@ final class ApplicationSnapshotRestorer implements ApplicationSnapshotRestorerIn
 
   private ApplicationExternalFileManagerInterface $externalFileManager;
 
+  private ApplicationResourcesItemManager $resourcesItemManager;
+
   public function __construct(
     ApplicationProcessManager $applicationProcessManager,
     ApplicationSnapshotManager $applicationSnapshotManager,
     ApplicationCostItemManager $costItemManager,
-    ApplicationExternalFileManagerInterface $externalFileManager
+    ApplicationExternalFileManagerInterface $externalFileManager,
+    ApplicationResourcesItemManager $resourcesItemManager
   ) {
     $this->applicationProcessManager = $applicationProcessManager;
     $this->applicationSnapshotManager = $applicationSnapshotManager;
     $this->costItemManager = $costItemManager;
     $this->externalFileManager = $externalFileManager;
+    $this->resourcesItemManager = $resourcesItemManager;
   }
 
   /**
@@ -76,6 +82,7 @@ final class ApplicationSnapshotRestorer implements ApplicationSnapshotRestorerIn
     $this->applicationProcessManager->update($contactId, $applicationProcessBundle);
 
     $this->restoreCostItems($applicationSnapshot);
+    $this->restoreResourcesItems($applicationSnapshot);
 
     $usedIdentifiers = [];
     $externalFiles = $this->externalFileManager->getFilesAttachedToSnapshot($applicationSnapshot->getId());
@@ -87,6 +94,9 @@ final class ApplicationSnapshotRestorer implements ApplicationSnapshotRestorerIn
     $this->externalFileManager->deleteFiles($applicationProcess->getId(), $usedIdentifiers);
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   */
   private function restoreCostItems(ApplicationSnapshotEntity $applicationSnapshot): void {
     $costItems = [];
     foreach ($applicationSnapshot->getCostItems() as $costItemData) {
@@ -94,6 +104,18 @@ final class ApplicationSnapshotRestorer implements ApplicationSnapshotRestorerIn
     }
 
     $this->costItemManager->updateAll($applicationSnapshot->getApplicationProcessId(), $costItems);
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  private function restoreResourcesItems(ApplicationSnapshotEntity $applicationSnapshot): void {
+    $resourcesItems = [];
+    foreach ($applicationSnapshot->getResourcesItems() as $resourcesItemData) {
+      $resourcesItems[] = ApplicationResourcesItemEntity::fromArray($resourcesItemData);
+    }
+
+    $this->resourcesItemManager->updateAll($applicationSnapshot->getApplicationProcessId(), $resourcesItems);
   }
 
 }

@@ -29,6 +29,7 @@ use Civi\Funding\Entity\ApplicationResourcesItemEntity;
  *   type?: string,
  *   amount?: float,
  *   properties?: array<int|string, mixed>,
+ *   data_pointer?: string,
  * }
  */
 final class ApplicationResourcesItemFactory {
@@ -43,6 +44,7 @@ final class ApplicationResourcesItemFactory {
       'type' => 'test',
       'amount' => 1.23,
       'properties' => [],
+      'data_pointer' => '/test',
     ];
 
     return ApplicationResourcesItemEntity::fromArray($values);

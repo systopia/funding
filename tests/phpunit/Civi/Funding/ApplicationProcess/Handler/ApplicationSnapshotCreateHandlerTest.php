@@ -21,11 +21,13 @@ namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
 use Civi\Funding\ApplicationProcess\ApplicationExternalFileManagerInterface;
+use Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager;
 use Civi\Funding\ApplicationProcess\ApplicationSnapshotManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationSnapshotCreateCommand;
 use Civi\Funding\Entity\ApplicationSnapshotEntity;
 use Civi\Funding\EntityFactory\ApplicationCostItemFactory;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
+use Civi\Funding\EntityFactory\ApplicationResourcesItemFactory;
 use Civi\Funding\EntityFactory\ExternalFileFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -53,6 +55,11 @@ final class ApplicationSnapshotCreateHandlerTest extends TestCase {
 
   private ApplicationSnapshotCreateHandler $handler;
 
+  /**
+   * @var \Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $resourcesItemManagerMock;
+
   public static function setUpBeforeClass(): void {
     parent::setUpBeforeClass();
     ClockMock::register(__CLASS__);
@@ -64,10 +71,12 @@ final class ApplicationSnapshotCreateHandlerTest extends TestCase {
     $this->applicationSnapshotManagerMock = $this->createMock(ApplicationSnapshotManager::class);
     $this->costItemManagerMock = $this->createMock(ApplicationCostItemManager::class);
     $this->externalFileManagerMock = $this->createMock(ApplicationExternalFileManagerInterface::class);
+    $this->resourcesItemManagerMock = $this->createMock(ApplicationResourcesItemManager::class);
     $this->handler = new ApplicationSnapshotCreateHandler(
       $this->applicationSnapshotManagerMock,
       $this->costItemManagerMock,
       $this->externalFileManagerMock,
+      $this->resourcesItemManagerMock
     );
   }
 
@@ -84,9 +93,16 @@ final class ApplicationSnapshotCreateHandlerTest extends TestCase {
     $costItemData = $costItem->toArray();
     unset($costItemData['id']);
 
+    $resourcesItem = ApplicationResourcesItemFactory::createApplicationResourcesItem(['id' => 22]);
+    $this->resourcesItemManagerMock->method('getByApplicationProcessId')
+      ->with($applicationProcess->getId())
+      ->willReturn([$resourcesItem]);
+    $resourcesItemData = $resourcesItem->toArray();
+    unset($resourcesItemData['id']);
+
     $this->applicationSnapshotManagerMock->expects(static::once())->method('add')
       ->with(static::callback(function (ApplicationSnapshotEntity $applicationSnapshot)
-      use ($applicationProcess, $costItemData) {
+      use ($applicationProcess, $costItemData, $resourcesItemData) {
         static::assertSame($applicationProcess->getId(), $applicationSnapshot->getApplicationProcessId());
         static::assertSame($applicationProcess->getStatus(), $applicationSnapshot->getStatus());
         static::assertEquals(new \DateTime('2023-02-02 02:02:02'), $applicationSnapshot->getCreationDate());
@@ -96,6 +112,7 @@ final class ApplicationSnapshotCreateHandlerTest extends TestCase {
         static::assertEquals($applicationProcess->getEndDate(), $applicationSnapshot->getEndDate());
         static::assertSame($applicationProcess->getRequestData(), $applicationSnapshot->getRequestData());
         static::assertSame([$costItemData], $applicationSnapshot->getCostItems());
+        static::assertSame([$resourcesItemData], $applicationSnapshot->getResourcesItems());
         static::assertSame($applicationProcess->getAmountRequested(), $applicationSnapshot->getAmountRequested());
         static::assertSame($applicationProcess->getIsReviewContent(), $applicationSnapshot->getIsReviewContent());
         static::assertSame(

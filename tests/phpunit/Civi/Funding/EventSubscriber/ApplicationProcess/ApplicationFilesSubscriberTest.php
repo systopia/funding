@@ -89,7 +89,7 @@ final class ApplicationFilesSubscriberTest extends TestCase {
 
     $this->subscriber->onCreated(new ApplicationProcessCreatedEvent(2, $applicationProcessBundle));
 
-    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([], []), FALSE);
+    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([], [], []), FALSE);
     $submitResult = ApplicationFormNewSubmitResult::createSuccess($validationResult, $applicationProcessBundle);
     $formSuccessEvent = new ApplicationFormSubmitSuccessEvent(2, $applicationProcessBundle, [], $submitResult);
     $this->subscriber->onSubmitSuccess($formSuccessEvent);
@@ -131,7 +131,7 @@ final class ApplicationFilesSubscriberTest extends TestCase {
       $applicationProcessBundle,
     ));
 
-    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([], []), FALSE);
+    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([], [], []), FALSE);
     $submitResult = ApplicationFormNewSubmitResult::createSuccess($validationResult, $applicationProcessBundle);
     $formSuccessEvent = new ApplicationFormSubmitSuccessEvent(2, $applicationProcessBundle, [], $submitResult);
     $this->subscriber->onSubmitSuccess($formSuccessEvent);

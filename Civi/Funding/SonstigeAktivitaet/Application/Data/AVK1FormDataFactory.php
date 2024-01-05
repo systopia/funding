@@ -28,15 +28,9 @@ final class AVK1FormDataFactory implements ApplicationFormDataFactoryInterface {
 
   use AVK1SupportedFundingCaseTypesTrait;
 
-  private AVK1FinanzierungFactory $avk1FinanzierungFactory;
-
   private AVK1ProjektunterlagenFactory $avk1ProjektunterlagenFactory;
 
-  public function __construct(
-    AVK1FinanzierungFactory $avk1FinanzierungFactory,
-    AVK1ProjektunterlagenFactory $avk1ProjektunterlagenFactory
-  ) {
-    $this->avk1FinanzierungFactory = $avk1FinanzierungFactory;
+  public function __construct(AVK1ProjektunterlagenFactory $avk1ProjektunterlagenFactory) {
     $this->avk1ProjektunterlagenFactory = $avk1ProjektunterlagenFactory;
   }
 
@@ -52,7 +46,6 @@ final class AVK1FormDataFactory implements ApplicationFormDataFactoryInterface {
     // @phpstan-ignore-next-line
     $data['grunddaten']['kurzbeschreibungDesInhalts'] = $applicationProcess->getShortDescription();
     $data['empfaenger'] = $fundingCase->getRecipientContactId();
-    $data['finanzierung'] = $this->avk1FinanzierungFactory->createFinanzierung($applicationProcess);
     $data['projektunterlagen'] = $this->avk1ProjektunterlagenFactory->createProjektunterlagen($applicationProcess);
 
     return $data;

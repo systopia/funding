@@ -46,13 +46,24 @@ final class TestValidatedData implements ValidatedApplicationDataInterface {
   private array $costItemsData;
 
   /**
+   * @phpstan-var array<string, \Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemData>
+   */
+  private array $resourcesItemsData;
+
+  /**
+   * phpcs:disable Generic.Files.LineLength.TooLong
+   *
    * @phpstan-param array<string, mixed> $validatedData
    * @phpstan-param array<string, \Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemData> $costItemsData
+   * @phpstan-param array<string, \Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemData> $resourcesItemsData
+   *
+   *  phpcs:enable
    */
-  public function __construct(array $validatedData, array $costItemsData) {
+  public function __construct(array $validatedData, array $costItemsData, array $resourcesItemsData) {
     /** @phpstan-var testValidatedDataT $validatedData */
     $this->data = $validatedData;
     $this->costItemsData = $costItemsData;
+    $this->resourcesItemsData = $resourcesItemsData;
   }
 
   public function getAction(): string {
@@ -88,6 +99,13 @@ final class TestValidatedData implements ValidatedApplicationDataInterface {
    */
   public function getCostItemsData(): array {
     return $this->costItemsData;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getResourcesItemsData(): array {
+    return $this->resourcesItemsData;
   }
 
   public function getComment(): ?array {

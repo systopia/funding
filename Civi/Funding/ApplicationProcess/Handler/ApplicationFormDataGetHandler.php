@@ -23,6 +23,7 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationFormDataGetCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateCommand;
 use Civi\Funding\Form\Application\ApplicationCostItemsFormDataLoaderInterface;
 use Civi\Funding\Form\Application\ApplicationFormDataFactoryInterface;
+use Civi\Funding\Form\Application\ApplicationResourcesItemsFormDataLoaderInterface;
 
 final class ApplicationFormDataGetHandler implements ApplicationFormDataGetHandlerInterface {
 
@@ -30,15 +31,19 @@ final class ApplicationFormDataGetHandler implements ApplicationFormDataGetHandl
 
   private ApplicationFormDataFactoryInterface $formDataFactory;
 
+  private ApplicationResourcesItemsFormDataLoaderInterface $resourcesItemsFormDataLoader;
+
   private ApplicationFormValidateHandlerInterface $validateHandler;
 
   public function __construct(
     ApplicationCostItemsFormDataLoaderInterface $costItemsFormDataLoader,
     ApplicationFormDataFactoryInterface $formDataFactory,
+    ApplicationResourcesItemsFormDataLoaderInterface $resourcesItemsFormDataLoader,
     ApplicationFormValidateHandlerInterface $validateHandler
   ) {
     $this->costItemsFormDataLoader = $costItemsFormDataLoader;
     $this->formDataFactory = $formDataFactory;
+    $this->resourcesItemsFormDataLoader = $resourcesItemsFormDataLoader;
     $this->validateHandler = $validateHandler;
   }
 
@@ -60,6 +65,7 @@ final class ApplicationFormDataGetHandler implements ApplicationFormDataGetHandl
     }
 
     $this->costItemsFormDataLoader->addCostItemsFormData($command->getApplicationProcess(), $data);
+    $this->resourcesItemsFormDataLoader->addResourcesItemsFormData($command->getApplicationProcess(), $data);
 
     // Perform calculations
     $result = $this->validateHandler->handle(new ApplicationFormValidateCommand(

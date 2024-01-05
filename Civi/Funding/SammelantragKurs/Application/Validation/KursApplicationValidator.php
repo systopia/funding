@@ -86,6 +86,7 @@ final class KursApplicationValidator extends AbstractCombinedApplicationValidato
       // @phpstan-ignore-next-line
       $validatedData,
       $jsonSchemaValidationResult->getCostItemsData(),
+      $jsonSchemaValidationResult->getResourcesItemsData(),
       $fundingCase->getRecipientContactId()
     );
 

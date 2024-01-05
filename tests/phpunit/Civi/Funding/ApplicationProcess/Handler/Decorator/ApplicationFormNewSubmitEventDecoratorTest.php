@@ -63,7 +63,7 @@ final class ApplicationFormNewSubmitEventDecoratorTest extends TestCase {
 
   public function testHandle(): void {
     $command = $this->createCommand();
-    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([], []), FALSE);
+    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([], [], []), FALSE);
     $result = ApplicationFormNewSubmitResult::createSuccess(
       $validationResult,
       new ApplicationProcessEntityBundle(
@@ -89,7 +89,7 @@ final class ApplicationFormNewSubmitEventDecoratorTest extends TestCase {
     $errorMessages = ['/a/b' => ['error']];
     $validationResult = ApplicationValidationResult::newInvalid(
       $errorMessages,
-      new TestValidatedData([], [])
+      new TestValidatedData([], [], [])
     );
     $result = ApplicationFormNewSubmitResult::createError($validationResult);
 

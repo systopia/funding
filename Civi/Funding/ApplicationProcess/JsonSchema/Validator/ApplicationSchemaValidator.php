@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\JsonSchema\Validator;
 
 use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemDataCollector;
+use Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemDataCollector;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\Validation\ValidationResult;
 use Civi\RemoteTools\Util\JsonConverter;
@@ -50,6 +51,7 @@ final class ApplicationSchemaValidator implements ApplicationSchemaValidatorInte
     $validationData = JsonConverter::toStdClass($data);
     $errorCollector = new ErrorCollector();
     $costItemDataCollector = new CostItemDataCollector();
+    $resourcesItemDataCollector = new ResourcesItemDataCollector();
 
     $prevMaxErrors = $this->validator->getMaxErrors();
     try {
@@ -57,6 +59,7 @@ final class ApplicationSchemaValidator implements ApplicationSchemaValidatorInte
       $this->validator->validate($validationData, $jsonSchema->toStdClass(), [
         'errorCollector' => $errorCollector,
         'costItemDataCollector' => $costItemDataCollector,
+        'resourcesItemDataCollector' => $resourcesItemDataCollector,
       ]);
     }
     finally {
@@ -65,7 +68,8 @@ final class ApplicationSchemaValidator implements ApplicationSchemaValidatorInte
 
     return new ApplicationSchemaValidationResult(
       new ValidationResult(JsonConverter::toArray($validationData), $errorCollector, $this->translator),
-      $costItemDataCollector->getCostItemsData()
+      $costItemDataCollector->getCostItemsData(),
+      $resourcesItemDataCollector->getResourcesItemsData()
     );
   }
 

@@ -13,7 +13,6 @@ use Civi\Funding\Mock\FundingCaseType\Application\Actions\TestApplicationActionS
 use Civi\Funding\Mock\FundingCaseType\Application\Actions\TestApplicationStatusDeterminer;
 use Civi\Funding\Mock\FundingCaseType\Application\Actions\TestApplicationSubmitActionsContainer;
 use Civi\Funding\Mock\FundingCaseType\Application\Data\TestApplicationFormFilesFactory;
-use Civi\Funding\Mock\FundingCaseType\Application\Data\TestApplicationResourcesItemsFactory;
 use Civi\Funding\Mock\FundingCaseType\Application\Data\TestFormDataFactory;
 use Civi\Funding\Mock\FundingCaseType\Application\JsonSchema\TestJsonSchemaFactory;
 use Civi\Funding\Mock\FundingCaseType\Application\UiSchema\TestUiSchemaFactory;
@@ -120,8 +119,6 @@ function _funding_test_civicrm_container(ContainerBuilder $container): void {
     ->addTag(TestValidator::SERVICE_TAG);
   $container->autowire(TestFormDataFactory::class)
     ->addTag(TestFormDataFactory::SERVICE_TAG);
-  $container->autowire(TestApplicationResourcesItemsFactory::class)
-    ->addTag(TestApplicationResourcesItemsFactory::SERVICE_TAG);
   $container->autowire(TestApplicationFormFilesFactory::class)
     ->addTag(TestApplicationFormFilesFactory::SERVICE_TAG);
 

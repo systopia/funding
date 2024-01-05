@@ -17,35 +17,15 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\SammelantragKurs\Application\Data;
+namespace Civi\Funding\Form\Application;
 
-use Civi\Funding\ApplicationProcess\ApplicationResourcesItemsFactoryInterface;
 use Civi\Funding\Entity\ApplicationProcessEntity;
-use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
 
-final class KursApplicationResourcesItemsFactory implements ApplicationResourcesItemsFactoryInterface {
-
-  use KursSupportedFundingCaseTypesTrait;
+interface ApplicationResourcesItemsFormDataLoaderInterface {
 
   /**
-   * @inheritDoc
+   * @phpstan-param array<string, mixed> $formData
    */
-  public function addIdentifiers(array $requestData): array {
-    return $requestData;
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public function areResourcesItemsChanged(array $requestData, array $previousRequestData): bool {
-    return FALSE;
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public function createItems(ApplicationProcessEntity $applicationProcess): array {
-    return [];
-  }
+  public function addResourcesItemsFormData(ApplicationProcessEntity $applicationProcess, array &$formData): void;
 
 }

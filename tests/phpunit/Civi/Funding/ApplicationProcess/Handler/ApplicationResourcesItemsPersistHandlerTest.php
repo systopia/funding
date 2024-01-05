@@ -20,11 +20,10 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager;
-use Civi\Funding\ApplicationProcess\ApplicationResourcesItemsFactoryInterface;
 use Civi\Funding\ApplicationProcess\Command\ApplicationResourcesItemsPersistCommand;
+use Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemData;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ApplicationResourcesItemFactory;
-use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -32,11 +31,6 @@ use PHPUnit\Framework\TestCase;
  * @covers \Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandler
  */
 final class ApplicationResourcesItemsPersistHandlerTest extends TestCase {
-
-  /**
-   * @var \Civi\Funding\ApplicationProcess\ApplicationResourcesItemsFactoryInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $resourcesItemsFactoryMock;
 
   /**
    * @var \Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager&\PHPUnit\Framework\MockObject\MockObject
@@ -47,70 +41,42 @@ final class ApplicationResourcesItemsPersistHandlerTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
-    $this->resourcesItemsFactoryMock = $this->createMock(ApplicationResourcesItemsFactoryInterface::class);
     $this->resourcesItemManagerMock = $this->createMock(ApplicationResourcesItemManager::class);
     $this->handler = new ApplicationResourcesItemsPersistHandler(
-      $this->resourcesItemsFactoryMock,
       $this->resourcesItemManagerMock,
     );
   }
 
-  public function testHandleNew(): void {
+  public function testHandle(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
       ['request_data' => ['foo' => 'bar']]
     );
 
-    $resourcesItems = [ApplicationResourcesItemFactory::createApplicationResourcesItem()];
-    $this->resourcesItemsFactoryMock->expects(static::once())->method('createItems')
-      ->with($applicationProcessBundle->getApplicationProcess())
-      ->willReturn($resourcesItems);
-    $this->resourcesItemManagerMock->expects(static::once())->method('updateAll')
-      ->with($applicationProcessBundle->getApplicationProcess()->getId(), $resourcesItems);
-
-    $this->handler->handle(new ApplicationResourcesItemsPersistCommand($applicationProcessBundle, NULL));
-  }
-
-  public function testHandleUpdate(): void {
-    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess(
-      ['request_data' => ['foo' => 'bar']]
-    );
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
-      ['request_data' => ['baz' => 'bar']]
-    );
-
-    $resourcesItems = [ApplicationResourcesItemFactory::createApplicationResourcesItem()];
-    $this->resourcesItemsFactoryMock->expects(static::once())->method('areResourcesItemsChanged')
-      ->with(['baz' => 'bar'], ['foo' => 'bar'])
-      ->willReturn(TRUE);
-    $this->resourcesItemsFactoryMock->expects(static::once())->method('createItems')
-      ->with($applicationProcessBundle->getApplicationProcess())
-      ->willReturn($resourcesItems);
+    $resourcesItemsData = [
+      new ResourcesItemData([
+        'type' => 'testType',
+        'identifier' => 'test',
+        'amount' => 1.23,
+        'properties' => ['x' => 1.23, 'y' => 'z'],
+        'dataPointer' => '/foo',
+        'dataType' => 'object',
+        'clearing' => NULL,
+      ]),
+    ];
+    $resourcesItems = [
+      ApplicationResourcesItemFactory::createApplicationResourcesItem([
+        'type' => 'testType',
+        'identifier' => 'test',
+        'amount' => 1.23,
+        'properties' => ['x' => 1.23, 'y' => 'z'],
+        'data_pointer' => '/foo',
+      ]),
+    ];
     $this->resourcesItemManagerMock->expects(static::once())->method('updateAll')
       ->with($applicationProcessBundle->getApplicationProcess()->getId(), $resourcesItems);
 
     $this->handler->handle(new ApplicationResourcesItemsPersistCommand(
-      $applicationProcessBundle,
-      $previousApplicationProcess,
-    ));
-  }
-
-  public function testHandleUpdateResourcesItemUnchanged(): void {
-    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess(
-      ['request_data' => ['foo' => 'bar']]
-    );
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
-      ['request_data' => ['baz' => 'bar']]
-    );
-
-    $this->resourcesItemsFactoryMock->expects(static::once())->method('areResourcesItemsChanged')
-      ->with(['baz' => 'bar'], ['foo' => 'bar'])
-      ->willReturn(FALSE);
-    $this->resourcesItemsFactoryMock->expects(static::never())->method('createItems');
-    $this->resourcesItemManagerMock->expects(static::never())->method('updateAll');
-
-    $this->handler->handle(new ApplicationResourcesItemsPersistCommand(
-      $applicationProcessBundle,
-      $previousApplicationProcess,
+      $applicationProcessBundle, $resourcesItemsData
     ));
   }
 

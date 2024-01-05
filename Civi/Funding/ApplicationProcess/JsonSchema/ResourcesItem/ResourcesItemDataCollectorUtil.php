@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2023 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,24 +17,17 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\ApplicationProcess\Command;
+namespace Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem;
 
-use Civi\Funding\Entity\ApplicationProcessEntityBundle;
-use Civi\Funding\Entity\Traits\ApplicationProcessEntityBundleTrait;
+use Opis\JsonSchema\ValidationContext;
 
-final class ApplicationResourcesItemsAddIdentifiersCommand {
+/**
+ * @codeCoverageIgnore
+ */
+final class ResourcesItemDataCollectorUtil {
 
-  use ApplicationProcessEntityBundleTrait;
-
-  public function __construct(ApplicationProcessEntityBundle $applicationProcessBundle) {
-    $this->applicationProcessBundle = $applicationProcessBundle;
-  }
-
-  /**
-   * @return array<string, mixed>
-   */
-  public function getRequestData(): array {
-    return $this->getApplicationProcess()->getRequestData();
+  public static function getResourcesItemCollector(ValidationContext $context): ResourcesItemDataCollector {
+    return $context->globals()['resourcesItemDataCollector'];
   }
 
 }

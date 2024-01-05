@@ -28,20 +28,10 @@ final class IJBApplicationFormDataFactory implements ApplicationFormDataFactoryI
 
   use IJBSupportedFundingCaseTypesTrait;
 
-  private IJBFormDataFinanzierungFactory $finanzierungFactory;
-
   private IJBProjektunterlagenFactory $projektunterlagenFactory;
 
-  private IJBFormDataZuschussFactory $zuschussFactory;
-
-  public function __construct(
-    IJBFormDataFinanzierungFactory $finanzierungFactory,
-    IJBProjektunterlagenFactory $projektunterlagenFactory,
-    IJBFormDataZuschussFactory $zuschussFactory
-  ) {
-    $this->finanzierungFactory = $finanzierungFactory;
+  public function __construct(IJBProjektunterlagenFactory $projektunterlagenFactory) {
     $this->projektunterlagenFactory = $projektunterlagenFactory;
-    $this->zuschussFactory = $zuschussFactory;
   }
 
   /**
@@ -56,8 +46,6 @@ final class IJBApplicationFormDataFactory implements ApplicationFormDataFactoryI
     // @phpstan-ignore-next-line
     $data['grunddaten']['kurzbeschreibungDesInhalts'] = $applicationProcess->getShortDescription();
     $data['empfaenger'] = $fundingCase->getRecipientContactId();
-    $data['finanzierung'] = $this->finanzierungFactory->createFinanzierung($applicationProcess);
-    $data['zuschuss'] = $this->zuschussFactory->createZuschuss($applicationProcess);
     $data['projektunterlagen'] = $this->projektunterlagenFactory->createProjektunterlagen($applicationProcess);
 
     return $data;

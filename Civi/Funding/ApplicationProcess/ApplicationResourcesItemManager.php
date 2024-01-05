@@ -25,14 +25,7 @@ use Civi\RemoteTools\Api4\Api4Interface;
 use Webmozart\Assert\Assert;
 
 /**
- * @phpstan-type applicationResourcesItemT array{
- *   id?: int,
- *   application_process_id: int,
- *   identifier: string,
- *   type: string,
- *   amount: float,
- *   properties: array<int|string, mixed>,
- * }
+ * @phpstan-import-type applicationResourcesItemT from ApplicationResourcesItemEntity
  */
 class ApplicationResourcesItemManager {
 
@@ -42,6 +35,9 @@ class ApplicationResourcesItemManager {
     $this->api4 = $api4;
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function delete(ApplicationResourcesItemEntity $applicationResourcesItem): void {
     Assert::false($applicationResourcesItem->isNew(), 'Application resources item is not persisted');
 
@@ -65,6 +61,9 @@ class ApplicationResourcesItemManager {
     return self::toEntities($result);
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function save(ApplicationResourcesItemEntity $applicationResourcesItem): void {
     if ($applicationResourcesItem->isNew()) {
       $action = FundingApplicationResourcesItem::create(FALSE)->setValues($applicationResourcesItem->toArray());
@@ -94,6 +93,7 @@ class ApplicationResourcesItemManager {
         $currentItem->setType($item->getType());
         $currentItem->setAmount($item->getAmount());
         $currentItem->setProperties($item->getProperties());
+        $currentItem->setDataPointer($item->getDataPointer());
         $this->save($currentItem);
       }
       else {

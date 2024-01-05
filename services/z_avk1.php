@@ -28,8 +28,6 @@ use Civi\Funding\SonstigeAktivitaet\Application\Actions\AVK1ApplicationStatusDet
 use Civi\Funding\SonstigeAktivitaet\Application\Actions\AVK1ApplicationSubmitActionsContainer;
 use Civi\Funding\SonstigeAktivitaet\Application\Actions\AVK1ApplicationSubmitActionsFactory;
 use Civi\Funding\SonstigeAktivitaet\Application\Data\AVK1ApplicationFormFilesFactory;
-use Civi\Funding\SonstigeAktivitaet\Application\Data\AVK1ApplicationResourcesItemsFactory;
-use Civi\Funding\SonstigeAktivitaet\Application\Data\AVK1FinanzierungFactory;
 use Civi\Funding\SonstigeAktivitaet\Application\Data\AVK1FormDataFactory;
 use Civi\Funding\SonstigeAktivitaet\Application\Data\AVK1ProjektunterlagenFactory;
 use Civi\Funding\SonstigeAktivitaet\Application\JsonSchema\AVK1JsonSchemaFactory;
@@ -56,10 +54,7 @@ $container->autowire(AVK1FormDataFactory::class)
 $container->autowire(AVK1Validator::class)
   ->setArgument('$jsonSchemaFactory', new Reference(AVK1JsonSchemaFactory::class))
   ->addTag(AVK1Validator::SERVICE_TAG);
-$container->autowire(AVK1FinanzierungFactory::class);
 $container->autowire(AVK1ProjektunterlagenFactory::class);
-$container->autowire(AVK1ApplicationResourcesItemsFactory::class)
-  ->addTag(AVK1ApplicationResourcesItemsFactory::SERVICE_TAG);
 $container->autowire(AVK1ApplicationFormFilesFactory::class)
   ->addTag(AVK1ApplicationFormFilesFactory::SERVICE_TAG);
 

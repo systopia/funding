@@ -20,20 +20,14 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager;
-use Civi\Funding\ApplicationProcess\ApplicationResourcesItemsFactoryInterface;
 use Civi\Funding\ApplicationProcess\Command\ApplicationResourcesItemsPersistCommand;
+use Civi\Funding\Entity\ApplicationResourcesItemEntity;
 
 final class ApplicationResourcesItemsPersistHandler implements ApplicationResourcesItemsPersistHandlerInterface {
 
-  private ApplicationResourcesItemsFactoryInterface $resourcesItemsFactory;
-
   private ApplicationResourcesItemManager $resourcesItemManager;
 
-  public function __construct(
-    ApplicationResourcesItemsFactoryInterface $resourcesItemsFactory,
-    ApplicationResourcesItemManager $resourcesItemManager
-  ) {
-    $this->resourcesItemsFactory = $resourcesItemsFactory;
+  public function __construct(ApplicationResourcesItemManager $resourcesItemManager) {
     $this->resourcesItemManager = $resourcesItemManager;
   }
 
@@ -41,15 +35,19 @@ final class ApplicationResourcesItemsPersistHandler implements ApplicationResour
    * @throws \CRM_Core_Exception
    */
   public function handle(ApplicationResourcesItemsPersistCommand $command): void {
-    if (NULL === $command->getPreviousRequestData()
-      || $this->resourcesItemsFactory->areResourcesItemsChanged(
-        $command->getRequestData(),
-        $command->getPreviousRequestData()
-      )
-    ) {
-      $items = $this->resourcesItemsFactory->createItems($command->getApplicationProcess());
-      $this->resourcesItemManager->updateAll($command->getApplicationProcess()->getId(), $items);
+    $resourcesItems = [];
+    foreach ($command->getResourcesItemsData() as $resourcesItemData) {
+      $resourcesItems[] = ApplicationResourcesItemEntity::fromArray([
+        'application_process_id' => $command->getApplicationProcess()->getId(),
+        'identifier' => $resourcesItemData->getIdentifier(),
+        'type' => $resourcesItemData->getType(),
+        'amount' => $resourcesItemData->getAmount(),
+        'properties' => $resourcesItemData->getProperties(),
+        'data_pointer' => $resourcesItemData->getDataPointer(),
+      ]);
     }
+
+    $this->resourcesItemManager->updateAll($command->getApplicationProcess()->getId(), $resourcesItems);
   }
 
 }

@@ -67,7 +67,7 @@ final class ApplicationCostItemsSubscriberTest extends TestCase {
   public function testOnFormSubmitSuccess(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
     $costItemsData = ['test' => $this->createCostItem()];
-    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([], $costItemsData), FALSE);
+    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([], $costItemsData, []), FALSE);
     $event = new ApplicationFormSubmitSuccessEvent(
       2,
       $applicationProcessBundle,
@@ -83,7 +83,7 @@ final class ApplicationCostItemsSubscriberTest extends TestCase {
   public function testOnFormSubmitSuccessReadOnly(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
     $costItemsData = ['test' => $this->createCostItem()];
-    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([], $costItemsData), TRUE);
+    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([], $costItemsData, []), TRUE);
     $event = new ApplicationFormSubmitSuccessEvent(
       2,
       $applicationProcessBundle,
@@ -101,7 +101,7 @@ final class ApplicationCostItemsSubscriberTest extends TestCase {
       ApplicationSnapshotFactory::createApplicationSnapshot()
     );
     $costItemsData = ['test' => $this->createCostItem()];
-    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([], $costItemsData), FALSE);
+    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([], $costItemsData, []), FALSE);
     $event = new ApplicationFormSubmitSuccessEvent(
       2,
       $applicationProcessBundle,

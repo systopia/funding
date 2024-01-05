@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\IJB\Application\JsonSchema;
 
+use Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\JsonSchemaResourcesItem;
+use Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\JsonSchemaResourcesItems;
 use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
 use Civi\RemoteTools\JsonSchema\JsonSchemaCalculate;
 use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
@@ -30,12 +32,47 @@ final class IJBFinanzierungJsonSchema extends JsonSchemaObject {
 
   public function __construct() {
     parent::__construct([
-      'teilnehmerbeitraege' => new JsonSchemaMoney(['minimum' => 0, 'default' => 0]),
-      'eigenmittel' => new JsonSchemaMoney(['minimum' => 0, 'default' => 0]),
+      'teilnehmerbeitraege' => new JsonSchemaMoney([
+        'minimum' => 0,
+        'default' => 0,
+        '$resourcesItem' => new JsonSchemaResourcesItem([
+          'type' => 'teilnehmerbeitraege',
+          'identifier' => 'teilnehmerbeitraege',
+        ]),
+      ]),
+      'eigenmittel' => new JsonSchemaMoney([
+        'minimum' => 0,
+        'default' => 0,
+        '$resourcesItem' => new JsonSchemaResourcesItem([
+          'type' => 'eigenmittel',
+          'identifier' => 'eigenmittel',
+        ]),
+      ]),
       'oeffentlicheMittel' => new JsonSchemaObject([
-        'europa' => new JsonSchemaMoney(['minimum' => 0, 'default' => 0]),
-        'bundeslaender' => new JsonSchemaMoney(['minimum' => 0, 'default' => 0]),
-        'staedteUndKreise' => new JsonSchemaMoney(['minimum' => 0, 'default' => 0]),
+        'europa' => new JsonSchemaMoney([
+          'minimum' => 0,
+          'default' => 0,
+          '$resourcesItem' => new JsonSchemaResourcesItem([
+            'type' => 'oeffentlicheMittel/europa',
+            'identifier' => 'oeffentlicheMittel.europa',
+          ]),
+        ]),
+        'bundeslaender' => new JsonSchemaMoney([
+          'minimum' => 0,
+          'default' => 0,
+          '$resourcesItem' => new JsonSchemaResourcesItem([
+            'type' => 'oeffentlicheMittel/bundeslaender',
+            'identifier' => 'oeffentlicheMittel.bundeslaender',
+          ]),
+        ]),
+        'staedteUndKreise' => new JsonSchemaMoney([
+          'minimum' => 0,
+          'default' => 0,
+          '$resourcesItem' => new JsonSchemaResourcesItem([
+            'type' => 'oeffentlicheMittel/staedteUndKreise',
+            'identifier' => 'oeffentlicheMittel.staedteUndKreise',
+          ]),
+        ]),
       ]),
       'oeffentlicheMittelGesamt' => new JsonSchemaCalculate(
         'number',
@@ -51,7 +88,14 @@ final class IJBFinanzierungJsonSchema extends JsonSchemaObject {
           '_identifier' => new JsonSchemaString(['readonly' => TRUE]),
           'quelle' => new JsonSchemaString(),
           'betrag' => new JsonSchemaMoney(['minimum' => 0]),
-        ], ['required' => ['betrag', 'quelle']])
+        ], ['required' => ['betrag', 'quelle']]),
+        [
+          '$resourcesItems' => new JsonSchemaResourcesItems([
+            'type' => 'sonstigeMittel',
+            'identifierProperty' => '_identifier',
+            'amountProperty' => 'betrag',
+          ]),
+        ]
       ),
       'sonstigeMittelGesamt' => new JsonSchemaCalculate(
         'number',

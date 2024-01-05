@@ -48,12 +48,23 @@ final class IJBApplicationValidatedData implements ValidatedApplicationDataInter
   private array $costItemsData;
 
   /**
+   * @phpstan-var array<string, \Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemData>
+   */
+  private array $resourcesItemsData;
+
+  /**
+   * phpcs:disable Generic.Files.LineLength.TooLong
+   *
    * @phpstan-param kursValidatedDataT $validatedData
    * @phpstan-param array<string, \Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemData> $costItemsData
+   * @phpstan-param array<string, \Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemData> $resourcesItemsData
+   *
+   * phpcs:enable
    */
-  public function __construct(array $validatedData, array $costItemsData) {
+  public function __construct(array $validatedData, array $costItemsData, array $resourcesItemsData) {
     $this->data = $validatedData;
     $this->costItemsData = $costItemsData;
+    $this->resourcesItemsData = $resourcesItemsData;
   }
 
   public function getAction(): string {
@@ -91,6 +102,13 @@ final class IJBApplicationValidatedData implements ValidatedApplicationDataInter
    */
   public function getCostItemsData(): array {
     return $this->costItemsData;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getResourcesItemsData(): array {
+    return $this->resourcesItemsData;
   }
 
   public function getComment(): ?array {
