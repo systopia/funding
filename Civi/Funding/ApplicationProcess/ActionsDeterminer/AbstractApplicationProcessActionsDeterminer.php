@@ -22,7 +22,7 @@ namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 
 /**
- * @phpstan-type statusPermissionsActionMapT array<string|null, array<string, array<string>>>
+ * @phpstan-type statusPermissionsActionMapT array<string|null, array<string, list<string>>>
  */
 abstract class AbstractApplicationProcessActionsDeterminer implements ApplicationProcessActionsDeterminerInterface {
 
@@ -71,7 +71,7 @@ abstract class AbstractApplicationProcessActionsDeterminer implements Applicatio
   /**
    * @phpstan-param array<string> $permissions
    *
-   * @phpstan-return array<string>
+   * @phpstan-return list<string>
    */
   private function doGetActions(?string $status, array $permissions): array {
     $actions = [];

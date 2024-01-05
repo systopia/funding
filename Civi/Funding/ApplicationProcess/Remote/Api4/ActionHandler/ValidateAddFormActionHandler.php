@@ -55,7 +55,7 @@ final class ValidateAddFormActionHandler implements ActionHandlerInterface {
   /**
    * @phpstan-return array{
    *   valid: bool,
-   *   errors: array<string, non-empty-array<string>>,
+   *   errors: array<string, non-empty-list<string>>,
    * }
    *
    * @throws \CRM_Core_Exception

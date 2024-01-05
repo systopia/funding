@@ -44,7 +44,8 @@ trait PermissionsSelectTrait {
   }
 
   /**
-   * @phpstan-return array<string>
+   * @phpstan-return array<string, string>
+   *   Permissions mapped to labels.
    */
   abstract protected function getPossiblePermissions(): array;
 

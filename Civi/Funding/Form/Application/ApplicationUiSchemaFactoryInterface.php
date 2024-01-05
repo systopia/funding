@@ -27,7 +27,7 @@ interface ApplicationUiSchemaFactoryInterface {
   public const SERVICE_TAG = 'funding.application.ui_schema_factory';
 
   /**
-   * @phpstan-return array<string>
+   * @phpstan-return list<string>
    */
   public static function getSupportedFundingCaseTypes(): array;
 

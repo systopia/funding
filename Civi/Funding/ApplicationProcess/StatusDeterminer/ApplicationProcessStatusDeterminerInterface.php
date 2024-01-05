@@ -29,7 +29,7 @@ interface ApplicationProcessStatusDeterminerInterface {
   public const SERVICE_TAG = 'funding.application.status_determiner';
 
   /**
-   * @phpstan-return array<string>
+   * @phpstan-return list<string>
    */
   public static function getSupportedFundingCaseTypes(): array;
 

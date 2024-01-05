@@ -30,7 +30,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  *   id: int,
  *   type: string,
  *   properties: array<string, mixed>,
- *   permissions: array<string>,
+ *   permissions: list<string>,
  * }
  */
 class FundingProgramPermissionsGetSubscriber implements EventSubscriberInterface {

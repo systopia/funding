@@ -53,7 +53,7 @@ use Civi\Funding\Entity\ApplicationProcessEntityBundle;
  *   creation_date?: string,
  *   modification_date?: string,
  *   amount_approved?: float|null,
- *   permissions?: array<string>,
+ *   permissions?: list<string>,
  *   transfer_contract_uri?: string|null,
  * }
  *
@@ -73,7 +73,7 @@ use Civi\Funding\Entity\ApplicationProcessEntityBundle;
  *   requests_end_date?: string,
  *   currency?: string,
  *   budget?: float|null,
- *   permissions?: array<string>,
+ *   permissions?: list<string>,
  * }
  */
 final class ApplicationProcessBundleFactory {

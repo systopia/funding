@@ -27,7 +27,7 @@ interface ApplicationJsonSchemaFactoryInterface {
   public const SERVICE_TAG = 'funding.application.json_schema_factory';
 
   /**
-   * @phpstan-return array<string>
+   * @phpstan-return list<string>
    */
   public static function getSupportedFundingCaseTypes(): array;
 

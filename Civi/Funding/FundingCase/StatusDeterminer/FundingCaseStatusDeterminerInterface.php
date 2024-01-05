@@ -26,7 +26,7 @@ interface FundingCaseStatusDeterminerInterface {
   public const SERVICE_TAG = 'funding.case.status_determiner';
 
   /**
-   * @phpstan-return array<string>
+   * @phpstan-return list<string>
    */
   public static function getSupportedFundingCaseTypes(): array;
 

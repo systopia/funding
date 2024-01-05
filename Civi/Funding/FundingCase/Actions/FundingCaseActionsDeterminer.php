@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase\Actions;
 
 /**
- * @phpstan-type statusPermissionsActionMapT array<string|null, array<string, array<string>>>
+ * @phpstan-type statusPermissionsActionMapT array<string|null, array<string, list<string>>>
  */
 class FundingCaseActionsDeterminer extends AbstractFundingCaseActionsDeterminer {
 
@@ -60,7 +60,7 @@ class FundingCaseActionsDeterminer extends AbstractFundingCaseActionsDeterminer 
   /**
    * @phpstan-param array<string> $permissions
    *
-   * @phpstan-return array<string>
+   * @phpstan-return list<string>
    */
   private function doGetActions(?string $status, array $permissions): array {
     $actions = [];

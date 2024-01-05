@@ -27,7 +27,7 @@ interface ApplicationFormDataFactoryInterface {
   public const SERVICE_TAG = 'funding.application.form_data_factory';
 
   /**
-   * @phpstan-return array<string>
+   * @phpstan-return list<string>
    */
   public static function getSupportedFundingCaseTypes(): array;
 

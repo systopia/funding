@@ -31,7 +31,7 @@ final class FundingCasePermissionsCacheManager {
   }
 
   /**
-   * @phpstan-param array<string> $permissions
+   * @phpstan-param list<string> $permissions
    *
    * @throws \CRM_Core_Exception
    */
@@ -81,7 +81,7 @@ final class FundingCasePermissionsCacheManager {
   }
 
   /**
-   * @phpstan-param array<string> $permissions
+   * @phpstan-param list<string> $permissions
    *
    * @throws \CRM_Core_Exception
    */

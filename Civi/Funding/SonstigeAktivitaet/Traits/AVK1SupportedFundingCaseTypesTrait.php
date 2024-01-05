@@ -24,7 +24,7 @@ use Civi\Funding\SonstigeAktivitaet\AVK1Constants;
 trait AVK1SupportedFundingCaseTypesTrait {
 
   /**
-   * @phpstan-return array<string>
+   * @phpstan-return list<string>
    */
   public static function getSupportedFundingCaseTypes(): array {
     return [AVK1Constants::FUNDING_CASE_TYPE_NAME];

@@ -24,7 +24,7 @@ use Civi\Api4\FundingCasePermissionsCache;
 final class FundingCasePermissionsCacheFixture {
 
   /**
-   * @phpstan-param array<string> $permissions
+   * @phpstan-param list<string> $permissions
    *
    * @phpstan-return array<string, scalar|null>&array{id: int}
    *

@@ -27,14 +27,14 @@ use Webmozart\Assert\Assert;
 final class FundingCaseValidationResult {
 
   /**
-   * @phpstan-var array<string, non-empty-array<string>>
+   * @phpstan-var array<string, non-empty-list<string>>
    */
   private array $errorMessages;
 
   private ValidatedFundingCaseDataInterface $validatedData;
 
   /**
-   * @phpstan-param non-empty-array<string, non-empty-array<string>> $errorMessages
+   * @phpstan-param non-empty-array<string, non-empty-list<string>> $errorMessages
    *   JSON pointers mapped to error messages. Should only contain leaf errors.
    */
   public static function newInvalid(
@@ -51,7 +51,7 @@ final class FundingCaseValidationResult {
   }
 
   /**
-   * @phpstan-param array<string, non-empty-array<string>> $errorMessages
+   * @phpstan-param array<string, non-empty-list<string>> $errorMessages
    */
   private function __construct(
     array $errorMessages,
@@ -62,7 +62,7 @@ final class FundingCaseValidationResult {
   }
 
   /**
-   * @phpstan-return array<string, non-empty-array<string>>
+   * @phpstan-return array<string, non-empty-list<string>>
    *   JSON pointers mapped to error messages.
    */
   public function getErrorMessages(): array {

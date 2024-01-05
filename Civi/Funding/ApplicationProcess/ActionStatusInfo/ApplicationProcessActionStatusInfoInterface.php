@@ -26,7 +26,7 @@ interface ApplicationProcessActionStatusInfoInterface {
   public const SERVICE_TAG = 'funding.application.action_status_info';
 
   /**
-   * @phpstan-return array<string>
+   * @phpstan-return list<string>
    */
   public static function getSupportedFundingCaseTypes(): array;
 

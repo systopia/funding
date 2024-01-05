@@ -26,18 +26,18 @@ final class AddPermissionsToRecords {
 
   /**
    * @var callable
-   * @phpstan-var callable(array<string, mixed>&array{id: int}): array<string>
+   * @phpstan-var callable(array<string, mixed>&array{id: int}): list<string>
    */
   private $getRecordPermissions;
 
   /**
-   * @phpstan-var array<string>
+   * @phpstan-var list<string>
    */
   private array $possiblePermissions;
 
   /**
-   * @phpstan-param array<string> $possiblePermissions
-   * @phpstan-param callable(array<string, mixed>&array{id: int}): array<string> $getRecordPermissions
+   * @phpstan-param list<string> $possiblePermissions
+   * @phpstan-param callable(array<string, mixed>&array{id: int}): list<string> $getRecordPermissions
    *   Callable that returns the permissions for a given record. If it returns
    *   NULL, the record is filtered out.
    */

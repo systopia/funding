@@ -73,7 +73,7 @@ abstract class AbstractFundingSubmitFormEvent extends AbstractFundingRequestEven
 
   /**
    * @param string $jsonPointer
-   * @param non-empty-array<string> $messages
+   * @param non-empty-list<string> $messages
    */
   public function addErrorsAt(string $jsonPointer, array $messages): self {
     $this->errors[$jsonPointer] = array_merge($this->errors[$jsonPointer] ?? [], $messages);

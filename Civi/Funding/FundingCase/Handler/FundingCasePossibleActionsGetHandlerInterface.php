@@ -26,7 +26,7 @@ interface FundingCasePossibleActionsGetHandlerInterface {
   public const SERVICE_TAG = 'funding.case.possible_actions_get_handler';
 
   /**
-   * @phpstan-return array<string>
+   * @phpstan-return list<string>
    */
   public function handle(FundingCasePossibleActionsGetCommand $command): array;
 

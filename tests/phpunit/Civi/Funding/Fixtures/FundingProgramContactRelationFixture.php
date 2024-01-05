@@ -24,7 +24,7 @@ use Civi\Api4\FundingProgramContactRelation;
 final class FundingProgramContactRelationFixture {
 
   /**
-   * @phpstan-param array<string> $permissions
+   * @phpstan-param list<string> $permissions
    *
    * @phpstan-return array<string, scalar|null>&array{id: int}
    *
@@ -38,7 +38,7 @@ final class FundingProgramContactRelationFixture {
 
   /**
    * @phpstan-param array<string, mixed> $properties
-   * @phpstan-param array<string> $permissions
+   * @phpstan-param list<string> $permissions
    *
    * @phpstan-return array<string, scalar|null>&array{id: int}
    *

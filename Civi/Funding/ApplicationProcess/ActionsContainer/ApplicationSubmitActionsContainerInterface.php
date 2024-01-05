@@ -26,7 +26,7 @@ interface ApplicationSubmitActionsContainerInterface extends SubmitActionsContai
   public const SERVICE_TAG = 'funding.application.actions_container';
 
   /**
-   * @phpstan-return array<string>
+   * @phpstan-return list<string>
    */
   public static function getSupportedFundingCaseTypes(): array;
 

@@ -70,7 +70,7 @@ final class GetAction extends DAOGetAction {
   /**
    * @param array{id: int} $record
    *
-   * @return array<string>
+   * @return list<string>
    */
   protected function getRecordPermissions(array $record): array {
     $permissionsGetEvent = new GetPermissionsEvent($record['id'], $this->requestContext->getContactId());
@@ -80,7 +80,7 @@ final class GetAction extends DAOGetAction {
   }
 
   /**
-   * @phpstan-return array<string>
+   * @phpstan-return list<string>
    */
   protected function getPossiblePermissions(): array {
     return \array_keys($this->_possiblePermissionsLoader->getFilteredPermissions($this->getEntityName()));

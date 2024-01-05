@@ -89,7 +89,7 @@ final class GetAction extends DAOGetAction {
 
     $possiblePermissions = $this->getPossiblePermissions();
     /**
-     * @phpstan-var array<int, array<string>> Mapping of funding case ID to permissions.
+     * @phpstan-var array<int, list<string>> Mapping of funding case ID to permissions.
      * Used in case we have the same funding case ID multiple times because of a join.
      */
     $casePermissions = [];
@@ -100,7 +100,7 @@ final class GetAction extends DAOGetAction {
     do {
       parent::_run($result);
 
-      /** @phpstan-var array<string, mixed>&array{id: int, '_pc.id': int|null, '_pc.permissions': array<string>|null} $record */
+      /** @phpstan-var array<string, mixed>&array{id: int, '_pc.id': int|null, '_pc.permissions': list<string>|null} $record */
       foreach ($result as $record) {
         $record['permissions'] = $record['_pc.permissions'];
         if (NULL === $record['permissions']) {
@@ -134,7 +134,7 @@ final class GetAction extends DAOGetAction {
   /**
    * @phpstan-param array{id: int, '_pc.id': int|null} $record
    *
-   * @phpstan-return array<string>
+   * @phpstan-return list<string>
    */
   private function determineAndCachePermissions(array $record): array {
     $permissionsGetEvent = new GetPermissionsEvent($record['id'], $this->requestContext->getContactId());
@@ -189,7 +189,7 @@ final class GetAction extends DAOGetAction {
   }
 
   /**
-   * @phpstan-return array<string>
+   * @phpstan-return list<string>
    */
   private function getPossiblePermissions(): array {
     return array_keys($this->possiblePermissionsLoader->getFilteredPermissions($this->getEntityName()));

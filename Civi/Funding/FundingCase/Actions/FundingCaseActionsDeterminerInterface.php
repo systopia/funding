@@ -24,7 +24,7 @@ interface FundingCaseActionsDeterminerInterface {
   public const SERVICE_TAG = 'funding.case.actions_determiner';
 
   /**
-   * @phpstan-return array<string>
+   * @phpstan-return list<string>
    */
   public static function getSupportedFundingCaseTypes(): array;
 
@@ -32,14 +32,14 @@ interface FundingCaseActionsDeterminerInterface {
    * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $applicationProcessStatusList
    * @phpstan-param array<string> $permissions
    *
-   * @phpstan-return array<string>
+   * @phpstan-return list<string>
    */
   public function getActions(string $status, array $applicationProcessStatusList, array $permissions): array;
 
   /**
    * @phpstan-param array<string> $permissions
    *
-   * @phpstan-return array<string>
+   * @phpstan-return list<string>
    */
   public function getInitialActions(array $permissions): array;
 

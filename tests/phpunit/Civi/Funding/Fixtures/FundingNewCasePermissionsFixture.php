@@ -25,7 +25,7 @@ use Civi\Funding\Permission\FundingCase\RelationFactory\Types\CreationContact;
 final class FundingNewCasePermissionsFixture {
 
   /**
-   * @phpstan-param array<string> $permissions
+   * @phpstan-param list<string> $permissions
    *
    * @phpstan-return array<string, scalar|null>&array{id: int}
    *

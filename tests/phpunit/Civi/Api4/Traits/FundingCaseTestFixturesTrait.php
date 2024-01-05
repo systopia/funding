@@ -76,8 +76,8 @@ trait FundingCaseTestFixturesTrait {
   }
 
   /**
-   * @phpstan-param array<string> $associatedContactPermissions
-   * @phpstan-param array<string> $permittedRelationshipTypePermissions
+   * @phpstan-param list<string> $associatedContactPermissions
+   * @phpstan-param list<string> $permittedRelationshipTypePermissions
    *
    * @throws \CRM_Core_Exception
    */

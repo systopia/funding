@@ -31,7 +31,7 @@ namespace Civi\Funding\Entity;
  *   requests_end_date: string,
  *   currency: string,
  *   budget: float|null,
- *   permissions?: array<string>,
+ *   permissions?: list<string>,
  * }
  *
  * @phpstan-extends AbstractEntity<fundingProgramT>
@@ -119,7 +119,7 @@ final class FundingProgramEntity extends AbstractEntity {
   }
 
   /**
-   * @phpstan-return array<string>
+   * @phpstan-return list<string>
    */
   public function getPermissions(): array {
     return $this->values['permissions'] ?? [];

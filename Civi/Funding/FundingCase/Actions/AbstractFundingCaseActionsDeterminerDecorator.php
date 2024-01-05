@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase\Actions;
 
 /**
- * @phpstan-type statusPermissionsActionMapT array<string|null, array<string, array<string>>>
+ * @phpstan-type statusPermissionsActionMapT array<string|null, array<string, list<string>>>
  *
  * @codeCoverageIgnore
  */

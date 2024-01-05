@@ -24,7 +24,7 @@ interface ApplicationFormFilesFactoryInterface {
   public const SERVICE_TAG = 'funding.application.files_factory';
 
   /**
-   * @phpstan-return array<string>
+   * @phpstan-return list<string>
    */
   public static function getSupportedFundingCaseTypes(): array;
 

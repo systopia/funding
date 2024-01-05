@@ -64,7 +64,7 @@ final class AVK1ValidatorTest extends TestCase {
 
   /**
    * @phpstan-param array<array{beginn: string, ende: string}> $zeitraeume
-   * @phpstan-param array<string, non-empty-array<string>> $errorMessages
+   * @phpstan-param array<string, non-empty-list<string>> $errorMessages
    * @phpstan-param array<array{beginn: string, ende: string}> $expectedZeitraeume
    *
    * @dataProvider provideZeitraeume
@@ -95,7 +95,7 @@ final class AVK1ValidatorTest extends TestCase {
 
   /**
    * @phpstan-param array<array{beginn: string, ende: string}> $zeitraeume
-   * @phpstan-param array<string, non-empty-array<string>> $errorMessages
+   * @phpstan-param array<string, non-empty-list<string>> $errorMessages
    * @phpstan-param array<array{beginn: string, ende: string}> $expectedZeitraeume
    *
    * @dataProvider provideZeitraeume
@@ -129,7 +129,7 @@ final class AVK1ValidatorTest extends TestCase {
   /**
    * @phpstan-return iterable<array{
    *   array<array{beginn: string, ende: string}>,
-   *   array<string, non-empty-array<string>>,
+   *   array<string, non-empty-list<string>>,
    *   array<array{beginn: string, ende: string}>,
    * }>
    *   array {

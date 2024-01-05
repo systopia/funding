@@ -33,7 +33,7 @@ use Civi\Funding\Entity\FundingProgramEntity;
  *   requests_end_date?: string,
  *   currency?: string,
  *   budget?: float|null,
- *   permissions?: array<string>,
+ *   permissions?: list<string>,
  * }
  */
 final class FundingProgramFactory {

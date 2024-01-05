@@ -85,7 +85,7 @@ final class DetermineApproveRejectActionsHelper {
   }
 
   /**
-   * @phpstan-return array<string>
+   * @phpstan-return list<string>
    */
   public function getActions(
     FullApplicationProcessStatus $status,

@@ -22,7 +22,7 @@ namespace Civi\Funding\Mock\FundingCaseType\Traits;
 trait TestSupportedFundingCaseTypesTrait {
 
   /**
-   * @phpstan-return array<string>
+   * @phpstan-return list<string>
    */
   public static function getSupportedFundingCaseTypes(): array {
     return ['TestCaseType'];

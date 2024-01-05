@@ -59,7 +59,7 @@ final class SubmitUpdateFormActionHandler implements ActionHandlerInterface {
    * @phpstan-return array{
    *    action: RemoteSubmitResponseActions::*,
    *    message: string,
-   *    errors?: array<string, non-empty-array<string>>,
+   *    errors?: array<string, non-empty-list<string>>,
    *  }
    *
    * @throws \CRM_Core_Exception

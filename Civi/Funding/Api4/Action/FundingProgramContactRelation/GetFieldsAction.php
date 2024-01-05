@@ -37,7 +37,8 @@ final class GetFieldsAction extends DAOGetFieldsAction {
   }
 
   /**
-   * @phpstan-return array<string>
+   * @phpstan-return array<string, string>
+   *   Permissions mapped to labels.
    */
   protected function getPossiblePermissions(): array {
     return $this->possiblePermissionsLoader->getPermissions(FundingProgram::getEntityName());

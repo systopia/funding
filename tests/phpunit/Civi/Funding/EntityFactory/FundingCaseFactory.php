@@ -33,7 +33,7 @@ use Civi\Funding\Entity\FundingCaseEntity;
  *   modification_date?: string,
  *   creation_contact_id?: int,
  *   amount_approved?: ?float,
- *   permissions?: array<string>,
+ *   permissions?: list<string>,
  * }
  */
 final class FundingCaseFactory {

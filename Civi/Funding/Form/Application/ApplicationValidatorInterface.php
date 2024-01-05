@@ -26,7 +26,7 @@ interface ApplicationValidatorInterface {
   public const SERVICE_TAG = 'funding.application.validator';
 
   /**
-   * @phpstan-return array<string>
+   * @phpstan-return list<string>
    */
   public static function getSupportedFundingCaseTypes(): array;
 

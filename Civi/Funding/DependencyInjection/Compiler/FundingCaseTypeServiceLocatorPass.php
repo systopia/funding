@@ -130,7 +130,7 @@ use Symfony\Component\DependencyInjection\Reference;
 final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
 
   /**
-   * @phpstan-var array<string>
+   * @phpstan-var list<string>
    */
   private array $fundingCaseTypes = [];
 
@@ -750,9 +750,9 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
   }
 
   /**
-   * @phpstan-param array{funding_case_type?: string, funding_case_types?: array<string>} $attributes
+   * @phpstan-param array{funding_case_type?: string, funding_case_types?: list<string>} $attributes
    *
-   * @phpstan-return array<string>
+   * @phpstan-return list<string>
    *
    * @throws \Symfony\Component\DependencyInjection\Exception\RuntimeException
    */
@@ -767,7 +767,7 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
 
     $class = $this->getServiceClass($container, $id);
     if (method_exists($class, 'getSupportedFundingCaseTypes')) {
-      /** @phpstan-var array<string> $fundingCaseTypes */
+      /** @phpstan-var list<string> $fundingCaseTypes */
       $fundingCaseTypes = $class::getSupportedFundingCaseTypes();
 
       return $fundingCaseTypes;

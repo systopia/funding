@@ -25,7 +25,7 @@ namespace Civi\Funding\Entity;
  *   funding_case_id: int,
  *   type: string,
  *   properties: array<string, mixed>,
- *   permissions: array<string>,
+ *   permissions: list<string>,
  * }
  *
  * @phpstan-extends AbstractEntity<fundingCaseContactRelationT>
@@ -65,14 +65,14 @@ final class FundingCaseContactRelationEntity extends AbstractEntity {
   }
 
   /**
-   * @phpstan-return array<string>
+   * @phpstan-return list<string>
    */
   public function getPermissions(): array {
     return $this->values['permissions'];
   }
 
   /**
-   * @phpstan-param array<string> $permissions
+   * @phpstan-param list<string> $permissions
    */
   public function setPermissions(array $permissions): self {
     $this->values['permissions'] = $permissions;

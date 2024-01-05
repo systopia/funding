@@ -30,7 +30,7 @@ abstract class AbstractGetPermissionsEvent extends Event {
   private int $entityId;
 
   /**
-   * @var array<string>
+   * @phpstan-var list<string>
    */
   private array $permissions = [];
 
@@ -62,7 +62,7 @@ abstract class AbstractGetPermissionsEvent extends Event {
   }
 
   /**
-   * @phpstan-return array<string>
+   * @phpstan-return list<string>
    */
   public function getPermissions(): array {
     return $this->permissions;

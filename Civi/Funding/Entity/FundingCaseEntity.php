@@ -33,7 +33,7 @@ use Civi\RemoteTools\Api4\RemoteApiConstants;
  *   modification_date: string,
  *   creation_contact_id: int,
  *   amount_approved: ?float,
- *   permissions?: array<string>,
+ *   permissions?: list<string>,
  *   transfer_contract_uri?: ?string,
  * }
  *
@@ -133,7 +133,7 @@ final class FundingCaseEntity extends AbstractEntity {
   }
 
   /**
-   * @phpstan-return array<string>
+   * @phpstan-return list<string>
    */
   public function getPermissions(): array {
     return $this->values['permissions'] ?? [];

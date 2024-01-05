@@ -53,7 +53,7 @@ final class SubmitNewFormActionHandler implements ActionHandlerInterface {
    * @phpstan-return array{
    *    action: string,
    *    message: string,
-   *    errors?: array<string, non-empty-array<string>>,
+   *    errors?: array<string, non-empty-list<string>>,
    *    entityType?: string,
    *    entityId?: int,
    *  }

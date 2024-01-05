@@ -24,7 +24,7 @@ use Civi\Funding\IJB\IJBConstants;
 trait IJBSupportedFundingCaseTypesTrait {
 
   /**
-   * @phpstan-return array<string>
+   * @phpstan-return list<string>
    */
   public static function getSupportedFundingCaseTypes(): array {
     return [IJBConstants::FUNDING_CASE_TYPE_NAME];

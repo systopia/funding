@@ -84,7 +84,7 @@ final class PossiblePermissionsLoader implements PossiblePermissionsLoaderInterf
   private function doGetPermissions(string $entityName): array {
     $cacheKey = $this->getCacheKey($entityName);
     if ($this->cache->has($cacheKey)) {
-      /** @phpstan-var array<string> */
+      /** @phpstan-var array<string, string> */
       return $this->cache->get($cacheKey);
     }
 
