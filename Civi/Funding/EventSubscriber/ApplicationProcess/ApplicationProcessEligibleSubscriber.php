@@ -35,9 +35,10 @@ final class ApplicationProcessEligibleSubscriber implements EventSubscriberInter
    * @inheritDoc
    */
   public static function getSubscribedEvents(): array {
+    // Priority is decreased so other subscribers can change the status before.
     return [
-      ApplicationProcessPreCreateEvent::class => 'onPreCreate',
-      ApplicationProcessPreUpdateEvent::class => 'onPreUpdate',
+      ApplicationProcessPreCreateEvent::class => ['onPreCreate', -100],
+      ApplicationProcessPreUpdateEvent::class => ['onPreUpdate', -100],
     ];
   }
 
