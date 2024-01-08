@@ -1,12 +1,8 @@
 # Funding Program Manager
 
-This extension forms the basis for application management in CiviCRM: manage funding programs from application to payout.
-The process of submitting and processing funding applications can be centralised:
+This extension forms the basis for funding application management in CiviCRM: manage funding programs from application to payout.
+The process of submitting and processing funding applications can be centralized:
 Application submission, application review, approval, call for funds, payment instruction and proof of use.
-In order to map the complex process in its entirety, this extension should be supplemented with the following:
-+ [external file](https://github.com/systopia/de.systopia.externalfile)
-+ [remote tools](https://github.com/systopia/de.systopia.remotetools)
-+ [civi banking](https://github.com/Project60/org.project60.banking)
 
 The extension is licensed under [AGPL-3.0](LICENSE.txt).
 
