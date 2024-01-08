@@ -91,7 +91,7 @@ final class ApplicationFilesSubscriberTest extends TestCase {
 
     $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([]), FALSE);
     $submitResult = ApplicationFormNewSubmitResult::createSuccess($validationResult, $applicationProcessBundle);
-    $formSuccessEvent = new ApplicationFormSubmitSuccessEvent(2, $applicationProcessBundle, [], $submitResult);
+    $formSuccessEvent = new ApplicationFormSubmitSuccessEvent(2, $applicationProcessBundle, [], $submitResult, NULL);
     $this->subscriber->onSubmitSuccess($formSuccessEvent);
     static::assertSame(['https://example.org' => $externalFile], $formSuccessEvent->getResult()->getFiles());
   }
@@ -133,7 +133,7 @@ final class ApplicationFilesSubscriberTest extends TestCase {
 
     $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([]), FALSE);
     $submitResult = ApplicationFormNewSubmitResult::createSuccess($validationResult, $applicationProcessBundle);
-    $formSuccessEvent = new ApplicationFormSubmitSuccessEvent(2, $applicationProcessBundle, [], $submitResult);
+    $formSuccessEvent = new ApplicationFormSubmitSuccessEvent(2, $applicationProcessBundle, [], $submitResult, NULL);
     $this->subscriber->onSubmitSuccess($formSuccessEvent);
     static::assertSame(['https://example.org' => $externalFile], $formSuccessEvent->getResult()->getFiles());
   }

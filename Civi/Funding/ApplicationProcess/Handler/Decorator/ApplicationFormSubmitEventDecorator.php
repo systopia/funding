@@ -40,6 +40,7 @@ final class ApplicationFormSubmitEventDecorator implements ApplicationFormSubmit
   }
 
   public function handle(ApplicationFormSubmitCommand $command): ApplicationFormSubmitResult {
+    $previousApplicationProcess = clone $command->getApplicationProcess();
     $result = $this->handler->handle($command);
     if ($result->isSuccess()) {
       $event = new ApplicationFormSubmitSuccessEvent(
@@ -47,6 +48,7 @@ final class ApplicationFormSubmitEventDecorator implements ApplicationFormSubmit
         $command->getApplicationProcessBundle(),
         $command->getData(),
         $result,
+        NULL,
       );
 
       $this->eventDispatcher->dispatch(ApplicationFormSubmitSuccessEvent::class, $event);

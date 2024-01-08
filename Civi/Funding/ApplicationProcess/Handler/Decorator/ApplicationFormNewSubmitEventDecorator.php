@@ -49,6 +49,7 @@ final class ApplicationFormNewSubmitEventDecorator implements ApplicationFormNew
         $result->getApplicationProcessBundle(),
         $command->getData(),
         $result,
+        NULL,
       );
 
       $this->eventDispatcher->dispatch(ApplicationFormSubmitSuccessEvent::class, $event);

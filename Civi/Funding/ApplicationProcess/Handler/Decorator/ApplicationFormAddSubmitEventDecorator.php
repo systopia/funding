@@ -49,6 +49,7 @@ final class ApplicationFormAddSubmitEventDecorator implements ApplicationFormAdd
         $result->getApplicationProcessBundle(),
         $command->getData(),
         $result,
+        NULL,
       );
 
       $this->eventDispatcher->dispatch(ApplicationFormSubmitSuccessEvent::class, $event);

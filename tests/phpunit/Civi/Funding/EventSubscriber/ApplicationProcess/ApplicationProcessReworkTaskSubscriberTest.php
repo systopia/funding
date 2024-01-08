@@ -82,6 +82,7 @@ final class ApplicationProcessReworkTaskSubscriberTest extends TestCase {
       ApplicationFormSubmitResult::createSuccess(
         ApplicationValidationResult::newValid(new TestValidatedData(['action' => 'apply']), FALSE)
       ),
+      NULL,
     );
     $applicationProcess = $event->getApplicationProcess();
 
@@ -98,6 +99,7 @@ final class ApplicationProcessReworkTaskSubscriberTest extends TestCase {
       ApplicationFormSubmitResult::createSuccess(
         ApplicationValidationResult::newValid(new TestValidatedData(['action' => 'some-action']), FALSE)
       ),
+      NULL,
     );
     $applicationProcess = $event->getApplicationProcess();
 
@@ -114,6 +116,7 @@ final class ApplicationProcessReworkTaskSubscriberTest extends TestCase {
       ApplicationFormSubmitResult::createSuccess(
         ApplicationValidationResult::newValid(new TestValidatedData(['action' => 'some-action']), FALSE)
       ),
+      NULL,
     );
     $applicationProcess = $event->getApplicationProcess();
 

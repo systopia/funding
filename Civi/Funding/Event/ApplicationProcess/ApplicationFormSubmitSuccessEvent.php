@@ -20,10 +20,13 @@ declare(strict_types = 1);
 namespace Civi\Funding\Event\ApplicationProcess;
 
 use Civi\Funding\ApplicationProcess\Command\AbstractApplicationFormSubmitResult;
+use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Form\Application\ValidatedApplicationDataInterface;
 
 final class ApplicationFormSubmitSuccessEvent extends AbstractApplicationEvent {
+
+  private ?ApplicationProcessEntity $previousApplicationProcess;
 
   private AbstractApplicationFormSubmitResult $result;
 
@@ -39,15 +42,21 @@ final class ApplicationFormSubmitSuccessEvent extends AbstractApplicationEvent {
     int $contactId,
     ApplicationProcessEntityBundle $applicationProcessBundle,
     array $submittedData,
-    AbstractApplicationFormSubmitResult $result
+    AbstractApplicationFormSubmitResult $result,
+    ?ApplicationProcessEntity $previousApplicationProcess
   ) {
     parent::__construct($contactId, $applicationProcessBundle);
     $this->submittedData = $submittedData;
     $this->result = $result;
+    $this->previousApplicationProcess = $previousApplicationProcess;
   }
 
   public function getAction(): string {
     return $this->getValidatedData()->getAction();
+  }
+
+  public function getPreviousApplicationProcess(): ?ApplicationProcessEntity {
+    return $this->previousApplicationProcess;
   }
 
   public  function getResult(): AbstractApplicationFormSubmitResult {
