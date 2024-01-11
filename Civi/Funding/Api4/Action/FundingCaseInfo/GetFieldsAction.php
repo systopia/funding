@@ -139,7 +139,7 @@ final class GetFieldsAction extends BasicGetFieldsAction {
         'name' => 'funding_case_permissions',
         'title' => 'funding_case_permissions',
         'data_type' => 'String',
-        'serialize' => 1,
+        'serialize' => \CRM_Core_DAO::SERIALIZE_JSON,
         'options' => $this->getOptions('FundingCase', 'permissions'),
       ],
       [
