@@ -53,7 +53,7 @@ trait PermissionsGetFieldsActionTrait {
         'type' => 'Extra',
         'data_type' => 'String',
         'readonly' => TRUE,
-        'serialize' => 1,
+        'serialize' => \CRM_Core_DAO::SERIALIZE_JSON,
         'options' => $possiblePermissions,
       ],
     ], $this->getFlattenedPermissionsFields($possiblePermissions));
