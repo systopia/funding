@@ -76,12 +76,12 @@ final class FundingProgramTokenSubscriberTest extends TestCase {
   public function testGetSubscribedEvents(): void {
     // We do not test subscriptions from \Civi\Token\AbstractTokenSubscriber.
     $expectedSubscriptions = [
-      'civi.civioffice.tokenContext' => 'onCiviOfficeTokenContext',
+      'civi.civioffice.tokenContext' => ['onCiviOfficeTokenContext', 0],
     ];
     $subscriptions = $this->subscriber::getSubscribedEvents();
 
-    foreach ($expectedSubscriptions as $eventName => $method) {
-      static::assertSame($method, $subscriptions[$eventName] ?? NULL);
+    foreach ($expectedSubscriptions as $eventName => [$method, $priority]) {
+      static::assertSame([$method, $priority], $subscriptions[$eventName] ?? NULL);
       static::assertTrue(method_exists(get_class($this->subscriber), $method));
     }
   }
@@ -115,6 +115,24 @@ final class FundingProgramTokenSubscriberTest extends TestCase {
     $fundingProgram = FundingProgramFactory::createFundingProgram();
     $this->fundingProgramManagerMock->expects(static::never())->method('get');
     $this->contextDataHolder->addEntityData('EntityName', 1, ['fundingProgram' => $fundingProgram]);
+
+    $this->subscriber->onCiviOfficeTokenContext($event);
+    // @phpstan-ignore-next-line
+    static::assertSame($fundingProgram, $context['fundingProgram']);
+  }
+
+  public function testOnCiviOfficeTokenContextWithId(): void {
+    $context = ['fundingProgramId' => FundingProgramFactory::DEFAULT_ID];
+    $event = GenericHookEvent::create([
+      'context' => &$context,
+      'entity_type' => 'SomeEntity',
+      'entity_id' => 123,
+    ]);
+
+    $fundingProgram = FundingProgramFactory::createFundingProgram();
+    $this->fundingProgramManagerMock->method('get')
+      ->with(FundingProgramFactory::DEFAULT_ID)
+      ->willReturn($fundingProgram);
 
     $this->subscriber->onCiviOfficeTokenContext($event);
     // @phpstan-ignore-next-line
