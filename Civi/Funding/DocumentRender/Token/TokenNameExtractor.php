@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\DocumentRender\Token;
 
 use Civi\RemoteTools\Api4\Api4Interface;
+use CRM_Funding_ExtensionUtil as E;
 
 /**
  * @codeCoverageIgnore
@@ -32,14 +33,16 @@ final class TokenNameExtractor implements TokenNameExtractorInterface {
     $this->api4 = $api4;
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function getTokenNames(string $entityName, string $entityClass): array {
     $tokenNames = [];
     $fields = $this->api4->execute(
       $entityName,
       'getFields',
       [
-        'select' => ['name', 'label'],
-        'checkPermissions' => FALSE,
+        'select' => ['name', 'label', 'serialize', 'suffixes'],
       ],
     );
     /** @phpstan-var array<string, array<string, scalar>|scalar[]|scalar|null> $field */
@@ -49,6 +52,11 @@ final class TokenNameExtractor implements TokenNameExtractorInterface {
       /** @var string $label */
       $label = $field['label'] ?? $name;
       $tokenNames[$name] = $label;
+
+      if (0 !== ($field['serialize'] ?? 0)) {
+        // Indicate that array value access is possible.
+        $tokenNames[$name . '::'] = sprintf('%s (%s)', $label, E::ts('Array value access'));
+      }
     }
 
     return $tokenNames;

@@ -24,6 +24,7 @@ use Civi\Funding\DocumentRender\Token\TokenNameExtractorInterface;
 use Civi\Funding\DocumentRender\Token\TokenResolverInterface;
 use Civi\Funding\Entity\AbstractEntity;
 use Civi\Token\AbstractTokenSubscriber;
+use Civi\Token\Event\TokenValueEvent;
 use Civi\Token\TokenProcessor;
 use Civi\Token\TokenRow;
 use Webmozart\Assert\Assert;
@@ -102,6 +103,22 @@ abstract class AbstractCiviOfficeTokenSubscriber extends AbstractTokenSubscriber
     $resolvedToken = $this->tokenResolver->resolveToken($this->getApiEntityName(), $entity, $field);
     $row->format($resolvedToken->format);
     $row->tokens($entityName, $field, $resolvedToken->value);
+  }
+
+  public function getActiveTokens(TokenValueEvent $e) {
+    $messageTokens = $e->getTokenProcessor()->getMessageTokens()[$this->entity] ?? [];
+    $activeTokens = array_values(array_intersect($messageTokens, array_keys($this->tokenNames)));
+
+    // Add tokens with path for array value access.
+    foreach ($messageTokens as $token) {
+      /** @var string $fieldName */
+      [$fieldName, $path] = explode('::', $token, 2) + [NULL, NULL];
+      if (NULL !== $path && isset($this->tokenNames[$fieldName . '::'])) {
+        $activeTokens[] = $token;
+      }
+    }
+
+    return $activeTokens;
   }
 
   protected function getContextKey(): string {

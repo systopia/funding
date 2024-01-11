@@ -21,6 +21,7 @@ namespace Civi\Funding\DocumentRender\Token;
 
 use Brick\Money\Money;
 use Civi\Api4\Generic\Result;
+use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Util\MoneyFactory;
 use Civi\RemoteTools\Api4\Api4Interface;
@@ -122,6 +123,34 @@ final class TokenResolverTest extends TestCase {
     static::assertEquals(
       new ResolvedToken(1.23, 'text/plain'),
       $this->tokenResolver->resolveToken('FundingProgram', $fundingProgram, 'nonMoneyFloat'),
+    );
+  }
+
+  public function testResolveTokenWithPath(): void {
+    $applicationProcess = ApplicationProcessFactory::createApplicationProcess([
+      'request_data' => ['foo' => ['bar' => 'baz']],
+    ]);
+
+    static::assertEquals(
+      new ResolvedToken('baz', 'text/plain'),
+      $this->tokenResolver->resolveToken('EntityName', $applicationProcess, 'request_data::foo.bar')
+    );
+
+    static::assertEquals(
+      new ResolvedToken('', 'text/plain'),
+      $this->tokenResolver->resolveToken('EntityName', $applicationProcess, 'request_data::foo.baz')
+    );
+
+    // Arrays are json encoded.
+    static::assertEquals(
+      new ResolvedToken('{"bar":"baz"}', 'text/plain'),
+      $this->tokenResolver->resolveToken('EntityName', $applicationProcess, 'request_data::foo')
+    );
+
+    // Complete data is json encoded, if path is empty.
+    static::assertEquals(
+      new ResolvedToken('{"foo":{"bar":"baz"}}', 'text/plain'),
+      $this->tokenResolver->resolveToken('EntityName', $applicationProcess, 'request_data::')
     );
   }
 

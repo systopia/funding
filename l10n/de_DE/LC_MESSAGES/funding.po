@@ -501,6 +501,10 @@ msgstr "Weiterleitungsvertrag"
 msgid "Files in filesystem (Funding Program Manager)"
 msgstr "Dateien im Dateisystem (Funding Program Manager)"
 
+#: Civi/Funding/DocumentRender/Token/TokenNameExtractor.php
+msgid "Array value access"
+msgstr "Zugriff auf Array-Wert"
+
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessCreatedSubscriber.php
 #: managed/ActivityTypeFundingApplicationCreate.mgd.php
 msgid "Funding Application Created"

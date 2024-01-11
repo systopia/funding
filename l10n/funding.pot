@@ -326,6 +326,10 @@ msgstr ""
 msgid "Files in filesystem (Funding Program Manager)"
 msgstr ""
 
+#: Civi/Funding/DocumentRender/Token/TokenNameExtractor.php
+msgid "Array value access"
+msgstr ""
+
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessCreatedSubscriber.php managed/ActivityTypeFundingApplicationCreate.mgd.php
 msgid "Funding Application Created"
 msgstr ""
