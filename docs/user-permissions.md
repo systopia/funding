@@ -86,4 +86,8 @@ Every drupal user is mapped to a CiviCRM contact. To assign a CiviRemote role, o
 !!! note
     The roles are automatically synchronised with the Drupal user account during login. If there are problems with the synchronisation, open the drupal user overview at `admin/people`. Select the user that you want to assign the roles to and perform the action **CiviRemote: Match contact(s)** and afterward **CiviRemote: Synchronise CiviRemote roles**.
 
+#### Drupal Roles
+
+Grant the permission **Access CiviCRM Funding** to the already existing role **authenticated user**.
+
 
