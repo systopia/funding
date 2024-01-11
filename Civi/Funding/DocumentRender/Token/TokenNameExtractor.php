@@ -57,6 +57,11 @@ final class TokenNameExtractor implements TokenNameExtractorInterface {
         // Indicate that array value access is possible.
         $tokenNames[$name . '::'] = sprintf('%s (%s)', $label, E::ts('Array value access'));
       }
+      elseif (is_array($field['suffixes'] ?? NULL)) {
+        foreach ($field['suffixes'] as $suffix) {
+          $tokenNames[$name . ':' . $suffix] ??= sprintf('%s (%s)', $label, $suffix);
+        }
+      }
     }
 
     return $tokenNames;
