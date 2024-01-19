@@ -4,9 +4,9 @@ An application goes through different states during an application process. Depe
 
 ## Main application workflow
 
-![](../img/application_states_new_eligible.png)
+![](../img/application_workflow_main.png)
 
-This figure shows the typical workflow of an application. Actions available to applicants are marked in blue, actions available to reviewers are marked in brown. For simplicity, actions that do not change the status of an application are omited.
+This figure shows the typical workflow of an application. Actions available to applicants are marked in blue, actions available to reviewers are marked in brown. For simplicity, actions that do not change the status of an application or are unusual are omitted.
 
 This is the full list of available actions depending on the state of an application:
 
@@ -32,7 +32,7 @@ the results of the review.
 
 The figure above is not complete. It is possible for applicants to edit an application that is already approved and has the status _eligible_. This requires an additional review and therefore a series of other possible states for an application.
 
-![](../img/application_states_rework.png)
+![](../img/application_workflow_rework.png)
 
 As above, actions that don't change the status of the applications are not shown in the figure.
 
@@ -45,3 +45,6 @@ This is the full list of available actions depending on the state of the applica
 | rework                    | save, apply, withdraw change    | review                                                                                                          |
 | rework review             | \-                              | update, reject change, request change, approve content, reject content, approve calculative, reject calculative |
 
+## Transfer contract
+
+## Drawdowns

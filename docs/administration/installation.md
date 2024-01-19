@@ -66,16 +66,16 @@ drush pm:enable civiremote_funding
 
 ## Further modules/dependencies
 
-- `fontawesome` not required if Font Awesome provided by other means.
-- `formtips` not required, but recommended.
-- `symfony/property-access` is dependency of funding extension.
+- `fontawesome` is not required if Font Awesome is provided by other means.
+- `formtips` is not required, but recommended.
+- `symfony/property-access` is a dependency of the funding extension.
 
 ```
 composer require drupal/fontawesome drupal/formtips symfony/property-access
 drush pm:enable fontawesome formtips
 ```
 
-So that changes to views etc. can be applied:
+Enter this command, so that changes to views etc. can be applied:
 
 ```
 composer require drupal/config_update
@@ -115,7 +115,7 @@ Install the following extensions, use the newest release if not otherwise indica
 
 - [de.systopia.xcm](https://github.com/systopia/de.systopia.xcm)
 - [de.systopia.identitytracker](https://github.com/systopia/de.systopia.identitytracker).
-  _Note (18.12.2023): I installed the master branch.
+  _Note (18.12.2023): I installed the master branch._
 - The branch `remote-tools-api4` of [de.systopia.remotetools](https://github.com/systopia/de.systopia.remotetools)
 - [de.systopia.civioffice](https://github.com/systopia/de.systopia.civioffice)
 - [org.project60.banking](https://github.com/Project60/org.project60.banking). The  _CiviContribute_ component needs to be activated for this extension.
@@ -135,26 +135,26 @@ The option **Use PHPWord macros for token replacement** needs to be activated.
 - Activate the option **Remote Contact Matching Enabled** at `/civicrm/admin/remotetools`.
 
 !!! question
-What is the best order between this and the following paragraph? Remote Contact Matching needs to be enabled in order to create / synchronise the Drupal roles "RemoteContacts: match and link" and "RemoteContacts: retrieve". The API key needs to be set to configure the CMRF profile. Does synchronising of the roles work before the configuration of the CMRF profile is finished?
+    What is the best order between this and the following two paragraphs? Remote Contact Matching needs to be enabled in order to create / synchronise the Drupal roles "RemoteContacts: match and link" and "RemoteContacts: retrieve". The API key needs to be set to configure the CMRF profile. Does synchronising of the roles work before the configuration of the CMRF profile is finished?
 
 ## Configure CiviMRF
 
 Set up an API User:
 
 - add a role **CiviCRM API** with the following permissions:
-  - AuthX: Authenticate to services with API key
-  - CiviCRM: access CiviCRM Backend und API
-  - CiviCRM: remote access to Funding Program Manager
-  - CiviCRM: view debug output
-  - RemoteContacts: match and link
-  - RemoteContacts: retrieve
+    - AuthX: Authenticate to services with API key
+    - CiviCRM: access CiviCRM Backend und API
+    - CiviCRM: remote access to Funding Program Manager
+    - CiviCRM: view debug output
+    - RemoteContacts: match and link
+    - RemoteContacts: retrieve
 - add a drupal user **api** with the role **CiviCRM API**
 - generate an [API key](https://docs.civicrm.org/sysadmin/en/latest/setup/api-keys/) for the corresponding CiviCRM contact **api**
 
 Set up a CiviMRF profile under `/admin/config/cmrf/profiles` or edit the default profile:
 
 - The Site Key can be found in your civicrm.settings.php
-- The URL is something of the form https://myCiviCRMWebsite/civicrm/ajax/rest
+- The URL is something of the form [https://example.org/civicrm/ajax/rest]()
 - Insert the API Key you just created.
 
 [Optional] Activate **CiviMRF Call Report** at `/admin/modules`.
@@ -172,13 +172,17 @@ CiviRemote will synchronise permissions that are set for a CiviCRM contact with 
 You should now see the roles listed for the test user. You can delete the test user if you don't need it anymore.
 For any other users you create, the roles selected in CiviCRM at **RemoteContact Information** will be automatically synchronised during the login of that user.
 
+Additionally, you need to adapt the permissions for Drupal user roles as described [here](./user-permissions.md#drupal-permissions).
+
 ## Configure Dashboard
 
 Open the basic site settings at `admin/config/system/site-information` and enter `/civiremote/funding` in the field for the default front page.
 
 ## Create templates
 
-## transfer contract template
+The creation of transfer contracts and payment instructions relies on templates in `docx` format. They are created with [CiviOffice](https://docs.civicrm.org/civioffice/en/latest/) and can contain tokens. Currently, there is no admin page available to upload the template files.
+
+### Transfer Contract Template
 
 Copy the template file to a temporary location (e.g. `/tmp/transfer-contract-template.docx`). Determine the ID of the funding case type.
 
@@ -199,7 +203,7 @@ Set the `file_type_id` (not possible with Attachment API):
 cv api4 File.update +v file_type_id:name=transfer_contract_template +w 'id = {FILE_ID}'
 ```
 
-### payment instruction template
+### Payment Instruction Template
 
 Copy the template file to a temporary location (e.g. `/tmp/payment-instruction-template.docx`). Determine the ID of the funding case type.
 

@@ -7,9 +7,16 @@ theme:
 
 nav:
   - 'Introduction': index.md
-  - 'Installation': installation.md
-  - 'Configuration': configuration.md
-  - 'Permissions': user-permissions.md
+  - 'Naming conventions': naming-conventions.md
+  - 'Administration':
+    - 'Installation': administration/installation.md
+    - 'Users and Permissions': administration/user-permissions.md
+    - 'Configuration': administration/configuration.md
+  - 'Usage':
+      - 'Application Workflow': usage/application-states.md
+      - 'Usage for Applicants': usage/usage-applicants.md
+      - 'Usage for Reviewers': usage/usage-reviewers.md
+      - 'Usage for Site Admins': usage/usage-site-admins.md
 
 markdown_extensions:
   - attr_list

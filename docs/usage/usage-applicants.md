@@ -1,14 +1,14 @@
 # Usage for applicants
 
+This section describes the typical usage of the funding portal for persons who apply to the funding program. This includes the application process as well as the workflow after a funding has been granted.
+
 ## Login
 
-To create a new application, applicants need to be provided with a username and password to log into the funding portal.
-Their user account needs to have the correct permissions, see the section [User Permissions](../user-permissions.md) for more details.
+To create a new application, applicants need to be provided with a username and password to log into the funding portal.  Their user account needs to have the correct permissions, see the section [User Permissions](../user-permissions.md) for more details.
 
 After login in, applicants can change their password at **My account** → **Edit**. All other possible actions can be found on the dashboard page.
 
 ![Dashboard page](.././img/drupal_dashboard.png)
-
 
 ## Create a new application
 
@@ -16,8 +16,9 @@ Applicants can create a new application by opening the dashboard and choosing **
 
 It is possible to save a draft and continue to work on the application at another time. When it is finished, it can be submitted by clicking on the button **Apply**.
 
-!!! note
-    To be able to submit an application, the CiviCRM contact of the applicant must meet the conditions that are set for possible funding recipients of the funding program. These conditions can be defined by opening `civicrm/funding/program/list`, choosing the funding program and the action **Edit recipients**.
+###  Combined applications
+
+...
 
 ## Change an application
 
@@ -29,11 +30,21 @@ All possible states and the available actions are explained [here]().
 
 ## View the history of an application
 
-The applications listed in **My Applications** or **My Combined Applications** also allow for the action **Application History**. This leads to a flow chart showing every status that the application has gone through in chronological order, including comments created by the reviewers or applicants.
+The applications listed in **My Applications** or **My Combined Applications** also allow for the action **Application History**. This leads to a flow chart showing every status that the application has gone through in chronological order, including public comments created by the reviewers or applicants.
 
 It is possible to hide all comments or to hide all workflow actions.
 
 ![screenshot of application history](../img/drupal_application_history.png)
+
+## Transfer contracts
+
+Available actions are:
+
+* download the transfer contract
+* create a drawdown
+* show existing drawdowns
+
+
 
 
 
