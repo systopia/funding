@@ -18,6 +18,7 @@
   <version>0.9-dev</version>
   <develStage>dev</develStage>
   <compatibility>
+    <!-- When set to 5.67 or later class X_EntityFile can be removed -->
     <ver>5.66</ver>
   </compatibility>
   <comments/>
