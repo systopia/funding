@@ -19,12 +19,11 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\Remote;
 
-use Civi\RemoteTools\Api4\Action\EventActionInterface;
+use Civi\Api4\Generic\AbstractAction;
+use Civi\RemoteTools\Api4\Action\Traits\EventActionTrait;
 
-interface RemoteFundingActionInterface extends EventActionInterface {
+abstract class AbstractRemoteFundingActionLegacy extends AbstractAction implements RemoteFundingActionLegacyInterface {
 
-  public function getRemoteContactId(): ?string;
-
-  public function setRemoteContactId(string $remoteContactId): self;
+  use EventActionTrait;
 
 }

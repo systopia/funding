@@ -23,7 +23,7 @@ use Civi\Api4\FundingDrawdown;
 use Civi\Api4\Generic\Result;
 use Civi\Api4\RemoteFundingDrawdown;
 use Civi\Core\CiviEventDispatcherInterface;
-use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingAction;
+use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingActionLegacy;
 use Civi\Funding\Api4\Action\Remote\Traits\RemoteFundingActionContactIdRequiredTrait;
 use Civi\Funding\Entity\DrawdownEntity;
 use Civi\Funding\Event\Remote\FundingEvents;
@@ -34,7 +34,7 @@ use Webmozart\Assert\Assert;
  * @method $this setAmount(float $amount)
  * @method $this setPayoutProcessId(int $payoutProcessId)
  */
-final class CreateAction extends AbstractRemoteFundingAction {
+final class CreateAction extends AbstractRemoteFundingActionLegacy {
 
   use RemoteFundingActionContactIdRequiredTrait;
 

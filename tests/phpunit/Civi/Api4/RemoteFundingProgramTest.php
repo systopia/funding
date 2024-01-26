@@ -30,7 +30,7 @@ use Civi\Funding\AbstractRemoteFundingHeadlessTestCase;
  * @group headless
  *
  * @covers \Civi\Api4\RemoteFundingProgram
- * @covers \Civi\Funding\Api4\Action\Remote\DAOGetAction
+ * @covers \Civi\Funding\Api4\Action\Remote\RemoteFundingDAOGetActionLegacy
  * @covers \Civi\Funding\EventSubscriber\Remote\FundingProgramDAOGetSubscriber
  */
 final class RemoteFundingProgramTest extends AbstractRemoteFundingHeadlessTestCase {

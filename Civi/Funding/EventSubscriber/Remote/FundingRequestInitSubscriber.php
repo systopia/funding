@@ -19,8 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\Remote;
 
-use Civi\Funding\Api4\Action\Remote\GetFieldsAction;
-use Civi\Funding\Api4\Action\Remote\RemoteFundingActionInterface;
+use Civi\Funding\Api4\Action\Remote\RemoteFundingGetFieldsActionLegacy;
+use Civi\Funding\Api4\Action\Remote\RemoteFundingActionLegacyInterface;
 use Civi\Funding\Contact\FundingRemoteContactIdResolverInterface;
 use Civi\Funding\Event\Remote\FundingEvents;
 use Civi\RemoteTools\Event\InitApiRequestEvent;
@@ -51,12 +51,12 @@ class FundingRequestInitSubscriber implements EventSubscriberInterface {
 
   public function onRemoteRequestInit(InitApiRequestEvent $event): void {
     $request = $event->getApiRequest();
-    Assert::isInstanceOf($request, RemoteFundingActionInterface::class);
-    /** @var \Civi\Funding\Api4\Action\Remote\RemoteFundingActionInterface $request */
+    Assert::isInstanceOf($request, RemoteFundingActionLegacyInterface::class);
+    /** @var \Civi\Funding\Api4\Action\Remote\RemoteFundingActionLegacyInterface $request */
     $remoteContactId = $request->getRemoteContactId();
     // GetFieldsAction is called in API explorer, though in that case it's no
     // remote request. Thus, the condition.
-    if (!$request instanceof GetFieldsAction || NULL !== $remoteContactId) {
+    if (!$request instanceof RemoteFundingGetFieldsActionLegacy || NULL !== $remoteContactId) {
       $this->requestContext->setRemote(TRUE);
     }
     $this->requestContext->setRemoteContactId($remoteContactId);

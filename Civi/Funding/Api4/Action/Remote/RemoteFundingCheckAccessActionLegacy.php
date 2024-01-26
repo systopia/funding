@@ -21,15 +21,16 @@ namespace Civi\Funding\Api4\Action\Remote;
 
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Api4\Action\Remote\Traits\RemoteFundingActionContactIdRequiredTrait;
+use Civi\Funding\Event\Remote\FundingCheckAccessEvent;
 use Civi\Funding\Event\Remote\FundingEvents;
-use Civi\Funding\Event\Remote\FundingGetEvent;
-use Civi\RemoteTools\Api4\Action\EventGetAction;
+use Civi\RemoteTools\Api4\Action\EventCheckAccessAction;
 
-class RemoteFundingGetAction extends EventGetAction implements RemoteFundingActionInterface {
-
+// phpcs:disable Generic.Files.LineLength.TooLong
+class RemoteFundingCheckAccessActionLegacy extends EventCheckAccessAction implements RemoteFundingActionLegacyInterface {
+//phpcs:enable
   use RemoteFundingActionContactIdRequiredTrait;
 
-  public function __construct(string $entityName, string $actionName = 'get',
+  public function __construct(string $entityName, string $actionName = 'checkAccess',
     CiviEventDispatcherInterface $eventDispatcher = NULL
   ) {
     parent::__construct(FundingEvents::REQUEST_INIT_EVENT_NAME,
@@ -41,7 +42,7 @@ class RemoteFundingGetAction extends EventGetAction implements RemoteFundingActi
    * @noinspection PhpMissingParentCallCommonInspection
    */
   protected function getEventClass(): string {
-    return FundingGetEvent::class;
+    return FundingCheckAccessEvent::class;
   }
 
 }

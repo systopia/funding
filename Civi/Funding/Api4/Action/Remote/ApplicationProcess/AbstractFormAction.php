@@ -21,14 +21,14 @@ namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 
 use Civi\Api4\RemoteFundingApplicationProcess;
 use Civi\Core\CiviEventDispatcherInterface;
-use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingAction;
+use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingActionLegacy;
 use Civi\Funding\Api4\Action\Remote\Traits\RemoteFundingActionContactIdRequiredTrait;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\Event\Remote\FundingEvents;
 use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
 
-abstract class AbstractFormAction extends AbstractRemoteFundingAction {
+abstract class AbstractFormAction extends AbstractRemoteFundingActionLegacy {
 
   use RemoteFundingActionContactIdRequiredTrait;
 

@@ -19,8 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
-use Civi\Funding\Api4\AbstractRemoteFundingEntity;
-use Civi\Funding\Api4\Action\Remote\DAOGetAction;
+use Civi\Funding\Api4\AbstractRemoteFundingEntityLegacy;
+use Civi\Funding\Api4\Action\Remote\RemoteFundingDAOGetActionLegacy;
 use Civi\Funding\Api4\Action\Remote\FundingCase\GetUpdateFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\GetNewFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\GetNewApplicationFormAction;
@@ -36,10 +36,10 @@ use Civi\Funding\Api4\Action\Remote\FundingCase\ValidateNewApplicationFormAction
  * with an application. The other new form actions are used for combined
  * applications to create a funding case without an application.
  */
-final class RemoteFundingCase extends AbstractRemoteFundingEntity {
+final class RemoteFundingCase extends AbstractRemoteFundingEntityLegacy {
 
-  public static function get(): DAOGetAction {
-    return new DAOGetAction(static::getEntityName());
+  public static function get(): RemoteFundingDAOGetActionLegacy {
+    return new RemoteFundingDAOGetActionLegacy(static::getEntityName());
   }
 
   public static function getUpdateForm(): GetUpdateFormAction {

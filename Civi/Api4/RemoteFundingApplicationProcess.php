@@ -19,23 +19,23 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
-use Civi\Funding\Api4\AbstractRemoteFundingEntity;
+use Civi\Funding\Api4\AbstractRemoteFundingEntityLegacy;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetAddFormAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetFormAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\SubmitAddFormAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\SubmitFormAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\ValidateAddFormAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\ValidateFormAction;
-use Civi\Funding\Api4\Action\Remote\DAOGetAction;
+use Civi\Funding\Api4\Action\Remote\RemoteFundingDAOGetActionLegacy;
 
 /**
  * The "Add" form actions are used to add an application to an existing funding
  * case. The form actions without "add" are used for existing applications.
  */
-final class RemoteFundingApplicationProcess extends AbstractRemoteFundingEntity {
+final class RemoteFundingApplicationProcess extends AbstractRemoteFundingEntityLegacy {
 
-  public static function get(): DAOGetAction {
-    return new DAOGetAction(static::getEntityName());
+  public static function get(): RemoteFundingDAOGetActionLegacy {
+    return new RemoteFundingDAOGetActionLegacy(static::getEntityName());
   }
 
   public static function getAddForm(): GetAddFormAction {
