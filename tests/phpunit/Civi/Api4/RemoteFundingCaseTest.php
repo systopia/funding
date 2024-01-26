@@ -42,7 +42,7 @@ use Symfony\Bridge\PhpUnit\ClockMock;
  *
  * @covers \Civi\Api4\RemoteFundingCase
  * @covers \Civi\Funding\Api4\Action\Remote\FundingCase\GetNewApplicationFormAction
- * @covers \Civi\Funding\Api4\Action\Remote\DAOGetAction
+ * @covers \Civi\Funding\Api4\Action\Remote\RemoteFundingDAOGetActionLegacy
  * @covers \Civi\Funding\EventSubscriber\Remote\FundingCaseDAOGetSubscriber
  */
 final class RemoteFundingCaseTest extends AbstractRemoteFundingHeadlessTestCase {

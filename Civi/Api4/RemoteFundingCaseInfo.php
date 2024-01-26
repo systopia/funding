@@ -19,13 +19,13 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
-use Civi\Funding\Api4\AbstractRemoteFundingEntity;
-use Civi\Funding\Api4\Action\Remote\RemoteFundingGetAction;
+use Civi\Funding\Api4\AbstractRemoteFundingEntityLegacy;
+use Civi\Funding\Api4\Action\Remote\RemoteFundingGetActionLegacy;
 
-final class RemoteFundingCaseInfo extends AbstractRemoteFundingEntity {
+final class RemoteFundingCaseInfo extends AbstractRemoteFundingEntityLegacy {
 
-  public static function get(): RemoteFundingGetAction {
-    return new RemoteFundingGetAction(static::getEntityName());
+  public static function get(): RemoteFundingGetActionLegacy {
+    return new RemoteFundingGetActionLegacy(static::getEntityName());
   }
 
 }

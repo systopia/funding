@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2024 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,35 +17,14 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Api4;
+namespace Civi\Funding\Api4\Traits;
 
-use Civi\Api4\Generic\AbstractEntity;
-use Civi\Funding\Api4\Action\Remote\CheckAccessAction;
-use Civi\Funding\Api4\Action\Remote\GetFieldsAction;
+use Civi\Funding\Api4\Permissions;
 
-class AbstractRemoteFundingEntity extends AbstractEntity {
+trait RemotePermissionsTrait {
 
   /**
-   * @inerhitDoc
-   * @noinspection PhpMissingParentCallCommonInspection
-   */
-  public static function checkAccess() {
-    return new CheckAccessAction(static::getEntityName(), __FUNCTION__);
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public static function getFields() {
-    return new GetFieldsAction(static::getEntityName(), __FUNCTION__);
-  }
-
-  /**
-   * @inheritDoc
-   *
-   * @return array<string, array<string|string[]>>
-   *
-   * @noinspection PhpMissingParentCallCommonInspection
+   * @phpstan-return array<string, array<string|string[]>>
    */
   public static function permissions(): array {
     return [

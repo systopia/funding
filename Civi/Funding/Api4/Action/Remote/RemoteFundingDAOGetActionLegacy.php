@@ -25,7 +25,7 @@ use Civi\Funding\Event\Remote\FundingDAOGetEvent;
 use Civi\Funding\Event\Remote\FundingEvents;
 use Civi\RemoteTools\Api4\Action\EventDAOGetAction;
 
-class DAOGetAction extends EventDAOGetAction implements RemoteFundingActionInterface {
+class RemoteFundingDAOGetActionLegacy extends EventDAOGetAction implements RemoteFundingActionLegacyInterface {
 
   use RemoteFundingActionContactIdRequiredTrait;
 

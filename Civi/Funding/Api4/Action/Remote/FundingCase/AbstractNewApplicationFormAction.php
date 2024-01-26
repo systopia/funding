@@ -21,7 +21,7 @@ namespace Civi\Funding\Api4\Action\Remote\FundingCase;
 
 use Civi\Api4\RemoteFundingCase;
 use Civi\Core\CiviEventDispatcherInterface;
-use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingAction;
+use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingActionLegacy;
 use Civi\Funding\Api4\Action\Remote\FundingCase\Traits\NewApplicationFormActionTrait;
 use Civi\Funding\Api4\Action\Remote\Traits\RemoteFundingActionContactIdRequiredTrait;
 use Civi\Funding\Event\Remote\FundingEvents;
@@ -31,7 +31,7 @@ use Civi\Funding\FundingProgram\FundingProgramManager;
 use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
 
-abstract class AbstractNewApplicationFormAction extends AbstractRemoteFundingAction {
+abstract class AbstractNewApplicationFormAction extends AbstractRemoteFundingActionLegacy {
 
   use NewApplicationFormActionTrait;
   use RemoteFundingActionContactIdRequiredTrait;

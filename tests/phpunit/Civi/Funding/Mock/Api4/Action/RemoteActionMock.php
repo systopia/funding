@@ -19,11 +19,11 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Mock\Api4\Action;
 
-use Civi\Funding\Api4\Action\Remote\RemoteFundingActionInterface;
+use Civi\Funding\Api4\Action\Remote\RemoteFundingActionLegacyInterface;
 use Civi\Funding\Api4\Action\Remote\Traits\RemoteFundingActionContactIdRequiredTrait;
 use Civi\RemoteTools\Api4\Action\Traits\EventActionTrait;
 
-class RemoteActionMock extends StandardActionMock implements RemoteFundingActionInterface {
+class RemoteActionMock extends StandardActionMock implements RemoteFundingActionLegacyInterface {
 
   use EventActionTrait;
 

@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\Remote\Traits;
 
-use Civi\Funding\Api4\Action\Remote\RemoteFundingActionInterface;
+use Civi\Funding\Api4\Action\Remote\RemoteFundingActionLegacyInterface;
 use Webmozart\Assert\Assert;
 
 trait RemoteFundingActionContactIdRequiredTrait {
@@ -41,7 +41,7 @@ trait RemoteFundingActionContactIdRequiredTrait {
    *
    * @return $this
    */
-  public function setRemoteContactId(string $remoteContactId): RemoteFundingActionInterface {
+  public function setRemoteContactId(string $remoteContactId): RemoteFundingActionLegacyInterface {
     $this->remoteContactId = $remoteContactId;
 
     return $this;

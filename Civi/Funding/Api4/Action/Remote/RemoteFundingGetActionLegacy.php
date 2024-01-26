@@ -20,16 +20,16 @@ declare(strict_types = 1);
 namespace Civi\Funding\Api4\Action\Remote;
 
 use Civi\Core\CiviEventDispatcherInterface;
-use Civi\Funding\Api4\Action\Remote\Traits\RemoteFundingActionContactIdTrait;
+use Civi\Funding\Api4\Action\Remote\Traits\RemoteFundingActionContactIdRequiredTrait;
 use Civi\Funding\Event\Remote\FundingEvents;
-use Civi\Funding\Event\Remote\FundingGetFieldsEvent;
-use Civi\RemoteTools\Api4\Action\EventGetFieldsAction;
+use Civi\Funding\Event\Remote\FundingGetEvent;
+use Civi\RemoteTools\Api4\Action\EventGetAction;
 
-class GetFieldsAction extends EventGetFieldsAction implements RemoteFundingActionInterface {
+class RemoteFundingGetActionLegacy extends EventGetAction implements RemoteFundingActionLegacyInterface {
 
-  use RemoteFundingActionContactIdTrait;
+  use RemoteFundingActionContactIdRequiredTrait;
 
-  public function __construct(string $entityName, string $actionName = 'getFields',
+  public function __construct(string $entityName, string $actionName = 'get',
     CiviEventDispatcherInterface $eventDispatcher = NULL
   ) {
     parent::__construct(FundingEvents::REQUEST_INIT_EVENT_NAME,
@@ -41,7 +41,7 @@ class GetFieldsAction extends EventGetFieldsAction implements RemoteFundingActio
    * @noinspection PhpMissingParentCallCommonInspection
    */
   protected function getEventClass(): string {
-    return FundingGetFieldsEvent::class;
+    return FundingGetEvent::class;
   }
 
 }
