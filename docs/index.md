@@ -1,22 +1,22 @@
 # Introduction
 
-Foundations and other organizations that have to distribute funding are faced with many administrative tasks and the need to interact with applicants and recipients in a specific workflow. The funding extension, together with other extensions and Drupal modules, provides a holistic solution for the entire funding process.
+Foundations and other organizations that distribute funding to applicants are faced with many administrative tasks. They also need to interact with applicants and grant recipients in a specific workflow. The funding extension, together with other extensions and Drupal modules, provides a holistic solution for the entire funding process.
 
 ## Administrative tasks
 
-The funding extension provides a precise and adaptable support for all administrative tasks that the giving organization has to perform. This includes receiving, checking and approving applications; viewing the history of applications; adding comments to applications (internally or visible for applicants); allocate funds; administer transfer contracts; receiving and checking proof of use.
+The funding extension provides neatly tailored and adaptable support for all administrative tasks that the funding organization has to perform. This includes receiving, reviewing and approving applications; viewing the history of applications; adding comments to applications (internally or visible for applicants); allocate funds; administer transfer contracts; receiving and checking accountability reports.
 
 ## Web portal for applicants
 
 The funding framework also provides a web portal which acts as interface for applicants. It allows applicants to submit applications, view ongoing application procedures, download transaction contracts, apply for disbursements and create where-used lists.
 
-The web portal is a Drupal website, which allows organizations to enhance it with additional content such as an FAQ or information pages about funding opportunities.
+The web portal is a Drupal website, which allows organizations to enhance it with additional content such as an FAQ or information pages about funding opportunities. (The API of the funding extension would be accessible from any other external system, though.)
 
 ## Adapt the funding framework to your needs
 
 The funding extension has a modular structure. Additional to the existing configuration options within CiviCRM, the code provides many possibilities for developers to adapt it to a different funding workflow. This documentation currently doesn't mention all of these possibilities.
 
-The current implementation reflects the workflow of _Arbeit und Leben_, a german organization that funded the development of this extension. In some places, you will need to adapt it to your own needs. For example, the current application form is in german and asks for data, that is probably not relevant in other contexts.
+The current implementation mainly reflects the workflow of _Arbeit und Leben_. This German organization pioneered the development of this extension framework, with substancial funding from Deutsche Stiftung Engagement und Ehrenamt and the German Federal Ministry for Family and Youth Affairs. In some places, you will need to adapt it to your own needs, or ask us for assistance. For example, the current application forms are in German and reflect very specific administrative processes. A form editor is planned, but not yet available at this moment.
 
 ## We need your support
 
