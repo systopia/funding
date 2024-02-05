@@ -19,28 +19,18 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 
-use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\RemoteFundingApplicationProcess;
+use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingAction;
 use Civi\Funding\Api4\Action\Traits\FundingCaseIdParameterTrait;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
-use Civi\RemoteTools\Api4\Action\RemoteActionInterface;
-use Civi\RemoteTools\Api4\Action\Traits\ActionHandlerRunTrait;
-use Civi\RemoteTools\Api4\Action\Traits\RemoteContactIdParameterTrait;
-use Civi\RemoteTools\Api4\Action\Traits\ResolvedContactIdTrait;
 
 /**
  * @method int getCopyDataFromId()
  * @method $this setCopyDataFromId(int $copyDataFromId)
  */
-final class GetAddFormAction extends AbstractAction implements RemoteActionInterface {
-
-  use ActionHandlerRunTrait;
+final class GetAddFormAction extends AbstractRemoteFundingAction {
 
   use FundingCaseIdParameterTrait;
-
-  use RemoteContactIdParameterTrait;
-
-  use ResolvedContactIdTrait;
 
   /**
    * @var int ID of the application process to copy the initial data from.
@@ -48,8 +38,7 @@ final class GetAddFormAction extends AbstractAction implements RemoteActionInter
   protected ?int $copyDataFromId = NULL;
 
   public function __construct(ActionHandlerInterface $actionHandler = NULL) {
-    parent::__construct(RemoteFundingApplicationProcess::getEntityName(), 'getAddForm');
-    $this->initActionHandler($actionHandler);
+    parent::__construct(RemoteFundingApplicationProcess::getEntityName(), 'getAddForm', $actionHandler);
   }
 
 }

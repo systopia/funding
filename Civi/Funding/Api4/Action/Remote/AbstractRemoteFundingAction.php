@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2023 SYSTOPIA GmbH
+ * Copyright (C) 2024 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,19 +17,20 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Api4\Action\Remote\FundingCase;
+namespace Civi\Funding\Api4\Action\Remote;
 
-use Civi\Api4\RemoteFundingCase;
-use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingAction;
-use Civi\Funding\Api4\Action\Traits\FundingCaseIdParameterTrait;
-use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
+use Civi\Api4\Generic\AbstractAction;
+use Civi\RemoteTools\Api4\Action\RemoteActionInterface;
+use Civi\RemoteTools\Api4\Action\Traits\ActionHandlerRunTrait;
+use Civi\RemoteTools\Api4\Action\Traits\RemoteContactIdParameterTrait;
+use Civi\RemoteTools\Api4\Action\Traits\ResolvedContactIdTrait;
 
-final class GetUpdateFormAction extends AbstractRemoteFundingAction {
+abstract class AbstractRemoteFundingAction extends AbstractAction implements RemoteActionInterface {
 
-  use FundingCaseIdParameterTrait;
+  use ActionHandlerRunTrait;
 
-  public function __construct(ActionHandlerInterface $actionHandler = NULL) {
-    parent::__construct(RemoteFundingCase::getEntityName(), 'getUpdateForm', $actionHandler);
-  }
+  use RemoteContactIdParameterTrait;
+
+  use ResolvedContactIdTrait;
 
 }

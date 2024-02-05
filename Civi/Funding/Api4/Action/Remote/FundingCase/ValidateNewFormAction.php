@@ -19,20 +19,14 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\Remote\FundingCase;
 
-use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\RemoteFundingCase;
+use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingAction;
 use Civi\Funding\Api4\Action\Traits\FundingCaseTypeIdParameterTrait;
 use Civi\Funding\Api4\Action\Traits\FundingProgramIdParameterTrait;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
-use Civi\RemoteTools\Api4\Action\RemoteActionInterface;
-use Civi\RemoteTools\Api4\Action\Traits\ActionHandlerRunTrait;
 use Civi\RemoteTools\Api4\Action\Traits\DataParameterTrait;
-use Civi\RemoteTools\Api4\Action\Traits\RemoteContactIdParameterTrait;
-use Civi\RemoteTools\Api4\Action\Traits\ResolvedContactIdTrait;
 
-final class ValidateNewFormAction extends AbstractAction implements RemoteActionInterface {
-
-  use ActionHandlerRunTrait;
+final class ValidateNewFormAction extends AbstractRemoteFundingAction {
 
   use DataParameterTrait;
 
@@ -40,13 +34,8 @@ final class ValidateNewFormAction extends AbstractAction implements RemoteAction
 
   use FundingCaseTypeIdParameterTrait;
 
-  use RemoteContactIdParameterTrait;
-
-  use ResolvedContactIdTrait;
-
   public function __construct(ActionHandlerInterface $actionHandler = NULL) {
-    parent::__construct(RemoteFundingCase::getEntityName(), 'validateNewForm');
-    $this->initActionHandler($actionHandler);
+    parent::__construct(RemoteFundingCase::getEntityName(), 'validateNewForm', $actionHandler);
   }
 
 }
