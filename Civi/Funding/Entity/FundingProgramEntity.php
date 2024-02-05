@@ -78,6 +78,16 @@ final class FundingProgramEntity extends AbstractEntity {
     return $this;
   }
 
+  public function getEndDate(): \DateTime {
+    return new \DateTime($this->values['end_date']);
+  }
+
+  public function setEndDate(\DateTimeInterface $endDate): self {
+    $this->values['end_date'] = static::toDateTimeStr($endDate);
+
+    return $this;
+  }
+
   public function getRequestsStartDate(): \DateTime {
     return new \DateTime($this->values['requests_start_date']);
   }
