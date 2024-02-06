@@ -42,8 +42,6 @@ final class AttachmentFixture {
       'mime_type' => mime_content_type($filename),
       'content' => file_get_contents($filename),
       'sequential' => 1,
-      // Ensure path is returned.
-      'check_permissions' => FALSE,
     ]);
 
     register_shutdown_function(function (string $path) {
