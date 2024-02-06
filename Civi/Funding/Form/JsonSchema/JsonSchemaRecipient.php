@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\JsonSchema;
 
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaInteger;
 use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
 
@@ -31,10 +32,16 @@ final class JsonSchemaRecipient extends JsonSchemaInteger {
    * @phpstan-param array<int, string> $possibleRecipients Contact ID mapped to name.
    */
   public function __construct(array $possibleRecipients, array $keywords = []) {
-    $keywords['oneOf'] = JsonSchemaUtil::buildTitledOneOf($possibleRecipients);
-    if (1 === count($possibleRecipients)) {
-      $keywords['default'] = array_key_first($possibleRecipients);
-      $keywords['readOnly'] = TRUE;
+    // 'oneOf' must not be empty.
+    if ([] !== $possibleRecipients) {
+      $keywords['oneOf'] = JsonSchemaUtil::buildTitledOneOf($possibleRecipients);
+      if (1 === count($possibleRecipients)) {
+        $keywords['default'] = array_key_first($possibleRecipients);
+        $keywords['readOnly'] = TRUE;
+      }
+    }
+    else {
+      $keywords['oneOf'] = JsonSchema::fromArray(['const' => NULL]);
     }
 
     parent::__construct($keywords);
