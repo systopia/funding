@@ -2,7 +2,6 @@
 
 declare(strict_types = 1);
 
-use Civi\Funding\ApplicationProcess\TaskType;
 use CRM_Funding_ExtensionUtil as E;
 
 return [

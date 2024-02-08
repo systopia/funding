@@ -1,7 +1,6 @@
 <?php
 declare(strict_types = 1);
 
-use Civi\Funding\FileTypeIds;
 use Civi\Funding\FileTypeNames;
 use CRM_Funding_ExtensionUtil as E;
 
