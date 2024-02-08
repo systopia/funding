@@ -103,7 +103,7 @@ return [
         'type' => 'table',
         'settings' => [
           'actions' => FALSE,
-          'limit' => 10,
+          'limit' => 60,
           'classes' => [
             'table',
             'table-striped',

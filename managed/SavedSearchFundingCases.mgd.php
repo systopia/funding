@@ -75,7 +75,7 @@ return [
         'settings' => [
           'description' => NULL,
           'sort' => [],
-          'limit' => 10,
+          'limit' => 60,
           'pager' => [
             'show_count' => FALSE,
             'expose_limit' => TRUE,
