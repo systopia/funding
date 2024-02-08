@@ -6,8 +6,10 @@ parameters:
 		- api
 		- Civi
 		- CRM
+		- managed
 		- services
 		- tests
+		- funding.php
 	excludePaths:
 		analyse:
 			- CRM/Funding/DAO/*

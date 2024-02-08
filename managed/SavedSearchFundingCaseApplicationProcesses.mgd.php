@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 use CRM_Funding_ExtensionUtil as E;
 
+// phpcs:disable Generic.Files.LineLength.TooLong
 return [
   [
     'name' => 'SavedSearch_FundingCaseApplicationProcesses',

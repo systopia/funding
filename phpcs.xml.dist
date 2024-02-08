@@ -6,8 +6,10 @@
     <file>api</file>
     <file>Civi</file>
     <file>CRM</file>
+    <file>managed</file>
     <file>services</file>
     <file>tests</file>
+    <file>funding.php</file>
 
     <exclude-pattern>/CRM/Funding/DAO/.*\.php$</exclude-pattern>
     <exclude-pattern>/CRM/Funding/Upgrader\.php$</exclude-pattern>
