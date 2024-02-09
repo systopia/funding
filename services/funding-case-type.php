@@ -20,12 +20,20 @@ declare(strict_types = 1);
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
+use Civi\Funding\Api4\Action\FundingCaseType\GetAction;
 use Civi\Funding\Api4\Action\FundingCaseType\GetByFundingProgramIdAction;
+use Civi\Funding\Api4\Action\FundingCaseType\UpdateAction;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseTypeDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseTypeGetByFundingProgramIdSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseTypeGetFieldsSubscriber;
 
+$container->autowire(GetAction::class)
+  ->setPublic(TRUE)
+  ->setShared(FALSE);
 $container->autowire(GetByFundingProgramIdAction::class)
+  ->setPublic(TRUE)
+  ->setShared(FALSE);
+$container->autowire(UpdateAction::class)
   ->setPublic(TRUE)
   ->setShared(FALSE);
 

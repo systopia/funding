@@ -81,6 +81,13 @@ final class TestAttachmentManager implements FundingAttachmentManagerInterface {
   /**
    * @inheritDoc
    */
+  public function deleteById(int $id, string $entityTable, int $entityId): void {
+    $this->attachmentManager->deleteById($id, $entityTable, $entityId);
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function get(int $id, string $entityTable, int $entityId): ?AttachmentEntity {
     return $this->attachmentManager->get($id, $entityTable, $entityId);
   }

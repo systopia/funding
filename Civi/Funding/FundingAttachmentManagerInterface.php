@@ -72,6 +72,11 @@ interface FundingAttachmentManagerInterface {
   /**
    * @throws \CRM_Core_Exception
    */
+  public function deleteById(int $id, string $entityTable, int $entityId): void;
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function get(int $id, string $entityTable, int $entityId): ?AttachmentEntity;
 
   /**

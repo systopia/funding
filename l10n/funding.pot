@@ -62,6 +62,14 @@ msgstr ""
 msgid "Timestamp"
 msgstr ""
 
+#: Civi/Funding/Api4/Action/FundingCaseType/GetFieldsAction.php managed/OptionValuesFileType.mgd.php
+msgid "Transfer Contract Template"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCaseType/GetFieldsAction.php managed/OptionValuesFileType.mgd.php
+msgid "Payment Instruction Template"
+msgstr ""
+
 #: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php Civi/Funding/EventSubscriber/Remote/FundingCaseGetFieldsSubscriber.php managed/SavedSearchFundingPrograms.mgd.php
 msgid "Currency"
 msgstr ""
@@ -666,6 +674,10 @@ msgstr ""
 msgid "Validation failed: %1"
 msgstr ""
 
+#: ang/afformFundingCaseTypeTemplates.aff.php
+msgid "Funding Case Type Templates"
+msgstr ""
+
 #: ang/afformFundingProgramAdd.aff.php
 msgid "New Funding Program"
 msgstr ""
@@ -1131,15 +1143,7 @@ msgid "Funding Program"
 msgstr ""
 
 #: managed/OptionValuesFileType.mgd.php
-msgid "Transfer Contract Template"
-msgstr ""
-
-#: managed/OptionValuesFileType.mgd.php
 msgid "Payment Instruction"
-msgstr ""
-
-#: managed/OptionValuesFileType.mgd.php
-msgid "Payment Instruction Template"
 msgstr ""
 
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCaseTypes.mgd.php managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingDrawdowns.mgd.php managed/SavedSearchFundingProgramControlling.mgd.php managed/SavedSearchFundingPrograms.mgd.php managed/SavedSearchFundingTasksMy.mgd.php
@@ -1176,6 +1180,10 @@ msgstr ""
 
 #: managed/SavedSearchFundingCaseTypes.mgd.php managed/SavedSearchFundingPrograms.mgd.php
 msgid "Abbreviation"
+msgstr ""
+
+#: managed/SavedSearchFundingCaseTypes.mgd.php
+msgid "Manage templates"
 msgstr ""
 
 #: managed/SavedSearchFundingCaseTypes.mgd.php
