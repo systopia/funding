@@ -949,6 +949,8 @@ msgid "Start Content Review"
 msgstr "Fachliche Prüfung starten"
 
 #: ang/crmFunding/application/applicationSidebar.template.html
+#: managed/SavedSearchFundingApplicationProcesses.mgd.php
+#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
 msgid "Content Review"
 msgstr "Fachliche Prüfung"
 
@@ -957,6 +959,8 @@ msgid "The aim intended by the funding can be achieved."
 msgstr "Der mit der Zuwendung beabsichtigte Zweck kann erreicht werden."
 
 #: ang/crmFunding/application/applicationSidebar.template.html
+#: managed/SavedSearchFundingApplicationProcesses.mgd.php
+#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
 msgid "Calculative Review"
 msgstr "Rechnerische Prüfung"
 

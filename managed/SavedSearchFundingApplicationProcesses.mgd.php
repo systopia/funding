@@ -30,9 +30,6 @@ return [
       'values' => [
         'name' => 'funding_application_processes',
         'label' => E::ts('Funding Applications'),
-        'form_values' => NULL,
-        'mapping_id' => NULL,
-        'search_custom_id' => NULL,
         'api_entity' => 'FundingApplicationProcess',
         'api_params' => [
           'version' => 4,
@@ -45,6 +42,8 @@ return [
             'status:label',
             'is_eligible',
             'funding_case_id',
+            'is_review_calculative',
+            'is_review_content',
           ],
           'orderBy' => [
             'id' => 'ASC',
@@ -54,8 +53,9 @@ return [
           'join' => [],
           'having' => [],
         ],
-        'expires_date' => NULL,
-        'description' => NULL,
+      ],
+      'match' => [
+        'name',
       ],
     ],
   ],
@@ -117,6 +117,20 @@ return [
               'sortable' => TRUE,
             ],
             [
+              'type' => 'field',
+              'key' => 'is_review_content',
+              'dataType' => 'Boolean',
+              'label' => E::ts('Content Review'),
+              'sortable' => TRUE,
+            ],
+            [
+              'type' => 'field',
+              'key' => 'is_review_calculative',
+              'dataType' => 'Boolean',
+              'label' => E::ts('Calculative Review'),
+              'sortable' => TRUE,
+            ],
+            [
               'size' => 'btn-xs',
               'links' => [
                 [
@@ -143,7 +157,10 @@ return [
           ],
           'headerCount' => FALSE,
         ],
-        'acl_bypass' => FALSE,
+      ],
+      'match' => [
+        'saved_search_id',
+        'name',
       ],
     ],
   ],
