@@ -702,7 +702,7 @@ msgstr ""
 msgid "Start Content Review"
 msgstr ""
 
-#: ang/crmFunding/application/applicationSidebar.template.html
+#: ang/crmFunding/application/applicationSidebar.template.html managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
 msgid "Content Review"
 msgstr ""
 
@@ -710,7 +710,7 @@ msgstr ""
 msgid "The aim intended by the funding can be achieved."
 msgstr ""
 
-#: ang/crmFunding/application/applicationSidebar.template.html
+#: ang/crmFunding/application/applicationSidebar.template.html managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
 msgid "Calculative Review"
 msgstr ""
 

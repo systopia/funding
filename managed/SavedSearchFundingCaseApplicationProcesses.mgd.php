@@ -31,9 +31,6 @@ return [
       'values' => [
         'name' => 'funding_case_application_processes',
         'label' => E::ts('Funding Case Applications'),
-        'form_values' => NULL,
-        'mapping_id' => NULL,
-        'search_custom_id' => NULL,
         'api_entity' => 'FundingCase',
         'api_params' => [
           'version' => 4,
@@ -50,6 +47,8 @@ return [
             'modification_date',
             'recipient_contact_id.display_name',
             'FundingCase_FundingApplicationProcess_funding_case_id_01.status:label',
+            'FundingCase_FundingApplicationProcess_funding_case_id_01.is_review_calculative',
+            'FundingCase_FundingApplicationProcess_funding_case_id_01.is_review_content',
           ],
           'orderBy' => [],
           'where' => [],
@@ -85,8 +84,10 @@ return [
           ],
           'having' => [],
         ],
-        'expires_date' => NULL,
         'description' => E::ts('List of all applications'),
+      ],
+      'match' => [
+        'name',
       ],
     ],
   ],
@@ -147,6 +148,20 @@ return [
               'key' => 'FundingCase_FundingApplicationProcess_funding_case_id_01.status:label',
               'dataType' => 'String',
               'label' => E::ts('Status'),
+              'sortable' => TRUE,
+            ],
+            [
+              'type' => 'field',
+              'key' => 'FundingCase_FundingApplicationProcess_funding_case_id_01.is_review_content',
+              'dataType' => 'Boolean',
+              'label' => E::ts('Content Review'),
+              'sortable' => TRUE,
+            ],
+            [
+              'type' => 'field',
+              'key' => 'FundingCase_FundingApplicationProcess_funding_case_id_01.is_review_calculative',
+              'dataType' => 'Boolean',
+              'label' => E::ts('Calculative Review'),
               'sortable' => TRUE,
             ],
             [
@@ -218,7 +233,10 @@ return [
           ],
           'button' => NULL,
         ],
-        'acl_bypass' => FALSE,
+      ],
+      'match' => [
+        'saved_search_id',
+        'name',
       ],
     ],
   ],
