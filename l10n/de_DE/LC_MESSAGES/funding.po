@@ -310,12 +310,12 @@ msgstr "Rechnerisch ablehnen"
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
 #: Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
 msgid "Approve Content"
-msgstr "Inhaltlich genehmigen"
+msgstr "Fachlich genehmigen"
 
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
 #: Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
 msgid "Reject Content"
-msgstr "Inhaltlich ablehnen"
+msgstr "Fachlich ablehnen"
 
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
 #: Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
@@ -1050,7 +1050,7 @@ msgstr "Durchgeführt von: %name"
 
 #: ang/crmFunding/application/history/activities/reviewStatusChange.template.html
 msgid "Content review: %status"
-msgstr "Inhaltliche Prüfung: %status"
+msgstr "Fachliche Prüfung: %status"
 
 #: ang/crmFunding/application/history/activities/reviewStatusChange.template.html
 msgid "Calculative review: %status"
