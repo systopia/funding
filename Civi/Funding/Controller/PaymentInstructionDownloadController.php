@@ -86,7 +86,8 @@ final class PaymentInstructionDownloadController implements PageControllerInterf
       Response::HTTP_OK,
       $headers,
       FALSE,
-    ))->setContentDisposition(ResponseHeaderBag::DISPOSITION_INLINE, $filename);
+    ))->setContentDisposition(ResponseHeaderBag::DISPOSITION_INLINE, $filename)
+      ->setMaxAge(300);
   }
 
 }
