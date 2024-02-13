@@ -20,47 +20,81 @@ declare(strict_types = 1);
 namespace Civi\Funding\IJB\Application\UiSchema;
 
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
+use Civi\RemoteTools\JsonForms\JsonFormsRule;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 
 final class IJBZuschlagsrelevanteKostenUiSchema extends JsonFormsGroup {
 
   public function __construct(string $currency) {
-    parent::__construct('Zuschlagsrelevante Kosten für Vor- und Nachbereitung und Qualifizierung der Maßnahme', [
-      new JsonFormsControl(
-        '#/properties/kosten/properties/zuschlagsrelevanteKosten/properties/programmabsprachen',
-        'Programmabsprachen (Telefon, Porto, Kopien, Internet etc.) in ' . $currency
-      ),
-      new JsonFormsControl(
-        '#/properties/kosten/properties/zuschlagsrelevanteKosten/properties/vorbereitungsmaterial',
-        'Erstellung von Vorbereitungsmaterial in ' . $currency
-      ),
-      new JsonFormsControl(
-        '#/properties/kosten/properties/zuschlagsrelevanteKosten/properties/veroeffentlichungen',
-        'Veröffentlichungen, Publikationen, Videos, Fotos etc. als
-        Dokumentation der Ergebnisse und für die Öffentlichkeitsarbeit in ' .
-        $currency
-      ),
-      new JsonFormsControl(
-        '#/properties/kosten/properties/zuschlagsrelevanteKosten/properties/honorare',
-        'Honorare für Vorträge, die der Vorbereitung der Gruppe dienen (nur im Inland) in ' . $currency
-      ),
-      new JsonFormsControl(
-        '#/properties/kosten/properties/zuschlagsrelevanteKosten/properties/fahrtkostenUndVerpflegung',
-        'Fahrtkosten und Verpflegung, ggf. Übernachtung bei überregionaler TN-Zusammensetzung in ' . $currency
-      ),
-      new JsonFormsControl(
-        '#/properties/kosten/properties/zuschlagsrelevanteKosten/properties/reisekosten',
-        'Reise-/Fahrtkosten für interne Koordination und Organisation der Vor- und Nachbereitung in ' . $currency
-      ),
-      new JsonFormsControl(
-        '#/properties/kosten/properties/zuschlagsrelevanteKosten/properties/miete',
-        'Raum-, Materialmiete (techn. Geräte, Beamer, Flipchart etc.) in ' . $currency
-      ),
-      new JsonFormsControl(
-        '#/properties/kosten/properties/zuschlagsrelevanteKostenGesamt',
-        'Zuschlagsrelevante Kosten für Vor- und Nachbereitung und Qualifizierung gesamt in ' . $currency
-      ),
-    ]);
+    $partnerlandRule = new JsonFormsRule(
+      'SHOW',
+      '#/properties/grunddaten/properties/begegnungsland',
+      JsonSchema::fromArray(['const' => 'partnerland'])
+    );
+
+    parent::__construct(
+      'Zuschlagsrelevante Kosten für Vor- und Nachbereitung und Qualifizierung von Maßnahmen im Ausland',
+      [
+        new JsonFormsControl(
+          '#/properties/kosten/properties/zuschlagsrelevanteKosten/properties/programmabsprachen',
+          'Programmabsprachen (Telefon, Porto, Kopien, Internet etc.) in ' . $currency,
+          NULL,
+          NULL,
+          ['rule' => $partnerlandRule]
+        ),
+        new JsonFormsControl(
+          '#/properties/kosten/properties/zuschlagsrelevanteKosten/properties/vorbereitungsmaterial',
+          'Erstellung von Vorbereitungsmaterial in ' . $currency,
+          NULL,
+          NULL,
+          ['rule' => $partnerlandRule]
+        ),
+        new JsonFormsControl(
+          '#/properties/kosten/properties/zuschlagsrelevanteKosten/properties/veroeffentlichungen',
+          'Veröffentlichungen, Publikationen, Videos, Fotos etc. als
+          Dokumentation der Ergebnisse und für die Öffentlichkeitsarbeit in ' . $currency,
+          NULL,
+          NULL,
+          ['rule' => $partnerlandRule]
+        ),
+        new JsonFormsControl(
+          '#/properties/kosten/properties/zuschlagsrelevanteKosten/properties/honorare',
+          'Honorare für Vorträge, die der Vorbereitung der Gruppe dienen (nur im Inland) in ' . $currency,
+          NULL,
+          NULL,
+          ['rule' => $partnerlandRule]
+        ),
+        new JsonFormsControl(
+          '#/properties/kosten/properties/zuschlagsrelevanteKosten/properties/fahrtkostenUndVerpflegung',
+          'Fahrtkosten und Verpflegung, ggf. Übernachtung bei überregionaler TN-Zusammensetzung in ' . $currency,
+          NULL,
+          NULL,
+          ['rule' => $partnerlandRule]
+        ),
+        new JsonFormsControl(
+          '#/properties/kosten/properties/zuschlagsrelevanteKosten/properties/reisekosten',
+          'Reise-/Fahrtkosten für interne Koordination und Organisation der Vor- und Nachbereitung in ' . $currency,
+          NULL,
+          NULL,
+          ['rule' => $partnerlandRule]
+        ),
+        new JsonFormsControl(
+          '#/properties/kosten/properties/zuschlagsrelevanteKosten/properties/miete',
+          'Raum-, Materialmiete (techn. Geräte, Beamer, Flipchart etc.) in ' . $currency,
+          NULL,
+          NULL,
+          ['rule' => $partnerlandRule]
+        ),
+        new JsonFormsControl(
+          '#/properties/kosten/properties/zuschlagsrelevanteKostenGesamt',
+          'Zuschlagsrelevante Kosten für Vor- und Nachbereitung und Qualifizierung gesamt in ' . $currency,
+          NULL,
+          NULL,
+          ['rule' => $partnerlandRule]
+        ),
+      ]
+    );
   }
 
 }

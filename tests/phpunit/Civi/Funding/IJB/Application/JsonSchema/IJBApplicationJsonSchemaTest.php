@@ -93,9 +93,8 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
     $fahrtkostenUndVerpflegung = 44.44;
     $reisekosten = 55.55;
     $mietkosten = 66.66;
-    $zuschlagsrelevanteKostenGesamt = round($kostenProgrammabsprachen + $kostenVorbereitungsmaterial
-      + $kostenVeroeffentlichungen + $kostenZuschlagHonorare + $fahrtkostenUndVerpflegung
-      + $reisekosten + $mietkosten, 2);
+    // Zuschlagsrelevante Kosten gibt es nur für Maßnahmen im Ausland.
+    $zuschlagsrelevanteKostenGesamt = 0;
 
     $kostenGesamt = round($unterkunftUndVerpflegung + $honorareGesamt + $fahrtkostenGesamt
       + $programmkostenGesamt + $sonstigeKostenGesamt + $sonstigeAusgabenGesamt + $zuschlagsrelevanteKostenGesamt, 2);
@@ -656,8 +655,8 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
     $fahrtkostenUndVerpflegung = 44.44;
     $reisekosten = 55.55;
     $mietkosten = 66.66;
-    $zuschlagsrelevanteKostenGesamt = round($kostenProgrammabsprachen + $kostenVeroeffentlichungen
-      + $kostenZuschlagHonorare + $fahrtkostenUndVerpflegung + $reisekosten + $mietkosten, 2);
+    // Zuschlagsrelevante Kosten gibt es nur für Maßnahmen im Ausland.
+    $zuschlagsrelevanteKostenGesamt = 0;
 
     $kostenGesamt = round($unterkunftUndVerpflegung + $honorareGesamt + $fahrtkostenGesamt
       + $programmkostenGesamt + $sonstigeKostenGesamt + $sonstigeAusgabenGesamt + $zuschlagsrelevanteKostenGesamt, 2);
