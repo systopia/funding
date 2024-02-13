@@ -34,6 +34,7 @@ use Civi\Funding\SammelantragKurs\Application\Data\KursApplicationResourcesItems
 use Civi\Funding\SammelantragKurs\Application\JsonSchema\KursApplicationJsonSchemaFactory;
 use Civi\Funding\SammelantragKurs\Application\UiSchema\KursApplicationUiSchemaFactory;
 use Civi\Funding\SammelantragKurs\Application\Validation\KursApplicationValidator;
+use Civi\Funding\SammelantragKurs\EventSubscriber\KursApplicationStatusSubscriber;
 use Civi\Funding\SammelantragKurs\FundingCase\Actions\KursCaseActionsDeterminer;
 use Civi\Funding\SammelantragKurs\FundingCase\Actions\KursCaseSubmitActionsContainer;
 use Civi\Funding\SammelantragKurs\FundingCase\Actions\KursCaseSubmitActionsFactory;
@@ -84,3 +85,7 @@ $container->autowire(KursApplicationResourcesItemsFactory::class)
   ->addTag(KursApplicationResourcesItemsFactory::SERVICE_TAG);
 $container->autowire(KursApplicationFormFilesFactory::class)
   ->addTag(KursApplicationFormFilesFactory::SERVICE_TAG);
+
+$container->autowire(KursApplicationStatusSubscriber::class)
+  ->addTag('kernel.event_subscriber')
+  ->setLazy(TRUE);

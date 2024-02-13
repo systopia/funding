@@ -53,13 +53,13 @@ final class ApplicationProcessEligibleSubscriberTest extends TestCase {
 
   public function testGetSubscribedEvents(): void {
     $expectedSubscriptions = [
-      ApplicationProcessPreCreateEvent::class => 'onPreCreate',
-      ApplicationProcessPreUpdateEvent::class => 'onPreUpdate',
+      ApplicationProcessPreCreateEvent::class => ['onPreCreate', -100],
+      ApplicationProcessPreUpdateEvent::class => ['onPreUpdate', -100],
     ];
 
     static::assertEquals($expectedSubscriptions, $this->subscriber::getSubscribedEvents());
 
-    foreach ($expectedSubscriptions as $method) {
+    foreach ($expectedSubscriptions as [$method, $priority]) {
       static::assertTrue(method_exists(get_class($this->subscriber), $method));
     }
   }
