@@ -48,16 +48,12 @@ Edit `$DRUPAL_ROOT/drupal/composer.json` and add the following to repositories:
             "type": "vcs",
             "url": "git@github.com:systopia/civiremote"
         },
-        "drupal/cmrf_core": {
-            "type": "vcs",
-            "url": "git@github.com:CiviMRF/cmrf_core.git"
-        },
 ```
 
 Open a terminal at `$DRUPAL_ROOT` and enter
 
 ```bash
-composer require drupal/cmrf_core:^2.1  custom/civiremote_funding
+composer require custom/civiremote_funding
 drush pm:enable civiremote_funding
 ```
 
@@ -83,7 +79,7 @@ drush pm:enable config_update
 ```
 
 !!! note
-    The last step is longer necessary as soon as we have releases of `civiremote_funding` with update routines.
+    The last step is no longer necessary as soon as we have releases of `civiremote_funding` with update routines.
 
 ### Configure fontawesome
 
@@ -114,14 +110,13 @@ The above selector restricts the module to the funding forms.
 Install the following extensions, use the newest release if not otherwise indicated:
 
 - [de.systopia.xcm](https://github.com/systopia/de.systopia.xcm)
-- [de.systopia.identitytracker](https://github.com/systopia/de.systopia.identitytracker).
-  _Note (18.12.2023): I installed the master branch._
+- [de.systopia.identitytracker](https://github.com/systopia/de.systopia.identitytracker)
 - The branch `remote-tools-api4` of [de.systopia.remotetools](https://github.com/systopia/de.systopia.remotetools)
 - [de.systopia.civioffice](https://github.com/systopia/de.systopia.civioffice)
 - [org.project60.banking](https://github.com/Project60/org.project60.banking). The  _CiviContribute_ component needs to be activated for this extension.
 - [activity-entity](https://github.com/systopia/activity-entity)
 - [external-file](https://github.com/systopia/external-file)
-- [funding](https://github.com/systopia/funding) - version 0.9.2 or later
+- [funding](https://github.com/systopia/funding)
 
 ## Configure CiviOffice
 
