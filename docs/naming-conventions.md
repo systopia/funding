@@ -20,9 +20,17 @@ The framework provided by the funding extension involves multiple entities, exte
 
 **Funding program**: The context in which the money is to be allocated. It contains a budget, a time interval for applications and a time interval in which recipients can collect the money.
 
-**Application / Request**: A specific application in the context of a funding program. There are (currently) two types of applications: Normal Applications and Combined Applications. Both contain different application forms which are specific to the needs of *Arbeit und Leben*, the organization that funded the development of the Funding Extension.
+**Application / Request**: A specific application in the context of a funding program.
 
-**Funding Case**: All applications that were created by the same applicant for a specific funding program. A funding case might contain multiple applications. Additionally, it contains .... . The Funding Case framework is similar to CiviCase and only accessible within CiviCRM.
+An application has different components:
 
-!!! question
-    Are comments and history part of the application or part of the funding case?
+  * The data that was entered in the application form
+  * The [status](./usage/application-states.md) of the application
+  * Assigned reviewers
+  * Comments by applicants or reviewers that can be private or public
+  * A history of all states and comments
+  * Other general data, for example the creation date or if a review is passed
+
+There are (currently) two types of applications: Normal Applications and Combined Applications. Both contain different application forms which are specific to the needs of *Arbeit und Leben*, the organization that funded the development of the Funding Extension.
+
+**Funding Case**: All applications that were created by the same applicant for a specific funding program. A funding case might contain multiple applications.
