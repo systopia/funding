@@ -89,8 +89,8 @@ final class TransferContractDownloadController implements PageControllerInterfac
       Response::HTTP_OK,
       $headers,
       FALSE,
-    ))->setContentDisposition(ResponseHeaderBag::DISPOSITION_INLINE, $filename);
-
+    ))->setContentDisposition(ResponseHeaderBag::DISPOSITION_INLINE, $filename)
+      ->setMaxAge(0);
   }
 
 }
