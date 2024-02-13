@@ -16,9 +16,8 @@ Some permissions need to be configured only once at the initial configuration of
 
 After installing the funding extension, the Drupal roles need to be given the correct permissions. You can edit the Drupal permissons at **People > Permissions** or `admin/people/permissions`, respectively.
 
-* Grant the following permissions to the already existing role *authenticated user*:
+* Grant the following permissions to the role *CiviRemote: CiviRemote Funding*:
     * Access CiviCRM Funding
-    * Access fontawesome additional settings
 * Reviewers need to have a role that grants the following permissions:
     * CiviCRM: access Funding Program Manager
 * Site Admins need to have a role that grants the following permissions:
@@ -55,9 +54,6 @@ As an example, consider a funding program that funds organizations. The applicat
 
 The dropdown menu will then show all organizations that have an _Employee_ relationship with the applicant that is logged in and creating the application.
 
-!!! question
-    Müssen sowohl Antragssteller*innen als auch zugehörige Organisationen ("recipients") die in **Edit Recipients** erstellten Regeln erfüllen, damit der Antrag gespeichert und abgesendet werden kann? Oder bezieht sich das nur auf die zugehörige Organisation?
-
 ### Edit permissions
 
 These permissions are related to a funding program, independently of a specific funding case or application.
@@ -65,10 +61,10 @@ These permissions are related to a funding program, independently of a specific 
 The following permissions exist:
 
 * **Application: create** allows contacts to create a new application for this funding program.
-* **Application: apply** allows contacts to send the finalized application to the giving organization.
-* **View** allows contacts to view their applications of this funding program in the funding portal.
+* **Application: apply** allows contacts to create a new application and apply it in one step.
+* **View** specifies which funding programs are available to create an application for. It also specifies which funding programs are visible in the CiviCRM funding program list.
 
-The permissions **Application: create** and **Application: apply** both implicitly include the permission **View**.
+The permissions **Application: create** and **Application: apply** are usually granted to applicants. Both implicitly include the permission **View**. The **View** permission is typically given to reviewers and site admins.
 
 Permissions can be assigned to specific contacts, contact types or contacts that have a relationship to a specific contact or contact type. In the last case, you need to specify the relationship type.
 
@@ -76,29 +72,24 @@ A configuration could look like this:
 
 !["Example configuration of permissions on funding program level"](../img/permissions_funding_program.png )
 
-!!! question
-    * Is the screenshot a good example?
-    * Permission **View**: Which applications can be seen? Is this referring to the funding portal or to CiviCRM or both?
-
 ### Initial funding case permissions
 
 Additional to the permissions that are set for a whole funding program, there exist permissions that are on the level of a funding case and can be different between cases. Funding cases are created automatically during the application process and there might be many cases for one funding program. This requires a default set of permissions that are automatically assigned during the creation of a new funding case. These initial permissions can be configured with the action **Initial funding case permissions** of a funding program. To alter the permissions for a specific funding case, go to **Funding > Funding Cases**, find the funding case in the list and choose the action **Edit permissions** for this case.
 
 The following permissions exist for reviewers:
 
-* Application: view
-* Application: request rework
 * Review: content
 * Review: calculative
 * Review: drawdown
 
-The following permissions exist for recipients:
+The following permissions exist for applicants:
 
 * Application: create
 * Application: view
 * Application: modify
 * Application: apply
 * Application: withdraw
+* Application: request rework
 * Drawdown: create
 
 As before, permissions can be assigned to specific contacts, contact types or contacts that have a relationship to a specific contact or contact type. In the last case, you need to specify the relationship type.
