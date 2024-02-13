@@ -4,7 +4,7 @@ The installation described below assumes that CiviCRM and the funding portal run
 
 The funding extension is still under development and there exists no stable release yet.
 
-In the following, `$ENV` refers to the drupal installation root, for example `/var/www/web`.
+In the following, `$DRUPAL_ROOT` refers to the drupal installation root, for example `/var/www/web`.
 
 ## Status of this document
 
@@ -19,13 +19,13 @@ The installation instructions were used on a system with
 ## Configure upload of private files
 
 ```bash
-mkdir $ENV/drupal/web/sites/default/files/private
-chmod g+w $ENV/drupal/web/sites/default/files/private
+mkdir $DRUPAL_ROOT/drupal/web/sites/default/files/private
+chmod g+w $DRUPAL_ROOT/drupal/web/sites/default/files/private
 ```
 
 Grant read and write permissions for the directory `private` to the webserver user.
 
-Set the following setting in `$ENV/drupal/web/sites/default/settings.php`:
+Set the following setting in `$DRUPAL_ROOT/drupal/web/sites/default/settings.php`:
 
 ```php
 $settings['file_private_path'] = 'sites/default/files/private';
@@ -33,7 +33,7 @@ $settings['file_private_path'] = 'sites/default/files/private';
 
 ## Drupal modules and dependencies
 
-Edit `$ENV/drupal/composer.json` and add the following to repositories:
+Edit `$DRUPAL_ROOT/drupal/composer.json` and add the following to repositories:
 
 ```
         "json_forms": {
@@ -54,7 +54,7 @@ Edit `$ENV/drupal/composer.json` and add the following to repositories:
         },
 ```
 
-Open a terminal at `$ENV` and enter
+Open a terminal at `$DRUPAL_ROOT` and enter
 
 ```bash
 composer require drupal/cmrf_core:^2.1  custom/civiremote_funding
@@ -134,9 +134,6 @@ The option **Use PHPWord macros for token replacement** needs to be activated.
 - Activate **Acquire CiviRemote ID** at `/admin/config/services/civiremote.` with Parameter mapping: **Email** → **email**
 - Activate the option **Remote Contact Matching Enabled** at `/civicrm/admin/remotetools`.
 
-!!! question
-    What is the best order between this and the following two paragraphs? Remote Contact Matching needs to be enabled in order to create / synchronise the Drupal roles "RemoteContacts: match and link" and "RemoteContacts: retrieve". The API key needs to be set to configure the CMRF profile. Does synchronising of the roles work before the configuration of the CMRF profile is finished?
-
 ## Configure CiviMRF
 
 Set up an API User:
@@ -154,7 +151,6 @@ Set up an API User:
 Set up a CiviMRF profile under `/admin/config/cmrf/profiles` or edit the default profile:
 
 - The Site Key can be found in your civicrm.settings.php
-- The URL is something of the form [https://example.org/civicrm/ajax/rest]()
 - Insert the API Key you just created.
 
 [Optional] Activate **CiviMRF Call Report** at `/admin/modules`.

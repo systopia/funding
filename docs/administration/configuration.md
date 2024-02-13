@@ -1,16 +1,13 @@
 # Configuration
 
-## Adapt the application webform
+## Adapt the application form
 
 The drupal webform that is shown when creating a new application needs to be different for every organization
 and every funding program. It highly depends on the content of the funding program. The webform that comes with the
-funding extension is in german and reflects the specific needs of _Arbeit und Leben_, the organization that
+funding extension is in German and reflects the specific needs of _Arbeit und Leben_, the organization that
 funded the development of the funding extension.
 
-You can edit the form to your needs.
+Custom forms can be developed in additional CiviCRM extensions. If you need support in this, you can send an email to
+info@systopia.de.
 
-!!! question
-    How would I edit the form? Where do I specify the fields that are present in the webform?
-    Which fields are required?
-
-
+A form editor is planned, but not yet available at this moment.
