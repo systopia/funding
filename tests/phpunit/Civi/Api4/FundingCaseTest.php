@@ -245,4 +245,53 @@ final class FundingCaseTest extends AbstractFundingHeadlessTestCase {
     static::assertSame(0, $permittedAssociatedResult->rowCount);
   }
 
+  /**
+   * @covers \Civi\Funding\Api4\Action\FundingCase\UpdateAmountApprovedAction
+   */
+  public function testUpdateAmountApproved(): void {
+    $this->addInternalFixtures();
+    FundingCase::update(FALSE)
+      ->addWhere('id', '=', $this->permittedFundingCaseId)
+      ->setValues([
+        'status' => 'ongoing',
+        'amount_approved' => 1,
+      ])
+      ->execute();
+
+    RequestTestUtil::mockInternalRequest($this->associatedContactId);
+
+    $e = NULL;
+    try {
+      FundingCase::updateAmountApproved()
+        ->setId($this->permittedFundingCaseId)
+        ->setAmount(123.45)
+        ->execute();
+    }
+    catch (UnauthorizedException $e) {
+      static::assertSame('Updating the approved amount of this funding case is not allowed.', $e->getMessage());
+    }
+    static::assertNotNull($e);
+
+    FundingCaseContactRelationFixture::addContact(
+      $this->associatedContactId,
+      $this->permittedFundingCaseId,
+      ['review_calculative'],
+    );
+
+    AttachmentFixture::addFixture(
+      'civicrm_funding_case_type',
+      $this->fundingCaseTypeId,
+      E::path('tests/phpunit/resources/FundingCaseDocumentTemplate.docx'),
+      ['file_type_id:name' => FileTypeNames::TRANSFER_CONTRACT_TEMPLATE],
+    );
+
+    $result = FundingCase::updateAmountApproved()
+      ->setId($this->permittedFundingCaseId)
+      ->setAmount(123.45)
+      ->execute();
+
+    static::assertSame(123.45, $result['amount_approved']);
+    static::assertSame('ongoing', $result['status']);
+  }
+
 }

@@ -18,6 +18,7 @@ msgstr "Kein passender Antrag oder fehlende Berechtigung."
 #: Civi/Funding/Api4/Action/FundingCase/ApproveAction.php
 #: Civi/Funding/Api4/Action/FundingCase/GetPossibleActionsAction.php
 #: Civi/Funding/Api4/Action/FundingCase/RecreateTransferContractAction.php
+#: Civi/Funding/FundingCase/Api4/ActionHandler/UpdateAmountApprovedActionHandler.php
 msgid "Funding case with ID \"%1\" not found"
 msgstr "Förderfall mit ID \"%1\" nicht gefunden"
 
@@ -174,6 +175,7 @@ msgstr "Berechtigung zum Ablehnen des Mittelabrufs fehlt."
 
 #: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
+#: ang/crmFunding/case/fundingCase.template.html
 #: managed/SavedSearchFundingCases.mgd.php
 #: managed/SavedSearchFundingProgramControlling.mgd.php
 msgid "Amount Approved"
@@ -663,6 +665,11 @@ msgstr "extern"
 msgid "Approving this funding case is not allowed."
 msgstr "Diesen Förderfall zu bewilligen ist nicht erlaubt."
 
+#: Civi/Funding/FundingCase/Handler/FundingCaseUpdateAmountApprovedHandler.php
+msgid "Updating the approved amount of this funding case is not allowed."
+msgstr ""
+"Den bewilligten Betrag dieses Förderfalls zu ändern, ist nicht erlaubt."
+
 #: Civi/Funding/FundingCase/Handler/TransferContractRecreateHandler.php
 msgid "Permission to recreate transfer contract is missing."
 msgstr "Berechtigung zum Erstellen des Weiterleitungsvertrags fehlt."
@@ -1088,6 +1095,10 @@ msgstr "Verfügbares Budget"
 #: managed/SavedSearchFundingDrawdowns.mgd.php
 msgid "Amount"
 msgstr "Betrag"
+
+#: ang/crmFunding/case/fundingCase.template.html
+msgid "Update Amount Approved"
+msgstr "Bewilligten Betrag ändern"
 
 #: ang/crmFunding/case/fundingCase.template.html
 msgid "Funding Case: %1"

@@ -40,6 +40,7 @@ use Civi\Funding\FundingCase\Handler\DefaultFundingCaseFormUpdateGetHandler;
 use Civi\Funding\FundingCase\Handler\DefaultFundingCaseFormUpdateSubmitHandler;
 use Civi\Funding\FundingCase\Handler\DefaultFundingCaseFormUpdateValidateHandler;
 use Civi\Funding\FundingCase\Handler\DefaultFundingCasePossibleActionsGetHandler;
+use Civi\Funding\FundingCase\Handler\DefaultFundingCaseUpdateAmountApprovedHandler;
 use Civi\Funding\FundingCase\Handler\DefaultTransferContractRecreateHandler;
 use Civi\Funding\FundingCase\Handler\FundingCaseApproveHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseFormDataGetHandlerInterface;
@@ -50,6 +51,7 @@ use Civi\Funding\FundingCase\Handler\FundingCaseFormUpdateGetHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseFormUpdateSubmitHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseFormUpdateValidateHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCasePossibleActionsGetHandlerInterface;
+use Civi\Funding\FundingCase\Handler\FundingCaseUpdateAmountApprovedHandlerInterface;
 use Civi\Funding\FundingCase\Handler\TransferContractRecreateHandlerInterface;
 use Civi\Funding\FundingCase\TransferContractRouter;
 use Civi\Funding\Permission\FundingCase\ContactsWithPermissionLoader;
@@ -70,6 +72,14 @@ $container->autowire(FundingCaseManager::class);
 $container->autowire(FundingCasePermissionsCacheManager::class);
 $container->autowire(TransferContractRouter::class);
 $container->autowire(FundingCaseIdentifierGeneratorInterface::class, FundingCaseIdentifierGenerator::class);
+
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/FundingCase/Api4/ActionHandler',
+  'Civi\\Funding\\FundingCase\\Api4\\ActionHandler',
+  ActionHandlerInterface::class,
+  [ActionHandlerInterface::SERVICE_TAG => []],
+);
 
 ServiceRegistrator::autowireAllImplementing(
   $container,
@@ -101,6 +111,10 @@ $container->autowire(FundingCaseApproveHandlerInterface::class, DefaultFundingCa
 $container->autowire(
   FundingCasePossibleActionsGetHandlerInterface::class,
   DefaultFundingCasePossibleActionsGetHandler::class
+);
+$container->autowire(
+  FundingCaseUpdateAmountApprovedHandlerInterface::class,
+  DefaultFundingCaseUpdateAmountApprovedHandler::class
 );
 $container->autowire(TransferContractRecreateHandlerInterface::class, DefaultTransferContractRecreateHandler::class);
 

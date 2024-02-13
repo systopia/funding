@@ -83,5 +83,12 @@ fundingModule.factory('fundingCaseService', ['crmApi4', function(crmApi4) {
      */
     recreateTransferContract:
         (id) => crmApi4('FundingCase', 'recreateTransferContract', {id}),
+
+    /**
+     * @param {integer} id
+     * @param {number} amount
+     * @returns {Promise<object>}
+     */
+    updateAmountApproved: (id, amount) => crmApi4('FundingCase', 'updateAmountApproved', {id, amount}),
   };
 }]);

@@ -17,14 +17,14 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\FundingCase\Actions;
+namespace Civi\Funding\FundingCase\Handler;
 
-final class FundingCaseActions {
+use Civi\Funding\FundingCase\Command\FundingCaseUpdateAmountApprovedCommand;
 
-  public const APPROVE = 'approve';
+interface FundingCaseUpdateAmountApprovedHandlerInterface {
 
-  public const DELETE = 'delete';
+  public const SERVICE_TAG = 'funding.case.update_approved_amount_handler';
 
-  public const UPDATE_AMOUNT_APPROVED = 'update-amount-approved';
+  public function handle(FundingCaseUpdateAmountApprovedCommand $command): void;
 
 }

@@ -59,7 +59,7 @@ fundingModule.controller('fundingCaseCtrl', [
           .find(part => part.type = 'currency').value;
     }
 
-    document.addEventListener('applicationSearchTaskExecuted', (event) => {
+    document.addEventListener('applicationSearchTaskExecuted', () => {
       fundingCaseService.getPossibleActions(fundingCase.id).then(
         (possibleActions) => $scope.possibleActions = possibleActions
       );
@@ -152,6 +152,37 @@ fundingModule.controller('fundingCaseCtrl', [
       $approveModal.modal('hide');
       return withOverlay(crmStatus({}, fundingCaseService.approve(fundingCase.id, $scope.approve.amount)
           .then(onFundingCaseUpdate)
+      ));
+    };
+
+    $scope.updateAmountApproved = {
+      amount: $scope.fundingCase.amount_approved,
+    };
+    let $updateAmountApprovedModal = null;
+    $scope.updateAmountApprovedPrepare = function () {
+      if ($scope.fundingProgram.budget !== null) {
+        fundingProgramService.getAmountApproved(fundingCase.funding_program_id).then((amountApproved) => {
+          $scope.availableBudget = $scope.fundingProgram.budget - amountApproved + $scope.fundingCase.amount_approved;
+        });
+      }
+
+      if ($updateAmountApprovedModal === null) {
+        $updateAmountApprovedModal = $('#update-amount-approved-modal');
+      }
+      $updateAmountApprovedModal.modal({backdrop: 'static'});
+    };
+    $scope.updateAmountApprovedSubmit = function () {
+      if (!document.getElementById('amount-approved').reportValidity()) {
+        return new Promise((resolve) => resolve(false));
+      }
+
+      $updateAmountApprovedModal.modal('hide');
+      if ($scope.fundingCase.amount_approved === $scope.updateAmountApproved.amount) {
+        return new Promise((resolve) => resolve(true));
+      }
+
+      return withOverlay(crmStatus({}, fundingCaseService.updateAmountApproved(fundingCase.id, $scope.updateAmountApproved.amount)
+        .then(onFundingCaseUpdate)
       ));
     };
 
