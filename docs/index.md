@@ -24,13 +24,14 @@ This CiviCRM extension is provided as Free and Open Source Software, and we are 
 
 As part of the project, we have so far developed, enhanced or integrated the following extensions and modules (eventually not exhaustive):
 
-- funding (CiviCRM extension)
-- civiremote_funding (Drupal module)
-- drupal-json_forms (Drupal modulel)
-- Opis JSON Scheme + opis-json-schema-ext (PHP packages)
-- Symfony ExpressionLanguage + expression-language-ext (PHP packages)
-- external-file (CiviCRM extension)
-- civiremote + cmrf + de.systopia.xcm + de.systopia.identitytracker (Tools for connecting Drupal portal environments with CiviCRM)
-- de.systopia.civioffice (added new interfaces)
+- [funding](https://github.com/systopia/funding) (CiviCRM extension)
+- [civiremote_funding](https://github.com/systopia/drupal-civiremote_funding/) (Drupal module)
+- [drupal-json_forms](https://github.com/systopia/drupal-json_forms) (Drupal module)
+- Opis JSON Scheme + [opis-json-schema-ext](https://github.com/systopia/opis-json-schema-ext) (PHP library that enhances Opis JSON Schema)
+- Symfony ExpressionLanguage + [expression-language-ext](https://github.com/systopia/expression-language-ext) (PHP library that enhances Symfony ExpressionLanguage)
+- [external-file](https://github.com/systopia/external-file) (CiviCRM extension)
+- [civiremote](https://github.com/systopia/civiremote) + [cmrf](https://www.drupal.org/project/cmrf_core) + [de.systopia.xcm](https://github.com/systopia/de.systopia.xcm) + [de.systopia.identitytracker](https://github.com/systopia/de.systopia.identitytracker) (Tools for connecting Drupal portal environments with CiviCRM)
+- [de.systopia.civioffice](https://github.com/systopia/de.systopia.civioffice) (CiviCRM extension)
+- [de.systopia.remotetools](https://github.com/systopia/de.systopia.remotetools) (CiviCRM extension)
 
 If you are willing to support us in developing this CiviCRM extension, please send an email to info@systopia.de to get an invoice or agree a different payment method. Thank you!
