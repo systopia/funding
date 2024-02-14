@@ -41,6 +41,7 @@
     <name>funding_program_id</name>
     <type>int unsigned</type>
     <required>true</required>
+    <title>Funding Program</title>
     <comment>FK to FundingProgram</comment>
     <html>
       <type>EntityRef</type>
@@ -126,6 +127,7 @@
     <name>recipient_contact_id</name>
     <type>int unsigned</type>
     <required>true</required>
+    <title>Recipient</title>
     <comment>FK to Contact</comment>
     <html>
       <type>EntityRef</type>
