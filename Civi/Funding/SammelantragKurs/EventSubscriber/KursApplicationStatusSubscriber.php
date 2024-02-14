@@ -37,7 +37,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * This subscriber ensures that under those conditions the status is changed to
  * "eligible" instead of "rework-review-requested".
  */
-final class KursApplicationStatusSubscriber implements EventSubscriberInterface {
+class KursApplicationStatusSubscriber implements EventSubscriberInterface {
 
   private ApplicationProcessManager $applicationProcessManager;
 
