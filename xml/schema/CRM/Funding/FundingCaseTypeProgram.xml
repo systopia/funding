@@ -25,6 +25,7 @@
     <name>funding_program_id</name>
     <type>int unsigned</type>
     <required>true</required>
+    <title>Funding Program</title>
     <comment>FK to FundingProgram</comment>
     <html>
       <type>EntityRef</type>
@@ -47,6 +48,7 @@
     <name>funding_case_type_id</name>
     <type>int unsigned</type>
     <required>true</required>
+    <title>Funding Case Type</title>
     <comment>FK to FundingCaseType</comment>
     <html>
       <type>EntityRef</type>

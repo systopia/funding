@@ -654,6 +654,34 @@ msgstr ""
 msgid "Validation failed: %1"
 msgstr ""
 
+#: ang/afformFundingProgramAdd.aff.php
+msgid "New Funding Program"
+msgstr ""
+
+#: ang/afformFundingProgramEdit.aff.php
+msgid "Edit Funding Program"
+msgstr ""
+
+#: ang/afsearchFundingCaseApplicationProcesses.aff.php managed/SavedSearchFundingApplicationProcesses.mgd.php
+msgid "Funding Applications"
+msgstr ""
+
+#: ang/afsearchFundingCases.aff.php managed/NavigationFunding.mgd.php managed/SavedSearchFundingCases.mgd.php
+msgid "Funding Cases"
+msgstr ""
+
+#: ang/afsearchFundingProgramControlling.aff.php managed/NavigationFunding.mgd.php managed/SavedSearchFundingProgramControlling.mgd.php
+msgid "Funding Program Controlling"
+msgstr ""
+
+#: ang/afsearchFundingPrograms.aff.php managed/NavigationFunding.mgd.php managed/SavedSearchFundingPrograms.mgd.php
+msgid "Funding Programs"
+msgstr ""
+
+#: ang/afsearchFundingTasksMy.aff.php managed/NavigationFunding.mgd.php
+msgid "My Tasks"
+msgstr ""
+
 #: ang/crmFunding/application/application.js ang/crmFunding/application/applicationEditor.directive.js ang/crmFunding/application/applicationReviewer.directive.js ang/crmFunding/application/applicationReviewers.directive.js ang/crmFunding/application/applicationSearchTasksMenu.decorator.js ang/crmFunding/application/applicationSidebar.directive.js ang/crmFunding/application/applicationSubmitModal.component.js ang/crmFunding/application/history/applicationProcessActivity.directive.js ang/crmFunding/application/history/applicationProcessHistory.directive.js ang/crmFunding/case/fundingCase.js ang/crmFunding/case/fundingCasePermissions.js ang/crmFunding/case/permissions/fundingCaseContactRelation.directive.js ang/crmFunding/form/editableField.directive.js ang/crmFunding/form/fundingAddRowButton.directive.js ang/crmFunding/form/fundingSelectPermissions.directive.js ang/crmFunding/form/fundingValidationErrors.directive.js ang/crmFunding/form/jsonFormsControl.directive.js ang/crmFunding/fundingDate.filter.js ang/crmFunding/program/fundingNewCasePermissions.js ang/crmFunding/program/fundingProgramPermissions.js ang/crmFunding/program/newCasePermissions/fundingNewCasePermissions.directive.js ang/crmFunding/program/permissions/fundingProgramContactRelation.directive.js ang/crmFunding/program/recipientRelations.js ang/crmFunding/program/recipients/recipientRelation.directive.js
 msgid "funding"
 msgstr ""
@@ -1074,22 +1102,6 @@ msgstr ""
 msgid "Funding"
 msgstr ""
 
-#: managed/NavigationFunding.mgd.php managed/SavedSearchFundingCases.mgd.php
-msgid "Funding Cases"
-msgstr ""
-
-#: managed/NavigationFunding.mgd.php
-msgid "My Tasks"
-msgstr ""
-
-#: managed/NavigationFunding.mgd.php managed/SavedSearchFundingPrograms.mgd.php
-msgid "Funding Programs"
-msgstr ""
-
-#: managed/NavigationFunding.mgd.php managed/SavedSearchFundingProgramControlling.mgd.php
-msgid "Funding Program Controlling"
-msgstr ""
-
 #: managed/NavigationFunding.mgd.php
 msgid "Add Funding Program"
 msgstr ""
@@ -1112,10 +1124,6 @@ msgstr ""
 
 #: managed/OptionValuesFileType.mgd.php
 msgid "Payment Instruction Template"
-msgstr ""
-
-#: managed/SavedSearchFundingApplicationProcesses.mgd.php
-msgid "Funding Applications"
 msgstr ""
 
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingDrawdowns.mgd.php managed/SavedSearchFundingProgramControlling.mgd.php managed/SavedSearchFundingPrograms.mgd.php managed/SavedSearchFundingTasksMy.mgd.php
