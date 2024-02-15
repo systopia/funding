@@ -1,0 +1,279 @@
+<?php
+/*
+ * Copyright (C) 2023 SYSTOPIA GmbH
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as published by
+ *  the Free Software Foundation in version 3.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+declare(strict_types = 1);
+
+namespace Civi\Funding\ApplicationProcess\JsonSchema\CostItem;
+
+use Civi\Funding\Util\Uuid;
+use Opis\JsonSchema\Exceptions\ParseException;
+use Opis\JsonSchema\JsonPointer;
+use Opis\JsonSchema\Parsers\SchemaParser;
+use Opis\JsonSchema\ValidationContext;
+use Systopia\JsonSchema\Exceptions\VariableResolveException;
+use Systopia\JsonSchema\Expression\ExpressionVariablesContainer;
+use Systopia\JsonSchema\Expression\Variables\JsonPointerVariable;
+use Systopia\JsonSchema\Expression\Variables\Variable;
+use Systopia\JsonSchema\Keywords\SetValueTrait;
+use Webmozart\Assert\Assert;
+
+/**
+ * @phpstan-type clearingT array{itemLabel: string}
+ */
+final class CostItemDataFactory {
+
+  use SetValueTrait;
+
+  private string $type;
+
+  /**
+   * @phpstan-var array{value: string}|array{property: string}
+   */
+  private array $identifier;
+
+  private Variable $amount;
+
+  private ExpressionVariablesContainer $propertiesContainer;
+
+  /**
+   * @phpstan-var clearingT|null
+   */
+  private ?array $clearing;
+
+  /**
+   * @param \stdClass $parentData
+   *   Object specifying a JSON array that contains "$costItem" as keyword.
+   *
+   * @throws \Opis\JsonSchema\Exceptions\ParseException
+   *
+   * phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
+   */
+  public static function newForArray(\stdClass $parentData, SchemaParser $parser): self {
+  // phpcs:enable
+    $data = $parentData->{'$costItem'} ?? NULL;
+    if (!$data instanceof \stdClass) {
+      throw new ParseException('Invalid $costItem keyword configuration');
+    }
+
+    $items = $parentData->items ?? NULL;
+    if (!$items instanceof \stdClass) {
+      throw new ParseException('Array items must be specified for use with $costItem');
+    }
+
+    if ('object' !== ($items->type ?? NULL)) {
+      throw new ParseException('Array items must be of type "object" for use with $costItem');
+    }
+
+    if (!self::propertyIsNonEmptyString($data, 'identifierProperty')) {
+      throw new ParseException('identifierProperty is required');
+    }
+
+    /** @var string $identifierProperty */
+    $identifierProperty = $data->identifierProperty;
+    if (!property_exists($items->properties, $identifierProperty)) {
+      throw new ParseException(sprintf('No property at "%s" defined', $identifierProperty));
+    }
+
+    // @phpstan-ignore-next-line
+    $identifierDataType = $items->properties->{$identifierProperty}->type ?? NULL;
+    if ('string' !== $identifierDataType) {
+      throw new ParseException('The identifier data type must be of type "string"');
+    }
+
+    $identifier = ['property' => $identifierProperty];
+
+    if (!self::propertyIsNonEmptyString($data, 'amountProperty')) {
+      throw new ParseException('amountProperty is required');
+    }
+
+    $amountProperty = $data->amountProperty;
+    // @phpstan-ignore-next-line
+    $amountDataType = $items->properties->{$amountProperty}->type ?? NULL;
+    if (is_array($amountDataType) && 2 === count($amountDataType)) {
+      if ('null' === $amountDataType[0]) {
+        $amountDataType = $amountDataType[1];
+      }
+      elseif ('null' === $amountDataType[1]) {
+        $amountDataType = $amountDataType[0];
+      }
+    }
+    if ('number' !== $amountDataType && 'integer' !== $amountDataType) {
+      throw new ParseException('The amount data type must be of type number or integer');
+    }
+
+    $amount = Variable::create((object) ['$data' => '0/' . $amountProperty, 'fallback' => 0], $parser);
+
+    $properties = [];
+    foreach ($items->properties as $name => $property) {
+      $properties[$name] = (object) ['$data' => '0/' . $name];
+    }
+    $propertiesContainer = ExpressionVariablesContainer::parse((object) $properties, $parser);
+
+    if (!self::propertyIsNonEmptyString($data, 'type')) {
+      throw new ParseException('type must be a non empty string');
+    }
+
+    $type = $data->type;
+    $clearing = self::parseClearing($data);
+
+    return new self($type, $identifier, $amount, $propertiesContainer, $clearing);
+  }
+
+  /**
+   * @param \stdClass $data
+   *   The cost item keyword data for a property of type number or integer.
+   *
+   * @throws \Opis\JsonSchema\Exceptions\ParseException
+   */
+  public static function newForNumber(\stdClass $data, SchemaParser $parser): self {
+    if (!self::propertyIsNonEmptyString($data, 'identifier')) {
+      throw new ParseException('identifier is required');
+    }
+
+    if (0 === preg_match('/^[a-zA-Z0-9.\-_]+$/', $data->identifier)) {
+      throw new ParseException('identifier may only contain letters, numbers, ".", "-", and "_"');
+    }
+
+    $identifier = ['value' => $data->identifier];
+    $amount = Variable::create((object) ['$data' => '0/'], $parser);
+    $propertiesContainer = ExpressionVariablesContainer::createEmpty();
+
+    if (!self::propertyIsNonEmptyString($data, 'type')) {
+      throw new ParseException('type must be a non empty string');
+    }
+
+    $type = $data->type;
+    $clearing = self::parseClearing($data);
+
+    return new self($type, $identifier, $amount, $propertiesContainer, $clearing);
+  }
+
+  /**
+   * @phpstan-return clearingT|null
+   *
+   * @throws \Opis\JsonSchema\Exceptions\ParseException
+   */
+  private static function parseClearing(\stdClass $data): ?array {
+    if (!property_exists($data, 'clearing')) {
+      return NULL;
+    }
+
+    if (!self::propertyIsNonEmptyString($data->clearing, 'itemLabel')) {
+      throw new ParseException('If clearing is enabled, an item label has to be set');
+    }
+
+    return [
+      'itemLabel' => $data->clearing->itemLabel,
+    ];
+  }
+
+  private static function propertyIsNonEmptyString(\stdClass $data, string $propertyName): bool {
+    return property_exists($data, $propertyName)
+      && is_string($data->{$propertyName})
+      && '' !== $data->{$propertyName};
+  }
+
+  /**
+   * @phpstan-param array{value: string}|array{property: string} $identifier
+   *   value is set if keyword is applied to number or integer, property is set
+   *   if keyword is applied to array.
+   * @phpstan-param clearingT|null $clearing
+   *   NULL if no clearing is required.
+   */
+  public function __construct(
+    string $type,
+    array $identifier,
+    Variable $amount,
+    ExpressionVariablesContainer $propertiesContainer,
+    ?array $clearing
+  ) {
+    $this->type = $type;
+    $this->identifier = $identifier;
+    $this->amount = $amount;
+    $this->propertiesContainer = $propertiesContainer;
+    $this->clearing = $clearing;
+  }
+
+  /**
+   * The amount of the returned cost item data is 0, if the amount in the
+   * context data is NULL.
+   *
+   * @throws \Systopia\JsonSchema\Exceptions\VariableResolveException
+   * @throws \Systopia\JsonSchema\Exceptions\ReferencedDataHasViolationException
+   */
+  public function createCostItemData(ValidationContext $context): CostItemData {
+    $dataPointer = JsonPointer::pathToString($context->currentDataPath());
+    $dataType = $context->currentDataType();
+    if (!in_array($dataType, ['number', 'integer', 'object'], TRUE)) {
+      throw new \RuntimeException(
+        sprintf('Expected data type number, integer, or object got "%s" at "%s"', $dataType, $dataPointer)
+      );
+    }
+
+    $identifier = $this->getOrGenerateIdentifier($context);
+
+    $amount = $this->amount->getValue($context, Variable::FLAG_FAIL_ON_VIOLATION) ?? 0;
+    if (!is_float($amount) && !is_int($amount)) {
+      throw new VariableResolveException('Amount could not be resolved to a number');
+    }
+
+    $clearing = $this->clearing;
+    $properties = $this->propertiesContainer->getValues($context, Variable::FLAG_FAIL_ON_VIOLATION);
+
+    return new CostItemData([
+      'type' => $this->type,
+      'identifier' => $identifier,
+      'amount' => (float) $amount,
+      'properties' => $properties,
+      'clearing' => $clearing,
+      'dataPointer' => $dataPointer,
+      'dataType' => $dataType,
+    ]);
+  }
+
+  /**
+   * @throws \Systopia\JsonSchema\Exceptions\VariableResolveException
+   * @throws \Systopia\JsonSchema\Exceptions\ReferencedDataHasViolationException
+   */
+  private function getOrGenerateIdentifier(ValidationContext $context): string {
+    if (isset($this->identifier['value'])) {
+      return $this->identifier['value'];
+    }
+
+    // @phpstan-ignore-next-line false positive
+    $identifierProperty = $this->identifier['property'];
+    $pointer = JsonPointer::parse('0/' . $identifierProperty);
+    Assert::notNull($pointer);
+    $identifier = (new JsonPointerVariable($pointer))->getValue($context, Variable::FLAG_FAIL_ON_VIOLATION);
+    if (NULL === $identifier || '' === $identifier) {
+      $identifier = Uuid::generateRandom();
+      // @phpstan-ignore-next-line
+      $this->setValue($context, function (\stdClass $data) use ($identifierProperty, $identifier) {
+        $data->{$identifierProperty} = $identifier;
+
+        return $data;
+      });
+    }
+
+    if (!is_string($identifier)) {
+      throw new VariableResolveException('Identifier could not be resolved to a string');
+    }
+
+    return $identifier;
+  }
+
+}

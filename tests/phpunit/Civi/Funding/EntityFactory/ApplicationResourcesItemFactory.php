@@ -25,11 +25,11 @@ use Civi\Funding\Entity\ApplicationResourcesItemEntity;
  * @phpstan-type applicationResourcesItemT array{
  *   id?: int,
  *   application_process_id?: int,
- *   identifier?: string,
- *   type?: string,
+ *   identifier?: non-empty-string,
+ *   type?: non-empty-string,
  *   amount?: float,
- *   properties?: array<int|string, mixed>,
- *   data_pointer?: string,
+ *   properties?: array<string, mixed>,
+ *   data_pointer?: non-empty-string,
  * }
  */
 final class ApplicationResourcesItemFactory {

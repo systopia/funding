@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2023 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,11 +17,31 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Entity;
+namespace Civi\Funding\Form;
+
+use Civi\RemoteTools\JsonForms\JsonFormsElement;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 
 /**
- * @phpstan-import-type financePlanItemT from AbstractFinancePlanItemEntity
- * @phpstan-type applicationCostItemT financePlanItemT
+ * @codeCoverageIgnore
  */
-final class ApplicationCostItemEntity extends AbstractFinancePlanItemEntity {
+class JsonFormsForm implements JsonFormsFormInterface {
+
+  private JsonSchema $jsonSchema;
+
+  private JsonFormsElement $uiSchema;
+
+  public function __construct(JsonSchema $jsonSchema, JsonFormsElement $uiSchema) {
+    $this->jsonSchema = $jsonSchema;
+    $this->uiSchema = $uiSchema;
+  }
+
+  public function getJsonSchema(): JsonSchema {
+    return $this->jsonSchema;
+  }
+
+  public function getUiSchema(): JsonFormsElement {
+    return $this->uiSchema;
+  }
+
 }

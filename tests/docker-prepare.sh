@@ -84,5 +84,5 @@ else
 fi
 
 cd "$FUNDING_EXT_DIR"
-composer update --no-progress --prefer-dist --optimize-autoloader --no-dev
+composer update --no-progress --prefer-dist --optimize-autoloader
 composer composer-phpunit -- update --no-progress --prefer-dist

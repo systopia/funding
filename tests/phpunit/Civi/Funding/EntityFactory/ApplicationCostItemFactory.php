@@ -25,10 +25,10 @@ use Civi\Funding\Entity\ApplicationCostItemEntity;
  * @phpstan-type applicationCostItemT array{
  *   id?: int,
  *   application_process_id?: int,
- *   identifier?: string,
- *   type?: string,
+ *   identifier?: non-empty-string,
+ *   type?: non-empty-string,
  *   amount?: float,
- *   properties?: array<int|string, mixed>,
+ *   properties?: array<string, mixed>,
  * }
  */
 final class ApplicationCostItemFactory {

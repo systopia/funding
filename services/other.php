@@ -56,6 +56,10 @@ if (!$container->has(PropertyAccessorInterface::class)) {
     ->setFactory([PropertyAccess::class, 'createPropertyAccessor']);
 }
 
+if (!$container->has(\Civi\Core\Format::class)) {
+  $container->setAlias(\Civi\Core\Format::class, 'format');
+}
+
 $container->autowire(DAOActionFactoryInterface::class, DAOActionFactory::class);
 
 $container->autowire(UrlGenerator::class);

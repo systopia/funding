@@ -23,6 +23,8 @@ final class Uuid {
 
   /**
    * Copied from https://github.com/symfony/polyfill-uuid/blob/a41886c1c81dc075a09c71fe6db5b9d68c79de23/Uuid.php#L356
+   *
+   * @phpstan-return non-empty-string
    */
   public static function generateRandom(): string {
     $uuid = bin2hex(random_bytes(16));

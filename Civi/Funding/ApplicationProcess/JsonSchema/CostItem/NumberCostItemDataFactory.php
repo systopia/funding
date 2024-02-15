@@ -31,8 +31,14 @@ use Opis\JsonSchema\ValidationContext;
  */
 final class NumberCostItemDataFactory {
 
+  /**
+   * @phpstan-var non-empty-string
+   */
   private string $type;
 
+  /**
+   * @phpstan-var non-empty-string
+   */
   private string $identifier;
 
   /**
@@ -92,6 +98,8 @@ final class NumberCostItemDataFactory {
   }
 
   /**
+   * @phpstan-param non-empty-string $type
+   * @phpstan-param non-empty-string $identifier
    * @phpstan-param clearingT|null $clearing
    *   NULL if no clearing is required.
    */
@@ -125,13 +133,16 @@ final class NumberCostItemDataFactory {
       throw new \InvalidArgumentException('Data is not a number');
     }
 
+    /** @phpstan-var non-empty-string $dataPointer */
+    $dataPointer = JsonPointer::pathToString($context->currentDataPath());
+
     return new CostItemData([
       'type' => $this->type,
       'identifier' => $this->identifier,
       'amount' => (float) $amount,
       'properties' => [],
       'clearing' => $this->clearing,
-      'dataPointer' => JsonPointer::pathToString($context->currentDataPath()),
+      'dataPointer' => $dataPointer,
       'dataType' => $dataType,
     ]);
   }

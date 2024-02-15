@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2024 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,25 +17,28 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\ApplicationProcess;
+namespace Civi\Funding\ApplicationProcess\Clearing\Container;
 
-use Civi\Api4\FundingApplicationResourcesItem;
-use Civi\Funding\Entity\ApplicationResourcesItemEntity;
-
-/**
- * @extends AbstractFinancePlanItemManager<ApplicationResourcesItemEntity>
- */
-class ApplicationResourcesItemManager extends AbstractFinancePlanItemManager {
-
-  protected function getApiEntityName(): string {
-    return FundingApplicationResourcesItem::getEntityName();
-  }
+final class ClearingItemsGroup {
 
   /**
-   * @inheritDoc
+   * @var string|null
+   *   If not NULL, a JSON forms group shall be created.
    */
-  protected function getEntityClass(): string {
-    return ApplicationResourcesItemEntity::class;
+  public ?string $label;
+
+  /**
+   * @phpstan-var array<string, \Civi\RemoteTools\JsonSchema\JsonSchema>
+   *   JSON Forms elements of the application form mapped by their scopes.
+   */
+  public array $elements = [];
+
+  /**
+   * @phpstan-param array<string, \Civi\RemoteTools\JsonSchema\JsonSchema> $elements
+   */
+  public function __construct(?string $label, array $elements = []) {
+    $this->label = $label;
+    $this->elements = $elements;
   }
 
 }

@@ -20,73 +20,9 @@ declare(strict_types = 1);
 namespace Civi\Funding\Entity;
 
 /**
- * @phpstan-type applicationResourcesItemT array{
- *   id?: int,
- *   application_process_id: int,
- *   identifier: string,
- *   type: string,
- *   amount: float,
- *   properties: array<int|string, mixed>,
- *   data_pointer: string,
- * }
- *
- * @phpstan-extends AbstractEntity<applicationResourcesItemT>
+ * @phpstan-import-type financePlanItemT from AbstractFinancePlanItemEntity
+ * @phpstan-type applicationResourcesItemT financePlanItemT
  */
-final class ApplicationResourcesItemEntity extends AbstractEntity {
-
-  public function getApplicationProcessId(): int {
-    return $this->values['application_process_id'];
-  }
-
-  public function getIdentifier(): string {
-    return $this->values['identifier'];
-  }
-
-  public function getType(): string {
-    return $this->values['type'];
-  }
-
-  public function setType(string $type): self {
-    $this->values['type'] = $type;
-
-    return $this;
-  }
-
-  public function getAmount(): float {
-    return $this->values['amount'];
-  }
-
-  public function setAmount(float $amount): self {
-    $this->values['amount'] = $amount;
-
-    return $this;
-  }
-
-  /**
-   * @phpstan-return array<int|string, mixed> JSON serializable array.
-   */
-  public function getProperties(): array {
-    return $this->values['properties'];
-  }
-
-  /**
-   * @phpstan-param array<int|string, mixed> $properties
-   *   JSON serializable array.
-   */
-  public function setProperties(array $properties): self {
-    $this->values['properties'] = $properties;
-
-    return $this;
-  }
-
-  public function getDataPointer(): string {
-    return $this->values['data_pointer'];
-  }
-
-  public function setDataPointer(string $dataPointer): self {
-    $this->values['data_pointer'] = $dataPointer;
-
-    return $this;
-  }
+final class ApplicationResourcesItemEntity extends AbstractFinancePlanItemEntity {
 
 }
