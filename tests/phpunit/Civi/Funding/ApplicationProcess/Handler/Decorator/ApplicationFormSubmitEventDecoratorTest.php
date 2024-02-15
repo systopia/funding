@@ -60,7 +60,7 @@ final class ApplicationFormSubmitEventDecoratorTest extends TestCase {
 
   public function testHandle(): void {
     $command = $this->createCommand();
-    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([], []), FALSE);
+    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([], [], []), FALSE);
     $result = ApplicationFormSubmitResult::createSuccess($validationResult);
 
     $this->decoratedHandlerMock->expects(static::once())->method('handle')
@@ -78,7 +78,7 @@ final class ApplicationFormSubmitEventDecoratorTest extends TestCase {
     $errorMessages = ['/a/b' => ['error']];
     $validationResult = ApplicationValidationResult::newInvalid(
       $errorMessages,
-      new TestValidatedData([], [])
+      new TestValidatedData([], [], [])
     );
     $result = ApplicationFormSubmitResult::createError($validationResult);
 

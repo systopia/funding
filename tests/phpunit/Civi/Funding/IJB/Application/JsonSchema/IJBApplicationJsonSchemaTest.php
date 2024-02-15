@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\IJB\Application\JsonSchema;
 
 use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemDataCollector;
+use Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemDataCollector;
 use Civi\Funding\ApplicationProcess\JsonSchema\Validator\OpisApplicationValidatorFactory;
 use Civi\Funding\Form\JsonSchema\JsonSchemaRecipient;
 use Civi\Funding\Form\Traits\AssertFormTrait;
@@ -278,13 +279,18 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
 
     $validator = OpisApplicationValidatorFactory::getValidator();
     $costItemDataCollector = new CostItemDataCollector();
+    $resourcesItemDataCollector = new ResourcesItemDataCollector();
     $result = $validator->validate(
       $data,
       \json_encode($jsonSchema),
-      ['costItemDataCollector' => $costItemDataCollector]
+      [
+        'costItemDataCollector' => $costItemDataCollector,
+        'resourcesItemDataCollector' => $resourcesItemDataCollector,
+      ]
     );
     static::assertValidationValid($result);
     static::assertCount(19, $costItemDataCollector->getCostItemsData());
+    static::assertCount(7, $resourcesItemDataCollector->getResourcesItemsData());
 
     $programmtage = 3;
     static::assertSame($programmtage, $data->grunddaten->programmtage);
@@ -567,13 +573,18 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
 
     $validator = OpisApplicationValidatorFactory::getValidator();
     $costItemDataCollector = new CostItemDataCollector();
+    $resourcesItemDataCollector = new ResourcesItemDataCollector();
     $result = $validator->validate(
       $data,
       \json_encode($jsonSchema),
-      ['costItemDataCollector' => $costItemDataCollector]
+      [
+        'costItemDataCollector' => $costItemDataCollector,
+        'resourcesItemDataCollector' => $resourcesItemDataCollector,
+      ]
     );
     static::assertValidationValid($result);
     static::assertCount(18, $costItemDataCollector->getCostItemsData());
+    static::assertCount(7, $resourcesItemDataCollector->getResourcesItemsData());
 
     $programmtage = 3;
     static::assertSame($programmtage, $data->grunddaten->programmtage);
@@ -849,13 +860,18 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
 
     $validator = OpisApplicationValidatorFactory::getValidator();
     $costItemDataCollector = new CostItemDataCollector();
+    $resourcesItemDataCollector = new ResourcesItemDataCollector();
     $result = $validator->validate(
       $data,
       \json_encode($jsonSchema),
-      ['costItemDataCollector' => $costItemDataCollector]
+      [
+        'costItemDataCollector' => $costItemDataCollector,
+        'resourcesItemDataCollector' => $resourcesItemDataCollector,
+      ]
     );
     static::assertValidationValid($result);
     static::assertCount(18, $costItemDataCollector->getCostItemsData());
+    static::assertCount(7, $resourcesItemDataCollector->getResourcesItemsData());
 
     $programmtage = 3;
     static::assertSame($programmtage, $data->grunddaten->programmtage);
@@ -1137,13 +1153,18 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
 
     $validator = OpisApplicationValidatorFactory::getValidator();
     $costItemDataCollector = new CostItemDataCollector();
+    $resourcesItemDataCollector = new ResourcesItemDataCollector();
     $result = $validator->validate(
       $data,
       \json_encode($jsonSchema),
-      ['costItemDataCollector' => $costItemDataCollector]
+      [
+        'costItemDataCollector' => $costItemDataCollector,
+        'resourcesItemDataCollector' => $resourcesItemDataCollector,
+      ]
     );
     static::assertValidationValid($result);
     static::assertCount(18, $costItemDataCollector->getCostItemsData());
+    static::assertCount(7, $resourcesItemDataCollector->getResourcesItemsData());
 
     $programmtage = 3;
     static::assertSame($programmtage, $data->grunddaten->programmtage);

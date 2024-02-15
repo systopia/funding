@@ -31,14 +31,25 @@ final class ApplicationSchemaValidationResult {
    */
   private array $costItemsData;
 
+  /**
+   * @phpstan-var array<string, \Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemData>
+   */
+  private array $resourcesItemsData;
+
   private ValidationResult $result;
 
   /**
+   * phpcs:disable Generic.Files.LineLength.TooLong
+   *
    * @phpstan-param array<string, \Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemData> $costItemsData
+   * @phpstan-param array<string, \Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemData> $resourcesItemsData
+   *
+   * phpcs:enable
    */
-  public function __construct(ValidationResult $result, array $costItemsData) {
+  public function __construct(ValidationResult $result, array $costItemsData, array $resourcesItemsData) {
     $this->result = $result;
     $this->costItemsData = $costItemsData;
+    $this->resourcesItemsData = $resourcesItemsData;
   }
 
   /**
@@ -75,6 +86,13 @@ final class ApplicationSchemaValidationResult {
    */
   public function getCostItemsData(): array {
     return $this->costItemsData;
+  }
+
+  /**
+   * @phpstan-return array<string, \Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemData>
+   */
+  public function getResourcesItemsData(): array {
+    return $this->resourcesItemsData;
   }
 
 }

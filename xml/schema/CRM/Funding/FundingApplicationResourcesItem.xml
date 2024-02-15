@@ -90,4 +90,15 @@
     <required>true</required>
     <serialize>JSON</serialize>
   </field>
+
+  <field>
+    <name>data_pointer</name>
+    <type>varchar</type>
+    <length>255</length>
+    <required>true</required>
+    <comment>JSON pointer to data in application data</comment>
+    <html>
+      <type>Text</type>
+    </html>
+  </field>
 </table>

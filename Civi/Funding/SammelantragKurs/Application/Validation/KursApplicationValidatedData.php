@@ -46,15 +46,31 @@ final class KursApplicationValidatedData implements ValidatedApplicationDataInte
    */
   private array $costItemsData;
 
+  /**
+   * @phpstan-var array<string, \Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemData>
+   */
+  private array $resourcesItemsData;
+
   private int $recipientContactId;
 
   /**
+   * phpcs:disable Generic.Files.LineLength.TooLong
+   *
    * @phpstan-param kursValidatedDataT $validatedData
    * @phpstan-param array<string, \Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemData> $costItemsData
+   * @phpstan-param array<string, \Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemData> $resourcesItemsData
+   *
+   * phpcs:enable
    */
-  public function __construct(array $validatedData, array $costItemsData, int $recipientContactId) {
+  public function __construct(
+    array $validatedData,
+    array $costItemsData,
+    array $resourcesItemsData,
+    int $recipientContactId
+  ) {
     $this->data = $validatedData;
     $this->costItemsData = $costItemsData;
+    $this->resourcesItemsData = $resourcesItemsData;
     $this->recipientContactId = $recipientContactId;
   }
 
@@ -93,6 +109,13 @@ final class KursApplicationValidatedData implements ValidatedApplicationDataInte
    */
   public function getCostItemsData(): array {
     return $this->costItemsData;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getResourcesItemsData(): array {
+    return $this->resourcesItemsData;
   }
 
   public function getComment(): ?array {

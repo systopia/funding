@@ -36,7 +36,6 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewValidateHandlerInt
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationJsonSchemaGetHandlerInterface;
-use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseApproveHandlerInterface;
@@ -90,11 +89,6 @@ interface FundingCaseTypeServiceLocatorInterface {
   public function getApplicationJsonSchemaGetHandler(): ApplicationJsonSchemaGetHandlerInterface;
 
   public function getApplicationCostItemsPersistHandler(): ApplicationCostItemsPersistHandlerInterface;
-
-  // phpcs:disable: Generic.Files.LineLength.TooLong
-  public function getApplicationResourcesItemsAddIdentifiersHandler(): ApplicationResourcesItemsAddIdentifiersHandlerInterface;
-
-  // phpcs:enable
 
   public function getApplicationResourcesItemsPersistHandler(): ApplicationResourcesItemsPersistHandlerInterface;
 

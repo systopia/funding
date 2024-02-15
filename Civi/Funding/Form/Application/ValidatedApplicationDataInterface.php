@@ -41,6 +41,11 @@ interface ValidatedApplicationDataInterface {
   public function getCostItemsData(): array;
 
   /**
+   * @phpstan-return array<string, \Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemData>
+   */
+  public function getResourcesItemsData(): array;
+
+  /**
    * @return array{text: string, type: string}|null
    */
   public function getComment(): ?array;

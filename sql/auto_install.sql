@@ -290,6 +290,7 @@ CREATE TABLE `civicrm_funding_app_resources_item` (
   `type` varchar(255) NOT NULL,
   `amount` decimal(10,2) NOT NULL,
   `properties` text NOT NULL,
+  `data_pointer` varchar(255) NOT NULL COMMENT 'JSON pointer to data in application data',
   PRIMARY KEY (`id`),
   UNIQUE INDEX `index_identifier_application_process_id`(identifier, application_process_id),
   CONSTRAINT FK_civicrm_funding_app_resources_item_application_process_id FOREIGN KEY (`application_process_id`) REFERENCES `civicrm_funding_application_process`(`id`) ON DELETE CASCADE
@@ -314,6 +315,7 @@ CREATE TABLE `civicrm_funding_application_snapshot` (
   `end_date` timestamp NULL,
   `request_data` text NOT NULL,
   `cost_items` text NOT NULL,
+  `resources_items` text NOT NULL,
   `amount_requested` decimal(10,2) NOT NULL,
   `is_review_content` tinyint NULL,
   `is_review_calculative` tinyint NULL,

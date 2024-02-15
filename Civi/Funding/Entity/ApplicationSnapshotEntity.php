@@ -21,6 +21,7 @@ namespace Civi\Funding\Entity;
 
 /**
  * @phpstan-import-type applicationCostItemT from ApplicationCostItemEntity
+ * @phpstan-import-type applicationResourcesItemT from ApplicationResourcesItemEntity
  *
  * @phpstan-type applicationSnapshotT array{
  *   id?: int,
@@ -33,6 +34,7 @@ namespace Civi\Funding\Entity;
  *   end_date: ?string,
  *   request_data: array<string, mixed>,
  *   cost_items: array<applicationCostItemT>,
+ *   resources_items: array<applicationResourcesItemT>,
  *   amount_requested: double,
  *   is_review_content: ?bool,
  *   is_review_calculative: ?bool,
@@ -83,6 +85,13 @@ final class ApplicationSnapshotEntity extends AbstractEntity {
    */
   public function getCostItems(): array {
     return $this->values['cost_items'];
+  }
+
+  /**
+   * @phpstan-return array<applicationResourcesItemT>
+   */
+  public function getResourcesItems(): array {
+    return $this->values['resources_items'];
   }
 
   public function getAmountRequested(): float {

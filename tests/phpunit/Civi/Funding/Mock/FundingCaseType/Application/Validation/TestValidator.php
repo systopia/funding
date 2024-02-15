@@ -84,7 +84,11 @@ final class TestValidator extends AbstractCombinedApplicationValidator implement
     int $maxErrors
   ): ApplicationValidationResult {
     return $this->createValidationResultValid(
-      new TestValidatedData($jsonSchemaValidationResult->getData(), $jsonSchemaValidationResult->getCostItemsData()),
+      new TestValidatedData(
+        $jsonSchemaValidationResult->getData(),
+        $jsonSchemaValidationResult->getCostItemsData(),
+        $jsonSchemaValidationResult->getResourcesItemsData()
+      ),
       $jsonSchema
     );
   }
@@ -100,7 +104,11 @@ final class TestValidator extends AbstractCombinedApplicationValidator implement
     int $maxErrors
   ): ApplicationValidationResult {
     return $this->createValidationResultValid(
-      new TestValidatedData($jsonSchemaValidationResult->getData(), $jsonSchemaValidationResult->getCostItemsData()),
+      new TestValidatedData(
+        $jsonSchemaValidationResult->getData(),
+        $jsonSchemaValidationResult->getCostItemsData(),
+        $jsonSchemaValidationResult->getResourcesItemsData()
+      ),
       $jsonSchema
     );
   }
@@ -120,7 +128,11 @@ final class TestValidator extends AbstractCombinedApplicationValidator implement
     int $maxErrors
   ): ApplicationValidationResult {
     return $this->createValidationResultValid(
-      new TestValidatedData($jsonSchemaValidationResult->getData(), $jsonSchemaValidationResult->getCostItemsData()),
+      new TestValidatedData(
+        $jsonSchemaValidationResult->getData(),
+        $jsonSchemaValidationResult->getCostItemsData(),
+        $jsonSchemaValidationResult->getResourcesItemsData()
+      ),
       $jsonSchema
     );
   }

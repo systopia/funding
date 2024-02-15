@@ -60,7 +60,6 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewValidateHandlerInt
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationJsonSchemaGetHandlerInterface;
-use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationActionApplyHandler;
@@ -80,7 +79,6 @@ use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormNewValidateHan
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormSubmitHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormValidateHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationJsonSchemaGetHandler;
-use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationResourcesItemsAddIdentifiersHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationResourcesItemsPersistHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationSnapshotCreateHandler;
 use Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidator;
@@ -110,6 +108,8 @@ use Civi\Funding\EventSubscriber\Remote\ApplicationProcessDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessGetFieldsSubscriber;
 use Civi\Funding\Form\Application\ApplicationCostItemsFormDataLoader;
 use Civi\Funding\Form\Application\ApplicationCostItemsFormDataLoaderInterface;
+use Civi\Funding\Form\Application\ApplicationResourcesItemsFormDataLoader;
+use Civi\Funding\Form\Application\ApplicationResourcesItemsFormDataLoaderInterface;
 use Civi\Funding\Validation\ConcreteEntityValidatorInterface;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 
@@ -125,6 +125,10 @@ $container->autowire(EligibleApplicationProcessesLoader::class);
 $container->autowire(ApplicationSnapshotManager::class);
 
 $container->autowire(ApplicationCostItemsFormDataLoaderInterface::class, ApplicationCostItemsFormDataLoader::class);
+$container->autowire(
+  ApplicationResourcesItemsFormDataLoaderInterface::class,
+  ApplicationResourcesItemsFormDataLoader::class
+);
 
 ServiceRegistrator::autowireAllImplementing(
   $container,
@@ -176,10 +180,6 @@ $container->autowire(ApplicationJsonSchemaGetHandlerInterface::class, DefaultApp
 $container->autowire(
   ApplicationCostItemsPersistHandlerInterface::class,
   DefaultApplicationCostItemsPersistHandler::class
-);
-$container->autowire(
-  ApplicationResourcesItemsAddIdentifiersHandlerInterface::class,
-  DefaultApplicationResourcesItemsAddIdentifiersHandler::class
 );
 $container->autowire(
   ApplicationResourcesItemsPersistHandlerInterface::class,

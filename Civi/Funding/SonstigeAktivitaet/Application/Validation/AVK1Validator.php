@@ -83,14 +83,22 @@ final class AVK1Validator extends AbstractNonCombinedApplicationValidator {
     if ([] !== $errorMessages) {
       return ApplicationValidationResult::newInvalid(
         $errorMessages,
-        // @phpstan-ignore-next-line
-        new AVK1ValidatedData($validatedData, $jsonSchemaValidationResult->getCostItemsData()),
+        new AVK1ValidatedData(
+          // @phpstan-ignore-next-line
+          $validatedData,
+          $jsonSchemaValidationResult->getCostItemsData(),
+          $jsonSchemaValidationResult->getResourcesItemsData()
+        ),
       );
     }
 
     return $this->createValidationResultValid(
-      // @phpstan-ignore-next-line
-      new AVK1ValidatedData($validatedData, $jsonSchemaValidationResult->getCostItemsData()),
+      new AVK1ValidatedData(
+        // @phpstan-ignore-next-line
+        $validatedData,
+        $jsonSchemaValidationResult->getCostItemsData(),
+        $jsonSchemaValidationResult->getResourcesItemsData()
+      ),
       $jsonSchema
     );
   }

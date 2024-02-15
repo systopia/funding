@@ -19,19 +19,12 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\ApplicationProcess;
 
-use Civi\Funding\ApplicationProcess\Command\ApplicationResourcesItemsAddIdentifiersCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationResourcesItemsPersistCommand;
-use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandlerInterface;
-use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
-use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreCreateEvent;
-use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
-use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
+use Civi\Funding\Event\ApplicationProcess\ApplicationFormSubmitSuccessEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ApplicationResourcesItemsSubscriber implements EventSubscriberInterface {
-
-  private ApplicationResourcesItemsAddIdentifiersHandlerInterface $resourcesItemsAddIdentifiersHandler;
 
   private ApplicationResourcesItemsPersistHandlerInterface $resourcesItemsPersistHandler;
 
@@ -40,52 +33,23 @@ class ApplicationResourcesItemsSubscriber implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents(): array {
     return [
-      ApplicationProcessPreCreateEvent::class => 'onPreCreate',
-      ApplicationProcessCreatedEvent::class => 'onCreated',
-      ApplicationProcessPreUpdateEvent::class => 'onPreUpdate',
-      ApplicationProcessUpdatedEvent::class => 'onUpdated',
+      ApplicationFormSubmitSuccessEvent::class => 'onFormSubmitSuccess',
     ];
   }
 
-  public function __construct(
-    ApplicationResourcesItemsAddIdentifiersHandlerInterface $resourcesItemsAddIdentifiersHandler,
-    ApplicationResourcesItemsPersistHandlerInterface $resourcesItemsPersistHandler
-  ) {
-    $this->resourcesItemsAddIdentifiersHandler = $resourcesItemsAddIdentifiersHandler;
+  public function __construct(ApplicationResourcesItemsPersistHandlerInterface $resourcesItemsPersistHandler) {
     $this->resourcesItemsPersistHandler = $resourcesItemsPersistHandler;
   }
 
-  public function onPreCreate(ApplicationProcessPreCreateEvent $event): void {
-    $requestData = $this->resourcesItemsAddIdentifiersHandler->handle(
-      new ApplicationResourcesItemsAddIdentifiersCommand(
-        $event->getApplicationProcessBundle(),
-      )
-    );
+  public function onFormSubmitSuccess(ApplicationFormSubmitSuccessEvent $event): void {
+    if ($event->getResult()->getValidationResult()->isReadOnly() ||
+      NULL !== $event->getApplicationProcess()->getRestoredSnapshot()) {
+      return;
+    }
 
-    $event->getApplicationProcess()->setRequestData($requestData);
-  }
-
-  public function onCreated(ApplicationProcessCreatedEvent $event): void {
     $this->resourcesItemsPersistHandler->handle(new ApplicationResourcesItemsPersistCommand(
       $event->getApplicationProcessBundle(),
-      NULL,
-    ));
-  }
-
-  public function onPreUpdate(ApplicationProcessPreUpdateEvent $event): void {
-    $requestData = $this->resourcesItemsAddIdentifiersHandler->handle(
-      new ApplicationResourcesItemsAddIdentifiersCommand(
-        $event->getApplicationProcessBundle(),
-      )
-    );
-
-    $event->getApplicationProcess()->setRequestData($requestData);
-  }
-
-  public function onUpdated(ApplicationProcessUpdatedEvent $event): void {
-    $this->resourcesItemsPersistHandler->handle(new ApplicationResourcesItemsPersistCommand(
-      $event->getApplicationProcessBundle(),
-      $event->getPreviousApplicationProcess(),
+      $event->getValidatedData()->getResourcesItemsData()
     ));
   }
 

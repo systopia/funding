@@ -109,6 +109,13 @@
   </field>
 
   <field>
+    <name>resources_items</name>
+    <type>text</type>
+    <required>true</required>
+    <serialize>JSON</serialize>
+  </field>
+
+  <field>
     <name>amount_requested</name>
     <type>decimal(10,2)</type>
     <required>true</required>

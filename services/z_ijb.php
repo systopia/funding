@@ -29,9 +29,6 @@ use Civi\Funding\IJB\Application\Actions\IJBApplicationSubmitActionsContainer;
 use Civi\Funding\IJB\Application\Actions\IJBApplicationSubmitActionsFactory;
 use Civi\Funding\IJB\Application\Data\IJBApplicationFormDataFactory;
 use Civi\Funding\IJB\Application\Data\IJBApplicationFormFilesFactory;
-use Civi\Funding\IJB\Application\Data\IJBApplicationResourcesItemsFactory;
-use Civi\Funding\IJB\Application\Data\IJBFormDataFinanzierungFactory;
-use Civi\Funding\IJB\Application\Data\IJBFormDataZuschussFactory;
 use Civi\Funding\IJB\Application\Data\IJBProjektunterlagenFactory;
 use Civi\Funding\IJB\Application\JsonSchema\IJBApplicationJsonSchemaFactory;
 use Civi\Funding\IJB\Application\UiSchema\IJBApplicationUiSchemaFactory;
@@ -53,15 +50,11 @@ $container->autowire(IJBApplicationUiSchemaFactory::class)
 
 $container->autowire(IJBApplicationFormDataFactory::class)
   ->addTag(IJBApplicationFormDataFactory::SERVICE_TAG);
-$container->autowire(IJBFormDataFinanzierungFactory::class);
 $container->autowire(IJBProjektunterlagenFactory::class);
-$container->autowire(IJBFormDataZuschussFactory::class);
 
 $container->autowire(IJBApplicationValidator::class)
   ->setArgument('$jsonSchemaFactory', new Reference(IJBApplicationJsonSchemaFactory::class))
   ->addTag(IJBApplicationValidator::SERVICE_TAG);
-$container->autowire(IJBApplicationResourcesItemsFactory::class)
-  ->addTag(IJBApplicationResourcesItemsFactory::SERVICE_TAG);
 $container->autowire(IJBApplicationFormFilesFactory::class)
   ->addTag(IJBApplicationFormFilesFactory::SERVICE_TAG);
 

@@ -19,16 +19,15 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\ApplicationProcess;
 
-use Civi\Funding\ApplicationProcess\Command\ApplicationResourcesItemsAddIdentifiersCommand;
+use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitResult;
 use Civi\Funding\ApplicationProcess\Command\ApplicationResourcesItemsPersistCommand;
-use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandlerInterface;
+use Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemData;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
-use Civi\Funding\EntityFactory\ApplicationProcessFactory;
-use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
-use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreCreateEvent;
-use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
-use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
+use Civi\Funding\EntityFactory\ApplicationSnapshotFactory;
+use Civi\Funding\Event\ApplicationProcess\ApplicationFormSubmitSuccessEvent;
+use Civi\Funding\Form\Application\ApplicationValidationResult;
+use Civi\Funding\Mock\FundingCaseType\Application\Validation\TestValidatedData;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -36,11 +35,6 @@ use PHPUnit\Framework\TestCase;
  * @covers \Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationResourcesItemsSubscriber
  */
 final class ApplicationResourcesItemsSubscriberTest extends TestCase {
-
-  /**
-   * @var \Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsAddIdentifiersHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $resourcesItemsAddIdentifiersHandlerMock;
 
   /**
    * @var \Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
@@ -51,24 +45,17 @@ final class ApplicationResourcesItemsSubscriberTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
-    $this->resourcesItemsAddIdentifiersHandlerMock = $this->createMock(
-      ApplicationResourcesItemsAddIdentifiersHandlerInterface::class
-    );
     $this->resourcesItemsPersistHandlerMock = $this->createMock(
       ApplicationResourcesItemsPersistHandlerInterface::class
     );
     $this->subscriber = new ApplicationResourcesItemsSubscriber(
-      $this->resourcesItemsAddIdentifiersHandlerMock,
       $this->resourcesItemsPersistHandlerMock
     );
   }
 
   public function testGetSubscribedEvents(): void {
     $expectedSubscriptions = [
-      ApplicationProcessPreCreateEvent::class => 'onPreCreate',
-      ApplicationProcessCreatedEvent::class => 'onCreated',
-      ApplicationProcessPreUpdateEvent::class => 'onPreUpdate',
-      ApplicationProcessUpdatedEvent::class => 'onUpdated',
+      ApplicationFormSubmitSuccessEvent::class => 'onFormSubmitSuccess',
     ];
 
     static::assertEquals($expectedSubscriptions, $this->subscriber::getSubscribedEvents());
@@ -78,59 +65,71 @@ final class ApplicationResourcesItemsSubscriberTest extends TestCase {
     }
   }
 
-  public function testOnPreCreate(): void {
+  public function testOnFormSubmitSuccess(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
-    $event = new ApplicationProcessPreCreateEvent(2, $applicationProcessBundle);
-
-    $this->resourcesItemsAddIdentifiersHandlerMock->expects(static::once())->method('handle')
-      ->with(new ApplicationResourcesItemsAddIdentifiersCommand($applicationProcessBundle))
-      ->willReturn(['bar' => 'baz']);
-    $this->subscriber->onPreCreate($event);
-    static::assertSame(['bar' => 'baz'], $applicationProcessBundle->getApplicationProcess()->getRequestData());
-  }
-
-  public function testOnCreated(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
-    $event = new ApplicationProcessCreatedEvent(2, $applicationProcessBundle);
-
-    $this->resourcesItemsPersistHandlerMock->expects(static::once())->method('handle')
-      ->with(new ApplicationResourcesItemsPersistCommand($applicationProcessBundle, NULL)
+    $resourcesItemsData = ['test' => $this->createResourcesItem()];
+    $validationResult = ApplicationValidationResult::newValid(
+      new TestValidatedData([], [], $resourcesItemsData),
+      FALSE
     );
-    $this->subscriber->onCreated($event);
-  }
-
-  public function testOnPreUpdate(): void {
-    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess(['title' => 'Previous']);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
-    $event = new ApplicationProcessPreUpdateEvent(
+    $event = new ApplicationFormSubmitSuccessEvent(
       2,
-      $previousApplicationProcess,
       $applicationProcessBundle,
-    );
-
-    $this->resourcesItemsAddIdentifiersHandlerMock->expects(static::once())->method('handle')
-      ->with(new ApplicationResourcesItemsAddIdentifiersCommand($applicationProcessBundle))
-      ->willReturn(['bar' => 'baz']);
-    $this->subscriber->onPreUpdate($event);
-    static::assertSame(['bar' => 'baz'], $applicationProcessBundle->getApplicationProcess()->getRequestData());
-  }
-
-  public function testOnUpdated(): void {
-    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess(['title' => 'Previous']);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
-    $event = new ApplicationProcessUpdatedEvent(
-      2,
-      $previousApplicationProcess,
-      $applicationProcessBundle,
+      $applicationProcessBundle->getApplicationProcess()->getRequestData(),
+      ApplicationFormSubmitResult::createSuccess($validationResult),
     );
 
     $this->resourcesItemsPersistHandlerMock->expects(static::once())->method('handle')
-      ->with(new ApplicationResourcesItemsPersistCommand(
-        $applicationProcessBundle,
-        $previousApplicationProcess,
-      )
+      ->with(new ApplicationResourcesItemsPersistCommand($applicationProcessBundle, $resourcesItemsData));
+    $this->subscriber->onFormSubmitSuccess($event);
+  }
+
+  public function testOnFormSubmitSuccessReadOnly(): void {
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $resourcesItemsData = ['test' => $this->createResourcesItem()];
+    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([], [], $resourcesItemsData), TRUE);
+    $event = new ApplicationFormSubmitSuccessEvent(
+      2,
+      $applicationProcessBundle,
+      $applicationProcessBundle->getApplicationProcess()->getRequestData(),
+      ApplicationFormSubmitResult::createSuccess($validationResult),
     );
-    $this->subscriber->onUpdated($event);
+
+    $this->resourcesItemsPersistHandlerMock->expects(static::never())->method('handle');
+    $this->subscriber->onFormSubmitSuccess($event);
+  }
+
+  public function testOnFormSubmitSuccessWithRestore(): void {
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $applicationProcessBundle->getApplicationProcess()->setRestoredSnapshot(
+      ApplicationSnapshotFactory::createApplicationSnapshot()
+    );
+    $resourcesItemsData = ['test' => $this->createResourcesItem()];
+    $validationResult = ApplicationValidationResult::newValid(
+      new TestValidatedData([], [], $resourcesItemsData),
+      FALSE
+    );
+    $event = new ApplicationFormSubmitSuccessEvent(
+      2,
+      $applicationProcessBundle,
+      $applicationProcessBundle->getApplicationProcess()->getRequestData(),
+      ApplicationFormSubmitResult::createSuccess($validationResult),
+    );
+
+    $this->resourcesItemsPersistHandlerMock->expects(static::never())->method('handle');
+    $this->subscriber->onFormSubmitSuccess($event);
+  }
+
+  private function createResourcesItem(): ResourcesItemData {
+    return new ResourcesItemData([
+      'type' => 'testType',
+      'identifier' => 'test',
+      'amount' => 1.23,
+      'properties' => [],
+      'dataPointer' => '/foo',
+      'dataType' => 'number',
+      'clearing' => NULL,
+    ]);
   }
 
 }

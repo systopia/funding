@@ -21,6 +21,8 @@ namespace Civi\Funding\ApplicationProcess\JsonSchema\Validator;
 
 use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemKeywordValidatorParser;
 use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemsKeywordValidatorParser;
+use Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemKeywordValidatorParser;
+use Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemsKeywordValidatorParser;
 use Systopia\JsonSchema\Parsers\SystopiaVocabulary;
 
 /**
@@ -35,6 +37,8 @@ final class ApplicationSchemaVocabulary extends SystopiaVocabulary {
     parent::__construct($keywords, $keywordValidators, $pragmas);
     $this->keywordValidators[] = new CostItemKeywordValidatorParser();
     $this->keywordValidators[] = new CostItemsKeywordValidatorParser();
+    $this->keywordValidators[] = new ResourcesItemKeywordValidatorParser();
+    $this->keywordValidators[] = new ResourcesItemsKeywordValidatorParser();
   }
 
 }

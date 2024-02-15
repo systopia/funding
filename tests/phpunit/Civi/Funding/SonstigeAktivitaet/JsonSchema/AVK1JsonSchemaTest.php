@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\SonstigeAktivitaet\JsonSchema;
 
 use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemDataCollector;
+use Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemDataCollector;
 use Civi\Funding\ApplicationProcess\JsonSchema\Validator\OpisApplicationValidatorFactory;
 use Civi\Funding\Form\JsonSchema\JsonSchemaRecipient;
 use Civi\Funding\Form\Traits\AssertFormTrait;
@@ -172,13 +173,18 @@ class AVK1JsonSchemaTest extends TestCase {
 
     $validator = OpisApplicationValidatorFactory::getValidator();
     $costItemDataCollector = new CostItemDataCollector();
+    $resourcesItemDataCollector = new ResourcesItemDataCollector();
     $result = $validator->validate(
       $data,
       \json_encode($jsonSchema),
-      ['costItemDataCollector' => $costItemDataCollector]
+      [
+        'costItemDataCollector' => $costItemDataCollector,
+        'resourcesItemDataCollector' => $resourcesItemDataCollector,
+      ]
     );
     static::assertValidationValid($result);
     static::assertCount(10, $costItemDataCollector->getCostItemsData());
+    static::assertCount(7, $resourcesItemDataCollector->getResourcesItemsData());
 
     $unterkunftUndVerpflegung = 222.22;
     $honorar1 = round(11.1 * 22.22, 2);

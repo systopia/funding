@@ -21,6 +21,7 @@ namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
 use Civi\Funding\ApplicationProcess\ApplicationExternalFileManagerInterface;
+use Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager;
 use Civi\Funding\ApplicationProcess\ApplicationSnapshotManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationSnapshotCreateCommand;
 use Civi\Funding\Entity\ApplicationSnapshotEntity;
@@ -28,6 +29,7 @@ use Civi\Funding\Util\DateTimeUtil;
 
 /**
  * @phpstan-import-type applicationCostItemT from \Civi\Funding\Entity\ApplicationCostItemEntity
+ * @phpstan-import-type applicationResourcesItemT from \Civi\Funding\Entity\ApplicationResourcesItemEntity
  */
 final class ApplicationSnapshotCreateHandler implements ApplicationSnapshotCreateHandlerInterface {
 
@@ -37,14 +39,18 @@ final class ApplicationSnapshotCreateHandler implements ApplicationSnapshotCreat
 
   private ApplicationExternalFileManagerInterface $externalFileManager;
 
+  private ApplicationResourcesItemManager $resourcesItemManager;
+
   public function __construct(
     ApplicationSnapshotManager $applicationSnapshotManager,
     ApplicationCostItemManager $costItemManager,
-    ApplicationExternalFileManagerInterface $externalFileManager
+    ApplicationExternalFileManagerInterface $externalFileManager,
+    ApplicationResourcesItemManager $resourcesItemManager
   ) {
     $this->applicationSnapshotManager = $applicationSnapshotManager;
     $this->costItemManager = $costItemManager;
     $this->externalFileManager = $externalFileManager;
+    $this->resourcesItemManager = $resourcesItemManager;
   }
 
   /**
@@ -62,6 +68,7 @@ final class ApplicationSnapshotCreateHandler implements ApplicationSnapshotCreat
       'end_date' => DateTimeUtil::toDateTimeStrOrNull($applicationProcess->getEndDate()),
       'request_data' => $applicationProcess->getRequestData(),
       'cost_items' => [...$this->getCostItems($applicationProcess->getId())],
+      'resources_items' => [...$this->getResourcesItems($applicationProcess->getId())],
       'amount_requested' => $applicationProcess->getAmountRequested(),
       'is_review_content' => $applicationProcess->getIsReviewContent(),
       'is_review_calculative' => $applicationProcess->getIsReviewCalculative(),
@@ -84,6 +91,20 @@ final class ApplicationSnapshotCreateHandler implements ApplicationSnapshotCreat
   private function getCostItems(int $applicationProcessId): iterable {
     foreach ($this->costItemManager->getByApplicationProcessId($applicationProcessId) as $costItem) {
       $data = $costItem->toArray();
+      unset($data['id']);
+
+      yield $data;
+    }
+  }
+
+  /**
+   * @phpstan-return iterable<applicationResourcesItemT>
+   *
+   * @throws \CRM_Core_Exception
+   */
+  private function getResourcesItems(int $applicationProcessId): iterable {
+    foreach ($this->resourcesItemManager->getByApplicationProcessId($applicationProcessId) as $resourcesItem) {
+      $data = $resourcesItem->toArray();
       unset($data['id']);
 
       yield $data;

@@ -85,6 +85,7 @@ final class AVK1ValidatorTest extends TestCase {
       ->with($jsonSchema, $formData, 2)
       ->willReturn(new ApplicationSchemaValidationResult(
         new ValidationResult($jsonSchemaValidatedData, new ErrorCollector()),
+        [],
         []
       ));
 
@@ -121,6 +122,7 @@ final class AVK1ValidatorTest extends TestCase {
       ->with($jsonSchema, $formData, 2)
       ->willReturn(new ApplicationSchemaValidationResult(
         new ValidationResult($jsonSchemaValidatedData, new ErrorCollector()),
+        [],
         []
       ));
 
