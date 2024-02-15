@@ -153,7 +153,7 @@ This helps with debugging by showing a report about all API calls sent to CiviCR
 
 ## Synchronise user roles
 
-CiviRemote will synchronise permissions that are set for a CiviCRM contact with the associated user in Drupal. For the funding extension, the roles **CiviRemote: CiviRemote User** and **CiviRemote: CiviRemote Funding** are used. During the synchronisation of user roles, these roles are automatically created in Drupal if they don't exist yet. Because of this, we create a test user, synchronise/create the roles and delete the user afterward. You can also create a regular user that you would need to create anyway.
+CiviRemote will synchronise permissions that are set for a CiviCRM contact with the associated user in Drupal. For the funding framework, the roles **CiviRemote: CiviRemote User** and **CiviRemote: CiviRemote Funding** are used. During the synchronisation of user roles, these roles are automatically created in Drupal if they don't exist yet. Because of this, we create a test user, synchronise/create the roles and delete the user afterward. You can also create a regular user that you would need to create anyway.
 
 - Create a new user **Test User** in Drupal
 - Open the associated CiviCRM Contact, scroll down in the summary page and edit the custom field set **RemoteContact Information**. Add the two roles **CiviRemote User** and **CiviRemote Funding**.

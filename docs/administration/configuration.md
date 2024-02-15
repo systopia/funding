@@ -4,8 +4,8 @@
 
 The drupal webform that is shown when creating a new application needs to be different for every organization
 and every funding program. It highly depends on the content of the funding program. The webform that comes with the
-funding extension is in German and reflects the specific needs of _Arbeit und Leben_, the organization that
-funded the development of the funding extension.
+funding framework is in German and reflects the specific needs of _Arbeit und Leben_, the organization that
+funded the development of the funding framework.
 
 Custom forms can be developed in additional CiviCRM extensions. If you need support in this, you can send an email to
 info@systopia.de.

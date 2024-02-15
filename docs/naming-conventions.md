@@ -2,7 +2,7 @@
 
 The framework provided by the funding extension involves multiple entities, extensions and groups of people that interact which each other. The following list provides a short description of the terms that are mostly used.
 
-**Funding Extension / Funding Framework**: The CiviCRM extension [funding](https://github.com/systopia/funding), as well as the drupal module [civiremote_funding](https://github.com/systopia/drupal-civiremote_funding/), as well as a [set of other extensions and modules](./index.md#we-need-your-support).
+**Funding Framework**: The CiviCRM extension [funding](https://github.com/systopia/funding), as well as the drupal module [civiremote_funding](https://github.com/systopia/drupal-civiremote_funding/), as well as a [set of other extensions and modules](./index.md#we-need-your-support).
 
 **Giving Organization**: The organization that hosts funding programs and allocates money to recipients with eligible applications. The giving organization hosts and administers CiviCRM.
 
@@ -10,15 +10,17 @@ The framework provided by the funding extension involves multiple entities, exte
 
 -------------
 
-**Applicant / Recipient**: A person or organization that applies for the funding program and possibly receives money. Applicants have access to the Funding Portal. They don't have access to CiviCRM.
+**Applicant**: A person or organization that applies for the funding program. Applicants have access to the Funding Portal. They don't have access to CiviCRM.
+
+**Recipient**: A person or organization that receives the funding.
 
 **Reviewer**: A person that is associated with the giving organization and reviews applications to be rejected or eligible. There can be a distinction between the following roles: content reviewer, calculative reviewer and drawdown reviewer. Reviewers have access to CiviCRM.
 
-**Site Admin**: A person that administers the funding extension in CiviCRM and in the Funding Portal. This includes creating new funding programs, creating new user accounts for the Funding Portal and setting correct permissions for those user accounts.
+**Site Admin**: A person that administers the funding framework in CiviCRM and in the Funding Portal. This includes creating new funding programs, creating new user accounts for the Funding Portal and setting correct permissions for those user accounts.
 
 ------------
 
-**Funding program**: The context in which the money is to be allocated. It contains a budget, a time interval for applications and a time interval in which recipients can collect the money.
+**Funding program**: The context in which the money is to be allocated. It contains a time interval for applications, a time interval in which recipients can collect the money, and it may contain a budget.
 
 **Application / Request**: A specific application in the context of a funding program.
 

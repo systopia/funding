@@ -10,7 +10,7 @@ The permissions need to be configured on different levels:
 * Allowed recipients for a funding program
 * Funding Case permissions
 
-Some permissions need to be configured only once at the initial configuration of the funding extension. Others have to be configured during the creation of a new funding program. Some have to be configured for every individual contact.
+Some permissions need to be configured only once at the initial configuration of the funding framework. Others have to be configured during the creation of a new funding program. Some have to be configured for every individual contact.
 
 ## Drupal permissions
 
