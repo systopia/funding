@@ -73,7 +73,7 @@ fundingModule.directive('editableField', [function() {
         }
 
         return checked ? ts('Yes') : ts('No');
-      }
+      };
 
       /**
        * @param {array} selected
@@ -127,9 +127,14 @@ fundingModule.directive('editableField', [function() {
         attrs.path = getPathFromValueName(attrs.value);
       }
 
+      // Expression "{{ $index }}" has to be replaced by concatenation
+      // "' + $index + '" because we use the string in an expression.
+      const errorsKey = "'" + toJsonPointer(attrs.path).replace(/{{( )*\$index( )*}}/, '\' + $$index + \'') + "'";
+      const validationErrorsTemplate = '<funding-validation-errors errors="errors[' + errorsKey + ']"></funding-validation-errors>';
+
       let template = '';
       if (attrs.label) {
-        template += '<label>{{' + attrs.label + '}}</label> ';
+        template += '<label class="control-label">{{' + attrs.label + '}} ' + validationErrorsTemplate + '</label> ';
       }
 
       let displayValueExpression;
@@ -139,43 +144,51 @@ fundingModule.directive('editableField', [function() {
         displayValueExpression = 'showChecklist(' + attrs.value + ', ' + attrs.optionsOneOf + ')';
       } else if (attrs.type === 'select') {
         displayValueExpression = 'showSelect(' + attrs.value + ', ' + attrs.optionsOneOf + ')';
-      }
-      else {
+      } else {
         displayValueExpression = '(null === ' + attrs.value + ' || "" === ' + attrs.value + ') ? $ctrl.emptyValueDisplay : ' + attrs.value;
       }
 
-      const editSpan = angular.element('<span>{{ ' + displayValueExpression + ' }}</span>');
-
-      if (attrs.optionsOneOf) {
-        editSpan.attr('e-ng-options', 'o.const as o.title for o in ' + attrs.optionsOneOf);
+      let editElement;
+      if (attrs.type === 'textarea') {
+        editElement = angular.element('<pre>{{ ' + displayValueExpression + ' }}</pre>');
+      } else {
+        editElement = angular.element('<span>{{ ' + displayValueExpression + ' }}</span>');
+        if (attrs.optionsOneOf) {
+          editElement.attr('e-ng-options', 'o.const as o.title for o in ' + attrs.optionsOneOf);
+        }
       }
 
-      editSpan.attr('ng-show', '$ctrl.editAllowed');
-      editSpan.attr('editable-' + attrs.type, attrs.value);
-      editSpan.attr('e-name', attrs.path);
-      editSpan.attr('e-form', '{{$ctrl.formName}}');
-      editSpan.attr('onshow', 'onStartEdit(this)');
-      editSpan.attr('onbeforesave', 'onBeforeSave(this)');
-      editSpan.attr('onaftersave', 'onAfterSave(this)');
-      editSpan.attr('oncancel', 'onCancelEdit(this)');
-      editSpan.attr('onhide', 'onEditFinished(this)');
+      editElement.attr('ng-show', '$ctrl.editAllowed');
+      editElement.attr('editable-' + attrs.type, attrs.value);
+      editElement.attr('e-name', attrs.path);
+      editElement.attr('e-form', '{{$ctrl.formName}}');
+      editElement.attr('onshow', 'onStartEdit(this)');
+      editElement.attr('onbeforesave', 'onBeforeSave(this)');
+      editElement.attr('onaftersave', 'onAfterSave(this)');
+      editElement.attr('oncancel', 'onCancelEdit(this)');
+      editElement.attr('onhide', 'onEditFinished(this)');
       for (let [key, value] of Object.entries(attrs)) {
         if (['path', 'type', 'value', 'formName', 'optionsOneOf'].includes(key) ||
           key.startsWith('$')) {
           continue;
         }
-        editSpan.attr(_4.kebabCase(key), value);
+        editElement.attr(_4.kebabCase(key), value);
       }
-      template += editSpan[0].outerHTML;
+      template += editElement[0].outerHTML;
 
-      const viewOnlySpan = angular.element('<span>{{ ' + displayValueExpression + ' }}</span>');
-      viewOnlySpan.attr('ng-show', '!$ctrl.editAllowed');
-      template += viewOnlySpan[0].outerHTML;
+      let viewOnlyElement;
+      if (attrs.type === 'textarea') {
+        viewOnlyElement = angular.element('<pre>{{ ' + displayValueExpression + ' }}</pre>');
+      } else {
+        viewOnlyElement = angular.element('<span>{{ ' + displayValueExpression + ' }}</span>');
+      }
+      viewOnlyElement.attr('ng-show', '!$ctrl.editAllowed');
+      template += viewOnlyElement[0].outerHTML;
 
-      // Expression "{{ $index }}" has to be replaced by concatenation
-      // "' + $index + '" because we use the string in an expression.
-      const errorsKey = "'" + toJsonPointer(attrs.path).replace(/{{( )*\$index( )*}}/, '\' + $$index + \'') + "'";
-      template += ' <funding-validation-errors errors="errors[' + errorsKey + ']"></funding-validation-errors>';
+      if (!attrs.label) {
+        template += ' ' + validationErrorsTemplate;
+      }
+      template = '<span ng-class="{\'has-warning\': errors[' + errorsKey + '].length}">' + template + '</span>';
 
       return template;
     },
