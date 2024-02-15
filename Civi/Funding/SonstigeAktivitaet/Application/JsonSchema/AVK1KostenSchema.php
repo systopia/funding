@@ -20,6 +20,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\SonstigeAktivitaet\Application\JsonSchema;
 
+use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\JsonSchemaCostItem;
+use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\JsonSchemaCostItems;
 use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
 use Civi\RemoteTools\JsonSchema\JsonSchemaCalculate;
 use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
@@ -34,7 +36,17 @@ final class AVK1KostenSchema extends JsonSchemaObject {
   public function __construct() {
     parent::__construct([
       // Abschnitt I.1
-      'unterkunftUndVerpflegung' => new JsonSchemaMoney(['minimum' => 0, 'default' => 0]),
+      'unterkunftUndVerpflegung' => new JsonSchemaMoney([
+        'minimum' => 0,
+        'default' => 0,
+        '$costItem' => new JsonSchemaCostItem([
+          'type' => 'unterkunftUndVerpflegung',
+          'identifier' => 'unterkunftUndVerpflegung',
+          'clearing' => [
+            'itemLabel' => 'Unterkunft und Verpflegung',
+          ],
+        ]),
+      ]),
       // Abschnitt I.2
       'honorare' => new JsonSchemaArray(
         new JsonSchemaObject([
@@ -57,15 +69,45 @@ final class AVK1KostenSchema extends JsonSchemaObject {
               'verguetung' => new JsonSchemaDataPointer('1/verguetung'),
             ]
           ),
-        ], ['required' => ['berechnungsgrundlage', 'dauer', 'verguetung', 'leistung', 'qualifikation']])
+        ], ['required' => ['berechnungsgrundlage', 'dauer', 'verguetung', 'leistung', 'qualifikation']]),
+        [
+          '$costItems' => new JsonSchemaCostItems([
+            'type' => 'honorar',
+            'identifierProperty' => '_identifier',
+            'amountProperty' => 'betrag',
+            'clearing' => [
+              'itemLabel' => 'Honorar {@pos}',
+            ],
+          ]),
+        ]
       ),
       'honorareGesamt' => new JsonSchemaCalculate('number', 'round(sum(map(honorare, "value.betrag")), 2)', [
         'honorare' => new JsonSchemaDataPointer('1/honorare'),
       ]),
       // Abschnitt I.4
       'fahrtkosten' => new JsonSchemaObject([
-        'intern' => new JsonSchemaMoney(['minimum' => 0, 'default' => 0]),
-        'anTeilnehmerErstattet' => new JsonSchemaMoney(['minimum' => 0, 'default' => 0]),
+        'intern' => new JsonSchemaMoney([
+          'minimum' => 0,
+          'default' => 0,
+          '$costItem' => new JsonSchemaCostItem([
+            'type' => 'fahrtkosten/intern',
+            'identifier' => 'fahrtkosten.intern',
+            'clearing' => [
+              'itemLabel' => 'Fahrtkosten innerhalb des Programms',
+            ],
+          ]),
+        ]),
+        'anTeilnehmerErstattet' => new JsonSchemaMoney([
+          'minimum' => 0,
+          'default' => 0,
+          '$costItem' => new JsonSchemaCostItem([
+            'type' => 'fahrtkosten/anTeilnehmerErstattet',
+            'identifier' => 'fahrtkosten.anTeilnehmerErstattet',
+            'clearing' => [
+              'itemLabel' => 'An Teilnehmer*innen/Referent*innen erstattete Fahrtkosten',
+            ],
+          ]),
+        ]),
       ]),
       'fahrtkostenGesamt' => new JsonSchemaCalculate('number', 'round(intern + anTeilnehmerErstattet, 2)', [
         'intern' => new JsonSchemaDataPointer('1/fahrtkosten/intern'),
@@ -78,7 +120,17 @@ final class AVK1KostenSchema extends JsonSchemaObject {
             '_identifier' => new JsonSchemaString(['readonly' => TRUE]),
             'gegenstand' => new JsonSchemaString(),
             'betrag' => new JsonSchemaMoney(['minimum' => 0]),
-          ], ['required' => ['gegenstand', 'betrag']])
+          ], ['required' => ['gegenstand', 'betrag']]),
+          [
+            '$costItems' => new JsonSchemaCostItems([
+              'type' => 'sachkosten/ausstattung',
+              'identifierProperty' => '_identifier',
+              'amountProperty' => 'betrag',
+              'clearing' => [
+                'itemLabel' => 'Sachkosten {@pos}',
+              ],
+            ]),
+          ]
         ),
       ], ['required' => ['ausstattung']]),
       'sachkostenGesamt' => new JsonSchemaCalculate(
@@ -94,7 +146,17 @@ final class AVK1KostenSchema extends JsonSchemaObject {
           '_identifier' => new JsonSchemaString(['readonly' => TRUE]),
           'betrag' => new JsonSchemaMoney(['minimum' => 0]),
           'zweck' => new JsonSchemaString(),
-        ], ['required' => ['betrag', 'zweck']])
+        ], ['required' => ['betrag', 'zweck']]),
+        [
+          '$costItems' => new JsonSchemaCostItems([
+            'type' => 'sonstigeAusgabe',
+            'identifierProperty' => '_identifier',
+            'amountProperty' => 'betrag',
+            'clearing' => [
+              'itemLabel' => 'Sonstige Ausgabe {@pos}',
+            ],
+          ]),
+        ]
       ),
       'sonstigeAusgabenGesamt' => new JsonSchemaCalculate(
         'number',
@@ -103,7 +165,17 @@ final class AVK1KostenSchema extends JsonSchemaObject {
       ),
       // Abschnitt I.7
       'versicherung' => new JsonSchemaObject([
-        'teilnehmer' => new JsonSchemaMoney(['minimum' => 0, 'default' => 0]),
+        'teilnehmer' => new JsonSchemaMoney([
+          'minimum' => 0,
+          'default' => 0,
+          '$costItem' => new JsonSchemaCostItem([
+            'type' => 'versicherung/teilnehmer',
+            'identifier' => 'versicherung.teilnehmer',
+            'clearing' => [
+              'itemLabel' => 'Kosten der Versicherung der Teilnehmer*innen',
+            ],
+          ]),
+        ]),
       ]),
       // Gesamtkosten
       'gesamtkosten' => new JsonSchemaCalculate(

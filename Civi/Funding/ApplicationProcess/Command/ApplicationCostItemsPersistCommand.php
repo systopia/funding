@@ -19,7 +19,6 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Command;
 
-use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\Traits\ApplicationProcessEntityBundleTrait;
 
@@ -27,18 +26,20 @@ final class ApplicationCostItemsPersistCommand {
 
   use ApplicationProcessEntityBundleTrait;
 
-  private ?ApplicationProcessEntity $previousApplicationProcess;
+  /**
+   * @phpstan-var array<\Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemData>
+   */
+  private array $costItemsData;
 
+  /**
+   * @phpstan-param array<\Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemData> $costItemsData
+   */
   public function __construct(
     ApplicationProcessEntityBundle $applicationProcessBundle,
-    ?ApplicationProcessEntity $previousApplicationProcess
+    array $costItemsData
   ) {
     $this->applicationProcessBundle = $applicationProcessBundle;
-    $this->previousApplicationProcess = $previousApplicationProcess;
-  }
-
-  public function getPreviousApplicationProcess(): ?ApplicationProcessEntity {
-    return $this->previousApplicationProcess;
+    $this->costItemsData = $costItemsData;
   }
 
   /**
@@ -49,10 +50,10 @@ final class ApplicationCostItemsPersistCommand {
   }
 
   /**
-   * @phpstan-return ?array<string, mixed> The previous request data or null.
+   * @phpstan-return array<\Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemData>
    */
-  public function getPreviousRequestData(): ?array {
-    return NULL === $this->previousApplicationProcess ? NULL : $this->previousApplicationProcess->getRequestData();
+  public function getCostItemsData(): array {
+    return $this->costItemsData;
   }
 
 }

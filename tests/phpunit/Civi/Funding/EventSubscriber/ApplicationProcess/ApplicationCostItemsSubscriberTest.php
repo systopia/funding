@@ -19,16 +19,15 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\ApplicationProcess;
 
-use Civi\Funding\ApplicationProcess\Command\ApplicationCostItemsAddIdentifiersCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationCostItemsPersistCommand;
-use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandlerInterface;
+use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitResult;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandlerInterface;
+use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemData;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
-use Civi\Funding\EntityFactory\ApplicationProcessFactory;
-use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
-use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreCreateEvent;
-use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
-use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
+use Civi\Funding\EntityFactory\ApplicationSnapshotFactory;
+use Civi\Funding\Event\ApplicationProcess\ApplicationFormSubmitSuccessEvent;
+use Civi\Funding\Form\Application\ApplicationValidationResult;
+use Civi\Funding\Mock\FundingCaseType\Application\Validation\TestValidatedData;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -36,11 +35,6 @@ use PHPUnit\Framework\TestCase;
  * @covers \Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationCostItemsSubscriber
  */
 final class ApplicationCostItemsSubscriberTest extends TestCase {
-
-  /**
-   * @var \Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $costItemsAddIdentifiersHandlerMock;
 
   /**
    * @var \Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
@@ -51,22 +45,16 @@ final class ApplicationCostItemsSubscriberTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
-    $this->costItemsAddIdentifiersHandlerMock = $this->createMock(
-      ApplicationCostItemsAddIdentifiersHandlerInterface::class
-    );
+
     $this->costItemsPersistHandlerMock = $this->createMock(ApplicationCostItemsPersistHandlerInterface::class);
     $this->subscriber = new ApplicationCostItemsSubscriber(
-      $this->costItemsAddIdentifiersHandlerMock,
-      $this->costItemsPersistHandlerMock
+      $this->costItemsPersistHandlerMock,
     );
   }
 
   public function testGetSubscribedEvents(): void {
     $expectedSubscriptions = [
-      ApplicationProcessPreCreateEvent::class => 'onPreCreate',
-      ApplicationProcessCreatedEvent::class => 'onCreated',
-      ApplicationProcessPreUpdateEvent::class => 'onPreUpdate',
-      ApplicationProcessUpdatedEvent::class => 'onUpdated',
+      ApplicationFormSubmitSuccessEvent::class => 'onFormSubmitSuccess',
     ];
 
     static::assertEquals($expectedSubscriptions, $this->subscriber::getSubscribedEvents());
@@ -76,56 +64,65 @@ final class ApplicationCostItemsSubscriberTest extends TestCase {
     }
   }
 
-  public function testOnPreCreate(): void {
+  public function testOnFormSubmitSuccess(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
-    $event = new ApplicationProcessPreCreateEvent(2, $applicationProcessBundle);
-
-    $this->costItemsAddIdentifiersHandlerMock->expects(static::once())->method('handle')
-      ->with(new ApplicationCostItemsAddIdentifiersCommand($applicationProcessBundle))
-      ->willReturn(['bar' => 'baz']);
-    $this->subscriber->onPreCreate($event);
-    static::assertSame(['bar' => 'baz'], $applicationProcessBundle->getApplicationProcess()->getRequestData());
-  }
-
-  public function testOnCreated(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
-    $event = new ApplicationProcessCreatedEvent(2, $applicationProcessBundle);
-
-    $this->costItemsPersistHandlerMock->expects(static::once())->method('handle')
-      ->with(new ApplicationCostItemsPersistCommand($applicationProcessBundle, NULL));
-    $this->subscriber->onCreated($event);
-  }
-
-  public function testOnPreUpdate(): void {
-    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess(['title' => 'Previous']);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
-    $event = new ApplicationProcessPreUpdateEvent(
+    $costItemsData = ['test' => $this->createCostItem()];
+    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([], $costItemsData), FALSE);
+    $event = new ApplicationFormSubmitSuccessEvent(
       2,
-      $previousApplicationProcess,
       $applicationProcessBundle,
-    );
-
-    $this->costItemsAddIdentifiersHandlerMock->expects(static::once())->method('handle')
-      ->with(new ApplicationCostItemsAddIdentifiersCommand($applicationProcessBundle))
-      ->willReturn(['bar' => 'baz']);
-    $this->subscriber->onPreUpdate($event);
-    static::assertSame(['bar' => 'baz'], $applicationProcessBundle->getApplicationProcess()->getRequestData());
-  }
-
-  public function testOnUpdated(): void {
-    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess(['title' => 'Previous']);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
-      ['request_data' => ['foo' => 'bar']]
-    );
-    $event = new ApplicationProcessUpdatedEvent(
-      2,
-      $previousApplicationProcess,
-      $applicationProcessBundle,
+      $applicationProcessBundle->getApplicationProcess()->getRequestData(),
+      ApplicationFormSubmitResult::createSuccess($validationResult),
     );
 
     $this->costItemsPersistHandlerMock->expects(static::once())->method('handle')
-      ->with(new ApplicationCostItemsPersistCommand($applicationProcessBundle, $previousApplicationProcess));
-    $this->subscriber->onUpdated($event);
+      ->with(new ApplicationCostItemsPersistCommand($applicationProcessBundle, $costItemsData));
+    $this->subscriber->onFormSubmitSuccess($event);
+  }
+
+  public function testOnFormSubmitSuccessReadOnly(): void {
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $costItemsData = ['test' => $this->createCostItem()];
+    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([], $costItemsData), TRUE);
+    $event = new ApplicationFormSubmitSuccessEvent(
+      2,
+      $applicationProcessBundle,
+      $applicationProcessBundle->getApplicationProcess()->getRequestData(),
+      ApplicationFormSubmitResult::createSuccess($validationResult),
+    );
+
+    $this->costItemsPersistHandlerMock->expects(static::never())->method('handle');
+    $this->subscriber->onFormSubmitSuccess($event);
+  }
+
+  public function testOnFormSubmitSuccessWithRestore(): void {
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $applicationProcessBundle->getApplicationProcess()->setRestoredSnapshot(
+      ApplicationSnapshotFactory::createApplicationSnapshot()
+    );
+    $costItemsData = ['test' => $this->createCostItem()];
+    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([], $costItemsData), FALSE);
+    $event = new ApplicationFormSubmitSuccessEvent(
+      2,
+      $applicationProcessBundle,
+      $applicationProcessBundle->getApplicationProcess()->getRequestData(),
+      ApplicationFormSubmitResult::createSuccess($validationResult),
+    );
+
+    $this->costItemsPersistHandlerMock->expects(static::never())->method('handle');
+    $this->subscriber->onFormSubmitSuccess($event);
+  }
+
+  private function createCostItem(): CostItemData {
+    return new CostItemData([
+      'type' => 'testType',
+      'identifier' => 'test',
+      'amount' => 1.23,
+      'properties' => [],
+      'dataPointer' => '/foo',
+      'dataType' => 'number',
+      'clearing' => NULL,
+    ]);
   }
 
 }

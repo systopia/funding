@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\SonstigeAktivitaet\JsonSchema;
 
+use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemDataCollector;
+use Civi\Funding\ApplicationProcess\JsonSchema\Validator\OpisApplicationValidatorFactory;
 use Civi\Funding\Form\JsonSchema\JsonSchemaRecipient;
 use Civi\Funding\Form\Traits\AssertFormTrait;
 use Civi\Funding\SonstigeAktivitaet\Application\JsonSchema\AVK1JsonSchema;
@@ -82,7 +84,6 @@ class AVK1JsonSchemaTest extends TestCase {
       ],
       'empfaenger' => 2,
       'kosten' => (object) [
-        'unterkunftUndVerpflegung' => 222.22,
         'honorare' => [
           (object) [
             'berechnungsgrundlage' => 'tagessatz',
@@ -99,6 +100,7 @@ class AVK1JsonSchemaTest extends TestCase {
             'qualifikation' => 'Qualifikation 2',
           ],
         ],
+        'unterkunftUndVerpflegung' => 222.22,
         'fahrtkosten' => (object) [
           'intern' => 2.2,
           'anTeilnehmerErstattet' => 3.3,
@@ -168,9 +170,15 @@ class AVK1JsonSchemaTest extends TestCase {
       'foo' => 'baz',
     ];
 
-    $validator = OpisValidatorFactory::getValidator();
-    $result = $validator->validate($data, \json_encode($jsonSchema));
+    $validator = OpisApplicationValidatorFactory::getValidator();
+    $costItemDataCollector = new CostItemDataCollector();
+    $result = $validator->validate(
+      $data,
+      \json_encode($jsonSchema),
+      ['costItemDataCollector' => $costItemDataCollector]
+    );
     static::assertValidationValid($result);
+    static::assertCount(10, $costItemDataCollector->getCostItemsData());
 
     $unterkunftUndVerpflegung = 222.22;
     $honorar1 = round(11.1 * 22.22, 2);

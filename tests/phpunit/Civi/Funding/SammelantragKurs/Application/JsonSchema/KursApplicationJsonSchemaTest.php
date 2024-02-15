@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\SammelantragKurs\Application\JsonSchema;
 
+use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemDataCollector;
+use Civi\Funding\ApplicationProcess\JsonSchema\Validator\OpisApplicationValidatorFactory;
 use Civi\Funding\Form\Traits\AssertFormTrait;
 use Civi\Funding\Validation\Traits\AssertValidationResultTrait;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
@@ -98,9 +100,15 @@ final class KursApplicationJsonSchemaTest extends TestCase {
       ],
     ];
 
-    $validator = OpisValidatorFactory::getValidator();
-    $result = $validator->validate($data, \json_encode($jsonSchema));
+    $validator = OpisApplicationValidatorFactory::getValidator();
+    $costItemDataCollector = new CostItemDataCollector();
+    $result = $validator->validate(
+      $data,
+      \json_encode($jsonSchema),
+      ['costItemDataCollector' => $costItemDataCollector]
+    );
     static::assertValidationValid($result);
+    static::assertCount(3, $costItemDataCollector->getCostItemsData());
 
     $beantragterZuschuss = (float) $teilnehmerkosten + $fahrtkosten + $honorarkosten;
     static::assertSame($beantragterZuschuss, $data->zuschuss->gesamt);

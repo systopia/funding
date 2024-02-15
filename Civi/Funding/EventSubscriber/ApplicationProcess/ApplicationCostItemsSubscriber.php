@@ -19,19 +19,12 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\ApplicationProcess;
 
-use Civi\Funding\ApplicationProcess\Command\ApplicationCostItemsAddIdentifiersCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationCostItemsPersistCommand;
-use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandlerInterface;
-use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
-use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreCreateEvent;
-use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
-use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
+use Civi\Funding\Event\ApplicationProcess\ApplicationFormSubmitSuccessEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ApplicationCostItemsSubscriber implements EventSubscriberInterface {
-
-  private ApplicationCostItemsAddIdentifiersHandlerInterface $costItemsAddIdentifiersHandler;
 
   private ApplicationCostItemsPersistHandlerInterface $costItemsPersistHandler;
 
@@ -40,48 +33,25 @@ class ApplicationCostItemsSubscriber implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents(): array {
     return [
-      ApplicationProcessPreCreateEvent::class => 'onPreCreate',
-      ApplicationProcessCreatedEvent::class => 'onCreated',
-      ApplicationProcessPreUpdateEvent::class => 'onPreUpdate',
-      ApplicationProcessUpdatedEvent::class => 'onUpdated',
+      ApplicationFormSubmitSuccessEvent::class => 'onFormSubmitSuccess',
     ];
   }
 
   public function __construct(
-    ApplicationCostItemsAddIdentifiersHandlerInterface $costItemsAddIdentifiersHandler,
     ApplicationCostItemsPersistHandlerInterface $costItemsPersistHandler
   ) {
-    $this->costItemsAddIdentifiersHandler = $costItemsAddIdentifiersHandler;
     $this->costItemsPersistHandler = $costItemsPersistHandler;
   }
 
-  public function onPreCreate(ApplicationProcessPreCreateEvent $event): void {
-    $requestData = $this->costItemsAddIdentifiersHandler->handle(new ApplicationCostItemsAddIdentifiersCommand(
-      $event->getApplicationProcessBundle(),
-    ));
+  public function onFormSubmitSuccess(ApplicationFormSubmitSuccessEvent $event): void {
+    if ($event->getResult()->getValidationResult()->isReadOnly() ||
+      NULL !== $event->getApplicationProcess()->getRestoredSnapshot()) {
+      return;
+    }
 
-    $event->getApplicationProcess()->setRequestData($requestData);
-  }
-
-  public function onCreated(ApplicationProcessCreatedEvent $event): void {
     $this->costItemsPersistHandler->handle(new ApplicationCostItemsPersistCommand(
       $event->getApplicationProcessBundle(),
-      NULL,
-    ));
-  }
-
-  public function onPreUpdate(ApplicationProcessPreUpdateEvent $event): void {
-    $requestData = $this->costItemsAddIdentifiersHandler->handle(new ApplicationCostItemsAddIdentifiersCommand(
-      $event->getApplicationProcessBundle(),
-    ));
-
-    $event->getApplicationProcess()->setRequestData($requestData);
-  }
-
-  public function onUpdated(ApplicationProcessUpdatedEvent $event): void {
-    $this->costItemsPersistHandler->handle(new ApplicationCostItemsPersistCommand(
-      $event->getApplicationProcessBundle(),
-      $event->getPreviousApplicationProcess(),
+      $event->getValidatedData()->getCostItemsData()
     ));
   }
 

@@ -19,7 +19,6 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\SammelantragKurs\Application\Data;
 
-use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Form\Application\ApplicationFormDataFactoryInterface;
@@ -29,45 +28,19 @@ final class KursApplicationFormDataFactory implements ApplicationFormDataFactory
 
   use KursSupportedFundingCaseTypesTrait;
 
-  private ApplicationCostItemManager $costItemManager;
-
-  public function __construct(ApplicationCostItemManager $costItemManager) {
-    $this->costItemManager = $costItemManager;
-  }
-
   /**
    * @inheritDoc
-   *
-   * @throws \CRM_Core_Exception
    */
   public function createFormData(ApplicationProcessEntity $applicationProcess, FundingCaseEntity $fundingCase): array {
     $data = $applicationProcess->getRequestData();
     // @phpstan-ignore-next-line
     $data['grunddaten']['titel'] = $applicationProcess->getTitle();
 
-    $costItems = $this->costItemManager->getByApplicationProcessId($applicationProcess->getId());
-    foreach ($costItems as $costItem) {
-      if ('teilnehmerkosten' === $costItem->getType()) {
-        // @phpstan-ignore-next-line
-        $data['zuschuss']['teilnehmerkosten'] = $costItem->getAmount();
-      }
-      elseif ('fahrtkosten' === $costItem->getType()) {
-        // @phpstan-ignore-next-line
-        $data['zuschuss']['fahrtkosten'] = $costItem->getAmount();
-      }
-      elseif ('honorarkosten' === $costItem->getType()) {
-        // @phpstan-ignore-next-line
-        $data['zuschuss']['honorarkosten'] = $costItem->getAmount();
-      }
-    }
-
     return $data;
   }
 
   /**
    * @inheritDoc
-   *
-   * @throws \CRM_Core_Exception
    */
   public function createFormDataForCopy(
     ApplicationProcessEntity $applicationProcess,

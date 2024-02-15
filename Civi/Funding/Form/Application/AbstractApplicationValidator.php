@@ -19,19 +19,20 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\Application;
 
+use Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidationResult;
+use Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidatorInterface;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
-use Civi\RemoteTools\JsonSchema\Validation\ValidatorInterface;
 
 abstract class AbstractApplicationValidator implements ApplicationValidatorInterface {
 
   protected ApplicationJsonSchemaFactoryInterface $jsonSchemaFactory;
 
-  protected ValidatorInterface $jsonSchemaValidator;
+  protected ApplicationSchemaValidatorInterface $jsonSchemaValidator;
 
   public function __construct(
     ApplicationJsonSchemaFactoryInterface $jsonSchemaFactory,
-    ValidatorInterface $jsonSchemaValidator
+    ApplicationSchemaValidatorInterface $jsonSchemaValidator
   ) {
     $this->jsonSchemaFactory = $jsonSchemaFactory;
     $this->jsonSchemaValidator = $jsonSchemaValidator;
@@ -63,7 +64,7 @@ abstract class AbstractApplicationValidator implements ApplicationValidatorInter
       $applicationProcessBundle,
       $data,
       $jsonSchema,
-      $jsonSchemaValidationResult->getData(),
+      $jsonSchemaValidationResult,
       $maxErrors
     );
   }
@@ -72,14 +73,12 @@ abstract class AbstractApplicationValidator implements ApplicationValidatorInter
    * Called after successful JSON schema validation.
    *
    * @phpstan-param array<string, mixed> $formData JSON serializable.
-   * @phpstan-param array<string, mixed> $validatedData JSON serializable.
-   *   Data returned by JSON schema validator.
    */
   abstract protected function getValidationResultExisting(
     ApplicationProcessEntityBundle $applicationProcessBundle,
     array $formData,
     JsonSchema $jsonSchema,
-    array $validatedData,
+    ApplicationSchemaValidationResult $jsonSchemaValidationResult,
     int $maxErrors
   ): ApplicationValidationResult;
 

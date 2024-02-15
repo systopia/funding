@@ -19,11 +19,12 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\Application;
 
+use Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidationResult;
+use Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidatorInterface;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
-use Civi\RemoteTools\JsonSchema\Validation\ValidatorInterface;
 
 /**
  * @property \Civi\Funding\Form\Application\CombinedApplicationJsonSchemaFactoryInterface $jsonSchemaFactory
@@ -34,7 +35,7 @@ abstract class AbstractCombinedApplicationValidator extends AbstractApplicationV
 // phpcs:enable
   public function __construct(
     CombinedApplicationJsonSchemaFactoryInterface $jsonSchemaFactory,
-    ValidatorInterface $jsonSchemaValidator
+    ApplicationSchemaValidatorInterface $jsonSchemaValidator
   ) {
     parent::__construct($jsonSchemaFactory, $jsonSchemaValidator);
   }
@@ -69,7 +70,7 @@ abstract class AbstractCombinedApplicationValidator extends AbstractApplicationV
       $fundingCase,
       $data,
       $jsonSchema,
-      $jsonSchemaValidationResult->getData(),
+      $jsonSchemaValidationResult,
       $maxErrors
     );
   }
@@ -78,8 +79,6 @@ abstract class AbstractCombinedApplicationValidator extends AbstractApplicationV
    * Called after successful JSON schema validation.
    *
    * @phpstan-param array<string, mixed> $formData JSON serializable.
-   * @phpstan-param array<string, mixed> $validatedData JSON serializable.
-   *   Data returned by JSON schema validator.
    */
   abstract protected function getValidationResultAdd(
     FundingProgramEntity $fundingProgram,
@@ -87,7 +86,7 @@ abstract class AbstractCombinedApplicationValidator extends AbstractApplicationV
     FundingCaseEntity $fundingCase,
     array $formData,
     JsonSchema $jsonSchema,
-    array $validatedData,
+    ApplicationSchemaValidationResult $jsonSchemaValidationResult,
     int $maxErrors
   ): ApplicationValidationResult;
 

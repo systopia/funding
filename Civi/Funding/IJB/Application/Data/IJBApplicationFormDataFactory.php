@@ -30,20 +30,16 @@ final class IJBApplicationFormDataFactory implements ApplicationFormDataFactoryI
 
   private IJBFormDataFinanzierungFactory $finanzierungFactory;
 
-  private IJBFormDataKostenFactory $kostenFactory;
-
   private IJBProjektunterlagenFactory $projektunterlagenFactory;
 
   private IJBFormDataZuschussFactory $zuschussFactory;
 
   public function __construct(
     IJBFormDataFinanzierungFactory $finanzierungFactory,
-    IJBFormDataKostenFactory $kostenFactory,
     IJBProjektunterlagenFactory $projektunterlagenFactory,
     IJBFormDataZuschussFactory $zuschussFactory
   ) {
     $this->finanzierungFactory = $finanzierungFactory;
-    $this->kostenFactory = $kostenFactory;
     $this->projektunterlagenFactory = $projektunterlagenFactory;
     $this->zuschussFactory = $zuschussFactory;
   }
@@ -60,7 +56,6 @@ final class IJBApplicationFormDataFactory implements ApplicationFormDataFactoryI
     // @phpstan-ignore-next-line
     $data['grunddaten']['kurzbeschreibungDesInhalts'] = $applicationProcess->getShortDescription();
     $data['empfaenger'] = $fundingCase->getRecipientContactId();
-    $data['kosten'] = $this->kostenFactory->createKosten($applicationProcess);
     $data['finanzierung'] = $this->finanzierungFactory->createFinanzierung($applicationProcess);
     $data['zuschuss'] = $this->zuschussFactory->createZuschuss($applicationProcess);
     $data['projektunterlagen'] = $this->projektunterlagenFactory->createProjektunterlagen($applicationProcess);

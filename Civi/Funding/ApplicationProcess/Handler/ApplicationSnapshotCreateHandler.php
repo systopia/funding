@@ -19,23 +19,31 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Handler;
 
+use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
 use Civi\Funding\ApplicationProcess\ApplicationExternalFileManagerInterface;
 use Civi\Funding\ApplicationProcess\ApplicationSnapshotManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationSnapshotCreateCommand;
 use Civi\Funding\Entity\ApplicationSnapshotEntity;
 use Civi\Funding\Util\DateTimeUtil;
 
+/**
+ * @phpstan-import-type applicationCostItemT from \Civi\Funding\Entity\ApplicationCostItemEntity
+ */
 final class ApplicationSnapshotCreateHandler implements ApplicationSnapshotCreateHandlerInterface {
 
   private ApplicationSnapshotManager $applicationSnapshotManager;
+
+  private ApplicationCostItemManager $costItemManager;
 
   private ApplicationExternalFileManagerInterface $externalFileManager;
 
   public function __construct(
     ApplicationSnapshotManager $applicationSnapshotManager,
+    ApplicationCostItemManager $costItemManager,
     ApplicationExternalFileManagerInterface $externalFileManager
   ) {
     $this->applicationSnapshotManager = $applicationSnapshotManager;
+    $this->costItemManager = $costItemManager;
     $this->externalFileManager = $externalFileManager;
   }
 
@@ -53,6 +61,7 @@ final class ApplicationSnapshotCreateHandler implements ApplicationSnapshotCreat
       'start_date' => DateTimeUtil::toDateTimeStrOrNull($applicationProcess->getStartDate()),
       'end_date' => DateTimeUtil::toDateTimeStrOrNull($applicationProcess->getEndDate()),
       'request_data' => $applicationProcess->getRequestData(),
+      'cost_items' => [...$this->getCostItems($applicationProcess->getId())],
       'amount_requested' => $applicationProcess->getAmountRequested(),
       'is_review_content' => $applicationProcess->getIsReviewContent(),
       'is_review_calculative' => $applicationProcess->getIsReviewCalculative(),
@@ -64,6 +73,20 @@ final class ApplicationSnapshotCreateHandler implements ApplicationSnapshotCreat
     $externalFiles = $this->externalFileManager->getFiles($applicationProcess->getId());
     foreach ($externalFiles as $externalFile) {
       $this->externalFileManager->attachFileToSnapshot($externalFile, $applicationSnapshot->getId());
+    }
+  }
+
+  /**
+   * @phpstan-return iterable<applicationCostItemT>
+   *
+   * @throws \CRM_Core_Exception
+   */
+  private function getCostItems(int $applicationProcessId): iterable {
+    foreach ($this->costItemManager->getByApplicationProcessId($applicationProcessId) as $costItem) {
+      $data = $costItem->toArray();
+      unset($data['id']);
+
+      yield $data;
     }
   }
 

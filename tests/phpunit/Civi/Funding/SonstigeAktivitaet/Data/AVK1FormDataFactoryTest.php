@@ -23,7 +23,6 @@ use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\SonstigeAktivitaet\Application\Data\AVK1FinanzierungFactory;
 use Civi\Funding\SonstigeAktivitaet\Application\Data\AVK1FormDataFactory;
-use Civi\Funding\SonstigeAktivitaet\Application\Data\AVK1KostenFactory;
 use Civi\Funding\SonstigeAktivitaet\Application\Data\AVK1ProjektunterlagenFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -42,11 +41,6 @@ final class AVK1FormDataFactoryTest extends TestCase {
   private AVK1FormDataFactory $formDataFactory;
 
   /**
-   * @var \Civi\Funding\SonstigeAktivitaet\Application\Data\AVK1KostenFactory&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $kostenFactoryMock;
-
-  /**
    * @var \Civi\Funding\SonstigeAktivitaet\Application\Data\AVK1ProjektunterlagenFactory&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $projektunterlagenFactoryMock;
@@ -60,11 +54,9 @@ final class AVK1FormDataFactoryTest extends TestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->finanzierungFactoryMock = $this->createMock(AVK1FinanzierungFactory::class);
-    $this->kostenFactoryMock = $this->createMock(AVK1KostenFactory::class);
     $this->projektunterlagenFactoryMock = $this->createMock(AVK1ProjektunterlagenFactory::class);
     $this->formDataFactory = new AVK1FormDataFactory(
       $this->finanzierungFactoryMock,
-      $this->kostenFactoryMock,
       $this->projektunterlagenFactoryMock,
     );
   }
@@ -87,8 +79,6 @@ final class AVK1FormDataFactoryTest extends TestCase {
       ],
     ]);
 
-    $this->kostenFactoryMock->method('createKosten')->with($applicationProcess)
-      ->willReturn(['foo' => 12.3]);
     $this->finanzierungFactoryMock->method('createFinanzierung')->with($applicationProcess)
       ->willReturn(['bar' => 1.23]);
     $this->projektunterlagenFactoryMock->method('createProjektunterlagen')->with($applicationProcess)
@@ -104,7 +94,6 @@ final class AVK1FormDataFactoryTest extends TestCase {
         ],
       ],
       'empfaenger' => $fundingCase->getRecipientContactId(),
-      'kosten' => ['foo' => 12.3],
       'finanzierung' => ['bar' => 1.23],
       'teilnehmer' => ['gesamt' => 100],
       'beschreibung' => ['veranstaltungsort' => 'dort'],

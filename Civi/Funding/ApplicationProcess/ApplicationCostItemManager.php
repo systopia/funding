@@ -25,14 +25,7 @@ use Civi\RemoteTools\Api4\Api4Interface;
 use Webmozart\Assert\Assert;
 
 /**
- * @phpstan-type applicationCostItemT array{
- *   id?: int,
- *   application_process_id: int,
- *   identifier: string,
- *   type: string,
- *   amount: float,
- *   properties: array<int|string, mixed>,
- * }
+ * @phpstan-import-type applicationCostItemT from ApplicationCostItemEntity
  */
 class ApplicationCostItemManager {
 
@@ -59,10 +52,10 @@ class ApplicationCostItemManager {
   public function getByApplicationProcessId(int $applicationProcessId): array {
     $action = FundingApplicationCostItem::get(FALSE)
       ->addWhere('application_process_id', '=', $applicationProcessId);
-    /** @phpstan-var iterable<applicationCostItemT> $result */
     $result = $this->api4->executeAction($action)->indexBy('identifier');
 
-    return self::toEntities($result);
+    // @phpstan-ignore-next-line
+    return ApplicationCostItemEntity::allFromApiResult($result);
   }
 
   public function save(ApplicationCostItemEntity $applicationCostItem): void {
@@ -94,6 +87,7 @@ class ApplicationCostItemManager {
         $currentItem->setType($item->getType());
         $currentItem->setAmount($item->getAmount());
         $currentItem->setProperties($item->getProperties());
+        $currentItem->setDataPointer($item->getDataPointer());
         $this->save($currentItem);
       }
       else {
@@ -105,21 +99,6 @@ class ApplicationCostItemManager {
     foreach (array_diff(array_keys($currentItems), $newIdentifiers) as $deletedIdentifier) {
       $this->delete($currentItems[$deletedIdentifier]);
     }
-  }
-
-  /**
-   * @phpstan-param iterable<applicationCostItemT> $records
-   *
-   * @phpstan-return array<ApplicationCostItemEntity>
-   *   Application resources items (keys are unchanged).
-   */
-  private static function toEntities(iterable $records): array {
-    $entities = [];
-    foreach ($records as $key => $record) {
-      $entities[$key] = ApplicationCostItemEntity::fromArray($record);
-    }
-
-    return $entities;
   }
 
 }

@@ -77,11 +77,14 @@ final class ApplicationCostItemManagerTest extends TestCase {
   }
 
   public function testUpdateAll(): void {
-    $deletedItem = $this->createApplicationCostItem(11, 'deleted');
-    $item = $this->createApplicationCostItem(12, 'updated');
-    $updatedItem = $this->createApplicationCostItem(12, 'updated');
-    $updatedItem->setProperties(['foo' => 'baz']);
-    $newItem = $this->createApplicationCostItem(NULL, 'new');
+    $deletedItem = $this->createApplicationCostItem(11, 'deleted', '/deleted');
+    $item = $this->createApplicationCostItem(12, 'updated', '/before');
+    $updatedItem = $this->createApplicationCostItem(12, 'updated', '/after');
+    $updatedItem
+      ->setAmount(12345)
+      ->setType('updatedType')
+      ->setProperties(['foo' => 'baz']);
+    $newItem = $this->createApplicationCostItem(NULL, 'new', '/new');
 
     $this->api4Mock->expects(static::exactly(4))->method('executeAction')
       ->withConsecutive(
@@ -160,7 +163,8 @@ final class ApplicationCostItemManagerTest extends TestCase {
   }
 
   private function createApplicationCostItem(?int $id = 12,
-    string $identifier = 'testIdentifier'
+    string $identifier = 'testIdentifier',
+    string $dataPointer = '/test'
   ): ApplicationCostItemEntity {
     $values = [
       'application_process_id' => 2,
@@ -168,6 +172,7 @@ final class ApplicationCostItemManagerTest extends TestCase {
       'type' => 'testType',
       'amount' => 1.23,
       'properties' => ['foo' => 'bar'],
+      'data_pointer' => $dataPointer,
     ];
     if (NULL !== $id) {
       $values['id'] = $id;

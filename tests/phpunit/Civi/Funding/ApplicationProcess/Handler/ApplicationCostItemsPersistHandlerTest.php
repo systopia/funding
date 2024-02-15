@@ -20,11 +20,10 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
-use Civi\Funding\ApplicationProcess\ApplicationCostItemsFactoryInterface;
 use Civi\Funding\ApplicationProcess\Command\ApplicationCostItemsPersistCommand;
+use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemData;
 use Civi\Funding\EntityFactory\ApplicationCostItemFactory;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
-use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -32,11 +31,6 @@ use PHPUnit\Framework\TestCase;
  * @covers \Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandler
  */
 final class ApplicationCostItemsPersistHandlerTest extends TestCase {
-
-  /**
-   * @var \Civi\Funding\ApplicationProcess\ApplicationCostItemsFactoryInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $costItemsFactoryMock;
 
   /**
    * @var \Civi\Funding\ApplicationProcess\ApplicationCostItemManager&\PHPUnit\Framework\MockObject\MockObject
@@ -47,70 +41,43 @@ final class ApplicationCostItemsPersistHandlerTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
-    $this->costItemsFactoryMock = $this->createMock(ApplicationCostItemsFactoryInterface::class);
     $this->costItemManagerMock = $this->createMock(ApplicationCostItemManager::class);
     $this->handler = new ApplicationCostItemsPersistHandler(
-      $this->costItemsFactoryMock,
       $this->costItemManagerMock,
     );
   }
 
-  public function testHandleNew(): void {
+  public function testHandle(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
       ['request_data' => ['foo' => 'bar']]
     );
 
-    $costItems = [ApplicationCostItemFactory::createApplicationCostItem()];
-    $this->costItemsFactoryMock->expects(static::once())->method('createItems')
-      ->with($applicationProcessBundle->getApplicationProcess())
-      ->willReturn($costItems);
+    $costItemsData = [
+      new CostItemData([
+        'type' => 'testType',
+        'identifier' => 'test',
+        'amount' => 1.23,
+        'properties' => ['x' => 1.23, 'y' => 'z'],
+        'dataPointer' => '/foo',
+        'dataType' => 'object',
+        'clearing' => NULL,
+      ]),
+    ];
+    $costItems = [
+      ApplicationCostItemFactory::createApplicationCostItem([
+        'type' => 'testType',
+        'identifier' => 'test',
+        'amount' => 1.23,
+        'properties' => ['x' => 1.23, 'y' => 'z'],
+        'data_pointer' => '/foo',
+      ]),
+    ];
+
     $this->costItemManagerMock->expects(static::once())->method('updateAll')
       ->with($applicationProcessBundle->getApplicationProcess()->getId(), $costItems);
 
     $this->handler->handle(new ApplicationCostItemsPersistCommand(
-      $applicationProcessBundle, NULL,
-    ));
-  }
-
-  public function testHandleUpdate(): void {
-    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess(
-      ['request_data' => ['foo' => 'bar']]
-    );
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
-      ['request_data' => ['baz' => 'bar']]
-    );
-
-    $costItems = [ApplicationCostItemFactory::createApplicationCostItem()];
-    $this->costItemsFactoryMock->expects(static::once())->method('areCostItemsChanged')
-      ->with(['baz' => 'bar'], ['foo' => 'bar'])
-      ->willReturn(TRUE);
-    $this->costItemsFactoryMock->expects(static::once())->method('createItems')
-      ->with($applicationProcessBundle->getApplicationProcess())
-      ->willReturn($costItems);
-    $this->costItemManagerMock->expects(static::once())->method('updateAll')
-      ->with($applicationProcessBundle->getApplicationProcess()->getId(), $costItems);
-
-    $this->handler->handle(new ApplicationCostItemsPersistCommand(
-      $applicationProcessBundle, $previousApplicationProcess,
-    ));
-  }
-
-  public function testHandleUpdateCostItemUnchanged(): void {
-    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess(
-      ['request_data' => ['foo' => 'bar']]
-    );
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
-      ['request_data' => ['baz' => 'bar']]
-    );
-
-    $this->costItemsFactoryMock->expects(static::once())->method('areCostItemsChanged')
-      ->with(['baz' => 'bar'], ['foo' => 'bar'])
-      ->willReturn(FALSE);
-    $this->costItemsFactoryMock->expects(static::never())->method('createItems');
-    $this->costItemManagerMock->expects(static::never())->method('updateAll');
-
-    $this->handler->handle(new ApplicationCostItemsPersistCommand(
-      $applicationProcessBundle, $previousApplicationProcess,
+      $applicationProcessBundle, $costItemsData,
     ));
   }
 

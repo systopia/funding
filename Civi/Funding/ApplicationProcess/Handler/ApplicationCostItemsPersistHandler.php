@@ -20,20 +20,14 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
-use Civi\Funding\ApplicationProcess\ApplicationCostItemsFactoryInterface;
 use Civi\Funding\ApplicationProcess\Command\ApplicationCostItemsPersistCommand;
+use Civi\Funding\Entity\ApplicationCostItemEntity;
 
 final class ApplicationCostItemsPersistHandler implements ApplicationCostItemsPersistHandlerInterface {
 
-  private ApplicationCostItemsFactoryInterface $costItemsFactory;
-
   private ApplicationCostItemManager $costItemManager;
 
-  public function __construct(
-    ApplicationCostItemsFactoryInterface $costItemsFactory,
-    ApplicationCostItemManager $costItemManager
-  ) {
-    $this->costItemsFactory = $costItemsFactory;
+  public function __construct(ApplicationCostItemManager $costItemManager) {
     $this->costItemManager = $costItemManager;
   }
 
@@ -41,12 +35,19 @@ final class ApplicationCostItemsPersistHandler implements ApplicationCostItemsPe
    * @throws \CRM_Core_Exception
    */
   public function handle(ApplicationCostItemsPersistCommand $command): void {
-    if (NULL === $command->getPreviousRequestData()
-      || $this->costItemsFactory->areCostItemsChanged($command->getRequestData(), $command->getPreviousRequestData())
-    ) {
-      $items = $this->costItemsFactory->createItems($command->getApplicationProcess());
-      $this->costItemManager->updateAll($command->getApplicationProcess()->getId(), $items);
+    $costItems = [];
+    foreach ($command->getCostItemsData() as $costItemData) {
+      $costItems[] = ApplicationCostItemEntity::fromArray([
+        'application_process_id' => $command->getApplicationProcess()->getId(),
+        'identifier' => $costItemData->getIdentifier(),
+        'type' => $costItemData->getType(),
+        'amount' => $costItemData->getAmount(),
+        'properties' => $costItemData->getProperties(),
+        'data_pointer' => $costItemData->getDataPointer(),
+      ]);
     }
+
+    $this->costItemManager->updateAll($command->getApplicationProcess()->getId(), $costItems);
   }
 
 }

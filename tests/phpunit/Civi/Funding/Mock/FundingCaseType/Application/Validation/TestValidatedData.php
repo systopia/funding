@@ -41,11 +41,18 @@ final class TestValidatedData implements ValidatedApplicationDataInterface {
   private array $data;
 
   /**
-   * @phpstan-param array<string, mixed> $validatedData
+   * @phpstan-var array<string, \Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemData>
    */
-  public function __construct(array $validatedData) {
+  private array $costItemsData;
+
+  /**
+   * @phpstan-param array<string, mixed> $validatedData
+   * @phpstan-param array<string, \Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemData> $costItemsData
+   */
+  public function __construct(array $validatedData, array $costItemsData) {
     /** @phpstan-var testValidatedDataT $validatedData */
     $this->data = $validatedData;
+    $this->costItemsData = $costItemsData;
   }
 
   public function getAction(): string {
@@ -74,6 +81,13 @@ final class TestValidatedData implements ValidatedApplicationDataInterface {
 
   public function getAmountRequested(): float {
     return $this->data['amountRequested'];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getCostItemsData(): array {
+    return $this->costItemsData;
   }
 
   public function getComment(): ?array {

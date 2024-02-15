@@ -80,7 +80,7 @@ final class ApplicationProcessReworkTaskSubscriberTest extends TestCase {
       ApplicationProcessBundleFactory::createApplicationProcessBundle(),
       [],
       ApplicationFormSubmitResult::createSuccess(
-        ApplicationValidationResult::newValid(new TestValidatedData(['action' => 'apply']), FALSE)
+        ApplicationValidationResult::newValid(new TestValidatedData(['action' => 'apply'], []), FALSE)
       ),
     );
     $applicationProcess = $event->getApplicationProcess();
@@ -96,7 +96,7 @@ final class ApplicationProcessReworkTaskSubscriberTest extends TestCase {
       ApplicationProcessBundleFactory::createApplicationProcessBundle(['status' => 'foo']),
       [],
       ApplicationFormSubmitResult::createSuccess(
-        ApplicationValidationResult::newValid(new TestValidatedData(['action' => 'some-action']), FALSE)
+        ApplicationValidationResult::newValid(new TestValidatedData(['action' => 'some-action'], []), FALSE)
       ),
     );
     $applicationProcess = $event->getApplicationProcess();
@@ -112,7 +112,7 @@ final class ApplicationProcessReworkTaskSubscriberTest extends TestCase {
       ApplicationProcessBundleFactory::createApplicationProcessBundle(['status' => 'draft']),
       [],
       ApplicationFormSubmitResult::createSuccess(
-        ApplicationValidationResult::newValid(new TestValidatedData(['action' => 'some-action']), FALSE)
+        ApplicationValidationResult::newValid(new TestValidatedData(['action' => 'some-action'], []), FALSE)
       ),
     );
     $applicationProcess = $event->getApplicationProcess();

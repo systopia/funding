@@ -36,6 +36,7 @@ final class ApplicationSnapshotFixture {
         'title' => 'Title',
         'short_description' => 'Description',
         'request_data' => ['foo' => 'bar'],
+        'cost_items' => [],
         'amount_requested' => 1.2,
         'creation_date' => date('Y-m-d H:i:s'),
         'start_date' => NULL,

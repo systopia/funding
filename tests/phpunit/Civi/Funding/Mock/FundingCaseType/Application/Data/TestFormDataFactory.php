@@ -49,7 +49,6 @@ final class TestFormDataFactory implements ApplicationFormDataFactoryInterface {
       'recipient' => $fundingCase->getRecipientContactId(),
       'startDate' => $applicationProcess->getStartDate()->format('Y-m-d'),
       'endDate' => $applicationProcess->getEndDate()->format('Y-m-d'),
-      'amountRequested' => $applicationProcess->getAmountRequested(),
       'resources' => $applicationProcess->getRequestData()['resources'],
     ];
 
