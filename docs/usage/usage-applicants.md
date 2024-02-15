@@ -22,9 +22,9 @@ It is possible to save a draft and continue to work on the application at anothe
 
 ## Change an application
 
-The dashboard elements **My Applications** and **My Combined Applications** show the existing applications and their current states. The applications can be opened which leads to the same webform as before, containing the details of the application. The available actions however depend on the status that the application currently has.
+The dashboard elements **My Applications** and **My Combined Applications** show the existing applications and their current states. The applications can be opened which leads to the same form as before, containing the details of the application. The available actions however depend on the status that the application currently has.
 
-Before applying, there are two actions possible that are reflected in the buttons available at the bottom of the webform: **Save** the application after editing, or **Apply** to submit the application. If the application is in the status _review_, there will be one other button shown, namely **Request Change**.
+Before applying, there are two actions possible that are reflected in the buttons available at the bottom of the form: **Save** the application after editing, or **Apply** to submit the application. If the application is in the status _review_, there will be one other button shown, namely **Request Change**.
 
 All possible states and the available actions are explained [here]().
 
