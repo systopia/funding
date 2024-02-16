@@ -63,7 +63,7 @@
 .funding-activity-title {
   font-size: larger;
   font-weight: bolder;
-  margin-bottom: 0px !important;
+  margin-bottom: 0 !important;
 }
 
 .btn-group > .funding-action-button {
@@ -95,6 +95,32 @@
 /* fix position of select container */
 .editable-controls .ui-select-container {
   vertical-align: middle;
+}
+
+/* Display textarea in new line */
+#bootstrap-theme editable-field[type="textarea"] form {
+  display: block;
+}
+
+/* Display textarea and buttons in same line */
+#bootstrap-theme editable-field[type="textarea"] div.form-group {
+  display: flex;
+}
+
+#bootstrap-theme editable-field[type="textarea"] textarea.editable-input.form-control {
+  width: 100%;
+  max-width: 1200px;
+  height: 30vh;
+}
+
+#bootstrap-theme editable-field[type="textarea"] pre {
+  width: 100%;
+  max-width: 1200px;
+  height: fit-content;
+  max-height: 30vh;
+  white-space: pre-wrap;
+  word-break: normal;
+  hyphens: auto;
 }
 
 /* don't let textarea grow out of a modal */

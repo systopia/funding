@@ -80,12 +80,12 @@
           <tr ng-repeat="zeitraum in data.grunddaten.zeitraeume track by $index" funding-editable-table-row>
             <td>
               <editable-field type="date" value="zeitraum.beginn"
-                              path="zeitraeume[{{ $index }}].beginn"
+                              path="grunddaten.zeitraeume[{{ $index }}].beginn"
                               e-ng-required="true"></editable-field>
             </td>
             <td>
               <editable-field type="date" value="zeitraum.ende"
-                              path="zeitraeume[{{ $index }}].ende"
+                              path="grunddaten.zeitraeume[{{ $index }}].ende"
                               e-ng-required="true"></editable-field>
             </td>
             <td class="editable-table-row-actions"></td>
@@ -300,6 +300,7 @@
           <tr ng-repeat="honorar in data.kosten.honorare track by $index" funding-editable-table-row>
             <td>
               <editable-field type="select" value="honorar.berechnungsgrundlage"
+                              path="kosten.honorare[{{ $index }}].berechnungsgrundlage"
                               options-one-of="jsonSchema.properties.kosten.properties.honorare.items.properties.berechnungsgrundlage.oneOf"
                               e-ng-required="true"></editable-field>
             </td>
@@ -823,17 +824,17 @@
     </div>
     <div>
       <editable-field label="'Inhalt und Ziel'"
-                      type="text" value="data.beschreibung.inhalt"
+                      type="textarea" value="data.beschreibung.inhalt"
                       e-ng-required="true"></editable-field>
     </div>
     <div>
       <editable-field label="'Erläuterungen zur Vor- und Nachbereitung, sprachlichen Verständigung und Öffentlichkeitsarbeit'"
-                      type="text" value="data.beschreibung.erlaeuterungen"
+                      type="textarea" value="data.beschreibung.erlaeuterungen"
                       e-ng-required="true"></editable-field>
     </div>
     <div>
       <editable-field label="'Qualifikation der Leitungs- und Begleitpersonen'"
-                      type="text" value="data.beschreibung.qualifikation"
+                      type="textarea" value="data.beschreibung.qualifikation"
                       e-ng-required="true"></editable-field>
     </div>
 
