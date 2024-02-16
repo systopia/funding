@@ -55,7 +55,7 @@ final class IJBKostenJsonSchema extends JsonSchemaObject {
               'tagessatz' => 'Tagessatz',
             ]),
           ]),
-          'dauer' => new JsonSchemaNumber(['precision' => 2]),
+          'dauer' => new JsonSchemaNumber(['precision' => 2, 'minimum' => 0]),
           'verguetung' => new JsonSchemaMoney(['minimum' => 0]),
           'leistung' => new JsonSchemaString(),
           'qualifikation' => new JsonSchemaString(),
