@@ -26,19 +26,14 @@ After installing the funding extension, the Drupal roles need to be given the co
 
 ## CiviRemote User Roles
 
-Every person you want to give any of the permissions listed above needs to have a drupal user account. This refers to reviewers of the giving organisation as well as individuals or members of external organisations that want to apply for the funding. You manually need to add CiviRemote roles to these user accounts.
+Every person you want to give any of the permissions listed above needs to have a Drupal user account. This refers to reviewers of the giving organisation as well as individuals or members of external organisations that want to apply for the funding. You manually need to add CiviRemote roles to these user accounts.
 
-Every drupal user is mapped to a CiviCRM contact. To assign a CiviRemote role, open the summary of the CiviCRM contact and edit the field set **RemoteContact Information**.
+Every Drupal user is mapped to a CiviCRM contact. To assign a CiviRemote role, open the summary of the CiviCRM contact and edit the field set **RemoteContact Information**.
 
 - for reviewers add the role **CiviRemote User**.
 - for receiving contacts add the roles **CiviRemote User** and **CiviRemote Funding**.
 
-!!! question
-    It can be handy to allow the creation of Drupal user accounts for unauthenticated users, for example new applicants. This is done at *Arbeit und Leben*, I think. How is this done exactly? I want to add this as a tip.
-
-!!! note
-    The CiviRemote User Roles are automatically synchronised with the Drupal user account during login. If there are problems with the synchronisation, open the drupal user overview at `admin/people`. Select the user that you want to assign the roles to and perform the action **CiviRemote: Match contact(s)** and afterward **CiviRemote: Synchronise CiviRemote roles**.
-
+The CiviRemote User Roles are automatically synchronised with the Drupal user account during login. If there are problems with the synchronisation, open the Drupal user overview at `admin/people`. Select the user that you want to assign the roles to and perform the action **CiviRemote: Match contact(s)** and afterward **CiviRemote: Synchronise CiviRemote roles**.
 
 ## Funding Program
 
@@ -62,9 +57,11 @@ The following permissions exist:
 
 * **Application: create** allows contacts to create a new application for this funding program.
 * **Application: apply** allows contacts to create a new application and apply it in one step.
-* **View** specifies which funding programs are available to create an application for. It also specifies which funding programs are visible in the CiviCRM funding program list.
+* **View** specifies which funding programs are visible in the CiviCRM funding program list.
 
-The permissions **Application: create** and **Application: apply** are usually granted to applicants. Both implicitly include the permission **View**. The **View** permission is typically given to reviewers and site admins.
+The permissions **Application: create** and **Application: apply** are granted to applicants. The **View** permission is typically given to reviewers and site admins.
+
+Some Drupal roles automatically imply funding program permissions. Users with the permission **CiviCRM: administer Funding Program Manager** implicitly have the **View** permission. Users with the Drupal permission **CiviCRM: administer CiviCRM** implicitly have every permission.
 
 Permissions can be assigned to specific contacts, contact types or contacts that have a relationship to a specific contact or contact type. In the last case, you need to specify the relationship type.
 

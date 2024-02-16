@@ -2,7 +2,7 @@
 
 The framework provided by the funding extension involves multiple entities, extensions and groups of people that interact which each other. The following list provides a short description of the terms that are mostly used.
 
-**Funding Framework**: The CiviCRM extension [funding](https://github.com/systopia/funding), as well as the drupal module [civiremote_funding](https://github.com/systopia/drupal-civiremote_funding/), as well as a [set of other extensions and modules](./index.md#we-need-your-support).
+**Funding Framework**: The CiviCRM extension [funding](https://github.com/systopia/funding), as well as the Drupal module [civiremote_funding](https://github.com/systopia/drupal-civiremote_funding/), as well as a [set of other extensions and modules](./index.md#we-need-your-support).
 
 **Giving Organization**: The organization that hosts funding programs and allocates money to recipients with eligible applications. The giving organization hosts and administers CiviCRM.
 

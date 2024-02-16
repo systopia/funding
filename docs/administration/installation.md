@@ -4,7 +4,7 @@ The installation described below assumes that CiviCRM and the funding portal run
 
 The funding extension is still under development and there exists no stable release yet.
 
-In the following, `$DRUPAL_ROOT` refers to the drupal installation root, for example `/var/www/web`.
+In the following, `$DRUPAL_ROOT` refers to the Drupal installation root, for example `/var/www/web`.
 
 ## Status of this document
 
@@ -46,7 +46,7 @@ Edit `$DRUPAL_ROOT/drupal/composer.json` and add the following to repositories:
         },
         "custom/civiremote": {
             "type": "vcs",
-            "url": "git@github.com:systopia/civiremote"
+            "url": "git@github.com:systopia/civiremote.git"
         },
 ```
 
@@ -56,9 +56,6 @@ Open a terminal at `$DRUPAL_ROOT` and enter
 composer require custom/civiremote_funding
 drush pm:enable civiremote_funding
 ```
-
-!!! note
-    If CMRF Core is published as stable, `composer require drupal/cmrf_core:^2.1` is no longer required.
 
 ## Further modules/dependencies
 
@@ -78,8 +75,7 @@ composer require drupal/config_update
 drush pm:enable config_update
 ```
 
-!!! note
-    The last step is no longer necessary as soon as we have releases of `civiremote_funding` with update routines.
+The last step is no longer necessary as soon as we have releases of `civiremote_funding` with update routines.
 
 ### Configure fontawesome
 
@@ -110,10 +106,10 @@ The above selector restricts the module to the funding forms.
 Install the following extensions, use the newest release if not otherwise indicated:
 
 - [de.systopia.xcm](https://github.com/systopia/de.systopia.xcm)
-- [de.systopia.identitytracker](https://github.com/systopia/de.systopia.identitytracker)
+- [de.systopia.identitytracker](https://github.com/systopia/de.systopia.identitytracker) - version >= 1.4
 - The branch `remote-tools-api4` of [de.systopia.remotetools](https://github.com/systopia/de.systopia.remotetools)
-- [de.systopia.civioffice](https://github.com/systopia/de.systopia.civioffice)
-- [org.project60.banking](https://github.com/Project60/org.project60.banking). The  _CiviContribute_ component needs to be activated for this extension.
+- [de.systopia.civioffice](https://github.com/systopia/de.systopia.civioffice) - version >= 1.0
+- [org.project60.banking](https://github.com/Project60/org.project60.banking) - version >= 1.0. The  _CiviContribute_ component needs to be activated for this extension.
 - [activity-entity](https://github.com/systopia/activity-entity)
 - [external-file](https://github.com/systopia/external-file)
 - [funding](https://github.com/systopia/funding)
@@ -140,7 +136,7 @@ Set up an API User:
     - CiviCRM: view debug output
     - RemoteContacts: match and link
     - RemoteContacts: retrieve
-- add a drupal user **api** with the role **CiviCRM API**
+- add a Drupal user **api** with the role **CiviCRM API**
 - generate an [API key](https://docs.civicrm.org/sysadmin/en/latest/setup/api-keys/) for the corresponding CiviCRM contact **api**
 
 Set up a CiviMRF profile under `/admin/config/cmrf/profiles` or edit the default profile:
