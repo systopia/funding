@@ -16,7 +16,7 @@ The framework provided by the funding extension involves multiple entities, exte
 
 **Reviewer**: A person that is associated with the giving organization and reviews applications to be rejected or eligible. There can be a distinction between the following roles: content reviewer, calculative reviewer and drawdown reviewer. Reviewers have access to CiviCRM.
 
-**Site Admin**: A person that administers the funding framework in CiviCRM and in the Funding Portal. This includes creating new funding programs, creating new user accounts for the Funding Portal and setting correct permissions for those user accounts.
+**Funding Admin**: A person that administers the funding framework in CiviCRM and in the Funding Portal. This includes creating new funding programs, creating new user accounts for the Funding Portal and setting correct permissions for those user accounts.
 
 ------------
 

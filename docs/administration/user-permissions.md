@@ -20,7 +20,7 @@ After installing the funding extension, the Drupal roles need to be given the co
     * Access CiviCRM Funding
 * Reviewers need to have a role that grants the following permissions:
     * CiviCRM: access Funding Program Manager
-* Site Admins need to have a role that grants the following permissions:
+* Funding Admins need to have a role that grants the following permissions:
     * CiviCRM: access Funding Program Manager
     * CiviCRM: Funding Program Manager Administration
 
@@ -59,7 +59,7 @@ The following permissions exist:
 * **Application: apply** allows contacts to create a new application and apply it in one step.
 * **View** specifies which funding programs are visible in the CiviCRM funding program list.
 
-The permissions **Application: create** and **Application: apply** are granted to applicants. The **View** permission is typically given to reviewers and site admins.
+The permissions **Application: create** and **Application: apply** are granted to applicants. The **View** permission is typically given to reviewers and funding admins.
 
 Some Drupal roles automatically imply funding program permissions. Users with the permission **CiviCRM: administer Funding Program Manager** implicitly have the **View** permission. Users with the Drupal permission **CiviCRM: administer CiviCRM** implicitly have every permission.
 
