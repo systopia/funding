@@ -4,7 +4,7 @@ This section describes the typical usage of the funding portal for persons who a
 
 ## Login
 
-To create a new application, applicants need to be provided with a username and password to log into the funding portal.  Their user account needs to have the correct permissions, see the section [User Permissions](../user-permissions.md) for more details.
+To create a new application, applicants need to be provided with a username and password to log into the funding portal.  Their user account needs to have the correct permissions, see the section [User Permissions](../administration/user-permissions.md) for more details.
 
 After login in, applicants can change their password at **My account** → **Edit**. All other possible actions can be found on the dashboard page.
 
