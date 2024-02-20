@@ -20,11 +20,9 @@ Navigate to **Funding > Add Funding Program**. This directs to a form where you 
     * Internationale Jugendbegegnung
     * Sammelantrag Kurs
 
-After creating the funding program, you will be redirected to a page that allows you to take further actions. It is recommended to [edit the funding program permissions](todo:add link) via **Actions > Edit permissions** before closing this page. Otherwise, you might not have enough permissions and not find the newly created funding program in the funding program overview.
+The dates **Start** and **End** are meant for the time span in which the money is given. The dates **Requests Start Date** and **Requests End Date** refer to the time span in which new applications can be made. In most situations, the application process ends before the distribution of money starts, i.e. `Requests Start Date < Requests End Date < Start Date < End Date`.
 
-!!! question
-    - What is the maximal recommended length of the abbreviation? In which situations is the abbreviation used?
-    - What are start and end date in contrast to requests start / end date? Is there a typical order (`start < start_request < end_request < end`)?
+After creating the funding program, you will be redirected to a page that allows you to take further actions. It is recommended to [edit the funding program permissions](todo:add link) via **Actions > Edit permissions** before closing this page. Otherwise, you might not have enough permissions and not find the newly created funding program in the funding program overview.
 
 ## Edit Funding Programs
 
