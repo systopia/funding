@@ -21,4 +21,16 @@ final class FundingClearingProcess extends Generic\DAOEntity {
     return \Civi::service(GetAction::class)->setCheckPermissions($checkPermissions);
   }
 
+  public static function getForm(): GetFormAction {
+
+  }
+
+  public static function validateForm() {
+
+  }
+
+  public static function submitForm() {
+
+  }
+
 }
