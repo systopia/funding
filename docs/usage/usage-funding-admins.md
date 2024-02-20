@@ -20,17 +20,11 @@ Navigate to **Funding > Add Funding Program**. This directs to a form where you 
     * Internationale Jugendbegegnung
     * Sammelantrag Kurs
 
-!!! note "Changing Funding Case Types"
-    The funding case types are specific to the needs of *Arbeit und Leben*, the organization that funded the development of the funding extension. They will be different for other giving organizations. Currently, there exists no administration page to change the funding case types. They have to be changed directly in the code of the extension. Alternatively, you are welcome to fund the creation of an administration page.
-
 After creating the funding program, you will be redirected to a page that allows you to take further actions. It is recommended to [edit the funding program permissions](todo:add link) via **Actions > Edit permissions** before closing this page. Otherwise, you might not have enough permissions and not find the newly created funding program in the funding program overview.
 
 !!! question
     - What is the maximal recommended length of the abbreviation? In which situations is the abbreviation used?
     - What are start and end date in contrast to requests start / end date? Is there a typical order (`start < start_request < end_request < end`)?
-    - Are "Requests" and "Applications" identical?
-    - Can the Funding Case Types configured?
-
 
 ## Edit Funding Programs
 

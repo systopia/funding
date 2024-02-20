@@ -33,6 +33,6 @@ An application has different components:
   * A history of all states and comments
   * Other general data, for example the creation date or if a review is passed
 
-There are (currently) two types of applications: Normal Applications and Combined Applications. Both contain different application forms which are specific to the needs of *Arbeit und Leben*, the organization that funded the development of the Funding Extension.
+There are two kinds of applications: Normal Applications and Combined Applications.
 
 **Funding Case**: All applications that were created by the same applicant for a specific funding program. A funding case might contain multiple applications.
