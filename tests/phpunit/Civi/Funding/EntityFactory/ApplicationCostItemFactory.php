@@ -23,7 +23,7 @@ use Civi\Funding\Entity\ApplicationCostItemEntity;
 
 /**
  * @phpstan-type applicationCostItemT array{
- *   id?: int,
+ *   id?: int|null,
  *   application_process_id?: int,
  *   identifier?: non-empty-string,
  *   type?: non-empty-string,
@@ -50,6 +50,10 @@ final class ApplicationCostItemFactory {
       'properties' => [],
       'data_pointer' => '/amount',
     ];
+
+    if (NULL === $values['id']) {
+      unset($values['id']);
+    }
 
     return ApplicationCostItemEntity::fromArray($values);
   }

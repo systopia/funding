@@ -23,7 +23,7 @@ use Civi\Funding\Entity\ApplicationResourcesItemEntity;
 
 /**
  * @phpstan-type applicationResourcesItemT array{
- *   id?: int,
+ *   id?: int|null,
  *   application_process_id?: int,
  *   identifier?: non-empty-string,
  *   type?: non-empty-string,
@@ -51,6 +51,10 @@ final class ApplicationResourcesItemFactory {
       'properties' => [],
       'data_pointer' => '/test',
     ];
+
+    if (NULL === $values['id']) {
+      unset($values['id']);
+    }
 
     return ApplicationResourcesItemEntity::fromArray($values);
   }

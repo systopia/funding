@@ -65,6 +65,7 @@ final class ApplicationCostItemsPersistHandlerTest extends TestCase {
     ];
     $costItems = [
       ApplicationCostItemFactory::createApplicationCostItem([
+        'id' => NULL,
         'type' => 'testType',
         'identifier' => 'test',
         'amount' => 1.23,
