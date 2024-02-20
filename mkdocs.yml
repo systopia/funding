@@ -16,7 +16,7 @@ nav:
       - 'Application Workflow': usage/application-states.md
       - 'Usage for Applicants': usage/usage-applicants.md
       - 'Usage for Reviewers': usage/usage-reviewers.md
-      - 'Usage for Site Admins': usage/usage-funding-admins.md
+      - 'Usage for Funding Admins': usage/usage-funding-admins.md
 
 markdown_extensions:
   - attr_list
