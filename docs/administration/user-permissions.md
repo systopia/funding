@@ -61,7 +61,7 @@ The following permissions exist:
 
 The permissions **Application: create** and **Application: apply** are granted to applicants. The **View** permission is typically given to reviewers and funding admins.
 
-Some Drupal roles automatically imply funding program permissions. Users with the permission **CiviCRM: administer Funding Program Manager** implicitly have the **View** permission. Users with the Drupal permission **CiviCRM: administer CiviCRM** implicitly have every permission.
+Some Drupal roles automatically imply funding program permissions. Users with the permission **CiviCRM: administer Funding Program Manager** (or **CiviCRM: administer CiviCRM**) implicitly have the **View** permission.
 
 Permissions can be assigned to specific contacts, contact types or contacts that have a relationship to a specific contact or contact type. In the last case, you need to specify the relationship type.
 
