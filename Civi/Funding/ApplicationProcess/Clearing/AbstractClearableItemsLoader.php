@@ -69,6 +69,12 @@ abstract class AbstractClearableItemsLoader {
 
     foreach ($items as $item) {
       $path = explode('/', ltrim($item->getDataPointer(), '/'));
+      if ([''] === $path) {
+        // Saved before we had cost items.
+        // @todo How to get path?
+        continue;
+      }
+
       if ([] !== $item->getProperties()) {
         $arrayItem = TRUE;
         $index = array_pop($path);

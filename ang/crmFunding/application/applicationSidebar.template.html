@@ -43,10 +43,10 @@
   <funding-action-button action="request-change" class="btn btn-default funding-application-sidebar-element" crm-icon="fa-arrow-left">{{ $ctrl.ts('Request Change') }}</funding-action-button>
   <div ng-show="isAnyActionAllowed('approve', 'reject')">
     <funding-action-button action="reject" class="btn btn-default funding-application-sidebar-element" crm-icon="fa-ban">
-      {{ $ctrl.ts('Reject %applicationProcessLabel', { applicationProcessLabel: $ctrl.applicationProcessLabel }) }}
+      {{ ts('Reject %applicationProcessLabel', { applicationProcessLabel: $ctrl.applicationProcessLabel }) }}
     </funding-action-button>
     <funding-action-button action="approve" hide-disabled="false" class="btn btn-default funding-application-sidebar-element" crm-icon="fa-check">
-      {{ $ctrl.ts('Approve %applicationProcessLabel', { applicationProcessLabel: $ctrl.applicationProcessLabel }) }}
+      {{ ts('Approve %applicationProcessLabel', { applicationProcessLabel: $ctrl.applicationProcessLabel }) }}
     </funding-action-button>
     <p ng-show="!isActionAllowed('approve')" class="disabled">
       {{ $ctrl.ts('Approval is possible once the review was successful.') }}

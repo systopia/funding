@@ -4,6 +4,9 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\Funding\Api4\Action\FundingClearingProcess\GetAction;
+use Civi\Funding\Api4\Action\FundingClearingProcess\GetFormAction;
+use Civi\Funding\Api4\Action\FundingClearingProcess\SubmitFormAction;
+use Civi\Funding\Api4\Action\FundingClearingProcess\ValidateFormAction;
 use Civi\Funding\Api4\Traits\AccessROPermissionsTrait;
 
 /**
@@ -22,15 +25,15 @@ final class FundingClearingProcess extends Generic\DAOEntity {
   }
 
   public static function getForm(): GetFormAction {
-
+    return new GetFormAction();
   }
 
-  public static function validateForm() {
-
+  public static function validateForm(): ValidateFormAction {
+    return new ValidateFormAction();
   }
 
-  public static function submitForm() {
-
+  public static function submitForm(): SubmitFormAction {
+    return new SubmitFormAction();
   }
 
 }

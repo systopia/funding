@@ -1,0 +1,74 @@
+<?php
+/*
+ * Copyright (C) 2024 SYSTOPIA GmbH
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as published by
+ *  the Free Software Foundation in version 3.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+declare(strict_types = 1);
+
+namespace Civi\Funding\ClearingProcess\Api4\ActionHandler;
+
+use Civi\Funding\Api4\Action\FundingClearingProcess\GetFormAction;
+use Civi\Funding\ClearingProcess\ClearingProcessBundleLoader;
+use Civi\Funding\ClearingProcess\Command\ClearingFormDataGetCommand;
+use Civi\Funding\ClearingProcess\Command\ClearingJsonFormsFormGetCommand;
+use Civi\Funding\ClearingProcess\Handler\ClearingFormDataGetHandlerInterface;
+use Civi\Funding\ClearingProcess\Handler\ClearingJsonFormsFormGetHandlerInterface;
+use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
+use Webmozart\Assert\Assert;
+
+final class GetFormActionHandler implements ActionHandlerInterface {
+
+  public const ENTITY_NAME = 'FundingClearingProcess';
+
+  private ClearingProcessBundleLoader $clearingProcessBundleLoader;
+
+  private ClearingFormDataGetHandlerInterface $formDataGetHandler;
+
+  private ClearingJsonFormsFormGetHandlerInterface $jsonSchemaGetHandler;
+
+  public function __construct(
+    ClearingProcessBundleLoader $clearingProcessBundleLoader,
+    ClearingFormDataGetHandlerInterface $formDataGetHandler,
+    ClearingJsonFormsFormGetHandlerInterface $jsonSchemaGetHandler
+  ) {
+    $this->clearingProcessBundleLoader = $clearingProcessBundleLoader;
+    $this->formDataGetHandler = $formDataGetHandler;
+    $this->jsonSchemaGetHandler = $jsonSchemaGetHandler;
+  }
+
+  /**
+   * @phpstan-return array{
+   *   jsonSchema: array<string, mixed>,
+   *   uiSchema: array<string, mixed>,
+   *   data: array<string, mixed>,
+   * }
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function getForm(GetFormAction $action): array {
+    $clearingProcessBundle = $this->clearingProcessBundleLoader->get($action->getId());
+    Assert::notNull($clearingProcessBundle, sprintf('Clearing pricess with ID %d not found', $action->getId()));
+
+    $form = $this->jsonSchemaGetHandler->handle(new ClearingJsonFormsFormGetCommand($clearingProcessBundle));
+    $data = $this->formDataGetHandler->handle(new ClearingFormDataGetCommand($clearingProcessBundle));
+
+    return [
+      'jsonSchema' => $form->getJsonSchema()->jsonSerialize(),
+      'uiSchema' => $form->getUiSchema()->toArray(),
+      'data' => $data,
+    ];
+  }
+
+}

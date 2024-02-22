@@ -70,6 +70,22 @@ final class ClearingProcessManager {
   }
 
   /**
+   * @phpstan-return array<int, ClearingProcessEntity>
+   *   Indexed by id.
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function getByFundingCaseId(int $fundingCaseId): array {
+    // @phpstan-ignore-next-line
+    return ClearingProcessEntity::allFromApiResult(
+      $this->api4->getEntities(
+        FundingClearingProcess::getEntityName(),
+        Comparison::new('funding_case_id', '=', $fundingCaseId)
+      )->indexBy('id')
+    );
+  }
+
+  /**
    * @throws \CRM_Core_Exception
    */
   public function get(int $id): ?ClearingProcessEntity {
