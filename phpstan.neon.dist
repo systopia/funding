@@ -19,9 +19,12 @@ parameters:
 		- tools/phpunit/vendor/bin/.phpunit/phpunit/src/Framework/TestCase.php
 	scanDirectories:
 		- tools/phpunit/vendor/bin/.phpunit/phpunit/src/Framework
+		- ../activity-entity/Civi/
+		- ../de.systopia.civioffice/CRM/
+		- ../de.systopia.remotetools/Civi/
+		- ../external-file/Civi/
 	bootstrapFiles:
 		- tools/phpunit/vendor/bin/.phpunit/phpunit/vendor/autoload.php
-		- vendor/autoload.php
 		- phpstanBootstrap.php
 	level: 9
 	universalObjectCratesClasses:
