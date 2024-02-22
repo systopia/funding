@@ -83,14 +83,22 @@ final class IJBApplicationValidator extends AbstractNonCombinedApplicationValida
     if ([] !== $errorMessages) {
       return ApplicationValidationResult::newInvalid(
         $errorMessages,
-        // @phpstan-ignore-next-line
-        new IJBApplicationValidatedData($validatedData, $jsonSchemaValidationResult->getCostItemsData()),
+        new IJBApplicationValidatedData(
+          // @phpstan-ignore-next-line
+          $validatedData,
+          $jsonSchemaValidationResult->getCostItemsData(),
+          $jsonSchemaValidationResult->getResourcesItemsData()
+        ),
       );
     }
 
     return $this->createValidationResultValid(
-      // @phpstan-ignore-next-line
-      new IJBApplicationValidatedData($validatedData, $jsonSchemaValidationResult->getCostItemsData()),
+      new IJBApplicationValidatedData(
+        // @phpstan-ignore-next-line
+        $validatedData,
+        $jsonSchemaValidationResult->getCostItemsData(),
+        $jsonSchemaValidationResult->getResourcesItemsData()
+      ),
       $jsonSchema
     );
   }
