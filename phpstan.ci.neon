@@ -5,16 +5,10 @@ parameters:
 	scanDirectories:
 		- ci/vendor/civicrm/civicrm-core/api/
 		- ci/vendor/civicrm/civicrm-core/CRM/
-		- de.systopia.civioffice/CRM/
-		- de.systopia.remotetools/Civi/
-		- external-file/Civi/
 	bootstrapFiles:
 		- ci/vendor/autoload.php
-		- de.systopia.remotetools/vendor/autoload.php
 	# Because we test with different versions in CI we have unmatched errors
 	reportUnmatchedIgnoredErrors: false
 	ignoreErrors:
-		# Depends on extension activity-entity
-		- '#^Call to static method connect\(\) on an unknown class Civi\\Api4\\EntityActivity.$#'
 		# Errors we get when using "prefer-lowest"
 		- '#::getSubscribedEvents\(\) return type has no value type specified in iterable type array.$#'
