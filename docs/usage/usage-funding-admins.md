@@ -1,6 +1,6 @@
 # Usage for administrators
 
-This section describes necessary administrative tasks besides the initial [installation](../administration/installation.md) and [configuration](../administration/configuration.md).
+This section describes necessary administrative tasks besides the initial [installation](../administration/installation.md) and [necessary adjustments](../administration/necessary-adjustments.md).
 
 ## Create a new Funding Program
 
