@@ -30,8 +30,8 @@ fundingModule.directive('fundingActionButton', [function() {
     },
     controllerAs: '$ctrl',
     controller: function () {
-        this.hideDisabled = true;
-        this.withComment = true;
+      this.hideDisabled = true;
+      this.withComment = true;
     },
     compile: function(element, attrs) {
       // copy attributes to button element
@@ -61,9 +61,9 @@ fundingModule.directive('fundingActionButton', [function() {
             element.find('button').find('span.funding-label').html(clone);
             if (!controller.label) {
               const cloneText = clone.text();
-              const expressionMatch = cloneText.match(/^\{\{(.+)\}\}$/);
+              const expressionMatch = cloneText.match(/^\s*\{\{(.+)\}\}\s*$/);
               if (expressionMatch && expressionMatch[1]) {
-                controller.label = scope.$eval(expressionMatch[1]);
+                controller.label = scope.$parent.$eval(expressionMatch[1]);
               }
               else {
                 controller.label = cloneText;
