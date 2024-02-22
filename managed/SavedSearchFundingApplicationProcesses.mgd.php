@@ -150,7 +150,9 @@ return [
               'alignment' => 'text-right',
             ],
           ],
-          'actions' => [],
+          'actions' => [
+            'civiofficeRender',
+          ],
           'classes' => [
             'table',
             'table-striped',

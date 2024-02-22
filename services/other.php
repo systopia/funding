@@ -33,6 +33,7 @@ use Civi\Funding\DependencyInjection\Compiler\FundingCaseTypeServiceLocatorPass;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\EventSubscriber\Api\TransactionalApiRequestSubscriber;
 use Civi\Funding\EventSubscriber\FundingFilterPossiblePermissionsSubscriber;
+use Civi\Funding\EventSubscriber\FundingCiviOfficeSearchKitTaskSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingRequestInitSubscriber;
 use Civi\Funding\EventSubscriber\Remote\RemotePageRequestSubscriber;
 use Civi\Funding\FundingAttachmentManager;
@@ -76,6 +77,9 @@ $container->autowire(TransactionalApiRequestSubscriber::class, TransactionalApiR
   ->addTag('kernel.event_subscriber');
 
 $container->autowire(FundingFilterPossiblePermissionsSubscriber::class)
+  ->addTag('kernel.event_subscriber');
+
+$container->autowire(FundingCiviOfficeSearchKitTaskSubscriber::class)
   ->addTag('kernel.event_subscriber');
 
 $container->autowire(EntityValidatorInterface::class, EntityValidator::class);

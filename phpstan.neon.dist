@@ -20,6 +20,7 @@ parameters:
 	scanDirectories:
 		- tools/phpunit/vendor/bin/.phpunit/phpunit/src/Framework
 		- ../activity-entity/Civi/
+		- ../de.systopia.civioffice/Civi/
 		- ../de.systopia.civioffice/CRM/
 		- ../de.systopia.remotetools/Civi/
 		- ../external-file/Civi/

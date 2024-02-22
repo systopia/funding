@@ -4,7 +4,8 @@ set -eu -o pipefail
 ACTIVITY_ENTITY_BRANCH=main
 EXTERNAL_FILE_BRANCH=main
 CIVIBANKING_VERSION=0.8.3
-CIVIOFFICE_VERSION=1.0-beta1
+#CIVIOFFICE_VERSION=1.0-beta1
+CIVIOFFICE_BRANCH=master
 XCM_VERSION=1.12.0
 #IDENTITYTRACKER_VERSION=1.3
 IDENTITYTRACKER_BRANCH=master
@@ -64,8 +65,10 @@ else
   cv ext:download "activity-entity@https://github.com/systopia/activity-entity/archive/refs/heads/$ACTIVITY_ENTITY_BRANCH.zip"
   cv ext:download "external-file@https://github.com/systopia/external-file/archive/refs/heads/$EXTERNAL_FILE_BRANCH.zip"
   cv ext:download "org.project60.banking@https://github.com/Project60/org.project60.banking/releases/download/$CIVIBANKING_VERSION/org.project60.banking-$CIVIBANKING_VERSION.zip"
-  # For some reason fails with this error: Class "CRM_Civioffice_Upgrader" not found
-  cv ext:download "de.systopia.civioffice@https://github.com/systopia/de.systopia.civioffice/archive/refs/tags/$CIVIOFFICE_VERSION.zip" ||:
+  # For some reason fails with this error: Class "CRM_Civioffice_Upgrader" not found.
+  # If ext:enable is called afterwards, everything is ok.
+  #cv ext:download "de.systopia.civioffice@https://github.com/systopia/de.systopia.civioffice/archive/refs/tags/$CIVIOFFICE_VERSION.zip" ||:
+  cv ext:download "de.systopia.civioffice@https://github.com/systopia/de.systopia.civioffice/archive/refs/heads/$CIVIOFFICE_BRANCH.zip" ||:
   cv ext:enable de.systopia.civioffice
   cv ext:download "de.systopia.xcm@https://github.com/systopia/de.systopia.xcm/releases/download/$XCM_VERSION/de.systopia.xcm-$XCM_VERSION.zip"
   #cv ext:download "de.systopia.identitytracker@https://github.com/systopia/de.systopia.identitytracker/releases/download/$IDENTITYTRACKER_VERSION/de.systopia.identitytracker-$IDENTITYTRACKER_VERSION.zip"

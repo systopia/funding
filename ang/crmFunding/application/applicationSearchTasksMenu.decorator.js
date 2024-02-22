@@ -66,14 +66,19 @@ fundingModule.directive('fundingApplicationTasksDecorator', function() {
 
         let allowedActionsByApplication = {};
 
-        taskManager.entityInfo = {
-          title: ts('Application'),
-          title_plural: ts('Applications'),
-        };
+        let searchKitTasks;
+        taskManager.getMetadata().then(() => {
+          taskManager.entityInfo = {
+            title: ts('Application'),
+            title_plural: ts('Applications'),
+          };
+
+          searchKitTasks = taskManager.tasks;
+        });
 
         function updateAvailableTasks() {
           if (ctrl.ids.length === 0) {
-            taskManager.tasks = [];
+            taskManager.tasks = searchKitTasks;
             return;
           }
 
@@ -84,6 +89,7 @@ fundingModule.directive('fundingApplicationTasksDecorator', function() {
               name: actionName,
               title: label,
               confirm: confirm,
+              _customTask: true,
             };
           }
 
@@ -94,13 +100,13 @@ fundingModule.directive('fundingApplicationTasksDecorator', function() {
             tasks = _4.pickBy(tasks, (task, actionName) => actions[actionName] && actions[actionName].label === task.title);
           }
 
-          taskManager.tasks = Object.values(tasks);
+          taskManager.tasks = searchKitTasks.concat(Object.values(tasks));
         }
 
         let lastIds;
         function updateTasks() {
           if (_4.isEqual(lastIds, ctrl.ids)) {
-            return;
+            return new Promise((resolve) => resolve([]));
           }
 
           lastIds = _4.clone(ctrl.ids);
@@ -112,25 +118,29 @@ fundingModule.directive('fundingApplicationTasksDecorator', function() {
           });
 
           if (idsToGetActions.length > 0) {
-            taskManager.tasks = [];
-            fundingApplicationProcessService.getAllowedActionsMultiple(idsToGetActions)
+            taskManager.tasks = searchKitTasks;
+            return fundingApplicationProcessService.getAllowedActionsMultiple(idsToGetActions)
               .then((allowedActions) => _4.extend(allowedActionsByApplication, allowedActions))
               .then(updateAvailableTasks);
           } else {
             updateAvailableTasks();
+            return new Promise((resolve) => resolve([]));
           }
         }
 
         // Only triggered if a new ID is selected, not un deselect.
         $scope.$watch('$ctrl.ids', () => updateTasks());
 
-        taskManager.getMetadata = () => {
-          updateTasks();
+        taskManager.getMetadata = updateTasks;
 
-          return new Promise((resolve) => resolve([]));
-        };
-
+        const parentDoTask = taskManager.doTask;
         taskManager.doTask = function(action, ids) {
+          if (!action._customTask) {
+            parentDoTask(action, ids);
+
+            return;
+          }
+
           if (!action.confirm || window.confirm(action.confirm)) {
             crmStatus(
               {},
@@ -153,9 +163,14 @@ fundingModule.directive('fundingApplicationTasksDecorator', function() {
           }
         };
 
-        // Only allowed actions are in the menu.
-        ctrl.isActionAllowed = () => true;
+        const parentIsActionAllowed = ctrl.isActionAllowed;
+        ctrl.isActionAllowed = function (action) {
+          if (action._customTask) {
+            return true;
+          }
 
+          return parentIsActionAllowed(action);
+        };
       }
     ],
   };
