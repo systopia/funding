@@ -1,0 +1,12 @@
+{
+    "type": "search",
+    "title": "Funding Case Types",
+    "placement": [],
+    "icon": "fa-list-alt",
+    "server_route": "civicrm/funding/case-type/list",
+    "permission": [
+        "access Funding",
+        "administer Funding"
+    ],
+    "permission_operator": "OR"
+}

@@ -1,0 +1,28 @@
+{
+    "type": "form",
+    "requires": ["crmFunding"],
+    "entity_type": null,
+    "join_entity": null,
+    "title": "Application Templates",
+    "description": null,
+    "placement": [],
+    "summary_contact_type": null,
+    "summary_weight": null,
+    "icon": "fa-file-text-o",
+    "server_route": "civicrm/funding/application-templates",
+    "is_public": false,
+    "permission": [
+        "access CiviCRM",
+        "administer Funding"
+    ],
+    "permission_operator": "AND",
+    "redirect": null,
+    "submit_enabled": true,
+    "submit_limit": null,
+    "create_submission": true,
+    "manual_processing": false,
+    "allow_verification_by_email": false,
+    "email_confirmation_template_id": null,
+    "navigation": null,
+    "modified_date": null
+}

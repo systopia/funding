@@ -24,6 +24,7 @@ use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\DocumentRender\CiviOffice\CiviOfficeContextDataHolder;
 use Civi\Funding\DocumentRender\CiviOffice\CiviOfficeDocumentRenderer;
 use Civi\Funding\DocumentRender\CiviOffice\CiviOfficeDocumentStore;
+use Civi\Funding\DocumentRender\CiviOffice\CiviOfficeRenderer;
 use Civi\Funding\DocumentRender\DocumentRendererInterface;
 use Civi\Funding\DocumentRender\Token\TokenNameExtractor;
 use Civi\Funding\DocumentRender\Token\TokenNameExtractorCacheDecorator;
@@ -48,6 +49,7 @@ if (class_exists(\CRM_Civioffice_DocumentStore::class)) {
 }
 
 $container->autowire(CiviOfficeContextDataHolder::class);
+$container->autowire(CiviOfficeRenderer::class);
 $container->autowire(DocumentRendererInterface::class, CiviOfficeDocumentRenderer::class);
 
 $container->autowire(TokenNameExtractorInterface::class, TokenNameExtractor::class);

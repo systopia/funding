@@ -22,6 +22,8 @@ namespace Civi\Api4;
 use Civi\Funding\Api4\AbstractRemoteFundingEntityLegacy;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetAddFormAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetFormAction;
+use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetTemplateRenderUriAction;
+use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetTemplatesAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\SubmitAddFormAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\SubmitFormAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\ValidateAddFormAction;
@@ -36,6 +38,14 @@ final class RemoteFundingApplicationProcess extends AbstractRemoteFundingEntityL
 
   public static function get(): RemoteFundingDAOGetActionLegacy {
     return new RemoteFundingDAOGetActionLegacy(static::getEntityName());
+  }
+
+  public static function getTemplateRenderUri(): GetTemplateRenderUriAction {
+    return new GetTemplateRenderUriAction();
+  }
+
+  public static function getTemplates(): GetTemplatesAction {
+    return new GetTemplatesAction();
   }
 
   public static function getAddForm(): GetAddFormAction {
