@@ -64,7 +64,11 @@ final class FundingProgramTokenSubscriberTest extends TestCase {
     $tokenNameExtractorMock = $this->createMock(TokenNameExtractorInterface::class);
     $tokenNameExtractorMock->method('getTokenNames')
       ->with(FundingProgram::getEntityName(), FundingProgramEntity::class)
-      ->willReturn(['my_field' => 'Label']);
+      ->willReturn([
+        'my_field' => 'Label',
+        'my_serialized' => 'Label 2',
+        'my_serialized::' => 'With path',
+      ]);
 
     $this->subscriber = new FundingProgramTokenSubscriber(
       $this->fundingProgramManagerMock,
@@ -123,7 +127,14 @@ final class FundingProgramTokenSubscriberTest extends TestCase {
 
   public function testBasic(): void {
     static::assertSame('funding_program', $this->subscriber->entity);
-    static::assertSame(['my_field' => 'Label'], $this->subscriber->tokenNames);
+    static::assertSame(
+      [
+        'my_field' => 'Label',
+        'my_serialized' => 'Label 2',
+        'my_serialized::' => 'With path',
+      ],
+      $this->subscriber->tokenNames
+    );
   }
 
   public function testCheckActive(): void {
@@ -159,6 +170,28 @@ final class FundingProgramTokenSubscriberTest extends TestCase {
     $row->format('text/html');
     // @phpstan-ignore-next-line
     static::assertSame('foo', $row->tokens['funding_program']['my_field'] ?? NULL);
+  }
+
+  public function testEvaluateWithPath(): void {
+    $tokenProcessor = $this->createTokenProcessor([]);
+    $tokenProcessor->addMessage('test', '{funding_program.my_serialized::foo}', 'text/plain');
+
+    $fundingProgram = FundingProgramFactory::createFundingProgram();
+    $tokenProcessor->addRow(['fundingProgram' => $fundingProgram]);
+
+    $this->tokenResolverMock->method('resolveToken')
+      ->with(FundingProgram::getEntityName(), $fundingProgram, 'my_serialized::foo')
+      ->willReturn(new ResolvedToken('bar', 'text/html'));
+
+    $event = new TokenValueEvent($tokenProcessor);
+    static::assertSame(['my_serialized::foo'], $this->subscriber->getActiveTokens($event));
+
+    $this->subscriber->evaluateTokens($event);
+    $row = $tokenProcessor->getRow(0);
+    static::assertSame([], $row->tokens);
+    $row->format('text/html');
+    // @phpstan-ignore-next-line
+    static::assertSame('bar', $row->tokens['funding_program']['my_serialized::foo'] ?? NULL);
   }
 
   /**

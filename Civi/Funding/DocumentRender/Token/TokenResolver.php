@@ -62,26 +62,56 @@ final class TokenResolver implements TokenResolverInterface {
    * @phpstan-ignore-next-line Generic argument of AbstractEntity not defined.
    */
   private function getValue(string $entityName, AbstractEntity $entity, string $tokenName) {
-    if ($this->propertyAccessor->isReadable($entity, $tokenName)) {
-      return $this->propertyAccessor->getValue($entity, $tokenName);
+    /** @var string $fieldName */
+    [$fieldName, $path] = explode('::', $tokenName, 2) + [NULL, NULL];
+    $entityValue = $this->getEntityValue($entityName, $entity, $fieldName);
+
+    if (NULL === $path) {
+      return $entityValue;
     }
 
-    if ($entity->has($tokenName)) {
-      return $entity->get($tokenName);
+    if (!is_array($entityValue)) {
+      return NULL;
     }
 
-    // Fallback to APIv4. Should not be necessary, but for custom fields.
+    if ('' === $path) {
+      $value = $entityValue;
+    }
+    else {
+      $value = \CRM_Utils_Array::pathGet($entityValue, explode('.', $path));
+    }
+
+    return is_array($value) ? json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : $value;
+  }
+
+  /**
+   * @return mixed
+   *
+   * @throws \CRM_Core_Exception
+   *
+   * @phpstan-ignore-next-line Generic argument of AbstractEntity not defined.
+   */
+  private function getEntityValue(string $entityName, AbstractEntity $entity, string $fieldName) {
+    if ($this->propertyAccessor->isReadable($entity, $fieldName)) {
+      return $this->propertyAccessor->getValue($entity, $fieldName);
+    }
+
+    if ($entity->has($fieldName)) {
+      return $entity->get($fieldName);
+    }
+
+    // Fallback to APIv4. Should not be necessary, but for custom fields and suffixed fields.
     $values = $this->api4->execute($entityName, 'get', [
-      'select' => [$tokenName],
+      'select' => [$fieldName],
       'where' => [['id', '=', $entity->getId()]],
       'checkPermissions' => FALSE,
     ])->first();
 
-    if (is_array($values) && array_key_exists($tokenName, $values)) {
-      return $values[$tokenName];
+    if (is_array($values) && array_key_exists($fieldName, $values)) {
+      return $values[$fieldName];
     }
 
-    throw new \RuntimeException(\sprintf('Unknown token "%s" for "%s"', $tokenName, $entityName));
+    throw new \RuntimeException(\sprintf('Unknown token "%s" for "%s"', $fieldName, $entityName));
   }
 
   /**
