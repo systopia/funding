@@ -19,35 +19,33 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\CiviOffice;
 
-use Civi\Api4\FundingCase;
+use Civi\Api4\FundingApplicationProcess;
 use Civi\Core\Event\GenericHookEvent;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\DocumentRender\CiviOffice\AbstractCiviOfficeTokenSubscriber;
 use Civi\Funding\DocumentRender\CiviOffice\CiviOfficeContextDataHolder;
 use Civi\Funding\DocumentRender\Token\TokenNameExtractorInterface;
 use Civi\Funding\DocumentRender\Token\TokenResolverInterface;
 use Civi\Funding\Entity\AbstractEntity;
-use Civi\Funding\FundingCase\FundingCaseManager;
+use Civi\Funding\Entity\ApplicationProcessEntity;
 
 /**
- * @phpstan-extends AbstractCiviOfficeTokenSubscriber<\Civi\Funding\Entity\FundingCaseEntity>
+ * @phpstan-extends AbstractCiviOfficeTokenSubscriber<\Civi\Funding\Entity\ApplicationProcessEntity>
  * @codeCoverageIgnore
  */
-class FundingCaseTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
+class ApplicationProcessTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
 
-  private FundingCaseManager $fundingCaseManager;
+  private ApplicationProcessManager $applicationProcessManager;
 
   public static function getPriority(): int {
-    return max(
-      FundingCaseTypeTokenSubscriber::getPriority() + 1,
-      FundingProgramTokenSubscriber::getPriority() + 1,
-    );
+    return FundingCaseTokenSubscriber::getPriority() + 1;
   }
 
   /**
-   * @phpstan-param TokenResolverInterface<\Civi\Funding\Entity\FundingCaseEntity> $tokenResolver
+   * @phpstan-param TokenResolverInterface<\Civi\Funding\Entity\ApplicationProcessEntity> $tokenResolver
    */
   public function __construct(
-    FundingCaseManager $fundingCaseManager,
+    ApplicationProcessManager $applicationProcessManager,
     CiviOfficeContextDataHolder $contextDataHolder,
     TokenResolverInterface $tokenResolver,
     TokenNameExtractorInterface $tokenNameExtractor
@@ -57,26 +55,28 @@ class FundingCaseTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
       $tokenResolver,
       $tokenNameExtractor
     );
-    $this->fundingCaseManager = $fundingCaseManager;
+    $this->applicationProcessManager = $applicationProcessManager;
   }
 
   public function onCiviOfficeTokenContext(GenericHookEvent $event): void {
     parent::onCiviOfficeTokenContext($event);
     if ($this->getApiEntityName() === $event->entity_type || isset($event->context[$this->getContextKey() . 'Id'])) {
-      /** @var \Civi\Funding\Entity\FundingCaseEntity $fundingCase */
-      $fundingCase = $event->context[$this->getContextKey()];
-      $event->context['fundingCaseTypeId'] ??= $fundingCase->getFundingCaseTypeId();
-      // @phpstan-ignore-next-line
-      $event->context['fundingProgramId'] ??= $fundingCase->getFundingProgramId();
+      /** @var \Civi\Funding\Entity\ApplicationProcessEntity $applicationProcess */
+      $applicationProcess = $event->context[$this->getContextKey()];
+      $event->context['fundingCaseId'] ??= $applicationProcess->getFundingCaseId();
     }
   }
 
   protected function getEntity(int $id): ?AbstractEntity {
-    return $this->fundingCaseManager->get($id);
+    return $this->applicationProcessManager->get($id);
   }
 
   protected function getApiEntityName(): string {
-    return FundingCase::getEntityName();
+    return FundingApplicationProcess::getEntityName();
+  }
+
+  protected function getEntityClass(): string {
+    return ApplicationProcessEntity::class;
   }
 
 }

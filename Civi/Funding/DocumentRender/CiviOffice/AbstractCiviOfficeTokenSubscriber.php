@@ -34,16 +34,20 @@ use Webmozart\Assert\Assert;
  */
 abstract class AbstractCiviOfficeTokenSubscriber extends AbstractTokenSubscriber {
 
-  private CiviOfficeContextDataHolder $contextDataHolder;
+  protected CiviOfficeContextDataHolder $contextDataHolder;
 
   /**
    * @phpstan-var TokenResolverInterface<T>
    */
-  private TokenResolverInterface $tokenResolver;
+  protected TokenResolverInterface $tokenResolver;
+
+  public static function getPriority(): int {
+    return 0;
+  }
 
   public static function getSubscribedEvents(): array {
     return [
-      'civi.civioffice.tokenContext' => 'onCiviOfficeTokenContext',
+      'civi.civioffice.tokenContext' => ['onCiviOfficeTokenContext', static::getPriority()],
     ] + parent::getSubscribedEvents();
   }
 
@@ -80,6 +84,14 @@ abstract class AbstractCiviOfficeTokenSubscriber extends AbstractTokenSubscriber
       $entityClass = $this->getEntityClass();
       if ($entity instanceof $entityClass) {
         $event->context[$this->getContextKey()] = $entity;
+      }
+      elseif (is_int($event->context[$this->getContextKey() . 'Id'] ?? NULL)) {
+        $entityId = $event->context[$this->getContextKey() . 'Id'];
+        $event->context[$this->getContextKey()] = $this->getEntity($entityId);
+        Assert::notNull(
+          $event->context[$this->getContextKey()],
+          sprintf('No %s with ID %d found', $this->getApiEntityName(), $entityId),
+        );
       }
     }
   }

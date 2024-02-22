@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\EventSubscriber\CiviOffice;
 
 use Civi\Api4\FundingPayoutProcess;
+use Civi\Core\Event\GenericHookEvent;
 use Civi\Funding\DocumentRender\CiviOffice\AbstractCiviOfficeTokenSubscriber;
 use Civi\Funding\DocumentRender\CiviOffice\CiviOfficeContextDataHolder;
 use Civi\Funding\DocumentRender\Token\TokenNameExtractorInterface;
@@ -36,6 +37,10 @@ class PayoutProcessTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
 
   private PayoutProcessManager $payoutProcessManager;
 
+  public static function getPriority(): int {
+    return FundingCaseTokenSubscriber::getPriority() + 1;
+  }
+
   /**
    * @phpstan-param TokenResolverInterface<\Civi\Funding\Entity\PayoutProcessEntity> $tokenResolver
    */
@@ -51,6 +56,15 @@ class PayoutProcessTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
       $tokenNameExtractor
     );
     $this->payoutProcessManager = $payoutProcessManager;
+  }
+
+  public function onCiviOfficeTokenContext(GenericHookEvent $event): void {
+    parent::onCiviOfficeTokenContext($event);
+    if ($this->getApiEntityName() === $event->entity_type || isset($event->context[$this->getContextKey() . 'Id'])) {
+      /** @var \Civi\Funding\Entity\PayoutProcessEntity $payoutProcess */
+      $payoutProcess = $event->context[$this->getContextKey()];
+      $event->context['fundingCaseId'] ??= $payoutProcess->getFundingCaseId();
+    }
   }
 
   protected function getEntity(int $id): ?AbstractEntity {

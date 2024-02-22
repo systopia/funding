@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\EventSubscriber\CiviOffice;
 
 use Civi\Api4\FundingDrawdown;
+use Civi\Core\Event\GenericHookEvent;
 use Civi\Funding\DocumentRender\CiviOffice\AbstractCiviOfficeTokenSubscriber;
 use Civi\Funding\DocumentRender\CiviOffice\CiviOfficeContextDataHolder;
 use Civi\Funding\DocumentRender\Token\TokenNameExtractorInterface;
@@ -36,6 +37,10 @@ class DrawdownTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
 
   private DrawdownManager $drawdownManager;
 
+  public static function getPriority(): int {
+    return PayoutProcessTokenSubscriber::getPriority() + 1;
+  }
+
   /**
    * @phpstan-param TokenResolverInterface<\Civi\Funding\Entity\DrawdownEntity> $tokenResolver
    */
@@ -51,6 +56,15 @@ class DrawdownTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
       $tokenNameExtractor
     );
     $this->drawdownManager = $drawdownManager;
+  }
+
+  public function onCiviOfficeTokenContext(GenericHookEvent $event): void {
+    parent::onCiviOfficeTokenContext($event);
+    if ($this->getApiEntityName() === $event->entity_type || isset($event->context[$this->getContextKey() . 'Id'])) {
+      /** @var \Civi\Funding\Entity\DrawdownEntity $drawdown */
+      $drawdown = $event->context[$this->getContextKey()];
+      $event->context['payoutProcessId'] ??= $drawdown->getPayoutProcessId();
+    }
   }
 
   protected function getEntity(int $id): ?AbstractEntity {
