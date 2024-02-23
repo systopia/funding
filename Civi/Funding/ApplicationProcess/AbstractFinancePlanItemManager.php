@@ -36,6 +36,18 @@ abstract class AbstractFinancePlanItemManager {
   }
 
   /**
+   * @phpstan-return T|null
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function get(int $id): ?AbstractFinancePlanItemEntity {
+    $values = $this->api4->getEntity($this->getApiEntityName(), $id);
+
+    // @phpstan-ignore-next-line
+    return NULL === $values ? NULL : $this->getEntityClass()::fromArray($values);
+  }
+
+  /**
    * @phpstan-param T $item
    *
    * @throws \CRM_Core_Exception
@@ -85,18 +97,18 @@ abstract class AbstractFinancePlanItemManager {
    * @throws \CRM_Core_Exception
    */
   public function updateAll(int $applicationProcessId, array $items): void {
-    $currenTs = $this->getByApplicationProcessId($applicationProcessId);
+    $currentItems = $this->getByApplicationProcessId($applicationProcessId);
     $newIdentifiers = [];
 
     foreach ($items as $item) {
       Assert::same($applicationProcessId, $item->getApplicationProcessId());
-      if (isset($currenTs[$item->getIdentifier()])) {
-        $currenT = $currenTs[$item->getIdentifier()];
-        $currenT->setType($item->getType());
-        $currenT->setAmount($item->getAmount());
-        $currenT->setProperties($item->getProperties());
-        $currenT->setDataPointer($item->getDataPointer());
-        $this->save($currenT);
+      if (isset($currentItems[$item->getIdentifier()])) {
+        $currentItem = $currentItems[$item->getIdentifier()];
+        $currentItem->setType($item->getType());
+        $currentItem->setAmount($item->getAmount());
+        $currentItem->setProperties($item->getProperties());
+        $currentItem->setDataPointer($item->getDataPointer());
+        $this->save($currentItem);
       }
       else {
         $this->save($item);
@@ -104,8 +116,8 @@ abstract class AbstractFinancePlanItemManager {
       $newIdentifiers[] = $item->getIdentifier();
     }
 
-    foreach (array_diff(array_keys($currenTs), $newIdentifiers) as $deletedIdentifier) {
-      $this->delete($currenTs[$deletedIdentifier]);
+    foreach (array_diff(array_keys($currentItems), $newIdentifiers) as $deletedIdentifier) {
+      $this->delete($currentItems[$deletedIdentifier]);
     }
   }
 

@@ -19,14 +19,13 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ClearingProcess\Handler;
 
-use Civi\Funding\ClearingProcess\Command\ClearingJsonFormsFormGetCommand;
-use Civi\Funding\Form\JsonFormsFormInterface;
-use Civi\RemoteTools\JsonSchema\JsonSchema;
+use Civi\Funding\ClearingProcess\Command\ClearingFormValidateCommand;
+use Civi\RemoteTools\JsonSchema\Validation\ValidationResult;
 
-interface ClearingJsonFormsFormGetHandlerInterface {
+interface ClearingFormValidateHandlerInterface {
 
-  public const SERVICE_TAG = 'clearing.json_forms_form_get_handler';
+  public const SERVICE_TAG = 'clearing.form_validate_handler';
 
-  public function handle(ClearingJsonFormsFormGetCommand $command): JsonFormsFormInterface;
+  public function handle(ClearingFormValidateCommand $command): ValidationResult;
 
 }

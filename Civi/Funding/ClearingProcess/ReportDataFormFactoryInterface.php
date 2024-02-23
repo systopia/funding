@@ -17,22 +17,15 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\ClearingProcess\Handler;
+namespace Civi\Funding\ClearingProcess;
 
-use Civi\Funding\ClearingProcess\ClearingFormsGenerator;
-use Civi\Funding\ClearingProcess\Command\ClearingJsonFormsFormGetCommand;
+use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\Form\JsonFormsFormInterface;
 
-final class ClearingJsonFormsFormGetHandler implements ClearingJsonFormsFormGetHandlerInterface {
+interface ReportDataFormFactoryInterface {
 
-  private ClearingFormsGenerator $clearingFormsGenerator;
+  public const SERVICE_TAG = 'funding.clearing.report_form_factory';
 
-  public function __construct(ClearingFormsGenerator $clearingFormsGenerator) {
-    $this->clearingFormsGenerator = $clearingFormsGenerator;
-  }
-
-  public function handle(ClearingJsonFormsFormGetCommand $command): JsonFormsFormInterface {
-    return $this->clearingFormsGenerator->generateForm($command->getClearingProcessBundle());
-  }
+  public function createReportForm(ClearingProcessEntityBundle $clearingProcessBundle): JsonFormsFormInterface;
 
 }

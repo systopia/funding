@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2023 SYSTOPIA GmbH
+ * Copyright (C) 2024 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,16 +17,16 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\ClearingProcess;
+namespace Civi\Funding\ClearingProcess\Handler;
 
-final class ClearingProcessPermissions {
+use Civi\Funding\ClearingProcess\Command\ClearingFormGetCommand;
+use Civi\Funding\Form\JsonFormsFormInterface;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 
-  public const CLEARING_APPLY = 'clearing_apply';
+interface ClearingFormGetHandlerInterface {
 
-  public const CLEARING_MODIFY = 'clearing_modify';
+  public const SERVICE_TAG = 'clearing.form_get_handler';
 
-  public const REVIEW_CALCULATIVE = 'review_clearing_calculative';
-
-  public const REVIEW_CONTENT = 'review_clearing_content';
+  public function handle(ClearingFormGetCommand $command): JsonFormsFormInterface;
 
 }

@@ -36,8 +36,11 @@ use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 use CRM_Funding_ExtensionUtil as E;
+use Webmozart\Assert\Assert;
 
 final class ClearingFormsGenerator {
+
+  private ClearingActionsDeterminer $actionsDeterminer;
 
   private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
 
@@ -47,16 +50,22 @@ final class ClearingFormsGenerator {
 
   private ClearingResourcesItemsJsonFormsGenerator $clearingResourcesItemsJsonFormsGenerator;
 
+  private ReportDataFormFactoryInterface $reportDataFormFactory;
+
   public function __construct(
+    ClearingActionsDeterminer $actionsDeterminer,
     ApplicationProcessBundleLoader $applicationProcessBundleLoader,
     ApplicationFormCreateHandlerInterface $applicationFormCreateHandler,
     ClearingCostItemsJsonFormsGenerator $clearingCostItemsJsonFormsGenerator,
-    ClearingResourcesItemsJsonFormsGenerator $clearingResourcesItemsJsonFormsGenerator
+    ClearingResourcesItemsJsonFormsGenerator $clearingResourcesItemsJsonFormsGenerator,
+    ReportDataFormFactoryInterface $reportDataFormFactory
   ) {
+    $this->actionsDeterminer = $actionsDeterminer;
     $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
     $this->applicationFormCreateHandler = $applicationFormCreateHandler;
     $this->clearingCostItemsJsonFormsGenerator = $clearingCostItemsJsonFormsGenerator;
     $this->clearingResourcesItemsJsonFormsGenerator = $clearingResourcesItemsJsonFormsGenerator;
+    $this->reportDataFormFactory = $reportDataFormFactory;
   }
 
   /**
@@ -78,34 +87,55 @@ final class ClearingFormsGenerator {
 
     $keywords = ArrayUtil::mergeRecursive(
       $costItemsForm->getJsonSchema()->toArray(),
-      $resourcesItemsForm->getJsonSchema()->toArray()
-    ) + ['type' => 'object'];
+      $resourcesItemsForm->getJsonSchema()->toArray(),
+    );
 
     $categories = [];
     if ([] !== $keywords) {
-      $keywords['properties']['_action'] = new JsonSchemaString(['enum' => ['save', 'apply']]);
-      $keywords['required'][] = '_action';
       $categories[] = new JsonFormsCategory(E::ts('Proofs'), [
         $costItemsForm->getUiSchema(),
         $resourcesItemsForm->getUiSchema(),
       ]);
     }
 
-    $jsonSchema = JsonSchema::fromArray($keywords);
+    $reportDataForm = $this->reportDataFormFactory->createReportForm($clearingProcessBundle);
+    if ([] !== $reportDataForm->getJsonSchema()->getKeywords()) {
+      $keywords = ArrayUtil::mergeRecursive($keywords, $reportDataForm->getJsonSchema()->toArray());
+      $reportCategoryLabel = $reportDataForm->getUiSchema()['label'] ?? E::ts('Report');
+      Assert::string($reportCategoryLabel);
+      $categories[] = new JsonFormsCategory($reportCategoryLabel, [$reportDataForm->getUiSchema()]);
+    }
 
     if ([] !== $categories) {
-      $elements = [
-        new JsonFormsCategorization($categories),
-        new JsonFormsSubmitButton('#/properties/_action', 'save', E::ts('Save')),
-        new JsonFormsSubmitButton('#/properties/_action', 'request_review', E::ts('Request Review')),
-      ];
+      $elements = [new JsonFormsCategorization($categories)];
+
+      $actions = $this->actionsDeterminer->getActions(
+        $clearingProcessBundle->getClearingProcess()->getStatus(),
+        $clearingProcessBundle->getFundingCase()->getPermissions()
+      );
+
+      foreach ($actions as $name => $label) {
+        $elements[] = new JsonFormsSubmitButton('#/properties/_action', $name, $label);
+      }
     }
     else {
       $elements = [new JsonFormsMarkup(E::ts('There are no proofs necessary.'))];
+      $actions = [];
     }
 
+    $actionsEnum = array_keys($actions);
+    if ([] === $actionsEnum) {
+      // empty array is not allowed as enum
+      $actionsEnum = [NULL];
+    }
+    // @phpstan-ignore-next-line
+    $keywords['properties']['_action'] =
+      new JsonSchemaString(['enum' => $actionsEnum]);
+    $keywords['required'][] = '_action';
+
     return new JsonFormsForm(
-      $jsonSchema, new JsonFormsGroup(E::ts('Clearing'), $elements)
+      JsonSchema::fromArray($keywords),
+      new JsonFormsGroup(E::ts('Clearing'), $elements)
     );
   }
 

@@ -35,12 +35,12 @@ namespace Civi\Funding\Entity;
  */
 final class ClearingCostItemEntity extends AbstractClearingItemEntity {
 
-  public function getClearingProcessId(): int {
-    return $this->values['clearing_process_id'];
-  }
-
   public function getApplicationCostItemId(): int {
     return $this->values['application_cost_item_id'];
+  }
+
+  public function getFinancePlanItemId(): int {
+    return $this->getApplicationCostItemId();
   }
 
 }

@@ -22,12 +22,28 @@ namespace Civi\Funding\ClearingProcess\Command;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\Entity\Traits\ClearingProcessEntityBundleTrait;
 
-final class ClearingJsonFormsFormGetCommand {
+final class ClearingFormSubmitCommand {
 
   use ClearingProcessEntityBundleTrait;
 
-  public function __construct(ClearingProcessEntityBundle $clearingProcessBundle) {
+  /**
+   * @phpstan-var array<string, mixed>
+   */
+  private array $data;
+
+  /**
+   * @phpstan-param array<string, mixed> $data
+   */
+  public function __construct(ClearingProcessEntityBundle $clearingProcessBundle, array $data) {
     $this->clearingProcessBundle = $clearingProcessBundle;
+    $this->data = $data;
+  }
+
+  /**
+   * @phpstan-return array<string, mixed>
+   */
+  public function getData(): array {
+    return $this->data;
   }
 
 }

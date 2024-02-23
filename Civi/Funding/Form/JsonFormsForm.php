@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Form;
 
 use Civi\RemoteTools\JsonForms\JsonFormsElement;
+use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 
 /**
@@ -30,6 +31,10 @@ class JsonFormsForm implements JsonFormsFormInterface {
   private JsonSchema $jsonSchema;
 
   private JsonFormsElement $uiSchema;
+
+  public static function newEmpty(): self {
+    return new self(new JsonSchema([]), new JsonFormsGroup('', []));
+  }
 
   public function __construct(JsonSchema $jsonSchema, JsonFormsElement $uiSchema) {
     $this->jsonSchema = $jsonSchema;

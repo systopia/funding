@@ -21,6 +21,8 @@ namespace Civi\Funding\ClearingProcess\Api4\ActionHandler;
 
 use Civi\Funding\Api4\Action\FundingClearingProcess\SubmitFormAction;
 use Civi\Funding\ClearingProcess\ClearingProcessBundleLoader;
+use Civi\Funding\ClearingProcess\Command\ClearingFormValidateCommand;
+use Civi\Funding\ClearingProcess\Handler\ClearingFormValidateHandlerInterface;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Webmozart\Assert\Assert;
 
@@ -30,24 +32,48 @@ final class SubmitFormActionHandler implements ActionHandlerInterface {
 
   private ClearingProcessBundleLoader $clearingProcessBundleLoader;
 
+  private ClearingFormValidateHandlerInterface $validateHandler;
+
+  public function __construct(
+    ClearingProcessBundleLoader $clearingProcessBundleLoader,
+    ClearingFormValidateHandlerInterface $validateHandler
+  ) {
+    $this->clearingProcessBundleLoader = $clearingProcessBundleLoader;
+    $this->validateHandler = $validateHandler;
+  }
+
   /**
    * @phpstan-return array{
    *   data: array<string, mixed>,
+   *   files: array<string, string>,
    *   errors: array<string, non-empty-list<string>>,
    * }
    * 'data' contains the persisted data, or the data after validation if the
    * validation failed. 'errors' contains JSON pointers mapped to error
-   * messages if the validation failed, or an emtpy \stdClass object otherwise.
+   * messages if the validation failed.
    *
    * @throws \CRM_Core_Exception
    */
   public function submitForm(SubmitFormAction $action): array {
     $clearingProcessBundle = $this->clearingProcessBundleLoader->get($action->getId());
-    Assert::notNull($clearingProcessBundle, sprintf('Clearing pricess with ID %d not found', $action->getId()));
+    Assert::notNull($clearingProcessBundle, sprintf('Clearing process with ID %d not found', $action->getId()));
+
+    $validationResult = $this->validateHandler->handle(
+      new ClearingFormValidateCommand($clearingProcessBundle, $action->getData())
+    );
+
+    if (!$validationResult->isValid()) {
+      return [
+        'data' => $validationResult->getData(),
+        'files' => [],
+        'errors' => $validationResult->getLeafErrorMessages(),
+      ];
+    }
 
     return [
       'data' => [],
-      'errors' => new \stdClass(),
+      'files' => [],
+      'errors' => [],
     ];
   }
 

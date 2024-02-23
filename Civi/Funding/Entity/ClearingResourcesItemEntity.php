@@ -39,4 +39,8 @@ final class ClearingResourcesItemEntity extends AbstractClearingItemEntity {
     return $this->values['application_resources_item_id'];
   }
 
+  public function getFinancePlanItemId(): int {
+    return $this->getApplicationResourcesItemId();
+  }
+
 }

@@ -21,6 +21,7 @@ namespace Civi\Funding\ClearingProcess;
 
 use Civi\Funding\Entity\AbstractClearingItemEntity;
 use Civi\RemoteTools\Api4\Api4Interface;
+use Civi\RemoteTools\Api4\Query\Comparison;
 use Webmozart\Assert\Assert;
 
 /**
@@ -48,7 +49,7 @@ abstract class AbstractClearingItemManager {
   /**
    * @throws \CRM_Core_Exception
    *
-   * @phpstan-return T
+   * @phpstan-return T|null
    */
   public function get(int $id): ?AbstractClearingItemEntity {
     $values = $this->api4->getEntity($this->getApiEntityName(), $id);
@@ -65,6 +66,23 @@ abstract class AbstractClearingItemManager {
   abstract public function getByApplicationProcessId(int $applicationProcessId): array;
 
   /**
+   * @phpstan-return array<int, T>
+   *   Clearing items indexed by id.
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function getByClearingProcessId(int $clearingProcessId): array {
+    $result = $this->api4->getEntities($this->getApiEntityName(), Comparison::new(
+      'clearing_process_id',
+      '=',
+      $clearingProcessId
+    ))->indexBy('id');
+
+    /** @phpstan-ignore-next-line */
+    return $this->getEntityClass()::allFromApiResult($result);
+  }
+
+  /**
    * @phpstan-param T $item
    *
    * @throws \CRM_Core_Exception
@@ -78,6 +96,23 @@ abstract class AbstractClearingItemManager {
     }
 
     $item->setValues($result->single());
+  }
+
+  /**
+   * @phpstan-param array<T> $items
+   */
+  public function updateAll(int $clearingProcessId, array $items): void {
+    $currentItems = $this->getByClearingProcessId($clearingProcessId);
+    $usedIds = [];
+    foreach ($items as $item) {
+      Assert::same($clearingProcessId, $item->getClearingProcessId());
+      $this->save($item);
+      $usedIds[] = $item->getId();
+    }
+
+    foreach (array_diff(array_keys($currentItems), $usedIds) as $deletedId) {
+      $this->delete($currentItems[$deletedId]);
+    }
   }
 
   abstract protected function getApiEntityName(): string;

@@ -25,6 +25,8 @@ use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Form\JsonFormsForm;
 use Civi\Funding\Form\JsonFormsFormInterface;
 use Civi\RemoteTools\JsonForms\Control\JsonFormsArray;
+use Civi\RemoteTools\JsonForms\Control\JsonFormsHidden;
+use Civi\RemoteTools\JsonForms\Control\JsonFormsValue;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
 use Civi\RemoteTools\JsonForms\JsonFormsMarkup;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCloseableGroup;
@@ -35,6 +37,7 @@ use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
 use Civi\RemoteTools\JsonSchema\JsonSchemaCalculate;
 use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
+use Civi\RemoteTools\JsonSchema\JsonSchemaInteger;
 use Civi\RemoteTools\JsonSchema\JsonSchemaMoney;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
@@ -58,7 +61,7 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
   private ItemDetailsFormElementGenerator $itemDetailsFormElementGenerator;
 
   /**
-   * @var array<string, \Civi\RemoteTools\JsonSchema\JsonSchema>
+   * @var array<int|string, \Civi\RemoteTools\JsonSchema\JsonSchema>
    */
   private array $properties = [];
 
@@ -107,13 +110,13 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
     }
 
     if ([] === $this->properties) {
-      return new JsonFormsForm(new JsonSchema([]), new JsonFormsGroup('', []));
+      return JsonFormsForm::newEmpty();
     }
 
     $jsonSchema = new JsonSchemaObject([
       $this->getPropertyKeyword() => new JsonSchemaObject(
         $this->properties,
-        ['required' => array_keys($this->properties)]
+        ['required' => array_map(fn ($key) => (string) $key, array_keys($this->properties))]
       ),
     ], ['required' => [$this->getPropertyKeyword()]]);
     $uiSchema = new JsonFormsGroup($this->getTitle(), $this->formElements);
@@ -136,8 +139,7 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
       $items = $clearableItems[$scope]->items;
 
       foreach ($items as $index => $item) {
-        // @phpstan-ignore-next-line
-        $this->properties[(string) $item->getId()] = new JsonSchemaObject([
+        $this->properties[$item->getId()] = new JsonSchemaObject([
           'amountRecordedTotal' => new JsonSchemaCalculate(
             'number',
             'round(sum(map(honorare, "value.amount")), 2)',
@@ -150,11 +152,12 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
           ),
           'records' => new JsonSchemaArray(
             new JsonSchemaObject([
+              '_id' => new JsonSchemaInteger(['readOnly' => TRUE, 'default' => NULL], TRUE),
               'file' => new JsonSchemaString(['format' => 'uri']),
               'description' => new JsonSchemaString(),
               'amount' => new JsonSchemaMoney(),
-              'amountAdmitted' => new JsonSchemaMoney(['readOnly' => TRUE]),
-            ], ['required' => ['description', 'amount']])
+              'amountAdmitted' => new JsonSchemaMoney(['readOnly' => TRUE, 'default' => 0]),
+            ], ['required' => ['_id', 'description', 'amount']])
           ),
         ], ['required' => ['records']]);
 
@@ -204,6 +207,7 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
               '',
               NULL,
               [
+                new JsonFormsValue('#/properties/_id'),
                 new JsonFormsControl('#/properties/file', E::ts('Proof'), NULL, ['format' => 'file']),
                 new JsonFormsControl('#/properties/description', E::ts('Description')),
                 new JsonFormsControl('#/properties/amountAdmitted', E::ts('Amount Admitted in %1', [1 => $currency])),

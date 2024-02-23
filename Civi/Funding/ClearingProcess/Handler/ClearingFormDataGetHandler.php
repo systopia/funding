@@ -21,7 +21,7 @@ namespace Civi\Funding\ClearingProcess\Handler;
 
 use Civi\Funding\ClearingProcess\Command\ClearingFormDataGetCommand;
 
-class ClearingFormDataGetHandler implements ClearingFormDataGetHandlerInterface {
+final class ClearingFormDataGetHandler implements ClearingFormDataGetHandlerInterface {
 
   public function handle(ClearingFormDataGetCommand $command): array {
     // @todo

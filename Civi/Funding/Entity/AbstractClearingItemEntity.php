@@ -91,7 +91,7 @@ abstract class AbstractClearingItemEntity extends AbstractEntity {
   /**
    * @return static
    */
-  public function setAmountAdmitted(float $amountAdmitted): self {
+  public function setAmountAdmitted(?float $amountAdmitted): self {
     $this->values['amount_admitted'] = $amountAdmitted;
 
     return $this;
@@ -110,5 +110,7 @@ abstract class AbstractClearingItemEntity extends AbstractEntity {
 
     return $this;
   }
+
+  abstract public function getFinancePlanItemId(): int;
 
 }

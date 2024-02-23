@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\ClearingProcess\Api4\ActionHandler;
 
 use Civi\Api4\FundingClearingProcess;
-use Civi\Funding\Api4\Action\FundingClearingProcess\SubmitFormAction;
+use Civi\Funding\Api4\Action\Remote\FundingClearingProcess\SubmitFormAction;
 use Civi\Funding\Form\RemoteSubmitResponseActions;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Civi\RemoteTools\Api4\Api4Interface;

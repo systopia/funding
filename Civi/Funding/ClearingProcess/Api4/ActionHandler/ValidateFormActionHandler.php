@@ -21,6 +21,8 @@ namespace Civi\Funding\ClearingProcess\Api4\ActionHandler;
 
 use Civi\Funding\Api4\Action\FundingClearingProcess\ValidateFormAction;
 use Civi\Funding\ClearingProcess\ClearingProcessBundleLoader;
+use Civi\Funding\ClearingProcess\Command\ClearingFormValidateCommand;
+use Civi\Funding\ClearingProcess\Handler\ClearingFormValidateHandlerInterface;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Webmozart\Assert\Assert;
 
@@ -30,11 +32,21 @@ final class ValidateFormActionHandler implements ActionHandlerInterface {
 
   private ClearingProcessBundleLoader $clearingProcessBundleLoader;
 
+  private ClearingFormValidateHandlerInterface $validateHandler;
+
+  public function __construct(
+    ClearingProcessBundleLoader $clearingProcessBundleLoader,
+    ClearingFormValidateHandlerInterface $validateHandler
+  ) {
+    $this->clearingProcessBundleLoader = $clearingProcessBundleLoader;
+    $this->validateHandler = $validateHandler;
+  }
+
   /**
    * @phpstan-return array{
    *   valid: bool,
    *   data: array<string, mixed>,
-   *   errors: non-empty-array<string, non-empty-list<string>>|\stdClass,
+   *   errors: array<string, non-empty-list<string>>,
    * }
    * 'data' contains the data after validation. 'errors' contains JSON pointers
    * mapped to error messages.
@@ -43,12 +55,16 @@ final class ValidateFormActionHandler implements ActionHandlerInterface {
    */
   public function validateForm(ValidateFormAction $action): array {
     $clearingProcessBundle = $this->clearingProcessBundleLoader->get($action->getId());
-    Assert::notNull($clearingProcessBundle, sprintf('Clearing pricess with ID %d not found', $action->getId()));
+    Assert::notNull($clearingProcessBundle, sprintf('Clearing process with ID %d not found', $action->getId()));
+
+    $result = $this->validateHandler->handle(
+      new ClearingFormValidateCommand($clearingProcessBundle, $action->getData())
+    );
 
     return [
       'valid' => FALSE,
-      'data' => [],
-      'errors' => new \stdClass(),
+      'data' => $result->getData(),
+      'errors' => $result->getLeafErrorMessages(),
     ];
   }
 

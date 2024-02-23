@@ -22,9 +22,9 @@ namespace Civi\Funding\ClearingProcess\Api4\ActionHandler;
 use Civi\Funding\Api4\Action\FundingClearingProcess\GetFormAction;
 use Civi\Funding\ClearingProcess\ClearingProcessBundleLoader;
 use Civi\Funding\ClearingProcess\Command\ClearingFormDataGetCommand;
-use Civi\Funding\ClearingProcess\Command\ClearingJsonFormsFormGetCommand;
+use Civi\Funding\ClearingProcess\Command\ClearingFormGetCommand;
 use Civi\Funding\ClearingProcess\Handler\ClearingFormDataGetHandlerInterface;
-use Civi\Funding\ClearingProcess\Handler\ClearingJsonFormsFormGetHandlerInterface;
+use Civi\Funding\ClearingProcess\Handler\ClearingFormGetHandlerInterface;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Webmozart\Assert\Assert;
 
@@ -36,12 +36,12 @@ final class GetFormActionHandler implements ActionHandlerInterface {
 
   private ClearingFormDataGetHandlerInterface $formDataGetHandler;
 
-  private ClearingJsonFormsFormGetHandlerInterface $jsonSchemaGetHandler;
+  private ClearingFormGetHandlerInterface $jsonSchemaGetHandler;
 
   public function __construct(
     ClearingProcessBundleLoader $clearingProcessBundleLoader,
     ClearingFormDataGetHandlerInterface $formDataGetHandler,
-    ClearingJsonFormsFormGetHandlerInterface $jsonSchemaGetHandler
+    ClearingFormGetHandlerInterface $jsonSchemaGetHandler
   ) {
     $this->clearingProcessBundleLoader = $clearingProcessBundleLoader;
     $this->formDataGetHandler = $formDataGetHandler;
@@ -50,8 +50,8 @@ final class GetFormActionHandler implements ActionHandlerInterface {
 
   /**
    * @phpstan-return array{
-   *   jsonSchema: array<string, mixed>,
-   *   uiSchema: array<string, mixed>,
+   *   jsonSchema: array<int|string, mixed>,
+   *   uiSchema: array<int|string, mixed>,
    *   data: array<string, mixed>,
    * }
    *
@@ -61,11 +61,11 @@ final class GetFormActionHandler implements ActionHandlerInterface {
     $clearingProcessBundle = $this->clearingProcessBundleLoader->get($action->getId());
     Assert::notNull($clearingProcessBundle, sprintf('Clearing pricess with ID %d not found', $action->getId()));
 
-    $form = $this->jsonSchemaGetHandler->handle(new ClearingJsonFormsFormGetCommand($clearingProcessBundle));
+    $form = $this->jsonSchemaGetHandler->handle(new ClearingFormGetCommand($clearingProcessBundle));
     $data = $this->formDataGetHandler->handle(new ClearingFormDataGetCommand($clearingProcessBundle));
 
     return [
-      'jsonSchema' => $form->getJsonSchema()->jsonSerialize(),
+      'jsonSchema' => $form->getJsonSchema()->toArray(),
       'uiSchema' => $form->getUiSchema()->toArray(),
       'data' => $data,
     ];
