@@ -20,8 +20,10 @@ declare(strict_types = 1);
 namespace Civi\Funding\ClearingProcess;
 
 use Civi\Api4\FundingClearingProcess;
+use Civi\Funding\Entity\AbstractClearingItemEntity;
 use Civi\Funding\Entity\ExternalFileEntity;
 use Civi\Funding\FundingExternalFileManagerInterface;
+use Civi\Funding\Util\Uuid;
 
 final class ClearingExternalFileManager implements ClearingExternalFileManagerInterface {
 
@@ -38,12 +40,18 @@ final class ClearingExternalFileManager implements ClearingExternalFileManagerIn
    */
   public function addOrUpdateFile(
     string $uri,
-    string $identifier,
+    ?AbstractClearingItemEntity $clearingItem,
     int $clearingProcessId,
     ?array $customData = NULL
   ): ExternalFileEntity {
-    $identifier = $this->addIdentifierPrefix($clearingProcessId, $identifier);
-    $externalFile = $this->getFile($identifier, $clearingProcessId);
+    $externalFile = NULL === $clearingItem ? NULL : $this->getFile($clearingItem);
+    if (NULL === $externalFile) {
+      $identifier = $this->getIdentifierPrefix($clearingProcessId) . Uuid::generateRandom();
+    }
+    else {
+      $identifier = $externalFile->getIdentifier();
+    }
+
     if (NULL !== $externalFile
       && $this->externalFileManager->isFileChanged($externalFile, $uri)) {
       $this->externalFileManager->deleteFile($externalFile);
@@ -69,26 +77,23 @@ final class ClearingExternalFileManager implements ClearingExternalFileManagerIn
   /**
    * @inheritDoc
    */
-  public function getFile(string $identifier, int $clearingProcessId): ?ExternalFileEntity {
-    $identifier = $this->addIdentifierPrefix($clearingProcessId, $identifier);
+  public function getFile(AbstractClearingItemEntity $clearingItem): ?ExternalFileEntity {
+    if (NULL === $clearingItem->getFileId()) {
+      return NULL;
+    }
 
-    return $this->externalFileManager->getFile($identifier, self::TABLE, $clearingProcessId);
+    return $this->externalFileManager->getFileByFileId(
+      $clearingItem->getFileId(),
+      self::TABLE,
+      $clearingItem->getClearingProcessId()
+    );
   }
 
   /**
    * @inheritDoc
    */
   public function getFiles(int $clearingProcessId): array {
-    return $this->buildExternalFilesMap(
-      $this->externalFileManager->getFiles(self::TABLE, $clearingProcessId),
-      $clearingProcessId,
-    );
-  }
-
-  private function addIdentifierPrefix(int $clearingProcessId, string $identifier): string {
-    $prefix = $this->getIdentifierPrefix($clearingProcessId);
-
-    return str_starts_with($identifier, $prefix) ? $identifier : ($prefix . $identifier);
+    return $this->externalFileManager->getFiles(self::TABLE, $clearingProcessId);
   }
 
   /**
@@ -103,33 +108,8 @@ final class ClearingExternalFileManager implements ClearingExternalFileManagerIn
     ] + ($customData ?? []);
   }
 
-  /**
-   * @phpstan-param array<ExternalFileEntity> $externalFiles
-   *
-   * @phpstan-return array<string, ExternalFileEntity>
-   *   Key is the identifier without prefix.
-   *
-   * @see addIdentifierPrefix()
-   */
-  private function buildExternalFilesMap(array $externalFiles, int $clearingProcessId): array {
-    $externalFilesMap = [];
-    foreach ($externalFiles as $externalFile) {
-      $prefixlessIdentifier = $this->stripIdentifierPrefix($externalFile->getIdentifier(), $clearingProcessId);
-      $externalFilesMap[$prefixlessIdentifier] = $externalFile;
-    }
-
-    return $externalFilesMap;
-  }
-
   private function getIdentifierPrefix(int $clearingProcessId): string {
     return FundingClearingProcess::getEntityName() . '.' . $clearingProcessId . ':';
-  }
-
-  private function stripIdentifierPrefix(string $identifier, int $clearingProcessId): string {
-    $prefix = $this->getIdentifierPrefix($clearingProcessId);
-
-    // @phpstan-ignore-next-line
-    return preg_replace('/^' . $prefix . '/', '', $identifier);
   }
 
 }

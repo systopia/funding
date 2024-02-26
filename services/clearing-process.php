@@ -27,29 +27,37 @@ use Civi\Funding\ApplicationProcess\Clearing\ItemDetailsFormElementGenerator;
 use Civi\Funding\ApplicationProcess\Clearing\ResourcesItem\ClearableResourcesItemsLoader;
 use Civi\Funding\ApplicationProcess\Clearing\ResourcesItem\ClearingResourcesItemsJsonFormsGenerator;
 use Civi\Funding\ClearingProcess\ClearingActionsDeterminer;
-use Civi\Funding\ClearingProcess\ClearingFormsGenerator;
+use Civi\Funding\ClearingProcess\ClearingCostItemManager;
+use Civi\Funding\ClearingProcess\ClearingExternalFileManager;
+use Civi\Funding\ClearingProcess\ClearingExternalFileManagerInterface;
+use Civi\Funding\ClearingProcess\ClearingFormGenerator;
 use Civi\Funding\ClearingProcess\ClearingProcessBundleLoader;
 use Civi\Funding\ClearingProcess\ClearingProcessManager;
+use Civi\Funding\ClearingProcess\ClearingResourcesItemManager;
 use Civi\Funding\ClearingProcess\ClearingStatusDeterminer;
 use Civi\Funding\ClearingProcess\Handler\ClearingFormDataGetHandler;
 use Civi\Funding\ClearingProcess\Handler\ClearingFormDataGetHandlerInterface;
 use Civi\Funding\ClearingProcess\Handler\ClearingFormGetHandler;
 use Civi\Funding\ClearingProcess\Handler\ClearingFormGetHandlerInterface;
+use Civi\Funding\ClearingProcess\Handler\ClearingFormSubmitHandler;
+use Civi\Funding\ClearingProcess\Handler\ClearingFormSubmitHandlerInterface;
 use Civi\Funding\ClearingProcess\Handler\ClearingFormValidateHandler;
 use Civi\Funding\ClearingProcess\Handler\ClearingFormValidateHandlerInterface;
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingCostItemsFormDataPersister;
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingResourcesItemsFormDataPersister;
-use Civi\Funding\ClearingProcess\ReportDataFormFactory;
-use Civi\Funding\ClearingProcess\ReportDataFormFactoryInterface;
+use Civi\Funding\DependencyInjection\Compiler\ReportFormFactoryPass;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
-use Symfony\Component\DependencyInjection\Argument\ServiceLocatorArgument;
-use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
+
+$container->addCompilerPass(new ReportFormFactoryPass());
 
 $container->autowire(ClearingProcessManager::class);
 $container->autowire(ClearingProcessBundleLoader::class);
+$container->autowire(ClearingCostItemManager::class);
+$container->autowire(ClearingResourcesItemManager::class);
+$container->autowire(ClearingExternalFileManagerInterface::class, ClearingExternalFileManager::class);
 
-$container->autowire(ClearingFormsGenerator::class);
+$container->autowire(ClearingFormGenerator::class);
 $container->autowire(ClearingCostItemsJsonFormsGenerator::class);
 $container->autowire(ClearingResourcesItemsJsonFormsGenerator::class);
 
@@ -64,15 +72,6 @@ $container->autowire(ClearingResourcesItemsFormDataPersister::class);
 $container->autowire(ClearingActionsDeterminer::class);
 $container->autowire(ClearingStatusDeterminer::class);
 
-$container->autowire(ReportDataFormFactoryInterface::class, ReportDataFormFactory::class)
-  ->addArgument(new ServiceLocatorArgument(
-    new TaggedIteratorArgument(
-      ReportDataFormFactoryInterface::SERVICE_TAG,
-      'supported_funding_case_type',
-      'getSupportedFundingCaseType'
-    )
-  ));
-
 $container->autowire(ClearingFormDataGetHandlerInterface::class, ClearingFormDataGetHandler::class)
   ->addTag(ClearingFormDataGetHandlerInterface::SERVICE_TAG);
 
@@ -81,6 +80,9 @@ $container->autowire(ClearingFormGetHandlerInterface::class, ClearingFormGetHand
 
 $container->autowire(ClearingFormValidateHandlerInterface::class, ClearingFormValidateHandler::class)
   ->addTag(ClearingFormValidateHandlerInterface::SERVICE_TAG);
+
+$container->autowire(ClearingFormSubmitHandlerInterface::class, ClearingFormSubmitHandler::class)
+  ->addTag(ClearingFormSubmitHandlerInterface::SERVICE_TAG);
 
 $container->autowire(\Civi\Funding\Api4\Action\FundingClearingProcess\GetAction::class)
   ->setPublic(TRUE)

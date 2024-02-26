@@ -19,20 +19,20 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ClearingProcess\Handler;
 
-use Civi\Funding\ClearingProcess\ClearingFormsGenerator;
+use Civi\Funding\ClearingProcess\ClearingFormGenerator;
 use Civi\Funding\ClearingProcess\Command\ClearingFormGetCommand;
 use Civi\Funding\Form\JsonFormsFormInterface;
 
 final class ClearingFormGetHandler implements ClearingFormGetHandlerInterface {
 
-  private ClearingFormsGenerator $clearingFormsGenerator;
+  private ClearingFormGenerator $clearingFormsGenerator;
 
   /**
    * @phpstan-var array<int, JsonFormsFormInterface>
    */
   private array $forms = [];
 
-  public function __construct(ClearingFormsGenerator $clearingFormsGenerator) {
+  public function __construct(ClearingFormGenerator $clearingFormsGenerator) {
     $this->clearingFormsGenerator = $clearingFormsGenerator;
   }
 

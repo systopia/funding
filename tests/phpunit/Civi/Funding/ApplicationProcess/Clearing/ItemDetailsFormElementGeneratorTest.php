@@ -28,6 +28,7 @@ use Civi\RemoteTools\JsonSchema\JsonSchemaBoolean;
 use Civi\RemoteTools\JsonSchema\JsonSchemaNumber;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
+use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -55,7 +56,9 @@ final class ItemDetailsFormElementGeneratorTest extends TestCase {
 
     $applicationPropertySchema = new JsonSchemaArray(new JsonSchemaObject([
       'theIdentifier' => new JsonSchemaString(),
-      'foo' => new JsonSchemaString(),
+      'foo' => new JsonSchemaString([
+        'oneOf' => JsonSchemaUtil::buildTitledOneOf(['test' => 'testTitle', 'abc' => 'abcTitle']),
+      ]),
       'theAmount' => new JsonSchemaNumber(),
       'bar' => new JsonSchemaNumber(['title' => 'BarTitle']),
       'baz' => new JsonSchemaBoolean(['title' => 'BazTitle']),
@@ -106,7 +109,8 @@ final class ItemDetailsFormElementGeneratorTest extends TestCase {
             ],
             [
               'type' => 'Markup',
-              'content' => 'test',
+              // title from 'oneOf'
+              'content' => 'testTitle',
               'contentMediaType' => 'text/html',
             ],
           ],

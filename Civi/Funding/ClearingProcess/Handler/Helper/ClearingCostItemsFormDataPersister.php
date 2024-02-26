@@ -22,6 +22,7 @@ namespace Civi\Funding\ClearingProcess\Handler\Helper;
 use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
 use Civi\Funding\ClearingProcess\ClearingCostItemManager;
 use Civi\Funding\ClearingProcess\ClearingExternalFileManager;
+use Civi\Funding\ClearingProcess\ClearingExternalFileManagerInterface;
 
 /**
  * @extends AbstractClearingItemsFormDataPersister<
@@ -33,7 +34,7 @@ final class ClearingCostItemsFormDataPersister extends AbstractClearingItemsForm
 
   public function __construct(
     ClearingCostItemManager $clearingItemManager,
-    ClearingExternalFileManager $externalFileManager,
+    ClearingExternalFileManagerInterface $externalFileManager,
     ApplicationCostItemManager $financePlanItemManager
   ) {
     parent::__construct($clearingItemManager, $externalFileManager, $financePlanItemManager);

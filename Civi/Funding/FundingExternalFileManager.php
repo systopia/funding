@@ -152,6 +152,26 @@ final class FundingExternalFileManager implements FundingExternalFileManagerInte
   /**
    * @inheritDoc
    */
+  public function getFileByFileId(int $fileId, string $entityTable, int $entityId): ?ExternalFileEntity {
+    if (0 === $this->api4->countEntities(X_EntityFile::getEntityName(), CompositeCondition::fromFieldValuePairs([
+      'file_id' => $fileId,
+      'entity_table' => $entityTable,
+      'entity_id' => $entityId,
+    ]))) {
+      return NULL;
+    }
+
+    $result = $this->api4->getEntities(ExternalFile::getEntityName(), CompositeCondition::fromFieldValuePairs([
+      'extension' => E::SHORT_NAME,
+      'file_id' => $fileId,
+    ]));
+
+    return ExternalFileEntity::singleOrNullFromApiResult($result);
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function getFiles(string $entityName, int $entityId, ?ConditionInterface $condition = NULL): array {
     $fileIds = $this->getFileIdsByEntity($entityName, $entityId);
     if ([] === $fileIds) {
@@ -172,6 +192,7 @@ final class FundingExternalFileManager implements FundingExternalFileManagerInte
       ['id' => 'ASC']
     );
 
+    /** @phpstan-ignore-next-line */
     return ExternalFileEntity::allFromApiResult($result);
   }
 

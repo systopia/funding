@@ -24,7 +24,7 @@ use Civi\Funding\Form\JsonFormsForm;
 use Civi\Funding\Form\JsonFormsFormInterface;
 use Psr\Container\ContainerInterface;
 
-final class ReportDataFormFactory implements ReportDataFormFactoryInterface {
+final class ReportFormFactory implements ReportFormFactoryInterface {
 
   private ContainerInterface $formFactories;
 
@@ -39,7 +39,7 @@ final class ReportDataFormFactory implements ReportDataFormFactoryInterface {
   public function createReportForm(ClearingProcessEntityBundle $clearingProcessBundle): JsonFormsFormInterface {
     $fundingCaseType = $clearingProcessBundle->getFundingCaseType();
     if ($this->formFactories->has($fundingCaseType->getName())) {
-      /** @var \Civi\Funding\ClearingProcess\ReportDataFormFactoryInterface $formFactory */
+      /** @var \Civi\Funding\ClearingProcess\ReportFormFactoryInterface $formFactory */
       $formFactory = $this->formFactories->get($fundingCaseType->getName());
 
       return $formFactory->createReportForm($clearingProcessBundle);

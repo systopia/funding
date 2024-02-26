@@ -38,7 +38,7 @@ use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
 
-final class ClearingFormsGenerator {
+final class ClearingFormGenerator {
 
   private ClearingActionsDeterminer $actionsDeterminer;
 
@@ -50,7 +50,7 @@ final class ClearingFormsGenerator {
 
   private ClearingResourcesItemsJsonFormsGenerator $clearingResourcesItemsJsonFormsGenerator;
 
-  private ReportDataFormFactoryInterface $reportDataFormFactory;
+  private ReportFormFactoryInterface $reportFormFactory;
 
   public function __construct(
     ClearingActionsDeterminer $actionsDeterminer,
@@ -58,14 +58,14 @@ final class ClearingFormsGenerator {
     ApplicationFormCreateHandlerInterface $applicationFormCreateHandler,
     ClearingCostItemsJsonFormsGenerator $clearingCostItemsJsonFormsGenerator,
     ClearingResourcesItemsJsonFormsGenerator $clearingResourcesItemsJsonFormsGenerator,
-    ReportDataFormFactoryInterface $reportDataFormFactory
+    ReportFormFactoryInterface $reportDataFormFactory
   ) {
     $this->actionsDeterminer = $actionsDeterminer;
     $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
     $this->applicationFormCreateHandler = $applicationFormCreateHandler;
     $this->clearingCostItemsJsonFormsGenerator = $clearingCostItemsJsonFormsGenerator;
     $this->clearingResourcesItemsJsonFormsGenerator = $clearingResourcesItemsJsonFormsGenerator;
-    $this->reportDataFormFactory = $reportDataFormFactory;
+    $this->reportFormFactory = $reportDataFormFactory;
   }
 
   /**
@@ -98,7 +98,7 @@ final class ClearingFormsGenerator {
       ]);
     }
 
-    $reportDataForm = $this->reportDataFormFactory->createReportForm($clearingProcessBundle);
+    $reportDataForm = $this->reportFormFactory->createReportForm($clearingProcessBundle);
     if ([] !== $reportDataForm->getJsonSchema()->getKeywords()) {
       $keywords = ArrayUtil::mergeRecursive($keywords, $reportDataForm->getJsonSchema()->toArray());
       $reportCategoryLabel = $reportDataForm->getUiSchema()['label'] ?? E::ts('Report');

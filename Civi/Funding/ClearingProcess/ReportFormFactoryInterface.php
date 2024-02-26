@@ -22,7 +22,7 @@ namespace Civi\Funding\ClearingProcess;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\Form\JsonFormsFormInterface;
 
-interface ReportDataFormFactoryInterface {
+interface ReportFormFactoryInterface {
 
   public const SERVICE_TAG = 'funding.clearing.report_form_factory';
 

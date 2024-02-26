@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ClearingProcess;
 
+use Civi\Funding\Entity\AbstractClearingItemEntity;
 use Civi\Funding\Entity\ExternalFileEntity;
 
 interface ClearingExternalFileManagerInterface {
@@ -28,30 +29,27 @@ interface ClearingExternalFileManagerInterface {
    * records will be deleted and new ones created. EntityFile relations will get
    * lost.
    *
+   * @phpstan-param AbstractClearingItemEntity<array<string, mixed>>|null $clearingItem
    * @phpstan-param array<int|string, mixed>|null $customData JSON serializable.
    *
    * @throws \CRM_Core_Exception
    */
   public function addOrUpdateFile(
     string $uri,
-    string $identifier,
+    ?AbstractClearingItemEntity $clearingItem,
     int $clearingProcessId,
     ?array $customData = NULL
   ): ExternalFileEntity;
 
   /**
-   * @param string $identifier
-   *   May already contain the identifier prefix that was added to the entity's
-   *   identifier.
+   * @phpstan-param AbstractClearingItemEntity<array<string, mixed>> $clearingItem
    *
    * @throws \CRM_Core_Exception
    */
-  public function getFile(string $identifier, int $clearingProcessId): ?ExternalFileEntity;
+  public function getFile(AbstractClearingItemEntity $clearingItem): ?ExternalFileEntity;
 
   /**
-   * @phpstan-return array<string, ExternalFileEntity>
-   *   The key contains the identifier used when the file was added. The
-   *   identifier of the value object has an additional prefix.
+   * @phpstan-return list<ExternalFileEntity>
    *
    * @throws \CRM_Core_Exception
    */

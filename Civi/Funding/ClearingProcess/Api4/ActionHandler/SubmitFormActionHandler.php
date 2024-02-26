@@ -21,8 +21,8 @@ namespace Civi\Funding\ClearingProcess\Api4\ActionHandler;
 
 use Civi\Funding\Api4\Action\FundingClearingProcess\SubmitFormAction;
 use Civi\Funding\ClearingProcess\ClearingProcessBundleLoader;
-use Civi\Funding\ClearingProcess\Command\ClearingFormValidateCommand;
-use Civi\Funding\ClearingProcess\Handler\ClearingFormValidateHandlerInterface;
+use Civi\Funding\ClearingProcess\Command\ClearingFormSubmitCommand;
+use Civi\Funding\ClearingProcess\Handler\ClearingFormSubmitHandlerInterface;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Webmozart\Assert\Assert;
 
@@ -32,14 +32,14 @@ final class SubmitFormActionHandler implements ActionHandlerInterface {
 
   private ClearingProcessBundleLoader $clearingProcessBundleLoader;
 
-  private ClearingFormValidateHandlerInterface $validateHandler;
+  private ClearingFormSubmitHandlerInterface $submitHandler;
 
   public function __construct(
     ClearingProcessBundleLoader $clearingProcessBundleLoader,
-    ClearingFormValidateHandlerInterface $validateHandler
+    ClearingFormSubmitHandlerInterface $submitHandler
   ) {
     $this->clearingProcessBundleLoader = $clearingProcessBundleLoader;
-    $this->validateHandler = $validateHandler;
+    $this->submitHandler = $submitHandler;
   }
 
   /**
@@ -58,22 +58,12 @@ final class SubmitFormActionHandler implements ActionHandlerInterface {
     $clearingProcessBundle = $this->clearingProcessBundleLoader->get($action->getId());
     Assert::notNull($clearingProcessBundle, sprintf('Clearing process with ID %d not found', $action->getId()));
 
-    $validationResult = $this->validateHandler->handle(
-      new ClearingFormValidateCommand($clearingProcessBundle, $action->getData())
-    );
-
-    if (!$validationResult->isValid()) {
-      return [
-        'data' => $validationResult->getData(),
-        'files' => [],
-        'errors' => $validationResult->getLeafErrorMessages(),
-      ];
-    }
+    $result = $this->submitHandler->handle(new ClearingFormSubmitCommand($clearingProcessBundle, $action->getData()));
 
     return [
-      'data' => [],
-      'files' => [],
-      'errors' => [],
+      'data' => $result->getData(),
+      'files' => $result->getFiles(),
+      'errors' => $result->getErrors(),
     ];
   }
 

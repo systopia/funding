@@ -171,7 +171,7 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
             E::ts('Amount Recorded in %1', [1 => $currency]),
           ], [
             new JsonFormsTableRow([
-              new JsonFormsMarkup($this->formaTLabel($itemLabel, $index)),
+              new JsonFormsMarkup($this->formatLabel($itemLabel, $index)),
               new JsonFormsMarkup($this->format->money($item->getAmount(), $currency)),
               new JsonFormsControl(sprintf(
                 '#/properties/%s/properties/%s/properties/amountAdmittedTotal',
@@ -231,7 +231,7 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
 
   abstract protected function getTitle(): string;
 
-  private function formaTLabel(string $itemLabel, int $index): string {
+  private function formatLabel(string $itemLabel, int $index): string {
     return str_replace('{@pos}', (string) ($index + 1), $itemLabel);
   }
 

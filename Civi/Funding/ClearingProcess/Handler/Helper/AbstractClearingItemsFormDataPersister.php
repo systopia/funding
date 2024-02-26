@@ -22,13 +22,14 @@ namespace Civi\Funding\ClearingProcess\Handler\Helper;
 use Civi\Funding\ApplicationProcess\AbstractFinancePlanItemManager;
 use Civi\Funding\ClearingProcess\AbstractClearingItemManager;
 use Civi\Funding\ClearingProcess\ClearingCostItemManager;
-use Civi\Funding\ClearingProcess\ClearingExternalFileManager;
+use Civi\Funding\ClearingProcess\ClearingExternalFileManagerInterface;
 use Civi\Funding\ClearingProcess\ClearingResourcesItemManager;
 use Civi\Funding\Entity\AbstractClearingItemEntity;
 use Civi\Funding\Entity\AbstractFinancePlanItemEntity;
 use Civi\Funding\Entity\ClearingCostItemEntity;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\Entity\ClearingResourcesItemEntity;
+use Civi\Funding\Entity\ExternalFileEntity;
 use Webmozart\Assert\Assert;
 
 /**
@@ -49,7 +50,7 @@ abstract class AbstractClearingItemsFormDataPersister {
    */
   private AbstractClearingItemManager $clearingItemManager;
 
-  private ClearingExternalFileManager $externalFileManager;
+  private ClearingExternalFileManagerInterface $externalFileManager;
 
   /**
    * @phpstan-var AbstractFinancePlanItemManager<TFinancePlanItem>
@@ -63,15 +64,13 @@ abstract class AbstractClearingItemsFormDataPersister {
 
   private string $financePlanItemIdFieldName;
 
-  private string $externalFileIdentifierPrefix;
-
   /**
    * @phpstan-param AbstractClearingItemManager<TClearingItem> $clearingItemManager
    * @phpstan-param AbstractFinancePlanItemManager<TFinancePlanItem> $financePlanItemManager
    */
   public function __construct(
     AbstractClearingItemManager $clearingItemManager,
-    ClearingExternalFileManager $externalFileManager,
+    ClearingExternalFileManagerInterface $externalFileManager,
     AbstractFinancePlanItemManager $financePlanItemManager
   ) {
     $this->clearingItemManager = $clearingItemManager;
@@ -82,13 +81,11 @@ abstract class AbstractClearingItemsFormDataPersister {
       // @phpstan-ignore-next-line
       $this->clearingItemEntityClass = ClearingCostItemEntity::class;
       $this->financePlanItemIdFieldName = 'application_cost_item_id';
-      $this->externalFileIdentifierPrefix = 'costItem';
     }
     elseif ($clearingItemManager instanceof ClearingResourcesItemManager) {
       // @phpstan-ignore-next-line
       $this->clearingItemEntityClass = ClearingResourcesItemEntity::class;
       $this->financePlanItemIdFieldName = 'application_resources_item_id';
-      $this->externalFileIdentifierPrefix = 'resourcesItem';
     }
     else {
       throw new \InvalidArgumentException(
@@ -98,7 +95,7 @@ abstract class AbstractClearingItemsFormDataPersister {
   }
 
   /**
-   * @phpstan-param array<int, list<clearingItemRecordT>> $clearingItemsFormData
+   * @phpstan-param array<int, array{records: list<clearingItemRecordT>}> $clearingItemsFormData
    *   Key is the corresponding finance plan item ID.
    *
    * @phpstan-return array<string, string>
@@ -113,7 +110,7 @@ abstract class AbstractClearingItemsFormDataPersister {
     $clearingProcessId = $clearingProcessBundle->getClearingProcess()->getId();
     $clearingItems = [];
     $files = [];
-    foreach ($clearingItemsFormData as $financePlanItemId => $records) {
+    foreach ($clearingItemsFormData as $financePlanItemId => $data) {
       $financePlanItem = $this->financePlanItemManager->get($financePlanItemId);
       Assert::notNull($financePlanItem, sprintf('Invalid finance plan item ID %d', $financePlanItemId));
 
@@ -128,7 +125,7 @@ abstract class AbstractClearingItemsFormDataPersister {
         )
       );
 
-      foreach ($records as $record) {
+      foreach ($data['records'] as $record) {
         [$clearingItem, $externalFile] = $this->createClearingItem($clearingProcessId, $financePlanItem, $record);
         $clearingItems[] = $clearingItem;
         if (NULL !== $externalFile) {
@@ -155,23 +152,12 @@ abstract class AbstractClearingItemsFormDataPersister {
     AbstractFinancePlanItemEntity $financePlanItem,
     array $record
   ): array {
-    if (isset($record['file'])) {
-      $externalFile = $this->externalFileManager->addOrUpdateFile(
-        $record['file'],
-        $this->getFileIdentifier($financePlanItem),
-        $clearingProcessId
-      );
-      $fileId = $externalFile->getFileId();
-    }
-    else {
-      $externalFile = NULL;
-      $fileId = NULL;
-    }
-
     if (isset($record['_id'])) {
       $existingClearingItem = $this->clearingItemManager->get($record['_id']);
       if (NULL !== $existingClearingItem) {
         Assert::same($existingClearingItem->get($this->financePlanItemIdFieldName), $financePlanItem->getId());
+        $externalFile = $this->handleFile($record, $existingClearingItem, $clearingProcessId);
+        $fileId = NULL === $externalFile ? NULL : $externalFile->getFileId();
 
         if ($this->isClearingItemChanged($existingClearingItem, $record, $fileId)) {
           $existingClearingItem
@@ -186,11 +172,12 @@ abstract class AbstractClearingItemsFormDataPersister {
       }
     }
 
+    $externalFile = $this->handleFile($record, NULL, $clearingProcessId);
     $clearingItem = $this->clearingItemEntityClass::fromArray([
       'clearing_process_id' => $clearingProcessId,
       $this->financePlanItemIdFieldName => $financePlanItem->getId(),
       'status' => 'new',
-      'file_id' => $fileId,
+      'file_id' => NULL === $externalFile ? NULL : $externalFile->getFileId(),
       'amount' => $record['amount'],
       'amount_admitted' => NULL,
       'description' => $record['description'],
@@ -199,8 +186,22 @@ abstract class AbstractClearingItemsFormDataPersister {
     return [$clearingItem, $externalFile];
   }
 
-  private function getFileIdentifier(AbstractFinancePlanItemEntity $financePlanItem): string {
-    return $this->externalFileIdentifierPrefix . '/' . $financePlanItem->getId();
+  /**
+   * @phpstan-param clearingItemRecordT $record
+   * @phpstan-param TClearingItem $existingClearingItem
+   *
+   * @throws \CRM_Core_Exception
+   */
+  private function handleFile(
+    array $record,
+    ?AbstractClearingItemEntity $existingClearingItem,
+    int $clearingProcessId
+  ): ?ExternalFileEntity {
+    if (!isset($record['file'])) {
+      return NULL;
+    }
+
+    return $this->externalFileManager->addOrUpdateFile($record['file'], $existingClearingItem, $clearingProcessId);
   }
 
   /**

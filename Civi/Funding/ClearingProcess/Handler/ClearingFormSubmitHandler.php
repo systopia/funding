@@ -75,8 +75,8 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
     /**
      * @phpstan-var array{
      *   _action: string,
-     *   costItems?: array<int, list<clearingItemRecordT>>,
-     *   resourcesItems?: array<int, list<clearingItemRecordT>>,
+     *   costItems?: array<int, array{records: list<clearingItemRecordT>}>,
+     *   resourcesItems?: array<int, array{records: list<clearingItemRecordT>}>,
      *   reportData?: array<string, mixed>,
      * } $data
      */

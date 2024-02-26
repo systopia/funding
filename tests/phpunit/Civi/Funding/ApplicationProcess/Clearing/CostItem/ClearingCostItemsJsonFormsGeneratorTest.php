@@ -144,6 +144,11 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                   'items' => [
                     'type' => 'object',
                     'properties' => [
+                      '_id' => [
+                        'type' => ['integer', 'null'],
+                        'readOnly' => TRUE,
+                        'default' => NULL,
+                      ],
                       'file' => [
                         'type' => 'string',
                         'format' => 'uri',
@@ -159,9 +164,10 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         'type' => 'number',
                         'precision' => 2,
                         'readOnly' => TRUE,
+                        'default' => 0,
                       ],
                     ],
-                    'required' => ['description', 'amount'],
+                    'required' => ['_id', 'description', 'amount'],
                   ],
                 ],
               ],
@@ -230,6 +236,12 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                   'options' => [
                     'detail' => [
                       'elements' => [
+                        [
+                          'type' => 'Control',
+                          'scope' => '#/properties/_id',
+                          'label' => '',
+                          'options' => ['type' => 'value'],
+                        ],
                         [
                           'type' => 'Control',
                           'scope' => '#/properties/file',
@@ -327,6 +339,11 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                   'items' => [
                     'type' => 'object',
                     'properties' => [
+                      '_id' => [
+                        'type' => ['integer', 'null'],
+                        'readOnly' => TRUE,
+                        'default' => NULL,
+                      ],
                       'file' => [
                         'type' => 'string',
                         'format' => 'uri',
@@ -342,9 +359,10 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         'type' => 'number',
                         'precision' => 2,
                         'readOnly' => TRUE,
+                        'default' => 0,
                       ],
                     ],
-                    'required' => ['description', 'amount'],
+                    'required' => ['_id', 'description', 'amount'],
                   ],
                 ],
               ],
@@ -409,6 +427,12 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
               'options' => [
                 'detail' => [
                   'elements' => [
+                    [
+                      'type' => 'Control',
+                      'scope' => '#/properties/_id',
+                      'label' => '',
+                      'options' => ['type' => 'value'],
+                    ],
                     [
                       'type' => 'Control',
                       'scope' => '#/properties/file',
@@ -517,6 +541,11 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                   'items' => [
                     'type' => 'object',
                     'properties' => [
+                      '_id' => [
+                        'type' => ['integer', 'null'],
+                        'readOnly' => TRUE,
+                        'default' => NULL,
+                      ],
                       'file' => [
                         'type' => 'string',
                         'format' => 'uri',
@@ -532,9 +561,10 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         'type' => 'number',
                         'precision' => 2,
                         'readOnly' => TRUE,
+                        'default' => 0,
                       ],
                     ],
-                    'required' => ['description', 'amount'],
+                    'required' => ['_id', 'description', 'amount'],
                   ],
                 ],
               ],
@@ -604,6 +634,12 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                   'options' => [
                     'detail' => [
                       'elements' => [
+                        [
+                          'type' => 'Control',
+                          'scope' => '#/properties/_id',
+                          'label' => '',
+                          'options' => ['type' => 'value'],
+                        ],
                         [
                           'type' => 'Control',
                           'scope' => '#/properties/file',

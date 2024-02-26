@@ -75,7 +75,7 @@ class ItemDetailsFormElementGenerator {
         // Actually this should always be true.
         if (is_scalar($value)) {
           $header[] = $label ?? $itemsProperties[$property]['title'] ?? ucfirst($property);
-          $tableRowElements[] = new JsonFormsMarkup($this->toString($value));
+          $tableRowElements[] = new JsonFormsMarkup($this->valueToString($value, $itemsProperties[$property]));
         }
       }
     }
@@ -86,7 +86,22 @@ class ItemDetailsFormElementGenerator {
   /**
    * @param scalar|null $value
    */
-  private function toString($value): string {
+  private function valueToString($value, JsonSchema $itemPropertySchema): string {
+    /** @phpstan-var list<JsonSchema> $oneOf */
+    $oneOf = $itemPropertySchema->getKeywordValueOrDefault('oneOf', []);
+    foreach ($oneOf as $oneOfEntry) {
+      if ($oneOfEntry->hasKeyword('const') && $oneOfEntry->getKeywordValue('const') === $value) {
+        if ($oneOfEntry->hasKeyword('title')) {
+          $title = $oneOfEntry->getKeywordValue('title');
+          Assert::string($title);
+
+          return $title;
+        }
+
+        break;
+      }
+    }
+
     if (is_bool($value)) {
       return $value ? E::ts('Yes') : E::ts('No');
     }
