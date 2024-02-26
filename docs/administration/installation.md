@@ -217,7 +217,7 @@ cv api4 File.update +v file_type_id:name=funding_payment_instruction_template +w
 
 ## Time Zone
 
-All requests must be done with the same time zone. This means that all CiviCRM
-contacts must use the same time zone. Therefore, the option
+All requests must be executed with the same time zone. This means that all
+CiviCRM contacts must use the same time zone. Therefore, the option
 `Users may set their own time zone` in the Drupal `Regional settings`
 (`/admin/config/regional/settings`) needs to be disabled.
