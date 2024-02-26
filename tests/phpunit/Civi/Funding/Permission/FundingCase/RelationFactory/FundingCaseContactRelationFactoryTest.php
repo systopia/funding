@@ -31,7 +31,7 @@ use PHPUnit\Framework\TestCase;
 final class FundingCaseContactRelationFactoryTest extends TestCase {
 
   /**
-   * @var \Civi\Funding\Permission\FundingCase\RelationFactory\RelationPropertiesFactoryLocator&\PHPUnit\Framework\MockObject\MockObject)
+   * @var \Civi\Funding\Permission\FundingCase\RelationFactory\RelationPropertiesFactoryLocator&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $propertiesFactoryLocatorMock;
 

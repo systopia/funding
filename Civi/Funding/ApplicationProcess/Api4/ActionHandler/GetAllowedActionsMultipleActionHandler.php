@@ -57,7 +57,7 @@ final class GetAllowedActionsMultipleActionHandler implements ActionHandlerInter
   }
 
   /**
-   * @phpstan-return array<string, array{label: string, confirm: string|null}>>
+   * @phpstan-return array<string, array{label: string, confirm: string|null}>
    *    Map of action names to button labels and confirm messages.
    */
   private function getAllowedActionsById(int $id): array {
