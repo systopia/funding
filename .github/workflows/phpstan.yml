@@ -45,7 +45,7 @@ jobs:
       run: |
         git clone --depth=1 https://github.com/systopia/activity-entity.git ../activity-entity &&
         git clone --depth=1 https://github.com/systopia/de.systopia.civioffice.git ../de.systopia.civioffice &&
-        git clone -b remote-tools-api4 --depth=1 https://github.com/systopia/de.systopia.remotetools.git ../de.systopia.remotetools &&
+        git clone --depth=1 https://github.com/systopia/de.systopia.remotetools.git ../de.systopia.remotetools &&
         git clone --depth=1 https://github.com/systopia/external-file.git ../external-file &&
         composer update --no-progress --prefer-dist --${{ matrix.prefer }} --optimize-autoloader --ignore-platform-req=ext-gd &&
         composer composer-phpunit -- update --no-progress --prefer-dist &&

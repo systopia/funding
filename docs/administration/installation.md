@@ -107,7 +107,7 @@ Install the following extensions, use the newest release if not otherwise indica
 
 - [de.systopia.xcm](https://github.com/systopia/de.systopia.xcm)
 - [de.systopia.identitytracker](https://github.com/systopia/de.systopia.identitytracker) - version >= 1.4
-- The branch `remote-tools-api4` of [de.systopia.remotetools](https://github.com/systopia/de.systopia.remotetools)
+- [de.systopia.remotetools](https://github.com/systopia/de.systopia.remotetools)
 - [de.systopia.civioffice](https://github.com/systopia/de.systopia.civioffice) - version >= 1.0
 - [org.project60.banking](https://github.com/Project60/org.project60.banking) - version >= 1.0. The  _CiviContribute_ component needs to be activated for this extension.
 - [activity-entity](https://github.com/systopia/activity-entity)
