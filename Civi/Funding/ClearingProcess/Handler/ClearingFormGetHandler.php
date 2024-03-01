@@ -19,8 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ClearingProcess\Handler;
 
-use Civi\Funding\ClearingProcess\ClearingFormGenerator;
 use Civi\Funding\ClearingProcess\Command\ClearingFormGetCommand;
+use Civi\Funding\ClearingProcess\Form\ClearingFormGenerator;
 use Civi\Funding\Form\JsonFormsFormInterface;
 
 final class ClearingFormGetHandler implements ClearingFormGetHandlerInterface {

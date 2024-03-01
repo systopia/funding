@@ -21,12 +21,12 @@ DROP TABLE IF EXISTS `civicrm_funding_clearing_cost_item`;
 DROP TABLE IF EXISTS `civicrm_funding_app_cost_item`;
 DROP TABLE IF EXISTS `civicrm_funding_drawdown`;
 DROP TABLE IF EXISTS `civicrm_funding_clearing_resources_item`;
+DROP TABLE IF EXISTS `civicrm_funding_clearing_process`;
 DROP TABLE IF EXISTS `civicrm_funding_application_snapshot`;
 DROP TABLE IF EXISTS `civicrm_funding_app_resources_item`;
 DROP TABLE IF EXISTS `civicrm_funding_application_process`;
 DROP TABLE IF EXISTS `civicrm_funding_payout_process`;
 DROP TABLE IF EXISTS `civicrm_funding_new_case_permissions`;
-DROP TABLE IF EXISTS `civicrm_funding_clearing_process`;
 DROP TABLE IF EXISTS `civicrm_funding_case_type_program`;
 DROP TABLE IF EXISTS `civicrm_funding_case_permissions_cache`;
 DROP TABLE IF EXISTS `civicrm_funding_case_contact_relation`;
@@ -238,23 +238,6 @@ ENGINE=InnoDB;
 
 -- /*******************************************************
 -- *
--- * civicrm_funding_clearing_process
--- *
--- *******************************************************/
-CREATE TABLE `civicrm_funding_clearing_process` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique FundingClearingProcess ID',
-  `funding_case_id` int unsigned NOT NULL COMMENT 'FK to FundingCase',
-  `status` varchar(64) NOT NULL,
-  `creation_date` timestamp NOT NULL,
-  `modification_date` timestamp NOT NULL,
-  `report_data` text NOT NULL,
-  PRIMARY KEY (`id`),
-  CONSTRAINT FK_civicrm_funding_clearing_process_funding_case_id FOREIGN KEY (`funding_case_id`) REFERENCES `civicrm_funding_case`(`id`) ON DELETE CASCADE
-)
-ENGINE=InnoDB;
-
--- /*******************************************************
--- *
 -- * civicrm_funding_new_case_permissions
 -- *
 -- * Defines the initial permissions for new funding cases
@@ -361,6 +344,30 @@ CREATE TABLE `civicrm_funding_application_snapshot` (
   `is_eligible` tinyint NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT FK_civicrm_funding_application_snapshot_application_process_id FOREIGN KEY (`application_process_id`) REFERENCES `civicrm_funding_application_process`(`id`) ON DELETE RESTRICT
+)
+ENGINE=InnoDB;
+
+-- /*******************************************************
+-- *
+-- * civicrm_funding_clearing_process
+-- *
+-- *******************************************************/
+CREATE TABLE `civicrm_funding_clearing_process` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique FundingClearingProcess ID',
+  `application_process_id` int unsigned NOT NULL COMMENT 'FK to FundingApplicationProcess',
+  `status` varchar(64) NOT NULL,
+  `creation_date` timestamp NOT NULL,
+  `modification_date` timestamp NOT NULL,
+  `report_data` text NOT NULL,
+  `is_review_content` tinyint NULL,
+  `reviewer_cont_contact_id` int unsigned NULL COMMENT 'FK to Contact',
+  `is_review_calculative` tinyint NULL,
+  `reviewer_calc_contact_id` int unsigned NULL COMMENT 'FK to Contact',
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `UI_application_process_id`(application_process_id),
+  CONSTRAINT FK_civicrm_funding_clearing_process_application_process_id FOREIGN KEY (`application_process_id`) REFERENCES `civicrm_funding_application_process`(`id`) ON DELETE CASCADE,
+  CONSTRAINT FK_civicrm_funding_clearing_process_reviewer_cont_contact_id FOREIGN KEY (`reviewer_cont_contact_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE RESTRICT,
+  CONSTRAINT FK_civicrm_funding_clearing_process_reviewer_calc_contact_id FOREIGN KEY (`reviewer_calc_contact_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE RESTRICT
 )
 ENGINE=InnoDB;
 

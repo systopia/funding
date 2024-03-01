@@ -28,7 +28,7 @@ use Civi\Funding\ClearingProcess\Handler\Helper\ClearingCostItemsFormDataPersist
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingResourcesItemsFormDataPersister;
 
 /**
- * @phpstan-import-type clearingItemRecordT from \Civi\Funding\ClearingProcess\Handler\Helper\AbstractClearingItemsFormDataPersister
+ * @phpstan-import-type clearingFormDataT from \Civi\Funding\ClearingProcess\Form\ClearingFormGenerator
  */
 final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterface {
 
@@ -66,20 +66,11 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
 
     if (!$validationResult->isValid()) {
       return new ClearingFormSubmitResult(
-        $validationResult->getData(),
-        $validationResult->getLeafErrorMessages(),
-        []
+        $validationResult->getErrorMessages(), $validationResult->getData(), []
       );
     }
 
-    /**
-     * @phpstan-var array{
-     *   _action: string,
-     *   costItems?: array<int, array{records: list<clearingItemRecordT>}>,
-     *   resourcesItems?: array<int, array{records: list<clearingItemRecordT>}>,
-     *   reportData?: array<string, mixed>,
-     * } $data
-     */
+    /** @phpstan-var clearingFormDataT $data */
     $data = $validationResult->getData();
 
     $clearingProcessBundle = $command->getClearingProcessBundle();
@@ -94,18 +85,13 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
     );
 
     $clearingProcess = $clearingProcessBundle->getClearingProcess();
-    $clearingProcess->setStatus(
-      $this->statusDeterminer->getStatus($clearingProcess->getStatus(),
-        $data['_action'])
-    );
     $clearingProcess->setReportData($data['reportData'] ?? []);
+    $clearingProcess->setFullStatus(
+      $this->statusDeterminer->getStatus($clearingProcess->getFullStatus(), $data['_action'])
+    );
     $this->clearingProcessManager->update($clearingProcess);
 
-    return new ClearingFormSubmitResult(
-      $validationResult->getData(),
-      $validationResult->getLeafErrorMessages(),
-      $files
-    );
+    return new ClearingFormSubmitResult([], $data, $files);
   }
 
 }

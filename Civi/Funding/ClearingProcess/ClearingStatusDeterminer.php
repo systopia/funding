@@ -19,38 +19,86 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ClearingProcess;
 
+use Civi\Funding\Entity\FullClearingProcessStatus;
+
 final class ClearingStatusDeterminer {
 
   private const STATUS_ACTION_STATUS_MAP = [
     'draft' => [
       'save' => 'draft',
-      'apply' => 'review-requested',
+      'apply' => 'review_requested',
+      'review' => 'review',
     ],
-    'review-requested' => [
+    'review_requested' => [
       'modify' => 'draft',
       'review' => 'review',
     ],
     'review' => [
       'update' => 'review',
       'request-change' => 'draft',
+      'accept-calculative' => 'review',
+      'reject-calculative' => 'review',
+      'accept-content' => 'review',
+      'reject-content' => 'review',
+      'reject' => 'rejected',
       'accept' => 'accepted',
     ],
     'accepted' => [
-      'update' => 'accepted',
+      'review' => 'review',
+      'request-change' => 'draft',
+    ],
+    'rejected' => [
+      'review' => 'review',
       'request-change' => 'draft',
     ],
   ];
 
-  public function getStatus(string $currentStatus, string $action): string {
-    $newStatus = self::STATUS_ACTION_STATUS_MAP[$currentStatus][$action] ?? NULL;
+  public function getStatus(FullClearingProcessStatus $currentStatus, string $action): FullClearingProcessStatus {
+    $status = self::STATUS_ACTION_STATUS_MAP[$currentStatus->getStatus()][$action] ?? NULL;
 
-    if (NULL === $newStatus) {
+    if (NULL === $status) {
       throw new \InvalidArgumentException(
-        sprintf('Invalid combination of action ("%s") and status ("%s")', $action, $currentStatus)
+        sprintf('Invalid combination of action ("%s") and status ("%s")', $action, $currentStatus->getStatus())
       );
     }
 
-    return $newStatus;
+    return new FullClearingProcessStatus(
+      $status,
+      $this->getIsReviewCalculative($currentStatus, $action),
+      $this->getIsReviewContent($currentStatus, $action)
+    );
+  }
+
+  private function getIsReviewCalculative(FullClearingProcessStatus $currentStatus, string $action): ?bool {
+    if ('request-change' === $action) {
+      return NULL;
+    }
+
+    if ('accept-calculative' === $action) {
+      return TRUE;
+    }
+
+    if ('reject-calculative' === $action) {
+      return FALSE;
+    }
+
+    return $currentStatus->getIsReviewCalculative();
+  }
+
+  private function getIsReviewContent(FullClearingProcessStatus $currentStatus, string $action): ?bool {
+    if ('request-change' === $action) {
+      return NULL;
+    }
+
+    if ('accept-content' === $action) {
+      return TRUE;
+    }
+
+    if ('reject-content' === $action) {
+      return FALSE;
+    }
+
+    return $currentStatus->getIsReviewContent();
   }
 
 }

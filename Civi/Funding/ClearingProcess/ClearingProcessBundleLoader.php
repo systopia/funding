@@ -48,33 +48,12 @@ class ClearingProcessBundleLoader {
   }
 
   /**
-   * @phpstan-return array<ClearingProcessEntityBundle>
-   */
-  public function getByFundingCaseId(int $fundingCaseId): array {
-    return array_map(
-      [$this, 'createFromClearingProcess'],
-      $this->clearingProcessManager->getByFundingCaseId($fundingCaseId),
-    );
-  }
-
-  /**
-   * @throws \CRM_Core_Exception
-   */
-  public function getFirstByFundingCaseId(int $fundingCaseId): ?ClearingProcessEntityBundle {
-    $clearingProcess = $this->clearingProcessManager->getFirstByFundingCaseId($fundingCaseId);
-
-    return NULL === $clearingProcess ? NULL : $this->createFromClearingProcess($clearingProcess);
-  }
-
-  /**
    * @throws \CRM_Core_Exception
    */
   private function createFromClearingProcess(
     ClearingProcessEntity $clearingProcess
   ): ClearingProcessEntityBundle {
-    $applicationProcessBundle = $this->applicationProcessBundleLoader->getFirstByFundingCaseId(
-      $clearingProcess->getFundingCaseId()
-    );
+    $applicationProcessBundle = $this->applicationProcessBundleLoader->get($clearingProcess->getApplicationProcessId());
     Assert::notNull($applicationProcessBundle);
 
     return new ClearingProcessEntityBundle($clearingProcess, $applicationProcessBundle);

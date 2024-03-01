@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\SonstigeAktivitaet\Report;
 
-use Civi\Funding\ClearingProcess\ReportFormFactoryInterface;
+use Civi\Funding\ClearingProcess\Form\ReportFormFactoryInterface;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\Form\JsonFormsForm;
 use Civi\Funding\Form\JsonFormsFormInterface;

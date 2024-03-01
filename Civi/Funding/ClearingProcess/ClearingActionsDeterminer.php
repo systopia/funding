@@ -19,10 +19,16 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ClearingProcess;
 
+use Civi\Funding\Entity\ClearingProcessEntity;
+use Civi\Funding\Entity\FullClearingProcessStatus;
+use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
 use CRM_Funding_ExtensionUtil as E;
 
 final class ClearingActionsDeterminer {
 
+  use HasReviewPermissionTrait;
+
+  // phpcs:disable Generic.Files.LineLength.TooLong
   private const STATUS_PERMISSION_ACTIONS_MAP = [
     'draft' => [
       ClearingProcessPermissions::CLEARING_APPLY => ['apply', 'save'],
@@ -39,16 +45,23 @@ final class ClearingActionsDeterminer {
     'review' => [
       ClearingProcessPermissions::CLEARING_APPLY => [],
       ClearingProcessPermissions::CLEARING_MODIFY => [],
-      ClearingProcessPermissions::REVIEW_CALCULATIVE => ['accept', 'request-change', 'update'],
-      ClearingProcessPermissions::REVIEW_CONTENT => ['accept', 'request-change', 'update'],
+      ClearingProcessPermissions::REVIEW_CALCULATIVE => ['reject', 'request-change', 'update'],
+      ClearingProcessPermissions::REVIEW_CONTENT => ['reject', 'request-change', 'update'],
     ],
     'accepted' => [
       ClearingProcessPermissions::CLEARING_APPLY => [],
       ClearingProcessPermissions::CLEARING_MODIFY => [],
-      ClearingProcessPermissions::REVIEW_CALCULATIVE => ['request-change', 'update'],
-      ClearingProcessPermissions::REVIEW_CONTENT => ['request-change', 'update'],
+      ClearingProcessPermissions::REVIEW_CALCULATIVE => ['request-change', 'review'],
+      ClearingProcessPermissions::REVIEW_CONTENT => ['request-change', 'review'],
+    ],
+    'rejected' => [
+      ClearingProcessPermissions::CLEARING_APPLY => [],
+      ClearingProcessPermissions::CLEARING_MODIFY => [],
+      ClearingProcessPermissions::REVIEW_CALCULATIVE => ['request-change', 'review'],
+      ClearingProcessPermissions::REVIEW_CONTENT => ['request-change', 'review'],
     ],
   ];
+  // phpcs:enable
 
   /**
    * @phpstan-var array<string, string>
@@ -63,8 +76,13 @@ final class ClearingActionsDeterminer {
       'modify' => E::ts('Modify'),
       'review' => E::ts('Review'),
       'update' => E::ts('Save'),
+      'accept-content' => E::ts('Accept Content'),
+      'reject-content' => E::ts('Reject Content'),
+      'accept-calculative' => E::ts('Accept Calculative'),
+      'reject-calculative' => E::ts('Reject Calculative'),
       'request-change' => E::ts('Request Change'),
       'accept' => E::ts('Accept'),
+      'reject' => E::ts('Reject'),
     ];
   }
 
@@ -74,11 +92,18 @@ final class ClearingActionsDeterminer {
    * @phpstan-return array<string, string>
    *   Mapping of action name to label.
    */
-  public function getActions(string $status, array $permissions): array {
+  public function getActions(FullClearingProcessStatus $fullStatus, array $permissions): array {
+    $status = $fullStatus->getStatus();
     $actions = [];
     foreach ($permissions as $permission) {
-      $actions = \array_merge($actions, self::STATUS_PERMISSION_ACTIONS_MAP[$status][$permission] ?? []);
+      $actions = array_merge($actions, self::STATUS_PERMISSION_ACTIONS_MAP[$status][$permission] ?? []);
     }
+
+    $actions = array_merge($actions, $this->getReviewActions(
+      $fullStatus,
+      $this->hasReviewCalculativePermission($permissions),
+      $this->hasReviewCalculativePermission($permissions)
+    ));
 
     return array_filter($this->labels, fn (string $name) => in_array($name, $actions, TRUE), ARRAY_FILTER_USE_KEY);
   }
@@ -86,8 +111,44 @@ final class ClearingActionsDeterminer {
   /**
    * @phpstan-param array<string> $permissions
    */
-  public function isActionAllowed(string $action, string $status, array $permissions): bool {
-    return isset($this->getActions($status, $permissions)[$action]);
+  public function isActionAllowed(string $action, FullClearingProcessStatus $fullStatus, array $permissions): bool {
+    return isset($this->getActions($fullStatus, $permissions)[$action]);
+  }
+
+  /**
+   * @phpstan-return list<string>
+   */
+  private function getReviewActions(
+    FullClearingProcessStatus $fullStatus,
+    bool $hasReviewCalculativePermission,
+    bool $hasReviewContentPermission
+  ): array {
+    $actions = [];
+    if ('review' === $fullStatus->getStatus()
+      && ($hasReviewCalculativePermission || $hasReviewContentPermission)
+    ) {
+      if ($hasReviewCalculativePermission) {
+        if (TRUE !== $fullStatus->getIsReviewCalculative()) {
+          $actions[] = 'accept-calculative';
+        }
+        if (FALSE !== $fullStatus->getIsReviewCalculative()) {
+          $actions[] = 'reject-calculative';
+        }
+      }
+      if ($hasReviewContentPermission) {
+        if (TRUE !== $fullStatus->getIsReviewContent()) {
+          $actions[] = 'accept-content';
+        }
+        if (FALSE !== $fullStatus->getIsReviewContent()) {
+          $actions[] = 'reject-content';
+        }
+      }
+      if (TRUE === $fullStatus->getIsReviewCalculative() && TRUE === $fullStatus->getIsReviewContent()) {
+        $actions[] = 'accept';
+      }
+    }
+
+    return $actions;
   }
 
 }

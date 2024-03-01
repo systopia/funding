@@ -58,13 +58,13 @@ final class ValidateFormActionHandler implements ActionHandlerInterface {
     Assert::notNull($clearingProcessBundle, sprintf('Clearing process with ID %d not found', $action->getId()));
 
     $result = $this->validateHandler->handle(
-      new ClearingFormValidateCommand($clearingProcessBundle, $action->getData())
+      new ClearingFormValidateCommand($clearingProcessBundle, $action->getData(), 10)
     );
 
     return [
       'valid' => FALSE,
       'data' => $result->getData(),
-      'errors' => $result->getLeafErrorMessages(),
+      'errors' => $result->getErrorMessages(),
     ];
   }
 

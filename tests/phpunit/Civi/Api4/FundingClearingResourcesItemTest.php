@@ -22,7 +22,9 @@ namespace Civi\Api4;
 use Civi\API\Exception\UnauthorizedException;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\ClearingProcessEntity;
+use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\Fixtures\ApplicationProcessFixture;
 use Civi\Funding\Fixtures\ApplicationResourcesItemFixture;
 use Civi\Funding\Fixtures\ClearingProcessFixture;
@@ -50,8 +52,9 @@ final class FundingClearingResourcesItemTest extends AbstractFundingHeadlessTest
   public function testGet(): void {
     $contact = ContactFixture::addIndividual();
     $contactNotPermitted = ContactFixture::addIndividual();
-    $clearingProcess = $this->createClearingProcess();
-    $applicationProcess = ApplicationProcessFixture::addFixture($clearingProcess->getFundingCaseId());
+    $clearingProcessBundle = $this->createClearingProcessBundle();
+    $clearingProcess = $clearingProcessBundle->getClearingProcess();
+    $applicationProcess = $clearingProcessBundle->getApplicationProcess();
     $applicationResourcesItem = ApplicationResourcesItemFixture::addFixture($applicationProcess->getId());
     $clearingResourcesItem = ClearingResourcesItemFixture::addFixture(
       $clearingProcess->getId(),
@@ -60,7 +63,7 @@ final class FundingClearingResourcesItemTest extends AbstractFundingHeadlessTest
 
     FundingCaseContactRelationFixture::addContact(
       $contact['id'],
-      $clearingProcess->getFundingCaseId(),
+      $applicationProcess->getFundingCaseId(),
       ['review_test'],
     );
 
@@ -78,7 +81,7 @@ final class FundingClearingResourcesItemTest extends AbstractFundingHeadlessTest
 
     FundingCaseContactRelationFixture::addContact(
       $contact['id'],
-      $clearingProcess->getFundingCaseId(),
+      $applicationProcess->getFundingCaseId(),
       [ClearingProcessPermissions::REVIEW_CALCULATIVE],
     );
     $result = FundingClearingResourcesItem::get()->addSelect('id', 'currency', 'CAN_review')->execute();
@@ -120,7 +123,7 @@ final class FundingClearingResourcesItemTest extends AbstractFundingHeadlessTest
       ->execute();
   }
 
-  private function createClearingProcess(): ClearingProcessEntity {
+  private function createClearingProcessBundle(): ClearingProcessEntityBundle {
     $fundingProgram = FundingProgramFixture::addFixture();
     $fundingCaseType = FundingCaseTypeFixture::addFixture();
     $recipientContact = ContactFixture::addOrganization();
@@ -133,7 +136,17 @@ final class FundingClearingResourcesItemTest extends AbstractFundingHeadlessTest
       $creationContact['id'],
     );
 
-    return ClearingProcessFixture::addFixture($fundingCase->getId(), ['status' => 'review']);
+    $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId());
+    $clearingProcess = ClearingProcessFixture::addFixture($applicationProcess->getId(), ['status' => 'review']);
+
+    $applicationProcessBundle = new ApplicationProcessEntityBundle(
+      $applicationProcess,
+      $fundingCase,
+      $fundingCaseType,
+      $fundingProgram
+    );
+
+    return new ClearingProcessEntityBundle($clearingProcess, $applicationProcessBundle);
   }
 
 }

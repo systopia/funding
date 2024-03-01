@@ -30,11 +30,11 @@ use Civi\Funding\ClearingProcess\ClearingActionsDeterminer;
 use Civi\Funding\ClearingProcess\ClearingCostItemManager;
 use Civi\Funding\ClearingProcess\ClearingExternalFileManager;
 use Civi\Funding\ClearingProcess\ClearingExternalFileManagerInterface;
-use Civi\Funding\ClearingProcess\ClearingFormGenerator;
 use Civi\Funding\ClearingProcess\ClearingProcessBundleLoader;
 use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\ClearingProcess\ClearingResourcesItemManager;
 use Civi\Funding\ClearingProcess\ClearingStatusDeterminer;
+use Civi\Funding\ClearingProcess\Form\ClearingFormGenerator;
 use Civi\Funding\ClearingProcess\Handler\ClearingFormDataGetHandler;
 use Civi\Funding\ClearingProcess\Handler\ClearingFormDataGetHandlerInterface;
 use Civi\Funding\ClearingProcess\Handler\ClearingFormGetHandler;
@@ -45,11 +45,13 @@ use Civi\Funding\ClearingProcess\Handler\ClearingFormValidateHandler;
 use Civi\Funding\ClearingProcess\Handler\ClearingFormValidateHandlerInterface;
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingCostItemsFormDataPersister;
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingResourcesItemsFormDataPersister;
-use Civi\Funding\DependencyInjection\Compiler\ReportFormFactoryPass;
+use Civi\Funding\DependencyInjection\Compiler\ClearingFormValidatorPass;
+use Civi\Funding\DependencyInjection\Compiler\ClearingReportFormFactoryPass;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 
-$container->addCompilerPass(new ReportFormFactoryPass());
+$container->addCompilerPass(new ClearingReportFormFactoryPass());
+$container->addCompilerPass(new ClearingFormValidatorPass());
 
 $container->autowire(ClearingProcessManager::class);
 $container->autowire(ClearingProcessBundleLoader::class);
@@ -85,6 +87,9 @@ $container->autowire(ClearingFormSubmitHandlerInterface::class, ClearingFormSubm
   ->addTag(ClearingFormSubmitHandlerInterface::SERVICE_TAG);
 
 $container->autowire(\Civi\Funding\Api4\Action\FundingClearingProcess\GetAction::class)
+  ->setPublic(TRUE)
+  ->setShared(FALSE);
+$container->autowire(\Civi\Funding\Api4\Action\FundingClearingProcess\GetFieldsAction::class)
   ->setPublic(TRUE)
   ->setShared(FALSE);
 

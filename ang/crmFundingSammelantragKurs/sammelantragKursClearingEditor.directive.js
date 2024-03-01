@@ -1,4 +1,3 @@
-<?php
 /*
  * Copyright (C) 2024 SYSTOPIA GmbH
  *
@@ -15,17 +14,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+'use strict';
 
-namespace Civi\Funding\ClearingProcess;
-
-use Civi\Funding\Entity\ClearingProcessEntityBundle;
-use Civi\Funding\Form\JsonFormsFormInterface;
-
-interface ReportFormFactoryInterface {
-
-  public const SERVICE_TAG = 'funding.clearing.report_form_factory';
-
-  public function createReportForm(ClearingProcessEntityBundle $clearingProcessBundle): JsonFormsFormInterface;
-
-}
+fundingSammelantragKursModule.directive('fundingSammelantragKursClearingEditor', function() {
+  return {
+    restrict: 'AE',
+    scope: false,
+    templateUrl: '~/crmFundingSammelantragKurs/sammelantragKursClearingEditor.template.html',
+    controller: function () {},
+  };
+});

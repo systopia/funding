@@ -38,6 +38,8 @@ final class GetAction extends AbstractReferencingDAOGetAction {
       $fundingCaseManager,
       $requestContext
     );
+
+    $this->_fundingCaseIdFieldName = 'application_process_id.funding_case_id';
   }
 
 }

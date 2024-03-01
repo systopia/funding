@@ -33,7 +33,8 @@
   overflow-y: scroll;
 }
 
-.funding-application-sidebar {
+.funding-application-sidebar,
+.funding-clearing-sidebar {
   height: 100%;
   width: 370px;
   position: absolute;
@@ -43,20 +44,24 @@
   padding: 0;
 }
 
-.funding-application-sidebar-element {
+.funding-application-sidebar-element,
+.funding-clearing-sidebar-element {
   width: 100%;
 }
 
-.funding-application-sidebar-element.panel-group {
+.funding-application-sidebar-element.panel-group,
+.funding-clearing-sidebar-element.panel-group {
   padding-left: 10px;
   padding-right: 10px;
 }
 
-.funding-application-main {
+.funding-application-main,
+.funding-clearing-main {
   margin-right: 370px;
 }
 
-#bootstrap-theme .funding-application-main table {
+#bootstrap-theme .funding-application-main table,
+#bootstrap-theme .funding-clearing-main table {
   max-width: 1200px;
 }
 
@@ -79,7 +84,8 @@
   background-color: #e8eef0 !important;
 }
 
-.funding-application-sidebar-element .btn-group {
+.funding-application-sidebar-element .btn-group,
+.funding-clearing-sidebar-element .btn-group {
   margin-bottom: 10px;
 }
 

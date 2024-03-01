@@ -21,6 +21,8 @@ namespace Civi\Funding\ClearingProcess\Handler;
 
 use Civi\Funding\ClearingProcess\Command\ClearingFormGetCommand;
 use Civi\Funding\ClearingProcess\Command\ClearingFormValidateCommand;
+use Civi\Funding\ClearingProcess\Form\Validation\ClearingFormValidatorInterface;
+use Civi\Funding\ClearingProcess\Form\Validation\ClearingFormValidationResult;
 use Civi\RemoteTools\JsonSchema\Validation\ValidationResult;
 use Civi\RemoteTools\JsonSchema\Validation\ValidatorInterface;
 
@@ -28,17 +30,34 @@ final class ClearingFormValidateHandler implements ClearingFormValidateHandlerIn
 
   private ClearingFormGetHandlerInterface $formGetHandler;
 
-  private ValidatorInterface $validator;
+  private ClearingFormValidatorInterface $formValidator;
 
-  public function __construct(ClearingFormGetHandlerInterface $formGetHandler, ValidatorInterface $validator) {
+  private ValidatorInterface $jsonSchemaValidator;
+
+  public function __construct(
+    ClearingFormGetHandlerInterface $formGetHandler,
+    ClearingFormValidatorInterface $formValidator,
+    ValidatorInterface $jsonSchemaValidator) {
     $this->formGetHandler = $formGetHandler;
-    $this->validator = $validator;
+    $this->formValidator = $formValidator;
+    $this->jsonSchemaValidator = $jsonSchemaValidator;
   }
 
-  public function handle(ClearingFormValidateCommand $command): ValidationResult {
+  public function handle(ClearingFormValidateCommand $command): ClearingFormValidationResult {
     $form = $this->formGetHandler->handle(new ClearingFormGetCommand($command->getClearingProcessBundle()));
 
-    return $this->validator->validate($form->getJsonSchema(), $command->getData());
+    $schemaValidationResult = $this->jsonSchemaValidator->validate(
+      $form->getJsonSchema(),
+      $command->getData(),
+      $command->getMaxErrors()
+    );
+    if (!$schemaValidationResult->isValid()) {
+      return new ClearingFormValidationResult(
+        $schemaValidationResult->getLeafErrorMessages(), $schemaValidationResult->getData()
+      );
+    }
+
+    return $this->formValidator->validate($command->getClearingProcessBundle(), $schemaValidationResult->getData());
   }
 
 }

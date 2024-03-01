@@ -22,8 +22,8 @@ namespace Civi\Funding\ClearingProcess;
 use Civi\Api4\FundingClearingProcess;
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
+use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ClearingProcessFactory;
-use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessCreatedEvent;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessPreCreateEvent;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessPreUpdateEvent;
@@ -73,20 +73,17 @@ final class ClearingProcessManagerTest extends TestCase {
   }
 
   public function testCreate(): void {
-    $fundingCase = FundingCaseFactory::createFundingCase([
-      'status' => 'draft',
-      'report_data' => [],
-    ]);
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
     $clearingProcess = ClearingProcessFactory::create(['id' => NULL]);
 
     $expectedDispatchCalls = [
       [
         ClearingProcessPreCreateEvent::class,
-        new ClearingProcessPreCreateEvent($clearingProcess, $fundingCase),
+        new ClearingProcessPreCreateEvent($clearingProcess, $applicationProcessBundle),
       ],
       [
         ClearingProcessCreatedEvent::class,
-        new ClearingProcessCreatedEvent($clearingProcess, $fundingCase),
+        new ClearingProcessCreatedEvent($clearingProcess, $applicationProcessBundle),
       ],
     ];
     $this->eventDispatcherMock->expects(static::exactly(2))->method('dispatch')
@@ -100,7 +97,7 @@ final class ClearingProcessManagerTest extends TestCase {
       ->with(FundingClearingProcess::getEntityName(), $clearingProcess->toArray())
       ->willReturn(new Result([$clearingProcess->toArray()]));
 
-    static::assertEquals($clearingProcess, $this->clearingProcessManager->create($fundingCase));
+    static::assertEquals($clearingProcess, $this->clearingProcessManager->create($applicationProcessBundle));
   }
 
   public function testGet(): void {
@@ -114,20 +111,19 @@ final class ClearingProcessManagerTest extends TestCase {
     static::assertEquals($clearingProcess, $this->clearingProcessManager->get($clearingProcess->getId()));
   }
 
-  public function testGetFirstByFundingCaseId(): void {
+  public function testGetByApplicationProcessId(): void {
     $clearingProcess = ClearingProcessFactory::create();
+    $applicationProcessId = $clearingProcess->getApplicationProcessId();
 
     $this->api4Mock->method('getEntities')->with(
       FundingClearingProcess::getEntityName(),
-      Comparison::new('funding_case_id', '=', $clearingProcess->getFundingCaseId()),
-      ['id' => 'ASC'],
-      1
+      Comparison::new('application_process_id', '=', $applicationProcessId),
     )->willReturn(new Result([]), new Result([$clearingProcess->toArray()]));
 
-    static::assertNull($this->clearingProcessManager->getFirstByFundingCaseId($clearingProcess->getFundingCaseId()));
+    static::assertNull($this->clearingProcessManager->getByApplicationProcessId($applicationProcessId));
     static::assertEquals(
       $clearingProcess,
-      $this->clearingProcessManager->getFirstByFundingCaseId($clearingProcess->getFundingCaseId())
+      $this->clearingProcessManager->getByApplicationProcessId($applicationProcessId)
     );
   }
 

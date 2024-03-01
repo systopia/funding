@@ -20,7 +20,6 @@ declare(strict_types = 1);
 namespace Civi\Funding\ClearingProcess\Api4\ActionHandler;
 
 use Civi\Funding\Api4\Action\Remote\FundingClearingProcess\GetOrCreateAction;
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoContainer;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
@@ -36,16 +35,12 @@ final class RemoteGetOrCreateActionHandler implements ActionHandlerInterface {
 
   private ClearingProcessManager $clearingProcessManager;
 
-  private ApplicationProcessActionStatusInfoContainer $infoContainer;
-
   public function __construct(
     ApplicationProcessBundleLoader $applicationProcessBundleLoader,
-    ClearingProcessManager $clearingProcessManager,
-    ApplicationProcessActionStatusInfoContainer $infoContainer
+    ClearingProcessManager $clearingProcessManager
   ) {
     $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
     $this->clearingProcessManager = $clearingProcessManager;
-    $this->infoContainer = $infoContainer;
   }
 
   /**
@@ -61,19 +56,15 @@ final class RemoteGetOrCreateActionHandler implements ActionHandlerInterface {
       );
     }
 
-    if (TRUE !== $this->infoContainer->get($applicationProcessBundle->getFundingCaseType()->getName())
-      ->isEligibleStatus($applicationProcessBundle->getApplicationProcess()->getStatus())) {
+    if (TRUE !== $applicationProcessBundle->getApplicationProcess()->getIsEligible()) {
       throw new \CRM_Core_Exception(
         sprintf('Application process with ID %d is not in an eligible status', $action->getApplicationProcessId())
       );
     }
 
-    $clearingProcess = $this->clearingProcessManager->getFirstByFundingCaseId(
-      $applicationProcessBundle->getFundingCase()->getId()
-    );
-    if (NULL === $clearingProcess) {
-      $clearingProcess = $this->clearingProcessManager->create($applicationProcessBundle->getFundingCase());
-    }
+    $clearingProcess = $this->clearingProcessManager->getByApplicationProcessId(
+      $applicationProcessBundle->getApplicationProcess()->getId()
+    ) ?? $this->clearingProcessManager->create($applicationProcessBundle);
 
     return $clearingProcess->toArray();
   }

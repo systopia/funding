@@ -52,7 +52,7 @@ class GetAction extends AbstractReferencingDAOGetAction {
       $fundingCaseManager,
       $requestContext
     );
-    $this->_fundingCaseIdFieldName = 'clearing_process_id.funding_case_id';
+    $this->_fundingCaseIdFieldName = 'clearing_process_id.application_process_id.funding_case_id';
   }
 
   public function _run(Result $result): void {

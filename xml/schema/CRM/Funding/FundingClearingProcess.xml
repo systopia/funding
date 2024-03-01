@@ -22,17 +22,22 @@
   </primaryKey>
 
   <field>
-    <name>funding_case_id</name>
+    <name>application_process_id</name>
     <type>int unsigned</type>
     <required>true</required>
-    <comment>FK to FundingCase</comment>
+    <comment>FK to FundingApplicationProcess</comment>
   </field>
   <foreignKey>
-    <name>funding_case_id</name>
-    <table>civicrm_funding_case</table>
+    <name>application_process_id</name>
+    <table>civicrm_funding_application_process</table>
     <key>id</key>
     <onDelete>CASCADE</onDelete>
   </foreignKey>
+  <index>
+    <name>UI_application_process_id</name>
+    <fieldName>application_process_id</fieldName>
+    <unique>true</unique>
+  </index>
 
   <field>
     <name>status</name>
@@ -69,5 +74,57 @@
     <required>true</required>
     <serialize>JSON</serialize>
   </field>
+
+  <field>
+    <name>is_review_content</name>
+    <type>boolean</type>
+    <required>false</required>
+    <html>
+      <type>CheckBox</type>
+    </html>
+  </field>
+
+  <field>
+    <!-- shortened because of limited FK identifier length -->
+    <name>reviewer_cont_contact_id</name>
+    <type>int unsigned</type>
+    <required>false</required>
+    <comment>FK to Contact</comment>
+    <html>
+      <type>EntityRef</type>
+    </html>
+  </field>
+  <foreignKey>
+    <name>reviewer_cont_contact_id</name>
+    <table>civicrm_contact</table>
+    <key>id</key>
+    <onDelete>RESTRICT</onDelete>
+  </foreignKey>
+
+  <field>
+    <name>is_review_calculative</name>
+    <type>boolean</type>
+    <required>false</required>
+    <html>
+      <type>CheckBox</type>
+    </html>
+  </field>
+
+  <field>
+    <!-- shortened because of limited FK identifier length -->
+    <name>reviewer_calc_contact_id</name>
+    <type>int unsigned</type>
+    <required>false</required>
+    <comment>FK to Contact</comment>
+    <html>
+      <type>EntityRef</type>
+    </html>
+  </field>
+  <foreignKey>
+    <name>reviewer_calc_contact_id</name>
+    <table>civicrm_contact</table>
+    <key>id</key>
+    <onDelete>RESTRICT</onDelete>
+  </foreignKey>
 
 </table>

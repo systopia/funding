@@ -36,12 +36,7 @@ use Webmozart\Assert\Assert;
  * @template TClearingItem of AbstractClearingItemEntity
  * @template TFinancePlanItem of AbstractFinancePlanItemEntity
  *
- * @phpstan-type clearingItemRecordT array{
- *   _id: int|null,
- *   amount: float,
- *   file: string|null,
- *   description: string,
- * }
+ * @phpstan-import-type clearingItemRecordT from \Civi\Funding\ClearingProcess\Form\ClearingFormGenerator
  */
 abstract class AbstractClearingItemsFormDataPersister {
 

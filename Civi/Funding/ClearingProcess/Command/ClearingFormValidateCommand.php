@@ -31,12 +31,15 @@ final class ClearingFormValidateCommand {
    */
   private array $data;
 
+  private int $maxErrors;
+
   /**
    * @phpstan-param array<string, mixed> $data
    */
-  public function __construct(ClearingProcessEntityBundle $clearingProcessBundle, array $data) {
+  public function __construct(ClearingProcessEntityBundle $clearingProcessBundle, array $data, int $maxErrors = 1) {
     $this->clearingProcessBundle = $clearingProcessBundle;
     $this->data = $data;
+    $this->maxErrors = $maxErrors;
   }
 
   /**
@@ -44,6 +47,10 @@ final class ClearingFormValidateCommand {
    */
   public function getData(): array {
     return $this->data;
+  }
+
+  public function getMaxErrors(): int {
+    return $this->maxErrors;
   }
 
 }

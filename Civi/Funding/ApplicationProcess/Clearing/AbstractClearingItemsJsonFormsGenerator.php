@@ -25,7 +25,6 @@ use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Form\JsonFormsForm;
 use Civi\Funding\Form\JsonFormsFormInterface;
 use Civi\RemoteTools\JsonForms\Control\JsonFormsArray;
-use Civi\RemoteTools\JsonForms\Control\JsonFormsHidden;
 use Civi\RemoteTools\JsonForms\Control\JsonFormsValue;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
 use Civi\RemoteTools\JsonForms\JsonFormsMarkup;
@@ -115,8 +114,7 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
 
     $jsonSchema = new JsonSchemaObject([
       $this->getPropertyKeyword() => new JsonSchemaObject(
-        $this->properties,
-        ['required' => array_map(fn ($key) => (string) $key, array_keys($this->properties))]
+        $this->properties
       ),
     ], ['required' => [$this->getPropertyKeyword()]]);
     $uiSchema = new JsonFormsGroup($this->getTitle(), $this->formElements);
@@ -142,21 +140,25 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
         $this->properties[$item->getId()] = new JsonSchemaObject([
           'amountRecordedTotal' => new JsonSchemaCalculate(
             'number',
-            'round(sum(map(honorare, "value.amount")), 2)',
-            ['honorare' => new JsonSchemaDataPointer('1/records')]
+            'round(sum(map(records, "value.amount")), 2)',
+            ['records' => new JsonSchemaDataPointer('1/records')],
+            NULL,
+            ['default' => 0]
           ),
           'amountAdmittedTotal' => new JsonSchemaCalculate(
             'number',
-            'round(sum(map(honorare, "value.amountAdmitted")), 2)',
-            ['honorare' => new JsonSchemaDataPointer('1/records')]
+            'round(sum(map(records, "value.amountAdmitted")), 2)',
+            ['records' => new JsonSchemaDataPointer('1/records')],
+            NULL,
+            ['default' => 0]
           ),
           'records' => new JsonSchemaArray(
             new JsonSchemaObject([
               '_id' => new JsonSchemaInteger(['readOnly' => TRUE, 'default' => NULL], TRUE),
-              'file' => new JsonSchemaString(['format' => 'uri']),
+              'file' => new JsonSchemaString(['format' => 'uri'], TRUE),
               'description' => new JsonSchemaString(),
               'amount' => new JsonSchemaMoney(),
-              'amountAdmitted' => new JsonSchemaMoney(['readOnly' => TRUE, 'default' => 0]),
+              'amountAdmitted' => new JsonSchemaMoney(['readOnly' => TRUE], TRUE),
             ], ['required' => ['_id', 'description', 'amount']])
           ),
         ], ['required' => ['records']]);

@@ -1,0 +1,20 @@
+<div id="funding-overlay"></div>
+<div id ="bootstrap-theme">
+    <h1 crm-page-title>{{:: ts('Clearing') }}</h1>
+
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" ng-class="{active: tab === 'clearing'}">
+            <a role="tab" ng-click="tab='clearing'">{{ ts('Clearing') }}</a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane" ng-class="{active: tab === 'clearing'}">
+            <funding-clearing-editor ng-show="tab === 'clearing'"
+                                        clearing-process="clearingProcess"
+                                        form="form"
+                                        status-options="statusOptions"
+                                        review-status-labels="reviewStatusLabels"></funding-clearing-editor>
+        </div>
+    </div>
+</div>

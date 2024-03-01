@@ -19,14 +19,14 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\DependencyInjection\Compiler;
 
-use Civi\Funding\ClearingProcess\ReportFormFactory;
-use Civi\Funding\ClearingProcess\ReportFormFactoryInterface;
+use Civi\Funding\ClearingProcess\Form\Validation\ClearingFormValidatorCollector;
+use Civi\Funding\ClearingProcess\Form\Validation\ClearingFormValidatorInterface;
 use Civi\Funding\DependencyInjection\Compiler\Traits\TaggedFundingCaseTypeServicesTrait;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-final class ReportFormFactoryPass implements CompilerPassInterface {
+final class ClearingFormValidatorPass implements CompilerPassInterface {
 
   use TaggedFundingCaseTypeServicesTrait;
 
@@ -34,8 +34,8 @@ final class ReportFormFactoryPass implements CompilerPassInterface {
    * @inheritDoc
    */
   public function process(ContainerBuilder $container): void {
-    $services = $this->getTaggedFundingCaseTypeServices($container, ReportFormFactoryInterface::SERVICE_TAG);
-    $container->register(ReportFormFactoryInterface::class, ReportFormFactory::class)
+    $services = $this->getTaggedFundingCaseTypeServices($container, ClearingFormValidatorInterface::SERVICE_TAG);
+    $container->register(ClearingFormValidatorInterface::class, ClearingFormValidatorCollector::class)
       ->addArgument(ServiceLocatorTagPass::register($container, $services));
   }
 

@@ -52,9 +52,9 @@ final class ClearingFormDataGetHandler implements ClearingFormDataGetHandlerInte
     $clearingProcessId = $command->getClearingProcess()->getId();
 
     $data = [
+      'reportData' => $command->getClearingProcess()->getReportData(),
       'costItems' => [],
       'resourcesItems' => [],
-      'reportData' => $command->getClearingProcess()->getReportData(),
     ];
 
     foreach ($this->clearingCostItemManager->getByClearingProcessId($clearingProcessId) as $clearingItem) {
@@ -63,6 +63,7 @@ final class ClearingFormDataGetHandler implements ClearingFormDataGetHandlerInte
         'amount' => $clearingItem->getAmount(),
         'file' => $this->getExternalFileUri($clearingItem),
         'description' => $clearingItem->getDescription(),
+        'amountAdmitted' => $clearingItem->getAmountAdmitted(),
       ];
     }
 
@@ -72,17 +73,23 @@ final class ClearingFormDataGetHandler implements ClearingFormDataGetHandlerInte
         'amount' => $clearingItem->getAmount(),
         'file' => $this->getExternalFileUri($clearingItem),
         'description' => $clearingItem->getDescription(),
+        'amountAdmitted' => $clearingItem->getAmountAdmitted(),
       ];
     }
 
     // Perform calculations.
     $result = $this->validateHandler->handle(
-      new ClearingFormValidateCommand($command->getClearingProcessBundle(), $data)
+      new ClearingFormValidateCommand($command->getClearingProcessBundle(), $data, 10)
     );
 
     return $result->getData();
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   *
+   * @phpstan-ignore-next-line Generic of $clearingItem not specified.
+   */
   private function getExternalFileUri(AbstractClearingItemEntity $clearingItem): ?string {
     $externalFile = $this->externalFileManager->getFile($clearingItem);
 

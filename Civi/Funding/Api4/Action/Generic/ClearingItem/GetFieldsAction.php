@@ -43,7 +43,9 @@ final class GetFieldsAction extends DAOGetFieldsAction {
         'type' => 'Extra',
         'data_type' => 'String',
         'readonly' => TRUE,
-        'sql_renderer' => new AliasSqlRenderer('clearing_process_id.funding_case_id.funding_program_id.currency'),
+        'sql_renderer' => new AliasSqlRenderer(
+          'clearing_process_id.application_process_id.funding_case_id.funding_program_id.currency'
+        ),
       ],
       [
         'name' => 'CAN_review',

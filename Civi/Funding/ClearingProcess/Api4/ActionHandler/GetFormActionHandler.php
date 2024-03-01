@@ -63,6 +63,7 @@ final class GetFormActionHandler implements ActionHandlerInterface {
 
     $form = $this->jsonSchemaGetHandler->handle(new ClearingFormGetCommand($clearingProcessBundle));
     $data = $this->formDataGetHandler->handle(new ClearingFormDataGetCommand($clearingProcessBundle));
+    $data = array_map(fn ($value) => [] === $value ? new \stdClass() : $value, $data);
 
     return [
       'jsonSchema' => $form->getJsonSchema()->toArray(),

@@ -20,12 +20,13 @@ declare(strict_types = 1);
 namespace Civi\Funding\ClearingProcess\Handler;
 
 use Civi\Funding\ClearingProcess\Command\ClearingFormValidateCommand;
+use Civi\Funding\ClearingProcess\Form\Validation\ClearingFormValidationResult;
 use Civi\RemoteTools\JsonSchema\Validation\ValidationResult;
 
 interface ClearingFormValidateHandlerInterface {
 
   public const SERVICE_TAG = 'clearing.form_validate_handler';
 
-  public function handle(ClearingFormValidateCommand $command): ValidationResult;
+  public function handle(ClearingFormValidateCommand $command): ClearingFormValidationResult;
 
 }

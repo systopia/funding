@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\Funding\Api4\Action\FundingClearingProcess\GetAction;
+use Civi\Funding\Api4\Action\FundingClearingProcess\GetFieldsAction;
 use Civi\Funding\Api4\Action\FundingClearingProcess\GetFormAction;
 use Civi\Funding\Api4\Action\FundingClearingProcess\SubmitFormAction;
 use Civi\Funding\Api4\Action\FundingClearingProcess\ValidateFormAction;
@@ -18,10 +19,16 @@ use Civi\Funding\Api4\Traits\AccessROPermissionsTrait;
  */
 final class FundingClearingProcess extends Generic\DAOEntity {
 
-  use AccessROPermissionsTrait;
+  use AccessROPermissionsTrait {
+    permissions as traitPermissions;
+  }
 
   public static function get($checkPermissions = TRUE) {
     return \Civi::service(GetAction::class)->setCheckPermissions($checkPermissions);
+  }
+
+  public static function getFields($checkPermissions = TRUE) {
+    return \Civi::service(GetFieldsAction::class)->setCheckPermissions($checkPermissions);
   }
 
   public static function getForm(): GetFormAction {
@@ -34,6 +41,19 @@ final class FundingClearingProcess extends Generic\DAOEntity {
 
   public static function submitForm(): SubmitFormAction {
     return new SubmitFormAction();
+  }
+
+  /**
+   * @phpstan-return array<string, array<string|array<string>>>
+   */
+  public static function permissions(): array {
+    $permissions = static::traitPermissions();
+
+    return $permissions + [
+      'getForm' => $permissions['get'],
+      'validateForm' => $permissions['get'],
+      'submitForm' => $permissions['get'],
+    ];
   }
 
 }

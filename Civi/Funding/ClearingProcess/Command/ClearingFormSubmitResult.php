@@ -22,14 +22,14 @@ namespace Civi\Funding\ClearingProcess\Command;
 final class ClearingFormSubmitResult {
 
   /**
+   * @phpstan-var array<string, non-empty-list<string>>
+   */
+  private array $errorMessages;
+
+  /**
    * @phpstan-var array<string, mixed>
    */
   private array $data;
-
-  /**
-   * @phpstan-var array<string, non-empty-list<string>>
-   */
-  private array $errors;
 
   /**
    * @phpstan-var array<string, string>
@@ -37,13 +37,13 @@ final class ClearingFormSubmitResult {
   private array $files;
 
   /**
+   * @phpstan-param array<string, non-empty-list<string>> $errorMessages
    * @phpstan-param array<string, mixed> $data
-   * @phpstan-param array<string, non-empty-list<string>> $errors
    * @phpstan-param array<string, string> $files
    */
-  public function __construct(array $data, array $errors, array $files) {
+  public function __construct(array $errorMessages, array $data, array $files) {
+    $this->errorMessages = $errorMessages;
     $this->data = $data;
-    $this->errors = $errors;
     $this->files = $files;
   }
 
@@ -57,8 +57,8 @@ final class ClearingFormSubmitResult {
   /**
    * @phpstan-return array<string, non-empty-list<string>>
    */
-  public function getErrors(): array {
-    return $this->errors;
+  public function getErrorMessages(): array {
+    return $this->errorMessages;
   }
 
   /**

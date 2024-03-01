@@ -21,8 +21,8 @@ namespace Civi\Funding\ClearingProcess;
 
 use Civi\Api4\FundingClearingProcess;
 use Civi\Core\CiviEventDispatcherInterface;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\ClearingProcessEntity;
-use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessCreatedEvent;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessPreCreateEvent;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessPreUpdateEvent;
@@ -45,44 +45,32 @@ final class ClearingProcessManager {
   /**
    * @throws \CRM_Core_Exception
    */
-  public function create(FundingCaseEntity $fundingCase): ClearingProcessEntity {
+  public function create(ApplicationProcessEntityBundle $applicationProcessBundle): ClearingProcessEntity {
     /** @var string $now */
     $now = date('Y-m-d H:i:s');
     $clearingProcess = ClearingProcessEntity::fromArray([
-      'funding_case_id' => $fundingCase->getId(),
+      'application_process_id' => $applicationProcessBundle->getApplicationProcess()->getId(),
       'status' => 'draft',
       'creation_date' => $now,
       'modification_date' => $now,
       'report_data' => [],
+      'is_review_content' => NULL,
+      'reviewer_cont_contact_id' => NULL,
+      'is_review_calculative' => NULL,
+      'reviewer_calc_contact_id' => NULL,
     ]);
 
-    $event = new ClearingProcessPreCreateEvent($clearingProcess, $fundingCase);
+    $event = new ClearingProcessPreCreateEvent($clearingProcess, $applicationProcessBundle);
     $this->eventDispatcher->dispatch(ClearingProcessPreCreateEvent::class, $event);
 
     $result = $this->api4->createEntity(FundingClearingProcess::getEntityName(), $clearingProcess->toArray());
     $clearingProcess = ClearingProcessEntity::singleFromApiResult($result)
       ->reformatDates();
 
-    $event = new ClearingProcessCreatedEvent($clearingProcess, $fundingCase);
+    $event = new ClearingProcessCreatedEvent($clearingProcess, $applicationProcessBundle);
     $this->eventDispatcher->dispatch(ClearingProcessCreatedEvent::class, $event);
 
     return $clearingProcess;
-  }
-
-  /**
-   * @phpstan-return array<int, ClearingProcessEntity>
-   *   Indexed by id.
-   *
-   * @throws \CRM_Core_Exception
-   */
-  public function getByFundingCaseId(int $fundingCaseId): array {
-    // @phpstan-ignore-next-line
-    return ClearingProcessEntity::allFromApiResult(
-      $this->api4->getEntities(
-        FundingClearingProcess::getEntityName(),
-        Comparison::new('funding_case_id', '=', $fundingCaseId)
-      )->indexBy('id')
-    );
   }
 
   /**
@@ -95,18 +83,13 @@ final class ClearingProcessManager {
     return NULL === $values ? NULL : ClearingProcessEntity::fromArray($values);
   }
 
-  /**
-   * @throws \CRM_Core_Exception
-   */
-  public function getFirstByFundingCaseId(int $fundingCaseId): ?ClearingProcessEntity {
-    $result = $this->api4->getEntities(
-      FundingClearingProcess::getEntityName(),
-      Comparison::new('funding_case_id', '=', $fundingCaseId),
-      ['id' => 'ASC'],
-      1
+  public function getByApplicationProcessId(int $applicationProcessId): ?ClearingProcessEntity {
+    return ClearingProcessEntity::singleOrNullFromApiResult(
+      $this->api4->getEntities(
+        FundingClearingProcess::getEntityName(),
+        Comparison::new('application_process_id', '=', $applicationProcessId)
+      )
     );
-
-    return ClearingProcessEntity::singleOrNullFromApiResult($result);
   }
 
   /**

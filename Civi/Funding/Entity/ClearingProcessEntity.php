@@ -22,11 +22,15 @@ namespace Civi\Funding\Entity;
 /**
  * @phpstan-type clearingProcessT array{
  *   id?: int,
- *   funding_case_id: int,
+ *   application_process_id: int,
  *   status: string,
  *   creation_date: string,
  *   modification_date: string,
  *   report_data: array<string, mixed>,
+ *   is_review_content: bool|null,
+ *   reviewer_cont_contact_id: int|null,
+ *   is_review_calculative: bool|null,
+ *   reviewer_calc_contact_id: int|null,
  * }
  *
  * @phpstan-extends AbstractEntity<clearingProcessT>
@@ -35,8 +39,8 @@ namespace Civi\Funding\Entity;
  */
 final class ClearingProcessEntity extends AbstractEntity {
 
-  public function getFundingCaseId(): int {
-    return $this->values['funding_case_id'];
+  public function getApplicationProcessId(): int {
+    return $this->values['application_process_id'];
   }
 
   public function getStatus(): string {
@@ -75,6 +79,62 @@ final class ClearingProcessEntity extends AbstractEntity {
    */
   public function setReportData(array $reportData): self {
     $this->values['report_data'] = $reportData;
+
+    return $this;
+  }
+
+  public function getIsReviewContent(): ?bool {
+    return $this->values['is_review_content'];
+  }
+
+  public function setIsReviewContent(?bool $isReviewContent): self {
+    $this->values['is_review_content'] = $isReviewContent;
+
+    return $this;
+  }
+
+  public function getReviewerContentContactId(): ?int {
+    return $this->values['reviewer_cont_contact_id'];
+  }
+
+  public function setReviewerContentContactId(?int $reviewerContentContactId): self {
+    $this->values['reviewer_cont_contact_id'] = $reviewerContentContactId;
+
+    return $this;
+  }
+
+  public function getIsReviewCalculative(): ?bool {
+    return $this->values['is_review_calculative'];
+  }
+
+  public function setIsReviewCalculative(?bool $isReviewCalculative): self {
+    $this->values['is_review_calculative'] = $isReviewCalculative;
+
+    return $this;
+  }
+
+  public function getReviewerCalculativeContactId(): ?int {
+    return $this->values['reviewer_calc_contact_id'];
+  }
+
+  public function setReviewerCalculativeContactId(?int $reviewerCalculativeContactId): self {
+    $this->values['reviewer_calc_contact_id'] = $reviewerCalculativeContactId;
+
+    return $this;
+  }
+
+  public function getFullStatus(): FullClearingProcessStatus {
+    return new FullClearingProcessStatus(
+      $this->getStatus(),
+      $this->getIsReviewCalculative(),
+      $this->getIsReviewContent()
+    );
+  }
+
+  public function setFullStatus(FullClearingProcessStatus $fullStatus): self {
+    $this->setStatus($fullStatus->getStatus());
+    $this->setIsReviewCalculative($fullStatus->getIsReviewCalculative());
+    $this->setIsReviewContent($fullStatus->getIsReviewContent());
 
     return $this;
   }

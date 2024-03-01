@@ -29,10 +29,10 @@ final class ClearingProcessFixture {
    *
    * @throws \CRM_Core_Exception
    */
-  public static function addFixture(int $fundingCaseId, array $values = []): ClearingProcessEntity {
+  public static function addFixture(int $applicationProcessId, array $values = []): ClearingProcessEntity {
     $result = FundingClearingProcess::create(FALSE)
       ->setValues($values + [
-        'funding_case_id' => $fundingCaseId,
+        'application_process_id' => $applicationProcessId,
         'status' => 'new',
         'creation_date' => date('Y-m-d H:i:s'),
         'modification_date' => date('Y-m-d H:i:s'),

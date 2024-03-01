@@ -17,13 +17,14 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\ClearingProcess;
+namespace Civi\Funding\ClearingProcess\Form;
 
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ApplicationProcess\Clearing\CostItem\ClearingCostItemsJsonFormsGenerator;
 use Civi\Funding\ApplicationProcess\Clearing\ResourcesItem\ClearingResourcesItemsJsonFormsGenerator;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormCreateCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
+use Civi\Funding\ClearingProcess\ClearingActionsDeterminer;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\Form\JsonFormsForm;
 use Civi\Funding\Form\JsonFormsFormInterface;
@@ -38,6 +39,25 @@ use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
 
+/**
+ * @phpstan-type clearingItemRecordT array{
+ *   _id: int|null,
+ *   amount: float,
+ *   file: string|null,
+ *   description: string,
+ * }
+ *
+ * @phpstan-type clearingFormDataT array{
+ *   _action: string,
+ *   costItems?: array<int, array{records: list<clearingItemRecordT>}>,
+ *   resourcesItems?: array<int, array{records: list<clearingItemRecordT>}>,
+ *   reportData?: array<string, mixed>,
+ * }
+ *
+ * This class generates a JSON Forms specification that has a JSON schema that
+ * validates the data specified in clearingFormDataT. (For displaying purposes
+ * costItems and resourcesItems have additional properties.)
+ */
 final class ClearingFormGenerator {
 
   private ClearingActionsDeterminer $actionsDeterminer;
@@ -110,7 +130,7 @@ final class ClearingFormGenerator {
       $elements = [new JsonFormsCategorization($categories)];
 
       $actions = $this->actionsDeterminer->getActions(
-        $clearingProcessBundle->getClearingProcess()->getStatus(),
+        $clearingProcessBundle->getClearingProcess()->getFullStatus(),
         $clearingProcessBundle->getFundingCase()->getPermissions()
       );
 

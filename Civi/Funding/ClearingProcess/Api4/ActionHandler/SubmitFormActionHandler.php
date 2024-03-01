@@ -63,7 +63,7 @@ final class SubmitFormActionHandler implements ActionHandlerInterface {
     return [
       'data' => $result->getData(),
       'files' => $result->getFiles(),
-      'errors' => $result->getErrors(),
+      'errors' => $result->getErrorMessages(),
     ];
   }
 
