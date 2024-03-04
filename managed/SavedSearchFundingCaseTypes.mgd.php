@@ -60,7 +60,7 @@ return [
       'version' => 4,
       'values' => [
         'name' => 'table',
-        'label' => E::ts('table'),
+        'label' => E::ts('Table'),
         'saved_search_id.name' => 'funding_case_types',
         'type' => 'table',
         'settings' => [

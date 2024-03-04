@@ -390,6 +390,16 @@ msgstr "Berechtigung zum Löschen des Antrags fehlt."
 msgid "Funding Application Comment"
 msgstr "Förderantragskommentar"
 
+#: Civi/Funding/ApplicationProcess/JsonSchema/CostItem/CostItemKeywordValidator.php
+#: Civi/Funding/ApplicationProcess/JsonSchema/CostItem/CostItemsKeywordValidator.php
+msgid "Duplicate cost item identifier \"{identifier}\""
+msgstr "Doppelter Kostenpositionsbezeichner \"{identifier}\""
+
+#: Civi/Funding/ApplicationProcess/JsonSchema/ResourcesItem/ResourcesItemKeywordValidator.php
+#: Civi/Funding/ApplicationProcess/JsonSchema/ResourcesItem/ResourcesItemsKeywordValidator.php
+msgid "Duplicate resources item identifier \"{identifier}\""
+msgstr "Doppelter Mittelpositionsbezeichner \"{identifier}\""
+
 #: Civi/Funding/ApplicationProcess/Remote/Api4/ActionHandler/SubmitAddFormActionHandler.php
 #: Civi/Funding/EventSubscriber/Form/SubmitApplicationFormSubscriber.php
 #: Civi/Funding/FundingCase/Remote/Api4/ActionHandler/SubmitNewFormActionHandler.php
@@ -648,6 +658,7 @@ msgid "View"
 msgstr "Ansehen"
 
 #: Civi/Funding/EventSubscriber/Remote/FundingCaseGetFieldsSubscriber.php
+#: managed/SavedSearchFundingCaseTypes.mgd.php
 msgid "Is Combined Application"
 msgstr "Ist Sammelantrag"
 
@@ -1444,6 +1455,11 @@ msgstr "Fördermittel"
 msgid "Add Funding Program"
 msgstr "Förderprogramm hinzufügen"
 
+#: managed/NavigationFunding.mgd.php
+#: managed/SavedSearchFundingCaseTypes.mgd.php
+msgid "Funding Case Types"
+msgstr "Förderfalltypen"
+
 #: managed/OptionValueActivityUsedForApplicationProcess.mgd.php
 msgid "Funding Application"
 msgstr "Förderantrag"
@@ -1468,6 +1484,7 @@ msgstr "Vorlage für Zahlungsanweisung"
 
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
+#: managed/SavedSearchFundingCaseTypes.mgd.php
 #: managed/SavedSearchFundingCases.mgd.php
 #: managed/SavedSearchFundingDrawdowns.mgd.php
 #: managed/SavedSearchFundingProgramControlling.mgd.php
@@ -1478,6 +1495,7 @@ msgstr "Tabelle"
 
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
+#: managed/SavedSearchFundingCaseTypes.mgd.php
 #: managed/SavedSearchFundingProgramControlling.mgd.php
 #: managed/SavedSearchFundingPrograms.mgd.php
 msgid "Title"
@@ -1498,10 +1516,6 @@ msgid "Funding Case Applications"
 msgstr "Förderfallanträge"
 
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
-msgid "List of all applications"
-msgstr "Liste aller Anträge"
-
-#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCases.mgd.php
 msgid "Funding Case Type"
 msgstr "Förderfalltyp"
@@ -1518,6 +1532,15 @@ msgstr "Aktionen"
 #: managed/SavedSearchFundingPrograms.mgd.php
 msgid "Edit permissions"
 msgstr "Berechtigungen bearbeiten"
+
+#: managed/SavedSearchFundingCaseTypes.mgd.php
+#: managed/SavedSearchFundingPrograms.mgd.php
+msgid "Abbreviation"
+msgstr "Abkürzung"
+
+#: managed/SavedSearchFundingCaseTypes.mgd.php
+msgid "Manage external application templates"
+msgstr "Externe Antragsvorlagen verwalten"
 
 #: managed/SavedSearchFundingCases.mgd.php
 msgid "Open case"
@@ -1552,10 +1575,6 @@ msgstr "Budget"
 #: managed/SavedSearchFundingPrograms.mgd.php
 msgid "End Date"
 msgstr "Enddatum"
-
-#: managed/SavedSearchFundingPrograms.mgd.php
-msgid "Abbreviation"
-msgstr "Abkürzung"
 
 #: managed/SavedSearchFundingPrograms.mgd.php
 msgid "Identifier Prefix"

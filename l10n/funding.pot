@@ -250,6 +250,14 @@ msgstr ""
 msgid "Funding Application Comment"
 msgstr ""
 
+#: Civi/Funding/ApplicationProcess/JsonSchema/CostItem/CostItemKeywordValidator.php Civi/Funding/ApplicationProcess/JsonSchema/CostItem/CostItemsKeywordValidator.php
+msgid "Duplicate cost item identifier \"{identifier}\""
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/JsonSchema/ResourcesItem/ResourcesItemKeywordValidator.php Civi/Funding/ApplicationProcess/JsonSchema/ResourcesItem/ResourcesItemsKeywordValidator.php
+msgid "Duplicate resources item identifier \"{identifier}\""
+msgstr ""
+
 #: Civi/Funding/ApplicationProcess/Remote/Api4/ActionHandler/SubmitAddFormActionHandler.php Civi/Funding/EventSubscriber/Form/SubmitApplicationFormSubscriber.php Civi/Funding/FundingCase/Remote/Api4/ActionHandler/SubmitNewFormActionHandler.php Civi/Funding/FundingCase/Remote/Api4/ActionHandler/SubmitUpdateFormActionHandler.php ang/crmFunding/application/applicationEditor.directive.js ang/crmFunding/case/fundingCase.js ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html ang/crmFundingIJB/ijbApplicationEditor.template.html ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 msgid "Validation failed"
 msgstr ""
@@ -462,7 +470,7 @@ msgstr ""
 msgid "View"
 msgstr ""
 
-#: Civi/Funding/EventSubscriber/Remote/FundingCaseGetFieldsSubscriber.php
+#: Civi/Funding/EventSubscriber/Remote/FundingCaseGetFieldsSubscriber.php managed/SavedSearchFundingCaseTypes.mgd.php
 msgid "Is Combined Application"
 msgstr ""
 
@@ -1110,6 +1118,10 @@ msgstr ""
 msgid "Add Funding Program"
 msgstr ""
 
+#: managed/NavigationFunding.mgd.php managed/SavedSearchFundingCaseTypes.mgd.php
+msgid "Funding Case Types"
+msgstr ""
+
 #: managed/OptionValueActivityUsedForApplicationProcess.mgd.php
 msgid "Funding Application"
 msgstr ""
@@ -1130,11 +1142,11 @@ msgstr ""
 msgid "Payment Instruction Template"
 msgstr ""
 
-#: managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingDrawdowns.mgd.php managed/SavedSearchFundingProgramControlling.mgd.php managed/SavedSearchFundingPrograms.mgd.php managed/SavedSearchFundingTasksMy.mgd.php
+#: managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCaseTypes.mgd.php managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingDrawdowns.mgd.php managed/SavedSearchFundingProgramControlling.mgd.php managed/SavedSearchFundingPrograms.mgd.php managed/SavedSearchFundingTasksMy.mgd.php
 msgid "Table"
 msgstr ""
 
-#: managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingProgramControlling.mgd.php managed/SavedSearchFundingPrograms.mgd.php
+#: managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCaseTypes.mgd.php managed/SavedSearchFundingProgramControlling.mgd.php managed/SavedSearchFundingPrograms.mgd.php
 msgid "Title"
 msgstr ""
 
@@ -1150,10 +1162,6 @@ msgstr ""
 msgid "Funding Case Applications"
 msgstr ""
 
-#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
-msgid "List of all applications"
-msgstr ""
-
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCases.mgd.php
 msgid "Funding Case Type"
 msgstr ""
@@ -1164,6 +1172,14 @@ msgstr ""
 
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingPrograms.mgd.php
 msgid "Edit permissions"
+msgstr ""
+
+#: managed/SavedSearchFundingCaseTypes.mgd.php managed/SavedSearchFundingPrograms.mgd.php
+msgid "Abbreviation"
+msgstr ""
+
+#: managed/SavedSearchFundingCaseTypes.mgd.php
+msgid "Manage external application templates"
 msgstr ""
 
 #: managed/SavedSearchFundingCases.mgd.php
@@ -1196,10 +1212,6 @@ msgstr ""
 
 #: managed/SavedSearchFundingProgramControlling.mgd.php managed/SavedSearchFundingPrograms.mgd.php
 msgid "End Date"
-msgstr ""
-
-#: managed/SavedSearchFundingPrograms.mgd.php
-msgid "Abbreviation"
 msgstr ""
 
 #: managed/SavedSearchFundingPrograms.mgd.php
