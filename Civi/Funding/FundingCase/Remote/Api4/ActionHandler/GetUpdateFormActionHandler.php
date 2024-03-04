@@ -54,8 +54,8 @@ final class GetUpdateFormActionHandler implements ActionHandlerInterface {
 
   /**
    * @phpstan-return array{
-   *   jsonSchema: array<string, mixed>,
-   *   uiSchema: array<string, mixed>,
+   *   jsonSchema: array<int|string, mixed>,
+   *   uiSchema: array<int|string, mixed>,
    *   data: array<string, mixed>,
    * }
    *
