@@ -28,6 +28,7 @@ DROP TABLE IF EXISTS `civicrm_funding_case_type_program`;
 DROP TABLE IF EXISTS `civicrm_funding_case_permissions_cache`;
 DROP TABLE IF EXISTS `civicrm_funding_case_contact_relation`;
 DROP TABLE IF EXISTS `civicrm_funding_case`;
+DROP TABLE IF EXISTS `civicrm_funding_application_civioffice_template`;
 DROP TABLE IF EXISTS `civicrm_funding_recipient_contact_relation`;
 DROP TABLE IF EXISTS `civicrm_funding_program_relationship`;
 DROP TABLE IF EXISTS `civicrm_funding_program_contact_relation`;
@@ -132,6 +133,24 @@ CREATE TABLE `civicrm_funding_recipient_contact_relation` (
   `properties` text NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT FK_civicrm_funding_recipient_contact_relation_funding_program_id FOREIGN KEY (`funding_program_id`) REFERENCES `civicrm_funding_program`(`id`) ON DELETE CASCADE
+)
+ENGINE=InnoDB;
+
+-- /*******************************************************
+-- *
+-- * civicrm_funding_application_civioffice_template
+-- *
+-- * Templates for use in application portal
+-- *
+-- *******************************************************/
+CREATE TABLE `civicrm_funding_application_civioffice_template` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique FundingApplicationCiviOfficeTemplate ID',
+  `case_type_id` int unsigned NOT NULL COMMENT 'FK to FundingCaseType',
+  `document_uri` varchar(255) NOT NULL COMMENT 'CiviOffice document URI',
+  `label` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `UI_case_type_id_label`(case_type_id, label),
+  CONSTRAINT FK_civicrm_funding_application_civioffice_template_case_type_id FOREIGN KEY (`case_type_id`) REFERENCES `civicrm_funding_case_type`(`id`) ON DELETE CASCADE
 )
 ENGINE=InnoDB;
 

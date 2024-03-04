@@ -1,0 +1,16 @@
+<p>Application templates available for applicants.</p>
+
+<div af-fieldset="">
+  <af-field name="case_type_id" defn="{input_type: 'Hidden', required: true, input_attrs: {}, label: false}" />
+  <crm-search-display-table search-name="Application_CiviOffice_Templates" display-name="Table"></crm-search-display-table>
+</div>
+
+<af-form ctrl="afform" funding-af-submit-reload>
+  <af-entity type="FundingApplicationCiviOfficeTemplate" name="template" label="template" actions="{create: true, update: false}" security="RBAC" />
+  <fieldset af-fieldset="template" class="af-container af-layout-cols">
+    <af-field style="display: none;" name="case_type_id" defn="{input_type: 'Hidden', input_attrs: {}, label: false, required: true}" />
+    <af-field name="document_uri" defn="{label: 'Document'}"/>
+    <af-field name="label" />
+  </fieldset>
+  <button class="btn btn-primary btn-sm" crm-icon="fa-check" ng-click="afform.submit()" ng-if="afform.showSubmitButton">Add</button>
+</af-form>

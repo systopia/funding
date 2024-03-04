@@ -1,6 +1,12 @@
 <?xml version="1.0"?>
 <menu>
   <item>
+    <path>civicrm/funding/remote/application/render</path>
+    <page_callback>CRM_Funding_Page_RemoteApplicationTemplateRender</page_callback>
+    <title>RemoteApplicationTemplateRender</title>
+    <access_arguments>access Remote Funding</access_arguments>
+  </item>
+  <item>
     <path>civicrm/funding/transfer-contract/download</path>
     <page_callback>CRM_Funding_Page_TransferContractDownload</page_callback>
     <title>TransferContractDownload</title>

@@ -196,4 +196,29 @@ return [
       ],
     ],
   ],
+  [
+    'name' => 'Navigation_Funding.FundingCaseTypes',
+    'entity' => 'Navigation',
+    'cleanup' => 'always',
+    'update' => 'unmodified',
+    'params' => [
+      'version' => 4,
+      'values' => [
+        'domain_id' => 'current_domain',
+        'label' => E::ts('Funding Case Types'),
+        'name' => 'afsearchFundingCaseTypes',
+        'url' => 'civicrm/funding/case-type/list',
+        'icon' => 'crm-i fa-list-alt',
+        'permission' => [
+          'administer Funding',
+          'access Funding',
+        ],
+        'permission_operator' => 'OR',
+        'parent_id.name' => 'funding',
+        'is_active' => TRUE,
+        'has_separator' => 0,
+        'weight' => ++$weight,
+      ],
+    ],
+  ],
 ];

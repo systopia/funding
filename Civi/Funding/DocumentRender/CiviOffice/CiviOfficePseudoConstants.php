@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2023 SYSTOPIA GmbH
+ * Copyright (C) 2024 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -19,27 +19,26 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\DocumentRender\CiviOffice;
 
-use Civi\Funding\DocumentRender\DocumentRendererInterface;
+use Civi\Api4\CiviofficeDocument;
 
-class CiviOfficeDocumentRenderer implements DocumentRendererInterface {
+final class CiviOfficePseudoConstants {
 
-  private CiviOfficeRenderer $renderer;
+  /**
+   * @phpstan-return array<string, string>
+   *   Document URIs mapped to document names.
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public static function getSharedDocumentUris(): array {
+    static $documents;
 
-  public function __construct(CiviOfficeRenderer $renderer) {
-    $this->renderer = $renderer;
-  }
-
-  public function getMimeType(): string {
-    return $this->renderer->getMimeType();
-  }
-
-  public function render(
-    string $templateFile,
-    string $entityName,
-    int $entityId,
-    array $data = []
-  ): string {
-    return $this->renderer->render('file://' . $templateFile, $entityName, $entityId, $data);
+    return $documents ??= CiviofficeDocument::get(FALSE)
+      ->addSelect('name', 'uri')
+      // Exclude contact-specific templates.
+      ->addWhere('document_store_uri', 'NOT REGEXP', '^upload::.+[0-9]+$')
+      ->execute()
+      ->indexBy('uri')
+      ->column('name');
   }
 
 }
