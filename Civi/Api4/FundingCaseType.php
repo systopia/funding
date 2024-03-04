@@ -20,7 +20,11 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\Api4\Generic\Traits\ManagedEntity;
+use Civi\Funding\Api4\Action\FundingCaseType\GetAction;
 use Civi\Funding\Api4\Action\FundingCaseType\GetByFundingProgramIdAction;
+use Civi\Funding\Api4\Action\FundingCaseType\GetFieldsAction;
+use Civi\Funding\Api4\Action\FundingCaseType\SaveAction;
+use Civi\Funding\Api4\Action\FundingCaseType\UpdateAction;
 use Civi\Funding\Api4\Traits\AccessPermissionsTrait;
 
 /**
@@ -36,8 +40,24 @@ class FundingCaseType extends Generic\DAOEntity {
 
   use ManagedEntity;
 
+  public static function get($checkPermissions = TRUE) {
+    return \Civi::service(GetAction::class)->setCheckPermissions($checkPermissions);
+  }
+
   public static function getByFundingProgramId(bool $checkPermissions = TRUE): GetByFundingProgramIdAction {
     return \Civi::service(GetByFundingProgramIdAction::class)->setCheckPermissions($checkPermissions);
+  }
+
+  public static function getFields($checkPermissions = TRUE) {
+    return (new GetFieldsAction())->setCheckPermissions($checkPermissions);
+  }
+
+  public static function save($checkPermissions = TRUE) {
+    return (new SaveAction())->setCheckPermissions($checkPermissions);
+  }
+
+  public static function update($checkPermissions = TRUE) {
+    return \Civi::service(UpdateAction::class)->setCheckPermissions($checkPermissions);
   }
 
 }

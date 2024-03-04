@@ -131,6 +131,14 @@ final class FundingAttachmentManager implements FundingAttachmentManagerInterfac
     ]);
   }
 
+  public function deleteById(int $id, string $entityTable, int $entityId): void {
+    $this->api3->execute('Attachment', 'delete', [
+      'id' => $id,
+      'entity_table' => $entityTable,
+      'entity_id' => $entityId,
+    ]);
+  }
+
   public function get(int $id, string $entityTable, int $entityId): ?AttachmentEntity {
     /** @phpstan-var array{count: int, values: array<int, array<string, mixed>>} $result */
     $result = $this->api3->execute('Attachment', 'get', [
