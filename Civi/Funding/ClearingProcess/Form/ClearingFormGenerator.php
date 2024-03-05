@@ -153,10 +153,15 @@ final class ClearingFormGenerator {
       new JsonSchemaString(['enum' => $actionsEnum]);
     $keywords['required'][] = '_action';
 
-    return new JsonFormsForm(
-      JsonSchema::fromArray($keywords),
-      new JsonFormsGroup(E::ts('Clearing'), $elements)
-    );
+    $uiSchema = new JsonFormsGroup(E::ts('Clearing'), $elements);
+    if ($this->actionsDeterminer->isEditAllowed(
+      $clearingProcessBundle->getClearingProcess()->getFullStatus(),
+      $clearingProcessBundle->getFundingCase()->getPermissions()
+    )) {
+      $uiSchema->setReadonly(TRUE);
+    }
+
+    return new JsonFormsForm(JsonSchema::fromArray($keywords), $uiSchema);
   }
 
 }

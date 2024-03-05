@@ -27,7 +27,6 @@ final class ClearingActionsDeterminer {
 
   use HasReviewPermissionTrait;
 
-  // phpcs:disable Generic.Files.LineLength.TooLong
   private const STATUS_PERMISSION_ACTIONS_MAP = [
     'draft' => [
       ClearingProcessPermissions::CLEARING_APPLY => ['apply', 'save'],
@@ -60,7 +59,6 @@ final class ClearingActionsDeterminer {
       ClearingProcessPermissions::REVIEW_CONTENT => ['request-change', 'review'],
     ],
   ];
-  // phpcs:enable
 
   /**
    * @phpstan-var array<string, string>
@@ -86,7 +84,7 @@ final class ClearingActionsDeterminer {
   }
 
   /**
-   * @phpstan-param array<string> $permissions
+   * @phpstan-param list<string> $permissions
    *
    * @phpstan-return array<string, string>
    *   Mapping of action name to label.
@@ -108,10 +106,29 @@ final class ClearingActionsDeterminer {
   }
 
   /**
-   * @phpstan-param array<string> $permissions
+   * @phpstan-param list<string> $permissions
    */
   public function isActionAllowed(string $action, FullClearingProcessStatus $fullStatus, array $permissions): bool {
     return isset($this->getActions($fullStatus, $permissions)[$action]);
+  }
+
+  /**
+   * @phpstan-param list<string> $actions
+   * @phpstan-param list<string> $permissions
+   */
+  public function isAnyActionAllowed(
+    array $actions,
+    FullClearingProcessStatus $status,
+    array $permissions
+  ): bool {
+    return [] !== array_intersect($this->getActions($status, $permissions), $actions);
+  }
+
+  /**
+   * @phpstan-param list<string> $permissions
+   */
+  public function isEditAllowed(FullClearingProcessStatus $status, array $permissions): bool {
+    return $this->isAnyActionAllowed(['save', 'apply', 'update'], $status, $permissions);
   }
 
   /**
