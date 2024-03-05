@@ -59,7 +59,7 @@ final class ClearingResourcesItemManagerTest extends TestCase {
     $item = ClearingResourcesItemFactory::create(['id' => 22]);
     $this->api4Mock->method('getEntities')->with(
       FundingClearingResourcesItem::getEntityName(),
-      Comparison::new('application_resources_item_id.application_process_id', '=', 12)
+      Comparison::new('app_resources_item_id.application_process_id', '=', 12)
     )->willReturn(new Result([$item->toArray()]));
 
     static::assertEquals([22 => $item], $this->itemManager->getByApplicationProcessId(12));
@@ -68,11 +68,11 @@ final class ClearingResourcesItemManagerTest extends TestCase {
   public function testGetByResourcesItemId(): void {
     $item = ClearingResourcesItemFactory::create([
       'id' => 22,
-      'application_resources_item_id' => 33,
+      'app_resources_item_id' => 33,
     ]);
     $this->api4Mock->method('getEntities')->with(
       FundingClearingResourcesItem::getEntityName(),
-      Comparison::new('application_resources_item_id', '=', 33)
+      Comparison::new('app_resources_item_id', '=', 33)
     )->willReturn(new Result([$item->toArray()]));
 
     static::assertEquals([22 => $item], $this->itemManager->getByResourcesItemId(33));

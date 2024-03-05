@@ -26,6 +26,16 @@ use Civi\Funding\ClearingProcess\Handler\ClearingFormSubmitHandlerInterface;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Webmozart\Assert\Assert;
 
+/**
+ * @phpstan-type submitResultT array{
+ *   data: array<string, mixed>,
+ *   files: non-empty-array<string, string>|\stdClass,
+ *   errors: non-empty-array<string, non-empty-list<string>>|\stdClass,
+ * }
+ * 'data' contains the persisted data, or the data after validation if the
+ * validation failed. 'errors' contains JSON pointers mapped to error
+ * messages if the validation failed.
+ */
 final class SubmitFormActionHandler implements ActionHandlerInterface {
 
   public const ENTITY_NAME = 'FundingClearingProcess';
@@ -43,14 +53,7 @@ final class SubmitFormActionHandler implements ActionHandlerInterface {
   }
 
   /**
-   * @phpstan-return array{
-   *   data: array<string, mixed>,
-   *   files: array<string, string>,
-   *   errors: array<string, non-empty-list<string>>,
-   * }
-   * 'data' contains the persisted data, or the data after validation if the
-   * validation failed. 'errors' contains JSON pointers mapped to error
-   * messages if the validation failed.
+   * @phpstan-return submitResultT
    *
    * @throws \CRM_Core_Exception
    */
@@ -62,8 +65,8 @@ final class SubmitFormActionHandler implements ActionHandlerInterface {
 
     return [
       'data' => $result->getData(),
-      'files' => $result->getFiles(),
-      'errors' => $result->getErrorMessages(),
+      'files' => [] === $result->getFiles() ? new \stdClass() : $result->getFiles(),
+      'errors' => [] === $result->getErrorMessages() ? new \stdClass() : $result->getErrorMessages(),
     ];
   }
 

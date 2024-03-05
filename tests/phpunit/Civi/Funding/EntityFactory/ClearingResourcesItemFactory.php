@@ -25,7 +25,7 @@ use Civi\Funding\Entity\ClearingResourcesItemEntity;
  * @phpstan-type clearingResourcesItemT array{
  *   id?: int,
  *   clearing_process_id?: int,
- *   application_resources_item_id?: int,
+ *   app_resources_item_id?: int,
  *   status?: string,
  *   file_id?: ?int,
  *   amount?: float,
@@ -41,7 +41,7 @@ final class ClearingResourcesItemFactory {
   public static function create(array $values = []): ClearingResourcesItemEntity {
     $values += [
       'clearing_process_id' => ClearingProcessFactory::DEFAULT_ID,
-      'application_resources_item_id' => ApplicationResourcesItemFactory::DEFAULT_ID,
+      'app_resources_item_id' => ApplicationResourcesItemFactory::DEFAULT_ID,
       'status' => 'new',
       'file_id' => NULL,
       'amount' => 1.23,

@@ -33,10 +33,11 @@ final class ApplicationResourcesItemFixture {
     $result = FundingApplicationResourcesItem::create(FALSE)
       ->setValues($values + [
         'application_process_id' => $applicationProcessId,
-        'identifier' => 'test',
-        'type' => 'TestType',
+        'identifier' => 'resources',
+        'type' => 'testResources',
         'amount' => 1.2,
         'properties' => [],
+        'data_pointer' => '/resources',
       ])->execute();
 
     return ApplicationResourcesItemEntity::singleFromApiResult($result);

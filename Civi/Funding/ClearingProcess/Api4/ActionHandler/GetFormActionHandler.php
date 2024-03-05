@@ -28,6 +28,13 @@ use Civi\Funding\ClearingProcess\Handler\ClearingFormGetHandlerInterface;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Webmozart\Assert\Assert;
 
+/**
+ * @phpstan-type formResultT array{
+ *   jsonSchema: array<int|string, mixed>,
+ *   uiSchema: array<int|string, mixed>,
+ *   data: array<string, mixed>,
+ * }
+ */
 final class GetFormActionHandler implements ActionHandlerInterface {
 
   public const ENTITY_NAME = 'FundingClearingProcess';
@@ -36,32 +43,28 @@ final class GetFormActionHandler implements ActionHandlerInterface {
 
   private ClearingFormDataGetHandlerInterface $formDataGetHandler;
 
-  private ClearingFormGetHandlerInterface $jsonSchemaGetHandler;
+  private ClearingFormGetHandlerInterface $formGetHandler;
 
   public function __construct(
     ClearingProcessBundleLoader $clearingProcessBundleLoader,
     ClearingFormDataGetHandlerInterface $formDataGetHandler,
-    ClearingFormGetHandlerInterface $jsonSchemaGetHandler
+    ClearingFormGetHandlerInterface $formGetHandler
   ) {
     $this->clearingProcessBundleLoader = $clearingProcessBundleLoader;
     $this->formDataGetHandler = $formDataGetHandler;
-    $this->jsonSchemaGetHandler = $jsonSchemaGetHandler;
+    $this->formGetHandler = $formGetHandler;
   }
 
   /**
-   * @phpstan-return array{
-   *   jsonSchema: array<int|string, mixed>,
-   *   uiSchema: array<int|string, mixed>,
-   *   data: array<string, mixed>,
-   * }
+   * @phpstan-return formResultT
    *
    * @throws \CRM_Core_Exception
    */
   public function getForm(GetFormAction $action): array {
     $clearingProcessBundle = $this->clearingProcessBundleLoader->get($action->getId());
-    Assert::notNull($clearingProcessBundle, sprintf('Clearing pricess with ID %d not found', $action->getId()));
+    Assert::notNull($clearingProcessBundle, sprintf('Clearing process with ID %d not found', $action->getId()));
 
-    $form = $this->jsonSchemaGetHandler->handle(new ClearingFormGetCommand($clearingProcessBundle));
+    $form = $this->formGetHandler->handle(new ClearingFormGetCommand($clearingProcessBundle));
     $data = $this->formDataGetHandler->handle(new ClearingFormDataGetCommand($clearingProcessBundle));
     $data = array_map(fn ($value) => [] === $value ? new \stdClass() : $value, $data);
 

@@ -26,6 +26,15 @@ use Civi\Funding\ClearingProcess\Handler\ClearingFormValidateHandlerInterface;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Webmozart\Assert\Assert;
 
+/**
+ * @phpstan-type validateResultT array{
+ *   valid: bool,
+ *   data: array<string, mixed>,
+ *   errors: non-empty-array<string, non-empty-list<string>>|\stdClass,
+ * }
+ * 'data' contains the data after validation. 'errors' contains JSON pointers
+ * mapped to error messages.
+ */
 final class ValidateFormActionHandler implements ActionHandlerInterface {
 
   public const ENTITY_NAME = 'FundingClearingProcess';
@@ -43,13 +52,7 @@ final class ValidateFormActionHandler implements ActionHandlerInterface {
   }
 
   /**
-   * @phpstan-return array{
-   *   valid: bool,
-   *   data: array<string, mixed>,
-   *   errors: array<string, non-empty-list<string>>,
-   * }
-   * 'data' contains the data after validation. 'errors' contains JSON pointers
-   * mapped to error messages.
+   * @phpstan-return validateResultT
    *
    * @throws \CRM_Core_Exception
    */
@@ -62,9 +65,9 @@ final class ValidateFormActionHandler implements ActionHandlerInterface {
     );
 
     return [
-      'valid' => FALSE,
+      'valid' => $result->isValid(),
       'data' => $result->getData(),
-      'errors' => $result->getErrorMessages(),
+      'errors' => [] === $result->getErrorMessages() ? new \stdClass() : $result->getErrorMessages(),
     ];
   }
 

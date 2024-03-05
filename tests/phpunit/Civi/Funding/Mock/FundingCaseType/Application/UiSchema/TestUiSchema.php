@@ -31,6 +31,8 @@ final class TestUiSchema extends JsonFormsGroup {
   public function __construct(array $submitButtons = [], array $hiddenFields = []) {
     parent::__construct('Test', [
       new JsonFormsControl('#/properties/title', 'Title'),
+      new JsonFormsControl('#/properties/amountRequested', 'Amount Requested'),
+      new JsonFormsControl('#/properties/resources', 'Resources'),
       ...$submitButtons,
       ...$hiddenFields,
     ]);

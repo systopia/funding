@@ -24,6 +24,9 @@ use Civi\Funding\Api4\Action\Remote\FundingClearingProcess\ValidateFormAction;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Civi\RemoteTools\Api4\Api4Interface;
 
+/**
+ * @phpstan-import-type validateResultT from ValidateFormActionHandler
+ */
 final class RemoteValidateFormActionHandler implements ActionHandlerInterface {
 
   public const ENTITY_NAME = 'RemoteFundingClearingProcess';
@@ -35,13 +38,7 @@ final class RemoteValidateFormActionHandler implements ActionHandlerInterface {
   }
 
   /**
-   * @phpstan-return array{
-   *   valid: bool,
-   *   data: array<string, mixed>,
-   *   errors: non-empty-array<string, non-empty-list<string>>|\stdClass,
-   * }
-   * 'data' contains the data after validation. 'errors' contains JSON pointers
-   * mapped to error messages.
+   * @phpstan-return validateResultT
    *
    * @throws \CRM_Core_Exception
    */

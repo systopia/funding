@@ -26,6 +26,9 @@ use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Civi\RemoteTools\Api4\Api4Interface;
 use CRM_Funding_ExtensionUtil as E;
 
+/**
+ * @phpstan-import-type submitResultT from SubmitFormActionHandler
+ */
 final class RemoteSubmitFormActionHandler implements ActionHandlerInterface {
 
   public const ENTITY_NAME = 'RemoteFundingClearingProcess';
@@ -38,24 +41,29 @@ final class RemoteSubmitFormActionHandler implements ActionHandlerInterface {
 
   /**
    * @phpstan-return array{
-   *   action: RemoteSubmitResponseActions::*,
-   *   message?:  string,
-   *   errors?: non-empty-array<string, non-empty-list<string>>,
+   *   action: RemoteSubmitResponseActions::SHOW_VALIDATION,
+   *   message: string,
+   *   errors: non-empty-array<string, non-empty-list<string>>,
+   * } | array{
+   *   action: RemoteSubmitResponseActions::CLOSE_FORM,
+   *   message: string,
+   *   files: non-empty-array<string, string>|\stdClass,
    * }
    *
    * @throws \CRM_Core_Exception
    */
   public function submitForm(SubmitFormAction $action): array {
+    /** @phpstan-var submitResultT $result */
     $result = $this->api4->execute(FundingClearingProcess::getEntityName(), 'submitForm', [
       'id' => $action->getId(),
       'data' => $action->getData(),
     ]);
 
-    if ([] !== $result['errors']) {
-      // @phpstan-ignore-next-line
+    if (!$result['errors'] instanceof \stdClass) {
       return [
         'action' => RemoteSubmitResponseActions::SHOW_VALIDATION,
         'message' => E::ts('Validation failed'),
+        'files' => new \stdClass(),
         'errors' => $result['errors'],
       ];
     }
@@ -63,6 +71,7 @@ final class RemoteSubmitFormActionHandler implements ActionHandlerInterface {
     return [
       'action' => RemoteSubmitResponseActions::CLOSE_FORM,
       'message' => E::ts('Saved'),
+      'files' => $result['files'],
     ];
   }
 

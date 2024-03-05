@@ -22,6 +22,7 @@ namespace Civi\Api4;
 use Civi\API\Exception\UnauthorizedException;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Entity\ApplicationCostItemEntity;
+use Civi\Funding\Entity\ApplicationResourcesItemEntity;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Fixtures\ApplicationProcessFixture;
@@ -365,6 +366,16 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
           'amount' => 11,
           'properties' => [],
           'data_pointer' => '/amountRequested',
+        ])->toArray(),
+      ],
+      'resources_items' => [
+        ApplicationResourcesItemEntity::fromArray([
+          'application_process_id' => $applicationProcess->getId(),
+          'identifier' => 'resources',
+          'type' => 'testResources',
+          'amount' => 22,
+          'properties' => [],
+          'data_pointer' => '/resources',
         ])->toArray(),
       ],
     ]);

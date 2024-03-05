@@ -25,7 +25,7 @@ use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Civi\RemoteTools\Api4\Action\Traits\ActionHandlerRunTrait;
 use Civi\RemoteTools\Api4\Action\Traits\IdParameterTrait;
 
-final class GetFormAction extends AbstractAction {
+class GetFormAction extends AbstractAction {
 
   use ActionHandlerRunTrait;
 

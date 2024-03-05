@@ -22,6 +22,7 @@ namespace Civi\Funding;
 use Civi\Funding\Api4\Permissions;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandler;
+use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Test;
 use Civi\Test\CiviEnvBuilder;
@@ -39,6 +40,7 @@ abstract class AbstractFundingHeadlessTestCase extends TestCase implements Headl
     ClockMock::register(FundingCaseManager::class);
     ClockMock::register(ApplicationProcessManager::class);
     ClockMock::register(ApplicationSnapshotCreateHandler::class);
+    ClockMock::register(ClearingProcessManager::class);
   }
 
   public static function tearDownAfterClass(): void {

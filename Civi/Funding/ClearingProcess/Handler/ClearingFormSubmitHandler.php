@@ -21,6 +21,7 @@ namespace Civi\Funding\ClearingProcess\Handler;
 
 use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\ClearingProcess\ClearingStatusDeterminer;
+use Civi\Funding\ClearingProcess\Command\ClearingFormDataGetCommand;
 use Civi\Funding\ClearingProcess\Command\ClearingFormSubmitCommand;
 use Civi\Funding\ClearingProcess\Command\ClearingFormSubmitResult;
 use Civi\Funding\ClearingProcess\Command\ClearingFormValidateCommand;
@@ -38,6 +39,8 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
 
   private ClearingProcessManager $clearingProcessManager;
 
+  private ClearingFormDataGetHandlerInterface $formDataGetHandler;
+
   private ClearingStatusDeterminer $statusDeterminer;
 
   private ClearingFormValidateHandlerInterface $validateHandler;
@@ -46,12 +49,14 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
     ClearingCostItemsFormDataPersister $clearingCostItemsFormDataPersister,
     ClearingResourcesItemsFormDataPersister $clearingResourcesItemsFormDataPersister,
     ClearingProcessManager $clearingProcessManager,
+    ClearingFormDataGetHandlerInterface $formDataGetHandler,
     ClearingStatusDeterminer $statusDeterminer,
     ClearingFormValidateHandlerInterface $validateHandler
   ) {
     $this->clearingCostItemsFormDataPersister = $clearingCostItemsFormDataPersister;
     $this->clearingResourcesItemsFormDataPersister = $clearingResourcesItemsFormDataPersister;
     $this->clearingProcessManager = $clearingProcessManager;
+    $this->formDataGetHandler = $formDataGetHandler;
     $this->statusDeterminer = $statusDeterminer;
     $this->validateHandler = $validateHandler;
   }
@@ -90,6 +95,8 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
       $this->statusDeterminer->getStatus($clearingProcess->getFullStatus(), $data['_action'])
     );
     $this->clearingProcessManager->update($clearingProcess);
+
+    $data = $this->formDataGetHandler->handle(new ClearingFormDataGetCommand($clearingProcessBundle));
 
     return new ClearingFormSubmitResult([], $data, $files);
   }

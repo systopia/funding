@@ -136,7 +136,7 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                 'amountAdmittedTotal' => [
                   'type' => 'number',
                   '$calculate' => [
-                    'expression' => 'round(sum(map(records, "value.amountAdmitted")), 2)',
+                    'expression' => 'round(sum(map(records, "value.amountAdmitted ?? 0")), 2)',
                     'variables' => ['records' => ['$data' => '1/records']],
                   ],
                   'default' => 0,
@@ -152,7 +152,7 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         'default' => NULL,
                       ],
                       'file' => [
-                        'type' => 'string',
+                        'type' => ['string', 'null'],
                         'format' => 'uri',
                       ],
                       'description' => [
@@ -163,10 +163,9 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         'precision' => 2,
                       ],
                       'amountAdmitted' => [
-                        'type' => 'number',
+                        'type' => ['number', 'null'],
                         'precision' => 2,
                         'readOnly' => TRUE,
-                        'default' => 0,
                       ],
                     ],
                     'required' => ['_id', 'description', 'amount'],
@@ -176,7 +175,6 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
               'required' => ['records'],
             ],
           ],
-          'required' => ['23'],
         ],
       ],
       'required' => ['costItems'],
@@ -333,7 +331,7 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                 'amountAdmittedTotal' => [
                   'type' => 'number',
                   '$calculate' => [
-                    'expression' => 'round(sum(map(records, "value.amountAdmitted")), 2)',
+                    'expression' => 'round(sum(map(records, "value.amountAdmitted ?? 0")), 2)',
                     'variables' => ['records' => ['$data' => '1/records']],
                   ],
                   'default' => 0,
@@ -349,7 +347,7 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         'default' => NULL,
                       ],
                       'file' => [
-                        'type' => 'string',
+                        'type' => ['string', 'null'],
                         'format' => 'uri',
                       ],
                       'description' => [
@@ -360,10 +358,9 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         'precision' => 2,
                       ],
                       'amountAdmitted' => [
-                        'type' => 'number',
+                        'type' => ['number', 'null'],
                         'precision' => 2,
                         'readOnly' => TRUE,
-                        'default' => 0,
                       ],
                     ],
                     'required' => ['_id', 'description', 'amount'],
@@ -373,7 +370,6 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
               'required' => ['records'],
             ],
           ],
-          'required' => ['23'],
         ],
       ],
       'required' => ['costItems'],
@@ -537,7 +533,7 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                 'amountAdmittedTotal' => [
                   'type' => 'number',
                   '$calculate' => [
-                    'expression' => 'round(sum(map(records, "value.amountAdmitted")), 2)',
+                    'expression' => 'round(sum(map(records, "value.amountAdmitted ?? 0")), 2)',
                     'variables' => ['records' => ['$data' => '1/records']],
                   ],
                   'default' => 0,
@@ -553,7 +549,7 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         'default' => NULL,
                       ],
                       'file' => [
-                        'type' => 'string',
+                        'type' => ['string', 'null'],
                         'format' => 'uri',
                       ],
                       'description' => [
@@ -564,10 +560,9 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         'precision' => 2,
                       ],
                       'amountAdmitted' => [
-                        'type' => 'number',
+                        'type' => ['number', 'null'],
                         'precision' => 2,
                         'readOnly' => TRUE,
-                        'default' => 0,
                       ],
                     ],
                     'required' => ['_id', 'description', 'amount'],
@@ -577,7 +572,6 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
               'required' => ['records'],
             ],
           ],
-          'required' => ['23'],
         ],
       ],
       'required' => ['costItems'],

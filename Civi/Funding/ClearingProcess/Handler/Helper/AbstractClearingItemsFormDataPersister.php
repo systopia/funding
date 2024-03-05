@@ -80,7 +80,7 @@ abstract class AbstractClearingItemsFormDataPersister {
     elseif ($clearingItemManager instanceof ClearingResourcesItemManager) {
       // @phpstan-ignore-next-line
       $this->clearingItemEntityClass = ClearingResourcesItemEntity::class;
-      $this->financePlanItemIdFieldName = 'application_resources_item_id';
+      $this->financePlanItemIdFieldName = 'app_resources_item_id';
     }
     else {
       throw new \InvalidArgumentException(

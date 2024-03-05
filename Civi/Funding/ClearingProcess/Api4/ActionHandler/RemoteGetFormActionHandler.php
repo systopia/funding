@@ -24,6 +24,9 @@ use Civi\Funding\Api4\Action\Remote\FundingClearingProcess\GetFormAction;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Civi\RemoteTools\Api4\Api4Interface;
 
+/**
+ * @phpstan-import-type formResultT from GetFormActionHandler
+ */
 final class RemoteGetFormActionHandler implements ActionHandlerInterface {
 
   public const ENTITY_NAME = 'RemoteFundingClearingProcess';
@@ -35,11 +38,7 @@ final class RemoteGetFormActionHandler implements ActionHandlerInterface {
   }
 
   /**
-   * @phpstan-return array{
-   *   jsonSchema: array<string, mixed>,
-   *   uiSchema: array<string, mixed>,
-   *   data: array<string, mixed>,
-   * }
+   * @phpstan-return formResultT
    *
    * @throws \CRM_Core_Exception
    */

@@ -25,6 +25,7 @@ use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\ClearingProcessEntity;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\Fixtures\ApplicationProcessFixture;
+use Civi\Funding\Fixtures\ClearingProcessBundleFixture;
 use Civi\Funding\Fixtures\ClearingProcessFixture;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
@@ -75,29 +76,7 @@ final class FundingClearingProcessTest extends AbstractFundingHeadlessTestCase {
   }
 
   private function createClearingProcessBundle(): ClearingProcessEntityBundle {
-    $fundingProgram = FundingProgramFixture::addFixture();
-    $fundingCaseType = FundingCaseTypeFixture::addFixture();
-    $recipientContact = ContactFixture::addOrganization();
-    $creationContact = ContactFixture::addIndividual();
-
-    $fundingCase = FundingCaseFixture::addFixture(
-      $fundingProgram->getId(),
-      $fundingCaseType->getId(),
-      $recipientContact['id'],
-      $creationContact['id'],
-    );
-
-    $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId());
-    $clearingProcess = ClearingProcessFixture::addFixture($applicationProcess->getId(), ['status' => 'review']);
-
-    $applicationProcessBundle = new ApplicationProcessEntityBundle(
-      $applicationProcess,
-      $fundingCase,
-      $fundingCaseType,
-      $fundingProgram
-    );
-
-    return new ClearingProcessEntityBundle($clearingProcess, $applicationProcessBundle);
+    return ClearingProcessBundleFixture::create(['status' => 'review']);
   }
 
 }

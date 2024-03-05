@@ -23,7 +23,7 @@ namespace Civi\Funding\Entity;
  * @phpstan-type clearingResourcesItemT array{
  *   id?: int,
  *   clearing_process_id: int,
- *   application_resources_item_id: int,
+ *   app_resources_item_id: int,
  *   status: string,
  *   file_id: ?int,
  *   amount: float,
@@ -36,7 +36,7 @@ namespace Civi\Funding\Entity;
 final class ClearingResourcesItemEntity extends AbstractClearingItemEntity {
 
   public function getApplicationResourcesItemId(): int {
-    return $this->values['application_resources_item_id'];
+    return $this->values['app_resources_item_id'];
   }
 
   public function getFinancePlanItemId(): int {

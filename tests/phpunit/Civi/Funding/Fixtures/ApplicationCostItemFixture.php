@@ -33,9 +33,10 @@ final class ApplicationCostItemFixture {
     $result = FundingApplicationCostItem::create(FALSE)
       ->setValues($values + [
         'application_process_id' => $applicationProcessId,
-        'identifier' => 'test',
-        'type' => 'TestType',
+        'identifier' => 'amountRequested',
+        'type' => 'amount',
         'amount' => 1.2,
+        'data_pointer' => '/amountRequested',
         'properties' => [],
       ])->execute();
 

@@ -58,7 +58,6 @@ final class ClearingProcessManagerTest extends TestCase {
   public static function setUpBeforeClass(): void {
     parent::setUpBeforeClass();
     ClockMock::register(__CLASS__);
-    ClockMock::register(ClearingProcessFactory::class);
     ClockMock::withClockMock(1234567);
   }
 
@@ -74,7 +73,11 @@ final class ClearingProcessManagerTest extends TestCase {
 
   public function testCreate(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
-    $clearingProcess = ClearingProcessFactory::create(['id' => NULL]);
+    $clearingProcess = ClearingProcessFactory::create([
+      'id' => NULL,
+      'creation_date' => date('Y-m-d H:i:s'),
+      'modification_date' => date('Y-m-d H:i:s'),
+    ]);
 
     $expectedDispatchCalls = [
       [

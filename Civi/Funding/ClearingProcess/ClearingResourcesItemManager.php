@@ -34,7 +34,7 @@ final class ClearingResourcesItemManager extends AbstractClearingItemManager {
   public function getByApplicationProcessId(int $applicationProcessId): array {
     $result = $this->api4->getEntities(
       $this->getApiEntityName(),
-      Comparison::new('application_resources_item_id.application_process_id', '=', $applicationProcessId)
+      Comparison::new('app_resources_item_id.application_process_id', '=', $applicationProcessId)
     )->indexBy('id');
 
     // @phpstan-ignore-next-line
@@ -50,7 +50,7 @@ final class ClearingResourcesItemManager extends AbstractClearingItemManager {
   public function getByResourcesItemId(int $resourcesItemId): array {
     $result = $this->api4->getEntities(
       $this->getApiEntityName(),
-      Comparison::new('application_resources_item_id', '=', $resourcesItemId)
+      Comparison::new('app_resources_item_id', '=', $resourcesItemId)
     )->indexBy('id');
 
     // @phpstan-ignore-next-line
