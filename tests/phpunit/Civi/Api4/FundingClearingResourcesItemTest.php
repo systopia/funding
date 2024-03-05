@@ -22,18 +22,12 @@ namespace Civi\Api4;
 use Civi\API\Exception\UnauthorizedException;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
-use Civi\Funding\Entity\ApplicationProcessEntityBundle;
-use Civi\Funding\Entity\ClearingProcessEntity;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
-use Civi\Funding\Fixtures\ApplicationProcessFixture;
 use Civi\Funding\Fixtures\ApplicationResourcesItemFixture;
 use Civi\Funding\Fixtures\ClearingProcessBundleFixture;
-use Civi\Funding\Fixtures\ClearingProcessFixture;
 use Civi\Funding\Fixtures\ClearingResourcesItemFixture;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
-use Civi\Funding\Fixtures\FundingCaseFixture;
-use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\Funding\Util\RequestTestUtil;
 

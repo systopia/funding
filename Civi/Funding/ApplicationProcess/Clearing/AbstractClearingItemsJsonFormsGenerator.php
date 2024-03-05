@@ -32,7 +32,6 @@ use Civi\RemoteTools\JsonForms\Layout\JsonFormsCloseableGroup;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsTable;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsTableRow;
-use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
 use Civi\RemoteTools\JsonSchema\JsonSchemaCalculate;
 use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;

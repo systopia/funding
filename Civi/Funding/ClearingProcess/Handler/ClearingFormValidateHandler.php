@@ -23,7 +23,6 @@ use Civi\Funding\ClearingProcess\Command\ClearingFormGetCommand;
 use Civi\Funding\ClearingProcess\Command\ClearingFormValidateCommand;
 use Civi\Funding\ClearingProcess\Form\Validation\ClearingFormValidatorInterface;
 use Civi\Funding\ClearingProcess\Form\Validation\ClearingFormValidationResult;
-use Civi\RemoteTools\JsonSchema\Validation\ValidationResult;
 use Civi\RemoteTools\JsonSchema\Validation\ValidatorInterface;
 
 final class ClearingFormValidateHandler implements ClearingFormValidateHandlerInterface {

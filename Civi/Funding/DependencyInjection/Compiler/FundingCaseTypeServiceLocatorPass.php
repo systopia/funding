@@ -149,7 +149,8 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
       $this->getTaggedFundingCaseTypeServices($container, ApplicationJsonSchemaFactoryInterface::SERVICE_TAG);
     $applicationUiSchemaFactoryServices =
       $this->getTaggedFundingCaseTypeServices($container, ApplicationUiSchemaFactoryInterface::SERVICE_TAG);
-    $applicationValidator = $this->getTaggedFundingCaseTypeServices($container, ApplicationValidatorInterface::SERVICE_TAG);
+    $applicationValidator =
+      $this->getTaggedFundingCaseTypeServices($container, ApplicationValidatorInterface::SERVICE_TAG);
     $applicationActionsDeterminerServices =
       $this->getTaggedFundingCaseTypeServices($container, ApplicationProcessActionsDeterminerInterface::SERVICE_TAG);
     $applicationStatusDeterminerServices =
@@ -197,8 +198,10 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
     $applicationCostItemsPersistHandlerServices =
       $this->getTaggedFundingCaseTypeServices($container, ApplicationCostItemsPersistHandlerInterface::SERVICE_TAG);
 
-    $applicationResourcesItemsPersistHandlerServices =
-      $this->getTaggedFundingCaseTypeServices($container, ApplicationResourcesItemsPersistHandlerInterface::SERVICE_TAG);
+    $applicationResourcesItemsPersistHandlerServices = $this->getTaggedFundingCaseTypeServices(
+      $container,
+      ApplicationResourcesItemsPersistHandlerInterface::SERVICE_TAG
+    );
 
     $applicationFilesAddIdentifiersHandlerServices =
       $this->getTaggedFundingCaseTypeServices($container, ApplicationFilesAddIdentifiersHandlerInterface::SERVICE_TAG);
@@ -219,7 +222,8 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
       $this->getTaggedFundingCaseTypeServices($container, FundingCaseJsonSchemaFactoryInterface::SERVICE_TAG);
     $fundingCaseUiSchemaFactoryServices =
       $this->getTaggedFundingCaseTypeServices($container, FundingCaseUiSchemaFactoryInterface::SERVICE_TAG);
-    $fundingCaseValidatorServices = $this->getTaggedFundingCaseTypeServices($container, FundingCaseValidatorInterface::SERVICE_TAG);
+    $fundingCaseValidatorServices
+      = $this->getTaggedFundingCaseTypeServices($container, FundingCaseValidatorInterface::SERVICE_TAG);
 
     $fundingCaseFormNewGetHandlerServices =
       $this->getTaggedFundingCaseTypeServices($container, FundingCaseFormNewGetHandlerInterface::SERVICE_TAG);

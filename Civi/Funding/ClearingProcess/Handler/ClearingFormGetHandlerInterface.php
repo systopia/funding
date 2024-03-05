@@ -21,7 +21,6 @@ namespace Civi\Funding\ClearingProcess\Handler;
 
 use Civi\Funding\ClearingProcess\Command\ClearingFormGetCommand;
 use Civi\Funding\Form\JsonFormsFormInterface;
-use Civi\RemoteTools\JsonSchema\JsonSchema;
 
 interface ClearingFormGetHandlerInterface {
 

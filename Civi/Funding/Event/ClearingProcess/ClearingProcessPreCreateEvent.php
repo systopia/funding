@@ -21,7 +21,6 @@ namespace Civi\Funding\Event\ClearingProcess;
 
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\ClearingProcessEntity;
-use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\Traits\ApplicationProcessEntityBundleTrait;
 
 final class ClearingProcessPreCreateEvent {

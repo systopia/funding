@@ -17,44 +17,49 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Api4\Action\FundingClearingProcess;
+namespace Civi\Funding\Api4\Action\RemoteFundingClearingProcess;
 
-use Civi\Api4\FundingClearingProcess;
-use Civi\Funding\AbstractFundingHeadlessTestCase;
+use Civi\Api4\RemoteFundingClearingProcess;
+use Civi\Funding\AbstractRemoteFundingHeadlessTestCase;
 use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\Traits\ClearingProcessFixturesTrait;
+use Civi\Funding\Form\RemoteSubmitResponseActions;
 use Civi\Funding\Util\RequestTestUtil;
 
 /**
- * @covers \Civi\Api4\FundingClearingProcess
- * @covers \Civi\Funding\Api4\Action\FundingClearingProcess\SubmitFormAction
- * @covers \Civi\Funding\ClearingProcess\Api4\ActionHandler\SubmitFormActionHandler
+ * @covers \Civi\Api4\RemoteFundingClearingProcess
+ * @covers \Civi\Funding\Api4\Action\Remote\FundingClearingProcess\SubmitFormAction
+ * @covers \Civi\Funding\ClearingProcess\Api4\ActionHandler\RemoteSubmitFormActionHandler
  *
  * @group headless
  */
-final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
+final class SubmitFormActionTest extends AbstractRemoteFundingHeadlessTestCase {
 
   use ClearingProcessFixturesTrait;
+
+  private string $remoteContactId;
 
   protected function setUp(): void {
     parent::setUp();
 
-    $this->addFixtures(['status' => 'review']);
+    $this->addFixtures(['status' => 'draft']);
     $contact = ContactFixture::addIndividual();
     FundingCaseContactRelationFixture::addContact(
       $contact['id'],
       $this->clearingProcessBundle->getFundingCase()->getId(),
-      [ClearingProcessPermissions::REVIEW_CONTENT],
+      [ClearingProcessPermissions::CLEARING_MODIFY],
     );
 
-    RequestTestUtil::mockInternalRequest($contact['id']);
+    $this->remoteContactId = (string) $contact['id'];
+    RequestTestUtil::mockRemoteRequest($this->remoteContactId);
   }
 
   public function testInvalid(): void {
 
-    $result = FundingClearingProcess::submitForm()
+    $result = RemoteFundingClearingProcess::submitForm()
+      ->setRemoteContactId($this->remoteContactId)
       ->setId($this->clearingProcessBundle->getClearingProcess()->getId())
       ->setData([
         'costItems' => [
@@ -83,14 +88,16 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
       ->execute()
       ->getArrayCopy();
 
+    static::assertSame(RemoteSubmitResponseActions::SHOW_VALIDATION, $result['action']);
+    static::assertSame('Validation failed', $result['message']);
     static::assertIsArray($result['errors']);
     static::assertCount(1, $result['errors']);
-    static::assertIsArray($result['data']);
     static::assertEquals(new \stdClass(), $result['files']);
   }
 
   public function testValid(): void {
-    $result = FundingClearingProcess::submitForm()
+    $result = RemoteFundingClearingProcess::submitForm()
+      ->setRemoteContactId($this->remoteContactId)
       ->setId($this->clearingProcessBundle->getClearingProcess()->getId())
       ->setData([
         'costItems' => [
@@ -114,15 +121,14 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
           ],
         ],
         'reportData' => ['foo' => 'bar'],
-        '_action' => 'update',
+        '_action' => 'save',
       ])
       ->execute()
       ->getArrayCopy();
 
-    static::assertEquals(new \stdClass(), $result['errors']);
-    static::assertIsArray($result['data']);
-    static::assertIsInt($result['data']['costItems'][$this->costItem->getId()]['records'][0]['_id']);
-    static::assertIsInt($result['data']['resourcesItems'][$this->resourcesItem->getId()]['records'][0]['_id']);
+    static::assertSame(RemoteSubmitResponseActions::CLOSE_FORM, $result['action']);
+    static::assertSame('Saved', $result['message']);
+    static::assertArrayNotHasKey('errors', $result);
     static::assertEquals(new \stdClass(), $result['files']);
   }
 

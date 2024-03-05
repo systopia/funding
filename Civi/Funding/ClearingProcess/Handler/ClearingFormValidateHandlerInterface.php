@@ -21,7 +21,6 @@ namespace Civi\Funding\ClearingProcess\Handler;
 
 use Civi\Funding\ClearingProcess\Command\ClearingFormValidateCommand;
 use Civi\Funding\ClearingProcess\Form\Validation\ClearingFormValidationResult;
-use Civi\RemoteTools\JsonSchema\Validation\ValidationResult;
 
 interface ClearingFormValidateHandlerInterface {
 

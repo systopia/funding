@@ -21,7 +21,6 @@ namespace Civi\Funding\ClearingProcess\Handler\Helper;
 
 use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
 use Civi\Funding\ClearingProcess\ClearingCostItemManager;
-use Civi\Funding\ClearingProcess\ClearingExternalFileManager;
 use Civi\Funding\ClearingProcess\ClearingExternalFileManagerInterface;
 
 /**

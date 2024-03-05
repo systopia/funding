@@ -17,10 +17,10 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Api4\Action\FundingClearingProcess;
+namespace Civi\Funding\Api4\Action\RemoteFundingClearingProcess;
 
-use Civi\Api4\FundingClearingProcess;
-use Civi\Funding\AbstractFundingHeadlessTestCase;
+use Civi\Api4\RemoteFundingClearingProcess;
+use Civi\Funding\AbstractRemoteFundingHeadlessTestCase;
 use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
@@ -28,32 +28,36 @@ use Civi\Funding\Fixtures\Traits\ClearingProcessFixturesTrait;
 use Civi\Funding\Util\RequestTestUtil;
 
 /**
- * @covers \Civi\Api4\FundingClearingProcess
- * @covers \Civi\Funding\Api4\Action\FundingClearingProcess\GetFormAction
- * @covers \Civi\Funding\ClearingProcess\Api4\ActionHandler\GetFormActionHandler
+ * @covers \Civi\Api4\RemoteFundingClearingProcess
+ * @covers \Civi\Funding\Api4\Action\Remote\FundingClearingProcess\GetFormAction
+ * @covers \Civi\Funding\ClearingProcess\Api4\ActionHandler\RemoteGetFormActionHandler
  *
  * @group headless
  */
-final class GetFormActionTest extends AbstractFundingHeadlessTestCase {
+final class GetFormActionTest extends AbstractRemoteFundingHeadlessTestCase {
 
   use ClearingProcessFixturesTrait;
+
+  private string $remoteContactId;
 
   protected function setUp(): void {
     parent::setUp();
 
-    $this->addFixtures(['status' => 'review', 'report_data' => ['foo' => 'bar']]);
+    $this->addFixtures(['status' => 'draft', 'report_data' => ['foo' => 'bar']]);
     $contact = ContactFixture::addIndividual();
     FundingCaseContactRelationFixture::addContact(
       $contact['id'],
       $this->clearingProcessBundle->getFundingCase()->getId(),
-      [ClearingProcessPermissions::REVIEW_CONTENT],
+      [ClearingProcessPermissions::CLEARING_MODIFY],
     );
 
-    RequestTestUtil::mockInternalRequest($contact['id']);
+    $this->remoteContactId = (string) $contact['id'];
+    RequestTestUtil::mockRemoteRequest($this->remoteContactId);
   }
 
   public function test(): void {
-    $result = FundingClearingProcess::getForm()
+    $result = RemoteFundingClearingProcess::getForm()
+      ->setRemoteContactId($this->remoteContactId)
       ->setId($this->clearingProcessBundle->getClearingProcess()->getId())
       ->execute()
       ->getArrayCopy();

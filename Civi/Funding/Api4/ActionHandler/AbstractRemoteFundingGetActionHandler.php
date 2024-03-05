@@ -22,7 +22,6 @@ namespace Civi\Funding\Api4\ActionHandler;
 use Civi\Api4\Generic\Result;
 use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingGetAction;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
-use Civi\RemoteTools\Api4\Action\AbstractRemoteGetFieldsAction;
 use Civi\RemoteTools\Api4\Api4Interface;
 
 abstract class AbstractRemoteFundingGetActionHandler implements ActionHandlerInterface {

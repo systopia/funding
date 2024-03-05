@@ -19,7 +19,6 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ClearingProcess;
 
-use Civi\Funding\Entity\ClearingProcessEntity;
 use Civi\Funding\Entity\FullClearingProcessStatus;
 use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
 use CRM_Funding_ExtensionUtil as E;

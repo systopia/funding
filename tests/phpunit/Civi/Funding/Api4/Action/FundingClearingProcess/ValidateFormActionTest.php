@@ -22,16 +22,9 @@ namespace Civi\Funding\Api4\Action\FundingClearingProcess;
 use Civi\Api4\FundingClearingProcess;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
-use Civi\Funding\Entity\ApplicationCostItemEntity;
-use Civi\Funding\Entity\ApplicationResourcesItemEntity;
-use Civi\Funding\Entity\ClearingProcessEntityBundle;
-use Civi\Funding\Fixtures\ApplicationCostItemFixture;
-use Civi\Funding\Fixtures\ApplicationResourcesItemFixture;
-use Civi\Funding\Fixtures\ClearingProcessBundleFixture;
 use Civi\Funding\Fixtures\ContactFixture;
-use Civi\Funding\Fixtures\EntityFileFixture;
-use Civi\Funding\Fixtures\ExternalFileFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
+use Civi\Funding\Fixtures\Traits\ClearingProcessFixturesTrait;
 use Civi\Funding\Util\RequestTestUtil;
 
 /**
@@ -43,36 +36,12 @@ use Civi\Funding\Util\RequestTestUtil;
  */
 final class ValidateFormActionTest extends AbstractFundingHeadlessTestCase {
 
-  private ClearingProcessEntityBundle $clearingProcessBundle;
-
-  private ApplicationCostItemEntity $costItem;
-
-  private ApplicationResourcesItemEntity $resourcesItem;
+  use ClearingProcessFixturesTrait;
 
   protected function setUp(): void {
     parent::setUp();
 
-    $this->clearingProcessBundle = ClearingProcessBundleFixture::create(
-      ['status' => 'review'],
-      [
-        'start_date' => '2024-03-04',
-        'end_date' => '2024-03-05',
-        'request_data' => ['amountRequested' => 10, 'resources' => 20],
-      ]
-    );
-    $applicationProcessId = $this->clearingProcessBundle->getApplicationProcess()->getId();
-    $this->costItem = ApplicationCostItemFixture::addFixture($applicationProcessId);
-    $this->resourcesItem = ApplicationResourcesItemFixture::addFixture($applicationProcessId);
-
-    $externalFile = ExternalFileFixture::addFixture([
-      'identifier' => 'FundingApplicationProcess.' . $applicationProcessId . ':file',
-    ]);
-    EntityFileFixture::addFixture(
-      'civicrm_funding_application_process',
-      $applicationProcessId,
-      $externalFile->getFileId(),
-    );
-
+    $this->addFixtures(['status' => 'review']);
     $contact = ContactFixture::addIndividual();
     FundingCaseContactRelationFixture::addContact(
       $contact['id'],
@@ -84,7 +53,6 @@ final class ValidateFormActionTest extends AbstractFundingHeadlessTestCase {
   }
 
   public function testInvalid(): void {
-
     $result = FundingClearingProcess::validateForm()
       ->setId($this->clearingProcessBundle->getClearingProcess()->getId())
       ->setData([

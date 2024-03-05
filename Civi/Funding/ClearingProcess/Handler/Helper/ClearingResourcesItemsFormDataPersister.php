@@ -20,7 +20,6 @@ declare(strict_types = 1);
 namespace Civi\Funding\ClearingProcess\Handler\Helper;
 
 use Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager;
-use Civi\Funding\ClearingProcess\ClearingExternalFileManager;
 use Civi\Funding\ClearingProcess\ClearingExternalFileManagerInterface;
 use Civi\Funding\ClearingProcess\ClearingResourcesItemManager;
 

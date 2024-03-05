@@ -171,7 +171,6 @@ EOD
         ]
       ),
 
-
     ]);
 
     return new JsonFormsForm($jsonSchema, $uiSchema);
