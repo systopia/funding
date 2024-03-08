@@ -26,7 +26,7 @@ use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Form\JsonFormsForm;
 use Civi\Funding\Form\JsonFormsFormInterface;
 use Civi\RemoteTools\JsonForms\Control\JsonFormsArray;
-use Civi\RemoteTools\JsonForms\Control\JsonFormsValue;
+use Civi\RemoteTools\JsonForms\Control\JsonFormsHidden;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
 use Civi\RemoteTools\JsonForms\JsonFormsMarkup;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCloseableGroup;
@@ -218,7 +218,7 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
               '',
               NULL,
               [
-                new JsonFormsValue('#/properties/_id'),
+                new JsonFormsHidden('#/properties/_id', ['internal' => TRUE]),
                 new JsonFormsControl('#/properties/file', E::ts('Proof'), NULL, ['format' => 'file']),
                 new JsonFormsControl('#/properties/description', E::ts('Description')),
                 new JsonFormsControl('#/properties/amountAdmitted', E::ts('Amount Admitted in %1', [1 => $currency])),

@@ -242,7 +242,7 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                           'type' => 'Control',
                           'scope' => '#/properties/_id',
                           'label' => '',
-                          'options' => ['type' => 'value'],
+                          'options' => ['type' => 'hidden', 'internal' => TRUE],
                         ],
                         [
                           'type' => 'Control',
@@ -435,7 +435,7 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                       'type' => 'Control',
                       'scope' => '#/properties/_id',
                       'label' => '',
-                      'options' => ['type' => 'value'],
+                      'options' => ['type' => 'hidden', 'internal' => TRUE],
                     ],
                     [
                       'type' => 'Control',
@@ -644,7 +644,7 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                           'type' => 'Control',
                           'scope' => '#/properties/_id',
                           'label' => '',
-                          'options' => ['type' => 'value'],
+                          'options' => ['type' => 'hidden', 'internal' => TRUE],
                         ],
                         [
                           'type' => 'Control',
