@@ -1,0 +1,8 @@
+<div class="{{ 'funding-jf-group funding-jf-group-' + groupNestingLevel }}">
+  <div class="{{ 'funding-jf-group-label funding-jf-group-label-' + groupNestingLevel }}">{{ uiSchema.label }}</div>
+  <div class="json-forms-group">
+    <funding-jf-element ng-repeat="element in uiSchema.elements track by $index"
+                        json-schema="jsonSchema" ui-schema="element" data="data"
+                        editable="editable" errors="errors"></funding-jf-element>
+  </div>
+</div>

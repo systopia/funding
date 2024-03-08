@@ -43,6 +43,7 @@ fundingModule.directive('editableField', [function() {
     scope: true,
     bindToController: {
       'path': '@?',
+      errorPathPrefix: '@?',
       'type': '@',
       'value': '@',
       // Will be displayed if model value is empty.
@@ -60,8 +61,8 @@ fundingModule.directive('editableField', [function() {
       if ($attrs.emptyValueDisplay === undefined) {
         this.emptyValueDisplay = $attrs.emptyValueDisplay = ts('empty');
       }
-      if ($attrs.formName === undefined && $scope.$parent.formName) {
-        this.formName = $scope.$parent.formName;
+      if ($attrs.formName === undefined) {
+        this.formName = $scope.$parent.$eval('formName');
       }
       if ($attrs.editAllowed === undefined) {
         $attrs.editAllowed = 'isEditAllowed()';
@@ -127,9 +128,16 @@ fundingModule.directive('editableField', [function() {
         attrs.path = getPathFromValueName(attrs.value);
       }
 
+      let errorPathPrefix = '';
+      if (attrs.errorPathPrefix) {
+        errorPathPrefix = attrs.errorPathPrefix;
+        if (!errorPathPrefix.endsWith('.')) {
+          errorPathPrefix += '.';
+        }
+      }
       // Expression "{{ $index }}" has to be replaced by concatenation
       // "' + $index + '" because we use the string in an expression.
-      const errorsKey = "'" + toJsonPointer(attrs.path).replace(/{{( )*\$index( )*}}/, '\' + $$index + \'') + "'";
+      const errorsKey = "'" + toJsonPointer(errorPathPrefix + attrs.path).replace(/{{( )*\$index( )*}}/, '\' + $$index + \'') + "'";
       const validationErrorsTemplate = '<funding-validation-errors errors="errors[' + errorsKey + ']"></funding-validation-errors>';
 
       let template = '';

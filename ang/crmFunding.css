@@ -138,3 +138,26 @@
 .editable-checklist label {
   display: block !important;
 }
+
+#bootstrap-theme .funding-jf-group-label {
+  font-weight: 500;
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+#bootstrap-theme .funding-jf-group-label-1 {
+  font-size: 120%;
+  font-weight: 600;
+}
+
+#bootstrap-theme .funding-jf-group-label-2 {
+  font-size: 110%;
+}
+
+#bootstrap-theme .funding-jf-group-label-3 {
+  font-size: 105%;
+}
+
+#bootstrap-theme .funding-jf-form table {
+  margin-bottom: 5px;
+}

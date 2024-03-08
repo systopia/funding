@@ -21,6 +21,7 @@ namespace Civi\Funding\ApplicationProcess\Clearing;
 
 use Civi\Core\Format;
 use Civi\Funding\ApplicationProcess\Clearing\Container\ClearingItemsGroup;
+use Civi\Funding\ClearingProcess\Traits\HasClearingReviewPermissionTrait;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Form\JsonFormsForm;
 use Civi\Funding\Form\JsonFormsFormInterface;
@@ -46,6 +47,8 @@ use Webmozart\Assert\Assert;
  * @template T of \Civi\Funding\Entity\AbstractFinancePlanItemEntity
  */
 abstract class AbstractClearingItemsJsonFormsGenerator {
+
+  use HasClearingReviewPermissionTrait;
 
   /**
    * @phpstan-var AbstractClearableItemsLoader<T>
@@ -103,8 +106,14 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
       array_keys($clearableItems)
     );
 
+    $hasReviewPermission = $this->hasReviewPermission($applicationProcessBundle->getFundingCase()->getPermissions());
     foreach ($groups as $group) {
-      $this->handleGroup($group, $applicationProcessBundle->getFundingProgram()->getCurrency(), $clearableItems);
+      $this->handleGroup(
+        $group,
+        $applicationProcessBundle->getFundingProgram()->getCurrency(),
+        $clearableItems,
+        $hasReviewPermission
+      );
     }
 
     if ([] === $this->properties) {
@@ -127,7 +136,8 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
   private function handleGroup(
     ClearingItemsGroup $group,
     string $currency,
-    array $clearableItems
+    array $clearableItems,
+    bool $hasReviewPermission
   ): void {
     $groupElements = [];
     foreach ($group->elements as $scope => $applicationFormElement) {
@@ -137,6 +147,15 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
 
       foreach ($items as $index => $item) {
         $this->properties[$item->getId()] = new JsonSchemaObject([
+          'records' => new JsonSchemaArray(
+            new JsonSchemaObject([
+              '_id' => new JsonSchemaInteger(['readOnly' => TRUE, 'default' => NULL], TRUE),
+              'file' => new JsonSchemaString(['format' => 'uri', 'default' => NULL], TRUE),
+              'description' => new JsonSchemaString(),
+              'amount' => new JsonSchemaMoney(),
+              'amountAdmitted' => new JsonSchemaMoney(['readOnly' => !$hasReviewPermission, 'default' => NULL], TRUE),
+            ], ['required' => ['description', 'amount']])
+          ),
           'amountRecordedTotal' => new JsonSchemaCalculate(
             'number',
             'round(sum(map(records, "value.amount")), 2)',
@@ -150,15 +169,6 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
             ['records' => new JsonSchemaDataPointer('1/records')],
             NULL,
             ['default' => 0]
-          ),
-          'records' => new JsonSchemaArray(
-            new JsonSchemaObject([
-              '_id' => new JsonSchemaInteger(['readOnly' => TRUE, 'default' => NULL], TRUE),
-              'file' => new JsonSchemaString(['format' => 'uri'], TRUE),
-              'description' => new JsonSchemaString(),
-              'amount' => new JsonSchemaMoney(),
-              'amountAdmitted' => new JsonSchemaMoney(['readOnly' => TRUE], TRUE),
-            ], ['required' => ['_id', 'description', 'amount']])
           ),
         ], ['required' => ['records']]);
 

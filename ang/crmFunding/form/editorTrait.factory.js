@@ -91,15 +91,12 @@ fundingModule.factory('fundingEditorTrait', [function() {
 
       let originalData;
       let originalDataString;
-      $scope.$watch('data', (data) => {
-        if (!_4.isEmpty($scope.errors)) {
-          return;
-        }
 
-        originalData = _4.cloneDeep(data);
+      $scope.resetOriginalData = function () {
+        originalData = _4.cloneDeep($scope.data);
         originalDataString = JSON.stringify(originalData);
         $scope.isChanged = false;
-      });
+      };
 
       $scope.reset = function () {
         $scope.data = _4.cloneDeep(originalData);

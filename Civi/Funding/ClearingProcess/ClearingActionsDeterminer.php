@@ -19,44 +19,46 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ClearingProcess;
 
+use Civi\Funding\ClearingProcess\Traits\HasClearingReviewPermissionTrait;
 use Civi\Funding\Entity\FullClearingProcessStatus;
-use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
 use CRM_Funding_ExtensionUtil as E;
 
 final class ClearingActionsDeterminer {
 
-  use HasReviewPermissionTrait;
+  use HasClearingReviewPermissionTrait;
+
+  private const EDIT_ACTIONS = ['save', 'apply', 'update'];
 
   private const STATUS_PERMISSION_ACTIONS_MAP = [
     'draft' => [
       ClearingProcessPermissions::CLEARING_APPLY => ['apply', 'save'],
       ClearingProcessPermissions::CLEARING_MODIFY => ['save'],
-      ClearingProcessPermissions::REVIEW_CALCULATIVE => ['review'],
-      ClearingProcessPermissions::REVIEW_CONTENT => ['review'],
+      ClearingProcessPermissions::REVIEW_CALCULATIVE => ['review', 'add-comment'],
+      ClearingProcessPermissions::REVIEW_CONTENT => ['review', 'add-comment'],
     ],
     'review_requested' => [
       ClearingProcessPermissions::CLEARING_APPLY => ['modify'],
       ClearingProcessPermissions::CLEARING_MODIFY => ['modify'],
-      ClearingProcessPermissions::REVIEW_CALCULATIVE => ['review'],
-      ClearingProcessPermissions::REVIEW_CONTENT => ['review'],
+      ClearingProcessPermissions::REVIEW_CALCULATIVE => ['review', 'add-comment'],
+      ClearingProcessPermissions::REVIEW_CONTENT => ['review', 'add-comment'],
     ],
     'review' => [
       ClearingProcessPermissions::CLEARING_APPLY => [],
       ClearingProcessPermissions::CLEARING_MODIFY => [],
-      ClearingProcessPermissions::REVIEW_CALCULATIVE => ['reject', 'request-change', 'update'],
-      ClearingProcessPermissions::REVIEW_CONTENT => ['reject', 'request-change', 'update'],
+      ClearingProcessPermissions::REVIEW_CALCULATIVE => ['reject', 'request-change', 'update', 'add-comment'],
+      ClearingProcessPermissions::REVIEW_CONTENT => ['reject', 'request-change', 'update', 'add-comment'],
     ],
     'accepted' => [
       ClearingProcessPermissions::CLEARING_APPLY => [],
       ClearingProcessPermissions::CLEARING_MODIFY => [],
-      ClearingProcessPermissions::REVIEW_CALCULATIVE => ['request-change', 'review'],
-      ClearingProcessPermissions::REVIEW_CONTENT => ['request-change', 'review'],
+      ClearingProcessPermissions::REVIEW_CALCULATIVE => ['request-change', 'review', 'add-comment'],
+      ClearingProcessPermissions::REVIEW_CONTENT => ['request-change', 'review', 'add-comment'],
     ],
     'rejected' => [
       ClearingProcessPermissions::CLEARING_APPLY => [],
       ClearingProcessPermissions::CLEARING_MODIFY => [],
-      ClearingProcessPermissions::REVIEW_CALCULATIVE => ['request-change', 'review'],
-      ClearingProcessPermissions::REVIEW_CONTENT => ['request-change', 'review'],
+      ClearingProcessPermissions::REVIEW_CALCULATIVE => ['request-change', 'review', 'add-comment'],
+      ClearingProcessPermissions::REVIEW_CONTENT => ['request-change', 'review', 'add-comment'],
     ],
   ];
 
@@ -77,6 +79,7 @@ final class ClearingActionsDeterminer {
       'reject-content' => E::ts('Reject Content'),
       'accept-calculative' => E::ts('Accept Calculative'),
       'reject-calculative' => E::ts('Reject Calculative'),
+      'add-comment' => E::ts('Add Comment'),
       'request-change' => E::ts('Request Change'),
       'accept' => E::ts('Accept'),
       'reject' => E::ts('Reject'),
@@ -99,7 +102,7 @@ final class ClearingActionsDeterminer {
     $actions = array_merge($actions, $this->getReviewActions(
       $fullStatus,
       $this->hasReviewCalculativePermission($permissions),
-      $this->hasReviewCalculativePermission($permissions)
+      $this->hasReviewContentPermission($permissions)
     ));
 
     return array_filter($this->labels, fn (string $name) => in_array($name, $actions, TRUE), ARRAY_FILTER_USE_KEY);
@@ -125,10 +128,19 @@ final class ClearingActionsDeterminer {
   }
 
   /**
+   * @return bool
+   *   TRUE if this action may change the content, FALSE if the action may only
+   *   change the status and/or add a comment.
+   */
+  public function isEditAction(string $action): bool {
+    return in_array($action, self::EDIT_ACTIONS, TRUE);
+  }
+
+  /**
    * @phpstan-param list<string> $permissions
    */
   public function isEditAllowed(FullClearingProcessStatus $status, array $permissions): bool {
-    return $this->isAnyActionAllowed(['save', 'apply', 'update'], $status, $permissions);
+    return $this->isAnyActionAllowed(self::EDIT_ACTIONS, $status, $permissions);
   }
 
   /**
@@ -145,6 +157,7 @@ final class ClearingActionsDeterminer {
     ) {
       if ($hasReviewCalculativePermission) {
         if (TRUE !== $fullStatus->getIsReviewCalculative()) {
+          // @fixme Only if no clearing item is in status 'new'.
           $actions[] = 'accept-calculative';
         }
         if (FALSE !== $fullStatus->getIsReviewCalculative()) {

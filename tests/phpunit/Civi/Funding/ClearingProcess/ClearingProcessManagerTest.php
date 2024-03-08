@@ -23,6 +23,7 @@ use Civi\Api4\FundingClearingProcess;
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
+use Civi\Funding\EntityFactory\ClearingProcessBundleFactory;
 use Civi\Funding\EntityFactory\ClearingProcessFactory;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessCreatedEvent;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessPreCreateEvent;
@@ -131,8 +132,9 @@ final class ClearingProcessManagerTest extends TestCase {
   }
 
   public function testUpdate(): void {
-    $previousClearingProcess = ClearingProcessFactory::create();
-    $clearingProcess = clone $previousClearingProcess;
+    $clearingProcessBundle = ClearingProcessBundleFactory::create();
+    $previousClearingProcess = clone $clearingProcessBundle->getClearingProcess();
+    $clearingProcess = $clearingProcessBundle->getClearingProcess();
     $clearingProcess->setStatus('new_status');
     sleep(1);
 
@@ -143,11 +145,11 @@ final class ClearingProcessManagerTest extends TestCase {
     $expectedDispatchCalls = [
       [
         ClearingProcessPreUpdateEvent::class,
-        new ClearingProcessPreUpdateEvent($previousClearingProcess, $clearingProcess),
+        new ClearingProcessPreUpdateEvent($previousClearingProcess, $clearingProcessBundle),
       ],
       [
         ClearingProcessUpdatedEvent::class,
-        new ClearingProcessUpdatedEvent($previousClearingProcess, $clearingProcess),
+        new ClearingProcessUpdatedEvent($previousClearingProcess, $clearingProcessBundle),
       ],
     ];
     $this->eventDispatcherMock->expects(static::exactly(2))->method('dispatch')->willReturnCallback(
@@ -164,7 +166,7 @@ final class ClearingProcessManagerTest extends TestCase {
       ['modification_date' => date('Y-m-d H:i:s')] + $clearingProcess->toArray()
     );
 
-    $this->clearingProcessManager->update($clearingProcess);
+    $this->clearingProcessManager->update($clearingProcessBundle);
     static::assertSame(time(), $clearingProcess->getModificationDate()->getTimestamp());
   }
 

@@ -57,12 +57,12 @@ fundingModule.directive('fundingClearingEditor', ['$compile', function($compile)
     controller: ['$scope', 'crmStatus', 'fundingContactService', 'fundingCaseService',
       'fundingCaseTypeService', 'fundingProgramService', 'fundingApplicationProcessService',
       'fundingClearingProcessService', 'fundingEditorTrait',
-      async function($scope, crmStatus, fundingContactService, fundingCaseService,
+      function($scope, crmStatus, fundingContactService, fundingCaseService,
                      fundingCaseTypeService, fundingProgramService, fundingApplicationProcessService,
                      fundingClearingProcessService, fundingEditorTrait) {
-        // Mix in copies of traits to this controller
-        //angular.extend(this, _4.cloneDeep(fundingEditorTrait));
         fundingEditorTrait.use($scope);
+
+        this.$scope = $scope;
 
         const $ = CRM.$;
         const ts = $scope.ts = CRM.ts('funding');
@@ -93,6 +93,14 @@ fundingModule.directive('fundingClearingEditor', ['$compile', function($compile)
 
         $scope.jsonSchema = $scope.form.jsonSchema;
         $scope.data = $scope.form.data;
+        $scope.resetOriginalData();
+
+        $scope.proofsUiSchema = null;
+        if (($scope.form.uiSchema.elements[0].elements[0]._name || '') === 'proofs') {
+          $scope.proofsUiSchema = $scope.form.uiSchema.elements[0].elements[0];
+        }
+        $scope.costItemsUiSchema = null;
+        $scope.resourcesItemsUiSchema = null;
 
         $scope.isActionAllowed = function (action) {
           return $scope.jsonSchema.properties._action.enum.includes(action);
@@ -130,6 +138,7 @@ fundingModule.directive('fundingClearingEditor', ['$compile', function($compile)
               $scope.form = form;
               $scope.jsonSchema = form.jsonSchema;
               $scope.data = form.data;
+              $scope.resetOriginalData();
             }
           );
         }

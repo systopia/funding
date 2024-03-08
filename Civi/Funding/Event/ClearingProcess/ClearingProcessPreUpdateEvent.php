@@ -20,27 +20,25 @@ declare(strict_types = 1);
 namespace Civi\Funding\Event\ClearingProcess;
 
 use Civi\Funding\Entity\ClearingProcessEntity;
+use Civi\Funding\Entity\ClearingProcessEntityBundle;
+use Civi\Funding\Entity\Traits\ClearingProcessEntityBundleTrait;
 
 final class ClearingProcessPreUpdateEvent {
 
-  private ClearingProcessEntity $previousClearingProcess;
+  use ClearingProcessEntityBundleTrait;
 
-  private ClearingProcessEntity $clearingProcess;
+  private ClearingProcessEntity $previousClearingProcess;
 
   public function __construct(
     ClearingProcessEntity $previousClearingProcess,
-    ClearingProcessEntity $clearingProcess
+    ClearingProcessEntityBundle $clearingProcessBundle
   ) {
     $this->previousClearingProcess = $previousClearingProcess;
-    $this->clearingProcess = $clearingProcess;
+    $this->clearingProcessBundle = $clearingProcessBundle;
   }
 
   public function getPreviousClearingProcess(): ClearingProcessEntity {
     return $this->previousClearingProcess;
-  }
-
-  public function getClearingProcess(): ClearingProcessEntity {
-    return $this->clearingProcess;
   }
 
 }

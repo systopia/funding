@@ -1,0 +1,8 @@
+<h2>{{ uiSchema.label }}</h2>
+<funding-jf-form ng-repeat="group in uiSchema.elements track by $index"
+                 json-schema="jsonSchema" ui-schema="group" data="data"
+                 errors="errors" editable="isEditAllowed()"
+                 on-start-edit="onStartEdit" on-before-save="onBeforeSave"
+                 on-after-save="onAfterSave" on-cancel-edit="onCancelEdit"
+                 on-edit-finished="onEditFinished" add-to="addTo" inserted="inserted"
+                 cancel-insert-at="cancelInsertAt" remove-at="removeAt"></funding-jf-form>

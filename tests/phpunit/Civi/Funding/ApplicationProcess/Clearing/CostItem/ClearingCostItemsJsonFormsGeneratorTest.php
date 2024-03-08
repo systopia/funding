@@ -125,6 +125,38 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
             '23' => [
               'type' => 'object',
               'properties' => [
+                'records' => [
+                  'type' => 'array',
+                  'items' => [
+                    'type' => 'object',
+                    'properties' => [
+                      '_id' => [
+                        'type' => ['integer', 'null'],
+                        'readOnly' => TRUE,
+                        'default' => NULL,
+                      ],
+                      'file' => [
+                        'type' => ['string', 'null'],
+                        'format' => 'uri',
+                        'default' => NULL,
+                      ],
+                      'description' => [
+                        'type' => 'string',
+                      ],
+                      'amount' => [
+                        'type' => 'number',
+                        'precision' => 2,
+                      ],
+                      'amountAdmitted' => [
+                        'type' => ['number', 'null'],
+                        'precision' => 2,
+                        'readOnly' => TRUE,
+                        'default' => NULL,
+                      ],
+                    ],
+                    'required' => ['description', 'amount'],
+                  ],
+                ],
                 'amountRecordedTotal' => [
                   'type' => 'number',
                   '$calculate' => [
@@ -140,36 +172,6 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                     'variables' => ['records' => ['$data' => '1/records']],
                   ],
                   'default' => 0,
-                ],
-                'records' => [
-                  'type' => 'array',
-                  'items' => [
-                    'type' => 'object',
-                    'properties' => [
-                      '_id' => [
-                        'type' => ['integer', 'null'],
-                        'readOnly' => TRUE,
-                        'default' => NULL,
-                      ],
-                      'file' => [
-                        'type' => ['string', 'null'],
-                        'format' => 'uri',
-                      ],
-                      'description' => [
-                        'type' => 'string',
-                      ],
-                      'amount' => [
-                        'type' => 'number',
-                        'precision' => 2,
-                      ],
-                      'amountAdmitted' => [
-                        'type' => ['number', 'null'],
-                        'precision' => 2,
-                        'readOnly' => TRUE,
-                      ],
-                    ],
-                    'required' => ['_id', 'description', 'amount'],
-                  ],
                 ],
               ],
               'required' => ['records'],
@@ -320,6 +322,38 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
             '23' => [
               'type' => 'object',
               'properties' => [
+                'records' => [
+                  'type' => 'array',
+                  'items' => [
+                    'type' => 'object',
+                    'properties' => [
+                      '_id' => [
+                        'type' => ['integer', 'null'],
+                        'readOnly' => TRUE,
+                        'default' => NULL,
+                      ],
+                      'file' => [
+                        'type' => ['string', 'null'],
+                        'format' => 'uri',
+                        'default' => NULL,
+                      ],
+                      'description' => [
+                        'type' => 'string',
+                      ],
+                      'amount' => [
+                        'type' => 'number',
+                        'precision' => 2,
+                      ],
+                      'amountAdmitted' => [
+                        'type' => ['number', 'null'],
+                        'precision' => 2,
+                        'readOnly' => TRUE,
+                        'default' => NULL,
+                      ],
+                    ],
+                    'required' => ['description', 'amount'],
+                  ],
+                ],
                 'amountRecordedTotal' => [
                   'type' => 'number',
                   '$calculate' => [
@@ -335,36 +369,6 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                     'variables' => ['records' => ['$data' => '1/records']],
                   ],
                   'default' => 0,
-                ],
-                'records' => [
-                  'type' => 'array',
-                  'items' => [
-                    'type' => 'object',
-                    'properties' => [
-                      '_id' => [
-                        'type' => ['integer', 'null'],
-                        'readOnly' => TRUE,
-                        'default' => NULL,
-                      ],
-                      'file' => [
-                        'type' => ['string', 'null'],
-                        'format' => 'uri',
-                      ],
-                      'description' => [
-                        'type' => 'string',
-                      ],
-                      'amount' => [
-                        'type' => 'number',
-                        'precision' => 2,
-                      ],
-                      'amountAdmitted' => [
-                        'type' => ['number', 'null'],
-                        'precision' => 2,
-                        'readOnly' => TRUE,
-                      ],
-                    ],
-                    'required' => ['_id', 'description', 'amount'],
-                  ],
                 ],
               ],
               'required' => ['records'],
@@ -522,6 +526,38 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
             '23' => [
               'type' => 'object',
               'properties' => [
+                'records' => [
+                  'type' => 'array',
+                  'items' => [
+                    'type' => 'object',
+                    'properties' => [
+                      '_id' => [
+                        'type' => ['integer', 'null'],
+                        'readOnly' => TRUE,
+                        'default' => NULL,
+                      ],
+                      'file' => [
+                        'type' => ['string', 'null'],
+                        'format' => 'uri',
+                        'default' => NULL,
+                      ],
+                      'description' => [
+                        'type' => 'string',
+                      ],
+                      'amount' => [
+                        'type' => 'number',
+                        'precision' => 2,
+                      ],
+                      'amountAdmitted' => [
+                        'type' => ['number', 'null'],
+                        'precision' => 2,
+                        'readOnly' => TRUE,
+                        'default' => NULL,
+                      ],
+                    ],
+                    'required' => ['description', 'amount'],
+                  ],
+                ],
                 'amountRecordedTotal' => [
                   'type' => 'number',
                   '$calculate' => [
@@ -537,36 +573,6 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                     'variables' => ['records' => ['$data' => '1/records']],
                   ],
                   'default' => 0,
-                ],
-                'records' => [
-                  'type' => 'array',
-                  'items' => [
-                    'type' => 'object',
-                    'properties' => [
-                      '_id' => [
-                        'type' => ['integer', 'null'],
-                        'readOnly' => TRUE,
-                        'default' => NULL,
-                      ],
-                      'file' => [
-                        'type' => ['string', 'null'],
-                        'format' => 'uri',
-                      ],
-                      'description' => [
-                        'type' => 'string',
-                      ],
-                      'amount' => [
-                        'type' => 'number',
-                        'precision' => 2,
-                      ],
-                      'amountAdmitted' => [
-                        'type' => ['number', 'null'],
-                        'precision' => 2,
-                        'readOnly' => TRUE,
-                      ],
-                    ],
-                    'required' => ['_id', 'description', 'amount'],
-                  ],
                 ],
               ],
               'required' => ['records'],

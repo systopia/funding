@@ -25,9 +25,11 @@ use Civi\Funding\ApplicationProcess\Clearing\ResourcesItem\ClearingResourcesItem
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormCreateCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
 use Civi\Funding\ClearingProcess\ClearingActionsDeterminer;
+use Civi\Funding\ClearingProcess\Traits\HasClearingReviewPermissionTrait;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\Form\JsonFormsForm;
 use Civi\Funding\Form\JsonFormsFormInterface;
+use Civi\Funding\Form\JsonSchema\JsonSchemaComment;
 use Civi\Funding\Util\ArrayUtil;
 use Civi\RemoteTools\JsonForms\Control\JsonFormsSubmitButton;
 use Civi\RemoteTools\JsonForms\JsonFormsMarkup;
@@ -35,6 +37,7 @@ use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategorization;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonSchema\JsonSchemaNull;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
@@ -45,6 +48,7 @@ use Webmozart\Assert\Assert;
  *   amount: float,
  *   file: string|null,
  *   description: string,
+ *   amountAdmitted: ?float,
  * }
  *
  * @phpstan-type clearingFormDataT array{
@@ -52,6 +56,7 @@ use Webmozart\Assert\Assert;
  *   costItems?: array<int, array{records: list<clearingItemRecordT>}>,
  *   resourcesItems?: array<int, array{records: list<clearingItemRecordT>}>,
  *   reportData?: array<string, mixed>,
+ *   comment?: array{text: string, type: 'internal'|'external'},
  * }
  *
  * This class generates a JSON Forms specification that has a JSON schema that
@@ -59,6 +64,8 @@ use Webmozart\Assert\Assert;
  * costItems and resourcesItems have additional properties.)
  */
 final class ClearingFormGenerator {
+
+  use HasClearingReviewPermissionTrait;
 
   private ClearingActionsDeterminer $actionsDeterminer;
 
@@ -112,10 +119,11 @@ final class ClearingFormGenerator {
 
     $categories = [];
     if ([] !== $keywords) {
+      // The '_name' keyword is used in the AngularJS code.
       $categories[] = new JsonFormsCategory(E::ts('Proofs'), [
         $costItemsForm->getUiSchema(),
         $resourcesItemsForm->getUiSchema(),
-      ]);
+      ], NULL, NULL, ['_name' => 'proofs']);
     }
 
     $reportDataForm = $this->reportFormFactory->createReportForm($clearingProcessBundle);
@@ -141,6 +149,16 @@ final class ClearingFormGenerator {
     else {
       $elements = [new JsonFormsMarkup(E::ts('There are no proofs necessary.'))];
       $actions = [];
+    }
+
+    if ($this->hasReviewPermission($clearingProcessBundle->getFundingCase()->getPermissions())) {
+      // @phpstan-ignore-next-line
+      $keywords['properties']['comment'] = new JsonSchemaComment();
+    }
+    else {
+      // Prevent adding a comment without permission
+      // @phpstan-ignore-next-line
+      $keywords['properties']['comment'] = new JsonSchemaNull();
     }
 
     $actionsEnum = array_keys($actions);

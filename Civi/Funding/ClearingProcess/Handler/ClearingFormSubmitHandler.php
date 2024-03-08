@@ -19,12 +19,14 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ClearingProcess\Handler;
 
+use Civi\Funding\ClearingProcess\ClearingActionsDeterminer;
 use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\ClearingProcess\ClearingStatusDeterminer;
 use Civi\Funding\ClearingProcess\Command\ClearingFormDataGetCommand;
 use Civi\Funding\ClearingProcess\Command\ClearingFormSubmitCommand;
 use Civi\Funding\ClearingProcess\Command\ClearingFormSubmitResult;
 use Civi\Funding\ClearingProcess\Command\ClearingFormValidateCommand;
+use Civi\Funding\ClearingProcess\Handler\Helper\ClearingCommentPersister;
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingCostItemsFormDataPersister;
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingResourcesItemsFormDataPersister;
 
@@ -33,11 +35,15 @@ use Civi\Funding\ClearingProcess\Handler\Helper\ClearingResourcesItemsFormDataPe
  */
 final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterface {
 
+  private ClearingActionsDeterminer $actionsDeterminer;
+
   private ClearingCostItemsFormDataPersister $clearingCostItemsFormDataPersister;
 
   private ClearingResourcesItemsFormDataPersister $clearingResourcesItemsFormDataPersister;
 
   private ClearingProcessManager $clearingProcessManager;
+
+  private ClearingCommentPersister $commentPersister;
 
   private ClearingFormDataGetHandlerInterface $formDataGetHandler;
 
@@ -46,16 +52,20 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
   private ClearingFormValidateHandlerInterface $validateHandler;
 
   public function __construct(
+    ClearingActionsDeterminer $actionsDeterminer,
     ClearingCostItemsFormDataPersister $clearingCostItemsFormDataPersister,
     ClearingResourcesItemsFormDataPersister $clearingResourcesItemsFormDataPersister,
     ClearingProcessManager $clearingProcessManager,
+    ClearingCommentPersister $commentPersister,
     ClearingFormDataGetHandlerInterface $formDataGetHandler,
     ClearingStatusDeterminer $statusDeterminer,
     ClearingFormValidateHandlerInterface $validateHandler
   ) {
+    $this->actionsDeterminer = $actionsDeterminer;
     $this->clearingCostItemsFormDataPersister = $clearingCostItemsFormDataPersister;
     $this->clearingResourcesItemsFormDataPersister = $clearingResourcesItemsFormDataPersister;
     $this->clearingProcessManager = $clearingProcessManager;
+    $this->commentPersister = $commentPersister;
     $this->formDataGetHandler = $formDataGetHandler;
     $this->statusDeterminer = $statusDeterminer;
     $this->validateHandler = $validateHandler;
@@ -77,24 +87,38 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
 
     /** @phpstan-var clearingFormDataT $data */
     $data = $validationResult->getData();
-
+    $files = [];
     $clearingProcessBundle = $command->getClearingProcessBundle();
-
-    $files = $this->clearingCostItemsFormDataPersister->persistCostItems(
-      $clearingProcessBundle,
-      $data['costItems'] ?? []
-    );
-    $files += $this->clearingResourcesItemsFormDataPersister->persistCostItems(
-      $clearingProcessBundle,
-      $data['resourcesItems'] ?? []
-    );
-
     $clearingProcess = $clearingProcessBundle->getClearingProcess();
-    $clearingProcess->setReportData($data['reportData'] ?? []);
-    $clearingProcess->setFullStatus(
-      $this->statusDeterminer->getStatus($clearingProcess->getFullStatus(), $data['_action'])
-    );
-    $this->clearingProcessManager->update($clearingProcess);
+
+    if ($this->actionsDeterminer->isEditAction($data['_action'])) {
+      $files += $this->clearingCostItemsFormDataPersister->persistClearingItems(
+        $clearingProcessBundle,
+        $data['costItems'] ?? []
+      );
+      $files += $this->clearingResourcesItemsFormDataPersister->persistClearingItems(
+        $clearingProcessBundle,
+        $data['resourcesItems'] ?? []
+      );
+
+      $clearingProcess->setReportData($data['reportData'] ?? []);
+    }
+
+    if ('add-comment' !== $data['_action']) {
+      $clearingProcess->setFullStatus(
+        $this->statusDeterminer->getStatus($clearingProcess->getFullStatus(), $data['_action'])
+      );
+      $this->clearingProcessManager->update($clearingProcessBundle);
+    }
+
+    if (isset($data['comment']) && '' !== $data['comment']['text']) {
+      $this->commentPersister->persistComment(
+        $clearingProcessBundle,
+        $data['comment']['type'],
+        $data['comment']['text'],
+        $data['_action']
+      );
+    }
 
     $data = $this->formDataGetHandler->handle(new ClearingFormDataGetCommand($clearingProcessBundle));
 

@@ -19,14 +19,22 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\RemoteFundingClearingProcess;
 
+use Civi\Api4\FundingClearingCostItem;
+use Civi\Api4\FundingClearingProcess;
+use Civi\Api4\FundingClearingResourcesItem;
 use Civi\Api4\RemoteFundingClearingProcess;
 use Civi\Funding\AbstractRemoteFundingHeadlessTestCase;
+use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
+use Civi\Funding\Fixtures\ClearingCostItemFixture;
+use Civi\Funding\Fixtures\ClearingResourcesItemFixture;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\Traits\ClearingProcessFixturesTrait;
 use Civi\Funding\Form\RemoteSubmitResponseActions;
 use Civi\Funding\Util\RequestTestUtil;
+use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
+use Symfony\Bridge\PhpUnit\ClockMock;
 
 /**
  * @covers \Civi\Api4\RemoteFundingClearingProcess
@@ -39,12 +47,24 @@ final class SubmitFormActionTest extends AbstractRemoteFundingHeadlessTestCase {
 
   use ClearingProcessFixturesTrait;
 
+  use ArraySubsetAsserts;
+
+  public static function setUpBeforeClass(): void {
+    parent::setUpBeforeClass();
+    ClockMock::register(__CLASS__);
+    ClockMock::withClockMock(123456);
+  }
+
   private string $remoteContactId;
 
   protected function setUp(): void {
     parent::setUp();
 
-    $this->addFixtures(['status' => 'draft']);
+    $this->addFixtures([
+      'status' => 'draft',
+      'creation_date' => date('Y-m-d H:i:s', time() - 1),
+      'modification_date' => date('Y-m-d H:i:s'),
+    ]);
     $contact = ContactFixture::addIndividual();
     FundingCaseContactRelationFixture::addContact(
       $contact['id'],
@@ -106,6 +126,10 @@ final class SubmitFormActionTest extends AbstractRemoteFundingHeadlessTestCase {
               [
                 'description' => 'costTest',
                 'amount' => 2,
+                // should be ignored.
+                'amountAdmitted' => 4,
+                // should be ignored.
+                'status' => 'accepted',
               ],
             ],
           ],
@@ -116,6 +140,10 @@ final class SubmitFormActionTest extends AbstractRemoteFundingHeadlessTestCase {
               [
                 'description' => 'resourcesTest',
                 'amount' => 3,
+                // should be ignored.
+                'amountAdmitted' => 5,
+                // should be ignored.
+                'status' => 'accepted',
               ],
             ],
           ],
@@ -130,6 +158,168 @@ final class SubmitFormActionTest extends AbstractRemoteFundingHeadlessTestCase {
     static::assertSame('Saved', $result['message']);
     static::assertArrayNotHasKey('errors', $result);
     static::assertEquals(new \stdClass(), $result['files']);
+
+    static::assertArraySubset([
+      'clearing_process_id' => $this->clearingProcessBundle->getClearingProcess()->getId(),
+      'application_cost_item_id' => $this->costItem->getId(),
+      'status' => 'new',
+      'file_id' => NULL,
+      'amount' => 2,
+      'amount_admitted' => NULL,
+      'description' => 'costTest',
+    ], FundingClearingCostItem::get(FALSE)->execute()->single());
+
+    static::assertArraySubset([
+      'clearing_process_id' => $this->clearingProcessBundle->getClearingProcess()->getId(),
+      'app_resources_item_id' => $this->resourcesItem->getId(),
+      'status' => 'new',
+      'file_id' => NULL,
+      'amount' => 3.0,
+      'amount_admitted' => NULL,
+      'description' => 'resourcesTest',
+    ], FundingClearingResourcesItem::get(FALSE)->execute()->single());
+  }
+
+  public function testStatusAndAmountIsReset(): void {
+    $clearingCostItem = ClearingCostItemFixture::addFixture(
+      $this->clearingProcessBundle->getClearingProcess()->getId(),
+      $this->costItem->getId(),
+      ['status' => 'accepted', 'amount' => 5, 'amount_admitted' => 4]
+    );
+    $clearingResourcesItem = ClearingResourcesItemFixture::addFixture(
+      $this->clearingProcessBundle->getClearingProcess()->getId(),
+      $this->resourcesItem->getId(),
+      ['status' => 'rejected', 'amount' => 3, 'amount_admitted' => 0]
+    );
+
+    $result = RemoteFundingClearingProcess::submitForm()
+      ->setRemoteContactId($this->remoteContactId)
+      ->setId($this->clearingProcessBundle->getClearingProcess()->getId())
+      ->setData([
+        'costItems' => [
+          $this->costItem->getId() => [
+            'records' => [
+              [
+                '_id' => $clearingCostItem->getId(),
+                'description' => 'costTest',
+                'amount' => 2,
+                // should be ignored.
+                'amountAdmitted' => 4,
+                // should be ignored.
+                'status' => 'accepted',
+              ],
+            ],
+          ],
+        ],
+        'resourcesItems' => [
+          $this->resourcesItem->getId() => [
+            'records' => [
+              [
+                '_id' => $clearingResourcesItem->getId(),
+                'description' => 'resourcesTest',
+                'amount' => 3,
+                // should be ignored.
+                'amountAdmitted' => 0,
+                // should be ignored.
+                'status' => 'rejected',
+              ],
+            ],
+          ],
+        ],
+        'reportData' => ['foo' => 'bar'],
+        '_action' => 'save',
+      ])
+      ->execute()
+      ->getArrayCopy();
+
+    static::assertSame(RemoteSubmitResponseActions::CLOSE_FORM, $result['action']);
+    static::assertSame('Saved', $result['message']);
+    static::assertArrayNotHasKey('errors', $result);
+    static::assertEquals(new \stdClass(), $result['files']);
+
+    static::assertEquals([
+      'id' => $clearingCostItem->getId(),
+      'clearing_process_id' => $this->clearingProcessBundle->getClearingProcess()->getId(),
+      'application_cost_item_id' => $this->costItem->getId(),
+      'status' => 'new',
+      'file_id' => NULL,
+      'amount' => 2,
+      'amount_admitted' => NULL,
+      'description' => 'costTest',
+    ], FundingClearingCostItem::get(FALSE)->execute()->single());
+
+    static::assertEquals([
+      'id' => $clearingResourcesItem->getId(),
+      'clearing_process_id' => $this->clearingProcessBundle->getClearingProcess()->getId(),
+      'app_resources_item_id' => $this->resourcesItem->getId(),
+      'status' => 'new',
+      'file_id' => NULL,
+      'amount' => 3.0,
+      'amount_admitted' => NULL,
+      'description' => 'resourcesTest',
+    ], FundingClearingResourcesItem::get(FALSE)->execute()->single());
+  }
+
+  public function testModifyDoesNotChangeData(): void {
+    $clearingProcess = $this->clearingProcessBundle->getClearingProcess();
+    $clearingProcess->setStatus('review_requested');
+    FundingClearingProcess::update(FALSE)->setValues($clearingProcess->toArray())->execute();
+
+    $clearingCostItem = ClearingCostItemFixture::addFixture(
+      $this->clearingProcessBundle->getClearingProcess()->getId(),
+      $this->costItem->getId()
+    );
+    $clearingResourcesItem = ClearingResourcesItemFixture::addFixture(
+      $this->clearingProcessBundle->getClearingProcess()->getId(),
+      $this->resourcesItem->getId()
+    );
+
+    $result = RemoteFundingClearingProcess::submitForm()
+      ->setRemoteContactId($this->remoteContactId)
+      ->setId($this->clearingProcessBundle->getClearingProcess()->getId())
+      ->setData([
+        'costItems' => [
+          $this->costItem->getId() => [
+            'records' => [
+              [
+                '_id' => $clearingCostItem->getId(),
+                'description' => 'costTest',
+                'amount' => 2,
+                'amountAdmitted' => 0,
+              ],
+            ],
+          ],
+        ],
+        'resourcesItems' => [
+          $this->resourcesItem->getId() => [
+            'records' => [
+              [
+                '_id' => $clearingResourcesItem->getId(),
+                'description' => 'resourcesTest',
+                'amount' => 3,
+                'amountAdmitted' => 2.3,
+              ],
+            ],
+          ],
+        ],
+        'reportData' => ['foo' => 'bar'],
+        '_action' => 'modify',
+      ])
+      ->execute()
+      ->getArrayCopy();
+
+    static::assertArrayNotHasKey('errors', $result);
+
+    static::assertEquals($clearingCostItem->toArray(), FundingClearingCostItem::get(FALSE)->execute()->single());
+    static::assertEquals(
+      $clearingResourcesItem->toArray(),
+      FundingClearingResourcesItem::get(FALSE)->execute()->single()
+    );
+
+    static::assertEquals(
+      ['status' => 'draft'] + $this->clearingProcessBundle->getClearingProcess()->toArray(),
+      FundingClearingProcess::get(FALSE)->execute()->single()
+    );
   }
 
 }

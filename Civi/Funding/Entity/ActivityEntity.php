@@ -23,7 +23,8 @@ namespace Civi\Funding\Entity;
  * @phpstan-type activityT array{
  *   id?: int,
  *   source_record_id?: ?int,
- *   activity_type_id: int,
+ *   activity_type_id?: int,
+ *   'activity_type_id:name'?: string,
  *   subject: ?string,
  *   activity_date_time?: ?string,
  *   duration?: ?int,
@@ -61,6 +62,14 @@ namespace Civi\Funding\Entity;
  */
 final class ActivityEntity extends AbstractEntity {
 
+  public function __construct(array $values) {
+    if (!isset($values['activity_type_id']) && !isset($values['activity_type_id:name'])) {
+      throw new \InvalidArgumentException('Either activity_type_id or activity_type_id:name is required');
+    }
+
+    parent::__construct($values);
+  }
+
   public function getSourceRecordId(): ?int {
     return $this->values['source_record_id'] ?? NULL;
   }
@@ -71,8 +80,13 @@ final class ActivityEntity extends AbstractEntity {
     return $this;
   }
 
+  /**
+   * @return int
+   *   -1, if constructed with activity_type_id:name instead of
+   *   activity_type_id and not persisted, yet.
+   */
   public function getActivityTypeId(): int {
-    return $this->values['activity_type_id'];
+    return $this->values['activity_type_id'] ?? -1;
   }
 
   public function getSubject(): ?string {

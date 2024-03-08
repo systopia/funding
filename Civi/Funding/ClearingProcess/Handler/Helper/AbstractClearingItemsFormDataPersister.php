@@ -24,6 +24,7 @@ use Civi\Funding\ClearingProcess\AbstractClearingItemManager;
 use Civi\Funding\ClearingProcess\ClearingCostItemManager;
 use Civi\Funding\ClearingProcess\ClearingExternalFileManagerInterface;
 use Civi\Funding\ClearingProcess\ClearingResourcesItemManager;
+use Civi\Funding\ClearingProcess\Traits\HasClearingReviewPermissionTrait;
 use Civi\Funding\Entity\AbstractClearingItemEntity;
 use Civi\Funding\Entity\AbstractFinancePlanItemEntity;
 use Civi\Funding\Entity\ClearingCostItemEntity;
@@ -39,6 +40,8 @@ use Webmozart\Assert\Assert;
  * @phpstan-import-type clearingItemRecordT from \Civi\Funding\ClearingProcess\Form\ClearingFormGenerator
  */
 abstract class AbstractClearingItemsFormDataPersister {
+
+  use HasClearingReviewPermissionTrait;
 
   /**
    * @phpstan-var \Civi\Funding\ClearingProcess\AbstractClearingItemManager<TClearingItem>
@@ -98,7 +101,7 @@ abstract class AbstractClearingItemsFormDataPersister {
    *
    * @throws \CRM_Core_Exception
    */
-  public function persistCostItems(
+  public function persistClearingItems(
     ClearingProcessEntityBundle $clearingProcessBundle,
     array $clearingItemsFormData
   ): array {
@@ -121,7 +124,7 @@ abstract class AbstractClearingItemsFormDataPersister {
       );
 
       foreach ($data['records'] as $record) {
-        [$clearingItem, $externalFile] = $this->createClearingItem($clearingProcessId, $financePlanItem, $record);
+        [$clearingItem, $externalFile] = $this->createClearingItem($clearingProcessBundle, $financePlanItem, $record);
         $clearingItems[] = $clearingItem;
         if (NULL !== $externalFile) {
           $files[$record['file']] = $externalFile->getUri();
@@ -143,10 +146,13 @@ abstract class AbstractClearingItemsFormDataPersister {
    * @throws \CRM_Core_Exception
    */
   private function createClearingItem(
-    int $clearingProcessId,
+    ClearingProcessEntityBundle $clearingProcessBundle,
     AbstractFinancePlanItemEntity $financePlanItem,
     array $record
   ): array {
+    $clearingProcessId = $clearingProcessBundle->getClearingProcess()->getId();
+    $permissions = $clearingProcessBundle->getFundingCase()->getPermissions();
+
     if (isset($record['_id'])) {
       $existingClearingItem = $this->clearingItemManager->get($record['_id']);
       if (NULL !== $existingClearingItem) {
@@ -154,13 +160,17 @@ abstract class AbstractClearingItemsFormDataPersister {
         $externalFile = $this->handleFile($record, $existingClearingItem, $clearingProcessId);
         $fileId = NULL === $externalFile ? NULL : $externalFile->getFileId();
 
-        if ($this->isClearingItemChanged($existingClearingItem, $record, $fileId)) {
-          $existingClearingItem
-            ->setFileId($fileId)
-            ->setAmount($record['amount'])
-            ->setDescription($record['description'])
-            ->setStatus('new')
-            ->setAmountAdmitted(NULL);
+        $status = $this->determineStatus($record, $existingClearingItem, $fileId, $permissions);
+        $existingClearingItem
+          ->setFileId($fileId)
+          ->setAmount($record['amount'])
+          ->setDescription($record['description'])
+          ->setStatus($status);
+        if ($this->hasReviewPermission($permissions)) {
+          $existingClearingItem->setAmountAdmitted($record['amountAdmitted']);
+        }
+        elseif ('new' === $status) {
+          $existingClearingItem->setAmountAdmitted(NULL);
         }
 
         return [$existingClearingItem, $externalFile];
@@ -168,17 +178,49 @@ abstract class AbstractClearingItemsFormDataPersister {
     }
 
     $externalFile = $this->handleFile($record, NULL, $clearingProcessId);
+    $fileId = NULL === $externalFile ? NULL : $externalFile->getFileId();
     $clearingItem = $this->clearingItemEntityClass::fromArray([
       'clearing_process_id' => $clearingProcessId,
       $this->financePlanItemIdFieldName => $financePlanItem->getId(),
-      'status' => 'new',
-      'file_id' => NULL === $externalFile ? NULL : $externalFile->getFileId(),
+      'status' => $this->determineStatus($record, NULL, $fileId, $permissions),
+      'file_id' => $fileId,
       'amount' => $record['amount'],
       'amount_admitted' => NULL,
       'description' => $record['description'],
     ]);
 
+    if ($this->hasReviewPermission($permissions)) {
+      $clearingItem->setAmountAdmitted($record['amountAdmitted']);
+    }
+
     return [$clearingItem, $externalFile];
+  }
+
+  /**
+   * @phpstan-param clearingItemRecordT $record
+   * @phpstan-param TClearingItem $existingClearingItem
+   * @phpstan-param list<string> $permissions
+   */
+  private function determineStatus(
+    array $record,
+    ?AbstractClearingItemEntity $existingClearingItem,
+    ?int $fileId,
+    array $permissions
+  ): string {
+    if ($this->hasReviewPermission($permissions)) {
+      if (NULL === $record['amountAdmitted']) {
+        return 'new';
+      }
+
+      return $record['amountAdmitted'] > 0 ? 'accepted' : 'rejected';
+    }
+
+    if (NULL === $existingClearingItem) {
+      return 'new';
+    }
+
+    return $this->isClearingItemChanged($existingClearingItem, $record, $fileId)
+      ? 'new' : $existingClearingItem->getStatus();
   }
 
   /**

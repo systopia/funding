@@ -12,7 +12,7 @@
   <div ng-if="errors | fundingIsNotEmpty" class="alert alert-danger">
     {{:: ts('Validation failed') }}
     <funding-validation-errors errors="errors['/']"></funding-validation-errors>
-    <funding-validation-errors errors="errors['/action']"></funding-validation-errors>
+    <funding-validation-errors errors="errors['/_action']"></funding-validation-errors>
   </div>
 
   <div class="funding-resize-height">
@@ -50,6 +50,8 @@
       <label>{{:: ts('Recipient') }}</label>
       {{ recipientContact.display_name }}
     </div>
+
+    <funding-clearing-proofs ng-show="proofsUiSchema" json-schema="jsonSchema" ui-schema="proofsUiSchema" data="data"></funding-clearing-proofs>
 
   </div>
 

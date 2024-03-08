@@ -43,12 +43,14 @@ use Civi\Funding\ClearingProcess\Handler\ClearingFormSubmitHandler;
 use Civi\Funding\ClearingProcess\Handler\ClearingFormSubmitHandlerInterface;
 use Civi\Funding\ClearingProcess\Handler\ClearingFormValidateHandler;
 use Civi\Funding\ClearingProcess\Handler\ClearingFormValidateHandlerInterface;
+use Civi\Funding\ClearingProcess\Handler\Helper\ClearingCommentPersister;
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingCostItemsFormDataPersister;
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingResourcesItemsFormDataPersister;
 use Civi\Funding\DependencyInjection\Compiler\ClearingFormValidatorPass;
 use Civi\Funding\DependencyInjection\Compiler\ClearingReportFormFactoryPass;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 $container->addCompilerPass(new ClearingReportFormFactoryPass());
 $container->addCompilerPass(new ClearingFormValidatorPass());
@@ -68,6 +70,7 @@ $container->autowire(ClearableResourcesItemsLoader::class);
 $container->autowire(ClearingGroupExtractor::class);
 $container->autowire(ItemDetailsFormElementGenerator::class);
 
+$container->autowire(ClearingCommentPersister::class);
 $container->autowire(ClearingCostItemsFormDataPersister::class);
 $container->autowire(ClearingResourcesItemsFormDataPersister::class);
 
@@ -107,4 +110,13 @@ ServiceRegistrator::autowireAllImplementing(
   'Civi\\Funding\\ClearingProcess\\Api4\\ActionHandler',
   ActionHandlerInterface::class,
   [ActionHandlerInterface::SERVICE_TAG => []],
+);
+
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/EventSubscriber/ClearingProcess',
+  'Civi\\Funding\\EventSubscriber\\ClearingProcess',
+  EventSubscriberInterface::class,
+  ['kernel.event_subscriber' => []],
+  ['lazy' => TRUE],
 );

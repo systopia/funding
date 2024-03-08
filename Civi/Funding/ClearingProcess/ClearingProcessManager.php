@@ -23,6 +23,7 @@ use Civi\Api4\FundingClearingProcess;
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\ClearingProcessEntity;
+use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessCreatedEvent;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessPreCreateEvent;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessPreUpdateEvent;
@@ -95,12 +96,13 @@ final class ClearingProcessManager {
   /**
    * @throws \CRM_Core_Exception
    */
-  public function update(ClearingProcessEntity $clearingProcess): void {
+  public function update(ClearingProcessEntityBundle $clearingProcessBundle): void {
+    $clearingProcess = $clearingProcessBundle->getClearingProcess();
     $clearingProcess->setModificationDate(new \DateTime(date('YmdHis')));
     $previousClearingProcess = $this->get($clearingProcess->getId());
     Assert::notNull($previousClearingProcess);
 
-    $event = new ClearingProcessPreUpdateEvent($previousClearingProcess, $clearingProcess);
+    $event = new ClearingProcessPreUpdateEvent($previousClearingProcess, $clearingProcessBundle);
     $this->eventDispatcher->dispatch(ClearingProcessPreUpdateEvent::class, $event);
 
     $this->api4->updateEntity(
@@ -109,7 +111,7 @@ final class ClearingProcessManager {
       $clearingProcess->toArray()
     );
 
-    $event = new ClearingProcessUpdatedEvent($previousClearingProcess, $clearingProcess);
+    $event = new ClearingProcessUpdatedEvent($previousClearingProcess, $clearingProcessBundle);
     $this->eventDispatcher->dispatch(ClearingProcessUpdatedEvent::class, $event);
   }
 
