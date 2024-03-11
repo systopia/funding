@@ -104,7 +104,7 @@ final class GetAction extends AbstractGetAction {
       'funding_case_modification_date' => $fundingCase->getModificationDate()->format('Y-m-d H:i:s'),
       'funding_case_amount_approved' => $fundingCase->getAmountApproved(),
       'funding_case_type_id' => $fundingCaseType->getId(),
-      'funding_case_type_is_combined_application' => $fundingCaseType->getIsCombinedApplication(),
+      'funding_case_type_is_combined_application' => (int) $fundingCaseType->getIsCombinedApplication(),
       'funding_case_transfer_contract_uri' => $fundingCase->getTransferContractUri(),
       'funding_program_id' => $fundingProgram->getId(),
       'funding_program_currency' => $fundingProgram->getCurrency(),
