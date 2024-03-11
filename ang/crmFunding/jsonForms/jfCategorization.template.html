@@ -1,0 +1,20 @@
+<ul class="nav nav-tabs" role="tablist">
+  <li ng-repeat="category in uiSchema.elements track by $index"
+      role="presentation" ng-class="{active: activeTab === $index}">
+    <a aria-controls="category-{{ count }}-{{ $index }}" role="tab" data-toggle="tab"
+       ng-click="setActiveTab($index)">
+      {{ category.label }}
+    </a>
+  </li>
+</ul>
+
+<div class="tab-content">
+  <div ng-repeat="category in uiSchema.elements track by $index"
+       role="tabpanel" class="tab-pane" ng-class="{active: activeTab === $index}"
+       id="category-{{ count }}-{{ $index }}"
+       ng-show="activeTab === $index">
+    <funding-jf-element ng-repeat="element in category.elements track by $index"
+                        json-schema="jsonSchema" ui-schema="element" data="data"
+                        editable="editable" errors="errors"></funding-jf-element>
+  </div>
+</div>

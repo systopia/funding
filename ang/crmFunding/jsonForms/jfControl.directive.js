@@ -97,8 +97,14 @@ fundingModule.directive('fundingJfControl', ['$compile', function($compile) {
           type = _4.find(type, (value) => value !== 'null');
         }
 
-        if (typeof type !== 'string' || type === '' || type === 'null') {
-          console.error('Unknown JSON schema type', type);
+        if (typeof type !== 'string') {
+          element.html('');
+
+          throw new Error(`Unknown JSON schema type ${propertySchema.type}`);
+        }
+
+        const uiSchemaType = getUiSchemaOption('type');
+        if (type === 'null' || uiSchemaType === 'hidden' || uiSchemaType === 'submit') {
           element.html('');
 
           return;
@@ -106,14 +112,8 @@ fundingModule.directive('fundingJfControl', ['$compile', function($compile) {
 
         scope.path = getPath();
 
-        const uiSchemaType = getUiSchemaOption('type');
-        if (uiSchemaType === 'hidden' || uiSchemaType === 'value') {
-          element.html('');
-
-          return;
-        }
-
-        if (getUiSchemaOption('format') === 'file') {
+        const uiSchemaFormat = getUiSchemaOption('format');
+        if (uiSchemaFormat === 'file') {
           element.html($compile('<funding-jf-control-file></funding-jf-control-file>')(scope));
 
           return;
@@ -122,35 +122,47 @@ fundingModule.directive('fundingJfControl', ['$compile', function($compile) {
         scope.required = scope.objectSchema.required instanceof Array &&
           scope.objectSchema.required.includes(scope.propertyName);
 
-        // @todo checklist, textarea, select, time, radios, url, email
+        let inputType;
 
         if (type === 'array') {
-          element.html($compile('<funding-jf-control-array></funding-jf-control-array>')(scope));
+          if (propertySchema.uniqueItems && propertySchema.items.oneOf) {
+            inputType = 'checklist';
+          } else {
+            element.html($compile('<funding-jf-control-array></funding-jf-control-array>')(scope));
 
-          return;
-        }
-
-        let inputType;
-        if (type === 'integer' || type === 'number') {
+            return;
+          }
+        } else if (uiSchemaFormat === 'radio') {
+          inputType = 'radiolist';
+        } else if (['string', 'number', 'integer', 'boolean'].includes(type) && propertySchema.oneOf) {
+          inputType = 'select';
+        } else if (type === 'integer' || type === 'number') {
           inputType = 'number';
         } else if (type === 'string') {
-          inputType = 'text';
+          if (propertySchema.format === 'date') {
+            inputType = 'date';
+          } else if (propertySchema.format === 'date-time') {
+            inputType = 'datetime-local';
+          } else if (propertySchema.format === 'email' || propertySchema.format === 'idn-email') {
+            inputType = 'email';
+          } else if (propertySchema.format === 'uri' || propertySchema.format === 'uri-reference') {
+            inputType = 'url';
+          } else {
+            inputType = getUiSchemaOption('multi') ? 'textarea' : 'text';
+          }
         } else if (type === 'boolean') {
-          inputType = 'checkBox';
-        } else if (type === 'date') {
-          inputType = 'date';
+          inputType = 'checkbox';
         } else {
-          console.error('Unknown JSON schema type', type);
           element.html('');
 
-          return;
+          throw new Error(`Unknown JSON schema type ${type}`);
         }
 
         if (propertySchema.readOnly || propertySchema.$calculate || uiSchema.readonly) {
           scope.editable = false;
         }
 
-        let label = null;
+        let label = '';
         if (!scope.noLabel) {
           if (uiSchema.label === null || uiSchema.label === undefined) {
             label = scope.propertyName.charAt(0).toUpperCase() + scope.propertyName.slice(1);
@@ -162,15 +174,22 @@ fundingModule.directive('fundingJfControl', ['$compile', function($compile) {
         const fieldElement = angular.element('<editable-field></editable-field>');
         fieldElement.attr('type', inputType);
         fieldElement.attr('value', 'data.' + scope.path);
-        fieldElement.attr('label', label);
+        fieldElement.attr('label', "'" + label + "'");
         fieldElement.attr('edit-allowed', 'editable');
         fieldElement.attr('e-ng-required', scope.required);
         fieldElement.attr('error-path-prefix', scope.errorPathPrefix);
 
-        if (propertySchema.precision !== undefined) {
-          fieldElement.attr('e-step', 1 / (10 ** propertySchema.precision));
+        if (inputType === 'checklist') {
+          fieldElement.attr('options-one-of', 'propertySchema.items.oneOf');
+        } else if (propertySchema.oneOf) {
+          fieldElement.attr('options-one-of', 'propertySchema.oneOf');
         }
 
+        if (propertySchema.precision !== undefined) {
+          fieldElement.attr('e-step', 1 / 10 ** propertySchema.precision);
+        }
+
+        // @todo rules
         // @todo minimum, maximum, length, pattern
 
         const template = fieldElement[0].outerHTML;

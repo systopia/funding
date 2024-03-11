@@ -97,6 +97,25 @@ fundingModule.directive('editableField', [function() {
       };
 
       /**
+       * @param {string|number|null} selected
+       * @param {object[]} oneOf
+       * @returns {string}
+       */
+      $scope.showRadiolist = function(selected, oneOf) {
+        if (selected === undefined) {
+          return $attrs.emptyValueDisplay;
+        }
+
+        for (const value of oneOf) {
+          if (selected === value.const) {
+            return value.title;
+          }
+        }
+
+        return $attrs.emptyValueDisplay;
+      };
+
+      /**
        * @param {string} selected
        * @param {object[]} oneOf
        * @returns {string}
@@ -150,6 +169,8 @@ fundingModule.directive('editableField', [function() {
         displayValueExpression = `showCheckbox(${attrs.value})`;
       } else if (attrs.type === 'checklist') {
         displayValueExpression = 'showChecklist(' + attrs.value + ', ' + attrs.optionsOneOf + ')';
+      } else if (attrs.type === "radiolist") {
+        displayValueExpression = `showRadiolist(${attrs.value}, ${attrs.optionsOneOf})`;
       } else if (attrs.type === 'select') {
         displayValueExpression = 'showSelect(' + attrs.value + ', ' + attrs.optionsOneOf + ')';
       } else {

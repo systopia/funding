@@ -177,3 +177,12 @@
 #bootstrap-theme .funding-jf-group .panel-title {
   font-size: inherit;
 }
+
+#bootstrap-theme funding-jf-categorization {
+  display: block;
+  margin-top: 15px;
+}
+
+funding-jf-control {
+  display: block;
+}

@@ -92,6 +92,8 @@ fundingModule.directive('fundingClearingEditor', ['$compile', function($compile)
         };
 
         $scope.jsonSchema = $scope.form.jsonSchema;
+        $scope.uiSchema = $scope.form.uiSchema;
+        $scope.uiSchema.label = null;
         $scope.data = $scope.form.data;
         $scope.resetOriginalData();
 
@@ -137,6 +139,8 @@ fundingModule.directive('fundingClearingEditor', ['$compile', function($compile)
             (form) => {
               $scope.form = form;
               $scope.jsonSchema = form.jsonSchema;
+              $scope.uiSchema = $scope.form.uiSchema;
+              $scope.uiSchema.label = null;
               $scope.data = form.data;
               $scope.resetOriginalData();
             }
