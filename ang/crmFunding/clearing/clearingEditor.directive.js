@@ -143,37 +143,14 @@ fundingModule.directive('fundingClearingEditor', ['$compile', function($compile)
           );
         }
 
-        function handleSetValue(field, value) {
-          return function (result) {
-            if (result[0] && _4.isEqual(result[0][field], value)) {
-              $scope.clearingProcess[field] = value;
-
-              return true;
-            }
-
-            return false;
-          };
-        }
-
-        $scope.updateClearingProcessField = function (field, value) {
-          if ($scope.clearingProcess[field] === value) {
-            return;
-          }
-
-          if (value === undefined) {
-            value = null;
-          }
-
-          return crmStatus({}, fundingClearingProcessService.setValue($scope.clearingProcess.id, field, value))
-            .then(handleSetValue(field, value));
-        };
-
         $scope.setReviewerCalculative = function (contactId) {
-          return $scope.updateClearingProcessField('reviewer_calc_contact_id', contactId);
+          return crmStatus({}, fundingClearingProcessService.setCalculativeReviewer($scope.clearingProcess.id, contactId))
+            .then(() => $scope.clearingProcess.reviewer_calc_contact_id = contactId);
         };
 
         $scope.setReviewerContent = function (contactId) {
-          return $scope.updateClearingProcessField('reviewer_cont_contact_id', contactId);
+          return crmStatus({}, fundingClearingProcessService.setContentReviewer($scope.clearingProcess.id, contactId))
+            .then(() => $scope.clearingProcess.reviewer_cont_contact_id = contactId);
         };
 
         $scope.hasPermission = function (permission) {
@@ -181,11 +158,11 @@ fundingModule.directive('fundingClearingEditor', ['$compile', function($compile)
         };
 
         $scope.hasReviewCalculativePermission = function () {
-          return $scope.hasPermission('review_calculative');
+          return $scope.hasPermission('review_clearing_calculative');
         };
 
         $scope.hasReviewContentPermission = function () {
-          return $scope.hasPermission('review_content');
+          return $scope.hasPermission('review_clearing_content');
         };
 
         $scope.startReviewCalculative = function () {

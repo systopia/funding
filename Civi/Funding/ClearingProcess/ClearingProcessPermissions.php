@@ -29,4 +29,25 @@ final class ClearingProcessPermissions {
 
   public const REVIEW_CONTENT = 'review_clearing_content';
 
+  /**
+   * @phpstan-param list<string> $permissions
+   */
+  public static function hasReviewPermission(array $permissions): bool {
+    return self::hasReviewCalculativePermission($permissions) || self::hasReviewContentPermission($permissions);
+  }
+
+  /**
+   * @phpstan-param list<string> $permissions
+   */
+  public static function hasReviewCalculativePermission(array $permissions): bool {
+    return in_array(self::REVIEW_CALCULATIVE, $permissions, TRUE);
+  }
+
+  /**
+   * @phpstan-param list<string> $permissions
+   */
+  public static function hasReviewContentPermission(array $permissions): bool {
+    return in_array(self::REVIEW_CONTENT, $permissions, TRUE);
+  }
+
 }

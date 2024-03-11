@@ -6,6 +6,8 @@ namespace Civi\Api4;
 use Civi\Funding\Api4\Action\FundingClearingProcess\GetAction;
 use Civi\Funding\Api4\Action\FundingClearingProcess\GetFieldsAction;
 use Civi\Funding\Api4\Action\FundingClearingProcess\GetFormAction;
+use Civi\Funding\Api4\Action\FundingClearingProcess\SetCalculativeReviewerAction;
+use Civi\Funding\Api4\Action\FundingClearingProcess\SetContentReviewerAction;
 use Civi\Funding\Api4\Action\FundingClearingProcess\SubmitFormAction;
 use Civi\Funding\Api4\Action\FundingClearingProcess\ValidateFormAction;
 use Civi\Funding\Api4\Traits\AccessROPermissionsTrait;
@@ -43,6 +45,14 @@ final class FundingClearingProcess extends Generic\DAOEntity {
     return new SubmitFormAction();
   }
 
+  public static function setCalculativeReviewer(): SetCalculativeReviewerAction {
+    return new SetCalculativeReviewerAction();
+  }
+
+  public static function setContentReviewer(): SetContentReviewerAction {
+    return new SetContentReviewerAction();
+  }
+
   /**
    * @phpstan-return array<string, array<string|array<string>>>
    */
@@ -53,6 +63,8 @@ final class FundingClearingProcess extends Generic\DAOEntity {
       'getForm' => $permissions['get'],
       'validateForm' => $permissions['get'],
       'submitForm' => $permissions['get'],
+      'setCalculativeReviewer' => $permissions['get'],
+      'setContentReviewer' => $permissions['get'],
     ];
   }
 

@@ -24,7 +24,6 @@ use Civi\Api4\FundingClearingProcess;
 use Civi\Api4\FundingClearingResourcesItem;
 use Civi\Api4\RemoteFundingClearingProcess;
 use Civi\Funding\AbstractRemoteFundingHeadlessTestCase;
-use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\Fixtures\ClearingCostItemFixture;
 use Civi\Funding\Fixtures\ClearingResourcesItemFixture;

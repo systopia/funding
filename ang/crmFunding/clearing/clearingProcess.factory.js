@@ -87,6 +87,22 @@ fundingModule.factory('fundingClearingProcessService', ['crmApi4', function(crmA
     validateForm: (id, data) => crmApi4('FundingClearingProcess', 'validateForm', {id, data}),
 
     /**
+     * @param {integer} clearingProcessId
+     * @param {integer} reviewerContactId
+     * @returns {Promise}
+     */
+    setCalculativeReviewer: (clearingProcessId, reviewerContactId) =>
+      crmApi4('FundingClearingProcess', 'setCalculativeReviewer', {clearingProcessId, reviewerContactId}),
+
+    /**
+     * @param {integer} clearingProcessId
+     * @param {integer} reviewerContactId
+     * @returns {Promise}
+     */
+    setContentReviewer: (clearingProcessId, reviewerContactId) =>
+      crmApi4('FundingClearingProcess', 'setContentReviewer', {clearingProcessId, reviewerContactId}),
+
+    /**
      * @param {integer} id
      *
      * @returns {Promise<object[]>}

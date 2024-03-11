@@ -24,24 +24,24 @@ use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 trait HasClearingReviewPermissionTrait {
 
   /**
-   * @phpstan-param array<string> $permissions
+   * @phpstan-param list<string> $permissions
    */
   protected function hasReviewPermission(array $permissions): bool {
-    return $this->hasReviewCalculativePermission($permissions) || $this->hasReviewContentPermission($permissions);
+    return ClearingProcessPermissions::hasReviewPermission($permissions);
   }
 
   /**
-   * @phpstan-param array<string> $permissions
+   * @phpstan-param list<string> $permissions
    */
   protected function hasReviewCalculativePermission(array $permissions): bool {
-    return in_array(ClearingProcessPermissions::REVIEW_CALCULATIVE, $permissions, TRUE);
+    return ClearingProcessPermissions::hasReviewCalculativePermission($permissions);
   }
 
   /**
-   * @phpstan-param array<string> $permissions
+   * @phpstan-param list<string> $permissions
    */
   protected function hasReviewContentPermission(array $permissions): bool {
-    return in_array(ClearingProcessPermissions::REVIEW_CONTENT, $permissions, TRUE);
+    return ClearingProcessPermissions::hasReviewContentPermission($permissions);
   }
 
 }
