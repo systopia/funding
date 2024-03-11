@@ -78,7 +78,11 @@ fundingModule.directive('fundingJfControl', ['$compile', function($compile) {
       }
 
       function getUiSchemaOption(key, defaultValue = undefined) {
-        return uiSchema.options ? uiSchema.options[key] : defaultValue;
+        if (Object.hasOwn(scope.uiSchema.options || {}, key)) {
+          return uiSchema.options[key];
+        }
+
+        return defaultValue;
       }
 
       scope.$watch('propertySchema', function (propertySchema) {

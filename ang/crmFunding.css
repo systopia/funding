@@ -61,7 +61,8 @@
 }
 
 #bootstrap-theme .funding-application-main table,
-#bootstrap-theme .funding-clearing-main table {
+#bootstrap-theme .funding-clearing-main table,
+#bootstrap-theme .funding-clearing-main funding-jf-group > div {
   max-width: 1200px;
 }
 
@@ -139,10 +140,13 @@
   display: block !important;
 }
 
-#bootstrap-theme .funding-jf-group-label {
-  font-weight: 500;
+#bootstrap-theme div.funding-jf-group-label {
   margin-top: 15px;
   margin-bottom: 10px;
+}
+
+#bootstrap-theme .funding-jf-group-label {
+  font-weight: 500;
 }
 
 #bootstrap-theme .funding-jf-group-label-1 {
@@ -160,4 +164,16 @@
 
 #bootstrap-theme .funding-jf-form table {
   margin-bottom: 5px;
+}
+
+#bootstrap-theme .funding-jf-group .panel-heading {
+  padding: 10px 10px;
+}
+
+#bootstrap-theme .funding-jf-group .panel-body {
+  padding: 5px 5px;
+}
+
+#bootstrap-theme .funding-jf-group .panel-title {
+  font-size: inherit;
 }

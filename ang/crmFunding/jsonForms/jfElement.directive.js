@@ -44,13 +44,12 @@ fundingModule.directive('fundingJfElement', ['$compile', function($compile) {
         });
       }
 
-      const unwatch = scope.$watch('uiSchema', function (uiSchema) {
+      scope.$watch('uiSchema', function (uiSchema) {
         if (uiSchema.type) {
           const directiveName = 'fundingJf' + _4.upperFirst(uiSchema.type);
           const tagName = snake_case(directiveName, '-');
           const template = '<' + tagName + '></' + tagName + '>';
           element.append($compile(template)(scope));
-          unwatch();
         }
       });
     },
@@ -59,14 +58,14 @@ fundingModule.directive('fundingJfElement', ['$compile', function($compile) {
         $scope.errorPathPrefix = $scope.$parent.$eval('errorPathPrefix');
       }
 
+      $scope.$parent.$watch('inserted',
+        (inserted) => $scope.inserted = inserted);
       $scope.onStartEdit = $scope.$parent.$eval('onStartEdit');
       $scope.onBeforeSave = $scope.$parent.$eval('onBeforeSave');
       $scope.onAfterSave = $scope.$parent.$eval('onAfterSave');
       $scope.onCancelEdit = $scope.$parent.$eval('onCancelEdit');
       $scope.onEditFinished = $scope.$parent.$eval('onEditFinished');
       $scope.addTo = $scope.$parent.$eval('addTo');
-      $scope.$parent.$watch('inserted',
-        (inserted) => $scope.inserted = inserted);
       $scope.cancelInsertAt = $scope.$parent.$eval('cancelInsertAt');
       $scope.removeAt = $scope.$parent.$eval('removeAt');
     }],

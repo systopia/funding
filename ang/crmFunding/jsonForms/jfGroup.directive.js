@@ -17,13 +17,16 @@
 'use strict';
 
 fundingModule.directive('fundingJfGroup', [function() {
+  let count = 0;
+
   return {
     restrict: 'E',
     scope: false,
     templateUrl: '~/crmFunding/jsonForms/jfGroup.template.html',
     controller: ['$scope', function($scope) {
       $scope.groupNestingLevel = ($scope.$parent.$eval('groupNestingLevel') || 0) + 1;
-      // @todo Closeable groups.
+      $scope.closeable = $scope.uiSchema.options ? $scope.uiSchema.options.closeable || false : false;
+      $scope.count = ++count;
     }],
   };
 }]);

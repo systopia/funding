@@ -1,8 +1,26 @@
-<div class="{{ 'funding-jf-group funding-jf-group-' + groupNestingLevel }}">
-  <div class="{{ 'funding-jf-group-label funding-jf-group-label-' + groupNestingLevel }}">{{ uiSchema.label }}</div>
-  <div class="json-forms-group">
+<div ng-if="!closeable" class="funding-jf-group funding-jf-group-{{ groupNestingLevel }}">
+  <div class="funding-jf-group-label funding-jf-group-label-{{ groupNestingLevel }}">{{ uiSchema.label }}</div>
+  <div class="funding-jf-group-body">
     <funding-jf-element ng-repeat="element in uiSchema.elements track by $index"
                         json-schema="jsonSchema" ui-schema="element" data="data"
                         editable="editable" errors="errors"></funding-jf-element>
+  </div>
+</div>
+
+<div ng-if="closeable" class="panel-group funding-jf-group funding-jf-group-{{ groupNestingLevel }}">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="panel-title">
+        <a data-toggle="collapse" data-target="#funding-jf-group-{{ count }}" aria-expanded="true"
+           class="funding-jf-group-label funding-jf-group-label-{{ groupNestingLevel }}">{{ uiSchema.label }}</a>
+      </div>
+    </div>
+    <div id="funding-jf-group-{{ count }}" class="panel-collapse collapse in">
+      <div class="panel-body funding-jf-group-body">
+        <funding-jf-element ng-repeat="element in uiSchema.elements track by $index"
+                            json-schema="jsonSchema" ui-schema="element" data="data"
+                            editable="editable" errors="errors"></funding-jf-element>
+      </div>
+    </div>
   </div>
 </div>
