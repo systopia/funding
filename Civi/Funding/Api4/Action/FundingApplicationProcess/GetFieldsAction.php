@@ -25,7 +25,7 @@ use Civi\Funding\Api4\Util\ContactUtil;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\FundingCase\FundingCaseManager;
-use Civi\Funding\Permission\FundingCase\FundingCaseContactsLoader;
+use Civi\Funding\Permission\FundingCase\FundingCaseContactsLoaderInterface;
 
 /**
  * @phpstan-type fieldsT array<array<string, array<string, scalar>|array<scalar>|scalar|null>&array{name: string}>
@@ -34,7 +34,7 @@ final class GetFieldsAction extends DAOGetFieldsAction {
 
   private ApplicationProcessManager $applicationProcessManager;
 
-  private FundingCaseContactsLoader $contactsLoader;
+  private FundingCaseContactsLoaderInterface $contactsLoader;
 
   private FundingCaseManager $fundingCaseManager;
 
@@ -44,7 +44,7 @@ final class GetFieldsAction extends DAOGetFieldsAction {
 
   public function __construct(
     ApplicationProcessManager $applicationProcessManager,
-    FundingCaseContactsLoader $contactsLoader,
+    FundingCaseContactsLoaderInterface $contactsLoader,
     FundingCaseManager $fundingCaseManager
   ) {
     parent::__construct(FundingApplicationProcess::getEntityName(), 'getFields');
