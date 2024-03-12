@@ -119,11 +119,10 @@ final class ClearingFormGenerator {
 
     $categories = [];
     if ([] !== $keywords) {
-      // The '_name' keyword is used in the AngularJS code.
       $categories[] = new JsonFormsCategory(E::ts('Proofs'), [
         $costItemsForm->getUiSchema(),
         $resourcesItemsForm->getUiSchema(),
-      ], NULL, NULL, ['_name' => 'proofs']);
+      ]);
     }
 
     $reportDataForm = $this->reportFormFactory->createReportForm($clearingProcessBundle);

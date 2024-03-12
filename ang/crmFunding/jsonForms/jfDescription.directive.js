@@ -16,11 +16,13 @@
 
 'use strict';
 
-fundingSammelantragKursModule.directive('fundingSammelantragKursClearingEditor', function() {
+fundingModule.directive('fundingJfDescription', function() {
   return {
-    restrict: 'AE',
-    scope: false,
-    templateUrl: '~/crmFundingSammelantragKurs/sammelantragKursClearingEditor.template.html',
+    restrict: 'E',
+    scope: {
+      text: '<',
+    },
+    templateUrl: '~/crmFunding/jsonForms/jfDescription.template.html',
     controller: function () {},
   };
 });

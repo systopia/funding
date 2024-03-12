@@ -132,10 +132,13 @@ fundingModule.directive('fundingJfControl', ['$compile', function($compile) {
 
             return;
           }
-        } else if (uiSchemaFormat === 'radio') {
-          inputType = 'radiolist';
         } else if (['string', 'number', 'integer', 'boolean'].includes(type) && propertySchema.oneOf) {
-          inputType = 'select';
+          if (uiSchemaFormat === 'radio') {
+            // @todo Should be 'radiolist', though when editing the resulting value is always undefined...
+            inputType = 'select';
+          } else {
+            inputType = 'select';
+          }
         } else if (type === 'integer' || type === 'number') {
           inputType = 'number';
         } else if (type === 'string') {
@@ -162,22 +165,22 @@ fundingModule.directive('fundingJfControl', ['$compile', function($compile) {
           scope.editable = false;
         }
 
-        let label = '';
-        if (!scope.noLabel) {
-          if (uiSchema.label === null || uiSchema.label === undefined) {
-            label = scope.propertyName.charAt(0).toUpperCase() + scope.propertyName.slice(1);
-          } else {
-            label = uiSchema.label;
-          }
-        }
-
         const fieldElement = angular.element('<editable-field></editable-field>');
         fieldElement.attr('type', inputType);
         fieldElement.attr('value', 'data.' + scope.path);
-        fieldElement.attr('label', "'" + label + "'");
+
+        if (!scope.noLabel) {
+          if (uiSchema.label === null || uiSchema.label === undefined) {
+            fieldElement.attr('label', "'" + scope.propertyName.charAt(0).toUpperCase() + scope.propertyName.slice(1) + "'");
+          } else if (uiSchema.label !== '') {
+            fieldElement.attr('label', 'uiSchema.label');
+          }
+        }
+
         fieldElement.attr('edit-allowed', 'editable');
         fieldElement.attr('e-ng-required', scope.required);
         fieldElement.attr('error-path-prefix', scope.errorPathPrefix);
+        fieldElement.attr('description', 'uiSchema.description');
 
         if (inputType === 'checklist') {
           fieldElement.attr('options-one-of', 'propertySchema.items.oneOf');

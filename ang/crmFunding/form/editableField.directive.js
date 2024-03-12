@@ -53,6 +53,7 @@ fundingModule.directive('editableField', [function() {
       'optionsOneOf': '=?',
       'formName': '@?',
       'label': '=?',
+      'description': '<?',
       'editAllowed': '=?',
     },
     controllerAs: '$ctrl',
@@ -66,6 +67,9 @@ fundingModule.directive('editableField', [function() {
       }
       if ($attrs.editAllowed === undefined) {
         $attrs.editAllowed = 'isEditAllowed()';
+      }
+      if ($attrs.label && $attrs.label.startsWith("'") && $attrs.label.endsWith("'") && $attrs.label.includes('"')) {
+        this.labelHtml = $attrs.label.slice(1, -1);
       }
 
       $scope.showCheckbox = function (checked) {
@@ -157,11 +161,18 @@ fundingModule.directive('editableField', [function() {
       // Expression "{{ $index }}" has to be replaced by concatenation
       // "' + $index + '" because we use the string in an expression.
       const errorsKey = "'" + toJsonPointer(errorPathPrefix + attrs.path).replace(/{{( )*\$index( )*}}/, '\' + $$index + \'') + "'";
+      const descriptionTemplate = '<funding-jf-description text="' + attrs.description + '"></funding-jf-description>';
       const validationErrorsTemplate = '<funding-validation-errors errors="errors[' + errorsKey + ']"></funding-validation-errors>';
 
       let template = '';
-      if (attrs.label) {
-        template += '<label class="control-label">{{' + attrs.label + '}} ' + validationErrorsTemplate + '</label> ';
+      if (attrs.label && attrs.label !== "''") {
+        let labelBindHtml;
+        if (attrs.label && attrs.label.startsWith("'") && attrs.label.endsWith("'") && attrs.label.includes('"')) {
+          labelBindHtml = '$ctrl.labelHtml';
+        } else {
+          labelBindHtml = attrs.label;
+        }
+        template += '<label class="control-label"><span ng-bind-html="' + labelBindHtml + '"></span> ' + descriptionTemplate + ' ' + validationErrorsTemplate + '</label> ';
       }
 
       let displayValueExpression;
@@ -174,7 +185,7 @@ fundingModule.directive('editableField', [function() {
       } else if (attrs.type === 'select') {
         displayValueExpression = 'showSelect(' + attrs.value + ', ' + attrs.optionsOneOf + ')';
       } else {
-        displayValueExpression = '(null === ' + attrs.value + ' || "" === ' + attrs.value + ') ? $ctrl.emptyValueDisplay : ' + attrs.value;
+        displayValueExpression = '((undefined === ' + attrs.value +  ' || undefined) || null === ' + attrs.value + ' || "" === ' + attrs.value + ') ? $ctrl.emptyValueDisplay : ' + attrs.value;
       }
 
       let editElement;
@@ -183,7 +194,7 @@ fundingModule.directive('editableField', [function() {
       } else {
         editElement = angular.element('<span>{{ ' + displayValueExpression + ' }}</span>');
         if (attrs.optionsOneOf) {
-          editElement.attr('e-ng-options', 'o.const as o.title for o in ' + attrs.optionsOneOf);
+          editElement.attr('e-ng-options', 'o.const as o.title for o in ' + attrs.optionsOneOf + ' track by o.const');
         }
       }
 
@@ -214,7 +225,7 @@ fundingModule.directive('editableField', [function() {
       viewOnlyElement.attr('ng-show', '!$ctrl.editAllowed');
       template += viewOnlyElement[0].outerHTML;
 
-      if (!attrs.label) {
+      if (!attrs.label || attrs.label === '') {
         template += ' ' + validationErrorsTemplate;
       }
       template = '<span ng-class="{\'has-warning\': errors[' + errorsKey + '].length}">' + template + '</span>';

@@ -16,7 +16,7 @@
 
 'use strict';
 
-fundingModule.directive('fundingClearingEditor', ['$compile', function($compile) {
+fundingModule.directive('fundingClearingEditor', [function() {
   return {
     restrict: 'E',
     scope: {
@@ -27,32 +27,10 @@ fundingModule.directive('fundingClearingEditor', ['$compile', function($compile)
       reviewStatusLabels: '=',
       onPostSubmit: '&',
     },
-    template: '',
+    templateUrl: '~/crmFunding/clearing/clearingEditor.template.html',
     // Insert the editor tag for the current funding case type.
-    link: function (scope, element) {
-      /**
-       * Copied from AngularJS. (The lodash analog behaves differently with
-       * consecutive upper case letters.)
-       * https://github.com/angular/angular.js/blob/47bf11ee94664367a26ed8c91b9b586d3dd420f5/src/Angular.js#L1893
-       */
-      const SNAKE_CASE_REGEXP = /[A-Z]/g;
-      function snake_case(name, separator) {
-        separator = separator || '_';
-        return name.replace(SNAKE_CASE_REGEXP, function(letter, pos) {
-          return (pos ? separator : '') + letter.toLowerCase();
-        });
-      }
-
-      const unwatch = scope.$watch('fundingCaseType', function (fundingCaseType) {
-        if (fundingCaseType) {
-          const directiveName = 'funding' + _4.upperFirst(fundingCaseType.name) + 'ClearingEditor';
-          const tagName = snake_case(directiveName, '-');
-          const template = '<' + tagName + '></' + tagName + '>';
-          element.append($compile(template)(scope));
-          window.setTimeout(fixHeights, 100);
-          unwatch();
-        }
-      });
+    link: function () {
+      window.setTimeout(fixHeights, 100);
     },
     controller: ['$scope', 'crmStatus', 'fundingContactService', 'fundingCaseService',
       'fundingCaseTypeService', 'fundingProgramService', 'fundingApplicationProcessService',

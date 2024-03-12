@@ -51,7 +51,12 @@
       {{ recipientContact.display_name }}
     </div>
 
-    <funding-clearing-proofs ng-show="proofsUiSchema" json-schema="jsonSchema" ui-schema="proofsUiSchema" data="data"></funding-clearing-proofs>
+    <funding-jf-form json-schema="jsonSchema" ui-schema="uiSchema" data="data"
+                     errors="errors" editable="isEditAllowed()"
+                     on-start-edit="onStartEdit" on-before-save="onBeforeSave"
+                     on-after-save="onAfterSave" on-cancel-edit="onCancelEdit"
+                     on-edit-finished="onEditFinished" add-to="addTo" inserted="inserted"
+                     cancel-insert-at="cancelInsertAt" remove-at="removeAt"></funding-jf-form>
 
   </div>
 
