@@ -27,13 +27,12 @@ fundingModule.factory('fundingClearingProcessService', ['crmApi4', function(crmA
   }
 
   /**
-   * @param {integer} id
    * @param {string} field
    *
    * @returns {Promise<object[]>}
    *   Options with option name as index.
    */
-  function getOptions(id, field) {
+  function getOptions(field) {
     return crmApi4('FundingClearingProcess', 'getFields', {
       loadOptions: [
         'id',
@@ -44,7 +43,6 @@ fundingModule.factory('fundingClearingProcessService', ['crmApi4', function(crmA
         'color',
         'icon',
       ],
-      values: {id},
       where: [['name', '=', field]],
       select: ['options']
     }).then(function (result) {
@@ -103,12 +101,10 @@ fundingModule.factory('fundingClearingProcessService', ['crmApi4', function(crmA
       crmApi4('FundingClearingProcess', 'setContentReviewer', {clearingProcessId, reviewerContactId}),
 
     /**
-     * @param {integer} id
-     *
      * @returns {Promise<object[]>}
      *   Options with option name as index.
      */
-    getStatusOptions: (id) => getOptions(id, 'status'),
+    getStatusOptions: () => getOptions('status'),
     getOptionLabels: (id, field) => getOptionLabels(id, field),
   };
 }]);

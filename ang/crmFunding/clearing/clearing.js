@@ -34,9 +34,11 @@ fundingModule.config(['$routeProvider', function($routeProvider) {
 );
 
 fundingModule.controller('fundingClearingCtrl', [
-  '$scope', 'fundingClearingProcessService',
+  '$scope', 'fundingClearingProcessService', 'fundingApplicationProcessActivityService',
+  'fundingApplicationProcessService',
   'clearingProcess', 'form',
   function($scope, fundingClearingProcessService,
+           fundingApplicationProcessActivityService, fundingApplicationProcessService,
            clearingProcess, form) {
     const ts = $scope.ts = CRM.ts('funding');
 
@@ -48,9 +50,20 @@ fundingModule.controller('fundingClearingCtrl', [
       false: ts('Failed'),
     };
 
-    $scope.statusOptions = {};
-    fundingClearingProcessService.getStatusOptions(clearingProcess.id)
-      .then((options) => $scope.statusOptions = options);
+    $scope.applicationStatusOptions = {};
+    fundingApplicationProcessService.getStatusOptions(clearingProcess.application_process_id)
+      .then((options) => $scope.applicationStatusOptions = options);
+
+    $scope.clearingStatusOptions = {};
+    fundingClearingProcessService.getStatusOptions()
+      .then((options) => $scope.clearingStatusOptions = options);
+
+    $scope.activities = {};
+    $scope.loadActivities = function () {
+      fundingApplicationProcessActivityService.get(clearingProcess.application_process_id)
+        .then((result) => $scope.activities = result);
+    };
+    $scope.loadActivities();
 
     $scope.tab = 'clearing';
     $scope.clearingProcess = clearingProcess;

@@ -22,6 +22,7 @@ fundingModule.directive('fundingApplicationProcessHistory', [function() {
     scope: {
       activities: '=',
       statusOptions: '=',
+      clearingStatusOptions: '<',
       reviewStatusLabels: '=',
     },
     templateUrl: '~/crmFunding/application/history/applicationProcessHistory.template.html',
@@ -42,10 +43,11 @@ fundingModule.directive('fundingApplicationProcessHistory', [function() {
       $scope.isActivityHidden = function (activity) {
         switch (activity['activity_type_id:name']) {
           case 'funding_application_status_change':
-            return $scope.workflowActivitiesHidden;
           case 'funding_application_review_status_change':
-            return $scope.workflowActivitiesHidden;
           case 'funding_application_create':
+          case 'funding_clearing_status_change':
+          case 'funding_clearing_review_status_change':
+          case 'funding_clearing_create':
             return $scope.workflowActivitiesHidden;
           case 'funding_application_comment_external':
           case 'funding_application_comment_internal':

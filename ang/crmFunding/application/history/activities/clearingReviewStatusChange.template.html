@@ -1,0 +1,22 @@
+<div class="funding-activity funding-application-review-status-change panel panel-success">
+    <div class="funding-activity-title panel-heading">
+        {{::
+            activity.from_is_review_content !== activity.to_is_review_content
+            ? ts('Clearing content review: %status', {status: reviewStatusLabels[activity.to_is_review_content]})
+            : ''
+        }}
+        {{::
+            activity.from_is_review_content !== activity.to_is_review_content && activity.from_is_review_calculative !== activity.to_is_review_calculative
+            ? ', ' : ''
+        }}
+        {{::
+            activity.from_is_review_calculative !== activity.to_is_review_calculative
+            ? ts('Clearing calculative review: %status', {status: reviewStatusLabels[activity.to_is_review_calculative]})
+            : ''
+        }}
+    </div>
+    <div class="panel-body">
+        <div class="funding-activity-date">{{:: ts('Date: %date', {date: (activity.created_date | fundingDate)}) }}</div>
+        <div class="funding-activity-performed-by">{{:: ts('Performed by: %name', {name: activity.source_contact_name}) }}</div>
+    </div>
+</div>

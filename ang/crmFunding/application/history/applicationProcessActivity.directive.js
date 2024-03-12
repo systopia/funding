@@ -22,6 +22,7 @@ fundingModule.directive('fundingApplicationProcessActivity', [function() {
     scope: {
       activity: '=',
       statusOptions: '=',
+      clearingStatusOptions: '<',
       reviewStatusLabels: '=',
     },
     templateUrl: '~/crmFunding/application/history/applicationProcessActivity.template.html',
@@ -36,6 +37,14 @@ fundingModule.directive('fundingApplicationProcessActivity', [function() {
         };
       } else if ($scope.activity['activity_type_id:name'] === 'funding_application_create') {
         $scope.statusOption = $scope.statusOptions['new'];
+      } else if ($scope.activity['activity_type_id:name'] === 'funding_clearing_status_change') {
+        $scope.statusOption = $scope.clearingStatusOptions[$scope.activity.to_status] || {
+          id: 'unknown',
+          name: 'unknown',
+          label: ts('Unknown'),
+        };
+      } else if ($scope.activity['activity_type_id:name'] === 'funding_clearing_create') {
+        $scope.statusOption = $scope.clearingStatusOptions.draft;
       }
 
       function getActivityTemplateUrl(activity) {
@@ -49,6 +58,12 @@ fundingModule.directive('fundingApplicationProcessActivity', [function() {
             return '~/crmFunding/application/history/activities/comment.template.html';
           case 'funding_application_review_status_change':
             return '~/crmFunding/application/history/activities/reviewStatusChange.template.html';
+          case 'funding_clearing_status_change':
+            return '~/crmFunding/application/history/activities/clearingStatusChange.template.html';
+          case 'funding_clearing_create':
+            return '~/crmFunding/application/history/activities/clearingCreate.template.html';
+          case 'funding_clearing_review_status_change':
+            return '~/crmFunding/application/history/activities/clearingReviewStatusChange.template.html';
           default:
             return null;
         }
