@@ -37,7 +37,7 @@ use CRM_Funding_ExtensionUtil as E;
 final class FundingPseudoConstants {
 
   /**
-   * @phpstan-return array<int, optionT>
+   * @phpstan-return list<optionT>
    */
   public static function getApplicationProcessStatus(): array {
     $options = [
@@ -137,14 +137,35 @@ final class FundingPseudoConstants {
   }
 
   /**
-   * @phpstan-return array<string, string>
+   * @phpstan-return list<optionT>
    */
   public static function getClearingProcessStatus(): array {
     return [
-      'draft' => E::ts('Draft'),
-      'review-requested' => E::ts('Review Requested'),
-      'review' => E::ts('In review'),
-      'accepted' => E::ts('Accepted'),
+      [
+        'id' => 'draft',
+        'name' => 'draft',
+        'label' => E::ts('Draft'),
+        'icon' => 'fa-spinner',
+      ],
+      [
+        'id' => 'review-requested',
+        'name' => 'review-requested',
+        'label' => E::ts('Review Requested'),
+        'icon' => 'fa-circle-o',
+      ],
+      [
+        'id' => 'review',
+        'name' => 'review',
+        'label' => E::ts('In review'),
+        'icon' => 'fa-eye',
+      ],
+      [
+        'id' => 'accepted',
+        'name' => 'accepted',
+        'label' => E::ts('Accepted'),
+        'icon' => 'fa-check-circle-o',
+        'color' => '#56ab41',
+      ],
     ];
   }
 
@@ -169,7 +190,7 @@ final class FundingPseudoConstants {
   }
 
   /**
-   * @phpstan-return array<int, optionT>
+   * @phpstan-return list<optionT>
    */
   public static function getFundingCaseStatus(): array {
     $options = [
