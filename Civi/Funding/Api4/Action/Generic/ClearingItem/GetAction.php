@@ -19,7 +19,6 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\Generic\ClearingItem;
 
-use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\FundingCase;
 use Civi\Api4\FundingClearingProcess;
 use Civi\Api4\Generic\Result;
