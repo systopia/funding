@@ -66,6 +66,7 @@ final class ValidateFormActionTest extends AbstractRemoteFundingHeadlessTestCase
               [
                 'description' => 'costTest',
                 'amount' => 'abc',
+                'amountAdmitted' => NULL,
               ],
             ],
           ],
@@ -76,6 +77,7 @@ final class ValidateFormActionTest extends AbstractRemoteFundingHeadlessTestCase
               [
                 'description' => 'resourcesTest',
                 'amount' => 'abc',
+                'amountAdmitted' => NULL,
               ],
             ],
           ],
