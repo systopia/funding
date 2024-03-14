@@ -17,9 +17,9 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\ApplicationProcess\Clearing;
+namespace Civi\Funding\ClearingProcess\Form;
 
-use Civi\Funding\ApplicationProcess\Clearing\Container\ClearingItemsGroup;
+use Civi\Funding\ClearingProcess\Form\Container\ClearingItemsGroup;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategorization;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
@@ -27,12 +27,12 @@ use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Civi\Funding\ApplicationProcess\Clearing\ClearingGroupExtractor
+ * @covers \Civi\Funding\ClearingProcess\Form\ClearingGroupExtractor
  */
 final class ClearingGroupExtractorTest extends TestCase {
 
   /**
-   * @var \Civi\Funding\ApplicationProcess\Clearing\ClearingGroupExtractor
+   * @var \Civi\Funding\ClearingProcess\Form\ClearingGroupExtractor
    */
   private ClearingGroupExtractor $extractor;
 

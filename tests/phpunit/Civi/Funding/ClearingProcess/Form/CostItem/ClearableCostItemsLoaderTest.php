@@ -17,12 +17,12 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\ApplicationProcess\Clearing\CostItem;
+namespace Civi\Funding\ClearingProcess\Form\CostItem;
 
 use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
-use Civi\Funding\ApplicationProcess\Clearing\Container\ClearableItems;
 use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\JsonSchemaCostItem;
 use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\JsonSchemaCostItems;
+use Civi\Funding\ClearingProcess\Form\Container\ClearableItems;
 use Civi\Funding\EntityFactory\ApplicationCostItemFactory;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
@@ -34,8 +34,8 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Civi\Funding\ApplicationProcess\Clearing\CostItem\ClearableCostItemsLoader
- * @covers \Civi\Funding\ApplicationProcess\Clearing\AbstractClearableItemsLoader
+ * @covers \Civi\Funding\ClearingProcess\Form\CostItem\ClearableCostItemsLoader
+ * @covers \Civi\Funding\ClearingProcess\Form\AbstractClearableItemsLoader
  */
 final class ClearableCostItemsLoaderTest extends TestCase {
 
@@ -45,7 +45,7 @@ final class ClearableCostItemsLoaderTest extends TestCase {
   private MockObject $itemManagerMock;
 
   /**
-   * @var \Civi\Funding\ApplicationProcess\Clearing\CostItem\ClearableCostItemsLoader
+   * @var \Civi\Funding\ClearingProcess\Form\CostItem\ClearableCostItemsLoader
    */
   private ClearableCostItemsLoader $loader;
 

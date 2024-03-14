@@ -17,10 +17,10 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\ApplicationProcess\Clearing\ResourcesItem;
+namespace Civi\Funding\ClearingProcess\Form\ResourcesItem;
 
 use Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager;
-use Civi\Funding\ApplicationProcess\Clearing\AbstractClearableItemsLoader;
+use Civi\Funding\ClearingProcess\Form\AbstractClearableItemsLoader;
 use Psr\Log\LoggerInterface;
 
 /**

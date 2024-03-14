@@ -17,15 +17,15 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\ApplicationProcess\Clearing\CostItem;
+namespace Civi\Funding\ClearingProcess\Form\CostItem;
 
 use Civi\Core\Format;
-use Civi\Funding\ApplicationProcess\Clearing\ClearingGroupExtractor;
-use Civi\Funding\ApplicationProcess\Clearing\Container\ClearableItems;
-use Civi\Funding\ApplicationProcess\Clearing\Container\ClearingItemsGroup;
-use Civi\Funding\ApplicationProcess\Clearing\ItemDetailsFormElementGenerator;
 use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\JsonSchemaCostItem;
 use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\JsonSchemaCostItems;
+use Civi\Funding\ClearingProcess\Form\ClearingGroupExtractor;
+use Civi\Funding\ClearingProcess\Form\Container\ClearableItems;
+use Civi\Funding\ClearingProcess\Form\Container\ClearingItemsGroup;
+use Civi\Funding\ClearingProcess\Form\ItemDetailsFormElementGenerator;
 use Civi\Funding\EntityFactory\ApplicationCostItemFactory;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\Form\JsonFormsForm;
@@ -39,18 +39,18 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Civi\Funding\ApplicationProcess\Clearing\CostItem\ClearingCostItemsJsonFormsGenerator
- * @covers \Civi\Funding\ApplicationProcess\Clearing\AbstractClearingItemsJsonFormsGenerator
+ * @covers \Civi\Funding\ClearingProcess\Form\CostItem\ClearingCostItemsJsonFormsGenerator
+ * @covers \Civi\Funding\ClearingProcess\Form\AbstractClearingItemsJsonFormsGenerator
  */
 final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
 
   /**
-   * @var \Civi\Funding\ApplicationProcess\Clearing\CostItem\ClearableCostItemsLoader&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\ClearingProcess\Form\CostItem\ClearableCostItemsLoader&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $clearableItemsLoaderMock;
 
   /**
-   * @var \Civi\Funding\ApplicationProcess\Clearing\ClearingGroupExtractor&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\ClearingProcess\Form\ClearingGroupExtractor&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $clearingGroupExtractorMock;
 
@@ -62,7 +62,7 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
   private ClearingCostItemsJsonFormsGenerator $generator;
 
   /**
-   * @var \Civi\Funding\ApplicationProcess\Clearing\ItemDetailsFormElementGenerator&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\ClearingProcess\Form\ItemDetailsFormElementGenerator&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $itemDetailsFormElementGeneratorMock;
 

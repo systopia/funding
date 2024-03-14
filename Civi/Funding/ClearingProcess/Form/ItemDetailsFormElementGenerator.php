@@ -17,7 +17,7 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\ApplicationProcess\Clearing;
+namespace Civi\Funding\ClearingProcess\Form;
 
 use Civi\RemoteTools\JsonForms\JsonFormsMarkup;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsTable;

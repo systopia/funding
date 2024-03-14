@@ -17,9 +17,9 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\ApplicationProcess\Clearing;
+namespace Civi\Funding\ClearingProcess\Form;
 
-use Civi\Funding\ApplicationProcess\Clearing\Container\ClearingItemsGroup;
+use Civi\Funding\ClearingProcess\Form\Container\ClearingItemsGroup;
 use Civi\RemoteTools\JsonForms\JsonFormsElement;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Webmozart\Assert\Assert;

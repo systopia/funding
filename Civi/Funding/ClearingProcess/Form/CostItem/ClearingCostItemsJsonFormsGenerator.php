@@ -17,22 +17,21 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\ApplicationProcess\Clearing\ResourcesItem;
+namespace Civi\Funding\ClearingProcess\Form\CostItem;
 
 use Civi\Core\Format;
-use Civi\Funding\ApplicationProcess\Clearing\AbstractClearingItemsJsonFormsGenerator;
-use Civi\Funding\ApplicationProcess\Clearing\ClearingGroupExtractor;
-use Civi\Funding\ApplicationProcess\Clearing\ItemDetailsFormElementGenerator;
+use Civi\Funding\ClearingProcess\Form\AbstractClearingItemsJsonFormsGenerator;
+use Civi\Funding\ClearingProcess\Form\ClearingGroupExtractor;
+use Civi\Funding\ClearingProcess\Form\ItemDetailsFormElementGenerator;
 use CRM_Funding_ExtensionUtil as E;
 
 /**
- * @extends AbstractClearingItemsJsonFormsGenerator<\Civi\Funding\Entity\ApplicationResourcesItemEntity
- * >
+ * @extends AbstractClearingItemsJsonFormsGenerator<\Civi\Funding\Entity\ApplicationCostItemEntity>
  */
-final class ClearingResourcesItemsJsonFormsGenerator extends AbstractClearingItemsJsonFormsGenerator {
+final class ClearingCostItemsJsonFormsGenerator extends AbstractClearingItemsJsonFormsGenerator {
 
   public function __construct(
-    ClearableResourcesItemsLoader $clearableItemsLoader,
+    ClearableCostItemsLoader $clearableItemsLoader,
     ClearingGroupExtractor $clearingGroupExtractor,
     Format $format,
     ItemDetailsFormElementGenerator $itemDetailsFormElementGenerator
@@ -41,11 +40,11 @@ final class ClearingResourcesItemsJsonFormsGenerator extends AbstractClearingIte
   }
 
   protected function getPropertyKeyword(): string {
-    return 'resourcesItems';
+    return 'costItems';
   }
 
   protected function getTitle(): string {
-    return E::ts('Resources');
+    return E::ts('Costs');
   }
 
 }

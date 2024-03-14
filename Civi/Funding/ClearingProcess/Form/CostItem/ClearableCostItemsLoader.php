@@ -17,10 +17,10 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\ApplicationProcess\Clearing\CostItem;
+namespace Civi\Funding\ClearingProcess\Form\CostItem;
 
 use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
-use Civi\Funding\ApplicationProcess\Clearing\AbstractClearableItemsLoader;
+use Civi\Funding\ClearingProcess\Form\AbstractClearableItemsLoader;
 use Psr\Log\LoggerInterface;
 
 /**

@@ -17,39 +17,28 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\ApplicationProcess\Clearing\Container;
+namespace Civi\Funding\ClearingProcess\Form\Container;
 
-use Civi\RemoteTools\JsonSchema\JsonSchema;
-
-/**
- * @template T of \Civi\Funding\Entity\AbstractFinancePlanItemEntity
- */
-final class ClearableItems {
-
-  public string $scope;
-
-  public JsonSchema $propertySchema;
-
-  public JsonSchema $financePlanItemSchema;
+final class ClearingItemsGroup {
 
   /**
-   * @phpstan-var array<T>
+   * @var string|null
+   *   If not NULL, a JSON forms group shall be created.
    */
-  public array $items;
+  public ?string $label;
 
   /**
-   * @phpstan-param array<T> $items
+   * @phpstan-var array<string, \Civi\RemoteTools\JsonSchema\JsonSchema>
+   *   JSON Forms elements of the application form mapped by their scopes.
    */
-  public function __construct(
-    string $scope,
-    JsonSchema $propertySchema,
-    JsonSchema $financePlanItemSchema,
-    array $items = []
-  ) {
-    $this->scope = $scope;
-    $this->propertySchema = $propertySchema;
-    $this->financePlanItemSchema = $financePlanItemSchema;
-    $this->items = $items;
+  public array $elements = [];
+
+  /**
+   * @phpstan-param array<string, \Civi\RemoteTools\JsonSchema\JsonSchema> $elements
+   */
+  public function __construct(?string $label, array $elements = []) {
+    $this->label = $label;
+    $this->elements = $elements;
   }
 
 }

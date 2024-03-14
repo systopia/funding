@@ -17,10 +17,10 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\ApplicationProcess\Clearing;
+namespace Civi\Funding\ClearingProcess\Form;
 
 use Civi\Funding\ApplicationProcess\AbstractFinancePlanItemManager;
-use Civi\Funding\ApplicationProcess\Clearing\Container\ClearableItems;
+use Civi\Funding\ClearingProcess\Form\Container\ClearableItems;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\RemoteTools\JsonForms\Util\JsonFormsUtil;
 use Civi\RemoteTools\JsonSchema\JsonSchema;

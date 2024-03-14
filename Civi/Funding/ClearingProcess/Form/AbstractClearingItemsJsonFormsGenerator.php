@@ -17,10 +17,10 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\ApplicationProcess\Clearing;
+namespace Civi\Funding\ClearingProcess\Form;
 
 use Civi\Core\Format;
-use Civi\Funding\ApplicationProcess\Clearing\Container\ClearingItemsGroup;
+use Civi\Funding\ClearingProcess\Form\Container\ClearingItemsGroup;
 use Civi\Funding\ClearingProcess\Traits\HasClearingReviewPermissionTrait;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Form\JsonFormsForm;
@@ -131,7 +131,7 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
   }
 
   /**
-   * @phpstan-param array<string, \Civi\Funding\ApplicationProcess\Clearing\Container\ClearableItems<T>> $clearableItems
+   * @phpstan-param array<string, \Civi\Funding\ClearingProcess\Form\Container\ClearableItems<T>> $clearableItems
    */
   private function handleGroup(
     ClearingItemsGroup $group,

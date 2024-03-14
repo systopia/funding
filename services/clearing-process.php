@@ -20,12 +20,6 @@ declare(strict_types = 1);
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
-use Civi\Funding\ApplicationProcess\Clearing\ClearingGroupExtractor;
-use Civi\Funding\ApplicationProcess\Clearing\CostItem\ClearableCostItemsLoader;
-use Civi\Funding\ApplicationProcess\Clearing\CostItem\ClearingCostItemsJsonFormsGenerator;
-use Civi\Funding\ApplicationProcess\Clearing\ItemDetailsFormElementGenerator;
-use Civi\Funding\ApplicationProcess\Clearing\ResourcesItem\ClearableResourcesItemsLoader;
-use Civi\Funding\ApplicationProcess\Clearing\ResourcesItem\ClearingResourcesItemsJsonFormsGenerator;
 use Civi\Funding\ClearingProcess\ClearingActionsDeterminer;
 use Civi\Funding\ClearingProcess\ClearingCostItemManager;
 use Civi\Funding\ClearingProcess\ClearingExternalFileManager;
@@ -35,6 +29,12 @@ use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\ClearingProcess\ClearingResourcesItemManager;
 use Civi\Funding\ClearingProcess\ClearingStatusDeterminer;
 use Civi\Funding\ClearingProcess\Form\ClearingFormGenerator;
+use Civi\Funding\ClearingProcess\Form\ClearingGroupExtractor;
+use Civi\Funding\ClearingProcess\Form\CostItem\ClearableCostItemsLoader;
+use Civi\Funding\ClearingProcess\Form\CostItem\ClearingCostItemsJsonFormsGenerator;
+use Civi\Funding\ClearingProcess\Form\ItemDetailsFormElementGenerator;
+use Civi\Funding\ClearingProcess\Form\ResourcesItem\ClearableResourcesItemsLoader;
+use Civi\Funding\ClearingProcess\Form\ResourcesItem\ClearingResourcesItemsJsonFormsGenerator;
 use Civi\Funding\ClearingProcess\Handler\ClearingFormDataGetHandler;
 use Civi\Funding\ClearingProcess\Handler\ClearingFormDataGetHandlerInterface;
 use Civi\Funding\ClearingProcess\Handler\ClearingFormGetHandler;

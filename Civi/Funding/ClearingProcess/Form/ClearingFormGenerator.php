@@ -20,11 +20,11 @@ declare(strict_types = 1);
 namespace Civi\Funding\ClearingProcess\Form;
 
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
-use Civi\Funding\ApplicationProcess\Clearing\CostItem\ClearingCostItemsJsonFormsGenerator;
-use Civi\Funding\ApplicationProcess\Clearing\ResourcesItem\ClearingResourcesItemsJsonFormsGenerator;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormCreateCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
 use Civi\Funding\ClearingProcess\ClearingActionsDeterminer;
+use Civi\Funding\ClearingProcess\Form\CostItem\ClearingCostItemsJsonFormsGenerator;
+use Civi\Funding\ClearingProcess\Form\ResourcesItem\ClearingResourcesItemsJsonFormsGenerator;
 use Civi\Funding\ClearingProcess\Traits\HasClearingReviewPermissionTrait;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\Form\JsonFormsForm;

@@ -17,7 +17,7 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\ApplicationProcess\Clearing;
+namespace Civi\Funding\ClearingProcess\Form;
 
 use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\JsonSchemaCostItems;
 use Civi\RemoteTools\JsonForms\Control\JsonFormsArray;
@@ -32,12 +32,12 @@ use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Civi\Funding\ApplicationProcess\Clearing\ItemDetailsFormElementGenerator
+ * @covers \Civi\Funding\ClearingProcess\Form\ItemDetailsFormElementGenerator
  */
 final class ItemDetailsFormElementGeneratorTest extends TestCase {
 
   /**
-   * @var \Civi\Funding\ApplicationProcess\Clearing\ItemDetailsFormElementGenerator
+   * @var \Civi\Funding\ClearingProcess\Form\ItemDetailsFormElementGenerator
    */
   private ItemDetailsFormElementGenerator $formElementGenerator;
 
