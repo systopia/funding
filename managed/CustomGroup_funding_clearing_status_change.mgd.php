@@ -40,7 +40,7 @@ return [
       'values' => [
         'custom_group_id.name' => 'funding_clearing_status_change',
         'name' => 'from_status',
-        'label' => E::ts('Von Status'),
+        'label' => E::ts('From Status'),
         'html_type' => 'Text',
         'is_required' => TRUE,
         'is_searchable' => TRUE,
@@ -64,7 +64,7 @@ return [
       'values' => [
         'custom_group_id.name' => 'funding_clearing_status_change',
         'name' => 'to_status',
-        'label' => E::ts('Zu Status'),
+        'label' => E::ts('To Status'),
         'html_type' => 'Text',
         'is_required' => TRUE,
         'is_searchable' => TRUE,

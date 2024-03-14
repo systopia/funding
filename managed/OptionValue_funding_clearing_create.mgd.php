@@ -14,7 +14,7 @@ return [
       'version' => 4,
       'values' => [
         'option_group_id.name' => 'activity_type',
-        'label' => E::ts('Funding Clearing Created'),
+        'label' => E::ts('Funding Clearing Started'),
         'name' => ActivityTypeNames::FUNDING_CLEARING_CREATE,
         'grouping' => 'funding',
         'weight' => 74,

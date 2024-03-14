@@ -73,7 +73,7 @@ final class ClearingProcessCreatedSubscriberTest extends TestCase {
 
     $activity = ActivityEntity::fromArray([
       'activity_type_id:name' => ActivityTypeNames::FUNDING_CLEARING_CREATE,
-      'subject' => 'Funding Clearing Created',
+      'subject' => 'Funding Clearing Started',
       'details' => 'Application: Title (Identifier)',
     ]);
     $this->activityManagerMock->expects(static::once())->method('addActivity')

@@ -55,7 +55,7 @@ class ClearingProcessCreatedSubscriber implements EventSubscriberInterface {
     $applicationProcess = $event->getApplicationProcess();
     $activity = ActivityEntity::fromArray([
       'activity_type_id:name' => ActivityTypeNames::FUNDING_CLEARING_CREATE,
-      'subject' => E::ts('Funding Clearing Created'),
+      'subject' => E::ts('Funding Clearing Started'),
       'details' => E::ts('Application: %1 (%2)',
         [
           1 => $applicationProcess->getTitle(),
