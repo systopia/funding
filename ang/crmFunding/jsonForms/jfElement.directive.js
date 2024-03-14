@@ -49,7 +49,7 @@ fundingModule.directive('fundingJfElement', ['$compile', function($compile) {
           const directiveName = 'fundingJf' + _4.upperFirst(uiSchema.type);
           const tagName = snake_case(directiveName, '-');
           const template = '<' + tagName + '></' + tagName + '>';
-          element.append($compile(template)(scope));
+          angular.element(element[0]).html($compile(template)(scope));
         }
       });
     },
