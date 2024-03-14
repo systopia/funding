@@ -137,7 +137,7 @@ final class ClearingFormGenerator {
       $elements = [new JsonFormsCategorization($categories)];
 
       $actions = $this->actionsDeterminer->getActions(
-        $clearingProcessBundle->getClearingProcess()->getFullStatus(),
+        $clearingProcessBundle->getClearingProcess(),
         $clearingProcessBundle->getFundingCase()->getPermissions()
       );
 
@@ -171,8 +171,8 @@ final class ClearingFormGenerator {
     $keywords['required'][] = '_action';
 
     $uiSchema = new JsonFormsGroup(E::ts('Clearing'), $elements);
-    if ($this->actionsDeterminer->isEditAllowed(
-      $clearingProcessBundle->getClearingProcess()->getFullStatus(),
+    if (!$this->actionsDeterminer->isEditAllowed(
+      $clearingProcessBundle->getClearingProcess(),
       $clearingProcessBundle->getFundingCase()->getPermissions()
     )) {
       $uiSchema->setReadonly(TRUE);

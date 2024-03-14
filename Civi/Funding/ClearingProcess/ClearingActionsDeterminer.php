@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\ClearingProcess;
 
 use Civi\Funding\ClearingProcess\Traits\HasClearingReviewPermissionTrait;
-use Civi\Funding\Entity\FullClearingProcessStatus;
+use Civi\Funding\Entity\ClearingProcessEntity;
 use CRM_Funding_ExtensionUtil as E;
 
 final class ClearingActionsDeterminer {
@@ -62,12 +62,22 @@ final class ClearingActionsDeterminer {
     ],
   ];
 
+  private ClearingCostItemManager $clearingCostItemManager;
+
+  private ClearingResourcesItemManager $clearingResourcesItemManager;
+
   /**
    * @phpstan-var array<string, string>
    */
   private array $labels;
 
-  public function __construct() {
+  public function __construct(
+    ClearingCostItemManager $clearingCostItemManager,
+    ClearingResourcesItemManager $clearingResourcesItemManager
+  ) {
+    $this->clearingCostItemManager = $clearingCostItemManager;
+    $this->clearingResourcesItemManager = $clearingResourcesItemManager;
+
     // Order determines the order returned by getActions().
     $this->labels = [
       'save' => E::ts('Save'),
@@ -92,15 +102,15 @@ final class ClearingActionsDeterminer {
    * @phpstan-return array<string, string>
    *   Mapping of action name to label.
    */
-  public function getActions(FullClearingProcessStatus $fullStatus, array $permissions): array {
-    $status = $fullStatus->getStatus();
+  public function getActions(ClearingProcessEntity $clearingProcess, array $permissions): array {
+    $status = $clearingProcess->getStatus();
     $actions = [];
     foreach ($permissions as $permission) {
       $actions = array_merge($actions, self::STATUS_PERMISSION_ACTIONS_MAP[$status][$permission] ?? []);
     }
 
     $actions = array_merge($actions, $this->getReviewActions(
-      $fullStatus,
+      $clearingProcess,
       $this->hasReviewCalculativePermission($permissions),
       $this->hasReviewContentPermission($permissions)
     ));
@@ -111,8 +121,8 @@ final class ClearingActionsDeterminer {
   /**
    * @phpstan-param list<string> $permissions
    */
-  public function isActionAllowed(string $action, FullClearingProcessStatus $fullStatus, array $permissions): bool {
-    return isset($this->getActions($fullStatus, $permissions)[$action]);
+  public function isActionAllowed(string $action, ClearingProcessEntity $clearingProcess, array $permissions): bool {
+    return isset($this->getActions($clearingProcess, $permissions)[$action]);
   }
 
   /**
@@ -121,10 +131,10 @@ final class ClearingActionsDeterminer {
    */
   public function isAnyActionAllowed(
     array $actions,
-    FullClearingProcessStatus $status,
+    ClearingProcessEntity $clearingProcess,
     array $permissions
   ): bool {
-    return [] !== array_intersect($this->getActions($status, $permissions), $actions);
+    return [] !== array_intersect(array_keys($this->getActions($clearingProcess, $permissions)), $actions);
   }
 
   /**
@@ -139,40 +149,43 @@ final class ClearingActionsDeterminer {
   /**
    * @phpstan-param list<string> $permissions
    */
-  public function isEditAllowed(FullClearingProcessStatus $status, array $permissions): bool {
-    return $this->isAnyActionAllowed(self::EDIT_ACTIONS, $status, $permissions);
+  public function isEditAllowed(ClearingProcessEntity $clearingProcess, array $permissions): bool {
+    return $this->isAnyActionAllowed(self::EDIT_ACTIONS, $clearingProcess, $permissions);
   }
 
   /**
    * @phpstan-return list<string>
    */
   private function getReviewActions(
-    FullClearingProcessStatus $fullStatus,
+    ClearingProcessEntity $clearingProcess,
     bool $hasReviewCalculativePermission,
     bool $hasReviewContentPermission
   ): array {
     $actions = [];
-    if ('review' === $fullStatus->getStatus()
+    if ('review' === $clearingProcess->getStatus()
       && ($hasReviewCalculativePermission || $hasReviewContentPermission)
     ) {
       if ($hasReviewCalculativePermission) {
-        if (TRUE !== $fullStatus->getIsReviewCalculative()) {
-          // @fixme Only if no clearing item is in status 'new'.
-          $actions[] = 'accept-calculative';
+        if (TRUE !== $clearingProcess->getIsReviewCalculative()) {
+          if ($this->clearingCostItemManager->areAllItemsReviewed($clearingProcess->getId())
+            && $this->clearingResourcesItemManager->areAllItemsReviewed($clearingProcess->getId())
+          ) {
+            $actions[] = 'accept-calculative';
+          }
         }
-        if (FALSE !== $fullStatus->getIsReviewCalculative()) {
+        if (FALSE !== $clearingProcess->getIsReviewCalculative()) {
           $actions[] = 'reject-calculative';
         }
       }
       if ($hasReviewContentPermission) {
-        if (TRUE !== $fullStatus->getIsReviewContent()) {
+        if (TRUE !== $clearingProcess->getIsReviewContent()) {
           $actions[] = 'accept-content';
         }
-        if (FALSE !== $fullStatus->getIsReviewContent()) {
+        if (FALSE !== $clearingProcess->getIsReviewContent()) {
           $actions[] = 'reject-content';
         }
       }
-      if (TRUE === $fullStatus->getIsReviewCalculative() && TRUE === $fullStatus->getIsReviewContent()) {
+      if (TRUE === $clearingProcess->getIsReviewCalculative() && TRUE === $clearingProcess->getIsReviewContent()) {
         $actions[] = 'accept';
       }
     }

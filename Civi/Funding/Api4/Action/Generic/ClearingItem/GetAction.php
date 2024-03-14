@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\Generic\ClearingItem;
 
+use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\FundingCase;
 use Civi\Api4\FundingClearingProcess;
 use Civi\Api4\Generic\Result;
@@ -76,7 +77,12 @@ class GetAction extends AbstractReferencingDAOGetAction {
     // Ensure permissions for all funding cases with clearing process are determined.
     $action = FundingCase::get(FALSE)
       ->setCachePermissionsOnly(TRUE)
-      ->addJoin(FundingClearingProcess::getEntityName() . ' AS cp', 'INNER', NULL, ['cp.funding_case_id', '=', 'id']);
+      ->addJoin(
+        FundingClearingProcess::getEntityName() . ' AS cp',
+        'INNER',
+        NULL,
+        ['cp.application_process_id.funding_case_id', '=', 'id']
+      );
 
     $clearingProcessId = WhereUtil::getInt($this->getWhere(), 'clearing_process_id');
     if (NULL !== $clearingProcessId) {

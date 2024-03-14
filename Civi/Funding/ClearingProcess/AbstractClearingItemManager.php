@@ -22,6 +22,7 @@ namespace Civi\Funding\ClearingProcess;
 use Civi\Funding\Entity\AbstractClearingItemEntity;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
+use Civi\RemoteTools\Api4\Query\CompositeCondition;
 use Webmozart\Assert\Assert;
 
 /**
@@ -33,6 +34,13 @@ abstract class AbstractClearingItemManager {
 
   public function __construct(Api4Interface $api4) {
     $this->api4 = $api4;
+  }
+
+  public function areAllItemsReviewed(int $clearingProcessId): bool {
+    return $this->api4->countEntities($this->getApiEntityName(), CompositeCondition::fromFieldValuePairs([
+      'clearing_process_id' => $clearingProcessId,
+      'amount_admitted' => NULL,
+    ])) === 0;
   }
 
   /**
