@@ -44,6 +44,7 @@ final class KursZuschussJsonSchema extends JsonSchemaObject {
         ],
       ),
       'teilnehmerkosten' => new JsonSchemaMoney([
+        '$default' => new JsonSchemaDataPointer('1/teilnehmerkostenMax'),
         'maximum' => new JsonSchemaDataPointer('1/teilnehmerkostenMax'),
         '$costItem' => new JsonSchemaCostItem([
           'type' => 'teilnehmerkosten',
@@ -62,6 +63,7 @@ final class KursZuschussJsonSchema extends JsonSchemaObject {
         ],
       ),
       'fahrtkosten' => new JsonSchemaMoney([
+        '$default' => new JsonSchemaDataPointer('1/fahrtkostenMax'),
         'maximum' => new JsonSchemaDataPointer('1/fahrtkostenMax'),
         '$costItem' => new JsonSchemaCostItem([
           'type' => 'fahrtkosten',
@@ -81,6 +83,7 @@ final class KursZuschussJsonSchema extends JsonSchemaObject {
         ],
       ),
       'honorarkosten' => new JsonSchemaMoney([
+        '$default' => new JsonSchemaDataPointer('1/honorarkostenMax'),
         'maximum' => new JsonSchemaDataPointer('1/honorarkostenMax'),
         '$costItem' => new JsonSchemaCostItem([
           'type' => 'honorarkosten',
