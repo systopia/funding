@@ -146,18 +146,27 @@ final class FundingPseudoConstants {
         'name' => 'draft',
         'label' => E::ts('Draft'),
         'icon' => 'fa-spinner',
+        'color' => NULL,
+        'abbr' => NULL,
+        'description' => NULL,
       ],
       [
         'id' => 'review-requested',
         'name' => 'review-requested',
         'label' => E::ts('Review Requested'),
         'icon' => 'fa-circle-o',
+        'color' => NULL,
+        'abbr' => NULL,
+        'description' => NULL,
       ],
       [
         'id' => 'review',
         'name' => 'review',
         'label' => E::ts('In review'),
         'icon' => 'fa-eye',
+        'color' => NULL,
+        'abbr' => NULL,
+        'description' => NULL,
       ],
       [
         'id' => 'accepted',
@@ -165,6 +174,8 @@ final class FundingPseudoConstants {
         'label' => E::ts('Accepted'),
         'icon' => 'fa-check-circle-o',
         'color' => '#56ab41',
+        'abbr' => NULL,
+        'description' => NULL,
       ],
     ];
   }

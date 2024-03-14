@@ -17,6 +17,8 @@
 
 declare(strict_types = 1);
 
+use Civi\Funding\Upgrade\Upgrader0002;
+
 /**
  * Collection of upgrade steps.
  */
@@ -25,6 +27,17 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
   public function upgrade_0001(): bool {
     $this->ctx->log->info('Applying database migration 0001');
     $this->executeSqlFile('sql/upgrade/0001.sql');
+
+    return TRUE;
+  }
+
+  public function upgrade_0002(): bool {
+    $this->ctx->log->info('Applying database migration 0002');
+    $this->executeSqlFile('sql/upgrade/0002.sql');
+    /** @var \Civi\Funding\Upgrade\Upgrader0002 $upgrader */
+    $upgrader = \Civi::service(Upgrader0002::class);
+
+    $upgrader->execute($this->ctx->log);
 
     return TRUE;
   }

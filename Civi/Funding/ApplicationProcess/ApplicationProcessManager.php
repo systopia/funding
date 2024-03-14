@@ -143,6 +143,18 @@ class ApplicationProcessManager {
   }
 
   /**
+   * @phpstan-return list<ApplicationProcessEntity>
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function getAll(): array {
+    // @phpstan-ignore-next-line
+    return ApplicationProcessEntity::allFromApiResult(
+      $this->api4->getEntities(FundingApplicationProcess::getEntityName())
+    );
+  }
+
+  /**
    * @throws \CRM_Core_Exception
    *
    * @phpstan-return array<int, FullApplicationProcessStatus>

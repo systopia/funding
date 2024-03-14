@@ -69,13 +69,10 @@ abstract class AbstractClearableItemsLoader {
 
     foreach ($items as $item) {
       $path = explode('/', ltrim($item->getDataPointer(), '/'));
-      if ([''] === $path) {
-        // Saved before we had cost items.
-        // @todo How to get path?
-        continue;
-      }
-
-      if ([] !== $item->getProperties()) {
+      // If $path is [''] then the application was last saved before
+      // cost/resources items were specified in the JSON schema and validation
+      // failed on update.
+      if ([] !== $item->getProperties() && [''] !== $path) {
         $arrayItem = TRUE;
         $index = array_pop($path);
         Assert::integerish($index);

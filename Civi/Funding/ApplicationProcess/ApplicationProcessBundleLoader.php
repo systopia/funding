@@ -58,6 +58,20 @@ class ApplicationProcessBundleLoader {
   }
 
   /**
+   * @phpstan-return list<ApplicationProcessEntityBundle>
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function getAll(): array {
+    $bundles = [];
+    foreach ($this->applicationProcessManager->getAll() as $applicationProcess) {
+      $bundles[] = $this->createFromApplicationProcess($applicationProcess);
+    }
+
+    return $bundles;
+  }
+
+  /**
    * @phpstan-return array<int, \Civi\Funding\Entity\FullApplicationProcessStatus>
    *   Status of other application processes in same funding case indexed by ID.
    *
