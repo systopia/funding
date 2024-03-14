@@ -168,7 +168,7 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                 'amountAdmittedTotal' => [
                   'type' => 'number',
                   '$calculate' => [
-                    'expression' => 'round(sum(map(records, "value.amountAdmitted ?? 0")), 2)',
+                    'expression' => 'round(sum(map(records, "value.amountAdmitted ?: 0")), 2)',
                     'variables' => ['records' => ['$data' => '1/records']],
                   ],
                   'default' => 0,
@@ -365,7 +365,7 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                 'amountAdmittedTotal' => [
                   'type' => 'number',
                   '$calculate' => [
-                    'expression' => 'round(sum(map(records, "value.amountAdmitted ?? 0")), 2)',
+                    'expression' => 'round(sum(map(records, "value.amountAdmitted ?: 0")), 2)',
                     'variables' => ['records' => ['$data' => '1/records']],
                   ],
                   'default' => 0,
@@ -569,7 +569,7 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                 'amountAdmittedTotal' => [
                   'type' => 'number',
                   '$calculate' => [
-                    'expression' => 'round(sum(map(records, "value.amountAdmitted ?? 0")), 2)',
+                    'expression' => 'round(sum(map(records, "value.amountAdmitted ?: 0")), 2)',
                     'variables' => ['records' => ['$data' => '1/records']],
                   ],
                   'default' => 0,

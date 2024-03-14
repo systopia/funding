@@ -165,7 +165,9 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
           ),
           'amountAdmittedTotal' => new JsonSchemaCalculate(
             'number',
-            'round(sum(map(records, "value.amountAdmitted ?? 0")), 2)',
+            // With Symfony Expression Language 6.2 we'd use '??' instead of '?:'
+            // Though as long as we support PHP 7.4 we have to keep '?:'.
+            'round(sum(map(records, "value.amountAdmitted ?: 0")), 2)',
             ['records' => new JsonSchemaDataPointer('1/records')],
             NULL,
             ['default' => 0]
