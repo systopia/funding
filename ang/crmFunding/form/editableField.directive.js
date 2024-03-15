@@ -18,7 +18,7 @@
 
 // TODO: Interpret some JSON schema keywords
 
-fundingModule.directive('editableField', [function() {
+fundingModule.directive('editableField', ['$filter', function($filter) {
   function toJsonPointer(path) {
     return '/' + _4.join(_4.toPath(path), '/');
   }
@@ -137,6 +137,18 @@ fundingModule.directive('editableField', [function() {
 
         return selected;
       };
+
+      $scope.showValue = function (value) {
+        if (value === undefined || value === null || value === '') {
+          return $attrs.emptyValueDisplay;
+        }
+
+        if (typeof value === 'number' && !Number.isInteger(value)) {
+          return $filter('fundingNumber')(value);
+        }
+
+        return value;
+      };
     }],
     link: function (scope, element, attrs, controller, transcludeFn) {
       transcludeFn(function (clone) {
@@ -185,7 +197,7 @@ fundingModule.directive('editableField', [function() {
       } else if (attrs.type === 'select') {
         displayValueExpression = 'showSelect(' + attrs.value + ', ' + attrs.optionsOneOf + ')';
       } else {
-        displayValueExpression = '((undefined === ' + attrs.value +  ' || undefined) || null === ' + attrs.value + ' || "" === ' + attrs.value + ') ? $ctrl.emptyValueDisplay : ' + attrs.value;
+        displayValueExpression = `showValue(${attrs.value})`;
       }
 
       let editElement;

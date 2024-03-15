@@ -28,6 +28,7 @@ use Civi\RemoteTools\JsonForms\JsonFormsControl;
 use Civi\RemoteTools\JsonForms\JsonFormsRule;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
@@ -37,19 +38,59 @@ final class AVK1ReportFormFactory implements ReportFormFactoryInterface {
   use AVK1SupportedFundingCaseTypesTrait;
 
   public function createReportForm(ClearingProcessEntityBundle $clearingProcessBundle): JsonFormsFormInterface {
-    $jsonSchema = new JsonSchemaObject([
-      'reportData' => new JsonSchemaObject([
-        'durchgefuehrt' => new JsonSchemaString([
-          'oneOf' => JsonSchemaUtil::buildTitledOneOf([
-            'geplant' => 'entsprechend dem geplanten Programm',
-            'geaendert' => 'mit folgenden wesentlichen Änderungen (kurze Begründung für die Änderung):',
-          ]),
+    // In draft report data fields may be empty.
+    $reportDataDraftSchema = new JsonSchemaObject([
+      'durchgefuehrt' => new JsonSchemaString([
+        'oneOf' => JsonSchemaUtil::buildTitledOneOf([
+          'geplant' => 'entsprechend dem geplanten Programm',
+          'geaendert' => 'mit folgenden wesentlichen Änderungen (kurze Begründung für die Änderung):',
         ]),
-        'aenderungen' => new JsonSchemaString(),
-        'thematischeSchwerpunkte' => new JsonSchemaString(),
-        'methoden' => new JsonSchemaString(),
-        'zielgruppe' => new JsonSchemaString(),
-        'sonstiges' => new JsonSchemaString(),
+      ]),
+      'aenderungen' => new JsonSchemaString(),
+      'thematischeSchwerpunkte' => new JsonSchemaString(),
+      'methoden' => new JsonSchemaString(),
+      'zielgruppe' => new JsonSchemaString(),
+      'sonstiges' => new JsonSchemaString(),
+    ]);
+
+    $reportDataSchema = $reportDataDraftSchema->clone();
+    $requiredStrings = [
+      'durchgefuehrt',
+      'thematischeSchwerpunkte',
+      'methoden',
+      'zielgruppe',
+      'sonstiges',
+    ];
+    $reportDataSchema['required'] = $requiredStrings;
+    foreach ($requiredStrings as $property) {
+      // @phpstan-ignore-next-line
+      $reportDataSchema['properties'][$property]['minLength'] ??= 1;
+    }
+
+    $validations = $reportDataSchema['properties']['aenderungen']['$validations'] ?? [];
+    $validations[] = JsonSchema::fromArray([
+      'keyword' => 'evaluate',
+      'value' => [
+        'expression' => 'data != "" || durchgefuehrt === "geplant"',
+        'variables' => [
+          'durchgefuehrt' => new JsonSchemaDataPointer('1/durchgefuehrt'),
+        ],
+      ],
+      'message' => 'Bitte Begründung für die Änderungen angeben.',
+    ]);
+    // @phpstan-ignore-next-line
+    $reportDataSchema['properties']['aenderungen']['$validations'] = $validations;
+
+    $jsonSchema = new JsonSchemaObject([
+      'reportData' => $reportDataDraftSchema,
+    ], [
+      'if' => JsonSchema::fromArray([
+        'properties' => [
+          '_action' => ['not' => ['const' => 'save']],
+        ],
+      ]),
+      'then' => new JsonSchemaObject([
+        'reportData' => $reportDataSchema,
       ]),
     ]);
 

@@ -30,6 +30,7 @@ use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
 use Civi\RemoteTools\JsonSchema\JsonSchemaBoolean;
+use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
@@ -39,96 +40,224 @@ final class IJBReportFormFactory implements ReportFormFactoryInterface {
   use IJBSupportedFundingCaseTypesTrait;
 
   public function createReportForm(ClearingProcessEntityBundle $clearingProcessBundle): JsonFormsFormInterface {
+    // In draft report data fields may be empty.
+    $reportDataDraftSchema = new JsonSchemaObject([
+      'durchgefuehrt' => new JsonSchemaString([
+        'oneOf' => JsonSchemaUtil::buildTitledOneOf([
+          'geplant' => 'entsprechend dem geplanten Programm',
+          'geaendert' => 'mit folgenden wesentlichen Änderungen (kurze Begründung für die Änderung):',
+        ]),
+      ]),
+      'aenderungen' => new JsonSchemaString(),
+      'sprache' => new JsonSchemaString([
+        'oneOf' => JsonSchemaUtil::buildTitledOneOf([
+          'partnersprache' => 'in der Partnersprache',
+          'deutsch' => 'auf Deutsch',
+          'andere' => 'auf:',
+        ]),
+      ]),
+      'andereSprache' => new JsonSchemaString(['maxLength' => 50]),
+
+      // Abschnitt 1: Sprachliche Verständigung
+      'verstaendigungBewertung' => new JsonSchemaString([
+        'oneOf' => JsonSchemaUtil::buildTitledOneOf([
+          'gut' => 'gut',
+          'zufriedenstellend' => 'zufriedenstellend',
+          'schlecht' => 'schlecht (bitte Begründung angeben)',
+        ]),
+      ]),
+      'verstaendigungFreitext' => new JsonSchemaString(),
+      'sprachlicheUnterstuetzung' => new JsonSchemaBoolean([
+        'oneOf' => JsonSchemaUtil::buildTitledOneOf2(['ja' => TRUE, 'nein' => FALSE]),
+      ]),
+      'sprachlicheUnterstuetzungArt' => new JsonSchemaString(),
+      'sprachlicheUnterstuetzungProgrammpunkte' => new JsonSchemaString(),
+      'sprachlicheUnterstuetzungErfahrungen' => new JsonSchemaString(),
+
+      // Abschnitt 2: Vorbereitung der Maßnahme
+      'vorbereitung' => new JsonSchemaString(),
+      'vorbereitungstreffen' => new JsonSchemaBoolean([
+        'oneOf' => JsonSchemaUtil::buildTitledOneOf2(['ja' => TRUE, 'nein, weil' => FALSE]),
+      ]),
+      'vorbereitungstreffenFreitext' => new JsonSchemaString(),
+      'vorbereitungTeilnehmer' => new JsonSchemaString(),
+
+      // Abschnitt 3: Durchführung/Inhalt/Methoden
+      'themenfelder' => new JsonSchemaArray(new JsonSchemaString([
+        'oneOf' => JsonSchemaUtil::buildTitledOneOf([
+          'kennenlernen' => 'gegenseitiges Kennenlernen',
+          'politik' => 'Politik und Gesellschaft',
+          'medien' => 'Medien',
+          'alltag' => 'Alltag in Familie u. Heimatort',
+          'geschichte' => 'Geschichte',
+          'gewaltpraeventation' => 'Gewaltprävention',
+          'sitten' => 'Sitten und Gebräuche',
+          'sport' => 'Sport',
+          'didaktik' => 'Didaktik und Methodik',
+          'religion' => 'Religion',
+          'natur' => 'Natur und Umwelt',
+          'spiel' => 'Spiel und Spielen',
+          'aufwachsen' => 'Gesundes Aufwachsen',
+          'kunst' => 'Kunst und Kultur',
+          'fortbildung' => 'Teamer-, Leiterfortbildung',
+          'ausbildung' => 'Schule, Ausbildung, Beruf',
+          'rettungsdienste' => 'Rettungs- und Hilfsdienste',
+          'sonstige' => 'Sonstige',
+          'geschlechtlicheIdentitaet' => 'geschlechtliche Identität',
+          'technik' => 'Technik und Handwerk',
+          'ohne' => 'ohne Schwerpunktthema',
+        ]),
+      ]), ['maxItems' => 3, 'uniqueItems' => TRUE]),
+      'zieleErreicht' => new JsonSchemaString(),
+      'intensiveBegegnungErmoeglicht' => new JsonSchemaString(),
+      'programmpunkteGemeinsamDurchgefuehrt' => new JsonSchemaBoolean([
+        'oneOf' => JsonSchemaUtil::buildTitledOneOf2(['ja:' => TRUE, 'nein,' => FALSE]),
+      ]),
+      'programmpunkteGemeinsamDurchgefuehrtFreitext' => new JsonSchemaString(),
+      'jugendlicheBeteiligt' => new JsonSchemaString(),
+      'methoden' => new JsonSchemaString(),
+      'besondere' => new JsonSchemaString(),
+      'erschwerteZugangsvoraussetzungenBeteiligt' => new JsonSchemaString(),
+
+      // Abschnitt 4: Auswertung, Evaluierung und Perspektiven
+      'beurteilungTeilnehmer' => new JsonSchemaString(),
+      'evaluierungsinstrumente' => new JsonSchemaString(),
+      'teilnahmenachweis' => new JsonSchemaBoolean([
+        'oneOf' => JsonSchemaUtil::buildTitledOneOf2(['ja' => TRUE, 'nein' => FALSE]),
+      ]),
+      'schlussfolgerungen' => new JsonSchemaString(),
+      'massnahmenGeplant' => new JsonSchemaString(),
+      'veroeffentlichungen' => new JsonSchemaString(),
+      'hinweisBMFSFJ' => new JsonSchemaString(),
+      'anregungenBMFSFJ' => new JsonSchemaString(),
+    ]);
+
+    $reportDataSchema = $reportDataDraftSchema->clone();
+    $requiredStrings = [
+      'durchgefuehrt',
+      'sprache',
+      'verstaendigungBewertung',
+      'verstaendigungFreitext',
+      'vorbereitung',
+      'vorbereitungstreffenFreitext',
+      'vorbereitungTeilnehmer',
+      'zieleErreicht',
+      'intensiveBegegnungErmoeglicht',
+      'programmpunkteGemeinsamDurchgefuehrt',
+      'programmpunkteGemeinsamDurchgefuehrtFreitext',
+      'jugendlicheBeteiligt',
+      'methoden',
+      'besondere',
+      'erschwerteZugangsvoraussetzungenBeteiligt',
+      'beurteilungTeilnehmer',
+      'evaluierungsinstrumente',
+      'schlussfolgerungen',
+      'massnahmenGeplant',
+      'veroeffentlichungen',
+      'hinweisBMFSFJ',
+      'anregungenBMFSFJ',
+    ];
+
+    $requiredArrays = [
+      'themenfelder',
+    ];
+
+    $requiredBooleans = [
+      'sprachlicheUnterstuetzung',
+      'vorbereitungstreffen',
+      'teilnahmenachweis',
+    ];
+
+    $reportDataSchema['required'] = array_merge($requiredStrings, $requiredArrays, $requiredBooleans);
+    foreach ($requiredStrings as $property) {
+      // @phpstan-ignore-next-line
+      $reportDataSchema['properties'][$property]['minLength'] ??= 1;
+    }
+    foreach ($requiredArrays as $property) {
+      // @phpstan-ignore-next-line
+      $reportDataSchema['properties'][$property]['minItems'] ??= 1;
+    }
+
+    $validations = $reportDataSchema['properties']['aenderungen']['$validations'] ?? [];
+    $validations[] = JsonSchema::fromArray([
+      'keyword' => 'evaluate',
+      'value' => [
+        'expression' => 'data != "" || durchgefuehrt === "geplant"',
+        'variables' => [
+          'durchgefuehrt' => new JsonSchemaDataPointer('1/durchgefuehrt'),
+        ],
+      ],
+      'message' => 'Bitte Begründung für die Änderungen angeben.',
+    ]);
+    // @phpstan-ignore-next-line
+    $reportDataSchema['properties']['aenderungen']['$validations'] = $validations;
+
+    $validations = $reportDataSchema['properties']['andereSprache']['$validations'] ?? [];
+    $validations[] = JsonSchema::fromArray([
+      'keyword' => 'evaluate',
+      'value' => [
+        'expression' => 'data != "" || sprache !== "andere"',
+        'variables' => [
+          'sprache' => new JsonSchemaDataPointer('1/sprache'),
+        ],
+      ],
+      'message' => 'Bitte die Verständigungssprache angeben.',
+    ]);
+    // @phpstan-ignore-next-line
+    $reportDataSchema['properties']['andereSprache']['$validations'] = $validations;
+
+    $validations = $reportDataSchema['properties']['sprachlicheUnterstuetzungArt']['$validations'] ?? [];
+    $validations[] = JsonSchema::fromArray([
+      'keyword' => 'evaluate',
+      'value' => [
+        'expression' => 'data != "" || !sprachlicheUnterstuetzung',
+        'variables' => [
+          'sprachlicheUnterstuetzung' => new JsonSchemaDataPointer('1/sprachlicheUnterstuetzung'),
+        ],
+      ],
+      'message' => 'Bitte die Art der Unterstützung angeben.',
+    ]);
+    // @phpstan-ignore-next-line
+    $reportDataSchema['properties']['sprachlicheUnterstuetzungArt']['$validations'] = $validations;
+
+    $validations = $reportDataSchema['properties']['sprachlicheUnterstuetzungProgrammpunkte']['$validations'] ?? [];
+    $validations[] = JsonSchema::fromArray([
+      'keyword' => 'evaluate',
+      'value' => [
+        'expression' => 'data != "" || !sprachlicheUnterstuetzung',
+        'variables' => [
+          'sprachlicheUnterstuetzung' => new JsonSchemaDataPointer('1/sprachlicheUnterstuetzung'),
+        ],
+      ],
+      'message' => 'Bitte die Programmpunkte angeben.',
+    ]);
+    // @phpstan-ignore-next-line
+    $reportDataSchema['properties']['sprachlicheUnterstuetzungProgrammpunkte']['$validations'] = $validations;
+
+    $validations = $reportDataSchema['properties']['sprachlicheUnterstuetzungErfahrungen']['$validations'] ?? [];
+    $validations[] = JsonSchema::fromArray([
+      'keyword' => 'evaluate',
+      'value' => [
+        'expression' => 'data != "" || !sprachlicheUnterstuetzung',
+        'variables' => [
+          'sprachlicheUnterstuetzung' => new JsonSchemaDataPointer('1/sprachlicheUnterstuetzung'),
+        ],
+      ],
+      'message' => 'Bitte die Erfahrungen angeben.',
+    ]);
+    // @phpstan-ignore-next-line
+    $reportDataSchema['properties']['sprachlicheUnterstuetzungErfahrungen']['$validations'] = $validations;
+
     $jsonSchema = new JsonSchemaObject([
-      'reportData' => new JsonSchemaObject([
-        'durchgefuehrt' => new JsonSchemaString([
-          'oneOf' => JsonSchemaUtil::buildTitledOneOf([
-            'geplant' => 'entsprechend dem geplanten Programm',
-            'geaendert' => 'mit folgenden wesentlichen Änderungen (kurze Begründung für die Änderung):',
-          ]),
-        ]),
-        'aenderungen' => new JsonSchemaString(),
-        'sprache' => new JsonSchemaString([
-          'oneOf' => JsonSchemaUtil::buildTitledOneOf([
-            'partnersprache' => 'in der Partnersprache',
-            'deutsch' => 'auf Deutsch',
-            'andere' => 'auf:',
-          ]),
-        ]),
-        'andereSprache' => new JsonSchemaString(['maxLength' => 50]),
-
-        // Abschnitt 1: Sprachliche Verständigung
-        'verstaendigungBewertung' => new JsonSchemaString([
-          'oneOf' => JsonSchemaUtil::buildTitledOneOf([
-            'gut' => 'gut',
-            'zufriedenstellend' => 'zufriedenstellend',
-            'schlecht' => 'schlecht (bitte Begründung angeben)',
-          ]),
-        ]),
-        'verstaendigungFreitext' => new JsonSchemaString(),
-        'sprachlicheUnterstuetzung' => new JsonSchemaBoolean([
-          'oneOf' => JsonSchemaUtil::buildTitledOneOf2(['ja' => TRUE, 'nein' => FALSE]),
-        ]),
-        'sprachlicheUnterstuetzungArt' => new JsonSchemaString(),
-        'sprachlicheUnterstuetzungProgrammpunkte' => new JsonSchemaString(),
-        'sprachlicheUnterstuetzungErfahrungen' => new JsonSchemaString(),
-
-        // Abschnitt 2: Vorbereitung der Maßnahme
-        'vorbereitung' => new JsonSchemaString(),
-        'vorbereitungstreffen' => new JsonSchemaBoolean([
-          'oneOf' => JsonSchemaUtil::buildTitledOneOf2(['ja' => TRUE, 'nein, weil' => FALSE]),
-        ]),
-        'vorbereitungstreffenFreitext' => new JsonSchemaString(),
-        'vorbereitungTeilnehmer' => new JsonSchemaString(),
-
-        // Abschnitt 3: Durchführung/Inhalt/Methoden
-        'themenfelder' => new JsonSchemaArray(new JsonSchemaString([
-          'oneOf' => JsonSchemaUtil::buildTitledOneOf([
-            'kennenlernen' => 'gegenseitiges Kennenlernen',
-            'politik' => 'Politik und Gesellschaft',
-            'median' => 'Medien',
-            'alltag' => 'Alltag in Familie u. Heimatort',
-            'geschichte' => 'Geschichte',
-            'gewaltpraeventation' => 'Gewaltprävention',
-            'sitten' => 'Sitten und Gebräuche',
-            'sport' => 'Sport',
-            'didaktik' => 'Didaktik und Methodik',
-            'religion' => 'Religion',
-            'natur' => 'Natur und Umwelt',
-            'spiel' => 'Spiel und Spielen',
-            'aufwachsen' => 'Gesundes Aufwachsen',
-            'kunst' => 'Kunst und Kultur',
-            'fortbildung' => 'Teamer-, Leiterfortbildung',
-            'ausbildung' => 'Schule, Ausbildung, Beruf',
-            'rettungsdienste' => 'Rettungs- und Hilfsdienste',
-            'sonstige' => 'Sonstige',
-            'geschlechtlicheIdentitaet' => 'geschlechtliche Identität',
-            'technik' => 'Technik und Handwerk',
-            'ohne' => 'ohne Schwerpunktthema',
-          ]),
-        ]), ['maxItems' => 3, 'uniqueItems' => TRUE]),
-        'zieleErreicht' => new JsonSchemaString(),
-        'intensiveBegegnungErmoeglicht' => new JsonSchemaString(),
-        'programmpunkteGemeinsamDurchgefuehrt' => new JsonSchemaBoolean([
-          'oneOf' => JsonSchemaUtil::buildTitledOneOf2(['ja:' => TRUE, 'nein,' => FALSE]),
-        ]),
-        'programmpunkteGemeinsamDurchgefuehrtFreitext' => new JsonSchemaString(),
-        'jugendlicheBeteiligt' => new JsonSchemaString(),
-        'methoden' => new JsonSchemaString(),
-        'besondere' => new JsonSchemaString(),
-        'erschwerteZugangsvoraussetzungenBeteiligt' => new JsonSchemaString(),
-
-        // Abschnitt 4: Auswertung, Evaluierung und Perspektiven
-        'beurteilungTeilnehmer' => new JsonSchemaString(),
-        'evaluierungsinstrumente' => new JsonSchemaString(),
-        'teilnahmenachweis' => new JsonSchemaBoolean([
-          'oneOf' => JsonSchemaUtil::buildTitledOneOf2(['ja' => TRUE, 'nein' => FALSE]),
-        ]),
-        'schlussfolgerungen' => new JsonSchemaString(),
-        'massnahmenGeplant' => new JsonSchemaString(),
-        'veroeffentlichungen' => new JsonSchemaString(),
-        'hinweisBMFSFJ' => new JsonSchemaString(),
-        'anregungenBMFSFJ' => new JsonSchemaString(),
+      'reportData' => $reportDataDraftSchema,
+    ], [
+      'if' => JsonSchema::fromArray([
+        'properties' => [
+          '_action' => ['not' => ['const' => 'save']],
+        ],
+      ]),
+      'then' => new JsonSchemaObject([
+        'reportData' => $reportDataSchema,
       ]),
     ]);
 
@@ -199,9 +328,9 @@ EOD
         [],
         [
           'rule' => new JsonFormsRule(
-            'SHOW',
+            'HIDE',
             '#/properties/reportData/properties/sprachlicheUnterstuetzung',
-            JsonSchema::fromArray(['const' => TRUE])
+            JsonSchema::fromArray(['const' => FALSE])
           ),
         ]
       ),
@@ -212,9 +341,9 @@ EOD
         [],
         [
           'rule' => new JsonFormsRule(
-            'SHOW',
+            'HIDE',
             '#/properties/reportData/properties/sprachlicheUnterstuetzung',
-            JsonSchema::fromArray(['const' => TRUE])
+            JsonSchema::fromArray(['const' => FALSE])
           ),
         ]
       ),
@@ -225,9 +354,9 @@ EOD
         [],
         [
           'rule' => new JsonFormsRule(
-            'SHOW',
+            'HIDE',
             '#/properties/reportData/properties/sprachlicheUnterstuetzung',
-            JsonSchema::fromArray(['const' => TRUE])
+            JsonSchema::fromArray(['const' => FALSE])
           ),
         ]
       ),
@@ -385,7 +514,7 @@ EOD,
           ['multi' => TRUE],
         ),
         new JsonFormsControl(
-          "$scopePrefix/hinweisBMFSFJ",
+          "$scopePrefix/anregungenBMFSFJ",
           '4.9 Welche Anregungen für den Bundearbeitskreis/das BMFSFJ haben sich ggf. aus der Maßnahme ergeben?',
           NULL,
           ['multi' => TRUE],

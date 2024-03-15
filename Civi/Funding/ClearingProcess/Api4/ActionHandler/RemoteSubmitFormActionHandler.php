@@ -45,7 +45,7 @@ final class RemoteSubmitFormActionHandler implements ActionHandlerInterface {
    *   message: string,
    *   errors: non-empty-array<string, non-empty-list<string>>,
    * } | array{
-   *   action: RemoteSubmitResponseActions::CLOSE_FORM,
+   *   action: RemoteSubmitResponseActions::CLOSE_FORM|RemoteSubmitResponseActions::RELOAD_FORM,
    *   message: string,
    *   files: non-empty-array<string, string>|\stdClass,
    * }
@@ -69,7 +69,9 @@ final class RemoteSubmitFormActionHandler implements ActionHandlerInterface {
     }
 
     return [
-      'action' => RemoteSubmitResponseActions::CLOSE_FORM,
+      'action' => 'modify' === ($action->getData()['_action'] ?? NULL)
+      ? RemoteSubmitResponseActions::RELOAD_FORM
+      : RemoteSubmitResponseActions::CLOSE_FORM,
       'message' => E::ts('Saved'),
       'files' => $result['files'],
     ];

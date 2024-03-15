@@ -63,10 +63,11 @@ final class ValidateFormActionHandler implements ActionHandlerInterface {
     $result = $this->validateHandler->handle(
       new ClearingFormValidateCommand($clearingProcessBundle, $action->getData(), 10)
     );
+    $data = array_map(fn ($value) => [] === $value ? new \stdClass() : $value, $result->getData());
 
     return [
       'valid' => $result->isValid(),
-      'data' => $result->getData(),
+      'data' => $data,
       'errors' => [] === $result->getErrorMessages() ? new \stdClass() : $result->getErrorMessages(),
     ];
   }

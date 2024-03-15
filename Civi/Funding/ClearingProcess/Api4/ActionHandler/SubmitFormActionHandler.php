@@ -62,9 +62,10 @@ final class SubmitFormActionHandler implements ActionHandlerInterface {
     Assert::notNull($clearingProcessBundle, sprintf('Clearing process with ID %d not found', $action->getId()));
 
     $result = $this->submitHandler->handle(new ClearingFormSubmitCommand($clearingProcessBundle, $action->getData()));
+    $data = array_map(fn ($value) => [] === $value ? new \stdClass() : $value, $result->getData());
 
     return [
-      'data' => $result->getData(),
+      'data' => $data,
       'files' => [] === $result->getFiles() ? new \stdClass() : $result->getFiles(),
       'errors' => [] === $result->getErrorMessages() ? new \stdClass() : $result->getErrorMessages(),
     ];
