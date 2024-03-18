@@ -39,6 +39,9 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
         '$resourcesItem' => new JsonSchemaResourcesItem([
           'type' => 'teilnehmerbeitraege',
           'identifier' => 'teilnehmerbeitraege',
+          'clearing' => [
+            'itemLabel' => 'Teilnehmer*innenbeiträge',
+          ],
         ]),
       ]),
       // Abschnitt II.2
@@ -48,6 +51,9 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
         '$resourcesItem' => new JsonSchemaResourcesItem([
           'type' => 'eigenmittel',
           'identifier' => 'eigenmittel',
+          'clearing' => [
+            'itemLabel' => 'Eigenmittel',
+          ],
         ]),
       ]),
       // Abschnitt II.3
@@ -58,6 +64,9 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
           '$resourcesItem' => new JsonSchemaResourcesItem([
             'type' => 'oeffentlicheMittel/europa',
             'identifier' => 'oeffentlicheMittel.europa',
+            'clearing' => [
+              'itemLabel' => 'Finanzierung durch Europa-Mittel',
+            ],
           ]),
         ]),
         'bundeslaender' => new JsonSchemaMoney([
@@ -66,6 +75,9 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
           '$resourcesItem' => new JsonSchemaResourcesItem([
             'type' => 'oeffentlicheMittel/bundeslaender',
             'identifier' => 'oeffentlicheMittel.bundeslaender',
+            'clearing' => [
+              'itemLabel' => 'Finanzierung durch Bundesländer',
+            ],
           ]),
         ]),
         'staedteUndKreise' => new JsonSchemaMoney([
@@ -74,6 +86,9 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
           '$resourcesItem' => new JsonSchemaResourcesItem([
             'type' => 'oeffentlicheMittel/staedteUndKreise',
             'identifier' => 'oeffentlicheMittel.staedteUndKreise',
+            'clearing' => [
+              'itemLabel' => 'Finanzierung durch Städte und Kreise',
+            ],
           ]),
         ]),
       ]),
@@ -98,6 +113,9 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
             'type' => 'sonstigeMittel',
             'identifierProperty' => '_identifier',
             'amountProperty' => 'betrag',
+            'clearing' => [
+              'itemLabel' => 'Sonstige Mittel',
+            ],
           ]),
         ]
       ),
