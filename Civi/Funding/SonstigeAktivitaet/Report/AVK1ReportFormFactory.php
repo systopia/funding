@@ -67,8 +67,7 @@ final class AVK1ReportFormFactory implements ReportFormFactoryInterface {
       $reportDataSchema['properties'][$property]['minLength'] ??= 1;
     }
 
-    $validations = $reportDataSchema['properties']['aenderungen']['$validations'] ?? [];
-    $validations[] = JsonSchema::fromArray([
+    $this->addValidation($reportDataSchema, 'aenderungen', JsonSchema::fromArray([
       'keyword' => 'evaluate',
       'value' => [
         'expression' => 'data != "" || durchgefuehrt === "geplant"',
@@ -77,9 +76,7 @@ final class AVK1ReportFormFactory implements ReportFormFactoryInterface {
         ],
       ],
       'message' => 'Bitte Begründung für die Änderungen angeben.',
-    ]);
-    // @phpstan-ignore-next-line
-    $reportDataSchema['properties']['aenderungen']['$validations'] = $validations;
+    ]));
 
     $jsonSchema = new JsonSchemaObject([
       'reportData' => $reportDataDraftSchema,
@@ -97,7 +94,7 @@ final class AVK1ReportFormFactory implements ReportFormFactoryInterface {
     $uiSchema = new JsonFormsGroup('Sachbericht', [
       new JsonFormsControl(
         '#/properties/reportData/properties/durchgefuehrt',
-        'Die Maßnahme wurde durchgeführt',
+        'Die Maßnahme wurde durchgeführt&nbsp;*',
         NULL,
         ['format' => 'radio']
       ),
@@ -110,31 +107,38 @@ final class AVK1ReportFormFactory implements ReportFormFactoryInterface {
       ]),
       new JsonFormsControl(
         '#/properties/reportData/properties/thematischeSchwerpunkte',
-        'Welche thematischen Schwerpunkte hatte die Veranstaltung?',
+        'Welche thematischen Schwerpunkte hatte die Veranstaltung?&nbsp;*',
         NULL,
         ['multi' => TRUE],
       ),
       new JsonFormsControl(
         '#/properties/reportData/properties/methoden',
-        'Inwiefern und mit welchen Methoden wurden die  inhaltlichen Ziele erreicht?',
+        'Inwiefern und mit welchen Methoden wurden die  inhaltlichen Ziele erreicht?&nbsp;*',
         NULL,
         ['multi' => TRUE]
       ),
       new JsonFormsControl(
         '#/properties/reportData/properties/zielgruppe',
-        'Welche Zielgruppe wurde mit der Veranstaltung erreicht (Zusammensetzung, Alter)?',
+        'Welche Zielgruppe wurde mit der Veranstaltung erreicht (Zusammensetzung, Alter)?&nbsp;*',
         NULL,
         ['multi' => TRUE]
       ),
       new JsonFormsControl(
         '#/properties/reportData/properties/sonstiges',
-        'Besondere Vorkommnisse, Schlussfolgerungen oder sonstige Hinweise',
+        'Besondere Vorkommnisse, Schlussfolgerungen oder sonstige Hinweise&nbsp;*',
         NULL,
         ['multi' => TRUE]
       ),
     ]);
 
     return new JsonFormsForm($jsonSchema, $uiSchema);
+  }
+
+  private function addValidation(JsonSchemaObject $reportDataSchema, string $property, JsonSchema $validation): void {
+    $validations = $reportDataSchema['properties'][$property]['$validations'] ?? [];
+    $validations[] = $validation;
+    // @phpstan-ignore-next-line
+    $reportDataSchema['properties'][$property]['$validations'] = $validations;
   }
 
 }

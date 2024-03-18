@@ -133,18 +133,295 @@ final class IJBReportFormFactory implements ReportFormFactoryInterface {
     ]);
 
     $reportDataSchema = $reportDataDraftSchema->clone();
+    $this->addValidations($reportDataSchema);
+
+    $jsonSchema = new JsonSchemaObject([
+      'reportData' => $reportDataDraftSchema,
+    ], [
+      'if' => JsonSchema::fromArray([
+        'properties' => [
+          '_action' => ['not' => ['const' => 'save']],
+        ],
+      ]),
+      'then' => new JsonSchemaObject([
+        'reportData' => $reportDataSchema,
+      ]),
+    ]);
+
+    $scopePrefix = '#/properties/reportData/properties';
+    $uiSchema = new JsonFormsGroup('Sachbericht', [
+      new JsonFormsGroup('Infotext', [], <<<'EOD'
+Mit der Beantwortung der nachfolgenden Fragen gebt Ihr uns und dem BMFSFJ die
+Möglichkeit, einen Einblick in Eure Maßnahme zu gewinnen. Eure Erfahrungen
+helfen uns, den internationalen Jugendaustausch weiterzuentwickeln, bewährte
+Methoden oder Programmteile weiterzuempfehlen sowie möglicherweise häufiger
+vorkommende Herausforderungen zu erkennen und bei der Behebung zu helfen.
+Vor diesem Hintergrund bitten wir Euch darum, die Fragen aufmerksam zu
+beantworten. Nutzt dafür gerne so viel Platz, wie Ihr benötigt.
+EOD
+      ),
+      new JsonFormsControl(
+        '#/properties/reportData/properties/durchgefuehrt',
+        'Die Maßnahme wurde durchgeführt&nbsp;*',
+        NULL,
+        ['format' => 'radio']
+      ),
+      new JsonFormsControl('#/properties/reportData/properties/aenderungen', '', NULL, ['multi' => TRUE], [
+        'rule' => new JsonFormsRule(
+          'ENABLE',
+          '#/properties/reportData/properties/durchgefuehrt',
+          JsonSchema::fromArray(['const' => 'geaendert'])
+        ),
+      ]),
+
+      new JsonFormsGroup('1. Sprachliche Verständigung', [
+        new JsonFormsControl(
+          '#/properties/reportData/properties/sprache',
+          '1.1 Die sprachliche Verständigung während der Maßnahme erfolgte:&nbsp;*',
+          NULL,
+          ['format' => 'radio'],
+        ),
+        new JsonFormsControl('#/properties/reportData/properties/andereSprache', '', NULL, NULL, [
+          'rule' => new JsonFormsRule(
+            'ENABLE',
+            '#/properties/reportData/properties/sprache',
+            JsonSchema::fromArray(['const' => 'andere'])
+          ),
+        ]),
+        new JsonFormsControl(
+          '#/properties/reportData/properties/verstaendigungBewertung',
+          '1.2 Die sprachliche Verständigung während der Maßnahme war:&nbsp;*',
+          NULL,
+          ['format' => 'radio'],
+        ),
+        new JsonFormsControl(
+          '#/properties/reportData/properties/verstaendigungFreitext',
+          'Anmerkungen',
+          NULL,
+          ['multi' => TRUE]
+        ),
+      ]),
+      new JsonFormsControl(
+        '#/properties/reportData/properties/sprachlicheUnterstuetzung',
+        '1.3 Wurde während der Maßnahme sprachliche Unterstützung ' .
+        '(Sprachanimation, Sprachmittlung, Dolmetschung) in Anspruch genommen?&nbsp;*',
+        NULL,
+        ['format' => 'radio']
+      ),
+      new JsonFormsControl(
+        '#/properties/reportData/properties/sprachlicheUnterstuetzungArt',
+        'Art der Unterstützung&nbsp;*',
+        NULL,
+        [],
+        [
+          'rule' => new JsonFormsRule(
+            'HIDE',
+            '#/properties/reportData/properties/sprachlicheUnterstuetzung',
+            JsonSchema::fromArray(['const' => FALSE])
+          ),
+        ]
+      ),
+      new JsonFormsControl(
+        '#/properties/reportData/properties/sprachlicheUnterstuetzungProgrammpunkte',
+        'Bei welchen Programmpunkten?&nbsp;*',
+        NULL,
+        [],
+        [
+          'rule' => new JsonFormsRule(
+            'HIDE',
+            '#/properties/reportData/properties/sprachlicheUnterstuetzung',
+            JsonSchema::fromArray(['const' => FALSE])
+          ),
+        ]
+      ),
+      new JsonFormsControl(
+        '#/properties/reportData/properties/sprachlicheUnterstuetzungErfahrungen',
+        'Welche Erfahrungen habt Ihr damit gemacht?&nbsp;*',
+        NULL,
+        [],
+        [
+          'rule' => new JsonFormsRule(
+            'HIDE',
+            '#/properties/reportData/properties/sprachlicheUnterstuetzung',
+            JsonSchema::fromArray(['const' => FALSE])
+          ),
+        ]
+      ),
+
+      new JsonFormsGroup('2. Vorbereitung der Maßnahme', [
+        new JsonFormsControl(
+          '#/properties/reportData/properties/vorbereitung',
+          '2.1 Über welche Erfahrungen verfügte(n) die Leitungsperson(en) und wie erfolgte die Vorbereitung?&nbsp;*',
+          NULL,
+          ['multi' => TRUE],
+        ),
+        new JsonFormsControl(
+          "$scopePrefix/vorbereitungstreffen",
+          'Gab es ein Vorbereitungstreffen?&nbsp;*',
+          NULL,
+          ['format' => 'radio'],
+        ),
+        new JsonFormsControl("$scopePrefix/vorbereitungstreffenFreitext", ''),
+        new JsonFormsControl(
+          "$scopePrefix/vorbereitungTeilnehmer",
+          '2.2 Wie bereiteten sich die Teilnehmenden auf die Maßnahme vor?&nbsp;*',
+          NULL,
+          ['multi' => TRUE]
+        ),
+      ]),
+
+      new JsonFormsGroup('3. Durchführung/Inhalt/Methoden', [
+        new JsonFormsControl("$scopePrefix/themenfelder",
+          <<<'EOD'
+3.1 Welche inhaltlichen Ziele wurden/werden (kurz und ggf. mittel- bis
+langfristig) mit der Maßnahme verfolgt (siehe auch Themenfelder im
+Formblatt M Statistische Mitteilungen)?<br>Themenfelder (bis zu 3 Themen können
+angekreuzt werden)&nbsp;*
+EOD),
+        new JsonFormsControl(
+          "$scopePrefix/zieleErreicht",
+          'Welche dieser Ziele wurden aus Eurer Sicht erreicht?&nbsp;*',
+          NULL,
+          ['multi' => TRUE]
+        ),
+        new JsonFormsControl(
+          "$scopePrefix/intensiveBegegnungErmoeglicht",
+          '3.2 Wie wurde eine intensive Begegnung der Teilnehmenden ermöglicht?&nbsp;*',
+          NULL,
+          ['multi' => TRUE],
+        ),
+        new JsonFormsControl(
+          "$scopePrefix/programmpunkteGemeinsamDurchgefuehrt",
+          <<<'EOD'
+Wurden alle Programmpunkte gemeinsam von den deutschen und ausländischen
+Jugendlichen der Partnerorganisation durchgeführt? Wenn nein, erläutert bitte,
+welche Punkte nicht gemeinsam verbracht worden sind und warum.&nbsp;*
+EOD,
+          NULL,
+          ['format' => 'radio'],
+        ),
+        new JsonFormsControl(
+          "$scopePrefix/programmpunkteGemeinsamDurchgefuehrtFreitext",
+          '',
+          NULL,
+          ['multi' => TRUE],
+        ),
+
+        new JsonFormsControl(
+          "$scopePrefix/jugendlicheBeteiligt",
+          <<<'EOD'
+3.3 Bei Jugendbegegnungen: In welcher Form waren die Jugendlichen an der
+Vorbereitung, Durchführung sowie Auswertung des Projekts beteiligt?&nbsp;*
+EOD,
+          NULL,
+          ['multi' => TRUE],
+        ),
+        new JsonFormsControl(
+          "$scopePrefix/methoden",
+          <<<'EOD'
+3.4 Mit welchen Methoden und Programmbausteinen wurde im Projekt gearbeitet?
+Welche haben sich bewährt, welche nicht und warum?&nbsp;*
+EOD,
+          NULL,
+          ['multi' => TRUE],
+        ),
+        new JsonFormsControl(
+          "$scopePrefix/besondere",
+          <<<'EOD'
+3.5 Was war das Besondere an der Begegnung? Gab es aus Sicht der
+Begegnungsleitung ein Highlight oder herausragende Erlebnisse?&nbsp;*
+EOD,
+          NULL,
+          ['multi' => TRUE],
+        ),
+        new JsonFormsControl(
+          "$scopePrefix/erschwerteZugangsvoraussetzungenBeteiligt",
+          <<<'EOD'
+3.6 Waren junge Menschen mit erschwerten Zugangsvoraussetzungen an der Maßnahme
+beteiligt (z.B. Jugendliche mit Migrationsgeschichte, Fluchterfahrung,
+Beeinträchtigung oder erhöhtem Betreuungsbedarf)? Wenn ja, welche Erfahrungen
+habt Ihr dabei gemacht?&nbsp;*
+EOD,
+          NULL,
+          ['multi' => TRUE],
+        ),
+      ]),
+
+      new JsonFormsGroup('4. Auswertung, Evaluierung und Perspektiven', [
+        new JsonFormsControl(
+          "$scopePrefix/beurteilungTeilnehmer",
+          '4.1 Wie beurteilten die Teilnehmenden die Maßnahme?&nbsp;*',
+          NULL,
+          ['multi' => TRUE],
+        ),
+        new JsonFormsControl(
+          "$scopePrefix/evaluierungsinstrumente",
+          '4.2 Welche Evaluierungsinstrumente wurden genutzt?&nbsp;*',
+          NULL,
+          ['multi' => TRUE],
+        ),
+        new JsonFormsControl(
+          "$scopePrefix/teilnahmenachweis",
+          <<<'EOD'
+4.4 Stellt Ihr Euren Teilnehmenden einen „Teilnahmenachweis International“ aus
+(vgl. <a href="https://www.nachweise-international.de/" target="_blank">www.nachweise-international.de</a>)?&nbsp;*
+EOD,
+          NULL,
+          ['format' => 'radio'],
+        ),
+        new JsonFormsControl(
+          "$scopePrefix/schlussfolgerungen",
+          <<<'EOD'
+4.5 Welche Schlussfolgerungen zieht die Leitung aus der Maßnahme? Wie werden die
+Erfahrungen durch die Leitung ausgewertet und weitergegeben?&nbsp;*
+EOD,
+          NULL,
+          ['multi' => TRUE],
+        ),
+        new JsonFormsControl(
+          "$scopePrefix/massnahmenGeplant",
+          '4.6 Sind weitere Maßnahmen geplant? Wenn ja, welche?&nbsp;*',
+          NULL,
+          ['multi' => TRUE],
+        ),
+        new JsonFormsControl(
+          "$scopePrefix/veroeffentlichungen",
+          <<<'EOD'
+4.7 Welche Veröffentlichungen oder Produkte gab es? Bitte ggf. einen Link zum
+Artikel auf der Homepage angeben, Kopie(n) von Pressemitteilung(en),
+Belegexemplare etc. beifügen.&nbsp;*
+EOD,
+          NULL,
+          ['multi' => TRUE],
+        ),
+        new JsonFormsControl(
+          "$scopePrefix/hinweisBMFSFJ",
+          '4.8 Wie wurde auf die Förderung durch das BMFSFJ hingewiesen?&nbsp;*',
+          NULL,
+          ['multi' => TRUE],
+        ),
+        new JsonFormsControl(
+          "$scopePrefix/anregungenBMFSFJ",
+          '4.9 Welche Anregungen für den Bundearbeitskreis/das BMFSFJ haben sich ggf. aus der Maßnahme ergeben?&nbsp;*',
+          NULL,
+          ['multi' => TRUE],
+        ),
+      ]),
+    ]);
+
+    return new JsonFormsForm($jsonSchema, $uiSchema);
+  }
+
+  private function addValidations(JsonSchemaObject $reportDataSchema): void {
     $requiredStrings = [
       'durchgefuehrt',
       'sprache',
       'verstaendigungBewertung',
-      'verstaendigungFreitext',
       'vorbereitung',
-      'vorbereitungstreffenFreitext',
       'vorbereitungTeilnehmer',
       'zieleErreicht',
       'intensiveBegegnungErmoeglicht',
       'programmpunkteGemeinsamDurchgefuehrt',
-      'programmpunkteGemeinsamDurchgefuehrtFreitext',
       'jugendlicheBeteiligt',
       'methoden',
       'besondere',
@@ -178,8 +455,7 @@ final class IJBReportFormFactory implements ReportFormFactoryInterface {
       $reportDataSchema['properties'][$property]['minItems'] ??= 1;
     }
 
-    $validations = $reportDataSchema['properties']['aenderungen']['$validations'] ?? [];
-    $validations[] = JsonSchema::fromArray([
+    $this->addValidation($reportDataSchema, 'aenderungen', JsonSchema::fromArray([
       'keyword' => 'evaluate',
       'value' => [
         'expression' => 'data != "" || durchgefuehrt === "geplant"',
@@ -188,12 +464,9 @@ final class IJBReportFormFactory implements ReportFormFactoryInterface {
         ],
       ],
       'message' => 'Bitte Begründung für die Änderungen angeben.',
-    ]);
-    // @phpstan-ignore-next-line
-    $reportDataSchema['properties']['aenderungen']['$validations'] = $validations;
+    ]));
 
-    $validations = $reportDataSchema['properties']['andereSprache']['$validations'] ?? [];
-    $validations[] = JsonSchema::fromArray([
+    $this->addValidation($reportDataSchema, 'andereSprache', JsonSchema::fromArray([
       'keyword' => 'evaluate',
       'value' => [
         'expression' => 'data != "" || sprache !== "andere"',
@@ -202,12 +475,9 @@ final class IJBReportFormFactory implements ReportFormFactoryInterface {
         ],
       ],
       'message' => 'Bitte die Verständigungssprache angeben.',
-    ]);
-    // @phpstan-ignore-next-line
-    $reportDataSchema['properties']['andereSprache']['$validations'] = $validations;
+    ]));
 
-    $validations = $reportDataSchema['properties']['sprachlicheUnterstuetzungArt']['$validations'] ?? [];
-    $validations[] = JsonSchema::fromArray([
+    $this->addValidation($reportDataSchema, 'sprachlicheUnterstuetzungArt', JsonSchema::fromArray([
       'keyword' => 'evaluate',
       'value' => [
         'expression' => 'data != "" || !sprachlicheUnterstuetzung',
@@ -216,12 +486,9 @@ final class IJBReportFormFactory implements ReportFormFactoryInterface {
         ],
       ],
       'message' => 'Bitte die Art der Unterstützung angeben.',
-    ]);
-    // @phpstan-ignore-next-line
-    $reportDataSchema['properties']['sprachlicheUnterstuetzungArt']['$validations'] = $validations;
+    ]));
 
-    $validations = $reportDataSchema['properties']['sprachlicheUnterstuetzungProgrammpunkte']['$validations'] ?? [];
-    $validations[] = JsonSchema::fromArray([
+    $this->addValidation($reportDataSchema, 'sprachlicheUnterstuetzungProgrammpunkte', JsonSchema::fromArray([
       'keyword' => 'evaluate',
       'value' => [
         'expression' => 'data != "" || !sprachlicheUnterstuetzung',
@@ -230,12 +497,9 @@ final class IJBReportFormFactory implements ReportFormFactoryInterface {
         ],
       ],
       'message' => 'Bitte die Programmpunkte angeben.',
-    ]);
-    // @phpstan-ignore-next-line
-    $reportDataSchema['properties']['sprachlicheUnterstuetzungProgrammpunkte']['$validations'] = $validations;
+    ]));
 
-    $validations = $reportDataSchema['properties']['sprachlicheUnterstuetzungErfahrungen']['$validations'] ?? [];
-    $validations[] = JsonSchema::fromArray([
+    $this->addValidation($reportDataSchema, 'sprachlicheUnterstuetzungErfahrungen', JsonSchema::fromArray([
       'keyword' => 'evaluate',
       'value' => [
         'expression' => 'data != "" || !sprachlicheUnterstuetzung',
@@ -244,285 +508,47 @@ final class IJBReportFormFactory implements ReportFormFactoryInterface {
         ],
       ],
       'message' => 'Bitte die Erfahrungen angeben.',
-    ]);
-    // @phpstan-ignore-next-line
-    $reportDataSchema['properties']['sprachlicheUnterstuetzungErfahrungen']['$validations'] = $validations;
+    ]));
 
-    $jsonSchema = new JsonSchemaObject([
-      'reportData' => $reportDataDraftSchema,
-    ], [
-      'if' => JsonSchema::fromArray([
-        'properties' => [
-          '_action' => ['not' => ['const' => 'save']],
+    $this->addValidation($reportDataSchema, 'verstaendigungFreitext', JsonSchema::fromArray([
+      'keyword' => 'evaluate',
+      'value' => [
+        'expression' => 'data != "" || verstaendigungBewertung !== "schlecht"',
+        'variables' => [
+          'verstaendigungBewertung' => new JsonSchemaDataPointer('1/verstaendigungBewertung'),
         ],
-      ]),
-      'then' => new JsonSchemaObject([
-        'reportData' => $reportDataSchema,
-      ]),
-    ]);
+      ],
+      'message' => 'Bitte eine Begründung angeben.',
+    ]));
 
-    $scopePrefix = '#/properties/reportData/properties';
-    $uiSchema = new JsonFormsGroup('Sachbericht', [
-      new JsonFormsGroup('Infotext', [], <<<'EOD'
-Mit der Beantwortung der nachfolgenden Fragen gebt Ihr uns und dem BMFSFJ die
-Möglichkeit, einen Einblick in Eure Maßnahme zu gewinnen. Eure Erfahrungen
-helfen uns, den internationalen Jugendaustausch weiterzuentwickeln, bewährte
-Methoden oder Programmteile weiterzuempfehlen sowie möglicherweise häufiger
-vorkommende Herausforderungen zu erkennen und bei der Behebung zu helfen.
-Vor diesem Hintergrund bitten wir Euch darum, die Fragen aufmerksam zu
-beantworten. Nutzt dafür gerne so viel Platz, wie Ihr benötigt.
-EOD
-      ),
-      new JsonFormsControl(
-        '#/properties/reportData/properties/durchgefuehrt',
-        'Die Maßnahme wurde durchgeführt',
-        NULL,
-        ['format' => 'radio']
-      ),
-      new JsonFormsControl('#/properties/reportData/properties/aenderungen', '', NULL, ['multi' => TRUE], [
-        'rule' => new JsonFormsRule(
-          'ENABLE',
-          '#/properties/reportData/properties/durchgefuehrt',
-          JsonSchema::fromArray(['const' => 'geaendert'])
-        ),
-      ]),
+    $this->addValidation($reportDataSchema, 'vorbereitungstreffenFreitext', JsonSchema::fromArray([
+      'keyword' => 'evaluate',
+      'value' => [
+        'expression' => 'data != "" || vorbereitungstreffen === TRUE',
+        'variables' => [
+          'vorbereitungstreffen' => new JsonSchemaDataPointer('1/vorbereitungstreffen'),
+        ],
+      ],
+      'message' => 'Bitte eine Begründung angeben.',
+    ]));
 
-      new JsonFormsGroup('1. Sprachliche Verständigung', [
-        new JsonFormsControl(
-          '#/properties/reportData/properties/sprache',
-          '1.1 Die sprachliche Verständigung während der Maßnahme erfolgte:',
-          NULL,
-          ['format' => 'radio'],
-        ),
-        new JsonFormsControl('#/properties/reportData/properties/andereSprache', '', NULL, NULL, [
-          'rule' => new JsonFormsRule(
-            'ENABLE',
-            '#/properties/reportData/properties/sprache',
-            JsonSchema::fromArray(['const' => 'andere'])
-          ),
-        ]),
-        new JsonFormsControl(
-          '#/properties/reportData/properties/verstaendigungBewertung',
-          '1.2 Die sprachliche Verständigung während der Maßnahme war:',
-          NULL,
-          ['format' => 'radio'],
-        ),
-        new JsonFormsControl(
-          '#/properties/reportData/properties/verstaendigungFreitext',
-          'Anmerkungen',
-          NULL,
-          ['multi' => TRUE]
-        ),
-      ]),
-      new JsonFormsControl(
-        '#/properties/reportData/properties/sprachlicheUnterstuetzung',
-        '1.3 Wurde während der Maßnahme sprachliche Unterstützung ' .
-        '(Sprachanimation, Sprachmittlung, Dolmetschung) in Anspruch genommen?',
-        NULL,
-        ['format' => 'radio']
-      ),
-      new JsonFormsControl(
-        '#/properties/reportData/properties/sprachlicheUnterstuetzungArt',
-        'Art der Unterstützung',
-        NULL,
-        [],
-        [
-          'rule' => new JsonFormsRule(
-            'HIDE',
-            '#/properties/reportData/properties/sprachlicheUnterstuetzung',
-            JsonSchema::fromArray(['const' => FALSE])
-          ),
-        ]
-      ),
-      new JsonFormsControl(
-        '#/properties/reportData/properties/sprachlicheUnterstuetzungProgrammpunkte',
-        'Bei welchen Programmpunkten?',
-        NULL,
-        [],
-        [
-          'rule' => new JsonFormsRule(
-            'HIDE',
-            '#/properties/reportData/properties/sprachlicheUnterstuetzung',
-            JsonSchema::fromArray(['const' => FALSE])
-          ),
-        ]
-      ),
-      new JsonFormsControl(
-        '#/properties/reportData/properties/sprachlicheUnterstuetzungErfahrungen',
-        'Welche Erfahrungen habt Ihr damit gemacht?',
-        NULL,
-        [],
-        [
-          'rule' => new JsonFormsRule(
-            'HIDE',
-            '#/properties/reportData/properties/sprachlicheUnterstuetzung',
-            JsonSchema::fromArray(['const' => FALSE])
-          ),
-        ]
-      ),
+    $this->addValidation($reportDataSchema, 'programmpunkteGemeinsamDurchgefuehrtFreitext', JsonSchema::fromArray([
+      'keyword' => 'evaluate',
+      'value' => [
+        'expression' => 'data != "" || programmpunkteGemeinsamDurchgefuehrt === TRUE',
+        'variables' => [
+          'programmpunkteGemeinsamDurchgefuehrt' => new JsonSchemaDataPointer('1/programmpunkteGemeinsamDurchgefuehrt'),
+        ],
+      ],
+      'message' => 'Bitte eine Begründung angeben.',
+    ]));
+  }
 
-      new JsonFormsGroup('2. Vorbereitung der Maßnahme', [
-        new JsonFormsControl(
-          '#/properties/reportData/properties/vorbereitung',
-          '2.1 Über welche Erfahrungen verfügte(n) die Leitungsperson(en) und wie erfolgte die Vorbereitung?',
-          NULL,
-          ['multi' => TRUE],
-        ),
-        new JsonFormsControl(
-          "$scopePrefix/vorbereitungstreffen",
-          'Gab es ein Vorbereitungstreffen?',
-          NULL,
-          ['format' => 'radio'],
-        ),
-        new JsonFormsControl("$scopePrefix/vorbereitungstreffenFreitext", ''),
-        new JsonFormsControl(
-          "$scopePrefix/vorbereitungTeilnehmer",
-          '2.2 Wie bereiteten sich die Teilnehmenden auf die Maßnahme vor?',
-          NULL,
-          ['multi' => TRUE]
-        ),
-      ]),
-
-      new JsonFormsGroup('3. Durchführung/Inhalt/Methoden', [
-        new JsonFormsControl("$scopePrefix/themenfelder",
-          <<<'EOD'
-3.1 Welche inhaltlichen Ziele wurden/werden (kurz und ggf. mittel- bis
-langfristig) mit der Maßnahme verfolgt (siehe auch Themenfelder im
-Formblatt M Statistische Mitteilungen)?<br>Themenfelder (bis zu 3 Themen können
-angekreuzt werden)
-EOD),
-        new JsonFormsControl(
-          "$scopePrefix/zieleErreicht",
-          'Welche dieser Ziele wurden aus Eurer Sicht erreicht?',
-          NULL,
-          ['multi' => TRUE]
-        ),
-        new JsonFormsControl(
-          "$scopePrefix/intensiveBegegnungErmoeglicht",
-          '3.2 Wie wurde eine intensive Begegnung der Teilnehmenden ermöglicht?',
-          NULL,
-          ['multi' => TRUE],
-        ),
-        new JsonFormsControl(
-          "$scopePrefix/programmpunkteGemeinsamDurchgefuehrt",
-          <<<'EOD'
-Wurden alle Programmpunkte gemeinsam von den deutschen und ausländischen
-Jugendlichen der Partnerorganisation durchgeführt? Wenn nein, erläutert bitte,
-welche Punkte nicht gemeinsam verbracht worden sind und warum.
-EOD,
-          NULL,
-          ['format' => 'radio'],
-        ),
-        new JsonFormsControl(
-          "$scopePrefix/programmpunkteGemeinsamDurchgefuehrtFreitext",
-          '',
-          NULL,
-          ['multi' => TRUE],
-        ),
-
-        new JsonFormsControl(
-          "$scopePrefix/jugendlicheBeteiligt",
-          <<<'EOD'
-3.3 Bei Jugendbegegnungen: In welcher Form waren die Jugendlichen an der
-Vorbereitung, Durchführung sowie Auswertung des Projekts beteiligt?
-EOD,
-          NULL,
-          ['multi' => TRUE],
-        ),
-        new JsonFormsControl(
-          "$scopePrefix/methoden",
-          <<<'EOD'
-3.4 Mit welchen Methoden und Programmbausteinen wurde im Projekt gearbeitet?
-Welche haben sich bewährt, welche nicht und warum?
-EOD,
-          NULL,
-          ['multi' => TRUE],
-        ),
-        new JsonFormsControl(
-          "$scopePrefix/besondere",
-          <<<'EOD'
-3.5 Was war das Besondere an der Begegnung? Gab es aus Sicht der
-Begegnungsleitung ein Highlight oder herausragende Erlebnisse?
-EOD,
-          NULL,
-          ['multi' => TRUE],
-        ),
-        new JsonFormsControl(
-          "$scopePrefix/erschwerteZugangsvoraussetzungenBeteiligt",
-          <<<'EOD'
-3.6 Waren junge Menschen mit erschwerten Zugangsvoraussetzungen an der Maßnahme
-beteiligt (z.B. Jugendliche mit Migrationsgeschichte, Fluchterfahrung,
-Beeinträchtigung oder erhöhtem Betreuungsbedarf)? Wenn ja, welche Erfahrungen
-habt Ihr dabei gemacht?
-EOD,
-          NULL,
-          ['multi' => TRUE],
-        ),
-      ]),
-
-      new JsonFormsGroup('4. Auswertung, Evaluierung und Perspektiven', [
-        new JsonFormsControl(
-          "$scopePrefix/beurteilungTeilnehmer",
-          '4.1 Wie beurteilten die Teilnehmenden die Maßnahme?',
-          NULL,
-          ['multi' => TRUE],
-        ),
-        new JsonFormsControl(
-          "$scopePrefix/evaluierungsinstrumente",
-          '4.2 Welche Evaluierungsinstrumente wurden genutzt?',
-          NULL,
-          ['multi' => TRUE],
-        ),
-        new JsonFormsControl(
-          "$scopePrefix/teilnahmenachweis",
-          <<<'EOD'
-4.4 Stellt Ihr Euren Teilnehmenden einen „Teilnahmenachweis International“ aus
-(vgl. <a href="https://www.nachweise-international.de/" target="_blank">www.nachweise-international.de</a>)?
-EOD,
-          NULL,
-          ['format' => 'radio'],
-        ),
-        new JsonFormsControl(
-          "$scopePrefix/schlussfolgerungen",
-          <<<'EOD'
-4.5 Welche Schlussfolgerungen zieht die Leitung aus der Maßnahme? Wie werden die
-Erfahrungen durch die Leitung ausgewertet und weitergegeben?
-EOD,
-          NULL,
-          ['multi' => TRUE],
-        ),
-        new JsonFormsControl(
-          "$scopePrefix/massnahmenGeplant",
-          '4.6 Sind weitere Maßnahmen geplant? Wenn ja, welche?',
-          NULL,
-          ['multi' => TRUE],
-        ),
-        new JsonFormsControl(
-          "$scopePrefix/veroeffentlichungen",
-          <<<'EOD'
-4.7 Welche Veröffentlichungen oder Produkte gab es? Bitte ggf. einen Link zum
-Artikel auf der Homepage angeben, Kopie(n) von Pressemitteilung(en),
-Belegexemplare etc. beifügen.
-EOD,
-          NULL,
-          ['multi' => TRUE],
-        ),
-        new JsonFormsControl(
-          "$scopePrefix/hinweisBMFSFJ",
-          '4.8 Wie wurde auf die Förderung durch das BMFSFJ hingewiesen?',
-          NULL,
-          ['multi' => TRUE],
-        ),
-        new JsonFormsControl(
-          "$scopePrefix/anregungenBMFSFJ",
-          '4.9 Welche Anregungen für den Bundearbeitskreis/das BMFSFJ haben sich ggf. aus der Maßnahme ergeben?',
-          NULL,
-          ['multi' => TRUE],
-        ),
-      ]),
-    ]);
-
-    return new JsonFormsForm($jsonSchema, $uiSchema);
+  private function addValidation(JsonSchemaObject $reportDataSchema, string $property, JsonSchema $validation): void {
+    $validations = $reportDataSchema['properties'][$property]['$validations'] ?? [];
+    $validations[] = $validation;
+    // @phpstan-ignore-next-line
+    $reportDataSchema['properties'][$property]['$validations'] = $validations;
   }
 
 }
