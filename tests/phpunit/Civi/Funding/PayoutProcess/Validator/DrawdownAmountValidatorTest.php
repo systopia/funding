@@ -49,6 +49,28 @@ final class DrawdownAmountValidatorTest extends TestCase {
     static::assertSame(DrawdownEntity::class, $this->validator::getEntityClass());
   }
 
+  public function testValidateAmountLessThanZero(): void {
+    $current = DrawdownFactory::create(['amount' => 10.0]);
+    $new = DrawdownFactory::create(['amount' => -0.1]);
+
+    $result = $this->validator->validate($new, $current);
+    static::assertFalse($result->isValid());
+    static::assertEquals([
+      'amount' => [
+        EntityValidationError::new(
+          'amount',
+          'Requested amount is less than 0.'),
+      ],
+    ], $result->getErrors());
+  }
+
+  public function testValidateAmountZero(): void {
+    $current = DrawdownFactory::create(['amount' => 10.0]);
+    $new = DrawdownFactory::create(['amount' => 0.0]);
+
+    static::assertTrue($this->validator->validate($new, $current)->isValid());
+  }
+
   public function testValidateAmountUnchanged(): void {
     $current = DrawdownFactory::create(['status' => 'new']);
     $new = DrawdownFactory::create(['status' => 'accepted']);
@@ -105,6 +127,35 @@ final class DrawdownAmountValidatorTest extends TestCase {
 
   public function testValidateNew(): void {
     $new = DrawdownFactory::create(['amount' => 10.1]);
+
+    $payoutProcess = PayoutProcessFactory::create();
+    $this->payoutProcessManagerMock->method('get')
+      ->with($payoutProcess->getId())
+      ->willReturn($payoutProcess);
+
+    $this->payoutProcessManagerMock->method('getAmountAvailable')
+      ->with($payoutProcess)
+      ->willReturn(10.1);
+
+    static::assertTrue($this->validator->validateNew($new)->isValid());
+  }
+
+  public function testValidateNewAmountLessThanZero(): void {
+    $new = DrawdownFactory::create(['amount' => -0.1]);
+
+    $result = $this->validator->validateNew($new);
+    static::assertFalse($result->isValid());
+    static::assertEquals([
+      'amount' => [
+        EntityValidationError::new(
+          'amount',
+          'Requested amount is less than 0.'),
+      ],
+    ], $result->getErrors());
+  }
+
+  public function testValidateNewAmountZero(): void {
+    $new = DrawdownFactory::create(['amount' => 0.0]);
 
     $payoutProcess = PayoutProcessFactory::create();
     $this->payoutProcessManagerMock->method('get')
