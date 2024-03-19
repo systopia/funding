@@ -608,8 +608,8 @@ msgid "BIC (maybe empty)"
 msgstr "BIC (kann leer sein)"
 
 #: Civi/Funding/EventSubscriber/CiviOffice/TransferContractTokenSubscriber.php
-msgid "Titles of Eligible Applications"
-msgstr "Titel förderfähiger Anträge"
+msgid "List of Eligible Applications (identifier and title)"
+msgstr "Liste förderfähiger Anträge (Bezeichner und Titel)"
 
 #: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
 #: Civi/Funding/EventSubscriber/FundingProgram/FundingProgramGetPossiblePermissionsSubscriber.php
@@ -938,7 +938,6 @@ msgstr "Meine Aufgaben"
 #: ang/crmFunding/form/fundingAddRowButton.directive.js
 #: ang/crmFunding/form/fundingSelectPermissions.directive.js
 #: ang/crmFunding/form/fundingValidationErrors.directive.js
-#: ang/crmFunding/form/jsonFormsControl.directive.js
 #: ang/crmFunding/fundingDate.filter.js
 #: ang/crmFunding/program/fundingNewCasePermissions.js
 #: ang/crmFunding/program/fundingProgramPermissions.js
@@ -1245,7 +1244,6 @@ msgid "Permissions"
 msgstr "Berechtigungen"
 
 #: ang/crmFunding/form/editableField.directive.js
-#: ang/crmFunding/form/jsonFormsControl.directive.js
 msgid "empty"
 msgstr "leer"
 

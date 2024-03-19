@@ -40,7 +40,7 @@ class TransferContractTokenSubscriber extends AbstractTokenSubscriber {
 
   public function __construct(CiviOfficeContextDataHolder $contextDataHolder) {
     parent::__construct('transfer_contract', [
-      'eligible_application_titles' => E::ts('Titles of Eligible Applications'),
+      'eligible_application_list' => E::ts('List of Eligible Applications (identifier and title)'),
     ]);
     $this->contextDataHolder = $contextDataHolder;
   }
@@ -70,11 +70,12 @@ class TransferContractTokenSubscriber extends AbstractTokenSubscriber {
    * @inheritDoc
    */
   public function evaluateToken(TokenRow $row, $entity, $field, $prefetch = NULL): void {
-    if ('eligible_application_titles' === $field) {
+    if ('eligible_application_list' === $field) {
       /** @phpstan-var array<\Civi\Funding\Entity\ApplicationProcessEntity> $applicationProcesses */
       $applicationProcesses = $row->context['transferContract']['eligibleApplicationProcesses'];
       $titles = array_map(
-        fn (ApplicationProcessEntity $applicationProcess) => $applicationProcess->getTitle(),
+        fn (ApplicationProcessEntity $applicationProcess) => $applicationProcess->getIdentifier() .
+          ': ' . $applicationProcess->getTitle(),
         $applicationProcesses,
       );
       $resolvedToken = ValueConverter::toResolvedToken($titles);
