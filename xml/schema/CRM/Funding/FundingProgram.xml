@@ -122,9 +122,8 @@
     <type>decimal(10,2)</type>
     <required>false</required>
     <crmType>CRM_Utils_Type::T_MONEY</crmType>
-    <dataPattern>/^\d{1,10}(\.\d{2})?$/</dataPattern>
     <html>
-      <type>Text</type>
+      <type>Number</type>
     </html>
   </field>
 </table>
