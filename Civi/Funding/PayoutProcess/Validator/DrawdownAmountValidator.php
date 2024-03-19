@@ -29,8 +29,9 @@ use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
 
 /**
- * Checks if user has review drawdown permission if status of drawdown is
- * changed.
+ * Checks that the drawdown amount is valid, i.e. does not exceed the amount
+ * available and is not less than 0. 0 is allowed as amount to indicate that
+ * (currently) no money is required.
  *
  * @implements ConcreteEntityValidatorInterface<DrawdownEntity>
  */
@@ -58,6 +59,10 @@ final class DrawdownAmountValidator implements ConcreteEntityValidatorInterface 
    * phpcs:disable Drupal.Commenting.FunctionComment.IncorrectTypeHint
    */
   public function validate(AbstractEntity $new, AbstractEntity $current): EntityValidationResult {
+    if ($new->getAmount() < 0) {
+      return $this->createAmountLessThanZeroResult();
+    }
+
     if ($new->getAmount() > $current->getAmount()) {
       $payoutProcess = $this->payoutProcessManager->get($new->getPayoutProcessId());
       Assert::notNull($payoutProcess);
@@ -76,8 +81,13 @@ final class DrawdownAmountValidator implements ConcreteEntityValidatorInterface 
    * @param \Civi\Funding\Entity\DrawdownEntity $new
    */
   public function validateNew(AbstractEntity $new): EntityValidationResult {
+    if ($new->getAmount() < 0) {
+      return $this->createAmountLessThanZeroResult();
+    }
+
     $payoutProcess = $this->payoutProcessManager->get($new->getPayoutProcessId());
     Assert::notNull($payoutProcess);
+
     if ($new->getAmount() > $this->payoutProcessManager->getAmountAvailable($payoutProcess)) {
       return $this->createAmountExceedsLimitResult();
     }
@@ -89,6 +99,13 @@ final class DrawdownAmountValidator implements ConcreteEntityValidatorInterface 
     return EntityValidationResult::new(EntityValidationError::new(
       'amount',
       E::ts('Requested amount is greater than available amount.')),
+    );
+  }
+
+  private function createAmountLessThanZeroResult(): EntityValidationResult {
+    return EntityValidationResult::new(EntityValidationError::new(
+      'amount',
+      E::ts('Requested amount is less than 0.')),
     );
   }
 

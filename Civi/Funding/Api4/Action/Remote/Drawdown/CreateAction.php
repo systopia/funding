@@ -45,11 +45,13 @@ final class CreateAction extends AbstractRemoteFundingActionLegacy {
   protected ?int $payoutProcessId = NULL;
 
   /**
+   * CiviCRM (v5.59) does not know float/double in @var.
    * @var mixed
    * @required
-   * @phpstan-ignore-next-line CiviCRM (v5.59) does not know float/double in @var.
+   * Cannot be PHP type hinted, because 0.0 is not accepted as required
+   * parameter, see https://github.com/civicrm/civicrm-core/pull/29766.
    */
-  protected ?float $amount = NULL;
+  protected $amount = NULL;
 
   public function __construct(CiviEventDispatcherInterface $eventDispatcher) {
     parent::__construct(RemoteFundingDrawdown::getEntityName(), 'create');
@@ -73,6 +75,7 @@ final class CreateAction extends AbstractRemoteFundingActionLegacy {
   private function createEvent(): CreateEvent {
     Assert::notNull($this->payoutProcessId);
     Assert::notNull($this->amount);
+    Assert::numeric($this->amount);
 
     return new CreateEvent(
       FundingDrawdown::getEntityName(),
@@ -82,7 +85,7 @@ final class CreateAction extends AbstractRemoteFundingActionLegacy {
           'payout_process_id' => $this->payoutProcessId,
           'status' => 'new',
           'creation_date' => date('Y-m-d H:i:s'),
-          'amount' => $this->amount,
+          'amount' => (float) $this->amount,
           'acception_date' => NULL,
           'requester_contact_id' => $this->getContactId(),
           'reviewer_contact_id' => NULL,
