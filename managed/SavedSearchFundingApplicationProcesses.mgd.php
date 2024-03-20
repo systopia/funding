@@ -135,14 +135,14 @@ return [
               'links' => [
                 [
                   'path' => 'civicrm/a#/funding/application/[id]',
-                  'icon' => 'fa-external-link',
+                  'icon' => 'fa-folder-open-o',
                   'text' => E::ts('Open application'),
                   'style' => 'default',
                   'condition' => [],
                   'entity' => '',
                   'action' => '',
                   'join' => '',
-                  'target' => '_blank',
+                  'target' => '',
                   'task' => '',
                 ],
               ],

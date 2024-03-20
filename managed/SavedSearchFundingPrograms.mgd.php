@@ -30,9 +30,6 @@ return [
       'values' => [
         'name' => 'funding_programs',
         'label' => E::ts('Funding Programs'),
-        'form_values' => NULL,
-        'mapping_id' => NULL,
-        'search_custom_id' => NULL,
         'api_entity' => 'FundingProgram',
         'api_params' => [
           'version' => 4,
@@ -54,8 +51,9 @@ return [
           'join' => [],
           'having' => [],
         ],
-        'expires_date' => NULL,
-        'description' => NULL,
+      ],
+      'match' => [
+        'name',
       ],
     ],
   ],
@@ -152,7 +150,7 @@ return [
               'links' => [
                 [
                   'path' => 'civicrm/a/#/funding/program/[id]/recipients',
-                  'icon' => 'fa-external-link',
+                  'icon' => 'fa-pencil-square-o',
                   'text' => E::ts('Edit recipients'),
                   'style' => 'default',
                   'condition' => [
@@ -163,12 +161,12 @@ return [
                   'entity' => '',
                   'action' => '',
                   'join' => '',
-                  'target' => '_blank',
+                  'target' => '',
                   'task' => '',
                 ],
                 [
                   'path' => 'civicrm/a/#/funding/program/[id]/permissions',
-                  'icon' => 'fa-external-link',
+                  'icon' => 'fa-pencil-square-o',
                   'text' => E::ts('Edit permissions'),
                   'style' => 'default',
                   'condition' => [
@@ -179,12 +177,12 @@ return [
                   'entity' => '',
                   'action' => '',
                   'join' => '',
-                  'target' => '_blank',
+                  'target' => '',
                   'task' => '',
                 ],
                 [
                   'path' => 'civicrm/a/#/funding/program/[id]/new-case-permissions',
-                  'icon' => 'fa-external-link',
+                  'icon' => 'fa-pencil-square-o',
                   'text' => E::ts('Edit initial funding case permissions'),
                   'style' => 'default',
                   'condition' => [
@@ -195,12 +193,12 @@ return [
                   'entity' => '',
                   'action' => '',
                   'join' => '',
-                  'target' => '_blank',
+                  'target' => '',
                   'task' => '',
                 ],
                 [
                   'path' => 'civicrm/funding/program/edit#?FundingProgram1=[id]',
-                  'icon' => 'fa-pencil',
+                  'icon' => 'fa-pencil-square-o',
                   'text' => E::ts('Edit basic values'),
                   'style' => 'default',
                   'condition' => [
@@ -225,7 +223,10 @@ return [
             'table-striped',
           ],
         ],
-        'acl_bypass' => FALSE,
+      ],
+      'match' => [
+        'saved_search_id',
+        'name',
       ],
     ],
   ],

@@ -98,7 +98,7 @@ return [
               'links' => [
                 [
                   'path' => 'civicrm/funding/application-templates#?case_type_id=[id]',
-                  'icon' => 'fa-external-link',
+                  'icon' => 'fa-pencil-square-o',
                   'text' => E::ts('Manage external application templates'),
                   'style' => 'default',
                   'condition' => [
@@ -112,7 +112,7 @@ return [
                   'entity' => '',
                   'action' => '',
                   'join' => '',
-                  'target' => '_blank',
+                  'target' => '',
                 ],
               ],
               'type' => 'buttons',
