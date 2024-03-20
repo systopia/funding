@@ -49,16 +49,16 @@ function funding_civicrm_container(ContainerBuilder $container): void {
  */
 function funding_civicrm_permission(array &$permissions): void {
   $permissions[Permissions::ACCESS_FUNDING] = [
-    E::ts('CiviCRM: access Funding Program Manager'),
-    E::ts('Access non-administrative API of the Funding Program Manager'),
+    'label' => E::ts('CiviCRM: access Funding Program Manager'),
+    'description' => E::ts('Access non-administrative API of the Funding Program Manager'),
   ];
   $permissions[Permissions::ACCESS_REMOTE_FUNDING] = [
-    E::ts('CiviCRM: remote access to Funding Program Manager'),
-    E::ts('Access remote API of the Funding Program Manager'),
+    'label' => E::ts('CiviCRM: remote access to Funding Program Manager'),
+    'description' => E::ts('Access remote API of the Funding Program Manager'),
   ];
   $permissions[Permissions::ADMINISTER_FUNDING] = [
-    E::ts('CiviCRM: administer Funding Program Manager'),
-    E::ts('Access administrative and non-administrative API of the Funding Program Manager'),
+    'label' => E::ts('CiviCRM: administer Funding Program Manager'),
+    'description' => E::ts('Access administrative and non-administrative API of the Funding Program Manager'),
   ];
 }
 
