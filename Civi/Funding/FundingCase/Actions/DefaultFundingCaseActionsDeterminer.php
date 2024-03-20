@@ -31,8 +31,8 @@ final class DefaultFundingCaseActionsDeterminer extends FundingCaseActionsDeterm
       'review_content' => ['approve'],
     ],
     'ongoing' => [
-      'review_calculative' => ['recreate-transfer-contract'],
-      'review_content' => ['recreate-transfer-contract'],
+      'review_calculative' => ['recreate-transfer-contract', FundingCaseActions::UPDATE_AMOUNT_APPROVED],
+      'review_content' => ['recreate-transfer-contract', FundingCaseActions::UPDATE_AMOUNT_APPROVED],
     ],
   ];
 
