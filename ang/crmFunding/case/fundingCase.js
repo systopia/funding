@@ -60,9 +60,7 @@ fundingModule.controller('fundingCaseCtrl', [
     }
 
     document.addEventListener('applicationSearchTaskExecuted', () => {
-      fundingCaseService.getPossibleActions(fundingCase.id).then(
-        (possibleActions) => $scope.possibleActions = possibleActions
-      );
+      withOverlay(fundingCaseService.get($scope.fundingCase.id).then(onFundingCaseUpdate));
     });
 
     fundingProgramService.get(fundingCase.funding_program_id).then(
@@ -160,6 +158,7 @@ fundingModule.controller('fundingCaseCtrl', [
     };
     let $updateAmountApprovedModal = null;
     $scope.updateAmountApprovedPrepare = function () {
+      $scope.updateAmountApproved.amount = $scope.fundingCase.amount_approved;
       if ($scope.fundingProgram.budget !== null) {
         fundingProgramService.getAmountApproved(fundingCase.funding_program_id).then((amountApproved) => {
           $scope.availableBudget = $scope.fundingProgram.budget - amountApproved + $scope.fundingCase.amount_approved;
