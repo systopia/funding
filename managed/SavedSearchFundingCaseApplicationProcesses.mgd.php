@@ -196,19 +196,19 @@ return [
               'links' => [
                 [
                   'path' => 'civicrm/a/#/funding/application/[id]',
-                  'icon' => 'fa-external-link',
+                  'icon' => 'fa-folder-open-o',
                   'text' => E::ts('Open application'),
                   'style' => 'default',
                   'condition' => [],
                   'entity' => '',
                   'action' => '',
                   'join' => '',
-                  'target' => '_blank',
+                  'target' => '',
                   'task' => '',
                 ],
                 [
                   'path' => 'civicrm/a/#/funding/case/[funding_case_id]/permissions',
-                  'icon' => 'fa-external-link',
+                  'icon' => 'fa-pencil-square-o',
                   'text' => E::ts('Edit permissions'),
                   'style' => 'default',
                   'condition' => [
@@ -221,7 +221,7 @@ return [
                   'entity' => '',
                   'action' => '',
                   'join' => '',
-                  'target' => '_blank',
+                  'target' => '',
                   'task' => '',
                 ],
               ],
