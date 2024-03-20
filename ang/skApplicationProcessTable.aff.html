@@ -1,3 +1,9 @@
 <div af-fieldset="">
+  <div class="af-container af-layout-inline">
+    <af-field name="identifier" defn="{required: false, input_attrs: {}}" />
+    <af-field name="title" defn="{required: false, input_attrs: {}}" />
+    <af-field name="short_description" defn="{required: false, input_attrs: {}}" />
+    <af-field name="status" defn="{input_attrs: {multiple: true}, required: false}" />
+  </div>
   <crm-search-display-table search-name="funding_application_processes" display-name="table" filters="options.filters"></crm-search-display-table>
 </div>
