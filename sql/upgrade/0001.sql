@@ -7,7 +7,7 @@ ALTER TABLE civicrm_funding_app_cost_item
 UPDATE civicrm_funding_app_cost_item SET identifier = REPLACE(identifier, '/', '.');
 
 ALTER TABLE civicrm_funding_application_snapshot
-  ADD resources_item text NOT NULL AFTER cost_items;
+  ADD resources_items text NOT NULL AFTER cost_items;
 
 ALTER TABLE civicrm_funding_app_resources_item
   ADD data_pointer varchar(255) NOT NULL COMMENT 'JSON pointer to data in application data';
