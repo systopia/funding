@@ -36,7 +36,9 @@ final class ReworkPossibleApplicationSubmitActionsContainerFactory {
       ->add('withdraw-rework', E::ts('Withdraw rework'))
       // Reviewer actions.
       ->add('approve-rework-request', E::ts('Approve Rework Request'), NULL, ['needsFormData' => FALSE])
-      ->add('reject-rework-request', E::ts('Reject Rework Request'), NULL, ['needsFormData' => FALSE]);
+      ->add('reject-rework-request', E::ts('Reject Rework Request'), NULL, ['needsFormData' => FALSE])
+      ->add('approve-change', E::ts('Approve'), NULL, ['needsFormData' => FALSE])
+      ->add('reject-change', E::ts('Reject'), NULL, ['needsFormData' => FALSE]);
   }
 
 }
