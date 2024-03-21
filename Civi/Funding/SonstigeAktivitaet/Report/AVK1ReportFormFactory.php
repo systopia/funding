@@ -53,7 +53,7 @@ final class AVK1ReportFormFactory implements ReportFormFactoryInterface {
       'sonstiges' => new JsonSchemaString(),
     ]);
 
-    $reportDataSchema = $reportDataDraftSchema->clone();
+    $reportDataSchema = clone $reportDataDraftSchema;
     $requiredStrings = [
       'durchgefuehrt',
       'thematischeSchwerpunkte',

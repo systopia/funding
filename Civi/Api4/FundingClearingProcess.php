@@ -22,7 +22,7 @@ use Civi\Funding\Api4\Traits\AccessROPermissionsTrait;
 final class FundingClearingProcess extends Generic\DAOEntity {
 
   use AccessROPermissionsTrait {
-    permissions as traitPermissions;
+    permissions as private traitPermissions;
   }
 
   public static function get($checkPermissions = TRUE) {
@@ -57,7 +57,7 @@ final class FundingClearingProcess extends Generic\DAOEntity {
    * @phpstan-return array<string, array<string|array<string>>>
    */
   public static function permissions(): array {
-    $permissions = static::traitPermissions();
+    $permissions = self::traitPermissions();
 
     return $permissions + [
       'getForm' => $permissions['get'],

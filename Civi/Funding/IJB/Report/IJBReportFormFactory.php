@@ -132,7 +132,7 @@ final class IJBReportFormFactory implements ReportFormFactoryInterface {
       'anregungenBMFSFJ' => new JsonSchemaString(),
     ]);
 
-    $reportDataSchema = $reportDataDraftSchema->clone();
+    $reportDataSchema = clone $reportDataDraftSchema;
     $this->addValidations($reportDataSchema);
 
     $jsonSchema = new JsonSchemaObject([

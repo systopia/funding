@@ -21,12 +21,15 @@ namespace Civi\Funding\Api4\Action\FundingClearingProcess;
 
 use Civi\Api4\FundingClearingProcess;
 use Civi\Api4\Generic\DAOGetFieldsAction;
+use Civi\Api4\Query\Api4Query;
+use Civi\Funding\Api4\Query\AliasSqlRenderer;
 use Civi\Funding\Api4\Util\ContactUtil;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\Permission\FundingCase\FundingCaseContactsLoaderInterface;
+use CRM_Funding_ExtensionUtil as E;
 
 /**
  * @phpstan-type fieldsT array<array<string, array<string, scalar>|array<scalar>|scalar|null>&array{name: string}>
@@ -71,6 +74,71 @@ final class GetFieldsAction extends DAOGetFieldsAction {
         $field['options'] = $this->getReviewerContactOptions('review_clearing_content');
       }
     }
+
+    $fields[] = [
+      'name' => 'currency',
+      'title' => E::ts('Currency'),
+      'type' => 'Extra',
+      'data_type' => 'String',
+      'readonly' => TRUE,
+      'sql_renderer' => new AliasSqlRenderer('application_process_id.funding_case_id.funding_program_id.currency'),
+    ];
+
+    $fields[] = [
+      'name' => 'amount_recorded_costs',
+      'title' => E::ts('Amount Recorded Costs'),
+      'description' => E::ts('The sum of the amounts recorded for costs.'),
+      'type' => 'Extra',
+      'data_type' => 'Money',
+      'readonly' => TRUE,
+      'nullable' => FALSE,
+      'sql_renderer' => fn () => sprintf('IFNULL(
+        (SELECT SUM(item.amount) FROM civicrm_funding_clearing_cost_item item
+        WHERE item.clearing_process_id = %s.id)
+      , 0)', Api4Query::MAIN_TABLE_ALIAS),
+    ];
+
+    $fields[] = [
+      'name' => 'amount_recorded_resources',
+      'title' => E::ts('Amount Recorded Resources'),
+      'description' => E::ts('The sum of the amounts recorded for resources.'),
+      'type' => 'Extra',
+      'data_type' => 'Money',
+      'readonly' => TRUE,
+      'nullable' => FALSE,
+      'sql_renderer' => fn () => sprintf('IFNULL(
+        (SELECT SUM(item.amount) FROM civicrm_funding_clearing_resources_item item
+        WHERE item.clearing_process_id = %s.id)
+      , 0)', Api4Query::MAIN_TABLE_ALIAS),
+    ];
+
+    $fields[] = [
+      'name' => 'amount_admitted_costs',
+      'title' => E::ts('Amount Admitted Costs'),
+      'description' => E::ts('The sum of the amounts admitted for costs.'),
+      'type' => 'Extra',
+      'data_type' => 'Money',
+      'readonly' => TRUE,
+      'nullable' => FALSE,
+      'sql_renderer' => fn () => sprintf('IFNULL(
+        (SELECT SUM(item.amount_admitted) FROM civicrm_funding_clearing_cost_item item
+        WHERE item.clearing_process_id = %s.id)
+      , 0)', Api4Query::MAIN_TABLE_ALIAS),
+    ];
+
+    $fields[] = [
+      'name' => 'amount_admitted_resources',
+      'title' => E::ts('Amount Admitted Resources'),
+      'description' => E::ts('The sum of the amounts admitted for resources.'),
+      'type' => 'Extra',
+      'data_type' => 'Money',
+      'readonly' => TRUE,
+      'nullable' => FALSE,
+      'sql_renderer' => fn () => sprintf('IFNULL(
+        (SELECT SUM(item.amount_admitted) FROM civicrm_funding_clearing_resources_item item
+        WHERE item.clearing_process_id = %s.id)
+      , 0)', Api4Query::MAIN_TABLE_ALIAS),
+    ];
 
     return $fields;
   }
