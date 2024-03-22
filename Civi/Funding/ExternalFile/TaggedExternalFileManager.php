@@ -23,6 +23,9 @@ use Civi\Funding\FundingExternalFileManagerInterface;
 use Civi\Funding\Util\Uuid;
 use Civi\RemoteTools\Api4\Query\Comparison;
 
+/**
+ * To be used with JSON schemas where URIs are tagged with 'externalFile'.
+ */
 final class TaggedExternalFileManager {
 
   private const IDENTIFIER_PREFIX = 'tagged:';
@@ -67,11 +70,7 @@ final class TaggedExternalFileManager {
 
     $newFiles = [];
     foreach ($uris as $dataPointer => $uri) {
-      $customData = [
-        'entityName' => $entityName,
-        'entityId' => $entityId,
-        'dataPointer' => $dataPointer,
-      ];
+      $customData = ['dataPointer' => $dataPointer];
       if (isset($existingFiles[$uri])) {
         $this->externalFileManager->updateCustomData($existingFiles[$uri], $customData);
         $newFiles[$uri] = $existingFiles[$uri];
