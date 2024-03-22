@@ -21,6 +21,7 @@ namespace Civi\Funding\ClearingProcess\Form\Validation;
 
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Psr\Container\ContainerInterface;
+use Systopia\JsonSchema\Tags\TaggedDataContainerInterface;
 
 final class ClearingFormValidatorCollector implements ClearingFormValidatorInterface {
 
@@ -39,17 +40,18 @@ final class ClearingFormValidatorCollector implements ClearingFormValidatorInter
    */
   public function validate(
     ClearingProcessEntityBundle $clearingProcessBundle,
-    array $data
+    array $data,
+    TaggedDataContainerInterface $taggedData
   ): ClearingFormValidationResult {
     $fundingCaseTypeName = $clearingProcessBundle->getFundingCaseType()->getName();
     if ($this->validators->has($fundingCaseTypeName)) {
       /** @var \Civi\Funding\ClearingProcess\Form\Validation\ClearingFormValidatorInterface $validator */
       $validator = $this->validators->get($fundingCaseTypeName);
 
-      return $validator->validate($clearingProcessBundle, $data);
+      return $validator->validate($clearingProcessBundle, $data, $taggedData);
     }
 
-    return new ClearingFormValidationResult([], $data);
+    return new ClearingFormValidationResult([], $data, $taggedData);
   }
 
 }

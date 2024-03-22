@@ -1,4 +1,4 @@
-<h2>{{ uiSchema.label }}</h2>
+<h2><span ng-bind-html="uiSchema.label"></span></h2>
 <funding-jf-form ng-repeat="group in uiSchema.elements track by $index"
                  json-schema="jsonSchema" ui-schema="group" data="data"
                  errors="errors" editable="isEditAllowed()"

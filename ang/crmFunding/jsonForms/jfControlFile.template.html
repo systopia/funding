@@ -1,2 +1,2 @@
-<a ng-show="$ctrl.getUri()" href="{{ $ctrl.getUri() }}" target="_blank">{{:: ts('Download') }}</a>
+<a ng-show="$ctrl.getUri()" href="{{ $ctrl.getUri() }}" target="_blank">{{ $ctrl.getFileName() }}</a>
 <span ng-show="!$ctrl.getUri()">-</span>

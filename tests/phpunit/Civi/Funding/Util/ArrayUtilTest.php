@@ -38,6 +38,28 @@ final class ArrayUtilTest extends TestCase {
     $array = ['x' => ['y' => 'z']];
     ArrayUtil::setValue($array, ['x', 'a'], 'test');
     static::assertEquals(['x' => ['y' => 'z', 'a' => 'test']], $array);
+
+    $array = [];
+    ArrayUtil::setValue($array, [], ['x' => 'y']);
+    static::assertSame(['x' => 'y'], $array);
+  }
+
+  public function testSetValueAtPointer(): void {
+    $array = [];
+    ArrayUtil::setValueAtPointer($array, '/x/y/2', 'test');
+    static::assertSame(['x' => ['y' => [2 => 'test']]], $array);
+
+    $array = ['x' => 1];
+    ArrayUtil::setValueAtPointer($array, '/x', 2);
+    static::assertEquals(['x' => 2], $array);
+
+    $array = ['x' => ['y' => 'z']];
+    ArrayUtil::setValueAtPointer($array, '/x/a', 'test');
+    static::assertEquals(['x' => ['y' => 'z', 'a' => 'test']], $array);
+
+    $array = [];
+    ArrayUtil::setValueAtPointer($array, '/', ['x' => 'y']);
+    static::assertSame(['x' => 'y'], $array);
   }
 
 }

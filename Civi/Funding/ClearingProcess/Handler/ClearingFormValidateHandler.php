@@ -52,11 +52,17 @@ final class ClearingFormValidateHandler implements ClearingFormValidateHandlerIn
     );
     if (!$schemaValidationResult->isValid()) {
       return new ClearingFormValidationResult(
-        $schemaValidationResult->getLeafErrorMessages(), $schemaValidationResult->getData()
+        $schemaValidationResult->getLeafErrorMessages(),
+        $schemaValidationResult->getData(),
+        $schemaValidationResult->getTaggedData()
       );
     }
 
-    return $this->formValidator->validate($command->getClearingProcessBundle(), $schemaValidationResult->getData());
+    return $this->formValidator->validate(
+      $command->getClearingProcessBundle(),
+      $schemaValidationResult->getData(),
+      $schemaValidationResult->getTaggedData()
+    );
   }
 
 }

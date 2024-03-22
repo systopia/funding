@@ -27,8 +27,6 @@ use Civi\Funding\Util\Uuid;
 
 final class ClearingExternalFileManager implements ClearingExternalFileManagerInterface {
 
-  private const TABLE = 'civicrm_funding_clearing_process';
-
   private FundingExternalFileManagerInterface $externalFileManager;
 
   public function __construct(FundingExternalFileManagerInterface $externalFileManager) {
@@ -59,18 +57,18 @@ final class ClearingExternalFileManager implements ClearingExternalFileManagerIn
       return $this->externalFileManager->addFile(
         $uri,
         $identifier,
-        self::TABLE,
+        FundingClearingProcess::getEntityName(),
         $clearingProcessId,
-        $this->buildCustomData($clearingProcessId, $customData)
+        $customData
       );
     }
 
     return $this->externalFileManager->addOrUpdateFile(
       $uri,
       $identifier,
-      self::TABLE,
+      FundingClearingProcess::getEntityName(),
       $clearingProcessId,
-      $this->buildCustomData($clearingProcessId, $customData),
+      $customData,
     );
   }
 
@@ -84,7 +82,7 @@ final class ClearingExternalFileManager implements ClearingExternalFileManagerIn
 
     return $this->externalFileManager->getFileByFileId(
       $clearingItem->getFileId(),
-      self::TABLE,
+      FundingClearingProcess::getEntityName(),
       $clearingItem->getClearingProcessId()
     );
   }
@@ -93,19 +91,7 @@ final class ClearingExternalFileManager implements ClearingExternalFileManagerIn
    * @inheritDoc
    */
   public function getFiles(int $clearingProcessId): array {
-    return $this->externalFileManager->getFiles(self::TABLE, $clearingProcessId);
-  }
-
-  /**
-   * @phpstan-param array<int|string, mixed>|null $customData
-   *
-   * @phpstan-return array<int|string, mixed>
-   */
-  private function buildCustomData(int $clearingProcessId, ?array $customData): array {
-    return [
-      'entityName' => FundingClearingProcess::getEntityName(),
-      'entityId' => $clearingProcessId,
-    ] + ($customData ?? []);
+    return $this->externalFileManager->getFiles(FundingClearingProcess::getEntityName(), $clearingProcessId);
   }
 
   private function getIdentifierPrefix(int $clearingProcessId): string {

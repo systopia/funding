@@ -1,6 +1,6 @@
 <div ng-if="!closeable" class="funding-jf-group funding-jf-group-{{ groupNestingLevel }}">
   <div class="funding-jf-group-label funding-jf-group-label-{{ groupNestingLevel }}">
-    {{ uiSchema.label }}
+    <span ng-bind-html="uiSchema.label"></span>
     <funding-jf-description text="uiSchema.description"></funding-jf-description>
   </div>
   <div class="funding-jf-group-body">
@@ -15,7 +15,7 @@
     <div class="panel-heading">
       <div class="panel-title">
         <a data-toggle="collapse" data-target="#funding-jf-group-{{ count }}" aria-expanded="true"
-           class="funding-jf-group-label funding-jf-group-label-{{ groupNestingLevel }}">{{ uiSchema.label }}</a>
+           class="funding-jf-group-label funding-jf-group-label-{{ groupNestingLevel }}"><span ng-bind-html="uiSchema.label"></span></a>
         <funding-jf-description text="uiSchema.description"></funding-jf-description>
       </div>
     </div>

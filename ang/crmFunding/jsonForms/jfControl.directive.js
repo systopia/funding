@@ -39,7 +39,7 @@ fundingModule.directive('fundingJfControl', ['$compile', function($compile) {
 
           scope.propertyName = uiSchema.scope.substring(uiSchema.scope.lastIndexOf('/') + 1);
           scope.objectSchema = objectSchemaPath === '' ? jsonSchema : _4.get(jsonSchema, objectSchemaPath);
-          scope.propertySchema = _4.get(jsonSchema, propertySchemaPath);
+          scope.propertySchema = propertySchemaPath === '' ? jsonSchema : _4.get(jsonSchema, propertySchemaPath);
 
           if (!dataUnwatch) {
             dataUnwatch = scope.$watch('data', function fallbackToDefault(data) {

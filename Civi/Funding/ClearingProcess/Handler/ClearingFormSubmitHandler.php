@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ClearingProcess\Handler;
 
+use Civi\Api4\FundingClearingProcess;
 use Civi\Funding\ClearingProcess\ClearingActionsDeterminer;
 use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\ClearingProcess\ClearingStatusDeterminer;
@@ -29,6 +30,8 @@ use Civi\Funding\ClearingProcess\Command\ClearingFormValidateCommand;
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingCommentPersister;
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingCostItemsFormDataPersister;
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingResourcesItemsFormDataPersister;
+use Civi\Funding\ExternalFile\TaggedExternalFilePersister;
+use Drupal\civiremote_funding\Api\DTO\ClearingProcess;
 
 /**
  * @phpstan-import-type clearingFormDataT from \Civi\Funding\ClearingProcess\Form\ClearingFormGenerator
@@ -45,6 +48,8 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
 
   private ClearingCommentPersister $commentPersister;
 
+  private TaggedExternalFilePersister $externalFilePersister;
+
   private ClearingFormDataGetHandlerInterface $formDataGetHandler;
 
   private ClearingStatusDeterminer $statusDeterminer;
@@ -57,6 +62,7 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
     ClearingResourcesItemsFormDataPersister $clearingResourcesItemsFormDataPersister,
     ClearingProcessManager $clearingProcessManager,
     ClearingCommentPersister $commentPersister,
+    TaggedExternalFilePersister $externalFilePersister,
     ClearingFormDataGetHandlerInterface $formDataGetHandler,
     ClearingStatusDeterminer $statusDeterminer,
     ClearingFormValidateHandlerInterface $validateHandler
@@ -66,6 +72,7 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
     $this->clearingResourcesItemsFormDataPersister = $clearingResourcesItemsFormDataPersister;
     $this->clearingProcessManager = $clearingProcessManager;
     $this->commentPersister = $commentPersister;
+    $this->externalFilePersister = $externalFilePersister;
     $this->formDataGetHandler = $formDataGetHandler;
     $this->statusDeterminer = $statusDeterminer;
     $this->validateHandler = $validateHandler;
@@ -99,6 +106,12 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
       $files += $this->clearingResourcesItemsFormDataPersister->persistClearingItems(
         $clearingProcessBundle,
         $data['resourcesItems'] ?? []
+      );
+      $files += $this->externalFilePersister->handleFiles(
+        $validationResult->getTaggedData(),
+        $data,
+        FundingClearingProcess::getEntityName(),
+        $clearingProcess->getId()
       );
 
       $clearingProcess->setReportData($data['reportData'] ?? []);

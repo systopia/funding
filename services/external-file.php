@@ -17,23 +17,11 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\ClearingProcess\Form\Validation;
+// phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
+/** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
-use Civi\Funding\Entity\ClearingProcessEntityBundle;
-use Systopia\JsonSchema\Tags\TaggedDataContainerInterface;
+use Civi\Funding\ExternalFile\TaggedExternalFileManager;
+use Civi\Funding\ExternalFile\TaggedExternalFilePersister;
 
-interface ClearingFormValidatorInterface {
-
-  public const SERVICE_TAG = 'funding.clearing.form_validator';
-
-  /**
-   * @phpstan-param array<string, mixed> $data
-   *   Data after successful JSON schema validation.
-   */
-  public function validate(
-    ClearingProcessEntityBundle $clearingProcessBundle,
-    array $data,
-    TaggedDataContainerInterface $taggedData
-  ): ClearingFormValidationResult;
-
-}
+$container->autowire(TaggedExternalFileManager::class);
+$container->autowire(TaggedExternalFilePersister::class);

@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ClearingProcess\Form\Validation;
 
+use Systopia\JsonSchema\Tags\TaggedDataContainerInterface;
+
 /**
  * @codeCoverageIgnore
  */
@@ -34,13 +36,16 @@ final class ClearingFormValidationResult {
    */
   private array $data;
 
+  private TaggedDataContainerInterface $taggedData;
+
   /**
    * @phpstan-param array<string, non-empty-list<string>> $errorMessages
    * @phpstan-param array<string, mixed> $data
    */
-  public function __construct(array $errorMessages, array $data) {
+  public function __construct(array $errorMessages, array $data, TaggedDataContainerInterface $taggedData) {
     $this->errorMessages = $errorMessages;
     $this->data = $data;
+    $this->taggedData = $taggedData;
   }
 
   /**
@@ -64,6 +69,10 @@ final class ClearingFormValidationResult {
    */
   public function getData(): array {
     return $this->data;
+  }
+
+  public function getTaggedData(): TaggedDataContainerInterface {
+    return $this->taggedData;
   }
 
 }

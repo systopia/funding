@@ -27,8 +27,19 @@ fundingModule.directive('fundingJfControlFile', [function() {
       // read only for now.
       $scope.ts = CRM.ts('funding');
 
+      const ctrl = this;
       this.getUri = function () {
-        return $scope.propertySchema.format === 'uri' ? _4.get($scope.data, $scope.path) : null;
+        if ($scope.propertySchema.format === 'uri') {
+          return '' === $scope.path ? $scope.data : _4.get($scope.data, $scope.path);
+        }
+
+        return null;
+      };
+
+      this.getFileName = function () {
+        const uri = ctrl.getUri();
+
+        return uri ? uri.substring(uri.lastIndexOf('/') + 1) : null;
       };
     }],
   };

@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Util;
 
+use Opis\JsonSchema\JsonPointer;
+
 final class ArrayUtil {
 
   /**
@@ -61,7 +63,7 @@ final class ArrayUtil {
    * arrays are created if necessary.
    *
    * @phpstan-param array<int|string, mixed> $array
-   * @phpstan-param array<int|string> $path
+   * @phpstan-param list<int|string> $path
    *
    * @param mixed $value
    */
@@ -79,6 +81,25 @@ final class ArrayUtil {
     }
 
     $ref = $value;
+  }
+
+  /**
+   * Same as setValue(), but with JSON pointer instead of path.
+   *
+   * @phpstan-param non-empty-string $pointer
+   * @phpstan-param array<int|string, mixed> $array
+   *
+   * @param mixed $value
+   *
+   * @see setValue()
+   */
+  public static function setValueAtPointer(array &$array, string $pointer, $value): void {
+    $parsedPointer = JsonPointer::parse($pointer);
+    if (NULL === $parsedPointer) {
+      throw new \InvalidArgumentException(sprintf('Invalid JSON pointer "%s"', $pointer));
+    }
+
+    self::setValue($array, $parsedPointer->path(), $value);
   }
 
 }

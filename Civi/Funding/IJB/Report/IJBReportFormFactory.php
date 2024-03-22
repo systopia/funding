@@ -24,6 +24,7 @@ use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\Form\JsonFormsForm;
 use Civi\Funding\Form\JsonFormsFormInterface;
 use Civi\Funding\IJB\Traits\IJBSupportedFundingCaseTypesTrait;
+use Civi\RemoteTools\JsonForms\Control\JsonFormsArray;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
 use Civi\RemoteTools\JsonForms\JsonFormsRule;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
@@ -128,6 +129,10 @@ final class IJBReportFormFactory implements ReportFormFactoryInterface {
       'schlussfolgerungen' => new JsonSchemaString(),
       'massnahmenGeplant' => new JsonSchemaString(),
       'veroeffentlichungen' => new JsonSchemaString(),
+      'veroeffentlichungenDateien' => new JsonSchemaArray(new JsonSchemaString([
+        'format' => 'uri',
+        '$tag' => 'externalFile',
+      ])),
       'hinweisBMFSFJ' => new JsonSchemaString(),
       'anregungenBMFSFJ' => new JsonSchemaString(),
     ]);
@@ -394,6 +399,9 @@ EOD,
           NULL,
           ['multi' => TRUE],
         ),
+        new JsonFormsArray("$scopePrefix/veroeffentlichungenDateien", NULL, NULL, [
+          new JsonFormsControl('#/', 'Datei', NULL, ['format' => 'file']),
+        ]),
         new JsonFormsControl(
           "$scopePrefix/hinweisBMFSFJ",
           '4.8 Wie wurde auf die Förderung durch das BMFSFJ hingewiesen?&nbsp;*',
