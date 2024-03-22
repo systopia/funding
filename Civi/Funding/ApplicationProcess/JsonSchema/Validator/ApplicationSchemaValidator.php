@@ -25,6 +25,7 @@ use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\Validation\ValidationResult;
 use Civi\RemoteTools\Util\JsonConverter;
 use Systopia\JsonSchema\Errors\ErrorCollector;
+use Systopia\JsonSchema\Tags\TaggedDataContainer;
 use Systopia\JsonSchema\Translation\TranslatorInterface;
 
 final class ApplicationSchemaValidator implements ApplicationSchemaValidatorInterface {
@@ -52,6 +53,7 @@ final class ApplicationSchemaValidator implements ApplicationSchemaValidatorInte
     $errorCollector = new ErrorCollector();
     $costItemDataCollector = new CostItemDataCollector();
     $resourcesItemDataCollector = new ResourcesItemDataCollector();
+    $taggedDataContainer = new TaggedDataContainer();
 
     $prevMaxErrors = $this->validator->getMaxErrors();
     try {
@@ -60,6 +62,7 @@ final class ApplicationSchemaValidator implements ApplicationSchemaValidatorInte
         'errorCollector' => $errorCollector,
         'costItemDataCollector' => $costItemDataCollector,
         'resourcesItemDataCollector' => $resourcesItemDataCollector,
+        'taggedDataContainer' => $taggedDataContainer,
       ]);
     }
     finally {
@@ -67,7 +70,12 @@ final class ApplicationSchemaValidator implements ApplicationSchemaValidatorInte
     }
 
     return new ApplicationSchemaValidationResult(
-      new ValidationResult(JsonConverter::toArray($validationData), $errorCollector, $this->translator),
+      new ValidationResult(
+        JsonConverter::toArray($validationData),
+        $taggedDataContainer,
+        $errorCollector,
+        $this->translator
+      ),
       $costItemDataCollector->getCostItemsData(),
       $resourcesItemDataCollector->getResourcesItemsData()
     );
