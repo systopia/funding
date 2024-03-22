@@ -31,6 +31,7 @@ use Civi\RemoteTools\JsonSchema\Validation\ValidationResult;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Systopia\JsonSchema\Errors\ErrorCollector;
+use Systopia\JsonSchema\Tags\TaggedDataContainer;
 
 /**
  * @covers \Civi\Funding\SonstigeAktivitaet\Application\Validation\AVK1Validator
@@ -84,7 +85,7 @@ final class AVK1ValidatorTest extends TestCase {
     $this->jsonSchemaValidatorMock->method('validate')
       ->with($jsonSchema, $formData, 2)
       ->willReturn(new ApplicationSchemaValidationResult(
-        new ValidationResult($jsonSchemaValidatedData, new ErrorCollector()),
+        new ValidationResult($jsonSchemaValidatedData, new TaggedDataContainer(), new ErrorCollector()),
         [],
         []
       ));
@@ -121,7 +122,7 @@ final class AVK1ValidatorTest extends TestCase {
     $this->jsonSchemaValidatorMock->method('validate')
       ->with($jsonSchema, $formData, 2)
       ->willReturn(new ApplicationSchemaValidationResult(
-        new ValidationResult($jsonSchemaValidatedData, new ErrorCollector()),
+        new ValidationResult($jsonSchemaValidatedData, new TaggedDataContainer(), new ErrorCollector()),
         [],
         []
       ));
