@@ -31,7 +31,6 @@ use Civi\Funding\ClearingProcess\Handler\Helper\ClearingCommentPersister;
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingCostItemsFormDataPersister;
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingResourcesItemsFormDataPersister;
 use Civi\Funding\ExternalFile\TaggedExternalFilePersister;
-use Drupal\civiremote_funding\Api\DTO\ClearingProcess;
 
 /**
  * @phpstan-import-type clearingFormDataT from \Civi\Funding\ClearingProcess\Form\ClearingFormGenerator
