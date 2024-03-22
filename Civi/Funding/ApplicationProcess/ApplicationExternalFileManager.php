@@ -20,14 +20,11 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess;
 
 use Civi\Api4\FundingApplicationProcess;
+use Civi\Api4\FundingApplicationSnapshot;
 use Civi\Funding\Entity\ExternalFileEntity;
 use Civi\Funding\FundingExternalFileManagerInterface;
 
 final class ApplicationExternalFileManager implements ApplicationExternalFileManagerInterface {
-
-  private const SNAPSHOT_TABLE = 'civicrm_funding_application_snapshot';
-
-  private const TABLE = 'civicrm_funding_application_process';
 
   private FundingExternalFileManagerInterface $externalFileManager;
 
@@ -53,18 +50,18 @@ final class ApplicationExternalFileManager implements ApplicationExternalFileMan
       return $this->externalFileManager->addFile(
         $uri,
         $identifier,
-        self::TABLE,
+        FundingApplicationProcess::getEntityName(),
         $applicationProcessId,
-        $this->buildCustomData($applicationProcessId, $customData)
+        $customData
       );
     }
 
     return $this->externalFileManager->addOrUpdateFile(
       $uri,
       $identifier,
-      self::TABLE,
+      FundingApplicationProcess::getEntityName(),
       $applicationProcessId,
-      $this->buildCustomData($applicationProcessId, $customData),
+      $customData,
     );
   }
 
@@ -72,7 +69,7 @@ final class ApplicationExternalFileManager implements ApplicationExternalFileMan
    * @inheritDoc
    */
   public function attachFileToSnapshot(ExternalFileEntity $externalFile, int $snapshotId): void {
-    $this->externalFileManager->attachFile($externalFile, self::SNAPSHOT_TABLE, $snapshotId);
+    $this->externalFileManager->attachFile($externalFile, FundingApplicationSnapshot::getEntityName(), $snapshotId);
   }
 
   /**
@@ -97,7 +94,11 @@ final class ApplicationExternalFileManager implements ApplicationExternalFileMan
   public function getFile(string $identifier, int $applicationProcessId): ?ExternalFileEntity {
     $identifier = $this->addIdentifierPrefix($applicationProcessId, $identifier);
 
-    return $this->externalFileManager->getFile($identifier, self::TABLE, $applicationProcessId);
+    return $this->externalFileManager->getFile(
+      $identifier,
+      FundingApplicationProcess::getEntityName(),
+      $applicationProcessId
+    );
   }
 
   /**
@@ -105,7 +106,7 @@ final class ApplicationExternalFileManager implements ApplicationExternalFileMan
    */
   public function getFiles(int $applicationProcessId): array {
     return $this->buildExternalFilesMap(
-      $this->externalFileManager->getFiles(self::TABLE, $applicationProcessId),
+      $this->externalFileManager->getFiles(FundingApplicationProcess::getEntityName(), $applicationProcessId),
       $applicationProcessId,
     );
   }
@@ -114,7 +115,7 @@ final class ApplicationExternalFileManager implements ApplicationExternalFileMan
    * @inheritDoc
    */
   public function getFilesAttachedToSnapshot(int $snapshotId): array {
-    return $this->externalFileManager->getFiles(self::SNAPSHOT_TABLE, $snapshotId);
+    return $this->externalFileManager->getFiles(FundingApplicationSnapshot::getEntityName(), $snapshotId);
   }
 
   /**
@@ -144,19 +145,11 @@ final class ApplicationExternalFileManager implements ApplicationExternalFileMan
    * @throws \CRM_Core_Exception
    */
   private function attachFile(ExternalFileEntity $externalFile, int $applicationProcessId): void {
-    $this->externalFileManager->attachFile($externalFile, self::TABLE, $applicationProcessId);
-  }
-
-  /**
-   * @phpstan-param array<int|string, mixed>|null $customData
-   *
-   * @phpstan-return array<int|string, mixed>
-   */
-  private function buildCustomData(int $applicationProcessId, ?array $customData): array {
-    return [
-      'entityName' => FundingApplicationProcess::getEntityName(),
-      'entityId' => $applicationProcessId,
-    ] + ($customData ?? []);
+    $this->externalFileManager->attachFile(
+      $externalFile,
+      FundingApplicationProcess::getEntityName(),
+      $applicationProcessId
+    );
   }
 
   /**
@@ -194,7 +187,10 @@ final class ApplicationExternalFileManager implements ApplicationExternalFileMan
    * @throws \CRM_Core_Exception
    */
   private function isUsedInSnapshot(ExternalFileEntity $externalFile): bool {
-    return $this->externalFileManager->isAttachedToTable($externalFile, self::SNAPSHOT_TABLE);
+    return $this->externalFileManager->isAttachedToEntityType(
+      $externalFile,
+      FundingApplicationSnapshot::getEntityName()
+    );
   }
 
   /**
@@ -203,7 +199,11 @@ final class ApplicationExternalFileManager implements ApplicationExternalFileMan
   private function makeSnapshot(ExternalFileEntity $externalFile, int $applicationProcessId): void {
     $identifier = 'snapshot@' . time() . ':' . $externalFile->getIdentifier();
     $this->externalFileManager->updateIdentifier($externalFile, $identifier);
-    $this->externalFileManager->detachFile($externalFile, self::TABLE, $applicationProcessId);
+    $this->externalFileManager->detachFile(
+      $externalFile,
+      FundingApplicationProcess::getEntityName(),
+      $applicationProcessId
+    );
   }
 
   private function stripIdentifierPrefix(string $identifier, int $applicationProcessId): string {

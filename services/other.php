@@ -27,6 +27,7 @@ use Civi\Funding\Contact\FundingRemoteContactIdResolverInterface;
 use Civi\Funding\Controller\PageControllerInterface;
 use Civi\Funding\ControllerDectorator\TransactionalPageController;
 use Civi\Funding\Database\ChangeSetFactory;
+use Civi\Funding\Database\DaoEntityInfoProvider;
 use Civi\Funding\DependencyInjection\Compiler\ActionPropertyAutowireFixPass;
 use Civi\Funding\DependencyInjection\Compiler\EntityValidatorPass;
 use Civi\Funding\DependencyInjection\Compiler\FundingCaseTypeServiceLocatorPass;
@@ -60,6 +61,7 @@ $container->autowire(DAOActionFactoryInterface::class, DAOActionFactory::class);
 $container->autowire(UrlGenerator::class);
 $container->autowire(MoneyFactory::class);
 $container->autowire(ChangeSetFactory::class);
+$container->autowire(DaoEntityInfoProvider::class);
 
 $container->addCompilerPass(new ActionPropertyAutowireFixPass(), PassConfig::TYPE_BEFORE_REMOVING);
 $container->addCompilerPass(new FundingCaseTypeServiceLocatorPass());
