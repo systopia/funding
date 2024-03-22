@@ -157,6 +157,15 @@ final class FundingExternalFileManagerTest extends AbstractFundingHeadlessTestCa
       )
     );
 
+    static::assertEquals(
+      $externalFile2,
+      $this->externalFileManager->getFileByFileId(
+        $externalFile2->getFileId(),
+        FundingProgram::getEntityName(),
+        $fundingProgram->getId()
+      )
+    );
+
     $this->externalFileManager->deleteFile($externalFile1);
     static::assertNull(
       $this->externalFileManager->getFile(

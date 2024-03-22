@@ -152,10 +152,10 @@ final class FundingExternalFileManager implements FundingExternalFileManagerInte
   /**
    * @inheritDoc
    */
-  public function getFileByFileId(int $fileId, string $entityTable, int $entityId): ?ExternalFileEntity {
+  public function getFileByFileId(int $fileId, string $entityName, int $entityId): ?ExternalFileEntity {
     if (0 === $this->api4->countEntities(X_EntityFile::getEntityName(), CompositeCondition::fromFieldValuePairs([
       'file_id' => $fileId,
-      'entity_table' => $entityTable,
+      'entity_table' => $this->daoEntityInfoProvider->getTable($entityName),
       'entity_id' => $entityId,
     ]))) {
       return NULL;

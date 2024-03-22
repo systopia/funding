@@ -84,7 +84,7 @@ interface FundingExternalFileManagerInterface {
   /**
    * @throws \CRM_Core_Exception
    */
-  public function getFileByFileId(int $fileId, string $entityTable, int $entityId): ?ExternalFileEntity;
+  public function getFileByFileId(int $fileId, string $entityName, int $entityId): ?ExternalFileEntity;
 
   /**
    * @phpstan-return list<ExternalFileEntity>
