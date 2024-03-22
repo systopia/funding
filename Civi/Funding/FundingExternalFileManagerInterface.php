@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding;
 
 use Civi\Funding\Entity\ExternalFileEntity;
+use Civi\RemoteTools\Api4\Query\ConditionInterface;
 
 interface FundingExternalFileManagerInterface {
 
@@ -31,7 +32,7 @@ interface FundingExternalFileManagerInterface {
   public function addFile(
     string $uri,
     string $identifier,
-    string $entityTable,
+    string $entityName,
     int $entityId,
     ?array $customData = NULL
   ): ExternalFileEntity;
@@ -48,7 +49,7 @@ interface FundingExternalFileManagerInterface {
   public function addOrUpdateFile(
     string $uri,
     string $identifier,
-    string $entityTable,
+    string $entityName,
     int $entityId,
     ?array $customData = NULL
   ): ExternalFileEntity;
@@ -56,7 +57,7 @@ interface FundingExternalFileManagerInterface {
   /**
    * @throws \CRM_Core_Exception
    */
-  public function attachFile(ExternalFileEntity $externalFile, string $entityTable, int $entityId): void;
+  public function attachFile(ExternalFileEntity $externalFile, string $entityName, int $entityId): void;
 
   /**
    * @throws \CRM_Core_Exception
@@ -68,38 +69,38 @@ interface FundingExternalFileManagerInterface {
    *
    * @throws \CRM_Core_Exception
    */
-  public function deleteFiles(string $entityTable, int $entityId, array $excludedIdentifiers): void;
+  public function deleteFiles(string $entityName, int $entityId, array $excludedIdentifiers): void;
 
   /**
    * @throws \CRM_Core_Exception
    */
-  public function detachFile(ExternalFileEntity $externalFile, string $entityTable, int $entityId): void;
+  public function detachFile(ExternalFileEntity $externalFile, string $entityName, int $entityId): void;
 
   /**
    * @throws \CRM_Core_Exception
    */
-  public function getFile(string $identifier, string $entityTable, int $entityId): ?ExternalFileEntity;
+  public function getFile(string $identifier, string $entityName, int $entityId): ?ExternalFileEntity;
 
   /**
    * @phpstan-return array<ExternalFileEntity>
    *
    * @throws \CRM_Core_Exception
    */
-  public function getFiles(string $entityTable, int $entityId): array;
+  public function getFiles(string $entityName, int $entityId, ?ConditionInterface $condition = NULL): array;
 
   /**
    * @throws \CRM_Core_Exception
    */
-  public function isAttachedToTable(ExternalFileEntity $externalFile, string $table): bool;
+  public function isAttachedToEntityType(ExternalFileEntity $externalFile, string $entityName): bool;
 
   public function isFileChanged(ExternalFileEntity $externalFile, string $newUri): bool;
 
   /**
-   * @phpstan-param array<int|string, mixed>|null $customData JSON serializable.
+   * @phpstan-param array<int|string, mixed> $customData JSON serializable.
    *
    * @throws \CRM_Core_Exception
    */
-  public function updateCustomData(ExternalFileEntity $externalFile, ?array $customData): void;
+  public function updateCustomData(ExternalFileEntity $externalFile, array $customData): void;
 
   /**
    * @throws \CRM_Core_Exception

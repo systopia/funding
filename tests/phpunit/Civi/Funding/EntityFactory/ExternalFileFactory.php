@@ -34,7 +34,7 @@ use Civi\Funding\Entity\ExternalFileEntity;
  *   download_start_date?: ?string,
  *   download_try_count?: int,
  *   last_modified?: ?string,
- *   uri?: string,
+ *   uri?: non-empty-string,
  *   file_file_type_id?: ?int,
  *   file_mime_type?: string,
  *   file_description?: ?string,
