@@ -43,23 +43,23 @@ final class TaggedExternalFilePersisterTest extends TestCase {
   }
 
   public function testHandleFiles(): void {
-    $data = ['file' => 'http://example.org/test.txt'];
+    $data = ['file' => 'https://exaample.org/test.txt'];
     $taggedData = new TaggedDataContainer();
-    $taggedData->add('externalFile', '/file', 'http://example.org/test.txt', NULL);
+    $taggedData->add('externalFile', '/file', 'https://exaample.org/test.txt', NULL);
 
     $externalFile = ExternalFileFactory::create([
-      'uri' => 'http://example.org/civi.txt',
+      'uri' => 'https://exaample.org/civi.txt',
       'custom_data' => ['dataPointer' => '/file'],
     ]);
     $this->externalFileManagerMock->expects(static::once())->method('updateAllFiles')
-      ->with(['/file' => 'http://example.org/test.txt'])
-      ->willReturn(['http://example.org/test.txt' => $externalFile]);
+      ->with(['/file' => 'https://exaample.org/test.txt'])
+      ->willReturn(['https://exaample.org/test.txt' => $externalFile]);
 
     static::assertSame(
-      ['http://example.org/test.txt' => 'http://example.org/civi.txt'],
+      ['https://exaample.org/test.txt' => 'https://exaample.org/civi.txt'],
       $this->persister->handleFiles($taggedData, $data, 'TestEntity', 123)
     );
-    static::assertSame(['file' => 'http://example.org/civi.txt'], $data);
+    static::assertSame(['file' => 'https://exaample.org/civi.txt'], $data);
   }
 
 }

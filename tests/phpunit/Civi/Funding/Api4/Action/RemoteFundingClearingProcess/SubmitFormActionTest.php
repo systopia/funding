@@ -152,7 +152,7 @@ final class SubmitFormActionTest extends AbstractRemoteFundingHeadlessTestCase {
         ],
         'reportData' => [
           'foo' => 'bar',
-          'file' => 'http://example.org/test.txt',
+          'file' => 'https://example.org/test.txt',
         ],
         '_action' => 'save',
       ])

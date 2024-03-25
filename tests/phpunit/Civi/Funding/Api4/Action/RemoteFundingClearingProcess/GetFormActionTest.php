@@ -73,7 +73,14 @@ final class GetFormActionTest extends AbstractRemoteFundingHeadlessTestCase {
 
     static::assertSame([
       'type' => 'object',
-      'properties' => ['foo' => ['type' => 'string']],
+      'properties' => [
+        'foo' => ['type' => 'string'],
+        'file' => [
+          'type' => 'string',
+          'format' => 'uri',
+          '$tag' => 'externalFile',
+        ],
+      ],
     ], $result['jsonSchema']['properties']['reportData']);
 
     // Test that scopes are parts of UI schema.

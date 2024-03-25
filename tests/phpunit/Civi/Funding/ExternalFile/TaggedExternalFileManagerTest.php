@@ -43,28 +43,28 @@ final class TaggedExternalFileManagerTest extends TestCase {
   }
 
   public function testGetFiles(): void {
-    $externalFile = ExternalFileFactory::create(['uri' => 'http://example.org/test.txt']);
+    $externalFile = ExternalFileFactory::create(['uri' => 'https://example.org/test.txt']);
     $this->externalFileManagerMock->method('getFiles')
       ->with('TestEntity', 123, Comparison::new('identifier', 'LIKE', 'tagged:%'))
       ->willReturn([$externalFile]);
 
     static::assertSame(
-      ['http://example.org/test.txt' => $externalFile],
+      ['https://example.org/test.txt' => $externalFile],
       $this->taggedExternalFileManager->getFiles('TestEntity', 123)
     );
   }
 
   public function testUpdateAllFiles(): void {
     $uris = [
-      '/uri1' => 'http://example.org/new.txt',
-      '/uri2' => 'http://example.org/existing.txt',
+      '/uri1' => 'https://example.org/new.txt',
+      '/uri2' => 'https://example.org/existing.txt',
     ];
 
     $existingFile = ExternalFileFactory::create([
-      'uri' => 'http://example.org/existing.txt',
+      'uri' => 'https://example.org/existing.txt',
       'customData' => ['dataPointer' => '/oldPath'],
     ]);
-    $toBeDeletedFile = ExternalFileFactory::create(['uri' => 'http://example.org/toBeDeleted.txt']);
+    $toBeDeletedFile = ExternalFileFactory::create(['uri' => 'https://example.org/toBeDeleted.txt']);
     $this->externalFileManagerMock->method('getFiles')
       ->with('TestEntity', 123, Comparison::new('identifier', 'LIKE', 'tagged:%'))
       ->willReturn([$existingFile, $toBeDeletedFile]);
@@ -72,10 +72,10 @@ final class TaggedExternalFileManagerTest extends TestCase {
     $this->externalFileManagerMock->expects(static::once())->method('updateCustomData')
       ->with($existingFile, ['dataPointer' => '/uri2']);
 
-    $newFile = ExternalFileFactory::create(['uri' => 'http://example.org/new.txt']);
+    $newFile = ExternalFileFactory::create(['uri' => 'https://example.org/new.txt']);
     $this->externalFileManagerMock->expects(static::once())->method('addFile')
       ->with(
-        'http://example.org/new.txt',
+        'https://example.org/new.txt',
         static::stringStartsWith('tagged:'),
         'TestEntity',
         123,
