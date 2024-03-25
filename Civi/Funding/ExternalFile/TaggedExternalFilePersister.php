@@ -22,6 +22,10 @@ namespace Civi\Funding\ExternalFile;
 use Civi\Funding\Util\ArrayUtil;
 use Systopia\JsonSchema\Tags\TaggedDataContainerInterface;
 
+/**
+ * To be used together with JSON schemas using the tag 'externalFile'
+ * ("$tag": 'externalFile') for files referenced by URI to store in CiviCRM.
+ */
 final class TaggedExternalFilePersister {
 
   private TaggedExternalFileManager $externalFileManager;

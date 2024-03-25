@@ -32,6 +32,7 @@ use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\Traits\ClearingProcessFixturesTrait;
 use Civi\Funding\Form\RemoteSubmitResponseActions;
 use Civi\Funding\Util\RequestTestUtil;
+use Civi\PHPUnit\Traits\ArrayAssertTrait;
 use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 use Symfony\Bridge\PhpUnit\ClockMock;
 
@@ -45,6 +46,8 @@ use Symfony\Bridge\PhpUnit\ClockMock;
 final class SubmitFormActionTest extends AbstractRemoteFundingHeadlessTestCase {
 
   use ClearingProcessFixturesTrait;
+
+  use ArrayAssertTrait;
 
   use ArraySubsetAsserts;
 
@@ -147,7 +150,10 @@ final class SubmitFormActionTest extends AbstractRemoteFundingHeadlessTestCase {
             ],
           ],
         ],
-        'reportData' => ['foo' => 'bar'],
+        'reportData' => [
+          'foo' => 'bar',
+          'file' => 'http://example.org/test.txt',
+        ],
         '_action' => 'save',
       ])
       ->execute()
@@ -156,7 +162,11 @@ final class SubmitFormActionTest extends AbstractRemoteFundingHeadlessTestCase {
     static::assertSame(RemoteSubmitResponseActions::CLOSE_FORM, $result['action']);
     static::assertSame('Saved', $result['message']);
     static::assertArrayNotHasKey('errors', $result);
-    static::assertEquals(new \stdClass(), $result['files']);
+
+    static::assertIsArray($result['files']);
+    static::assertArrayHasSameKeys(['https://example.org/test.txt'], $result['files']);
+    static::assertIsString($result['files']['https://example.org/test.txt']);
+    static::assertStringStartsWith('http://localhost/', $result['files']['https://example.org/test.txt']);
 
     static::assertArraySubset([
       'clearing_process_id' => $this->clearingProcessBundle->getClearingProcess()->getId(),

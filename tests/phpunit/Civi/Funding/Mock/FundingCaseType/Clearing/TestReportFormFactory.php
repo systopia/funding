@@ -37,6 +37,10 @@ final class TestReportFormFactory implements ReportFormFactoryInterface {
     $jsonSchema = new JsonSchemaObject([
       'reportData' => new JsonSchemaObject([
         'foo' => new JsonSchemaString(),
+        'file' => new JsonSchemaString([
+          'format' => 'uri',
+          '$tag' => 'externalFile',
+        ]),
       ]),
     ]);
 

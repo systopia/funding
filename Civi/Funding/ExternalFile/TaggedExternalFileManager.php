@@ -19,14 +19,15 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ExternalFile;
 
-use Civi\Funding\FundingExternalFileManagerInterface;
 use Civi\Funding\Util\Uuid;
 use Civi\RemoteTools\Api4\Query\Comparison;
 
 /**
  * To be used with JSON schemas where URIs are tagged with 'externalFile'.
+ *
+ * @see \Civi\Funding\ExternalFile\TaggedExternalFilePersister
  */
-final class TaggedExternalFileManager {
+class TaggedExternalFileManager {
 
   private const IDENTIFIER_PREFIX = 'tagged:';
 
@@ -60,8 +61,8 @@ final class TaggedExternalFileManager {
    *   Mapping of data pointers to URIs.
    *
    * @phpstan-return array<non-empty-string, \Civi\Funding\Entity\ExternalFileEntity>
-   *   Mapping of URIs given to files. The data pointer is part of the custom
-   *   data at kay 'dataPointer'.
+   *   Mapping of given URIs to files. The data pointer is part of the custom
+   *   data at key 'dataPointer'.
    *
    * @throws \CRM_Core_Exception
    */

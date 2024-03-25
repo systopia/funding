@@ -22,7 +22,7 @@ namespace Civi\Funding\ClearingProcess;
 use Civi\Api4\FundingClearingProcess;
 use Civi\Funding\Entity\AbstractClearingItemEntity;
 use Civi\Funding\Entity\ExternalFileEntity;
-use Civi\Funding\FundingExternalFileManagerInterface;
+use Civi\Funding\ExternalFile\FundingExternalFileManagerInterface;
 use Civi\Funding\Util\Uuid;
 
 final class ClearingExternalFileManager implements ClearingExternalFileManagerInterface {

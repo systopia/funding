@@ -20,7 +20,6 @@ declare(strict_types = 1);
 namespace Civi\Funding\ExternalFile;
 
 use Civi\Funding\EntityFactory\ExternalFileFactory;
-use Civi\Funding\FundingExternalFileManagerInterface;
 use Civi\RemoteTools\Api4\Query\Comparison;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -31,7 +30,7 @@ use PHPUnit\Framework\TestCase;
 final class TaggedExternalFileManagerTest extends TestCase {
 
   /**
-   * @var \Civi\Funding\FundingExternalFileManagerInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\ExternalFile\FundingExternalFileManagerInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $externalFileManagerMock;
 
