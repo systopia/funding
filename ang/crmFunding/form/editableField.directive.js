@@ -206,8 +206,16 @@ fundingModule.directive('editableField', ['$filter', function($filter) {
       } else {
         editElement = angular.element('<span>{{ ' + displayValueExpression + ' }}</span>');
         if (attrs.optionsOneOf) {
-          editElement.attr('e-ng-options', 'o.const as o.title for o in ' + attrs.optionsOneOf + ' track by o.const');
+          editElement.attr('e-ng-options', 'o.const as o.title for o in ' + attrs.optionsOneOf);
         }
+      }
+
+      for (let [key, value] of Object.entries(attrs)) {
+        if (['path', 'type', 'value', 'formName', 'optionsOneOf'].includes(key) ||
+          key.startsWith('$')) {
+          continue;
+        }
+        editElement.attr(_4.kebabCase(key), value);
       }
 
       editElement.attr('ng-show', '$ctrl.editAllowed');
@@ -219,13 +227,7 @@ fundingModule.directive('editableField', ['$filter', function($filter) {
       editElement.attr('onaftersave', 'onAfterSave(this)');
       editElement.attr('oncancel', 'onCancelEdit(this)');
       editElement.attr('onhide', 'onEditFinished(this)');
-      for (let [key, value] of Object.entries(attrs)) {
-        if (['path', 'type', 'value', 'formName', 'optionsOneOf'].includes(key) ||
-          key.startsWith('$')) {
-          continue;
-        }
-        editElement.attr(_4.kebabCase(key), value);
-      }
+
       template += editElement[0].outerHTML;
 
       let viewOnlyElement;

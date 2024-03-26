@@ -25,7 +25,25 @@ fundingModule.directive('fundingJfControl', ['$compile', function($compile) {
       let jsonSchema;
       let uiSchema;
 
+      let applyRule;
       let dataUnwatch;
+      let readOnlyBySchema = false;
+      let readOnlyByParent = false;
+      let readOnlyByRule = false;
+      scope.$parent.$watch('editable', function (editable) {
+        readOnlyByParent = !editable;
+        scope.editable = !readOnlyBySchema && !readOnlyByParent && !readOnlyByRule;
+      });
+
+      function fallbackToDefault(data) {
+        if (typeof data !== 'object' || scope.propertySchema.default === undefined) {
+          return;
+        }
+
+        if (_4.get(data, scope.path) === undefined) {
+          _4.set(data, scope.path, _4.cloneDeep(scope.propertySchema.default));
+        }
+      }
 
       function update() {
         if (jsonSchema !== undefined && uiSchema !== undefined) {
@@ -42,15 +60,12 @@ fundingModule.directive('fundingJfControl', ['$compile', function($compile) {
           scope.propertySchema = propertySchemaPath === '' ? jsonSchema : _4.get(jsonSchema, propertySchemaPath);
 
           if (!dataUnwatch) {
-            dataUnwatch = scope.$watch('data', function fallbackToDefault(data) {
-              if (typeof data !== 'object' || scope.propertySchema.default === undefined) {
-                return;
-              }
-
-              if (_4.get(data, scope.path) === undefined) {
-                _4.set(data, scope.path, _4.cloneDeep(scope.propertySchema.default));
-              }
+            dataUnwatch = scope.$watch('data', function (data) {
+              fallbackToDefault(data);
+              applyRule(data);
             });
+          } else {
+            applyRule(scope.data);
           }
         }
       }
@@ -65,6 +80,62 @@ fundingModule.directive('fundingJfControl', ['$compile', function($compile) {
       scope.$watch('uiSchema', function(value) {
         if (value !== undefined) {
           uiSchema = value;
+          if (uiSchema.rule) {
+            const validate = ajv.compile(uiSchema.rule.condition.schema);
+            const ruleDataPath = uiSchema.rule.condition.scope.replaceAll(/\/properties\//g, '/')
+              .substring(2)
+              .replaceAll('/', '.')
+              .replaceAll(/\.([0-9]+)(\.|$)/g, '[$1]$2');
+            applyRule = function (data) {
+              const ruleData = _4.get(data, ruleDataPath);
+              if (validate(ruleData)) {
+                switch (uiSchema.rule.effect) {
+                  case 'HIDE':
+                    scope.visible = false;
+                    break;
+                  case 'SHOW':
+                    scope.visible = true;
+                    break;
+                  case 'ENABLE':
+                    readOnlyByRule = false;
+                    scope.editable = !readOnlyByParent && !readOnlyBySchema;
+                    scope.visible = true;
+                    break;
+                  case 'DISABLE':
+                    readOnlyByRule = true;
+                    scope.editable = false;
+                    scope.visible = true;
+                    break;
+                  default:
+                    console.error('Unknown rule effect', uiSchema.rule.effect);
+                }
+              } else {
+                switch (uiSchema.rule.effect) {
+                  case 'HIDE':
+                    scope.visible = true;
+                    break;
+                  case 'SHOW':
+                    scope.visible = false;
+                    break;
+                  case 'ENABLE':
+                    readOnlyByRule = true;
+                    scope.editable = false;
+                    scope.visible = true;
+                    break;
+                  case 'DISABLE':
+                    readOnlyByRule = false;
+                    scope.editable = !readOnlyByParent && !readOnlyBySchema;
+                    scope.visible = true;
+                    break;
+                  default:
+                    console.error('Unknown rule effect', uiSchema.rule.effect);
+                }
+              }
+            };
+          } else {
+            scope.visible = true;
+            applyRule = function () {};
+          }
           update();
         }
       });
@@ -114,7 +185,7 @@ fundingModule.directive('fundingJfControl', ['$compile', function($compile) {
 
         const uiSchemaFormat = getUiSchemaOption('format');
         if (uiSchemaFormat === 'file') {
-          element.html($compile('<funding-jf-control-file></funding-jf-control-file>')(scope));
+          element.html($compile('<funding-jf-control-file ng-show="visible"></funding-jf-control-file>')(scope));
 
           return;
         }
@@ -128,7 +199,7 @@ fundingModule.directive('fundingJfControl', ['$compile', function($compile) {
           if (propertySchema.uniqueItems && propertySchema.items.oneOf) {
             inputType = 'checklist';
           } else {
-            element.html($compile('<funding-jf-control-array></funding-jf-control-array>')(scope));
+            element.html($compile('<funding-jf-control-array ng-show="visible"></funding-jf-control-array>')(scope));
 
             return;
           }
@@ -161,11 +232,13 @@ fundingModule.directive('fundingJfControl', ['$compile', function($compile) {
           throw new Error(`Unknown JSON schema type ${type}`);
         }
 
-        if (propertySchema.readOnly || propertySchema.$calculate || uiSchema.readonly) {
+        readOnlyBySchema = propertySchema.readOnly || propertySchema.$calculate || uiSchema.readonly;
+        if (readOnlyBySchema) {
           scope.editable = false;
         }
 
         const fieldElement = angular.element('<editable-field></editable-field>');
+        fieldElement.attr('ng-show', 'visible');
         fieldElement.attr('type', inputType);
         fieldElement.attr('value', 'data.' + scope.path);
 
@@ -188,12 +261,40 @@ fundingModule.directive('fundingJfControl', ['$compile', function($compile) {
           fieldElement.attr('options-one-of', 'propertySchema.oneOf');
         }
 
-        if (propertySchema.precision !== undefined) {
+        if (typeof propertySchema.maximum === 'number') {
+          fieldElement.attr('e-max', propertySchema.maximum);
+        }
+
+        if (typeof propertySchema.minimum === 'number') {
+          fieldElement.attr('e-min', propertySchema.minimum);
+        }
+
+        if (typeof propertySchema.maxLength === 'number') {
+          fieldElement.attr('e-maxlength', propertySchema.maxLength);
+        }
+
+        if (typeof propertySchema.minLength === 'number') {
+          fieldElement.attr('e-minlength', propertySchema.minLength);
+        }
+
+        if (typeof propertySchema.pattern === 'string') {
+          fieldElement.attr('e-pattern', propertySchema.pattern);
+        }
+
+        // Custom keyword.
+        if (typeof propertySchema.precision === 'number') {
           fieldElement.attr('e-step', 1 / 10 ** propertySchema.precision);
         }
 
-        // @todo rules
-        // @todo minimum, maximum, length, pattern
+        // Custom keyword.
+        if (typeof propertySchema.maxDate === 'string') {
+          fieldElement.attr('e-max', propertySchema.maxDate);
+        }
+
+        // Custom keyword.
+        if (typeof propertySchema.minDate === 'string') {
+          fieldElement.attr('e-min', propertySchema.minDate);
+        }
 
         const template = fieldElement[0].outerHTML;
         element.html($compile(template)(scope));
