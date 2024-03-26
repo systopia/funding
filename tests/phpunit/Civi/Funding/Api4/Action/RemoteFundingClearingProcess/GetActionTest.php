@@ -33,7 +33,7 @@ use Civi\Funding\Fixtures\Traits\ClearingProcessFixturesTrait;
  *
  * @group headless
  */
-final class GetFormActionTest extends AbstractRemoteFundingHeadlessTestCase {
+final class GetActionTest extends AbstractRemoteFundingHeadlessTestCase {
 
   use ClearingProcessFixturesTrait;
 
@@ -54,50 +54,35 @@ final class GetFormActionTest extends AbstractRemoteFundingHeadlessTestCase {
   }
 
   public function test(): void {
-    $result = RemoteFundingClearingProcess::getForm()
-      ->setRemoteContactId($this->remoteContactId)
-      ->setId($this->clearingProcessBundle->getClearingProcess()->getId())
-      ->execute()
-      ->getArrayCopy();
-
-    static::assertArrayHasKey('jsonSchema', $result);
-    static::assertArrayHasKey('uiSchema', $result);
-    static::assertArrayHasKey('data', $result);
-
-    static::assertIsArray($result['jsonSchema']['properties']['costItems']['properties'][$this->costItem->getId()]);
-    static::assertIsArray(
-      $result['jsonSchema']['properties']['resourcesItems']['properties'][$this->resourcesItem->getId()]
+    static::assertSame(
+      [$this->clearingProcessBundle->getClearingProcess()->toArray()],
+      RemoteFundingClearingProcess::get()->setRemoteContactId($this->remoteContactId)->execute()->getArrayCopy()
     );
 
     static::assertSame([
-      'type' => 'object',
-      'properties' => [
-        'foo' => ['type' => 'string'],
-        'file' => [
-          'type' => 'string',
-          'format' => 'uri',
-          '$tag' => 'externalFile',
-        ],
+      [
+        'id' => $this->clearingProcessBundle->getClearingProcess()->getId(),
+        'amount_recorded_costs' => NULL,
+        'amount_recorded_resources' => NULL,
+        'amount_admitted_costs' => NULL,
+        'amount_admitted_resources' => NULL,
       ],
-    ], $result['jsonSchema']['properties']['reportData']);
-
-    // Test that scopes are parts of UI schema.
-    $uiSchemaString = json_encode($result['uiSchema'], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
-    static::assertStringContainsString(
-      '"#/properties/costItems/properties/' . $this->costItem->getId() . '/properties/',
-      $uiSchemaString
+    ], RemoteFundingClearingProcess::get()
+      ->setRemoteContactId($this->remoteContactId)
+      ->addSelect(
+        'amount_recorded_costs',
+        'amount_recorded_resources',
+        'amount_admitted_costs',
+        'amount_admitted_resources',
+      )->execute()->getArrayCopy()
     );
-    static::assertStringContainsString(
-      '"#/properties/resourcesItems/properties/' . $this->resourcesItem->getId() . '/properties/',
-      $uiSchemaString
-    );
-    static::assertStringContainsString('"#/properties/reportData/properties/foo"', $uiSchemaString);
 
-    static::assertEquals([
-      'costItems' => new \stdClass(),
-      'resourcesItems' => new \stdClass(),
-      'reportData' => ['foo' => 'bar'],
-    ], $result['data']);
+    $this->clearCache();
+    $contactNotPermitted = ContactFixture::addIndividual();
+    static::assertCount(0, RemoteFundingClearingProcess::get()
+      ->setRemoteContactId((string) $contactNotPermitted['id'])
+      ->execute()
+    );
   }
 
 }

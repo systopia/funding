@@ -26,7 +26,7 @@ use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 final class GetAction extends AbstractRemoteFundingGetAction {
 
   public function __construct(ActionHandlerInterface $actionHandler = NULL) {
-    parent::__construct(RemoteFundingClearingProcess::getEntityName(), 'getFields', $actionHandler);
+    parent::__construct(RemoteFundingClearingProcess::getEntityName(), 'get', $actionHandler);
   }
 
 }

@@ -268,6 +268,36 @@ final class GetFieldsAction extends BasicGetFieldsAction {
         'data_type' => 'Boolean',
         'nullable' => TRUE,
       ],
+      [
+        'name' => 'clearing_process_id',
+        'title' => 'clearing_process_id',
+        'data_type' => 'Integer',
+        'nullable' => TRUE,
+      ],
+      [
+        'name' => 'clearing_process_amount_recorded_costs',
+        'title' => 'clearing_process_amount_recorded_costs',
+        'data_type' => 'Money',
+        'nullable' => TRUE,
+      ],
+      [
+        'name' => 'clearing_process_amount_recorded_resources',
+        'title' => 'clearing_process_amount_recorded_resources',
+        'data_type' => 'Money',
+        'nullable' => TRUE,
+      ],
+      [
+        'name' => 'clearing_process_amount_admitted_costs',
+        'title' => 'clearing_process_amount_admitted_costs',
+        'data_type' => 'Money',
+        'nullable' => TRUE,
+      ],
+      [
+        'name' => 'clearing_process_amount_admitted_resources',
+        'title' => 'clearing_process_amount_admitted_resources',
+        'data_type' => 'Money',
+        'nullable' => TRUE,
+      ],
     ], iterator_to_array($this->getPermissionFields()));
   }
 

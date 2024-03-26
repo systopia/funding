@@ -32,7 +32,7 @@ abstract class AbstractRemoteFundingGetActionHandler implements ActionHandlerInt
     $this->api4 = $api4;
   }
 
-  public function getAction(AbstractRemoteFundingGetAction $action): Result {
+  public function get(AbstractRemoteFundingGetAction $action): Result {
     return $this->api4->execute($this->getEntityName(), 'get', [
       'language' => $action->getLanguage(),
       'select' => $action->getSelect(),

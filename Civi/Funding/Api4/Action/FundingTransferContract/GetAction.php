@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\FundingTransferContract;
 
+use Civi\Api4\FundingClearingProcess;
 use Civi\Api4\FundingTransferContract;
 use Civi\Api4\Generic\AbstractGetAction;
 use Civi\Api4\Generic\Result;
@@ -28,12 +29,15 @@ use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\Funding\PayoutProcess\PayoutProcessManager;
+use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
 use Webmozart\Assert\Assert;
 
 final class GetAction extends AbstractGetAction {
 
   use ArrayQueryActionTrait;
+
+  private Api4Interface $api4;
 
   private FundingCaseManager $fundingCaseManager;
 
@@ -42,11 +46,13 @@ final class GetAction extends AbstractGetAction {
   private PayoutProcessManager $payoutProcessManager;
 
   public function __construct(
+    Api4Interface $api4,
     FundingCaseManager $fundingCaseManager,
     FundingProgramManager $fundingProgramManager,
     PayoutProcessManager $payoutProcessManager
   ) {
     parent::__construct(FundingTransferContract::getEntityName(), 'get');
+    $this->api4 = $api4;
     $this->fundingCaseManager = $fundingCaseManager;
     $this->fundingProgramManager = $fundingProgramManager;
     $this->payoutProcessManager = $payoutProcessManager;
@@ -83,6 +89,16 @@ final class GetAction extends AbstractGetAction {
       $fundingCase->getId()
     ));
     $amountAvailable = $this->payoutProcessManager->getAmountAvailable($payoutProcess);
+    $clearingProcessAmounts = $this->api4->execute(FundingClearingProcess::getEntityName(), 'get', [
+      'select' => [
+        'id',
+        'amount_recorded_costs',
+        'amount_recorded_resources',
+        'amount_admitted_costs',
+        'amount_admitted_resources',
+      ],
+      'where' => [['application_process_id.funding_case_id', '=', $fundingCase->getId()]],
+    ])->first();
 
     return [
       'funding_case_id' => $fundingCase->getId(),
@@ -91,6 +107,10 @@ final class GetAction extends AbstractGetAction {
       'payout_process_id' => $payoutProcess->getId(),
       'amount_paid_out' => $this->payoutProcessManager->getAmountAccepted($payoutProcess),
       'amount_available' => $amountAvailable,
+      'amount_recorded_costs' => $clearingProcessAmounts['amount_recorded_costs'] ?? NULL,
+      'amount_recorded_resources' => $clearingProcessAmounts['amount_recorded_resources'] ?? NULL,
+      'amount_admitted_costs' => $clearingProcessAmounts['amount_admitted_costs'] ?? NULL,
+      'amount_admitted_resources' => $clearingProcessAmounts['amount_admitted_resources'] ?? NULL,
       'transfer_contract_uri' => $fundingCase->getTransferContractUri(),
       'funding_case_type_id' => $fundingCase->getFundingCaseTypeId(),
       'funding_program_id' => $fundingProgram->getId(),

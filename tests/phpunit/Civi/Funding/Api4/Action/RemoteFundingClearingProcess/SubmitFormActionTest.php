@@ -31,7 +31,6 @@ use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\Traits\ClearingProcessFixturesTrait;
 use Civi\Funding\Form\RemoteSubmitResponseActions;
-use Civi\Funding\Util\RequestTestUtil;
 use Civi\PHPUnit\Traits\ArrayAssertTrait;
 use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 use Symfony\Bridge\PhpUnit\ClockMock;
@@ -75,7 +74,6 @@ final class SubmitFormActionTest extends AbstractRemoteFundingHeadlessTestCase {
     );
 
     $this->remoteContactId = (string) $contact['id'];
-    RequestTestUtil::mockRemoteRequest($this->remoteContactId);
   }
 
   public function testInvalid(): void {

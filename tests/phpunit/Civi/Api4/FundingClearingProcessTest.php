@@ -22,7 +22,11 @@ namespace Civi\Api4;
 use Civi\API\Exception\UnauthorizedException;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
+use Civi\Funding\Fixtures\ApplicationCostItemFixture;
+use Civi\Funding\Fixtures\ApplicationResourcesItemFixture;
+use Civi\Funding\Fixtures\ClearingCostItemFixture;
 use Civi\Funding\Fixtures\ClearingProcessBundleFixture;
+use Civi\Funding\Fixtures\ClearingResourcesItemFixture;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Util\RequestTestUtil;
@@ -42,7 +46,13 @@ final class FundingClearingProcessTest extends AbstractFundingHeadlessTestCase {
   public function testGet(): void {
     $contact = ContactFixture::addIndividual();
     $contactNotPermitted = ContactFixture::addIndividual();
-    $clearingProcessBundle = $this->createClearingProcessBundle();
+    $clearingProcessBundle = $this->createClearingProcessBundle([
+      'is_review_calculative' => TRUE,
+      'is_review_content' => TRUE,
+      'status' => 'accepted',
+    ]);
+    $clearingProcessId = $clearingProcessBundle->getClearingProcess()->getId();
+    $applicationProcessId = $clearingProcessBundle->getApplicationProcess()->getId();
 
     FundingCaseContactRelationFixture::addContact(
       $contact['id'],
@@ -56,8 +66,63 @@ final class FundingClearingProcessTest extends AbstractFundingHeadlessTestCase {
       FundingClearingProcess::get()->execute()->getArrayCopy()
     );
 
+    static::assertSame([
+        [
+        'id' => $clearingProcessId,
+        'amount_recorded_costs' => NULL,
+        'amount_recorded_resources' => NULL,
+        'amount_admitted_costs' => NULL,
+        'amount_admitted_resources' => NULL,
+      ],
+    ], FundingClearingProcess::get()->addSelect(
+        'amount_recorded_costs',
+        'amount_recorded_resources',
+        'amount_admitted_costs',
+        'amount_admitted_resources',
+      )->execute()->getArrayCopy()
+    );
+
+    $applicationCostItem = ApplicationCostItemFixture::addFixture($applicationProcessId);
+    ClearingCostItemFixture::addFixture($clearingProcessId, $applicationCostItem->getId(), [
+      'amount' => 10.1,
+      'amount_admitted' => 9.1,
+      'status' => 'accepted',
+    ]);
+    ClearingCostItemFixture::addFixture($clearingProcessId, $applicationCostItem->getId(), [
+      'amount' => 1.1,
+      'amount_admitted' => 0,
+      'status' => 'rejected',
+    ]);
+
+    $applicationResourcesItem = ApplicationResourcesItemFixture::addFixture($applicationProcessId);
+    ClearingResourcesItemFixture::addFixture($clearingProcessId, $applicationResourcesItem->getId(), [
+      'amount' => 3.2,
+      'amount_admitted' => 2.2,
+      'status' => 'accepted',
+    ]);
+    ClearingResourcesItemFixture::addFixture($clearingProcessId, $applicationResourcesItem->getId(), [
+      'amount' => 1.1,
+      'amount_admitted' => 0,
+      'status' => 'rejected',
+    ]);
+
+    static::assertSame([
+      [
+        'id' => $clearingProcessId,
+        'amount_recorded_costs' => 10.1,
+        'amount_recorded_resources' => 3.2,
+        'amount_admitted_costs' => 9.1,
+        'amount_admitted_resources' => 2.2,
+      ],
+    ], FundingClearingProcess::get()->addSelect(
+      'amount_recorded_costs',
+      'amount_recorded_resources',
+      'amount_admitted_costs',
+      'amount_admitted_resources',
+    )->execute()->getArrayCopy());
+
     RequestTestUtil::mockInternalRequest($contactNotPermitted['id']);
-    static::assertCount(0, FundingDrawdown::get()->execute());
+    static::assertCount(0, FundingClearingProcess::get()->execute());
   }
 
   public function testUpdateNotPermitted(): void {
@@ -68,8 +133,13 @@ final class FundingClearingProcessTest extends AbstractFundingHeadlessTestCase {
       ->execute();
   }
 
-  private function createClearingProcessBundle(): ClearingProcessEntityBundle {
-    return ClearingProcessBundleFixture::create(['status' => 'review']);
+  /**
+   * @phpstan-param array<string, mixed> $values
+   *
+   * @throws \CRM_Core_Exception
+   */
+  private function createClearingProcessBundle(array $values = []): ClearingProcessEntityBundle {
+    return ClearingProcessBundleFixture::create($values + ['status' => 'review']);
   }
 
 }

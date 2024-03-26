@@ -87,57 +87,54 @@ final class GetFieldsAction extends DAOGetFieldsAction {
     $fields[] = [
       'name' => 'amount_recorded_costs',
       'title' => E::ts('Amount Recorded Costs'),
-      'description' => E::ts('The sum of the amounts recorded for costs.'),
+      'description' => E::ts('The sum of the amounts recorded for costs for accepted clearing processes.'),
       'type' => 'Extra',
       'data_type' => 'Money',
       'readonly' => TRUE,
-      'nullable' => FALSE,
-      'sql_renderer' => fn () => sprintf('IFNULL(
-        (SELECT SUM(item.amount) FROM civicrm_funding_clearing_cost_item item
-        WHERE item.clearing_process_id = %s.id)
-      , 0)', Api4Query::MAIN_TABLE_ALIAS),
+      'nullable' => TRUE,
+      'sql_renderer' => fn () => sprintf('(SELECT SUM(item.amount) FROM civicrm_funding_clearing_cost_item item
+        WHERE %1$s.status = "accepted" AND item.clearing_process_id = %1$s.id AND item.amount_admitted > 0)',
+        Api4Query::MAIN_TABLE_ALIAS),
     ];
 
     $fields[] = [
       'name' => 'amount_recorded_resources',
       'title' => E::ts('Amount Recorded Resources'),
-      'description' => E::ts('The sum of the amounts recorded for resources.'),
+      'description' => E::ts('The sum of the amounts recorded for resources for accepted clearing processes.'),
       'type' => 'Extra',
       'data_type' => 'Money',
       'readonly' => TRUE,
-      'nullable' => FALSE,
-      'sql_renderer' => fn () => sprintf('IFNULL(
-        (SELECT SUM(item.amount) FROM civicrm_funding_clearing_resources_item item
-        WHERE item.clearing_process_id = %s.id)
-      , 0)', Api4Query::MAIN_TABLE_ALIAS),
+      'nullable' => TRUE,
+      'sql_renderer' => fn () => sprintf('(SELECT SUM(item.amount) FROM civicrm_funding_clearing_resources_item item
+        WHERE %1$s.status = "accepted" AND item.clearing_process_id = %1$s.id AND item.amount_admitted > 0)',
+        Api4Query::MAIN_TABLE_ALIAS),
     ];
 
     $fields[] = [
       'name' => 'amount_admitted_costs',
       'title' => E::ts('Amount Admitted Costs'),
-      'description' => E::ts('The sum of the amounts admitted for costs.'),
+      'description' => E::ts('The sum of the amounts admitted for costs for accepted clearing processes.'),
       'type' => 'Extra',
       'data_type' => 'Money',
       'readonly' => TRUE,
-      'nullable' => FALSE,
-      'sql_renderer' => fn () => sprintf('IFNULL(
-        (SELECT SUM(item.amount_admitted) FROM civicrm_funding_clearing_cost_item item
-        WHERE item.clearing_process_id = %s.id)
-      , 0)', Api4Query::MAIN_TABLE_ALIAS),
+      'nullable' => TRUE,
+      'sql_renderer' => fn () => sprintf('(SELECT SUM(item.amount_admitted) FROM civicrm_funding_clearing_cost_item item
+        WHERE %1$s.status = "accepted" AND item.clearing_process_id = %1$s.id)',
+        Api4Query::MAIN_TABLE_ALIAS),
     ];
 
     $fields[] = [
       'name' => 'amount_admitted_resources',
       'title' => E::ts('Amount Admitted Resources'),
-      'description' => E::ts('The sum of the amounts admitted for resources.'),
+      'description' => E::ts('The sum of the amounts admitted for resources for accepted clearing processes.'),
       'type' => 'Extra',
       'data_type' => 'Money',
       'readonly' => TRUE,
-      'nullable' => FALSE,
-      'sql_renderer' => fn () => sprintf('IFNULL(
-        (SELECT SUM(item.amount_admitted) FROM civicrm_funding_clearing_resources_item item
-        WHERE item.clearing_process_id = %s.id)
-      , 0)', Api4Query::MAIN_TABLE_ALIAS),
+      'nullable' => TRUE,
+      'sql_renderer' => fn () => sprintf(
+        '(SELECT SUM(item.amount_admitted) FROM civicrm_funding_clearing_resources_item item
+        WHERE %1$s.status = "accepted" AND item.clearing_process_id = %1$s.id)',
+        Api4Query::MAIN_TABLE_ALIAS),
     ];
 
     return $fields;

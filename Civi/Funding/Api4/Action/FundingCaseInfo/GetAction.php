@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Api4\Action\FundingCaseInfo;
 
 use Civi\Api4\FundingCaseInfo;
+use Civi\Api4\FundingClearingProcess;
 use Civi\Api4\Generic\AbstractGetAction;
 use Civi\Api4\Generic\Result;
 use Civi\Api4\Generic\Traits\ArrayQueryActionTrait;
@@ -27,6 +28,7 @@ use Civi\Funding\Api4\Util\WhereUtil;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\FundingCase\FundingCaseManager;
+use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
 
 final class GetAction extends AbstractGetAction {
@@ -34,6 +36,8 @@ final class GetAction extends AbstractGetAction {
   use ArrayQueryActionTrait {
     ArrayQueryActionTrait::filterCompare as traitFilterCompare;
   }
+
+  private Api4Interface $api4;
 
   private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
 
@@ -64,10 +68,12 @@ final class GetAction extends AbstractGetAction {
   }
 
   public function __construct(
+    Api4Interface $api4,
     ApplicationProcessBundleLoader $applicationProcessBundleLoader,
     FundingCaseManager $fundingCaseManager
   ) {
     parent::__construct(FundingCaseInfo::getEntityName(), 'get');
+    $this->api4 = $api4;
     $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
     $this->fundingCaseManager = $fundingCaseManager;
   }
@@ -94,6 +100,16 @@ final class GetAction extends AbstractGetAction {
     $fundingCase = $applicationProcessBundle->getFundingCase();
     $fundingCaseType = $applicationProcessBundle->getFundingCaseType();
     $fundingProgram = $applicationProcessBundle->getFundingProgram();
+    $clearingProcessAmounts = $this->api4->execute(FundingClearingProcess::getEntityName(), 'get', [
+      'select' => [
+        'id',
+        'amount_recorded_costs',
+        'amount_recorded_resources',
+        'amount_admitted_costs',
+        'amount_admitted_resources',
+      ],
+      'where' => [['application_process_id', '=', $applicationProcess->getId()]],
+    ])->first();
 
     $record = [
       'funding_case_id' => $fundingCase->getId(),
@@ -122,6 +138,11 @@ final class GetAction extends AbstractGetAction {
       'application_process_start_date' => self::toFormattedDateOrNull($applicationProcess->getStartDate()),
       'application_process_end_date' => self::toFormattedDateOrNull($applicationProcess->getEndDate()),
       'application_process_is_eligible' => $applicationProcess->getIsEligible(),
+      'clearing_process_id' => $clearingProcessAmounts['id'] ?? NULL,
+      'clearing_process_amount_recorded_costs' => $clearingProcessAmounts['amount_recorded_costs'] ?? NULL,
+      'clearing_process_amount_recorded_resources' => $clearingProcessAmounts['amount_recorded_resources'] ?? NULL,
+      'clearing_process_amount_admitted_costs' => $clearingProcessAmounts['amount_admitted_costs'] ?? NULL,
+      'clearing_process_amount_admitted_resources' => $clearingProcessAmounts['amount_admitted_resources'] ?? NULL,
     ];
 
     foreach ($fundingCase->getFlattenedPermissions() as $permission => $active) {
