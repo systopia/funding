@@ -95,6 +95,45 @@
   </foreignKey>
 
   <field>
+    <name>receipt_number</name>
+    <type>varchar</type>
+    <length>255</length>
+    <html>
+      <type>Text</type>
+    </html>
+  </field>
+
+  <field>
+    <name>payment_date</name>
+    <type>date</type>
+    <required>true</required>
+    <html>
+      <type>Select Date</type>
+      <formatType>activityDate</formatType>
+    </html>
+  </field>
+
+  <field>
+    <name>recipient</name>
+    <type>varchar</type>
+    <length>255</length>
+    <required>true</required>
+    <html>
+      <type>Text</type>
+    </html>
+  </field>
+
+  <field>
+    <name>reason</name>
+    <type>varchar</type>
+    <length>255</length>
+    <required>true</required>
+    <html>
+      <type>Text</type>
+    </html>
+  </field>
+
+  <field>
     <name>amount</name>
     <type>decimal(10,2)</type>
     <required>true</required>
@@ -112,15 +151,6 @@
     <dataPattern>/^\d{1,10}(\.\d{2})?$/</dataPattern>
     <html>
       <type>Text</type>
-    </html>
-  </field>
-
-  <field>
-    <name>description</name>
-    <type>Text</type>
-    <required>true</required>
-    <html>
-      <type>TextArea</type>
     </html>
   </field>
 

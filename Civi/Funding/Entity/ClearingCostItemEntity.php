@@ -26,9 +26,12 @@ namespace Civi\Funding\Entity;
  *   application_cost_item_id: int,
  *   status: string,
  *   file_id: ?int,
+ *   receipt_number: ?string,
+ *   payment_date: string,
+ *   recipient: string,
+ *   reason: string,
  *   amount: float,
  *   amount_admitted: ?float,
- *   description: string,
  * }
  *
  * @phpstan-extends AbstractClearingItemEntity<clearingCostItemT>

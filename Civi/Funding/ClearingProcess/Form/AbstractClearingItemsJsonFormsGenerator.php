@@ -36,6 +36,7 @@ use Civi\RemoteTools\JsonForms\Layout\JsonFormsTableRow;
 use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
 use Civi\RemoteTools\JsonSchema\JsonSchemaCalculate;
 use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
+use Civi\RemoteTools\JsonSchema\JsonSchemaDate;
 use Civi\RemoteTools\JsonSchema\JsonSchemaInteger;
 use Civi\RemoteTools\JsonSchema\JsonSchemaMoney;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
@@ -151,10 +152,13 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
             new JsonSchemaObject([
               '_id' => new JsonSchemaInteger(['readOnly' => TRUE, 'default' => NULL], TRUE),
               'file' => new JsonSchemaString(['format' => 'uri', 'default' => NULL], TRUE),
-              'description' => new JsonSchemaString(),
+              'receiptNumber' => new JsonSchemaString(['maxlength' => 255], TRUE),
+              'paymentDate' => new JsonSchemaDate(),
+              'recipient' => new JsonSchemaString(['maxlength' => 255]),
+              'reason' => new JsonSchemaString(['maxlength' => 255]),
               'amount' => new JsonSchemaMoney(),
               'amountAdmitted' => new JsonSchemaMoney(['readOnly' => !$hasReviewPermission, 'default' => NULL], TRUE),
-            ], ['required' => ['description', 'amount']])
+            ], ['required' => ['paymentDate', 'recipient', 'reason', 'amount']])
           ),
           'amountRecordedTotal' => new JsonSchemaCalculate(
             'number',
@@ -222,9 +226,12 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
               [
                 new JsonFormsHidden('#/properties/_id', ['internal' => TRUE]),
                 new JsonFormsControl('#/properties/file', E::ts('Proof'), NULL, ['format' => 'file']),
-                new JsonFormsControl('#/properties/description', E::ts('Description')),
-                new JsonFormsControl('#/properties/amountAdmitted', E::ts('Amount Admitted in %1', [1 => $currency])),
+                new JsonFormsControl('#/properties/receiptNumber', E::ts('Receipt Number')),
+                new JsonFormsControl('#/properties/paymentDate', E::ts('Payment/Posting Date')),
+                new JsonFormsControl('#/properties/recipient', E::ts('Payment Recipient')),
+                new JsonFormsControl('#/properties/reason', E::ts('Reason for Payment/Payment Reference')),
                 new JsonFormsControl('#/properties/amount', E::ts('Amount in %1', [1 => $currency])),
+                new JsonFormsControl('#/properties/amountAdmitted', E::ts('Amount Admitted in %1', [1 => $currency])),
               ],
               ['addButtonLabel' => E::ts('Add Proof')]
             ),

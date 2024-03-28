@@ -28,9 +28,12 @@ use Civi\Funding\Entity\ClearingResourcesItemEntity;
  *   app_resources_item_id?: int,
  *   status?: string,
  *   file_id?: ?int,
+ *   receipt_number?: ?string,
+ *   payment_date?: string,
+ *   recipient?: string,
+ *   reason?: string,
  *   amount?: float,
  *   amount_admitted?: ?float,
- *   description?: string,
  * }
  */
 final class ClearingResourcesItemFactory {
@@ -44,12 +47,15 @@ final class ClearingResourcesItemFactory {
       'app_resources_item_id' => ApplicationResourcesItemFactory::DEFAULT_ID,
       'status' => 'new',
       'file_id' => NULL,
+      'receipt_number' => NULL,
+      'payment_date' => '2024-04-04',
+      'recipient' => 'costRecipient',
+      'reason' => 'TestClearingResourcesItem',
       'amount' => 1.23,
       'amount_admitted' => NULL,
-      'description' => 'TestClearingResourcesItem',
     ];
 
-    return ClearingResourcesItemEntity::fromArray($values);
+    return ClearingResourcesItemEntity::fromArray($values)->reformatDates();
   }
 
 }

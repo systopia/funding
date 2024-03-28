@@ -62,8 +62,40 @@ msgstr ""
 msgid "Timestamp"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php Civi/Funding/Api4/Action/Generic/ClearingItem/GetFieldsAction.php Civi/Funding/EventSubscriber/Remote/FundingCaseGetFieldsSubscriber.php managed/SavedSearchFundingPrograms.mgd.php
+#: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php Civi/Funding/Api4/Action/Generic/ClearingItem/GetFieldsAction.php Civi/Funding/EventSubscriber/Remote/FundingCaseGetFieldsSubscriber.php managed/SavedSearchFundingPrograms.mgd.php
 msgid "Currency"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
+msgid "Amount Recorded Costs"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
+msgid "The sum of the amounts recorded for costs for accepted clearing processes."
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
+msgid "Amount Recorded Resources"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
+msgid "The sum of the amounts recorded for resources for accepted clearing processes."
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
+msgid "Amount Admitted Costs"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
+msgid "The sum of the amounts admitted for costs for accepted clearing processes."
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
+msgid "Amount Admitted Resources"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
+msgid "The sum of the amounts admitted for resources for accepted clearing processes."
 msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingDrawdown/RejectAction.php
@@ -194,7 +226,11 @@ msgstr ""
 msgid "Request Change"
 msgstr ""
 
-#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php ang/crmFunding/application/applicationSidebar.template.html managed/SavedSearchFundingDrawdowns.mgd.php
+#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php Civi/Funding/ApplicationProcess/ActionsContainer/ReworkPossibleApplicationSubmitActionsContainerFactory.php Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php ang/crmFunding/application/applicationSidebar.template.html ang/crmFunding/case/fundingCase.template.html
+msgid "Approve"
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php Civi/Funding/ApplicationProcess/ActionsContainer/ReworkPossibleApplicationSubmitActionsContainerFactory.php Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php ang/crmFunding/application/applicationSidebar.template.html managed/SavedSearchFundingDrawdowns.mgd.php
 msgid "Reject"
 msgstr ""
 
@@ -335,7 +371,19 @@ msgid "Proof"
 msgstr ""
 
 #: Civi/Funding/ClearingProcess/Form/AbstractClearingItemsJsonFormsGenerator.php
-msgid "Description"
+msgid "Receipt Number"
+msgstr ""
+
+#: Civi/Funding/ClearingProcess/Form/AbstractClearingItemsJsonFormsGenerator.php
+msgid "Payment/Posting Date"
+msgstr ""
+
+#: Civi/Funding/ClearingProcess/Form/AbstractClearingItemsJsonFormsGenerator.php
+msgid "Payment Recipient"
+msgstr ""
+
+#: Civi/Funding/ClearingProcess/Form/AbstractClearingItemsJsonFormsGenerator.php
+msgid "Reason for Payment/Payment Reference"
 msgstr ""
 
 #: Civi/Funding/ClearingProcess/Form/AbstractClearingItemsJsonFormsGenerator.php
@@ -706,6 +754,10 @@ msgstr ""
 msgid "Requested amount is greater than available amount."
 msgstr ""
 
+#: Civi/Funding/PayoutProcess/Validator/DrawdownAmountValidator.php
+msgid "Requested amount is less than 0."
+msgstr ""
+
 #: Civi/Funding/PayoutProcess/Validator/DrawdownCreateValidator.php
 msgid "Payout process is closed."
 msgstr ""
@@ -776,10 +828,6 @@ msgstr ""
 
 #: Civi/Funding/Permission/FundingCase/RelationFactory/Types/RecipientContactRelationship.php
 msgid "Assign permissions for new funding cases to contacts that have a relationship\nof the specified type to the recipient contact."
-msgstr ""
-
-#: Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php ang/crmFunding/application/applicationSidebar.template.html ang/crmFunding/case/fundingCase.template.html
-msgid "Approve"
 msgstr ""
 
 #: Civi/Funding/Validation/EntityValidationResult.php
@@ -1104,10 +1152,6 @@ msgstr ""
 
 #: ang/crmFunding/jsonForms/jfControlArray.template.html
 msgid "No data"
-msgstr ""
-
-#: ang/crmFunding/jsonForms/jfControlFile.template.html
-msgid "Download"
 msgstr ""
 
 #: ang/crmFunding/program/fundingNewCasePermissions.html

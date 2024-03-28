@@ -40,12 +40,15 @@ final class ClearingResourcesItemFixture {
         'app_resources_item_id' => $applicationResourcesItemId,
         'status' => 'new',
         'file_id' => NULL,
+        'receipt_number' => NULL,
+        'payment_date' => '2024-04-04',
+        'recipient' => 'Recipient',
+        'reason' => 'Test Clearing Resources Item',
         'amount' => 1.2,
         'amount_admitted' => NULL,
-        'description' => 'Test Clearing Resources Item',
       ])->execute();
 
-    return ClearingResourcesItemEntity::singleFromApiResult($result);
+    return ClearingResourcesItemEntity::singleFromApiResult($result)->reformatDates();
   }
 
 }

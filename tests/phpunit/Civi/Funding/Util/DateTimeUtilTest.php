@@ -26,6 +26,15 @@ use PHPUnit\Framework\TestCase;
  */
 final class DateTimeUtilTest extends TestCase {
 
+  public function testToDateStr(): void {
+    static::assertSame('2022-10-04', DateTimeUtil::toDateStr(new \DateTime('2022-10-04 01:02')));
+  }
+
+  public function testToDateStrOrNull(): void {
+    static::assertSame('2022-10-04', DateTimeUtil::toDateStrOrNull(new \DateTime('2022-10-04 01:02')));
+    static::assertNull(DateTimeUtil::toDateStrOrNull(NULL));
+  }
+
   public function testToDateTimeOrNull(): void {
     static::assertEquals(new \DateTime('2022-10-04 01:02:03'), DateTimeUtil::toDateTimeOrNull('2022-10-04 01:02:03'));
     static::assertNull(DateTimeUtil::toDateTimeOrNull(NULL));

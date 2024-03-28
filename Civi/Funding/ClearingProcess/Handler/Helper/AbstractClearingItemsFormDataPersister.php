@@ -163,8 +163,11 @@ abstract class AbstractClearingItemsFormDataPersister {
         $status = $this->determineStatus($record, $existingClearingItem, $fileId, $permissions);
         $existingClearingItem
           ->setFileId($fileId)
+          ->setReceiptNumber($record['receiptNumber'])
+          ->setPaymentDate(new \DateTime($record['paymentDate']))
+          ->setRecipient($record['recipient'])
+          ->setReason($record['reason'])
           ->setAmount($record['amount'])
-          ->setDescription($record['description'])
           ->setStatus($status);
         if ($this->hasReviewPermission($permissions)) {
           $existingClearingItem->setAmountAdmitted($record['amountAdmitted']);
@@ -184,9 +187,12 @@ abstract class AbstractClearingItemsFormDataPersister {
       $this->financePlanItemIdFieldName => $financePlanItem->getId(),
       'status' => $this->determineStatus($record, NULL, $fileId, $permissions),
       'file_id' => $fileId,
+      'receipt_number' => $record['receiptNumber'],
+      'payment_date' => $record['paymentDate'],
+      'recipient' => $record['recipient'],
+      'reason' => $record['reason'],
       'amount' => $record['amount'],
       'amount_admitted' => NULL,
-      'description' => $record['description'],
     ]);
 
     if ($this->hasReviewPermission($permissions)) {
@@ -247,8 +253,11 @@ abstract class AbstractClearingItemsFormDataPersister {
    */
   private function isClearingItemChanged(AbstractClearingItemEntity $clearingItem, array $record, ?int $fileId): bool {
     return $clearingItem->getFileId() !== $fileId
-      || $clearingItem->getAmount() !== $record['amount']
-      || $clearingItem->getDescription() !== $record['description'];
+      || $clearingItem->getReceiptNumber() !== $record['receiptNumber']
+      || $clearingItem->getPaymentDate() !== $record['paymentDate']
+      || $clearingItem->getRecipient() !== $record['recipient']
+      || $clearingItem->getReason() !== $record['reason']
+      || $clearingItem->getAmount() !== $record['amount'];
   }
 
 }

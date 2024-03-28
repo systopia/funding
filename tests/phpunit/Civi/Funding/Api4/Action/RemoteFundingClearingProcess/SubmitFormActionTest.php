@@ -86,7 +86,10 @@ final class SubmitFormActionTest extends AbstractRemoteFundingHeadlessTestCase {
           $this->costItem->getId() => [
             'records' => [
               [
-                'description' => 'costTest',
+                'receiptNumber' => 'A123',
+                'paymentDate' => '2024-04-04',
+                'recipient' => 'Recipient',
+                'reason' => 'costTest',
                 'amount' => 'abc',
               ],
             ],
@@ -96,7 +99,10 @@ final class SubmitFormActionTest extends AbstractRemoteFundingHeadlessTestCase {
           $this->resourcesItem->getId() => [
             'records' => [
               [
-                'description' => 'resourcesTest',
+                'receiptNumber' => 'A123',
+                'paymentDate' => '2024-04-04',
+                'recipient' => 'Recipient',
+                'reason' => 'resourcesTest',
                 'amount' => 'abc',
               ],
             ],
@@ -124,7 +130,10 @@ final class SubmitFormActionTest extends AbstractRemoteFundingHeadlessTestCase {
           $this->costItem->getId() => [
             'records' => [
               [
-                'description' => 'costTest',
+                'receiptNumber' => 'A123',
+                'paymentDate' => '2024-04-04',
+                'recipient' => 'Recipient',
+                'reason' => 'costTest',
                 'amount' => 2,
                 // should be ignored.
                 'amountAdmitted' => 4,
@@ -138,7 +147,10 @@ final class SubmitFormActionTest extends AbstractRemoteFundingHeadlessTestCase {
           $this->resourcesItem->getId() => [
             'records' => [
               [
-                'description' => 'resourcesTest',
+                'receiptNumber' => 'A123',
+                'paymentDate' => '2024-04-04',
+                'recipient' => 'Recipient',
+                'reason' => 'resourcesTest',
                 'amount' => 3,
                 // should be ignored.
                 'amountAdmitted' => 5,
@@ -171,9 +183,12 @@ final class SubmitFormActionTest extends AbstractRemoteFundingHeadlessTestCase {
       'application_cost_item_id' => $this->costItem->getId(),
       'status' => 'new',
       'file_id' => NULL,
+      'receipt_number' => 'A123',
+      'payment_date' => '2024-04-04',
+      'recipient' => 'Recipient',
+      'reason' => 'costTest',
       'amount' => 2,
       'amount_admitted' => NULL,
-      'description' => 'costTest',
     ], FundingClearingCostItem::get(FALSE)->execute()->single());
 
     static::assertArraySubset([
@@ -181,9 +196,12 @@ final class SubmitFormActionTest extends AbstractRemoteFundingHeadlessTestCase {
       'app_resources_item_id' => $this->resourcesItem->getId(),
       'status' => 'new',
       'file_id' => NULL,
+      'receipt_number' => 'A123',
+      'payment_date' => '2024-04-04',
+      'recipient' => 'Recipient',
+      'reason' => 'resourcesTest',
       'amount' => 3.0,
       'amount_admitted' => NULL,
-      'description' => 'resourcesTest',
     ], FundingClearingResourcesItem::get(FALSE)->execute()->single());
   }
 
@@ -208,7 +226,10 @@ final class SubmitFormActionTest extends AbstractRemoteFundingHeadlessTestCase {
             'records' => [
               [
                 '_id' => $clearingCostItem->getId(),
-                'description' => 'costTest',
+                'receiptNumber' => 'A123',
+                'paymentDate' => '2001-01-01',
+                'recipient' => 'new cost recipient',
+                'reason' => 'new cost reason',
                 'amount' => 2,
                 // should be ignored.
                 'amountAdmitted' => 4,
@@ -223,7 +244,10 @@ final class SubmitFormActionTest extends AbstractRemoteFundingHeadlessTestCase {
             'records' => [
               [
                 '_id' => $clearingResourcesItem->getId(),
-                'description' => 'resourcesTest',
+                'receiptNumber' => 'A123',
+                'paymentDate' => '2001-01-01',
+                'recipient' => 'new resources recipient',
+                'reason' => 'new resources reason',
                 'amount' => 3,
                 // should be ignored.
                 'amountAdmitted' => 0,
@@ -250,9 +274,12 @@ final class SubmitFormActionTest extends AbstractRemoteFundingHeadlessTestCase {
       'application_cost_item_id' => $this->costItem->getId(),
       'status' => 'new',
       'file_id' => NULL,
+      'receipt_number' => 'A123',
+      'payment_date' => '2001-01-01',
+      'recipient' => 'new cost recipient',
+      'reason' => 'new cost reason',
       'amount' => 2,
       'amount_admitted' => NULL,
-      'description' => 'costTest',
     ], FundingClearingCostItem::get(FALSE)->execute()->single());
 
     static::assertEquals([
@@ -261,9 +288,12 @@ final class SubmitFormActionTest extends AbstractRemoteFundingHeadlessTestCase {
       'app_resources_item_id' => $this->resourcesItem->getId(),
       'status' => 'new',
       'file_id' => NULL,
+      'receipt_number' => 'A123',
+      'payment_date' => '2001-01-01',
+      'recipient' => 'new resources recipient',
+      'reason' => 'new resources reason',
       'amount' => 3.0,
       'amount_admitted' => NULL,
-      'description' => 'resourcesTest',
     ], FundingClearingResourcesItem::get(FALSE)->execute()->single());
   }
 
@@ -290,7 +320,10 @@ final class SubmitFormActionTest extends AbstractRemoteFundingHeadlessTestCase {
             'records' => [
               [
                 '_id' => $clearingCostItem->getId(),
-                'description' => 'costTest',
+                'receiptNumber' => 'ignored',
+                'paymentDate' => '2001-01-01',
+                'recipient' => 'ignored',
+                'reason' => 'ignored',
                 'amount' => 2,
                 'amountAdmitted' => 0,
               ],
@@ -302,7 +335,10 @@ final class SubmitFormActionTest extends AbstractRemoteFundingHeadlessTestCase {
             'records' => [
               [
                 '_id' => $clearingResourcesItem->getId(),
-                'description' => 'resourcesTest',
+                'receiptNumber' => 'ignored',
+                'paymentDate' => '2001-01-01',
+                'recipient' => 'ignored',
+                'reason' => 'ignored',
                 'amount' => 3,
                 'amountAdmitted' => 2.3,
               ],

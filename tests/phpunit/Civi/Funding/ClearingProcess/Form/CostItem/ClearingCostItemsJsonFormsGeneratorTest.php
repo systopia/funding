@@ -140,8 +140,21 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         'format' => 'uri',
                         'default' => NULL,
                       ],
-                      'description' => [
+                      'receiptNumber' => [
+                        'type' => ['string', 'null'],
+                        'maxlength' => 255,
+                      ],
+                      'paymentDate' => [
                         'type' => 'string',
+                        'format' => 'date',
+                      ],
+                      'recipient' => [
+                        'type' => 'string',
+                        'maxlength' => 255,
+                      ],
+                      'reason' => [
+                        'type' => 'string',
+                        'maxlength' => 255,
                       ],
                       'amount' => [
                         'type' => 'number',
@@ -154,7 +167,7 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         'default' => NULL,
                       ],
                     ],
-                    'required' => ['description', 'amount'],
+                    'required' => ['paymentDate', 'recipient', 'reason', 'amount'],
                   ],
                 ],
                 'amountRecordedTotal' => [
@@ -252,18 +265,33 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         ],
                         [
                           'type' => 'Control',
-                          'scope' => '#/properties/description',
-                          'label' => 'Description',
+                          'scope' => '#/properties/receiptNumber',
+                          'label' => 'Receipt Number',
                         ],
                         [
                           'type' => 'Control',
-                          'scope' => '#/properties/amountAdmitted',
-                          'label' => 'Amount Admitted in EUR',
+                          'scope' => '#/properties/paymentDate',
+                          'label' => 'Payment/Posting Date',
+                        ],
+                        [
+                          'type' => 'Control',
+                          'scope' => '#/properties/recipient',
+                          'label' => 'Payment Recipient',
+                        ],
+                        [
+                          'type' => 'Control',
+                          'scope' => '#/properties/reason',
+                          'label' => 'Reason for Payment/Payment Reference',
                         ],
                         [
                           'type' => 'Control',
                           'scope' => '#/properties/amount',
                           'label' => 'Amount in EUR',
+                        ],
+                        [
+                          'type' => 'Control',
+                          'scope' => '#/properties/amountAdmitted',
+                          'label' => 'Amount Admitted in EUR',
                         ],
                       ],
                     ],
@@ -337,8 +365,21 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         'format' => 'uri',
                         'default' => NULL,
                       ],
-                      'description' => [
+                      'receiptNumber' => [
+                        'type' => ['string', 'null'],
+                        'maxlength' => 255,
+                      ],
+                      'paymentDate' => [
                         'type' => 'string',
+                        'format' => 'date',
+                      ],
+                      'recipient' => [
+                        'type' => 'string',
+                        'maxlength' => 255,
+                      ],
+                      'reason' => [
+                        'type' => 'string',
+                        'maxlength' => 255,
                       ],
                       'amount' => [
                         'type' => 'number',
@@ -351,7 +392,7 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         'default' => NULL,
                       ],
                     ],
-                    'required' => ['description', 'amount'],
+                    'required' => ['paymentDate', 'recipient', 'reason', 'amount'],
                   ],
                 ],
                 'amountRecordedTotal' => [
@@ -445,18 +486,33 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                     ],
                     [
                       'type' => 'Control',
-                      'scope' => '#/properties/description',
-                      'label' => 'Description',
+                      'scope' => '#/properties/receiptNumber',
+                      'label' => 'Receipt Number',
                     ],
                     [
                       'type' => 'Control',
-                      'scope' => '#/properties/amountAdmitted',
-                      'label' => 'Amount Admitted in EUR',
+                      'scope' => '#/properties/paymentDate',
+                      'label' => 'Payment/Posting Date',
+                    ],
+                    [
+                      'type' => 'Control',
+                      'scope' => '#/properties/recipient',
+                      'label' => 'Payment Recipient',
+                    ],
+                    [
+                      'type' => 'Control',
+                      'scope' => '#/properties/reason',
+                      'label' => 'Reason for Payment/Payment Reference',
                     ],
                     [
                       'type' => 'Control',
                       'scope' => '#/properties/amount',
                       'label' => 'Amount in EUR',
+                    ],
+                    [
+                      'type' => 'Control',
+                      'scope' => '#/properties/amountAdmitted',
+                      'label' => 'Amount Admitted in EUR',
                     ],
                   ],
                 ],
@@ -541,8 +597,21 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         'format' => 'uri',
                         'default' => NULL,
                       ],
-                      'description' => [
+                      'receiptNumber' => [
+                        'type' => ['string', 'null'],
+                        'maxlength' => 255,
+                      ],
+                      'paymentDate' => [
                         'type' => 'string',
+                        'format' => 'date',
+                      ],
+                      'recipient' => [
+                        'type' => 'string',
+                        'maxlength' => 255,
+                      ],
+                      'reason' => [
+                        'type' => 'string',
+                        'maxlength' => 255,
                       ],
                       'amount' => [
                         'type' => 'number',
@@ -555,7 +624,7 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         'default' => NULL,
                       ],
                     ],
-                    'required' => ['description', 'amount'],
+                    'required' => ['paymentDate', 'recipient', 'reason', 'amount'],
                   ],
                 ],
                 'amountRecordedTotal' => [
@@ -654,18 +723,33 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         ],
                         [
                           'type' => 'Control',
-                          'scope' => '#/properties/description',
-                          'label' => 'Description',
+                          'scope' => '#/properties/receiptNumber',
+                          'label' => 'Receipt Number',
                         ],
                         [
                           'type' => 'Control',
-                          'scope' => '#/properties/amountAdmitted',
-                          'label' => 'Amount Admitted in EUR',
+                          'scope' => '#/properties/paymentDate',
+                          'label' => 'Payment/Posting Date',
+                        ],
+                        [
+                          'type' => 'Control',
+                          'scope' => '#/properties/recipient',
+                          'label' => 'Payment Recipient',
+                        ],
+                        [
+                          'type' => 'Control',
+                          'scope' => '#/properties/reason',
+                          'label' => 'Reason for Payment/Payment Reference',
                         ],
                         [
                           'type' => 'Control',
                           'scope' => '#/properties/amount',
                           'label' => 'Amount in EUR',
+                        ],
+                        [
+                          'type' => 'Control',
+                          'scope' => '#/properties/amountAdmitted',
+                          'label' => 'Amount Admitted in EUR',
                         ],
                       ],
                     ],

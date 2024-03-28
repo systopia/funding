@@ -62,7 +62,10 @@ final class ClearingFormDataGetHandler implements ClearingFormDataGetHandlerInte
         '_id' => $clearingItem->getId(),
         'amount' => $clearingItem->getAmount(),
         'file' => $this->getExternalFileUri($clearingItem),
-        'description' => $clearingItem->getDescription(),
+        'receiptNumber' => $clearingItem->getReceiptNumber(),
+        'paymentDate' => $clearingItem->getPaymentDate()->format('Y-m-d'),
+        'recipient' => $clearingItem->getRecipient(),
+        'reason' => $clearingItem->getReason(),
         'amountAdmitted' => $clearingItem->getAmountAdmitted(),
       ];
     }
@@ -72,7 +75,10 @@ final class ClearingFormDataGetHandler implements ClearingFormDataGetHandlerInte
         '_id' => $clearingItem->getId(),
         'amount' => $clearingItem->getAmount(),
         'file' => $this->getExternalFileUri($clearingItem),
-        'description' => $clearingItem->getDescription(),
+        'receiptNumber' => $clearingItem->getReceiptNumber(),
+        'paymentDate' => $clearingItem->getPaymentDate()->format('Y-m-d'),
+        'recipient' => $clearingItem->getRecipient(),
+        'reason' => $clearingItem->getReason(),
         'amountAdmitted' => $clearingItem->getAmountAdmitted(),
       ];
     }

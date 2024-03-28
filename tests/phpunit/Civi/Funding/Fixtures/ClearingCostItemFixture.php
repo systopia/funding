@@ -40,12 +40,15 @@ final class ClearingCostItemFixture {
         'application_cost_item_id' => $applicationCostItemId,
         'status' => 'new',
         'file_id' => NULL,
+        'receipt_number' => NULL,
+        'payment_date' => '2024-04-04',
+        'recipient' => 'Recipient',
+        'reason' => 'Test Clearing Cost Item',
         'amount' => 1.2,
         'amount_admitted' => NULL,
-        'description' => 'Test Clearing Cost Item',
       ])->execute();
 
-    return ClearingCostItemEntity::singleFromApiResult($result);
+    return ClearingCostItemEntity::singleFromApiResult($result)->reformatDates();
   }
 
 }

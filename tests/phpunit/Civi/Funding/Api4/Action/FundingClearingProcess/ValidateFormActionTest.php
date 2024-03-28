@@ -60,7 +60,10 @@ final class ValidateFormActionTest extends AbstractFundingHeadlessTestCase {
           $this->costItem->getId() => [
             'records' => [
               [
-                'description' => 'costTest',
+                'receiptNumber' => 'A123',
+                'paymentDate' => '2024-04-04',
+                'recipient' => 'Recipient',
+                'reason' => 'costTest',
                 'amount' => 'abc',
                 'amountAdmitted' => NULL,
               ],
@@ -71,7 +74,10 @@ final class ValidateFormActionTest extends AbstractFundingHeadlessTestCase {
           $this->resourcesItem->getId() => [
             'records' => [
               [
-                'description' => 'resourcesTest',
+                'receiptNumber' => 'A123',
+                'paymentDate' => '2024-04-04',
+                'recipient' => 'Recipient',
+                'reason' => 'resourceTest',
                 'amount' => 'abc',
                 'amountAdmitted' => NULL,
               ],
@@ -97,7 +103,10 @@ final class ValidateFormActionTest extends AbstractFundingHeadlessTestCase {
           $this->costItem->getId() => [
             'records' => [
               [
-                'description' => 'costTest',
+                'receiptNumber' => 'A123',
+                'paymentDate' => '2024-04-04',
+                'recipient' => 'Recipient',
+                'reason' => 'costTest',
                 'amount' => 2,
               ],
             ],
@@ -107,7 +116,10 @@ final class ValidateFormActionTest extends AbstractFundingHeadlessTestCase {
           $this->resourcesItem->getId() => [
             'records' => [
               [
-                'description' => 'resourcesTest',
+                'receiptNumber' => 'A123',
+                'paymentDate' => '2024-04-04',
+                'recipient' => 'Recipient',
+                'reason' => 'resourcesTest',
                 'amount' => 3,
               ],
             ],

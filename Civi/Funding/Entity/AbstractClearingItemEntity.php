@@ -25,9 +25,12 @@ namespace Civi\Funding\Entity;
  *   clearing_process_id: int,
  *   status: string,
  *   file_id: ?int,
+ *   receipt_number: ?string,
+ *   payment_date: string,
+ *   recipient: string,
+ *   reason: string,
  *   amount: float,
  *   amount_admitted: ?float,
- *   description: string,
  * }
  *
  * @phpstan-template T of array<string, mixed> //+clearingItemT
@@ -69,6 +72,62 @@ abstract class AbstractClearingItemEntity extends AbstractEntity {
     return $this;
   }
 
+  public function getReceiptNumber(): ?string {
+    // @phpstan-ignore-next-line
+    return $this->values['receipt_number'];
+  }
+
+  /**
+   * @return static
+   */
+  public function setReceiptNumber(?string $receiptNumber): self {
+    $this->values['receipt_number'] = $receiptNumber;
+
+    return $this;
+  }
+
+  public function getPaymentDate(): \DateTimeInterface {
+    // @phpstan-ignore-next-line
+    return new \DateTime($this->values['payment_date']);
+  }
+
+  /**
+   * @return static
+   */
+  public function setPaymentDate(\DateTimeInterface $paymentDate): self {
+    $this->values['payment_date'] = self::toDateStr($paymentDate);
+
+    return $this;
+  }
+
+  public function getRecipient(): string {
+    // @phpstan-ignore-next-line
+    return $this->values['recipient'];
+  }
+
+  /**
+   * @return static
+   */
+  public function setRecipient(string $recipient): self {
+    $this->values['recipient'] = $recipient;
+
+    return $this;
+  }
+
+  public function getReason(): string {
+    // @phpstan-ignore-next-line
+    return $this->values['reason'];
+  }
+
+  /**
+   * @return static
+   */
+  public function setReason(string $reason): self {
+    $this->values['reason'] = $reason;
+
+    return $this;
+  }
+
   public function getAmount(): float {
     // @phpstan-ignore-next-line
     return $this->values['amount'];
@@ -97,20 +156,20 @@ abstract class AbstractClearingItemEntity extends AbstractEntity {
     return $this;
   }
 
-  public function getDescription(): string {
-    // @phpstan-ignore-next-line
-    return $this->values['description'];
-  }
+  abstract public function getFinancePlanItemId(): int;
 
   /**
+   * On create CiviCRM returns a different date format than on get. This method
+   * reformats the dates in $values so that they are as on get.
+   *
    * @return static
+   *
+   * @internal
    */
-  public function setDescription(string $description): self {
-    $this->values['description'] = $description;
+  public function reformatDates(): self {
+    $this->setPaymentDate($this->getPaymentDate());
 
     return $this;
   }
-
-  abstract public function getFinancePlanItemId(): int;
 
 }

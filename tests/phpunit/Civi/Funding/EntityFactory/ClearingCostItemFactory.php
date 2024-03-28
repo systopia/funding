@@ -28,9 +28,12 @@ use Civi\Funding\Entity\ClearingCostItemEntity;
  *   application_cost_item_id?: int,
  *   status?: string,
  *   file_id?: ?int,
+ *   receipt_number?: ?string,
+ *   payment_date?: string,
+ *   recipient?: string,
+ *   reason?: string,
  *   amount?: float,
  *   amount_admitted?: ?float,
- *   description?: string,
  * }
  */
 final class ClearingCostItemFactory {
@@ -44,12 +47,15 @@ final class ClearingCostItemFactory {
       'application_cost_item_id' => ApplicationCostItemFactory::DEFAULT_ID,
       'status' => 'new',
       'file_id' => NULL,
+      'receipt_number' => NULL,
+      'payment_date' => '2024-04-04',
+      'recipient' => 'costRecipient',
+      'reason' => 'TestClearingCostItem',
       'amount' => 1.23,
       'amount_admitted' => NULL,
-      'description' => 'TestClearingCostItem',
     ];
 
-    return ClearingCostItemEntity::fromArray($values);
+    return ClearingCostItemEntity::fromArray($values)->reformatDates();
   }
 
 }

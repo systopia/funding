@@ -35,6 +35,7 @@ abstract class AbstractRemoteFundingGetFieldsActionHandler implements ActionHand
   public function getFields(AbstractRemoteGetFieldsAction $action): Result {
     return $this->api4->execute($this->getEntityName(), 'getFields', [
       'loadOptions' => $action->getLoadOptions(),
+      'action' => $action->getAction(),
       'values' => $action->getValues(),
       'language' => $action->getLanguage(),
       'select' => $action->getSelect(),

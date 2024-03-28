@@ -45,9 +45,12 @@ use Webmozart\Assert\Assert;
 /**
  * @phpstan-type clearingItemRecordT array{
  *   _id: int|null,
- *   amount: float,
  *   file: string|null,
- *   description: string,
+ *   receiptNumber: ?string,
+ *   paymentDate: string,
+ *   recipient: string,
+ *   reason: string,
+ *   amount: float,
  *   amountAdmitted: ?float,
  * }
  *
