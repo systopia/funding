@@ -64,38 +64,10 @@ final class AVK1Validator extends AbstractNonCombinedApplicationValidator {
     ApplicationSchemaValidationResult $jsonSchemaValidationResult,
     JsonSchema $jsonSchema
   ): ApplicationValidationResult {
-    $validatedData = $jsonSchemaValidationResult->getData();
-    /** @phpstan-var array<array{beginn: string, ende: string}> $zeitraeume */
-    // @phpstan-ignore-next-line
-    $zeitraeume = &$validatedData['grunddaten']['zeitraeume'];
-    usort($zeitraeume, fn (array $a, array $b) => strcmp($a['beginn'], $b['beginn']));
-
-    $zeitraeumeCount = count($zeitraeume);
-    $errorMessages = [];
-    for ($i = 1; $i < $zeitraeumeCount; ++$i) {
-      if (strcmp($zeitraeume[$i]['beginn'], $zeitraeume[$i - 1]['ende']) <= 0) {
-        $errorMessages['/grunddaten/zeitraeume'] =
-          ['Die Zeiträume dürfen sich nicht überschneiden.'];
-        break;
-      }
-    }
-
-    if ([] !== $errorMessages) {
-      return ApplicationValidationResult::newInvalid(
-        $errorMessages,
-        new AVK1ValidatedData(
-          // @phpstan-ignore-next-line
-          $validatedData,
-          $jsonSchemaValidationResult->getCostItemsData(),
-          $jsonSchemaValidationResult->getResourcesItemsData()
-        ),
-      );
-    }
-
     return $this->createValidationResultValid(
       new AVK1ValidatedData(
         // @phpstan-ignore-next-line
-        $validatedData,
+        $jsonSchemaValidationResult->getData(),
         $jsonSchemaValidationResult->getCostItemsData(),
         $jsonSchemaValidationResult->getResourcesItemsData()
       ),

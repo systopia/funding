@@ -46,7 +46,11 @@ final class AVK1GrunddatenSchema extends JsonSchemaObject {
           [
             'required' => ['beginn', 'ende'],
           ]),
-        ['minItems' => 1]
+        [
+          'minItems' => 1,
+          'noIntersect' => JsonSchema::fromArray(['begin' => 'beginn', 'end' => 'ende']),
+          '$order' => JsonSchema::fromArray(['beginn' => 'ASC']),
+        ]
       ),
       'teilnehmer' => new JsonSchemaObject([
         'gesamt' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 1]),

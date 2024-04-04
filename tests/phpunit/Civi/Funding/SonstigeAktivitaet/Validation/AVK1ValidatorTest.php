@@ -25,6 +25,7 @@ use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Form\Application\NonCombinedApplicationJsonSchemaFactoryInterface;
+use Civi\Funding\SonstigeAktivitaet\Application\Validation\AVK1ValidatedData;
 use Civi\Funding\SonstigeAktivitaet\Application\Validation\AVK1Validator;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\Validation\ValidationResult;
@@ -64,18 +65,11 @@ final class AVK1ValidatorTest extends TestCase {
     static::assertSame(['AVK1SonstigeAktivitaet'], $this->validator::getSupportedFundingCaseTypes());
   }
 
-  /**
-   * @phpstan-param array<array{beginn: string, ende: string}> $zeitraeume
-   * @phpstan-param array<string, non-empty-list<string>> $errorMessages
-   * @phpstan-param array<array{beginn: string, ende: string}> $expectedZeitraeume
-   *
-   * @dataProvider provideZeitraeume
-   */
-  public function testValidateExisting(array $zeitraeume, array $errorMessages, array $expectedZeitraeume): void {
+  public function testValidateExisting(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
     $formData = ['foo' => 'bar'];
     $jsonSchemaValidatedData = [
-      'grunddaten' => ['zeitraeume' => $zeitraeume],
+      'grunddaten' => ['titel' => 'Test'],
     ];
 
     $jsonSchema = new JsonSchema([]);
@@ -91,25 +85,15 @@ final class AVK1ValidatorTest extends TestCase {
       ));
 
     $validationResult = $this->validator->validateExisting($applicationProcessBundle, [], $formData, 2);
-    static::assertSame($errorMessages, $validationResult->getErrorMessages());
-    static::assertSame([] === $errorMessages, $validationResult->isValid());
-    static::assertEquals(
-      ['zeitraeume' => $expectedZeitraeume],
-      $validationResult->getValidatedData()->getRawData()['grunddaten']
-    );
+    static::assertSame([], $validationResult->getErrorMessages());
+    static::assertTrue($validationResult->isValid());
+    static::assertInstanceOf(AVK1ValidatedData::class, $validationResult->getValidatedData());
   }
 
-  /**
-   * @phpstan-param array<array{beginn: string, ende: string}> $zeitraeume
-   * @phpstan-param array<string, non-empty-list<string>> $errorMessages
-   * @phpstan-param array<array{beginn: string, ende: string}> $expectedZeitraeume
-   *
-   * @dataProvider provideZeitraeume
-   */
-  public function testValidateInitial(array $zeitraeume, array $errorMessages, array $expectedZeitraeume): void {
+  public function testValidateInitial(): void {
     $formData = ['foo' => 'bar'];
     $jsonSchemaValidatedData = [
-      'grunddaten' => ['zeitraeume' => $zeitraeume],
+      'grunddaten' => ['titel' => 'test'],
     ];
 
     $contactId = 12;
@@ -128,72 +112,9 @@ final class AVK1ValidatorTest extends TestCase {
       ));
 
     $validationResult = $this->validator->validateInitial($contactId, $fundingProgram, $fundingCaseType, $formData, 2);
-    static::assertSame($errorMessages, $validationResult->getErrorMessages());
-    static::assertSame([] === $errorMessages, $validationResult->isValid());
-    static::assertEquals(
-      ['zeitraeume' => $expectedZeitraeume],
-      $validationResult->getValidatedData()->getRawData()['grunddaten']
-    );
-  }
-
-  /**
-   * @phpstan-return iterable<array{
-   *   array<array{beginn: string, ende: string}>,
-   *   array<string, non-empty-list<string>>,
-   *   array<array{beginn: string, ende: string}>,
-   * }>
-   *   array {
-   *     Input Zeitraeume,
-   *     Expected error messages,
-   *     Expected Zeitraeume (sorted by "beginn"),
-   *   }
-   */
-  public function provideZeitraeume(): iterable {
-    yield [
-      [
-        ['beginn' => '2023-08-02', 'ende' => '2023-08-02'],
-        ['beginn' => '2023-08-01', 'ende' => '2023-08-02'],
-      ],
-      ['/grunddaten/zeitraeume' => ['Die Zeiträume dürfen sich nicht überschneiden.']],
-      [
-        ['beginn' => '2023-08-01', 'ende' => '2023-08-02'],
-        ['beginn' => '2023-08-02', 'ende' => '2023-08-02'],
-      ],
-    ];
-
-    yield [
-      [
-        ['beginn' => '2023-08-02', 'ende' => '2023-08-02'],
-        ['beginn' => '2023-08-01', 'ende' => '2023-08-03'],
-      ],
-      ['/grunddaten/zeitraeume' => ['Die Zeiträume dürfen sich nicht überschneiden.']],
-      [
-        ['beginn' => '2023-08-01', 'ende' => '2023-08-03'],
-        ['beginn' => '2023-08-02', 'ende' => '2023-08-02'],
-      ],
-    ];
-
-    yield [
-      [
-        ['beginn' => '2023-08-02', 'ende' => '2023-08-02'],
-        ['beginn' => '2023-08-01', 'ende' => '2023-08-01'],
-      ],
-      [],
-      [
-        ['beginn' => '2023-08-01', 'ende' => '2023-08-01'],
-        ['beginn' => '2023-08-02', 'ende' => '2023-08-02'],
-      ],
-    ];
-
-    yield [
-      [
-        ['beginn' => '2023-08-01', 'ende' => '2023-08-02'],
-      ],
-      [],
-      [
-        ['beginn' => '2023-08-01', 'ende' => '2023-08-02'],
-      ],
-    ];
+    static::assertSame([], $validationResult->getErrorMessages());
+    static::assertTrue($validationResult->isValid());
+    static::assertInstanceOf(AVK1ValidatedData::class, $validationResult->getValidatedData());
   }
 
 }

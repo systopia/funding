@@ -66,35 +66,16 @@ final class KursApplicationValidator extends AbstractCombinedApplicationValidato
     ApplicationSchemaValidationResult $jsonSchemaValidationResult,
     JsonSchema $jsonSchema
   ): ApplicationValidationResult {
-    $validatedData = $jsonSchemaValidationResult->getData();
-    /** @phpstan-var array<array{beginn: string, ende: string}> $zeitraeume */
-    // @phpstan-ignore-next-line
-    $zeitraeume = &$validatedData['grunddaten']['zeitraeume'];
-    usort($zeitraeume, fn (array $a, array $b) => strcmp($a['beginn'], $b['beginn']));
-
-    $zeitraeumeCount = count($zeitraeume);
-    $errorMessages = [];
-    for ($i = 1; $i < $zeitraeumeCount; ++$i) {
-      if (strcmp($zeitraeume[$i]['beginn'], $zeitraeume[$i - 1]['ende']) <= 0) {
-        $errorMessages['/grunddaten/zeitraeume'] =
-          ['Die Zeiträume dürfen sich nicht überschneiden.'];
-        break;
-      }
-    }
-
-    $validatedApplicationData = new KursApplicationValidatedData(
-      // @phpstan-ignore-next-line
-      $validatedData,
-      $jsonSchemaValidationResult->getCostItemsData(),
-      $jsonSchemaValidationResult->getResourcesItemsData(),
-      $fundingCase->getRecipientContactId()
+    return $this->createValidationResultValid(
+      new KursApplicationValidatedData(
+        // @phpstan-ignore-next-line
+        $jsonSchemaValidationResult->getData(),
+        $jsonSchemaValidationResult->getCostItemsData(),
+        $jsonSchemaValidationResult->getResourcesItemsData(),
+        $fundingCase->getRecipientContactId()
+      ),
+      $jsonSchema
     );
-
-    if ([] !== $errorMessages) {
-      return ApplicationValidationResult::newInvalid($errorMessages, $validatedApplicationData);
-    }
-
-    return $this->createValidationResultValid($validatedApplicationData, $jsonSchema);
   }
 
 }
