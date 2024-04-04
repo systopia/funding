@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\SammelantragKurs\Application\JsonSchema;
 
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
 use Civi\RemoteTools\JsonSchema\JsonSchemaCalculate;
 use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
@@ -47,7 +48,11 @@ final class KursGrunddatenJsonSchema extends JsonSchemaObject {
           [
             'required' => ['beginn', 'ende'],
           ]),
-        ['minItems' => 1]
+        [
+          'minItems' => 1,
+          'noIntersect' => JsonSchema::fromArray(['begin' => 'beginn', 'end' => 'ende']),
+          '$order' => JsonSchema::fromArray(['beginn' => 'ASC']),
+        ]
       ),
       'programmtage' => new JsonSchemaCalculate(
         'number',
