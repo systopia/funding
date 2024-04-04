@@ -57,8 +57,12 @@ final class DefaultApplicationProcessStatusDeterminer extends AbstractApplicatio
       'add-comment' => 'draft',
     ],
     'eligible' => [
+      'withdraw' => 'withdrawn',
       'update' => 'eligible',
       'add-comment' => 'eligible',
+    ],
+    'complete' => [
+      'withdraw' => 'withdrawn',
     ],
   ];
 
