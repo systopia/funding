@@ -84,6 +84,15 @@ abstract class AbstractEntity {
   }
 
   /**
+   * @phpstan-param T|null $values
+   *
+   * @return static|null
+   */
+  public static function fromArrayOrNull(?array $values): ?self {
+    return NULL === $values ? NULL : static::fromArray($values);
+  }
+
+  /**
    * @phpstan-param T $values
    */
   public function __construct(array $values) {
