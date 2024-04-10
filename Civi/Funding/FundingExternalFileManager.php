@@ -19,8 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding;
 
+use Civi\Api4\EntityFile;
 use Civi\Api4\ExternalFile;
-use Civi\Api4\X_EntityFile;
 use Civi\Funding\Database\DaoEntityInfoProvider;
 use Civi\Funding\Entity\ExternalFileEntity;
 use Civi\RemoteTools\Api4\Api4Interface;
@@ -117,7 +117,7 @@ final class FundingExternalFileManager implements FundingExternalFileManagerInte
    * @inheritDoc
    */
   public function detachFile(ExternalFileEntity $externalFile, string $entityName, int $entityId): void {
-    $entityFileAction = X_EntityFile::delete(FALSE)
+    $entityFileAction = EntityFile::delete(FALSE)
       ->addWhere('file_id', '=', $externalFile->getFileId())
       ->addWhere('entity_table', '=', $this->daoEntityInfoProvider->getTable($entityName))
       ->addWhere('entity_id', '=', $entityId);
@@ -137,7 +137,7 @@ final class FundingExternalFileManager implements FundingExternalFileManagerInte
       return NULL;
     }
 
-    $countAction = X_EntityFile::get(FALSE)
+    $countAction = EntityFile::get(FALSE)
       ->selectRowCount()
       ->addWhere('file_id', '=', $externalFile->getFileId())
       ->addWhere('entity_table', '=', $this->daoEntityInfoProvider->getTable($entityName))
@@ -179,7 +179,7 @@ final class FundingExternalFileManager implements FundingExternalFileManagerInte
    * @inheritDoc
    */
   public function isAttachedToEntityType(ExternalFileEntity $externalFile, string $entityName): bool {
-    $action = X_EntityFile::get(FALSE)
+    $action = EntityFile::get(FALSE)
       ->selectRowCount()
       ->addWhere('file_id', '=', $externalFile->getFileId())
       ->addWhere('entity_table', '=', $this->daoEntityInfoProvider->getTable($entityName));
@@ -228,14 +228,14 @@ final class FundingExternalFileManager implements FundingExternalFileManagerInte
    * @throws \CRM_Core_Exception
    */
   private function attachCiviFile(int $fileId, string $entityName, int $entityId): void {
-    $countAction = X_EntityFile::get(FALSE)
+    $countAction = EntityFile::get(FALSE)
       ->selectRowCount()
       ->addWhere('file_id', '=', $fileId)
       ->addWhere('entity_table', '=', $this->daoEntityInfoProvider->getTable($entityName))
       ->addWhere('entity_id', '=', $entityId);
 
     if (0 === $this->api4->executeAction($countAction)->count()) {
-      $entityFileAction = X_EntityFile::create(FALSE)
+      $entityFileAction = EntityFile::create(FALSE)
         ->setValues([
           'file_id' => $fileId,
           'entity_table' => $this->daoEntityInfoProvider->getTable($entityName),
@@ -263,7 +263,7 @@ final class FundingExternalFileManager implements FundingExternalFileManagerInte
    * @throws \CRM_Core_Exception
    */
   private function getFileIdsByEntity(string $entityName, int $entityId): array {
-    $entityFileAction = X_EntityFile::get(FALSE)
+    $entityFileAction = EntityFile::get(FALSE)
       ->addSelect('file_id')
       ->addWhere('entity_table', '=', $this->daoEntityInfoProvider->getTable($entityName))
       ->addWhere('entity_id', '=', $entityId);

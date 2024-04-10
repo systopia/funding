@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Fixtures;
 
-use Civi\Api4\X_EntityFile;
+use Civi\Api4\EntityFile;
 
 /**
  * @phpstan-type entityFileT array{
@@ -35,7 +35,7 @@ final class EntityFileFixture {
    * @phpstan-return entityFileT
    */
   public static function addFixture(string $entityTable, int $entityId, int $fileId): array {
-    $action = X_EntityFile::create(FALSE)
+    $action = EntityFile::create(FALSE)
       ->setValues([
         'entity_table' => $entityTable,
         'entity_id' => $entityId,
