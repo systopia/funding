@@ -170,7 +170,7 @@ msgstr ""
 msgid "Do you really want to withdraw the application?"
 msgstr ""
 
-#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
+#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php managed/SavedSearch_Application_CiviOffice_Templates.mgd.php
 msgid "Delete"
 msgstr ""
 
@@ -202,7 +202,11 @@ msgstr ""
 msgid "Request Change"
 msgstr ""
 
-#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php ang/crmFunding/application/applicationSidebar.template.html managed/SavedSearchFundingDrawdowns.mgd.php
+#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php Civi/Funding/ApplicationProcess/ActionsContainer/ReworkPossibleApplicationSubmitActionsContainerFactory.php Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php ang/crmFunding/application/applicationSidebar.template.html ang/crmFunding/case/fundingCase.template.html
+msgid "Approve"
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php Civi/Funding/ApplicationProcess/ActionsContainer/ReworkPossibleApplicationSubmitActionsContainerFactory.php Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php ang/crmFunding/application/applicationSidebar.template.html managed/SavedSearchFundingDrawdowns.mgd.php
 msgid "Reject"
 msgstr ""
 
@@ -594,6 +598,10 @@ msgstr ""
 msgid "Requested amount is greater than available amount."
 msgstr ""
 
+#: Civi/Funding/PayoutProcess/Validator/DrawdownAmountValidator.php
+msgid "Requested amount is less than 0."
+msgstr ""
+
 #: Civi/Funding/PayoutProcess/Validator/DrawdownCreateValidator.php
 msgid "Payout process is closed."
 msgstr ""
@@ -664,10 +672,6 @@ msgstr ""
 
 #: Civi/Funding/Permission/FundingCase/RelationFactory/Types/RecipientContactRelationship.php
 msgid "Assign permissions for new funding cases to contacts that have a relationship\nof the specified type to the recipient contact."
-msgstr ""
-
-#: Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php ang/crmFunding/application/applicationSidebar.template.html ang/crmFunding/case/fundingCase.template.html
-msgid "Approve"
 msgstr ""
 
 #: Civi/Funding/Validation/EntityValidationResult.php
@@ -1146,7 +1150,7 @@ msgstr ""
 msgid "Payment Instruction"
 msgstr ""
 
-#: managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCaseTypes.mgd.php managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingDrawdowns.mgd.php managed/SavedSearchFundingProgramControlling.mgd.php managed/SavedSearchFundingPrograms.mgd.php managed/SavedSearchFundingTasksMy.mgd.php
+#: managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCaseTypes.mgd.php managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingDrawdowns.mgd.php managed/SavedSearchFundingProgramControlling.mgd.php managed/SavedSearchFundingPrograms.mgd.php managed/SavedSearchFundingTasksMy.mgd.php managed/SavedSearch_Application_CiviOffice_Templates.mgd.php
 msgid "Table"
 msgstr ""
 
@@ -1260,5 +1264,17 @@ msgstr ""
 
 #: managed/SavedSearchFundingTasksMy.mgd.php
 msgid "Subject"
+msgstr ""
+
+#: managed/SavedSearch_Application_CiviOffice_Templates.mgd.php
+msgid "Application CiviOffice Templates"
+msgstr ""
+
+#: managed/SavedSearch_Application_CiviOffice_Templates.mgd.php
+msgid "Document"
+msgstr ""
+
+#: managed/SavedSearch_Application_CiviOffice_Templates.mgd.php
+msgid "Label"
 msgstr ""
 

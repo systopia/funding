@@ -297,6 +297,7 @@ msgid "Do you really want to withdraw the application?"
 msgstr "Möchten Sie den Antrag wirklich zurückziehen?"
 
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
+#: managed/SavedSearch_Application_CiviOffice_Templates.mgd.php
 msgid "Delete"
 msgstr "Löschen"
 
@@ -336,6 +337,15 @@ msgid "Request Change"
 msgstr "Änderung verlangen"
 
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
+#: Civi/Funding/ApplicationProcess/ActionsContainer/ReworkPossibleApplicationSubmitActionsContainerFactory.php
+#: Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
+#: ang/crmFunding/application/applicationSidebar.template.html
+#: ang/crmFunding/case/fundingCase.template.html
+msgid "Approve"
+msgstr "Bewilligen"
+
+#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
+#: Civi/Funding/ApplicationProcess/ActionsContainer/ReworkPossibleApplicationSubmitActionsContainerFactory.php
 #: Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
 #: ang/crmFunding/application/applicationSidebar.template.html
 #: managed/SavedSearchFundingDrawdowns.mgd.php
@@ -787,6 +797,10 @@ msgstr "Kein Bankkonto für Kontakt mit ID \"%1\" verfügbar."
 msgid "Requested amount is greater than available amount."
 msgstr "Angefragter Betrag ist größer als der verfügbare Betrag."
 
+#: Civi/Funding/PayoutProcess/Validator/DrawdownAmountValidator.php
+msgid "Requested amount is less than 0."
+msgstr "Angefragter Betrag ist kleiner als 0."
+
 #: Civi/Funding/PayoutProcess/Validator/DrawdownCreateValidator.php
 msgid "Payout process is closed."
 msgstr "Auszahlungsprozess ist geschlossen."
@@ -887,12 +901,6 @@ msgid ""
 msgstr ""
 "Berechtigungen für neue Förderfalle an Kontakte zuweisen, die eine Beziehung "
 "vom gewählten Typ zum Empfängerkontakt haben."
-
-#: Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
-#: ang/crmFunding/application/applicationSidebar.template.html
-#: ang/crmFunding/case/fundingCase.template.html
-msgid "Approve"
-msgstr "Bewilligen"
 
 #: Civi/Funding/Validation/EntityValidationResult.php
 msgid "Validation failed: %1"
@@ -1494,6 +1502,7 @@ msgstr "Zahlungsanweisung"
 #: managed/SavedSearchFundingProgramControlling.mgd.php
 #: managed/SavedSearchFundingPrograms.mgd.php
 #: managed/SavedSearchFundingTasksMy.mgd.php
+#: managed/SavedSearch_Application_CiviOffice_Templates.mgd.php
 msgid "Table"
 msgstr "Tabelle"
 
@@ -1623,3 +1632,15 @@ msgstr "Förderverwaltungsaufgaben des angemeldeten Nutzers"
 #: managed/SavedSearchFundingTasksMy.mgd.php
 msgid "Subject"
 msgstr "Betreff"
+
+#: managed/SavedSearch_Application_CiviOffice_Templates.mgd.php
+msgid "Application CiviOffice Templates"
+msgstr "CiviOffice-Vorlagen für Anträge"
+
+#: managed/SavedSearch_Application_CiviOffice_Templates.mgd.php
+msgid "Document"
+msgstr "Dokument"
+
+#: managed/SavedSearch_Application_CiviOffice_Templates.mgd.php
+msgid "Label"
+msgstr "Bezeichnung"
