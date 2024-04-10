@@ -162,6 +162,16 @@ msgstr ""
 msgid "Timestamp"
 msgstr ""
 
+#: Civi/Funding/Api4/Action/FundingCaseType/GetFieldsAction.php
+#: managed/OptionValuesFileType.mgd.php
+msgid "Transfer Contract Template"
+msgstr "Vorlage für Weiterleitungsvertrag"
+
+#: Civi/Funding/Api4/Action/FundingCaseType/GetFieldsAction.php
+#: managed/OptionValuesFileType.mgd.php
+msgid "Payment Instruction Template"
+msgstr "Vorlage für Zahlungsanweisung"
+
 #: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
 #: Civi/Funding/EventSubscriber/Remote/FundingCaseGetFieldsSubscriber.php
@@ -888,6 +898,10 @@ msgstr "Bewilligen"
 msgid "Validation failed: %1"
 msgstr "Validierung fehlgeschlagen: %1"
 
+#: ang/afformFundingCaseTypeTemplates.aff.php
+msgid "Funding Case Type Templates"
+msgstr "Vorlagen für Förderfalltyp"
+
 #: ang/afformFundingProgramAdd.aff.php
 msgid "New Funding Program"
 msgstr "Neues Förderprogramm"
@@ -1469,16 +1483,8 @@ msgid "Funding Program"
 msgstr "Förderprogramm"
 
 #: managed/OptionValuesFileType.mgd.php
-msgid "Transfer Contract Template"
-msgstr "Vorlage für Weiterleitungsvertrag"
-
-#: managed/OptionValuesFileType.mgd.php
 msgid "Payment Instruction"
 msgstr "Zahlungsanweisung"
-
-#: managed/OptionValuesFileType.mgd.php
-msgid "Payment Instruction Template"
-msgstr "Vorlage für Zahlungsanweisung"
 
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
@@ -1535,6 +1541,10 @@ msgstr "Berechtigungen bearbeiten"
 #: managed/SavedSearchFundingPrograms.mgd.php
 msgid "Abbreviation"
 msgstr "Abkürzung"
+
+#: managed/SavedSearchFundingCaseTypes.mgd.php
+msgid "Manage templates"
+msgstr "Vorlagen verwalten"
 
 #: managed/SavedSearchFundingCaseTypes.mgd.php
 msgid "Manage external application templates"

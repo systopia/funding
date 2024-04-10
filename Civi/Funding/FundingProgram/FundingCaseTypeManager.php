@@ -37,20 +37,18 @@ class FundingCaseTypeManager {
   }
 
   public function get(int $id): ?FundingCaseTypeEntity {
-    $action = FundingCaseType::get(FALSE)
-      ->addWhere('id', '=', $id);
-    $result = $this->api4->executeAction($action);
+    $values = $this->api4->getEntity(FundingCaseType::getEntityName(), $id);
 
-    return FundingCaseTypeEntity::singleOrNullFromApiResult($result);
+    // @phpstan-ignore-next-line
+    return FundingCaseTypeEntity::fromArrayOrNull($values);
   }
 
   public function getIdByName(string $name): ?int {
     if (!array_key_exists($name, $this->nameIdMap)) {
-      $action = FundingCaseType::get()
-        ->addSelect('id')
-        ->addWhere('name', '=', $name);
-
-      $result = $this->api4->executeAction($action);
+      $result = $this->api4->execute(FundingCaseType::getEntityName(), 'get', [
+        'select' => ['id'],
+        'where' => [['name', '=', $name]],
+      ]);
       $this->nameIdMap[$name] = $result->first()['id'] ?? NULL;
     }
 

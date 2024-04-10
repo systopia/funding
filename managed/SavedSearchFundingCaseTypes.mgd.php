@@ -97,6 +97,24 @@ return [
               'size' => 'btn-xs',
               'links' => [
                 [
+                  'path' => 'civicrm/funding/case-type/templates#?case_type_id=[id]',
+                  'icon' => 'fa-external-link',
+                  'text' => E::ts('Manage templates'),
+                  'style' => 'default',
+                  'condition' => [
+                    'check user permission',
+                    '=',
+                    [
+                      'administer Funding',
+                    ],
+                  ],
+                  'task' => '',
+                  'entity' => '',
+                  'action' => '',
+                  'join' => '',
+                  'target' => '',
+                ],
+                [
                   'path' => 'civicrm/funding/application-templates#?case_type_id=[id]',
                   'icon' => 'fa-pencil-square-o',
                   'text' => E::ts('Manage external application templates'),

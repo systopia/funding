@@ -20,7 +20,6 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingProgram;
 
 use Civi\Api4\FundingCaseType;
-use Civi\Api4\Generic\DAOGetAction;
 use Civi\Api4\Generic\Result;
 use Civi\RemoteTools\Api4\Api4Interface;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -45,16 +44,11 @@ final class FundingCaseTypeManagerTest extends TestCase {
   }
 
   public function testGetIdByName(): void {
-    $this->api4Mock->expects(static::once())->method('executeAction')
-      ->willReturnCallback(function (DAOGetAction $action): Result {
-        static::assertSame(FundingCaseType::getEntityName(), $action->getEntityName());
-        static::assertSame(['id'], $action->getSelect());
-        static::assertSame([['name', '=', 'test', FALSE]], $action->getWhere());
-
-        return new Result([
-          ['id' => 11],
-        ]);
-      });
+    $this->api4Mock->expects(static::once())->method('execute')
+      ->with(FundingCaseType::getEntityName(), 'get', [
+        'select' => ['id'],
+        'where' => [['name', '=', 'test']],
+      ])->willReturn(new Result([['id' => 11]]));
 
     static::assertSame(11, $this->fundingCaseTypeManager->getIdByName('test'));
     // Cache is used
@@ -62,14 +56,11 @@ final class FundingCaseTypeManagerTest extends TestCase {
   }
 
   public function testGetIdByNameNotFound(): void {
-    $this->api4Mock->expects(static::once())->method('executeAction')
-      ->willReturnCallback(function (DAOGetAction $action): Result {
-        static::assertSame(FundingCaseType::getEntityName(), $action->getEntityName());
-        static::assertSame(['id'], $action->getSelect());
-        static::assertSame([['name', '=', 'test', FALSE]], $action->getWhere());
-
-        return new Result();
-      });
+    $this->api4Mock->expects(static::once())->method('execute')
+      ->with(FundingCaseType::getEntityName(), 'get', [
+        'select' => ['id'],
+        'where' => [['name', '=', 'test']],
+      ])->willReturn(new Result([]));
 
     static::assertNull($this->fundingCaseTypeManager->getIdByName('test'));
     // Cache is used
