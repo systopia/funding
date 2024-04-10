@@ -678,6 +678,10 @@ msgstr ""
 msgid "Validation failed: %1"
 msgstr ""
 
+#: ang/afformApplicationTemplates.aff.php
+msgid "Application Templates"
+msgstr ""
+
 #: ang/afformFundingCaseTypeTemplates.aff.php
 msgid "Funding Case Type Templates"
 msgstr ""
