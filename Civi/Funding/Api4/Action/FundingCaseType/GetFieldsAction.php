@@ -57,7 +57,6 @@ final class GetFieldsAction extends DAOGetFieldsAction {
       'data_type' => 'Integer',
       'input_type' => 'File',
       'fk_entity' => 'File',
-      'required' => TRUE,
       // Might be NULL on get until set.
       'nullable' => !str_starts_with($this->action, 'get'),
       'readonly' => 'create' === $this->action,
