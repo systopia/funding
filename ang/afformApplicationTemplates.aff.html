@@ -9,7 +9,7 @@
   <af-entity type="FundingApplicationCiviOfficeTemplate" name="template" label="template" actions="{create: true, update: false}" security="RBAC" />
   <fieldset af-fieldset="template" class="af-container af-layout-cols">
     <af-field style="display: none;" name="case_type_id" defn="{input_type: 'Hidden', input_attrs: {}, label: false, required: true}" />
-    <af-field name="document_uri" defn="{label: 'Document'}"/>
+    <af-field name="document_uri" />
     <af-field name="label" />
   </fieldset>
   <button class="btn btn-primary btn-sm" crm-icon="fa-check" ng-click="afform.submit()" ng-if="afform.showSubmitButton">Add</button>

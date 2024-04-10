@@ -58,6 +58,7 @@
     <pseudoconstant>
       <callback>Civi\Funding\DocumentRender\CiviOffice\CiviOfficePseudoConstants::getSharedDocumentUris</callback>
     </pseudoconstant>
+    <title>Document</title>
     <html>
       <type>Select</type>
     </html>
