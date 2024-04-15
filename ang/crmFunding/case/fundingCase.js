@@ -43,9 +43,9 @@ fundingModule.config(['$routeProvider', function ($routeProvider) {
 );
 
 fundingModule.controller('fundingCaseCtrl', [
-  '$scope', 'crmStatus', 'fundingProgramService', 'fundingCaseService', 'fundingContactService',
+  '$scope', 'crmStatus', 'fundingProgramService', 'fundingCaseService', 'fundingApplicationProcessService', 'fundingContactService',
   'fundingCase', 'statusLabels', 'applicationProcesses', 'payoutProcesses', 'possibleActions',
-  function ($scope, crmStatus, fundingProgramService, fundingCaseService, fundingContactService,
+  function ($scope, crmStatus, fundingProgramService, fundingCaseService, fundingApplicationProcessService, fundingContactService,
             fundingCase, statusLabels, applicationProcesses, payoutProcesses, possibleActions) {
     const $ = CRM.$;
     const ts = $scope.ts = CRM.ts('funding');
@@ -57,6 +57,34 @@ fundingModule.controller('fundingCaseCtrl', [
       })
           .formatToParts(1)
           .find(part => part.type = 'currency').value;
+    }
+
+    function updateAmountRequestedEligible() {
+      $scope.amountRequestedEligible = $scope.applicationProcesses
+        .filter((applicationProcess) => applicationProcess.is_eligible)
+        .reduce(
+          (total, applicationProcess) => total + applicationProcess.amount_requested,
+          0
+        );
+      $scope.approve = {
+        amount: $scope.amountRequestedEligible,
+      };
+    }
+
+    function updateApplicationProcesses() {
+      fundingApplicationProcessService.getByFundingCaseId($scope.fundingCase.id).then(function (applicationProcesses) {
+        $scope.applicationProcesses = applicationProcesses;
+        updateAmountRequestedEligible();
+      });
+    }
+
+    function onFundingCaseUpdate(fundingCase) {
+      $scope.fundingCase = fundingCase;
+      withOverlay(fundingCaseService.getPossibleActions(fundingCase.id)
+        .then((possibleActions) => {
+          $scope.possibleActions = possibleActions;
+          updateApplicationProcesses();
+        }));
     }
 
     document.addEventListener('applicationSearchTaskExecuted', () => {
@@ -79,12 +107,7 @@ fundingModule.controller('fundingCaseCtrl', [
     $scope.applicationProcesses = applicationProcesses;
     $scope.payoutProcesses = payoutProcesses;
     $scope.possibleActions = possibleActions;
-    $scope.amountRequestedEligible = applicationProcesses
-        .filter((applicationProcess) => applicationProcess.is_eligible)
-        .reduce(
-            (total, applicationProcess) => total + applicationProcess.amount_requested,
-            0
-        );
+    updateAmountRequestedEligible();
 
     function handleSetValue(field, value) {
       return function (result) {
@@ -120,15 +143,6 @@ fundingModule.controller('fundingCaseCtrl', [
       }
     };
 
-    function onFundingCaseUpdate(fundingCase) {
-      $scope.fundingCase = fundingCase;
-      withOverlay(fundingCaseService.getPossibleActions(fundingCase.id)
-          .then((possibleActions) => $scope.possibleActions = possibleActions));
-    }
-
-    $scope.approve = {
-      amount: $scope.amountRequestedEligible,
-    };
     let $approveModal = null;
     $scope.approvePrepare = function () {
       if ($scope.fundingProgram.budget !== null) {
