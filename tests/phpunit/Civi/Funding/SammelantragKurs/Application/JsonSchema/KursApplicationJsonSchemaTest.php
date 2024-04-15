@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\SammelantragKurs\Application\JsonSchema;
 
 use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemDataCollector;
+use Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemDataCollector;
 use Civi\Funding\ApplicationProcess\JsonSchema\Validator\OpisApplicationValidatorFactory;
 use Civi\Funding\Form\Traits\AssertFormTrait;
 use Civi\Funding\Validation\Traits\AssertValidationResultTrait;
@@ -57,6 +58,20 @@ final class KursApplicationJsonSchemaTest extends TestCase {
     $programmtage = 3;
     $teilnehmerGesamt = 5;
     $referenten = 2;
+
+    // Finanzierung
+    $eigenmittel = 9.09;
+    $teilnehmerBeitrage = 10.1;
+    $mittelEuropa = 30.3;
+    $mittelBundeslaender = 40.4;
+    $mittelStaedteUndKreise = 50.5;
+    $oeffentlicheMittelGesamt = round($mittelEuropa + $mittelBundeslaender + $mittelStaedteUndKreise, 2);
+    $sonstigesMittel1 = 60.6;
+    $sonstigesMittel2 = 77.7;
+    $sonstigeMittelGesamt = round($sonstigesMittel1 + $sonstigesMittel2, 2);
+    $fremdmittelGesamt = round($teilnehmerBeitrage + $oeffentlicheMittelGesamt + $sonstigeMittelGesamt, 2);
+    $mittelGesamt = round($eigenmittel + $fremdmittelGesamt, 2);
+
     $teilnehmerkosten = $programmtage * $teilnehmerGesamt * 40;
     $fahrtkosten = $teilnehmerGesamt * 60;
     $honorarkosten = $programmtage * $referenten * 305;
@@ -85,6 +100,25 @@ final class KursApplicationJsonSchemaTest extends TestCase {
           'referenten' => $referenten,
         ],
       ],
+      'finanzierung' => (object) [
+        'teilnehmerbeitraege' => $teilnehmerBeitrage,
+        'eigenmittel' => $eigenmittel,
+        'oeffentlicheMittel' => (object) [
+          'europa' => $mittelEuropa,
+          'bundeslaender' => $mittelBundeslaender,
+          'staedteUndKreise' => $mittelStaedteUndKreise,
+        ],
+        'sonstigeMittel' => [
+          (object) [
+            'quelle' => 'Quelle 1',
+            'betrag' => $sonstigesMittel1,
+          ],
+          (object) [
+            'quelle' => 'Quelle 2',
+            'betrag' => $sonstigesMittel2,
+          ],
+        ],
+      ],
       'zuschuss' => (object) [
         'teilnehmerkosten' => $teilnehmerkosten,
         'fahrtkosten' => $fahrtkosten,
@@ -102,13 +136,22 @@ final class KursApplicationJsonSchemaTest extends TestCase {
 
     $validator = OpisApplicationValidatorFactory::getValidator();
     $costItemDataCollector = new CostItemDataCollector();
+    $resourcesItemDataCollector = new ResourcesItemDataCollector();
     $result = $validator->validate(
       $data,
       \json_encode($jsonSchema),
-      ['costItemDataCollector' => $costItemDataCollector]
+      [
+        'costItemDataCollector' => $costItemDataCollector,
+        'resourcesItemDataCollector' => $resourcesItemDataCollector,
+      ]
     );
     static::assertValidationValid($result);
     static::assertCount(3, $costItemDataCollector->getCostItemsData());
+
+    static::assertSame($oeffentlicheMittelGesamt, $data->finanzierung->oeffentlicheMittelGesamt);
+    static::assertSame($sonstigeMittelGesamt, $data->finanzierung->sonstigeMittelGesamt);
+    static::assertSame($mittelGesamt, $data->finanzierung->mittelGesamt);
+    static::assertCount(7, $resourcesItemDataCollector->getResourcesItemsData());
 
     $beantragterZuschuss = (float) $teilnehmerkosten + $fahrtkosten + $honorarkosten;
     static::assertSame($beantragterZuschuss, $data->zuschuss->gesamt);
