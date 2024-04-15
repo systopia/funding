@@ -36,6 +36,7 @@ final class KursApplicationJsonSchema extends JsonSchemaObject {
     // @todo Additional validations, e.g. required, length, min, max, ...
     $properties = [
       'grunddaten' => new KursGrunddatenJsonSchema($applicationBegin, $applicationEnd),
+      'finanzierung' => new KursFinanzierungJsonSchema(),
       'zuschuss' => new KursZuschussJsonSchema(),
       'beschreibung' => new KursBeschreibungJsonSchema(),
     ];
