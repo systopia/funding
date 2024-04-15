@@ -128,35 +128,6 @@ final class ResourcesItemKeywordTest extends TestCase {
     );
   }
 
-  public function testZero(): void {
-    $jsonSchema = new JsonSchemaObject([
-      'resources' => new JsonSchemaObject([
-        'amount1' => new JsonSchemaNumber([
-          '$resourcesItem' => new JsonSchemaResourcesItem([
-            'type' => 'foo',
-            'identifier' => 'bar',
-            'clearing' => ['itemLabel' => 'label'],
-          ]),
-        ]),
-      ]),
-    ]);
-
-    $data = (object) [
-      'resources' => (object) [
-        'amount1' => 0.0,
-      ],
-    ];
-
-    $result = $this->validator->validate(
-      $data,
-      $jsonSchema->toStdClass(),
-      ['resourcesItemDataCollector' => $this->resourcesItemDataCollector],
-    );
-
-    static::assertTrue($result->isValid());
-    static::assertEquals([], $this->resourcesItemDataCollector->getResourcesItemsData());
-  }
-
   public function testNull(): void {
     $jsonSchema = new JsonSchemaObject([
       'resources' => new JsonSchemaObject([

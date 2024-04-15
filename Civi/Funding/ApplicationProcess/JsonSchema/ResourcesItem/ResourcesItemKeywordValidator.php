@@ -86,7 +86,7 @@ final class ResourcesItemKeywordValidator extends AbstractKeywordValidator {
   private function collectResourcesItemData(ValidationContext $context): ?ValidationError {
     try {
       $resourcesItemData = $this->resourcesItemDataFactory->createResourcesItemData($context);
-      if (NULL === $resourcesItemData || $resourcesItemData->getAmount() === 0.0) {
+      if (NULL === $resourcesItemData) {
         return NULL;
       }
 

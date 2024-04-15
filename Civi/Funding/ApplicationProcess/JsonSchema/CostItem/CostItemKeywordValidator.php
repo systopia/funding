@@ -86,7 +86,7 @@ final class CostItemKeywordValidator extends AbstractKeywordValidator {
   private function collectCostItemData(ValidationContext $context): ?ValidationError {
     try {
       $costItemData = $this->costItemDataFactory->createCostItemData($context);
-      if (NULL === $costItemData || $costItemData->getAmount() === 0.0) {
+      if (NULL === $costItemData) {
         return NULL;
       }
 
