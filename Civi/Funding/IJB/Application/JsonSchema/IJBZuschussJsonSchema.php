@@ -116,13 +116,13 @@ final class IJBZuschussJsonSchema extends JsonSchemaObject {
         'number',
         'begegnungsland == "partnerland" ? (
           artDerMassnahme == "fachkraefteprogramm"
-            ? min(round(teilnehmerGesamt * festbetragFachkraefte, 2), zuschlagMaxFachkraefte)
-            : min(round(teilnehmerGesamt * festbetragJugendliche, 2), zuschlagMaxJugendliche)
+            ? min(round(teilnehmerDeutschlandGesamt * festbetragFachkraefte, 2), zuschlagMaxFachkraefte)
+            : min(round(teilnehmerDeutschlandGesamt * festbetragJugendliche, 2), zuschlagMaxJugendliche)
           ) : 0',
         [
           'begegnungsland' => new JsonSchemaDataPointer('/grunddaten/begegnungsland'),
           'artDerMassnahme' => new JsonSchemaDataPointer('/grunddaten/artDerMassnahme'),
-          'teilnehmerGesamt' => new JsonSchemaDataPointer('/teilnehmer/gesamt'),
+          'teilnehmerDeutschlandGesamt' => new JsonSchemaDataPointer('/teilnehmer/deutschland/gesamt'),
           'festbetragFachkraefte' => self::ZUSCHLAG_FESTBETRAG_FACHKRAEFTE,
           'zuschlagMaxFachkraefte' => self::ZUSCHLAG_MAX_FACHKRAEFTE,
           'festbetragJugendliche' => self::ZUSCHLAG_FESTBETRAG_JUGENDLICHE,

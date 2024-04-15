@@ -359,7 +359,7 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
     static::assertEquals(new JsonSchemaRecipient($possibleRecipients), $properties->getKeywordValue('empfaenger'));
 
     $fahrtstreckeInKm = 555;
-    $teilnehmerDeutschlandGesamt = 10;
+    $teilnehmerDeutschlandGesamt = 12;
     $teilnehmerPartnerlandGesamt = 11;
     $teilnehmerGesamt = $teilnehmerDeutschlandGesamt + $teilnehmerPartnerlandGesamt;
 
@@ -606,11 +606,11 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
     static::assertSame(0, $data->zuschuss->teilnehmerkostenMax);
     static::assertSame(0, $data->zuschuss->honorarkostenMax);
     static::assertSame(
-      round($teilnehmerDeutschlandGesamt * $fahrtstreckeInKm * 0.08, 2),
+      floor($teilnehmerDeutschlandGesamt * $fahrtstreckeInKm * 0.08),
       $data->zuschuss->fahrtkostenAuslandEuropaMax
     );
     static::assertSame(
-      round($teilnehmerDeutschlandGesamt * $fahrtstreckeInKm * 0.12, 2),
+      floor($teilnehmerDeutschlandGesamt * $fahrtstreckeInKm * 0.12),
       $data->zuschuss->fahrtkostenNichtEuropaMax
     );
     static::assertSame(500, $data->zuschuss->zuschlagMax);
@@ -939,7 +939,7 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
     static::assertEquals(new JsonSchemaRecipient($possibleRecipients), $properties->getKeywordValue('empfaenger'));
 
     $fahrtstreckeInKm = 555;
-    $teilnehmerDeutschlandGesamt = 10;
+    $teilnehmerDeutschlandGesamt = 12;
     $teilnehmerPartnerlandGesamt = 11;
     $teilnehmerGesamt = $teilnehmerDeutschlandGesamt + $teilnehmerPartnerlandGesamt;
 
@@ -1186,11 +1186,11 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
     static::assertSame(0, $data->zuschuss->teilnehmerkostenMax);
     static::assertSame(0, $data->zuschuss->honorarkostenMax);
     static::assertSame(
-      round($teilnehmerDeutschlandGesamt * $fahrtstreckeInKm * 0.08, 2),
+      floor($teilnehmerDeutschlandGesamt * $fahrtstreckeInKm * 0.08),
       $data->zuschuss->fahrtkostenAuslandEuropaMax
     );
     static::assertSame(
-      round($teilnehmerDeutschlandGesamt * $fahrtstreckeInKm * 0.12, 2),
+      floor($teilnehmerDeutschlandGesamt * $fahrtstreckeInKm * 0.12),
       $data->zuschuss->fahrtkostenNichtEuropaMax
     );
     static::assertSame(300, $data->zuschuss->zuschlagMax);
