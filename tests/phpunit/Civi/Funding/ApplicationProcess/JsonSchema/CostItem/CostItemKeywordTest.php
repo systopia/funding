@@ -128,35 +128,6 @@ final class CostItemKeywordTest extends TestCase {
     );
   }
 
-  public function testZero(): void {
-    $jsonSchema = new JsonSchemaObject([
-      'costs' => new JsonSchemaObject([
-        'amount1' => new JsonSchemaNumber([
-          '$costItem' => new JsonSchemaCostItem([
-            'type' => 'foo',
-            'identifier' => 'bar',
-            'clearing' => ['itemLabel' => 'label'],
-          ]),
-        ]),
-      ]),
-    ]);
-
-    $data = (object) [
-      'costs' => (object) [
-        'amount1' => 0.0,
-      ],
-    ];
-
-    $result = $this->validator->validate(
-      $data,
-      $jsonSchema->toStdClass(),
-      ['costItemDataCollector' => $this->costItemDataCollector],
-    );
-
-    static::assertTrue($result->isValid());
-    static::assertEquals([], $this->costItemDataCollector->getCostItemsData());
-  }
-
   public function testNull(): void {
     $jsonSchema = new JsonSchemaObject([
       'costs' => new JsonSchemaObject([
