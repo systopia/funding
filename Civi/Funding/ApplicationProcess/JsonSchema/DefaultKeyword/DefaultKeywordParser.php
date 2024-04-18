@@ -28,6 +28,11 @@ use Systopia\JsonSchema\Expression\Variables\Variable;
 /**
  * Similar to the 'default' keyword, but allows to use '$data' as well as
  * '$calculate'. The value is set if the property exists, but is null, too.
+ *
+ * It is implemented in a way that previous properties can be referenced and
+ * that subsequent properties can use this property.
+ *
+ * Note that it cannot be used on an object and its properties at the same time.
  */
 final class DefaultKeywordParser extends KeywordParser {
 
@@ -42,11 +47,13 @@ final class DefaultKeywordParser extends KeywordParser {
    * @inheritDoc
    */
   public function type(): string {
-    return self::TYPE_APPEND;
+    return self::TYPE_PREPEND;
   }
 
   /**
    * @inheritDoc
+   *
+   * @throws \Opis\JsonSchema\Exceptions\ParseException
    */
   public function parse(SchemaInfo $info, SchemaParser $parser, object $shared): ?Keyword {
     $schema = $info->data();
@@ -55,17 +62,23 @@ final class DefaultKeywordParser extends KeywordParser {
       return NULL;
     }
 
-    $defaults = [];
+    if ($this->keywordExists($info)) {
+      return new DefaultKeyword(Variable::create($this->keywordValue($info), $parser));
+    }
+
+    // Ensure that properties with defaults are initialized so their keywords
+    // will be parsed including the "$default" keyword.
+    $propertiesWithDefault = [];
     if (($schema->properties ?? NULL) instanceof \stdClass) {
       // @phpstan-ignore-next-line
       foreach ($schema->properties as $name => $value) {
         if ($value instanceof \stdClass && property_exists($value, $this->keyword)) {
-          $defaults[$name] = Variable::create($value->{$this->keyword}, $parser);
+          $propertiesWithDefault[] = $name;
         }
       }
     }
 
-    return [] === $defaults ? NULL : new DefaultKeyword($defaults);
+    return [] === $propertiesWithDefault ? NULL : new DefaultInitKeyword($propertiesWithDefault);
   }
 
 }

@@ -19,33 +19,42 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\JsonSchema\DefaultKeyword;
 
-use Opis\JsonSchema\Helper;
+use Opis\JsonSchema\Errors\ValidationError;
 use Opis\JsonSchema\Keyword;
 use Opis\JsonSchema\Schema;
 use Opis\JsonSchema\ValidationContext;
-use Opis\JsonSchema\Errors\ValidationError;
-use Systopia\JsonSchema\Expression\Variables\Variable;
-use Systopia\JsonSchema\Keywords\SetValueTrait;
 
 /**
+ * This class ensures that a property is initialized so its actual default value
+ * will be parsed. (Keywords are only applied to property that actually exist.)
+ *
  * @see \Civi\Funding\ApplicationProcess\JsonSchema\DefaultKeyword\DefaultKeywordParser
+ * @see \Civi\Funding\ApplicationProcess\JsonSchema\DefaultKeyword\DefaultKeyword
  */
-final class DefaultKeyword implements Keyword {
+final class DefaultInitKeyword implements Keyword {
 
-  use SetValueTrait;
+  /**
+   * @phpstan-var array<int|string>
+   */
+  private array $propertiesWithDefault;
 
-  private Variable $default;
-
-  public function __construct(Variable $default) {
-    $this->default = $default;
+  /**
+   * @param array<int|string> $propertiesWithDefault
+   */
+  public function __construct(array $propertiesWithDefault) {
+    $this->propertiesWithDefault = $propertiesWithDefault;
   }
 
   /**
    * @inheritDoc
    */
   public function validate(ValidationContext $context, Schema $schema): ?ValidationError {
-    if (NULL === $context->currentData()) {
-      $this->setValue($context, fn() => Helper::cloneValue($this->default->getValue($context)));
+    $data = $context->currentData();
+
+    if ($data instanceof \stdClass) {
+      foreach ($this->propertiesWithDefault as $propertyName) {
+        $data->{$propertyName} ??= NULL;
+      }
     }
 
     return NULL;
