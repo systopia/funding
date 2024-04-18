@@ -72,9 +72,10 @@ final class KursApplicationJsonSchemaTest extends TestCase {
     $fremdmittelGesamt = round($teilnehmerBeitrage + $oeffentlicheMittelGesamt + $sonstigeMittelGesamt, 2);
     $mittelGesamt = round($eigenmittel + $fremdmittelGesamt, 2);
 
-    $teilnehmerkosten = $programmtage * $teilnehmerGesamt * 40;
-    $fahrtkosten = $teilnehmerGesamt * 60;
-    $honorarkosten = $programmtage * $referenten * 305;
+    // Use a little bit less than the allowed maximum.
+    $teilnehmerkosten = $programmtage * $teilnehmerGesamt * 40 - 0.1;
+    $fahrtkosten = $teilnehmerGesamt * 60 - 0.1;
+    $honorarkosten = $programmtage * $referenten * 305 - 0.1;
 
     $data = (object) [
       'action' => 'submitAction1',
@@ -124,6 +125,123 @@ final class KursApplicationJsonSchemaTest extends TestCase {
         'fahrtkosten' => $fahrtkosten,
         'honorarkosten' => $honorarkosten,
       ],
+      'beschreibung' => (object) [
+        'ziele' => [
+          'persoenlichkeitsbildung',
+          'internationaleBegegnungen',
+        ],
+        'bildungsanteil' => 22,
+        'veranstaltungsort' => 'Veranstaltungsort',
+      ],
+    ];
+
+    $validator = OpisApplicationValidatorFactory::getValidator();
+    $costItemDataCollector = new CostItemDataCollector();
+    $resourcesItemDataCollector = new ResourcesItemDataCollector();
+    $result = $validator->validate(
+      $data,
+      \json_encode($jsonSchema),
+      [
+        'costItemDataCollector' => $costItemDataCollector,
+        'resourcesItemDataCollector' => $resourcesItemDataCollector,
+      ]
+    );
+    static::assertValidationValid($result);
+    static::assertCount(3, $costItemDataCollector->getCostItemsData());
+
+    static::assertSame($oeffentlicheMittelGesamt, $data->finanzierung->oeffentlicheMittelGesamt);
+    static::assertSame($sonstigeMittelGesamt, $data->finanzierung->sonstigeMittelGesamt);
+    static::assertSame($mittelGesamt, $data->finanzierung->mittelGesamt);
+    static::assertCount(7, $resourcesItemDataCollector->getResourcesItemsData());
+
+    $beantragterZuschuss = round($teilnehmerkosten + $fahrtkosten + $honorarkosten, 2);
+    static::assertSame($beantragterZuschuss, $data->zuschuss->gesamt);
+    static::assertSame($programmtage, $data->grunddaten->programmtage);
+
+    static::assertAllPropertiesSet($jsonSchema->toStdClass(), $data);
+  }
+
+  public function testJsonSchemaDefaults(): void {
+    $actionSchema = new JsonSchemaString();
+    $jsonSchema = new KursApplicationJsonSchema(
+      new \DateTime('2022-08-24'),
+      new \DateTime('2022-08-26'),
+      ['action' => $actionSchema],
+      ['required' => ['action']],
+    );
+
+    $required = $jsonSchema->getKeywordValue('required');
+    static::assertIsArray($required);
+    static::assertContains('action', $required);
+    $properties = $jsonSchema->getKeywordValue('properties');
+    static::assertInstanceOf(JsonSchema::class, $properties);
+    static::assertSame($actionSchema, $properties->getKeywordValue('action'));
+
+    $programmtage = 3;
+    $teilnehmerGesamt = 5;
+    $referenten = 2;
+
+    // Finanzierung
+    $eigenmittel = 9.09;
+    $teilnehmerBeitrage = 10.1;
+    $mittelEuropa = 30.3;
+    $mittelBundeslaender = 40.4;
+    $mittelStaedteUndKreise = 50.5;
+    $oeffentlicheMittelGesamt = round($mittelEuropa + $mittelBundeslaender + $mittelStaedteUndKreise, 2);
+    $sonstigesMittel1 = 60.6;
+    $sonstigesMittel2 = 77.7;
+    $sonstigeMittelGesamt = round($sonstigesMittel1 + $sonstigesMittel2, 2);
+    $fremdmittelGesamt = round($teilnehmerBeitrage + $oeffentlicheMittelGesamt + $sonstigeMittelGesamt, 2);
+    $mittelGesamt = round($eigenmittel + $fremdmittelGesamt, 2);
+
+    $teilnehmerkosten = $programmtage * $teilnehmerGesamt * 40;
+    $fahrtkosten = $teilnehmerGesamt * 60;
+    $honorarkosten = $programmtage * $referenten * 305;
+
+    $data = (object) [
+      'action' => 'submitAction1',
+      'grunddaten' => (object) [
+        'titel' => 'Test',
+        'kurzbeschreibungDerInhalte' => 'foo bar',
+        'zeitraeume' => [
+          (object) [
+            'beginn' => '2022-08-24',
+            'ende' => '2022-08-24',
+          ],
+          (object) [
+            'beginn' => '2022-08-25',
+            'ende' => '2022-08-26',
+          ],
+        ],
+        'teilnehmer' => (object) [
+          'gesamt' => $teilnehmerGesamt,
+          'weiblich' => 4,
+          'divers' => 3,
+          'unter27' => 2,
+          'inJugendhilfeTaetig' => 1,
+          'referenten' => $referenten,
+        ],
+      ],
+      'finanzierung' => (object) [
+        'teilnehmerbeitraege' => $teilnehmerBeitrage,
+        'eigenmittel' => $eigenmittel,
+        'oeffentlicheMittel' => (object) [
+          'europa' => $mittelEuropa,
+          'bundeslaender' => $mittelBundeslaender,
+          'staedteUndKreise' => $mittelStaedteUndKreise,
+        ],
+        'sonstigeMittel' => [
+          (object) [
+            'quelle' => 'Quelle 1',
+            'betrag' => $sonstigesMittel1,
+          ],
+          (object) [
+            'quelle' => 'Quelle 2',
+            'betrag' => $sonstigesMittel2,
+          ],
+        ],
+      ],
+      'zuschuss' => (object) [],
       'beschreibung' => (object) [
         'ziele' => [
           'persoenlichkeitsbildung',
