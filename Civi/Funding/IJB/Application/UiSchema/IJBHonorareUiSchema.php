@@ -36,12 +36,7 @@ final class IJBHonorareUiSchema extends JsonFormsGroup {
         new JsonFormsControl('#/properties/dauer', "Stunden/\u{200B}Tage"),
         new JsonFormsControl('#/properties/verguetung', "Vergütung pro Stunde/\u{200B}Tag in " . $currency),
         new JsonFormsControl('#/properties/leistung', 'Vereinbarte Leistung'),
-        new JsonFormsControl(
-          '#/properties/qualifikation', 'Qualifikation', <<<EOD
-Bitte geben Sie ebenfalls die Qualifikation der Honorarkraft an (Bsp.:
-Sozialpädagog*in, Wissenschaftler*in, Student*in Politikwissenschaften).
-EOD
-        ),
+        new JsonFormsControl('#/properties/qualifikation', 'Qualifikation'),
         new JsonFormsControl('#/properties/betrag', 'Betrag in ' . $currency),
       ], [
         'addButtonLabel' => 'Honorar hinzufügen',
@@ -57,7 +52,9 @@ EOD
       $elements,
       <<<EOD
 Bitte geben Sie die Kosten für Honorare für Referent*innen an. Ebenso können Sie
-hier Kosten für Sprachmittlung/Dolmetschung im Inland angeben.
+hier Kosten für Sprachmittlung/Dolmetschung im Inland angeben. Bitte geben Sie
+ebenfalls die Qualifikation der Honorarkraft an (Bsp.: Sozialpädagog*in,
+Wissenschaftler*in, Student*in Politikwissenschaften).
 EOD
     );
   }
