@@ -68,6 +68,8 @@ class FundingCaseTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
       $event->context['fundingCaseTypeId'] ??= $fundingCase->getFundingCaseTypeId();
       // @phpstan-ignore-next-line
       $event->context['fundingProgramId'] ??= $fundingCase->getFundingProgramId();
+      // @phpstan-ignore-next-line
+      $event->context['contactId'] ??= $fundingCase->getRecipientContactId();
     }
   }
 
