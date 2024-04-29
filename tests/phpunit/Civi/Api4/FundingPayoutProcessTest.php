@@ -22,6 +22,7 @@ namespace Civi\Api4;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Fixtures\ContactFixture;
+use Civi\Funding\Fixtures\DrawdownFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
@@ -46,9 +47,28 @@ final class FundingPayoutProcessTest extends AbstractFundingHeadlessTestCase {
     FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['application_permission']);
 
     RequestTestUtil::mockRemoteRequest((string) $contact['id']);
-    $result = FundingPayoutProcess::get()->addSelect('id')->execute();
+    $result = FundingPayoutProcess::get()->addSelect('id', 'currency', 'amount_paid_out', 'amount_new')->execute();
     static::assertCount(1, $result);
-    static::assertSame(['id' => $payoutProcess->getId()], $result->first());
+    static::assertSame([
+      'id' => $payoutProcess->getId(),
+      'currency' => FundingProgramFixture::DEFAULT_CURRENCY,
+      'amount_paid_out' => 0.0,
+      'amount_new' => 0.0,
+    ], $result->first());
+
+    DrawdownFixture::addFixture($payoutProcess->getId(), $contactNotPermitted['id'], ['amount' => 0.1]);
+    DrawdownFixture::addFixture($payoutProcess->getId(), $contactNotPermitted['id'], [
+      'amount' => 0.2,
+      'status' => 'accepted',
+    ]);
+    $result = FundingPayoutProcess::get()->addSelect('id', 'currency', 'amount_paid_out', 'amount_new')->execute();
+    static::assertCount(1, $result);
+    static::assertSame([
+      'id' => $payoutProcess->getId(),
+      'currency' => FundingProgramFixture::DEFAULT_CURRENCY,
+      'amount_paid_out' => 0.2,
+      'amount_new' => 0.1,
+    ], $result->first());
 
     RequestTestUtil::mockRemoteRequest((string) $contactNotPermitted['id']);
     static::assertCount(0, FundingPayoutProcess::get()

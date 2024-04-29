@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\Funding\Api4\Action\FundingPayoutProcess\GetAction;
+use Civi\Funding\Api4\Action\FundingPayoutProcess\GetFieldsAction;
 use Civi\Funding\Api4\Traits\AccessPermissionsTrait;
 
 /**
@@ -19,6 +20,10 @@ class FundingPayoutProcess extends Generic\DAOEntity {
 
   public static function get($checkPermissions = TRUE) {
     return \Civi::service(GetAction::class)->setCheckPermissions($checkPermissions);
+  }
+
+  public static function getFields($checkPermissions = TRUE) {
+    return (new GetFieldsAction())->setCheckPermissions($checkPermissions);
   }
 
 }

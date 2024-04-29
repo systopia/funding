@@ -22,6 +22,8 @@ namespace Civi\Funding\Api4\Action\FundingProgram;
 use Civi\Api4\FundingProgram;
 use Civi\Api4\Generic\DAOGetFieldsAction;
 use Civi\Api4\Query\Api4Query;
+use Civi\Api4\Query\Api4SelectQuery;
+use Civi\Funding\Api4\Query\Util\SqlRendererUtil;
 use Civi\RemoteTools\Api4\Action\Traits\PermissionsGetFieldsActionTrait;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
 use CRM_Funding_ExtensionUtil as E;
@@ -76,13 +78,13 @@ final class GetFieldsAction extends DAOGetFieldsAction {
       'data_type' => 'Money',
       'readonly' => TRUE,
       'nullable' => FALSE,
-      'sql_renderer' => fn () => sprintf("IFNULL(
+      'sql_renderer' => fn (array $field, Api4SelectQuery $query) => sprintf("IFNULL(
         (SELECT SUM(drawdown.amount) FROM civicrm_funding_case c
         JOIN civicrm_funding_payout_process payout ON payout.funding_case_id = c.id
         JOIN civicrm_funding_drawdown drawdown ON drawdown.payout_process_id = payout.id
           AND drawdown.status = 'accepted'
-        WHERE c.funding_program_id = %s.id)
-      , 0)", Api4Query::MAIN_TABLE_ALIAS),
+        WHERE c.funding_program_id = %s)
+      , 0)", SqlRendererUtil::getFieldSqlName($field, $query, 'id')),
     ];
 
     return $fields;
