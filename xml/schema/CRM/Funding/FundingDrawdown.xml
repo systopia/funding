@@ -64,6 +64,10 @@
     <name>creation_date</name>
     <type>timestamp</type>
     <required>true</required>
+    <html>
+      <type>Select Date</type>
+      <formatType>activityDateTime</formatType>
+    </html>
   </field>
 
   <field>
@@ -80,6 +84,10 @@
     <name>acception_date</name>
     <type>timestamp</type>
     <required>false</required>
+    <html>
+      <type>Select Date</type>
+      <formatType>activityDateTime</formatType>
+    </html>
   </field>
 
   <field>

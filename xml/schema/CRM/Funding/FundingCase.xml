@@ -99,12 +99,20 @@
     <name>creation_date</name>
     <type>timestamp</type>
     <required>true</required>
+    <html>
+      <type>Select Date</type>
+      <formatType>activityDateTime</formatType>
+    </html>
   </field>
 
   <field>
     <name>modification_date</name>
     <type>timestamp</type>
     <required>true</required>
+    <html>
+      <type>Select Date</type>
+      <formatType>activityDateTime</formatType>
+    </html>
   </field>
 
   <field>

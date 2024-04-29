@@ -173,21 +173,54 @@ msgid "Payment Instruction Template"
 msgstr "Vorlage für Zahlungsanweisung"
 
 #: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
 #: Civi/Funding/EventSubscriber/Remote/FundingCaseGetFieldsSubscriber.php
 #: managed/SavedSearchFundingPrograms.mgd.php
 msgid "Currency"
 msgstr "Währung"
 
+#: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
+#: managed/SavedSearchFundingProgramControlling.mgd.php
+#: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
+msgid "Amount Paid Out"
+msgstr "Ausbezahlter Betrag"
+
+#: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php
+msgid "The amount if the drawdown is accepted, 0 otherwise."
+msgstr "Der Betrag, wenn der Mittelabruf genehmigt wurde, sonst 0."
+
+#: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php
+msgid "Amount Open"
+msgstr "Offener Betrag"
+
+#: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php
+msgid "The amount if the drawdown is unverified, 0 otherwise."
+msgstr "Der Betrag, wenn der Mittelabruf ungeprüft ist, sonst 0."
+
 #: Civi/Funding/Api4/Action/FundingDrawdown/RejectAction.php
 msgid "Permission to reject drawdown is missing."
 msgstr "Berechtigung zum Ablehnen des Mittelabrufs fehlt."
+
+#: Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
+msgid "The sum of the amounts of accepted drawdowns."
+msgstr "Die Summe der Beträge akzeptierter Mittelabrufe."
+
+#: Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php
+msgid "The sum of the amounts of unverified drawdowns."
+msgstr "Die Summe der Beträge offener Mittelabrufe."
 
 #: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
 #: ang/crmFunding/case/fundingCase.template.html
 #: managed/SavedSearchFundingCases.mgd.php
 #: managed/SavedSearchFundingProgramControlling.mgd.php
+#: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
 msgid "Amount Approved"
 msgstr "Bewilligter Betrag"
 
@@ -200,16 +233,6 @@ msgstr "Verfügbarer Betrag"
 #: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
 msgid "The difference between the budget and the amount approved."
 msgstr "Die Differenz zwischen Budget und bewilligtem Betrag."
-
-#: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
-#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
-#: managed/SavedSearchFundingProgramControlling.mgd.php
-msgid "Amount Paid Out"
-msgstr "Ausbezahlter Betrag"
-
-#: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
-msgid "The sum of the amounts of accepted drawdowns."
-msgstr "Die Summe der Beträge der akzeptierten Mittelabrufe."
 
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
 #: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
@@ -922,6 +945,10 @@ msgstr "Neues Förderprogramm"
 msgid "Edit Funding Program"
 msgstr "Förderprogramm bearbeiten"
 
+#: ang/afsearchDrawdownControlling.aff.php managed/NavigationFunding.mgd.php
+msgid "Drawdown Controlling"
+msgstr "Controlling Mittelabrufe"
+
 #: ang/afsearchFundingCaseApplicationProcesses.aff.php
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
 msgid "Funding Applications"
@@ -1215,6 +1242,7 @@ msgstr "Änderungsdatum"
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCases.mgd.php
 #: managed/SavedSearchFundingTasksMy.mgd.php
+#: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
 msgid "Recipient"
 msgstr "Empfänger"
 
@@ -1233,6 +1261,7 @@ msgstr "Weiterleitungsvertrag erneut erstellen"
 
 #: ang/crmFunding/case/fundingCase.template.html
 #: managed/SavedSearchFundingDrawdowns.mgd.php
+#: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
 msgid "Drawdowns"
 msgstr "Mittelabrufe"
 
@@ -1290,6 +1319,18 @@ msgstr ""
 #: ang/crmFunding/fundingDate.filter.js
 msgid "yyyy-MM-dd hh:mm:ss"
 msgstr "dd.MM.yyyy hh:mm:ss"
+
+#: ang/crmFunding/jsonForms/jfControlArrayTable.template.html
+#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
+#: managed/SavedSearchFundingCases.mgd.php
+#: managed/SavedSearchFundingDrawdowns.mgd.php
+#: managed/SavedSearchFundingPrograms.mgd.php
+msgid "Actions"
+msgstr "Aktionen"
+
+#: ang/crmFunding/jsonForms/jfControlArrayTable.template.html
+msgid "No data"
+msgstr "Keine Daten"
 
 #: ang/crmFunding/program/fundingNewCasePermissions.html
 msgid "Initial Funding Case Permissions"
@@ -1491,6 +1532,7 @@ msgstr "Förderantrag"
 #: managed/OptionValueCgExtendsFundingProgram.mgd.php
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCases.mgd.php
+#: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
 msgid "Funding Program"
 msgstr "Förderprogramm"
 
@@ -1507,6 +1549,7 @@ msgstr "Zahlungsanweisung"
 #: managed/SavedSearchFundingPrograms.mgd.php
 #: managed/SavedSearchFundingTasksMy.mgd.php
 #: managed/SavedSearch_Application_CiviOffice_Templates.mgd.php
+#: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
 msgid "Table"
 msgstr "Tabelle"
 
@@ -1536,13 +1579,6 @@ msgstr "Förderfallanträge"
 #: managed/SavedSearchFundingCases.mgd.php
 msgid "Funding Case Type"
 msgstr "Förderfalltyp"
-
-#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
-#: managed/SavedSearchFundingCases.mgd.php
-#: managed/SavedSearchFundingDrawdowns.mgd.php
-#: managed/SavedSearchFundingPrograms.mgd.php
-msgid "Actions"
-msgstr "Aktionen"
 
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCases.mgd.php
@@ -1648,3 +1684,11 @@ msgstr "Dokument"
 #: managed/SavedSearch_Application_CiviOffice_Templates.mgd.php
 msgid "Label"
 msgstr "Bezeichnung"
+
+#: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
+msgid "Drawdowns by Recipient and Funding Program"
+msgstr "Mittelabrufe nach Empfänger und Förderprogramm"
+
+#: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
+msgid "Open Drawdowns"
+msgstr "Offene Mittelabrufe"

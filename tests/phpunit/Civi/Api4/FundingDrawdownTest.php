@@ -51,12 +51,14 @@ final class FundingDrawdownTest extends AbstractFundingHeadlessTestCase {
     );
 
     RequestTestUtil::mockRemoteRequest((string) $contact['id']);
-    $result = FundingDrawdown::get()->addSelect('id', 'currency')->execute();
+    $result = FundingDrawdown::get()->addSelect('id', 'currency', 'amount_paid_out', 'amount_new')->execute();
     static::assertCount(1, $result);
     static::assertSame(
       [
         'id' => $drawdown->getId(),
         'currency' => FundingProgramFixture::DEFAULT_CURRENCY,
+        'amount_paid_out' => 0.0,
+        'amount_new' => $drawdown->getAmount(),
       ],
       $result->first(),
     );

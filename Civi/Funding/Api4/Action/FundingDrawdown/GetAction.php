@@ -28,10 +28,8 @@ use Civi\Funding\Api4\Action\Traits\IsFieldSelectedTrait;
 use Civi\Funding\Api4\Util\FundingCasePermissionsUtil;
 use Civi\Funding\Api4\Util\WhereUtil;
 use Civi\Funding\Entity\FundingCaseEntity;
-use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Entity\PayoutProcessEntity;
 use Civi\Funding\FundingCase\FundingCaseManager;
-use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\Funding\PayoutProcess\PayoutProcessManager;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
@@ -50,13 +48,6 @@ final class GetAction extends DAOGetAction {
    */
   private array $fundingCases = [];
 
-  private FundingProgramManager $fundingProgramManager;
-
-  /**
-   * @phpstan-var array<FundingProgramEntity>
-   */
-  private array $fundingPrograms = [];
-
   private PayoutProcessManager $payoutProcessManager;
 
   /**
@@ -69,14 +60,12 @@ final class GetAction extends DAOGetAction {
   public function __construct(
     Api4Interface $api4,
     FundingCaseManager $fundingCaseManager,
-    FundingProgramManager $fundingProgramManager,
     PayoutProcessManager $payoutProcessManager,
     RequestContextInterface $requestContext
   ) {
     parent::__construct(FundingDrawdown::getEntityName(), 'get');
     $this->api4 = $api4;
     $this->fundingCaseManager = $fundingCaseManager;
-    $this->fundingProgramManager = $fundingProgramManager;
     $this->payoutProcessManager = $payoutProcessManager;
     $this->requestContext = $requestContext;
   }
@@ -97,7 +86,6 @@ final class GetAction extends DAOGetAction {
     );
     FundingCasePermissionsUtil::addPermissionsRestriction($this);
 
-    $currencySelected = $this->isFieldSelected('currency');
     $canReviewSelected = $this->isFieldSelected('CAN_review');
     $payoutProcessIdSelected = $this->isFieldSelected('payout_process_id');
 
@@ -119,9 +107,6 @@ final class GetAction extends DAOGetAction {
       foreach ($result as $record) {
         $payoutProcess = $this->getPayoutProcess($record['payout_process_id']);
         if (NULL !== $payoutProcess) {
-          if ($currencySelected) {
-            $record['currency'] = $this->getCurrency($payoutProcess);
-          }
           if ($canReviewSelected) {
             $record['CAN_review'] = $this->getCanReview($record['status'], $payoutProcess);
           }
@@ -158,16 +143,6 @@ final class GetAction extends DAOGetAction {
     $this->api4->executeAction($action);
   }
 
-  /**
-   * @throws \CRM_Core_Exception
-   */
-  private function getCurrency(PayoutProcessEntity $payoutProcess): string {
-    $fundingCase = $this->getFundingCase($payoutProcess->getFundingCaseId());
-    $fundingProgram = $this->getFundingProgram($fundingCase->getFundingProgramId());
-
-    return $fundingProgram->getCurrency();
-  }
-
   private function getPayoutProcess(int $id): ?PayoutProcessEntity {
     if (!array_key_exists($id, $this->payoutProcesses)) {
       $this->payoutProcesses[$id] = $this->payoutProcessManager->get($id);
@@ -187,19 +162,6 @@ final class GetAction extends DAOGetAction {
     }
 
     return $this->fundingCases[$id];
-  }
-
-  /**
-   * @throws \CRM_Core_Exception
-   */
-  private function getFundingProgram(int $id): FundingProgramEntity {
-    if (!isset($this->fundingPrograms[$id])) {
-      $fundingProgram = $this->fundingProgramManager->get($id);
-      Assert::notNull($fundingProgram, sprintf('Funding program with ID "%d" not found', $id));
-      $this->fundingPrograms[$id] = $fundingProgram;
-    }
-
-    return $this->fundingPrograms[$id];
   }
 
   /**
