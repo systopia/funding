@@ -26,10 +26,10 @@ namespace Civi\Funding\Api4\Traits;
 trait AccessROAdministerRWPermissionsTrait {
 
   use AccessPermissionsTrait {
-    AccessPermissionsTrait::permissions as accessPermissions;
+    AccessPermissionsTrait::permissions as private accessPermissions;
   }
   use AdministerPermissionsTrait {
-    AdministerPermissionsTrait::permissions as administerPermissions;
+    AdministerPermissionsTrait::permissions as private administerPermissions;
   }
 
   /**
