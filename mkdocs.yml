@@ -11,6 +11,7 @@ nav:
   - 'Administration':
     - 'Installation': administration/installation.md
     - 'Users and Permissions': administration/user-permissions.md
+    - 'Necessary Adjustments': administration/necessary-adjustments.md
 
 markdown_extensions:
   - attr_list
