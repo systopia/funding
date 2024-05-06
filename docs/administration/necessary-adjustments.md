@@ -1,12 +1,14 @@
 # Necessary adjustments
 
-Some adjustments that are necessary to represent the funding workflow of a specific giving organization can not be done via configuration pages.
-We recommend writing an additional extension that contains the necessary adaptations.
+Necessary adjustments to represent the funding workflow of a specific giving
+organization can be done via code in a custom extension.
 If you need support in this, you can send an email to info@systopia.de.
 
 The development of the funding framework was funded by the German organization _Arbeit und Leben_.
 Therefore, the application forms and funding case types are in German.
-The funding workflow as described [here](../usage/application-states.md) reflects the workflow of this specific organization for the funding case types AVK1 and IJB.
+The funding workflow as described [here](../usage/application-states.md)
+reflects the workflow of this specific organization for the funding case types
+AVK1, IJB, and Sammelantrag Kurs.
 
 You will need to define your own custom funding case type. Choosing a funding case type for a funding program affects
 
