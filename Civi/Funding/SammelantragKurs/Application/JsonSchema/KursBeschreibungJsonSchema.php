@@ -48,9 +48,10 @@ final class KursBeschreibungJsonSchema extends JsonSchemaObject {
         ]), ['uniqueItems' => TRUE, 'minItems' => 1]),
       'bildungsanteil' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0, 'maximum' => 100]),
       'veranstaltungsort' => new JsonSchemaString(),
+      'kooperationspartner' => new JsonSchemaString(),
     ];
 
-    parent::__construct($properties, ['required' => array_keys($properties)]);
+    parent::__construct($properties, ['required' => ['ziele', 'bildungsanteil', 'veranstaltungsort']]);
   }
 
 }

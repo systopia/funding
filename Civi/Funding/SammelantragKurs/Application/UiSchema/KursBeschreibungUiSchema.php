@@ -41,6 +41,9 @@ EOD
       new JsonFormsControl(
         '#/properties/beschreibung/properties/veranstaltungsort', 'Wo findet die Veranstaltung statt?'
       ),
+      new JsonFormsControl(
+        '#/properties/beschreibung/properties/kooperationspartner', 'Kooperationspartner'
+      ),
     ]);
   }
 
