@@ -8,13 +8,12 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Symfony DI tries to autowire properties annotated with @required. Though
- * CiviCRM actions parameters can be annotated in this way to make them
- * required. This pass clears the properties that are going to be injected for
- * action classes registered as service in the Civi\Funding\Api4\Action
- * namespace.
- *
- * @see https://github.com/symfony/symfony/pull/52910
+ * Symfony DI (v5 and v6) tries to autowire properties annotated with @required.
+ * Though CiviCRM action parameters can be annotated in this way to make them
+ * mandatory. This pass clears the properties that are going to be injected for
+ * action classes registered as services in the Civi\Funding\Api4\Action
+ * namespace. (In Symfony DI v7 support of annotations is dropped in favor of
+ * PHP attributes.)
  */
 final class ActionPropertyAutowireFixPass implements CompilerPassInterface {
 
