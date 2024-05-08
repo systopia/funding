@@ -66,8 +66,13 @@ fundingModule.directive('fundingEditableTableRow', function() {
         this.row = null;
       }
 
-      const path = $attrs.path || this.path;
+      let path = $attrs.path || this.path;
       if (path) {
+        const expressionMatch = path.match(/^\s*\{\{(.+)\}\}\s*$/);
+        if (expressionMatch && expressionMatch[1]) {
+          path = $scope.$parent.$eval(expressionMatch[1]);
+        }
+
         this.jsonPointer = toJsonPointer(path);
         if (!$attrs.formName) {
           this.formName = path
@@ -81,11 +86,11 @@ fundingModule.directive('fundingEditableTableRow', function() {
 
       const self = this;
       this.form = function () {
-        return $scope[self.formName];
+        return $scope[self.formName] || $scope.$parent.$eval(self.formName);
       };
 
       this.insertedRow = function() {
-        return self.inserted || $scope.$parent.inserted;
+        return self.inserted || $scope.$parent.$eval('inserted');
       };
     }],
     link: function (scope, element, attrs, controller, transcludeFn) {

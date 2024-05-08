@@ -13,6 +13,9 @@ fundingModule.run(['editableOptions', 'editableThemes', function(editableOptions
   editableOptions.icon_set = 'font-awesome';
 }]);
 
+const Ajv = window.ajv7;
+const ajv = new Ajv();
+
 let overlayCount = 0;
 function enableOverlay() {
   ++overlayCount;

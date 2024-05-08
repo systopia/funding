@@ -1,0 +1,28 @@
+<label ng-show="uiSchema.label" class="control-label">
+  <span ng-bind-html="uiSchema.label"></span>
+  <funding-jf-description text="uiSchema.description"></funding-jf-description>
+  <funding-validation-errors errors="errors[errorsJsonPointer]"></funding-validation-errors>
+</label>
+<span ng-show="!uiSchema.label">
+  <funding-jf-description text="uiSchema.description"></funding-jf-description>
+  <funding-validation-errors errors="errors[errorsJsonPointer]"></funding-validation-errors>
+</span>
+<table class="table table-striped table-bordered table-hover table-condensed">
+  <thead>
+    <tr>
+      <th ng-repeat="label in header track by $index">{{ label }}</th>
+      <th>{{:: ts('Actions') }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="row in value track by $index" edit-allowed="editable" path="{{ path }}" funding-editable-table-row>
+      <td ng-repeat="cellElement in elements track by $index">
+        <funding-jf-element json-schema="propertySchema.items" ui-schema="cellElement"
+                            error-path-prefix="{{ path }}[{{ $parent.$index }}]" data="row"
+                            editable="editable" errors="errors" no-label="true"></funding-jf-element>
+      </td>
+      <td class="editable-table-row-actions"></td>
+    </tr>
+  </tbody>
+</table>
+<funding-add-row-button path="{{ path }}" ng-show="editable"></funding-add-row-button>

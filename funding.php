@@ -43,6 +43,15 @@ function funding_civicrm_container(ContainerBuilder $container): void {
 }
 
 /**
+ * Implements hook_civicrm_pageRun().
+ */
+function funding_civicrm_pageRun(\CRM_Core_Page $page): void {
+  if ($page instanceof \Civi\Angular\Page\Main) {
+    \Civi::resources()->addModuleFile(E::LONG_NAME, 'js/json-ptr.js');
+  }
+}
+
+/**
  * Implements hook_civicrm_permission().
  *
  * @phpstan-param array<string, string|array{string, string}> $permissions

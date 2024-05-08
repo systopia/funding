@@ -6,3 +6,6 @@
 /tools/*/vendor/
 /tools/*/composer.lock
 /vendor/
+/node_modules/*/dist/cjs/
+/node_modules/json-ptr/dist/*.js
+/node_modules/json-ptr/dist/*.js.map
