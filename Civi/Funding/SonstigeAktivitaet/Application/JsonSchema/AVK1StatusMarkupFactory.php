@@ -82,7 +82,7 @@ final class AVK1StatusMarkupFactory {
       )
     );
 
-    return implode('<br>', $content);
+    return '<p>' . implode('<br>', $content) . '</p>';
   }
 
   /**

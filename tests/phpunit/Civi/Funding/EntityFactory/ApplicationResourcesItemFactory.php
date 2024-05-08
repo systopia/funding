@@ -23,22 +23,27 @@ use Civi\Funding\Entity\ApplicationResourcesItemEntity;
 
 /**
  * @phpstan-type applicationResourcesItemT array{
- *   id?: int,
+ *   id?: int|null,
  *   application_process_id?: int,
- *   identifier?: string,
- *   type?: string,
+ *   identifier?: non-empty-string,
+ *   type?: non-empty-string,
  *   amount?: float,
- *   properties?: array<int|string, mixed>,
- *   data_pointer?: string,
+ *   properties?: array<string, mixed>,
+ *   data_pointer?: non-empty-string,
  * }
  */
 final class ApplicationResourcesItemFactory {
+
+  public const DEFAULT_ID = 55;
+
+  private static int $id = self::DEFAULT_ID;
 
   /**
    * @phpstan-param applicationResourcesItemT $values
    */
   public static function createApplicationResourcesItem(array $values = []): ApplicationResourcesItemEntity {
     $values += [
+      'id' => self::$id++,
       'application_process_id' => ApplicationProcessFactory::DEFAULT_ID,
       'identifier' => 'test-resources-item',
       'type' => 'test',
@@ -46,6 +51,10 @@ final class ApplicationResourcesItemFactory {
       'properties' => [],
       'data_pointer' => '/test',
     ];
+
+    if (NULL === $values['id']) {
+      unset($values['id']);
+    }
 
     return ApplicationResourcesItemEntity::fromArray($values);
   }

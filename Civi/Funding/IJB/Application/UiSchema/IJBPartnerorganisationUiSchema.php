@@ -54,7 +54,7 @@ final class IJBPartnerorganisationUiSchema extends JsonFormsCategory {
         ['rule' => $fortsetzungsMassnahmeRule],
       ),
       new JsonFormsMarkup(
-        'Bisherige Begegnungen mit dieser Partnerorganisation in den letzten fünf Jahren (Zeitraum und Ort)',
+        '<p>Bisherige Begegnungen mit dieser Partnerorganisation in den letzten fünf Jahren (Zeitraum und Ort)</p>',
         'text/html',
         ['rule' => $fortsetzungsMassnahmeRule]
       ),

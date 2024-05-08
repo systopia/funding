@@ -60,8 +60,8 @@ final class FundingProgramManagerTest extends AbstractContainerMockedTestCase {
     $requestContext = TestRequestContext::newInternal();
     $this->containerMock->expects(static::exactly(2))->method('get')->with(GetAction::class)
       ->willReturnOnConsecutiveCalls(
-        new GetAction($eventDispatcherMock, $possiblePermissionsLoaderMock, $requestContext),
-        new GetAction($eventDispatcherMock, $possiblePermissionsLoaderMock, $requestContext),
+        new GetAction($this->api4Mock, $eventDispatcherMock, $possiblePermissionsLoaderMock, $requestContext),
+        new GetAction($this->api4Mock, $eventDispatcherMock, $possiblePermissionsLoaderMock, $requestContext),
 
       );
     $this->api4Mock->expects(static::exactly(2))->method('executeAction')->withConsecutive(
@@ -108,7 +108,9 @@ final class FundingProgramManagerTest extends AbstractContainerMockedTestCase {
     $requestContext = TestRequestContext::newInternal();
     $this->containerMock->expects(static::once())->method('get')
       ->with(GetAction::class)
-      ->willReturn(new GetAction($eventDispatcherMock, $possiblePermissionsLoaderMock, $requestContext));
+      ->willReturn(
+        new GetAction($this->api4Mock, $eventDispatcherMock, $possiblePermissionsLoaderMock, $requestContext)
+      );
 
     $this->api4Mock->expects(static::once())->method('executeAction')
       ->willReturnCallback(function (GetAction $action) {

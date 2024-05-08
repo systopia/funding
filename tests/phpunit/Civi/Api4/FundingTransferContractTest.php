@@ -130,7 +130,7 @@ final class FundingTransferContractTest extends AbstractFundingHeadlessTestCase 
       static::assertTrue($field['readonly'], $message);
     }
 
-    static::assertCount(12, $result);
+    static::assertCount(18, $result);
   }
 
 }

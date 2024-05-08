@@ -149,7 +149,7 @@ final class RemoteFundingTransferContractTest extends AbstractRemoteFundingHeadl
       static::assertTrue($field['readonly'], $message);
     }
 
-    static::assertCount(12, $result);
+    static::assertCount(18, $result);
   }
 
 }

@@ -87,6 +87,30 @@ final class GetFieldsAction extends DAOGetFieldsAction {
       , 0)", SqlRendererUtil::getFieldSqlName($field, $query, 'id')),
     ];
 
+    $fields[] = [
+      'name' => 'amount_cleared',
+      'title' => E::ts('Amount Cleared'),
+      'type' => 'Extra',
+      'data_type' => 'Money',
+      'readonly' => TRUE,
+      'nullable' => TRUE,
+      'operators' => [],
+      // Without sql renderer the query would fail. The actual value is fetched afterward.
+      'sql_renderer' => fn () => '(SELECT NULL)',
+    ];
+
+    $fields[] = [
+      'name' => 'amount_admitted',
+      'title' => E::ts('Amount Admitted'),
+      'type' => 'Extra',
+      'data_type' => 'Money',
+      'readonly' => TRUE,
+      'nullable' => TRUE,
+      'operators' => [],
+      // Without sql renderer the query would fail. The actual value is fetched afterward.
+      'sql_renderer' => fn () => '(SELECT NULL)',
+    ];
+
     return $fields;
   }
 

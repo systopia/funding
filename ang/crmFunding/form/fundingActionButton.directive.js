@@ -24,6 +24,7 @@ fundingModule.directive('fundingActionButton', [function() {
     bindToController: {
       'action': '@',
       'label': '@',
+      'modalSubmitButtonLabel': '@?',
       // Hide button if action is not allowed. (Default: true).
       'hideDisabled': '=?',
       'withComment': '=?',
@@ -37,7 +38,9 @@ fundingModule.directive('fundingActionButton', [function() {
       // copy attributes to button element
       const button = angular.element(element[0].querySelector('button'));
       for (let attr of element[0].attributes) {
-        if (attr.name !== 'action' && attr.name !== 'label' && attr.name !== 'hide-disabled' && attr.name !== 'with-comment') {
+        if (attr.name !== 'action' && attr.name !== 'label' && attr.name !== 'modal-submit-button-label' &&
+          attr.name !== 'hide-disabled' && attr.name !== 'with-comment'
+        ) {
           button.attr(attr.name, attr.value);
           // avoid handling of attributes such as crm-icon on custom button directive
           _4.unset(attrs, _4.camelCase(attr.name));
@@ -51,7 +54,9 @@ fundingModule.directive('fundingActionButton', [function() {
 
       return function (scope, element, attrs, controller, transcludeFn) {
         for (let attr of element[0].attributes) {
-          if (attr.name !== 'action' && attr.name !== 'label' && attr.name !== 'hide-disabled' && attr.name !== 'with-comment') {
+          if (attr.name !== 'action' && attr.name !== 'label' && attr.name !== 'modal-submit-button-label' &&
+            attr.name !== 'hide-disabled' && attr.name !== 'with-comment'
+          ) {
             element.removeAttr(attr.name);
           }
         }

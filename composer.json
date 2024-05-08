@@ -22,6 +22,9 @@
         "symfony/property-access": "^5||^6",
         "webmozart/assert": "^1.10"
     },
+    "require-dev": {
+        "colinodell/psr-testlogger": "^1"
+    },
     "scripts": {
         "composer-phpcs": [
             "@composer --working-dir=tools/phpcs"

@@ -11,4 +11,6 @@ parameters:
 	reportUnmatchedIgnoredErrors: false
 	ignoreErrors:
 		# Errors we get when using "prefer-lowest"
+		# \DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts is used
+		- '#^Call to deprecated method assertArraySubset\(\)#'
 		- '#::getSubscribedEvents\(\) return type has no value type specified in iterable type array.$#'

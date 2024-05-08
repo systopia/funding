@@ -22,20 +22,21 @@ namespace Civi\Funding;
 use Civi\Api4\FundingCaseType;
 use Civi\Api4\FundingProgram;
 use Civi\Funding\Database\DaoEntityInfoProvider;
+use Civi\Funding\ExternalFile\FundingExternalFileManager;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\RemoteTools\Api4\Api4;
 use Civi\RemoteTools\Api4\Query\Comparison;
 
 /**
- * @covers \Civi\Funding\FundingExternalFileManager
+ * @covers \Civi\Funding\ExternalFile\FundingExternalFileManager
  *
  * @group headless
  */
 final class FundingExternalFileManagerTest extends AbstractFundingHeadlessTestCase {
 
   /**
-   * @var \Civi\Funding\FundingExternalFileManager
+   * @var \Civi\Funding\ExternalFile\FundingExternalFileManager
    */
   private FundingExternalFileManager $externalFileManager;
 
@@ -154,6 +155,15 @@ final class FundingExternalFileManagerTest extends AbstractFundingHeadlessTestCa
         FundingProgram::getEntityName(),
         $fundingProgram->getId(),
         Comparison::new('source', '=', $externalFile2->getSource())
+      )
+    );
+
+    static::assertEquals(
+      $externalFile2,
+      $this->externalFileManager->getFileByFileId(
+        $externalFile2->getFileId(),
+        FundingProgram::getEntityName(),
+        $fundingProgram->getId()
       )
     );
 

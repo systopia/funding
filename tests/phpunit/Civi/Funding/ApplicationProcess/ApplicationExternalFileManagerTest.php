@@ -22,7 +22,7 @@ namespace Civi\Funding\ApplicationProcess;
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\FundingApplicationSnapshot;
 use Civi\Funding\EntityFactory\ExternalFileFactory;
-use Civi\Funding\FundingExternalFileManagerInterface;
+use Civi\Funding\ExternalFile\FundingExternalFileManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ClockMock;
@@ -35,7 +35,7 @@ final class ApplicationExternalFileManagerTest extends TestCase {
   private ApplicationExternalFileManager $applicationExternalFileManager;
 
   /**
-   * @var \Civi\Funding\FundingExternalFileManagerInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\ExternalFile\FundingExternalFileManagerInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $externalFileManagerMock;
 

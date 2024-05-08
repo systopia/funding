@@ -19,9 +19,11 @@ declare(strict_types = 1);
 
 namespace Civi\Funding;
 
+use Civi\Api4\FundingCasePermissionsCache;
 use Civi\Funding\Api4\Permissions;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandler;
+use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Test;
 use Civi\Test\CiviEnvBuilder;
@@ -39,6 +41,7 @@ abstract class AbstractFundingHeadlessTestCase extends TestCase implements Headl
     ClockMock::register(FundingCaseManager::class);
     ClockMock::register(ApplicationProcessManager::class);
     ClockMock::register(ApplicationSnapshotCreateHandler::class);
+    ClockMock::register(ClearingProcessManager::class);
   }
 
   public static function tearDownAfterClass(): void {
@@ -79,6 +82,9 @@ abstract class AbstractFundingHeadlessTestCase extends TestCase implements Headl
   protected function clearCache(): void {
     // @phpstan-ignore-next-line
     \Civi::service(FundingCaseManager::class)->clearCache();
+    FundingCasePermissionsCache::delete(FALSE)
+      ->addWhere('id', 'IS NOT NULL')
+      ->execute();
   }
 
   /**

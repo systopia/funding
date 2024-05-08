@@ -21,9 +21,9 @@ use CRM_Funding_ExtensionUtil as E;
 
 return [
   [
-    'name' => 'SavedSearch_FundingCases',
+    'name' => 'SavedSearch_funding_cases',
     'entity' => 'SavedSearch',
-    'cleanup' => 'always',
+    'cleanup' => 'unused',
     'update' => 'unmodified',
     'params' => [
       'version' => 4,
@@ -41,6 +41,9 @@ return [
             'FundingCase_FundingCaseType_funding_case_type_id_01.title',
             'recipient_contact_id.display_name',
             'amount_approved',
+            'amount_paid_out',
+            'amount_admitted',
+            'amount_cleared',
             'creation_date',
             'modification_date',
           ],
@@ -78,9 +81,9 @@ return [
     ],
   ],
   [
-    'name' => 'SearchDisplay_FundingCases.Table',
+    'name' => 'SavedSearch_funding_cases_SearchDisplay_table',
     'entity' => 'SearchDisplay',
-    'cleanup' => 'always',
+    'cleanup' => 'unused',
     'update' => 'unmodified',
     'params' => [
       'version' => 4,
@@ -139,6 +142,27 @@ return [
               'key' => 'amount_approved',
               'dataType' => 'Money',
               'label' => E::ts('Amount Approved'),
+              'sortable' => TRUE,
+            ],
+            [
+              'type' => 'field',
+              'key' => 'amount_paid_out',
+              'dataType' => 'Money',
+              'label' => E::ts('Amount Paid Out'),
+              'sortable' => TRUE,
+            ],
+            [
+              'type' => 'field',
+              'key' => 'amount_admitted',
+              'dataType' => 'Money',
+              'label' => E::ts('Amount Admitted'),
+              'sortable' => TRUE,
+            ],
+            [
+              'type' => 'field',
+              'key' => 'amount_cleared',
+              'dataType' => 'Money',
+              'label' => E::ts('Amount Cleared'),
               'sortable' => TRUE,
             ],
             [

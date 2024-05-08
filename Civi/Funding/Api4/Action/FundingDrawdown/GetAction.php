@@ -22,117 +22,62 @@ namespace Civi\Funding\Api4\Action\FundingDrawdown;
 use Civi\Api4\FundingCase;
 use Civi\Api4\FundingDrawdown;
 use Civi\Api4\FundingPayoutProcess;
-use Civi\Api4\Generic\DAOGetAction;
 use Civi\Api4\Generic\Result;
-use Civi\Funding\Api4\Action\Traits\IsFieldSelectedTrait;
-use Civi\Funding\Api4\Util\FundingCasePermissionsUtil;
+use Civi\Funding\Api4\Action\FundingCase\AbstractReferencingDAOGetAction;
 use Civi\Funding\Api4\Util\WhereUtil;
 use Civi\Funding\Entity\FundingCaseEntity;
-use Civi\Funding\Entity\PayoutProcessEntity;
 use Civi\Funding\FundingCase\FundingCaseManager;
-use Civi\Funding\PayoutProcess\PayoutProcessManager;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Webmozart\Assert\Assert;
 
-final class GetAction extends DAOGetAction {
+final class GetAction extends AbstractReferencingDAOGetAction {
 
-  use IsFieldSelectedTrait;
-
-  private Api4Interface $api4;
-
-  private FundingCaseManager $fundingCaseManager;
+  private bool $canReviewSelected;
 
   /**
    * @phpstan-var array<FundingCaseEntity>
    */
   private array $fundingCases = [];
 
-  private PayoutProcessManager $payoutProcessManager;
-
-  /**
-   * @phpstan-var array<PayoutProcessEntity|null>
-   */
-  private array $payoutProcesses = [];
-
-  private RequestContextInterface $requestContext;
-
   public function __construct(
     Api4Interface $api4,
     FundingCaseManager $fundingCaseManager,
-    PayoutProcessManager $payoutProcessManager,
     RequestContextInterface $requestContext
   ) {
-    parent::__construct(FundingDrawdown::getEntityName(), 'get');
-    $this->api4 = $api4;
-    $this->fundingCaseManager = $fundingCaseManager;
-    $this->payoutProcessManager = $payoutProcessManager;
-    $this->requestContext = $requestContext;
-  }
-
-  // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
-  public function _run(Result $result): void {
-  // phpcs:enable
-    $rowCountSelected = $this->isRowCountSelected();
-    if ($rowCountSelected) {
-      $this->ensureFundingCasePermissions();
-    }
-
-    FundingCasePermissionsUtil::addPermissionsCacheJoin(
-      $this,
-      'payout_process_id.funding_case_id',
-      $this->requestContext->getContactId(),
-      $this->requestContext->isRemote()
+    parent::__construct(
+      FundingDrawdown::getEntityName(),
+      $api4,
+      $fundingCaseManager,
+      $requestContext
     );
-    FundingCasePermissionsUtil::addPermissionsRestriction($this);
-
-    $canReviewSelected = $this->isFieldSelected('CAN_review');
-    $payoutProcessIdSelected = $this->isFieldSelected('payout_process_id');
-
-    if ($canReviewSelected && !$this->isFieldSelected('status')) {
-      $this->addSelect('status');
-    }
-
-    if (!$payoutProcessIdSelected) {
-      $this->addSelect('payout_process_id');
-    }
-
-    $limit = $this->getLimit();
-    $offset = $this->getOffset();
-    $records = [];
-    do {
-      parent::_run($result);
-
-      /** @phpstan-var array<string, mixed>&array{payout_process_id: int, status: string} $record */
-      foreach ($result as $record) {
-        $payoutProcess = $this->getPayoutProcess($record['payout_process_id']);
-        if (NULL !== $payoutProcess) {
-          if ($canReviewSelected) {
-            $record['CAN_review'] = $this->getCanReview($record['status'], $payoutProcess);
-          }
-          if (!$payoutProcessIdSelected) {
-            unset($record['payout_process_id']);
-          }
-
-          $records[] = $record;
-        }
-      }
-
-      $limitBefore = $this->getLimit();
-      $this->setOffset($offset + count($records));
-      $this->setLimit($limit - count($records));
-    } while ($this->getLimit() > 0 && count($result) === $limitBefore);
-
-    $result->exchangeArray($records);
-    if (!$rowCountSelected) {
-      $result->rowCount = count($records);
-    }
+    $this->_fundingCaseIdFieldName = 'payout_process_id.funding_case_id';
   }
 
-  private function ensureFundingCasePermissions(): void {
+  public function _run(Result $result): void {
+    $this->initOriginalSelect();
+    $this->canReviewSelected = $this->isFieldExplicitlySelected('CAN_review');
+
+    if ([] === $this->getSelect()) {
+      $this->setSelect(['*']);
+    }
+
+    if ($this->canReviewSelected) {
+      if (!$this->isFieldSelected('status')) {
+        $this->addSelect('status');
+      }
+      if (!$this->isFieldSelected('payout_process_id.status')) {
+        $this->addSelect('payout_process_id.status');
+      }
+    }
+
+    parent::_run($result);
+  }
+
+  protected function ensureFundingCasePermissions(): void {
     // Ensure permissions for all funding cases with payout process are determined.
     $action = FundingCase::get(FALSE)
-      ->addSelect('DISTINCT id')
+      ->setCachePermissionsOnly(TRUE)
       ->addJoin(FundingPayoutProcess::getEntityName() . ' AS pp', 'INNER', NULL, ['pp.funding_case_id', '=', 'id']);
 
     $payoutProcessId = WhereUtil::getInt($this->getWhere(), 'payout_process_id');
@@ -140,15 +85,25 @@ final class GetAction extends DAOGetAction {
       $action->addWhere('pp.id', '=', $payoutProcessId);
     }
 
-    $this->api4->executeAction($action);
+    $this->_api4->executeAction($action);
   }
 
-  private function getPayoutProcess(int $id): ?PayoutProcessEntity {
-    if (!array_key_exists($id, $this->payoutProcesses)) {
-      $this->payoutProcesses[$id] = $this->payoutProcessManager->get($id);
+  protected function handleRecord(array &$record): bool {
+    if (!parent::handleRecord($record)) {
+      return FALSE;
     }
 
-    return $this->payoutProcesses[$id];
+    if ($this->canReviewSelected) {
+      $record['CAN_review'] = $this->getCanReview(
+        $record['status'],
+        $record['payout_process_id.status'],
+        $record[$this->_fundingCaseIdFieldName]
+      );
+      $this->unsetIfNotSelected($record, 'status');
+      $this->unsetIfNotSelected($record, 'payout_process_id.status');
+    }
+
+    return TRUE;
   }
 
   /**
@@ -156,7 +111,7 @@ final class GetAction extends DAOGetAction {
    */
   private function getFundingCase(int $id): FundingCaseEntity {
     if (!isset($this->fundingCases[$id])) {
-      $fundingCase = $this->fundingCaseManager->get($id);
+      $fundingCase = $this->_fundingCaseManager->get($id);
       Assert::notNull($fundingCase, sprintf('Funding case with ID "%d" not found', $id));
       $this->fundingCases[$id] = $fundingCase;
     }
@@ -167,10 +122,10 @@ final class GetAction extends DAOGetAction {
   /**
    * @throws \CRM_Core_Exception
    */
-  private function getCanReview(string $drawdownStatus, PayoutProcessEntity $payoutProcess): bool {
+  private function getCanReview(string $drawdownStatus, string $payoutProcessStatus, int $fundingCaseId): bool {
     return 'new' === $drawdownStatus
-      && 'open' === $payoutProcess->getStatus()
-      && $this->getFundingCase($payoutProcess->getFundingCaseId())->hasPermission('review_drawdown');
+      && 'open' === $payoutProcessStatus
+      && $this->getFundingCase($fundingCaseId)->hasPermission('review_drawdown');
   }
 
 }

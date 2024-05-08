@@ -39,6 +39,9 @@ final class ArrayResourcesItemDataFactory {
 
   use SetValueTrait;
 
+  /**
+   * @phpstan-var non-empty-string
+   */
   private string $type;
 
   private string $identifierProperty;
@@ -151,6 +154,7 @@ final class ArrayResourcesItemDataFactory {
   }
 
   /**
+   * @phpstan-param non-empty-string $type
    * @phpstan-param clearingT|null $clearing
    *   NULL if no clearing is required.
    */
@@ -198,6 +202,8 @@ final class ArrayResourcesItemDataFactory {
 
     $identifier = $this->getOrGenerateIdentifier($context);
     $properties = $this->propertiesContainer->getValues($context, Variable::FLAG_FAIL_ON_VIOLATION);
+    /** @phpstan-var non-empty-string $dataPointer */
+    $dataPointer = JsonPointer::pathToString($context->currentDataPath());
 
     return new ResourcesItemData([
       'type' => $this->type,
@@ -205,12 +211,14 @@ final class ArrayResourcesItemDataFactory {
       'amount' => (float) $amount,
       'properties' => $properties,
       'clearing' => $this->clearing,
-      'dataPointer' => JsonPointer::pathToString($context->currentDataPath()),
+      'dataPointer' => $dataPointer,
       'dataType' => $dataType,
     ]);
   }
 
   /**
+   * @phpstan-return non-empty-string
+   *
    * @throws \Systopia\JsonSchema\Exceptions\ReferencedDataHasViolationException
    * @throws \InvalidArgumentException
    */
@@ -230,8 +238,9 @@ final class ArrayResourcesItemDataFactory {
     if (!is_string($identifier)) {
       throw new \InvalidArgumentException('Identifier could not be resolved to a string');
     }
+    /** @phpstan-var non-empty-string $identifier */
 
-    if (0 === preg_match('/^[a-zA-Z0-9.\-_]+$/', $identifier)) {
+    if (1 !== preg_match('/^[a-zA-Z0-9.\-_]+$/', $identifier)) {
       throw new \InvalidArgumentException('Identifier may only contain letters, numbers, ".", "-", and "_"');
     }
 

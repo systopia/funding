@@ -33,14 +33,14 @@ use Civi\Funding\DependencyInjection\Compiler\EntityValidatorPass;
 use Civi\Funding\DependencyInjection\Compiler\FundingCaseTypeServiceLocatorPass;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\EventSubscriber\Api\TransactionalApiRequestSubscriber;
-use Civi\Funding\EventSubscriber\FundingFilterPossiblePermissionsSubscriber;
 use Civi\Funding\EventSubscriber\FundingCiviOfficeSearchKitTaskSubscriber;
+use Civi\Funding\EventSubscriber\FundingFilterPossiblePermissionsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingRequestInitSubscriber;
 use Civi\Funding\EventSubscriber\Remote\RemotePageRequestSubscriber;
+use Civi\Funding\ExternalFile\FundingExternalFileManager;
+use Civi\Funding\ExternalFile\FundingExternalFileManagerInterface;
 use Civi\Funding\FundingAttachmentManager;
 use Civi\Funding\FundingAttachmentManagerInterface;
-use Civi\Funding\FundingExternalFileManager;
-use Civi\Funding\FundingExternalFileManagerInterface;
 use Civi\Funding\Util\MoneyFactory;
 use Civi\Funding\Util\UrlGenerator;
 use Civi\Funding\Validation\EntityValidator;
@@ -54,6 +54,10 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 if (!$container->has(PropertyAccessorInterface::class)) {
   $container->register(PropertyAccessorInterface::class, PropertyAccess::class)
     ->setFactory([PropertyAccess::class, 'createPropertyAccessor']);
+}
+
+if (!$container->has(\Civi\Core\Format::class)) {
+  $container->setAlias(\Civi\Core\Format::class, 'format');
 }
 
 $container->autowire(DAOActionFactoryInterface::class, DAOActionFactory::class);

@@ -1,0 +1,57 @@
+<span ng-if="!isChanged">
+  <div ng-show="isAnyActionAllowed('review', 'approve-content', 'reject-content', 'approve-calculative', 'reject-calculative')"
+      class="panel-group funding-clearing-sidebar-element">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-target="#review-panel" aria-expanded="true">{{:: ts('Review') }}</a>
+        </h4>
+      </div>
+      <div id="review-panel" class="panel-collapse collapse in">
+        <div class="panel-body">
+          <button ng-show="hasReviewCalculativePermission() && (isActionAllowed('review') || clearingProcess.reviewer_calc_contact_id === null)"
+                  type="button" class="btn btn-default funding-action-button" crm-icon="fa-eye"
+                  ng-click="startReviewCalculative()">
+              <span class="funding-label">{{:: ts('Start Calculative Review') }}</span>
+          </button>
+          <button ng-show="hasReviewContentPermission() && (isActionAllowed('review') || clearingProcess.reviewer_cont_contact_id === null)"
+                  type="button" class="btn btn-default funding-action-button" crm-icon="fa-eye"
+                  ng-click="startReviewContent()">
+              <span class="funding-label">{{:: ts('Start Content Review') }}</span>
+          </button>
+
+          <div ng-show="isAnyActionAllowed('accept-content', 'reject-content')" class="btn-group" role="group">
+            <p><strong>{{:: ts('Content Review') }}</strong></p>
+            <p>{{:: ts('The aim intended with the funding was achieved. All required proofs are present.') }}</p>
+            <funding-action-button action="accept-content" hide-disabled="false" class="btn btn-default" crm-icon="fa-thumbs-up">{{:: ts('Passed') }}</funding-action-button>
+            <funding-action-button action="reject-content" hide-disabled="false" class="btn btn-default" crm-icon="fa-thumbs-down">{{:: ts('Failed') }}</funding-action-button>
+          </div>
+          <div ng-show="isAnyActionAllowed('accept-calculative', 'reject-calculative')" class="btn-group" role="group">
+            <p><strong>{{:: $ctrl.ts('Calculative Review') }}</strong></p>
+            <p>{{:: ts('The clearing is calculationally correct. All required proofs are present. The resources have been used appropriately.') }}</p>
+            <funding-action-button action="accept-calculative" hide-disabled="false" class="btn btn-default" crm-icon="fa-thumbs-up">{{:: $ctrl.ts('Passed') }}</funding-action-button>
+            <funding-action-button action="reject-calculative" hide-disabled="false" class="btn btn-default" crm-icon="fa-thumbs-down">{{:: $ctrl.ts('Failed') }}</funding-action-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <funding-action-button action="add-comment" with-comment="'required'" class="btn btn-default funding-clearing-sidebar-element" crm-icon="fa-commenting">{{:: $ctrl.ts('Add Comment') }}</funding-action-button>
+  <funding-action-button action="request-change" class="btn btn-default funding-clearing-sidebar-element" crm-icon="fa-arrow-left">{{:: $ctrl.ts('Request Change') }}</funding-action-button>
+  <div ng-show="isAnyActionAllowed('accept', 'reject')">
+    <funding-action-button action="reject" class="btn btn-default funding-clearing-sidebar-element" crm-icon="fa-ban">
+      {{:: $ctrl.ts('Reject Clearing') }}
+    </funding-action-button>
+    <funding-action-button action="accept" hide-disabled="false" class="btn btn-default funding-clearing-sidebar-element" crm-icon="fa-check">
+      {{:: ts('Accept Clearing') }}
+    </funding-action-button>
+    <p ng-show="!isActionAllowed('accept')" class="disabled">
+      {{:: ts('Accept is possible once the review was successful.') }}
+    </p>
+  </div>
+</span>
+
+<span ng-if="isChanged">
+  <funding-action-button action="update" modal-submit-button-label="{{:: ts('Save') }}" class="btn btn-success funding-clearing-sidebar-element" crm-icon="fa-check">{{:: ts('Save') }}</funding-action-button>
+  <button type="button" class="btn btn-danger funding-clearing-sidebar-element" ng-click="reset()" ng-disabled="editCount > 0" crm-icon="fa-times">{{:: ts('Reset') }}</button>
+</span>

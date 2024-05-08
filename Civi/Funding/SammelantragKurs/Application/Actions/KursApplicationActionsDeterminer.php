@@ -59,6 +59,7 @@ final class KursApplicationActionsDeterminer extends AbstractApplicationProcessA
     ],
     'eligible' => [
       'application_modify' => ['modify'],
+      'application_withdraw' => ['withdraw'],
       'review_calculative' => ['update', 'add-comment'],
       'review_content' => ['update', 'add-comment'],
     ],
@@ -77,6 +78,9 @@ final class KursApplicationActionsDeterminer extends AbstractApplicationProcessA
     'rework-review' => [
       'review_calculative' => ['request-change', 'update', 'reject-change', 'add-comment'],
       'review_content' => ['request-change', 'update', 'reject-change', 'add-comment'],
+    ],
+    'complete' => [
+      'application_withdraw' => ['withdraw'],
     ],
   ];
 

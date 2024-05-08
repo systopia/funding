@@ -65,6 +65,7 @@ final class ApplicationResourcesItemsPersistHandlerTest extends TestCase {
     ];
     $resourcesItems = [
       ApplicationResourcesItemFactory::createApplicationResourcesItem([
+        'id' => NULL,
         'type' => 'testType',
         'identifier' => 'test',
         'amount' => 1.23,

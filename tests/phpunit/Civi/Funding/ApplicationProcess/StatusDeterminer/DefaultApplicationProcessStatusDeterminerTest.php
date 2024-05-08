@@ -162,4 +162,13 @@ final class DefaultApplicationProcessStatusDeterminerTest extends TestCase {
     yield [new FullApplicationProcessStatus('complete', TRUE, TRUE)];
   }
 
+  public function testGetStatusOnClearingProcessCreated(): void {
+    static::assertEquals(
+      new FullApplicationProcessStatus('complete', TRUE, TRUE),
+      $this->statusDeterminer->getStatusOnClearingProcessCreated(
+        new FullApplicationProcessStatus('eligible', TRUE, TRUE)
+      )
+    );
+  }
+
 }

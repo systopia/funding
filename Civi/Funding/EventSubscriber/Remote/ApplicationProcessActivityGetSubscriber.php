@@ -21,6 +21,7 @@ namespace Civi\Funding\EventSubscriber\Remote;
 
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Funding\ActivityTypeIds;
+use Civi\Funding\ActivityTypeNames;
 use Civi\RemoteTools\Event\GetEvent;
 use Civi\RemoteTools\EventSubscriber\AbstractRemoteGetSubscriber;
 
@@ -43,6 +44,8 @@ class ApplicationProcessActivityGetSubscriber extends AbstractRemoteGetSubscribe
         ['activity_type_id', '=', ActivityTypeIds::FUNDING_APPLICATION_CREATE],
         ['activity_type_id', '=', ActivityTypeIds::FUNDING_APPLICATION_STATUS_CHANGE],
         ['activity_type_id', '=', ActivityTypeIds::FUNDING_APPLICATION_COMMENT_EXTERNAL],
+        ['activity_type_id:name', '=', ActivityTypeNames::FUNDING_CLEARING_CREATE],
+        ['activity_type_id:name', '=', ActivityTypeNames::FUNDING_CLEARING_STATUS_CHANGE],
       );
   }
 

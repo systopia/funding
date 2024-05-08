@@ -131,12 +131,48 @@ final class GetFieldsAction extends BasicGetFieldsAction {
       [
         'name' => 'amount_paid_out',
         'title' => E::ts('Amount Paid Out'),
-        'data_type' => 'Float',
+        'data_type' => 'Money',
       ],
       [
         'name' => 'amount_available',
         'title' => E::ts('Amount Available'),
-        'data_type' => 'Float',
+        'data_type' => 'Money',
+      ],
+      [
+        'name' => 'amount_recorded_costs',
+        'title' => E::ts('Amount Recorded Costs'),
+        'data_type' => 'Money',
+        'nullable' => TRUE,
+      ],
+      [
+        'name' => 'amount_recorded_resources',
+        'title' => E::ts('Amount Recorded Resources'),
+        'data_type' => 'Money',
+        'nullable' => TRUE,
+      ],
+      [
+        'name' => 'amount_admitted_costs',
+        'title' => E::ts('Amount Admitted Costs'),
+        'data_type' => 'Money',
+        'nullable' => TRUE,
+      ],
+      [
+        'name' => 'amount_admitted_resources',
+        'title' => E::ts('Amount Admitted Resources'),
+        'data_type' => 'Money',
+        'nullable' => TRUE,
+      ],
+      [
+        'name' => 'amount_cleared',
+        'title' => E::ts('Amount Cleared'),
+        'data_type' => 'Money',
+        'nullable' => TRUE,
+      ],
+      [
+        'name' => 'amount_admitted',
+        'title' => E::ts('Amount Admitted'),
+        'data_type' => 'Money',
+        'nullable' => TRUE,
       ],
       [
         'name' => 'uri',

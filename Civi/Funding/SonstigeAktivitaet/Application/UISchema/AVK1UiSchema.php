@@ -40,7 +40,7 @@ final class AVK1UiSchema extends JsonFormsGroup {
   public function __construct(string $currency, array $submitButtons, array $preSubmitButtonElements = []) {
     parent::__construct('Förderantrag für Sonstige Aktivitäten (SoA) / Virtuelle Kurse', [
       new JsonFormsCategorization([
-        new AVK1GrunddatenUiSchema(),
+        new AVK1GrunddatenUiSchema('#/properties/grunddaten/properties'),
         new JsonFormsCategory('Antragstellende Organisation', [
           new JsonFormsControl('#/properties/empfaenger', ''),
         ]),
@@ -158,9 +158,14 @@ final class AVK1UiSchema extends JsonFormsGroup {
           ),
         ]),
         new JsonFormsCategory('Projektunterlagen', [
-          new JsonFormsArray('#/properties/projektunterlagen', 'Dokumente',
-            'Hier können Unterlagen wie das geplante Programm mit Zeitangaben oder die Ausschreibung' .
-            ' hochgeladen werden.',
+          new JsonFormsArray(
+            '#/properties/projektunterlagen',
+            'Dokumente',
+            <<<EOD
+<p>Hier können Unterlagen wie das geplante Programm mit Zeitangaben oder die
+Ausschreibung hochgeladen werden.</p>
+Die Unterschriftsseite Antrag ist erforderlich.
+EOD,
             [
               new JsonFormsHidden('#/properties/_identifier'),
               new JsonFormsControl('#/properties/datei', 'Datei', NULL, ['format' => 'file']),

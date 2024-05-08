@@ -88,20 +88,6 @@ use Civi\Funding\ApplicationProcess\JsonSchema\Validator\OpisApplicationValidato
 use Civi\Funding\ApplicationProcess\Snapshot\ApplicationSnapshotRestorer;
 use Civi\Funding\ApplicationProcess\Snapshot\ApplicationSnapshotRestorerInterface;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
-use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationCostItemsSubscriber;
-use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationFilesSubscriber;
-use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessCreatedSubscriber;
-use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessEligibleSubscriber;
-use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessIdentifierSubscriber;
-use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessModificationDateSubscriber;
-use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessPreDeleteSubscriber;
-use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessReviewStatusSubscriber;
-use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessReviewTaskSubscriber;
-use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessReworkTaskSubscriber;
-use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessStatusSubscriber;
-use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationResourcesItemsSubscriber;
-use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationSnapshotCreateSubscriber;
-use Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationSnapshotRestoreSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessActivityGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessActivityGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessDAOGetSubscriber;
@@ -112,6 +98,7 @@ use Civi\Funding\Form\Application\ApplicationResourcesItemsFormDataLoader;
 use Civi\Funding\Form\Application\ApplicationResourcesItemsFormDataLoaderInterface;
 use Civi\Funding\Validation\ConcreteEntityValidatorInterface;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 $container->autowire(ApplicationProcessManager::class);
 $container->autowire(ApplicationProcessBundleLoader::class);
@@ -246,50 +233,17 @@ $container->autowire(ValidateFormAction::class)
   ->setPublic(TRUE)
   ->setShared(FALSE);
 
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/EventSubscriber/ApplicationProcess',
+  'Civi\\Funding\\EventSubscriber\\ApplicationProcess',
+  EventSubscriberInterface::class,
+  ['kernel.event_subscriber' => []],
+  ['lazy' => 'auto'],
+);
+
 $container->autowire(ApplicationProcessGetFieldsSubscriber::class)
   ->addTag('kernel.event_subscriber');
-$container->autowire(ApplicationProcessEligibleSubscriber::class)
-  ->addTag('kernel.event_subscriber');
-$container->autowire(ApplicationProcessIdentifierSubscriber::class)
-  ->addTag('kernel.event_subscriber')
-  ->setLazy(TRUE);
-$container->autowire(ApplicationProcessCreatedSubscriber::class)
-  ->addTag('kernel.event_subscriber')
-  ->setLazy(TRUE);
-$container->autowire(ApplicationProcessPreDeleteSubscriber::class)
-  ->addTag('kernel.event_subscriber')
-  ->setLazy(TRUE);
-$container->autowire(ApplicationProcessModificationDateSubscriber::class)
-  ->addTag('kernel.event_subscriber')
-  ->setLazy(TRUE);
-$container->autowire(ApplicationProcessStatusSubscriber::class)
-  ->addTag('kernel.event_subscriber')
-  ->setLazy(TRUE);
-$container->autowire(ApplicationProcessReviewStatusSubscriber::class)
-  ->addTag('kernel.event_subscriber')
-  ->setLazy(TRUE);
-$container->autowire(ApplicationProcessReviewTaskSubscriber::class)
-  ->addTag('kernel.event_subscriber')
-  ->setLazy(TRUE);
-$container->autowire(ApplicationProcessReworkTaskSubscriber::class)
-  ->addTag('kernel.event_subscriber')
-  ->setLazy(TRUE);
-$container->autowire(ApplicationCostItemsSubscriber::class)
-  ->addTag('kernel.event_subscriber')
-  ->setLazy(TRUE);
-$container->autowire(ApplicationResourcesItemsSubscriber::class)
-  ->addTag('kernel.event_subscriber')
-  ->setLazy(TRUE);
-$container->autowire(ApplicationFilesSubscriber::class)
-  ->addTag('kernel.event_subscriber')
-  ->setLazy(TRUE);
-$container->autowire(ApplicationSnapshotCreateSubscriber::class)
-  ->addTag('kernel.event_subscriber')
-  ->setLazy(TRUE);
-$container->autowire(ApplicationSnapshotRestoreSubscriber::class)
-  ->addTag('kernel.event_subscriber')
-  ->setLazy(TRUE);
-
 $container->autowire(ApplicationProcessDAOGetSubscriber::class)
   ->addTag('kernel.event_subscriber');
 

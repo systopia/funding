@@ -19,11 +19,15 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\FundingProgram;
 
+use Civi\Api4\FundingClearingProcess;
 use Civi\Api4\FundingProgram;
 use Civi\Api4\Generic\DAOGetAction;
+use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Event\FundingProgram\GetPermissionsEvent;
 use Civi\RemoteTools\Api4\Action\Traits\PermissionsGetActionTrait;
+use Civi\RemoteTools\Api4\Api4Interface;
+use Civi\RemoteTools\Api4\Query\CompositeCondition;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 
@@ -31,24 +35,59 @@ final class GetAction extends DAOGetAction {
 
   // The number of funding programs is usually not large, otherwise a permission
   // caching like for funding cases would be necessary.
-  use PermissionsGetActionTrait;
+  use PermissionsGetActionTrait {
+    PermissionsGetActionTrait::_run as traitRun;
+  }
 
-  private CiviEventDispatcherInterface $_eventDispatcher;
+  private Api4Interface $api4;
 
-  private PossiblePermissionsLoaderInterface $_possiblePermissionsLoader;
+  private CiviEventDispatcherInterface $eventDispatcher;
+
+  private PossiblePermissionsLoaderInterface $possiblePermissionsLoader;
 
   private RequestContextInterface $requestContext;
 
   private bool $allowEmptyRecordPermissions = FALSE;
 
-  public function __construct(CiviEventDispatcherInterface $eventDispatcher,
+  public function __construct(
+    Api4Interface $api4,
+    CiviEventDispatcherInterface $eventDispatcher,
     PossiblePermissionsLoaderInterface $possiblePermissionsLoader,
     RequestContextInterface $requestContext
   ) {
     parent::__construct(FundingProgram::getEntityName(), 'get');
-    $this->_eventDispatcher = $eventDispatcher;
-    $this->_possiblePermissionsLoader = $possiblePermissionsLoader;
+    $this->api4 = $api4;
+    $this->eventDispatcher = $eventDispatcher;
+    $this->possiblePermissionsLoader = $possiblePermissionsLoader;
     $this->requestContext = $requestContext;
+  }
+
+  public function _run(Result $result): void {
+    $this->traitRun($result);
+
+    $clearingProcessFields = array_intersect([
+      'amount_cleared',
+      'amount_admitted',
+    ], $this->getSelect());
+    if ([] !== $clearingProcessFields) {
+      /** @phpstan-var array<string, mixed> $record */
+      foreach ($result as &$record) {
+        $clearingProcessAmounts = $this->api4->execute(FundingClearingProcess::getEntityName(), 'get', [
+          'select' => $clearingProcessFields,
+          'where' => [
+            // @phpstan-ignore-next-line
+            CompositeCondition::fromFieldValuePairs([
+              'application_process_id.funding_case_id.funding_program_id' => $record['id'],
+              'status' => 'accepted',
+            ])->toArray(),
+          ],
+        ])->first();
+
+        foreach ($clearingProcessFields as $field) {
+          $record[$field] = $clearingProcessAmounts[$field] ?? NULL;
+        }
+      }
+    }
   }
 
   public function isAllowEmptyRecordPermissions(): bool {
@@ -74,7 +113,7 @@ final class GetAction extends DAOGetAction {
    */
   protected function getRecordPermissions(array $record): array {
     $permissionsGetEvent = new GetPermissionsEvent($record['id'], $this->requestContext->getContactId());
-    $this->_eventDispatcher->dispatch(GetPermissionsEvent::class, $permissionsGetEvent);
+    $this->eventDispatcher->dispatch(GetPermissionsEvent::class, $permissionsGetEvent);
 
     return $permissionsGetEvent->getPermissions();
   }
@@ -83,7 +122,7 @@ final class GetAction extends DAOGetAction {
    * @phpstan-return list<string>
    */
   protected function getPossiblePermissions(): array {
-    return \array_keys($this->_possiblePermissionsLoader->getFilteredPermissions($this->getEntityName()));
+    return \array_keys($this->possiblePermissionsLoader->getFilteredPermissions($this->getEntityName()));
   }
 
 }

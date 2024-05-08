@@ -35,6 +35,8 @@ use Civi\Funding\SonstigeAktivitaet\Application\JsonSchema\AVK1StatusMarkupFacto
 use Civi\Funding\SonstigeAktivitaet\Application\UISchema\AVK1UiSchemaFactory;
 use Civi\Funding\SonstigeAktivitaet\Application\Validation\AVK1Validator;
 use Civi\Funding\SonstigeAktivitaet\FundingCase\Actions\AVK1CaseActionsDeterminer;
+use Civi\Funding\SonstigeAktivitaet\Report\AVK1ReportDataLoader;
+use Civi\Funding\SonstigeAktivitaet\Report\AVK1ReportFormFactory;
 use Symfony\Component\DependencyInjection\Reference;
 
 $container->autowire(AVK1ApplicationSubmitActionsContainer::class)
@@ -65,3 +67,8 @@ $container->autowire(AVK1ApplicationActionStatusInfo::class)
 
 $container->autowire(AVK1CaseActionsDeterminer::class)
   ->addTag(AVK1CaseActionsDeterminer::SERVICE_TAG);
+
+$container->autowire(AVK1ReportDataLoader::class)
+  ->addTag(AVK1ReportDataLoader::SERVICE_TAG);
+$container->autowire(AVK1ReportFormFactory::class)
+  ->addTag(AVK1ReportFormFactory::SERVICE_TAG);

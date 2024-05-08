@@ -1,0 +1,64 @@
+<funding-clearing-submit-modal
+  modal-title="submitModal.title"
+  submit-button-label="submitModal.submitButtonLabel",
+  comment-required="submitModal.commentRequired"
+  comment-text="comment.text"
+  comment-type="comment.type"
+  submit="modalSubmit"></funding-clearing-submit-modal>
+
+<div class="funding-clearing-sidebar funding-resize-height" funding-clearing-sidebar>
+</div>
+
+<div class="funding-clearing-main">
+  <div ng-if="errors | fundingIsNotEmpty" class="alert alert-danger">
+    {{:: ts('Validation failed') }}
+    <funding-validation-errors errors="errors['/']"></funding-validation-errors>
+    <funding-validation-errors errors="errors['/_action']"></funding-validation-errors>
+  </div>
+
+  <div class="funding-resize-height">
+    <h2>{{:: ts('Reviewers') }}</h2>
+    <funding-clearing-reviewers clearing-process="clearingProcess" permissions="permissions"></funding-clearing-reviewers>
+
+    <h2>{{:: ts('General') }}</h2>
+    <div>
+      <label>{{:: ts('Identifier') }}</label>
+      {{ applicationProcess.identifier }}
+    </div>
+    <div>
+      <label>{{:: ts('Status') }}</label>
+      {{ statusOptions[clearingProcess.status].label || ts('Unknown') }}
+      <funding-fa icon="statusOptions[clearingProcess.status].icon"
+                  ng-style="{color: statusOptions[clearingProcess.status].color };"></funding-fa>
+    </div>
+    <div>
+      <label>{{:: ts('Review Content') }}</label>
+      {{ reviewStatusLabels[clearingProcess.is_review_content] }}
+    </div>
+    <div>
+      <label>{{:: ts('Review Calculative') }}</label>
+      {{ reviewStatusLabels[clearingProcess.is_review_calculative] }}
+    </div>
+    <div>
+      <label>{{:: ts('Creation Date') }}</label>
+      {{ clearingProcess.creation_date|fundingDate }}
+    </div>
+    <div>
+      <label>{{ ts('Modification Date') }}</label>
+      {{ clearingProcess.modification_date|fundingDate }}
+    </div>
+    <div>
+      <label>{{:: ts('Recipient') }}</label>
+      {{ recipientContact.display_name }}
+    </div>
+
+    <funding-jf-form json-schema="jsonSchema" ui-schema="uiSchema" data="data"
+                     errors="errors" editable="isEditAllowed()"
+                     on-start-edit="onStartEdit" on-before-save="onBeforeSave"
+                     on-after-save="onAfterSave" on-cancel-edit="onCancelEdit"
+                     on-edit-finished="onEditFinished" add-to="addTo" inserted="inserted"
+                     cancel-insert-at="cancelInsertAt" remove-at="removeAt"></funding-jf-form>
+
+  </div>
+
+</div>

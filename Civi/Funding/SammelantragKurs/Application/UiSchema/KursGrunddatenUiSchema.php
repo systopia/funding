@@ -19,47 +19,107 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\SammelantragKurs\Application\UiSchema;
 
+use Civi\Funding\SammelantragKurs\Application\JsonSchema\KursGrunddatenJsonSchema;
 use Civi\RemoteTools\JsonForms\Control\JsonFormsArray;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
+use Civi\RemoteTools\JsonForms\JsonFormsElement;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 
 final class KursGrunddatenUiSchema extends JsonFormsCategory {
 
-  public function __construct() {
-    parent::__construct('Grunddaten', [
-      new JsonFormsControl('#/properties/grunddaten/properties/titel', 'Titel'),
+  private string $scopePrefix;
+
+  /**
+   * @param bool $report TRUE if used for report.
+   */
+  public function __construct(string $scopePrefix, bool $report = FALSE) {
+    $this->scopePrefix = $scopePrefix;
+
+    $teilnehmerElements = [
       new JsonFormsControl(
-        '#/properties/grunddaten/properties/kurzbeschreibungDerInhalte', 'Kurzbeschreibung der Kursinhalte', NULL, [
+        "$scopePrefix/teilnehmer/properties/gesamt", 'Gesamtanzahl der Teilnehmer*innen',
+      ),
+      new JsonFormsControl("$scopePrefix/teilnehmer/properties/weiblich", 'davon weiblich'),
+      new JsonFormsControl("$scopePrefix/teilnehmer/properties/divers", 'davon divers'),
+      new JsonFormsControl("$scopePrefix/teilnehmer/properties/unter27", 'davon U27'),
+      new JsonFormsControl(
+        "$scopePrefix/teilnehmer/properties/inJugendhilfeEhrenamtlichTaetig",
+        'davon in der Kinder- und Jugendhilfe (Multiplikator*innen-Seminare) ehrenamtlich tätig',
+      ),
+      new JsonFormsControl(
+        "$scopePrefix/teilnehmer/properties/inJugendhilfeHauptamtlichTaetig",
+        'davon in der Kinder- und Jugendhilfe (Multiplikator*innen-Seminare) hauptamtlich tätig',
+      ),
+      new JsonFormsControl(
+        "$scopePrefix/teilnehmer/properties/referenten", 'davon Referent*innen',
+      ),
+    ];
+    if ($report) {
+      $teilnehmerElements[] = new JsonFormsControl(
+        "$scopePrefix/teilnehmer/properties/referentenMitHonorar",
+        'davon Referent*innen, bei denen tatsächlich ein Honorar gezahlt wurde',
+      );
+      $teilnehmerElements[] = new JsonFormsControl(
+        "$scopePrefix/teilnehmer/properties/mitFahrtkosten",
+        'davon Personen, bei denen tatsächlich Fahrtkosten angefallen sind',
+      );
+    }
+
+    parent::__construct('Grunddaten', [
+      new JsonFormsControl("$scopePrefix/titel", 'Titel'),
+      new JsonFormsControl(
+        "$scopePrefix/kurzbeschreibungDerInhalte", 'Kurzbeschreibung der Kursinhalte', NULL, [
           'multi' => TRUE,
           'placeholder' => 'Kurzbeschreibung der Kursinhalte (maximal 500 Zeichen)',
         ]
       ),
-      new JsonFormsArray('#/properties/grunddaten/properties/zeitraeume', 'Zeiträume', NULL, [
+      new JsonFormsArray("$scopePrefix/zeitraeume", 'Zeiträume', NULL, [
         new JsonFormsControl('#/properties/beginn', 'Beginn'),
         new JsonFormsControl('#/properties/ende', 'Ende'),
       ], [
         'addButtonLabel' => 'Zeitraum hinzufügen',
         'removeButtonLabel' => 'Zeitraum entfernen',
       ]),
-      new JsonFormsControl('#/properties/grunddaten/properties/programmtage', 'Programmtage'),
-      new JsonFormsGroup('Teilnehmer*innen', [
-        new JsonFormsControl(
-          '#/properties/grunddaten/properties/teilnehmer/properties/gesamt', 'Gesamtanzahl der Teilnehmer*innen',
-        ),
-        new JsonFormsControl('#/properties/grunddaten/properties/teilnehmer/properties/weiblich', 'davon weiblich'),
-        new JsonFormsControl('#/properties/grunddaten/properties/teilnehmer/properties/divers', 'davon divers'),
-        new JsonFormsControl('#/properties/grunddaten/properties/teilnehmer/properties/unter27', 'davon U27'),
-        new JsonFormsControl(
-          '#/properties/grunddaten/properties/teilnehmer/properties/inJugendhilfeTaetig',
-          'davon in der Kinder- und Jugendhilfe (Multiplikator*innen-Seminare) tätig',
-        ),
-        new JsonFormsControl(
-          '#/properties/grunddaten/properties/teilnehmer/properties/referenten', 'davon Referent*innen',
-        ),
-      ]),
-      new JsonFormsControl('#/properties/grunddaten/properties/teilnehmertage', 'Teilnehmendentage'),
+      new JsonFormsControl("$scopePrefix/programmtage", 'Programmtage'),
+      new JsonFormsGroup('Teilnehmer*innen', $teilnehmerElements),
+      new JsonFormsControl("$scopePrefix/teilnehmertage", 'Teilnehmendentage'),
     ]);
+  }
+
+  /**
+   * Adds an asterisk to every non-required field. In report all fields are
+   * required.
+   */
+  public function withRequiredLabels(KursGrunddatenJsonSchema $grunddatenJsonSchema): self {
+    $clone = clone $this;
+    $clone->modifyLabels($clone, $grunddatenJsonSchema);
+
+    return $clone;
+  }
+
+  private function modifyLabels(JsonFormsElement $element, KursGrunddatenJsonSchema $grunddatenJsonSchema): void {
+    if ('Control' === $element['type']) {
+      // @phpstan-ignore-next-line
+      $relativeScope = 'properties' . substr($element['scope'], strlen($this->scopePrefix));
+      $schemaPath = explode('/', $relativeScope);
+      $propertyName = array_pop($schemaPath);
+      array_pop($schemaPath);
+      /** @var \Civi\RemoteTools\JsonSchema\JsonSchema $objectSchema */
+      $objectSchema = $grunddatenJsonSchema->getKeywordValueAt($schemaPath);
+      // @phpstan-ignore-next-line
+      if (!in_array($propertyName, $objectSchema['required'] ?? [], TRUE) && !$element->hasKeyword('$calculate')) {
+        // @phpstan-ignore-next-line
+        $element['label'] .= '&nbsp;*';
+      }
+    }
+    else {
+      /** @phpstan-var list<JsonFormsElement> $elements */
+      $elements = $element['elements'] ?? [];
+      foreach ($elements as $subElement) {
+        $this->modifyLabels($subElement, $grunddatenJsonSchema);
+      }
+    }
   }
 
 }

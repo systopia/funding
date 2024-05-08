@@ -29,6 +29,12 @@ final class WhereUtil {
    */
   public static function getBool(array $where, string $field): ?bool {
     foreach ($where as $clause) {
+      if (is_array($clause[1])) {
+        // Composite condition.
+        // @phpstan-ignore-next-line
+        return 'AND' === $clause[0] ? self::getBool($clause[1], $field) : NULL;
+      }
+
       if ($clause[0] === $field && '=' === $clause[1] && is_scalar($clause[2] ?? NULL)) {
         return (bool) $clause[2];
       }
@@ -46,6 +52,12 @@ final class WhereUtil {
    */
   public static function getInt(array $where, string $field): ?int {
     foreach ($where as $clause) {
+      if (is_array($clause[1])) {
+        // Composite condition.
+        // @phpstan-ignore-next-line
+        return 'AND' === $clause[0] ? self::getInt($clause[1], $field) : NULL;
+      }
+
       if ($clause[0] === $field && '=' === $clause[1] && is_numeric($clause[2] ?? NULL)) {
         return (int) $clause[2];
       }

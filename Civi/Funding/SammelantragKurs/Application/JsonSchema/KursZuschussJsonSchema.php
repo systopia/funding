@@ -23,6 +23,7 @@ use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\JsonSchemaCostItem;
 use Civi\RemoteTools\JsonSchema\JsonSchemaCalculate;
 use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
 use Civi\RemoteTools\JsonSchema\JsonSchemaMoney;
+use Civi\RemoteTools\JsonSchema\JsonSchemaNumber;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 
 final class KursZuschussJsonSchema extends JsonSchemaObject {
@@ -33,13 +34,16 @@ final class KursZuschussJsonSchema extends JsonSchemaObject {
 
   public const HONORARKOSTENFESTBETRAG = 305;
 
-  public function __construct() {
+  /**
+   * @param bool $report TRUE if used for report.
+   */
+  public function __construct(bool $report = FALSE) {
     $properties = [
       'teilnehmerkostenMax' => new JsonSchemaCalculate(
         'number',
         'teilnehmertage * festbetrag',
         [
-          'teilnehmertage' => new JsonSchemaDataPointer('/grunddaten/teilnehmertage'),
+          'teilnehmertage' => new JsonSchemaDataPointer('2/grunddaten/teilnehmertage'),
           'festbetrag' => self::TEILNEHMERFESTBETRAG,
         ],
       ),
@@ -50,15 +54,18 @@ final class KursZuschussJsonSchema extends JsonSchemaObject {
           'type' => 'teilnehmerkosten',
           'identifier' => 'teilnehmerkosten',
           'clearing' => [
-            'itemLabel' => 'Teilnehmendenkosten',
+            'itemLabel' => 'Unterkunft und Verpflegung',
           ],
         ]),
       ], TRUE),
       'fahrtkostenMax' => new JsonSchemaCalculate(
         'number',
-        'teilnehmerGesamt * festbetrag',
+        'teilnehmer * festbetrag',
         [
-          'teilnehmerGesamt' => new JsonSchemaDataPointer('/grunddaten/teilnehmer/gesamt'),
+          'teilnehmer' => new JsonSchemaDataPointer(
+            sprintf('2/grunddaten/teilnehmer/%s', $report ? 'mitFahrtkosten' : 'gesamt'),
+            0
+          ),
           'festbetrag' => self::FAHRTKOSTENFESTBETRAG,
         ],
       ),
@@ -77,8 +84,11 @@ final class KursZuschussJsonSchema extends JsonSchemaObject {
         'number',
         'programmtage * referenten * festbetrag',
         [
-          'programmtage' => new JsonSchemaDataPointer('/grunddaten/programmtage'),
-          'referenten' => new JsonSchemaDataPointer('/grunddaten/teilnehmer/referenten', 0),
+          'programmtage' => new JsonSchemaDataPointer('2/grunddaten/programmtage'),
+          'referenten' => new JsonSchemaDataPointer(
+            sprintf('2/grunddaten/teilnehmer/%s', $report ? 'referentenMitHonorar' : 'referenten'),
+            0
+          ),
           'festbetrag' => self::HONORARKOSTENFESTBETRAG,
         ],
       ),
@@ -93,6 +103,28 @@ final class KursZuschussJsonSchema extends JsonSchemaObject {
           ],
         ]),
       ], TRUE),
+      // Not displayed, but used to have a cost item so receipts for previously
+      // unknown costs can be submitted.
+      'sonstigeAusgaben' => new JsonSchemaNumber([
+        '$default' => 0,
+        'const' => 0,
+        '$costItem' => new JsonSchemaCostItem([
+          'type' => 'sonstigeAusgaben',
+          'identifier' => 'sonstigeAusgaben',
+          'clearing' => [
+            'itemLabel' => 'Sonstige Ausgaben',
+          ],
+        ]),
+      ]),
+      'gesamtMax' => new JsonSchemaCalculate(
+        'number',
+        'round(teilnehmerkostenMax + fahrtkostenMax + honorarkostenMax, 2)',
+        [
+          'teilnehmerkostenMax' => new JsonSchemaDataPointer('1/teilnehmerkostenMax'),
+          'fahrtkostenMax' => new JsonSchemaDataPointer('1/fahrtkostenMax'),
+          'honorarkostenMax' => new JsonSchemaDataPointer('1/honorarkostenMax'),
+        ],
+      ),
       'gesamt' => new JsonSchemaCalculate(
         'number',
         'round(teilnehmerkosten + fahrtkosten + honorarkosten, 2)',

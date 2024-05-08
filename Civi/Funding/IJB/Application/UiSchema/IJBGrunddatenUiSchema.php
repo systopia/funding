@@ -28,11 +28,14 @@ use Civi\RemoteTools\JsonSchema\JsonSchema;
 
 final class IJBGrunddatenUiSchema extends JsonFormsCategory {
 
-  public function __construct() {
-    parent::__construct('Grunddaten', [
-      new JsonFormsControl('#/properties/grunddaten/properties/titel', 'Titel'),
+  /**
+   * @param bool $report TRUE if used for report.
+   */
+  public function __construct(string $scopePrefix, bool $report = FALSE) {
+    $elements = [
+      new JsonFormsControl("$scopePrefix/titel", 'Titel'),
       new JsonFormsControl(
-        '#/properties/grunddaten/properties/kurzbeschreibungDesInhalts',
+        "$scopePrefix/kurzbeschreibungDesInhalts",
         'Kurzbeschreibung des Inhalts',
         NULL,
         [
@@ -40,34 +43,54 @@ final class IJBGrunddatenUiSchema extends JsonFormsCategory {
           'placeholder' => 'Maximal 500 Zeichen',
         ]
       ),
-      new JsonFormsArray('#/properties/grunddaten/properties/zeitraeume', 'Zeiträume', NULL, [
+      new JsonFormsArray("$scopePrefix/zeitraeume", 'Zeiträume', NULL, [
         new JsonFormsControl('#/properties/beginn', 'Beginn'),
         new JsonFormsControl('#/properties/ende', 'Ende'),
       ], [
         'addButtonLabel' => 'Zeitraum hinzufügen',
         'removeButtonLabel' => 'Zeitraum entfernen',
       ]),
-      new JsonFormsControl('#/properties/grunddaten/properties/programmtage', 'Programmtage'),
-      new JsonFormsControl('#/properties/grunddaten/properties/artDerMassnahme', 'Art der Maßnahme'),
-      new JsonFormsControl('#/properties/grunddaten/properties/begegnungsland', 'Begegnungsland'),
+      new JsonFormsControl("$scopePrefix/programmtage", 'Programmtage'),
+    ];
+
+    if ($report) {
+      $deutschlandRule = new JsonFormsRule(
+        'SHOW',
+        "$scopePrefix/begegnungsland",
+        JsonSchema::fromArray(['const' => 'deutschland'])
+      );
+
+      $elements[] = new JsonFormsControl(
+        "$scopePrefix/programmtageMitHonorar",
+        'davon Tage, für die bei Inlandsmaßnahmen Honorare für Sprachmittlung/Dolmetschung ausgezahlt wurden',
+        NULL,
+        ['rule' => $deutschlandRule]
+      );
+    }
+
+    $elements = array_merge($elements, [
+      new JsonFormsControl("$scopePrefix/artDerMassnahme", 'Art der Maßnahme'),
+      new JsonFormsControl("$scopePrefix/begegnungsland", 'Begegnungsland'),
       new JsonFormsGroup('Wo findet die Veranstaltung statt?', [
-        new JsonFormsControl('#/properties/grunddaten/properties/stadt', 'Stadt/Ort der Begegnung'),
-        new JsonFormsControl('#/properties/grunddaten/properties/land', 'Land'),
+        new JsonFormsControl("$scopePrefix/stadt", 'Stadt/Ort der Begegnung'),
+        new JsonFormsControl("$scopePrefix/land", 'Land'),
       ]),
       new JsonFormsControl(
-        '#/properties/grunddaten/properties/fahrtstreckeInKm',
+        "$scopePrefix/fahrtstreckeInKm",
         'Einfache Fahrtstrecke in km (abgerundet)',
         'Wegstrecke bspw. mit OpenStreetMap berechnen. Luftlinie bspw. mit www.luftlinie.org berechnen.',
         NULL,
         [
           'rule' => new JsonFormsRule(
             'SHOW',
-            '#/properties/grunddaten/properties/begegnungsland',
+            "$scopePrefix/begegnungsland",
             JsonSchema::fromArray(['const' => 'partnerland'])
           ),
         ]
       ),
     ]);
+
+    parent::__construct('Grunddaten', $elements);
   }
 
 }

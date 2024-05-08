@@ -77,12 +77,12 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
   public function testCountByFundingCaseId(): void {
     $contact = ContactFixture::addIndividual();
     $fundingCase = $this->createFundingCase();
-    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['test_permission']);
 
+    RequestTestUtil::mockInternalRequest($contact['id']);
     ApplicationProcessFixture::addFixture($fundingCase->getId());
     static::assertSame(0, $this->applicationProcessManager->countByFundingCaseId($fundingCase->getId()));
 
-    RequestTestUtil::mockInternalRequest($contact['id']);
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['test_permission']);
     static::assertSame(1, $this->applicationProcessManager->countByFundingCaseId($fundingCase->getId()));
   }
 
@@ -181,12 +181,13 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
   public function testGet(): void {
     $contact = ContactFixture::addIndividual();
     $fundingCase = $this->createFundingCase();
-    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['test_permission']);
 
     $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId());
+    RequestTestUtil::mockInternalRequest($contact['id']);
     static::assertNull($this->applicationProcessManager->get($applicationProcess->getId()));
 
-    RequestTestUtil::mockInternalRequest($contact['id']);
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['test_permission']);
+    $this->clearCache();
     static::assertNotNull($this->applicationProcessManager->get($applicationProcess->getId()));
 
     static::assertNull($this->applicationProcessManager->get($applicationProcess->getId() + 1));
@@ -248,12 +249,13 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
   public function testGetStatusListByFundingCaseId(): void {
     $contact = ContactFixture::addIndividual();
     $fundingCase = $this->createFundingCase();
-    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['test_permission']);
 
     $applicationProcess1 = ApplicationProcessFixture::addFixture($fundingCase->getId());
+    RequestTestUtil::mockInternalRequest($contact['id']);
     static::assertSame([], $this->applicationProcessManager->getStatusListByFundingCaseId($fundingCase->getId()));
 
-    RequestTestUtil::mockInternalRequest($contact['id']);
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['test_permission']);
+    $this->clearCache();
     static::assertEquals(
       [$applicationProcess1->getId() => $applicationProcess1->getFullStatus()],
       $this->applicationProcessManager->getStatusListByFundingCaseId($fundingCase->getId())

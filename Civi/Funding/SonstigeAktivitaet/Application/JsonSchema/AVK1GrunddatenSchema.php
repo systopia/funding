@@ -23,6 +23,7 @@ use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
 use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
 use Civi\RemoteTools\JsonSchema\JsonSchemaDate;
+use Civi\RemoteTools\JsonSchema\JsonSchemaInteger;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 
@@ -57,12 +58,41 @@ final class AVK1GrunddatenSchema extends JsonSchemaObject {
         'weiblich' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0]),
         'divers' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0]),
         'unter27' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0]),
-        'inJugendhilfeTaetig' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0]),
+        'inJugendhilfeEhrenamtlichTaetig' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0]),
+        'inJugendhilfeHauptamtlichTaetig' => new JsonSchemaInteger(['minimum' => 0], TRUE),
         'referenten' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0]),
       ]),
     ];
 
     parent::__construct($properties, ['required' => array_keys($properties)]);
+  }
+
+  /**
+   * In report all fields are required.
+   */
+  public function withAllFieldsRequired(): self {
+    $schema = clone $this;
+    $schema->addValidations();
+
+    return $schema;
+  }
+
+  private function addValidations(): void {
+    $required = [];
+
+    /**
+     * @var string $propertyName
+     * @var \Civi\RemoteTools\JsonSchema\JsonSchema $propertySchema
+     *
+     * @phpstan-ignore-next-line
+     */
+    foreach ($this['properties']['teilnehmer']['properties'] as $propertyName => $propertySchema) {
+      $required[] = $propertyName;
+      $propertySchema['type'] = 'integer';
+    }
+
+    // @phpstan-ignore-next-line
+    $this['properties']['teilnehmer']['required'] = $required;
   }
 
 }

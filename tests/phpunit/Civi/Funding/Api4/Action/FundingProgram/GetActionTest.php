@@ -17,7 +17,7 @@
 
 declare(strict_types = 1);
 
-namespace phpunit\Civi\Funding\Api4\Action\FundingProgram;
+namespace Civi\Funding\Api4\Action\FundingProgram;
 
 use Civi\Api4\FundingProgram;
 use Civi\Funding\AbstractFundingHeadlessTestCase;

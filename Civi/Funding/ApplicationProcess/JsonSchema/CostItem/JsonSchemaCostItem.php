@@ -34,7 +34,10 @@ final class JsonSchemaCostItem extends JsonSchema {
    * @phpstan-param array{
    *   type: non-empty-string,
    *   identifier: non-empty-string,
-   *   clearing?: array{itemLabel: non-empty-string},
+   *   clearing?: array{
+   *     itemLabel: non-empty-string,
+   *     recipientLabel?: non-empty-string,
+   *   },
    * } $config
    */
   public function __construct(array $config) {

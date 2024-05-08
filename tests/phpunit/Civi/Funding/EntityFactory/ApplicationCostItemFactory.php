@@ -23,21 +23,26 @@ use Civi\Funding\Entity\ApplicationCostItemEntity;
 
 /**
  * @phpstan-type applicationCostItemT array{
- *   id?: int,
+ *   id?: int|null,
  *   application_process_id?: int,
- *   identifier?: string,
- *   type?: string,
+ *   identifier?: non-empty-string,
+ *   type?: non-empty-string,
  *   amount?: float,
- *   properties?: array<int|string, mixed>,
+ *   properties?: array<string, mixed>,
  * }
  */
 final class ApplicationCostItemFactory {
+
+  public const DEFAULT_ID = 44;
+
+  private static int $id = self::DEFAULT_ID;
 
   /**
    * @phpstan-param applicationCostItemT $values
    */
   public static function createApplicationCostItem(array $values = []): ApplicationCostItemEntity {
     $values += [
+      'id' => self::$id++,
       'application_process_id' => ApplicationProcessFactory::DEFAULT_ID,
       'identifier' => 'test-cost-item',
       'type' => 'test',
@@ -45,6 +50,10 @@ final class ApplicationCostItemFactory {
       'properties' => [],
       'data_pointer' => '/amount',
     ];
+
+    if (NULL === $values['id']) {
+      unset($values['id']);
+    }
 
     return ApplicationCostItemEntity::fromArray($values);
   }

@@ -30,7 +30,7 @@ final class KursApplicationUiSchema extends JsonFormsGroup {
   public function __construct(string $title, string $currency, array $submitButtons) {
     $elements = [
       new JsonFormsCategorization([
-        new KursGrunddatenUiSchema(),
+        new KursGrunddatenUiSchema('#/properties/grunddaten/properties'),
         new KursFinanzierungUiSchema('#/properties/finanzierung/properties', $currency),
         new KursZuschussUiSchema($currency),
         new KursBeschreibungUiSchema(),

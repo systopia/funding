@@ -31,7 +31,14 @@ use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
 
 final class IJBGrunddatenJsonSchema extends JsonSchemaObject {
 
-  public function __construct(\DateTimeInterface $applicationBegin, \DateTimeInterface $applicationEnd) {
+  /**
+   * @param bool $report TRUE if used for report.
+   */
+  public function __construct(
+    \DateTimeInterface $applicationBegin,
+    \DateTimeInterface $applicationEnd,
+    bool $report = FALSE
+  ) {
     $properties = [
       'titel' => new JsonSchemaString(),
       'kurzbeschreibungDesInhalts' => new JsonSchemaString(['maxLength' => 500]),
@@ -78,9 +85,16 @@ final class IJBGrunddatenJsonSchema extends JsonSchemaObject {
       'fahrtstreckeInKm' => new JsonSchemaInteger(['default' => 0]),
     ];
 
+    if ($report) {
+      $properties['programmtageMitHonorar'] = new JsonSchemaInteger([
+        'minimum' => 0,
+        'maximum' => new JsonSchemaDataPointer('1/programmtage'),
+      ]);
+    }
+
     $required = array_filter(
       array_keys($properties),
-      static fn (string $key) => $key !== 'fahrtstreckeInKm',
+      static fn (string $key) => $key !== 'fahrtstreckeInKm' && $key !== 'programmtageMitHonorar',
     );
 
     parent::__construct($properties, ['required' => $required]);

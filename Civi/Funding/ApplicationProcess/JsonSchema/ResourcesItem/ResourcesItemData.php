@@ -21,12 +21,12 @@ namespace Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem;
 
 /**
  * @phpstan-type ResourcesItemDataT array{
- *   type: string,
- *   identifier: string,
+ *   type: non-empty-string,
+ *   identifier: non-empty-string,
  *   amount: float,
  *   properties: array<string, mixed>,
  *   clearing: array{itemLabel: string}|null,
- *   dataPointer: string,
+ *   dataPointer: non-empty-string,
  *   dataType: 'number'|'integer'|'object',
  * }
  *
@@ -46,10 +46,16 @@ final class ResourcesItemData {
     $this->data = $data;
   }
 
+  /**
+   * @phpstan-return non-empty-string
+   */
   public function getType(): string {
     return $this->data['type'];
   }
 
+  /**
+   * @phpstan-return non-empty-string
+   */
   public function getIdentifier(): string {
     return $this->data['identifier'];
   }
@@ -73,6 +79,9 @@ final class ResourcesItemData {
     return $this->data['clearing'];
   }
 
+  /**
+   * @phpstan-return non-empty-string
+   */
   public function getDataPointer(): string {
     return $this->data['dataPointer'];
   }

@@ -32,8 +32,8 @@ final class IJBApplicationUiSchema extends JsonFormsGroup {
   public function __construct(string $currency, array $submitButtons) {
     $elements = [
       new JsonFormsCategorization([
-        new IJBGrunddatenUiSchema(),
-        new IJBTeilnehmerUiSchema(),
+        new IJBGrunddatenUiSchema('#/properties/grunddaten/properties'),
+        new IJBTeilnehmerUiSchema('#/properties/teilnehmer/properties'),
         new JsonFormsCategory('Antragstellende Organisation', [
           new JsonFormsControl('#/properties/empfaenger', ''),
         ]),

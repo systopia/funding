@@ -1,0 +1,31 @@
+<div id="funding-overlay"></div>
+<div id ="bootstrap-theme">
+    <h1 crm-page-title>{{:: ts('Clearing') }}</h1>
+
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" ng-class="{active: tab === 'clearing'}">
+            <a role="tab" ng-click="tab='clearing'">{{:: ts('Clearing') }}</a>
+        </li>
+      <li role="presentation" ng-class="{active: tab === 'history'}">
+        <a role="tab" ng-click="tab='history'">{{:: ts('History') }}</a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane" ng-class="{active: tab === 'clearing'}">
+            <funding-clearing-editor ng-show="tab === 'clearing'"
+                                     clearing-process="clearingProcess"
+                                     form="form"
+                                     status-options="clearingStatusOptions"
+                                     review-status-labels="reviewStatusLabels"
+                                     on-post-submit="loadActivities()"></funding-clearing-editor>
+        </div>
+        <div role="tabpanel" class="tab-pane" ng-class="{active: tab === 'history'}">
+          <funding-application-process-history ng-show="tab === 'history'"
+                                               activities="activities"
+                                               status-options="applicationStatusOptions"
+                                               clearing-status-options="clearingStatusOptions"
+                                               review-status-labels="reviewStatusLabels"></funding-application-process-history>
+        </div>
+    </div>
+</div>

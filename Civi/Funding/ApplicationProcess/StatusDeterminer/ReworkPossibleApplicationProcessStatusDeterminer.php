@@ -59,6 +59,11 @@ final class ReworkPossibleApplicationProcessStatusDeterminer extends AbstractApp
       'update' => 'rework-review',
       'add-comment' => 'rework-review',
     ],
+    'complete' => [
+      'withdraw' => 'withdrawn',
+      'update' => 'complete',
+      'add-comment' => 'complete',
+    ],
   ];
 
   /**

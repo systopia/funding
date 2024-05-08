@@ -68,6 +68,7 @@ use Civi\Funding\ApplicationProcess\Handler\Decorator\ApplicationFormAddSubmitEv
 use Civi\Funding\ApplicationProcess\Handler\Decorator\ApplicationFormNewSubmitEventDecorator;
 use Civi\Funding\ApplicationProcess\Handler\Decorator\ApplicationFormSubmitEventDecorator;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
+use Civi\Funding\DependencyInjection\Compiler\Traits\TaggedFundingCaseTypeServicesTrait;
 use Civi\Funding\Form\Application\ApplicationFormDataFactoryInterface;
 use Civi\Funding\Form\Application\ApplicationJsonSchemaFactoryInterface;
 use Civi\Funding\Form\Application\ApplicationSubmitActionsFactory;
@@ -125,10 +126,7 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
 
-  /**
-   * @phpstan-var list<string>
-   */
-  private array $fundingCaseTypes = [];
+  use TaggedFundingCaseTypeServicesTrait;
 
   /**
    * @inheritDoc
@@ -139,120 +137,124 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
   public function process(ContainerBuilder $container): void {
   // phpcs:enable
     $applicationActionsContainerServices =
-      $this->getTaggedServices($container, ApplicationSubmitActionsContainerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, ApplicationSubmitActionsContainerInterface::SERVICE_TAG);
     $applicationSubmitActionsFactoryServices =
-      $this->getTaggedServices($container, ApplicationSubmitActionsFactoryInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, ApplicationSubmitActionsFactoryInterface::SERVICE_TAG);
     $applicationActionStatusInfoServices =
-      $this->getTaggedServices($container, ApplicationProcessActionStatusInfoInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, ApplicationProcessActionStatusInfoInterface::SERVICE_TAG);
 
     $applicationFormDataFactoryServices =
-      $this->getTaggedServices($container, ApplicationFormDataFactoryInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, ApplicationFormDataFactoryInterface::SERVICE_TAG);
     $applicationJsonSchemaFactoryServices =
-      $this->getTaggedServices($container, ApplicationJsonSchemaFactoryInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, ApplicationJsonSchemaFactoryInterface::SERVICE_TAG);
     $applicationUiSchemaFactoryServices =
-      $this->getTaggedServices($container, ApplicationUiSchemaFactoryInterface::SERVICE_TAG);
-    $applicationValidator = $this->getTaggedServices($container, ApplicationValidatorInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, ApplicationUiSchemaFactoryInterface::SERVICE_TAG);
+    $applicationValidator =
+      $this->getTaggedFundingCaseTypeServices($container, ApplicationValidatorInterface::SERVICE_TAG);
     $applicationActionsDeterminerServices =
-      $this->getTaggedServices($container, ApplicationProcessActionsDeterminerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, ApplicationProcessActionsDeterminerInterface::SERVICE_TAG);
     $applicationStatusDeterminerServices =
-      $this->getTaggedServices($container, ApplicationProcessStatusDeterminerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, ApplicationProcessStatusDeterminerInterface::SERVICE_TAG);
     $applicationFormFilesFactoryServices =
-      $this->getTaggedServices($container, ApplicationFormFilesFactoryInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, ApplicationFormFilesFactoryInterface::SERVICE_TAG);
 
     $applicationAllowedActionsGetHandlerServices =
-      $this->getTaggedServices($container, ApplicationAllowedActionsGetHandlerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, ApplicationAllowedActionsGetHandlerInterface::SERVICE_TAG);
 
     $applicationDeleteHandlerServices =
-      $this->getTaggedServices($container, ApplicationDeleteHandlerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, ApplicationDeleteHandlerInterface::SERVICE_TAG);
 
     $applicationFormNewCreateHandlerServices =
-      $this->getTaggedServices($container, ApplicationFormNewCreateHandlerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, ApplicationFormNewCreateHandlerInterface::SERVICE_TAG);
     $applicationFormNewValidateHandlerServices =
-      $this->getTaggedServices($container, ApplicationFormValidateHandlerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, ApplicationFormValidateHandlerInterface::SERVICE_TAG);
     $applicationFormNewSubmitHandlerServices =
-      $this->getTaggedServices($container, ApplicationFormNewSubmitHandlerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, ApplicationFormNewSubmitHandlerInterface::SERVICE_TAG);
 
     $applicationFormAddCreateHandlerServices =
-      $this->getTaggedServices($container, ApplicationFormAddCreateHandlerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, ApplicationFormAddCreateHandlerInterface::SERVICE_TAG);
     $applicationFormAddValidateHandlerServices =
-      $this->getTaggedServices($container, ApplicationFormAddValidateHandlerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, ApplicationFormAddValidateHandlerInterface::SERVICE_TAG);
     $applicationFormAddSubmitHandlerServices =
-      $this->getTaggedServices($container, ApplicationFormAddSubmitHandlerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, ApplicationFormAddSubmitHandlerInterface::SERVICE_TAG);
 
     $applicationFormCreateHandlerServices =
-      $this->getTaggedServices($container, ApplicationFormCreateHandlerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, ApplicationFormCreateHandlerInterface::SERVICE_TAG);
     $applicationFormDataGetHandlerServices =
-      $this->getTaggedServices($container, ApplicationFormDataGetHandlerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, ApplicationFormDataGetHandlerInterface::SERVICE_TAG);
     $applicationFormValidateHandlerServices =
-      $this->getTaggedServices($container, ApplicationFormValidateHandlerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, ApplicationFormValidateHandlerInterface::SERVICE_TAG);
     $applicationFormSubmitHandlerServices =
-      $this->getTaggedServices($container, ApplicationFormSubmitHandlerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, ApplicationFormSubmitHandlerInterface::SERVICE_TAG);
 
     $applicationActionApplyHandlerServices =
-      $this->getTaggedServices($container, ApplicationActionApplyHandlerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, ApplicationActionApplyHandlerInterface::SERVICE_TAG);
 
     $applicationFormCommentPersistHandlerServices =
-      $this->getTaggedServices($container, ApplicationFormCommentPersistHandlerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, ApplicationFormCommentPersistHandlerInterface::SERVICE_TAG);
     $applicationFormJsonSchemaGetHandlerServices =
-      $this->getTaggedServices($container, ApplicationJsonSchemaGetHandlerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, ApplicationJsonSchemaGetHandlerInterface::SERVICE_TAG);
 
     $applicationCostItemsPersistHandlerServices =
-      $this->getTaggedServices($container, ApplicationCostItemsPersistHandlerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, ApplicationCostItemsPersistHandlerInterface::SERVICE_TAG);
 
-    $applicationResourcesItemsPersistHandlerServices =
-      $this->getTaggedServices($container, ApplicationResourcesItemsPersistHandlerInterface::SERVICE_TAG);
+    $applicationResourcesItemsPersistHandlerServices = $this->getTaggedFundingCaseTypeServices(
+      $container,
+      ApplicationResourcesItemsPersistHandlerInterface::SERVICE_TAG
+    );
 
     $applicationFilesAddIdentifiersHandlerServices =
-      $this->getTaggedServices($container, ApplicationFilesAddIdentifiersHandlerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, ApplicationFilesAddIdentifiersHandlerInterface::SERVICE_TAG);
     $applicationFilesPersistHandlerServices =
-      $this->getTaggedServices($container, ApplicationFilesPersistHandlerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, ApplicationFilesPersistHandlerInterface::SERVICE_TAG);
 
     $applicationSnapshotCreateHandlerServices =
-      $this->getTaggedServices($container, ApplicationSnapshotCreateHandlerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, ApplicationSnapshotCreateHandlerInterface::SERVICE_TAG);
 
     $fundingCaseActionsDeterminerServices =
-      $this->getTaggedServices($container, FundingCaseActionsDeterminerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, FundingCaseActionsDeterminerInterface::SERVICE_TAG);
     $fundingCaseStatusDeterminerServices =
-      $this->getTaggedServices($container, FundingCaseStatusDeterminerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, FundingCaseStatusDeterminerInterface::SERVICE_TAG);
 
     $fundingCaseFormDataFactoryServices =
-      $this->getTaggedServices($container, FundingCaseFormDataFactoryInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, FundingCaseFormDataFactoryInterface::SERVICE_TAG);
     $fundingCaseJsonSchemaFactoryServices =
-      $this->getTaggedServices($container, FundingCaseJsonSchemaFactoryInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, FundingCaseJsonSchemaFactoryInterface::SERVICE_TAG);
     $fundingCaseUiSchemaFactoryServices =
-      $this->getTaggedServices($container, FundingCaseUiSchemaFactoryInterface::SERVICE_TAG);
-    $fundingCaseValidatorServices = $this->getTaggedServices($container, FundingCaseValidatorInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, FundingCaseUiSchemaFactoryInterface::SERVICE_TAG);
+    $fundingCaseValidatorServices
+      = $this->getTaggedFundingCaseTypeServices($container, FundingCaseValidatorInterface::SERVICE_TAG);
 
     $fundingCaseFormNewGetHandlerServices =
-      $this->getTaggedServices($container, FundingCaseFormNewGetHandlerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, FundingCaseFormNewGetHandlerInterface::SERVICE_TAG);
     $fundingCaseFormNewSubmitHandlerServices =
-      $this->getTaggedServices($container, FundingCaseFormNewSubmitHandlerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, FundingCaseFormNewSubmitHandlerInterface::SERVICE_TAG);
     $fundingCaseFormNewValidateHandlerServices =
-      $this->getTaggedServices($container, FundingCaseFormNewValidateHandlerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, FundingCaseFormNewValidateHandlerInterface::SERVICE_TAG);
 
     $fundingCaseFormUpdateGetHandlerServices =
-      $this->getTaggedServices($container, FundingCaseFormUpdateGetHandlerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, FundingCaseFormUpdateGetHandlerInterface::SERVICE_TAG);
     $fundingCaseFormDataGetHandlerServices =
-      $this->getTaggedServices($container, FundingCaseFormDataGetHandlerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, FundingCaseFormDataGetHandlerInterface::SERVICE_TAG);
     $fundingCaseFormUpdateSubmitHandlerServices =
-      $this->getTaggedServices($container, FundingCaseFormUpdateSubmitHandlerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, FundingCaseFormUpdateSubmitHandlerInterface::SERVICE_TAG);
     $fundingCaseFormUpdateValidateHandlerServices =
-      $this->getTaggedServices($container, FundingCaseFormUpdateValidateHandlerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, FundingCaseFormUpdateValidateHandlerInterface::SERVICE_TAG);
 
     $fundingCaseApproveHandlerServices =
-      $this->getTaggedServices($container, FundingCaseApproveHandlerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, FundingCaseApproveHandlerInterface::SERVICE_TAG);
     $fundingCasePossibleActionsGetHandlerServices =
-      $this->getTaggedServices($container, FundingCasePossibleActionsGetHandlerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, FundingCasePossibleActionsGetHandlerInterface::SERVICE_TAG);
     $fundingCaseUpdateAmountApprovedHandlerServices =
-      $this->getTaggedServices($container, FundingCaseUpdateAmountApprovedHandlerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, FundingCaseUpdateAmountApprovedHandlerInterface::SERVICE_TAG);
 
     $transferContractRecreateHandlerServices =
-      $this->getTaggedServices($container, TransferContractRecreateHandlerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, TransferContractRecreateHandlerInterface::SERVICE_TAG);
     $transferContractRenderHandlerServices =
-      $this->getTaggedServices($container, TransferContractRenderHandlerInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, TransferContractRenderHandlerInterface::SERVICE_TAG);
 
     $serviceLocatorServices =
-      $this->getTaggedServices($container, FundingCaseTypeServiceLocatorInterface::SERVICE_TAG);
+      $this->getTaggedFundingCaseTypeServices($container, FundingCaseTypeServiceLocatorInterface::SERVICE_TAG);
 
     foreach ($this->fundingCaseTypes as $fundingCaseType) {
       if (!isset($applicationActionStatusInfoServices[$fundingCaseType])) {
@@ -603,6 +605,7 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         ApplicationResourcesItemsPersistHandlerInterface::class
         => $applicationResourcesItemsPersistHandlerServices[$fundingCaseType],
         ApplicationSnapshotCreateHandlerInterface::class => $applicationSnapshotCreateHandlerServices[$fundingCaseType],
+        ApplicationProcessStatusDeterminerInterface::class => $applicationStatusDeterminerServices[$fundingCaseType],
         FundingCaseApproveHandlerInterface::class => $fundingCaseApproveHandlerServices[$fundingCaseType],
         FundingCaseStatusDeterminerInterface::class => $fundingCaseStatusDeterminerServices[$fundingCaseType],
         FundingCasePossibleActionsGetHandlerInterface::class
@@ -699,72 +702,6 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
     }
 
     return new Reference($serviceId);
-  }
-
-  /**
-   * @phpstan-return array<string, Reference>
-   *
-   * @throws \Symfony\Component\DependencyInjection\Exception\RuntimeException
-   */
-  private function getTaggedServices(ContainerBuilder $container, string $tagName): array {
-    $services = [];
-    foreach ($container->findTaggedServiceIds($tagName) as $id => $tags) {
-      foreach ($tags as $attributes) {
-        foreach ($this->getFundingCaseTypes($container, $id, $attributes) as $fundingCaseType) {
-          if (isset($services[$fundingCaseType])) {
-            throw new RuntimeException(
-              sprintf(
-                'Duplicate service with tag "%s" and funding case type "%s" (IDs: %s, %s)',
-                $tagName,
-                $fundingCaseType,
-                (string) $services[$fundingCaseType],
-                $id,
-              )
-            );
-          }
-          $services[$fundingCaseType] = new Reference($id);
-          if (!in_array($fundingCaseType, $this->fundingCaseTypes, TRUE)) {
-            $this->fundingCaseTypes[] = $fundingCaseType;
-          }
-        }
-      }
-    }
-
-    return $services;
-  }
-
-  /**
-   * @phpstan-param array{funding_case_type?: string, funding_case_types?: list<string>} $attributes
-   *
-   * @phpstan-return list<string>
-   *
-   * @throws \Symfony\Component\DependencyInjection\Exception\RuntimeException
-   */
-  private function getFundingCaseTypes(ContainerBuilder $container, string $id, array $attributes): array {
-    if (array_key_exists('funding_case_types', $attributes)) {
-      return $attributes['funding_case_types'];
-    }
-
-    if (array_key_exists('funding_case_type', $attributes)) {
-      return [$attributes['funding_case_type']];
-    }
-
-    $class = $this->getServiceClass($container, $id);
-    if (method_exists($class, 'getSupportedFundingCaseTypes')) {
-      /** @phpstan-var list<string> $fundingCaseTypes */
-      $fundingCaseTypes = $class::getSupportedFundingCaseTypes();
-
-      return $fundingCaseTypes;
-    }
-
-    if (!method_exists($class, 'getSupportedFundingCaseType')) {
-      throw new RuntimeException(sprintf('No funding case type specified for service "%s"', $id));
-    }
-
-    /** @var string $fundingCaseType */
-    $fundingCaseType = $class::getSupportedFundingCaseType();
-
-    return [$fundingCaseType];
   }
 
   /**

@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\SammelantragKurs\Application\UiSchema;
 
 use Civi\Funding\SammelantragKurs\Application\JsonSchema\KursZuschussJsonSchema;
+use Civi\RemoteTools\JsonForms\Control\JsonFormsHidden;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
 use Civi\RemoteTools\JsonForms\JsonFormsMarkup;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
@@ -30,14 +31,14 @@ final class KursZuschussUiSchema extends JsonFormsCategory {
   public function __construct(string $currency) {
     $elements = [
       new JsonFormsMarkup(<<<EOD
-Anhand der Veranstaltungsdaten wird hier der maximal mögliche KJP-Zuschuss
+<p>Anhand der Veranstaltungsdaten wird hier der maximal mögliche KJP-Zuschuss
 berechnet. Ist der benötigte KJP-Zuschuss geringer als der maximal mögliche,
-wird lediglich der benötigte Zuschuss für den Antrag übernommen.
+wird lediglich der benötigte Zuschuss für den Antrag übernommen.</p>
 EOD
       ),
       new JsonFormsGroup('Teilnehmendenkosten', [
         new JsonFormsMarkup(sprintf(
-          'Teilnehmendenfestbetrag: %s %s',
+          '<p>Teilnehmendenfestbetrag: %s %s</p>',
           KursZuschussJsonSchema::TEILNEHMERFESTBETRAG,
           $currency
         )),
@@ -57,7 +58,7 @@ EOD
       ),
       new JsonFormsGroup('Fahrtkosten', [
         new JsonFormsMarkup(sprintf(
-          'Fahrtkostenfestbetrag: %s %s',
+          '<p>Fahrtkostenfestbetrag: %s %s</p>',
           KursZuschussJsonSchema::FAHRTKOSTENFESTBETRAG,
           $currency
         )),
@@ -71,7 +72,7 @@ EOD
       ),
       new JsonFormsGroup('Honorarkosten', [
         new JsonFormsMarkup(sprintf(
-          'Honorarkostenfestbetrag: %s %s',
+          '<p>Honorarkostenfestbetrag: %s %s</p>',
           KursZuschussJsonSchema::HONORARKOSTENFESTBETRAG,
           $currency
         )),
@@ -83,6 +84,12 @@ ausgezahlt werden, kann pro vortragender Person ein Festbetrag
 gewährt werden.
 EOD
       ),
+      // Not displayed, but used to have a cost item so receipts for previously
+      // unknown costs can be submitted.
+      new JsonFormsHidden('#/properties/zuschuss/properties/sonstigeAusgaben'),
+      new JsonFormsGroup('Maximal möglicher Gesamtzuschuss in ' . $currency, [
+        new JsonFormsControl('#/properties/zuschuss/properties/gesamtMax', ''),
+      ]),
       new JsonFormsGroup('Beantragter Zuschuss', [
         new JsonFormsControl('#/properties/zuschuss/properties/gesamt', 'Beantragte KJP-Mittel gesamt in ' . $currency),
       ]),

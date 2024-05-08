@@ -17,14 +17,13 @@
 
 declare(strict_types = 1);
 
-namespace phpunit\Civi\Funding\EventSubscriber\FundingCase;
+namespace Civi\Funding\EventSubscriber\FundingCase;
 
 use Civi\Api4\Contact;
 use Civi\Api4\FundingCaseContactRelation;
 use Civi\Api4\FundingCasePermissionsCache;
 use Civi\Api4\Relationship;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
-use Civi\Funding\EventSubscriber\FundingCase\FundingCasePermissionsCacheClearSubscriber;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\ContactTypeFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;

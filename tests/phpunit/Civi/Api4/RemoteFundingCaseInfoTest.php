@@ -168,7 +168,7 @@ final class RemoteFundingCaseInfoTest extends AbstractRemoteFundingHeadlessTestC
       }
     }
 
-    static::assertCount(26 + $permissionsCount, $result);
+    static::assertCount(33 + $permissionsCount, $result);
   }
 
 }
