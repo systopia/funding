@@ -40,45 +40,29 @@ if (file_exists(__DIR__ . '/../../vendor/autoload.php')) {
 // Make CRM_Funding_ExtensionUtil available.
 require_once __DIR__ . '/../../funding.civix.php';
 
-/*
- * The return value of this function call is used in the strftime()
- * implementation used in CiviCRM. If it is 'C' this results in this error:
- * datefmt_create: invalid locale: U_ILLEGAL_ARGUMENT_ERROR
- *
- * Patch applied by CiviCRM containing strftime():
- * https://patch-diff.githubusercontent.com/raw/pear/Log/pull/23.patch
- *
- * https://lab.civicrm.org/dev/core/-/issues/4739
- * Fixed in 5.67.0 https://github.com/civicrm/civicrm-core/pull/27981
- */
-if ('C' === setlocale(LC_TIME, '0')) {
-  setlocale(LC_TIME, 'en_US.UTF-8');
-}
-
-// phpcs:disable
+// phpcs:disable Drupal.Functions.DiscouragedFunctions.Discouraged
 eval(cv('php:boot --level=classloader', 'phpcode'));
-// phpcs:enable
+// phpcs.enable
 
 // phpcs:disable PSR1.Files.SideEffects
 
-// Allow autoloading of PHPUnit helper classes in this extension.
-$loader = new ClassLoader();
-$loader->add('CRM_', [__DIR__ . '/../..', __DIR__]);
-$loader->addPsr4('Civi\\', [__DIR__ . '/../../Civi', __DIR__ . '/Civi']);
-$loader->add('api_', [__DIR__ . '/../..', __DIR__]);
-$loader->addPsr4('api\\', [__DIR__ . '/../../api', __DIR__ . '/api']);
-$loader->register();
-
-// Ensure function ts() is available - it's declared in the same file as CRM_Core_I18n
-\CRM_Core_I18n::singleton();
+// Add test classes to class loader.
+addExtensionDirToClassLoader(__DIR__);
+addExtensionToClassLoader('funding');
 
 // For tests without Civi environment.
 addExtensionToClassLoader('external-file');
 addExtensionToClassLoader('de.systopia.remotetools');
 
+// Ensure function ts() is available - it's declared in the same file as CRM_Core_I18n.
+\CRM_Core_I18n::singleton();
+
 $comparatorFactory = Factory::getInstance();
 $comparatorFactory->register(new ApiActionComparator());
 
+/**
+ * Modify DI container for tests.
+ */
 function _funding_test_civicrm_container(ContainerBuilder $container): void {
   $container->autowire(TestAttachmentManager::class)
     ->setDecoratedService(FundingAttachmentManagerInterface::class);
@@ -136,7 +120,10 @@ function _funding_test_civicrm_container(ContainerBuilder $container): void {
 }
 
 function addExtensionToClassLoader(string $extension): void {
-  $extensionDir = __DIR__ . '/../../../' . $extension;
+  addExtensionDirToClassLoader(__DIR__ . '/../../../' . $extension);
+}
+
+function addExtensionDirToClassLoader(string $extensionDir): void {
   $loader = new ClassLoader();
   $loader->add('CRM_', [$extensionDir]);
   $loader->addPsr4('Civi\\', [$extensionDir . '/Civi']);

@@ -2,9 +2,9 @@
 set -eu -o pipefail
 
 SCRIPT_DIR=$(realpath "$(dirname "$0")")
-FUNDING_EXT_DIR=$(dirname "$SCRIPT_DIR")
+EXT_DIR=$(dirname "$SCRIPT_DIR")
 
-cd "$FUNDING_EXT_DIR"
+cd "$EXT_DIR"
 if [ ! -e tools/phpunit/vendor/bin ]; then
   "$SCRIPT_DIR/docker-prepare.sh"
 fi
