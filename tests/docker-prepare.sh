@@ -12,8 +12,8 @@ IDENTITYTRACKER_BRANCH=master
 #REMOTETOOLS_VERSION=0.4
 REMOTETOOLS_BRANCH=master
 
-FUNDING_EXT_DIR=$(dirname "$(dirname "$(realpath "$0")")")
-EXT_DIR=$(dirname "$FUNDING_EXT_DIR")
+EXT_DIR=$(dirname "$(dirname "$(realpath "$0")")")
+EXT_NAME=$(basename "$EXT_DIR")
 
 if ! type git >/dev/null 2>&1; then
   apt -y update
@@ -41,11 +41,6 @@ else
   # For headless tests it is required that CIVICRM_UF is defined using the corresponding env variable.
   sed -E "s/define\('CIVICRM_UF', '([^']+)'\);/define('CIVICRM_UF', getenv('CIVICRM_UF') ?: '\1');/g" \
     -i /var/www/html/sites/default/civicrm.settings.php
-
-  # Required with PHP 8.1.25 and CiviCRM <5.67
-  # https://lab.civicrm.org/dev/core/-/issues/4739
-  echo "setlocale(LC_TIME, 'en_US.UTF-8');" >> /var/www/html/sites/default/civicrm.settings.php
-
   civicrm-docker-install
 
   # Avoid this error:
@@ -54,13 +49,9 @@ else
   # class was not in it, the class name or namespace probably has a typo.
   rm -f /var/www/html/sites/all/modules/civicrm/Civi/ActionSchedule/Mapping.php
 
-  # Ensure we have at least symfony/dependency-injection:~4 which is mandatory
-  # for service locators. At least in Docker container with CiviCRM 5.50 there's
-  # symfony/dependency-injection:~3 installed.
-  cd /var/www/html/sites/all/modules/civicrm
-  if composer show symfony/dependency-injection "<4" >/dev/null 2>/dev/null; then
-    composer update --no-dev --no-scripts --optimize-autoloader symfony/*
-  fi
+  # For headless tests these files need to exist.
+  touch /var/www/html/sites/all/modules/civicrm/sql/test_data.mysql
+  touch /var/www/html/sites/all/modules/civicrm/sql/test_data_second_domain.mysql
 
   cv ext:download "activity-entity@https://github.com/systopia/activity-entity/archive/refs/heads/$ACTIVITY_ENTITY_BRANCH.zip"
   cv ext:download "external-file@https://github.com/systopia/external-file/archive/refs/heads/$EXTERNAL_FILE_BRANCH.zip"
@@ -75,14 +66,11 @@ else
   cv ext:download "de.systopia.identitytracker@https://github.com/systopia/de.systopia.identitytracker/archive/refs/heads/$IDENTITYTRACKER_BRANCH.zip"
   #cv ext:download "de.systopia.remotetools@https://github.com/systopia/de.systopia.remotetools/archive/refs/tags/$REMOTETOOLS_VERSION.zip"
   cv ext:download "de.systopia.remotetools@https://github.com/systopia/de.systopia.remotetools/archive/refs/heads/$REMOTETOOLS_BRANCH.zip"
-  composer --working-dir="$EXT_DIR/de.systopia.remotetools" update --no-dev --no-progress --prefer-dist --optimize-autoloader
-  cv ext:enable funding
+  composer --working-dir="$EXT_DIR/../de.systopia.remotetools" update --no-dev --no-progress --prefer-dist --optimize-autoloader
 
-  # For headless tests these files need to exist.
-  touch /var/www/html/sites/all/modules/civicrm/sql/test_data.mysql
-  touch /var/www/html/sites/all/modules/civicrm/sql/test_data_second_domain.mysql
+  cv ext:enable "$EXT_NAME"
 fi
 
-cd "$FUNDING_EXT_DIR"
-composer update --no-progress --prefer-dist --optimize-autoloader --no-dev
+cd "$EXT_DIR"
+composer update --no-progress --prefer-dist --optimize-autoloader
 composer composer-phpunit -- update --no-progress --prefer-dist

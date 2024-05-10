@@ -13,7 +13,7 @@
   </php>
 
   <testsuites>
-    <testsuite name="My Test Suite">
+    <testsuite name="Extension Test Suite">
       <directory>./tests/phpunit</directory>
     </testsuite>
   </testsuites>
@@ -23,7 +23,7 @@
       <directory suffix=".php">CRM</directory>
       <directory suffix=".php">Civi</directory>
       <exclude>
-        <directory suffix=".php">CRM/Funding/DAO</directory>
+        <directory>CRM/Funding/DAO</directory>
       </exclude>
     </whitelist>
   </filter>

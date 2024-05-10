@@ -1,5 +1,5 @@
 # Copy this file to phpstan.neon and replace {VENDOR_DIR} with the appropriate
-# paths.
+# path.
 
 includes:
 	- phpstan.neon.dist
