@@ -19,9 +19,9 @@ The funding framework has a modular structure. Additional to the existing config
 The current implementation mainly reflects the workflow of _Arbeit und Leben_. This German organization pioneered the development of this extension framework, with substancial funding from Deutsche Stiftung Engagement und Ehrenamt and the German Federal Ministry for Family and Youth Affairs. In some places, you will need to adapt it to your own needs, or ask us for assistance. For example, the current application forms are in German and reflect very specific administrative processes. A form editor is planned, but not yet available at this moment.
 
 ## Known issues and To-dos
-- Documentation is still work in progress - if you want to use this extension and run into issues that should be covered by documentation, feel free to contact us
-- Configuration options are limited so far - configurability will be improved in future versions
-- API is still under development, so it is best to get in touch if you want to integrate it into your projects
+- Documentation is still work in progress - if you want to use this extension and run into issues that should be covered by documentation, feel free to contact us.
+- Configuration options are limited so far - configurability will be improved in future versions.
+- API is still under development, so it is best to get in touch if you want to integrate it into your projects.
 
 ## We need your support
 
