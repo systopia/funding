@@ -136,6 +136,106 @@
       {{ data.grunddaten.teilnehmertage }}
     </div>
 
+    <h2>Finanzierung</h2>
+    <table class="table table-condensed table-striped table-hover">
+      <thead>
+        <tr>
+          <th style="width: 80%;">Quelle</th>
+          <th style="width: 10%;">Betrag</th>
+          <th style="width: 10%;">Aktionen</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr funding-editable-table-row form-name="teilnehmerbeitraegeForm">
+          <td>Teilnehmer*innenbeiträge</td>
+          <td>
+            <editable-field type="number" value="data.finanzierung.teilnehmerbeitraege"
+                            e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+          </td>
+          <td class="editable-table-row-actions"></td>
+        </tr>
+        <tr funding-editable-table-row form-name="eigenmittelForm">
+          <td>Eigenmittel</td>
+          <td>
+            <editable-field type="number" value="data.finanzierung.eigenmittel"
+                            e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+          </td>
+          <td class="editable-table-row-actions"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Öffentliche Mittel</h3>
+    <table class="table table-condensed table-striped table-hover">
+      <thead>
+        <tr>
+          <th style="width: 80%;">Quelle</th>
+          <th style="width: 10%;">Betrag</th>
+          <th style="width: 10%;">Aktionen</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr funding-editable-table-row form-name="oeffentlicheMittelEuropaForm">
+          <td>Europa</td>
+          <td>
+            <editable-field type="number" value="data.finanzierung.oeffentlicheMittel.europa"
+                            e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+          </td>
+          <td class="editable-table-row-actions"></td>
+        </tr>
+        <tr funding-editable-table-row form-name="oeffentlicheMittelBundeslaenderForm">
+          <td>Bundesländer</td>
+          <td>
+            <editable-field type="number" value="data.finanzierung.oeffentlicheMittel.bundeslaender"
+                            e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+          </td>
+          <td class="editable-table-row-actions"></td>
+        </tr>
+        <tr funding-editable-table-row form-name="oeffentlicheMittelStaedteUndKreiseForm">
+          <td>Städte und Kreise</td>
+          <td>
+            <editable-field type="number" value="data.finanzierung.oeffentlicheMittel.staedteUndKreise"
+                            e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+          </td>
+          <td class="editable-table-row-actions"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Sonstige Mittel</h3>
+    <table class="table table-condensed table-striped table-hover">
+      <thead>
+        <tr>
+          <th style="width: 80%;">Quelle</th>
+          <th style="width: 10%;">Betrag</th>
+          <th style="width: 10%;">Aktionen</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="sonstigesMittel in data.finanzierung.sonstigeMittel track by $index" funding-editable-table-row>
+          <td>
+            <editable-field type="text" value="sonstigesMittel.quelle"
+                            path="finanzierung.sonstigeMittel[{{ $index }}].quelle"
+                            e-step="0.01" e-ng-required="true"></editable-field>
+          </td>
+          <td>
+            <editable-field type="number" value="sonstigesMittel.betrag"
+                            path="finanzierung.sonstigeMittel[{{ $index }}].betrag"
+                            e-step="0.01" e-ng-required="true"></editable-field> {{ currency }}
+          </td>
+          <td class="editable-table-row-actions"></td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td>Sonstige Mittel gesamt</td>
+          <td>{{ data.finanzierung.sonstigeMittelGesamt }} {{ currency }}</td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+    <funding-add-row-button path="finanzierung.sonstigeMittel" ng-if="isEditAllowed()"></funding-add-row-button>
+
     <h2>Zuschussberechnung</h2>
 
     <div>
