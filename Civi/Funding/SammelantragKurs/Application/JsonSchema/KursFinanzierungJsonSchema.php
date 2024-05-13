@@ -133,7 +133,6 @@ final class KursFinanzierungJsonSchema extends JsonSchemaObject {
     ], [
       'required' => [
         'oeffentlicheMittel',
-        'sonstigeMittel',
       ],
     ]);
   }
