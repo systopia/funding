@@ -1,6 +1,6 @@
 # Application Workflow
 
-An application goes through different states during an application process. Depending on the current status, different actions are allowed for external applicants and internal reviewers. In some states, a reviewer or applicant can leave a comment which can be seen in the application history as well.
+An application goes through different states during the application phase. Depending on the current status, different actions are allowed for external applicants and internal reviewers. In some states, a reviewer or applicant can leave a comment which can be seen in the application history as well.
 
 ## Main application workflow
 
