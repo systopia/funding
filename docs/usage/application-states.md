@@ -20,7 +20,7 @@ This is the full list of available actions depending on the state of an applicat
 
 The states _withdrawn_ and _rejected_ do not allow for further actions.
 
-The transition from the status _eligible_ to the status _complete_ is triggered by the beginning of the billing process.
+The transition from the status _eligible_ to the status _complete_ is triggered by the beginning of the [drawdown phase](./usage.md#phases-of-a-funding-case).
 
 In the _complete_ status, any changes are possible, except the deletion of cost items. The changes have no influence on the application status or
 the results of the review.
