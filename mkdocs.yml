@@ -12,6 +12,7 @@ nav:
     - 'Installation': administration/installation.md
     - 'Users and Permissions': administration/user-permissions.md
     - 'Necessary Adjustments': administration/necessary-adjustments.md
+    - 'Administer Funding Programs': administration/funding-programs.md
   - 'Usage':
       - 'Introduction': usage/usage.md
       - 'Application Workflow': usage/application-states.md
