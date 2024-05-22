@@ -35,7 +35,7 @@ As part of the overall funding management framework, we have so far developed, e
 - [opis-json-schema-ext](https://github.com/systopia/opis-json-schema-ext) (PHP library that enhances Opis JSON Schema)
 - [expression-language-ext](https://github.com/systopia/expression-language-ext) (PHP library that enhances Symfony ExpressionLanguage)
 - [external-file](https://github.com/systopia/external-file) (CiviCRM extension)
-- [activity-entity] (https://github.com/systopia/activity-entity) (CiviCRM extension)
+- [activity-entity](https://github.com/systopia/activity-entity) (CiviCRM extension)
 - [civiremote](https://github.com/systopia/civiremote) + [cmrf](https://www.drupal.org/project/cmrf_core) + [de.systopia.xcm](https://github.com/systopia/de.systopia.xcm) + [de.systopia.identitytracker](https://github.com/systopia/de.systopia.identitytracker) (Tools for connecting Drupal portal environments with CiviCRM)
 - [de.systopia.civioffice](https://github.com/systopia/de.systopia.civioffice) (CiviCRM extension)
 - [de.systopia.remotetools](https://github.com/systopia/de.systopia.remotetools) (CiviCRM extension)
