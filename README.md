@@ -24,4 +24,4 @@ to get an invoice or agree a different payment method. Thank you!
 
 ## Documentation:
 
-https://docs.civicrm.org/funding/en/latest
+https://docs.civicrm.org/funding/en/latest (automatic publishing)
