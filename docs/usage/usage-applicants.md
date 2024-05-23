@@ -8,7 +8,7 @@ The actions described below are grouped into the various [phases](./usage.md#pha
 
 ### Login
 
-Before an application can be created, applicants need to be provided with a username and password to log into the funding portal.  Their user account needs to have the correct permissions, see the section [User Permissions](../administration/user-permissions.md) for more details.
+Before an application can be created, applicants need to be provided with a username and password to log into the funding portal. Their user account needs to have the correct permissions, see the section [User Permissions](../administration/user-permissions.md) for more details.
 
 After login in, applicants can change their password at **My account** → **Edit**. All other possible actions can be found on the dashboard page.
 
@@ -28,7 +28,7 @@ Applications of funding case type _Sammelantrag_ are listed separately in the da
 
 #### Create and upload documents
 
-Some actions that are listed in the application list have names of the form **Create: ...**. Those actions lead to pdf documents that were created by the giving organization. They can be downloaded and printed. After filling them out you can upload them to the appropriate place, for example the application or the drawdown form.
+If application templates are configured by the giving organization, there are actions availabe in the application list with names of the form **Create: ...**. Those actions will create a PDF document based on the template. They can be downloaded and printed. After filling them out you can upload them to the appropriate place, for example the application or the drawdown form.
 
 An example use case is a confirmation of the accuracy of the data that needs to be signed by hand. This could be uploaded to the application form. Or a list of participants of a workshop, that needs to be submitted during the clearing phase.
 
@@ -41,20 +41,19 @@ _It is possible to upload documents to the application form._
 
 Applicants can create a new application by opening the dashboard and choosing **New Application**. The first step is to choose the funding program they want to apply for. This leads to the application form which can be long and divided into multiple tabs.
 
-It is possible to save a draft and continue to work on the application at another time. When it is finished, it can be submitted by clicking on the button **Apply**.
-
+It is possible to save a draft and continue to work on the application at another time. When it is finished, it can be applied by clicking on the button **Apply**.
 
 ### Change an application
 
-You can open the application from the application list via the action **Open application**. This leads to the same form that was used during creation, containing the details of the application. However, the available buttons and associated actions in this form depend on the status that the application currently has. It could be that the application has a status that does not allow for changes.
+You can open the application from the application list via the action **Open application**. This leads to the same form that was used during creation, containing the details of the application. However, the available buttons and associated actions in this form depend on the status that the application currently has. The application might be in a status that does not allow changes.
 
-Before applying, there are two actions possible that are reflected in the buttons available at the bottom of the form: **Save** the application after editing, or **Apply** to submit the application. If the application is in the status _review_, there will appear instead another button, namely **Request Change**.
+Before applying, there are two actions possible that are reflected in the buttons available at the bottom of the form: **Save** the application after editing, or **Apply** to apply the application.
 
-All possible states and the available actions are explained [here](./application-states.md).
+All possible states and the available actions for the currently built-in funding case types are explained [here](./application-states.md).
 
 ### View the application history
 
-The applications listed in **My Applications** also allow for the action **Show History**. This leads to a flow chart showing every status that the application has gone through in chronological order, including comments created by the reviewers.
+The applications listed in **My Applications** also provide the action **Show History**. This leads to a flow chart showing every status that the application has gone through in chronological order, including comments created by the reviewers.
 
 It is possible to hide all comments or to hide all workflow actions.
 
@@ -62,19 +61,18 @@ It is possible to hide all comments or to hide all workflow actions.
 
 ## Drawdown Phase
 
-Once a funding application has been approved, the drawdown phase begins. The dashboard element **Transfer Contracts -
-Download transfer contracts and manage drawdowns** leads to a list of eligible applications and provides different actions.
+Once a funding case has been approved, the drawdown phase begins. The dashboard element **Transfer Contracts -
+Download transfer contracts and manage drawdowns** leads to a list of approved funding cases and provides different actions.
 
 ![](../img/drupal_transfercontract_list.png)
 
 ### Transfer contracts
 
-A transfer contract is signed between the giving organization and the recipient. The document is uploaded by the giving
-organization and available for **Download** for every eligible application.
+A transfer contract is signed between the giving organization and the recipient. The document is available for **Download** by the applicants. A corresponding template is configured by the giving organization.
 
 ### Drawdowns
 
-There are two actions available: **Create drawdown** and **Show drawdowns**. It is possible to create multiple drawdowns, which allows the distribution of the available amount in several steps.
+There are two actions available: **Create drawdown** and **Show drawdowns**. It is possible to create multiple drawdowns, which allow the distribution of the available amount in several parts.
 
 The creation of a drawdown is a very simple webform:
 
