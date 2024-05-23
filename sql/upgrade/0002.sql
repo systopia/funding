@@ -1,3 +1,21 @@
+-- Fix timestamp columns in MariaDB <= 10.9
+-- https://mariadb.com/kb/en/server-system-variables/#explicit_defaults_for_timestamp
+SET SESSION explicit_defaults_for_timestamp=ON;
+
+ALTER TABLE civicrm_funding_case
+  MODIFY creation_date TIMESTAMP NOT NULL,
+  MODIFY modification_date TIMESTAMP NOT NULL;
+
+ALTER TABLE civicrm_funding_application_process
+  MODIFY creation_date TIMESTAMP NOT NULL,
+  MODIFY modification_date TIMESTAMP NOT NULL;
+
+ALTER TABLE civicrm_funding_application_snapshot
+  MODIFY creation_date TIMESTAMP NOT NULL;
+
+ALTER TABLE civicrm_funding_drawdown
+  MODIFY creation_date TIMESTAMP NOT NULL;
+
 CREATE TABLE `civicrm_funding_clearing_process` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique FundingClearingProcess ID',
   `application_process_id` int unsigned NOT NULL COMMENT 'FK to FundingApplicationProcess',

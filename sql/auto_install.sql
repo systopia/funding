@@ -15,6 +15,10 @@
 -- *
 -- *******************************************************/
 
+-- DON'T DROP THIS LINE as long as MariaDB <= 10.9 is supported!
+-- https://mariadb.com/kb/en/server-system-variables/#explicit_defaults_for_timestamp
+SET SESSION explicit_defaults_for_timestamp=ON;
+
 SET FOREIGN_KEY_CHECKS=0;
 
 DROP TABLE IF EXISTS `civicrm_funding_clearing_cost_item`;
