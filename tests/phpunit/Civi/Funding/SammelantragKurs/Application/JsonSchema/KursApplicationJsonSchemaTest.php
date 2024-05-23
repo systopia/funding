@@ -132,6 +132,7 @@ final class KursApplicationJsonSchemaTest extends TestCase {
         ],
         'bildungsanteil' => 22,
         'veranstaltungsort' => 'Veranstaltungsort',
+        'kooperationspartner' => 'Kooperationspartner',
       ],
     ];
 
@@ -249,6 +250,7 @@ final class KursApplicationJsonSchemaTest extends TestCase {
         ],
         'bildungsanteil' => 22,
         'veranstaltungsort' => 'Veranstaltungsort',
+        'kooperationspartner' => 'Kooperationspartner',
       ],
     ];
 
