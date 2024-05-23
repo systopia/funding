@@ -1,6 +1,6 @@
 # Usage for applicants
 
-This section describes the typical usage of the funding portal for persons who apply to the funding program. This includes the application process as well as the workflow after a funding has been granted.
+This section describes the typical use of the Funding Portal by a person who is applying for funding under a funding program. This includes the application phase as well as the workflow after a funding has been granted.
 
 The actions described below are grouped into the various [phases](./usage.md#phases-of-a-funding-case) that a funding case can go through.
 

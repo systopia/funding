@@ -1,12 +1,12 @@
-# Application Workflow
+# Application States
 
 An application goes through different states during the application phase. Depending on the current status, different actions are allowed for external applicants and internal reviewers. In some states, a reviewer or applicant can leave a comment which can be seen in the application history as well.
 
-## Main application workflow
+## Main application states
 
 ![](../img/application_workflow_main.png)
 
-This figure shows the typical workflow of an application of funding case type AVK1 or IJB. Actions available to applicants are marked in blue, actions available to reviewers are marked in brown. For simplicity, actions that do not change the status of an application or are unusual are omitted.
+This figure shows the typical development of the states of an application of funding case type AVK1 or IJB. Actions available to applicants are marked in blue, actions available to reviewers are marked in brown. For simplicity, actions that do not change the status of an application or are unusual are omitted.
 
 This is the full list of available actions depending on the state of an application:
 
@@ -20,7 +20,7 @@ This is the full list of available actions depending on the state of an applicat
 
 The states _withdrawn_ and _rejected_ do not allow for further actions.
 
-The transition from the status _eligible_ to the status _complete_ is triggered by the beginning of the [drawdown phase](./usage.md#phases-of-a-funding-case).
+If a funding case is approved by the reviewers, the status of all _eligible_ applications that belong to that funding case changes to _complete_ .
 
 In the _complete_ status, any changes are possible, except the deletion of cost items. The changes have no influence on the application status or
 the results of the review.

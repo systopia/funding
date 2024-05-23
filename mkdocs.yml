@@ -14,7 +14,7 @@ nav:
     - 'Necessary Adjustments': administration/necessary-adjustments.md
   - 'Usage':
       - 'Introduction': usage/usage.md
-      - 'Application Workflow': usage/application-states.md
+      - 'Application States': usage/application-states.md
       - 'Usage for Applicants': usage/usage-applicants.md
 
 markdown_extensions:
