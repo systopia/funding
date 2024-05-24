@@ -1,6 +1,6 @@
 # Usage for applicants
 
-This section describes the typical use of the Funding Portal by a person who is applying for funding under a funding program. This includes the application phase as well as the workflow after a funding has been granted.
+This chapter describes the typical use of the Funding Portal by a person who is applying for funding under a funding program. This includes the application phase as well as the workflow after a funding has been granted.
 
 The actions described below are grouped into the various [phases](./usage.md#phases-of-a-funding-case) that a funding case can go through.
 
@@ -8,7 +8,7 @@ The actions described below are grouped into the various [phases](./usage.md#pha
 
 ### Login
 
-Before an application can be created, applicants need to be provided with a username and password to log into the funding portal. Their user account needs to have the correct permissions, see the section [User Permissions](../administration/user-permissions.md) for more details.
+Before an application can be created, applicants need to be provided with a username and password to log into the funding portal. Their user account needs to have the correct permissions, see the chapter [User Permissions](../administration/user-permissions.md) for more details.
 
 After login in, applicants can change their password at **My account** → **Edit**. All other possible actions can be found on the dashboard page.
 
