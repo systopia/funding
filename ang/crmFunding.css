@@ -132,3 +132,50 @@
 .editable-checklist label {
   display: block !important;
 }
+
+#bootstrap-theme div.funding-jf-group-label {
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+#bootstrap-theme .funding-jf-group-label {
+  font-weight: 500;
+}
+
+#bootstrap-theme .funding-jf-group-label-1 {
+  font-size: 120%;
+  font-weight: 600;
+}
+
+#bootstrap-theme .funding-jf-group-label-2 {
+  font-size: 110%;
+}
+
+#bootstrap-theme .funding-jf-group-label-3 {
+  font-size: 105%;
+}
+
+#bootstrap-theme .funding-jf-form table {
+  margin-bottom: 5px;
+}
+
+#bootstrap-theme .funding-jf-group .panel-heading {
+  padding: 10px 10px;
+}
+
+#bootstrap-theme .funding-jf-group .panel-body {
+  padding: 5px 5px;
+}
+
+#bootstrap-theme .funding-jf-group .panel-title {
+  font-size: inherit;
+}
+
+#bootstrap-theme funding-jf-categorization {
+  display: block;
+  margin-top: 15px;
+}
+
+funding-jf-control {
+  display: block;
+}

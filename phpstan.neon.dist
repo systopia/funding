@@ -9,7 +9,8 @@ parameters:
 		- managed
 		- services
 		- tests
-		- funding.php
+		# funding.php currently fails with 'Internal error: Class "CRM_Core_Page" not found while analysing file'
+		#- funding.php
 	excludePaths:
 		analyse:
 			- CRM/Funding/DAO/*

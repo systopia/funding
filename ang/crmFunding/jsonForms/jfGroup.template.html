@@ -1,0 +1,30 @@
+<div ng-if="!closeable" class="funding-jf-group funding-jf-group-{{ groupNestingLevel }}">
+  <div class="funding-jf-group-label funding-jf-group-label-{{ groupNestingLevel }}">
+    <span ng-bind-html="uiSchema.label"></span>
+    <funding-jf-description text="uiSchema.description"></funding-jf-description>
+  </div>
+  <div class="funding-jf-group-body">
+    <funding-jf-element ng-repeat="element in uiSchema.elements track by $index"
+                        json-schema="jsonSchema" ui-schema="element" data="data"
+                        editable="editable" errors="errors"></funding-jf-element>
+  </div>
+</div>
+
+<div ng-if="closeable" class="panel-group funding-jf-group funding-jf-group-{{ groupNestingLevel }}">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="panel-title">
+        <a data-toggle="collapse" data-target="#funding-jf-group-{{ count }}" aria-expanded="true"
+           class="funding-jf-group-label funding-jf-group-label-{{ groupNestingLevel }}"><span ng-bind-html="uiSchema.label"></span></a>
+        <funding-jf-description text="uiSchema.description"></funding-jf-description>
+      </div>
+    </div>
+    <div id="funding-jf-group-{{ count }}" class="panel-collapse collapse in">
+      <div class="panel-body funding-jf-group-body">
+        <funding-jf-element ng-repeat="element in uiSchema.elements track by $index"
+                            json-schema="jsonSchema" ui-schema="element" data="data"
+                            editable="editable" errors="errors"></funding-jf-element>
+      </div>
+    </div>
+  </div>
+</div>
