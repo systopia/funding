@@ -41,7 +41,7 @@ final class JsonSchemaRecipient extends JsonSchemaInteger {
       }
     }
     else {
-      $keywords['oneOf'] = JsonSchema::fromArray(['const' => NULL]);
+      $keywords['oneOf'] = [JsonSchema::fromArray(['const' => NULL])];
     }
 
     parent::__construct($keywords);
