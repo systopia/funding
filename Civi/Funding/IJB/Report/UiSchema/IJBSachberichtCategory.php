@@ -29,7 +29,7 @@ final class IJBSachberichtCategory extends JsonFormsCategory {
 
   public function __construct(string $scopePrefix) {
     parent::__construct('Sachbericht', [
-      new JsonFormsGroup('Infotext', [], <<<'EOD'
+      new JsonFormsGroup('Sachbericht', [], <<<'EOD'
 Mit der Beantwortung der nachfolgenden Fragen gebt Ihr uns und dem BMFSFJ die
 Möglichkeit, einen Einblick in Eure Maßnahme zu gewinnen. Eure Erfahrungen
 helfen uns, den internationalen Jugendaustausch weiterzuentwickeln, bewährte
