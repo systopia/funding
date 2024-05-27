@@ -109,4 +109,13 @@ final class DefaultApplicationProcessStatusDeterminer extends AbstractApplicatio
     return $currentStatus->getIsReviewContent();
   }
 
+  public function getStatusOnClearingProcessCreated(FullApplicationProcessStatus $currentStatus
+  ): FullApplicationProcessStatus {
+    return new FullApplicationProcessStatus(
+      'complete',
+      $currentStatus->getIsReviewCalculative(),
+      $currentStatus->getIsReviewContent()
+    );
+  }
+
 }

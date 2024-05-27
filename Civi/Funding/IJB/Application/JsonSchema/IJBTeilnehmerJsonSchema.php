@@ -26,22 +26,32 @@ use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 
 final class IJBTeilnehmerJsonSchema extends JsonSchemaObject {
 
-  public function __construct() {
+  /**
+   * @param bool $report TRUE if used for report.
+   */
+  public function __construct(bool $report = FALSE) {
+    $teilnehmerDeutschlandProperties = [
+      'gesamt' => new JsonSchemaInteger(['minimum' => 1]),
+      'weiblich' => new JsonSchemaInteger(['minimum' => 0], TRUE),
+      'divers' => new JsonSchemaInteger(['minimum' => 0], TRUE),
+      'unter27' => new JsonSchemaInteger(['minimum' => 0], TRUE),
+      'inJugendhilfeEhrenamtlichTaetig' => new JsonSchemaInteger(['minimum' => 0], TRUE),
+      'inJugendhilfeHauptamtlichTaetig' => new JsonSchemaInteger(['minimum' => 0], TRUE),
+      'referenten' => new JsonSchemaInteger(['minimum' => 0], TRUE),
+    ];
+    if ($report) {
+      $teilnehmerDeutschlandProperties['mitFahrtkosten'] = new JsonSchemaInteger(['minimum' => 0, TRUE]);
+    }
+
     $properties = [
-      'deutschland' => new JsonSchemaObject([
-        'gesamt' => new JsonSchemaInteger(['minimum' => 1]),
-        'weiblich' => new JsonSchemaInteger(['minimum' => 0], TRUE),
-        'divers' => new JsonSchemaInteger(['minimum' => 0], TRUE),
-        'unter27' => new JsonSchemaInteger(['minimum' => 0], TRUE),
-        'inJugendhilfeTaetig' => new JsonSchemaInteger(['minimum' => 0], TRUE),
-        'referenten' => new JsonSchemaInteger(['minimum' => 0], TRUE),
-      ], ['required' => ['gesamt']]),
+      'deutschland' => new JsonSchemaObject($teilnehmerDeutschlandProperties, ['required' => ['gesamt']]),
       'partnerland' => new JsonSchemaObject([
         'gesamt' => new JsonSchemaInteger(['minimum' => 1]),
         'weiblich' => new JsonSchemaInteger(['minimum' => 0], TRUE),
         'divers' => new JsonSchemaInteger(['minimum' => 0], TRUE),
         'unter27' => new JsonSchemaInteger(['minimum' => 0], TRUE),
-        'inJugendhilfeTaetig' => new JsonSchemaInteger(['minimum' => 0], TRUE),
+        'inJugendhilfeEhrenamtlichTaetig' => new JsonSchemaInteger(['minimum' => 0], TRUE),
+        'inJugendhilfeHauptamtlichTaetig' => new JsonSchemaInteger(['minimum' => 0], TRUE),
         'referenten' => new JsonSchemaInteger(['minimum' => 0], TRUE),
       ], ['required' => ['gesamt']]),
       'gesamt' => new JsonSchemaCalculate(
@@ -56,7 +66,7 @@ final class IJBTeilnehmerJsonSchema extends JsonSchemaObject {
         'number',
         'programmtage * teilnehmerGesamt',
         [
-          'programmtage' => new JsonSchemaDataPointer('/grunddaten/programmtage'),
+          'programmtage' => new JsonSchemaDataPointer('2/grunddaten/programmtage'),
           'teilnehmerGesamt' => new JsonSchemaDataPointer('1/gesamt'),
         ],
         0
@@ -64,6 +74,45 @@ final class IJBTeilnehmerJsonSchema extends JsonSchemaObject {
     ];
 
     parent::__construct($properties, ['required' => ['deutschland', 'partnerland']]);
+  }
+
+  /**
+   * In report all fields are required.
+   */
+  public function withAllFieldsRequired(): self {
+    $schema = clone $this;
+    $schema->addValidations();
+
+    return $schema;
+  }
+
+  private function addValidations(): void {
+    $requiredIntegers = [
+      'weiblich',
+      'divers',
+      'unter27',
+      'inJugendhilfeEhrenamtlichTaetig',
+      'inJugendhilfeHauptamtlichTaetig',
+      'referenten',
+    ];
+
+    // @phpstan-ignore-next-line
+    $this['properties']['deutschland']['required']
+    // @phpstan-ignore-next-line
+      = array_merge($this['properties']['deutschland']['required'], $requiredIntegers, ['mitFahrtkosten']);
+    // @phpstan-ignore-next-line
+    $this['properties']['partnerland']['required']
+    // @phpstan-ignore-next-line
+      = array_merge($this['properties']['partnerland']['required'], $requiredIntegers);
+
+    foreach ($requiredIntegers as $property) {
+      // @phpstan-ignore-next-line
+      $this['properties']['deutschland']['properties'][$property]['type'] = 'integer';
+      // @phpstan-ignore-next-line
+      $this['properties']['partnerland']['properties'][$property]['type'] = 'integer';
+    }
+    // @phpstan-ignore-next-line
+    $this['properties']['deutschland']['properties']['mitFahrtkosten']['type'] = 'integer';
   }
 
 }

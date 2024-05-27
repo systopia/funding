@@ -145,6 +145,14 @@ abstract class AbstractEntity {
     return $this->values;
   }
 
+  protected static function toDateStr(\DateTimeInterface $dateTime): string {
+    return DateTimeUtil::toDateStr($dateTime);
+  }
+
+  protected static function toDateStrOrNull(?\DateTimeInterface $dateTime): ?string {
+    return DateTimeUtil::toDateStrOrNull($dateTime);
+  }
+
   protected static function toDateTimeOrNull(?string $dateTimeStr): ?\DateTime {
     return DateTimeUtil::toDateTimeOrNull($dateTimeStr);
   }

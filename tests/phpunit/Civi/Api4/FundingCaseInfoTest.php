@@ -173,7 +173,7 @@ final class FundingCaseInfoTest extends AbstractFundingHeadlessTestCase {
       }
     }
 
-    static::assertCount(26 + $permissionsCount, $result);
+    static::assertCount(33 + $permissionsCount, $result);
   }
 
 }

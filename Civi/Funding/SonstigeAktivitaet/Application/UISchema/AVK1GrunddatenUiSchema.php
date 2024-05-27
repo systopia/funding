@@ -19,21 +19,36 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\SonstigeAktivitaet\Application\UISchema;
 
+use Civi\Funding\SonstigeAktivitaet\Application\JsonSchema\AVK1GrunddatenSchema;
 use Civi\RemoteTools\JsonForms\Control\JsonFormsArray;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
+use Civi\RemoteTools\JsonForms\JsonFormsElement;
+use Civi\RemoteTools\JsonForms\JsonFormsMarkup;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 
 final class AVK1GrunddatenUiSchema extends JsonFormsCategory {
 
-  public function __construct() {
+  private string $scopePrefix;
+
+  public function __construct(string $scopePrefix) {
+    $this->scopePrefix = $scopePrefix;
+
     $elements = [
+      new JsonFormsMarkup(<<<EOD
+<p>Bei Sonstigen Aktivitäten kann die Summe einer Kostenkategorie (Einzelansätze,
+nicht die einzelne Positionen) um bis zu 20 % überschritten werden, solange die
+Überschreitung durch entsprechende Einsparungen bei anderen Einzelansätzen
+ausgeglichen werden kann. Die bewilligte Gesamtsumme kann nicht überschritten
+werden.</p>
+EOD
+      ),
       new JsonFormsControl(
-        '#/properties/grunddaten/properties/titel',
+        "$scopePrefix/titel",
         'Titel'
       ),
       new JsonFormsControl(
-        '#/properties/grunddaten/properties/kurzbeschreibungDesInhalts',
+        "$scopePrefix/kurzbeschreibungDesInhalts",
         'Kurzbeschreibung des Inhalts',
         NULL,
         [
@@ -42,7 +57,7 @@ final class AVK1GrunddatenUiSchema extends JsonFormsCategory {
         ]
       ),
       new JsonFormsArray(
-        '#/properties/grunddaten/properties/zeitraeume',
+        "$scopePrefix/zeitraeume",
         'Zeiträume',
         NULL,
         [
@@ -56,27 +71,31 @@ final class AVK1GrunddatenUiSchema extends JsonFormsCategory {
       ),
       new JsonFormsGroup('Teilnehmer*innen', [
         new JsonFormsControl(
-          '#/properties/grunddaten/properties/teilnehmer/properties/gesamt',
+          "$scopePrefix/teilnehmer/properties/gesamt",
           'Gesamtanzahl der Teilnehmer*innen'
         ),
         new JsonFormsControl(
-          '#/properties/grunddaten/properties/teilnehmer/properties/weiblich',
+          "$scopePrefix/teilnehmer/properties/weiblich",
           'davon weiblich'
         ),
         new JsonFormsControl(
-          '#/properties/grunddaten/properties/teilnehmer/properties/divers',
+          "$scopePrefix/teilnehmer/properties/divers",
           'davon divers'
         ),
         new JsonFormsControl(
-          '#/properties/grunddaten/properties/teilnehmer/properties/unter27',
+          "$scopePrefix/teilnehmer/properties/unter27",
           'davon U27'
         ),
         new JsonFormsControl(
-          '#/properties/grunddaten/properties/teilnehmer/properties/inJugendhilfeTaetig',
-          'davon in der Kinder- und Jugendhilfe (Multiplikator*innen-Seminare) tätig'
+          "$scopePrefix/teilnehmer/properties/inJugendhilfeEhrenamtlichTaetig",
+          'davon in der Kinder- und Jugendhilfe (Multiplikator*innen-Seminare) ehrenamtlich tätig',
         ),
         new JsonFormsControl(
-          '#/properties/grunddaten/properties/teilnehmer/properties/referenten',
+          "$scopePrefix/teilnehmer/properties/inJugendhilfeHauptamtlichTaetig",
+          'davon in der Kinder- und Jugendhilfe (Multiplikator*innen-Seminare) hauptamtlich tätig',
+        ),
+        new JsonFormsControl(
+          "$scopePrefix/teilnehmer/properties/referenten",
           'davon Referent*innen'
         ),
       ], 'Wie viele Teilnehmer*innen werden für die Veranstaltung erwartet?'),
@@ -86,6 +105,41 @@ final class AVK1GrunddatenUiSchema extends JsonFormsCategory {
       'Grunddaten',
       $elements,
     );
+  }
+
+  /**
+   * Adds an asterisk to every non-required field. In report all fields are
+   * required.
+   */
+  public function withRequiredLabels(AVK1GrunddatenSchema $grunddatenJsonSchema): self {
+    $clone = clone $this;
+    $clone->modifyLabels($clone, $grunddatenJsonSchema);
+
+    return $clone;
+  }
+
+  private function modifyLabels(JsonFormsElement $element, AVK1GrunddatenSchema $grunddatenJsonSchema): void {
+    if ('Control' === $element['type']) {
+      // @phpstan-ignore-next-line
+      $relativeScope = 'properties' . substr($element['scope'], strlen($this->scopePrefix));
+      $schemaPath = explode('/', $relativeScope);
+      $propertyName = array_pop($schemaPath);
+      array_pop($schemaPath);
+      /** @var \Civi\RemoteTools\JsonSchema\JsonSchema $objectSchema */
+      $objectSchema = $grunddatenJsonSchema->getKeywordValueAt($schemaPath);
+      // @phpstan-ignore-next-line
+      if (!in_array($propertyName, $objectSchema['required'] ?? [], TRUE) && !$element->hasKeyword('$calculate')) {
+        // @phpstan-ignore-next-line
+        $element['label'] .= '&nbsp;*';
+      }
+    }
+    else {
+      /** @phpstan-var list<JsonFormsElement> $elements */
+      $elements = $element['elements'] ?? [];
+      foreach ($elements as $subElement) {
+        $this->modifyLabels($subElement, $grunddatenJsonSchema);
+      }
+    }
   }
 
 }

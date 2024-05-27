@@ -48,6 +48,12 @@ final class FundingCasePermissionsCacheManager {
     );
   }
 
+  public function clear(): void {
+    $this->api4->execute(FundingCasePermissionsCache::getEntityName(), 'delete', [
+      'where' => [['id', 'IS NOT NULL']],
+    ]);
+  }
+
   /**
    * @throws \CRM_Core_Exception
    */

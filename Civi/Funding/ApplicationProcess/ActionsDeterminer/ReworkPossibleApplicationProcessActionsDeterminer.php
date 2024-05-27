@@ -61,6 +61,11 @@ final class ReworkPossibleApplicationProcessActionsDeterminer extends AbstractAp
       'review_calculative' => ['request-change', 'update', 'reject-change', 'add-comment'],
       'review_content' => ['request-change', 'update', 'reject-change', 'add-comment'],
     ],
+    'complete' => [
+      'application_withdraw' => ['withdraw'],
+      'review_calculative' => ['update', 'add-comment'],
+      'review_content' => ['update', 'add-comment'],
+    ],
   ];
 
   private ApplicationProcessActionsDeterminerInterface $actionsDeterminer;

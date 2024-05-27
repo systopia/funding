@@ -1,20 +1,4 @@
 <?php
-/*
- * Copyright (C) 2023 SYSTOPIA GmbH
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as published by
- *  the Free Software Foundation in version 3.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Affero General Public License for more details.
- *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 declare(strict_types = 1);
 
 use CRM_Funding_ExtensionUtil as E;
@@ -30,9 +14,6 @@ return [
       'values' => [
         'name' => 'funding_program_controlling',
         'label' => E::ts('Funding Program Controlling'),
-        'form_values' => NULL,
-        'mapping_id' => NULL,
-        'search_custom_id' => NULL,
         'api_entity' => 'FundingProgram',
         'api_params' => [
           'version' => 4,
@@ -43,6 +24,8 @@ return [
             'amount_approved',
             'amount_available',
             'amount_paid_out',
+            'amount_cleared',
+            'amount_admitted',
             'end_date',
           ],
           'orderBy' => [],
@@ -53,8 +36,6 @@ return [
           'join' => [],
           'having' => [],
         ],
-        'expires_date' => NULL,
-        'description' => NULL,
       ],
       'match' => [
         'name',
@@ -62,7 +43,7 @@ return [
     ],
   ],
   [
-    'name' => 'SavedSearch_funding_program_controlling.table',
+    'name' => 'SavedSearch_funding_program_controlling_SearchDisplay_table',
     'entity' => 'SearchDisplay',
     'cleanup' => 'unused',
     'update' => 'unmodified',
@@ -117,6 +98,20 @@ return [
             ],
             [
               'type' => 'field',
+              'key' => 'amount_admitted',
+              'dataType' => 'Money',
+              'label' => E::ts('Amount Admitted'),
+              'sortable' => TRUE,
+            ],
+            [
+              'type' => 'field',
+              'key' => 'amount_cleared',
+              'dataType' => 'Money',
+              'label' => E::ts('Amount Cleared'),
+              'sortable' => TRUE,
+            ],
+            [
+              'type' => 'field',
               'key' => 'end_date',
               'dataType' => 'Date',
               'label' => E::ts('End Date'),
@@ -131,11 +126,10 @@ return [
             'table-striped',
           ],
         ],
-        'acl_bypass' => FALSE,
       ],
       'match' => [
-        'name',
         'saved_search_id',
+        'name',
       ],
     ],
   ],

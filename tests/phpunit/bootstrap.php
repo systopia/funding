@@ -17,6 +17,7 @@ use Civi\Funding\Mock\FundingCaseType\Application\Data\TestFormDataFactory;
 use Civi\Funding\Mock\FundingCaseType\Application\JsonSchema\TestJsonSchemaFactory;
 use Civi\Funding\Mock\FundingCaseType\Application\UiSchema\TestUiSchemaFactory;
 use Civi\Funding\Mock\FundingCaseType\Application\Validation\TestValidator;
+use Civi\Funding\Mock\FundingCaseType\Clearing\TestReportFormFactory;
 use Civi\Funding\Mock\FundingCaseType\FundingCase\Actions\TestCaseActionsDeterminer;
 use Civi\Funding\Mock\FundingCaseType\FundingCase\Data\TestFundingCaseFormDataFactory;
 use Civi\Funding\Mock\FundingCaseType\FundingCase\JsonSchema\TestFundingCaseJsonSchemaFactory;
@@ -117,6 +118,9 @@ function _funding_test_civicrm_container(ContainerBuilder $container): void {
   $container->autowire(TestFundingCaseValidator::class)
     ->setArgument('$jsonSchemaFactory', new Reference(TestFundingCaseJsonSchemaFactory::class))
     ->addTag(TestFundingCaseValidator::SERVICE_TAG);
+
+  $container->autowire(TestReportFormFactory::class)
+    ->addTag(TestReportFormFactory::SERVICE_TAG);
 }
 
 function addExtensionToClassLoader(string $extension): void {

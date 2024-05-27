@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Funding</base>
+  <class>ClearingResourcesItem</class>
+  <name>civicrm_funding_clearing_resources_item</name>
+  <comment>Clearing for an application resources item</comment>
+  <log>true</log>
+
+  <field>
+    <name>id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>Unique FundingClearingResourcesItem ID</comment>
+    <html>
+      <type>Number</type>
+    </html>
+  </field>
+  <primaryKey>
+    <name>id</name>
+    <autoincrement>true</autoincrement>
+  </primaryKey>
+
+  <field>
+    <name>clearing_process_id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>FK to FundingClearingProcess</comment>
+    <html>
+      <type>EntityRef</type>
+    </html>
+    <pseudoconstant>
+      <table>civicrm_funding_clearing_process</table>
+      <keyColumn>id</keyColumn>
+      <labelColumn>id</labelColumn>
+      <prefetch>false</prefetch>
+    </pseudoconstant>
+  </field>
+  <foreignKey>
+    <name>clearing_process_id</name>
+    <table>civicrm_funding_clearing_process</table>
+    <key>id</key>
+    <onDelete>RESTRICT</onDelete>
+  </foreignKey>
+
+  <field>
+    <name>app_resources_item_id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>FK to FundingApplicationResourcesItem</comment>
+    <html>
+      <type>EntityRef</type>
+    </html>
+    <pseudoconstant>
+      <table>civicrm_funding_app_resources_item</table>
+      <keyColumn>id</keyColumn>
+      <labelColumn>identifier</labelColumn>
+      <prefetch>false</prefetch>
+    </pseudoconstant>
+  </field>
+  <foreignKey>
+    <!--
+      "application" is shortened to "app" so the generated constraint name does
+      not exceed the limit of 64 chars.
+    -->
+    <name>app_resources_item_id</name>
+    <table>civicrm_funding_app_resources_item</table>
+    <key>id</key>
+    <onDelete>CASCADE</onDelete>
+  </foreignKey>
+
+  <field>
+    <name>status</name>
+    <type>varchar</type>
+    <length>64</length>
+    <required>true</required>
+    <pseudoconstant>
+      <callback>Civi\Funding\FundingPseudoConstants::getClearingItemStatus()</callback>
+    </pseudoconstant>
+    <html>
+      <type>Select</type>
+    </html>
+  </field>
+
+  <field>
+    <name>file_id</name>
+    <type>int unsigned</type>
+    <required>false</required>
+    <comment>FK to File</comment>
+    <html>
+      <type>EntityRef</type>
+    </html>
+  </field>
+  <foreignKey>
+    <name>file_id</name>
+    <table>civicrm_file</table>
+    <key>id</key>
+    <onDelete>RESTRICT</onDelete>
+  </foreignKey>
+
+  <field>
+    <name>receipt_number</name>
+    <type>varchar</type>
+    <length>255</length>
+    <html>
+      <type>Text</type>
+    </html>
+  </field>
+
+  <field>
+    <name>payment_date</name>
+    <type>date</type>
+    <required>true</required>
+    <html>
+      <type>Select Date</type>
+      <formatType>activityDate</formatType>
+    </html>
+  </field>
+
+  <field>
+    <name>recipient</name>
+    <type>varchar</type>
+    <length>255</length>
+    <required>true</required>
+    <html>
+      <type>Text</type>
+    </html>
+  </field>
+
+  <field>
+    <name>reason</name>
+    <type>varchar</type>
+    <length>255</length>
+    <required>true</required>
+    <html>
+      <type>Text</type>
+    </html>
+  </field>
+
+  <field>
+    <name>amount</name>
+    <type>decimal(10,2)</type>
+    <required>true</required>
+    <crmType>CRM_Utils_Type::T_MONEY</crmType>
+    <dataPattern>/^\d{1,10}(\.\d{2})?$/</dataPattern>
+    <html>
+      <type>Text</type>
+    </html>
+  </field>
+
+  <field>
+    <name>amount_admitted</name>
+    <type>decimal(10,2)</type>
+    <crmType>CRM_Utils_Type::T_MONEY</crmType>
+    <dataPattern>/^\d{1,10}(\.\d{2})?$/</dataPattern>
+    <html>
+      <type>Text</type>
+    </html>
+  </field>
+
+</table>

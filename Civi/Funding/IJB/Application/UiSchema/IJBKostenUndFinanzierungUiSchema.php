@@ -28,7 +28,7 @@ final class IJBKostenUndFinanzierungUiSchema extends JsonFormsCategory {
       [
         new IJBKostenUiSchema($currency),
         new IJBFinanzierungUiSchema($currency),
-        new IJBZuschussUiSchema($currency),
+        new IJBZuschussUiSchema($currency, '#/properties/zuschuss/properties', '#/properties/grunddaten/properties'),
       ],
       <<<'EOD'
 Der Kosten- und Finanzierungsplan muss ausgeglichen sein, damit der Antrag

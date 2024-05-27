@@ -17,7 +17,7 @@
 
 declare(strict_types = 1);
 
-namespace phpunit\Civi\Funding\FundingCase;
+namespace Civi\Funding\FundingCase;
 
 use Civi\Api4\FundingCasePermissionsCache;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
@@ -25,7 +25,6 @@ use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
-use Civi\Funding\FundingCase\FundingCasePermissionsCacheManager;
 use Civi\RemoteTools\Api4\Api4;
 
 /**
@@ -114,6 +113,11 @@ final class FundingCasePermissionsCacheManagerTest extends AbstractFundingHeadle
     $permissionsCacheResult = FundingCasePermissionsCache::get()->execute();
     static::assertCount(1, $permissionsCacheResult);
     static::assertEquals($permissionsCache2, $permissionsCacheResult[0]);
+
+    $this->permissionsCacheManager->clear();
+
+    $permissionsCacheResult = FundingCasePermissionsCache::get()->execute();
+    static::assertCount(0, $permissionsCacheResult);
   }
 
 }

@@ -37,4 +37,10 @@ final class ActivityTypeNames {
 
   public const FUNDING_APPLICATION_RESTORE = 'funding_application_restore';
 
+  public const FUNDING_CLEARING_CREATE = 'funding_clearing_create';
+
+  public const FUNDING_CLEARING_STATUS_CHANGE = 'funding_clearing_status_change';
+
+  public const FUNDING_CLEARING_REVIEW_STATUS_CHANGE = 'funding_clearing_review_status_change';
+
 }

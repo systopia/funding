@@ -30,7 +30,14 @@ use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 
 final class KursGrunddatenJsonSchema extends JsonSchemaObject {
 
-  public function __construct(\DateTimeInterface $applicationBegin, \DateTimeInterface $applicationEnd) {
+  /**
+   * @param bool $report TRUE if used for report.
+   */
+  public function __construct(
+    \DateTimeInterface $applicationBegin,
+    \DateTimeInterface $applicationEnd,
+    bool $report = FALSE
+  ) {
     $properties = [
       'titel' => new JsonSchemaString(),
       'kurzbeschreibungDerInhalte' => new JsonSchemaString(['maxLength' => 500]),
@@ -65,7 +72,8 @@ final class KursGrunddatenJsonSchema extends JsonSchemaObject {
         'weiblich' => new JsonSchemaInteger(['minimum' => 0], TRUE),
         'divers' => new JsonSchemaInteger(['minimum' => 0], TRUE),
         'unter27' => new JsonSchemaInteger(['minimum' => 0], TRUE),
-        'inJugendhilfeTaetig' => new JsonSchemaInteger(['minimum' => 0], TRUE),
+        'inJugendhilfeEhrenamtlichTaetig' => new JsonSchemaInteger(['minimum' => 0], TRUE),
+        'inJugendhilfeHauptamtlichTaetig' => new JsonSchemaInteger(['minimum' => 0], TRUE),
         'referenten' => new JsonSchemaInteger(['minimum' => 0]),
       ], ['required' => ['gesamt', 'referenten']]),
       'teilnehmertage' => new JsonSchemaCalculate(
@@ -79,7 +87,47 @@ final class KursGrunddatenJsonSchema extends JsonSchemaObject {
       ),
     ];
 
+    if ($report) {
+      /** @var \Civi\RemoteTools\JsonSchema\JsonSchema $teilnehmerProperties */
+      $teilnehmerProperties = $properties['teilnehmer']['properties'];
+      $teilnehmerProperties['referentenMitHonorar'] = new JsonSchemaInteger(['minimum' => 0, TRUE]);
+      $teilnehmerProperties['mitFahrtkosten'] = new JsonSchemaInteger(['minimum' => 0, TRUE]);
+    }
+
     parent::__construct($properties, ['required' => array_keys($properties)]);
+  }
+
+  /**
+   * In report all fields are required.
+   */
+  public function withAllFieldsRequired(): self {
+    $schema = clone $this;
+    $schema->addValidations();
+
+    return $schema;
+  }
+
+  private function addValidations(): void {
+    $requiredTeilnehmerIntegers = [
+      'weiblich',
+      'divers',
+      'unter27',
+      'inJugendhilfeEhrenamtlichTaetig',
+      'inJugendhilfeHauptamtlichTaetig',
+      'referenten',
+      'referentenMitHonorar',
+      'mitFahrtkosten',
+    ];
+
+    // @phpstan-ignore-next-line
+    $this['properties']['teilnehmer']['required']
+    // @phpstan-ignore-next-line
+      = array_merge($this['properties']['teilnehmer']['required'], $requiredTeilnehmerIntegers);
+
+    foreach ($requiredTeilnehmerIntegers as $property) {
+      // @phpstan-ignore-next-line
+      $this['properties']['teilnehmer']['properties'][$property]['type'] = 'integer';
+    }
   }
 
 }

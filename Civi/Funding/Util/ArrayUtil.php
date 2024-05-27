@@ -19,14 +19,51 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Util;
 
+use Opis\JsonSchema\JsonPointer;
+
 final class ArrayUtil {
+
+  /**
+   * Similar to array_merge_recursive(), but only performs recursive merge if
+   * both values are arrays. Otherwise, the latter one overwrites the previous
+   * one.
+   *
+   * @phpstan-param array<mixed> $array1
+   * @phpstan-param array<mixed> $array2
+   * @phpstan-param array<mixed> ...$arrays
+   *
+   * @phpstan-return array<mixed>
+   */
+  public static function mergeRecursive(array $array1, array $array2, array ...$arrays): array {
+    $arrays = [$array1, $array2, ...$arrays];
+
+    $merged = [];
+    while ($arrays) {
+      $array = array_shift($arrays);
+      foreach ($array as $key => $value) {
+        if (is_string($key)) {
+          if (is_array($value) && array_key_exists($key, $merged) && is_array($merged[$key])) {
+            $merged[$key] = self::mergeRecursive($merged[$key], $value);
+          }
+          else {
+            $merged[$key] = $value;
+          }
+        }
+        else {
+          $merged[] = $value;
+        }
+      }
+    }
+
+    return $merged;
+  }
 
   /**
    * Set the given value at the given path. Existing values are replaced. New
    * arrays are created if necessary.
    *
    * @phpstan-param array<int|string, mixed> $array
-   * @phpstan-param array<int|string> $path
+   * @phpstan-param list<int|string> $path
    *
    * @param mixed $value
    */
@@ -44,6 +81,25 @@ final class ArrayUtil {
     }
 
     $ref = $value;
+  }
+
+  /**
+   * Same as setValue(), but with JSON pointer instead of path.
+   *
+   * @phpstan-param non-empty-string $pointer
+   * @phpstan-param array<int|string, mixed> $array
+   *
+   * @param mixed $value
+   *
+   * @see setValue()
+   */
+  public static function setValueAtPointer(array &$array, string $pointer, $value): void {
+    $parsedPointer = JsonPointer::parse($pointer);
+    if (NULL === $parsedPointer) {
+      throw new \InvalidArgumentException(sprintf('Invalid JSON pointer "%s"', $pointer));
+    }
+
+    self::setValue($array, $parsedPointer->path(), $value);
   }
 
 }

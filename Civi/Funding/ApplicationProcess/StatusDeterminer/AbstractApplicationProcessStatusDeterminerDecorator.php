@@ -45,4 +45,9 @@ abstract class AbstractApplicationProcessStatusDeterminerDecorator implements Ap
     return $this->statusDeterminer->getStatus($currentStatus, $action);
   }
 
+  public function getStatusOnClearingProcessCreated(FullApplicationProcessStatus $currentStatus
+  ): FullApplicationProcessStatus {
+    return $this->statusDeterminer->getStatusOnClearingProcessCreated($currentStatus);
+  }
+
 }

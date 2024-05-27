@@ -28,6 +28,7 @@ final class FundingCaseFilterPermissionsSubscriber implements EventSubscriberInt
   private const APPLICANT_PERMISSION_PREFIXES = [
     'application_',
     'drawdown_',
+    'clearing_',
   ];
 
   private RequestContextInterface $requestContext;

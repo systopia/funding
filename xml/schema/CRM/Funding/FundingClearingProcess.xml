@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Funding</base>
+  <class>ClearingProcess</class>
+  <name>civicrm_funding_clearing_process</name>
+  <comment/>
+  <log>true</log>
+
+  <field>
+    <name>id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>Unique FundingClearingProcess ID</comment>
+    <html>
+      <type>Number</type>
+    </html>
+  </field>
+  <primaryKey>
+    <name>id</name>
+    <autoincrement>true</autoincrement>
+  </primaryKey>
+
+  <field>
+    <name>application_process_id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>FK to FundingApplicationProcess</comment>
+  </field>
+  <foreignKey>
+    <name>application_process_id</name>
+    <table>civicrm_funding_application_process</table>
+    <key>id</key>
+    <onDelete>CASCADE</onDelete>
+  </foreignKey>
+  <index>
+    <name>UI_application_process_id</name>
+    <fieldName>application_process_id</fieldName>
+    <unique>true</unique>
+  </index>
+
+  <field>
+    <name>status</name>
+    <type>varchar</type>
+    <length>64</length>
+    <required>true</required>
+    <pseudoconstant>
+      <callback>Civi\Funding\FundingPseudoConstants::getClearingProcessStatus</callback>
+    </pseudoconstant>
+    <html>
+      <type>Select</type>
+    </html>
+  </field>
+
+  <field>
+    <name>creation_date</name>
+    <type>timestamp</type>
+    <required>true</required>
+  </field>
+
+  <field>
+    <name>modification_date</name>
+    <type>timestamp</type>
+    <required>true</required>
+    <html>
+      <type>Select Date</type>
+      <formatType>activityDateTime</formatType>
+    </html>
+  </field>
+
+  <field>
+    <name>report_data</name>
+    <type>text</type>
+    <required>true</required>
+    <serialize>JSON</serialize>
+  </field>
+
+  <field>
+    <name>is_review_content</name>
+    <type>boolean</type>
+    <required>false</required>
+    <html>
+      <type>CheckBox</type>
+    </html>
+  </field>
+
+  <field>
+    <!-- shortened because of limited FK identifier length -->
+    <name>reviewer_cont_contact_id</name>
+    <type>int unsigned</type>
+    <required>false</required>
+    <comment>FK to Contact</comment>
+    <html>
+      <type>EntityRef</type>
+    </html>
+  </field>
+  <foreignKey>
+    <name>reviewer_cont_contact_id</name>
+    <table>civicrm_contact</table>
+    <key>id</key>
+    <onDelete>RESTRICT</onDelete>
+  </foreignKey>
+
+  <field>
+    <name>is_review_calculative</name>
+    <type>boolean</type>
+    <required>false</required>
+    <html>
+      <type>CheckBox</type>
+    </html>
+  </field>
+
+  <field>
+    <!-- shortened because of limited FK identifier length -->
+    <name>reviewer_calc_contact_id</name>
+    <type>int unsigned</type>
+    <required>false</required>
+    <comment>FK to Contact</comment>
+    <html>
+      <type>EntityRef</type>
+    </html>
+  </field>
+  <foreignKey>
+    <name>reviewer_calc_contact_id</name>
+    <table>civicrm_contact</table>
+    <key>id</key>
+    <onDelete>RESTRICT</onDelete>
+  </foreignKey>
+
+</table>

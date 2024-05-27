@@ -35,7 +35,10 @@ final class JsonSchemaCostItems extends JsonSchema {
    *   type: non-empty-string,
    *   identifierProperty: non-empty-string,
    *   amountProperty: non-empty-string,
-   *   clearing?: array{itemLabel: non-empty-string},
+   *   clearing?: array{
+   *     itemLabel: non-empty-string,
+   *     recipientLabel?: non-empty-string,
+   *   },
    * } $config
    */
   public function __construct(array $config) {

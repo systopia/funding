@@ -21,11 +21,13 @@ namespace Civi\Funding\Api4\Action\FundingApplicationProcess;
 
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\DAOGetFieldsAction;
+use Civi\Funding\Api4\Query\AliasSqlRenderer;
 use Civi\Funding\Api4\Util\ContactUtil;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\Permission\FundingCase\FundingCaseContactsLoaderInterface;
+use CRM_Funding_ExtensionUtil as E;
 
 /**
  * @phpstan-type fieldsT array<array<string, array<string, scalar>|array<scalar>|scalar|null>&array{name: string}>
@@ -66,6 +68,33 @@ final class GetFieldsAction extends DAOGetFieldsAction {
         $field['options'] = $this->getReviewerContactOptions('review_content');
       }
     }
+
+    $fields[] = [
+      'name' => 'currency',
+      'title' => E::ts('Currency'),
+      'type' => 'Extra',
+      'data_type' => 'String',
+      'readonly' => TRUE,
+      'sql_renderer' => new AliasSqlRenderer('funding_case_id.funding_program_id.currency'),
+    ];
+    $fields[] = [
+      'name' => 'amount_cleared',
+      'title' => E::ts('Amount Cleared'),
+      'type' => 'Custom',
+      'data_type' => 'Money',
+      'readonly' => TRUE,
+      'nullable' => TRUE,
+      'operators' => [],
+    ];
+    $fields[] = [
+      'name' => 'amount_admitted',
+      'title' => E::ts('Amount Admitted'),
+      'type' => 'Custom',
+      'data_type' => 'Money',
+      'readonly' => TRUE,
+      'nullable' => TRUE,
+      'operators' => [],
+    ];
 
     return $fields;
   }

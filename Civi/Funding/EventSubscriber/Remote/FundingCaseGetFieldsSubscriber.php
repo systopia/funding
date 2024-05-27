@@ -34,16 +34,6 @@ final class FundingCaseGetFieldsSubscriber extends AbstractRemoteGetFieldsSubscr
 
   public function onGetFields(GetFieldsEvent $event): void {
     parent::onGetFields($event);
-    $event->addField([
-      'nullable' => FALSE,
-      'name' => 'funding_program_id.currency',
-      'title' => E::ts('Currency'),
-      'data_type' => 'String',
-      'serialize' => NULL,
-      'options' => FALSE,
-      'label' => E::ts('Currency'),
-      'operators' => NULL,
-    ]);
 
     $event->addField([
       'nullable' => FALSE,

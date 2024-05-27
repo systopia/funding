@@ -20,18 +20,16 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess;
 
 use Civi\Api4\FundingApplicationCostItem;
-use Civi\Api4\Generic\DAOCreateAction;
-use Civi\Api4\Generic\DAODeleteAction;
-use Civi\Api4\Generic\DAOGetAction;
-use Civi\Api4\Generic\DAOUpdateAction;
 use Civi\Api4\Generic\Result;
 use Civi\Funding\Entity\ApplicationCostItemEntity;
 use Civi\RemoteTools\Api4\Api4Interface;
+use Civi\RemoteTools\Api4\Query\Comparison;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Civi\Funding\ApplicationProcess\ApplicationCostItemManager
+ * @covers \Civi\Funding\ApplicationProcess\AbstractFinancePlanItemManager
  */
 final class ApplicationCostItemManagerTest extends TestCase {
 
@@ -51,13 +49,10 @@ final class ApplicationCostItemManagerTest extends TestCase {
   public function testGetByApplicationProcessId(): void {
     $item = $this->createApplicationCostItem();
 
-    $this->api4Mock->expects(static::once())->method('executeAction')
-      ->willReturnCallback(function (DAOGetAction $action) use ($item) {
-        static::assertSame(FundingApplicationCostItem::getEntityName(), $action->getEntityName());
-        static::assertSame([['application_process_id', '=', 2, FALSE]], $action->getWhere());
-
-        return new Result([$item->toArray()]);
-      });
+    $this->api4Mock->expects(static::once())->method('getEntities')->with(
+      FundingApplicationCostItem::getEntityName(),
+      Comparison::new('application_process_id', '=', 2)
+    )->willReturn(new Result([$item->toArray()]));
 
     static::assertEquals(['testIdentifier' => $item], $this->applicationCostItemManager->getByApplicationProcessId(2));
   }
@@ -65,13 +60,8 @@ final class ApplicationCostItemManagerTest extends TestCase {
   public function testDelete(): void {
     $item = $this->createApplicationCostItem();
 
-    $this->api4Mock->expects(static::once())->method('executeAction')
-      ->willReturnCallback(function (DAODeleteAction $action) {
-          static::assertSame(FundingApplicationCostItem::getEntityName(), $action->getEntityName());
-          static::assertSame([['id', '=', 12]], $action->getWhere());
-
-          return new Result();
-      });
+    $this->api4Mock->expects(static::once())->method('deleteEntity')
+      ->with(FundingApplicationCostItem::getEntityName(), $item->getId());
 
     $this->applicationCostItemManager->delete($item);
   }
@@ -86,50 +76,21 @@ final class ApplicationCostItemManagerTest extends TestCase {
       ->setProperties(['foo' => 'baz']);
     $newItem = $this->createApplicationCostItem(NULL, 'new', '/new');
 
-    $this->api4Mock->expects(static::exactly(4))->method('executeAction')
-      ->withConsecutive(
-        [
-          static::callback(function (DAOGetAction $action) {
-            static::assertSame(FundingApplicationCostItem::getEntityName(), $action->getEntityName());
-            static::assertSame([['application_process_id', '=', 2, FALSE]], $action->getWhere());
+    $this->api4Mock->expects(static::once())->method('getEntities')->with(
+      FundingApplicationCostItem::getEntityName(),
+      Comparison::new('application_process_id', '=', 2)
+    )->willReturn(new Result([$deletedItem->toArray(), $item->toArray()]));
 
-            return TRUE;
-          }),
-        ],
-        [
-          static::callback(function (DAOUpdateAction $action) use ($updatedItem) {
-            static::assertSame(FundingApplicationCostItem::getEntityName(), $action->getEntityName());
-            static::assertSame($updatedItem->toArray(), $action->getValues());
+    $this->api4Mock->expects(static::once())->method('updateEntity')
+      ->with(FundingApplicationCostItem::getEntityName(), $updatedItem->getId(), $updatedItem->toArray())
+      ->willReturn(new Result([$updatedItem->toArray()]));
 
-            return TRUE;
-          }),
-        ],
-        [
-          static::callback(function (DAOCreateAction $action) use ($newItem) {
-            // Callbacks are executed twice. On second call $newItem has attribute 'id'.
-            static $values;
-            $values ??= $newItem->toArray();
-            static::assertSame(FundingApplicationCostItem::getEntityName(), $action->getEntityName());
-            static::assertSame($values, $action->getValues());
+    $this->api4Mock->expects(static::once())->method('createEntity')
+      ->with(FundingApplicationCostItem::getEntityName(), $newItem->toArray())
+      ->willReturn(new Result([$newItem->toArray() + ['id' => 13]]));
 
-            return TRUE;
-          }),
-        ],
-        [
-          static::callback(function (DAODeleteAction $action) {
-            static::assertSame(FundingApplicationCostItem::getEntityName(), $action->getEntityName());
-            static::assertSame([['id', '=', 11]], $action->getWhere());
-
-            return TRUE;
-          }),
-        ],
-      )
-      ->willReturnOnConsecutiveCalls(
-        new Result([$deletedItem->toArray(), $item->toArray()]),
-        new Result([$updatedItem->toArray()]),
-        new Result([$newItem->toArray() + ['id' => 13]]),
-        new Result(),
-      );
+    $this->api4Mock->expects(static::once())->method('deleteEntity')
+      ->with(FundingApplicationCostItem::getEntityName(), $deletedItem->getId());
 
     $this->applicationCostItemManager->updateAll(2, [$updatedItem, $newItem]);
     static::assertSame(13, $newItem->getId());
@@ -137,13 +98,9 @@ final class ApplicationCostItemManagerTest extends TestCase {
 
   public function testSaveNew(): void {
     $item = $this->createApplicationCostItem(NULL);
-    $this->api4Mock->expects(static::once())->method('executeAction')
-      ->willReturnCallback(function (DAOCreateAction $action) use ($item) {
-        static::assertSame(FundingApplicationCostItem::getEntityName(), $action->getEntityName());
-        static::assertSame($item->toArray(), $action->getValues());
-
-        return new Result([$item->toArray() + ['id' => 11]]);
-      });
+    $this->api4Mock->expects(static::once())->method('createEntity')
+      ->with(FundingApplicationCostItem::getEntityName(), $item->toArray())
+      ->willReturn(new Result([$item->toArray() + ['id' => 11]]));
 
     $this->applicationCostItemManager->save($item);
     static::assertSame(11, $item->getId());
@@ -151,17 +108,17 @@ final class ApplicationCostItemManagerTest extends TestCase {
 
   public function testSaveExisting(): void {
     $item = $this->createApplicationCostItem();
-    $this->api4Mock->expects(static::once())->method('executeAction')
-      ->willReturnCallback(function (DAOUpdateAction $action) use ($item) {
-        static::assertSame(FundingApplicationCostItem::getEntityName(), $action->getEntityName());
-        static::assertSame($item->toArray(), $action->getValues());
-
-        return new Result([$item->toArray()]);
-      });
+    $this->api4Mock->expects(static::once())->method('updateEntity')
+      ->with(FundingApplicationCostItem::getEntityName(), $item->getId(), $item->toArray())
+      ->willReturn(new Result([$item->toArray()]));
 
     $this->applicationCostItemManager->save($item);
   }
 
+  /**
+   * @param non-empty-string $identifier
+   * @param non-empty-string $dataPointer
+   */
   private function createApplicationCostItem(?int $id = 12,
     string $identifier = 'testIdentifier',
     string $dataPointer = '/test'

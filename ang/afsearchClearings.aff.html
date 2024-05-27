@@ -1,0 +1,10 @@
+<div af-fieldset="">
+  <div class="af-container af-layout-inline">
+    <af-field name="FundingClearingProcess_FundingApplicationProcess_application_process_id_01.identifier" defn="{required: false, input_attrs: {}}" />
+    <af-field name="FundingClearingProcess_FundingApplicationProcess_application_process_id_01.title" defn="{required: false, input_attrs: {}}" />
+    <af-field name="status" defn="{input_attrs: {multiple: true}, required: false, afform_default: ['review-requested', 'review', 'accepted']}" />
+    <af-field name="FundingClearingProcess_FundingApplicationProcess_application_process_id_01_FundingApplicationProcess_FundingCase_funding_case_id_01.recipient_contact_id" defn="{required: false, input_attrs: {}}" />
+    <af-field name="FundingClearingProcess_FundingApplicationProcess_application_process_id_01_FundingApplicationProcess_FundingCase_funding_case_id_01.funding_program_id" defn="{input_type: 'Select', input_attrs: {multiple: true}, required: false}" />
+  </div>
+  <crm-search-display-table search-name="Clearings" display-name="Table"></crm-search-display-table>
+</div>

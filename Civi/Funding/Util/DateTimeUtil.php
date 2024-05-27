@@ -21,6 +21,14 @@ namespace Civi\Funding\Util;
 
 final class DateTimeUtil {
 
+  public static function toDateStr(\DateTimeInterface $dateTime): string {
+    return $dateTime->format('Y-m-d');
+  }
+
+  public static function toDateStrOrNull(?\DateTimeInterface $dateTime): ?string {
+    return NULL === $dateTime ? NULL : $dateTime->format('Y-m-d');
+  }
+
   public static function toDateTimeOrNull(?string $dateTimeStr): ?\DateTime {
     return NULL === $dateTimeStr ? NULL : new \DateTime($dateTimeStr);
   }

@@ -94,4 +94,7 @@ parameters:
 		-
 			message: '#has an uninitialized property \$[^\s]+. Give it default value or assign it in the constructor.$#'
 			path: */tests/phpunit/Civi/*
+		-
+			message: '#^Access to an uninitialized property #'
+			path: */tests/phpunit/Civi/**/*Test.php
 	tmpDir: .phpstan

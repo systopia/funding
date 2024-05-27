@@ -35,8 +35,10 @@ fundingModule.config(['$routeProvider', function($routeProvider) {
 
 fundingModule.controller('fundingApplicationCtrl', [
   '$scope', 'fundingApplicationProcessService', 'fundingApplicationProcessActivityService',
+  'fundingClearingProcessService',
   'applicationProcess', 'jsonSchema',
   function($scope, fundingApplicationProcessService, fundingApplicationProcessActivityService,
+           fundingClearingProcessService,
            applicationProcess, jsonSchema) {
     const ts = $scope.ts = CRM.ts('funding');
 
@@ -51,6 +53,10 @@ fundingModule.controller('fundingApplicationCtrl', [
     $scope.statusOptions = {};
     fundingApplicationProcessService.getStatusOptions(applicationProcess.id)
       .then((options) => $scope.statusOptions = options);
+
+    $scope.clearingStatusOptions = {};
+    fundingClearingProcessService.getStatusOptions()
+      .then((options) => $scope.clearingStatusOptions = options);
 
     $scope.activities = {};
     $scope.loadActivities = function () {

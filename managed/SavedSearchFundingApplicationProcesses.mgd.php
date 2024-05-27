@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 use CRM_Funding_ExtensionUtil as E;
 
+// phpcs:disable Generic.Files.LineLength.TooLong
 return [
   [
     'name' => 'SavedSearch_FundingApplicationProcesses',
@@ -44,13 +45,24 @@ return [
             'funding_case_id',
             'is_review_calculative',
             'is_review_content',
+            'FundingApplicationProcess_FundingClearingProcess_application_process_id_01.id',
           ],
           'orderBy' => [
             'id' => 'ASC',
           ],
           'where' => [],
           'groupBy' => [],
-          'join' => [],
+          'join' => [
+            [
+              'FundingClearingProcess AS FundingApplicationProcess_FundingClearingProcess_application_process_id_01',
+              'LEFT',
+              [
+                'id',
+                '=',
+                'FundingApplicationProcess_FundingClearingProcess_application_process_id_01.application_process_id',
+              ],
+            ],
+          ],
           'having' => [],
         ],
       ],
@@ -131,7 +143,10 @@ return [
               'sortable' => TRUE,
             ],
             [
+              'text' => E::ts('Actions'),
+              'style' => 'default',
               'size' => 'btn-xs',
+              'icon' => 'fa-bars',
               'links' => [
                 [
                   'path' => 'civicrm/a#/funding/application/[id]',
@@ -139,15 +154,31 @@ return [
                   'text' => E::ts('Open application'),
                   'style' => 'default',
                   'condition' => [],
+                  'task' => '',
                   'entity' => '',
                   'action' => '',
                   'join' => '',
                   'target' => '',
+                ],
+                [
+                  'path' => 'civicrm/a#/funding/clearing/[FundingApplicationProcess_FundingClearingProcess_application_process_id_01.id]',
+                  'icon' => 'fa-folder-open-o',
+                  'text' => E::ts('Open clearing'),
+                  'style' => 'default',
+                  'condition' => [
+                    'FundingApplicationProcess_FundingClearingProcess_application_process_id_01.id',
+                    'IS NOT EMPTY',
+                  ],
                   'task' => '',
+                  'entity' => '',
+                  'action' => '',
+                  'join' => '',
+                  'target' => '',
                 ],
               ],
-              'type' => 'buttons',
+              'type' => 'menu',
               'alignment' => 'text-right',
+              'label' => '',
             ],
           ],
           'actions' => [

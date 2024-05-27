@@ -19,50 +19,110 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\IJB\Application\UiSchema;
 
+use Civi\Funding\IJB\Application\JsonSchema\IJBTeilnehmerJsonSchema;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
+use Civi\RemoteTools\JsonForms\JsonFormsElement;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 
 final class IJBTeilnehmerUiSchema extends JsonFormsCategory {
 
-  public function __construct() {
+  private string $scopePrefix;
+
+  /**
+   * @param bool $report TRUE if used for report.
+   */
+  public function __construct(string $scopePrefix, bool $report = FALSE) {
+    $this->scopePrefix = $scopePrefix;
+
+    $teilnehmerDeutschlandElements = [
+      new JsonFormsControl(
+        "$scopePrefix/deutschland/properties/gesamt",
+        'Gesamtanzahl der Teilnehmer*innen (inkl. Team)',
+      ),
+      new JsonFormsControl("$scopePrefix/deutschland/properties/weiblich", 'davon weiblich'),
+      new JsonFormsControl("$scopePrefix/deutschland/properties/divers", 'davon divers'),
+      new JsonFormsControl("$scopePrefix/deutschland/properties/unter27", 'davon U27'),
+      new JsonFormsControl(
+        "$scopePrefix/deutschland/properties/inJugendhilfeEhrenamtlichTaetig",
+        'davon in der Kinder- und Jugendhilfe (Multiplikator*innen-Seminare) ehrenamtlich tätig',
+      ),
+      new JsonFormsControl(
+        "$scopePrefix/deutschland/properties/inJugendhilfeHauptamtlichTaetig",
+        'davon in der Kinder- und Jugendhilfe (Multiplikator*innen-Seminare) hauptamtlich tätig',
+      ),
+      new JsonFormsControl(
+        "$scopePrefix/deutschland/properties/referenten",
+        'davon Referent*innen, Leitungs- und Begleitpersonen (Team)',
+      ),
+    ];
+    if ($report) {
+      $teilnehmerDeutschlandElements[] = new JsonFormsControl(
+        "$scopePrefix/deutschland/properties/mitFahrtkosten",
+        'davon Personen, bei denen tatsächlich Fahrtkosten angefallen sind',
+      );
+    }
+
     parent::__construct('Teilnehmer*innen', [
-      new JsonFormsGroup('Teilnehmer*innen aus Deutschland', [
-        new JsonFormsControl(
-          '#/properties/teilnehmer/properties/deutschland/properties/gesamt',
-          'Gesamtanzahl der Teilnehmer*innen (inkl. Team)',
-        ),
-        new JsonFormsControl('#/properties/teilnehmer/properties/deutschland/properties/weiblich', 'davon weiblich'),
-        new JsonFormsControl('#/properties/teilnehmer/properties/deutschland/properties/divers', 'davon divers'),
-        new JsonFormsControl('#/properties/teilnehmer/properties/deutschland/properties/unter27', 'davon U27'),
-        new JsonFormsControl(
-          '#/properties/teilnehmer/properties/deutschland/properties/inJugendhilfeTaetig',
-          'davon in der Kinder- und Jugendhilfe (Multiplikator*innen-Seminare) tätig',
-        ),
-        new JsonFormsControl(
-          '#/properties/teilnehmer/properties/deutschland/properties/referenten',
-          'davon Referent*innen, Leitungs- und Begleitpersonen (Team)',
-        ),
-      ]),
+      new JsonFormsGroup('Teilnehmer*innen aus Deutschland', $teilnehmerDeutschlandElements),
       new JsonFormsGroup('Teilnehmer*innen aus dem Partnerland', [
         new JsonFormsControl(
-          '#/properties/teilnehmer/properties/partnerland/properties/gesamt',
+          "$scopePrefix/partnerland/properties/gesamt",
           'Gesamtanzahl der Teilnehmer*innen (inkl. Team)',
         ),
-        new JsonFormsControl('#/properties/teilnehmer/properties/partnerland/properties/weiblich', 'davon weiblich'),
-        new JsonFormsControl('#/properties/teilnehmer/properties/partnerland/properties/divers', 'davon divers'),
-        new JsonFormsControl('#/properties/teilnehmer/properties/partnerland/properties/unter27', 'davon U27'),
+        new JsonFormsControl("$scopePrefix/partnerland/properties/weiblich", 'davon weiblich'),
+        new JsonFormsControl("$scopePrefix/partnerland/properties/divers", 'davon divers'),
+        new JsonFormsControl("$scopePrefix/partnerland/properties/unter27", 'davon U27'),
         new JsonFormsControl(
-          '#/properties/teilnehmer/properties/partnerland/properties/inJugendhilfeTaetig',
-          'davon in der Kinder- und Jugendhilfe (Multiplikator*innen-Seminare) tätig',
+          "$scopePrefix/partnerland/properties/inJugendhilfeEhrenamtlichTaetig",
+          'davon in der Kinder- und Jugendhilfe (Multiplikator*innen-Seminare) ehrenamtlich tätig',
         ),
         new JsonFormsControl(
-          '#/properties/teilnehmer/properties/partnerland/properties/referenten',
+          "$scopePrefix/partnerland/properties/inJugendhilfeHauptamtlichTaetig",
+          'davon in der Kinder- und Jugendhilfe (Multiplikator*innen-Seminare) hauptamtlich tätig',
+        ),
+        new JsonFormsControl(
+          "$scopePrefix/partnerland/properties/referenten",
           'davon Referent*innen, Leitungs- und Begleitpersonen (Team)',
         ),
       ]),
-      new JsonFormsControl('#/properties/teilnehmer/properties/teilnehmertage', 'Teilnehmendentage'),
+      new JsonFormsControl("$scopePrefix/teilnehmertage", 'Teilnehmendentage'),
     ]);
+  }
+
+  /**
+   * Adds an asterisk to every non-required field. In report all fields are
+   * required.
+   */
+  public function withRequiredLabels(IJBTeilnehmerJsonSchema $teilnehmerSchema): self {
+    $clone = clone $this;
+    $clone->modifyLabels($clone, $teilnehmerSchema);
+
+    return $clone;
+  }
+
+  private function modifyLabels(JsonFormsElement $element, IJBTeilnehmerJsonSchema $teilnehmerJsonSchema): void {
+    if ('Control' === $element['type']) {
+      // @phpstan-ignore-next-line
+      $relativeScope = 'properties' . substr($element['scope'], strlen($this->scopePrefix));
+      $schemaPath = explode('/', $relativeScope);
+      $propertyName = array_pop($schemaPath);
+      array_pop($schemaPath);
+      /** @var \Civi\RemoteTools\JsonSchema\JsonSchema $objectSchema */
+      $objectSchema = $teilnehmerJsonSchema->getKeywordValueAt($schemaPath);
+      // @phpstan-ignore-next-line
+      if (!in_array($propertyName, $objectSchema['required'] ?? [], TRUE)) {
+        // @phpstan-ignore-next-line
+        $element['label'] .= '&nbsp;*';
+      }
+    }
+    else {
+      /** @phpstan-var list<JsonFormsElement> $elements */
+      $elements = $element['elements'] ?? [];
+      foreach ($elements as $subElement) {
+        $this->modifyLabels($subElement, $teilnehmerJsonSchema);
+      }
+    }
   }
 
 }

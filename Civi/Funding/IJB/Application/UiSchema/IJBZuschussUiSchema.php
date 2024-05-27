@@ -28,30 +28,30 @@ use Civi\RemoteTools\JsonSchema\JsonSchema;
 
 final class IJBZuschussUiSchema extends JsonFormsGroup {
 
-  public function __construct(string $currency) {
+  public function __construct(string $currency, string $zuschussScopePrefix, string $grunddatenScopePrefix) {
     $deutschlandRule = new JsonFormsRule(
       'SHOW',
-      '#/properties/grunddaten/properties/begegnungsland',
+      "$grunddatenScopePrefix/begegnungsland",
       JsonSchema::fromArray(['const' => 'deutschland'])
     );
     $partnerlandRule = new JsonFormsRule(
       'SHOW',
-      '#/properties/grunddaten/properties/begegnungsland',
+      "$grunddatenScopePrefix/begegnungsland",
       JsonSchema::fromArray(['const' => 'partnerland'])
     );
 
     $elements = [
       new JsonFormsMarkup(<<<EOD
-Anhand der Veranstaltungsdaten wird hier der maximal mögliche KJP-Zuschuss
+<p>Anhand der Veranstaltungsdaten wird hier der maximal mögliche KJP-Zuschuss
 berechnet. Ist der benötigte KJP-Zuschuss geringer als der maximal mögliche,
-wird lediglich der benötigte Zuschuss für den Antrag übernommen.
+wird lediglich der benötigte Zuschuss für den Antrag übernommen.</p>
 EOD
       ),
       new JsonFormsGroup('Teilnehmendenkosten', [
         new JsonFormsMarkup(
           sprintf(<<<EOD
-Teilnehmendenfestbetrag Fachkräfte im Inland: %s $currency<br>
-Teilnehmendenfestbetrag Jugendliche im Inland: %s $currency
+<p>Teilnehmendenfestbetrag Fachkräfte im Inland: %s $currency<br>
+Teilnehmendenfestbetrag Jugendliche im Inland: %s $currency</p>
 EOD,
             IJBZuschussJsonSchema::TEILNEHMER_FESTBETRAG_FACHKRAEFTE,
             IJBZuschussJsonSchema::TEILNEHMER_FESTBETRAG_JUGENDLICHE,
@@ -60,14 +60,14 @@ EOD,
           ['rule' => $deutschlandRule]
         ),
         new JsonFormsControl(
-          '#/properties/zuschuss/properties/teilnehmerkostenMax',
+          "$zuschussScopePrefix/teilnehmerkostenMax",
           'Maximaler Zuschuss in ' . $currency,
           NULL,
           NULL,
           ['rule' => $deutschlandRule]
         ),
         new JsonFormsControl(
-          '#/properties/zuschuss/properties/teilnehmerkosten',
+          "$zuschussScopePrefix/teilnehmerkosten",
           'Benötigter Zuschuss in ' . $currency,
           NULL,
           NULL,
@@ -85,7 +85,7 @@ EOD
       new JsonFormsGroup('Honorarkosten', [
         new JsonFormsMarkup(
           sprintf(
-            'Honorarkostenfestbetrag: %s %s',
+            '<p>Honorarkostenfestbetrag: %s %s</p>',
             IJBZuschussJsonSchema::HONORARKOSTEN_FESTBETRAG,
             $currency,
           ),
@@ -93,14 +93,14 @@ EOD
           ['rule' => $deutschlandRule]
         ),
         new JsonFormsControl(
-          '#/properties/zuschuss/properties/honorarkostenMax',
+          "$zuschussScopePrefix/honorarkostenMax",
           'Maximaler Zuschuss in ' . $currency,
         NULL,
         NULL,
           ['rule' => $deutschlandRule]
         ),
         new JsonFormsControl(
-          '#/properties/zuschuss/properties/honorarkosten',
+          "$zuschussScopePrefix/honorarkosten",
           'Benötigter Zuschuss in ' . $currency,
         NULL,
         NULL,
@@ -116,8 +116,8 @@ EOD,
       new JsonFormsGroup('Fahrtkosten', [
         new JsonFormsMarkup(
           sprintf(<<<EOD
-Fahrtkostenfestbetrag ins europäische Ausland: %s $currency<br>
-Fahrtkostenfestbetrag ins außereuropäische Ausland: %s $currency
+<p>Fahrtkostenfestbetrag ins europäische Ausland: %s $currency<br>
+Fahrtkostenfestbetrag ins außereuropäische Ausland: %s $currency</p>
 EOD,
             IJBZuschussJsonSchema::FAHRTKOSTEN_FESTBETRAG_AUSLAND_EUROPA,
             IJBZuschussJsonSchema::FAHRTKOSTEN_FESTBETRAG_NICHT_EUROPA,
@@ -126,21 +126,21 @@ EOD,
           ['rule' => $partnerlandRule]
         ),
         new JsonFormsControl(
-          '#/properties/zuschuss/properties/fahrtkostenAuslandEuropaMax',
+          "$zuschussScopePrefix/fahrtkostenAuslandEuropaMax",
           'Maximaler Zuschuss im europäischen Ausland in ' . $currency,
           NULL,
           NULL,
           ['rule' => $partnerlandRule]
         ),
         new JsonFormsControl(
-          '#/properties/zuschuss/properties/fahrtkostenNichtEuropaMax',
+          "$zuschussScopePrefix/fahrtkostenNichtEuropaMax",
           'Maximaler Zuschuss im außereuropäischen Ausland in ' . $currency,
           NULL,
           NULL,
           ['rule' => $partnerlandRule]
         ),
         new JsonFormsControl(
-          '#/properties/zuschuss/properties/fahrtkosten',
+          "$zuschussScopePrefix/fahrtkosten",
           'Benötigter Zuschuss in ' . $currency,
           NULL,
         NULL,
@@ -161,14 +161,14 @@ EOD,
         'Zuschlag für Vor- und Nachbereitung der Maßnahme, Qualifizierung und Auswertung',
         [
           new JsonFormsControl(
-            '#/properties/zuschuss/properties/zuschlagMax',
+            "$zuschussScopePrefix/zuschlagMax",
             'Maximaler Zuschuss in ' . $currency,
           NULL,
           NULL,
             ['rule' => $partnerlandRule]
           ),
           new JsonFormsControl(
-            '#/properties/zuschuss/properties/zuschlag',
+            "$zuschussScopePrefix/zuschlag",
             'Benötigter Zuschuss in ' . $currency,
             NULL,
             NULL,
@@ -187,12 +187,15 @@ EOD,
           IJBZuschussJsonSchema::ZUSCHLAG_MAX_JUGENDLICHE,
         )
       ),
+      new JsonFormsGroup('Maximal möglicher Gesamtzuschuss in ' . $currency, [
+        new JsonFormsControl("$zuschussScopePrefix/gesamtMax", ''),
+      ]),
       new JsonFormsGroup('Beantragter Zuschuss', [
-        new JsonFormsControl('#/properties/zuschuss/properties/gesamt', 'Beantragte KJP-Mittel gesamt in ' . $currency),
+        new JsonFormsControl("$zuschussScopePrefix/gesamt", 'Beantragte KJP-Mittel gesamt in ' . $currency),
       ]),
       new JsonFormsGroup('Gesamtfinanzierung', [
         new JsonFormsControl(
-          '#/properties/zuschuss/properties/finanzierungGesamt',
+          "$zuschussScopePrefix/finanzierungGesamt",
           'Gesamtfinanzierung in ' . $currency
         ),
       ]),

@@ -32,12 +32,13 @@ final class IJBProjektunterlagenUiSchema extends JsonFormsCategory {
         '#/properties/projektunterlagen',
         'Dokumente',
         <<<EOD
-Bitte hier einen Screenshot der Berechnung der Reiseentfernung und die geplante
+<p>Bitte hier einen Screenshot der Berechnung der Reiseentfernung und die geplante
 Programmübersicht (ein tageweise gegliedertes und aussagekräftiges
 Begegnungsprogramm/Programmentwurf bzw. eine Darstellung des Verlaufs/der
 vorgesehen Aktivitäten der geplanten Maßnahme, aus der hervorgehen soll,
 inwieweit die Programmpunkte gemeinsam – deutsche und ausländische Gruppe –
-durchgeführt werden) und ggf. weitere Unterlagen hochladen.
+durchgeführt werden) und ggf. weitere Unterlagen hochladen.</p>
+Die Unterschriftsseite Antrag ist erforderlich.
 EOD,
         [
           new JsonFormsHidden('#/properties/_identifier'),

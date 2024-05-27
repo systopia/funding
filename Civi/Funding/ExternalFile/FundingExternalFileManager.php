@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2023 SYSTOPIA GmbH
+ * Copyright (C) 2024 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,7 +17,7 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding;
+namespace Civi\Funding\ExternalFile;
 
 use Civi\Api4\EntityFile;
 use Civi\Api4\ExternalFile;
@@ -152,6 +152,26 @@ final class FundingExternalFileManager implements FundingExternalFileManagerInte
   /**
    * @inheritDoc
    */
+  public function getFileByFileId(int $fileId, string $entityName, int $entityId): ?ExternalFileEntity {
+    if (0 === $this->api4->countEntities(EntityFile::getEntityName(), CompositeCondition::fromFieldValuePairs([
+      'file_id' => $fileId,
+      'entity_table' => $this->daoEntityInfoProvider->getTable($entityName),
+      'entity_id' => $entityId,
+    ]))) {
+      return NULL;
+    }
+
+    $result = $this->api4->getEntities(ExternalFile::getEntityName(), CompositeCondition::fromFieldValuePairs([
+      'extension' => E::SHORT_NAME,
+      'file_id' => $fileId,
+    ]));
+
+    return ExternalFileEntity::singleOrNullFromApiResult($result);
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function getFiles(string $entityName, int $entityId, ?ConditionInterface $condition = NULL): array {
     $fileIds = $this->getFileIdsByEntity($entityName, $entityId);
     if ([] === $fileIds) {
@@ -172,6 +192,7 @@ final class FundingExternalFileManager implements FundingExternalFileManagerInte
       ['id' => 'ASC']
     );
 
+    /** @phpstan-ignore-next-line */
     return ExternalFileEntity::allFromApiResult($result);
   }
 

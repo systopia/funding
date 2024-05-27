@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Api4\Action\FundingCase;
 
 use Civi\Api4\FundingCase;
+use Civi\Api4\FundingClearingProcess;
 use Civi\Api4\Generic\DAOGetAction;
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
@@ -29,12 +30,18 @@ use Civi\Funding\Event\FundingCase\GetPermissionsEvent;
 use Civi\Funding\FundingCase\FundingCasePermissionsCacheManager;
 use Civi\Funding\FundingCase\TransferContractRouter;
 use Civi\Funding\Permission\Util\FlattenedPermissionsUtil;
+use Civi\RemoteTools\Api4\Api4Interface;
+use Civi\RemoteTools\Api4\Query\CompositeCondition;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 
 final class GetAction extends DAOGetAction {
 
   use IsFieldSelectedTrait;
+
+  private bool $cachePermissionsOnly = FALSE;
+
+  private Api4Interface $api4;
 
   private CiviEventDispatcherInterface $eventDispatcher;
 
@@ -47,6 +54,7 @@ final class GetAction extends DAOGetAction {
   private TransferContractRouter $transferContractRouter;
 
   public function __construct(
+    Api4Interface $api4,
     CiviEventDispatcherInterface $eventDispatcher,
     FundingCasePermissionsCacheManager $permissionsCacheManager,
     PossiblePermissionsLoaderInterface $possiblePermissionsLoader,
@@ -54,6 +62,7 @@ final class GetAction extends DAOGetAction {
     TransferContractRouter $transferContractRouterRecreate
   ) {
     parent::__construct(FundingCase::getEntityName(), 'get');
+    $this->api4 = $api4;
     $this->eventDispatcher = $eventDispatcher;
     $this->permissionsCacheManager = $permissionsCacheManager;
     $this->possiblePermissionsLoader = $possiblePermissionsLoader;
@@ -65,8 +74,12 @@ final class GetAction extends DAOGetAction {
   public function _run(Result $result): void {
   // phpcs:enable
     $rowCountSelected = $this->isRowCountSelected();
-    if ($rowCountSelected) {
+    if ($rowCountSelected || $this->cachePermissionsOnly) {
       $this->ensurePermissions();
+    }
+
+    if ($this->cachePermissionsOnly) {
+      return;
     }
 
     FundingCasePermissionsUtil::addPermissionsCacheJoin(
@@ -76,6 +89,12 @@ final class GetAction extends DAOGetAction {
       $this->requestContext->isRemote()
     );
     FundingCasePermissionsUtil::addPermissionsRestriction($this);
+
+    if ($this->isRowCountSelectedOnly()) {
+      parent::_run($result);
+
+      return;
+    }
 
     if ([] === $this->getSelect()) {
       $this->addSelect('*');
@@ -117,6 +136,27 @@ final class GetAction extends DAOGetAction {
         $record['transfer_contract_uri'] =
           isset($record['id']) ? $this->transferContractRouter->generate($record['id']) : NULL;
 
+        $clearingProcessFields = array_intersect([
+          'amount_cleared',
+          'amount_admitted',
+        ], $this->getSelect());
+        if ([] !== $clearingProcessFields) {
+          $clearingProcessAmounts = $this->api4->execute(FundingClearingProcess::getEntityName(), 'get', [
+            'select' => array_map(fn (string $field) => 'SUM(' . $field . ') AS SUM_' . $field, $clearingProcessFields),
+            'where' => [
+              CompositeCondition::fromFieldValuePairs([
+                'application_process_id.funding_case_id' => $record['id'],
+                'status' => 'accepted',
+              ])->toArray(),
+            ],
+            'groupBy' => ['application_process_id.funding_case_id'],
+          ])->first();
+        }
+
+        foreach ($clearingProcessFields as $field) {
+          $record[$field] = $clearingProcessAmounts['SUM_' . $field] ?? NULL;
+        }
+
         $records[] = $record;
       }
 
@@ -129,6 +169,21 @@ final class GetAction extends DAOGetAction {
     if (!$rowCountSelected) {
       $result->rowCount = count($records);
     }
+  }
+
+  public function isCachePermissionsOnly(): bool {
+    return $this->cachePermissionsOnly;
+  }
+
+  /**
+   * @param bool $cachePermissionsOnly
+   *   If TRUE it is ensured that for all queried funding cases the permissions
+   *   are cached without returning any data.
+   */
+  public function setCachePermissionsOnly(bool $cachePermissionsOnly): self {
+    $this->cachePermissionsOnly = $cachePermissionsOnly;
+
+    return $this;
   }
 
   /**

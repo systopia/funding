@@ -22,7 +22,7 @@ namespace Civi\Funding\ApplicationProcess;
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\FundingApplicationSnapshot;
 use Civi\Funding\Entity\ExternalFileEntity;
-use Civi\Funding\FundingExternalFileManagerInterface;
+use Civi\Funding\ExternalFile\FundingExternalFileManagerInterface;
 
 final class ApplicationExternalFileManager implements ApplicationExternalFileManagerInterface {
 

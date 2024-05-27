@@ -97,7 +97,8 @@ final class KursApplicationJsonSchemaTest extends TestCase {
           'weiblich' => 4,
           'divers' => 3,
           'unter27' => 2,
-          'inJugendhilfeTaetig' => 1,
+          'inJugendhilfeEhrenamtlichTaetig' => 1,
+          'inJugendhilfeHauptamtlichTaetig' => 0,
           'referenten' => $referenten,
         ],
       ],
@@ -148,7 +149,7 @@ final class KursApplicationJsonSchemaTest extends TestCase {
       ]
     );
     static::assertValidationValid($result);
-    static::assertCount(3, $costItemDataCollector->getCostItemsData());
+    static::assertCount(4, $costItemDataCollector->getCostItemsData());
 
     static::assertSame($oeffentlicheMittelGesamt, $data->finanzierung->oeffentlicheMittelGesamt);
     static::assertSame($sonstigeMittelGesamt, $data->finanzierung->sonstigeMittelGesamt);
@@ -219,7 +220,8 @@ final class KursApplicationJsonSchemaTest extends TestCase {
           'weiblich' => 4,
           'divers' => 3,
           'unter27' => 2,
-          'inJugendhilfeTaetig' => 1,
+          'inJugendhilfeEhrenamtlichTaetig' => 1,
+          'inJugendhilfeHauptamtlichTaetig' => 0,
           'referenten' => $referenten,
         ],
       ],
@@ -266,7 +268,7 @@ final class KursApplicationJsonSchemaTest extends TestCase {
       ]
     );
     static::assertValidationValid($result);
-    static::assertCount(3, $costItemDataCollector->getCostItemsData());
+    static::assertCount(4, $costItemDataCollector->getCostItemsData());
 
     static::assertSame($oeffentlicheMittelGesamt, $data->finanzierung->oeffentlicheMittelGesamt);
     static::assertSame($sonstigeMittelGesamt, $data->finanzierung->sonstigeMittelGesamt);

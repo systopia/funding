@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2023 SYSTOPIA GmbH
+ * Copyright (C) 2024 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,7 +17,7 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding;
+namespace Civi\Funding\ExternalFile;
 
 use Civi\Funding\Entity\ExternalFileEntity;
 use Civi\RemoteTools\Api4\Query\ConditionInterface;
@@ -82,7 +82,12 @@ interface FundingExternalFileManagerInterface {
   public function getFile(string $identifier, string $entityName, int $entityId): ?ExternalFileEntity;
 
   /**
-   * @phpstan-return array<ExternalFileEntity>
+   * @throws \CRM_Core_Exception
+   */
+  public function getFileByFileId(int $fileId, string $entityName, int $entityId): ?ExternalFileEntity;
+
+  /**
+   * @phpstan-return list<ExternalFileEntity>
    *
    * @throws \CRM_Core_Exception
    */

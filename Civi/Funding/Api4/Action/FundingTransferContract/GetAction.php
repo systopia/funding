@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\FundingTransferContract;
 
+use Civi\Api4\FundingClearingProcess;
 use Civi\Api4\FundingTransferContract;
 use Civi\Api4\Generic\AbstractGetAction;
 use Civi\Api4\Generic\Result;
@@ -28,12 +29,16 @@ use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\Funding\PayoutProcess\PayoutProcessManager;
+use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
+use Civi\RemoteTools\Api4\Query\CompositeCondition;
 use Webmozart\Assert\Assert;
 
 final class GetAction extends AbstractGetAction {
 
   use ArrayQueryActionTrait;
+
+  private Api4Interface $api4;
 
   private FundingCaseManager $fundingCaseManager;
 
@@ -42,11 +47,13 @@ final class GetAction extends AbstractGetAction {
   private PayoutProcessManager $payoutProcessManager;
 
   public function __construct(
+    Api4Interface $api4,
     FundingCaseManager $fundingCaseManager,
     FundingProgramManager $fundingProgramManager,
     PayoutProcessManager $payoutProcessManager
   ) {
     parent::__construct(FundingTransferContract::getEntityName(), 'get');
+    $this->api4 = $api4;
     $this->fundingCaseManager = $fundingCaseManager;
     $this->fundingProgramManager = $fundingProgramManager;
     $this->payoutProcessManager = $payoutProcessManager;
@@ -84,7 +91,28 @@ final class GetAction extends AbstractGetAction {
     ));
     $amountAvailable = $this->payoutProcessManager->getAmountAvailable($payoutProcess);
 
-    return [
+    $clearingProcessFields = array_intersect([
+      'amount_recorded_costs',
+      'amount_recorded_resources',
+      'amount_admitted_costs',
+      'amount_admitted_resources',
+      'amount_cleared',
+      'amount_admitted',
+    ], $this->getSelect());
+    if ([] !== $clearingProcessFields) {
+      $clearingProcessAmounts = $this->api4->execute(FundingClearingProcess::getEntityName(), 'get', [
+        'select' => array_map(fn (string $field) => 'SUM(' . $field . ') AS SUM_' . $field, $clearingProcessFields),
+        'where' => [
+          CompositeCondition::fromFieldValuePairs([
+            'application_process_id.funding_case_id' => $fundingCase->getId(),
+            'status' => 'accepted',
+          ])->toArray(),
+        ],
+        'groupBy' => ['application_process_id.funding_case_id'],
+      ])->first();
+    }
+
+    $record = [
       'funding_case_id' => $fundingCase->getId(),
       'identifier' => $fundingCase->getIdentifier(),
       'amount_approved' => $fundingCase->getAmountApproved(),
@@ -99,6 +127,12 @@ final class GetAction extends AbstractGetAction {
       'CAN_create_drawdown'
       => in_array('drawdown_create', $fundingCase->getPermissions(), TRUE) && 'closed' !== $payoutProcess->getStatus(),
     ];
+
+    foreach ($clearingProcessFields as $field) {
+      $record[$field] = $clearingProcessAmounts['SUM_' . $field] ?? NULL;
+    }
+
+    return $record;
   }
 
   private function getFundingCaseIdFromWhere(): ?int {

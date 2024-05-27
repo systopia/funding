@@ -33,9 +33,10 @@
   overflow-y: scroll;
 }
 
-.funding-application-sidebar {
+.funding-application-sidebar,
+.funding-clearing-sidebar {
   height: 100%;
-  width: 370px;
+  width: 355px;
   position: absolute;
   z-index: 1;
   right: 0;
@@ -43,21 +44,36 @@
   padding: 0;
 }
 
-.funding-application-sidebar-element {
+.funding-application-sidebar-element,
+.funding-clearing-sidebar-element {
   width: 100%;
 }
 
-.funding-application-sidebar-element.panel-group {
+.funding-application-sidebar-element.panel-group,
+.funding-clearing-sidebar-element.panel-group {
   padding-left: 10px;
   padding-right: 10px;
 }
 
-.funding-application-main {
-  margin-right: 370px;
+.funding-application-main,
+.funding-clearing-main {
+  margin-right: 355px;
 }
 
-#bootstrap-theme .funding-application-main table {
+#bootstrap-theme .funding-application-main table,
+#bootstrap-theme .funding-clearing-main table,
+#bootstrap-theme .funding-clearing-main funding-jf-group > div {
   max-width: 1200px;
+}
+
+#bootstrap-theme .funding-application-main th,
+#bootstrap-theme .funding-clearing-main th {
+  hyphens: auto;
+  word-break: break-word;
+}
+
+#bootstrap-theme td input:not([type="button"]):not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="submit"]):not([type="image"]) {
+  min-width: 3em;
 }
 
 .funding-activity-title {
@@ -79,12 +95,13 @@
   background-color: #e8eef0 !important;
 }
 
-.funding-application-sidebar-element .btn-group {
+.funding-application-sidebar-element .btn-group,
+.funding-clearing-sidebar-element .btn-group {
   margin-bottom: 10px;
 }
 
 #bootstrap-theme .tab-pane {
-  padding: 15px 20px;
+  padding: 15px 3px 15px 10px;
 }
 
 /* fix padding issue in date field */

@@ -66,6 +66,7 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
             'identifier' => 'oeffentlicheMittel.europa',
             'clearing' => [
               'itemLabel' => 'Finanzierung durch Europa-Mittel',
+              'recipientLabel' => 'Fördernde Stelle',
             ],
           ]),
         ]),
@@ -77,6 +78,7 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
             'identifier' => 'oeffentlicheMittel.bundeslaender',
             'clearing' => [
               'itemLabel' => 'Finanzierung durch Bundesländer',
+              'recipientLabel' => 'Fördernde Stelle',
             ],
           ]),
         ]),
@@ -88,6 +90,7 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
             'identifier' => 'oeffentlicheMittel.staedteUndKreise',
             'clearing' => [
               'itemLabel' => 'Finanzierung durch Städte und Kreise',
+              'recipientLabel' => 'Fördernde Stelle',
             ],
           ]),
         ]),
@@ -115,6 +118,7 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
             'amountProperty' => 'betrag',
             'clearing' => [
               'itemLabel' => 'Sonstige Mittel',
+              'recipientLabel' => 'Fördernde Stelle',
             ],
           ]),
         ]

@@ -40,6 +40,8 @@ use Civi\Funding\SammelantragKurs\FundingCase\Data\KursCaseFormDataFactory;
 use Civi\Funding\SammelantragKurs\FundingCase\JsonSchema\KursCaseJsonSchemaFactory;
 use Civi\Funding\SammelantragKurs\FundingCase\UiSchema\KursCaseUiSchemaFactory;
 use Civi\Funding\SammelantragKurs\FundingCase\Validation\KursCaseValidator;
+use Civi\Funding\SammelantragKurs\Report\KursReportDataLoader;
+use Civi\Funding\SammelantragKurs\Report\KursReportFormFactory;
 use Symfony\Component\DependencyInjection\Reference;
 
 $container->autowire(KursApplicationActionsDeterminer::class)
@@ -83,3 +85,8 @@ $container->autowire(KursApplicationFormFilesFactory::class)
 $container->autowire(KursApplicationStatusSubscriber::class)
   ->addTag('kernel.event_subscriber')
   ->setLazy(TRUE);
+
+$container->autowire(KursReportDataLoader::class)
+  ->addTag(KursReportDataLoader::SERVICE_TAG);
+$container->autowire(KursReportFormFactory::class)
+  ->addTag(KursReportFormFactory::SERVICE_TAG);

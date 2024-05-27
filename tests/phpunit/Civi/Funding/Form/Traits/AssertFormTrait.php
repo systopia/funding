@@ -57,8 +57,10 @@ trait AssertFormTrait {
       if (TRUE !== ($jsonSchema->uniqueItems ?? NULL)) {
         foreach ($data as $key => $value) {
           Assert::assertIsInt($key, sprintf('Expected non-associative array at path "%s"', $path));
-          Assert::assertInstanceOf(\stdClass::class, $value, sprintf('Expected \stdClass at path "%s"', $path));
-          static::assertAllPropertiesSet($value, $jsonSchema->items, $path . '/' . $key);
+          if ('object' === $jsonSchema->items->type) {
+            Assert::assertInstanceOf(\stdClass::class, $value, sprintf('Expected \stdClass at path "%s"', $path));
+            static::assertAllPropertiesSet($value, $jsonSchema->items, $path . '/' . $key);
+          }
         }
       }
     }

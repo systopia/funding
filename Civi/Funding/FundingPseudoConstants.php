@@ -37,7 +37,7 @@ use CRM_Funding_ExtensionUtil as E;
 final class FundingPseudoConstants {
 
   /**
-   * @phpstan-return array<int, optionT>
+   * @phpstan-return list<optionT>
    */
   public static function getApplicationProcessStatus(): array {
     $options = [
@@ -128,6 +128,61 @@ final class FundingPseudoConstants {
   /**
    * @phpstan-return array<string, string>
    */
+  public static function getClearingItemStatus(): array {
+    return [
+      'new' => E::ts('New'),
+      'accepted' => E::ts('Accepted'),
+      'rejected' => E::ts('Rejected'),
+    ];
+  }
+
+  /**
+   * @phpstan-return list<optionT>
+   */
+  public static function getClearingProcessStatus(): array {
+    return [
+      [
+        'id' => 'draft',
+        'name' => 'draft',
+        'label' => E::ts('Draft'),
+        'icon' => 'fa-spinner',
+        'color' => NULL,
+        'abbr' => NULL,
+        'description' => NULL,
+      ],
+      [
+        'id' => 'review-requested',
+        'name' => 'review-requested',
+        'label' => E::ts('Review Requested'),
+        'icon' => 'fa-circle-o',
+        'color' => NULL,
+        'abbr' => NULL,
+        'description' => NULL,
+      ],
+      [
+        'id' => 'review',
+        'name' => 'review',
+        'label' => E::ts('In review'),
+        'icon' => 'fa-eye',
+        'color' => NULL,
+        'abbr' => NULL,
+        'description' => NULL,
+      ],
+      [
+        'id' => 'accepted',
+        'name' => 'accepted',
+        'label' => E::ts('Accepted'),
+        'icon' => 'fa-check-circle-o',
+        'color' => '#56ab41',
+        'abbr' => NULL,
+        'description' => NULL,
+      ],
+    ];
+  }
+
+  /**
+   * @phpstan-return array<string, string>
+   */
   public static function getDrawdownStatus(): array {
     return [
       'new' => E::ts('New'),
@@ -146,7 +201,7 @@ final class FundingPseudoConstants {
   }
 
   /**
-   * @phpstan-return array<int, optionT>
+   * @phpstan-return list<optionT>
    */
   public static function getFundingCaseStatus(): array {
     $options = [
