@@ -16,13 +16,15 @@ Some permissions need to be configured only once at the initial configuration of
 
 After installing the funding extension, the Drupal roles need to be given the correct permissions. You can edit the Drupal permissons at **People > Permissions** or `admin/people/permissions`, respectively.
 
-* Grant the following permissions to the role *CiviRemote: CiviRemote Funding*:
-    * Access CiviCRM Funding
+* Create a role for frontend users and assign this permission to it:
+    * CiviRemote: Access CiviCRM Funding
 * Reviewers need to have a role that grants the following permissions:
     * CiviCRM: access Funding Program Manager
 * Funding Admins need to have a role that grants the following permissions:
     * CiviCRM: access Funding Program Manager
     * CiviCRM: Funding Program Manager Administration
+ 
+If you don't need to differentiate, reviewer and funding program admin permissions can also be combined in one role.
 
 ## CiviRemote User Roles
 
