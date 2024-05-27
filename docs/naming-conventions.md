@@ -35,4 +35,4 @@ An application has different components:
 
 There are two kinds of applications: Normal Applications and Combined Applications.
 
-**Funding Case**: All applications that were created by the same applicant for a specific funding program. A funding case might contain multiple applications.
+**Funding Case**{#funding-cases}: All applications that were created by the same applicant for a specific funding program. A funding case might contain multiple applications.
