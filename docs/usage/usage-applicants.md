@@ -26,11 +26,11 @@ The dashboard element **My Applications**  shows the existing applications with 
 
 Applications of funding case type _Sammelantrag_ are listed separately in the dashboard element **My combined Applications**.
 
-#### Create and upload documents
+#### Create documents
 
-If application templates are configured by the giving organization, there are actions availabe in the application list with names of the form **Create: ...**. Those actions will create a PDF document based on the template. They can be downloaded and printed. After filling them out you can upload them to the appropriate place, for example the application or the drawdown form.
+If application templates are configured by the giving organization, there are actions available in the application list with names of the form **Create: ...**. Those actions will create a PDF document based on the template. It can be downloaded and printed.
 
-An example use case is a confirmation of the accuracy of the data that needs to be signed by hand. This could be uploaded to the application form. Or a list of participants of a workshop, that needs to be submitted during the clearing phase.
+An example use case is a confirmation of the accuracy of the data that needs to be signed by hand. Or a list of participants of a workshop, that needs to be submitted during the clearing phase.
 
 ![](../img/drupal_application_upload_document.png)
 _It is possible to upload documents to the application form._
