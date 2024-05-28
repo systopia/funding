@@ -40,7 +40,7 @@ final class IJBTeilnehmerJsonSchema extends JsonSchemaObject {
       'referenten' => new JsonSchemaInteger(['minimum' => 0], TRUE),
     ];
     if ($report) {
-      $teilnehmerDeutschlandProperties['mitFahrtkosten'] = new JsonSchemaInteger(['minimum' => 0, TRUE]);
+      $teilnehmerDeutschlandProperties['mitFahrtkosten'] = new JsonSchemaInteger(['minimum' => 0], TRUE);
     }
 
     $properties = [

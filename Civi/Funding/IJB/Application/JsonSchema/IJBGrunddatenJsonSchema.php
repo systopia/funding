@@ -89,7 +89,7 @@ final class IJBGrunddatenJsonSchema extends JsonSchemaObject {
       $properties['programmtageMitHonorar'] = new JsonSchemaInteger([
         'minimum' => 0,
         'maximum' => new JsonSchemaDataPointer('1/programmtage'),
-      ]);
+      ], TRUE);
     }
 
     $required = array_filter(
