@@ -90,8 +90,8 @@ final class KursGrunddatenJsonSchema extends JsonSchemaObject {
     if ($report) {
       /** @var \Civi\RemoteTools\JsonSchema\JsonSchema $teilnehmerProperties */
       $teilnehmerProperties = $properties['teilnehmer']['properties'];
-      $teilnehmerProperties['referentenMitHonorar'] = new JsonSchemaInteger(['minimum' => 0, TRUE]);
-      $teilnehmerProperties['mitFahrtkosten'] = new JsonSchemaInteger(['minimum' => 0, TRUE]);
+      $teilnehmerProperties['referentenMitHonorar'] = new JsonSchemaInteger(['minimum' => 0], TRUE);
+      $teilnehmerProperties['mitFahrtkosten'] = new JsonSchemaInteger(['minimum' => 0], TRUE);
     }
 
     parent::__construct($properties, ['required' => array_keys($properties)]);
