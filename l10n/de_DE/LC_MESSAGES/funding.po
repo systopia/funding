@@ -1029,7 +1029,7 @@ msgstr "In Prüfung"
 
 #: Civi/Funding/FundingPseudoConstants.php
 msgid "Rejected"
-msgstr "Abgelehent"
+msgstr "Abgelehnt"
 
 #: Civi/Funding/FundingPseudoConstants.php
 msgid "Eligible"
