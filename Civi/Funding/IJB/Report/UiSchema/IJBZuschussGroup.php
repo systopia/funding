@@ -53,7 +53,7 @@ jeweiligen Personen tatsächliche Ausgaben entstanden sind und nachgewiesen
 werden. Bei Festbeträgen können Mittel, die bei der Abrechnung der einzelnen
 Kategorien der Festbeträge eingespart werden, da tatsächliche Ausgaben nicht in
 Höhe der Festbeträge gegeben sind, für andere zuwendungsfähige Ausgaben
-eingesetzt werden. Beispiel: Wenn keine Honorar entstanden ist, kann kein
+eingesetzt werden. Beispiel: Wenn kein Honorar entstanden ist, kann kein
 Honorarfestbetrag gewährt werden. Wenn bei einem Teilnehmenden Reisekosten
 entstanden sind, die unter dem Festbetrag liegen, kann die Differenz auch andere
 Kosten ausgleichen.</p>
