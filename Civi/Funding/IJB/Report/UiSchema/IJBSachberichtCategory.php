@@ -181,7 +181,7 @@ EOD,
         ),
         new JsonFormsControl(
           "$scopePrefix/programmpunkteGemeinsamDurchgefuehrtFreitext",
-          'Anmerkungen zu (nicht) gemeinsam durchgeführten Punkte',
+          'Anmerkungen zu (nicht) gemeinsam durchgeführten Punkten',
           NULL,
           ['multi' => TRUE]
         ),
