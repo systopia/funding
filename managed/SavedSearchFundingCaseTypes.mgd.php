@@ -97,7 +97,7 @@ return [
               'size' => 'btn-xs',
               'links' => [
                 [
-                  'path' => 'civicrm/funding/case-type/templates#?case_type_id=[id]',
+                  'path' => 'civicrm/funding/case-type/templates#?fundingCaseType=[id]',
                   'icon' => 'fa-external-link',
                   'text' => E::ts('Manage templates'),
                   'style' => 'default',
