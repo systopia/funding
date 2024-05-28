@@ -39,6 +39,9 @@ final class UpdateAction extends DAOUpdateAction {
     $this->attachmentManager = $attachmentManager;
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function _run(Result $result): void {
     $transferContractTemplateFileId = $this->values['transfer_contract_template_file_id'] ?? NULL;
     unset($this->values['transfer_contract_template_file_id']);
@@ -49,18 +52,23 @@ final class UpdateAction extends DAOUpdateAction {
     parent::_run($result);
 
     if (NULL !== $transferContractTemplateFileId) {
+      $transferContractTemplateFileId = (int) $transferContractTemplateFileId;
       $this->updateTransferContractTemplate($transferContractTemplateFileId);
       // @phpstan-ignore-next-line
       $result[0]['transfer_contract_template_file_id'] = $transferContractTemplateFileId;
     }
 
     if (NULL !== $paymentInstructionTemplateFileId) {
+      $paymentInstructionTemplateFileId = (int) $paymentInstructionTemplateFileId;
       $this->updatePaymentInstructionTemplate($paymentInstructionTemplateFileId);
       // @phpstan-ignore-next-line
       $result[0]['payment_instruction_template_file_id'] = $paymentInstructionTemplateFileId;
     }
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   */
   private function updateTransferContractTemplate(int $transferContractTemplateFileId): void {
     $result = FundingCaseType::get(FALSE)
       ->addSelect('id', 'transfer_contract_template_file_id')
