@@ -7,7 +7,7 @@ Application submission, application review, approval, call for funds, payment in
 The extension is licensed under [AGPL-3.0](LICENSE.txt).
 
 ## Documentation
-Documentation is work in progress. For now you can look into the /docs folder to see what's already there. Also feel free to get in touch with us if you want to set up your own funding management with CiviCRM.
+You can read the documentation [here]([url](https://docs.civicrm.org/funding/en/latest/)).
 
 ## We need your support
 This CiviCRM extension is provided as Free and Open Source Software, and we are happy if you find it useful. 
