@@ -30,6 +30,7 @@ msgstr "Währung"
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
 #: managed/SavedSearchFundingCases.mgd.php
 #: managed/SavedSearchFundingProgramControlling.mgd.php
+#: managed/SavedSearch_Clearings.mgd.php
 msgid "Amount Cleared"
 msgstr "Abgerechneter Betrag"
 
@@ -41,6 +42,7 @@ msgstr "Abgerechneter Betrag"
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
 #: managed/SavedSearchFundingCases.mgd.php
 #: managed/SavedSearchFundingProgramControlling.mgd.php
+#: managed/SavedSearch_Clearings.mgd.php
 msgid "Amount Admitted"
 msgstr "Anerkannter Betrag"
 
@@ -2031,8 +2033,8 @@ msgid "Requests End Date"
 msgstr "Enddatum für Anträge"
 
 #: managed/SavedSearchFundingPrograms.mgd.php
-msgid "Edit recipients"
-msgstr "Empfänger bearbeiten"
+msgid "Edit possible funding recipients"
+msgstr "Mögliche Fördergeldempfänger bearbeiten"
 
 #: managed/SavedSearchFundingPrograms.mgd.php
 msgid "Edit initial funding case permissions"

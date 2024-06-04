@@ -151,7 +151,7 @@ return [
                 [
                   'path' => 'civicrm/a/#/funding/program/[id]/recipients',
                   'icon' => 'fa-pencil-square-o',
-                  'text' => E::ts('Edit recipients'),
+                  'text' => E::ts('Edit possible funding recipients'),
                   'style' => 'default',
                   'condition' => [
                     'check user permission',
