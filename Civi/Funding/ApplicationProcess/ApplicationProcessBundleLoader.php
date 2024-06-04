@@ -24,6 +24,7 @@ use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\Funding\FundingProgram\FundingProgramManager;
+use Civi\RemoteTools\Api4\Query\ConditionInterface;
 use Webmozart\Assert\Assert;
 
 class ApplicationProcessBundleLoader {
@@ -65,6 +66,20 @@ class ApplicationProcessBundleLoader {
   public function getAll(): array {
     $bundles = [];
     foreach ($this->applicationProcessManager->getAll() as $applicationProcess) {
+      $bundles[] = $this->createFromApplicationProcess($applicationProcess);
+    }
+
+    return $bundles;
+  }
+
+  /**
+   * @phpstan-return list<ApplicationProcessEntityBundle>
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function getBy(ConditionInterface $condition): array {
+    $bundles = [];
+    foreach ($this->applicationProcessManager->getBy($condition) as $applicationProcess) {
       $bundles[] = $this->createFromApplicationProcess($applicationProcess);
     }
 
