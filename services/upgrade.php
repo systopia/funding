@@ -21,6 +21,10 @@ declare(strict_types = 1);
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
 use Civi\Funding\Upgrade\Upgrader0002;
+use Civi\Funding\Upgrade\Upgrader0003;
 
 $container->autowire(Upgrader0002::class)
+  ->setPublic(TRUE);
+
+$container->autowire(Upgrader0003::class)
   ->setPublic(TRUE);

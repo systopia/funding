@@ -40,6 +40,7 @@ use Civi\Funding\Util\Uuid;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
+use Civi\RemoteTools\Api4\Query\ConditionInterface;
 use Webmozart\Assert\Assert;
 
 class ApplicationProcessManager {
@@ -155,6 +156,35 @@ class ApplicationProcessManager {
   }
 
   /**
+   * @phpstan-param array<string, 'ASC'|'DESC'> $orderBy
+   *
+   * @phpstan-return array<ApplicationProcessEntity>
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function getBy(
+    ConditionInterface $condition,
+    array $orderBy = [],
+    int $limit = 0,
+    int $offset = 0,
+    ?string $indexBy = NULL
+  ): array {
+    $result = $this->api4->getEntities(
+      FundingApplicationProcess::getEntityName(),
+      $condition,
+      $orderBy,
+      $limit,
+      $offset
+    );
+
+    if (NULL !== $indexBy) {
+      $result->indexBy($indexBy);
+    }
+
+    return ApplicationProcessEntity::allFromApiResult($result);
+  }
+
+  /**
    * @throws \CRM_Core_Exception
    *
    * @phpstan-return array<int, FullApplicationProcessStatus>
@@ -185,29 +215,14 @@ class ApplicationProcessManager {
    * @throws \CRM_Core_Exception
    */
   public function getByFundingCaseId(int $fundingCaseId): array {
-    // @phpstan-ignore-next-line
-    return ApplicationProcessEntity::allFromApiResult(
-      $this->api4->getEntities(
-        FundingApplicationProcess::getEntityName(),
-        Comparison::new('funding_case_id', '=', $fundingCaseId),
-        [],
-        0,
-        0,
-        ['checkPermissions' => FALSE],
-      )->indexBy('id')
-    );
+    return $this->getBy(Comparison::new('funding_case_id', '=', $fundingCaseId), [], 0, 0, 'id');
   }
 
   /**
    * @throws \CRM_Core_Exception
    */
   public function getFirstByFundingCaseId(int $fundingCaseId): ?ApplicationProcessEntity {
-    $action = FundingApplicationProcess::get(FALSE)
-      ->addWhere('funding_case_id', '=', $fundingCaseId)
-      ->addOrderBy('id')
-      ->setLimit(1);
-
-    return ApplicationProcessEntity::singleOrNullFromApiResult($this->api4->executeAction($action));
+    return $this->getBy(Comparison::new('funding_case_id', '=', $fundingCaseId), ['id' => 'ASC'], 1)[0] ?? NULL;
   }
 
   /**

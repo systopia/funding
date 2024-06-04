@@ -19,7 +19,6 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Fixtures;
 
-use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 
 final class ClearingProcessBundleFixture {
@@ -34,26 +33,10 @@ final class ClearingProcessBundleFixture {
     array $clearingProcessValues = [],
     array $applicationProcessValues = []
   ): ClearingProcessEntityBundle {
-    $fundingProgram = FundingProgramFixture::addFixture();
-    $fundingCaseType = FundingCaseTypeFixture::addFixture();
-    $recipientContact = ContactFixture::addOrganization();
-    $creationContact = ContactFixture::addIndividual();
-
-    $fundingCase = FundingCaseFixture::addFixture(
-      $fundingProgram->getId(),
-      $fundingCaseType->getId(),
-      $recipientContact['id'],
-      $creationContact['id'],
-    );
-
-    $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId(), $applicationProcessValues);
-    $clearingProcess = ClearingProcessFixture::addFixture($applicationProcess->getId(), $clearingProcessValues);
-
-    $applicationProcessBundle = new ApplicationProcessEntityBundle(
-      $applicationProcess,
-      $fundingCase,
-      $fundingCaseType,
-      $fundingProgram
+    $applicationProcessBundle = ApplicationProcessBundleFixture::create($applicationProcessValues);
+    $clearingProcess = ClearingProcessFixture::addFixture(
+      $applicationProcessBundle->getApplicationProcess()->getId(),
+      $clearingProcessValues
     );
 
     return new ClearingProcessEntityBundle($clearingProcess, $applicationProcessBundle);
