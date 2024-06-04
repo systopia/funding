@@ -32,9 +32,6 @@ If application templates are configured by the giving organization, there are ac
 
 An example use case is a confirmation of the accuracy of the data that needs to be signed by hand. Or a list of participants of a workshop, that needs to be submitted during the clearing phase.
 
-![](../img/drupal_application_upload_document.png)
-_It is possible to upload documents to the application form._
-
 ## Application phase
 
 ### Create a new application
@@ -85,10 +82,3 @@ The action **show drawdown** leads to a list such as this:
 ## Clearing Process
 
 **Important**: The implementation of the clearing process is still under development. A description of the usage will be added later.
-
-
-
-
-
-
-
