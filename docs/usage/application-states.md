@@ -2,7 +2,7 @@
 
 An application goes through different states during the application phase. Depending on the current status, different actions are allowed for external applicants and internal reviewers. In some states, a reviewer or applicant can leave a comment which can be seen in the application history as well.
 
-## Main application states
+## Main Application States
 
 ![](../img/application_workflow_main.png)
 
@@ -25,7 +25,7 @@ If a funding case is approved by the reviewers, the status of all _eligible_ app
 In the _complete_ status, any changes are possible, except the deletion of cost items. The changes have no influence on the application status or
 the results of the review.
 
-## Rework an eligible application
+## Rework an Eligible Application
 
 The figure above is not complete. It is possible for applicants to edit an application that is already approved and has the status _eligible_. This requires an additional review and therefore a series of other possible states for an application.
 

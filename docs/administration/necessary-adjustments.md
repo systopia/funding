@@ -1,4 +1,4 @@
-# Necessary adjustments
+# Necessary Adjustments
 
 Necessary adjustments to represent the funding workflow of a specific giving
 organization can be done via code in a custom extension.

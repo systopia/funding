@@ -1,4 +1,4 @@
-# Naming conventions
+# Naming Conventions
 
 The framework provided by the funding extension involves multiple entities, extensions and groups of people that interact which each other. The following list provides a short description of the terms that are mostly used.
 

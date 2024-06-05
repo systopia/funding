@@ -1,4 +1,4 @@
-# Usage for applicants
+# Usage for Applicants
 
 This chapter describes the typical use of the Funding Portal by a person who is applying for funding under a funding program. This includes the application phase as well as the workflow after a funding has been granted.
 
@@ -18,7 +18,7 @@ The dashboard is the central page of the funding portal and is usually configure
 
 ![Dashboard page](.././img/drupal_dashboard.png){ width="500" }
 
-### Application list
+### Application List
 
 The dashboard element **My Applications**  shows the existing applications with some details. Different actions can be performed for applications in this list.
 
@@ -26,21 +26,21 @@ The dashboard element **My Applications**  shows the existing applications with 
 
 Applications of funding case type _Sammelantrag_ are listed separately in the dashboard element **My combined Applications**.
 
-#### Create documents
+#### Create Documents
 
 If application templates are configured by the giving organization, there are actions available in the application list with names of the form **Create: ...**. Those actions will create a PDF document based on the template. It can be downloaded and printed.
 
 An example use case is a confirmation of the accuracy of the data that needs to be signed by hand. Or a list of participants of a workshop, that needs to be submitted during the clearing phase.
 
-## Application phase
+## Application Phase
 
-### Create a new application
+### Create a new Application
 
 Applicants can create a new application by opening the dashboard and choosing **New Application**. The first step is to choose the funding program they want to apply for. This leads to the application form which can be long and divided into multiple tabs.
 
 It is possible to save a draft and continue to work on the application at another time. When it is finished, it can be applied by clicking on the button **Apply**.
 
-### Change an application
+### Change an Application
 
 You can open the application from the application list via the action **Open application**. This leads to the same form that was used during creation, containing the details of the application. However, the available buttons and associated actions in this form depend on the status that the application currently has. The application might be in a status that does not allow changes.
 
@@ -48,7 +48,7 @@ Before applying, there are two actions possible that are reflected in the button
 
 All possible states and the available actions for the currently built-in funding case types are explained [here](./application-states.md).
 
-### View the application history
+### View the Application History
 
 The applications listed in **My Applications** also provide the action **Show History**. This leads to a flow chart showing every status that the application has gone through in chronological order, including comments created by the reviewers.
 
@@ -63,7 +63,7 @@ Download transfer contracts and manage drawdowns** leads to a list of approved f
 
 ![](../img/drupal_transfercontract_list.png)
 
-### Transfer contracts
+### Transfer Contracts
 
 A transfer contract is signed between the giving organization and the recipient. The document is available for **Download** by the applicants. A corresponding template is configured by the giving organization.
 

@@ -4,7 +4,7 @@ The user experience of the funding framework depends in detail on the funding ca
 
 This chapter is based on the funding case type _Sonstige Aktivität_ (AVK1).
 
-## Phases of a funding case
+## Phases of a Funding Case
 
 The workflow that a funding case goes through is visualized in a simplified version by the following diagram:
 
