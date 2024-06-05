@@ -1,4 +1,4 @@
-# Users and permissions
+# Users and Permissions
 
 In a funding program and for a specific funding case, different people from the giving organisation might be involved. If the receiving contact is an organisation, there might be different people interacting with the funding case as well. These people have different roles that come with different permissions.
 
@@ -12,7 +12,7 @@ The permissions need to be configured on different levels:
 
 Some permissions need to be configured only once at the initial configuration of the funding framework. Others have to be configured during the creation of a new funding program. Some have to be configured for every individual contact.
 
-## Drupal permissions
+## Drupal Permissions
 
 After installing the funding extension, the Drupal roles need to be given the correct permissions. You can edit the Drupal permissons at **People > Permissions** or `admin/people/permissions`, respectively.
 
@@ -51,7 +51,7 @@ As an example, consider a funding program that funds organizations. The applicat
 
 The dropdown menu will then show all organizations that have an _Employee_ relationship with the applicant that is logged in and creating the application.
 
-### Edit permissions
+### Edit Permissions
 
 These permissions are related to a funding program, independently of a specific funding case or application.
 
@@ -71,7 +71,7 @@ A configuration could look like this:
 
 !["Example configuration of permissions on funding program level"](../img/permissions_funding_program.png )
 
-### Initial funding case permissions
+### Initial Funding Case Permissions
 
 Additional to the permissions that are set for a whole funding program, there exist permissions that are on the level of a funding case and can be different between cases. Funding cases are created automatically during the application process and there might be many cases for one funding program. This requires a default set of permissions that are automatically assigned during the creation of a new funding case. These initial permissions can be configured with the action **Initial funding case permissions** of a funding program. To alter the permissions for a specific funding case, go to **Funding > Funding Cases**, find the funding case in the list and choose the action **Edit permissions** for this case.
 

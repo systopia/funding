@@ -6,7 +6,7 @@ The funding extension is still under development and there exists no stable rele
 
 In the following, `$DRUPAL_ROOT` refers to the Drupal installation root, for example `/var/www/web`.
 
-## Status of this document
+## Status of this Document
 
 The status of this document is **work in progress**.
 
@@ -16,7 +16,7 @@ The installation instructions were used on a system with
 - Drupal 10.1.6
 - PHP 8.1
 
-## Configure upload of private files
+## Configure Upload of Private Files
 
 ```bash
 mkdir $DRUPAL_ROOT/drupal/web/sites/default/files/private
@@ -31,7 +31,7 @@ Set the following setting in `$DRUPAL_ROOT/drupal/web/sites/default/settings.php
 $settings['file_private_path'] = 'sites/default/files/private';
 ```
 
-## Drupal modules and dependencies
+## Drupal Modules and Dependencies
 
 Edit `$DRUPAL_ROOT/drupal/composer.json` and add the following to repositories:
 
@@ -57,7 +57,7 @@ composer require custom/civiremote_funding
 drush pm:enable civiremote_funding
 ```
 
-## Further modules/dependencies
+## Further Modules/Dependencies
 
 - `fontawesome` is not required if Font Awesome is provided by other means.
 - `formtips` is not required, but recommended.
@@ -77,7 +77,7 @@ drush pm:enable config_update
 
 The last step is no longer necessary as soon as we have releases of `civiremote_funding` with update routines.
 
-### Configure fontawesome
+### Configure Fontawesome
 
 You can optionally change the settings to provide Font Awesome files locally:
 
@@ -88,7 +88,7 @@ drush fa:download
 Open `/admin/config/content/fontawesome` and uncheck the option **Use external file (CDN) / local file?**
 
 
-### Configure formtips
+### Configure Formtips
 
 Set the following under `/admin/config/user-interface/formtips` (adjust times if necessary):
 
@@ -147,7 +147,7 @@ Set up a CiviMRF profile under `/admin/config/cmrf/profiles` or edit the default
 [Optional] Activate **CiviMRF Call Report** at `/admin/modules`.
 This helps with debugging by showing a report about all API calls sent to CiviCRM and the corresponding results. The report can be found at `admin/reports/cmrfcalls`.
 
-## Synchronise user roles
+## Synchronise User Roles
 
 CiviRemote will synchronise permissions that are set for a CiviCRM contact with the associated user in Drupal. For the funding framework, the roles **CiviRemote: CiviRemote User** and **CiviRemote: CiviRemote Funding** are used. During the synchronisation of user roles, these roles are automatically created in Drupal if they don't exist yet. Because of this, we create a test user, synchronise/create the roles and delete the user afterward. You can also create a regular user that you would need to create anyway.
 
@@ -165,7 +165,7 @@ Additionally, you need to adapt the permissions for Drupal user roles as describ
 
 Open the basic site settings at `admin/config/system/site-information` and enter `/civiremote/funding` in the field for the default front page.
 
-## Create templates
+## Create Templates
 
 The creation of transfer contracts and payment instructions relies on templates in `docx` format. They are created with [CiviOffice](https://docs.civicrm.org/civioffice/en/latest/) and can contain tokens. Currently, there is no admin page available to upload the template files.
 
