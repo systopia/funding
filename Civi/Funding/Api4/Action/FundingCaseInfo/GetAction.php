@@ -25,14 +25,13 @@ use Civi\Api4\Generic\AbstractGetAction;
 use Civi\Api4\Generic\Result;
 use Civi\Api4\Generic\Traits\ArrayQueryActionTrait;
 use Civi\Funding\Api4\Action\Traits\IsFieldSelectedTrait;
-use Civi\Funding\Api4\Util\WhereUtil;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
-use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
+use Civi\RemoteTools\Api4\Query\ConditionInterface;
 
 final class GetAction extends AbstractGetAction {
 
@@ -45,8 +44,6 @@ final class GetAction extends AbstractGetAction {
   private Api4Interface $api4;
 
   private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
-
-  private FundingCaseManager $fundingCaseManager;
 
   /**
    * @phpstan-param array<string, mixed> $row
@@ -74,13 +71,11 @@ final class GetAction extends AbstractGetAction {
 
   public function __construct(
     Api4Interface $api4,
-    ApplicationProcessBundleLoader $applicationProcessBundleLoader,
-    FundingCaseManager $fundingCaseManager
+    ApplicationProcessBundleLoader $applicationProcessBundleLoader
   ) {
     parent::__construct(FundingCaseInfo::getEntityName(), 'get');
     $this->api4 = $api4;
     $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
-    $this->fundingCaseManager = $fundingCaseManager;
   }
 
   /**
@@ -194,55 +189,39 @@ final class GetAction extends AbstractGetAction {
    * @throws \CRM_Core_Exception
    */
   private function getApplicationProcessBundles(): iterable {
-    $applicationProcessId = WhereUtil::getInt($this->where, 'application_process_id');
-    if (NULL !== $applicationProcessId) {
-      $applicationProcessBundle = $this->applicationProcessBundleLoader->get($applicationProcessId);
-      if (NULL !== $applicationProcessBundle) {
-        yield $applicationProcessBundle;
-      }
+    $conditions = $this->buildCondition();
+    if (isset($conditions)) {
+      return $this->applicationProcessBundleLoader->getBy($conditions);
     }
-    else {
-      foreach ($this->getFundingCases() as $fundingCase) {
-        foreach (
-          $this->applicationProcessBundleLoader->getByFundingCaseId($fundingCase->getId()) as $applicationProcessBundle
-        ) {
-          yield $applicationProcessBundle;
-        }
-      }
-    }
-  }
-
-  private function getFundingCaseIdFromWhere(): ?int {
-    return WhereUtil::getInt($this->where, 'funding_case_id');
+    return $this->applicationProcessBundleLoader->getAll();
   }
 
   /**
-   * @return array<\Civi\Funding\Entity\FundingCaseEntity>
-   *
-   * @throws \CRM_Core_Exception
+   * @return \Civi\RemoteTools\Api4\Query\ConditionInterface|null
    */
-  private function getFundingCases(): array {
-    $fundingCaseId = $this->getFundingCaseIdFromWhere();
-    if (NULL === $fundingCaseId) {
-      $withCombinedApplication = WhereUtil::getBool($this->where, 'funding_case_type_is_combined_application');
-      if (NULL !== $withCombinedApplication) {
-        return $this->fundingCaseManager->getBy(Comparison::new(
-          'funding_case_type_id.is_combined_application',
-          '=',
-          $withCombinedApplication
-        ));
+  private function buildCondition(): ?ConditionInterface {
+    $fieldNameMapping = [
+      'funding_case_type_is_combined_application' => 'funding_case_id.funding_case_type_id.is_combined_application',
+      'funding_program_title' => 'funding_case_id.funding_program_id.title',
+      'application_process_id' => 'id',
+      'application_process_status' => 'status',
+      'funding_case_id' => 'funding_case_id',
+    ];
+    $conditions = [];
+    foreach ($this->where as $condition) {
+      if (array_key_exists($condition[0], $fieldNameMapping)) {
+        $conditions[] = Comparison::new($fieldNameMapping[$condition[0]], $condition[1], $condition[2]);
       }
-
-      return $this->fundingCaseManager->getAll();
+    }
+    if ($conditions !== []) {
+      return CompositeCondition::new('AND', ...$conditions);
     }
 
-    $fundingCase = $this->fundingCaseManager->get($fundingCaseId);
-
-    return NULL === $fundingCase ? [] : [$fundingCase];
+    return NULL;
   }
 
   /**
-   * @phpstan-param array<string> $permissions
+   * @phpstan-param list<string> $permissions
    */
   private function canOpenClearing(?bool $isEligible, ?int $clearingProcessId, array $permissions): bool {
     return TRUE === $isEligible && (NULL !== $clearingProcessId

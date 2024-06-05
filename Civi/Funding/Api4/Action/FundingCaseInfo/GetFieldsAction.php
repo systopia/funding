@@ -222,6 +222,7 @@ final class GetFieldsAction extends BasicGetFieldsAction {
         'title' => 'application_process_status',
         'data_type' => 'String',
         'options' => $this->getOptions(FundingApplicationProcess::getEntityName(), 'status'),
+        'operators' => ['IN'],
       ],
       [
         'name' => 'application_process_is_review_calculative',
