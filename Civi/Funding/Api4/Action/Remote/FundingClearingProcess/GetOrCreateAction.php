@@ -24,7 +24,7 @@ use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingAction;
 use Civi\Funding\Api4\Action\Traits\ApplicationProcessIdParameterTrait;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 
-final class GetOrCreateAction extends AbstractRemoteFundingAction {
+class GetOrCreateAction extends AbstractRemoteFundingAction {
 
   use ApplicationProcessIdParameterTrait;
 

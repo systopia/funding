@@ -19,9 +19,11 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ClearingProcess\Api4\ActionHandler;
 
+use Civi\API\Exception\UnauthorizedException;
 use Civi\Funding\Api4\Action\Remote\FundingClearingProcess\GetOrCreateAction;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ClearingProcess\ClearingProcessManager;
+use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 
 /**
@@ -62,9 +64,21 @@ final class RemoteGetOrCreateActionHandler implements ActionHandlerInterface {
       );
     }
 
-    $clearingProcess = $this->clearingProcessManager->getByApplicationProcessId(
-      $applicationProcessBundle->getApplicationProcess()->getId()
-    ) ?? $this->clearingProcessManager->create($applicationProcessBundle);
+    $clearingProcess = $this->clearingProcessManager->getByApplicationProcessId($action->getApplicationProcessId());
+
+    if (NULL === $clearingProcess) {
+      $fundingCase = $applicationProcessBundle->getFundingCase();
+      if (!$fundingCase->hasPermission(ClearingProcessPermissions::CLEARING_APPLY)
+        && !$fundingCase->hasPermission(ClearingProcessPermissions::CLEARING_MODIFY)
+      ) {
+        throw new UnauthorizedException(sprintf(
+          'Permission to create clearing for application process with ID %d is missing',
+          $action->getApplicationProcessId()
+        ));
+      }
+
+      $clearingProcess = $this->clearingProcessManager->create($applicationProcessBundle);
+    }
 
     return $clearingProcess->toArray();
   }

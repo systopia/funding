@@ -23,10 +23,13 @@ use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\FundingClearingProcess;
 use Civi\Api4\Generic\Result;
 use Civi\Funding\Api4\Action\FundingCase\AbstractReferencingDAOGetAction;
+use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\RemoteTools\Api4\Api4Interface;
+use Civi\RemoteTools\Api4\Query\Comparison;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
+use Webmozart\Assert\Assert;
 
 final class GetAction extends AbstractReferencingDAOGetAction {
 
@@ -44,7 +47,20 @@ final class GetAction extends AbstractReferencingDAOGetAction {
   }
 
   public function _run(Result $result): void {
+    if ($this->isFieldExplicitlySelected('CAN_open_clearing')) {
+      $this->addSelect('is_eligible');
+      $this->addSelect('funding_case_id');
+    }
+
     parent::_run($result);
+
+    if ($this->isFieldExplicitlySelected('CAN_open_clearing')) {
+      /** @phpstan-var array<string, mixed> $record */
+      foreach ($result as &$record) {
+        // @phpstan-ignore-next-line
+        $record['CAN_open_clearing'] = $this->canOpenClearing($record);
+      }
+    }
 
     $clearingProcessFields = array_intersect([
       'amount_cleared',
@@ -69,6 +85,32 @@ final class GetAction extends AbstractReferencingDAOGetAction {
         }
       }
     }
+  }
+
+  /**
+   * @phpstan-param array{id: int, is_eligible: bool|null, funding_case_id: int} $record
+   */
+  private function canOpenClearing(array $record): bool {
+    if (TRUE !== $record['is_eligible']) {
+      return FALSE;
+    }
+
+    if (0 !== $this->_api4->countEntities(
+        FundingClearingProcess::getEntityName(),
+        Comparison::new(
+          'application_process_id',
+          '=',
+          $record['id']
+        )
+      )) {
+      return TRUE;
+    }
+
+    $fundingCase = $this->_fundingCaseManager->get($record['funding_case_id']);
+    Assert::notNull($fundingCase);
+
+    return $fundingCase->hasPermission(ClearingProcessPermissions::CLEARING_MODIFY) || $fundingCase->hasPermission(
+        ClearingProcessPermissions::CLEARING_APPLY);
   }
 
 }

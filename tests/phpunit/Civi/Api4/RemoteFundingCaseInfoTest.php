@@ -72,7 +72,8 @@ final class RemoteFundingCaseInfoTest extends AbstractRemoteFundingHeadlessTestC
     FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['application_case_perm']);
 
     $action = RemoteFundingCaseInfo::get()
-      ->setRemoteContactId((string) $contact['id']);
+      ->setRemoteContactId((string) $contact['id'])
+      ->addSelect('*', 'CAN_open_clearing');
     $result = $action->execute();
     static::assertCount(1, $result);
 
@@ -106,7 +107,9 @@ final class RemoteFundingCaseInfoTest extends AbstractRemoteFundingHeadlessTestC
       'application_process_start_date' => '2022-09-20 20:20:20',
       'application_process_end_date' => NULL,
       'application_process_is_eligible' => $applicationProcess->getIsEligible(),
+      'clearing_process_id' => NULL,
       'funding_case_PERM_application_case_perm' => TRUE,
+      'CAN_open_clearing' => FALSE,
     ];
     static::assertEquals($expected,
       // Not given, but possible permissions are part of the flattened permissions
@@ -168,7 +171,7 @@ final class RemoteFundingCaseInfoTest extends AbstractRemoteFundingHeadlessTestC
       }
     }
 
-    static::assertCount(33 + $permissionsCount, $result);
+    static::assertCount(34 + $permissionsCount, $result);
   }
 
 }

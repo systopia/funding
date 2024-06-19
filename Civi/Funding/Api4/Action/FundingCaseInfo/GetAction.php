@@ -24,8 +24,10 @@ use Civi\Api4\FundingClearingProcess;
 use Civi\Api4\Generic\AbstractGetAction;
 use Civi\Api4\Generic\Result;
 use Civi\Api4\Generic\Traits\ArrayQueryActionTrait;
+use Civi\Funding\Api4\Action\Traits\IsFieldSelectedTrait;
 use Civi\Funding\Api4\Util\WhereUtil;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
+use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\RemoteTools\Api4\Api4Interface;
@@ -37,6 +39,8 @@ final class GetAction extends AbstractGetAction {
   use ArrayQueryActionTrait {
     ArrayQueryActionTrait::filterCompare as traitFilterCompare;
   }
+
+  use IsFieldSelectedTrait;
 
   private Api4Interface $api4;
 
@@ -85,9 +89,18 @@ final class GetAction extends AbstractGetAction {
    * @throws \CRM_Core_Exception
    */
   public function _run(Result $result): void {
+    if ($this->isFieldExplicitlySelected('CAN_open_clearing')) {
+      $this->addSelect('clearing_process_id');
+    }
+
     $records = [];
     foreach ($this->getApplicationProcessBundles() as $applicationProcessBundle) {
       $records[] = $this->buildRecord($applicationProcessBundle);
+    }
+
+    if (in_array('*', $this->getSelect(), TRUE)) {
+      // Don't filter not explicitly selected fields in queryArray().
+      $this->setSelect([]);
     }
 
     $this->queryArray($records, $result);
@@ -160,6 +173,14 @@ final class GetAction extends AbstractGetAction {
       $record['funding_case_' . $permission] = $active;
     }
 
+    if ($this->isFieldExplicitlySelected('CAN_open_clearing')) {
+      $record['CAN_open_clearing'] = $this->canOpenClearing(
+        $record['application_process_is_eligible'],
+        $record['clearing_process_id'],
+        $record['funding_case_permissions']
+      );
+    }
+
     return $record;
   }
 
@@ -218,6 +239,15 @@ final class GetAction extends AbstractGetAction {
     $fundingCase = $this->fundingCaseManager->get($fundingCaseId);
 
     return NULL === $fundingCase ? [] : [$fundingCase];
+  }
+
+  /**
+   * @phpstan-param array<string> $permissions
+   */
+  private function canOpenClearing(?bool $isEligible, ?int $clearingProcessId, array $permissions): bool {
+    return TRUE === $isEligible && (NULL !== $clearingProcessId
+      || in_array(ClearingProcessPermissions::CLEARING_MODIFY, $permissions, TRUE)
+      || in_array(ClearingProcessPermissions::CLEARING_APPLY, $permissions, TRUE));
   }
 
 }
