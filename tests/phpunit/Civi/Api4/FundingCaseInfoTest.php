@@ -70,7 +70,7 @@ final class FundingCaseInfoTest extends AbstractFundingHeadlessTestCase {
     FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['case_perm']);
 
     \CRM_Core_Session::singleton()->set('userID', $contact['id']);
-    $action = FundingCaseInfo::get();
+    $action = FundingCaseInfo::get()->addSelect('*', 'CAN_open_clearing');
     $result = $action->execute();
     static::assertCount(1, $result);
 
@@ -104,7 +104,9 @@ final class FundingCaseInfoTest extends AbstractFundingHeadlessTestCase {
       'application_process_start_date' => '2022-09-20 20:20:20',
       'application_process_end_date' => NULL,
       'application_process_is_eligible' => $applicationProcess->getIsEligible(),
+      'clearing_process_id' => NULL,
       'funding_case_PERM_case_perm' => TRUE,
+      'CAN_open_clearing' => FALSE,
     ];
     static::assertEquals($expected,
       // Not given, but possible permissions are part of the flattened permissions
@@ -173,7 +175,7 @@ final class FundingCaseInfoTest extends AbstractFundingHeadlessTestCase {
       }
     }
 
-    static::assertCount(33 + $permissionsCount, $result);
+    static::assertCount(34 + $permissionsCount, $result);
   }
 
 }

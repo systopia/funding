@@ -95,6 +95,16 @@ final class GetFieldsAction extends DAOGetFieldsAction {
       'nullable' => TRUE,
       'operators' => [],
     ];
+    $fields[] = [
+      'name' => 'CAN_open_clearing',
+      'type' => 'Extra',
+      'data_type' => 'Boolean',
+      'readonly' => TRUE,
+      'nullable' => FALSE,
+      'operators' => [],
+      // Without sql renderer the query would fail. The actual value is fetched afterward.
+      'sql_renderer' => fn () => '(SELECT NULL)',
+    ];
 
     return $fields;
   }

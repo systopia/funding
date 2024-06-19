@@ -310,6 +310,11 @@ final class GetFieldsAction extends BasicGetFieldsAction {
         'data_type' => 'Money',
         'nullable' => TRUE,
       ],
+      [
+        'name' => 'CAN_open_clearing',
+        'type' => 'Extra',
+        'data_type' => 'Boolean',
+      ],
     ], iterator_to_array($this->getPermissionFields()));
   }
 
