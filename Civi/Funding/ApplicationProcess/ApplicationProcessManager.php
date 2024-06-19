@@ -39,7 +39,6 @@ use Civi\Funding\Util\DateTimeUtil;
 use Civi\Funding\Util\Uuid;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
-use Civi\RemoteTools\Api4\Query\CompositeCondition;
 use Civi\RemoteTools\Api4\Query\ConditionInterface;
 use Webmozart\Assert\Assert;
 
@@ -57,7 +56,7 @@ class ApplicationProcessManager {
   /**
    * @throws \CRM_Core_Exception
    */
-  public function countBy(CompositeCondition $where): int {
+  public function countBy(ConditionInterface $where): int {
     return $this->api4->countEntities(
       FundingApplicationProcess::getEntityName(),
       $where,

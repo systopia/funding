@@ -35,6 +35,38 @@ use Civi\RemoteTools\Api4\Query\ConditionInterface;
 
 final class GetAction extends AbstractGetAction {
 
+  /**
+   * Mapping of FundingCaseInfo field names to FundingApplicationProcess field
+   * names. Used for filtering and sorting.
+   */
+  private const FIELD_NAME_MAPPING = [
+    'funding_case_id' => 'funding_case_id',
+    'funding_case_identifier' => 'funding_case_id.identifier',
+    'funding_case_permissions' => 'funding_case_id.permissions',
+    'funding_case_status' => 'funding_case_id.status',
+    'funding_case_creation_date' => 'funding_case_id.creation_date',
+    'funding_case_modification_date' => 'funding_case_id.modification_date',
+    'funding_case_amount_approved' => 'funding_case_id.amount_approved',
+    'funding_case_type_id' => 'funding_case_id.funding_case_type_id',
+    'funding_case_type_is_combined_application' => 'funding_case_id.funding_case_type_id.is_combined_application',
+    'funding_program_id' => 'funding_case_id.funding_program_id',
+    'funding_program_currency' => 'funding_case_id.funding_program_id.currency',
+    'funding_program_title' => 'funding_case_id.funding_program_id.title',
+    'application_process_id' => 'id',
+    'application_process_identifier' => 'identifier',
+    'application_process_title' => 'title',
+    'application_process_short_description' => 'short_description',
+    'application_process_status' => 'status',
+    'application_process_is_review_calculative' => 'is_review_calculative',
+    'application_process_is_review_content' => 'is_review_content',
+    'application_process_amount_requested' => 'amount_requested',
+    'application_process_creation_date' => 'creation_date',
+    'application_process_modification_date' => 'modification_date',
+    'application_process_start_date' => 'start_date',
+    'application_process_end_date' => 'end_date',
+    'application_process_is_eligible' => 'is_eligible',
+  ];
+
   use ArrayQueryActionTrait {
     ArrayQueryActionTrait::filterCompare as traitFilterCompare;
   }
@@ -44,30 +76,6 @@ final class GetAction extends AbstractGetAction {
   private Api4Interface $api4;
 
   private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
-
-  /**
-   * @phpstan-param array<string, mixed> $row
-   * @phpstan-param array<mixed> $condition
-   *
-   * @return bool
-   *
-   * @throws \Civi\API\Exception\NotImplementedException
-   *
-   * @see ArrayQueryActionTrait::filterCompare()
-   */
-  public static function filterCompare($row, $condition) {
-    if (is_string($row[$condition[0] ?? NULL] ?? NULL) && 'LIKE' === ($condition[1] ?? NULL)) {
-      $expected = $condition[2] ?? NULL;
-      if (is_string($expected) && str_starts_with($expected, '%') && str_ends_with($expected, '%')) {
-        // Make case-insensitive comparison if we're looking for "%<something>%".
-        // This makes searching (in Drupal Views) behaving as accustomed to users.
-        $condition[1] = 'CONTAINS';
-        $condition[2] = trim($expected, '%');
-      }
-    }
-
-    return static::traitFilterCompare($row, $condition);
-  }
 
   public function __construct(
     Api4Interface $api4,
@@ -84,6 +92,14 @@ final class GetAction extends AbstractGetAction {
    * @throws \CRM_Core_Exception
    */
   public function _run(Result $result): void {
+    if ($this->getSelect() === ['row_count']) {
+      $count = $this->applicationProcessBundleLoader->countBy($this->buildCondition($this->getWhere()));
+      $result->setCountMatched($count);
+      $result->exchangeArray([['row_count' => $count]]);
+
+      return;
+    }
+
     if ($this->isFieldExplicitlySelected('CAN_open_clearing')) {
       $this->addSelect('clearing_process_id');
     }
@@ -93,12 +109,22 @@ final class GetAction extends AbstractGetAction {
       $records[] = $this->buildRecord($applicationProcessBundle);
     }
 
-    if (in_array('*', $this->getSelect(), TRUE)) {
-      // Don't filter not explicitly selected fields in queryArray().
-      $this->setSelect([]);
+    if (in_array('row_count', $this->getSelect(), TRUE)) {
+      if (0 === $this->getOffset() && (0 === $this->getLimit() || count($records) < $this->getLimit())) {
+        $result->setCountMatched(count($records));
+      }
+      else {
+        $result->setCountMatched(
+          $this->applicationProcessBundleLoader->countBy($this->buildCondition($this->getWhere()))
+        );
+      }
     }
 
-    $this->queryArray($records, $result);
+    if (!in_array('*', $this->getSelect(), TRUE)) {
+      $records = $this->selectArray($records);
+    }
+
+    $result->exchangeArray($records);
   }
 
   /**
@@ -189,35 +215,12 @@ final class GetAction extends AbstractGetAction {
    * @throws \CRM_Core_Exception
    */
   private function getApplicationProcessBundles(): iterable {
-    $conditions = $this->buildCondition();
-    if (isset($conditions)) {
-      return $this->applicationProcessBundleLoader->getBy($conditions);
-    }
-    return $this->applicationProcessBundleLoader->getAll();
-  }
-
-  /**
-   * @return \Civi\RemoteTools\Api4\Query\ConditionInterface|null
-   */
-  private function buildCondition(): ?ConditionInterface {
-    $fieldNameMapping = [
-      'funding_case_type_is_combined_application' => 'funding_case_id.funding_case_type_id.is_combined_application',
-      'funding_program_title' => 'funding_case_id.funding_program_id.title',
-      'application_process_id' => 'id',
-      'application_process_status' => 'status',
-      'funding_case_id' => 'funding_case_id',
-    ];
-    $conditions = [];
-    foreach ($this->where as $condition) {
-      if (array_key_exists($condition[0], $fieldNameMapping)) {
-        $conditions[] = Comparison::new($fieldNameMapping[$condition[0]], $condition[1], $condition[2]);
-      }
-    }
-    if ($conditions !== []) {
-      return CompositeCondition::new('AND', ...$conditions);
-    }
-
-    return NULL;
+    return $this->applicationProcessBundleLoader->getBy(
+      $this->buildCondition($this->getWhere()),
+      $this->buildOrderBy(),
+      $this->getLimit(),
+      $this->getOffset()
+    );
   }
 
   /**
@@ -225,8 +228,41 @@ final class GetAction extends AbstractGetAction {
    */
   private function canOpenClearing(?bool $isEligible, ?int $clearingProcessId, array $permissions): bool {
     return TRUE === $isEligible && (NULL !== $clearingProcessId
-      || in_array(ClearingProcessPermissions::CLEARING_MODIFY, $permissions, TRUE)
-      || in_array(ClearingProcessPermissions::CLEARING_APPLY, $permissions, TRUE));
+        || in_array(ClearingProcessPermissions::CLEARING_MODIFY, $permissions, TRUE)
+        || in_array(ClearingProcessPermissions::CLEARING_APPLY, $permissions, TRUE));
+  }
+
+  /**
+   * @phpstan-param array<array{string, string|mixed[], 2?: mixed}> $where
+   */
+  private function buildCondition(array $where, string $operation = 'AND'): ConditionInterface {
+    $conditions = [];
+    foreach ($where as $clause) {
+      if (is_array($clause[1])) {
+        // @phpstan-ignore-next-line
+        $conditions[] = $this->buildCondition($clause[1], $clause[0]);
+      }
+      elseif (array_key_exists($clause[0], self::FIELD_NAME_MAPPING)) {
+        // @phpstan-ignore-next-line
+        $conditions[] = Comparison::new(self::FIELD_NAME_MAPPING[$clause[0]], $clause[1], $clause[2] ?? NULL);
+      }
+    }
+
+    return CompositeCondition::new($operation, ...$conditions);
+  }
+
+  /**
+   * @phpstan-return array<string, 'ASC'|'DESC'>
+   */
+  private function buildOrderBy(): array {
+    $orderBy = [];
+    foreach ($this->getOrderBy() as $field => $direction) {
+      if (isset(self::FIELD_NAME_MAPPING[$field])) {
+        $orderBy[self::FIELD_NAME_MAPPING[$field]] = $direction;
+      }
+    }
+
+    return $orderBy;
   }
 
 }
