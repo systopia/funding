@@ -46,6 +46,9 @@ abstract class AbstractRemoteFundingGetFieldsActionHandler implements ActionHand
     ]);
   }
 
+  /**
+   * @return string The non-remote entity name.
+   */
   abstract protected function getEntityName(): string;
 
 }
