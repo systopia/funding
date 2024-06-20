@@ -63,7 +63,8 @@ class TransferContractTokenSubscriber extends AbstractTokenSubscriber {
 
   public function checkActive(TokenProcessor $processor): bool {
     return in_array('transferContract', $processor->context['schema'] ?? [], TRUE)
-      || [] !== $processor->getContextValues('transferContract');
+      || [] !== $processor->getContextValues('transferContract')
+      || 'CRM_Civioffice_Page_Tokens' === ($processor->context['controller'] ?? NULL);
   }
 
   /**

@@ -98,7 +98,8 @@ abstract class AbstractCiviOfficeTokenSubscriber extends AbstractTokenSubscriber
 
   public function checkActive(TokenProcessor $processor): bool {
     return in_array($this->getContextKey(), $processor->context['schema'] ?? [], TRUE)
-      || [] !== $processor->getContextValues($this->getContextKey());
+      || [] !== $processor->getContextValues($this->getContextKey())
+      || 'CRM_Civioffice_Page_Tokens' === ($processor->context['controller'] ?? NULL);
   }
 
   /**
