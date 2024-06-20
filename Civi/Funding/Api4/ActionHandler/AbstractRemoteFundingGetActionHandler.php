@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Api4\ActionHandler;
 
 use Civi\Api4\Generic\Result;
-use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingGetAction;
+use Civi\Funding\Api4\Action\Remote\RemoteFundingGetAction;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Civi\RemoteTools\Api4\Api4Interface;
 
@@ -32,7 +32,7 @@ abstract class AbstractRemoteFundingGetActionHandler implements ActionHandlerInt
     $this->api4 = $api4;
   }
 
-  public function get(AbstractRemoteFundingGetAction $action): Result {
+  public function get(RemoteFundingGetAction $action): Result {
     return $this->api4->execute($this->getEntityName(), 'get', [
       'language' => $action->getLanguage(),
       'select' => $action->getSelect(),

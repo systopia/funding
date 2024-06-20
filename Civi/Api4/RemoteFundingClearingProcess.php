@@ -4,11 +4,11 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\Funding\Api4\AbstractRemoteFundingEntity;
-use Civi\Funding\Api4\Action\Remote\FundingClearingProcess\GetAction;
-use Civi\Funding\Api4\Action\Remote\FundingClearingProcess\GetOrCreateAction;
 use Civi\Funding\Api4\Action\Remote\FundingClearingProcess\GetFormAction;
+use Civi\Funding\Api4\Action\Remote\FundingClearingProcess\GetOrCreateAction;
 use Civi\Funding\Api4\Action\Remote\FundingClearingProcess\SubmitFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingClearingProcess\ValidateFormAction;
+use Civi\Funding\Api4\Action\Remote\RemoteFundingGetAction;
 
 /**
  * FundingClearingProcess entity.
@@ -19,8 +19,8 @@ use Civi\Funding\Api4\Action\Remote\FundingClearingProcess\ValidateFormAction;
  */
 final class RemoteFundingClearingProcess extends AbstractRemoteFundingEntity {
 
-  public static function get(): GetAction {
-    return new GetAction();
+  public static function get(): RemoteFundingGetAction {
+    return new RemoteFundingGetAction(self::getEntityName(), __FUNCTION__);
   }
 
   public static function getOrCreate(): GetOrCreateAction {
