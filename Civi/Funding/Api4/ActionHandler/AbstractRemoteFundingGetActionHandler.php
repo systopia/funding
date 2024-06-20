@@ -32,6 +32,9 @@ abstract class AbstractRemoteFundingGetActionHandler implements ActionHandlerInt
     $this->api4 = $api4;
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function get(RemoteFundingGetAction $action): Result {
     return $this->api4->execute($this->getEntityName(), 'get', [
       'language' => $action->getLanguage(),

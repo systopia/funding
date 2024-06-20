@@ -32,6 +32,9 @@ abstract class AbstractRemoteFundingGetFieldsActionHandler implements ActionHand
     $this->api4 = $api4;
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function getFields(AbstractRemoteGetFieldsAction $action): Result {
     return $this->api4->execute($this->getEntityName(), 'getFields', [
       'loadOptions' => $action->getLoadOptions(),
