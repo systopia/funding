@@ -17,16 +17,20 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Api4\Action\Remote\FundingClearingProcess;
+namespace Civi\Funding\Api4\Action\Remote;
 
-use Civi\Api4\RemoteFundingClearingProcess;
-use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingGetAction;
-use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
+use Civi\Api4\Generic\AbstractGetAction;
+use Civi\RemoteTools\Api4\Action\RemoteActionInterface;
+use Civi\RemoteTools\Api4\Action\Traits\ActionHandlerRunTrait;
+use Civi\RemoteTools\Api4\Action\Traits\RemoteContactIdParameterTrait;
+use Civi\RemoteTools\Api4\Action\Traits\ResolvedContactIdTrait;
 
-final class GetAction extends AbstractRemoteFundingGetAction {
+class RemoteFundingGetAction extends AbstractGetAction implements RemoteActionInterface {
 
-  public function __construct(ActionHandlerInterface $actionHandler = NULL) {
-    parent::__construct(RemoteFundingClearingProcess::getEntityName(), 'get', $actionHandler);
-  }
+  use ActionHandlerRunTrait;
+
+  use RemoteContactIdParameterTrait;
+
+  use ResolvedContactIdTrait;
 
 }
