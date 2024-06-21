@@ -58,7 +58,7 @@ final class DrawdownTokenResolver implements TokenResolverInterface {
    * @inheritDoc
    */
   public function resolveToken(string $entityName, AbstractEntity $entity, string $tokenName): ResolvedToken {
-    if ($tokenName === 'review_contact_display_name') {
+    if ($tokenName === 'reviewer_contact_display_name') {
       return new ResolvedToken($this->getRequestContactDisplayName(), 'text/plain');
     }
 

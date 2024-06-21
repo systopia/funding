@@ -75,7 +75,7 @@ final class DrawdownTokenResolverTest extends TestCase {
     $drawdown = DrawdownFactory::create();
     static::assertEquals(
       new ResolvedToken('Some Name', 'text/plain'),
-      $this->drawdownTokenResolver->resolveToken('Drawdown', $drawdown, 'review_contact_display_name'));
+      $this->drawdownTokenResolver->resolveToken('Drawdown', $drawdown, 'reviewer_contact_display_name'));
   }
 
   public function testResolveTokenOther(): void {
