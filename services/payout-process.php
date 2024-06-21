@@ -28,6 +28,8 @@ use Civi\Funding\PayoutProcess\Handler\PaymentInstructionRenderHandler;
 use Civi\Funding\PayoutProcess\Handler\PaymentInstructionRenderHandlerInterface;
 use Civi\Funding\PayoutProcess\PaymentInstructionCreator;
 use Civi\Funding\PayoutProcess\PayoutProcessManager;
+use Civi\Funding\PayoutProcess\Token\DrawdownTokenNameExtractor;
+use Civi\Funding\PayoutProcess\Token\DrawdownTokenResolver;
 use Civi\Funding\Validation\ConcreteEntityValidatorInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -37,6 +39,9 @@ $container->autowire(BankAccountManager::class);
 
 $container->autowire(PaymentInstructionCreator::class);
 $container->autowire(PaymentInstructionRenderHandlerInterface::class, PaymentInstructionRenderHandler::class);
+
+$container->autowire(DrawdownTokenNameExtractor::class);
+$container->autowire(DrawdownTokenResolver::class);
 
 ServiceRegistrator::autowireAllImplementing(
   $container,

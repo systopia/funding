@@ -802,6 +802,10 @@ msgstr ""
 msgid "No bank account for contact with ID \"%1\" available."
 msgstr ""
 
+#: Civi/Funding/PayoutProcess/Token/DrawdownTokenNameExtractor.php
+msgid "Display name of drawdown review contact"
+msgstr ""
+
 #: Civi/Funding/PayoutProcess/Validator/DrawdownAmountValidator.php
 msgid "Requested amount is greater than available amount."
 msgstr ""
