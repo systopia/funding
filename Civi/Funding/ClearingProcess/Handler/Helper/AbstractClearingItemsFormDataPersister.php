@@ -31,6 +31,7 @@ use Civi\Funding\Entity\ClearingCostItemEntity;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\Entity\ClearingResourcesItemEntity;
 use Civi\Funding\Entity\ExternalFileEntity;
+use Civi\Funding\Exception\FundingException;
 use Webmozart\Assert\Assert;
 
 /**
@@ -155,29 +156,34 @@ abstract class AbstractClearingItemsFormDataPersister {
 
     if (isset($record['_id'])) {
       $existingClearingItem = $this->clearingItemManager->get($record['_id']);
-      if (NULL !== $existingClearingItem) {
-        Assert::same($existingClearingItem->get($this->financePlanItemIdFieldName), $financePlanItem->getId());
-        $externalFile = $this->handleFile($record, $existingClearingItem, $clearingProcessId);
-        $fileId = NULL === $externalFile ? NULL : $externalFile->getFileId();
-
-        $status = $this->determineStatus($record, $existingClearingItem, $fileId, $permissions);
-        $existingClearingItem
-          ->setFileId($fileId)
-          ->setReceiptNumber($record['receiptNumber'])
-          ->setPaymentDate(new \DateTime($record['paymentDate']))
-          ->setRecipient($record['recipient'])
-          ->setReason($record['reason'])
-          ->setAmount($record['amount'])
-          ->setStatus($status);
-        if ($this->hasReviewPermission($permissions)) {
-          $existingClearingItem->setAmountAdmitted($record['amountAdmitted']);
-        }
-        elseif ('new' === $status) {
-          $existingClearingItem->setAmountAdmitted(NULL);
-        }
-
-        return [$existingClearingItem, $externalFile];
+      if (NULL === $existingClearingItem) {
+        // Clearing item has been removed by another request. The record may
+        // contain a link to a file already loaded into CiviCRM that was deleted
+        // when the clearing item has been removed.
+        throw new FundingException('Clearing was modified after loading the form');
       }
+
+      Assert::same($existingClearingItem->get($this->financePlanItemIdFieldName), $financePlanItem->getId());
+      $externalFile = $this->handleFile($record, $existingClearingItem, $clearingProcessId);
+      $fileId = NULL === $externalFile ? NULL : $externalFile->getFileId();
+
+      $status = $this->determineStatus($record, $existingClearingItem, $fileId, $permissions);
+      $existingClearingItem
+        ->setFileId($fileId)
+        ->setReceiptNumber($record['receiptNumber'])
+        ->setPaymentDate(new \DateTime($record['paymentDate']))
+        ->setRecipient($record['recipient'])
+        ->setReason($record['reason'])
+        ->setAmount($record['amount'])
+        ->setStatus($status);
+      if ($this->hasReviewPermission($permissions)) {
+        $existingClearingItem->setAmountAdmitted($record['amountAdmitted']);
+      }
+      elseif ('new' === $status) {
+        $existingClearingItem->setAmountAdmitted(NULL);
+      }
+
+      return [$existingClearingItem, $externalFile];
     }
 
     $externalFile = $this->handleFile($record, NULL, $clearingProcessId);
