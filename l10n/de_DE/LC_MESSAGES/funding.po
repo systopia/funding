@@ -1093,6 +1093,10 @@ msgstr "Beziehung von b zu a"
 msgid "No bank account for contact with ID \"%1\" available."
 msgstr "Kein Bankkonto für Kontakt mit ID \"%1\" verfügbar."
 
+#: Civi/Funding/PayoutProcess/Token/DrawdownTokenNameExtractor.php
+msgid "Display name of drawdown review contact"
+msgstr "Anzeigename des Mittelabruf-Prüfkontakts"
+
 #: Civi/Funding/PayoutProcess/Validator/DrawdownAmountValidator.php
 msgid "Requested amount is greater than available amount."
 msgstr "Angefragter Betrag ist größer als der verfügbare Betrag."
