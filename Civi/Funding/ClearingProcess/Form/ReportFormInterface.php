@@ -36,4 +36,10 @@ interface ReportFormInterface extends JsonFormsFormInterface {
    */
   public function getReceiptsPrependUiSchema(): ?JsonFormsElement;
 
+  /**
+   * The UI schema returned by getUiSchema() is displayed before the receipts
+   * category. This one is displayed after the receipts category.
+   */
+  public function getPostReceiptsUiSchema(): ?JsonFormsElement;
+
 }

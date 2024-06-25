@@ -35,7 +35,9 @@ final class KursReportDataLoader implements ReportDataLoaderInterface {
 
     return $clearingProcessBundle->getClearingProcess()->getReportData()
       + ['grunddaten' => $applicationData['grunddaten']]
-      + ['zuschuss' => []];
+      + ['zuschuss' => []]
+      + ['foerderung' => []]
+      + ['zusammenfassung' => []];
   }
 
 }

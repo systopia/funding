@@ -95,23 +95,7 @@ final class ClearingFormGenerator {
 
     $keywords = $receiptsForm->getJsonSchema()->toArray();
     if ([] !== $keywords) {
-      $receiptsFormUiSchema = $receiptsForm->getUiSchema();
-      if (NULL !== $reportForm->getReceiptsPrependUiSchema()) {
-        $receiptsFormUiSchema['elements'] = array_merge(
-          [$reportForm->getReceiptsPrependUiSchema()],
-          // @phpstan-ignore-next-line
-          $receiptsFormUiSchema['elements']
-        );
-      }
-      if (NULL !== $reportForm->getReceiptsAppendUiSchema()) {
-        $receiptsFormUiSchema['elements'] = array_merge(
-        // @phpstan-ignore-next-line
-          $receiptsFormUiSchema['elements'],
-          [$reportForm->getReceiptsAppendUiSchema()]
-        );
-      }
-
-      $categories = $this->toCategories($receiptsFormUiSchema, E::ts('Receipts'));
+      $categories = $this->generateReceiptsFormCategories($receiptsForm, $reportForm);
     }
     else {
       $categories = [];
@@ -120,6 +104,13 @@ final class ClearingFormGenerator {
     if ([] !== $reportForm->getJsonSchema()->getKeywords()) {
       $keywords = ArrayUtil::mergeRecursive($keywords, $reportForm->getJsonSchema()->toArray());
       $categories = array_merge($this->toCategories($reportForm->getUiSchema(), E::ts('Report')), $categories);
+
+      if (NULL !== $reportForm->getPostReceiptsUiSchema()) {
+        $categories = array_merge(
+          $categories,
+          $this->toCategories($reportForm->getPostReceiptsUiSchema(), E::ts('Summary'))
+        );
+      }
     }
 
     if ([] !== $categories) {
@@ -168,6 +159,34 @@ final class ClearingFormGenerator {
     }
 
     return new JsonFormsForm(JsonSchema::fromArray($keywords), $uiSchema);
+  }
+
+  /**
+   * @phpstan-return list<JsonFormsElement>
+   */
+  private function generateReceiptsFormCategories(
+    JsonFormsFormInterface $receiptsForm,
+    ReportFormInterface $reportForm
+  ): array {
+    $receiptsFormUiSchema = $receiptsForm->getUiSchema();
+    if (NULL !== $reportForm->getReceiptsPrependUiSchema()) {
+      // @phpstan-ignore-next-line
+      $receiptsFormUiSchema['elements'] = array_merge(
+        [$reportForm->getReceiptsPrependUiSchema()],
+        // @phpstan-ignore-next-line
+        $receiptsFormUiSchema['elements']
+      );
+    }
+    if (NULL !== $reportForm->getReceiptsAppendUiSchema()) {
+      // @phpstan-ignore-next-line
+      $receiptsFormUiSchema['elements'] = array_merge(
+      // @phpstan-ignore-next-line
+        $receiptsFormUiSchema['elements'],
+        [$reportForm->getReceiptsAppendUiSchema()]
+      );
+    }
+
+    return $this->toCategories($receiptsFormUiSchema, E::ts('Receipts'));
   }
 
   /**

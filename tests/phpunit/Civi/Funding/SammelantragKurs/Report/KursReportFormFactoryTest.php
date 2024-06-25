@@ -146,6 +146,7 @@ final class KursReportFormFactoryTest extends TestCase {
         'zuschuss' => (object) [],
         'dokumente' => $dokumente,
         'foerderung' => $foerderung,
+        'zusammenfassung' => (object) [],
       ],
     ];
 

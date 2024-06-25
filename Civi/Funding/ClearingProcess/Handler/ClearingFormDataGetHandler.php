@@ -62,7 +62,9 @@ final class ClearingFormDataGetHandler implements ClearingFormDataGetHandlerInte
     $data = [
       'reportData' => $this->reportDataLoader->getReportData($command->getClearingProcessBundle()),
       'costItems' => [],
+      'costItemsByType' => [],
       'resourcesItems' => [],
+      'resourcesItemsByType' => [],
     ];
 
     foreach ($this->clearingCostItemManager->getByClearingProcessId($clearingProcessId) as $clearingItem) {

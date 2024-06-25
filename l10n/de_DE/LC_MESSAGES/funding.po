@@ -670,6 +670,10 @@ msgid "Report"
 msgstr "Sachbericht"
 
 #: Civi/Funding/ClearingProcess/Form/ClearingFormGenerator.php
+msgid "Summary"
+msgstr "Zusammenfassung"
+
+#: Civi/Funding/ClearingProcess/Form/ClearingFormGenerator.php
 msgid "There are no receipts necessary."
 msgstr "Es sind keine Belege erforderlich."
 

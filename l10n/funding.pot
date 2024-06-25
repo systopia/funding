@@ -443,6 +443,10 @@ msgid "Report"
 msgstr ""
 
 #: Civi/Funding/ClearingProcess/Form/ClearingFormGenerator.php
+msgid "Summary"
+msgstr ""
+
+#: Civi/Funding/ClearingProcess/Form/ClearingFormGenerator.php
 msgid "There are no receipts necessary."
 msgstr ""
 

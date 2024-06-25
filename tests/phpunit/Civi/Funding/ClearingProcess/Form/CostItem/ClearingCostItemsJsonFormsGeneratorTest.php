@@ -213,11 +213,40 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
         'costItemsAmountAdmitted' => [
           'type' => 'number',
           '$calculate' => [
-            'expression' => 'round(item23Recorded, 2)',
+            'expression' => 'round(item23Admitted, 2)',
             'variables' => [
-              'item23Recorded' => [
+              'item23Admitted' => [
                 '$data' => '1/costItems/23/amountAdmittedTotal',
                 'fallback' => 0,
+              ],
+            ],
+          ],
+        ],
+        'costItemsByType' => [
+          'type' => 'object',
+          'properties' => [
+            'amountRecorded_test' => [
+              'type' => 'number',
+              '$calculate' => [
+                'expression' => 'round(item23Recorded, 2)',
+                'variables' => [
+                  'item23Recorded' => [
+                    '$data' => '2/costItems/23/amountRecordedTotal',
+                    'fallback' => 0,
+                  ],
+                ],
+              ],
+            ],
+            'amountAdmitted_test' => [
+              'type' => 'number',
+              '$calculate' => [
+                'expression' => 'round(item23Admitted, 2)',
+                'variables' => [
+                  'item23Admitted' => [
+                    '$data' => '2/costItems/23/amountAdmittedTotal',
+                    'fallback' => 0,
+                  ],
+                ],
               ],
             ],
           ],
@@ -503,11 +532,40 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
         'costItemsAmountAdmitted' => [
           'type' => 'number',
           '$calculate' => [
-            'expression' => 'round(item23Recorded, 2)',
+            'expression' => 'round(item23Admitted, 2)',
             'variables' => [
-              'item23Recorded' => [
+              'item23Admitted' => [
                 '$data' => '1/costItems/23/amountAdmittedTotal',
                 'fallback' => 0,
+              ],
+            ],
+          ],
+        ],
+        'costItemsByType' => [
+          'type' => 'object',
+          'properties' => [
+            'amountRecorded_test' => [
+              'type' => 'number',
+              '$calculate' => [
+                'expression' => 'round(item23Recorded, 2)',
+                'variables' => [
+                  'item23Recorded' => [
+                    '$data' => '2/costItems/23/amountRecordedTotal',
+                    'fallback' => 0,
+                  ],
+                ],
+              ],
+            ],
+            'amountAdmitted_test' => [
+              'type' => 'number',
+              '$calculate' => [
+                'expression' => 'round(item23Admitted, 2)',
+                'variables' => [
+                  'item23Admitted' => [
+                    '$data' => '2/costItems/23/amountAdmittedTotal',
+                    'fallback' => 0,
+                  ],
+                ],
               ],
             ],
           ],
@@ -806,11 +864,40 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
         'costItemsAmountAdmitted' => [
           'type' => 'number',
           '$calculate' => [
-            'expression' => 'round(item23Recorded, 2)',
+            'expression' => 'round(item23Admitted, 2)',
             'variables' => [
-              'item23Recorded' => [
+              'item23Admitted' => [
                 '$data' => '1/costItems/23/amountAdmittedTotal',
                 'fallback' => 0,
+              ],
+            ],
+          ],
+        ],
+        'costItemsByType' => [
+          'type' => 'object',
+          'properties' => [
+            'amountRecorded_test' => [
+              'type' => 'number',
+              '$calculate' => [
+                'expression' => 'round(item23Recorded, 2)',
+                'variables' => [
+                  'item23Recorded' => [
+                    '$data' => '2/costItems/23/amountRecordedTotal',
+                    'fallback' => 0,
+                  ],
+                ],
+              ],
+            ],
+            'amountAdmitted_test' => [
+              'type' => 'number',
+              '$calculate' => [
+                'expression' => 'round(item23Admitted, 2)',
+                'variables' => [
+                  'item23Admitted' => [
+                    '$data' => '2/costItems/23/amountAdmittedTotal',
+                    'fallback' => 0,
+                  ],
+                ],
               ],
             ],
           ],

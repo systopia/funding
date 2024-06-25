@@ -93,7 +93,15 @@ final class GetFormActionTest extends AbstractFundingHeadlessTestCase {
 
     static::assertEquals([
       'costItems' => new \stdClass(),
+      'costItemsByType' => [
+        'amountRecorded_testCost' => 0,
+        'amountAdmitted_testCost' => 0,
+      ],
       'resourcesItems' => new \stdClass(),
+      'resourcesItemsByType' => [
+        'amountRecorded_testResources' => 0,
+        'amountAdmitted_testResources' => 0,
+      ],
       'costItemsAmountRecorded' => 0,
       'costItemsAmountAdmitted' => 0,
       'resourcesItemsAmountRecorded' => 0,

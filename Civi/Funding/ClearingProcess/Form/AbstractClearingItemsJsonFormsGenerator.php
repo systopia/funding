@@ -65,6 +65,11 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
   private ItemDetailsFormElementGenerator $itemDetailsFormElementGenerator;
 
   /**
+   * @phpstan-var array<string, list<T>>
+   */
+  private array $itemsByType = [];
+
+  /**
    * @var array<int, \Civi\RemoteTools\JsonSchema\JsonSchema>
    *   Mapping of clearable finance plan item ID to JsonSchema.
    */
@@ -97,6 +102,7 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
     ApplicationProcessEntityBundle $applicationProcessBundle,
     JsonFormsFormInterface $applicationForm
   ): JsonFormsFormInterface {
+    $this->itemsByType = [];
     $this->properties = [];
     $this->formElements = [];
 
@@ -134,7 +140,7 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
         0
       );
 
-      $admittedVariableName = sprintf('item%dRecorded', $itemId);
+      $admittedVariableName = sprintf('item%dAdmitted', $itemId);
       $amountAdmittedOverallVariables[$admittedVariableName] = new JsonSchemaDataPointer(
         sprintf('1/%s/%d/amountAdmittedTotal', $this->getPropertyKeyword(), $itemId),
         0
@@ -143,6 +149,7 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
 
     $jsonSchema = new JsonSchemaObject([
       $this->getPropertyKeyword() => new JsonSchemaObject($this->properties),
+      $this->getPropertyKeyword() . 'ByType' => $this->getItemsByTypeSchema(),
       $this->getPropertyKeyword() . 'AmountRecorded' => new JsonSchemaCalculate(
         'number',
         'round(' . implode('+', array_keys($amountRecordedOverallVariables)) . ', 2)',
@@ -205,6 +212,12 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
       $items = $clearableItems[$scope]->items;
 
       foreach ($items as $index => $item) {
+        [$type, $subType] = explode('.', str_replace('/', '.', $item->getType()), 2) + [NULL, NULL];
+        $this->itemsByType[$type][] = $item;
+        if (NULL !== $subType) {
+          $this->itemsByType[$type . '.' . $subType][] = $item;
+        }
+
         $this->properties[$item->getId()] = new JsonSchemaObject([
           'records' => new JsonSchemaArray(
             new JsonSchemaObject([
@@ -325,6 +338,41 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
 
   private function formatLabel(string $itemLabel, int $index): string {
     return str_replace('{@pos}', (string) ($index + 1), $itemLabel);
+  }
+
+  private function getItemsByTypeSchema(): JsonSchemaObject {
+    $itemsByTypeProperties = [];
+    foreach ($this->itemsByType as $type => $items) {
+      $amountRecordedByTypeVariables = [];
+      $amountAdmittedByTypeVariables = [];
+
+      foreach ($items as $item) {
+        $recordedVariableName = sprintf('item%dRecorded', $item->getId());
+        $amountRecordedByTypeVariables[$recordedVariableName] = new JsonSchemaDataPointer(
+          sprintf('2/%s/%d/amountRecordedTotal', $this->getPropertyKeyword(), $item->getId()),
+          0
+        );
+
+        $admittedVariableName = sprintf('item%dAdmitted', $item->getId());
+        $amountAdmittedByTypeVariables[$admittedVariableName] = new JsonSchemaDataPointer(
+          sprintf('2/%s/%d/amountAdmittedTotal', $this->getPropertyKeyword(), $item->getId()),
+          0
+        );
+      }
+
+      $itemsByTypeProperties["amountRecorded_$type"] = new JsonSchemaCalculate(
+        'number',
+        'round(' . implode('+', array_keys($amountRecordedByTypeVariables)) . ', 2)',
+        $amountRecordedByTypeVariables
+      );
+      $itemsByTypeProperties["amountAdmitted_$type"] = new JsonSchemaCalculate(
+        'number',
+        'round(' . implode('+', array_keys($amountAdmittedByTypeVariables)) . ', 2)',
+        $amountAdmittedByTypeVariables
+      );
+    }
+
+    return new JsonSchemaObject($itemsByTypeProperties);
   }
 
 }
