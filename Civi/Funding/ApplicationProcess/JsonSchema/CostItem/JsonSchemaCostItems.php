@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\JsonSchema\CostItem;
 
+use Civi\Funding\ApplicationProcess\JsonSchema\FinancePlanItem\ArgumentAssert;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 
 /**
@@ -42,6 +43,8 @@ final class JsonSchemaCostItems extends JsonSchema {
    * } $config
    */
   public function __construct(array $config) {
+    ArgumentAssert::assertType($config['type']);
+
     $keywords = $config;
     if (isset($keywords['clearing'])) {
       $keywords['clearing'] = JsonSchema::fromArray($keywords['clearing']);

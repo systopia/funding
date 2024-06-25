@@ -28,8 +28,10 @@ use Civi\Funding\SammelantragKurs\Application\JsonSchema\KursZuschussJsonSchema;
 use Civi\Funding\SammelantragKurs\Application\UiSchema\KursGrunddatenUiSchema;
 use Civi\Funding\SammelantragKurs\Report\JsonSchema\KursDokumenteJsonSchema;
 use Civi\Funding\SammelantragKurs\Report\JsonSchema\KursFoerderungJsonSchema;
+use Civi\Funding\SammelantragKurs\Report\JsonSchema\KursZusammenfassungJsonSchema;
 use Civi\Funding\SammelantragKurs\Report\UiSchema\KursDokumenteCategory;
 use Civi\Funding\SammelantragKurs\Report\UiSchema\KursFoerderungGroup;
+use Civi\Funding\SammelantragKurs\Report\UiSchema\KursZusammenFassungCategory;
 use Civi\Funding\SammelantragKurs\Report\UiSchema\KursZuschussGroup;
 use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
@@ -61,6 +63,7 @@ final class KursReportFormFactory implements ReportFormFactoryInterface {
 
     $dokumenteJsonSchema = new KursDokumenteJsonSchema();
     $foerderungJsonSchema = new KursFoerderungJsonSchema();
+    $zusammenfassungJsonSchema = new KursZusammenfassungJsonSchema();
 
     $jsonSchema = new JsonSchemaObject([
       'reportData' => new JsonSchemaObject([
@@ -68,6 +71,7 @@ final class KursReportFormFactory implements ReportFormFactoryInterface {
         'zuschuss' => $zuschussJsonSchema,
         'dokumente' => $dokumenteJsonSchema,
         'foerderung' => $foerderungJsonSchema,
+        'zusammenfassung' => $zusammenfassungJsonSchema,
       ]),
     ], [
       'if' => JsonSchema::fromArray([
@@ -81,6 +85,7 @@ final class KursReportFormFactory implements ReportFormFactoryInterface {
           'zuschuss' => $zuschussJsonSchema,
           'dokumente' => $dokumenteJsonSchema,
           'foerderung' => $foerderungJsonSchema->withAllFieldsRequired(),
+          'zusammenfassung' => $zusammenfassungJsonSchema,
         ],
         ['required' => ['grunddaten', 'zuschuss', 'dokumente', 'foerderung']]),
       ]),
@@ -106,8 +111,9 @@ final class KursReportFormFactory implements ReportFormFactoryInterface {
     );
 
     $receiptsAppendUiSchema = new JsonFormsGroup('', [$maxZuschussUiSchema, $foerderungUiSchema]);
+    $zusammenfassungUiSchema = new KursZusammenFassungCategory('#/properties/reportData/properties', $currency);
 
-    return new ReportForm($jsonSchema, $uiSchema, $zuschussUiSchema, $receiptsAppendUiSchema);
+    return new ReportForm($jsonSchema, $uiSchema, $zuschussUiSchema, $receiptsAppendUiSchema, $zusammenfassungUiSchema);
   }
 
 }

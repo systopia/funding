@@ -30,6 +30,8 @@ final class ReportForm extends JsonFormsForm implements ReportFormInterface {
 
   private ?JsonFormsElement $receiptsPrependUiSchema;
 
+  private ?JsonFormsElement $postReceiptsUiSchema;
+
   /**
    * @return static
    */
@@ -41,19 +43,34 @@ final class ReportForm extends JsonFormsForm implements ReportFormInterface {
     JsonSchema $jsonSchema,
     JsonFormsElement $uiSchema,
     JsonFormsElement $receiptsPrependUiSchema = NULL,
-    JsonFormsElement $receiptsAppendUiSchema = NULL
+    JsonFormsElement $receiptsAppendUiSchema = NULL,
+    JsonFormsElement $postReceiptsUiSchema = NULL
   ) {
     parent::__construct($jsonSchema, $uiSchema);
     $this->receiptsPrependUiSchema = $receiptsPrependUiSchema;
     $this->receiptsAppendUiSchema = $receiptsAppendUiSchema;
+    $this->postReceiptsUiSchema = $postReceiptsUiSchema;
   }
 
+  /**
+   * @inheritDoc
+   */
   public function getReceiptsAppendUiSchema(): ?JsonFormsElement {
     return $this->receiptsAppendUiSchema;
   }
 
+  /**
+   * @inheritDoc
+   */
   public function getReceiptsPrependUiSchema(): ?JsonFormsElement {
     return $this->receiptsPrependUiSchema;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getPostReceiptsUiSchema(): ?JsonFormsElement {
+    return $this->postReceiptsUiSchema;
   }
 
 }

@@ -34,7 +34,7 @@ final class ApplicationCostItemFixture {
       ->setValues($values + [
         'application_process_id' => $applicationProcessId,
         'identifier' => 'amountRequested',
-        'type' => 'amount',
+        'type' => 'testCost',
         'amount' => 1.2,
         'data_pointer' => '/amountRequested',
         'properties' => [],

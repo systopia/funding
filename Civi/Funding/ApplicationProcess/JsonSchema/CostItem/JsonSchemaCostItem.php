@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\JsonSchema\CostItem;
 
+use Civi\Funding\ApplicationProcess\JsonSchema\FinancePlanItem\ArgumentAssert;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 
 /**
@@ -41,11 +42,8 @@ final class JsonSchemaCostItem extends JsonSchema {
    * } $config
    */
   public function __construct(array $config) {
-    if (1 !== preg_match('/^[a-zA-Z0-9._\-]+$/', $config['identifier'])) {
-      throw new \InvalidArgumentException(
-        'identifier must not be empty and only consist of letters, numbers, ".", "_", and "-"'
-      );
-    }
+    ArgumentAssert::assertIdentifier($config['identifier']);
+    ArgumentAssert::assertType($config['type']);
 
     $keywords = $config;
     if (isset($keywords['clearing'])) {

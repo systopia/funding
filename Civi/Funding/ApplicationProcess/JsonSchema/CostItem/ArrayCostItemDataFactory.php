@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\JsonSchema\CostItem;
 
+use Civi\Funding\ApplicationProcess\JsonSchema\FinancePlanItem\ArgumentAssert;
 use Civi\Funding\Util\Uuid;
 use Opis\JsonSchema\Exceptions\ParseException;
 use Opis\JsonSchema\JsonPointer;
@@ -240,9 +241,7 @@ final class ArrayCostItemDataFactory {
     }
     /** @phpstan-var non-empty-string $identifier */
 
-    if (1 !== preg_match('/^[a-zA-Z0-9.\-_]+$/', $identifier)) {
-      throw new \InvalidArgumentException('Identifier may only contain letters, numbers, ".", "-", and "_"');
-    }
+    ArgumentAssert::assertIdentifier($identifier);
 
     return $identifier;
   }

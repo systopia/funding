@@ -54,7 +54,7 @@ final class TestJsonSchema extends JsonSchemaObject {
       'endDate' => new JsonSchemaDate(),
       'amountRequested' => new JsonSchemaMoney([
         '$costItem' => new JsonSchemaCostItem([
-          'type' => 'amount',
+          'type' => 'testCost',
           'identifier' => 'amountRequested',
           'clearing' => [
             'itemLabel' => 'Amount requested',
