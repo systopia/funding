@@ -285,7 +285,7 @@ final class IJBKostenJsonSchema extends JsonSchemaObject {
         'begegnungsland == "partnerland" ? round(programmabsprachen + vorbereitungsmaterial + veroeffentlichungen
         + honorare + fahrtkostenUndVerpflegung + reisekosten + miete, 2) : 0',
         [
-          'begegnungsland' => new JsonSchemaDataPointer('/grunddaten/begegnungsland'),
+          'begegnungsland' => new JsonSchemaDataPointer('/grunddaten/begegnungsland', ''),
           'programmabsprachen' => new JsonSchemaDataPointer('1/zuschlagsrelevanteKosten/programmabsprachen'),
           'vorbereitungsmaterial' => new JsonSchemaDataPointer('1/zuschlagsrelevanteKosten/vorbereitungsmaterial'),
           'veroeffentlichungen' => new JsonSchemaDataPointer('1/zuschlagsrelevanteKosten/veroeffentlichungen'),

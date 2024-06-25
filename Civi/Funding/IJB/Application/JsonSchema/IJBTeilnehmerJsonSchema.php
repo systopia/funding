@@ -58,8 +58,8 @@ final class IJBTeilnehmerJsonSchema extends JsonSchemaObject {
         'number',
           'deutschlandGesamt + partnerlandGesamt',
         [
-          'deutschlandGesamt' => new JsonSchemaDataPointer('1/deutschland/gesamt'),
-          'partnerlandGesamt' => new JsonSchemaDataPointer('1/partnerland/gesamt'),
+          'deutschlandGesamt' => new JsonSchemaDataPointer('1/deutschland/gesamt', 0),
+          'partnerlandGesamt' => new JsonSchemaDataPointer('1/partnerland/gesamt', 0),
         ]
       ),
       'teilnehmertage' => new JsonSchemaCalculate(
