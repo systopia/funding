@@ -58,8 +58,8 @@ final class IJBZuschussJsonSchema extends JsonSchemaObject {
             : round(teilnehmertage * festbetragJugendliche, 2)
           ) : 0',
         [
-          'begegnungsland' => new JsonSchemaDataPointer('2/grunddaten/begegnungsland'),
-          'artDerMassnahme' => new JsonSchemaDataPointer('2/grunddaten/artDerMassnahme'),
+          'begegnungsland' => new JsonSchemaDataPointer('2/grunddaten/begegnungsland', ''),
+          'artDerMassnahme' => new JsonSchemaDataPointer('2/grunddaten/artDerMassnahme', ''),
           'teilnehmertage' => new JsonSchemaDataPointer('2/teilnehmer/teilnehmertage'),
           'festbetragFachkraefte' => self::TEILNEHMER_FESTBETRAG_FACHKRAEFTE,
           'festbetragJugendliche' => self::TEILNEHMER_FESTBETRAG_JUGENDLICHE,
@@ -73,7 +73,7 @@ final class IJBZuschussJsonSchema extends JsonSchemaObject {
         'number',
         'begegnungsland == "deutschland" ? round(programmtage * festbetrag, 2) : 0',
         [
-          'begegnungsland' => new JsonSchemaDataPointer('2/grunddaten/begegnungsland'),
+          'begegnungsland' => new JsonSchemaDataPointer('2/grunddaten/begegnungsland', ''),
           'programmtage' => new JsonSchemaDataPointer(
             sprintf('2/grunddaten/%s', $report ? 'programmtageMitHonorar' : 'programmtage'),
             0
@@ -95,7 +95,7 @@ final class IJBZuschussJsonSchema extends JsonSchemaObject {
             sprintf('2/teilnehmer/deutschland/%s', $report ? 'mitFahrtkosten' : 'gesamt'),
             0
           ),
-          'fahrtstreckeInKm' => new JsonSchemaDataPointer('2/grunddaten/fahrtstreckeInKm'),
+          'fahrtstreckeInKm' => new JsonSchemaDataPointer('2/grunddaten/fahrtstreckeInKm', 0),
           'festbetrag' => self::FAHRTKOSTEN_FESTBETRAG_AUSLAND_EUROPA,
         ],
       ),
@@ -107,7 +107,7 @@ final class IJBZuschussJsonSchema extends JsonSchemaObject {
             sprintf('2/teilnehmer/deutschland/%s', $report ? 'mitFahrtkosten' : 'gesamt'),
             0
           ),
-          'fahrtstreckeInKm' => new JsonSchemaDataPointer('2/grunddaten/fahrtstreckeInKm'),
+          'fahrtstreckeInKm' => new JsonSchemaDataPointer('2/grunddaten/fahrtstreckeInKm', 0),
           'festbetrag' => self::FAHRTKOSTEN_FESTBETRAG_NICHT_EUROPA,
         ],
       ),
@@ -115,7 +115,7 @@ final class IJBZuschussJsonSchema extends JsonSchemaObject {
         'number',
         'begegnungsland == "partnerland" ? max(fahrtkostenAuslandEuropaMax, fahrtkostenNichtEuropaMax) : 0',
         [
-          'begegnungsland' => new JsonSchemaDataPointer('2/grunddaten/begegnungsland'),
+          'begegnungsland' => new JsonSchemaDataPointer('2/grunddaten/begegnungsland', ''),
           'fahrtkostenAuslandEuropaMax' => new JsonSchemaDataPointer('1/fahrtkostenAuslandEuropaMax'),
           'fahrtkostenNichtEuropaMax' => new JsonSchemaDataPointer('1/fahrtkostenNichtEuropaMax'),
         ]
@@ -132,8 +132,8 @@ final class IJBZuschussJsonSchema extends JsonSchemaObject {
             : min(round(teilnehmerDeutschlandGesamt * festbetragJugendliche, 2), zuschlagMaxJugendliche)
           ) : 0',
         [
-          'begegnungsland' => new JsonSchemaDataPointer('2/grunddaten/begegnungsland'),
-          'artDerMassnahme' => new JsonSchemaDataPointer('2/grunddaten/artDerMassnahme'),
+          'begegnungsland' => new JsonSchemaDataPointer('2/grunddaten/begegnungsland', ''),
+          'artDerMassnahme' => new JsonSchemaDataPointer('2/grunddaten/artDerMassnahme', ''),
           'teilnehmerDeutschlandGesamt' => new JsonSchemaDataPointer('2/teilnehmer/deutschland/gesamt'),
           'festbetragFachkraefte' => self::ZUSCHLAG_FESTBETRAG_FACHKRAEFTE,
           'zuschlagMaxFachkraefte' => self::ZUSCHLAG_MAX_FACHKRAEFTE,
@@ -175,7 +175,7 @@ final class IJBZuschussJsonSchema extends JsonSchemaObject {
                 ? min(fahrtkostenAuslandEuropaMax, fahrtkostenNichtEuropaMax)
                 : 0',
               [
-                'begegnungsland' => new JsonSchemaDataPointer('2/grunddaten/begegnungsland'),
+                'begegnungsland' => new JsonSchemaDataPointer('2/grunddaten/begegnungsland', ''),
                 'fahrtkostenAuslandEuropaMax' => new JsonSchemaDataPointer('1/fahrtkostenAuslandEuropaMax'),
                 'fahrtkostenNichtEuropaMax' => new JsonSchemaDataPointer('1/fahrtkostenNichtEuropaMax'),
               ],
@@ -193,13 +193,24 @@ final class IJBZuschussJsonSchema extends JsonSchemaObject {
         [
           'mittelGesamt' => new JsonSchemaDataPointer('2/finanzierung/mittelGesamt'),
           'zuschussGesamt' => new JsonSchemaDataPointer('1/gesamt'),
+        ]
+      ),
+      'kostenGesamt' => new JsonSchemaCalculate('number', 'kostenGesamt', [
+        'kostenGesamt' => new JsonSchemaDataPointer('2/kosten/kostenGesamt'),
+      ]),
+      'finanzierungKostenDifferenz' => new JsonSchemaCalculate(
+        'number',
+        'finanzierungGesamt - kostenGesamt',
+        [
+          'finanzierungGesamt' => new JsonSchemaDataPointer('1/finanzierungGesamt'),
+          'kostenGesamt' => new JsonSchemaDataPointer('1/kostenGesamt'),
         ],
         NULL,
         [
           '$validations' => JsonSchema::convertToJsonSchemaArray([
             [
               'keyword' => 'const',
-              'value' => new JsonSchemaDataPointer('2/kosten/kostenGesamt'),
+              'value' => 0,
               'message' => 'Die Finanzierung ist nicht ausgeglichen.',
             ],
           ]),

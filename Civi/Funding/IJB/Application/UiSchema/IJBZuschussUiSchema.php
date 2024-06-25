@@ -199,6 +199,18 @@ EOD,
           'Gesamtfinanzierung in ' . $currency
         ),
       ]),
+      new JsonFormsGroup('Gesamtkosten', [
+        new JsonFormsControl(
+          "$zuschussScopePrefix/kostenGesamt",
+          'Gesamtkosten in ' . $currency
+        ),
+      ]),
+      new JsonFormsGroup('Finanzierungslücke/Überfinanzierung', [
+        new JsonFormsControl(
+          "$zuschussScopePrefix/finanzierungKostenDifferenz",
+          'Finanzierungslücke/Überfinanzierung in ' . $currency
+        ),
+      ]),
     ];
 
     parent::__construct('Zuschussberechnung', $elements);

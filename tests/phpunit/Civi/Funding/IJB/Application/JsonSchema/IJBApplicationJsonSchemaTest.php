@@ -1450,7 +1450,7 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
     $errorCollector = new ErrorCollector();
     $validator->validate($data, \json_encode($jsonSchema), ['errorCollector' => $errorCollector]);
 
-    $errors = $errorCollector->getLeafErrorsAt(['zuschuss', 'finanzierungGesamt']);
+    $errors = $errorCollector->getLeafErrorsAt(['zuschuss', 'finanzierungKostenDifferenz']);
     static::assertCount(1, $errors);
     static::assertSame('Die Finanzierung ist nicht ausgeglichen.', $errors[0]->message());
   }
