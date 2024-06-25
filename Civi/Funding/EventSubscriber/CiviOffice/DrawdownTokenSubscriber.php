@@ -23,11 +23,11 @@ use Civi\Api4\FundingDrawdown;
 use Civi\Core\Event\GenericHookEvent;
 use Civi\Funding\DocumentRender\CiviOffice\AbstractCiviOfficeTokenSubscriber;
 use Civi\Funding\DocumentRender\CiviOffice\CiviOfficeContextDataHolder;
-use Civi\Funding\DocumentRender\Token\TokenResolverInterface;
 use Civi\Funding\Entity\AbstractEntity;
 use Civi\Funding\Entity\DrawdownEntity;
 use Civi\Funding\PayoutProcess\DrawdownManager;
 use Civi\Funding\PayoutProcess\Token\DrawdownTokenNameExtractor;
+use Civi\Funding\PayoutProcess\Token\DrawdownTokenResolver;
 
 /**
  * @phpstan-extends AbstractCiviOfficeTokenSubscriber<\Civi\Funding\Entity\DrawdownEntity>
@@ -41,13 +41,10 @@ class DrawdownTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
     return PayoutProcessTokenSubscriber::getPriority() + 1;
   }
 
-  /**
-   * @phpstan-param TokenResolverInterface<\Civi\Funding\Entity\DrawdownEntity> $tokenResolver
-   */
   public function __construct(
     DrawdownManager $drawdownManager,
     CiviOfficeContextDataHolder $contextDataHolder,
-    TokenResolverInterface $tokenResolver,
+    DrawdownTokenResolver $tokenResolver,
     DrawdownTokenNameExtractor $tokenNameExtractor
   ) {
     parent::__construct(

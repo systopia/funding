@@ -69,7 +69,7 @@ final class DrawdownTokenResolverTest extends TestCase {
     $this->api4Mock->method('execute')
       ->with('Contact', 'get', [
         'select' => ['id', 'display_name'],
-        'where' => ['id', '=', 12],
+        'where' => [['id', '=', 12]],
       ])->willReturn(new Result([['id' => 12, 'display_name' => 'Some Name']]));
 
     $drawdown = DrawdownFactory::create();
