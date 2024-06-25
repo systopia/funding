@@ -69,7 +69,7 @@ final class DrawdownTokenResolver implements TokenResolverInterface {
     /** @phpstan-var array{id: int, display_name: string|null} $contact */
     $contact = $this->api4->execute(Contact::getEntityName(), 'get', [
       'select' => ['id', 'display_name'],
-      'where' => ['id', '=', $this->requestContext->getContactId()],
+      'where' => [['id', '=', $this->requestContext->getContactId()]],
     ])->single();
 
     return ContactUtil::getDisplayName($contact);
