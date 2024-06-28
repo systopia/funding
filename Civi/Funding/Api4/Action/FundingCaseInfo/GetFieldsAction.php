@@ -85,7 +85,7 @@ final class GetFieldsAction extends BasicGetFieldsAction {
         'name' => 'operators',
         'data_type' => 'Array',
         'description' => 'If set, limits the operators that can be used on this field for "get" actions.',
-        'default_value' => [],
+        'default_value' => NULL,
       ],
       [
         'name' => 'data_type',
@@ -128,7 +128,6 @@ final class GetFieldsAction extends BasicGetFieldsAction {
         'name' => 'funding_case_id',
         'title' => 'funding_case_id',
         'data_type' => 'Integer',
-        'operators' => ['='],
       ],
       [
         'name' => 'funding_case_identifier',
@@ -180,6 +179,7 @@ final class GetFieldsAction extends BasicGetFieldsAction {
         'title' => 'funding_case_transfer_contract_uri',
         'data_type' => 'String',
         'nullable' => TRUE,
+        'operators' => [],
       ],
       [
         'name' => 'funding_program_id',
@@ -195,7 +195,6 @@ final class GetFieldsAction extends BasicGetFieldsAction {
         'name' => 'funding_program_title',
         'title' => 'funding_program_title',
         'data_type' => 'String',
-        'operators' => ['=', '!=', 'LIKE', 'CONTAINS'],
       ],
       [
         'name' => 'application_process_id',
@@ -222,6 +221,7 @@ final class GetFieldsAction extends BasicGetFieldsAction {
         'title' => 'application_process_status',
         'data_type' => 'String',
         'options' => $this->getOptions(FundingApplicationProcess::getEntityName(), 'status'),
+        'operators' => ['IN'],
       ],
       [
         'name' => 'application_process_is_review_calculative',
@@ -273,47 +273,55 @@ final class GetFieldsAction extends BasicGetFieldsAction {
         'title' => 'clearing_process_id',
         'data_type' => 'Integer',
         'nullable' => TRUE,
+        'operators' => [],
       ],
       [
         'name' => 'clearing_process_amount_recorded_costs',
         'title' => 'clearing_process_amount_recorded_costs',
         'data_type' => 'Money',
         'nullable' => TRUE,
+        'operators' => [],
       ],
       [
         'name' => 'clearing_process_amount_recorded_resources',
         'title' => 'clearing_process_amount_recorded_resources',
         'data_type' => 'Money',
         'nullable' => TRUE,
+        'operators' => [],
       ],
       [
         'name' => 'clearing_process_amount_admitted_costs',
         'title' => 'clearing_process_amount_admitted_costs',
         'data_type' => 'Money',
         'nullable' => TRUE,
+        'operators' => [],
       ],
       [
         'name' => 'clearing_process_amount_admitted_resources',
         'title' => 'clearing_process_amount_admitted_resources',
         'data_type' => 'Money',
         'nullable' => TRUE,
+        'operators' => [],
       ],
       [
         'name' => 'clearing_process_amount_cleared',
         'title' => E::ts('Amount Cleared'),
         'data_type' => 'Money',
         'nullable' => TRUE,
+        'operators' => [],
       ],
       [
         'name' => 'clearing_process_amount_admitted',
         'title' => E::ts('Amount Admitted'),
         'data_type' => 'Money',
         'nullable' => TRUE,
+        'operators' => [],
       ],
       [
         'name' => 'CAN_open_clearing',
         'type' => 'Extra',
         'data_type' => 'Boolean',
+        'operators' => [],
       ],
     ], iterator_to_array($this->getPermissionFields()));
   }

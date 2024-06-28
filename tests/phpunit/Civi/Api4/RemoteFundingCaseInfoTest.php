@@ -131,6 +131,7 @@ final class RemoteFundingCaseInfoTest extends AbstractRemoteFundingHeadlessTestC
     static::assertCount(1, $result);
 
     FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase2->getId(), ['application_test']);
+    $this->clearCache();
     $result = $action->execute();
     static::assertCount(2, $result);
 
@@ -138,6 +139,24 @@ final class RemoteFundingCaseInfoTest extends AbstractRemoteFundingHeadlessTestC
     $result = $action->execute();
     static::assertCount(1, $result);
     static::assertSame($fundingCase2->getId(), $result->first()['funding_case_id']);
+    static::assertSame($applicationProcess2->getId(), $result->first()['application_process_id']);
+
+    $action->setWhere([])->addClause(
+      'OR',
+      ['application_process_id', '=', $applicationProcess->getId()],
+      ['funding_case_id', '=', $fundingCase2->getId()],
+    );
+    $result = $action->execute();
+    static::assertCount(2, $result);
+
+    $action->setOrderBy(['application_process_id' => 'ASC']);
+    $result = $action->execute();
+    static::assertCount(2, $result);
+    static::assertSame($applicationProcess->getId(), $result->first()['application_process_id']);
+
+    $action->setOrderBy(['application_process_id' => 'DESC']);
+    $result = $action->execute();
+    static::assertCount(2, $result);
     static::assertSame($applicationProcess2->getId(), $result->first()['application_process_id']);
   }
 

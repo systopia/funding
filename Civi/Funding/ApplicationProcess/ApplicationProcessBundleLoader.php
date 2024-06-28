@@ -49,6 +49,10 @@ class ApplicationProcessBundleLoader {
     $this->fundingProgramManager = $fundingProgramManager;
   }
 
+  public function countBy(ConditionInterface $condition): int {
+    return $this->applicationProcessManager->countBy($condition);
+  }
+
   /**
    * @throws \CRM_Core_Exception
    */
@@ -73,13 +77,20 @@ class ApplicationProcessBundleLoader {
   }
 
   /**
+   * @phpstan-param array<string, 'ASC'|'DESC'> $orderBy
+   *
    * @phpstan-return list<ApplicationProcessEntityBundle>
    *
    * @throws \CRM_Core_Exception
    */
-  public function getBy(ConditionInterface $condition): array {
+  public function getBy(
+    ConditionInterface $condition,
+    array $orderBy = [],
+    int $limit = 0,
+    int $offset = 0
+  ): array {
     $bundles = [];
-    foreach ($this->applicationProcessManager->getBy($condition) as $applicationProcess) {
+    foreach ($this->applicationProcessManager->getBy($condition, $orderBy, $limit, $offset) as $applicationProcess) {
       $bundles[] = $this->createFromApplicationProcess($applicationProcess);
     }
 
