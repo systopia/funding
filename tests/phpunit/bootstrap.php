@@ -34,16 +34,12 @@ use Symfony\Component\DependencyInjection\Reference;
 
 ini_set('memory_limit', '2G');
 
-if (file_exists(__DIR__ . '/../../vendor/autoload.php')) {
-  require_once __DIR__ . '/../../vendor/autoload.php';
-}
-
-// Make CRM_Funding_ExtensionUtil available.
-require_once __DIR__ . '/../../funding.civix.php';
-
 // phpcs:disable Drupal.Functions.DiscouragedFunctions.Discouraged
 eval(cv('php:boot --level=classloader', 'phpcode'));
 // phpcs.enable
+
+// Make CRM_Funding_ExtensionUtil available.
+require_once __DIR__ . '/../../funding.civix.php';
 
 // phpcs:disable PSR1.Files.SideEffects
 
@@ -55,8 +51,11 @@ addExtensionToClassLoader('funding');
 addExtensionToClassLoader('external-file');
 addExtensionToClassLoader('de.systopia.remotetools');
 
-// Ensure function ts() is available - it's declared in the same file as CRM_Core_I18n.
-\CRM_Core_I18n::singleton();
+if (!function_exists('ts')) {
+  // Ensure function ts() is available - it's declared in the same file as CRM_Core_I18n in CiviCRM < 5.74.
+  // In later versions the function is registered following the composer conventions.
+  \CRM_Core_I18n::singleton();
+}
 
 $comparatorFactory = Factory::getInstance();
 $comparatorFactory->register(new ApiActionComparator());
@@ -134,6 +133,10 @@ function addExtensionDirToClassLoader(string $extensionDir): void {
   $loader->add('api_', [$extensionDir]);
   $loader->addPsr4('api\\', [$extensionDir . '/api']);
   $loader->register();
+
+  if (file_exists($extensionDir . '/autoload.php')) {
+    require_once $extensionDir . '/autoload.php';
+  }
 }
 
 /**
