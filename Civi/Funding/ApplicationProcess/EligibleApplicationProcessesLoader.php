@@ -20,8 +20,6 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess;
 
 use Civi\Funding\Entity\FundingCaseEntity;
-use Civi\Funding\Exception\FundingException;
-use CRM_Funding_ExtensionUtil as E;
 
 class EligibleApplicationProcessesLoader {
 
@@ -37,24 +35,11 @@ class EligibleApplicationProcessesLoader {
    * @phpstan-return array<\Civi\Funding\Entity\ApplicationProcessEntity>
    *
    * @throws \CRM_Core_Exception
-   * @throws \Civi\Funding\Exception\FundingException
-   *   If there is an application that is neither eligible nor in a final
-   *   status.
    */
   public function getEligibleProcessesForContract(FundingCaseEntity $fundingCase): array {
     $eligibleApplicationProcesses = [];
     foreach ($this->applicationProcessManager->getByFundingCaseId($fundingCase->getId()) as $applicationProcess) {
-      if (NULL === $applicationProcess->getIsEligible()) {
-        throw new FundingException(E::ts(
-          'The eligibility of application "%1" is not decided (current status: %2).',
-          [
-            1 => $applicationProcess->getIdentifier(),
-            2 => $applicationProcess->getStatus(),
-          ]
-        ));
-      }
-
-      if ($applicationProcess->getIsEligible()) {
+      if (TRUE === $applicationProcess->getIsEligible()) {
         $eligibleApplicationProcesses[] = $applicationProcess;
       }
     }

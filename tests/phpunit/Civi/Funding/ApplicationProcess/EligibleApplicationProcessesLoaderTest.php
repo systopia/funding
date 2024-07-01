@@ -21,7 +21,6 @@ namespace Civi\Funding\ApplicationProcess;
 
 use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
-use Civi\Funding\Exception\FundingException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -44,33 +43,22 @@ final class EligibleApplicationProcessesLoaderTest extends TestCase {
   }
 
   public function test(): void {
+    $applicationProcessEligibilityUndecided = ApplicationProcessFactory::createApplicationProcess([
+      'is_eligible' => NULL,
+    ]);
     $applicationProcessIneligible = ApplicationProcessFactory::createApplicationProcess(['is_eligible' => FALSE]);
     $applicationProcessEligible = ApplicationProcessFactory::createApplicationProcess(['is_eligible' => TRUE]);
 
     $fundingCase = FundingCaseFactory::createFundingCase();
     $this->applicationProcessManagerMock->method('getByFundingCaseId')
       ->with($fundingCase->getId())
-      ->willReturn([$applicationProcessIneligible, $applicationProcessEligible]);
+      ->willReturn([
+        $applicationProcessEligibilityUndecided,
+        $applicationProcessIneligible,
+        $applicationProcessEligible,
+      ]);
 
     static::assertSame([$applicationProcessEligible], $this->loader->getEligibleProcessesForContract($fundingCase));
-  }
-
-  public function testUnknownEligibility(): void {
-    $applicationProcess = ApplicationProcessFactory::createApplicationProcess([
-      'identifier' => 'test_identifier',
-      'status' => 'test_status',
-      'is_eligible' => NULL,
-    ]);
-    $fundingCase = FundingCaseFactory::createFundingCase();
-    $this->applicationProcessManagerMock->method('getByFundingCaseId')
-      ->with($fundingCase->getId())
-      ->willReturn([$applicationProcess]);
-
-    static::expectException(FundingException::class);
-    static::expectExceptionMessage(
-      'The eligibility of application "test_identifier" is not decided (current status: test_status).'
-    );
-    $this->loader->getEligibleProcessesForContract($fundingCase);
   }
 
 }
