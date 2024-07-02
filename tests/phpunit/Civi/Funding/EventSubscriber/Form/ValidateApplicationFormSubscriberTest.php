@@ -33,7 +33,7 @@ use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Event\Remote\ApplicationProcess\ValidateApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingCase\ValidateNewApplicationFormEvent;
 use Civi\Funding\Form\Application\ApplicationValidationResult;
-use Civi\Funding\Mock\FundingCaseType\Application\Validation\TestValidatedData;
+use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -100,7 +100,7 @@ final class ValidateApplicationFormSubscriberTest extends TestCase {
       20,
     );
 
-    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([], [], []), FALSE);
+    $validationResult = ApplicationValidationResult::newValid(new ValidatedApplicationDataMock(), FALSE);
     $this->validateHandlerMock->expects(static::once())->method('handle')
       ->with($command)
       ->willReturn($validationResult);
@@ -123,7 +123,7 @@ final class ValidateApplicationFormSubscriberTest extends TestCase {
     $errorMessages = ['/a/b' => ['error']];
     $validationResult = ApplicationValidationResult::newInvalid(
       $errorMessages,
-      new TestValidatedData([], [], [])
+      new ValidatedApplicationDataMock()
     );
     $this->validateHandlerMock->expects(static::once())->method('handle')
       ->with($command)
@@ -143,7 +143,7 @@ final class ValidateApplicationFormSubscriberTest extends TestCase {
       $event->getFundingCaseType(),
       $event->getData()
     );
-    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([], [], []), FALSE);
+    $validationResult = ApplicationValidationResult::newValid(new ValidatedApplicationDataMock(), FALSE);
     $this->newValidateHandlerMock->expects(static::once())->method('handle')
       ->with($command)
       ->willReturn($validationResult);
@@ -166,7 +166,7 @@ final class ValidateApplicationFormSubscriberTest extends TestCase {
     $errorMessages = ['/a/b' => ['error']];
     $validationResult = ApplicationValidationResult::newInvalid(
       $errorMessages,
-      new TestValidatedData([], [], [])
+      new ValidatedApplicationDataMock()
     );
     $this->newValidateHandlerMock->expects(static::once())->method('handle')
       ->with($command)

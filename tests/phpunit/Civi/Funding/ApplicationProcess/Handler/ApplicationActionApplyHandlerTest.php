@@ -205,7 +205,7 @@ final class ApplicationActionApplyHandlerTest extends TestCase {
       $action,
       ApplicationProcessBundleFactory::createApplicationProcessBundle(),
       ApplicationValidationResult::newValid(
-        new ValidatedApplicationDataMock($applicationData, ['action' => $action] + $data),
+        new ValidatedApplicationDataMock($applicationData, ['_action' => $action] + $data),
         $readOnly
       ),
     );

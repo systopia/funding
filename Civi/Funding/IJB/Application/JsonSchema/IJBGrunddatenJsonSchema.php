@@ -40,17 +40,24 @@ final class IJBGrunddatenJsonSchema extends JsonSchemaObject {
     bool $report = FALSE
   ) {
     $properties = [
-      'titel' => new JsonSchemaString(),
-      'kurzbeschreibungDesInhalts' => new JsonSchemaString(['maxLength' => 500]),
+      'titel' => new JsonSchemaString([
+        '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'title']]),
+      ]),
+      'kurzbeschreibungDesInhalts' => new JsonSchemaString([
+        'maxLength' => 500,
+        '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'short_description']]),
+      ]),
       'zeitraeume' => new JsonSchemaArray(
         new JsonSchemaObject([
           'beginn' => new JsonSchemaDate([
             'minDate' => $applicationBegin->format('Y-m-d'),
             'maxDate' => $applicationEnd->format('Y-m-d'),
+            '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'start_date', 'replace' => FALSE]]),
           ]),
           'ende' => new JsonSchemaDate([
             'minDate' => new JsonSchemaDataPointer('1/beginn', '0000-00-00'),
             'maxDate' => $applicationEnd->format('Y-m-d'),
+            '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'end_date']]),
           ]),
         ],
           [

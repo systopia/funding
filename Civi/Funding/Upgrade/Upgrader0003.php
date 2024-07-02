@@ -91,7 +91,7 @@ final class Upgrader0003 {
           $applicationProcessBundle,
           $applicationProcessStatusList,
           [
-            'action' => 'update',
+            '_action' => 'update',
             'finanzierung' => (object) [
               'teilnehmerbeitraege' => 0,
               'eigenmittel' => 0,

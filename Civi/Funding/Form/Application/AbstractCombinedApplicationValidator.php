@@ -58,7 +58,7 @@ abstract class AbstractCombinedApplicationValidator extends AbstractApplicationV
     $jsonSchemaValidationResult = $this->jsonSchemaValidator->validate($jsonSchema, $data, $maxErrors);
     if (!$jsonSchemaValidationResult->isValid()) {
       return ApplicationValidationResult::newInvalid(
-      // @phpstan-ignore-next-line leaf error messages are not empty.
+        // @phpstan-ignore-next-line leaf error messages are not empty.
         $jsonSchemaValidationResult->getLeafErrorMessages(),
         new ValidatedApplicationDataInvalid($jsonSchemaValidationResult->getData()),
       );

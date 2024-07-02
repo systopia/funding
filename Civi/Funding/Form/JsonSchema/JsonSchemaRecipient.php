@@ -22,6 +22,7 @@ namespace Civi\Funding\Form\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaInteger;
 use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
+use Webmozart\Assert\Assert;
 
 /**
  * JSON schema for funding recipient.
@@ -43,6 +44,15 @@ final class JsonSchemaRecipient extends JsonSchemaInteger {
     else {
       $keywords['oneOf'] = [JsonSchema::fromArray(['const' => NULL])];
     }
+
+    if (!isset($keywords['$tag'])) {
+      $keywords['$tag'] = new JsonSchema([]);
+    }
+    else {
+      Assert::isInstanceOf($keywords['$tag'], JsonSchema::class);
+    }
+
+    $keywords['$tag']['mapToField'] = JsonSchema::fromArray(['fieldName' => 'recipient_contact_id']);
 
     parent::__construct($keywords);
   }

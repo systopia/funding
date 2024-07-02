@@ -19,8 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\IJB\Application\JsonSchema;
 
-use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemDataCollector;
-use Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemDataCollector;
+use Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidator;
 use Civi\Funding\ApplicationProcess\JsonSchema\Validator\OpisApplicationValidatorFactory;
 use Civi\Funding\Form\JsonSchema\JsonSchemaRecipient;
 use Civi\Funding\Form\Traits\AssertFormTrait;
@@ -28,8 +27,10 @@ use Civi\Funding\Validation\Traits\AssertValidationResultTrait;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 use Civi\RemoteTools\JsonSchema\Validation\OpisValidatorFactory;
+use Civi\RemoteTools\Util\JsonConverter;
 use PHPUnit\Framework\TestCase;
 use Systopia\JsonSchema\Errors\ErrorCollector;
+use Systopia\JsonSchema\Translation\NullTranslator;
 
 /**
  * @covers \Civi\Funding\IJB\Application\JsonSchema\IJBApplicationJsonSchema
@@ -39,6 +40,16 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
   use AssertFormTrait;
 
   use AssertValidationResultTrait;
+
+  private ApplicationSchemaValidator $validator;
+
+  protected function setUp(): void {
+    parent::setUp();
+    $this->validator = new ApplicationSchemaValidator(
+      new NullTranslator(),
+      OpisApplicationValidatorFactory::getValidator()
+    );
+  }
 
   public function testFachkraefteprogrammDeutschland(): void {
     $possibleRecipients = [
@@ -124,17 +135,17 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
     $eigenmittel = round($kostenGesamt - $zuschussGesamt - $fremdmittelGesamt, 2);
     $mittelGesamt = round($eigenmittel + $fremdmittelGesamt, 2);
 
-    $data = (object) [
+    $data = [
       'action' => 'submitAction1',
-      'grunddaten' => (object) [
+      'grunddaten' => [
         'titel' => 'Test',
         'kurzbeschreibungDesInhalts' => 'foo bar',
         'zeitraeume' => [
-          (object) [
+          [
             'beginn' => '2022-08-24',
             'ende' => '2022-08-24',
           ],
-          (object) [
+          [
             'beginn' => '2022-08-25',
             'ende' => '2022-08-26',
           ],
@@ -145,8 +156,8 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
         'land' => 'Land',
         'fahrtstreckeInKm' => $fahrtstreckeInKm,
       ],
-      'teilnehmer' => (object) [
-        'deutschland' => (object) [
+      'teilnehmer' => [
+        'deutschland' => [
           'gesamt' => $teilnehmerDeutschlandGesamt,
           'weiblich' => 4,
           'divers' => 3,
@@ -155,7 +166,7 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
           'inJugendhilfeHauptamtlichTaetig' => 0,
           'referenten' => 5,
         ],
-        'partnerland' => (object) [
+        'partnerland' => [
           'gesamt' => $teilnehmerPartnerlandGesamt,
           'weiblich' => 4,
           'divers' => 3,
@@ -166,7 +177,7 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
         ],
       ],
       'empfaenger' => 2,
-      'partnerorganisation' => (object) [
+      'partnerorganisation' => [
         'name' => 'abc',
         'adresse' => 'def',
         'land' => 'ghi',
@@ -179,17 +190,17 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
         'bisherigeBegegnungenInDeutschland' => 'Hier 2001',
         'bisherigeBegegnungenImPartnerland' => 'Dort 2002',
       ],
-      'kosten' => (object) [
+      'kosten' => [
         'unterkunftUndVerpflegung' => $unterkunftUndVerpflegung,
         'honorare' => [
-          (object) [
+          [
             'berechnungsgrundlage' => 'stundensatz',
             'dauer' => $honorarDauer1,
             'verguetung' => $honorarVerguetung1,
             'leistung' => 'Leistung 1',
             'qualifikation' => 'Qualifikation 1',
           ],
-          (object) [
+          [
             'berechnungsgrundlage' => 'tagessatz',
             'dauer' => $honorarDauer2,
             'verguetung' => $honorarVerguetung2,
@@ -197,36 +208,36 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
             'qualifikation' => 'Qualifikation 2',
           ],
         ],
-        'fahrtkosten' => (object) [
+        'fahrtkosten' => [
           'flug' => $fahrtkostenFlug,
           'anTeilnehmerErstattet' => $fahrtkostenAnTeilnehmerErstattet,
         ],
-        'programmkosten' => (object) [
+        'programmkosten' => [
           'programmkosten' => $programmkosten,
           'arbeitsmaterial' => $kostenArbeitsmaterial,
           'fahrt' => $programmfahrtkosten,
         ],
         'sonstigeKosten' => [
-          (object) [
+          [
             'gegenstand' => 'Gegenstand 1',
             'betrag' => $sonstigeKosten1,
           ],
-          (object) [
+          [
             'gegenstand' => 'Gegenstand 2',
             'betrag' => $sonstigeKosten2,
           ],
         ],
         'sonstigeAusgaben' => [
-          (object) [
+          [
             'zweck' => 'Zweck 1',
             'betrag' => $sonstigeAusgabe1,
           ],
-          (object) [
+          [
             'zweck' => 'Zweck 2',
             'betrag' => $sonstigeAusgabe2,
           ],
         ],
-        'zuschlagsrelevanteKosten' => (object) [
+        'zuschlagsrelevanteKosten' => [
           'programmabsprachen' => $kostenProgrammabsprachen,
           'vorbereitungsmaterial' => $kostenVorbereitungsmaterial,
           'veroeffentlichungen' => $kostenVeroeffentlichungen,
@@ -236,32 +247,32 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
           'miete' => $mietkosten,
         ],
       ],
-      'finanzierung' => (object) [
+      'finanzierung' => [
         'teilnehmerbeitraege' => $teilnehmerBeitrage,
         'eigenmittel' => $eigenmittel,
-        'oeffentlicheMittel' => (object) [
+        'oeffentlicheMittel' => [
           'europa' => $mittelEuropa,
           'bundeslaender' => $mittelBundeslaender,
           'staedteUndKreise' => $mittelStaedteUndKreise,
         ],
         'sonstigeMittel' => [
-          (object) [
+          [
             'quelle' => 'Quelle 1',
             'betrag' => $sonstigesMittel1,
           ],
-          (object) [
+          [
             'quelle' => 'Quelle 2',
             'betrag' => $sonstigesMittel2,
           ],
         ],
       ],
-      'zuschuss' => (object) [
+      'zuschuss' => [
         'teilnehmerkosten' => $zuschussTeilnehmerkosten,
         'honorarkosten' => $zuschussHonorarkosten,
         'fahrtkosten' => $zuschussFahrtkosten,
         'zuschlag' => $zuschussZuschlag,
       ],
-      'beschreibung' => (object) [
+      'beschreibung' => [
         'ziele' => [
           'persoenlichkeitsbildung',
           'internationaleBegegnungen',
@@ -272,70 +283,61 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
         'qualifikation' => 'Qualifikation',
       ],
       'projektunterlagen' => [
-        (object) [
+        [
           'datei' => 'https://example.org/test.txt',
           'beschreibung' => 'Test',
         ],
       ],
     ];
 
-    $validator = OpisApplicationValidatorFactory::getValidator();
-    $costItemDataCollector = new CostItemDataCollector();
-    $resourcesItemDataCollector = new ResourcesItemDataCollector();
-    $result = $validator->validate(
-      $data,
-      \json_encode($jsonSchema),
-      [
-        'costItemDataCollector' => $costItemDataCollector,
-        'resourcesItemDataCollector' => $resourcesItemDataCollector,
-      ]
-    );
-    static::assertValidationValid($result);
-    static::assertCount(19, $costItemDataCollector->getCostItemsData());
-    static::assertCount(7, $resourcesItemDataCollector->getResourcesItemsData());
+    $result = $this->validator->validate($jsonSchema, $data);
+    static::assertSame([], $result->getLeafErrorMessages());
+    static::assertCount(19, $result->getCostItemsData());
+    static::assertCount(7, $result->getResourcesItemsData());
 
+    $resultData = JsonConverter::toStdClass($result->getData());
     $programmtage = 3;
-    static::assertSame($programmtage, $data->grunddaten->programmtage);
-    static::assertSame($teilnehmerGesamt, $data->teilnehmer->gesamt);
-    static::assertSame($programmtage * $teilnehmerGesamt, $data->teilnehmer->teilnehmertage);
+    static::assertSame($programmtage, $resultData->grunddaten->programmtage);
+    static::assertSame($teilnehmerGesamt, $resultData->teilnehmer->gesamt);
+    static::assertSame($programmtage * $teilnehmerGesamt, $resultData->teilnehmer->teilnehmertage);
 
-    static::assertSame($honorareGesamt, $data->kosten->honorareGesamt);
-    static::assertSame($fahrtkostenGesamt, $data->kosten->fahrtkostenGesamt);
-    static::assertSame($programmkostenGesamt, $data->kosten->programmkostenGesamt);
-    static::assertSame($sonstigeKostenGesamt, $data->kosten->sonstigeKostenGesamt);
-    static::assertSame($sonstigeAusgabenGesamt, $data->kosten->sonstigeAusgabenGesamt);
-    static::assertSame($zuschlagsrelevanteKostenGesamt, $data->kosten->zuschlagsrelevanteKostenGesamt);
-    static::assertSame($kostenGesamt, $data->kosten->kostenGesamt);
+    static::assertSame($honorareGesamt, $resultData->kosten->honorareGesamt);
+    static::assertSame($fahrtkostenGesamt, $resultData->kosten->fahrtkostenGesamt);
+    static::assertSame($programmkostenGesamt, $resultData->kosten->programmkostenGesamt);
+    static::assertSame($sonstigeKostenGesamt, $resultData->kosten->sonstigeKostenGesamt);
+    static::assertSame($sonstigeAusgabenGesamt, $resultData->kosten->sonstigeAusgabenGesamt);
+    static::assertSame($zuschlagsrelevanteKostenGesamt, $resultData->kosten->zuschlagsrelevanteKostenGesamt);
+    static::assertSame($kostenGesamt, $resultData->kosten->kostenGesamt);
 
-    static::assertSame($oeffentlicheMittelGesamt, $data->finanzierung->oeffentlicheMittelGesamt);
-    static::assertSame($sonstigeMittelGesamt, $data->finanzierung->sonstigeMittelGesamt);
-    static::assertSame($mittelGesamt, $data->finanzierung->mittelGesamt);
+    static::assertSame($oeffentlicheMittelGesamt, $resultData->finanzierung->oeffentlicheMittelGesamt);
+    static::assertSame($sonstigeMittelGesamt, $resultData->finanzierung->sonstigeMittelGesamt);
+    static::assertSame($mittelGesamt, $resultData->finanzierung->mittelGesamt);
 
     static::assertSame(
       round($teilnehmerGesamt * $programmtage * 40, 2),
-      $data->zuschuss->teilnehmerkostenMax,
+      $resultData->zuschuss->teilnehmerkostenMax,
     );
     static::assertSame(
       round($programmtage * 305, 2),
-      $data->zuschuss->honorarkostenMax,
+      $resultData->zuschuss->honorarkostenMax,
     );
     static::assertSame(
       round($teilnehmerDeutschlandGesamt * $fahrtstreckeInKm * 0.08, 2),
-      $data->zuschuss->fahrtkostenAuslandEuropaMax
+      $resultData->zuschuss->fahrtkostenAuslandEuropaMax
     );
     static::assertSame(
       round($teilnehmerDeutschlandGesamt * $fahrtstreckeInKm * 0.12, 2),
-      $data->zuschuss->fahrtkostenNichtEuropaMax
+      $resultData->zuschuss->fahrtkostenNichtEuropaMax
     );
-    static::assertSame(0, $data->zuschuss->fahrtkostenMax);
-    static::assertSame(0, $data->zuschuss->zuschlagMax);
-    static::assertSame($zuschussGesamt, $data->zuschuss->gesamt);
+    static::assertSame(0, $resultData->zuschuss->fahrtkostenMax);
+    static::assertSame(0, $resultData->zuschuss->zuschlagMax);
+    static::assertSame($zuschussGesamt, $resultData->zuschuss->gesamt);
     static::assertSame(
       round($mittelGesamt + $zuschussGesamt, 2),
-      $data->zuschuss->finanzierungGesamt
+      $resultData->zuschuss->finanzierungGesamt
     );
 
-    static::assertAllPropertiesSet($jsonSchema->toStdClass(), $data);
+    static::assertAllPropertiesSet($jsonSchema->toStdClass(), $resultData);
   }
 
   public function testFachkraefteprogrammPartnerland(): void {
@@ -421,17 +423,17 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
     $eigenmittel = round($kostenGesamt - $zuschussGesamt - $fremdmittelGesamt, 2);
     $mittelGesamt = round($eigenmittel + $fremdmittelGesamt, 2);
 
-    $data = (object) [
+    $data = [
       'action' => 'submitAction1',
-      'grunddaten' => (object) [
+      'grunddaten' => [
         'titel' => 'Test',
         'kurzbeschreibungDesInhalts' => 'foo bar',
         'zeitraeume' => [
-          (object) [
+          [
             'beginn' => '2022-08-24',
             'ende' => '2022-08-24',
           ],
-          (object) [
+          [
             'beginn' => '2022-08-25',
             'ende' => '2022-08-26',
           ],
@@ -442,8 +444,8 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
         'land' => 'Land',
         'fahrtstreckeInKm' => $fahrtstreckeInKm,
       ],
-      'teilnehmer' => (object) [
-        'deutschland' => (object) [
+      'teilnehmer' => [
+        'deutschland' => [
           'gesamt' => $teilnehmerDeutschlandGesamt,
           'weiblich' => 4,
           'divers' => 3,
@@ -452,7 +454,7 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
           'inJugendhilfeHauptamtlichTaetig' => 0,
           'referenten' => 5,
         ],
-        'partnerland' => (object) [
+        'partnerland' => [
           'gesamt' => $teilnehmerPartnerlandGesamt,
           'weiblich' => 4,
           'divers' => 3,
@@ -463,7 +465,7 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
         ],
       ],
       'empfaenger' => 2,
-      'partnerorganisation' => (object) [
+      'partnerorganisation' => [
         'name' => 'abc',
         'adresse' => 'def',
         'land' => 'ghi',
@@ -476,17 +478,17 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
         'bisherigeBegegnungenInDeutschland' => 'Hier 2001',
         'bisherigeBegegnungenImPartnerland' => 'Dort 2002',
       ],
-      'kosten' => (object) [
+      'kosten' => [
         'unterkunftUndVerpflegung' => $unterkunftUndVerpflegung,
         'honorare' => [
-          (object) [
+          [
             'berechnungsgrundlage' => 'stundensatz',
             'dauer' => $honorarDauer1,
             'verguetung' => $honorarVerguetung1,
             'leistung' => 'Leistung 1',
             'qualifikation' => 'Qualifikation 1',
           ],
-          (object) [
+          [
             'berechnungsgrundlage' => 'tagessatz',
             'dauer' => $honorarDauer2,
             'verguetung' => $honorarVerguetung2,
@@ -494,36 +496,36 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
             'qualifikation' => 'Qualifikation 2',
           ],
         ],
-        'fahrtkosten' => (object) [
+        'fahrtkosten' => [
           'flug' => $fahrtkostenFlug,
           'anTeilnehmerErstattet' => $fahrtkostenAnTeilnehmerErstattet,
         ],
-        'programmkosten' => (object) [
+        'programmkosten' => [
           'programmkosten' => $programmkosten,
           'arbeitsmaterial' => $kostenArbeitsmaterial,
           'fahrt' => $programmfahrtkosten,
         ],
         'sonstigeKosten' => [
-          (object) [
+          [
             'gegenstand' => 'Gegenstand 1',
             'betrag' => $sonstigeKosten1,
           ],
-          (object) [
+          [
             'gegenstand' => 'Gegenstand 2',
             'betrag' => $sonstigeKosten2,
           ],
         ],
         'sonstigeAusgaben' => [
-          (object) [
+          [
             'zweck' => 'Zweck 1',
             'betrag' => $sonstigeAusgabe1,
           ],
-          (object) [
+          [
             'zweck' => 'Zweck 2',
             'betrag' => $sonstigeAusgabe2,
           ],
         ],
-        'zuschlagsrelevanteKosten' => (object) [
+        'zuschlagsrelevanteKosten' => [
           'programmabsprachen' => $kostenProgrammabsprachen,
           'veroeffentlichungen' => $kostenVeroeffentlichungen,
           'honorare' => $kostenZuschlagHonorare,
@@ -532,32 +534,32 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
           'miete' => $mietkosten,
         ],
       ],
-      'finanzierung' => (object) [
+      'finanzierung' => [
         'teilnehmerbeitraege' => $teilnehmerBeitrage,
         'eigenmittel' => $eigenmittel,
-        'oeffentlicheMittel' => (object) [
+        'oeffentlicheMittel' => [
           'europa' => $mittelEuropa,
           'bundeslaender' => $mittelBundeslaender,
           'staedteUndKreise' => $mittelStaedteUndKreise,
         ],
         'sonstigeMittel' => [
-          (object) [
+          [
             'quelle' => 'Quelle 1',
             'betrag' => $sonstigesMittel1,
           ],
-          (object) [
+          [
             'quelle' => 'Quelle 2',
             'betrag' => $sonstigesMittel2,
           ],
         ],
       ],
-      'zuschuss' => (object) [
+      'zuschuss' => [
         'teilnehmerkosten' => $zuschussTeilnehmerkosten,
         'honorarkosten' => $zuschussHonorarkosten,
         'fahrtkosten' => $zuschussFahrtkosten,
         'zuschlag' => $zuschussZuschlag,
       ],
-      'beschreibung' => (object) [
+      'beschreibung' => [
         'ziele' => [
           'persoenlichkeitsbildung',
           'internationaleBegegnungen',
@@ -568,63 +570,54 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
         'qualifikation' => 'Qualifikation',
       ],
       'projektunterlagen' => [
-        (object) [
+        [
           'datei' => 'https://example.org/test.txt',
           'beschreibung' => 'Test',
         ],
       ],
     ];
 
-    $validator = OpisApplicationValidatorFactory::getValidator();
-    $costItemDataCollector = new CostItemDataCollector();
-    $resourcesItemDataCollector = new ResourcesItemDataCollector();
-    $result = $validator->validate(
-      $data,
-      \json_encode($jsonSchema),
-      [
-        'costItemDataCollector' => $costItemDataCollector,
-        'resourcesItemDataCollector' => $resourcesItemDataCollector,
-      ]
-    );
-    static::assertValidationValid($result);
-    static::assertCount(18, $costItemDataCollector->getCostItemsData());
-    static::assertCount(7, $resourcesItemDataCollector->getResourcesItemsData());
+    $result = $this->validator->validate($jsonSchema, $data);
+    static::assertSame([], $result->getLeafErrorMessages());
+    static::assertCount(18, $result->getCostItemsData());
+    static::assertCount(7, $result->getResourcesItemsData());
 
+    $resultData = JsonConverter::toStdClass($result->getData());
     $programmtage = 3;
-    static::assertSame($programmtage, $data->grunddaten->programmtage);
-    static::assertSame($teilnehmerGesamt, $data->teilnehmer->gesamt);
-    static::assertSame($programmtage * $teilnehmerGesamt, $data->teilnehmer->teilnehmertage);
+    static::assertSame($programmtage, $resultData->grunddaten->programmtage);
+    static::assertSame($teilnehmerGesamt, $resultData->teilnehmer->gesamt);
+    static::assertSame($programmtage * $teilnehmerGesamt, $resultData->teilnehmer->teilnehmertage);
 
-    static::assertSame($honorareGesamt, $data->kosten->honorareGesamt);
-    static::assertSame($fahrtkostenGesamt, $data->kosten->fahrtkostenGesamt);
-    static::assertSame($programmkostenGesamt, $data->kosten->programmkostenGesamt);
-    static::assertSame($sonstigeKostenGesamt, $data->kosten->sonstigeKostenGesamt);
-    static::assertSame($sonstigeAusgabenGesamt, $data->kosten->sonstigeAusgabenGesamt);
-    static::assertSame($zuschlagsrelevanteKostenGesamt, $data->kosten->zuschlagsrelevanteKostenGesamt);
-    static::assertSame($kostenGesamt, $data->kosten->kostenGesamt);
+    static::assertSame($honorareGesamt, $resultData->kosten->honorareGesamt);
+    static::assertSame($fahrtkostenGesamt, $resultData->kosten->fahrtkostenGesamt);
+    static::assertSame($programmkostenGesamt, $resultData->kosten->programmkostenGesamt);
+    static::assertSame($sonstigeKostenGesamt, $resultData->kosten->sonstigeKostenGesamt);
+    static::assertSame($sonstigeAusgabenGesamt, $resultData->kosten->sonstigeAusgabenGesamt);
+    static::assertSame($zuschlagsrelevanteKostenGesamt, $resultData->kosten->zuschlagsrelevanteKostenGesamt);
+    static::assertSame($kostenGesamt, $resultData->kosten->kostenGesamt);
 
-    static::assertSame($oeffentlicheMittelGesamt, $data->finanzierung->oeffentlicheMittelGesamt);
-    static::assertSame($sonstigeMittelGesamt, $data->finanzierung->sonstigeMittelGesamt);
-    static::assertSame($mittelGesamt, $data->finanzierung->mittelGesamt);
+    static::assertSame($oeffentlicheMittelGesamt, $resultData->finanzierung->oeffentlicheMittelGesamt);
+    static::assertSame($sonstigeMittelGesamt, $resultData->finanzierung->sonstigeMittelGesamt);
+    static::assertSame($mittelGesamt, $resultData->finanzierung->mittelGesamt);
 
-    static::assertSame(0, $data->zuschuss->teilnehmerkostenMax);
-    static::assertSame(0, $data->zuschuss->honorarkostenMax);
+    static::assertSame(0, $resultData->zuschuss->teilnehmerkostenMax);
+    static::assertSame(0, $resultData->zuschuss->honorarkostenMax);
     static::assertSame(
       floor($teilnehmerDeutschlandGesamt * $fahrtstreckeInKm * 0.08),
-      $data->zuschuss->fahrtkostenAuslandEuropaMax
+      $resultData->zuschuss->fahrtkostenAuslandEuropaMax
     );
     static::assertSame(
       floor($teilnehmerDeutschlandGesamt * $fahrtstreckeInKm * 0.12),
-      $data->zuschuss->fahrtkostenNichtEuropaMax
+      $resultData->zuschuss->fahrtkostenNichtEuropaMax
     );
-    static::assertSame(500, $data->zuschuss->zuschlagMax);
-    static::assertSame($zuschussGesamt, $data->zuschuss->gesamt);
+    static::assertSame(500, $resultData->zuschuss->zuschlagMax);
+    static::assertSame($zuschussGesamt, $resultData->zuschuss->gesamt);
     static::assertSame(
       round($mittelGesamt + $zuschussGesamt, 2),
-      $data->zuschuss->finanzierungGesamt
+      $resultData->zuschuss->finanzierungGesamt
     );
 
-    static::assertAllPropertiesSet($jsonSchema->toStdClass(), $data);
+    static::assertAllPropertiesSet($jsonSchema->toStdClass(), $resultData);
   }
 
   public function testJugendbegegnungDeutschland(): void {
@@ -710,17 +703,17 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
     $eigenmittel = round($kostenGesamt - $zuschussGesamt - $fremdmittelGesamt, 2);
     $mittelGesamt = round($eigenmittel + $fremdmittelGesamt, 2);
 
-    $data = (object) [
+    $data = [
       'action' => 'submitAction1',
-      'grunddaten' => (object) [
+      'grunddaten' => [
         'titel' => 'Test',
         'kurzbeschreibungDesInhalts' => 'foo bar',
         'zeitraeume' => [
-          (object) [
+          [
             'beginn' => '2022-08-24',
             'ende' => '2022-08-24',
           ],
-          (object) [
+          [
             'beginn' => '2022-08-25',
             'ende' => '2022-08-26',
           ],
@@ -731,8 +724,8 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
         'land' => 'Land',
         'fahrtstreckeInKm' => $fahrtstreckeInKm,
       ],
-      'teilnehmer' => (object) [
-        'deutschland' => (object) [
+      'teilnehmer' => [
+        'deutschland' => [
           'gesamt' => $teilnehmerDeutschlandGesamt,
           'weiblich' => 4,
           'divers' => 3,
@@ -741,7 +734,7 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
           'inJugendhilfeHauptamtlichTaetig' => 0,
           'referenten' => 5,
         ],
-        'partnerland' => (object) [
+        'partnerland' => [
           'gesamt' => $teilnehmerPartnerlandGesamt,
           'weiblich' => 4,
           'divers' => 3,
@@ -752,7 +745,7 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
         ],
       ],
       'empfaenger' => 2,
-      'partnerorganisation' => (object) [
+      'partnerorganisation' => [
         'name' => 'abc',
         'adresse' => 'def',
         'land' => 'ghi',
@@ -765,17 +758,17 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
         'bisherigeBegegnungenInDeutschland' => 'Hier 2001',
         'bisherigeBegegnungenImPartnerland' => 'Dort 2002',
       ],
-      'kosten' => (object) [
+      'kosten' => [
         'unterkunftUndVerpflegung' => $unterkunftUndVerpflegung,
         'honorare' => [
-          (object) [
+          [
             'berechnungsgrundlage' => 'stundensatz',
             'dauer' => $honorarDauer1,
             'verguetung' => $honorarVerguetung1,
             'leistung' => 'Leistung 1',
             'qualifikation' => 'Qualifikation 1',
           ],
-          (object) [
+          [
             'berechnungsgrundlage' => 'stundensatz',
             'dauer' => $honorarDauer2,
             'verguetung' => $honorarVerguetung2,
@@ -783,36 +776,36 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
             'qualifikation' => 'Qualifikation 2',
           ],
         ],
-        'fahrtkosten' => (object) [
+        'fahrtkosten' => [
           'flug' => $fahrtkostenFlug,
           'anTeilnehmerErstattet' => $fahrtkostenAnTeilnehmerErstattet,
         ],
-        'programmkosten' => (object) [
+        'programmkosten' => [
           'programmkosten' => $programmkosten,
           'arbeitsmaterial' => $kostenArbeitsmaterial,
           'fahrt' => $programmfahrtkosten,
         ],
         'sonstigeKosten' => [
-          (object) [
+          [
             'gegenstand' => 'Gegenstand 1',
             'betrag' => $sonstigeKosten1,
           ],
-          (object) [
+          [
             'gegenstand' => 'Gegenstand 2',
             'betrag' => $sonstigeKosten2,
           ],
         ],
         'sonstigeAusgaben' => [
-          (object) [
+          [
             'zweck' => 'Zweck 1',
             'betrag' => $sonstigeAusgabe1,
           ],
-          (object) [
+          [
             'zweck' => 'Zweck 2',
             'betrag' => $sonstigeAusgabe2,
           ],
         ],
-        'zuschlagsrelevanteKosten' => (object) [
+        'zuschlagsrelevanteKosten' => [
           'programmabsprachen' => $kostenProgrammabsprachen,
           'veroeffentlichungen' => $kostenVeroeffentlichungen,
           'honorare' => $kostenZuschlagHonorare,
@@ -821,32 +814,32 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
           'miete' => $mietkosten,
         ],
       ],
-      'finanzierung' => (object) [
+      'finanzierung' => [
         'teilnehmerbeitraege' => $teilnehmerBeitrage,
         'eigenmittel' => $eigenmittel,
-        'oeffentlicheMittel' => (object) [
+        'oeffentlicheMittel' => [
           'europa' => $mittelEuropa,
           'bundeslaender' => $mittelBundeslaender,
           'staedteUndKreise' => $mittelStaedteUndKreise,
         ],
         'sonstigeMittel' => [
-          (object) [
+          [
             'quelle' => 'Quelle 1',
             'betrag' => $sonstigesMittel1,
           ],
-          (object) [
+          [
             'quelle' => 'Quelle 2',
             'betrag' => $sonstigesMittel2,
           ],
         ],
       ],
-      'zuschuss' => (object) [
+      'zuschuss' => [
         'teilnehmerkosten' => $zuschussTeilnehmerkosten,
         'honorarkosten' => $zuschussHonorarkosten,
         'fahrtkosten' => $zuschussFahrtkosten,
         'zuschlag' => $zuschussZuschlag,
       ],
-      'beschreibung' => (object) [
+      'beschreibung' => [
         'ziele' => [
           'persoenlichkeitsbildung',
           'internationaleBegegnungen',
@@ -857,69 +850,60 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
         'qualifikation' => 'Qualifikation',
       ],
       'projektunterlagen' => [
-        (object) [
+        [
           'datei' => 'https://example.org/test.txt',
           'beschreibung' => 'Test',
         ],
       ],
     ];
 
-    $validator = OpisApplicationValidatorFactory::getValidator();
-    $costItemDataCollector = new CostItemDataCollector();
-    $resourcesItemDataCollector = new ResourcesItemDataCollector();
-    $result = $validator->validate(
-      $data,
-      \json_encode($jsonSchema),
-      [
-        'costItemDataCollector' => $costItemDataCollector,
-        'resourcesItemDataCollector' => $resourcesItemDataCollector,
-      ]
-    );
-    static::assertValidationValid($result);
-    static::assertCount(18, $costItemDataCollector->getCostItemsData());
-    static::assertCount(7, $resourcesItemDataCollector->getResourcesItemsData());
+    $result = $this->validator->validate($jsonSchema, $data);
+    static::assertSame([], $result->getLeafErrorMessages());
+    static::assertCount(18, $result->getCostItemsData());
+    static::assertCount(7, $result->getResourcesItemsData());
 
+    $resultData = JsonConverter::toStdClass($result->getData());
     $programmtage = 3;
-    static::assertSame($programmtage, $data->grunddaten->programmtage);
-    static::assertSame($teilnehmerGesamt, $data->teilnehmer->gesamt);
-    static::assertSame($programmtage * $teilnehmerGesamt, $data->teilnehmer->teilnehmertage);
+    static::assertSame($programmtage, $resultData->grunddaten->programmtage);
+    static::assertSame($teilnehmerGesamt, $resultData->teilnehmer->gesamt);
+    static::assertSame($programmtage * $teilnehmerGesamt, $resultData->teilnehmer->teilnehmertage);
 
-    static::assertSame($honorareGesamt, $data->kosten->honorareGesamt);
-    static::assertSame($fahrtkostenGesamt, $data->kosten->fahrtkostenGesamt);
-    static::assertSame($programmkostenGesamt, $data->kosten->programmkostenGesamt);
-    static::assertSame($sonstigeKostenGesamt, $data->kosten->sonstigeKostenGesamt);
-    static::assertSame($sonstigeAusgabenGesamt, $data->kosten->sonstigeAusgabenGesamt);
-    static::assertSame($zuschlagsrelevanteKostenGesamt, $data->kosten->zuschlagsrelevanteKostenGesamt);
-    static::assertSame($kostenGesamt, $data->kosten->kostenGesamt);
+    static::assertSame($honorareGesamt, $resultData->kosten->honorareGesamt);
+    static::assertSame($fahrtkostenGesamt, $resultData->kosten->fahrtkostenGesamt);
+    static::assertSame($programmkostenGesamt, $resultData->kosten->programmkostenGesamt);
+    static::assertSame($sonstigeKostenGesamt, $resultData->kosten->sonstigeKostenGesamt);
+    static::assertSame($sonstigeAusgabenGesamt, $resultData->kosten->sonstigeAusgabenGesamt);
+    static::assertSame($zuschlagsrelevanteKostenGesamt, $resultData->kosten->zuschlagsrelevanteKostenGesamt);
+    static::assertSame($kostenGesamt, $resultData->kosten->kostenGesamt);
 
-    static::assertSame($oeffentlicheMittelGesamt, $data->finanzierung->oeffentlicheMittelGesamt);
-    static::assertSame($sonstigeMittelGesamt, $data->finanzierung->sonstigeMittelGesamt);
-    static::assertSame($mittelGesamt, $data->finanzierung->mittelGesamt);
+    static::assertSame($oeffentlicheMittelGesamt, $resultData->finanzierung->oeffentlicheMittelGesamt);
+    static::assertSame($sonstigeMittelGesamt, $resultData->finanzierung->sonstigeMittelGesamt);
+    static::assertSame($mittelGesamt, $resultData->finanzierung->mittelGesamt);
 
     static::assertSame(
       round($teilnehmerGesamt * $programmtage * 24, 2),
-      $data->zuschuss->teilnehmerkostenMax,
+      $resultData->zuschuss->teilnehmerkostenMax,
     );
     static::assertSame(
       round($programmtage * 305, 2),
-      $data->zuschuss->honorarkostenMax,
+      $resultData->zuschuss->honorarkostenMax,
     );
     static::assertSame(
       round($teilnehmerDeutschlandGesamt * $fahrtstreckeInKm * 0.08, 2),
-      $data->zuschuss->fahrtkostenAuslandEuropaMax
+      $resultData->zuschuss->fahrtkostenAuslandEuropaMax
     );
     static::assertSame(
       round($teilnehmerDeutschlandGesamt * $fahrtstreckeInKm * 0.12, 2),
-      $data->zuschuss->fahrtkostenNichtEuropaMax
+      $resultData->zuschuss->fahrtkostenNichtEuropaMax
     );
-    static::assertSame(0, $data->zuschuss->zuschlagMax);
-    static::assertSame($zuschussGesamt, $data->zuschuss->gesamt);
+    static::assertSame(0, $resultData->zuschuss->zuschlagMax);
+    static::assertSame($zuschussGesamt, $resultData->zuschuss->gesamt);
     static::assertSame(
       round($mittelGesamt + $zuschussGesamt, 2),
-      $data->zuschuss->finanzierungGesamt
+      $resultData->zuschuss->finanzierungGesamt
     );
 
-    static::assertAllPropertiesSet($jsonSchema->toStdClass(), $data);
+    static::assertAllPropertiesSet($jsonSchema->toStdClass(), $resultData);
   }
 
   public function testJugendbegegnungPartnerland(): void {
@@ -1005,17 +989,17 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
     $eigenmittel = round($kostenGesamt - $zuschussGesamt - $fremdmittelGesamt, 2);
     $mittelGesamt = round($eigenmittel + $fremdmittelGesamt, 2);
 
-    $data = (object) [
+    $data = [
       'action' => 'submitAction1',
-      'grunddaten' => (object) [
+      'grunddaten' => [
         'titel' => 'Test',
         'kurzbeschreibungDesInhalts' => 'foo bar',
         'zeitraeume' => [
-          (object) [
+          [
             'beginn' => '2022-08-24',
             'ende' => '2022-08-24',
           ],
-          (object) [
+          [
             'beginn' => '2022-08-25',
             'ende' => '2022-08-26',
           ],
@@ -1026,8 +1010,8 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
         'land' => 'Land',
         'fahrtstreckeInKm' => $fahrtstreckeInKm,
       ],
-      'teilnehmer' => (object) [
-        'deutschland' => (object) [
+      'teilnehmer' => [
+        'deutschland' => [
           'gesamt' => $teilnehmerDeutschlandGesamt,
           'weiblich' => 4,
           'divers' => 3,
@@ -1036,7 +1020,7 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
           'inJugendhilfeHauptamtlichTaetig' => 0,
           'referenten' => 5,
         ],
-        'partnerland' => (object) [
+        'partnerland' => [
           'gesamt' => $teilnehmerPartnerlandGesamt,
           'weiblich' => 4,
           'divers' => 3,
@@ -1047,7 +1031,7 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
         ],
       ],
       'empfaenger' => 2,
-      'partnerorganisation' => (object) [
+      'partnerorganisation' => [
         'name' => 'abc',
         'adresse' => 'def',
         'land' => 'ghi',
@@ -1060,17 +1044,17 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
         'bisherigeBegegnungenInDeutschland' => 'Hier 2001',
         'bisherigeBegegnungenImPartnerland' => 'Dort 2002',
       ],
-      'kosten' => (object) [
+      'kosten' => [
         'unterkunftUndVerpflegung' => $unterkunftUndVerpflegung,
         'honorare' => [
-          (object) [
+          [
             'berechnungsgrundlage' => 'stundensatz',
             'dauer' => $honorarDauer1,
             'verguetung' => $honorarVerguetung1,
             'leistung' => 'Leistung 1',
             'qualifikation' => 'Qualifikation 1',
           ],
-          (object) [
+          [
             'berechnungsgrundlage' => 'tagessatz',
             'dauer' => $honorarDauer2,
             'verguetung' => $honorarVerguetung2,
@@ -1078,36 +1062,36 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
             'qualifikation' => 'Qualifikation 2',
           ],
         ],
-        'fahrtkosten' => (object) [
+        'fahrtkosten' => [
           'flug' => $fahrtkostenFlug,
           'anTeilnehmerErstattet' => $fahrtkostenAnTeilnehmerErstattet,
         ],
-        'programmkosten' => (object) [
+        'programmkosten' => [
           'programmkosten' => $programmkosten,
           'arbeitsmaterial' => $kostenArbeitsmaterial,
           'fahrt' => $programmfahrtkosten,
         ],
         'sonstigeKosten' => [
-          (object) [
+          [
             'gegenstand' => 'Gegenstand 1',
             'betrag' => $sonstigeKosten1,
           ],
-          (object) [
+          [
             'gegenstand' => 'Gegenstand 2',
             'betrag' => $sonstigeKosten2,
           ],
         ],
         'sonstigeAusgaben' => [
-          (object) [
+          [
             'zweck' => 'Zweck 1',
             'betrag' => $sonstigeAusgabe1,
           ],
-          (object) [
+          [
             'zweck' => 'Zweck 2',
             'betrag' => $sonstigeAusgabe2,
           ],
         ],
-        'zuschlagsrelevanteKosten' => (object) [
+        'zuschlagsrelevanteKosten' => [
           'programmabsprachen' => $kostenProgrammabsprachen,
           'veroeffentlichungen' => $kostenVeroeffentlichungen,
           'honorare' => $kostenZuschlagHonorare,
@@ -1116,32 +1100,32 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
           'miete' => $mietkosten,
         ],
       ],
-      'finanzierung' => (object) [
+      'finanzierung' => [
         'teilnehmerbeitraege' => $teilnehmerBeitrage,
         'eigenmittel' => $eigenmittel,
-        'oeffentlicheMittel' => (object) [
+        'oeffentlicheMittel' => [
           'europa' => $mittelEuropa,
           'bundeslaender' => $mittelBundeslaender,
           'staedteUndKreise' => $mittelStaedteUndKreise,
         ],
         'sonstigeMittel' => [
-          (object) [
+          [
             'quelle' => 'Quelle 1',
             'betrag' => $sonstigesMittel1,
           ],
-          (object) [
+          [
             'quelle' => 'Quelle 2',
             'betrag' => $sonstigesMittel2,
           ],
         ],
       ],
-      'zuschuss' => (object) [
+      'zuschuss' => [
         'teilnehmerkosten' => $zuschussTeilnehmerkosten,
         'honorarkosten' => $zuschussHonorarkosten,
         'fahrtkosten' => $zuschussFahrtkosten,
         'zuschlag' => $zuschussZuschlag,
       ],
-      'beschreibung' => (object) [
+      'beschreibung' => [
         'ziele' => [
           'persoenlichkeitsbildung',
           'internationaleBegegnungen',
@@ -1152,63 +1136,54 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
         'qualifikation' => 'Qualifikation',
       ],
       'projektunterlagen' => [
-        (object) [
+        [
           'datei' => 'https://example.org/test.txt',
           'beschreibung' => 'Test',
         ],
       ],
     ];
 
-    $validator = OpisApplicationValidatorFactory::getValidator();
-    $costItemDataCollector = new CostItemDataCollector();
-    $resourcesItemDataCollector = new ResourcesItemDataCollector();
-    $result = $validator->validate(
-      $data,
-      \json_encode($jsonSchema),
-      [
-        'costItemDataCollector' => $costItemDataCollector,
-        'resourcesItemDataCollector' => $resourcesItemDataCollector,
-      ]
-    );
-    static::assertValidationValid($result);
-    static::assertCount(18, $costItemDataCollector->getCostItemsData());
-    static::assertCount(7, $resourcesItemDataCollector->getResourcesItemsData());
+    $result = $this->validator->validate($jsonSchema, $data);
+    static::assertSame([], $result->getLeafErrorMessages());
+    static::assertCount(18, $result->getCostItemsData());
+    static::assertCount(7, $result->getResourcesItemsData());
 
+    $resultData = JsonConverter::toStdClass($result->getData());
     $programmtage = 3;
-    static::assertSame($programmtage, $data->grunddaten->programmtage);
-    static::assertSame($teilnehmerGesamt, $data->teilnehmer->gesamt);
-    static::assertSame($programmtage * $teilnehmerGesamt, $data->teilnehmer->teilnehmertage);
+    static::assertSame($programmtage, $resultData->grunddaten->programmtage);
+    static::assertSame($teilnehmerGesamt, $resultData->teilnehmer->gesamt);
+    static::assertSame($programmtage * $teilnehmerGesamt, $resultData->teilnehmer->teilnehmertage);
 
-    static::assertSame($honorareGesamt, $data->kosten->honorareGesamt);
-    static::assertSame($fahrtkostenGesamt, $data->kosten->fahrtkostenGesamt);
-    static::assertSame($programmkostenGesamt, $data->kosten->programmkostenGesamt);
-    static::assertSame($sonstigeKostenGesamt, $data->kosten->sonstigeKostenGesamt);
-    static::assertSame($sonstigeAusgabenGesamt, $data->kosten->sonstigeAusgabenGesamt);
-    static::assertSame($zuschlagsrelevanteKostenGesamt, $data->kosten->zuschlagsrelevanteKostenGesamt);
-    static::assertSame($kostenGesamt, $data->kosten->kostenGesamt);
+    static::assertSame($honorareGesamt, $resultData->kosten->honorareGesamt);
+    static::assertSame($fahrtkostenGesamt, $resultData->kosten->fahrtkostenGesamt);
+    static::assertSame($programmkostenGesamt, $resultData->kosten->programmkostenGesamt);
+    static::assertSame($sonstigeKostenGesamt, $resultData->kosten->sonstigeKostenGesamt);
+    static::assertSame($sonstigeAusgabenGesamt, $resultData->kosten->sonstigeAusgabenGesamt);
+    static::assertSame($zuschlagsrelevanteKostenGesamt, $resultData->kosten->zuschlagsrelevanteKostenGesamt);
+    static::assertSame($kostenGesamt, $resultData->kosten->kostenGesamt);
 
-    static::assertSame($oeffentlicheMittelGesamt, $data->finanzierung->oeffentlicheMittelGesamt);
-    static::assertSame($sonstigeMittelGesamt, $data->finanzierung->sonstigeMittelGesamt);
-    static::assertSame($mittelGesamt, $data->finanzierung->mittelGesamt);
+    static::assertSame($oeffentlicheMittelGesamt, $resultData->finanzierung->oeffentlicheMittelGesamt);
+    static::assertSame($sonstigeMittelGesamt, $resultData->finanzierung->sonstigeMittelGesamt);
+    static::assertSame($mittelGesamt, $resultData->finanzierung->mittelGesamt);
 
-    static::assertSame(0, $data->zuschuss->teilnehmerkostenMax);
-    static::assertSame(0, $data->zuschuss->honorarkostenMax);
+    static::assertSame(0, $resultData->zuschuss->teilnehmerkostenMax);
+    static::assertSame(0, $resultData->zuschuss->honorarkostenMax);
     static::assertSame(
       floor($teilnehmerDeutschlandGesamt * $fahrtstreckeInKm * 0.08),
-      $data->zuschuss->fahrtkostenAuslandEuropaMax
+      $resultData->zuschuss->fahrtkostenAuslandEuropaMax
     );
     static::assertSame(
       floor($teilnehmerDeutschlandGesamt * $fahrtstreckeInKm * 0.12),
-      $data->zuschuss->fahrtkostenNichtEuropaMax
+      $resultData->zuschuss->fahrtkostenNichtEuropaMax
     );
-    static::assertSame(300, $data->zuschuss->zuschlagMax);
-    static::assertSame($zuschussGesamt, $data->zuschuss->gesamt);
+    static::assertSame(300, $resultData->zuschuss->zuschlagMax);
+    static::assertSame($zuschussGesamt, $resultData->zuschuss->gesamt);
     static::assertSame(
       round($mittelGesamt + $zuschussGesamt, 2),
-      $data->zuschuss->finanzierungGesamt
+      $resultData->zuschuss->finanzierungGesamt
     );
 
-    static::assertAllPropertiesSet($jsonSchema->toStdClass(), $data);
+    static::assertAllPropertiesSet($jsonSchema->toStdClass(), $resultData);
   }
 
   public function testFinanzierungNichtAusgeglichen(): void {

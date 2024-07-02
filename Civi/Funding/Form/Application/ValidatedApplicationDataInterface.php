@@ -52,7 +52,13 @@ interface ValidatedApplicationDataInterface {
 
   /**
    * @phpstan-return array<string, mixed> JSON serializable.
-   *   Request data without extra data like "action".
+   *   Data to set in the FundingApplicationProcess entity.
+   */
+  public function getMappedData(): array;
+
+  /**
+   * @phpstan-return array<string, mixed> JSON serializable.
+   *   Request data without extra data like "_action".
    */
   public function getApplicationData(): array;
 

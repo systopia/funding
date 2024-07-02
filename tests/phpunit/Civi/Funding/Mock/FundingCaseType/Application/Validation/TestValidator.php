@@ -27,6 +27,7 @@ use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\Application\AbstractCombinedApplicationValidator;
 use Civi\Funding\Form\Application\ApplicationValidationResult;
 use Civi\Funding\Form\Application\NonCombinedApplicationValidatorInterface;
+use Civi\Funding\Form\Application\ValidatedApplicationData;
 use Civi\Funding\Form\Application\ValidatedApplicationDataInvalid;
 use Civi\Funding\Mock\FundingCaseType\Traits\TestSupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
@@ -84,10 +85,11 @@ final class TestValidator extends AbstractCombinedApplicationValidator implement
     int $maxErrors
   ): ApplicationValidationResult {
     return $this->createValidationResultValid(
-      new TestValidatedData(
+      new ValidatedApplicationData(
         $jsonSchemaValidationResult->getData(),
         $jsonSchemaValidationResult->getCostItemsData(),
-        $jsonSchemaValidationResult->getResourcesItemsData()
+        $jsonSchemaValidationResult->getResourcesItemsData(),
+        $jsonSchemaValidationResult->getTaggedData(),
       ),
       $jsonSchema
     );
@@ -104,10 +106,11 @@ final class TestValidator extends AbstractCombinedApplicationValidator implement
     int $maxErrors
   ): ApplicationValidationResult {
     return $this->createValidationResultValid(
-      new TestValidatedData(
+      new ValidatedApplicationData(
         $jsonSchemaValidationResult->getData(),
         $jsonSchemaValidationResult->getCostItemsData(),
-        $jsonSchemaValidationResult->getResourcesItemsData()
+        $jsonSchemaValidationResult->getResourcesItemsData(),
+        $jsonSchemaValidationResult->getTaggedData(),
       ),
       $jsonSchema
     );
@@ -128,10 +131,11 @@ final class TestValidator extends AbstractCombinedApplicationValidator implement
     int $maxErrors
   ): ApplicationValidationResult {
     return $this->createValidationResultValid(
-      new TestValidatedData(
+      new ValidatedApplicationData(
         $jsonSchemaValidationResult->getData(),
         $jsonSchemaValidationResult->getCostItemsData(),
-        $jsonSchemaValidationResult->getResourcesItemsData()
+        $jsonSchemaValidationResult->getResourcesItemsData(),
+        $jsonSchemaValidationResult->getTaggedData(),
       ),
       $jsonSchema
     );

@@ -30,7 +30,7 @@ use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationFormSubmitSuccessEvent;
 use Civi\Funding\Form\Application\ApplicationValidationResult;
-use Civi\Funding\Mock\FundingCaseType\Application\Validation\TestValidatedData;
+use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -63,7 +63,7 @@ final class ApplicationFormAddSubmitEventDecoratorTest extends TestCase {
 
   public function testHandle(): void {
     $command = $this->createCommand();
-    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([], [], []), FALSE);
+    $validationResult = ApplicationValidationResult::newValid(new ValidatedApplicationDataMock(), FALSE);
     $result = ApplicationFormAddSubmitResult::createSuccess(
       $validationResult,
       new ApplicationProcessEntityBundle(
@@ -89,7 +89,7 @@ final class ApplicationFormAddSubmitEventDecoratorTest extends TestCase {
     $errorMessages = ['/a/b' => ['error']];
     $validationResult = ApplicationValidationResult::newInvalid(
       $errorMessages,
-      new TestValidatedData([], [], [])
+      new ValidatedApplicationDataMock()
     );
     $result = ApplicationFormAddSubmitResult::createError($validationResult);
 

@@ -47,11 +47,11 @@ class TestJsonSchemaFactory implements CombinedApplicationJsonSchemaFactoryInter
   ): JsonSchema {
     $submitActions = ['save', 'save&new'];
     $extraProperties = [
-      'action' => new JsonSchemaString(['enum' => $submitActions]),
+      '_action' => new JsonSchemaString(['enum' => $submitActions]),
     ];
     $extraKeywords = ['required' => array_keys($extraProperties)];
 
-    return new TestJsonSchema($extraProperties, $extraKeywords);
+    return new TestJsonSchema(FALSE, $extraProperties, $extraKeywords);
   }
 
   public function createJsonSchemaExisting(
@@ -65,11 +65,11 @@ class TestJsonSchemaFactory implements CombinedApplicationJsonSchemaFactoryInter
       $submitActions = ['save', 'withdraw-change'];
     }
     $extraProperties = [
-      'action' => new JsonSchemaString(['enum' => $submitActions]),
+      '_action' => new JsonSchemaString(['enum' => $submitActions]),
     ];
     $extraKeywords = ['required' => array_keys($extraProperties)];
 
-    return new TestJsonSchema($extraProperties, $extraKeywords);
+    return new TestJsonSchema(FALSE, $extraProperties, $extraKeywords);
   }
 
   public function createJsonSchemaInitial(
@@ -79,11 +79,11 @@ class TestJsonSchemaFactory implements CombinedApplicationJsonSchemaFactoryInter
   ): JsonSchema {
     $submitActions = ['save'];
     $extraProperties = [
-      'action' => new JsonSchemaString(['enum' => $submitActions]),
+      '_action' => new JsonSchemaString(['enum' => $submitActions]),
     ];
     $extraKeywords = ['required' => array_keys($extraProperties)];
 
-    return new TestJsonSchema($extraProperties, $extraKeywords);
+    return new TestJsonSchema(TRUE, $extraProperties, $extraKeywords);
   }
 
 }

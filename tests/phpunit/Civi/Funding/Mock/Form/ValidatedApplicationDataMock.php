@@ -23,7 +23,7 @@ use Civi\Funding\Form\Application\ValidatedApplicationDataInterface;
 
 /**
  * @phpstan-type mockValidatedDataT array<string, mixed>&array{
- *   action: string,
+ *   _action: string,
  *   title: string,
  *   shortDescription: string,
  *   recipientContactId: int,
@@ -36,7 +36,7 @@ use Civi\Funding\Form\Application\ValidatedApplicationDataInterface;
  * }
  *
  * @phpstan-type mockValidatedDataValuesT array{
- *   action?: string,
+ *   _action?: string,
  *   title?: string,
  *   shortDescription?: string,
  *   recipientContactId?: int,
@@ -77,13 +77,23 @@ final class ValidatedApplicationDataMock implements ValidatedApplicationDataInte
   private array $applicationData = [];
 
   /**
+   * @phpstan-var array<string, mixed>
+   */
+  private array $mappedData;
+
+  /**
    * @phpstan-param array<string, mixed> $applicationData
    * @phpstan-param mockValidatedDataValuesT $data
+   * @phpstan-param array<string, mixed> $mappedData
    */
-  public function __construct(array $applicationData = self::APPLICATION_DATA, array $data = []) {
+  public function __construct(
+    array $applicationData = self::APPLICATION_DATA,
+    array $data = [],
+    array $mappedData = []
+  ) {
     $this->applicationData = $applicationData;
     $this->data = $data + [
-      'action' => self::ACTION,
+      '_action' => self::ACTION,
       'title' => self::TITLE,
       'shortDescription' => self::SHORT_DESCRIPTION,
       'recipientContactId' => self::RECIPIENT_CONTACT_ID,
@@ -93,10 +103,11 @@ final class ValidatedApplicationDataMock implements ValidatedApplicationDataInte
       'costItemsData' => [],
       'resourcesItemsData' => [],
     ];
+    $this->mappedData = $mappedData;
   }
 
   public function getAction(): string {
-    return $this->data['action'];
+    return $this->data['_action'];
   }
 
   public function getTitle(): string {
@@ -139,6 +150,19 @@ final class ValidatedApplicationDataMock implements ValidatedApplicationDataInte
 
   public function getComment(): ?array {
     return $this->data['comment'] ?? NULL;
+  }
+
+  public function getMappedData(): array {
+    return $this->mappedData;
+  }
+
+  /**
+   * @phpstan-param array<string, mixed> $mappedData
+   */
+  public function setMappedData(array $mappedData): self {
+    $this->mappedData = $mappedData;
+
+    return $this;
   }
 
   public function getApplicationData(): array {

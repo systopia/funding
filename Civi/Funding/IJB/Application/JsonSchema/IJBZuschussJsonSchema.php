@@ -185,7 +185,7 @@ final class IJBZuschussJsonSchema extends JsonSchemaObject {
             '1/zuschlag',
             new JsonSchemaDataPointer('1/zuschlagMax'),
           ),
-        ],
+        ], NULL, ['$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'amount_requested']])],
       ),
       'finanzierungGesamt' => new JsonSchemaCalculate(
         'number',

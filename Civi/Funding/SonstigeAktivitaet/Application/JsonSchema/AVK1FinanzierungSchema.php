@@ -21,6 +21,7 @@ namespace Civi\Funding\SonstigeAktivitaet\Application\JsonSchema;
 
 use Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\JsonSchemaResourcesItem;
 use Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\JsonSchemaResourcesItems;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
 use Civi\RemoteTools\JsonSchema\JsonSchemaCalculate;
 use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
@@ -145,7 +146,7 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
       'beantragterZuschuss' => new JsonSchemaCalculate('number', 'round(max(gesamtkosten - gesamtmittel, 0), 2)', [
         'gesamtkosten' => new JsonSchemaDataPointer('/kosten/gesamtkosten'),
         'gesamtmittel' => new JsonSchemaDataPointer('1/gesamtmittel'),
-      ]),
+      ], NULL, ['$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'amount_requested']])]),
     ], [
       'required' => [
         'oeffentlicheMittel',

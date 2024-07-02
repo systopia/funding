@@ -39,7 +39,6 @@ final class SubmitAddFormActionTest extends AbstractAddFormActionTestCase {
 
     $data = [
       'title' => 'Title',
-      'recipient' => $this->fundingCase->getRecipientContactId(),
       'startDate' => '2023-08-07',
       'endDate' => '2023-08-08',
       'amountRequested' => 123.45,
@@ -49,7 +48,7 @@ final class SubmitAddFormActionTest extends AbstractAddFormActionTestCase {
     $action = RemoteFundingApplicationProcess::submitAddForm()
       ->setRemoteContactId($this->remoteContactId)
       ->setFundingCaseId($this->fundingCase->getId())
-      ->setData($data + ['action' => 'save']);
+      ->setData($data + ['_action' => 'save']);
 
     $result = $action->execute();
     static::assertArrayHasSameKeys(['action', 'message', 'files'], $result->getArrayCopy());
@@ -66,7 +65,6 @@ final class SubmitAddFormActionTest extends AbstractAddFormActionTestCase {
 
     $data = [
       'title' => 'Title',
-      'recipient' => $this->fundingCase->getRecipientContactId(),
       'startDate' => '2023-08-07',
       'endDate' => '2023-08-08',
       'amountRequested' => 123.45,
@@ -76,7 +74,7 @@ final class SubmitAddFormActionTest extends AbstractAddFormActionTestCase {
     $action = RemoteFundingApplicationProcess::submitAddForm()
       ->setRemoteContactId($this->remoteContactId)
       ->setFundingCaseId($this->fundingCase->getId())
-      ->setData($data + ['action' => 'save&new']);
+      ->setData($data + ['_action' => 'save&new']);
 
     $result = $action->execute();
     static::assertArrayHasSameKeys(['action', 'message', 'files'], $result->getArrayCopy());

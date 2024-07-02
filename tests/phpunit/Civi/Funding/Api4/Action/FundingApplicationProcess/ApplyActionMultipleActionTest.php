@@ -84,7 +84,6 @@ final class ApplyActionMultipleActionTest extends AbstractFundingHeadlessTestCas
 
     $data = [
       'title' => 'Title',
-      'recipient' => $fundingCase->getRecipientContactId(),
       'startDate' => '2023-08-07',
       'endDate' => '2023-08-08',
       'amountRequested' => 123.45,

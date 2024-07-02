@@ -105,7 +105,7 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
     );
 
     $postValidationData = ['foo' => 'bar'];
-    $validatedData = new ValidatedApplicationDataMock($postValidationData, ['action' => 'save']);
+    $validatedData = new ValidatedApplicationDataMock($postValidationData, ['_action' => 'save']);
     $validationResult = ApplicationValidationResult::newValid($validatedData, FALSE);
     $result = ApplicationFormSubmitResult::createSuccess($validationResult);
     $result->setFiles([
@@ -131,7 +131,7 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
     );
 
     $postValidationData = ['foo' => 'baz'];
-    $validatedData = new ValidatedApplicationDataMock($postValidationData, ['action' => 'save']);
+    $validatedData = new ValidatedApplicationDataMock($postValidationData, ['_action' => 'save']);
     $errorMessages = ['/a/b' => ['error']];
     $validationResult = ApplicationValidationResult::newInvalid($errorMessages, $validatedData);
     $result = ApplicationFormSubmitResult::createError($validationResult);
@@ -156,7 +156,7 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
     );
 
     $postValidationData = ['foo' => 'bar'];
-    $validatedData = new ValidatedApplicationDataMock($postValidationData, ['action' => 'save']);
+    $validatedData = new ValidatedApplicationDataMock($postValidationData, ['_action' => 'save']);
     $validationResult = ApplicationValidationResult::newValid($validatedData, FALSE);
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
     $result = ApplicationFormNewSubmitResult::createSuccess(
