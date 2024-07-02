@@ -187,10 +187,10 @@ Additionally, you need to adapt the permissions for Drupal user roles as describ
 
 If no roles are listed for **Test User** after **CiviRemote: Synchronise CiviRemote Roles** has been performed:
 
-1. check **CiviMRF Call Reports** at `admin/reports/cmrfcalls`.
+1. check CiviMRF Call Reports at `admin/reports/cmrfcalls`.
 
-If you see a message **FAIL civiremote RemoteContact match** then the Drupal **Test User** did not receive a **CiviRemote ID** for its CiviCRM contact through action **CiviRemote: Match contacts**.
-You can verify this by taking a look at the infopage of the **Test User**, linked at `/admin/people`. The field **CiviRemote ID** might be empty.
+- if you see a message ``FAIL civiremote RemoteContact match`` then the Drupal **Test User** did not receive a **CiviRemote ID** for its CiviCRM contact through action **CiviRemote: Match contacts**.
+- you can verify this by taking a look at the infopage of **Test User**, listed at `/admin/people`. The field **CiviRemote ID** might be empty.
                             
 2. you can try to solve this issue by relaoding the XCM (Extended Contact Matcher) profile, that is used for matching contacts.
 
@@ -198,8 +198,9 @@ You can verify this by taking a look at the infopage of the **Test User**, linke
 - save the profile without making any changes
 - perform the action **CiviRemote: Match contacts** again for Drupal user **Test User**.
 
-**CiviMRF Call Reports** at `admin/reports/cmrfcalls` should now show a message **DONE civiremote RemoteContact match**
-If so, run action **CiviRemote: Synchronise CiviRemote Roles** for Drupal user **Test User** again in order to synchronize roles from CiviCRM.
+3. CiviMRF Call Reports at `admin/reports/cmrfcalls` should now show a message ``DONE civiremote RemoteContact match``
+
+- if so, run action **CiviRemote: Synchronise CiviRemote Roles** for Drupal user **Test User** again in order to synchronize roles from CiviCRM.
 
 ## Configure Dashboard
 
