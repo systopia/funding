@@ -29,7 +29,7 @@ use Civi\Funding\FundingCase\Command\FundingCaseFormUpdateValidateCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\Handler\Helper\ApplicationAllowedActionApplier;
 use Civi\Funding\FundingCase\StatusDeterminer\FundingCaseStatusDeterminerInterface;
-use Civi\Funding\Mock\FundingCaseType\FundingCase\Validation\TestFundingCaseValidatedData;
+use Civi\Funding\Mock\FundingCaseType\FundingCase\Validation\ValidatedFundingCaseDataMock;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -80,7 +80,7 @@ final class FundingCaseFormUpdateSubmitHandlerTest extends TestCase {
     $command = $this->createCommand();
 
     $recipientContactId = 123;
-    $validatedData = new TestFundingCaseValidatedData([
+    $validatedData = new ValidatedFundingCaseDataMock([
       '_action' => 'apply',
       'title' => 'Test',
       'recipient' => $recipientContactId,

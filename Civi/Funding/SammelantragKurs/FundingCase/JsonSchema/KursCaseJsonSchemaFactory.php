@@ -90,7 +90,7 @@ final class KursCaseJsonSchemaFactory implements FundingCaseJsonSchemaFactoryInt
     }
 
     $extraProperties = [
-      'action' => new JsonSchemaString(['enum' => $submitActions]),
+      '_action' => new JsonSchemaString(['enum' => $submitActions]),
     ];
     $extraKeywords = ['required' => array_keys($extraProperties)];
 

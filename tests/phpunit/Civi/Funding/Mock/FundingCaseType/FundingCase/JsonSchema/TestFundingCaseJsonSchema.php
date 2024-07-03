@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Mock\FundingCaseType\FundingCase\JsonSchema;
 
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaInteger;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
@@ -39,7 +40,9 @@ final class TestFundingCaseJsonSchema extends JsonSchemaObject {
 
     parent::__construct([
       'title' => new JsonSchemaString(),
-      'recipient' => new JsonSchemaInteger(),
+      'recipient' => new JsonSchemaInteger([
+        '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'recipient_contact_id']]),
+      ]),
     ] + $extraProperties, $keywords);
   }
 

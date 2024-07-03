@@ -24,8 +24,10 @@ use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\FundingCase\AbstractFundingCaseValidator;
 use Civi\Funding\Form\FundingCase\FundingCaseValidationResult;
+use Civi\Funding\Form\FundingCase\ValidatedFundingCaseData;
 use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonSchema\Validation\ValidationResult;
 
 final class KursCaseValidator extends AbstractFundingCaseValidator {
 
@@ -40,12 +42,12 @@ final class KursCaseValidator extends AbstractFundingCaseValidator {
     FundingCaseEntity $fundingCase,
     array $formData,
     JsonSchema $jsonSchema,
-    array $validatedData,
+    ValidationResult $jsonSchemaValidationResult,
     int $maxErrors
   ): FundingCaseValidationResult {
-    return FundingCaseValidationResult::newValid(new KursCaseValidatedData(
-      // @phpstan-ignore-next-line
-      $validatedData,
+    return FundingCaseValidationResult::newValid(new ValidatedFundingCaseData(
+      $jsonSchemaValidationResult->getData(),
+      $jsonSchemaValidationResult->getTaggedData()
     ));
   }
 
@@ -57,12 +59,12 @@ final class KursCaseValidator extends AbstractFundingCaseValidator {
     FundingCaseTypeEntity $fundingCaseType,
     array $formData,
     JsonSchema $jsonSchema,
-    array $validatedData,
+    ValidationResult $jsonSchemaValidationResult,
     int $maxErrors
   ): FundingCaseValidationResult {
-    return FundingCaseValidationResult::newValid(new KursCaseValidatedData(
-      // @phpstan-ignore-next-line
-      $validatedData,
+    return FundingCaseValidationResult::newValid(new ValidatedFundingCaseData(
+      $jsonSchemaValidationResult->getData(),
+      $jsonSchemaValidationResult->getTaggedData()
     ));
   }
 
