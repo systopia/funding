@@ -71,6 +71,7 @@ final class ApplicationSnapshotFactory {
       'is_review_content' => TRUE,
       'is_review_calculative' => TRUE,
       'is_eligible' => FALSE,
+      'custom_fields' => [],
     ]);
   }
 

@@ -47,6 +47,7 @@ final class ApplicationSnapshotFixture {
         'is_review_content' => TRUE,
         'is_review_calculative' => TRUE,
         'is_eligible' => NULL,
+        'custom_fields' => [],
       ])->execute();
 
     return ApplicationSnapshotEntity::singleFromApiResult($result);

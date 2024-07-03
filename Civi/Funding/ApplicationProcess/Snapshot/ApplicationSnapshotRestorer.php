@@ -78,6 +78,8 @@ final class ApplicationSnapshotRestorer implements ApplicationSnapshotRestorerIn
     $applicationProcess->setIsReviewContent($applicationSnapshot->getIsReviewContent());
     $applicationProcess->setIsEligible($applicationSnapshot->getIsEligible());
     $applicationProcess->setRestoredSnapshot($applicationSnapshot);
+    // @phpstan-ignore-next-line
+    $applicationProcess->setValues($applicationProcess->toArray() + $applicationSnapshot->getCustomFields());
 
     $this->applicationProcessManager->update($contactId, $applicationProcessBundle);
 

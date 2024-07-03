@@ -144,6 +144,21 @@ class ApplicationProcessManager {
   }
 
   /**
+   * @phpstan-return array<string, mixed>
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function getCustomFields(ApplicationProcessEntity $applicationProcess): array {
+    $customFields = $this->api4->execute(FundingApplicationProcess::getEntityName(), 'get', [
+      'select' => ['custom.*'],
+      'where' => [['id', '=', $applicationProcess->getId()]],
+    ])->single();
+    unset($customFields['id']);
+
+    return $customFields;
+  }
+
+  /**
    * @phpstan-return list<ApplicationProcessEntity>
    *
    * @throws \CRM_Core_Exception
