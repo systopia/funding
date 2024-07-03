@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\SammelantragKurs\Application\JsonSchema;
 
 use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\JsonSchemaCostItem;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaCalculate;
 use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
 use Civi\RemoteTools\JsonSchema\JsonSchemaMoney;
@@ -141,7 +142,7 @@ final class KursZuschussJsonSchema extends JsonSchemaObject {
             '1/honorarkosten',
             new JsonSchemaDataPointer('1/honorarkostenMax'),
           ),
-        ],
+        ], NULL, ['$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'amount_requested']])]
       ),
     ];
 

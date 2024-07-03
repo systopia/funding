@@ -22,6 +22,7 @@ namespace Civi\Funding\IJB\Application\JsonSchema;
 use Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidator;
 use Civi\Funding\ApplicationProcess\JsonSchema\Validator\OpisApplicationValidatorFactory;
 use Civi\Funding\Form\JsonSchema\JsonSchemaRecipient;
+use Civi\Funding\Form\MappedData\MappedDataLoader;
 use Civi\Funding\Form\Traits\AssertFormTrait;
 use Civi\Funding\Validation\Traits\AssertValidationResultTrait;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
@@ -142,12 +143,12 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
         'kurzbeschreibungDesInhalts' => 'foo bar',
         'zeitraeume' => [
           [
-            'beginn' => '2022-08-24',
-            'ende' => '2022-08-24',
-          ],
-          [
             'beginn' => '2022-08-25',
             'ende' => '2022-08-26',
+          ],
+          [
+            'beginn' => '2022-08-24',
+            'ende' => '2022-08-24',
           ],
         ],
         'artDerMassnahme' => 'fachkraefteprogramm',
@@ -338,6 +339,17 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
     );
 
     static::assertAllPropertiesSet($jsonSchema->toStdClass(), $resultData);
+
+    $mappedDataLoader = new MappedDataLoader();
+    $mappedData = $mappedDataLoader->getMappedData($result->getTaggedData());
+    static::assertEquals([
+      'title' => 'Test',
+      'short_description' => 'foo bar',
+      'recipient_contact_id' => 2,
+      'start_date' => '2022-08-24',
+      'end_date' => '2022-08-26',
+      'amount_requested' => $zuschussGesamt,
+    ], $mappedData);
   }
 
   public function testFachkraefteprogrammPartnerland(): void {
@@ -618,6 +630,17 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
     );
 
     static::assertAllPropertiesSet($jsonSchema->toStdClass(), $resultData);
+
+    $mappedDataLoader = new MappedDataLoader();
+    $mappedData = $mappedDataLoader->getMappedData($result->getTaggedData());
+    static::assertEquals([
+      'title' => 'Test',
+      'short_description' => 'foo bar',
+      'recipient_contact_id' => 2,
+      'start_date' => '2022-08-24',
+      'end_date' => '2022-08-26',
+      'amount_requested' => $zuschussGesamt,
+    ], $mappedData);
   }
 
   public function testJugendbegegnungDeutschland(): void {
@@ -904,6 +927,17 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
     );
 
     static::assertAllPropertiesSet($jsonSchema->toStdClass(), $resultData);
+
+    $mappedDataLoader = new MappedDataLoader();
+    $mappedData = $mappedDataLoader->getMappedData($result->getTaggedData());
+    static::assertEquals([
+      'title' => 'Test',
+      'short_description' => 'foo bar',
+      'recipient_contact_id' => 2,
+      'start_date' => '2022-08-24',
+      'end_date' => '2022-08-26',
+      'amount_requested' => $zuschussGesamt,
+    ], $mappedData);
   }
 
   public function testJugendbegegnungPartnerland(): void {
@@ -1184,6 +1218,17 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
     );
 
     static::assertAllPropertiesSet($jsonSchema->toStdClass(), $resultData);
+
+    $mappedDataLoader = new MappedDataLoader();
+    $mappedData = $mappedDataLoader->getMappedData($result->getTaggedData());
+    static::assertEquals([
+      'title' => 'Test',
+      'short_description' => 'foo bar',
+      'recipient_contact_id' => 2,
+      'start_date' => '2022-08-24',
+      'end_date' => '2022-08-26',
+      'amount_requested' => $zuschussGesamt,
+    ], $mappedData);
   }
 
   public function testFinanzierungNichtAusgeglichen(): void {

@@ -33,6 +33,7 @@ final class OpisApplicationValidatorFactory {
     if (!isset(self::$validator)) {
       $expressionHandler = new SymfonyExpressionHandler(new SystopiaExpressionLanguage());
       self::$validator = new OpisApplicationValidator([
+        'convertEmptyArrays' => TRUE,
         'calculator' => $expressionHandler,
         'evaluator' => $expressionHandler,
       ]);
