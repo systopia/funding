@@ -47,21 +47,21 @@ final class KursApplicationUiSchemaTest extends TestCase {
     $jsonSchema = new KursApplicationJsonSchema(
       new \DateTime('2022-08-24'),
       new \DateTime('2022-08-25'),
-      ['action' => new JsonSchemaString()],
+      ['_action' => new JsonSchemaString()],
     );
 
     $uiSchema = new KursApplicationUiSchema('Title', '€', JsonFormsSubmitButtonsFactory::createButtons($submitActions));
 
     static::assertNull($uiSchema->isReadonly());
     static::assertScopesExist($jsonSchema->toStdClass(), $uiSchema);
-    static::assertScopeExists('#/properties/action', $uiSchema);
+    static::assertScopeExists('#/properties/_action', $uiSchema);
 
     static::assertEquals(
       [
-        new JsonFormsSubmitButton('#/properties/action', 'submitAction1', 'Do Submit1'),
-        new JsonFormsSubmitButton('#/properties/action', 'submitAction2', 'Do Submit2', 'Proceed?'),
+        new JsonFormsSubmitButton('#/properties/_action', 'submitAction1', 'Do Submit1'),
+        new JsonFormsSubmitButton('#/properties/_action', 'submitAction2', 'Do Submit2', 'Proceed?'),
       ],
-      FormTestUtil::getControlsWithScope('#/properties/action', $uiSchema)
+      FormTestUtil::getControlsWithScope('#/properties/_action', $uiSchema)
     );
   }
 

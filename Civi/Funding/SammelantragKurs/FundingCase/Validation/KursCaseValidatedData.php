@@ -23,7 +23,7 @@ use Civi\Funding\Form\FundingCase\ValidatedFundingCaseDataInterface;
 
 /**
  * @phpstan-type kursValidatedDataT array{
- *   action: string,
+ *   _action: string,
  *   empfaenger: int,
  * }
  */
@@ -42,7 +42,7 @@ final class KursCaseValidatedData implements ValidatedFundingCaseDataInterface {
   }
 
   public function getAction(): string {
-    return $this->data['action'];
+    return $this->data['_action'];
   }
 
   public function getRecipientContactId(): int {
@@ -54,7 +54,7 @@ final class KursCaseValidatedData implements ValidatedFundingCaseDataInterface {
    */
   public function getFundingCaseData(): array {
     $data = $this->data;
-    unset($data['action']);
+    unset($data['_action']);
 
     return $data;
   }

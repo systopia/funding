@@ -31,7 +31,7 @@ final class JsonFormsSubmitButtonsFactory {
    */
   public static function createButton(string $actionName, array $action): JsonFormsSubmitButton {
     return new JsonFormsSubmitButton(
-      '#/properties/action',
+      '#/properties/_action',
       $actionName,
       $action['label'],
       $action['confirm'] ?? NULL
@@ -48,7 +48,7 @@ final class JsonFormsSubmitButtonsFactory {
     $buttons = [];
     foreach ($actions as $name => $action) {
       $buttons[] = new JsonFormsSubmitButton(
-        '#/properties/action',
+        '#/properties/_action',
         $name,
         $action['label'],
         $action['confirm'] ?? NULL

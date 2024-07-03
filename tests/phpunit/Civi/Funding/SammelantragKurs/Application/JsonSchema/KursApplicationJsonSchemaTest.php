@@ -56,16 +56,16 @@ final class KursApplicationJsonSchemaTest extends TestCase {
     $jsonSchema = new KursApplicationJsonSchema(
       new \DateTime('2022-08-24'),
       new \DateTime('2022-08-26'),
-      ['action' => $actionSchema],
-      ['required' => ['action']],
+      ['_action' => $actionSchema],
+      ['required' => ['_action']],
     );
 
     $required = $jsonSchema->getKeywordValue('required');
     static::assertIsArray($required);
-    static::assertContains('action', $required);
+    static::assertContains('_action', $required);
     $properties = $jsonSchema->getKeywordValue('properties');
     static::assertInstanceOf(JsonSchema::class, $properties);
-    static::assertSame($actionSchema, $properties->getKeywordValue('action'));
+    static::assertSame($actionSchema, $properties->getKeywordValue('_action'));
 
     $programmtage = 3;
     $teilnehmerGesamt = 5;
@@ -90,7 +90,7 @@ final class KursApplicationJsonSchemaTest extends TestCase {
     $honorarkosten = $programmtage * $referenten * 305 - 0.1;
 
     $data = [
-      'action' => 'submitAction1',
+      '_action' => 'submitAction1',
       'grunddaten' => [
         'titel' => 'Test',
         'kurzbeschreibungDerInhalte' => 'foo bar',
@@ -181,16 +181,16 @@ final class KursApplicationJsonSchemaTest extends TestCase {
     $jsonSchema = new KursApplicationJsonSchema(
       new \DateTime('2022-08-24'),
       new \DateTime('2022-08-26'),
-      ['action' => $actionSchema],
-      ['required' => ['action']],
+      ['_action' => $actionSchema],
+      ['required' => ['_action']],
     );
 
     $required = $jsonSchema->getKeywordValue('required');
     static::assertIsArray($required);
-    static::assertContains('action', $required);
+    static::assertContains('_action', $required);
     $properties = $jsonSchema->getKeywordValue('properties');
     static::assertInstanceOf(JsonSchema::class, $properties);
-    static::assertSame($actionSchema, $properties->getKeywordValue('action'));
+    static::assertSame($actionSchema, $properties->getKeywordValue('_action'));
 
     $programmtage = 3;
     $teilnehmerGesamt = 5;
@@ -214,7 +214,7 @@ final class KursApplicationJsonSchemaTest extends TestCase {
     $honorarkosten = $programmtage * $referenten * 305;
 
     $data = [
-      'action' => 'submitAction1',
+      '_action' => 'submitAction1',
       'grunddaten' => [
         'titel' => 'Test',
         'kurzbeschreibungDerInhalte' => 'foo bar',

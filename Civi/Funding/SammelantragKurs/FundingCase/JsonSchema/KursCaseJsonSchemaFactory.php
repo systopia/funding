@@ -73,8 +73,8 @@ final class KursCaseJsonSchemaFactory implements FundingCaseJsonSchemaFactoryInt
     }
 
     return new JsonSchemaObject(
-      ['action' => new JsonSchemaString(['enum' => $submitActions])],
-      ['required' => ['action']],
+      ['_action' => new JsonSchemaString(['enum' => $submitActions])],
+      ['required' => ['_action']],
     );
   }
 

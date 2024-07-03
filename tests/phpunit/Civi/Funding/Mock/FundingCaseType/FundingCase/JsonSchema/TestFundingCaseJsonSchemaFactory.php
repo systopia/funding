@@ -38,7 +38,7 @@ final class TestFundingCaseJsonSchemaFactory implements FundingCaseJsonSchemaFac
   ): JsonSchema {
     $submitActions = ['save'];
     $extraProperties = [
-      'action' => new JsonSchemaString(['enum' => $submitActions]),
+      '_action' => new JsonSchemaString(['enum' => $submitActions]),
     ];
     $extraKeywords = ['required' => array_keys($extraProperties)];
 
@@ -52,7 +52,7 @@ final class TestFundingCaseJsonSchemaFactory implements FundingCaseJsonSchemaFac
   ): JsonSchema {
     $submitActions = ['save'];
     $extraProperties = [
-      'action' => new JsonSchemaString(['enum' => $submitActions]),
+      '_action' => new JsonSchemaString(['enum' => $submitActions]),
     ];
     $extraKeywords = ['required' => array_keys($extraProperties)];
 
