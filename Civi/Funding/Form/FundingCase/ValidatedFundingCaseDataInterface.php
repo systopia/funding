@@ -27,7 +27,7 @@ interface ValidatedFundingCaseDataInterface {
 
   /**
    * @phpstan-return array<string, mixed> JSON serializable.
-   *   Request data without extra data like "action".
+   *   Request data without extra data like "_action".
    */
   public function getFundingCaseData(): array;
 

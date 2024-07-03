@@ -23,6 +23,7 @@ use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonSchema\Validation\ValidationResult;
 use Civi\RemoteTools\JsonSchema\Validation\ValidatorInterface;
 
 abstract class AbstractFundingCaseValidator implements FundingCaseValidatorInterface {
@@ -69,7 +70,7 @@ abstract class AbstractFundingCaseValidator implements FundingCaseValidatorInter
       $fundingCase,
       $data,
       $jsonSchema,
-      $jsonSchemaValidationResult->getData(),
+      $jsonSchemaValidationResult,
       $maxErrors
     );
   }
@@ -103,7 +104,7 @@ abstract class AbstractFundingCaseValidator implements FundingCaseValidatorInter
       $fundingCaseType,
       $data,
       $jsonSchema,
-      $jsonSchemaValidationResult->getData(),
+      $jsonSchemaValidationResult,
       $maxErrors
     );
   }
@@ -112,8 +113,6 @@ abstract class AbstractFundingCaseValidator implements FundingCaseValidatorInter
    * Called after successful JSON schema validation.
    *
    * @phpstan-param array<string, mixed> $formData JSON serializable.
-   * @phpstan-param array<string, mixed> $validatedData JSON serializable.
-   *   Data returned by JSON schema validator.
    */
   abstract protected function getValidationResultExisting(
     FundingProgramEntity $fundingProgram,
@@ -121,7 +120,7 @@ abstract class AbstractFundingCaseValidator implements FundingCaseValidatorInter
     FundingCaseEntity $fundingCase,
     array $formData,
     JsonSchema $jsonSchema,
-    array $validatedData,
+    ValidationResult $jsonSchemaValidationResult,
     int $maxErrors
   ): FundingCaseValidationResult;
 
@@ -129,15 +128,13 @@ abstract class AbstractFundingCaseValidator implements FundingCaseValidatorInter
    * Called after successful JSON schema validation.
    *
    * @phpstan-param array<string, mixed> $formData JSON serializable.
-   * @phpstan-param array<string, mixed> $validatedData JSON serializable.
-   *   Data returned by JSON schema validator.
    */
   abstract protected function getValidationResultNew(
     FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType,
     array $formData,
     JsonSchema $jsonSchema,
-    array $validatedData,
+    ValidationResult $jsonSchemaValidationResult,
     int $maxErrors
   ): FundingCaseValidationResult;
 

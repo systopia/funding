@@ -17,28 +17,29 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\SammelantragKurs\FundingCase\Validation;
+namespace Civi\Funding\Mock\FundingCaseType\FundingCase\Validation;
 
 use Civi\Funding\Form\FundingCase\ValidatedFundingCaseDataInterface;
 
 /**
- * @phpstan-type kursValidatedDataT array{
+ * @phpstan-type testValidatedDataT array<string, mixed>&array{
  *   _action: string,
- *   empfaenger: int,
+ *   recipient: int,
  * }
  */
-final class KursCaseValidatedData implements ValidatedFundingCaseDataInterface {
+final class ValidatedFundingCaseDataMock implements ValidatedFundingCaseDataInterface {
 
   /**
-   * @phpstan-var kursValidatedDataT
+   * @phpstan-var testValidatedDataT
    */
   private array $data;
 
   /**
-   * @phpstan-param kursValidatedDataT $data
+   * @phpstan-param array<string, mixed> $validatedData
    */
-  public function __construct(array $data) {
-    $this->data = $data;
+  public function __construct(array $validatedData) {
+    /** @phpstan-var testValidatedDataT $validatedData */
+    $this->data = $validatedData;
   }
 
   public function getAction(): string {
@@ -46,12 +47,9 @@ final class KursCaseValidatedData implements ValidatedFundingCaseDataInterface {
   }
 
   public function getRecipientContactId(): int {
-    return $this->data['empfaenger'];
+    return $this->data['recipient'];
   }
 
-  /**
-   * @inheritDoc
-   */
   public function getFundingCaseData(): array {
     $data = $this->data;
     unset($data['_action']);
@@ -59,9 +57,6 @@ final class KursCaseValidatedData implements ValidatedFundingCaseDataInterface {
     return $data;
   }
 
-  /**
-   * @inheritDoc
-   */
   public function getRawData(): array {
     return $this->data;
   }

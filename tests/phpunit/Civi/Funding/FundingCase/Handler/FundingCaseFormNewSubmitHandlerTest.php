@@ -27,7 +27,7 @@ use Civi\Funding\Form\FundingCase\ValidatedFundingCaseDataInvalid;
 use Civi\Funding\FundingCase\Command\FundingCaseFormNewSubmitCommand;
 use Civi\Funding\FundingCase\Command\FundingCaseFormNewValidateCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
-use Civi\Funding\Mock\FundingCaseType\FundingCase\Validation\TestFundingCaseValidatedData;
+use Civi\Funding\Mock\FundingCaseType\FundingCase\Validation\ValidatedFundingCaseDataMock;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -64,7 +64,7 @@ final class FundingCaseFormNewSubmitHandlerTest extends TestCase {
     $command = $this->createCommand();
 
     $recipientContactId = 123;
-    $validatedData = new TestFundingCaseValidatedData([
+    $validatedData = new ValidatedFundingCaseDataMock([
       '_action' => 'save',
       'title' => 'Test',
       'recipient' => $recipientContactId,

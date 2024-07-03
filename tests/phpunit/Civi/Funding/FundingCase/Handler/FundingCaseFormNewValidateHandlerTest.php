@@ -24,7 +24,7 @@ use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Form\FundingCase\FundingCaseValidationResult;
 use Civi\Funding\Form\FundingCase\FundingCaseValidatorInterface;
 use Civi\Funding\FundingCase\Command\FundingCaseFormNewValidateCommand;
-use Civi\Funding\Mock\FundingCaseType\FundingCase\Validation\TestFundingCaseValidatedData;
+use Civi\Funding\Mock\FundingCaseType\FundingCase\Validation\ValidatedFundingCaseDataMock;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -54,7 +54,7 @@ final class FundingCaseFormNewValidateHandlerTest extends TestCase {
     $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
 
     $data = ['foo' => 'bar'];
-    $validatedData = new TestFundingCaseValidatedData([]);
+    $validatedData = new ValidatedFundingCaseDataMock([]);
     $errorMessages = ['/a/b' => ['error']];
     $validationResult = FundingCaseValidationResult::newInvalid($errorMessages, $validatedData);
 
