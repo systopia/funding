@@ -19,16 +19,18 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\SammelantragKurs\Application\JsonSchema;
 
-use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemDataCollector;
-use Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemDataCollector;
+use Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidator;
 use Civi\Funding\ApplicationProcess\JsonSchema\Validator\OpisApplicationValidatorFactory;
+use Civi\Funding\Form\MappedData\MappedDataLoader;
 use Civi\Funding\Form\Traits\AssertFormTrait;
 use Civi\Funding\Validation\Traits\AssertValidationResultTrait;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 use Civi\RemoteTools\JsonSchema\Validation\OpisValidatorFactory;
+use Civi\RemoteTools\Util\JsonConverter;
 use PHPUnit\Framework\TestCase;
 use Systopia\JsonSchema\Errors\ErrorCollector;
+use Systopia\JsonSchema\Translation\NullTranslator;
 
 /**
  * @covers \Civi\Funding\SammelantragKurs\Application\JsonSchema\KursApplicationJsonSchema
@@ -38,6 +40,16 @@ final class KursApplicationJsonSchemaTest extends TestCase {
   use AssertFormTrait;
 
   use AssertValidationResultTrait;
+
+  private ApplicationSchemaValidator $validator;
+
+  protected function setUp(): void {
+    parent::setUp();
+    $this->validator = new ApplicationSchemaValidator(
+      new NullTranslator(),
+      OpisApplicationValidatorFactory::getValidator()
+    );
+  }
 
   public function testJsonSchema(): void {
     $actionSchema = new JsonSchemaString();
@@ -77,22 +89,22 @@ final class KursApplicationJsonSchemaTest extends TestCase {
     $fahrtkosten = $teilnehmerGesamt * 60 - 0.1;
     $honorarkosten = $programmtage * $referenten * 305 - 0.1;
 
-    $data = (object) [
+    $data = [
       'action' => 'submitAction1',
-      'grunddaten' => (object) [
+      'grunddaten' => [
         'titel' => 'Test',
         'kurzbeschreibungDerInhalte' => 'foo bar',
         'zeitraeume' => [
-          (object) [
-            'beginn' => '2022-08-24',
-            'ende' => '2022-08-24',
-          ],
-          (object) [
+          [
             'beginn' => '2022-08-25',
             'ende' => '2022-08-26',
           ],
+          [
+            'beginn' => '2022-08-24',
+            'ende' => '2022-08-24',
+          ],
         ],
-        'teilnehmer' => (object) [
+        'teilnehmer' => [
           'gesamt' => $teilnehmerGesamt,
           'weiblich' => 4,
           'divers' => 3,
@@ -102,31 +114,31 @@ final class KursApplicationJsonSchemaTest extends TestCase {
           'referenten' => $referenten,
         ],
       ],
-      'finanzierung' => (object) [
+      'finanzierung' => [
         'teilnehmerbeitraege' => $teilnehmerBeitrage,
         'eigenmittel' => $eigenmittel,
-        'oeffentlicheMittel' => (object) [
+        'oeffentlicheMittel' => [
           'europa' => $mittelEuropa,
           'bundeslaender' => $mittelBundeslaender,
           'staedteUndKreise' => $mittelStaedteUndKreise,
         ],
         'sonstigeMittel' => [
-          (object) [
+          [
             'quelle' => 'Quelle 1',
             'betrag' => $sonstigesMittel1,
           ],
-          (object) [
+          [
             'quelle' => 'Quelle 2',
             'betrag' => $sonstigesMittel2,
           ],
         ],
       ],
-      'zuschuss' => (object) [
+      'zuschuss' => [
         'teilnehmerkosten' => $teilnehmerkosten,
         'fahrtkosten' => $fahrtkosten,
         'honorarkosten' => $honorarkosten,
       ],
-      'beschreibung' => (object) [
+      'beschreibung' => [
         'ziele' => [
           'persoenlichkeitsbildung',
           'internationaleBegegnungen',
@@ -137,30 +149,31 @@ final class KursApplicationJsonSchemaTest extends TestCase {
       ],
     ];
 
-    $validator = OpisApplicationValidatorFactory::getValidator();
-    $costItemDataCollector = new CostItemDataCollector();
-    $resourcesItemDataCollector = new ResourcesItemDataCollector();
-    $result = $validator->validate(
-      $data,
-      \json_encode($jsonSchema),
-      [
-        'costItemDataCollector' => $costItemDataCollector,
-        'resourcesItemDataCollector' => $resourcesItemDataCollector,
-      ]
-    );
-    static::assertValidationValid($result);
-    static::assertCount(4, $costItemDataCollector->getCostItemsData());
+    $result = $this->validator->validate($jsonSchema, $data);
+    static::assertSame([], $result->getLeafErrorMessages());
+    static::assertCount(4, $result->getCostItemsData());
+    static::assertCount(7, $result->getResourcesItemsData());
 
-    static::assertSame($oeffentlicheMittelGesamt, $data->finanzierung->oeffentlicheMittelGesamt);
-    static::assertSame($sonstigeMittelGesamt, $data->finanzierung->sonstigeMittelGesamt);
-    static::assertSame($mittelGesamt, $data->finanzierung->mittelGesamt);
-    static::assertCount(7, $resourcesItemDataCollector->getResourcesItemsData());
+    $resultData = JsonConverter::toStdClass($result->getData());
+    static::assertSame($oeffentlicheMittelGesamt, $resultData->finanzierung->oeffentlicheMittelGesamt);
+    static::assertSame($sonstigeMittelGesamt, $resultData->finanzierung->sonstigeMittelGesamt);
+    static::assertSame($mittelGesamt, $resultData->finanzierung->mittelGesamt);
 
     $beantragterZuschuss = round($teilnehmerkosten + $fahrtkosten + $honorarkosten, 2);
-    static::assertSame($beantragterZuschuss, $data->zuschuss->gesamt);
-    static::assertSame($programmtage, $data->grunddaten->programmtage);
+    static::assertSame($beantragterZuschuss, $resultData->zuschuss->gesamt);
+    static::assertSame($programmtage, $resultData->grunddaten->programmtage);
 
-    static::assertAllPropertiesSet($jsonSchema->toStdClass(), $data);
+    static::assertAllPropertiesSet($jsonSchema->toStdClass(), $resultData);
+
+    $mappedDataLoader = new MappedDataLoader();
+    $mappedData = $mappedDataLoader->getMappedData($result->getTaggedData());
+    static::assertEquals([
+      'title' => 'Test',
+      'short_description' => 'foo bar',
+      'start_date' => '2022-08-24',
+      'end_date' => '2022-08-26',
+      'amount_requested' => $beantragterZuschuss,
+    ], $mappedData);
   }
 
   public function testJsonSchemaDefaults(): void {
@@ -200,22 +213,22 @@ final class KursApplicationJsonSchemaTest extends TestCase {
     $fahrtkosten = $teilnehmerGesamt * 60;
     $honorarkosten = $programmtage * $referenten * 305;
 
-    $data = (object) [
+    $data = [
       'action' => 'submitAction1',
-      'grunddaten' => (object) [
+      'grunddaten' => [
         'titel' => 'Test',
         'kurzbeschreibungDerInhalte' => 'foo bar',
         'zeitraeume' => [
-          (object) [
+          [
             'beginn' => '2022-08-24',
             'ende' => '2022-08-24',
           ],
-          (object) [
+          [
             'beginn' => '2022-08-25',
             'ende' => '2022-08-26',
           ],
         ],
-        'teilnehmer' => (object) [
+        'teilnehmer' => [
           'gesamt' => $teilnehmerGesamt,
           'weiblich' => 4,
           'divers' => 3,
@@ -225,27 +238,27 @@ final class KursApplicationJsonSchemaTest extends TestCase {
           'referenten' => $referenten,
         ],
       ],
-      'finanzierung' => (object) [
+      'finanzierung' => [
         'teilnehmerbeitraege' => $teilnehmerBeitrage,
         'eigenmittel' => $eigenmittel,
-        'oeffentlicheMittel' => (object) [
+        'oeffentlicheMittel' => [
           'europa' => $mittelEuropa,
           'bundeslaender' => $mittelBundeslaender,
           'staedteUndKreise' => $mittelStaedteUndKreise,
         ],
         'sonstigeMittel' => [
-          (object) [
+          [
             'quelle' => 'Quelle 1',
             'betrag' => $sonstigesMittel1,
           ],
-          (object) [
+          [
             'quelle' => 'Quelle 2',
             'betrag' => $sonstigesMittel2,
           ],
         ],
       ],
-      'zuschuss' => (object) [],
-      'beschreibung' => (object) [
+      'zuschuss' => [],
+      'beschreibung' => [
         'ziele' => [
           'persoenlichkeitsbildung',
           'internationaleBegegnungen',
@@ -256,30 +269,31 @@ final class KursApplicationJsonSchemaTest extends TestCase {
       ],
     ];
 
-    $validator = OpisApplicationValidatorFactory::getValidator();
-    $costItemDataCollector = new CostItemDataCollector();
-    $resourcesItemDataCollector = new ResourcesItemDataCollector();
-    $result = $validator->validate(
-      $data,
-      \json_encode($jsonSchema),
-      [
-        'costItemDataCollector' => $costItemDataCollector,
-        'resourcesItemDataCollector' => $resourcesItemDataCollector,
-      ]
-    );
-    static::assertValidationValid($result);
-    static::assertCount(4, $costItemDataCollector->getCostItemsData());
+    $result = $this->validator->validate($jsonSchema, $data);
+    static::assertSame([], $result->getLeafErrorMessages());
+    static::assertCount(4, $result->getCostItemsData());
+    static::assertCount(7, $result->getResourcesItemsData());
 
-    static::assertSame($oeffentlicheMittelGesamt, $data->finanzierung->oeffentlicheMittelGesamt);
-    static::assertSame($sonstigeMittelGesamt, $data->finanzierung->sonstigeMittelGesamt);
-    static::assertSame($mittelGesamt, $data->finanzierung->mittelGesamt);
-    static::assertCount(7, $resourcesItemDataCollector->getResourcesItemsData());
+    $resultData = JsonConverter::toStdClass($result->getData());
+    static::assertSame($oeffentlicheMittelGesamt, $resultData->finanzierung->oeffentlicheMittelGesamt);
+    static::assertSame($sonstigeMittelGesamt, $resultData->finanzierung->sonstigeMittelGesamt);
+    static::assertSame($mittelGesamt, $resultData->finanzierung->mittelGesamt);
 
     $beantragterZuschuss = (float) $teilnehmerkosten + $fahrtkosten + $honorarkosten;
-    static::assertSame($beantragterZuschuss, $data->zuschuss->gesamt);
-    static::assertSame($programmtage, $data->grunddaten->programmtage);
+    static::assertSame($beantragterZuschuss, $resultData->zuschuss->gesamt);
+    static::assertSame($programmtage, $resultData->grunddaten->programmtage);
 
-    static::assertAllPropertiesSet($jsonSchema->toStdClass(), $data);
+    static::assertAllPropertiesSet($jsonSchema->toStdClass(), $resultData);
+
+    $mappedDataLoader = new MappedDataLoader();
+    $mappedData = $mappedDataLoader->getMappedData($result->getTaggedData());
+    static::assertEquals([
+      'title' => 'Test',
+      'short_description' => 'foo bar',
+      'start_date' => '2022-08-24',
+      'end_date' => '2022-08-26',
+      'amount_requested' => $beantragterZuschuss,
+    ], $mappedData);
   }
 
   public function testNotAllowedDates(): void {
