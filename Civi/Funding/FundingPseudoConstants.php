@@ -207,7 +207,8 @@ final class FundingPseudoConstants {
     $options = [
       'open' => E::ts('Open'),
       'ongoing' => E::ts('Ongoing'),
-      'closed' => E::ts('Closed'),
+      'rejected' => E::ts('Rejected'),
+      'withdrawn' => E::ts('Withdrawn'),
     ];
 
     $event = new GetPossibleFundingCaseStatusEvent($options);

@@ -49,9 +49,6 @@ class ApplicationProcessStatusSubscriber implements EventSubscriberInterface {
 
   public function onUpdated(ApplicationProcessUpdatedEvent $event): void {
     $fundingCase = $event->getFundingCase();
-    if ('closed' === $fundingCase->getStatus()) {
-      return;
-    }
 
     $previousStatus = $event->getPreviousApplicationProcess()->getStatus();
     if ($previousStatus === $event->getApplicationProcess()->getStatus()) {
@@ -59,10 +56,10 @@ class ApplicationProcessStatusSubscriber implements EventSubscriberInterface {
     }
 
     $applicationProcessBundle = $event->getApplicationProcessBundle();
-    if ($this->getStatusDeterminer($applicationProcessBundle)
-      ->isClosedByApplicationProcess($applicationProcessBundle, $previousStatus)
-    ) {
-      $fundingCase->setStatus('closed');
+    $newStatus = $this->getStatusDeterminer($applicationProcessBundle)
+      ->getStatusOnApplicationProcessStatusChange($applicationProcessBundle, $previousStatus);
+    if ($fundingCase->getStatus() !== $newStatus) {
+      $fundingCase->setStatus($newStatus);
       $this->fundingCaseManager->update($fundingCase);
     }
   }

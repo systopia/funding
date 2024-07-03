@@ -72,4 +72,8 @@ final class DefaultApplicationProcessActionStatusInfo extends AbstractApplicatio
     return in_array($status->getStatus(), ['eligible', 'complete'], TRUE);
   }
 
+  public function isWithdrawnStatus(string $status): bool {
+    return 'withdrawn' === $status;
+  }
+
 }
