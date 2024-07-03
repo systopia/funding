@@ -318,10 +318,6 @@ msgstr ""
 msgid "Application process: %1 (%2)"
 msgstr ""
 
-#: Civi/Funding/ApplicationProcess/EligibleApplicationProcessesLoader.php
-msgid "The eligibility of application \"%1\" is not decided (current status: %2)."
-msgstr ""
-
 #: Civi/Funding/ApplicationProcess/Handler/ApplicationDeleteHandler.php
 msgid "Permission to delete application is missing."
 msgstr ""
@@ -1398,6 +1394,10 @@ msgstr ""
 msgid "Funding Program"
 msgstr ""
 
+#: managed/OptionValue_cg_extend_objects-civicrm_funding_application_process.mgd.php
+msgid "Application Process"
+msgstr ""
+
 #: managed/OptionValue_funding_clearing_create.mgd.php
 msgid "Activity type for funding clearing creation"
 msgstr ""
@@ -1424,6 +1424,10 @@ msgstr ""
 
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
 msgid "Short Description"
+msgstr ""
+
+#: managed/SavedSearchFundingApplicationProcesses.mgd.php
+msgid "Clearing Status"
 msgstr ""
 
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingTasksMy.mgd.php managed/SavedSearch_Clearings.mgd.php

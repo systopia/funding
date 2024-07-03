@@ -45,7 +45,7 @@ return [
             'funding_case_id',
             'is_review_calculative',
             'is_review_content',
-            'FundingApplicationProcess_FundingClearingProcess_application_process_id_01.id',
+            'FundingApplicationProcess_FundingClearingProcess_application_process_id_01.status:label',
           ],
           'orderBy' => [
             'id' => 'ASC',
@@ -140,6 +140,13 @@ return [
               'key' => 'is_review_calculative',
               'dataType' => 'Boolean',
               'label' => E::ts('Calculative Review'),
+              'sortable' => TRUE,
+            ],
+            [
+              'type' => 'field',
+              'key' => 'FundingApplicationProcess_FundingClearingProcess_application_process_id_01.status:label',
+              'dataType' => 'String',
+              'label' => E::ts('Clearing Status'),
               'sortable' => TRUE,
             ],
             [

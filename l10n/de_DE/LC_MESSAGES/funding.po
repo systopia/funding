@@ -515,13 +515,6 @@ msgstr "Anwenden der Aktion %1 auf Antragsprozess %2 ist nicht erlaubt."
 msgid "Application process: %1 (%2)"
 msgstr "Förderfallprozess: %1 (%2)"
 
-#: Civi/Funding/ApplicationProcess/EligibleApplicationProcessesLoader.php
-msgid ""
-"The eligibility of application \"%1\" is not decided (current status: %2)."
-msgstr ""
-"Die Förderfähigkeit von Antrag \"%1\" ist nicht entschieden (aktueller "
-"Status: %2)."
-
 #: Civi/Funding/ApplicationProcess/Handler/ApplicationDeleteHandler.php
 msgid "Permission to delete application is missing."
 msgstr "Berechtigung zum Löschen des Antrags fehlt."
@@ -1904,6 +1897,10 @@ msgstr "Förderantrag"
 msgid "Funding Program"
 msgstr "Förderprogramm"
 
+#: managed/OptionValue_cg_extend_objects-civicrm_funding_application_process.mgd.php
+msgid "Application Process"
+msgstr "Antragsprozess"
+
 #: managed/OptionValue_funding_clearing_create.mgd.php
 msgid "Activity type for funding clearing creation"
 msgstr "Aktivitätsart für Erstellung eines Verwendungsnachweises"
@@ -1946,6 +1943,10 @@ msgstr "Titel"
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
 msgid "Short Description"
 msgstr "Kurzbeschreibung"
+
+#: managed/SavedSearchFundingApplicationProcesses.mgd.php
+msgid "Clearing Status"
+msgstr "Verwendungsnachweisstatus"
 
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
