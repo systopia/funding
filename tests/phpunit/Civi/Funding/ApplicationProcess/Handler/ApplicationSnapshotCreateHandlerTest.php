@@ -21,6 +21,7 @@ namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
 use Civi\Funding\ApplicationProcess\ApplicationExternalFileManagerInterface;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager;
 use Civi\Funding\ApplicationProcess\ApplicationSnapshotManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationSnapshotCreateCommand;
@@ -37,6 +38,11 @@ use Symfony\Bridge\PhpUnit\ClockMock;
  * @covers \Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandler
  */
 final class ApplicationSnapshotCreateHandlerTest extends TestCase {
+
+  /**
+   * @var \Civi\Funding\ApplicationProcess\ApplicationProcessManager&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $applicationProcessManagerMock;
 
   /**
    * @var \Civi\Funding\ApplicationProcess\ApplicationSnapshotManager&\PHPUnit\Framework\MockObject\MockObject
@@ -68,11 +74,14 @@ final class ApplicationSnapshotCreateHandlerTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
+
+    $this->applicationProcessManagerMock = $this->createMock(ApplicationProcessManager::class);
     $this->applicationSnapshotManagerMock = $this->createMock(ApplicationSnapshotManager::class);
     $this->costItemManagerMock = $this->createMock(ApplicationCostItemManager::class);
     $this->externalFileManagerMock = $this->createMock(ApplicationExternalFileManagerInterface::class);
     $this->resourcesItemManagerMock = $this->createMock(ApplicationResourcesItemManager::class);
     $this->handler = new ApplicationSnapshotCreateHandler(
+      $this->applicationProcessManagerMock,
       $this->applicationSnapshotManagerMock,
       $this->costItemManagerMock,
       $this->externalFileManagerMock,
@@ -85,6 +94,10 @@ final class ApplicationSnapshotCreateHandlerTest extends TestCase {
       'is_eligible' => TRUE,
     ]);
     $applicationProcess = $applicationProcessBundle->getApplicationProcess();
+
+    $this->applicationProcessManagerMock->method('getCustomFields')
+      ->with($applicationProcess)
+      ->willReturn(['foo.bar' => 'baz']);
 
     $costItem = ApplicationCostItemFactory::createApplicationCostItem(['id' => 11]);
     $this->costItemManagerMock->method('getByApplicationProcessId')
@@ -120,6 +133,7 @@ final class ApplicationSnapshotCreateHandlerTest extends TestCase {
           $applicationSnapshot->getIsReviewCalculative()
         );
         static::assertSame($applicationProcess->getIsEligible(), $applicationSnapshot->getIsEligible());
+        static::assertSame(['foo.bar' => 'baz'], $applicationSnapshot->getCustomFields());
 
         $applicationSnapshot->setValues($applicationSnapshot->toArray() + ['id' => 123]);
 

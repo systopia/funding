@@ -108,6 +108,8 @@ final class ApplicationActionApplyHandler implements ApplicationActionApplyHandl
       $applicationProcess->setEndDate($validatedData->getEndDate());
       $applicationProcess->setAmountRequested($validatedData->getAmountRequested());
       $applicationProcess->setRequestData($validatedData->getApplicationData());
+      // @phpstan-ignore-next-line
+      $applicationProcess->setValues($applicationProcess->toArray() + $validatedData->getMappedData());
     }
   }
 

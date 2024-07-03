@@ -81,7 +81,7 @@ final class ApplicationActionApplyHandlerTest extends TestCase {
   }
 
   public function testHandleValid(): void {
-    $command = $this->createCommand(ValidatedApplicationDataMock::ACTION, FALSE, [], ['foo' => 'bar']);
+    $command = $this->createCommand(ValidatedApplicationDataMock::ACTION, FALSE, [], ['foo' => 'bar'], ['x.y' => 'z']);
 
     $newStatus = new FullApplicationProcessStatus('new_status', TRUE, FALSE);
     $this->statusDeterminerMock->method('getStatus')
@@ -107,6 +107,7 @@ final class ApplicationActionApplyHandlerTest extends TestCase {
     static::assertSame('new_status', $applicationProcess->getStatus());
     static::assertTrue($applicationProcess->getIsReviewCalculative());
     static::assertFalse($applicationProcess->getIsReviewContent());
+    static::assertSame('z', $applicationProcess->get('x.y'));
   }
 
   public function testHandleComment(): void {
@@ -192,12 +193,14 @@ final class ApplicationActionApplyHandlerTest extends TestCase {
    *    comment?: array{text: string, type: string},
    *  } $data
    * @phpstan-param array<string, mixed> $applicationData
+   * @phpstan-param array<string, mixed> $mappedData
    */
   private function createCommand(
     string $action,
     bool $readOnly,
     array $data = [],
-    array $applicationData = []
+    array $applicationData = [],
+    array $mappedData = []
   ): ApplicationActionApplyCommand {
 
     return new ApplicationActionApplyCommand(
@@ -205,7 +208,7 @@ final class ApplicationActionApplyHandlerTest extends TestCase {
       $action,
       ApplicationProcessBundleFactory::createApplicationProcessBundle(),
       ApplicationValidationResult::newValid(
-        new ValidatedApplicationDataMock($applicationData, ['_action' => $action] + $data),
+        new ValidatedApplicationDataMock($applicationData, ['_action' => $action] + $data, $mappedData),
         $readOnly
       ),
     );

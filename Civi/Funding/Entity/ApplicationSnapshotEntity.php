@@ -39,6 +39,7 @@ namespace Civi\Funding\Entity;
  *   is_review_content: ?bool,
  *   is_review_calculative: ?bool,
  *   is_eligible: ?bool,
+ *   custom_fields: array<string, mixed>,
  * }
  *
  * @extends AbstractEntity<applicationSnapshotT>
@@ -112,6 +113,22 @@ final class ApplicationSnapshotEntity extends AbstractEntity {
 
   public function setIsEligible(?bool $isEligibleStatus): self {
     $this->values['is_eligible'] = $isEligibleStatus;
+
+    return $this;
+  }
+
+  /**
+   * @phpstan-return array<string, mixed>
+   */
+  public function getCustomFields(): array {
+    return $this->values['custom_fields'];
+  }
+
+  /**
+   * @phpstan-param array<string, mixed> $customFields
+   */
+  public function setCustomFields(array $customFields): self {
+    $this->values['custom_fields'] = $customFields;
 
     return $this;
   }

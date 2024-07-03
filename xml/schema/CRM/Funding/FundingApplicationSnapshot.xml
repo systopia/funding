@@ -165,4 +165,12 @@
     </html>
   </field>
 
+  <field>
+    <name>custom_fields</name>
+    <type>mediumtext</type>
+    <crmType>CRM_Utils_Type::T_TEXT</crmType>
+    <required>true</required>
+    <serialize>JSON</serialize>
+  </field>
+
 </table>

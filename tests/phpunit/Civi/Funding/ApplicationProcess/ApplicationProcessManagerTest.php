@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess;
 
+use Civi\Api4\CustomField;
+use Civi\Api4\CustomGroup;
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\DAOGetAction;
 use Civi\Core\CiviEventDispatcherInterface;
@@ -192,6 +194,63 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
     static::assertNotNull($this->applicationProcessManager->get($applicationProcess->getId()));
 
     static::assertNull($this->applicationProcessManager->get($applicationProcess->getId() + 1));
+  }
+
+  public function testGetCustomFields(): void {
+    // Creating custom groups and custom fields changes the DB schema and thus flushes the transaction.
+    \Civi\Core\Transaction\Manager::singleton()->forceRollback();
+
+    $customGroup = CustomGroup::create(FALSE)
+      ->setValues([
+        'name' => 'application_process_custom_group',
+        'title' => 'ApplicationProcess Custom Group',
+        'extends' => 'FundingApplicationProcess',
+      ])->execute()->single();
+
+    try {
+      $customField = CustomField::create(FALSE)
+        ->setValues([
+          'custom_group_id.name' => 'application_process_custom_group',
+          'name' => 'foo',
+          'label' => 'Foo Test',
+          'data_type' => 'String',
+          'html_type' => 'Text',
+        ])->execute()->single();
+
+      \Civi\Core\Transaction\Manager::singleton()->inc();
+      \Civi\Core\Transaction\Manager::singleton()->getFrame()->setRollbackOnly();
+
+      $contact = ContactFixture::addIndividual();
+      $fundingCase = $this->createFundingCase();
+
+      $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId());
+      RequestTestUtil::mockInternalRequest($contact['id']);
+      FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['test_permission']);
+
+      FundingApplicationProcess::update(FALSE)
+        ->addValue('application_process_custom_group.foo', 'bar')
+        ->addWhere('id', '=', $applicationProcess->getId())
+        ->execute();
+
+      static::assertSame(
+        ['application_process_custom_group.foo' => 'bar'],
+        $this->applicationProcessManager->getCustomFields($applicationProcess)
+      );
+    }
+    finally {
+      \Civi\Core\Transaction\Manager::singleton()->forceRollback();
+
+      if (isset($customField)) {
+        CustomField::delete(FALSE)->addWhere('id', '=', $customField['id'])->execute();
+      }
+
+      CustomGroup::delete(FALSE)->addWhere('id', '=', $customGroup['id'])->execute();
+
+      // There needs to be an open transaction to prevent an error when the CiviCRM test listener tries to rollback a
+      // transaction.
+      \Civi\Core\Transaction\Manager::singleton()->inc();
+      \Civi\Core\Transaction\Manager::singleton()->getFrame()->setRollbackOnly();
+    }
   }
 
   public function testGetBy(): void {

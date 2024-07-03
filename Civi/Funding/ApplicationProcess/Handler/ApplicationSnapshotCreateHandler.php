@@ -21,6 +21,7 @@ namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
 use Civi\Funding\ApplicationProcess\ApplicationExternalFileManagerInterface;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager;
 use Civi\Funding\ApplicationProcess\ApplicationSnapshotManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationSnapshotCreateCommand;
@@ -33,6 +34,8 @@ use Civi\Funding\Util\DateTimeUtil;
  */
 final class ApplicationSnapshotCreateHandler implements ApplicationSnapshotCreateHandlerInterface {
 
+  private ApplicationProcessManager $applicationProcessManager;
+
   private ApplicationSnapshotManager $applicationSnapshotManager;
 
   private ApplicationCostItemManager $costItemManager;
@@ -42,11 +45,13 @@ final class ApplicationSnapshotCreateHandler implements ApplicationSnapshotCreat
   private ApplicationResourcesItemManager $resourcesItemManager;
 
   public function __construct(
+    ApplicationProcessManager $applicationProcessManager,
     ApplicationSnapshotManager $applicationSnapshotManager,
     ApplicationCostItemManager $costItemManager,
     ApplicationExternalFileManagerInterface $externalFileManager,
     ApplicationResourcesItemManager $resourcesItemManager
   ) {
+    $this->applicationProcessManager = $applicationProcessManager;
     $this->applicationSnapshotManager = $applicationSnapshotManager;
     $this->costItemManager = $costItemManager;
     $this->externalFileManager = $externalFileManager;
@@ -73,6 +78,7 @@ final class ApplicationSnapshotCreateHandler implements ApplicationSnapshotCreat
       'is_review_content' => $applicationProcess->getIsReviewContent(),
       'is_review_calculative' => $applicationProcess->getIsReviewCalculative(),
       'is_eligible' => $applicationProcess->getIsEligible(),
+      'custom_fields' => $this->applicationProcessManager->getCustomFields($applicationProcess),
     ]);
 
     $this->applicationSnapshotManager->add($applicationSnapshot);

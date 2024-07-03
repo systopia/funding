@@ -89,6 +89,7 @@ final class ApplicationSnapshotRestorerTest extends TestCase {
     $applicationSnapshot = ApplicationSnapshotFactory::createApplicationSnapshot([
       'cost_items' => [$costItem->toArray()],
       'resources_items' => [$resourcesItem->toArray()],
+      'custom_fields' => ['foo.bar' => 'baz'],
     ]);
 
     $this->applicationSnapshotManagerMock->method('getLastByApplicationProcessId')
@@ -125,6 +126,7 @@ final class ApplicationSnapshotRestorerTest extends TestCase {
     static::assertSame($applicationSnapshot->getIsReviewContent(), $applicationProcess->getIsReviewContent());
     static::assertSame($applicationSnapshot->getIsReviewCalculative(), $applicationProcess->getIsReviewCalculative());
     static::assertSame($applicationSnapshot->getIsEligible(), $applicationProcess->getIsEligible());
+    static::assertSame('baz', $applicationProcess->get('foo.bar'));
     static::assertSame($applicationSnapshot, $applicationProcess->getRestoredSnapshot());
   }
 
