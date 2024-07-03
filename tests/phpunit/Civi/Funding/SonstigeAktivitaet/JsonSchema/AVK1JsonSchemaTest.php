@@ -63,20 +63,20 @@ class AVK1JsonSchemaTest extends TestCase {
       new \DateTime('2022-08-24'),
       new \DateTime('2022-08-25'),
       $possibleRecipients,
-      ['action' => $actionSchema],
-      ['required' => ['action']],
+      ['_action' => $actionSchema],
+      ['required' => ['_action']],
     );
 
     $required = $jsonSchema->getKeywordValue('required');
     static::assertIsArray($required);
-    static::assertContains('action', $required);
+    static::assertContains('_action', $required);
     $properties = $jsonSchema->getKeywordValue('properties');
     static::assertInstanceOf(JsonSchema::class, $properties);
-    static::assertSame($actionSchema, $properties->getKeywordValue('action'));
+    static::assertSame($actionSchema, $properties->getKeywordValue('_action'));
     static::assertEquals(new JsonSchemaRecipient($possibleRecipients), $properties->getKeywordValue('empfaenger'));
 
     $data = [
-      'action' => 'submitAction1',
+      '_action' => 'submitAction1',
       'grunddaten' => [
         'titel' => 'Test',
         'kurzbeschreibungDesInhalts' => 'foo bar',

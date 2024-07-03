@@ -62,16 +62,16 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
       new \DateTime('2022-08-24'),
       new \DateTime('2022-08-26'),
       $possibleRecipients,
-      ['action' => $actionSchema],
-      ['required' => ['action']],
+      ['_action' => $actionSchema],
+      ['required' => ['_action']],
     );
 
     $required = $jsonSchema->getKeywordValue('required');
     static::assertIsArray($required);
-    static::assertContains('action', $required);
+    static::assertContains('_action', $required);
     $properties = $jsonSchema->getKeywordValue('properties');
     static::assertInstanceOf(JsonSchema::class, $properties);
-    static::assertSame($actionSchema, $properties->getKeywordValue('action'));
+    static::assertSame($actionSchema, $properties->getKeywordValue('_action'));
     static::assertEquals(new JsonSchemaRecipient($possibleRecipients), $properties->getKeywordValue('empfaenger'));
 
     $fahrtstreckeInKm = 100;
@@ -137,7 +137,7 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
     $mittelGesamt = round($eigenmittel + $fremdmittelGesamt, 2);
 
     $data = [
-      'action' => 'submitAction1',
+      '_action' => 'submitAction1',
       'grunddaten' => [
         'titel' => 'Test',
         'kurzbeschreibungDesInhalts' => 'foo bar',
@@ -362,16 +362,16 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
       new \DateTime('2022-08-24'),
       new \DateTime('2022-08-26'),
       $possibleRecipients,
-      ['action' => $actionSchema],
-      ['required' => ['action']],
+      ['_action' => $actionSchema],
+      ['required' => ['_action']],
     );
 
     $required = $jsonSchema->getKeywordValue('required');
     static::assertIsArray($required);
-    static::assertContains('action', $required);
+    static::assertContains('_action', $required);
     $properties = $jsonSchema->getKeywordValue('properties');
     static::assertInstanceOf(JsonSchema::class, $properties);
-    static::assertSame($actionSchema, $properties->getKeywordValue('action'));
+    static::assertSame($actionSchema, $properties->getKeywordValue('_action'));
     static::assertEquals(new JsonSchemaRecipient($possibleRecipients), $properties->getKeywordValue('empfaenger'));
 
     $fahrtstreckeInKm = 555;
@@ -436,7 +436,7 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
     $mittelGesamt = round($eigenmittel + $fremdmittelGesamt, 2);
 
     $data = [
-      'action' => 'submitAction1',
+      '_action' => 'submitAction1',
       'grunddaten' => [
         'titel' => 'Test',
         'kurzbeschreibungDesInhalts' => 'foo bar',
@@ -653,16 +653,16 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
       new \DateTime('2022-08-24'),
       new \DateTime('2022-08-26'),
       $possibleRecipients,
-      ['action' => $actionSchema],
-      ['required' => ['action']],
+      ['_action' => $actionSchema],
+      ['required' => ['_action']],
     );
 
     $required = $jsonSchema->getKeywordValue('required');
     static::assertIsArray($required);
-    static::assertContains('action', $required);
+    static::assertContains('_action', $required);
     $properties = $jsonSchema->getKeywordValue('properties');
     static::assertInstanceOf(JsonSchema::class, $properties);
-    static::assertSame($actionSchema, $properties->getKeywordValue('action'));
+    static::assertSame($actionSchema, $properties->getKeywordValue('_action'));
     static::assertEquals(new JsonSchemaRecipient($possibleRecipients), $properties->getKeywordValue('empfaenger'));
 
     $fahrtstreckeInKm = 100;
@@ -727,7 +727,7 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
     $mittelGesamt = round($eigenmittel + $fremdmittelGesamt, 2);
 
     $data = [
-      'action' => 'submitAction1',
+      '_action' => 'submitAction1',
       'grunddaten' => [
         'titel' => 'Test',
         'kurzbeschreibungDesInhalts' => 'foo bar',
@@ -950,16 +950,16 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
       new \DateTime('2022-08-24'),
       new \DateTime('2022-08-26'),
       $possibleRecipients,
-      ['action' => $actionSchema],
-      ['required' => ['action']],
+      ['_action' => $actionSchema],
+      ['required' => ['_action']],
     );
 
     $required = $jsonSchema->getKeywordValue('required');
     static::assertIsArray($required);
-    static::assertContains('action', $required);
+    static::assertContains('_action', $required);
     $properties = $jsonSchema->getKeywordValue('properties');
     static::assertInstanceOf(JsonSchema::class, $properties);
-    static::assertSame($actionSchema, $properties->getKeywordValue('action'));
+    static::assertSame($actionSchema, $properties->getKeywordValue('_action'));
     static::assertEquals(new JsonSchemaRecipient($possibleRecipients), $properties->getKeywordValue('empfaenger'));
 
     $fahrtstreckeInKm = 555;
@@ -1024,7 +1024,7 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
     $mittelGesamt = round($eigenmittel + $fremdmittelGesamt, 2);
 
     $data = [
-      'action' => 'submitAction1',
+      '_action' => 'submitAction1',
       'grunddaten' => [
         'titel' => 'Test',
         'kurzbeschreibungDesInhalts' => 'foo bar',
@@ -1241,16 +1241,16 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
       new \DateTime('2022-08-24'),
       new \DateTime('2022-08-26'),
       $possibleRecipients,
-      ['action' => $actionSchema],
-      ['required' => ['action']],
+      ['_action' => $actionSchema],
+      ['required' => ['_action']],
     );
 
     $required = $jsonSchema->getKeywordValue('required');
     static::assertIsArray($required);
-    static::assertContains('action', $required);
+    static::assertContains('_action', $required);
     $properties = $jsonSchema->getKeywordValue('properties');
     static::assertInstanceOf(JsonSchema::class, $properties);
-    static::assertSame($actionSchema, $properties->getKeywordValue('action'));
+    static::assertSame($actionSchema, $properties->getKeywordValue('_action'));
     static::assertEquals(new JsonSchemaRecipient($possibleRecipients), $properties->getKeywordValue('empfaenger'));
 
     $fahrtstreckeInKm = 100;
@@ -1313,7 +1313,7 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
     $eigenmittel = round($kostenGesamt - $zuschussGesamt - $fremdmittelGesamt - 0.1, 2);
 
     $data = (object) [
-      'action' => 'submitAction1',
+      '_action' => 'submitAction1',
       'grunddaten' => (object) [
         'titel' => 'Test',
         'kurzbeschreibungDesInhalts' => 'foo bar',

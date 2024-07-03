@@ -44,7 +44,7 @@ final class SubmitUpdateFormActionTest extends AbstractUpdateFormActionTestCase 
       ->setData([
         'title' => 'Test',
         'recipient' => $recipientContact['id'],
-        'action' => 'save',
+        '_action' => 'save',
       ]);
 
     $result = $action->execute();

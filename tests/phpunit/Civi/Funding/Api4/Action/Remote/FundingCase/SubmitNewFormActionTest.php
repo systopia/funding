@@ -45,7 +45,7 @@ final class SubmitNewFormActionTest extends AbstractNewFormActionTestCase {
       ->setData([
         'title' => 'Test',
         'recipient' => $recipientContact['id'],
-        'action' => 'save',
+        '_action' => 'save',
       ]);
 
     $result = $action->execute();

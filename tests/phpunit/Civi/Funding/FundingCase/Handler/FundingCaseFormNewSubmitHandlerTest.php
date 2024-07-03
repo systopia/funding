@@ -65,7 +65,7 @@ final class FundingCaseFormNewSubmitHandlerTest extends TestCase {
 
     $recipientContactId = 123;
     $validatedData = new TestFundingCaseValidatedData([
-      'action' => 'save',
+      '_action' => 'save',
       'title' => 'Test',
       'recipient' => $recipientContactId,
     ]);
