@@ -33,13 +33,13 @@ interface FundingCaseStatusDeterminerInterface {
   public function getStatus(string $currentStatus, string $action): string;
 
   /**
-   * @return bool
-   *   TRUE when a funding case shall be closed after the status change of the
-   *   given application process.
+   * If an application process status is changed the return value of this
+   * method will be used as new funding case status. If the funding case status
+   * should not change, the current status has to be returned.
    */
-  public function isClosedByApplicationProcess(
+  public function getStatusOnApplicationProcessStatusChange(
     ApplicationProcessEntityBundle $applicationProcessBundle,
     string $previousStatus
-  ): bool;
+  ): string;
 
 }

@@ -107,9 +107,8 @@ use Civi\Funding\FundingCase\Handler\FundingCaseUpdateAmountApprovedHandlerInter
 use Civi\Funding\FundingCase\Handler\Helper\ApplicationAllowedActionApplier;
 use Civi\Funding\FundingCase\Handler\TransferContractRecreateHandler;
 use Civi\Funding\FundingCase\Handler\TransferContractRecreateHandlerInterface;
-use Civi\Funding\FundingCase\StatusDeterminer\CombinedFundingCaseStatusDeterminer;
+use Civi\Funding\FundingCase\StatusDeterminer\DefaultFundingCaseStatusDeterminer;
 use Civi\Funding\FundingCase\StatusDeterminer\FundingCaseStatusDeterminerInterface;
-use Civi\Funding\FundingCase\StatusDeterminer\NonCombinedFundingCaseStatusDeterminer;
 use Civi\Funding\FundingCaseTypeServiceLocator;
 use Civi\Funding\FundingCaseTypeServiceLocatorContainer;
 use Civi\Funding\FundingCaseTypeServiceLocatorInterface;
@@ -294,6 +293,15 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         ]
       );
 
+      $fundingCaseStatusDeterminerServices[$fundingCaseType] ??= $this->createService(
+        $container,
+        $fundingCaseType,
+        DefaultFundingCaseStatusDeterminer::class,
+        [
+          '$info' => $applicationActionStatusInfoServices[$fundingCaseType],
+        ]
+      );
+
       if ($this->isServiceReferenceInstanceOf(
         $container,
         $applicationJsonSchemaFactoryServices[$fundingCaseType] ?? NULL,
@@ -303,15 +311,6 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
           $applicationValidator[$fundingCaseType] ?? NULL,
         NonCombinedApplicationValidatorInterface::class
       )) {
-        $fundingCaseStatusDeterminerServices[$fundingCaseType] ??= $this->createService(
-          $container,
-          $fundingCaseType,
-          NonCombinedFundingCaseStatusDeterminer::class,
-          [
-            '$info' => $applicationActionStatusInfoServices[$fundingCaseType],
-          ]
-        );
-
         $applicationFormNewCreateHandlerServices[$fundingCaseType] ??= $this->createService(
           $container, $fundingCaseType, ApplicationFormNewCreateHandler::class, [
             '$jsonSchemaFactory' => $applicationJsonSchemaFactoryServices[$fundingCaseType],
@@ -344,13 +343,6 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
           CombinedApplicationJsonSchemaFactoryInterface::class
       ) || isset($fundingCaseJsonSchemaFactoryServices[$fundingCaseType])
       ) {
-        $fundingCaseStatusDeterminerServices[$fundingCaseType] ??= $this->createService(
-          $container,
-          $fundingCaseType,
-          CombinedFundingCaseStatusDeterminer::class,
-          [],
-        );
-
         $applicationFormAddCreateHandlerServices[$fundingCaseType] ??= $this->createService(
           $container,
           $fundingCaseType,

@@ -78,4 +78,8 @@ abstract class AbstractApplicationProcessActionStatusInfoDecorator implements Ap
     return $this->info->isSnapshotRequiredStatus($status);
   }
 
+  public function isWithdrawnStatus(string $status): bool {
+    return $this->info->isWithdrawnStatus($status);
+  }
+
 }

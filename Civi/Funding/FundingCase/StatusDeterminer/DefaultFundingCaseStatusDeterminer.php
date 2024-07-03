@@ -25,7 +25,7 @@ use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\RemoteTools\Api4\Query\Comparison;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
 
-final class NonCombinedFundingCaseStatusDeterminer implements FundingCaseStatusDeterminerInterface {
+final class DefaultFundingCaseStatusDeterminer implements FundingCaseStatusDeterminerInterface {
 
   private ApplicationProcessManager $applicationProcessManager;
 
@@ -50,13 +50,13 @@ final class NonCombinedFundingCaseStatusDeterminer implements FundingCaseStatusD
     return 'approve' === $action ? 'ongoing' : $currentStatus;
   }
 
-  public function isClosedByApplicationProcess(
+  public function getStatusOnApplicationProcessStatusChange(
     ApplicationProcessEntityBundle $applicationProcessBundle,
     string $previousStatus
-  ): bool {
+  ): string {
     $ineligibleStatusList = $this->info->getFinalIneligibleStatusList();
 
-    return 'open' === $applicationProcessBundle->getFundingCase()->getStatus() && in_array(
+    if (in_array(
       $applicationProcessBundle->getApplicationProcess()->getStatus(),
       $ineligibleStatusList,
       TRUE
@@ -65,7 +65,16 @@ final class NonCombinedFundingCaseStatusDeterminer implements FundingCaseStatusD
           Comparison::new('funding_case_id', '=', $applicationProcessBundle->getFundingCase()->getId()),
           Comparison::new('status', 'NOT IN', $ineligibleStatusList),
         ),
-      );
+      )) {
+      // Application process status has changed to an ineligible status and
+      // there is no other application process that is eligible or with an
+      // undecided eligibility.
+      return $this->info->isWithdrawnStatus($applicationProcessBundle->getApplicationProcess()->getStatus())
+        ? 'withdrawn'
+        : 'rejected';
+    }
+
+    return $applicationProcessBundle->getFundingCase()->getStatus();
   }
 
 }

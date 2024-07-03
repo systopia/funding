@@ -64,4 +64,6 @@ interface ApplicationProcessActionStatusInfoInterface {
 
   public function isSnapshotRequiredStatus(FullApplicationProcessStatus $status): bool;
 
+  public function isWithdrawnStatus(string $status): bool;
+
 }

@@ -75,41 +75,31 @@ final class ApplicationProcessStatusSubscriberTest extends TestCase {
     }
   }
 
-  public function testOnUpdatedClosed(): void {
-    $event = $this->createEvent('open', 'sealed');
+  public function testOnUpdatedStatusChanged(): void {
+    $event = $this->createEvent('foo', 'new_status');
 
-    $this->statusDeterminerMock->expects(static::once())->method('isClosedByApplicationProcess')
+    $this->statusDeterminerMock->expects(static::once())->method('getStatusOnApplicationProcessStatusChange')
       ->with($event->getApplicationProcessBundle(), 'previous_status')
-      ->willReturn(TRUE);
+      ->willReturn('bar');
 
     $this->fundingCaseManagerMock->expects(static::once())->method('update')
       ->with($event->getFundingCase());
 
     $this->subscriber->onUpdated($event);
-    static::assertSame('closed', $event->getFundingCase()->getStatus());
+    static::assertSame('bar', $event->getFundingCase()->getStatus());
   }
 
-  public function testOnUpdatedAlreadyClosed(): void {
-    $event = $this->createEvent('closed', 'sealed');
+  public function testOnUpdatedStatusUnchanged(): void {
+    $event = $this->createEvent('foo', 'new_status');
 
-    $this->statusDeterminerMock->expects(static::never())->method('isClosedByApplicationProcess');
-    $this->fundingCaseManagerMock->expects(static::never())->method('update');
-
-    $this->subscriber->onUpdated($event);
-    static::assertSame('closed', $event->getFundingCase()->getStatus());
-  }
-
-  public function testOnUpdatedStaysOpen(): void {
-    $event = $this->createEvent('open', 'some_status');
-
-    $this->statusDeterminerMock->expects(static::once())->method('isClosedByApplicationProcess')
+    $this->statusDeterminerMock->expects(static::once())->method('getStatusOnApplicationProcessStatusChange')
       ->with($event->getApplicationProcessBundle(), 'previous_status')
-      ->willReturn(FALSE);
+      ->willReturn('foo');
 
     $this->fundingCaseManagerMock->expects(static::never())->method('update');
 
     $this->subscriber->onUpdated($event);
-    static::assertSame('open', $event->getFundingCase()->getStatus());
+    static::assertSame('foo', $event->getFundingCase()->getStatus());
   }
 
   private function createEvent(
