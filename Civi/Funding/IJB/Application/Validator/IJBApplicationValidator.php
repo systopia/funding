@@ -25,6 +25,7 @@ use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\Application\AbstractNonCombinedApplicationValidator;
 use Civi\Funding\Form\Application\ApplicationValidationResult;
+use Civi\Funding\Form\Application\ValidatedApplicationData;
 use Civi\Funding\IJB\Traits\IJBSupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 
@@ -65,11 +66,11 @@ final class IJBApplicationValidator extends AbstractNonCombinedApplicationValida
     JsonSchema $jsonSchema
   ): ApplicationValidationResult {
     return $this->createValidationResultValid(
-      new IJBApplicationValidatedData(
-        // @phpstan-ignore-next-line
+      new ValidatedApplicationData(
         $jsonSchemaValidationResult->getData(),
         $jsonSchemaValidationResult->getCostItemsData(),
-        $jsonSchemaValidationResult->getResourcesItemsData()
+        $jsonSchemaValidationResult->getResourcesItemsData(),
+        $jsonSchemaValidationResult->getTaggedData()
       ),
       $jsonSchema
     );

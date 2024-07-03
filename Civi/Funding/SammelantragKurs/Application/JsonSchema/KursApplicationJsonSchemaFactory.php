@@ -67,7 +67,7 @@ final class KursApplicationJsonSchemaFactory implements CombinedApplicationJsonS
       $submitActions = [NULL];
     }
     $extraProperties = [
-      'action' => new JsonSchemaString(['enum' => $submitActions]),
+      '_action' => new JsonSchemaString(['enum' => $submitActions]),
     ];
     $extraKeywords = ['required' => array_keys($extraProperties)];
 
@@ -112,7 +112,7 @@ final class KursApplicationJsonSchemaFactory implements CombinedApplicationJsonS
   private function createSchema(FundingProgramEntity $fundingProgram): KursApplicationJsonSchema {
     $submitActions = $this->actionsDeterminer->getInitialActions($fundingProgram->getPermissions());
     $extraProperties = [
-      'action' => new JsonSchemaString(['enum' => $submitActions]),
+      '_action' => new JsonSchemaString(['enum' => $submitActions]),
     ];
     $extraKeywords = ['required' => array_keys($extraProperties)];
 

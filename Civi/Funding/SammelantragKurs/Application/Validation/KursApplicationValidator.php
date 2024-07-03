@@ -26,6 +26,7 @@ use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\Application\AbstractCombinedApplicationValidator;
 use Civi\Funding\Form\Application\ApplicationValidationResult;
+use Civi\Funding\Form\Application\ValidatedApplicationData;
 use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 
@@ -67,12 +68,11 @@ final class KursApplicationValidator extends AbstractCombinedApplicationValidato
     JsonSchema $jsonSchema
   ): ApplicationValidationResult {
     return $this->createValidationResultValid(
-      new KursApplicationValidatedData(
-        // @phpstan-ignore-next-line
+      new ValidatedApplicationData(
         $jsonSchemaValidationResult->getData(),
         $jsonSchemaValidationResult->getCostItemsData(),
         $jsonSchemaValidationResult->getResourcesItemsData(),
-        $fundingCase->getRecipientContactId()
+        $jsonSchemaValidationResult->getTaggedData(),
       ),
       $jsonSchema
     );

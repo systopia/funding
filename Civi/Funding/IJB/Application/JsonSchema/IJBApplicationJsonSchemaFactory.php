@@ -76,7 +76,7 @@ final class IJBApplicationJsonSchemaFactory implements NonCombinedApplicationJso
       $submitActions = [NULL];
     }
     $extraProperties = [
-      'action' => new JsonSchemaString(['enum' => $submitActions]),
+      '_action' => new JsonSchemaString(['enum' => $submitActions]),
     ];
     $extraKeywords = ['required' => array_keys($extraProperties)];
 
@@ -118,7 +118,7 @@ final class IJBApplicationJsonSchemaFactory implements NonCombinedApplicationJso
   ): JsonSchema {
     $submitActions = $this->actionsDeterminer->getInitialActions($fundingProgram->getPermissions());
     $extraProperties = [
-      'action' => new JsonSchemaString(['enum' => $submitActions]),
+      '_action' => new JsonSchemaString(['enum' => $submitActions]),
     ];
     $extraKeywords = ['required' => array_keys($extraProperties)];
 

@@ -33,7 +33,7 @@ use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreCreateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
 use Civi\Funding\Form\Application\ApplicationValidationResult;
-use Civi\Funding\Mock\FundingCaseType\Application\Validation\TestValidatedData;
+use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -89,7 +89,7 @@ final class ApplicationFilesSubscriberTest extends TestCase {
 
     $this->subscriber->onCreated(new ApplicationProcessCreatedEvent(2, $applicationProcessBundle));
 
-    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([], [], []), FALSE);
+    $validationResult = ApplicationValidationResult::newValid(new ValidatedApplicationDataMock(), FALSE);
     $submitResult = ApplicationFormNewSubmitResult::createSuccess($validationResult, $applicationProcessBundle);
     $formSuccessEvent = new ApplicationFormSubmitSuccessEvent(2, $applicationProcessBundle, [], $submitResult);
     $this->subscriber->onSubmitSuccess($formSuccessEvent);
@@ -131,7 +131,7 @@ final class ApplicationFilesSubscriberTest extends TestCase {
       $applicationProcessBundle,
     ));
 
-    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([], [], []), FALSE);
+    $validationResult = ApplicationValidationResult::newValid(new ValidatedApplicationDataMock(), FALSE);
     $submitResult = ApplicationFormNewSubmitResult::createSuccess($validationResult, $applicationProcessBundle);
     $formSuccessEvent = new ApplicationFormSubmitSuccessEvent(2, $applicationProcessBundle, [], $submitResult);
     $this->subscriber->onSubmitSuccess($formSuccessEvent);

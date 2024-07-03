@@ -25,7 +25,7 @@ use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Form\Application\NonCombinedApplicationJsonSchemaFactoryInterface;
-use Civi\Funding\SonstigeAktivitaet\Application\Validation\AVK1ValidatedData;
+use Civi\Funding\Form\Application\ValidatedApplicationData;
 use Civi\Funding\SonstigeAktivitaet\Application\Validation\AVK1Validator;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\Validation\ValidationResult;
@@ -69,6 +69,7 @@ final class AVK1ValidatorTest extends TestCase {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
     $formData = ['foo' => 'bar'];
     $jsonSchemaValidatedData = [
+      '_action' => 'save',
       'grunddaten' => ['titel' => 'Test'],
     ];
 
@@ -87,12 +88,13 @@ final class AVK1ValidatorTest extends TestCase {
     $validationResult = $this->validator->validateExisting($applicationProcessBundle, [], $formData, 2);
     static::assertSame([], $validationResult->getErrorMessages());
     static::assertTrue($validationResult->isValid());
-    static::assertInstanceOf(AVK1ValidatedData::class, $validationResult->getValidatedData());
+    static::assertInstanceOf(ValidatedApplicationData::class, $validationResult->getValidatedData());
   }
 
   public function testValidateInitial(): void {
     $formData = ['foo' => 'bar'];
     $jsonSchemaValidatedData = [
+      '_action' => 'save',
       'grunddaten' => ['titel' => 'test'],
     ];
 
@@ -114,7 +116,7 @@ final class AVK1ValidatorTest extends TestCase {
     $validationResult = $this->validator->validateInitial($contactId, $fundingProgram, $fundingCaseType, $formData, 2);
     static::assertSame([], $validationResult->getErrorMessages());
     static::assertTrue($validationResult->isValid());
-    static::assertInstanceOf(AVK1ValidatedData::class, $validationResult->getValidatedData());
+    static::assertInstanceOf(ValidatedApplicationData::class, $validationResult->getValidatedData());
   }
 
 }

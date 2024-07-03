@@ -88,6 +88,7 @@ class ApplicationProcessManager {
   ): ApplicationProcessEntity {
     /** @var string $now */
     $now = date('Y-m-d H:i:s');
+    // @phpstan-ignore-next-line Because of possible extra values through mapped data.
     $applicationProcess = ApplicationProcessEntity::fromArray([
       // Initialize with random UUID
       'identifier' => Uuid::generateRandom(),
@@ -106,7 +107,7 @@ class ApplicationProcessManager {
       'is_review_calculative' => NULL,
       'reviewer_calc_contact_id' => NULL,
       'is_eligible' => NULL,
-    ]);
+    ] + $data->getMappedData());
 
     $event = new ApplicationProcessPreCreateEvent(
       $contactId,

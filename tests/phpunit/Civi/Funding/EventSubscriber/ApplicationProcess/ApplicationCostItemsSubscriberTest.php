@@ -27,7 +27,7 @@ use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ApplicationSnapshotFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationFormSubmitSuccessEvent;
 use Civi\Funding\Form\Application\ApplicationValidationResult;
-use Civi\Funding\Mock\FundingCaseType\Application\Validation\TestValidatedData;
+use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -67,7 +67,10 @@ final class ApplicationCostItemsSubscriberTest extends TestCase {
   public function testOnFormSubmitSuccess(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
     $costItemsData = ['test' => $this->createCostItem()];
-    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([], $costItemsData, []), FALSE);
+    $validationResult = ApplicationValidationResult::newValid(
+      new ValidatedApplicationDataMock([], ['costItemsData' => $costItemsData]),
+      FALSE
+    );
     $event = new ApplicationFormSubmitSuccessEvent(
       2,
       $applicationProcessBundle,
@@ -83,7 +86,10 @@ final class ApplicationCostItemsSubscriberTest extends TestCase {
   public function testOnFormSubmitSuccessReadOnly(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
     $costItemsData = ['test' => $this->createCostItem()];
-    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([], $costItemsData, []), TRUE);
+    $validationResult = ApplicationValidationResult::newValid(
+      new ValidatedApplicationDataMock([], ['costItemsData' => $costItemsData]),
+      TRUE
+    );
     $event = new ApplicationFormSubmitSuccessEvent(
       2,
       $applicationProcessBundle,
@@ -101,7 +107,10 @@ final class ApplicationCostItemsSubscriberTest extends TestCase {
       ApplicationSnapshotFactory::createApplicationSnapshot()
     );
     $costItemsData = ['test' => $this->createCostItem()];
-    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([], $costItemsData, []), FALSE);
+    $validationResult = ApplicationValidationResult::newValid(
+      new ValidatedApplicationDataMock([], ['costItemsData' => $costItemsData]),
+      FALSE
+    );
     $event = new ApplicationFormSubmitSuccessEvent(
       2,
       $applicationProcessBundle,

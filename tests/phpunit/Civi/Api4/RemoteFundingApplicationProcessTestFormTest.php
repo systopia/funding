@@ -141,14 +141,13 @@ final class RemoteFundingApplicationProcessTestFormTest extends AbstractRemoteFu
     $validData = [
       'title' => 'My Title',
       'shortDescription' => 'My short description',
-      'recipient' => $this->fundingCase->getRecipientContactId(),
       'startDate' => date('Y-m-d'),
       'endDate' => date('Y-m-d'),
       'amountRequested' => 123.45,
       'resources' => 12.34,
       'file' => 'https://example.org/test.txt',
     ];
-    $action->setData($validData + ['action' => 'save']);
+    $action->setData($validData + ['_action' => 'save']);
 
     $values = $action->execute()->getArrayCopy();
     static::assertEquals(['valid', 'errors'], array_keys($values));
@@ -196,14 +195,13 @@ final class RemoteFundingApplicationProcessTestFormTest extends AbstractRemoteFu
     $validData = [
       'title' => 'My Title',
       'shortDescription' => 'My short description',
-      'recipient' => $this->fundingCase->getRecipientContactId(),
       'startDate' => date('Y-m-d'),
       'endDate' => date('Y-m-d'),
       'amountRequested' => 123.45,
       'resources' => 0,
       'file' => 'https://example.org/test.txt',
     ];
-    $action->setData($validData + ['action' => 'save']);
+    $action->setData($validData + ['_action' => 'save']);
 
     $values = $action->execute()->getArrayCopy();
     static::assertEquals(['action', 'message', 'files'], array_keys($values));

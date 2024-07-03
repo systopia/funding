@@ -27,7 +27,7 @@ use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ApplicationSnapshotFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationFormSubmitSuccessEvent;
 use Civi\Funding\Form\Application\ApplicationValidationResult;
-use Civi\Funding\Mock\FundingCaseType\Application\Validation\TestValidatedData;
+use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -69,7 +69,7 @@ final class ApplicationResourcesItemsSubscriberTest extends TestCase {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
     $resourcesItemsData = ['test' => $this->createResourcesItem()];
     $validationResult = ApplicationValidationResult::newValid(
-      new TestValidatedData([], [], $resourcesItemsData),
+      new ValidatedApplicationDataMock([], ['resourcesItemsData' => $resourcesItemsData]),
       FALSE
     );
     $event = new ApplicationFormSubmitSuccessEvent(
@@ -87,7 +87,10 @@ final class ApplicationResourcesItemsSubscriberTest extends TestCase {
   public function testOnFormSubmitSuccessReadOnly(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
     $resourcesItemsData = ['test' => $this->createResourcesItem()];
-    $validationResult = ApplicationValidationResult::newValid(new TestValidatedData([], [], $resourcesItemsData), TRUE);
+    $validationResult = ApplicationValidationResult::newValid(
+      new ValidatedApplicationDataMock([], ['resourcesItemsData' => $resourcesItemsData]),
+      TRUE
+    );
     $event = new ApplicationFormSubmitSuccessEvent(
       2,
       $applicationProcessBundle,
@@ -106,7 +109,7 @@ final class ApplicationResourcesItemsSubscriberTest extends TestCase {
     );
     $resourcesItemsData = ['test' => $this->createResourcesItem()];
     $validationResult = ApplicationValidationResult::newValid(
-      new TestValidatedData([], [], $resourcesItemsData),
+      new ValidatedApplicationDataMock([], ['resourcesItemsData' => $resourcesItemsData]),
       FALSE
     );
     $event = new ApplicationFormSubmitSuccessEvent(

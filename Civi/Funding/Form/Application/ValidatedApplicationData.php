@@ -17,28 +17,17 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\SonstigeAktivitaet\Application\Validation;
+namespace Civi\Funding\Form\Application;
 
-use Civi\Funding\Form\Application\ValidatedApplicationDataInterface;
+use Civi\Funding\Form\MappedData\MappedDataLoader;
+use Civi\Funding\Util\DateTimeUtil;
+use Systopia\JsonSchema\Tags\TaggedDataContainerInterface;
+use Webmozart\Assert\Assert;
 
-/**
- * @phpstan-type avk1ValidatedDataT array<string, mixed>&array{
- *   action: string,
- *   grunddaten: array{
- *      titel: string,
- *      kurzbeschreibungDesInhalts: string,
- *      zeitraeume: non-empty-array<array{beginn: string, ende: string}>,
- *    },
- *   empfaenger: int,
- *   finanzierung: array{beantragterZuschuss: float},
- *   comment?: array{text: string, type: string},
- * }
- * zeitraeume: Entries ordered ascending by "beginn".
- */
-final class AVK1ValidatedData implements ValidatedApplicationDataInterface {
+final class ValidatedApplicationData implements ValidatedApplicationDataInterface {
 
   /**
-   * @phpstan-var avk1ValidatedDataT
+   * @phpstan-var array<string, mixed>
    */
   private array $data;
 
@@ -53,48 +42,75 @@ final class AVK1ValidatedData implements ValidatedApplicationDataInterface {
   private array $resourcesItemsData;
 
   /**
+   * @phpstan-var array{
+   *   title: string,
+   *   short_description: string,
+   *   recipient_contact_id?: int,
+   *   start_date?: ?string,
+   *   end_date?: ?string,
+   *   amount_requested: float,
+   * } May contain additional data.
+   */
+  private array $mappedData;
+
+  /**
    * phpcs:disable Generic.Files.LineLength.TooLong
    *
-   * @phpstan-param avk1ValidatedDataT $validatedData
+   * @phpstan-param array<string, mixed> $validatedData
+   *   Must contain the action in key '_action'.
    * @phpstan-param array<string, \Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemData> $costItemsData
    * @phpstan-param array<string, \Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemData> $resourcesItemsData
    *
    * phpcs:enable
    */
-  public function __construct(array $validatedData, array $costItemsData, array $resourcesItemsData) {
+  public function __construct(
+    array $validatedData,
+    array $costItemsData,
+    array $resourcesItemsData,
+    TaggedDataContainerInterface $taggedData
+  ) {
+    Assert::keyExists($validatedData, '_action');
     $this->data = $validatedData;
     $this->costItemsData = $costItemsData;
     $this->resourcesItemsData = $resourcesItemsData;
+    $mappedDataLoader = new MappedDataLoader();
+    // @phpstan-ignore-next-line
+    $this->mappedData = $mappedDataLoader->getMappedData($taggedData);
   }
 
   public function getAction(): string {
-    return $this->data['action'];
+    // @phpstan-ignore-next-line
+    return $this->data['_action'];
   }
 
   public function getTitle(): string {
-    return $this->data['grunddaten']['titel'];
+    return $this->mappedData['title'];
   }
 
   public function getShortDescription(): string {
-    return $this->data['grunddaten']['kurzbeschreibungDesInhalts'];
+    return $this->mappedData['short_description'];
   }
 
   public function getRecipientContactId(): int {
-    return $this->data['empfaenger'];
+    if (!isset($this->mappedData['recipient_contact_id'])) {
+      // For existing and combined applications there doesn't need to be a
+      // recipient contact ID in the mapped data. Recipients cannot be changed.
+      throw new \RuntimeException('No mapped data for "recipient_contact_id"');
+    }
+
+    return $this->mappedData['recipient_contact_id'];
   }
 
-  public function getStartDate(): \DateTimeInterface {
-    return new \DateTime($this->data['grunddaten']['zeitraeume'][0]['beginn']);
+  public function getStartDate(): ?\DateTimeInterface {
+    return DateTimeUtil::toDateTimeOrNull($this->mappedData['start_date'] ?? NULL);
   }
 
-  public function getEndDate(): \DateTimeInterface {
-    $zeitraeume = $this->data['grunddaten']['zeitraeume'];
-
-    return new \DateTime($zeitraeume[count($zeitraeume) - 1]['ende']);
+  public function getEndDate(): ?\DateTimeInterface {
+    return DateTimeUtil::toDateTimeOrNull($this->mappedData['end_date'] ?? NULL);
   }
 
   public function getAmountRequested(): float {
-    return $this->data['finanzierung']['beantragterZuschuss'];
+    return $this->mappedData['amount_requested'];
   }
 
   /**
@@ -112,15 +128,19 @@ final class AVK1ValidatedData implements ValidatedApplicationDataInterface {
   }
 
   public function getComment(): ?array {
+    // @phpstan-ignore-next-line
     return $this->data['comment'] ?? NULL;
+  }
+
+  public function getMappedData(): array {
+    return $this->mappedData;
   }
 
   public function getApplicationData(): array {
     $data = $this->data;
-    unset($data['action']);
     unset($data['comment']);
 
-    return $data;
+    return array_filter($data, fn (string $key) => !str_starts_with($key, '_'), ARRAY_FILTER_USE_KEY);
   }
 
   public function getRawData(): array {

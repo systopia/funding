@@ -19,18 +19,20 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\SonstigeAktivitaet\JsonSchema;
 
-use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemDataCollector;
-use Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemDataCollector;
+use Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidator;
 use Civi\Funding\ApplicationProcess\JsonSchema\Validator\OpisApplicationValidatorFactory;
 use Civi\Funding\Form\JsonSchema\JsonSchemaRecipient;
+use Civi\Funding\Form\MappedData\MappedDataLoader;
 use Civi\Funding\Form\Traits\AssertFormTrait;
 use Civi\Funding\SonstigeAktivitaet\Application\JsonSchema\AVK1JsonSchema;
 use Civi\Funding\Validation\Traits\AssertValidationResultTrait;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 use Civi\RemoteTools\JsonSchema\Validation\OpisValidatorFactory;
+use Civi\RemoteTools\Util\JsonConverter;
 use PHPUnit\Framework\TestCase;
 use Systopia\JsonSchema\Errors\ErrorCollector;
+use Systopia\JsonSchema\Translation\NullTranslator;
 
 /**
  * @covers \Civi\Funding\SonstigeAktivitaet\Application\JsonSchema\AVK1JsonSchema
@@ -40,6 +42,16 @@ class AVK1JsonSchemaTest extends TestCase {
   use AssertFormTrait;
 
   use AssertValidationResultTrait;
+
+  private ApplicationSchemaValidator $validator;
+
+  protected function setUp(): void {
+    parent::setUp();
+    $this->validator = new ApplicationSchemaValidator(
+      new NullTranslator(),
+      OpisApplicationValidatorFactory::getValidator()
+    );
+  }
 
   public function testJsonSchema(): void {
     $possibleRecipients = [
@@ -63,18 +75,22 @@ class AVK1JsonSchemaTest extends TestCase {
     static::assertSame($actionSchema, $properties->getKeywordValue('action'));
     static::assertEquals(new JsonSchemaRecipient($possibleRecipients), $properties->getKeywordValue('empfaenger'));
 
-    $data = (object) [
+    $data = [
       'action' => 'submitAction1',
-      'grunddaten' => (object) [
+      'grunddaten' => [
         'titel' => 'Test',
         'kurzbeschreibungDesInhalts' => 'foo bar',
         'zeitraeume' => [
-          (object) [
-            'beginn' => '2022-08-24',
+          [
+            'beginn' => '2022-08-25',
             'ende' => '2022-08-25',
           ],
+          [
+            'beginn' => '2022-08-24',
+            'ende' => '2022-08-24',
+          ],
         ],
-        'teilnehmer' => (object) [
+        'teilnehmer' => [
           'gesamt' => 5,
           'weiblich' => 4,
           'divers' => 3,
@@ -85,16 +101,16 @@ class AVK1JsonSchemaTest extends TestCase {
         ],
       ],
       'empfaenger' => 2,
-      'kosten' => (object) [
+      'kosten' => [
         'honorare' => [
-          (object) [
+          [
             'berechnungsgrundlage' => 'tagessatz',
             'dauer' => 11.1,
             'verguetung' => 22.22,
             'leistung' => 'Leistung 1',
             'qualifikation' => 'Qualifikation 1',
           ],
-          (object) [
+          [
             'berechnungsgrundlage' => 'stundensatz',
             'dauer' => 9.9,
             'verguetung' => 10,
@@ -103,54 +119,54 @@ class AVK1JsonSchemaTest extends TestCase {
           ],
         ],
         'unterkunftUndVerpflegung' => 222.22,
-        'fahrtkosten' => (object) [
+        'fahrtkosten' => [
           'intern' => 2.2,
           'anTeilnehmerErstattet' => 3.3,
         ],
-        'sachkosten' => (object) [
+        'sachkosten' => [
           'ausstattung' => [
-            (object) [
+            [
               'gegenstand' => 'Thing1',
               'betrag' => 5.5,
             ],
-            (object) [
+            [
               'gegenstand' => 'Thing2',
               'betrag' => 6.6,
             ],
           ],
         ],
         'sonstigeAusgaben' => [
-          (object) [
+          [
             'betrag' => 12.34,
             'zweck' => 'Sonstige Ausgaben 1',
           ],
-          (object) [
+          [
             'betrag' => 56.78,
             'zweck' => 'Sonstige Ausgaben 2',
           ],
         ],
-        'versicherung' => (object) ['teilnehmer' => 9.9],
+        'versicherung' => ['teilnehmer' => 9.9],
       ],
-      'finanzierung' => (object) [
+      'finanzierung' => [
         'teilnehmerbeitraege' => 100.00,
         'eigenmittel' => 10.00,
-        'oeffentlicheMittel' => (object) [
+        'oeffentlicheMittel' => [
           'europa' => 1.11,
           'bundeslaender' => 2.22,
           'staedteUndKreise' => 3.33,
         ],
         'sonstigeMittel' => [
-          (object) [
+          [
             'betrag' => 1.0,
             'quelle' => 'Quelle 1',
           ],
-          (object) [
+          [
             'betrag' => 2.0,
             'quelle' => 'Quelle 2',
           ],
         ],
       ],
-      'beschreibung' => (object) [
+      'beschreibung' => [
         'thematischeSchwerpunkte' => 'Schwerpunkte',
         'geplanterAblauf' => 'Ablauf',
         'beitragZuPolitischerJugendbildung' => 'Beitrag',
@@ -164,7 +180,7 @@ class AVK1JsonSchemaTest extends TestCase {
         'partner' => 'Partner',
       ],
       'projektunterlagen' => [
-        (object) [
+        [
           'datei' => 'https://example.org/test.txt',
           'beschreibung' => 'Test',
         ],
@@ -172,34 +188,25 @@ class AVK1JsonSchemaTest extends TestCase {
       'foo' => 'baz',
     ];
 
-    $validator = OpisApplicationValidatorFactory::getValidator();
-    $costItemDataCollector = new CostItemDataCollector();
-    $resourcesItemDataCollector = new ResourcesItemDataCollector();
-    $result = $validator->validate(
-      $data,
-      \json_encode($jsonSchema),
-      [
-        'costItemDataCollector' => $costItemDataCollector,
-        'resourcesItemDataCollector' => $resourcesItemDataCollector,
-      ]
-    );
-    static::assertValidationValid($result);
-    static::assertCount(10, $costItemDataCollector->getCostItemsData());
-    static::assertCount(7, $resourcesItemDataCollector->getResourcesItemsData());
+    $result = $this->validator->validate($jsonSchema, $data);
+    static::assertSame([], $result->getLeafErrorMessages());
+    static::assertCount(10, $result->getCostItemsData());
+    static::assertCount(7, $result->getResourcesItemsData());
 
+    $resultData = JsonConverter::toStdClass($result->getData());
     $unterkunftUndVerpflegung = 222.22;
     $honorar1 = round(11.1 * 22.22, 2);
-    static::assertSame($honorar1, $data->kosten->honorare[0]->betrag);
+    static::assertSame($honorar1, $resultData->kosten->honorare[0]->betrag);
     $honorar2 = round(9.9 * 10, 2);
-    static::assertSame($honorar2, $data->kosten->honorare[1]->betrag);
+    static::assertSame($honorar2, $resultData->kosten->honorare[1]->betrag);
     $honorareGesamt = $honorar1 + $honorar2;
-    static::assertSame($honorareGesamt, $data->kosten->honorareGesamt);
+    static::assertSame($honorareGesamt, $resultData->kosten->honorareGesamt);
     $fahrtkostenGesamt = 2.2 + 3.3;
-    static::assertSame($fahrtkostenGesamt, $data->kosten->fahrtkostenGesamt);
+    static::assertSame($fahrtkostenGesamt, $resultData->kosten->fahrtkostenGesamt);
     $sachkostenGesamt = 5.5 + 6.6;
-    static::assertSame($sachkostenGesamt, $data->kosten->sachkostenGesamt);
+    static::assertSame($sachkostenGesamt, $resultData->kosten->sachkostenGesamt);
     $sonstigeAusgabenGesamt = 12.34 + 56.78;
-    static::assertSame($sonstigeAusgabenGesamt, $data->kosten->sonstigeAusgabenGesamt);
+    static::assertSame($sonstigeAusgabenGesamt, $resultData->kosten->sonstigeAusgabenGesamt);
     $versicherungTeilnehmer = 9.9;
     $gesamtkosten = $unterkunftUndVerpflegung
       + $honorareGesamt
@@ -207,19 +214,30 @@ class AVK1JsonSchemaTest extends TestCase {
       + $sachkostenGesamt
       + $sonstigeAusgabenGesamt
       + $versicherungTeilnehmer;
-    static::assertSame($gesamtkosten, $data->kosten->gesamtkosten);
+    static::assertSame($gesamtkosten, $resultData->kosten->gesamtkosten);
 
     $oeffentlicheMittelGesamt = 1.11 + 2.22 + 3.33;
-    static::assertSame($oeffentlicheMittelGesamt, $data->finanzierung->oeffentlicheMittelGesamt);
+    static::assertSame($oeffentlicheMittelGesamt, $resultData->finanzierung->oeffentlicheMittelGesamt);
     $sonstigeMittelGesamt = 1.0 + 2.0;
-    static::assertSame($sonstigeMittelGesamt, $data->finanzierung->sonstigeMittelGesamt);
+    static::assertSame($sonstigeMittelGesamt, $resultData->finanzierung->sonstigeMittelGesamt);
     $gesamtmittel = 100.00 + 10.00 + $oeffentlicheMittelGesamt + $sonstigeMittelGesamt;
-    static::assertSame($gesamtmittel, $data->finanzierung->gesamtmittel);
+    static::assertSame($gesamtmittel, $resultData->finanzierung->gesamtmittel);
 
-    static::assertSame($gesamtkosten - $gesamtmittel, $data->finanzierung->beantragterZuschuss);
+    static::assertSame($gesamtkosten - $gesamtmittel, $resultData->finanzierung->beantragterZuschuss);
 
-    $data->foo = 'bar';
-    static::assertAllPropertiesSet($jsonSchema->toStdClass(), $data);
+    $resultData->foo = 'bar';
+    static::assertAllPropertiesSet($jsonSchema->toStdClass(), $resultData);
+
+    $mappedDataLoader = new MappedDataLoader();
+    $mappedData = $mappedDataLoader->getMappedData($result->getTaggedData());
+    static::assertEquals([
+      'title' => 'Test',
+      'short_description' => 'foo bar',
+      'recipient_contact_id' => 2,
+      'start_date' => '2022-08-24',
+      'end_date' => '2022-08-25',
+      'amount_requested' => $gesamtkosten - $gesamtmittel,
+    ], $mappedData);
   }
 
   public function testNotAllowedDates(): void {

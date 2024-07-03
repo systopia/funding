@@ -73,7 +73,7 @@ class AVK1JsonSchemaFactory implements NonCombinedApplicationJsonSchemaFactoryIn
       $submitActions = [NULL];
     }
     $extraProperties = [
-      'action' => new JsonSchemaString(['enum' => $submitActions]),
+      '_action' => new JsonSchemaString(['enum' => $submitActions]),
     ];
     $extraKeywords = ['required' => array_keys($extraProperties)];
 
@@ -112,7 +112,7 @@ class AVK1JsonSchemaFactory implements NonCombinedApplicationJsonSchemaFactoryIn
   ): JsonSchema {
     $submitActions = $this->actionsDeterminer->getInitialActions($fundingProgram->getPermissions());
     $extraProperties = [
-      'action' => new JsonSchemaString(['enum' => $submitActions]),
+      '_action' => new JsonSchemaString(['enum' => $submitActions]),
     ];
     $extraKeywords = ['required' => array_keys($extraProperties)];
 

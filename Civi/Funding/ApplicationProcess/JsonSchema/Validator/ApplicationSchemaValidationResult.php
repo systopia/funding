@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\JsonSchema\Validator;
 
 use Civi\RemoteTools\JsonSchema\Validation\ValidationResult;
+use Systopia\JsonSchema\Tags\TaggedDataContainerInterface;
 
 /**
  * @codeCoverageIgnore
@@ -93,6 +94,10 @@ final class ApplicationSchemaValidationResult {
    */
   public function getResourcesItemsData(): array {
     return $this->resourcesItemsData;
+  }
+
+  public function getTaggedData(): TaggedDataContainerInterface {
+    return $this->result->getTaggedData();
   }
 
 }

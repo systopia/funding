@@ -262,11 +262,11 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
 
     $result = FundingApplicationProcess::submitForm()
       ->setId($applicationProcess->getId())
-      ->setData(['action' => 'test'])
+      ->setData(['_action' => 'test'])
       ->execute();
 
     static::assertIsArray($result['errors']);
-    static::assertNotEmpty($result['errors']['/action']);
+    static::assertNotEmpty($result['errors']['/_action']);
     static::assertNotEmpty($result['data']);
   }
 
@@ -299,9 +299,8 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
     $result = FundingApplicationProcess::submitForm()
       ->setId($applicationProcess->getId())
       ->setData([
-        'action' => 'approve',
+        '_action' => 'approve',
         'title' => 'Title',
-        'recipient' => $fundingCase->getRecipientContactId(),
         'startDate' => '2022-11-15',
         'endDate' => '2022-11-16',
         'amountRequested' => 10,
@@ -415,9 +414,8 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
     $result = FundingApplicationProcess::submitForm()
       ->setId($applicationProcess->getId())
       ->setData([
-        'action' => 'withdraw-change',
+        '_action' => 'withdraw-change',
         'title' => 'Title',
-        'recipient' => $fundingCase->getRecipientContactId(),
         'startDate' => '2022-11-15',
         'endDate' => '2022-11-16',
         'amountRequested' => 10,
@@ -428,8 +426,8 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
 
     static::assertEquals(new \stdClass(), $result['errors']);
     static::assertNotEmpty($result['data']);
-    static::assertSame(11, $result['data']['amountRequested']);
-    static::assertSame(22, $result['data']['resources']);
+    static::assertSame(11.0, $result['data']['amountRequested']);
+    static::assertSame(22.0, $result['data']['resources']);
     static::assertIsString($result['data']['file']);
     static::assertStringStartsWith('http://localhost/', $result['data']['file']);
     static::assertStringEndsWith('/test1.txt', $result['data']['file']);
@@ -453,12 +451,12 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
 
     $result = FundingApplicationProcess::validateForm()
       ->setId($applicationProcess->getId())
-      ->setData(['action' => 'test'])
+      ->setData(['_action' => 'test'])
       ->execute();
 
     static::assertFalse($result['valid']);
     static::assertIsArray($result['errors']);
-    static::assertNotEmpty($result['errors']['/action']);
+    static::assertNotEmpty($result['errors']['/_action']);
     static::assertNotEmpty($result['data']);
   }
 

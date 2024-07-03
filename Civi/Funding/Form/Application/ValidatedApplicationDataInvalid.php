@@ -90,6 +90,13 @@ final class ValidatedApplicationDataInvalid implements ValidatedApplicationDataI
   /**
    * @inheritDoc
    */
+  public function getMappedData(): array {
+    return [];
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function getApplicationData(): array {
     return [];
   }

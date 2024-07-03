@@ -32,7 +32,7 @@ use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationFormSubmitSuccessEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
 use Civi\Funding\Form\Application\ApplicationValidationResult;
-use Civi\Funding\Mock\FundingCaseType\Application\Validation\TestValidatedData;
+use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
 use Civi\Funding\Mock\Psr\PsrContainer;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -80,7 +80,7 @@ final class ApplicationProcessReworkTaskSubscriberTest extends TestCase {
       ApplicationProcessBundleFactory::createApplicationProcessBundle(),
       [],
       ApplicationFormSubmitResult::createSuccess(
-        ApplicationValidationResult::newValid(new TestValidatedData(['action' => 'apply'], [], []), FALSE)
+        ApplicationValidationResult::newValid(new ValidatedApplicationDataMock([], ['_action' => 'apply']), FALSE)
       ),
     );
     $applicationProcess = $event->getApplicationProcess();
@@ -96,7 +96,7 @@ final class ApplicationProcessReworkTaskSubscriberTest extends TestCase {
       ApplicationProcessBundleFactory::createApplicationProcessBundle(['status' => 'foo']),
       [],
       ApplicationFormSubmitResult::createSuccess(
-        ApplicationValidationResult::newValid(new TestValidatedData(['action' => 'some-action'], [], []), FALSE)
+        ApplicationValidationResult::newValid(new ValidatedApplicationDataMock([], ['_action' => 'some-action']), FALSE)
       ),
     );
     $applicationProcess = $event->getApplicationProcess();
@@ -112,10 +112,9 @@ final class ApplicationProcessReworkTaskSubscriberTest extends TestCase {
       ApplicationProcessBundleFactory::createApplicationProcessBundle(['status' => 'draft']),
       [],
       ApplicationFormSubmitResult::createSuccess(
-        ApplicationValidationResult::newValid(new TestValidatedData(['action' => 'some-action'], [], []), FALSE)
+        ApplicationValidationResult::newValid(new ValidatedApplicationDataMock([], ['_action' => 'some-action']), FALSE)
       ),
     );
-    $applicationProcess = $event->getApplicationProcess();
 
     $this->taskManagerMock->expects(static::never())->method('cancelExternalTask');
     $this->subscriber->onFormSubmitSuccess($event);

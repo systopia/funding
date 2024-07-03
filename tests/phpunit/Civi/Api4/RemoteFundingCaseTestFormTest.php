@@ -146,7 +146,7 @@ final class RemoteFundingCaseTestFormTest extends AbstractRemoteFundingHeadlessT
       'resources' => 12.34,
       'file' => 'https://example.org/test.txt',
     ];
-    $action->setData($validData + ['action' => 'save']);
+    $action->setData($validData + ['_action' => 'save']);
 
     $values = $action->execute()->getArrayCopy();
     static::assertEquals(['valid', 'errors'], array_keys($values));
@@ -204,7 +204,7 @@ final class RemoteFundingCaseTestFormTest extends AbstractRemoteFundingHeadlessT
       'resources' => 0,
       'file' => 'https://example.org/test.txt',
     ];
-    $action->setData($validData + ['action' => 'save']);
+    $action->setData($validData + ['_action' => 'save']);
 
     $values = $action->execute()->getArrayCopy();
     static::assertEquals(['action', 'message', 'files'], array_keys($values));
