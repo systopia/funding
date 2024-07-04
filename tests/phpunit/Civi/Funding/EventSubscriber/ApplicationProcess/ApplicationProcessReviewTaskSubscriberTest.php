@@ -159,9 +159,7 @@ final class ApplicationProcessReviewTaskSubscriberTest extends TestCase {
     $previousValues = array_map(fn(array $oldAndNew) => $oldAndNew[0], $changeSet);
     $currentValues = array_map(fn(array $oldAndNew) => $oldAndNew[1], $changeSet);
 
-    // @phpstan-ignore-next-line
     $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess($previousValues);
-    // @phpstan-ignore-next-line
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle($currentValues);
 
     return new ApplicationProcessUpdatedEvent(
