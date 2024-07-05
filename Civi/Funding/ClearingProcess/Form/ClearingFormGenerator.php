@@ -170,7 +170,6 @@ final class ClearingFormGenerator {
   ): array {
     $receiptsFormUiSchema = $receiptsForm->getUiSchema();
     if (NULL !== $reportForm->getReceiptsPrependUiSchema()) {
-      // @phpstan-ignore-next-line
       $receiptsFormUiSchema['elements'] = array_merge(
         [$reportForm->getReceiptsPrependUiSchema()],
         // @phpstan-ignore-next-line
@@ -178,7 +177,6 @@ final class ClearingFormGenerator {
       );
     }
     if (NULL !== $reportForm->getReceiptsAppendUiSchema()) {
-      // @phpstan-ignore-next-line
       $receiptsFormUiSchema['elements'] = array_merge(
       // @phpstan-ignore-next-line
         $receiptsFormUiSchema['elements'],
