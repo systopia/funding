@@ -20,10 +20,10 @@ declare(strict_types = 1);
 namespace Civi\Funding\Form\Validation;
 
 use Civi\RemoteTools\Form\RemoteFormInterface;
-use Civi\RemoteTools\JsonSchema\Validation\ValidationResult;
+use Civi\RemoteTools\JsonSchema\Validation\ValidationResultInterface;
 
 interface FormValidatorInterface {
 
-  public function validate(RemoteFormInterface $form): ValidationResult;
+  public function validate(RemoteFormInterface $form): ValidationResultInterface;
 
 }

@@ -19,13 +19,18 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Handler;
 
+use Civi\Funding\ApplicationProcess\Command\ApplicationFormAddCreateCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormAddValidateCommand;
+use Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormAddValidatorInterface;
+use Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidationResult;
+use Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidatorInterface;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
-use Civi\Funding\Form\Application\ApplicationValidationResult;
-use Civi\Funding\Form\Application\CombinedApplicationValidatorInterface;
-use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
+use Civi\Funding\Form\Application\ValidatedApplicationDataInvalid;
+use Civi\Funding\Mock\ApplicationProcess\Form\Validation\ApplicationFormValidationResultFactory;
+use Civi\Funding\Mock\Form\ApplicationFormMock;
+use Civi\Funding\Mock\RemoteTools\JsonSchema\Validation\ValidationResultMock;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -35,32 +40,56 @@ use PHPUnit\Framework\TestCase;
  */
 final class ApplicationFormAddValidateHandlerTest extends TestCase {
 
+  /**
+   * @var \Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddCreateHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $formCreateHandlerMock;
+
   private ApplicationFormAddValidateHandler $handler;
 
   /**
-   * @var \Civi\Funding\Form\Application\CombinedApplicationValidatorInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormAddValidatorInterface&\PHPUnit\Framework\MockObject\MockObject
    */
-  private MockObject $validatorMock;
+  private MockObject $formValidatorMock;
+
+  /**
+   * @var \Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidatorInterface&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $jsonSchemaValidatorMock;
 
   protected function setUp(): void {
     parent::setUp();
-    $this->validatorMock = $this->createMock(CombinedApplicationValidatorInterface::class);
-    $this->handler = new ApplicationFormAddValidateHandler($this->validatorMock);
+    $this->formCreateHandlerMock = $this->createMock(ApplicationFormAddCreateHandlerInterface::class);
+    $this->formValidatorMock = $this->createMock(ApplicationFormAddValidatorInterface::class);
+    $this->jsonSchemaValidatorMock = $this->createMock(ApplicationSchemaValidatorInterface::class);
+    $this->handler = new ApplicationFormAddValidateHandler(
+      $this->formCreateHandlerMock,
+      $this->formValidatorMock,
+      $this->jsonSchemaValidatorMock
+    );
   }
 
-  public function testHandle(): void {
+  public function testHandleValid(): void {
     $contactId = 1;
     $fundingProgram = FundingProgramFactory::createFundingProgram();
     $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
     $fundingCase = FundingCaseFactory::createFundingCase();
 
-    $data = ['foo' => 'bar'];
-    $validatedData = new ValidatedApplicationDataMock();
-    $errorMessages = ['/a/b' => ['error']];
-    $validationResult = ApplicationValidationResult::newInvalid($errorMessages, $validatedData);
+    $data = ['_action' => 'save'];
+    $validationResult = ApplicationFormValidationResultFactory::createValid();
 
-    $this->validatorMock->expects(static::once())->method('validateAdd')
-      ->with($fundingProgram, $fundingCaseType, $fundingCase, $data, 20)
+    $form = new ApplicationFormMock();
+    $this->formCreateHandlerMock->method('handle')
+      ->with(new ApplicationFormAddCreateCommand($contactId, $fundingProgram, $fundingCaseType, $fundingCase))
+      ->willReturn($form);
+
+    $schemaValidationResult = new ApplicationSchemaValidationResult(new ValidationResultMock($data), [], []);
+    $this->jsonSchemaValidatorMock->method('validate')
+      ->with($form->getJsonSchema(), $data, 20)
+      ->willReturn($schemaValidationResult);
+
+    $this->formValidatorMock->expects(static::once())->method('validateAdd')
+      ->with($fundingCase, $fundingCaseType, $fundingProgram, $schemaValidationResult, FALSE)
       ->willReturn($validationResult);
 
     $command = new ApplicationFormAddValidateCommand(
@@ -71,9 +100,41 @@ final class ApplicationFormAddValidateHandlerTest extends TestCase {
       $data,
     );
     $result = $this->handler->handle($command);
-    static::assertSame($validatedData, $result->getValidatedData());
+    static::assertSame($validationResult, $result);
+  }
+
+  public function testHandleInvalid(): void {
+    $contactId = 1;
+    $fundingProgram = FundingProgramFactory::createFundingProgram();
+    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
+    $fundingCase = FundingCaseFactory::createFundingCase();
+
+    $data = ['_action' => 'save'];
+    $errorMessages = ['/a/b' => ['error']];
+
+    $form = new ApplicationFormMock();
+    $this->formCreateHandlerMock->method('handle')
+      ->with(new ApplicationFormAddCreateCommand($contactId, $fundingProgram, $fundingCaseType, $fundingCase))
+      ->willReturn($form);
+
+    $schemaValidationResult = new ValidationResultMock($data, $errorMessages);
+    $this->jsonSchemaValidatorMock->method('validate')
+      ->with($form->getJsonSchema(), $data, 20)
+      ->willReturn(new ApplicationSchemaValidationResult($schemaValidationResult, [], []));
+
+    $this->formValidatorMock->expects(static::never())->method('validateAdd');
+
+    $command = new ApplicationFormAddValidateCommand(
+      $contactId,
+      $fundingProgram,
+      $fundingCaseType,
+      $fundingCase,
+      $data,
+    );
+    $result = $this->handler->handle($command);
+    static::assertInstanceOf(ValidatedApplicationDataInvalid::class, $result->getValidatedData());
+    static::assertSame($data, $result->getData());
     static::assertSame($errorMessages, $result->getErrorMessages());
-    static::assertFalse($result->isValid());
   }
 
 }

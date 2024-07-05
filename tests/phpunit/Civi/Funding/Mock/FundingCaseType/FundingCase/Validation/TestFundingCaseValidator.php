@@ -27,7 +27,7 @@ use Civi\Funding\Form\FundingCase\FundingCaseValidationResult;
 use Civi\Funding\Form\FundingCase\ValidatedFundingCaseData;
 use Civi\Funding\Mock\FundingCaseType\Traits\TestSupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
-use Civi\RemoteTools\JsonSchema\Validation\ValidationResult;
+use Civi\RemoteTools\JsonSchema\Validation\ValidationResultInterface;
 
 final class TestFundingCaseValidator extends AbstractFundingCaseValidator {
 
@@ -42,7 +42,7 @@ final class TestFundingCaseValidator extends AbstractFundingCaseValidator {
     FundingCaseEntity $fundingCase,
     array $formData,
     JsonSchema $jsonSchema,
-    ValidationResult $jsonSchemaValidationResult,
+    ValidationResultInterface $jsonSchemaValidationResult,
     int $maxErrors
   ): FundingCaseValidationResult {
     return FundingCaseValidationResult::newValid(new ValidatedFundingCaseData(
@@ -59,7 +59,7 @@ final class TestFundingCaseValidator extends AbstractFundingCaseValidator {
     FundingCaseTypeEntity $fundingCaseType,
     array $formData,
     JsonSchema $jsonSchema,
-    ValidationResult $jsonSchemaValidationResult,
+    ValidationResultInterface $jsonSchemaValidationResult,
     int $maxErrors
   ): FundingCaseValidationResult {
     return FundingCaseValidationResult::newValid(new ValidatedFundingCaseData(

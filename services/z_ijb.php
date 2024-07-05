@@ -32,11 +32,9 @@ use Civi\Funding\IJB\Application\Data\IJBApplicationFormFilesFactory;
 use Civi\Funding\IJB\Application\Data\IJBProjektunterlagenFactory;
 use Civi\Funding\IJB\Application\JsonSchema\IJBApplicationJsonSchemaFactory;
 use Civi\Funding\IJB\Application\UiSchema\IJBApplicationUiSchemaFactory;
-use Civi\Funding\IJB\Application\Validator\IJBApplicationValidator;
 use Civi\Funding\IJB\FundingCase\Actions\IJBCaseActionsDeterminer;
 use Civi\Funding\IJB\Report\IJBReportDataLoader;
 use Civi\Funding\IJB\Report\IJBReportFormFactory;
-use Symfony\Component\DependencyInjection\Reference;
 
 $container->autowire(IJBApplicationSubmitActionsContainer::class)
   ->addTag(IJBApplicationSubmitActionsContainer::SERVICE_TAG);
@@ -54,9 +52,6 @@ $container->autowire(IJBApplicationFormDataFactory::class)
   ->addTag(IJBApplicationFormDataFactory::SERVICE_TAG);
 $container->autowire(IJBProjektunterlagenFactory::class);
 
-$container->autowire(IJBApplicationValidator::class)
-  ->setArgument('$jsonSchemaFactory', new Reference(IJBApplicationJsonSchemaFactory::class))
-  ->addTag(IJBApplicationValidator::SERVICE_TAG);
 $container->autowire(IJBApplicationFormFilesFactory::class)
   ->addTag(IJBApplicationFormFilesFactory::SERVICE_TAG);
 

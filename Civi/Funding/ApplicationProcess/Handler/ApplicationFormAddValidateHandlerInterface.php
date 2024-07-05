@@ -20,12 +20,10 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormAddValidateCommand;
-use Civi\Funding\Form\Application\ApplicationValidationResult;
+use Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormValidationResult;
 
 interface ApplicationFormAddValidateHandlerInterface {
 
-  public const SERVICE_TAG = 'funding.application.form_add_validate_handler';
-
-  public function handle(ApplicationFormAddValidateCommand $command): ApplicationValidationResult;
+  public function handle(ApplicationFormAddValidateCommand $command): ApplicationFormValidationResult;
 
 }

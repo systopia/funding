@@ -19,9 +19,9 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Command;
 
+use Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormValidationResult;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\Traits\ApplicationProcessEntityBundleTrait;
-use Civi\Funding\Form\Application\ApplicationValidationResult;
 use Webmozart\Assert\Assert;
 
 final class ApplicationActionApplyCommand {
@@ -32,17 +32,17 @@ final class ApplicationActionApplyCommand {
 
   private string $action;
 
-  private ?ApplicationValidationResult $validationResult;
+  private ?ApplicationFormValidationResult $validationResult;
 
   /**
-   * @param \Civi\Funding\Form\Application\ApplicationValidationResult|null $validationResult
+   * @param \Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormValidationResult|null $validationResult
    *   A valid result or NULL.
    */
   public function __construct(
     int $contactId,
     string $action,
     ApplicationProcessEntityBundle $applicationProcessBundle,
-    ?ApplicationValidationResult $validationResult
+    ?ApplicationFormValidationResult $validationResult
   ) {
     $this->contactId = $contactId;
     $this->action = $action;
@@ -61,7 +61,7 @@ final class ApplicationActionApplyCommand {
     return $this->contactId;
   }
 
-  public function getValidationResult(): ?ApplicationValidationResult {
+  public function getValidationResult(): ?ApplicationFormValidationResult {
     return $this->validationResult;
   }
 

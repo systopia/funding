@@ -23,10 +23,10 @@ use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionSta
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationActionApplyCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormCommentPersistCommand;
+use Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormValidationResult;
 use Civi\Funding\ApplicationProcess\Snapshot\ApplicationSnapshotRestorerInterface;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\Entity\ApplicationProcessEntity;
-use Civi\Funding\Form\Application\ApplicationValidationResult;
 
 final class ApplicationActionApplyHandler implements ApplicationActionApplyHandlerInterface {
 
@@ -98,7 +98,7 @@ final class ApplicationActionApplyHandler implements ApplicationActionApplyHandl
 
   private function mapValidatedDataIntoApplicationProcess(
     ApplicationProcessEntity $applicationProcess,
-    ApplicationValidationResult $validationResult
+    ApplicationFormValidationResult $validationResult
   ): void {
     $validatedData = $validationResult->getValidatedData();
     if (!$validationResult->isReadOnly()) {

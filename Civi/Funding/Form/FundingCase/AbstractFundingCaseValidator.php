@@ -23,7 +23,7 @@ use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
-use Civi\RemoteTools\JsonSchema\Validation\ValidationResult;
+use Civi\RemoteTools\JsonSchema\Validation\ValidationResultInterface;
 use Civi\RemoteTools\JsonSchema\Validation\ValidatorInterface;
 
 abstract class AbstractFundingCaseValidator implements FundingCaseValidatorInterface {
@@ -120,7 +120,7 @@ abstract class AbstractFundingCaseValidator implements FundingCaseValidatorInter
     FundingCaseEntity $fundingCase,
     array $formData,
     JsonSchema $jsonSchema,
-    ValidationResult $jsonSchemaValidationResult,
+    ValidationResultInterface $jsonSchemaValidationResult,
     int $maxErrors
   ): FundingCaseValidationResult;
 
@@ -134,7 +134,7 @@ abstract class AbstractFundingCaseValidator implements FundingCaseValidatorInter
     FundingCaseTypeEntity $fundingCaseType,
     array $formData,
     JsonSchema $jsonSchema,
-    ValidationResult $jsonSchemaValidationResult,
+    ValidationResultInterface $jsonSchemaValidationResult,
     int $maxErrors
   ): FundingCaseValidationResult;
 

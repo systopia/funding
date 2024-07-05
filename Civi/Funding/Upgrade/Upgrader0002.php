@@ -95,13 +95,13 @@ final class Upgrader0002 {
       if ($validationResult->isValid()) {
         $this->costItemsPersistHandler->handle(
           new ApplicationCostItemsPersistCommand(
-            $applicationProcessBundle, $validationResult->getValidatedData()->getCostItemsData()
+            $applicationProcessBundle, $validationResult->getCostItemsData()
           )
         );
 
         $this->resourcesItemsPersistHandler->handle(
           new ApplicationResourcesItemsPersistCommand(
-            $applicationProcessBundle, $validationResult->getValidatedData()->getResourcesItemsData()
+            $applicationProcessBundle, $validationResult->getResourcesItemsData()
           )
         );
       }

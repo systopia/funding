@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\JsonSchema\Validator;
 
-use Civi\RemoteTools\JsonSchema\Validation\ValidationResult;
+use Civi\RemoteTools\JsonSchema\Validation\ValidationResultInterface;
 use Systopia\JsonSchema\Tags\TaggedDataContainerInterface;
 
 /**
@@ -37,7 +37,7 @@ final class ApplicationSchemaValidationResult {
    */
   private array $resourcesItemsData;
 
-  private ValidationResult $result;
+  private ValidationResultInterface $result;
 
   /**
    * phpcs:disable Generic.Files.LineLength.TooLong
@@ -47,7 +47,7 @@ final class ApplicationSchemaValidationResult {
    *
    * phpcs:enable
    */
-  public function __construct(ValidationResult $result, array $costItemsData, array $resourcesItemsData) {
+  public function __construct(ValidationResultInterface $result, array $costItemsData, array $resourcesItemsData) {
     $this->result = $result;
     $this->costItemsData = $costItemsData;
     $this->resourcesItemsData = $resourcesItemsData;

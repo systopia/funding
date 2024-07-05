@@ -31,8 +31,7 @@ use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationFormSubmitSuccessEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
-use Civi\Funding\Form\Application\ApplicationValidationResult;
-use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
+use Civi\Funding\Mock\ApplicationProcess\Form\Validation\ApplicationFormValidationResultFactory;
 use Civi\Funding\Mock\Psr\PsrContainer;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -80,7 +79,7 @@ final class ApplicationProcessReworkTaskSubscriberTest extends TestCase {
       ApplicationProcessBundleFactory::createApplicationProcessBundle(),
       [],
       ApplicationFormSubmitResult::createSuccess(
-        ApplicationValidationResult::newValid(new ValidatedApplicationDataMock([], ['_action' => 'apply']), FALSE)
+        ApplicationFormValidationResultFactory::createValid(['_action' => 'apply'])
       ),
     );
     $applicationProcess = $event->getApplicationProcess();
@@ -96,7 +95,7 @@ final class ApplicationProcessReworkTaskSubscriberTest extends TestCase {
       ApplicationProcessBundleFactory::createApplicationProcessBundle(['status' => 'foo']),
       [],
       ApplicationFormSubmitResult::createSuccess(
-        ApplicationValidationResult::newValid(new ValidatedApplicationDataMock([], ['_action' => 'some-action']), FALSE)
+        ApplicationFormValidationResultFactory::createValid(['_action' => 'some-action'])
       ),
     );
     $applicationProcess = $event->getApplicationProcess();
@@ -112,7 +111,7 @@ final class ApplicationProcessReworkTaskSubscriberTest extends TestCase {
       ApplicationProcessBundleFactory::createApplicationProcessBundle(['status' => 'draft']),
       [],
       ApplicationFormSubmitResult::createSuccess(
-        ApplicationValidationResult::newValid(new ValidatedApplicationDataMock([], ['_action' => 'some-action']), FALSE)
+        ApplicationFormValidationResultFactory::createValid(['_action' => 'some-action'])
       ),
     );
 

@@ -27,14 +27,11 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesAddIdentifiersHandle
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddSubmitHandlerInterface;
-use Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddValidateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewSubmitHandlerInterface;
-use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewValidateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
-use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationJsonSchemaGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandlerInterface;
@@ -71,19 +68,13 @@ interface FundingCaseTypeServiceLocatorInterface {
 
   public function getApplicationFormAddSubmitHandler(): ?ApplicationFormAddSubmitHandlerInterface;
 
-  public function getApplicationFormAddValidateHandler(): ?ApplicationFormAddValidateHandlerInterface;
-
   public function getApplicationFormNewCreateHandler(): ?ApplicationFormNewCreateHandlerInterface;
-
-  public function getApplicationFormNewValidateHandler(): ?ApplicationFormNewValidateHandlerInterface;
 
   public function getApplicationFormNewSubmitHandler(): ?ApplicationFormNewSubmitHandlerInterface;
 
   public function getApplicationFormDataGetHandler(): ApplicationFormDataGetHandlerInterface;
 
   public function getApplicationFormCreateHandler(): ApplicationFormCreateHandlerInterface;
-
-  public function getApplicationFormValidateHandler(): ApplicationFormValidateHandlerInterface;
 
   public function getApplicationFormSubmitHandler(): ApplicationFormSubmitHandlerInterface;
 

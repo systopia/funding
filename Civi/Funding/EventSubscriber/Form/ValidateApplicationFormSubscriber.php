@@ -22,12 +22,12 @@ namespace Civi\Funding\EventSubscriber\Form;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewValidateCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateCommand;
+use Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormValidationResult;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewValidateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterface;
 use Civi\Funding\Event\Remote\AbstractFundingValidateFormEvent;
 use Civi\Funding\Event\Remote\ApplicationProcess\ValidateApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingCase\ValidateNewApplicationFormEvent;
-use Civi\Funding\Form\Application\ApplicationValidationResult;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ValidateApplicationFormSubscriber implements EventSubscriberInterface {
@@ -85,7 +85,7 @@ class ValidateApplicationFormSubscriber implements EventSubscriberInterface {
   }
 
   private function mapValidationResultToEvent(
-    ApplicationValidationResult $validationResult,
+    ApplicationFormValidationResult $validationResult,
     AbstractFundingValidateFormEvent $event
   ): void {
     if ($validationResult->isValid()) {

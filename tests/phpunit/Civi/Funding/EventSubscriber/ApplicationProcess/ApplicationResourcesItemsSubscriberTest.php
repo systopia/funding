@@ -26,8 +26,7 @@ use Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemData;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ApplicationSnapshotFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationFormSubmitSuccessEvent;
-use Civi\Funding\Form\Application\ApplicationValidationResult;
-use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
+use Civi\Funding\Mock\ApplicationProcess\Form\Validation\ApplicationFormValidationResultFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -68,10 +67,7 @@ final class ApplicationResourcesItemsSubscriberTest extends TestCase {
   public function testOnFormSubmitSuccess(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
     $resourcesItemsData = ['test' => $this->createResourcesItem()];
-    $validationResult = ApplicationValidationResult::newValid(
-      new ValidatedApplicationDataMock([], ['resourcesItemsData' => $resourcesItemsData]),
-      FALSE
-    );
+    $validationResult = ApplicationFormValidationResultFactory::createValid([], [], [], $resourcesItemsData);
     $event = new ApplicationFormSubmitSuccessEvent(
       2,
       $applicationProcessBundle,
@@ -87,10 +83,7 @@ final class ApplicationResourcesItemsSubscriberTest extends TestCase {
   public function testOnFormSubmitSuccessReadOnly(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
     $resourcesItemsData = ['test' => $this->createResourcesItem()];
-    $validationResult = ApplicationValidationResult::newValid(
-      new ValidatedApplicationDataMock([], ['resourcesItemsData' => $resourcesItemsData]),
-      TRUE
-    );
+    $validationResult = ApplicationFormValidationResultFactory::createValid([], [], [], $resourcesItemsData, TRUE);
     $event = new ApplicationFormSubmitSuccessEvent(
       2,
       $applicationProcessBundle,
@@ -108,10 +101,7 @@ final class ApplicationResourcesItemsSubscriberTest extends TestCase {
       ApplicationSnapshotFactory::createApplicationSnapshot()
     );
     $resourcesItemsData = ['test' => $this->createResourcesItem()];
-    $validationResult = ApplicationValidationResult::newValid(
-      new ValidatedApplicationDataMock([], ['resourcesItemsData' => $resourcesItemsData]),
-      FALSE
-    );
+    $validationResult = ApplicationFormValidationResultFactory::createValid([], [], [], $resourcesItemsData);
     $event = new ApplicationFormSubmitSuccessEvent(
       2,
       $applicationProcessBundle,

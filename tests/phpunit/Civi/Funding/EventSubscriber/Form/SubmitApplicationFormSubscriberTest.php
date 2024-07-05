@@ -35,9 +35,8 @@ use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Event\Remote\ApplicationProcess\SubmitApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
-use Civi\Funding\Form\Application\ApplicationValidationResult;
 use Civi\Funding\Form\RemoteSubmitResponseActions;
-use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
+use Civi\Funding\Mock\ApplicationProcess\Form\Validation\ApplicationFormValidationResultFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -104,9 +103,7 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
       $event->getContactId(), $event->getApplicationProcessBundle(), $this->statusList, $event->getData(),
     );
 
-    $postValidationData = ['foo' => 'bar'];
-    $validatedData = new ValidatedApplicationDataMock($postValidationData, ['_action' => 'save']);
-    $validationResult = ApplicationValidationResult::newValid($validatedData, FALSE);
+    $validationResult = ApplicationFormValidationResultFactory::createValid(['_action' => 'save']);
     $result = ApplicationFormSubmitResult::createSuccess($validationResult);
     $result->setFiles([
       'https://example.org/test.txt' => ExternalFileFactory::create(
@@ -130,10 +127,8 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
       $event->getContactId(), $event->getApplicationProcessBundle(), $this->statusList, $event->getData(),
     );
 
-    $postValidationData = ['foo' => 'baz'];
-    $validatedData = new ValidatedApplicationDataMock($postValidationData, ['_action' => 'save']);
     $errorMessages = ['/a/b' => ['error']];
-    $validationResult = ApplicationValidationResult::newInvalid($errorMessages, $validatedData);
+    $validationResult = ApplicationFormValidationResultFactory::createInvalid($errorMessages, ['_action' => 'save']);
     $result = ApplicationFormSubmitResult::createError($validationResult);
     $this->submitHandlerMock->expects(static::once())->method('handle')
       ->with($command)
@@ -155,9 +150,7 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
       $event->getData()
     );
 
-    $postValidationData = ['foo' => 'bar'];
-    $validatedData = new ValidatedApplicationDataMock($postValidationData, ['_action' => 'save']);
-    $validationResult = ApplicationValidationResult::newValid($validatedData, FALSE);
+    $validationResult = ApplicationFormValidationResultFactory::createValid();
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
     $result = ApplicationFormNewSubmitResult::createSuccess(
       $validationResult,
@@ -188,10 +181,8 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
       $event->getData()
     );
 
-    $postValidationData = ['foo' => 'bar'];
-    $validatedData = new ValidatedApplicationDataMock($postValidationData);
     $errorMessages = ['/a/b' => ['error']];
-    $validationResult = ApplicationValidationResult::newInvalid($errorMessages, $validatedData);
+    $validationResult = ApplicationFormValidationResultFactory::createInvalid($errorMessages);
     $result = ApplicationFormNewSubmitResult::createError($validationResult);
     $this->newSubmitHandlerMock->expects(static::once())->method('handle')
       ->with($command)
