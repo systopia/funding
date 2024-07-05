@@ -29,8 +29,7 @@ use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDet
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ApplicationProcessFactory;
-use Civi\Funding\Form\Application\ApplicationValidationResult;
-use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
+use Civi\Funding\Mock\ApplicationProcess\Form\Validation\ApplicationFormValidationResultFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -81,11 +80,11 @@ final class ApplicationActionApplyHandlerTest extends TestCase {
   }
 
   public function testHandleValid(): void {
-    $command = $this->createCommand(ValidatedApplicationDataMock::ACTION, FALSE, [], ['foo' => 'bar'], ['x.y' => 'z']);
+    $command = $this->createCommand('some-action', FALSE, ['foo' => 'bar'], ['x.y' => 'z']);
 
     $newStatus = new FullApplicationProcessStatus('new_status', TRUE, FALSE);
     $this->statusDeterminerMock->method('getStatus')
-      ->with($command->getApplicationProcess()->getFullStatus(), ValidatedApplicationDataMock::ACTION)
+      ->with($command->getApplicationProcess()->getFullStatus(), 'some-action')
       ->willReturn($newStatus);
 
     $this->applicationProcessManagerMock->expects(static::once())->method('update')
@@ -96,13 +95,19 @@ final class ApplicationActionApplyHandlerTest extends TestCase {
     $this->handler->handle($command);
 
     $applicationProcess = $command->getApplicationProcess();
-    static::assertSame(ValidatedApplicationDataMock::TITLE, $applicationProcess->getTitle());
-    static::assertSame(ValidatedApplicationDataMock::SHORT_DESCRIPTION, $applicationProcess->getShortDescription());
-    static::assertEquals(new \DateTime(ValidatedApplicationDataMock::START_DATE),
+    static::assertSame(ApplicationFormValidationResultFactory::TITLE, $applicationProcess->getTitle());
+    static::assertSame(
+      ApplicationFormValidationResultFactory::SHORT_DESCRIPTION,
+      $applicationProcess->getShortDescription()
+    );
+    static::assertEquals(new \DateTime(ApplicationFormValidationResultFactory::START_DATE),
       $applicationProcess->getStartDate());
-    static::assertEquals(new \DateTime(ValidatedApplicationDataMock::END_DATE),
+    static::assertEquals(new \DateTime(ApplicationFormValidationResultFactory::END_DATE),
       $applicationProcess->getEndDate());
-    static::assertSame(ValidatedApplicationDataMock::AMOUNT_REQUESTED, $applicationProcess->getAmountRequested());
+    static::assertSame(
+      ApplicationFormValidationResultFactory::AMOUNT_REQUESTED,
+      $applicationProcess->getAmountRequested()
+    );
     static::assertSame(['foo' => 'bar'], $applicationProcess->getRequestData());
     static::assertSame('new_status', $applicationProcess->getStatus());
     static::assertTrue($applicationProcess->getIsReviewCalculative());
@@ -112,7 +117,7 @@ final class ApplicationActionApplyHandlerTest extends TestCase {
 
   public function testHandleComment(): void {
     $command = $this->createCommand(
-      ValidatedApplicationDataMock::ACTION,
+      'some-action',
       FALSE,
       ['comment' => ['text' => 'test', 'type' => 'internal']]
     );
@@ -182,24 +187,13 @@ final class ApplicationActionApplyHandlerTest extends TestCase {
   }
 
   /**
-   * @phpstan-param array{
-   *    action?: string,
-   *    title?: string,
-   *    shortDescription?: string,
-   *    recipientContactId?: int,
-   *    startDate?: string,
-   *    endDate?: string,
-   *    amountRequested?: float,
-   *    comment?: array{text: string, type: string},
-   *  } $data
-   * @phpstan-param array<string, mixed> $applicationData
+   * @phpstan-param array<string, mixed> $formData
    * @phpstan-param array<string, mixed> $mappedData
    */
   private function createCommand(
     string $action,
     bool $readOnly,
-    array $data = [],
-    array $applicationData = [],
+    array $formData = [],
     array $mappedData = []
   ): ApplicationActionApplyCommand {
 
@@ -207,9 +201,8 @@ final class ApplicationActionApplyHandlerTest extends TestCase {
       1,
       $action,
       ApplicationProcessBundleFactory::createApplicationProcessBundle(),
-      ApplicationValidationResult::newValid(
-        new ValidatedApplicationDataMock($applicationData, ['_action' => $action] + $data, $mappedData),
-        $readOnly
+      ApplicationFormValidationResultFactory::createValid(
+        ['_action' => $action] + $formData, $mappedData, [], [], $readOnly
       ),
     );
   }

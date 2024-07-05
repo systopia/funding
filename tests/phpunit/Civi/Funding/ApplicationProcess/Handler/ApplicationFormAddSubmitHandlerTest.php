@@ -27,8 +27,7 @@ use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
-use Civi\Funding\Form\Application\ApplicationValidationResult;
-use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
+use Civi\Funding\Mock\ApplicationProcess\Form\Validation\ApplicationFormValidationResultFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -72,8 +71,7 @@ final class ApplicationFormAddSubmitHandlerTest extends TestCase {
   public function testHandle(): void {
     $command = $this->createCommand();
 
-    $validatedData = new ValidatedApplicationDataMock();
-    $validationResult = ApplicationValidationResult::newValid($validatedData, FALSE);
+    $validationResult = ApplicationFormValidationResultFactory::createValid();
     $this->validateHandlerMock->method('handle')->with(new ApplicationFormAddValidateCommand(
       $command->getContactId(),
       $command->getFundingProgram(),
@@ -83,7 +81,7 @@ final class ApplicationFormAddSubmitHandlerTest extends TestCase {
     ))->willReturn($validationResult);
 
     $this->statusDeterminerMock->expects(static::once())->method('getInitialStatus')
-      ->with(ValidatedApplicationDataMock::ACTION)
+      ->with(ApplicationFormValidationResultFactory::ACTION)
       ->willReturn('test_status');
 
     $applicationProcess = ApplicationProcessFactory::createApplicationProcess();
@@ -94,14 +92,13 @@ final class ApplicationFormAddSubmitHandlerTest extends TestCase {
         $command->getFundingCaseType(),
         $command->getFundingProgram(),
         'test_status',
-        $validatedData
+        $validationResult->getValidatedData()
       )->willReturn($applicationProcess);
 
     $result = $this->handler->handle($command);
 
     static::assertTrue($result->isSuccess());
     static::assertSame($validationResult, $result->getValidationResult());
-    static::assertSame($validatedData, $result->getValidatedData());
     static::assertNotNull($result->getApplicationProcessBundle());
     static::assertSame($applicationProcess, $result->getApplicationProcessBundle()->getApplicationProcess());
   }
@@ -109,9 +106,8 @@ final class ApplicationFormAddSubmitHandlerTest extends TestCase {
   public function testHandleInvalid(): void {
     $command = $this->createCommand();
 
-    $validatedData = new ValidatedApplicationDataMock();
     $errorMessages = ['/field' => ['error']];
-    $validationResult = ApplicationValidationResult::newInvalid($errorMessages, $validatedData);
+    $validationResult = ApplicationFormValidationResultFactory::createInvalid($errorMessages);
     $this->validateHandlerMock->method('handle')->with(new ApplicationFormAddValidateCommand(
       $command->getContactId(),
       $command->getFundingProgram(),
@@ -126,7 +122,6 @@ final class ApplicationFormAddSubmitHandlerTest extends TestCase {
 
     static::assertFalse($result->isSuccess());
     static::assertSame($validationResult, $result->getValidationResult());
-    static::assertSame($validatedData, $result->getValidatedData());
     static::assertNull($result->getApplicationProcessBundle());
   }
 

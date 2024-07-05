@@ -19,19 +19,19 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Command;
 
+use Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormValidationResult;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
-use Civi\Funding\Form\Application\ApplicationValidationResult;
 
 final class ApplicationFormNewSubmitResult extends AbstractApplicationFormSubmitResult {
 
   private ?ApplicationProcessEntityBundle $applicationProcessBundle;
 
-  public static function createError(ApplicationValidationResult $validationResult): self {
+  public static function createError(ApplicationFormValidationResult $validationResult): self {
     return new self(FALSE, $validationResult);
   }
 
   public static function createSuccess(
-    ApplicationValidationResult $validationResult,
+    ApplicationFormValidationResult $validationResult,
     ApplicationProcessEntityBundle $applicationProcessBundle
   ): self {
     return new self(TRUE, $validationResult, $applicationProcessBundle);
@@ -39,7 +39,7 @@ final class ApplicationFormNewSubmitResult extends AbstractApplicationFormSubmit
 
   protected function __construct(
     bool $success,
-    ApplicationValidationResult $validationResult,
+    ApplicationFormValidationResult $validationResult,
     ApplicationProcessEntityBundle $applicationProcessBundle = NULL
   ) {
     parent::__construct($success, $validationResult);

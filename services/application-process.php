@@ -51,13 +51,16 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesAddIdentifiersHandle
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddSubmitHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddValidateHandler;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddValidateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewSubmitHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewValidateHandler;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewValidateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandler;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationJsonSchemaGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandlerInterface;
@@ -70,14 +73,11 @@ use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFilesAddIdentifier
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFilesPersistHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormAddCreateHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormAddSubmitHandler;
-use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormAddValidateHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormCreateHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormDataGetHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormNewCreateHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormNewSubmitHandler;
-use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormNewValidateHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormSubmitHandler;
-use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormValidateHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationJsonSchemaGetHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationResourcesItemsPersistHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationSnapshotCreateHandler;
@@ -87,6 +87,7 @@ use Civi\Funding\ApplicationProcess\JsonSchema\Validator\OpisApplicationValidato
 use Civi\Funding\ApplicationProcess\JsonSchema\Validator\OpisApplicationValidatorFactory;
 use Civi\Funding\ApplicationProcess\Snapshot\ApplicationSnapshotRestorer;
 use Civi\Funding\ApplicationProcess\Snapshot\ApplicationSnapshotRestorerInterface;
+use Civi\Funding\DependencyInjection\ApplicationFormValidatorPass;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessActivityGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessActivityGetSubscriber;
@@ -99,6 +100,8 @@ use Civi\Funding\Form\Application\ApplicationResourcesItemsFormDataLoaderInterfa
 use Civi\Funding\Validation\ConcreteEntityValidatorInterface;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
+$container->addCompilerPass(new ApplicationFormValidatorPass());
 
 $container->autowire(ApplicationProcessManager::class);
 $container->autowire(ApplicationProcessBundleLoader::class);
@@ -145,22 +148,16 @@ $container->autowire(
 $container->autowire(ApplicationDeleteHandlerInterface::class, DefaultApplicationDeleteHandler::class);
 
 $container->autowire(ApplicationFormNewCreateHandlerInterface::class, DefaultApplicationFormNewCreateHandler::class);
-$container->autowire(
-  ApplicationFormNewValidateHandlerInterface::class,
-  DefaultApplicationFormNewValidateHandler::class
-);
+$container->autowire(ApplicationFormNewValidateHandlerInterface::class, ApplicationFormNewValidateHandler::class);
 $container->autowire(ApplicationFormNewSubmitHandlerInterface::class, DefaultApplicationFormNewSubmitHandler::class);
 
 $container->autowire(ApplicationFormAddCreateHandlerInterface::class, DefaultApplicationFormAddCreateHandler::class);
-$container->autowire(
-  ApplicationFormAddValidateHandlerInterface::class,
-  DefaultApplicationFormAddValidateHandler::class
-);
+$container->autowire(ApplicationFormAddValidateHandlerInterface::class, ApplicationFormAddValidateHandler::class);
 $container->autowire(ApplicationFormAddSubmitHandlerInterface::class, DefaultApplicationFormAddSubmitHandler::class);
 
 $container->autowire(ApplicationFormDataGetHandlerInterface::class, DefaultApplicationFormDataGetHandler::class);
 $container->autowire(ApplicationFormCreateHandlerInterface::class, DefaultApplicationFormCreateHandler::class);
-$container->autowire(ApplicationFormValidateHandlerInterface::class, DefaultApplicationFormValidateHandler::class);
+$container->autowire(ApplicationFormValidateHandlerInterface::class, ApplicationFormValidateHandler::class);
 $container->autowire(ApplicationFormSubmitHandlerInterface::class, DefaultApplicationFormSubmitHandler::class);
 
 $container->autowire(ApplicationJsonSchemaGetHandlerInterface::class, DefaultApplicationJsonSchemaGetHandler::class);

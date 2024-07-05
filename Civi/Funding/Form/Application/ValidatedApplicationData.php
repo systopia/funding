@@ -19,9 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\Application;
 
-use Civi\Funding\Form\MappedData\MappedDataLoader;
 use Civi\Funding\Util\DateTimeUtil;
-use Systopia\JsonSchema\Tags\TaggedDataContainerInterface;
 use Webmozart\Assert\Assert;
 
 final class ValidatedApplicationData implements ValidatedApplicationDataInterface {
@@ -60,6 +58,8 @@ final class ValidatedApplicationData implements ValidatedApplicationDataInterfac
    *   Must contain the action in key '_action'.
    * @phpstan-param array<string, \Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemData> $costItemsData
    * @phpstan-param array<string, \Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemData> $resourcesItemsData
+   * @phpstan-param array<string, mixed> $mappedData
+   *   See $mappedData property for required attributes.
    *
    * phpcs:enable
    */
@@ -67,15 +67,14 @@ final class ValidatedApplicationData implements ValidatedApplicationDataInterfac
     array $validatedData,
     array $costItemsData,
     array $resourcesItemsData,
-    TaggedDataContainerInterface $taggedData
+    array $mappedData
   ) {
     Assert::keyExists($validatedData, '_action');
     $this->data = $validatedData;
     $this->costItemsData = $costItemsData;
     $this->resourcesItemsData = $resourcesItemsData;
-    $mappedDataLoader = new MappedDataLoader();
     // @phpstan-ignore-next-line
-    $this->mappedData = $mappedDataLoader->getMappedData($taggedData);
+    $this->mappedData = $mappedData;
   }
 
   public function getAction(): string {

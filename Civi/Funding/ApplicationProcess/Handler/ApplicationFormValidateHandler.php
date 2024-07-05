@@ -20,24 +20,60 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateCommand;
-use Civi\Funding\Form\Application\ApplicationValidationResult;
-use Civi\Funding\Form\Application\ApplicationValidatorInterface;
+use Civi\Funding\ApplicationProcess\Command\ApplicationJsonSchemaGetCommand;
+use Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormValidationResult;
+use Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormValidatorInterface;
+use Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidatorInterface;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 
 final class ApplicationFormValidateHandler implements ApplicationFormValidateHandlerInterface {
 
-  private ApplicationValidatorInterface $validator;
+  private ApplicationJsonSchemaGetHandlerInterface $jsonSchemaGetHandler;
 
-  public function __construct(ApplicationValidatorInterface $validator) {
-    $this->validator = $validator;
+  private ApplicationFormValidatorInterface $formValidator;
+
+  private ApplicationSchemaValidatorInterface $jsonSchemaValidator;
+
+  public function __construct(
+    ApplicationJsonSchemaGetHandlerInterface $jsonSchemaGetHandler,
+    ApplicationFormValidatorInterface $formValidator,
+    ApplicationSchemaValidatorInterface $jsonSchemaValidator) {
+    $this->jsonSchemaGetHandler = $jsonSchemaGetHandler;
+    $this->formValidator = $formValidator;
+    $this->jsonSchemaValidator = $jsonSchemaValidator;
   }
 
-  public function handle(ApplicationFormValidateCommand $command): ApplicationValidationResult {
-    return $this->validator->validateExisting(
+  public function handle(ApplicationFormValidateCommand $command): ApplicationFormValidationResult {
+    $jsonSchema = $this->jsonSchemaGetHandler->handle(new ApplicationJsonSchemaGetCommand(
       $command->getApplicationProcessBundle(),
-      $command->getApplicationProcessStatusList(),
+      $command->getApplicationProcessStatusList()
+    ));
+
+    $schemaValidationResult = $this->jsonSchemaValidator->validate(
+      $jsonSchema,
       $command->getData(),
-      $command->getMaxErrors(),
+      $command->getMaxErrors()
     );
+    if (!$schemaValidationResult->isValid()) {
+      return new ApplicationFormValidationResult(
+        $schemaValidationResult->getLeafErrorMessages(),
+        $schemaValidationResult->getData(),
+        $schemaValidationResult->getCostItemsData(),
+        $schemaValidationResult->getResourcesItemsData(),
+        $schemaValidationResult->getTaggedData(),
+        TRUE
+      );
+    }
+
+    return $this->formValidator->validateExisting(
+      $command->getApplicationProcessBundle(),
+      $schemaValidationResult,
+      $this->isJsonSchemaReadOnly($jsonSchema)
+    );
+  }
+
+  private function isJsonSchemaReadOnly(JsonSchema $jsonSchema): bool {
+    return TRUE === $jsonSchema->getKeywordValueOrDefault('readOnly', FALSE);
   }
 
 }

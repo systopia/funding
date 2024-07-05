@@ -26,8 +26,7 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateCommand;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
-use Civi\Funding\Form\Application\ApplicationValidationResult;
-use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
+use Civi\Funding\Mock\ApplicationProcess\Form\Validation\ApplicationFormValidationResultFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -66,8 +65,7 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
 
   public function testHandleValid(): void {
     $command = $this->createCommand();
-    $validatedData = new ValidatedApplicationDataMock();
-    $validationResult = ApplicationValidationResult::newValid($validatedData, FALSE);
+    $validationResult = ApplicationFormValidationResultFactory::createValid();
     $this->validateHandlerMock->method('handle')->with(new ApplicationFormValidateCommand(
       $command->getApplicationProcessBundle(),
       $command->getApplicationProcessStatusList(),
@@ -76,7 +74,7 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
 
     $this->actionApplyHandlerMock->expects(static::once())->method('handle')->with(new ApplicationActionApplyCommand(
       $command->getContactId(),
-      $validatedData->getAction(),
+      $validationResult->getAction(),
       $command->getApplicationProcessBundle(),
       $validationResult,
     ));
@@ -85,14 +83,13 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
 
     static::assertTrue($result->isSuccess());
     static::assertSame($validationResult, $result->getValidationResult());
-    static::assertSame($validatedData, $result->getValidatedData());
   }
 
   public function testHandleInvalid(): void {
     $command = $this->createCommand();
-    $validatedData = new ValidatedApplicationDataMock();
     $errorMessages = ['/field' => ['error']];
-    $validationResult = ApplicationValidationResult::newInvalid($errorMessages, $validatedData);
+    $validationResult = ApplicationFormValidationResultFactory::createInvalid($errorMessages);
+
     $this->validateHandlerMock->method('handle')->with(new ApplicationFormValidateCommand(
       $command->getApplicationProcessBundle(),
       $command->getApplicationProcessStatusList(),
@@ -105,7 +102,6 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
 
     static::assertFalse($result->isSuccess());
     static::assertSame($validationResult, $result->getValidationResult());
-    static::assertSame($validatedData, $result->getValidatedData());
   }
 
   private function createCommand(): ApplicationFormSubmitCommand {

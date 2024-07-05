@@ -33,11 +33,9 @@ use Civi\Funding\SonstigeAktivitaet\Application\Data\AVK1ProjektunterlagenFactor
 use Civi\Funding\SonstigeAktivitaet\Application\JsonSchema\AVK1JsonSchemaFactory;
 use Civi\Funding\SonstigeAktivitaet\Application\JsonSchema\AVK1StatusMarkupFactory;
 use Civi\Funding\SonstigeAktivitaet\Application\UISchema\AVK1UiSchemaFactory;
-use Civi\Funding\SonstigeAktivitaet\Application\Validation\AVK1Validator;
 use Civi\Funding\SonstigeAktivitaet\FundingCase\Actions\AVK1CaseActionsDeterminer;
 use Civi\Funding\SonstigeAktivitaet\Report\AVK1ReportDataLoader;
 use Civi\Funding\SonstigeAktivitaet\Report\AVK1ReportFormFactory;
-use Symfony\Component\DependencyInjection\Reference;
 
 $container->autowire(AVK1ApplicationSubmitActionsContainer::class)
   ->addTag(AVK1ApplicationSubmitActionsContainer::SERVICE_TAG);
@@ -53,9 +51,6 @@ $container->autowire(AVK1UiSchemaFactory::class)
   ->addTag(AVK1UiSchemaFactory::SERVICE_TAG);
 $container->autowire(AVK1FormDataFactory::class)
   ->addTag(AVK1FormDataFactory::SERVICE_TAG);
-$container->autowire(AVK1Validator::class)
-  ->setArgument('$jsonSchemaFactory', new Reference(AVK1JsonSchemaFactory::class))
-  ->addTag(AVK1Validator::SERVICE_TAG);
 $container->autowire(AVK1ProjektunterlagenFactory::class);
 $container->autowire(AVK1ApplicationFormFilesFactory::class)
   ->addTag(AVK1ApplicationFormFilesFactory::SERVICE_TAG);

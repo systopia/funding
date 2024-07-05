@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Command;
 
-use Civi\Funding\Form\Application\ApplicationValidationResult;
+use Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormValidationResult;
 use Civi\Funding\Form\Application\ValidatedApplicationDataInterface;
 
 abstract class AbstractApplicationFormSubmitResult {
@@ -31,7 +31,7 @@ abstract class AbstractApplicationFormSubmitResult {
 
   protected bool $success;
 
-  protected ApplicationValidationResult $validationResult;
+  protected ApplicationFormValidationResult $validationResult;
 
   /**
    * @phpstan-param array<string, \Civi\Funding\Entity\ExternalFileEntity> $files
@@ -39,7 +39,7 @@ abstract class AbstractApplicationFormSubmitResult {
    */
   protected function __construct(
     bool $success,
-    ApplicationValidationResult $validationResult,
+    ApplicationFormValidationResult $validationResult,
     array $files = []
   ) {
     $this->success = $success;
@@ -77,7 +77,7 @@ abstract class AbstractApplicationFormSubmitResult {
     return $this->validationResult->getValidatedData();
   }
 
-  public function getValidationResult(): ApplicationValidationResult {
+  public function getValidationResult(): ApplicationFormValidationResult {
     return $this->validationResult;
   }
 

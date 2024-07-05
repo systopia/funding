@@ -22,10 +22,10 @@ namespace Civi\Funding\ApplicationProcess\Handler;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewSubmitCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewSubmitResult;
+use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewValidateCommand;
+use Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormValidationResult;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
-use Civi\Funding\Form\Application\ApplicationValidationResult;
-use Civi\Funding\Form\Application\NonCombinedApplicationValidatorInterface;
 use Civi\Funding\FundingCase\FundingCaseManager;
 
 final class ApplicationFormNewSubmitHandler implements ApplicationFormNewSubmitHandlerInterface {
@@ -36,30 +36,30 @@ final class ApplicationFormNewSubmitHandler implements ApplicationFormNewSubmitH
 
   private ApplicationProcessStatusDeterminerInterface $statusDeterminer;
 
-  private NonCombinedApplicationValidatorInterface $validator;
+  private ApplicationFormNewValidateHandlerInterface $validateHandler;
 
   public function __construct(
     ApplicationProcessManager $applicationProcessManager,
     FundingCaseManager $fundingCaseManager,
     ApplicationProcessStatusDeterminerInterface $statusDeterminer,
-    NonCombinedApplicationValidatorInterface $validator
+    ApplicationFormNewValidateHandlerInterface $validateHandler
   ) {
     $this->applicationProcessManager = $applicationProcessManager;
     $this->fundingCaseManager = $fundingCaseManager;
     $this->statusDeterminer = $statusDeterminer;
-    $this->validator = $validator;
+    $this->validateHandler = $validateHandler;
   }
 
   /**
    * @throws \CRM_Core_Exception
    */
   public function handle(ApplicationFormNewSubmitCommand $command): ApplicationFormNewSubmitResult {
-    $validationResult = $this->validator->validateInitial(
+    $validationResult = $this->validateHandler->handle(new ApplicationFormNewValidateCommand(
       $command->getContactId(),
       $command->getFundingProgram(),
       $command->getFundingCaseType(),
       $command->getData(),
-    );
+    ));
 
     if ($validationResult->isValid()) {
       return $this->handleValid($command, $validationResult);
@@ -74,7 +74,7 @@ final class ApplicationFormNewSubmitHandler implements ApplicationFormNewSubmitH
    */
   private function handleValid(
     ApplicationFormNewSubmitCommand $command,
-    ApplicationValidationResult $validationResult
+    ApplicationFormValidationResult $validationResult
   ): ApplicationFormNewSubmitResult {
     $validatedData = $validationResult->getValidatedData();
     $fundingCase = $this->fundingCaseManager->getOpenOrCreate($command->getContactId(), [

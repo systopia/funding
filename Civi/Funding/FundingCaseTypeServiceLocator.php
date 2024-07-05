@@ -27,14 +27,11 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesAddIdentifiersHandle
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddSubmitHandlerInterface;
-use Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddValidateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewSubmitHandlerInterface;
-use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewValidateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
-use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationJsonSchemaGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandlerInterface;
@@ -90,16 +87,8 @@ final class FundingCaseTypeServiceLocator implements FundingCaseTypeServiceLocat
     return $this->getOrNull(ApplicationFormAddSubmitHandlerInterface::class);
   }
 
-  public function getApplicationFormAddValidateHandler(): ?ApplicationFormAddValidateHandlerInterface {
-    return $this->getOrNull(ApplicationFormAddValidateHandlerInterface::class);
-  }
-
   public function getApplicationFormNewCreateHandler(): ?ApplicationFormNewCreateHandlerInterface {
     return $this->locator->get(ApplicationFormNewCreateHandlerInterface::class);
-  }
-
-  public function getApplicationFormNewValidateHandler(): ?ApplicationFormNewValidateHandlerInterface {
-    return $this->locator->get(ApplicationFormNewValidateHandlerInterface::class);
   }
 
   public function getApplicationFormNewSubmitHandler(): ?ApplicationFormNewSubmitHandlerInterface {
@@ -112,10 +101,6 @@ final class FundingCaseTypeServiceLocator implements FundingCaseTypeServiceLocat
 
   public function getApplicationFormCreateHandler(): ApplicationFormCreateHandlerInterface {
     return $this->locator->get(ApplicationFormCreateHandlerInterface::class);
-  }
-
-  public function getApplicationFormValidateHandler(): ApplicationFormValidateHandlerInterface {
-    return $this->locator->get(ApplicationFormValidateHandlerInterface::class);
   }
 
   public function getApplicationFormSubmitHandler(): ApplicationFormSubmitHandlerInterface {

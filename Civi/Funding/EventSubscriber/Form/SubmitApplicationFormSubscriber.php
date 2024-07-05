@@ -22,13 +22,13 @@ namespace Civi\Funding\EventSubscriber\Form;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewSubmitCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitCommand;
+use Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormValidationResult;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewSubmitHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
 use Civi\Funding\Entity\ExternalFileEntity;
 use Civi\Funding\Event\Remote\AbstractFundingSubmitFormEvent;
 use Civi\Funding\Event\Remote\ApplicationProcess\SubmitApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
-use Civi\Funding\Form\Application\ApplicationValidationResult;
 use Civi\Funding\Form\RemoteSubmitResponseActions;
 use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -107,7 +107,7 @@ class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
   }
 
   private function mapValidationErrorsToEvent(
-    ApplicationValidationResult $validationResult,
+    ApplicationFormValidationResult $validationResult,
     AbstractFundingSubmitFormEvent $event
   ): void {
     $event->setMessage(E::ts('Validation failed'));

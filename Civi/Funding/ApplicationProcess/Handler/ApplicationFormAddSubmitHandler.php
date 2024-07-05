@@ -23,9 +23,9 @@ use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormAddSubmitCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormAddSubmitResult;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormAddValidateCommand;
+use Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormValidationResult;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
-use Civi\Funding\Form\Application\ApplicationValidationResult;
 
 final class ApplicationFormAddSubmitHandler implements ApplicationFormAddSubmitHandlerInterface {
 
@@ -70,7 +70,7 @@ final class ApplicationFormAddSubmitHandler implements ApplicationFormAddSubmitH
    */
   private function handleValid(
     ApplicationFormAddSubmitCommand $command,
-    ApplicationValidationResult $validationResult
+    ApplicationFormValidationResult $validationResult
   ): ApplicationFormAddSubmitResult {
     $validatedData = $validationResult->getValidatedData();
 

@@ -17,30 +17,31 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\ClearingProcess\Form\Validation;
+namespace Civi\Funding\ApplicationProcess\Form\Validation;
 
-use Civi\Funding\Entity\ClearingProcessEntityBundle;
-use Systopia\JsonSchema\Tags\TaggedDataContainerInterface;
+use Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidationResult;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
+use Civi\Funding\Entity\FundingProgramEntity;
 
 /**
+ * Used when validating a new application that usually will lead to a new
+ * funding case, i.e. for non-combined applications.
+ *
  * This can be used if additional validation to JSON schema validation is
- * required.
+ * required or if additional mapped values shall be set.
  *
  * Implementations should be registered as service tagged with SERVICE_TAG and
  * add the public static method getFundingCaseType() or getFundingCaseTypes().
  */
-interface ClearingFormValidatorInterface {
+interface ApplicationFormNewValidatorInterface {
 
-  public const SERVICE_TAG = 'funding.clearing.form_validator';
+  public const SERVICE_TAG = 'funding.application.form_new_validator';
 
-  /**
-   * @phpstan-param array<string, mixed> $data
-   *   Data after successful JSON schema validation.
-   */
-  public function validate(
-    ClearingProcessEntityBundle $clearingProcessBundle,
-    array $data,
-    TaggedDataContainerInterface $taggedData
-  ): ClearingFormValidationResult;
+  public function validateInitial(
+    FundingCaseTypeEntity $fundingCaseType,
+    FundingProgramEntity $fundingProgram,
+    ApplicationSchemaValidationResult $schemaValidationResult,
+    bool $readOnly
+  ): ApplicationFormValidationResult;
 
 }
