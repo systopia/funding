@@ -112,6 +112,7 @@ abstract class AbstractCiviOfficeTokenSubscriber extends AbstractTokenSubscriber
       $this->getEntityClass(),
       sprintf('Context value "%s" must be an instance of "%s"', $this->getContextKey(), $this->getEntityClass()),
     );
+    /** @phpstan-var T $entity */
 
     $resolvedToken = $this->tokenResolver->resolveToken($this->getApiEntityName(), $entity, $field);
     $row->format($resolvedToken->format);
