@@ -20,6 +20,8 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\JsonSchema;
 
 use Civi\Funding\Form\JsonSchema\JsonSchemaRecipient;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonSchema\JsonSchemaNumber;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 use Webmozart\Assert\Assert;
 
@@ -42,11 +44,18 @@ final class HiHApplicationJsonSchema extends JsonSchemaObject {
       'fragenZumProjekt' => new HiHFragenZumProjektJsonSchema(),
       'informationenZumProjekt' => new HiHInformationenZumProjektJsonSchema($applicationBegin, $applicationEnd),
       'empfaenger' => new JsonSchemaRecipient($possibleRecipients),
+      'kostenUndFinanzierung' => new HiHKostenUndFinanzierungJsonSchema(),
+      'rechtliches' => new HiHRechtlichesJsonSchema(),
+      'amount' => new JsonSchemaNumber([
+        '$default' => 0.0,
+        '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'amount_requested']]),
+      ]),
     ];
 
     $required = $keywords['required'] ?? [];
     Assert::isArray($required);
-    $keywords['required'] = array_merge(array_keys($properties), $required);
+    // @todo Comment in once we have properties in "kostenUndFinanzierung".
+    // $keywords['required'] = array_merge(array_keys($properties), $required);
 
     parent::__construct($properties + $extraProperties, $keywords);
   }
