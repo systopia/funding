@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\JsonSchema;
 
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaBoolean;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
@@ -27,11 +28,15 @@ final class HiHFragenZumProjektJsonSchema extends JsonSchemaObject {
 
   public function __construct() {
     $properties = [
-      'ansprechpartner' => new JsonSchemaString(),
-      'anrede' => new JsonSchemaString(),
-      'titel' => new JsonSchemaString(),
-      'vorname' => new JsonSchemaString(),
-      'nachname' => new JsonSchemaString(),
+      'name' => new JsonSchemaString([
+        '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'title']]),
+      ]),
+      'ansprechpartner' => new JsonSchemaObject([
+        'anrede' => new JsonSchemaString(),
+        'titel' => new JsonSchemaString(),
+        'vorname' => new JsonSchemaString(),
+        'nachname' => new JsonSchemaString(),
+      ], ['required' => ['anrede', 'vorname', 'nachname']]),
       'adresseIdentischMitOrganisation' => new JsonSchemaBoolean(),
       'abweichendeAnschrift' => new JsonSchemaObject([
         'strasse' => new JsonSchemaString(),
@@ -44,10 +49,8 @@ final class HiHFragenZumProjektJsonSchema extends JsonSchemaObject {
 
     $keywords = [
       'required' => [
+        'name',
         'ansprechpartner',
-        'anrede',
-        'vorname',
-        'nachname',
         'adresseIdentischMitOrganisation',
         'telefonnummer',
         'email',

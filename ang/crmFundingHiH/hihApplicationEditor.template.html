@@ -1,0 +1,59 @@
+<funding-application-submit-modal
+  title="submitModal.title"
+  comment-required="submitModal.commentRequired"
+  comment-text="comment.text"
+  comment-type="comment.type"
+  submit="modalSubmit"></funding-application-submit-modal>
+
+<div class="funding-application-sidebar funding-resize-height" funding-application-sidebar>
+</div>
+
+<div class="funding-application-main">
+  <div ng-if="errors | fundingIsNotEmpty" class="alert alert-danger">
+    {{ ts('Validation failed') }}
+    <funding-validation-errors errors="errors['/']"></funding-validation-errors>
+    <funding-validation-errors errors="errors['/action']"></funding-validation-errors>
+  </div>
+
+  <div class="funding-resize-height">
+    <h2>{{ ts('Reviewers') }}</h2>
+    <funding-application-reviewers application-process="applicationProcess" permissions="permissions"></funding-application-reviewers>
+
+    <h2>{{ ts('General') }}</h2>
+    <div>
+      <label>{{ ts('Identifier') }}</label>
+      {{ applicationProcess.identifier }}
+    </div>
+    <div>
+      <label>{{ ts('Status') }}</label>
+      {{ statusOptions[applicationProcess.status].label || ts('Unknown') }}
+      <funding-fa icon="statusOptions[applicationProcess.status].icon"
+                  ng-style="{color: statusOptions[applicationProcess.status].color };"></funding-fa>
+    </div>
+    <div>
+      <label>{{ ts('Review Content') }}</label>
+      {{ reviewStatusLabels[applicationProcess.is_review_content] }}
+    </div>
+    <div>
+      <label>{{ ts('Review Calculative') }}</label>
+      {{ reviewStatusLabels[applicationProcess.is_review_calculative] }}
+    </div>
+    <div>
+      <label>{{ ts('Creation Date') }}</label>
+      {{ applicationProcess.creation_date|fundingDate }}
+    </div>
+    <div>
+      <label>{{ ts('Modification Date') }}</label>
+      {{ applicationProcess.modification_date|fundingDate }}
+    </div>
+    <div>
+      <label>{{ ts('Recipient') }}</label>
+      {{ recipientContact.display_name }}
+    </div>
+    <div>
+      <label>{{ ts('Amount Requested') }}</label>
+      {{ applicationProcess.amount_requested }} {{ currency }}
+    </div>
+
+  </div>
+</div>

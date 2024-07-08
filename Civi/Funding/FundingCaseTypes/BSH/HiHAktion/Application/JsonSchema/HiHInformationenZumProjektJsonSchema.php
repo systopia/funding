@@ -32,17 +32,27 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
 
   public function __construct(\DateTimeInterface $applicationBegin, \DateTimeInterface $applicationEnd) {
     $properties = [
-      'kurzbeschreibung' => new JsonSchemaString(),
+      'kurzbeschreibung' => new JsonSchemaString([
+        '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'short_description']]),
+      ]),
       'wirktGegenEinsamkeit' => new JsonSchemaString(),
       'kern' => new JsonSchemaString(),
-      'status' => new JsonSchemaString(),
-      'beginn' => new JsonSchemaDate([
+      'status' => new JsonSchemaString([
+        'oneOf' => JsonSchemaUtil::buildTitledOneOf([
+          'neu' => 'neu startendes Projekt',
+          'laeuftSchon' => 'läuft schon seit',
+          'sonstiges' => 'sonstiges (was?)',
+        ]),
+      ]),
+      'statusBeginn' => new JsonSchemaDate(),
+      'statusSonstiges' => new JsonSchemaString(),
+      'foerderungAb' => new JsonSchemaDate([
         'minDate' => $applicationBegin->format('Y-m-d'),
         'maxDate' => $applicationEnd->format('Y-m-d'),
         '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'start_date']]),
       ]),
-      'ende' => new JsonSchemaDate([
-        'minDate' => new JsonSchemaDataPointer('1/beginn', '0000-00-00'),
+      'foerderungBis' => new JsonSchemaDate([
+        'minDate' => new JsonSchemaDataPointer('1/foerderungAb', '1970-01-01'),
         'maxDate' => $applicationEnd->format('Y-m-d'),
         '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'end_date']]),
       ]),
@@ -62,7 +72,7 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
           'jungeMuetter' => 'Junge Mütter',
         ]),
       ]), ['uniqueItems' => TRUE, 'minItems' => 1]),
-      'sonstigeZielgruppe' => new JsonSchemaString(),
+      'zielgruppeSonstige' => new JsonSchemaString(),
       'zielgruppeErreichen' => new JsonSchemaString(),
       'projektformat' => new JsonSchemaArray(new JsonSchemaString([
         'oneOf' => JsonSchemaUtil::buildTitledOneOf([
@@ -78,6 +88,7 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
       ]), ['uniqueItems' => TRUE, 'minItems' => 1]),
       'sonstigesProjektformat' => new JsonSchemaString(),
       'dateien' => new JsonSchemaArray(new JsonSchemaObject([
+        '_identifier' => new JsonSchemaString(['readonly' => TRUE]),
         'datei' => new JsonSchemaString([
           'format' => 'uri',
           '$tag' => 'externalFile',
@@ -93,8 +104,8 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
         'wirktGegenEinsamkeit',
         'kern',
         'status',
-        'beginn',
-        'ende',
+        'foerderungAb',
+        'foerderungBis',
         'haeufigkeit',
         'beabsichtigteTeilnehmendenzahl',
         'zielgruppe',
