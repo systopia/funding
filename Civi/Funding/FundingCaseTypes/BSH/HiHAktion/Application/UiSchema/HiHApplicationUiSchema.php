@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\UiSchema;
 
+use Civi\RemoteTools\JsonForms\JsonFormsControl;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 
 final class HiHApplicationUiSchema extends JsonFormsGroup {
@@ -28,6 +29,11 @@ final class HiHApplicationUiSchema extends JsonFormsGroup {
    */
   public function __construct(string $currency, array $submitButtons) {
     $elements = [
+      new JsonFormsControl('#/properties/empfaenger', 'Fördergeldempfänger'),
+      new HiHFragenZumProjektGroup('#/properties/fragenZumProjekt/properties'),
+      new HiHInformationenZumProjektGroup('#/properties/informationenZumProjekt/properties'),
+      new HiHKostenUndFinanzierungGroup('#/properties/kostenUndFinanzierung/properties', $currency),
+      new HiHRechtlichesGroup('#/properties/rechtliches/properties'),
       ...$submitButtons,
     ];
     parent::__construct('Förderantrag für NDR-Benefizaktion', $elements);
