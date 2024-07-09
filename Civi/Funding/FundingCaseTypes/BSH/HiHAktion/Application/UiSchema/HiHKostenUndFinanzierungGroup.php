@@ -19,12 +19,18 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\UiSchema;
 
+use Civi\RemoteTools\JsonForms\JsonFormsControl;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 
 final class HiHKostenUndFinanzierungGroup extends JsonFormsGroup {
 
   public function __construct(string $scopePrefix, string $currency) {
-    parent::__construct('Kosten und Finanzierung', []);
+    parent::__construct('Kosten und Finanzierung', [
+      new JsonFormsControl(
+        "$scopePrefix/sachkosten",
+        'Sachkosten in ' . $currency,
+      ),
+    ]);
   }
 
 }

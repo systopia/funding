@@ -39,6 +39,7 @@ final class HiHApplicationJsonSchema extends JsonSchemaObject {
     array $extraProperties = [],
     array $keywords = []
   ) {
+    // @todo Validate conditional fields.
     // @todo Additional validations, e.g. required, length, min, max, ...
     $properties = [
       'fragenZumProjekt' => new HiHFragenZumProjektJsonSchema(),
@@ -47,6 +48,7 @@ final class HiHApplicationJsonSchema extends JsonSchemaObject {
       'kostenUndFinanzierung' => new HiHKostenUndFinanzierungJsonSchema(),
       'rechtliches' => new HiHRechtlichesJsonSchema(),
       'amount' => new JsonSchemaNumber([
+        'default' => 0.0,
         '$default' => 0.0,
         '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'amount_requested']]),
       ]),
@@ -54,8 +56,7 @@ final class HiHApplicationJsonSchema extends JsonSchemaObject {
 
     $required = $keywords['required'] ?? [];
     Assert::isArray($required);
-    // @todo Comment in once we have properties in "kostenUndFinanzierung".
-    // $keywords['required'] = array_merge(array_keys($properties), $required);
+    $keywords['required'] = array_merge(array_keys($properties), $required);
 
     parent::__construct($properties + $extraProperties, $keywords);
   }
