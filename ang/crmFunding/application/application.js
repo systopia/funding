@@ -25,8 +25,8 @@ fundingModule.config(['$routeProvider', function($routeProvider) {
         applicationProcess: ['$route', 'fundingApplicationProcessService', function($route, fundingApplicationProcessService) {
           return fundingApplicationProcessService.get($route.current.params.applicationProcessId);
         }],
-        jsonSchema: ['$route', 'fundingApplicationProcessService', function($route, fundingApplicationProcessService) {
-          return fundingApplicationProcessService.getJsonSchema($route.current.params.applicationProcessId);
+        form: ['$route', 'fundingApplicationProcessService', function($route, fundingApplicationProcessService) {
+          return fundingApplicationProcessService.getForm($route.current.params.applicationProcessId);
         }],
       },
     });
@@ -36,10 +36,10 @@ fundingModule.config(['$routeProvider', function($routeProvider) {
 fundingModule.controller('fundingApplicationCtrl', [
   '$scope', 'fundingApplicationProcessService', 'fundingApplicationProcessActivityService',
   'fundingClearingProcessService',
-  'applicationProcess', 'jsonSchema',
+  'applicationProcess', 'form',
   function($scope, fundingApplicationProcessService, fundingApplicationProcessActivityService,
            fundingClearingProcessService,
-           applicationProcess, jsonSchema) {
+           applicationProcess, form) {
     const ts = $scope.ts = CRM.ts('funding');
 
     $scope.$watch('tab', () => window.setTimeout(fixHeights, 100));
@@ -67,6 +67,6 @@ fundingModule.controller('fundingApplicationCtrl', [
 
     $scope.tab = 'application';
     $scope.applicationProcess = applicationProcess;
-    $scope.jsonSchema = jsonSchema;
+    $scope.form = form;
   },
 ]);

@@ -72,6 +72,13 @@ fundingModule.factory('fundingApplicationProcessService', ['crmApi4', function(c
     getByFundingCaseId: (fundingCaseId) => crmApi4('FundingApplicationProcess', 'get', {
       where: [['funding_case_id', '=', fundingCaseId]],
     }),
+
+    /**
+     * @param {integer} id
+     * @returns {Promise}
+     */
+    getForm: (id) => crmApi4('FundingApplicationProcess', 'getForm', {id}),
+
     getFormData: (id) => crmApi4('FundingApplicationProcess', 'getFormData', {id}).then(function (result) {
       return result.data || null;
     }),

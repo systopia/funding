@@ -25,6 +25,7 @@ use Civi\Funding\Api4\Action\FundingApplicationProcess\DeleteAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\GetAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\GetAllowedActionsMultipleAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\GetFieldsAction;
+use Civi\Funding\Api4\Action\FundingApplicationProcess\GetFormAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\GetFormDataAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\GetJsonSchemaAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\SaveAction;
@@ -96,6 +97,10 @@ class FundingApplicationProcess extends Generic\DAOEntity {
 
   public static function getAllowedActionsMultiple(bool $checkPermissions = TRUE): GetAllowedActionsMultipleAction {
     return new GetAllowedActionsMultipleAction();
+  }
+
+  public static function getForm(): GetFormAction {
+    return new GetFormAction();
   }
 
   public static function getFormData(): GetFormDataAction {

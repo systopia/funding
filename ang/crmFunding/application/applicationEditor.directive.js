@@ -22,7 +22,7 @@ fundingModule.directive('fundingApplicationEditor', ['$compile', function($compi
     scope: {
       applicationProcess: '=',
       // Buttons are not shown initially if JSON schema is loaded in controller.
-      jsonSchema: '=',
+      form: '=',
       statusOptions: '=',
       reviewStatusLabels: '=',
       onPostSubmit: '&',
@@ -173,17 +173,12 @@ fundingModule.directive('fundingApplicationEditor', ['$compile', function($compi
           );
         }
 
-        function loadFormData() {
-          return fundingApplicationProcessService.getFormData($scope.applicationProcess.id).then(
-              (data) => $scope.data = data
-          );
-        }
-
-        enableOverlay();
-        await loadFormData();
+        $scope.jsonSchema = $scope.form.jsonSchema;
+        $scope.uiSchema = $scope.form.uiSchema;
+        $scope.uiSchema.label = null;
+        $scope.data = $scope.form.data;
         let originalData = _4.cloneDeep($scope.data);
         let originalDataString = JSON.stringify(originalData);
-        disableOverlay();
 
         function handleSetValue(field, value) {
           return function (result) {
