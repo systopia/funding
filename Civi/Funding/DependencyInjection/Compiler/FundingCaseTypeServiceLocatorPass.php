@@ -24,6 +24,7 @@ use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsD
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoContainer;
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface;
 use Civi\Funding\ApplicationProcess\ApplicationFormFilesFactoryInterface;
+use Civi\Funding\ApplicationProcess\DefaultApplicationFormFilesFactory;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationActionApplyHandler;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationActionApplyHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationAllowedActionsGetHandler;
@@ -69,6 +70,7 @@ use Civi\Funding\Form\Application\ApplicationSubmitActionsFactory;
 use Civi\Funding\Form\Application\ApplicationSubmitActionsFactoryInterface;
 use Civi\Funding\Form\Application\ApplicationUiSchemaFactoryInterface;
 use Civi\Funding\Form\Application\CombinedApplicationJsonSchemaFactoryInterface;
+use Civi\Funding\Form\Application\DefaultApplicationFormDataFactory;
 use Civi\Funding\Form\Application\NonCombinedApplicationJsonSchemaFactoryInterface;
 use Civi\Funding\Form\FundingCase\FundingCaseFormDataFactoryInterface;
 use Civi\Funding\Form\FundingCase\FundingCaseJsonSchemaFactoryInterface;
@@ -249,6 +251,20 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
       if (isset($serviceLocatorServices[$fundingCaseType])) {
         continue;
       }
+
+      $applicationFormDataFactoryServices[$fundingCaseType] ??= $this->createService(
+        $container,
+        $fundingCaseType,
+        DefaultApplicationFormDataFactory::class,
+        []
+      );
+
+      $applicationFormFilesFactoryServices[$fundingCaseType] ??= $this->createService(
+        $container,
+        $fundingCaseType,
+        DefaultApplicationFormFilesFactory::class,
+        []
+      );
 
       $applicationAllowedActionsGetHandlerServices[$fundingCaseType] ??= $this->createService(
         $container,
