@@ -41,10 +41,10 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
         'oneOf' => JsonSchemaUtil::buildTitledOneOf([
           'neu' => 'neu startendes Projekt',
           'laeuftSchon' => 'läuft schon seit',
-          'sonstiges' => 'sonstiges (was?)',
+          'sonstiges' => 'Sonstiges und zwar',
         ]),
       ]),
-      'statusBeginn' => new JsonSchemaDate(),
+      'statusBeginn' => new JsonSchemaDate(['maxDate' => date('Y-m-d')], TRUE),
       'statusSonstiges' => new JsonSchemaString(),
       'foerderungAb' => new JsonSchemaDate([
         'minDate' => $applicationBegin->format('Y-m-d'),
@@ -70,6 +70,7 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
           'arbeitslose' => 'Arbeitslose',
           'sozialBeduerftige' => 'Soziale Bedürftige',
           'jungeMuetter' => 'Junge Mütter',
+          'sonstiges' => 'Sonstiges und zwar',
         ]),
       ]), ['uniqueItems' => TRUE, 'minItems' => 1]),
       'zielgruppeSonstige' => new JsonSchemaString(),
@@ -84,6 +85,7 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
           'reisen' => 'Reisen (mit Übernachtung)',
           'material' => 'Material',
           'qualifizierung' => 'Qualifizierung',
+          'sonstiges' => 'Sonstiges und zwar',
         ]),
       ]), ['uniqueItems' => TRUE, 'minItems' => 1]),
       'sonstigesProjektformat' => new JsonSchemaString(),

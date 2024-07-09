@@ -19,12 +19,24 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\JsonSchema;
 
+use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\JsonSchemaCostItem;
+use Civi\RemoteTools\JsonSchema\JsonSchemaNumber;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 
 final class HiHKostenUndFinanzierungJsonSchema extends JsonSchemaObject {
 
   public function __construct() {
-    parent::__construct([]);
+    parent::__construct([
+      'sachkosten' => new JsonSchemaNumber([
+        '$costItem' => new JsonSchemaCostItem([
+          'type' => 'sachkosten',
+          'identifier' => 'sachkosten',
+          'clearing' => [
+            'itemLabel' => 'Sachkosten',
+          ],
+        ]),
+      ]),
+    ], ['required' => ['sachkosten']]);
   }
 
 }
