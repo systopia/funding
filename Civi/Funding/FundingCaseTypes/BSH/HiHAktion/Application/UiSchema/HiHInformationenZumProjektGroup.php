@@ -22,7 +22,6 @@ namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\UiSchema;
 use Civi\RemoteTools\JsonForms\Control\JsonFormsArray;
 use Civi\RemoteTools\JsonForms\Control\JsonFormsHidden;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
-use Civi\RemoteTools\JsonForms\JsonFormsMarkup;
 use Civi\RemoteTools\JsonForms\JsonFormsRule;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
@@ -77,15 +76,16 @@ EOD, NULL, NULL, ['$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' 
           ),
         ]
       ),
-      new JsonFormsMarkup('Für welchen Zeitraum beantragen Sie die Förderung?'),
-      new JsonFormsControl(
-        "$scopePrefix/foerderungAb",
-        'Ab',
-      ),
-      new JsonFormsControl(
-        "$scopePrefix/foerderungBis",
-        'Bis',
-      ),
+      new JsonFormsGroup('Für welchen Zeitraum beantragen Sie die Förderung?', [
+        new JsonFormsControl(
+          "$scopePrefix/foerderungAb",
+          'Ab',
+        ),
+        new JsonFormsControl(
+          "$scopePrefix/foerderungBis",
+          'Bis',
+        ),
+      ]),
       new JsonFormsControl(
         "$scopePrefix/haeufigkeit",
         'Wie oft findet das Projekt statt?',
@@ -100,7 +100,16 @@ EOD, NULL, NULL, ['$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' 
       ),
       new JsonFormsControl(
         "$scopePrefix/zielgruppeSonstige",
-        'Sonstige Zielgruppe',
+        '',
+        NULL,
+        NULL,
+        [
+          'rule' => new JsonFormsRule(
+            'SHOW',
+            "$scopePrefix/zielgruppe",
+            JsonSchema::fromArray(['contains' => ['const' => 'sonstiges']])
+          ),
+        ]
       ),
       new JsonFormsControl(
         "$scopePrefix/zielgruppeErreichen",
@@ -112,7 +121,16 @@ EOD, NULL, NULL, ['$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' 
       ),
       new JsonFormsControl(
         "$scopePrefix/sonstigesProjektformat",
-        'Sonstiges Projektformat',
+        '',
+        NULL,
+        NULL,
+        [
+          'rule' => new JsonFormsRule(
+            'SHOW',
+            "$scopePrefix/projektformat",
+            JsonSchema::fromArray(['contains' => ['const' => 'sonstiges']])
+          ),
+        ]
       ),
       new JsonFormsArray(
         "$scopePrefix/dateien",
@@ -123,6 +141,10 @@ EOD, NULL, NULL, ['$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' 
           new JsonFormsControl('#/properties/datei', 'Datei', NULL, ['format' => 'file']),
           new JsonFormsControl('#/properties/beschreibung', 'Beschreibung'),
         ],
+        [
+          'addButtonLabel' => 'Datei hinzufügen',
+          'removeButtonLabel' => 'Datei entfernen',
+        ]
       ),
       new JsonFormsControl(
         "$scopePrefix/sonstiges",

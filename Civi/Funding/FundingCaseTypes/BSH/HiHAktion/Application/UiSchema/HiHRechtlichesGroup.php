@@ -25,7 +25,7 @@ use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 final class HiHRechtlichesGroup extends JsonFormsGroup {
 
   public function __construct(string $scopePrefix) {
-    parent::__construct('', [
+    parent::__construct('Rechtliches', [
       new JsonFormsControl(
         "$scopePrefix/kinderschutzklausel",
         'Kinderschutz/Antidiskriminierungsklausel',
