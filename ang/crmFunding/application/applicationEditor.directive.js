@@ -138,7 +138,7 @@ fundingModule.directive('fundingApplicationEditor', ['$compile', function($compi
         $scope.editCount = 0;
 
         $scope.isActionAllowed = function (action) {
-          return $scope.jsonSchema.properties.action.enum.includes(action);
+          return $scope.jsonSchema.properties._action.enum.includes(action);
         };
 
         $scope.isAnyActionAllowed = function (...actions) {
