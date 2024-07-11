@@ -52,9 +52,9 @@ EOD, NULL, NULL, ['$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' 
       ),
       new JsonFormsControl(
         "$scopePrefix/statusBeginn",
-        '',
+        'Läuft seit',
         NULL,
-        NULL,
+        ['hideLabel' => TRUE],
         [
           'rule' => new JsonFormsRule(
             'SHOW',
@@ -65,9 +65,9 @@ EOD, NULL, NULL, ['$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' 
       ),
       new JsonFormsControl(
         "$scopePrefix/statusSonstiges",
-        '',
+        'Sonstiger Status',
         NULL,
-        NULL,
+        ['hideLabel' => TRUE],
         [
           'rule' => new JsonFormsRule(
             'SHOW',
@@ -99,10 +99,10 @@ EOD, NULL, NULL, ['$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' 
         'Wer ist Ihre Zielgruppe? (Mehrfachnennung möglich)',
       ),
       new JsonFormsControl(
-        "$scopePrefix/zielgruppeSonstige",
-        '',
+        "$scopePrefix/zielgruppeSonstiges",
+        'Sonstige Zielgruppe',
         NULL,
-        NULL,
+        ['hideLabel' => TRUE],
         [
           'rule' => new JsonFormsRule(
             'SHOW',
@@ -120,10 +120,10 @@ EOD, NULL, NULL, ['$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' 
         'Welches Projektformat planen Sie umzusetzen? (Mehrfachnennung möglich)',
       ),
       new JsonFormsControl(
-        "$scopePrefix/sonstigesProjektformat",
-        '',
+        "$scopePrefix/projektformatSonstiges",
+        'Sonstiges Projektformat',
         NULL,
-        NULL,
+        ['hideLabel' => TRUE],
         [
           'rule' => new JsonFormsRule(
             'SHOW',
