@@ -27,6 +27,26 @@ use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 final class HiHFragenZumProjektJsonSchema extends JsonSchemaObject {
 
   public function __construct() {
+    $abweichendeAnschrift = new JsonSchemaObject([
+      'strasse' => new JsonSchemaString(),
+      'plz' => new JsonSchemaString(),
+      'ort' => new JsonSchemaString(),
+    ]);
+    $minLengthValidation = [
+      '$validations' => [
+        JsonSchema::fromArray([
+          'keyword' => 'minLength',
+          'value' => 1,
+          'message' => 'Dieser Wert ist erforderlich.',
+        ]),
+      ],
+    ];
+    $abweichendeAnschriftRequired = new JsonSchemaObject([
+      'strasse' => new JsonSchemaString($minLengthValidation),
+      'plz' => new JsonSchemaString($minLengthValidation),
+      'ort' => new JsonSchemaString($minLengthValidation),
+    ], ['required' => ['strasse', 'plz', 'ort']]);
+
     $properties = [
       'name' => new JsonSchemaString([
         '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'title']]),
@@ -38,11 +58,7 @@ final class HiHFragenZumProjektJsonSchema extends JsonSchemaObject {
         'nachname' => new JsonSchemaString(),
       ], ['required' => ['anrede', 'vorname', 'nachname']]),
       'adresseIdentischMitOrganisation' => new JsonSchemaBoolean(),
-      'abweichendeAnschrift' => new JsonSchemaObject([
-        'strasse' => new JsonSchemaString(),
-        'plz' => new JsonSchemaString(),
-        'ort' => new JsonSchemaString(),
-      ]),
+      'abweichendeAnschrift' => $abweichendeAnschrift,
       'telefonnummer' => new JsonSchemaString(),
       'email' => new JsonSchemaString(),
     ];
@@ -55,6 +71,14 @@ final class HiHFragenZumProjektJsonSchema extends JsonSchemaObject {
         'telefonnummer',
         'email',
       ],
+      'if' => JsonSchema::fromArray([
+        'properties' => [
+          'adresseIdentischMitOrganisation' => ['const' => FALSE],
+        ],
+      ]),
+      'then' => new JsonSchemaObject([
+        'abweichendeAnschrift' => $abweichendeAnschriftRequired,
+      ], ['required' => ['abweichendeAnschrift']]),
     ];
 
     parent::__construct($properties, $keywords);

@@ -73,7 +73,7 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
           'sonstiges' => 'Sonstiges und zwar',
         ]),
       ]), ['uniqueItems' => TRUE, 'minItems' => 1]),
-      'zielgruppeSonstige' => new JsonSchemaString(),
+      'zielgruppeSonstiges' => new JsonSchemaString(),
       'zielgruppeErreichen' => new JsonSchemaString(),
       'projektformat' => new JsonSchemaArray(new JsonSchemaString([
         'oneOf' => JsonSchemaUtil::buildTitledOneOf([
@@ -88,7 +88,7 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
           'sonstiges' => 'Sonstiges und zwar',
         ]),
       ]), ['uniqueItems' => TRUE, 'minItems' => 1]),
-      'sonstigesProjektformat' => new JsonSchemaString(),
+      'projektformatSonstiges' => new JsonSchemaString(),
       'dateien' => new JsonSchemaArray(new JsonSchemaObject([
         '_identifier' => new JsonSchemaString(['readonly' => TRUE]),
         'datei' => new JsonSchemaString([
@@ -98,6 +98,16 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
         'beschreibung' => new JsonSchemaString(),
       ], ['required' => ['datei', 'beschreibung']])),
       'sonstiges' => new JsonSchemaString(),
+    ];
+
+    $minLengthValidation = [
+      '$validations' => [
+        JsonSchema::fromArray([
+          'keyword' => 'minLength',
+          'value' => 1,
+          'message' => 'Dieser Wert ist erforderlich.',
+        ]),
+      ],
     ];
 
     $keywords = [
@@ -114,6 +124,57 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
         'zielgruppeErreichen',
         'projektformat',
         'dateien',
+      ],
+      'allOf' => [
+        JsonSchema::fromArray([
+          'if' => [
+            'properties' => [
+              'status' => ['const' => 'laeuftSchon'],
+            ],
+          ],
+          'then' => new JsonSchemaObject([
+            'statusBeginn' => new JsonSchemaDate([
+              'maxDate' => date('Y-m-d'),
+              '$validations' => [
+                JsonSchema::fromArray([
+                  'keyword' => 'type',
+                  'value' => 'string',
+                  'message' => 'Dieser Wert ist erforderlich.',
+                ]),
+              ],
+            ], TRUE),
+          ], ['required' => ['statusBeginn']]),
+        ]),
+        JsonSchema::fromArray([
+          'if' => [
+            'properties' => [
+              'status' => ['const' => 'sonstiges'],
+            ],
+          ],
+          'then' => new JsonSchemaObject([
+            'statusSonstiges' => new JsonSchemaString($minLengthValidation),
+          ], ['required' => ['statusSonstiges']]),
+        ]),
+        JsonSchema::fromArray([
+          'if' => [
+            'properties' => [
+              'zielgruppe' => ['contains' => ['const' => 'sonstiges']],
+            ],
+          ],
+          'then' => new JsonSchemaObject([
+            'zielgruppeSonstiges' => new JsonSchemaString($minLengthValidation),
+          ], ['required' => ['zielgruppeSonstiges']]),
+        ]),
+        JsonSchema::fromArray([
+          'if' => [
+            'properties' => [
+              'projektformat' => ['contains' => ['const' => 'sonstiges']],
+            ],
+          ],
+          'then' => new JsonSchemaObject([
+            'projektformatSonstiges' => new JsonSchemaString($minLengthValidation),
+          ], ['required' => ['projektformatSonstiges']]),
+        ]),
       ],
     ];
 
