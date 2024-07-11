@@ -71,7 +71,15 @@ final class IJBGrunddatenJsonSchema extends JsonSchemaObject {
       ),
       'programmtage' => new JsonSchemaCalculate(
         'number',
-        'sum(map(zeitraeume, "date_create(value.beginn).diff(date_create(value.ende)).days + 1"))',
+        <<<'EOD'
+sum(
+  map(zeitraeume, "
+    value.beginn && value.ende
+    ? date_create(value.beginn).diff(date_create(value.ende)).days + 1
+    : 0
+  ")
+)
+EOD,
         ['zeitraeume' => new JsonSchemaDataPointer('1/zeitraeume')],
         0
       ),
