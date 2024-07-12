@@ -97,7 +97,7 @@ fundingModule.directive('editableField', ['$filter', function($filter) {
           }
         });
 
-        return labels.join(', ');
+        return labels.length === 0 ? $attrs.emptyValueDisplay : labels.join(', ');
       };
 
       /**
@@ -120,7 +120,7 @@ fundingModule.directive('editableField', ['$filter', function($filter) {
       };
 
       /**
-       * @param {string} selected
+       * @param {string|number|null} selected
        * @param {object[]} oneOf
        * @returns {string}
        */
@@ -135,7 +135,7 @@ fundingModule.directive('editableField', ['$filter', function($filter) {
           }
         }
 
-        return selected;
+        return $attrs.emptyValueDisplay;
       };
 
       $scope.showValue = function (value) {
