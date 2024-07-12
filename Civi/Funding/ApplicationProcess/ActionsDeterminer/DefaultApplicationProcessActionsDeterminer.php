@@ -68,6 +68,8 @@ final class DefaultApplicationProcessActionsDeterminer extends AbstractApplicati
     ],
     'complete' => [
       'application_withdraw' => ['withdraw'],
+      'review_calculative' => ['update', 'add-comment'],
+      'review_content' => ['update', 'add-comment'],
     ],
   ];
 
