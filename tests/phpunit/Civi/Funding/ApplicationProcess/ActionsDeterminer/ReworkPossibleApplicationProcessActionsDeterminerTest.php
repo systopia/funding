@@ -74,9 +74,9 @@ final class ReworkPossibleApplicationProcessActionsDeterminerTest extends TestCa
       'application_modify' => [],
       'application_request_rework' => [],
       'application_apply' => [],
-      'application_withdraw' => ['withdraw'],
-      'review_calculative' => ['update', 'add-comment'],
-      'review_content' => ['update', 'add-comment'],
+      'application_withdraw' => [],
+      'review_calculative' => [],
+      'review_content' => [],
     ],
   ];
   // phpcs:enable

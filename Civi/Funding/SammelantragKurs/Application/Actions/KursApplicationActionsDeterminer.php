@@ -81,6 +81,8 @@ final class KursApplicationActionsDeterminer extends AbstractApplicationProcessA
     ],
     'complete' => [
       'application_withdraw' => ['withdraw'],
+      'review_calculative' => ['update', 'add-comment'],
+      'review_content' => ['update', 'add-comment'],
     ],
   ];
 

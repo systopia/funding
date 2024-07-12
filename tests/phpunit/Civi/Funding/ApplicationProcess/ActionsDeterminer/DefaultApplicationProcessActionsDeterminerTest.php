@@ -100,8 +100,8 @@ final class DefaultApplicationProcessActionsDeterminerTest extends TestCase {
       'application_modify' => [],
       'application_apply' => [],
       'application_withdraw' => ['withdraw'],
-      'review_calculative' => [],
-      'review_content' => [],
+      'review_calculative' => ['update', 'add-comment'],
+      'review_content' => ['update', 'add-comment'],
     ],
   ];
   // phpcs:enable
