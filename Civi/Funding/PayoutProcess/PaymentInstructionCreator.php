@@ -100,12 +100,12 @@ class PaymentInstructionCreator {
     $this->attachmentManager->attachFileUniqueByFileType(
       'civicrm_funding_drawdown',
       $drawdown->getId(),
-      FileTypeNames::PAYMENT_INSTRUCTION,
+      $drawdown->getAmount() < 0 ? FileTypeNames::PAYBACK_CLAIM : FileTypeNames::PAYMENT_INSTRUCTION,
       $result->getFilename(),
       $result->getMimeType(),
       [
         'name' => sprintf(
-          'payment-instruction.%d.%s',
+          $drawdown->getAmount() < 0 ? 'payback-claim.%d.%s' : 'payment-instruction.%d.%s',
           $drawdown->getId(),
           pathinfo($result->getFilename(), PATHINFO_EXTENSION)
         ),

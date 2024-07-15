@@ -49,6 +49,9 @@ final class SaveAction extends DAOSaveAction {
       if (isset($item['payment_instruction_template_file_id'])) {
         $updateValues['payment_instruction_template_file_id'] = $item['payment_instruction_template_file_id'];
       }
+      if (isset($item['payback_claim_template_file_id'])) {
+        $updateValues['payback_claim_template_file_id'] = $item['payback_claim_template_file_id'];
+      }
 
       if ([] !== $updateValues) {
         FundingCaseType::update(FALSE)

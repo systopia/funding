@@ -28,7 +28,7 @@ trait TaggedFundingCaseTypeServicesTrait {
   /**
    * @phpstan-var list<string>
    */
-  protected array $fundingCaseTypes = [];
+  protected static array $fundingCaseTypes = [];
 
   /**
    * @phpstan-return array<string, Reference>
@@ -52,14 +52,54 @@ trait TaggedFundingCaseTypeServicesTrait {
             );
           }
           $services[$fundingCaseType] = new Reference($id);
-          if (!in_array($fundingCaseType, $this->fundingCaseTypes, TRUE)) {
-            $this->fundingCaseTypes[] = $fundingCaseType;
+          if (!in_array($fundingCaseType, self::$fundingCaseTypes, TRUE)) {
+            self::$fundingCaseTypes[] = $fundingCaseType;
           }
         }
       }
     }
 
     return $services;
+  }
+
+  /**
+   *
+   * @phpstan-param array<string|int, Reference> $arguments
+   * @phpstan-param array<string, array<string|int, Reference>> $decorators
+   *   Class names mapped to arguments. The handler to decorate has to be the
+   *   first argument in the decorator class constructor.
+   */
+  protected function createService(
+    ContainerBuilder $container,
+    string $fundingCaseType,
+    string $class,
+    array $arguments,
+    array $decorators = []
+  ): Reference {
+    $serviceId = $class;
+    if ([] !== $arguments) {
+      $serviceId .= ':' . $fundingCaseType;
+      $definition = $container->autowire($serviceId, $class)->setArguments($arguments);
+    }
+    else {
+      $definition = $container->hasDefinition($serviceId)
+        ? $container->findDefinition($serviceId)
+        : $container->autowire($serviceId, $class);
+    }
+
+    $serviceTag = defined("$class::SERVICE_TAG") ? $class::SERVICE_TAG : NULL;
+    if (NULL !== $serviceTag) {
+      $definition->addTag($serviceTag, ['funding_case_type' => $fundingCaseType]);
+    }
+
+    foreach ($decorators as $decoratorClass => $decoratorArguments) {
+      $decoratorServiceId = $decoratorClass . ':' . $fundingCaseType;
+      array_unshift($decoratorArguments, new Reference($serviceId));
+      $container->autowire($decoratorServiceId, $decoratorClass)->setArguments($decoratorArguments);
+      $serviceId = $decoratorServiceId;
+    }
+
+    return new Reference($serviceId);
   }
 
   /**

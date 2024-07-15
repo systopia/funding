@@ -19,8 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\PayoutProcess;
 
-use Civi\Api4\Generic\Result;
 use Civi\Api4\FundingPayoutProcess;
+use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\PayoutProcessFactory;
@@ -64,7 +64,6 @@ final class PayoutProcessManagerTest extends TestCase {
         FundingPayoutProcess::getEntityName(),
         $payoutProcess->getId(),
         ['status' => 'closed'] + $payoutProcess->toArray(),
-        ['checkPermissions' => FALSE],
       );
 
     $this->payoutProcessManager->close($payoutProcess);
@@ -144,6 +143,18 @@ final class PayoutProcessManagerTest extends TestCase {
       )->willReturn(1);
 
     static::assertTrue($this->payoutProcessManager->hasAccess(12));
+  }
+
+  public function testUpdateAmountTotal(): void {
+    $payoutProcess = PayoutProcessFactory::create();
+    $this->api4Mock->expects(static::once())->method('updateEntity')
+      ->with(
+        FundingPayoutProcess::getEntityName(),
+        $payoutProcess->getId(),
+        ['amount_total' => 123.45] + $payoutProcess->toArray()
+      )->willReturn(new Result([['amount_total' => 123.45] + $payoutProcess->toArray()]));
+
+    $this->payoutProcessManager->updateAmountTotal($payoutProcess, 123.45);
   }
 
 }

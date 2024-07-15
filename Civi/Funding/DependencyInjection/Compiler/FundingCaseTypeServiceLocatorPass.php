@@ -78,6 +78,7 @@ use Civi\Funding\Form\FundingCase\FundingCaseUiSchemaFactoryInterface;
 use Civi\Funding\Form\FundingCase\FundingCaseValidatorInterface;
 use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
 use Civi\Funding\FundingCase\Handler\Decorator\FundingCaseApproveEventDecorator;
+use Civi\Funding\FundingCase\Handler\Decorator\FundingCaseUpdateAmountApprovedEventDecorator;
 use Civi\Funding\FundingCase\Handler\FundingCaseApproveHandler;
 use Civi\Funding\FundingCase\Handler\FundingCaseApproveHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseFormDataGetHandler;
@@ -241,7 +242,7 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
     $serviceLocatorServices =
       $this->getTaggedFundingCaseTypeServices($container, FundingCaseTypeServiceLocatorInterface::SERVICE_TAG);
 
-    foreach ($this->fundingCaseTypes as $fundingCaseType) {
+    foreach (self::$fundingCaseTypes as $fundingCaseType) {
       if (!isset($applicationActionStatusInfoServices[$fundingCaseType])) {
         throw new RuntimeException(
           sprintf('Application action status info for funding case type "%s" missing', $fundingCaseType)
@@ -533,6 +534,7 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
           '$actionsDeterminer' => $fundingCaseActionsDeterminerServices[$fundingCaseType],
           '$statusDeterminer' => $fundingCaseStatusDeterminerServices[$fundingCaseType],
         ],
+        [FundingCaseUpdateAmountApprovedEventDecorator::class => []]
       );
 
       $transferContractRecreateHandlerServices[$fundingCaseType] ??= $this->createService(
@@ -632,35 +634,6 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
 
     $container->register(FundingCaseTypeServiceLocatorContainer::class, FundingCaseTypeServiceLocatorContainer::class)
       ->addArgument(ServiceLocatorTagPass::register($container, $serviceLocatorServices));
-  }
-
-  /**
-   * @phpstan-param array<string|int, Reference> $arguments
-   * @phpstan-param array<string, array<string|int, Reference>> $decorators
-   *   Class names mapped to arguments. The handler to decorate has to be the
-   *   first argument in the decorator class constructor.
-   */
-  private function createService(
-    ContainerBuilder $container,
-    string $fundingCaseType,
-    string $class,
-    array $arguments,
-    array $decorators = []
-  ): Reference {
-    $serviceId = $class;
-    if ([] !== $arguments) {
-      $serviceId .= ':' . $fundingCaseType;
-    }
-    $container->autowire($serviceId, $class)->setArguments($arguments);
-
-    foreach ($decorators as $decoratorClass => $decoratorArguments) {
-      $decoratorServiceId = $decoratorClass . ':' . $fundingCaseType;
-      array_unshift($decoratorArguments, new Reference($serviceId));
-      $container->autowire($decoratorServiceId, $decoratorClass)->setArguments($decoratorArguments);
-      $serviceId = $decoratorServiceId;
-    }
-
-    return new Reference($serviceId);
   }
 
   /**

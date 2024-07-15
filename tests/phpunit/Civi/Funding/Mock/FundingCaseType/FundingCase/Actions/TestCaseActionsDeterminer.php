@@ -19,37 +19,21 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Mock\FundingCaseType\FundingCase\Actions;
 
+use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\FundingCase\Actions\AbstractFundingCaseActionsDeterminerDecorator;
 use Civi\Funding\FundingCase\Actions\DefaultFundingCaseActionsDeterminer;
-use Civi\Funding\FundingCase\Actions\FundingCaseActions;
 use Civi\Funding\Mock\FundingCaseType\Application\Actions\TestApplicationActionStatusInfo;
 use Civi\Funding\Mock\FundingCaseType\Traits\TestSupportedFundingCaseTypesTrait;
-use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
 
 final class TestCaseActionsDeterminer extends AbstractFundingCaseActionsDeterminerDecorator {
 
   use TestSupportedFundingCaseTypesTrait;
 
-  use HasReviewPermissionTrait;
-
   public function __construct(
-    TestApplicationActionStatusInfo $statusInfo
+    TestApplicationActionStatusInfo $statusInfo,
+    ClearingProcessManager $clearingProcessManager
   ) {
-    parent::__construct(new DefaultFundingCaseActionsDeterminer($statusInfo));
-  }
-
-  public function getActions(string $status, array $applicationProcessStatusList, array $permissions): array {
-    $actions = parent::getActions(
-      $status,
-      $applicationProcessStatusList,
-      $permissions
-    );
-
-    if ('ongoing' === $status && $this->hasReviewPermission($permissions)) {
-      $actions[] = FundingCaseActions::UPDATE_AMOUNT_APPROVED;
-    }
-
-    return $actions;
+    parent::__construct(new DefaultFundingCaseActionsDeterminer($clearingProcessManager, $statusInfo));
   }
 
 }

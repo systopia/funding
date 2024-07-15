@@ -20,7 +20,11 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase\Actions;
 
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface;
+use Civi\Funding\ClearingProcess\ClearingProcessManager;
+use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
+use Civi\Funding\EntityFactory\ClearingProcessFactory;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -51,14 +55,23 @@ final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
   private DefaultFundingCaseActionsDeterminer $actionsDeterminer;
 
   /**
+   * @var \Civi\Funding\ClearingProcess\ClearingProcessManager&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $clearingProcessManagerMock;
+
+  /**
    * @phpstan-var array<int, FullApplicationProcessStatus>
    */
   private array $statusList;
 
   protected function setUp(): void {
     parent::setUp();
+    $this->clearingProcessManagerMock = $this->createMock(ClearingProcessManager::class);
     $statusInfoMock = $this->createMock(ApplicationProcessActionStatusInfoInterface::class);
-    $this->actionsDeterminer = new DefaultFundingCaseActionsDeterminer($statusInfoMock);
+    $this->actionsDeterminer = new DefaultFundingCaseActionsDeterminer(
+      $this->clearingProcessManagerMock,
+      $statusInfoMock
+    );
     $this->statusList = [22 => new FullApplicationProcessStatus('eligible', TRUE, TRUE)];
 
     $statusInfoMock->method('isEligibleStatus')
@@ -85,6 +98,67 @@ final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
         );
       }
     }
+  }
+
+  /**
+   * @dataProvider provideClearingReviewPermission
+   */
+  public function testGetActionsFinishClearing(string $clearingReviewPermission): void {
+    $statusList = [22 => new FullApplicationProcessStatus('review', TRUE, TRUE)];
+    static::assertNotContains(FundingCaseActions::FINISH_CLEARING, $this->actionsDeterminer->getActions(
+      'ongoing',
+      $statusList,
+      [$clearingReviewPermission]
+    ));
+
+    $statusList = [22 => new FullApplicationProcessStatus('eligible', TRUE, TRUE)];
+    static::assertNotContains(FundingCaseActions::FINISH_CLEARING, $this->actionsDeterminer->getActions(
+      'ongoing',
+      $statusList,
+      [$clearingReviewPermission]
+    ));
+
+    $clearingProcess = ClearingProcessFactory::create(['status' => 'accepted']);
+    $this->clearingProcessManagerMock->method('getByApplicationProcessId')
+      ->with(22)->willReturn($clearingProcess);
+    static::assertContains(FundingCaseActions::FINISH_CLEARING, $this->actionsDeterminer->getActions(
+      'ongoing',
+      $statusList,
+      [$clearingReviewPermission]
+    ));
+
+    $clearingProcess->setValues(['status' => 'rejected'] + $clearingProcess->toArray());
+    static::assertContains(FundingCaseActions::FINISH_CLEARING, $this->actionsDeterminer->getActions(
+      'ongoing',
+      $statusList,
+      [$clearingReviewPermission]
+    ));
+
+    $clearingProcess->setValues(['status' => 'review'] + $clearingProcess->toArray());
+    static::assertNotContains(FundingCaseActions::FINISH_CLEARING, $this->actionsDeterminer->getActions(
+      'ongoing',
+      $statusList,
+      [$clearingReviewPermission]
+    ));
+  }
+
+  public function testGetActionsFinishClearingWithoutPermission(): void {
+    $statusList = [22 => new FullApplicationProcessStatus('eligible', TRUE, TRUE)];
+    $clearingProcess = ClearingProcessFactory::create(['status' => 'accepted']);
+    $this->clearingProcessManagerMock->expects(static::never())->method('getByApplicationProcessId');
+    static::assertNotContains(FundingCaseActions::FINISH_CLEARING, $this->actionsDeterminer->getActions(
+      'ongoing',
+      $statusList,
+      ['review_content']
+    ));
+  }
+
+  /**
+   * @phpstan-return iterable<array{string}>
+   */
+  public function provideClearingReviewPermission(): iterable {
+    yield [ClearingProcessPermissions::REVIEW_CALCULATIVE];
+    yield [ClearingProcessPermissions::REVIEW_CONTENT];
   }
 
   public function testGetActionsAll(): void {

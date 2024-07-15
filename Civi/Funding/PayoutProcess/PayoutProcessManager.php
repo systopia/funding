@@ -86,6 +86,14 @@ class PayoutProcessManager {
   /**
    * @throws \CRM_Core_Exception
    */
+  public function updateAmountTotal(PayoutProcessEntity $payoutProcess, float $amountTotal): void {
+    $payoutProcess->setAmountTotal($amountTotal);
+    $this->update($payoutProcess);
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function getAmountAccepted(PayoutProcessEntity $payoutProcess): float {
     $action = FundingDrawdown::get()
       ->setCheckPermissions(FALSE)
@@ -151,8 +159,7 @@ class PayoutProcessManager {
     $this->api4->updateEntity(
       FundingPayoutProcess::getEntityName(),
       $payoutProcess->getId(),
-      $payoutProcess->toArray(),
-      ['checkPermissions' => FALSE],
+      $payoutProcess->toArray()
     );
   }
 

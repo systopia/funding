@@ -42,6 +42,12 @@ fundingModule.factory('fundingCaseService', ['crmApi4', function(crmApi4) {
 
     /**
      * @param {integer} id
+     * @returns {Promise<object>}
+     */
+    finishClearing: (id) => crmApi4('FundingCase', 'finishClearing', {id}),
+
+    /**
+     * @param {integer} id
      * @returns {Promise}
      */
     get: (id) => crmApi4('FundingCase', 'get', {

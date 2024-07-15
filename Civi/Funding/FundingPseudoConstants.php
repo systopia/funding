@@ -209,6 +209,7 @@ final class FundingPseudoConstants {
       'ongoing' => E::ts('Ongoing'),
       'rejected' => E::ts('Rejected'),
       'withdrawn' => E::ts('Withdrawn'),
+      'cleared' => E::ts('Cleared'),
     ];
 
     $event = new GetPossibleFundingCaseStatusEvent($options);

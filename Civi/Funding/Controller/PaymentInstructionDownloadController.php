@@ -62,14 +62,15 @@ final class PaymentInstructionDownloadController implements PageControllerInterf
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    */
   private function download(int $drawdownId): Response {
-    if (NULL === $this->drawdownManager->get($drawdownId)) {
+    $drawdown = $this->drawdownManager->get($drawdownId);
+    if (NULL === $drawdown) {
       throw new AccessDeniedHttpException();
     }
 
     $attachment = $this->attachmentManager->getLastByFileType(
       'civicrm_funding_drawdown',
       $drawdownId,
-      FileTypeNames::PAYMENT_INSTRUCTION,
+      $drawdown->getAmount() < 0 ? FileTypeNames::PAYBACK_CLAIM : FileTypeNames::PAYMENT_INSTRUCTION,
     );
 
     if (NULL === $attachment) {
@@ -79,7 +80,8 @@ final class PaymentInstructionDownloadController implements PageControllerInterf
     $headers = [
       'Content-Type' => $attachment->getMimeType(),
     ];
-    $filename = E::ts('payment-instruction') . '.' . pathinfo($attachment->getPath(), PATHINFO_EXTENSION);
+    $filename = $drawdown->getAmount() < 0 ? E::ts('payment-instruction') : E::ts('payback-claim');
+    $filename .= '.' . pathinfo($attachment->getPath(), PATHINFO_EXTENSION);
 
     return (new BinaryFileResponse(
       $attachment->getPath(),

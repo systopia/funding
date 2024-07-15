@@ -17,16 +17,14 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\FundingCase\Actions;
+namespace Civi\Funding\FundingCase\Handler;
 
-final class FundingCaseActions {
+use Civi\Funding\FundingCase\Command\FundingCaseFinishClearingCommand;
 
-  public const APPROVE = 'approve';
+interface FundingCaseFinishClearingHandlerInterface {
 
-  public const DELETE = 'delete';
+  public const SERVICE_TAG = 'funding.case.finish_clearing_handler';
 
-  public const FINISH_CLEARING = 'finish-clearing';
-
-  public const UPDATE_AMOUNT_APPROVED = 'update-amount-approved';
+  public function handle(FundingCaseFinishClearingCommand $command): void;
 
 }

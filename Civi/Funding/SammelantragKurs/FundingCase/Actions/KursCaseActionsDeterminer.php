@@ -19,9 +19,9 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\SammelantragKurs\FundingCase\Actions;
 
+use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\FundingCase\Actions\AbstractFundingCaseActionsDeterminerDecorator;
 use Civi\Funding\FundingCase\Actions\DefaultFundingCaseActionsDeterminer;
-use Civi\Funding\FundingCase\Actions\FundingCaseActions;
 use Civi\Funding\SammelantragKurs\Application\Actions\KursApplicationActionsDeterminer;
 use Civi\Funding\SammelantragKurs\Application\Actions\KursApplicationActionStatusInfo;
 use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
@@ -30,20 +30,14 @@ final class KursCaseActionsDeterminer extends AbstractFundingCaseActionsDetermin
 
   use KursSupportedFundingCaseTypesTrait;
 
-  private const EXTRA_STATUS_PERMISSIONS_ACTION_MAP = [
-    'ongoing' => [
-      'review_calculative' => [FundingCaseActions::UPDATE_AMOUNT_APPROVED],
-      'review_content' => [FundingCaseActions::UPDATE_AMOUNT_APPROVED],
-    ],
-  ];
-
   private KursApplicationActionsDeterminer $applicationActionsDeterminer;
 
   public function __construct(
     KursApplicationActionsDeterminer $applicationActionsDeterminer,
+    ClearingProcessManager $clearingProcessManager,
     KursApplicationActionStatusInfo $statusInfo
   ) {
-    parent::__construct(new DefaultFundingCaseActionsDeterminer($statusInfo));
+    parent::__construct(new DefaultFundingCaseActionsDeterminer($clearingProcessManager, $statusInfo));
     $this->applicationActionsDeterminer = $applicationActionsDeterminer;
   }
 
@@ -82,10 +76,6 @@ final class KursCaseActionsDeterminer extends AbstractFundingCaseActionsDetermin
 
     if ($this->isActionAllowedForAllApplications('delete', $applicationProcessStatusList, $permissions)) {
       $actions[] = 'delete';
-    }
-
-    foreach ($permissions as $permission) {
-      $actions = array_merge($actions, self::EXTRA_STATUS_PERMISSIONS_ACTION_MAP[$status][$permission] ?? []);
     }
 
     return array_values(array_unique(array_merge(

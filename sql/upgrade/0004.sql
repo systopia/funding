@@ -11,3 +11,11 @@ UPDATE civicrm_funding_case SET
     'withdrawn',
     'rejected')
   WHERE status = 'closed';
+
+-- The amount approved of a funding case might have been changed without the
+-- amount total of the corresponding payout process being updated.
+-- The status might be closed, through a previous subscriber, but it now gets
+-- closed when finishing clearing of a funding case.
+UPDATE civicrm_funding_payout_process p SET
+  p.amount_total = (SELECT c.amount_approved FROM civicrm_funding_case c WHERE c.id = p.funding_case_id),
+  p.status = 'open';

@@ -61,6 +61,18 @@ final class GetFieldsAction extends DAOGetFieldsAction {
       'nullable' => !str_starts_with($this->action, 'get'),
       'readonly' => 'create' === $this->action,
     ];
+    $fields[] = [
+      'name' => 'payback_claim_template_file_id',
+      'title' => E::ts('Payback Claim Template'),
+      'description' => 'ID of a file already attached to the entity',
+      'type' => 'Custom',
+      'data_type' => 'Integer',
+      'input_type' => 'File',
+      'fk_entity' => 'File',
+      // Might be NULL on get until set.
+      'nullable' => !str_starts_with($this->action, 'get'),
+      'readonly' => 'create' === $this->action,
+    ];
 
     return $fields;
   }

@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\PayoutProcess\Handler;
 
 use Civi\Funding\DocumentRender\DocumentRendererInterface;
+use Civi\Funding\Entity\DrawdownEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\FileTypeNames;
 use Civi\Funding\FundingAttachmentManagerInterface;
@@ -46,7 +47,7 @@ final class PaymentInstructionRenderHandler implements PaymentInstructionRenderH
   public function handle(PaymentInstructionRenderCommand $command): PaymentInstructionRenderResult {
     return new PaymentInstructionRenderResult(
       $this->documentRenderer->render(
-        $this->getTemplateFile($command->getFundingCaseType()),
+        $this->getTemplateFile($command->getFundingCaseType(), $command->getDrawdown()),
         'FundingPaymentInstruction',
         $command->getDrawdown()->getId(),
         [
@@ -64,18 +65,36 @@ final class PaymentInstructionRenderHandler implements PaymentInstructionRenderH
   /**
    * @throws \CRM_Core_Exception
    */
-  private function getTemplateFile(FundingCaseTypeEntity $fundingCaseType): string {
-    $attachment = $this->attachmentManager->getLastByFileType(
-      'civicrm_funding_case_type',
-      $fundingCaseType->getId(),
-      FileTypeNames::PAYMENT_INSTRUCTION_TEMPLATE,
-    );
+  private function getTemplateFile(FundingCaseTypeEntity $fundingCaseType, DrawdownEntity $drawdown): string {
+    if ($drawdown->getAmount() < 0) {
+      $attachment = $this->attachmentManager->getLastByFileType(
+        'civicrm_funding_case_type',
+        $fundingCaseType->getId(),
+        FileTypeNames::PAYBACK_CLAIM_TEMPLATE,
+      );
 
-    if (NULL === $attachment) {
-      throw new \RuntimeException(sprintf(
-        'No payment instruction template for funding case type "%s" found.',
-        $fundingCaseType->getName()
-      ));
+      if (NULL === $attachment) {
+        throw new \RuntimeException(sprintf(
+          'No payback claim template for funding case type "%s" found.',
+          $fundingCaseType->getName()
+        ));
+      }
+    }
+    else {
+      $attachment = $this->attachmentManager->getLastByFileType(
+        'civicrm_funding_case_type',
+        $fundingCaseType->getId(),
+        FileTypeNames::PAYMENT_INSTRUCTION_TEMPLATE,
+      );
+
+      if (NULL === $attachment) {
+        throw new \RuntimeException(
+          sprintf(
+            'No payment instruction template for funding case type "%s" found.',
+            $fundingCaseType->getName()
+          )
+        );
+      }
     }
 
     return $attachment->getPath();

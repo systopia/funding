@@ -22,6 +22,7 @@ namespace Civi\Funding\FundingCase\StatusDeterminer;
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
+use Civi\Funding\FundingCase\Actions\FundingCaseActions;
 use Civi\RemoteTools\Api4\Query\Comparison;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -57,6 +58,7 @@ final class DefaultFundingCaseStatusDeterminerTest extends TestCase {
   public function testGetStatus(): void {
     static::assertSame('test', $this->statusDeterminer->getStatus('test', 'do_something'));
     static::assertSame('ongoing', $this->statusDeterminer->getStatus('test', 'approve'));
+    static::assertSame('cleared', $this->statusDeterminer->getStatus('test', FundingCaseActions::FINISH_CLEARING));
   }
 
   public function testGetStatusOnApplicationProcessStatusChangeWithdrawn(): void {

@@ -199,6 +199,20 @@ fundingModule.controller('fundingCaseCtrl', [
       ));
     };
 
+    $scope.finishClearing = function () {
+      CRM.confirm({
+        message: ts(
+`This will close the funding case. A final payment instruction will be created,
+if the available funding wasn't paid out completely, yet. Otherwise, a payback
+claim will be created. Maybe you want to update the amount approved before.`
+        ),
+      }).on('crmConfirm:yes', function() {
+        return withOverlay(crmStatus({}, fundingCaseService.finishClearing(fundingCase.id)
+          .then(() => window.location.reload())
+        ));
+      });
+    };
+
     $scope.recreateTransferContract = function () {
       withOverlay(crmStatus({}, fundingCaseService.recreateTransferContract(fundingCase.id)
           .then(onFundingCaseUpdate)
