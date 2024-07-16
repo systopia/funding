@@ -358,7 +358,7 @@ fundingModule.directive('fundingApplicationEditor', ['$compile', function($compi
         };
 
         $scope.validate = function () {
-          const data = angular.extend({}, $scope.data, {action: 'update'});
+          const data = angular.extend({}, $scope.data, {_action: 'update'});
           return fundingApplicationProcessService.validateForm($scope.applicationProcess.id, data).then(function (result) {
             if (result.data) {
               $scope.data = result.data;
@@ -378,7 +378,7 @@ fundingModule.directive('fundingApplicationEditor', ['$compile', function($compi
           }
 
           enableOverlay();
-          const data = angular.extend({}, $scope.data, {action});
+          const data = angular.extend({}, $scope.data, {_action: action});
           if ($scope.comment.text) {
             data.comment = $scope.comment;
           }
