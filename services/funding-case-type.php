@@ -23,9 +23,11 @@ declare(strict_types = 1);
 use Civi\Funding\Api4\Action\FundingCaseType\GetAction;
 use Civi\Funding\Api4\Action\FundingCaseType\GetByFundingProgramIdAction;
 use Civi\Funding\Api4\Action\FundingCaseType\UpdateAction;
+use Civi\Funding\EventSubscriber\FundingCaseType\AfformCacheCiviOfficeDocumentSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseTypeDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseTypeGetByFundingProgramIdSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseTypeGetFieldsSubscriber;
+use Symfony\Component\DependencyInjection\Reference;
 
 $container->autowire(GetAction::class)
   ->setPublic(TRUE)
@@ -37,6 +39,9 @@ $container->autowire(UpdateAction::class)
   ->setPublic(TRUE)
   ->setShared(FALSE);
 
+$container->autowire(AfformCacheCiviOfficeDocumentSubscriber::class)
+  ->setArgument('$assetBuilder', new Reference('asset_builder'))
+  ->addTag('kernel.event_subscriber');
 $container->autowire(FundingCaseTypeGetFieldsSubscriber::class)
   ->addTag('kernel.event_subscriber');
 $container->autowire(FundingCaseTypeDAOGetSubscriber::class)
