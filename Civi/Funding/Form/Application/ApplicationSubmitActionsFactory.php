@@ -49,10 +49,6 @@ class ApplicationSubmitActionsFactory implements ApplicationSubmitActionsFactory
     return $this->doCreateSubmitActions($this->actionsDeterminer->getInitialActions($permissions));
   }
 
-  public function isEditAllowed(FullApplicationProcessStatus $status, array $statusList, array $permissions): bool {
-    return $this->actionsDeterminer->isEditAllowed($status, $statusList, $permissions);
-  }
-
   /**
    * @phpstan-param array<string> $actions
    *
