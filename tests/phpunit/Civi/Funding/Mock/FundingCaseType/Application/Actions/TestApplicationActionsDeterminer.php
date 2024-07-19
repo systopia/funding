@@ -34,4 +34,13 @@ final class TestApplicationActionsDeterminer extends AbstractApplicationActionsD
     );
   }
 
+  public function getInitialActions(array $permissions): array {
+    $actions = parent::getInitialActions($permissions);
+    if (in_array('application_create', $permissions, TRUE)) {
+      $actions = array_merge($actions, ['save&new', 'save&copy']);
+    }
+
+    return $actions;
+  }
+
 }

@@ -27,27 +27,21 @@ use Civi\RemoteTools\JsonSchema\JsonSchemaInteger;
 use Civi\RemoteTools\JsonSchema\JsonSchemaMoney;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
-use Webmozart\Assert\Assert;
 
 final class TestJsonSchema extends JsonSchemaObject {
 
-  /**
-   * @phpstan-param array<string, \Civi\RemoteTools\JsonSchema\JsonSchema> $extraProperties
-   */
-  public function __construct(bool $withRecipient, array $extraProperties = [], array $keywords = []) {
-    $required = $keywords['required'] ?? [];
-    Assert::isArray($required);
-    if ($withRecipient) {
-      $required[] = 'recipient';
-    }
-    $keywords['required'] = array_merge([
+  public function __construct(bool $withRecipient) {
+    $required = [
       'title',
       'startDate',
       'endDate',
       'amountRequested',
       'resources',
       'file',
-    ], $required);
+    ];
+    if ($withRecipient) {
+      $required[] = 'recipient';
+    }
 
     $properties = [
       'title' => new JsonSchemaString([
@@ -91,7 +85,7 @@ final class TestJsonSchema extends JsonSchemaObject {
       ]);
     }
 
-    parent::__construct($properties + $extraProperties, $keywords);
+    parent::__construct($properties, ['required' => $required]);
   }
 
 }

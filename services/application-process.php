@@ -81,6 +81,7 @@ use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormSubmitHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationJsonSchemaGetHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationResourcesItemsPersistHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationSnapshotCreateHandler;
+use Civi\Funding\ApplicationProcess\Helper\ApplicationJsonSchemaCreateHelper;
 use Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidator;
 use Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidatorInterface;
 use Civi\Funding\ApplicationProcess\JsonSchema\Validator\OpisApplicationValidator;
@@ -119,6 +120,8 @@ $container->autowire(
   ApplicationResourcesItemsFormDataLoaderInterface::class,
   ApplicationResourcesItemsFormDataLoader::class
 );
+
+$container->autowire(ApplicationJsonSchemaCreateHelper::class);
 
 ServiceRegistrator::autowireAllImplementing(
   $container,

@@ -20,7 +20,6 @@ declare(strict_types = 1);
 namespace Civi\Funding\SammelantragKurs\Application\JsonSchema;
 
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
-use Webmozart\Assert\Assert;
 
 final class KursApplicationJsonSchema extends JsonSchemaObject {
 
@@ -30,8 +29,7 @@ final class KursApplicationJsonSchema extends JsonSchemaObject {
   public function __construct(
     \DateTimeInterface $applicationBegin,
     \DateTimeInterface $applicationEnd,
-    array $extraProperties = [],
-    array $keywords = []
+    array $extraProperties = []
   ) {
     // @todo Additional validations, e.g. required, length, min, max, ...
     $properties = [
@@ -41,11 +39,7 @@ final class KursApplicationJsonSchema extends JsonSchemaObject {
       'beschreibung' => new KursBeschreibungJsonSchema(),
     ];
 
-    $required = $keywords['required'] ?? [];
-    Assert::isArray($required);
-    $keywords['required'] = array_merge(array_keys($properties), $required);
-
-    parent::__construct($properties + $extraProperties, $keywords);
+    parent::__construct($properties + $extraProperties, ['required' => array_keys($properties)]);
   }
 
 }

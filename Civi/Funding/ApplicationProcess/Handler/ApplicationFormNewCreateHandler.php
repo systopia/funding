@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewCreateCommand;
+use Civi\Funding\ApplicationProcess\Helper\ApplicationJsonSchemaCreateHelper;
 use Civi\Funding\Form\Application\NonCombinedApplicationJsonSchemaFactoryInterface;
 use Civi\Funding\Form\Application\NonCombinedApplicationUiSchemaFactoryInterface;
 use Civi\RemoteTools\Form\RemoteForm;
@@ -27,14 +28,18 @@ use Civi\RemoteTools\Form\RemoteFormInterface;
 
 final class ApplicationFormNewCreateHandler implements ApplicationFormNewCreateHandlerInterface {
 
+  private ApplicationJsonSchemaCreateHelper $jsonSchemaCreateHelper;
+
   private NonCombinedApplicationJsonSchemaFactoryInterface $jsonSchemaFactory;
 
   private NonCombinedApplicationUiSchemaFactoryInterface $uiSchemaFactory;
 
   public function __construct(
+    ApplicationJsonSchemaCreateHelper $jsonSchemaCreateHelper,
     NonCombinedApplicationJsonSchemaFactoryInterface $jsonSchemaFactory,
     NonCombinedApplicationUiSchemaFactoryInterface $uiSchemaFactory
   ) {
+    $this->jsonSchemaCreateHelper = $jsonSchemaCreateHelper;
     $this->jsonSchemaFactory = $jsonSchemaFactory;
     $this->uiSchemaFactory = $uiSchemaFactory;
   }
@@ -45,6 +50,13 @@ final class ApplicationFormNewCreateHandler implements ApplicationFormNewCreateH
       $command->getFundingCaseType(),
       $command->getFundingProgram(),
     );
+
+    $this->jsonSchemaCreateHelper->addInitialActionProperty(
+      $jsonSchema,
+      $command->getFundingCaseType(),
+      $command->getFundingProgram()->getPermissions()
+    );
+
     $uiSchema = $this->uiSchemaFactory->createUiSchemaNew(
       $command->getFundingProgram(),
       $command->getFundingCaseType(),

@@ -23,7 +23,6 @@ use Civi\Funding\Form\JsonSchema\JsonSchemaRecipient;
 use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
-use Webmozart\Assert\Assert;
 
 /**
  * This implements the JSON schema for an "AV-K1" form to apply for a funding
@@ -38,7 +37,7 @@ final class AVK1JsonSchema extends JsonSchemaObject {
    * @phpstan-param array<string, \Civi\RemoteTools\JsonSchema\JsonSchema> $extraProperties
    */
   public function __construct(\DateTimeInterface $applicationBegin, \DateTimeInterface $applicationEnd,
-    array $possibleRecipients, array $extraProperties = [], array $keywords = []
+    array $possibleRecipients, array $extraProperties = []
   ) {
     // TODO: Additional validations (required, length, min, max, ...)
     $properties = [
@@ -57,11 +56,7 @@ final class AVK1JsonSchema extends JsonSchemaObject {
       ], ['required' => ['datei', 'beschreibung']])),
     ];
 
-    $required = $keywords['required'] ?? [];
-    Assert::isArray($required);
-    $keywords['required'] = array_merge(array_keys($properties), $required);
-
-    parent::__construct($properties + $extraProperties, $keywords);
+    parent::__construct($properties + $extraProperties, ['required' => array_keys($properties)]);
   }
 
 }

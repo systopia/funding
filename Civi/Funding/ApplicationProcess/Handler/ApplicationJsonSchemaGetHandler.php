@@ -20,22 +20,43 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationJsonSchemaGetCommand;
+use Civi\Funding\ApplicationProcess\Helper\ApplicationJsonSchemaCreateHelper;
 use Civi\Funding\Form\Application\ApplicationJsonSchemaFactoryInterface;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 
 final class ApplicationJsonSchemaGetHandler implements ApplicationJsonSchemaGetHandlerInterface {
 
+  private ApplicationJsonSchemaCreateHelper $jsonSchemaCreateHelper;
+
   private ApplicationJsonSchemaFactoryInterface $jsonSchemaFactory;
 
-  public function __construct(ApplicationJsonSchemaFactoryInterface $jsonSchemaFactory) {
+  public function __construct(
+    ApplicationJsonSchemaCreateHelper $jsonSchemaCreateHelper,
+    ApplicationJsonSchemaFactoryInterface $jsonSchemaFactory
+  ) {
+    $this->jsonSchemaCreateHelper = $jsonSchemaCreateHelper;
     $this->jsonSchemaFactory = $jsonSchemaFactory;
   }
 
   public function handle(ApplicationJsonSchemaGetCommand $command): JsonSchema {
-    return $this->jsonSchemaFactory->createJsonSchemaExisting(
+    $jsonSchema = $this->jsonSchemaFactory->createJsonSchemaExisting(
       $command->getApplicationProcessBundle(),
       $command->getApplicationProcessStatusList(),
     );
+
+    $this->jsonSchemaCreateHelper->addActionProperty(
+      $jsonSchema,
+      $command->getApplicationProcessBundle(),
+      $command->getApplicationProcessStatusList()
+    );
+    $this->jsonSchemaCreateHelper->addCommentProperty($jsonSchema, $command->getApplicationProcessBundle());
+    $this->jsonSchemaCreateHelper->addReadOnlyKeywordIfNecessary(
+      $jsonSchema,
+      $command->getApplicationProcessBundle(),
+      $command->getApplicationProcessStatusList()
+    );
+
+    return $jsonSchema;
   }
 
 }

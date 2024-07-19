@@ -201,9 +201,9 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
     FundingProgramContactRelationFixture::addContact(
       $contact['id'],
       $this->fundingProgram->getId(),
-      ['review_permission']
+      ['review_content']
     );
-    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['review_permission']);
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['review_content']);
 
     $externalFile = ExternalFileFixture::addFixture([
       'identifier' => 'FundingApplicationProcess.' . $applicationProcess->getId() . ':file',
@@ -232,9 +232,9 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
     FundingProgramContactRelationFixture::addContact(
       $contact['id'],
       $this->fundingProgram->getId(),
-      ['review_permission']
+      ['review_content']
     );
-    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['review_permission']);
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['review_content']);
     RequestTestUtil::mockInternalRequest($contact['id']);
 
     $result = FundingApplicationProcess::getJsonSchema()
@@ -255,9 +255,9 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
     FundingProgramContactRelationFixture::addContact(
       $contact['id'],
       $this->fundingProgram->getId(),
-      ['review_permission']
+      ['review_content']
     );
-    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['review_permission']);
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['review_content']);
     RequestTestUtil::mockInternalRequest($contact['id']);
 
     $result = FundingApplicationProcess::submitForm()
@@ -444,9 +444,9 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
     FundingProgramContactRelationFixture::addContact(
       $contact['id'],
       $this->fundingProgram->getId(),
-      ['review_permission']
+      ['review_content']
     );
-    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['review_permission']);
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['review_content']);
     RequestTestUtil::mockInternalRequest($contact['id']);
 
     $result = FundingApplicationProcess::validateForm()

@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormAddCreateCommand;
+use Civi\Funding\ApplicationProcess\Helper\ApplicationJsonSchemaCreateHelper;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
@@ -42,6 +43,11 @@ final class ApplicationFormAddCreateHandlerTest extends TestCase {
   private ApplicationFormAddCreateHandler $handler;
 
   /**
+   * @var \Civi\Funding\ApplicationProcess\Helper\ApplicationJsonSchemaCreateHelper&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private $jsonSchemaCreateHelperMock;
+
+  /**
    * @var \Civi\Funding\Form\Application\CombinedApplicationJsonSchemaFactoryInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $jsonSchemaFactoryMock;
@@ -53,9 +59,11 @@ final class ApplicationFormAddCreateHandlerTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
+    $this->jsonSchemaCreateHelperMock = $this->createMock(ApplicationJsonSchemaCreateHelper::class);
     $this->jsonSchemaFactoryMock = $this->createMock(CombinedApplicationJsonSchemaFactoryInterface::class);
     $this->uiSchemaFactoryMock = $this->createMock(CombinedApplicationUiSchemaFactoryInterface::class);
     $this->handler = new ApplicationFormAddCreateHandler(
+      $this->jsonSchemaCreateHelperMock,
       $this->jsonSchemaFactoryMock,
       $this->uiSchemaFactoryMock,
     );
@@ -73,6 +81,10 @@ final class ApplicationFormAddCreateHandlerTest extends TestCase {
       ->with($fundingProgram, $fundingCaseType, $fundingCase)
       ->willReturn($jsonSchema);
     $uiSchema = new JsonFormsElement('test');
+
+    $this->jsonSchemaCreateHelperMock->expects(self::once())->method('addInitialActionProperty')
+      ->with($jsonSchema, $fundingCaseType, $fundingCase->getPermissions());
+
     $this->uiSchemaFactoryMock->method('createUiSchemaAdd')
       ->with($fundingProgram, $fundingCaseType, $fundingCase)
       ->willReturn($uiSchema);

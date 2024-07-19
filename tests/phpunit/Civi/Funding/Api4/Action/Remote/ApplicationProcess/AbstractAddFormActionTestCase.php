@@ -63,7 +63,7 @@ abstract class AbstractAddFormActionTestCase extends AbstractRemoteFundingHeadle
     FundingCaseContactRelationFixture::addContact(
       $creationContact['id'],
       $this->fundingCase->getId(),
-      ['application_save'],
+      ['application_create', 'application_save'],
     );
   }
 

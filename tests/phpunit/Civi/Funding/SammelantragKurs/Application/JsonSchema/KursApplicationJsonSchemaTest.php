@@ -24,8 +24,6 @@ use Civi\Funding\ApplicationProcess\JsonSchema\Validator\OpisApplicationValidato
 use Civi\Funding\Form\MappedData\MappedDataLoader;
 use Civi\Funding\Form\Traits\AssertFormTrait;
 use Civi\Funding\Validation\Traits\AssertValidationResultTrait;
-use Civi\RemoteTools\JsonSchema\JsonSchema;
-use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 use Civi\RemoteTools\JsonSchema\Validation\OpisValidatorFactory;
 use Civi\RemoteTools\Util\JsonConverter;
 use PHPUnit\Framework\TestCase;
@@ -52,20 +50,10 @@ final class KursApplicationJsonSchemaTest extends TestCase {
   }
 
   public function testJsonSchema(): void {
-    $actionSchema = new JsonSchemaString();
     $jsonSchema = new KursApplicationJsonSchema(
       new \DateTime('2022-08-24'),
       new \DateTime('2022-08-26'),
-      ['_action' => $actionSchema],
-      ['required' => ['_action']],
     );
-
-    $required = $jsonSchema->getKeywordValue('required');
-    static::assertIsArray($required);
-    static::assertContains('_action', $required);
-    $properties = $jsonSchema->getKeywordValue('properties');
-    static::assertInstanceOf(JsonSchema::class, $properties);
-    static::assertSame($actionSchema, $properties->getKeywordValue('_action'));
 
     $programmtage = 3;
     $teilnehmerGesamt = 5;
@@ -90,7 +78,6 @@ final class KursApplicationJsonSchemaTest extends TestCase {
     $honorarkosten = $programmtage * $referenten * 305 - 0.1;
 
     $data = [
-      '_action' => 'submitAction1',
       'grunddaten' => [
         'titel' => 'Test',
         'kurzbeschreibungDerInhalte' => 'foo bar',
@@ -177,20 +164,10 @@ final class KursApplicationJsonSchemaTest extends TestCase {
   }
 
   public function testJsonSchemaDefaults(): void {
-    $actionSchema = new JsonSchemaString();
     $jsonSchema = new KursApplicationJsonSchema(
       new \DateTime('2022-08-24'),
       new \DateTime('2022-08-26'),
-      ['_action' => $actionSchema],
-      ['required' => ['_action']],
     );
-
-    $required = $jsonSchema->getKeywordValue('required');
-    static::assertIsArray($required);
-    static::assertContains('_action', $required);
-    $properties = $jsonSchema->getKeywordValue('properties');
-    static::assertInstanceOf(JsonSchema::class, $properties);
-    static::assertSame($actionSchema, $properties->getKeywordValue('_action'));
 
     $programmtage = 3;
     $teilnehmerGesamt = 5;
@@ -214,7 +191,6 @@ final class KursApplicationJsonSchemaTest extends TestCase {
     $honorarkosten = $programmtage * $referenten * 305;
 
     $data = [
-      '_action' => 'submitAction1',
       'grunddaten' => [
         'titel' => 'Test',
         'kurzbeschreibungDerInhalte' => 'foo bar',

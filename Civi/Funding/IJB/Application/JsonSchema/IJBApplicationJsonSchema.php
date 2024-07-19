@@ -21,7 +21,6 @@ namespace Civi\Funding\IJB\Application\JsonSchema;
 
 use Civi\Funding\Form\JsonSchema\JsonSchemaRecipient;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
-use Webmozart\Assert\Assert;
 
 final class IJBApplicationJsonSchema extends JsonSchemaObject {
 
@@ -34,8 +33,7 @@ final class IJBApplicationJsonSchema extends JsonSchemaObject {
     \DateTimeInterface $applicationBegin,
     \DateTimeInterface $applicationEnd,
     array $possibleRecipients,
-    array $extraProperties = [],
-    array $keywords = []
+    array $extraProperties = []
   ) {
     // @todo Additional validations, e.g. required, length, min, max, ...
     $properties = [
@@ -50,11 +48,7 @@ final class IJBApplicationJsonSchema extends JsonSchemaObject {
       'projektunterlagen' => new IJBProjektunterlagenJsonSchema(),
     ];
 
-    $required = $keywords['required'] ?? [];
-    Assert::isArray($required);
-    $keywords['required'] = array_merge(array_keys($properties), $required);
-
-    parent::__construct($properties + $extraProperties, $keywords);
+    parent::__construct($properties + $extraProperties, ['required' => array_keys($properties)]);
   }
 
 }
