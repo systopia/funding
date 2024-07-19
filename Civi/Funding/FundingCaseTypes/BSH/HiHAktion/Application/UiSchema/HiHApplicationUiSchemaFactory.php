@@ -23,20 +23,12 @@ use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\Application\NonCombinedApplicationUiSchemaFactoryInterface;
-use Civi\Funding\Form\JsonSchema\JsonFormsSubmitButtonsFactory;
-use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Actions\HiHApplicationSubmitActionsFactory;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Traits\HiHSupportedFundingCaseTypesTrait;
-use Civi\RemoteTools\JsonForms\JsonFormsElement;
+use Civi\RemoteTools\JsonForms\JsonFormsLayout;
 
 final class HiHApplicationUiSchemaFactory implements NonCombinedApplicationUiSchemaFactoryInterface {
 
   use HiHSupportedFundingCaseTypesTrait;
-
-  private HiHApplicationSubmitActionsFactory $submitActionsFactory;
-
-  public function __construct(HiHApplicationSubmitActionsFactory $submitActionsFactory) {
-    $this->submitActionsFactory = $submitActionsFactory;
-  }
 
   /**
    * @inheritDoc
@@ -44,30 +36,8 @@ final class HiHApplicationUiSchemaFactory implements NonCombinedApplicationUiSch
   public function createUiSchemaExisting(
     ApplicationProcessEntityBundle $applicationProcessBundle,
     array $applicationProcessStatusList
-  ): JsonFormsElement {
-    $applicationProcess = $applicationProcessBundle->getApplicationProcess();
-    $fundingCase = $applicationProcessBundle->getFundingCase();
-    $fundingProgram = $applicationProcessBundle->getFundingProgram();
-
-    $submitButtons = JsonFormsSubmitButtonsFactory::createButtons(
-      $this->submitActionsFactory->createSubmitActions(
-        $applicationProcess->getFullStatus(),
-        $applicationProcessStatusList,
-        $fundingCase->getPermissions()
-      ),
-    );
-
-    $uiSchema = new HiHApplicationUiSchema($fundingProgram->getCurrency(), $submitButtons);
-
-    if (!$this->submitActionsFactory->isEditAllowed(
-      $applicationProcess->getFullStatus(),
-      $applicationProcessStatusList,
-      $fundingCase->getPermissions()
-    )) {
-      $uiSchema->setReadonly(TRUE);
-    }
-
-    return $uiSchema;
+  ): JsonFormsLayout {
+    return new HiHApplicationUiSchema($applicationProcessBundle->getFundingProgram()->getCurrency());
   }
 
   /**
@@ -76,12 +46,8 @@ final class HiHApplicationUiSchemaFactory implements NonCombinedApplicationUiSch
   public function createUiSchemaNew(
     FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType
-  ): JsonFormsElement {
-    $submitButtons = JsonFormsSubmitButtonsFactory::createButtons(
-      $this->submitActionsFactory->createInitialSubmitActions($fundingProgram->getPermissions()),
-    );
-
-    return new HiHApplicationUiSchema($fundingProgram->getCurrency(), $submitButtons);
+  ): JsonFormsLayout {
+    return new HiHApplicationUiSchema($fundingProgram->getCurrency());
   }
 
 }

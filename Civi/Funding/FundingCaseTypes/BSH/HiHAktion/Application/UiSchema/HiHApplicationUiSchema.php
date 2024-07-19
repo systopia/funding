@@ -24,17 +24,13 @@ use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 
 final class HiHApplicationUiSchema extends JsonFormsGroup {
 
-  /**
-   * @phpstan-param array<int, \Civi\RemoteTools\JsonForms\Control\JsonFormsSubmitButton> $submitButtons
-   */
-  public function __construct(string $currency, array $submitButtons) {
+  public function __construct(string $currency) {
     $elements = [
       new JsonFormsControl('#/properties/empfaenger', 'Fördergeldempfänger'),
       new HiHFragenZumProjektGroup('#/properties/fragenZumProjekt/properties'),
       new HiHInformationenZumProjektGroup('#/properties/informationenZumProjekt/properties'),
       new HiHKostenUndFinanzierungGroup('#/properties/kostenUndFinanzierung/properties', $currency),
       new HiHRechtlichesGroup('#/properties/rechtliches/properties'),
-      ...$submitButtons,
     ];
     parent::__construct('Förderantrag für NDR-Benefizaktion', $elements);
   }
