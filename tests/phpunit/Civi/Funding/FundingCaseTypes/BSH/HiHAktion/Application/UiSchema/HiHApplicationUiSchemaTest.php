@@ -19,12 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\UiSchema;
 
-use Civi\Funding\Form\JsonSchema\JsonFormsSubmitButtonsFactory;
 use Civi\Funding\Form\Traits\AssertFormTrait;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\JsonSchema\HiHApplicationJsonSchema;
-use Civi\Funding\Util\FormTestUtil;
-use Civi\RemoteTools\JsonForms\Control\JsonFormsSubmitButton;
-use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -48,21 +44,10 @@ final class HiHApplicationUiSchemaTest extends TestCase {
       new \DateTime('2024-08-08'),
       new \DateTime('2024-08-09'),
       $possibleRecipients,
-      ['_action' => new JsonSchemaString()],
     );
 
-    $uiSchema = new HiHApplicationUiSchema('EUR', JsonFormsSubmitButtonsFactory::createButtons($submitActions));
-
+    $uiSchema = new HiHApplicationUiSchema('EUR');
     static::assertScopesExist($jsonSchema->toStdClass(), $uiSchema);
-    static::assertScopeExists('#/properties/_action', $uiSchema);
-
-    static::assertEquals(
-      [
-        new JsonFormsSubmitButton('#/properties/_action', 'submitAction1', 'Do Submit1'),
-        new JsonFormsSubmitButton('#/properties/_action', 'submitAction2', 'Do Submit2', 'Proceed?'),
-      ],
-      FormTestUtil::getControlsWithScope('#/properties/_action', $uiSchema)
-    );
   }
 
 }
