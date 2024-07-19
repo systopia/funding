@@ -19,12 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\IJB\Application\UiSchema;
 
-use Civi\Funding\Form\JsonSchema\JsonFormsSubmitButtonsFactory;
 use Civi\Funding\Form\Traits\AssertFormTrait;
 use Civi\Funding\IJB\Application\JsonSchema\IJBApplicationJsonSchema;
-use Civi\Funding\Util\FormTestUtil;
-use Civi\RemoteTools\JsonForms\Control\JsonFormsSubmitButton;
-use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -39,30 +35,15 @@ final class IJBApplicationUiSchemaTest extends TestCase {
       1 => 'Organization 1',
       2 => 'Organization 2',
     ];
-    $submitActions = [
-      'submitAction1' => ['label' => 'Do Submit1', 'confirm' => NULL],
-      'submitAction2' => ['label' => 'Do Submit2', 'confirm' => 'Proceed?'],
-    ];
 
     $jsonSchema = new IJBApplicationJsonSchema(
       new \DateTime('2022-08-24'),
       new \DateTime('2022-08-25'),
       $possibleRecipients,
-      ['_action' => new JsonSchemaString()],
     );
 
-    $uiSchema = new IJBApplicationUiSchema('EUR', JsonFormsSubmitButtonsFactory::createButtons($submitActions));
-
+    $uiSchema = new IJBApplicationUiSchema('EUR');
     static::assertScopesExist($jsonSchema->toStdClass(), $uiSchema);
-    static::assertScopeExists('#/properties/_action', $uiSchema);
-
-    static::assertEquals(
-      [
-        new JsonFormsSubmitButton('#/properties/_action', 'submitAction1', 'Do Submit1'),
-        new JsonFormsSubmitButton('#/properties/_action', 'submitAction2', 'Do Submit2', 'Proceed?'),
-      ],
-      FormTestUtil::getControlsWithScope('#/properties/_action', $uiSchema)
-    );
   }
 
 }

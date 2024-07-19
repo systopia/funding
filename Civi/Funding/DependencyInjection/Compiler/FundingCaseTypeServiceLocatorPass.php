@@ -310,6 +310,7 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         $applicationFormNewCreateHandlerServices[$fundingCaseType] ??= $this->createService(
           $container, $fundingCaseType, ApplicationFormNewCreateHandler::class, [
             '$jsonSchemaFactory' => $applicationJsonSchemaFactoryServices[$fundingCaseType],
+            '$submitActionsFactory' => $applicationSubmitActionsFactoryServices[$fundingCaseType],
             '$uiSchemaFactory' => $applicationUiSchemaFactoryServices[$fundingCaseType],
           ]
         );
@@ -337,6 +338,7 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
           ApplicationFormAddCreateHandler::class,
           [
             '$jsonSchemaFactory' => $applicationJsonSchemaFactoryServices[$fundingCaseType],
+            '$submitActionsFactory' => $applicationSubmitActionsFactoryServices[$fundingCaseType],
             '$uiSchemaFactory' => $applicationUiSchemaFactoryServices[$fundingCaseType],
           ],
         );
@@ -441,6 +443,7 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         ApplicationFormCreateHandler::class,
         [
           '$jsonSchemaGetHandler' => $applicationFormJsonSchemaGetHandlerServices[$fundingCaseType],
+          '$submitActionsFactory' => $applicationSubmitActionsFactoryServices[$fundingCaseType],
           '$uiSchemaFactory' => $applicationUiSchemaFactoryServices[$fundingCaseType],
           '$dataGetHandler' => $applicationFormDataGetHandlerServices[$fundingCaseType],
         ]

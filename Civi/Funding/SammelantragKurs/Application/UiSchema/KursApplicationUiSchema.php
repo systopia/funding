@@ -24,10 +24,7 @@ use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 
 final class KursApplicationUiSchema extends JsonFormsGroup {
 
-  /**
-   * @phpstan-param array<int, \Civi\RemoteTools\JsonForms\Control\JsonFormsSubmitButton> $submitButtons
-   */
-  public function __construct(string $title, string $currency, array $submitButtons) {
+  public function __construct(string $title, string $currency) {
     $elements = [
       new JsonFormsCategorization([
         new KursGrunddatenUiSchema('#/properties/grunddaten/properties'),
@@ -35,7 +32,6 @@ final class KursApplicationUiSchema extends JsonFormsGroup {
         new KursZuschussUiSchema($currency),
         new KursBeschreibungUiSchema(),
       ]),
-      ...$submitButtons,
     ];
     parent::__construct($title, $elements);
   }

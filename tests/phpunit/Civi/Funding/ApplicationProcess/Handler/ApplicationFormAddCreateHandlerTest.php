@@ -24,9 +24,12 @@ use Civi\Funding\ApplicationProcess\Helper\ApplicationJsonSchemaCreateHelper;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
+use Civi\Funding\Form\Application\ApplicationSubmitActionsFactoryInterface;
 use Civi\Funding\Form\Application\CombinedApplicationJsonSchemaFactoryInterface;
 use Civi\Funding\Form\Application\CombinedApplicationUiSchemaFactoryInterface;
-use Civi\RemoteTools\JsonForms\JsonFormsElement;
+use Civi\Funding\Util\FormTestUtil;
+use Civi\RemoteTools\JsonForms\Control\JsonFormsSubmitButton;
+use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -53,6 +56,11 @@ final class ApplicationFormAddCreateHandlerTest extends TestCase {
   private MockObject $jsonSchemaFactoryMock;
 
   /**
+   * @var \Civi\Funding\Form\Application\ApplicationSubmitActionsFactoryInterface&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $submitActionsFactoryMock;
+
+  /**
    * @var \Civi\Funding\Form\Application\CombinedApplicationUiSchemaFactoryInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $uiSchemaFactoryMock;
@@ -61,10 +69,12 @@ final class ApplicationFormAddCreateHandlerTest extends TestCase {
     parent::setUp();
     $this->jsonSchemaCreateHelperMock = $this->createMock(ApplicationJsonSchemaCreateHelper::class);
     $this->jsonSchemaFactoryMock = $this->createMock(CombinedApplicationJsonSchemaFactoryInterface::class);
+    $this->submitActionsFactoryMock = $this->createMock(ApplicationSubmitActionsFactoryInterface::class);
     $this->uiSchemaFactoryMock = $this->createMock(CombinedApplicationUiSchemaFactoryInterface::class);
     $this->handler = new ApplicationFormAddCreateHandler(
       $this->jsonSchemaCreateHelperMock,
       $this->jsonSchemaFactoryMock,
+      $this->submitActionsFactoryMock,
       $this->uiSchemaFactoryMock,
     );
   }
@@ -80,7 +90,7 @@ final class ApplicationFormAddCreateHandlerTest extends TestCase {
     $this->jsonSchemaFactoryMock->method('createJsonSchemaAdd')
       ->with($fundingProgram, $fundingCaseType, $fundingCase)
       ->willReturn($jsonSchema);
-    $uiSchema = new JsonFormsElement('test');
+    $uiSchema = new JsonFormsGroup('test', []);
 
     $this->jsonSchemaCreateHelperMock->expects(self::once())->method('addInitialActionProperty')
       ->with($jsonSchema, $fundingCaseType, $fundingCase->getPermissions());
@@ -89,10 +99,25 @@ final class ApplicationFormAddCreateHandlerTest extends TestCase {
       ->with($fundingProgram, $fundingCaseType, $fundingCase)
       ->willReturn($uiSchema);
 
+    $this->submitActionsFactoryMock->expects(self::once())->method('createInitialSubmitActions')
+      ->with($fundingCase->getPermissions())
+      ->willReturn([
+        'submitAction1' => ['label' => 'Submit1', 'properties' => []],
+        'submitAction2' => ['label' => 'Submit2', 'confirm' => 'Proceed?', 'properties' => []],
+      ]);
+
     $form = $this->handler->handle($command);
     static::assertSame($jsonSchema, $form->getJsonSchema());
     static::assertSame($uiSchema, $form->getUiSchema());
     static::assertSame([], $form->getData());
+
+    static::assertEquals(
+      [
+        new JsonFormsSubmitButton('#/properties/_action', 'submitAction1', 'Submit1'),
+        new JsonFormsSubmitButton('#/properties/_action', 'submitAction2', 'Submit2', 'Proceed?'),
+      ],
+      FormTestUtil::getControlsWithScope('#/properties/_action', $uiSchema)
+    );
   }
 
 }

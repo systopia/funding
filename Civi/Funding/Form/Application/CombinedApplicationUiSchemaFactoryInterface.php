@@ -22,7 +22,7 @@ namespace Civi\Funding\Form\Application;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
-use Civi\RemoteTools\JsonForms\JsonFormsElement;
+use Civi\RemoteTools\JsonForms\JsonFormsLayout;
 
 interface CombinedApplicationUiSchemaFactoryInterface extends ApplicationUiSchemaFactoryInterface {
 
@@ -33,6 +33,6 @@ interface CombinedApplicationUiSchemaFactoryInterface extends ApplicationUiSchem
     FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType,
     FundingCaseEntity $fundingCase
-  ): JsonFormsElement;
+  ): JsonFormsLayout;
 
 }

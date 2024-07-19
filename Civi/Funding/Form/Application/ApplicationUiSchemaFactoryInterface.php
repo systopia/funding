@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Form\Application;
 
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
-use Civi\RemoteTools\JsonForms\JsonFormsElement;
+use Civi\RemoteTools\JsonForms\JsonFormsLayout;
 
 interface ApplicationUiSchemaFactoryInterface {
 
@@ -40,6 +40,6 @@ interface ApplicationUiSchemaFactoryInterface {
   public function createUiSchemaExisting(
     ApplicationProcessEntityBundle $applicationProcessBundle,
     array $applicationProcessStatusList
-  ): JsonFormsElement;
+  ): JsonFormsLayout;
 
 }

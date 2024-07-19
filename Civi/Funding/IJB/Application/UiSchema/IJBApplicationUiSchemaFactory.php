@@ -23,20 +23,12 @@ use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\Application\NonCombinedApplicationUiSchemaFactoryInterface;
-use Civi\Funding\Form\JsonSchema\JsonFormsSubmitButtonsFactory;
-use Civi\Funding\IJB\Application\Actions\IJBApplicationSubmitActionsFactory;
 use Civi\Funding\IJB\Traits\IJBSupportedFundingCaseTypesTrait;
-use Civi\RemoteTools\JsonForms\JsonFormsElement;
+use Civi\RemoteTools\JsonForms\JsonFormsLayout;
 
 final class IJBApplicationUiSchemaFactory implements NonCombinedApplicationUiSchemaFactoryInterface {
 
   use IJBSupportedFundingCaseTypesTrait;
-
-  private IJBApplicationSubmitActionsFactory $submitActionsFactory;
-
-  public function __construct(IJBApplicationSubmitActionsFactory $submitActionsFactory) {
-    $this->submitActionsFactory = $submitActionsFactory;
-  }
 
   /**
    * @inheritDoc
@@ -44,30 +36,8 @@ final class IJBApplicationUiSchemaFactory implements NonCombinedApplicationUiSch
   public function createUiSchemaExisting(
     ApplicationProcessEntityBundle $applicationProcessBundle,
     array $applicationProcessStatusList
-  ): JsonFormsElement {
-    $applicationProcess = $applicationProcessBundle->getApplicationProcess();
-    $fundingCase = $applicationProcessBundle->getFundingCase();
-    $fundingProgram = $applicationProcessBundle->getFundingProgram();
-
-    $submitButtons = JsonFormsSubmitButtonsFactory::createButtons(
-      $this->submitActionsFactory->createSubmitActions(
-        $applicationProcess->getFullStatus(),
-        $applicationProcessStatusList,
-        $fundingCase->getPermissions()
-      ),
-    );
-
-    $uiSchema = new IJBApplicationUiSchema($fundingProgram->getCurrency(), $submitButtons);
-
-    if (!$this->submitActionsFactory->isEditAllowed(
-      $applicationProcess->getFullStatus(),
-      $applicationProcessStatusList,
-      $fundingCase->getPermissions()
-    )) {
-      $uiSchema->setReadonly(TRUE);
-    }
-
-    return $uiSchema;
+  ): JsonFormsLayout {
+    return new IJBApplicationUiSchema($applicationProcessBundle->getFundingProgram()->getCurrency());
   }
 
   /**
@@ -76,12 +46,8 @@ final class IJBApplicationUiSchemaFactory implements NonCombinedApplicationUiSch
   public function createUiSchemaNew(
     FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType
-  ): JsonFormsElement {
-    $submitButtons = JsonFormsSubmitButtonsFactory::createButtons(
-      $this->submitActionsFactory->createInitialSubmitActions($fundingProgram->getPermissions()),
-    );
-
-    return new IJBApplicationUiSchema($fundingProgram->getCurrency(), $submitButtons);
+  ): JsonFormsLayout {
+    return new IJBApplicationUiSchema($fundingProgram->getCurrency());
   }
 
 }

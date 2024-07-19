@@ -21,8 +21,10 @@ namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewCreateCommand;
 use Civi\Funding\ApplicationProcess\Helper\ApplicationJsonSchemaCreateHelper;
+use Civi\Funding\Form\Application\ApplicationSubmitActionsFactoryInterface;
 use Civi\Funding\Form\Application\NonCombinedApplicationJsonSchemaFactoryInterface;
 use Civi\Funding\Form\Application\NonCombinedApplicationUiSchemaFactoryInterface;
+use Civi\Funding\Form\JsonSchema\JsonFormsSubmitButtonsFactory;
 use Civi\RemoteTools\Form\RemoteForm;
 use Civi\RemoteTools\Form\RemoteFormInterface;
 
@@ -32,15 +34,19 @@ final class ApplicationFormNewCreateHandler implements ApplicationFormNewCreateH
 
   private NonCombinedApplicationJsonSchemaFactoryInterface $jsonSchemaFactory;
 
+  private ApplicationSubmitActionsFactoryInterface $submitActionsFactory;
+
   private NonCombinedApplicationUiSchemaFactoryInterface $uiSchemaFactory;
 
   public function __construct(
     ApplicationJsonSchemaCreateHelper $jsonSchemaCreateHelper,
     NonCombinedApplicationJsonSchemaFactoryInterface $jsonSchemaFactory,
+    ApplicationSubmitActionsFactoryInterface $submitActionsFactory,
     NonCombinedApplicationUiSchemaFactoryInterface $uiSchemaFactory
   ) {
     $this->jsonSchemaCreateHelper = $jsonSchemaCreateHelper;
     $this->jsonSchemaFactory = $jsonSchemaFactory;
+    $this->submitActionsFactory = $submitActionsFactory;
     $this->uiSchemaFactory = $uiSchemaFactory;
   }
 
@@ -61,6 +67,12 @@ final class ApplicationFormNewCreateHandler implements ApplicationFormNewCreateH
       $command->getFundingProgram(),
       $command->getFundingCaseType(),
     );
+
+    $submitButtons = JsonFormsSubmitButtonsFactory::createButtons(
+      $this->submitActionsFactory->createInitialSubmitActions($command->getFundingProgram()->getPermissions()),
+    );
+    $elements = array_merge($uiSchema->getElements(), $submitButtons);
+    $uiSchema['elements'] = $elements;
 
     return new RemoteForm($jsonSchema, $uiSchema);
   }

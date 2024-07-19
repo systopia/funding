@@ -26,10 +26,7 @@ use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 
 final class IJBApplicationUiSchema extends JsonFormsGroup {
 
-  /**
-   * @phpstan-param array<int, \Civi\RemoteTools\JsonForms\Control\JsonFormsSubmitButton> $submitButtons
-   */
-  public function __construct(string $currency, array $submitButtons) {
+  public function __construct(string $currency) {
     $elements = [
       new JsonFormsCategorization([
         new IJBGrunddatenUiSchema('#/properties/grunddaten/properties'),
@@ -42,7 +39,6 @@ final class IJBApplicationUiSchema extends JsonFormsGroup {
         new IJBBeschreibungUiSchema(),
         new IJBProjektunterlagenUiSchema(),
       ]),
-      ...$submitButtons,
     ];
     parent::__construct('Förderantrag für Jugend- und Fachkräftebegegnungen', $elements);
   }

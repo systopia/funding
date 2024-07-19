@@ -34,10 +34,9 @@ use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 final class AVK1UiSchema extends JsonFormsGroup {
 
   /**
-   * @phpstan-param array<int, \Civi\RemoteTools\JsonForms\Control\JsonFormsSubmitButton> $submitButtons
-   * @phpstan-param array<int, \Civi\RemoteTools\JsonForms\JsonFormsElement> $preSubmitButtonElements
+   * @phpstan-param array<int, \Civi\RemoteTools\JsonForms\JsonFormsElement> $extraElements
    */
-  public function __construct(string $currency, array $submitButtons, array $preSubmitButtonElements = []) {
+  public function __construct(string $currency, array $extraElements = []) {
     parent::__construct('Förderantrag für Sonstige Aktivitäten (SoA) / Virtuelle Kurse', [
       new JsonFormsCategorization([
         new AVK1GrunddatenUiSchema('#/properties/grunddaten/properties'),
@@ -177,8 +176,7 @@ EOD,
             ]),
         ]),
       ]),
-      ...$preSubmitButtonElements,
-      ...$submitButtons,
+      ...$extraElements,
     ]);
   }
 
