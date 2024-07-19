@@ -21,7 +21,7 @@ namespace Civi\Funding\Form\Application;
 
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
-use Civi\RemoteTools\JsonForms\JsonFormsElement;
+use Civi\RemoteTools\JsonForms\JsonFormsLayout;
 
 interface NonCombinedApplicationUiSchemaFactoryInterface extends ApplicationUiSchemaFactoryInterface {
 
@@ -31,6 +31,6 @@ interface NonCombinedApplicationUiSchemaFactoryInterface extends ApplicationUiSc
   public function createUiSchemaNew(
     FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType
-  ): JsonFormsElement;
+  ): JsonFormsLayout;
 
 }

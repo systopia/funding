@@ -27,13 +27,11 @@ final class IJBApplicationJsonSchema extends JsonSchemaObject {
   /**
    * @phpstan-param array<int, string> $possibleRecipients
    *    Map of contact IDs to names.
-   * @phpstan-param array<string, \Civi\RemoteTools\JsonSchema\JsonSchema> $extraProperties
    */
   public function __construct(
     \DateTimeInterface $applicationBegin,
     \DateTimeInterface $applicationEnd,
-    array $possibleRecipients,
-    array $extraProperties = []
+    array $possibleRecipients
   ) {
     // @todo Additional validations, e.g. required, length, min, max, ...
     $properties = [
@@ -48,7 +46,7 @@ final class IJBApplicationJsonSchema extends JsonSchemaObject {
       'projektunterlagen' => new IJBProjektunterlagenJsonSchema(),
     ];
 
-    parent::__construct($properties + $extraProperties, ['required' => array_keys($properties)]);
+    parent::__construct($properties, ['required' => array_keys($properties)]);
   }
 
 }

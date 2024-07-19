@@ -56,15 +56,4 @@ interface ApplicationSubmitActionsFactoryInterface {
     array $permissions
   ): array;
 
-  /**
-   * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $statusList
-   *     Status of other application processes in same funding case indexed by ID.
-   * @phpstan-param array<string> $permissions
-   *
-   * @return bool
-   *   true if an action that allows to edit the application details is
-   *   available.
-   */
-  public function isEditAllowed(FullApplicationProcessStatus $status, array $statusList, array $permissions): bool;
-
 }

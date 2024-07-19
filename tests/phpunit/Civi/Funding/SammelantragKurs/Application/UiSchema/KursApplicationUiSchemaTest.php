@@ -19,12 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\SammelantragKurs\Application\UiSchema;
 
-use Civi\Funding\Form\JsonSchema\JsonFormsSubmitButtonsFactory;
 use Civi\Funding\Form\Traits\AssertFormTrait;
 use Civi\Funding\SammelantragKurs\Application\JsonSchema\KursApplicationJsonSchema;
-use Civi\Funding\Util\FormTestUtil;
-use Civi\RemoteTools\JsonForms\Control\JsonFormsSubmitButton;
-use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -35,34 +31,13 @@ final class KursApplicationUiSchemaTest extends TestCase {
   use AssertFormTrait;
 
   public function testUiSchema(): void {
-    $possibleRecipients = [
-      1 => 'Organization 1',
-      2 => 'Organization 2',
-    ];
-    $submitActions = [
-      'submitAction1' => ['label' => 'Do Submit1', 'confirm' => NULL],
-      'submitAction2' => ['label' => 'Do Submit2', 'confirm' => 'Proceed?'],
-    ];
-
     $jsonSchema = new KursApplicationJsonSchema(
       new \DateTime('2022-08-24'),
       new \DateTime('2022-08-25'),
-      ['_action' => new JsonSchemaString()],
     );
 
-    $uiSchema = new KursApplicationUiSchema('Title', '€', JsonFormsSubmitButtonsFactory::createButtons($submitActions));
-
-    static::assertNull($uiSchema->isReadonly());
+    $uiSchema = new KursApplicationUiSchema('Title', '€');
     static::assertScopesExist($jsonSchema->toStdClass(), $uiSchema);
-    static::assertScopeExists('#/properties/_action', $uiSchema);
-
-    static::assertEquals(
-      [
-        new JsonFormsSubmitButton('#/properties/_action', 'submitAction1', 'Do Submit1'),
-        new JsonFormsSubmitButton('#/properties/_action', 'submitAction2', 'Do Submit2', 'Proceed?'),
-      ],
-      FormTestUtil::getControlsWithScope('#/properties/_action', $uiSchema)
-    );
   }
 
 }

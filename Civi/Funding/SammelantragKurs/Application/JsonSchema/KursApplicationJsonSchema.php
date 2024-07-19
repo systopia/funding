@@ -23,13 +23,9 @@ use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 
 final class KursApplicationJsonSchema extends JsonSchemaObject {
 
-  /**
-   * @phpstan-param array<string, \Civi\RemoteTools\JsonSchema\JsonSchema> $extraProperties
-   */
   public function __construct(
     \DateTimeInterface $applicationBegin,
-    \DateTimeInterface $applicationEnd,
-    array $extraProperties = []
+    \DateTimeInterface $applicationEnd
   ) {
     // @todo Additional validations, e.g. required, length, min, max, ...
     $properties = [
@@ -39,7 +35,7 @@ final class KursApplicationJsonSchema extends JsonSchemaObject {
       'beschreibung' => new KursBeschreibungJsonSchema(),
     ];
 
-    parent::__construct($properties + $extraProperties, ['required' => array_keys($properties)]);
+    parent::__construct($properties, ['required' => array_keys($properties)]);
   }
 
 }

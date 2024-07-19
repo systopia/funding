@@ -24,20 +24,12 @@ use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\Application\CombinedApplicationUiSchemaFactoryInterface;
-use Civi\Funding\Form\JsonSchema\JsonFormsSubmitButtonsFactory;
-use Civi\Funding\SammelantragKurs\Application\Actions\KursApplicationSubmitActionsFactory;
 use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
-use Civi\RemoteTools\JsonForms\JsonFormsElement;
+use Civi\RemoteTools\JsonForms\JsonFormsLayout;
 
 final class KursApplicationUiSchemaFactory implements CombinedApplicationUiSchemaFactoryInterface {
 
   use KursSupportedFundingCaseTypesTrait;
-
-  private KursApplicationSubmitActionsFactory $submitActionsFactory;
-
-  public function __construct(KursApplicationSubmitActionsFactory $submitActionsFactory) {
-    $this->submitActionsFactory = $submitActionsFactory;
-  }
 
   /**
    * @inheritDoc
@@ -45,34 +37,11 @@ final class KursApplicationUiSchemaFactory implements CombinedApplicationUiSchem
   public function createUiSchemaExisting(
     ApplicationProcessEntityBundle $applicationProcessBundle,
     array $applicationProcessStatusList
-  ): JsonFormsElement {
-    $applicationProcess = $applicationProcessBundle->getApplicationProcess();
-    $fundingCase = $applicationProcessBundle->getFundingCase();
-    $fundingProgram = $applicationProcessBundle->getFundingProgram();
-
-    $submitButtons = JsonFormsSubmitButtonsFactory::createButtons(
-      $this->submitActionsFactory->createSubmitActions(
-        $applicationProcess->getFullStatus(),
-        $applicationProcessStatusList,
-        $fundingCase->getPermissions()
-      ),
+  ): JsonFormsLayout {
+    return new KursApplicationUiSchema(
+      $applicationProcessBundle->getApplicationProcess()->getIdentifier(),
+      $applicationProcessBundle->getFundingProgram()->getCurrency(),
     );
-
-    $uiSchema = new KursApplicationUiSchema(
-      $applicationProcess->getIdentifier(),
-      $fundingProgram->getCurrency(),
-      $submitButtons,
-    );
-
-    if (!$this->submitActionsFactory->isEditAllowed(
-      $applicationProcess->getFullStatus(),
-      $applicationProcessStatusList,
-      $fundingCase->getPermissions()
-    )) {
-      $uiSchema->setReadonly(TRUE);
-    }
-
-    return $uiSchema;
   }
 
   /**
@@ -82,12 +51,8 @@ final class KursApplicationUiSchemaFactory implements CombinedApplicationUiSchem
     FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType,
     FundingCaseEntity $fundingCase
-  ): JsonFormsElement {
-    $submitButtons = JsonFormsSubmitButtonsFactory::createButtons(
-      $this->submitActionsFactory->createInitialSubmitActions($fundingProgram->getPermissions())
-    );
-
-    return new KursApplicationUiSchema('Neuer Kurs', $fundingProgram->getCurrency(), $submitButtons);
+  ): JsonFormsLayout {
+    return new KursApplicationUiSchema('Neuer Kurs', $fundingProgram->getCurrency());
   }
 
 }

@@ -104,14 +104,4 @@ final class ApplicationSubmitActionsFactoryTest extends TestCase {
     static::assertSame([], $this->submitActionsFactory->createInitialSubmitActions(['permission']));
   }
 
-  public function testIsEditAllowed(): void {
-    $fullStatus = new FullApplicationProcessStatus('test', NULL, NULL);
-    $statusList = [23 => new FullApplicationProcessStatus('status', NULL, NULL)];
-    $this->actionsDeterminerMock->expects(static::once())->method('isEditAllowed')
-      ->with($fullStatus, $statusList, ['permission'])
-      ->willReturn(TRUE);
-
-    static::assertTrue($this->submitActionsFactory->isEditAllowed($fullStatus, $statusList, ['permission']));
-  }
-
 }

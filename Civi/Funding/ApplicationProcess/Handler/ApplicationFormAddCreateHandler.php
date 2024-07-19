@@ -21,8 +21,10 @@ namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormAddCreateCommand;
 use Civi\Funding\ApplicationProcess\Helper\ApplicationJsonSchemaCreateHelper;
+use Civi\Funding\Form\Application\ApplicationSubmitActionsFactoryInterface;
 use Civi\Funding\Form\Application\CombinedApplicationJsonSchemaFactoryInterface;
 use Civi\Funding\Form\Application\CombinedApplicationUiSchemaFactoryInterface;
+use Civi\Funding\Form\JsonSchema\JsonFormsSubmitButtonsFactory;
 use Civi\RemoteTools\Form\RemoteForm;
 use Civi\RemoteTools\Form\RemoteFormInterface;
 
@@ -32,15 +34,19 @@ final class ApplicationFormAddCreateHandler implements ApplicationFormAddCreateH
 
   private CombinedApplicationJsonSchemaFactoryInterface $jsonSchemaFactory;
 
+  private ApplicationSubmitActionsFactoryInterface $submitActionsFactory;
+
   private CombinedApplicationUiSchemaFactoryInterface $uiSchemaFactory;
 
   public function __construct(
     ApplicationJsonSchemaCreateHelper $jsonSchemaCreateHelper,
     CombinedApplicationJsonSchemaFactoryInterface $jsonSchemaFactory,
+    ApplicationSubmitActionsFactoryInterface $submitActionsFactory,
     CombinedApplicationUiSchemaFactoryInterface $uiSchemaFactory
   ) {
     $this->jsonSchemaCreateHelper = $jsonSchemaCreateHelper;
     $this->jsonSchemaFactory = $jsonSchemaFactory;
+    $this->submitActionsFactory = $submitActionsFactory;
     $this->uiSchemaFactory = $uiSchemaFactory;
   }
 
@@ -62,6 +68,14 @@ final class ApplicationFormAddCreateHandler implements ApplicationFormAddCreateH
       $command->getFundingCaseType(),
       $command->getFundingCase(),
     );
+
+    $submitButtons = JsonFormsSubmitButtonsFactory::createButtons(
+      $this->submitActionsFactory->createInitialSubmitActions(
+        $command->getFundingCase()->getPermissions()
+      )
+    );
+    $elements = array_merge($uiSchema->getElements(), $submitButtons);
+    $uiSchema['elements'] = $elements;
 
     return new RemoteForm($jsonSchema, $uiSchema);
   }

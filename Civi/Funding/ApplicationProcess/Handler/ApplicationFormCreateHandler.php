@@ -22,7 +22,9 @@ namespace Civi\Funding\ApplicationProcess\Handler;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormCreateCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormDataGetCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationJsonSchemaGetCommand;
+use Civi\Funding\Form\Application\ApplicationSubmitActionsFactoryInterface;
 use Civi\Funding\Form\Application\ApplicationUiSchemaFactoryInterface;
+use Civi\Funding\Form\JsonSchema\JsonFormsSubmitButtonsFactory;
 use Civi\RemoteTools\Form\RemoteForm;
 use Civi\RemoteTools\Form\RemoteFormInterface;
 
@@ -30,16 +32,20 @@ final class ApplicationFormCreateHandler implements ApplicationFormCreateHandler
 
   private ApplicationJsonSchemaGetHandlerInterface $jsonSchemaGetHandler;
 
+  private ApplicationSubmitActionsFactoryInterface $submitActionsFactory;
+
   private ApplicationUiSchemaFactoryInterface $uiSchemaFactory;
 
   private ApplicationFormDataGetHandlerInterface $dataGetHandler;
 
   public function __construct(
     ApplicationJsonSchemaGetHandlerInterface $jsonSchemaGetHandler,
+    ApplicationSubmitActionsFactoryInterface $submitActionsFactory,
     ApplicationUiSchemaFactoryInterface $uiSchemaFactory,
     ApplicationFormDataGetHandlerInterface $dataGetHandler
   ) {
     $this->jsonSchemaGetHandler = $jsonSchemaGetHandler;
+    $this->submitActionsFactory = $submitActionsFactory;
     $this->uiSchemaFactory = $uiSchemaFactory;
     $this->dataGetHandler = $dataGetHandler;
   }
@@ -53,6 +59,20 @@ final class ApplicationFormCreateHandler implements ApplicationFormCreateHandler
       $command->getApplicationProcessBundle(),
       $command->getApplicationProcessStatusList(),
     );
+
+    $submitButtons = JsonFormsSubmitButtonsFactory::createButtons(
+      $this->submitActionsFactory->createSubmitActions(
+        $command->getApplicationProcess()->getFullStatus(),
+        $command->getApplicationProcessStatusList(),
+        $command->getFundingCase()->getPermissions()
+      )
+    );
+    $elements = array_merge($uiSchema->getElements(), $submitButtons);
+    $uiSchema['elements'] = $elements;
+
+    if (TRUE === $jsonSchema['readOnly']) {
+      $uiSchema->setReadonly(TRUE);
+    }
 
     $data = $this->dataGetHandler->handle(new ApplicationFormDataGetCommand(
       $command->getApplicationProcessBundle(),

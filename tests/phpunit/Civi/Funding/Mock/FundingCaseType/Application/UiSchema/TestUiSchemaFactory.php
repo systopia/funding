@@ -26,7 +26,7 @@ use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\Application\CombinedApplicationUiSchemaFactoryInterface;
 use Civi\Funding\Form\Application\NonCombinedApplicationUiSchemaFactoryInterface;
 use Civi\Funding\Mock\FundingCaseType\Traits\TestSupportedFundingCaseTypesTrait;
-use Civi\RemoteTools\JsonForms\JsonFormsElement;
+use Civi\RemoteTools\JsonForms\JsonFormsLayout;
 
 // phpcs:disable Generic.Files.LineLength.TooLong
 final class TestUiSchemaFactory implements CombinedApplicationUiSchemaFactoryInterface, NonCombinedApplicationUiSchemaFactoryInterface {
@@ -40,21 +40,21 @@ final class TestUiSchemaFactory implements CombinedApplicationUiSchemaFactoryInt
     FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType,
     FundingCaseEntity $fundingCase
-  ): JsonFormsElement {
+  ): JsonFormsLayout {
     return new TestUiSchema();
   }
 
   public function createUiSchemaExisting(
     ApplicationProcessEntityBundle $applicationProcessBundle,
     array $applicationProcessStatusList
-  ): JsonFormsElement {
+  ): JsonFormsLayout {
     return new TestUiSchema();
   }
 
   public function createUiSchemaNew(
     FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType
-  ): JsonFormsElement {
+  ): JsonFormsLayout {
     return new TestUiSchema();
   }
 
