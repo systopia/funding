@@ -23,21 +23,17 @@ use Civi\Funding\Form\JsonSchema\JsonSchemaRecipient;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaNumber;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
-use Webmozart\Assert\Assert;
 
 final class HiHApplicationJsonSchema extends JsonSchemaObject {
 
   /**
    * @phpstan-param array<int, string> $possibleRecipients
    *    Map of contact IDs to names.
-   * @phpstan-param array<string, \Civi\RemoteTools\JsonSchema\JsonSchema> $extraProperties
    */
   public function __construct(
     \DateTimeInterface $applicationBegin,
     \DateTimeInterface $applicationEnd,
-    array $possibleRecipients,
-    array $extraProperties = [],
-    array $keywords = []
+    array $possibleRecipients
   ) {
     // @todo Validate conditional fields.
     // @todo Additional validations, e.g. required, length, min, max, ...
@@ -54,11 +50,7 @@ final class HiHApplicationJsonSchema extends JsonSchemaObject {
       ]),
     ];
 
-    $required = $keywords['required'] ?? [];
-    Assert::isArray($required);
-    $keywords['required'] = array_merge(array_keys($properties), $required);
-
-    parent::__construct($properties + $extraProperties, $keywords);
+    parent::__construct($properties, ['required' => array_keys($properties)]);
   }
 
 }
