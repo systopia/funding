@@ -71,7 +71,7 @@ final class ApplicationFormDataGetHandler implements ApplicationFormDataGetHandl
     $result = $this->validateHandler->handle(new ApplicationFormValidateCommand(
       $command->getApplicationProcessBundle(),
       $command->getApplicationProcessStatusList(),
-      $data,
+      $data + ['_action' => 'get-form-data'],
       10
     ));
 
