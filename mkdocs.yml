@@ -17,6 +17,7 @@ nav:
       - 'Introduction': usage/usage.md
       - 'Application States': usage/application-states.md
       - 'Usage for Applicants': usage/usage-applicants.md
+      - 'Usage for Reviewers': usage/usage-reviewers.md
 
 markdown_extensions:
   - attr_list
