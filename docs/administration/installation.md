@@ -97,10 +97,10 @@ The above selector restricts the module to the funding forms.
 Install the following extensions, use the newest release if not otherwise indicated:
 
 - [de.systopia.xcm](https://github.com/systopia/de.systopia.xcm)
-- [de.systopia.identitytracker](https://github.com/systopia/de.systopia.identitytracker) - version >= 1.4
+- [de.systopia.identitytracker](https://github.com/systopia/de.systopia.identitytracker)
 - [de.systopia.remotetools](https://github.com/systopia/de.systopia.remotetools)
 - [de.systopia.civioffice](https://github.com/systopia/de.systopia.civioffice) - version >= 1.0
-- [org.project60.banking](https://github.com/Project60/org.project60.banking) - version >= 1.0. The  _CiviContribute_ component needs to be activated for this extension.
+- [org.project60.banking](https://github.com/Project60/org.project60.banking) - The  _CiviContribute_ component needs to be activated for this extension.
 - [activity-entity](https://github.com/systopia/activity-entity)
 - [external-file](https://github.com/systopia/external-file)
 - [funding](https://github.com/systopia/funding)
@@ -148,15 +148,15 @@ drush pm:enable cmrf_call_report
 ```
 
 This helps with debugging by showing a report about all API calls sent to CiviCRM and the corresponding results.
-The report can be found at `admin/reports/cmrfcalls`.
+The report can be found at `/admin/reports/cmrfcalls`.
 
 ## Synchronise User Roles
 
 CiviRemote will synchronise permissions that are set for a CiviCRM contact with the associated user in Drupal. For the funding framework, the roles **CiviRemote: CiviRemote User** and **CiviRemote: CiviRemote Funding** are used. During the synchronisation of user roles, these roles are automatically created in Drupal if they don't exist yet. Because of this, we create a test user, synchronise/create the roles and delete the user afterward. You can also create a regular user that you would need to create anyway.
 
-- Create a new Drupal user **Test User**.
+- Create a new Drupal user **Test User** (or use an existing one).
 - Open the associated CiviCRM Contact, scroll down in the summary page and edit the custom field set **RemoteContact Information**. Add the two roles **CiviRemote User** and **CiviRemote Funding**.
-- Open the user list of Drupal (`admin/people`) and select the test user you just created.
+- Open the user list of Drupal (`/admin/people`) and select the test user you just created.
 - Perform the action **CiviRemote: Match contacts** and afterwards **CiviRemote: Synchronise CiviRemote Roles**.
 
 You should now see the roles listed for **Test User**.
@@ -170,74 +170,24 @@ Additionally, you need to adapt the permissions for Drupal user roles as describ
 
 If no roles are listed for **Test User** after **CiviRemote: Synchronise CiviRemote Roles** has been performed:
 
-1. Check CiviMRF Call Reports at `admin/reports/cmrfcalls`.
+1. Check CiviMRF Call Reports at `/admin/reports/cmrfcalls`.
 
 - If you see a message ``FAIL civiremote RemoteContact match`` then the Drupal **Test User** did not receive a **CiviRemote ID** for its CiviCRM contact through action **CiviRemote: Match contacts**.
 - You can verify this by taking a look at the infopage of **Test User**, listed at `/admin/people`. The field **CiviRemote ID** might be empty.
 
 2. You can try to solve this issue by relaoding the XCM (Extended Contact Matcher) profile, that is used for matching contacts.
 
-- Go to `civicrm/admin/setting/xcm` and edit the XCM-Profile (ie. _default_). 
+- Go to `/civicrm/admin/setting/xcm` and edit the XCM-Profile (ie. _default_). 
 - Save the profile without making any changes.
 - Perform action **CiviRemote: Match contacts** again for Drupal user **Test User**.
 
-3. CiviMRF Call Reports at `admin/reports/cmrfcalls` should now show a message ``DONE civiremote RemoteContact match``.
+3. CiviMRF Call Reports at `/admin/reports/cmrfcalls` should now show a message ``DONE civiremote RemoteContact match``.
 
 - If so, run action **CiviRemote: Synchronise CiviRemote Roles** for Drupal user **Test User** again in order to synchronize roles from CiviCRM.
 
 ## Configure Dashboard
 
-Open the basic site settings at `admin/config/system/site-information` and enter `/civiremote/funding` in the field for the default front page.
-
-## Create Templates
-
-The creation of transfer contracts and payment instructions relies on templates in `docx` format. They are created with [CiviOffice](https://docs.civicrm.org/civioffice/en/latest/) and can contain tokens. Currently, there is no admin page available to upload the template files.
-
-### Transfer Contract Template
-
-Copy the template file to a temporary location (e.g. `/tmp/transfer-contract-template.docx`). Determine the ID of the funding case type.
-
-```shell
-cv cli civicrm_api3('Attachment', 'create', [
-  'name' => "transfer-contract-template.docx",
-  'mime_type' => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  'entity_id' => {FUNDING_CASE_TYPE_ID},
-  'entity_table' => "civicrm_funding_case_type",
-  'options' => ['move-file' => "/tmp/transfer-contract-template.docx"],
-]);
-
-exit
-```
-Set the `file_type_id` (not possible with Attachment API):
-
-```shell
-cv api4 File.update +v file_type_id:name=transfer_contract_template +w 'id = {FILE_ID}'
-```
-
-### Payment Instruction Template
-
-Copy the template file to a temporary location (e.g. `/tmp/payment-instruction-template.docx`). Determine the ID of the funding case type.
-
-```cv cli```
-
-in the following prompt you can enter
-
-```shell
-civicrm_api3('Attachment', 'create', [
-  'name' => "payment-instruction-template.docx",
-  'mime_type' => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  'entity_id' => "{FUNDING_CASE_TYPE_ID}",
-  'entity_table' => "civicrm_funding_case_type",
-  'options' => ['move-file' => "/tmp/payment-instruction-template.docx"],
-]);
-
-exit
-```
-Set the `file_type_id` (not possible with Attachment API):
-
-```shell
-cv api4 File.update +v file_type_id:name=funding_payment_instruction_template +w 'id = {FILE_ID}'
-```
+Open the basic site settings at `/admin/config/system/site-information` and enter `/civiremote/funding` in the field for the default front page.
 
 ## Time Zone
 
@@ -245,3 +195,9 @@ All requests must be executed with the same time zone. This means that all
 CiviCRM contacts must use the same time zone. Therefore, the option
 `Users may set their own time zone` in the Drupal `Regional settings`
 (`/admin/config/regional/settings`) needs to be disabled.
+
+## Create and Configure Funding Case Type Templates
+
+The creation of transfer contracts and payment instructions relies on templates in `docx` format. They are created with [CiviOffice](https://docs.civicrm.org/civioffice/en/latest/) and can contain tokens. For each funding case type different templates can be uploaded.
+
+To upload your templates open `/civicrm/funding/case-type/list` and click *Manage templates* at the funding case type you want to configure the templates.
