@@ -52,10 +52,10 @@ drush pm:enable civiremote_funding
 
 - `fontawesome` is not required if **Font Awesome** is provided by other means.
 - `formtips` is not required, but recommended.
-- `symfony/property-access` is a dependency of the funding extension.
+- `symfony/property-access` and `webmozart/assert` are dependencies of the funding extension.
 
 ```
-composer require drupal/fontawesome drupal/formtips symfony/property-access
+composer require drupal/fontawesome drupal/formtips symfony/property-access webmozart/assert
 drush pm:enable fontawesome formtips
 ```
 
