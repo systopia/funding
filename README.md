@@ -21,7 +21,3 @@ to get an invoice or agree a different payment method. Thank you!
 
 * PHP v7.4+
 * CiviCRM 5.66
-
-## Documentation:
-
-https://docs.civicrm.org/funding/en/latest (automatic publishing)
