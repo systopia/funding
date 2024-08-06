@@ -53,9 +53,7 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
       new NullTranslator(),
       OpisApplicationValidatorFactory::getValidator()
     );
-  }
 
-  public function test(): void {
     $possibleRecipients = [
       1 => 'Organization 1',
       2 => 'Organization 2',
@@ -66,9 +64,6 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
       new \DateTime('2024-07-09'),
       $possibleRecipients
     );
-
-    $personalkostenSumme = 8000.8;
-
 
     $this->validData = [
       'fragenZumProjekt' => [
