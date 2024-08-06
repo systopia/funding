@@ -41,7 +41,8 @@ final class HiHApplicationJsonSchema extends JsonSchemaObject {
       'fragenZumProjekt' => new HiHFragenZumProjektJsonSchema(),
       'informationenZumProjekt' => new HiHInformationenZumProjektJsonSchema($applicationBegin, $applicationEnd),
       'empfaenger' => new JsonSchemaRecipient($possibleRecipients),
-      'kostenUndFinanzierung' => new HiHKostenUndFinanzierungJsonSchema(),
+      'kosten' => new HiHKostenJsonSchema(),
+      'einnahmen' => new HiHEinnahmenJsonSchema(),
       'rechtliches' => new HiHRechtlichesJsonSchema(),
       'amount' => new JsonSchemaNumber([
         'default' => 0.0,
