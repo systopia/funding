@@ -36,11 +36,10 @@ Kinderschutz verpflichtet und macht dieses entsprechend kenntlich
 (Flyer/Website/Satzung). Bitte ankreuzen.
 EOD
       ),
-      new JsonFormsGroup('Datenschutz', [
-        new JsonFormsControl(
-          "$scopePrefix/datenschutz",
-          'Ich habe die Hinweise zum Datenschutz gelesen und stimme zu.',
-          <<<EOD
+      new JsonFormsControl(
+        "$scopePrefix/datenschutz",
+        'Ich habe die Hinweise zum Datenschutz gelesen und stimme zu.',
+        <<<EOD
 Ich bin damit einverstanden, dass meine hier eingetragenen Daten sowie
 hochgeladene Dokumente in der Datenbank der BürgerStiftung Hamburg
 weiterverarbeitet, gespeichert und veröffentlicht werden und zum Zweck der
@@ -49,8 +48,7 @@ sowie die Beiratsmitglieder und den Verein Stiften für alle e.V. weitergeleitet
 werden dürfen. Weitere Infos finden Sie in unseren Hinweisen zum Datenschutz
 finden Sie in unseren Hinweisen zum Datenschutz.
 EOD
-        ),
-      ]),
+      ),
     ]);
   }
 

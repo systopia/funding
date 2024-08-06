@@ -20,17 +20,25 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\UiSchema;
 
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
+use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategorization;
+use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 
 final class HiHApplicationUiSchema extends JsonFormsGroup {
 
   public function __construct(string $currency) {
     $elements = [
-      new JsonFormsControl('#/properties/empfaenger', 'Fördergeldempfänger'),
-      new HiHFragenZumProjektGroup('#/properties/fragenZumProjekt/properties'),
-      new HiHInformationenZumProjektGroup('#/properties/informationenZumProjekt/properties'),
-      new HiHKostenUndFinanzierungGroup('#/properties/kostenUndFinanzierung/properties', $currency),
-      new HiHRechtlichesGroup('#/properties/rechtliches/properties'),
+      new JsonFormsCategorization([
+        new JsonFormsCategory('Allgemein', [
+          new JsonFormsControl('#/properties/empfaenger', 'Fördergeldempfänger'),
+          new HiHFragenZumProjektGroup('#/properties/fragenZumProjekt/properties'),
+          new HiHInformationenZumProjektGroup('#/properties/informationenZumProjekt/properties'),
+        ]),
+        new HiHKostenUndFinanzierungCategory('#/properties', $currency),
+        new JsonFormsCategory('Rechtliches', [
+          new HiHRechtlichesGroup('#/properties/rechtliches/properties'),
+        ]),
+      ]),
     ];
     parent::__construct('Förderantrag für NDR-Benefizaktion', $elements);
   }
