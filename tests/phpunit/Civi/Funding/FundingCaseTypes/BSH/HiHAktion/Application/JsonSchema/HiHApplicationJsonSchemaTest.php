@@ -67,6 +67,9 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
       $possibleRecipients
     );
 
+    $personalkostenSumme = 8000.8;
+
+
     $this->validData = [
       'fragenZumProjekt' => [
         'name' => 'Test',
