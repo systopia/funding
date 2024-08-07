@@ -28,9 +28,9 @@ final class HiHFragenZumProjektJsonSchema extends JsonSchemaObject {
 
   public function __construct() {
     $abweichendeAnschrift = new JsonSchemaObject([
-      'strasse' => new JsonSchemaString(),
-      'plz' => new JsonSchemaString(),
-      'ort' => new JsonSchemaString(),
+      'strasse' => new JsonSchemaString(['maxLength' => 255]),
+      'plz' => new JsonSchemaString(['maxLength' => 255]),
+      'ort' => new JsonSchemaString(['maxLength' => 255]),
     ]);
     $minLengthValidation = [
       '$validations' => [
@@ -49,18 +49,19 @@ final class HiHFragenZumProjektJsonSchema extends JsonSchemaObject {
 
     $properties = [
       'name' => new JsonSchemaString([
+        'maxLength' => 255,
         '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'title']]),
       ]),
       'ansprechpartner' => new JsonSchemaObject([
-        'anrede' => new JsonSchemaString(),
-        'titel' => new JsonSchemaString(),
-        'vorname' => new JsonSchemaString(),
-        'nachname' => new JsonSchemaString(),
+        'anrede' => new JsonSchemaString(['maxLength' => 255]),
+        'titel' => new JsonSchemaString(['maxLength' => 255]),
+        'vorname' => new JsonSchemaString(['maxLength' => 255]),
+        'nachname' => new JsonSchemaString(['maxLength' => 255]),
       ], ['required' => ['anrede', 'vorname', 'nachname']]),
       'adresseIdentischMitOrganisation' => new JsonSchemaBoolean(),
       'abweichendeAnschrift' => $abweichendeAnschrift,
-      'telefonnummer' => new JsonSchemaString(),
-      'email' => new JsonSchemaString(),
+      'telefonnummer' => new JsonSchemaString(['maxLength' => 255]),
+      'email' => new JsonSchemaString(['maxLength' => 255]),
     ];
 
     $keywords = [
