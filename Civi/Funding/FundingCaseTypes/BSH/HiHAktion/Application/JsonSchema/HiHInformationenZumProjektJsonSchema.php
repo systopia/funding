@@ -33,10 +33,11 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
   public function __construct(\DateTimeInterface $applicationBegin, \DateTimeInterface $applicationEnd) {
     $properties = [
       'kurzbeschreibung' => new JsonSchemaString([
+        'maxLength' => 4000,
         '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'short_description']]),
       ]),
-      'wirktGegenEinsamkeit' => new JsonSchemaString(),
-      'kern' => new JsonSchemaString(),
+      'wirktGegenEinsamkeit' => new JsonSchemaString(['maxLength' => 4000]),
+      'kern' => new JsonSchemaString(['maxLength' => 4000]),
       'status' => new JsonSchemaString([
         'oneOf' => JsonSchemaUtil::buildTitledOneOf([
           'neu' => 'neu startendes Projekt',
@@ -45,7 +46,7 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
         ]),
       ]),
       'statusBeginn' => new JsonSchemaDate(['maxDate' => date('Y-m-d')], TRUE),
-      'statusSonstiges' => new JsonSchemaString(),
+      'statusSonstiges' => new JsonSchemaString(['maxLength' => 255]),
       'foerderungAb' => new JsonSchemaDate([
         'minDate' => $applicationBegin->format('Y-m-d'),
         'maxDate' => $applicationEnd->format('Y-m-d'),
@@ -56,8 +57,8 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
         'maxDate' => $applicationEnd->format('Y-m-d'),
         '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'end_date']]),
       ]),
-      'haeufigkeit' => new JsonSchemaString(),
-      'beabsichtigteTeilnehmendenzahl' => new JsonSchemaInteger(),
+      'haeufigkeit' => new JsonSchemaString(['maxLength' => 255]),
+      'beabsichtigteTeilnehmendenzahl' => new JsonSchemaInteger(['minimum' => 1]),
       'zielgruppe' => new JsonSchemaArray(new JsonSchemaString([
         'oneOf' => JsonSchemaUtil::buildTitledOneOf([
           'kinder' => 'Kinder',
@@ -73,8 +74,8 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
           'sonstiges' => 'Sonstiges und zwar',
         ]),
       ]), ['uniqueItems' => TRUE, 'minItems' => 1]),
-      'zielgruppeSonstiges' => new JsonSchemaString(),
-      'zielgruppeErreichen' => new JsonSchemaString(),
+      'zielgruppeSonstiges' => new JsonSchemaString(['maxLength' => 255]),
+      'zielgruppeErreichen' => new JsonSchemaString(['maxLength' => 4000]),
       'projektformat' => new JsonSchemaArray(new JsonSchemaString([
         'oneOf' => JsonSchemaUtil::buildTitledOneOf([
           'offenesAngebot' => 'Offenes Angebot',
@@ -88,16 +89,17 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
           'sonstiges' => 'Sonstiges und zwar',
         ]),
       ]), ['uniqueItems' => TRUE, 'minItems' => 1]),
-      'projektformatSonstiges' => new JsonSchemaString(),
+      'projektformatSonstiges' => new JsonSchemaString(['maxLength' => 255]),
       'dateien' => new JsonSchemaArray(new JsonSchemaObject([
         '_identifier' => new JsonSchemaString(['readonly' => TRUE]),
         'datei' => new JsonSchemaString([
+          'maxLength' => 255,
           'format' => 'uri',
           '$tag' => 'externalFile',
         ]),
-        'beschreibung' => new JsonSchemaString(),
+        'beschreibung' => new JsonSchemaString(['maxLength' => 255]),
       ], ['required' => ['datei', 'beschreibung']])),
-      'sonstiges' => new JsonSchemaString(),
+      'sonstiges' => new JsonSchemaString(['maxLength' => 4000]),
     ];
 
     $minLengthValidation = [
