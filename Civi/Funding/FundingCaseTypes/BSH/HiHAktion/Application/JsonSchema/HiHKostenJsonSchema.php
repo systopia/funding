@@ -62,10 +62,11 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
           'personalkosten' => new JsonSchemaDataPointer('1/personalkosten'),
         ]
       ),
+      'personalkostenKommentar' => new JsonSchemaString(['maxLength' => 4000]),
       'honorare' => new JsonSchemaArray(
         new JsonSchemaObject([
           '_identifier' => new JsonSchemaString(['readonly' => TRUE]),
-          'posten' => new JsonSchemaString(),
+          'posten' => new JsonSchemaString(['maxLength' => 255]),
           'berechnungsgrundlage' => new JsonSchemaString([
             'oneOf' => JsonSchemaUtil::buildTitledOneOf([
               'stundensatz' => 'Stundensatz',
@@ -99,6 +100,7 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
           'honorare' => new JsonSchemaDataPointer('1/honorare'),
         ]
       ),
+      'honorareKommentar' => new JsonSchemaString(['maxLength' => 4000]),
       'sachkosten' => new JsonSchemaObject([
         'materialien' => new JsonSchemaMoney([
           'minimum' => 0,
@@ -173,7 +175,7 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
         'verwaltungskosten' => new JsonSchemaArray(
           new JsonSchemaObject([
             '_identifier' => new JsonSchemaString(['readonly' => TRUE]),
-            'bezeichnung' => new JsonSchemaString(),
+            'bezeichnung' => new JsonSchemaString(['maxLength' => 255]),
             'summe' => new JsonSchemaMoney(['minimum' => 0]),
           ], ['required' => ['bezeichnung', 'summe']]),
           [
@@ -195,7 +197,7 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
         'sonstige' => new JsonSchemaArray(
           new JsonSchemaObject([
             '_identifier' => new JsonSchemaString(['readonly' => TRUE]),
-            'bezeichnung' => new JsonSchemaString(),
+            'bezeichnung' => new JsonSchemaString(['maxLength' => 255]),
             'summe' => new JsonSchemaMoney(['minimum' => 0]),
           ], ['required' => ['bezeichnung', 'summe']]),
           [
@@ -243,6 +245,7 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
           'sonstige',
         ],
       ]),
+      'sachkostenKommentar' => new JsonSchemaString(['maxLength' => 4000]),
       'gesamtkosten' => new JsonSchemaCalculate(
         'number',
         'round(personalkostenSumme + honorareSumme + sachkostenSumme, 2)',

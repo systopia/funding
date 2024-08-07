@@ -54,6 +54,50 @@ EOD
 
         ),
       ]),
+      new JsonFormsControl(
+        "$scopePrefix/kosten/properties/personalkostenKommentar",
+        'Kommentar zu den Personalkosten',
+        <<<EOD
+Bitte erklären Sie, wie viele Stunden pro Woche und Stelle gearbeitet werden,
+was die Aufgaben sind und warum die Stelle für das Projekt wichtig ist.
+EOD,
+        ['multi' => TRUE]
+      ),
+      new JsonFormsControl(
+        "$scopePrefix/kosten/properties/honorareKommentar",
+        'Kommentar zu den Honorarkosten',
+        <<<EOD
+Bitte erklären Sie, was die Honorarkräfte machen, wo sie im Projekt arbeiten und
+warum sie wichtig sind.
+EOD,
+        ['multi' => TRUE]
+      ),
+      new JsonFormsControl(
+        "$scopePrefix/kosten/properties/sachkostenKommentar",
+        'Kommentar zu den Sachkosten',
+        <<<EOD
+Bitte erklären Sie, wofür das Geld im Projekt ausgegeben wird und warum das
+wichtig ist. Gehen Sie dabei auf alle Sachkostenkategorien ein  (z.B.
+projektbezogene Materialien, Verpflegung usw.)
+EOD,
+        ['multi' => TRUE]
+      ),
+      new JsonFormsControl(
+        "$scopePrefix/einnahmen/properties/einnahmenKommentar",
+        'Kommentar zu den Einnahmen',
+        <<<EOD
+Bitte erklären Sie, woher Ihr Geld kommt. Geben Sie auch an, ob das ganze Geld
+schon da ist oder ob es noch genehmigt werden muss.
+EOD,
+        ['multi' => TRUE]
+      ),
+      new JsonFormsControl(
+        "$scopePrefix/einnahmen/properties/kannStattfindenOhneVollstaendigeEinnahmen",
+        <<<EOD
+Hiermit bestätige ich, dass das Projekt stattfinden kann, auch wenn nicht alle
+angegeben Einnahmen vollumfänglich zur Verfügung gestellt werden.
+EOD
+      ),
     ]);
   }
 

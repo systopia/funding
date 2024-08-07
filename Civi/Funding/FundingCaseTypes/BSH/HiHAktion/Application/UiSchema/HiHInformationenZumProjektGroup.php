@@ -36,15 +36,19 @@ final class HiHInformationenZumProjektGroup extends JsonFormsGroup {
 Beschreiben Sie kurz, was Sie mit der Förderung umsetzen wollen?
 Bitte beschreiben Sie in wenigen Sätzen Ihr Projekt.
 (Was erleben die Teilnehmer:innen?)
-EOD, NULL, NULL, ['$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'short_description']])]
+EOD, NULL, ['multi' => TRUE]
       ),
       new JsonFormsControl(
         "$scopePrefix/wirktGegenEinsamkeit",
-        'Warum wirkt das Projekt gegen Einsamkeit?'
+        'Warum wirkt das Projekt gegen Einsamkeit?',
+        NULL,
+        ['multi' => TRUE]
       ),
       new JsonFormsControl(
         "$scopePrefix/kern",
-        'Kurztext für den NDR: Was ist der Kern Ihres Projektes? (1-2 Sätze)'
+        'Kurztext für den NDR: Was ist der Kern Ihres Projektes? (1-2 Sätze)',
+        NULL,
+        ['multi' => TRUE]
       ),
       new JsonFormsControl(
         "$scopePrefix/status",
@@ -114,6 +118,8 @@ EOD, NULL, NULL, ['$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' 
       new JsonFormsControl(
         "$scopePrefix/zielgruppeErreichen",
         'Wie erreichen Sie die Zielgruppe?',
+        NULL,
+        ['multi' => TRUE]
       ),
       new JsonFormsControl(
         "$scopePrefix/projektformat",
@@ -148,7 +154,9 @@ EOD, NULL, NULL, ['$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' 
       ),
       new JsonFormsControl(
         "$scopePrefix/sonstiges",
-        'Was Sie uns sonst noch zu Ihrem Projekt sagen wollen'
+        'Was Sie uns sonst noch zu Ihrem Projekt sagen wollen',
+        NULL,
+        ['multi' => TRUE]
       ),
     ]);
   }

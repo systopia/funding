@@ -21,10 +21,12 @@ namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\JsonSchema;
 
 use Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\JsonSchemaResourcesItem;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonSchema\JsonSchemaBoolean;
 use Civi\RemoteTools\JsonSchema\JsonSchemaCalculate;
 use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
 use Civi\RemoteTools\JsonSchema\JsonSchemaMoney;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
+use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 
 final class HiHEinnahmenJsonSchema extends JsonSchemaObject {
 
@@ -80,7 +82,16 @@ final class HiHEinnahmenJsonSchema extends JsonSchemaObject {
           ]),
         ]
       ),
-    ], ['required' => ['antragssumme', 'andereFoerdermittel', 'eigenmittel']]);
+      'einnahmenKommentar' => new JsonSchemaString(['maxLength' => 4000]),
+      'kannStattfindenOhneVollstaendigeEinnahmen' => new JsonSchemaBoolean(['const' => TRUE, 'default' => FALSE]),
+    ], [
+      'required' => [
+        'antragssumme',
+        'andereFoerdermittel',
+        'eigenmittel',
+        'kannStattfindenOhneVollstaendigeEinnahmen',
+      ],
+    ]);
   }
 
 }
