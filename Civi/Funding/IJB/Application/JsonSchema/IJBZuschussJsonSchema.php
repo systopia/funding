@@ -200,7 +200,7 @@ final class IJBZuschussJsonSchema extends JsonSchemaObject {
       ]),
       'finanzierungKostenDifferenz' => new JsonSchemaCalculate(
         'number',
-        'finanzierungGesamt - kostenGesamt',
+        'round(finanzierungGesamt - kostenGesamt, 2)',
         [
           'finanzierungGesamt' => new JsonSchemaDataPointer('1/finanzierungGesamt'),
           'kostenGesamt' => new JsonSchemaDataPointer('1/kostenGesamt'),
