@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\Application;
 
-use Civi\Funding\Entity\FullApplicationProcessStatus;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 
 interface ApplicationSubmitActionsFactoryInterface {
 
@@ -40,7 +40,6 @@ interface ApplicationSubmitActionsFactoryInterface {
   /**
    * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $statusList
    *     Status of other application processes in same funding case indexed by ID.
-   * @phpstan-param array<string> $permissions
    *
    * @phpstan-return array<string, array{
    *   label: string,
@@ -51,9 +50,8 @@ interface ApplicationSubmitActionsFactoryInterface {
    *   needsFormData is FALSE if the action is applicable without form data.
    */
   public function createSubmitActions(
-    FullApplicationProcessStatus $status,
-    array $statusList,
-    array $permissions
+    ApplicationProcessEntityBundle $applicationProcessBundle,
+    array $statusList
   ): array;
 
 }

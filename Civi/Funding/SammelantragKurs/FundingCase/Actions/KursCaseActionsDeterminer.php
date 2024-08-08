@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\SammelantragKurs\FundingCase\Actions;
 
+use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\FundingCase\Actions\AbstractFundingCaseActionsDeterminerDecorator;
 use Civi\Funding\FundingCase\Actions\DefaultFundingCaseActionsDeterminer;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions;
@@ -39,12 +40,16 @@ final class KursCaseActionsDeterminer extends AbstractFundingCaseActionsDetermin
 
   private KursApplicationActionsDeterminer $applicationActionsDeterminer;
 
+  private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
+
   public function __construct(
     KursApplicationActionsDeterminer $applicationActionsDeterminer,
+    ApplicationProcessBundleLoader $applicationProcessBundleLoader,
     KursApplicationActionStatusInfo $statusInfo
   ) {
     parent::__construct(new DefaultFundingCaseActionsDeterminer($statusInfo));
     $this->applicationActionsDeterminer = $applicationActionsDeterminer;
+    $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
   }
 
   /**
@@ -62,18 +67,18 @@ final class KursCaseActionsDeterminer extends AbstractFundingCaseActionsDetermin
       unset($curStatusList[$id]);
       if ($this->applicationActionsDeterminer->isActionAllowed(
         'apply',
-        $applicationProcessStatus,
-        $curStatusList,
-        $permissions
+        // @phpstan-ignore argument.type
+        $this->applicationProcessBundleLoader->get($id),
+        $curStatusList
       )) {
         $actions[] = 'apply';
         break;
       }
       elseif ($this->applicationActionsDeterminer->isActionAllowed(
         'review',
-        $applicationProcessStatus,
-        $curStatusList,
-        $permissions
+        // @phpstan-ignore argument.type
+        $this->applicationProcessBundleLoader->get($id),
+        $curStatusList
       )) {
         $actions[] = 'review';
         break;
@@ -119,9 +124,9 @@ final class KursCaseActionsDeterminer extends AbstractFundingCaseActionsDetermin
       unset($curStatusList[$id]);
       if (!$this->applicationActionsDeterminer->isActionAllowed(
         $action,
-        $applicationProcessStatus,
-        $curStatusList,
-        $permissions
+        // @phpstan-ignore argument.type
+        $this->applicationProcessBundleLoader->get($id),
+        $curStatusList
       )) {
         return FALSE;
       }

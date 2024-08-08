@@ -21,7 +21,7 @@ namespace Civi\Funding\Form\Application;
 
 use Civi\Funding\ApplicationProcess\ActionsContainer\ApplicationSubmitActionsContainerInterface;
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerInterface;
-use Civi\Funding\Entity\FullApplicationProcessStatus;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 
 class ApplicationSubmitActionsFactory implements ApplicationSubmitActionsFactoryInterface {
 
@@ -38,11 +38,10 @@ class ApplicationSubmitActionsFactory implements ApplicationSubmitActionsFactory
   }
 
   public function createSubmitActions(
-    FullApplicationProcessStatus $status,
-    array $statusList,
-    array $permissions
+    ApplicationProcessEntityBundle $applicationProcessBundle,
+    array $statusList
   ): array {
-    return $this->doCreateSubmitActions($this->actionsDeterminer->getActions($status, $statusList, $permissions));
+    return $this->doCreateSubmitActions($this->actionsDeterminer->getActions($applicationProcessBundle, $statusList));
   }
 
   public function createInitialSubmitActions(array $permissions): array {

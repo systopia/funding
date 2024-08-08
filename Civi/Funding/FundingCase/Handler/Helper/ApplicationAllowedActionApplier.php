@@ -79,9 +79,8 @@ class ApplicationAllowedActionApplier {
   ): bool {
     return $this->actionsDeterminer->isActionAllowed(
       $action,
-      $applicationProcessBundle->getApplicationProcess()->getFullStatus(),
+      $applicationProcessBundle,
       $this->applicationProcessBundleLoader->getStatusList($applicationProcessBundle),
-      $applicationProcessBundle->getFundingCase()->getPermissions(),
     );
   }
 

@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\Helper\DetermineApproveRejectActionsHelper;
-use Civi\Funding\Entity\FullApplicationProcessStatus;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
 
 final class DefaultApplicationProcessActionsDeterminer extends AbstractApplicationProcessActionsDeterminer {
@@ -80,11 +80,13 @@ final class DefaultApplicationProcessActionsDeterminer extends AbstractApplicati
     $this->determineApproveRejectActionsHelper = new DetermineApproveRejectActionsHelper();
   }
 
-  public function getActions(FullApplicationProcessStatus $status, array $statusList, array $permissions): array {
+  public function getActions(ApplicationProcessEntityBundle $applicationProcessBundle, array $statusList): array {
+    $permissions = $applicationProcessBundle->getFundingCase()->getPermissions();
+
     return array_merge(
-      parent::getActions($status, $statusList, $permissions),
+      parent::getActions($applicationProcessBundle, $statusList),
       $this->determineApproveRejectActionsHelper->getActions(
-        $status,
+        $applicationProcessBundle->getApplicationProcess()->getFullStatus(),
         $this->hasReviewCalculativePermission($permissions),
         $this->hasReviewContentPermission($permissions)
       ),

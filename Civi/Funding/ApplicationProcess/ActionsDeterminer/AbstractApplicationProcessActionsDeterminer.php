@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
-use Civi\Funding\Entity\FullApplicationProcessStatus;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 
 /**
  * @phpstan-type statusPermissionsActionMapT array<string|null, array<string, list<string>>>
@@ -38,8 +38,11 @@ abstract class AbstractApplicationProcessActionsDeterminer implements Applicatio
     $this->statusPermissionActionsMap = $statusPermissionActionsMap;
   }
 
-  public function getActions(FullApplicationProcessStatus $status, array $statusList, array $permissions): array {
-    return $this->doGetActions($status->getStatus(), $permissions);
+  public function getActions(ApplicationProcessEntityBundle $applicationProcessBundle, array $statusList): array {
+    return $this->doGetActions(
+      $applicationProcessBundle->getApplicationProcess()->getStatus(),
+      $applicationProcessBundle->getFundingCase()->getPermissions()
+    );
   }
 
   public function getInitialActions(array $permissions): array {
@@ -48,24 +51,25 @@ abstract class AbstractApplicationProcessActionsDeterminer implements Applicatio
 
   public function isActionAllowed(
     string $action,
-    FullApplicationProcessStatus $status,
-    array $statusList,
-    array $permissions
+    ApplicationProcessEntityBundle $applicationProcessBundle,
+    array $statusList
   ): bool {
-    return $this->isAnyActionAllowed([$action], $status, $statusList, $permissions);
+    return $this->isAnyActionAllowed([$action], $applicationProcessBundle, $statusList);
   }
 
   public function isAnyActionAllowed(
     array $actions,
-    FullApplicationProcessStatus $status,
-    array $statusList,
-    array $permissions
+    ApplicationProcessEntityBundle $applicationProcessBundle,
+    array $statusList
   ): bool {
-    return [] !== array_intersect($this->getActions($status, $statusList, $permissions), $actions);
+    return [] !== array_intersect($this->getActions($applicationProcessBundle, $statusList), $actions);
   }
 
-  public function isEditAllowed(FullApplicationProcessStatus $status, array $statusList, array $permissions): bool {
-    return $this->isAnyActionAllowed(['save', 'apply', 'update'], $status, $statusList, $permissions);
+  public function isEditAllowed(
+    ApplicationProcessEntityBundle $applicationProcessBundle,
+    array $statusList
+  ): bool {
+    return $this->isAnyActionAllowed(['save', 'apply', 'update'], $applicationProcessBundle, $statusList);
   }
 
   /**

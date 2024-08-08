@@ -38,9 +38,8 @@ final class ApplicationAllowedActionsGetHandler implements ApplicationAllowedAct
    */
   public function handle(ApplicationAllowedActionsGetCommand $command): array {
     return $this->submitActionsFactory->createSubmitActions(
-      $command->getApplicationProcess()->getFullStatus(),
+      $command->getApplicationProcessBundle(),
       $command->getApplicationProcessStatusList(),
-      $command->getFundingCase()->getPermissions(),
     );
   }
 

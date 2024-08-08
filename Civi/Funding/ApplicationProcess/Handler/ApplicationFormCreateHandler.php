@@ -62,9 +62,8 @@ final class ApplicationFormCreateHandler implements ApplicationFormCreateHandler
 
     $submitButtons = JsonFormsSubmitButtonsFactory::createButtons(
       $this->submitActionsFactory->createSubmitActions(
-        $command->getApplicationProcess()->getFullStatus(),
-        $command->getApplicationProcessStatusList(),
-        $command->getFundingCase()->getPermissions()
+        $command->getApplicationProcessBundle(),
+        $command->getApplicationProcessStatusList()
       )
     );
     $elements = array_merge($uiSchema->getElements(), $submitButtons);

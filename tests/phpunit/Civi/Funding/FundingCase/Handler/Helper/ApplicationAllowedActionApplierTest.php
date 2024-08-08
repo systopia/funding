@@ -23,6 +23,7 @@ use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsD
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ApplicationProcess\Command\ApplicationActionApplyCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationActionApplyHandlerInterface;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -73,9 +74,8 @@ final class ApplicationAllowedActionApplierTest extends TestCase {
       ->willReturn($statusList);
     $this->actionsDeterminerMock->method('isActionAllowed')->with(
       'action',
-      $applicationProcessBundle->getApplicationProcess()->getFullStatus(),
-      $statusList,
-      $applicationProcessBundle->getFundingCase()->getPermissions()
+      $applicationProcessBundle,
+      $statusList
     )->willReturn(TRUE);
 
     $contactId = 2;
@@ -94,9 +94,8 @@ final class ApplicationAllowedActionApplierTest extends TestCase {
       ->willReturn($statusList);
     $this->actionsDeterminerMock->method('isActionAllowed')->with(
       'action',
-      $applicationProcessBundle->getApplicationProcess()->getFullStatus(),
-      $statusList,
-      $applicationProcessBundle->getFundingCase()->getPermissions()
+      $applicationProcessBundle,
+      $statusList
     )->willReturn(FALSE);
 
     $contactId = 2;
@@ -134,17 +133,17 @@ final class ApplicationAllowedActionApplierTest extends TestCase {
     ]);
 
     $this->actionsDeterminerMock->method('isActionAllowed')->willReturnCallback(
-      function (string $action, FullApplicationProcessStatus $status, array $statusList, array $permissions)
+      function (string $action, ApplicationProcessEntityBundle $applicationProcessBundle, array $statusList)
       use ($fundingCase) {
         static::assertSame('action', $action);
-        static::assertSame($fundingCase->getPermissions(), $permissions);
-        if ('status1' === $status->getStatus()) {
+        static::assertEquals($fundingCase, $applicationProcessBundle->getFundingCase());
+        if ('status1' === $applicationProcessBundle->getApplicationProcess()->getStatus()) {
           static::assertEquals([20 => new FullApplicationProcessStatus('status2', NULL, NULL)], $statusList);
 
           return FALSE;
         }
 
-        static::assertSame('status2', $status->getStatus());
+        static::assertSame('status2', $applicationProcessBundle->getApplicationProcess()->getStatus());
         static::assertEquals([10 => new FullApplicationProcessStatus('status1', NULL, NULL)], $statusList);
 
         return TRUE;
