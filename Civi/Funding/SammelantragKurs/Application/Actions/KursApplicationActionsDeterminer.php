@@ -21,7 +21,7 @@ namespace Civi\Funding\SammelantragKurs\Application\Actions;
 
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\AbstractApplicationProcessActionsDeterminer;
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\Helper\DetermineApproveRejectActionsHelper;
-use Civi\Funding\Entity\FullApplicationProcessStatus;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
 use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
 
@@ -99,15 +99,17 @@ final class KursApplicationActionsDeterminer extends AbstractApplicationProcessA
     $this->statusInfo = $statusInfo;
   }
 
-  public function getActions(FullApplicationProcessStatus $status, array $statusList, array $permissions): array {
+  public function getActions(ApplicationProcessEntityBundle $applicationProcessBundle, array $statusList): array {
+    $permissions = $applicationProcessBundle->getFundingCase()->getPermissions();
+
     if (!$this->hasReviewPermission($permissions) && $this->isAnyApplicationInReview($statusList)) {
       return [];
     }
 
     return array_merge(
-      parent::getActions($status, $statusList, $permissions),
+      parent::getActions($applicationProcessBundle, $statusList),
       $this->determineApproveRejectActionsHelper->getActions(
-        $status,
+        $applicationProcessBundle->getApplicationProcess()->getFullStatus(),
         $this->hasReviewCalculativePermission($permissions),
         $this->hasReviewContentPermission($permissions)
       ),
@@ -115,7 +117,7 @@ final class KursApplicationActionsDeterminer extends AbstractApplicationProcessA
   }
 
   /**
-   * @phpstan-param array<int, FullApplicationProcessStatus> $statusList
+   * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $statusList
    */
   private function isAnyApplicationInReview(array $statusList): bool {
     foreach ($statusList as $status) {

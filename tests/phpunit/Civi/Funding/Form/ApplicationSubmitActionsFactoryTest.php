@@ -21,7 +21,9 @@ namespace Civi\Funding\Form;
 
 use Civi\Funding\ApplicationProcess\ActionsContainer\ApplicationSubmitActionsContainer;
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerInterface;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
+use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\Form\Application\ApplicationSubmitActionsFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -54,13 +56,16 @@ final class ApplicationSubmitActionsFactoryTest extends TestCase {
     $this->submitActionsContainer->add('test1', 'Test1');
     $this->submitActionsContainer->add('test2', 'Test2');
     $this->submitActionsContainer->add('test3', 'Test3', 'Really?');
-    $fullStatus = new FullApplicationProcessStatus('test', NULL, NULL);
+    $applicationProcessBundle = $this->createApplicationProcessBundle('test', NULL, NULL);
     $statusList = [23 => new FullApplicationProcessStatus('status', NULL, NULL)];
     $this->actionsDeterminerMock->expects(static::once())->method('getActions')
-      ->with($fullStatus, $statusList, ['permission'])
+      ->with($applicationProcessBundle, $statusList)
       ->willReturn(['test3', 'test1']);
 
-    $submitActions = $this->submitActionsFactory->createSubmitActions($fullStatus, $statusList, ['permission']);
+    $submitActions = $this->submitActionsFactory->createSubmitActions(
+      $applicationProcessBundle,
+      $statusList
+    );
     // "test1" must be first
     static::assertSame([
       'test1' => ['label' => 'Test1', 'confirm' => NULL, 'properties' => []],
@@ -70,13 +75,16 @@ final class ApplicationSubmitActionsFactoryTest extends TestCase {
 
   public function testCreateSubmitActionsUnknownAction(): void {
     $this->submitActionsContainer->add('test1', 'Test1');
-    $fullStatus = new FullApplicationProcessStatus('test', NULL, NULL);
+    $applicationProcessBundle = $this->createApplicationProcessBundle('test', NULL, NULL);
     $statusList = [23 => new FullApplicationProcessStatus('status', NULL, NULL)];
     $this->actionsDeterminerMock->expects(static::once())->method('getActions')
-      ->with($fullStatus, $statusList, ['permission'])
+      ->with($applicationProcessBundle, $statusList)
       ->willReturn(['test2']);
 
-    static::assertSame([], $this->submitActionsFactory->createSubmitActions($fullStatus, $statusList, ['permission']));
+    static::assertSame(
+      [],
+      $this->submitActionsFactory->createSubmitActions($applicationProcessBundle, $statusList)
+    );
   }
 
   public function testCreateInitialSubmitActions(): void {
@@ -102,6 +110,18 @@ final class ApplicationSubmitActionsFactoryTest extends TestCase {
       ->willReturn(['test2']);
 
     static::assertSame([], $this->submitActionsFactory->createInitialSubmitActions(['permission']));
+  }
+
+  private function createApplicationProcessBundle(
+    string $status,
+    ?bool $isReviewCalculative,
+    ?bool $isReviewContent
+  ): ApplicationProcessEntityBundle {
+    return ApplicationProcessBundleFactory::createApplicationProcessBundle([
+      'status' => $status,
+      'is_review_calculative' => $isReviewCalculative,
+      'is_review_content' => $isReviewContent,
+    ]);
   }
 
 }

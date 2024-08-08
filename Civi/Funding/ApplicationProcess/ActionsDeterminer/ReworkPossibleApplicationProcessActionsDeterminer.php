@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\Helper\DetermineApproveRejectActionsHelper;
-use Civi\Funding\Entity\FullApplicationProcessStatus;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
 
 // phpcs:disable Generic.Files.LineLength.TooLong
@@ -76,12 +76,14 @@ final class ReworkPossibleApplicationProcessActionsDeterminer extends AbstractAp
     parent::__construct(self::STATUS_PERMISSIONS_ACTION_MAP);
   }
 
-  public function getActions(FullApplicationProcessStatus $status, array $statusList, array $permissions): array {
+  public function getActions(ApplicationProcessEntityBundle $applicationProcessBundle, array $statusList): array {
+    $permissions = $applicationProcessBundle->getFundingCase()->getPermissions();
+
     return \array_values(\array_unique(\array_merge(
-      parent::getActions($status, $statusList, $permissions),
-      $this->actionsDeterminer->getActions($status, $statusList, $permissions),
+      parent::getActions($applicationProcessBundle, $statusList),
+      $this->actionsDeterminer->getActions($applicationProcessBundle, $statusList),
       $this->determineApproveRejectActionsHelper->getActions(
-        $status,
+        $applicationProcessBundle->getApplicationProcess()->getFullStatus(),
         $this->hasReviewCalculativePermission($permissions),
         $this->hasReviewContentPermission($permissions)
       ),

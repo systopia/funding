@@ -61,9 +61,8 @@ final class ApplicationDeleteHandlerTest extends TestCase {
     $this->actionsDeterminerMock->method('isActionAllowed')
       ->with(
         'delete',
-        $applicationProcessBundle->getApplicationProcess()->getFullStatus(),
-        $statusList,
-        $applicationProcessBundle->getFundingCase()->getPermissions()
+        $applicationProcessBundle,
+        $statusList
       )->willReturn(TRUE);
 
     $this->applicationProcessManagerMock->expects(static::once())->method('delete')
@@ -78,9 +77,8 @@ final class ApplicationDeleteHandlerTest extends TestCase {
     $this->actionsDeterminerMock->method('isActionAllowed')
       ->with(
         'delete',
-        $applicationProcessBundle->getApplicationProcess()->getFullStatus(),
-        $statusList,
-        $applicationProcessBundle->getFundingCase()->getPermissions()
+        $applicationProcessBundle,
+        $statusList
       )->willReturn(FALSE);
 
     $this->expectException(UnauthorizedException::class);

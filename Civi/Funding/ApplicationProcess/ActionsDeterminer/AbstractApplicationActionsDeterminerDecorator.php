@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
-use Civi\Funding\Entity\FullApplicationProcessStatus;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 
 /**
  * @codeCoverageIgnore
@@ -35,8 +35,8 @@ abstract class AbstractApplicationActionsDeterminerDecorator implements Applicat
   /**
    * @inheritDoc
    */
-  public function getActions(FullApplicationProcessStatus $status, array $statusList, array $permissions): array {
-    return $this->actionsDeterminer->getActions($status, $statusList, $permissions);
+  public function getActions(ApplicationProcessEntityBundle $applicationProcessBundle, array $statusList): array {
+    return $this->actionsDeterminer->getActions($applicationProcessBundle, $statusList);
   }
 
   /**
@@ -51,11 +51,10 @@ abstract class AbstractApplicationActionsDeterminerDecorator implements Applicat
    */
   public function isActionAllowed(
     string $action,
-    FullApplicationProcessStatus $status,
-    array $statusList,
-    array $permissions
+    ApplicationProcessEntityBundle $applicationProcessBundle,
+    array $statusList
   ): bool {
-    return $this->actionsDeterminer->isActionAllowed($action, $status, $statusList, $permissions);
+    return $this->actionsDeterminer->isActionAllowed($action, $applicationProcessBundle, $statusList);
   }
 
   /**
@@ -63,18 +62,20 @@ abstract class AbstractApplicationActionsDeterminerDecorator implements Applicat
    */
   public function isAnyActionAllowed(
     array $actions,
-    FullApplicationProcessStatus $status,
-    array $statusList,
-    array $permissions
+    ApplicationProcessEntityBundle $applicationProcessBundle,
+    array $statusList
   ): bool {
-    return $this->actionsDeterminer->isAnyActionAllowed($actions, $status, $statusList, $permissions);
+    return $this->actionsDeterminer->isAnyActionAllowed($actions, $applicationProcessBundle, $statusList);
   }
 
   /**
    * @inheritDoc
    */
-  public function isEditAllowed(FullApplicationProcessStatus $status, array $statusList, array $permissions): bool {
-    return $this->actionsDeterminer->isEditAllowed($status, $statusList, $permissions);
+  public function isEditAllowed(
+    ApplicationProcessEntityBundle $applicationProcessBundle,
+    array $statusList
+  ): bool {
+    return $this->actionsDeterminer->isEditAllowed($applicationProcessBundle, $statusList);
   }
 
 }

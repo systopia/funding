@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
-use Civi\Funding\Entity\FullApplicationProcessStatus;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 
 interface ApplicationProcessActionsDeterminerInterface {
 
@@ -33,11 +33,10 @@ interface ApplicationProcessActionsDeterminerInterface {
   /**
    * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $statusList
    *    Status of other application processes in same funding case indexed by ID.
-   * @phpstan-param array<string> $permissions
    *
    * @phpstan-return list<string>
    */
-  public function getActions(FullApplicationProcessStatus $status, array $statusList, array $permissions): array;
+  public function getActions(ApplicationProcessEntityBundle $applicationProcessBundle, array $statusList): array;
 
   /**
    * @phpstan-param array<string> $permissions
@@ -49,40 +48,38 @@ interface ApplicationProcessActionsDeterminerInterface {
   /**
    * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $statusList
    *     Status of other application processes in same funding case indexed by ID.
-   * @phpstan-param array<string> $permissions
    */
   public function isActionAllowed(
     string $action,
-    FullApplicationProcessStatus $status,
-    array $statusList,
-    array $permissions
+    ApplicationProcessEntityBundle $applicationProcessBundle,
+    array $statusList
   ): bool;
 
   /**
    * @phpstan-param array<string> $actions
    * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $statusList
    *     Status of other application processes in same funding case indexed by ID.
-   * @phpstan-param array<string> $permissions
    *
    * @return bool
    *   true if one of the specified actions is allowed.
    */
   public function isAnyActionAllowed(
     array $actions,
-    FullApplicationProcessStatus $status,
-    array $statusList,
-    array $permissions
+    ApplicationProcessEntityBundle $applicationProcessBundle,
+    array $statusList
   ): bool;
 
   /**
    * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $statusList
    *     Status of other application processes in same funding case indexed by ID.
-   * @phpstan-param array<string> $permissions
    *
    * @return bool
    *   true if an action that allows to edit the application details is
    *   available.
    */
-  public function isEditAllowed(FullApplicationProcessStatus $status, array $statusList, array $permissions): bool;
+  public function isEditAllowed(
+    ApplicationProcessEntityBundle $applicationProcessBundle,
+    array $statusList
+  ): bool;
 
 }

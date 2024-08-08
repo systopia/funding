@@ -49,9 +49,8 @@ class ApplicationJsonSchemaCreateHelper {
     array $applicationProcessStatusList
   ): void {
     $submitActions = $this->getActionsDeterminer($applicationProcessBundle->getFundingCaseType())->getActions(
-      $applicationProcessBundle->getApplicationProcess()->getFullStatus(),
-      $applicationProcessStatusList,
-      $applicationProcessBundle->getFundingCase()->getPermissions()
+      $applicationProcessBundle,
+      $applicationProcessStatusList
     );
     $this->doAddActionProperty($jsonSchema, $submitActions);
   }
@@ -95,9 +94,8 @@ class ApplicationJsonSchemaCreateHelper {
   ): void {
     // The readOnly keyword is not inherited, though we use it for informational purposes.
     if (!$this->getActionsDeterminer($applicationProcessBundle->getFundingCaseType())->isEditAllowed(
-      $applicationProcessBundle->getApplicationProcess()->getFullStatus(),
-      $applicationProcessStatusList,
-      $applicationProcessBundle->getFundingCase()->getPermissions()
+      $applicationProcessBundle,
+      $applicationProcessStatusList
     )) {
       $jsonSchema->addKeyword('readOnly', TRUE);
     }
