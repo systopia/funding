@@ -168,11 +168,15 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
             ],
           ],
         ],
+        'personalkostenKommentar' => 'PersonalkostenKommentar',
+        'honorareKommentar' => 'HonorareKommentar',
+        'sachkostenKommentar' => 'SachkostenKommentar',
       ],
       'einnahmen' => [
         'antragssumme' => 8000.8 + 355.53 + 52.8 - 100.1 - 200.2,
         'andereFoerdermittel' => 100.1,
         'eigenmittel' => 200.2,
+        'einnahmenKommentar' => 'EinnahmenKommentar',
       ],
       'rechtliches' => [
         'kinderschutzklausel' => TRUE,
