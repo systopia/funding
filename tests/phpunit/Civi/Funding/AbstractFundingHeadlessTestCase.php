@@ -25,6 +25,8 @@ use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandler;
 use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\FundingCase\FundingCaseManager;
+use Civi\Funding\FundingProgram\FundingCaseTypeManager;
+use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\Test;
 use Civi\Test\CiviEnvBuilder;
 use Civi\Test\HeadlessInterface;
@@ -82,6 +84,10 @@ abstract class AbstractFundingHeadlessTestCase extends TestCase implements Headl
   protected function clearCache(): void {
     // @phpstan-ignore-next-line
     \Civi::service(FundingCaseManager::class)->clearCache();
+    // @phpstan-ignore-next-line
+    \Civi::service(FundingCaseTypeManager::class)->clearCache();
+    // @phpstan-ignore-next-line
+    \Civi::service(FundingProgramManager::class)->clearCache();
     FundingCasePermissionsCache::delete(FALSE)
       ->addWhere('id', 'IS NOT NULL')
       ->execute();

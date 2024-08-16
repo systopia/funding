@@ -21,6 +21,8 @@ namespace Civi\Funding\Util;
 
 use Civi\Api4\FundingCasePermissionsCache;
 use Civi\Funding\FundingCase\FundingCaseManager;
+use Civi\Funding\FundingProgram\FundingCaseTypeManager;
+use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Webmozart\Assert\Assert;
 
@@ -47,6 +49,10 @@ final class RequestTestUtil {
       ->execute();
     // @phpstan-ignore-next-line
     \Civi::service(FundingCaseManager::class)->clearCache();
+    // @phpstan-ignore-next-line
+    \Civi::service(FundingCaseTypeManager::class)->clearCache();
+    // @phpstan-ignore-next-line
+    \Civi::service(FundingProgramManager::class)->clearCache();
     \CRM_Core_Session::singleton()->reset();
     /** @var \Civi\RemoteTools\RequestContext\RequestContextInterface $requestContext */
     $requestContext = \Civi::service(RequestContextInterface::class);

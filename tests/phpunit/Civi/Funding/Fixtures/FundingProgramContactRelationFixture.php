@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Fixtures;
 
 use Civi\Api4\FundingProgramContactRelation;
+use Civi\Funding\FundingProgram\FundingProgramManager;
 
 final class FundingProgramContactRelationFixture {
 
@@ -45,6 +46,9 @@ final class FundingProgramContactRelationFixture {
    * @throws \CRM_Core_Exception
    */
   public static function addFixture(int $fundingProgramId, string $type, array $properties, array $permissions): array {
+    // @phpstan-ignore-next-line
+    \Civi::service(FundingProgramManager::class)->clearCache();
+
     return FundingProgramContactRelation::create(FALSE)
       ->setValues([
         'funding_program_id' => $fundingProgramId,

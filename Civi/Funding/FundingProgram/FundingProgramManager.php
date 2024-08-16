@@ -23,12 +23,24 @@ use Civi\Api4\FundingProgram;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\RemoteTools\Api4\Api4Interface;
 
+/**
+ * @phpstan-import-type fundingProgramT from FundingProgramEntity
+ */
 class FundingProgramManager {
 
   private Api4Interface $api4;
 
+  /**
+   * @phpstan-var array<int, FundingProgramEntity|null>
+   */
+  private array $fundingPrograms = [];
+
   public function __construct(Api4Interface $api4) {
     $this->api4 = $api4;
+  }
+
+  public function clearCache(): void {
+    $this->fundingPrograms = [];
   }
 
   /**
@@ -39,12 +51,15 @@ class FundingProgramManager {
    * @see getIfAllowed()
    */
   public function get(int $id): ?FundingProgramEntity {
-    $action = FundingProgram::get(FALSE)
-      ->setAllowEmptyRecordPermissions(TRUE)
-      ->addWhere('id', '=', $id);
-    $result = $this->api4->executeAction($action);
+    if (!array_key_exists($id, $this->fundingPrograms)) {
+      $action = FundingProgram::get(FALSE)
+        ->setAllowEmptyRecordPermissions(TRUE)
+        ->addWhere('id', '=', $id);
+      $result = $this->api4->executeAction($action);
+      $this->fundingPrograms[$id] = FundingProgramEntity::singleOrNullFromApiResult($result);
+    }
 
-    return FundingProgramEntity::singleOrNullFromApiResult($result);
+    return $this->fundingPrograms[$id];
   }
 
   /**
