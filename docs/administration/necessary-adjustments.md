@@ -35,4 +35,37 @@ For example, these are relevant folders and files for the funding case type *Son
 - `funding/ang/crmFundingAVK1SonstigeAktivitaet`
 - `funding/ang/crmFundingAVK1SonstigeAktivitaet.ang.php`
 - `funding/ang/crmFundingAVK1SonstigeAktivitaet.js`
-- `funding/managed/FundingCaseType_AVK1.mgd.php`
+
+Additionally, there exists a managed entity to make the funding case type
+available in a custom extension. (This prevents that the funding case types are
+available on systems where there are not required.)
+
+`managed/FundingCaseType_AVK1.mgd.php`:
+```php
+<?php
+declare(strict_types = 1);
+
+return [
+  [
+    'name' => 'FundingCaseType_AVK1SonstigeAktivitaet',
+    'entity' => 'FundingCaseType',
+    'cleanup' => 'never',
+    'update' => 'unmodified',
+    'params' => [
+      'version' => 4,
+      'values' => [
+        'title' => 'Sonstige Aktivität (AVK1)',
+        'abbreviation' => 'SoA',
+        'name' => 'AVK1SonstigeAktivitaet',
+        'is_combined_application' => FALSE,
+        'application_process_label' => NULL,
+        'properties' => NULL,
+      ],
+      'match' => [
+        'name',
+      ],
+    ],
+  ],
+];
+
+```
