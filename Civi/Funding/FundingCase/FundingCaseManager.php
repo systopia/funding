@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase;
 
 use Civi\Api4\FundingCase;
+use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent;
@@ -33,6 +34,9 @@ use Civi\RemoteTools\Api4\Query\CompositeCondition;
 use Civi\RemoteTools\Api4\Query\ConditionInterface;
 use Webmozart\Assert\Assert;
 
+/**
+ * @phpstan-import-type fundingCaseT from FundingCaseEntity
+ */
 class FundingCaseManager {
 
   private Api4Interface $api4;
@@ -45,6 +49,11 @@ class FundingCaseManager {
    * @phpstan-var array<int, bool>
    */
   private array $accessAllowed = [];
+
+  /**
+   * @phpstan-var array<int, FundingCaseEntity>
+   */
+  private array $fundingCases = [];
 
   public function __construct(
     Api4Interface $api4,
@@ -65,7 +74,9 @@ class FundingCaseManager {
     $action = FundingCase::get(FALSE)
       ->setWhere([$condition->toArray()]);
 
-    return FundingCaseEntity::allFromApiResult($this->api4->executeAction($action));
+    $result = $this->api4->executeAction($action);
+
+    return $this->getFundingCasesFromApiResult($result);
   }
 
   /**
@@ -76,11 +87,12 @@ class FundingCaseManager {
   public function getFirstBy(ConditionInterface $condition, array $orderBy = ['id' => 'ASC']): ?FundingCaseEntity {
     $result = $this->api4->getEntities(FundingCase::getEntityName(), $condition, $orderBy, 1);
 
-    return FundingCaseEntity::singleOrNullFromApiResult($result);
+    return $this->getFundingCaseFromApiResultOrNull($result);
   }
 
   public function clearCache(): void {
     $this->accessAllowed = [];
+    $this->fundingCases = [];
   }
 
   /**
@@ -128,6 +140,8 @@ class FundingCaseManager {
       ->addWhere('id', '=', $fundingCase->getId());
 
     $this->api4->executeAction($action);
+    unset($this->fundingCases[$fundingCase->getId()]);
+    unset($this->accessAllowed[$fundingCase->getId()]);
 
     $event = new FundingCaseDeletedEvent($fundingCase);
     $this->eventDispatcher->dispatch(FundingCaseDeletedEvent::class, $event);
@@ -137,10 +151,14 @@ class FundingCaseManager {
    * @throws \CRM_Core_Exception
    */
   public function get(int $id): ?FundingCaseEntity {
+    if (isset($this->fundingCases[$id])) {
+      return $this->fundingCases[$id];
+    }
+
     $action = FundingCase::get(FALSE)
       ->addWhere('id', '=', $id);
 
-    return FundingCaseEntity::singleOrNullFromApiResult($this->api4->executeAction($action));
+    return $this->getFundingCaseFromApiResultOrNull($this->api4->executeAction($action));
   }
 
   /**
@@ -151,7 +169,7 @@ class FundingCaseManager {
   public function getAll(): array {
     $action = FundingCase::get(FALSE);
 
-    return FundingCaseEntity::allFromApiResult($this->api4->executeAction($action));
+    return $this->getFundingCasesFromApiResult($this->api4->executeAction($action));
   }
 
   /**
@@ -234,7 +252,30 @@ class FundingCaseManager {
       ['checkPermissions' => FALSE],
     );
 
-    return FundingCaseEntity::singleOrNullFromApiResult($result);
+    return $this->getFundingCaseFromApiResultOrNull($result);
+  }
+
+  /**
+   * @phpstan-return list<FundingCaseEntity>
+   */
+  private function getFundingCasesFromApiResult(Result $result): array {
+    $fundingCases = [];
+    /** @phpstan-var fundingCaseT $fundingCaseData */
+    foreach ($result as $fundingCaseData) {
+      // @phpstan-ignore offsetAccess.notFound
+      $fundingCases[] = $this->fundingCases[$fundingCaseData['id']]
+        ??= FundingCaseEntity::fromArray($fundingCaseData);
+      // @phpstan-ignore offsetAccess.notFound
+      $this->accessAllowed[$fundingCaseData['id']] = TRUE;
+    }
+
+    return $fundingCases;
+  }
+
+  private function getFundingCaseFromApiResultOrNull(Result $result): ?FundingCaseEntity {
+    $fundingCases = $this->getFundingCasesFromApiResult($result);
+
+    return $fundingCases[0] ?? NULL;
   }
 
 }

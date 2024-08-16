@@ -7,6 +7,8 @@ use Civi\Funding\DocumentRender\CiviOffice\CiviOfficeContextDataHolder;
 use Civi\Funding\DocumentRender\DocumentRendererInterface;
 use Civi\Funding\FundingAttachmentManagerInterface;
 use Civi\Funding\FundingCase\FundingCaseManager;
+use Civi\Funding\FundingProgram\FundingCaseTypeManager;
+use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\Funding\Mock\DocumentRender\MockDocumentRenderer;
 use Civi\Funding\Mock\FundingCaseType\Application\Actions\TestApplicationActionsDeterminer;
 use Civi\Funding\Mock\FundingCaseType\Application\Actions\TestApplicationActionStatusInfo;
@@ -68,6 +70,8 @@ function _funding_test_civicrm_container(ContainerBuilder $container): void {
 
   // To clear cache
   $container->getDefinition(FundingCaseManager::class)->setPublic(TRUE);
+  $container->getDefinition(FundingCaseTypeManager::class)->setPublic(TRUE);
+  $container->getDefinition(FundingProgramManager::class)->setPublic(TRUE);
 
   // For FundingCaseContactRelationPropertiesFactoryTypeTest
   $container->getDefinition(RelationPropertiesFactoryLocator::class)->setPublic(TRUE);

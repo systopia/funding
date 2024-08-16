@@ -23,9 +23,17 @@ use Civi\Api4\FundingCaseType;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\RemoteTools\Api4\Api4Interface;
 
+/**
+ * @phpstan-import-type fundingCaseTypeT from FundingCaseTypeEntity
+ */
 class FundingCaseTypeManager {
 
   private Api4Interface $api4;
+
+  /**
+   * @phpstan-var array<int, FundingCaseTypeEntity|null>
+   */
+  private array $fundingCaseTypes = [];
 
   /**
    * @phpstan-var array<string, ?int>
@@ -36,11 +44,18 @@ class FundingCaseTypeManager {
     $this->api4 = $api4;
   }
 
-  public function get(int $id): ?FundingCaseTypeEntity {
-    $values = $this->api4->getEntity(FundingCaseType::getEntityName(), $id);
+  public function clearCache(): void {
+    $this->fundingCaseTypes = [];
+  }
 
-    // @phpstan-ignore-next-line
-    return FundingCaseTypeEntity::fromArrayOrNull($values);
+  public function get(int $id): ?FundingCaseTypeEntity {
+    if (!array_key_exists($id, $this->fundingCaseTypes)) {
+      $values = $this->api4->getEntity(FundingCaseType::getEntityName(), $id);
+      // @phpstan-ignore argument.type
+      $this->fundingCaseTypes[$id] = FundingCaseTypeEntity::fromArrayOrNull($values);
+    }
+
+    return $this->fundingCaseTypes[$id];
   }
 
   public function getIdByName(string $name): ?int {
