@@ -20,8 +20,6 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\JsonSchema;
 
 use Civi\Funding\Form\JsonSchema\JsonSchemaRecipient;
-use Civi\RemoteTools\JsonSchema\JsonSchema;
-use Civi\RemoteTools\JsonSchema\JsonSchemaNumber;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 
 final class HiHApplicationJsonSchema extends JsonSchemaObject {
@@ -42,7 +40,7 @@ final class HiHApplicationJsonSchema extends JsonSchemaObject {
       'informationenZumProjekt' => new HiHInformationenZumProjektJsonSchema($applicationBegin, $applicationEnd),
       'empfaenger' => new JsonSchemaRecipient($possibleRecipients),
       'kosten' => new HiHKostenJsonSchema(),
-      'einnahmen' => new HiHEinnahmenJsonSchema(),
+      'finanzierung' => new HiHFinanzierungJsonSchema(),
       'rechtliches' => new HiHRechtlichesJsonSchema(),
     ];
 

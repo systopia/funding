@@ -57,25 +57,32 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
         'maxDate' => $applicationEnd->format('Y-m-d'),
         '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'end_date']]),
       ]),
-      'haeufigkeit' => new JsonSchemaString(['maxLength' => 255]),
       'beabsichtigteTeilnehmendenzahl' => new JsonSchemaInteger(['minimum' => 1]),
       'zielgruppe' => new JsonSchemaArray(new JsonSchemaString([
         'oneOf' => JsonSchemaUtil::buildTitledOneOf([
-          'kinder' => 'Kinder',
-          'jugendliche' => 'Jugendliche',
+          'kinder' => 'Kinder (0-12 Jahre)',
+          'jugendliche' => 'Jugendliche (13-19 Jahre)',
+          'jungeErwachsene' => 'Junge Erwachsene (20-29 Jahre)',
+          'erwachsene' => 'Erwachsene (30-49 Jahre)',
+          'aeltereErwachsene' => 'Ältere Erwachsene (50-66 Jahre)',
+          'senioren' => 'Senior:innen (ab 67 Jahre)',
           'altersaeubergreifend' => 'Altersübergreifend',
-          'senioren' => 'Senior:innen',
-          'gefluechtete' => 'Geflüchtete',
-          'chronischKranke' => 'Chronisch Kranke',
-          'erwerbstaetige' => 'Erwerbstätige',
-          'arbeitslose' => 'Arbeitslose',
-          'sozialBeduerftige' => 'Soziale Bedürftige',
-          'jungeMuetter' => 'Junge Mütter',
-          'sonstiges' => 'Sonstiges und zwar',
         ]),
       ]), ['uniqueItems' => TRUE, 'minItems' => 1]),
-      'zielgruppeSonstiges' => new JsonSchemaString(['maxLength' => 255]),
       'zielgruppeErreichen' => new JsonSchemaString(['maxLength' => 4000]),
+      'zielgruppeHerausforderungen' => new JsonSchemaArray(new JsonSchemaString([
+        'oneOf' => JsonSchemaUtil::buildTitledOneOf([
+          'fluchterfahrung' => 'Mit Fluchterfahrung',
+          'diskriminierung' => 'Mit Diskriminierung und/oder Rassismus',
+          'armut' => 'Mit Armut',
+          'erwerbslosigkeit' => 'Mit Erwerbslosigkeit',
+          'pflegeVonAngehoerigen' => 'Mit dem Pflegen von Angehörigen',
+          'alleinerziehend' => 'Weil sie alleinerziehend sind',
+          'sonstige' => 'Aus sonstigen Gründen',
+        ]),
+      ]), ['uniqueItems' => TRUE, 'minItems' => 1]),
+      'zielgruppeHerausforderungenSonstige' => new JsonSchemaString(['maxLength' => 255]),
+      'zielgruppeHerausforderungenErlaeuterung' => new JsonSchemaString(['maxLength' => 4000]),
       'projektformat' => new JsonSchemaArray(new JsonSchemaString([
         'oneOf' => JsonSchemaUtil::buildTitledOneOf([
           'offenesAngebot' => 'Offenes Angebot',
@@ -90,6 +97,7 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
         ]),
       ]), ['uniqueItems' => TRUE, 'minItems' => 1]),
       'projektformatSonstiges' => new JsonSchemaString(['maxLength' => 255]),
+      'projektformatErlaeuterung' => new JsonSchemaString(['maxLength' => 4000]),
       'dateien' => new JsonSchemaArray(new JsonSchemaObject([
         '_identifier' => new JsonSchemaString(['readonly' => TRUE]),
         'datei' => new JsonSchemaString([
@@ -98,7 +106,7 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
           '$tag' => 'externalFile',
         ]),
         'beschreibung' => new JsonSchemaString(['maxLength' => 255]),
-      ], ['required' => ['datei', 'beschreibung']])),
+      ], ['required' => ['datei']])),
       'sonstiges' => new JsonSchemaString(['maxLength' => 4000]),
     ];
 
@@ -120,11 +128,13 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
         'status',
         'foerderungAb',
         'foerderungBis',
-        'haeufigkeit',
         'beabsichtigteTeilnehmendenzahl',
         'zielgruppe',
         'zielgruppeErreichen',
+        'zielgruppeHerausforderungen',
+        'zielgruppeHerausforderungenErlaeuterung',
         'projektformat',
+        'projektformatErlaeuterung',
         'dateien',
       ],
       'allOf' => [
@@ -160,12 +170,12 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
         JsonSchema::fromArray([
           'if' => [
             'properties' => [
-              'zielgruppe' => ['contains' => ['const' => 'sonstiges']],
+              'zielgruppeHerausforderungen' => ['contains' => ['const' => 'sonstige']],
             ],
           ],
           'then' => new JsonSchemaObject([
-            'zielgruppeSonstiges' => new JsonSchemaString($minLengthValidation),
-          ], ['required' => ['zielgruppeSonstiges']]),
+            'zielgruppeHerausforderungenSonstige' => new JsonSchemaString($minLengthValidation),
+          ], ['required' => ['zielgruppeHerausforderungenSonstige']]),
         ]),
         JsonSchema::fromArray([
           'if' => [
