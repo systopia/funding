@@ -23,6 +23,7 @@ use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaBoolean;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
+use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
 
 final class HiHFragenZumProjektJsonSchema extends JsonSchemaObject {
 
@@ -31,6 +32,8 @@ final class HiHFragenZumProjektJsonSchema extends JsonSchemaObject {
       'strasse' => new JsonSchemaString(['maxLength' => 255]),
       'plz' => new JsonSchemaString(['maxLength' => 255]),
       'ort' => new JsonSchemaString(['maxLength' => 255]),
+      'telefonnummer' => new JsonSchemaString(['maxLength' => 255]),
+      'email' => new JsonSchemaString(['maxLength' => 255]),
     ]);
     $minLengthValidation = [
       '$validations' => [
@@ -45,7 +48,9 @@ final class HiHFragenZumProjektJsonSchema extends JsonSchemaObject {
       'strasse' => new JsonSchemaString($minLengthValidation),
       'plz' => new JsonSchemaString($minLengthValidation),
       'ort' => new JsonSchemaString($minLengthValidation),
-    ], ['required' => ['strasse', 'plz', 'ort']]);
+      'telefonnummer' => new JsonSchemaString($minLengthValidation),
+      'email' => new JsonSchemaString($minLengthValidation),
+    ], ['required' => ['strasse', 'plz', 'ort', 'telefonnummer', 'email']]);
 
     $properties = [
       'name' => new JsonSchemaString([
@@ -53,28 +58,30 @@ final class HiHFragenZumProjektJsonSchema extends JsonSchemaObject {
         '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'title']]),
       ]),
       'ansprechpartner' => new JsonSchemaObject([
-        'anrede' => new JsonSchemaString(['maxLength' => 255]),
+        'anrede' => new JsonSchemaString([
+          'oneOf' => JsonSchemaUtil::buildTitledOneOf([
+            'Herr' => 'Herr',
+            'Frau' => 'Frau',
+            'ohne' => 'Ohne Anrede',
+          ]),
+        ]),
         'titel' => new JsonSchemaString(['maxLength' => 255]),
         'vorname' => new JsonSchemaString(['maxLength' => 255]),
         'nachname' => new JsonSchemaString(['maxLength' => 255]),
       ], ['required' => ['anrede', 'vorname', 'nachname']]),
-      'adresseIdentischMitOrganisation' => new JsonSchemaBoolean(),
+      'adresseNichtIdentischMitOrganisation' => new JsonSchemaBoolean(['default' => FALSE]),
       'abweichendeAnschrift' => $abweichendeAnschrift,
-      'telefonnummer' => new JsonSchemaString(['maxLength' => 255]),
-      'email' => new JsonSchemaString(['maxLength' => 255]),
     ];
 
     $keywords = [
       'required' => [
         'name',
         'ansprechpartner',
-        'adresseIdentischMitOrganisation',
-        'telefonnummer',
-        'email',
+        'adresseNichtIdentischMitOrganisation',
       ],
       'if' => JsonSchema::fromArray([
         'properties' => [
-          'adresseIdentischMitOrganisation' => ['const' => FALSE],
+          'adresseNichtIdentischMitOrganisation' => ['const' => TRUE],
         ],
       ]),
       'then' => new JsonSchemaObject([
