@@ -173,7 +173,7 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
         'sachkostenKommentar' => 'SachkostenKommentar',
       ],
       'einnahmen' => [
-        'antragssumme' => 8000.8 + 355.53 + 52.8 - 100.1 - 200.2,
+        'antragssumme' => round(8000.8 + 355.53 + 52.8 - 100.1 - 200.2, 2),
         'andereFoerdermittel' => 100.1,
         'eigenmittel' => 200.2,
         'einnahmenKommentar' => 'EinnahmenKommentar',
@@ -222,7 +222,7 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
       'recipient_contact_id' => 2,
       'start_date' => '2024-07-08',
       'end_date' => '2024-07-09',
-      'amount_requested' => 0.0,
+      'amount_requested' => 8108.83,
     ], $mappedData);
   }
 
