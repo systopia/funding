@@ -21,6 +21,7 @@ namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\JsonSchema;
 
 use Civi\Funding\Form\JsonSchema\JsonSchemaRecipient;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
+use Webmozart\Assert\Assert;
 
 final class HiHApplicationJsonSchema extends JsonSchemaObject {
 
@@ -33,6 +34,8 @@ final class HiHApplicationJsonSchema extends JsonSchemaObject {
     \DateTimeInterface $applicationEnd,
     array $possibleRecipients
   ) {
+    Assert::count($possibleRecipients, 1, 'Es darf nur genau einen möglichen Fördergeldempfänger geben. (Aktuell: %d)');
+
     // @todo Validate conditional fields.
     // @todo Additional validations, e.g. required, length, min, max, ...
     $properties = [
