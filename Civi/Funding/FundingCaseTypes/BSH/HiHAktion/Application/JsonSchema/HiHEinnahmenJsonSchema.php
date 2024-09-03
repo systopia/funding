@@ -37,6 +37,7 @@ final class HiHEinnahmenJsonSchema extends JsonSchemaObject {
         '$resourcesItem' => new JsonSchemaResourcesItem([
           'type' => 'antragssumme',
           'identifier' => 'antragssumme',
+          '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'amount_requested']]),
         ]),
       ]),
       'andereFoerdermittel' => new JsonSchemaMoney([
