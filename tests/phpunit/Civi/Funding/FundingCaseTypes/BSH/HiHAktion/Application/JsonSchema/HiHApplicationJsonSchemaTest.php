@@ -74,14 +74,14 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
           'vorname' => 'Erika',
           'nachname' => 'Mustermann',
         ],
-        'adresseIdentischMitOrganisation' => FALSE,
+        'adresseNichtIdentischMitOrganisation' => TRUE,
         'abweichendeAnschrift' => [
           'strasse' => 'Musterstr. 11',
           'plz' => '47110',
           'ort' => 'Musterort',
+          'telefonnummer' => '0123456789',
+          'email' => 'mustermann@example.org',
         ],
-        'telefonnummer' => '0123456789',
-        'email' => 'mustermann@example.org',
       ],
       'informationenZumProjekt' => [
         'kurzbeschreibung' => 'Kurzbeschreibung',
@@ -91,18 +91,18 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
         'statusBeginn' => '2024-07-01',
         'foerderungAb' => '2024-07-08',
         'foerderungBis' => '2024-07-09',
-        'haeufigkeit' => 'Jährlich',
         'beabsichtigteTeilnehmendenzahl' => 123,
         'zielgruppe' => [
           'kinder',
           'jugendliche',
         ],
-        'zielgruppeSonstiges' => 'Sonstige Zielgruppe',
         'zielgruppeErreichen' => 'Zielgruppe erreichen',
-        'projektformat' => [
-          'regelmaessigeGruppe',
-        ],
+        'zielgruppeHerausforderungen' => ['fluchterfahrung'],
+        'zielgruppeHerausforderungenSonstige' => 'Sonstige Herausforderung',
+        'zielgruppeHerausforderungenErlaeuterung' => 'Erläuterung Herausforderungen',
+        'projektformat' => ['regelmaessigeGruppe'],
         'projektformatSonstiges' => 'Sonstiges Projektformat',
+        'projektformatErlaeuterung' => 'Erläuterung Projektformat',
         'dateien' => [
           [
             'datei' => 'https://example.org/test.txt',
@@ -139,6 +139,7 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
             'dauer' => 3,
           ],
         ],
+        'sachkostenKeine' => FALSE,
         'sachkosten' => [
           'materialien' => 1.1,
           'ehrenamtspauschalen' => 2.2,
@@ -172,11 +173,12 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
         'honorareKommentar' => 'HonorareKommentar',
         'sachkostenKommentar' => 'SachkostenKommentar',
       ],
-      'einnahmen' => [
-        'antragssumme' => round(8000.8 + 355.53 + 52.8 - 100.1 - 200.2, 2),
-        'andereFoerdermittel' => 100.1,
-        'eigenmittel' => 200.2,
-        'einnahmenKommentar' => 'EinnahmenKommentar',
+      'finanzierung' => [
+        'grundsaetzlich' => 'Finanzierung grundsätzlich',
+        'gesamtesProjektHiH' => TRUE,
+        'wichtigstePositionenBeiTeilbetrag' => 'Position A',
+        'andereKosten' => '',
+        'finanzierungZusaetzlicheKosten' => '',
       ],
       'rechtliches' => [
         'kinderschutzklausel' => TRUE,
@@ -198,7 +200,6 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
     $result = $this->validator->validate($this->jsonSchema, $this->validData);
     static::assertSame([], $result->getLeafErrorMessages());
     static::assertCount(15, $result->getCostItemsData());
-    static::assertCount(3, $result->getResourcesItemsData());
 
     $resultData = JsonConverter::toStdClass($result->getData());
     static::assertSame(8000.8, $resultData->kosten->personalkostenSumme);
@@ -207,9 +208,6 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
     static::assertSame(12.1, $resultData->kosten->sachkosten->sonstigeSumme);
     static::assertSame(52.8, $resultData->kosten->sachkosten->summe);
     static::assertSame(8000.8 + 355.53 + 52.8, $resultData->kosten->gesamtkosten);
-
-    static::assertSame(8000.8 + 355.53 + 52.8, $resultData->einnahmen->gesamteinnahmen);
-    static::assertSame(0.0, $resultData->einnahmen->einnahmenKostenDifferenz);
 
     $resultData->informationenZumProjekt->statusSonstiges = 'Status Sonstiges';
     static::assertAllPropertiesSet($this->jsonSchema->toStdClass(), $resultData);
@@ -222,34 +220,26 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
       'recipient_contact_id' => 2,
       'start_date' => '2024-07-08',
       'end_date' => '2024-07-09',
-      'amount_requested' => 8108.83,
+      'amount_requested' => 8000.8 + 355.53 + 52.8,
     ], $mappedData);
-  }
-
-  public function testNichtAusgeglichen(): void {
-    $data = $this->validData;
-    $data['kosten']['sachkosten']['materialien'] += 0.1;
-
-    $result = $this->validator->validate($this->jsonSchema, $data, 4);
-    static::assertEquals([
-      '/einnahmen/einnahmenKostenDifferenz' => ['Die Finanzierung ist nicht ausgeglichen.'],
-    ], $result->getLeafErrorMessages());
-
-    static::assertSame(-0.1, $result->getData()['einnahmen']['einnahmenKostenDifferenz']);
   }
 
   public function testAbweichendeAdresseEmpty(): void {
     $data = $this->validData;
-    $data['fragenZumProjekt']['adresseIdentischMitOrganisation'] = FALSE;
+    $data['fragenZumProjekt']['adresseNichtIdentischMitOrganisation'] = TRUE;
     $data['fragenZumProjekt']['abweichendeAnschrift']['strasse'] = '';
     $data['fragenZumProjekt']['abweichendeAnschrift']['plz'] = '';
     $data['fragenZumProjekt']['abweichendeAnschrift']['ort'] = '';
+    $data['fragenZumProjekt']['abweichendeAnschrift']['telefonnummer'] = '';
+    $data['fragenZumProjekt']['abweichendeAnschrift']['email'] = '';
 
-    $result = $this->validator->validate($this->jsonSchema, $data, 4);
+    $result = $this->validator->validate($this->jsonSchema, $data, 10);
     static::assertEquals([
       '/fragenZumProjekt/abweichendeAnschrift/strasse' => ['Dieser Wert ist erforderlich.'],
       '/fragenZumProjekt/abweichendeAnschrift/plz' => ['Dieser Wert ist erforderlich.'],
       '/fragenZumProjekt/abweichendeAnschrift/ort' => ['Dieser Wert ist erforderlich.'],
+      '/fragenZumProjekt/abweichendeAnschrift/telefonnummer' => ['Dieser Wert ist erforderlich.'],
+      '/fragenZumProjekt/abweichendeAnschrift/email' => ['Dieser Wert ist erforderlich.'],
     ], $result->getLeafErrorMessages());
   }
 
@@ -277,17 +267,6 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
     ], $result->getLeafErrorMessages());
   }
 
-  public function testZielgruppeSonstiges(): void {
-    $data = $this->validData;
-    $data['informationenZumProjekt']['zielgruppe'] = ['sonstiges'];
-    $data['informationenZumProjekt']['zielgruppeSonstiges'] = '';
-
-    $result = $this->validator->validate($this->jsonSchema, $data, 2);
-    static::assertEquals([
-      '/informationenZumProjekt/zielgruppeSonstiges' => ['Dieser Wert ist erforderlich.'],
-    ], $result->getLeafErrorMessages());
-  }
-
   public function testProjektformatSonstiges(): void {
     $data = $this->validData;
     $data['informationenZumProjekt']['projektformat'] = ['sonstiges'];
@@ -296,6 +275,41 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
     $result = $this->validator->validate($this->jsonSchema, $data, 2);
     static::assertEquals([
       '/informationenZumProjekt/projektformatSonstiges' => ['Dieser Wert ist erforderlich.'],
+    ], $result->getLeafErrorMessages());
+  }
+
+  public function testZielgruppeHerausforderungenSonstige(): void {
+    $data = $this->validData;
+    $data['informationenZumProjekt']['zielgruppeHerausforderungen'] = ['sonstige'];
+    $data['informationenZumProjekt']['zielgruppeHerausforderungenSonstige'] = '';
+
+    $result = $this->validator->validate($this->jsonSchema, $data, 2);
+    static::assertEquals([
+      '/informationenZumProjekt/zielgruppeHerausforderungenSonstige' => ['Dieser Wert ist erforderlich.'],
+    ], $result->getLeafErrorMessages());
+  }
+
+  public function testFinanzierungGesamtesProjektHiHTrue(): void {
+    $data = $this->validData;
+    $data['finanzierung']['gesamtesProjektHiH'] = TRUE;
+    $data['finanzierung']['wichtigstePositionenBeiTeilbetrag'] = '';
+
+    $result = $this->validator->validate($this->jsonSchema, $data, 2);
+    static::assertEquals([
+      '/finanzierung/wichtigstePositionenBeiTeilbetrag' => ['Dieser Wert ist erforderlich.'],
+    ], $result->getLeafErrorMessages());
+  }
+
+  public function testFinanzierungGesamtesProjektHiHFalse(): void {
+    $data = $this->validData;
+    $data['finanzierung']['gesamtesProjektHiH'] = FALSE;
+    $data['finanzierung']['andereKosten'] = '';
+    $data['finanzierung']['finanzierungZusaetzlicheKosten'] = '';
+
+    $result = $this->validator->validate($this->jsonSchema, $data, 3);
+    static::assertEquals([
+      '/finanzierung/andereKosten' => ['Dieser Wert ist erforderlich.'],
+      '/finanzierung/finanzierungZusaetzlicheKosten' => ['Dieser Wert ist erforderlich.'],
     ], $result->getLeafErrorMessages());
   }
 

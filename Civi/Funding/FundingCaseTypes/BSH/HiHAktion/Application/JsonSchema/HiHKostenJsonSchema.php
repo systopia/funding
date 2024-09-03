@@ -21,7 +21,9 @@ namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\JsonSchema;
 
 use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\JsonSchemaCostItem;
 use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\JsonSchemaCostItems;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
+use Civi\RemoteTools\JsonSchema\JsonSchemaBoolean;
 use Civi\RemoteTools\JsonSchema\JsonSchemaCalculate;
 use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
 use Civi\RemoteTools\JsonSchema\JsonSchemaInteger;
@@ -34,7 +36,7 @@ use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
 final class HiHKostenJsonSchema extends JsonSchemaObject {
 
   public function __construct() {
-    parent::__construct([
+    $properties = [
       'personalkosten' => new JsonSchemaArray(
         new JsonSchemaObject([
           '_identifier' => new JsonSchemaString(['readOnly' => TRUE]),
@@ -101,8 +103,10 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
         ]
       ),
       'honorareKommentar' => new JsonSchemaString(['maxLength' => 4000]),
+      'sachkostenKeine' => new JsonSchemaBoolean(),
       'sachkosten' => new JsonSchemaObject([
         'materialien' => new JsonSchemaMoney([
+          'default' => 0,
           'minimum' => 0,
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'sachkosten.materialien',
@@ -113,6 +117,7 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
           ]),
         ]),
         'ehrenamtspauschalen' => new JsonSchemaMoney([
+          'default' => 0,
           'minimum' => 0,
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'sachkosten.ehrenamtspauschalen',
@@ -123,6 +128,7 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
           ]),
         ]),
         'verpflegung' => new JsonSchemaMoney([
+          'default' => 0,
           'minimum' => 0,
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'sachkosten.verpflegung',
@@ -133,6 +139,7 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
           ]),
         ]),
         'fahrtkosten' => new JsonSchemaMoney([
+          'default' => 0,
           'minimum' => 0,
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'sachkosten.fahrtkosten',
@@ -143,6 +150,7 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
           ]),
         ]),
         'oeffentlichkeitsarbeit' => new JsonSchemaMoney([
+          'default' => 0,
           'minimum' => 0,
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'sachkosten.oeffentlichkeitsarbeit',
@@ -153,6 +161,7 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
           ]),
         ]),
         'investitionen' => new JsonSchemaMoney([
+          'default' => 0,
           'minimum' => 0,
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'sachkosten.investitionen',
@@ -163,6 +172,7 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
           ]),
         ]),
         'mieten' => new JsonSchemaMoney([
+          'default' => 0,
           'minimum' => 0,
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'sachkosten.mieten',
@@ -219,7 +229,7 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
         'summe' => new JsonSchemaCalculate(
           'number',
           'round(materialien + ehrenamtspauschalen + verpflegung + fahrtkosten + oeffentlichkeitsarbeit'
-            . '+ investitionen + mieten + verwaltungskostenSumme + sonstigeSumme, 2)',
+          . '+ investitionen + mieten + verwaltungskostenSumme + sonstigeSumme, 2)',
           [
             'materialien' => new JsonSchemaDataPointer('1/materialien', 0),
             'ehrenamtspauschalen' => new JsonSchemaDataPointer('1/ehrenamtspauschalen', 0),
@@ -253,9 +263,46 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
           'personalkostenSumme' => new JsonSchemaDataPointer('1/personalkostenSumme'),
           'honorareSumme' => new JsonSchemaDataPointer('1/honorareSumme'),
           'sachkostenSumme' => new JsonSchemaDataPointer('1/sachkosten/summe'),
-        ]
+        ],
+        NULL,
+        ['$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'amount_requested']])],
       ),
-    ], ['required' => ['personalkosten', 'honorare', 'sachkosten']]);
+    ];
+
+    $minLengthValidation = [
+      '$validations' => [
+        JsonSchema::fromArray([
+          'keyword' => 'minLength',
+          'value' => 1,
+          'message' => 'Dieser Wert ist erforderlich.',
+        ]),
+      ],
+    ];
+
+    $keywords = [
+      'required' => [
+        'personalkosten',
+        'personalkostenKommentar',
+        'honorare',
+        'honorareKommentar',
+        'sachkostenKeine',
+        'sachkosten',
+      ],
+      'allOf' => [
+        JsonSchema::fromArray([
+          'if' => [
+            'properties' => [
+              'sachkosten' => ['const' => TRUE],
+            ],
+          ],
+          'then' => new JsonSchemaObject([
+            'sachkostenKommentar' => new JsonSchemaString($minLengthValidation),
+          ], ['required' => ['sachkostenKommentar']]),
+        ]),
+      ],
+    ];
+
+    parent::__construct($properties, $keywords);
   }
 
 }
