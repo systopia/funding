@@ -51,8 +51,8 @@ final class HiHFragenZumProjektGroup extends JsonFormsGroup {
         ),
       ]),
       new JsonFormsControl(
-        "$scopePrefix/adresseIdentischMitOrganisation",
-        'Ist die Adresse identisch mit Organisation?'
+        "$scopePrefix/adresseNichtIdentischMitOrganisation",
+        'Ist diese Adresse nicht identisch mit Organisation?'
       ),
       new JsonFormsGroup('Abweichende Anschrift', [
         new JsonFormsControl(
@@ -68,21 +68,21 @@ final class HiHFragenZumProjektGroup extends JsonFormsGroup {
           "$scopePrefix/abweichendeAnschrift/properties/ort",
           'Stadt'
         ),
+        new JsonFormsControl(
+          "$scopePrefix/abweichendeAnschrift/properties/telefonnummer",
+          'Telefonnummer'
+        ),
+        new JsonFormsControl(
+          "$scopePrefix/abweichendeAnschrift/properties/email",
+          'E-Mail'
+        ),
       ], NULL, NULL, [
         'rule' => new JsonFormsRule(
-          'SHOW',
-          "$scopePrefix/adresseIdentischMitOrganisation",
+          'HIDE',
+          "$scopePrefix/adresseNichtIdentischMitOrganisation",
           JsonSchema::fromArray(['const' => FALSE])
         ),
       ]),
-      new JsonFormsControl(
-        "$scopePrefix/telefonnummer",
-        'Telefonnummer'
-      ),
-      new JsonFormsControl(
-        "$scopePrefix/email",
-        'Email'
-      ),
     ]);
   }
 

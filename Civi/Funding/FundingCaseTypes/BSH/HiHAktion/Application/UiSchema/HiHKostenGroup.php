@@ -22,12 +22,20 @@ namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\UiSchema;
 use Civi\RemoteTools\JsonForms\Control\JsonFormsArray;
 use Civi\RemoteTools\JsonForms\Control\JsonFormsHidden;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
+use Civi\RemoteTools\JsonForms\JsonFormsRule;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 
 final class HiHKostenGroup extends JsonFormsGroup {
 
   public function __construct(string $scopePrefix, string $currency) {
-    parent::__construct('Ausgaben', [
+    $sachkostenRule = new JsonFormsRule(
+      'SHOW',
+      "$scopePrefix/sachkostenKeine",
+      JsonSchema::fromArray(['const' => FALSE])
+    );
+
+    parent::__construct('Projektkosten', [
       new JsonFormsGroup('Personalkosten', [
         new JsonFormsArray("$scopePrefix/personalkosten", '', NULL, [
           new JsonFormsHidden('#/properties/_identifier'),
@@ -40,6 +48,15 @@ final class HiHKostenGroup extends JsonFormsGroup {
           'removeButtonLabel' => 'Entfernen',
         ]),
         new JsonFormsControl("$scopePrefix/personalkostenSumme", "Summe Personalkosten in $currency"),
+        new JsonFormsControl(
+          "$scopePrefix/personalkostenKommentar",
+          'Kommentar zu den Personalkosten',
+          <<<EOD
+Bitte erklären Sie, wie viele Stunden pro Woche und Stelle gearbeitet werden,
+was die Aufgaben sind und warum die Stelle für das Projekt wichtig ist.
+EOD,
+          ['multi' => TRUE]
+        ),
       ], <<<EOD
 Als monatliches Arbeitgeberbrutto geben Sie bitte die monatliche Gesamtsumme
 pro Mitarbeiter inklusive aller Steuern an (Arbeitgeberbrutto).<br>
@@ -63,81 +80,108 @@ EOD
         new JsonFormsControl(
           "$scopePrefix/honorareSumme", 'Summe Honorare in ' . $currency
         ),
+        new JsonFormsControl(
+          "$scopePrefix/honorareKommentar",
+          'Kommentar zu den Honorarkosten',
+          <<<EOD
+Bitte erklären Sie, was die Honorarkräfte machen, wo sie im Projekt arbeiten und
+warum sie wichtig sind.
+EOD,
+          ['multi' => TRUE]
+        ),
       ]),
+      new JsonFormsControl(
+        "$scopePrefix/sachkostenKeine",
+        'Ich beantrage keine Sachkosten',
+      ),
       new JsonFormsGroup('Sachkosten', [
-        new JsonFormsControl(
-          "$scopePrefix/sachkosten/properties/materialien",
-          'Projektbezogene Materialien in ' . $currency,
-          'z.B. für Veranstaltungen, Workshops, Verbrauchsmaterial'
-        ),
-        new JsonFormsControl(
-          "$scopePrefix/sachkosten/properties/ehrenamtspauschalen",
-          'Ehrenamts-/Übungsleiterpauschalen in ' . $currency
-        ),
-        new JsonFormsControl(
-          "$scopePrefix/sachkosten/properties/verpflegung",
-          'Verpflegung/Catering in ' . $currency,
-          'z.B. für Teilnehmer:innen von Angeboten'
-        ),
-        new JsonFormsControl(
-          "$scopePrefix/sachkosten/properties/fahrtkosten",
-          'Fahrtkosten in ' . $currency,
-          'z.B. für Ausflüge'
-        ),
-        new JsonFormsControl(
-          "$scopePrefix/sachkosten/properties/oeffentlichkeitsarbeit",
-          'Projektbezogene Öffentlichkeitsarbeit in ' . $currency,
-          'z.B. Druckkosten, Anzeigen, Gimmicks, RollUps'
-        ),
-        new JsonFormsControl(
-          "$scopePrefix/sachkosten/properties/investitionen",
-          'Projektbezogene Investitionen in ' . $currency,
-          'z.B. Möbel, Laptop, Software, Fahrradrikscha'
-        ),
-        new JsonFormsControl(
-          "$scopePrefix/sachkosten/properties/mieten",
-          'Projektbezogene Mieten in ' . $currency,
-          'z.B. für Veranstaltungen'
-        ),
-        new JsonFormsArray(
-          "$scopePrefix/sachkosten/properties/verwaltungskosten",
-          'Projektbezogene Verwaltungs-/Organisationskosten',
-          'z.B. Telefonkosten, Bürobedarf oder IT-Support',
+        new JsonFormsGroup(
+          '',
           [
-            new JsonFormsHidden('#/properties/_identifier'),
-            new JsonFormsControl('#/properties/bezeichnung', 'Bezeichnung'),
-            new JsonFormsControl('#/properties/summe', "Summe in $currency"),
+            new JsonFormsControl(
+              "$scopePrefix/sachkosten/properties/materialien",
+              'Projektbezogene Materialien in ' . $currency,
+              'z.B. für Veranstaltungen, Workshops, Verbrauchsmaterial',
+            ),
+            new JsonFormsControl(
+              "$scopePrefix/sachkosten/properties/ehrenamtspauschalen",
+              'Ehrenamts-/Übungsleiterpauschalen in ' . $currency
+            ),
+            new JsonFormsControl(
+              "$scopePrefix/sachkosten/properties/verpflegung",
+              'Verpflegung/Catering in ' . $currency,
+              'z.B. für Teilnehmer:innen von Angeboten'
+            ),
+            new JsonFormsControl(
+              "$scopePrefix/sachkosten/properties/fahrtkosten",
+              'Fahrtkosten in ' . $currency,
+              'z.B. für Ausflüge'
+            ),
+            new JsonFormsControl(
+              "$scopePrefix/sachkosten/properties/oeffentlichkeitsarbeit",
+              'Projektbezogene Öffentlichkeitsarbeit in ' . $currency,
+              'z.B. Druckkosten, Anzeigen, Gimmicks, RollUps'
+            ),
+            new JsonFormsControl(
+              "$scopePrefix/sachkosten/properties/investitionen",
+              'Projektbezogene Investitionen in ' . $currency,
+              'z.B. Möbel, Laptop, Software, Fahrradrikscha'
+            ),
+            new JsonFormsControl(
+              "$scopePrefix/sachkosten/properties/mieten",
+              'Projektbezogene Mieten in ' . $currency,
+              'z.B. für Veranstaltungen'
+            ),
+            new JsonFormsArray(
+              "$scopePrefix/sachkosten/properties/verwaltungskosten",
+              'Projektbezogene Verwaltungs-/Organisationskosten',
+              'z.B. Telefonkosten, Bürobedarf oder IT-Support',
+              [
+                new JsonFormsHidden('#/properties/_identifier'),
+                new JsonFormsControl('#/properties/bezeichnung', 'Bezeichnung'),
+                new JsonFormsControl('#/properties/summe', "Summe in $currency"),
+              ],
+              [
+                'addButtonLabel' => 'Verwaltungs-/Organisationskosten hinzufügen',
+                'removeButtonLabel' => 'Entfernen',
+              ]
+            ),
+            new JsonFormsArray(
+              "$scopePrefix/sachkosten/properties/sonstige",
+              'Sonstige Sachkosten in ' . $currency,
+              'z.B. Telefonkosten, Bürobedarf oder IT-Support',
+              [
+                new JsonFormsHidden('#/properties/_identifier'),
+                new JsonFormsControl('#/properties/bezeichnung', 'Bezeichnung'),
+                new JsonFormsControl('#/properties/summe', "Summe in $currency"),
+              ],
+              [
+                'addButtonLabel' => 'Sonstige hinzufügen',
+                'removeButtonLabel' => 'Entfernen',
+              ]
+            ),
+            new JsonFormsControl(
+              "$scopePrefix/sachkosten/properties/sonstigeSumme",
+              "Summe sonstige Sachkosten in $currency"
+            ),
+            new JsonFormsControl(
+              "$scopePrefix/sachkosten/properties/summe",
+              "Summe Sachkosten in $currency"
+            ),
+            new JsonFormsControl(
+              "$scopePrefix/sachkostenKommentar",
+              'Kommentar zu den Sachkosten',
+              <<<EOD
+    Bitte erklären Sie die Sachkosten: Warum werden sie benötigt und wie werden sie
+    im Projekt verwendet? Bitte gehen Sie auf die einzelnen Unterkategorien ein.
+    Erklären Sie besonders die Kategorie „Sonstige Sachkosten“:)
+    EOD,
+              ['multi' => TRUE]
+            ),
           ],
-          [
-            'addButtonLabel' => 'Verwaltungs-/Organisationskosten hinzufügen',
-            'removeButtonLabel' => 'Entfernen',
-          ]
-        ),
-        new JsonFormsControl(
-          "$scopePrefix/sachkosten/properties/verwaltungskostenSumme",
-          "Summe projektbezogene Verwaltungs-/Organisationskosten in $currency"
-        ),
-        new JsonFormsArray(
-          "$scopePrefix/sachkosten/properties/sonstige",
-          'Sonstige Sachkosten in ' . $currency,
-          'z.B. Telefonkosten, Bürobedarf oder IT-Support',
-          [
-            new JsonFormsHidden('#/properties/_identifier'),
-            new JsonFormsControl('#/properties/bezeichnung', 'Bezeichnung'),
-            new JsonFormsControl('#/properties/summe', "Summe in $currency"),
-          ],
-          [
-            'addButtonLabel' => 'Sonstige hinzufügen',
-            'removeButtonLabel' => 'Entfernen',
-          ]
-        ),
-        new JsonFormsControl(
-          "$scopePrefix/sachkosten/properties/sonstigeSumme",
-          "Summe sonstige Sachkosten in $currency"
-        ),
-        new JsonFormsControl(
-          "$scopePrefix/sachkosten/properties/summe",
-          "Summe Sachkosten in $currency"
+          NULL,
+          NULL,
+          ['rule' => $sachkostenRule]
         ),
       ], <<<EOD
 Bitte beachten Sie, dass nur konkrete Ausgaben für das Projekt beantragt werden

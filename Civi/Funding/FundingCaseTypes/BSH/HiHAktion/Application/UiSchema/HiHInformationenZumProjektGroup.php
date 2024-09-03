@@ -33,14 +33,13 @@ final class HiHInformationenZumProjektGroup extends JsonFormsGroup {
       new JsonFormsControl(
         "$scopePrefix/kurzbeschreibung",
         <<<EOD
-Beschreiben Sie kurz, was Sie mit der Förderung umsetzen wollen?
-Bitte beschreiben Sie in wenigen Sätzen Ihr Projekt.
-(Was erleben die Teilnehmer:innen?)
+Bitte beschreiben Sie ihr Projekt. Gehen sie dabei besonders darauf ein, was sie
+konkret mit der Förderung umsetzen wollen):
 EOD, NULL, ['multi' => TRUE]
       ),
       new JsonFormsControl(
         "$scopePrefix/wirktGegenEinsamkeit",
-        'Warum wirkt das Projekt gegen Einsamkeit?',
+        'Wie wirkt das Projekt gegen Einsamkeit?',
         NULL,
         ['multi' => TRUE]
       ),
@@ -91,33 +90,39 @@ EOD, NULL, ['multi' => TRUE]
         ),
       ]),
       new JsonFormsControl(
-        "$scopePrefix/haeufigkeit",
-        'Wie oft findet das Projekt statt?',
-      ),
-      new JsonFormsControl(
         "$scopePrefix/beabsichtigteTeilnehmendenzahl",
         'Wie viele Teilnehmende wollen Sie erreichen?',
       ),
       new JsonFormsControl(
         "$scopePrefix/zielgruppe",
-        'Wer ist Ihre Zielgruppe? (Mehrfachnennung möglich)',
+        'Wer ist Ihre Zielgruppe? (Mehrfachnennungen möglich)',
       ),
       new JsonFormsControl(
-        "$scopePrefix/zielgruppeSonstiges",
-        'Sonstige Zielgruppe',
+        "$scopePrefix/zielgruppeErreichen",
+        'Wie erreichen Sie die Zielgruppe?',
+        NULL,
+        ['multi' => TRUE]
+      ),
+      new JsonFormsControl(
+        "$scopePrefix/zielgruppeHerausforderungen",
+        'Mit welchen Herausforderungen hat Ihre Zielgruppe zu kämpfen?'
+      ),
+      new JsonFormsControl(
+        "$scopePrefix/zielgruppeHerausforderungenSonstige",
+        'Sonstige Herausforderungen',
         NULL,
         ['hideLabel' => TRUE],
         [
           'rule' => new JsonFormsRule(
             'SHOW',
-            "$scopePrefix/zielgruppe",
-            JsonSchema::fromArray(['contains' => ['const' => 'sonstiges']])
+            "$scopePrefix/zielgruppeHerausforderungen",
+            JsonSchema::fromArray(['contains' => ['const' => 'sonstige']])
           ),
         ]
       ),
       new JsonFormsControl(
-        "$scopePrefix/zielgruppeErreichen",
-        'Wie erreichen Sie die Zielgruppe?',
+        "$scopePrefix/zielgruppeHerausforderungenErlaeuterung",
+        'Bitte erläutern Sie die Herausforderungen ihrer Zielgruppe detaillierter:',
         NULL,
         ['multi' => TRUE]
       ),
@@ -137,6 +142,15 @@ EOD, NULL, ['multi' => TRUE]
             JsonSchema::fromArray(['contains' => ['const' => 'sonstiges']])
           ),
         ]
+      ),
+      new JsonFormsControl(
+        "$scopePrefix/projektformatErlaeuterung",
+        <<<EOD
+Bitte erläutern Sie das Projektformat: Wie funktioniert das Angebot, wie oft
+findet es statt und worum geht es?
+EOD,
+        NULL,
+        ['multi' => TRUE]
       ),
       new JsonFormsArray(
         "$scopePrefix/dateien",
