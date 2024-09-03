@@ -44,11 +44,6 @@ final class HiHApplicationJsonSchema extends JsonSchemaObject {
       'kosten' => new HiHKostenJsonSchema(),
       'einnahmen' => new HiHEinnahmenJsonSchema(),
       'rechtliches' => new HiHRechtlichesJsonSchema(),
-      'amount' => new JsonSchemaNumber([
-        'default' => 0.0,
-        '$default' => 0.0,
-        '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'amount_requested']]),
-      ]),
     ];
 
     parent::__construct($properties, ['required' => array_keys($properties)]);
