@@ -22,7 +22,9 @@ namespace Civi\Funding\Api4\Action\FundingCase;
 use Civi\Api4\FundingCase;
 use Civi\Api4\Generic\DAOGetFieldsAction;
 use Civi\Api4\Query\Api4Query;
+use Civi\Api4\Query\Api4SelectQuery;
 use Civi\Funding\Api4\Query\AliasSqlRenderer;
+use Civi\Funding\Api4\Query\Util\SqlRendererUtil;
 use Civi\RemoteTools\Api4\Action\Traits\PermissionsGetFieldsActionTrait;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
 use CRM_Funding_ExtensionUtil as E;
@@ -44,6 +46,7 @@ final class GetFieldsAction extends DAOGetFieldsAction {
    * @phpstan-return array<array<string, array<string, scalar>|array<scalar>|scalar|null>&array{name: string}>
    */
   protected function getRecords(): array {
+
     return array_merge($this->getRecordsWithPermissions(), [
       [
         'name' => 'transfer_contract_uri',
@@ -109,6 +112,65 @@ final class GetFieldsAction extends DAOGetFieldsAction {
         'nullable' => TRUE,
         // Without sql renderer the query would fail. The actual value is fetched afterward.
         'sql_renderer' => fn () => '(SELECT NULL)',
+      ],
+      [
+        'name' => 'debug_num_applications with status',
+        'title' => E::ts('Debug num applications status'),
+        'description' => E::ts('Debug number of applications with status'),
+        'type' => 'Extra',
+        'data_type' => 'Integer',
+        'readonly' => TRUE,
+        'nullable' => FALSE,
+        'sql_renderer' => fn (array $field, Api4SelectQuery $query) => sprintf('
+          (
+            SELECT
+              COUNT(CASE WHEN fap.status IS NOT NULL THEN 1 END) 
+            FROM
+              civicrm_funding_application_process AS fap
+            WHERE
+              fap.funding_case_id = %s
+          )', SqlRendererUtil::getFieldSqlName($field, $query, 'id')
+        ),
+      ],
+      [
+        'name' => 'debug_num_applications eligible',
+        'title' => E::ts('Debug num applications eligible'),
+        'description' => E::ts('Debug number of applications eligible'),
+        'type' => 'Extra',
+        'data_type' => 'Integer',
+        'readonly' => TRUE,
+        'nullable' => FALSE,
+        'sql_renderer' => fn (array $field, Api4SelectQuery $query) => sprintf('
+          (
+            SELECT
+              COUNT(CASE WHEN fap.is_eligible IS NOT NULL THEN 1 END)
+            FROM
+              civicrm_funding_application_process AS fap
+            WHERE
+              fap.funding_case_id = %s
+          )', SqlRendererUtil::getFieldSqlName($field, $query, 'id')
+        ),
+      ],
+      [
+        'name' => 'application_process_progress',
+        'title' => E::ts('Review Progress'),
+        'description' => E::ts('The progress of application review.'),
+        'type' => 'Extra',
+        'data_type' => 'Integer',
+        'readonly' => TRUE,
+        'nullable' => FALSE,
+        'sql_renderer' => fn (array $field, Api4SelectQuery $query) => sprintf('
+          (
+            SELECT
+                COUNT(CASE WHEN fap.is_eligible IS NOT NULL THEN 1 END)
+              / COUNT(CASE WHEN fap.status IS NOT NULL THEN 1 END) 
+              * 100
+            FROM
+              civicrm_funding_application_process AS fap
+            WHERE
+              fap.funding_case_id = %s
+          )', SqlRendererUtil::getFieldSqlName($field, $query, 'id')
+        ),
       ],
     ]);
   }
