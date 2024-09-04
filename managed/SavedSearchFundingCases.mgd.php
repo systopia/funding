@@ -23,7 +23,7 @@ return [
   [
     'name' => 'SavedSearch_funding_cases',
     'entity' => 'SavedSearch',
-    'cleanup' => 'unused',
+    'cleanup' => 'always',
     'update' => 'unmodified',
     'params' => [
       'version' => 4,
@@ -46,6 +46,9 @@ return [
             'amount_cleared',
             'creation_date',
             'modification_date',
+            'application_process_progress',
+            'debug_num_applications with status',
+            'debug_num_applications eligible',
           ],
           'orderBy' => [
             'id' => 'DESC',
@@ -83,7 +86,7 @@ return [
   [
     'name' => 'SavedSearch_funding_cases_SearchDisplay_table',
     'entity' => 'SearchDisplay',
-    'cleanup' => 'unused',
+    'cleanup' => 'always',
     'update' => 'unmodified',
     'params' => [
       'version' => 4,
@@ -102,6 +105,13 @@ return [
           ],
           'placeholder' => 5,
           'columns' => [
+            [
+              'type' => 'field',
+              'key' => 'id',
+              'dataType' => 'Integer',
+              'label' => E::ts('ID'),
+              'sortable' => TRUE,
+            ],
             [
               'type' => 'field',
               'key' => 'identifier',
@@ -139,9 +149,30 @@ return [
             ],
             [
               'type' => 'field',
+              'key' => 'application_process_progress',
+              'dataType' => 'Integer',
+              'label' => E::ts('Review Progress'),
+              'sortable' => TRUE,
+            ],
+            [
+              'type' => 'field',
               'key' => 'amount_approved',
               'dataType' => 'Money',
               'label' => E::ts('Amount Approved'),
+              'sortable' => TRUE,
+            ],
+            [
+              'type' => 'field',
+              'key' => 'debug_num_applications eligible',
+              'dataType' => 'Integer',
+              'label' => E::ts('Debug num applications eligible'),
+              'sortable' => TRUE,
+            ],
+            [
+              'type' => 'field',
+              'key' => 'debug_num_applications with status',
+              'dataType' => 'Integer',
+              'label' => E::ts('Debug num applications status'),
               'sortable' => TRUE,
             ],
             [
