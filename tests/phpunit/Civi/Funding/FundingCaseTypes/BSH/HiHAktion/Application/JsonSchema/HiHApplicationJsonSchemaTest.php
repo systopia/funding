@@ -55,7 +55,6 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
     );
 
     $possibleRecipients = [
-      1 => 'Organization 1',
       2 => 'Organization 2',
     ];
 
@@ -189,7 +188,6 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
 
   public function test(): void {
     $possibleRecipients = [
-      1 => 'Organization 1',
       2 => 'Organization 2',
     ];
 
@@ -317,7 +315,7 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
     $jsonSchema = new HiHApplicationJsonSchema(
       new \DateTime('2024-07-08'),
       new \DateTime('2024-07-09'),
-      []
+      [2 => 'Organization 2']
     );
 
     $data = (object) [
@@ -344,7 +342,7 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
     $jsonSchema = new HiHApplicationJsonSchema(
       new \DateTime('2024-07-08'),
       new \DateTime('2024-07-09'),
-      []
+      [2 => 'Organization 2']
     );
 
     $data = (object) [
