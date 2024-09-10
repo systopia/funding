@@ -32,7 +32,6 @@ final class HiHApplicationUiSchemaTest extends TestCase {
 
   public function testUiSchema(): void {
     $possibleRecipients = [
-      1 => 'Organization 1',
       2 => 'Organization 2',
     ];
     $submitActions = [
