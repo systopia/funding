@@ -34,7 +34,7 @@ final class HiHApplicationJsonSchema extends JsonSchemaObject {
     \DateTimeInterface $applicationEnd,
     array $possibleRecipients
   ) {
-    Assert::count($possibleRecipients, 1, 'Es darf nur genau einen möglichen Fördergeldempfänger geben. (Aktuell: %d)');
+    Assert::count($possibleRecipients, 1, 'Es darf nur genau einen möglichen Fördergeldempfänger geben. (Aktuell: %2$d)');
 
     // @todo Validate conditional fields.
     // @todo Additional validations, e.g. required, length, min, max, ...
