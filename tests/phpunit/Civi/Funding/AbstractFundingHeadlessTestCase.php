@@ -78,7 +78,6 @@ abstract class AbstractFundingHeadlessTestCase extends TestCase implements Headl
   protected function tearDown(): void {
     parent::tearDown();
     $this->clearCache();
-
   }
 
   protected function clearCache(): void {
