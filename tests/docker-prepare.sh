@@ -3,10 +3,10 @@ set -eu -o pipefail
 
 ACTIVITY_ENTITY_BRANCH=main
 EXTERNAL_FILE_BRANCH=main
-CIVIBANKING_VERSION=0.8.3
+CIVIBANKING_VERSION=1.1.0
 #CIVIOFFICE_VERSION=1.0-beta1
 CIVIOFFICE_BRANCH=master
-XCM_VERSION=1.12.0
+XCM_VERSION=1.13.1
 #IDENTITYTRACKER_VERSION=1.3
 IDENTITYTRACKER_BRANCH=master
 #REMOTETOOLS_VERSION=0.4
@@ -47,7 +47,13 @@ else
   # The autoloader expected class "Civi\ActionSchedule\Mapping" to be defined in
   # file "[...]/Civi/ActionSchedule/Mapping.php". The file was found but the
   # class was not in it, the class name or namespace probably has a typo.
-  rm -f /var/www/html/sites/all/modules/civicrm/Civi/ActionSchedule/Mapping.php
+  #
+  # Necessary for CiviCRM 5.66.0 - 5.74.x.
+  # https://github.com/civicrm/civicrm-core/blob/5.66.0/Civi/ActionSchedule/Mapping.php
+  if [ -e /var/www/html/sites/all/modules/civicrm/Civi/ActionSchedule/Mapping.php ] \
+      && grep -q '// Empty file' /var/www/html/sites/all/modules/civicrm/Civi/ActionSchedule/Mapping.php; then
+    rm /var/www/html/sites/all/modules/civicrm/Civi/ActionSchedule/Mapping.php
+  fi
 
   # For headless tests these files need to exist.
   touch /var/www/html/sites/all/modules/civicrm/sql/test_data.mysql
