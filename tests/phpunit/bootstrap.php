@@ -9,6 +9,7 @@ use Civi\Funding\FundingAttachmentManagerInterface;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\Funding\FundingProgram\FundingProgramManager;
+use Civi\Funding\Mock\Contact\PossibleRecipientsLoaderMock;
 use Civi\Funding\Mock\DocumentRender\MockDocumentRenderer;
 use Civi\Funding\Mock\FundingCaseType\Application\Actions\TestApplicationActionsDeterminer;
 use Civi\Funding\Mock\FundingCaseType\Application\Actions\TestApplicationActionStatusInfo;
@@ -120,6 +121,9 @@ function _funding_test_civicrm_container(ContainerBuilder $container): void {
 
   $container->autowire(TestReportFormFactory::class)
     ->addTag(TestReportFormFactory::SERVICE_TAG);
+
+  $container->autowire(PossibleRecipientsLoaderMock::class)
+    ->addTag(PossibleRecipientsLoaderMock::SERVICE_TAG);
 }
 
 function addExtensionToClassLoader(string $extension): void {

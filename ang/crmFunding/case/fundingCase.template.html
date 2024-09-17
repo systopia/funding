@@ -70,7 +70,7 @@
     </div>
     <div>
         <label>{{ ts('Recipient') }}</label>
-        {{ recipientContact.display_name }}
+        <funding-recipient-contact funding-case="fundingCase" edit-allowed="possibleActions.includes('set-recipient-contact')"></funding-recipient-contact>
     </div>
     <div>
       <label>{{ ts('Amount Approved')}}</label>

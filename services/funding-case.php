@@ -24,6 +24,7 @@ use Civi\Api4\Generic\AbstractAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\GetNewApplicationFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\SubmitNewApplicationFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\ValidateNewApplicationFormAction;
+use Civi\Funding\DependencyInjection\Compiler\FundingCaseRecipientContactSetHandlerPass;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseGetFieldsSubscriber;
@@ -67,6 +68,8 @@ use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Symfony\Component\DependencyInjection\Argument\ServiceLocatorArgument;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
+$container->addCompilerPass(new FundingCaseRecipientContactSetHandlerPass());
 
 $container->autowire(FundingCaseManager::class);
 $container->autowire(FundingCasePermissionsCacheManager::class);

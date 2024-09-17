@@ -22,6 +22,7 @@ namespace Civi\Funding\Mock\FundingCaseType\FundingCase\Actions;
 use Civi\Funding\FundingCase\Actions\AbstractFundingCaseActionsDeterminerDecorator;
 use Civi\Funding\FundingCase\Actions\DefaultFundingCaseActionsDeterminer;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions;
+use Civi\Funding\FundingCase\Actions\SetRecipientContactActionsDeterminer;
 use Civi\Funding\Mock\FundingCaseType\Application\Actions\TestApplicationActionStatusInfo;
 use Civi\Funding\Mock\FundingCaseType\Traits\TestSupportedFundingCaseTypesTrait;
 use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
@@ -35,7 +36,7 @@ final class TestCaseActionsDeterminer extends AbstractFundingCaseActionsDetermin
   public function __construct(
     TestApplicationActionStatusInfo $statusInfo
   ) {
-    parent::__construct(new DefaultFundingCaseActionsDeterminer($statusInfo));
+    parent::__construct(new SetRecipientContactActionsDeterminer(new DefaultFundingCaseActionsDeterminer($statusInfo)));
   }
 
   public function getActions(string $status, array $applicationProcessStatusList, array $permissions): array {

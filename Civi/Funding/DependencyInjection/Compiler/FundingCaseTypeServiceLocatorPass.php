@@ -63,6 +63,7 @@ use Civi\Funding\ApplicationProcess\Handler\Decorator\ApplicationFormAddSubmitEv
 use Civi\Funding\ApplicationProcess\Handler\Decorator\ApplicationFormNewSubmitEventDecorator;
 use Civi\Funding\ApplicationProcess\Handler\Decorator\ApplicationFormSubmitEventDecorator;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
+use Civi\Funding\DependencyInjection\Compiler\Traits\CreateFundingCaseTypeServiceTrait;
 use Civi\Funding\DependencyInjection\Compiler\Traits\TaggedFundingCaseTypeServicesTrait;
 use Civi\Funding\Form\Application\ApplicationFormDataFactoryInterface;
 use Civi\Funding\Form\Application\ApplicationJsonSchemaFactoryInterface;
@@ -119,6 +120,7 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
 
+  use CreateFundingCaseTypeServiceTrait;
   use TaggedFundingCaseTypeServicesTrait;
 
   /**
@@ -241,7 +243,7 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
     $serviceLocatorServices =
       $this->getTaggedFundingCaseTypeServices($container, FundingCaseTypeServiceLocatorInterface::SERVICE_TAG);
 
-    foreach ($this->fundingCaseTypes as $fundingCaseType) {
+    foreach (static::$fundingCaseTypes as $fundingCaseType) {
       if (!isset($applicationActionStatusInfoServices[$fundingCaseType])) {
         throw new RuntimeException(
           sprintf('Application action status info for funding case type "%s" missing', $fundingCaseType)
@@ -651,20 +653,7 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
     array $arguments,
     array $decorators = []
   ): Reference {
-    $serviceId = $class;
-    if ([] !== $arguments) {
-      $serviceId .= ':' . $fundingCaseType;
-    }
-    $container->autowire($serviceId, $class)->setArguments($arguments);
-
-    foreach ($decorators as $decoratorClass => $decoratorArguments) {
-      $decoratorServiceId = $decoratorClass . ':' . $fundingCaseType;
-      array_unshift($decoratorArguments, new Reference($serviceId));
-      $container->autowire($decoratorServiceId, $decoratorClass)->setArguments($decoratorArguments);
-      $serviceId = $decoratorServiceId;
-    }
-
-    return new Reference($serviceId);
+    return $this->createFundingCaseTypeService($container, $fundingCaseType, $class, $arguments, $decorators);
   }
 
   /**

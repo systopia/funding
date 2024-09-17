@@ -28,7 +28,7 @@ trait TaggedFundingCaseTypeServicesTrait {
   /**
    * @phpstan-var list<string>
    */
-  protected array $fundingCaseTypes = [];
+  protected static array $fundingCaseTypes = [];
 
   /**
    * @phpstan-return array<string, Reference>
@@ -52,8 +52,8 @@ trait TaggedFundingCaseTypeServicesTrait {
             );
           }
           $services[$fundingCaseType] = new Reference($id);
-          if (!in_array($fundingCaseType, $this->fundingCaseTypes, TRUE)) {
-            $this->fundingCaseTypes[] = $fundingCaseType;
+          if (!in_array($fundingCaseType, static::$fundingCaseTypes, TRUE)) {
+            static::$fundingCaseTypes[] = $fundingCaseType;
           }
         }
       }

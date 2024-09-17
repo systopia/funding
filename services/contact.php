@@ -37,9 +37,9 @@ use Symfony\Component\DependencyInjection\Reference;
 $container->autowire(FundingCaseRecipientLoaderInterface::class, FundingCaseRecipientLoader::class);
 
 $container->register(PossibleRecipientsLoaderInterface::class, PossibleRecipientsLoaderCollection::class)
-  ->addArgument(new TaggedIteratorArgument('funding.possible_recipients_loader'));
+  ->addArgument(new TaggedIteratorArgument(PossibleRecipientsLoaderInterface::SERVICE_TAG));
 $container->autowire(DefaultPossibleRecipientsLoader::class)
-  ->addTag('funding.possible_recipients_loader');
+  ->addTag(PossibleRecipientsLoaderInterface::SERVICE_TAG);
 
 $container->autowire(GetAction::class)
   ->setArgument('$relationTypeContainer', new Reference('funding.contact_relation_type_container'))

@@ -23,6 +23,8 @@ use Civi\Funding\Entity\FundingProgramEntity;
 
 interface PossibleRecipientsLoaderInterface {
 
+  public const SERVICE_TAG = 'funding.possible_recipients_loader';
+
   /**
    * @phpstan-return array<int, string>
    *   Contact ID mapped to display name.

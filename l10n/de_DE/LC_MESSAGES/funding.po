@@ -53,6 +53,8 @@ msgstr "Kein passender Antrag oder fehlende Berechtigung."
 #: Civi/Funding/Api4/Action/FundingCase/ApproveAction.php
 #: Civi/Funding/Api4/Action/FundingCase/GetPossibleActionsAction.php
 #: Civi/Funding/Api4/Action/FundingCase/RecreateTransferContractAction.php
+#: Civi/Funding/FundingCase/Api4/ActionHandler/GetPossibleRecipientsActionHandler.php
+#: Civi/Funding/FundingCase/Api4/ActionHandler/SetRecipientContactActionHandler.php
 #: Civi/Funding/FundingCase/Api4/ActionHandler/UpdateAmountApprovedActionHandler.php
 msgid "Funding case with ID \"%1\" not found"
 msgstr "Förderfall mit ID \"%1\" nicht gefunden"
@@ -989,6 +991,10 @@ msgstr "extern"
 msgid "Approving this funding case is not allowed."
 msgstr "Diesen Förderfall zu bewilligen ist nicht erlaubt."
 
+#: Civi/Funding/FundingCase/Handler/FundingCaseRecipientContactSetHandler.php
+msgid "Changing the recipient contact of this funding case is not allowed."
+msgstr "Den Empfängerkontakt dieses Förderfalls zu ändern, ist nicht erlaubt."
+
 #: Civi/Funding/FundingCase/Handler/FundingCaseUpdateAmountApprovedHandler.php
 msgid "Updating the approved amount of this funding case is not allowed."
 msgstr ""
@@ -1266,6 +1272,7 @@ msgstr "Meine Aufgaben"
 #: ang/crmFunding/case/fundingCase.js
 #: ang/crmFunding/case/fundingCasePermissions.js
 #: ang/crmFunding/case/permissions/fundingCaseContactRelation.directive.js
+#: ang/crmFunding/case/recipientContact.directive.js
 #: ang/crmFunding/clearing/clearing.js
 #: ang/crmFunding/clearing/clearingEditor.directive.js
 #: ang/crmFunding/clearing/clearingReviewer.directive.js

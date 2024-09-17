@@ -29,7 +29,9 @@ use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Api4\Permissions;
 use Civi\Funding\FileTypeNames;
 use Civi\Funding\Fixtures\AttachmentFixture;
+use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
+use Civi\Funding\Mock\Contact\PossibleRecipientsLoaderMock;
 use Civi\Funding\Util\RequestTestUtil;
 use CRM_Funding_ExtensionUtil as E;
 
@@ -43,6 +45,11 @@ use CRM_Funding_ExtensionUtil as E;
 final class FundingCaseTest extends AbstractFundingHeadlessTestCase {
 
   use FundingCaseTestFixturesTrait;
+
+  protected function tearDown(): void {
+    PossibleRecipientsLoaderMock::$possibleRecipients = [];
+    parent::tearDown();
+  }
 
   public function testApprove(): void {
     $this->addInternalFixtures();
@@ -243,6 +250,54 @@ final class FundingCaseTest extends AbstractFundingHeadlessTestCase {
     $permittedAssociatedResult = FundingCase::get()
       ->execute();
     static::assertSame(0, $permittedAssociatedResult->rowCount);
+  }
+
+  /**
+   * @covers \Civi\Funding\Api4\Action\FundingCase\UpdateAmountApprovedAction
+   */
+  public function testSetRecipientContact(): void {
+    $this->addInternalFixtures();
+    $newRecipientContact = ContactFixture::addIndividual();
+
+    RequestTestUtil::mockInternalRequest($this->associatedContactId);
+
+    $e = NULL;
+    try {
+      FundingCase::setRecipientContact()
+        ->setId($this->permittedFundingCaseId)
+        ->setContactId($newRecipientContact['id'])
+        ->execute();
+    }
+    catch (UnauthorizedException $e) {
+      static::assertSame('Changing the recipient contact of this funding case is not allowed.', $e->getMessage());
+    }
+    static::assertNotNull($e);
+
+    FundingCaseContactRelationFixture::addContact(
+      $this->associatedContactId,
+      $this->permittedFundingCaseId,
+      ['review_calculative'],
+    );
+
+    $e = NULL;
+    try {
+      FundingCase::setRecipientContact()
+        ->setId($this->permittedFundingCaseId)
+        ->setContactId($newRecipientContact['id'])
+        ->execute();
+    }
+    catch (\Exception $e) {
+      static::assertSame('Invalid recipient contact ID', $e->getMessage());
+    }
+    static::assertNotNull($e);
+
+    PossibleRecipientsLoaderMock::$possibleRecipients = [$newRecipientContact['id'] => 'New Recipient'];
+    $result = FundingCase::setRecipientContact()
+      ->setId($this->permittedFundingCaseId)
+      ->setContactId($newRecipientContact['id'])
+      ->execute();
+
+    static::assertSame($newRecipientContact['id'], $result['recipient_contact_id']);
   }
 
   /**
