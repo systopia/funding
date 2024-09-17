@@ -21,6 +21,7 @@ namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\FundingCase\Actions;
 
 use Civi\Funding\FundingCase\Actions\AbstractFundingCaseActionsDeterminerDecorator;
 use Civi\Funding\FundingCase\Actions\DefaultFundingCaseActionsDeterminer;
+use Civi\Funding\FundingCase\Actions\SetRecipientContactActionsDeterminer;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Actions\HiHApplicationActionStatusInfo;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Traits\HiHSupportedFundingCaseTypesTrait;
 
@@ -29,7 +30,7 @@ final class HiHCaseActionsDeterminer extends AbstractFundingCaseActionsDetermine
   use HiHSupportedFundingCaseTypesTrait;
 
   public function __construct(HiHApplicationActionStatusInfo $statusInfo) {
-    parent::__construct(new DefaultFundingCaseActionsDeterminer($statusInfo));
+    parent::__construct(new SetRecipientContactActionsDeterminer(new DefaultFundingCaseActionsDeterminer($statusInfo)));
   }
 
 }
