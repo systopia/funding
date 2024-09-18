@@ -24,7 +24,7 @@ final class RemoteSubmitResponseActions {
   public const CLOSE_FORM = 'closeForm';
 
   /**
-   * Has to be combined with attributes "entity_type" and "entity_id".
+   * Has to be combined with attributes "entityType" and "entityId".
    */
   public const LOAD_ENTITY = 'loadEntity';
 
