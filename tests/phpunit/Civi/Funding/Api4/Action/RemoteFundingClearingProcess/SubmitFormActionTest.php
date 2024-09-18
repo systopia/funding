@@ -169,7 +169,7 @@ final class SubmitFormActionTest extends AbstractRemoteFundingHeadlessTestCase {
       ->execute()
       ->getArrayCopy();
 
-    static::assertSame(RemoteSubmitResponseActions::CLOSE_FORM, $result['action']);
+    static::assertSame(RemoteSubmitResponseActions::RELOAD_FORM, $result['action']);
     static::assertSame('Saved', $result['message']);
     static::assertArrayNotHasKey('errors', $result);
 
@@ -263,7 +263,7 @@ final class SubmitFormActionTest extends AbstractRemoteFundingHeadlessTestCase {
       ->execute()
       ->getArrayCopy();
 
-    static::assertSame(RemoteSubmitResponseActions::CLOSE_FORM, $result['action']);
+    static::assertSame(RemoteSubmitResponseActions::RELOAD_FORM, $result['action']);
     static::assertSame('Saved', $result['message']);
     static::assertArrayNotHasKey('errors', $result);
     static::assertEquals(new \stdClass(), $result['files']);

@@ -69,7 +69,7 @@ final class RemoteSubmitFormActionHandler implements ActionHandlerInterface {
     }
 
     return [
-      'action' => 'modify' === ($action->getData()['_action'] ?? NULL)
+      'action' => in_array($action->getData()['_action'] ?? NULL, ['save', 'modify'], TRUE)
       ? RemoteSubmitResponseActions::RELOAD_FORM
       : RemoteSubmitResponseActions::CLOSE_FORM,
       'message' => E::ts('Saved'),
