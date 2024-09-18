@@ -1995,6 +1995,10 @@ msgstr "Externe Antragsvorlagen verwalten"
 msgid "Open case"
 msgstr "Fall öffnen"
 
+#: managed/SavedSearchFundingCases.mgd.php managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
+msgid "Total"
+msgstr "Gesamt"
+
 #: managed/SavedSearchFundingDrawdowns.mgd.php
 msgid "Requester"
 msgstr "Anforderer"

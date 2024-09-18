@@ -107,6 +107,9 @@ return [
               'dataType' => 'String',
               'label' => E::ts('Identifier'),
               'sortable' => TRUE,
+              'tally' => [
+                'fn' => NULL,
+              ],
             ],
             [
               'type' => 'field',
@@ -114,6 +117,9 @@ return [
               'dataType' => 'String',
               'label' => E::ts('Title'),
               'sortable' => TRUE,
+              'tally' => [
+                'fn' => NULL,
+              ],
             ],
             [
               'type' => 'field',
@@ -121,6 +127,9 @@ return [
               'dataType' => 'String',
               'label' => E::ts('Funding Program'),
               'sortable' => TRUE,
+              'tally' => [
+                'fn' => NULL,
+              ],
             ],
             [
               'type' => 'field',
@@ -128,6 +137,9 @@ return [
               'dataType' => 'String',
               'label' => E::ts('Status'),
               'sortable' => TRUE,
+              'tally' => [
+                'fn' => NULL,
+              ],
             ],
             [
               'type' => 'field',
@@ -135,6 +147,9 @@ return [
               'dataType' => 'Boolean',
               'label' => E::ts('Review Calculative'),
               'sortable' => TRUE,
+              'tally' => [
+                'fn' => NULL,
+              ],
             ],
             [
               'type' => 'field',
@@ -142,6 +157,9 @@ return [
               'dataType' => 'Boolean',
               'label' => E::ts('Review Content'),
               'sortable' => TRUE,
+              'tally' => [
+                'fn' => NULL,
+              ],
             ],
             [
               'type' => 'field',
@@ -149,6 +167,9 @@ return [
               'dataType' => 'String',
               'label' => E::ts('Funding Case Type'),
               'sortable' => TRUE,
+              'tally' => [
+                'fn' => NULL,
+              ],
             ],
             [
               'type' => 'field',
@@ -156,6 +177,9 @@ return [
               'dataType' => 'Money',
               'label' => E::ts('Amount Cleared'),
               'sortable' => TRUE,
+              'tally' => [
+                'fn' => 'SUM',
+              ],
             ],
             [
               'type' => 'field',
@@ -163,6 +187,9 @@ return [
               'dataType' => 'Money',
               'label' => E::ts('Amount Admitted'),
               'sortable' => TRUE,
+              'tally' => [
+                'fn' => 'SUM',
+              ],
             ],
             [
               'type' => 'field',
@@ -170,6 +197,9 @@ return [
               'dataType' => 'Timestamp',
               'label' => E::ts('Creation Date'),
               'sortable' => TRUE,
+              'tally' => [
+                'fn' => NULL,
+              ],
             ],
             [
               'type' => 'field',
@@ -177,6 +207,9 @@ return [
               'dataType' => 'Timestamp',
               'label' => E::ts('Modification Date'),
               'sortable' => TRUE,
+              'tally' => [
+                'fn' => NULL,
+              ],
             ],
             [
               'type' => 'field',
@@ -184,6 +217,9 @@ return [
               'dataType' => 'String',
               'label' => E::ts('Recipient'),
               'sortable' => TRUE,
+              'tally' => [
+                'fn' => NULL,
+              ],
             ],
             [
               'text' => '',
@@ -239,6 +275,9 @@ return [
           'classes' => [
             'table',
             'table-striped',
+          ],
+          'tally' => [
+            'label' => E::ts('Total'),
           ],
         ],
       ],
