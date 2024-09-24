@@ -96,6 +96,8 @@ class FundingCaseManager {
   }
 
   /**
+   * Creates a new funding case in status 'open'.
+   *
    * @phpstan-param array{
    *   funding_program: \Civi\Funding\Entity\FundingProgramEntity,
    *   funding_case_type: \Civi\Funding\Entity\FundingCaseTypeEntity,
@@ -173,9 +175,12 @@ class FundingCaseManager {
   }
 
   /**
-   * Returns a funding case in status open with the given funding program,
-   * funding case type, and recipient contact. If no such funding case exists,
-   * a new one will be created.
+   * Returns the last funding case in any of the given allowed status, with the
+   * given funding program, funding case type, and recipient contact. If no such
+   * funding case exists, a new one will be created. The parameter $contactId
+   * and the attribute 'title' in $values are only used if a new funding case is
+   * created. If $allowedExistingStatusList is empty, no existing funding case
+   * will be matched resulting in a new one.
    *
    * @phpstan-param array{
    *   funding_program: \Civi\Funding\Entity\FundingProgramEntity,
@@ -184,14 +189,21 @@ class FundingCaseManager {
    *   title?: string|null,
    * } $values
    *
+   * @phpstan-param list<string> $allowedExistingStatusList
+   *
    * @throws \CRM_Core_Exception
+   *
+   * @see create()
    */
-  public function getOpenOrCreate(int $contactId, array $values): FundingCaseEntity {
-    $fundingCase = $this->getLastBy(CompositeCondition::fromFieldValuePairs([
-      'funding_program_id' => $values['funding_program']->getId(),
-      'recipient_contact_id' => $values['recipient_contact_id'],
-      'status' => 'open',
-    ]));
+  public function getOrCreate(array $allowedExistingStatusList, int $contactId, array $values): FundingCaseEntity {
+    if ([] !== $allowedExistingStatusList) {
+      $fundingCase = $this->getLastBy(CompositeCondition::fromFieldValuePairs([
+        'funding_program_id' => $values['funding_program']->getId(),
+        'funding_case_type_id' => $values['funding_case_type']->getId(),
+        'recipient_contact_id' => $values['recipient_contact_id'],
+        'status' => $allowedExistingStatusList,
+      ]));
+    }
 
     return $fundingCase ?? $this->create($contactId, $values);
   }

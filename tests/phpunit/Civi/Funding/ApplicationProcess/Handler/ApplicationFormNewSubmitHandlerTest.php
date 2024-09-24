@@ -93,8 +93,8 @@ final class ApplicationFormNewSubmitHandlerTest extends TestCase {
       ->willReturn('test_status');
 
     $fundingCase = FundingCaseFactory::createFundingCase();
-    $this->fundingCaseManagerMock->expects(static::once())->method('getOpenOrCreate')
-      ->with($command->getContactId(), [
+    $this->fundingCaseManagerMock->expects(static::once())->method('getOrCreate')
+      ->with(['addable_status'], $command->getContactId(), [
         'funding_program' => $command->getFundingProgram(),
         'funding_case_type' => $command->getFundingCaseType(),
         'recipient_contact_id' => ApplicationFormValidationResultFactory::RECIPIENT_CONTACT_ID,
@@ -143,7 +143,9 @@ final class ApplicationFormNewSubmitHandlerTest extends TestCase {
   private function createCommand(): ApplicationFormNewSubmitCommand {
     return new ApplicationFormNewSubmitCommand(
       1,
-      FundingCaseTypeFactory::createFundingCaseType(),
+      FundingCaseTypeFactory::createFundingCaseType([
+        'properties' => ['applicationAddableStatusList' => ['addable_status']],
+      ]),
       FundingProgramFactory::createFundingProgram(),
       ['test' => 'foo'],
     );

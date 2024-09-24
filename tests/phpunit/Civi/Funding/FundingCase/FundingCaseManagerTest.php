@@ -148,13 +148,20 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
     );
   }
 
-  public function testGetOpenOrCreate(): void {
+  public function testGetOrCreate(): void {
     $contact = ContactFixture::addIndividual();
     $fundingProgram = FundingProgramFixture::addFixture();
+    $fundingProgram2 = FundingProgramFixture::addFixture();
     $fundingCaseType = FundingCaseTypeFixture::addFixture();
+    $fundingCaseType2 = FundingCaseTypeFixture::addFixture([
+      'title' => 'Test2',
+      'abbreviation' => 't2',
+      'name' => 'test2',
+    ]);
     $recipientContact = ContactFixture::addOrganization();
+    $recipientContact2 = ContactFixture::addOrganization();
 
-    $this->eventDispatcherMock->expects(static::exactly(2))->method('dispatch')->with(
+    $this->eventDispatcherMock->expects(static::exactly(6))->method('dispatch')->with(
       FundingCaseCreatedEvent::class,
       static::isInstanceOf(FundingCaseCreatedEvent::class)
     )->willReturnCallback(function (string $eventName, FundingCaseCreatedEvent $event): void {
@@ -165,31 +172,68 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
     });
 
     RequestTestUtil::mockInternalRequest($contact['id']);
-    $fundingCase = $this->fundingCaseManager->getOpenOrCreate($contact['id'], [
+    // Create a new funding case.
+    $fundingCase = $this->fundingCaseManager->getOrCreate([], $contact['id'], [
       'funding_program' => $fundingProgram,
       'funding_case_type' => $fundingCaseType,
       'recipient_contact_id' => $recipientContact['id'],
       'title' => 'Title',
     ]);
-
     static::assertSame('open', $fundingCase->getStatus());
-    static::assertEquals($fundingCase, $this->fundingCaseManager->getOpenOrCreate($contact['id'], [
+
+    // Test that the existing funding case is returned.
+    $fundingCaseIdentical = $this->fundingCaseManager->getOrCreate(['open'], $contact['id'], [
       'funding_program' => $fundingProgram,
       'funding_case_type' => $fundingCaseType,
       'recipient_contact_id' => $recipientContact['id'],
       'title' => 'Title',
-    ]));
+    ]);
+    static::assertEquals($fundingCase, $fundingCaseIdentical);
 
-    $fundingCase->setStatus('test');
-    FundingCase::update()->setValues($fundingCase->toArray())->execute();
+    // Test that a new funding case is created when the allowed existing status ('foo') is different.
+    $fundingCase2 = $this->fundingCaseManager->getOrCreate(['foo'], $contact['id'], [
+      'funding_program' => $fundingProgram,
+      'funding_case_type' => $fundingCaseType,
+      'recipient_contact_id' => $recipientContact['id'],
+      'title' => 'Title',
+    ]);
+    static::assertNotSame($fundingCase->getId(), $fundingCase2->getId());
 
-    $fundingCase2 = $this->fundingCaseManager->getOpenOrCreate($contact['id'], [
+    // Test that a new funding case is created because when allowed existing status are empty.
+    $fundingCase3 = $this->fundingCaseManager->getOrCreate([], $contact['id'], [
       'funding_program' => $fundingProgram,
       'funding_case_type' => $fundingCaseType,
       'recipient_contact_id' => $recipientContact['id'],
       'title' => 'Title2',
     ]);
-    static::assertNotSame($fundingCase->getId(), $fundingCase2->getId());
+    static::assertNotSame($fundingCase->getId(), $fundingCase3->getId());
+
+    // Test that a new funding case is created when the funding program is different.
+    $fundingCase4 = $this->fundingCaseManager->getOrCreate(['open'], $contact['id'], [
+      'funding_program' => $fundingProgram2,
+      'funding_case_type' => $fundingCaseType,
+      'recipient_contact_id' => $recipientContact['id'],
+      'title' => 'Title',
+    ]);
+    static::assertNotSame($fundingCase->getId(), $fundingCase4->getId());
+
+    // Test that a new funding case is created when the funding case type is different.
+    $fundingCase5 = $this->fundingCaseManager->getOrCreate(['open'], $contact['id'], [
+      'funding_program' => $fundingProgram,
+      'funding_case_type' => $fundingCaseType2,
+      'recipient_contact_id' => $recipientContact['id'],
+      'title' => 'Title',
+    ]);
+    static::assertNotSame($fundingCase->getId(), $fundingCase4->getId());
+
+    // Test that a new funding case is created when the recipient contact is different.
+    $fundingCase6 = $this->fundingCaseManager->getOrCreate(['open'], $contact['id'], [
+      'funding_program' => $fundingProgram,
+      'funding_case_type' => $fundingCaseType,
+      'recipient_contact_id' => $recipientContact2['id'],
+      'title' => 'Title',
+    ]);
+    static::assertNotSame($fundingCase->getId(), $fundingCase5->getId());
   }
 
   public function testDelete(): void {
