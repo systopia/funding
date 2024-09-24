@@ -27,6 +27,7 @@ use Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormValidationRes
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\FundingCase\FundingCaseManager;
+use Webmozart\Assert\Assert;
 
 final class ApplicationFormNewSubmitHandler implements ApplicationFormNewSubmitHandlerInterface {
 
@@ -77,11 +78,19 @@ final class ApplicationFormNewSubmitHandler implements ApplicationFormNewSubmitH
     ApplicationFormValidationResult $validationResult
   ): ApplicationFormNewSubmitResult {
     $validatedData = $validationResult->getValidatedData();
-    $fundingCase = $this->fundingCaseManager->getOpenOrCreate($command->getContactId(), [
-      'funding_program' => $command->getFundingProgram(),
-      'funding_case_type' => $command->getFundingCaseType(),
-      'recipient_contact_id' => $validatedData->getRecipientContactId(),
-    ]);
+    $applicationAddableStatusList = $command->getFundingCaseType()->getProperty('applicationAddableStatusList', []);
+    Assert::allString($applicationAddableStatusList, '"applicationAddableStatusList" must be a list of strings');
+    /** @phpstan-var list<string> $applicationAddableStatusList */
+
+    $fundingCase = $this->fundingCaseManager->getOrCreate(
+      $applicationAddableStatusList,
+      $command->getContactId(),
+      [
+        'funding_program' => $command->getFundingProgram(),
+        'funding_case_type' => $command->getFundingCaseType(),
+        'recipient_contact_id' => $validatedData->getRecipientContactId(),
+      ]
+    );
 
     $applicationProcess = $this->applicationProcessManager->create(
       $command->getContactId(),

@@ -25,7 +25,7 @@ use Civi\Funding\Entity\FundingCaseTypeEntity;
 final class FundingCaseTypeFixture {
 
   /**
-   * @param array<string, scalar> $values
+   * @param array<string, mixed> $values
    *
    * @throws \CRM_Core_Exception
    */

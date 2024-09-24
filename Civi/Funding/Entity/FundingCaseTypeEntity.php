@@ -102,4 +102,23 @@ final class FundingCaseTypeEntity extends AbstractEntity {
     return $this;
   }
 
+  /**
+   * @param mixed $default
+   *
+   * @return mixed|null
+   */
+  public function getProperty(string $key, $default = NULL) {
+    return $this->values['properties'][$key] ?? $default;
+  }
+
+  /**
+   * @param mixed $value
+   *   JSON serializable.
+   */
+  public function setProperty(string $key, $value): self {
+    $this->values['properties'][$key] = $value;
+
+    return $this;
+  }
+
 }
