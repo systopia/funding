@@ -54,58 +54,70 @@
     </div>
   </div>
 
-    <h1 crm-page-title>{{ ts('Funding Case: %1', {1: fundingCase.identifier}) }}</h1>
+  <h1 crm-page-title>{{ ts('Funding Case: %1', {1: fundingCase.identifier}) }}</h1>
 
-    <div>
-        <label>{{ ts('Status' )}}</label>
-        {{ statusLabels[fundingCase.status] || ts('Unknown') }}
-    </div>
-    <div>
-        <label>{{ ts('Creation Date') }}</label>
-        {{ fundingCase.creation_date }}
-    </div>
-    <div>
-        <label>{{ ts('Modification Date') }}</label>
-        {{ fundingCase.modification_date }}
-    </div>
-    <div>
-        <label>{{ ts('Recipient') }}</label>
-        <funding-recipient-contact funding-case="fundingCase" edit-allowed="possibleActions.includes('set-recipient-contact')"></funding-recipient-contact>
-    </div>
-    <div>
-      <label>{{ ts('Amount Approved')}}</label>
-      {{ fundingCase.amount_approved|fundingCurrency:fundingProgram.currency }}
-    </div>
-    <div>
-        <label>{{ ts('Amount Requested Eligible') }}</label>
-        {{ amountRequestedEligible|fundingCurrency:fundingProgram.currency }}
-    </div>
-    <div ng-show="fundingCase.transfer_contract_uri">
-        <a href="{{ fundingCase.transfer_contract_uri }}" target="_blank" crm-icon="fa-external-link">{{ ts('Transfer Contract') }}</a>
-    </div>
+  <div>
+      <label>{{ ts('Status' )}}</label>
+      {{ statusLabels[fundingCase.status] || ts('Unknown') }}
+  </div>
+  <div>
+      <label>{{ ts('Creation Date') }}</label>
+      {{ fundingCase.creation_date }}
+  </div>
+  <div>
+      <label>{{ ts('Modification Date') }}</label>
+      {{ fundingCase.modification_date }}
+  </div>
+  <div>
+      <label>{{ ts('Recipient') }}</label>
+      <funding-recipient-contact funding-case="fundingCase" edit-allowed="possibleActions.includes('set-recipient-contact')"></funding-recipient-contact>
+  </div>
+  <div>
+    <label>{{ ts('Amount Approved')}}</label>
+    {{ fundingCase.amount_approved|fundingCurrency:fundingProgram.currency }}
+  </div>
+  <div>
+      <label>{{ ts('Amount Requested Eligible') }}</label>
+      {{ amountRequestedEligible|fundingCurrency:fundingProgram.currency }}
+  </div>
+  <div>
+    <label>{{ ts('Amount Cleared') }}</label>
+    {{ fundingCase.amount_cleared|fundingCurrency:fundingProgram.currency }}
+  </div>
+  <div>
+    <label>{{ ts('Amount Admitted') }}</label>
+    {{ fundingCase.amount_admitted|fundingCurrency:fundingProgram.currency }}
+  </div>
+  <div ng-show="fundingCase.transfer_contract_uri">
+      <a href="{{ fundingCase.transfer_contract_uri }}" target="_blank" crm-icon="fa-external-link">{{ ts('Transfer Contract') }}</a>
+  </div>
 
-    <h2>{{ ts('Applications') }}</h2>
-    <sk-application-process-table options="{filters: {funding_case_id: fundingCase.id}}"></sk-application-process-table>
+  <h2>{{ ts('Applications') }}</h2>
+  <sk-application-process-table options="{filters: {funding_case_id: fundingCase.id}}"></sk-application-process-table>
 
-    <button ng-show="possibleActions.includes('approve')" type="button"
-            ng-click="approvePrepare()">
-        <span class="funding-label">{{ ts('Approve') }}</span>
-    </button>
+  <button ng-show="possibleActions.includes('approve')" type="button"
+          ng-click="approvePrepare()">
+      <span class="funding-label">{{ ts('Approve') }}</span>
+  </button>
 
-    <button ng-show="possibleActions.includes('update-amount-approved')" type="button"
-            ng-click="updateAmountApprovedPrepare()">
-      <span class="funding-label">{{ ts('Update Amount Approved') }}</span>
-    </button>
+  <button ng-show="possibleActions.includes('update-amount-approved')" type="button"
+          ng-click="updateAmountApprovedPrepare()">
+    <span class="funding-label">{{ ts('Update Amount Approved') }}</span>
+  </button>
 
-    <button ng-show="possibleActions.includes('recreate-transfer-contract')" type="button"
-            ng-click="recreateTransferContract()">
-        <span class="funding-label">{{ ts('Recreate Transfer Contract') }}</span>
-    </button>
+  <button ng-show="possibleActions.includes('recreate-transfer-contract')" type="button"
+          ng-click="recreateTransferContract()">
+      <span class="funding-label">{{ ts('Recreate Transfer Contract') }}</span>
+  </button>
 
-    <h2 ng-show="payoutProcesses.length > 0">{{ ts('Drawdowns') }}</h2>
-    <div ng-repeat="payoutProcess in payoutProcesses">
-      <sk-drawdown-table options="{filters: {payout_process_id: payoutProcess.id}}"></sk-drawdown-table>
-    </div>
+  <button ng-show="possibleActions.includes('finish-clearing')" type="button"
+          ng-click="finishClearing()">
+    <span class="funding-label">{{ ts('Finish Clearing') }}</span>
+  </button>
 
+  <h2 ng-show="payoutProcesses.length > 0">{{ ts('Drawdowns') }}</h2>
+  <div ng-repeat="payoutProcess in payoutProcesses">
+    <sk-drawdown-table options="{filters: {payout_process_id: payoutProcess.id}}"></sk-drawdown-table>
+  </div>
 
 </div>

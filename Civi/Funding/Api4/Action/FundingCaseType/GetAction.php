@@ -48,6 +48,11 @@ final class GetAction extends DAOGetAction {
       unset($this->select[$paymentInstructionTemplateFileIdIndex]);
     }
 
+    $paybackClaimTemplateFileIdIndex = array_search('payback_claim_template_file_id', $this->select, TRUE);
+    if ($paybackClaimTemplateFileIdIndex !== FALSE) {
+      unset($this->select[$paybackClaimTemplateFileIdIndex]);
+    }
+
     parent::_run($result);
 
     $idSelected = $this->isFieldSelected('id');
@@ -55,28 +60,48 @@ final class GetAction extends DAOGetAction {
     if ($idSelected && $transferContractTemplateFileIdIndex !== FALSE) {
       /** @phpstan-var array<string, mixed> $record */
       foreach ($result as &$record) {
-        $attachment = $this->attachmentManager->getLastByFileType(
-          'civicrm_funding_case_type',
-          // @phpstan-ignore-next-line
+        $record['transfer_contract_template_file_id'] = $this->getFileId(
+        // @phpstan-ignore-next-line
           $record['id'],
           FileTypeNames::TRANSFER_CONTRACT_TEMPLATE
         );
-        $record['transfer_contract_template_file_id'] = NULL === $attachment ? NULL : $attachment->getId();
       }
     }
 
     if ($idSelected && $paymentInstructionTemplateFileIdIndex !== FALSE) {
       /** @phpstan-var array<string, mixed> $record */
       foreach ($result as &$record) {
-        $attachment = $this->attachmentManager->getLastByFileType(
-          'civicrm_funding_case_type',
-          // @phpstan-ignore-next-line
+        $record['payment_instruction_template_file_id'] = $this->getFileId(
+        // @phpstan-ignore-next-line
           $record['id'],
           FileTypeNames::PAYMENT_INSTRUCTION_TEMPLATE
         );
-        $record['payment_instruction_template_file_id'] = NULL === $attachment ? NULL : $attachment->getId();
       }
     }
+
+    if ($idSelected && $paybackClaimTemplateFileIdIndex !== FALSE) {
+      /** @phpstan-var array<string, mixed> $record */
+      foreach ($result as &$record) {
+        $record['payback_claim_template_file_id'] = $this->getFileId(
+          // @phpstan-ignore-next-line
+          $record['id'],
+          FileTypeNames::PAYBACK_CLAIM_TEMPLATE
+        );
+      }
+    }
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  private function getFileId(int $fundingCaseId, string $fileTypeName): ?int {
+    $attachment = $this->attachmentManager->getLastByFileType(
+      'civicrm_funding_case_type',
+      $fundingCaseId,
+      $fileTypeName
+    );
+
+    return NULL === $attachment ? NULL : $attachment->getId();
   }
 
 }

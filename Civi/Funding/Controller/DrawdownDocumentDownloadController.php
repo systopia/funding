@@ -31,7 +31,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-final class PaymentInstructionDownloadController implements PageControllerInterface {
+final class DrawdownDocumentDownloadController implements PageControllerInterface {
 
   private FundingAttachmentManagerInterface $attachmentManager;
 
@@ -62,24 +62,26 @@ final class PaymentInstructionDownloadController implements PageControllerInterf
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    */
   private function download(int $drawdownId): Response {
-    if (NULL === $this->drawdownManager->get($drawdownId)) {
+    $drawdown = $this->drawdownManager->get($drawdownId);
+    if (NULL === $drawdown) {
       throw new AccessDeniedHttpException();
     }
 
     $attachment = $this->attachmentManager->getLastByFileType(
       'civicrm_funding_drawdown',
       $drawdownId,
-      FileTypeNames::PAYMENT_INSTRUCTION,
+      $drawdown->getAmount() < 0 ? FileTypeNames::PAYBACK_CLAIM : FileTypeNames::PAYMENT_INSTRUCTION,
     );
 
     if (NULL === $attachment) {
-      throw new NotFoundHttpException('Payment instruction does not exist');
+      throw new NotFoundHttpException('Drawdown document does not exist');
     }
 
     $headers = [
       'Content-Type' => $attachment->getMimeType(),
     ];
-    $filename = E::ts('payment-instruction') . '.' . pathinfo($attachment->getPath(), PATHINFO_EXTENSION);
+    $filename = $drawdown->getAmount() < 0 ? E::ts('payback-claim') : E::ts('payment-instruction');
+    $filename .= '.' . pathinfo($attachment->getPath(), PATHINFO_EXTENSION);
 
     return (new BinaryFileResponse(
       $attachment->getPath(),

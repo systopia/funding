@@ -21,6 +21,7 @@ namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
+use Civi\Funding\FundingCase\FundingCaseStatus;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -276,6 +277,25 @@ final class DefaultApplicationProcessActionsDeterminerTest extends TestCase {
     );
   }
 
+  public function testGetActionsFundingCaseCleared(): void {
+    foreach (self::STATUS_PERMISSION_ACTIONS_MAP as $status => $permissionActionsMap) {
+      foreach ($permissionActionsMap as $permission => $actions) {
+        $applicationProcessBundle = $this->createApplicationProcessBundle(
+          $status,
+          NULL,
+          NULL,
+          [$permission],
+          FundingCaseStatus::CLEARED
+        );
+        static::assertSame(
+          [],
+          $this->actionsDeterminer->getActions($applicationProcessBundle, []),
+          sprintf('Status: %s, permission: %s', $status, $permission)
+        );
+      }
+    }
+  }
+
   public function testGetInitialActions(): void {
     foreach (self::INITIAL_PERMISSION_ACTIONS_MAP as $permission => $actions) {
       static::assertSame($actions, $this->actionsDeterminer->getInitialActions([$permission]));
@@ -347,13 +367,14 @@ final class DefaultApplicationProcessActionsDeterminerTest extends TestCase {
     string $status,
     ?bool $isReviewCalculative,
     ?bool $isReviewContent,
-    array $permissions
+    array $permissions,
+    string $fundingCaseStatus = FundingCaseStatus::OPEN
   ): ApplicationProcessEntityBundle {
     return ApplicationProcessBundleFactory::createApplicationProcessBundle([
       'status' => $status,
       'is_review_calculative' => $isReviewCalculative,
       'is_review_content' => $isReviewContent,
-    ], ['permissions' => $permissions]);
+    ], ['permissions' => $permissions, 'status' => $fundingCaseStatus]);
   }
 
 }

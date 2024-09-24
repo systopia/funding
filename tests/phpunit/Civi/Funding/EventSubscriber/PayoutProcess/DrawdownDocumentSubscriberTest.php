@@ -21,26 +21,26 @@ namespace Civi\Funding\EventSubscriber\PayoutProcess;
 
 use Civi\Funding\EntityFactory\DrawdownFactory;
 use Civi\Funding\Event\PayoutProcess\DrawdownAcceptedEvent;
-use Civi\Funding\PayoutProcess\PaymentInstructionCreator;
+use Civi\Funding\PayoutProcess\DrawdownDocumentCreator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Civi\Funding\EventSubscriber\PayoutProcess\PaymentInstructionSubscriber
+ * @covers \Civi\Funding\EventSubscriber\PayoutProcess\DrawdownDocumentSubscriber
  */
-final class PaymentInstructionSubscriberTest extends TestCase {
+final class DrawdownDocumentSubscriberTest extends TestCase {
 
   /**
-   * @var \Civi\Funding\PayoutProcess\PaymentInstructionCreator&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\PayoutProcess\DrawdownDocumentCreator&\PHPUnit\Framework\MockObject\MockObject
    */
-  private MockObject $paymentInstructionCreatorMock;
+  private MockObject $drawdownDocumentCreatorMock;
 
-  private PaymentInstructionSubscriber $subscriber;
+  private DrawdownDocumentSubscriber $subscriber;
 
   protected function setUp(): void {
     parent::setUp();
-    $this->paymentInstructionCreatorMock = $this->createMock(PaymentInstructionCreator::class);
-    $this->subscriber = new PaymentInstructionSubscriber($this->paymentInstructionCreatorMock);
+    $this->drawdownDocumentCreatorMock = $this->createMock(DrawdownDocumentCreator::class);
+    $this->subscriber = new DrawdownDocumentSubscriber($this->drawdownDocumentCreatorMock);
   }
 
   public function testGetSubscribedEvents(): void {
@@ -58,7 +58,7 @@ final class PaymentInstructionSubscriberTest extends TestCase {
   public function testOnAccepted(): void {
     $drawdown = DrawdownFactory::create(['status' => 'accepted']);
 
-    $this->paymentInstructionCreatorMock->expects(static::once())->method('createPaymentInstruction')
+    $this->drawdownDocumentCreatorMock->expects(static::once())->method('createDrawdownDocument')
       ->with($drawdown);
     $this->subscriber->onAccepted(new DrawdownAcceptedEvent($drawdown));
   }

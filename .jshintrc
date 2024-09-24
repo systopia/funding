@@ -1,5 +1,6 @@
 {
   "indent": 2,
+  "-W043": true,
   "-W097": true,
   "-W119": true,
   "curly": true,

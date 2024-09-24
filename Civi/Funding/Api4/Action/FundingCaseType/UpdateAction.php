@@ -49,76 +49,70 @@ final class UpdateAction extends DAOUpdateAction {
     $paymentInstructionTemplateFileId = $this->values['payment_instruction_template_file_id'] ?? NULL;
     unset($this->values['payment_instruction_template_file_id']);
 
+    $paybackClaimTemplateFileId = $this->values['payback_claim_template_file_id'] ?? NULL;
+    unset($this->values['payback_claim_template_file_id']);
+
     parent::_run($result);
 
     if (NULL !== $transferContractTemplateFileId) {
       $transferContractTemplateFileId = (int) $transferContractTemplateFileId;
-      $this->updateTransferContractTemplate($transferContractTemplateFileId);
+      $this->updateTemplate(
+        'transfer_contract_template_file_id',
+        $transferContractTemplateFileId,
+        FileTypeNames::TRANSFER_CONTRACT_TEMPLATE
+      );
       // @phpstan-ignore-next-line
       $result[0]['transfer_contract_template_file_id'] = $transferContractTemplateFileId;
     }
 
     if (NULL !== $paymentInstructionTemplateFileId) {
       $paymentInstructionTemplateFileId = (int) $paymentInstructionTemplateFileId;
-      $this->updatePaymentInstructionTemplate($paymentInstructionTemplateFileId);
+      $this->updateTemplate(
+        'payment_instruction_template_file_id',
+        $paymentInstructionTemplateFileId,
+        FileTypeNames::PAYMENT_INSTRUCTION_TEMPLATE
+      );
       // @phpstan-ignore-next-line
       $result[0]['payment_instruction_template_file_id'] = $paymentInstructionTemplateFileId;
     }
+
+    if (NULL !== $paybackClaimTemplateFileId) {
+      $paybackClaimTemplateFileId = (int) $paybackClaimTemplateFileId;
+      $this->updateTemplate(
+        'payback_claim_template_file_id',
+        $paybackClaimTemplateFileId,
+        FileTypeNames::PAYBACK_CLAIM_TEMPLATE
+      );
+      // @phpstan-ignore-next-line
+      $result[0]['payback_claim_template_file_id'] = $paybackClaimTemplateFileId;
+    }
   }
 
   /**
    * @throws \CRM_Core_Exception
    */
-  private function updateTransferContractTemplate(int $transferContractTemplateFileId): void {
+  private function updateTemplate(string $templateIdFieldName, int $templateFileId, string $fileType): void {
     $result = FundingCaseType::get(FALSE)
-      ->addSelect('id', 'transfer_contract_template_file_id')
+      ->addSelect('id', $templateIdFieldName)
       ->setWhere($this->getWhere())
       ->execute();
 
     if ($result->count() > 1) {
       throw new \InvalidArgumentException(
-        'Transfer contract template can only be updated for a single funding case type'
+        'Template can only be updated for a single funding case type'
       );
     }
 
     if ($result->count() === 1) {
-      $previousFileId = $result->single()['transfer_contract_template_file_id'];
-      if ($previousFileId !== NULL && $previousFileId !== $transferContractTemplateFileId) {
+      $previousFileId = $result->single()[$templateIdFieldName];
+      if ($previousFileId !== NULL && $previousFileId !== $templateFileId) {
         $fundingCaseTypeId = $result->single()['id'];
         $this->attachmentManager->deleteById($previousFileId, 'civicrm_funding_case_type', $fundingCaseTypeId);
       }
     }
 
-    $this->api4->updateEntity(File::getEntityName(), $transferContractTemplateFileId, [
-      'file_type_id:name' => FileTypeNames::TRANSFER_CONTRACT_TEMPLATE,
-    ]);
-  }
-
-  /**
-   * @throws \CRM_Core_Exception
-   */
-  private function updatePaymentInstructionTemplate(int $paymentInstructionTemplateFileId): void {
-    $result = FundingCaseType::get(FALSE)
-      ->addSelect('id', 'payment_instruction_template_file_id')
-      ->setWhere($this->getWhere())
-      ->execute();
-
-    if ($result->count() > 1) {
-      throw new \InvalidArgumentException(
-        'Transfer contract template can only be updated for a single funding case type'
-      );
-    }
-
-    if ($result->count() === 1) {
-      $previousFileId = $result->single()['payment_instruction_template_file_id'];
-      if ($previousFileId !== NULL && $previousFileId !== $paymentInstructionTemplateFileId) {
-        $fundingCaseTypeId = $result->single()['id'];
-        $this->attachmentManager->deleteById($previousFileId, 'civicrm_funding_case_type', $fundingCaseTypeId);
-      }
-    }
-
-    $this->api4->updateEntity(File::getEntityName(), $paymentInstructionTemplateFileId, [
-      'file_type_id:name' => FileTypeNames::PAYMENT_INSTRUCTION_TEMPLATE,
+    $this->api4->updateEntity(File::getEntityName(), $templateFileId, [
+      'file_type_id:name' => $fileType,
     ]);
   }
 

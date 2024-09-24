@@ -24,9 +24,9 @@ use Civi\Api4\Generic\AbstractAction;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\PayoutProcess\BankAccountManager;
 use Civi\Funding\PayoutProcess\DrawdownManager;
-use Civi\Funding\PayoutProcess\Handler\PaymentInstructionRenderHandler;
-use Civi\Funding\PayoutProcess\Handler\PaymentInstructionRenderHandlerInterface;
-use Civi\Funding\PayoutProcess\PaymentInstructionCreator;
+use Civi\Funding\PayoutProcess\Handler\DrawdownDocumentRenderHandler;
+use Civi\Funding\PayoutProcess\Handler\DrawdownDocumentRenderHandlerInterface;
+use Civi\Funding\PayoutProcess\DrawdownDocumentCreator;
 use Civi\Funding\PayoutProcess\PayoutProcessManager;
 use Civi\Funding\PayoutProcess\Token\DrawdownTokenNameExtractor;
 use Civi\Funding\PayoutProcess\Token\DrawdownTokenResolver;
@@ -37,8 +37,8 @@ $container->autowire(DrawdownManager::class);
 $container->autowire(PayoutProcessManager::class);
 $container->autowire(BankAccountManager::class);
 
-$container->autowire(PaymentInstructionCreator::class);
-$container->autowire(PaymentInstructionRenderHandlerInterface::class, PaymentInstructionRenderHandler::class);
+$container->autowire(DrawdownDocumentCreator::class);
+$container->autowire(DrawdownDocumentRenderHandlerInterface::class, DrawdownDocumentRenderHandler::class);
 
 $container->autowire(DrawdownTokenNameExtractor::class);
 $container->autowire(DrawdownTokenResolver::class);

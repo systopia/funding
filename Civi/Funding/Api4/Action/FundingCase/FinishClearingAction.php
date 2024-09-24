@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2023 SYSTOPIA GmbH
+ * Copyright (C) 2024 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,16 +17,21 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\EventSubscriber\CiviOffice;
+namespace Civi\Funding\Api4\Action\FundingCase;
 
-class PaymentInstructionTokenSubscriber extends AbstractDrawdownTokenSubscriber {
+use Civi\Api4\FundingCase;
+use Civi\Api4\Generic\AbstractAction;
+use Civi\RemoteTools\Api4\Action\Traits\ActionHandlerRunTrait;
+use Civi\RemoteTools\Api4\Action\Traits\IdParameterTrait;
 
-  protected function getCiviOfficeEntityName(): string {
-    return 'FundingPaymentInstruction';
-  }
+class FinishClearingAction extends AbstractAction {
 
-  protected function getTokenEntityName(): string {
-    return 'funding_payment_instruction';
+  use ActionHandlerRunTrait;
+
+  use IdParameterTrait;
+
+  public function __construct() {
+    parent::__construct(FundingCase::getEntityName(), 'finishClearing');
   }
 
 }

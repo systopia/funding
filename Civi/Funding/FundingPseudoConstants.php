@@ -21,6 +21,7 @@ namespace Civi\Funding;
 
 use Civi\Funding\Event\ApplicationProcess\GetPossibleApplicationProcessStatusEvent;
 use Civi\Funding\Event\FundingCase\GetPossibleFundingCaseStatusEvent;
+use Civi\Funding\FundingCase\FundingCaseStatus;
 use CRM_Funding_ExtensionUtil as E;
 
 /**
@@ -205,10 +206,11 @@ final class FundingPseudoConstants {
    */
   public static function getFundingCaseStatus(): array {
     $options = [
-      'open' => E::ts('Open'),
-      'ongoing' => E::ts('Ongoing'),
-      'rejected' => E::ts('Rejected'),
-      'withdrawn' => E::ts('Withdrawn'),
+      FundingCaseStatus::OPEN => E::ts('Open'),
+      FundingCaseStatus::ONGOING => E::ts('Ongoing'),
+      FundingCaseStatus::REJECTED => E::ts('Rejected'),
+      FundingCaseStatus::WITHDRAWN => E::ts('Withdrawn'),
+      FundingCaseStatus::CLEARED => E::ts('Cleared'),
     ];
 
     $event = new GetPossibleFundingCaseStatusEvent($options);

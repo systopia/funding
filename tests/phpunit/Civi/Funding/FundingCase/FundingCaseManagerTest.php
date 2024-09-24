@@ -275,6 +275,19 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
     $this->fundingCaseManager->delete($fundingCase);
   }
 
+  public function testGetAmountRemaining(): void {
+    $api4Mock = $this->createMock(Api4Interface::class);
+    $this->makeFullyMocked($api4Mock);
+
+    $api4Mock->method('execute')
+      ->with(FundingCase::getEntityName(), 'get', [
+        'select' => ['amount_admitted', 'amount_paid_out'],
+        'where' => [['id', '=', 23]],
+      ])->willReturn(new Result([['amount_admitted' => 25.2, 'amount_paid_out' => 14.1]]));
+
+    static::assertSame(11.1, $this->fundingCaseManager->getAmountRemaining(23));
+  }
+
   public function testGet(): void {
     $fundingCase = $this->createFundingCase();
 

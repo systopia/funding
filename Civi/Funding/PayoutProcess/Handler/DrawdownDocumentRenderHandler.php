@@ -20,13 +20,14 @@ declare(strict_types = 1);
 namespace Civi\Funding\PayoutProcess\Handler;
 
 use Civi\Funding\DocumentRender\DocumentRendererInterface;
+use Civi\Funding\Entity\DrawdownEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\FileTypeNames;
 use Civi\Funding\FundingAttachmentManagerInterface;
-use Civi\Funding\PayoutProcess\Command\PaymentInstructionRenderCommand;
-use Civi\Funding\PayoutProcess\Command\PaymentInstructionRenderResult;
+use Civi\Funding\PayoutProcess\Command\DrawdownDocumentRenderCommand;
+use Civi\Funding\PayoutProcess\Command\DrawdownDocumentRenderResult;
 
-final class PaymentInstructionRenderHandler implements PaymentInstructionRenderHandlerInterface {
+final class DrawdownDocumentRenderHandler implements DrawdownDocumentRenderHandlerInterface {
 
   private FundingAttachmentManagerInterface $attachmentManager;
 
@@ -43,11 +44,11 @@ final class PaymentInstructionRenderHandler implements PaymentInstructionRenderH
   /**
    * @throws \CRM_Core_Exception
    */
-  public function handle(PaymentInstructionRenderCommand $command): PaymentInstructionRenderResult {
-    return new PaymentInstructionRenderResult(
+  public function handle(DrawdownDocumentRenderCommand $command): DrawdownDocumentRenderResult {
+    return new DrawdownDocumentRenderResult(
       $this->documentRenderer->render(
-        $this->getTemplateFile($command->getFundingCaseType()),
-        'FundingPaymentInstruction',
+        $this->getTemplateFile($command->getFundingCaseType(), $command->getDrawdown()),
+        $command->getDrawdown()->getAmount() < 0 ? 'FundingPaybackClaim' : 'FundingPaymentInstruction',
         $command->getDrawdown()->getId(),
         [
           'drawdown' => $command->getDrawdown(),
@@ -64,18 +65,36 @@ final class PaymentInstructionRenderHandler implements PaymentInstructionRenderH
   /**
    * @throws \CRM_Core_Exception
    */
-  private function getTemplateFile(FundingCaseTypeEntity $fundingCaseType): string {
-    $attachment = $this->attachmentManager->getLastByFileType(
-      'civicrm_funding_case_type',
-      $fundingCaseType->getId(),
-      FileTypeNames::PAYMENT_INSTRUCTION_TEMPLATE,
-    );
+  private function getTemplateFile(FundingCaseTypeEntity $fundingCaseType, DrawdownEntity $drawdown): string {
+    if ($drawdown->getAmount() < 0) {
+      $attachment = $this->attachmentManager->getLastByFileType(
+        'civicrm_funding_case_type',
+        $fundingCaseType->getId(),
+        FileTypeNames::PAYBACK_CLAIM_TEMPLATE,
+      );
 
-    if (NULL === $attachment) {
-      throw new \RuntimeException(sprintf(
-        'No payment instruction template for funding case type "%s" found.',
-        $fundingCaseType->getName()
-      ));
+      if (NULL === $attachment) {
+        throw new \RuntimeException(sprintf(
+          'No payback claim template for funding case type "%s" found.',
+          $fundingCaseType->getName()
+        ));
+      }
+    }
+    else {
+      $attachment = $this->attachmentManager->getLastByFileType(
+        'civicrm_funding_case_type',
+        $fundingCaseType->getId(),
+        FileTypeNames::PAYMENT_INSTRUCTION_TEMPLATE,
+      );
+
+      if (NULL === $attachment) {
+        throw new \RuntimeException(
+          sprintf(
+            'No payment instruction template for funding case type "%s" found.',
+            $fundingCaseType->getName()
+          )
+        );
+      }
     }
 
     return $attachment->getPath();

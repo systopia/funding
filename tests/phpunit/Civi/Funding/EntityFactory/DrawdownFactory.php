@@ -23,7 +23,7 @@ use Civi\Funding\Entity\DrawdownEntity;
 
 /**
  * @phpstan-type drawdownT array{
- *   id?: int,
+ *   id?: int|null,
  *   payout_process_id?: int,
  *   status?: string,
  *   creation_date?: string,
@@ -41,7 +41,7 @@ final class DrawdownFactory {
    * @phpstan-param drawdownT $values
    */
   public static function create(array $values = []): DrawdownEntity {
-    return DrawdownEntity::fromArray($values + [
+    $values = $values + [
       'id' => self::DEFAULT_ID,
       'payout_process_id' => PayoutProcessFactory::DEFAULT_ID,
       'status' => 'new',
@@ -50,7 +50,12 @@ final class DrawdownFactory {
       'acception_date' => NULL,
       'requester_contact_id' => 1,
       'reviewer_contact_id' => NULL,
-    ]);
+    ];
+    if (NULL === $values['id']) {
+      unset($values['id']);
+    }
+
+    return DrawdownEntity::fromArray($values);
   }
 
 }

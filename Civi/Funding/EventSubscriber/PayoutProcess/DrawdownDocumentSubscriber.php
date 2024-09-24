@@ -20,12 +20,12 @@ declare(strict_types = 1);
 namespace Civi\Funding\EventSubscriber\PayoutProcess;
 
 use Civi\Funding\Event\PayoutProcess\DrawdownAcceptedEvent;
-use Civi\Funding\PayoutProcess\PaymentInstructionCreator;
+use Civi\Funding\PayoutProcess\DrawdownDocumentCreator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class PaymentInstructionSubscriber implements EventSubscriberInterface {
+class DrawdownDocumentSubscriber implements EventSubscriberInterface {
 
-  private PaymentInstructionCreator $paymentInstructionCreator;
+  private DrawdownDocumentCreator $drawdownDocumentCreator;
 
   /**
    * @inheritDoc
@@ -34,12 +34,12 @@ class PaymentInstructionSubscriber implements EventSubscriberInterface {
     return [DrawdownAcceptedEvent::class => 'onAccepted'];
   }
 
-  public function __construct(PaymentInstructionCreator $paymentInstructionCreator) {
-    $this->paymentInstructionCreator = $paymentInstructionCreator;
+  public function __construct(DrawdownDocumentCreator $drawdownDocumentCreator) {
+    $this->drawdownDocumentCreator = $drawdownDocumentCreator;
   }
 
   public function onAccepted(DrawdownAcceptedEvent $event): void {
-    $this->paymentInstructionCreator->createPaymentInstruction($event->getDrawdown());
+    $this->drawdownDocumentCreator->createDrawdownDocument($event->getDrawdown());
   }
 
 }

@@ -29,15 +29,15 @@ use Civi\Funding\EntityFactory\PayoutProcessFactory;
 use Civi\Funding\FileTypeNames;
 use Civi\Funding\FundingAttachmentManagerInterface;
 use Civi\Funding\PayoutProcess\BankAccount;
-use Civi\Funding\PayoutProcess\Command\PaymentInstructionRenderCommand;
+use Civi\Funding\PayoutProcess\Command\DrawdownDocumentRenderCommand;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Civi\Funding\PayoutProcess\Handler\PaymentInstructionRenderHandler
- * @covers \Civi\Funding\PayoutProcess\Command\PaymentInstructionRenderCommand
+ * @covers \Civi\Funding\PayoutProcess\Handler\DrawdownDocumentRenderHandler
+ * @covers \Civi\Funding\PayoutProcess\Command\DrawdownDocumentRenderCommand
  */
-final class PaymentInstructionRenderHandlerTest extends TestCase {
+final class DrawdownDocumentRenderHandlerTest extends TestCase {
 
   /**
    * @var \Civi\Funding\FundingAttachmentManagerInterface&\PHPUnit\Framework\MockObject\MockObject
@@ -49,20 +49,67 @@ final class PaymentInstructionRenderHandlerTest extends TestCase {
    */
   private MockObject $documentRendererMock;
 
-  private PaymentInstructionRenderHandler $handler;
+  private DrawdownDocumentRenderHandler $handler;
 
   protected function setUp(): void {
     parent::setUp();
     $this->attachmentManagerMock = $this->createMock(FundingAttachmentManagerInterface::class);
     $this->documentRendererMock = $this->createMock(DocumentRendererInterface::class);
-    $this->handler = new PaymentInstructionRenderHandler(
+    $this->handler = new DrawdownDocumentRenderHandler(
       $this->attachmentManagerMock,
       $this->documentRendererMock,
     );
   }
 
-  public function testHandle(): void {
-    $command = $this->createCommand();
+  public function testHandlePaybackClaim(): void {
+    $command = $this->createCommand(-1.23);
+    $paymentInstructionAttachment = AttachmentFactory::create([
+      'entity_table' => 'civicrm_funding_case_type',
+      'entity_id' => FundingCaseTypeFactory::DEFAULT_ID,
+    ]);
+    $this->attachmentManagerMock->method('getLastByFileType')
+      ->with(
+        'civicrm_funding_case_type',
+        FundingCaseTypeFactory::DEFAULT_ID,
+        FileTypeNames::PAYBACK_CLAIM_TEMPLATE
+      )->willReturn($paymentInstructionAttachment);
+
+    $this->documentRendererMock->expects(static::once())->method('render')
+      ->with(
+        $paymentInstructionAttachment->getPath(),
+        'FundingPaybackClaim',
+        DrawdownFactory::DEFAULT_ID,
+        [
+          'drawdown' => $command->getDrawdown(),
+          'bankAccount' => $command->getBankAccount(),
+          'payoutProcess' => $command->getPayoutProcess(),
+          'fundingCase' => $command->getFundingCase(),
+          'fundingCaseType' => $command->getFundingCaseType(),
+          'fundingProgram' => $command->getFundingProgram(),
+        ],
+      );
+    $this->handler->handle($command);
+  }
+
+  public function testHandleNoPaybackClaimTemplate(): void {
+    $command = $this->createCommand(-1.23);
+    $this->attachmentManagerMock->method('getLastByFileType')
+      ->with(
+        'civicrm_funding_case_type',
+        FundingCaseTypeFactory::DEFAULT_ID,
+        FileTypeNames::PAYBACK_CLAIM_TEMPLATE
+      )->willReturn(NULL);
+
+    $this->expectException(\RuntimeException::class);
+    $this->expectExceptionMessage(sprintf(
+      'No payback claim template for funding case type "%s" found.',
+      FundingCaseTypeFactory::DEFAULT_NAME,
+    ));
+    $this->handler->handle($command);
+  }
+
+  public function testHandlePaymentInstruction(): void {
+    $command = $this->createCommand(1.23);
     $paymentInstructionAttachment = AttachmentFactory::create([
       'entity_table' => 'civicrm_funding_case_type',
       'entity_id' => FundingCaseTypeFactory::DEFAULT_ID,
@@ -91,8 +138,8 @@ final class PaymentInstructionRenderHandlerTest extends TestCase {
     $this->handler->handle($command);
   }
 
-  public function testHandleNoTemplate(): void {
-    $command = $this->createCommand();
+  public function testHandleNoPaymentInstructionTemplate(): void {
+    $command = $this->createCommand(1.23);
     $this->attachmentManagerMock->method('getLastByFileType')
       ->with(
         'civicrm_funding_case_type',
@@ -108,15 +155,15 @@ final class PaymentInstructionRenderHandlerTest extends TestCase {
     $this->handler->handle($command);
   }
 
-  private function createCommand(): PaymentInstructionRenderCommand {
+  private function createCommand(float $drawdownAmount): DrawdownDocumentRenderCommand {
     $fundingProgram = FundingProgramFactory::createFundingProgram();
     $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
     $fundingCase = FundingCaseFactory::createFundingCase();
     $payoutProcess = PayoutProcessFactory::create();
     $bankAccount = new BankAccount('BIC', 'reference');
-    $drawdown = DrawdownFactory::create();
+    $drawdown = DrawdownFactory::create(['amount' => $drawdownAmount]);
 
-    return new PaymentInstructionRenderCommand(
+    return new DrawdownDocumentRenderCommand(
       $drawdown,
       $bankAccount,
       $payoutProcess,

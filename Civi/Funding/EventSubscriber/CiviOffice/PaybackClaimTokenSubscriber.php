@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2023 SYSTOPIA GmbH
+ * Copyright (C) 2024 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -19,14 +19,14 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\CiviOffice;
 
-class PaymentInstructionTokenSubscriber extends AbstractDrawdownTokenSubscriber {
+class PaybackClaimTokenSubscriber extends AbstractDrawdownTokenSubscriber {
 
   protected function getCiviOfficeEntityName(): string {
-    return 'FundingPaymentInstruction';
+    return 'FundingPaybackClaim';
   }
 
   protected function getTokenEntityName(): string {
-    return 'funding_payment_instruction';
+    return 'funding_payback_claim';
   }
 
 }

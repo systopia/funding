@@ -28,16 +28,16 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
- * @covers \Civi\Funding\Controller\PaymentInstructionDownloadController
+ * @covers \Civi\Funding\Controller\DrawdownDocumentDownloadController
  */
-final class PaymentInstructionDownloadControllerTest extends TestCase {
+final class DrawdownDocumentDownloadControllerTest extends TestCase {
 
   /**
    * @var \Civi\Funding\FundingAttachmentManagerInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $attachmentManagerMock;
 
-  private PaymentInstructionDownloadController $controller;
+  private DrawdownDocumentDownloadController $controller;
 
   /**
    * @var \Civi\Funding\PayoutProcess\DrawdownManager&\PHPUnit\Framework\MockObject\MockObject
@@ -48,7 +48,7 @@ final class PaymentInstructionDownloadControllerTest extends TestCase {
     parent::setUp();
     $this->attachmentManagerMock = $this->createMock(FundingAttachmentManagerInterface::class);
     $this->drawdownManagerMock = $this->createMock(DrawdownManager::class);
-    $this->controller = new PaymentInstructionDownloadController(
+    $this->controller = new DrawdownDocumentDownloadController(
       $this->attachmentManagerMock,
       $this->drawdownManagerMock,
     );

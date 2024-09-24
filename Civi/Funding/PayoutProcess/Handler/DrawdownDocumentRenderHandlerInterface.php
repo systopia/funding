@@ -17,16 +17,13 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\EventSubscriber\CiviOffice;
+namespace Civi\Funding\PayoutProcess\Handler;
 
-class PaymentInstructionTokenSubscriber extends AbstractDrawdownTokenSubscriber {
+use Civi\Funding\PayoutProcess\Command\DrawdownDocumentRenderCommand;
+use Civi\Funding\PayoutProcess\Command\DrawdownDocumentRenderResult;
 
-  protected function getCiviOfficeEntityName(): string {
-    return 'FundingPaymentInstruction';
-  }
+interface DrawdownDocumentRenderHandlerInterface {
 
-  protected function getTokenEntityName(): string {
-    return 'funding_payment_instruction';
-  }
+  public function handle(DrawdownDocumentRenderCommand $command): DrawdownDocumentRenderResult;
 
 }

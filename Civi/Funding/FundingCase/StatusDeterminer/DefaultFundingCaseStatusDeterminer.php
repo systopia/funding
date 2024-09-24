@@ -22,6 +22,8 @@ namespace Civi\Funding\FundingCase\StatusDeterminer;
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\FundingCase\Actions\FundingCaseActions;
+use Civi\Funding\FundingCase\FundingCaseStatus;
 use Civi\RemoteTools\Api4\Query\Comparison;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
 
@@ -47,7 +49,16 @@ final class DefaultFundingCaseStatusDeterminer implements FundingCaseStatusDeter
   }
 
   public function getStatus(string $currentStatus, string $action): string {
-    return 'approve' === $action ? 'ongoing' : $currentStatus;
+    switch ($action) {
+      case FundingCaseActions::APPROVE:
+        return FundingCaseStatus::ONGOING;
+
+      case FundingCaseActions::FINISH_CLEARING:
+        return FundingCaseStatus::CLEARED;
+
+      default:
+        return $currentStatus;
+    }
   }
 
   public function getStatusOnApplicationProcessStatusChange(

@@ -31,6 +31,7 @@ use Civi\Funding\FileTypeNames;
 use Civi\Funding\Fixtures\AttachmentFixture;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
+use Civi\Funding\Fixtures\PayoutProcessFixture;
 use Civi\Funding\Mock\Contact\PossibleRecipientsLoaderMock;
 use Civi\Funding\Util\RequestTestUtil;
 use CRM_Funding_ExtensionUtil as E;
@@ -309,9 +310,11 @@ final class FundingCaseTest extends AbstractFundingHeadlessTestCase {
       ->addWhere('id', '=', $this->permittedFundingCaseId)
       ->setValues([
         'status' => 'ongoing',
-        'amount_approved' => 1,
+        'amount_approved' => 1.0,
       ])
       ->execute();
+
+    $payoutProcess = PayoutProcessFixture::addFixture($this->permittedFundingCaseId, ['amount_total' => 1.0]);
 
     RequestTestUtil::mockInternalRequest($this->associatedContactId);
 
@@ -347,6 +350,12 @@ final class FundingCaseTest extends AbstractFundingHeadlessTestCase {
 
     static::assertSame(123.45, $result['amount_approved']);
     static::assertSame('ongoing', $result['status']);
+
+    static::assertSame(123.45, FundingPayoutProcess::get(FALSE)
+      ->addSelect('amount_total')
+      ->addWhere('id', '=', $payoutProcess->getId())
+      ->execute()
+      ->single()['amount_total']);
   }
 
 }

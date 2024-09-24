@@ -19,8 +19,13 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\PayoutProcess\Validator;
 
+use Civi\API\Exception\UnauthorizedException;
+use Civi\Funding\ClearingProcess\Traits\HasClearingReviewPermissionTrait;
 use Civi\Funding\Entity\AbstractEntity;
 use Civi\Funding\Entity\DrawdownEntity;
+use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\PayoutProcessEntity;
+use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\PayoutProcess\PayoutProcessManager;
 use Civi\Funding\Validation\ConcreteEntityValidatorInterface;
 use Civi\Funding\Validation\EntityValidationError;
@@ -29,13 +34,15 @@ use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
 
 /**
- * Checks that the drawdown amount is valid, i.e. does not exceed the amount
- * available and is not less than 0. 0 is allowed as amount to indicate that
- * (currently) no money is required.
+ * Checks if user has permission to create drawdown.
  *
  * @implements ConcreteEntityValidatorInterface<DrawdownEntity>
  */
-final class DrawdownAmountValidator implements ConcreteEntityValidatorInterface {
+final class DrawdownValidator implements ConcreteEntityValidatorInterface {
+
+  use HasClearingReviewPermissionTrait;
+
+  private FundingCaseManager $fundingCaseManager;
 
   private PayoutProcessManager $payoutProcessManager;
 
@@ -46,7 +53,8 @@ final class DrawdownAmountValidator implements ConcreteEntityValidatorInterface 
     return DrawdownEntity::class;
   }
 
-  public function __construct(PayoutProcessManager $payoutProcessManager) {
+  public function __construct(FundingCaseManager $fundingCaseManager, PayoutProcessManager $payoutProcessManager) {
+    $this->fundingCaseManager = $fundingCaseManager;
     $this->payoutProcessManager = $payoutProcessManager;
   }
 
@@ -59,8 +67,16 @@ final class DrawdownAmountValidator implements ConcreteEntityValidatorInterface 
    * phpcs:disable Drupal.Commenting.FunctionComment.IncorrectTypeHint
    */
   public function validate(AbstractEntity $new, AbstractEntity $current): EntityValidationResult {
+    $payoutProcess = $this->getPayoutProcess($new);
+    $this->assertNotClosed($payoutProcess);
+
     if ($new->getAmount() < 0) {
-      return $this->createAmountLessThanZeroResult();
+      $payoutProcess = $this->getPayoutProcess($new);
+      $fundingCase = $this->getFundingCase($payoutProcess);
+
+      if (!$this->hasReviewPermission($fundingCase->getPermissions())) {
+        return $this->createAmountLessThanZeroResult();
+      }
     }
 
     if ($new->getAmount() > $current->getAmount()) {
@@ -79,20 +95,45 @@ final class DrawdownAmountValidator implements ConcreteEntityValidatorInterface 
    * @inheritDoc
    *
    * @param \Civi\Funding\Entity\DrawdownEntity $new
+   *
+   * @throws \Civi\API\Exception\UnauthorizedException
+   * @throws \CRM_Core_Exception
    */
   public function validateNew(AbstractEntity $new): EntityValidationResult {
-    if ($new->getAmount() < 0) {
-      return $this->createAmountLessThanZeroResult();
-    }
+    $payoutProcess = $this->getPayoutProcess($new);
+    $this->assertNotClosed($payoutProcess);
 
-    $payoutProcess = $this->payoutProcessManager->get($new->getPayoutProcessId());
-    Assert::notNull($payoutProcess);
+    $fundingCase = $this->getFundingCase($payoutProcess);
+    if ($fundingCase->hasPermission('drawdown_create')) {
+      if ($new->getAmount() < 0) {
+        return $this->createAmountLessThanZeroResult();
+      }
+    }
+    elseif (!$this->hasReviewPermission($fundingCase->getPermissions())) {
+      throw new UnauthorizedException(E::ts('Permission to create drawdown is missing.'));
+    }
 
     if ($new->getAmount() > $this->payoutProcessManager->getAmountAvailable($payoutProcess)) {
       return $this->createAmountExceedsLimitResult();
     }
 
     return EntityValidationResult::new();
+  }
+
+  /**
+   * @throws \Civi\API\Exception\UnauthorizedException
+   */
+  private function assertNotClosed(PayoutProcessEntity $payoutProcess): void {
+    if ('closed' === $payoutProcess->getStatus()) {
+      throw new UnauthorizedException(E::ts('Payout process is closed.'));
+    }
+  }
+
+  private function createAmountLessThanZeroResult(): EntityValidationResult {
+    return EntityValidationResult::new(EntityValidationError::new(
+      'amount',
+      E::ts('Requested amount is less than 0.')),
+    );
   }
 
   private function createAmountExceedsLimitResult(): EntityValidationResult {
@@ -102,11 +143,24 @@ final class DrawdownAmountValidator implements ConcreteEntityValidatorInterface 
     );
   }
 
-  private function createAmountLessThanZeroResult(): EntityValidationResult {
-    return EntityValidationResult::new(EntityValidationError::new(
-      'amount',
-      E::ts('Requested amount is less than 0.')),
-    );
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  private function getFundingCase(PayoutProcessEntity $payoutProcess): FundingCaseEntity {
+    $fundingCase = $this->fundingCaseManager->get($payoutProcess->getFundingCaseId());
+    Assert::notNull($fundingCase);
+
+    return $fundingCase;
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  private function getPayoutProcess(DrawdownEntity $drawdown): PayoutProcessEntity {
+    $payoutProcess = $this->payoutProcessManager->get($drawdown->getPayoutProcessId());
+    Assert::notNull($payoutProcess);
+
+    return $payoutProcess;
   }
 
 }

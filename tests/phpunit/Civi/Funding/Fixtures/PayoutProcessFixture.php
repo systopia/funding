@@ -33,7 +33,7 @@ final class PayoutProcessFixture {
     $result = FundingPayoutProcess::create(FALSE)
       ->setValues($values + [
         'funding_case_id' => $fundingCaseId,
-        'status' => 'new',
+        'status' => 'open',
         'amount_total' => 1.2,
       ])->execute();
 

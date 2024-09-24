@@ -31,6 +31,8 @@ use Civi\Funding\Fixtures\FundingProgramFixture;
 
 trait FundingCaseTestFixturesTrait {
 
+  protected int $applicationProcessId = -1;
+
   protected int $associatedContactId = -1;
 
   protected int $associatedContactIdApplicationAndReview = -1;
@@ -112,13 +114,13 @@ trait FundingCaseTestFixturesTrait {
       ],
     );
 
-    ApplicationProcessFixture::addFixture(
+    $this->applicationProcessId = ApplicationProcessFixture::addFixture(
       $this->permittedFundingCaseId,
       [
         'status' => 'eligible',
         'is_eligible' => TRUE,
       ]
-    );
+    )->getId();
 
     $permittedRelationshipTypeId = RelationshipType::create(FALSE)
       ->setValues([

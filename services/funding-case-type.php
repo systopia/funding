@@ -23,11 +23,17 @@ declare(strict_types = 1);
 use Civi\Funding\Api4\Action\FundingCaseType\GetAction;
 use Civi\Funding\Api4\Action\FundingCaseType\GetByFundingProgramIdAction;
 use Civi\Funding\Api4\Action\FundingCaseType\UpdateAction;
+use Civi\Funding\DependencyInjection\Compiler\FundingCaseFinishClearingHandlerPass;
+use Civi\Funding\DependencyInjection\Compiler\FundingCaseTypeServiceLocatorPass;
 use Civi\Funding\EventSubscriber\FundingCaseType\AfformCacheCiviOfficeDocumentSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseTypeDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseTypeGetByFundingProgramIdSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseTypeGetFieldsSubscriber;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\Reference;
+
+$container->addCompilerPass(new FundingCaseTypeServiceLocatorPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 1);
+$container->addCompilerPass(new FundingCaseFinishClearingHandlerPass());
 
 $container->autowire(GetAction::class)
   ->setPublic(TRUE)

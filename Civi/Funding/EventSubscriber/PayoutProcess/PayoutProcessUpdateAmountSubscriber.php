@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2023 SYSTOPIA GmbH
+ * Copyright (C) 2024 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -19,12 +19,12 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\PayoutProcess;
 
-use Civi\Funding\Event\PayoutProcess\DrawdownAcceptedEvent;
+use Civi\Funding\Event\FundingCase\FundingCaseAmountApprovedUpdatedEvent;
 use Civi\Funding\PayoutProcess\PayoutProcessManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Webmozart\Assert\Assert;
 
-class PayoutProcessCloseSubscriber implements EventSubscriberInterface {
+class PayoutProcessUpdateAmountSubscriber implements EventSubscriberInterface {
 
   private PayoutProcessManager $payoutProcessManager;
 
@@ -32,7 +32,7 @@ class PayoutProcessCloseSubscriber implements EventSubscriberInterface {
    * @inheritDoc
    */
   public static function getSubscribedEvents(): array {
-    return [DrawdownAcceptedEvent::class => 'onAccepted'];
+    return [FundingCaseAmountApprovedUpdatedEvent::class => 'onAmountApprovedUpdated'];
   }
 
   public function __construct(PayoutProcessManager $payoutProcessManager) {
@@ -42,14 +42,10 @@ class PayoutProcessCloseSubscriber implements EventSubscriberInterface {
   /**
    * @throws \CRM_Core_Exception
    */
-  public function onAccepted(DrawdownAcceptedEvent $event): void {
-    $drawdown = $event->getDrawdown();
-    $payoutProcess = $this->payoutProcessManager->get($drawdown->getPayoutProcessId());
+  public function onAmountApprovedUpdated(FundingCaseAmountApprovedUpdatedEvent $event): void {
+    $payoutProcess = $this->payoutProcessManager->getLastByFundingCaseId($event->getFundingCase()->getId());
     Assert::notNull($payoutProcess);
-
-    if ($payoutProcess->getAmountTotal() === $this->payoutProcessManager->getAmountAccepted($payoutProcess)) {
-      $this->payoutProcessManager->close($payoutProcess);
-    }
+    $this->payoutProcessManager->updateAmountTotal($payoutProcess, $event->getAmount());
   }
 
 }

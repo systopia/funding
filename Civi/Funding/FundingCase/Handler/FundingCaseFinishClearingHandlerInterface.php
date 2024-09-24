@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2023 SYSTOPIA GmbH
+ * Copyright (C) 2024 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,16 +17,14 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\EventSubscriber\CiviOffice;
+namespace Civi\Funding\FundingCase\Handler;
 
-class PaymentInstructionTokenSubscriber extends AbstractDrawdownTokenSubscriber {
+use Civi\Funding\FundingCase\Command\FundingCaseFinishClearingCommand;
 
-  protected function getCiviOfficeEntityName(): string {
-    return 'FundingPaymentInstruction';
-  }
+interface FundingCaseFinishClearingHandlerInterface {
 
-  protected function getTokenEntityName(): string {
-    return 'funding_payment_instruction';
-  }
+  public const SERVICE_TAG = 'funding.case.finish_clearing_handler';
+
+  public function handle(FundingCaseFinishClearingCommand $command): void;
 
 }

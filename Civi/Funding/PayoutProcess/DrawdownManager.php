@@ -26,6 +26,8 @@ use Civi\Funding\Event\PayoutProcess\DrawdownAcceptedEvent;
 use Civi\Funding\Event\PayoutProcess\DrawdownDeletedEvent;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
+use Civi\RemoteTools\Api4\Query\CompositeCondition;
+use Civi\RemoteTools\Api4\Query\ConditionInterface;
 
 class DrawdownManager {
 
@@ -50,8 +52,7 @@ class DrawdownManager {
     $this->api4->updateEntity(
       FundingDrawdown::getEntityName(),
       $drawdown->getId(),
-      $drawdown->toArray(),
-      ['checkPermissions' => FALSE],
+      $drawdown->toArray()
     );
 
     $event = new DrawdownAcceptedEvent($drawdown);
@@ -62,13 +63,21 @@ class DrawdownManager {
    * @throws \CRM_Core_Exception
    */
   public function delete(DrawdownEntity $drawdown): void {
-    $this->api4->execute(FundingDrawdown::getEntityName(), 'delete', [
-      'where' => [['id', '=', $drawdown->getId()]],
-      'checkPermissions' => FALSE,
-    ]);
+    $this->api4->deleteEntity(FundingDrawdown::getEntityName(), $drawdown->getId());
 
     $event = new DrawdownDeletedEvent($drawdown);
     $this->eventDispatcher->dispatch(DrawdownDeletedEvent::class, $event);
+  }
+
+  public function deleteNewDrawdownsByPayoutProcessId(int $payoutProcessId): void {
+    $drawdowns = $this->getBy(CompositeCondition::fromFieldValuePairs([
+      'payout_process_id' => $payoutProcessId,
+      'status' => 'new',
+    ]));
+
+    foreach ($drawdowns as $drawdown) {
+      $this->delete($drawdown);
+    }
   }
 
   /**
@@ -85,6 +94,28 @@ class DrawdownManager {
     );
 
     return DrawdownEntity::singleOrNullFromApiResult($result);
+  }
+
+  /**
+   * @phpstan-return list<DrawdownEntity>
+   */
+  public function getBy(ConditionInterface $condition): array {
+    $result = $this->api4->getEntities(
+      FundingDrawdown::getEntityName(),
+      $condition,
+    );
+
+    // @phpstan-ignore-next-line The result is not indexed, so it's actual a list.
+    return DrawdownEntity::allFromApiResult($result);
+  }
+
+  public function insert(DrawdownEntity $drawdown): void {
+    if (NULL !== $drawdown->getAcceptionDate() || 'new' !== $drawdown->getStatus()) {
+      throw new \InvalidArgumentException('New drawdowns have to be in status "new"');
+    }
+
+    $result = $this->api4->createEntity(FundingDrawdown::getEntityName(), $drawdown->toArray());
+    $drawdown->setValues(['id' => $result->single()['id']] + $drawdown->toArray());
   }
 
 }

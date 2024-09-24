@@ -28,6 +28,7 @@ msgstr "Währung"
 #: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
+#: ang/crmFunding/case/fundingCase.template.html
 #: managed/SavedSearchFundingCases.mgd.php
 #: managed/SavedSearchFundingProgramControlling.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
@@ -40,6 +41,7 @@ msgstr "Abgerechneter Betrag"
 #: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
+#: ang/crmFunding/case/fundingCase.template.html
 #: managed/SavedSearchFundingCases.mgd.php
 #: managed/SavedSearchFundingProgramControlling.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
@@ -53,6 +55,7 @@ msgstr "Kein passender Antrag oder fehlende Berechtigung."
 #: Civi/Funding/Api4/Action/FundingCase/ApproveAction.php
 #: Civi/Funding/Api4/Action/FundingCase/GetPossibleActionsAction.php
 #: Civi/Funding/Api4/Action/FundingCase/RecreateTransferContractAction.php
+#: Civi/Funding/FundingCase/Api4/ActionHandler/FinishClearingActionHandler.php
 #: Civi/Funding/FundingCase/Api4/ActionHandler/GetPossibleRecipientsActionHandler.php
 #: Civi/Funding/FundingCase/Api4/ActionHandler/SetRecipientContactActionHandler.php
 #: Civi/Funding/FundingCase/Api4/ActionHandler/UpdateAmountApprovedActionHandler.php
@@ -233,6 +236,11 @@ msgstr "Vorlage für Weiterleitungsvertrag"
 #: managed/OptionValuesFileType.mgd.php
 msgid "Payment Instruction Template"
 msgstr "Vorlage für Zahlungsanweisung"
+
+#: Civi/Funding/Api4/Action/FundingCaseType/GetFieldsAction.php
+#: managed/OptionValuesFileType.mgd.php
+msgid "Payback Claim Template"
+msgstr "Vorlage für Rückzahlungsforderung"
 
 #: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
@@ -762,7 +770,11 @@ msgstr ""
 "Der beantragende Kontakt selbst ist als Empfänger verfügbar, wenn er die "
 "gewählte Art hat."
 
-#: Civi/Funding/Controller/PaymentInstructionDownloadController.php
+#: Civi/Funding/Controller/DrawdownDocumentDownloadController.php
+msgid "payback-claim"
+msgstr "Rückzahlungsforderung"
+
+#: Civi/Funding/Controller/DrawdownDocumentDownloadController.php
 msgid "payment-instruction"
 msgstr "Zahlungsanweisung"
 
@@ -879,11 +891,11 @@ msgstr "Antrag \"%1\" (%2) wiederhergestellt auf Version vom %3."
 msgid "Y-m-d H:i:s"
 msgstr "d.m.Y H:i:s"
 
-#: Civi/Funding/EventSubscriber/CiviOffice/PaymentInstructionTokenSubscriber.php
+#: Civi/Funding/EventSubscriber/CiviOffice/AbstractDrawdownTokenSubscriber.php
 msgid "Bank Account Reference (e.g. IBAN)"
 msgstr "Bankkontoreferenz (z. B. IBAN)"
 
-#: Civi/Funding/EventSubscriber/CiviOffice/PaymentInstructionTokenSubscriber.php
+#: Civi/Funding/EventSubscriber/CiviOffice/AbstractDrawdownTokenSubscriber.php
 msgid "BIC (maybe empty)"
 msgstr "BIC (kann leer sein)"
 
@@ -991,6 +1003,10 @@ msgstr "extern"
 msgid "Approving this funding case is not allowed."
 msgstr "Diesen Förderfall zu bewilligen ist nicht erlaubt."
 
+#: Civi/Funding/FundingCase/Handler/FundingCaseFinishClearingHandler.php
+msgid "Finishing the clearing of this funding case is not allowed."
+msgstr "Die Abrechnung dieses Förderfalls abzuschließen, ist nicht erlaubt."
+
 #: Civi/Funding/FundingCase/Handler/FundingCaseRecipientContactSetHandler.php
 msgid "Changing the recipient contact of this funding case is not allowed."
 msgstr "Den Empfängerkontakt dieses Förderfalls zu ändern, ist nicht erlaubt."
@@ -1077,6 +1093,10 @@ msgid "Ongoing"
 msgstr "Laufend"
 
 #: Civi/Funding/FundingPseudoConstants.php
+msgid "Cleared"
+msgstr "Abgerechnet"
+
+#: Civi/Funding/FundingPseudoConstants.php
 msgid "Applications adoptable"
 msgstr "Anträge übernehmbar"
 
@@ -1088,7 +1108,7 @@ msgstr "Beziehung von a zu b"
 msgid "Relationship from b to a"
 msgstr "Beziehung von b zu a"
 
-#: Civi/Funding/PayoutProcess/PaymentInstructionCreator.php
+#: Civi/Funding/PayoutProcess/DrawdownDocumentCreator.php
 msgid "No bank account for contact with ID \"%1\" available."
 msgstr "Kein Bankkonto für Kontakt mit ID \"%1\" verfügbar."
 
@@ -1096,25 +1116,25 @@ msgstr "Kein Bankkonto für Kontakt mit ID \"%1\" verfügbar."
 msgid "Display name of drawdown review contact"
 msgstr "Anzeigename des Mittelabruf-Prüfkontakts"
 
-#: Civi/Funding/PayoutProcess/Validator/DrawdownAmountValidator.php
-msgid "Requested amount is greater than available amount."
-msgstr "Angefragter Betrag ist größer als der verfügbare Betrag."
-
-#: Civi/Funding/PayoutProcess/Validator/DrawdownAmountValidator.php
-msgid "Requested amount is less than 0."
-msgstr "Angefragter Betrag ist kleiner als 0."
-
-#: Civi/Funding/PayoutProcess/Validator/DrawdownCreateValidator.php
-msgid "Payout process is closed."
-msgstr "Auszahlungsprozess ist geschlossen."
-
-#: Civi/Funding/PayoutProcess/Validator/DrawdownCreateValidator.php
-msgid "Permission to create drawdown is missing."
-msgstr "Berechtigung zum Erstellen eines Mittelabrufs fehlt."
-
 #: Civi/Funding/PayoutProcess/Validator/DrawdownReviewValidator.php
 msgid "Permission to change drawdown status is missing."
 msgstr "Berechtigung zur Änderung des Status des Mittelabrufs fehlt."
+
+#: Civi/Funding/PayoutProcess/Validator/DrawdownValidator.php
+msgid "Permission to create drawdown is missing."
+msgstr "Berechtigung zum Erstellen eines Mittelabrufs fehlt."
+
+#: Civi/Funding/PayoutProcess/Validator/DrawdownValidator.php
+msgid "Payout process is closed."
+msgstr "Auszahlungsprozess ist geschlossen."
+
+#: Civi/Funding/PayoutProcess/Validator/DrawdownValidator.php
+msgid "Requested amount is less than 0."
+msgstr "Angefragter Betrag ist kleiner als 0."
+
+#: Civi/Funding/PayoutProcess/Validator/DrawdownValidator.php
+msgid "Requested amount is greater than available amount."
+msgstr "Angefragter Betrag ist größer als der verfügbare Betrag."
 
 #: Civi/Funding/Permission/ContactRelation/Types/Contact.php
 #: Civi/Funding/Permission/ContactRelation/Types/ContactRelationship.php
@@ -1513,6 +1533,18 @@ msgstr "Ablaufaktivitäten ausblenden"
 msgid "Hide Comments"
 msgstr "Kommentare ausblenden"
 
+#: ang/crmFunding/case/fundingCase.js
+msgid ""
+"This will close the funding case. A final payment instruction will be "
+"created,             if the available funding wasn't paid out completely, "
+"yet. Otherwise, a payback             claim will be created. Maybe you want "
+"to update the amount approved before."
+msgstr ""
+"Dies wird den Förderfall schließen. Eine abschließende Zahlungsanweisung "
+"wird erstellt, wenn die verfügbare Förderung noch nicht vollständig "
+"ausgezahlt wurde. Anderenfalls wird eine Rückzahlungsforderung erstellt. "
+"Vielleicht möchten Sie den bewilligten Betrag zuvor anpassen."
+
 #: ang/crmFunding/case/fundingCase.template.html
 msgid "Available budget"
 msgstr "Verfügbares Budget"
@@ -1592,6 +1624,10 @@ msgstr "Weiterleitungsvertrag"
 #: ang/crmFunding/case/fundingCase.template.html
 msgid "Recreate Transfer Contract"
 msgstr "Weiterleitungsvertrag erneut erstellen"
+
+#: ang/crmFunding/case/fundingCase.template.html
+msgid "Finish Clearing"
+msgstr "Abrechnung abschließen"
 
 #: ang/crmFunding/case/fundingCase.template.html
 #: managed/SavedSearchFundingDrawdowns.mgd.php
@@ -1924,6 +1960,10 @@ msgstr "Aktivitätsart für Statusänderung eines Verwendungsnachweises"
 msgid "Payment Instruction"
 msgstr "Zahlungsanweisung"
 
+#: managed/OptionValuesFileType.mgd.php
+msgid "Payback Claim"
+msgstr "Rückzahlungsforderung"
+
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCaseTypes.mgd.php
@@ -2015,8 +2055,8 @@ msgid "Reviewer"
 msgstr "Prüfer*in"
 
 #: managed/SavedSearchFundingDrawdowns.mgd.php
-msgid "Download Payment Instruction"
-msgstr "Zahlungsanweisung herunterladen"
+msgid "Download Document"
+msgstr "Dokument herunterladen"
 
 #: managed/SavedSearchFundingProgramControlling.mgd.php
 #: managed/SavedSearchFundingPrograms.mgd.php
