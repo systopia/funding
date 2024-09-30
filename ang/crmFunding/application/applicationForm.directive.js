@@ -16,17 +16,23 @@
 
 'use strict';
 
-fundingModule.directive('fundingApplicationSidebar', ['$compile', function($compile) {
+fundingModule.directive('fundingApplicationForm', ['$compile', function($compile) {
   return {
     restrict: 'AE',
     scope: false,
     template: '',
-    // Insert the sidebar tag for the current funding case type.
+    // Insert the application form for the current funding case type.
     link: function (scope, element) {
       const unwatch = scope.$watch('fundingCaseType', function (fundingCaseType) {
         if (fundingCaseType) {
-          const tagName = _4.get(fundingCaseType, 'properties.applicationReviewSidebarTagName', 'funding-default-application-sidebar');
-          const template = '<' + tagName + '></' + tagName + '>';
+          const tagName = _4.get(fundingCaseType, 'properties.applicationFormTagName', 'funding-jf-form');
+          const template = '<' + tagName +
+            ' json-schema="jsonSchema" ui-schema="uiSchema" data="data"' +
+            ' errors="errors" editable="isEditAllowed()"' +
+            ' on-start-edit="onStartEdit" on-before-save="onBeforeSave"' +
+            ' on-after-save="onAfterSave" on-cancel-edit="onCancelEdit"' +
+            ' on-edit-finished="onEditFinished" add-to="addTo" inserted="inserted"' +
+            ' cancel-insert-at="cancelInsertAt" remove-at="removeAt"></' + tagName + '>';
           element.append($compile(template)(scope));
           unwatch();
         }

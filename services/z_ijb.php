@@ -32,6 +32,7 @@ use Civi\Funding\IJB\Application\Data\IJBApplicationFormFilesFactory;
 use Civi\Funding\IJB\Application\Data\IJBProjektunterlagenFactory;
 use Civi\Funding\IJB\Application\JsonSchema\IJBApplicationJsonSchemaFactory;
 use Civi\Funding\IJB\Application\UiSchema\IJBApplicationUiSchemaFactory;
+use Civi\Funding\IJB\EventSubscriber\IJBAngularModuleSubscriber;
 use Civi\Funding\IJB\FundingCase\Actions\IJBCaseActionsDeterminer;
 use Civi\Funding\IJB\Report\IJBReportDataLoader;
 use Civi\Funding\IJB\Report\IJBReportFormFactory;
@@ -67,3 +68,6 @@ $container->autowire(IJBReportDataLoader::class)
   ->addTag(IJBReportDataLoader::SERVICE_TAG);
 $container->autowire(IJBReportFormFactory::class)
   ->addTag(IJBReportFormFactory::SERVICE_TAG);
+
+$container->autowire(IJBAngularModuleSubscriber::class)
+  ->addTag('kernel.event_subscriber');
