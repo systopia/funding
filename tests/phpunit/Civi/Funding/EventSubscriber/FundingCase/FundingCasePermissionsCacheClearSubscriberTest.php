@@ -22,6 +22,8 @@ namespace Civi\Funding\EventSubscriber\FundingCase;
 use Civi\Api4\Contact;
 use Civi\Api4\FundingCaseContactRelation;
 use Civi\Api4\FundingCasePermissionsCache;
+use Civi\Api4\Group;
+use Civi\Api4\GroupContact;
 use Civi\Api4\Relationship;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Database\ChangeSetFactory;
@@ -34,6 +36,8 @@ use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCasePermissionsCacheFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
+use Civi\Funding\Fixtures\GroupContactFixture;
+use Civi\Funding\Fixtures\GroupFixture;
 use Civi\Funding\FundingCase\FundingCasePermissionsCacheManager;
 use Civi\RemoteTools\Api4\Api4Interface;
 
@@ -50,11 +54,13 @@ final class FundingCasePermissionsCacheClearSubscriberTest extends AbstractFundi
 
   public function testGetSubscribedEvents(): void {
     $expectedSubscriptions = [
-      'hook_civicrm_pre::Individual' => ['preContact', PHP_INT_MIN],
-      'hook_civicrm_pre::Organization' => ['preContact', PHP_INT_MIN],
-      'hook_civicrm_pre::Household' => ['preContact', PHP_INT_MIN],
-      'hook_civicrm_pre::FundingCaseContactRelation' => ['preFundingCaseContactRelation', PHP_INT_MIN],
-      'hook_civicrm_pre::Relationship' => ['preRelationship', PHP_INT_MIN],
+      'hook_civicrm_pre::Individual' => ['onPreContact', PHP_INT_MIN],
+      'hook_civicrm_pre::Organization' => ['onPreContact', PHP_INT_MIN],
+      'hook_civicrm_pre::Household' => ['onPreContact', PHP_INT_MIN],
+      'hook_civicrm_pre::Group' => ['onPreGroup', PHP_INT_MIN],
+      'hook_civicrm_pre::GroupContact' => ['onPreGroupContact', PHP_INT_MIN],
+      'hook_civicrm_pre::FundingCaseContactRelation' => ['onPreFundingCaseContactRelation', PHP_INT_MIN],
+      'hook_civicrm_pre::Relationship' => ['onPreRelationship', PHP_INT_MIN],
       FundingCaseUpdatedEvent::class => ['onFundingCaseUpdated'],
     ];
 
@@ -65,7 +71,7 @@ final class FundingCasePermissionsCacheClearSubscriberTest extends AbstractFundi
     }
   }
 
-  public function testPreContact(): void {
+  public function testOnPreContact(): void {
     $fundingProgram = FundingProgramFixture::addFixture();
     $fundingCaseType = FundingCaseTypeFixture::addFixture();
     $contact = ContactFixture::addIndividual();
@@ -100,7 +106,116 @@ final class FundingCasePermissionsCacheClearSubscriberTest extends AbstractFundi
     static::assertCount(0, FundingCasePermissionsCache::get(FALSE)->execute());
   }
 
-  public function testPreFundingCaseContactRelation(): void {
+  public function testOnPreGroup(): void {
+    $fundingProgram = FundingProgramFixture::addFixture();
+    $fundingCaseType = FundingCaseTypeFixture::addFixture();
+    $contact = ContactFixture::addIndividual();
+
+    $group1 = GroupFixture::addFixture();
+    $group2 = GroupFixture::addFixture();
+
+    $fundingCase = FundingCaseFixture::addFixture(
+      $fundingProgram->getId(),
+      $fundingCaseType->getId(),
+      $contact['id'],
+      $contact['id']
+    );
+    FundingCaseContactRelationFixture::addFixture($fundingCase->getId(), Relationship::getEntityName(), [
+      'relationshipTypeIds' => [],
+      'contactTypeIds' => [],
+      'groupIds' => [$group1['id']],
+    ], ['permission']);
+    FundingCasePermissionsCacheFixture::add($fundingCase->getId(), $contact['id'], FALSE, ['test']);
+
+    // Changing title should not affect cache.
+    $group1['title'] = 'new title';
+    Group::update(FALSE)->setValues($group1)->execute();
+    static::assertSame(['test'], FundingCasePermissionsCache::get(FALSE)->execute()->single()['permissions']);
+
+    // Changing is_active of unrelated group should not affect cache.
+    $group2['is_active'] = FALSE;
+    Group::update(FALSE)->setValues($group2)->execute();
+    static::assertSame(['test'], FundingCasePermissionsCache::get(FALSE)->execute()->single()['permissions']);
+
+    // Changing is_active should affect cache.
+    $group1['is_active'] = FALSE;
+    Group::update(FALSE)->setValues($group1)->execute();
+    static::assertNull(FundingCasePermissionsCache::get(FALSE)->execute()->single()['permissions']);
+
+    FundingCasePermissionsCache::delete(FALSE)->addWhere('id', 'IS NOT NULL')->execute();
+    FundingCasePermissionsCacheFixture::add($fundingCase->getId(), $contact['id'], FALSE, ['test']);
+
+    // Deleting unrelated group should not affect cache.
+    Group::delete(FALSE)->addWhere('id', '=', $group2['id'])->execute();
+    static::assertSame(['test'], FundingCasePermissionsCache::get(FALSE)->execute()->single()['permissions']);
+
+    // Deleting group should affect cache.
+    Group::delete(FALSE)->addWhere('id', '=', $group1['id'])->execute();
+    static::assertNull(FundingCasePermissionsCache::get(FALSE)->execute()->single()['permissions']);
+  }
+
+  public function testOnPreGroupContact(): void {
+    $fundingProgram = FundingProgramFixture::addFixture();
+    $fundingCaseType = FundingCaseTypeFixture::addFixture();
+    $contact1 = ContactFixture::addIndividual();
+    $contact2 = ContactFixture::addIndividual();
+
+    $group1 = GroupFixture::addFixture();
+    $group2 = GroupFixture::addFixture();
+
+    $fundingCase1 = FundingCaseFixture::addFixture(
+      $fundingProgram->getId(),
+      $fundingCaseType->getId(),
+      $contact1['id'],
+      $contact1['id']
+    );
+    $fundingCase2 = FundingCaseFixture::addFixture(
+      $fundingProgram->getId(),
+      $fundingCaseType->getId(),
+      $contact1['id'],
+      $contact1['id']
+    );
+    FundingCaseContactRelationFixture::addFixture($fundingCase1->getId(), Relationship::getEntityName(), [
+      'relationshipTypeIds' => [],
+      'contactTypeIds' => [],
+      'groupIds' => [$group1['id']],
+    ], ['permission']);
+    FundingCaseContactRelationFixture::addFixture($fundingCase2->getId(), Relationship::getEntityName(), [
+      'relationshipTypeIds' => [],
+      'contactTypeIds' => [],
+      'groupIds' => [$group2['id']],
+    ], ['permission']);
+
+    FundingCasePermissionsCacheFixture::add($fundingCase1->getId(), $contact1['id'], FALSE, ['test']);
+
+    // Adding contact to group should affect cache.
+    $groupContact = GroupContactFixture::addFixtureWithGroupId($group1['id'], $contact1['id']);
+    static::assertNull(FundingCasePermissionsCache::get(FALSE)->execute()->single()['permissions']);
+
+    // Clear permissions and add new one.
+    FundingCasePermissionsCache::delete(FALSE)->addWhere('id', 'IS NOT NULL')->execute();
+    FundingCasePermissionsCacheFixture::add($fundingCase1->getId(), $contact1['id'], FALSE, ['test']);
+
+    // Removing contact from group should affect cache.
+    GroupContact::delete(FALSE)->addWhere('id', '=', $groupContact['id'])->execute();
+    static::assertNull(FundingCasePermissionsCache::get(FALSE)->execute()->single()['permissions']);
+
+    // Clear permissions and add new one.
+    FundingCasePermissionsCache::delete(FALSE)->addWhere('id', 'IS NOT NULL')->execute();
+    FundingCasePermissionsCacheFixture::add($fundingCase1->getId(), $contact1['id'], FALSE, ['test']);
+    FundingCasePermissionsCacheFixture::add($fundingCase1->getId(), $contact2['id'], FALSE, ['test']);
+
+    $groupContact = GroupContactFixture::addFixtureWithGroupId($group1['id'], $contact1['id']);
+
+    // Updating GroupContact should affect cache.
+    $groupContact['contact_id'] = $contact2['id'];
+    $groupContact['group_id'] = $group2['id'];
+    GroupContact::update(FALSE)->setValues($groupContact)->execute();
+
+    static::assertSame([NULL, NULL], FundingCasePermissionsCache::get(FALSE)->execute()->column('permissions'));
+  }
+
+  public function testOnPreFundingCaseContactRelation(): void {
     $fundingProgram = FundingProgramFixture::addFixture();
     $fundingCaseType = FundingCaseTypeFixture::addFixture();
     $contact = ContactFixture::addIndividual();
@@ -152,7 +267,7 @@ final class FundingCasePermissionsCacheClearSubscriberTest extends AbstractFundi
     static::assertNull(FundingCasePermissionsCache::get(FALSE)->execute()->single()['permissions']);
   }
 
-  public function testPreRelationship(): void {
+  public function testOnPreRelationship(): void {
     $fundingProgram = FundingProgramFixture::addFixture();
     $fundingCaseType = FundingCaseTypeFixture::addFixture();
     $contact1 = ContactFixture::addIndividual();

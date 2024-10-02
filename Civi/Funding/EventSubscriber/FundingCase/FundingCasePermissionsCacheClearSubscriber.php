@@ -22,9 +22,12 @@ namespace Civi\Funding\EventSubscriber\FundingCase;
 use Civi\Api4\FundingCaseContactRelation;
 use Civi\Core\Event\PreEvent;
 use Civi\Funding\Database\ChangeSetFactory;
+use Civi\Funding\Entity\FundingCaseContactRelationEntity;
 use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
 use Civi\Funding\FundingCase\FundingCasePermissionsCacheManager;
+use Civi\Funding\Permission\ContactRelation\Types\Relationship;
 use Civi\RemoteTools\Api4\Api4Interface;
+use Civi\RemoteTools\Api4\Query\Comparison;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -45,11 +48,13 @@ final class FundingCasePermissionsCacheClearSubscriber implements EventSubscribe
   public static function getSubscribedEvents(): array {
     // Use minimum priority, so we also get possible changes by previous event listeners.
     return [
-      'hook_civicrm_pre::Individual' => ['preContact', PHP_INT_MIN],
-      'hook_civicrm_pre::Organization' => ['preContact', PHP_INT_MIN],
-      'hook_civicrm_pre::Household' => ['preContact', PHP_INT_MIN],
-      'hook_civicrm_pre::Relationship' => ['preRelationship', PHP_INT_MIN],
-      'hook_civicrm_pre::FundingCaseContactRelation' => ['preFundingCaseContactRelation', PHP_INT_MIN],
+      'hook_civicrm_pre::Individual' => ['onPreContact', PHP_INT_MIN],
+      'hook_civicrm_pre::Organization' => ['onPreContact', PHP_INT_MIN],
+      'hook_civicrm_pre::Household' => ['onPreContact', PHP_INT_MIN],
+      'hook_civicrm_pre::Group' => ['onPreGroup', PHP_INT_MIN],
+      'hook_civicrm_pre::GroupContact' => ['onPreGroupContact', PHP_INT_MIN],
+      'hook_civicrm_pre::Relationship' => ['onPreRelationship', PHP_INT_MIN],
+      'hook_civicrm_pre::FundingCaseContactRelation' => ['onPreFundingCaseContactRelation', PHP_INT_MIN],
       FundingCaseUpdatedEvent::class => ['onFundingCaseUpdated'],
     ];
   }
@@ -67,7 +72,7 @@ final class FundingCasePermissionsCacheClearSubscriber implements EventSubscribe
   /**
    * @throws \CRM_Core_Exception
    */
-  public function preContact(PreEvent $event): void {
+  public function onPreContact(PreEvent $event): void {
     $changeSet = $this->changeSetFactory->createChangeSetForPreEvent(
       $event,
       ['contact_type', 'contact_sub_type', 'is_deleted']
@@ -83,10 +88,65 @@ final class FundingCasePermissionsCacheClearSubscriber implements EventSubscribe
 
   /**
    * @throws \CRM_Core_Exception
+   */
+  public function onPreGroup(PreEvent $event): void {
+    if (NULL === $event->id) {
+      return;
+    }
+
+    if ('delete' !== $event->action) {
+      $changeSet = $this->changeSetFactory->createChangeSetForPreEvent($event, ['is_active']);
+      if (!isset($changeSet['is_active'])) {
+        return;
+      }
+    }
+
+    foreach ($this->getRelationshipRelationsByGroupId($event->id) as $relation) {
+      $this->permissionsCacheManager->clearByFundingCaseId($relation->getFundingCaseId());
+    }
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function onPreGroupContact(PreEvent $event): void {
+    if ('create' === $event->action) {
+      $contactIds = [(int) $event->params['contact_id']];
+      $groupIds = [(int) $event->params['group_id']];
+    }
+    elseif ('delete' === $event->action) {
+      /** @phpstan-var array{id: int, contact_id: int, group_id: int} $oldValues */
+      $oldValues = $this->api4->getEntity('GroupContact', (int) $event->id);
+      $contactIds = [$oldValues['contact_id']];
+      $groupIds = [$oldValues['group_id']];
+    }
+    else {
+      /** @phpstan-var array{id: int, contact_id: int, group_id: int} $oldValues */
+      $oldValues = $this->api4->getEntity('GroupContact', (int) $event->id);
+      $contactIds = [$oldValues['contact_id']];
+      if (isset($event->params['contact_id']) && (int) $event->params['contact_id'] !== $oldValues['contact_id']) {
+        $contactIds[] = (int) $event->params['contact_id'];
+      }
+
+      $groupIds = [$oldValues['group_id']];
+      if (isset($event->params['group_id']) && (int) $event->params['group_id'] !== $oldValues['group_id']) {
+        $groupIds[] = (int) $event->params['group_id'];
+      }
+    }
+
+    foreach ($groupIds as $groupId) {
+      foreach ($this->getRelationshipRelationsByGroupId($groupId) as $relation) {
+        $this->permissionsCacheManager->clearByFundingCaseIdAndContactIds($relation->getFundingCaseId(), $contactIds);
+      }
+    }
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
    *
    * phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
    */
-  public function preRelationship(PreEvent $event): void {
+  public function onPreRelationship(PreEvent $event): void {
   // phpcs:enable
     $params = $event->params;
     // Contact ID in $params might be a string.
@@ -151,7 +211,7 @@ final class FundingCasePermissionsCacheClearSubscriber implements EventSubscribe
   /**
    * @throws \CRM_Core_Exception
    */
-  public function preFundingCaseContactRelation(PreEvent $event): void {
+  public function onPreFundingCaseContactRelation(PreEvent $event): void {
     if (isset($event->params['funding_case_id'])) {
       $this->permissionsCacheManager->clearByFundingCaseId((int) $event->params['funding_case_id']);
     }
@@ -165,11 +225,32 @@ final class FundingCasePermissionsCacheClearSubscriber implements EventSubscribe
     }
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function onFundingCaseUpdated(FundingCaseUpdatedEvent $event): void {
     if ($event->getFundingCase()->getRecipientContactId()
       !== $event->getPreviousFundingCase()->getRecipientContactId()
     ) {
       $this->permissionsCacheManager->clearByFundingCaseId($event->getFundingCase()->getId());
+    }
+  }
+
+  /**
+   * @phpstan-return iterable<FundingCaseContactRelationEntity>
+   *
+   * @throws \CRM_Core_Exception
+   */
+  private function getRelationshipRelationsByGroupId(int $groupId): iterable {
+    $relations = FundingCaseContactRelationEntity::allFromApiResult($this->api4->getEntities(
+      FundingCaseContactRelation::getEntityName(),
+      Comparison::new('type', '=', Relationship::NAME)
+    ));
+
+    foreach ($relations as $relation) {
+      if (in_array($groupId, $relation->getProperty('groupIds', []), TRUE)) {
+        yield $relation;
+      }
     }
   }
 

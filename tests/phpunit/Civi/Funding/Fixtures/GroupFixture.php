@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2024 SYSTOPIA GmbH
+ * Copyright (C) 2022 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,18 +17,29 @@
 
 declare(strict_types = 1);
 
-// phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
-/** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
+namespace Civi\Funding\Fixtures;
 
-use Civi\Funding\Upgrade\Upgrader0002;
-use Civi\Funding\Upgrade\Upgrader0003;
-use Civi\Funding\Upgrade\Upgrader0006;
+use Civi\Api4\Group;
 
-$container->autowire(Upgrader0002::class)
-  ->setPublic(TRUE);
+final class GroupFixture {
 
-$container->autowire(Upgrader0003::class)
-  ->setPublic(TRUE);
+  private static int $count = 0;
 
-$container->autowire(Upgrader0006::class)
-  ->setPublic(TRUE);
+  /**
+   * @phpstan-param array<string, mixed> $values
+   *
+   * @phpstan-return array<string, mixed>&array{id: int}
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public static function addFixture(array $values = []): array {
+    ++self::$count;
+
+    return Group::create(FALSE)
+      ->setValues($values + [
+        'name' => 'TestGroup' . self::$count,
+        'title' => 'Test Group ' . self::$count,
+      ])->execute()->single();
+  }
+
+}

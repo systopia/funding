@@ -120,4 +120,57 @@ final class FundingCasePermissionsCacheManagerTest extends AbstractFundingHeadle
     static::assertCount(0, $permissionsCacheResult);
   }
 
+  public function testClearByFundingCaseIdAndContactIds(): void {
+    $fundingProgram = FundingProgramFixture::addFixture();
+    $fundingCaseType = FundingCaseTypeFixture::addFixture();
+    $contact = ContactFixture::addIndividual();
+
+    $fundingCase1 = FundingCaseFixture::addFixture(
+      $fundingProgram->getId(),
+      $fundingCaseType->getId(),
+      $contact['id'],
+      $contact['id']
+    );
+
+    $fundingCase2 = FundingCaseFixture::addFixture(
+      $fundingProgram->getId(),
+      $fundingCaseType->getId(),
+      $contact['id'],
+      $contact['id']
+    );
+
+    $this->permissionsCacheManager->add($fundingCase1->getId(), 33, FALSE, ['permission1']);
+    $this->permissionsCacheManager->add($fundingCase2->getId(), 33, FALSE, ['permission2']);
+    $this->permissionsCacheManager->add($fundingCase1->getId(), 44, FALSE, ['permission3']);
+
+    $this->permissionsCacheManager->clearByFundingCaseIdAndContactIds($fundingCase1->getId(), [33]);
+    $permissionsCacheResult = FundingCasePermissionsCache::get()->execute();
+
+    $permissionsCache1 = [
+      'id' => $permissionsCacheResult[0]['id'],
+      'funding_case_id' => $fundingCase1->getId(),
+      'contact_id' => 33,
+      'is_remote' => FALSE,
+      'permissions' => NULL,
+    ];
+    $permissionsCache2 = [
+      'id' => $permissionsCacheResult[1]['id'],
+      'funding_case_id' => $fundingCase2->getId(),
+      'contact_id' => 33,
+      'is_remote' => FALSE,
+      'permissions' => ['permission2'],
+    ];
+    $permissionsCache3 = [
+      'id' => $permissionsCacheResult[2]['id'],
+      'funding_case_id' => $fundingCase1->getId(),
+      'contact_id' => 44,
+      'is_remote' => FALSE,
+      'permissions' => ['permission3'],
+    ];
+    static::assertEquals(
+      [$permissionsCache1, $permissionsCache2, $permissionsCache3],
+      $permissionsCacheResult->getArrayCopy()
+    );
+  }
+
 }
