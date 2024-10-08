@@ -39,7 +39,9 @@ use Webmozart\Assert\Assert;
  */
 final class DrawdownReviewValidator implements ConcreteEntityValidatorInterface {
 
-  use HasClearingReviewPermissionTrait;
+  use HasClearingReviewPermissionTrait {
+    hasReviewPermission as hasClearingReviewPermission;
+  }
 
   private FundingCaseManager $fundingCaseManager;
 
@@ -82,7 +84,8 @@ final class DrawdownReviewValidator implements ConcreteEntityValidatorInterface 
   public function validateNew(AbstractEntity $new): EntityValidationResult {
     if ('new' !== $new->getStatus()) {
       $fundingCase = $this->getFundingCase($new);
-      if (!$this->hasReviewPermission($fundingCase->getPermissions())) {
+      // Allow clearing reviewers to create a final drawdown when finishing clearing.
+      if (!$this->hasClearingReviewPermission($fundingCase->getPermissions())) {
         $this->assertPermission($fundingCase);
       }
     }
