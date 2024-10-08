@@ -34,13 +34,15 @@ use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
 
 /**
- * Checks if user has permission to create drawdown.
+ * Checks if user has permission to create/update a drawdown.
  *
  * @implements ConcreteEntityValidatorInterface<DrawdownEntity>
  */
 final class DrawdownValidator implements ConcreteEntityValidatorInterface {
 
-  use HasClearingReviewPermissionTrait;
+  use HasClearingReviewPermissionTrait {
+    hasReviewPermission as hasClearingReviewPermission;
+  }
 
   private FundingCaseManager $fundingCaseManager;
 
@@ -71,17 +73,14 @@ final class DrawdownValidator implements ConcreteEntityValidatorInterface {
     $this->assertNotClosed($payoutProcess);
 
     if ($new->getAmount() < 0) {
-      $payoutProcess = $this->getPayoutProcess($new);
       $fundingCase = $this->getFundingCase($payoutProcess);
-
-      if (!$this->hasReviewPermission($fundingCase->getPermissions())) {
+      // Only reviewers are allowed to create payback claims.
+      if (!$this->hasClearingReviewPermission($fundingCase->getPermissions())) {
         return $this->createAmountLessThanZeroResult();
       }
     }
 
     if ($new->getAmount() > $current->getAmount()) {
-      $payoutProcess = $this->payoutProcessManager->get($new->getPayoutProcessId());
-      Assert::notNull($payoutProcess);
       $amountDiff = $new->getAmount() - $current->getAmount();
       if ($amountDiff > $this->payoutProcessManager->getAmountAvailable($payoutProcess)) {
         return $this->createAmountExceedsLimitResult();
@@ -105,11 +104,12 @@ final class DrawdownValidator implements ConcreteEntityValidatorInterface {
 
     $fundingCase = $this->getFundingCase($payoutProcess);
     if ($fundingCase->hasPermission('drawdown_create')) {
+      // Only reviewers are allowed to create payback claims.
       if ($new->getAmount() < 0) {
         return $this->createAmountLessThanZeroResult();
       }
     }
-    elseif (!$this->hasReviewPermission($fundingCase->getPermissions())) {
+    elseif (!$this->hasClearingReviewPermission($fundingCase->getPermissions())) {
       throw new UnauthorizedException(E::ts('Permission to create drawdown is missing.'));
     }
 
