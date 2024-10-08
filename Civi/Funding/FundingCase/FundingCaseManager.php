@@ -25,6 +25,7 @@ use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent;
 use Civi\Funding\Event\FundingCase\FundingCaseDeletedEvent;
+use Civi\Funding\Event\FundingCase\FundingCasePreCreateEvent;
 use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
 use Civi\Funding\FileTypeNames;
 use Civi\Funding\FundingAttachmentManagerInterface;
@@ -120,6 +121,15 @@ class FundingCaseManager {
       'creation_contact_id' => $contactId,
       'amount_approved' => NULL,
     ]);
+
+    $event = new FundingCasePreCreateEvent(
+      $contactId,
+      $fundingCase,
+      $values['funding_program'],
+      $values['funding_case_type']
+    );
+    $this->eventDispatcher->dispatch(FundingCasePreCreateEvent::class, $event);
+
     $action = FundingCase::create(FALSE)
       ->setValues($fundingCase->toArray());
 
