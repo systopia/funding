@@ -84,11 +84,7 @@ final class DefaultApplicationProcessActionsDeterminer extends AbstractApplicati
   }
 
   public function getActions(ApplicationProcessEntityBundle $applicationProcessBundle, array $statusList): array {
-    if (in_array(
-      $applicationProcessBundle->getFundingCase()->getStatus(),
-      self::FUNDING_CASE_FINAL_STATUS_LIST,
-      TRUE
-    )) {
+    if ($applicationProcessBundle->getFundingCase()->isStatusIn(self::FUNDING_CASE_FINAL_STATUS_LIST)) {
       return [];
     }
 

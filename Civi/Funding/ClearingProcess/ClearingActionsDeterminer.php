@@ -105,7 +105,7 @@ final class ClearingActionsDeterminer {
    *   Mapping of action name to label.
    */
   public function getActions(ClearingProcessEntityBundle $clearingProcessBundle): array {
-    if (in_array($clearingProcessBundle->getFundingCase()->getStatus(), self::FUNDING_CASE_FINAL_STATUS_LIST, TRUE)) {
+    if ($clearingProcessBundle->getFundingCase()->isStatusIn(self::FUNDING_CASE_FINAL_STATUS_LIST)) {
       return [];
     }
 
