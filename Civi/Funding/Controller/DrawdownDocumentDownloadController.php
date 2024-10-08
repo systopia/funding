@@ -74,7 +74,7 @@ final class DrawdownDocumentDownloadController implements PageControllerInterfac
     );
 
     if (NULL === $attachment) {
-      throw new NotFoundHttpException('Drawdown document does not exist');
+      throw new NotFoundHttpException("Drawdown document (ID: $drawdownId) does not exist");
     }
 
     $headers = [
