@@ -12,16 +12,25 @@ use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Config\Resource\GlobResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
+function _funding_composer_autoload(): void {
+  if (file_exists(__DIR__ . '/vendor/autoload.php')) {
+    require_once __DIR__ . '/vendor/autoload.php';
+  }
+}
+
 /**
  * Implements hook_civicrm_config().
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_config/
  */
 function funding_civicrm_config(\CRM_Core_Config &$config): void {
+  _funding_composer_autoload();
   _funding_civix_civicrm_config($config);
 }
 
 function funding_civicrm_container(ContainerBuilder $container): void {
+  _funding_composer_autoload();
+
   if (!interface_exists(Api4Interface::class)) {
     // Extension de.systopia.remotetools is not loaded, yet.
     return;
