@@ -28,6 +28,7 @@ use Civi\Funding\Api4\Action\FundingCase\GetAction;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent;
+use Civi\Funding\Event\FundingCase\FundingCasePreCreateEvent;
 use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
 use Civi\Funding\FileTypeNames;
 use Civi\Funding\Fixtures\ContactFixture;
@@ -47,6 +48,7 @@ use Symfony\Bridge\PhpUnit\ClockMock;
 /**
  * @covers \Civi\Funding\FundingCase\FundingCaseManager
  * @covers \Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent
+ * @covers \Civi\Funding\Event\FundingCase\FundingCasePreCreateEvent
  *
  * @group headless
  */
@@ -105,19 +107,29 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
     $fundingCaseType = FundingCaseTypeFixture::addFixture();
     $recipientContact = ContactFixture::addOrganization();
 
-    $this->eventDispatcherMock->expects(static::once())->method('dispatch')->with(
-      FundingCaseCreatedEvent::class,
-      static::isInstanceOf(FundingCaseCreatedEvent::class)
-    )->willReturnCallback(function (string $eventName, FundingCaseCreatedEvent $event)
-      use ($contact, $fundingProgram, $fundingCaseType): void {
-      static::assertSame($contact['id'], $event->getContactId());
-      static::assertSame($fundingProgram, $event->getFundingProgram());
-      static::assertSame($fundingCaseType, $event->getFundingCaseType());
-      FundingCaseContactRelationFixture::addContact($event->getContactId(),
-        $event->getFundingCase()->getId(),
-        ['test_permission'],
-      );
-    });
+    $this->eventDispatcherMock->expects(static::exactly(2))->method('dispatch')->willReturnCallback(
+      function (string $eventName, $event) use ($contact, $fundingProgram, $fundingCaseType): void {
+        static $calls = 0;
+        if (1 === ++$calls) {
+          static::assertSame(FundingCasePreCreateEvent::class, $eventName);
+          static::assertInstanceOf(FundingCasePreCreateEvent::class, $event);
+          /** @var \Civi\Funding\Event\FundingCase\FundingCasePreCreateEvent $event */
+        }
+        else {
+          static::assertSame(FundingCaseCreatedEvent::class, $eventName);
+          static::assertInstanceOf(FundingCaseCreatedEvent::class, $event);
+          /** @var \Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent $event */
+          FundingCaseContactRelationFixture::addContact($event->getContactId(),
+            $event->getFundingCase()->getId(),
+            ['test_permission'],
+          );
+        }
+
+        static::assertSame($contact['id'], $event->getContactId());
+        static::assertSame($fundingProgram, $event->getFundingProgram());
+        static::assertSame($fundingCaseType, $event->getFundingCaseType());
+      }
+    );
 
     \CRM_Core_Session::singleton()->set('userID', $contact['id']);
     $fundingCase = $this->fundingCaseManager->create($contact['id'], [
@@ -161,15 +173,25 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
     $recipientContact = ContactFixture::addOrganization();
     $recipientContact2 = ContactFixture::addOrganization();
 
-    $this->eventDispatcherMock->expects(static::exactly(6))->method('dispatch')->with(
-      FundingCaseCreatedEvent::class,
-      static::isInstanceOf(FundingCaseCreatedEvent::class)
-    )->willReturnCallback(function (string $eventName, FundingCaseCreatedEvent $event): void {
-      FundingCaseContactRelationFixture::addContact($event->getContactId(),
-        $event->getFundingCase()->getId(),
-        ['test_permission'],
-      );
-    });
+    $this->eventDispatcherMock->expects(static::exactly(12))->method('dispatch')->willReturnCallback(
+      function (string $eventName, $event): void {
+        static $calls = 0;
+        if (1 === (++$calls % 2)) {
+          static::assertSame(FundingCasePreCreateEvent::class, $eventName);
+          static::assertInstanceOf(FundingCasePreCreateEvent::class, $event);
+          /** @var \Civi\Funding\Event\FundingCase\FundingCasePreCreateEvent $event */
+        }
+        else {
+          static::assertSame(FundingCaseCreatedEvent::class, $eventName);
+          static::assertInstanceOf(FundingCaseCreatedEvent::class, $event);
+          /** @var \Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent $event */
+          FundingCaseContactRelationFixture::addContact($event->getContactId(),
+            $event->getFundingCase()->getId(),
+            ['test_permission'],
+          );
+        }
+      }
+    );
 
     RequestTestUtil::mockInternalRequest($contact['id']);
     // Create a new funding case.
