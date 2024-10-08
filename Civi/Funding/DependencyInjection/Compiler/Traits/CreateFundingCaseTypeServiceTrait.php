@@ -38,20 +38,34 @@ trait CreateFundingCaseTypeServiceTrait {
     array $decorators = []
   ): Reference {
     $serviceId = $class;
-    if ([] !== $arguments) {
+    if ([] !== $arguments || [] !== $decorators) {
+      // Create funding case type specific service.
       $serviceId .= ':' . $fundingCaseType;
+      if ($container->hasDefinition($serviceId)) {
+        throw new \RuntimeException(
+          sprintf('A service with class "%s" for funding case type "%s" already exists', $class, $fundingCaseType)
+        );
+      }
+
+      $definition = $container->autowire($serviceId, $class)->setArguments($arguments);
+
+      foreach ($decorators as $decoratorClass => $decoratorArguments) {
+        $decoratorServiceId = $decoratorClass . ':' . $fundingCaseType;
+        array_unshift($decoratorArguments, new Reference($serviceId));
+        $container->autowire($decoratorServiceId, $decoratorClass)->setArguments($decoratorArguments);
+        $serviceId = $decoratorServiceId;
+      }
+    }
+    else {
+      // Use existing definition, if any, so previous tags aren't lost.
+      $definition = $container->hasDefinition($serviceId)
+        ? $container->findDefinition($serviceId)
+        : $container->autowire($serviceId, $class);
     }
 
-    $definition = $container->autowire($serviceId, $class)->setArguments($arguments);
-    if (defined("$class::SERVICE_TAG")) {
-      $definition->addTag($class::SERVICE_TAG, ['funding_case_type' => $fundingCaseType]);
-    }
-
-    foreach ($decorators as $decoratorClass => $decoratorArguments) {
-      $decoratorServiceId = $decoratorClass . ':' . $fundingCaseType;
-      array_unshift($decoratorArguments, new Reference($serviceId));
-      $container->autowire($decoratorServiceId, $decoratorClass)->setArguments($decoratorArguments);
-      $serviceId = $decoratorServiceId;
+    $serviceTag = defined("$class::SERVICE_TAG") ? $class::SERVICE_TAG : NULL;
+    if (NULL !== $serviceTag) {
+      $definition->addTag($serviceTag, ['funding_case_type' => $fundingCaseType]);
     }
 
     return new Reference($serviceId);

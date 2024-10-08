@@ -35,10 +35,12 @@ final class TestCaseActionsDeterminer extends AbstractFundingCaseActionsDetermin
   use HasReviewPermissionTrait;
 
   public function __construct(
-    TestApplicationActionStatusInfo $statusInfo,
-    ClearingProcessManager $clearingProcessManager
+    ClearingProcessManager $clearingProcessManager,
+    TestApplicationActionStatusInfo $statusInfo
   ) {
-    parent::__construct(new SetRecipientContactActionsDeterminer(new DefaultFundingCaseActionsDeterminer($statusInfo)));
+    parent::__construct(new SetRecipientContactActionsDeterminer(
+      new DefaultFundingCaseActionsDeterminer($clearingProcessManager, $statusInfo)
+    ));
   }
 
   public function getActions(string $status, array $applicationProcessStatusList, array $permissions): array {
