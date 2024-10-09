@@ -30,7 +30,13 @@ use Webmozart\Assert\Assert;
  * Checks if a contact has a relationship of any of the given types to a contact
  * of any of the given types that is in any of the given groups.
  *
- *  All options may be empty, meaning everything is allowed.
+ * All options may be empty, meaning everything is allowed. The options have
+ * the following form:
+ * array {
+ *   relationshipTypeIds: list<int>,
+ *   contactTypeIds: list<int>,
+ *   groupIds: list<int>,
+ * }
  */
 final class RelationshipChecker implements ContactRelationCheckerInterface {
 
