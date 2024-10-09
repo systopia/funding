@@ -45,7 +45,7 @@ final class RelationshipCheckerTest extends AbstractFundingHeadlessTestCase {
     $this->checker = new RelationshipChecker(Api4::getInstance());
   }
 
-  public function testGetContacts(): void {
+  public function testHasRelation(): void {
     $contact = ContactFixture::addIndividual();
 
     $contactType1 = ContactTypeFixture::addIndividualFixture('testType1');
