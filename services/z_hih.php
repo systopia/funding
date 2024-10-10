@@ -28,6 +28,7 @@ use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Actions\HiHApplicati
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\JsonSchema\HiHApplicationJsonSchemaFactory;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\UiSchema\HiHApplicationUiSchemaFactory;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\FundingCase\Actions\HiHCaseActionsDeterminer;
+use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\FundingCase\HiHPossibleRecipientsForChangeLoader;
 
 $container->autowire(HiHApplicationActionsDeterminer::class)
   ->addTag(HiHApplicationActionsDeterminer::SERVICE_TAG);
@@ -53,3 +54,6 @@ $container->autowire(HiHApplicationUiSchemaFactory::class)
 
 $container->autowire(HiHCaseActionsDeterminer::class)
   ->addTag(HiHCaseActionsDeterminer::SERVICE_TAG);
+
+$container->autowire(HiHPossibleRecipientsForChangeLoader::class)
+  ->addTag(HiHPossibleRecipientsForChangeLoader::SERVICE_TAG);
