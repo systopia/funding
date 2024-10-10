@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\UiSchema;
 
-use Civi\RemoteTools\JsonForms\Control\JsonFormsHidden;
+use Civi\RemoteTools\JsonForms\JsonFormsControl;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategorization;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
@@ -30,7 +30,7 @@ final class HiHApplicationUiSchema extends JsonFormsGroup {
     $elements = [
       new JsonFormsCategorization([
         new JsonFormsCategory('Allgemein', [
-          new JsonFormsHidden('#/properties/empfaenger'),
+          new JsonFormsControl('#/properties/empfaenger', 'Bürgerstiftung oder sonstiger Mittelempfänger'),
           new HiHFragenZumProjektGroup('#/properties/fragenZumProjekt/properties'),
           new HiHInformationenZumProjektGroup('#/properties/informationenZumProjekt/properties'),
         ]),
