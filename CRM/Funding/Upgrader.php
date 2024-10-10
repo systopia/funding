@@ -59,4 +59,11 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
     return TRUE;
   }
 
+  public function upgrade_0005(): bool {
+    $this->ctx->log->info('Applying database migration 0005');
+    $this->executeSqlFile('sql/upgrade/0005.sql');
+
+    return TRUE;
+  }
+
 }

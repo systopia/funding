@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2023 SYSTOPIA GmbH
+ * Copyright (C) 2024 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,25 +17,18 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\PayoutProcess\Command;
+namespace Civi\Funding\FundingCase;
 
-final class PaymentInstructionRenderResult {
+final class FundingCaseStatus {
 
-  private string $filename;
+  public const CLEARED = 'cleared';
 
-  private string $mimeType;
+  public const ONGOING = 'ongoing';
 
-  public function __construct(string $filename, string $mimeType) {
-    $this->filename = $filename;
-    $this->mimeType = $mimeType;
-  }
+  public const OPEN = 'open';
 
-  public function getFilename(): string {
-    return $this->filename;
-  }
+  public const REJECTED = 'rejected';
 
-  public function getMimeType(): string {
-    return $this->mimeType;
-  }
+  public const WITHDRAWN = 'withdrawn';
 
 }

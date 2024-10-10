@@ -141,7 +141,7 @@ Set up a CiviMRF profile under `/admin/config/cmrf/profiles` or edit the default
 
 [Optional]
 
-Activate **CiviMRF Call Report** at `/admin/modules` or via `drush` at `$DRUPAL_ROOT` 
+Activate **CiviMRF Call Report** at `/admin/modules` or via `drush` at `$DRUPAL_ROOT`
 
 ```
 drush pm:enable cmrf_call_report
@@ -177,7 +177,7 @@ If no roles are listed for **Test User** after **CiviRemote: Synchronise CiviRem
 
 2. You can try to solve this issue by relaoding the XCM (Extended Contact Matcher) profile, that is used for matching contacts.
 
-- Go to `/civicrm/admin/setting/xcm` and edit the XCM-Profile (ie. _default_). 
+- Go to `/civicrm/admin/setting/xcm` and edit the XCM-Profile (ie. _default_).
 - Save the profile without making any changes.
 - Perform action **CiviRemote: Match contacts** again for Drupal user **Test User**.
 
@@ -198,6 +198,6 @@ CiviCRM contacts must use the same time zone. Therefore, the option
 
 ## Create and Configure Funding Case Type Templates
 
-The creation of transfer contracts and payment instructions relies on templates in `docx` format. They are created with [CiviOffice](https://docs.civicrm.org/civioffice/en/latest/) and can contain tokens. For each funding case type different templates can be uploaded.
+The creation of transfer contracts, payment instructions, and payback claims relies on templates in `docx` format. They are created with [CiviOffice](https://docs.civicrm.org/civioffice/en/latest/) and can contain tokens. For each funding case type different templates need to be uploaded.
 
 To upload your templates open `/civicrm/funding/case-type/list` and click *Manage templates* at the funding case type you want to configure the templates.

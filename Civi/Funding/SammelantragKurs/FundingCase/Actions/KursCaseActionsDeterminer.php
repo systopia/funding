@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\SammelantragKurs\FundingCase\Actions;
 
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
+use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\FundingCase\Actions\AbstractFundingCaseActionsDeterminerDecorator;
 use Civi\Funding\FundingCase\Actions\DefaultFundingCaseActionsDeterminer;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions;
@@ -45,9 +46,10 @@ final class KursCaseActionsDeterminer extends AbstractFundingCaseActionsDetermin
   public function __construct(
     KursApplicationActionsDeterminer $applicationActionsDeterminer,
     ApplicationProcessBundleLoader $applicationProcessBundleLoader,
+    ClearingProcessManager $clearingProcessManager,
     KursApplicationActionStatusInfo $statusInfo
   ) {
-    parent::__construct(new DefaultFundingCaseActionsDeterminer($statusInfo));
+    parent::__construct(new DefaultFundingCaseActionsDeterminer($clearingProcessManager, $statusInfo));
     $this->applicationActionsDeterminer = $applicationActionsDeterminer;
     $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
   }

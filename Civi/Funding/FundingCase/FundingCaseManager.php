@@ -66,6 +66,15 @@ class FundingCaseManager {
     $this->eventDispatcher = $eventDispatcher;
   }
 
+  public function getAmountRemaining(int $fundingCaseId): float {
+    $values = $this->api4->execute(FundingCase::getEntityName(), 'get', [
+      'select' => ['amount_admitted', 'amount_paid_out'],
+      'where' => [['id', '=', $fundingCaseId]],
+    ])->single();
+
+    return ($values['amount_admitted'] ?? 0.0) - $values['amount_paid_out'];
+  }
+
   /**
    * @phpstan-return array<FundingCaseEntity>
    *

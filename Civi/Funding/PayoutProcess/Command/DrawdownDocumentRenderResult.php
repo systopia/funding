@@ -17,13 +17,25 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\PayoutProcess\Handler;
+namespace Civi\Funding\PayoutProcess\Command;
 
-use Civi\Funding\PayoutProcess\Command\PaymentInstructionRenderCommand;
-use Civi\Funding\PayoutProcess\Command\PaymentInstructionRenderResult;
+final class DrawdownDocumentRenderResult {
 
-interface PaymentInstructionRenderHandlerInterface {
+  private string $filename;
 
-  public function handle(PaymentInstructionRenderCommand $command): PaymentInstructionRenderResult;
+  private string $mimeType;
+
+  public function __construct(string $filename, string $mimeType) {
+    $this->filename = $filename;
+    $this->mimeType = $mimeType;
+  }
+
+  public function getFilename(): string {
+    return $this->filename;
+  }
+
+  public function getMimeType(): string {
+    return $this->mimeType;
+  }
 
 }

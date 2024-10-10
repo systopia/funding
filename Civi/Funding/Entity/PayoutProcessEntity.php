@@ -51,4 +51,10 @@ final class PayoutProcessEntity extends AbstractEntity {
     return $this->values['amount_total'];
   }
 
+  public function setAmountTotal(float $amountTotal): self {
+    $this->values['amount_total'] = $amountTotal;
+
+    return $this;
+  }
+
 }

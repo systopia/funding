@@ -22,6 +22,7 @@ namespace Civi\Funding\SammelantragKurs\Application\Actions;
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\AbstractApplicationProcessActionsDeterminer;
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\Helper\DetermineApproveRejectActionsHelper;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\FundingCase\FundingCaseStatus;
 use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
 use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
 
@@ -30,6 +31,8 @@ final class KursApplicationActionsDeterminer extends AbstractApplicationProcessA
   use HasReviewPermissionTrait;
 
   use KursSupportedFundingCaseTypesTrait;
+
+  private const FUNDING_CASE_FINAL_STATUS_LIST = [FundingCaseStatus::CLEARED];
 
   private const STATUS_PERMISSION_ACTIONS_MAP = [
     NULL => [
@@ -100,6 +103,10 @@ final class KursApplicationActionsDeterminer extends AbstractApplicationProcessA
   }
 
   public function getActions(ApplicationProcessEntityBundle $applicationProcessBundle, array $statusList): array {
+    if ($applicationProcessBundle->getFundingCase()->isStatusIn(self::FUNDING_CASE_FINAL_STATUS_LIST)) {
+      return [];
+    }
+
     $permissions = $applicationProcessBundle->getFundingCase()->getPermissions();
 
     if (!$this->hasReviewPermission($permissions) && $this->isAnyApplicationInReview($statusList)) {

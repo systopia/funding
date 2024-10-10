@@ -42,9 +42,17 @@ fundingModule.factory('fundingCaseService', ['crmApi4', function(crmApi4) {
 
     /**
      * @param {integer} id
+     * @returns {Promise<object>}
+     */
+    finishClearing: (id) => crmApi4('FundingCase', 'finishClearing', {id}),
+
+    /**
+     * @param {integer} id
+     * @param {string[]} extraFields
      * @returns {Promise}
      */
-    get: (id) => crmApi4('FundingCase', 'get', {
+    get: (id, extraFields = []) => crmApi4('FundingCase', 'get', {
+      select: ['*'].concat(extraFields),
       where: [['id', '=', id]],
     }).then(function (result) {
       return result[0] || null;

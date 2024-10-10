@@ -30,7 +30,6 @@ use Civi\Funding\Database\ChangeSetFactory;
 use Civi\Funding\Database\DaoEntityInfoProvider;
 use Civi\Funding\DependencyInjection\Compiler\ActionPropertyAutowireFixPass;
 use Civi\Funding\DependencyInjection\Compiler\EntityValidatorPass;
-use Civi\Funding\DependencyInjection\Compiler\FundingCaseTypeServiceLocatorPass;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\EventSubscriber\Api\TransactionalApiRequestSubscriber;
 use Civi\Funding\EventSubscriber\FundingCiviOfficeSearchKitTaskSubscriber;
@@ -68,7 +67,6 @@ $container->autowire(ChangeSetFactory::class);
 $container->autowire(DaoEntityInfoProvider::class);
 
 $container->addCompilerPass(new ActionPropertyAutowireFixPass(), PassConfig::TYPE_BEFORE_REMOVING);
-$container->addCompilerPass(new FundingCaseTypeServiceLocatorPass());
 
 $container->autowire(FundingRemoteContactIdResolverInterface::class, FundingRemoteContactIdResolver::class);
 

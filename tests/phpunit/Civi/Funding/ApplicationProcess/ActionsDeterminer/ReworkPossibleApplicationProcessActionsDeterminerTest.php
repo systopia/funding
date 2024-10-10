@@ -21,6 +21,7 @@ namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
+use Civi\Funding\FundingCase\FundingCaseStatus;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -272,6 +273,26 @@ final class ReworkPossibleApplicationProcessActionsDeterminerTest extends TestCa
     static::assertSame(['bar'], $this->actionsDeterminer->getActions($applicationProcessBundle, []));
   }
 
+  public function testGetActionsFundingCaseCleared(): void {
+    $this->decoratedActionsDeterminerMock->expects(static::never())->method('getActions');
+    foreach (self::STATUS_PERMISSION_ACTIONS_MAP as $status => $permissionActionsMap) {
+      foreach ($permissionActionsMap as $permission => $actions) {
+        $applicationProcessBundle = $this->createApplicationProcessBundle(
+          $status,
+          NULL,
+          NULL,
+          [$permission],
+          FundingCaseStatus::CLEARED
+        );
+        static::assertSame(
+          [],
+          $this->actionsDeterminer->getActions($applicationProcessBundle, []),
+          sprintf('Status: %s, permission: %s', $status, $permission)
+        );
+      }
+    }
+  }
+
   /**
    * @param string $status
    * @param bool|null $isReviewCalculative
@@ -282,13 +303,14 @@ final class ReworkPossibleApplicationProcessActionsDeterminerTest extends TestCa
     string $status,
     ?bool $isReviewCalculative,
     ?bool $isReviewContent,
-    array $permissions
+    array $permissions,
+    string $fundingCaseStatus = FundingCaseStatus::OPEN
   ): ApplicationProcessEntityBundle {
     return ApplicationProcessBundleFactory::createApplicationProcessBundle([
       'status' => $status,
       'is_review_calculative' => $isReviewCalculative,
       'is_review_content' => $isReviewContent,
-    ], ['permissions' => $permissions]);
+    ], ['permissions' => $permissions, 'status' => $fundingCaseStatus]);
   }
 
 }

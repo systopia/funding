@@ -21,19 +21,19 @@
   <item>
     <path>civicrm/funding/drawdown/accept</path>
     <page_callback>CRM_Funding_Page_DrawdownAccept</page_callback>
-    <title>PaymentInstructionDownload</title>
+    <title>DrawdownAccept</title>
     <access_arguments>access Funding;administer Funding</access_arguments>
   </item>
   <item>
     <path>civicrm/funding/drawdown/reject</path>
     <page_callback>CRM_Funding_Page_DrawdownReject</page_callback>
-    <title>PaymentInstructionDownload</title>
+    <title>DrawdownReject</title>
     <access_arguments>access Funding;administer Funding</access_arguments>
   </item>
   <item>
-    <path>civicrm/funding/payment-instruction/download</path>
-    <page_callback>CRM_Funding_Page_PaymentInstructionDownload</page_callback>
-    <title>PaymentInstructionDownload</title>
+    <path>civicrm/funding/drawdown-document/download</path>
+    <page_callback>CRM_Funding_Page_DrawdownDocumentDownload</page_callback>
+    <title>DrawdownDocumentDownload</title>
     <access_arguments>access Funding;administer Funding</access_arguments>
   </item>
 </menu>

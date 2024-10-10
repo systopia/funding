@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\Funding\Api4\Action\FundingCase\ApproveAction;
+use Civi\Funding\Api4\Action\FundingCase\FinishClearingAction;
 use Civi\Funding\Api4\Action\FundingCase\GetAction;
 use Civi\Funding\Api4\Action\FundingCase\GetFieldsAction;
 use Civi\Funding\Api4\Action\FundingCase\GetPossibleActionsAction;
@@ -40,6 +41,10 @@ final class FundingCase extends Generic\DAOEntity {
 
   public static function approve(bool $checkPermissions = TRUE): ApproveAction {
     return \Civi::service(ApproveAction::class)->setCheckPermissions($checkPermissions);
+  }
+
+  public static function finishClearing(bool $checkPermissions = TRUE): FinishClearingAction {
+    return (new FinishClearingAction())->setCheckPermissions($checkPermissions);
   }
 
   /**

@@ -21,6 +21,7 @@ namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\Helper\DetermineApproveRejectActionsHelper;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\FundingCase\FundingCaseStatus;
 use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
 
 // phpcs:disable Generic.Files.LineLength.TooLong
@@ -35,6 +36,8 @@ final class ReworkPossibleApplicationProcessActionsDeterminer extends AbstractAp
   }
 
   use HasReviewPermissionTrait;
+
+  private const FUNDING_CASE_FINAL_STATUS_LIST = [FundingCaseStatus::CLEARED];
 
   private const STATUS_PERMISSIONS_ACTION_MAP = [
     'eligible' => [
@@ -77,6 +80,10 @@ final class ReworkPossibleApplicationProcessActionsDeterminer extends AbstractAp
   }
 
   public function getActions(ApplicationProcessEntityBundle $applicationProcessBundle, array $statusList): array {
+    if ($applicationProcessBundle->getFundingCase()->isStatusIn(self::FUNDING_CASE_FINAL_STATUS_LIST)) {
+      return [];
+    }
+
     $permissions = $applicationProcessBundle->getFundingCase()->getPermissions();
 
     return \array_values(\array_unique(\array_merge(

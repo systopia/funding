@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Mock\FundingCaseType\FundingCase\Actions;
 
+use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\FundingCase\Actions\AbstractFundingCaseActionsDeterminerDecorator;
 use Civi\Funding\FundingCase\Actions\DefaultFundingCaseActionsDeterminer;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions;
@@ -34,9 +35,12 @@ final class TestCaseActionsDeterminer extends AbstractFundingCaseActionsDetermin
   use HasReviewPermissionTrait;
 
   public function __construct(
+    ClearingProcessManager $clearingProcessManager,
     TestApplicationActionStatusInfo $statusInfo
   ) {
-    parent::__construct(new SetRecipientContactActionsDeterminer(new DefaultFundingCaseActionsDeterminer($statusInfo)));
+    parent::__construct(new SetRecipientContactActionsDeterminer(
+      new DefaultFundingCaseActionsDeterminer($clearingProcessManager, $statusInfo)
+    ));
   }
 
   public function getActions(string $status, array $applicationProcessStatusList, array $permissions): array {

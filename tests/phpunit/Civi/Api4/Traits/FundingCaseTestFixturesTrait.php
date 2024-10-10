@@ -21,6 +21,7 @@ namespace Civi\Api4\Traits;
 
 use Civi\Api4\Relationship;
 use Civi\Api4\RelationshipType;
+use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Fixtures\ApplicationProcessFixture;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
@@ -30,6 +31,8 @@ use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 
 trait FundingCaseTestFixturesTrait {
+
+  protected int $applicationProcessId = -1;
 
   protected int $associatedContactId = -1;
 
@@ -43,9 +46,11 @@ trait FundingCaseTestFixturesTrait {
 
   protected int $relatedBAContactId = -1;
 
-  protected int $permittedFundingCaseId = -1;
-
   protected int $notPermittedContactId = -1;
+
+  protected FundingCaseEntity $permittedFundingCase;
+
+  protected int $permittedFundingCaseId = -1;
 
   /**
    * @throws \CRM_Core_Exception
@@ -90,7 +95,7 @@ trait FundingCaseTestFixturesTrait {
     ])['id'];
     $creationContact = ContactFixture::addIndividual(['first_name' => 'creation', 'last_name' => 'contact']);
 
-    $this->permittedFundingCaseId = FundingCaseFixture::addFixture(
+    $this->permittedFundingCase = FundingCaseFixture::addFixture(
       $fundingProgramId,
       $this->fundingCaseTypeId,
       $recipientContactId,
@@ -99,7 +104,8 @@ trait FundingCaseTestFixturesTrait {
         'creation_date' => '2022-06-23 10:00:00',
         'modification_date' => '2022-06-24 10:00:00',
       ],
-    )->getId();
+    );
+    $this->permittedFundingCaseId = $this->permittedFundingCase->getId();
 
     FundingCaseFixture::addFixture(
       $fundingProgramId,
@@ -112,13 +118,13 @@ trait FundingCaseTestFixturesTrait {
       ],
     );
 
-    ApplicationProcessFixture::addFixture(
+    $this->applicationProcessId = ApplicationProcessFixture::addFixture(
       $this->permittedFundingCaseId,
       [
         'status' => 'eligible',
         'is_eligible' => TRUE,
       ]
-    );
+    )->getId();
 
     $permittedRelationshipTypeId = RelationshipType::create(FALSE)
       ->setValues([

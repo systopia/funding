@@ -21,6 +21,10 @@ namespace Civi\Funding;
 
 final class FileTypeNames {
 
+  public const PAYBACK_CLAIM_TEMPLATE = 'funding_payback_claim_template';
+
+  public const PAYBACK_CLAIM = 'funding_payback_claim';
+
   public const PAYMENT_INSTRUCTION = 'funding_payment_instruction';
 
   public const PAYMENT_INSTRUCTION_TEMPLATE = 'funding_payment_instruction_template';

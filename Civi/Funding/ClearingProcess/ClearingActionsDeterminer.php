@@ -21,6 +21,8 @@ namespace Civi\Funding\ClearingProcess;
 
 use Civi\Funding\ClearingProcess\Traits\HasClearingReviewPermissionTrait;
 use Civi\Funding\Entity\ClearingProcessEntity;
+use Civi\Funding\Entity\ClearingProcessEntityBundle;
+use Civi\Funding\FundingCase\FundingCaseStatus;
 use CRM_Funding_ExtensionUtil as E;
 
 final class ClearingActionsDeterminer {
@@ -28,6 +30,8 @@ final class ClearingActionsDeterminer {
   use HasClearingReviewPermissionTrait;
 
   private const EDIT_ACTIONS = ['save', 'apply', 'update'];
+
+  private const FUNDING_CASE_FINAL_STATUS_LIST = [FundingCaseStatus::CLEARED];
 
   private const STATUS_PERMISSION_ACTIONS_MAP = [
     'draft' => [
@@ -97,20 +101,23 @@ final class ClearingActionsDeterminer {
   }
 
   /**
-   * @phpstan-param list<string> $permissions
-   *
    * @phpstan-return array<string, string>
    *   Mapping of action name to label.
    */
-  public function getActions(ClearingProcessEntity $clearingProcess, array $permissions): array {
-    $status = $clearingProcess->getStatus();
+  public function getActions(ClearingProcessEntityBundle $clearingProcessBundle): array {
+    if ($clearingProcessBundle->getFundingCase()->isStatusIn(self::FUNDING_CASE_FINAL_STATUS_LIST)) {
+      return [];
+    }
+
+    $permissions = $clearingProcessBundle->getFundingCase()->getPermissions();
+    $status = $clearingProcessBundle->getClearingProcess()->getStatus();
     $actions = [];
     foreach ($permissions as $permission) {
       $actions = array_merge($actions, self::STATUS_PERMISSION_ACTIONS_MAP[$status][$permission] ?? []);
     }
 
     $actions = array_merge($actions, $this->getReviewActions(
-      $clearingProcess,
+      $clearingProcessBundle->getClearingProcess(),
       $this->hasReviewCalculativePermission($permissions),
       $this->hasReviewContentPermission($permissions)
     ));
@@ -118,23 +125,18 @@ final class ClearingActionsDeterminer {
     return array_filter($this->labels, fn (string $name) => in_array($name, $actions, TRUE), ARRAY_FILTER_USE_KEY);
   }
 
-  /**
-   * @phpstan-param list<string> $permissions
-   */
-  public function isActionAllowed(string $action, ClearingProcessEntity $clearingProcess, array $permissions): bool {
-    return isset($this->getActions($clearingProcess, $permissions)[$action]);
+  public function isActionAllowed(string $action, ClearingProcessEntityBundle $clearingProcessBundle): bool {
+    return isset($this->getActions($clearingProcessBundle)[$action]);
   }
 
   /**
    * @phpstan-param list<string> $actions
-   * @phpstan-param list<string> $permissions
    */
-  public function isAnyActionAllowed(
-    array $actions,
-    ClearingProcessEntity $clearingProcess,
-    array $permissions
-  ): bool {
-    return [] !== array_intersect(array_keys($this->getActions($clearingProcess, $permissions)), $actions);
+  public function isAnyActionAllowed(array $actions, ClearingProcessEntityBundle $clearingProcessBundle): bool {
+    return [] !== array_intersect(
+      array_keys($this->getActions($clearingProcessBundle)),
+      $actions
+    );
   }
 
   /**
@@ -146,11 +148,8 @@ final class ClearingActionsDeterminer {
     return in_array($action, self::EDIT_ACTIONS, TRUE);
   }
 
-  /**
-   * @phpstan-param list<string> $permissions
-   */
-  public function isEditAllowed(ClearingProcessEntity $clearingProcess, array $permissions): bool {
-    return $this->isAnyActionAllowed(self::EDIT_ACTIONS, $clearingProcess, $permissions);
+  public function isEditAllowed(ClearingProcessEntityBundle $clearingProcessBundle): bool {
+    return $this->isAnyActionAllowed(self::EDIT_ACTIONS, $clearingProcessBundle);
   }
 
   /**

@@ -21,6 +21,7 @@ namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\Helper\DetermineApproveRejectActionsHelper;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\FundingCase\FundingCaseStatus;
 use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
 
 final class DefaultApplicationProcessActionsDeterminer extends AbstractApplicationProcessActionsDeterminer {
@@ -33,6 +34,8 @@ final class DefaultApplicationProcessActionsDeterminer extends AbstractApplicati
   }
 
   use HasReviewPermissionTrait;
+
+  private const FUNDING_CASE_FINAL_STATUS_LIST = [FundingCaseStatus::CLEARED];
 
   private const STATUS_PERMISSION_ACTIONS_MAP = [
     NULL => [
@@ -81,6 +84,10 @@ final class DefaultApplicationProcessActionsDeterminer extends AbstractApplicati
   }
 
   public function getActions(ApplicationProcessEntityBundle $applicationProcessBundle, array $statusList): array {
+    if ($applicationProcessBundle->getFundingCase()->isStatusIn(self::FUNDING_CASE_FINAL_STATUS_LIST)) {
+      return [];
+    }
+
     $permissions = $applicationProcessBundle->getFundingCase()->getPermissions();
 
     return array_merge(

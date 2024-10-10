@@ -2,11 +2,11 @@
 msgid "Currency"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingApplicationProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingProgramControlling.mgd.php managed/SavedSearch_Clearings.mgd.php
+#: Civi/Funding/Api4/Action/FundingApplicationProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php ang/crmFunding/case/fundingCase.template.html managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingProgramControlling.mgd.php managed/SavedSearch_Clearings.mgd.php
 msgid "Amount Cleared"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingApplicationProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingProgramControlling.mgd.php managed/SavedSearch_Clearings.mgd.php
+#: Civi/Funding/Api4/Action/FundingApplicationProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php ang/crmFunding/case/fundingCase.template.html managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingProgramControlling.mgd.php managed/SavedSearch_Clearings.mgd.php
 msgid "Amount Admitted"
 msgstr ""
 
@@ -14,7 +14,7 @@ msgstr ""
 msgid "No such application or missing permission."
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCase/ApproveAction.php Civi/Funding/Api4/Action/FundingCase/GetPossibleActionsAction.php Civi/Funding/Api4/Action/FundingCase/RecreateTransferContractAction.php Civi/Funding/FundingCase/Api4/ActionHandler/GetPossibleRecipientsActionHandler.php Civi/Funding/FundingCase/Api4/ActionHandler/SetRecipientContactActionHandler.php Civi/Funding/FundingCase/Api4/ActionHandler/UpdateAmountApprovedActionHandler.php
+#: Civi/Funding/Api4/Action/FundingCase/ApproveAction.php Civi/Funding/Api4/Action/FundingCase/GetPossibleActionsAction.php Civi/Funding/Api4/Action/FundingCase/RecreateTransferContractAction.php Civi/Funding/FundingCase/Api4/ActionHandler/FinishClearingActionHandler.php Civi/Funding/FundingCase/Api4/ActionHandler/GetPossibleRecipientsActionHandler.php Civi/Funding/FundingCase/Api4/ActionHandler/SetRecipientContactActionHandler.php Civi/Funding/FundingCase/Api4/ActionHandler/UpdateAmountApprovedActionHandler.php
 msgid "Funding case with ID \"%1\" not found"
 msgstr ""
 
@@ -92,6 +92,10 @@ msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingCaseType/GetFieldsAction.php managed/OptionValuesFileType.mgd.php
 msgid "Payment Instruction Template"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCaseType/GetFieldsAction.php managed/OptionValuesFileType.mgd.php
+msgid "Payback Claim Template"
 msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
@@ -506,7 +510,11 @@ msgstr ""
 msgid "The applying contact itself is available as recipient if the contact is of the\nspecified type."
 msgstr ""
 
-#: Civi/Funding/Controller/PaymentInstructionDownloadController.php
+#: Civi/Funding/Controller/DrawdownDocumentDownloadController.php
+msgid "payback-claim"
+msgstr ""
+
+#: Civi/Funding/Controller/DrawdownDocumentDownloadController.php
 msgid "payment-instruction"
 msgstr ""
 
@@ -598,11 +606,11 @@ msgstr ""
 msgid "Y-m-d H:i:s"
 msgstr ""
 
-#: Civi/Funding/EventSubscriber/CiviOffice/PaymentInstructionTokenSubscriber.php
+#: Civi/Funding/EventSubscriber/CiviOffice/AbstractDrawdownTokenSubscriber.php
 msgid "Bank Account Reference (e.g. IBAN)"
 msgstr ""
 
-#: Civi/Funding/EventSubscriber/CiviOffice/PaymentInstructionTokenSubscriber.php
+#: Civi/Funding/EventSubscriber/CiviOffice/AbstractDrawdownTokenSubscriber.php
 msgid "BIC (maybe empty)"
 msgstr ""
 
@@ -702,6 +710,10 @@ msgstr ""
 msgid "Approving this funding case is not allowed."
 msgstr ""
 
+#: Civi/Funding/FundingCase/Handler/FundingCaseFinishClearingHandler.php
+msgid "Finishing the clearing of funding case \"%1\" is not allowed."
+msgstr ""
+
 #: Civi/Funding/FundingCase/Handler/FundingCaseRecipientContactSetHandler.php
 msgid "Changing the recipient contact of this funding case is not allowed."
 msgstr ""
@@ -787,6 +799,10 @@ msgid "Ongoing"
 msgstr ""
 
 #: Civi/Funding/FundingPseudoConstants.php
+msgid "Cleared"
+msgstr ""
+
+#: Civi/Funding/FundingPseudoConstants.php
 msgid "Applications adoptable"
 msgstr ""
 
@@ -798,7 +814,7 @@ msgstr ""
 msgid "Relationship from b to a"
 msgstr ""
 
-#: Civi/Funding/PayoutProcess/PaymentInstructionCreator.php
+#: Civi/Funding/PayoutProcess/DrawdownDocumentCreator.php
 msgid "No bank account for contact with ID \"%1\" available."
 msgstr ""
 
@@ -806,24 +822,24 @@ msgstr ""
 msgid "Display name of drawdown review contact"
 msgstr ""
 
-#: Civi/Funding/PayoutProcess/Validator/DrawdownAmountValidator.php
-msgid "Requested amount is greater than available amount."
+#: Civi/Funding/PayoutProcess/Validator/DrawdownReviewValidator.php
+msgid "Permission to change drawdown status is missing."
 msgstr ""
 
-#: Civi/Funding/PayoutProcess/Validator/DrawdownAmountValidator.php
-msgid "Requested amount is less than 0."
-msgstr ""
-
-#: Civi/Funding/PayoutProcess/Validator/DrawdownCreateValidator.php
-msgid "Payout process is closed."
-msgstr ""
-
-#: Civi/Funding/PayoutProcess/Validator/DrawdownCreateValidator.php
+#: Civi/Funding/PayoutProcess/Validator/DrawdownValidator.php
 msgid "Permission to create drawdown is missing."
 msgstr ""
 
-#: Civi/Funding/PayoutProcess/Validator/DrawdownReviewValidator.php
-msgid "Permission to change drawdown status is missing."
+#: Civi/Funding/PayoutProcess/Validator/DrawdownValidator.php
+msgid "Payout process is closed."
+msgstr ""
+
+#: Civi/Funding/PayoutProcess/Validator/DrawdownValidator.php
+msgid "Requested amount is less than 0."
+msgstr ""
+
+#: Civi/Funding/PayoutProcess/Validator/DrawdownValidator.php
+msgid "Requested amount is greater than available amount."
 msgstr ""
 
 #: Civi/Funding/Permission/ContactRelation/Types/Contact.php Civi/Funding/Permission/ContactRelation/Types/ContactRelationship.php Civi/Funding/Permission/FundingCase/RelationFactory/Types/Contact.php
@@ -1110,6 +1126,10 @@ msgstr ""
 msgid "Hide Comments"
 msgstr ""
 
+#: ang/crmFunding/case/fundingCase.js
+msgid "This will close the funding case. A final payment instruction will be created,             if the available funding wasn't paid out completely, yet. Otherwise, a payback             claim will be created. Maybe you want to update the amount approved before."
+msgstr ""
+
 #: ang/crmFunding/case/fundingCase.template.html
 msgid "Available budget"
 msgstr ""
@@ -1152,6 +1172,10 @@ msgstr ""
 
 #: ang/crmFunding/case/fundingCase.template.html
 msgid "Recreate Transfer Contract"
+msgstr ""
+
+#: ang/crmFunding/case/fundingCase.template.html
+msgid "Finish Clearing"
 msgstr ""
 
 #: ang/crmFunding/case/fundingCase.template.html managed/SavedSearchFundingDrawdowns.mgd.php managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
@@ -1418,6 +1442,10 @@ msgstr ""
 msgid "Payment Instruction"
 msgstr ""
 
+#: managed/OptionValuesFileType.mgd.php
+msgid "Payback Claim"
+msgstr ""
+
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCaseTypes.mgd.php managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingDrawdowns.mgd.php managed/SavedSearchFundingProgramControlling.mgd.php managed/SavedSearchFundingPrograms.mgd.php managed/SavedSearchFundingTasksMy.mgd.php managed/SavedSearch_Application_CiviOffice_Templates.mgd.php managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
 msgid "Table"
 msgstr ""
@@ -1483,7 +1511,7 @@ msgid "Reviewer"
 msgstr ""
 
 #: managed/SavedSearchFundingDrawdowns.mgd.php
-msgid "Download Payment Instruction"
+msgid "Download Document"
 msgstr ""
 
 #: managed/SavedSearchFundingProgramControlling.mgd.php managed/SavedSearchFundingPrograms.mgd.php

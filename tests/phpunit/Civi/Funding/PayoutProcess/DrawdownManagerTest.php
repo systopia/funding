@@ -27,6 +27,7 @@ use Civi\Funding\Event\PayoutProcess\DrawdownAcceptedEvent;
 use Civi\Funding\Event\PayoutProcess\DrawdownDeletedEvent;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
+use Civi\RemoteTools\Api4\Query\CompositeCondition;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ClockMock;
@@ -77,7 +78,6 @@ final class DrawdownManagerTest extends TestCase {
           'reviewer_contact_id' => 2,
           'acception_date' => date('Y-m-d H:i:s'),
         ] + $drawdown->toArray(),
-        ['checkPermissions' => FALSE],
       );
 
     $this->eventDispatcherMock->expects(static::once())->method('dispatch')
@@ -92,20 +92,27 @@ final class DrawdownManagerTest extends TestCase {
   public function testDelete(): void {
     $drawdown = DrawdownFactory::create();
 
-    $this->api4Mock->expects(static::once())->method('execute')
-      ->with(
-        FundingDrawdown::getEntityName(),
-        'delete',
-        [
-          'where' => [['id', '=', $drawdown->getId()]],
-          'checkPermissions' => FALSE,
-        ]
-      );
+    $this->api4Mock->expects(static::once())->method('deleteEntity')
+      ->with(FundingDrawdown::getEntityName(), $drawdown->getId());
 
     $this->eventDispatcherMock->expects(static::once())->method('dispatch')
       ->with(DrawdownDeletedEvent::class, new DrawdownDeletedEvent($drawdown));
 
     $this->drawdownManager->delete($drawdown);
+  }
+
+  public function testDeleteNewDrawdownsByPayoutProcessId(): void {
+    $drawdown = DrawdownFactory::create();
+    $this->api4Mock->method('getEntities')
+      ->with(FundingDrawdown::getEntityName(), CompositeCondition::fromFieldValuePairs([
+        'payout_process_id' => 23,
+        'status' => 'new',
+      ]))->willReturn(new Result([$drawdown->toArray()]));
+
+    $this->api4Mock->expects(static::once())->method('deleteEntity')
+      ->with(FundingDrawdown::getEntityName(), $drawdown->getId());
+
+    $this->drawdownManager->deleteNewDrawdownsByPayoutProcessId(23);
   }
 
   public function testGet(): void {
@@ -136,6 +143,16 @@ final class DrawdownManagerTest extends TestCase {
       )->willReturn(new Result());
 
     static::assertNull($this->drawdownManager->get(12));
+  }
+
+  public function testGetBy(): void {
+    $drawdown = DrawdownFactory::create();
+    $condition = Comparison::new('id', '=', 12);
+    $this->api4Mock->method('getEntities')
+      ->with(FundingDrawdown::getEntityName(), $condition)
+      ->willReturn(new Result([$drawdown->toArray()]));
+
+    static::assertEquals([$drawdown], $this->drawdownManager->getBy($condition));
   }
 
 }

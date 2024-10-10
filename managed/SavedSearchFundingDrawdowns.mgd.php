@@ -160,9 +160,9 @@ return [
                   'task' => '',
                 ],
                 [
-                  'path' => 'civicrm/funding/payment-instruction/download?drawdownId=[id]',
+                  'path' => 'civicrm/funding/drawdown-document/download?drawdownId=[id]',
                   'icon' => 'fa-external-link',
-                  'text' => E::ts('Download Payment Instruction'),
+                  'text' => E::ts('Download Document'),
                   'style' => 'default',
                   'condition' => [
                     'acception_date',

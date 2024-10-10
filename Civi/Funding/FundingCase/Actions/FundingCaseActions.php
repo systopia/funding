@@ -25,6 +25,8 @@ final class FundingCaseActions {
 
   public const DELETE = 'delete';
 
+  public const FINISH_CLEARING = 'finish-clearing';
+
   public const RECREATE_TRANSFER_CONTRACT = 'recreate-transfer-contract';
 
   public const SET_RECIPIENT_CONTACT = 'set-recipient-contact';

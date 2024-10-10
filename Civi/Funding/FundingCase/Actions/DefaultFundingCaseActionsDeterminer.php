@@ -20,9 +20,13 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase\Actions;
 
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface;
+use Civi\Funding\ClearingProcess\ClearingProcessManager;
+use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions as Actions;
 
 final class DefaultFundingCaseActionsDeterminer extends FundingCaseActionsDeterminer {
+
+  private ClearingProcessManager $clearingProcessManager;
 
   private ApplicationProcessActionStatusInfoInterface $statusInfo;
 
@@ -34,12 +38,18 @@ final class DefaultFundingCaseActionsDeterminer extends FundingCaseActionsDeterm
     'ongoing' => [
       'review_calculative' => [Actions::RECREATE_TRANSFER_CONTRACT, Actions::UPDATE_AMOUNT_APPROVED],
       'review_content' => [Actions::RECREATE_TRANSFER_CONTRACT, Actions::UPDATE_AMOUNT_APPROVED],
+      ClearingProcessPermissions::REVIEW_CALCULATIVE => [Actions::FINISH_CLEARING],
+      ClearingProcessPermissions::REVIEW_CONTENT => [Actions::FINISH_CLEARING],
     ],
   ];
 
-  public function __construct(ApplicationProcessActionStatusInfoInterface $statusInfo) {
+  public function __construct(
+    ClearingProcessManager $clearingProcessManager,
+    ApplicationProcessActionStatusInfoInterface $statusInfo
+  ) {
     parent::__construct(self::STATUS_PERMISSIONS_ACTION_MAP);
     $this->statusInfo = $statusInfo;
+    $this->clearingProcessManager = $clearingProcessManager;
   }
 
   public function getActions(string $status, array $applicationProcessStatusList, array $permissions): array {
@@ -52,6 +62,12 @@ final class DefaultFundingCaseActionsDeterminer extends FundingCaseActionsDeterm
     $posApprove = array_search(Actions::APPROVE, $actions, TRUE);
     if (FALSE !== $posApprove && !$this->isApprovePossible($applicationProcessStatusList)) {
       unset($actions[$posApprove]);
+      $actions = array_values($actions);
+    }
+
+    $posFinishClearing = array_search(Actions::FINISH_CLEARING, $actions, TRUE);
+    if (FALSE !== $posFinishClearing && !$this->isFinishClearingPossible($applicationProcessStatusList)) {
+      unset($actions[$posFinishClearing]);
       $actions = array_values($actions);
     }
 
@@ -79,6 +95,28 @@ final class DefaultFundingCaseActionsDeterminer extends FundingCaseActionsDeterm
     }
 
     return $eligibleCount > 0;
+  }
+
+  /**
+   * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $applicationProcessStatusList
+   */
+  private function isFinishClearingPossible(array $applicationProcessStatusList): bool {
+    foreach ($applicationProcessStatusList as $applicationProcessId => $applicationProcessStatus) {
+      // Eligibility of all applications has to be decided.
+      if (NULL === $this->statusInfo->isEligibleStatus($applicationProcessStatus->getStatus())) {
+        return FALSE;
+      }
+
+      if (TRUE === $this->statusInfo->isEligibleStatus($applicationProcessStatus->getStatus())) {
+        // There has to be a clearing process for every eligible application that is either accepted or rejected.
+        $clearingProcess = $this->clearingProcessManager->getByApplicationProcessId($applicationProcessId);
+        if (NULL === $clearingProcess || !in_array($clearingProcess->getStatus(), ['accepted', 'rejected'], TRUE)) {
+          return FALSE;
+        }
+      }
+    }
+
+    return TRUE;
   }
 
 }

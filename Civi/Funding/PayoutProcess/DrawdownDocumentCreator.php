@@ -26,12 +26,12 @@ use Civi\Funding\FundingAttachmentManagerInterface;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\Funding\FundingProgram\FundingProgramManager;
-use Civi\Funding\PayoutProcess\Command\PaymentInstructionRenderCommand;
-use Civi\Funding\PayoutProcess\Handler\PaymentInstructionRenderHandlerInterface;
+use Civi\Funding\PayoutProcess\Command\DrawdownDocumentRenderCommand;
+use Civi\Funding\PayoutProcess\Handler\DrawdownDocumentRenderHandlerInterface;
 use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
 
-class PaymentInstructionCreator {
+class DrawdownDocumentCreator {
 
   private FundingAttachmentManagerInterface $attachmentManager;
 
@@ -43,7 +43,7 @@ class PaymentInstructionCreator {
 
   private FundingProgramManager $fundingProgramManager;
 
-  private PaymentInstructionRenderHandlerInterface $paymentInstructionRenderHandler;
+  private DrawdownDocumentRenderHandlerInterface $drawdownDocumentRenderHandler;
 
   private PayoutProcessManager $payoutProcessManager;
 
@@ -53,7 +53,7 @@ class PaymentInstructionCreator {
     FundingCaseManager $fundingCaseManager,
     FundingCaseTypeManager $fundingCaseTypeManager,
     FundingProgramManager $fundingProgramManager,
-    PaymentInstructionRenderHandlerInterface $paymentInstructionRenderHandler,
+    DrawdownDocumentRenderHandlerInterface $drawdownDocumentRenderHandler,
     PayoutProcessManager $payoutProcessManager
   ) {
     $this->attachmentManager = $attachmentManager;
@@ -61,7 +61,7 @@ class PaymentInstructionCreator {
     $this->fundingCaseManager = $fundingCaseManager;
     $this->fundingCaseTypeManager = $fundingCaseTypeManager;
     $this->fundingProgramManager = $fundingProgramManager;
-    $this->paymentInstructionRenderHandler = $paymentInstructionRenderHandler;
+    $this->drawdownDocumentRenderHandler = $drawdownDocumentRenderHandler;
     $this->payoutProcessManager = $payoutProcessManager;
   }
 
@@ -69,7 +69,7 @@ class PaymentInstructionCreator {
    * @throws \Civi\Funding\Exception\FundingException
    * @throws \CRM_Core_Exception
    */
-  public function createPaymentInstruction(DrawdownEntity $drawdown): void {
+  public function createDrawdownDocument(DrawdownEntity $drawdown): void {
     $payoutProcess = $this->payoutProcessManager->get($drawdown->getPayoutProcessId());
     Assert::notNull($payoutProcess);
     $fundingCase = $this->fundingCaseManager->get($payoutProcess->getFundingCaseId());
@@ -86,7 +86,7 @@ class PaymentInstructionCreator {
     Assert::notNull($fundingCaseType);
     $fundingProgram = $this->fundingProgramManager->get($fundingCase->getFundingProgramId());
     Assert::notNull($fundingProgram);
-    $command = new PaymentInstructionRenderCommand(
+    $command = new DrawdownDocumentRenderCommand(
       $drawdown,
       $bankAccount,
       $payoutProcess,
@@ -94,18 +94,18 @@ class PaymentInstructionCreator {
       $fundingCaseType,
       $fundingProgram,
     );
-    $result = $this->paymentInstructionRenderHandler->handle($command);
+    $result = $this->drawdownDocumentRenderHandler->handle($command);
 
     // There might be only one payment instruction for a drawdown.
     $this->attachmentManager->attachFileUniqueByFileType(
       'civicrm_funding_drawdown',
       $drawdown->getId(),
-      FileTypeNames::PAYMENT_INSTRUCTION,
+      $drawdown->getAmount() < 0 ? FileTypeNames::PAYBACK_CLAIM : FileTypeNames::PAYMENT_INSTRUCTION,
       $result->getFilename(),
       $result->getMimeType(),
       [
         'name' => sprintf(
-          'payment-instruction.%d.%s',
+          $drawdown->getAmount() < 0 ? 'payback-claim.%d.%s' : 'payment-instruction.%d.%s',
           $drawdown->getId(),
           pathinfo($result->getFilename(), PATHINFO_EXTENSION)
         ),

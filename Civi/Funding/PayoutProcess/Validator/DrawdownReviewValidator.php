@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\PayoutProcess\Validator;
 
 use Civi\API\Exception\UnauthorizedException;
+use Civi\Funding\ClearingProcess\Traits\HasClearingReviewPermissionTrait;
 use Civi\Funding\Entity\AbstractEntity;
 use Civi\Funding\Entity\DrawdownEntity;
 use Civi\Funding\Entity\FundingCaseEntity;
@@ -37,6 +38,10 @@ use Webmozart\Assert\Assert;
  * @implements ConcreteEntityValidatorInterface<DrawdownEntity>
  */
 final class DrawdownReviewValidator implements ConcreteEntityValidatorInterface {
+
+  use HasClearingReviewPermissionTrait {
+    hasReviewPermission as hasClearingReviewPermission;
+  }
 
   private FundingCaseManager $fundingCaseManager;
 
@@ -79,7 +84,10 @@ final class DrawdownReviewValidator implements ConcreteEntityValidatorInterface 
   public function validateNew(AbstractEntity $new): EntityValidationResult {
     if ('new' !== $new->getStatus()) {
       $fundingCase = $this->getFundingCase($new);
-      $this->assertPermission($fundingCase);
+      // Allow clearing reviewers to create a final drawdown when finishing clearing.
+      if (!$this->hasClearingReviewPermission($fundingCase->getPermissions())) {
+        $this->assertPermission($fundingCase);
+      }
     }
 
     return EntityValidationResult::new();

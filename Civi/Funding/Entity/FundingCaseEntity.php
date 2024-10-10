@@ -74,6 +74,16 @@ final class FundingCaseEntity extends AbstractEntity {
     return $this;
   }
 
+  /**
+   * @phpstan-param list<string> $statusList
+   *
+   * @return bool
+   *   TRUE, if the funding case is in one of the given status, FALSE otherwise.
+   */
+  public function isStatusIn(array $statusList): bool {
+    return in_array($this->values['status'], $statusList, TRUE);
+  }
+
   public function getCreationDate(): \DateTime {
     return new \DateTime($this->values['creation_date']);
   }
