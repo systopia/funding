@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\FundingCase\Actions;
 
+use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\FundingCase\Actions\AbstractFundingCaseActionsDeterminerDecorator;
 use Civi\Funding\FundingCase\Actions\DefaultFundingCaseActionsDeterminer;
 use Civi\Funding\FundingCase\Actions\SetRecipientContactActionsDeterminer;
@@ -29,8 +30,13 @@ final class HiHCaseActionsDeterminer extends AbstractFundingCaseActionsDetermine
 
   use HiHSupportedFundingCaseTypesTrait;
 
-  public function __construct(HiHApplicationActionStatusInfo $statusInfo) {
-    parent::__construct(new SetRecipientContactActionsDeterminer(new DefaultFundingCaseActionsDeterminer($statusInfo)));
+  public function __construct(
+    ClearingProcessManager $clearingProcessManager,
+    HiHApplicationActionStatusInfo $statusInfo
+  ) {
+    parent::__construct(new SetRecipientContactActionsDeterminer(
+      new DefaultFundingCaseActionsDeterminer($clearingProcessManager, $statusInfo))
+    );
   }
 
 }
