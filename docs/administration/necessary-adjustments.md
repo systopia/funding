@@ -67,5 +67,43 @@ return [
     ],
   ],
 ];
+```
 
+For `properties` an array may be set. These attributes can be used optionally:
+
+* `applicationAddableStatusList`: A new application is added to an existing funding case in any of the given status that has the same funding case type and the same funding program. If no such funding case exists, a new one is created. Only relevant for non-combined applications. (If empty or not specified a new funding case is created for every application.)
+* `applicationEditorTagName`: The tag name of an AngularJS directive to use instead of the default application editor for reviewers.
+* `applicationReviewSidebarTagName`: The tag name of an AngularJS directive to use instead of the default review sidebar.
+* `applicationFormTagName`: The tag name of an AngularJS directive to use instead of the default application form for reviewers.
+
+If a custom AngularJS directive shall be used, the module containing it has to
+be registered as a requirement of the `crmFunding` module. This can be achieved
+with an event subscriber like this:
+
+```php
+declare(strict_types = 1);
+
+use Civi\Core\Event\GenericHookEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
+namespace Civi\MyExtension\EventSubscriber;
+
+final class MyAngularModuleSubscriber implements EventSubscriberInterface {
+
+  public static function getSubscribedEvents(): array {
+    return ['hook_civicrm_angularModules' => ['onAngularModules', -10]];
+  }
+
+  public function onAngularModules(GenericHookEvent $event): void {
+    $event->angularModules['crmFunding']['requires'][] = 'MyAngularModule';
+  }
+
+}
+```
+
+The subscriber can be registered in the DI container like this:
+
+```php
+$container->autowire(MyAngularModuleSubscriber::class)
+  ->addTag('kernel.event_subscriber');
 ```

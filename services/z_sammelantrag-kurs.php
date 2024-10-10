@@ -31,6 +31,7 @@ use Civi\Funding\SammelantragKurs\Application\Data\KursApplicationFormDataFactor
 use Civi\Funding\SammelantragKurs\Application\Data\KursApplicationFormFilesFactory;
 use Civi\Funding\SammelantragKurs\Application\JsonSchema\KursApplicationJsonSchemaFactory;
 use Civi\Funding\SammelantragKurs\Application\UiSchema\KursApplicationUiSchemaFactory;
+use Civi\Funding\SammelantragKurs\EventSubscriber\KursAngularModuleSubscriber;
 use Civi\Funding\SammelantragKurs\EventSubscriber\KursApplicationStatusSubscriber;
 use Civi\Funding\SammelantragKurs\FundingCase\Actions\KursCaseActionsDeterminer;
 use Civi\Funding\SammelantragKurs\FundingCase\Actions\KursCaseSubmitActionsContainer;
@@ -78,6 +79,8 @@ $container->autowire(KursApplicationFormDataFactory::class)
 $container->autowire(KursApplicationFormFilesFactory::class)
   ->addTag(KursApplicationFormFilesFactory::SERVICE_TAG);
 
+$container->autowire(KursAngularModuleSubscriber::class)
+  ->addTag('kernel.event_subscriber');
 $container->autowire(KursApplicationStatusSubscriber::class)
   ->addTag('kernel.event_subscriber')
   ->setLazy(TRUE);

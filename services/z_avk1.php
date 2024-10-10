@@ -33,6 +33,7 @@ use Civi\Funding\SonstigeAktivitaet\Application\Data\AVK1ProjektunterlagenFactor
 use Civi\Funding\SonstigeAktivitaet\Application\JsonSchema\AVK1JsonSchemaFactory;
 use Civi\Funding\SonstigeAktivitaet\Application\JsonSchema\AVK1StatusMarkupFactory;
 use Civi\Funding\SonstigeAktivitaet\Application\UISchema\AVK1UiSchemaFactory;
+use Civi\Funding\SonstigeAktivitaet\EventSubscriber\AVK1AngularModuleSubscriber;
 use Civi\Funding\SonstigeAktivitaet\FundingCase\Actions\AVK1CaseActionsDeterminer;
 use Civi\Funding\SonstigeAktivitaet\Report\AVK1ReportDataLoader;
 use Civi\Funding\SonstigeAktivitaet\Report\AVK1ReportFormFactory;
@@ -67,3 +68,6 @@ $container->autowire(AVK1ReportDataLoader::class)
   ->addTag(AVK1ReportDataLoader::SERVICE_TAG);
 $container->autowire(AVK1ReportFormFactory::class)
   ->addTag(AVK1ReportFormFactory::SERVICE_TAG);
+
+$container->autowire(AVK1AngularModuleSubscriber::class)
+  ->addTag('kernel.event_subscriber');

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 SYSTOPIA GmbH
+ * Copyright (C) 2022 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -16,21 +16,15 @@
 
 'use strict';
 
-fundingModule.directive('fundingApplicationSidebar', ['$compile', function($compile) {
+fundingModule.directive('fundingDefaultApplicationSidebar', function() {
   return {
     restrict: 'AE',
     scope: false,
-    template: '',
-    // Insert the sidebar tag for the current funding case type.
-    link: function (scope, element) {
-      const unwatch = scope.$watch('fundingCaseType', function (fundingCaseType) {
-        if (fundingCaseType) {
-          const tagName = _4.get(fundingCaseType, 'properties.applicationReviewSidebarTagName', 'funding-default-application-sidebar');
-          const template = '<' + tagName + '></' + tagName + '>';
-          element.append($compile(template)(scope));
-          unwatch();
-        }
-      });
-    },
+    templateUrl: '~/crmFunding/application/defaultApplicationSidebar.template.html',
+    controllerAs: '$ctrl',
+    controller: ['$scope', function ($scope) {
+      this.ts = CRM.ts('funding');
+      this.applicationProcessLabel = $scope.fundingCaseType.application_process_label || this.ts('Application');
+    }],
   };
-}]);
+});
