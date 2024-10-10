@@ -20,7 +20,6 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase\Handler;
 
 use Civi\API\Exception\UnauthorizedException;
-use Civi\Funding\Contact\PossibleRecipientsLoaderInterface;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
@@ -28,6 +27,7 @@ use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
 use Civi\Funding\FundingCase\Command\FundingCaseRecipientContactSetCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
+use Civi\Funding\FundingCase\Recipients\PossibleRecipientsForChangeLoaderInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -50,7 +50,7 @@ final class FundingCaseRecipientContactSetHandlerTest extends TestCase {
   private FundingCaseRecipientContactSetHandler $handler;
 
   /**
-   * @var \Civi\Funding\Contact\PossibleRecipientsLoaderInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\FundingCase\Recipients\PossibleRecipientsForChangeLoaderInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $possibleRecipientsLoaderMock;
 
@@ -58,7 +58,7 @@ final class FundingCaseRecipientContactSetHandlerTest extends TestCase {
     parent::setUp();
     $this->actionsDeterminerMock = $this->createMock(FundingCaseActionsDeterminerInterface::class);
     $this->fundingCaseManagerMock = $this->createMock(FundingCaseManager::class);
-    $this->possibleRecipientsLoaderMock = $this->createMock(PossibleRecipientsLoaderInterface::class);
+    $this->possibleRecipientsLoaderMock = $this->createMock(PossibleRecipientsForChangeLoaderInterface::class);
     $this->handler = new FundingCaseRecipientContactSetHandler(
       $this->actionsDeterminerMock,
       $this->fundingCaseManagerMock,
@@ -78,7 +78,7 @@ final class FundingCaseRecipientContactSetHandlerTest extends TestCase {
       ->willReturn(TRUE);
 
     $this->possibleRecipientsLoaderMock->method('getPossibleRecipients')
-      ->with($command->getFundingCase()->getCreationContactId(), $command->getFundingProgram())
+      ->with($command->getFundingCase(), $command->getFundingCaseType(), $command->getFundingProgram())
       ->willReturn([1234 => 'New Recipient']);
 
     $this->fundingCaseManagerMock->expects(static::once())->method('update')
@@ -100,7 +100,7 @@ final class FundingCaseRecipientContactSetHandlerTest extends TestCase {
       ->willReturn(TRUE);
 
     $this->possibleRecipientsLoaderMock->method('getPossibleRecipients')
-      ->with($command->getFundingCase()->getCreationContactId(), $command->getFundingProgram())
+      ->with($command->getFundingCase(), $command->getFundingCaseType(), $command->getFundingProgram())
       ->willReturn([$command->getRecipientContactId() + 1 => 'Some Recipient']);
 
     $this->expectException(\InvalidArgumentException::class);

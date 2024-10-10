@@ -25,6 +25,7 @@ use Civi\Funding\Api4\Action\Remote\FundingCase\GetNewApplicationFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\SubmitNewApplicationFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\ValidateNewApplicationFormAction;
 use Civi\Funding\DependencyInjection\Compiler\FundingCaseRecipientContactSetHandlerPass;
+use Civi\Funding\DependencyInjection\PossibleRecipientsForChangeLoaderPass;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseDAOGetSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseGetFieldsSubscriber;
@@ -54,6 +55,7 @@ use Civi\Funding\FundingCase\Handler\FundingCaseFormUpdateValidateHandlerInterfa
 use Civi\Funding\FundingCase\Handler\FundingCasePossibleActionsGetHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseUpdateAmountApprovedHandlerInterface;
 use Civi\Funding\FundingCase\Handler\TransferContractRecreateHandlerInterface;
+use Civi\Funding\FundingCase\Recipients\FallbackPossibleRecipientsForChangeLoader;
 use Civi\Funding\FundingCase\TransferContractRouter;
 use Civi\Funding\Permission\FundingCase\ContactsWithPermissionLoader;
 use Civi\Funding\Permission\FundingCase\FundingCaseContactsLoader;
@@ -69,12 +71,14 @@ use Symfony\Component\DependencyInjection\Argument\ServiceLocatorArgument;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+$container->addCompilerPass(new PossibleRecipientsForChangeLoaderPass());
 $container->addCompilerPass(new FundingCaseRecipientContactSetHandlerPass());
 
 $container->autowire(FundingCaseManager::class);
 $container->autowire(FundingCasePermissionsCacheManager::class);
 $container->autowire(TransferContractRouter::class);
 $container->autowire(FundingCaseIdentifierGeneratorInterface::class, FundingCaseIdentifierGenerator::class);
+$container->autowire(FallbackPossibleRecipientsForChangeLoader::class);
 
 ServiceRegistrator::autowireAllImplementing(
   $container,

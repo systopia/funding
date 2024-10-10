@@ -19,20 +19,16 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\DependencyInjection;
 
-use Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormAddValidatorCollector;
-use Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormAddValidatorInterface;
-use Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormNewValidatorCollector;
-use Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormNewValidatorInterface;
-use Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormValidatorCollector;
-use Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormValidatorInterface;
 use Civi\Funding\DependencyInjection\Compiler\Traits\FundingCaseTypeServiceCollectorTrait;
+use Civi\Funding\FundingCase\Recipients\PossibleRecipientsForChangeLoaderCollector;
+use Civi\Funding\FundingCase\Recipients\PossibleRecipientsForChangeLoaderInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * @codeCoverageIgnore
  */
-final class ApplicationFormValidatorPass implements CompilerPassInterface {
+final class PossibleRecipientsForChangeLoaderPass implements CompilerPassInterface {
 
   use FundingCaseTypeServiceCollectorTrait;
 
@@ -42,20 +38,8 @@ final class ApplicationFormValidatorPass implements CompilerPassInterface {
   public function process(ContainerBuilder $container): void {
     $this->registerCollector(
       $container,
-      ApplicationFormValidatorCollector::class,
-      ApplicationFormValidatorInterface::class
-    );
-
-    $this->registerCollector(
-      $container,
-      ApplicationFormAddValidatorCollector::class,
-      ApplicationFormAddValidatorInterface::class
-    );
-
-    $this->registerCollector(
-      $container,
-      ApplicationFormNewValidatorCollector::class,
-      ApplicationFormNewValidatorInterface::class
+      PossibleRecipientsForChangeLoaderCollector::class,
+      PossibleRecipientsForChangeLoaderInterface::class
     );
   }
 

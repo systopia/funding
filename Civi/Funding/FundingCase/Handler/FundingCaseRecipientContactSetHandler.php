@@ -20,11 +20,11 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase\Handler;
 
 use Civi\API\Exception\UnauthorizedException;
-use Civi\Funding\Contact\PossibleRecipientsLoaderInterface;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions;
 use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
 use Civi\Funding\FundingCase\Command\FundingCaseRecipientContactSetCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
+use Civi\Funding\FundingCase\Recipients\PossibleRecipientsForChangeLoaderInterface;
 use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
 
@@ -34,12 +34,12 @@ final class FundingCaseRecipientContactSetHandler implements FundingCaseRecipien
 
   private FundingCaseManager $fundingCaseManager;
 
-  private PossibleRecipientsLoaderInterface $possibleRecipientsLoader;
+  private PossibleRecipientsForChangeLoaderInterface $possibleRecipientsLoader;
 
   public function __construct(
     FundingCaseActionsDeterminerInterface $actionsDeterminer,
     FundingCaseManager $fundingCaseManager,
-    PossibleRecipientsLoaderInterface $possibleRecipientsLoader
+    PossibleRecipientsForChangeLoaderInterface $possibleRecipientsLoader
   ) {
     $this->actionsDeterminer = $actionsDeterminer;
     $this->fundingCaseManager = $fundingCaseManager;
@@ -54,7 +54,8 @@ final class FundingCaseRecipientContactSetHandler implements FundingCaseRecipien
     $this->assertAuthorized($command);
 
     $possibleRecipients = $this->possibleRecipientsLoader->getPossibleRecipients(
-      $fundingCase->getCreationContactId(),
+      $fundingCase,
+      $command->getFundingCaseType(),
       $command->getFundingProgram()
     );
     Assert::keyExists($possibleRecipients, $command->getRecipientContactId(), 'Invalid recipient contact ID');
