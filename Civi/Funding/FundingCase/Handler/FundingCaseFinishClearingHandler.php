@@ -109,7 +109,10 @@ final class FundingCaseFinishClearingHandler implements FundingCaseFinishClearin
       $command->getApplicationProcessStatusList(),
       $command->getFundingCase()->getPermissions(),
     )) {
-      throw new UnauthorizedException(E::ts('Finishing the clearing of this funding case is not allowed.'));
+      throw new UnauthorizedException(E::ts(
+        'Finishing the clearing of funding case "%1" is not allowed.',
+        [1 => $command->getFundingCase()->getIdentifier()])
+      );
     }
   }
 

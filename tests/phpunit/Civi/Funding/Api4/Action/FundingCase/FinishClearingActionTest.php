@@ -68,7 +68,13 @@ final class FinishClearingActionTest extends AbstractFundingHeadlessTestCase {
         ->execute();
     }
     catch (UnauthorizedException $e) {
-      static::assertSame('Finishing the clearing of this funding case is not allowed.', $e->getMessage());
+      static::assertSame(
+        sprintf(
+          'Finishing the clearing of funding case "%s" is not allowed.',
+          $this->permittedFundingCase->getIdentifier()
+        ),
+        $e->getMessage()
+      );
     }
     static::assertNotNull($e);
 

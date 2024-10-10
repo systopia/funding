@@ -191,14 +191,14 @@ final class FundingCaseFinishClearingHandlerTest extends TestCase {
   }
 
   public function testHandleActionNotAllowed(): void {
-    $fundingCase = FundingCaseFactory::createFundingCase(['status' => 'ongoing']);
+    $fundingCase = FundingCaseFactory::createFundingCase(['status' => 'ongoing', 'identifier' => 'test']);
     $applicationProcessStatusList = [22 => new FullApplicationProcessStatus('eligible', TRUE, TRUE)];
     $this->actionsDeterminerMock->method('isActionAllowed')
       ->with(FundingCaseActions::FINISH_CLEARING, 'ongoing', $applicationProcessStatusList)
       ->willReturn(FALSE);
 
     $this->expectException(UnauthorizedException::class);
-    $this->expectExceptionMessage('Finishing the clearing of this funding case is not allowed.');
+    $this->expectExceptionMessage('Finishing the clearing of funding case "test" is not allowed.');
 
     $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
     $fundingProgram = FundingProgramFactory::createFundingProgram();

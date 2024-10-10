@@ -711,7 +711,7 @@ msgid "Approving this funding case is not allowed."
 msgstr ""
 
 #: Civi/Funding/FundingCase/Handler/FundingCaseFinishClearingHandler.php
-msgid "Finishing the clearing of this funding case is not allowed."
+msgid "Finishing the clearing of funding case \"%1\" is not allowed."
 msgstr ""
 
 #: Civi/Funding/FundingCase/Handler/FundingCaseRecipientContactSetHandler.php

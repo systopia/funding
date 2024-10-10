@@ -1004,8 +1004,9 @@ msgid "Approving this funding case is not allowed."
 msgstr "Diesen Förderfall zu bewilligen ist nicht erlaubt."
 
 #: Civi/Funding/FundingCase/Handler/FundingCaseFinishClearingHandler.php
-msgid "Finishing the clearing of this funding case is not allowed."
-msgstr "Die Abrechnung dieses Förderfalls abzuschließen, ist nicht erlaubt."
+msgid "Finishing the clearing of funding case \"%1\" is not allowed."
+msgstr ""
+"Die Abrechnung des Förderfalls \"%1\" abzuschließen, ist nicht erlaubt."
 
 #: Civi/Funding/FundingCase/Handler/FundingCaseRecipientContactSetHandler.php
 msgid "Changing the recipient contact of this funding case is not allowed."
