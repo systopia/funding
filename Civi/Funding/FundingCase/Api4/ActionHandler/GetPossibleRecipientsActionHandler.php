@@ -20,8 +20,9 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase\Api4\ActionHandler;
 
 use Civi\Funding\Api4\Action\FundingCase\GetPossibleRecipientsAction;
-use Civi\Funding\Contact\PossibleRecipientsLoaderInterface;
 use Civi\Funding\FundingCase\FundingCaseManager;
+use Civi\Funding\FundingCase\Recipients\PossibleRecipientsForChangeLoaderInterface;
+use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use CRM_Funding_ExtensionUtil as E;
@@ -33,16 +34,20 @@ final class GetPossibleRecipientsActionHandler implements ActionHandlerInterface
 
   private FundingCaseManager $fundingCaseManager;
 
+  private FundingCaseTypeManager $fundingCaseTypeManager;
+
   private FundingProgramManager $fundingProgramManager;
 
-  private PossibleRecipientsLoaderInterface $possibleRecipientsLoader;
+  private PossibleRecipientsForChangeLoaderInterface $possibleRecipientsLoader;
 
   public function __construct(
     FundingCaseManager $fundingCaseManager,
+    FundingCaseTypeManager $fundingCaseTypeManager,
     FundingProgramManager $fundingProgramManager,
-    PossibleRecipientsLoaderInterface $possibleRecipientsLoader
+    PossibleRecipientsForChangeLoaderInterface $possibleRecipientsLoader
   ) {
     $this->fundingCaseManager = $fundingCaseManager;
+    $this->fundingCaseTypeManager = $fundingCaseTypeManager;
     $this->fundingProgramManager = $fundingProgramManager;
     $this->possibleRecipientsLoader = $possibleRecipientsLoader;
   }
@@ -55,11 +60,14 @@ final class GetPossibleRecipientsActionHandler implements ActionHandlerInterface
   public function getPossibleRecipients(GetPossibleRecipientsAction $action): array {
     $fundingCase = $this->fundingCaseManager->get($action->getId());
     Assert::notNull($fundingCase, E::ts('Funding case with ID "%1" not found', [1 => $action->getId()]));
+    $fundingCaseType = $this->fundingCaseTypeManager->get($fundingCase->getFundingCaseTypeId());
+    Assert::notNull($fundingCaseType);
     $fundingProgram = $this->fundingProgramManager->get($fundingCase->getFundingProgramId());
     Assert::notNull($fundingProgram);
 
     $possibleRecipients = $this->possibleRecipientsLoader->getPossibleRecipients(
-      $fundingCase->getCreationContactId(),
+      $fundingCase,
+      $fundingCaseType,
       $fundingProgram
     );
     $result = [];
