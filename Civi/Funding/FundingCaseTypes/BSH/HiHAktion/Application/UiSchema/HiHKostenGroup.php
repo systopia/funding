@@ -102,6 +102,7 @@ EOD,
               "$scopePrefix/sachkosten/properties/materialien",
               'Projektbezogene Materialien in ' . $currency,
               'z.B. für Veranstaltungen, Workshops, Verbrauchsmaterial',
+              ['descriptionDisplay' => 'before']
             ),
             new JsonFormsControl(
               "$scopePrefix/sachkosten/properties/ehrenamtspauschalen",
@@ -110,27 +111,32 @@ EOD,
             new JsonFormsControl(
               "$scopePrefix/sachkosten/properties/verpflegung",
               'Verpflegung/Catering in ' . $currency,
-              'z.B. für Teilnehmer:innen von Angeboten'
+              'z.B. für Teilnehmer:innen von Angeboten',
+              ['descriptionDisplay' => 'before']
             ),
             new JsonFormsControl(
               "$scopePrefix/sachkosten/properties/fahrtkosten",
               'Fahrtkosten in ' . $currency,
-              'z.B. für Ausflüge'
+              'z.B. für Ausflüge',
+              ['descriptionDisplay' => 'before']
             ),
             new JsonFormsControl(
               "$scopePrefix/sachkosten/properties/oeffentlichkeitsarbeit",
               'Projektbezogene Öffentlichkeitsarbeit in ' . $currency,
-              'z.B. Druckkosten, Anzeigen, Gimmicks, RollUps'
+              'z.B. Druckkosten, Anzeigen, Gimmicks, RollUps',
+              ['descriptionDisplay' => 'before']
             ),
             new JsonFormsControl(
               "$scopePrefix/sachkosten/properties/investitionen",
               'Projektbezogene Investitionen in ' . $currency,
-              'z.B. Möbel, Laptop, Software, Fahrradrikscha'
+              'z.B. Möbel, Laptop, Software, Fahrradrikscha',
+              ['descriptionDisplay' => 'before']
             ),
             new JsonFormsControl(
               "$scopePrefix/sachkosten/properties/mieten",
               'Projektbezogene Mieten in ' . $currency,
-              'z.B. für Veranstaltungen'
+              'z.B. für Veranstaltungen',
+              ['descriptionDisplay' => 'before']
             ),
             new JsonFormsArray(
               "$scopePrefix/sachkosten/properties/verwaltungskosten",
@@ -144,6 +150,7 @@ EOD,
               [
                 'addButtonLabel' => 'Verwaltungs-/Organisationskosten hinzufügen',
                 'removeButtonLabel' => 'Entfernen',
+                'descriptionDisplay' => 'before',
               ]
             ),
             new JsonFormsArray(
@@ -158,6 +165,7 @@ EOD,
               [
                 'addButtonLabel' => 'Sonstige hinzufügen',
                 'removeButtonLabel' => 'Entfernen',
+                'descriptionDisplay' => 'before',
               ]
             ),
             new JsonFormsControl(
