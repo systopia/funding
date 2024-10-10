@@ -77,6 +77,18 @@ class FundingCasePermissionsCacheManager {
   }
 
   /**
+   * @phpstan-param list<int> $contactIds
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function clearByFundingCaseIdAndContactIds(int $fundingCaseId, array $contactIds): void {
+    $this->api4->execute(FundingCasePermissionsCache::getEntityName(), 'update', [
+      'values' => ['permissions' => NULL],
+      'where' => [['contact_id', 'IN', $contactIds], ['funding_case_id', '=', $fundingCaseId]],
+    ]);
+  }
+
+  /**
    * @throws \CRM_Core_Exception
    */
   public function deleteByContactId(int $contactId): void {

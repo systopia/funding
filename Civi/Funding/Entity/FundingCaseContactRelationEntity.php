@@ -65,6 +65,16 @@ final class FundingCaseContactRelationEntity extends AbstractEntity {
   }
 
   /**
+   * @template T
+   * @phpstan-param T $default
+   *
+   * @phpstan-return T
+   */
+  public function getProperty(string $key, $default = NULL) {
+    return $this->values['properties'][$key] ?? $default;
+  }
+
+  /**
    * @phpstan-return list<string>
    */
   public function getPermissions(): array {

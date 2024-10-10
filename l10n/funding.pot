@@ -482,11 +482,11 @@ msgstr ""
 msgid "Related contacts of a specific type"
 msgstr ""
 
-#: Civi/Funding/Contact/Relation/Types/ContactTypeAndRelationshipType.php Civi/Funding/Contact/Relation/Types/SelfByContactType.php Civi/Funding/Permission/ContactRelation/Types/ContactType.php Civi/Funding/Permission/ContactRelation/Types/ContactTypeRelationship.php Civi/Funding/Permission/FundingCase/RelationFactory/Types/ContactType.php
+#: Civi/Funding/Contact/Relation/Types/ContactTypeAndRelationshipType.php Civi/Funding/Contact/Relation/Types/SelfByContactType.php Civi/Funding/Permission/ContactRelation/Types/ContactType.php Civi/Funding/Permission/FundingCase/RelationFactory/Types/ContactType.php
 msgid "Contact type"
 msgstr ""
 
-#: Civi/Funding/Contact/Relation/Types/ContactTypeAndRelationshipType.php Civi/Funding/Contact/Relation/Types/RelationshipType.php Civi/Funding/Permission/ContactRelation/Types/ContactRelationship.php Civi/Funding/Permission/ContactRelation/Types/ContactTypeRelationship.php Civi/Funding/Permission/FundingCase/RelationFactory/Types/CreationContactRelationship.php Civi/Funding/Permission/FundingCase/RelationFactory/Types/RecipientContactRelationship.php
+#: Civi/Funding/Contact/Relation/Types/ContactTypeAndRelationshipType.php Civi/Funding/Contact/Relation/Types/RelationshipType.php Civi/Funding/Permission/ContactRelation/Types/ContactRelationship.php Civi/Funding/Permission/FundingCase/RelationFactory/Types/CreationContactRelationship.php Civi/Funding/Permission/FundingCase/RelationFactory/Types/RecipientContactRelationship.php
 msgid "Relationship type"
 msgstr ""
 
@@ -862,12 +862,28 @@ msgstr ""
 msgid "Matches if a contact has the specified contact type."
 msgstr ""
 
-#: Civi/Funding/Permission/ContactRelation/Types/ContactTypeRelationship.php
-msgid "Relationship to contact of specific type"
+#: Civi/Funding/Permission/ContactRelation/Types/Relationship.php
+msgid "Relationship"
 msgstr ""
 
-#: Civi/Funding/Permission/ContactRelation/Types/ContactTypeRelationship.php
-msgid "Matches a contact that has a relationship of the specified type to a contact of\nthe specified type."
+#: Civi/Funding/Permission/ContactRelation/Types/Relationship.php
+msgid "Contact types"
+msgstr ""
+
+#: Civi/Funding/Permission/ContactRelation/Types/Relationship.php
+msgid "Groups"
+msgstr ""
+
+#: Civi/Funding/Permission/ContactRelation/Types/Relationship.php
+msgid "Relationship types"
+msgstr ""
+
+#: Civi/Funding/Permission/ContactRelation/Types/Relationship.php
+msgid "any"
+msgstr ""
+
+#: Civi/Funding/Permission/ContactRelation/Types/Relationship.php
+msgid "Matches a contact that has a relationship. The relationship type may be limited\nto various types. The type of the related contacts may be limited to various\ntypes. The related contacts may be limited to those in any of the given groups."
 msgstr ""
 
 #: Civi/Funding/Permission/FundingCase/RelationFactory/Types/Contact.php

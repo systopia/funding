@@ -89,6 +89,9 @@ parameters:
 			message: '#^Class [^\s]+ has an uninitialized property#'
 			path : */tests/phpunit/Civi/Funding/Mock/**/*.php
 		- '#^Method Civi\\Funding\\Fixtures\\[^\s]+Fixture::[^\s]+\(\) should return array{[^}]+} but returns array\|null.$#'
+		-
+			identifier: return.type
+			path: */tests/phpunit/Civi/Funding/Fixtures/*.php
 		- '#^In method "Civi\\[^\s]+Test::[^\s]+", caught "Exception" must be rethrown.#'
 		-
 			message: "#^Cannot access offset '.+' on mixed.$#"
