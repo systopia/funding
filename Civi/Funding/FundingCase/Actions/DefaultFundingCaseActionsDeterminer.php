@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase\Actions;
 
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface;
+use Civi\Funding\FundingCase\Actions\FundingCaseActions as Actions;
 
 final class DefaultFundingCaseActionsDeterminer extends FundingCaseActionsDeterminer {
 
@@ -27,12 +28,12 @@ final class DefaultFundingCaseActionsDeterminer extends FundingCaseActionsDeterm
 
   private const STATUS_PERMISSIONS_ACTION_MAP = [
     'open' => [
-      'review_calculative' => ['approve'],
-      'review_content' => ['approve'],
+      'review_calculative' => [Actions::APPROVE],
+      'review_content' => [Actions::APPROVE],
     ],
     'ongoing' => [
-      'review_calculative' => ['recreate-transfer-contract', FundingCaseActions::UPDATE_AMOUNT_APPROVED],
-      'review_content' => ['recreate-transfer-contract', FundingCaseActions::UPDATE_AMOUNT_APPROVED],
+      'review_calculative' => [Actions::RECREATE_TRANSFER_CONTRACT, Actions::UPDATE_AMOUNT_APPROVED],
+      'review_content' => [Actions::RECREATE_TRANSFER_CONTRACT, Actions::UPDATE_AMOUNT_APPROVED],
     ],
   ];
 
@@ -48,7 +49,7 @@ final class DefaultFundingCaseActionsDeterminer extends FundingCaseActionsDeterm
       $permissions
     );
 
-    $posApprove = array_search('approve', $actions, TRUE);
+    $posApprove = array_search(Actions::APPROVE, $actions, TRUE);
     if (FALSE !== $posApprove && !$this->isApprovePossible($applicationProcessStatusList)) {
       unset($actions[$posApprove]);
       $actions = array_values($actions);

@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2023 SYSTOPIA GmbH
+ * Copyright (C) 2024 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,18 +17,27 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\FundingCase\Actions;
+namespace Civi\Funding\Api4\Action\FundingCase;
 
-final class FundingCaseActions {
+use Civi\Api4\FundingCase;
+use Civi\Api4\Generic\AbstractAction;
+use Civi\RemoteTools\Api4\Action\Traits\ActionHandlerRunTrait;
+use Civi\RemoteTools\Api4\Action\Traits\IdParameterTrait;
 
-  public const APPROVE = 'approve';
+/**
+ * @method int getContactId()
+ * @method $this setContactId(int $contactId)
+ */
+class SetRecipientContactAction extends AbstractAction {
 
-  public const DELETE = 'delete';
+  use ActionHandlerRunTrait;
 
-  public const RECREATE_TRANSFER_CONTRACT = 'recreate-transfer-contract';
+  use IdParameterTrait;
 
-  public const SET_RECIPIENT_CONTACT = 'set-recipient-contact';
+  protected ?int $contactId = NULL;
 
-  public const UPDATE_AMOUNT_APPROVED = 'update-amount-approved';
+  public function __construct() {
+    parent::__construct(FundingCase::getEntityName(), 'setRecipientContact');
+  }
 
 }

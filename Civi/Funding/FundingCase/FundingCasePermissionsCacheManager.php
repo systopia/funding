@@ -22,7 +22,7 @@ namespace Civi\Funding\FundingCase;
 use Civi\Api4\FundingCasePermissionsCache;
 use Civi\RemoteTools\Api4\Api4Interface;
 
-final class FundingCasePermissionsCacheManager {
+class FundingCasePermissionsCacheManager {
 
   private Api4Interface $api4;
 
