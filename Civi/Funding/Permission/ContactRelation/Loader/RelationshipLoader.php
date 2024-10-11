@@ -34,9 +34,9 @@ use Webmozart\Assert\Assert;
  * All options may be empty, meaning everything is allowed. The options have
  * the following form:
  * array {
- *   relationshipTypeIds: list<int>,
- *   contactTypeIds: list<int>,
- *   groupIds: list<int>,
+ *   relationshipTypeIds?: list<int>,
+ *   contactTypeIds?: list<int>,
+ *   groupIds?: list<int>,
  * }
  */
 final class RelationshipLoader implements ContactRelationLoaderInterface {
@@ -53,13 +53,13 @@ final class RelationshipLoader implements ContactRelationLoaderInterface {
    * @throws \CRM_Core_Exception
    */
   public function getContacts(string $relationType, array $relationProperties): array {
-    $relationshipTypeIds = $relationProperties['relationshipTypeIds'];
+    $relationshipTypeIds = $relationProperties['relationshipTypeIds'] ?? [];
     Assert::isArray($relationshipTypeIds);
     Assert::allIntegerish($relationshipTypeIds);
-    $contactTypeIds = $relationProperties['contactTypeIds'];
+    $contactTypeIds = $relationProperties['contactTypeIds'] ?? [];
     Assert::isArray($contactTypeIds);
     Assert::allIntegerish($contactTypeIds);
-    $groupIds = $relationProperties['groupIds'];
+    $groupIds = $relationProperties['groupIds'] ?? [];
     Assert::isArray($groupIds);
     Assert::allIntegerish($groupIds);
 
