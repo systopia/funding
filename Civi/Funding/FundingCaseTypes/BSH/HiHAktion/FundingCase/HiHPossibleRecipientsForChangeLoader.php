@@ -31,9 +31,11 @@ final class HiHPossibleRecipientsForChangeLoader implements PossibleRecipientsFo
     FundingCaseTypeEntity $fundingCaseType,
     FundingProgramEntity $fundingProgram
   ): array {
+    $separator = \CRM_Core_DAO::VALUE_SEPARATOR;
+
     return $this->api4->execute(Contact::getEntityName(), 'get', [
       'select' => ['id', 'display_name'],
-      'where' => [['contact_sub_type', 'CONTAINS', 'Mittelempfaenger']],
+      'where' => [['contact_sub_type', 'LIKE', "%${separator}Mittelempfaenger${separator}%"]],
     ])->indexBy('id')->column('display_name');
   }
 
