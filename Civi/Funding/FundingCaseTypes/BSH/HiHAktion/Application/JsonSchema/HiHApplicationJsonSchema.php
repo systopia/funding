@@ -21,7 +21,6 @@ namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\JsonSchema;
 
 use Civi\Funding\Form\JsonSchema\JsonSchemaRecipient;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
-use Webmozart\Assert\Assert;
 
 final class HiHApplicationJsonSchema extends JsonSchemaObject {
 
