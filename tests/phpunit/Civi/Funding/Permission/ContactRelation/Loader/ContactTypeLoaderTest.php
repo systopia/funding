@@ -48,8 +48,9 @@ final class ContactTypeLoaderTest extends AbstractFundingHeadlessTestCase {
       ->execute();
 
     $contactType = ContactTypeFixture::addIndividualFixture('testType');
+    ContactTypeFixture::addIndividualFixture('testType2');
     $contact = ContactFixture::addIndividual();
-    $contactWithSubType = ContactFixture::addIndividual(['contact_sub_type' => 'testType']);
+    $contactWithSubType = ContactFixture::addIndividual(['contact_sub_type' => ['testType', 'testType2']]);
 
     static::assertArrayHasSameKeys(
       [$contactWithSubType['id']],

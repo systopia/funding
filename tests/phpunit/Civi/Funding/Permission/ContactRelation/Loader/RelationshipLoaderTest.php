@@ -48,23 +48,24 @@ final class RelationshipLoaderTest extends AbstractFundingHeadlessTestCase {
   public function testGetContacts(): void {
     $contactType1 = ContactTypeFixture::addIndividualFixture('testType1');
     $contactType2 = ContactTypeFixture::addIndividualFixture('testType2');
+    ContactTypeFixture::addIndividualFixture('testType3');
 
     $group1 = GroupFixture::addFixture();
     $group2 = GroupFixture::addFixture();
-    $group2Inactive = GroupFixture::addFixture(['is_active' => FALSE]);
+    $group3Inactive = GroupFixture::addFixture(['is_active' => FALSE]);
 
     $contactInGroup1 = ContactFixture::addIndividual();
     GroupContactFixture::addFixtureWithGroupId($group1['id'], $contactInGroup1['id']);
-    $contactWithSubType1InGroup1 = ContactFixture::addIndividual([
-      'contact_sub_type' => 'testType1',
-      'last_name' => 'With Sub Type1',
+    $contactWithSubType1And3InGroup1 = ContactFixture::addIndividual([
+      'contact_sub_type' => ['testType1', 'testType3'],
+      'last_name' => 'With Sub Type 1 and 3',
     ]);
-    GroupContactFixture::addFixtureWithGroupId($group1['id'], $contactWithSubType1InGroup1['id']);
-    $contactWithSubType2InGroup2 = ContactFixture::addIndividual([
-      'contact_sub_type' => 'testType2',
-      'last_name' => 'With Sub Type2',
+    GroupContactFixture::addFixtureWithGroupId($group1['id'], $contactWithSubType1And3InGroup1['id']);
+    $contactWithSubType2And3InGroup3 = ContactFixture::addIndividual([
+      'contact_sub_type' => ['testType2', 'testType3'],
+      'last_name' => 'With Sub Type 2 and 3',
     ]);
-    GroupContactFixture::addFixtureWithGroupId($group2Inactive['id'], $contactWithSubType2InGroup2['id']);
+    GroupContactFixture::addFixtureWithGroupId($group3Inactive['id'], $contactWithSubType2And3InGroup3['id']);
 
     // Related A to B with sub type1
     $relatedContact1 = ContactFixture::addIndividual(['last_name' => 'Related 1']);
@@ -105,7 +106,7 @@ final class RelationshipLoaderTest extends AbstractFundingHeadlessTestCase {
 
     Relationship::create(FALSE)
       ->setValues([
-        'contact_id_a' => $contactWithSubType1InGroup1['id'],
+        'contact_id_a' => $contactWithSubType1And3InGroup1['id'],
         'contact_id_b' => $relatedContact1['id'],
         'relationship_type_id' => $relationshipType1Id,
       ])->execute();
@@ -120,7 +121,7 @@ final class RelationshipLoaderTest extends AbstractFundingHeadlessTestCase {
     Relationship::create(FALSE)
       ->setValues([
         'contact_id_a' => $relatedContact3['id'],
-        'contact_id_b' => $contactWithSubType2InGroup2['id'],
+        'contact_id_b' => $contactWithSubType2And3InGroup3['id'],
         'relationship_type_id' => $relationshipType1Id,
       ])->execute();
 
@@ -151,11 +152,11 @@ final class RelationshipLoaderTest extends AbstractFundingHeadlessTestCase {
     // Match relationship type.
     static::assertArrayHasSameKeys([
       $relatedContact1['id'],
-      $contactWithSubType1InGroup1['id'],
+      $contactWithSubType1And3InGroup1['id'],
       $contactInGroup1['id'],
       $relatedContact2['id'],
       $relatedContact3['id'],
-      $contactWithSubType2InGroup2['id'],
+      $contactWithSubType2And3InGroup3['id'],
     ], $this->loader->getContacts('Relationship', [
       'relationshipTypeIds' => [$relationshipType1Id],
       'contactTypeIds' => [],
@@ -223,7 +224,7 @@ final class RelationshipLoaderTest extends AbstractFundingHeadlessTestCase {
     static::assertEmpty($this->loader->getContacts('Relationship', [
       'relationshipTypeIds' => [],
       'contactTypeIds' => [],
-      'groupIds' => [$group2Inactive['id']],
+      'groupIds' => [$group3Inactive['id']],
     ]));
 
     // Inactive relationship has no result.

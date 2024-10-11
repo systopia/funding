@@ -24,9 +24,8 @@ use Civi\Api4\Contact;
 final class ContactFixture {
 
   /**
-   * @param array<string, scalar> $values
+   * @phpstan-param array<string, mixed> $values
    *
-   * @return array
    * @phpstan-return array<string, scalar|null>&array{id: int}
    *
    * @throws \CRM_Core_Exception

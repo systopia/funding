@@ -46,14 +46,16 @@ final class ContactTypeAndRelationshipTypeLoader implements RelatedContactsLoade
     Assert::integer($relationProperties['relationshipTypeId']);
     $contactTypeId = $relationProperties['contactTypeId'];
     $relationshipTypeId = $relationProperties['relationshipTypeId'];
+    $separator = \CRM_Core_DAO::VALUE_SEPARATOR;
+
     $action = Contact::get(FALSE)
       ->addJoin('ContactType AS ct', 'INNER', NULL,
         CompositeCondition::new('AND',
           Comparison::new('ct.id', '=', $contactTypeId),
           CompositeCondition::new(
             'OR',
-            Comparison::new('ct.name', '=', 'contact_type'),
-            Comparison::new('ct.name', '=', 'contact_sub_type'),
+            Comparison::new('contact_type', '=', 'ct.name'),
+            Comparison::new('contact_sub_type', 'LIKE', "CONCAT('%${separator}', ct.name, '${separator}%')")
           ),
         )->toArray()
       )->addJoin('Relationship AS r', 'INNER', NULL,

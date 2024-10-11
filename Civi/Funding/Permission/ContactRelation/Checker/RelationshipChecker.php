@@ -96,12 +96,13 @@ final class RelationshipChecker implements ContactRelationCheckerInterface {
     }
 
     if ([] !== $contactTypeIds) {
+      $separator = \CRM_Core_DAO::VALUE_SEPARATOR;
       $action->addJoin('ContactType AS ct', 'INNER', NULL,
         CompositeCondition::new('AND',
           Comparison::new('ct.id', 'IN', $contactTypeIds),
           CompositeCondition::new('OR',
-            Comparison::new('ct.name', '=', 'c.contact_type'),
-            Comparison::new('ct.name', '=', 'c.contact_sub_type'),
+            Comparison::new('c.contact_type', '=', 'ct.name'),
+            Comparison::new('c.contact_sub_type', 'LIKE', "CONCAT('%${separator}', ct.name, '${separator}%')")
           )
         )->toArray()
       );
