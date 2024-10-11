@@ -46,11 +46,12 @@ final class ContactTypeLoader implements ContactRelationLoaderInterface {
   public function getContacts(string $relationType, array $relationProperties): array {
     $contactTypeId = $relationProperties['contactTypeId'];
     Assert::integerish($contactTypeId);
+    $separator = \CRM_Core_DAO::VALUE_SEPARATOR;
 
     $action = Contact::get(FALSE)
       ->addJoin('ContactType AS ct', 'INNER', NULL, CompositeCondition::new('OR',
         Comparison::new('contact_type', '=', 'ct.name'),
-        Comparison::new('contact_sub_type', '=', 'ct.name'),
+        Comparison::new('contact_sub_type', 'LIKE', "CONCAT('%${separator}', ct.name, '${separator}%')")
       )->toArray())
       ->addWhere('ct.id', '=', $contactTypeId);
 

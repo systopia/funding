@@ -45,6 +45,7 @@ final class ContactTypeChecker implements ContactRelationCheckerInterface {
   public function hasRelation(int $contactId, string $relationType, array $relationProperties): bool {
     $contactTypeId = $relationProperties['contactTypeId'];
     Assert::numeric($contactTypeId);
+    $separator = \CRM_Core_DAO::VALUE_SEPARATOR;
 
     $action = ContactType::get(FALSE)
       ->addSelect('id')
@@ -55,7 +56,7 @@ final class ContactTypeChecker implements ContactRelationCheckerInterface {
           CompositeCondition::new(
             'OR',
             Comparison::new('c.contact_type', '=', 'name'),
-            Comparison::new('c.contact_sub_type', '=', 'name'),
+            Comparison::new('c.contact_sub_type', 'LIKE', "CONCAT('%${separator}', name, '${separator}%')")
           ),
         )->toArray(),
       );

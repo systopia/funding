@@ -42,8 +42,12 @@ final class SelfByContactTypeLoaderTest extends AbstractFundingHeadlessTestCase 
   public function testGetRelatedContacts(): void {
     $contactType = ContactTypeFixture::addFixture(['name' => 'testType']);
     $contactSubType = ContactTypeFixture::addIndividualFixture('testSubType');
+    ContactTypeFixture::addIndividualFixture('testSubType2');
     $contact1 = ContactFixture::addIndividual(['nick_name' => 'Contact 1', 'contact_type' => 'testType']);
-    $contact2 = ContactFixture::addIndividual(['nick_name' => 'Contact 2', 'contact_sub_type' => 'testSubType']);
+    $contact2 = ContactFixture::addIndividual([
+      'nick_name' => 'Contact 2',
+      'contact_sub_type' => ['testSubType', 'testSubType2'],
+    ]);
 
     $relatedContacts1 = $this->relatedContactLoader->getRelatedContacts(
       $contact1['id'],

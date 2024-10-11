@@ -43,14 +43,16 @@ final class SelfByContactTypeLoader implements RelatedContactsLoaderInterface {
   public function getRelatedContacts(int $contactId, string $relationType, array $relationProperties): array {
     Assert::integer($relationProperties['contactTypeId']);
     $contactTypeId = $relationProperties['contactTypeId'];
+    $separator = \CRM_Core_DAO::VALUE_SEPARATOR;
+
     $action = Contact::get(FALSE)
       ->addJoin('ContactType AS ct', 'INNER', NULL,
         CompositeCondition::new('AND',
           Comparison::new('ct.id', '=', $contactTypeId),
           CompositeCondition::new(
             'OR',
-            Comparison::new('ct.name', '=', 'contact_type'),
-            Comparison::new('ct.name', '=', 'contact_sub_type'),
+            Comparison::new('contact_type', '=', 'ct.name'),
+            Comparison::new('contact_sub_type', 'LIKE', "CONCAT('%${separator}', ct.name, '${separator}%')")
           ),
         )->toArray(),
       )
