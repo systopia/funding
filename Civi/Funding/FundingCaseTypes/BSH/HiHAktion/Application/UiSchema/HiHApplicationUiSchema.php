@@ -30,7 +30,18 @@ final class HiHApplicationUiSchema extends JsonFormsGroup {
     $elements = [
       new JsonFormsCategorization([
         new JsonFormsCategory('Allgemein', [
-          new JsonFormsControl('#/properties/empfaenger', 'Bürgerstiftung oder sonstiger Mittelempfänger'),
+          new JsonFormsControl('#/properties/empfaenger', <<<EOD
+Projekte im Rahmen von „Hand in Hand“ können normalerweise nur zusammen mit
+einer Bürgerstiftung aus Norddeutschland einen Antrag stellen. Bitte teilen Sie
+uns mit, welche Bürgerstiftung für Sie zuständig ist.
+EOD
+          ),
+          new JsonFormsControl(
+            '#/properties/mitBuergerstiftungGesprochen',
+            'Haben Sie schon mit jemandem in der ausgewählten Bürgerstiftung gesprochen?',
+            'Entfällt, wenn es vor Ort keine Bürgerstiftung gibt.',
+            ['descriptionDisplay' => 'before']
+          ),
           new HiHFragenZumProjektGroup('#/properties/fragenZumProjekt/properties'),
           new HiHInformationenZumProjektGroup('#/properties/informationenZumProjekt/properties'),
         ]),
@@ -40,7 +51,10 @@ final class HiHApplicationUiSchema extends JsonFormsGroup {
         ]),
       ]),
     ];
-    parent::__construct('Förderantrag für NDR-Benefizaktion', $elements);
+    parent::__construct(
+      'Förderantrag für die NDR-Benefizaktion „Hand in Hand für Norddeutschland“ – aus einsam wird gemeinsam.',
+      $elements
+    );
   }
 
 }

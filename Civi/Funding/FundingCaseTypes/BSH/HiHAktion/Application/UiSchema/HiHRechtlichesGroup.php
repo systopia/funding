@@ -30,11 +30,12 @@ final class HiHRechtlichesGroup extends JsonFormsGroup {
         "$scopePrefix/kinderschutzklausel",
         'Kinderschutz/Antidiskriminierungsklausel',
         <<<EOD
-Die beteiligten Stiftungen wenden sich explizit gegen jede Form von physischer,
-psychischer und sexualisierter Gewalt. Die antragstellende Organisation ist dem
-Kinderschutz verpflichtet und macht dieses entsprechend kenntlich
-(Flyer/Website/Satzung). Bitte ankreuzen.
-EOD
+Die beteiligten Organisationen wenden sich explizit gegen jede Form von
+physischer, psychischer und sexualisierter Gewalt. Die antragstellende
+Organisation ist dem Kinderschutz verpflichtet und macht dieses entsprechend
+kenntlich (Flyer/Website/Satzung). Bitte ankreuzen.
+EOD,
+        ['descriptionDisplay' => 'tooltip']
       ),
       new JsonFormsControl(
         "$scopePrefix/datenschutz",
@@ -45,9 +46,9 @@ hochgeladene Dokumente in der Datenbank der BürgerStiftung Hamburg
 weiterverarbeitet, gespeichert und veröffentlicht werden und zum Zweck der
 Begutachtung und Berichterstattung an den NDR, an die zuständige Bürgerstiftung
 sowie die Beiratsmitglieder und den Verein Stiften für alle e.V. weitergeleitet
-werden dürfen. Weitere Infos finden Sie in unseren Hinweisen zum Datenschutz
-finden Sie in unseren Hinweisen zum Datenschutz.
-EOD
+werden dürfen. Weitere Infos finden Sie in unseren Hinweisen zum Datenschutz.
+EOD,
+        ['descriptionDisplay' => 'tooltip']
       ),
     ]);
   }
