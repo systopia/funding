@@ -60,4 +60,18 @@ class FundingCaseTypeTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
     return FundingCaseType::getEntityName();
   }
 
+  /**
+   * @inheritDoc
+   */
+  protected function getRelatedContextSchemas(): array {
+    return [];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  protected function getRelatedContextValues(AbstractEntity $entity): array {
+    return [];
+  }
+
 }

@@ -20,7 +20,6 @@ declare(strict_types = 1);
 namespace Civi\Funding\EventSubscriber\CiviOffice;
 
 use Civi\Api4\FundingDrawdown;
-use Civi\Core\Event\GenericHookEvent;
 use Civi\Funding\DocumentRender\CiviOffice\AbstractCiviOfficeTokenSubscriber;
 use Civi\Funding\DocumentRender\CiviOffice\CiviOfficeContextDataHolder;
 use Civi\Funding\Entity\AbstractEntity;
@@ -55,15 +54,6 @@ class DrawdownTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
     $this->drawdownManager = $drawdownManager;
   }
 
-  public function onCiviOfficeTokenContext(GenericHookEvent $event): void {
-    parent::onCiviOfficeTokenContext($event);
-    if ($this->getApiEntityName() === $event->entity_type || isset($event->context[$this->getContextKey() . 'Id'])) {
-      /** @var \Civi\Funding\Entity\DrawdownEntity $drawdown */
-      $drawdown = $event->context[$this->getContextKey()];
-      $event->context['payoutProcessId'] ??= $drawdown->getPayoutProcessId();
-    }
-  }
-
   protected function getEntity(int $id): ?AbstractEntity {
     return $this->drawdownManager->get($id);
   }
@@ -74,6 +64,20 @@ class DrawdownTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
 
   protected function getEntityClass(): string {
     return DrawdownEntity::class;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  protected function getRelatedContextSchemas(): array {
+    return ['payoutProcessId'];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  protected function getRelatedContextValues(AbstractEntity $entity): array {
+    return ['payoutProcessId' => $entity->getPayoutProcessId()];
   }
 
 }

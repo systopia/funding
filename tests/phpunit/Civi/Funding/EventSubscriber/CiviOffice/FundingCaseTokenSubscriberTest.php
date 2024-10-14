@@ -17,35 +17,36 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\EventSubscriber\CiviOffice;
+namespace tests\phpunit\Civi\Funding\EventSubscriber\CiviOffice;
 
-use Civi\Api4\FundingProgram;
+use Civi\Api4\FundingCase;
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Core\Event\GenericHookEvent;
 use Civi\Funding\DocumentRender\CiviOffice\CiviOfficeContextDataHolder;
 use Civi\Funding\DocumentRender\Token\ResolvedToken;
 use Civi\Funding\DocumentRender\Token\TokenNameExtractorInterface;
 use Civi\Funding\DocumentRender\Token\TokenResolverInterface;
-use Civi\Funding\Entity\FundingProgramEntity;
-use Civi\Funding\EntityFactory\FundingProgramFactory;
-use Civi\Funding\FundingProgram\FundingProgramManager;
+use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\EntityFactory\FundingCaseFactory;
+use Civi\Funding\EventSubscriber\CiviOffice\FundingCaseTokenSubscriber;
+use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Token\Event\TokenValueEvent;
 use Civi\Token\TokenProcessor;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Civi\Funding\EventSubscriber\CiviOffice\FundingProgramTokenSubscriber
+ * @covers \Civi\Funding\EventSubscriber\CiviOffice\FundingCaseTokenSubscriber
  * @covers \Civi\Funding\DocumentRender\CiviOffice\AbstractCiviOfficeTokenSubscriber
  */
-final class FundingProgramTokenSubscriberTest extends TestCase {
+final class FundingCaseTokenSubscriberTest extends TestCase {
 
   private CiviOfficeContextDataHolder $contextDataHolder;
 
   /**
-   * @var \Civi\Funding\FundingProgram\FundingProgramManager&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\FundingCase\FundingCaseManager&\PHPUnit\Framework\MockObject\MockObject
    */
-  private MockObject $fundingProgramManagerMock;
+  private MockObject $fundingCaseManagerMock;
 
   /**
    * @var \Civi\Funding\DocumentRender\Token\TokenResolverInterface&\PHPUnit\Framework\MockObject\MockObject
@@ -53,34 +54,35 @@ final class FundingProgramTokenSubscriberTest extends TestCase {
    */
   private MockObject $tokenResolverMock;
 
-  private FundingProgramTokenSubscriber $subscriber;
+  private FundingCaseTokenSubscriber $subscriber;
 
   protected function setUp(): void {
     parent::setUp();
-    $this->fundingProgramManagerMock = $this->createMock(FundingProgramManager::class);
+    $this->fundingCaseManagerMock = $this->createMock(FundingCaseManager::class);
     $this->contextDataHolder = new CiviOfficeContextDataHolder();
     $this->tokenResolverMock = $this->createMock(TokenResolverInterface::class);
 
     $tokenNameExtractorMock = $this->createMock(TokenNameExtractorInterface::class);
     $tokenNameExtractorMock->method('getTokenNames')
-      ->with(FundingProgram::getEntityName(), FundingProgramEntity::class)
+      ->with(FundingCase::getEntityName(), FundingCaseEntity::class)
       ->willReturn([
         'my_field' => 'Label',
         'my_serialized' => 'Label 2',
         'my_serialized::' => 'With path',
       ]);
 
-    $this->subscriber = new FundingProgramTokenSubscriber(
-      $this->fundingProgramManagerMock,
+    $this->subscriber = new FundingCaseTokenSubscriber(
+      $this->fundingCaseManagerMock,
       $this->contextDataHolder,
       $this->tokenResolverMock, $tokenNameExtractorMock,
     );
   }
 
   public function testGetSubscribedEvents(): void {
-    // We do not test subscriptions from \Civi\Token\AbstractTokenSubscriber.
+    // We do not test all subscriptions from \Civi\Token\AbstractTokenSubscriber.
     $expectedSubscriptions = [
-      'civi.civioffice.tokenContext' => ['onCiviOfficeTokenContext', 0],
+      'civi.civioffice.tokenContext' => ['onCiviOfficeTokenContext', 1],
+      'civi.token.eval' => ['evaluateTokens', 1],
     ];
     $subscriptions = $this->subscriber::getSubscribedEvents();
 
@@ -94,18 +96,18 @@ final class FundingProgramTokenSubscriberTest extends TestCase {
     $context = [];
     $event = GenericHookEvent::create([
       'context' => &$context,
-      'entity_type' => 'FundingProgram',
-      'entity_id' => FundingProgramFactory::DEFAULT_ID,
+      'entity_type' => 'FundingCase',
+      'entity_id' => FundingCaseFactory::DEFAULT_ID,
     ]);
 
-    $fundingProgram = FundingProgramFactory::createFundingProgram();
-    $this->fundingProgramManagerMock->method('get')
-      ->with(FundingProgramFactory::DEFAULT_ID)
-      ->willReturn($fundingProgram);
+    $fundingCase = FundingCaseFactory::createFundingCase();
+    $this->fundingCaseManagerMock->method('get')
+      ->with(FundingCaseFactory::DEFAULT_ID)
+      ->willReturn($fundingCase);
 
     $this->subscriber->onCiviOfficeTokenContext($event);
     // @phpstan-ignore-next-line
-    static::assertSame($fundingProgram, $context['fundingProgram']);
+    static::assertSame($fundingCase, $context['fundingCase']);
   }
 
   public function testOnCiviOfficeTokenContextWithContextValue(): void {
@@ -116,25 +118,13 @@ final class FundingProgramTokenSubscriberTest extends TestCase {
       'entity_id' => 1,
     ]);
 
-    $fundingProgram = FundingProgramFactory::createFundingProgram();
-    $this->fundingProgramManagerMock->expects(static::never())->method('get');
-    $this->contextDataHolder->addEntityData('EntityName', 1, ['fundingProgram' => $fundingProgram]);
+    $fundingCase = FundingCaseFactory::createFundingCase();
+    $this->fundingCaseManagerMock->expects(static::never())->method('get');
+    $this->contextDataHolder->addEntityData('EntityName', 1, ['fundingCase' => $fundingCase]);
 
     $this->subscriber->onCiviOfficeTokenContext($event);
     // @phpstan-ignore-next-line
-    static::assertSame($fundingProgram, $context['fundingProgram']);
-  }
-
-  public function testBasic(): void {
-    static::assertSame('funding_program', $this->subscriber->entity);
-    static::assertSame(
-      [
-        'my_field' => 'Label',
-        'my_serialized' => 'Label 2',
-        'my_serialized::' => 'With path',
-      ],
-      $this->subscriber->tokenNames
-    );
+    static::assertSame($fundingCase, $context['fundingCase']);
   }
 
   public function testCheckActive(): void {
@@ -142,80 +132,101 @@ final class FundingProgramTokenSubscriberTest extends TestCase {
       $this->createTokenProcessor([])
     ));
     static::assertTrue($this->subscriber->checkActive(
-      $this->createTokenProcessor(['schema' => ['fundingProgram']])
+      $this->createTokenProcessor(['schema' => ['fundingCase']])
     ));
     static::assertTrue($this->subscriber->checkActive(
-      $this->createTokenProcessor(['schema' => ['fundingProgramId']])
+      $this->createTokenProcessor(['schema' => ['fundingCaseId']])
     ));
 
-    $tokenProcessor = $this->createTokenProcessor([], ['fundingProgram' => 'test']);
+    $tokenProcessor = $this->createTokenProcessor([], ['fundingCase' => 'test']);
     static::assertTrue($this->subscriber->checkActive($tokenProcessor));
-    static::assertSame(['fundingProgram'], $tokenProcessor->context['schema']);
+    static::assertEquals([
+      'fundingCase',
+      'fundingCaseTypeId',
+      'fundingProgramId',
+      'contactId',
+    ], $tokenProcessor->context['schema']);
 
-    $tokenProcessor = $this->createTokenProcessor([], ['fundingProgramId' => 'test']);
+    $tokenProcessor = $this->createTokenProcessor([], ['fundingCaseId' => 'test']);
     static::assertTrue($this->subscriber->checkActive($tokenProcessor));
-    static::assertSame(['fundingProgram'], $tokenProcessor->context['schema']);
+    static::assertEquals([
+      'fundingCase',
+      'fundingCaseTypeId',
+      'fundingProgramId',
+      'contactId',
+    ], $tokenProcessor->context['schema']);
   }
 
   public function testEvaluate(): void {
     $tokenProcessor = $this->createTokenProcessor([]);
-    $tokenProcessor->addMessage('test', '{funding_program.my_field}', 'text/plain');
-    $tokenProcessor->addMessage('test2', '{funding_program.my_field2}', 'text/plain');
+    $tokenProcessor->addMessage('test', '{funding_case.my_field}', 'text/plain');
+    $tokenProcessor->addMessage('test2', '{funding_case.my_field2}', 'text/plain');
 
-    $fundingProgram = FundingProgramFactory::createFundingProgram();
-    $tokenProcessor->addRow(['fundingProgram' => $fundingProgram]);
+    $fundingCase = FundingCaseFactory::createFundingCase();
+    $tokenProcessor->addRow(['fundingCase' => $fundingCase]);
 
     $this->tokenResolverMock->method('resolveToken')
-      ->with(FundingProgram::getEntityName(), $fundingProgram, 'my_field')
+      ->with(FundingCase::getEntityName(), $fundingCase, 'my_field')
       ->willReturn(new ResolvedToken('foo', 'text/html'));
 
     $event = new TokenValueEvent($tokenProcessor);
     static::assertSame(['my_field'], $this->subscriber->getActiveTokens($event));
+    $row = $tokenProcessor->getRow(0);
+    static::assertSame($fundingCase->getFundingCaseTypeId(), $row->context['fundingCaseTypeId']);
+    static::assertSame($fundingCase->getFundingProgramId(), $row->context['fundingProgramId']);
+    static::assertSame($fundingCase->getRecipientContactId(), $row->context['contactId']);
 
     $this->subscriber->evaluateTokens($event);
     $row = $tokenProcessor->getRow(0);
     static::assertSame([], $row->tokens);
     $row->format('text/html');
     // @phpstan-ignore-next-line
-    static::assertSame('foo', $row->tokens['funding_program']['my_field'] ?? NULL);
+    static::assertSame('foo', $row->tokens['funding_case']['my_field'] ?? NULL);
   }
 
   public function testEvaluateWithId(): void {
-    $fundingProgram = FundingProgramFactory::createFundingProgram();
-    $this->fundingProgramManagerMock->method('get')
-      ->with(FundingProgramFactory::DEFAULT_ID)
-      ->willReturn($fundingProgram);
+    $fundingCase = FundingCaseFactory::createFundingCase(['recipient_contact_id' => 2]);
+    $this->fundingCaseManagerMock->method('get')
+      ->with(FundingCaseFactory::DEFAULT_ID)
+      ->willReturn($fundingCase);
 
     $tokenProcessor = $this->createTokenProcessor([]);
-    $tokenProcessor->addMessage('test', '{funding_program.my_field}', 'text/plain');
-    $tokenProcessor->addMessage('test2', '{funding_program.my_field2}', 'text/plain');
-    $tokenProcessor->addRow(['fundingProgramId' => FundingProgramFactory::DEFAULT_ID]);
+    $tokenProcessor->addMessage('test', '{funding_case.my_field}', 'text/plain');
+    $tokenProcessor->addMessage('test2', '{funding_case.my_field2}', 'text/plain');
+    $tokenProcessor->addRow([
+      'fundingCaseId' => FundingCaseFactory::DEFAULT_ID,
+      'contactId' => 3,
+    ]);
 
     $this->tokenResolverMock->method('resolveToken')
-      ->with(FundingProgram::getEntityName(), $fundingProgram, 'my_field')
+      ->with(FundingCase::getEntityName(), $fundingCase, 'my_field')
       ->willReturn(new ResolvedToken('foo', 'text/html'));
 
     $event = new TokenValueEvent($tokenProcessor);
     static::assertSame(['my_field'], $this->subscriber->getActiveTokens($event));
     $row = $tokenProcessor->getRow(0);
-    static::assertSame($fundingProgram, $row->context['fundingProgram']);
+    static::assertSame($fundingCase, $row->context['fundingCase']);
+    static::assertSame($fundingCase->getFundingCaseTypeId(), $row->context['fundingCaseTypeId']);
+    static::assertSame($fundingCase->getFundingProgramId(), $row->context['fundingProgramId']);
+    // Test 'contactId' is not overridden.
+    static::assertSame(3, $row->context['contactId']);
 
     $this->subscriber->evaluateTokens($event);
     static::assertSame([], $row->tokens);
     $row->format('text/html');
     // @phpstan-ignore-next-line
-    static::assertSame('foo', $row->tokens['funding_program']['my_field'] ?? NULL);
+    static::assertSame('foo', $row->tokens['funding_case']['my_field'] ?? NULL);
   }
 
   public function testEvaluateWithPath(): void {
     $tokenProcessor = $this->createTokenProcessor([]);
-    $tokenProcessor->addMessage('test', '{funding_program.my_serialized::foo}', 'text/plain');
+    $tokenProcessor->addMessage('test', '{funding_case.my_serialized::foo}', 'text/plain');
 
-    $fundingProgram = FundingProgramFactory::createFundingProgram();
-    $tokenProcessor->addRow(['fundingProgram' => $fundingProgram]);
+    $fundingCase = FundingCaseFactory::createFundingCase();
+    $tokenProcessor->addRow(['fundingCase' => $fundingCase]);
 
     $this->tokenResolverMock->method('resolveToken')
-      ->with(FundingProgram::getEntityName(), $fundingProgram, 'my_serialized::foo')
+      ->with(FundingCase::getEntityName(), $fundingCase, 'my_serialized::foo')
       ->willReturn(new ResolvedToken('bar', 'text/html'));
 
     $event = new TokenValueEvent($tokenProcessor);
@@ -226,7 +237,7 @@ final class FundingProgramTokenSubscriberTest extends TestCase {
     static::assertSame([], $row->tokens);
     $row->format('text/html');
     // @phpstan-ignore-next-line
-    static::assertSame('bar', $row->tokens['funding_program']['my_serialized::foo'] ?? NULL);
+    static::assertSame('bar', $row->tokens['funding_case']['my_serialized::foo'] ?? NULL);
   }
 
   /**

@@ -20,7 +20,6 @@ declare(strict_types = 1);
 namespace Civi\Funding\EventSubscriber\CiviOffice;
 
 use Civi\Api4\FundingCase;
-use Civi\Core\Event\GenericHookEvent;
 use Civi\Funding\DocumentRender\CiviOffice\AbstractCiviOfficeTokenSubscriber;
 use Civi\Funding\DocumentRender\CiviOffice\CiviOfficeContextDataHolder;
 use Civi\Funding\DocumentRender\Token\TokenNameExtractorInterface;
@@ -60,25 +59,34 @@ class FundingCaseTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
     $this->fundingCaseManager = $fundingCaseManager;
   }
 
-  public function onCiviOfficeTokenContext(GenericHookEvent $event): void {
-    parent::onCiviOfficeTokenContext($event);
-    if ($this->getApiEntityName() === $event->entity_type || isset($event->context[$this->getContextKey() . 'Id'])) {
-      /** @var \Civi\Funding\Entity\FundingCaseEntity $fundingCase */
-      $fundingCase = $event->context[$this->getContextKey()];
-      $event->context['fundingCaseTypeId'] ??= $fundingCase->getFundingCaseTypeId();
-      // @phpstan-ignore-next-line
-      $event->context['fundingProgramId'] ??= $fundingCase->getFundingProgramId();
-      // @phpstan-ignore-next-line
-      $event->context['contactId'] ??= $fundingCase->getRecipientContactId();
-    }
-  }
-
   protected function getEntity(int $id): ?AbstractEntity {
     return $this->fundingCaseManager->get($id);
   }
 
   protected function getApiEntityName(): string {
     return FundingCase::getEntityName();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  protected function getRelatedContextSchemas(): array {
+    return [
+      'fundingCaseTypeId',
+      'fundingProgramId',
+      'contactId',
+    ];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  protected function getRelatedContextValues(AbstractEntity $entity): array {
+    return [
+      'fundingCaseTypeId' => $entity->getFundingCaseTypeId(),
+      'fundingProgramId' => $entity->getFundingProgramId(),
+      'contactId' => $entity->getRecipientContactId(),
+    ];
   }
 
 }
