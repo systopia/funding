@@ -49,12 +49,24 @@ final class HiHFragenZumProjektGroup extends JsonFormsGroup {
           "$scopePrefix/ansprechpartner/properties/nachname",
           'Nachname'
         ),
+        new JsonFormsControl(
+          "$scopePrefix/ansprechpartner/properties/telefonnummer",
+          'Telefonnummer'
+        ),
+        new JsonFormsControl(
+          "$scopePrefix/ansprechpartner/properties/email",
+          'E-Mail'
+        ),
       ]),
       new JsonFormsControl(
         "$scopePrefix/adresseNichtIdentischMitOrganisation",
-        'Ist diese Adresse nicht identisch mit Organisation?'
+        'Ist die Projektadresse abweichend zur Organisation?'
       ),
-      new JsonFormsGroup('Abweichende Anschrift', [
+      new JsonFormsGroup('Abweichende Anschrift Projekt', [
+        new JsonFormsControl(
+          "$scopePrefix/abweichendeAnschrift/properties/projekttraeger",
+          'Name Projektträger'
+        ),
         new JsonFormsControl(
           "$scopePrefix/abweichendeAnschrift/properties/strasse",
           'Straße und Hausnummer'
@@ -67,14 +79,6 @@ final class HiHFragenZumProjektGroup extends JsonFormsGroup {
         new JsonFormsControl(
           "$scopePrefix/abweichendeAnschrift/properties/ort",
           'Stadt'
-        ),
-        new JsonFormsControl(
-          "$scopePrefix/abweichendeAnschrift/properties/telefonnummer",
-          'Telefonnummer'
-        ),
-        new JsonFormsControl(
-          "$scopePrefix/abweichendeAnschrift/properties/email",
-          'E-Mail'
         ),
       ], NULL, NULL, [
         'rule' => new JsonFormsRule(

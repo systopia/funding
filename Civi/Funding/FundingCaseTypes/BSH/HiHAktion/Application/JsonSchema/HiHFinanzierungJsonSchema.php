@@ -46,18 +46,8 @@ final class HiHFinanzierungJsonSchema extends JsonSchemaObject {
     ];
 
     $keywords = [
-      'required' => ['grundsaetzlich', 'gesamtesProjektHiH'],
+      'required' => ['grundsaetzlich', 'gesamtesProjektHiH', 'wichtigstePositionenBeiTeilbetrag'],
       'allOf' => [
-        JsonSchema::fromArray([
-          'if' => [
-            'properties' => [
-              'gesamtesProjektHiH' => ['const' => TRUE],
-            ],
-          ],
-          'then' => new JsonSchemaObject([
-            'wichtigstePositionenBeiTeilbetrag' => new JsonSchemaString($minLengthValidation),
-          ], ['required' => ['wichtigstePositionenBeiTeilbetrag']]),
-        ]),
         JsonSchema::fromArray([
           'if' => [
             'properties' => [
