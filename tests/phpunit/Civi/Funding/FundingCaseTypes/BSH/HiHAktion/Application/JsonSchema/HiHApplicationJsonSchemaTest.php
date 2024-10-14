@@ -65,6 +65,7 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
     );
 
     $this->validData = [
+      'mitBuergerstiftungGesprochen' => TRUE,
       'fragenZumProjekt' => [
         'name' => 'Test',
         'ansprechpartner' => [
@@ -72,14 +73,15 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
           'titel' => 'Dr.',
           'vorname' => 'Erika',
           'nachname' => 'Mustermann',
+          'telefonnummer' => '0123456789',
+          'email' => 'mustermann@example.org',
         ],
         'adresseNichtIdentischMitOrganisation' => TRUE,
         'abweichendeAnschrift' => [
+          'projekttraeger' => 'Projektträger',
           'strasse' => 'Musterstr. 11',
           'plz' => '47110',
           'ort' => 'Musterort',
-          'telefonnummer' => '0123456789',
-          'email' => 'mustermann@example.org',
         ],
       ],
       'informationenZumProjekt' => [
@@ -236,8 +238,6 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
       '/fragenZumProjekt/abweichendeAnschrift/strasse' => ['Dieser Wert ist erforderlich.'],
       '/fragenZumProjekt/abweichendeAnschrift/plz' => ['Dieser Wert ist erforderlich.'],
       '/fragenZumProjekt/abweichendeAnschrift/ort' => ['Dieser Wert ist erforderlich.'],
-      '/fragenZumProjekt/abweichendeAnschrift/telefonnummer' => ['Dieser Wert ist erforderlich.'],
-      '/fragenZumProjekt/abweichendeAnschrift/email' => ['Dieser Wert ist erforderlich.'],
     ], $result->getLeafErrorMessages());
   }
 
@@ -284,17 +284,6 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
     $result = $this->validator->validate($this->jsonSchema, $data, 2);
     static::assertEquals([
       '/informationenZumProjekt/zielgruppeHerausforderungenSonstige' => ['Dieser Wert ist erforderlich.'],
-    ], $result->getLeafErrorMessages());
-  }
-
-  public function testFinanzierungGesamtesProjektHiHTrue(): void {
-    $data = $this->validData;
-    $data['finanzierung']['gesamtesProjektHiH'] = TRUE;
-    $data['finanzierung']['wichtigstePositionenBeiTeilbetrag'] = '';
-
-    $result = $this->validator->validate($this->jsonSchema, $data, 2);
-    static::assertEquals([
-      '/finanzierung/wichtigstePositionenBeiTeilbetrag' => ['Dieser Wert ist erforderlich.'],
     ], $result->getLeafErrorMessages());
   }
 
