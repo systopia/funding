@@ -29,11 +29,10 @@ final class HiHFragenZumProjektJsonSchema extends JsonSchemaObject {
 
   public function __construct() {
     $abweichendeAnschrift = new JsonSchemaObject([
+      'projekttraeger' => new JsonSchemaString(['maxLength' => 255]),
       'strasse' => new JsonSchemaString(['maxLength' => 255]),
       'plz' => new JsonSchemaString(['maxLength' => 255]),
       'ort' => new JsonSchemaString(['maxLength' => 255]),
-      'telefonnummer' => new JsonSchemaString(['maxLength' => 255]),
-      'email' => new JsonSchemaString(['maxLength' => 255]),
     ]);
     $minLengthValidation = [
       '$validations' => [
@@ -45,12 +44,11 @@ final class HiHFragenZumProjektJsonSchema extends JsonSchemaObject {
       ],
     ];
     $abweichendeAnschriftRequired = new JsonSchemaObject([
+      'projekttraeger' => new JsonSchemaString($minLengthValidation),
       'strasse' => new JsonSchemaString($minLengthValidation),
       'plz' => new JsonSchemaString($minLengthValidation),
       'ort' => new JsonSchemaString($minLengthValidation),
-      'telefonnummer' => new JsonSchemaString($minLengthValidation),
-      'email' => new JsonSchemaString($minLengthValidation),
-    ], ['required' => ['strasse', 'plz', 'ort', 'telefonnummer', 'email']]);
+    ], ['required' => ['strasse', 'plz', 'ort']]);
 
     $properties = [
       'name' => new JsonSchemaString([
@@ -68,7 +66,9 @@ final class HiHFragenZumProjektJsonSchema extends JsonSchemaObject {
         'titel' => new JsonSchemaString(['maxLength' => 255]),
         'vorname' => new JsonSchemaString(['maxLength' => 255]),
         'nachname' => new JsonSchemaString(['maxLength' => 255]),
-      ], ['required' => ['anrede', 'vorname', 'nachname']]),
+        'telefonnummer' => new JsonSchemaString(['maxLength' => 255]),
+        'email' => new JsonSchemaString(['maxLength' => 255]),
+      ], ['required' => ['anrede', 'vorname', 'nachname', 'telefonnummer', 'email']]),
       'adresseNichtIdentischMitOrganisation' => new JsonSchemaBoolean(['default' => FALSE]),
       'abweichendeAnschrift' => $abweichendeAnschrift,
     ];

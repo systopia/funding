@@ -52,10 +52,13 @@ final class HiHKostenGroup extends JsonFormsGroup {
           "$scopePrefix/personalkostenKommentar",
           'Kommentar zu den Personalkosten',
           <<<EOD
-Bitte erklären Sie, wie viele Stunden pro Woche und Stelle gearbeitet werden,
-was die Aufgaben sind und warum die Stelle für das Projekt wichtig ist.
+Bitte geben Sie die monatliche Gesamtsumme pro Mitarbeiter inklusive aller
+Steuern und Nebenkosten an (Arbeitgeberbrutto).
 EOD,
-          ['multi' => TRUE]
+          [
+            'multi' => TRUE,
+            'descriptionDisplay' => 'before',
+          ]
         ),
       ], <<<EOD
 Als monatliches Arbeitgeberbrutto geben Sie bitte die monatliche Gesamtsumme
@@ -63,7 +66,8 @@ pro Mitarbeiter inklusive aller Steuern an (Arbeitgeberbrutto).<br>
 Im Feld Monate geben Sie bitte die Gesamtzahl der Monate für den
 beantragten Zeitraum an. Zum Beispiel bei einer Förderung von zwei Jahren sind
 es 24 Monate.
-EOD
+EOD,
+      ['descriptionDisplay' => 'tooltip']
       ),
       new JsonFormsGroup('Honorare', [
         new JsonFormsArray("$scopePrefix/honorare", '', NULL, [
@@ -87,7 +91,10 @@ EOD
 Bitte erklären Sie, was die Honorarkräfte machen, wo sie im Projekt arbeiten und
 warum sie wichtig sind.
 EOD,
-          ['multi' => TRUE]
+          [
+            'multi' => TRUE,
+            'descriptionDisplay' => 'before',
+          ]
         ),
       ]),
       new JsonFormsControl(
@@ -156,7 +163,7 @@ EOD,
             new JsonFormsArray(
               "$scopePrefix/sachkosten/properties/sonstige",
               'Sonstige Sachkosten in ' . $currency,
-              'z.B. Telefonkosten, Bürobedarf oder IT-Support',
+              'z.B. Eintrittsgelder für den Besuch von Veranstaltungen',
               [
                 new JsonFormsHidden('#/properties/_identifier'),
                 new JsonFormsControl('#/properties/bezeichnung', 'Bezeichnung'),
@@ -184,7 +191,10 @@ EOD,
     im Projekt verwendet? Bitte gehen Sie auf die einzelnen Unterkategorien ein.
     Erklären Sie besonders die Kategorie „Sonstige Sachkosten“:)
     EOD,
-              ['multi' => TRUE]
+              [
+                'multi' => TRUE,
+                'descriptionDisplay' => 'before',
+              ]
             ),
           ],
           NULL,
@@ -197,7 +207,8 @@ können. Kosten wie Buchhaltung, allgemeine Personalverwaltung oder
 Versicherungen für die Organisation sind nicht erlaubt. Auch Einzelfallhilfen
 können nicht beantragt werden. Achten Sie bei allen Ausgaben darauf, sparsam und
 wirtschaftlich zu sein.
-EOD
+EOD,
+        ['descriptionDisplay' => 'tooltip']
       ),
     ]);
   }

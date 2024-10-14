@@ -20,7 +20,9 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\JsonSchema;
 
 use Civi\Funding\Form\JsonSchema\JsonSchemaRecipient;
+use Civi\RemoteTools\JsonSchema\JsonSchemaBoolean;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
+use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
 
 final class HiHApplicationJsonSchema extends JsonSchemaObject {
 
@@ -33,18 +35,34 @@ final class HiHApplicationJsonSchema extends JsonSchemaObject {
     \DateTimeInterface $applicationEnd,
     array $possibleRecipients
   ) {
-    // @todo Validate conditional fields.
     // @todo Additional validations, e.g. required, length, min, max, ...
     $properties = [
       'fragenZumProjekt' => new HiHFragenZumProjektJsonSchema(),
       'informationenZumProjekt' => new HiHInformationenZumProjektJsonSchema($applicationBegin, $applicationEnd),
       'empfaenger' => new JsonSchemaRecipient($possibleRecipients),
+      'mitBuergerstiftungGesprochen' => new JsonSchemaBoolean([
+        'oneOf' => JsonSchemaUtil::buildTitledOneOf2(
+          [
+            'Ja' => TRUE,
+            'Nein' => FALSE,
+          ],
+        ),
+      ], TRUE),
       'kosten' => new HiHKostenJsonSchema(),
       'finanzierung' => new HiHFinanzierungJsonSchema(),
       'rechtliches' => new HiHRechtlichesJsonSchema(),
     ];
 
-    parent::__construct($properties, ['required' => array_keys($properties)]);
+    parent::__construct($properties, [
+      'required' => [
+        'fragenZumProjekt',
+        'informationenZumProjekt',
+        'empfaenger',
+        'kosten',
+        'finanzierung',
+        'rechtliches',
+      ],
+    ]);
   }
 
 }
