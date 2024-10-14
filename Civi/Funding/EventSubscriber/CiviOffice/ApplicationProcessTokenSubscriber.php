@@ -20,7 +20,6 @@ declare(strict_types = 1);
 namespace Civi\Funding\EventSubscriber\CiviOffice;
 
 use Civi\Api4\FundingApplicationProcess;
-use Civi\Core\Event\GenericHookEvent;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\DocumentRender\CiviOffice\AbstractCiviOfficeTokenSubscriber;
 use Civi\Funding\DocumentRender\CiviOffice\CiviOfficeContextDataHolder;
@@ -58,15 +57,6 @@ class ApplicationProcessTokenSubscriber extends AbstractCiviOfficeTokenSubscribe
     $this->applicationProcessManager = $applicationProcessManager;
   }
 
-  public function onCiviOfficeTokenContext(GenericHookEvent $event): void {
-    parent::onCiviOfficeTokenContext($event);
-    if ($this->getApiEntityName() === $event->entity_type || isset($event->context[$this->getContextKey() . 'Id'])) {
-      /** @var \Civi\Funding\Entity\ApplicationProcessEntity $applicationProcess */
-      $applicationProcess = $event->context[$this->getContextKey()];
-      $event->context['fundingCaseId'] ??= $applicationProcess->getFundingCaseId();
-    }
-  }
-
   protected function getEntity(int $id): ?AbstractEntity {
     return $this->applicationProcessManager->get($id);
   }
@@ -77,6 +67,20 @@ class ApplicationProcessTokenSubscriber extends AbstractCiviOfficeTokenSubscribe
 
   protected function getEntityClass(): string {
     return ApplicationProcessEntity::class;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  protected function getRelatedContextSchemas(): array {
+    return ['fundingCaseId'];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  protected function getRelatedContextValues(AbstractEntity $entity): array {
+    return ['fundingCaseId' => $entity->getFundingCaseId()];
   }
 
 }

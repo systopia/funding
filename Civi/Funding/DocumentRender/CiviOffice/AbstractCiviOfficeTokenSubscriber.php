@@ -48,6 +48,8 @@ abstract class AbstractCiviOfficeTokenSubscriber extends AbstractTokenSubscriber
   public static function getSubscribedEvents(): array {
     return [
       'civi.civioffice.tokenContext' => ['onCiviOfficeTokenContext', static::getPriority()],
+      // The priority is necessary to add related values to the context.
+      'civi.token.eval' => ['evaluateTokens', static::getPriority()],
     ] + parent::getSubscribedEvents();
   }
 
@@ -85,42 +87,55 @@ abstract class AbstractCiviOfficeTokenSubscriber extends AbstractTokenSubscriber
       if ($entity instanceof $entityClass) {
         $event->context[$this->getContextKey()] = $entity;
       }
-      elseif (is_int($event->context[$this->getContextKey() . 'Id'] ?? NULL)) {
-        $entityId = $event->context[$this->getContextKey() . 'Id'];
-        $event->context[$this->getContextKey()] = $this->getEntity($entityId);
-        Assert::notNull(
-          $event->context[$this->getContextKey()],
-          sprintf('No %s with ID %d found', $this->getApiEntityName(), $entityId),
-        );
-      }
     }
   }
 
   public function checkActive(TokenProcessor $processor): bool {
-    return in_array($this->getContextKey(), $processor->context['schema'] ?? [], TRUE)
-      || [] !== $processor->getContextValues($this->getContextKey())
-      || 'CRM_Civioffice_Page_Tokens' === ($processor->context['controller'] ?? NULL);
+    if ('CRM_Civioffice_Page_Tokens' === ($processor->context['controller'] ?? NULL)) {
+      return TRUE;
+    }
+
+    $active = in_array($this->getContextKey(), $processor->context['schema'] ?? [], TRUE)
+      || in_array($this->getContextKey() . 'Id', $processor->context['schema'] ?? [], TRUE);
+
+    if (!$active) {
+      /** @var \Civi\Token\TokenRow $row */
+      foreach ($processor->getRows() as $row) {
+        if (isset($row->context[$this->getContextKey()]) ||
+          isset($row->context[$this->getContextKey() . 'Id'])) {
+          $processor->context['schema'][] = $this->getContextKey();
+          $active = TRUE;
+
+          break;
+        }
+      }
+    }
+
+    if ($active) {
+      $processor->context['schema'] = array_unique(
+        array_merge($processor->context['schema'], $this->getRelatedContextSchemas())
+      );
+    }
+
+    return $active;
   }
 
   /**
    * @inheritDoc
    */
   public function evaluateToken(TokenRow $row, $entityName, $field, $prefetch = NULL): void {
-    $entity = $row->context[$this->getContextKey()];
-    Assert::isInstanceOf(
-      $entity,
-      $this->getEntityClass(),
-      sprintf('Context value "%s" must be an instance of "%s"', $this->getContextKey(), $this->getEntityClass()),
-    );
     /** @phpstan-var T $entity */
+    $entity = $row->context[$this->getContextKey()];
 
     $resolvedToken = $this->tokenResolver->resolveToken($this->getApiEntityName(), $entity, $field);
     $row->format($resolvedToken->format);
     $row->tokens($entityName, $field, $resolvedToken->value);
   }
 
-  public function getActiveTokens(TokenValueEvent $e) {
-    $messageTokens = $e->getTokenProcessor()->getMessageTokens()[$this->entity] ?? [];
+  public function getActiveTokens(TokenValueEvent $event) {
+    $this->addRelatedContextValues($event);
+
+    $messageTokens = $event->getTokenProcessor()->getMessageTokens()[$this->entity] ?? [];
     $activeTokens = array_values(array_intersect($messageTokens, array_keys($this->tokenNames)));
 
     // Add tokens with path for array value access.
@@ -153,5 +168,44 @@ abstract class AbstractCiviOfficeTokenSubscriber extends AbstractTokenSubscriber
   }
 
   abstract protected function getApiEntityName(): string;
+
+  /**
+   * @phpstan-return list<string>
+   */
+  abstract protected function getRelatedContextSchemas(): array;
+
+  /**
+   * @phpstan-param T $entity
+   *
+   * @phpstan-return array<string, mixed>
+   */
+  abstract protected function getRelatedContextValues(AbstractEntity $entity): array;
+
+  private function addRelatedContextValues(TokenValueEvent $event): void {
+    /** @var \Civi\Token\TokenRow $row */
+    foreach ($event->getRows() as $row) {
+      $entity = $row->context[$this->getContextKey()] ?? NULL;
+      if (NULL === $entity && isset($row->context[$this->getContextKey() . 'Id'])) {
+        $entityId = $row->context[$this->getContextKey() . 'Id'];
+        Assert::integer($entityId, sprintf('Context value "%s" must be an integer', $this->getContextKey() . 'Id'));
+        $entity = $row->context[$this->getContextKey()] = $this->getEntity($entityId);
+        Assert::notNull(
+          $entity,
+          sprintf('No %s with ID %d found', $this->getApiEntityName(), $entityId),
+        );
+      }
+
+      Assert::isInstanceOf(
+        $entity,
+        $this->getEntityClass(),
+        sprintf('Context value "%s" must be an instance of "%s"', $this->getContextKey(), $this->getEntityClass()),
+      );
+
+      // @phpstan-ignore argument.type
+      foreach ($this->getRelatedContextValues($entity) as $key => $value) {
+        $row->context[$key] ??= $value;
+      }
+    }
+  }
 
 }

@@ -79,4 +79,18 @@ class PayoutProcessTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
     return PayoutProcessEntity::class;
   }
 
+  /**
+   * @inheritDoc
+   */
+  protected function getRelatedContextSchemas(): array {
+    return ['fundingCaseId'];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  protected function getRelatedContextValues(AbstractEntity $entity): array {
+    return ['fundingCaseId' => $entity->getFundingCaseId()];
+  }
+
 }
