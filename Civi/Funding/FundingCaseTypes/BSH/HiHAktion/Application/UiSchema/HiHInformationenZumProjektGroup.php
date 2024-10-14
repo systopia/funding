@@ -34,7 +34,7 @@ final class HiHInformationenZumProjektGroup extends JsonFormsGroup {
         "$scopePrefix/kurzbeschreibung",
         <<<EOD
 Bitte beschreiben Sie ihr Projekt. Gehen sie dabei besonders darauf ein, was sie
-konkret mit der Förderung umsetzen wollen):
+konkret mit der Förderung umsetzen wollen:
 EOD, NULL, ['multi' => TRUE]
       ),
       new JsonFormsControl(
