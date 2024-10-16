@@ -57,6 +57,7 @@ msgstr "Kein passender Antrag oder fehlende Berechtigung."
 #: Civi/Funding/Api4/Action/FundingCase/RecreateTransferContractAction.php
 #: Civi/Funding/FundingCase/Api4/ActionHandler/FinishClearingActionHandler.php
 #: Civi/Funding/FundingCase/Api4/ActionHandler/GetPossibleRecipientsActionHandler.php
+#: Civi/Funding/FundingCase/Api4/ActionHandler/SetNotificationContactsActionHandler.php
 #: Civi/Funding/FundingCase/Api4/ActionHandler/SetRecipientContactActionHandler.php
 #: Civi/Funding/FundingCase/Api4/ActionHandler/UpdateAmountApprovedActionHandler.php
 msgid "Funding case with ID \"%1\" not found"
@@ -1035,6 +1036,12 @@ msgid "Finishing the clearing of funding case \"%1\" is not allowed."
 msgstr ""
 "Die Abrechnung des Förderfalls \"%1\" abzuschließen, ist nicht erlaubt."
 
+#: Civi/Funding/FundingCase/Handler/FundingCaseNotificationContactsSetHandler.php
+msgid "Changing the notification contacts of this funding case is not allowed."
+msgstr ""
+"Die Benachrichtigungskontakte dieses Förderfalls zu ändern, ist nicht "
+"erlaubt."
+
 #: Civi/Funding/FundingCase/Handler/FundingCaseRecipientContactSetHandler.php
 msgid "Changing the recipient contact of this funding case is not allowed."
 msgstr "Den Empfängerkontakt dieses Förderfalls zu ändern, ist nicht erlaubt."
@@ -1331,6 +1338,7 @@ msgstr "Meine Aufgaben"
 #: ang/crmFunding/application/history/applicationProcessHistory.directive.js
 #: ang/crmFunding/case/fundingCase.js
 #: ang/crmFunding/case/fundingCasePermissions.js
+#: ang/crmFunding/case/notificationContacts.directive.js
 #: ang/crmFunding/case/permissions/fundingCaseContactRelation.directive.js
 #: ang/crmFunding/case/recipientContact.directive.js
 #: ang/crmFunding/clearing/clearing.js
@@ -1694,6 +1702,10 @@ msgid "Funding Case: %1"
 msgstr "Förderfall: %1"
 
 #: ang/crmFunding/case/fundingCase.template.html
+msgid "Notification Contacts"
+msgstr "Benachrichtigungskontakte"
+
+#: ang/crmFunding/case/fundingCase.template.html
 msgid "Amount Requested Eligible"
 msgstr "Förderfähiger Betrag"
 
@@ -1734,6 +1746,11 @@ msgstr "Hinzufügen"
 #: ang/crmFunding/program/recipientRelations.html
 msgid "Remove"
 msgstr "Entfernen"
+
+#: ang/crmFunding/case/notificationContacts.directive.js
+#: ang/crmFunding/form/editableField.directive.js
+msgid "empty"
+msgstr "leer"
 
 #: ang/crmFunding/case/permissions/fundingCaseContactRelation.template.html
 #: ang/crmFunding/program/newCasePermissions/fundingNewCasePermissions.template.html
@@ -1776,10 +1793,6 @@ msgstr "Verwendungsnachweis annehmen"
 #: ang/crmFunding/clearing/clearingSidebar.template.html
 msgid "Accept is possible once the review was successful."
 msgstr "Annahme ist möglich, wenn die Prüfung erfolgreich war."
-
-#: ang/crmFunding/form/editableField.directive.js
-msgid "empty"
-msgstr "leer"
 
 #: ang/crmFunding/form/fundingSelectPermissions.directive.js
 msgid "Combining application permissions with other ones is not possible."

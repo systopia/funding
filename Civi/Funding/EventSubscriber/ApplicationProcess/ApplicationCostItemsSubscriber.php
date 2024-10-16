@@ -45,7 +45,8 @@ class ApplicationCostItemsSubscriber implements EventSubscriberInterface {
 
   public function onFormSubmitSuccess(ApplicationFormSubmitSuccessEvent $event): void {
     if ($event->getResult()->getValidationResult()->isReadOnly() ||
-      NULL !== $event->getApplicationProcess()->getRestoredSnapshot()) {
+      NULL !== $event->getApplicationProcess()->getRestoredSnapshot() ||
+      'delete' === $event->getAction()) {
       return;
     }
 

@@ -175,6 +175,7 @@ CREATE TABLE `civicrm_funding_case` (
   `creation_date` timestamp NOT NULL,
   `modification_date` timestamp NOT NULL,
   `creation_contact_id` int unsigned NOT NULL COMMENT 'FK to Contact',
+  `notification_contact_ids` varchar(255) NOT NULL,
   `recipient_contact_id` int unsigned NOT NULL COMMENT 'FK to Contact',
   `amount_approved` decimal(10,2),
   PRIMARY KEY (`id`),

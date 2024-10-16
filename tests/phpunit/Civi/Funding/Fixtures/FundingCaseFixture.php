@@ -46,6 +46,7 @@ final class FundingCaseFixture {
         'creation_date' => $now,
         'modification_date' => $now,
         'creation_contact_id' => $creationContactId,
+        'notification_contact_ids' => [$creationContactId],
         'amount_approved' => NULL,
       ])->execute();
 

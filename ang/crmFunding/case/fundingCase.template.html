@@ -73,6 +73,10 @@
       <funding-recipient-contact funding-case="fundingCase" edit-allowed="possibleActions.includes('set-recipient-contact')"></funding-recipient-contact>
   </div>
   <div>
+    <label>{{ ts('Notification Contacts') }}</label>
+    <funding-notification-contacts funding-case="fundingCase" edit-allowed="possibleActions.includes('set-notification-contacts')"></funding-notification-contacts>
+  </div>
+  <div>
     <label>{{ ts('Amount Approved')}}</label>
     {{ fundingCase.amount_approved|fundingCurrency:fundingProgram.currency }}
   </div>

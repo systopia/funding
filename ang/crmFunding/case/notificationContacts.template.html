@@ -1,0 +1,20 @@
+<span ng-show="editAllowed">
+  <span editable-ui-select="fundingCase.notification_contact_ids" name="notification_contact_ids"
+        theme="bootstrap" data-e-ng-model="fundingCase.notification_contact_ids"
+        e-multiple e-on-select="onSelect($item)" e-on-remove="onRemove($item)"
+        onshow="onStartEdit()"
+        onbeforesave="setContacts($data)"
+        onhide="onEditFinished()">
+    {{ contactNames }}
+    <editable-ui-select-match  class="ui-select-match">
+      {{ $item.label }}
+    </editable-ui-select-match>
+    <editable-ui-select-choices class="ui-select-choices" repeat="contact.id as contact in contacts | filter: $select.search"
+      refresh="refreshContacts($select.search)" refresh-delay="700">
+      <div ng-bind-html="contact.label | highlight: $select.search"></div>
+    </editable-ui-select-choices>
+  </span>
+</span>
+<span ng-show="!editAllowed">
+  <span>{{ contactNames }}</span>
+</span>

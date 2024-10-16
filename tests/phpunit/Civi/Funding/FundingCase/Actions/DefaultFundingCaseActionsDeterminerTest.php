@@ -35,20 +35,39 @@ final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
 
   private const STATUS_PERMISSION_ACTIONS_MAP = [
     'open' => [
-      'review_calculative' => ['approve'],
-      'review_content' => ['approve'],
+      'review_calculative' => ['approve', 'set-notification-contacts'],
+      'review_content' => ['approve', 'set-notification-contacts'],
+      'review_clearing_calculative' => ['set-notification-contacts'],
+      'review_clearing_content' => ['set-notification-contacts'],
+      'review_drawdown' => ['set-notification-contacts'],
     ],
     'ongoing' => [
-      'review_calculative' => ['recreate-transfer-contract', 'update-amount-approved'],
-      'review_content' => ['recreate-transfer-contract', 'update-amount-approved'],
+      'review_calculative' => ['recreate-transfer-contract', 'update-amount-approved', 'set-notification-contacts'],
+      'review_content' => ['recreate-transfer-contract', 'update-amount-approved', 'set-notification-contacts'],
+      'review_clearing_calculative' => ['set-notification-contacts'],
+      'review_clearing_content' => ['set-notification-contacts'],
+      'review_drawdown' => ['set-notification-contacts'],
+    ],
+    'cleared' => [
+      'review_calculative' => ['set-notification-contacts'],
+      'review_content' => ['set-notification-contacts'],
+      'review_clearing_calculative' => ['set-notification-contacts'],
+      'review_clearing_content' => ['set-notification-contacts'],
+      'review_drawdown' => ['set-notification-contacts'],
     ],
     'rejected' => [
-      'review_calculative' => [],
-      'review_content' => [],
+      'review_calculative' => ['set-notification-contacts'],
+      'review_content' => ['set-notification-contacts'],
+      'review_clearing_calculative' => ['set-notification-contacts'],
+      'review_clearing_content' => ['set-notification-contacts'],
+      'review_drawdown' => ['set-notification-contacts'],
     ],
     'withdrawn' => [
-      'review_calculative' => [],
-      'review_content' => [],
+      'review_calculative' => ['set-notification-contacts'],
+      'review_content' => ['set-notification-contacts'],
+      'review_clearing_calculative' => ['set-notification-contacts'],
+      'review_clearing_content' => ['set-notification-contacts'],
+      'review_drawdown' => ['set-notification-contacts'],
     ],
   ];
 

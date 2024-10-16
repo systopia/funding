@@ -54,6 +54,7 @@ final class FundingCaseFactory {
       'creation_date' => date('Y-m-d H:i:s'),
       'modification_date' => date('Y-m-d H:i:s'),
       'creation_contact_id' => 1,
+      'notification_contact_ids' => [1],
       'amount_approved' => NULL,
       'permissions' => ['test_permission'],
     ]);

@@ -150,6 +150,7 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
       'creation_date' => date('Y-m-d H:i:s'),
       'modification_date' => date('Y-m-d H:i:s'),
       'creation_contact_id' => $contact['id'],
+      'notification_contact_ids' => [$contact['id']],
       'amount_approved' => NULL,
       'transfer_contract_uri' => NULL,
       'permissions' => ['test_permission'],

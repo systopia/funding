@@ -85,6 +85,13 @@ fundingModule.factory('fundingCaseService', ['crmApi4', function(crmApi4) {
 
     /**
      * @param {integer} id
+     * @param {integer[]} contactIds
+     * @returns {Promise<Object>}
+     */
+    setNotificationContacts: (id, contactIds) => crmApi4('FundingCase', 'setNotificationContacts', {id, contactIds}),
+
+    /**
+     * @param {integer} id
      * @param {string} field
      * @param value
      * @returns {Promise}

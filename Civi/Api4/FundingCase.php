@@ -26,6 +26,7 @@ use Civi\Funding\Api4\Action\FundingCase\GetFieldsAction;
 use Civi\Funding\Api4\Action\FundingCase\GetPossibleActionsAction;
 use Civi\Funding\Api4\Action\FundingCase\GetPossibleRecipientsAction;
 use Civi\Funding\Api4\Action\FundingCase\RecreateTransferContractAction;
+use Civi\Funding\Api4\Action\FundingCase\SetNotificationContactsAction;
 use Civi\Funding\Api4\Action\FundingCase\SetRecipientContactAction;
 use Civi\Funding\Api4\Action\FundingCase\UpdateAmountApprovedAction;
 use Civi\Funding\Api4\Traits\AccessPermissionsTrait;
@@ -75,6 +76,10 @@ final class FundingCase extends Generic\DAOEntity {
 
   public static function recreateTransferContract(bool $checkPermissions = TRUE): RecreateTransferContractAction {
     return \Civi::service(RecreateTransferContractAction::class)->setCheckPermissions($checkPermissions);
+  }
+
+  public static function setNotificationContacts(bool $checkPermissions = TRUE): SetNotificationContactsAction {
+    return (new SetNotificationContactsAction())->setCheckPermissions($checkPermissions);
   }
 
   public static function setRecipientContact(bool $checkPermissions = TRUE): SetRecipientContactAction {
