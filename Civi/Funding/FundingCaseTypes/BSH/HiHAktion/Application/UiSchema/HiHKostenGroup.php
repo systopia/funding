@@ -29,6 +29,16 @@ use Civi\RemoteTools\JsonSchema\JsonSchema;
 final class HiHKostenGroup extends JsonFormsGroup {
 
   public function __construct(string $scopePrefix, string $currency) {
+    $personalkostenRule = new JsonFormsRule(
+      'SHOW',
+      "$scopePrefix/personalkostenKeine",
+      JsonSchema::fromArray(['const' => FALSE])
+    );
+    $honorareRule = new JsonFormsRule(
+      'SHOW',
+      "$scopePrefix/honorareKeine",
+      JsonSchema::fromArray(['const' => FALSE])
+    );
     $sachkostenRule = new JsonFormsRule(
       'SHOW',
       "$scopePrefix/sachkostenKeine",
@@ -36,6 +46,10 @@ final class HiHKostenGroup extends JsonFormsGroup {
     );
 
     parent::__construct('Projektkosten', [
+      new JsonFormsControl(
+        "$scopePrefix/personalkostenKeine",
+        'Ich beantrage keine Personalkosten',
+      ),
       new JsonFormsGroup('Personalkosten', [
         new JsonFormsArray("$scopePrefix/personalkosten", '', NULL, [
           new JsonFormsHidden('#/properties/_identifier'),
@@ -52,8 +66,8 @@ final class HiHKostenGroup extends JsonFormsGroup {
           "$scopePrefix/personalkostenKommentar",
           'Kommentar zu den Personalkosten',
           <<<EOD
-Bitte geben Sie die monatliche Gesamtsumme pro Mitarbeiter inklusive aller
-Steuern und Nebenkosten an (Arbeitgeberbrutto).
+Bitte erklären Sie was die Arbeitnehmer:innen machen, wo sie im Projekt arbeiten
+und warum sie wichtig sind.
 EOD,
           [
             'multi' => TRUE,
@@ -67,7 +81,12 @@ Im Feld Monate geben Sie bitte die Gesamtzahl der Monate für den
 beantragten Zeitraum an. Zum Beispiel bei einer Förderung von zwei Jahren sind
 es 24 Monate.
 EOD,
-      ['descriptionDisplay' => 'tooltip']
+        ['descriptionDisplay' => 'tooltip'],
+        ['rule' => $personalkostenRule]
+      ),
+      new JsonFormsControl(
+        "$scopePrefix/honorareKeine",
+        'Ich beantrage keine Honorarkosten',
       ),
       new JsonFormsGroup('Honorare', [
         new JsonFormsArray("$scopePrefix/honorare", '', NULL, [
@@ -96,7 +115,7 @@ EOD,
             'descriptionDisplay' => 'before',
           ]
         ),
-      ]),
+      ], NULL, NULL, ['rule' => $honorareRule]),
       new JsonFormsControl(
         "$scopePrefix/sachkostenKeine",
         'Ich beantrage keine Sachkosten',
@@ -189,7 +208,7 @@ EOD,
               <<<EOD
     Bitte erklären Sie die Sachkosten: Warum werden sie benötigt und wie werden sie
     im Projekt verwendet? Bitte gehen Sie auf die einzelnen Unterkategorien ein.
-    Erklären Sie besonders die Kategorie „Sonstige Sachkosten“:)
+    Erklären Sie besonders die Kategorie „Sonstige Sachkosten“:
     EOD,
               [
                 'multi' => TRUE,

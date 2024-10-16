@@ -40,14 +40,6 @@ final class HiHApplicationJsonSchema extends JsonSchemaObject {
       'fragenZumProjekt' => new HiHFragenZumProjektJsonSchema(),
       'informationenZumProjekt' => new HiHInformationenZumProjektJsonSchema($applicationBegin, $applicationEnd),
       'empfaenger' => new JsonSchemaRecipient($possibleRecipients),
-      'mitBuergerstiftungGesprochen' => new JsonSchemaBoolean([
-        'oneOf' => JsonSchemaUtil::buildTitledOneOf2(
-          [
-            'Ja' => TRUE,
-            'Nein' => FALSE,
-          ],
-        ),
-      ], TRUE),
       'kosten' => new HiHKostenJsonSchema(),
       'finanzierung' => new HiHFinanzierungJsonSchema(),
       'rechtliches' => new HiHRechtlichesJsonSchema(),

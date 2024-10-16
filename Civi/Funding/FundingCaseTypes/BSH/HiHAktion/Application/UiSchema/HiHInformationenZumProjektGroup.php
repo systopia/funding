@@ -33,19 +33,24 @@ final class HiHInformationenZumProjektGroup extends JsonFormsGroup {
       new JsonFormsControl(
         "$scopePrefix/kurzbeschreibung",
         <<<EOD
-Bitte beschreiben Sie ihr Projekt. Gehen sie dabei besonders darauf ein, was sie
-konkret mit der Förderung umsetzen wollen:
+Bitte beschreiben Sie ihr Projekt. Gehen Sie dabei besonders darauf ein, was Sie
+konkret mit der Förderung umsetzen wollen: (max. 1800 Zeichen mit Leerzeichen)
 EOD, NULL, ['multi' => TRUE]
       ),
       new JsonFormsControl(
         "$scopePrefix/wirktGegenEinsamkeit",
-        'Wie wirkt das Projekt gegen Einsamkeit?',
+        'Wie wirkt das Projekt gegen Einsamkeit? (max. 900 Zeichen mit Leerzeichen)',
         NULL,
         ['multi' => TRUE]
       ),
       new JsonFormsControl(
-        "$scopePrefix/kern",
-        'Kurztext für den NDR: Was ist der Kern Ihres Projektes? (1-2 Sätze)',
+        "$scopePrefix/ziel",
+        <<<EOD
+Was ist das Ziel Ihres Projektes und wie wollen sie die Förderung hierfür
+konkret einsetzen? (2-3 Sätze, max. 300 Zeichen mit Leerzeichen): Dieser Text
+dient zur Veröffentlichung durch den NDR auf der Webseite.
+EOD
+,
         NULL,
         ['multi' => TRUE]
       ),
@@ -66,19 +71,6 @@ EOD, NULL, ['multi' => TRUE]
           ),
         ]
       ),
-      new JsonFormsControl(
-        "$scopePrefix/statusSonstiges",
-        'Sonstiger Status',
-        NULL,
-        ['hideLabel' => TRUE],
-        [
-          'rule' => new JsonFormsRule(
-            'SHOW',
-            "$scopePrefix/status",
-            JsonSchema::fromArray(['const' => 'sonstiges'])
-          ),
-        ]
-      ),
       new JsonFormsGroup('Für welchen Zeitraum beantragen Sie die Förderung?', [
         new JsonFormsControl(
           "$scopePrefix/foerderungAb",
@@ -88,7 +80,12 @@ EOD, NULL, ['multi' => TRUE]
           "$scopePrefix/foerderungBis",
           'Bis',
         ),
-      ]),
+      ], <<<EOD
+Frühester Beginn des Verwendungszeitraums ist der 01.05.2025 und die maximale
+Projektlaufzeit beträgt drei Jahre.
+EOD,
+        ['descriptionDisplay' => 'before']
+      ),
       new JsonFormsControl(
         "$scopePrefix/beabsichtigteTeilnehmendenzahl",
         'Wie viele Teilnehmende wollen Sie erreichen?',
@@ -99,7 +96,7 @@ EOD, NULL, ['multi' => TRUE]
       ),
       new JsonFormsControl(
         "$scopePrefix/zielgruppeErreichen",
-        'Wie erreichen Sie die Zielgruppe?',
+        'Wie erreichen Sie die Zielgruppe? (max. 900 Zeichen mit Leerzeichen)',
         NULL,
         ['multi' => TRUE]
       ),
@@ -122,7 +119,7 @@ EOD, NULL, ['multi' => TRUE]
       ),
       new JsonFormsControl(
         "$scopePrefix/zielgruppeHerausforderungenErlaeuterung",
-        'Bitte erläutern Sie die Herausforderungen ihrer Zielgruppe detaillierter:',
+        'Bitte erläutern Sie die Herausforderungen ihrer Zielgruppe detaillierter: (max. 900 Zeichen mit Leerzeichen)',
         NULL,
         ['multi' => TRUE]
       ),
@@ -147,7 +144,7 @@ EOD, NULL, ['multi' => TRUE]
         "$scopePrefix/projektformatErlaeuterung",
         <<<EOD
 Bitte erläutern Sie das Projektformat: Wie funktioniert das Angebot, wie oft
-findet es statt und worum geht es?
+findet es statt und worum geht es? (max. 900 Zeichen mit Leerzeichen)
 EOD,
         NULL,
         ['multi' => TRUE]
@@ -168,7 +165,7 @@ EOD,
       ),
       new JsonFormsControl(
         "$scopePrefix/sonstiges",
-        'Was Sie uns sonst noch zu Ihrem Projekt sagen wollen',
+        'Was Sie uns sonst noch zu Ihrem Projekt sagen wollen (max. 900 Zeichen mit Leerzeichen)',
         NULL,
         ['multi' => TRUE]
       ),

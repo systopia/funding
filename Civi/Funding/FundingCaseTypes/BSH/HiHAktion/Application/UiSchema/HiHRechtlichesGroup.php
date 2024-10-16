@@ -33,7 +33,7 @@ final class HiHRechtlichesGroup extends JsonFormsGroup {
 Die beteiligten Organisationen wenden sich explizit gegen jede Form von
 physischer, psychischer und sexualisierter Gewalt. Die antragstellende
 Organisation ist dem Kinderschutz verpflichtet und macht dieses entsprechend
-kenntlich (Flyer/Website/Satzung). Bitte ankreuzen.
+kenntlich (Flyer/Website/Satzung).
 EOD,
         ['descriptionDisplay' => 'tooltip']
       ),
