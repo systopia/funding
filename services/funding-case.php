@@ -24,6 +24,7 @@ use Civi\Api4\Generic\AbstractAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\GetNewApplicationFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\SubmitNewApplicationFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\ValidateNewApplicationFormAction;
+use Civi\Funding\DependencyInjection\Compiler\FundingCaseNotificationContactsSetHandlerPass;
 use Civi\Funding\DependencyInjection\Compiler\FundingCaseRecipientContactSetHandlerPass;
 use Civi\Funding\DependencyInjection\PossibleRecipientsForChangeLoaderPass;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
@@ -73,6 +74,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 $container->addCompilerPass(new PossibleRecipientsForChangeLoaderPass());
 $container->addCompilerPass(new FundingCaseRecipientContactSetHandlerPass());
+$container->addCompilerPass(new FundingCaseNotificationContactsSetHandlerPass());
 
 $container->autowire(FundingCaseManager::class);
 $container->autowire(FundingCasePermissionsCacheManager::class);

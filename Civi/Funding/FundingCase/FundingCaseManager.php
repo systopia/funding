@@ -128,6 +128,7 @@ class FundingCaseManager {
       'creation_date' => $now,
       'modification_date' => $now,
       'creation_contact_id' => $contactId,
+      'notification_contact_ids' => [$contactId],
       'amount_approved' => NULL,
     ]);
 

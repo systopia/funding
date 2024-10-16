@@ -132,6 +132,14 @@
   </foreignKey>
 
   <field>
+    <name>notification_contact_ids</name>
+    <type>varchar</type>
+    <length>255</length>
+    <required>true</required>
+    <serialize>JSON</serialize>
+  </field>
+
+  <field>
     <name>recipient_contact_id</name>
     <type>int unsigned</type>
     <required>true</required>

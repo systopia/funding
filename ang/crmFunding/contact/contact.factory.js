@@ -23,5 +23,17 @@ fundingModule.factory('fundingContactService', ['crmApi4', function(crmApi4) {
     }).then(function (result) {
       return result[0] || null;
     }),
+
+    /**
+     * @param {string} input
+     * @returns {Promise<{id: integer, label: string}[]>}
+     */
+    autocomplete: (input) => crmApi4('Contact', 'autocomplete', {input}),
+
+    /**
+     * @param {integer[]} ids
+     * @returns {Promise<{id: integer, label: string}[]>}
+     */
+    autocompleteByIds: (ids) => crmApi4('Contact', 'autocomplete', {ids}),
   };
 }]);

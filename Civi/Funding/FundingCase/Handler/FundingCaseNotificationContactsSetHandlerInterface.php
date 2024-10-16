@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2023 SYSTOPIA GmbH
+ * Copyright (C) 2024 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,22 +17,17 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\FundingCase\Actions;
+namespace Civi\Funding\FundingCase\Handler;
 
-final class FundingCaseActions {
+use Civi\Funding\FundingCase\Command\FundingCaseNotificationContactsSetCommand;
 
-  public const APPROVE = 'approve';
+interface FundingCaseNotificationContactsSetHandlerInterface {
 
-  public const DELETE = 'delete';
+  public const SERVICE_TAG = 'funding.case.set_notification_contacts_handler';
 
-  public const FINISH_CLEARING = 'finish-clearing';
-
-  public const RECREATE_TRANSFER_CONTRACT = 'recreate-transfer-contract';
-
-  public const SET_NOTIFICATION_CONTACTS = 'set-notification-contacts';
-
-  public const SET_RECIPIENT_CONTACT = 'set-recipient-contact';
-
-  public const UPDATE_AMOUNT_APPROVED = 'update-amount-approved';
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function handle(FundingCaseNotificationContactsSetCommand $command): void;
 
 }

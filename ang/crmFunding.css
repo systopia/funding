@@ -114,6 +114,10 @@
   vertical-align: middle;
 }
 
+.editable-input .ui-select-search {
+  min-width: 200px;
+}
+
 /* Display textarea in new line */
 #bootstrap-theme editable-field[type="textarea"] form {
   display: block;

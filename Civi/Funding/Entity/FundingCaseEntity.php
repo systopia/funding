@@ -32,6 +32,7 @@ use Civi\RemoteTools\Api4\RemoteApiConstants;
  *   creation_date: string,
  *   modification_date: string,
  *   creation_contact_id: int,
+ *   notification_contact_ids: list<int>,
  *   amount_approved: ?float,
  *   permissions?: list<string>,
  *   transfer_contract_uri?: ?string,
@@ -114,6 +115,22 @@ final class FundingCaseEntity extends AbstractEntity {
 
   public function setCreationContactId(int $creationContactId): self {
     $this->values['creation_contact_id'] = $creationContactId;
+
+    return $this;
+  }
+
+  /**
+   * @phpstan-return list<int>
+   */
+  public function getNotificationContactIds(): array {
+    return $this->values['notification_contact_ids'];
+  }
+
+  /**
+   * @phpstan-param list<int> $notificationContactIds
+   */
+  public function setNotificationContactIds(array $notificationContactIds): self {
+    $this->values['notification_contact_ids'] = $notificationContactIds;
 
     return $this;
   }

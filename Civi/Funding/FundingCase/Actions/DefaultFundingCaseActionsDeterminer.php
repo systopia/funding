@@ -20,9 +20,11 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase\Actions;
 
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface;
+use Civi\Funding\ApplicationProcess\ApplicationProcessPermissions;
 use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions as Actions;
+use Civi\Funding\FundingCase\FundingCaseStatus as Status;
 
 final class DefaultFundingCaseActionsDeterminer extends FundingCaseActionsDeterminer {
 
@@ -30,18 +32,45 @@ final class DefaultFundingCaseActionsDeterminer extends FundingCaseActionsDeterm
 
   private ApplicationProcessActionStatusInfoInterface $statusInfo;
 
+  // phpcs:disable Generic.Files.LineLength.TooLong
   private const STATUS_PERMISSIONS_ACTION_MAP = [
-    'open' => [
-      'review_calculative' => [Actions::APPROVE],
-      'review_content' => [Actions::APPROVE],
+    Status::OPEN => [
+      ApplicationProcessPermissions::REVIEW_CALCULATIVE => [Actions::APPROVE, Actions::SET_NOTIFICATION_CONTACTS],
+      ApplicationProcessPermissions::REVIEW_CONTENT => [Actions::APPROVE, Actions::SET_NOTIFICATION_CONTACTS],
+      ClearingProcessPermissions::REVIEW_CALCULATIVE => [Actions::SET_NOTIFICATION_CONTACTS],
+      ClearingProcessPermissions::REVIEW_CONTENT => [Actions::SET_NOTIFICATION_CONTACTS],
+      'review_drawdown' => [Actions::SET_NOTIFICATION_CONTACTS],
     ],
-    'ongoing' => [
-      'review_calculative' => [Actions::RECREATE_TRANSFER_CONTRACT, Actions::UPDATE_AMOUNT_APPROVED],
-      'review_content' => [Actions::RECREATE_TRANSFER_CONTRACT, Actions::UPDATE_AMOUNT_APPROVED],
-      ClearingProcessPermissions::REVIEW_CALCULATIVE => [Actions::FINISH_CLEARING],
-      ClearingProcessPermissions::REVIEW_CONTENT => [Actions::FINISH_CLEARING],
+    Status::ONGOING => [
+      ApplicationProcessPermissions::REVIEW_CALCULATIVE => [Actions::RECREATE_TRANSFER_CONTRACT, Actions::UPDATE_AMOUNT_APPROVED, Actions::SET_NOTIFICATION_CONTACTS],
+      ApplicationProcessPermissions::REVIEW_CONTENT => [Actions::RECREATE_TRANSFER_CONTRACT, Actions::UPDATE_AMOUNT_APPROVED, Actions::SET_NOTIFICATION_CONTACTS],
+      ClearingProcessPermissions::REVIEW_CALCULATIVE => [Actions::FINISH_CLEARING, Actions::SET_NOTIFICATION_CONTACTS],
+      ClearingProcessPermissions::REVIEW_CONTENT => [Actions::FINISH_CLEARING, Actions::SET_NOTIFICATION_CONTACTS],
+      'review_drawdown' => [Actions::SET_NOTIFICATION_CONTACTS],
+    ],
+    Status::CLEARED => [
+      ApplicationProcessPermissions::REVIEW_CALCULATIVE => [Actions::SET_NOTIFICATION_CONTACTS],
+      ApplicationProcessPermissions::REVIEW_CONTENT => [Actions::SET_NOTIFICATION_CONTACTS],
+      ClearingProcessPermissions::REVIEW_CALCULATIVE => [Actions::SET_NOTIFICATION_CONTACTS],
+      ClearingProcessPermissions::REVIEW_CONTENT => [Actions::SET_NOTIFICATION_CONTACTS],
+      'review_drawdown' => [Actions::SET_NOTIFICATION_CONTACTS],
+    ],
+    Status::REJECTED => [
+      ApplicationProcessPermissions::REVIEW_CALCULATIVE => [Actions::SET_NOTIFICATION_CONTACTS],
+      ApplicationProcessPermissions::REVIEW_CONTENT => [Actions::SET_NOTIFICATION_CONTACTS],
+      ClearingProcessPermissions::REVIEW_CALCULATIVE => [Actions::SET_NOTIFICATION_CONTACTS],
+      ClearingProcessPermissions::REVIEW_CONTENT => [Actions::SET_NOTIFICATION_CONTACTS],
+      'review_drawdown' => [Actions::SET_NOTIFICATION_CONTACTS],
+    ],
+    Status::WITHDRAWN => [
+      ApplicationProcessPermissions::REVIEW_CALCULATIVE => [Actions::SET_NOTIFICATION_CONTACTS],
+      ApplicationProcessPermissions::REVIEW_CONTENT => [Actions::SET_NOTIFICATION_CONTACTS],
+      ClearingProcessPermissions::REVIEW_CALCULATIVE => [Actions::SET_NOTIFICATION_CONTACTS],
+      ClearingProcessPermissions::REVIEW_CONTENT => [Actions::SET_NOTIFICATION_CONTACTS],
+      'review_drawdown' => [Actions::SET_NOTIFICATION_CONTACTS],
     ],
   ];
+  // phpcs:enable
 
   public function __construct(
     ClearingProcessManager $clearingProcessManager,

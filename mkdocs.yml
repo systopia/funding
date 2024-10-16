@@ -13,6 +13,7 @@ nav:
     - 'Users and Permissions': administration/user-permissions.md
     - 'Necessary Adjustments': administration/necessary-adjustments.md
     - 'Administer Funding Programs': administration/funding-programs.md
+    - 'Notification Emails': administration/notification-emails.md
   - 'Usage':
       - 'Introduction': usage/usage.md
       - 'Application States': usage/application-states.md

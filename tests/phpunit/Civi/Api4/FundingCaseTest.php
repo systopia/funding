@@ -256,6 +256,41 @@ final class FundingCaseTest extends AbstractFundingHeadlessTestCase {
   /**
    * @covers \Civi\Funding\Api4\Action\FundingCase\UpdateAmountApprovedAction
    */
+  public function testSetNotificationContacts(): void {
+    $this->addInternalFixtures();
+    $newNotificationContact = ContactFixture::addIndividual();
+
+    RequestTestUtil::mockInternalRequest($this->associatedContactId);
+
+    $e = NULL;
+    try {
+      FundingCase::setNotificationContacts()
+        ->setId($this->permittedFundingCaseId)
+        ->setContactIds([$newNotificationContact['id']])
+        ->execute();
+    }
+    catch (UnauthorizedException $e) {
+      static::assertSame('Changing the notification contacts of this funding case is not allowed.', $e->getMessage());
+    }
+    static::assertNotNull($e);
+
+    FundingCaseContactRelationFixture::addContact(
+      $this->associatedContactId,
+      $this->permittedFundingCaseId,
+      ['review_calculative'],
+    );
+
+    $result = FundingCase::setNotificationContacts()
+      ->setId($this->permittedFundingCaseId)
+      ->setContactIds([$newNotificationContact['id']])
+      ->execute();
+
+    static::assertSame([$newNotificationContact['id']], $result['notification_contact_ids']);
+  }
+
+  /**
+   * @covers \Civi\Funding\Api4\Action\FundingCase\UpdateAmountApprovedAction
+   */
   public function testSetRecipientContact(): void {
     $this->addInternalFixtures();
     $newRecipientContact = ContactFixture::addIndividual();
