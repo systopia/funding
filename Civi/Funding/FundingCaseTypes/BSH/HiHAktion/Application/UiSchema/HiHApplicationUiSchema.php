@@ -30,17 +30,17 @@ final class HiHApplicationUiSchema extends JsonFormsGroup {
     $elements = [
       new JsonFormsCategorization([
         new JsonFormsCategory('Allgemein', [
-          new JsonFormsControl('#/properties/empfaenger', <<<EOD
-Projekte im Rahmen von „Hand in Hand“ können normalerweise nur zusammen mit
-einer Bürgerstiftung aus Norddeutschland einen Antrag stellen. Bitte teilen Sie
-uns mit, welche Bürgerstiftung für Sie zuständig ist.
-EOD
-          ),
-          new JsonFormsControl(
-            '#/properties/mitBuergerstiftungGesprochen',
-            'Haben Sie schon mit jemandem in der ausgewählten Bürgerstiftung gesprochen?',
-            'Entfällt, wenn es vor Ort keine Bürgerstiftung gibt.',
-            ['descriptionDisplay' => 'before']
+          new JsonFormsControl('#/properties/empfaenger', 'Welche Bürgerstiftung befindet sich in Ihrer Nähe?', <<<EOD
+Projekte im Rahmen von „Hand in Hand für Norddeutschland“ können in der Regel
+nur gemeinsam mit einer Bürgerstiftung aus Norddeutschland einen Antrag stellen.
+Dabei können auch neue Partnerschaften entstehen. Bitte wählen Sie die
+Bürgerstiftung in Ihrer Nähe aus oder sagen Sie, wenn es keine gibt. Wenn Sie
+Hilfe bei der Suche benötigen, gucken Sie z.B.
+<a href="https://www.aktive-buergerschaft.de/buergerstiftungen/buergerstiftung-finden/" target="_blank">hier</a>.
+Wir empfehlen, vor der Antragsstellung Kontakt mit der Bürgerstiftung
+aufzunehmen.
+EOD,
+            ['descriptionDisplay' => 'before'],
           ),
           new HiHFragenZumProjektGroup('#/properties/fragenZumProjekt/properties'),
           new HiHInformationenZumProjektGroup('#/properties/informationenZumProjekt/properties'),

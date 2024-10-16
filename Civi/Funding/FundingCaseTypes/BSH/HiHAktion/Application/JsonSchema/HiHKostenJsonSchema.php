@@ -37,6 +37,7 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
 
   public function __construct() {
     $properties = [
+      'personalkostenKeine' => new JsonSchemaBoolean(),
       'personalkosten' => new JsonSchemaArray(
         new JsonSchemaObject([
           '_identifier' => new JsonSchemaString(['readOnly' => TRUE]),
@@ -65,6 +66,7 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
         ]
       ),
       'personalkostenKommentar' => new JsonSchemaString(['maxLength' => 4000]),
+      'honorareKeine' => new JsonSchemaBoolean(),
       'honorare' => new JsonSchemaArray(
         new JsonSchemaObject([
           '_identifier' => new JsonSchemaString(['readonly' => TRUE]),
@@ -282,9 +284,7 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
     $keywords = [
       'required' => [
         'personalkosten',
-        'personalkostenKommentar',
         'honorare',
-        'honorareKommentar',
         'sachkostenKeine',
         'sachkosten',
       ],
@@ -298,6 +298,26 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
           'then' => new JsonSchemaObject([
             'sachkostenKommentar' => new JsonSchemaString($minLengthValidation),
           ], ['required' => ['sachkostenKommentar']]),
+        ]),
+        JsonSchema::fromArray([
+          'if' => [
+            'properties' => [
+              'personalkostenSumme' => ['exclusiveMinimum' => 0],
+            ],
+          ],
+          'then' => new JsonSchemaObject([
+            'personalkostenKommentar' => new JsonSchemaString($minLengthValidation),
+          ], ['required' => ['personalkostenKommentar']]),
+        ]),
+        JsonSchema::fromArray([
+          'if' => [
+            'properties' => [
+              'honorareSumme' => ['exclusiveMinimum' => 0],
+            ],
+          ],
+          'then' => new JsonSchemaObject([
+            'honorareKommentar' => new JsonSchemaString($minLengthValidation),
+          ], ['required' => ['honorareKommentar']]),
         ]),
       ],
     ];

@@ -33,20 +33,18 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
   public function __construct(\DateTimeInterface $applicationBegin, \DateTimeInterface $applicationEnd) {
     $properties = [
       'kurzbeschreibung' => new JsonSchemaString([
-        'maxLength' => 4000,
+        'maxLength' => 1800,
         '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'short_description']]),
       ]),
-      'wirktGegenEinsamkeit' => new JsonSchemaString(['maxLength' => 4000]),
-      'kern' => new JsonSchemaString(['maxLength' => 4000]),
+      'wirktGegenEinsamkeit' => new JsonSchemaString(['maxLength' => 900]),
+      'ziel' => new JsonSchemaString(['maxLength' => 300]),
       'status' => new JsonSchemaString([
         'oneOf' => JsonSchemaUtil::buildTitledOneOf([
           'neu' => 'neu startendes Projekt',
           'laeuftSchon' => 'läuft schon seit',
-          'sonstiges' => 'Sonstiges und zwar',
         ]),
       ]),
       'statusBeginn' => new JsonSchemaDate(['maxDate' => date('Y-m-d')], TRUE),
-      'statusSonstiges' => new JsonSchemaString(['maxLength' => 255]),
       'foerderungAb' => new JsonSchemaDate([
         'minDate' => $applicationBegin->format('Y-m-d'),
         'maxDate' => $applicationEnd->format('Y-m-d'),
@@ -69,7 +67,7 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
           'altersaeubergreifend' => 'Altersübergreifend',
         ]),
       ]), ['uniqueItems' => TRUE, 'minItems' => 1]),
-      'zielgruppeErreichen' => new JsonSchemaString(['maxLength' => 4000]),
+      'zielgruppeErreichen' => new JsonSchemaString(['maxLength' => 900]),
       'zielgruppeHerausforderungen' => new JsonSchemaArray(new JsonSchemaString([
         'oneOf' => JsonSchemaUtil::buildTitledOneOf([
           'fluchterfahrung' => 'Mit Fluchterfahrung',
@@ -82,7 +80,7 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
         ]),
       ]), ['uniqueItems' => TRUE, 'minItems' => 1]),
       'zielgruppeHerausforderungenSonstige' => new JsonSchemaString(['maxLength' => 255]),
-      'zielgruppeHerausforderungenErlaeuterung' => new JsonSchemaString(['maxLength' => 4000]),
+      'zielgruppeHerausforderungenErlaeuterung' => new JsonSchemaString(['maxLength' => 900]),
       'projektformat' => new JsonSchemaArray(new JsonSchemaString([
         'oneOf' => JsonSchemaUtil::buildTitledOneOf([
           'offenesAngebot' => 'Offenes Angebot',
@@ -91,13 +89,12 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
           'veranstaltung' => 'Veranstaltung',
           'ausfluege' => 'Ausflüge',
           'reisen' => 'Reisen (mit Übernachtung)',
-          'material' => 'Material',
           'qualifizierung' => 'Qualifizierung',
           'sonstiges' => 'Sonstiges und zwar',
         ]),
       ]), ['uniqueItems' => TRUE, 'minItems' => 1]),
       'projektformatSonstiges' => new JsonSchemaString(['maxLength' => 255]),
-      'projektformatErlaeuterung' => new JsonSchemaString(['maxLength' => 4000]),
+      'projektformatErlaeuterung' => new JsonSchemaString(['maxLength' => 900]),
       'dateien' => new JsonSchemaArray(new JsonSchemaObject([
         '_identifier' => new JsonSchemaString(['readonly' => TRUE]),
         'datei' => new JsonSchemaString([
@@ -107,7 +104,7 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
         ]),
         'beschreibung' => new JsonSchemaString(['maxLength' => 255]),
       ], ['required' => ['datei']])),
-      'sonstiges' => new JsonSchemaString(['maxLength' => 4000]),
+      'sonstiges' => new JsonSchemaString(['maxLength' => 900]),
     ];
 
     $minLengthValidation = [
@@ -124,7 +121,7 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
       'required' => [
         'kurzbeschreibung',
         'wirktGegenEinsamkeit',
-        'kern',
+        'ziel',
         'status',
         'foerderungAb',
         'foerderungBis',
@@ -156,16 +153,6 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
               ],
             ], TRUE),
           ], ['required' => ['statusBeginn']]),
-        ]),
-        JsonSchema::fromArray([
-          'if' => [
-            'properties' => [
-              'status' => ['const' => 'sonstiges'],
-            ],
-          ],
-          'then' => new JsonSchemaObject([
-            'statusSonstiges' => new JsonSchemaString($minLengthValidation),
-          ], ['required' => ['statusSonstiges']]),
         ]),
         JsonSchema::fromArray([
           'if' => [
