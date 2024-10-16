@@ -20,9 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\JsonSchema;
 
 use Civi\Funding\Form\JsonSchema\JsonSchemaRecipient;
-use Civi\RemoteTools\JsonSchema\JsonSchemaBoolean;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
-use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
 
 final class HiHApplicationJsonSchema extends JsonSchemaObject {
 
