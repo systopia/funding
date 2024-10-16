@@ -50,7 +50,7 @@ Was ist das Ziel Ihres Projektes und wie wollen sie die Förderung hierfür
 konkret einsetzen? (2-3 Sätze, max. 300 Zeichen mit Leerzeichen): Dieser Text
 dient zur Veröffentlichung durch den NDR auf der Webseite.
 EOD
-,
+    ,
         NULL,
         ['multi' => TRUE]
       ),
