@@ -26,9 +26,6 @@ use Civi\Api4\Group;
 use Civi\Api4\GroupContact;
 use Civi\Api4\Relationship;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
-use Civi\Funding\Database\ChangeSetFactory;
-use Civi\Funding\EntityFactory\FundingCaseFactory;
-use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\ContactTypeFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
@@ -38,8 +35,6 @@ use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\Funding\Fixtures\GroupContactFixture;
 use Civi\Funding\Fixtures\GroupFixture;
-use Civi\Funding\FundingCase\FundingCasePermissionsCacheManager;
-use Civi\RemoteTools\Api4\Api4Interface;
 
 /**
  * @covers \Civi\Funding\EventSubscriber\FundingCase\FundingCasePermissionsCacheClearSubscriber
@@ -61,7 +56,6 @@ final class FundingCasePermissionsCacheClearSubscriberTest extends AbstractFundi
       'hook_civicrm_pre::GroupContact' => ['onPreGroupContact', PHP_INT_MIN],
       'hook_civicrm_pre::FundingCaseContactRelation' => ['onPreFundingCaseContactRelation', PHP_INT_MIN],
       'hook_civicrm_pre::Relationship' => ['onPreRelationship', PHP_INT_MIN],
-      FundingCaseUpdatedEvent::class => ['onFundingCaseUpdated'],
     ];
 
     static::assertEquals($expectedSubscriptions, FundingCasePermissionsCacheClearSubscriber::getSubscribedEvents());
@@ -349,24 +343,6 @@ final class FundingCasePermissionsCacheClearSubscriberTest extends AbstractFundi
     static::assertNull($permissionsCacheResult[1]['permissions']);
     static::assertNull($permissionsCacheResult[2]['permissions']);
     static::assertSame(['test'], $permissionsCacheResult[3]['permissions']);
-  }
-
-  public function testOnFundingCaseUpdated(): void {
-    $api4Mock = $this->createMock(Api4Interface::class);
-    $changeSetFactory = new ChangeSetFactory($api4Mock);
-    $permissionsCacheManagerMock = $this->createMock(FundingCasePermissionsCacheManager::class);
-    $subscriber = new FundingCasePermissionsCacheClearSubscriber(
-      $api4Mock, $changeSetFactory, $permissionsCacheManagerMock
-    );
-
-    $fundingCase = FundingCaseFactory::createFundingCase();
-    $previousFundingCase = clone $fundingCase;
-
-    // Changing recipient contact should clear cache.
-    $fundingCase->setRecipientContactId(1234);
-    $permissionsCacheManagerMock->expects(static::once())->method('clearByFundingCaseId')
-      ->with($fundingCase->getId());
-    $subscriber->onFundingCaseUpdated(new FundingCaseUpdatedEvent($previousFundingCase, $fundingCase));
   }
 
 }

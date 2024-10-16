@@ -23,7 +23,6 @@ use Civi\Api4\FundingCaseContactRelation;
 use Civi\Core\Event\PreEvent;
 use Civi\Funding\Database\ChangeSetFactory;
 use Civi\Funding\Entity\FundingCaseContactRelationEntity;
-use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
 use Civi\Funding\FundingCase\FundingCasePermissionsCacheManager;
 use Civi\Funding\Permission\ContactRelation\Types\Relationship;
 use Civi\RemoteTools\Api4\Api4Interface;
@@ -55,7 +54,6 @@ final class FundingCasePermissionsCacheClearSubscriber implements EventSubscribe
       'hook_civicrm_pre::GroupContact' => ['onPreGroupContact', PHP_INT_MIN],
       'hook_civicrm_pre::Relationship' => ['onPreRelationship', PHP_INT_MIN],
       'hook_civicrm_pre::FundingCaseContactRelation' => ['onPreFundingCaseContactRelation', PHP_INT_MIN],
-      FundingCaseUpdatedEvent::class => ['onFundingCaseUpdated'],
     ];
   }
 
@@ -222,17 +220,6 @@ final class FundingCasePermissionsCacheClearSubscriber implements EventSubscribe
         'checkPermissions' => FALSE,
       ])->single()['funding_case_id'];
       $this->permissionsCacheManager->clearByFundingCaseId($fundingCaseId);
-    }
-  }
-
-  /**
-   * @throws \CRM_Core_Exception
-   */
-  public function onFundingCaseUpdated(FundingCaseUpdatedEvent $event): void {
-    if ($event->getFundingCase()->getRecipientContactId()
-      !== $event->getPreviousFundingCase()->getRecipientContactId()
-    ) {
-      $this->permissionsCacheManager->clearByFundingCaseId($event->getFundingCase()->getId());
     }
   }
 
