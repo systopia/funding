@@ -65,7 +65,6 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
     );
 
     $this->validData = [
-      'mitBuergerstiftungGesprochen' => TRUE,
       'fragenZumProjekt' => [
         'name' => 'Test',
         'ansprechpartner' => [
@@ -87,7 +86,7 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
       'informationenZumProjekt' => [
         'kurzbeschreibung' => 'Kurzbeschreibung',
         'wirktGegenEinsamkeit' => 'Wirkt',
-        'kern' => 'Kern',
+        'ziel' => 'Ziel',
         'status' => 'laeuftSchon',
         'statusBeginn' => '2024-07-01',
         'foerderungAb' => '2024-07-08',
@@ -209,9 +208,6 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
     static::assertSame(52.8, $resultData->kosten->sachkosten->summe);
     static::assertSame(8000.8 + 355.53 + 52.8, $resultData->kosten->gesamtkosten);
 
-    $resultData->informationenZumProjekt->statusSonstiges = 'Status Sonstiges';
-    static::assertAllPropertiesSet($this->jsonSchema->toStdClass(), $resultData);
-
     $mappedDataLoader = new MappedDataLoader();
     $mappedData = $mappedDataLoader->getMappedData($result->getTaggedData());
     static::assertEquals([
@@ -245,23 +241,10 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
     $data = $this->validData;
     $data['informationenZumProjekt']['status'] = 'laeuftSchon';
     $data['informationenZumProjekt']['statusBeginn'] = NULL;
-    $data['informationenZumProjekt']['statusSonstiges'] = '';
 
     $result = $this->validator->validate($this->jsonSchema, $data, 2);
     static::assertEquals([
       '/informationenZumProjekt/statusBeginn' => ['Dieser Wert ist erforderlich.'],
-    ], $result->getLeafErrorMessages());
-  }
-
-  public function testStatusSonstiges(): void {
-    $data = $this->validData;
-    $data['informationenZumProjekt']['status'] = 'sonstiges';
-    $data['informationenZumProjekt']['statusBeginn'] = NULL;
-    $data['informationenZumProjekt']['statusSonstiges'] = '';
-
-    $result = $this->validator->validate($this->jsonSchema, $data, 2);
-    static::assertEquals([
-      '/informationenZumProjekt/statusSonstiges' => ['Dieser Wert ist erforderlich.'],
     ], $result->getLeafErrorMessages());
   }
 
@@ -298,6 +281,34 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
       '/finanzierung/andereKosten' => ['Dieser Wert ist erforderlich.'],
       '/finanzierung/finanzierungZusaetzlicheKosten' => ['Dieser Wert ist erforderlich.'],
     ], $result->getLeafErrorMessages());
+  }
+
+  public function testPersonalkostenKommentarRequired(): void {
+    $data = $this->validData;
+    $data['kosten']['personalkostenKommentar'] = '';
+
+    $result = $this->validator->validate($this->jsonSchema, $data, 2);
+    static::assertEquals([
+      '/kosten/personalkostenKommentar' => ['Dieser Wert ist erforderlich.'],
+    ], $result->getLeafErrorMessages());
+
+    $data['kosten']['personalkosten'] = [];
+    $result = $this->validator->validate($this->jsonSchema, $data);
+    static::assertSame([], $result->getLeafErrorMessages());
+  }
+
+  public function testHonorarkostenKommentarRequired(): void {
+    $data = $this->validData;
+    $data['kosten']['honorareKommentar'] = '';
+
+    $result = $this->validator->validate($this->jsonSchema, $data, 2);
+    static::assertEquals([
+      '/kosten/honorareKommentar' => ['Dieser Wert ist erforderlich.'],
+    ], $result->getLeafErrorMessages());
+
+    $data['kosten']['honorare'] = [];
+    $result = $this->validator->validate($this->jsonSchema, $data);
+    static::assertSame([], $result->getLeafErrorMessages());
   }
 
   public function testNotAllowedDates(): void {

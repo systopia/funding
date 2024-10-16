@@ -46,13 +46,6 @@ final class HiHKostenUndFinanzierungCategory extends JsonFormsCategory {
         'Ich beantrage das gesamte Projektbudget über Hand in Hand.',
       ),
       new JsonFormsControl(
-        "$scopePrefix/finanzierung/properties/wichtigstePositionenBeiTeilbetrag",
-        <<<EOD
-Falls nur ein Teilbetrag bewilligt werden kann – welche Positionen im Finanzplan
-sind für Sie am wichtigsten:
-EOD,
-      ),
-      new JsonFormsControl(
         "$scopePrefix/finanzierung/properties/andereKosten",
         'Welche anderen Kosten hat das Projekt?',
         NULL,
@@ -80,6 +73,13 @@ EOD,
             JsonSchema::fromArray(['const' => FALSE])
           ),
         ]
+      ),
+      new JsonFormsControl(
+        "$scopePrefix/finanzierung/properties/wichtigstePositionenBeiTeilbetrag",
+        <<<EOD
+Falls nur ein Teilbetrag bewilligt werden kann – welche Positionen im Finanzplan
+sind für Sie am wichtigsten:
+EOD,
       ),
     ]);
   }
