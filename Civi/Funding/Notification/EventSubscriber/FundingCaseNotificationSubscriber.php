@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Notification\EventSubscriber;
 
+use Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent;
 use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
 use Civi\Funding\Notification\NotificationSender;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -31,11 +32,25 @@ class FundingCaseNotificationSubscriber implements EventSubscriberInterface {
    * @inheritDoc
    */
   public static function getSubscribedEvents(): array {
-    return [FundingCaseUpdatedEvent::class => 'onUpdated'];
+    return [
+      FundingCaseCreatedEvent::class => 'onCreated',
+      FundingCaseUpdatedEvent::class => 'onUpdated',
+    ];
   }
 
   public function __construct(NotificationSender $notificationSender) {
     $this->notificationSender = $notificationSender;
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function onCreated(FundingCaseCreatedEvent $event): void {
+    $this->notificationSender->sendNotification(
+      'funding_case.status_change:' . $event->getFundingCase()->getStatus(),
+      $event->getFundingCase(),
+      []
+    );
   }
 
   /**
