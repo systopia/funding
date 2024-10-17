@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Notification\EventSubscriber;
 
+use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
 use Civi\Funding\Notification\NotificationSender;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -31,11 +32,28 @@ class ApplicationProcessNotificationSubscriber implements EventSubscriberInterfa
    * @inheritDoc
    */
   public static function getSubscribedEvents(): array {
-    return [ApplicationProcessUpdatedEvent::class => 'onUpdated'];
+    return [
+      ApplicationProcessCreatedEvent::class => 'onCreated',
+      ApplicationProcessUpdatedEvent::class => 'onUpdated',
+    ];
   }
 
   public function __construct(NotificationSender $notificationSender) {
     $this->notificationSender = $notificationSender;
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function onCreated(ApplicationProcessCreatedEvent $event): void {
+    $this->notificationSender->sendNotification(
+      'application_process.status_change:' . $event->getApplicationProcess()->getStatus(),
+      $event->getFundingCase(),
+      [
+        'applicationProcess' => $event->getApplicationProcess(),
+        'fundingProgram' => $event->getFundingProgram(),
+      ]
+    );
   }
 
   /**
