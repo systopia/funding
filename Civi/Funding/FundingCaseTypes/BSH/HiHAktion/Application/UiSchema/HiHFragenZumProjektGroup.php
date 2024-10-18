@@ -65,20 +65,20 @@ final class HiHFragenZumProjektGroup extends JsonFormsGroup {
       new JsonFormsGroup('Abweichende Anschrift Projekt', [
         new JsonFormsControl(
           "$scopePrefix/abweichendeAnschrift/properties/projekttraeger",
-          'Name Projektträger'
+          'Name Projektträger *'
         ),
         new JsonFormsControl(
           "$scopePrefix/abweichendeAnschrift/properties/strasse",
-          'Straße und Hausnummer'
+          'Straße und Hausnummer *'
         ),
         new JsonFormsControl(
           "$scopePrefix/abweichendeAnschrift/properties/plz",
-          'Postleitzahl'
+          'Postleitzahl *'
         ),
 
         new JsonFormsControl(
           "$scopePrefix/abweichendeAnschrift/properties/ort",
-          'Stadt'
+          'Stadt *'
         ),
       ], NULL, NULL, [
         'rule' => new JsonFormsRule(
