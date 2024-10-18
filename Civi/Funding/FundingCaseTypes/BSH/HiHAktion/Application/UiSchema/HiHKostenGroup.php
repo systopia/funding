@@ -64,7 +64,7 @@ final class HiHKostenGroup extends JsonFormsGroup {
         new JsonFormsControl("$scopePrefix/personalkostenSumme", "Summe Personalkosten in $currency"),
         new JsonFormsControl(
           "$scopePrefix/personalkostenKommentar",
-          'Kommentar zu den Personalkosten',
+          'Kommentar zu den Personalkosten *',
           <<<EOD
 Bitte erklären Sie was die Arbeitnehmer:innen machen, wo sie im Projekt arbeiten
 und warum sie wichtig sind.
@@ -105,7 +105,7 @@ EOD,
         ),
         new JsonFormsControl(
           "$scopePrefix/honorareKommentar",
-          'Kommentar zu den Honorarkosten',
+          'Kommentar zu den Honorarkosten *',
           <<<EOD
 Bitte erklären Sie, was die Honorarkräfte machen, wo sie im Projekt arbeiten und
 warum sie wichtig sind.
@@ -204,7 +204,7 @@ EOD,
             ),
             new JsonFormsControl(
               "$scopePrefix/sachkostenKommentar",
-              'Kommentar zu den Sachkosten',
+              'Kommentar zu den Sachkosten *',
               <<<EOD
     Bitte erklären Sie die Sachkosten: Warum werden sie benötigt und wie werden sie
     im Projekt verwendet? Bitte gehen Sie auf die einzelnen Unterkategorien ein.
