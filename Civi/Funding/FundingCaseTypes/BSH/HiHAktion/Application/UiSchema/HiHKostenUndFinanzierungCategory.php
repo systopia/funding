@@ -47,7 +47,7 @@ final class HiHKostenUndFinanzierungCategory extends JsonFormsCategory {
       ),
       new JsonFormsControl(
         "$scopePrefix/finanzierung/properties/andereKosten",
-        'Welche anderen Kosten hat das Projekt?',
+        'Welche anderen Kosten hat das Projekt? *',
         NULL,
         NULL,
         [
@@ -62,7 +62,7 @@ final class HiHKostenUndFinanzierungCategory extends JsonFormsCategory {
         "$scopePrefix/finanzierung/properties/finanzierungZusaetzlicheKosten",
         <<<EOD
 Wie finanzieren Sie die zusätzlichen Kosten? (z.B. Spenden, andere Stiftungen,
-öffentliche Mittel). Sind die Mittel schon beantragt oder bewilligt?
+öffentliche Mittel). Sind die Mittel schon beantragt oder bewilligt? *
 EOD,
         NULL,
         NULL,
