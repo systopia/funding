@@ -292,7 +292,7 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
         JsonSchema::fromArray([
           'if' => [
             'properties' => [
-              'sachkosten' => ['const' => TRUE],
+              'sachkostenSumme' => ['exclusiveMinimum' => 0],
             ],
           ],
           'then' => new JsonSchemaObject([
