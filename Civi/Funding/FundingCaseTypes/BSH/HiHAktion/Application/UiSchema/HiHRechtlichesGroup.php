@@ -34,8 +34,7 @@ Die beteiligten Organisationen wenden sich explizit gegen jede Form von
 physischer, psychischer und sexualisierter Gewalt. Die antragstellende
 Organisation ist dem Kinderschutz verpflichtet und macht dieses entsprechend
 kenntlich (Flyer/Website/Satzung).
-EOD,
-        ['descriptionDisplay' => 'tooltip']
+EOD
       ),
       new JsonFormsControl(
         "$scopePrefix/datenschutz",
@@ -47,8 +46,7 @@ weiterverarbeitet, gespeichert und veröffentlicht werden und zum Zweck der
 Begutachtung und Berichterstattung an den NDR, an die zuständige Bürgerstiftung
 sowie die Beiratsmitglieder und den Verein Stiften für alle e.V. weitergeleitet
 werden dürfen. Weitere Infos finden Sie in unseren Hinweisen zum Datenschutz.
-EOD,
-        ['descriptionDisplay' => 'tooltip']
+EOD
       ),
     ]);
   }
