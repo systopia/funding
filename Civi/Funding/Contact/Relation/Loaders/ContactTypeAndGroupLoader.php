@@ -49,7 +49,7 @@ final class ContactTypeAndGroupLoader implements RelatedContactsLoaderInterface 
     Assert::isArray($groupIds);
     Assert::allIntegerish($groupIds);
 
-    $action = Contact::get(FALSE);
+    $action = Contact::get(FALSE)->addOrderBy('display_name');
 
     if ([] !== $contactTypeIds) {
       $separator = \CRM_Core_DAO::VALUE_SEPARATOR;

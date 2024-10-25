@@ -49,6 +49,7 @@ final class ContactTypeAndRelationshipTypeLoader implements RelatedContactsLoade
     $separator = \CRM_Core_DAO::VALUE_SEPARATOR;
 
     $action = Contact::get(FALSE)
+      ->addOrderBy('display_name')
       ->addJoin('ContactType AS ct', 'INNER', NULL,
         CompositeCondition::new('AND',
           Comparison::new('ct.id', '=', $contactTypeId),
