@@ -44,6 +44,7 @@ final class RelationshipTypeLoader implements RelatedContactsLoaderInterface {
     Assert::integer($relationProperties['relationshipTypeId']);
     $relationshipTypeId = $relationProperties['relationshipTypeId'];
     $action = Contact::get(FALSE)
+      ->addOrderBy('display_name')
       ->addJoin('Relationship AS r', 'INNER', NULL,
         CompositeCondition::new('AND',
           Comparison::new('r.relationship_type_id', '=', $relationshipTypeId),
