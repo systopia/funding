@@ -131,7 +131,7 @@ final class GetFieldsAction extends BasicGetFieldsAction {
       ],
       [
         'name' => 'funding_case_identifier',
-        'title' => E::ts('Identifier'),
+        'title' => E::ts('Funding Case Identifier'),
         'data_type' => 'String',
       ],
       [
@@ -143,18 +143,18 @@ final class GetFieldsAction extends BasicGetFieldsAction {
       ],
       [
         'name' => 'funding_case_status',
-        'title' => E::ts('Status'),
+        'title' => E::ts('Funding Case Status'),
         'data_type' => 'String',
         'options' => $this->getOptions(FundingCase::getEntityName(), 'status'),
       ],
       [
         'name' => 'funding_case_creation_date',
-        'title' => E::ts('Creation Date'),
+        'title' => E::ts('Funding Case Creation Date'),
         'data_type' => 'Date',
       ],
       [
         'name' => 'funding_case_modification_date',
-        'title' => E::ts('Modification Date'),
+        'title' => E::ts('Funding Case Modification Date'),
         'data_type' => 'Date',
       ],
       [
