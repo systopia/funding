@@ -13,6 +13,7 @@ msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingApplicationProcess/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php
@@ -64,6 +65,7 @@ msgid "Funding case with ID \"%1\" not found"
 msgstr "Förderfall mit ID \"%1\" nicht gefunden"
 
 #: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
 #: ang/crmFunding/application/defaultApplicationEditor.template.html
 #: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
 #: ang/crmFundingIJB/ijbApplicationEditor.template.html
@@ -229,6 +231,144 @@ msgstr ""
 msgid "Timestamp"
 msgstr ""
 
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
+#: ang/crmFunding/application/defaultApplicationEditor.template.html
+#: ang/crmFunding/clearing/clearingEditor.template.html
+#: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingIJB/ijbApplicationEditor.template.html
+#: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
+#: managed/SavedSearchFundingApplicationProcesses.mgd.php
+#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
+#: managed/SavedSearchFundingCases.mgd.php
+#: managed/SavedSearch_Clearings.mgd.php
+msgid "Identifier"
+msgstr "Bezeichner"
+
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: ang/crmFunding/case/permissions/fundingCaseContactRelation.template.html
+#: ang/crmFunding/program/newCasePermissions/fundingNewCasePermissions.template.html
+#: ang/crmFunding/program/permissions/fundingProgramContactRelation.template.html
+msgid "Permissions"
+msgstr "Berechtigungen"
+
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: ang/crmFunding/application/defaultApplicationEditor.template.html
+#: ang/crmFunding/case/fundingCase.template.html
+#: ang/crmFunding/clearing/clearingEditor.template.html
+#: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingIJB/ijbApplicationEditor.template.html
+#: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
+#: managed/SavedSearchFundingApplicationProcesses.mgd.php
+#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
+#: managed/SavedSearchFundingCases.mgd.php
+#: managed/SavedSearchFundingDrawdowns.mgd.php
+#: managed/SavedSearch_Clearings.mgd.php
+msgid "Status"
+msgstr "Status"
+
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: ang/crmFunding/application/defaultApplicationEditor.template.html
+#: ang/crmFunding/case/fundingCase.template.html
+#: ang/crmFunding/clearing/clearingEditor.template.html
+#: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingIJB/ijbApplicationEditor.template.html
+#: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
+#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
+#: managed/SavedSearchFundingCases.mgd.php
+#: managed/SavedSearchFundingDrawdowns.mgd.php
+#: managed/SavedSearch_Clearings.mgd.php
+msgid "Creation Date"
+msgstr "Erstellungsdatum"
+
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: ang/crmFunding/application/defaultApplicationEditor.template.html
+#: ang/crmFunding/case/fundingCase.template.html
+#: ang/crmFunding/clearing/clearingEditor.template.html
+#: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingIJB/ijbApplicationEditor.template.html
+#: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
+#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
+#: managed/SavedSearchFundingCases.mgd.php
+#: managed/SavedSearchFundingTasksMy.mgd.php
+#: managed/SavedSearch_Clearings.mgd.php
+msgid "Modification Date"
+msgstr "Änderungsdatum"
+
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
+#: Civi/Funding/ClearingProcess/Form/AbstractClearingItemsJsonFormsGenerator.php
+#: ang/crmFunding/case/fundingCase.template.html
+#: managed/SavedSearchFundingCases.mgd.php
+#: managed/SavedSearchFundingProgramControlling.mgd.php
+#: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
+msgid "Amount Approved"
+msgstr "Bewilligter Betrag"
+
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: managed/OptionValueCgExtendsFundingProgram.mgd.php
+#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
+#: managed/SavedSearchFundingCases.mgd.php
+#: managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
+msgid "Funding Program"
+msgstr "Förderprogramm"
+
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: managed/SavedSearchFundingApplicationProcesses.mgd.php
+#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
+#: managed/SavedSearchFundingCaseTypes.mgd.php
+#: managed/SavedSearchFundingProgramControlling.mgd.php
+#: managed/SavedSearchFundingPrograms.mgd.php
+#: managed/SavedSearch_Clearings.mgd.php
+msgid "Title"
+msgstr "Titel"
+
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: managed/SavedSearchFundingApplicationProcesses.mgd.php
+msgid "Short Description"
+msgstr "Kurzbeschreibung"
+
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: managed/SavedSearchFundingPrograms.mgd.php
+msgid "Start Date"
+msgstr "Startdatum"
+
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: managed/SavedSearchFundingProgramControlling.mgd.php
+#: managed/SavedSearchFundingPrograms.mgd.php
+msgid "End Date"
+msgstr "Enddatum"
+
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+msgid "Is Eligible"
+msgstr "Ist Förderfähig"
+
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
+msgid "Amount Recorded Costs"
+msgstr "Erfasste Kosten"
+
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
+msgid "Amount Recorded Resources"
+msgstr "Erfasste Mittel"
+
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
+msgid "Amount Admitted Costs"
+msgstr "Anerkannter Kosten"
+
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
+msgid "Amount Admitted Resources"
+msgstr "Anerkannter Mittel"
+
 #: Civi/Funding/Api4/Action/FundingCaseType/GetFieldsAction.php
 #: managed/OptionValuesFileType.mgd.php
 msgid "Transfer Contract Template"
@@ -245,36 +385,16 @@ msgid "Payback Claim Template"
 msgstr "Vorlage für Rückzahlungsforderung"
 
 #: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
-#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
-msgid "Amount Recorded Costs"
-msgstr "Erfasste Kosten"
-
-#: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
 msgid "The sum of the amounts recorded for costs that are not rejected."
 msgstr "Die Summe der für Kosten erfassten Beträge, die nicht abgelehnt sind."
-
-#: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
-#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
-msgid "Amount Recorded Resources"
-msgstr "Erfasste Mittel"
 
 #: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
 msgid "The sum of the amounts recorded for resources that are not rejected."
 msgstr "Die Summe der für Mittel erfassten Beträge, die nicht abgelehnt sind."
 
 #: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
-#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
-msgid "Amount Admitted Costs"
-msgstr "Anerkannter Kosten"
-
-#: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
 msgid "The sum of the amounts admitted for costs."
 msgstr "Die Summe der für Kosten anerkannte Beträge."
-
-#: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
-#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
-msgid "Amount Admitted Resources"
-msgstr "Anerkannter Mittel"
 
 #: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
 msgid "The sum of the amounts admitted for resources."
@@ -315,16 +435,6 @@ msgstr "Die Summe der Beträge offener Mittelabrufe."
 
 #: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
-#: Civi/Funding/ClearingProcess/Form/AbstractClearingItemsJsonFormsGenerator.php
-#: ang/crmFunding/case/fundingCase.template.html
-#: managed/SavedSearchFundingCases.mgd.php
-#: managed/SavedSearchFundingProgramControlling.mgd.php
-#: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
-msgid "Amount Approved"
-msgstr "Bewilligter Betrag"
-
-#: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
-#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
 #: managed/SavedSearchFundingProgramControlling.mgd.php
 msgid "Amount Available"
 msgstr "Verfügbarer Betrag"
@@ -332,19 +442,6 @@ msgstr "Verfügbarer Betrag"
 #: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
 msgid "The difference between the budget and the amount approved."
 msgstr "Die Differenz zwischen Budget und bewilligtem Betrag."
-
-#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
-#: ang/crmFunding/application/defaultApplicationEditor.template.html
-#: ang/crmFunding/clearing/clearingEditor.template.html
-#: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
-#: ang/crmFundingIJB/ijbApplicationEditor.template.html
-#: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
-#: managed/SavedSearchFundingApplicationProcesses.mgd.php
-#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
-#: managed/SavedSearchFundingCases.mgd.php
-#: managed/SavedSearch_Clearings.mgd.php
-msgid "Identifier"
-msgstr "Bezeichner"
 
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
 msgid "URI to Transfer Contract"
@@ -1457,20 +1554,6 @@ msgid "General"
 msgstr "Allgemein"
 
 #: ang/crmFunding/application/defaultApplicationEditor.template.html
-#: ang/crmFunding/case/fundingCase.template.html
-#: ang/crmFunding/clearing/clearingEditor.template.html
-#: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
-#: ang/crmFundingIJB/ijbApplicationEditor.template.html
-#: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
-#: managed/SavedSearchFundingApplicationProcesses.mgd.php
-#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
-#: managed/SavedSearchFundingCases.mgd.php
-#: managed/SavedSearchFundingDrawdowns.mgd.php
-#: managed/SavedSearch_Clearings.mgd.php
-msgid "Status"
-msgstr "Status"
-
-#: ang/crmFunding/application/defaultApplicationEditor.template.html
 #: ang/crmFunding/application/history/applicationProcessActivity.directive.js
 #: ang/crmFunding/case/fundingCase.template.html
 #: ang/crmFunding/clearing/clearingEditor.template.html
@@ -1499,32 +1582,6 @@ msgstr "Fachliche Prüfung"
 #: managed/SavedSearch_Clearings.mgd.php
 msgid "Review Calculative"
 msgstr "Rechnerische Prüfung"
-
-#: ang/crmFunding/application/defaultApplicationEditor.template.html
-#: ang/crmFunding/case/fundingCase.template.html
-#: ang/crmFunding/clearing/clearingEditor.template.html
-#: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
-#: ang/crmFundingIJB/ijbApplicationEditor.template.html
-#: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
-#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
-#: managed/SavedSearchFundingCases.mgd.php
-#: managed/SavedSearchFundingDrawdowns.mgd.php
-#: managed/SavedSearch_Clearings.mgd.php
-msgid "Creation Date"
-msgstr "Erstellungsdatum"
-
-#: ang/crmFunding/application/defaultApplicationEditor.template.html
-#: ang/crmFunding/case/fundingCase.template.html
-#: ang/crmFunding/clearing/clearingEditor.template.html
-#: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
-#: ang/crmFundingIJB/ijbApplicationEditor.template.html
-#: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
-#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
-#: managed/SavedSearchFundingCases.mgd.php
-#: managed/SavedSearchFundingTasksMy.mgd.php
-#: managed/SavedSearch_Clearings.mgd.php
-msgid "Modification Date"
-msgstr "Änderungsdatum"
 
 #: ang/crmFunding/application/defaultApplicationEditor.template.html
 #: ang/crmFunding/case/fundingCase.template.html
@@ -1760,12 +1817,6 @@ msgstr "leer"
 msgid "Type"
 msgstr "Art"
 
-#: ang/crmFunding/case/permissions/fundingCaseContactRelation.template.html
-#: ang/crmFunding/program/newCasePermissions/fundingNewCasePermissions.template.html
-#: ang/crmFunding/program/permissions/fundingProgramContactRelation.template.html
-msgid "Permissions"
-msgstr "Berechtigungen"
-
 #: ang/crmFunding/clearing/clearingSidebar.template.html
 msgid ""
 "The aim intended with the funding was achieved. All required proofs are "
@@ -1994,14 +2045,6 @@ msgstr "Förderfalltypen"
 msgid "Funding Application"
 msgstr "Förderantrag"
 
-#: managed/OptionValueCgExtendsFundingProgram.mgd.php
-#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
-#: managed/SavedSearchFundingCases.mgd.php
-#: managed/SavedSearch_Clearings.mgd.php
-#: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
-msgid "Funding Program"
-msgstr "Förderprogramm"
-
 #: managed/OptionValue_cg_extend_objects-civicrm_funding_application_process.mgd.php
 msgid "Application Process"
 msgstr "Antragsprozess"
@@ -2039,19 +2082,6 @@ msgstr "Rückzahlungsforderung"
 #: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
 msgid "Table"
 msgstr "Tabelle"
-
-#: managed/SavedSearchFundingApplicationProcesses.mgd.php
-#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
-#: managed/SavedSearchFundingCaseTypes.mgd.php
-#: managed/SavedSearchFundingProgramControlling.mgd.php
-#: managed/SavedSearchFundingPrograms.mgd.php
-#: managed/SavedSearch_Clearings.mgd.php
-msgid "Title"
-msgstr "Titel"
-
-#: managed/SavedSearchFundingApplicationProcesses.mgd.php
-msgid "Short Description"
-msgstr "Kurzbeschreibung"
 
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
 msgid "Clearing Status"
@@ -2125,18 +2155,9 @@ msgstr "Dokument herunterladen"
 msgid "Budget"
 msgstr "Budget"
 
-#: managed/SavedSearchFundingProgramControlling.mgd.php
-#: managed/SavedSearchFundingPrograms.mgd.php
-msgid "End Date"
-msgstr "Enddatum"
-
 #: managed/SavedSearchFundingPrograms.mgd.php
 msgid "Identifier Prefix"
 msgstr "Bezeichnerpräfix"
-
-#: managed/SavedSearchFundingPrograms.mgd.php
-msgid "Start Date"
-msgstr "Startdatum"
 
 #: managed/SavedSearchFundingPrograms.mgd.php
 msgid "Requests Start Date"
