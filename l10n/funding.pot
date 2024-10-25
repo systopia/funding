@@ -86,24 +86,24 @@ msgstr ""
 msgid "Timestamp"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php ang/crmFunding/application/defaultApplicationEditor.template.html ang/crmFunding/clearing/clearingEditor.template.html ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html ang/crmFundingIJB/ijbApplicationEditor.template.html ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCases.mgd.php managed/SavedSearch_Clearings.mgd.php
-msgid "Identifier"
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+msgid "Funding Case Identifier"
 msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php ang/crmFunding/case/permissions/fundingCaseContactRelation.template.html ang/crmFunding/program/newCasePermissions/fundingNewCasePermissions.template.html ang/crmFunding/program/permissions/fundingProgramContactRelation.template.html
 msgid "Permissions"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php ang/crmFunding/application/defaultApplicationEditor.template.html ang/crmFunding/case/fundingCase.template.html ang/crmFunding/clearing/clearingEditor.template.html ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html ang/crmFundingIJB/ijbApplicationEditor.template.html ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingDrawdowns.mgd.php managed/SavedSearch_Clearings.mgd.php
-msgid "Status"
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+msgid "Funding Case Status"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php ang/crmFunding/application/defaultApplicationEditor.template.html ang/crmFunding/case/fundingCase.template.html ang/crmFunding/clearing/clearingEditor.template.html ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html ang/crmFundingIJB/ijbApplicationEditor.template.html ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingDrawdowns.mgd.php managed/SavedSearch_Clearings.mgd.php
-msgid "Creation Date"
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+msgid "Funding Case Creation Date"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php ang/crmFunding/application/defaultApplicationEditor.template.html ang/crmFunding/case/fundingCase.template.html ang/crmFunding/clearing/clearingEditor.template.html ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html ang/crmFundingIJB/ijbApplicationEditor.template.html ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingTasksMy.mgd.php managed/SavedSearch_Clearings.mgd.php
-msgid "Modification Date"
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+msgid "Funding Case Modification Date"
 msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php Civi/Funding/ClearingProcess/Form/AbstractClearingItemsJsonFormsGenerator.php ang/crmFunding/case/fundingCase.template.html managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingProgramControlling.mgd.php managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
@@ -118,12 +118,28 @@ msgstr ""
 msgid "Funding Program"
 msgstr ""
 
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php ang/crmFunding/application/defaultApplicationEditor.template.html ang/crmFunding/clearing/clearingEditor.template.html ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html ang/crmFundingIJB/ijbApplicationEditor.template.html ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCases.mgd.php managed/SavedSearch_Clearings.mgd.php
+msgid "Identifier"
+msgstr ""
+
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCaseTypes.mgd.php managed/SavedSearchFundingProgramControlling.mgd.php managed/SavedSearchFundingPrograms.mgd.php managed/SavedSearch_Clearings.mgd.php
 msgid "Title"
 msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php managed/SavedSearchFundingApplicationProcesses.mgd.php
 msgid "Short Description"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php ang/crmFunding/application/defaultApplicationEditor.template.html ang/crmFunding/case/fundingCase.template.html ang/crmFunding/clearing/clearingEditor.template.html ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html ang/crmFundingIJB/ijbApplicationEditor.template.html ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingDrawdowns.mgd.php managed/SavedSearch_Clearings.mgd.php
+msgid "Status"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php ang/crmFunding/application/defaultApplicationEditor.template.html ang/crmFunding/case/fundingCase.template.html ang/crmFunding/clearing/clearingEditor.template.html ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html ang/crmFundingIJB/ijbApplicationEditor.template.html ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingDrawdowns.mgd.php managed/SavedSearch_Clearings.mgd.php
+msgid "Creation Date"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php ang/crmFunding/application/defaultApplicationEditor.template.html ang/crmFunding/case/fundingCase.template.html ang/crmFunding/clearing/clearingEditor.template.html ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html ang/crmFundingIJB/ijbApplicationEditor.template.html ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingTasksMy.mgd.php managed/SavedSearch_Clearings.mgd.php
+msgid "Modification Date"
 msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php managed/SavedSearchFundingPrograms.mgd.php
