@@ -164,6 +164,16 @@ final class GetFieldsAction extends BasicGetFieldsAction {
         'nullable' => TRUE,
       ],
       [
+        'name' => 'funding_case_recipient_contact_id',
+        'title' => 'funding_case_recipient_contact_id',
+        'data_type' => 'Integer',
+      ],
+      [
+        'name' => 'funding_case_recipient_contact_display_name',
+        'title' => E::ts('Recipient'),
+        'data_type' => 'String',
+      ],
+      [
         'name' => 'funding_case_type_id',
         'title' => 'funding_case_type_id',
         'data_type' => 'Integer',

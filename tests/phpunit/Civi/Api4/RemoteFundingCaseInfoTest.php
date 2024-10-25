@@ -73,7 +73,7 @@ final class RemoteFundingCaseInfoTest extends AbstractRemoteFundingHeadlessTestC
 
     $action = RemoteFundingCaseInfo::get()
       ->setRemoteContactId((string) $contact['id'])
-      ->addSelect('*', 'CAN_open_clearing');
+      ->addSelect('*', 'funding_case_recipient_contact_display_name', 'CAN_open_clearing');
     $result = $action->execute();
     static::assertCount(1, $result);
 
@@ -87,6 +87,9 @@ final class RemoteFundingCaseInfoTest extends AbstractRemoteFundingHeadlessTestC
       'funding_case_creation_date' => $fundingCase->getCreationDate()->format('Y-m-d H:i:s'),
       'funding_case_modification_date' => $fundingCase->getModificationDate()->format('Y-m-d H:i:s'),
       'funding_case_amount_approved' => 12.34,
+      'funding_case_recipient_contact_id' => $fundingCase->getRecipientContactId(),
+      // @phpstan-ignore offsetAccess.notFound
+      'funding_case_recipient_contact_display_name' => $recipientContact['display_name'],
       'funding_case_transfer_contract_uri'
       => 'http://localhost/civicrm/funding/remote/transfer-contract/download?fundingCaseId=' . $fundingCase->getId(),
       'funding_case_type_id' => $fundingCaseType->getId(),
@@ -190,7 +193,7 @@ final class RemoteFundingCaseInfoTest extends AbstractRemoteFundingHeadlessTestC
       }
     }
 
-    static::assertCount(34 + $permissionsCount, $result);
+    static::assertCount(36 + $permissionsCount, $result);
   }
 
 }
