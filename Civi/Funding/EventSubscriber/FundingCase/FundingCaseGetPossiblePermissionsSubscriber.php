@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\EventSubscriber\FundingCase;
 
 use Civi\Api4\FundingCase;
+use Civi\Funding\ApplicationProcess\ApplicationProcessPermissions;
 use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\RemoteTools\Event\GetPossiblePermissionsEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -45,8 +46,8 @@ final class FundingCaseGetPossiblePermissionsSubscriber implements EventSubscrib
       'drawdown_create' => E::ts('Drawdown: create'),
       ClearingProcessPermissions::CLEARING_MODIFY => E::ts('Clearing: modify'),
       ClearingProcessPermissions::CLEARING_APPLY => E::ts('Clearing: apply'),
-      'review_calculative' => E::ts('Review: calculative'),
-      'review_content' => E::ts('Review: content'),
+      ApplicationProcessPermissions::REVIEW_CALCULATIVE => E::ts('Review: calculative'),
+      ApplicationProcessPermissions::REVIEW_CONTENT => E::ts('Review: content'),
       'review_drawdown' => E::ts('Review: drawdown'),
       ClearingProcessPermissions::REVIEW_CALCULATIVE => E::ts('Review: clearing calculative'),
       ClearingProcessPermissions::REVIEW_CONTENT => E::ts('Review: clearing content'),
