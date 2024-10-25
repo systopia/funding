@@ -81,7 +81,7 @@ Im Feld Monate geben Sie bitte die Gesamtzahl der Monate für den
 beantragten Zeitraum an. Zum Beispiel bei einer Förderung von zwei Jahren sind
 es 24 Monate.
 EOD,
-        ['descriptionDisplay' => 'tooltip'],
+        NULL,
         ['rule' => $personalkostenRule]
       ),
       new JsonFormsControl(
@@ -226,8 +226,7 @@ können. Kosten wie Buchhaltung, allgemeine Personalverwaltung oder
 Versicherungen für die Organisation sind nicht erlaubt. Auch Einzelfallhilfen
 können nicht beantragt werden. Achten Sie bei allen Ausgaben darauf, sparsam und
 wirtschaftlich zu sein.
-EOD,
-        ['descriptionDisplay' => 'tooltip']
+EOD
       ),
     ]);
   }
