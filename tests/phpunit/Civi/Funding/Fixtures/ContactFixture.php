@@ -48,11 +48,15 @@ final class ContactFixture {
    * @throws \CRM_Core_Exception
    */
   public static function addOrganization(array $values = []): array {
+    $values += [
+      'contact_type' => 'Organization',
+      'legal_name' => 'Test organization',
+    ];
+    $values['organization_name'] ??= $values['legal_name'];
+    $values['display_name'] ??= $values['organization_name'];
+
     return Contact::create(FALSE)
-      ->setValues($values + [
-        'contact_type' => 'Organization',
-        'legal_name' => 'Test organization',
-      ])->execute()->first();
+      ->setValues($values)->execute()->first();
   }
 
 }

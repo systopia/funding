@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\FundingCaseInfo;
 
+use Civi\Api4\Contact;
 use Civi\Api4\FundingCaseInfo;
 use Civi\Api4\FundingClearingProcess;
 use Civi\Api4\Generic\AbstractGetAction;
@@ -47,6 +48,7 @@ final class GetAction extends AbstractGetAction {
     'funding_case_creation_date' => 'funding_case_id.creation_date',
     'funding_case_modification_date' => 'funding_case_id.modification_date',
     'funding_case_amount_approved' => 'funding_case_id.amount_approved',
+    'funding_case_recipient_contact_id' => 'funding_case_id.recipient_contact_id',
     'funding_case_type_id' => 'funding_case_id.funding_case_type_id',
     'funding_case_type_is_combined_application' => 'funding_case_id.funding_case_type_id.is_combined_application',
     'funding_program_id' => 'funding_case_id.funding_program_id',
@@ -165,6 +167,7 @@ final class GetAction extends AbstractGetAction {
       'funding_case_creation_date' => $fundingCase->getCreationDate()->format('Y-m-d H:i:s'),
       'funding_case_modification_date' => $fundingCase->getModificationDate()->format('Y-m-d H:i:s'),
       'funding_case_amount_approved' => $fundingCase->getAmountApproved(),
+      'funding_case_recipient_contact_id' => $fundingCase->getRecipientContactId(),
       'funding_case_type_id' => $fundingCaseType->getId(),
       'funding_case_type_is_combined_application' => $fundingCaseType->getIsCombinedApplication(),
       'funding_case_transfer_contract_uri' => $fundingCase->getTransferContractUri(),
@@ -185,6 +188,13 @@ final class GetAction extends AbstractGetAction {
       'application_process_end_date' => self::toFormattedDateOrNull($applicationProcess->getEndDate()),
       'application_process_is_eligible' => $applicationProcess->getIsEligible(),
     ];
+
+    if ($this->isFieldExplicitlySelected('funding_case_recipient_contact_display_name')) {
+      $record['funding_case_recipient_contact_display_name'] = $this->api4->execute(Contact::getEntityName(), 'get', [
+        'select' => ['display_name'],
+        'where' => [['id', '=', $fundingCase->getRecipientContactId()]],
+      ])->single()['display_name'];
+    }
 
     foreach ($clearingProcessFields as $field) {
       $record[$field] = $clearingProcessAmounts[substr($field, 17)] ?? NULL;
