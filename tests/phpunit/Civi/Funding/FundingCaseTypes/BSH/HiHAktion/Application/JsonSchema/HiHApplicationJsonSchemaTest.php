@@ -116,11 +116,13 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
         'personalkosten' => [
           [
             'posten' => 'Personalkosten 1',
+            'wochenstunden' => 10,
             'bruttoMonatlich' => 1000.1,
             'anzahlMonate' => 2,
           ],
           [
             'posten' => 'Personalkosten 2',
+            'wochenstunden' => 20,
             'bruttoMonatlich' => 2000.2,
             'anzahlMonate' => 3,
           ],
@@ -148,16 +150,6 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
           'oeffentlichkeitsarbeit' => 5.5,
           'investitionen' => 6.6,
           'mieten' => 7.7,
-          'verwaltungskosten' => [
-            [
-              'bezeichnung' => 'Verwaltungskosten 1',
-              'summe' => 1.1,
-            ],
-            [
-              'bezeichnung' => 'Verwaltungskosten 2',
-              'summe' => 8.8,
-            ],
-          ],
           'sonstige' => [
             [
               'bezeichnung' => 'Sonstige 1',
@@ -198,15 +190,14 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
 
     $result = $this->validator->validate($this->jsonSchema, $this->validData);
     static::assertSame([], $result->getLeafErrorMessages());
-    static::assertCount(15, $result->getCostItemsData());
+    static::assertCount(13, $result->getCostItemsData());
 
     $resultData = JsonConverter::toStdClass($result->getData());
     static::assertSame(8000.8, $resultData->kosten->personalkostenSumme);
     static::assertSame(355.53, $resultData->kosten->honorareSumme);
-    static::assertSame(9.9, $resultData->kosten->sachkosten->verwaltungskostenSumme);
     static::assertSame(12.1, $resultData->kosten->sachkosten->sonstigeSumme);
-    static::assertSame(52.8, $resultData->kosten->sachkosten->summe);
-    static::assertSame(8000.8 + 355.53 + 52.8, $resultData->kosten->gesamtkosten);
+    static::assertSame(42.9, $resultData->kosten->sachkosten->summe);
+    static::assertSame(8000.8 + 355.53 + 42.9, $resultData->kosten->gesamtkosten);
 
     $mappedDataLoader = new MappedDataLoader();
     $mappedData = $mappedDataLoader->getMappedData($result->getTaggedData());
@@ -216,7 +207,7 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
       'recipient_contact_id' => 2,
       'start_date' => '2024-07-08',
       'end_date' => '2024-07-09',
-      'amount_requested' => 8000.8 + 355.53 + 52.8,
+      'amount_requested' => 8000.8 + 355.53 + 42.9,
     ], $mappedData);
   }
 

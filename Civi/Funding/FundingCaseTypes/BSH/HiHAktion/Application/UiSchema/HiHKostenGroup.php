@@ -54,7 +54,11 @@ final class HiHKostenGroup extends JsonFormsGroup {
         new JsonFormsArray("$scopePrefix/personalkosten", '', NULL, [
           new JsonFormsHidden('#/properties/_identifier'),
           new JsonFormsControl('#/properties/posten', 'Posten', NULL, ['placeholder' => 'Titel der Stelle']),
-          new JsonFormsControl('#/properties/bruttoMonatlich', "Monatliches Arbeitgeberbrutto in $currency"),
+          new JsonFormsControl('#/properties/wochenstunden', 'Wochenstunden (Anteil Projekt)'),
+          new JsonFormsControl(
+            '#/properties/bruttoMonatlich',
+            "Monatliches Arbeitgeberbrutto in $currency (Anteil Projekt)"
+          ),
           new JsonFormsControl('#/properties/anzahlMonate', 'Monate (insgesamt)'),
           new JsonFormsControl('#/properties/summe', "Summe in $currency"),
         ], [
@@ -66,8 +70,8 @@ final class HiHKostenGroup extends JsonFormsGroup {
           "$scopePrefix/personalkostenKommentar",
           'Kommentar zu den Personalkosten *',
           <<<EOD
-Bitte erklären Sie was die Arbeitnehmer:innen machen, wo sie im Projekt arbeiten
-und warum sie wichtig sind.
+Bitte beschreiben Sie die Funktion und Tätigkeit der Arbeitnehmer:innen im
+Projekt und warum sie wichtig sind.
 EOD,
           [
             'multi' => TRUE,
@@ -93,7 +97,7 @@ EOD,
           new JsonFormsHidden('#/properties/_identifier'),
           new JsonFormsControl('#/properties/posten', 'Posten', NULL, ['placeholder' => 'Titel der Stelle']),
           new JsonFormsControl('#/properties/berechnungsgrundlage', "Berechnungs\u{AD}grundlage"),
-          new JsonFormsControl('#/properties/verguetung', "Vergütung pro Stunde/\u{200B}Tag in " . $currency),
+          new JsonFormsControl('#/properties/verguetung', "Vergütung pro Stunde/\u{200B}Tag in $currency (brutto)"),
           new JsonFormsControl('#/properties/dauer', "Stunden/\u{200B}Tage"),
           new JsonFormsControl('#/properties/summe', 'Summe in ' . $currency),
         ], [
@@ -107,15 +111,18 @@ EOD,
           "$scopePrefix/honorareKommentar",
           'Kommentar zu den Honorarkosten *',
           <<<EOD
-Bitte erklären Sie, was die Honorarkräfte machen, wo sie im Projekt arbeiten und
-warum sie wichtig sind.
+Bitte beschreiben Sie die Funktion und Tätigkeit der Honorarkräfte im Projekt
+und warum sie wichtig sind.
 EOD,
           [
             'multi' => TRUE,
             'descriptionDisplay' => 'before',
           ]
         ),
-      ], NULL, NULL, ['rule' => $honorareRule]),
+      ], <<<EOD
+Achtung: Hier keine Ehrenamts- oder Übungsleiterpauschalen angeben. Diese finden
+sich unter Sachkosten.
+EOD, NULL, ['rule' => $honorareRule]),
       new JsonFormsControl(
         "$scopePrefix/sachkostenKeine",
         'Ich beantrage keine Sachkosten',
@@ -165,24 +172,9 @@ EOD,
               ['descriptionDisplay' => 'before']
             ),
             new JsonFormsArray(
-              "$scopePrefix/sachkosten/properties/verwaltungskosten",
-              'Projektbezogene Verwaltungs-/Organisationskosten',
-              'z.B. Telefonkosten, Bürobedarf oder IT-Support',
-              [
-                new JsonFormsHidden('#/properties/_identifier'),
-                new JsonFormsControl('#/properties/bezeichnung', 'Bezeichnung'),
-                new JsonFormsControl('#/properties/summe', "Summe in $currency"),
-              ],
-              [
-                'addButtonLabel' => 'Verwaltungs-/Organisationskosten hinzufügen',
-                'removeButtonLabel' => 'Entfernen',
-                'descriptionDisplay' => 'before',
-              ]
-            ),
-            new JsonFormsArray(
               "$scopePrefix/sachkosten/properties/sonstige",
-              'Sonstige Sachkosten in ' . $currency,
-              'z.B. Eintrittsgelder für den Besuch von Veranstaltungen',
+              'Sonstige projektbezogene Sachkosten in ' . $currency,
+              'z.B. Eintrittsgelder für den Besuch von Veranstaltungen, Telefonkosten, Bürobedarf oder IT-Support',
               [
                 new JsonFormsHidden('#/properties/_identifier'),
                 new JsonFormsControl('#/properties/bezeichnung', 'Bezeichnung'),
@@ -226,7 +218,7 @@ können. Kosten wie Buchhaltung, allgemeine Personalverwaltung oder
 Versicherungen für die Organisation sind nicht erlaubt. Auch Einzelfallhilfen
 können nicht beantragt werden. Achten Sie bei allen Ausgaben darauf, sparsam und
 wirtschaftlich zu sein.
-EOD
+EOD, NULL, ['rule' => $sachkostenRule]
       ),
     ]);
   }
