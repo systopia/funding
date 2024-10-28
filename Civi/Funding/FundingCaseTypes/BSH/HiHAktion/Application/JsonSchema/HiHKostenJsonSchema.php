@@ -42,13 +42,14 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
         new JsonSchemaObject([
           '_identifier' => new JsonSchemaString(['readOnly' => TRUE]),
           'posten' => new JsonSchemaString(['maxLength' => 255]),
+          'wochenstunden' => new JsonSchemaInteger(['minimum' => 1]),
           'bruttoMonatlich' => new JsonSchemaMoney(['minimum' => 0]),
           'anzahlMonate' => new JsonSchemaInteger(['minimum' => 1]),
           'summe' => new JsonSchemaCalculate('number', 'round(bruttoMonatlich * anzahlMonate, 2)', [
             'bruttoMonatlich' => new JsonSchemaDataPointer('1/bruttoMonatlich'),
             'anzahlMonate' => new JsonSchemaDataPointer('1/anzahlMonate'),
           ]),
-        ], ['required' => ['posten', 'bruttoMonatlich', 'anzahlMonate']]),
+        ], ['required' => ['posten', 'wochenstunden', 'bruttoMonatlich', 'anzahlMonate']]),
         [
           '$costItems' => new JsonSchemaCostItems([
             'type' => 'personalkosten',
@@ -184,28 +185,6 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
             ],
           ]),
         ]),
-        'verwaltungskosten' => new JsonSchemaArray(
-          new JsonSchemaObject([
-            '_identifier' => new JsonSchemaString(['readonly' => TRUE]),
-            'bezeichnung' => new JsonSchemaString(['maxLength' => 255]),
-            'summe' => new JsonSchemaMoney(['minimum' => 0]),
-          ], ['required' => ['bezeichnung', 'summe']]),
-          [
-            '$costItems' => new JsonSchemaCostItems([
-              'type' => 'sachkosten.verwaltungskosten',
-              'identifierProperty' => '_identifier',
-              'amountProperty' => 'summe',
-              'clearing' => [
-                'itemLabel' => ' Projektbezogene Verwaltungs-/Organisationskosten {@pos}',
-              ],
-            ]),
-          ]
-        ),
-        'verwaltungskostenSumme' => new JsonSchemaCalculate(
-          'number',
-          'round(sum(map(verwaltungskosten, "value.summe")), 2)',
-          ['verwaltungskosten' => new JsonSchemaDataPointer('1/verwaltungskosten')]
-        ),
         'sonstige' => new JsonSchemaArray(
           new JsonSchemaObject([
             '_identifier' => new JsonSchemaString(['readonly' => TRUE]),
@@ -231,7 +210,7 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
         'summe' => new JsonSchemaCalculate(
           'number',
           'round(materialien + ehrenamtspauschalen + verpflegung + fahrtkosten + oeffentlichkeitsarbeit'
-          . '+ investitionen + mieten + verwaltungskostenSumme + sonstigeSumme, 2)',
+          . '+ investitionen + mieten + sonstigeSumme, 2)',
           [
             'materialien' => new JsonSchemaDataPointer('1/materialien', 0),
             'ehrenamtspauschalen' => new JsonSchemaDataPointer('1/ehrenamtspauschalen', 0),
@@ -240,7 +219,6 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
             'oeffentlichkeitsarbeit' => new JsonSchemaDataPointer('1/oeffentlichkeitsarbeit', 0),
             'investitionen' => new JsonSchemaDataPointer('1/investitionen', 0),
             'mieten' => new JsonSchemaDataPointer('1/mieten', 0),
-            'verwaltungskostenSumme' => new JsonSchemaDataPointer('1/verwaltungskostenSumme'),
             'sonstigeSumme' => new JsonSchemaDataPointer('1/sonstigeSumme'),
           ]
         ),
@@ -253,7 +231,6 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
           'oeffentlichkeitsarbeit',
           'investitionen',
           'mieten',
-          'verwaltungskosten',
           'sonstige',
         ],
       ]),
