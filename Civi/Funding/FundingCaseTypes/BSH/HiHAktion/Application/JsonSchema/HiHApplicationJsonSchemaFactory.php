@@ -52,8 +52,8 @@ final class HiHApplicationJsonSchemaFactory implements NonCombinedApplicationJso
     array $applicationProcessStatusList
   ): JsonSchema {
     return new HiHApplicationJsonSchema(
-      $applicationProcessBundle->getFundingProgram()->getRequestsStartDate(),
-      $applicationProcessBundle->getFundingProgram()->getRequestsEndDate(),
+      $applicationProcessBundle->getFundingProgram()->getStartDate(),
+      $applicationProcessBundle->getFundingProgram()->getEndDate(),
       $this->existingCaseRecipientLoader->getRecipient($applicationProcessBundle->getFundingCase()),
     );
   }
@@ -67,8 +67,8 @@ final class HiHApplicationJsonSchemaFactory implements NonCombinedApplicationJso
     FundingProgramEntity $fundingProgram
   ): JsonSchema {
     return new HiHApplicationJsonSchema(
-      $fundingProgram->getRequestsStartDate(),
-      $fundingProgram->getRequestsEndDate(),
+      $fundingProgram->getStartDate(),
+      $fundingProgram->getEndDate(),
       $this->possibleRecipientsLoader->getPossibleRecipients($contactId, $fundingProgram),
     );
   }
