@@ -40,12 +40,14 @@ EOD
         "$scopePrefix/datenschutz",
         'Ich habe die Hinweise zum Datenschutz gelesen und stimme zu.',
         <<<EOD
-Ich bin damit einverstanden, dass meine hier eingetragenen Daten sowie
-hochgeladene Dokumente in der Datenbank der BürgerStiftung Hamburg
-weiterverarbeitet, gespeichert und veröffentlicht werden und zum Zweck der
-Begutachtung und Berichterstattung an den NDR, an die zuständige Bürgerstiftung
-sowie die Beiratsmitglieder und den Verein Stiften für alle e.V. weitergeleitet
-werden dürfen. Weitere Infos finden Sie in unseren Hinweisen zum Datenschutz.
+Ich bin damit einverstanden, dass meine hier eingetragenen personenbezogenen
+Daten sowie hochgeladene Dokumente in der Datenbank der BürgerStiftung Hamburg
+verarbeitet, gespeichert und veröffentlicht werden dürfen und zum Zweck der
+Begutachtung, Dokumentation, Berichterstattung und Veröffentlichung an den NDR,
+sowie zur Begutachtung und Weiterleitung von Fördermitteln an die zuständige
+Bürgerstiftung, sowie Beiratsmitglieder und den Verein Stiften für alle e.V.
+weitergeleitet werden dürfen. Weitere Infos finden Sie in unseren Hinweisen zum
+<a href="https://buergerstiftung-hamburg.de/service/datenschutz/" target="_blank">Datenschutz</a>.
 EOD
       ),
     ]);
