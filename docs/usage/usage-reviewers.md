@@ -33,7 +33,7 @@ The list includes tasks to review an application.
 
 The main task for reviewers during the application phase is to review applications and approve or reject funding cases.
 
-The funding extension provides two different types of reviews: A content review and a calculative review. They can be performed by the same or different persons. An application can get the status *eligible* when both the content review and calculative review are passed. If a funding case has at least one associated application with status *eligible*, it can be approved. This marks the start of the drawdown phase for that funding case.
+The funding extension provides two different types of reviews: A content review and a calculative review. They can be performed by the same or different persons. An application can be approved and get the status *eligible* when both the content review and calculative review are passed.
 
 ### Review an Application
 
@@ -69,12 +69,12 @@ The history of a funding application contains all status changes of this applica
 
 ### Approve a Funding Case
 
-If a funding case is approved, a transfer contract is created and the drawdown phase begins. As long as there is no transfer contract, no drawdowns are possible.
+When a funding case gets approved, a transfer contract is created and the drawdown phase begins. As long as there is no transfer contract, no drawdowns are possible.
 
-A funding can be approved in the funding case view which, can be accessed via **Funding > Funding Cases**. It is only possible to approve funding cases with the following properties:
+A funding case can be approved in the funding case view which, can be accessed via **Funding > Funding Cases**. It is only possible to approve funding cases with the following properties:
 
 * At least one associated application has the status *eligible*.
-* All associated applications have the status *eligible*, *withdrawn* or *rejected*, i.e. there's a decision about the eligibility.
+* All associated applications have the status *eligible*, *withdrawn*, or *rejected*, i.e. there's a decision about the eligibility.
 
 ## Drawdown Phase
 
