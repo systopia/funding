@@ -26,7 +26,7 @@ use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 
 final class HiHFinanzierungJsonSchema extends JsonSchemaObject {
 
-  public function __construct() {
+  public function __construct(JsonSchema $ifFullValidation) {
     $properties = [
       'grundsaetzlich' => new JsonSchemaString(['maxLength' => 255]),
       'gesamtesProjektHiH' => new JsonSchemaBoolean(),
@@ -46,20 +46,27 @@ final class HiHFinanzierungJsonSchema extends JsonSchemaObject {
     ];
 
     $keywords = [
-      'required' => ['grundsaetzlich', 'gesamtesProjektHiH', 'wichtigstePositionenBeiTeilbetrag'],
-      'allOf' => [
-        JsonSchema::fromArray([
-          'if' => [
-            'properties' => [
-              'gesamtesProjektHiH' => ['const' => FALSE],
+      'if' => $ifFullValidation,
+      'then' => JsonSchema::fromArray([
+        'properties' => [
+          'grundsaetzlich' => new JsonSchemaString($minLengthValidation),
+          'wichtigstePositionenBeiTeilbetrag' => new JsonSchemaString($minLengthValidation),
+        ],
+        'required' => ['grundsaetzlich', 'gesamtesProjektHiH', 'wichtigstePositionenBeiTeilbetrag'],
+        'allOf' => [
+          JsonSchema::fromArray([
+            'if' => [
+              'properties' => [
+                'gesamtesProjektHiH' => ['const' => FALSE],
+              ],
             ],
-          ],
-          'then' => new JsonSchemaObject([
-            'andereKosten' => new JsonSchemaString($minLengthValidation),
-            'finanzierungZusaetzlicheKosten' => new JsonSchemaString($minLengthValidation),
-          ], ['required' => ['andereKosten', 'finanzierungZusaetzlicheKosten']]),
-        ]),
-      ],
+            'then' => new JsonSchemaObject([
+              'andereKosten' => new JsonSchemaString($minLengthValidation),
+              'finanzierungZusaetzlicheKosten' => new JsonSchemaString($minLengthValidation),
+            ], ['required' => ['andereKosten', 'finanzierungZusaetzlicheKosten']]),
+          ]),
+        ],
+      ]),
     ];
 
     parent::__construct($properties, $keywords);

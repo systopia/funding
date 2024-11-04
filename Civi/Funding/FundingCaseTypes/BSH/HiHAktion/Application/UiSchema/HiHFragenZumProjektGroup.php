@@ -35,7 +35,7 @@ final class HiHFragenZumProjektGroup extends JsonFormsGroup {
       new JsonFormsGroup('Ansprechpartner:in für das Projekt', [
         new JsonFormsControl(
           "$scopePrefix/ansprechpartner/properties/anrede",
-          'Anrede'
+          'Anrede *'
         ),
         new JsonFormsControl(
           "$scopePrefix/ansprechpartner/properties/titel",
@@ -43,11 +43,11 @@ final class HiHFragenZumProjektGroup extends JsonFormsGroup {
         ),
         new JsonFormsControl(
           "$scopePrefix/ansprechpartner/properties/vorname",
-          'Vorname'
+          'Vorname *'
         ),
         new JsonFormsControl(
           "$scopePrefix/ansprechpartner/properties/nachname",
-          'Nachname'
+          'Nachname *'
         ),
         new JsonFormsControl(
           "$scopePrefix/ansprechpartner/properties/telefonnummer",
@@ -55,7 +55,7 @@ final class HiHFragenZumProjektGroup extends JsonFormsGroup {
         ),
         new JsonFormsControl(
           "$scopePrefix/ansprechpartner/properties/email",
-          'E-Mail'
+          'E-Mail *'
         ),
       ]),
       new JsonFormsControl(

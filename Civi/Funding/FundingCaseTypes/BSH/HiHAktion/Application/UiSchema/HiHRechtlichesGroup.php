@@ -28,7 +28,7 @@ final class HiHRechtlichesGroup extends JsonFormsGroup {
     parent::__construct('Rechtliches', [
       new JsonFormsControl(
         "$scopePrefix/kinderschutzklausel",
-        'Kinderschutz/Antidiskriminierungsklausel',
+        'Kinderschutz/Antidiskriminierungsklausel *',
         <<<EOD
 Die beteiligten Organisationen wenden sich explizit gegen jede Form von
 physischer, psychischer und sexualisierter Gewalt. Die antragstellende
@@ -38,7 +38,7 @@ EOD
       ),
       new JsonFormsControl(
         "$scopePrefix/datenschutz",
-        'Ich habe die Hinweise zum Datenschutz gelesen und stimme zu.',
+        'Ich habe die Hinweise zum Datenschutz gelesen und stimme zu. *',
         <<<EOD
 Ich bin damit einverstanden, dass meine hier eingetragenen personenbezogenen
 Daten sowie hochgeladene Dokumente in der Datenbank der BürgerStiftung Hamburg

@@ -113,6 +113,7 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
       ],
       'empfaenger' => 2,
       'kosten' => [
+        'personalkostenKeine' => FALSE,
         'personalkosten' => [
           [
             'posten' => 'Personalkosten 1',
@@ -127,6 +128,7 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
             'anzahlMonate' => 3,
           ],
         ],
+        'honorareKeine' => FALSE,
         'honorare' => [
           [
             'posten' => 'Honorar 1',
@@ -300,6 +302,49 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
     $data['kosten']['honorare'] = [];
     $result = $this->validator->validate($this->jsonSchema, $data);
     static::assertSame([], $result->getLeafErrorMessages());
+  }
+
+  public function testSachkostenKommentarRequired(): void {
+    $data = $this->validData;
+    $data['kosten']['sachkostenKommentar'] = '';
+
+    $result = $this->validator->validate($this->jsonSchema, $data, 2);
+    static::assertEquals([
+      '/kosten/sachkostenKommentar' => ['Dieser Wert ist erforderlich.'],
+    ], $result->getLeafErrorMessages());
+
+    $data['kosten']['sachkosten'] = [
+      'materialien' => 0,
+      'ehrenamtspauschalen' => 0,
+      'verpflegung' => 0,
+      'fahrtkosten' => 0,
+      'oeffentlichkeitsarbeit' => 0,
+      'investitionen' => 0,
+      'mieten' => 0,
+      'sonstige' => [],
+    ];
+    $result = $this->validator->validate($this->jsonSchema, $data);
+    static::assertSame([], $result->getLeafErrorMessages());
+  }
+
+  public function testAnsprechpartnerAnredeEmpty(): void {
+    $data = $this->validData;
+    $data['fragenZumProjekt']['ansprechpartner']['anrede'] = '';
+
+    $result = $this->validator->validate($this->jsonSchema, $data, 2);
+    static::assertEquals([
+      '/fragenZumProjekt/ansprechpartner/anrede' => ['Dieser Wert ist erforderlich.'],
+    ], $result->getLeafErrorMessages());
+  }
+
+  public function testAnsprechpartnerVornameEmpty(): void {
+    $data = $this->validData;
+    $data['fragenZumProjekt']['ansprechpartner']['vorname'] = '';
+
+    $result = $this->validator->validate($this->jsonSchema, $data, 2);
+    static::assertEquals([
+      '/fragenZumProjekt/ansprechpartner/vorname' => ['Dieser Wert ist erforderlich.'],
+    ], $result->getLeafErrorMessages());
   }
 
   public function testNotAllowedDates(): void {
