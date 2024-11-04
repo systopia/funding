@@ -39,7 +39,7 @@ EOD, NULL, ['multi' => TRUE]
       ),
       new JsonFormsControl(
         "$scopePrefix/wirktGegenEinsamkeit",
-        'Wie wirkt das Projekt gegen Einsamkeit? (max. 900 Zeichen mit Leerzeichen)',
+        'Wie wirkt das Projekt gegen Einsamkeit? (max. 900 Zeichen mit Leerzeichen) *',
         NULL,
         ['multi' => TRUE]
       ),
@@ -48,7 +48,7 @@ EOD, NULL, ['multi' => TRUE]
         <<<EOD
 Was ist das Ziel Ihres Projektes und wie wollen sie die Förderung hierfür
 konkret einsetzen? (2-3 Sätze, max. 300 Zeichen mit Leerzeichen): Dieser Text
-dient zur Veröffentlichung durch den NDR auf der Webseite.
+dient zur Veröffentlichung durch den NDR auf der Webseite. *
 EOD
     ,
         NULL,
@@ -56,7 +56,7 @@ EOD
       ),
       new JsonFormsControl(
         "$scopePrefix/status",
-        'Welchen Status hat das Projekt?',
+        'Welchen Status hat das Projekt? *',
       ),
       new JsonFormsControl(
         "$scopePrefix/statusBeginn",
@@ -71,7 +71,7 @@ EOD
           ),
         ]
       ),
-      new JsonFormsGroup('Für welchen Zeitraum beantragen Sie die Förderung?', [
+      new JsonFormsGroup('Für welchen Zeitraum beantragen Sie die Förderung? *', [
         new JsonFormsControl(
           "$scopePrefix/foerderungAb",
           'Ab',
@@ -88,21 +88,21 @@ EOD,
       ),
       new JsonFormsControl(
         "$scopePrefix/beabsichtigteTeilnehmendenzahl",
-        'Wie viele Teilnehmende wollen Sie erreichen?',
+        'Wie viele Teilnehmende wollen Sie erreichen? *',
       ),
       new JsonFormsControl(
         "$scopePrefix/zielgruppe",
-        'Wer ist Ihre Zielgruppe? (Mehrfachnennungen möglich)',
+        'Wer ist Ihre Zielgruppe? (Mehrfachnennungen möglich) *',
       ),
       new JsonFormsControl(
         "$scopePrefix/zielgruppeErreichen",
-        'Wie erreichen Sie die Zielgruppe? (max. 900 Zeichen mit Leerzeichen)',
+        'Wie erreichen Sie die Zielgruppe? (max. 900 Zeichen mit Leerzeichen) *',
         NULL,
         ['multi' => TRUE]
       ),
       new JsonFormsControl(
         "$scopePrefix/zielgruppeHerausforderungen",
-        'Mit welchen Herausforderungen hat Ihre Zielgruppe zu kämpfen?'
+        'Mit welchen Herausforderungen hat Ihre Zielgruppe zu kämpfen? *'
       ),
       new JsonFormsControl(
         "$scopePrefix/zielgruppeHerausforderungenSonstige",
@@ -119,13 +119,13 @@ EOD,
       ),
       new JsonFormsControl(
         "$scopePrefix/zielgruppeHerausforderungenErlaeuterung",
-        'Bitte erläutern Sie die Herausforderungen ihrer Zielgruppe detaillierter: (max. 900 Zeichen mit Leerzeichen)',
+        'Bitte erläutern Sie die Herausforderungen ihrer Zielgruppe detaillierter: (max. 900 Zeichen mit Leerzeichen) *',
         NULL,
         ['multi' => TRUE]
       ),
       new JsonFormsControl(
         "$scopePrefix/projektformat",
-        'Welches Projektformat planen Sie umzusetzen? (Mehrfachnennung möglich)',
+        'Welches Projektformat planen Sie umzusetzen? (Mehrfachnennung möglich) *',
       ),
       new JsonFormsControl(
         "$scopePrefix/projektformatSonstiges",
@@ -144,7 +144,7 @@ EOD,
         "$scopePrefix/projektformatErlaeuterung",
         <<<EOD
 Bitte erläutern Sie das Projektformat: Wie funktioniert das Angebot, wie oft
-findet es statt und worum geht es? (max. 900 Zeichen mit Leerzeichen)
+findet es statt und worum geht es? (max. 900 Zeichen mit Leerzeichen) *
 EOD,
         NULL,
         ['multi' => TRUE]

@@ -19,16 +19,36 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\JsonSchema;
 
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaBoolean;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 
 final class HiHRechtlichesJsonSchema extends JsonSchemaObject {
 
-  public function __construct() {
+  public function __construct(JsonSchema $ifFullValidation) {
+    $trueValidation = [
+      '$validations' => [
+        JsonSchema::fromArray([
+          'keyword' => 'const',
+          'value' => TRUE,
+          'message' => 'Muss akzeptiert werden.',
+        ]),
+      ],
+    ];
+
     parent::__construct([
-      'kinderschutzklausel' => new JsonSchemaBoolean(['const' => TRUE, 'default' => FALSE]),
-      'datenschutz' => new JsonSchemaBoolean(['const' => TRUE, 'default' => FALSE]),
-    ], ['required' => ['kinderschutzklausel', 'datenschutz']]);
+      'kinderschutzklausel' => new JsonSchemaBoolean(),
+      'datenschutz' => new JsonSchemaBoolean(),
+    ], [
+      'if' => $ifFullValidation,
+      'then' => JsonSchema::fromArray([
+        'properties' => [
+          'kinderschutzklausel' => new JsonSchemaBoolean($trueValidation),
+          'datenschutz' => new JsonSchemaBoolean($trueValidation),
+        ],
+        'required' => ['kinderschutzklausel', 'datenschutz'],
+      ]),
+    ]);
   }
 
 }

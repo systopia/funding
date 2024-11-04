@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\JsonSchema;
 
 use Civi\Funding\Form\JsonSchema\JsonSchemaRecipient;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 
 final class HiHApplicationJsonSchema extends JsonSchemaObject {
@@ -33,14 +34,23 @@ final class HiHApplicationJsonSchema extends JsonSchemaObject {
     \DateTimeInterface $applicationEnd,
     array $possibleRecipients
   ) {
+    $ifFullValidation = JsonSchema::fromArray([
+      'evaluate' => [
+        'expression' => 'action != "save"',
+        'variables' => ['action' => ['$data' => '/_action', 'fallback' => '']],
+      ],
+    ]);
+
     // @todo Additional validations, e.g. required, length, min, max, ...
     $properties = [
-      'fragenZumProjekt' => new HiHFragenZumProjektJsonSchema(),
-      'informationenZumProjekt' => new HiHInformationenZumProjektJsonSchema($applicationBegin, $applicationEnd),
+      'fragenZumProjekt' => new HiHFragenZumProjektJsonSchema($ifFullValidation),
+      'informationenZumProjekt' => new HiHInformationenZumProjektJsonSchema(
+        $applicationBegin, $applicationEnd, $ifFullValidation
+      ),
       'empfaenger' => new JsonSchemaRecipient($possibleRecipients),
-      'kosten' => new HiHKostenJsonSchema(),
-      'finanzierung' => new HiHFinanzierungJsonSchema(),
-      'rechtliches' => new HiHRechtlichesJsonSchema(),
+      'kosten' => new HiHKostenJsonSchema($ifFullValidation),
+      'finanzierung' => new HiHFinanzierungJsonSchema($ifFullValidation),
+      'rechtliches' => new HiHRechtlichesJsonSchema($ifFullValidation),
     ];
 
     parent::__construct($properties, [

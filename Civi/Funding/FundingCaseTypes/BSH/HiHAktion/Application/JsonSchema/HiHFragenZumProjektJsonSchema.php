@@ -27,7 +27,7 @@ use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
 
 final class HiHFragenZumProjektJsonSchema extends JsonSchemaObject {
 
-  public function __construct() {
+  public function __construct(JsonSchema $ifFullValidation) {
     $abweichendeAnschrift = new JsonSchemaObject([
       'projekttraeger' => new JsonSchemaString(['maxLength' => 255]),
       'strasse' => new JsonSchemaString(['maxLength' => 255]),
@@ -58,6 +58,7 @@ final class HiHFragenZumProjektJsonSchema extends JsonSchemaObject {
       'ansprechpartner' => new JsonSchemaObject([
         'anrede' => new JsonSchemaString([
           'oneOf' => JsonSchemaUtil::buildTitledOneOf([
+            '' => '- Bitte auswählen -',
             'Herr' => 'Herr',
             'Frau' => 'Frau',
             'ohne' => 'Ohne Anrede',
@@ -68,25 +69,33 @@ final class HiHFragenZumProjektJsonSchema extends JsonSchemaObject {
         'nachname' => new JsonSchemaString(['maxLength' => 255]),
         'telefonnummer' => new JsonSchemaString(['maxLength' => 255]),
         'email' => new JsonSchemaString(['maxLength' => 255]),
-      ], ['required' => ['anrede', 'vorname', 'nachname', 'telefonnummer', 'email']]),
+      ]),
       'adresseNichtIdentischMitOrganisation' => new JsonSchemaBoolean(['default' => FALSE]),
       'abweichendeAnschrift' => $abweichendeAnschrift,
     ];
 
     $keywords = [
-      'required' => [
-        'name',
-        'ansprechpartner',
-        'adresseNichtIdentischMitOrganisation',
-      ],
-      'if' => JsonSchema::fromArray([
+      'required' => ['name', 'ansprechpartner', 'adresseNichtIdentischMitOrganisation'],
+      'if' => $ifFullValidation,
+      'then' => JsonSchema::fromArray([
         'properties' => [
-          'adresseNichtIdentischMitOrganisation' => ['const' => TRUE],
+          'ansprechpartner' => new JsonSchemaObject([
+            'anrede' => new JsonSchemaString($minLengthValidation),
+            'vorname' => new JsonSchemaString($minLengthValidation),
+            'nachname' => new JsonSchemaString($minLengthValidation),
+            'telefonnummer' => new JsonSchemaString($minLengthValidation),
+            'email' => new JsonSchemaString($minLengthValidation),
+          ], ['required' => ['anrede', 'vorname', 'nachname', 'telefonnummer', 'email']]),
         ],
+        'if' => JsonSchema::fromArray([
+          'properties' => [
+            'adresseNichtIdentischMitOrganisation' => ['const' => TRUE],
+          ],
+        ]),
+        'then' => new JsonSchemaObject([
+          'abweichendeAnschrift' => $abweichendeAnschriftRequired,
+        ], ['required' => ['abweichendeAnschrift']]),
       ]),
-      'then' => new JsonSchemaObject([
-        'abweichendeAnschrift' => $abweichendeAnschriftRequired,
-      ], ['required' => ['abweichendeAnschrift']]),
     ];
 
     parent::__construct($properties, $keywords);
