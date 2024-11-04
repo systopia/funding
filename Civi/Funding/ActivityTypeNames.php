@@ -21,6 +21,10 @@ namespace Civi\Funding;
 
 final class ActivityTypeNames {
 
+  public const APPLICATION_PROCESS_TASK = 'funding_application_process_task';
+
+  public const CLEARING_PROCESS_TASK = 'funding_clearing_process_task';
+
   public const FUNDING_APPLICATION_CREATE = 'funding_application_create';
 
   public const FUNDING_APPLICATION_STATUS_CHANGE = 'funding_application_status_change';
@@ -36,6 +40,8 @@ final class ActivityTypeNames {
   public const FUNDING_APPLICATION_TASK_EXTERNAL = 'funding_application_task_external';
 
   public const FUNDING_APPLICATION_RESTORE = 'funding_application_restore';
+
+  public const FUNDING_CASE_TASK = 'funding_case_task';
 
   public const FUNDING_CLEARING_CREATE = 'funding_clearing_create';
 
