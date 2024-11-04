@@ -24,8 +24,8 @@ namespace Civi\Funding\Entity;
  *   id?: int,
  *   application_process_id: int,
  *   status: string,
- *   creation_date: string,
- *   modification_date: string,
+ *   creation_date: string|null,
+ *   modification_date: string|null,
  *   report_data: array<int|string, mixed>,
  *   is_review_content: bool|null,
  *   reviewer_cont_contact_id: int|null,
@@ -53,12 +53,18 @@ final class ClearingProcessEntity extends AbstractEntity {
     return $this;
   }
 
-  public function getCreationDate(): \DateTimeInterface {
-    return new \DateTime($this->values['creation_date']);
+  public function getCreationDate(): ?\DateTimeInterface {
+    return static::toDateTimeOrNull($this->values['creation_date']);
   }
 
-  public function getModificationDate(): \DateTimeInterface {
-    return new \DateTime($this->values['modification_date']);
+  public function setCreationDate(\DateTimeInterface $creationDate): self {
+    $this->values['creation_date'] = static::toDateTimeStr($creationDate);
+
+    return $this;
+  }
+
+  public function getModificationDate(): ?\DateTimeInterface {
+    return static::toDateTimeOrNull($this->values['modification_date']);
   }
 
   public function setModificationDate(\DateTimeInterface $modificationDate): self {
@@ -146,8 +152,8 @@ final class ClearingProcessEntity extends AbstractEntity {
    * @internal
    */
   public function reformatDates(): self {
-    $this->values['creation_date'] = static::toDateTimeStr($this->getCreationDate());
-    $this->setModificationDate($this->getModificationDate());
+    $this->values['creation_date'] = static::toDateTimeStrOrNull($this->getCreationDate());
+    $this->values['modification_date'] = static::toDateTimeStrOrNull($this->getModificationDate());
 
     return $this;
   }
