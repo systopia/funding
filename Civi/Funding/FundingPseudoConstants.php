@@ -172,6 +172,15 @@ final class FundingPseudoConstants {
   public static function getClearingProcessStatus(): array {
     return [
       [
+        'id' => 'not-started',
+        'name' => 'not-started',
+        'label' => E::ts('Not started'),
+        'icon' => 'fa-minus',
+        'color' => NULL,
+        'abbr' => NULL,
+        'description' => NULL,
+      ],
+      [
         'id' => 'draft',
         'name' => 'draft',
         'label' => E::ts('Draft'),
@@ -183,7 +192,7 @@ final class FundingPseudoConstants {
       [
         'id' => 'review-requested',
         'name' => 'review-requested',
-        'label' => E::ts('Review Requested'),
+        'label' => E::ts('Review requested'),
         'icon' => 'fa-circle-o',
         'color' => NULL,
         'abbr' => NULL,

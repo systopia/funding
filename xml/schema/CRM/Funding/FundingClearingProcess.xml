@@ -55,13 +55,18 @@
   <field>
     <name>creation_date</name>
     <type>timestamp</type>
-    <required>true</required>
+    <required>false</required>
+    <comment>Start of the clearing. (Not date of entity creation.)</comment>
+    <html>
+      <type>Select Date</type>
+      <formatType>activityDateTime</formatType>
+    </html>
   </field>
 
   <field>
     <name>modification_date</name>
     <type>timestamp</type>
-    <required>true</required>
+    <required>false</required>
     <html>
       <type>Select Date</type>
       <formatType>activityDateTime</formatType>
