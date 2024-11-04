@@ -35,7 +35,7 @@ use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
 
 final class HiHKostenJsonSchema extends JsonSchemaObject {
 
-  public function __construct() {
+  public function __construct(JsonSchema $ifFullValidation) {
     $properties = [
       'personalkostenKeine' => new JsonSchemaBoolean(),
       'personalkosten' => new JsonSchemaArray(
@@ -260,43 +260,52 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
 
     $keywords = [
       'required' => [
+        'personalkostenKeine',
         'personalkosten',
+        'honorareKeine',
         'honorare',
         'sachkostenKeine',
         'sachkosten',
       ],
-      'allOf' => [
-        JsonSchema::fromArray([
-          'if' => [
-            'properties' => [
-              'sachkostenSumme' => ['exclusiveMinimum' => 0],
+      'if' => $ifFullValidation,
+      'then' => JsonSchema::fromArray([
+        'allOf' => [
+          JsonSchema::fromArray([
+            'if' => [
+              'properties' => [
+                'sachkosten' => [
+                  'properties' => [
+                    'summe' => ['exclusiveMinimum' => 0],
+                  ],
+                ],
+              ],
             ],
-          ],
-          'then' => new JsonSchemaObject([
-            'sachkostenKommentar' => new JsonSchemaString($minLengthValidation),
-          ], ['required' => ['sachkostenKommentar']]),
-        ]),
-        JsonSchema::fromArray([
-          'if' => [
-            'properties' => [
-              'personalkostenSumme' => ['exclusiveMinimum' => 0],
+            'then' => new JsonSchemaObject([
+              'sachkostenKommentar' => new JsonSchemaString($minLengthValidation),
+            ], ['required' => ['sachkostenKommentar']]),
+          ]),
+          JsonSchema::fromArray([
+            'if' => [
+              'properties' => [
+                'personalkostenSumme' => ['exclusiveMinimum' => 0],
+              ],
             ],
-          ],
-          'then' => new JsonSchemaObject([
-            'personalkostenKommentar' => new JsonSchemaString($minLengthValidation),
-          ], ['required' => ['personalkostenKommentar']]),
-        ]),
-        JsonSchema::fromArray([
-          'if' => [
-            'properties' => [
-              'honorareSumme' => ['exclusiveMinimum' => 0],
+            'then' => new JsonSchemaObject([
+              'personalkostenKommentar' => new JsonSchemaString($minLengthValidation),
+            ], ['required' => ['personalkostenKommentar']]),
+          ]),
+          JsonSchema::fromArray([
+            'if' => [
+              'properties' => [
+                'honorareSumme' => ['exclusiveMinimum' => 0],
+              ],
             ],
-          ],
-          'then' => new JsonSchemaObject([
-            'honorareKommentar' => new JsonSchemaString($minLengthValidation),
-          ], ['required' => ['honorareKommentar']]),
-        ]),
-      ],
+            'then' => new JsonSchemaObject([
+              'honorareKommentar' => new JsonSchemaString($minLengthValidation),
+            ], ['required' => ['honorareKommentar']]),
+          ]),
+        ],
+      ]),
     ];
 
     parent::__construct($properties, $keywords);

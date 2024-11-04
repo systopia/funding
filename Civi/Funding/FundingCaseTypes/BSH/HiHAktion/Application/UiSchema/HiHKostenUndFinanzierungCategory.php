@@ -39,7 +39,7 @@ final class HiHKostenUndFinanzierungCategory extends JsonFormsCategory {
       ]),
       new JsonFormsControl(
         "$scopePrefix/finanzierung/properties/grundsaetzlich",
-        'Wie finanziert sich Ihr Träger grundsätzlich?',
+        'Wie finanziert sich Ihr Träger grundsätzlich? *',
       ),
       new JsonFormsControl(
         "$scopePrefix/finanzierung/properties/gesamtesProjektHiH",
@@ -78,7 +78,7 @@ EOD,
         "$scopePrefix/finanzierung/properties/wichtigstePositionenBeiTeilbetrag",
         <<<EOD
 Falls nur ein Teilbetrag bewilligt werden kann – welche Positionen im Finanzplan
-sind für Sie am wichtigsten:
+sind für Sie am wichtigsten: *
 EOD,
       ),
     ]);
