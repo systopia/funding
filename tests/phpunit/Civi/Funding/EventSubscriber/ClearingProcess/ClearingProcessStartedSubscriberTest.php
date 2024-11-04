@@ -22,38 +22,37 @@ namespace Civi\Funding\EventSubscriber\ClearingProcess;
 use Civi\Funding\ActivityTypeNames;
 use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\Entity\ActivityEntity;
-use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
-use Civi\Funding\EntityFactory\ClearingProcessFactory;
-use Civi\Funding\Event\ClearingProcess\ClearingProcessCreatedEvent;
+use Civi\Funding\EntityFactory\ClearingProcessBundleFactory;
+use Civi\Funding\Event\ClearingProcess\ClearingProcessStartedEvent;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Civi\Funding\EventSubscriber\ClearingProcess\ClearingProcessCreatedSubscriber
+ * @covers \Civi\Funding\EventSubscriber\ClearingProcess\ClearingProcessStartedSubscriber
  */
-final class ClearingProcessCreatedSubscriberTest extends TestCase {
+final class ClearingProcessStartedSubscriberTest extends TestCase {
 
   /**
    * @var \Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $activityManagerMock;
 
-  private ClearingProcessCreatedSubscriber $subscriber;
+  private ClearingProcessStartedSubscriber $subscriber;
 
   protected function setUp(): void {
     parent::setUp();
     $this->activityManagerMock = $this->createMock(ApplicationProcessActivityManager::class);
     $requestContextMock = $this->createMock(RequestContextInterface::class);
     $requestContextMock->method('getContactId')->willReturn(22);
-    $this->subscriber = new ClearingProcessCreatedSubscriber(
+    $this->subscriber = new ClearingProcessStartedSubscriber(
       $this->activityManagerMock, $requestContextMock
     );
   }
 
   public function testGetSubscribedEvents(): void {
     $expectedSubscriptions = [
-      ClearingProcessCreatedEvent::class => 'onCreated',
+      ClearingProcessStartedEvent::class => 'onStarted',
     ];
 
     static::assertEquals($expectedSubscriptions, $this->subscriber::getSubscribedEvents());
@@ -64,12 +63,14 @@ final class ClearingProcessCreatedSubscriberTest extends TestCase {
   }
 
   public function testOnCreated(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
-      'title' => 'Title',
-      'identifier' => 'Identifier',
-    ]);
-    $clearingProcess = ClearingProcessFactory::create();
-    $event = new ClearingProcessCreatedEvent($clearingProcess, $applicationProcessBundle);
+    $clearingProcessBundle = ClearingProcessBundleFactory::create(
+      [],
+      [
+        'title' => 'Title',
+        'identifier' => 'Identifier',
+      ],
+    );
+    $event = new ClearingProcessStartedEvent($clearingProcessBundle);
 
     $activity = ActivityEntity::fromArray([
       'activity_type_id:name' => ActivityTypeNames::FUNDING_CLEARING_CREATE,
@@ -77,9 +78,9 @@ final class ClearingProcessCreatedSubscriberTest extends TestCase {
       'details' => 'Application: Title (Identifier)',
     ]);
     $this->activityManagerMock->expects(static::once())->method('addActivity')
-      ->with(22, $applicationProcessBundle->getApplicationProcess(), $activity);
+      ->with(22, $clearingProcessBundle->getApplicationProcess(), $activity);
 
-    $this->subscriber->onCreated($event);
+    $this->subscriber->onStarted($event);
   }
 
 }
