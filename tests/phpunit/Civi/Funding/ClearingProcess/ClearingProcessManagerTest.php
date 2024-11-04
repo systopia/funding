@@ -28,6 +28,7 @@ use Civi\Funding\EntityFactory\ClearingProcessFactory;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessCreatedEvent;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessPreCreateEvent;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessPreUpdateEvent;
+use Civi\Funding\Event\ClearingProcess\ClearingProcessStartedEvent;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessUpdatedEvent;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
@@ -76,8 +77,9 @@ final class ClearingProcessManagerTest extends TestCase {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
     $clearingProcess = ClearingProcessFactory::create([
       'id' => NULL,
-      'creation_date' => date('Y-m-d H:i:s'),
-      'modification_date' => date('Y-m-d H:i:s'),
+      'status' => 'not-started',
+      'creation_date' => NULL,
+      'modification_date' => NULL,
     ]);
 
     $expectedDispatchCalls = [
@@ -131,6 +133,59 @@ final class ClearingProcessManagerTest extends TestCase {
     );
   }
 
+  public function testStart(): void {
+    $clearingProcessBundle = ClearingProcessBundleFactory::create([
+      'status' => 'not-started',
+      'creation_date' => NULL,
+      'modification_date' => NULL,
+    ]);
+    $clearingProcess = $clearingProcessBundle->getClearingProcess();
+    $previousClearingProcess = clone $clearingProcess;
+
+    $this->api4Mock->method('getEntity')
+      ->with(FundingClearingProcess::getEntityName(), $clearingProcess->getId())
+      ->willReturn($previousClearingProcess->toArray());
+
+    $expectedDispatchCalls = [
+      [
+        ClearingProcessPreUpdateEvent::class,
+        new ClearingProcessPreUpdateEvent($previousClearingProcess, $clearingProcessBundle),
+      ],
+      [
+        ClearingProcessUpdatedEvent::class,
+        new ClearingProcessUpdatedEvent($previousClearingProcess, $clearingProcessBundle),
+      ],
+      [
+        ClearingProcessStartedEvent::class,
+        new ClearingProcessStartedEvent($clearingProcessBundle),
+      ],
+    ];
+    $this->eventDispatcherMock->expects(static::exactly(count($expectedDispatchCalls)))->method('dispatch')
+      ->willReturnCallback(function (...$args) use (&$expectedDispatchCalls) {
+        static::assertEquals(array_shift($expectedDispatchCalls), $args);
+
+        return $args[1];
+      }
+    );
+
+    $this->api4Mock->expects(static::once())->method('updateEntity')->with(
+      FundingClearingProcess::getEntityName(),
+      $clearingProcess->getId(),
+      [
+        'status' => 'draft',
+        'creation_date' => date('Y-m-d H:i:s'),
+        'modification_date' => date('Y-m-d H:i:s'),
+      ] + $clearingProcess->toArray()
+    );
+
+    $this->clearingProcessManager->start($clearingProcessBundle);
+    static::assertSame('draft', $clearingProcess->getStatus());
+    static::assertNotNull($clearingProcess->getCreationDate());
+    static::assertSame(time(), $clearingProcess->getCreationDate()->getTimestamp());
+    static::assertNotNull($clearingProcess->getModificationDate());
+    static::assertSame(time(), $clearingProcess->getModificationDate()->getTimestamp());
+  }
+
   public function testUpdate(): void {
     $clearingProcessBundle = ClearingProcessBundleFactory::create();
     $previousClearingProcess = clone $clearingProcessBundle->getClearingProcess();
@@ -167,6 +222,7 @@ final class ClearingProcessManagerTest extends TestCase {
     );
 
     $this->clearingProcessManager->update($clearingProcessBundle);
+    static::assertNotNull($clearingProcess->getModificationDate());
     static::assertSame(time(), $clearingProcess->getModificationDate()->getTimestamp());
   }
 

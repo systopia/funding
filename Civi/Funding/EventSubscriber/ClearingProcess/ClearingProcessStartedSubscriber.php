@@ -22,12 +22,12 @@ namespace Civi\Funding\EventSubscriber\ClearingProcess;
 use Civi\Funding\ActivityTypeNames;
 use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\Entity\ActivityEntity;
-use Civi\Funding\Event\ClearingProcess\ClearingProcessCreatedEvent;
+use Civi\Funding\Event\ClearingProcess\ClearingProcessStartedEvent;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class ClearingProcessCreatedSubscriber implements EventSubscriberInterface {
+class ClearingProcessStartedSubscriber implements EventSubscriberInterface {
 
   private ApplicationProcessActivityManager $activityManager;
 
@@ -37,7 +37,7 @@ class ClearingProcessCreatedSubscriber implements EventSubscriberInterface {
    * @inheritDoc
    */
   public static function getSubscribedEvents(): array {
-    return [ClearingProcessCreatedEvent::class => 'onCreated'];
+    return [ClearingProcessStartedEvent::class => 'onStarted'];
   }
 
   public function __construct(
@@ -51,7 +51,7 @@ class ClearingProcessCreatedSubscriber implements EventSubscriberInterface {
   /**
    * @throws \CRM_Core_Exception
    */
-  public function onCreated(ClearingProcessCreatedEvent $event): void {
+  public function onStarted(ClearingProcessStartedEvent $event): void {
     $applicationProcess = $event->getApplicationProcess();
     $activity = ActivityEntity::fromArray([
       'activity_type_id:name' => ActivityTypeNames::FUNDING_CLEARING_CREATE,

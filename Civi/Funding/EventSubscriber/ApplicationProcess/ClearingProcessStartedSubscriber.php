@@ -23,11 +23,12 @@ use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessCreatedEvent;
+use Civi\Funding\Event\ClearingProcess\ClearingProcessStartedEvent;
 use Civi\Funding\FundingCaseTypeServiceLocatorContainer;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class ClearingProcessCreatedSubscriber implements EventSubscriberInterface {
+class ClearingProcessStartedSubscriber implements EventSubscriberInterface {
 
   private ApplicationProcessManager $applicationProcessManager;
 
@@ -39,7 +40,7 @@ class ClearingProcessCreatedSubscriber implements EventSubscriberInterface {
    * @inheritDoc
    */
   public static function getSubscribedEvents(): array {
-    return [ClearingProcessCreatedEvent::class => 'onCreated'];
+    return [ClearingProcessStartedEvent::class => 'onStarted'];
   }
 
   public function __construct(
@@ -55,11 +56,11 @@ class ClearingProcessCreatedSubscriber implements EventSubscriberInterface {
   /**
    * @throws \CRM_Core_Exception
    */
-  public function onCreated(ClearingProcessCreatedEvent $event): void {
+  public function onStarted(ClearingProcessCreatedEvent $event): void {
     $applicationProcess = $event->getApplicationProcess();
     $event->getApplicationProcess()->setFullStatus(
       $this->getStatusDeterminer($event->getFundingCaseType())
-        ->getStatusOnClearingProcessCreated($applicationProcess->getFullStatus())
+        ->getStatusOnClearingProcessStarted($applicationProcess->getFullStatus())
     );
     $this->applicationProcessManager->update(
       $this->requestContext->getContactId(), $event->getApplicationProcessBundle()
