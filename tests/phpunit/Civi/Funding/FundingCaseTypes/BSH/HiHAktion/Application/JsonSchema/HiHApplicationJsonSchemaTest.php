@@ -174,8 +174,9 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
         'andereKosten' => '',
         'finanzierungZusaetzlicheKosten' => '',
       ],
-      'rechtliches' => [
-        'kinderschutzklausel' => TRUE,
+      'formales' => [
+        'antidiskriminierung' => TRUE,
+        'kinderschutz' => TRUE,
         'datenschutz' => TRUE,
       ],
     ];
