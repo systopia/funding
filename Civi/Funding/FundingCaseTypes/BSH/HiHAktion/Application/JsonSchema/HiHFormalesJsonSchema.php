@@ -45,7 +45,7 @@ final class HiHFormalesJsonSchema extends JsonSchemaObject {
       'then' => JsonSchema::fromArray([
         'properties' => [
           'antidiskriminierung' => new JsonSchemaBoolean($trueValidation),
-          'kinderschutzklausel' => new JsonSchemaBoolean($trueValidation),
+          'kinderschutz' => new JsonSchemaBoolean($trueValidation),
           'datenschutz' => new JsonSchemaBoolean($trueValidation),
         ],
         'required' => ['antidiskriminierung', 'kinderschutz', 'datenschutz'],
