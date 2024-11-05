@@ -50,7 +50,7 @@ final class HiHApplicationJsonSchema extends JsonSchemaObject {
       'empfaenger' => new JsonSchemaRecipient($possibleRecipients),
       'kosten' => new HiHKostenJsonSchema($ifFullValidation),
       'finanzierung' => new HiHFinanzierungJsonSchema($ifFullValidation),
-      'rechtliches' => new HiHRechtlichesJsonSchema($ifFullValidation),
+      'formales' => new HiHFormalesJsonSchema($ifFullValidation),
     ];
 
     parent::__construct($properties, [
@@ -60,7 +60,7 @@ final class HiHApplicationJsonSchema extends JsonSchemaObject {
         'empfaenger',
         'kosten',
         'finanzierung',
-        'rechtliches',
+        'formales',
       ],
     ]);
   }

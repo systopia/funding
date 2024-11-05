@@ -23,7 +23,7 @@ use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaBoolean;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 
-final class HiHRechtlichesJsonSchema extends JsonSchemaObject {
+final class HiHFormalesJsonSchema extends JsonSchemaObject {
 
   public function __construct(JsonSchema $ifFullValidation) {
     $trueValidation = [
@@ -37,16 +37,18 @@ final class HiHRechtlichesJsonSchema extends JsonSchemaObject {
     ];
 
     parent::__construct([
-      'kinderschutzklausel' => new JsonSchemaBoolean(),
+      'antidiskriminierung' => new JsonSchemaBoolean(),
+      'kinderschutz' => new JsonSchemaBoolean(),
       'datenschutz' => new JsonSchemaBoolean(),
     ], [
       'if' => $ifFullValidation,
       'then' => JsonSchema::fromArray([
         'properties' => [
+          'antidiskriminierung' => new JsonSchemaBoolean($trueValidation),
           'kinderschutzklausel' => new JsonSchemaBoolean($trueValidation),
           'datenschutz' => new JsonSchemaBoolean($trueValidation),
         ],
-        'required' => ['kinderschutzklausel', 'datenschutz'],
+        'required' => ['antidiskriminierung', 'kinderschutz', 'datenschutz'],
       ]),
     ]);
   }

@@ -22,18 +22,28 @@ namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\UiSchema;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 
-final class HiHRechtlichesGroup extends JsonFormsGroup {
+final class HiHFormalesGroup extends JsonFormsGroup {
 
   public function __construct(string $scopePrefix) {
-    parent::__construct('Rechtliches', [
+    parent::__construct('Formales', [
       new JsonFormsControl(
-        "$scopePrefix/kinderschutzklausel",
-        'Kinderschutz/Antidiskriminierungsklausel *',
+        "$scopePrefix/antidiskriminierung",
+        'Selbstverpflichtung Antidiskriminierung *',
         <<<EOD
-Die beteiligten Organisationen wenden sich explizit gegen jede Form von
-physischer, psychischer und sexualisierter Gewalt. Die antragstellende
-Organisation ist dem Kinderschutz verpflichtet und macht dieses entsprechend
-kenntlich (Flyer/Website/Satzung).
+Die antragstellende Organisation verpflichtet sich dazu im Rahmen ihrer
+Projektarbeit jede Form der Diskriminierung aufgrund von Alter, Geschlecht,
+Herkunft, Religion, Behinderung, Muttersprache oder sexueller Orientierung und
+Identität zu verhindern und zu unterbinden.
+EOD
+      ),
+      new JsonFormsControl(
+        "$scopePrefix/kinderschutz",
+        'Selbstverpflichtung Kinderschutz *',
+        <<<EOD
+Die antragstellende Organisation wendet sich explizit gegen jede Form von
+physischer, psychischer und sexualisierter Gewalt. Wenn die antragstellende
+Organisation mit Kindern und Jugendlichen arbeitet, ist sie dem Kinderschutz
+verpflichtet und macht dieses entsprechend kenntlich.
 EOD
       ),
       new JsonFormsControl(

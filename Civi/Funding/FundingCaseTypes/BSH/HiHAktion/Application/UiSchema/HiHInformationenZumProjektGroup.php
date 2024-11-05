@@ -46,7 +46,7 @@ EOD, NULL, ['multi' => TRUE]
       new JsonFormsControl(
         "$scopePrefix/ziel",
         <<<EOD
-Was ist das Ziel Ihres Projektes und wie wollen sie die Förderung hierfür
+Was ist das Ziel Ihres Projektes und wie wollen Sie die Förderung hierfür
 konkret einsetzen? (2-3 Sätze, max. 300 Zeichen mit Leerzeichen): Dieser Text
 dient zur Veröffentlichung durch den NDR auf der Webseite. *
 EOD
@@ -88,7 +88,7 @@ EOD,
       ),
       new JsonFormsControl(
         "$scopePrefix/beabsichtigteTeilnehmendenzahl",
-        'Wie viele Teilnehmende wollen Sie erreichen? *',
+        'Wie viele Personen wollen Sie mit der Förderung erreichen? *',
       ),
       new JsonFormsControl(
         "$scopePrefix/zielgruppe",
@@ -119,7 +119,10 @@ EOD,
       ),
       new JsonFormsControl(
         "$scopePrefix/zielgruppeHerausforderungenErlaeuterung",
-        'Bitte erläutern Sie die Herausforderungen ihrer Zielgruppe detaillierter: (max. 900 Zeichen mit Leerzeichen) *',
+        <<<EOD
+Bitte erläutern Sie die Herausforderungen Ihrer Zielgruppe im Zusammenhang mit
+dem Thema „Einsamkeit“ detaillierter: (max. 900 Zeichen mit Leerzeichen)'
+EOD,
         NULL,
         ['multi' => TRUE]
       ),

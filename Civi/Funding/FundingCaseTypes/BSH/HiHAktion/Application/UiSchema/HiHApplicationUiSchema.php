@@ -46,8 +46,8 @@ EOD,
           new HiHInformationenZumProjektGroup('#/properties/informationenZumProjekt/properties'),
         ]),
         new HiHKostenUndFinanzierungCategory('#/properties', $currency),
-        new JsonFormsCategory('Rechtliches', [
-          new HiHRechtlichesGroup('#/properties/rechtliches/properties'),
+        new JsonFormsCategory('Formales', [
+          new HiHFormalesGroup('#/properties/formales/properties'),
         ]),
       ]),
     ];
