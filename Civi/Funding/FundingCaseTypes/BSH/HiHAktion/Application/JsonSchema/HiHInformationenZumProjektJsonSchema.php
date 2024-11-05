@@ -153,7 +153,6 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
           'beabsichtigteTeilnehmendenzahl' => new JsonSchema($integerValidation),
           'zielgruppe' => new JsonSchemaArray(new JsonSchemaString(), ['minItems' => 1]),
           'zielgruppeHerausforderungen' => new JsonSchemaArray(new JsonSchemaString(), ['minItems' => 1]),
-          'zielgruppeHerausforderungenErlaeuterung' => new JsonSchemaString($minLengthValidation),
           'projektformat' => new JsonSchemaArray(new JsonSchemaString(), ['minItems' => 1]),
           'projektformatErlaeuterung' => new JsonSchemaString($minLengthValidation),
         ],
