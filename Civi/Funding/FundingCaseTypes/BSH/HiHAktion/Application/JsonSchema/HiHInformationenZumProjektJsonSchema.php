@@ -44,7 +44,7 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
       'ziel' => new JsonSchemaString(['maxLength' => 300]),
       'status' => new JsonSchemaString([
         'oneOf' => JsonSchemaUtil::buildTitledOneOf2([
-          '- Bitte auswählen -' => NULL,
+          '- Bitte auswählen -' => '',
           'neu startendes Projekt' => 'neu',
           'läuft schon seit' => 'laeuftSchon',
         ]),
