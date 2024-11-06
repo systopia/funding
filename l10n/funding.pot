@@ -402,8 +402,8 @@ msgstr ""
 msgid "Validation failed"
 msgstr ""
 
-#: Civi/Funding/ApplicationProcess/Remote/Api4/ActionHandler/SubmitAddFormActionHandler.php Civi/Funding/ClearingProcess/Api4/ActionHandler/RemoteSubmitFormActionHandler.php Civi/Funding/EventSubscriber/Form/SubmitApplicationFormSubscriber.php Civi/Funding/FundingCase/Remote/Api4/ActionHandler/SubmitNewFormActionHandler.php Civi/Funding/FundingCase/Remote/Api4/ActionHandler/SubmitUpdateFormActionHandler.php
-msgid "Saved"
+#: Civi/Funding/ApplicationProcess/Remote/Api4/ActionHandler/SubmitAddFormActionHandler.php Civi/Funding/EventSubscriber/Form/SubmitApplicationFormSubscriber.php
+msgid "Saved (Status: %1)"
 msgstr ""
 
 #: Civi/Funding/ApplicationProcess/Validator/IsReviewCalculativeValidator.php
@@ -428,6 +428,10 @@ msgstr ""
 
 #: Civi/Funding/ApplicationProcess/Validator/ReviewerContentContactValidator.php Civi/Funding/ClearingProcess/Api4/ActionHandler/SetContentReviewerActionHandler.php
 msgid "Contact %1 is not allowed as content reviewer."
+msgstr ""
+
+#: Civi/Funding/ClearingProcess/Api4/ActionHandler/RemoteSubmitFormActionHandler.php Civi/Funding/FundingCase/Remote/Api4/ActionHandler/SubmitNewFormActionHandler.php Civi/Funding/FundingCase/Remote/Api4/ActionHandler/SubmitUpdateFormActionHandler.php
+msgid "Saved"
 msgstr ""
 
 #: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php

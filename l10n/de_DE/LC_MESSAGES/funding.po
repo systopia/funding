@@ -692,12 +692,9 @@ msgid "Validation failed"
 msgstr "Validierung fehlgeschlagen"
 
 #: Civi/Funding/ApplicationProcess/Remote/Api4/ActionHandler/SubmitAddFormActionHandler.php
-#: Civi/Funding/ClearingProcess/Api4/ActionHandler/RemoteSubmitFormActionHandler.php
 #: Civi/Funding/EventSubscriber/Form/SubmitApplicationFormSubscriber.php
-#: Civi/Funding/FundingCase/Remote/Api4/ActionHandler/SubmitNewFormActionHandler.php
-#: Civi/Funding/FundingCase/Remote/Api4/ActionHandler/SubmitUpdateFormActionHandler.php
-msgid "Saved"
-msgstr "Gespeichert"
+msgid "Saved (Status: %1)"
+msgstr "Gespeichert (Status: %1)"
 
 #: Civi/Funding/ApplicationProcess/Validator/IsReviewCalculativeValidator.php
 msgid "Permission to change calculative review result is missing."
@@ -726,6 +723,12 @@ msgstr "Berechtigung zur Änderung des fachlichen Prüfers fehlt."
 #: Civi/Funding/ClearingProcess/Api4/ActionHandler/SetContentReviewerActionHandler.php
 msgid "Contact %1 is not allowed as content reviewer."
 msgstr "Kontakt %1 ist nicht als fachlicher Prüfer erlaubt."
+
+#: Civi/Funding/ClearingProcess/Api4/ActionHandler/RemoteSubmitFormActionHandler.php
+#: Civi/Funding/FundingCase/Remote/Api4/ActionHandler/SubmitNewFormActionHandler.php
+#: Civi/Funding/FundingCase/Remote/Api4/ActionHandler/SubmitUpdateFormActionHandler.php
+msgid "Saved"
+msgstr "Gespeichert"
 
 #: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php
 msgid "Request Review"

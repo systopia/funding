@@ -19,25 +19,31 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\Form;
 
+use Civi\Api4\FundingApplicationProcess;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewSubmitCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitCommand;
 use Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormValidationResult;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewSubmitHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
+use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\ExternalFileEntity;
 use Civi\Funding\Event\Remote\AbstractFundingSubmitFormEvent;
 use Civi\Funding\Event\Remote\ApplicationProcess\SubmitApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
 use Civi\Funding\Form\RemoteSubmitResponseActions;
+use Civi\RemoteTools\Api4\OptionsLoaderInterface;
 use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Webmozart\Assert\Assert;
 
 class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
 
   private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
 
   private ApplicationFormNewSubmitHandlerInterface $newSubmitHandler;
+
+  private OptionsLoaderInterface $optionsLoader;
 
   private ApplicationFormSubmitHandlerInterface $submitHandler;
 
@@ -54,13 +60,18 @@ class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
   public function __construct(
     ApplicationProcessBundleLoader $applicationProcessBundleLoader,
     ApplicationFormNewSubmitHandlerInterface $newSubmitHandler,
+    OptionsLoaderInterface $optionsLoader,
     ApplicationFormSubmitHandlerInterface $submitHandler
   ) {
     $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
     $this->newSubmitHandler = $newSubmitHandler;
+    $this->optionsLoader = $optionsLoader;
     $this->submitHandler = $submitHandler;
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function onSubmitForm(SubmitApplicationFormEvent $event): void {
     $statusList = $this->applicationProcessBundleLoader->getStatusList($event->getApplicationProcessBundle());
 
@@ -73,7 +84,7 @@ class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
 
     $result = $this->submitHandler->handle($command);
     if ($result->isSuccess()) {
-      $event->setMessage(E::ts('Saved'));
+      $event->setMessage($this->createSuccessMessage($event->getApplicationProcessBundle()->getApplicationProcess()));
       $this->addFilesToEvent($result->getFiles(), $event);
       if ($result->getValidationResult()->isReadOnly() && 'delete' !== $result->getValidatedData()->getAction()) {
         $event->setAction(RemoteSubmitResponseActions::RELOAD_FORM);
@@ -87,6 +98,9 @@ class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
     }
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function onSubmitNewForm(SubmitNewApplicationFormEvent $event): void {
     $command = new ApplicationFormNewSubmitCommand(
       $event->getContactId(),
@@ -97,7 +111,8 @@ class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
 
     $result = $this->newSubmitHandler->handle($command);
     if ($result->isSuccess()) {
-      $event->setMessage(E::ts('Saved'));
+      Assert::notNull($result->getApplicationProcessBundle());
+      $event->setMessage($this->createSuccessMessage($result->getApplicationProcessBundle()->getApplicationProcess()));
       $this->addFilesToEvent($result->getFiles(), $event);
       $event->setAction(RemoteSubmitResponseActions::CLOSE_FORM);
     }
@@ -124,6 +139,19 @@ class SubmitApplicationFormSubscriber implements EventSubscriberInterface {
       fn (ExternalFileEntity $file) => $file->getUri(),
       $files,
     ));
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  private function createSuccessMessage(ApplicationProcessEntity $applicationProcess): string {
+    return E::ts('Saved (Status: %1)', [
+      1 => $this->optionsLoader->getOptionLabel(
+        FundingApplicationProcess::getEntityName(),
+        'status',
+        $applicationProcess->getStatus()
+      ),
+    ]);
   }
 
 }

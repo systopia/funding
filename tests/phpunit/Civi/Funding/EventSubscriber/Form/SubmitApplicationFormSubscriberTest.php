@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\Form;
 
+use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\RemoteFundingApplicationProcess;
 use Civi\Api4\RemoteFundingCase;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
@@ -37,6 +38,7 @@ use Civi\Funding\Event\Remote\ApplicationProcess\SubmitApplicationFormEvent;
 use Civi\Funding\Event\Remote\FundingCase\SubmitNewApplicationFormEvent;
 use Civi\Funding\Form\RemoteSubmitResponseActions;
 use Civi\Funding\Mock\ApplicationProcess\Form\Validation\ApplicationFormValidationResultFactory;
+use Civi\RemoteTools\Api4\OptionsLoaderInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -59,6 +61,11 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
   private MockObject $newSubmitHandlerMock;
 
   /**
+   * @var \Civi\RemoteTools\Api4\OptionsLoaderInterface&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $optionsLoaderMock;
+
+  /**
    * @var \Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $submitHandlerMock;
@@ -74,10 +81,12 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
     parent::setUp();
     $this->applicationProcessBundleLoaderMock = $this->createMock(ApplicationProcessBundleLoader::class);
     $this->newSubmitHandlerMock = $this->createMock(ApplicationFormNewSubmitHandlerInterface::class);
+    $this->optionsLoaderMock = $this->createMock(OptionsLoaderInterface::class);
     $this->submitHandlerMock = $this->createMock(ApplicationFormSubmitHandlerInterface::class);
     $this->subscriber = new SubmitApplicationFormSubscriber(
       $this->applicationProcessBundleLoaderMock,
       $this->newSubmitHandlerMock,
+      $this->optionsLoaderMock,
       $this->submitHandlerMock,
     );
 
@@ -114,10 +123,17 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
       ->with($command)
       ->willReturn($result);
 
+    $this->optionsLoaderMock->method('getOptionLabel')
+      ->with(
+        FundingApplicationProcess::getEntityName(),
+        'status',
+        $event->getApplicationProcessBundle()->getApplicationProcess()->getStatus()
+      )->willReturn('New Status');
+
     $this->subscriber->onSubmitForm($event);
 
     static::assertSame(RemoteSubmitResponseActions::CLOSE_FORM, $event->getAction());
-    static::assertSame('Saved', $event->getMessage());
+    static::assertSame('Saved (Status: New Status)', $event->getMessage());
     static::assertSame(['https://example.org/test.txt' => 'https://example.net/test.txt'], $event->getFiles());
   }
 
@@ -165,10 +181,17 @@ final class SubmitApplicationFormSubscriberTest extends TestCase {
       ->with($command)
       ->willReturn($result);
 
+    $this->optionsLoaderMock->method('getOptionLabel')
+      ->with(
+        FundingApplicationProcess::getEntityName(),
+        'status',
+        $applicationProcessBundle->getApplicationProcess()->getStatus()
+      )->willReturn('New Status');
+
     $this->subscriber->onSubmitNewForm($event);
 
     static::assertSame(RemoteSubmitResponseActions::CLOSE_FORM, $event->getAction());
-    static::assertSame('Saved', $event->getMessage());
+    static::assertSame('Saved (Status: New Status)', $event->getMessage());
     static::assertSame(['https://example.org/test.txt' => 'https://example.net/test.txt'], $event->getFiles());
   }
 

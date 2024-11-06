@@ -53,7 +53,7 @@ final class SubmitAddFormActionTest extends AbstractAddFormActionTestCase {
     $result = $action->execute();
     static::assertArrayHasSameKeys(['action', 'message', 'files'], $result->getArrayCopy());
     static::assertSame(RemoteSubmitResponseActions::CLOSE_FORM, $result['action']);
-    static::assertSame('Saved', $result['message']);
+    static::assertSame('Saved (Status: New)', $result['message']);
     static::assertIsArray($result['files']);
     static::assertArrayHasSameKeys(['https://example.org/test.txt'], $result['files']);
     static::assertIsString($result['files']['https://example.org/test.txt']);
@@ -79,7 +79,7 @@ final class SubmitAddFormActionTest extends AbstractAddFormActionTestCase {
     $result = $action->execute();
     static::assertArrayHasSameKeys(['action', 'message', 'files'], $result->getArrayCopy());
     static::assertSame(RemoteSubmitResponseActions::RELOAD_FORM, $result['action']);
-    static::assertSame('Saved', $result['message']);
+    static::assertSame('Saved (Status: New)', $result['message']);
     static::assertIsArray($result['files']);
     static::assertArrayHasSameKeys(['https://example.org/test.txt'], $result['files']);
     static::assertIsString($result['files']['https://example.org/test.txt']);
