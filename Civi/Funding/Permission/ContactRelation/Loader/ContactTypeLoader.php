@@ -51,7 +51,7 @@ final class ContactTypeLoader implements ContactRelationLoaderInterface {
     $action = Contact::get(FALSE)
       ->addJoin('ContactType AS ct', 'INNER', NULL, CompositeCondition::new('OR',
         Comparison::new('contact_type', '=', 'ct.name'),
-        Comparison::new('contact_sub_type', 'LIKE', "CONCAT('%${separator}', ct.name, '${separator}%')")
+        Comparison::new('contact_sub_type', 'LIKE', "CONCAT('%{$separator}', ct.name, '{$separator}%')")
       )->toArray())
       ->addWhere('ct.id', '=', $contactTypeId);
 

@@ -56,7 +56,7 @@ final class ContactTypeChecker implements ContactRelationCheckerInterface {
           CompositeCondition::new(
             'OR',
             Comparison::new('c.contact_type', '=', 'name'),
-            Comparison::new('c.contact_sub_type', 'LIKE', "CONCAT('%${separator}', name, '${separator}%')")
+            Comparison::new('c.contact_sub_type', 'LIKE', "CONCAT('%{$separator}', name, '{$separator}%')")
           ),
         )->toArray(),
       );
