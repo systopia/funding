@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Remote\Api4\ActionHandler;
 
+use Civi\Api4\FundingApplicationProcess;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\SubmitAddFormAction;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormAddSubmitCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddSubmitHandlerInterface;
@@ -28,6 +29,7 @@ use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
+use Civi\RemoteTools\Api4\OptionsLoaderInterface;
 use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
 
@@ -43,16 +45,20 @@ final class SubmitAddFormActionHandler implements ActionHandlerInterface {
 
   private FundingProgramManager $fundingProgramManager;
 
+  private OptionsLoaderInterface $optionsLoader;
+
   public function __construct(
     ApplicationFormAddSubmitHandlerInterface $submitHandler,
     FundingCaseManager $fundingCaseManager,
     FundingCaseTypeManager $fundingCaseTypeManager,
-    FundingProgramManager $fundingProgramManager
+    FundingProgramManager $fundingProgramManager,
+    OptionsLoaderInterface $optionsLoader
   ) {
     $this->submitHandler = $submitHandler;
     $this->fundingCaseManager = $fundingCaseManager;
     $this->fundingCaseTypeManager = $fundingCaseTypeManager;
     $this->fundingProgramManager = $fundingProgramManager;
+    $this->optionsLoader = $optionsLoader;
   }
 
   /**
@@ -93,7 +99,13 @@ final class SubmitAddFormActionHandler implements ActionHandlerInterface {
     Assert::notNull($submitResult->getApplicationProcessBundle());
     $result = [
       'action' => RemoteSubmitResponseActions::CLOSE_FORM,
-      'message' => E::ts('Saved'),
+      'message' => E::ts('Saved (Status: %1)', [
+        1 => $this->optionsLoader->getOptionLabel(
+          FundingApplicationProcess::getEntityName(),
+          'status',
+          $submitResult->getApplicationProcessBundle()->getApplicationProcess()->getStatus()
+        ),
+      ]),
       'files' => array_map(
         fn (ExternalFileEntity $file) => $file->getUri(),
         $submitResult->getFiles(),
