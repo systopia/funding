@@ -27,7 +27,6 @@ use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Event\FundingProgram\GetPermissionsEvent;
 use Civi\RemoteTools\Api4\Action\Traits\PermissionsGetActionTrait;
 use Civi\RemoteTools\Api4\Api4Interface;
-use Civi\RemoteTools\Api4\Query\CompositeCondition;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 
@@ -75,11 +74,7 @@ final class GetAction extends DAOGetAction {
         $clearingProcessAmounts = $this->api4->execute(FundingClearingProcess::getEntityName(), 'get', [
           'select' => $clearingProcessFields,
           'where' => [
-            // @phpstan-ignore-next-line
-            CompositeCondition::fromFieldValuePairs([
-              'application_process_id.funding_case_id.funding_program_id' => $record['id'],
-              'status' => 'accepted',
-            ])->toArray(),
+            ['application_process_id.funding_case_id.funding_program_id', '=', $record['id']],
           ],
         ])->first();
 

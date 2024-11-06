@@ -27,7 +27,6 @@ use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
-use Civi\RemoteTools\Api4\Query\CompositeCondition;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Webmozart\Assert\Assert;
 
@@ -72,11 +71,7 @@ final class GetAction extends AbstractReferencingDAOGetAction {
         $clearingProcessAmounts = $this->_api4->execute(FundingClearingProcess::getEntityName(), 'get', [
           'select' => $clearingProcessFields,
           'where' => [
-            // @phpstan-ignore-next-line
-            CompositeCondition::fromFieldValuePairs([
-              'application_process_id' => $record['id'],
-              'status' => 'accepted',
-            ])->toArray(),
+            ['application_process_id', '=', $record['id']],
           ],
         ])->first();
 

@@ -31,7 +31,6 @@ use Civi\Funding\FundingCase\FundingCasePermissionsCacheManager;
 use Civi\Funding\FundingCase\TransferContractRouter;
 use Civi\Funding\Permission\Util\FlattenedPermissionsUtil;
 use Civi\RemoteTools\Api4\Api4Interface;
-use Civi\RemoteTools\Api4\Query\CompositeCondition;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 
@@ -144,10 +143,7 @@ final class GetAction extends DAOGetAction {
           $clearingProcessAmounts = $this->api4->execute(FundingClearingProcess::getEntityName(), 'get', [
             'select' => array_map(fn (string $field) => 'SUM(' . $field . ') AS SUM_' . $field, $clearingProcessFields),
             'where' => [
-              CompositeCondition::fromFieldValuePairs([
-                'application_process_id.funding_case_id' => $record['id'],
-                'status' => 'accepted',
-              ])->toArray(),
+              ['application_process_id.funding_case_id', '=', $record['id']],
             ],
             'groupBy' => ['application_process_id.funding_case_id'],
           ])->first();

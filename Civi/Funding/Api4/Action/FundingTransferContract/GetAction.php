@@ -31,7 +31,6 @@ use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\Funding\PayoutProcess\PayoutProcessManager;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
-use Civi\RemoteTools\Api4\Query\CompositeCondition;
 use Webmozart\Assert\Assert;
 
 final class GetAction extends AbstractGetAction {
@@ -103,10 +102,7 @@ final class GetAction extends AbstractGetAction {
       $clearingProcessAmounts = $this->api4->execute(FundingClearingProcess::getEntityName(), 'get', [
         'select' => array_map(fn (string $field) => 'SUM(' . $field . ') AS SUM_' . $field, $clearingProcessFields),
         'where' => [
-          CompositeCondition::fromFieldValuePairs([
-            'application_process_id.funding_case_id' => $fundingCase->getId(),
-            'status' => 'accepted',
-          ])->toArray(),
+          ['application_process_id.funding_case_id', '=', $fundingCase->getId()],
         ],
         'groupBy' => ['application_process_id.funding_case_id'],
       ])->first();
