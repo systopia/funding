@@ -151,10 +151,7 @@ final class GetAction extends AbstractGetAction {
       $clearingProcessAmounts = $this->api4->execute(FundingClearingProcess::getEntityName(), 'get', [
         'select' => array_map(fn (string $field) => substr($field, 17), $clearingProcessFields),
         'where' => [
-          CompositeCondition::fromFieldValuePairs([
-            'application_process_id' => $applicationProcess->getId(),
-            'status' => 'accepted',
-          ])->toArray(),
+          ['application_process_id', '=', $applicationProcess->getId()],
         ],
       ])->first();
     }
