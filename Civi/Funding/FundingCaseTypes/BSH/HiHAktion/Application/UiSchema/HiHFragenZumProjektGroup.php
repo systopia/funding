@@ -51,7 +51,7 @@ final class HiHFragenZumProjektGroup extends JsonFormsGroup {
         ),
         new JsonFormsControl(
           "$scopePrefix/ansprechpartner/properties/telefonnummer",
-          'Telefonnummer'
+          'Telefonnummer *'
         ),
         new JsonFormsControl(
           "$scopePrefix/ansprechpartner/properties/email",
