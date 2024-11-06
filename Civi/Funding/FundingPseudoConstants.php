@@ -178,6 +178,15 @@ final class FundingPseudoConstants {
         'abbr' => NULL,
         'description' => NULL,
       ],
+      [
+        'id' => 'rejected',
+        'name' => 'rejected',
+        'label' => E::ts('Rejected'),
+        'icon' => 'fa-times-circle-o',
+        'color' => '#d65050',
+        'abbr' => NULL,
+        'description' => NULL,
+      ],
     ];
   }
 
