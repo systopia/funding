@@ -33,7 +33,7 @@ final class HiHInformationenZumProjektGroup extends JsonFormsGroup {
       new JsonFormsControl(
         "$scopePrefix/kurzbeschreibung",
         <<<EOD
-Bitte beschreiben Sie ihr Projekt. Gehen Sie dabei besonders darauf ein, was Sie
+Bitte beschreiben Sie Ihr Projekt. Gehen Sie dabei besonders darauf ein, was Sie
 konkret mit der Förderung umsetzen wollen: (max. 1800 Zeichen mit Leerzeichen)
 EOD, NULL, ['multi' => TRUE]
       ),
