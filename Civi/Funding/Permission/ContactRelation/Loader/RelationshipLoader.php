@@ -98,7 +98,7 @@ final class RelationshipLoader implements ContactRelationLoaderInterface {
           Comparison::new('ct2.id', 'IN', $contactTypeIds),
           CompositeCondition::new('OR',
             Comparison::new('c2.contact_type', '=', 'ct2.name'),
-            Comparison::new('c2.contact_sub_type', 'LIKE', "CONCAT('%${separator}', ct2.name, '${separator}%')")
+            Comparison::new('c2.contact_sub_type', 'LIKE', "CONCAT('%{$separator}', ct2.name, '{$separator}%')")
           )
         )->toArray()
       );
