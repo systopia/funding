@@ -67,10 +67,6 @@ class PayoutProcessTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
     }
   }
 
-  protected function getEntity(int $id): ?AbstractEntity {
-    return $this->payoutProcessManager->get($id);
-  }
-
   protected function getApiEntityName(): string {
     return FundingPayoutProcess::getEntityName();
   }
@@ -91,6 +87,10 @@ class PayoutProcessTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
    */
   protected function getRelatedContextValues(AbstractEntity $entity): array {
     return ['fundingCaseId' => $entity->getFundingCaseId()];
+  }
+
+  protected function loadEntity(int $id): ?AbstractEntity {
+    return $this->payoutProcessManager->get($id);
   }
 
 }

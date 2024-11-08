@@ -59,10 +59,6 @@ class FundingCaseTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
     $this->fundingCaseManager = $fundingCaseManager;
   }
 
-  protected function getEntity(int $id): ?AbstractEntity {
-    return $this->fundingCaseManager->get($id);
-  }
-
   protected function getApiEntityName(): string {
     return FundingCase::getEntityName();
   }
@@ -87,6 +83,10 @@ class FundingCaseTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
       'fundingProgramId' => $entity->getFundingProgramId(),
       'contactId' => $entity->getRecipientContactId(),
     ];
+  }
+
+  protected function loadEntity(int $id): ?AbstractEntity {
+    return $this->fundingCaseManager->get($id);
   }
 
 }

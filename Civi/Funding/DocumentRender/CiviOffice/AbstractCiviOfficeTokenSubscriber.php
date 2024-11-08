@@ -41,6 +41,11 @@ abstract class AbstractCiviOfficeTokenSubscriber extends AbstractTokenSubscriber
    */
   protected TokenResolverInterface $tokenResolver;
 
+  /**
+   * @phpstan-var array<int, T|null>
+   */
+  private array $entities = [];
+
   public static function getPriority(): int {
     return 0;
   }
@@ -157,7 +162,9 @@ abstract class AbstractCiviOfficeTokenSubscriber extends AbstractTokenSubscriber
   /**
    * @phpstan-return T
    */
-  abstract protected function getEntity(int $id): ?AbstractEntity;
+  protected function getEntity(int $id): ?AbstractEntity {
+    return $this->entities[$id] ??= $this->loadEntity($id);
+  }
 
   /**
    * @phpstan-return class-string<T>
@@ -175,6 +182,11 @@ abstract class AbstractCiviOfficeTokenSubscriber extends AbstractTokenSubscriber
   abstract protected function getRelatedContextSchemas(): array;
 
   /**
+   * @phpstan-return T
+   */
+  abstract protected function loadEntity(int $id): ?AbstractEntity;
+
+  /**
    * @phpstan-param T $entity
    *
    * @phpstan-return array<string, mixed>
@@ -188,7 +200,7 @@ abstract class AbstractCiviOfficeTokenSubscriber extends AbstractTokenSubscriber
       if (NULL === $entity && isset($row->context[$this->getContextKey() . 'Id'])) {
         $entityId = $row->context[$this->getContextKey() . 'Id'];
         Assert::integer($entityId, sprintf('Context value "%s" must be an integer', $this->getContextKey() . 'Id'));
-        $entity = $row->context[$this->getContextKey()] = $this->getEntity($entityId);
+        $entity = $row->context[$this->getContextKey()] ??= $this->getEntity($entityId);
         Assert::notNull(
           $entity,
           sprintf('No %s with ID %d found', $this->getApiEntityName(), $entityId),
