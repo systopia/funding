@@ -20,12 +20,10 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Remote\Api4\ActionHandler;
 
 use Civi\Api4\FundingApplicationCiviOfficeTemplate;
+use Civi\Api4\FundingApplicationProcess;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetTemplatesAction;
-use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
-use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Civi\RemoteTools\Api4\Api4Interface;
-use Webmozart\Assert\Assert;
 
 final class GetTemplatesActionHandler implements ActionHandlerInterface {
 
@@ -33,18 +31,8 @@ final class GetTemplatesActionHandler implements ActionHandlerInterface {
 
   private Api4Interface $api4;
 
-  private ApplicationProcessManager $applicationProcessManager;
-
-  private FundingCaseManager $fundingCaseManager;
-
-  public function __construct(
-    Api4Interface $api4,
-    ApplicationProcessManager $applicationProcessManager,
-    FundingCaseManager $fundingCaseManager
-  ) {
+  public function __construct(Api4Interface $api4) {
     $this->api4 = $api4;
-    $this->applicationProcessManager = $applicationProcessManager;
-    $this->fundingCaseManager = $fundingCaseManager;
   }
 
   /**
@@ -53,18 +41,19 @@ final class GetTemplatesActionHandler implements ActionHandlerInterface {
    * @throws \CRM_Core_Exception
    */
   public function getTemplates(GetTemplatesAction $action): array {
-    $applicationProcess = $this->applicationProcessManager->get($action->getApplicationProcessId());
-    if (NULL === $applicationProcess) {
+    $fundingCaseTypeId = $this->api4->execute(FundingApplicationProcess::getEntityName(), 'get', [
+      'select' => ['funding_case_id.funding_case_type_id'],
+      'where' => [['id', '=', $action->getApplicationProcessId()]],
+    ])->first()['funding_case_id.funding_case_type_id'] ?? NULL;
+
+    if (NULL === $fundingCaseTypeId) {
       return [];
     }
-
-    $fundingCase = $this->fundingCaseManager->get($applicationProcess->getFundingCaseId());
-    Assert::notNull($fundingCase);
 
     /** @phpstan-var list<array{id: integer, label: string}> $templates */
     $templates = $this->api4->execute(FundingApplicationCiviOfficeTemplate::getEntityName(), 'get', [
       'select' => ['id', 'label'],
-      'where' => [['case_type_id', '=', $fundingCase->getFundingCaseTypeId()]],
+      'where' => [['case_type_id', '=', $fundingCaseTypeId]],
       'orderBy' => ['label' => 'ASC'],
     ])->getArrayCopy();
 
