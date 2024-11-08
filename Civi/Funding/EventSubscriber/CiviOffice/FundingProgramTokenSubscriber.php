@@ -47,13 +47,6 @@ class FundingProgramTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
     $this->fundingProgramManager = $fundingProgramManager;
   }
 
-  /**
-   * @inheritDoc
-   */
-  protected function getEntity(int $id): ?AbstractEntity {
-    return $this->fundingProgramManager->get($id);
-  }
-
   protected function getApiEntityName(): string {
     return FundingProgram::getEntityName();
   }
@@ -70,6 +63,13 @@ class FundingProgramTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
    */
   protected function getRelatedContextValues(AbstractEntity $entity): array {
     return [];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  protected function loadEntity(int $id): ?AbstractEntity {
+    return $this->fundingProgramManager->get($id);
   }
 
 }

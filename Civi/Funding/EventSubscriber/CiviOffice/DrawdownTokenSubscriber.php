@@ -54,10 +54,6 @@ class DrawdownTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
     $this->drawdownManager = $drawdownManager;
   }
 
-  protected function getEntity(int $id): ?AbstractEntity {
-    return $this->drawdownManager->get($id);
-  }
-
   protected function getApiEntityName(): string {
     return FundingDrawdown::getEntityName();
   }
@@ -78,6 +74,10 @@ class DrawdownTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
    */
   protected function getRelatedContextValues(AbstractEntity $entity): array {
     return ['payoutProcessId' => $entity->getPayoutProcessId()];
+  }
+
+  protected function loadEntity(int $id): ?AbstractEntity {
+    return $this->drawdownManager->get($id);
   }
 
 }

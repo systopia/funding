@@ -57,10 +57,6 @@ class ApplicationProcessTokenSubscriber extends AbstractCiviOfficeTokenSubscribe
     $this->applicationProcessManager = $applicationProcessManager;
   }
 
-  protected function getEntity(int $id): ?AbstractEntity {
-    return $this->applicationProcessManager->get($id);
-  }
-
   protected function getApiEntityName(): string {
     return FundingApplicationProcess::getEntityName();
   }
@@ -81,6 +77,10 @@ class ApplicationProcessTokenSubscriber extends AbstractCiviOfficeTokenSubscribe
    */
   protected function getRelatedContextValues(AbstractEntity $entity): array {
     return ['fundingCaseId' => $entity->getFundingCaseId()];
+  }
+
+  protected function loadEntity(int $id): ?AbstractEntity {
+    return $this->applicationProcessManager->get($id);
   }
 
 }
