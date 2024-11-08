@@ -20,12 +20,9 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Remote\Api4\ActionHandler;
 
 use Civi\Api4\FundingApplicationCiviOfficeTemplate;
+use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\Result;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetTemplatesAction;
-use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
-use Civi\Funding\EntityFactory\ApplicationProcessFactory;
-use Civi\Funding\EntityFactory\FundingCaseFactory;
-use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\Traits\CreateMockTrait;
 use Civi\RemoteTools\Api4\Api4Interface;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -47,45 +44,46 @@ final class GetTemplatesActionHandlerTest extends TestCase {
    */
   private MockObject $api4Mock;
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\ApplicationProcessManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $applicationProcessManagerMock;
-
-  /**
-   * @var \Civi\Funding\FundingCase\FundingCaseManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $fundingCaseManagerMock;
-
   protected function setUp(): void {
     parent::setUp();
     $this->api4Mock = $this->createMock(Api4Interface::class);
-    $this->applicationProcessManagerMock = $this->createMock(ApplicationProcessManager::class);
-    $this->fundingCaseManagerMock = $this->createMock(FundingCaseManager::class);
-    $this->actionHandler = new GetTemplatesActionHandler(
-      $this->api4Mock,
-      $this->applicationProcessManagerMock,
-      $this->fundingCaseManagerMock
-    );
+    $this->actionHandler = new GetTemplatesActionHandler($this->api4Mock);
   }
 
   public function testGetTemplates(): void {
-    $applicationProcess = ApplicationProcessFactory::createApplicationProcess(['id' => 2]);
-    $this->applicationProcessManagerMock->method('get')
-      ->with(2)
-      ->willReturn($applicationProcess);
-    $fundingCase = FundingCaseFactory::createFundingCase();
-    $this->fundingCaseManagerMock->method('get')
-      ->with($fundingCase->getId())
-      ->willReturn($fundingCase);
+    $series = [
+      [
+        [
+          FundingApplicationProcess::getEntityName(),
+          'get',
+          [
+            'select' => ['funding_case_id.funding_case_type_id'],
+            'where' => [['id', '=', 2]],
+          ],
+        ],
+        new Result([['funding_case_id.funding_case_type_id' => 123]]),
+      ],
+      [
+        [
+          FundingApplicationCiviOfficeTemplate::getEntityName(),
+          'get',
+          [
+            'select' => ['id', 'label'],
+            'where' => [['case_type_id', '=', 123]],
+            'orderBy' => ['label' => 'ASC'],
+          ],
+        ],
+        new Result([['id' => 3, 'label' => 'test']]),
+      ],
+    ];
 
-    $this->api4Mock->method('execute')
-      ->with(FundingApplicationCiviOfficeTemplate::getEntityName(), 'get', [
-        'select' => ['id', 'label'],
-        'where' => [['case_type_id', '=', $fundingCase->getFundingCaseTypeId()]],
-        'orderBy' => ['label' => 'ASC'],
-      ])
-      ->willReturn(new Result([['id' => 3, 'label' => 'test']]));
+    $this->api4Mock->method('execute')->willReturnCallback(function (...$args) use (&$series) {
+      // @phpstan-ignore-next-line
+      [$expectedArgs, $return] = array_shift($series);
+      static::assertEquals($expectedArgs, $args);
+
+      return $return;
+    });
 
     $action = $this->createApi4ActionMock(GetTemplatesAction::class)
       ->setApplicationProcessId(2);
@@ -94,9 +92,11 @@ final class GetTemplatesActionHandlerTest extends TestCase {
   }
 
   public function testGetTemplatesNoApplicationProcess(): void {
-    $this->applicationProcessManagerMock->method('get')
-      ->with(2)
-      ->willReturn(NULL);
+    $this->api4Mock->method('execute')
+      ->with(FundingApplicationProcess::getEntityName(), 'get', [
+        'select' => ['funding_case_id.funding_case_type_id'],
+        'where' => [['id', '=', 2]],
+      ])->willReturn(new Result());
 
     $action = $this->createApi4ActionMock(GetTemplatesAction::class)
       ->setApplicationProcessId(2);
