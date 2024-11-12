@@ -19,6 +19,10 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Permission\Traits;
 
+/**
+ * Do NOT use this trait if there should be no dependency on concrete
+ * permissions.
+ */
 trait HasReviewPermissionTrait {
 
   /**

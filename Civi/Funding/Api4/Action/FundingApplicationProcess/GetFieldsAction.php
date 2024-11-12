@@ -62,9 +62,11 @@ final class GetFieldsAction extends DAOGetFieldsAction {
     $fields = parent::getRecords();
     foreach ($fields as &$field) {
       if ('reviewer_calc_contact_id' === $field['name']) {
+        // @todo Make permission depend on funding case type.
         $field['options'] = $this->getReviewerContactOptions('review_calculative');
       }
       elseif ('reviewer_cont_contact_id' === $field['name']) {
+        // @todo Make permission depend on funding case type.
         $field['options'] = $this->getReviewerContactOptions('review_content');
       }
     }

@@ -97,12 +97,14 @@ final class ReviewerContentContactValidator implements ConcreteEntityValidatorIn
   }
 
   private function assertPermission(FundingCaseEntity $fundingCase): void {
+    // @todo Make permission depend on funding case type.
     if (!$fundingCase->hasPermission('review_content')) {
       throw new UnauthorizedException(E::ts('Permission to change content reviewer is missing.'));
     }
   }
 
   private function validateContactId(int $contactId, FundingCaseEntity $fundingCase): EntityValidationResult {
+    // @todo Make permission depend on funding case type.
     $possibleReviewers = $this->fundingCaseContactsLoader->getContactsWithPermission($fundingCase, 'review_content');
     if (isset($possibleReviewers[$contactId])) {
       return EntityValidationResult::new();

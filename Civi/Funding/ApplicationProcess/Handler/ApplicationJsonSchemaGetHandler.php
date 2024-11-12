@@ -49,7 +49,11 @@ final class ApplicationJsonSchemaGetHandler implements ApplicationJsonSchemaGetH
       $command->getApplicationProcessBundle(),
       $command->getApplicationProcessStatusList()
     );
-    $this->jsonSchemaCreateHelper->addCommentProperty($jsonSchema, $command->getApplicationProcessBundle());
+    $this->jsonSchemaCreateHelper->addCommentProperty(
+      $jsonSchema,
+      $command->getApplicationProcessBundle(),
+      $command->getApplicationProcessStatusList()
+    );
     $this->jsonSchemaCreateHelper->addReadOnlyKeywordIfNecessary(
       $jsonSchema,
       $command->getApplicationProcessBundle(),
