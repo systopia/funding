@@ -81,6 +81,7 @@ final class IsReviewContentValidator implements ConcreteEntityValidatorInterface
   }
 
   private function assertPermission(FundingCaseEntity $fundingCase): void {
+    // @todo Make permission depend on funding case type.
     if (!$fundingCase->hasPermission('review_content')) {
       throw new UnauthorizedException(E::ts('Permission to change content review result is missing.'));
     }

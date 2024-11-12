@@ -24,14 +24,11 @@ use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Form\JsonSchema\JsonSchemaComment;
 use Civi\Funding\FundingCaseTypeServiceLocatorContainer;
-use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaNull;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 
 class ApplicationJsonSchemaCreateHelper {
-
-  use HasReviewPermissionTrait;
 
   private FundingCaseTypeServiceLocatorContainer $serviceLocatorContainer;
 
@@ -67,14 +64,23 @@ class ApplicationJsonSchemaCreateHelper {
     $this->doAddActionProperty($jsonSchema, $submitActions);
   }
 
+  /**
+   * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $applicationProcessStatusList
+   *   Status of other application processes in same funding case indexed by ID.
+   */
   public function addCommentProperty(
     JsonSchema $jsonSchema,
-    ApplicationProcessEntityBundle $applicationProcessBundle
+    ApplicationProcessEntityBundle $applicationProcessBundle,
+    array $applicationProcessStatusList
   ): void {
     /** @var \Civi\RemoteTools\JsonSchema\JsonSchema $properties */
     $properties = $jsonSchema['properties'];
 
-    if ($this->hasReviewPermission($applicationProcessBundle->getFundingCase()->getPermissions())) {
+    if ($this->getActionsDeterminer($applicationProcessBundle->getFundingCaseType())->isActionAllowed(
+      'add-comment',
+      $applicationProcessBundle,
+      $applicationProcessStatusList
+    )) {
       $properties['comment'] = new JsonSchemaComment();
     }
     else {

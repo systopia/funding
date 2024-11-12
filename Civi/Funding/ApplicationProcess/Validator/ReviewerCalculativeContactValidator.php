@@ -97,12 +97,14 @@ final class ReviewerCalculativeContactValidator implements ConcreteEntityValidat
   }
 
   private function assertPermission(FundingCaseEntity $fundingCase): void {
+    // @todo Make permission depend on funding case type.
     if (!$fundingCase->hasPermission('review_calculative')) {
       throw new UnauthorizedException(E::ts('Permission to change calculative reviewer is missing.'));
     }
   }
 
   private function validateContactId(int $contactId, FundingCaseEntity $fundingCase): EntityValidationResult {
+    // @todo Make permission depend on funding case type.
     $possibleReviewers = $this->fundingCaseContactsLoader->getContactsWithPermission(
       $fundingCase,
       'review_calculative',

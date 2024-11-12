@@ -81,6 +81,7 @@ final class IsReviewCalculativeValidator implements ConcreteEntityValidatorInter
   }
 
   private function assertPermission(FundingCaseEntity $fundingCase): void {
+    // @todo Make permission depend on funding case type.
     if (!$fundingCase->hasPermission('review_calculative')) {
       throw new UnauthorizedException(E::ts('Permission to change calculative review result is missing.'));
     }
