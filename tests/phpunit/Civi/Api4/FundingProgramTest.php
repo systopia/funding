@@ -140,4 +140,24 @@ final class FundingProgramTest extends AbstractFundingHeadlessTestCase {
     static::assertSame(0, $notPermittedResult->rowCount);
   }
 
+  public function testGet(): void {
+    // This does only check if sub queries of extra fields can be executed.
+    $this->setUserPermissions([Permissions::ACCESS_CIVICRM, Permissions::ADMINISTER_FUNDING]);
+    $fundingProgram = FundingProgram::get()->addSelect(
+      'amount_eligible',
+      'amount_approved',
+      'amount_available',
+      'amount_paid_out',
+      'amount_cleared',
+      'amount_admitted',
+    )->execute()->first();
+
+    static::assertSame(0.0, $fundingProgram['amount_eligible']);
+    static::assertSame(0.0, $fundingProgram['amount_approved']);
+    static::assertNull($fundingProgram['amount_available']);
+    static::assertSame(0.0, $fundingProgram['amount_paid_out']);
+    static::assertSame(0.0, $fundingProgram['amount_cleared']);
+    static::assertSame(0.0, $fundingProgram['amount_admitted']);
+  }
+
 }

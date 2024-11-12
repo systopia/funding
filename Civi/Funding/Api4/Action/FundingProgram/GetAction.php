@@ -62,12 +62,16 @@ final class GetAction extends DAOGetAction {
   }
 
   public function _run(Result $result): void {
-    $this->traitRun($result);
-
     $clearingProcessFields = array_intersect([
       'amount_cleared',
       'amount_admitted',
     ], $this->getSelect());
+    if ([] !== $clearingProcessFields && !$this->isFieldSelected('id')) {
+      $this->addSelect('id');
+    }
+
+    $this->traitRun($result);
+
     if ([] !== $clearingProcessFields) {
       /** @phpstan-var array<string, mixed> $record */
       foreach ($result as &$record) {
@@ -79,7 +83,7 @@ final class GetAction extends DAOGetAction {
         ])->first();
 
         foreach ($clearingProcessFields as $field) {
-          $record[$field] = $clearingProcessAmounts[$field] ?? NULL;
+          $record[$field] = $clearingProcessAmounts[$field] ?? 0.0;
         }
       }
     }

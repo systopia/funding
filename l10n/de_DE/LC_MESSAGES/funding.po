@@ -465,6 +465,21 @@ msgid "The sum of the amounts of unverified drawdowns."
 msgstr "Die Summe der Beträge offener Mittelabrufe."
 
 #: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
+#: managed/SavedSearchFundingProgramControlling.mgd.php
+#, fuzzy
+#| msgid "Amount Requested Eligible"
+msgid "Amount Eligible"
+msgstr "Förderfähiger Betrag"
+
+#: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
+msgid ""
+"The sum of the amounts requested of eligible applications in the funding "
+"program."
+msgstr ""
+"Die Summe der beantragten Beträge von förderfähigen Anträgen im "
+"Förderprogramm."
+
+#: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
 #: managed/SavedSearchFundingProgramControlling.mgd.php
 msgid "Amount Available"
