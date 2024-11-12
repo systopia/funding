@@ -59,7 +59,7 @@ HELP);
 
   public function getExtra(): array {
     return [
-      'contactTypes' => iterator_to_array($this->getContactTypes()),
+      'contactTypes' => [...$this->getContactTypes()],
     ];
   }
 

@@ -42,7 +42,7 @@ final class ContactRelationTypeContainer implements RelationTypeContainerInterfa
    * @inheritDoc
    */
   public function getRelationTypes(): array {
-    return \iterator_to_array($this->relationTypes);
+    return [...$this->relationTypes];
   }
 
 }
