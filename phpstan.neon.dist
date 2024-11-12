@@ -78,7 +78,6 @@ parameters:
 		- '#^Method Civi\\RemoteTools\\Event\\DAOGetEvent::addJoin\(\) has parameter \$conditions with no value type specified in iterable type array.$#'
 		- '#^Method Civi\\RemoteTools\\Event\\DAOGetEvent::getJoin\(\) return type has no value type specified in iterable type array.$#'
 		- '#^Property Civi\\Api4\\Generic\\Result::\$debug \(array\) on left side of \?\? is not nullable.$#'
-		- '/^Parameter #1 \$iterator of function iterator_to_array expects Traversable, iterable(<.+>)? given.$/' # false positive
 		-
 			message: '#^Call to function method_exists\(\) with .+ will always evaluate to true.$#'
 			path: */tests/phpunit/**/EventSubscriber/*SubscriberTest.php

@@ -42,7 +42,7 @@ final class RelationPropertiesFactoryTypeContainer {
    * @phpstan-return array<\Civi\Funding\Permission\FundingCase\RelationFactory\RelationPropertiesFactoryTypeInterface>
    */
   public function getFactoryTypes(): array {
-    return \iterator_to_array($this->factoryTypes);
+    return [...$this->factoryTypes];
   }
 
 }

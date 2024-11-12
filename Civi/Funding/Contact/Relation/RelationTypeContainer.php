@@ -40,7 +40,7 @@ final class RelationTypeContainer implements RelationTypeContainerInterface {
    * @inheritDoc
    */
   public function getRelationTypes(): array {
-    return \iterator_to_array($this->relationTypes);
+    return [...$this->relationTypes];
   }
 
 }

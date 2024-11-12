@@ -69,11 +69,11 @@ HELP);
   }
 
   /**
-   * @phpstan-return iterable<string, int>
+   * @phpstan-return \Traversable<string, int>
    *
    * @throws \CRM_Core_Exception
    */
-  private function getContactTypes(): iterable {
+  private function getContactTypes(): \Traversable {
     $action = ContactType::get(FALSE)
       ->addSelect('id', 'label')
       ->addOrderBy('label');
@@ -85,11 +85,11 @@ HELP);
   }
 
   /**
-   * @return iterable<string, int>
+   * @phpstan-return \Traversable<string, int>
    *
    * @throws \CRM_Core_Exception
    */
-  private function getRelationshipTypes(): iterable {
+  private function getRelationshipTypes(): \Traversable {
     $action = \Civi\Api4\RelationshipType::get(FALSE)
       ->addSelect('id', 'label_a_b', 'label_b_a')
       ->addOrderBy('label_a_b');

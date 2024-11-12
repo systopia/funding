@@ -333,7 +333,7 @@ final class GetFieldsAction extends BasicGetFieldsAction {
         'data_type' => 'Boolean',
         'operators' => [],
       ],
-    ], iterator_to_array($this->getPermissionFields()));
+    ], [...$this->getPermissionFields()]);
   }
 
   /**
