@@ -58,16 +58,16 @@ HELP);
 
   public function getExtra(): array {
     return [
-      'relationshipTypes' => [...$this->getRelationshipTypes()],
+      'relationshipTypes' => iterator_to_array($this->getRelationshipTypes()),
     ];
   }
 
   /**
-   * @return iterable<string, int>
+   * @phpstan-return \Traversable<string, int>
    *
    * @throws \CRM_Core_Exception
    */
-  private function getRelationshipTypes(): iterable {
+  private function getRelationshipTypes(): \Traversable {
     $action = \Civi\Api4\RelationshipType::get(FALSE)
       ->addSelect('id', 'label_a_b', 'label_b_a')
       ->addOrderBy('label_a_b');

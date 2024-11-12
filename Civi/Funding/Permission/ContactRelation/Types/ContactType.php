@@ -59,16 +59,16 @@ HELP);
 
   public function getExtra(): array {
     return [
-      'contactTypes' => [...$this->getContactTypes()],
+      'contactTypes' => iterator_to_array($this->getContactTypes()),
     ];
   }
 
   /**
-   * @phpstan-return iterable<string, int>
+   * @phpstan-return \Traversable<string, int>
    *
    * @throws \CRM_Core_Exception
    */
-  private function getContactTypes(): iterable {
+  private function getContactTypes(): \Traversable {
     $action = \Civi\Api4\ContactType::get(FALSE)
       ->addSelect('id', 'label')
       ->addOrderBy('label');
