@@ -46,6 +46,22 @@ final class GetFieldsAction extends DAOGetFieldsAction {
    */
   protected function getRecords(): array {
     $fields = $this->traitGetRecords();
+
+    $fields[] = [
+      'name' => 'amount_eligible',
+      'title' => E::ts('Amount Eligible'),
+      'description' => E::ts('The sum of the amounts requested of eligible applications in the funding program.'),
+      'type' => 'Extra',
+      'data_type' => 'Money',
+      'readonly' => TRUE,
+      'nullalbe' => FALSE,
+      'sql_renderer' => fn () => sprintf('IFNULL(
+        (SELECT SUM(amount_requested) FROM civicrm_funding_application_process WHERE
+          is_eligible = 1 AND
+          funding_case_id IN (SELECT id FROM civicrm_funding_case WHERE funding_program_id = %s.id))
+      , 0)', Api4Query::MAIN_TABLE_ALIAS),
+    ];
+
     $fields[] = [
       'name' => 'amount_approved',
       'title' => E::ts('Amount Approved'),

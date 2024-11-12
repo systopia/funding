@@ -226,6 +226,14 @@ msgstr ""
 msgid "The sum of the amounts of unverified drawdowns."
 msgstr ""
 
+#: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php managed/SavedSearchFundingProgramControlling.mgd.php
+msgid "Amount Eligible"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
+msgid "The sum of the amounts requested of eligible applications in the funding program."
+msgstr ""
+
 #: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php managed/SavedSearchFundingProgramControlling.mgd.php
 msgid "Amount Available"
 msgstr ""

@@ -21,6 +21,7 @@ return [
             'id',
             'title',
             'budget',
+            'amount_eligible',
             'amount_approved',
             'amount_available',
             'amount_paid_out',
@@ -73,6 +74,13 @@ return [
               'key' => 'budget',
               'dataType' => 'Money',
               'label' => E::ts('Budget'),
+              'sortable' => TRUE,
+            ],
+            [
+              'type' => 'field',
+              'key' => 'amount_eligible',
+              'dataType' => 'Money',
+              'label' => E::ts('Amount Eligible'),
               'sortable' => TRUE,
             ],
             [
