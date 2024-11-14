@@ -5,16 +5,13 @@ namespace tests\phpunit\Civi\Funding\EventSubscriber\FundingCase;
 
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
+use Civi\Funding\EntityFactory\FundingCaseBundleFactory;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
-use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
-use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Event\FundingCase\FundingCasePreUpdateEvent;
 use Civi\Funding\EventSubscriber\FundingCase\FundingCaseWithdrawnSubscriber;
 use Civi\Funding\FundingCase\Command\FundingCaseUpdateAmountApprovedCommand;
 use Civi\Funding\FundingCase\FundingCaseStatus;
 use Civi\Funding\FundingCase\Handler\FundingCaseUpdateAmountApprovedHandlerInterface;
-use Civi\Funding\FundingProgram\FundingCaseTypeManager;
-use Civi\Funding\FundingProgram\FundingProgramManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -28,16 +25,6 @@ final class FundingCaseWithdrawnSubscriberTest extends TestCase {
    */
   private MockObject $applicationProcessManagerMock;
 
-  /**
-   * @var \Civi\Funding\FundingProgram\FundingCaseTypeManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $fundingCaseTypeManagerMock;
-
-  /**
-   * @var \Civi\Funding\FundingProgram\FundingProgramManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $fundingProgramManagerMock;
-
   private FundingCaseWithdrawnSubscriber $subscriber;
 
   /**
@@ -48,13 +35,9 @@ final class FundingCaseWithdrawnSubscriberTest extends TestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->applicationProcessManagerMock = $this->createMock(ApplicationProcessManager::class);
-    $this->fundingCaseTypeManagerMock = $this->createMock(FundingCaseTypeManager::class);
-    $this->fundingProgramManagerMock = $this->createMock(FundingProgramManager::class);
     $this->updateAmountApprovedHandlerMock = $this->createMock(FundingCaseUpdateAmountApprovedHandlerInterface::class);
     $this->subscriber = new FundingCaseWithdrawnSubscriber(
       $this->applicationProcessManagerMock,
-      $this->fundingCaseTypeManagerMock,
-      $this->fundingProgramManagerMock,
       $this->updateAmountApprovedHandlerMock
     );
   }
@@ -72,20 +55,17 @@ final class FundingCaseWithdrawnSubscriberTest extends TestCase {
   }
 
   public function testOnPreUpdate(): void {
-    $fundingCase = FundingCaseFactory::createFundingCase([
+    $fundingCaseBundle = FundingCaseBundleFactory::create([
       'status' => FundingCaseStatus::WITHDRAWN,
       'amount_approved' => 0.1,
     ]);
+    $fundingCase = $fundingCaseBundle->getFundingCase();
+    $fundingCaseType = $fundingCaseBundle->getFundingCaseType();
+    $fundingProgram = $fundingCaseBundle->getFundingProgram();
     $previousFundingCase = FundingCaseFactory::createFundingCase([
       'status' => FundingCaseStatus::ONGOING,
       'amount_approved' => 0.1,
     ]);
-
-    $fundingProgram = FundingProgramFactory::createFundingProgram();
-    $this->fundingProgramManagerMock->method('get')->with($fundingProgram->getId())->willReturn($fundingProgram);
-
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
-    $this->fundingCaseTypeManagerMock->method('get')->with($fundingCaseType->getId())->willReturn($fundingCaseType);
 
     $statusList = [23 => new FullApplicationProcessStatus('status', NULL, NULL)];
     $this->applicationProcessManagerMock->method('getStatusListByFundingCaseId')
@@ -98,12 +78,12 @@ final class FundingCaseWithdrawnSubscriberTest extends TestCase {
       ))->setAuthorized(TRUE)
     );
 
-    $event = new FundingCasePreUpdateEvent($previousFundingCase, $fundingCase);
+    $event = new FundingCasePreUpdateEvent($previousFundingCase, $fundingCaseBundle);
     $this->subscriber->onPreUpdate($event);
   }
 
   public function testOnPreUpdateAmountNull(): void {
-    $fundingCase = FundingCaseFactory::createFundingCase([
+    $fundingCaseBundle = FundingCaseBundleFactory::create([
       'status' => FundingCaseStatus::WITHDRAWN,
       'amount_approved' => NULL,
     ]);
@@ -114,12 +94,12 @@ final class FundingCaseWithdrawnSubscriberTest extends TestCase {
 
     $this->updateAmountApprovedHandlerMock->expects(static::never())->method('handle');
 
-    $event = new FundingCasePreUpdateEvent($previousFundingCase, $fundingCase);
+    $event = new FundingCasePreUpdateEvent($previousFundingCase, $fundingCaseBundle);
     $this->subscriber->onPreUpdate($event);
   }
 
   public function testOnPreUpdateAmountZero(): void {
-    $fundingCase = FundingCaseFactory::createFundingCase([
+    $fundingCaseBundle = FundingCaseBundleFactory::create([
       'status' => FundingCaseStatus::WITHDRAWN,
       'amount_approved' => NULL,
     ]);
@@ -130,12 +110,12 @@ final class FundingCaseWithdrawnSubscriberTest extends TestCase {
 
     $this->updateAmountApprovedHandlerMock->expects(static::never())->method('handle');
 
-    $event = new FundingCasePreUpdateEvent($previousFundingCase, $fundingCase);
+    $event = new FundingCasePreUpdateEvent($previousFundingCase, $fundingCaseBundle);
     $this->subscriber->onPreUpdate($event);
   }
 
   public function testOnPreUpdateStatusNotChanged(): void {
-    $fundingCase = FundingCaseFactory::createFundingCase([
+    $fundingCaseBundle = FundingCaseBundleFactory::create([
       'status' => FundingCaseStatus::WITHDRAWN,
       'amount_approved' => 2.0,
     ]);
@@ -146,7 +126,7 @@ final class FundingCaseWithdrawnSubscriberTest extends TestCase {
 
     $this->updateAmountApprovedHandlerMock->expects(static::never())->method('handle');
 
-    $event = new FundingCasePreUpdateEvent($previousFundingCase, $fundingCase);
+    $event = new FundingCasePreUpdateEvent($previousFundingCase, $fundingCaseBundle);
     $this->subscriber->onPreUpdate($event);
   }
 
