@@ -62,14 +62,18 @@ class ClearingProcessManager {
       'reviewer_calc_contact_id' => NULL,
     ]);
 
-    $event = new ClearingProcessPreCreateEvent($clearingProcess, $applicationProcessBundle);
+    $event = new ClearingProcessPreCreateEvent(
+      new ClearingProcessEntityBundle($clearingProcess, $applicationProcessBundle)
+    );
     $this->eventDispatcher->dispatch(ClearingProcessPreCreateEvent::class, $event);
 
     $result = $this->api4->createEntity(FundingClearingProcess::getEntityName(), $clearingProcess->toArray());
     $clearingProcess = ClearingProcessEntity::singleFromApiResult($result)
       ->reformatDates();
 
-    $event = new ClearingProcessCreatedEvent($clearingProcess, $applicationProcessBundle);
+    $event = new ClearingProcessCreatedEvent(
+      new ClearingProcessEntityBundle($clearingProcess, $applicationProcessBundle)
+    );
     $this->eventDispatcher->dispatch(ClearingProcessCreatedEvent::class, $event);
 
     return $clearingProcess;

@@ -24,7 +24,7 @@ use Civi\Funding\Entity\Traits\ApplicationProcessEntityBundleTrait;
 /**
  * @codeCoverageIgnore
  */
-final class ClearingProcessEntityBundle {
+final class ClearingProcessEntityBundle implements EntityBundleInterface {
 
   use ApplicationProcessEntityBundleTrait;
 

@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\DependencyInjection\Compiler\Traits;
 
+use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
 use Symfony\Component\DependencyInjection\Reference;
@@ -63,6 +64,37 @@ trait TaggedFundingCaseTypeServicesTrait {
   }
 
   /**
+   * @phpstan-return array<string, IteratorArgument>
+   *   Mapping of funding case type to prioritized service references.
+   *
+   * @throws \Symfony\Component\DependencyInjection\Exception\RuntimeException
+   */
+  protected function getMultiTaggedFundingCaseTypeServices(ContainerBuilder $container, string $tagName): array {
+    /** @phpstan-var array<string, \SplPriorityQueue<int, Reference>> $services */
+    $services = [];
+    foreach ($container->findTaggedServiceIds($tagName) as $id => $tags) {
+      foreach ($tags as $attributes) {
+        foreach ($this->getFundingCaseTypes($container, $id, $attributes) as $fundingCaseType) {
+          if (!isset($services[$fundingCaseType])) {
+            $services[$fundingCaseType] = new \SplPriorityQueue();
+          }
+
+          $services[$fundingCaseType]->insert(new Reference($id), $this->getPriority($container, $id, $attributes));
+
+          if (!in_array($fundingCaseType, static::$fundingCaseTypes, TRUE)) {
+            static::$fundingCaseTypes[] = $fundingCaseType;
+          }
+        }
+      }
+    }
+
+    return array_map(
+      fn (\SplPriorityQueue $priorityQueue) => new IteratorArgument(iterator_to_array($priorityQueue)),
+      $services
+    );
+  }
+
+  /**
    * @phpstan-param array{funding_case_type?: string, funding_case_types?: list<string>} $attributes
    *
    * @phpstan-return list<string>
@@ -94,6 +126,29 @@ trait TaggedFundingCaseTypeServicesTrait {
     $fundingCaseType = $class::getSupportedFundingCaseType();
 
     return [$fundingCaseType];
+  }
+
+  /**
+   * @phpstan-param array{priority?: int} $attributes
+   */
+  private function getPriority(ContainerBuilder $container, string $id, array $attributes): int {
+    if (isset($attributes['priority'])) {
+      return $attributes['priority'];
+    }
+
+    $class = $this->getServiceClass($container, $id);
+    if (method_exists($class, 'getPriority')) {
+      // @phpstan-ignore return.type
+      return $class::getPriority();
+    }
+
+    $constName = $class . '::PRIORITY';
+    if (defined($constName)) {
+      // @phpstan-ignore return.type
+      return constant($constName);
+    }
+
+    return 0;
   }
 
   /**

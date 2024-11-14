@@ -37,26 +37,19 @@ final class ApplicationProcessBundleFixture {
     array $fundingCaseTypeValues = [],
     array $fundingProgramValues = []
   ): ApplicationProcessEntityBundle {
-    $fundingProgram = FundingProgramFixture::addFixture($fundingProgramValues);
-    $fundingCaseType = FundingCaseTypeFixture::addFixture($fundingCaseTypeValues);
-    $recipientContact = ContactFixture::addOrganization();
-    $creationContact = ContactFixture::addIndividual();
-
-    $fundingCase = FundingCaseFixture::addFixture(
-      $fundingProgram->getId(),
-      $fundingCaseType->getId(),
-      $recipientContact['id'],
-      $creationContact['id'],
-      $fundingCaseValues
+    $fundingCaseBundle = FundingCaseBundleFixture::create(
+      $fundingCaseValues,
+      $fundingCaseTypeValues,
+      $fundingProgramValues
     );
-
+    $fundingCase = $fundingCaseBundle->getFundingCase();
     $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId(), $applicationProcessValues);
 
     return new ApplicationProcessEntityBundle(
       $applicationProcess,
       $fundingCase,
-      $fundingCaseType,
-      $fundingProgram
+      $fundingCaseBundle->getFundingCaseType(),
+      $fundingCaseBundle->getFundingProgram(),
     );
   }
 

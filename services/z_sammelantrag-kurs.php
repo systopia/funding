@@ -22,6 +22,7 @@ declare(strict_types = 1);
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
+use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\SammelantragKurs\Application\Actions\KursApplicationActionsDeterminer;
 use Civi\Funding\SammelantragKurs\Application\Actions\KursApplicationActionStatusInfo;
 use Civi\Funding\SammelantragKurs\Application\Actions\KursApplicationStatusDeterminer;
@@ -42,6 +43,8 @@ use Civi\Funding\SammelantragKurs\FundingCase\UiSchema\KursCaseUiSchemaFactory;
 use Civi\Funding\SammelantragKurs\FundingCase\Validation\KursCaseValidator;
 use Civi\Funding\SammelantragKurs\Report\KursReportDataLoader;
 use Civi\Funding\SammelantragKurs\Report\KursReportFormFactory;
+use Civi\Funding\Task\Creator\ApplicationProcessTaskCreatorInterface;
+use Civi\Funding\Task\Modifier\ApplicationProcessTaskModifierInterface;
 use Symfony\Component\DependencyInjection\Reference;
 
 $container->autowire(KursApplicationActionsDeterminer::class)
@@ -78,6 +81,22 @@ $container->autowire(KursApplicationFormDataFactory::class)
   ->addTag(KursApplicationFormDataFactory::SERVICE_TAG);
 $container->autowire(KursApplicationFormFilesFactory::class)
   ->addTag(KursApplicationFormFilesFactory::SERVICE_TAG);
+
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/SammelantragKurs/Application/Task',
+  'Civi\\Funding\\SammelantragKurs\\Application\\Task',
+  ApplicationProcessTaskCreatorInterface::class,
+  [ApplicationProcessTaskCreatorInterface::class => []],
+);
+
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/SammelantragKurs/Application/Task',
+  'Civi\\Funding\\SammelantragKurs\\Application\\Task',
+  ApplicationProcessTaskModifierInterface::class,
+  [ApplicationProcessTaskModifierInterface::class => []]
+);
 
 $container->autowire(KursAngularModuleSubscriber::class)
   ->addTag('kernel.event_subscriber');

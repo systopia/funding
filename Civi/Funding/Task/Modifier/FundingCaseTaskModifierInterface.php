@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2023 SYSTOPIA GmbH
+ * Copyright (C) 2024 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,14 +17,17 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\ApplicationProcess;
+namespace Civi\Funding\Task\Modifier;
 
-final class TaskType {
+use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\FundingTaskEntity;
 
-  public const REVIEW_CALCULATIVE = 'review_calculative';
+interface FundingCaseTaskModifierInterface {
 
-  public const REVIEW_CONTENT = 'review_content';
-
-  public const REWORK = 'rework';
+  public function modifyTask(
+    FundingTaskEntity $task,
+    FundingCaseEntity $fundingCase,
+    FundingCaseEntity $previousFundingCase
+  ): bool;
 
 }

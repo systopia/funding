@@ -19,6 +19,9 @@ declare(strict_types = 1);
 
 namespace Civi\Funding;
 
+/**
+ * @phpstan-type taskNameT ActivityTypeNames::APPLICATION_PROCESS_TASK|ActivityTypeNames::CLEARING_PROCESS_TASK|ActivityTypeNames::FUNDING_CASE_TASK
+ */
 final class ActivityTypeNames {
 
   public const APPLICATION_PROCESS_TASK = 'funding_application_process_task';
@@ -48,5 +51,16 @@ final class ActivityTypeNames {
   public const FUNDING_CLEARING_STATUS_CHANGE = 'funding_clearing_status_change';
 
   public const FUNDING_CLEARING_REVIEW_STATUS_CHANGE = 'funding_clearing_review_status_change';
+
+  /**
+   * @phpstan-return list<taskNameT>
+   */
+  public static function getTasks(): array {
+    return [
+      self::APPLICATION_PROCESS_TASK,
+      self::CLEARING_PROCESS_TASK,
+      self::FUNDING_CASE_TASK,
+    ];
+  }
 
 }

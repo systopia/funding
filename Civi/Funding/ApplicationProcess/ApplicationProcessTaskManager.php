@@ -90,7 +90,7 @@ class ApplicationProcessTaskManager {
             2 => $applicationProcess->getIdentifier(),
           ]
         ),
-        'assignee_contact_id' => $assigneeContactId,
+        'assignee_contact_id' => NULL === $assigneeContactId ? [] : [$assigneeContactId],
         'funding_application_task.type' => $type,
       ]);
       $this->activityManager->addActivity($contactId, $applicationProcess, $task);

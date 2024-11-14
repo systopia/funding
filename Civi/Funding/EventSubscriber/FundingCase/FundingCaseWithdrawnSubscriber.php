@@ -25,8 +25,6 @@ use Civi\Funding\Event\FundingCase\FundingCasePreUpdateEvent;
 use Civi\Funding\FundingCase\Command\FundingCaseUpdateAmountApprovedCommand;
 use Civi\Funding\FundingCase\FundingCaseStatus;
 use Civi\Funding\FundingCase\Handler\FundingCaseUpdateAmountApprovedHandlerInterface;
-use Civi\Funding\FundingProgram\FundingCaseTypeManager;
-use Civi\Funding\FundingProgram\FundingProgramManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -36,10 +34,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class FundingCaseWithdrawnSubscriber implements EventSubscriberInterface {
 
   private ApplicationProcessManager $applicationProcessManager;
-
-  private FundingCaseTypeManager $fundingCaseTypeManager;
-
-  private FundingProgramManager $fundingProgramManager;
 
   private FundingCaseUpdateAmountApprovedHandlerInterface $updateAmountApprovedHandler;
 
@@ -52,13 +46,9 @@ class FundingCaseWithdrawnSubscriber implements EventSubscriberInterface {
 
   public function __construct(
     ApplicationProcessManager $applicationProcessManager,
-    FundingCaseTypeManager $fundingCaseTypeManager,
-    FundingProgramManager $fundingProgramManager,
     FundingCaseUpdateAmountApprovedHandlerInterface $updateAmountApprovedHandler
   ) {
     $this->applicationProcessManager = $applicationProcessManager;
-    $this->fundingCaseTypeManager = $fundingCaseTypeManager;
-    $this->fundingProgramManager = $fundingProgramManager;
     $this->updateAmountApprovedHandler = $updateAmountApprovedHandler;
   }
 
@@ -69,17 +59,12 @@ class FundingCaseWithdrawnSubscriber implements EventSubscriberInterface {
     $fundingCase = $event->getFundingCase();
     if ($this->isStatusChangedToWithdrawn($fundingCase, $event->getPreviousFundingCase())) {
       if ($fundingCase->getAmountApproved() > 0) {
-        $fundingCaseType = $this->fundingCaseTypeManager->get($fundingCase->getFundingCaseTypeId());
-        assert(NULL !== $fundingCaseType);
-        $fundingProgram = $this->fundingProgramManager->get($fundingCase->getFundingProgramId());
-        assert(NULL !== $fundingProgram);
-
         $this->updateAmountApprovedHandler->handle((new FundingCaseUpdateAmountApprovedCommand(
           $fundingCase,
           0.0,
           $this->applicationProcessManager->getStatusListByFundingCaseId($fundingCase->getId()),
-          $fundingCaseType,
-          $fundingProgram
+          $event->getFundingCaseType(),
+          $event->getFundingProgram()
         ))->setAuthorized(TRUE));
       }
     }

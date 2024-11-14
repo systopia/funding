@@ -22,7 +22,7 @@ namespace Civi\Funding\Entity;
 /**
  * @codeCoverageIgnore
  */
-final class ApplicationProcessEntityBundle {
+final class ApplicationProcessEntityBundle implements EntityBundleInterface {
 
   private ApplicationProcessEntity $applicationProcess;
 

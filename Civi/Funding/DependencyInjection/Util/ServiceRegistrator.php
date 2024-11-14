@@ -116,7 +116,10 @@ final class ServiceRegistrator {
         $class = static::getClass($namespace, $it->getInnerIterator());
         if (static::isServiceClass($class, $classOrInterface) && !$container->has($class)) {
           /** @phpstan-var class-string $class */
-          $definition = $container->autowire($class);
+          // Use existing definition, if any, so previous tags aren't lost.
+          $definition = $container->hasDefinition($class)
+            ? $container->findDefinition($class)
+            : $container->autowire($class);
           $definition->setLazy(self::isServiceLazy($class, $options));
           $definition->setShared($options['shared'] ?? TRUE);
           $definition->setPublic($options['public'] ?? FALSE);

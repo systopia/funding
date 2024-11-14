@@ -40,6 +40,8 @@ final class FundingCaseFactory {
 
   public const DEFAULT_ID = 3;
 
+  public const DEFAULT_IDENTIFIER = 'fc3';
+
   /**
    * @phpstan-param fundingCaseValuesT $values
    */
@@ -48,7 +50,7 @@ final class FundingCaseFactory {
       'id' => self::DEFAULT_ID,
       'funding_program_id' => FundingProgramFactory::DEFAULT_ID,
       'funding_case_type_id' => FundingCaseTypeFactory::DEFAULT_ID,
-      'identifier' => 'fc3',
+      'identifier' => self::DEFAULT_IDENTIFIER,
       'recipient_contact_id' => 1,
       'status' => 'open',
       'creation_date' => date('Y-m-d H:i:s'),
