@@ -89,12 +89,11 @@ abstract class AbstractReferencingDAOGetAction extends DAOGetAction {
       $this->ensureFundingCasePermissions();
     }
 
-    if (!$this->isFieldSelected($this->_fundingCaseIdFieldName)) {
-      if ([] === $this->getSelect()) {
-        $this->setSelect(['*']);
-      }
-      $this->addSelect($this->_fundingCaseIdFieldName);
+    if ([] === $this->getSelect()) {
+      $this->setSelect(['*']);
     }
+    $this->addSelect($this->_fundingCaseIdFieldName);
+    $this->addSelect('_pc.permissions');
 
     $limit = $this->getLimit();
     $offset = $this->getOffset();
@@ -169,11 +168,16 @@ abstract class AbstractReferencingDAOGetAction extends DAOGetAction {
    * @throws \CRM_Core_Exception
    */
   protected function handleRecord(array &$record): bool {
-    // Normally the funding case ID is set. Though it might be NULL if the where
-    // clause was modified in hook_civicrm_selectWhereClause.
-    return isset($record[$this->_fundingCaseIdFieldName])
-      // @phpstan-ignore argument.type
-      && $this->getFundingCaseManager()->hasAccess($record[$this->_fundingCaseIdFieldName]);
+    try {
+      // Normally the funding case ID is set. Though it might be NULL if the
+      // where clause was modified in hook_civicrm_selectWhereClause.
+      return isset($record['_pc.permissions']) || (isset($record[$this->_fundingCaseIdFieldName])
+        // @phpstan-ignore argument.type
+        && $this->getFundingCaseManager()->hasAccess($record[$this->_fundingCaseIdFieldName]));
+    }
+    finally {
+      unset($record['_pc.permissions']);
+    }
   }
 
   protected function initOriginalSelect(): void {
