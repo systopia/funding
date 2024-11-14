@@ -58,6 +58,7 @@ parameters:
 			message: '#^Access to an undefined property Civi\\Api4\\Generic\\AbstractAction::\$_eventDispatcher.$#'
 			path: */Civi/RemoteTools/Api4/Action/Traits/EventActionTrait.php
 		- '#^Class Civi\\Funding\\Api4\\Action\\[^\s]+Action(Legacy)? has an uninitialized property \$[^\s]+\. Give it default value or assign it in the constructor.$#'
+		- '/^Parameter #1 \$items \(array<int, array{id: int}>\) of method Civi\\Funding\\Api4\\Action\\[^\s]+::deleteObjects\(\) should be contravariant with parameter \$items \(mixed\) of method Civi\\Api4\\Generic\\[^\s]+::deleteObjects\(\)$/'
 		- '/^Parameter #1 \$items \(array<int, array<string, mixed>>\) of method Civi\\Funding\\Api4\\Action\\[^\s]+::writeObjects\(\) should be contravariant with parameter \$items \(array\) of method Civi\\Api4\\Generic\\[^\s]+::writeObjects\(\)$/'
 		# For actions that are fetched from container
 		-

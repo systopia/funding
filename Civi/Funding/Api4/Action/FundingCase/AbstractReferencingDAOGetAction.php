@@ -96,12 +96,11 @@ abstract class AbstractReferencingDAOGetAction extends DAOGetAction {
     );
     FundingCasePermissionsUtil::addPermissionsRestriction($this);
 
-    if (!$this->isFieldSelected($this->_fundingCaseIdFieldName)) {
-      if ([] === $this->getSelect()) {
-        $this->setSelect(['*']);
-      }
-      $this->addSelect($this->_fundingCaseIdFieldName);
+    if ([] === $this->getSelect()) {
+      $this->setSelect(['*']);
     }
+    $this->addSelect($this->_fundingCaseIdFieldName);
+    $this->addSelect('_pc.permissions');
 
     $limit = $this->getLimit();
     $offset = $this->getOffset();
@@ -156,8 +155,14 @@ abstract class AbstractReferencingDAOGetAction extends DAOGetAction {
    * @throws \CRM_Core_Exception
    */
   protected function handleRecord(array &$record): bool {
-    // @phpstan-ignore-next-line
-    return $this->_fundingCaseManager->hasAccess($record[$this->_fundingCaseIdFieldName]);
+    try {
+      return NULL !== $record['_pc.permissions']
+        // @phpstan-ignore argument.type
+        || $this->_fundingCaseManager->hasAccess($record[$this->_fundingCaseIdFieldName]);
+    }
+    finally {
+      unset($record['_pc.permissions']);
+    }
   }
 
   protected function initOriginalSelect(): void {
