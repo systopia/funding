@@ -29,6 +29,7 @@ use Civi\Funding\Event\FundingCase\FundingCasePreCreateEvent;
 use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
 use Civi\Funding\FileTypeNames;
 use Civi\Funding\FundingAttachmentManagerInterface;
+use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\Funding\Util\Uuid;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
@@ -46,6 +47,8 @@ class FundingCaseManager {
 
   private CiviEventDispatcherInterface $eventDispatcher;
 
+  private FundingCaseTypeManager $fundingCaseTypeManager;
+
   /**
    * @phpstan-var array<int, bool>
    */
@@ -59,11 +62,13 @@ class FundingCaseManager {
   public function __construct(
     Api4Interface $api4,
     FundingAttachmentManagerInterface $attachmentManager,
-    CiviEventDispatcherInterface $eventDispatcher
+    CiviEventDispatcherInterface $eventDispatcher,
+    FundingCaseTypeManager $fundingCaseTypeManager
   ) {
     $this->api4 = $api4;
     $this->attachmentManager = $attachmentManager;
     $this->eventDispatcher = $eventDispatcher;
+    $this->fundingCaseTypeManager = $fundingCaseTypeManager;
   }
 
   public function getAmountRemaining(int $fundingCaseId): float {
@@ -238,7 +243,9 @@ class FundingCaseManager {
       ->setValues($fundingCase->toArray());
     $this->api4->executeAction($action);
 
-    $event = new FundingCaseUpdatedEvent($previousFundingCase, $fundingCase);
+    /** @var \Civi\Funding\Entity\FundingCaseTypeEntity $fundingCaseType */
+    $fundingCaseType = $this->fundingCaseTypeManager->get($fundingCase->getFundingCaseTypeId());
+    $event = new FundingCaseUpdatedEvent($previousFundingCase, $fundingCase, $fundingCaseType);
     $this->eventDispatcher->dispatch(FundingCaseUpdatedEvent::class, $event);
   }
 

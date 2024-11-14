@@ -27,6 +27,7 @@ use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Api4\Action\FundingCase\GetAction;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
+use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent;
 use Civi\Funding\Event\FundingCase\FundingCasePreCreateEvent;
 use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
@@ -37,6 +38,7 @@ use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\Funding\FundingAttachmentManagerInterface;
+use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\Funding\Util\RequestTestUtil;
 use Civi\Funding\Util\TestUtil;
 use Civi\RemoteTools\Api4\Api4;
@@ -66,6 +68,11 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
    */
   private MockObject $eventDispatcherMock;
 
+  /**
+   * @var \Civi\Funding\FundingProgram\FundingCaseTypeManager&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $fundingCaseTypeManagerMock;
+
   public static function setUpBeforeClass(): void {
     parent::setUpBeforeClass();
     ClockMock::register(__CLASS__);
@@ -76,10 +83,12 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
     parent::setUp();
     $this->attachmentManagerMock = $this->createMock(FundingAttachmentManagerInterface::class);
     $this->eventDispatcherMock = $this->createMock(CiviEventDispatcherInterface::class);
+    $this->fundingCaseTypeManagerMock = $this->createMock(FundingCaseTypeManager::class);
     $this->fundingCaseManager = new FundingCaseManager(
       new Api4(),
       $this->attachmentManagerMock,
       $this->eventDispatcherMock,
+      $this->fundingCaseTypeManagerMock
     );
   }
 
@@ -404,6 +413,10 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
 
   public function testUpdate(): void {
     $contact = ContactFixture::addIndividual();
+    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
+    $this->fundingCaseTypeManagerMock->method('get')->with($fundingCaseType->getId())
+      ->willReturn($fundingCaseType);
+
     $fundingCase = $this->createFundingCase();
     \CRM_Core_Session::singleton()->set('userID', $contact['id']);
     FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['test_permission']);
@@ -445,6 +458,7 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
       $api4Mock,
       $this->attachmentManagerMock,
       $this->eventDispatcherMock,
+      $this->fundingCaseTypeManagerMock
     );
   }
 
