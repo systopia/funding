@@ -22,6 +22,7 @@ namespace Civi\Funding\EventSubscriber\FundingCase;
 use Civi\Api4\FundingCaseContactRelation;
 use Civi\Api4\Generic\Result;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
+use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
 use Civi\Funding\Permission\ContactRelation\Types\ContactRelationship;
 use Civi\RemoteTools\Api4\Api4Interface;
@@ -63,6 +64,7 @@ final class FundingCaseContactRelationSubscriberTest extends TestCase {
   }
 
   public function testOnFundingCaseUpdated(): void {
+    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
     $fundingCase = FundingCaseFactory::createFundingCase(['recipient_contact_id' => 123]);
     $previousFundingCase = clone $fundingCase;
 
@@ -106,7 +108,9 @@ final class FundingCaseContactRelationSubscriberTest extends TestCase {
         ],
       ]);
 
-    $this->subscriber->onFundingCaseUpdated(new FundingCaseUpdatedEvent($previousFundingCase, $fundingCase));
+    $this->subscriber->onFundingCaseUpdated(
+      new FundingCaseUpdatedEvent($previousFundingCase, $fundingCase, $fundingCaseType)
+    );
   }
 
 }

@@ -25,19 +25,24 @@ use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Api4\Action\FundingCase\GetAction;
+use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
+use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
+use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent;
 use Civi\Funding\Event\FundingCase\FundingCasePreCreateEvent;
 use Civi\Funding\Event\FundingCase\FundingCasePreUpdateEvent;
 use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
 use Civi\Funding\FileTypeNames;
 use Civi\Funding\Fixtures\ContactFixture;
+use Civi\Funding\Fixtures\FundingCaseBundleFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
-use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\Funding\FundingAttachmentManagerInterface;
+use Civi\Funding\FundingProgram\FundingCaseTypeManager;
+use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\Funding\Util\RequestTestUtil;
 use Civi\Funding\Util\TestUtil;
 use Civi\RemoteTools\Api4\Api4;
@@ -67,6 +72,16 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
    */
   private MockObject $eventDispatcherMock;
 
+  /**
+   * @var \Civi\Funding\FundingProgram\FundingCaseTypeManager&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $fundingCaseTypeManagerMock;
+
+  /**
+   * @var \Civi\Funding\FundingProgram\FundingProgramManager&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $fundingProgramManagerMock;
+
   public static function setUpBeforeClass(): void {
     parent::setUpBeforeClass();
     ClockMock::register(__CLASS__);
@@ -77,10 +92,40 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
     parent::setUp();
     $this->attachmentManagerMock = $this->createMock(FundingAttachmentManagerInterface::class);
     $this->eventDispatcherMock = $this->createMock(CiviEventDispatcherInterface::class);
+    $this->fundingCaseTypeManagerMock = $this->createMock(FundingCaseTypeManager::class);
+    $this->fundingProgramManagerMock = $this->createMock(FundingProgramManager::class);
     $this->fundingCaseManager = new FundingCaseManager(
       new Api4(),
       $this->attachmentManagerMock,
       $this->eventDispatcherMock,
+      $this->fundingCaseTypeManagerMock,
+      $this->fundingProgramManagerMock,
+    );
+  }
+
+  public function testGetBundle(): void {
+    $api4Mock = $this->createMock(Api4Interface::class);
+    $this->makeFullyMocked($api4Mock);
+
+    $fundingProgram = FundingProgramFactory::createFundingProgram();
+    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
+    $fundingCase = FundingCaseFactory::createFundingCase();
+
+    $api4Mock->expects(static::once())->method('getEntities')
+      ->with(FundingCase::getEntityName(), Comparison::new('id', '=', 12))
+      ->willReturn(new Result([$fundingCase->toArray()]));
+
+    $this->fundingCaseTypeManagerMock->expects(static::once())->method('get')
+      ->with($fundingCase->getFundingCaseTypeId())
+      ->willReturn($fundingCaseType);
+
+    $this->fundingProgramManagerMock->expects(static::once())->method('get')
+      ->with($fundingCase->getFundingProgramId())
+      ->willReturn($fundingProgram);
+
+    static::assertEquals(
+      new FundingCaseBundle($fundingCase, $fundingCaseType, $fundingProgram),
+      $this->fundingCaseManager->getBundle(12)
     );
   }
 
@@ -120,25 +165,26 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
           static::assertSame(FundingCaseCreatedEvent::class, $eventName);
           static::assertInstanceOf(FundingCaseCreatedEvent::class, $event);
           /** @var \Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent $event */
-          FundingCaseContactRelationFixture::addContact($event->getContactId(),
+          FundingCaseContactRelationFixture::addContact(
+            $contact['id'],
             $event->getFundingCase()->getId(),
             ['test_permission'],
           );
         }
 
-        static::assertSame($contact['id'], $event->getContactId());
         static::assertSame($fundingProgram, $event->getFundingProgram());
         static::assertSame($fundingCaseType, $event->getFundingCaseType());
       }
     );
 
     \CRM_Core_Session::singleton()->set('userID', $contact['id']);
-    $fundingCase = $this->fundingCaseManager->create($contact['id'], [
-      'funding_program' => $fundingProgram,
-      'funding_case_type' => $fundingCaseType,
-      'recipient_contact_id' => $recipientContact['id'],
-      'title' => 'Title',
-    ]);
+    $fundingCase = $this->fundingCaseManager->create(
+      $contact['id'], [
+        'funding_program' => $fundingProgram,
+        'funding_case_type' => $fundingCaseType,
+        'recipient_contact_id' => $recipientContact['id'],
+        'title' => 'Title',
+      ]);
 
     static::assertGreaterThan(0, $fundingCase->getId());
     static::assertEquals([
@@ -176,7 +222,7 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
     $recipientContact2 = ContactFixture::addOrganization();
 
     $this->eventDispatcherMock->expects(static::exactly(12))->method('dispatch')->willReturnCallback(
-      function (string $eventName, $event): void {
+      function (string $eventName, $event) use ($contact): void {
         static $calls = 0;
         if (1 === (++$calls % 2)) {
           static::assertSame(FundingCasePreCreateEvent::class, $eventName);
@@ -187,7 +233,8 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
           static::assertSame(FundingCaseCreatedEvent::class, $eventName);
           static::assertInstanceOf(FundingCaseCreatedEvent::class, $event);
           /** @var \Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent $event */
-          FundingCaseContactRelationFixture::addContact($event->getContactId(),
+          FundingCaseContactRelationFixture::addContact(
+            $contact['id'],
             $event->getFundingCase()->getId(),
             ['test_permission'],
           );
@@ -297,22 +344,31 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
     $this->makeFullyMocked($api4Mock);
 
     \CRM_Core_Session::singleton()->set('userID', 11);
-    $api4Mock->expects(static::exactly(2))->method('executeAction')->withConsecutive(
+    $series = [
       [
-        static::callback(function (GetAction $action) {
-          static::assertSame([['id', '=', 13, FALSE]], $action->getWhere());
-
-          return TRUE;
-        }),
+        [
+          FundingCase::getEntityName(),
+          Comparison::new('id', '=', 13),
+        ],
+        new Result(),
       ],
       [
-        static::callback(function (GetAction $action) {
-          static::assertSame([['id', '=', 12, FALSE]], $action->getWhere());
+        [
+          FundingCase::getEntityName(),
+          Comparison::new('id', '=', 12),
+        ],
+        new Result([$fundingCase->toArray()]),
+      ],
+    ];
+    $api4Mock->expects(static::exactly(2))->method('getEntities')
+      ->willReturnCallback(function ($entityName, $condition) use (&$series) {
+        // @phpstan-ignore-next-line
+        [$expectedArgs, $return] = array_shift($series);
+        static::assertEquals($expectedArgs, [$entityName, $condition]);
 
-          return TRUE;
-        }),
-      ]
-    )->willReturnOnConsecutiveCalls(new Result(), new Result([$fundingCase->toArray()]));
+        return $return;
+      }
+    );
 
     $fundingCaseLoaded = $this->fundingCaseManager->get(13);
     static::assertNull($fundingCaseLoaded);
@@ -404,26 +460,36 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
   }
 
   public function testUpdate(): void {
+    $fundingCaseBundle = FundingCaseBundleFixture::create();
+    $fundingCase = $fundingCaseBundle->getFundingCase();
+    $fundingCaseType = $fundingCaseBundle->getFundingCaseType();
+    $fundingProgram = $fundingCaseBundle->getFundingProgram();
+
+    $this->fundingCaseTypeManagerMock->method('get')->with($fundingCaseType->getId())
+      ->willReturn($fundingCaseType);
+
+    $this->fundingProgramManagerMock->method('get')->with($fundingCase->getFundingProgramId())
+      ->willReturn($fundingProgram);
+
     $contact = ContactFixture::addIndividual();
-    $fundingCase = $this->createFundingCase();
     \CRM_Core_Session::singleton()->set('userID', $contact['id']);
     FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['test_permission']);
 
-    $updatedFundingCase = $this->fundingCaseManager->get($fundingCase->getId());
-    static::assertNotNull($updatedFundingCase);
+    $updatedFundingCase = FundingCaseEntity::fromArray($fundingCase->toArray());
     $updatedFundingCase->setStatus('updated');
 
     // Reload to have permission fields required for the event object comparison.
-    // @phpstan-ignore argument.type
-    $fundingCase->setValues(FundingCase::get(FALSE)
-      ->addWhere('id', '=', $fundingCase->getId())
-      ->execute()
-      ->single()
-    );
+    // We use the funding case manager so we also test that the previous case in
+    // the events is actually fetched from the DB and not from cache.
+    $fundingCase = $this->fundingCaseManager->get($fundingCase->getId());
+    static::assertNotNull($fundingCase);
+    $previousFundingCase = clone $fundingCase;
+
+    $fundingCase->setStatus('updated');
 
     $dispatchSeries = [
-      [FundingCasePreUpdateEvent::class, new FundingCasePreUpdateEvent($fundingCase, $updatedFundingCase)],
-      [FundingCaseUpdatedEvent::class, new FundingCaseUpdatedEvent($fundingCase, $updatedFundingCase)],
+      [FundingCasePreUpdateEvent::class, new FundingCasePreUpdateEvent($previousFundingCase, $fundingCaseBundle)],
+      [FundingCaseUpdatedEvent::class, new FundingCaseUpdatedEvent($previousFundingCase, $fundingCaseBundle)],
     ];
     $this->eventDispatcherMock->expects(static::exactly(2))->method('dispatch')
       ->willReturnCallback(function (...$args) use (&$dispatchSeries) {
@@ -431,22 +497,12 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
       });
 
     sleep(1);
-    $this->fundingCaseManager->update($updatedFundingCase);
-    static::assertSame(time(), $updatedFundingCase->getModificationDate()->getTimestamp());
+    $this->fundingCaseManager->update($fundingCase);
+    static::assertSame(time(), $fundingCase->getModificationDate()->getTimestamp());
   }
 
   private function createFundingCase(): FundingCaseEntity {
-    $fundingProgram = FundingProgramFixture::addFixture();
-    $fundingCaseType = FundingCaseTypeFixture::addFixture();
-    $recipientContact = ContactFixture::addOrganization();
-    $creationContact = ContactFixture::addIndividual(['first_name' => 'creation', 'last_name' => 'contact']);
-
-    return FundingCaseFixture::addFixture(
-      $fundingProgram->getId(),
-      $fundingCaseType->getId(),
-      $recipientContact['id'],
-      $creationContact['id'],
-    );
+    return FundingCaseBundleFixture::create()->getFundingCase();
   }
 
   private function makeFullyMocked(Api4Interface $api4Mock): void {
@@ -454,6 +510,8 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
       $api4Mock,
       $this->attachmentManagerMock,
       $this->eventDispatcherMock,
+      $this->fundingCaseTypeManagerMock,
+      $this->fundingProgramManagerMock
     );
   }
 
