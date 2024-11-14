@@ -22,6 +22,7 @@ namespace Civi\Funding\ClearingProcess;
 use Civi\Api4\FundingClearingProcess;
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
+use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ClearingProcessBundleFactory;
 use Civi\Funding\EntityFactory\ClearingProcessFactory;
@@ -85,11 +86,11 @@ final class ClearingProcessManagerTest extends TestCase {
     $expectedDispatchCalls = [
       [
         ClearingProcessPreCreateEvent::class,
-        new ClearingProcessPreCreateEvent($clearingProcess, $applicationProcessBundle),
+        new ClearingProcessPreCreateEvent(new ClearingProcessEntityBundle($clearingProcess, $applicationProcessBundle)),
       ],
       [
         ClearingProcessCreatedEvent::class,
-        new ClearingProcessCreatedEvent($clearingProcess, $applicationProcessBundle),
+        new ClearingProcessCreatedEvent(new ClearingProcessEntityBundle($clearingProcess, $applicationProcessBundle)),
       ],
     ];
     $this->eventDispatcherMock->expects(static::exactly(2))->method('dispatch')
