@@ -96,6 +96,9 @@ return [
               'dataType' => 'String',
               'label' => E::ts('Funding Program'),
               'sortable' => TRUE,
+              'tally' => [
+                'fn' => NULL,
+              ],
             ],
             [
               'type' => 'field',
@@ -103,6 +106,9 @@ return [
               'dataType' => 'String',
               'label' => E::ts('Recipient'),
               'sortable' => TRUE,
+              'tally' => [
+                'fn' => NULL,
+              ],
             ],
             [
               'type' => 'field',
@@ -110,6 +116,9 @@ return [
               'dataType' => 'Money',
               'label' => E::ts('Amount Approved'),
               'sortable' => TRUE,
+              'tally' => [
+                'fn' => 'SUM',
+              ],
             ],
             [
               'type' => 'field',
@@ -117,6 +126,9 @@ return [
               'dataType' => 'Money',
               'label' => E::ts('Drawdowns'),
               'sortable' => TRUE,
+              'tally' => [
+                'fn' => 'SUM',
+              ],
             ],
             [
               'type' => 'field',
@@ -124,6 +136,9 @@ return [
               'dataType' => 'Money',
               'label' => E::ts('Amount Paid Out'),
               'sortable' => TRUE,
+              'tally' => [
+                'fn' => 'SUM',
+              ],
             ],
             [
               'type' => 'field',
@@ -131,6 +146,9 @@ return [
               'dataType' => 'Money',
               'label' => E::ts('Open Drawdowns'),
               'sortable' => TRUE,
+              'tally' => [
+                'fn' => 'SUM',
+              ],
             ],
           ],
           'actions' => [
@@ -139,6 +157,9 @@ return [
           'classes' => [
             'table',
             'table-striped',
+          ],
+          'tally' => [
+            'label' => E::ts('Total'),
           ],
         ],
       ],

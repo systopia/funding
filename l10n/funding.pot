@@ -1570,6 +1570,10 @@ msgstr ""
 msgid "Open case"
 msgstr ""
 
+#: managed/SavedSearchFundingCases.mgd.php managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
+msgid "Total"
+msgstr ""
+
 #: managed/SavedSearchFundingDrawdowns.mgd.php
 msgid "Requester"
 msgstr ""
