@@ -39,8 +39,8 @@ final class HiHPossibleRecipientsForChangeLoader implements PossibleRecipientsFo
       'select' => ['id', 'display_name'],
       'where' => [
         CompositeCondition::new('OR',
-          Comparison::new('contact_sub_type', 'LIKE', "%${separator}Buergerstiftung${separator}%"),
-          Comparison::new('contact_sub_type', 'LIKE', "%${separator}Mittelempfaenger${separator}%"),
+          Comparison::new('contact_sub_type', 'LIKE', "%{$separator}Buergerstiftung{$separator}%"),
+          Comparison::new('contact_sub_type', 'LIKE', "%{$separator}Mittelempfaenger{$separator}%"),
         )->toArray(),
       ],
     ])->indexBy('id')->column('display_name');
