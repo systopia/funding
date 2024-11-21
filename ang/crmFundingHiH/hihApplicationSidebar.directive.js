@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 SYSTOPIA GmbH
+ * Copyright (C) 2024 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -16,10 +16,14 @@
 
 'use strict';
 
-fundingHiHModule.directive('fundingHiHApplicationEditor', function() {
+fundingModule.directive('fundingHihApplicationSidebar', function() {
   return {
     restrict: 'AE',
     scope: false,
-    templateUrl: '~/crmFundingHiH/hihApplicationEditor.template.html',
+    templateUrl: '~/crmFundingHiH/hihApplicationSidebar.template.html',
+    controllerAs: '$ctrl',
+    controller: ['$scope', function ($scope) {
+      this.ts = CRM.ts('funding');
+    }],
   };
 });
