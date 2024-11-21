@@ -68,6 +68,10 @@ abstract class AbstractGetPermissionsEvent extends Event {
     return $this->permissions;
   }
 
+  public function hasPermission(string $permission): bool {
+    return in_array($permission, $this->permissions, TRUE);
+  }
+
   /**
    * @phpstan-param array<string> $permissions
    */

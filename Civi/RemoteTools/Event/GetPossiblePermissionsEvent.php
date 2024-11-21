@@ -66,6 +66,12 @@ class GetPossiblePermissionsEvent extends Event {
     return $this->permissions;
   }
 
+  public function removePermission(string $permission): self {
+    unset($this->permissions[$permission]);
+
+    return $this;
+  }
+
   /**
    * @phpstan-param array<string, string> $permissions
    *   Permissions mapped to labels.
