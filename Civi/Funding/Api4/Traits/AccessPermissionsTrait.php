@@ -22,7 +22,14 @@ namespace Civi\Funding\Api4\Traits;
 use Civi\Funding\Api4\Permissions;
 
 /**
- * Permissions for funding entities not related to administration.
+ * Permissions for funding entities not related to administration that can be
+ * read, updated, and deleted. In many cases update or delete doesn't need to be
+ * (and shouldn't be) performed directly, but only via specific actions. Read
+ * may be necessary for SearchKit. Then use the read only permission trait
+ * instead.
+ *
+ * @see \Civi\Funding\Api4\Traits\AccessROPermissionsTrait
+ * @see \Civi\Funding\Api4\Traits\AccessROAdministerRWPermissionsTrait
  */
 trait AccessPermissionsTrait {
 

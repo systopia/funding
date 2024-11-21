@@ -22,7 +22,10 @@ namespace Civi\Funding\Api4\Traits;
 use Civi\Funding\Api4\Permissions;
 
 /**
- * Permissions for funding entities related to administration.
+ * Permissions for funding entities related to administration. Those entities
+ * can be read, updated, and deleted by funding admins.
+ *
+ * @see \Civi\Funding\Api4\Traits\AccessROAdministerRWPermissionsTrait
  */
 trait AdministerPermissionsTrait {
 
