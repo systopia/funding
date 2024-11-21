@@ -21,7 +21,6 @@ namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Actions;
 
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\AbstractApplicationProcessActionStatusInfoDecorator;
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\DefaultApplicationProcessActionStatusInfo;
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\ReworkPossibleApplicationProcessActionStatusInfo;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Traits\HiHSupportedFundingCaseTypesTrait;
 
 final class HiHApplicationActionStatusInfo extends AbstractApplicationProcessActionStatusInfoDecorator {
@@ -29,8 +28,7 @@ final class HiHApplicationActionStatusInfo extends AbstractApplicationProcessAct
   use HiHSupportedFundingCaseTypesTrait;
 
   public function __construct() {
-    $info = new ReworkPossibleApplicationProcessActionStatusInfo(new DefaultApplicationProcessActionStatusInfo());
-    parent::__construct($info);
+    parent::__construct(new DefaultApplicationProcessActionStatusInfo());
   }
 
 }
