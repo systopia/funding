@@ -71,7 +71,7 @@ abstract class AbstractGetOptionsEvent extends Event {
   }
 
   /**
-   * @phpstan-return array<int, optionT>
+   * @phpstan-return list<optionT>
    */
   public function getOptions(): array {
     return array_values($this->options);

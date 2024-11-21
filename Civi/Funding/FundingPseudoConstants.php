@@ -19,6 +19,9 @@ declare(strict_types = 1);
 
 namespace Civi\Funding;
 
+use Civi\Api4\FundingApplicationProcess;
+use Civi\Api4\FundingCase;
+use Civi\Api4\FundingCaseType;
 use Civi\Funding\Event\ApplicationProcess\GetPossibleApplicationProcessStatusEvent;
 use Civi\Funding\Event\FundingCase\GetPossibleFundingCaseStatusEvent;
 use Civi\Funding\FundingCase\FundingCaseStatus;
@@ -38,9 +41,13 @@ use CRM_Funding_ExtensionUtil as E;
 final class FundingPseudoConstants {
 
   /**
+   * @phpstan-param array{values: array<int|string, mixed>} $params
+   *
    * @phpstan-return list<optionT>
+   *
+   * @throws \CRM_Core_Exception
    */
-  public static function getApplicationProcessStatus(): array {
+  public static function getApplicationProcessStatus(string $fieldName, array $params): array {
     $options = [
       [
         'id' => 'new',
@@ -118,9 +125,31 @@ final class FundingPseudoConstants {
       ],
     ];
 
-    // If ApplicationProcess is limited to one via "id" in $props, we could
-    // determine the possible status depending on the funding case type...
-    $event = new GetPossibleApplicationProcessStatusEvent($options);
+    $fundingCaseTypeName = NULL;
+    if ([] !== $params['values']) {
+      $values = $params['values'];
+      if (is_int($values['fundingCaseTypeId'] ?? NULL)) {
+        $fundingCaseTypeName = FundingCaseType::get(FALSE)
+          ->addSelect('name')
+          ->addWhere('id', '=', $values['fundingCaseTypeId'])
+          ->execute()->single()['name'];
+      }
+      elseif (is_int($values['fundingCaseId'] ?? NULL)) {
+        $fundingCaseTypeName = FundingCase::get(FALSE)
+          ->addSelect('funding_case_type_id.name')
+          ->addWhere('id', '=', $values['fundingCaseId'])
+          ->execute()->single()['funding_case_type_id.name'];
+      }
+      elseif (is_int($values['id'] ?? NULL)) {
+        $fundingCaseTypeName = FundingApplicationProcess::get(FALSE)
+          ->addSelect('funding_case_id.funding_case_type_id.name')
+          ->addWhere('id', '=', $values['id'])
+          ->execute()->single()['funding_case_id.funding_case_type_id.name'];
+      }
+    }
+
+    // @todo Enforce funding case types to provide the possible status.
+    $event = new GetPossibleApplicationProcessStatusEvent($options, $fundingCaseTypeName);
     \Civi::dispatcher()->dispatch(GetPossibleApplicationProcessStatusEvent::class, $event);
 
     return $event->getOptions();

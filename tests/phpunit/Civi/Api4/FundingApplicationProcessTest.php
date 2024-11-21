@@ -159,13 +159,18 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
     static::assertTrue($result['reviewer_cont_contact_id']['options']);
 
     // Load options with unknown application process ID.
-    $result = FundingApplicationProcess::getFields()
-      ->setLoadOptions(TRUE)
-      ->addValue('id', $applicationProcess->getId() + 1)
-      ->execute()
-      ->indexBy('name');
-    static::assertTrue($result['reviewer_calc_contact_id']['options']);
-    static::assertTrue($result['reviewer_cont_contact_id']['options']);
+    $e = NULL;
+    try {
+      FundingApplicationProcess::getFields()
+        ->setLoadOptions(TRUE)
+        ->addValue('id', $applicationProcess->getId() + 1)
+        ->execute()
+        ->indexBy('name');
+    }
+    catch (\CRM_Core_Exception $e) {
+      // @ignoreException
+    }
+    static::assertNotNull($e);
 
     // Load options with known application process ID.
     $result = FundingApplicationProcess::getFields()
@@ -180,13 +185,18 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
 
     // Load options without application process permission.
     RequestTestUtil::mockInternalRequest($contactNotPermitted['id']);
-    $result = FundingApplicationProcess::getFields()
-      ->setLoadOptions(TRUE)
-      ->addValue('id', $applicationProcess->getId())
-      ->execute()
-      ->indexBy('name');
-    static::assertTrue($result['reviewer_calc_contact_id']['options']);
-    static::assertTrue($result['reviewer_cont_contact_id']['options']);
+    $e = NULL;
+    try {
+      FundingApplicationProcess::getFields()
+        ->setLoadOptions(TRUE)
+        ->addValue('id', $applicationProcess->getId())
+        ->execute()
+        ->indexBy('name');
+    }
+    catch (\CRM_Core_Exception $e) {
+      // @ignoreException
+    }
+    static::assertNotNull($e);
   }
 
   public function testGetFormData(): void {

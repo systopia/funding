@@ -27,13 +27,13 @@ fundingModule.factory('fundingApplicationProcessService', ['crmApi4', function(c
   }
 
   /**
-   * @param {integer} id
+   * @param {object} values
    * @param {string} field
    *
    * @returns {Promise<object[]>}
    *   Options with option name as index.
    */
-  function getOptions(id, field) {
+  function getOptions(values, field) {
     return crmApi4('FundingApplicationProcess', 'getFields', {
       loadOptions: [
         'id',
@@ -44,7 +44,7 @@ fundingModule.factory('fundingApplicationProcessService', ['crmApi4', function(c
         'color',
         'icon',
       ],
-      values: {id},
+      values: values,
       where: [['name', '=', field]],
       select: ['options']
     }).then(function (result) {
@@ -109,12 +109,12 @@ fundingModule.factory('fundingApplicationProcessService', ['crmApi4', function(c
     applyActionMultiple: (ids, action) => crmApi4('FundingApplicationProcess', 'applyActionMultiple', {ids, action}),
 
     /**
-     * @param {integer} id
+     * @param {object} values
      *
      * @returns {Promise<object[]>}
      *   Options with option name as index.
      */
-    getStatusOptions: (id) => getOptions(id, 'status'),
+    getStatusOptions: (values) => getOptions(values, 'status'),
     getOptionLabels: (id, field) => getOptionLabels(id, field),
   };
 }]);
