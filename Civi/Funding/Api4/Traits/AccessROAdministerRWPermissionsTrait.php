@@ -22,6 +22,9 @@ namespace Civi\Funding\Api4\Traits;
 /**
  * Permissions for funding entities that may only be changed with administer
  * permissions, but are allowed to be read without.
+ *
+ * @see \Civi\Funding\Api4\Traits\AccessROPermissionsTrait
+ * @see \Civi\Funding\Api4\Traits\AdministerPermissionsTrait
  */
 trait AccessROAdministerRWPermissionsTrait {
 
