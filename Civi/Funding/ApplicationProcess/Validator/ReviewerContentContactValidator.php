@@ -105,7 +105,10 @@ final class ReviewerContentContactValidator implements ConcreteEntityValidatorIn
 
   private function validateContactId(int $contactId, FundingCaseEntity $fundingCase): EntityValidationResult {
     // @todo Make permission depend on funding case type.
-    $possibleReviewers = $this->fundingCaseContactsLoader->getContactsWithPermission($fundingCase, 'review_content');
+    $possibleReviewers = $this->fundingCaseContactsLoader->getContactsWithAnyPermission(
+      $fundingCase,
+      ['review_content']
+    );
     if (isset($possibleReviewers[$contactId])) {
       return EntityValidationResult::new();
     }

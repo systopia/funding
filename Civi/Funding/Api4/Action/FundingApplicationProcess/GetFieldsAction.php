@@ -140,7 +140,7 @@ final class GetFieldsAction extends DAOGetFieldsAction {
       return TRUE;
     }
 
-    $contacts = $this->contactsLoader->getContactsWithPermission($fundingCase, $permission);
+    $contacts = $this->contactsLoader->getContactsWithAnyPermission($fundingCase, [$permission]);
 
     /** @phpstan-ignore-next-line */
     return array_map(fn (array $contact) => ContactUtil::getDisplayName($contact), $contacts);

@@ -58,7 +58,7 @@ final class FundingCaseContactsLoaderTest extends TestCase {
     );
   }
 
-  public function testGetContactsWithPermission(): void {
+  public function testGetContactsWithAnyPermission(): void {
     $actionMock = new BasicGetAction(FundingCaseContactRelation::getEntityName(), 'get');
     $this->api4Mock->method('createGetAction')
       ->with(FundingCaseContactRelation::getEntityName())
@@ -93,12 +93,12 @@ final class FundingCaseContactsLoaderTest extends TestCase {
       1 => ['id' => 1, 'name' => 'Contact1'],
       2 => ['id' => 2, 'name' => 'Contact2'],
     ];
-    $this->contactsWithPermissionLoaderMock->method('getContactsWithPermission')
-      ->with($contactRelations, 'test')
+    $this->contactsWithPermissionLoaderMock->method('getContactsWithAnyPermission')
+      ->with($contactRelations, ['test'])
       ->willReturn($contacts);
 
     $fundingCase = FundingCaseFactory::createFundingCase();
-    static::assertSame($contacts, $this->contactsLoader->getContactsWithPermission($fundingCase, 'test'));
+    static::assertSame($contacts, $this->contactsLoader->getContactsWithAnyPermission($fundingCase, ['test']));
   }
 
 }

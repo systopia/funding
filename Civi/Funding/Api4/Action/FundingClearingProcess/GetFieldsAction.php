@@ -26,6 +26,7 @@ use Civi\Funding\Api4\Query\AliasSqlRenderer;
 use Civi\Funding\Api4\Util\ContactUtil;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ClearingProcess\ClearingProcessManager;
+use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\Permission\FundingCase\FundingCaseContactsLoaderInterface;
@@ -68,10 +69,10 @@ final class GetFieldsAction extends DAOGetFieldsAction {
     $fields = parent::getRecords();
     foreach ($fields as &$field) {
       if ('reviewer_calc_contact_id' === $field['name']) {
-        $field['options'] = $this->getReviewerContactOptions('review_clearing_calculative');
+        $field['options'] = $this->getReviewerContactOptions(ClearingProcessPermissions::REVIEW_CALCULATIVE);
       }
       elseif ('reviewer_cont_contact_id' === $field['name']) {
-        $field['options'] = $this->getReviewerContactOptions('review_clearing_content');
+        $field['options'] = $this->getReviewerContactOptions(ClearingProcessPermissions::REVIEW_CONTENT);
       }
     }
 
@@ -204,7 +205,7 @@ final class GetFieldsAction extends DAOGetFieldsAction {
       return TRUE;
     }
 
-    $contacts = $this->contactsLoader->getContactsWithPermission($fundingCase, $permission);
+    $contacts = $this->contactsLoader->getContactsWithAnyPermission($fundingCase, [$permission]);
 
     /** @phpstan-ignore-next-line */
     return array_map(fn (array $contact) => ContactUtil::getDisplayName($contact), $contacts);

@@ -98,8 +98,8 @@ final class ReviewerCalculativeContactValidatorTest extends TestCase {
       'reviewer_calc_contact_id' => 1,
     ]);
 
-    $this->fundingCaseContactsLoaderMock->method('getContactsWithPermission')
-      ->with($this->fundingCase, 'review_calculative')
+    $this->fundingCaseContactsLoaderMock->method('getContactsWithAnyPermission')
+      ->with($this->fundingCase, ['review_calculative'])
       ->willReturn([2 => 'foo', 3 => 'bar']);
     $this->fundingCase->setValues(['permissions' => ['review_calculative']] + $this->fundingCase->toArray());
     static::assertTrue($this->validator->validate($new, $current)->isValid());
@@ -115,8 +115,8 @@ final class ReviewerCalculativeContactValidatorTest extends TestCase {
       'reviewer_calc_contact_id' => 1,
     ]);
 
-    $this->fundingCaseContactsLoaderMock->method('getContactsWithPermission')
-      ->with($this->fundingCase, 'review_calculative')
+    $this->fundingCaseContactsLoaderMock->method('getContactsWithAnyPermission')
+      ->with($this->fundingCase, ['review_calculative'])
       ->willReturn([3 => 'bar']);
     $this->fundingCase->setValues(['permissions' => ['review_calculative']] + $this->fundingCase->toArray());
     $result = $this->validator->validate($new, $current);
@@ -159,8 +159,8 @@ final class ReviewerCalculativeContactValidatorTest extends TestCase {
       'reviewer_calc_contact_id' => 1,
     ]);
 
-    $this->fundingCaseContactsLoaderMock->method('getContactsWithPermission')
-      ->with($this->fundingCase, 'review_calculative')
+    $this->fundingCaseContactsLoaderMock->method('getContactsWithAnyPermission')
+      ->with($this->fundingCase, ['review_calculative'])
       ->willReturn([1 => 'foo']);
     $this->fundingCase->setValues(['permissions' => ['review_calculative']] + $this->fundingCase->toArray());
     static::assertTrue($this->validator->validateNew($new)->isValid());
@@ -173,8 +173,8 @@ final class ReviewerCalculativeContactValidatorTest extends TestCase {
       'reviewer_calc_contact_id' => 1,
     ]);
 
-    $this->fundingCaseContactsLoaderMock->method('getContactsWithPermission')
-      ->with($this->fundingCase, 'review_calculative')
+    $this->fundingCaseContactsLoaderMock->method('getContactsWithAnyPermission')
+      ->with($this->fundingCase, ['review_calculative'])
       ->willReturn([2 => 'foo']);
     $this->fundingCase->setValues(['permissions' => ['review_calculative']] + $this->fundingCase->toArray());
     $result = $this->validator->validateNew($new);

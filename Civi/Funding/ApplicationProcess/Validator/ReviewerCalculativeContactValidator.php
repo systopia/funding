@@ -105,9 +105,9 @@ final class ReviewerCalculativeContactValidator implements ConcreteEntityValidat
 
   private function validateContactId(int $contactId, FundingCaseEntity $fundingCase): EntityValidationResult {
     // @todo Make permission depend on funding case type.
-    $possibleReviewers = $this->fundingCaseContactsLoader->getContactsWithPermission(
+    $possibleReviewers = $this->fundingCaseContactsLoader->getContactsWithAnyPermission(
       $fundingCase,
-      'review_calculative',
+      ['review_calculative'],
     );
     if (isset($possibleReviewers[$contactId])) {
       return EntityValidationResult::new();

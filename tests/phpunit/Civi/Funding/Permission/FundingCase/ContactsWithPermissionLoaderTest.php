@@ -84,7 +84,7 @@ final class ContactsWithPermissionLoaderTest extends TestCase {
       2 => ['id' => 2, 'display_name' => 'Contact2_1'],
       3 => ['id' => 3, 'display_name' => 'Contact3'],
     ];
-    static::assertEquals($expectedContacts, $this->loader->getContactsWithPermission($contactRelations, 'foo'));
+    static::assertEquals($expectedContacts, $this->loader->getContactsWithAnyPermission($contactRelations, ['foo']));
   }
 
 }

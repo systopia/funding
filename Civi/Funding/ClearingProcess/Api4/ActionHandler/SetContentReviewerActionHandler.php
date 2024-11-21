@@ -81,9 +81,9 @@ final class SetContentReviewerActionHandler implements ActionHandlerInterface {
   }
 
   private function validateContactId(int $contactId, FundingCaseEntity $fundingCase): void {
-    $possibleReviewers = $this->fundingCaseContactsLoader->getContactsWithPermission(
+    $possibleReviewers = $this->fundingCaseContactsLoader->getContactsWithAnyPermission(
       $fundingCase,
-      ClearingProcessPermissions::REVIEW_CONTENT,
+      [ClearingProcessPermissions::REVIEW_CONTENT],
     );
 
     if (!isset($possibleReviewers[$contactId])) {

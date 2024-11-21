@@ -38,10 +38,10 @@ final class FundingCaseContactsLoaderCollection implements FundingCaseContactsLo
   /**
    * @inheritDoc
    */
-  public function getContactsWithPermission(FundingCaseEntity $fundingCase, string $permission): array {
+  public function getContactsWithAnyPermission(FundingCaseEntity $fundingCase, array $permissions): array {
     $contacts = [];
     foreach ($this->contactsLoader as $contactLoader) {
-      $contacts += $contactLoader->getContactsWithPermission($fundingCase, $permission);
+      $contacts += $contactLoader->getContactsWithAnyPermission($fundingCase, $permissions);
     }
 
     return $contacts;

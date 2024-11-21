@@ -81,9 +81,9 @@ final class SetCalculativeReviewerActionHandler implements ActionHandlerInterfac
   }
 
   private function validateContactId(int $contactId, FundingCaseEntity $fundingCase): void {
-    $possibleReviewers = $this->fundingCaseContactsLoader->getContactsWithPermission(
+    $possibleReviewers = $this->fundingCaseContactsLoader->getContactsWithAnyPermission(
       $fundingCase,
-      ClearingProcessPermissions::REVIEW_CALCULATIVE,
+      [ClearingProcessPermissions::REVIEW_CALCULATIVE],
     );
 
     if (!isset($possibleReviewers[$contactId])) {
