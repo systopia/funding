@@ -4,7 +4,7 @@ This section describes necessary administrative tasks besides the initial [insta
 
 ## Funding Programs
 
-A funding program contains basic data such as title, funding period, application period, budget etc. It is possible to add user-defined properties. By defining a [funding case type](../administration/necessary-adjustments.md) you can influence the funding logic as described [here](../application-states.md) as well as the forms that are visible to applicants in the funding portal.
+A funding program contains basic data such as title, funding period, application period, budget etc. It is possible to add user-defined properties. By defining a [funding case type](../administration/necessary-adjustments.md) you can influence the funding logic as described [here](../usage/application-states.md) as well as the forms that are visible to applicants in the funding portal.
 
 ### Create a New Funding Program
 
