@@ -23,4 +23,15 @@ use Civi\Funding\Event\AbstractGetOptionsEvent;
 
 final class GetPossibleApplicationProcessStatusEvent extends AbstractGetOptionsEvent {
 
+  private ?string $fundingCaseTypeName;
+
+  public function __construct(array $options, ?string $fundingCaseTypeName) {
+    parent::__construct($options);
+    $this->fundingCaseTypeName = $fundingCaseTypeName;
+  }
+
+  public function getFundingCaseTypeName(): ?string {
+    return $this->fundingCaseTypeName;
+  }
+
 }

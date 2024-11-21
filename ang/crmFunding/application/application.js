@@ -51,7 +51,7 @@ fundingModule.controller('fundingApplicationCtrl', [
     };
 
     $scope.statusOptions = {};
-    fundingApplicationProcessService.getStatusOptions(applicationProcess.id)
+    fundingApplicationProcessService.getStatusOptions({id: applicationProcess.id, fundingCaseId: applicationProcess.funding_case_id})
       .then((options) => $scope.statusOptions = options);
 
     $scope.clearingStatusOptions = {};
