@@ -19,19 +19,33 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Actions;
 
-use Civi\Funding\ApplicationProcess\ActionsContainer\AbstractApplicationSubmitActionsContainerDecorator;
-use Civi\Funding\ApplicationProcess\ActionsContainer\ReworkPossibleApplicationSubmitActionsContainerFactory;
+use Civi\Funding\ApplicationProcess\ActionsContainer\AbstractApplicationSubmitActionsContainer;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Traits\HiHSupportedFundingCaseTypesTrait;
+use CRM_Funding_ExtensionUtil as E;
 
 /**
  * @codeCoverageIgnore
  */
-final class HiHApplicationSubmitActionsContainer extends AbstractApplicationSubmitActionsContainerDecorator {
+final class HiHApplicationSubmitActionsContainer extends AbstractApplicationSubmitActionsContainer {
 
   use HiHSupportedFundingCaseTypesTrait;
 
   public function __construct() {
-    parent::__construct(ReworkPossibleApplicationSubmitActionsContainerFactory::create());
+    $this
+      // Applicant actions.
+      ->add('save', E::ts('Save'))
+      ->add('modify', E::ts('Modify'))
+      ->add('apply', E::ts('Apply'))
+      ->add('withdraw', E::ts('Withdraw'), E::ts('Do you really want to withdraw the application?'))
+      ->add('delete', E::ts('Delete'), E::ts('Do you really want to delete the application?'))
+      // Reviewer actions.
+      ->add('review', E::ts('Start Review'), NULL, ['needsFormData' => FALSE])
+      ->add('release', E::ts('Release for Advisory'), NULL, ['needsFormData' => FALSE])
+      ->add('request-change', E::ts('Request Change'), NULL, ['needsFormData' => FALSE])
+      // Reviewer and advisor actions.
+      ->add('reject', E::ts('Reject'), NULL, ['needsFormData' => FALSE])
+      // Advisor actions.
+      ->add('approve', E::ts('Approve'), NULL, ['needsFormData' => FALSE]);
   }
 
 }
