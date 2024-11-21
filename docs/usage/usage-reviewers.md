@@ -78,8 +78,8 @@ A funding case can be approved in the funding case view which, can be accessed v
 
 ## Drawdown Phase
 
-...
+TODO
 
 ## Clearing Process
 
-...
+TODO
