@@ -31,14 +31,15 @@ class ContactsWithPermissionLoader {
 
   /**
    * @phpstan-param array<\Civi\Funding\Entity\FundingCaseContactRelationEntity> $contactRelations
+   * @phpstan-param non-empty-list<string> $permissions
    *
    * @phpstan-return array<int, array<string, mixed>>
    *   Contacts indexed by id.
    */
-  public function getContactsWithPermission(array $contactRelations, string $permission): array {
+  public function getContactsWithAnyPermission(array $contactRelations, array $permissions): array {
     $contacts = [];
     foreach ($contactRelations as $contactRelation) {
-      if (in_array($permission, $contactRelation->getPermissions(), TRUE)) {
+      if ([] !== array_intersect($permissions, $contactRelation->getPermissions())) {
         $contacts += $this->contactRelationLoader->getContacts(
           $contactRelation->getType(),
           $contactRelation->getProperties()

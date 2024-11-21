@@ -24,9 +24,11 @@ use Civi\Funding\Entity\FundingCaseEntity;
 interface FundingCaseContactsLoaderInterface {
 
   /**
+   * @phpstan-param non-empty-list<string> $permissions
+   *
    * @phpstan-return array<int, array<string, mixed>>
-   *   Contacts indexed by id.
+   *   Contacts that have any of the given permissions indexed by id.
    */
-  public function getContactsWithPermission(FundingCaseEntity $fundingCase, string $permission): array;
+  public function getContactsWithAnyPermission(FundingCaseEntity $fundingCase, array $permissions): array;
 
 }
