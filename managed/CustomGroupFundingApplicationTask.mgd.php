@@ -19,7 +19,6 @@ return [
         'title' => E::ts('Funding Application Task'),
         'extends' => 'Activity',
         'extends_entity_column_value:name' => [
-          'funding_application_task_external',
           'funding_application_task_internal',
         ],
         'style' => 'Inline',
