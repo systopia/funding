@@ -22,7 +22,9 @@ namespace Civi\Funding\Api4\Action\FundingCase;
 use Civi\Api4\FundingCase;
 use Civi\Api4\Generic\DAOGetFieldsAction;
 use Civi\Api4\Query\Api4Query;
+use Civi\Api4\Query\Api4SelectQuery;
 use Civi\Funding\Api4\Query\AliasSqlRenderer;
+use Civi\Funding\Api4\Query\Util\SqlRendererUtil;
 use Civi\RemoteTools\Api4\Action\Traits\PermissionsGetFieldsActionTrait;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
 use CRM_Funding_ExtensionUtil as E;
@@ -109,6 +111,27 @@ final class GetFieldsAction extends DAOGetFieldsAction {
         'nullable' => TRUE,
         // Without sql renderer the query would fail. The actual value is fetched afterward.
         'sql_renderer' => fn () => '(SELECT NULL)',
+      ],
+      [
+        'name' => 'application_process_review_progress',
+        'title' => E::ts('Review Progress'),
+        'description' => E::ts('The progress of application review in percent.'),
+        'type' => 'Extra',
+        'data_type' => 'Integer',
+        'readonly' => TRUE,
+        'nullable' => TRUE,
+        'sql_renderer' => fn (array $field, Api4SelectQuery $query) => sprintf('
+          (
+            SELECT
+                COUNT(CASE WHEN fap.is_eligible IS NOT NULL THEN 1 END)
+              / COUNT(fap.id) 
+              * 100
+            FROM
+              civicrm_funding_application_process AS fap
+            WHERE
+              fap.funding_case_id = %s
+          )', SqlRendererUtil::getFieldSqlName($field, $query, 'id')
+        ),
       ],
     ]);
   }

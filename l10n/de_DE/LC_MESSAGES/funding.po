@@ -91,6 +91,14 @@ msgstr "Ausbezahlter Betrag"
 msgid "The sum of the amounts of accepted drawdowns."
 msgstr "Die Summe der Beträge akzeptierter Mittelabrufe."
 
+#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php managed/SavedSearchFundingCases.mgd.php
+msgid "Review Progress"
+msgstr "Prüffortschritt"
+
+#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
+msgid "The progress of application review in percent."
+msgstr "Der Fortschritt der Antragsprüfung in Prozent."
+
 # Übersetzung nicht notwendig
 #: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php
