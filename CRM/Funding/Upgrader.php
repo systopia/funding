@@ -97,6 +97,15 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
     return TRUE;
   }
 
+  //  public function upgrade_0009(): bool {
+  //    $this->installJsonOverlapsSqlFunction();
+  //    /** @var \Civi\Funding\Upgrade\Upgrader0008 $upgrader */
+  //    $upgrader = \Civi::service(Upgrader0008::class);
+  //    $upgrader->execute($this->ctx->log);
+  //
+  //    return TRUE;
+  //  }
+
   private function installJsonOverlapsSqlFunction(): void {
     try {
       CRM_Core_DAO::executeQuery('JSON_OVERLAPS(NULL, NULL)');
