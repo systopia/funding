@@ -80,6 +80,19 @@ final class ApplicationProcessTaskSubscriberTest extends TestCase {
     $this->subscriber->onCreated($event);
   }
 
+  public function testOnCreatedWithoutCreators(): void {
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+      [],
+      [],
+      ['name' => 'SomeCaseType']
+    );
+    $event = new ApplicationProcessCreatedEvent(12, $applicationProcessBundle);
+
+    $this->taskCreatorMock->expects(static::never())->method('createTasksOnNew');
+
+    $this->subscriber->onCreated($event);
+  }
+
   public function testOnUpdated(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
     $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess();
@@ -102,6 +115,27 @@ final class ApplicationProcessTaskSubscriberTest extends TestCase {
     $this->taskManagerMock->expects(static::once())->method('addTask')
       ->with($newTask)
       ->willReturn($newTask);
+
+    $this->subscriber->onUpdated($event);
+  }
+
+  public function testOnUpdatedWithoutCreatorsOrModifiers(): void {
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+      [],
+      [],
+      ['name' => 'SomeCaseType']
+    );
+    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess();
+    $event = new ApplicationProcessUpdatedEvent(12, $previousApplicationProcess, $applicationProcessBundle);
+
+    $existingTask = FundingTaskFactory::create(['subject' => 'Existing Task']);
+
+    $this->taskManagerMock->expects(static::once())->method('getOpenTasks')
+      ->with(ActivityTypeNames::APPLICATION_PROCESS_TASK, $applicationProcessBundle->getApplicationProcess()->getId())
+      ->willReturn([$existingTask]);
+    $this->taskModifierMock->expects(static::never())->method('modifyTask');
+    $this->taskManagerMock->expects(static::never())->method('updateTask');
+    $this->taskCreatorMock->expects(static::never())->method('createTasksOnChange');
 
     $this->subscriber->onUpdated($event);
   }

@@ -69,7 +69,7 @@ class ClearingProcessTaskSubscriber implements EventSubscriberInterface {
    * @throws \CRM_Core_Exception
    */
   public function onCreated(ClearingProcessCreatedEvent $event): void {
-    foreach ($this->taskCreators[$event->getFundingCaseType()->getName()] as $taskCreator) {
+    foreach ($this->taskCreators[$event->getFundingCaseType()->getName()] ?? [] as $taskCreator) {
       foreach ($taskCreator->createTasksOnNew($event->getClearingProcessBundle()) as $task) {
         $task->setValues($task->toArray() +
           ['target_contact_id' => [$event->getFundingCase()->getRecipientContactId()]]
@@ -89,7 +89,7 @@ class ClearingProcessTaskSubscriber implements EventSubscriberInterface {
     );
     foreach ($openTasks as $task) {
       $modified = FALSE;
-      foreach ($this->taskModifiers[$event->getFundingCaseType()->getName()] as $taskModifier) {
+      foreach ($this->taskModifiers[$event->getFundingCaseType()->getName()] ?? [] as $taskModifier) {
         if ($taskModifier->modifyTask(
           $task,
           $event->getClearingProcessBundle(),
@@ -103,7 +103,7 @@ class ClearingProcessTaskSubscriber implements EventSubscriberInterface {
       }
     }
 
-    foreach ($this->taskCreators[$event->getFundingCaseType()->getName()] as $taskCreator) {
+    foreach ($this->taskCreators[$event->getFundingCaseType()->getName()] ?? [] as $taskCreator) {
       $tasks = $taskCreator->createTasksOnChange(
         $event->getClearingProcessBundle(),
         $event->getPreviousClearingProcess()

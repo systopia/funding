@@ -82,6 +82,17 @@ final class FundingCaseTaskSubscriberTest extends TestCase {
     $this->subscriber->onCreated($event);
   }
 
+  public function testOnCreatedWithoutCreators(): void {
+    $fundingProgram = FundingProgramFactory::createFundingProgram();
+    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType(['name' => 'SomeCaseType']);
+    $fundingCase = FundingCaseFactory::createFundingCase();
+    $event = new FundingCaseCreatedEvent(12, $fundingCase, $fundingProgram, $fundingCaseType);
+
+    $this->taskCreatorMock->expects(static::never())->method('createTasksOnNew');
+
+    $this->subscriber->onCreated($event);
+  }
+
   public function testOnUpdated(): void {
     $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
     $fundingCase = FundingCaseFactory::createFundingCase();
@@ -105,6 +116,24 @@ final class FundingCaseTaskSubscriberTest extends TestCase {
     $this->taskManagerMock->expects(static::once())->method('addTask')
       ->with($newTask)
       ->willReturn($newTask);
+
+    $this->subscriber->onUpdated($event);
+  }
+
+  public function testOnUpdatedWithoutCreatorsOrModifiers(): void {
+    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType(['name' => 'SomeCaseType']);
+    $fundingCase = FundingCaseFactory::createFundingCase();
+    $previousFundingCase = FundingCaseFactory::createFundingCase();
+    $event = new FundingCaseUpdatedEvent($previousFundingCase, $fundingCase, $fundingCaseType);
+
+    $existingTask = FundingTaskFactory::create(['subject' => 'Existing Task']);
+
+    $this->taskManagerMock->expects(static::once())->method('getOpenTasks')
+      ->with(ActivityTypeNames::FUNDING_CASE_TASK, $fundingCase->getId())
+      ->willReturn([$existingTask]);
+    $this->taskModifierMock->expects(static::never())->method('modifyTask');
+    $this->taskManagerMock->expects(static::never())->method('updateTask');
+    $this->taskCreatorMock->expects(static::never())->method('createTasksOnChange');
 
     $this->subscriber->onUpdated($event);
   }

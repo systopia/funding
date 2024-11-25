@@ -21,6 +21,9 @@ namespace Civi\Api4\Query;
 
 use CRM_Funding_ExtensionUtil as E;
 
+/**
+ * @todo Once the minimum MariaDB version is 10.9 'JSON_OVERLAPS' should be returned in getName().
+ */
 final class SqlFunctionFUNDING_JSON_OVERLAPS extends SqlFunction {
 
   protected static $category = self::CATEGORY_COMPARISON;

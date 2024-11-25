@@ -413,13 +413,14 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
 
   public function testUpdate(): void {
     $contact = ContactFixture::addIndividual();
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
-    $this->fundingCaseTypeManagerMock->method('get')->with($fundingCaseType->getId())
-      ->willReturn($fundingCaseType);
 
     $fundingCase = $this->createFundingCase();
     \CRM_Core_Session::singleton()->set('userID', $contact['id']);
     FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['test_permission']);
+
+    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
+    $this->fundingCaseTypeManagerMock->method('get')->with($fundingCase->getFundingCaseTypeId())
+      ->willReturn($fundingCaseType);
 
     $updatedFundingCase = FundingCaseEntity::fromArray($fundingCase->toArray());
     $updatedFundingCase->setStatus('updated');
