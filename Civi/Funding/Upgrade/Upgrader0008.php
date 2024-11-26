@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Upgrade;
 
 use Civi\Api4\FundingCaseContactRelation;
+use Civi\Api4\FundingNewCasePermissions;
 use Civi\Api4\FundingProgramContactRelation;
 use Civi\Funding\Permission\ContactRelation\Types\ContactTypeAndGroup;
 use Civi\RemoteTools\Api4\Api4Interface;
@@ -39,6 +40,9 @@ final class Upgrader0008 {
   public function execute(\Log $log): void {
     $log->info('Migrate funding program permissions');
     $this->migrateRelations(FundingProgramContactRelation::getEntityName());
+
+    $log->info('Migrate initial funding case permissions');
+    $this->migrateRelations(FundingNewCasePermissions::getEntityName());
 
     $log->info('Migrate funding case permissions');
     $this->migrateRelations(FundingCaseContactRelation::getEntityName());

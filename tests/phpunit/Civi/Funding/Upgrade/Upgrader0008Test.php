@@ -20,12 +20,14 @@ declare(strict_types = 1);
 namespace tests\phpunit\Civi\Funding\Upgrade;
 
 use Civi\Api4\FundingCaseContactRelation;
+use Civi\Api4\FundingNewCasePermissions;
 use Civi\Api4\FundingProgramContactRelation;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
+use Civi\Funding\Fixtures\FundingNewCasePermissionsFixture;
 use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\Funding\Upgrade\Upgrader0008;
@@ -45,6 +47,10 @@ final class Upgrader0008Test extends AbstractFundingHeadlessTestCase {
     FundingProgramContactRelationFixture::addFixture($fundingProgram->getId(), 'ContactType', [
       'contactTypeId' => 2,
     ], ['program_permission']);
+
+    FundingNewCasePermissionsFixture::addFixture($fundingProgram->getId(), 'ContactType', [
+      'contactTypeId' => 3,
+    ], ['new_case_permission']);
 
     $fundingCaseType = FundingCaseTypeFixture::addFixture();
     $contact = ContactFixture::addIndividual();
@@ -74,6 +80,16 @@ final class Upgrader0008Test extends AbstractFundingHeadlessTestCase {
         'groupIds' => [],
       ],
     ], FundingProgramContactRelation::get(FALSE)->execute()->single());
+
+    static::assertArraySubset([
+      'type' => 'ContactTypeAndGroup',
+      'funding_program_id' => $fundingProgram->getId(),
+      'permissions' => ['new_case_permission'],
+      'properties' => [
+        'contactTypeIds' => [3],
+        'groupIds' => [],
+      ],
+    ], FundingNewCasePermissions::get(FALSE)->execute()->single());
 
     static::assertArraySubset([
       'type' => 'ContactTypeAndGroup',
