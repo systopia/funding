@@ -21,11 +21,11 @@ namespace Civi\Funding\Upgrade;
 
 use Civi\Api4\FundingCaseContactRelation;
 use Civi\Api4\FundingProgramContactRelation;
-use Civi\Funding\Permission\ContactRelation\Types\Relationship;
+use Civi\Funding\Permission\ContactRelation\Types\ContactTypeAndGroup;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
 
-final class Upgrader0006 {
+final class Upgrader0008 {
 
   private Api4Interface $api4;
 
@@ -51,14 +51,13 @@ final class Upgrader0006 {
     /** @phpstan-var list<array{id: int, type: string, properties: array{relationshipTypeId: int, contactTypeId: int}}> $relations */
     $relations = $this->api4->getEntities(
       $entityName,
-      Comparison::new('type', '=', 'ContactTypeRelationship')
+      Comparison::new('type', '=', 'ContactType')
     );
 
     foreach ($relations as $relation) {
       $this->api4->updateEntity($entityName, $relation['id'], [
-        'type' => Relationship::NAME,
+        'type' => ContactTypeAndGroup::NAME,
         'properties' => [
-          'relationshipTypeIds' => [$relation['properties']['relationshipTypeId']],
           'contactTypeIds' => [$relation['properties']['contactTypeId']],
           'groupIds' => [],
         ],

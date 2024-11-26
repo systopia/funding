@@ -50,15 +50,15 @@ trait FundingCaseTypeFixturesTrait {
 
     FundingProgramContactRelationFixture::addFixture(
       $this->fundingProgramId,
-      'ContactType',
-      ['contactTypeId' => $permittedContactTypeId],
+      'ContactTypeAndGroup',
+      ['contactTypeIds' => [$permittedContactTypeId]],
       ['application_foo', 'application_bar', 'review_baz'],
     );
 
     FundingProgramContactRelationFixture::addFixture(
       $this->fundingProgramIdWithoutFundingCaseType,
-      'ContactType',
-      ['contactTypeId' => $permittedContactTypeId],
+      'ContactTypeAndGroup',
+      ['contactTypeIds' => [$permittedContactTypeId]],
       ['application_foo', 'application_bar', 'review_baz'],
     );
 

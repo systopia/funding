@@ -21,26 +21,27 @@ namespace Civi\Funding\Permission\FundingCase\RelationFactory\Factory;
 
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Permission\FundingCase\RelationFactory\RelationPropertiesFactoryInterface;
-use Civi\Funding\Permission\FundingCase\RelationFactory\Types\ContactType;
+use Civi\Funding\Permission\FundingCase\RelationFactory\Types\ContactTypeAndGroup;
 
 /**
  * @codeCoverageIgnore
  */
-final class ContactTypeRelationPropertiesFactory implements RelationPropertiesFactoryInterface {
+final class ContactTypeAndGroupRelationPropertiesFactory implements RelationPropertiesFactoryInterface {
 
   public static function getSupportedFactoryType(): string {
-    return ContactType::NAME;
+    return ContactTypeAndGroup::NAME;
   }
 
   public function createRelationProperties(
     array $properties,
     FundingCaseEntity $fundingCase
   ): array {
+    /** @phpstan-param array{contactTypeIds?: list<int>, groupIds?: list<int>} $properties */
     return $properties;
   }
 
   public function getRelationType(): string {
-    return \Civi\Funding\Permission\ContactRelation\Types\ContactType::NAME;
+    return \Civi\Funding\Permission\ContactRelation\Types\ContactTypeAndGroup::NAME;
   }
 
 }
