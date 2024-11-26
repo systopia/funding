@@ -59,12 +59,3 @@ $container->autowire(HiHCaseActionsDeterminer::class)
 
 $container->autowire(HiHPossibleRecipientsForChangeLoader::class)
   ->addTag(HiHPossibleRecipientsForChangeLoader::SERVICE_TAG);
-
-ServiceRegistrator::autowireAllImplementing(
-  $container,
-  __DIR__ . '/../Civi/Funding/FundingCaseTypes/BSH/HiHAktion/EventSubscriber',
-  'Civi\\Funding\\FundingCaseTypes\\BSH\\HiHAktion\\EventSubscriber',
-  EventSubscriberInterface::class,
-  ['kernel.event_subscriber' => []],
-  ['lazy' => 'auto'],
-);

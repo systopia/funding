@@ -55,14 +55,13 @@ final class HiHApplicationActionsDeterminer extends AbstractApplicationProcessAc
       'review_application' => ['add-comment'],
     ],
     'advisory' => [
-      'advisor' => ['approve', 'reject', 'add-comment'],
+      'advisor' => ['add-comment'],
+      'review_application' => ['update', 'reject', 'add-comment'],
     ],
     'eligible' => [
-      'advisor' => ['add-comment'],
       'review_application' => ['add-comment'],
     ],
     'complete' => [
-      'advisor' => ['add-comment'],
       'review_application' => ['add-comment'],
     ],
   ];

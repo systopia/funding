@@ -90,7 +90,7 @@ final class HiHApplicationStatusDeterminer extends AbstractApplicationProcessSta
     }
 
     if ('reject' === $action) {
-      return FALSE;
+      return $currentStatus->getIsReviewCalculative() ?? FALSE;
     }
 
     return $currentStatus->getIsReviewCalculative();
@@ -106,7 +106,7 @@ final class HiHApplicationStatusDeterminer extends AbstractApplicationProcessSta
     }
 
     if ('reject' === $action) {
-      return FALSE;
+      return $currentStatus->getIsReviewContent() ?? FALSE;
     }
 
     return $currentStatus->getIsReviewContent();
