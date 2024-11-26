@@ -40,7 +40,7 @@ final class HiHApplicationSubmitActionsContainer extends AbstractApplicationSubm
       ->add('delete', E::ts('Delete'), E::ts('Do you really want to delete the application?'))
       // Reviewer actions.
       ->add('review', E::ts('Start Review'), NULL, ['needsFormData' => FALSE])
-      ->add('release', E::ts('Release for Advisory'), NULL, ['needsFormData' => FALSE])
+      ->add('release', 'Für Beirat freigeben', NULL, ['needsFormData' => FALSE])
       ->add('request-change', E::ts('Request Change'), NULL, ['needsFormData' => FALSE])
       // Reviewer and advisor actions.
       ->add('reject', E::ts('Reject'), NULL, ['needsFormData' => FALSE])
