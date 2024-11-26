@@ -32,11 +32,23 @@ final class FundingNewCasePermissionsFixture {
    * @throws \CRM_Core_Exception
    */
   public static function addCreationContact(int $fundingProgramId, array $permissions): array {
+    return self::addFixture($fundingProgramId, CreationContact::NAME, [], $permissions);
+  }
+
+  /**
+   * @phpstan-param array<mixed> $properties
+   * @phpstan-param list<string> $permissions
+   *
+   * @phpstan-return array<string, scalar|null>&array{id: int}
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public static function addFixture(int $fundingProgramId, string $type, array $properties, array $permissions): array {
     return FundingNewCasePermissions::create(FALSE)
       ->setValues([
         'funding_program_id' => $fundingProgramId,
-        'type' => CreationContact::NAME,
-        'properties' => [],
+        'type' => $type,
+        'properties' => $properties,
         'permissions' => $permissions,
       ])->execute()->first();
   }
