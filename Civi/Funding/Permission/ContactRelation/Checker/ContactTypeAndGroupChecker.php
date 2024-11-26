@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Permission\ContactRelation\Checker;
 
-use Civi\Api4\ContactType;
+use Civi\Api4\Contact;
 use Civi\Funding\Permission\ContactRelation\ContactRelationCheckerInterface;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
@@ -27,9 +27,10 @@ use Civi\RemoteTools\Api4\Query\CompositeCondition;
 use Webmozart\Assert\Assert;
 
 /**
- * Checks if the type of a contact is equal to a given type.
+ * Checks if the type of a contact is in one of the given types and the contact
+ * is in one of the given groups.
  */
-final class ContactTypeChecker implements ContactRelationCheckerInterface {
+final class ContactTypeAndGroupChecker implements ContactRelationCheckerInterface {
 
   private Api4Interface $api4;
 
@@ -43,29 +44,43 @@ final class ContactTypeChecker implements ContactRelationCheckerInterface {
    * @throws \CRM_Core_Exception
    */
   public function hasRelation(int $contactId, string $relationType, array $relationProperties): bool {
-    $contactTypeId = $relationProperties['contactTypeId'];
-    Assert::numeric($contactTypeId);
-    $separator = \CRM_Core_DAO::VALUE_SEPARATOR;
+    $contactTypeIds = $relationProperties['contactTypeIds'] ?? [];
+    Assert::isArray($contactTypeIds);
+    Assert::allIntegerish($contactTypeIds);
+    $groupIds = $relationProperties['groupIds'] ?? [];
+    Assert::isArray($groupIds);
+    Assert::allIntegerish($groupIds);
 
-    $action = ContactType::get(FALSE)
-      ->addSelect('id')
-      ->addWhere('id', '=', $contactTypeId)
-      ->addJoin('Contact AS c', 'INNER', NULL,
+    $action = Contact::get(FALSE)
+      ->addWhere('id', '=', $contactId);
+
+    if ([] !== $contactTypeIds) {
+      $separator = \CRM_Core_DAO::VALUE_SEPARATOR;
+      $action->addJoin('ContactType AS ct', 'INNER', NULL,
         CompositeCondition::new('AND',
-          Comparison::new('c.id', '=', $contactId),
+          Comparison::new('ct.id', 'IN', $contactTypeIds),
           CompositeCondition::new(
             'OR',
-            Comparison::new('c.contact_type', '=', 'name'),
-            Comparison::new('c.contact_sub_type', 'LIKE', "CONCAT('%{$separator}', name, '{$separator}%')")
+            Comparison::new('contact_type', '=', 'ct.name'),
+            Comparison::new('contact_sub_type', 'LIKE', "CONCAT('%{$separator}', ct.name, '{$separator}%')")
           ),
-        )->toArray(),
+        )->toArray()
       );
+    }
+
+    if ([] !== $groupIds) {
+      $action
+        ->addJoin('GroupContact AS gc', 'INNER', NULL,
+          ['gc.contact_id', '=', 'id'], ['gc.group_id', 'IN', $groupIds])
+        ->addJoin('Group AS g', 'INNER', NULL,
+          ['g.id', '=', 'gc.group_id'], ['g.is_active', '=', TRUE]);
+    }
 
     return $this->api4->executeAction($action)->rowCount === 1;
   }
 
   public function supportsRelationType(string $relationType): bool {
-    return \Civi\Funding\Permission\ContactRelation\Types\ContactType::NAME === $relationType;
+    return \Civi\Funding\Permission\ContactRelation\Types\ContactTypeAndGroup::NAME === $relationType;
   }
 
 }

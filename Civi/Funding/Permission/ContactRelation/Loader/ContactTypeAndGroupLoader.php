@@ -21,16 +21,17 @@ namespace Civi\Funding\Permission\ContactRelation\Loader;
 
 use Civi\Api4\Contact;
 use Civi\Funding\Permission\ContactRelation\ContactRelationLoaderInterface;
-use Civi\Funding\Permission\ContactRelation\Types\ContactType;
+use Civi\Funding\Permission\ContactRelation\Types\ContactTypeAndGroup;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
 use Webmozart\Assert\Assert;
 
 /**
- * Loads contacts with a type that is equal to a given type.
+ * Loads all contacts with any of the specified types in any of the specified
+ * groups.
  */
-final class ContactTypeLoader implements ContactRelationLoaderInterface {
+final class ContactTypeAndGroupLoader implements ContactRelationLoaderInterface {
 
   private Api4Interface $api4;
 
@@ -44,16 +45,36 @@ final class ContactTypeLoader implements ContactRelationLoaderInterface {
    * @throws \CRM_Core_Exception
    */
   public function getContacts(string $relationType, array $relationProperties): array {
-    $contactTypeId = $relationProperties['contactTypeId'];
-    Assert::integerish($contactTypeId);
-    $separator = \CRM_Core_DAO::VALUE_SEPARATOR;
+    $contactTypeIds = $relationProperties['contactTypeIds'] ?? [];
+    Assert::isArray($contactTypeIds);
+    Assert::allIntegerish($contactTypeIds);
+    $groupIds = $relationProperties['groupIds'] ?? [];
+    Assert::isArray($groupIds);
+    Assert::allIntegerish($groupIds);
 
-    $action = Contact::get(FALSE)
-      ->addJoin('ContactType AS ct', 'INNER', NULL, CompositeCondition::new('OR',
-        Comparison::new('contact_type', '=', 'ct.name'),
-        Comparison::new('contact_sub_type', 'LIKE', "CONCAT('%{$separator}', ct.name, '{$separator}%')")
-      )->toArray())
-      ->addWhere('ct.id', '=', $contactTypeId);
+    $action = Contact::get(FALSE);
+
+    if ([] !== $contactTypeIds) {
+      $separator = \CRM_Core_DAO::VALUE_SEPARATOR;
+      $action->addJoin('ContactType AS ct', 'INNER', NULL,
+        CompositeCondition::new('AND',
+          Comparison::new('ct.id', 'IN', $contactTypeIds),
+          CompositeCondition::new(
+            'OR',
+            Comparison::new('contact_type', '=', 'ct.name'),
+            Comparison::new('contact_sub_type', 'LIKE', "CONCAT('%{$separator}', ct.name, '{$separator}%')")
+          ),
+        )->toArray()
+      );
+    }
+
+    if ([] !== $groupIds) {
+      $action
+        ->addJoin('GroupContact AS gc', 'INNER', NULL,
+          ['gc.contact_id', '=', 'id'], ['gc.group_id', 'IN', $groupIds])
+        ->addJoin('Group AS g', 'INNER', NULL,
+          ['g.id', '=', 'gc.group_id'], ['g.is_active', '=', TRUE]);
+    }
 
     /** @phpstan-var array<int, array<string, mixed>> $contacts */
     $contacts = $this->api4->executeAction($action)->indexBy('id')->getArrayCopy();
@@ -62,7 +83,7 @@ final class ContactTypeLoader implements ContactRelationLoaderInterface {
   }
 
   public function supportsRelationType(string $relationType): bool {
-    return ContactType::NAME === $relationType;
+    return ContactTypeAndGroup::NAME === $relationType;
   }
 
 }

@@ -23,6 +23,7 @@ declare(strict_types = 1);
 use Civi\Funding\Upgrade\Upgrader0002;
 use Civi\Funding\Upgrade\Upgrader0003;
 use Civi\Funding\Upgrade\Upgrader0006;
+use Civi\Funding\Upgrade\Upgrader0008;
 
 $container->autowire(Upgrader0002::class)
   ->setPublic(TRUE);
@@ -31,4 +32,7 @@ $container->autowire(Upgrader0003::class)
   ->setPublic(TRUE);
 
 $container->autowire(Upgrader0006::class)
+  ->setPublic(TRUE);
+
+$container->autowire(Upgrader0008::class)
   ->setPublic(TRUE);

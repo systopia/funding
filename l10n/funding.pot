@@ -558,19 +558,19 @@ msgstr ""
 msgid "Funding Clearing Comment"
 msgstr ""
 
-#: Civi/Funding/Contact/Relation/Types/ContactTypeAndGroup.php
+#: Civi/Funding/Contact/Relation/Types/ContactTypeAndGroup.php Civi/Funding/Permission/ContactRelation/Types/ContactTypeAndGroup.php Civi/Funding/Permission/FundingCase/RelationFactory/Types/ContactTypeAndGroup.php
 msgid "Contact type and group"
 msgstr ""
 
-#: Civi/Funding/Contact/Relation/Types/ContactTypeAndGroup.php Civi/Funding/Permission/ContactRelation/Types/Relationship.php
+#: Civi/Funding/Contact/Relation/Types/ContactTypeAndGroup.php Civi/Funding/Permission/ContactRelation/Types/ContactTypeAndGroup.php Civi/Funding/Permission/ContactRelation/Types/Relationship.php Civi/Funding/Permission/FundingCase/RelationFactory/Types/ContactTypeAndGroup.php
 msgid "Contact types"
 msgstr ""
 
-#: Civi/Funding/Contact/Relation/Types/ContactTypeAndGroup.php Civi/Funding/Permission/ContactRelation/Types/Relationship.php
+#: Civi/Funding/Contact/Relation/Types/ContactTypeAndGroup.php Civi/Funding/Permission/ContactRelation/Types/ContactTypeAndGroup.php Civi/Funding/Permission/ContactRelation/Types/Relationship.php Civi/Funding/Permission/FundingCase/RelationFactory/Types/ContactTypeAndGroup.php
 msgid "Groups"
 msgstr ""
 
-#: Civi/Funding/Contact/Relation/Types/ContactTypeAndGroup.php Civi/Funding/Permission/ContactRelation/Types/Relationship.php
+#: Civi/Funding/Contact/Relation/Types/ContactTypeAndGroup.php Civi/Funding/Permission/ContactRelation/Types/ContactTypeAndGroup.php Civi/Funding/Permission/ContactRelation/Types/Relationship.php Civi/Funding/Permission/FundingCase/RelationFactory/Types/ContactTypeAndGroup.php
 msgid "any"
 msgstr ""
 
@@ -582,7 +582,7 @@ msgstr ""
 msgid "Related contacts of a specific type"
 msgstr ""
 
-#: Civi/Funding/Contact/Relation/Types/ContactTypeAndRelationshipType.php Civi/Funding/Contact/Relation/Types/SelfByContactType.php Civi/Funding/Permission/ContactRelation/Types/ContactType.php Civi/Funding/Permission/FundingCase/RelationFactory/Types/ContactType.php
+#: Civi/Funding/Contact/Relation/Types/ContactTypeAndRelationshipType.php Civi/Funding/Contact/Relation/Types/SelfByContactType.php
 msgid "Contact type"
 msgstr ""
 
@@ -962,8 +962,8 @@ msgstr ""
 msgid "Matches if a contact has a relationship of the specified type to the specified contact."
 msgstr ""
 
-#: Civi/Funding/Permission/ContactRelation/Types/ContactType.php
-msgid "Matches if a contact has the specified contact type."
+#: Civi/Funding/Permission/ContactRelation/Types/ContactTypeAndGroup.php
+msgid "Matches if a contact has one of the specified contact types and is in one of the\nspecified groups."
 msgstr ""
 
 #: Civi/Funding/Permission/ContactRelation/Types/Relationship.php
@@ -982,8 +982,8 @@ msgstr ""
 msgid "Assign permissions for new funding cases to the specified contact."
 msgstr ""
 
-#: Civi/Funding/Permission/FundingCase/RelationFactory/Types/ContactType.php
-msgid "Assign permissions for new funding cases to contacts with the specified contact type."
+#: Civi/Funding/Permission/FundingCase/RelationFactory/Types/ContactTypeAndGroup.php
+msgid "Assign permissions for new funding cases to contacts with one of the specified\ncontact types in one of the specified groups."
 msgstr ""
 
 #: Civi/Funding/Permission/FundingCase/RelationFactory/Types/CreationContact.php

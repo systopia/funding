@@ -59,8 +59,8 @@ trait FundingProgramTestFixturesTrait {
 
     FundingProgramContactRelationFixture::addFixture(
       $fundingProgramId,
-      'ContactType',
-      ['contactTypeId' => $permittedContactTypeId],
+      'ContactTypeAndGroup',
+      ['contactTypeIds' => [$permittedContactTypeId]],
       $permittedContactTypePermissions
     );
 
