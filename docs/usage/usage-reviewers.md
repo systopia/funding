@@ -89,5 +89,3 @@ The grant report for an application can be accessed from the application overvie
 ### Funding cases
 
 The funding case is subject to an overall clearing statement which can result in additional payment or reclaim of funds from the applicant. A corresponding document (to be configured for each funding case type) can be created to formally communicate the result to the applicant.
-
-TODO
