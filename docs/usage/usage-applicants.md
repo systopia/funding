@@ -81,4 +81,4 @@ The action **show drawdown** leads to a list such as this:
 
 ## Clearing Process
 
-**Important**: The implementation of the clearing process is still under development. A description of the usage will be added later.
+Once an application has been approved by the reviewers, applicants can start recording expenses and other information about their project. If they find their report is complete, they can submit it for review. 
