@@ -69,17 +69,25 @@ The history of a funding application contains all status changes of this applica
 
 ### Approve a Funding Case
 
-When a funding case gets approved, a transfer contract is created and the drawdown phase begins. As long as there is no transfer contract, no drawdowns are possible.
+When a funding case gets approved, a transfer contract is created and the drawdown phase begins, i.e. applicants can start requesting pay-outs. As long as there is no transfer contract, no drawdowns are possible.
 
-A funding case can be approved in the funding case view which, can be accessed via **Funding > Funding Cases**. It is only possible to approve funding cases with the following properties:
+A funding case can be approved in the funding case view, which can be accessed via **Funding > Funding Cases**. Only funding cases with the following properties can be approved:
 
 * At least one associated application has the status *eligible*.
-* All associated applications have the status *eligible*, *withdrawn*, or *rejected*, i.e. there's a decision about the eligibility.
+* All associated applications have the status *eligible*, *withdrawn*, or *rejected*, i.e. they are no longer in the editing or review phase.
 
 ## Drawdown Phase
 
-TODO
+Once a funding case has been approved, applicants can request money by creating drawdowns. Reviewers will find the drawdowns in the funding case view, where they can also approve or reject the pay-out. They can download a payment order document (based on the template configured for the funding case type) for their accounting. 
 
 ## Clearing Process
+
+### Applications
+
+The grant report for an application can be accessed from the application overview, if it exists. The clearing process starts once the application has been approved so applicants can already record expenses etc. during the project phase. Given the appropriate permissions, reviewers can approve, partly approve or reject expenses. 
+
+### Funding cases
+
+The funding case is subject to an overall clearing statement which can result in additional payment or reclaim of funds from the applicant. A corresponding document (to be configured for each funding case type) can be created to formally communicate the result to the applicant.
 
 TODO
