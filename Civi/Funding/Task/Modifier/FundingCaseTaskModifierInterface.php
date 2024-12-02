@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Task\Modifier;
 
+use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingTaskEntity;
 
@@ -26,7 +27,7 @@ interface FundingCaseTaskModifierInterface {
 
   public function modifyTask(
     FundingTaskEntity $task,
-    FundingCaseEntity $fundingCase,
+    FundingCaseBundle $fundingCaseBundle,
     FundingCaseEntity $previousFundingCase
   ): bool;
 
