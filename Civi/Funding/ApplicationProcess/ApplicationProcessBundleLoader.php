@@ -22,8 +22,6 @@ namespace Civi\Funding\ApplicationProcess;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\FundingCase\FundingCaseManager;
-use Civi\Funding\FundingProgram\FundingCaseTypeManager;
-use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\RemoteTools\Api4\Query\ConditionInterface;
 use Webmozart\Assert\Assert;
 
@@ -33,20 +31,12 @@ class ApplicationProcessBundleLoader {
 
   private FundingCaseManager $fundingCaseManager;
 
-  private FundingCaseTypeManager $fundingCaseTypeManager;
-
-  private FundingProgramManager $fundingProgramManager;
-
   public function __construct(
     ApplicationProcessManager $applicationProcessManager,
-    FundingCaseManager $fundingCaseManager,
-    FundingCaseTypeManager $fundingCaseTypeManager,
-    FundingProgramManager $fundingProgramManager
+    FundingCaseManager $fundingCaseManager
   ) {
     $this->applicationProcessManager = $applicationProcessManager;
     $this->fundingCaseManager = $fundingCaseManager;
-    $this->fundingCaseTypeManager = $fundingCaseTypeManager;
-    $this->fundingProgramManager = $fundingProgramManager;
   }
 
   public function countBy(ConditionInterface $condition): int {
@@ -137,19 +127,15 @@ class ApplicationProcessBundleLoader {
   private function createFromApplicationProcess(
     ApplicationProcessEntity $applicationProcess
   ): ApplicationProcessEntityBundle {
-    $fundingCase = $this->fundingCaseManager->get($applicationProcess->getFundingCaseId());
-    Assert::notNull($fundingCase);
+    $fundingCaseBundle = $this->fundingCaseManager->getBundle($applicationProcess->getFundingCaseId());
+    Assert::notNull($fundingCaseBundle);
 
-    $fundingCaseType = $this->fundingCaseTypeManager->get($fundingCase->getFundingCaseTypeId());
-    Assert::notNull($fundingCaseType);
-
-    $fundingProgram = $this->fundingProgramManager->get($fundingCase->getFundingProgramId());
-    Assert::notNull($fundingProgram, sprintf(
-      'No permission to access funding program with ID "%d"',
-      $fundingCase->getFundingProgramId()
-    ));
-
-    return new ApplicationProcessEntityBundle($applicationProcess, $fundingCase, $fundingCaseType, $fundingProgram);
+    return new ApplicationProcessEntityBundle(
+      $applicationProcess,
+      $fundingCaseBundle->getFundingCase(),
+      $fundingCaseBundle->getFundingCaseType(),
+      $fundingCaseBundle->getFundingProgram()
+    );
   }
 
 }

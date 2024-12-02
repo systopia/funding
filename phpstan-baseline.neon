@@ -48,11 +48,6 @@ parameters:
 		-
 			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
 			count: 1
-			path: tests/phpunit/Civi/Funding/FundingCase/FundingCaseManagerTest.php
-
-		-
-			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
-			count: 1
 			path: tests/phpunit/Civi/Funding/FundingProgram/FundingProgramManagerTest.php
 
 		-

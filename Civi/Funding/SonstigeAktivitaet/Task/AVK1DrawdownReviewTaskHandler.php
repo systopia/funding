@@ -17,24 +17,13 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Task\Creator;
+namespace Civi\Funding\SonstigeAktivitaet\Task;
 
-use Civi\Funding\Entity\FundingCaseBundle;
-use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\PayoutProcess\Task\AbstractDrawdownReviewTaskHandler;
+use Civi\Funding\SonstigeAktivitaet\Traits\AVK1SupportedFundingCaseTypesTrait;
 
-interface FundingCaseTaskCreatorInterface {
+final class AVK1DrawdownReviewTaskHandler extends AbstractDrawdownReviewTaskHandler {
 
-  /**
-   * @phpstan-return iterable<\Civi\Funding\Entity\FundingTaskEntity>
-   */
-  public function createTasksOnChange(
-    FundingCaseBundle $fundingCaseBundle,
-    FundingCaseEntity $previousFundingCase
-  ): iterable;
-
-  /**
-   * @phpstan-return iterable<\Civi\Funding\Entity\FundingTaskEntity>
-   */
-  public function createTasksOnNew(FundingCaseBundle $fundingCaseBundle): iterable;
+  use AVK1SupportedFundingCaseTypesTrait;
 
 }
