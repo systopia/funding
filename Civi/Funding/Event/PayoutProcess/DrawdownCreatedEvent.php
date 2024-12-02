@@ -17,13 +17,17 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\IJB\Application\Task;
+namespace Civi\Funding\Event\PayoutProcess;
 
-use Civi\Funding\ApplicationProcess\Task\AbstractApplicationReviewCalculativeTaskHandler;
-use Civi\Funding\IJB\Traits\IJBSupportedFundingCaseTypesTrait;
+use Civi\Funding\Entity\DrawdownBundle;
+use Civi\Funding\Entity\Traits\DrawdownBundleTrait;
 
-final class IJBApplicationReviewCalculativeTaskHandler extends AbstractApplicationReviewCalculativeTaskHandler {
+final class DrawdownCreatedEvent {
 
-  use IJBSupportedFundingCaseTypesTrait;
+  use DrawdownBundleTrait;
+
+  public function __construct(DrawdownBundle $drawdownBundle) {
+    $this->drawdownBundle = $drawdownBundle;
+  }
 
 }

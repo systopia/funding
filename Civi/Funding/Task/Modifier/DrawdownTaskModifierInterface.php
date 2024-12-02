@@ -17,24 +17,18 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Task\Creator;
+namespace Civi\Funding\Task\Modifier;
 
-use Civi\Funding\Entity\FundingCaseBundle;
-use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\DrawdownEntity;
+use Civi\Funding\Entity\DrawdownBundle;
+use Civi\Funding\Entity\FundingTaskEntity;
 
-interface FundingCaseTaskCreatorInterface {
+interface DrawdownTaskModifierInterface {
 
-  /**
-   * @phpstan-return iterable<\Civi\Funding\Entity\FundingTaskEntity>
-   */
-  public function createTasksOnChange(
-    FundingCaseBundle $fundingCaseBundle,
-    FundingCaseEntity $previousFundingCase
-  ): iterable;
-
-  /**
-   * @phpstan-return iterable<\Civi\Funding\Entity\FundingTaskEntity>
-   */
-  public function createTasksOnNew(FundingCaseBundle $fundingCaseBundle): iterable;
+  public function modifyTask(
+    FundingTaskEntity $task,
+    DrawdownBundle $drawdownBundle,
+    DrawdownEntity $previousDrawdown
+  ): bool;
 
 }

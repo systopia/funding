@@ -17,13 +17,17 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\SammelantragKurs\Application\Task;
+namespace Civi\Funding\PayoutProcess\Api4\ActionHandler\RemoteFundingDrawdown;
 
-use Civi\Funding\ApplicationProcess\Task\AbstractApplicationReviewContentTaskHandler;
-use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
+use Civi\Api4\FundingDrawdown;
+use Civi\Funding\Api4\ActionHandler\AbstractRemoteFundingGetFieldsActionHandler;
 
-final class KursApplicationReviewContentTaskHandler extends AbstractApplicationReviewContentTaskHandler {
+final class RemoteGetFieldsActionHandler extends AbstractRemoteFundingGetFieldsActionHandler {
 
-  use KursSupportedFundingCaseTypesTrait;
+  public const ENTITY_NAME = 'RemoteFundingDrawdown';
+
+  protected function getEntityName(): string {
+    return FundingDrawdown::getEntityName();
+  }
 
 }

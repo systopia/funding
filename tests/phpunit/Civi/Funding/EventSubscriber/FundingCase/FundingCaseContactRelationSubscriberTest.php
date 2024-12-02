@@ -21,8 +21,8 @@ namespace Civi\Funding\EventSubscriber\FundingCase;
 
 use Civi\Api4\FundingCaseContactRelation;
 use Civi\Api4\Generic\Result;
+use Civi\Funding\EntityFactory\FundingCaseBundleFactory;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
-use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
 use Civi\Funding\Permission\ContactRelation\Types\ContactRelationship;
 use Civi\RemoteTools\Api4\Api4Interface;
@@ -64,22 +64,19 @@ final class FundingCaseContactRelationSubscriberTest extends TestCase {
   }
 
   public function testOnFundingCaseUpdated(): void {
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
-    $fundingCase = FundingCaseFactory::createFundingCase(['recipient_contact_id' => 123]);
-    $previousFundingCase = clone $fundingCase;
-
+    $previousFundingCase = FundingCaseFactory::createFundingCase(['recipient_contact_id' => 123]);
     // Changing recipient contact should clear cache.
-    $fundingCase->setRecipientContactId(1234);
+    $fundingCaseBundle = FundingCaseBundleFactory::create(['recipient_contact_id' => 1234]);
 
     $this->api4Mock->expects(static::once())->method('getEntities')
       ->with(FundingCaseContactRelation::getEntityName(), CompositeCondition::fromFieldValuePairs([
-        'funding_case_id' => $fundingCase->getId(),
+        'funding_case_id' => $fundingCaseBundle->getFundingCase()->getId(),
         'type' => ContactRelationship::NAME,
       ]))
       ->willReturn(new Result([
         [
           'id' => 2,
-          'funding_case_id' => $fundingCase->getId(),
+          'funding_case_id' => $fundingCaseBundle->getFundingCase()->getId(),
           'type' => ContactRelationship::NAME,
           'properties' => [
             'contactId' => 12,
@@ -88,7 +85,7 @@ final class FundingCaseContactRelationSubscriberTest extends TestCase {
         ],
         [
           'id' => 3,
-          'funding_case_id' => $fundingCase->getId(),
+          'funding_case_id' => $fundingCaseBundle->getFundingCase()->getId(),
           'type' => ContactRelationship::NAME,
           'properties' => [
             'contactId' => 123,
@@ -100,7 +97,7 @@ final class FundingCaseContactRelationSubscriberTest extends TestCase {
     $this->api4Mock->expects(static::once())->method('updateEntity')
       ->with(FundingCaseContactRelation::getEntityName(), 3, [
         'id' => 3,
-        'funding_case_id' => $fundingCase->getId(),
+        'funding_case_id' => $fundingCaseBundle->getFundingCase()->getId(),
         'type' => ContactRelationship::NAME,
         'properties' => [
           'contactId' => 1234,
@@ -109,7 +106,7 @@ final class FundingCaseContactRelationSubscriberTest extends TestCase {
       ]);
 
     $this->subscriber->onFundingCaseUpdated(
-      new FundingCaseUpdatedEvent($previousFundingCase, $fundingCase, $fundingCaseType)
+      new FundingCaseUpdatedEvent($previousFundingCase, $fundingCaseBundle)
     );
   }
 

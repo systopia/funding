@@ -80,3 +80,11 @@ ServiceRegistrator::autowireAllImplementing(
   ConcreteEntityValidatorInterface::class,
   ['funding.validator.entity' => []]
 );
+
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/PayoutProcess/Api4/ActionHandler',
+  'Civi\\Funding\\PayoutProcess\\Api4\\ActionHandler',
+  ActionHandlerInterface::class,
+  [ActionHandlerInterface::SERVICE_TAG => []]
+);
