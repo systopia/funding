@@ -19,22 +19,22 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Task\Creator;
 
-use Civi\Funding\Entity\FundingCaseBundle;
-use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\DrawdownEntity;
+use Civi\Funding\Entity\DrawdownBundle;
 
-interface FundingCaseTaskCreatorInterface {
+interface DrawdownTaskCreatorInterface {
 
   /**
    * @phpstan-return iterable<\Civi\Funding\Entity\FundingTaskEntity>
    */
   public function createTasksOnChange(
-    FundingCaseBundle $fundingCaseBundle,
-    FundingCaseEntity $previousFundingCase
+    DrawdownBundle $drawdownBundle,
+    DrawdownEntity $previousDrawdown
   ): iterable;
 
   /**
    * @phpstan-return iterable<\Civi\Funding\Entity\FundingTaskEntity>
    */
-  public function createTasksOnNew(FundingCaseBundle $fundingCaseBundle): iterable;
+  public function createTasksOnNew(DrawdownBundle $drawdownBundle): iterable;
 
 }

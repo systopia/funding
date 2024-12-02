@@ -17,12 +17,12 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\IJB\Application\Task;
+namespace Civi\Funding\IJB\Task;
 
-use Civi\Funding\ApplicationProcess\Task\AbstractApplicationApplyTaskHandler;
+use Civi\Funding\ApplicationProcess\Task\AbstractApplicationReviewCalculativeTaskHandler;
 use Civi\Funding\IJB\Traits\IJBSupportedFundingCaseTypesTrait;
 
-final class IJBApplicationApplyTaskHandler extends AbstractApplicationApplyTaskHandler {
+final class IJBApplicationReviewCalculativeTaskHandler extends AbstractApplicationReviewCalculativeTaskHandler {
 
   use IJBSupportedFundingCaseTypesTrait;
 

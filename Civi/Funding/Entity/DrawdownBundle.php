@@ -17,13 +17,29 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\SammelantragKurs\Application\Task;
+namespace Civi\Funding\Entity;
 
-use Civi\Funding\ApplicationProcess\Task\AbstractApplicationReviewCalculativeTaskHandler;
-use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
+use Civi\Funding\Entity\Traits\PayoutProcessBundleTrait;
 
-final class KursApplicationReviewCalculativeTaskHandler extends AbstractApplicationReviewCalculativeTaskHandler {
+/**
+ * @codeCoverageIgnore
+ */
+final class DrawdownBundle implements EntityBundleInterface {
 
-  use KursSupportedFundingCaseTypesTrait;
+  use PayoutProcessBundleTrait;
+
+  private DrawdownEntity $drawdown;
+
+  public function __construct(
+    DrawdownEntity $drawdown,
+    PayoutProcessBundle $payoutProcessBundle
+  ) {
+    $this->drawdown = $drawdown;
+    $this->payoutProcessBundle = $payoutProcessBundle;
+  }
+
+  public function getDrawdown(): DrawdownEntity {
+    return $this->drawdown;
+  }
 
 }

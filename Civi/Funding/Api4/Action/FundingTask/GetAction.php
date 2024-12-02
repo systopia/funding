@@ -63,7 +63,9 @@ final class GetAction extends AbstractReferencingDAOGetAction {
         'status_id:name',
         'funding_case_task.*',
         'funding_application_process_task.*',
-        'funding_clearing_process_task.*'
+        'funding_clearing_process_task.*',
+        'funding_payout_process_task.*',
+        'funding_drawdown_task.*',
       );
     }
 

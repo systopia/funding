@@ -17,13 +17,10 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\IJB\Application\Task;
+namespace Civi\Funding\Task\Handler;
 
-use Civi\Funding\ApplicationProcess\Task\AbstractApplicationReviewContentTaskHandler;
-use Civi\Funding\IJB\Traits\IJBSupportedFundingCaseTypesTrait;
+use Civi\Funding\Task\Creator\DrawdownTaskCreatorInterface;
+use Civi\Funding\Task\Modifier\DrawdownTaskModifierInterface;
 
-final class IJBApplicationReviewContentTaskHandler extends AbstractApplicationReviewContentTaskHandler {
-
-  use IJBSupportedFundingCaseTypesTrait;
-
+interface DrawdownTaskHandlerInterface extends DrawdownTaskCreatorInterface, DrawdownTaskModifierInterface {
 }

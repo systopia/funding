@@ -20,22 +20,22 @@ declare(strict_types = 1);
 namespace Civi\Funding\Task\EventSubscriber;
 
 use Civi\Funding\ActivityTypeNames;
-use Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent;
-use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
+use Civi\Funding\Event\PayoutProcess\DrawdownCreatedEvent;
+use Civi\Funding\Event\PayoutProcess\DrawdownUpdatedEvent;
 use Civi\Funding\Task\FundingTaskManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class FundingCaseTaskSubscriber implements EventSubscriberInterface {
+class DrawdownTaskSubscriber implements EventSubscriberInterface {
 
   private FundingTaskManager $taskManager;
 
   /**
-   * @phpstan-var array<string, iterable<\Civi\Funding\Task\Creator\FundingCaseTaskCreatorInterface>>
+   * @phpstan-var array<string, iterable<\Civi\Funding\Task\Creator\DrawdownTaskCreatorInterface>>
    */
   private array $taskCreators;
 
   /**
-   * @phpstan-var array<string, iterable<\Civi\Funding\Task\Modifier\FundingCaseTaskModifierInterface>>
+   * @phpstan-var array<string, iterable<\Civi\Funding\Task\Modifier\DrawdownTaskModifierInterface>>
    */
   private array $taskModifiers;
 
@@ -44,14 +44,20 @@ class FundingCaseTaskSubscriber implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents(): array {
     return [
-      FundingCaseCreatedEvent::class => 'onCreated',
-      FundingCaseUpdatedEvent::class => 'onUpdated',
+      DrawdownCreatedEvent::class => 'onCreated',
+      DrawdownUpdatedEvent::class => 'onUpdated',
     ];
   }
 
   /**
-   * @phpstan-param array<string, iterable<\Civi\Funding\Task\Creator\FundingCaseTaskCreatorInterface>> $taskCreators
-   * @phpstan-param array<string, iterable<\Civi\Funding\Task\Modifier\FundingCaseTaskModifierInterface>> $taskModifiers
+   * @phpstan-param array<
+   *   string,
+   *   iterable<\Civi\Funding\Task\Creator\DrawdownTaskCreatorInterface>
+   * > $taskCreators
+   * @phpstan-param array<
+   *   string,
+   *   iterable<\Civi\Funding\Task\Modifier\DrawdownTaskModifierInterface>
+   * > $taskModifiers
    */
   public function __construct(FundingTaskManager $taskManager, array $taskCreators, array $taskModifiers) {
     $this->taskManager = $taskManager;
@@ -62,9 +68,9 @@ class FundingCaseTaskSubscriber implements EventSubscriberInterface {
   /**
    * @throws \CRM_Core_Exception
    */
-  public function onCreated(FundingCaseCreatedEvent $event): void {
+  public function onCreated(DrawdownCreatedEvent $event): void {
     foreach ($this->taskCreators[$event->getFundingCaseType()->getName()] ?? [] as $taskCreator) {
-      foreach ($taskCreator->createTasksOnNew($event->getFundingCaseBundle()) as $task) {
+      foreach ($taskCreator->createTasksOnNew($event->getDrawdownBundle()) as $task) {
         $task->setValues($task->toArray() +
           ['target_contact_id' => [$event->getFundingCase()->getRecipientContactId()]]
         );
@@ -76,15 +82,19 @@ class FundingCaseTaskSubscriber implements EventSubscriberInterface {
   /**
    * @throws \CRM_Core_Exception
    */
-  public function onUpdated(FundingCaseUpdatedEvent $event): void {
+  public function onUpdated(DrawdownUpdatedEvent $event): void {
     $openTasks = $this->taskManager->getOpenTasks(
-      ActivityTypeNames::FUNDING_CASE_TASK,
-      $event->getFundingCase()->getId()
+      ActivityTypeNames::DRAWDOWN_TASK,
+      $event->getDrawdown()->getId()
     );
     foreach ($openTasks as $task) {
       $modified = FALSE;
       foreach ($this->taskModifiers[$event->getFundingCaseType()->getName()] ?? [] as $taskModifier) {
-        if ($taskModifier->modifyTask($task, $event->getFundingCaseBundle(), $event->getPreviousFundingCase())) {
+        if ($taskModifier->modifyTask(
+          $task,
+          $event->getDrawdownBundle(),
+          $event->getPreviousDrawdown()
+        )) {
           $modified = TRUE;
         }
       }
@@ -94,7 +104,10 @@ class FundingCaseTaskSubscriber implements EventSubscriberInterface {
     }
 
     foreach ($this->taskCreators[$event->getFundingCaseType()->getName()] ?? [] as $taskCreator) {
-      $tasks = $taskCreator->createTasksOnChange($event->getFundingCaseBundle(), $event->getPreviousFundingCase());
+      $tasks = $taskCreator->createTasksOnChange(
+        $event->getDrawdownBundle(),
+        $event->getPreviousDrawdown()
+      );
       foreach ($tasks as $task) {
         $task->setValues($task->toArray() +
           ['target_contact_id' => [$event->getFundingCase()->getRecipientContactId()]]

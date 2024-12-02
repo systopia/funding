@@ -17,13 +17,29 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\SonstigeAktivitaet\Application\Task;
+namespace Civi\Funding\Entity;
 
-use Civi\Funding\ApplicationProcess\Task\AbstractApplicationReviewContentTaskHandler;
-use Civi\Funding\SonstigeAktivitaet\Traits\AVK1SupportedFundingCaseTypesTrait;
+use Civi\Funding\Entity\Traits\FundingCaseBundleTrait;
 
-final class AVK1ApplicationReviewContentTaskHandler extends AbstractApplicationReviewContentTaskHandler {
+/**
+ * @codeCoverageIgnore
+ */
+final class PayoutProcessBundle implements EntityBundleInterface {
 
-  use AVK1SupportedFundingCaseTypesTrait;
+  use FundingCaseBundleTrait;
+
+  private PayoutProcessEntity $payoutProcess;
+
+  public function __construct(
+    PayoutProcessEntity $payoutProcess,
+    FundingCaseBundle $fundingCaseBundle
+  ) {
+    $this->payoutProcess = $payoutProcess;
+    $this->fundingCaseBundle = $fundingCaseBundle;
+  }
+
+  public function getPayoutProcess(): PayoutProcessEntity {
+    return $this->payoutProcess;
+  }
 
 }

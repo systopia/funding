@@ -22,12 +22,18 @@ namespace Civi\Funding\PayoutProcess;
 use Civi\Api4\FundingDrawdown;
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Entity\DrawdownEntity;
+use Civi\Funding\Entity\DrawdownBundle;
+use Civi\Funding\Entity\PayoutProcessBundle;
 use Civi\Funding\Event\PayoutProcess\DrawdownAcceptedEvent;
+use Civi\Funding\Event\PayoutProcess\DrawdownCreatedEvent;
 use Civi\Funding\Event\PayoutProcess\DrawdownDeletedEvent;
+use Civi\Funding\Event\PayoutProcess\DrawdownPreCreateEvent;
+use Civi\Funding\Event\PayoutProcess\DrawdownPreUpdateEvent;
+use Civi\Funding\Event\PayoutProcess\DrawdownUpdatedEvent;
 use Civi\RemoteTools\Api4\Api4Interface;
-use Civi\RemoteTools\Api4\Query\Comparison;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
 use Civi\RemoteTools\Api4\Query\ConditionInterface;
+use Webmozart\Assert\Assert;
 
 class DrawdownManager {
 
@@ -35,28 +41,66 @@ class DrawdownManager {
 
   private CiviEventDispatcherInterface $eventDispatcher;
 
-  public function __construct(Api4Interface $api4, CiviEventDispatcherInterface $eventDispatcher) {
+  private PayoutProcessManager $payoutProcessManager;
+
+  public function __construct(
+    Api4Interface $api4,
+    CiviEventDispatcherInterface $eventDispatcher,
+    PayoutProcessManager $payoutProcessManager
+  ) {
     $this->api4 = $api4;
     $this->eventDispatcher = $eventDispatcher;
+    $this->payoutProcessManager = $payoutProcessManager;
   }
 
   /**
    * @throws \CRM_Core_Exception
    */
   public function accept(DrawdownEntity $drawdown, int $contactId): void {
+    $payoutProcessBundle = $this->payoutProcessManager->getBundle($drawdown->getPayoutProcessId());
+    Assert::notNull($payoutProcessBundle);
+
     $drawdown
       ->setReviewerContactId($contactId)
       ->setStatus('accepted')
       ->setAcceptionDate(new \DateTime(date('Y-m-d H:i:s')));
 
-    $this->api4->updateEntity(
-      FundingDrawdown::getEntityName(),
-      $drawdown->getId(),
-      $drawdown->toArray()
-    );
+    $drawdownBundle = new DrawdownBundle($drawdown, $payoutProcessBundle);
+    $this->update($drawdownBundle);
 
-    $event = new DrawdownAcceptedEvent($drawdown);
+    $event = new DrawdownAcceptedEvent($drawdownBundle);
     $this->eventDispatcher->dispatch(DrawdownAcceptedEvent::class, $event);
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function createNew(
+    PayoutProcessBundle $payoutProcessBundle,
+    float $amount,
+    int $requesterContactId
+  ): DrawdownEntity {
+    $drawdown = DrawdownEntity::fromArray([
+      'payout_process_id' => $payoutProcessBundle->getPayoutProcess()->getId(),
+      'status' => 'new',
+      'creation_date' => date('Y-m-d H:i:s'),
+      'amount' => $amount,
+      'acception_date' => NULL,
+      'requester_contact_id' => $requesterContactId,
+      'reviewer_contact_id' => NULL,
+    ]);
+
+    $drawdownBundle = new DrawdownBundle($drawdown, $payoutProcessBundle);
+    $event = new DrawdownPreCreateEvent($drawdownBundle);
+    $this->eventDispatcher->dispatch(DrawdownPreCreateEvent::class, $event);
+
+    $result = $this->api4->createEntity(FundingDrawdown::getEntityName(), $drawdown->toArray());
+    $drawdown->setValues(['id' => $result->single()['id']] + $drawdown->toArray());
+
+    $event = new DrawdownCreatedEvent($drawdownBundle);
+    $this->eventDispatcher->dispatch(DrawdownCreatedEvent::class, $event);
+
+    return $drawdown;
   }
 
   /**
@@ -84,16 +128,10 @@ class DrawdownManager {
    * @throws \CRM_Core_Exception
    */
   public function get(int $id): ?DrawdownEntity {
-    $result = $this->api4->getEntities(
-      FundingDrawdown::getEntityName(),
-      Comparison::new('id', '=', $id),
-      [],
-      1,
-      0,
-      ['checkPermissions' => FALSE],
-    );
+    $values = $this->api4->getEntity(FundingDrawdown::getEntityName(), $id);
 
-    return DrawdownEntity::singleOrNullFromApiResult($result);
+    // @phpstan-ignore argument.type
+    return NULL === $values ? NULL : DrawdownEntity::fromArray($values);
   }
 
   /**
@@ -116,6 +154,27 @@ class DrawdownManager {
 
     $result = $this->api4->createEntity(FundingDrawdown::getEntityName(), $drawdown->toArray());
     $drawdown->setValues(['id' => $result->single()['id']] + $drawdown->toArray());
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  private function update(DrawdownBundle $drawdownBundle): void {
+    $drawdown = $drawdownBundle->getDrawdown();
+    $previousDrawdown = $this->get($drawdown->getId());
+    Assert::notNull($previousDrawdown);
+
+    $event = new DrawdownPreUpdateEvent($previousDrawdown, $drawdownBundle);
+    $this->eventDispatcher->dispatch(DrawdownPreUpdateEvent::class, $event);
+
+    $this->api4->updateEntity(
+      FundingDrawdown::getEntityName(),
+      $drawdown->getId(),
+      $drawdown->toArray()
+    );
+
+    $event = new DrawdownUpdatedEvent($previousDrawdown, $drawdownBundle);
+    $this->eventDispatcher->dispatch(DrawdownUpdatedEvent::class, $event);
   }
 
 }

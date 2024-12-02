@@ -17,12 +17,12 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\SonstigeAktivitaet\Application\Task;
+namespace Civi\Funding\SonstigeAktivitaet\Task;
 
-use Civi\Funding\ApplicationProcess\Task\AbstractApplicationApplyTaskHandler;
+use Civi\Funding\ApplicationProcess\Task\AbstractApplicationReviewCalculativeTaskHandler;
 use Civi\Funding\SonstigeAktivitaet\Traits\AVK1SupportedFundingCaseTypesTrait;
 
-final class AVK1ApplicationApplyTaskHandler extends AbstractApplicationApplyTaskHandler {
+final class AVK1ApplicationReviewCalculativeTaskHandler extends AbstractApplicationReviewCalculativeTaskHandler {
 
   use AVK1SupportedFundingCaseTypesTrait;
 

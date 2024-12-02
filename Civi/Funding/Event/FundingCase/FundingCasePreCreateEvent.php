@@ -19,44 +19,16 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Event\FundingCase;
 
-use Civi\Funding\Entity\FundingCaseEntity;
-use Civi\Funding\Entity\FundingCaseTypeEntity;
-use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\Entity\FundingCaseBundle;
+use Civi\Funding\Entity\Traits\FundingCaseBundleTrait;
 use Symfony\Contracts\EventDispatcher\Event;
 
 final class FundingCasePreCreateEvent extends Event {
 
-  private int $contactId;
+  use FundingCaseBundleTrait;
 
-  private FundingCaseEntity $fundingCase;
-
-  private FundingCaseTypeEntity $fundingCaseType;
-
-  private FundingProgramEntity $fundingProgram;
-
-  public function __construct(int $contactId, FundingCaseEntity $fundingCase,
-    FundingProgramEntity $fundingProgram, FundingCaseTypeEntity $fundingCaseType
-  ) {
-    $this->contactId = $contactId;
-    $this->fundingCase = $fundingCase;
-    $this->fundingProgram = $fundingProgram;
-    $this->fundingCaseType = $fundingCaseType;
-  }
-
-  public function getContactId(): int {
-    return $this->contactId;
-  }
-
-  public function getFundingCase(): FundingCaseEntity {
-    return $this->fundingCase;
-  }
-
-  public function getFundingCaseType(): FundingCaseTypeEntity {
-    return $this->fundingCaseType;
-  }
-
-  public function getFundingProgram(): FundingProgramEntity {
-    return $this->fundingProgram;
+  public function __construct(FundingCaseBundle $fundingCaseBundle) {
+    $this->fundingCaseBundle = $fundingCaseBundle;
   }
 
 }

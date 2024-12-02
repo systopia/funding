@@ -30,6 +30,7 @@ use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\Funding\Fixtures\PayoutProcessFixture;
+use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\Util\RequestTestUtil;
 use Civi\RemoteTools\Api4\Api4;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -54,6 +55,7 @@ final class PayoutProcessManagerHeadlessTest extends AbstractFundingHeadlessTest
     $this->payoutProcessManager = new PayoutProcessManager(
       new Api4(),
       $this->eventDispatcherMock,
+      $this->createMock(FundingCaseManager::class),
     );
   }
 

@@ -37,6 +37,8 @@ use Webmozart\Assert\Assert;
  *    funding_case_id: int,
  *    application_process_id?: int,
  *    clearing_process_id?: int,
+ *    payout_process_id?: int,
+ *    drawdown_id?: int,
  *  }
  *
  * @phpstan-type fundingTaskT array{
@@ -74,6 +76,8 @@ use Webmozart\Assert\Assert;
  *   'funding_case_task.funding_case_id': int,
  *   'funding_application_process_task.application_process_id'?: int|null,
  *   'funding_clearing_process_task.clearing_process_id'?: int|null,
+ *   'funding_payout_process_task.payout_process_id'?: int|null,
+ *   'funding_drawdown_task.drawdown_id'?: int|null,
  * }
  *
  * status_id:name can be used on create or update, but is normally not returned
@@ -103,8 +107,11 @@ final class FundingTaskEntity extends AbstractActivityEntity {
 
   /**
    * @phpstan-param newFundingTaskT $values
+   *
+   * phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
    */
   public static function newTask(array $values): self {
+    // phpcs:enable
     $entityValues = [
       'subject' => $values['subject'],
       'details' => $values['details'] ?? NULL,
@@ -115,13 +122,26 @@ final class FundingTaskEntity extends AbstractActivityEntity {
       'funding_case_task.funding_case_id' => $values['funding_case_id'],
       'funding_application_process_task.application_process_id' => $values['application_process_id'] ?? NULL,
       'funding_clearing_process_task.clearing_process_id' => $values['clearing_process_id'] ?? NULL,
+      'funding_payout_process_task.payout_process_id' => $values['payout_process_id'] ?? NULL,
+      'funding_drawdown_task.drawdown_id' => $values['drawdown_id'] ?? NULL,
     ];
 
     if (isset($values['assignee_contact_ids'])) {
       $entityValues['assignee_contact_id'] = $values['assignee_contact_ids'];
     }
 
-    if (isset($values['clearing_process_id'])) {
+    if (isset($values['drawdown_id'])) {
+      Assert::integer(
+        $values['payout_process_id'] ?? NULL,
+        'Payout process ID is required for drawdown tasks'
+      );
+      $entityValues['activity_type_id:name'] = ActivityTypeNames::DRAWDOWN_TASK;
+      $entityValues['source_record_id'] = $values['drawdown_id'];
+    }
+    elseif (isset($values['payout_process_id'])) {
+      throw new \InvalidArgumentException('Payout process tasks are not supported');
+    }
+    elseif (isset($values['clearing_process_id'])) {
       Assert::integer(
         $values['application_process_id'] ?? NULL,
         'Application process ID is required for clearing process tasks'

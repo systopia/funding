@@ -22,7 +22,7 @@ declare(strict_types = 1);
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
-use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
+use Civi\Funding\DependencyInjection\Util\TaskServiceRegistrator;
 use Civi\Funding\IJB\Application\Actions\IJBApplicationActionsDeterminer;
 use Civi\Funding\IJB\Application\Actions\IJBApplicationActionStatusInfo;
 use Civi\Funding\IJB\Application\Actions\IJBApplicationStatusDeterminer;
@@ -37,8 +37,6 @@ use Civi\Funding\IJB\EventSubscriber\IJBAngularModuleSubscriber;
 use Civi\Funding\IJB\FundingCase\Actions\IJBCaseActionsDeterminer;
 use Civi\Funding\IJB\Report\IJBReportDataLoader;
 use Civi\Funding\IJB\Report\IJBReportFormFactory;
-use Civi\Funding\Task\Creator\ApplicationProcessTaskCreatorInterface;
-use Civi\Funding\Task\Modifier\ApplicationProcessTaskModifierInterface;
 
 $container->autowire(IJBApplicationSubmitActionsContainer::class)
   ->addTag(IJBApplicationSubmitActionsContainer::SERVICE_TAG);
@@ -72,20 +70,10 @@ $container->autowire(IJBReportDataLoader::class)
 $container->autowire(IJBReportFormFactory::class)
   ->addTag(IJBReportFormFactory::SERVICE_TAG);
 
-ServiceRegistrator::autowireAllImplementing(
+TaskServiceRegistrator::autowireAll(
   $container,
-  __DIR__ . '/../Civi/Funding/IJB/Application/Task',
-  'Civi\\Funding\\IJB\\Application\\Task',
-  ApplicationProcessTaskCreatorInterface::class,
-  [ApplicationProcessTaskCreatorInterface::class => []],
-);
-
-ServiceRegistrator::autowireAllImplementing(
-  $container,
-  __DIR__ . '/../Civi/Funding/IJB/Application/Task',
-  'Civi\\Funding\\IJB\\Application\\Task',
-  ApplicationProcessTaskModifierInterface::class,
-  [ApplicationProcessTaskModifierInterface::class => []]
+  __DIR__ . '/../Civi/Funding/IJB/Task',
+  'Civi\\Funding\\IJB\\Task'
 );
 
 $container->autowire(IJBAngularModuleSubscriber::class)

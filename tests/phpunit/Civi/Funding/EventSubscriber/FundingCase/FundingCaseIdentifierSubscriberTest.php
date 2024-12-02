@@ -20,9 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\EventSubscriber\FundingCase;
 
 use Civi\Api4\FundingCase;
-use Civi\Funding\EntityFactory\FundingCaseFactory;
-use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
-use Civi\Funding\EntityFactory\FundingProgramFactory;
+use Civi\Funding\EntityFactory\FundingCaseBundleFactory;
 use Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent;
 use Civi\Funding\FundingCase\FundingCaseIdentifierGeneratorInterface;
 use Civi\RemoteTools\Api4\Api4Interface;
@@ -72,25 +70,27 @@ final class FundingCaseIdentifierSubscriberTest extends TestCase {
   }
 
   public function testOnCreated(): void {
-    $fundingProgram = FundingProgramFactory::createFundingProgram();
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
-    $fundingCase = FundingCaseFactory::createFundingCase();
-    $event = new FundingCaseCreatedEvent(1, $fundingCase, $fundingProgram, $fundingCaseType);
+    $fundingCaseBundle = FundingCaseBundleFactory::create();
+    $event = new FundingCaseCreatedEvent($fundingCaseBundle);
 
     $this->fundingCaseIdentifierGeneratorMock->method('generateIdentifier')
-      ->with($fundingCase, $fundingCaseType, $fundingProgram)
+      ->with(
+        $fundingCaseBundle->getFundingCase(),
+        $fundingCaseBundle->getFundingCaseType(),
+        $fundingCaseBundle->getFundingProgram()
+      )
       ->willReturn('generated');
 
     $this->api4Mock->expects(static::once())->method('updateEntity')
       ->with(
         FundingCase::getEntityName(),
-        $fundingCase->getId(),
+        $fundingCaseBundle->getFundingCase()->getId(),
         ['identifier' => 'generated'],
         ['checkPermissions' => FALSE],
       );
 
     $this->subscriber->onCreated($event);
-    static::assertSame('generated', $fundingCase->getIdentifier());
+    static::assertSame('generated', $fundingCaseBundle->getFundingCase()->getIdentifier());
   }
 
 }

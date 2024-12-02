@@ -4,30 +4,30 @@ declare(strict_types = 1);
 namespace Civi\Funding\Task\EventSubscriber;
 
 use Civi\Funding\ActivityTypeNames;
-use Civi\Funding\EntityFactory\FundingCaseBundleFactory;
-use Civi\Funding\EntityFactory\FundingCaseFactory;
+use Civi\Funding\EntityFactory\DrawdownBundleFactory;
+use Civi\Funding\EntityFactory\DrawdownFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingTaskFactory;
-use Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent;
-use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
-use Civi\Funding\Task\Creator\FundingCaseTaskCreatorInterface;
+use Civi\Funding\Event\PayoutProcess\DrawdownCreatedEvent;
+use Civi\Funding\Event\PayoutProcess\DrawdownUpdatedEvent;
+use Civi\Funding\Task\Creator\DrawdownTaskCreatorInterface;
 use Civi\Funding\Task\FundingTaskManager;
-use Civi\Funding\Task\Modifier\FundingCaseTaskModifierInterface;
+use Civi\Funding\Task\Modifier\DrawdownTaskModifierInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Civi\Funding\Task\EventSubscriber\FundingCaseTaskSubscriber
+ * @covers \Civi\Funding\Task\EventSubscriber\DrawdownTaskSubscriber
  */
-final class FundingCaseTaskSubscriberTest extends TestCase {
+final class DrawdownTaskSubscriberTest extends TestCase {
 
   /**
-   * @var \Civi\Funding\Task\EventSubscriber\FundingCaseTaskSubscriber
+   * @var \Civi\Funding\Task\EventSubscriber\DrawdownTaskSubscriber
    */
-  private FundingCaseTaskSubscriber $subscriber;
+  private DrawdownTaskSubscriber $subscriber;
 
   /**
-   * @var \Civi\Funding\Task\Creator\FundingCaseTaskCreatorInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\Task\Creator\DrawdownTaskCreatorInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $taskCreatorMock;
 
@@ -37,16 +37,16 @@ final class FundingCaseTaskSubscriberTest extends TestCase {
   private MockObject $taskManagerMock;
 
   /**
-   * @var \Civi\Funding\Task\Modifier\FundingCaseTaskModifierInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\Task\Modifier\DrawdownTaskModifierInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $taskModifierMock;
 
   protected function setUp(): void {
     parent::setUp();
     $this->taskManagerMock = $this->createMock(FundingTaskManager::class);
-    $this->taskCreatorMock = $this->createMock(FundingCaseTaskCreatorInterface::class);
-    $this->taskModifierMock = $this->createMock(FundingCaseTaskModifierInterface::class);
-    $this->subscriber = new FundingCaseTaskSubscriber(
+    $this->taskCreatorMock = $this->createMock(DrawdownTaskCreatorInterface::class);
+    $this->taskModifierMock = $this->createMock(DrawdownTaskModifierInterface::class);
+    $this->subscriber = new DrawdownTaskSubscriber(
       $this->taskManagerMock,
       [FundingCaseTypeFactory::DEFAULT_NAME => [$this->taskCreatorMock]],
       [FundingCaseTypeFactory::DEFAULT_NAME => [$this->taskModifierMock]]
@@ -55,8 +55,8 @@ final class FundingCaseTaskSubscriberTest extends TestCase {
 
   public function testGetSubscribedEvents(): void {
     $expectedSubscriptions = [
-      FundingCaseCreatedEvent::class => 'onCreated',
-      FundingCaseUpdatedEvent::class => 'onUpdated',
+      DrawdownCreatedEvent::class => 'onCreated',
+      DrawdownUpdatedEvent::class => 'onUpdated',
     ];
 
     static::assertEquals($expectedSubscriptions, $this->subscriber::getSubscribedEvents());
@@ -67,8 +67,8 @@ final class FundingCaseTaskSubscriberTest extends TestCase {
   }
 
   public function testOnCreated(): void {
-    $fundingCaseBundle = FundingCaseBundleFactory::create();
-    $event = new FundingCaseCreatedEvent($fundingCaseBundle);
+    $drawdownBundle = DrawdownBundleFactory::create();
+    $event = new DrawdownCreatedEvent($drawdownBundle);
     $task = FundingTaskFactory::create();
 
     $this->taskCreatorMock->expects(static::once())->method('createTasksOnNew')
@@ -81,8 +81,13 @@ final class FundingCaseTaskSubscriberTest extends TestCase {
   }
 
   public function testOnCreatedWithoutCreators(): void {
-    $fundingCaseBundle = FundingCaseBundleFactory::create([], ['name' => 'SomeCaseType']);
-    $event = new FundingCaseCreatedEvent($fundingCaseBundle);
+    $drawdownBundle = DrawdownBundleFactory::create(
+      [],
+      [],
+      [],
+      ['name' => 'SomeCaseType']
+    );
+    $event = new DrawdownCreatedEvent($drawdownBundle);
 
     $this->taskCreatorMock->expects(static::never())->method('createTasksOnNew');
 
@@ -90,23 +95,23 @@ final class FundingCaseTaskSubscriberTest extends TestCase {
   }
 
   public function testOnUpdated(): void {
-    $fundingCaseBundle = FundingCaseBundleFactory::create();
-    $previousFundingCase = FundingCaseFactory::createFundingCase();
-    $event = new FundingCaseUpdatedEvent($previousFundingCase, $fundingCaseBundle);
+    $drawdownBundle = DrawdownBundleFactory::create();
+    $previousDrawdown = DrawdownFactory::create();
+    $event = new DrawdownUpdatedEvent($previousDrawdown, $drawdownBundle);
 
     $existingTask = FundingTaskFactory::create(['subject' => 'Existing Task']);
     $newTask = FundingTaskFactory::create(['subject' => 'New Task']);
 
     $this->taskManagerMock->expects(static::once())->method('getOpenTasks')
-      ->with(ActivityTypeNames::FUNDING_CASE_TASK, $fundingCaseBundle->getFundingCase()->getId())
+      ->with(ActivityTypeNames::DRAWDOWN_TASK, $drawdownBundle->getDrawdown()->getId())
       ->willReturn([$existingTask]);
     $this->taskModifierMock->expects(static::once())->method('modifyTask')
-      ->with($existingTask, $fundingCaseBundle, $previousFundingCase)
+      ->with($existingTask, $drawdownBundle, $previousDrawdown)
       ->willReturn(TRUE);
     $this->taskManagerMock->expects(static::once())->method('updateTask')->with($existingTask);
 
     $this->taskCreatorMock->expects(static::once())->method('createTasksOnChange')
-      ->with($fundingCaseBundle, $previousFundingCase)
+      ->with($drawdownBundle, $previousDrawdown)
       ->willReturn([$newTask]);
     $this->taskManagerMock->expects(static::once())->method('addTask')
       ->with($newTask)
@@ -116,14 +121,19 @@ final class FundingCaseTaskSubscriberTest extends TestCase {
   }
 
   public function testOnUpdatedWithoutCreatorsOrModifiers(): void {
-    $fundingCaseBundle = FundingCaseBundleFactory::create([], ['name' => 'SomeCaseType']);
-    $previousFundingCase = FundingCaseFactory::createFundingCase();
-    $event = new FundingCaseUpdatedEvent($previousFundingCase, $fundingCaseBundle);
+    $drawdownBundle = DrawdownBundleFactory::create(
+      [],
+      [],
+      [],
+      ['name' => 'SomeCaseType']
+    );
+    $previousDrawdown = DrawdownFactory::create();
+    $event = new DrawdownUpdatedEvent($previousDrawdown, $drawdownBundle);
 
     $existingTask = FundingTaskFactory::create(['subject' => 'Existing Task']);
 
     $this->taskManagerMock->expects(static::once())->method('getOpenTasks')
-      ->with(ActivityTypeNames::FUNDING_CASE_TASK, $fundingCaseBundle->getFundingCase()->getId())
+      ->with(ActivityTypeNames::DRAWDOWN_TASK, $drawdownBundle->getDrawdown()->getId())
       ->willReturn([$existingTask]);
     $this->taskModifierMock->expects(static::never())->method('modifyTask');
     $this->taskManagerMock->expects(static::never())->method('updateTask');

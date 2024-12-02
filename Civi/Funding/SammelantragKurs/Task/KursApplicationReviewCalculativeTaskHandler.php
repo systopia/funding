@@ -17,24 +17,13 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Task\Creator;
+namespace Civi\Funding\SammelantragKurs\Task;
 
-use Civi\Funding\Entity\FundingCaseBundle;
-use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\ApplicationProcess\Task\AbstractApplicationReviewCalculativeTaskHandler;
+use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
 
-interface FundingCaseTaskCreatorInterface {
+final class KursApplicationReviewCalculativeTaskHandler extends AbstractApplicationReviewCalculativeTaskHandler {
 
-  /**
-   * @phpstan-return iterable<\Civi\Funding\Entity\FundingTaskEntity>
-   */
-  public function createTasksOnChange(
-    FundingCaseBundle $fundingCaseBundle,
-    FundingCaseEntity $previousFundingCase
-  ): iterable;
-
-  /**
-   * @phpstan-return iterable<\Civi\Funding\Entity\FundingTaskEntity>
-   */
-  public function createTasksOnNew(FundingCaseBundle $fundingCaseBundle): iterable;
+  use KursSupportedFundingCaseTypesTrait;
 
 }

@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\PayoutProcess;
 
-use Civi\Funding\EntityFactory\DrawdownFactory;
+use Civi\Funding\EntityFactory\DrawdownBundleFactory;
 use Civi\Funding\Event\PayoutProcess\DrawdownAcceptedEvent;
 use Civi\Funding\PayoutProcess\DrawdownDocumentCreator;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -56,11 +56,11 @@ final class DrawdownDocumentSubscriberTest extends TestCase {
   }
 
   public function testOnAccepted(): void {
-    $drawdown = DrawdownFactory::create(['status' => 'accepted']);
+    $drawdownBundle = DrawdownBundleFactory::create(['status' => 'accepted']);
 
     $this->drawdownDocumentCreatorMock->expects(static::once())->method('createDrawdownDocument')
-      ->with($drawdown);
-    $this->subscriber->onAccepted(new DrawdownAcceptedEvent($drawdown));
+      ->with($drawdownBundle->getDrawdown());
+    $this->subscriber->onAccepted(new DrawdownAcceptedEvent($drawdownBundle));
   }
 
 }
