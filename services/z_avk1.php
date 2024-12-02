@@ -22,7 +22,7 @@ declare(strict_types = 1);
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
-use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
+use Civi\Funding\DependencyInjection\Util\TaskServiceRegistrator;
 use Civi\Funding\SonstigeAktivitaet\Application\Actions\AVK1ApplicationActionsDeterminer;
 use Civi\Funding\SonstigeAktivitaet\Application\Actions\AVK1ApplicationActionStatusInfo;
 use Civi\Funding\SonstigeAktivitaet\Application\Actions\AVK1ApplicationStatusDeterminer;
@@ -38,8 +38,6 @@ use Civi\Funding\SonstigeAktivitaet\EventSubscriber\AVK1AngularModuleSubscriber;
 use Civi\Funding\SonstigeAktivitaet\FundingCase\Actions\AVK1CaseActionsDeterminer;
 use Civi\Funding\SonstigeAktivitaet\Report\AVK1ReportDataLoader;
 use Civi\Funding\SonstigeAktivitaet\Report\AVK1ReportFormFactory;
-use Civi\Funding\Task\Creator\ApplicationProcessTaskCreatorInterface;
-use Civi\Funding\Task\Modifier\ApplicationProcessTaskModifierInterface;
 
 $container->autowire(AVK1ApplicationSubmitActionsContainer::class)
   ->addTag(AVK1ApplicationSubmitActionsContainer::SERVICE_TAG);
@@ -72,20 +70,10 @@ $container->autowire(AVK1ReportDataLoader::class)
 $container->autowire(AVK1ReportFormFactory::class)
   ->addTag(AVK1ReportFormFactory::SERVICE_TAG);
 
-ServiceRegistrator::autowireAllImplementing(
+TaskServiceRegistrator::autowireAll(
   $container,
-  __DIR__ . '/../Civi/Funding/SonstigeAktivitaet/Application/Task',
-  'Civi\\Funding\\SonstigeAktivitaet\\Application\\Task',
-  ApplicationProcessTaskCreatorInterface::class,
-  [ApplicationProcessTaskCreatorInterface::class => []],
-);
-
-ServiceRegistrator::autowireAllImplementing(
-  $container,
-  __DIR__ . '/../Civi/Funding/SonstigeAktivitaet/Application/Task',
-  'Civi\\Funding\\SonstigeAktivitaet\\Application\\Task',
-  ApplicationProcessTaskModifierInterface::class,
-  [ApplicationProcessTaskModifierInterface::class => []]
+  __DIR__ . '/../Civi/Funding/SonstigeAktivitaet/Task',
+  'Civi\\Funding\\SonstigeAktivitaet\\Task'
 );
 
 $container->autowire(AVK1AngularModuleSubscriber::class)

@@ -17,24 +17,13 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Task\Creator;
+namespace Civi\Funding\IJB\Task;
 
-use Civi\Funding\Entity\FundingCaseBundle;
-use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\ApplicationProcess\Task\AbstractApplicationReviewContentTaskHandler;
+use Civi\Funding\IJB\Traits\IJBSupportedFundingCaseTypesTrait;
 
-interface FundingCaseTaskCreatorInterface {
+final class IJBApplicationReviewContentTaskHandler extends AbstractApplicationReviewContentTaskHandler {
 
-  /**
-   * @phpstan-return iterable<\Civi\Funding\Entity\FundingTaskEntity>
-   */
-  public function createTasksOnChange(
-    FundingCaseBundle $fundingCaseBundle,
-    FundingCaseEntity $previousFundingCase
-  ): iterable;
-
-  /**
-   * @phpstan-return iterable<\Civi\Funding\Entity\FundingTaskEntity>
-   */
-  public function createTasksOnNew(FundingCaseBundle $fundingCaseBundle): iterable;
+  use IJBSupportedFundingCaseTypesTrait;
 
 }
