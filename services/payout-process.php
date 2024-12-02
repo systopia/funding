@@ -31,6 +31,7 @@ use Civi\Funding\PayoutProcess\PayoutProcessManager;
 use Civi\Funding\PayoutProcess\Token\DrawdownTokenNameExtractor;
 use Civi\Funding\PayoutProcess\Token\DrawdownTokenResolver;
 use Civi\Funding\Validation\ConcreteEntityValidatorInterface;
+use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 $container->autowire(DrawdownManager::class);
@@ -100,4 +101,12 @@ ServiceRegistrator::autowireAllImplementing(
   'Civi\\Funding\\PayoutProcess\\Validator',
   ConcreteEntityValidatorInterface::class,
   ['funding.validator.entity' => []]
+);
+
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/PayoutProcess/Api4/ActionHandler',
+  'Civi\\Funding\\PayoutProcess\\Api4\\ActionHandler',
+  ActionHandlerInterface::class,
+  [ActionHandlerInterface::SERVICE_TAG => []]
 );

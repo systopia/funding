@@ -19,19 +19,16 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Event\PayoutProcess;
 
-use Civi\Funding\Entity\DrawdownEntity;
+use Civi\Funding\Entity\DrawdownBundle;
+use Civi\Funding\Entity\Traits\DrawdownBundleTrait;
 use Symfony\Contracts\EventDispatcher\Event;
 
 final class DrawdownAcceptedEvent extends Event {
 
-  private DrawdownEntity $drawdown;
+  use DrawdownBundleTrait;
 
-  public function __construct(DrawdownEntity $drawdown) {
-    $this->drawdown = $drawdown;
-  }
-
-  public function getDrawdown(): DrawdownEntity {
-    return $this->drawdown;
+  public function __construct(DrawdownBundle $drawdownBundle) {
+    $this->drawdownBundle = $drawdownBundle;
   }
 
 }

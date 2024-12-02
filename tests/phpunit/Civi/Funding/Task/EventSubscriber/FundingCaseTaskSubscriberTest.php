@@ -4,9 +4,9 @@ declare(strict_types = 1);
 namespace Civi\Funding\Task\EventSubscriber;
 
 use Civi\Funding\ActivityTypeNames;
+use Civi\Funding\EntityFactory\FundingCaseBundleFactory;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
-use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\EntityFactory\FundingTaskFactory;
 use Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent;
 use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
@@ -67,10 +67,8 @@ final class FundingCaseTaskSubscriberTest extends TestCase {
   }
 
   public function testOnCreated(): void {
-    $fundingProgram = FundingProgramFactory::createFundingProgram();
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
-    $fundingCase = FundingCaseFactory::createFundingCase();
-    $event = new FundingCaseCreatedEvent(12, $fundingCase, $fundingProgram, $fundingCaseType);
+    $fundingCaseBundle = FundingCaseBundleFactory::create();
+    $event = new FundingCaseCreatedEvent($fundingCaseBundle);
     $task = FundingTaskFactory::create();
 
     $this->taskCreatorMock->expects(static::once())->method('createTasksOnNew')
@@ -83,10 +81,8 @@ final class FundingCaseTaskSubscriberTest extends TestCase {
   }
 
   public function testOnCreatedWithoutCreators(): void {
-    $fundingProgram = FundingProgramFactory::createFundingProgram();
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType(['name' => 'SomeCaseType']);
-    $fundingCase = FundingCaseFactory::createFundingCase();
-    $event = new FundingCaseCreatedEvent(12, $fundingCase, $fundingProgram, $fundingCaseType);
+    $fundingCaseBundle = FundingCaseBundleFactory::create([], ['name' => 'SomeCaseType']);
+    $event = new FundingCaseCreatedEvent($fundingCaseBundle);
 
     $this->taskCreatorMock->expects(static::never())->method('createTasksOnNew');
 
@@ -94,24 +90,23 @@ final class FundingCaseTaskSubscriberTest extends TestCase {
   }
 
   public function testOnUpdated(): void {
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
-    $fundingCase = FundingCaseFactory::createFundingCase();
+    $fundingCaseBundle = FundingCaseBundleFactory::create();
     $previousFundingCase = FundingCaseFactory::createFundingCase();
-    $event = new FundingCaseUpdatedEvent($previousFundingCase, $fundingCase, $fundingCaseType);
+    $event = new FundingCaseUpdatedEvent($previousFundingCase, $fundingCaseBundle);
 
     $existingTask = FundingTaskFactory::create(['subject' => 'Existing Task']);
     $newTask = FundingTaskFactory::create(['subject' => 'New Task']);
 
     $this->taskManagerMock->expects(static::once())->method('getOpenTasks')
-      ->with(ActivityTypeNames::FUNDING_CASE_TASK, $fundingCase->getId())
+      ->with(ActivityTypeNames::FUNDING_CASE_TASK, $fundingCaseBundle->getFundingCase()->getId())
       ->willReturn([$existingTask]);
     $this->taskModifierMock->expects(static::once())->method('modifyTask')
-      ->with($existingTask, $fundingCase, $previousFundingCase)
+      ->with($existingTask, $fundingCaseBundle, $previousFundingCase)
       ->willReturn(TRUE);
     $this->taskManagerMock->expects(static::once())->method('updateTask')->with($existingTask);
 
     $this->taskCreatorMock->expects(static::once())->method('createTasksOnChange')
-      ->with($fundingCase, $previousFundingCase)
+      ->with($fundingCaseBundle, $previousFundingCase)
       ->willReturn([$newTask]);
     $this->taskManagerMock->expects(static::once())->method('addTask')
       ->with($newTask)
@@ -121,15 +116,14 @@ final class FundingCaseTaskSubscriberTest extends TestCase {
   }
 
   public function testOnUpdatedWithoutCreatorsOrModifiers(): void {
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType(['name' => 'SomeCaseType']);
-    $fundingCase = FundingCaseFactory::createFundingCase();
+    $fundingCaseBundle = FundingCaseBundleFactory::create([], ['name' => 'SomeCaseType']);
     $previousFundingCase = FundingCaseFactory::createFundingCase();
-    $event = new FundingCaseUpdatedEvent($previousFundingCase, $fundingCase, $fundingCaseType);
+    $event = new FundingCaseUpdatedEvent($previousFundingCase, $fundingCaseBundle);
 
     $existingTask = FundingTaskFactory::create(['subject' => 'Existing Task']);
 
     $this->taskManagerMock->expects(static::once())->method('getOpenTasks')
-      ->with(ActivityTypeNames::FUNDING_CASE_TASK, $fundingCase->getId())
+      ->with(ActivityTypeNames::FUNDING_CASE_TASK, $fundingCaseBundle->getFundingCase()->getId())
       ->willReturn([$existingTask]);
     $this->taskModifierMock->expects(static::never())->method('modifyTask');
     $this->taskManagerMock->expects(static::never())->method('updateTask');
