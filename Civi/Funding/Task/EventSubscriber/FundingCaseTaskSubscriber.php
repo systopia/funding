@@ -64,7 +64,7 @@ class FundingCaseTaskSubscriber implements EventSubscriberInterface {
    */
   public function onCreated(FundingCaseCreatedEvent $event): void {
     foreach ($this->taskCreators[$event->getFundingCaseType()->getName()] ?? [] as $taskCreator) {
-      foreach ($taskCreator->createTasksOnNew($event->getFundingCase()) as $task) {
+      foreach ($taskCreator->createTasksOnNew($event->getFundingCaseBundle()) as $task) {
         $task->setValues($task->toArray() +
           ['target_contact_id' => [$event->getFundingCase()->getRecipientContactId()]]
         );
@@ -84,7 +84,7 @@ class FundingCaseTaskSubscriber implements EventSubscriberInterface {
     foreach ($openTasks as $task) {
       $modified = FALSE;
       foreach ($this->taskModifiers[$event->getFundingCaseType()->getName()] ?? [] as $taskModifier) {
-        if ($taskModifier->modifyTask($task, $event->getFundingCase(), $event->getPreviousFundingCase())) {
+        if ($taskModifier->modifyTask($task, $event->getFundingCaseBundle(), $event->getPreviousFundingCase())) {
           $modified = TRUE;
         }
       }
@@ -94,7 +94,7 @@ class FundingCaseTaskSubscriber implements EventSubscriberInterface {
     }
 
     foreach ($this->taskCreators[$event->getFundingCaseType()->getName()] ?? [] as $taskCreator) {
-      $tasks = $taskCreator->createTasksOnChange($event->getFundingCase(), $event->getPreviousFundingCase());
+      $tasks = $taskCreator->createTasksOnChange($event->getFundingCaseBundle(), $event->getPreviousFundingCase());
       foreach ($tasks as $task) {
         $task->setValues($task->toArray() +
           ['target_contact_id' => [$event->getFundingCase()->getRecipientContactId()]]

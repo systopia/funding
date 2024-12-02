@@ -23,6 +23,7 @@ use Civi\Api4\FundingCase;
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent;
 use Civi\Funding\Event\FundingCase\FundingCaseDeletedEvent;
 use Civi\Funding\Event\FundingCase\FundingCasePreCreateEvent;
@@ -30,8 +31,10 @@ use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
 use Civi\Funding\FileTypeNames;
 use Civi\Funding\FundingAttachmentManagerInterface;
 use Civi\Funding\FundingProgram\FundingCaseTypeManager;
+use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\Funding\Util\Uuid;
 use Civi\RemoteTools\Api4\Api4Interface;
+use Civi\RemoteTools\Api4\Query\Comparison;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
 use Civi\RemoteTools\Api4\Query\ConditionInterface;
 use Webmozart\Assert\Assert;
@@ -49,6 +52,8 @@ class FundingCaseManager {
 
   private FundingCaseTypeManager $fundingCaseTypeManager;
 
+  private FundingProgramManager $fundingProgramManager;
+
   /**
    * @phpstan-var array<int, bool>
    */
@@ -63,12 +68,14 @@ class FundingCaseManager {
     Api4Interface $api4,
     FundingAttachmentManagerInterface $attachmentManager,
     CiviEventDispatcherInterface $eventDispatcher,
-    FundingCaseTypeManager $fundingCaseTypeManager
+    FundingCaseTypeManager $fundingCaseTypeManager,
+    FundingProgramManager $fundingProgramManager
   ) {
     $this->api4 = $api4;
     $this->attachmentManager = $attachmentManager;
     $this->eventDispatcher = $eventDispatcher;
     $this->fundingCaseTypeManager = $fundingCaseTypeManager;
+    $this->fundingProgramManager = $fundingProgramManager;
   }
 
   public function getAmountRemaining(int $fundingCaseId): float {
@@ -78,6 +85,23 @@ class FundingCaseManager {
     ])->single();
 
     return ($values['amount_admitted'] ?? 0.0) - $values['amount_paid_out'];
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function getBundle(int $id): ?FundingCaseBundle {
+    $fundingCase = $this->get($id);
+    if (NULL === $fundingCase) {
+      return NULL;
+    }
+
+    $fundingCaseType = $this->fundingCaseTypeManager->get($fundingCase->getFundingCaseTypeId());
+    Assert::notNull($fundingCaseType);
+    $fundingProgram = $this->fundingProgramManager->get($fundingCase->getFundingProgramId());
+    Assert::notNull($fundingProgram);
+
+    return new FundingCaseBundle($fundingCase, $fundingCaseType, $fundingProgram);
   }
 
   /**
@@ -138,10 +162,7 @@ class FundingCaseManager {
     ]);
 
     $event = new FundingCasePreCreateEvent(
-      $contactId,
-      $fundingCase,
-      $values['funding_program'],
-      $values['funding_case_type']
+      new FundingCaseBundle($fundingCase, $values['funding_case_type'], $values['funding_program'])
     );
     $this->eventDispatcher->dispatch(FundingCasePreCreateEvent::class, $event);
 
@@ -150,8 +171,13 @@ class FundingCaseManager {
 
     $fundingCase = FundingCaseEntity::singleFromApiResult($this->api4->executeAction($action))->reformatDates();
 
-    $event = new FundingCaseCreatedEvent($contactId, $fundingCase,
-      $values['funding_program'], $values['funding_case_type']);
+    $event = new FundingCaseCreatedEvent(
+      new FundingCaseBundle(
+        $fundingCase,
+        $values['funding_case_type'],
+        $values['funding_program']
+      )
+    );
     $this->eventDispatcher->dispatch(FundingCaseCreatedEvent::class, $event);
 
     // Fetch permissions
@@ -182,10 +208,10 @@ class FundingCaseManager {
       return $this->fundingCases[$id];
     }
 
-    $action = FundingCase::get(FALSE)
-      ->addWhere('id', '=', $id);
-
-    return $this->getFundingCaseFromApiResultOrNull($this->api4->executeAction($action));
+    return $this->getFundingCaseFromApiResultOrNull($this->api4->getEntities(
+      FundingCase::getEntityName(),
+      Comparison::new('id', '=', $id)
+    ));
   }
 
   /**
@@ -243,9 +269,14 @@ class FundingCaseManager {
       ->setValues($fundingCase->toArray());
     $this->api4->executeAction($action);
 
-    /** @var \Civi\Funding\Entity\FundingCaseTypeEntity $fundingCaseType */
     $fundingCaseType = $this->fundingCaseTypeManager->get($fundingCase->getFundingCaseTypeId());
-    $event = new FundingCaseUpdatedEvent($previousFundingCase, $fundingCase, $fundingCaseType);
+    Assert::notNull($fundingCaseType);
+    $fundingProgram = $this->fundingProgramManager->get($fundingCase->getFundingProgramId());
+    Assert::notNull($fundingProgram);
+    $event = new FundingCaseUpdatedEvent(
+      $previousFundingCase,
+      new FundingCaseBundle($fundingCase, $fundingCaseType, $fundingProgram)
+    );
     $this->eventDispatcher->dispatch(FundingCaseUpdatedEvent::class, $event);
   }
 
