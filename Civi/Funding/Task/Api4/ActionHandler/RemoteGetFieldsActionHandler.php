@@ -21,6 +21,8 @@ namespace Civi\Funding\Task\Api4\ActionHandler;
 
 use Civi\Api4\FundingTask;
 use Civi\Funding\Api4\ActionHandler\AbstractRemoteFundingGetFieldsActionHandler;
+use Civi\RemoteTools\Api4\Action\AbstractRemoteGetFieldsAction;
+use CRM_Funding_ExtensionUtil as E;
 
 final class RemoteGetFieldsActionHandler extends AbstractRemoteFundingGetFieldsActionHandler {
 
@@ -28,6 +30,33 @@ final class RemoteGetFieldsActionHandler extends AbstractRemoteFundingGetFieldsA
 
   protected function getEntityName(): string {
     return FundingTask::getEntityName();
+  }
+
+  public function getFields(AbstractRemoteGetFieldsAction $action): array {
+    $fields = parent::getFields($action);
+    $fields[] = [
+      'type' => 'Extra',
+      'name' => 'funding_case_task.funding_case_id.funding_case_type_id.is_combined_application',
+      'nullable' => FALSE,
+      'title' => E::ts('Is Combined Application'),
+      'data_type' => 'Boolean',
+      'input_type' => 'CheckBox',
+    ];
+
+    $fields[] = [
+      'type' => 'Extra',
+      'name' => 'funding_case_task.funding_case_id.funding_case_type_id.application_process_label',
+      'nullable' => TRUE,
+      'title' => E::ts('Application Process Label'),
+      'description' => E::ts('Used for combined applications'),
+      'data_type' => 'String',
+      'input_type' => 'Text',
+      'input_attrs' => [
+        'maxlength' => 255,
+      ],
+    ];
+
+    return $fields;
   }
 
 }
