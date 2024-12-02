@@ -17,24 +17,28 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Task\Creator;
+namespace Civi\Funding\Event\PayoutProcess;
 
-use Civi\Funding\Entity\FundingCaseBundle;
-use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\DrawdownEntity;
+use Civi\Funding\Entity\DrawdownBundle;
+use Civi\Funding\Entity\Traits\DrawdownBundleTrait;
 
-interface FundingCaseTaskCreatorInterface {
+final class DrawdownUpdatedEvent {
 
-  /**
-   * @phpstan-return iterable<\Civi\Funding\Entity\FundingTaskEntity>
-   */
-  public function createTasksOnChange(
-    FundingCaseBundle $fundingCaseBundle,
-    FundingCaseEntity $previousFundingCase
-  ): iterable;
+  use DrawdownBundleTrait;
 
-  /**
-   * @phpstan-return iterable<\Civi\Funding\Entity\FundingTaskEntity>
-   */
-  public function createTasksOnNew(FundingCaseBundle $fundingCaseBundle): iterable;
+  private DrawdownEntity $previousDrawdown;
+
+  public function __construct(
+    DrawdownEntity $previousDrawdown,
+    DrawdownBundle $drawdownBundle
+  ) {
+    $this->previousDrawdown = $previousDrawdown;
+    $this->drawdownBundle = $drawdownBundle;
+  }
+
+  public function getPreviousDrawdown(): DrawdownEntity {
+    return $this->previousDrawdown;
+  }
 
 }

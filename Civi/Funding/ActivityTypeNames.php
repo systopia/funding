@@ -20,13 +20,15 @@ declare(strict_types = 1);
 namespace Civi\Funding;
 
 /**
- * @phpstan-type taskNameT ActivityTypeNames::APPLICATION_PROCESS_TASK|ActivityTypeNames::CLEARING_PROCESS_TASK|ActivityTypeNames::FUNDING_CASE_TASK
+ * @phpstan-type taskNameT ActivityTypeNames::APPLICATION_PROCESS_TASK|ActivityTypeNames::CLEARING_PROCESS_TASK|ActivityTypeNames::DRAWDOWN_TASK|ActivityTypeNames::FUNDING_CASE_TASK
  */
 final class ActivityTypeNames {
 
   public const APPLICATION_PROCESS_TASK = 'funding_application_process_task';
 
   public const CLEARING_PROCESS_TASK = 'funding_clearing_process_task';
+
+  public const DRAWDOWN_TASK = 'funding_drawdown_task';
 
   public const FUNDING_APPLICATION_CREATE = 'funding_application_create';
 
@@ -59,6 +61,7 @@ final class ActivityTypeNames {
     return [
       self::APPLICATION_PROCESS_TASK,
       self::CLEARING_PROCESS_TASK,
+      self::DRAWDOWN_TASK,
       self::FUNDING_CASE_TASK,
     ];
   }
