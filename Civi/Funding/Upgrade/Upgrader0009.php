@@ -22,6 +22,7 @@ namespace Civi\Funding\Upgrade;
 use Civi\Api4\Activity;
 use Civi\Api4\CustomField;
 use Civi\Api4\CustomGroup;
+use Civi\Api4\EntityActivity;
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\OptionGroup;
 use Civi\Api4\OptionValue;
@@ -31,7 +32,7 @@ use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
 
-final class Upgrader0009 {
+final class Upgrader0009 implements UpgraderInterface {
 
   private Api4Interface $api4;
 
@@ -50,7 +51,7 @@ final class Upgrader0009 {
   /**
    * External tasks weren't used in any way so we delete existing ones.
    *
-   * @throws \Civi\API\Exception\NotImplementedException
+   * @throws \CRM_Core_Exception
    */
   private function deleteExternalTasks(): void {
     $this->api4->deleteEntities(
@@ -65,7 +66,7 @@ final class Upgrader0009 {
   }
 
   /**
-   * @throws \Civi\API\Exception\NotImplementedException
+   * @throws \CRM_Core_Exception
    */
   private function migrateTasks(): void {
     $this->deleteExternalTasks();
@@ -77,31 +78,31 @@ final class Upgrader0009 {
    */
   private function migrateInternalTasks(): void {
     $action = Activity::get(FALSE)
-      ->addJoin(FundingApplicationProcess::getEntityName() . ' AS as', 'INNER', 'EntityActivity')
+      ->addJoin(FundingApplicationProcess::getEntityName() . ' AS ap', 'INNER', 'EntityActivity')
       ->addSelect(
         '*',
         'funding_application_task.type',
-        'ap.id AS funding_application_process_task.application_process_id',
-        'ap.funding_case_id AS funding_case_task.funding_case_id',
+        'ap.id',
+        'ap.funding_case_id',
       )
       ->addWhere('activity_type_id:name', '=', 'funding_application_task_internal');
 
     $tasks = ActivityEntity::allFromApiResult($this->api4->executeAction($action));
     foreach ($tasks as $task) {
-      $values = $task->toArray();
-      unset($values['activity_type_id:name']);
-      $values['activity_type_id:name'] = ActivityTypeNames::APPLICATION_PROCESS_TASK;
+      $this->api4->updateEntity(Activity::getEntityName(), $task->getId(), [
+        'activity_type_id:name' => ActivityTypeNames::APPLICATION_PROCESS_TASK,
+        // Possible types: 'review_calculative' and 'review_content'. These are
+        // used again in the abstract application task handlers. However, a
+        // funding case type that don't have handlers that take care of these
+        // tasks will result in tasks that won't be changed automatically.
+        'funding_case_task.type' => $task->get('funding_application_task.type'),
+        'funding_case_task.funding_case_id' => $task->get('ap.funding_case_id'),
+        'funding_application_process_task.application_process_id' => $task->get('ap.id'),
+      ]);
 
-      // Possible types: 'review_calculative' and 'review_content'. These are
-      // used again in the abstract application task handlers. However, a
-      // funding case type that don't have handlers that take core of these
-      // tasks will result in tasks that won't be changed automatically.
-      // @phpstan-ignore offsetAccess.notFound
-      $values['funding_case_task.type'] = $values['funding_application_task.type'];
-      // @phpstan-ignore unset.offset
-      unset($values['funding_application_task.type']);
-
-      $this->api4->updateEntity(Activity::getEntityName(), $task->getId(), $values);
+      EntityActivity::disconnectActivity(FALSE)
+        ->setActivityId($task->getId())
+        ->execute();
     }
 
     $this->api4->deleteEntities(
@@ -118,6 +119,11 @@ final class Upgrader0009 {
       OptionGroup::getEntityName(),
       Comparison::new('name', '=', 'funding_application_task_type')
     );
+
+    $this->api4->deleteEntities(OptionValue::getEntityName(), CompositeCondition::fromFieldValuePairs([
+      'name' => 'funding_application_task_internal',
+      'option_group_id.name' => 'activity_type',
+    ]));
   }
 
 }
