@@ -43,6 +43,9 @@ else
     -i /var/www/html/sites/default/civicrm.settings.php
   civicrm-docker-install
 
+# Apply patch. Can be dropped once CiviCRM 5.80 is released.
+patch -p 1 -s -t -d sites/all/modules/civicrm/ < <(curl https://patch-diff.githubusercontent.com/raw/civicrm/civicrm-core/pull/31519.patch) ||:
+
   # Avoid this error:
   # The autoloader expected class "Civi\ActionSchedule\Mapping" to be defined in
   # file "[...]/Civi/ActionSchedule/Mapping.php". The file was found but the
