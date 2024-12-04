@@ -24,20 +24,25 @@ use Civi\Funding\Entity\ApplicationResourcesItemEntity;
 
 final class ApplicationResourcesItemFixture {
 
+  private static int $count = 0;
+
   /**
    * @phpstan-param array<string, mixed> $values
    *
    * @throws \CRM_Core_Exception
    */
   public static function addFixture(int $applicationProcessId, array $values = []): ApplicationResourcesItemEntity {
+    ++self::$count;
+    $identifier = $values['identifier'] ?? ('resources' . self::$count);
+
     $result = FundingApplicationResourcesItem::create(FALSE)
       ->setValues($values + [
         'application_process_id' => $applicationProcessId,
-        'identifier' => 'resources',
+        'identifier' => $identifier,
         'type' => 'testResources',
         'amount' => 1.2,
         'properties' => [],
-        'data_pointer' => '/resources',
+        'data_pointer' => '/' . $identifier,
       ])->execute();
 
     return ApplicationResourcesItemEntity::singleFromApiResult($result);

@@ -45,6 +45,8 @@ use Civi\Funding\Entity\ApplicationProcessEntity;
  */
 final class ApplicationProcessFixture {
 
+  private static int $count = 0;
+
   /**
    * @phpstan-param array<string, mixed> $values
    *
@@ -56,7 +58,7 @@ final class ApplicationProcessFixture {
     /** @phpstan-var applicationProcessT $applicationProcessValues */
     $applicationProcessValues = FundingApplicationProcess::create(FALSE)
       ->setValues($values + [
-        'identifier' => 'test',
+        'identifier' => 'test' . ++self::$count,
         'funding_case_id' => $fundingCaseId,
         'status' => 'new',
         'title' => 'Title',

@@ -24,19 +24,24 @@ use Civi\Funding\Entity\ApplicationCostItemEntity;
 
 final class ApplicationCostItemFixture {
 
+  private static int $count = 0;
+
   /**
    * @phpstan-param array<string, mixed> $values
    *
    * @throws \CRM_Core_Exception
    */
   public static function addFixture(int $applicationProcessId, array $values = []): ApplicationCostItemEntity {
+    self::$count++;
+    $identifier = $values['identifier'] ?? ('amountRequested' . self::$count);
+
     $result = FundingApplicationCostItem::create(FALSE)
       ->setValues($values + [
         'application_process_id' => $applicationProcessId,
-        'identifier' => 'amountRequested',
+        'identifier' => 'amountRequested' . self::$count,
         'type' => 'amount',
         'amount' => 1.2,
-        'data_pointer' => '/amountRequested',
+        'data_pointer' => '/' . $identifier,
         'properties' => [],
       ])->execute();
 

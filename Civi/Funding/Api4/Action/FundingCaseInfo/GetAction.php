@@ -149,10 +149,14 @@ final class GetAction extends AbstractGetAction {
     ], $this->getSelect());
     if ([] !== $clearingProcessFields) {
       $clearingProcessAmounts = $this->api4->execute(FundingClearingProcess::getEntityName(), 'get', [
-        'select' => array_map(fn (string $field) => substr($field, 17), $clearingProcessFields),
+        'select' => array_map(
+          fn (string $field) => 'SUM(' . substr($field, 17) . ') AS SUM_' . $field,
+          $clearingProcessFields
+        ),
         'where' => [
           ['application_process_id', '=', $applicationProcess->getId()],
         ],
+        'groupBy' => ['application_process_id'],
       ])->first();
     }
 
@@ -194,7 +198,7 @@ final class GetAction extends AbstractGetAction {
     }
 
     foreach ($clearingProcessFields as $field) {
-      $record[$field] = $clearingProcessAmounts[substr($field, 17)] ?? NULL;
+      $record[$field] = $clearingProcessAmounts["SUM_$field"] ?? NULL;
     }
 
     foreach ($fundingCase->getFlattenedPermissions() as $permission => $active) {

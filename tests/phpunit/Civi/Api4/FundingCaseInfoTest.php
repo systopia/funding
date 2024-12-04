@@ -71,7 +71,18 @@ final class FundingCaseInfoTest extends AbstractFundingHeadlessTestCase {
 
     \CRM_Core_Session::singleton()->set('userID', $contact['id']);
     $action = FundingCaseInfo::get()
-      ->addSelect('*', 'funding_case_recipient_contact_display_name', 'CAN_open_clearing');
+      ->addSelect(
+        '*',
+        'funding_case_recipient_contact_display_name',
+        'CAN_open_clearing',
+        'clearing_process_id',
+        'clearing_process_amount_recorded_costs',
+        'clearing_process_amount_recorded_resources',
+        'clearing_process_amount_admitted_costs',
+        'clearing_process_amount_admitted_resources',
+        'clearing_process_amount_cleared',
+        'clearing_process_amount_admitted',
+      );
     $result = $action->execute();
     static::assertCount(1, $result);
 
@@ -111,6 +122,12 @@ final class FundingCaseInfoTest extends AbstractFundingHeadlessTestCase {
       'clearing_process_id' => NULL,
       'funding_case_PERM_case_perm' => TRUE,
       'CAN_open_clearing' => FALSE,
+      'clearing_process_amount_recorded_costs' => NULL,
+      'clearing_process_amount_recorded_resources' => NULL,
+      'clearing_process_amount_admitted_costs' => NULL,
+      'clearing_process_amount_admitted_resources' => NULL,
+      'clearing_process_amount_cleared' => NULL,
+      'clearing_process_amount_admitted' => NULL,
     ];
     static::assertEquals($expected,
       // Not given, but possible permissions are part of the flattened permissions

@@ -21,12 +21,17 @@ namespace Civi\Funding\Api4\Action\FundingProgram;
 
 use Civi\Api4\FundingProgram;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
+use Civi\Funding\Fixtures\ApplicationCostItemFixture;
+use Civi\Funding\Fixtures\ApplicationProcessFixture;
+use Civi\Funding\Fixtures\ClearingCostItemFixture;
+use Civi\Funding\Fixtures\ClearingProcessFixture;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\DrawdownFixture;
 use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\Funding\Fixtures\PayoutProcessFixture;
+use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 
 /**
  * @covers \Civi\Funding\Api4\Action\FundingProgram\GetAction
@@ -34,6 +39,8 @@ use Civi\Funding\Fixtures\PayoutProcessFixture;
  * @group headless
  */
 final class GetActionTest extends AbstractFundingHeadlessTestCase {
+
+  use ArraySubsetAsserts;
 
   public function testAmountApproved(): void {
     $fundingProgram1 = FundingProgramFixture::addFixture();
@@ -185,6 +192,38 @@ final class GetActionTest extends AbstractFundingHeadlessTestCase {
       ->addWhere('id', '=', $fundingProgram1->getId())
       ->execute()
       ->single());
+
+    $applicationProcess1 = ApplicationProcessFixture::addFixture($fundingCase1->getId());
+    $clearingProcess1 = ClearingProcessFixture::addFixture($applicationProcess1->getId());
+    $applicationCostItem1_1 = ApplicationCostItemFixture::addFixture($applicationProcess1->getId());
+    $applicationCostItem1_2 = ApplicationCostItemFixture::addFixture($applicationProcess1->getId());
+    ClearingCostItemFixture::addFixture($clearingProcess1->getId(), $applicationCostItem1_1->getId(), [
+      'amount' => 6.7,
+      'amount_admitted' => 8.9,
+    ]);
+    ClearingCostItemFixture::addFixture($clearingProcess1->getId(), $applicationCostItem1_2->getId(), [
+      'amount' => 7.7,
+      'amount_admitted' => NULL,
+    ]);
+
+    $applicationProcess2 = ApplicationProcessFixture::addFixture($fundingCase2->getId());
+    $clearingProcess2 = ClearingProcessFixture::addFixture($applicationProcess2->getId());
+    $applicationCostItem2 = ApplicationCostItemFixture::addFixture($applicationProcess2->getId());
+    ClearingCostItemFixture::addFixture($clearingProcess2->getId(), $applicationCostItem2->getId(), [
+      'amount' => 7.8,
+      'amount_admitted' => 1.2,
+    ]);
+
+    static::assertArraySubset([
+      'amount_cleared' => 6.7 + 7.7,
+      'amount_admitted' => 8.9,
+    ], FundingProgram::get()
+      ->setAllowEmptyRecordPermissions(TRUE)
+      ->addSelect('amount_cleared', 'amount_admitted')
+      ->addWhere('id', '=', $fundingProgram1->getId())
+      ->execute()
+      ->single()
+    );
   }
 
 }

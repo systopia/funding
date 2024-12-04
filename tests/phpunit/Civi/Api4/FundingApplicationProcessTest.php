@@ -38,6 +38,7 @@ use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\Funding\Mock\FundingCaseType\Application\JsonSchema\TestJsonSchema;
 use Civi\Funding\Mock\FundingCaseType\Application\JsonSchema\TestJsonSchemaFactory;
 use Civi\Funding\Util\RequestTestUtil;
+use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 
 /**
  * @covers \Civi\Api4\FundingApplicationProcess
@@ -50,6 +51,8 @@ use Civi\Funding\Util\RequestTestUtil;
  * @group headless
  */
 final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCase {
+
+  use ArraySubsetAsserts;
 
   /**
    * @phpstan-ignore-next-line
@@ -116,6 +119,18 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
     $result = FundingApplicationProcess::get()->addSelect('id')->execute();
     static::assertCount(1, $result);
     static::assertSame(['id' => $applicationProcess->getId()], $result->first());
+
+    static::assertArraySubset([
+      'CAN_open_clearing' => FALSE,
+      'amount_cleared' => NULL,
+      'amount_admitted' => NULL,
+    ], FundingApplicationProcess::get()->addSelect(
+        '*',
+        'CAN_open_clearing',
+        'amount_cleared',
+        'amount_admitted',
+      )->execute()->single()
+    );
 
     RequestTestUtil::mockRemoteRequest((string) $contactNotPermitted['id']);
     static::assertCount(0, FundingApplicationProcess::get()
