@@ -69,14 +69,15 @@ final class GetAction extends AbstractReferencingDAOGetAction {
       /** @phpstan-var array<string, mixed> $record */
       foreach ($result as &$record) {
         $clearingProcessAmounts = $this->_api4->execute(FundingClearingProcess::getEntityName(), 'get', [
-          'select' => $clearingProcessFields,
+          'select' => array_map(fn (string $field) => 'SUM(' . $field . ') AS SUM_' . $field, $clearingProcessFields),
           'where' => [
             ['application_process_id', '=', $record['id']],
           ],
+          'groupBy' => ['application_process_id'],
         ])->first();
 
         foreach ($clearingProcessFields as $field) {
-          $record[$field] = $clearingProcessAmounts[$field] ?? NULL;
+          $record[$field] = $clearingProcessAmounts["SUM_$field"] ?? NULL;
         }
       }
     }

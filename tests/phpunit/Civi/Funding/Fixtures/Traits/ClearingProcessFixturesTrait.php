@@ -53,8 +53,12 @@ trait ClearingProcessFixturesTrait {
       ]
     );
     $applicationProcessId = $this->clearingProcessBundle->getApplicationProcess()->getId();
-    $this->costItem = ApplicationCostItemFixture::addFixture($applicationProcessId);
-    $this->resourcesItem = ApplicationResourcesItemFixture::addFixture($applicationProcessId);
+    $this->costItem = ApplicationCostItemFixture::addFixture($applicationProcessId, [
+      'identifier' => 'amountRequested',
+    ]);
+    $this->resourcesItem = ApplicationResourcesItemFixture::addFixture($applicationProcessId, [
+      'identifier' => 'resources',
+    ]);
 
     $this->externalFile = ExternalFileFixture::addFixture([
       'identifier' => 'FundingApplicationProcess.' . $applicationProcessId . ':file',
