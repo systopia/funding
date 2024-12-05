@@ -29,8 +29,10 @@ msgstr "Währung"
 #: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
-#: ang/crmFunding/case/fundingCase.template.html managed/SavedSearchFundingCases.mgd.php
-#: managed/SavedSearchFundingProgramControlling.mgd.php managed/SavedSearch_Clearings.mgd.php
+#: ang/crmFunding/case/fundingCase.template.html
+#: managed/SavedSearchFundingProgramControlling.mgd.php
+#: managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearch_funding_cases.mgd.php
 msgid "Amount Cleared"
 msgstr "Abgerechneter Betrag"
 
@@ -40,8 +42,10 @@ msgstr "Abgerechneter Betrag"
 #: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
-#: ang/crmFunding/case/fundingCase.template.html managed/SavedSearchFundingCases.mgd.php
-#: managed/SavedSearchFundingProgramControlling.mgd.php managed/SavedSearch_Clearings.mgd.php
+#: ang/crmFunding/case/fundingCase.template.html
+#: managed/SavedSearchFundingProgramControlling.mgd.php
+#: managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearch_funding_cases.mgd.php
 msgid "Amount Admitted"
 msgstr "Anerkannter Betrag"
 
@@ -75,8 +79,9 @@ msgstr "Beantragter Betrag"
 #: Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
-#: managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingProgramControlling.mgd.php
+#: managed/SavedSearchFundingProgramControlling.mgd.php
 #: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
+#: managed/SavedSearch_funding_cases.mgd.php
 msgid "Amount Paid Out"
 msgstr "Ausbezahlter Betrag"
 
@@ -86,7 +91,18 @@ msgstr "Ausbezahlter Betrag"
 msgid "The sum of the amounts of accepted drawdowns."
 msgstr "Die Summe der Beträge akzeptierter Mittelabrufe."
 
-#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php managed/SavedSearchFundingCases.mgd.php
+#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
+#: managed/SavedSearch_funding_cases.mgd.php
+msgid "Withdrawable Funds"
+msgstr "Abrufbare Mittel"
+
+#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
+msgid "The difference between the amount approved and the amount paid out."
+msgstr ""
+"Die Differenz zwischen dem bewilligten Betrag und dem ausbezahlten Betrag."
+
+#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
+#: managed/SavedSearch_funding_cases.mgd.php
 msgid "Review Progress"
 msgstr "Prüffortschritt"
 
@@ -261,9 +277,10 @@ msgstr "Förderfalländerungsdatum"
 #: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
 #: Civi/Funding/ClearingProcess/Form/AbstractClearingItemsJsonFormsGenerator.php
-#: ang/crmFunding/case/fundingCase.template.html managed/SavedSearchFundingCases.mgd.php
+#: ang/crmFunding/case/fundingCase.template.html
 #: managed/SavedSearchFundingProgramControlling.mgd.php
 #: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
+#: managed/SavedSearch_funding_cases.mgd.php
 msgid "Amount Approved"
 msgstr "Bewilligter Betrag"
 
@@ -275,17 +292,19 @@ msgstr "Bewilligter Betrag"
 #: ang/crmFundingIJB/ijbApplicationEditor.template.html
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
-#: managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingTasksMy.mgd.php
+#: managed/SavedSearchFundingTasksMy.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
 #: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
+#: managed/SavedSearch_funding_cases.mgd.php
 msgid "Recipient"
 msgstr "Empfänger"
 
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
 #: managed/OptionValueCgExtendsFundingProgram.mgd.php
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
-#: managed/SavedSearchFundingCases.mgd.php managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearch_Clearings.mgd.php
 #: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
+#: managed/SavedSearch_funding_cases.mgd.php
 msgid "Funding Program"
 msgstr "Förderprogramm"
 
@@ -298,15 +317,18 @@ msgstr "Förderprogramm"
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
-#: managed/SavedSearchFundingCases.mgd.php managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearch_funding_cases.mgd.php
 msgid "Identifier"
 msgstr "Bezeichner"
 
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
-#: managed/SavedSearchFundingCaseTypes.mgd.php managed/SavedSearchFundingProgramControlling.mgd.php
-#: managed/SavedSearchFundingPrograms.mgd.php managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearchFundingCaseTypes.mgd.php
+#: managed/SavedSearchFundingProgramControlling.mgd.php
+#: managed/SavedSearchFundingPrograms.mgd.php
+#: managed/SavedSearch_Clearings.mgd.php
 msgid "Title"
 msgstr "Titel"
 
@@ -324,8 +346,9 @@ msgstr "Kurzbeschreibung"
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
-#: managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingDrawdowns.mgd.php
+#: managed/SavedSearchFundingDrawdowns.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearch_funding_cases.mgd.php
 msgid "Status"
 msgstr "Status"
 
@@ -337,8 +360,9 @@ msgstr "Status"
 #: ang/crmFundingIJB/ijbApplicationEditor.template.html
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
-#: managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingDrawdowns.mgd.php
+#: managed/SavedSearchFundingDrawdowns.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearch_funding_cases.mgd.php
 msgid "Creation Date"
 msgstr "Erstellungsdatum"
 
@@ -350,8 +374,9 @@ msgstr "Erstellungsdatum"
 #: ang/crmFundingIJB/ijbApplicationEditor.template.html
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
-#: managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingTasksMy.mgd.php
+#: managed/SavedSearchFundingTasksMy.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearch_funding_cases.mgd.php
 msgid "Modification Date"
 msgstr "Änderungsdatum"
 
@@ -361,7 +386,8 @@ msgid "Start Date"
 msgstr "Startdatum"
 
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
-#: managed/SavedSearchFundingProgramControlling.mgd.php managed/SavedSearchFundingPrograms.mgd.php
+#: managed/SavedSearchFundingProgramControlling.mgd.php
+#: managed/SavedSearchFundingPrograms.mgd.php
 msgid "End Date"
 msgstr "Enddatum"
 
@@ -426,12 +452,14 @@ msgstr "Die Summe der für Mittel anerkannte Beträge."
 
 #: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
 msgid ""
-"The sum of the amounts recorded for costs minus the sum of the amounts recorded for resources."
+"The sum of the amounts recorded for costs minus the sum of the amounts "
+"recorded for resources."
 msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
 msgid ""
-"The sum of the amounts admitted for costs minus the sum of the amounts admitted for resources."
+"The sum of the amounts admitted for costs minus the sum of the amounts "
+"admitted for resources."
 msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php
@@ -461,8 +489,12 @@ msgid "Amount Eligible"
 msgstr "Förderfähiger Betrag"
 
 #: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
-msgid "The sum of the amounts requested of eligible applications in the funding program."
-msgstr "Die Summe der beantragten Beträge von förderfähigen Anträgen im Förderprogramm."
+msgid ""
+"The sum of the amounts requested of eligible applications in the funding "
+"program."
+msgstr ""
+"Die Summe der beantragten Beträge von förderfähigen Anträgen im "
+"Förderprogramm."
 
 #: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
@@ -682,7 +714,8 @@ msgstr "Doppelter Mittelpositionsbezeichner \"{identifier}\""
 #: Civi/Funding/FundingCase/Remote/Api4/ActionHandler/SubmitUpdateFormActionHandler.php
 #: ang/crmFunding/application/applicationEditor.directive.js
 #: ang/crmFunding/application/defaultApplicationEditor.template.html
-#: ang/crmFunding/case/fundingCase.js ang/crmFunding/clearing/clearingEditor.template.html
+#: ang/crmFunding/case/fundingCase.js
+#: ang/crmFunding/clearing/clearingEditor.template.html
 #: ang/crmFunding/form/editorTrait.factory.js
 #: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
 #: ang/crmFundingIJB/ijbApplicationEditor.template.html
@@ -876,8 +909,11 @@ msgid "any"
 msgstr "beliebig"
 
 #: Civi/Funding/Contact/Relation/Types/ContactTypeAndGroup.php
-msgid "Contacts with any of the specified types in any of the specified groups."
-msgstr "Kontakte mit irgendeiner der gewählten Kontaktarten in irgendeiner der gewählten Gruppen."
+msgid ""
+"Contacts with any of the specified types in any of the specified groups."
+msgstr ""
+"Kontakte mit irgendeiner der gewählten Kontaktarten in irgendeiner der "
+"gewählten Gruppen."
 
 #: Civi/Funding/Contact/Relation/Types/ContactTypeAndRelationshipType.php
 msgid "Related contacts of a specific type"
@@ -898,11 +934,12 @@ msgstr "Beziehungsart"
 
 #: Civi/Funding/Contact/Relation/Types/ContactTypeAndRelationshipType.php
 msgid ""
-"Contacts of the specified type are available as recipients if a relationship of\n"
+"Contacts of the specified type are available as recipients if a relationship "
+"of\n"
 "the specified type exists."
 msgstr ""
-"Kontakte der gewählten Art sind als Empfänger verfügbar, wenn eine Beziehung der gewählten Art "
-"besteht."
+"Kontakte der gewählten Art sind als Empfänger verfügbar, wenn eine Beziehung "
+"der gewählten Art besteht."
 
 #: Civi/Funding/Contact/Relation/Types/RelationshipType.php
 msgid "Related contacts"
@@ -910,10 +947,12 @@ msgstr "In Beziehung stehende Kontakte"
 
 #: Civi/Funding/Contact/Relation/Types/RelationshipType.php
 msgid ""
-"All contacts to which a relationship of the specified type exists are available\n"
+"All contacts to which a relationship of the specified type exists are "
+"available\n"
 "as recipient."
 msgstr ""
-"Alle Kontakte, zu denen eine Beziehung der gewählten Art besteht, sind als Empfänger verfügbar."
+"Alle Kontakte, zu denen eine Beziehung der gewählten Art besteht, sind als "
+"Empfänger verfügbar."
 
 #: Civi/Funding/Contact/Relation/Types/SelfByContactType.php
 msgid "Applicant by contact type"
@@ -921,9 +960,12 @@ msgstr "Antragssteller nach Kontaktart"
 
 #: Civi/Funding/Contact/Relation/Types/SelfByContactType.php
 msgid ""
-"The applying contact itself is available as recipient if the contact is of the\n"
+"The applying contact itself is available as recipient if the contact is of "
+"the\n"
 "specified type."
-msgstr "Der beantragende Kontakt selbst ist als Empfänger verfügbar, wenn er die gewählte Art hat."
+msgstr ""
+"Der beantragende Kontakt selbst ist als Empfänger verfügbar, wenn er die "
+"gewählte Art hat."
 
 #: Civi/Funding/Controller/DrawdownDocumentDownloadController.php
 msgid "payback-claim"
@@ -987,7 +1029,8 @@ msgstr "Zu rechnerische Prüfung: %1"
 #: Civi/Funding/EventSubscriber/ClearingProcess/ClearingProcessReviewStatusSubscriber.php
 #: ang/crmFunding/application/application.js
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
-#: ang/crmFunding/clearing/clearing.js ang/crmFunding/clearing/clearingSidebar.template.html
+#: ang/crmFunding/clearing/clearing.js
+#: ang/crmFunding/clearing/clearingSidebar.template.html
 msgid "Passed"
 msgstr "Erfolgreich"
 
@@ -995,13 +1038,15 @@ msgstr "Erfolgreich"
 #: Civi/Funding/EventSubscriber/ClearingProcess/ClearingProcessReviewStatusSubscriber.php
 #: ang/crmFunding/application/application.js
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
-#: ang/crmFunding/clearing/clearing.js ang/crmFunding/clearing/clearingSidebar.template.html
+#: ang/crmFunding/clearing/clearing.js
+#: ang/crmFunding/clearing/clearingSidebar.template.html
 msgid "Failed"
 msgstr "Nicht erfolgreich"
 
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
 #: Civi/Funding/EventSubscriber/ClearingProcess/ClearingProcessReviewStatusSubscriber.php
-#: ang/crmFunding/application/application.js ang/crmFunding/clearing/clearing.js
+#: ang/crmFunding/application/application.js
+#: ang/crmFunding/clearing/clearing.js
 msgid "Undecided"
 msgstr "Nicht entschieden"
 
@@ -1157,11 +1202,14 @@ msgstr "Diesen Förderfall zu bewilligen ist nicht erlaubt."
 
 #: Civi/Funding/FundingCase/Handler/FundingCaseFinishClearingHandler.php
 msgid "Finishing the clearing of funding case \"%1\" is not allowed."
-msgstr "Die Abrechnung des Förderfalls \"%1\" abzuschließen, ist nicht erlaubt."
+msgstr ""
+"Die Abrechnung des Förderfalls \"%1\" abzuschließen, ist nicht erlaubt."
 
 #: Civi/Funding/FundingCase/Handler/FundingCaseNotificationContactsSetHandler.php
 msgid "Changing the notification contacts of this funding case is not allowed."
-msgstr "Die Benachrichtigungskontakte dieses Förderfalls zu ändern, ist nicht erlaubt."
+msgstr ""
+"Die Benachrichtigungskontakte dieses Förderfalls zu ändern, ist nicht "
+"erlaubt."
 
 #: Civi/Funding/FundingCase/Handler/FundingCaseRecipientContactSetHandler.php
 msgid "Changing the recipient contact of this funding case is not allowed."
@@ -1169,7 +1217,8 @@ msgstr "Den Empfängerkontakt dieses Förderfalls zu ändern, ist nicht erlaubt.
 
 #: Civi/Funding/FundingCase/Handler/FundingCaseUpdateAmountApprovedHandler.php
 msgid "Updating the approved amount of this funding case is not allowed."
-msgstr "Den bewilligten Betrag dieses Förderfalls zu ändern, ist nicht erlaubt."
+msgstr ""
+"Den bewilligten Betrag dieses Förderfalls zu ändern, ist nicht erlaubt."
 
 #: Civi/Funding/FundingCase/Handler/TransferContractRecreateHandler.php
 msgid "Permission to recreate transfer contract is missing."
@@ -1306,16 +1355,21 @@ msgid "Relationship to contact"
 msgstr "Beziehung zu Kontakt"
 
 #: Civi/Funding/Permission/ContactRelation/Types/ContactRelationship.php
-msgid "Matches if a contact has a relationship of the specified type to the specified contact."
-msgstr "Zutreffend, wenn ein Kontakt eine Beziehung der gewählten Art zum gewählten Kontakt hat."
+msgid ""
+"Matches if a contact has a relationship of the specified type to the "
+"specified contact."
+msgstr ""
+"Zutreffend, wenn ein Kontakt eine Beziehung der gewählten Art zum gewählten "
+"Kontakt hat."
 
 #: Civi/Funding/Permission/ContactRelation/Types/ContactTypeAndGroup.php
 msgid ""
-"Matches if a contact has one of the specified contact types and is in one of the\n"
+"Matches if a contact has one of the specified contact types and is in one of "
+"the\n"
 "specified groups."
 msgstr ""
-"Zutreffend, wenn ein irgendeine der gewählten Kontaktarten hat und in irgendeiner der gewählten "
-"Gruppen ist."
+"Zutreffend, wenn ein irgendeine der gewählten Kontaktarten hat und in "
+"irgendeiner der gewählten Gruppen ist."
 
 #: Civi/Funding/Permission/ContactRelation/Types/Relationship.php
 msgid "Relationship"
@@ -1327,13 +1381,19 @@ msgstr "Beziehungsarten"
 
 #: Civi/Funding/Permission/ContactRelation/Types/Relationship.php
 msgid ""
-"Matches a contact that has a relationship. The relationship type may be limited\n"
-"to various types. The type of the related contacts may be limited to various\n"
-"types. The related contacts may be limited to those in any of the given groups."
+"Matches a contact that has a relationship. The relationship type may be "
+"limited\n"
+"to various types. The type of the related contacts may be limited to "
+"various\n"
+"types. The related contacts may be limited to those in any of the given "
+"groups."
 msgstr ""
-"Zutreffend, wenn ein Kontakt eine Beziehung hat. Die Beziehung kann eingeschränkt werden\n"
-"auf verschiedene Typen. Der Typ der verbundenen Kontakte kann beschränkt werden auf\n"
-"verschiedene Typen. Die verbundenen Kontakte können auf solche in einer der angegebenen\n"
+"Zutreffend, wenn ein Kontakt eine Beziehung hat. Die Beziehung kann "
+"eingeschränkt werden\n"
+"auf verschiedene Typen. Der Typ der verbundenen Kontakte kann beschränkt "
+"werden auf\n"
+"verschiedene Typen. Die verbundenen Kontakte können auf solche in einer der "
+"angegebenen\n"
 "Gruppen beschränkt werden."
 
 #: Civi/Funding/Permission/FundingCase/RelationFactory/Types/Contact.php
@@ -1342,19 +1402,24 @@ msgstr "Berechtigungen für neue Förderfalle an gewählten Kontakt zuweisen."
 
 #: Civi/Funding/Permission/FundingCase/RelationFactory/Types/ContactTypeAndGroup.php
 msgid ""
-"Assign permissions for new funding cases to contacts with one of the specified\n"
+"Assign permissions for new funding cases to contacts with one of the "
+"specified\n"
 "contact types in one of the specified groups."
 msgstr ""
-"Berechtigungen für neue Förderfalle an Kontakte mit einer der gewählten Kontaktarten in einer "
-"der gewählten Gruppen zuweisen."
+"Berechtigungen für neue Förderfalle an Kontakte mit einer der gewählten "
+"Kontaktarten in einer der gewählten Gruppen zuweisen."
 
 #: Civi/Funding/Permission/FundingCase/RelationFactory/Types/CreationContact.php
 msgid "Creation contact"
 msgstr "Erstellerkontakt"
 
 #: Civi/Funding/Permission/FundingCase/RelationFactory/Types/CreationContact.php
-msgid "Assign permissions for new funding cases to the contact which created the funding case."
-msgstr "Berechtigungen für neue Förderfalle an Kontakt zuweisen, der den Förderfall erstellt hat."
+msgid ""
+"Assign permissions for new funding cases to the contact which created the "
+"funding case."
+msgstr ""
+"Berechtigungen für neue Förderfalle an Kontakt zuweisen, der den Förderfall "
+"erstellt hat."
 
 #: Civi/Funding/Permission/FundingCase/RelationFactory/Types/CreationContactRelationship.php
 msgid "Relationship to creation contact"
@@ -1362,11 +1427,12 @@ msgstr "Beziehung zu Erstellerkontakt"
 
 #: Civi/Funding/Permission/FundingCase/RelationFactory/Types/CreationContactRelationship.php
 msgid ""
-"Assign permissions for new funding cases to contacts that have a relationship\n"
+"Assign permissions for new funding cases to contacts that have a "
+"relationship\n"
 "of the specified type to the creation contact."
 msgstr ""
-"Berechtigungen für neue Förderfalle an Kontakte zuweisen, die eine Beziehung vom gewählten Typ "
-"zum Erstellerkontakt haben."
+"Berechtigungen für neue Förderfalle an Kontakte zuweisen, die eine Beziehung "
+"vom gewählten Typ zum Erstellerkontakt haben."
 
 #: Civi/Funding/Permission/FundingCase/RelationFactory/Types/RecipientContactRelationship.php
 msgid "Relationship to recipient contact"
@@ -1374,11 +1440,12 @@ msgstr "Beziehung zu Empfängerkontakt"
 
 #: Civi/Funding/Permission/FundingCase/RelationFactory/Types/RecipientContactRelationship.php
 msgid ""
-"Assign permissions for new funding cases to contacts that have a relationship\n"
+"Assign permissions for new funding cases to contacts that have a "
+"relationship\n"
 "of the specified type to the recipient contact."
 msgstr ""
-"Berechtigungen für neue Förderfalle an Kontakte zuweisen, die eine Beziehung vom gewählten Typ "
-"zum Empfängerkontakt haben."
+"Berechtigungen für neue Förderfalle an Kontakte zuweisen, die eine Beziehung "
+"vom gewählten Typ zum Empfängerkontakt haben."
 
 #: Civi/Funding/Validation/EntityValidationResult.php
 msgid "Validation failed: %1"
@@ -1415,11 +1482,12 @@ msgid "Funding Applications"
 msgstr "Förderanträge"
 
 #: ang/afsearchFundingCases.aff.php managed/NavigationFunding.mgd.php
-#: managed/SavedSearchFundingCases.mgd.php
+#: managed/SavedSearch_funding_cases.mgd.php
 msgid "Funding Cases"
 msgstr "Förderfälle"
 
-#: ang/afsearchFundingProgramControlling.aff.php managed/NavigationFunding.mgd.php
+#: ang/afsearchFundingProgramControlling.aff.php
+#: managed/NavigationFunding.mgd.php
 #: managed/SavedSearchFundingProgramControlling.mgd.php
 msgid "Funding Program Controlling"
 msgstr "Controlling Förderprogramme"
@@ -1443,19 +1511,23 @@ msgstr "Meine Aufgaben"
 #: ang/crmFunding/application/defaultApplicationSidebar.directive.js
 #: ang/crmFunding/application/history/applicationProcessActivity.directive.js
 #: ang/crmFunding/application/history/applicationProcessHistory.directive.js
-#: ang/crmFunding/case/fundingCase.js ang/crmFunding/case/fundingCasePermissions.js
+#: ang/crmFunding/case/fundingCase.js
+#: ang/crmFunding/case/fundingCasePermissions.js
 #: ang/crmFunding/case/notificationContacts.directive.js
 #: ang/crmFunding/case/permissions/fundingCaseContactRelation.directive.js
-#: ang/crmFunding/case/recipientContact.directive.js ang/crmFunding/clearing/clearing.js
+#: ang/crmFunding/case/recipientContact.directive.js
+#: ang/crmFunding/clearing/clearing.js
 #: ang/crmFunding/clearing/clearingEditor.directive.js
 #: ang/crmFunding/clearing/clearingReviewer.directive.js
 #: ang/crmFunding/clearing/clearingReviewers.directive.js
 #: ang/crmFunding/clearing/clearingSidebar.directive.js
 #: ang/crmFunding/clearing/clearingSubmitModal.component.js
-#: ang/crmFunding/form/editableField.directive.js ang/crmFunding/form/editorTrait.factory.js
+#: ang/crmFunding/form/editableField.directive.js
+#: ang/crmFunding/form/editorTrait.factory.js
 #: ang/crmFunding/form/fundingAddRowButton.directive.js
 #: ang/crmFunding/form/fundingSelectPermissions.directive.js
-#: ang/crmFunding/form/fundingValidationErrors.directive.js ang/crmFunding/fundingDate.filter.js
+#: ang/crmFunding/form/fundingValidationErrors.directive.js
+#: ang/crmFunding/fundingDate.filter.js
 #: ang/crmFunding/jsonForms/jfControlArray.directive.js
 #: ang/crmFunding/jsonForms/jfControlFile.directive.js
 #: ang/crmFunding/program/fundingNewCasePermissions.js
@@ -1486,7 +1558,8 @@ msgstr "Verlauf"
 #: ang/crmFunding/application/applicationEditor.directive.js
 #: ang/crmFunding/clearing/clearingEditor.directive.js
 msgid "The chosen action is disabled. Please report this issue."
-msgstr "Die gewählte Aktion ist nicht verfügbar. Bitte melden Sie diesen Fehler."
+msgstr ""
+"Die gewählte Aktion ist nicht verfügbar. Bitte melden Sie diesen Fehler."
 
 #: ang/crmFunding/application/applicationReviewer.directive.js
 #: ang/crmFunding/clearing/clearingReviewer.directive.js
@@ -1509,7 +1582,8 @@ msgid "Content Reviewer"
 msgstr "Fachliche*r Prüfer*in"
 
 #: ang/crmFunding/application/applicationSearchTasksMenu.decorator.js
-#: ang/crmFunding/case/fundingCase.template.html managed/NavigationFunding.mgd.php
+#: ang/crmFunding/case/fundingCase.template.html
+#: managed/NavigationFunding.mgd.php
 msgid "Applications"
 msgstr "Anträge"
 
@@ -1572,7 +1646,8 @@ msgstr "Unbekannt"
 #: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
 #: ang/crmFundingIJB/ijbApplicationEditor.template.html
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
-#: managed/CustomGroupFundingApplicationTask.mgd.php managed/SavedSearch_Clearings.mgd.php
+#: managed/CustomGroupFundingApplicationTask.mgd.php
+#: managed/SavedSearch_Clearings.mgd.php
 msgid "Review Content"
 msgstr "Fachliche Prüfung"
 
@@ -1581,7 +1656,8 @@ msgstr "Fachliche Prüfung"
 #: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
 #: ang/crmFundingIJB/ijbApplicationEditor.template.html
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
-#: managed/CustomGroupFundingApplicationTask.mgd.php managed/SavedSearch_Clearings.mgd.php
+#: managed/CustomGroupFundingApplicationTask.mgd.php
+#: managed/SavedSearch_Clearings.mgd.php
 msgid "Review Calculative"
 msgstr "Rechnerische Prüfung"
 
@@ -1719,19 +1795,22 @@ msgstr "Kommentare ausblenden"
 
 #: ang/crmFunding/case/fundingCase.js
 msgid ""
-"This will close the funding case. A final payment instruction will be created,             if "
-"the available funding wasn't paid out completely, yet. Otherwise, a payback             claim "
-"will be created. Maybe you want to update the amount approved before."
+"This will close the funding case. A final payment instruction will be "
+"created,             if the available funding wasn't paid out completely, "
+"yet. Otherwise, a payback             claim will be created. Maybe you want "
+"to update the amount approved before."
 msgstr ""
-"Dies wird den Förderfall schließen. Eine abschließende Zahlungsanweisung wird erstellt, wenn die "
-"verfügbare Förderung noch nicht vollständig ausgezahlt wurde. Anderenfalls wird eine "
-"Rückzahlungsforderung erstellt. Vielleicht möchten Sie den bewilligten Betrag zuvor anpassen."
+"Dies wird den Förderfall schließen. Eine abschließende Zahlungsanweisung "
+"wird erstellt, wenn die verfügbare Förderung noch nicht vollständig "
+"ausgezahlt wurde. Anderenfalls wird eine Rückzahlungsforderung erstellt. "
+"Vielleicht möchten Sie den bewilligten Betrag zuvor anpassen."
 
 #: ang/crmFunding/case/fundingCase.template.html
 msgid "Available budget"
 msgstr "Verfügbares Budget"
 
-#: ang/crmFunding/case/fundingCase.template.html managed/SavedSearchFundingDrawdowns.mgd.php
+#: ang/crmFunding/case/fundingCase.template.html
+#: managed/SavedSearchFundingDrawdowns.mgd.php
 msgid "Amount"
 msgstr "Betrag"
 
@@ -1751,7 +1830,8 @@ msgstr "Benachrichtigungskontakte"
 msgid "Amount Requested Eligible"
 msgstr "Förderfähiger Betrag"
 
-#: ang/crmFunding/case/fundingCase.template.html managed/OptionValuesFileType.mgd.php
+#: ang/crmFunding/case/fundingCase.template.html
+#: managed/OptionValuesFileType.mgd.php
 msgid "Transfer Contract"
 msgstr "Weiterleitungsvertrag"
 
@@ -1763,7 +1843,8 @@ msgstr "Weiterleitungsvertrag erneut erstellen"
 msgid "Finish Clearing"
 msgstr "Abrechnung abschließen"
 
-#: ang/crmFunding/case/fundingCase.template.html managed/SavedSearchFundingDrawdowns.mgd.php
+#: ang/crmFunding/case/fundingCase.template.html
+#: managed/SavedSearchFundingDrawdowns.mgd.php
 #: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
 msgid "Drawdowns"
 msgstr "Mittelabrufe"
@@ -1801,18 +1882,20 @@ msgid "Type"
 msgstr "Art"
 
 #: ang/crmFunding/clearing/clearingSidebar.template.html
-msgid "The aim intended with the funding was achieved. All required proofs are present."
+msgid ""
+"The aim intended with the funding was achieved. All required proofs are "
+"present."
 msgstr ""
-"Der mit der Zuwendung beabsichtigte Zweck wurde erreicht. Alle erforderlichen Nachweise liegen "
-"vor."
+"Der mit der Zuwendung beabsichtigte Zweck wurde erreicht. Alle "
+"erforderlichen Nachweise liegen vor."
 
 #: ang/crmFunding/clearing/clearingSidebar.template.html
 msgid ""
-"The clearing is calculationally correct. All required proofs are present. The resources have "
-"been used appropriately."
+"The clearing is calculationally correct. All required proofs are present. "
+"The resources have been used appropriately."
 msgstr ""
-"Der Verwendungsnachweis ist rechnerisch richtig. Alle erforderlichen Belege liegen vor. Die "
-"Mittel wurden zweckentsprechend verwendet."
+"Der Verwendungsnachweis ist rechnerisch richtig. Alle erforderlichen Belege "
+"liegen vor. Die Mittel wurden zweckentsprechend verwendet."
 
 #: ang/crmFunding/clearing/clearingSidebar.template.html
 msgid "Reject Clearing"
@@ -1828,7 +1911,9 @@ msgstr "Annahme ist möglich, wenn die Prüfung erfolgreich war."
 
 #: ang/crmFunding/form/fundingSelectPermissions.directive.js
 msgid "Combining application permissions with other ones is not possible."
-msgstr "Die Kombination von Antragsberechtigungen mit anderen Berechtigungen ist nicht möglich."
+msgstr ""
+"Die Kombination von Antragsberechtigungen mit anderen Berechtigungen ist "
+"nicht möglich."
 
 #: ang/crmFunding/fundingDate.filter.js
 msgid "yyyy-MM-dd hh:mm:ss"
@@ -1837,8 +1922,10 @@ msgstr "dd.MM.yyyy hh:mm:ss"
 #: ang/crmFunding/jsonForms/jfControlArray.template.html
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
-#: managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingDrawdowns.mgd.php
-#: managed/SavedSearchFundingPrograms.mgd.php managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearchFundingDrawdowns.mgd.php
+#: managed/SavedSearchFundingPrograms.mgd.php
+#: managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearch_funding_cases.mgd.php
 msgid "Actions"
 msgstr "Aktionen"
 
@@ -1875,8 +1962,12 @@ msgid "CiviCRM: administer Funding Program Manager"
 msgstr "CiviCRM: Funding Program Manager Administration"
 
 #: funding.php
-msgid "Access administrative and non-administrative API of the Funding Program Manager"
-msgstr "Zugriff auf administrative und nicht-administrative API des Funding Program Managers"
+msgid ""
+"Access administrative and non-administrative API of the Funding Program "
+"Manager"
+msgstr ""
+"Zugriff auf administrative und nicht-administrative API des Funding Program "
+"Managers"
 
 #: managed/ActivityTypeFundingApplicationCommentExternal.mgd.php
 msgid "External Funding Application Comment"
@@ -2009,7 +2100,8 @@ msgstr "Fördermittel"
 msgid "Add Funding Program"
 msgstr "Förderprogramm hinzufügen"
 
-#: managed/NavigationFunding.mgd.php managed/SavedSearchFundingCaseTypes.mgd.php
+#: managed/NavigationFunding.mgd.php
+#: managed/SavedSearchFundingCaseTypes.mgd.php
 msgid "Funding Case Types"
 msgstr "Förderfalltypen"
 
@@ -2043,12 +2135,15 @@ msgstr "Rückzahlungsforderung"
 
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
-#: managed/SavedSearchFundingCaseTypes.mgd.php managed/SavedSearchFundingCases.mgd.php
-#: managed/SavedSearchFundingDrawdowns.mgd.php managed/SavedSearchFundingProgramControlling.mgd.php
-#: managed/SavedSearchFundingPrograms.mgd.php managed/SavedSearchFundingTasksMy.mgd.php
+#: managed/SavedSearchFundingCaseTypes.mgd.php
+#: managed/SavedSearchFundingDrawdowns.mgd.php
+#: managed/SavedSearchFundingProgramControlling.mgd.php
+#: managed/SavedSearchFundingPrograms.mgd.php
+#: managed/SavedSearchFundingTasksMy.mgd.php
 #: managed/SavedSearch_Application_CiviOffice_Templates.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
 #: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
+#: managed/SavedSearch_funding_cases.mgd.php
 msgid "Table"
 msgstr "Tabelle"
 
@@ -2058,12 +2153,14 @@ msgstr "Verwendungsnachweisstatus"
 
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
-#: managed/SavedSearchFundingTasksMy.mgd.php managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearchFundingTasksMy.mgd.php
+#: managed/SavedSearch_Clearings.mgd.php
 msgid "Open application"
 msgstr "Antrag öffnen"
 
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
-#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
+#: managed/SavedSearch_Clearings.mgd.php
 msgid "Open clearing"
 msgstr "Verwendungsnachweis öffnen"
 
@@ -2072,17 +2169,20 @@ msgid "Funding Case Applications"
 msgstr "Förderfallanträge"
 
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
-#: managed/SavedSearchFundingCases.mgd.php managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearch_funding_cases.mgd.php
 msgid "Funding Case Type"
 msgstr "Förderfalltyp"
 
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
-#: managed/SavedSearchFundingCases.mgd.php managed/SavedSearchFundingPrograms.mgd.php
+#: managed/SavedSearchFundingPrograms.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearch_funding_cases.mgd.php
 msgid "Edit permissions"
 msgstr "Berechtigungen bearbeiten"
 
-#: managed/SavedSearchFundingCaseTypes.mgd.php managed/SavedSearchFundingPrograms.mgd.php
+#: managed/SavedSearchFundingCaseTypes.mgd.php
+#: managed/SavedSearchFundingPrograms.mgd.php
 msgid "Abbreviation"
 msgstr "Abkürzung"
 
@@ -2093,15 +2193,6 @@ msgstr "Vorlagen verwalten"
 #: managed/SavedSearchFundingCaseTypes.mgd.php
 msgid "Manage external application templates"
 msgstr "Externe Antragsvorlagen verwalten"
-
-#: managed/SavedSearchFundingCases.mgd.php
-msgid "Open case"
-msgstr "Fall öffnen"
-
-#: managed/SavedSearchFundingCases.mgd.php managed/SavedSearch_Clearings.mgd.php
-#: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
-msgid "Total"
-msgstr "Gesamt"
 
 #: managed/SavedSearchFundingDrawdowns.mgd.php
 msgid "Requester"
@@ -2119,7 +2210,8 @@ msgstr "Prüfer*in"
 msgid "Download Document"
 msgstr "Dokument herunterladen"
 
-#: managed/SavedSearchFundingProgramControlling.mgd.php managed/SavedSearchFundingPrograms.mgd.php
+#: managed/SavedSearchFundingProgramControlling.mgd.php
+#: managed/SavedSearchFundingPrograms.mgd.php
 msgid "Budget"
 msgstr "Budget"
 
@@ -2171,6 +2263,12 @@ msgstr "Dokument"
 msgid "Label"
 msgstr "Bezeichnung"
 
+#: managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
+#: managed/SavedSearch_funding_cases.mgd.php
+msgid "Total"
+msgstr "Gesamt"
+
 #: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
 msgid "Drawdowns by Recipient and Funding Program"
 msgstr "Mittelabrufe nach Empfänger und Förderprogramm"
@@ -2178,3 +2276,7 @@ msgstr "Mittelabrufe nach Empfänger und Förderprogramm"
 #: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
 msgid "Open Drawdowns"
 msgstr "Offene Mittelabrufe"
+
+#: managed/SavedSearch_funding_cases.mgd.php
+msgid "Open case"
+msgstr "Fall öffnen"

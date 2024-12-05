@@ -105,6 +105,11 @@ final class GetAction extends DAOGetAction {
       $this->addSelect('id');
     }
 
+    if ($this->isFieldExplicitlySelected('withdrawable_funds')) {
+      // amount_paid_out needs to be selected before because it is referenced.
+      array_unshift($this->select, 'amount_paid_out');
+    }
+
     $possiblePermissions = $this->getPossiblePermissions();
     /**
      * @phpstan-var array<int, list<string>> Mapping of funding case ID to permissions.

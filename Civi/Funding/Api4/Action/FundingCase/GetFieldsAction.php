@@ -92,6 +92,20 @@ final class GetFieldsAction extends DAOGetFieldsAction {
       , 0)", Api4Query::MAIN_TABLE_ALIAS),
       ],
       [
+        'name' => 'withdrawable_funds',
+        'title' => E::ts('Withdrawable Funds'),
+        'description' => E::ts('The difference between the amount approved and the amount paid out.'),
+        'type' => 'Extra',
+        'data_type' => 'Money',
+        'readonly' => TRUE,
+        // NULL if funding case is not approved (yet).
+        'nullable' => TRUE,
+        'sql_renderer' => fn (array $field, Api4SelectQuery $query) => sprintf(
+          '(SELECT %s - amount_paid_out)',
+          SqlRendererUtil::getFieldSqlName($field, $query, 'amount_approved'),
+        ),
+      ],
+      [
         'name' => 'amount_cleared',
         'title' => E::ts('Amount Cleared'),
         'type' => 'Extra',
@@ -124,7 +138,7 @@ final class GetFieldsAction extends DAOGetFieldsAction {
           (
             SELECT
                 COUNT(CASE WHEN fap.is_eligible IS NOT NULL THEN 1 END)
-              / COUNT(fap.id) 
+              / COUNT(fap.id)
               * 100
             FROM
               civicrm_funding_application_process AS fap
