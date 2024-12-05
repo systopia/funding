@@ -23,6 +23,7 @@ return [
             'recipient_contact_id.display_name',
             'amount_approved',
             'amount_paid_out',
+            'withdrawable_funds',
             'amount_admitted',
             'amount_cleared',
             'creation_date',
@@ -151,6 +152,13 @@ return [
               'tally' => [
                 'fn' => 'SUM',
               ],
+            ],
+            [
+              'type' => 'field',
+              'key' => 'withdrawable_funds',
+              'dataType' => 'String',
+              'label' => E::ts('Withdrawable Funds'),
+              'sortable' => TRUE,
             ],
             [
               'type' => 'field',

@@ -35,6 +35,7 @@ use Civi\Funding\Fixtures\PayoutProcessFixture;
 use Civi\Funding\Mock\Contact\PossibleRecipientsLoaderMock;
 use Civi\Funding\Util\RequestTestUtil;
 use CRM_Funding_ExtensionUtil as E;
+use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 
 /**
  * @group headless
@@ -45,6 +46,7 @@ use CRM_Funding_ExtensionUtil as E;
  */
 final class FundingCaseTest extends AbstractFundingHeadlessTestCase {
 
+  use ArraySubsetAsserts;
   use FundingCaseTestFixturesTrait;
 
   protected function tearDown(): void {
@@ -89,6 +91,56 @@ final class FundingCaseTest extends AbstractFundingHeadlessTestCase {
 
     static::assertSame(123.45, $result['amount_approved']);
     static::assertSame('ongoing', $result['status']);
+  }
+
+  public function testGet(): void {
+    $this->addInternalFixtures();
+
+    RequestTestUtil::mockInternalRequest($this->associatedContactId);
+
+    FundingCaseContactRelationFixture::addContact(
+      $this->associatedContactId,
+      $this->permittedFundingCaseId,
+      ['view'],
+    );
+
+    $values = FundingCase::get()
+      ->addSelect(
+        '*',
+        'transfer_contract_uri',
+        'currency',
+        'amount_requested',
+        'amount_paid_out',
+        'withdrawable_funds',
+        'amount_cleared',
+        'amount_admitted',
+        'application_process_review_progress',
+      )
+      ->execute()
+      ->single();
+
+    static::assertArraySubset([
+      'transfer_contract_uri' => NULL,
+      'currency' => 'EUR',
+      'amount_requested' => 1.2,
+      'amount_paid_out' => 0.0,
+      'withdrawable_funds' => NULL,
+      'amount_cleared' => NULL,
+      'amount_admitted' => NULL,
+      'application_process_review_progress' => 100,
+    ], $values);
+
+    FundingCase::update(FALSE)
+      ->addValue('amount_approved', 1.1)
+      ->addWhere('id', '=', $this->permittedFundingCaseId)
+      ->execute();
+
+    $values = FundingCase::get()
+      ->addSelect('withdrawable_funds')
+      ->execute()
+      ->single();
+
+    static::assertSame(1.1, $values['withdrawable_funds']);
   }
 
   public function testRecreateTransferContract(): void {
