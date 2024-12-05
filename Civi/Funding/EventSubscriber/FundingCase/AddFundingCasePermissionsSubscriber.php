@@ -19,29 +19,16 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\FundingCase;
 
-use Civi\Api4\FundingCaseContactRelation;
-use Civi\Api4\FundingNewCasePermissions;
-use Civi\Funding\Entity\FundingNewCasePermissionsEntity;
 use Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent;
-use Civi\Funding\Permission\FundingCase\RelationFactory\FundingCaseContactRelationFactory;
-use Civi\RemoteTools\Api4\Api4Interface;
+use Civi\Funding\FundingCase\FundingCasePermissionsInitializer;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Adds permissions to newly created FundingCase.
- *
- * @phpstan-type newCasePermissionsT array{
- *   id: int,
- *   type: string,
- *   properties: array<string, mixed>,
- *   permissions: list<string>,
- * }
  */
 class AddFundingCasePermissionsSubscriber implements EventSubscriberInterface {
 
-  private Api4Interface $api4;
-
-  private FundingCaseContactRelationFactory $relationFactory;
+  private FundingCasePermissionsInitializer $permissionsInitializer;
 
   /**
    * @inheritDoc
@@ -50,29 +37,15 @@ class AddFundingCasePermissionsSubscriber implements EventSubscriberInterface {
     return [FundingCaseCreatedEvent::class => 'onCreated'];
   }
 
-  public function __construct(Api4Interface $api4, FundingCaseContactRelationFactory $relationFactory) {
-    $this->api4 = $api4;
-    $this->relationFactory = $relationFactory;
+  public function __construct(FundingCasePermissionsInitializer $permissionsInitializer) {
+    $this->permissionsInitializer = $permissionsInitializer;
   }
 
   /**
    * @throws \CRM_Core_Exception
    */
   public function onCreated(FundingCaseCreatedEvent $event): void {
-    $action = FundingNewCasePermissions::get(FALSE)
-      ->addWhere('funding_program_id', '=', $event->getFundingProgram()->getId());
-
-    /** @phpstan-var newCasePermissionsT $newCasePermissions */
-    foreach ($this->api4->executeAction($action) as $newCasePermissions) {
-      $createAction = FundingCaseContactRelation::create(FALSE)
-        ->setValues(
-          $this->relationFactory->createFundingCaseContactRelation(
-            FundingNewCasePermissionsEntity::fromArray($newCasePermissions),
-            $event->getFundingCase(),
-          )->toArray()
-        );
-      $this->api4->executeAction($createAction);
-    }
+    $this->permissionsInitializer->initializePermissions($event->getFundingCase());
   }
 
 }

@@ -26,9 +26,11 @@ use Civi\Funding\Api4\Action\FundingCase\GetFieldsAction;
 use Civi\Funding\Api4\Action\FundingCase\GetPossibleActionsAction;
 use Civi\Funding\Api4\Action\FundingCase\GetPossibleRecipientsAction;
 use Civi\Funding\Api4\Action\FundingCase\RecreateTransferContractAction;
+use Civi\Funding\Api4\Action\FundingCase\ResetPermissionsAction;
 use Civi\Funding\Api4\Action\FundingCase\SetNotificationContactsAction;
 use Civi\Funding\Api4\Action\FundingCase\SetRecipientContactAction;
 use Civi\Funding\Api4\Action\FundingCase\UpdateAmountApprovedAction;
+use Civi\Funding\Api4\Permissions;
 use Civi\Funding\Api4\Traits\AccessPermissionsTrait;
 
 /**
@@ -38,7 +40,9 @@ use Civi\Funding\Api4\Traits\AccessPermissionsTrait;
  */
 final class FundingCase extends Generic\DAOEntity {
 
-  use AccessPermissionsTrait;
+  use AccessPermissionsTrait {
+    permissions as private traitPermissions;
+  }
 
   public static function approve(bool $checkPermissions = TRUE): ApproveAction {
     return \Civi::service(ApproveAction::class)->setCheckPermissions($checkPermissions);
@@ -78,6 +82,10 @@ final class FundingCase extends Generic\DAOEntity {
     return \Civi::service(RecreateTransferContractAction::class)->setCheckPermissions($checkPermissions);
   }
 
+  public static function resetPermissions(bool $checkPermissions = TRUE): ResetPermissionsAction {
+    return (new ResetPermissionsAction())->setCheckPermissions($checkPermissions);
+  }
+
   public static function setNotificationContacts(bool $checkPermissions = TRUE): SetNotificationContactsAction {
     return (new SetNotificationContactsAction())->setCheckPermissions($checkPermissions);
   }
@@ -89,6 +97,14 @@ final class FundingCase extends Generic\DAOEntity {
   public static function updateAmountApproved(bool $checkPermissions = TRUE): UpdateAmountApprovedAction {
     return (new UpdateAmountApprovedAction())->setCheckPermissions($checkPermissions);
 
+  }
+
+  /**
+   * @return array<string, array<string|string[]>>
+   */
+  public static function permissions(): array {
+    return ['resetPermissions' => [Permissions::ACCESS_CIVICRM, Permissions::ADMINISTER_FUNDING]]
+      + self::traitPermissions();
   }
 
 }
