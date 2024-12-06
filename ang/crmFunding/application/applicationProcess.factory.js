@@ -60,6 +60,7 @@ fundingModule.factory('fundingApplicationProcessService', ['crmApi4', function(c
 
   return {
     get: (id) => crmApi4('FundingApplicationProcess', 'get', {
+      select: ['*', 'custom.*'],
       where: [['id', '=', id]],
     }).then(function (result) {
       return result[0] || null;
