@@ -1,3 +1,21 @@
+<div class="funding-application-sidebar-element">
+  <label for="ndr_berichterstattung">NDR-Berichterstattung</label>
+  <span id="ndr_berichterstattung" editable-select="applicationProcess['bsh_funding_application_extra.ndr_berichterstattung']"
+        e-ng-options="key for (key, value) in { Ja: true, Nein: false }"
+        onbeforesave="updateNdrBerichterstattung($data)">
+    {{ showNdrBerichterstattung() }}
+  </span>
+</div>
+
+<div class="funding-application-sidebar-element">
+  <label for="prioritaet">Priorität</label>
+  <span id="prioritaet" editable-select="applicationProcess['bsh_funding_application_extra.prioritaet']"
+        e-ng-options="key as value for (key, value) in prioritaetOptions"
+        onbeforesave="updatePrioritaet($data)">
+    {{ showPrioritaet() }}
+  </span>
+</div>
+
 <span ng-if="!isChanged">
   <funding-action-button action="review" class="btn btn-default funding-application-sidebar-element" crm-icon="fa-eye">{{ $ctrl.ts('Start Review') }}</funding-action-button>
   <funding-action-button action="release" class="btn btn-default funding-application-sidebar-element" crm-icon="fa-thumbs-up">Für Beirat freigeben</funding-action-button>
