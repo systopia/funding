@@ -22,8 +22,47 @@ fundingModule.directive('fundingHihApplicationSidebar', function() {
     scope: false,
     templateUrl: '~/crmFundingHiH/hihApplicationSidebar.template.html',
     controllerAs: '$ctrl',
-    controller: ['$scope', function ($scope) {
+    controller: ['$scope', 'crmApi4', 'crmStatus', function ($scope, crmApi4, crmStatus) {
       this.ts = CRM.ts('funding');
+
+      $scope.prioritaetOptions = {};
+        crmApi4('FundingApplicationProcess', 'getFields', {
+        loadOptions: true,
+        where: [['name', '=', 'bsh_funding_application_extra.prioritaet']],
+        select: ["options"]
+      }).then(function(fields) {
+        $scope.prioritaetOptions = fields[0].options;
+      });
+
+      $scope.updateNdrBerichterstattung = function(data) {
+        return crmStatus({}, crmApi4('FundingApplicationProcess', 'setNdrBerichterstattung', {
+          id: $scope.applicationProcess.id,
+          berichterstattung: data,
+        }));
+      };
+
+      $scope.showNdrBerichterstattung = function() {
+        if ($scope.applicationProcess['bsh_funding_application_extra.ndr_berichterstattung']) {
+          return 'Ja';
+        }
+
+        if ($scope.applicationProcess['bsh_funding_application_extra.ndr_berichterstattung'] === false) {
+          return 'Nein';
+        }
+
+        return 'unbekannt';
+      };
+
+      $scope.updatePrioritaet = function(data) {
+        return crmStatus({}, crmApi4('FundingApplicationProcess', 'setBshPrioritaet', {
+          id: $scope.applicationProcess.id,
+          prioritaet: data,
+        }));
+      };
+
+      $scope.showPrioritaet = function() {
+        return $scope.prioritaetOptions[$scope.applicationProcess['bsh_funding_application_extra.prioritaet']] || 'nicht definiert';
+      };
     }],
   };
 });
