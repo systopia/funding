@@ -25,13 +25,13 @@ fundingModule.directive('fundingHihApplicationSidebar', function() {
     controller: ['$scope', 'crmApi4', 'crmStatus', function ($scope, crmApi4, crmStatus) {
       this.ts = CRM.ts('funding');
 
-      $scope.prioritaetOptions = {};
+      $scope.priorisierungOptions = {};
         crmApi4('FundingApplicationProcess', 'getFields', {
         loadOptions: true,
-        where: [['name', '=', 'bsh_funding_application_extra.prioritaet']],
+        where: [['name', '=', 'bsh_funding_application_extra.priorisierung']],
         select: ["options"]
       }).then(function(fields) {
-        $scope.prioritaetOptions = fields[0].options;
+        $scope.priorisierungOptions = fields[0].options;
       });
 
       $scope.updateNdrBerichterstattung = function(data) {
@@ -53,15 +53,15 @@ fundingModule.directive('fundingHihApplicationSidebar', function() {
         return 'unbekannt';
       };
 
-      $scope.updatePrioritaet = function(data) {
-        return crmStatus({}, crmApi4('FundingApplicationProcess', 'setBshPrioritaet', {
+      $scope.updatePriorisierung = function(data) {
+        return crmStatus({}, crmApi4('FundingApplicationProcess', 'setBshPriorisierung', {
           id: $scope.applicationProcess.id,
-          prioritaet: data,
+          priorisierung: data,
         }));
       };
 
-      $scope.showPrioritaet = function() {
-        return $scope.prioritaetOptions[$scope.applicationProcess['bsh_funding_application_extra.prioritaet']] || 'nicht definiert';
+      $scope.showPriorisierung = function() {
+        return $scope.priorisierungOptions[$scope.applicationProcess['bsh_funding_application_extra.priorisierung']] || 'nicht definiert';
       };
     }],
   };

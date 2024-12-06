@@ -8,11 +8,11 @@
 </div>
 
 <div class="funding-application-sidebar-element">
-  <label for="prioritaet">Priorität</label>
-  <span id="prioritaet" editable-select="applicationProcess['bsh_funding_application_extra.prioritaet']"
-        e-ng-options="key as value for (key, value) in prioritaetOptions"
-        onbeforesave="updatePrioritaet($data)">
-    {{ showPrioritaet() }}
+  <label for="priorisierung">Priorisierung</label>
+  <span id="priorisierung" editable-select="applicationProcess['bsh_funding_application_extra.priorisierung']"
+        e-ng-options="key as value for (key, value) in priorisierungOptions"
+        onbeforesave="updatePriorisierung($data)">
+    {{ showPriorisierung() }}
   </span>
 </div>
 
