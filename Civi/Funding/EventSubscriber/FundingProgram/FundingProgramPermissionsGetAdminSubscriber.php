@@ -46,11 +46,22 @@ final class FundingProgramPermissionsGetAdminSubscriber implements EventSubscrib
   }
 
   public function onPermissionsGet(GetPermissionsEvent $event): void {
-    if (!$this->requestContext->isRemote()
-      && \CRM_Core_Permission::check(Permissions::ADMINISTER_FUNDING, $this->requestContext->getContactId())
-    ) {
+    if ($this->isFundingAdmin()) {
       $event->addPermissions(['view']);
     }
+  }
+
+  private function isFundingAdmin(): bool {
+    if ($this->requestContext->isRemote()) {
+      return FALSE;
+    }
+
+    if ($this->requestContext->getContactId() === 0) {
+      // Grant access on CLI.
+      return PHP_SAPI === 'cli';
+    }
+
+    return \CRM_Core_Permission::check(Permissions::ADMINISTER_FUNDING, $this->requestContext->getContactId());
   }
 
 }
