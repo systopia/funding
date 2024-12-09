@@ -36,7 +36,7 @@ final class AVK1SachberichtJsonSchema extends JsonSchemaObject {
           'mit folgenden wesentlichen Änderungen (kurze Begründung für die Änderung):' => 'geaendert',
         ]),
       ], TRUE),
-      'aenderungen' => new JsonSchemaString(),
+      'aenderungen' => new JsonSchemaString([], TRUE),
       'thematischeSchwerpunkte' => new JsonSchemaString(),
       'methoden' => new JsonSchemaString(),
       'zielgruppe' => new JsonSchemaString(),

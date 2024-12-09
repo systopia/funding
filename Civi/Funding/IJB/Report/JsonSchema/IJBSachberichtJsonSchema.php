@@ -46,7 +46,7 @@ final class IJBSachberichtJsonSchema extends JsonSchemaObject {
           'in Präsenz mit digitalen Anteilen' => 'digitaleAnteile',
         ]),
       ], TRUE),
-      'aenderungen' => new JsonSchemaString(),
+      'aenderungen' => new JsonSchemaString([], TRUE),
       'sprache' => new JsonSchemaString([
         'oneOf' => JsonSchemaUtil::buildTitledOneOf2([
           '' => NULL,
