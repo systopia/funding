@@ -25,15 +25,19 @@ final class ApplicationProcessBundleFixture {
 
   /**
    * @phpstan-param array<string, mixed> $applicationProcessValues
+   * @phpstan-param array<string, mixed> $fundingCaseValues
    * @phpstan-param array<string, scalar> $fundingCaseTypeValues
+   * @phpstan-param array<string, scalar|null> $fundingProgramValues
    *
    * @throws \CRM_Core_Exception
    */
   public static function create(
     array $applicationProcessValues = [],
-    array $fundingCaseTypeValues = []
+    array $fundingCaseValues = [],
+    array $fundingCaseTypeValues = [],
+    array $fundingProgramValues = []
   ): ApplicationProcessEntityBundle {
-    $fundingProgram = FundingProgramFixture::addFixture();
+    $fundingProgram = FundingProgramFixture::addFixture($fundingProgramValues);
     $fundingCaseType = FundingCaseTypeFixture::addFixture($fundingCaseTypeValues);
     $recipientContact = ContactFixture::addOrganization();
     $creationContact = ContactFixture::addIndividual();
@@ -43,6 +47,7 @@ final class ApplicationProcessBundleFixture {
       $fundingCaseType->getId(),
       $recipientContact['id'],
       $creationContact['id'],
+      $fundingCaseValues
     );
 
     $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId(), $applicationProcessValues);

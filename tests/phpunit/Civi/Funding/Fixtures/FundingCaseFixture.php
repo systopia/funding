@@ -25,7 +25,7 @@ use Civi\Funding\Entity\FundingCaseEntity;
 final class FundingCaseFixture {
 
   /**
-   * @phpstan-param array<string, scalar> $values
+   * @phpstan-param array<string, mixed> $values
    *
    * @throws \CRM_Core_Exception
    */

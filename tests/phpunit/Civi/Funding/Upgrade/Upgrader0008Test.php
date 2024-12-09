@@ -34,7 +34,7 @@ use Civi\Funding\Upgrade\Upgrader0008;
 use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 
 /**
- * @covers \Civi\Funding\Upgrade\Upgrader0006
+ * @covers \Civi\Funding\Upgrade\Upgrader0008
  *
  * @group headless
  */

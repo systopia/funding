@@ -66,6 +66,7 @@ final class Upgrader0003Test extends AbstractFundingHeadlessTestCase {
 
     ApplicationProcessBundleFixture::create(
       ['request_data' => $requestData],
+      [],
       ['name' => KursConstants::FUNDING_CASE_TYPE_NAME]
     );
 
