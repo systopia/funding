@@ -78,7 +78,7 @@ final class FundingCaseUpdateAmountApprovedHandler implements FundingCaseUpdateA
    * @throws \Civi\API\Exception\UnauthorizedException
    */
   private function assertAuthorized(FundingCaseUpdateAmountApprovedCommand $command): void {
-    if (!$this->actionsDeterminer->isActionAllowed(
+    if (!$command->isAuthorized() && !$this->actionsDeterminer->isActionAllowed(
       FundingCaseActions::UPDATE_AMOUNT_APPROVED,
       $command->getFundingCase()->getStatus(),
       $command->getApplicationProcessStatusList(),

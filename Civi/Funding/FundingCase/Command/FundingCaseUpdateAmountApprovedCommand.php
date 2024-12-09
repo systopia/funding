@@ -41,6 +41,8 @@ final class FundingCaseUpdateAmountApprovedCommand {
 
   private FundingProgramEntity $fundingProgram;
 
+  private bool $authorized = FALSE;
+
   /**
    * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $applicationProcessStatusList
    *   Indexed by application process ID.
@@ -81,6 +83,16 @@ final class FundingCaseUpdateAmountApprovedCommand {
 
   public function getFundingProgram(): FundingProgramEntity {
     return $this->fundingProgram;
+  }
+
+  public function isAuthorized(): bool {
+    return $this->authorized;
+  }
+
+  public function setAuthorized(bool $authorized): self {
+    $this->authorized = $authorized;
+
+    return $this;
   }
 
 }

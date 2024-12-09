@@ -26,6 +26,7 @@ use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent;
 use Civi\Funding\Event\FundingCase\FundingCaseDeletedEvent;
 use Civi\Funding\Event\FundingCase\FundingCasePreCreateEvent;
+use Civi\Funding\Event\FundingCase\FundingCasePreUpdateEvent;
 use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
 use Civi\Funding\FileTypeNames;
 use Civi\Funding\FundingAttachmentManagerInterface;
@@ -234,6 +235,10 @@ class FundingCaseManager {
     if ($fundingCase->getModificationDate() == $previousFundingCase->getModificationDate()) {
       $fundingCase->setModificationDate(new \DateTime(date('Y-m-d H:i:s')));
     }
+
+    $event = new FundingCasePreUpdateEvent($previousFundingCase, $fundingCase);
+    $this->eventDispatcher->dispatch(FundingCasePreUpdateEvent::class, $event);
+
     $action = FundingCase::update(FALSE)
       ->setValues($fundingCase->toArray());
     $this->api4->executeAction($action);

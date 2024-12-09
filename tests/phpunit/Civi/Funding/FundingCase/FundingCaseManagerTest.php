@@ -29,6 +29,7 @@ use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent;
 use Civi\Funding\Event\FundingCase\FundingCasePreCreateEvent;
+use Civi\Funding\Event\FundingCase\FundingCasePreUpdateEvent;
 use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
 use Civi\Funding\FileTypeNames;
 use Civi\Funding\Fixtures\ContactFixture;
@@ -411,15 +412,22 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
     $updatedFundingCase = FundingCaseEntity::fromArray($fundingCase->toArray());
     $updatedFundingCase->setStatus('updated');
 
-    $this->eventDispatcherMock->expects(static::once())->method('dispatch')
-      ->with(FundingCaseUpdatedEvent::class, static::callback(
-        function (FundingCaseUpdatedEvent $event) {
-          static::assertSame('open', $event->getPreviousFundingCase()->getStatus());
-          static::assertSame('updated', $event->getFundingCase()->getStatus());
+    // Reload to have permission fields required for the event object comparison.
+    // @phpstan-ignore argument.type
+    $fundingCase->setValues(FundingCase::get(FALSE)
+      ->addWhere('id', '=', $fundingCase->getId())
+      ->execute()
+      ->single()
+    );
 
-          return TRUE;
-        }
-      ));
+    $dispatchSeries = [
+      [FundingCasePreUpdateEvent::class, new FundingCasePreUpdateEvent($fundingCase, $updatedFundingCase)],
+      [FundingCaseUpdatedEvent::class, new FundingCaseUpdatedEvent($fundingCase, $updatedFundingCase)],
+    ];
+    $this->eventDispatcherMock->expects(static::exactly(2))->method('dispatch')
+      ->willReturnCallback(function (...$args) use (&$dispatchSeries) {
+        static::assertEquals(array_shift($dispatchSeries), $args);
+      });
 
     sleep(1);
     $this->fundingCaseManager->update($updatedFundingCase);

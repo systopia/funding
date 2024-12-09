@@ -17,26 +17,28 @@
 
 declare(strict_types = 1);
 
-// phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
-/** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
+namespace Civi\Funding\Event\FundingCase;
 
-use Civi\Funding\Upgrade\Upgrader0002;
-use Civi\Funding\Upgrade\Upgrader0003;
-use Civi\Funding\Upgrade\Upgrader0006;
-use Civi\Funding\Upgrade\Upgrader0008;
-use Civi\Funding\Upgrade\Upgrader0009;
+use Civi\Funding\Entity\FundingCaseEntity;
+use Symfony\Contracts\EventDispatcher\Event;
 
-$container->autowire(Upgrader0002::class)
-  ->setPublic(TRUE);
+final class FundingCasePreUpdateEvent extends Event {
 
-$container->autowire(Upgrader0003::class)
-  ->setPublic(TRUE);
+  private FundingCaseEntity $previousFundingCase;
 
-$container->autowire(Upgrader0006::class)
-  ->setPublic(TRUE);
+  private FundingCaseEntity $fundingCase;
 
-$container->autowire(Upgrader0008::class)
-  ->setPublic(TRUE);
+  public function __construct(FundingCaseEntity $previousFundingCase, FundingCaseEntity $fundingCase) {
+    $this->previousFundingCase = $previousFundingCase;
+    $this->fundingCase = $fundingCase;
+  }
 
-$container->autowire(Upgrader0009::class)
-  ->setPublic(TRUE);
+  public function getPreviousFundingCase(): FundingCaseEntity {
+    return $this->previousFundingCase;
+  }
+
+  public function getFundingCase(): FundingCaseEntity {
+    return $this->fundingCase;
+  }
+
+}
