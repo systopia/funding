@@ -75,6 +75,22 @@ msgid "Amount Requested"
 msgstr "Beantragter Betrag"
 
 #: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
+msgid "Amount Drawdowns"
+msgstr "Betrag Mittelabrufe"
+
+#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
+msgid "The sum of the amounts of drawdowns."
+msgstr "Die Summe der Beträge der Mittelabrufe."
+
+#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
+msgid "Amount Drawdowns Open"
+msgstr "Betrag offene Mittelabrufe"
+
+#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
+msgid "The sum of the amounts of new (unreviewed) drawdowns."
+msgstr "Die Summe der Beträge neuer (ungeprüfter) Mittelabrufe."
+
+#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
