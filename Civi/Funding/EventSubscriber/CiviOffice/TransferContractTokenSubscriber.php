@@ -72,6 +72,10 @@ class TransferContractTokenSubscriber extends AbstractTokenSubscriber {
    */
   public function evaluateToken(TokenRow $row, $entity, $field, $prefetch = NULL): void {
     if ('eligible_application_list' === $field) {
+      // In case there's no eligible application process (i.e. re-creation of transfer contract on funding cas withdraw)
+      // there should be an empty array, but it is NULL because \CRM_Utils_Array::extend() is used which sets NULL for
+      // an empty array.
+      $row->context['transferContract']['eligibleApplicationProcesses'] ??= [];
       /** @phpstan-var array<\Civi\Funding\Entity\ApplicationProcessEntity> $applicationProcesses */
       $applicationProcesses = $row->context['transferContract']['eligibleApplicationProcesses'];
       $titles = array_map(
