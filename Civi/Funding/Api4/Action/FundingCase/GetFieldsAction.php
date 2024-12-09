@@ -77,6 +77,35 @@ final class GetFieldsAction extends DAOGetFieldsAction {
       , 0)', Api4Query::MAIN_TABLE_ALIAS),
       ],
       [
+        'name' => 'amount_drawdowns',
+        'title' => E::ts('Amount Drawdowns'),
+        'description' => E::ts('The sum of the amounts of drawdowns.'),
+        'type' => 'Extra',
+        'data_type' => 'Money',
+        'readonly' => TRUE,
+        'nullable' => FALSE,
+        'sql_renderer' => fn (array $field, Api4SelectQuery $query) => sprintf('IFNULL(
+        (SELECT SUM(drawdown.amount) FROM civicrm_funding_payout_process payout
+        JOIN civicrm_funding_drawdown drawdown ON drawdown.payout_process_id = payout.id
+        WHERE payout.funding_case_id = %s)
+      , 0)', SqlRendererUtil::getFieldSqlName($field, $query, 'id')),
+      ],
+      [
+        'name' => 'amount_drawdowns_open',
+        'title' => E::ts('Amount Drawdowns Open'),
+        'description' => E::ts('The sum of the amounts of new (unreviewed) drawdowns.'),
+        'type' => 'Extra',
+        'data_type' => 'Money',
+        'readonly' => TRUE,
+        'nullable' => FALSE,
+        'sql_renderer' => fn (array $field, Api4SelectQuery $query) => sprintf("IFNULL(
+        (SELECT SUM(drawdown.amount) FROM civicrm_funding_payout_process payout
+        JOIN civicrm_funding_drawdown drawdown ON drawdown.payout_process_id = payout.id
+          AND drawdown.status = 'new'
+        WHERE payout.funding_case_id = %s)
+      , 0)", SqlRendererUtil::getFieldSqlName($field, $query, 'id')),
+      ],
+      [
         'name' => 'amount_paid_out',
         'title' => E::ts('Amount Paid Out'),
         'description' => E::ts('The sum of the amounts of accepted drawdowns.'),

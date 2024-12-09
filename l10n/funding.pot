@@ -22,6 +22,22 @@ msgstr ""
 msgid "Amount Requested"
 msgstr ""
 
+#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
+msgid "Amount Drawdowns"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
+msgid "The sum of the amounts of drawdowns."
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
+msgid "Amount Drawdowns Open"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
+msgid "The sum of the amounts of new (unreviewed) drawdowns."
+msgstr ""
+
 #: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php managed/SavedSearchFundingProgramControlling.mgd.php managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php managed/SavedSearch_funding_cases.mgd.php
 msgid "Amount Paid Out"
 msgstr ""
