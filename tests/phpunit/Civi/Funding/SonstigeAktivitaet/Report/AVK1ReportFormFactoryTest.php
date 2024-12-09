@@ -66,7 +66,7 @@ final class AVK1ReportFormFactoryTest extends TestCase {
       'reportData' => (object) [
         'grunddaten' => $grunddaten,
         'sachbericht' => (object) [
-          'aenderungen' => '',
+          'aenderungen' => NULL,
           'thematischeSchwerpunkte' => '',
         ],
         'dokumente' => (object) [

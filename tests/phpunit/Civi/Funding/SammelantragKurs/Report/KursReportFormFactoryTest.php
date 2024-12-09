@@ -72,10 +72,6 @@ final class KursReportFormFactoryTest extends TestCase {
       '_action' => 'save',
       'reportData' => (object) [
         'grunddaten' => $grunddaten,
-        'sachbericht' => (object) [
-          'aenderungen' => '',
-          'thematischeSchwerpunkte' => '',
-        ],
         'dokumente' => (object) [
           'dateien' => [],
         ],
