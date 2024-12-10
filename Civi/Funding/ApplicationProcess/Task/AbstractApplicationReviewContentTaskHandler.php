@@ -49,7 +49,7 @@ abstract class AbstractApplicationReviewContentTaskHandler implements Applicatio
     ApplicationProcessEntityBundle $applicationProcessBundle,
     ApplicationProcessEntity $previousApplicationProcess
   ): iterable {
-    if ($this->isStatusChangedToReview($applicationProcessBundle, $previousApplicationProcess)
+    if ($this->isStatusChangedToReviewable($applicationProcessBundle, $previousApplicationProcess)
       && NULL === $applicationProcessBundle->getApplicationProcess()->getIsReviewContent()
     ) {
       yield $this->createReviewTask($applicationProcessBundle);
@@ -57,7 +57,7 @@ abstract class AbstractApplicationReviewContentTaskHandler implements Applicatio
   }
 
   public function createTasksOnNew(ApplicationProcessEntityBundle $applicationProcessBundle): iterable {
-    if ($this->isInReviewStatus($applicationProcessBundle)
+    if ($this->isInReviewableStatus($applicationProcessBundle)
       && NULL === $applicationProcessBundle->getApplicationProcess()->getIsReviewContent()
     ) {
       yield $this->createReviewTask($applicationProcessBundle);
@@ -86,12 +86,18 @@ abstract class AbstractApplicationReviewContentTaskHandler implements Applicatio
       $task->setStatusName(ActivityStatusNames::COMPLETED);
       $changed = TRUE;
     }
-    elseif ($this->isStatusChangedToNonReview($applicationProcessBundle, $previousApplicationProcess)) {
+    elseif ($this->isStatusChangedToNonReviewable($applicationProcessBundle, $previousApplicationProcess)) {
       $task->setStatusName(ActivityStatusNames::CANCELLED);
       $changed = TRUE;
     }
 
     return $changed;
+  }
+
+  final protected function getInfo(
+    FundingCaseTypeEntity $fundingCaseType
+  ): ApplicationProcessActionStatusInfoInterface {
+    return $this->infoContainer->get($fundingCaseType->getName());
   }
 
   /**
@@ -107,8 +113,12 @@ abstract class AbstractApplicationReviewContentTaskHandler implements Applicatio
     return E::ts('Review Funding Application (content)');
   }
 
-  protected function isInReviewStatus(ApplicationProcessEntityBundle $applicationProcessBundle): bool {
-    return $this->getInfo($applicationProcessBundle->getFundingCaseType())
+  protected function isInReviewableStatus(ApplicationProcessEntityBundle $applicationProcessBundle): bool {
+    return in_array(
+      $applicationProcessBundle->getApplicationProcess()->getStatus(),
+      ['applied', 'rework-review-requested'],
+      TRUE
+    ) || $this->getInfo($applicationProcessBundle->getFundingCaseType())
       ->isReviewStatus($applicationProcessBundle->getApplicationProcess()->getStatus());
   }
 
@@ -132,24 +142,20 @@ abstract class AbstractApplicationReviewContentTaskHandler implements Applicatio
       ? [] : [$applicationProcess->getReviewerContentContactId()];
   }
 
-  private function getInfo(FundingCaseTypeEntity $fundingCaseType): ApplicationProcessActionStatusInfoInterface {
-    return $this->infoContainer->get($fundingCaseType->getName());
-  }
-
-  private function isStatusChangedToReview(
+  private function isStatusChangedToReviewable(
     ApplicationProcessEntityBundle $applicationProcessBundle,
     ApplicationProcessEntity $previousApplicationProcess
   ): bool {
     return $applicationProcessBundle->getApplicationProcess()->getStatus() !== $previousApplicationProcess->getStatus()
-      && $this->isInReviewStatus($applicationProcessBundle);
+      && $this->isInReviewableStatus($applicationProcessBundle);
   }
 
-  private function isStatusChangedToNonReview(
+  private function isStatusChangedToNonReviewable(
     ApplicationProcessEntityBundle $applicationProcessBundle,
     ApplicationProcessEntity $previousApplicationProcess
   ): bool {
     return $applicationProcessBundle->getApplicationProcess()->getStatus() !== $previousApplicationProcess->getStatus()
-      && !$this->isInReviewStatus($applicationProcessBundle);
+      && !$this->isInReviewableStatus($applicationProcessBundle);
   }
 
 }
