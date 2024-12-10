@@ -24,7 +24,7 @@ use Civi\Api4\FundingApplicationSnapshot;
 use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoContainer;
 use Civi\RemoteTools\Api4\Api4Interface;
 
-final class Upgrader0010 {
+final class Upgrader0010 implements UpgraderInterface {
 
   private Api4Interface $api4;
 

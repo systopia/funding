@@ -24,6 +24,7 @@ use Civi\Funding\Upgrade\Upgrader0006;
 use Civi\Funding\Upgrade\Upgrader0008;
 use Civi\Funding\Upgrade\Upgrader0009;
 use Civi\Funding\Upgrade\Upgrader0010;
+use Civi\Funding\Upgrade\Upgrader0011;
 use CRM_Funding_ExtensionUtil as E;
 
 /**
@@ -120,6 +121,10 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
 
   public function upgrade_0011(): bool {
     $this->installJsonOverlapsSqlFunction();
+
+    /** @var \Civi\Funding\Upgrade\Upgrader0011 $upgrader */
+    $upgrader = \Civi::service(Upgrader0011::class);
+    $upgrader->execute($this->ctx->log);
 
     return TRUE;
   }

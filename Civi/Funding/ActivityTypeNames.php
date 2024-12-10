@@ -40,10 +40,6 @@ final class ActivityTypeNames {
 
   public const FUNDING_APPLICATION_COMMENT_EXTERNAL = 'funding_application_comment_external';
 
-  public const FUNDING_APPLICATION_TASK_INTERNAL = 'funding_application_task_internal';
-
-  public const FUNDING_APPLICATION_TASK_EXTERNAL = 'funding_application_task_external';
-
   public const FUNDING_APPLICATION_RESTORE = 'funding_application_restore';
 
   public const FUNDING_CASE_TASK = 'funding_case_task';

@@ -30,7 +30,7 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterf
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandlerInterface;
 use Civi\Funding\FundingCase\FundingCasePermissionsCacheManager;
 
-final class Upgrader0002 {
+final class Upgrader0002 implements UpgraderInterface {
 
   private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
 

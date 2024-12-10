@@ -31,7 +31,7 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHand
 use Civi\Funding\SammelantragKurs\KursConstants;
 use Civi\RemoteTools\Api4\Query\Comparison;
 
-final class Upgrader0003 {
+final class Upgrader0003 implements UpgraderInterface {
 
   private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
 
