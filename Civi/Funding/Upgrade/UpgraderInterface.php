@@ -17,17 +17,13 @@
 
 declare(strict_types = 1);
 
-// phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
-/** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
+namespace Civi\Funding\Upgrade;
 
-use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
-use Civi\Funding\Upgrade\UpgraderInterface;
+interface UpgraderInterface {
 
-ServiceRegistrator::autowireAllImplementing(
-  $container,
-  __DIR__ . '/../Civi/Funding/Upgrade',
-  'Civi\\Funding\\Upgrade',
-  UpgraderInterface::class,
-  [],
-  ['public' => TRUE]
-);
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function execute(\Log $log): void;
+
+}

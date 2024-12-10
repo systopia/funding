@@ -29,7 +29,7 @@ use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\RemoteTools\Api4\Query\Comparison;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
 
-final class Upgrader0009 {
+final class Upgrader0009 implements UpgraderInterface {
 
   private ApplicationProcessManager $applicationProcessManager;
 
