@@ -39,8 +39,29 @@ final class AbstractApplicationReviewCalculativeTaskHandlerTest extends TestCase
     );
   }
 
+  public function testCreateTasksOnChangeStatusApplied(): void {
+    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess(['status' => 'draft']);
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+      'status' => 'applied',
+      'reviewer_calc_contact_id' => 123,
+    ]);
+
+    $tasks = [...$this->taskHandler->createTasksOnChange($applicationProcessBundle, $previousApplicationProcess)];
+    static::assertEquals([
+      FundingTaskEntity::newTask([
+        'subject' => 'Review Funding Application (calculative)',
+        'affected_identifier' => $applicationProcessBundle->getApplicationProcess()->getIdentifier(),
+        'required_permissions' => [ApplicationProcessPermissions::REVIEW_CALCULATIVE],
+        'type' => 'review_calculative',
+        'funding_case_id' => $applicationProcessBundle->getFundingCase()->getId(),
+        'application_process_id' => $applicationProcessBundle->getApplicationProcess()->getId(),
+        'assignee_contact_ids' => [123],
+      ]),
+    ], $tasks);
+  }
+
   public function testCreateTasksOnChangeStatusReview(): void {
-    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess(['status' => 'applied']);
+    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess(['status' => 'draft']);
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
       'status' => 'review',
       'reviewer_calc_contact_id' => 123,
@@ -80,17 +101,36 @@ final class AbstractApplicationReviewCalculativeTaskHandlerTest extends TestCase
   }
 
   public function testCreateTasksOnChangeStatusNonReview(): void {
-    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess(['status' => 'new']);
+    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess(['status' => 'review']);
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
-      ['status' => 'applied']
+      ['status' => 'draft']
     );
 
     $this->infoMock->expects(static::once())->method('isReviewStatus')
-      ->with('applied')
+      ->with('draft')
       ->willReturn(FALSE);
 
     $tasks = [...$this->taskHandler->createTasksOnChange($applicationProcessBundle, $previousApplicationProcess)];
     static::assertSame([], $tasks);
+  }
+
+  public function testCreateTasksOnNewStatusApplied(): void {
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+      'status' => 'applied',
+    ]);
+
+    $tasks = [...$this->taskHandler->createTasksOnNew($applicationProcessBundle)];
+    static::assertEquals([
+      FundingTaskEntity::newTask([
+        'subject' => 'Review Funding Application (calculative)',
+        'affected_identifier' => $applicationProcessBundle->getApplicationProcess()->getIdentifier(),
+        'required_permissions' => [ApplicationProcessPermissions::REVIEW_CALCULATIVE],
+        'type' => 'review_calculative',
+        'funding_case_id' => $applicationProcessBundle->getFundingCase()->getId(),
+        'application_process_id' => $applicationProcessBundle->getApplicationProcess()->getId(),
+        'assignee_contact_ids' => [],
+      ]),
+    ], $tasks);
   }
 
   public function testCreateTasksOnNewStatusReview(): void {
@@ -118,11 +158,11 @@ final class AbstractApplicationReviewCalculativeTaskHandlerTest extends TestCase
 
   public function testCreateTasksOnNewStatusNonReview(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
-      ['status' => 'applied']
+      ['status' => 'new']
     );
 
     $this->infoMock->expects(static::once())->method('isReviewStatus')
-      ->with('applied')
+      ->with('new')
       ->willReturn(FALSE);
 
     $tasks = [...$this->taskHandler->createTasksOnNew($applicationProcessBundle)];
