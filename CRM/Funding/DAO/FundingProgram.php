@@ -365,6 +365,9 @@ class CRM_Funding_DAO_FundingProgram extends CRM_Core_DAO {
           'localizable' => 0,
           'html' => [
             'type' => 'Number',
+            // Manually added to have the correct step for the number input field.
+            // \CRM_Funding_BAO_FundingProgram::fields() isn't called, anymore.
+            'step' => 0.01,
           ],
           'add' => NULL,
         ],

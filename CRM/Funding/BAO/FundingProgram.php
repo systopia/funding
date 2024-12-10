@@ -64,16 +64,4 @@ final class CRM_Funding_BAO_FundingProgram extends CRM_Funding_DAO_FundingProgra
     // TODO: Provide Afform for a funding program.
   }
 
-  /**
-   * @phpstan-return array<string, mixed>
-   */
-  public static function &fields() {
-    $fields = parent::fields();
-    // Currently needs to be set here,
-    // see https://github.com/civicrm/civicrm-core/pull/29768.
-    $fields['budget']['html']['step'] = 0.01;
-
-    return $fields;
-  }
-
 }
