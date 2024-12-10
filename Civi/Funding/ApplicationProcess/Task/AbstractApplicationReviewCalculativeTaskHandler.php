@@ -49,7 +49,7 @@ abstract class AbstractApplicationReviewCalculativeTaskHandler implements Applic
     ApplicationProcessEntityBundle $applicationProcessBundle,
     ApplicationProcessEntity $previousApplicationProcess
   ): iterable {
-    if ($this->isStatusChangedToReview($applicationProcessBundle, $previousApplicationProcess)
+    if ($this->isStatusChangedToReviewable($applicationProcessBundle, $previousApplicationProcess)
       && NULL === $applicationProcessBundle->getApplicationProcess()->getIsReviewCalculative()
     ) {
       yield $this->createReviewTask($applicationProcessBundle);
@@ -57,7 +57,7 @@ abstract class AbstractApplicationReviewCalculativeTaskHandler implements Applic
   }
 
   public function createTasksOnNew(ApplicationProcessEntityBundle $applicationProcessBundle): iterable {
-    if ($this->isInReviewStatus($applicationProcessBundle)
+    if ($this->isInReviewableStatus($applicationProcessBundle)
       && NULL === $applicationProcessBundle->getApplicationProcess()->getIsReviewCalculative()
     ) {
       yield $this->createReviewTask($applicationProcessBundle);
@@ -86,7 +86,7 @@ abstract class AbstractApplicationReviewCalculativeTaskHandler implements Applic
       $task->setStatusName(ActivityStatusNames::COMPLETED);
       $changed = TRUE;
     }
-    elseif ($this->isStatusChangedToNonReview($applicationProcessBundle, $previousApplicationProcess)) {
+    elseif ($this->isStatusChangedToNonReviewable($applicationProcessBundle, $previousApplicationProcess)) {
       $task->setStatusName(ActivityStatusNames::CANCELLED);
       $changed = TRUE;
     }
@@ -94,10 +94,16 @@ abstract class AbstractApplicationReviewCalculativeTaskHandler implements Applic
     return $changed;
   }
 
+  final protected function getInfo(
+    FundingCaseTypeEntity $fundingCaseType
+  ): ApplicationProcessActionStatusInfoInterface {
+    return $this->infoContainer->get($fundingCaseType->getName());
+  }
+
   /**
    * @phpstan-return non-empty-list<string>
    *   One of the returned permissions is required to review an application
-   *   calculative.
+   *   calculative-wise.
    */
   protected function getRequiredPermissions(): array {
     return [ApplicationProcessPermissions::REVIEW_CALCULATIVE];
@@ -107,8 +113,12 @@ abstract class AbstractApplicationReviewCalculativeTaskHandler implements Applic
     return E::ts('Review Funding Application (calculative)');
   }
 
-  protected function isInReviewStatus(ApplicationProcessEntityBundle $applicationProcessBundle): bool {
-    return $this->getInfo($applicationProcessBundle->getFundingCaseType())
+  protected function isInReviewableStatus(ApplicationProcessEntityBundle $applicationProcessBundle): bool {
+    return in_array(
+      $applicationProcessBundle->getApplicationProcess()->getStatus(),
+      ['applied', 'rework-review-requested'],
+      TRUE
+    ) || $this->getInfo($applicationProcessBundle->getFundingCaseType())
       ->isReviewStatus($applicationProcessBundle->getApplicationProcess()->getStatus());
   }
 
@@ -132,24 +142,20 @@ abstract class AbstractApplicationReviewCalculativeTaskHandler implements Applic
       ? [] : [$applicationProcess->getReviewerCalculativeContactId()];
   }
 
-  private function getInfo(FundingCaseTypeEntity $fundingCaseType): ApplicationProcessActionStatusInfoInterface {
-    return $this->infoContainer->get($fundingCaseType->getName());
-  }
-
-  private function isStatusChangedToReview(
+  private function isStatusChangedToReviewable(
     ApplicationProcessEntityBundle $applicationProcessBundle,
     ApplicationProcessEntity $previousApplicationProcess
   ): bool {
     return $applicationProcessBundle->getApplicationProcess()->getStatus() !== $previousApplicationProcess->getStatus()
-      && $this->isInReviewStatus($applicationProcessBundle);
+      && $this->isInReviewableStatus($applicationProcessBundle);
   }
 
-  private function isStatusChangedToNonReview(
+  private function isStatusChangedToNonReviewable(
     ApplicationProcessEntityBundle $applicationProcessBundle,
     ApplicationProcessEntity $previousApplicationProcess
   ): bool {
     return $applicationProcessBundle->getApplicationProcess()->getStatus() !== $previousApplicationProcess->getStatus()
-      && !$this->isInReviewStatus($applicationProcessBundle);
+      && !$this->isInReviewableStatus($applicationProcessBundle);
   }
 
 }
