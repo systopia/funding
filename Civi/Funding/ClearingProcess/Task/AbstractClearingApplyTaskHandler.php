@@ -64,7 +64,7 @@ abstract class AbstractClearingApplyTaskHandler implements ClearingProcessTaskHa
   }
 
   protected function getTaskSubject(ClearingProcessEntityBundle $clearingProcessBundle): string {
-    return E::ts('Complete and apply clearing');
+    return E::ts('Complete and Apply Clearing');
   }
 
   private function createApplyTask(ClearingProcessEntityBundle $clearingProcessBundle): FundingTaskEntity {

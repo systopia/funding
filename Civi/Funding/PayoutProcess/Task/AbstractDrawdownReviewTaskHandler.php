@@ -73,7 +73,7 @@ abstract class AbstractDrawdownReviewTaskHandler implements DrawdownTaskHandlerI
   }
 
   protected function getTaskSubject(DrawdownBundle $drawdownBundle): string {
-    return E::ts('Review drawdown');
+    return E::ts('Review Drawdown');
   }
 
   protected function isInNewStatus(DrawdownBundle $drawdownBundle): bool {
