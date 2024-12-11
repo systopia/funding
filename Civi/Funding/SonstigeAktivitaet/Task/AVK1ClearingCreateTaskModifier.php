@@ -17,18 +17,13 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Task\Modifier;
+namespace Civi\Funding\SonstigeAktivitaet\Task;
 
-use Civi\Funding\Entity\ClearingProcessEntity;
-use Civi\Funding\Entity\ClearingProcessEntityBundle;
-use Civi\Funding\Entity\FundingTaskEntity;
+use Civi\Funding\ClearingProcess\Task\AbstractClearingCreateTaskModifier;
+use Civi\Funding\IJB\Traits\IJBSupportedFundingCaseTypesTrait;
 
-interface ClearingProcessTaskModifierInterface {
+final class AVK1ClearingCreateTaskModifier extends AbstractClearingCreateTaskModifier {
 
-  public function modifyTask(
-    FundingTaskEntity $task,
-    ClearingProcessEntityBundle $clearingProcessBundle,
-    ClearingProcessEntity $previousClearingProcess
-  ): bool;
+  use IJBSupportedFundingCaseTypesTrait;
 
 }
