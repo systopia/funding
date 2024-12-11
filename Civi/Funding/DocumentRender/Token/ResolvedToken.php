@@ -25,7 +25,8 @@ namespace Civi\Funding\DocumentRender\Token;
 final class ResolvedToken {
 
   /**
-   * @var mixed Either a string or a value that is handle by TokenProcessor.
+   * @phpstan-var string|\DateTime|\Brick\Money\Money
+   * Either a string or a value that is handled by TokenProcessor.
    */
   public $value;
 
@@ -35,8 +36,8 @@ final class ResolvedToken {
   public string $format;
 
   /**
-   * @param mixed $value
-   *   Either a string or a value that is handle by TokenProcessor.
+   * @phpstan-param string|\DateTime|\Brick\Money\Money $value
+   *   Either a string or a value that is handled by TokenProcessor.
    * @phpstan-param 'text/plain'|'text/html' $format
    */
   public function __construct($value, string $format) {
