@@ -19,14 +19,10 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Entity;
 
-use Civi\Funding\Entity\Traits\ApplicationProcessEntityBundleTrait;
-
 /**
  * @codeCoverageIgnore
  */
-final class ClearingProcessEntityBundle implements EntityBundleInterface {
-
-  use ApplicationProcessEntityBundleTrait;
+final class ClearingProcessEntityBundle extends ApplicationProcessEntityBundle {
 
   private ClearingProcessEntity $clearingProcess;
 
@@ -35,7 +31,12 @@ final class ClearingProcessEntityBundle implements EntityBundleInterface {
     ApplicationProcessEntityBundle $applicationProcessBundle
   ) {
     $this->clearingProcess = $clearingProcess;
-    $this->applicationProcessBundle = $applicationProcessBundle;
+    parent::__construct(
+      $applicationProcessBundle->getApplicationProcess(),
+      $applicationProcessBundle->getFundingCase(),
+      $applicationProcessBundle->getFundingCaseType(),
+      $applicationProcessBundle->getFundingProgram()
+    );
   }
 
   public function getClearingProcess(): ClearingProcessEntity {
