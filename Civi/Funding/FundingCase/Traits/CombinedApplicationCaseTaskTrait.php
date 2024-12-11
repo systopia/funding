@@ -17,27 +17,31 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Entity;
+namespace Civi\Funding\FundingCase\Traits;
 
-/**
- * @codeCoverageIgnore
- */
-class ApplicationProcessEntityBundle extends FundingCaseBundle {
+trait CombinedApplicationCaseTaskTrait {
 
-  private ApplicationProcessEntity $applicationProcess;
+  protected static string $taskType = 'apply';
 
-  public function __construct(
-    ApplicationProcessEntity $applicationProcess,
-    FundingCaseEntity $fundingCase,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingProgramEntity $fundingProgram
-  ) {
-    $this->applicationProcess = $applicationProcess;
-    parent::__construct($fundingCase, $fundingCaseType, $fundingProgram);
+  /**
+   * @phpstan-return list<string>
+   */
+  abstract public static function getSupportedFundingCaseTypes(): array;
+
+  /**
+   * @phpstan-return non-empty-list<string>
+   *   List of status in which an application process can be applied.
+   */
+  protected function getAppliableStatusList(): array {
+    return ['draft', 'new', 'rework'];
   }
 
-  public function getApplicationProcess(): ApplicationProcessEntity {
-    return $this->applicationProcess;
+  /**
+   * @phpstan-return non-empty-list<string>
+   *   One of the returned permissions is required to apply an application.
+   */
+  protected function getRequiredPermissions(): array {
+    return ['application_apply'];
   }
 
 }

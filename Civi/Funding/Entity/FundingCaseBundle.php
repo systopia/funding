@@ -22,7 +22,7 @@ namespace Civi\Funding\Entity;
 /**
  * @codeCoverageIgnore
  */
-final class FundingCaseBundle implements EntityBundleInterface {
+class FundingCaseBundle implements EntityBundleInterface {
 
   private FundingCaseEntity $fundingCase;
 

@@ -63,7 +63,7 @@ class ClearingProcessStartedSubscriber implements EventSubscriberInterface {
         ->getStatusOnClearingProcessStarted($applicationProcess->getFullStatus())
     );
     $this->applicationProcessManager->update(
-      $this->requestContext->getContactId(), $event->getApplicationProcessBundle()
+      $this->requestContext->getContactId(), $event->getClearingProcessBundle()
     );
   }
 
