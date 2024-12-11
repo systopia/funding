@@ -41,7 +41,7 @@ final class AbstractApplicationApplyTaskHandlerTest extends TestCase {
     $tasks = [...$this->taskHandler->createTasksOnNew($applicationProcessBundle)];
     static::assertEquals([
       FundingTaskEntity::newTask([
-        'subject' => 'Complete and apply application',
+        'subject' => 'Complete and Apply Application',
         'affected_identifier' => $applicationProcessBundle->getApplicationProcess()->getIdentifier(),
         'required_permissions' => ['application_apply'],
         'type' => 'apply',
@@ -70,7 +70,7 @@ final class AbstractApplicationApplyTaskHandlerTest extends TestCase {
     $tasks = [...$this->taskHandler->createTasksOnChange($applicationProcessBundle, $previousApplication)];
     static::assertEquals([
       FundingTaskEntity::newTask([
-        'subject' => 'Complete and apply application',
+        'subject' => 'Complete and Apply Application',
         'affected_identifier' => $applicationProcessBundle->getApplicationProcess()->getIdentifier(),
         'required_permissions' => ['application_apply'],
         'type' => 'apply',
@@ -97,7 +97,7 @@ final class AbstractApplicationApplyTaskHandlerTest extends TestCase {
     ]);
 
     $task = FundingTaskEntity::newTask([
-      'subject' => 'Complete and apply application',
+      'subject' => 'Complete and Apply Application',
       'affected_identifier' => $previousApplicationProcess->getIdentifier(),
       'required_permissions' => ['application_apply'],
       'type' => 'apply',
@@ -119,7 +119,7 @@ final class AbstractApplicationApplyTaskHandlerTest extends TestCase {
     ]);
 
     $task = FundingTaskEntity::newTask([
-      'subject' => 'Complete and apply application',
+      'subject' => 'Complete and Apply Application',
       'affected_identifier' => $previousApplicationProcess->getIdentifier(),
       'required_permissions' => ['application_apply'],
       'type' => 'apply',
