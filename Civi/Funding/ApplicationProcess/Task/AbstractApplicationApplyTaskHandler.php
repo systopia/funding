@@ -73,7 +73,7 @@ abstract class AbstractApplicationApplyTaskHandler implements ApplicationProcess
   }
 
   protected function getTaskSubject(ApplicationProcessEntityBundle $applicationProcessBundle): string {
-    return E::ts('Complete and apply application');
+    return E::ts('Complete and Apply Application');
   }
 
   protected function isInAppliableStatus(ApplicationProcessEntityBundle $applicationProcessBundle): bool {

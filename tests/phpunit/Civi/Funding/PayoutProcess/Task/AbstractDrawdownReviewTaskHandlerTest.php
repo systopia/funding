@@ -27,7 +27,7 @@ final class AbstractDrawdownReviewTaskHandlerTest extends TestCase {
     $tasks = [...$this->taskHandler->createTasksOnNew($drawdownBundle)];
     static::assertEquals([
       FundingTaskEntity::newTask([
-        'subject' => 'Review drawdown',
+        'subject' => 'Review Drawdown',
         'affected_identifier' => $drawdownBundle->getFundingCase()->getIdentifier(),
         'required_permissions' => ['review_drawdown'],
         'type' => 'review',
@@ -58,7 +58,7 @@ final class AbstractDrawdownReviewTaskHandlerTest extends TestCase {
     $drawdownBundle = DrawdownBundleFactory::create(['id' => 99, 'status' => 'test']);
 
     $task = FundingTaskEntity::newTask([
-      'subject' => 'Complete and apply application',
+      'subject' => 'Review Drawdown',
       'affected_identifier' => $drawdownBundle->getFundingCase()->getIdentifier(),
       'required_permissions' => ['review_drawdown'],
       'type' => 'review',
@@ -76,7 +76,7 @@ final class AbstractDrawdownReviewTaskHandlerTest extends TestCase {
     $drawdownBundle = DrawdownBundleFactory::create(['id' => 99, 'status' => 'new']);
 
     $task = FundingTaskEntity::newTask([
-      'subject' => 'Complete and apply application',
+      'subject' => 'Review Drawdown',
       'affected_identifier' => $drawdownBundle->getFundingCase()->getIdentifier(),
       'required_permissions' => ['review_drawdown'],
       'type' => 'review',
