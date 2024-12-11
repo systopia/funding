@@ -24,6 +24,7 @@ use Civi\Funding\Api4\Action\Remote\FundingClearingProcess\GetOrCreateAction;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ClearingProcessBundleFactory;
 use Civi\Funding\Traits\CreateMockTrait;
@@ -102,10 +103,16 @@ final class RemoteGetOrCreateActionHandlerTest extends TestCase {
       ['is_eligible' => TRUE],
       ['permissions' => ['application_modify']],
     );
+    $applicationProcessBundle = new ApplicationProcessEntityBundle(
+      $clearingProcessBundle->getApplicationProcess(),
+      $clearingProcessBundle->getFundingCase(),
+      $clearingProcessBundle->getFundingCaseType(),
+      $clearingProcessBundle->getFundingProgram()
+    );
 
     $this->applicationProcessBundleLoaderMock->method('get')
       ->with(12)
-      ->willReturn($clearingProcessBundle->getApplicationProcessBundle());
+      ->willReturn($applicationProcessBundle);
 
     $this->clearingProcessManagerMock->method('getByApplicationProcessId')
       ->with(12)
@@ -132,10 +139,16 @@ final class RemoteGetOrCreateActionHandlerTest extends TestCase {
       ['is_eligible' => TRUE],
       ['permissions' => [$permission]],
     );
+    $applicationProcessBundle = new ApplicationProcessEntityBundle(
+      $clearingProcessBundle->getApplicationProcess(),
+      $clearingProcessBundle->getFundingCase(),
+      $clearingProcessBundle->getFundingCaseType(),
+      $clearingProcessBundle->getFundingProgram()
+    );
 
     $this->applicationProcessBundleLoaderMock->method('get')
       ->with(12)
-      ->willReturn($clearingProcessBundle->getApplicationProcessBundle());
+      ->willReturn($applicationProcessBundle);
 
     $this->clearingProcessManagerMock->method('getByApplicationProcessId')
       ->with(12)
@@ -168,10 +181,16 @@ final class RemoteGetOrCreateActionHandlerTest extends TestCase {
       ['is_eligible' => TRUE],
       ['permissions' => ['application_modify']],
     );
+    $applicationProcessBundle = new ApplicationProcessEntityBundle(
+      $clearingProcessBundle->getApplicationProcess(),
+      $clearingProcessBundle->getFundingCase(),
+      $clearingProcessBundle->getFundingCaseType(),
+      $clearingProcessBundle->getFundingProgram()
+    );
 
     $this->applicationProcessBundleLoaderMock->method('get')
       ->with(12)
-      ->willReturn($clearingProcessBundle->getApplicationProcessBundle());
+      ->willReturn($applicationProcessBundle);
 
     $this->clearingProcessManagerMock->method('getByApplicationProcessId')
       ->with(12)
