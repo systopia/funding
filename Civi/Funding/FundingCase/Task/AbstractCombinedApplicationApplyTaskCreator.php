@@ -62,7 +62,7 @@ abstract class AbstractCombinedApplicationApplyTaskCreator implements Applicatio
   }
 
   protected function getTaskSubject(FundingCaseBundle $fundingCaseBundle): string {
-    return E::ts('Complete and apply application');
+    return E::ts('Complete and Apply Application');
   }
 
   private function createApplyTask(FundingCaseBundle $fundingCaseBundle): FundingTaskEntity {

@@ -50,7 +50,7 @@ trait ClearingCreateTaskTrait {
   }
 
   protected function getTaskSubject(ClearingProcessEntityBundle $clearingProcessBundle): string {
-    return E::ts('Create clearing');
+    return E::ts('Create Clearing');
   }
 
   final protected function isClearingStarted(ClearingProcessEntity $clearingProcess): bool {
