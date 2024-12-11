@@ -76,7 +76,7 @@ final class GetAction extends AbstractReferencingDAOGetAction {
     }
 
     if (NULL !== $this->statusType) {
-      $this->addJoin('OptionValue as _ov', 'INNER', NULL,
+      $this->addJoin('OptionValue AS _ov', 'INNER', NULL,
         ['_ov.filter', '=', $this->statusType],
         ['_ov.value', '=', 'status_id'],
         ['_ov.option_group_id.name', '=', '"activity_status"']
