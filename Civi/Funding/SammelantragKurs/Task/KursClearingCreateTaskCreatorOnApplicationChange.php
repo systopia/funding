@@ -17,18 +17,14 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Task\Modifier;
+namespace Civi\Funding\SammelantragKurs\Task;
 
-use Civi\Funding\Entity\ClearingProcessEntity;
-use Civi\Funding\Entity\ClearingProcessEntityBundle;
-use Civi\Funding\Entity\FundingTaskEntity;
+use Civi\Funding\ClearingProcess\Task\AbstractClearingCreateTaskCreatorOnApplicationChange;
+use Civi\Funding\IJB\Traits\IJBSupportedFundingCaseTypesTrait;
 
-interface ClearingProcessTaskModifierInterface {
+// phpcs:disable Generic.Files.LineLength.TooLong
+final class KursClearingCreateTaskCreatorOnApplicationChange extends AbstractClearingCreateTaskCreatorOnApplicationChange {
 
-  public function modifyTask(
-    FundingTaskEntity $task,
-    ClearingProcessEntityBundle $clearingProcessBundle,
-    ClearingProcessEntity $previousClearingProcess
-  ): bool;
+  use IJBSupportedFundingCaseTypesTrait;
 
 }
