@@ -17,18 +17,43 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Task\Modifier;
+namespace Civi\Funding\ClearingProcess\Task;
 
+use Civi\Funding\ActivityStatusNames;
+use Civi\Funding\ClearingProcess\Traits\ClearingCreateTaskTrait;
 use Civi\Funding\Entity\ClearingProcessEntity;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\Entity\FundingTaskEntity;
+use Civi\Funding\Task\Modifier\ClearingProcessTaskModifierInterface;
 
-interface ClearingProcessTaskModifierInterface {
+/**
+ * Should be combined with:
+ * @see \Civi\Funding\ClearingProcess\Task\AbstractClearingCreateTaskCreatorOnApplicationChange
+ * @see \Civi\Funding\ClearingProcess\Task\AbstractClearingCreateTaskCreatorOnFundingCaseChange
+ */
+abstract class AbstractClearingCreateTaskModifier implements ClearingProcessTaskModifierInterface {
+
+  use ClearingCreateTaskTrait;
+
+  /**
+   * @phpstan-return list<string>
+   */
+  abstract public static function getSupportedFundingCaseTypes(): array;
 
   public function modifyTask(
     FundingTaskEntity $task,
     ClearingProcessEntityBundle $clearingProcessBundle,
     ClearingProcessEntity $previousClearingProcess
-  ): bool;
+  ): bool {
+    if (self::$taskType !== $task->getType()
+      || !$this->isClearingStarted($clearingProcessBundle->getClearingProcess())
+    ) {
+      return FALSE;
+    }
+
+    $task->setStatusName(ActivityStatusNames::COMPLETED);
+
+    return TRUE;
+  }
 
 }
