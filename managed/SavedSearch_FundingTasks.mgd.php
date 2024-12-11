@@ -81,7 +81,7 @@ return [
                 [
                   'path' => 'civicrm/a#funding/case/[source_record_id]',
                   'icon' => 'fa-folder-open-o',
-                  'text' => E::ts('Open Funding Case'),
+                  'text' => E::ts('Open case'),
                   'style' => 'default',
                   'condition' => [
                     'activity_type_id:name',
@@ -97,7 +97,7 @@ return [
                 [
                   'path' => 'civicrm/a#funding/application/[source_record_id]',
                   'icon' => 'fa-external-link',
-                  'text' => E::ts('Open Application'),
+                  'text' => E::ts('Open application'),
                   'style' => 'default',
                   'condition' => [
                     'activity_type_id:name',
@@ -113,7 +113,7 @@ return [
                 [
                   'path' => 'civicrm/a#funding/clearing/[source_record_id]',
                   'icon' => 'fa-external-link',
-                  'text' => E::ts('Open Clearing'),
+                  'text' => E::ts('Open clearing'),
                   'style' => 'default',
                   'condition' => [
                     'activity_type_id:name',
