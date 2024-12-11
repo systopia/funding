@@ -49,7 +49,7 @@ final class AbstractApplicationReviewContentTaskHandlerTest extends TestCase {
     $tasks = [...$this->taskHandler->createTasksOnChange($applicationProcessBundle, $previousApplicationProcess)];
     static::assertEquals([
       FundingTaskEntity::newTask([
-        'subject' => 'Review Funding Application (content)',
+        'subject' => 'Review Application (content)',
         'affected_identifier' => $applicationProcessBundle->getApplicationProcess()->getIdentifier(),
         'required_permissions' => [ApplicationProcessPermissions::REVIEW_CONTENT],
         'type' => 'review_content',
@@ -74,7 +74,7 @@ final class AbstractApplicationReviewContentTaskHandlerTest extends TestCase {
     $tasks = [...$this->taskHandler->createTasksOnChange($applicationProcessBundle, $previousApplicationProcess)];
     static::assertEquals([
       FundingTaskEntity::newTask([
-        'subject' => 'Review Funding Application (content)',
+        'subject' => 'Review Application (content)',
         'affected_identifier' => $applicationProcessBundle->getApplicationProcess()->getIdentifier(),
         'required_permissions' => [ApplicationProcessPermissions::REVIEW_CONTENT],
         'type' => 'review_content',
@@ -122,7 +122,7 @@ final class AbstractApplicationReviewContentTaskHandlerTest extends TestCase {
     $tasks = [...$this->taskHandler->createTasksOnNew($applicationProcessBundle)];
     static::assertEquals([
       FundingTaskEntity::newTask([
-        'subject' => 'Review Funding Application (content)',
+        'subject' => 'Review Application (content)',
         'affected_identifier' => $applicationProcessBundle->getApplicationProcess()->getIdentifier(),
         'required_permissions' => [ApplicationProcessPermissions::REVIEW_CONTENT],
         'type' => 'review_content',
@@ -145,7 +145,7 @@ final class AbstractApplicationReviewContentTaskHandlerTest extends TestCase {
     $tasks = [...$this->taskHandler->createTasksOnNew($applicationProcessBundle)];
     static::assertEquals([
       FundingTaskEntity::newTask([
-        'subject' => 'Review Funding Application (content)',
+        'subject' => 'Review Application (content)',
         'affected_identifier' => $applicationProcessBundle->getApplicationProcess()->getIdentifier(),
         'required_permissions' => [ApplicationProcessPermissions::REVIEW_CONTENT],
         'type' => 'review_content',
@@ -176,7 +176,7 @@ final class AbstractApplicationReviewContentTaskHandlerTest extends TestCase {
     );
 
     $task = FundingTaskEntity::newTask([
-      'subject' => 'Review Funding Application (content)',
+      'subject' => 'Review Application (content)',
       'affected_identifier' => $previousApplicationProcess->getIdentifier(),
       'required_permissions' => [ApplicationProcessPermissions::REVIEW_CONTENT],
       'type' => 'review_content',
@@ -200,7 +200,7 @@ final class AbstractApplicationReviewContentTaskHandlerTest extends TestCase {
     ]);
 
     $task = FundingTaskEntity::newTask([
-      'subject' => 'Review Funding Application (content)',
+      'subject' => 'Review Application (content)',
       'affected_identifier' => $previousApplicationProcess->getIdentifier(),
       'required_permissions' => [ApplicationProcessPermissions::REVIEW_CONTENT],
       'type' => 'review_content',
@@ -224,7 +224,7 @@ final class AbstractApplicationReviewContentTaskHandlerTest extends TestCase {
     );
 
     $task = FundingTaskEntity::newTask([
-      'subject' => 'Review Funding Application (content)',
+      'subject' => 'Review Application (content)',
       'affected_identifier' => $previousApplicationProcess->getIdentifier(),
       'required_permissions' => [ApplicationProcessPermissions::REVIEW_CONTENT],
       'type' => 'review_content',
@@ -247,7 +247,7 @@ final class AbstractApplicationReviewContentTaskHandlerTest extends TestCase {
     ]);
 
     $task = FundingTaskEntity::newTask([
-      'subject' => 'Review Funding Application (content)',
+      'subject' => 'Review Application (content)',
       'affected_identifier' => $previousApplicationProcess->getIdentifier(),
       'required_permissions' => [ApplicationProcessPermissions::REVIEW_CONTENT],
       'type' => 'review_content',

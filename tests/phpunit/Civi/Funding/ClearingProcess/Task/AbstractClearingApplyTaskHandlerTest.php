@@ -28,7 +28,7 @@ final class AbstractClearingApplyTaskHandlerTest extends TestCase {
 
     static::assertEquals([
       FundingTaskEntity::newTask([
-        'subject' => 'Complete and apply clearing',
+        'subject' => 'Complete and Apply Clearing',
         'affected_identifier' => $clearingProcessBundle->getApplicationProcess()->getIdentifier(),
         'required_permissions' => [ClearingProcessPermissions::CLEARING_APPLY],
         'type' => 'apply',
@@ -65,7 +65,7 @@ final class AbstractClearingApplyTaskHandlerTest extends TestCase {
     ]);
 
     $task = FundingTaskEntity::newTask([
-      'subject' => 'Complete and apply clearing',
+      'subject' => 'Complete and Apply Clearing',
       'affected_identifier' => $clearingProcessBundle->getApplicationProcess()->getIdentifier(),
       'required_permissions' => [ClearingProcessPermissions::CLEARING_APPLY],
       'type' => 'apply',
@@ -83,7 +83,7 @@ final class AbstractClearingApplyTaskHandlerTest extends TestCase {
     $previousClearingProcess = ClearingProcessFactory::create(['status' => 'draft']);
 
     $task = FundingTaskEntity::newTask([
-      'subject' => 'Complete and apply clearing',
+      'subject' => 'Complete and Apply Clearing',
       'affected_identifier' => $clearingProcessBundle->getApplicationProcess()->getIdentifier(),
       'required_permissions' => [ClearingProcessPermissions::CLEARING_APPLY],
       'type' => 'apply',
@@ -101,10 +101,10 @@ final class AbstractClearingApplyTaskHandlerTest extends TestCase {
     $previousClearingProcess = ClearingProcessFactory::create(['status' => 'draft']);
 
     $task = FundingTaskEntity::newTask([
-      'subject' => 'Complete and apply clearing',
+      'subject' => 'Some Task',
       'affected_identifier' => $clearingProcessBundle->getApplicationProcess()->getIdentifier(),
       'required_permissions' => [ClearingProcessPermissions::CLEARING_APPLY],
-      'type' => 'applyX',
+      'type' => 'some_type',
       'funding_case_id' => $clearingProcessBundle->getFundingCase()->getId(),
       'application_process_id' => $clearingProcessBundle->getApplicationProcess()->getId(),
       'clearing_process_id' => $clearingProcessBundle->getClearingProcess()->getId(),

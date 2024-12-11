@@ -49,7 +49,7 @@ final class AbstractApplicationReviewCalculativeTaskHandlerTest extends TestCase
     $tasks = [...$this->taskHandler->createTasksOnChange($applicationProcessBundle, $previousApplicationProcess)];
     static::assertEquals([
       FundingTaskEntity::newTask([
-        'subject' => 'Review Funding Application (calculative)',
+        'subject' => 'Review Application (calculative)',
         'affected_identifier' => $applicationProcessBundle->getApplicationProcess()->getIdentifier(),
         'required_permissions' => [ApplicationProcessPermissions::REVIEW_CALCULATIVE],
         'type' => 'review_calculative',
@@ -74,7 +74,7 @@ final class AbstractApplicationReviewCalculativeTaskHandlerTest extends TestCase
     $tasks = [...$this->taskHandler->createTasksOnChange($applicationProcessBundle, $previousApplicationProcess)];
     static::assertEquals([
       FundingTaskEntity::newTask([
-        'subject' => 'Review Funding Application (calculative)',
+        'subject' => 'Review Application (calculative)',
         'affected_identifier' => $applicationProcessBundle->getApplicationProcess()->getIdentifier(),
         'required_permissions' => [ApplicationProcessPermissions::REVIEW_CALCULATIVE],
         'type' => 'review_calculative',
@@ -122,7 +122,7 @@ final class AbstractApplicationReviewCalculativeTaskHandlerTest extends TestCase
     $tasks = [...$this->taskHandler->createTasksOnNew($applicationProcessBundle)];
     static::assertEquals([
       FundingTaskEntity::newTask([
-        'subject' => 'Review Funding Application (calculative)',
+        'subject' => 'Review Application (calculative)',
         'affected_identifier' => $applicationProcessBundle->getApplicationProcess()->getIdentifier(),
         'required_permissions' => [ApplicationProcessPermissions::REVIEW_CALCULATIVE],
         'type' => 'review_calculative',
@@ -145,7 +145,7 @@ final class AbstractApplicationReviewCalculativeTaskHandlerTest extends TestCase
     $tasks = [...$this->taskHandler->createTasksOnNew($applicationProcessBundle)];
     static::assertEquals([
       FundingTaskEntity::newTask([
-        'subject' => 'Review Funding Application (calculative)',
+        'subject' => 'Review Application (calculative)',
         'affected_identifier' => $applicationProcessBundle->getApplicationProcess()->getIdentifier(),
         'required_permissions' => [ApplicationProcessPermissions::REVIEW_CALCULATIVE],
         'type' => 'review_calculative',
@@ -176,7 +176,7 @@ final class AbstractApplicationReviewCalculativeTaskHandlerTest extends TestCase
     );
 
     $task = FundingTaskEntity::newTask([
-      'subject' => 'Review Funding Application (calculative)',
+      'subject' => 'Review Application (calculative)',
       'affected_identifier' => $previousApplicationProcess->getIdentifier(),
       'required_permissions' => [ApplicationProcessPermissions::REVIEW_CALCULATIVE],
       'type' => 'review_calculative',
@@ -200,7 +200,7 @@ final class AbstractApplicationReviewCalculativeTaskHandlerTest extends TestCase
     ]);
 
     $task = FundingTaskEntity::newTask([
-      'subject' => 'Review Funding Application (calculative)',
+      'subject' => 'Review Application (calculative)',
       'affected_identifier' => $previousApplicationProcess->getIdentifier(),
       'required_permissions' => [ApplicationProcessPermissions::REVIEW_CALCULATIVE],
       'type' => 'review_calculative',
@@ -224,7 +224,7 @@ final class AbstractApplicationReviewCalculativeTaskHandlerTest extends TestCase
     );
 
     $task = FundingTaskEntity::newTask([
-      'subject' => 'Review Funding Application (calculative)',
+      'subject' => 'Review Application (calculative)',
       'affected_identifier' => $previousApplicationProcess->getIdentifier(),
       'required_permissions' => [ApplicationProcessPermissions::REVIEW_CALCULATIVE],
       'type' => 'review_calculative',
@@ -247,7 +247,7 @@ final class AbstractApplicationReviewCalculativeTaskHandlerTest extends TestCase
     ]);
 
     $task = FundingTaskEntity::newTask([
-      'subject' => 'Review Funding Application (calculative)',
+      'subject' => 'Review Application (calculative)',
       'affected_identifier' => $previousApplicationProcess->getIdentifier(),
       'required_permissions' => [ApplicationProcessPermissions::REVIEW_CALCULATIVE],
       'type' => 'review_calculative',

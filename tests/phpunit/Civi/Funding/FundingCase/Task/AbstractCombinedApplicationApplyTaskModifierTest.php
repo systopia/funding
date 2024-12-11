@@ -37,7 +37,7 @@ final class AbstractCombinedApplicationApplyTaskModifierTest extends TestCase {
     $previousFundingCase = FundingCaseFactory::createFundingCase(['modification_date' => '2000-01-01 01:01:01']);
 
     $task = FundingTaskEntity::newTask([
-      'subject' => 'Complete and apply application',
+      'subject' => 'Complete and Apply Application',
       'affected_identifier' => $fundingCaseBundle->getFundingCase()->getIdentifier(),
       'required_permissions' => ['application_apply'],
       'type' => 'apply',
@@ -59,7 +59,7 @@ final class AbstractCombinedApplicationApplyTaskModifierTest extends TestCase {
     $previousFundingCase = FundingCaseFactory::createFundingCase(['modification_date' => '2000-01-01 01:01:01']);
 
     $task = FundingTaskEntity::newTask([
-      'subject' => 'Complete and apply application',
+      'subject' => 'Complete and Apply Application',
       'affected_identifier' => $fundingCaseBundle->getFundingCase()->getIdentifier(),
       'required_permissions' => ['application_apply'],
       'type' => 'apply',
@@ -81,10 +81,10 @@ final class AbstractCombinedApplicationApplyTaskModifierTest extends TestCase {
     $previousFundingCase = FundingCaseFactory::createFundingCase(['modification_date' => '2000-01-01 01:01:01']);
 
     $task = FundingTaskEntity::newTask([
-      'subject' => 'Complete and apply application',
+      'subject' => 'Some Task',
       'affected_identifier' => $fundingCaseBundle->getFundingCase()->getIdentifier(),
       'required_permissions' => ['application_apply'],
-      'type' => 'applyX',
+      'type' => 'some_type',
       'funding_case_id' => $fundingCaseBundle->getFundingCase()->getId(),
     ]);
 

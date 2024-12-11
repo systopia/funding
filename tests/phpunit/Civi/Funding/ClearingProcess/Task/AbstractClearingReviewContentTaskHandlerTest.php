@@ -127,10 +127,10 @@ final class AbstractClearingReviewContentTaskHandlerTest extends TestCase {
     $previousClearingProcess = ClearingProcessFactory::create(['status' => 'review']);
 
     $task = FundingTaskEntity::newTask([
-      'subject' => 'Review Clearing (content)',
+      'subject' => 'Some Task',
       'affected_identifier' => $clearingProcessBundle->getApplicationProcess()->getIdentifier(),
       'required_permissions' => [ClearingProcessPermissions::REVIEW_CONTENT],
-      'type' => 'review_contentX',
+      'type' => 'some_type',
       'funding_case_id' => $clearingProcessBundle->getFundingCase()->getId(),
       'application_process_id' => $clearingProcessBundle->getApplicationProcess()->getId(),
       'clearing_process_id' => $clearingProcessBundle->getClearingProcess()->getId(),

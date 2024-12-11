@@ -31,7 +31,7 @@ final class AbstractCombinedApplicationApplyTaskCreatorTest extends TestCase {
 
     static::assertEquals([
       FundingTaskEntity::newTask([
-        'subject' => 'Complete and apply application',
+        'subject' => 'Complete and Apply Application',
         'affected_identifier' => $applicationProcessBundle->getFundingCase()->getIdentifier(),
         'required_permissions' => ['application_apply'],
         'type' => 'apply',
@@ -80,7 +80,7 @@ final class AbstractCombinedApplicationApplyTaskCreatorTest extends TestCase {
 
     static::assertEquals([
       FundingTaskEntity::newTask([
-        'subject' => 'Complete and apply application',
+        'subject' => 'Complete and Apply Application',
         'affected_identifier' => $applicationProcessBundle->getFundingCase()->getIdentifier(),
         'required_permissions' => ['application_apply'],
         'type' => 'apply',

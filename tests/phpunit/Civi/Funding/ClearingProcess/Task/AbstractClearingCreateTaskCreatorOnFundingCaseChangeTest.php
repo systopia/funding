@@ -63,7 +63,7 @@ final class AbstractClearingCreateTaskCreatorOnFundingCaseChangeTest extends Tes
 
     static::assertEquals([
       FundingTaskEntity::newTask([
-        'subject' => 'Create clearing',
+        'subject' => 'Create Clearing',
         'affected_identifier' => $eligibleApplicationProcess->getIdentifier(),
         'required_permissions' => [
           ClearingProcessPermissions::CLEARING_APPLY,
