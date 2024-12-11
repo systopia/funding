@@ -45,7 +45,7 @@ final class AbstractClearingCreateTaskCreatorOnApplicationChangeTest extends Tes
 
     static::assertEquals([
       FundingTaskEntity::newTask([
-        'subject' => 'Create clearing',
+        'subject' => 'Create Clearing',
         'affected_identifier' => $applicationProcessBundle->getApplicationProcess()->getIdentifier(),
         'required_permissions' => [
           ClearingProcessPermissions::CLEARING_APPLY,
