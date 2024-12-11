@@ -121,7 +121,7 @@ final class TokenResolverTest extends TestCase {
     static::assertSame('EUR', $resolvedBudget->value->getCurrency()->getCurrencyCode());
 
     static::assertEquals(
-      new ResolvedToken(1.23, 'text/plain'),
+      new ResolvedToken('1.23', 'text/plain'),
       $this->tokenResolver->resolveToken('FundingProgram', $fundingProgram, 'nonMoneyFloat'),
     );
   }

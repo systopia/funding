@@ -87,6 +87,8 @@ final class ValueConverter {
    *
    * @return bool TRUE, if $value is converted to string by TokenProcessor.
    *
+   * @phpstan-assert-if-true \DateTime|Money $value
+   *
    * @see \Civi\Token\TokenProcessor::filterTokenValue()
    */
   private static function isValueConvertedByTokenProcessor($value): bool {
