@@ -19,14 +19,10 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Entity;
 
-use Civi\Funding\Entity\Traits\PayoutProcessBundleTrait;
-
 /**
  * @codeCoverageIgnore
  */
-final class DrawdownBundle implements EntityBundleInterface {
-
-  use PayoutProcessBundleTrait;
+final class DrawdownBundle extends PayoutProcessBundle {
 
   private DrawdownEntity $drawdown;
 
@@ -35,7 +31,7 @@ final class DrawdownBundle implements EntityBundleInterface {
     PayoutProcessBundle $payoutProcessBundle
   ) {
     $this->drawdown = $drawdown;
-    $this->payoutProcessBundle = $payoutProcessBundle;
+    parent::__construct($payoutProcessBundle->getPayoutProcess(), $payoutProcessBundle);
   }
 
   public function getDrawdown(): DrawdownEntity {

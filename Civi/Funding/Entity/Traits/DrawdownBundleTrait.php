@@ -25,7 +25,6 @@ use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Entity\DrawdownEntity;
 use Civi\Funding\Entity\DrawdownBundle;
 use Civi\Funding\Entity\PayoutProcessEntity;
-use Civi\Funding\Entity\PayoutProcessBundle;
 
 /**
  * @codeCoverageIgnore
@@ -56,10 +55,6 @@ trait DrawdownBundleTrait {
 
   public function getPayoutProcess(): PayoutProcessEntity {
     return $this->drawdownBundle->getPayoutProcess();
-  }
-
-  public function getPayoutProcessBundle(): PayoutProcessBundle {
-    return $this->drawdownBundle->getPayoutProcessBundle();
   }
 
 }

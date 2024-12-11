@@ -20,7 +20,6 @@ declare(strict_types = 1);
 namespace Civi\Funding\Entity\Traits;
 
 use Civi\Funding\Entity\ApplicationProcessEntity;
-use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\ClearingProcessEntity;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseEntity;
@@ -36,10 +35,6 @@ trait ClearingProcessEntityBundleTrait {
 
   public function getApplicationProcess(): ApplicationProcessEntity {
     return $this->clearingProcessBundle->getApplicationProcess();
-  }
-
-  public function getApplicationProcessBundle(): ApplicationProcessEntityBundle {
-    return $this->clearingProcessBundle->getApplicationProcessBundle();
   }
 
   public function getClearingProcessBundle(): ClearingProcessEntityBundle {
