@@ -110,7 +110,7 @@ abstract class AbstractApplicationReviewCalculativeTaskHandler implements Applic
   }
 
   protected function getTaskSubject(ApplicationProcessEntityBundle $applicationProcessBundle): string {
-    return E::ts('Review Funding Application (calculative)');
+    return E::ts('Review Application (calculative)');
   }
 
   protected function isInReviewableStatus(ApplicationProcessEntityBundle $applicationProcessBundle): bool {

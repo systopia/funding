@@ -27,7 +27,7 @@ final class AbstractClearingCreateTaskModifierTest extends TestCase {
     $previousClearingProcess = ClearingProcessFactory::create(['status' => 'not-started']);
 
     $task = FundingTaskEntity::newTask([
-      'subject' => 'Create clearing',
+      'subject' => 'Create Clearing',
       'affected_identifier' => $clearingProcessBundle->getApplicationProcess()->getIdentifier(),
       'required_permissions' => [
         ClearingProcessPermissions::CLEARING_APPLY,
@@ -48,7 +48,7 @@ final class AbstractClearingCreateTaskModifierTest extends TestCase {
     $previousClearingProcess = ClearingProcessFactory::create(['status' => 'not-started']);
 
     $task = FundingTaskEntity::newTask([
-      'subject' => 'Create clearing',
+      'subject' => 'Create Clearing',
       'affected_identifier' => $clearingProcessBundle->getApplicationProcess()->getIdentifier(),
       'required_permissions' => [
         ClearingProcessPermissions::CLEARING_APPLY,
@@ -69,13 +69,13 @@ final class AbstractClearingCreateTaskModifierTest extends TestCase {
     $previousClearingProcess = ClearingProcessFactory::create(['status' => 'not-started']);
 
     $task = FundingTaskEntity::newTask([
-      'subject' => 'Create clearing',
+      'subject' => 'Some Task',
       'affected_identifier' => $clearingProcessBundle->getApplicationProcess()->getIdentifier(),
       'required_permissions' => [
         ClearingProcessPermissions::CLEARING_APPLY,
         ClearingProcessPermissions::CLEARING_MODIFY,
       ],
-      'type' => 'createX',
+      'type' => 'some_type',
       'funding_case_id' => $clearingProcessBundle->getFundingCase()->getId(),
       'application_process_id' => $clearingProcessBundle->getApplicationProcess()->getId(),
       'clearing_process_id' => $clearingProcessBundle->getClearingProcess()->getId(),
