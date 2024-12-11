@@ -17,29 +17,13 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Entity;
+namespace Civi\Funding\SammelantragKurs\Task;
 
-/**
- * @codeCoverageIgnore
- */
-class PayoutProcessBundle extends FundingCaseBundle {
+use Civi\Funding\FundingCase\Task\AbstractCombinedApplicationApplyTaskModifier;
+use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
 
-  private PayoutProcessEntity $payoutProcess;
+final class KursCombinedApplicationApplyTaskModifier extends AbstractCombinedApplicationApplyTaskModifier {
 
-  public function __construct(
-    PayoutProcessEntity $payoutProcess,
-    FundingCaseBundle $fundingCaseBundle
-  ) {
-    $this->payoutProcess = $payoutProcess;
-    parent::__construct(
-      $fundingCaseBundle->getFundingCase(),
-      $fundingCaseBundle->getFundingCaseType(),
-      $fundingCaseBundle->getFundingProgram()
-    );
-  }
-
-  public function getPayoutProcess(): PayoutProcessEntity {
-    return $this->payoutProcess;
-  }
+  use KursSupportedFundingCaseTypesTrait;
 
 }
