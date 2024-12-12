@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
-use Civi\Funding\Api4\AbstractRemoteFundingEntityLegacy;
+use Civi\Funding\Api4\AbstractRemoteFundingEntity;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetAddFormAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetFormAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetTemplateRenderUriAction;
@@ -28,16 +28,16 @@ use Civi\Funding\Api4\Action\Remote\ApplicationProcess\SubmitAddFormAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\SubmitFormAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\ValidateAddFormAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\ValidateFormAction;
-use Civi\Funding\Api4\Action\Remote\RemoteFundingDAOGetActionLegacy;
+use Civi\Funding\Api4\Action\Remote\RemoteFundingGetAction;
 
 /**
  * The "Add" form actions are used to add an application to an existing funding
  * case. The form actions without "add" are used for existing applications.
  */
-final class RemoteFundingApplicationProcess extends AbstractRemoteFundingEntityLegacy {
+final class RemoteFundingApplicationProcess extends AbstractRemoteFundingEntity {
 
-  public static function get(): RemoteFundingDAOGetActionLegacy {
-    return new RemoteFundingDAOGetActionLegacy(static::getEntityName());
+  public static function get(): RemoteFundingGetAction {
+    return new RemoteFundingGetAction(self::getEntityName(), __FUNCTION__);
   }
 
   public static function getTemplateRenderUri(): GetTemplateRenderUriAction {
