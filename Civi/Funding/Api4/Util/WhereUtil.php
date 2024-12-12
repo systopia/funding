@@ -20,12 +20,35 @@ declare(strict_types = 1);
 namespace Civi\Funding\Api4\Util;
 
 /**
+ * @phpstan-type whereT array<array{string, string|mixed[], 2?: mixed}>
+ *
  * @codeCoverageIgnore
  */
 final class WhereUtil {
 
   /**
-   * @phpstan-param array<array{string, string|mixed[], 2?: mixed}> $where
+   * @phpstan-param whereT $where
+   */
+  public static function containsField(array $where, string $field): bool {
+    foreach ($where as $clause) {
+      if (is_array($clause[1])) {
+        // Composite condition.
+        // @phpstan-ignore-next-line
+        if (self::containsField($clause[1], $field)) {
+          return TRUE;
+        }
+      }
+
+      if ($clause[0] === $field) {
+        return TRUE;
+      }
+    }
+
+    return FALSE;
+  }
+
+  /**
+   * @phpstan-param whereT $where
    */
   public static function getBool(array $where, string $field): ?bool {
     foreach ($where as $clause) {
@@ -48,7 +71,7 @@ final class WhereUtil {
   }
 
   /**
-   * @phpstan-param array<array{string, string|mixed[], 2?: mixed}> $where
+   * @phpstan-param whereT $where
    */
   public static function getInt(array $where, string $field): ?int {
     foreach ($where as $clause) {

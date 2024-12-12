@@ -39,6 +39,7 @@ abstract class AbstractRemoteFundingGetActionHandler implements ActionHandlerInt
     return $this->api4->execute($this->getEntityName(), 'get', [
       'language' => $action->getLanguage(),
       'select' => $action->getSelect(),
+      'join' => $this->getJoin($action),
       'where' => $action->getWhere(),
       'orderBy' => $action->getOrderBy(),
       'limit' => $action->getLimit(),
@@ -50,5 +51,13 @@ abstract class AbstractRemoteFundingGetActionHandler implements ActionHandlerInt
    * @return string The non-remote entity name.
    */
   abstract protected function getEntityName(): string;
+
+  /**
+   * @phpstan-return array<mixed>
+   *   APIv4 join parameter.
+   */
+  protected function getJoin(RemoteFundingGetAction $action): array {
+    return [];
+  }
 
 }
