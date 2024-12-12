@@ -1,0 +1,31 @@
+<div class="funding-application-sidebar-element">
+  <label for="ndr_berichterstattung">NDR-Berichterstattung</label>
+  <span id="ndr_berichterstattung" editable-select="applicationProcess['bsh_funding_application_extra.ndr_berichterstattung']"
+        e-ng-options="key for (key, value) in { Ja: true, Nein: false }"
+        onbeforesave="updateNdrBerichterstattung($data)">
+    {{ showNdrBerichterstattung() }}
+  </span>
+</div>
+
+<div class="funding-application-sidebar-element">
+  <label for="priorisierung">Priorisierung</label>
+  <span id="priorisierung" editable-select="applicationProcess['bsh_funding_application_extra.priorisierung']"
+        e-ng-options="key as value for (key, value) in priorisierungOptions"
+        onbeforesave="updatePriorisierung($data)">
+    {{ showPriorisierung() }}
+  </span>
+</div>
+
+<span ng-if="!isChanged">
+  <funding-action-button action="review" class="btn btn-default funding-application-sidebar-element" crm-icon="fa-eye">{{ $ctrl.ts('Start Review') }}</funding-action-button>
+  <funding-action-button action="release" class="btn btn-default funding-application-sidebar-element" crm-icon="fa-thumbs-up">Für Beirat freigeben</funding-action-button>
+  <funding-action-button action="approve" class="btn btn-default funding-application-sidebar-element" crm-icon="fa-check-circle">{{ $ctrl.ts('Approve') }}</funding-action-button>
+  <funding-action-button action="reject" class="btn btn-default funding-application-sidebar-element" crm-icon="fa-thumbs-down">{{ $ctrl.ts('Reject') }}</funding-action-button>
+  <funding-action-button action="request-change" class="btn btn-default funding-application-sidebar-element" crm-icon="fa-arrow-left">{{ $ctrl.ts('Request Change') }}</funding-action-button>
+  <funding-action-button action="add-comment" with-comment="'required'" class="btn btn-default funding-application-sidebar-element" crm-icon="fa-commenting">{{ $ctrl.ts('Add Comment') }}</funding-action-button>
+</span>
+
+<span ng-if="isChanged">
+  <funding-action-button action="update" with-comment="'required'" class="btn btn-success funding-application-sidebar-element" crm-icon="fa-check">{{ $ctrl.ts('Save') }}</funding-action-button>
+  <button type="button" class="btn btn-danger funding-application-sidebar-element" ng-click="reset()" ng-disabled="editCount > 0" crm-icon="fa-times">{{ $ctrl.ts('Reset') }}</button>
+</span>
