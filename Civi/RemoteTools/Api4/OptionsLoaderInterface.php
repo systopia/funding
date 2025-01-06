@@ -22,7 +22,7 @@ namespace Civi\RemoteTools\Api4;
 interface OptionsLoaderInterface {
 
   /**
-   * @phpstan-return array<scalar|null, string>
+   * @phpstan-return array<string|int, string>
    *   Options in the form "value => label".
    *
    * @throws \CRM_Core_Exception

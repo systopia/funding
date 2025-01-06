@@ -33,7 +33,7 @@ final class WhereUtil {
     foreach ($where as $clause) {
       if (is_array($clause[1])) {
         // Composite condition.
-        // @phpstan-ignore-next-line
+        // @phpstan-ignore argument.type
         if (self::containsField($clause[1], $field)) {
           return TRUE;
         }
@@ -50,11 +50,32 @@ final class WhereUtil {
   /**
    * @phpstan-param whereT $where
    */
+  public static function containsFieldPrefix(array $where, string $fieldPrefix): bool {
+    foreach ($where as $clause) {
+      if (is_array($clause[1])) {
+        // Composite condition.
+        // @phpstan-ignore argument.type
+        if (self::containsFieldPrefix($clause[1], $fieldPrefix)) {
+          return TRUE;
+        }
+      }
+
+      if (str_starts_with($clause[0], $fieldPrefix)) {
+        return TRUE;
+      }
+    }
+
+    return FALSE;
+  }
+
+  /**
+   * @phpstan-param whereT $where
+   */
   public static function getBool(array $where, string $field): ?bool {
     foreach ($where as $clause) {
       if (is_array($clause[1])) {
         // Composite condition.
-        // @phpstan-ignore-next-line
+        // @phpstan-ignore argument.type
         return 'AND' === $clause[0] ? self::getBool($clause[1], $field) : NULL;
       }
 
@@ -77,7 +98,7 @@ final class WhereUtil {
     foreach ($where as $clause) {
       if (is_array($clause[1])) {
         // Composite condition.
-        // @phpstan-ignore-next-line
+        // @phpstan-ignore argument.type
         return 'AND' === $clause[0] ? self::getInt($clause[1], $field) : NULL;
       }
 
