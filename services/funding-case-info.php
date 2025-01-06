@@ -25,9 +25,11 @@ use Civi\Funding\Api4\Action\FundingCaseInfo\GetFieldsAction;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseInfoGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\FundingCaseInfoGetSubscriber;
 
+// @phpstan-ignore classConstant.deprecatedClass
 $container->autowire(GetAction::class)
   ->setPublic(TRUE)
   ->setShared(FALSE);
+// @phpstan-ignore classConstant.deprecatedClass
 $container->autowire(GetFieldsAction::class)
   ->setPublic(TRUE)
   ->setShared(FALSE);

@@ -22,6 +22,9 @@ namespace Civi\Api4;
 use Civi\Funding\Api4\AbstractRemoteFundingEntityLegacy;
 use Civi\Funding\Api4\Action\Remote\RemoteFundingGetActionLegacy;
 
+/**
+ * @deprecated Use RemoteFundingApplicationProcess instead.
+ */
 final class RemoteFundingCaseInfo extends AbstractRemoteFundingEntityLegacy {
 
   public static function get(): RemoteFundingGetActionLegacy {

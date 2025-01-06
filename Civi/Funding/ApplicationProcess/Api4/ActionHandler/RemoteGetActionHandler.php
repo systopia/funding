@@ -33,8 +33,8 @@ final class RemoteGetActionHandler extends AbstractRemoteFundingGetActionHandler
   }
 
   protected function getJoin(RemoteFundingGetAction $action): array {
-    if (in_array('funding_clearing_process.status', $action->getSelect(), TRUE)
-      || WhereUtil::containsField($action->getWhere(), 'funding_clearing_process.status')
+    if ($this->isClearingProcessFieldSelected($action)
+      || WhereUtil::containsFieldPrefix($action->getWhere(), 'funding_clearing_process.')
     ) {
       return [
         [
@@ -46,6 +46,16 @@ final class RemoteGetActionHandler extends AbstractRemoteFundingGetActionHandler
     }
 
     return [];
+  }
+
+  private function isClearingProcessFieldSelected(RemoteFundingGetAction $action): bool {
+    foreach ($action->getSelect() as $field) {
+      if (str_starts_with($field, 'funding_clearing_process.')) {
+        return TRUE;
+      }
+    }
+
+    return FALSE;
   }
 
 }

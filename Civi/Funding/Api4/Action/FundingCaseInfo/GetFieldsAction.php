@@ -28,6 +28,9 @@ use Civi\RemoteTools\Api4\OptionsLoaderInterface;
 use Civi\RemoteTools\Api4\RemoteApiConstants;
 use CRM_Funding_ExtensionUtil as E;
 
+/**
+ * @deprecated
+ */
 final class GetFieldsAction extends BasicGetFieldsAction {
 
   private Api4Interface $api4;

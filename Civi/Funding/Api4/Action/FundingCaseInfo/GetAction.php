@@ -34,6 +34,9 @@ use Civi\RemoteTools\Api4\Query\Comparison;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
 use Civi\RemoteTools\Api4\Query\ConditionInterface;
 
+/**
+ * @deprecated
+ */
 final class GetAction extends AbstractGetAction {
 
   /**

@@ -24,6 +24,9 @@ use Civi\Funding\Api4\Action\FundingCaseInfo\GetAction;
 use Civi\Funding\Api4\Action\FundingCaseInfo\GetFieldsAction;
 use Civi\Funding\Api4\Traits\AccessPermissionsTrait;
 
+/**
+ * @deprecated Use FundingApplicationProcess (with joins) instead.
+ */
 final class FundingCaseInfo extends AbstractEntity {
 
   use AccessPermissionsTrait;

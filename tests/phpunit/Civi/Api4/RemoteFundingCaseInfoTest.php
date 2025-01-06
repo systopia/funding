@@ -34,6 +34,8 @@ use Civi\RemoteTools\Api4\RemoteApiConstants;
 use CRM_Funding_ExtensionUtil as E;
 
 /**
+ * @deprecated
+ *
  * @group headless
  *
  * @covers \Civi\Api4\RemoteFundingCaseInfo
