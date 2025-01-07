@@ -23,6 +23,7 @@ use Civi\Api4\Generic\AbstractEntity;
 use Civi\Funding\Api4\Action\Remote\RemoteFundingCheckAccessAction;
 use Civi\Funding\Api4\Action\Remote\RemoteFundingGetFieldsAction;
 use Civi\Funding\Api4\Traits\RemotePermissionsTrait;
+use Civi\RemoteTools\Api4\Action\RemoteGetActions;
 
 class AbstractRemoteFundingEntity extends AbstractEntity {
 
@@ -33,6 +34,13 @@ class AbstractRemoteFundingEntity extends AbstractEntity {
    */
   public static function checkAccess() {
     return new RemoteFundingCheckAccessAction(static::getEntityName(), __FUNCTION__);
+  }
+
+  /**
+   * @return \Civi\RemoteTools\Api4\Action\RemoteGetActions
+   */
+  public static function getActions($checkPermissions = TRUE) {
+    return new RemoteGetActions(static::getEntityName(), __FUNCTION__);
   }
 
   /**
