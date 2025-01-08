@@ -77,10 +77,22 @@ $container->addCompilerPass(new PossibleRecipientsForChangeLoaderPass());
 $container->addCompilerPass(new FundingCaseRecipientContactSetHandlerPass());
 $container->addCompilerPass(new FundingCaseNotificationContactsSetHandlerPass());
 
-$container->autowire(FundingCaseManager::class);
+$container->autowire(FundingCaseManager::class)
+  // phpcs:disable Squiz.PHP.CommentedOutCode.Found
+  // Accessed in \Civi\Funding\Api4\Action\FundingCase\AbstractReferencingDAOGetAction.
+  // phpcs:enable
+  ->setPublic(TRUE);
 $container->autowire(FundingCasePermissionsInitializer::class);
-$container->autowire(FundingCasePermissionsCacheManager::class);
-$container->autowire(TransferContractRouter::class);
+$container->autowire(FundingCasePermissionsCacheManager::class)
+  // phpcs:disable Squiz.PHP.CommentedOutCode.Found
+  // Used in class \Civi\Funding\Api4\Action\FundingCase\GetAction.
+  // phpcs:enable
+  ->setPublic(TRUE);
+$container->autowire(TransferContractRouter::class)
+  // phpcs:disable Squiz.PHP.CommentedOutCode.Found
+  // Used in class \Civi\Funding\Api4\Action\FundingCase\GetAction.
+  // phpcs:enable
+  ->setPublic(TRUE);
 $container->autowire(FundingCaseIdentifierGeneratorInterface::class, FundingCaseIdentifierGenerator::class);
 $container->autowire(FallbackPossibleRecipientsForChangeLoader::class);
 

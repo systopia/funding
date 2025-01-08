@@ -22,7 +22,6 @@ declare(strict_types = 1);
 
 use Civi\Funding\Api4\Action\FundingApplicationProcess\CreateAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\DeleteAction;
-use Civi\Funding\Api4\Action\FundingApplicationProcess\GetAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\GetFieldsAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\GetFormDataAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\GetJsonSchemaAction;
@@ -193,9 +192,6 @@ $container->autowire(CreateAction::class)
 $container->autowire(DeleteAction::class)
   ->setPublic(TRUE)
   ->setShared(TRUE);
-$container->autowire(GetAction::class)
-  ->setPublic(TRUE)
-  ->setShared(FALSE);
 $container->autowire(GetFieldsAction::class)
   ->setPublic(TRUE)
   ->setShared(FALSE);

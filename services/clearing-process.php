@@ -101,14 +101,6 @@ $container->autowire(\Civi\Funding\Api4\Action\FundingClearingProcess\GetFieldsA
   ->setPublic(TRUE)
   ->setShared(FALSE);
 
-$container->autowire(\Civi\Funding\Api4\Action\FundingClearingCostItem\GetAction::class)
-  ->setPublic(TRUE)
-  ->setShared(FALSE);
-
-$container->autowire(\Civi\Funding\Api4\Action\FundingClearingResourcesItem\GetAction::class)
-  ->setPublic(TRUE)
-  ->setShared(FALSE);
-
 ServiceRegistrator::autowireAllImplementing(
   $container,
   __DIR__ . '/../Civi/Funding/ClearingProcess/Api4/ActionHandler',

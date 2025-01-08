@@ -33,9 +33,9 @@ use Webmozart\Assert\Assert;
 final class GetAction extends AbstractReferencingDAOGetAction {
 
   public function __construct(
-    Api4Interface $api4,
-    FundingCaseManager $fundingCaseManager,
-    RequestContextInterface $requestContext
+    ?Api4Interface $api4 = NULL,
+    ?FundingCaseManager $fundingCaseManager = NULL,
+    ?RequestContextInterface $requestContext = NULL
   ) {
     parent::__construct(
       FundingApplicationProcess::getEntityName(),
@@ -68,7 +68,7 @@ final class GetAction extends AbstractReferencingDAOGetAction {
     if ([] !== $clearingProcessFields) {
       /** @phpstan-var array<string, mixed> $record */
       foreach ($result as &$record) {
-        $clearingProcessAmounts = $this->_api4->execute(FundingClearingProcess::getEntityName(), 'get', [
+        $clearingProcessAmounts = $this->getApi4()->execute(FundingClearingProcess::getEntityName(), 'get', [
           'select' => array_map(fn (string $field) => 'SUM(' . $field . ') AS SUM_' . $field, $clearingProcessFields),
           'where' => [
             ['application_process_id', '=', $record['id']],
@@ -91,7 +91,7 @@ final class GetAction extends AbstractReferencingDAOGetAction {
       return FALSE;
     }
 
-    if (0 !== $this->_api4->countEntities(
+    if (0 !== $this->getApi4()->countEntities(
         FundingClearingProcess::getEntityName(),
         Comparison::new(
           'application_process_id',
@@ -102,7 +102,7 @@ final class GetAction extends AbstractReferencingDAOGetAction {
       return TRUE;
     }
 
-    $fundingCase = $this->_fundingCaseManager->get($record['funding_case_id']);
+    $fundingCase = $this->getFundingCaseManager()->get($record['funding_case_id']);
     Assert::notNull($fundingCase);
 
     return $fundingCase->hasPermission(ClearingProcessPermissions::CLEARING_MODIFY) || $fundingCase->hasPermission(

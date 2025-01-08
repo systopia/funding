@@ -39,7 +39,11 @@ $container->setAlias(LoggerInterface::class, 'psr_log');
 $container->register(TransactionFactory::class);
 
 $container->autowire(OptionsLoaderInterface::class, OptionsLoader::class);
-$container->autowire(PossiblePermissionsLoaderInterface::class, PossiblePermissionsLoader::class);
+$container->autowire(PossiblePermissionsLoaderInterface::class, PossiblePermissionsLoader::class)
+  // phpcs:disable Squiz.PHP.CommentedOutCode.Found
+  // Used in class \Civi\Funding\Api4\Action\FundingCase\GetAction.
+  // phpcs:enable
+  ->setPublic(TRUE);
 
 $container->autowire(ApiAuthorizeInitRequestSubscriber::class)
   ->addTag('kernel.event_subscriber');

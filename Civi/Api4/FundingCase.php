@@ -58,7 +58,7 @@ final class FundingCase extends Generic\DAOEntity {
    * @return \Civi\Funding\Api4\Action\FundingCase\GetAction
    */
   public static function get($checkPermissions = TRUE) {
-    return \Civi::service(GetAction::class)->setCheckPermissions($checkPermissions);
+    return (new GetAction())->setCheckPermissions($checkPermissions);
   }
 
   /**

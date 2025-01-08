@@ -28,9 +28,9 @@ use Civi\RemoteTools\RequestContext\RequestContextInterface;
 final class GetAction extends AbstractReferencingDAOGetAction {
 
   public function __construct(
-    Api4Interface $api4,
-    FundingCaseManager $fundingCaseManager,
-    RequestContextInterface $requestContext
+    ?Api4Interface $api4 = NULL,
+    ?FundingCaseManager $fundingCaseManager = NULL,
+    ?RequestContextInterface $requestContext = NULL
   ) {
     parent::__construct(
       FundingClearingProcess::getEntityName(),
