@@ -10,6 +10,6 @@
         "sort-packages": true
     },
     "require": {
-        "civicrm/civicrm-core": "^5.73"
+        "civicrm/civicrm-core": "^5.80"
     }
 }

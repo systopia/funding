@@ -137,6 +137,15 @@ return [
               'tally' => [
                 'fn' => 'SUM',
               ],
+              'rewrite' => '',
+            ],
+            [
+              'type' => 'field',
+              'key' => 'COUNT_id',
+              'dataType' => 'Integer',
+              'label' => E::ts('Withdrawable Funds'),
+              'sortable' => TRUE,
+              'rewrite' => '{($SUM_amount_approved - $SUM_FundingCase_FundingPayoutProcess_funding_case_id_01_FundingPayoutProcess_FundingDrawdown_payout_process_id_01_amount_paid_out)|crmMoney:$currency}',
             ],
             [
               'type' => 'field',
