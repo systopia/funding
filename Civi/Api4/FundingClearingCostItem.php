@@ -19,7 +19,7 @@ final class FundingClearingCostItem extends Generic\DAOEntity {
   use AccessROPermissionsTrait;
 
   public static function get($checkPermissions = TRUE) {
-    return \Civi::service(GetAction::class)->setCheckPermissions($checkPermissions);
+    return (new GetAction())->setCheckPermissions($checkPermissions);
   }
 
   public static function getFields($checkPermissions = TRUE) {

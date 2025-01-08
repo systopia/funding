@@ -45,18 +45,6 @@ $container->autowire(DrawdownTokenResolver::class);
 
 ServiceRegistrator::autowireAllImplementing(
   $container,
-  __DIR__ . '/../Civi/Funding/Api4/Action/FundingPayoutProcess',
-  'Civi\\Funding\\Api4\\Action\\FundingPayoutProcess',
-  AbstractAction::class,
-  [],
-  [
-    'public' => TRUE,
-    'shared' => FALSE,
-  ]
-);
-
-ServiceRegistrator::autowireAllImplementing(
-  $container,
   __DIR__ . '/../Civi/Funding/Api4/Action/FundingDrawdown',
   'Civi\\Funding\\Api4\\Action\\FundingDrawdown',
   AbstractAction::class,

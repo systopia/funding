@@ -30,6 +30,7 @@ use Civi\Funding\Event\FundingCase\GetPermissionsEvent;
 use Civi\Funding\FundingCase\FundingCasePermissionsCacheManager;
 use Civi\Funding\FundingCase\TransferContractRouter;
 use Civi\Funding\Permission\Util\FlattenedPermissionsUtil;
+use Civi\RemoteTools\Api4\Api4;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
@@ -40,25 +41,27 @@ final class GetAction extends DAOGetAction {
 
   private bool $cachePermissionsOnly = FALSE;
 
-  private Api4Interface $api4;
+  private ?Api4Interface $api4;
 
-  private CiviEventDispatcherInterface $eventDispatcher;
+  private ?CiviEventDispatcherInterface $eventDispatcher;
 
-  private FundingCasePermissionsCacheManager $permissionsCacheManager;
+  private ?FundingCasePermissionsCacheManager $permissionsCacheManager;
 
-  private PossiblePermissionsLoaderInterface $possiblePermissionsLoader;
+  private ?PossiblePermissionsLoaderInterface $possiblePermissionsLoader;
 
-  private RequestContextInterface $requestContext;
+  private ?RequestContextInterface $requestContext;
 
-  private TransferContractRouter $transferContractRouter;
+  private ?TransferContractRouter $transferContractRouter;
+
+  private bool $runCalled = FALSE;
 
   public function __construct(
-    Api4Interface $api4,
-    CiviEventDispatcherInterface $eventDispatcher,
-    FundingCasePermissionsCacheManager $permissionsCacheManager,
-    PossiblePermissionsLoaderInterface $possiblePermissionsLoader,
-    RequestContextInterface $requestContext,
-    TransferContractRouter $transferContractRouterRecreate
+    ?Api4Interface $api4 = NULL,
+    ?CiviEventDispatcherInterface $eventDispatcher = NULL,
+    ?FundingCasePermissionsCacheManager $permissionsCacheManager = NULL,
+    ?PossiblePermissionsLoaderInterface $possiblePermissionsLoader = NULL,
+    ?RequestContextInterface $requestContext = NULL,
+    ?TransferContractRouter $transferContractRouterRecreate = NULL
   ) {
     parent::__construct(FundingCase::getEntityName(), 'get');
     $this->api4 = $api4;
@@ -72,6 +75,8 @@ final class GetAction extends DAOGetAction {
   // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
   public function _run(Result $result): void {
   // phpcs:enable
+    $this->runCalled = TRUE;
+
     $rowCountSelected = $this->isRowCountSelected();
     if ($rowCountSelected || $this->cachePermissionsOnly) {
       $this->ensurePermissions();
@@ -80,14 +85,6 @@ final class GetAction extends DAOGetAction {
     if ($this->cachePermissionsOnly) {
       return;
     }
-
-    FundingCasePermissionsUtil::addPermissionsCacheJoin(
-      $this,
-      'id',
-      $this->requestContext->getContactId(),
-      $this->requestContext->isRemote()
-    );
-    FundingCasePermissionsUtil::addPermissionsRestriction($this);
 
     if ($this->isRowCountSelectedOnly()) {
       parent::_run($result);
@@ -138,14 +135,14 @@ final class GetAction extends DAOGetAction {
 
         FlattenedPermissionsUtil::addFlattenedPermissions($record, $record['permissions'], $possiblePermissions);
         $record['transfer_contract_uri'] =
-          isset($record['id']) ? $this->transferContractRouter->generate($record['id']) : NULL;
+          isset($record['id']) ? $this->getTransferContractRouter()->generate($record['id']) : NULL;
 
         $clearingProcessFields = array_intersect([
           'amount_cleared',
           'amount_admitted',
         ], $this->getSelect());
         if ([] !== $clearingProcessFields) {
-          $clearingProcessAmounts = $this->api4->execute(FundingClearingProcess::getEntityName(), 'get', [
+          $clearingProcessAmounts = $this->getApi4()->execute(FundingClearingProcess::getEntityName(), 'get', [
             'select' => array_map(fn (string $field) => 'SUM(' . $field . ') AS SUM_' . $field, $clearingProcessFields),
             'where' => [
               ['application_process_id.funding_case_id', '=', $record['id']],
@@ -187,25 +184,71 @@ final class GetAction extends DAOGetAction {
     return $this;
   }
 
+  public function setDefaultWhereClause(): void {
+    if (!$this->runCalled) {
+      // _run() was not called, e.g. aggregation line in SearchKit.
+      // See \Civi\Api4\Action\SearchDisplay\Run::processResult()
+      $this->ensurePermissions();
+    }
+
+    FundingCasePermissionsUtil::addPermissionsCacheJoin(
+      $this,
+      'id',
+      $this->getRequestContext()->getContactId(),
+      $this->getRequestContext()->isRemote()
+    );
+    FundingCasePermissionsUtil::addPermissionsRestriction($this);
+
+    parent::setDefaultWhereClause();
+  }
+
+  private function getApi4(): Api4Interface {
+    return $this->api4 ??= Api4::getInstance();
+  }
+
+  private function getEventDispatcher(): CiviEventDispatcherInterface {
+    return $this->eventDispatcher ??= \Civi::dispatcher();
+  }
+
+  private function getPermissionsCacheManager(): FundingCasePermissionsCacheManager {
+    // @phpstan-ignore return.type, assign.propertyType
+    return $this->permissionsCacheManager ??= \Civi::service(FundingCasePermissionsCacheManager::class);
+  }
+
+  public function getPossiblePermissionsLoader(): PossiblePermissionsLoaderInterface {
+    // @phpstan-ignore return.type, assign.propertyType
+    return $this->possiblePermissionsLoader ??= \Civi::service(PossiblePermissionsLoaderInterface::class);
+  }
+
+  private function getRequestContext(): RequestContextInterface {
+    // @phpstan-ignore return.type, assign.propertyType
+    return $this->requestContext ??= \Civi::service(RequestContextInterface::class);
+  }
+
+  public function getTransferContractRouter(): TransferContractRouter {
+    // @phpstan-ignore return.type, assign.propertyType
+    return $this->transferContractRouter ??= \Civi::service(TransferContractRouter::class);
+  }
+
   /**
    * @phpstan-param array{id: int, '_pc.id': int|null} $record
    *
    * @phpstan-return list<string>
    */
   private function determineAndCachePermissions(array $record): array {
-    $permissionsGetEvent = new GetPermissionsEvent($record['id'], $this->requestContext->getContactId());
-    $this->eventDispatcher->dispatch(GetPermissionsEvent::class, $permissionsGetEvent);
+    $permissionsGetEvent = new GetPermissionsEvent($record['id'], $this->getRequestContext()->getContactId());
+    $this->getEventDispatcher()->dispatch(GetPermissionsEvent::class, $permissionsGetEvent);
 
     $permissions = $permissionsGetEvent->getPermissions();
 
     if (NULL !== $record['_pc.id']) {
-      $this->permissionsCacheManager->update($record['_pc.id'], $permissions);
+      $this->getPermissionsCacheManager()->update($record['_pc.id'], $permissions);
     }
     else {
-      $this->permissionsCacheManager->add(
+      $this->getPermissionsCacheManager()->add(
         $record['id'],
-        $this->requestContext->getContactId(),
-        $this->requestContext->isRemote(),
+        $this->getRequestContext()->getContactId(),
+        $this->getRequestContext()->isRemote(),
         $permissions
       );
     }
@@ -232,8 +275,8 @@ final class GetAction extends DAOGetAction {
     FundingCasePermissionsUtil::addPermissionsCacheJoin(
       $daoGetAction,
       'id',
-      $this->requestContext->getContactId(),
-      $this->requestContext->isRemote()
+      $this->getRequestContext()->getContactId(),
+      $this->getRequestContext()->isRemote()
     );
 
     $result = new Result();
@@ -248,7 +291,7 @@ final class GetAction extends DAOGetAction {
    * @phpstan-return list<string>
    */
   private function getPossiblePermissions(): array {
-    return array_keys($this->possiblePermissionsLoader->getFilteredPermissions($this->getEntityName()));
+    return array_keys($this->getPossiblePermissionsLoader()->getFilteredPermissions($this->getEntityName()));
   }
 
 }

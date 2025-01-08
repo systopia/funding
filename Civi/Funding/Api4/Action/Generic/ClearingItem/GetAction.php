@@ -42,9 +42,9 @@ class GetAction extends AbstractReferencingDAOGetAction {
 
   public function __construct(
     string $entityName,
-    Api4Interface $api4,
-    FundingCaseManager $fundingCaseManager,
-    RequestContextInterface $requestContext
+    ?Api4Interface $api4 = NULL,
+    ?FundingCaseManager $fundingCaseManager = NULL,
+    ?RequestContextInterface $requestContext = NULL
   ) {
     parent::__construct(
       $entityName,
@@ -88,7 +88,7 @@ class GetAction extends AbstractReferencingDAOGetAction {
       $action->addWhere('cp.id', '=', $clearingProcessId);
     }
 
-    $this->_api4->executeAction($action);
+    $this->getApi4()->executeAction($action);
   }
 
   protected function handleRecord(array &$record): bool {
@@ -112,7 +112,7 @@ class GetAction extends AbstractReferencingDAOGetAction {
    */
   private function getFundingCase(int $id): FundingCaseEntity {
     if (!isset($this->fundingCases[$id])) {
-      $fundingCase = $this->_fundingCaseManager->get($id);
+      $fundingCase = $this->getFundingCaseManager()->get($id);
       Assert::notNull($fundingCase, sprintf('Funding case with ID "%d" not found', $id));
       $this->fundingCases[$id] = $fundingCase;
     }
