@@ -106,6 +106,7 @@ fundingModule.directive('fundingApplicationEditor', ['$compile', function($compi
         const ts = $scope.ts = CRM.ts('funding');
 
         fundingCaseService.get($scope.applicationProcess.funding_case_id).then(function (fundingCase) {
+          $scope.fundingCase = fundingCase;
           $scope.permissions = fundingCase.permissions;
           fundingProgramService.get(fundingCase.funding_program_id).then(
               (fundingProgram) => $scope.currency = fundingProgram.currency

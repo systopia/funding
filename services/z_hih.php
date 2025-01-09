@@ -27,6 +27,7 @@ use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Actions\HiHApplicati
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Actions\HiHApplicationSubmitActionsFactory;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\JsonSchema\HiHApplicationJsonSchemaFactory;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\UiSchema\HiHApplicationUiSchemaFactory;
+use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\EventSubscriber\HiHAngularModuleSubscriber;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\FundingCase\Actions\HiHCaseActionsDeterminer;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\FundingCase\HiHPossibleRecipientsForChangeLoader;
 
@@ -57,3 +58,6 @@ $container->autowire(HiHCaseActionsDeterminer::class)
 
 $container->autowire(HiHPossibleRecipientsForChangeLoader::class)
   ->addTag(HiHPossibleRecipientsForChangeLoader::SERVICE_TAG);
+
+$container->autowire(HiHAngularModuleSubscriber::class)
+  ->addTag('kernel.event_subscriber');
