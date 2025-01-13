@@ -16,7 +16,7 @@
 
 'use strict';
 
-fundingModule.directive('fundingHihApplicationSidebar', function() {
+fundingHiHModule.directive('fundingHihApplicationSidebar', function() {
   return {
     restrict: 'AE',
     scope: false,
