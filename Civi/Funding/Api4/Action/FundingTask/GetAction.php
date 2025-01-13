@@ -42,9 +42,9 @@ final class GetAction extends AbstractReferencingDAOGetAction {
   protected ?int $statusType = NULL;
 
   public function __construct(
-    Api4Interface $api4,
-    FundingCaseManager $fundingCaseManager,
-    RequestContextInterface $requestContext
+    ?Api4Interface $api4 = NULL,
+    ?FundingCaseManager $fundingCaseManager = NULL,
+    ?RequestContextInterface $requestContext = NULL
   ) {
     parent::__construct(
       Activity::getEntityName(),
@@ -87,7 +87,7 @@ final class GetAction extends AbstractReferencingDAOGetAction {
 
     $this->addClause('OR',
       ['assignee_contact_id', 'IS NULL'],
-      ['assignee_contact_id', '=', $this->_requestContext->getContactId()],
+      ['assignee_contact_id', '=', $this->getRequestContext()->getContactId()],
     );
 
     $this->addSelect(
@@ -120,7 +120,7 @@ final class GetAction extends AbstractReferencingDAOGetAction {
     }
 
     // @phpstan-ignore argument.type
-    $fundingCase = $this->_fundingCaseManager->get($record['funding_case_task.funding_case_id']);
+    $fundingCase = $this->getFundingCaseManager()->get($record['funding_case_task.funding_case_id']);
     if (NULL === $fundingCase) {
       return FALSE;
     }
