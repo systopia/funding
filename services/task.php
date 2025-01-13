@@ -32,7 +32,3 @@ $container->autowire(\Civi\Funding\Task\Api4\ActionHandler\RemoteGetActionHandle
   ->addTag(\Civi\Funding\Task\Api4\ActionHandler\RemoteGetActionHandler::SERVICE_TAG);
 $container->autowire(\Civi\Funding\Task\Api4\ActionHandler\RemoteGetFieldsActionHandler::class)
   ->addTag(\Civi\Funding\Task\Api4\ActionHandler\RemoteGetFieldsActionHandler::SERVICE_TAG);
-
-$container->autowire(\Civi\Funding\Api4\Action\FundingTask\GetAction::class)
-  ->setPublic(TRUE)
-  ->setShared(FALSE);
