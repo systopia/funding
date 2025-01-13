@@ -47,7 +47,7 @@ final class FundingTask extends AbstractEntity {
   }
 
   public static function get(bool $checkPermissions = TRUE): GetAction {
-    return \Civi::service(GetAction::class)->setCheckPermissions($checkPermissions);
+    return (new GetAction())->setCheckPermissions($checkPermissions);
   }
 
   public static function update(bool $checkPermissions = TRUE): UpdateAction {
