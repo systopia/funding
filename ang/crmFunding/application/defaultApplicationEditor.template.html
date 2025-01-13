@@ -52,7 +52,7 @@
     </div>
     <div>
       <label>{{ ts('Amount Requested') }}</label>
-      {{ applicationProcess.amount_requested }} {{ currency }}
+      {{ applicationProcess.amount_requested|fundingCurrency:currency }}
     </div>
 
     <funding-application-form></funding-application-form>
