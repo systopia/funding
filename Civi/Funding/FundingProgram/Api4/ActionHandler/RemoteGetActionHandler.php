@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2025 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,17 +17,17 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\EventSubscriber\Remote;
+namespace Civi\Funding\FundingProgram\Api4\ActionHandler;
 
-use Civi\Funding\Event\Remote\FundingDAOGetEvent;
-use Civi\RemoteTools\EventSubscriber\AbstractRemoteDAOGetSubscriber;
+use Civi\Api4\FundingProgram;
+use Civi\Funding\Api4\ActionHandler\AbstractRemoteFundingGetActionHandler;
 
-final class FundingCaseDAOGetSubscriber extends AbstractRemoteDAOGetSubscriber {
+final class RemoteGetActionHandler extends AbstractRemoteFundingGetActionHandler {
 
-  protected const BASIC_ENTITY_NAME = 'FundingCase';
+  public const ENTITY_NAME = 'RemoteFundingProgram';
 
-  protected const ENTITY_NAME = 'RemoteFundingCase';
-
-  protected const EVENT_CLASS = FundingDAOGetEvent::class;
+  protected function getEntityName(): string {
+    return FundingProgram::getEntityName();
+  }
 
 }

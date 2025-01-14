@@ -31,6 +31,7 @@ use Civi\Funding\PayoutProcess\PayoutProcessManager;
 use Civi\Funding\PayoutProcess\Token\DrawdownTokenNameExtractor;
 use Civi\Funding\PayoutProcess\Token\DrawdownTokenResolver;
 use Civi\Funding\Validation\ConcreteEntityValidatorInterface;
+use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 $container->autowire(DrawdownManager::class);
@@ -66,20 +67,10 @@ ServiceRegistrator::autowireAllImplementing(
 
 ServiceRegistrator::autowireAllImplementing(
   $container,
-  __DIR__ . '/../Civi/Funding/EventSubscriber/Remote/Drawdown',
-  'Civi\\Funding\\EventSubscriber\\Remote\\Drawdown',
-  EventSubscriberInterface::class,
-  ['kernel.event_subscriber' => []],
-  ['lazy' => 'auto'],
-);
-
-ServiceRegistrator::autowireAllImplementing(
-  $container,
-  __DIR__ . '/../Civi/Funding/EventSubscriber/Remote/PayoutProcess',
-  'Civi\\Funding\\EventSubscriber\\Remote\\PayoutProcess',
-  EventSubscriberInterface::class,
-  ['kernel.event_subscriber' => []],
-  ['lazy' => 'auto'],
+  __DIR__ . '/../Civi/Funding/PayoutProcess/Api4/ActionHandler',
+  'Civi\\Funding\\PayoutProcess\\Api4\\ActionHandler',
+  ActionHandlerInterface::class,
+  [ActionHandlerInterface::SERVICE_TAG => []],
 );
 
 ServiceRegistrator::autowireAllImplementing(

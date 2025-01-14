@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2025 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,20 +17,17 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\EventSubscriber\Remote;
+namespace Civi\Funding\PayoutProcess\Api4\ActionHandler;
 
-use Civi\Funding\Event\Remote\FundingGetFieldsEvent;
-use Civi\Funding\EventSubscriber\Remote\Traits\FundingCaseTypeSubscriberTrait;
-use Civi\RemoteTools\EventSubscriber\AbstractRemoteGetFieldsSubscriber;
+use Civi\Api4\FundingPayoutProcess;
+use Civi\Funding\Api4\ActionHandler\AbstractRemoteFundingGetActionHandler;
 
-final class FundingCaseTypeGetFieldsSubscriber extends AbstractRemoteGetFieldsSubscriber {
+final class RemoteGetActionHandler extends AbstractRemoteFundingGetActionHandler {
 
-  use FundingCaseTypeSubscriberTrait;
+  public const ENTITY_NAME = 'RemoteFundingPayoutProcess';
 
-  protected const BASIC_ENTITY_NAME = 'FundingCaseType';
-
-  protected const ENTITY_NAME = 'RemoteFundingCaseType';
-
-  protected const EVENT_CLASS = FundingGetFieldsEvent::class;
+  protected function getEntityName(): string {
+    return FundingPayoutProcess::getEntityName();
+  }
 
 }

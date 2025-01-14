@@ -19,40 +19,11 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\Remote\FundingCaseType;
 
-use Civi\Api4\Generic\Result;
-use Civi\Api4\RemoteFundingCaseType;
-use Civi\Core\CiviEventDispatcherInterface;
-use Civi\Funding\Api4\Action\Remote\RemoteFundingActionLegacyInterface;
-use Civi\Funding\Api4\Action\Remote\Traits\RemoteFundingActionContactIdRequiredTrait;
+use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingAction;
 use Civi\Funding\Api4\Action\Traits\FundingProgramIdParameterTrait;
-use Civi\Funding\Event\Remote\FundingCaseType\GetByFundingProgramIdEvent;
-use Civi\Funding\Event\Remote\FundingEvents;
-use Civi\RemoteTools\Api4\Action\AbstractEventAction;
-use Civi\RemoteTools\Event\AbstractRequestEvent;
 
-final class GetByFundingProgramIdAction extends AbstractEventAction implements RemoteFundingActionLegacyInterface {
+final class GetByFundingProgramIdAction extends AbstractRemoteFundingAction {
 
   use FundingProgramIdParameterTrait;
-
-  use RemoteFundingActionContactIdRequiredTrait;
-
-  public function __construct(CiviEventDispatcherInterface $eventDispatcher = NULL) {
-    parent::__construct(
-      FundingEvents::REQUEST_INIT_EVENT_NAME,
-      FundingEvents::REQUEST_AUTHORIZE_EVENT_NAME,
-      RemoteFundingCaseType::getEntityName(),
-      'getByFundingProgramId',
-      $eventDispatcher
-    );
-  }
-
-  protected function getEventClass(): string {
-    return GetByFundingProgramIdEvent::class;
-  }
-
-  protected function updateResult(Result $result, AbstractRequestEvent $event): void {
-    /** @var \Civi\Funding\Event\Remote\FundingCaseType\GetByFundingProgramIdEvent $event */
-    $result->exchangeArray($event->getRecords());
-  }
 
 }

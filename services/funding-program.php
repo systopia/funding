@@ -23,8 +23,6 @@ declare(strict_types = 1);
 use Civi\Funding\Api4\Action\FundingProgram\GetAction;
 use Civi\Funding\Api4\Action\FundingProgram\GetFieldsAction;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
-use Civi\Funding\EventSubscriber\Remote\FundingProgramDAOGetSubscriber;
-use Civi\Funding\EventSubscriber\Remote\FundingProgramGetFieldsSubscriber;
 use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker;
 use Civi\Funding\FundingProgram\FundingProgramManager;
@@ -52,11 +50,6 @@ ServiceRegistrator::autowireAllImplementing(
   ActionHandlerInterface::class,
   [ActionHandlerInterface::SERVICE_TAG => []],
 );
-
-$container->autowire(FundingProgramGetFieldsSubscriber::class)
-  ->addTag('kernel.event_subscriber');
-$container->autowire(FundingProgramDAOGetSubscriber::class)
-  ->addTag('kernel.event_subscriber');
 
 ServiceRegistrator::autowireAllImplementing(
   $container,

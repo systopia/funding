@@ -25,10 +25,9 @@ use Civi\Funding\Api4\Action\FundingCaseType\GetByFundingProgramIdAction;
 use Civi\Funding\Api4\Action\FundingCaseType\UpdateAction;
 use Civi\Funding\DependencyInjection\Compiler\FundingCaseFinishClearingHandlerPass;
 use Civi\Funding\DependencyInjection\Compiler\FundingCaseTypeServiceLocatorPass;
+use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\EventSubscriber\FundingCaseType\AfformCacheCiviOfficeDocumentSubscriber;
-use Civi\Funding\EventSubscriber\Remote\FundingCaseTypeDAOGetSubscriber;
-use Civi\Funding\EventSubscriber\Remote\FundingCaseTypeGetByFundingProgramIdSubscriber;
-use Civi\Funding\EventSubscriber\Remote\FundingCaseTypeGetFieldsSubscriber;
+use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\Reference;
 
@@ -48,9 +47,11 @@ $container->autowire(UpdateAction::class)
 $container->autowire(AfformCacheCiviOfficeDocumentSubscriber::class)
   ->setArgument('$assetBuilder', new Reference('asset_builder'))
   ->addTag('kernel.event_subscriber');
-$container->autowire(FundingCaseTypeGetFieldsSubscriber::class)
-  ->addTag('kernel.event_subscriber');
-$container->autowire(FundingCaseTypeDAOGetSubscriber::class)
-  ->addTag('kernel.event_subscriber');
-$container->autowire(FundingCaseTypeGetByFundingProgramIdSubscriber::class)
-  ->addTag('kernel.event_subscriber');
+
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/FundingCaseType/Api4/ActionHandler',
+  'Civi\\Funding\\FundingCaseType\\Api4\\ActionHandler',
+  ActionHandlerInterface::class,
+  [ActionHandlerInterface::SERVICE_TAG => []],
+);

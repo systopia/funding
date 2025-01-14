@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2025 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,25 +17,21 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\EventSubscriber\Remote;
+namespace Civi\Funding\FundingCase\Api4\ActionHandler;
 
-use Civi\Funding\Event\Remote\FundingGetFieldsEvent;
-use Civi\RemoteTools\Event\GetFieldsEvent;
-use Civi\RemoteTools\EventSubscriber\AbstractRemoteGetFieldsSubscriber;
+use Civi\Api4\FundingCase;
+use Civi\Api4\Generic\Result;
+use Civi\Funding\Api4\ActionHandler\AbstractRemoteFundingGetFieldsActionHandler;
+use Civi\RemoteTools\Api4\Action\AbstractRemoteGetFieldsAction;
 use CRM_Funding_ExtensionUtil as E;
 
-final class FundingCaseGetFieldsSubscriber extends AbstractRemoteGetFieldsSubscriber {
+final class RemoteGetFieldsActionHandler extends AbstractRemoteFundingGetFieldsActionHandler {
 
-  protected const BASIC_ENTITY_NAME = 'FundingCase';
+  public const ENTITY_NAME = 'RemoteFundingCase';
 
-  protected const ENTITY_NAME = 'RemoteFundingCase';
-
-  protected const EVENT_CLASS = FundingGetFieldsEvent::class;
-
-  public function onGetFields(GetFieldsEvent $event): void {
-    parent::onGetFields($event);
-
-    $event->addField([
+  public function getFields(AbstractRemoteGetFieldsAction $action): Result {
+    $fields = parent::getFields($action);
+    $fields[] = [
       'nullable' => FALSE,
       'name' => 'funding_case_type_id.is_combined_application',
       'title' => E::ts('Is Combined Application'),
@@ -43,10 +39,9 @@ final class FundingCaseGetFieldsSubscriber extends AbstractRemoteGetFieldsSubscr
       'serialize' => NULL,
       'options' => FALSE,
       'label' => E::ts('Is Combined Application'),
-      'operators' => NULL,
-    ]);
+    ];
 
-    $event->addField([
+    $fields[] = [
       'nullable' => TRUE,
       'name' => 'funding_case_type_id.application_process_label',
       'title' => E::ts('Application Process Label'),
@@ -54,8 +49,13 @@ final class FundingCaseGetFieldsSubscriber extends AbstractRemoteGetFieldsSubscr
       'serialize' => NULL,
       'options' => FALSE,
       'label' => E::ts('Application Process Label'),
-      'operators' => NULL,
-    ]);
+    ];
+
+    return $fields;
+  }
+
+  protected function getEntityName(): string {
+    return FundingCase::getEntityName();
   }
 
 }

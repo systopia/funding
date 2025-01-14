@@ -36,15 +36,21 @@ abstract class AbstractRemoteFundingGetActionHandler implements ActionHandlerInt
    * @throws \CRM_Core_Exception
    */
   public function get(RemoteFundingGetAction $action): Result {
-    return $this->api4->execute($this->getEntityName(), 'get', [
+    $params = [
       'language' => $action->getLanguage(),
       'select' => $action->getSelect(),
-      'join' => $this->getJoin($action),
       'where' => $action->getWhere(),
       'orderBy' => $action->getOrderBy(),
       'limit' => $action->getLimit(),
       'offset' => $action->getOffset(),
-    ]);
+    ];
+
+    $join = $this->getJoin($action);
+    if ($join !== []) {
+      $params['join'] = $join;
+    }
+
+    return $this->api4->execute($this->getEntityName(), 'get', $params);
   }
 
   /**

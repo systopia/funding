@@ -30,8 +30,8 @@ use Civi\Funding\AbstractRemoteFundingHeadlessTestCase;
  * @group headless
  *
  * @covers \Civi\Api4\RemoteFundingProgram
- * @covers \Civi\Funding\Api4\Action\Remote\RemoteFundingDAOGetActionLegacy
- * @covers \Civi\Funding\EventSubscriber\Remote\FundingProgramDAOGetSubscriber
+ * @covers \Civi\Funding\Api4\ActionHandler\AbstractRemoteFundingGetActionHandler
+ * @covers \Civi\Funding\FundingProgram\Api4\ActionHandler\RemoteGetActionHandler
  */
 final class RemoteFundingProgramTest extends AbstractRemoteFundingHeadlessTestCase {
 
@@ -55,7 +55,7 @@ final class RemoteFundingProgramTest extends AbstractRemoteFundingHeadlessTestCa
     $permittedOrganizationResult = RemoteFundingProgram::get()
       ->setRemoteContactId((string) $this->permittedOrganizationId)
       ->execute();
-    static::assertSame(1, $permittedOrganizationResult->rowCount);
+    static::assertSame(1, $permittedOrganizationResult->countFetched());
     static::assertSame('Foo', $permittedOrganizationResult->first()['title']);
     static::assertSame(['application_foo'], $permittedOrganizationResult->first()['permissions']);
     static::assertTrue($permittedOrganizationResult->first()['PERM_application_foo']);
@@ -65,7 +65,7 @@ final class RemoteFundingProgramTest extends AbstractRemoteFundingHeadlessTestCa
     $permittedIndividualResult = RemoteFundingProgram::get()
       ->setRemoteContactId((string) $this->permittedIndividualId)
       ->execute();
-    static::assertSame(1, $permittedIndividualResult->rowCount);
+    static::assertSame(1, $permittedIndividualResult->countFetched());
     static::assertSame('Foo', $permittedIndividualResult->first()['title']);
     static::assertSame(['application_a'], $permittedIndividualResult->first()['permissions']);
     static::assertTrue($permittedIndividualResult->first()['PERM_application_a']);
@@ -75,13 +75,13 @@ final class RemoteFundingProgramTest extends AbstractRemoteFundingHeadlessTestCa
     $notPermittedResult = RemoteFundingProgram::get()
       ->setRemoteContactId((string) $this->notPermittedContactId)
       ->execute();
-    static::assertSame(0, $notPermittedResult->rowCount);
+    static::assertSame(0, $notPermittedResult->countFetched());
 
     // Contact has a permitted type, but the relation has no permissions set
     $notPermittedResult = RemoteFundingProgram::get()
       ->setRemoteContactId((string) $this->permittedOrganizationIdNoPermissions)
       ->execute();
-    static::assertSame(0, $notPermittedResult->rowCount);
+    static::assertSame(0, $notPermittedResult->countFetched());
   }
 
 }

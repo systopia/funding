@@ -25,7 +25,7 @@ use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\TransferContract\Handler\DefaultTransferContractRenderHandler;
 use Civi\Funding\TransferContract\Handler\TransferContractRenderHandlerInterface;
 use Civi\Funding\TransferContract\TransferContractCreator;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 
 $container->autowire(TransferContractCreator::class);
 $container->autowire(TransferContractRenderHandlerInterface::class, DefaultTransferContractRenderHandler::class);
@@ -44,9 +44,8 @@ ServiceRegistrator::autowireAllImplementing(
 
 ServiceRegistrator::autowireAllImplementing(
   $container,
-  __DIR__ . '/../Civi/Funding/EventSubscriber/Remote/TransferContract',
-  'Civi\\Funding\\EventSubscriber\\Remote\\TransferContract',
-  EventSubscriberInterface::class,
-  ['kernel.event_subscriber' => []],
-  ['lazy' => 'auto'],
+  __DIR__ . '/../Civi/Funding/TransferContract/Api4/ActionHandler',
+  'Civi\\Funding\\TransferContract\\Api4\\ActionHandler',
+  ActionHandlerInterface::class,
+  [ActionHandlerInterface::SERVICE_TAG => []],
 );

@@ -19,27 +19,27 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
-use Civi\Funding\Api4\AbstractRemoteFundingEntityLegacy;
-use Civi\Funding\Api4\Action\Remote\RemoteFundingDAOGetActionLegacy;
-use Civi\Funding\Api4\Action\Remote\FundingCase\GetUpdateFormAction;
-use Civi\Funding\Api4\Action\Remote\FundingCase\GetNewFormAction;
+use Civi\Funding\Api4\AbstractRemoteFundingEntity;
 use Civi\Funding\Api4\Action\Remote\FundingCase\GetNewApplicationFormAction;
-use Civi\Funding\Api4\Action\Remote\FundingCase\SubmitUpdateFormAction;
-use Civi\Funding\Api4\Action\Remote\FundingCase\SubmitNewFormAction;
+use Civi\Funding\Api4\Action\Remote\FundingCase\GetNewFormAction;
+use Civi\Funding\Api4\Action\Remote\FundingCase\GetUpdateFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\SubmitNewApplicationFormAction;
-use Civi\Funding\Api4\Action\Remote\FundingCase\ValidateUpdateFormAction;
-use Civi\Funding\Api4\Action\Remote\FundingCase\ValidateNewFormAction;
+use Civi\Funding\Api4\Action\Remote\FundingCase\SubmitNewFormAction;
+use Civi\Funding\Api4\Action\Remote\FundingCase\SubmitUpdateFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\ValidateNewApplicationFormAction;
+use Civi\Funding\Api4\Action\Remote\FundingCase\ValidateNewFormAction;
+use Civi\Funding\Api4\Action\Remote\FundingCase\ValidateUpdateFormAction;
+use Civi\Funding\Api4\Action\Remote\RemoteFundingGetAction;
 
 /**
  * The new application form actions are used to create a funding case together
  * with an application. The other new form actions are used for combined
  * applications to create a funding case without an application.
  */
-final class RemoteFundingCase extends AbstractRemoteFundingEntityLegacy {
+final class RemoteFundingCase extends AbstractRemoteFundingEntity {
 
-  public static function get(): RemoteFundingDAOGetActionLegacy {
-    return new RemoteFundingDAOGetActionLegacy(static::getEntityName());
+  public static function get(): RemoteFundingGetAction {
+    return new RemoteFundingGetAction(static::getEntityName(), __FUNCTION__);
   }
 
   public static function getUpdateForm(): GetUpdateFormAction {
