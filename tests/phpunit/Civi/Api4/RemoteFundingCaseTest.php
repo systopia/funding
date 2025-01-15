@@ -42,8 +42,8 @@ use Symfony\Bridge\PhpUnit\ClockMock;
  *
  * @covers \Civi\Api4\RemoteFundingCase
  * @covers \Civi\Funding\Api4\Action\Remote\FundingCase\GetNewApplicationFormAction
- * @covers \Civi\Funding\Api4\Action\Remote\RemoteFundingDAOGetActionLegacy
- * @covers \Civi\Funding\EventSubscriber\Remote\FundingCaseDAOGetSubscriber
+ * @covers \Civi\Funding\Api4\ActionHandler\AbstractRemoteFundingGetActionHandler
+ * @covers \Civi\Funding\FundingCase\Api4\ActionHandler\RemoteGetActionHandler
  */
 final class RemoteFundingCaseTest extends AbstractRemoteFundingHeadlessTestCase {
 
@@ -144,7 +144,7 @@ final class RemoteFundingCaseTest extends AbstractRemoteFundingHeadlessTestCase 
     $permittedAssociatedResult = RemoteFundingCase::get()
       ->setRemoteContactId((string) $this->associatedContactId)
       ->execute();
-    static::assertSame(1, $permittedAssociatedResult->rowCount);
+    static::assertSame(1, $permittedAssociatedResult->countFetched());
     static::assertSame($this->permittedFundingCaseId, $permittedAssociatedResult->first()['id']);
     static::assertSame(['application_foo', 'application_bar'], $permittedAssociatedResult->first()['permissions']);
     static::assertTrue($permittedAssociatedResult->first()['PERM_application_foo']);
@@ -155,7 +155,7 @@ final class RemoteFundingCaseTest extends AbstractRemoteFundingHeadlessTestCase 
     $permittedABResult = RemoteFundingCase::get()
       ->setRemoteContactId((string) $this->relatedABContactId)
       ->execute();
-    static::assertSame(1, $permittedABResult->rowCount);
+    static::assertSame(1, $permittedABResult->countFetched());
     static::assertSame($this->permittedFundingCaseId, $permittedABResult->first()['id']);
     static::assertSame(['application_c', 'application_d'], $permittedABResult->first()['permissions']);
     static::assertTrue($permittedABResult->first()['PERM_application_c']);
@@ -166,7 +166,7 @@ final class RemoteFundingCaseTest extends AbstractRemoteFundingHeadlessTestCase 
     $permittedBAResult = RemoteFundingCase::get()
       ->setRemoteContactId((string) $this->relatedBAContactId)
       ->execute();
-    static::assertSame(1, $permittedBAResult->rowCount);
+    static::assertSame(1, $permittedBAResult->countFetched());
     static::assertSame($this->permittedFundingCaseId, $permittedBAResult->first()['id']);
     static::assertSame(['application_c', 'application_d'], $permittedBAResult->first()['permissions']);
     static::assertTrue($permittedBAResult->first()['PERM_application_c']);
@@ -177,13 +177,13 @@ final class RemoteFundingCaseTest extends AbstractRemoteFundingHeadlessTestCase 
     $notPermittedResult = RemoteFundingCase::get()
       ->setRemoteContactId((string) $this->notPermittedContactId)
       ->execute();
-    static::assertSame(0, $notPermittedResult->rowCount);
+    static::assertSame(0, $notPermittedResult->countFetched());
 
     // Contact is directly associated, but has no permissions set
     $permittedAssociatedResult = RemoteFundingCase::get()
       ->setRemoteContactId((string) $this->associatedContactIdNoPermissions)
       ->execute();
-    static::assertSame(0, $permittedAssociatedResult->rowCount);
+    static::assertSame(0, $permittedAssociatedResult->countFetched());
   }
 
 }

@@ -19,24 +19,15 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\Remote\Drawdown;
 
-use Civi\Api4\FundingDrawdown;
-use Civi\Api4\Generic\Result;
-use Civi\Api4\RemoteFundingDrawdown;
-use Civi\Core\CiviEventDispatcherInterface;
-use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingActionLegacy;
-use Civi\Funding\Api4\Action\Remote\Traits\RemoteFundingActionContactIdRequiredTrait;
-use Civi\Funding\Entity\DrawdownEntity;
-use Civi\Funding\Event\Remote\FundingEvents;
-use Civi\RemoteTools\Event\CreateEvent;
-use Webmozart\Assert\Assert;
+use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingAction;
 
 /**
+ * @method float getAmount()
  * @method $this setAmount(float $amount)
+ * @method int getPayoutProcessId()
  * @method $this setPayoutProcessId(int $payoutProcessId)
  */
-final class CreateAction extends AbstractRemoteFundingActionLegacy {
-
-  use RemoteFundingActionContactIdRequiredTrait;
+final class CreateAction extends AbstractRemoteFundingAction {
 
   /**
    * @var int
@@ -45,53 +36,9 @@ final class CreateAction extends AbstractRemoteFundingActionLegacy {
   protected ?int $payoutProcessId = NULL;
 
   /**
-   * CiviCRM (v5.59) does not know float/double in @var.
-   * @var mixed
+   * @var float
    * @required
-   * Cannot be PHP type hinted, because 0.0 is not accepted as required
-   * parameter, see https://github.com/civicrm/civicrm-core/pull/29766.
    */
-  protected $amount = NULL;
-
-  public function __construct(CiviEventDispatcherInterface $eventDispatcher) {
-    parent::__construct(RemoteFundingDrawdown::getEntityName(), 'create');
-    $this->_eventDispatcher = $eventDispatcher;
-    $this->_authorizeRequestEventName = FundingEvents::REQUEST_AUTHORIZE_EVENT_NAME;
-    $this->_initRequestEventName = FundingEvents::REQUEST_INIT_EVENT_NAME;
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public function _run(Result $result): void {
-    $event = $this->createEvent();
-    $this->dispatchEvent($event);
-
-    $result->debug['event'] = $event->getDebugOutput();
-    $result->setCountMatched($event->getRowCount());
-    $result->exchangeArray($event->getRecords());
-  }
-
-  private function createEvent(): CreateEvent {
-    Assert::notNull($this->payoutProcessId);
-    Assert::notNull($this->amount);
-    Assert::numeric($this->amount);
-
-    return new CreateEvent(
-      FundingDrawdown::getEntityName(),
-      'create',
-      [
-        'values' => DrawdownEntity::fromArray([
-          'payout_process_id' => $this->payoutProcessId,
-          'status' => 'new',
-          'creation_date' => date('Y-m-d H:i:s'),
-          'amount' => (float) $this->amount,
-          'acception_date' => NULL,
-          'requester_contact_id' => $this->getContactId(),
-          'reviewer_contact_id' => NULL,
-        ])->toArray(),
-      ],
-    );
-  }
+  protected ?float $amount = NULL;
 
 }

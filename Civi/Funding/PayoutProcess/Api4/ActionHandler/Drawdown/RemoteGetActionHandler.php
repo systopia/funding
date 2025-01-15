@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2025 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,17 +17,17 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\EventSubscriber\Remote\Traits;
+namespace Civi\Funding\PayoutProcess\Api4\ActionHandler\Drawdown;
 
-use Civi\RemoteTools\Event\AbstractRequestEvent;
+use Civi\Api4\FundingDrawdown;
+use Civi\Funding\Api4\ActionHandler\AbstractRemoteFundingGetActionHandler;
 
-trait FundingCaseTypeSubscriberTrait {
+final class RemoteGetActionHandler extends AbstractRemoteFundingGetActionHandler {
 
-  /**
-   * @return string[]
-   */
-  protected function getIncludedFields(AbstractRequestEvent $event): array {
-    return ['id', 'title', 'is_combined_application', 'application_process_label'];
+  public const ENTITY_NAME = 'RemoteFundingDrawdown';
+
+  protected function getEntityName(): string {
+    return FundingDrawdown::getEntityName();
   }
 
 }

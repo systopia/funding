@@ -91,8 +91,6 @@ use Civi\Funding\DependencyInjection\ApplicationFormValidatorPass;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessActivityGetFieldsSubscriber;
 use Civi\Funding\EventSubscriber\Remote\ApplicationProcessActivityGetSubscriber;
-use Civi\Funding\EventSubscriber\Remote\ApplicationProcessDAOGetSubscriber;
-use Civi\Funding\EventSubscriber\Remote\ApplicationProcessGetFieldsSubscriber;
 use Civi\Funding\Form\Application\ApplicationCostItemsFormDataLoader;
 use Civi\Funding\Form\Application\ApplicationCostItemsFormDataLoaderInterface;
 use Civi\Funding\Form\Application\ApplicationResourcesItemsFormDataLoader;
@@ -237,11 +235,6 @@ ServiceRegistrator::autowireAllImplementing(
   ['kernel.event_subscriber' => []],
   ['lazy' => 'auto'],
 );
-
-$container->autowire(ApplicationProcessGetFieldsSubscriber::class)
-  ->addTag('kernel.event_subscriber');
-$container->autowire(ApplicationProcessDAOGetSubscriber::class)
-  ->addTag('kernel.event_subscriber');
 
 $container->autowire(ApplicationProcessActivityGetSubscriber::class)
   ->addTag('kernel.event_subscriber');

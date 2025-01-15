@@ -27,7 +27,7 @@ use Civi\Funding\AbstractRemoteFundingHeadlessTestCase;
  *
  * @covers \Civi\Api4\RemoteFundingCaseType
  * @covers \Civi\Funding\Api4\Action\Remote\FundingCaseType\GetByFundingProgramIdAction
- * @covers \Civi\Funding\EventSubscriber\Remote\FundingCaseTypeGetByFundingProgramIdSubscriber
+ * @covers \Civi\Funding\FundingCaseType\Api4\ActionHandler\RemoteGetByFundingProgramIdActionHandler
  */
 final class RemoteFundingCaseTypeTest extends AbstractRemoteFundingHeadlessTestCase {
 

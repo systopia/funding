@@ -28,8 +28,6 @@ use Civi\Funding\DependencyInjection\Compiler\FundingCaseNotificationContactsSet
 use Civi\Funding\DependencyInjection\Compiler\FundingCaseRecipientContactSetHandlerPass;
 use Civi\Funding\DependencyInjection\PossibleRecipientsForChangeLoaderPass;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
-use Civi\Funding\EventSubscriber\Remote\FundingCaseDAOGetSubscriber;
-use Civi\Funding\EventSubscriber\Remote\FundingCaseGetFieldsSubscriber;
 use Civi\Funding\FundingCase\FundingCaseIdentifierGenerator;
 use Civi\Funding\FundingCase\FundingCaseIdentifierGeneratorInterface;
 use Civi\Funding\FundingCase\FundingCaseManager;
@@ -220,11 +218,6 @@ $container->register(FundingCaseContactsLoaderInterface::class, FundingCaseConta
 $container->autowire(FundingCaseContactsLoader::class)
   ->addTag('funding.case.contacts_loader');
 $container->autowire(ContactsWithPermissionLoader::class);
-
-$container->autowire(FundingCaseGetFieldsSubscriber::class)
-  ->addTag('kernel.event_subscriber');
-$container->autowire(FundingCaseDAOGetSubscriber::class)
-  ->addTag('kernel.event_subscriber');
 
 ServiceRegistrator::autowireAllImplementing(
   $container,
