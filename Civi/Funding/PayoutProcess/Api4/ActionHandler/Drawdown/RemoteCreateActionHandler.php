@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2025 SYSTOPIA GmbH
+ * Copyright (C) 2024 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -19,38 +19,46 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\PayoutProcess\Api4\ActionHandler\Drawdown;
 
-use Civi\Api4\FundingDrawdown;
-use Civi\Api4\Generic\Result;
 use Civi\Funding\Api4\Action\Remote\Drawdown\CreateAction;
-use Civi\Funding\Entity\DrawdownEntity;
+use Civi\Funding\PayoutProcess\DrawdownManager;
+use Civi\Funding\PayoutProcess\PayoutProcessManager;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
-use Civi\RemoteTools\Api4\Api4Interface;
+use Webmozart\Assert\Assert;
 
-class RemoteCreateActionHandler implements ActionHandlerInterface {
+/**
+ * @phpstan-import-type drawdownT from \Civi\Funding\Entity\DrawdownEntity
+ */
+final class RemoteCreateActionHandler implements ActionHandlerInterface {
 
   public const ENTITY_NAME = 'RemoteFundingDrawdown';
 
-  private Api4Interface $api4;
+  private DrawdownManager $drawdownManager;
 
-  public function __construct(Api4Interface $api4) {
-    $this->api4 = $api4;
+  private PayoutProcessManager $payoutProcessManager;
+
+  public function __construct(DrawdownManager $drawdownManager, PayoutProcessManager $payoutProcessManager) {
+    $this->drawdownManager = $drawdownManager;
+    $this->payoutProcessManager = $payoutProcessManager;
   }
 
   /**
+   * @phpstan-return array{drawdownT}
+   *
    * @throws \CRM_Core_Exception
    */
-  public function create(CreateAction $action): Result {
-    return $this->api4->execute(FundingDrawdown::getEntityName(), 'create', [
-      'values' => DrawdownEntity::fromArray([
-        'payout_process_id' => $action->getPayoutProcessId(),
-        'status' => 'new',
-        'creation_date' => date('Y-m-d H:i:s'),
-        'amount' => $action->getAmount(),
-        'acception_date' => NULL,
-        'requester_contact_id' => $action->getResolvedContactId(),
-        'reviewer_contact_id' => NULL,
-      ])->toArray(),
-    ]);
+  public function create(CreateAction $action): array {
+    $payoutProcessBundle = $this->payoutProcessManager->getBundle($action->getPayoutProcessId());
+    Assert::notNull(
+      $payoutProcessBundle,
+      sprintf('Payout process with ID %d not found', $action->getPayoutProcessId())
+    );
+    $drawdown = $this->drawdownManager->createNew(
+      $payoutProcessBundle,
+      $action->getAmount(),
+      $action->getResolvedContactId()
+    );
+
+    return [$drawdown->toArray()];
   }
 
 }
