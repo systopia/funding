@@ -120,6 +120,7 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
   }
 
   public function upgrade_0011(): bool {
+    $this->ctx->log->info('Installing JSON overlaps SQL function');
     $this->installJsonOverlapsSqlFunction();
 
     /** @var \Civi\Funding\Upgrade\Upgrader0011 $upgrader */
