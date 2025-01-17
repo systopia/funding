@@ -14,7 +14,7 @@ return [
       'values' => [
         'name' => 'funding_drawdown_task',
         'table_name' => 'civicrm_value_funding_drawdown_task',
-        'title' => E::ts('Funding Payout Task'),
+        'title' => E::ts('Funding Drawdown Task'),
         'extends' => 'Activity',
         'extends_entity_column_value:name' => [
           ActivityTypeNames::DRAWDOWN_TASK,
