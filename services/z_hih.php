@@ -25,6 +25,9 @@ use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Actions\HiHApplicati
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Actions\HiHApplicationStatusDeterminer;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Actions\HiHApplicationSubmitActionsContainer;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Actions\HiHApplicationSubmitActionsFactory;
+use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Data\HiHApplicationFormDataFactory;
+use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Data\HiHApplicationFormFilesFactory;
+use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Data\HiHInfoDateienFactory;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\JsonSchema\HiHApplicationJsonSchemaFactory;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\UiSchema\HiHApplicationUiSchemaFactory;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\EventSubscriber\HiHAngularModuleSubscriber;
@@ -55,6 +58,15 @@ $container->autowire(HiHApplicationUiSchemaFactory::class)
 
 $container->autowire(HiHCaseActionsDeterminer::class)
   ->addTag(HiHCaseActionsDeterminer::SERVICE_TAG);
+
+$container->autowire(HiHApplicationFormDataFactory::class)
+  ->addTag(HiHApplicationFormDataFactory::SERVICE_TAG);
+
+$container->autowire(HiHApplicationFormFilesFactory::class)
+  ->addTag(HiHApplicationFormFilesFactory::SERVICE_TAG);
+
+$container->autowire(HiHInfoDateienFactory::class);
+
 
 $container->autowire(HiHPossibleRecipientsForChangeLoader::class)
   ->addTag(HiHPossibleRecipientsForChangeLoader::SERVICE_TAG);

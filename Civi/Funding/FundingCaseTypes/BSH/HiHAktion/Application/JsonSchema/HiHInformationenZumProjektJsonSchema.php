@@ -105,7 +105,6 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
         'datei' => new JsonSchemaString([
           'maxLength' => 255,
           'format' => 'uri',
-          '$tag' => 'externalFile',
         ]),
         'beschreibung' => new JsonSchemaString(['maxLength' => 255]),
       ], ['required' => ['datei']])),
