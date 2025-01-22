@@ -62,6 +62,11 @@ final class RemoteFundingDrawdownTest extends AbstractRemoteFundingHeadlessTestC
     $record = $result->single();
     static::assertSame($payoutProcess->getId(), $record['payout_process_id']);
     static::assertSame(1.23, $record['amount']);
+
+    static::assertCount(1, RemoteFundingDrawdown::get()
+      ->setRemoteContactId((string) $contact['id'])
+      ->execute()
+    );
   }
 
   public function testCreatePermissionMissing(): void {
@@ -102,6 +107,10 @@ final class RemoteFundingDrawdownTest extends AbstractRemoteFundingHeadlessTestC
       ->setPayoutProcessId($payoutProcess->getId())
       ->setAmount(10.1)
       ->execute();
+  }
+
+  public function testGetFields(): void {
+    static::assertCount(12, RemoteFundingDrawdown::getFields()->execute());
   }
 
   private function createFundingCase(): FundingCaseEntity {
