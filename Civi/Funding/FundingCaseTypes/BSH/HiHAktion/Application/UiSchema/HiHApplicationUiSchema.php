@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\UiSchema;
 
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
+use Civi\RemoteTools\JsonForms\JsonFormsMarkup;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategorization;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
@@ -50,6 +51,11 @@ EOD,
           new HiHFormalesGroup('#/properties/formales/properties'),
         ]),
       ]),
+      new JsonFormsMarkup(<<<EOD
+<p><strong>Achtung: Ihr Antrag ist erst gespeichert, wenn das System auf die
+Übersichtsseite springt.</strong></p>
+EOD
+      ),
     ];
     parent::__construct(
       'Förderantrag für die NDR-Benefizaktion „Hand in Hand für Norddeutschland“ – aus einsam wird gemeinsam.',
