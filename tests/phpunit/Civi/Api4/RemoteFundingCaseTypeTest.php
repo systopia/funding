@@ -33,12 +33,15 @@ final class RemoteFundingCaseTypeTest extends AbstractRemoteFundingHeadlessTestC
 
   use FundingCaseTypeFixturesTrait;
 
-  protected function setUp(): void {
-    parent::setUp();
+  public function testGet(): void {
     $this->addFixtures();
+    static::assertCount(1, RemoteFundingCaseType::get()
+      ->setRemoteContactId((string) $this->permittedContactId)
+      ->execute());
   }
 
   public function testGetByFundingProgramId(): void {
+    $this->addFixtures();
     static::assertCount(1, RemoteFundingCaseType::getByFundingProgramId()
       ->setRemoteContactId((string) $this->permittedContactId)
       ->setFundingProgramId($this->fundingProgramId)
@@ -53,6 +56,10 @@ final class RemoteFundingCaseTypeTest extends AbstractRemoteFundingHeadlessTestC
       ->setRemoteContactId((string) $this->notPermittedContactId)
       ->setFundingProgramId($this->fundingProgramId)
       ->execute());
+  }
+
+  public function testGetFields(): void {
+    static::assertCount(13, RemoteFundingCaseType::getFields()->execute());
   }
 
 }
