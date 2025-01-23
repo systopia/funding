@@ -114,17 +114,21 @@ final class ServiceRegistrator {
       if ($it->isFile() && 'php' === $it->getFileInfo()->getExtension()) {
         // @phpstan-ignore-next-line
         $class = static::getClass($namespace, $it->getInnerIterator());
-        if (static::isServiceClass($class, $classOrInterface) && !$container->has($class)) {
+        if (static::isServiceClass($class, $classOrInterface)) {
           /** @phpstan-var class-string $class */
           // Use existing definition, if any, so previous tags aren't lost.
           $definition = $container->hasDefinition($class)
             ? $container->findDefinition($class)
             : $container->autowire($class);
+
           $definition->setLazy(self::isServiceLazy($class, $options));
           $definition->setShared($options['shared'] ?? TRUE);
           $definition->setPublic($options['public'] ?? FALSE);
           foreach ($tags as $tagName => $tagAttributes) {
-            $definition->addTag($tagName, $tagAttributes);
+            $existingTagAttributesList = $definition->getTag($tagName);
+            if (!in_array($tagAttributes, $existingTagAttributesList, TRUE)) {
+              $definition->addTag($tagName, $tagAttributes);
+            }
           }
 
           $definitions[$class] = $definition;
