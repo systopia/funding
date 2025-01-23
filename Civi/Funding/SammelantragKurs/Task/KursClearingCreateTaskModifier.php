@@ -20,10 +20,10 @@ declare(strict_types = 1);
 namespace Civi\Funding\SammelantragKurs\Task;
 
 use Civi\Funding\ClearingProcess\Task\AbstractClearingCreateTaskModifier;
-use Civi\Funding\IJB\Traits\IJBSupportedFundingCaseTypesTrait;
+use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
 
 final class KursClearingCreateTaskModifier extends AbstractClearingCreateTaskModifier {
 
-  use IJBSupportedFundingCaseTypesTrait;
+  use KursSupportedFundingCaseTypesTrait;
 
 }
