@@ -90,23 +90,32 @@ final class GetAction extends AbstractReferencingDAOGetAction {
       ['assignee_contact_id', '=', $this->getRequestContext()->getContactId()],
     );
 
-    $this->addSelect(
-      'funding_case_task.funding_case_id',
-      'funding_case_task.required_permissions',
-      '_pc.permissions',
-    );
+    if (!$this->ignoreCasePermissions) {
+      $this->addSelect(
+        'funding_case_task.funding_case_id',
+        'funding_case_task.required_permissions',
+        '_pc.permissions',
+      );
 
-    // Permission check. If _pc.permissions is NULL, check is performed in handleRecord().
-    $this->addClause('OR',
-      ['_pc.permissions', 'IS NULL'],
-      CompositeCondition::new('AND',
-        Comparison::new('_pc.permissions', '!=', NULL),
-        CompositeCondition::new('OR',
-          Comparison::new('funding_case_task.required_permissions', '=', NULL),
-          Comparison::new('FUNDING_JSON_OVERLAPS(_pc.permissions, funding_case_task.required_permissions)', '=', TRUE),
-        )
-      )->toArray(),
-    );
+      // Permission check. If _pc.permissions is NULL, check is performed in handleRecord().
+      $this->addClause(
+        'OR',
+        ['_pc.permissions', 'IS NULL'],
+        CompositeCondition::new(
+          'AND',
+          Comparison::new('_pc.permissions', '!=', NULL),
+          CompositeCondition::new(
+            'OR',
+            Comparison::new('funding_case_task.required_permissions', '=', NULL),
+            Comparison::new(
+              'FUNDING_JSON_OVERLAPS(_pc.permissions, funding_case_task.required_permissions)',
+              '=',
+              TRUE
+            ),
+          )
+        )->toArray(),
+      );
+    }
 
     parent::_run($result);
   }
