@@ -20,10 +20,10 @@ declare(strict_types = 1);
 namespace Civi\Funding\SonstigeAktivitaet\Task;
 
 use Civi\Funding\ClearingProcess\Task\AbstractClearingApplyTaskHandler;
-use Civi\Funding\IJB\Traits\IJBSupportedFundingCaseTypesTrait;
+use Civi\Funding\SonstigeAktivitaet\Traits\AVK1SupportedFundingCaseTypesTrait;
 
 final class AVK1ClearingApplyTaskHandler extends AbstractClearingApplyTaskHandler {
 
-  use IJBSupportedFundingCaseTypesTrait;
+  use AVK1SupportedFundingCaseTypesTrait;
 
 }

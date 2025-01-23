@@ -20,11 +20,11 @@ declare(strict_types = 1);
 namespace Civi\Funding\SammelantragKurs\Task;
 
 use Civi\Funding\ClearingProcess\Task\AbstractClearingCreateTaskCreatorOnFundingCaseChange;
-use Civi\Funding\IJB\Traits\IJBSupportedFundingCaseTypesTrait;
+use Civi\Funding\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
 
 // phpcs:disable Generic.Files.LineLength.TooLong
 final class KursClearingCreateTaskCreatorOnFundingCaseChange extends AbstractClearingCreateTaskCreatorOnFundingCaseChange {
 
-  use IJBSupportedFundingCaseTypesTrait;
+  use KursSupportedFundingCaseTypesTrait;
 
 }

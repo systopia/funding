@@ -20,11 +20,11 @@ declare(strict_types = 1);
 namespace Civi\Funding\SonstigeAktivitaet\Task;
 
 use Civi\Funding\ClearingProcess\Task\AbstractClearingCreateTaskCreatorOnFundingCaseChange;
-use Civi\Funding\IJB\Traits\IJBSupportedFundingCaseTypesTrait;
+use Civi\Funding\SonstigeAktivitaet\Traits\AVK1SupportedFundingCaseTypesTrait;
 
 // phpcs:disable Generic.Files.LineLength.TooLong
 final class AVK1ClearingCreateTaskCreatorOnFundingCaseChange extends AbstractClearingCreateTaskCreatorOnFundingCaseChange {
 
-  use IJBSupportedFundingCaseTypesTrait;
+  use AVK1SupportedFundingCaseTypesTrait;
 
 }

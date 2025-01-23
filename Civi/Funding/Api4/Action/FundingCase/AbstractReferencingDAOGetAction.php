@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\FundingCase;
 
+use Civi\API\Exception\UnauthorizedException;
 use Civi\Api4\FundingCase;
 use Civi\Api4\Generic\DAOGetAction;
 use Civi\Api4\Generic\Result;
@@ -120,7 +121,13 @@ abstract class AbstractReferencingDAOGetAction extends DAOGetAction {
     }
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   * @throws \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException
+   */
   public function setDefaultWhereClause(): void {
+    $this->assertIgnoreCasePermissions();
+
     if (!$this->ignoreCasePermissions) {
       if (NULL === $this->originalSelect) {
         // _run() was not called, e.g. aggregation line in SearchKit.
@@ -233,6 +240,19 @@ abstract class AbstractReferencingDAOGetAction extends DAOGetAction {
   protected function unsetIfNotSelected(array &$record, string $fieldName): void {
     if (!$this->isFieldSelected($fieldName)) {
       unset($record[$fieldName]);
+    }
+  }
+
+  /**
+   * @throws \Civi\API\Exception\UnauthorizedException
+   */
+  private function assertIgnoreCasePermissions(): void {
+    // Only allow to ignore case permissions on internal requests with check
+    // permissions disabled or if contact has administer permission.
+    if ($this->ignoreCasePermissions &&
+      $this->getCheckPermissions() && !\CRM_Core_Permission::check('administer CiviCRM')
+    ) {
+      throw new UnauthorizedException('Ignoring case permissions is not allowed');
     }
   }
 

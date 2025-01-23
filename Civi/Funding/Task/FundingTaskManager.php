@@ -71,12 +71,15 @@ class FundingTaskManager {
   }
 
   /**
+   * Tasks are looked up independent of active contact's permissions.
+   *
    * @phpstan-param taskNameT $activityTypeName
    *
    * @throws \CRM_Core_Exception
    */
   public function getOpenTask(string $activityTypeName, int $entityId, string $type): ?FundingTaskEntity {
     $task = $this->api4->execute(FundingTask::getEntityName(), 'get', [
+      'ignoreCasePermissions' => TRUE,
       'statusType' => ActivityStatusTypes::INCOMPLETE,
       'where' => [
         ['activity_type_id:name', '=', $activityTypeName],
@@ -93,6 +96,8 @@ class FundingTaskManager {
   }
 
   /**
+   * Tasks are looked up independent of active contact's permissions.
+   *
    * @phpstan-param taskNameT $activityTypeName
    *
    * @phpstan-return list<FundingTaskEntity>
@@ -101,6 +106,7 @@ class FundingTaskManager {
    */
   public function getOpenTasks(string $activityTypeName, int $entityId): array {
     $result = $this->api4->execute(FundingTask::getEntityName(), 'get', [
+      'ignoreCasePermissions' => TRUE,
       'statusType' => ActivityStatusTypes::INCOMPLETE,
       'where' => [
         ['activity_type_id:name', '=', $activityTypeName],
@@ -113,11 +119,18 @@ class FundingTaskManager {
   }
 
   /**
+   * Task is updated independent of active contact's permissions.
+   *
    * @throws \CRM_Core_Exception
    */
   public function updateTask(FundingTaskEntity $task): void {
     $task->setModifiedDate(new \DateTime(date('YmdHis')));
-    $this->api4->updateEntity(FundingTask::getEntityName(), $task->getId(), $task->toPersistArray());
+    $this->api4->updateEntity(
+      FundingTask::getEntityName(),
+      $task->getId(),
+      $task->toPersistArray(),
+      ['ignoreCasePermissions' => TRUE]
+    );
   }
 
   private function getSourceContactId(): int {

@@ -25,7 +25,13 @@ use Civi\Api4\FundingTask;
 use Civi\Api4\Generic\DAOUpdateAction;
 use Civi\Funding\Api4\Util\WhereUtil;
 
+/**
+ * @method bool getIgnoreCasePermissions()
+ * @method $this setIgnoreCasePermissions(bool $ignoreCasePermissions)
+ */
 final class UpdateAction extends DAOUpdateAction {
+
+  protected bool $ignoreCasePermissions = FALSE;
 
   public function __construct() {
     parent::__construct(Activity::getEntityName(), 'update');
@@ -34,18 +40,35 @@ final class UpdateAction extends DAOUpdateAction {
   protected function validateValues(): void {
     parent::validateValues();
 
-    $id = $this->values['id'] ?? WhereUtil::getInt($this->getWhere(), 'id');
-    if (NULL === $id) {
-      throw new \InvalidArgumentException('id is required');
-    }
+    $this->assertIgnoreCasePermissions();
 
-    if (0 === FundingTask::get(FALSE)
-      ->addSelect('id')
-      ->addWhere('id', '=', $id)
-      ->execute()
-      ->count()
+    if (!$this->ignoreCasePermissions) {
+      $id = $this->values['id'] ?? WhereUtil::getInt($this->getWhere(), 'id');
+      if (NULL === $id) {
+        throw new \InvalidArgumentException('id is required');
+      }
+
+      if (0 === FundingTask::get(FALSE)
+        ->addSelect('id')
+        ->addWhere('id', '=', $id)
+        ->execute()
+        ->count()
+      ) {
+        throw new UnauthorizedException(sprintf('Cannot update task with ID %d', $id));
+      }
+    }
+  }
+
+  /**
+   * @throws \Civi\API\Exception\UnauthorizedException
+   */
+  private function assertIgnoreCasePermissions(): void {
+    // Only allow to ignore case permissions on internal requests with check
+    // permissions disabled or if contact has administer permission.
+    if ($this->ignoreCasePermissions &&
+      $this->getCheckPermissions() && !\CRM_Core_Permission::check('administer CiviCRM')
     ) {
-      throw new UnauthorizedException('Cannot update task with ID %d', $id);
+      throw new UnauthorizedException('Ignoring case permissions is not allowed');
     }
   }
 
