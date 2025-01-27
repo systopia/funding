@@ -22,7 +22,7 @@ fundingHiHModule.directive('fundingHihApplicationEditor', function() {
     scope: false,
     templateUrl: '~/crmFundingHiH/hihApplicationEditor.template.html',
     controllerAs: '$ctrl',
-    controller: ['$scope', 'crmApi4', 'crmStatus', function ($scope, crmApi4, crmStatus) {
+    controller: ['$scope', 'crmApi4', function ($scope, crmApi4) {
       $scope.crmUrl = CRM.url;
 
       crmApi4('Contact', 'get', {

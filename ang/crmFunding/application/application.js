@@ -35,14 +35,20 @@ fundingModule.config(['$routeProvider', function($routeProvider) {
 
 fundingModule.controller('fundingApplicationCtrl', [
   '$scope', 'fundingApplicationProcessService', 'fundingApplicationProcessActivityService',
+  'fundingCaseService', 'fundingCaseTypeService',
   'fundingClearingProcessService',
   'applicationProcess', 'form',
   function($scope, fundingApplicationProcessService, fundingApplicationProcessActivityService,
+           fundingCaseService, fundingCaseTypeService,
            fundingClearingProcessService,
            applicationProcess, form) {
     const ts = $scope.ts = CRM.ts('funding');
 
     $scope.$watch('tab', () => window.setTimeout(fixHeights, 100));
+
+    $scope.hasPermission = function (permission) {
+      return $scope.fundingCase && $scope.fundingCase.permissions.includes(permission);
+    };
 
     $scope.reviewStatusLabels = {
       null: ts('Undecided'),
@@ -57,6 +63,13 @@ fundingModule.controller('fundingApplicationCtrl', [
     $scope.clearingStatusOptions = {};
     fundingClearingProcessService.getStatusOptions()
       .then((options) => $scope.clearingStatusOptions = options);
+
+    fundingCaseService.get(applicationProcess.funding_case_id).then(function (fundingCase) {
+      $scope.fundingCase = fundingCase;
+      fundingCaseTypeService.get(fundingCase.funding_case_type_id).then(
+        (fundingCaseType) => $scope.fundingCaseType = fundingCaseType
+      );
+    });
 
     $scope.activities = {};
     $scope.loadActivities = function () {

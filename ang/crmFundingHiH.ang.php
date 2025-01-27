@@ -10,4 +10,7 @@ return [
   'partials' => [
     'ang/crmFundingHiH',
   ],
+  'css' => [
+    'ang/crmFundingHiH.css',
+  ],
 ];

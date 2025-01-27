@@ -1,0 +1,31 @@
+<h1 crm-page-title>{{ ts('Application %1', {1: applicationProcess.title}) }}</h1>
+
+<ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" ng-class="{active: tab === 'application'}">
+        <a role="tab" ng-click="tab='application'">{{:: ts('Application') }}</a>
+    </li>
+    <li role="presentation" ng-class="{active: tab === 'history'}">
+        <a role="tab" ng-click="tab='history'">{{:: ts('History') }}</a>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane" ng-class="{active: tab === 'application'}">
+        <funding-application-editor ng-show="tab === 'application'"
+                                    activities="activities"
+                                    application-process="applicationProcess"
+                                    funding-case="fundingCase"
+                                    funding-case-type="fundingCaseType"
+                                    form="form"
+                                    status-options="statusOptions"
+                                    review-status-labels="reviewStatusLabels"
+                                    on-post-submit="loadActivities()"></funding-application-editor>
+    </div>
+    <div role="tabpanel" class="tab-pane" ng-class="{active: tab === 'history'}">
+        <funding-application-process-history ng-show="tab === 'history'"
+                                             activities="activities"
+                                             status-options="statusOptions"
+                                             clearing-status-options="clearingStatusOptions"
+                                             review-status-labels="reviewStatusLabels"></funding-application-process-history>
+    </div>
+</div>

@@ -24,10 +24,11 @@ fundingHiHModule.directive('fundingHihApplicationSidebar', function() {
     controllerAs: '$ctrl',
     controller: ['$scope', 'crmApi4', 'crmStatus', function ($scope, crmApi4, crmStatus) {
       this.ts = CRM.ts('funding');
+      const ctrl = this;
 
       $scope.hasReviewPermission = $scope.hasPermission('review_application');
       $scope.hasVotePermission = $scope.hasPermission('advisory_vote');
-      $scope.hasShowVotePermissions = $scope.hasPermission('advisory_show_votes');
+      $scope.hasShowVotesPermission = $scope.hasPermission('advisory_show_votes');
 
       $scope.priorisierungOptions = {};
         crmApi4('FundingApplicationProcess', 'getFields', {
@@ -55,7 +56,7 @@ fundingHiHModule.directive('fundingHihApplicationSidebar', function() {
             ['contact_id', '=', CRM.config.cid],
           ],
         }).then(function(result) {
-          $scope.vote = result[0] ? result[0].vote : null;
+          $scope.vote = result[0] ? result[0].vote.toString() : null;
         });
 
         $scope.updateVote = function (data) {
@@ -68,14 +69,27 @@ fundingHiHModule.directive('fundingHihApplicationSidebar', function() {
         $scope.showVote = function() {
           return $scope.voteOptions[$scope.vote] || 'Unbearbeitet';
         };
+
+        crmApi4('BshFundingAdvisoryNote', 'get', {
+          select: ['text'],
+          where: [['application_process_id', '=', $scope.applicationProcess.id]],
+        }).then((result) => { ctrl.note = result[0] ? result[0].text : ''; });
+
+        ctrl.setNote = function () {
+          crmStatus({}, crmApi4('BshFundingAdvisoryNote', 'setNote', {
+            applicationProcessId: $scope.applicationProcess.id,
+            text: ctrl.note.trim(),
+          }));
+        };
       }
 
-      if ($scope.hasShowVotePermissions) {
+      if ($scope.hasShowVotesPermission) {
         crmApi4('BshFundingAdvisoryVote', 'get', {
           select: ['contact_id.display_name', 'vote'],
           where: [
             ['application_process_id', '=', $scope.applicationProcess.id],
           ],
+          orderBy: {'contact_id.display_name': 'ASC'},
         }).then(function(result) {
           $scope.votes = result;
         });
