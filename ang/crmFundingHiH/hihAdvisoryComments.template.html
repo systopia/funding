@@ -1,0 +1,14 @@
+<div id="hihAdvisoryComments" class="funding-hih-advisory-comments" ng-repeat="comment in $ctrl.comments">
+  <div class="funding-hih-advisory-comment panel panel-info">
+    <div class="funding-hih-advisory-comment-heading panel-heading">
+      {{:: comment['contact_id.display_name'] }} am {{:: comment.creation_date | fundingDate }}
+    </div>
+    <div class="funding-hih-advisory-comment-body panel-body">
+      <div class="funding-hih-comment-text">
+        <span style="white-space: pre-wrap;">{{:: comment.text }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<funding-hih-advisory-comment-form application-process="applicationProcess" on-comment-added="$ctrl.loadComments"></funding-hih-advisory-comment-form>
