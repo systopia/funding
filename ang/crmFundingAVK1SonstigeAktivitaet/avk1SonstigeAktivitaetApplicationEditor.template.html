@@ -64,7 +64,12 @@
                       value="data.grunddaten.kurzbeschreibungDesInhalts"
                       e-ng-required="true"></editable-field>
     </div>
-
+    <div>
+      <editable-field label="'Interner Bezeichner'" type="text"
+                      value="data.grunddaten.internerBezeichner"
+                      e-ng-required="false"></editable-field>
+    </div>
+`
     <div>
       <h3>Zeiträume <funding-validation-errors errors="errors['/grunddaten/zeitraeume']"></funding-validation-errors></h3>
       <table class="table table-condensed table-striped table-hover">

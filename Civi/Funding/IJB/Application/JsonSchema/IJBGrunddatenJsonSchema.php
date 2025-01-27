@@ -47,6 +47,11 @@ final class IJBGrunddatenJsonSchema extends JsonSchemaObject {
         'maxLength' => 500,
         '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'short_description']]),
       ]),
+      'internerBezeichner' => new JsonSchemaString([
+        '$tag' => JsonSchema::fromArray(
+          ['mapToField' => ['fieldName' => 'funding_application_process_extra.internal_identifier']]
+        ),
+      ]),
       'zeitraeume' => new JsonSchemaArray(
         new JsonSchemaObject([
           'beginn' => new JsonSchemaDate([
@@ -109,7 +114,9 @@ EOD,
 
     $required = array_filter(
       array_keys($properties),
-      static fn (string $key) => $key !== 'fahrtstreckeInKm' && $key !== 'programmtageMitHonorar',
+      static fn (string $key) => $key !== 'fahrtstreckeInKm'
+                              && $key !== 'programmtageMitHonorar'
+                              && $key !== 'internerBezeichner',
     );
 
     parent::__construct($properties, ['required' => $required]);

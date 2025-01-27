@@ -38,6 +38,11 @@ final class AVK1GrunddatenSchema extends JsonSchemaObject {
         'maxLength' => 500,
         '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'short_description']]),
       ]),
+      'internerBezeichner' => new JsonSchemaString([
+        '$tag' => JsonSchema::fromArray(
+          ['mapToField' => ['fieldName' => 'funding_application_process_extra.internal_identifier']]
+        ),
+      ]),
       'zeitraeume' => new JsonSchemaArray(
         new JsonSchemaObject([
           'beginn' => new JsonSchemaDate([
@@ -71,7 +76,12 @@ final class AVK1GrunddatenSchema extends JsonSchemaObject {
       ]),
     ];
 
-    parent::__construct($properties, ['required' => array_keys($properties)]);
+    $required = array_filter(
+      array_keys($properties),
+      static fn (string $key) => $key !== 'internerBezeichner',
+    );
+
+    parent::__construct($properties, ['required' => $required]);
   }
 
   /**

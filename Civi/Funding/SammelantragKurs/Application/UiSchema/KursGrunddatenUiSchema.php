@@ -74,6 +74,7 @@ final class KursGrunddatenUiSchema extends JsonFormsCategory {
           'placeholder' => 'Kurzbeschreibung der Kursinhalte (maximal 500 Zeichen)',
         ]
       ),
+      new JsonFormsControl("$scopePrefix/internerBezeichner", 'Interner Bezeichner'),
       new JsonFormsArray("$scopePrefix/zeitraeume", 'Zeiträume', NULL, [
         new JsonFormsControl('#/properties/beginn', 'Beginn'),
         new JsonFormsControl('#/properties/ende', 'Ende'),

@@ -56,6 +56,10 @@ EOD
           'placeholder' => 'Maximal 500 Zeichen',
         ]
       ),
+      new JsonFormsControl(
+        "$scopePrefix/internerBezeichner",
+        'Interner Bezeichner'
+      ),
       new JsonFormsArray(
         "$scopePrefix/zeitraeume",
         'Zeiträume',
