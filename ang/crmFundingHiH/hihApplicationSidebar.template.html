@@ -18,7 +18,7 @@
   </span>
 </div>
 
-<div ng-show="hasShowVotePermissions" class="funding-application-sidebar-element">
+<div ng-show="hasShowVotesPermission" class="funding-application-sidebar-element">
   <label>Abstimmung</label>
   <div>
     <ul ng-repeat="vote in votes">
@@ -50,3 +50,10 @@
   <funding-action-button action="update" with-comment="'required'" class="btn btn-success funding-application-sidebar-element" crm-icon="fa-check">{{:: $ctrl.ts('Save') }}</funding-action-button>
   <button type="button" class="btn btn-danger funding-application-sidebar-element" ng-click="reset()" ng-disabled="editCount > 0" crm-icon="fa-times">{{:: $ctrl.ts('Reset') }}</button>
 </span>
+
+<div ng-show="hasVotePermission" class="funding-application-sidebar-element">
+  <label for="note">Private Notizen</label>
+  <div>
+    <textarea id="note" ng-model="$ctrl.note" ng-model-options="{ updateOn: 'blur' }" style="width: 100%" rows="5" ng-change="$ctrl.setNote()"></textarea>
+  </div>
+</div>
