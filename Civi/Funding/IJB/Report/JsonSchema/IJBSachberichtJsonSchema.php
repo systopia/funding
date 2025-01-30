@@ -55,7 +55,7 @@ final class IJBSachberichtJsonSchema extends JsonSchemaObject {
           'auf:' => 'andere',
         ]),
       ], TRUE),
-      'andereSprache' => new JsonSchemaString(['maxLength' => 50]),
+      'andereSprache' => new JsonSchemaString(['maxLength' => 50], TRUE),
 
       // Abschnitt 1: Sprachliche Verständigung
       'verstaendigungBewertung' => new JsonSchemaString([
