@@ -21,7 +21,6 @@ namespace Civi\Funding\Api4\Action\FundingCase;
 
 use Civi\Api4\FundingCase;
 use Civi\Api4\Generic\DAOGetFieldsAction;
-use Civi\Api4\Query\Api4Query;
 use Civi\Api4\Query\Api4SelectQuery;
 use Civi\Funding\Api4\Query\AliasSqlRenderer;
 use Civi\Funding\Api4\Query\Util\SqlRendererUtil;
@@ -71,10 +70,11 @@ final class GetFieldsAction extends DAOGetFieldsAction {
         'data_type' => 'Money',
         'readonly' => TRUE,
         'nullable' => FALSE,
-        'sql_renderer' => fn () => sprintf('IFNULL(
+        // @todo Instead of testing status we should add flags to ApplicationProcess: is_withdrawn, is_rejected.
+        'sql_renderer' => fn (array $field, Api4SelectQuery $query) => sprintf('IFNULL(
         (SELECT SUM(ap.amount_requested) FROM civicrm_funding_application_process ap
-        WHERE ap.funding_case_id = %s.id)
-      , 0)', Api4Query::MAIN_TABLE_ALIAS),
+        WHERE ap.funding_case_id = %s AND ap.status NOT IN ("withdrawn", "rejected"))
+      , 0)', SqlRendererUtil::getFieldSqlName($field, $query, 'id')),
       ],
       [
         'name' => 'amount_drawdowns',
@@ -113,12 +113,12 @@ final class GetFieldsAction extends DAOGetFieldsAction {
         'data_type' => 'Money',
         'readonly' => TRUE,
         'nullable' => FALSE,
-        'sql_renderer' => fn () => sprintf("IFNULL(
+        'sql_renderer' => fn (array $field, Api4SelectQuery $query) => sprintf("IFNULL(
         (SELECT SUM(drawdown.amount) FROM civicrm_funding_payout_process payout
         JOIN civicrm_funding_drawdown drawdown ON drawdown.payout_process_id = payout.id
           AND drawdown.status = 'accepted'
-        WHERE payout.funding_case_id = %s.id)
-      , 0)", Api4Query::MAIN_TABLE_ALIAS),
+        WHERE payout.funding_case_id = %s)
+      , 0)", SqlRendererUtil::getFieldSqlName($field, $query, 'id')),
       ],
       [
         'name' => 'withdrawable_funds',
