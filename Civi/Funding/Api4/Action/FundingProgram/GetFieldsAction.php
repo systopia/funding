@@ -21,7 +21,6 @@ namespace Civi\Funding\Api4\Action\FundingProgram;
 
 use Civi\Api4\FundingProgram;
 use Civi\Api4\Generic\DAOGetFieldsAction;
-use Civi\Api4\Query\Api4Query;
 use Civi\Api4\Query\Api4SelectQuery;
 use Civi\Funding\Api4\Query\Util\SqlRendererUtil;
 use Civi\RemoteTools\Api4\Action\Traits\PermissionsGetFieldsActionTrait;
@@ -55,11 +54,11 @@ final class GetFieldsAction extends DAOGetFieldsAction {
       'data_type' => 'Money',
       'readonly' => TRUE,
       'nullalbe' => FALSE,
-      'sql_renderer' => fn () => sprintf('IFNULL(
+      'sql_renderer' => fn (array $field, Api4SelectQuery $query) => sprintf('IFNULL(
         (SELECT SUM(amount_requested) FROM civicrm_funding_application_process WHERE
           is_eligible = 1 AND
-          funding_case_id IN (SELECT id FROM civicrm_funding_case WHERE funding_program_id = %s.id))
-      , 0)', Api4Query::MAIN_TABLE_ALIAS),
+          funding_case_id IN (SELECT id FROM civicrm_funding_case WHERE funding_program_id = %s))
+      , 0)', SqlRendererUtil::getFieldSqlName($field, $query, 'id')),
     ];
 
     $fields[] = [
@@ -69,9 +68,9 @@ final class GetFieldsAction extends DAOGetFieldsAction {
       'data_type' => 'Money',
       'readonly' => TRUE,
       'nullable' => FALSE,
-      'sql_renderer' => fn () => sprintf('IFNULL(
-        (SELECT SUM(amount_approved) FROM civicrm_funding_case WHERE funding_program_id = %s.id)
-      , 0)', Api4Query::MAIN_TABLE_ALIAS),
+      'sql_renderer' => fn (array $field, Api4SelectQuery $query) => sprintf('IFNULL(
+        (SELECT SUM(amount_approved) FROM civicrm_funding_case WHERE funding_program_id = %s)
+      , 0)', SqlRendererUtil::getFieldSqlName($field, $query, 'id')),
     ];
 
     $fields[] = [
@@ -81,9 +80,10 @@ final class GetFieldsAction extends DAOGetFieldsAction {
       'type' => 'Extra',
       'data_type' => 'Money',
       'readonly' => TRUE,
-      'sql_renderer' => fn () => sprintf('%1$s.budget - IFNULL(
-        (SELECT SUM(amount_approved) FROM civicrm_funding_case WHERE funding_program_id = %1$s.id)
-      , 0)', Api4Query::MAIN_TABLE_ALIAS),
+      'sql_renderer' => fn (array $field, Api4SelectQuery $query) => sprintf('%s - IFNULL(
+        (SELECT SUM(amount_approved) FROM civicrm_funding_case WHERE funding_program_id = %s)
+      , 0)', SqlRendererUtil::getFieldSqlName($field, $query, 'budget'),
+        SqlRendererUtil::getFieldSqlName($field, $query, 'id')),
     ];
 
     $fields[] = [
