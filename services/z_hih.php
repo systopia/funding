@@ -33,6 +33,7 @@ use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\UiSchema\HiHApplicat
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\EventSubscriber\HiHAngularModuleSubscriber;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\FundingCase\Actions\HiHCaseActionsDeterminer;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\FundingCase\HiHPossibleRecipientsForChangeLoader;
+use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\FundingCase\StatusDeterminer\HiHCaseStatusDeterminer;
 
 $container->autowire(HiHApplicationActionsDeterminer::class)
   ->addTag(HiHApplicationActionsDeterminer::SERVICE_TAG);
@@ -58,6 +59,9 @@ $container->autowire(HiHApplicationUiSchemaFactory::class)
 
 $container->autowire(HiHCaseActionsDeterminer::class)
   ->addTag(HiHCaseActionsDeterminer::SERVICE_TAG);
+
+$container->autowire(HiHCaseStatusDeterminer::class)
+  ->addTag(HiHCaseStatusDeterminer::SERVICE_TAG);
 
 $container->autowire(HiHApplicationFormDataFactory::class)
   ->addTag(HiHApplicationFormDataFactory::SERVICE_TAG);

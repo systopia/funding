@@ -42,10 +42,10 @@ final class HiHApplicationSubmitActionsContainer extends AbstractApplicationSubm
       ->add('review', E::ts('Start Review'), NULL, ['needsFormData' => FALSE])
       ->add('release', 'Für Beirat freigeben', NULL, ['needsFormData' => FALSE])
       ->add('request-change', E::ts('Request Change'), NULL, ['needsFormData' => FALSE])
-      // Reviewer and advisor actions.
+      // Reviewer actions.
       ->add('reject', E::ts('Reject'), NULL, ['needsFormData' => FALSE])
-      // Advisor actions.
-      ->add('approve', E::ts('Approve'), NULL, ['needsFormData' => FALSE]);
+      // Admin actions
+      ->add('re-review', 'Erneut prüfen', NULL, ['needsFormData' => FALSE]);
   }
 
 }
