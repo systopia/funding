@@ -20,6 +20,8 @@ declare(strict_types = 1);
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
+use Civi\Funding\Api4\Action\FundingClearingProcess\GetAction;
+use Civi\Funding\Api4\Action\FundingClearingProcess\GetFieldsAction;
 use Civi\Funding\ClearingProcess\ClearingActionsDeterminer;
 use Civi\Funding\ClearingProcess\ClearingCostItemManager;
 use Civi\Funding\ClearingProcess\ClearingExternalFileManager;
@@ -37,6 +39,8 @@ use Civi\Funding\ClearingProcess\Form\ReceiptsFormGenerator;
 use Civi\Funding\ClearingProcess\Form\ReceiptsFormGeneratorInterface;
 use Civi\Funding\ClearingProcess\Form\ResourcesItem\ClearableResourcesItemsLoader;
 use Civi\Funding\ClearingProcess\Form\ResourcesItem\ClearingResourcesItemsJsonFormsGenerator;
+use Civi\Funding\ClearingProcess\Handler\ClearingActionApplyHandler;
+use Civi\Funding\ClearingProcess\Handler\ClearingActionApplyHandlerInterface;
 use Civi\Funding\ClearingProcess\Handler\ClearingFormDataGetHandler;
 use Civi\Funding\ClearingProcess\Handler\ClearingFormDataGetHandlerInterface;
 use Civi\Funding\ClearingProcess\Handler\ClearingFormGetHandler;
@@ -82,6 +86,9 @@ $container->autowire(ClearingResourcesItemsFormDataPersister::class);
 $container->autowire(ClearingActionsDeterminer::class);
 $container->autowire(ClearingStatusDeterminer::class);
 
+$container->autowire(ClearingActionApplyHandlerInterface::class, ClearingActionApplyHandler::class)
+  ->addTag(ClearingActionApplyHandlerInterface::class);
+
 $container->autowire(ClearingFormDataGetHandlerInterface::class, ClearingFormDataGetHandler::class)
   ->addTag(ClearingFormDataGetHandlerInterface::SERVICE_TAG);
 
@@ -94,10 +101,10 @@ $container->autowire(ClearingFormValidateHandlerInterface::class, ClearingFormVa
 $container->autowire(ClearingFormSubmitHandlerInterface::class, ClearingFormSubmitHandler::class)
   ->addTag(ClearingFormSubmitHandlerInterface::SERVICE_TAG);
 
-$container->autowire(\Civi\Funding\Api4\Action\FundingClearingProcess\GetAction::class)
+$container->autowire(GetAction::class)
   ->setPublic(TRUE)
   ->setShared(FALSE);
-$container->autowire(\Civi\Funding\Api4\Action\FundingClearingProcess\GetFieldsAction::class)
+$container->autowire(GetFieldsAction::class)
   ->setPublic(TRUE)
   ->setShared(FALSE);
 

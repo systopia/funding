@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
+use Civi\Funding\Api4\Action\FundingClearingProcess\ApplyActionMultipleAction;
+use Civi\Funding\Api4\Action\FundingClearingProcess\GetAllowedActionsMultipleAction;
 use Civi\Funding\Api4\Action\FundingClearingProcess\GetAction;
 use Civi\Funding\Api4\Action\FundingClearingProcess\GetFieldsAction;
 use Civi\Funding\Api4\Action\FundingClearingProcess\GetFormAction;
@@ -27,6 +29,14 @@ final class FundingClearingProcess extends Generic\DAOEntity {
 
   public static function get($checkPermissions = TRUE) {
     return (new GetAction())->setCheckPermissions($checkPermissions);
+  }
+
+  public static function applyActionMultiple(bool $checkPermissions = TRUE): ApplyActionMultipleAction {
+    return (new ApplyActionMultipleAction())->setCheckPermissions($checkPermissions);
+  }
+
+  public static function getAllowedActionsMultiple(bool $checkPermissions = TRUE): GetAllowedActionsMultipleAction {
+    return (new GetAllowedActionsMultipleAction())->setCheckPermissions($checkPermissions);
   }
 
   public static function getFields($checkPermissions = TRUE) {
@@ -60,7 +70,9 @@ final class FundingClearingProcess extends Generic\DAOEntity {
     $permissions = self::traitPermissions();
 
     return $permissions + [
+      'applyActionMultiple' => $permissions['get'],
       'getForm' => $permissions['get'],
+      'getAllowedActionsMultiple' => $permissions['get'],
       'validateForm' => $permissions['get'],
       'submitForm' => $permissions['get'],
       'setCalculativeReviewer' => $permissions['get'],

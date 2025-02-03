@@ -25,7 +25,7 @@ use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\FundingCase\FundingCaseStatus;
 use CRM_Funding_ExtensionUtil as E;
 
-final class ClearingActionsDeterminer {
+class ClearingActionsDeterminer {
 
   use HasClearingReviewPermissionTrait;
 

@@ -21,8 +21,7 @@ namespace Civi\Funding\ClearingProcess\Handler;
 
 use Civi\Api4\FundingClearingProcess;
 use Civi\Funding\ClearingProcess\ClearingActionsDeterminer;
-use Civi\Funding\ClearingProcess\ClearingProcessManager;
-use Civi\Funding\ClearingProcess\ClearingStatusDeterminer;
+use Civi\Funding\ClearingProcess\Command\ClearingActionApplyCommand;
 use Civi\Funding\ClearingProcess\Command\ClearingFormDataGetCommand;
 use Civi\Funding\ClearingProcess\Command\ClearingFormSubmitCommand;
 use Civi\Funding\ClearingProcess\Command\ClearingFormSubmitResult;
@@ -37,13 +36,13 @@ use Civi\Funding\ExternalFile\TaggedExternalFilePersister;
  */
 final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterface {
 
+  private ClearingActionApplyHandlerInterface $actionApplyHandler;
+
   private ClearingActionsDeterminer $actionsDeterminer;
 
   private ClearingCostItemsFormDataPersister $clearingCostItemsFormDataPersister;
 
   private ClearingResourcesItemsFormDataPersister $clearingResourcesItemsFormDataPersister;
-
-  private ClearingProcessManager $clearingProcessManager;
 
   private ClearingCommentPersister $commentPersister;
 
@@ -51,29 +50,25 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
 
   private ClearingFormDataGetHandlerInterface $formDataGetHandler;
 
-  private ClearingStatusDeterminer $statusDeterminer;
-
   private ClearingFormValidateHandlerInterface $validateHandler;
 
   public function __construct(
+    ClearingActionApplyHandlerInterface $actionApplyHandler,
     ClearingActionsDeterminer $actionsDeterminer,
     ClearingCostItemsFormDataPersister $clearingCostItemsFormDataPersister,
     ClearingResourcesItemsFormDataPersister $clearingResourcesItemsFormDataPersister,
-    ClearingProcessManager $clearingProcessManager,
     ClearingCommentPersister $commentPersister,
     TaggedExternalFilePersister $externalFilePersister,
     ClearingFormDataGetHandlerInterface $formDataGetHandler,
-    ClearingStatusDeterminer $statusDeterminer,
     ClearingFormValidateHandlerInterface $validateHandler
   ) {
+    $this->actionApplyHandler = $actionApplyHandler;
     $this->actionsDeterminer = $actionsDeterminer;
     $this->clearingCostItemsFormDataPersister = $clearingCostItemsFormDataPersister;
     $this->clearingResourcesItemsFormDataPersister = $clearingResourcesItemsFormDataPersister;
-    $this->clearingProcessManager = $clearingProcessManager;
     $this->commentPersister = $commentPersister;
     $this->externalFilePersister = $externalFilePersister;
     $this->formDataGetHandler = $formDataGetHandler;
-    $this->statusDeterminer = $statusDeterminer;
     $this->validateHandler = $validateHandler;
   }
 
@@ -116,12 +111,9 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
       $clearingProcess->setReportData($data['reportData'] ?? []);
     }
 
-    if ('add-comment' !== $data['_action']) {
-      $clearingProcess->setFullStatus(
-        $this->statusDeterminer->getStatus($clearingProcess->getFullStatus(), $data['_action'])
-      );
-      $this->clearingProcessManager->update($clearingProcessBundle);
-    }
+    $this->actionApplyHandler->handle(
+      new ClearingActionApplyCommand($command->getClearingProcessBundle(), $data['_action'])
+    );
 
     if (isset($data['comment']) && '' !== $data['comment']['text']) {
       $this->commentPersister->persistComment(

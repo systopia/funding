@@ -57,11 +57,24 @@ fundingModule.factory('fundingClearingProcessService', ['crmApi4', function(crmA
   }
 
   return {
+    /**
+     * @param {array<integer>} ids
+     * @param {string} action
+     * @returns {Promise}
+     */
+    applyActionMultiple: (ids, action) => crmApi4('FundingClearingProcess', 'applyActionMultiple', {ids, action}),
+
     get: (id) => crmApi4('FundingClearingProcess', 'get', {
       where: [['id', '=', id]],
     }).then(function (result) {
       return result[0] || null;
     }),
+
+    /**
+     * @param {array<integer>} ids
+     * @returns {Promise}
+     */
+    getAllowedActionsMultiple: (ids) => crmApi4('FundingClearingProcess', 'getAllowedActionsMultiple', {ids}),
 
     /**
      * @param {integer} applicationProcessId

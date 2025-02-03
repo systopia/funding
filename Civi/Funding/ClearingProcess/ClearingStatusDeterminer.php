@@ -21,7 +21,7 @@ namespace Civi\Funding\ClearingProcess;
 
 use Civi\Funding\Entity\FullClearingProcessStatus;
 
-final class ClearingStatusDeterminer {
+class ClearingStatusDeterminer {
 
   private const STATUS_ACTION_STATUS_MAP = [
     'draft' => [
