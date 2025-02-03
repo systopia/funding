@@ -26,6 +26,9 @@
     "require-dev": {
         "colinodell/psr-testlogger": "^1"
     },
+    "autoload-dev": {
+        "psr-4": { "Civi\\": "tests/phpunit/Civi/" }
+    },
     "scripts": {
         "composer-phpcs": [
             "@composer --working-dir=tools/phpcs"
