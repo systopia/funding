@@ -20,6 +20,7 @@ fundingModule.directive('fundingApplicationEditor', ['$compile', function($compi
   return {
     restrict: 'E',
     scope: {
+      activities: '<',
       applicationProcess: '=',
       // Buttons are not shown initially if JSON schema is loaded in controller.
       form: '=',

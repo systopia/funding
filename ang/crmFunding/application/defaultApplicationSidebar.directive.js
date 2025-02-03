@@ -23,8 +23,20 @@ fundingModule.directive('fundingDefaultApplicationSidebar', function() {
     templateUrl: '~/crmFunding/application/defaultApplicationSidebar.template.html',
     controllerAs: '$ctrl',
     controller: ['$scope', function ($scope) {
+      const ctrl = this;
       this.ts = CRM.ts('funding');
       this.applicationProcessLabel = $scope.fundingCaseType.application_process_label || this.ts('Application');
+
+      $scope.$watch('activities', function (activities) {
+        if (activities) {
+          for (const activity of activities) {
+            if (activity['activity_type_id:name'] === 'funding_application_comment_internal') {
+              ctrl.lastInternalCommentActivity = activity;
+              break;
+            }
+          }
+        }
+      });
     }],
   };
 });
