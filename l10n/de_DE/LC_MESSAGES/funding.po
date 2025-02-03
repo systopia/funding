@@ -58,6 +58,7 @@ msgstr "Kein passender Antrag oder fehlende Berechtigung."
 #: Civi/Funding/Api4/Action/FundingCase/RecreateTransferContractAction.php
 #: Civi/Funding/FundingCase/Api4/ActionHandler/FinishClearingActionHandler.php
 #: Civi/Funding/FundingCase/Api4/ActionHandler/GetPossibleRecipientsActionHandler.php
+#: Civi/Funding/FundingCase/Api4/ActionHandler/ResetPermissionsActionHandler.php
 #: Civi/Funding/FundingCase/Api4/ActionHandler/SetNotificationContactsActionHandler.php
 #: Civi/Funding/FundingCase/Api4/ActionHandler/SetRecipientContactActionHandler.php
 #: Civi/Funding/FundingCase/Api4/ActionHandler/UpdateAmountApprovedActionHandler.php
@@ -68,6 +69,7 @@ msgstr "Förderfall mit ID \"%1\" nicht gefunden"
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
 #: ang/crmFunding/application/defaultApplicationEditor.template.html
 #: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingHiH/hihApplicationEditor.template.html
 #: ang/crmFundingIJB/ijbApplicationEditor.template.html
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
@@ -267,10 +269,12 @@ msgid "Timestamp"
 msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php
 msgid "Funding Case Identifier"
 msgstr "Förderfallnummer"
 
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php
 #: ang/crmFunding/case/permissions/fundingCaseContactRelation.template.html
 #: ang/crmFunding/program/newCasePermissions/fundingNewCasePermissions.template.html
 #: ang/crmFunding/program/permissions/fundingProgramContactRelation.template.html
@@ -278,20 +282,24 @@ msgid "Permissions"
 msgstr "Berechtigungen"
 
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php
 msgid "Funding Case Status"
 msgstr "Förderfallstatus"
 
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php
 msgid "Funding Case Creation Date"
 msgstr "Förderfallerstellungsdatum"
 
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php
 msgid "Funding Case Modification Date"
 msgstr "Förderfalländerungsdatum"
 
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
+#: Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php
 #: Civi/Funding/ClearingProcess/Form/AbstractClearingItemsJsonFormsGenerator.php
 #: ang/crmFunding/case/fundingCase.template.html
 #: managed/SavedSearchFundingProgramControlling.mgd.php
@@ -301,10 +309,12 @@ msgid "Amount Approved"
 msgstr "Bewilligter Betrag"
 
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php
 #: ang/crmFunding/application/defaultApplicationEditor.template.html
 #: ang/crmFunding/case/fundingCase.template.html
 #: ang/crmFunding/clearing/clearingEditor.template.html
 #: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingHiH/hihApplicationEditor.template.html
 #: ang/crmFundingIJB/ijbApplicationEditor.template.html
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
@@ -316,6 +326,7 @@ msgid "Recipient"
 msgstr "Empfänger"
 
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php
 #: managed/OptionValueCgExtendsFundingProgram.mgd.php
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
@@ -329,6 +340,7 @@ msgstr "Förderprogramm"
 #: ang/crmFunding/application/defaultApplicationEditor.template.html
 #: ang/crmFunding/clearing/clearingEditor.template.html
 #: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingHiH/hihApplicationEditor.template.html
 #: ang/crmFundingIJB/ijbApplicationEditor.template.html
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
@@ -358,6 +370,7 @@ msgstr "Kurzbeschreibung"
 #: ang/crmFunding/case/fundingCase.template.html
 #: ang/crmFunding/clearing/clearingEditor.template.html
 #: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingHiH/hihApplicationEditor.template.html
 #: ang/crmFundingIJB/ijbApplicationEditor.template.html
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
@@ -373,6 +386,7 @@ msgstr "Status"
 #: ang/crmFunding/case/fundingCase.template.html
 #: ang/crmFunding/clearing/clearingEditor.template.html
 #: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingHiH/hihApplicationEditor.template.html
 #: ang/crmFundingIJB/ijbApplicationEditor.template.html
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
@@ -387,6 +401,7 @@ msgstr "Erstellungsdatum"
 #: ang/crmFunding/case/fundingCase.template.html
 #: ang/crmFunding/clearing/clearingEditor.template.html
 #: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingHiH/hihApplicationEditor.template.html
 #: ang/crmFundingIJB/ijbApplicationEditor.template.html
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
@@ -575,43 +590,53 @@ msgstr "Kontakt %1"
 
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
 #: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php
+#: Civi/Funding/FundingCaseTypes/BSH/HiHAktion/Application/Actions/HiHApplicationSubmitActionsContainer.php
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
 #: ang/crmFunding/case/fundingCasePermissions.html
 #: ang/crmFunding/clearing/clearingSidebar.template.html
 #: ang/crmFunding/program/fundingNewCasePermissions.html
 #: ang/crmFunding/program/fundingProgramPermissions.html
 #: ang/crmFunding/program/recipientRelations.html
+#: ang/crmFundingHiH/hihApplicationSidebar.template.html
 msgid "Save"
 msgstr "Speichern"
 
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
 #: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php
+#: Civi/Funding/FundingCaseTypes/BSH/HiHAktion/Application/Actions/HiHApplicationSubmitActionsContainer.php
 msgid "Modify"
 msgstr "Ändern"
 
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
+#: Civi/Funding/FundingCaseTypes/BSH/HiHAktion/Application/Actions/HiHApplicationSubmitActionsContainer.php
 msgid "Apply"
 msgstr "Beantragen"
 
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
+#: Civi/Funding/FundingCaseTypes/BSH/HiHAktion/Application/Actions/HiHApplicationSubmitActionsContainer.php
 msgid "Withdraw"
 msgstr "Zurückziehen"
 
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
+#: Civi/Funding/FundingCaseTypes/BSH/HiHAktion/Application/Actions/HiHApplicationSubmitActionsContainer.php
 msgid "Do you really want to withdraw the application?"
 msgstr "Möchten Sie den Antrag wirklich zurückziehen?"
 
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
+#: Civi/Funding/FundingCaseTypes/BSH/HiHAktion/Application/Actions/HiHApplicationSubmitActionsContainer.php
 #: managed/SavedSearch_Application_CiviOffice_Templates.mgd.php
 msgid "Delete"
 msgstr "Löschen"
 
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
+#: Civi/Funding/FundingCaseTypes/BSH/HiHAktion/Application/Actions/HiHApplicationSubmitActionsContainer.php
 msgid "Do you really want to delete the application?"
 msgstr "Möchten Sie den Antrag wirklich löschen?"
 
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
+#: Civi/Funding/FundingCaseTypes/BSH/HiHAktion/Application/Actions/HiHApplicationSubmitActionsContainer.php
 #: Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
+#: ang/crmFundingHiH/hihApplicationSidebar.template.html
 msgid "Start Review"
 msgstr "Prüfung starten"
 
@@ -639,25 +664,31 @@ msgstr "Fachlich ablehnen"
 
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
 #: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php
+#: Civi/Funding/FundingCaseTypes/BSH/HiHAktion/Application/Actions/HiHApplicationSubmitActionsContainer.php
 #: Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
 #: ang/crmFunding/clearing/clearingSidebar.template.html
+#: ang/crmFundingHiH/hihApplicationSidebar.template.html
 msgid "Request Change"
 msgstr "Änderung verlangen"
 
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
 #: Civi/Funding/ApplicationProcess/ActionsContainer/ReworkPossibleApplicationSubmitActionsContainerFactory.php
+#: Civi/Funding/FundingCaseTypes/BSH/HiHAktion/Application/Actions/HiHApplicationSubmitActionsContainer.php
 #: Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
 #: ang/crmFunding/case/fundingCase.template.html
+#: ang/crmFundingHiH/hihApplicationSidebar.template.html
 msgid "Approve"
 msgstr "Bewilligen"
 
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
 #: Civi/Funding/ApplicationProcess/ActionsContainer/ReworkPossibleApplicationSubmitActionsContainerFactory.php
 #: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php
+#: Civi/Funding/FundingCaseTypes/BSH/HiHAktion/Application/Actions/HiHApplicationSubmitActionsContainer.php
 #: Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
+#: ang/crmFundingHiH/hihApplicationSidebar.template.html
 #: managed/SavedSearchFundingDrawdowns.mgd.php
 msgid "Reject"
 msgstr "Ablehnen"
@@ -700,6 +731,17 @@ msgstr "Antragsprozess mit ID %1 nicht gefunden."
 msgid "Performing action %1 on application process %2 is not allowed."
 msgstr "Anwenden der Aktion %1 auf Antragsprozess %2 ist nicht erlaubt."
 
+#: Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php
+#: Civi/Funding/FundingCase/Api4/ActionHandler/RemoteGetFieldsActionHandler.php
+#: managed/SavedSearchFundingCaseTypes.mgd.php
+msgid "Is Combined Application"
+msgstr "Ist Sammelantrag"
+
+#: Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php
+#: managed/SavedSearchFundingApplicationProcesses.mgd.php
+msgid "Clearing Status"
+msgstr "Verwendungsnachweisstatus"
+
 #: Civi/Funding/ApplicationProcess/ApplicationProcessTaskManager.php
 msgid "Application process: %1 (%2)"
 msgstr "Förderfallprozess: %1 (%2)"
@@ -734,6 +776,7 @@ msgstr "Doppelter Mittelpositionsbezeichner \"{identifier}\""
 #: ang/crmFunding/clearing/clearingEditor.template.html
 #: ang/crmFunding/form/editorTrait.factory.js
 #: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingHiH/hihApplicationEditor.template.html
 #: ang/crmFundingIJB/ijbApplicationEditor.template.html
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 msgid "Validation failed"
@@ -799,6 +842,7 @@ msgstr "Rechnerisch annehmen"
 #: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
 #: ang/crmFunding/clearing/clearingSidebar.template.html
+#: ang/crmFundingHiH/hihApplicationSidebar.template.html
 msgid "Add Comment"
 msgstr "Kommentar hinzufügen"
 
@@ -868,6 +912,7 @@ msgstr "Es sind keine Belege erforderlich."
 
 #: Civi/Funding/ClearingProcess/Form/ClearingFormGenerator.php
 #: ang/crmFunding/clearing/clearing.template.html
+#: ang/crmFunding/clearing/clearingSearchTasksMenu.decorator.js
 msgid "Clearing"
 msgstr "Verwendungsnachweis"
 
@@ -1191,15 +1236,6 @@ msgstr "Prüfung: Verwendungsnachweis fachlich"
 msgid "View"
 msgstr "Ansehen"
 
-#: Civi/Funding/EventSubscriber/Remote/FundingCaseGetFieldsSubscriber.php
-#: managed/SavedSearchFundingCaseTypes.mgd.php
-msgid "Is Combined Application"
-msgstr "Ist Sammelantrag"
-
-#: Civi/Funding/EventSubscriber/Remote/FundingCaseGetFieldsSubscriber.php
-msgid "Application Process Label"
-msgstr "Antragsprozesslabel"
-
 #: Civi/Funding/Form/JsonSchema/JsonSchemaComment.php
 #: ang/crmFunding/application/applicationSubmitModal.template.html
 #: ang/crmFunding/clearing/clearingSubmitModal.template.html
@@ -1211,6 +1247,10 @@ msgstr "intern"
 #: ang/crmFunding/clearing/clearingSubmitModal.template.html
 msgid "external"
 msgstr "extern"
+
+#: Civi/Funding/FundingCase/Api4/ActionHandler/RemoteGetFieldsActionHandler.php
+msgid "Application Process Label"
+msgstr "Antragsprozesslabel"
 
 #: Civi/Funding/FundingCase/Handler/FundingCaseApproveHandler.php
 msgid "Approving this funding case is not allowed."
@@ -1483,8 +1523,9 @@ msgstr "Neues Förderprogramm"
 msgid "Edit Funding Program"
 msgstr "Förderprogramm bearbeiten"
 
-#: ang/afsearchClearings.aff.php managed/NavigationFunding.mgd.php
-#: managed/SavedSearch_Clearings.mgd.php
+#: ang/afsearchClearings.aff.php
+#: ang/crmFunding/clearing/clearingSearchTasksMenu.decorator.js
+#: managed/NavigationFunding.mgd.php managed/SavedSearch_Clearings.mgd.php
 msgid "Clearings"
 msgstr "Verwendungsnachweise"
 
@@ -1536,6 +1577,7 @@ msgstr "Meine Aufgaben"
 #: ang/crmFunding/clearing/clearingEditor.directive.js
 #: ang/crmFunding/clearing/clearingReviewer.directive.js
 #: ang/crmFunding/clearing/clearingReviewers.directive.js
+#: ang/crmFunding/clearing/clearingSearchTasksMenu.decorator.js
 #: ang/crmFunding/clearing/clearingSidebar.directive.js
 #: ang/crmFunding/clearing/clearingSubmitModal.component.js
 #: ang/crmFunding/form/editableField.directive.js
@@ -1552,6 +1594,7 @@ msgstr "Meine Aufgaben"
 #: ang/crmFunding/program/permissions/fundingProgramContactRelation.directive.js
 #: ang/crmFunding/program/recipientRelations.js
 #: ang/crmFunding/program/recipients/recipientRelation.directive.js
+#: ang/crmFundingHiH/hihApplicationSidebar.directive.js
 msgid "funding"
 msgstr "Förderung"
 
@@ -1642,6 +1685,7 @@ msgstr "Prüfer*innen"
 #: ang/crmFunding/application/defaultApplicationEditor.template.html
 #: ang/crmFunding/clearing/clearingEditor.template.html
 #: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingHiH/hihApplicationEditor.template.html
 #: ang/crmFundingIJB/ijbApplicationEditor.template.html
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 msgid "General"
@@ -1652,6 +1696,7 @@ msgstr "Allgemein"
 #: ang/crmFunding/case/fundingCase.template.html
 #: ang/crmFunding/clearing/clearingEditor.template.html
 #: ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html
+#: ang/crmFundingHiH/hihApplicationEditor.template.html
 #: ang/crmFundingIJB/ijbApplicationEditor.template.html
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 msgid "Unknown"
@@ -1727,13 +1772,15 @@ msgstr "Annahme ist möglich, wenn die Prüfung erfolgreich war."
 
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
 #: ang/crmFunding/clearing/clearingSidebar.template.html
+#: ang/crmFundingHiH/hihApplicationSidebar.template.html
 msgid "Reset"
 msgstr "Zurücksetzen"
 
-#: ang/crmFunding/application/history/activities/clearingCreate.template.html
-msgid "Clearing started"
-msgstr "Verwendungsnachweis gestartet"
+#: ang/crmFunding/application/defaultApplicationSidebar.template.html
+msgid "Last Internal Comment"
+msgstr "Letzter interner Kommentar"
 
+#: ang/crmFunding/application/defaultApplicationSidebar.template.html
 #: ang/crmFunding/application/history/activities/clearingCreate.template.html
 #: ang/crmFunding/application/history/activities/clearingReviewStatusChange.template.html
 #: ang/crmFunding/application/history/activities/clearingStatusChange.template.html
@@ -1743,6 +1790,20 @@ msgstr "Verwendungsnachweis gestartet"
 #: ang/crmFunding/application/history/activities/statusChange.template.html
 msgid "Date: %date"
 msgstr "Datum: %date"
+
+#: ang/crmFunding/application/defaultApplicationSidebar.template.html
+#: ang/crmFunding/application/history/activities/comment.template.html
+msgid "From: %name"
+msgstr "Von: %name"
+
+#: ang/crmFunding/application/defaultApplicationSidebar.template.html
+#: ang/crmFunding/application/history/activities/comment.template.html
+msgid "Text:"
+msgstr "Text:"
+
+#: ang/crmFunding/application/history/activities/clearingCreate.template.html
+msgid "Clearing started"
+msgstr "Verwendungsnachweis gestartet"
 
 #: ang/crmFunding/application/history/activities/clearingCreate.template.html
 #: ang/crmFunding/application/history/activities/clearingReviewStatusChange.template.html
@@ -1772,14 +1833,6 @@ msgstr "Interner Kommentar"
 #: ang/crmFunding/application/history/activities/comment.template.html
 msgid "External Comment"
 msgstr "Externer Kommentar"
-
-#: ang/crmFunding/application/history/activities/comment.template.html
-msgid "From: %name"
-msgstr "Von: %name"
-
-#: ang/crmFunding/application/history/activities/comment.template.html
-msgid "Text:"
-msgstr "Text:"
 
 #: ang/crmFunding/application/history/activities/create.template.html
 msgid "Created"
@@ -2162,10 +2215,6 @@ msgstr "Rückzahlungsforderung"
 #: managed/SavedSearch_funding_cases.mgd.php
 msgid "Table"
 msgstr "Tabelle"
-
-#: managed/SavedSearchFundingApplicationProcesses.mgd.php
-msgid "Clearing Status"
-msgstr "Verwendungsnachweisstatus"
 
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
