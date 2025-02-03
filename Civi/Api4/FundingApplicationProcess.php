@@ -92,11 +92,11 @@ class FundingApplicationProcess extends Generic\DAOEntity {
   }
 
   public static function applyActionMultiple(bool $checkPermissions = TRUE): ApplyActionMultipleAction {
-    return new ApplyActionMultipleAction();
+    return (new ApplyActionMultipleAction())->setCheckPermissions($checkPermissions);
   }
 
   public static function getAllowedActionsMultiple(bool $checkPermissions = TRUE): GetAllowedActionsMultipleAction {
-    return new GetAllowedActionsMultipleAction();
+    return (new GetAllowedActionsMultipleAction())->setCheckPermissions($checkPermissions);
   }
 
   public static function getForm(): GetFormAction {
