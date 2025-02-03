@@ -17,7 +17,7 @@
 
 declare(strict_types = 1);
 
-namespace tests\phpunit\Civi\Funding\Contact\RelationLoader;
+namespace Civi\Funding\Contact\RelationLoader;
 
 use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Contact\Relation\Loaders\ContactTypeAndGroupLoader;

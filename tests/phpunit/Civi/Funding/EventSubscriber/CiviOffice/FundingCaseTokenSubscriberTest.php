@@ -17,7 +17,7 @@
 
 declare(strict_types = 1);
 
-namespace tests\phpunit\Civi\Funding\EventSubscriber\CiviOffice;
+namespace Civi\Funding\EventSubscriber\CiviOffice;
 
 use Civi\Api4\FundingCase;
 use Civi\Core\CiviEventDispatcherInterface;
@@ -28,7 +28,6 @@ use Civi\Funding\DocumentRender\Token\TokenNameExtractorInterface;
 use Civi\Funding\DocumentRender\Token\TokenResolverInterface;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
-use Civi\Funding\EventSubscriber\CiviOffice\FundingCaseTokenSubscriber;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Token\Event\TokenValueEvent;
 use Civi\Token\TokenProcessor;

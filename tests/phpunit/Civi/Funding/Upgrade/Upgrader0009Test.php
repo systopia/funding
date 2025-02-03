@@ -17,7 +17,7 @@
 
 declare(strict_types = 1);
 
-namespace tests\phpunit\Civi\Funding\Upgrade;
+namespace Civi\Funding\Upgrade;
 
 use Civi\Api4\FundingCase;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
@@ -26,7 +26,6 @@ use Civi\Funding\Fixtures\ApplicationProcessBundleFixture;
 use Civi\Funding\Fixtures\AttachmentFixture;
 use Civi\Funding\Fixtures\PayoutProcessFixture;
 use Civi\Funding\FundingCase\FundingCaseStatus;
-use Civi\Funding\Upgrade\Upgrader0009;
 use CRM_Funding_ExtensionUtil as E;
 
 /**

@@ -17,7 +17,7 @@
 
 declare(strict_types = 1);
 
-namespace tests\phpunit\Civi\Funding\Upgrade;
+namespace Civi\Funding\Upgrade;
 
 use Civi\Api4\FundingCaseContactRelation;
 use Civi\Api4\FundingProgramContactRelation;
@@ -28,7 +28,6 @@ use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
-use Civi\Funding\Upgrade\Upgrader0006;
 use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 
 /**

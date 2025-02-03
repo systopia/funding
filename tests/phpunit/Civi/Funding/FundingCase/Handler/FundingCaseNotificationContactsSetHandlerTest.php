@@ -17,7 +17,7 @@
 
 declare(strict_types = 1);
 
-namespace tests\phpunit\Civi\Funding\FundingCase\Handler;
+namespace Civi\Funding\FundingCase\Handler;
 
 use Civi\API\Exception\UnauthorizedException;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
@@ -27,7 +27,6 @@ use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
 use Civi\Funding\FundingCase\Command\FundingCaseNotificationContactsSetCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
-use Civi\Funding\FundingCase\Handler\FundingCaseNotificationContactsSetHandler;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
