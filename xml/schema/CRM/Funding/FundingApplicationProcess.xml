@@ -204,4 +204,48 @@
       <type>CheckBox</type>
     </html>
   </field>
+  <index>
+    <name>index_is_eligible</name>
+    <fieldName>is_eligible</fieldName>
+  </index>
+
+  <field>
+    <name>is_in_work</name>
+    <type>boolean</type>
+    <required>true</required>
+    <comment>Is the application in work by the applicant?</comment>
+    <html>
+      <type>CheckBox</type>
+    </html>
+  </field>
+  <index>
+    <name>index_is_in_work</name>
+    <fieldName>is_in_work</fieldName>
+  </index>
+
+  <field>
+    <name>is_rejected</name>
+    <type>boolean</type>
+    <required>true</required>
+    <html>
+      <type>CheckBox</type>
+    </html>
+  </field>
+  <index>
+    <name>index_is_rejected</name>
+    <fieldName>is_rejected</fieldName>
+  </index>
+
+  <field>
+    <name>is_withdrawn</name>
+    <type>boolean</type>
+    <required>true</required>
+    <html>
+      <type>CheckBox</type>
+    </html>
+  </field>
+  <index>
+    <name>index_is_withdrawn</name>
+    <fieldName>is_withdrawn</fieldName>
+  </index>
 </table>

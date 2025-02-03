@@ -80,9 +80,9 @@ final class DefaultFundingCaseStatusDeterminer implements FundingCaseStatusDeter
       // Application process status has changed to an ineligible status and
       // there is no other application process that is eligible or with an
       // undecided eligibility.
-      return $this->info->isWithdrawnStatus($applicationProcessBundle->getApplicationProcess()->getStatus())
-        ? 'withdrawn'
-        : 'rejected';
+      return $applicationProcessBundle->getApplicationProcess()->getIsWithdrawn()
+        ? FundingCaseStatus::WITHDRAWN
+        : FundingCaseStatus::REJECTED;
     }
 
     return $applicationProcessBundle->getFundingCase()->getStatus();
