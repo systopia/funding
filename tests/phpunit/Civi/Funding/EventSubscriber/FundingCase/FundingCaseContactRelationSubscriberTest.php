@@ -17,13 +17,12 @@
 
 declare(strict_types = 1);
 
-namespace tests\phpunit\Civi\Funding\EventSubscriber\FundingCase;
+namespace Civi\Funding\EventSubscriber\FundingCase;
 
 use Civi\Api4\FundingCaseContactRelation;
 use Civi\Api4\Generic\Result;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
-use Civi\Funding\EventSubscriber\FundingCase\FundingCaseContactRelationUpdateSubscriber;
 use Civi\Funding\Permission\ContactRelation\Types\ContactRelationship;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;

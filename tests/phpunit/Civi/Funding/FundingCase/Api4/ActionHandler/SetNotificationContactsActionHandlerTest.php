@@ -17,7 +17,7 @@
 
 declare(strict_types = 1);
 
-namespace tests\phpunit\Civi\Funding\FundingCase\Api4\ActionHandler;
+namespace Civi\Funding\FundingCase\Api4\ActionHandler;
 
 use Civi\Funding\Api4\Action\FundingCase\SetNotificationContactsAction;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
@@ -25,7 +25,6 @@ use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
-use Civi\Funding\FundingCase\Api4\ActionHandler\SetNotificationContactsActionHandler;
 use Civi\Funding\FundingCase\Command\FundingCaseNotificationContactsSetCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\Handler\FundingCaseNotificationContactsSetHandlerInterface;

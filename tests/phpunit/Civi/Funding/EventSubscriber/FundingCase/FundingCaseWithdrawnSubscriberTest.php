@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace tests\phpunit\Civi\Funding\EventSubscriber\FundingCase;
+namespace Civi\Funding\EventSubscriber\FundingCase;
 
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
@@ -9,7 +9,6 @@ use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Event\FundingCase\FundingCasePreUpdateEvent;
-use Civi\Funding\EventSubscriber\FundingCase\FundingCaseWithdrawnSubscriber;
 use Civi\Funding\FundingCase\Command\FundingCaseUpdateAmountApprovedCommand;
 use Civi\Funding\FundingCase\FundingCaseStatus;
 use Civi\Funding\FundingCase\Handler\FundingCaseUpdateAmountApprovedHandlerInterface;
