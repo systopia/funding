@@ -2,13 +2,15 @@
 
 declare(strict_types = 1);
 
-use Civi\Funding\Controller\PageControllerInterface;
+namespace Civi\Funding\Page;
+
 use Civi\Funding\Controller\ApplicationTemplateRenderController;
+use Civi\Funding\Controller\PageControllerInterface;
 
 /**
  * @codeCoverageIgnore
  */
-final class CRM_Funding_Page_RemoteApplicationTemplateRender extends CRM_Funding_Page_AbstractRemotePage {
+final class RemoteApplicationTemplateRenderPage extends AbstractRemoteControllerPage {
 
   protected function getController(): PageControllerInterface {
     return \Civi::service(ApplicationTemplateRenderController::class);

@@ -19,21 +19,22 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Event\Remote;
 
+use Civi\Funding\Page\AbstractRemoteControllerPage;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\EventDispatcher\Event;
 
 final class RemotePageRequestEvent extends Event {
 
-  private \CRM_Funding_Page_AbstractRemotePage $page;
+  private AbstractRemoteControllerPage $page;
 
   private Request $request;
 
-  public function __construct(\CRM_Funding_Page_AbstractRemotePage $page, Request $request) {
+  public function __construct(AbstractRemoteControllerPage $page, Request $request) {
     $this->page = $page;
     $this->request = $request;
   }
 
-  public function getPage(): \CRM_Funding_Page_AbstractRemotePage {
+  public function getPage(): AbstractRemoteControllerPage {
     return $this->page;
   }
 

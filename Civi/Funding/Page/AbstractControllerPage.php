@@ -17,6 +17,8 @@
 
 declare(strict_types = 1);
 
+namespace Civi\Funding\Page;
+
 use Civi\Funding\Controller\PageControllerInterface;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,10 +27,8 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 /**
  * @codeCoverageIgnore
- *
- * phpcs:disable Generic.NamingConventions.AbstractClassNamePrefix.Missing
  */
-abstract class CRM_Funding_Page_AbstractPage extends \CRM_Core_Page {
+abstract class AbstractControllerPage extends \CRM_Core_Page {
 
   public function run(): void {
     $request = Request::createFromGlobals();
