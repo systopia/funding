@@ -2,13 +2,15 @@
 
 declare(strict_types = 1);
 
-use Civi\Funding\Controller\PageControllerInterface;
+namespace Civi\Funding\Page;
+
 use Civi\Funding\Controller\DrawdownAcceptController;
+use Civi\Funding\Controller\PageControllerInterface;
 
 /**
  * @codeCoverageIgnore
  */
-class CRM_Funding_Page_DrawdownAccept extends CRM_Funding_Page_AbstractPage {
+final class DrawdownAcceptPage extends AbstractControllerPage {
 
   protected function getController(): PageControllerInterface {
     return \Civi::service(DrawdownAcceptController::class);

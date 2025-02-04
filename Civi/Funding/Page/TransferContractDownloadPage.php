@@ -2,13 +2,15 @@
 
 declare(strict_types = 1);
 
+namespace Civi\Funding\Page;
+
 use Civi\Funding\Controller\PageControllerInterface;
 use Civi\Funding\Controller\TransferContractDownloadController;
 
 /**
  * @codeCoverageIgnore
  */
-class CRM_Funding_Page_RemoteTransferContractDownload extends CRM_Funding_Page_AbstractRemotePage {
+final class TransferContractDownloadPage extends AbstractControllerPage {
 
   protected function getController(): PageControllerInterface {
     return \Civi::service(TransferContractDownloadController::class);

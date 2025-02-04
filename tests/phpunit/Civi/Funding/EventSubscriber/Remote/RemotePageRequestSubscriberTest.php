@@ -22,6 +22,7 @@ namespace Civi\Funding\EventSubscriber\Remote;
 use Civi\Funding\Contact\FundingRemoteContactIdResolverInterface;
 use Civi\Funding\Event\Remote\RemotePageRequestEvent;
 use Civi\Funding\Mock\RequestContext\TestRequestContext;
+use Civi\Funding\Page\AbstractRemoteControllerPage;
 use Civi\RemoteTools\Exception\ResolveContactIdFailedException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -66,7 +67,7 @@ final class RemotePageRequestSubscriberTest extends TestCase {
   }
 
   public function test(): void {
-    $pageMock = $this->createMock(\CRM_Funding_Page_AbstractRemotePage::class);
+    $pageMock = $this->createMock(AbstractRemoteControllerPage::class);
     $request = new Request();
     $request->headers->set('X-Civi-Remote-Contact-Id', 'abc');
     $event = new RemotePageRequestEvent($pageMock, $request);
@@ -79,7 +80,7 @@ final class RemotePageRequestSubscriberTest extends TestCase {
   }
 
   public function testRemoteContactIdMissing(): void {
-    $pageMock = $this->createMock(\CRM_Funding_Page_AbstractRemotePage::class);
+    $pageMock = $this->createMock(AbstractRemoteControllerPage::class);
     $request = new Request();
     $event = new RemotePageRequestEvent($pageMock, $request);
 
@@ -89,7 +90,7 @@ final class RemotePageRequestSubscriberTest extends TestCase {
   }
 
   public function testRemoteContactIdResolveFailed(): void {
-    $pageMock = $this->createMock(\CRM_Funding_Page_AbstractRemotePage::class);
+    $pageMock = $this->createMock(AbstractRemoteControllerPage::class);
     $request = new Request();
     $request->headers->set('X-Civi-Remote-Contact-Id', 'abc');
     $event = new RemotePageRequestEvent($pageMock, $request);

@@ -17,6 +17,8 @@
 
 declare(strict_types = 1);
 
+namespace Civi\Funding\Page;
+
 use Civi\Funding\Event\Remote\RemotePageRequestEvent;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,7 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * phpcs:disable Generic.NamingConventions.AbstractClassNamePrefix.Missing
  */
-abstract class CRM_Funding_Page_AbstractRemotePage extends CRM_Funding_Page_AbstractPage {
+abstract class AbstractRemoteControllerPage extends AbstractControllerPage {
 
   protected function handle(Request $request): Response {
     /** @var \Civi\RemoteTools\RequestContext\RequestContextInterface $requestContext */

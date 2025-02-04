@@ -2,37 +2,37 @@
 <menu>
   <item>
     <path>civicrm/funding/remote/application/render</path>
-    <page_callback>CRM_Funding_Page_RemoteApplicationTemplateRender</page_callback>
+    <page_callback>Civi\Funding\Page\RemoteApplicationTemplateRenderPage</page_callback>
     <title>RemoteApplicationTemplateRender</title>
     <access_arguments>access Remote Funding</access_arguments>
   </item>
   <item>
     <path>civicrm/funding/transfer-contract/download</path>
-    <page_callback>CRM_Funding_Page_TransferContractDownload</page_callback>
+    <page_callback>Civi\Funding\Page\TransferContractDownloadPage</page_callback>
     <title>TransferContractDownload</title>
     <access_arguments>access Funding;administer Funding</access_arguments>
   </item>
   <item>
     <path>civicrm/funding/remote/transfer-contract/download</path>
-    <page_callback>CRM_Funding_Page_RemoteTransferContractDownload</page_callback>
+    <page_callback>Civi\Funding\Page\RemoteTransferContractDownloadPage</page_callback>
     <title>RemoteTransferContractDownload</title>
     <access_arguments>access Remote Funding</access_arguments>
   </item>
   <item>
     <path>civicrm/funding/drawdown/accept</path>
-    <page_callback>CRM_Funding_Page_DrawdownAccept</page_callback>
+    <page_callback>Civi\Funding\Page\DrawdownAcceptPage</page_callback>
     <title>DrawdownAccept</title>
     <access_arguments>access Funding;administer Funding</access_arguments>
   </item>
   <item>
     <path>civicrm/funding/drawdown/reject</path>
-    <page_callback>CRM_Funding_Page_DrawdownReject</page_callback>
+    <page_callback>Civi\Funding\Page\DrawdownRejectPage</page_callback>
     <title>DrawdownReject</title>
     <access_arguments>access Funding;administer Funding</access_arguments>
   </item>
   <item>
     <path>civicrm/funding/drawdown-document/download</path>
-    <page_callback>CRM_Funding_Page_DrawdownDocumentDownload</page_callback>
+    <page_callback>Civi\Funding\Page\DrawdownDocumentDownloadPage</page_callback>
     <title>DrawdownDocumentDownload</title>
     <access_arguments>access Funding;administer Funding</access_arguments>
   </item>

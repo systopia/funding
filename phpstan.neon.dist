@@ -47,7 +47,7 @@ parameters:
 	ignoreErrors:
 		# Note paths are prefixed with "*/" to work with inspections in PHPStorm because of:
 		# https://youtrack.jetbrains.com/issue/WI-63891/PHPStan-ignoreErrors-configuration-isnt-working-with-inspections
-		- '#^Method CRM_Funding_Page_[^\s]+::getController\(\) should return Civi\\Funding\\Controller\\PageControllerInterface but returns mixed.$#'
+		- '#^Method Civi\\Funding\\Page\\[^\s]+Page::getController\(\) should return Civi\\Funding\\Controller\\PageControllerInterface but returns mixed.$#'
 		- '#^Method Civi\\Funding\\FundingCaseTypeServiceLocator::[^\s]+ should return [^\s]+ but returns mixed.$#'
 		-
 			message: '#has an uninitialized property#'
