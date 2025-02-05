@@ -1,9 +1,9 @@
 <af-form ctrl="afform">
   <af-entity type="FundingCaseType" name="fundingCaseType" label="fundingCaseType" actions="{create: false, update: true}" security="RBAC" url-autofill="1" />
   <fieldset af-fieldset="fundingCaseType" class="af-container">
-    <af-field name="transfer_contract_template_file_id" />
-    <af-field name="payment_instruction_template_file_id" />
-    <af-field name="payback_claim_template_file_id" />
+    <af-field name="transfer_contract_template_file_id" defn="{input_type: 'File'}" />
+    <af-field name="payment_instruction_template_file_id" defn="{input_type: 'File'}" />
+    <af-field name="payback_claim_template_file_id" defn="{input_type: 'File'}" />
   </fieldset>
   <button class="af-button btn btn-primary" crm-icon="fa-check" ng-click="afform.submit()" ng-if="afform.showSubmitButton">Submit</button>
 </af-form>
