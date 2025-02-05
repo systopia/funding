@@ -63,7 +63,7 @@ Enter this command, so that changes to views etc. can be applied:
 
 ```
 composer require drupal/config_update
-drush pm:enable config_update
+drush pm:enable config_update_ui
 ```
 
 The last step is no longer necessary as soon as we have releases of `civiremote_funding` with update routines.
