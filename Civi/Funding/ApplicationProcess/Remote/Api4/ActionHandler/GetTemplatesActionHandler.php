@@ -24,7 +24,11 @@ use Civi\Api4\FundingApplicationProcess;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetTemplatesAction;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Civi\RemoteTools\Api4\Api4Interface;
+use Webmozart\Assert\Assert;
 
+/**
+ * @phpstan-type applicationTemplateT array{id: int, label: string}
+ */
 final class GetTemplatesActionHandler implements ActionHandlerInterface {
 
   public const ENTITY_NAME = 'RemoteFundingApplicationProcess';
@@ -36,14 +40,35 @@ final class GetTemplatesActionHandler implements ActionHandlerInterface {
   }
 
   /**
-   * @phpstan-return list<array{id: integer, label: string}>
+   * @phpstan-return list<applicationTemplateT>|array<int, list<applicationTemplateT>>
    *
    * @throws \CRM_Core_Exception
    */
   public function getTemplates(GetTemplatesAction $action): array {
+    if (NULL !== $action->getApplicationProcessId()) {
+      Assert::null(
+        $action->getApplicationProcessIds(),
+        'Only "applicationProcessId" or "applicationProcessIds" is allowed'
+      );
+
+      return $this->getSingle($action->getApplicationProcessId());
+    }
+    elseif (NULL !== $action->getApplicationProcessIds()) {
+      return $this->getMultiple($action->getApplicationProcessIds());
+    }
+
+    throw new \InvalidArgumentException('Either "applicationProcessId" or "applicationProcessIds" must be set');
+  }
+
+  /**
+   * @phpstan-return list<array{id: integer, label: string}>
+   *
+   * @throws \CRM_Core_Exception
+   */
+  private function getSingle(int $applicationProcessId) {
     $fundingCaseTypeId = $this->api4->execute(FundingApplicationProcess::getEntityName(), 'get', [
       'select' => ['funding_case_id.funding_case_type_id'],
-      'where' => [['id', '=', $action->getApplicationProcessId()]],
+      'where' => [['id', '=', $applicationProcessId]],
     ])->first()['funding_case_id.funding_case_type_id'] ?? NULL;
 
     if (NULL === $fundingCaseTypeId) {
@@ -58,6 +83,45 @@ final class GetTemplatesActionHandler implements ActionHandlerInterface {
     ])->getArrayCopy();
 
     return $templates;
+  }
+
+  /**
+   * @phpstan-param list<int> $applicationProcessIds
+   *
+   * @phpstan-return array<int, list<applicationTemplateT>>
+   *
+   * @throws \CRM_Core_Exception
+   */
+  private function getMultiple(array $applicationProcessIds): array {
+    if ([] === $applicationProcessIds) {
+      return [];
+    }
+
+    $result = array_fill_keys($applicationProcessIds, []);
+    $joinRecords = $this->api4->execute(FundingApplicationProcess::getEntityName(), 'get', [
+      'select' => [
+        'id',
+        'tpl.id',
+        'tpl.label',
+      ],
+      'where' => [
+        ['id', 'IN', $applicationProcessIds],
+      ],
+      'join' => [
+        [
+          'FundingApplicationCiviOfficeTemplate AS tpl',
+          'INNER',
+          ['funding_case_id.funding_case_type_id', '=', 'tpl.case_type_id'],
+        ],
+      ],
+    ]);
+
+    /** @phpstan-var array{id: int, 'tpl.id': int, 'tpl.label': string} $joinRecord */
+    foreach ($joinRecords as $joinRecord) {
+      $result[$joinRecord['id']][] = ['id' => $joinRecord['tpl.id'], 'label' => $joinRecord['tpl.label']];
+    }
+
+    return $result;
   }
 
 }

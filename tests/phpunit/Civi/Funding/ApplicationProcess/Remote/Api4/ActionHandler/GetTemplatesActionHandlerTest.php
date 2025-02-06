@@ -50,7 +50,7 @@ final class GetTemplatesActionHandlerTest extends TestCase {
     $this->actionHandler = new GetTemplatesActionHandler($this->api4Mock);
   }
 
-  public function testGetTemplates(): void {
+  public function testGetTemplatesSingle(): void {
     $series = [
       [
         [
@@ -91,7 +91,7 @@ final class GetTemplatesActionHandlerTest extends TestCase {
     static::assertSame([['id' => 3, 'label' => 'test']], $this->actionHandler->getTemplates($action));
   }
 
-  public function testGetTemplatesNoApplicationProcess(): void {
+  public function testGetTemplatesSingleNoApplicationProcess(): void {
     $this->api4Mock->method('execute')
       ->with(FundingApplicationProcess::getEntityName(), 'get', [
         'select' => ['funding_case_id.funding_case_type_id'],
@@ -102,6 +102,67 @@ final class GetTemplatesActionHandlerTest extends TestCase {
       ->setApplicationProcessId(2);
 
     static::assertSame([], $this->actionHandler->getTemplates($action));
+  }
+
+  public function testGetTemplatesMulti(): void {
+    $series = [
+      [
+        [
+          FundingApplicationProcess::getEntityName(),
+          'get',
+          [
+            'select' => ['id', 'tpl.id', 'tpl.label'],
+            'where' => [['id', 'IN', [2, 3]]],
+            'join' => [
+              [
+                'FundingApplicationCiviOfficeTemplate AS tpl',
+                'INNER',
+                ['funding_case_id.funding_case_type_id', '=', 'tpl.case_type_id'],
+              ],
+            ],
+          ],
+        ],
+        new Result([
+          ['id' => 2, 'tpl.id' => 4, 'tpl.label' => 'test1'],
+          ['id' => 2, 'tpl.id' => 5, 'tpl.label' => 'test2'],
+        ]),
+      ],
+    ];
+
+    $this->api4Mock->method('execute')->willReturnCallback(function (...$args) use (&$series) {
+      // @phpstan-ignore-next-line
+      [$expectedArgs, $return] = array_shift($series);
+      static::assertEquals($expectedArgs, $args);
+
+      return $return;
+    });
+
+    $action = $this->createApi4ActionMock(GetTemplatesAction::class)
+      ->setApplicationProcessIds([2, 3]);
+
+    static::assertSame([
+      2 => [
+        ['id' => 4, 'label' => 'test1'],
+        ['id' => 5, 'label' => 'test2'],
+      ],
+      3 => [],
+    ], $this->actionHandler->getTemplates($action));
+  }
+
+  public function testGetTemplatesNoId(): void {
+    $action = $this->createApi4ActionMock(GetTemplatesAction::class);
+
+    $this->expectException(\InvalidArgumentException::class);
+    $this->actionHandler->getTemplates($action);
+  }
+
+  public function testGetTemplatesSingleAndMulti(): void {
+    $action = $this->createApi4ActionMock(GetTemplatesAction::class)
+      ->setApplicationProcessId(1)
+      ->setApplicationProcessIds([2, 3]);
+
+    $this->expectException(\InvalidArgumentException::class);
+    $this->actionHandler->getTemplates($action);
   }
 
 }

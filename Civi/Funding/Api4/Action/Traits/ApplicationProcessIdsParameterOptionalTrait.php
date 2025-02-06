@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2024 SYSTOPIA GmbH
+ * Copyright (C) 2025 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,21 +17,34 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
+namespace Civi\Funding\Api4\Action\Traits;
 
-use Civi\Api4\RemoteFundingApplicationProcess;
-use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingAction;
-use Civi\Funding\Api4\Action\Traits\ApplicationProcessIdParameterOptionalTrait;
-use Civi\Funding\Api4\Action\Traits\ApplicationProcessIdsParameterOptionalTrait;
+use Webmozart\Assert\Assert;
 
-class GetTemplatesAction extends AbstractRemoteFundingAction {
+/**
+ * @phpstan-method list<int>|null getApplicationProcessIds()
+ */
+trait ApplicationProcessIdsParameterOptionalTrait {
 
-  use ApplicationProcessIdParameterOptionalTrait;
+  /**
+   * @var array|null
+   * @phpstan-var list<int>|null
+   */
+  protected ?array $applicationProcessIds = NULL;
 
-  use ApplicationProcessIdsParameterOptionalTrait;
+  /**
+   * @phpstan-param list<int>|null $ids
+   */
+  public function setApplicationProcessIds(?array $ids): self {
+    if (NULL === $ids) {
+      $this->applicationProcessIds = $ids;
+    }
+    else {
+      Assert::allInteger($ids);
+      $this->applicationProcessIds = array_values($ids);
+    }
 
-  public function __construct() {
-    parent::__construct(RemoteFundingApplicationProcess::getEntityName(), 'getTemplates');
+    return $this;
   }
 
 }
