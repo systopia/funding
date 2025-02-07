@@ -23,7 +23,7 @@ After installing the funding extension, the Drupal roles need to be given the co
 * Funding Admins need to have a role that grants the following permissions:
     * CiviCRM: access Funding Program Manager
     * CiviCRM: Funding Program Manager Administration
- 
+
 If you don't need to differentiate, reviewer and funding program admin permissions can also be combined in one role.
 
 ## CiviRemote User Roles
@@ -96,3 +96,15 @@ As before, permissions can be assigned to specific contacts, contact types or co
 A configuration could look like this:
 
 !["Example configuration of permissions on funding program level"](../img/permissions_funding_case.png)
+
+In case the initial funding case permissions are changed later, the permissions
+of all  existing funding cases can be reset on CLI. To do this run `cv cli` and
+execute this function:
+
+```php
+> funding_case_reset_permissions();
+```
+
+An APIv4 where array for the `FundingCase` entity may be given as argument to
+limit the funding cases to which the operation is applied. Depending on the
+number of funding cases this might take a while.
