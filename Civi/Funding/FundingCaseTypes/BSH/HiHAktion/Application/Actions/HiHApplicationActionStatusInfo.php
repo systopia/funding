@@ -31,4 +31,16 @@ final class HiHApplicationActionStatusInfo extends AbstractApplicationProcessAct
     parent::__construct(new DefaultApplicationProcessActionStatusInfo());
   }
 
+  public function getFinalIneligibleStatusList(): array {
+    return [
+      'rejected',
+      'rejected_after_advisory',
+      'withdrawn',
+    ];
+  }
+
+  public function getEligibleStatusList(): array {
+    return ['advisory', 'approved', 'complete'];
+  }
+
 }
