@@ -5,6 +5,7 @@ declare(strict_types = 1);
 require_once 'funding.civix.php';
 // phpcs:enable
 
+use Civi\Api4\FundingCase;
 use Civi\Funding\Api4\Permissions;
 use Civi\RemoteTools\Api4\Api4Interface;
 use CRM_Funding_ExtensionUtil as E;
@@ -96,4 +97,28 @@ function funding_civicrm_install(): void {
  */
 function funding_civicrm_enable(): void {
   _funding_civix_civicrm_enable();
+}
+
+/**
+ * Reset permissions of funding cases to the ones configured in the funding
+ * program.
+ *
+ * @phpstan-param array<mixed> $where
+ *   An APIv4 where array for the FundingCase entity. If not given the
+ *   permissions of all funding cases will be reset.
+ *
+ * @throws \CRM_Core_Exception
+ */
+function funding_case_reset_permissions(array $where = []): void {
+  $fundingCaseIds = FundingCase::get(FALSE)
+    ->addSelect('id')
+    ->setWhere($where)
+    ->execute()
+    ->column('id');
+
+  foreach ($fundingCaseIds as $fundingCaseId) {
+    FundingCase::resetPermissions(FALSE)
+      ->setId($fundingCaseId)
+      ->execute();
+  }
 }
