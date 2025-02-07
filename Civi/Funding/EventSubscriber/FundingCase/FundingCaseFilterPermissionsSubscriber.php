@@ -19,7 +19,9 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\FundingCase;
 
+use Civi\Funding\Api4\Permissions;
 use Civi\Funding\Event\FundingCase\GetPermissionsEvent;
+use Civi\Funding\Permission\CiviPermissionChecker;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -30,6 +32,8 @@ final class FundingCaseFilterPermissionsSubscriber implements EventSubscriberInt
     'drawdown_',
     'clearing_',
   ];
+
+  private CiviPermissionChecker $permissionChecker;
 
   private RequestContextInterface $requestContext;
 
@@ -42,7 +46,8 @@ final class FundingCaseFilterPermissionsSubscriber implements EventSubscriberInt
     ];
   }
 
-  public function __construct(RequestContextInterface $requestContext) {
+  public function __construct(CiviPermissionChecker $permissionChecker, RequestContextInterface $requestContext) {
+    $this->permissionChecker = $permissionChecker;
     $this->requestContext = $requestContext;
   }
 
@@ -75,11 +80,16 @@ final class FundingCaseFilterPermissionsSubscriber implements EventSubscriberInt
   private function preventAccessIfHasApplicantPermission(GetPermissionsEvent $event): void {
     foreach ($event->getPermissions() as $permission) {
       if ($this->isApplicantPermission($permission)) {
-        $event->setPermissions([]);
+        // funding admins are still allowed to view the application.
+        $event->setPermissions($this->isFundingAdmin() ? ['view'] : []);
 
         return;
       }
     }
+  }
+
+  private function isFundingAdmin(): bool {
+    return $this->permissionChecker->checkPermission(Permissions::ADMINISTER_FUNDING);
   }
 
 }
