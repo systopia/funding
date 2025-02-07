@@ -128,6 +128,10 @@ final class GetAction extends AbstractReferencingDAOGetAction {
       return TRUE;
     }
 
+    if (!isset($record['funding_case_task.funding_case_id'])) {
+      return FALSE;
+    }
+
     // @phpstan-ignore argument.type
     $fundingCase = $this->getFundingCaseManager()->get($record['funding_case_task.funding_case_id']);
     if (NULL === $fundingCase) {
