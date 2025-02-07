@@ -21,6 +21,7 @@ namespace Civi\Funding\EventSubscriber\FundingProgram;
 
 use Civi\Funding\Api4\Permissions;
 use Civi\Funding\Event\FundingProgram\GetPermissionsEvent;
+use Civi\Funding\Permission\CiviPermissionChecker;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -32,6 +33,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 final class FundingProgramPermissionsGetAdminSubscriber implements EventSubscriberInterface {
 
+  private CiviPermissionChecker $permissionChecker;
+
   private RequestContextInterface $requestContext;
 
   /**
@@ -41,7 +44,8 @@ final class FundingProgramPermissionsGetAdminSubscriber implements EventSubscrib
     return [GetPermissionsEvent::class => 'onPermissionsGet'];
   }
 
-  public function __construct(RequestContextInterface $requestContext) {
+  public function __construct(CiviPermissionChecker $permissionChecker, RequestContextInterface $requestContext) {
+    $this->permissionChecker = $permissionChecker;
     $this->requestContext = $requestContext;
   }
 
@@ -61,7 +65,7 @@ final class FundingProgramPermissionsGetAdminSubscriber implements EventSubscrib
       return PHP_SAPI === 'cli';
     }
 
-    return \CRM_Core_Permission::check(Permissions::ADMINISTER_FUNDING, $this->requestContext->getContactId());
+    return $this->permissionChecker->checkPermission(Permissions::ADMINISTER_FUNDING);
   }
 
 }

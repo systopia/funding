@@ -40,6 +40,7 @@ use Civi\Funding\ExternalFile\FundingExternalFileManager;
 use Civi\Funding\ExternalFile\FundingExternalFileManagerInterface;
 use Civi\Funding\FundingAttachmentManager;
 use Civi\Funding\FundingAttachmentManagerInterface;
+use Civi\Funding\Permission\CiviPermissionChecker;
 use Civi\Funding\Util\MoneyFactory;
 use Civi\Funding\Util\UrlGenerator;
 use Civi\Funding\Validation\EntityValidator;
@@ -65,6 +66,7 @@ $container->autowire(UrlGenerator::class);
 $container->autowire(MoneyFactory::class);
 $container->autowire(ChangeSetFactory::class);
 $container->autowire(DaoEntityInfoProvider::class);
+$container->autowire(CiviPermissionChecker::class);
 
 $container->addCompilerPass(new ActionPropertyAutowireFixPass(), PassConfig::TYPE_BEFORE_REMOVING);
 
