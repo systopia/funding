@@ -169,8 +169,11 @@ abstract class AbstractReferencingDAOGetAction extends DAOGetAction {
    * @throws \CRM_Core_Exception
    */
   protected function handleRecord(array &$record): bool {
-    // @phpstan-ignore argument.type
-    return $this->getFundingCaseManager()->hasAccess($record[$this->_fundingCaseIdFieldName]);
+    // Normally the funding case ID is set. Though it might be NULL if the where
+    // clause was modified in hook_civicrm_selectWhereClause.
+    return isset($record[$this->_fundingCaseIdFieldName])
+      // @phpstan-ignore argument.type
+      && $this->getFundingCaseManager()->hasAccess($record[$this->_fundingCaseIdFieldName]);
   }
 
   protected function initOriginalSelect(): void {
