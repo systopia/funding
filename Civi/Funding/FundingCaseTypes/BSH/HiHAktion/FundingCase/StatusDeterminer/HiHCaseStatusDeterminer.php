@@ -57,6 +57,12 @@ final class HiHCaseStatusDeterminer implements FundingCaseStatusDeterminerInterf
       return FundingCaseStatus::OPEN;
     }
 
+    if ('rejected_after_advisory' === $previousStatus
+      && 'advisory' === $applicationProcessBundle->getApplicationProcess()->getStatus()
+    ) {
+      return FundingCaseStatus::OPEN;
+    }
+
     return $this->defaultStatusDeterminer->getStatusOnApplicationProcessStatusChange(
       $applicationProcessBundle,
       $previousStatus
