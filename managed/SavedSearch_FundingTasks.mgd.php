@@ -79,14 +79,17 @@ return [
               'size' => 'btn-xs',
               'links' => [
                 [
-                  'path' => 'civicrm/a#funding/case/[source_record_id]',
+                  'path' => 'civicrm/a#funding/case/[funding_case_task.funding_case_id]',
                   'icon' => 'fa-folder-open-o',
                   'text' => E::ts('Open case'),
                   'style' => 'default',
                   'condition' => [
                     'activity_type_id:name',
-                    '=',
-                    'funding_case_task',
+                    'IN',
+                    [
+                      'funding_case_task',
+                      'funding_drawdown_task',
+                    ],
                   ],
                   'task' => '',
                   'entity' => '',
@@ -96,7 +99,7 @@ return [
                 ],
                 [
                   'path' => 'civicrm/a#funding/application/[source_record_id]',
-                  'icon' => 'fa-external-link',
+                  'icon' => 'fa-folder-open-o',
                   'text' => E::ts('Open application'),
                   'style' => 'default',
                   'condition' => [
@@ -112,7 +115,7 @@ return [
                 ],
                 [
                   'path' => 'civicrm/a#funding/clearing/[source_record_id]',
-                  'icon' => 'fa-external-link',
+                  'icon' => 'fa-folder-open-o',
                   'text' => E::ts('Open clearing'),
                   'style' => 'default',
                   'condition' => [
@@ -131,11 +134,14 @@ return [
               'alignment' => 'text-right',
             ],
           ],
-          'actions' => TRUE,
+          'actions' => [
+            'download',
+          ],
           'classes' => [
             'table',
             'table-striped',
           ],
+          'actions_display_mode' => 'menu',
         ],
       ],
       'match' => [

@@ -22,12 +22,15 @@ namespace Civi\Funding\DependencyInjection\Compiler;
 use Civi\Funding\DependencyInjection\Compiler\Traits\TaggedFundingCaseTypeServicesTrait;
 use Civi\Funding\Task\Creator\ApplicationProcessTaskCreatorInterface;
 use Civi\Funding\Task\Creator\ClearingProcessTaskCreatorInterface;
+use Civi\Funding\Task\Creator\DrawdownTaskCreatorInterface;
 use Civi\Funding\Task\Creator\FundingCaseTaskCreatorInterface;
 use Civi\Funding\Task\EventSubscriber\ApplicationProcessTaskSubscriber;
 use Civi\Funding\Task\EventSubscriber\ClearingProcessTaskSubscriber;
+use Civi\Funding\Task\EventSubscriber\DrawdownTaskSubscriber;
 use Civi\Funding\Task\EventSubscriber\FundingCaseTaskSubscriber;
 use Civi\Funding\Task\Modifier\ApplicationProcessTaskModifierInterface;
 use Civi\Funding\Task\Modifier\ClearingProcessTaskModifierInterface;
+use Civi\Funding\Task\Modifier\DrawdownTaskModifierInterface;
 use Civi\Funding\Task\Modifier\FundingCaseTaskModifierInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -78,6 +81,11 @@ final class FundingTaskPass implements CompilerPassInterface {
     yield ClearingProcessTaskSubscriber::class => [
       ClearingProcessTaskCreatorInterface::class,
       ClearingProcessTaskModifierInterface::class,
+    ];
+
+    yield DrawdownTaskSubscriber::class => [
+      DrawdownTaskCreatorInterface::class,
+      DrawdownTaskModifierInterface::class,
     ];
   }
 
