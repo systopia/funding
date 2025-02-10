@@ -48,7 +48,7 @@ class ApplicationProcessWithdrawSubscriber implements EventSubscriberInterface {
    */
   public function onUpdated(ApplicationProcessUpdatedEvent $event): void {
     if ($event->getPreviousApplicationProcess()->getStatus() !== $event->getApplicationProcess()->getStatus()
-      && 'withdrawn' === $event->getApplicationProcess()->getStatus()
+      && $event->getApplicationProcess()->getIsWithdrawn()
     ) {
       $clearingProcess = $this->clearingProcessManager->getByApplicationProcessId(
         $event->getApplicationProcess()->getId()

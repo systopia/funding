@@ -78,6 +78,9 @@ final class ApplicationSnapshotCreateHandler implements ApplicationSnapshotCreat
       'is_review_content' => $applicationProcess->getIsReviewContent(),
       'is_review_calculative' => $applicationProcess->getIsReviewCalculative(),
       'is_eligible' => $applicationProcess->getIsEligible(),
+      'is_in_work' => $applicationProcess->getIsInWork(),
+      'is_rejected' => $applicationProcess->getIsRejected(),
+      'is_withdrawn' => $applicationProcess->getIsWithdrawn(),
       'custom_fields' => $this->applicationProcessManager->getCustomFields($applicationProcess),
     ]);
 

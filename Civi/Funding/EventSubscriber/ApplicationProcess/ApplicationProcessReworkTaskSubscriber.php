@@ -65,7 +65,7 @@ class ApplicationProcessReworkTaskSubscriber implements EventSubscriberInterface
         TaskType::REWORK,
       );
     }
-    elseif (!$this->getInfo($event->getFundingCaseType())->isChangeRequiredStatus($applicationProcess->getStatus())) {
+    elseif (!$this->getInfo($event->getFundingCaseType())->isInWorkStatus($applicationProcess->getStatus())) {
       $this->taskManager->cancelExternalTask(
         $applicationProcess->getId(),
         TaskType::REWORK,
@@ -81,7 +81,7 @@ class ApplicationProcessReworkTaskSubscriber implements EventSubscriberInterface
     $previousApplicationProcess = $event->getPreviousApplicationProcess();
 
     if ($applicationProcess->getStatus() !== $previousApplicationProcess->getStatus()) {
-      if ($this->getInfo($event->getFundingCaseType())->isChangeRequiredStatus($applicationProcess->getStatus())) {
+      if ($this->getInfo($event->getFundingCaseType())->isInWorkStatus($applicationProcess->getStatus())) {
         $this->taskManager->addExternalTask(
           $event->getContactId(),
           $applicationProcess,

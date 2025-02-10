@@ -77,6 +77,9 @@ final class ApplicationSnapshotRestorer implements ApplicationSnapshotRestorerIn
     $applicationProcess->setIsReviewCalculative($applicationSnapshot->getIsReviewCalculative());
     $applicationProcess->setIsReviewContent($applicationSnapshot->getIsReviewContent());
     $applicationProcess->setIsEligible($applicationSnapshot->getIsEligible());
+    $applicationProcess->setIsInWork($applicationSnapshot->getIsInWork());
+    $applicationProcess->setIsRejected($applicationSnapshot->getIsRejected());
+    $applicationProcess->setIsWithdrawn($applicationSnapshot->getIsWithdrawn());
     $applicationProcess->setRestoredSnapshot($applicationSnapshot);
     // @phpstan-ignore-next-line
     $applicationProcess->setValues($applicationProcess->toArray() + $applicationSnapshot->getCustomFields());

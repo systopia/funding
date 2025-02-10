@@ -46,8 +46,6 @@ interface ApplicationProcessActionStatusInfoInterface {
 
   public function isApplyAction(string $action): bool;
 
-  public function isChangeRequiredStatus(string $status): bool;
-
   public function isDeleteAction(string $action): bool;
 
   /**
@@ -56,6 +54,12 @@ interface ApplicationProcessActionStatusInfoInterface {
    */
   public function isEligibleStatus(string $status): ?bool;
 
+  /**
+   * @return bool
+   *   TRUE if in work by the applicant, FALSE otherwise.
+   */
+  public function isInWorkStatus(string $status): bool;
+
   public function isRestoreAction(string $action): bool;
 
   public function isReviewStartAction(string $action): bool;
@@ -63,6 +67,8 @@ interface ApplicationProcessActionStatusInfoInterface {
   public function isReviewStatus(string $status): bool;
 
   public function isSnapshotRequiredStatus(FullApplicationProcessStatus $status): bool;
+
+  public function isRejectedStatus(string $status): bool;
 
   public function isWithdrawnStatus(string $status): bool;
 

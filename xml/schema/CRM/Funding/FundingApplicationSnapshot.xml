@@ -166,6 +166,33 @@
   </field>
 
   <field>
+    <name>is_in_work</name>
+    <type>boolean</type>
+    <required>true</required>
+    <html>
+      <type>CheckBox</type>
+    </html>
+  </field>
+
+  <field>
+    <name>is_rejected</name>
+    <type>boolean</type>
+    <required>true</required>
+    <html>
+      <type>CheckBox</type>
+    </html>
+  </field>
+
+  <field>
+    <name>is_withdrawn</name>
+    <type>boolean</type>
+    <required>true</required>
+    <html>
+      <type>CheckBox</type>
+    </html>
+  </field>
+
+  <field>
     <name>custom_fields</name>
     <type>mediumtext</type>
     <crmType>CRM_Utils_Type::T_TEXT</crmType>

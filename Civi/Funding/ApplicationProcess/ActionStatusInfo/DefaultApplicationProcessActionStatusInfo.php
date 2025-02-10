@@ -48,12 +48,12 @@ final class DefaultApplicationProcessActionStatusInfo extends AbstractApplicatio
     return 'apply' === $action;
   }
 
-  public function isChangeRequiredStatus(string $status): bool {
-    return 'draft' === $status;
-  }
-
   public function isDeleteAction(string $action): bool {
     return 'delete' === $action;
+  }
+
+  public function isInWorkStatus(string $status): bool {
+    return in_array($status, ['new', 'draft'], TRUE);
   }
 
   public function isRestoreAction(string $action): bool {
@@ -70,6 +70,10 @@ final class DefaultApplicationProcessActionStatusInfo extends AbstractApplicatio
 
   public function isSnapshotRequiredStatus(FullApplicationProcessStatus $status): bool {
     return in_array($status->getStatus(), ['eligible', 'complete'], TRUE);
+  }
+
+  public function isRejectedStatus(string $status): bool {
+    return 'rejected' === $status;
   }
 
   public function isWithdrawnStatus(string $status): bool {

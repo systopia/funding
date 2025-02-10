@@ -110,6 +110,11 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
             static::assertSame($fundingCaseType, $event->getFundingCaseType());
             static::assertSame($fundingProgram, $event->getFundingProgram());
 
+            $event->getApplicationProcess()
+              ->setIsInWork(TRUE)
+              ->setIsWithdrawn(FALSE)
+              ->setIsRejected(FALSE);
+
             return TRUE;
           }
         ),
@@ -160,6 +165,9 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
       'is_review_calculative' => NULL,
       'reviewer_calc_contact_id' => NULL,
       'is_eligible' => NULL,
+      'is_in_work' => TRUE,
+      'is_rejected' => FALSE,
+      'is_withdrawn' => FALSE,
     ], $applicationProcessValues);
   }
 

@@ -38,8 +38,9 @@ namespace Civi\Funding\Entity;
  *   is_review_calculative: bool|null,
  *   reviewer_calc_contact_id: int|null,
  *   is_eligible: bool|null,
- *   check_permissions?: bool,
- *   custom?: mixed,
+ *   is_in_work: bool,
+ *   is_rejected: bool,
+ *   is_withdrawn: bool,
  * }
  *
  * @phpstan-extends AbstractEntity<applicationProcessT>
@@ -196,8 +197,38 @@ final class ApplicationProcessEntity extends AbstractEntity {
     return $this->values['is_eligible'];
   }
 
-  public function setIsEligible(?bool $isEligibleStatus): self {
-    $this->values['is_eligible'] = $isEligibleStatus;
+  public function setIsEligible(?bool $isEligible): self {
+    $this->values['is_eligible'] = $isEligible;
+
+    return $this;
+  }
+
+  public function getIsInWork(): bool {
+    return $this->values['is_in_work'];
+  }
+
+  public function setIsInWork(bool $isInWork): self {
+    $this->values['is_in_work'] = $isInWork;
+
+    return $this;
+  }
+
+  public function getIsRejected(): bool {
+    return $this->values['is_rejected'];
+  }
+
+  public function setIsRejected(bool $isRejected): self {
+    $this->values['is_rejected'] = $isRejected;
+
+    return $this;
+  }
+
+  public function getIsWithdrawn(): bool {
+    return $this->values['is_withdrawn'];
+  }
+
+  public function setIsWithdrawn(bool $isWithdrawn): self {
+    $this->values['is_withdrawn'] = $isWithdrawn;
 
     return $this;
   }

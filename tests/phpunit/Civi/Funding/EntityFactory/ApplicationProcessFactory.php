@@ -39,8 +39,9 @@ use Civi\Funding\Entity\ApplicationProcessEntity;
  *   is_review_calculative?: bool|null,
  *   reviewer_calc_contact_id?: int|null,
  *   is_eligible?: bool|null,
- *   check_permissions?: bool,
- *   custom?: mixed,
+ *   is_in_work?: bool,
+ *   is_rejected?: bool,
+ *   is_withdrawn?: bool,
  * }
  */
 final class ApplicationProcessFactory {
@@ -69,6 +70,9 @@ final class ApplicationProcessFactory {
       'is_review_calculative' => NULL,
       'reviewer_calc_contact_id' => NULL,
       'is_eligible' => NULL,
+      'is_in_work' => TRUE,
+      'is_rejected' => FALSE,
+      'is_withdrawn' => FALSE,
     ];
     if (NULL === $values['id']) {
       unset($values['id']);

@@ -27,7 +27,7 @@ use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreCreateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-final class ApplicationProcessEligibleSubscriber implements EventSubscriberInterface {
+final class ApplicationProcessStatusFlagsSubscriber implements EventSubscriberInterface {
 
   private ApplicationProcessActionStatusInfoContainer $infoContainer;
 
@@ -47,23 +47,26 @@ final class ApplicationProcessEligibleSubscriber implements EventSubscriberInter
   }
 
   public function onPreCreate(ApplicationProcessPreCreateEvent $event): void {
-    $this->updateIsEligibleFlag($event->getApplicationProcessBundle());
+    $this->updateStatusFlags($event->getApplicationProcessBundle());
   }
 
   public function onPreUpdate(ApplicationProcessPreUpdateEvent $event): void {
-    $this->updateIsEligibleFlag($event->getApplicationProcessBundle());
+    $this->updateStatusFlags($event->getApplicationProcessBundle());
   }
 
   private function getInfo(FundingCaseTypeEntity $fundingCaseType): ApplicationProcessActionStatusInfoInterface {
     return $this->infoContainer->get($fundingCaseType->getName());
   }
 
-  private function updateIsEligibleFlag(ApplicationProcessEntityBundle $applicationProcessBundle): void {
-    $applicationProcessBundle->getApplicationProcess()->setIsEligible(
-      $this->getInfo($applicationProcessBundle->getFundingCaseType())->isEligibleStatus(
-        $applicationProcessBundle->getApplicationProcess()->getStatus()
-      )
-    );
+  private function updateStatusFlags(ApplicationProcessEntityBundle $applicationProcessBundle): void {
+    $info = $this->getInfo($applicationProcessBundle->getFundingCaseType());
+    $applicationProcess = $applicationProcessBundle->getApplicationProcess();
+    $status = $applicationProcess->getStatus();
+    $applicationProcess
+      ->setIsEligible($info->isEligibleStatus($status))
+      ->setIsInWork($info->isInWorkStatus($status))
+      ->setIsRejected($info->isRejectedStatus($status))
+      ->setIsWithdrawn($info->isWithdrawnStatus($status));
   }
 
 }

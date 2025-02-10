@@ -31,16 +31,16 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessEligibleSubscriber
+ * @covers \Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationProcessStatusFlagsSubscriber
  */
-final class ApplicationProcessEligibleSubscriberTest extends TestCase {
+final class ApplicationProcessStatusFlagsSubscriberTest extends TestCase {
 
   /**
    * @var \Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $infoMock;
 
-  private ApplicationProcessEligibleSubscriber $subscriber;
+  private ApplicationProcessStatusFlagsSubscriber $subscriber;
 
   protected function setUp(): void {
     parent::setUp();
@@ -48,7 +48,7 @@ final class ApplicationProcessEligibleSubscriberTest extends TestCase {
     $infoContainer = new ApplicationProcessActionStatusInfoContainer(new PsrContainer([
       FundingCaseTypeFactory::DEFAULT_NAME => $this->infoMock,
     ]));
-    $this->subscriber = new ApplicationProcessEligibleSubscriber($infoContainer);
+    $this->subscriber = new ApplicationProcessStatusFlagsSubscriber($infoContainer);
   }
 
   public function testGetSubscribedEvents(): void {
@@ -68,15 +68,31 @@ final class ApplicationProcessEligibleSubscriberTest extends TestCase {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
       'status' => 'test',
       'is_eligible' => NULL,
+      'is_in_work' => TRUE,
+      'is_withdrawn' => FALSE,
+      'is_rejected' => TRUE,
     ]);
 
     $this->infoMock->expects(static::once())->method('isEligibleStatus')
       ->with('test')
       ->willReturn(TRUE);
+    $this->infoMock->expects(static::once())->method('isInWorkStatus')
+      ->with('test')
+      ->willReturn(FALSE);
+    $this->infoMock->expects(static::once())->method('isRejectedStatus')
+      ->with('test')
+      ->willReturn(TRUE);
+    $this->infoMock->expects(static::once())->method('isWithdrawnStatus')
+      ->with('test')
+      ->willReturn(FALSE);
 
     $event = new ApplicationProcessPreCreateEvent(1, $applicationProcessBundle);
     $this->subscriber->onPreCreate($event);
-    static::assertTrue($applicationProcessBundle->getApplicationProcess()->getIsEligible());
+    $applicationProcess = $applicationProcessBundle->getApplicationProcess();
+    static::assertTrue($applicationProcess->getIsEligible());
+    static::assertFalse($applicationProcess->getIsInWork());
+    static::assertTrue($applicationProcess->getIsRejected());
+    static::assertFalse($applicationProcess->getIsWithdrawn());
   }
 
   public function testOnPreUpdate(): void {
