@@ -34,6 +34,10 @@ class ClearingActionsDeterminer {
   private const FUNDING_CASE_FINAL_STATUS_LIST = [FundingCaseStatus::CLEARED];
 
   private const STATUS_PERMISSION_ACTIONS_MAP = [
+    'not-started' => [
+      ClearingProcessPermissions::CLEARING_APPLY => ['apply', 'save'],
+      ClearingProcessPermissions::CLEARING_MODIFY => ['save'],
+    ],
     'draft' => [
       ClearingProcessPermissions::CLEARING_APPLY => ['apply', 'save'],
       ClearingProcessPermissions::CLEARING_MODIFY => ['save'],
