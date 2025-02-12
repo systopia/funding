@@ -229,8 +229,11 @@ class FundingCaseManager {
     return $fundingCase ?? $this->create($contactId, $values);
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function update(FundingCaseEntity $fundingCase): void {
-    $previousFundingCase = $this->get($fundingCase->getId());
+    $previousFundingCase = $this->getWithoutCache($fundingCase->getId());
     Assert::notNull($previousFundingCase, 'Funding case could not be loaded');
     if ($fundingCase->getModificationDate() == $previousFundingCase->getModificationDate()) {
       $fundingCase->setModificationDate(new \DateTime(date('Y-m-d H:i:s')));
@@ -313,6 +316,14 @@ class FundingCaseManager {
     $fundingCases = $this->getFundingCasesFromApiResult($result);
 
     return $fundingCases[0] ?? NULL;
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  private function getWithoutCache(int $id): ?FundingCaseEntity {
+    // @phpstan-ignore argument.type
+    return FundingCaseEntity::fromArrayOrNull($this->api4->getEntity(FundingCase::getEntityName(), $id));
   }
 
 }
