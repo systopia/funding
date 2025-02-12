@@ -56,15 +56,17 @@ class ClearingProcessStartedSubscriber implements EventSubscriberInterface {
   /**
    * @throws \CRM_Core_Exception
    */
-  public function onStarted(ClearingProcessCreatedEvent $event): void {
+  public function onStarted(ClearingProcessStartedEvent $event): void {
     $applicationProcess = $event->getApplicationProcess();
-    $event->getApplicationProcess()->setFullStatus(
-      $this->getStatusDeterminer($event->getFundingCaseType())
-        ->getStatusOnClearingProcessStarted($applicationProcess->getFullStatus())
-    );
-    $this->applicationProcessManager->update(
-      $this->requestContext->getContactId(), $event->getClearingProcessBundle()
-    );
+    $newFullStatus = $this->getStatusDeterminer($event->getFundingCaseType())
+      ->getStatusOnClearingProcessStarted($applicationProcess->getFullStatus());
+    if ($applicationProcess->getFullStatus() != $newFullStatus) {
+      $event->getApplicationProcess()->setFullStatus($newFullStatus);
+      $this->applicationProcessManager->update(
+        $this->requestContext->getContactId(),
+        $event->getClearingProcessBundle()
+      );
+    }
   }
 
   private function getStatusDeterminer(
