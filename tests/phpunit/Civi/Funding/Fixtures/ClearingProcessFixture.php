@@ -33,7 +33,7 @@ final class ClearingProcessFixture {
     $result = FundingClearingProcess::create(FALSE)
       ->setValues($values + [
         'application_process_id' => $applicationProcessId,
-        'status' => 'new',
+        'status' => 'draft',
         'creation_date' => date('Y-m-d H:i:s'),
         'modification_date' => date('Y-m-d H:i:s'),
         'report_data' => [],

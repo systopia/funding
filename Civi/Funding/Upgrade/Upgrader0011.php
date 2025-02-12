@@ -24,10 +24,12 @@ use Civi\Api4\CustomField;
 use Civi\Api4\CustomGroup;
 use Civi\Api4\EntityActivity;
 use Civi\Api4\FundingApplicationProcess;
+use Civi\Api4\FundingClearingProcess;
 use Civi\Api4\OptionGroup;
 use Civi\Api4\OptionValue;
 use Civi\Funding\ActivityTypeNames;
 use Civi\Funding\Entity\ActivityEntity;
+use Civi\Funding\Entity\ClearingProcessEntity;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
@@ -46,6 +48,8 @@ final class Upgrader0011 implements UpgraderInterface {
   public function execute(\Log $log): void {
     $log->info('Migrate tasks');
     $this->migrateTasks();
+    $log->info('Create clearing process entities');
+    $this->createClearingProcesses();
   }
 
   /**
@@ -124,6 +128,34 @@ final class Upgrader0011 implements UpgraderInterface {
       'name' => 'funding_application_task_internal',
       'option_group_id.name' => 'activity_type',
     ]));
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  private function createClearingProcesses(): void {
+    /** @phpstan-var list<int> $ids */
+    $ids = $this->api4->execute(FundingApplicationProcess::getEntityName(), 'get', [
+      'select' => ['id'],
+      'join' => [
+        ['FundingClearingProcess AS cp', 'EXCLUDE', ['cp.application_process_id', '=', 'id']],
+      ],
+    ])->column('id');
+
+    foreach ($ids as $id) {
+      $clearingProcess = ClearingProcessEntity::fromArray([
+        'application_process_id' => $id,
+        'status' => 'not-started',
+        'creation_date' => NULL,
+        'modification_date' => NULL,
+        'report_data' => [],
+        'is_review_content' => NULL,
+        'reviewer_cont_contact_id' => NULL,
+        'is_review_calculative' => NULL,
+        'reviewer_calc_contact_id' => NULL,
+      ]);
+      $this->api4->createEntity(FundingClearingProcess::getEntityName(), $clearingProcess->toArray());
+    }
   }
 
 }
