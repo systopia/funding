@@ -67,6 +67,7 @@ final class KursGrunddatenUiSchema extends JsonFormsCategory {
     }
 
     parent::__construct('Grunddaten', [
+      new JsonFormsControl("$scopePrefix/internerBezeichner", 'Interner Bezeichner'),
       new JsonFormsControl("$scopePrefix/titel", 'Titel'),
       new JsonFormsControl(
         "$scopePrefix/kurzbeschreibungDerInhalte", 'Kurzbeschreibung der Kursinhalte', NULL, [
@@ -74,7 +75,6 @@ final class KursGrunddatenUiSchema extends JsonFormsCategory {
           'placeholder' => 'Kurzbeschreibung der Kursinhalte (maximal 500 Zeichen)',
         ]
       ),
-      new JsonFormsControl("$scopePrefix/internerBezeichner", 'Interner Bezeichner'),
       new JsonFormsArray("$scopePrefix/zeitraeume", 'Zeiträume', NULL, [
         new JsonFormsControl('#/properties/beginn', 'Beginn'),
         new JsonFormsControl('#/properties/ende', 'Ende'),
