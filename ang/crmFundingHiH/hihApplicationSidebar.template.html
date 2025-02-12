@@ -3,7 +3,7 @@
   <span id="ndr_berichterstattung" editable-select="applicationProcess['bsh_funding_application_extra.ndr_berichterstattung']"
         e-ng-options="key for (key, value) in { Ja: true, Nein: false }"
         onbeforesave="updateNdrBerichterstattung($data)"
-        edit-disabled="!hasReviewPermission">
+        edit-disabled="!hasAdminPermission">
     {{ showNdrBerichterstattung() }}
   </span>
 </div>

@@ -26,6 +26,7 @@ fundingHiHModule.directive('fundingHihApplicationSidebar', function() {
       this.ts = CRM.ts('funding');
       const ctrl = this;
 
+      $scope.hasAdminPermission = $scope.hasPermission('bsh_admin');
       $scope.hasReviewPermission = $scope.hasPermission('review_application');
       $scope.hasVotePermission = $scope.hasPermission('advisory_vote');
       $scope.hasShowVotesPermission = $scope.hasPermission('advisory_show_votes');
