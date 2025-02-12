@@ -48,8 +48,6 @@ class ClearingProcessManager {
    * @throws \CRM_Core_Exception
    */
   public function create(ApplicationProcessEntityBundle $applicationProcessBundle): ClearingProcessEntity {
-    /** @var string $now */
-    $now = date('Y-m-d H:i:s');
     $clearingProcess = ClearingProcessEntity::fromArray([
       'application_process_id' => $applicationProcessBundle->getApplicationProcess()->getId(),
       'status' => 'not-started',

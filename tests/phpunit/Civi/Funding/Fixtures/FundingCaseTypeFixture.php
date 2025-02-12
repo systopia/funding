@@ -24,16 +24,19 @@ use Civi\Funding\Entity\FundingCaseTypeEntity;
 
 final class FundingCaseTypeFixture {
 
+  public static int $count = 0;
+
   /**
    * @param array<string, mixed> $values
    *
    * @throws \CRM_Core_Exception
    */
   public static function addFixture(array $values = []): FundingCaseTypeEntity {
+    self::$count++;
     $result = FundingCaseType::create(FALSE)
       ->setValues($values + [
-        'title' => 'Test Case Type',
-        'abbreviation' => 'TCT',
+        'title' => 'Test Case Type' . self::$count,
+        'abbreviation' => 'TCT' . self::$count,
         'name' => 'TestCaseType',
         'is_combined_application' => TRUE,
       ])->execute();
