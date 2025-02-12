@@ -304,7 +304,7 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
       'recipient_contact_id' => $recipientContact2['id'],
       'title' => 'Title',
     ]);
-    static::assertNotSame($fundingCase->getId(), $fundingCase5->getId());
+    static::assertNotSame($fundingCase->getId(), $fundingCase6->getId());
   }
 
   public function testDelete(): void {
@@ -483,6 +483,7 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
     // the events is actually fetched from the DB and not from cache.
     $fundingCase = $this->fundingCaseManager->get($fundingCase->getId());
     static::assertNotNull($fundingCase);
+    $fundingCaseBundle = new FundingCaseBundle($fundingCase, $fundingCaseType, $fundingProgram);
     $previousFundingCase = clone $fundingCase;
 
     $fundingCase->setStatus('updated');
