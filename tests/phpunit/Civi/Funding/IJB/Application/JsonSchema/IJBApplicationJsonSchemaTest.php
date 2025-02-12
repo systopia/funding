@@ -314,11 +314,11 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
       $resultData->zuschuss->honorarkostenMax,
     );
     static::assertSame(
-      round($teilnehmerDeutschlandGesamt * $fahrtstreckeInKm * 0.08, 2),
+      round($teilnehmerDeutschlandGesamt * $fahrtstreckeInKm * 0.12, 2),
       $resultData->zuschuss->fahrtkostenAuslandEuropaMax
     );
     static::assertSame(
-      round($teilnehmerDeutschlandGesamt * $fahrtstreckeInKm * 0.12, 2),
+      round($teilnehmerDeutschlandGesamt * $fahrtstreckeInKm * 0.08, 2),
       $resultData->zuschuss->fahrtkostenNichtEuropaMax
     );
     static::assertSame(0, $resultData->zuschuss->fahrtkostenMax);
@@ -598,11 +598,11 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
     static::assertSame(0, $resultData->zuschuss->teilnehmerkostenMax);
     static::assertSame(0, $resultData->zuschuss->honorarkostenMax);
     static::assertSame(
-      floor($teilnehmerDeutschlandGesamt * $fahrtstreckeInKm * 0.08),
+      floor($teilnehmerDeutschlandGesamt * $fahrtstreckeInKm * 0.12),
       $resultData->zuschuss->fahrtkostenAuslandEuropaMax
     );
     static::assertSame(
-      floor($teilnehmerDeutschlandGesamt * $fahrtstreckeInKm * 0.12),
+      floor($teilnehmerDeutschlandGesamt * $fahrtstreckeInKm * 0.08),
       $resultData->zuschuss->fahrtkostenNichtEuropaMax
     );
     static::assertSame(500, $resultData->zuschuss->zuschlagMax);
@@ -887,11 +887,11 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
       $resultData->zuschuss->honorarkostenMax,
     );
     static::assertSame(
-      round($teilnehmerDeutschlandGesamt * $fahrtstreckeInKm * 0.08, 2),
+      round($teilnehmerDeutschlandGesamt * $fahrtstreckeInKm * 0.12, 2),
       $resultData->zuschuss->fahrtkostenAuslandEuropaMax
     );
     static::assertSame(
-      round($teilnehmerDeutschlandGesamt * $fahrtstreckeInKm * 0.12, 2),
+      round($teilnehmerDeutschlandGesamt * $fahrtstreckeInKm * 0.08, 2),
       $resultData->zuschuss->fahrtkostenNichtEuropaMax
     );
     static::assertSame(0, $resultData->zuschuss->zuschlagMax);
@@ -1170,11 +1170,11 @@ final class IJBApplicationJsonSchemaTest extends TestCase {
     static::assertSame(0, $resultData->zuschuss->teilnehmerkostenMax);
     static::assertSame(0, $resultData->zuschuss->honorarkostenMax);
     static::assertSame(
-      floor($teilnehmerDeutschlandGesamt * $fahrtstreckeInKm * 0.08),
+      floor($teilnehmerDeutschlandGesamt * $fahrtstreckeInKm * 0.12),
       $resultData->zuschuss->fahrtkostenAuslandEuropaMax
     );
     static::assertSame(
-      floor($teilnehmerDeutschlandGesamt * $fahrtstreckeInKm * 0.12),
+      floor($teilnehmerDeutschlandGesamt * $fahrtstreckeInKm * 0.08),
       $resultData->zuschuss->fahrtkostenNichtEuropaMax
     );
     static::assertSame(300, $resultData->zuschuss->zuschlagMax);

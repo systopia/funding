@@ -210,11 +210,11 @@ final class IJBReportFormFactoryTest extends TestCase {
       $data->reportData->zuschuss->honorarkostenMax,
     );
     static::assertSame(
-      round($teilnehmerDeutschlandMitFahrtkosten * $fahrtstreckeInKm * 0.08, 2),
+      round($teilnehmerDeutschlandMitFahrtkosten * $fahrtstreckeInKm * 0.12, 2),
       $data->reportData->zuschuss->fahrtkostenAuslandEuropaMax
     );
     static::assertSame(
-      round($teilnehmerDeutschlandMitFahrtkosten * $fahrtstreckeInKm * 0.12, 2),
+      round($teilnehmerDeutschlandMitFahrtkosten * $fahrtstreckeInKm * 0.08, 2),
       $data->reportData->zuschuss->fahrtkostenNichtEuropaMax
     );
     static::assertSame(0, $data->reportData->zuschuss->fahrtkostenMax);
