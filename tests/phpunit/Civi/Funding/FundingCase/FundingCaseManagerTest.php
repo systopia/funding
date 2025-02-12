@@ -409,7 +409,8 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
     \CRM_Core_Session::singleton()->set('userID', $contact['id']);
     FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['test_permission']);
 
-    $updatedFundingCase = FundingCaseEntity::fromArray($fundingCase->toArray());
+    $updatedFundingCase = $this->fundingCaseManager->get($fundingCase->getId());
+    static::assertNotNull($updatedFundingCase);
     $updatedFundingCase->setStatus('updated');
 
     // Reload to have permission fields required for the event object comparison.
