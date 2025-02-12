@@ -119,8 +119,8 @@ EOD,
 <p>Fahrtkostenfestbetrag ins europäische Ausland: %s $currency<br>
 Fahrtkostenfestbetrag ins außereuropäische Ausland: %s $currency</p>
 EOD,
-            IJBZuschussJsonSchema::FAHRTKOSTEN_FESTBETRAG_AUSLAND_EUROPA,
-            IJBZuschussJsonSchema::FAHRTKOSTEN_FESTBETRAG_NICHT_EUROPA,
+            str_replace('.', ',', (string) IJBZuschussJsonSchema::FAHRTKOSTEN_FESTBETRAG_AUSLAND_EUROPA),
+            str_replace('.', ',', (string) IJBZuschussJsonSchema::FAHRTKOSTEN_FESTBETRAG_NICHT_EUROPA),
           ),
           'text/html',
           ['rule' => $partnerlandRule]
