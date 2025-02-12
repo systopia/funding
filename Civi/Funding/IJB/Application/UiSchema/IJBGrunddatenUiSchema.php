@@ -33,6 +33,7 @@ final class IJBGrunddatenUiSchema extends JsonFormsCategory {
    */
   public function __construct(string $scopePrefix, bool $report = FALSE) {
     $elements = [
+      new JsonFormsControl("$scopePrefix/internerBezeichner", 'Interner Bezeichner'),
       new JsonFormsControl("$scopePrefix/titel", 'Titel'),
       new JsonFormsControl(
         "$scopePrefix/kurzbeschreibungDesInhalts",
@@ -43,7 +44,6 @@ final class IJBGrunddatenUiSchema extends JsonFormsCategory {
           'placeholder' => 'Maximal 500 Zeichen',
         ]
       ),
-      new JsonFormsControl("$scopePrefix/internerBezeichner", 'Interner Bezeichner'),
       new JsonFormsArray("$scopePrefix/zeitraeume", 'Zeiträume', NULL, [
         new JsonFormsControl('#/properties/beginn', 'Beginn'),
         new JsonFormsControl('#/properties/ende', 'Ende'),
