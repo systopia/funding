@@ -10,6 +10,7 @@ use Civi\Api4\EntityActivity;
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\FundingCase;
 use Civi\Api4\FundingCaseType;
+use Civi\Api4\FundingClearingProcess;
 use Civi\Api4\FundingProgram;
 use Civi\Api4\Generic\DAODeleteAction;
 use Civi\Api4\OptionValue;
@@ -17,6 +18,7 @@ use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\ActivityTypeNames;
 use Civi\Funding\Api4\Permissions;
 use Civi\Funding\Fixtures\ApplicationProcessBundleFixture;
+use Civi\Funding\Fixtures\ClearingProcessBundleFixture;
 use Civi\Funding\Fixtures\ContactFixture;
 use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 
@@ -90,10 +92,38 @@ final class Upgrader0010Test extends AbstractFundingHeadlessTestCase {
       $externalTask = $this->addExternalTask($contact['id'], $applicationProcessId);
       $internalTask = $this->addInternalTask($contact['id'], $applicationProcessId);
 
+      $clearingProcessBundle = ClearingProcessBundleFixture::create();
+
       /** @var \Civi\Funding\Upgrade\Upgrader0010 $upgrader */
       $upgrader = \Civi::service(Upgrader0010::class);
       $upgrader->execute(new \Log_null('test'));
 
+      // New clearing process created.
+      static::assertArraySubset([
+        'status' => 'not-started',
+        'creation_date' => NULL,
+        'modification_date' => NULL,
+        'report_data' => [],
+        'is_review_content' => NULL,
+        'reviewer_cont_contact_id' => NULL,
+        'is_review_calculative' => NULL,
+        'reviewer_calc_contact_id' => NULL,
+      ], FundingClearingProcess::get(FALSE)
+        ->addWhere('application_process_id', '=', $applicationProcessId)
+        ->execute()
+        ->single()
+      );
+
+      // Existing clearing process unchanged.
+      static::assertEquals(
+        $clearingProcessBundle->getClearingProcess()->toArray(),
+        FundingClearingProcess::get(FALSE)
+          ->addWhere('id', '=', $clearingProcessBundle->getClearingProcess()->getId())
+          ->execute()
+          ->single()
+      );
+
+      // Task migration.
       static::assertCount(0, Activity::get(FALSE)
         ->addWhere('id', '=', $externalTask['id'])
         ->execute()
@@ -127,7 +157,7 @@ final class Upgrader0010Test extends AbstractFundingHeadlessTestCase {
       \Civi\Core\Transaction\Manager::singleton()->forceRollback();
 
       // Because the upgrader deletes custom fields and custom groups and
-      // thereby commits the open transaction we delete everything explicitely.
+      // thereby commits the open transaction we delete everything explicitly.
       $this->setUserPermissions([Permissions::ACCESS_CIVICRM, Permissions::ADMINISTER_FUNDING]);
       (new DAODeleteAction(FundingApplicationProcess::getEntityName(), 'delete'))
         ->setCheckPermissions(FALSE)

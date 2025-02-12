@@ -108,6 +108,9 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
   }
 
   public function upgrade_0010(): bool {
+    $this->ctx->log->info('Applying database migration 0010');
+    $this->executeSqlFile('sql/upgrade/0010.sql');
+
     $this->ctx->log->info('Installing JSON overlaps SQL function');
     $this->installJsonOverlapsSqlFunction();
 
