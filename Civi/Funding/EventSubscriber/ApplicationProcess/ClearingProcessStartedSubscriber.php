@@ -22,7 +22,6 @@ namespace Civi\Funding\EventSubscriber\ApplicationProcess;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
-use Civi\Funding\Event\ClearingProcess\ClearingProcessCreatedEvent;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessStartedEvent;
 use Civi\Funding\FundingCaseTypeServiceLocatorContainer;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;

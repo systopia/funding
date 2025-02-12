@@ -59,7 +59,7 @@ return [
               'key' => 'subject',
               'dataType' => 'String',
               'label' => E::ts('Subject'),
-              'sortable' => FALSE,
+              'sortable' => TRUE,
             ],
             [
               'type' => 'field',
