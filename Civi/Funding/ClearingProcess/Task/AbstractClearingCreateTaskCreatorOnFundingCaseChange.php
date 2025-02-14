@@ -82,6 +82,9 @@ abstract class AbstractClearingCreateTaskCreatorOnFundingCaseChange implements F
     }
   }
 
+  /**
+   * @codeCoverageIgnore
+   */
   public function createTasksOnNew(FundingCaseBundle $fundingCaseBundle): iterable {
     return [];
   }
