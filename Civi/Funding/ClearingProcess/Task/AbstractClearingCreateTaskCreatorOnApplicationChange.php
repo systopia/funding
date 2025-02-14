@@ -62,6 +62,9 @@ abstract class AbstractClearingCreateTaskCreatorOnApplicationChange implements A
     }
   }
 
+  /**
+   * @codeCoverageIgnore
+   */
   public function createTasksOnNew(ApplicationProcessEntityBundle $applicationProcessBundle): iterable {
     return [];
   }
