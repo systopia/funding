@@ -49,6 +49,9 @@ jobs:
         git clone --depth=1 https://github.com/systopia/external-file.git ../external-file &&
         composer composer-phpunit -- update --no-progress --prefer-dist &&
         composer composer-phpstan -- update --no-progress --prefer-dist --optimize-autoloader &&
+        # TODO: The extension's composer.json should be included in ci/composer.json.
+        # Though if it is, analyzing fails with interface not found error...
+        composer update --no-progress --prefer-dist --${{ matrix.prefer }} --optimize-autoloader &&
         (composer --working-dir=ci update --no-progress --prefer-dist --${{ matrix.prefer }} --ignore-platform-req=ext-gd;
         # "--with-all-dependencies" necessary when update initiated after install of wikimedia/composer-merge-plugin fails
         composer --working-dir=ci update --no-progress --prefer-dist --${{ matrix.prefer }} --with-all-dependencies --ignore-platform-req=ext-gd)
