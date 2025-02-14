@@ -45,6 +45,9 @@ abstract class AbstractClearingReviewFinishTaskHandler implements ClearingProces
     }
   }
 
+  /**
+   * @codeCoverageIgnore
+   */
   public function createTasksOnNew(ClearingProcessEntityBundle $clearingProcessBundle): iterable {
     return [];
   }

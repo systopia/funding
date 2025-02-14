@@ -24,19 +24,18 @@ use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingTaskEntity;
 use Civi\Funding\FundingCase\FundingCaseStatus;
-use Civi\Funding\FundingCase\Traits\FundingCaseApproveTaskTrait;
+use Civi\Funding\FundingCase\Traits\FundingCaseFinishClearingTaskTrait;
 use Civi\Funding\Task\Modifier\FundingCaseTaskModifierInterface;
 
 /**
- * Completes an apply funding case task if there's no remaining application
- * process that is in a status in which it can be applied.
+ * Completes a finish clearing funding case task.
  *
  * Should be combined with:
- * @see \Civi\Funding\FundingCase\Task\AbstractFundingCaseApproveTaskCreator
+ * @see \Civi\Funding\FundingCase\Task\AbstractFundingCaseFinishClearingTaskCreator
  */
-abstract class AbstractFundingCaseApproveTaskModifier implements FundingCaseTaskModifierInterface {
+abstract class AbstractFundingCaseFinishClearingTaskModifier implements FundingCaseTaskModifierInterface {
 
-  use FundingCaseApproveTaskTrait;
+  use FundingCaseFinishClearingTaskTrait;
 
   /**
    * @throws \CRM_Core_Exception
@@ -47,15 +46,13 @@ abstract class AbstractFundingCaseApproveTaskModifier implements FundingCaseTask
     FundingCaseEntity $previousFundingCase
   ): bool {
     if (self::$taskType === $task->getType()) {
-      if ($this->isFundingCaseApproved($fundingCaseBundle)) {
+      if ($this->isFundingCaseCleared($fundingCaseBundle)) {
         $task->setStatusName(ActivityStatusNames::COMPLETED);
 
         return TRUE;
       }
 
-      if (FundingCaseStatus::OPEN !== $fundingCaseBundle->getFundingCase()->getStatus() ||
-        $this->existsApplicationWithUndecidedEligibility($fundingCaseBundle)
-      ) {
+      if (!$this->isFinishClearingPossible($fundingCaseBundle)) {
         $task->setStatusName(ActivityStatusNames::CANCELLED);
 
         return TRUE;
@@ -65,8 +62,8 @@ abstract class AbstractFundingCaseApproveTaskModifier implements FundingCaseTask
     return FALSE;
   }
 
-  private function isFundingCaseApproved(FundingCaseBundle $fundingCaseBundle): bool {
-    return NULL !== $fundingCaseBundle->getFundingCase()->getAmountApproved();
+  protected function isFundingCaseCleared(FundingCaseBundle $fundingCaseBundle): bool {
+    return FundingCaseStatus::CLEARED === $fundingCaseBundle->getFundingCase()->getStatus();
   }
 
 }
