@@ -50,7 +50,7 @@ class ApplicationProcessNotificationSubscriber implements EventSubscriberInterfa
       'application_process.status_change:' . $event->getApplicationProcess()->getStatus(),
       $event->getFundingCase(),
       [
-        'applicationProcess' => $event->getApplicationProcess(),
+        'fundingApplicationProcess' => $event->getApplicationProcess(),
         'fundingProgram' => $event->getFundingProgram(),
       ]
     );
@@ -65,7 +65,7 @@ class ApplicationProcessNotificationSubscriber implements EventSubscriberInterfa
         'application_process.status_change:' . $event->getApplicationProcess()->getStatus(),
         $event->getFundingCase(),
         [
-          'applicationProcess' => $event->getApplicationProcess(),
+          'fundingApplicationProcess' => $event->getApplicationProcess(),
           'fundingProgram' => $event->getFundingProgram(),
         ]
       );
