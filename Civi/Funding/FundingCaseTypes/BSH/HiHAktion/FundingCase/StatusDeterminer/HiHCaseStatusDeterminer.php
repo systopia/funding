@@ -52,7 +52,7 @@ final class HiHCaseStatusDeterminer implements FundingCaseStatusDeterminerInterf
     string $previousStatus
   ): string {
     if ('rejected' === $previousStatus
-      && 'review' === $applicationProcessBundle->getApplicationProcess()->getStatus()
+      && in_array($applicationProcessBundle->getApplicationProcess()->getStatus(), ['applied', 'review'], TRUE)
     ) {
       return FundingCaseStatus::OPEN;
     }

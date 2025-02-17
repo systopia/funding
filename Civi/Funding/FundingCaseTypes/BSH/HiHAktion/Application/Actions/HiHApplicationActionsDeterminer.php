@@ -57,12 +57,13 @@ final class HiHApplicationActionsDeterminer extends AbstractApplicationProcessAc
     'advisory' => [
       'advisor' => ['add-comment'],
       'review_application' => ['update', 'reject', 'add-comment'],
+      'bsh_admin' => ['re-apply'],
     ],
     'eligible' => [
       'review_application' => ['add-comment'],
     ],
     'rejected' => [
-      'bsh_admin' => ['re-review'],
+      'bsh_admin' => ['re-apply'],
     ],
     'complete' => [
       'review_application' => ['add-comment'],
