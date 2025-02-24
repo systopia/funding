@@ -70,7 +70,7 @@ final class ReviewerCalculativeContactValidatorTest extends TestCase {
       'reviewer_calc_contact_id' => 1,
     ]);
 
-    static::assertTrue($this->validator->validate($new, $current)->isValid());
+    static::assertTrue($this->validator->validate($new, $current, TRUE)->isValid());
   }
 
   public function testValidateWithoutPermission(): void {
@@ -85,7 +85,7 @@ final class ReviewerCalculativeContactValidatorTest extends TestCase {
 
     $this->expectException(UnauthorizedException::class);
     $this->expectExceptionMessage('Permission to change calculative reviewer is missing.');
-    static::assertTrue($this->validator->validate($new, $current)->isValid());
+    static::assertTrue($this->validator->validate($new, $current, TRUE)->isValid());
   }
 
   public function testValidateWithPermission(): void {
@@ -102,7 +102,7 @@ final class ReviewerCalculativeContactValidatorTest extends TestCase {
       ->with($this->fundingCase, ['review_calculative'])
       ->willReturn([2 => 'foo', 3 => 'bar']);
     $this->fundingCase->setValues(['permissions' => ['review_calculative']] + $this->fundingCase->toArray());
-    static::assertTrue($this->validator->validate($new, $current)->isValid());
+    static::assertTrue($this->validator->validate($new, $current, TRUE)->isValid());
   }
 
   public function testValidateContactNotAllowed(): void {
@@ -119,7 +119,7 @@ final class ReviewerCalculativeContactValidatorTest extends TestCase {
       ->with($this->fundingCase, ['review_calculative'])
       ->willReturn([3 => 'bar']);
     $this->fundingCase->setValues(['permissions' => ['review_calculative']] + $this->fundingCase->toArray());
-    $result = $this->validator->validate($new, $current);
+    $result = $this->validator->validate($new, $current, TRUE);
     static::assertFalse($result->isValid());
     static::assertEquals([
       'reviewer_calc_contact_id' => [
@@ -137,7 +137,7 @@ final class ReviewerCalculativeContactValidatorTest extends TestCase {
       'reviewer_calc_contact_id' => NULL,
     ]);
 
-    static::assertTrue($this->validator->validateNew($new)->isValid());
+    static::assertTrue($this->validator->validateNew($new, TRUE)->isValid());
   }
 
   public function testValidateNewWithoutPermission(): void {
@@ -149,7 +149,7 @@ final class ReviewerCalculativeContactValidatorTest extends TestCase {
 
     $this->expectException(UnauthorizedException::class);
     $this->expectExceptionMessage('Permission to change calculative reviewer is missing.');
-    static::assertTrue($this->validator->validateNew($new)->isValid());
+    static::assertTrue($this->validator->validateNew($new, TRUE)->isValid());
   }
 
   public function testValidateNewWithPermission(): void {
@@ -163,7 +163,7 @@ final class ReviewerCalculativeContactValidatorTest extends TestCase {
       ->with($this->fundingCase, ['review_calculative'])
       ->willReturn([1 => 'foo']);
     $this->fundingCase->setValues(['permissions' => ['review_calculative']] + $this->fundingCase->toArray());
-    static::assertTrue($this->validator->validateNew($new)->isValid());
+    static::assertTrue($this->validator->validateNew($new, TRUE)->isValid());
   }
 
   public function testValidateNewContactNotAllowed(): void {
@@ -177,7 +177,7 @@ final class ReviewerCalculativeContactValidatorTest extends TestCase {
       ->with($this->fundingCase, ['review_calculative'])
       ->willReturn([2 => 'foo']);
     $this->fundingCase->setValues(['permissions' => ['review_calculative']] + $this->fundingCase->toArray());
-    $result = $this->validator->validateNew($new);
+    $result = $this->validator->validateNew($new, TRUE);
     static::assertFalse($result->isValid());
     static::assertEquals([
       'reviewer_calc_contact_id' => [

@@ -180,6 +180,7 @@ fundingModule.directive('fundingApplicationEditor', ['$compile', function($compi
           };
         }
 
+        // @todo Don't call update action directly.
         $scope.updateApplicationProcessField = function (field, value) {
           if ($scope.applicationProcess[field] === value) {
             return;

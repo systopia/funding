@@ -65,7 +65,7 @@ final class DrawdownReviewValidatorTest extends TestCase {
     $new = DrawdownFactory::create(['status' => 'accepted']);
     $current = DrawdownFactory::create(['status' => 'accepted']);
 
-    static::assertTrue($this->validator->validate($new, $current)->isValid());
+    static::assertTrue($this->validator->validate($new, $current, TRUE)->isValid());
   }
 
   public function testValidateWithoutPermission(): void {
@@ -74,7 +74,7 @@ final class DrawdownReviewValidatorTest extends TestCase {
 
     $this->expectException(UnauthorizedException::class);
     $this->expectExceptionMessage('Permission to change drawdown status is missing.');
-    $this->validator->validate($new, $current)->isValid();
+    $this->validator->validate($new, $current, TRUE)->isValid();
   }
 
   public function testValidateWithPermission(): void {
@@ -82,12 +82,12 @@ final class DrawdownReviewValidatorTest extends TestCase {
     $current = DrawdownFactory::create(['status' => 'accepted']);
 
     $this->fundingCase->setValues(['permissions' => ['review_drawdown']] + $this->fundingCase->toArray());
-    static::assertTrue($this->validator->validate($new, $current)->isValid());
+    static::assertTrue($this->validator->validate($new, $current, TRUE)->isValid());
   }
 
   public function testValidateNew(): void {
     $new = DrawdownFactory::create(['status' => 'new']);
-    static::assertTrue($this->validator->validateNew($new)->isValid());
+    static::assertTrue($this->validator->validateNew($new, TRUE)->isValid());
   }
 
   public function testValidateNewWithoutPermission(): void {
@@ -95,14 +95,14 @@ final class DrawdownReviewValidatorTest extends TestCase {
 
     $this->expectException(UnauthorizedException::class);
     $this->expectExceptionMessage('Permission to change drawdown status is missing.');
-    $this->validator->validateNew($new)->isValid();
+    $this->validator->validateNew($new, TRUE)->isValid();
   }
 
   public function testValidateNewWithPermission(): void {
     $new = DrawdownFactory::create(['status' => 'accepted']);
 
     $this->fundingCase->setValues(['permissions' => ['review_drawdown']] + $this->fundingCase->toArray());
-    static::assertTrue($this->validator->validateNew($new)->isValid());
+    static::assertTrue($this->validator->validateNew($new, TRUE)->isValid());
   }
 
 }

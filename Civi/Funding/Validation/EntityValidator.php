@@ -37,10 +37,14 @@ final class EntityValidator implements EntityValidatorInterface {
    *
    * @phpstan-ignore-next-line Generic argument of AbstractEntity not defined.
    */
-  public function validate(AbstractEntity $new, AbstractEntity $current): EntityValidationResult {
+  public function validate(
+    AbstractEntity $new,
+    AbstractEntity $current,
+    bool $checkPermissions
+  ): EntityValidationResult {
     $result = new EntityValidationResult();
     foreach ($this->entityValidatorLoader->getValidators(get_class($new)) as $validator) {
-      $result->merge($validator->validate($new, $current));
+      $result->merge($validator->validate($new, $current, $checkPermissions));
     }
 
     return $result;
@@ -51,10 +55,10 @@ final class EntityValidator implements EntityValidatorInterface {
    *
    * @phpstan-ignore-next-line Generic argument of AbstractEntity not defined.
    */
-  public function validateNew(AbstractEntity $new): EntityValidationResult {
+  public function validateNew(AbstractEntity $new, bool $checkPermissions): EntityValidationResult {
     $result = new EntityValidationResult();
     foreach ($this->entityValidatorLoader->getValidators(get_class($new)) as $validator) {
-      $result->merge($validator->validateNew($new));
+      $result->merge($validator->validateNew($new, $checkPermissions));
     }
 
     return $result;

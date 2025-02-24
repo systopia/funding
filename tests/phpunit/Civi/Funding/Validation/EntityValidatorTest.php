@@ -53,12 +53,12 @@ final class EntityValidatorTest extends TestCase {
     $current = FundingProgramFactory::createFundingProgram(['title' => 'Current']);
 
     $error1 = EntityValidationError::new('test1', 'Foo1');
-    $validatorMock1->method('validate')->with($new, $current)->willReturn(EntityValidationResult::new($error1));
+    $validatorMock1->method('validate')->with($new, $current, TRUE)->willReturn(EntityValidationResult::new($error1));
 
     $error2 = EntityValidationError::new('test2', 'Foo2');
-    $validatorMock2->method('validate')->with($new, $current)->willReturn(EntityValidationResult::new($error2));
+    $validatorMock2->method('validate')->with($new, $current, TRUE)->willReturn(EntityValidationResult::new($error2));
 
-    $result = $this->validator->validate($new, $current);
+    $result = $this->validator->validate($new, $current, TRUE);
     static::assertSame(['test1' => [$error1], 'test2' => [$error2]], $result->getErrors());
   }
 
@@ -72,12 +72,12 @@ final class EntityValidatorTest extends TestCase {
     $new = FundingProgramFactory::createFundingProgram(['title' => 'New']);
 
     $error1 = EntityValidationError::new('test1', 'Foo1');
-    $validatorMock1->method('validateNew')->with($new)->willReturn(EntityValidationResult::new($error1));
+    $validatorMock1->method('validateNew')->with($new, TRUE)->willReturn(EntityValidationResult::new($error1));
 
     $error2 = EntityValidationError::new('test2', 'Foo2');
-    $validatorMock2->method('validateNew')->with($new)->willReturn(EntityValidationResult::new($error2));
+    $validatorMock2->method('validateNew')->with($new, TRUE)->willReturn(EntityValidationResult::new($error2));
 
-    $result = $this->validator->validateNew($new);
+    $result = $this->validator->validateNew($new, TRUE);
     static::assertSame(['test1' => [$error1], 'test2' => [$error2]], $result->getErrors());
   }
 

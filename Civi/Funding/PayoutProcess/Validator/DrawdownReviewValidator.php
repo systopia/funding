@@ -67,7 +67,11 @@ final class DrawdownReviewValidator implements ConcreteEntityValidatorInterface 
    *
    * phpcs:disable Drupal.Commenting.FunctionComment.IncorrectTypeHint
    */
-  public function validate(AbstractEntity $new, AbstractEntity $current): EntityValidationResult {
+  public function validate(
+    AbstractEntity $new,
+    AbstractEntity $current,
+    bool $checkPermissions
+  ): EntityValidationResult {
     if ($new->getStatus() !== $current->getStatus()) {
       $fundingCase = $this->getFundingCase($new);
       $this->assertPermission($fundingCase);
@@ -81,7 +85,7 @@ final class DrawdownReviewValidator implements ConcreteEntityValidatorInterface 
    *
    * @param \Civi\Funding\Entity\DrawdownEntity $new
    */
-  public function validateNew(AbstractEntity $new): EntityValidationResult {
+  public function validateNew(AbstractEntity $new, bool $checkPermissions): EntityValidationResult {
     if ('new' !== $new->getStatus()) {
       $fundingCase = $this->getFundingCase($new);
       // Allow clearing reviewers to create a final drawdown when finishing clearing.

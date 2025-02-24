@@ -55,8 +55,14 @@ final class IsReviewCalculativeValidator implements ConcreteEntityValidatorInter
    *
    * phpcs:disable Drupal.Commenting.FunctionComment.IncorrectTypeHint
    */
-  public function validate(AbstractEntity $new, AbstractEntity $current): EntityValidationResult {
-    if ($new->getIsReviewCalculative() !== $current->getIsReviewCalculative()) {
+  public function validate(
+    AbstractEntity $new,
+    AbstractEntity $current,
+    bool $checkPermissions
+  ): EntityValidationResult {
+    // Allow flag to be reset when changes to the application are requested.
+    if (($checkPermissions || NULL !== $new->getIsReviewCalculative())
+      && $new->getIsReviewCalculative() !== $current->getIsReviewCalculative()) {
       $fundingCase = $this->fundingCaseManager->get($new->getFundingCaseId());
       Assert::notNull($fundingCase);
       $this->assertPermission($fundingCase);
@@ -70,7 +76,7 @@ final class IsReviewCalculativeValidator implements ConcreteEntityValidatorInter
    *
    * @param \Civi\Funding\Entity\ApplicationProcessEntity $new
    */
-  public function validateNew(AbstractEntity $new): EntityValidationResult {
+  public function validateNew(AbstractEntity $new, bool $checkPermissions): EntityValidationResult {
     if (NULL !== $new->getIsReviewCalculative()) {
       $fundingCase = $this->fundingCaseManager->get($new->getFundingCaseId());
       Assert::notNull($fundingCase);

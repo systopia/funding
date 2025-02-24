@@ -122,7 +122,7 @@ trait ActionRecordValidationTrait {
     $entityClass = $this->_getEntityClass();
     $entity = $entityClass::fromArray($record);
 
-    return $this->_entityValidator->validateNew($entity);
+    return $this->_entityValidator->validateNew($entity, $this->getCheckPermissions());
   }
 
   /**
@@ -139,7 +139,7 @@ trait ActionRecordValidationTrait {
     $new = $entityClass::fromArray($record + $currentRecord);
     $current = $entityClass::fromArray($currentRecord);
 
-    return $this->_entityValidator->validate($new, $current);
+    return $this->_entityValidator->validate($new, $current, $this->getCheckPermissions());
   }
 
   /**
