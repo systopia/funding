@@ -62,6 +62,9 @@ fundingHiHModule.directive('fundingHihApplicationEditor', function() {
         groupBy: ["id"]
       }).then(function(contacts) {
         $scope.creationContact = contacts[0];
+        if (typeof $scope.creationContact['bank_account.data_parsed'] === 'string') {
+          $scope.creationContact['bank_account.data_parsed'] = JSON.parse($scope.creationContact['bank_account.data_parsed']);
+        }
       });
     }],
   };
