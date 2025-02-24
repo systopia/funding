@@ -55,8 +55,13 @@ final class IsReviewContentValidator implements ConcreteEntityValidatorInterface
    *
    * phpcs:disable Drupal.Commenting.FunctionComment.IncorrectTypeHint
    */
-  public function validate(AbstractEntity $new, AbstractEntity $current): EntityValidationResult {
-    if ($new->getIsReviewContent() !== $current->getIsReviewContent()) {
+  public function validate(
+    AbstractEntity $new,
+    AbstractEntity $current,
+    bool $checkPermissions
+  ): EntityValidationResult {
+    if (($checkPermissions || NULL !== $new->getIsReviewContent())
+      && $new->getIsReviewContent() !== $current->getIsReviewContent()) {
       $fundingCase = $this->fundingCaseManager->get($new->getFundingCaseId());
       Assert::notNull($fundingCase);
       $this->assertPermission($fundingCase);
@@ -70,7 +75,7 @@ final class IsReviewContentValidator implements ConcreteEntityValidatorInterface
    *
    * @param \Civi\Funding\Entity\ApplicationProcessEntity $new
    */
-  public function validateNew(AbstractEntity $new): EntityValidationResult {
+  public function validateNew(AbstractEntity $new, bool $checkPermissions): EntityValidationResult {
     if (NULL !== $new->getIsReviewContent()) {
       $fundingCase = $this->fundingCaseManager->get($new->getFundingCaseId());
       Assert::notNull($fundingCase);

@@ -63,7 +63,11 @@ final class ReviewerCalculativeContactValidator implements ConcreteEntityValidat
    *
    * phpcs:disable Drupal.Commenting.FunctionComment.IncorrectTypeHint
    */
-  public function validate(AbstractEntity $new, AbstractEntity $current): EntityValidationResult {
+  public function validate(
+    AbstractEntity $new,
+    AbstractEntity $current,
+    bool $checkPermissions
+  ): EntityValidationResult {
     if ($new->getReviewerCalculativeContactId() === $current->getReviewerCalculativeContactId()) {
       return EntityValidationResult::new();
     }
@@ -84,7 +88,7 @@ final class ReviewerCalculativeContactValidator implements ConcreteEntityValidat
    *
    * @param \Civi\Funding\Entity\ApplicationProcessEntity $new
    */
-  public function validateNew(AbstractEntity $new): EntityValidationResult {
+  public function validateNew(AbstractEntity $new, bool $checkPermissions): EntityValidationResult {
     if (NULL === $new->getReviewerCalculativeContactId()) {
       return EntityValidationResult::new();
     }

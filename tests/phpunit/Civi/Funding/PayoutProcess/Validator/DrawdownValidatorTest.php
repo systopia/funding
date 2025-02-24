@@ -74,7 +74,7 @@ final class DrawdownValidatorTest extends TestCase {
     $new = DrawdownFactory::create();
     $current = DrawdownFactory::create();
 
-    static::assertTrue($this->validator->validate($new, $current)->isValid());
+    static::assertTrue($this->validator->validate($new, $current, TRUE)->isValid());
   }
 
   public function testValidateNewWithoutPermission(): void {
@@ -83,7 +83,7 @@ final class DrawdownValidatorTest extends TestCase {
     $this->expectException(UnauthorizedException::class);
     $this->expectExceptionMessage('Permission to create drawdown is missing.');
 
-    static::assertTrue($this->validator->validateNew($new)->isValid());
+    static::assertTrue($this->validator->validateNew($new, TRUE)->isValid());
   }
 
   public function testValidateNewWithPermission(): void {
@@ -94,7 +94,7 @@ final class DrawdownValidatorTest extends TestCase {
       ->with($this->payoutProcess)
       ->willReturn(10.1);
 
-    static::assertTrue($this->validator->validateNew($new)->isValid());
+    static::assertTrue($this->validator->validateNew($new, TRUE)->isValid());
   }
 
   public function testValidateNewClosed(): void {
@@ -105,7 +105,7 @@ final class DrawdownValidatorTest extends TestCase {
     $this->expectException(UnauthorizedException::class);
     $this->expectExceptionMessage('Payout process is closed.');
 
-    static::assertTrue($this->validator->validateNew($new)->isValid());
+    static::assertTrue($this->validator->validateNew($new, TRUE)->isValid());
   }
 
   public function testValidateAmountLessThanZero(): void {
@@ -113,7 +113,7 @@ final class DrawdownValidatorTest extends TestCase {
     $new = DrawdownFactory::create(['amount' => -0.1]);
     $this->fundingCase->setValues(['permissions' => ['drawdown_create']] + $this->fundingCase->toArray());
 
-    $result = $this->validator->validate($new, $current);
+    $result = $this->validator->validate($new, $current, TRUE);
     static::assertFalse($result->isValid());
     static::assertEquals([
       'amount' => [
@@ -131,7 +131,7 @@ final class DrawdownValidatorTest extends TestCase {
       'permissions' => [ClearingProcessPermissions::REVIEW_CONTENT],
     ] + $this->fundingCase->toArray());
 
-    $result = $this->validator->validate($new, $current);
+    $result = $this->validator->validate($new, $current, TRUE);
     static::assertTrue($result->isValid());
   }
 
@@ -140,7 +140,7 @@ final class DrawdownValidatorTest extends TestCase {
     $new = DrawdownFactory::create(['amount' => 0.0]);
     $this->fundingCase->setValues(['permissions' => ['drawdown_create']] + $this->fundingCase->toArray());
 
-    static::assertTrue($this->validator->validate($new, $current)->isValid());
+    static::assertTrue($this->validator->validate($new, $current, TRUE)->isValid());
   }
 
   public function testValidateAmountUnchanged(): void {
@@ -148,7 +148,7 @@ final class DrawdownValidatorTest extends TestCase {
     $new = DrawdownFactory::create(['status' => 'accepted']);
     $this->fundingCase->setValues(['permissions' => ['drawdown_create']] + $this->fundingCase->toArray());
 
-    static::assertTrue($this->validator->validate($new, $current)->isValid());
+    static::assertTrue($this->validator->validate($new, $current, TRUE)->isValid());
   }
 
   public function testValidateAmountReduced(): void {
@@ -156,7 +156,7 @@ final class DrawdownValidatorTest extends TestCase {
     $new = DrawdownFactory::create(['amount' => 9.9]);
     $this->fundingCase->setValues(['permissions' => ['drawdown_create']] + $this->fundingCase->toArray());
 
-    static::assertTrue($this->validator->validate($new, $current)->isValid());
+    static::assertTrue($this->validator->validate($new, $current, TRUE)->isValid());
   }
 
   public function testValidateAmountIncreased(): void {
@@ -168,7 +168,7 @@ final class DrawdownValidatorTest extends TestCase {
       ->with($this->payoutProcess)
       ->willReturn(0.1);
 
-    static::assertTrue($this->validator->validate($new, $current)->isValid());
+    static::assertTrue($this->validator->validate($new, $current, TRUE)->isValid());
   }
 
   public function testValidateAmountExceedsLimit(): void {
@@ -180,7 +180,7 @@ final class DrawdownValidatorTest extends TestCase {
       ->with($this->payoutProcess)
       ->willReturn(0.01);
 
-    $result = $this->validator->validate($new, $current);
+    $result = $this->validator->validate($new, $current, TRUE);
     static::assertFalse($result->isValid());
     static::assertEquals([
       'amount' => [
@@ -199,14 +199,14 @@ final class DrawdownValidatorTest extends TestCase {
       ->with($this->payoutProcess)
       ->willReturn(10.1);
 
-    static::assertTrue($this->validator->validateNew($new)->isValid());
+    static::assertTrue($this->validator->validateNew($new, TRUE)->isValid());
   }
 
   public function testValidateNewAmountLessThanZero(): void {
     $new = DrawdownFactory::create(['amount' => -0.1]);
     $this->fundingCase->setValues(['permissions' => ['drawdown_create']] + $this->fundingCase->toArray());
 
-    $result = $this->validator->validateNew($new);
+    $result = $this->validator->validateNew($new, TRUE);
     static::assertFalse($result->isValid());
     static::assertEquals([
       'amount' => [
@@ -223,7 +223,7 @@ final class DrawdownValidatorTest extends TestCase {
       'permissions' => [ClearingProcessPermissions::REVIEW_CALCULATIVE],
     ] + $this->fundingCase->toArray());
 
-    $result = $this->validator->validateNew($new);
+    $result = $this->validator->validateNew($new, TRUE);
     static::assertTrue($result->isValid());
   }
 
@@ -235,7 +235,7 @@ final class DrawdownValidatorTest extends TestCase {
       ->with($this->payoutProcess)
       ->willReturn(10.1);
 
-    static::assertTrue($this->validator->validateNew($new)->isValid());
+    static::assertTrue($this->validator->validateNew($new, TRUE)->isValid());
   }
 
   public function testValidateNewExceedsLimit(): void {
@@ -246,7 +246,7 @@ final class DrawdownValidatorTest extends TestCase {
       ->with($this->payoutProcess)
       ->willReturn(10.0);
 
-    $result = $this->validator->validateNew($new);
+    $result = $this->validator->validateNew($new, TRUE);
     static::assertFalse($result->isValid());
     static::assertEquals([
       'amount' => [

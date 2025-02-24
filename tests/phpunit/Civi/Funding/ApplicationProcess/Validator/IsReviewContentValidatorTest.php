@@ -58,7 +58,7 @@ final class IsReviewContentValidatorTest extends TestCase {
       'is_review_content' => TRUE,
     ]);
 
-    static::assertTrue($this->validator->validate($new, $current)->isValid());
+    static::assertTrue($this->validator->validate($new, $current, TRUE)->isValid());
   }
 
   public function testValidateWithoutPermission(): void {
@@ -73,7 +73,7 @@ final class IsReviewContentValidatorTest extends TestCase {
 
     $this->expectException(UnauthorizedException::class);
     $this->expectExceptionMessage('Permission to change content review result is missing.');
-    $this->validator->validate($new, $current)->isValid();
+    $this->validator->validate($new, $current, TRUE)->isValid();
   }
 
   public function testValidateWithPermission(): void {
@@ -87,7 +87,7 @@ final class IsReviewContentValidatorTest extends TestCase {
     ]);
 
     $this->fundingCase->setValues(['permissions' => ['review_content']] + $this->fundingCase->toArray());
-    static::assertTrue($this->validator->validate($new, $current)->isValid());
+    static::assertTrue($this->validator->validate($new, $current, TRUE)->isValid());
   }
 
   public function testValidateNewNotSet(): void {
@@ -97,7 +97,7 @@ final class IsReviewContentValidatorTest extends TestCase {
       'is_review_content' => NULL,
     ]);
 
-    static::assertTrue($this->validator->validateNew($new)->isValid());
+    static::assertTrue($this->validator->validateNew($new, TRUE)->isValid());
   }
 
   public function testValidateNewWithoutPermission(): void {
@@ -109,7 +109,7 @@ final class IsReviewContentValidatorTest extends TestCase {
 
     $this->expectException(UnauthorizedException::class);
     $this->expectExceptionMessage('Permission to change content review result is missing.');
-    $this->validator->validateNew($new)->isValid();
+    $this->validator->validateNew($new, TRUE)->isValid();
   }
 
   public function testValidateNewWithPermission(): void {
@@ -120,7 +120,38 @@ final class IsReviewContentValidatorTest extends TestCase {
     ]);
 
     $this->fundingCase->setValues(['permissions' => ['review_content']] + $this->fundingCase->toArray());
-    static::assertTrue($this->validator->validateNew($new)->isValid());
+    static::assertTrue($this->validator->validateNew($new, TRUE)->isValid());
+  }
+
+  public function testValidateResetWithoutPermissionCheckIsValid(): void {
+    $new = ApplicationProcessFactory::createApplicationProcess([
+      'title' => 'new',
+      'is_review_content' => NULL,
+    ]);
+    $current = ApplicationProcessFactory::createApplicationProcess([
+      'title' => 'current',
+      'is_review_content' => TRUE,
+    ]);
+
+    $this->fundingCase->setValues(['permissions' => ['test']] + $this->fundingCase->toArray());
+    static::assertTrue($this->validator->validate($new, $current, FALSE)->isValid());
+  }
+
+  public function testValidateChangeWithoutPermissionCheckIsInvalid(): void {
+    $new = ApplicationProcessFactory::createApplicationProcess([
+      'title' => 'new',
+      'is_review_content' => TRUE,
+    ]);
+    $current = ApplicationProcessFactory::createApplicationProcess([
+      'title' => 'current',
+      'is_review_content' => NULL,
+    ]);
+
+    $this->fundingCase->setValues(['permissions' => ['test']] + $this->fundingCase->toArray());
+
+    $this->expectException(UnauthorizedException::class);
+    $this->expectExceptionMessage('Permission to change content review result is missing.');
+    static::assertFalse($this->validator->validate($new, $current, FALSE)->isValid());
   }
 
 }

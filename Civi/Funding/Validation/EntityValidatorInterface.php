@@ -29,12 +29,21 @@ interface EntityValidatorInterface {
   /**
    * @phpstan-param T $new
    * @phpstan-param T $current
+   * @param bool $checkPermissions
+   *   TRUE if the API request is executed with permission check, FALSE otherwise.
    */
-  public function validate(AbstractEntity $new, AbstractEntity $current): EntityValidationResult;
+  public function validate(
+    AbstractEntity $new,
+    AbstractEntity $current,
+    bool $checkPermissions
+  ): EntityValidationResult;
 
   /**
    * @phpstan-param T $new
+   *
+   * @param bool $checkPermissions
+   *    TRUE if the API request is executed with permission check, FALSE otherwise.
    */
-  public function validateNew(AbstractEntity $new): EntityValidationResult;
+  public function validateNew(AbstractEntity $new, bool $checkPermissions): EntityValidationResult;
 
 }

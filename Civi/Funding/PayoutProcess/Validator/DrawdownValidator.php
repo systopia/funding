@@ -68,7 +68,11 @@ final class DrawdownValidator implements ConcreteEntityValidatorInterface {
    *
    * phpcs:disable Drupal.Commenting.FunctionComment.IncorrectTypeHint
    */
-  public function validate(AbstractEntity $new, AbstractEntity $current): EntityValidationResult {
+  public function validate(
+    AbstractEntity $new,
+    AbstractEntity $current,
+    bool $checkPermissions
+  ): EntityValidationResult {
     $payoutProcess = $this->getPayoutProcess($new);
     $this->assertNotClosed($payoutProcess);
 
@@ -98,7 +102,7 @@ final class DrawdownValidator implements ConcreteEntityValidatorInterface {
    * @throws \Civi\API\Exception\UnauthorizedException
    * @throws \CRM_Core_Exception
    */
-  public function validateNew(AbstractEntity $new): EntityValidationResult {
+  public function validateNew(AbstractEntity $new, bool $checkPermissions): EntityValidationResult {
     $payoutProcess = $this->getPayoutProcess($new);
     $this->assertNotClosed($payoutProcess);
 

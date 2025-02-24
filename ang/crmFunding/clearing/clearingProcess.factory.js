@@ -88,12 +88,6 @@ fundingModule.factory('fundingClearingProcessService', ['crmApi4', function(crmA
     }),
 
     getForm: (id) => crmApi4('FundingClearingProcess', 'getForm', {id}),
-    setValue: (id, field, value) => {
-      let params = {where: [['id', '=', id]], values: {}};
-      params.values[field] = value;
-
-      return crmApi4('FundingClearingProcess', 'update', params);
-    },
     submitForm: (id, data) => crmApi4('FundingClearingProcess', 'submitForm', {id, data}),
     validateForm: (id, data) => crmApi4('FundingClearingProcess', 'validateForm', {id, data}),
 
