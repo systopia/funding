@@ -70,10 +70,9 @@ final class GetFieldsAction extends DAOGetFieldsAction {
         'data_type' => 'Money',
         'readonly' => TRUE,
         'nullable' => FALSE,
-        // @todo Instead of testing status we should add flags to ApplicationProcess: is_withdrawn, is_rejected.
         'sql_renderer' => fn (array $field, Api4SelectQuery $query) => sprintf('IFNULL(
         (SELECT SUM(ap.amount_requested) FROM civicrm_funding_application_process ap
-        WHERE ap.funding_case_id = %s AND ap.status NOT IN ("withdrawn", "rejected"))
+        WHERE ap.funding_case_id = %s AND ap.is_withdrawn = FALSE AND ap.is_rejected = FALSE)
       , 0)', SqlRendererUtil::getFieldSqlName($field, $query, 'id')),
       ],
       [
@@ -165,10 +164,10 @@ final class GetFieldsAction extends DAOGetFieldsAction {
         'nullable' => TRUE,
         'sql_renderer' => fn (array $field, Api4SelectQuery $query) => sprintf('
           (
-            SELECT
+            SELECT IFNULL(
                 COUNT(CASE WHEN fap.is_eligible IS NOT NULL THEN 1 END)
-              / COUNT(fap.id)
-              * 100
+              / COUNT(CASE WHEN fap.is_in_work = FALSE THEN 1 END)
+              * 100, 100)
             FROM
               civicrm_funding_application_process AS fap
             WHERE

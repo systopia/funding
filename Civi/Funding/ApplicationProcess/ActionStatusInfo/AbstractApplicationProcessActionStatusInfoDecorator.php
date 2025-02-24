@@ -50,16 +50,16 @@ abstract class AbstractApplicationProcessActionStatusInfoDecorator implements Ap
     return $this->info->isApplyAction($action);
   }
 
-  public function isChangeRequiredStatus(string $status): bool {
-    return $this->info->isChangeRequiredStatus($status);
-  }
-
   public function isDeleteAction(string $action): bool {
     return $this->info->isDeleteAction($action);
   }
 
   public function isEligibleStatus(string $status): ?bool {
     return $this->info->isEligibleStatus($status);
+  }
+
+  public function isInWorkStatus(string $status): bool {
+    return $this->info->isInWorkStatus($status);
   }
 
   public function isRestoreAction(string $action): bool {
@@ -76,6 +76,10 @@ abstract class AbstractApplicationProcessActionStatusInfoDecorator implements Ap
 
   public function isSnapshotRequiredStatus(FullApplicationProcessStatus $status): bool {
     return $this->info->isSnapshotRequiredStatus($status);
+  }
+
+  public function isRejectedStatus(string $status): bool {
+    return $this->info->isRejectedStatus($status);
   }
 
   public function isWithdrawnStatus(string $status): bool {

@@ -23,25 +23,7 @@ use Civi\Api4\FundingApplicationProcess;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 
 /**
- * @phpstan-type applicationProcessT array{
- *   id: int,
- *   identifier: string,
- *   funding_case_id: int,
- *   status: string,
- *   creation_date: string,
- *   modification_date: string,
- *   title: string,
- *   short_description: string,
- *   start_date: string|null,
- *   end_date: string|null,
- *   request_data: array<string, mixed>,
- *   amount_requested: float,
- *   is_review_content: bool|null,
- *   reviewer_cont_contact_id: int|null,
- *   is_review_calculative: bool|null,
- *   reviewer_calc_contact_id: int|null,
- *   is_eligible: bool|null,
- * }
+ * @phpstan-import-type applicationProcessT from ApplicationProcessEntity
  */
 final class ApplicationProcessFixture {
 
@@ -55,8 +37,7 @@ final class ApplicationProcessFixture {
   public static function addFixture(int $fundingCaseId, array $values = []): ApplicationProcessEntity {
     $now = date('Y-m-d H:i:s');
 
-    /** @phpstan-var applicationProcessT $applicationProcessValues */
-    $applicationProcessValues = FundingApplicationProcess::create(FALSE)
+    $result = FundingApplicationProcess::create(FALSE)
       ->setValues($values + [
         'identifier' => 'test' . ++self::$count,
         'funding_case_id' => $fundingCaseId,
@@ -74,9 +55,12 @@ final class ApplicationProcessFixture {
         'is_review_calculative' => NULL,
         'reviewer_calc_contact_id' => NULL,
         'is_eligible' => NULL,
-      ])->execute()->first();
+        'is_in_work' => TRUE,
+        'is_rejected' => FALSE,
+        'is_withdrawn' => FALSE,
+      ])->execute();
 
-    return ApplicationProcessEntity::fromArray($applicationProcessValues)->reformatDates();
+    return ApplicationProcessEntity::singleFromApiResult($result)->reformatDates();
   }
 
   /**

@@ -100,8 +100,14 @@ final class ApplicationProcessWithdrawSubscriberTest extends TestCase {
   private function createEvent(string $oldStatus, string $newStatus): ApplicationProcessUpdatedEvent {
     return new ApplicationProcessUpdatedEvent(
       11,
-      ApplicationProcessFactory::createApplicationProcess(['status' => $oldStatus]),
-      ApplicationProcessBundleFactory::createApplicationProcessBundle(['status' => $newStatus]),
+      ApplicationProcessFactory::createApplicationProcess([
+        'status' => $oldStatus,
+        'is_withdrawn' => 'withdrawn' === $oldStatus,
+      ]),
+      ApplicationProcessBundleFactory::createApplicationProcessBundle([
+        'status' => $newStatus,
+        'is_withdrawn' => 'withdrawn' === $newStatus,
+      ]),
     );
   }
 

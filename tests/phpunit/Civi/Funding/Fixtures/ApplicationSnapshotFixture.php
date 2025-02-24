@@ -46,7 +46,10 @@ final class ApplicationSnapshotFixture {
         'granted_budget' => NULL,
         'is_review_content' => TRUE,
         'is_review_calculative' => TRUE,
-        'is_eligible' => NULL,
+        'is_eligible' => TRUE,
+        'is_in_work' => FALSE,
+        'is_rejected' => FALSE,
+        'is_withdrawn' => FALSE,
         'custom_fields' => [],
       ])->execute();
 

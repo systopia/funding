@@ -38,10 +38,6 @@ final class ReworkPossibleApplicationProcessActionStatusInfo extends AbstractApp
     return 'apply' === $action || parent::isApplyAction($action);
   }
 
-  public function isChangeRequiredStatus(string $status): bool {
-    return 'rework' === $status || parent::isChangeRequiredStatus($status);
-  }
-
   public function isRestoreAction(string $action): bool {
     return in_array($action, ['withdraw-change', 'revert-change', 'reject-change'], TRUE)
       || parent::isRestoreAction($action);
@@ -53,6 +49,10 @@ final class ReworkPossibleApplicationProcessActionStatusInfo extends AbstractApp
 
   public function isReviewStatus(string $status): bool {
     return 'rework-review' === $status || parent::isReviewStatus($status);
+  }
+
+  public function isInWorkStatus(string $status): bool {
+    return 'rework' === $status || parent::isInWorkStatus($status);
   }
 
 }
