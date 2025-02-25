@@ -20,14 +20,15 @@ final class AbstractCombinedApplicationApplyTaskCreatorTest extends TestCase {
     $this->taskCreator = $this->getMockForAbstractClass(AbstractCombinedApplicationApplyTaskCreator::class);
   }
 
-  /**
-   * @dataProvider provideAppliableStatus
-   */
-  public function testCreateTasksOnChangeStatusAppliable(string $appliableStatus): void {
+  public function testCreateTasksOnChangeStatusAppliable(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
-      'status' => $appliableStatus,
+      'status' => 'draft',
+      'is_in_work' => TRUE,
     ]);
-    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess(['status' => 'test']);
+    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess([
+      'status' => 'test',
+      'is_in_work' => FALSE,
+    ]);
 
     static::assertEquals([
       FundingTaskEntity::newTask([
@@ -43,10 +44,12 @@ final class AbstractCombinedApplicationApplyTaskCreatorTest extends TestCase {
   public function testCreateTasksOnChangeStatusUnchanged(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
       'status' => 'draft',
+      'is_in_work' => TRUE,
       'short_description' => 'foo',
     ]);
     $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess([
       'status' => 'draft',
+      'is_in_work' => TRUE,
       'short_description' => 'bar',
     ]);
 
@@ -59,9 +62,11 @@ final class AbstractCombinedApplicationApplyTaskCreatorTest extends TestCase {
   public function testCreateTasksOnChangeStatusNotAppliable(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
       'status' => 'applied',
+      'is_in_work' => FALSE,
     ]);
     $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess([
       'status' => 'draft',
+      'is_in_work' => TRUE,
     ]);
 
     static::assertSame(
@@ -70,12 +75,10 @@ final class AbstractCombinedApplicationApplyTaskCreatorTest extends TestCase {
     );
   }
 
-  /**
-   * @dataProvider provideAppliableStatus
-   */
-  public function testCreateTasksOnNewAppliable(string $appliableStatus): void {
+  public function testCreateTasksOnNewAppliable(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
-      'status' => $appliableStatus,
+      'status' => 'draft',
+      'is_in_work' => TRUE,
     ]);
 
     static::assertEquals([
@@ -92,18 +95,10 @@ final class AbstractCombinedApplicationApplyTaskCreatorTest extends TestCase {
   public function testCreateTasksOnNewNotAppliable(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
       'status' => 'applied',
+      'is_in_work' => FALSE,
     ]);
 
     static::assertSame([], [...$this->taskCreator->createTasksOnNew($applicationProcessBundle)]);
-  }
-
-  /**
-   * @phpstan-return iterable<array{string}>
-   */
-  public function provideAppliableStatus(): iterable {
-    yield ['new'];
-    yield ['draft'];
-    yield ['rework'];
   }
 
 }

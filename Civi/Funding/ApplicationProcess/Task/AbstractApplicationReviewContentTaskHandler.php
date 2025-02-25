@@ -20,12 +20,9 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Task;
 
 use Civi\Funding\ActivityStatusNames;
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoContainer;
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessPermissions;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
-use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingTaskEntity;
 use Civi\Funding\Task\Handler\ApplicationProcessTaskHandlerInterface;
 use CRM_Funding_ExtensionUtil as E;
@@ -34,16 +31,10 @@ abstract class AbstractApplicationReviewContentTaskHandler implements Applicatio
 
   private const TASK_TYPE = 'review_content';
 
-  private ApplicationProcessActionStatusInfoContainer $infoContainer;
-
   /**
    * @phpstan-return list<string>
    */
   abstract public static function getSupportedFundingCaseTypes(): array;
-
-  public function __construct(ApplicationProcessActionStatusInfoContainer $infoContainer) {
-    $this->infoContainer = $infoContainer;
-  }
 
   public function createTasksOnChange(
     ApplicationProcessEntityBundle $applicationProcessBundle,
@@ -94,12 +85,6 @@ abstract class AbstractApplicationReviewContentTaskHandler implements Applicatio
     return $changed;
   }
 
-  final protected function getInfo(
-    FundingCaseTypeEntity $fundingCaseType
-  ): ApplicationProcessActionStatusInfoInterface {
-    return $this->infoContainer->get($fundingCaseType->getName());
-  }
-
   /**
    * @phpstan-return non-empty-list<string>
    *   One of the returned permissions is required to review an application
@@ -114,12 +99,8 @@ abstract class AbstractApplicationReviewContentTaskHandler implements Applicatio
   }
 
   protected function isInReviewableStatus(ApplicationProcessEntityBundle $applicationProcessBundle): bool {
-    return in_array(
-      $applicationProcessBundle->getApplicationProcess()->getStatus(),
-      ['applied', 'rework-review-requested'],
-      TRUE
-    ) || $this->getInfo($applicationProcessBundle->getFundingCaseType())
-      ->isReviewStatus($applicationProcessBundle->getApplicationProcess()->getStatus());
+    return !$applicationProcessBundle->getApplicationProcess()->getIsInWork()
+      && NULL === $applicationProcessBundle->getApplicationProcess()->getIsEligible();
   }
 
   private function createReviewTask(ApplicationProcessEntityBundle $applicationProcessBundle): FundingTaskEntity {
