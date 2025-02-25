@@ -59,10 +59,10 @@ abstract class AbstractCombinedApplicationApplyTaskModifier implements FundingCa
     return TRUE;
   }
 
-  private function isInAppliableStatus(FundingCaseBundle $fundingCaseBundle): bool {
+  protected function isInAppliableStatus(FundingCaseBundle $fundingCaseBundle): bool {
     return 0 !== $this->applicationProcessManager->countBy(CompositeCondition::fromFieldValuePairs([
       'funding_case_id' => $fundingCaseBundle->getFundingCase()->getId(),
-      'status' => $this->getAppliableStatusList(),
+      'is_in_work' => TRUE,
     ]));
   }
 

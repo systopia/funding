@@ -75,12 +75,8 @@ abstract class AbstractCombinedApplicationApplyTaskCreator implements Applicatio
     ]);
   }
 
-  private function isInAppliableStatus(ApplicationProcessEntityBundle $applicationProcessBundle): bool {
-    return in_array(
-      $applicationProcessBundle->getApplicationProcess()->getStatus(),
-      $this->getAppliableStatusList(),
-      TRUE
-    );
+  protected function isInAppliableStatus(ApplicationProcessEntityBundle $applicationProcessBundle): bool {
+    return $applicationProcessBundle->getApplicationProcess()->getIsInWork();
   }
 
   private function isStatusChangedToAppliable(
