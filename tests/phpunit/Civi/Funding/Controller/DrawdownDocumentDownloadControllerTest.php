@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Controller;
 
+use Civi\Funding\EntityFactory\DrawdownFactory;
+use Civi\Funding\FileTypeNames;
 use Civi\Funding\FundingAttachmentManagerInterface;
 use Civi\Funding\PayoutProcess\DrawdownManager;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -26,6 +28,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @covers \Civi\Funding\Controller\DrawdownDocumentDownloadController
@@ -54,24 +57,98 @@ final class DrawdownDocumentDownloadControllerTest extends TestCase {
     );
   }
 
-  public function testHandleInvalidDrawdownId(): void {
+  public function testHandleDrawdownIdInvalid(): void {
     $request = new Request(['drawdownId' => 'abc']);
-    $this->drawdownManagerMock->method('get')
-      ->with(12)
-      ->willReturn(NULL);
 
     $this->expectException(BadRequestHttpException::class);
     $this->expectExceptionMessage('Invalid drawdown ID');
     $this->controller->handle($request);
   }
 
-  public function testHandleUnauthorized(): void {
+  public function testHandleDrawdownIdUnauthorized(): void {
     $request = new Request(['drawdownId' => '12']);
     $this->drawdownManagerMock->method('get')
       ->with(12)
       ->willReturn(NULL);
 
     $this->expectException(AccessDeniedHttpException::class);
+    $this->controller->handle($request);
+  }
+
+  public function testHandleDrawdownIdNotFoundPaymentInstruction(): void {
+    $request = new Request(['drawdownId' => '1']);
+    $this->drawdownManagerMock->expects(static::once())->method('get')
+      ->with(1)
+      ->willReturn(DrawdownFactory::create(['id' => 1]));
+    $this->attachmentManagerMock->expects(static::once())->method('getLastByFileType')
+      ->with('civicrm_funding_drawdown', 1, FileTypeNames::PAYMENT_INSTRUCTION)
+      ->willReturn(NULL);
+
+    $this->expectException(NotFoundHttpException::class);
+    $this->expectExceptionMessage('Drawdown document (ID: 1) does not exist');
+    $this->controller->handle($request);
+  }
+
+  public function testHandleDrawdownIdNotFoundPaybackClaim(): void {
+    $request = new Request(['drawdownId' => '2']);
+    $this->drawdownManagerMock->expects(static::once())->method('get')
+      ->with(2)
+      ->willReturn(DrawdownFactory::create(['id' => 2, 'amount' => -0.1]));
+    $this->attachmentManagerMock->expects(static::once())->method('getLastByFileType')
+      ->with('civicrm_funding_drawdown', 2, FileTypeNames::PAYBACK_CLAIM)
+      ->willReturn(NULL);
+
+    $this->expectException(NotFoundHttpException::class);
+    $this->expectExceptionMessage('Drawdown document (ID: 2) does not exist');
+    $this->controller->handle($request);
+  }
+
+  public function testHandleDrawdownIdsInvalid(): void {
+    $request = new Request(['drawdownIds' => '1,2a']);
+    $this->drawdownManagerMock->method('get')
+      ->with(12)
+      ->willReturn(NULL);
+
+    $this->expectException(BadRequestHttpException::class);
+    $this->expectExceptionMessage('Invalid drawdown IDs');
+    $this->controller->handle($request);
+  }
+
+  public function testHandleDrawdownIdsUnauthorized(): void {
+    $request = new Request(['drawdownIds' => '1,2']);
+    $this->drawdownManagerMock->expects(static::once())->method('get')
+      ->with(1)
+      ->willReturn(NULL);
+
+    $this->expectException(AccessDeniedHttpException::class);
+    $this->controller->handle($request);
+  }
+
+  public function testHandleDrawdownIdsNotFoundPaymentInstruction(): void {
+    $request = new Request(['drawdownIds' => '1,2']);
+    $this->drawdownManagerMock->expects(static::once())->method('get')
+      ->with(1)
+      ->willReturn(DrawdownFactory::create(['id' => 1]));
+    $this->attachmentManagerMock->expects(static::once())->method('getLastByFileType')
+      ->with('civicrm_funding_drawdown', 1, FileTypeNames::PAYMENT_INSTRUCTION)
+      ->willReturn(NULL);
+
+    $this->expectException(NotFoundHttpException::class);
+    $this->expectExceptionMessage('Drawdown document (ID: 1) does not exist');
+    $this->controller->handle($request);
+  }
+
+  public function testHandleDrawdownIdsNotFoundPaybackClaim(): void {
+    $request = new Request(['drawdownIds' => '2,3']);
+    $this->drawdownManagerMock->expects(static::once())->method('get')
+      ->with(2)
+      ->willReturn(DrawdownFactory::create(['id' => 2, 'amount' => -0.1]));
+    $this->attachmentManagerMock->expects(static::once())->method('getLastByFileType')
+      ->with('civicrm_funding_drawdown', 2, FileTypeNames::PAYBACK_CLAIM)
+      ->willReturn(NULL);
+
+    $this->expectException(NotFoundHttpException::class);
+    $this->expectExceptionMessage('Drawdown document (ID: 2) does not exist');
     $this->controller->handle($request);
   }
 

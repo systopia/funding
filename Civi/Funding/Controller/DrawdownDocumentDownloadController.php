@@ -23,13 +23,18 @@ use Civi\Funding\FileTypeNames;
 use Civi\Funding\FundingAttachmentManagerInterface;
 use Civi\Funding\PayoutProcess\DrawdownManager;
 use CRM_Funding_ExtensionUtil as E;
+use setasign\Fpdi\Fpdi;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Tomsgu\PdfMerger\PdfCollection;
+use Tomsgu\PdfMerger\PdfFile;
+use Tomsgu\PdfMerger\PdfMerger;
 
 final class DrawdownDocumentDownloadController implements PageControllerInterface {
 
@@ -47,6 +52,19 @@ final class DrawdownDocumentDownloadController implements PageControllerInterfac
    * @throws \CRM_Core_Exception
    */
   public function handle(Request $request): Response {
+    if ($request->query->has('drawdownIds')) {
+      $drawdownIds = (string) $request->query->get('drawdownIds');
+
+      if (preg_match('/^[1-9][0-9]*(,[1-9][0-9]*)*$/', $drawdownIds) !== 1) {
+        throw new BadRequestHttpException('Invalid drawdown IDs');
+      }
+
+      $drawdownIds = array_map(fn (string $id) => (int) $id, explode(',', $drawdownIds));
+      /** @phpstan-var list<int> $drawdownIds */
+
+      return $this->downloadMultiple($drawdownIds);
+    }
+
     $drawdownId = $request->query->get('drawdownId');
 
     if (!is_numeric($drawdownId)) {
@@ -90,6 +108,48 @@ final class DrawdownDocumentDownloadController implements PageControllerInterfac
       FALSE,
     ))->setContentDisposition(ResponseHeaderBag::DISPOSITION_INLINE, $filename)
       ->setMaxAge(300);
+  }
+
+  /**
+   * @phpstan-param list<int> $drawdownIds
+   *
+   * @throws \CRM_Core_Exception
+   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+   * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+   */
+  private function downloadMultiple(array $drawdownIds): Response {
+    $pdfCollection = new PdfCollection();
+    foreach ($drawdownIds as $drawdownId) {
+      $drawdown = $this->drawdownManager->get($drawdownId);
+      if (NULL === $drawdown) {
+        throw new AccessDeniedHttpException();
+      }
+
+      $attachment = $this->attachmentManager->getLastByFileType(
+        'civicrm_funding_drawdown',
+        $drawdownId,
+        $drawdown->getAmount() < 0 ? FileTypeNames::PAYBACK_CLAIM : FileTypeNames::PAYMENT_INSTRUCTION,
+      );
+
+      if (NULL === $attachment) {
+        throw new NotFoundHttpException("Drawdown document (ID: $drawdownId) does not exist");
+      }
+
+      $pdfCollection->addPdf($attachment->getPath());
+    }
+
+    $filename = E::ts('payment-instructions') . '.pdf';
+    $headers = [
+      'Content-Type' => 'application/pdf',
+      'Content-Disposition' => HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_INLINE, $filename),
+    ];
+
+    $merger = new PdfMerger(new Fpdi());
+    return (new Response(
+      $merger->merge($pdfCollection, $filename, PdfMerger::MODE_STRING, PdfFile::ORIENTATION_AUTO_DETECT),
+      200,
+      $headers
+    ))->setMaxAge(300);
   }
 
 }

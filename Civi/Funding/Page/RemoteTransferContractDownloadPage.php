@@ -10,7 +10,7 @@ use Civi\Funding\Controller\TransferContractDownloadController;
 /**
  * @codeCoverageIgnore
  */
-class RemoteTransferContractDownloadPage extends AbstractRemoteControllerPage {
+final class RemoteTransferContractDownloadPage extends AbstractRemoteControllerPage {
 
   protected function getController(): PageControllerInterface {
     return \Civi::service(TransferContractDownloadController::class);

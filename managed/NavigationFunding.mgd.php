@@ -123,6 +123,31 @@ return [
     ],
   ],
   [
+    'name' => 'Navigation_Funding.Drawdowns',
+    'entity' => 'Navigation',
+    'cleanup' => 'always',
+    'update' => 'unmodified',
+    'params' => [
+      'version' => 4,
+      'values' => [
+        'domain_id' => 'current_domain',
+        'label' => E::ts('Drawdowns'),
+        'name' => 'afsearchFundingDrawdowns',
+        'url' => 'civicrm/funding/drawdown/list',
+        'icon' => 'crm-i fa-files-o',
+        'permission' => [
+          'administer Funding',
+          'access Funding',
+        ],
+        'permission_operator' => 'OR',
+        'parent_id.name' => 'funding',
+        'is_active' => TRUE,
+        'has_separator' => 0,
+        'weight' => ++$weight,
+      ],
+    ],
+  ],
+  [
     'name' => 'Navigation_Funding.MyTasks',
     'entity' => 'Navigation',
     'cleanup' => 'always',
