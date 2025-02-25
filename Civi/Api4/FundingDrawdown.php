@@ -4,10 +4,12 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\Funding\Api4\Action\FundingDrawdown\AcceptAction;
+use Civi\Funding\Api4\Action\FundingDrawdown\AcceptMultipleAction;
 use Civi\Funding\Api4\Action\FundingDrawdown\CreateAction;
 use Civi\Funding\Api4\Action\FundingDrawdown\GetAction;
 use Civi\Funding\Api4\Action\FundingDrawdown\GetFieldsAction;
 use Civi\Funding\Api4\Action\FundingDrawdown\RejectAction;
+use Civi\Funding\Api4\Action\FundingDrawdown\RejectMultipleAction;
 use Civi\Funding\Api4\Action\FundingDrawdown\SaveAction;
 use Civi\Funding\Api4\Action\FundingDrawdown\UpdateAction;
 use Civi\Funding\Api4\Permissions;
@@ -30,6 +32,10 @@ final class FundingDrawdown extends Generic\DAOEntity {
     return \Civi::service(AcceptAction::class)->setCheckPermissions($checkPermissions);
   }
 
+  public static function acceptMultiple(bool $checkPermissions = TRUE): AcceptMultipleAction {
+    return (new AcceptMultipleAction())->setCheckPermissions($checkPermissions);
+  }
+
   public static function create($checkPermissions = TRUE) {
     return \Civi::service(CreateAction::class)->setCheckPermissions($checkPermissions);
   }
@@ -44,6 +50,10 @@ final class FundingDrawdown extends Generic\DAOEntity {
 
   public static function reject(bool $checkPermissions = TRUE): RejectAction {
     return \Civi::service(RejectAction::class)->setCheckPermissions($checkPermissions);
+  }
+
+  public static function rejectMultiple(bool $checkPermissions = TRUE): RejectMultipleAction {
+    return (new RejectMultipleAction())->setCheckPermissions($checkPermissions);
   }
 
   public static function save($checkPermissions = TRUE) {

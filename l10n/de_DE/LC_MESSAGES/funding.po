@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #: Civi/Funding/Api4/Action/FundingApplicationProcess/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
@@ -110,6 +110,7 @@ msgid "The sum of the amounts of accepted drawdowns."
 msgstr "Die Summe der Beträge akzeptierter Mittelabrufe."
 
 #: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
+#: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
 #: managed/SavedSearch_funding_cases.mgd.php
 msgid "Withdrawable Funds"
 msgstr "Abrufbare Mittel"
@@ -321,6 +322,7 @@ msgstr "Bewilligter Betrag"
 #: managed/SavedSearchFundingTasksMy.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
 #: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
+#: managed/SavedSearch_FundingDrawdownsAll.mgd.php
 #: managed/SavedSearch_funding_cases.mgd.php
 msgid "Recipient"
 msgstr "Empfänger"
@@ -331,6 +333,7 @@ msgstr "Empfänger"
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
 #: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
+#: managed/SavedSearch_FundingDrawdownsAll.mgd.php
 #: managed/SavedSearch_funding_cases.mgd.php
 msgid "Funding Program"
 msgstr "Förderprogramm"
@@ -377,6 +380,7 @@ msgstr "Kurzbeschreibung"
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingDrawdowns.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearch_FundingDrawdownsAll.mgd.php
 #: managed/SavedSearch_funding_cases.mgd.php
 msgid "Status"
 msgstr "Status"
@@ -392,6 +396,7 @@ msgstr "Status"
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingDrawdowns.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearch_FundingDrawdownsAll.mgd.php
 #: managed/SavedSearch_funding_cases.mgd.php
 msgid "Creation Date"
 msgstr "Erstellungsdatum"
@@ -674,11 +679,9 @@ msgstr "Änderung verlangen"
 
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
 #: Civi/Funding/ApplicationProcess/ActionsContainer/ReworkPossibleApplicationSubmitActionsContainerFactory.php
-#: Civi/Funding/FundingCaseTypes/BSH/HiHAktion/Application/Actions/HiHApplicationSubmitActionsContainer.php
 #: Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
 #: ang/crmFunding/case/fundingCase.template.html
-#: ang/crmFundingHiH/hihApplicationSidebar.template.html
 msgid "Approve"
 msgstr "Bewilligen"
 
@@ -688,8 +691,10 @@ msgstr "Bewilligen"
 #: Civi/Funding/FundingCaseTypes/BSH/HiHAktion/Application/Actions/HiHApplicationSubmitActionsContainer.php
 #: Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
+#: ang/crmFunding/drawdown/drawdownSearchTasksMenu.decorator.js
 #: ang/crmFundingHiH/hihApplicationSidebar.template.html
 #: managed/SavedSearchFundingDrawdowns.mgd.php
+#: managed/SavedSearch_FundingDrawdownsAll.mgd.php
 msgid "Reject"
 msgstr "Ablehnen"
 
@@ -847,7 +852,9 @@ msgid "Add Comment"
 msgstr "Kommentar hinzufügen"
 
 #: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php
+#: ang/crmFunding/drawdown/drawdownSearchTasksMenu.decorator.js
 #: managed/SavedSearchFundingDrawdowns.mgd.php
+#: managed/SavedSearch_FundingDrawdownsAll.mgd.php
 msgid "Accept"
 msgstr "Annehmen"
 
@@ -1035,6 +1042,10 @@ msgstr "Rückzahlungsforderung"
 #: Civi/Funding/Controller/DrawdownDocumentDownloadController.php
 msgid "payment-instruction"
 msgstr "Zahlungsanweisung"
+
+#: Civi/Funding/Controller/DrawdownDocumentDownloadController.php
+msgid "payment-instructions"
+msgstr "Zahlungsanweisungen"
 
 #: Civi/Funding/Controller/TransferContractDownloadController.php
 msgid "transfer-contract"
@@ -1533,6 +1544,14 @@ msgstr "Verwendungsnachweise"
 msgid "Drawdown Controlling"
 msgstr "Controlling Mittelabrufe"
 
+#: ang/afsearchDrawdowns.aff.php ang/crmFunding/case/fundingCase.template.html
+#: ang/crmFunding/drawdown/drawdownSearchTasksMenu.decorator.js
+#: managed/NavigationFunding.mgd.php
+#: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
+#: managed/SavedSearch_FundingDrawdownsAll.mgd.php
+msgid "Drawdowns"
+msgstr "Mittelabrufe"
+
 #: ang/afsearchFundingCaseApplicationProcesses.aff.php
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
 msgid "Funding Applications"
@@ -1580,6 +1599,7 @@ msgstr "Meine Aufgaben"
 #: ang/crmFunding/clearing/clearingSearchTasksMenu.decorator.js
 #: ang/crmFunding/clearing/clearingSidebar.directive.js
 #: ang/crmFunding/clearing/clearingSubmitModal.component.js
+#: ang/crmFunding/drawdown/drawdownSearchTasksMenu.decorator.js
 #: ang/crmFunding/form/editableField.directive.js
 #: ang/crmFunding/form/editorTrait.factory.js
 #: ang/crmFunding/form/fundingAddRowButton.directive.js
@@ -1880,6 +1900,7 @@ msgstr "Verfügbares Budget"
 
 #: ang/crmFunding/case/fundingCase.template.html
 #: managed/SavedSearchFundingDrawdowns.mgd.php
+#: managed/SavedSearch_FundingDrawdownsAll.mgd.php
 msgid "Amount"
 msgstr "Betrag"
 
@@ -1911,12 +1932,6 @@ msgstr "Weiterleitungsvertrag erneut erstellen"
 #: ang/crmFunding/case/fundingCase.template.html
 msgid "Finish Clearing"
 msgstr "Abrechnung abschließen"
-
-#: ang/crmFunding/case/fundingCase.template.html
-#: managed/SavedSearchFundingDrawdowns.mgd.php
-#: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
-msgid "Drawdowns"
-msgstr "Mittelabrufe"
 
 #: ang/crmFunding/case/fundingCasePermissions.html
 msgid "Funding Case Permissions"
@@ -1978,6 +1993,18 @@ msgstr "Verwendungsnachweis annehmen"
 msgid "Accept is possible once the review was successful."
 msgstr "Annahme ist möglich, wenn die Prüfung erfolgreich war."
 
+#: ang/crmFunding/drawdown/drawdownSearchTasksMenu.decorator.js
+msgid "Drawdown"
+msgstr "Mittelabruf"
+
+#: ang/crmFunding/drawdown/drawdownSearchTasksMenu.decorator.js
+msgid "Do you want to accept the selected drawdowns?"
+msgstr "Möchten Sie die ausgewählten Mittelabrufe annehmen?"
+
+#: ang/crmFunding/drawdown/drawdownSearchTasksMenu.decorator.js
+msgid "Do you want to reject the selected drawdowns?"
+msgstr "Möchten Sie die ausgewählten Mittelabrufe ablehnen?"
+
 #: ang/crmFunding/form/fundingSelectPermissions.directive.js
 msgid "Combining application permissions with other ones is not possible."
 msgstr ""
@@ -1994,6 +2021,7 @@ msgstr "dd.MM.yyyy hh:mm:ss"
 #: managed/SavedSearchFundingDrawdowns.mgd.php
 #: managed/SavedSearchFundingPrograms.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearch_FundingDrawdownsAll.mgd.php
 #: managed/SavedSearch_funding_cases.mgd.php
 msgid "Actions"
 msgstr "Aktionen"
@@ -2212,6 +2240,7 @@ msgstr "Rückzahlungsforderung"
 #: managed/SavedSearch_Application_CiviOffice_Templates.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
 #: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
+#: managed/SavedSearch_FundingDrawdownsAll.mgd.php
 #: managed/SavedSearch_funding_cases.mgd.php
 msgid "Table"
 msgstr "Tabelle"
@@ -2260,18 +2289,26 @@ msgid "Manage external application templates"
 msgstr "Externe Antragsvorlagen verwalten"
 
 #: managed/SavedSearchFundingDrawdowns.mgd.php
+msgid "Drawdowns (in Funding Case)"
+msgstr "Mittelabrufe (in Förderfall)"
+
+#: managed/SavedSearchFundingDrawdowns.mgd.php
+#: managed/SavedSearch_FundingDrawdownsAll.mgd.php
 msgid "Requester"
 msgstr "Anforderer"
 
 #: managed/SavedSearchFundingDrawdowns.mgd.php
+#: managed/SavedSearch_FundingDrawdownsAll.mgd.php
 msgid "Acception Date"
 msgstr "Annahmedatum"
 
 #: managed/SavedSearchFundingDrawdowns.mgd.php
+#: managed/SavedSearch_FundingDrawdownsAll.mgd.php
 msgid "Reviewer"
 msgstr "Prüfer*in"
 
 #: managed/SavedSearchFundingDrawdowns.mgd.php
+#: managed/SavedSearch_FundingDrawdownsAll.mgd.php
 msgid "Download Document"
 msgstr "Dokument herunterladen"
 
@@ -2341,6 +2378,12 @@ msgstr "Mittelabrufe nach Empfänger und Förderprogramm"
 #: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
 msgid "Open Drawdowns"
 msgstr "Offene Mittelabrufe"
+
+#: managed/SavedSearch_FundingDrawdownsAll.mgd.php
+#, fuzzy
+#| msgid "Open case"
+msgid "Open Case"
+msgstr "Fall öffnen"
 
 #: managed/SavedSearch_funding_cases.mgd.php
 msgid "Open case"
