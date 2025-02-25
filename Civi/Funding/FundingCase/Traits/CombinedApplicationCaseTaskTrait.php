@@ -30,14 +30,6 @@ trait CombinedApplicationCaseTaskTrait {
 
   /**
    * @phpstan-return non-empty-list<string>
-   *   List of status in which an application process can be applied.
-   */
-  protected function getAppliableStatusList(): array {
-    return ['draft', 'new', 'rework'];
-  }
-
-  /**
-   * @phpstan-return non-empty-list<string>
    *   One of the returned permissions is required to apply an application.
    */
   protected function getRequiredPermissions(): array {

@@ -47,7 +47,7 @@ final class AbstractCombinedApplicationApplyTaskModifierTest extends TestCase {
     $this->applicationProcessManagerMock->method('countBy')
       ->with(CompositeCondition::fromFieldValuePairs([
         'funding_case_id' => $fundingCaseBundle->getFundingCase()->getId(),
-        'status' => ['draft', 'new', 'rework'],
+        'is_in_work' => TRUE,
       ]))->willReturn(1);
 
     static::assertFalse($this->taskModifier->modifyTask($task, $fundingCaseBundle, $previousFundingCase));
@@ -69,7 +69,7 @@ final class AbstractCombinedApplicationApplyTaskModifierTest extends TestCase {
     $this->applicationProcessManagerMock->method('countBy')
       ->with(CompositeCondition::fromFieldValuePairs([
         'funding_case_id' => $fundingCaseBundle->getFundingCase()->getId(),
-        'status' => ['draft', 'new', 'rework'],
+        'is_in_work' => TRUE,
       ]))->willReturn(0);
 
     static::assertTrue($this->taskModifier->modifyTask($task, $fundingCaseBundle, $previousFundingCase));
