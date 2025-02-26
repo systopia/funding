@@ -84,9 +84,10 @@ final class DrawdownValidator implements ConcreteEntityValidatorInterface {
       }
     }
 
-    if ($new->getAmount() > $current->getAmount()) {
+    if (round($new->getAmount(), 2) > round($current->getAmount(), 2)) {
       $amountDiff = $new->getAmount() - $current->getAmount();
-      if ($amountDiff > $this->payoutProcessManager->getAmountAvailable($payoutProcess)) {
+      $amountAvailable = $this->payoutProcessManager->getAmountAvailable($payoutProcess);
+      if (round($amountDiff, 2) > round($amountAvailable, 2)) {
         return $this->createAmountExceedsLimitResult();
       }
     }
@@ -117,7 +118,7 @@ final class DrawdownValidator implements ConcreteEntityValidatorInterface {
       throw new UnauthorizedException(E::ts('Permission to create drawdown is missing.'));
     }
 
-    if ($new->getAmount() > $this->payoutProcessManager->getAmountAvailable($payoutProcess)) {
+    if (round($new->getAmount(), 2) > round($this->payoutProcessManager->getAmountAvailable($payoutProcess), 2)) {
       return $this->createAmountExceedsLimitResult();
     }
 
