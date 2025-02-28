@@ -211,6 +211,10 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
       'start_date' => '2024-07-08',
       'end_date' => '2024-07-09',
       'amount_requested' => 8000.8 + 355.53 + 42.9,
+      '_zielgruppe' => [
+        'kinder',
+        'jugendliche',
+      ],
     ], $mappedData);
   }
 
