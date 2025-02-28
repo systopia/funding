@@ -2380,8 +2380,6 @@ msgid "Open Drawdowns"
 msgstr "Offene Mittelabrufe"
 
 #: managed/SavedSearch_FundingDrawdownsAll.mgd.php
-#, fuzzy
-#| msgid "Open case"
 msgid "Open Case"
 msgstr "Fall öffnen"
 
