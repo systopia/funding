@@ -30,6 +30,16 @@ use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
 
 final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
 
+  public const ZIELGRUPPE_MAP = [
+    'kinder' => 'Kinder (0-12 Jahre)',
+    'jugendliche' => 'Jugendliche (13-19 Jahre)',
+    'jungeErwachsene' => 'Junge Erwachsene (20-29 Jahre)',
+    'erwachsene' => 'Erwachsene (30-49 Jahre)',
+    'aeltereErwachsene' => 'Ältere Erwachsene (50-66 Jahre)',
+    'senioren' => 'Senior:innen (ab 67 Jahre)',
+    'altersaeubergreifend' => 'Altersübergreifend',
+  ];
+
   public function __construct(
     \DateTimeInterface $applicationBegin,
     \DateTimeInterface $applicationEnd,
@@ -62,16 +72,11 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
       ], TRUE),
       'beabsichtigteTeilnehmendenzahl' => new JsonSchemaInteger(['minimum' => 1], TRUE),
       'zielgruppe' => new JsonSchemaArray(new JsonSchemaString([
-        'oneOf' => JsonSchemaUtil::buildTitledOneOf([
-          'kinder' => 'Kinder (0-12 Jahre)',
-          'jugendliche' => 'Jugendliche (13-19 Jahre)',
-          'jungeErwachsene' => 'Junge Erwachsene (20-29 Jahre)',
-          'erwachsene' => 'Erwachsene (30-49 Jahre)',
-          'aeltereErwachsene' => 'Ältere Erwachsene (50-66 Jahre)',
-          'senioren' => 'Senior:innen (ab 67 Jahre)',
-          'altersaeubergreifend' => 'Altersübergreifend',
-        ]),
-      ]), ['uniqueItems' => TRUE]),
+        'oneOf' => JsonSchemaUtil::buildTitledOneOf(self::ZIELGRUPPE_MAP),
+      ]), [
+        'uniqueItems' => TRUE,
+        '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => '_zielgruppe']]),
+      ]),
       'zielgruppeErreichen' => new JsonSchemaString(['maxLength' => 900]),
       'zielgruppeHerausforderungen' => new JsonSchemaArray(new JsonSchemaString([
         'oneOf' => JsonSchemaUtil::buildTitledOneOf([
