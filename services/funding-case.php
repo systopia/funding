@@ -21,7 +21,6 @@ declare(strict_types = 1);
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
 use Civi\Api4\Generic\AbstractAction;
-use Civi\Funding\Api4\Action\Remote\FundingCase\GetNewApplicationFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\SubmitNewApplicationFormAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\ValidateNewApplicationFormAction;
 use Civi\Funding\DependencyInjection\Compiler\FundingCaseNotificationContactsSetHandlerPass;
@@ -228,9 +227,6 @@ ServiceRegistrator::autowireAllImplementing(
   ['lazy' => 'auto'],
 );
 
-$container->autowire(GetNewApplicationFormAction::class)
-  ->setPublic(TRUE)
-  ->setShared(FALSE);
 $container->autowire(SubmitNewApplicationFormAction::class)
   ->setPublic(TRUE)
   ->setShared(FALSE);

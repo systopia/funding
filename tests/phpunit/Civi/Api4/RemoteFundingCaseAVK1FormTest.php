@@ -33,8 +33,7 @@ use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeProgramFixture;
 use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
-use Civi\Funding\SonstigeAktivitaet\Application\JsonSchema\AVK1JsonSchema;
-use Civi\Funding\SonstigeAktivitaet\Application\UISchema\AVK1UiSchema;
+use Civi\Funding\FundingCase\Api4\ActionHandler\Traits\NewApplicationFormRemoteActionHandlerTrait;
 use Symfony\Bridge\PhpUnit\ClockMock;
 
 /**
@@ -57,6 +56,7 @@ final class RemoteFundingCaseAVK1FormTest extends AbstractRemoteFundingHeadlessT
     parent::setUpBeforeClass();
     ClockMock::register(__CLASS__);
     ClockMock::register(NewApplicationFormActionTrait::class);
+    ClockMock::register(NewApplicationFormRemoteActionHandlerTrait::class);
     ClockMock::withClockMock(strtotime('1970-01-02'));
   }
 
@@ -94,9 +94,12 @@ final class RemoteFundingCaseAVK1FormTest extends AbstractRemoteFundingHeadlessT
     );
 
     $values = $action->execute()->getArrayCopy();
-    static::assertEquals(['jsonSchema', 'uiSchema', 'data'], array_keys($values));
-    static::assertInstanceOf(AVK1JsonSchema::class, $values['jsonSchema']);
-    static::assertInstanceOf(AVK1UiSchema::class, $values['uiSchema']);
+    static::assertEquals(['data', 'jsonSchema', 'uiSchema'], array_keys($values));
+    static::assertIsArray($values['jsonSchema']);
+    static::assertSame('object', $values['jsonSchema']['properties']['grunddaten']['type']);
+    static::assertIsArray($values['uiSchema']);
+    static::assertSame('Förderantrag für Sonstige Aktivitäten (SoA) / Virtuelle Kurse', $values['uiSchema']['label']);
+    static::assertFalse($values['uiSchema']['options']['readonly'] ?? FALSE);
     static::assertIsArray($values['data']);
   }
 

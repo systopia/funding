@@ -27,7 +27,6 @@ use Civi\Funding\Api4\Action\FundingApplicationProcess\GetFormDataAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\GetJsonSchemaAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\SaveAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\UpdateAction;
-use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetFormAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\SubmitFormAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\ValidateFormAction;
 use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
@@ -215,9 +214,6 @@ $container->autowire(GetJsonSchemaAction::class)
   ->setPublic(TRUE)
   ->setShared(FALSE);
 
-$container->autowire(GetFormAction::class)
-  ->setPublic(TRUE)
-  ->setShared(FALSE);
 $container->autowire(SubmitFormAction::class)
   ->setPublic(TRUE)
   ->setShared(FALSE);

@@ -27,12 +27,15 @@ use Civi\Funding\Form\Application\NonCombinedApplicationUiSchemaFactoryInterface
 use Civi\Funding\Form\JsonSchema\JsonFormsSubmitButtonsFactory;
 use Civi\RemoteTools\Form\RemoteForm;
 use Civi\RemoteTools\Form\RemoteFormInterface;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 
 final class ApplicationFormNewCreateHandler implements ApplicationFormNewCreateHandlerInterface {
 
   private ApplicationJsonSchemaCreateHelper $jsonSchemaCreateHelper;
 
   private NonCombinedApplicationJsonSchemaFactoryInterface $jsonSchemaFactory;
+
+  private RequestContextInterface $requestContext;
 
   private ApplicationSubmitActionsFactoryInterface $submitActionsFactory;
 
@@ -41,18 +44,20 @@ final class ApplicationFormNewCreateHandler implements ApplicationFormNewCreateH
   public function __construct(
     ApplicationJsonSchemaCreateHelper $jsonSchemaCreateHelper,
     NonCombinedApplicationJsonSchemaFactoryInterface $jsonSchemaFactory,
+    RequestContextInterface $requestContext,
     ApplicationSubmitActionsFactoryInterface $submitActionsFactory,
     NonCombinedApplicationUiSchemaFactoryInterface $uiSchemaFactory
   ) {
     $this->jsonSchemaCreateHelper = $jsonSchemaCreateHelper;
     $this->jsonSchemaFactory = $jsonSchemaFactory;
+    $this->requestContext = $requestContext;
     $this->submitActionsFactory = $submitActionsFactory;
     $this->uiSchemaFactory = $uiSchemaFactory;
   }
 
   public function handle(ApplicationFormNewCreateCommand $command): RemoteFormInterface {
     $jsonSchema = $this->jsonSchemaFactory->createJsonSchemaInitial(
-      $command->getContactId(),
+      $this->requestContext->getContactId(),
       $command->getFundingCaseType(),
       $command->getFundingProgram(),
     );

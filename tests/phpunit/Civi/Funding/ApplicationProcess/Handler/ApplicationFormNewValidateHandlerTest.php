@@ -78,7 +78,7 @@ final class ApplicationFormNewValidateHandlerTest extends TestCase {
 
     $form = new ApplicationFormMock();
     $this->formCreateHandlerMock->method('handle')
-      ->with(new ApplicationFormNewCreateCommand($contactId, $fundingCaseType, $fundingProgram))
+      ->with(new ApplicationFormNewCreateCommand($fundingCaseType, $fundingProgram))
       ->willReturn($form);
 
     $schemaValidationResult = new ApplicationSchemaValidationResult(new ValidationResultMock($data), [], []);
@@ -105,7 +105,7 @@ final class ApplicationFormNewValidateHandlerTest extends TestCase {
 
     $form = new ApplicationFormMock();
     $this->formCreateHandlerMock->method('handle')
-      ->with(new ApplicationFormNewCreateCommand($contactId, $fundingCaseType, $fundingProgram))
+      ->with(new ApplicationFormNewCreateCommand($fundingCaseType, $fundingProgram))
       ->willReturn($form);
 
     $schemaValidationResult = new ValidationResultMock($data, $errorMessages);

@@ -56,7 +56,7 @@ final class GetFormActionHandler implements ActionHandlerInterface {
    */
   public function getForm(GetFormAction $action): array {
     $applicationProcessBundle = $this->applicationProcessBundleLoader->get($action->getId());
-    Assert::notNull($applicationProcessBundle, sprintf('Application process with ID %d not found', $action->getId()));
+    Assert::notNull($applicationProcessBundle, sprintf('Application process with ID "%d" not found', $action->getId()));
     $applicationProcessStatusList = $this->applicationProcessBundleLoader->getStatusList($applicationProcessBundle);
 
     $form = $this->createHandler->handle(new ApplicationFormCreateCommand(

@@ -34,9 +34,7 @@ use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeProgramFixture;
 use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
-use Civi\Funding\Mock\FundingCaseType\Application\JsonSchema\TestJsonSchema;
 use Civi\Funding\Mock\FundingCaseType\Application\JsonSchema\TestJsonSchemaFactory;
-use Civi\Funding\Mock\FundingCaseType\Application\UiSchema\TestUiSchema;
 
 /**
  * @group headless
@@ -99,8 +97,10 @@ final class RemoteFundingApplicationProcessTestFormTest extends AbstractRemoteFu
 
     $values = $action->execute()->getArrayCopy();
     static::assertEquals(['jsonSchema', 'uiSchema', 'data'], array_keys($values));
-    static::assertInstanceOf(TestJsonSchema::class, $values['jsonSchema']);
-    static::assertInstanceOf(TestUiSchema::class, $values['uiSchema']);
+    static::assertIsArray($values['jsonSchema']);
+    static::assertSame('string', $values['jsonSchema']['properties']['title']['type']);
+    static::assertIsArray($values['uiSchema']);
+    static::assertSame('Test', $values['uiSchema']['label']);
     static::assertIsArray($values['data']);
     static::assertSame($this->applicationProcess->getTitle(), $values['data']['title']);
   }

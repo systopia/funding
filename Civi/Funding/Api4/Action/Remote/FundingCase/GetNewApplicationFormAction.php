@@ -19,19 +19,13 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\Remote\FundingCase;
 
-use Civi\Api4\Generic\Result;
-use Civi\Core\CiviEventDispatcherInterface;
+use Civi\Api4\RemoteFundingCase;
+use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\Traits\NewApplicationFormActionTrait;
 use Civi\Funding\Api4\Action\Traits\FundingCaseTypeIdParameterTrait;
 use Civi\Funding\Api4\Action\Traits\FundingProgramIdParameterTrait;
-use Civi\Funding\Event\Remote\FundingCase\GetNewApplicationFormEvent;
-use Civi\Funding\Exception\FundingException;
-use Civi\Funding\FundingProgram\FundingCaseTypeManager;
-use Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker;
-use Civi\Funding\FundingProgram\FundingProgramManager;
-use CRM_Funding_ExtensionUtil as E;
 
-class GetNewApplicationFormAction extends AbstractNewApplicationFormAction {
+class GetNewApplicationFormAction extends AbstractRemoteFundingAction {
 
   use FundingCaseTypeIdParameterTrait;
 
@@ -39,52 +33,8 @@ class GetNewApplicationFormAction extends AbstractNewApplicationFormAction {
 
   use NewApplicationFormActionTrait;
 
-  public function __construct(
-    FundingCaseTypeManager $fundingCaseTypeManager,
-    FundingProgramManager $fundingProgramManager,
-    CiviEventDispatcherInterface $eventDispatcher,
-    FundingCaseTypeProgramRelationChecker $relationChecker
-  ) {
-    parent::__construct(
-      'getNewApplicationForm',
-      $fundingCaseTypeManager,
-      $fundingProgramManager,
-      $eventDispatcher,
-      $relationChecker,
-    );
-  }
-
-  /**
-   * @inheritDoc
-   *
-   * @throws \CRM_Core_Exception
-   */
-  public function _run(Result $result): void {
-    $this->assertFundingCaseTypeAndProgramRelated($this->getFundingCaseTypeId(), $this->getFundingProgramId());
-    $event = $this->createEvent();
-    $this->dispatchEvent($event);
-
-    $result->debug['event'] = $event->getDebugOutput();
-    if (NULL === $event->getJsonSchema() || NULL === $event->getUiSchema()) {
-      throw new FundingException(E::ts('Invalid funding program ID or funding case type ID'), 'invalid_arguments');
-    }
-
-    $result->rowCount = 1;
-    $result->exchangeArray([
-      'jsonSchema' => $event->getJsonSchema(),
-      'uiSchema' => $event->getUiSchema(),
-      'data' => $event->getData(),
-    ]);
-  }
-
-  /**
-   * @throws \CRM_Core_Exception
-   */
-  private function createEvent(): GetNewApplicationFormEvent {
-    return GetNewApplicationFormEvent::fromApiRequest(
-      $this,
-      $this->createEventParams($this->getFundingCaseTypeId(), $this->getFundingProgramId()),
-    );
+  public function __construct() {
+    parent::__construct(RemoteFundingCase::getEntityName(), 'getNewApplicationForm');
   }
 
 }

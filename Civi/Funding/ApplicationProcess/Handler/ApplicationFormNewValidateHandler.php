@@ -46,7 +46,6 @@ final class ApplicationFormNewValidateHandler implements ApplicationFormNewValid
 
   public function handle(ApplicationFormNewValidateCommand $command): ApplicationFormValidationResult {
     $form = $this->formCreateHandler->handle(new ApplicationFormNewCreateCommand(
-      $command->getContactId(),
       $command->getFundingCaseType(),
       $command->getFundingProgram()
     ));

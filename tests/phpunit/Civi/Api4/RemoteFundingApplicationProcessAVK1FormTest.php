@@ -32,8 +32,6 @@ use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeProgramFixture;
 use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
-use Civi\Funding\SonstigeAktivitaet\Application\JsonSchema\AVK1JsonSchema;
-use Civi\Funding\SonstigeAktivitaet\Application\UISchema\AVK1UiSchema;
 
 /**
  * @group headless
@@ -87,9 +85,11 @@ final class RemoteFundingApplicationProcessAVK1FormTest extends AbstractRemoteFu
 
     $values = $action->execute()->getArrayCopy();
     static::assertEquals(['jsonSchema', 'uiSchema', 'data'], array_keys($values));
-    static::assertInstanceOf(AVK1JsonSchema::class, $values['jsonSchema']);
-    static::assertInstanceOf(AVK1UiSchema::class, $values['uiSchema']);
-    static::assertTrue($values['uiSchema']->isReadonly());
+    static::assertIsArray($values['jsonSchema']);
+    static::assertSame('object', $values['jsonSchema']['properties']['grunddaten']['type']);
+    static::assertIsArray($values['uiSchema']);
+    static::assertSame('Förderantrag für Sonstige Aktivitäten (SoA) / Virtuelle Kurse', $values['uiSchema']['label']);
+    static::assertTrue($values['uiSchema']['options']['readonly']);
     static::assertIsArray($values['data']);
     static::assertEquals(
       [
@@ -108,9 +108,11 @@ final class RemoteFundingApplicationProcessAVK1FormTest extends AbstractRemoteFu
 
     $values = $action->execute()->getArrayCopy();
     static::assertEquals(['jsonSchema', 'uiSchema', 'data'], array_keys($values));
-    static::assertInstanceOf(AVK1JsonSchema::class, $values['jsonSchema']);
-    static::assertInstanceOf(AVK1UiSchema::class, $values['uiSchema']);
-    static::assertFalse($values['uiSchema']->isReadonly() ?? FALSE);
+    static::assertIsArray($values['jsonSchema']);
+    static::assertSame('object', $values['jsonSchema']['properties']['grunddaten']['type']);
+    static::assertIsArray($values['uiSchema']);
+    static::assertSame('Förderantrag für Sonstige Aktivitäten (SoA) / Virtuelle Kurse', $values['uiSchema']['label']);
+    static::assertFalse($values['uiSchema']['options']['readonly'] ?? FALSE);
     static::assertIsArray($values['data']);
     static::assertSame($this->applicationProcess->getTitle(), $values['data']['grunddaten']['titel']);
   }
