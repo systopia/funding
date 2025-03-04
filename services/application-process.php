@@ -28,7 +28,6 @@ use Civi\Funding\Api4\Action\FundingApplicationProcess\GetJsonSchemaAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\SaveAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\UpdateAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\SubmitFormAction;
-use Civi\Funding\Api4\Action\Remote\ApplicationProcess\ValidateFormAction;
 use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
 use Civi\Funding\ApplicationProcess\ApplicationExternalFileManager;
 use Civi\Funding\ApplicationProcess\ApplicationExternalFileManagerInterface;
@@ -215,9 +214,6 @@ $container->autowire(GetJsonSchemaAction::class)
   ->setShared(FALSE);
 
 $container->autowire(SubmitFormAction::class)
-  ->setPublic(TRUE)
-  ->setShared(FALSE);
-$container->autowire(ValidateFormAction::class)
   ->setPublic(TRUE)
   ->setShared(FALSE);
 

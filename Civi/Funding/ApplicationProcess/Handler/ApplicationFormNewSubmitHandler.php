@@ -56,7 +56,6 @@ final class ApplicationFormNewSubmitHandler implements ApplicationFormNewSubmitH
    */
   public function handle(ApplicationFormNewSubmitCommand $command): ApplicationFormNewSubmitResult {
     $validationResult = $this->validateHandler->handle(new ApplicationFormNewValidateCommand(
-      $command->getContactId(),
       $command->getFundingProgram(),
       $command->getFundingCaseType(),
       $command->getData(),

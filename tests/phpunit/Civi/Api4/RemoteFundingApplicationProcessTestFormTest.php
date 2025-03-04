@@ -152,7 +152,7 @@ final class RemoteFundingApplicationProcessTestFormTest extends AbstractRemoteFu
     $values = $action->execute()->getArrayCopy();
     static::assertEquals(['valid', 'errors'], array_keys($values));
     static::assertTrue($values['valid']);
-    static::assertCount(0, $values['errors']);
+    static::assertEquals(new \stdClass(), $values['errors']);
   }
 
   public function testSubmitForm(): void {

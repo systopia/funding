@@ -69,7 +69,6 @@ final class ApplicationFormNewValidateHandlerTest extends TestCase {
   }
 
   public function testHandleValid(): void {
-    $contactId = 1;
     $fundingProgram = FundingProgramFactory::createFundingProgram();
     $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
 
@@ -90,13 +89,12 @@ final class ApplicationFormNewValidateHandlerTest extends TestCase {
       ->with($fundingCaseType, $fundingProgram, $schemaValidationResult, FALSE)
       ->willReturn($validationResult);
 
-    $command = new ApplicationFormNewValidateCommand($contactId, $fundingProgram, $fundingCaseType, $data);
+    $command = new ApplicationFormNewValidateCommand($fundingProgram, $fundingCaseType, $data);
     $result = $this->handler->handle($command);
     static::assertSame($validationResult, $result);
   }
 
   public function testHandleInvalid(): void {
-    $contactId = 1;
     $fundingProgram = FundingProgramFactory::createFundingProgram();
     $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
 
@@ -115,7 +113,7 @@ final class ApplicationFormNewValidateHandlerTest extends TestCase {
 
     $this->formValidatorMock->expects(static::never())->method('validateInitial');
 
-    $command = new ApplicationFormNewValidateCommand($contactId, $fundingProgram, $fundingCaseType, $data);
+    $command = new ApplicationFormNewValidateCommand($fundingProgram, $fundingCaseType, $data);
     $result = $this->handler->handle($command);
     static::assertInstanceOf(ValidatedApplicationDataInvalid::class, $result->getValidatedData());
     static::assertSame($data, $result->getData());

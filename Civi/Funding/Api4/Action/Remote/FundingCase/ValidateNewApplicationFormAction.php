@@ -19,21 +19,13 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\Remote\FundingCase;
 
-use Civi\Api4\Generic\Result;
-use Civi\Core\CiviEventDispatcherInterface;
+use Civi\Api4\RemoteFundingCase;
+use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingAction;
 use Civi\Funding\Api4\Action\Traits\FundingCaseTypeIdParameterTrait;
 use Civi\Funding\Api4\Action\Traits\FundingProgramIdParameterTrait;
-use Civi\Funding\Event\Remote\FundingCase\ValidateNewApplicationFormEvent;
-use Civi\Funding\Exception\FundingException;
-use Civi\Funding\FundingProgram\FundingCaseTypeManager;
-use Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker;
-use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\RemoteTools\Api4\Action\Traits\DataParameterTrait;
 
-/**
- * @method $this setData(array $data)
- */
-class ValidateNewApplicationFormAction extends AbstractNewApplicationFormAction {
+class ValidateNewApplicationFormAction extends AbstractRemoteFundingAction {
 
   use DataParameterTrait;
 
@@ -41,52 +33,8 @@ class ValidateNewApplicationFormAction extends AbstractNewApplicationFormAction 
 
   use FundingProgramIdParameterTrait;
 
-  public function __construct(
-    FundingCaseTypeManager $fundingCaseTypeManager,
-    FundingProgramManager $fundingProgramManager,
-    CiviEventDispatcherInterface $eventDispatcher,
-    FundingCaseTypeProgramRelationChecker $relationChecker
-  ) {
-    parent::__construct(
-      'validateNewApplicationForm',
-      $fundingCaseTypeManager,
-      $fundingProgramManager,
-      $eventDispatcher,
-      $relationChecker,
-    );
-  }
-
-  /**
-   * @inheritDoc
-   *
-   * @throws \CRM_Core_Exception
-   */
-  public function _run(Result $result): void {
-    $this->assertFundingCaseTypeAndProgramRelated($this->getFundingCaseTypeId(), $this->getFundingProgramId());
-    $event = $this->createEvent();
-    $this->dispatchEvent($event);
-
-    $result->debug['event'] = $event->getDebugOutput();
-
-    if (NULL === $event->isValid()) {
-      throw new FundingException('Form not validated');
-    }
-
-    $result->rowCount = 1;
-    $result->exchangeArray([
-      'valid' => $event->isValid(),
-      'errors' => $event->getErrors(),
-    ]);
-  }
-
-  /**
-   * @throws \CRM_Core_Exception
-   */
-  private function createEvent(): ValidateNewApplicationFormEvent {
-    return ValidateNewApplicationFormEvent::fromApiRequest(
-      $this,
-      $this->createEventParams($this->getFundingCaseTypeId(), $this->getFundingProgramId()),
-    );
+  public function __construct() {
+    parent::__construct(RemoteFundingCase::getEntityName(), 'validateNewApplicationForm');
   }
 
 }

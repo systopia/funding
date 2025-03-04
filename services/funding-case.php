@@ -22,7 +22,6 @@ declare(strict_types = 1);
 
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Funding\Api4\Action\Remote\FundingCase\SubmitNewApplicationFormAction;
-use Civi\Funding\Api4\Action\Remote\FundingCase\ValidateNewApplicationFormAction;
 use Civi\Funding\DependencyInjection\Compiler\FundingCaseNotificationContactsSetHandlerPass;
 use Civi\Funding\DependencyInjection\Compiler\FundingCaseRecipientContactSetHandlerPass;
 use Civi\Funding\DependencyInjection\PossibleRecipientsForChangeLoaderPass;
@@ -228,8 +227,5 @@ ServiceRegistrator::autowireAllImplementing(
 );
 
 $container->autowire(SubmitNewApplicationFormAction::class)
-  ->setPublic(TRUE)
-  ->setShared(FALSE);
-$container->autowire(ValidateNewApplicationFormAction::class)
   ->setPublic(TRUE)
   ->setShared(FALSE);

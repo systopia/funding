@@ -19,64 +19,19 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 
-use Civi\Api4\Generic\Result;
-use Civi\Core\CiviEventDispatcherInterface;
+use Civi\Api4\RemoteFundingApplicationProcess;
+use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingAction;
 use Civi\Funding\Api4\Action\Traits\ApplicationProcessIdParameterTrait;
-use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
-use Civi\Funding\Event\Remote\ApplicationProcess\ValidateApplicationFormEvent;
-use Civi\Funding\Event\Remote\FundingEvents;
-use Civi\Funding\Exception\FundingException;
 use Civi\RemoteTools\Api4\Action\Traits\DataParameterTrait;
 
-/**
- * @method $this setData(array $data)
- */
-class ValidateFormAction extends AbstractFormAction {
+class ValidateFormAction extends AbstractRemoteFundingAction {
 
   use ApplicationProcessIdParameterTrait;
 
   use DataParameterTrait;
 
-  public function __construct(
-    ApplicationProcessBundleLoader $applicationProcessBundleLoader,
-    CiviEventDispatcherInterface $eventDispatcher
-  ) {
-    parent::__construct('validateForm', $applicationProcessBundleLoader, $eventDispatcher);
-    $this->_eventDispatcher = $eventDispatcher;
-    $this->_authorizeRequestEventName = FundingEvents::REQUEST_AUTHORIZE_EVENT_NAME;
-    $this->_initRequestEventName = FundingEvents::REQUEST_INIT_EVENT_NAME;
-  }
-
-  /**
-   * @inheritDoc
-   *
-   * @throws \CRM_Core_Exception
-   */
-  public function _run(Result $result): void {
-    $event = $this->createEvent();
-    $this->dispatchEvent($event);
-
-    $result->debug['event'] = $event->getDebugOutput();
-
-    if (NULL === $event->isValid()) {
-      throw new FundingException('Form not validated');
-    }
-
-    $result->rowCount = 1;
-    $result->exchangeArray([
-      'valid' => $event->isValid(),
-      'errors' => $event->getErrors(),
-    ]);
-  }
-
-  /**
-   * @throws \CRM_Core_Exception
-   */
-  private function createEvent(): ValidateApplicationFormEvent {
-    return ValidateApplicationFormEvent::fromApiRequest(
-      $this,
-      $this->createEventParams($this->getApplicationProcessId())
-    );
+  public function __construct() {
+    parent::__construct(RemoteFundingApplicationProcess::getEntityName(), 'validateForm');
   }
 
 }
