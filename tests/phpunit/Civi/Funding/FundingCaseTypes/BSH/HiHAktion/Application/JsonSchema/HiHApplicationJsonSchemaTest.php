@@ -215,6 +215,7 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
         'kinder',
         'jugendliche',
       ],
+      '_zielgruppeHerausforderungen' => ['fluchterfahrung'],
     ], $mappedData);
   }
 
