@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2025 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,17 +17,18 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\EventSubscriber\Remote;
+namespace Civi\Funding\ApplicationProcess\Api4\ActionHandler\FundingCaseInfo;
 
-use Civi\Funding\Event\Remote\FundingGetFieldsEvent;
-use Civi\RemoteTools\EventSubscriber\AbstractRemoteGetFieldsSubscriber;
+use Civi\Api4\FundingCaseInfo;
+use Civi\Funding\Api4\ActionHandler\AbstractRemoteFundingGetFieldsActionHandler;
 
-final class ApplicationProcessActivityGetFieldsSubscriber extends AbstractRemoteGetFieldsSubscriber {
+final class RemoteGetFieldsActionHandler extends AbstractRemoteFundingGetFieldsActionHandler {
 
-  protected const BASIC_ENTITY_NAME = 'FundingApplicationProcessActivity';
+  public const ENTITY_NAME = 'RemoteFundingCaseInfo';
 
-  protected const ENTITY_NAME = 'RemoteFundingApplicationProcessActivity';
-
-  protected const EVENT_CLASS = FundingGetFieldsEvent::class;
+  protected function getEntityName(): string {
+    // @phpstan-ignore staticMethod.deprecatedClass
+    return FundingCaseInfo::getEntityName();
+  }
 
 }

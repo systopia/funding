@@ -33,7 +33,7 @@ use Civi\PHPUnit\Traits\ArrayAssertTrait;
 
 /**
  * @covers \Civi\Api4\RemoteFundingApplicationProcessActivity
- * @covers \Civi\Funding\EventSubscriber\Remote\ApplicationProcessActivityGetSubscriber
+ * @covers \Civi\Funding\ApplicationProcess\Api4\ActionHandler\ApplicationProcessActivity\RemoteGetActionHandler
  *
  * @group headless
  */

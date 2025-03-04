@@ -22,8 +22,6 @@ declare(strict_types = 1);
 
 use Civi\Funding\Api4\Action\FundingCaseInfo\GetAction;
 use Civi\Funding\Api4\Action\FundingCaseInfo\GetFieldsAction;
-use Civi\Funding\EventSubscriber\Remote\FundingCaseInfoGetFieldsSubscriber;
-use Civi\Funding\EventSubscriber\Remote\FundingCaseInfoGetSubscriber;
 
 // @phpstan-ignore classConstant.deprecatedClass
 $container->autowire(GetAction::class)
@@ -33,8 +31,3 @@ $container->autowire(GetAction::class)
 $container->autowire(GetFieldsAction::class)
   ->setPublic(TRUE)
   ->setShared(FALSE);
-
-$container->autowire(FundingCaseInfoGetSubscriber::class)
-  ->addTag('kernel.event_subscriber');
-$container->autowire(FundingCaseInfoGetFieldsSubscriber::class)
-  ->addTag('kernel.event_subscriber');

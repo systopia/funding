@@ -89,8 +89,6 @@ use Civi\Funding\ApplicationProcess\Snapshot\ApplicationSnapshotRestorer;
 use Civi\Funding\ApplicationProcess\Snapshot\ApplicationSnapshotRestorerInterface;
 use Civi\Funding\DependencyInjection\ApplicationFormValidatorPass;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
-use Civi\Funding\EventSubscriber\Remote\ApplicationProcessActivityGetFieldsSubscriber;
-use Civi\Funding\EventSubscriber\Remote\ApplicationProcessActivityGetSubscriber;
 use Civi\Funding\Form\Application\ApplicationCostItemsFormDataLoader;
 use Civi\Funding\Form\Application\ApplicationCostItemsFormDataLoaderInterface;
 use Civi\Funding\Form\Application\ApplicationResourcesItemsFormDataLoader;
@@ -235,10 +233,5 @@ ServiceRegistrator::autowireAllImplementing(
   ['kernel.event_subscriber' => []],
   ['lazy' => 'auto'],
 );
-
-$container->autowire(ApplicationProcessActivityGetSubscriber::class)
-  ->addTag('kernel.event_subscriber');
-$container->autowire(ApplicationProcessActivityGetFieldsSubscriber::class)
-  ->addTag('kernel.event_subscriber');
 
 $container->autowire(ApplicationSnapshotRestorerInterface::class, ApplicationSnapshotRestorer::class);
