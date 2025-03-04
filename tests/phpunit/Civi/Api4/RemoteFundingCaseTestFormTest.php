@@ -34,9 +34,8 @@ use Civi\Funding\Fixtures\FundingCaseTypeProgramFixture;
 use Civi\Funding\Fixtures\FundingNewCasePermissionsFixture;
 use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
-use Civi\Funding\Mock\FundingCaseType\Application\JsonSchema\TestJsonSchema;
+use Civi\Funding\FundingCase\Api4\ActionHandler\Traits\NewApplicationFormRemoteActionHandlerTrait;
 use Civi\Funding\Mock\FundingCaseType\Application\JsonSchema\TestJsonSchemaFactory;
-use Civi\Funding\Mock\FundingCaseType\Application\UiSchema\TestUiSchema;
 use Symfony\Bridge\PhpUnit\ClockMock;
 
 /**
@@ -59,6 +58,7 @@ final class RemoteFundingCaseTestFormTest extends AbstractRemoteFundingHeadlessT
     parent::setUpBeforeClass();
     ClockMock::register(__CLASS__);
     ClockMock::register(NewApplicationFormActionTrait::class);
+    ClockMock::register(NewApplicationFormRemoteActionHandlerTrait::class);
     ClockMock::withClockMock(strtotime('1970-01-02'));
   }
 
@@ -96,9 +96,11 @@ final class RemoteFundingCaseTestFormTest extends AbstractRemoteFundingHeadlessT
     );
 
     $values = $action->execute()->getArrayCopy();
-    static::assertEquals(['jsonSchema', 'uiSchema', 'data'], array_keys($values));
-    static::assertInstanceOf(TestJsonSchema::class, $values['jsonSchema']);
-    static::assertInstanceOf(TestUiSchema::class, $values['uiSchema']);
+    static::assertEquals(['data', 'jsonSchema', 'uiSchema'], array_keys($values));
+    static::assertIsArray($values['jsonSchema']);
+    static::assertSame('string', $values['jsonSchema']['properties']['title']['type']);
+    static::assertIsArray($values['uiSchema']);
+    static::assertSame('Test', $values['uiSchema']['label']);
     static::assertIsArray($values['data']);
   }
 

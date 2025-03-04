@@ -92,7 +92,7 @@ final class GetAddFormActionHandler implements ActionHandlerInterface {
       $applicationProcessBundle = $this->applicationProcessBundleLoader->get($action->getCopyDataFromId());
       Assert::notNull(
         $applicationProcessBundle,
-        sprintf('Application process with ID %d not found', $action->getCopyDataFromId())
+        sprintf('Application process with ID "%d" not found', $action->getCopyDataFromId())
       );
       Assert::same(
         $fundingCaseType->getId(),

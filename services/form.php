@@ -20,7 +20,6 @@ declare(strict_types = 1);
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
-use Civi\Funding\EventSubscriber\Form\GetApplicationFormSubscriber;
 use Civi\Funding\EventSubscriber\Form\SubmitApplicationFormSubscriber;
 use Civi\Funding\EventSubscriber\Form\ValidateApplicationFormSubscriber;
 use Civi\Funding\Form\Validation\FormValidator;
@@ -28,9 +27,6 @@ use Civi\Funding\Form\Validation\FormValidatorInterface;
 
 $container->autowire(FormValidatorInterface::class, FormValidator::class);
 
-$container->autowire(GetApplicationFormSubscriber::class)
-  ->addTag('kernel.event_subscriber')
-  ->setLazy(TRUE);
 $container->autowire(ValidateApplicationFormSubscriber::class)
   ->addTag('kernel.event_subscriber')
   ->setLazy(TRUE);

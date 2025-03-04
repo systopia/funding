@@ -26,15 +26,13 @@ namespace Civi\Api4;
 use Civi\API\Exception\UnauthorizedException;
 use Civi\Api4\Traits\FundingCaseTestFixturesTrait;
 use Civi\Funding\AbstractRemoteFundingHeadlessTestCase;
-use Civi\Funding\Api4\Action\Remote\FundingCase\Traits\NewApplicationFormActionTrait;
 use Civi\Funding\Exception\FundingException;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeProgramFixture;
 use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
-use Civi\Funding\Mock\FundingCaseType\Application\JsonSchema\TestJsonSchema;
-use Civi\Funding\Mock\FundingCaseType\Application\UiSchema\TestUiSchema;
+use Civi\Funding\FundingCase\Api4\ActionHandler\Traits\NewApplicationFormRemoteActionHandlerTrait;
 use Symfony\Bridge\PhpUnit\ClockMock;
 
 /**
@@ -51,7 +49,7 @@ final class RemoteFundingCaseTest extends AbstractRemoteFundingHeadlessTestCase 
 
   public static function setUpBeforeClass(): void {
     parent::setUpBeforeClass();
-    ClockMock::register(NewApplicationFormActionTrait::class);
+    ClockMock::register(NewApplicationFormRemoteActionHandlerTrait::class);
   }
 
   public function testGetNewApplicationForm(): void {
@@ -101,9 +99,11 @@ final class RemoteFundingCaseTest extends AbstractRemoteFundingHeadlessTestCase 
       ->execute()
       ->getArrayCopy();
 
-    static::assertEquals(['jsonSchema', 'uiSchema', 'data'], array_keys($values));
-    static::assertInstanceOf(TestJsonSchema::class, $values['jsonSchema']);
-    static::assertInstanceOf(TestUiSchema::class, $values['uiSchema']);
+    static::assertEquals(['data', 'jsonSchema', 'uiSchema'], array_keys($values));
+    static::assertIsArray($values['jsonSchema']);
+    static::assertSame('string', $values['jsonSchema']['properties']['title']['type']);
+    static::assertIsArray($values['uiSchema']);
+    static::assertSame('Test', $values['uiSchema']['label']);
     static::assertIsArray($values['data']);
 
     // Current date is before requests start date

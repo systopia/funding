@@ -7,11 +7,6 @@ parameters:
 
 		-
 			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
-			count: 1
-			path: tests/phpunit/Civi/Funding/Api4/Action/Remote/ApplicationProcess/GetFormActionTest.php
-
-		-
-			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
 			count: 2
 			path: tests/phpunit/Civi/Funding/Api4/Action/Remote/ApplicationProcess/SubmitFormActionTest.php
 
@@ -19,11 +14,6 @@ parameters:
 			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
 			count: 2
 			path: tests/phpunit/Civi/Funding/Api4/Action/Remote/ApplicationProcess/ValidateFormActionTest.php
-
-		-
-			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
-			count: 1
-			path: tests/phpunit/Civi/Funding/Api4/Action/Remote/FundingCase/GetNewApplicationFormActionTest.php
 
 		-
 			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"

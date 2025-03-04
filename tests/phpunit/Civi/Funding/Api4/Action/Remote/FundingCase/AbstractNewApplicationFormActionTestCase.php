@@ -25,6 +25,7 @@ use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
+use Civi\Funding\FundingCase\Api4\ActionHandler\Traits\NewApplicationFormRemoteActionHandlerTrait;
 use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker;
 use Civi\Funding\FundingProgram\FundingProgramManager;
@@ -62,6 +63,7 @@ abstract class AbstractNewApplicationFormActionTestCase extends TestCase {
     parent::setUpBeforeClass();
     ClockMock::register(__CLASS__);
     ClockMock::register(NewApplicationFormActionTrait::class);
+    ClockMock::register(NewApplicationFormRemoteActionHandlerTrait::class);
     ClockMock::withClockMock(strtotime('1970-01-02'));
   }
 

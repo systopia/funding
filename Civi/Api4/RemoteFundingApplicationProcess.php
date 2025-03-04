@@ -61,7 +61,7 @@ final class RemoteFundingApplicationProcess extends AbstractRemoteFundingEntity 
   }
 
   public static function getForm(): GetFormAction {
-    return \Civi::service(GetFormAction::class);
+    return new GetFormAction();
   }
 
   public static function submitForm(): SubmitFormAction {
