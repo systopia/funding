@@ -36,14 +36,7 @@ abstract class AbstractRemoteFundingGetActionHandler implements ActionHandlerInt
    * @throws \CRM_Core_Exception
    */
   public function get(RemoteFundingGetAction $action): Result {
-    $params = [
-      'language' => $action->getLanguage(),
-      'select' => $action->getSelect(),
-      'where' => $action->getWhere(),
-      'orderBy' => $action->getOrderBy(),
-      'limit' => $action->getLimit(),
-      'offset' => $action->getOffset(),
-    ];
+    $params = $this->getParams($action);
 
     $join = $this->getJoin($action);
     if ($join !== []) {
@@ -64,6 +57,20 @@ abstract class AbstractRemoteFundingGetActionHandler implements ActionHandlerInt
    */
   protected function getJoin(RemoteFundingGetAction $action): array {
     return [];
+  }
+
+  /**
+   * @phpstan-return array<string, mixed>
+   */
+  protected function getParams(RemoteFundingGetAction $action): array {
+    return [
+      'language' => $action->getLanguage(),
+      'select' => $action->getSelect(),
+      'where' => $action->getWhere(),
+      'orderBy' => $action->getOrderBy(),
+      'limit' => $action->getLimit(),
+      'offset' => $action->getOffset(),
+    ];
   }
 
 }

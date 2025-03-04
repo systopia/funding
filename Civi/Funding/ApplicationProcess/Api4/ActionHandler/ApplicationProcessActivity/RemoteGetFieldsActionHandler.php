@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2025 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,15 +17,17 @@
 
 declare(strict_types = 1);
 
-namespace Civi\RemoteTools\Database;
+namespace Civi\Funding\ApplicationProcess\Api4\ActionHandler\ApplicationProcessActivity;
 
-/**
- * @codeCoverageIgnore
- */
-class TransactionFactory {
+use Civi\Api4\FundingApplicationProcessActivity;
+use Civi\Funding\Api4\ActionHandler\AbstractRemoteFundingGetFieldsActionHandler;
 
-  public function createTransaction(): \CRM_Core_Transaction {
-    return \CRM_Core_Transaction::create();
+final class RemoteGetFieldsActionHandler extends AbstractRemoteFundingGetFieldsActionHandler {
+
+  public const ENTITY_NAME = 'RemoteFundingApplicationProcessActivity';
+
+  protected function getEntityName(): string {
+    return FundingApplicationProcessActivity::getEntityName();
   }
 
 }
