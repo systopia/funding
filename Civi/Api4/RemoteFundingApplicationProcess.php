@@ -69,7 +69,7 @@ final class RemoteFundingApplicationProcess extends AbstractRemoteFundingEntity 
   }
 
   public static function validateForm(): ValidateFormAction {
-    return \Civi::service(ValidateFormAction::class);
+    return new ValidateFormAction();
   }
 
 }

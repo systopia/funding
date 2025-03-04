@@ -82,7 +82,6 @@ final class ApplicationFormNewSubmitHandlerTest extends TestCase {
 
     $validationResult = ApplicationFormValidationResultFactory::createValid();
     $this->validateHandlerMock->method('handle')->with(new ApplicationFormNewValidateCommand(
-      $command->getContactId(),
       $command->getFundingProgram(),
       $command->getFundingCaseType(),
       $command->getData()
@@ -125,7 +124,6 @@ final class ApplicationFormNewSubmitHandlerTest extends TestCase {
     $errorMessages = ['/field' => ['error']];
     $validationResult = ApplicationFormValidationResultFactory::createInvalid($errorMessages);
     $this->validateHandlerMock->method('handle')->with(new ApplicationFormNewValidateCommand(
-      $command->getContactId(),
       $command->getFundingProgram(),
       $command->getFundingCaseType(),
       $command->getData()
