@@ -46,8 +46,8 @@ use Webmozart\Assert\Assert;
  *   paymentDate: string,
  *   recipient: string,
  *   reason: string,
- *   amount: float,
- *   amountAdmitted: ?float,
+ *   amount: float|int,
+ *   amountAdmitted: float|int|null,
  * }
  *
  * @phpstan-type clearingFormDataT array{

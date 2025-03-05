@@ -260,10 +260,10 @@ abstract class AbstractClearingItemsFormDataPersister {
   private function isClearingItemChanged(AbstractClearingItemEntity $clearingItem, array $record, ?int $fileId): bool {
     return $clearingItem->getFileId() !== $fileId
       || $clearingItem->getReceiptNumber() !== $record['receiptNumber']
-      || $clearingItem->getPaymentDate() !== $record['paymentDate']
+      || $clearingItem->get('payment_date') !== $record['paymentDate']
       || $clearingItem->getRecipient() !== $record['recipient']
       || $clearingItem->getReason() !== $record['reason']
-      || $clearingItem->getAmount() !== $record['amount'];
+      || abs($clearingItem->getAmount() - $record['amount']) >= PHP_FLOAT_EPSILON;
   }
 
 }

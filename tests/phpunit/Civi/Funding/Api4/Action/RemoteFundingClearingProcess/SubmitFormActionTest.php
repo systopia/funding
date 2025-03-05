@@ -297,6 +297,75 @@ final class SubmitFormActionTest extends AbstractRemoteFundingHeadlessTestCase {
     ], FundingClearingResourcesItem::get(FALSE)->execute()->single());
   }
 
+  public function testStatusAndAmountIsNotResetIfClearingItemUnchanged(): void {
+    $clearingCostItem = ClearingCostItemFixture::addFixture(
+      $this->clearingProcessBundle->getClearingProcess()->getId(),
+      $this->costItem->getId(),
+      ['status' => 'accepted', 'amount' => 5, 'amount_admitted' => 4.1]
+    );
+    $clearingResourcesItem = ClearingResourcesItemFixture::addFixture(
+      $this->clearingProcessBundle->getClearingProcess()->getId(),
+      $this->resourcesItem->getId(),
+      ['status' => 'rejected', 'amount' => 3, 'amount_admitted' => 0.1]
+    );
+
+    $result = RemoteFundingClearingProcess::submitForm()
+      ->setRemoteContactId($this->remoteContactId)
+      ->setId($this->clearingProcessBundle->getClearingProcess()->getId())
+      ->setData([
+        'costItems' => [
+          $this->costItem->getId() => [
+            'records' => [
+              [
+                '_id' => $clearingCostItem->getId(),
+                'receiptNumber' => $clearingCostItem->getReceiptNumber(),
+                'paymentDate' => $clearingCostItem->getPaymentDate()->format('Y-m-d'),
+                'recipient' => $clearingCostItem->getRecipient(),
+                'reason' => $clearingCostItem->getReason(),
+                'amount' => $clearingCostItem->getAmount(),
+                'amountAdmitted' => $clearingCostItem->getAmountAdmitted(),
+                'status' => $clearingCostItem->getStatus(),
+              ],
+            ],
+          ],
+        ],
+        'resourcesItems' => [
+          $this->resourcesItem->getId() => [
+            'records' => [
+              [
+                '_id' => $clearingResourcesItem->getId(),
+                'receiptNumber' => $clearingResourcesItem->getReceiptNumber(),
+                'paymentDate' => $clearingResourcesItem->getPaymentDate()->format('Y-m-d'),
+                'recipient' => $clearingResourcesItem->getRecipient(),
+                'reason' => $clearingResourcesItem->getReason(),
+                'amount' => $clearingResourcesItem->getAmount(),
+                'amountAdmitted' => $clearingResourcesItem->getAmountAdmitted(),
+                'status' => $clearingResourcesItem->getStatus(),
+              ],
+            ],
+          ],
+        ],
+        'reportData' => ['foo' => 'bar'],
+        '_action' => 'save',
+      ])
+      ->execute()
+      ->getArrayCopy();
+
+    static::assertSame(RemoteSubmitResponseActions::RELOAD_FORM, $result['action']);
+    static::assertSame('Saved', $result['message']);
+    static::assertArrayNotHasKey('errors', $result);
+    static::assertEquals(new \stdClass(), $result['files']);
+
+    static::assertEquals(
+      $clearingCostItem->toArray(),
+      FundingClearingCostItem::get(FALSE)->execute()->single()
+    );
+    static::assertEquals(
+      $clearingResourcesItem->toArray(),
+      FundingClearingResourcesItem::get(FALSE)->execute()->single()
+    );
+  }
+
   public function testModifyDoesNotChangeData(): void {
     $clearingProcess = $this->clearingProcessBundle->getClearingProcess();
     $clearingProcess->setStatus('review-requested');
