@@ -57,7 +57,7 @@ fundingHiHModule.directive('fundingHihApplicationSidebar', function() {
             ['contact_id', '=', CRM.config.cid],
           ],
         }).then(function(result) {
-          $scope.vote = result[0] ? result[0].vote.toString() : null;
+          $scope.vote = result[0] ? result[0].vote.toString() : '-1';
         });
 
         $scope.updateVote = function (data) {
