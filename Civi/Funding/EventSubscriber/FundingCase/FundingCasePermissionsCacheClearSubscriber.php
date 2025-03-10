@@ -24,6 +24,7 @@ use Civi\Core\Event\PreEvent;
 use Civi\Funding\Database\ChangeSetFactory;
 use Civi\Funding\Entity\FundingCaseContactRelationEntity;
 use Civi\Funding\FundingCase\FundingCasePermissionsCacheManager;
+use Civi\Funding\Permission\ContactRelation\Types\ContactTypeAndGroup;
 use Civi\Funding\Permission\ContactRelation\Types\Relationship;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
@@ -34,6 +35,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * created/updated/deleted that might affect the permissions.
  */
 final class FundingCasePermissionsCacheClearSubscriber implements EventSubscriberInterface {
+
+  private const RELATION_TYPES_WITH_GROUP_IDS = [Relationship::NAME, ContactTypeAndGroup::NAME];
 
   private Api4Interface $api4;
 
@@ -231,11 +234,12 @@ final class FundingCasePermissionsCacheClearSubscriber implements EventSubscribe
   private function getRelationshipRelationsByGroupId(int $groupId): iterable {
     $relations = FundingCaseContactRelationEntity::allFromApiResult($this->api4->getEntities(
       FundingCaseContactRelation::getEntityName(),
-      Comparison::new('type', '=', Relationship::NAME)
+      Comparison::new('type', 'IN', self::RELATION_TYPES_WITH_GROUP_IDS)
     ));
 
     foreach ($relations as $relation) {
-      if (in_array($groupId, $relation->getProperty('groupIds', []), TRUE)) {
+      $relationGroupIds = $relation->getProperty('groupIds', []);
+      if ([] === $relationGroupIds || in_array($groupId, $relationGroupIds, TRUE)) {
         yield $relation;
       }
     }
