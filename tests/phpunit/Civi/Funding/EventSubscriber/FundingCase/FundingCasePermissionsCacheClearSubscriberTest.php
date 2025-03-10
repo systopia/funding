@@ -35,6 +35,8 @@ use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\Funding\Fixtures\GroupContactFixture;
 use Civi\Funding\Fixtures\GroupFixture;
+use Civi\Funding\Permission\ContactRelation\Types\ContactTypeAndGroup;
+use Civi\Funding\Permission\ContactRelation\Types\Relationship as RelationshipType;
 
 /**
  * @covers \Civi\Funding\EventSubscriber\FundingCase\FundingCasePermissionsCacheClearSubscriber
@@ -107,6 +109,7 @@ final class FundingCasePermissionsCacheClearSubscriberTest extends AbstractFundi
 
     $group1 = GroupFixture::addFixture();
     $group2 = GroupFixture::addFixture();
+    $group3 = GroupFixture::addFixture();
 
     $fundingCase = FundingCaseFixture::addFixture(
       $fundingProgram->getId(),
@@ -114,7 +117,7 @@ final class FundingCasePermissionsCacheClearSubscriberTest extends AbstractFundi
       $contact['id'],
       $contact['id']
     );
-    FundingCaseContactRelationFixture::addFixture($fundingCase->getId(), Relationship::getEntityName(), [
+    FundingCaseContactRelationFixture::addFixture($fundingCase->getId(), RelationshipType::NAME, [
       'relationshipTypeIds' => [],
       'contactTypeIds' => [],
       'groupIds' => [$group1['id']],
@@ -146,6 +149,16 @@ final class FundingCasePermissionsCacheClearSubscriberTest extends AbstractFundi
     // Deleting group should affect cache.
     Group::delete(FALSE)->addWhere('id', '=', $group1['id'])->execute();
     static::assertNull(FundingCasePermissionsCache::get(FALSE)->execute()->single()['permissions']);
+
+    // Deleting group should affect cache when there is no group restriction.
+    FundingCaseContactRelationFixture::addFixture($fundingCase->getId(), ContactTypeAndGroup::NAME, [
+      'contactTypeIds' => [],
+      'groupIds' => [],
+    ], ['permission']);
+    FundingCasePermissionsCache::delete(FALSE)->addWhere('id', 'IS NOT NULL')->execute();
+    FundingCasePermissionsCacheFixture::add($fundingCase->getId(), $contact['id'], FALSE, ['test']);
+    Group::delete(FALSE)->addWhere('id', '=', $group3['id'])->execute();
+    static::assertNull(FundingCasePermissionsCache::get(FALSE)->execute()->single()['permissions']);
   }
 
   public function testOnPreGroupContact(): void {
@@ -156,6 +169,7 @@ final class FundingCasePermissionsCacheClearSubscriberTest extends AbstractFundi
 
     $group1 = GroupFixture::addFixture();
     $group2 = GroupFixture::addFixture();
+    $group3 = GroupFixture::addFixture();
 
     $fundingCase1 = FundingCaseFixture::addFixture(
       $fundingProgram->getId(),
@@ -169,12 +183,12 @@ final class FundingCasePermissionsCacheClearSubscriberTest extends AbstractFundi
       $contact1['id'],
       $contact1['id']
     );
-    FundingCaseContactRelationFixture::addFixture($fundingCase1->getId(), Relationship::getEntityName(), [
+    FundingCaseContactRelationFixture::addFixture($fundingCase1->getId(), RelationshipType::NAME, [
       'relationshipTypeIds' => [],
       'contactTypeIds' => [],
       'groupIds' => [$group1['id']],
     ], ['permission']);
-    FundingCaseContactRelationFixture::addFixture($fundingCase2->getId(), Relationship::getEntityName(), [
+    FundingCaseContactRelationFixture::addFixture($fundingCase2->getId(), RelationshipType::NAME, [
       'relationshipTypeIds' => [],
       'contactTypeIds' => [],
       'groupIds' => [$group2['id']],
@@ -207,6 +221,16 @@ final class FundingCasePermissionsCacheClearSubscriberTest extends AbstractFundi
     GroupContact::update(FALSE)->setValues($groupContact)->execute();
 
     static::assertSame([NULL, NULL], FundingCasePermissionsCache::get(FALSE)->execute()->column('permissions'));
+
+    // Adding GroupContact should affect cache when there is no group restriction.
+    FundingCaseContactRelationFixture::addFixture($fundingCase1->getId(), ContactTypeAndGroup::NAME, [
+      'contactTypeIds' => [],
+      'groupIds' => [],
+    ], ['permission']);
+    FundingCasePermissionsCache::delete(FALSE)->addWhere('id', 'IS NOT NULL')->execute();
+    FundingCasePermissionsCacheFixture::add($fundingCase1->getId(), $contact1['id'], FALSE, ['test']);
+    GroupContactFixture::addFixtureWithGroupId($group1['id'], $contact1['id']);
+    static::assertNull(FundingCasePermissionsCache::get(FALSE)->execute()->single()['permissions']);
   }
 
   public function testOnPreFundingCaseContactRelation(): void {
