@@ -57,7 +57,7 @@ fundingModule.directive('editableField', ['$filter', function($filter) {
       'editAllowed': '=?',
     },
     controllerAs: '$ctrl',
-    controller: ['$scope', '$attrs', function ($scope, $attrs) {
+    controller: ['$scope', '$attrs', 'dateFilter', function ($scope, $attrs, dateFilter) {
       const ts = CRM.ts('funding');
       if ($attrs.emptyValueDisplay === undefined) {
         this.emptyValueDisplay = $attrs.emptyValueDisplay = ts('empty');
@@ -138,6 +138,22 @@ fundingModule.directive('editableField', ['$filter', function($filter) {
         return $attrs.emptyValueDisplay;
       };
 
+      $scope.showDate = function (value) {
+        if (value === undefined || value === null || value === '') {
+          return $attrs.emptyValueDisplay;
+        }
+
+        return dateFilter(new Date(value), ts('yyyy-MM-dd'));
+      };
+
+      $scope.showDateTime = function (value) {
+        if (value === undefined || value === null || value === '') {
+          return $attrs.emptyValueDisplay;
+        }
+
+        return dateFilter(new Date(value), ts('yyyy-MM-dd hh:mm:ss'));
+      };
+
       $scope.showValue = function (value) {
         if (value === undefined || value === null || value === '') {
           return $attrs.emptyValueDisplay;
@@ -196,7 +212,12 @@ fundingModule.directive('editableField', ['$filter', function($filter) {
         displayValueExpression = `showRadiolist(${attrs.value}, ${attrs.optionsOneOf})`;
       } else if (attrs.type === 'select') {
         displayValueExpression = 'showSelect(' + attrs.value + ', ' + attrs.optionsOneOf + ')';
-      } else {
+      } else if (attrs.type === 'date') {
+        displayValueExpression = `showDate(${attrs.value})`;
+      } else if (attrs.type === 'datetime-local') {
+        displayValueExpression = `showDateTime(${attrs.value})`;
+      }
+      else {
         displayValueExpression = `showValue(${attrs.value})`;
       }
 
