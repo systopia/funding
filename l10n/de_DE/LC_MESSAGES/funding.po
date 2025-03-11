@@ -551,7 +551,6 @@ msgid "Funding Program Title"
 msgstr "Titel des Förderprogramms"
 
 #: Civi/Funding/Api4/Action/Remote/ApplicationProcess/AbstractFormAction.php
-#: Civi/Funding/Api4/Action/Remote/ApplicationProcess/GetFormAction.php
 msgid "Application process with ID \"%1\" not found"
 msgstr "Antragsprozess mit ID \"%1\" nicht gefunden"
 
@@ -563,27 +562,28 @@ msgstr "Förderfalltyp mit ID \"%1\" nicht gefunden"
 msgid "Funding program with ID \"%1\" not found"
 msgstr "Förderprogramm mit ID \"%1\" nicht gefunden"
 
-#: Civi/Funding/Api4/Action/Remote/FundingCase/GetNewApplicationFormAction.php
-msgid "Invalid funding program ID or funding case type ID"
-msgstr "Ungültige Förderprogramm ID oder Förderfalltyp ID"
-
 #: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php
+#: Civi/Funding/FundingCase/Api4/ActionHandler/Traits/NewApplicationFormRemoteActionHandlerTrait.php
 msgid "Required permission is missing"
 msgstr "Notwendige Berechtigung fehlt"
 
 #: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php
+#: Civi/Funding/FundingCase/Api4/ActionHandler/Traits/NewApplicationFormRemoteActionHandlerTrait.php
 msgid "Funding program and funding case type are not related"
 msgstr "Förderprogramm und Förderfalltyp sind nicht verknüpft"
 
 #: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php
+#: Civi/Funding/FundingCase/Api4/ActionHandler/Traits/NewApplicationFormRemoteActionHandlerTrait.php
 msgid "Funding program does not allow applications before %1"
 msgstr "Förderprogramm erlaubt keine Anträge vor %1"
 
 #: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php
+#: Civi/Funding/FundingCase/Api4/ActionHandler/Traits/NewApplicationFormRemoteActionHandlerTrait.php
 msgid "Y-m-d"
 msgstr "d.m.Y"
 
 #: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php
+#: Civi/Funding/FundingCase/Api4/ActionHandler/Traits/NewApplicationFormRemoteActionHandlerTrait.php
 msgid "Funding program does not allow applications after %1"
 msgstr "Förderprogramm erlaubt keine Anträge nach %1"
 
@@ -1618,22 +1618,6 @@ msgstr "Meine Aufgaben"
 msgid "funding"
 msgstr "Förderung"
 
-#: ang/crmFunding/application/application.template.html
-msgid "Application %1"
-msgstr "Antrag %1"
-
-#: ang/crmFunding/application/application.template.html
-#: ang/crmFunding/application/applicationSearchTasksMenu.decorator.js
-#: ang/crmFunding/application/defaultApplicationSidebar.directive.js
-#: managed/SavedSearchFundingTasksMy.mgd.php
-msgid "Application"
-msgstr "Antrag"
-
-#: ang/crmFunding/application/application.template.html
-#: ang/crmFunding/clearing/clearing.template.html
-msgid "History"
-msgstr "Verlauf"
-
 #: ang/crmFunding/application/applicationEditor.directive.js
 #: ang/crmFunding/clearing/clearingEditor.directive.js
 msgid "The chosen action is disabled. Please report this issue."
@@ -1659,6 +1643,14 @@ msgstr "Rechnerische*r Prüfer*in"
 #: ang/crmFunding/clearing/clearingReviewers.template.html
 msgid "Content Reviewer"
 msgstr "Fachliche*r Prüfer*in"
+
+#: ang/crmFunding/application/applicationSearchTasksMenu.decorator.js
+#: ang/crmFunding/application/defaultApplicationPage.template.html
+#: ang/crmFunding/application/defaultApplicationSidebar.directive.js
+#: ang/crmFundingHiH/hihApplicationPage.template.html
+#: managed/SavedSearchFundingTasksMy.mgd.php
+msgid "Application"
+msgstr "Antrag"
 
 #: ang/crmFunding/application/applicationSearchTasksMenu.decorator.js
 #: ang/crmFunding/case/fundingCase.template.html
@@ -1741,6 +1733,17 @@ msgstr "Fachliche Prüfung"
 #: managed/SavedSearch_Clearings.mgd.php
 msgid "Review Calculative"
 msgstr "Rechnerische Prüfung"
+
+#: ang/crmFunding/application/defaultApplicationPage.template.html
+#: ang/crmFundingHiH/hihApplicationPage.template.html
+msgid "Application %1"
+msgstr "Antrag %1"
+
+#: ang/crmFunding/application/defaultApplicationPage.template.html
+#: ang/crmFunding/clearing/clearing.template.html
+#: ang/crmFundingHiH/hihApplicationPage.template.html
+msgid "History"
+msgstr "Verlauf"
 
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
 #: ang/crmFunding/clearing/clearingSidebar.template.html
@@ -2005,15 +2008,20 @@ msgstr "Möchten Sie die ausgewählten Mittelabrufe annehmen?"
 msgid "Do you want to reject the selected drawdowns?"
 msgstr "Möchten Sie die ausgewählten Mittelabrufe ablehnen?"
 
+#: ang/crmFunding/form/editableField.directive.js
+msgid "yyyy-MM-dd"
+msgstr "dd.MM.yyyy"
+
+#: ang/crmFunding/form/editableField.directive.js
+#: ang/crmFunding/fundingDate.filter.js
+msgid "yyyy-MM-dd hh:mm:ss"
+msgstr "dd.MM.yyyy hh:mm:ss"
+
 #: ang/crmFunding/form/fundingSelectPermissions.directive.js
 msgid "Combining application permissions with other ones is not possible."
 msgstr ""
 "Die Kombination von Antragsberechtigungen mit anderen Berechtigungen ist "
 "nicht möglich."
-
-#: ang/crmFunding/fundingDate.filter.js
-msgid "yyyy-MM-dd hh:mm:ss"
-msgstr "dd.MM.yyyy hh:mm:ss"
 
 #: ang/crmFunding/jsonForms/jfControlArray.template.html
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
@@ -2386,3 +2394,6 @@ msgstr "Fall öffnen"
 #: managed/SavedSearch_funding_cases.mgd.php
 msgid "Open case"
 msgstr "Fall öffnen"
+
+#~ msgid "Invalid funding program ID or funding case type ID"
+#~ msgstr "Ungültige Förderprogramm ID oder Förderfalltyp ID"
