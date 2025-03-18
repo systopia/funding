@@ -57,18 +57,25 @@ final class HiHApplicationStatusDeterminer extends AbstractApplicationProcessSta
       'add-comment' => 'draft',
     ],
     'advisory' => [
-      'approve' => 'eligible',
-      'reject' => 'rejected',
+      'reject' => 'rejected_after_advisory',
       'add-comment' => 'advisory',
       're-apply' => 'applied',
     ],
-    'eligible' => [
-      'add-comment' => 'eligible',
+    'approved' => [
+      'add-comment' => 'approved',
+      'update' => 'approved',
     ],
     'rejected' => [
       're-apply' => 'applied',
+      'add-comment' => 'rejected',
     ],
-    'complete' => [],
+    'rejected_after_advisory' => [
+      're-release' => 'advisory',
+      'add-comment' => 'rejected_after_advisory',
+    ],
+    'complete' => [
+      'add-comment' => 'complete',
+    ],
   ];
 
   public function __construct() {

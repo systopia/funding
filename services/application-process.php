@@ -98,7 +98,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 $container->addCompilerPass(new ApplicationFormValidatorPass());
 
 $container->autowire(ApplicationProcessManager::class);
-$container->autowire(ApplicationProcessBundleLoader::class);
+$container->autowire(ApplicationProcessBundleLoader::class)
+  // Used in API actions.
+  ->setPublic(TRUE);
 $container->autowire(ApplicationCostItemManager::class);
 $container->autowire(ApplicationResourcesItemManager::class);
 $container->autowire(ApplicationExternalFileManagerInterface::class, ApplicationExternalFileManager::class);

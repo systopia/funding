@@ -22,6 +22,8 @@ fundingModule.directive('fundingApplicationEditor', ['$compile', function($compi
     scope: {
       activities: '<',
       applicationProcess: '=',
+      fundingCase: '=',
+      fundingCaseType: '=',
       // Buttons are not shown initially if JSON schema is loaded in controller.
       form: '=',
       statusOptions: '=',
@@ -41,10 +43,10 @@ fundingModule.directive('fundingApplicationEditor', ['$compile', function($compi
         }
       });
     },
-    controller: ['$scope', 'crmStatus', 'fundingContactService', 'fundingCaseService',
-      'fundingCaseTypeService', 'fundingProgramService', 'fundingApplicationProcessService',
-      async function($scope, crmStatus, fundingContactService, fundingCaseService,
-                     fundingCaseTypeService, fundingProgramService, fundingApplicationProcessService) {
+    controller: ['$scope', 'crmStatus', 'fundingContactService',
+      'fundingProgramService', 'fundingApplicationProcessService',
+      async function($scope, crmStatus, fundingContactService,
+                     fundingProgramService, fundingApplicationProcessService) {
         function convertStringsToDates(formOrField) {
           // If we ensure that this function is called for every single field via
           // onStartEdit() we would not need to take care of forms, i.e.
@@ -106,19 +108,13 @@ fundingModule.directive('fundingApplicationEditor', ['$compile', function($compi
         const $ = CRM.$;
         const ts = $scope.ts = CRM.ts('funding');
 
-        fundingCaseService.get($scope.applicationProcess.funding_case_id).then(function (fundingCase) {
-          $scope.fundingCase = fundingCase;
-          $scope.permissions = fundingCase.permissions;
-          fundingProgramService.get(fundingCase.funding_program_id).then(
-              (fundingProgram) => $scope.currency = fundingProgram.currency
-          );
-          fundingContactService.get(fundingCase.recipient_contact_id).then(
-              (contact) => $scope.recipientContact = contact
-          );
-          fundingCaseTypeService.get(fundingCase.funding_case_type_id).then(
-            (fundingCaseType) => $scope.fundingCaseType = fundingCaseType
-          );
-        });
+        $scope.permissions = $scope.fundingCase.permissions;
+        fundingProgramService.get($scope.fundingCase.funding_program_id).then(
+          (fundingProgram) => $scope.currency = fundingProgram.currency
+        );
+        fundingContactService.get($scope.fundingCase.recipient_contact_id).then(
+          (contact) => $scope.recipientContact = contact
+        );
 
         $scope.errors = {};
         $scope.comment = {text: null};

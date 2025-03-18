@@ -30,6 +30,36 @@ use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
 
 final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
 
+  public const ZIELGRUPPE_MAP = [
+    'kinder' => 'Kinder (0-12 Jahre)',
+    'jugendliche' => 'Jugendliche (13-19 Jahre)',
+    'jungeErwachsene' => 'Junge Erwachsene (20-29 Jahre)',
+    'erwachsene' => 'Erwachsene (30-49 Jahre)',
+    'aeltereErwachsene' => 'Ältere Erwachsene (50-66 Jahre)',
+    'senioren' => 'Senior:innen (ab 67 Jahre)',
+    'altersaeubergreifend' => 'Altersübergreifend',
+  ];
+
+  public const ZIELGRUPPE_HERAUSFORDERUNGEN_MAP = [
+    'fluchterfahrung' => 'Mit Fluchterfahrung',
+    'diskriminierung' => 'Mit Diskriminierung und/oder Rassismus',
+    'armut' => 'Mit Armut',
+    'erwerbslosigkeit' => 'Mit Erwerbslosigkeit',
+    'pflegeVonAngehoerigen' => 'Mit dem Pflegen von Angehörigen',
+    'alleinerziehend' => 'Weil sie alleinerziehend sind',
+    'sonstige' => 'Aus sonstigen Gründen',
+  ];
+
+  public const THEMEN_MAP = [
+    'fluchterfahrung' => 'Fluchterfahrung',
+    'diskriminierung' => 'Diskriminierung/Rassismus',
+    'armut' => 'Armut',
+    'erwerbslosigkeit' => 'Erwerbslosigkeit',
+    'pflegeVonAngehoerigen' => 'Pflege von Angehörigen',
+    'alleinerziehend' => 'Alleinerziehend',
+    'sonstige' => 'Sonstige',
+  ];
+
   public function __construct(
     \DateTimeInterface $applicationBegin,
     \DateTimeInterface $applicationEnd,
@@ -62,28 +92,18 @@ final class HiHInformationenZumProjektJsonSchema extends JsonSchemaObject {
       ], TRUE),
       'beabsichtigteTeilnehmendenzahl' => new JsonSchemaInteger(['minimum' => 1], TRUE),
       'zielgruppe' => new JsonSchemaArray(new JsonSchemaString([
-        'oneOf' => JsonSchemaUtil::buildTitledOneOf([
-          'kinder' => 'Kinder (0-12 Jahre)',
-          'jugendliche' => 'Jugendliche (13-19 Jahre)',
-          'jungeErwachsene' => 'Junge Erwachsene (20-29 Jahre)',
-          'erwachsene' => 'Erwachsene (30-49 Jahre)',
-          'aeltereErwachsene' => 'Ältere Erwachsene (50-66 Jahre)',
-          'senioren' => 'Senior:innen (ab 67 Jahre)',
-          'altersaeubergreifend' => 'Altersübergreifend',
-        ]),
-      ]), ['uniqueItems' => TRUE]),
+        'oneOf' => JsonSchemaUtil::buildTitledOneOf(self::ZIELGRUPPE_MAP),
+      ]), [
+        'uniqueItems' => TRUE,
+        '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => '_zielgruppe']]),
+      ]),
       'zielgruppeErreichen' => new JsonSchemaString(['maxLength' => 900]),
       'zielgruppeHerausforderungen' => new JsonSchemaArray(new JsonSchemaString([
-        'oneOf' => JsonSchemaUtil::buildTitledOneOf([
-          'fluchterfahrung' => 'Mit Fluchterfahrung',
-          'diskriminierung' => 'Mit Diskriminierung und/oder Rassismus',
-          'armut' => 'Mit Armut',
-          'erwerbslosigkeit' => 'Mit Erwerbslosigkeit',
-          'pflegeVonAngehoerigen' => 'Mit dem Pflegen von Angehörigen',
-          'alleinerziehend' => 'Weil sie alleinerziehend sind',
-          'sonstige' => 'Aus sonstigen Gründen',
-        ]),
-      ]), ['uniqueItems' => TRUE]),
+        'oneOf' => JsonSchemaUtil::buildTitledOneOf(self::ZIELGRUPPE_HERAUSFORDERUNGEN_MAP),
+      ]), [
+        'uniqueItems' => TRUE,
+        '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => '_zielgruppeHerausforderungen']]),
+      ]),
       'zielgruppeHerausforderungenSonstige' => new JsonSchemaString(['maxLength' => 255]),
       'zielgruppeHerausforderungenErlaeuterung' => new JsonSchemaString(['maxLength' => 900]),
       'projektformat' => new JsonSchemaArray(new JsonSchemaString([

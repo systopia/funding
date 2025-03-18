@@ -24,22 +24,93 @@ fundingHiHModule.directive('fundingHihApplicationSidebar', function() {
     controllerAs: '$ctrl',
     controller: ['$scope', 'crmApi4', 'crmStatus', function ($scope, crmApi4, crmStatus) {
       this.ts = CRM.ts('funding');
+      const ctrl = this;
+
+      $scope.hasAdminPermission = $scope.hasPermission('bsh_admin');
+      $scope.hasReviewPermission = $scope.hasPermission('review_application');
+      $scope.hasVotePermission = $scope.hasPermission('advisory_vote');
+      $scope.hasShowVotesPermission = $scope.hasPermission('advisory_show_votes');
 
       $scope.priorisierungOptions = {};
         crmApi4('FundingApplicationProcess', 'getFields', {
         loadOptions: true,
         where: [['name', '=', 'bsh_funding_application_extra.priorisierung']],
-        select: ["options"]
+        select: ['options']
       }).then(function(fields) {
         $scope.priorisierungOptions = fields[0].options;
       });
 
-      $scope.updateNdrBerichterstattung = function(data) {
-        return crmStatus({}, crmApi4('FundingApplicationProcess', 'setNdrBerichterstattung', {
-          id: $scope.applicationProcess.id,
-          berichterstattung: data,
-        }));
-      };
+      if ($scope.hasVotePermission) {
+        $scope.voteOptions = {};
+        crmApi4('BshFundingAdvisoryVote', 'getFields', {
+          loadOptions: true,
+          where: [['name', '=', 'vote']],
+          select: ['options']
+        }).then(function(fields) {
+          $scope.voteOptions = fields[0].options;
+        });
+
+        crmApi4('BshFundingAdvisoryVote', 'get', {
+          select: ['vote'],
+          where: [
+            ['application_process_id', '=', $scope.applicationProcess.id],
+            ['contact_id', '=', CRM.config.cid],
+          ],
+        }).then(function(result) {
+          $scope.vote = result[0] ? result[0].vote.toString() : '-1';
+        });
+
+        $scope.updateVote = function (data) {
+          return crmStatus({}, crmApi4('BshFundingAdvisoryVote', 'vote', {
+            applicationProcessId: $scope.applicationProcess.id,
+            vote: data,
+          }));
+        };
+
+        $scope.showVote = function() {
+          return $scope.voteOptions[$scope.vote] || 'Unbearbeitet';
+        };
+
+        crmApi4('BshFundingAdvisoryNote', 'get', {
+          select: ['text'],
+          where: [['application_process_id', '=', $scope.applicationProcess.id]],
+        }).then((result) => { ctrl.note = result[0] ? result[0].text : ''; });
+
+        ctrl.setNote = function () {
+          crmStatus({}, crmApi4('BshFundingAdvisoryNote', 'setNote', {
+            applicationProcessId: $scope.applicationProcess.id,
+            text: ctrl.note.trim(),
+          }));
+        };
+      }
+
+      if ($scope.hasShowVotesPermission) {
+        crmApi4('BshFundingAdvisoryVote', 'get', {
+          select: ['contact_id.display_name', 'vote'],
+          where: [
+            ['application_process_id', '=', $scope.applicationProcess.id],
+          ],
+          orderBy: {'contact_id.display_name': 'ASC'},
+        }).then(function(result) {
+          $scope.votes = result;
+        });
+      }
+
+      if ($scope.hasReviewPermission) {
+        $scope.updateNdrBerichterstattung = function (data) {
+          return crmStatus({}, crmApi4('FundingApplicationProcess', 'setNdrBerichterstattung', {
+            id: $scope.applicationProcess.id,
+            berichterstattung: data,
+          }));
+        };
+
+        $scope.updatePriorisierung = function(data) {
+          return crmStatus({}, crmApi4('FundingApplicationProcess', 'setBshPriorisierung', {
+            id: $scope.applicationProcess.id,
+            priorisierung: data,
+          }));
+        };
+      }
 
       $scope.showNdrBerichterstattung = function() {
         if ($scope.applicationProcess['bsh_funding_application_extra.ndr_berichterstattung']) {
@@ -51,13 +122,6 @@ fundingHiHModule.directive('fundingHihApplicationSidebar', function() {
         }
 
         return 'unbekannt';
-      };
-
-      $scope.updatePriorisierung = function(data) {
-        return crmStatus({}, crmApi4('FundingApplicationProcess', 'setBshPriorisierung', {
-          id: $scope.applicationProcess.id,
-          priorisierung: data,
-        }));
       };
 
       $scope.showPriorisierung = function() {

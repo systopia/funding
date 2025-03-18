@@ -69,7 +69,7 @@ final class DefaultApplicationProcessActionStatusInfo extends AbstractApplicatio
   }
 
   public function isSnapshotRequiredStatus(FullApplicationProcessStatus $status): bool {
-    return in_array($status->getStatus(), ['eligible', 'complete'], TRUE);
+    return in_array($status->getStatus(), $this->getEligibleStatusList(), TRUE);
   }
 
   public function isRejectedStatus(string $status): bool {
