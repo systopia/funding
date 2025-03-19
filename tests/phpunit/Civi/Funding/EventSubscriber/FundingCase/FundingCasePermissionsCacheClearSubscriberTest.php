@@ -186,7 +186,8 @@ final class FundingCasePermissionsCacheClearSubscriberTest extends AbstractFundi
     FundingCaseContactRelationFixture::addFixture($fundingCase1->getId(), RelationshipType::NAME, [
       'relationshipTypeIds' => [],
       'contactTypeIds' => [],
-      'groupIds' => [$group1['id']],
+      // IDs might be persisted as strings.
+      'groupIds' => [(string) $group1['id']],
     ], ['permission']);
     FundingCaseContactRelationFixture::addFixture($fundingCase2->getId(), RelationshipType::NAME, [
       'relationshipTypeIds' => [],

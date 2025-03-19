@@ -260,8 +260,11 @@ final class FundingCasePermissionsCacheClearSubscriber implements EventSubscribe
     ));
 
     foreach ($relations as $relation) {
+      // Group id integers might be persisted as strings.
+      /** @phpstan-var list<int|string> $relationGroupIds */
       $relationGroupIds = $relation->getProperty('groupIds', []);
-      if ([] === $relationGroupIds || in_array($groupId, $relationGroupIds, TRUE)) {
+      // @phpstan-ignore function.strict
+      if ([] === $relationGroupIds || in_array($groupId, $relationGroupIds, FALSE)) {
         yield $relation;
       }
     }
