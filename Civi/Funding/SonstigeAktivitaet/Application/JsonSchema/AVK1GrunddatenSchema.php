@@ -39,6 +39,7 @@ final class AVK1GrunddatenSchema extends JsonSchemaObject {
         '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'short_description']]),
       ]),
       'internerBezeichner' => new JsonSchemaString([
+        'maxLength' => 255,
         '$tag' => JsonSchema::fromArray(
           ['mapToField' => ['fieldName' => 'funding_application_process_extra.internal_identifier']]
         ),
