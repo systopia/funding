@@ -43,4 +43,16 @@ final class HiHApplicationActionStatusInfo extends AbstractApplicationProcessAct
     return ['advisory', 'approved', 'complete'];
   }
 
+  public function isEligibleStatus(string $status): ?bool {
+    if (in_array($status, $this->getEligibleStatusList(), TRUE)) {
+      return TRUE;
+    }
+
+    if (in_array($status, $this->getFinalIneligibleStatusList(), TRUE)) {
+      return FALSE;
+    }
+
+    return NULL;
+  }
+
 }
