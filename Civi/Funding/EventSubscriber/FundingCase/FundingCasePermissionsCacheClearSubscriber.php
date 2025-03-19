@@ -33,6 +33,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Clears cached funding case permissions, if an entity is
  * created/updated/deleted that might affect the permissions.
+ *
+ * @todo Handle contact merge: No event is dispatched in
+ * \CRM_Contact_BAO_GroupContact::mergeGroupContact().
  */
 final class FundingCasePermissionsCacheClearSubscriber implements EventSubscriberInterface {
 
@@ -112,16 +115,35 @@ final class FundingCasePermissionsCacheClearSubscriber implements EventSubscribe
    */
   public function onPreGroupContact(PreEvent $event): void {
     if ('create' === $event->action) {
-      $contactIds = [(int) $event->params['contact_id']];
-      $groupIds = [(int) $event->params['group_id']];
+      if (!isset($event->params['contact_id'])) {
+        // \CRM_Contact_BAO_GroupContact::bulkAddContactsToGroup()
+        // The BAO class has an unexpected way of defining the event.
+        $contactIds = $event->params;
+        $groupIds = [(int) $event->id];
+      }
+      else {
+        // APIv4
+        $contactIds = [(int) $event->params['contact_id']];
+        $groupIds = [(int) $event->params['group_id']];
+      }
     }
     elseif ('delete' === $event->action) {
-      /** @phpstan-var array{id: int, contact_id: int, group_id: int} $oldValues */
-      $oldValues = $this->api4->getEntity('GroupContact', (int) $event->id);
-      $contactIds = [$oldValues['contact_id']];
-      $groupIds = [$oldValues['group_id']];
+      if (isset($event->params[0])) {
+        // \CRM_Contact_BAO_GroupContact::removeContactsFromGroup()
+        // The BAO class has an unexpected way of defining the event.
+        $contactIds = $event->params;
+        $groupIds = [(int) $event->id];
+      }
+      else {
+        // APIv4
+        /** @phpstan-var array{id: int, contact_id: int, group_id: int} $oldValues */
+        $oldValues = $this->api4->getEntity('GroupContact', (int) $event->id);
+        $contactIds = [$oldValues['contact_id']];
+        $groupIds = [$oldValues['group_id']];
+      }
     }
     else {
+      // APIv4
       /** @phpstan-var array{id: int, contact_id: int, group_id: int} $oldValues */
       $oldValues = $this->api4->getEntity('GroupContact', (int) $event->id);
       $contactIds = [$oldValues['contact_id']];

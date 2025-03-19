@@ -233,6 +233,54 @@ final class FundingCasePermissionsCacheClearSubscriberTest extends AbstractFundi
     static::assertNull(FundingCasePermissionsCache::get(FALSE)->execute()->single()['permissions']);
   }
 
+  public function testOnPreGroupContactViaBAO(): void {
+    $fundingProgram = FundingProgramFixture::addFixture();
+    $fundingCaseType = FundingCaseTypeFixture::addFixture();
+    $contact1 = ContactFixture::addIndividual();
+
+    $group1 = GroupFixture::addFixture();
+    $group2 = GroupFixture::addFixture();
+
+    $fundingCase1 = FundingCaseFixture::addFixture(
+      $fundingProgram->getId(),
+      $fundingCaseType->getId(),
+      $contact1['id'],
+      $contact1['id']
+    );
+    $fundingCase2 = FundingCaseFixture::addFixture(
+      $fundingProgram->getId(),
+      $fundingCaseType->getId(),
+      $contact1['id'],
+      $contact1['id']
+    );
+    FundingCaseContactRelationFixture::addFixture($fundingCase1->getId(), RelationshipType::NAME, [
+      'relationshipTypeIds' => [],
+      'contactTypeIds' => [],
+      'groupIds' => [$group1['id']],
+    ], ['permission']);
+    FundingCaseContactRelationFixture::addFixture($fundingCase2->getId(), RelationshipType::NAME, [
+      'relationshipTypeIds' => [],
+      'contactTypeIds' => [],
+      'groupIds' => [$group2['id']],
+    ], ['permission']);
+
+    FundingCasePermissionsCacheFixture::add($fundingCase1->getId(), $contact1['id'], FALSE, ['test']);
+
+    // Adding contact to group should affect cache.
+    \CRM_Contact_BAO_GroupContact::addContactsToGroup([(string) $contact1['id']], $group1['id']);
+    static::assertNull(FundingCasePermissionsCache::get(FALSE)->execute()->single()['permissions']);
+
+    // Clear permissions and add new one.
+    FundingCasePermissionsCache::delete(FALSE)->addWhere('id', 'IS NOT NULL')->execute();
+    FundingCasePermissionsCacheFixture::add($fundingCase1->getId(), $contact1['id'], FALSE, ['test']);
+
+    // Removing contact from group should affect cache.
+    // Extra variable because passed as reference.
+    $contactIds = [(string) $contact1['id']];
+    \CRM_Contact_BAO_GroupContact::removeContactsFromGroup($contactIds, $group1['id']);
+    static::assertNull(FundingCasePermissionsCache::get(FALSE)->execute()->single()['permissions']);
+  }
+
   public function testOnPreFundingCaseContactRelation(): void {
     $fundingProgram = FundingProgramFixture::addFixture();
     $fundingCaseType = FundingCaseTypeFixture::addFixture();
