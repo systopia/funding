@@ -35,13 +35,18 @@ class ClearingStatusDeterminer {
     ],
     'review' => [
       'update' => 'review',
-      'request-change' => 'draft',
+      'request-change' => 'rework',
       'accept-calculative' => 'review',
       'reject-calculative' => 'review',
       'accept-content' => 'review',
       'reject-content' => 'review',
       'reject' => 'rejected',
       'accept' => 'accepted',
+    ],
+    'rework' => [
+      'save' => 'rework',
+      'apply' => 'review-requested',
+      'review' => 'review',
     ],
     'accepted' => [
       'review' => 'review',

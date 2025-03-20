@@ -1348,7 +1348,7 @@ msgid "Accepted"
 msgstr "Angenommen"
 
 #: Civi/Funding/FundingPseudoConstants.php
-msgid "Review Requested"
+msgid "Review requested"
 msgstr "Prüfung beantragt"
 
 #: Civi/Funding/FundingPseudoConstants.php
@@ -2394,6 +2394,3 @@ msgstr "Fall öffnen"
 #: managed/SavedSearch_funding_cases.mgd.php
 msgid "Open case"
 msgstr "Fall öffnen"
-
-#~ msgid "Invalid funding program ID or funding case type ID"
-#~ msgstr "Ungültige Förderprogramm ID oder Förderfalltyp ID"
