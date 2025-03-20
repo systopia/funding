@@ -915,7 +915,7 @@ msgid "Accepted"
 msgstr ""
 
 #: Civi/Funding/FundingPseudoConstants.php
-msgid "Review Requested"
+msgid "Review requested"
 msgstr ""
 
 #: Civi/Funding/FundingPseudoConstants.php
