@@ -51,7 +51,6 @@ class ApplicationProcessNotificationSubscriber implements EventSubscriberInterfa
       $event->getFundingCase(),
       [
         'fundingApplicationProcess' => $event->getApplicationProcess(),
-        'fundingProgram' => $event->getFundingProgram(),
       ]
     );
   }
@@ -66,7 +65,6 @@ class ApplicationProcessNotificationSubscriber implements EventSubscriberInterfa
         $event->getFundingCase(),
         [
           'fundingApplicationProcess' => $event->getApplicationProcess(),
-          'fundingProgram' => $event->getFundingProgram(),
         ]
       );
     }
