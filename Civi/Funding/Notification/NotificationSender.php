@@ -19,24 +19,35 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Notification;
 
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\FundingProgram\FundingCaseTypeManager;
+use Civi\Funding\FundingProgram\FundingProgramManager;
+use Civi\Funding\Notification\Event\PreSendNotificationEvent;
 use Webmozart\Assert\Assert;
 
 final class NotificationSender {
 
+  private CiviEventDispatcherInterface $eventDispatcher;
+
   private FundingCaseTypeManager $fundingCaseTypeManager;
+
+  private FundingProgramManager $fundingProgramManager;
 
   private NotificationSendTemplateParamsFactory $sendTemplateParamsFactory;
 
   private NotificationWorkflowDeterminer $workflowDeterminer;
 
   public function __construct(
+    CiviEventDispatcherInterface $eventDispatcher,
     FundingCaseTypeManager $fundingCaseTypeManager,
+    FundingProgramManager $fundingProgramManager,
     NotificationSendTemplateParamsFactory $sendTemplateParamsFactory,
     NotificationWorkflowDeterminer $workflowDeterminer
   ) {
+    $this->eventDispatcher = $eventDispatcher;
     $this->fundingCaseTypeManager = $fundingCaseTypeManager;
+    $this->fundingProgramManager = $fundingProgramManager;
     $this->sendTemplateParamsFactory = $sendTemplateParamsFactory;
     $this->workflowDeterminer = $workflowDeterminer;
   }
@@ -53,21 +64,30 @@ final class NotificationSender {
   ): void {
     $fundingCaseType = $this->fundingCaseTypeManager->get($fundingCase->getFundingCaseTypeId());
     Assert::notNull($fundingCaseType);
-
-    $workflowName = $this->workflowDeterminer->getWorkflowName($workflowNamePostfix, $fundingCaseType);
-    if (NULL === $workflowName) {
-      return;
-    }
+    $fundingProgram = $this->fundingProgramManager->get($fundingCase->getFundingProgramId());
+    Assert::notNull($fundingProgram);
 
     $tokenContext['fundingCase'] = $fundingCase;
     $tokenContext['fundingCaseType'] = $fundingCaseType;
+    $tokenContext['fundingProgram'] = $fundingProgram;
+
+    $event = new PreSendNotificationEvent(
+      $fundingCase->getNotificationContactIds(),
+      $tokenContext,
+      $this->workflowDeterminer->getWorkflowName($workflowNamePostfix, $fundingCaseType)
+    );
+    $this->eventDispatcher->dispatch(PreSendNotificationEvent::class, $event);
+
+    if (NULL === $event->getWorkflowName()) {
+      return;
+    }
 
     [$fromName, $fromEmail] = \CRM_Core_BAO_Domain::getNameAndEmail();
 
-    foreach ($fundingCase->getNotificationContactIds() as $notificationContactId) {
+    foreach ($event->getNotificationContactIds() as $notificationContactId) {
       $sendTemplateParams = $this->sendTemplateParamsFactory->createSendTemplateParams(
         $notificationContactId,
-        $workflowName,
+        $event->getWorkflowName(),
         $fromName,
         $fromEmail,
         $tokenContext
