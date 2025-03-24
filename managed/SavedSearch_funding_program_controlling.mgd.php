@@ -1,6 +1,4 @@
 <?php
-declare(strict_types = 1);
-
 use CRM_Funding_ExtensionUtil as E;
 
 return [
@@ -106,16 +104,16 @@ return [
             ],
             [
               'type' => 'field',
-              'key' => 'amount_admitted',
+              'key' => 'amount_cleared',
               'dataType' => 'Money',
-              'label' => E::ts('Amount Admitted'),
+              'label' => E::ts('Amount Cleared'),
               'sortable' => TRUE,
             ],
             [
               'type' => 'field',
-              'key' => 'amount_cleared',
+              'key' => 'amount_admitted',
               'dataType' => 'Money',
-              'label' => E::ts('Amount Cleared'),
+              'label' => E::ts('Amount Admitted'),
               'sortable' => TRUE,
             ],
             [
@@ -133,6 +131,7 @@ return [
             'table',
             'table-striped',
           ],
+          'actions_display_mode' => 'menu',
         ],
       ],
       'match' => [
