@@ -77,7 +77,7 @@ final class AVK1GrunddatenSchema extends JsonSchemaObject {
         'referenten' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0]),
       ]),
     ];
-    
+
     if (!$report) {
       $properties['internerBezeichner'] = new JsonSchemaString([
         'maxLength' => 255,

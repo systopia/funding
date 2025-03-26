@@ -110,7 +110,8 @@ EOD,
       $teilnehmerProperties = $properties['teilnehmer']['properties'];
       $teilnehmerProperties['referentenMitHonorar'] = new JsonSchemaInteger(['minimum' => 0], TRUE);
       $teilnehmerProperties['mitFahrtkosten'] = new JsonSchemaInteger(['minimum' => 0], TRUE);
-    } else {
+    }
+    else {
       $properties['internerBezeichner'] = new JsonSchemaString([
         'maxLength' => 255,
         '$tag' => JsonSchema::fromArray(
