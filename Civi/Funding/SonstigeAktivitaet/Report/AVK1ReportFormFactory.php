@@ -42,7 +42,8 @@ final class AVK1ReportFormFactory implements ReportFormFactoryInterface {
     $fundingProgram = $clearingProcessBundle->getFundingProgram();
     $grunddatenJsonSchema = new AVK1GrunddatenSchema(
       $fundingProgram->getRequestsStartDate(),
-      $fundingProgram->getRequestsEndDate()
+      $fundingProgram->getRequestsEndDate(),
+      TRUE
     );
     // In draft report data fields may be empty.
     $reportDataDraftSchema = new AVK1SachberichtJsonSchema();
