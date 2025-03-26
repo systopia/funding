@@ -91,7 +91,7 @@ abstract class AbstractClearingApplyTaskHandler implements ClearingProcessTaskHa
   }
 
   private function isInAppliableStatus(ClearingProcessEntityBundle $clearingProcessBundle): bool {
-    return $clearingProcessBundle->getClearingProcess()->getStatus() === 'draft';
+    return in_array($clearingProcessBundle->getClearingProcess()->getStatus(), ['draft', 'rework'], TRUE);
   }
 
   private function isStatusChangedToAppliable(

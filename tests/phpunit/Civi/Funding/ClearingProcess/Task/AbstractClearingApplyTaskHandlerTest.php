@@ -22,9 +22,12 @@ final class AbstractClearingApplyTaskHandlerTest extends TestCase {
     $this->taskHandler = $this->getMockForAbstractClass(AbstractClearingApplyTaskHandler::class);
   }
 
-  public function testCreateTasksOnChangeAppliable(): void {
-    $clearingProcessBundle = ClearingProcessBundleFactory::create(['status' => 'draft']);
-    $previousClearingProcess = ClearingProcessFactory::create(['status' => 'not-started']);
+  /**
+   * @dataProvider provideAppliableStatus
+   */
+  public function testCreateTasksOnChangeAppliable(string $appliableStatus, string $previousStatus): void {
+    $clearingProcessBundle = ClearingProcessBundleFactory::create(['status' => $appliableStatus]);
+    $previousClearingProcess = ClearingProcessFactory::create(['status' => $previousStatus]);
 
     static::assertEquals([
       FundingTaskEntity::newTask([
@@ -47,6 +50,14 @@ final class AbstractClearingApplyTaskHandlerTest extends TestCase {
       [],
       [...$this->taskHandler->createTasksOnChange($clearingProcessBundle, $previousClearingProcess)]
     );
+  }
+
+  /**
+   * @phpstan-return iterable<array{string, string}>
+   */
+  public function provideAppliableStatus(): iterable {
+    yield ['draft', 'not-started'];
+    yield ['rework', 'review'];
   }
 
   public function testCreateTasksOnNew(): void {
