@@ -48,9 +48,6 @@ final class KursGrunddatenJsonSchema extends JsonSchemaObject {
       ]),
       'internerBezeichner' => new JsonSchemaString([
         'maxLength' => 255,
-        '$tag' => JsonSchema::fromArray(
-            ['mapToField' => ['fieldName' => 'funding_application_process_extra.internal_identifier']]
-        ),
       ]),
       'zeitraeume' => new JsonSchemaArray(
         new JsonSchemaObject([
@@ -113,6 +110,13 @@ EOD,
       $teilnehmerProperties = $properties['teilnehmer']['properties'];
       $teilnehmerProperties['referentenMitHonorar'] = new JsonSchemaInteger(['minimum' => 0], TRUE);
       $teilnehmerProperties['mitFahrtkosten'] = new JsonSchemaInteger(['minimum' => 0], TRUE);
+    } else {
+      $properties['internerBezeichner'] = new JsonSchemaString([
+        'maxLength' => 255,
+        '$tag' => JsonSchema::fromArray(
+            ['mapToField' => ['fieldName' => 'funding_application_process_extra.internal_identifier']]
+        ),
+      ]);
     }
 
     $required = array_filter(

@@ -29,7 +29,11 @@ use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 
 final class AVK1GrunddatenSchema extends JsonSchemaObject {
 
-  public function __construct(\DateTimeInterface $applicationBegin, \DateTimeInterface $applicationEnd) {
+  public function __construct(
+    \DateTimeInterface $applicationBegin,
+    \DateTimeInterface $applicationEnd,
+    bool $report = FALSE
+  ) {
     $properties = [
       'titel' => new JsonSchemaString([
         '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'title']]),
@@ -40,9 +44,6 @@ final class AVK1GrunddatenSchema extends JsonSchemaObject {
       ]),
       'internerBezeichner' => new JsonSchemaString([
         'maxLength' => 255,
-        '$tag' => JsonSchema::fromArray(
-          ['mapToField' => ['fieldName' => 'funding_application_process_extra.internal_identifier']]
-        ),
       ]),
       'zeitraeume' => new JsonSchemaArray(
         new JsonSchemaObject([
@@ -76,6 +77,15 @@ final class AVK1GrunddatenSchema extends JsonSchemaObject {
         'referenten' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0]),
       ]),
     ];
+    
+    if (!$report) {
+      $properties['internerBezeichner'] = new JsonSchemaString([
+        'maxLength' => 255,
+        '$tag' => JsonSchema::fromArray(
+          ['mapToField' => ['fieldName' => 'funding_application_process_extra.internal_identifier']]
+        ),
+      ]);
+    }
 
     $required = array_filter(
       array_keys($properties),
