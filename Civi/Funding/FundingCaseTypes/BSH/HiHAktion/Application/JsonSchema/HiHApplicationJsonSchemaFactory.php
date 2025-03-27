@@ -55,6 +55,7 @@ final class HiHApplicationJsonSchemaFactory implements NonCombinedApplicationJso
       $applicationProcessBundle->getFundingProgram()->getStartDate(),
       $applicationProcessBundle->getFundingProgram()->getEndDate(),
       $this->existingCaseRecipientLoader->getRecipient($applicationProcessBundle->getFundingCase()),
+      $applicationProcessBundle->getFundingCase()->hasPermission('bsh_admin')
     );
   }
 
@@ -70,6 +71,7 @@ final class HiHApplicationJsonSchemaFactory implements NonCombinedApplicationJso
       $fundingProgram->getStartDate(),
       $fundingProgram->getEndDate(),
       $this->possibleRecipientsLoader->getPossibleRecipients($contactId, $fundingProgram),
+      FALSE
     );
   }
 

@@ -40,7 +40,7 @@ final class HiHApplicationActionStatusInfo extends AbstractApplicationProcessAct
   }
 
   public function getEligibleStatusList(): array {
-    return ['advisory', 'approved', 'complete'];
+    return ['advisory', 'approved', 'approved_partial', 'complete'];
   }
 
   public function isEligibleStatus(string $status): ?bool {
