@@ -60,10 +60,18 @@ final class HiHApplicationStatusDeterminer extends AbstractApplicationProcessSta
       'reject' => 'rejected_after_advisory',
       'add-comment' => 'advisory',
       're-apply' => 'applied',
+      // Maybe changed to "approved_partial" by a subscriber.
+      'approve' => 'approved',
     ],
     'approved' => [
       'add-comment' => 'approved',
       'update' => 'approved',
+      'approve-update' => 'approved',
+    ],
+    'approved_partial' => [
+      'add-comment' => 'approved_partial',
+      'update' => 'approved_partial',
+      'approve-update' => 'approved_partial',
     ],
     'rejected' => [
       're-apply' => 'applied',
@@ -75,6 +83,7 @@ final class HiHApplicationStatusDeterminer extends AbstractApplicationProcessSta
     ],
     'complete' => [
       'add-comment' => 'complete',
+      'approve-update' => 'complete',
     ],
   ];
 

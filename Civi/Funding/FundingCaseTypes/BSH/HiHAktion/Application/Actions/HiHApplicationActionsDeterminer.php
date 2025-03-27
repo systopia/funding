@@ -56,11 +56,15 @@ final class HiHApplicationActionsDeterminer extends AbstractApplicationProcessAc
     ],
     'advisory' => [
       'review_application' => ['update', 'reject', 'add-comment'],
-      'bsh_admin' => ['re-apply'],
+      'bsh_admin' => ['re-apply', 'approve'],
     ],
     'approved' => [
-      'bsh_admin' => ['update'],
-      'review_application' => ['reject', 'add-comment'],
+      'bsh_admin' => ['update', 'approve-update'],
+      'review_application' => ['add-comment'],
+    ],
+    'approved_partial' => [
+      'bsh_admin' => ['update', 'approve-update'],
+      'review_application' => ['add-comment'],
     ],
     'rejected' => [
       'bsh_admin' => ['re-apply'],
@@ -71,7 +75,7 @@ final class HiHApplicationActionsDeterminer extends AbstractApplicationProcessAc
       'review_application' => ['add-comment'],
     ],
     'complete' => [
-      'review_application' => ['add-comment'],
+      'review_application' => ['add-comment', 'approve-update'],
     ],
   ];
 
