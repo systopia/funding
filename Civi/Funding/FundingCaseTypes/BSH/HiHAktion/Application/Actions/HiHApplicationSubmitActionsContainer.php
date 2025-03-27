@@ -46,7 +46,9 @@ final class HiHApplicationSubmitActionsContainer extends AbstractApplicationSubm
       ->add('reject', E::ts('Reject'), NULL, ['needsFormData' => FALSE])
       // Admin actions
       ->add('re-apply', 'Zurück zu "beantragt"', NULL, ['needsFormData' => FALSE])
-      ->add('re-release', 'Erneut für Beirat freigeben', NULL, ['needsFormData' => FALSE]);
+      ->add('re-release', 'Erneut für Beirat freigeben', NULL, ['needsFormData' => FALSE])
+      ->add('approve', 'Bewilligen', NULL, ['needsFormData' => TRUE])
+      ->add('approve-update', 'Bewilligung aktualisieren', NULL, ['needsFormData' => TRUE]);
   }
 
 }

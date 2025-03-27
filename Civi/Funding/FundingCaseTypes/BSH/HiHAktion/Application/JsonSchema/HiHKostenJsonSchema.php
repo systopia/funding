@@ -35,7 +35,7 @@ use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
 
 final class HiHKostenJsonSchema extends JsonSchemaObject {
 
-  public function __construct(JsonSchema $ifFullValidation) {
+  public function __construct(JsonSchema $ifFullValidation, bool $bshAdmin) {
     $properties = [
       'personalkostenKeine' => new JsonSchemaBoolean(),
       'personalkosten' => new JsonSchemaArray(
@@ -55,9 +55,6 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
             'type' => 'personalkosten',
             'identifierProperty' => '_identifier',
             'amountProperty' => 'summe',
-            'clearing' => [
-              'itemLabel' => 'Personalkosten {@pos}',
-            ],
           ]),
         ]
       ),
@@ -94,9 +91,6 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
             'type' => 'honorar',
             'identifierProperty' => '_identifier',
             'amountProperty' => 'summe',
-            'clearing' => [
-              'itemLabel' => 'Honorar {@pos}',
-            ],
           ]),
         ]
       ),
@@ -114,9 +108,6 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'sachkosten.materialien',
             'identifier' => 'sachkosten.materialien',
-            'clearing' => [
-              'itemLabel' => 'Projektbezogene Materialien',
-            ],
           ]),
         ]),
         'ehrenamtspauschalen' => new JsonSchemaMoney([
@@ -125,9 +116,6 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'sachkosten.ehrenamtspauschalen',
             'identifier' => 'sachkosten.ehrenamtspauschalen',
-            'clearing' => [
-              'itemLabel' => 'Ehrenamts-/Übungsleiterpauschalen',
-            ],
           ]),
         ]),
         'verpflegung' => new JsonSchemaMoney([
@@ -136,9 +124,6 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'sachkosten.verpflegung',
             'identifier' => 'sachkosten.verpflegung',
-            'clearing' => [
-              'itemLabel' => 'Verpflegung/Catering',
-            ],
           ]),
         ]),
         'fahrtkosten' => new JsonSchemaMoney([
@@ -147,9 +132,6 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'sachkosten.fahrtkosten',
             'identifier' => 'sachkosten.fahrtkosten',
-            'clearing' => [
-              'itemLabel' => 'Fahrtkosten',
-            ],
           ]),
         ]),
         'oeffentlichkeitsarbeit' => new JsonSchemaMoney([
@@ -158,9 +140,6 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'sachkosten.oeffentlichkeitsarbeit',
             'identifier' => 'sachkosten.oeffentlichkeitsarbeit',
-            'clearing' => [
-              'itemLabel' => 'Projektbezogene Öffentlichkeitsarbeit',
-            ],
           ]),
         ]),
         'investitionen' => new JsonSchemaMoney([
@@ -169,9 +148,6 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'sachkosten.investitionen',
             'identifier' => 'sachkosten.investitionen',
-            'clearing' => [
-              'itemLabel' => 'Projektbezogene Investitionen',
-            ],
           ]),
         ]),
         'mieten' => new JsonSchemaMoney([
@@ -180,9 +156,6 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'sachkosten.mieten',
             'identifier' => 'sachkosten.mieten',
-            'clearing' => [
-              'itemLabel' => 'Projektbezogene Mieten',
-            ],
           ]),
         ]),
         'sonstige' => new JsonSchemaArray(
@@ -196,9 +169,6 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
               'type' => 'sachkosten.sonstige',
               'identifierProperty' => '_identifier',
               'amountProperty' => 'summe',
-              'clearing' => [
-                'itemLabel' => 'Sonstige Sachkosten {@pos}',
-              ],
             ]),
           ]
         ),
@@ -247,6 +217,64 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
         ['$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'amount_requested']])],
       ),
     ];
+
+    if ($bshAdmin) {
+      $properties['personalkostenBewilligt'] = new JsonSchemaMoney([
+        'minimum' => 0,
+         // @todo: default value.
+        '$costItem' => new JsonSchemaCostItem([
+          'type' => 'bewilligt',
+          'identifier' => 'personalkostenBewilligt',
+          'clearing' => [
+            'itemLabel' => 'Personalkosten',
+          ],
+        ]),
+        '$tag' => JsonSchema::fromArray([
+          'mapToField' => [
+            'fieldName' => 'bsh_funding_application_extra.amount_approved_personalkosten',
+          ],
+        ]),
+      ]);
+      $properties['honorareBewilligt'] = new JsonSchemaMoney([
+        'minimum' => 0,
+        // @todo: default value.
+        '$costItem' => new JsonSchemaCostItem([
+          'type' => 'bewilligt',
+          'identifier' => 'honorareBewilligt',
+          'clearing' => [
+            'itemLabel' => 'Honorare',
+          ],
+        ]),
+        '$tag' => JsonSchema::fromArray([
+          'mapToField' => [
+            'fieldName' => 'bsh_funding_application_extra.amount_approved_honorare',
+          ],
+        ]),
+      ]);
+      $properties['sachkostenBewilligt'] = new JsonSchemaMoney([
+        'minimum' => 0,
+        // @todo: default value.
+        '$costItem' => new JsonSchemaCostItem([
+          'type' => 'bewilligt',
+          'identifier' => 'sachkostenBewilligt',
+          'clearing' => [
+            'itemLabel' => 'Sachkosten',
+          ],
+        ]),
+        '$tag' => JsonSchema::fromArray([
+          'mapToField' => [
+            'fieldName' => 'bsh_funding_application_extra.amount_approved_sachkosten',
+          ],
+        ]),
+      ]);
+      $properties['bewilligungskommentar'] = new JsonSchemaString([
+        '$tag' => JsonSchema::fromArray([
+          'mapToField' => [
+            'fieldName' => 'bsh_funding_application_extra.approval_comment',
+          ],
+        ]),
+      ]);
+    }
 
     $minLengthValidation = [
       '$validations' => [
@@ -303,6 +331,17 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
             'then' => new JsonSchemaObject([
               'honorareKommentar' => new JsonSchemaString($minLengthValidation),
             ], ['required' => ['honorareKommentar']]),
+          ]),
+          JsonSchema::fromArray([
+            'if' => [
+              'evaluate' => [
+                'expression' => 'action == "approve" || action == "approve-update"',
+                'variables' => ['action' => ['$data' => '/_action', 'fallback' => '']],
+              ],
+            ],
+            'then' => JsonSchema::fromArray([
+              'required' => ['personalkostenBewilligt', 'honorareBewilligt', 'sachkostenBewilligt'],
+            ]),
           ]),
         ],
       ]),

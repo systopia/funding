@@ -20,6 +20,7 @@ declare(strict_types = 1);
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
+use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Actions\HiHApplicationActionsDeterminer;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Actions\HiHApplicationActionStatusInfo;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Actions\HiHApplicationStatusDeterminer;
@@ -28,12 +29,13 @@ use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Actions\HiHApplicati
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Data\HiHApplicationFormDataFactory;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Data\HiHApplicationFormFilesFactory;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Data\HiHInfoDateienFactory;
+use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\JsonSchema\HiHApplicationFormValidator;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\JsonSchema\HiHApplicationJsonSchemaFactory;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\UiSchema\HiHApplicationUiSchemaFactory;
-use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\EventSubscriber\HiHAngularModuleSubscriber;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\FundingCase\Actions\HiHCaseActionsDeterminer;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\FundingCase\HiHPossibleRecipientsForChangeLoader;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\FundingCase\StatusDeterminer\HiHCaseStatusDeterminer;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 $container->autowire(HiHApplicationActionsDeterminer::class)
   ->addTag(HiHApplicationActionsDeterminer::SERVICE_TAG);
@@ -71,9 +73,17 @@ $container->autowire(HiHApplicationFormFilesFactory::class)
 
 $container->autowire(HiHInfoDateienFactory::class);
 
+$container->autowire(HiHApplicationFormValidator::class)
+  ->addTag(HiHApplicationFormValidator::SERVICE_TAG);
 
 $container->autowire(HiHPossibleRecipientsForChangeLoader::class)
   ->addTag(HiHPossibleRecipientsForChangeLoader::SERVICE_TAG);
 
-$container->autowire(HiHAngularModuleSubscriber::class)
-  ->addTag('kernel.event_subscriber');
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/FundingCaseTypes/BSH/HiHAktion/EventSubscriber',
+  'Civi\\Funding\\FundingCaseTypes\\BSH\\HiHAktion\\EventSubscriber',
+  EventSubscriberInterface::class,
+  ['kernel.event_subscriber' => []],
+  ['lazy' => 'auto'],
+);

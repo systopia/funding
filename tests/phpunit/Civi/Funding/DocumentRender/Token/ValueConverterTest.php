@@ -65,6 +65,11 @@ final class ValueConverterTest extends TestCase {
     );
 
     static::assertEquals(
+      new ResolvedToken("foo<br />\nbar", 'text/html'),
+      ValueConverter::toResolvedToken("foo\nbar")
+    );
+
+    static::assertEquals(
       new ResolvedToken('', 'text/plain'),
       ValueConverter::toResolvedToken(fopen(__FILE__, 'r'))
     );
