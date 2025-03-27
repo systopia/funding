@@ -1,0 +1,50 @@
+<div class="modal fade funding-modal" id="approve-modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="{{ ts('Close') }}"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">{{ $ctrlApprove.action === 'approve' ? 'Antrag bewilligen' : 'Bewilligung ändern' }}</h4>
+      </div>
+      <div class="modal-body">
+        <div ng-show="$ctrlApprove.action === 'approve-update'" class="alert alert-info">
+          Hinweis: Der bewilligte Betrag darf sich nicht ändern.
+        </div>
+        <div class="form-group">
+          <label for="personalkostenBewilligt">Bewilligte Personalkosten</label>
+          <input id="personalkostenBewilligt" class="form-control" type="number" step="0.01" min="0" ng-model="data.kosten.personalkostenBewilligt" ng-required="true">
+        </div>
+        <div class="form-group">
+          <label for="honorareBewilligt">Bewilligte Honorare</label>
+          <input id="honorareBewilligt" class="form-control" type="number" step="0.01" min="0" ng-model="data.kosten.honorareBewilligt" ng-required="true">
+        </div>
+        <div class="form-group">
+          <label for="sachkostenBewilligt">Bewilligte Sachkosten</label>
+          <input id="sachkostenBewilligt" class="form-control" type="number" step="0.01" min="0" ng-model="data.kosten.sachkostenBewilligt" ng-required="true">
+        </div>
+        <div class="form-group">
+          <label>Summe</label>
+          {{ $ctrlApprove.approveSum()|fundingCurrency:currency }}
+          <div ng-show="!$ctrlApprove.isApproveSumValid()" class="alert alert-danger">
+            Nicht erlaubte Summe.
+          </div>
+        </div>
+        <div ng-show="$ctrlApprove.action === 'approve'" class="form-group">
+          <label>Beantragter Betrag</label>
+          {{ applicationProcess.amount_requested|fundingCurrency:currency }}
+        </div>
+        <div ng-show="$ctrlApprove.action === 'approve-update'" class="form-group">
+          <label>Bewilligter Betrag</label>
+          {{ fundingCase.amount_approved|fundingCurrency:currency }}
+        </div>
+        <div>
+          <label for="bewilligungskommentar">Bewilligungskommentar</label>
+          <textarea id="bewilligungskommentar" rows="5" cols="80" ng-model="data.kosten.bewilligungskommentar" ng-required="false"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" crm-icon="fa-check" ng-click="submitApprove()">{{ $ctrlApprove.action === 'approve' ? 'Bewilligen' : 'Ändern' }}</button>
+        <button type="button" class="btn btn-default" crm-icon="fa-times" data-dismiss="modal">{{ ts('Cancel') }}</button>
+      </div>
+    </div>
+  </div>
+</div>

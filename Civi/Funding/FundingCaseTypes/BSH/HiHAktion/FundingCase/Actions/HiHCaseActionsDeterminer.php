@@ -37,6 +37,7 @@ final class HiHCaseActionsDeterminer extends FundingCaseActionsDeterminer {
       ClearingProcessPermissions::REVIEW_CALCULATIVE => [Actions::SET_NOTIFICATION_CONTACTS],
       ClearingProcessPermissions::REVIEW_CONTENT => [Actions::SET_NOTIFICATION_CONTACTS],
       'review_drawdown' => [Actions::SET_NOTIFICATION_CONTACTS],
+      'bsh_admin' => [Actions::APPROVE],
     ],
     Status::ONGOING => [
       'review_application' => [Actions::SET_NOTIFICATION_CONTACTS],

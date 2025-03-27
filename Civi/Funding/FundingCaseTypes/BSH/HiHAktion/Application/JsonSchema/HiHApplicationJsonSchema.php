@@ -32,7 +32,8 @@ final class HiHApplicationJsonSchema extends JsonSchemaObject {
   public function __construct(
     \DateTimeInterface $applicationBegin,
     \DateTimeInterface $applicationEnd,
-    array $possibleRecipients
+    array $possibleRecipients,
+    bool $bshAdmin
   ) {
     $ifFullValidation = JsonSchema::fromArray([
       'evaluate' => [
@@ -48,7 +49,7 @@ final class HiHApplicationJsonSchema extends JsonSchemaObject {
         $applicationBegin, $applicationEnd, $ifFullValidation
       ),
       'empfaenger' => new JsonSchemaRecipient($possibleRecipients),
-      'kosten' => new HiHKostenJsonSchema($ifFullValidation),
+      'kosten' => new HiHKostenJsonSchema($ifFullValidation, $bshAdmin),
       'finanzierung' => new HiHFinanzierungJsonSchema($ifFullValidation),
       'formales' => new HiHFormalesJsonSchema($ifFullValidation),
     ];

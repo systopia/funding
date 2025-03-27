@@ -61,7 +61,8 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
     $this->jsonSchema = new HiHApplicationJsonSchema(
       new \DateTime('2024-07-08'),
       new \DateTime('2024-07-09'),
-      $possibleRecipients
+      $possibleRecipients,
+      TRUE
     );
 
     $this->validData = [
@@ -166,6 +167,9 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
         'personalkostenKommentar' => 'PersonalkostenKommentar',
         'honorareKommentar' => 'HonorareKommentar',
         'sachkostenKommentar' => 'SachkostenKommentar',
+        'personalkostenBewilligt' => 11.11,
+        'honorareBewilligt' => 22.22,
+        'sachkostenBewilligt' => 33.33,
       ],
       'finanzierung' => [
         'grundsaetzlich' => 'Finanzierung grundsätzlich',
@@ -193,7 +197,7 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
 
     $result = $this->validator->validate($this->jsonSchema, $this->validData);
     static::assertSame([], $result->getLeafErrorMessages());
-    static::assertCount(13, $result->getCostItemsData());
+    static::assertCount(16, $result->getCostItemsData());
 
     $resultData = JsonConverter::toStdClass($result->getData());
     static::assertSame(8000.8, $resultData->kosten->personalkostenSumme);
@@ -216,6 +220,9 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
         'jugendliche',
       ],
       '_zielgruppeHerausforderungen' => ['fluchterfahrung'],
+      'bsh_funding_application_extra.amount_approved_personalkosten' => 11.11,
+      'bsh_funding_application_extra.amount_approved_honorare' => 22.22,
+      'bsh_funding_application_extra.amount_approved_sachkosten' => 33.33,
     ], $mappedData);
   }
 
@@ -357,7 +364,8 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
     $jsonSchema = new HiHApplicationJsonSchema(
       new \DateTime('2024-07-08'),
       new \DateTime('2024-07-09'),
-      [2 => 'Organization 2']
+      [2 => 'Organization 2'],
+      FALSE
     );
 
     $data = (object) [
@@ -384,7 +392,8 @@ final class HiHApplicationJsonSchemaTest extends TestCase {
     $jsonSchema = new HiHApplicationJsonSchema(
       new \DateTime('2024-07-08'),
       new \DateTime('2024-07-09'),
-      [2 => 'Organization 2']
+      [2 => 'Organization 2'],
+      TRUE
     );
 
     $data = (object) [
