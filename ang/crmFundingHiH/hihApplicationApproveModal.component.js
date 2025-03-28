@@ -105,9 +105,13 @@ fundingHiHModule.directive('fundingHihApplicationApproveModal', function() {
 
       ctrl.approveSum = function () {
         return ($scope.data.kosten.personalkostenBewilligt + $scope.data.kosten.honorareBewilligt + $scope.data.kosten.sachkostenBewilligt).toFixed(2);
-      }
+      };
 
       ctrl.isApproveSumValid = function () {
+        if (ctrl.approveSum() <= 0) {
+          return false;
+        }
+
         if (ctrl.action === 'approve-update') {
           if (Math.abs(ctrl.approveSum() - $scope.fundingCase.amount_approved) > Number.EPSILON) {
             return false;
@@ -115,7 +119,7 @@ fundingHiHModule.directive('fundingHihApplicationApproveModal', function() {
         }
 
         return true;
-      }
+      };
 
       $scope.submitApprove = function() {
         const validationResult = validate();
