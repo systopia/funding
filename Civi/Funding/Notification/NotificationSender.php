@@ -74,7 +74,8 @@ final class NotificationSender {
     $event = new PreSendNotificationEvent(
       $fundingCase->getNotificationContactIds(),
       $tokenContext,
-      $this->workflowDeterminer->getWorkflowName($workflowNamePostfix, $fundingCaseType)
+      $this->workflowDeterminer->getWorkflowName($workflowNamePostfix, $fundingCaseType),
+      $workflowNamePostfix
     );
     $this->eventDispatcher->dispatch(PreSendNotificationEvent::class, $event);
 
