@@ -22,6 +22,8 @@ namespace Civi\Funding\Controller;
 use Civi\Funding\FileTypeNames;
 use Civi\Funding\FundingAttachmentManagerInterface;
 use Civi\Funding\FundingCase\FundingCaseManager;
+use Civi\Funding\FundingCase\FundingCasePermissions;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,12 +39,16 @@ final class TransferContractDownloadController implements PageControllerInterfac
 
   private FundingCaseManager $fundingCaseManager;
 
+  private RequestContextInterface $requestContext;
+
   public function __construct(
     FundingAttachmentManagerInterface $attachmentManager,
-    FundingCaseManager $fundingCaseManager
+    FundingCaseManager $fundingCaseManager,
+    RequestContextInterface $requestContext
   ) {
     $this->attachmentManager = $attachmentManager;
     $this->fundingCaseManager = $fundingCaseManager;
+    $this->requestContext = $requestContext;
   }
 
   /**
@@ -65,7 +71,12 @@ final class TransferContractDownloadController implements PageControllerInterfac
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    */
   private function download(int $fundingCaseId): Response {
-    if (!$this->fundingCaseManager->hasAccess($fundingCaseId)) {
+    $fundingCase = $this->fundingCaseManager->get($fundingCaseId);
+    if (NULL === $fundingCase) {
+      throw new NotFoundHttpException();
+    }
+
+    if ($this->requestContext->isRemote() && !$fundingCase->hasPermission(FundingCasePermissions::CONTRACT_VIEW)) {
       throw new AccessDeniedHttpException();
     }
 
