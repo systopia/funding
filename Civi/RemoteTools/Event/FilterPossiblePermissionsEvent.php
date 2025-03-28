@@ -78,6 +78,27 @@ final class FilterPossiblePermissionsEvent extends Event {
     return $this;
   }
 
+  /**
+   * @phpstan-param list<string> $prefixes
+   */
+  public function keepPermissionsByPrefixes(array $prefixes): self {
+    $this->permissions = array_filter(
+      $this->permissions,
+      function (string $permission) use ($prefixes): bool {
+        foreach ($prefixes as $prefix) {
+          if (str_starts_with($permission, $prefix)) {
+            return TRUE;
+          }
+        }
+
+        return FALSE;
+      },
+      ARRAY_FILTER_USE_KEY
+    );
+
+    return $this;
+  }
+
   public function removePermission(string $permission): self {
     $this->removePermissions([$permission]);
 
