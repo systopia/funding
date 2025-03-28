@@ -44,14 +44,22 @@ final class PreSendNotificationEvent extends Event {
 
   private ?string $workflowName;
 
+  private string $workflowNamePostfix;
+
   /**
    * @phpstan-param list<int> $notificationContactIds
    * @phpstan-param array<string, mixed> $tokenContext
    */
-  public function __construct(array $notificationContactIds, array $tokenContext, ?string $workflowName) {
+  public function __construct(
+    array $notificationContactIds,
+    array $tokenContext,
+    ?string $workflowName,
+    string $workflowNamePostfix
+  ) {
     $this->notificationContactIds = $notificationContactIds;
     $this->tokenContext = $tokenContext;
     $this->workflowName = $workflowName;
+    $this->workflowNamePostfix = $workflowNamePostfix;
   }
 
   public function getApplicationProcess(): ?ApplicationProcessEntity {
@@ -135,6 +143,10 @@ final class PreSendNotificationEvent extends Event {
     $this->workflowName = $workflowName;
 
     return $this;
+  }
+
+  public function getWorkflowNamePostfix(): string {
+    return $this->workflowNamePostfix;
   }
 
 }
