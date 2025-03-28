@@ -22,16 +22,11 @@ namespace Civi\Funding\EventSubscriber\FundingCase;
 use Civi\Funding\Api4\Permissions;
 use Civi\Funding\Event\FundingCase\GetPermissionsEvent;
 use Civi\Funding\Permission\CiviPermissionChecker;
+use Civi\Funding\PermissionPrefixes;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 final class FundingCaseFilterPermissionsSubscriber implements EventSubscriberInterface {
-
-  private const APPLICANT_PERMISSION_PREFIXES = [
-    'application_',
-    'drawdown_',
-    'clearing_',
-  ];
 
   private CiviPermissionChecker $permissionChecker;
 
@@ -60,26 +55,16 @@ final class FundingCaseFilterPermissionsSubscriber implements EventSubscriberInt
     }
   }
 
-  private function isApplicantPermission(string $permission): bool {
-    foreach (self::APPLICANT_PERMISSION_PREFIXES as $permissionPrefix) {
-      if (\str_starts_with($permission, $permissionPrefix)) {
-        return TRUE;
-      }
-    }
-
-    return FALSE;
-  }
-
   private function provideOnlyApplicantPermissions(GetPermissionsEvent $event): void {
     $event->setPermissions(\array_filter(
       $event->getPermissions(),
-      fn (string $permission) => $this->isApplicantPermission($permission),
+      fn (string $permission) => PermissionPrefixes::isApplicantPermission($permission),
     ));
   }
 
   private function preventAccessIfHasApplicantPermission(GetPermissionsEvent $event): void {
     foreach ($event->getPermissions() as $permission) {
-      if ($this->isApplicantPermission($permission)) {
+      if (PermissionPrefixes::isApplicantPermission($permission)) {
         // funding admins are still allowed to view the application.
         $event->setPermissions($this->isFundingAdmin() ? ['view'] : []);
 

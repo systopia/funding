@@ -228,6 +228,11 @@ final class GetFieldsAction extends BasicGetFieldsAction {
         'title' => 'CAN_create_drawdown',
         'data_type' => 'Boolean',
       ],
+      [
+        'name' => 'CAN_view_contract',
+        'title' => 'CAN_view_contract',
+        'data_type' => 'Boolean',
+      ],
     ];
   }
 

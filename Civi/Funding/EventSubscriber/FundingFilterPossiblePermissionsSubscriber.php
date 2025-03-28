@@ -21,13 +21,12 @@ namespace Civi\Funding\EventSubscriber;
 
 use Civi\Api4\FundingCase;
 use Civi\Api4\FundingProgram;
+use Civi\Funding\PermissionPrefixes;
 use Civi\RemoteTools\Event\FilterPossiblePermissionsEvent;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 final class FundingFilterPossiblePermissionsSubscriber implements EventSubscriberInterface {
-
-  private const APPLICATION_PERMISSION_PREFIX = 'application_';
 
   private RequestContextInterface $requestContext;
 
@@ -49,19 +48,22 @@ final class FundingFilterPossiblePermissionsSubscriber implements EventSubscribe
 
   public function onFilterPossiblePermissions(FilterPossiblePermissionsEvent $event): void {
     if ($this->requestContext->isRemote()) {
-      $this->excludeNonApplicationPermissions($event);
+      $this->excludeNonApplicantPermissions($event);
     }
     else {
-      $this->excludeApplicationPermissions($event);
+      $this->excludeApplicantPermissions($event);
     }
   }
 
-  private function excludeApplicationPermissions(FilterPossiblePermissionsEvent $event): void {
-    $event->removePermissionsByPrefix(self::APPLICATION_PERMISSION_PREFIX);
+  private function excludeApplicantPermissions(FilterPossiblePermissionsEvent $event): void {
+    array_map(
+      fn (string $prefix) => $event->removePermissionsByPrefix($prefix),
+      PermissionPrefixes::APPLICANT
+    );
   }
 
-  private function excludeNonApplicationPermissions(FilterPossiblePermissionsEvent $event): void {
-    $event->keepPermissionsByPrefix(self::APPLICATION_PERMISSION_PREFIX);
+  private function excludeNonApplicantPermissions(FilterPossiblePermissionsEvent $event): void {
+    $event->keepPermissionsByPrefixes(PermissionPrefixes::APPLICANT);
   }
 
 }
