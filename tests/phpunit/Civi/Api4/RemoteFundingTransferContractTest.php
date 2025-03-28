@@ -87,16 +87,26 @@ final class RemoteFundingTransferContractTest extends AbstractRemoteFundingHeadl
       'currency' => $fundingProgram->getCurrency(),
       'funding_program_title' => $fundingProgram->getTitle(),
       'CAN_create_drawdown' => FALSE,
+      'CAN_view_contract' => FALSE,
     ];
     static::assertEquals($expected, $values);
 
     // Test CAN_create_drawdown with drawdown_create permission
-    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['drawdown_create']);
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), [
+      'drawdown_create',
+      'contract_view',
+    ]);
     static::assertTrue(
       RemoteFundingTransferContract::get()
         ->setRemoteContactId((string) $contact['id'])
         ->execute()
         ->first()['CAN_create_drawdown']
+    );
+    static::assertTrue(
+      RemoteFundingTransferContract::get()
+        ->setRemoteContactId((string) $contact['id'])
+        ->execute()
+        ->first()['CAN_view_contract']
     );
 
     // Test CAN_create_drawdown with payout process closed
@@ -149,7 +159,7 @@ final class RemoteFundingTransferContractTest extends AbstractRemoteFundingHeadl
       static::assertTrue($field['readonly'], $message);
     }
 
-    static::assertCount(22, $result);
+    static::assertCount(23, $result);
   }
 
 }
