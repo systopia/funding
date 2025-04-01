@@ -81,6 +81,7 @@ final class KursApplicationJsonSchemaTest extends TestCase {
       'grunddaten' => [
         'titel' => 'Test',
         'kurzbeschreibungDerInhalte' => 'foo bar',
+        'internerBezeichner' => 'interne id',
         'zeitraeume' => [
           [
             'beginn' => '2022-08-25',
@@ -157,6 +158,7 @@ final class KursApplicationJsonSchemaTest extends TestCase {
     static::assertEquals([
       'title' => 'Test',
       'short_description' => 'foo bar',
+      'funding_application_process_extra.internal_identifier' => 'interne id',
       'start_date' => '2022-08-24',
       'end_date' => '2022-08-26',
       'amount_requested' => $beantragterZuschuss,
@@ -194,6 +196,7 @@ final class KursApplicationJsonSchemaTest extends TestCase {
       'grunddaten' => [
         'titel' => 'Test',
         'kurzbeschreibungDerInhalte' => 'foo bar',
+        'internerBezeichner' => 'interne id',
         'zeitraeume' => [
           [
             'beginn' => '2022-08-24',
@@ -266,6 +269,7 @@ final class KursApplicationJsonSchemaTest extends TestCase {
     static::assertEquals([
       'title' => 'Test',
       'short_description' => 'foo bar',
+      'funding_application_process_extra.internal_identifier' => 'interne id',
       'start_date' => '2022-08-24',
       'end_date' => '2022-08-26',
       'amount_requested' => $beantragterZuschuss,
