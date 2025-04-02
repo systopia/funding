@@ -51,6 +51,7 @@ final class AVK1ReportFormFactoryTest extends TestCase {
     $grunddaten = (object) [
       'titel' => 'Test',
       'kurzbeschreibungDesInhalts' => 'foo bar',
+      'internerBezeichner' => 'interne id',
       'zeitraeume' => [
         (object) [
           'beginn' => '2022-08-24',
@@ -84,6 +85,7 @@ final class AVK1ReportFormFactoryTest extends TestCase {
     $grunddaten = (object) [
       'titel' => 'Test',
       'kurzbeschreibungDesInhalts' => 'foo bar',
+      'internerBezeichner' => 'interne id',
       'zeitraeume' => [
         (object) [
           'beginn' => '2022-08-24',

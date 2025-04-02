@@ -33,6 +33,7 @@ final class IJBGrunddatenUiSchema extends JsonFormsCategory {
    */
   public function __construct(string $scopePrefix, bool $report = FALSE) {
     $elements = [
+      new JsonFormsControl("$scopePrefix/internerBezeichner", 'Interner Bezeichner'),
       new JsonFormsControl("$scopePrefix/titel", 'Titel'),
       new JsonFormsControl(
         "$scopePrefix/kurzbeschreibungDesInhalts",
