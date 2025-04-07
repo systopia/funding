@@ -222,9 +222,9 @@ final class IJBReportFormFactoryTest extends TestCase {
     static::assertSame(0, $data->reportData->zuschuss->fahrtkostenMax);
     static::assertSame(0, $data->reportData->zuschuss->zuschlagMax);
     static::assertSame(10, $data->reportData->foerderung->summe);
-    
+
     $tagValidator = new Validator(new NullTranslator(), OpisValidatorFactory::getValidator());
-    $result = $tagValidator>validate($validationSchema, $data);
+    $result = $tagValidator->validate($validationSchema, $data);
 
     $mappedDataLoader = new MappedDataLoader();
     $mappedData = $mappedDataLoader->getMappedData($result->getTaggedData());
