@@ -23,6 +23,7 @@ use Civi\Funding\EntityFactory\ClearingProcessBundleFactory;
 use Civi\Funding\Form\JsonFormsFormInterface;
 use Civi\Funding\Form\Traits\AssertFormTrait;
 use Civi\Funding\Validation\Traits\AssertValidationResultTrait;
+use Civi\RemoteTools\JsonSchema\Validation\Validator;
 use Civi\RemoteTools\JsonSchema\Validation\OpisValidatorFactory;
 use PHPUnit\Framework\TestCase;
 
@@ -221,6 +222,21 @@ final class IJBReportFormFactoryTest extends TestCase {
     static::assertSame(0, $data->reportData->zuschuss->fahrtkostenMax);
     static::assertSame(0, $data->reportData->zuschuss->zuschlagMax);
     static::assertSame(10, $data->reportData->foerderung->summe);
+    
+    $tagValidator = new Validator(new NullTranslator(), OpisValidatorFactory::getValidator());
+    $result = $tagValidator>validate($validationSchema, $data);
+
+    $mappedDataLoader = new MappedDataLoader();
+    $mappedData = $mappedDataLoader->getMappedData($result->getTaggedData());
+
+    static::assertEquals([
+      'title' => 'Test',
+      'short_description' => 'foo bar',
+      'recipient_contact_id' => 2,
+      'start_date' => '2022-08-24',
+      'end_date' => '2022-08-26',
+      'amount_requested' => 0,
+    ], $mappedData);
   }
 
   public function testValidationSpracheAndere(): void {
