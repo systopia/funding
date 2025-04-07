@@ -19,7 +19,6 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\IJB\Report;
 
-use Systopia\JsonSchema\Translation\NullTranslator;
 use Civi\Funding\EntityFactory\ClearingProcessBundleFactory;
 use Civi\Funding\Form\JsonFormsFormInterface;
 use Civi\Funding\Form\MappedData\MappedDataLoader;
