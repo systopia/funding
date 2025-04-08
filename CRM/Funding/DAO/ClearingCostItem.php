@@ -262,7 +262,7 @@ class CRM_Funding_DAO_ClearingCostItem extends CRM_Core_DAO {
             'type' => 'Select',
           ],
           'pseudoconstant' => [
-            'callback' => 'Civi\Funding\FundingPseudoConstants::getClearingItemStatus()',
+            'callback' => 'Civi\Funding\FundingPseudoConstants::getClearingItemStatus',
           ],
           'add' => NULL,
         ],

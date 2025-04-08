@@ -71,7 +71,7 @@
     <length>64</length>
     <required>true</required>
     <pseudoconstant>
-      <callback>Civi\Funding\FundingPseudoConstants::getClearingItemStatus()</callback>
+      <callback>Civi\Funding\FundingPseudoConstants::getClearingItemStatus</callback>
     </pseudoconstant>
     <html>
       <type>Select</type>
