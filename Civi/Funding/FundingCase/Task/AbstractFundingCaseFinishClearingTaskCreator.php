@@ -68,7 +68,7 @@ abstract class AbstractFundingCaseFinishClearingTaskCreator implements ClearingP
   }
 
   protected function getTaskSubject(FundingCaseBundle $fundingCaseBundle): string {
-    return E::ts('Finish Funding Case Clearing');
+    return E::ts('Finish Clearing');
   }
 
   private function createFinishClearingTask(FundingCaseBundle $fundingCaseBundle): FundingTaskEntity {

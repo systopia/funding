@@ -152,7 +152,7 @@ final class AbstractFundingCaseFinishClearingTaskCreatorTest extends TestCase {
 
     static::assertEquals([
       FundingTaskEntity::newTask([
-        'subject' => 'Finish Funding Case Clearing',
+        'subject' => 'Finish Clearing',
         'affected_identifier' => $clearingProcessBundle->getFundingCase()->getIdentifier(),
         'required_permissions' => [
           'review_clearing_calculative',
