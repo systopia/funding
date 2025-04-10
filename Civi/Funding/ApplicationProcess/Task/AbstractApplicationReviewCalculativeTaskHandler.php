@@ -131,12 +131,4 @@ abstract class AbstractApplicationReviewCalculativeTaskHandler implements Applic
       && $this->isInReviewableStatus($applicationProcessBundle);
   }
 
-  private function isStatusChangedToNonReviewable(
-    ApplicationProcessEntityBundle $applicationProcessBundle,
-    ApplicationProcessEntity $previousApplicationProcess
-  ): bool {
-    return $applicationProcessBundle->getApplicationProcess()->getStatus() !== $previousApplicationProcess->getStatus()
-      && !$this->isInReviewableStatus($applicationProcessBundle);
-  }
-
 }
