@@ -22,15 +22,9 @@ namespace Civi\Funding\Entity;
 /**
  * @codeCoverageIgnore
  */
-final class ApplicationProcessEntityBundle {
+class ApplicationProcessEntityBundle extends FundingCaseBundle {
 
   private ApplicationProcessEntity $applicationProcess;
-
-  private FundingCaseEntity $fundingCase;
-
-  private FundingCaseTypeEntity $fundingCaseType;
-
-  private FundingProgramEntity $fundingProgram;
 
   public function __construct(
     ApplicationProcessEntity $applicationProcess,
@@ -39,25 +33,11 @@ final class ApplicationProcessEntityBundle {
     FundingProgramEntity $fundingProgram
   ) {
     $this->applicationProcess = $applicationProcess;
-    $this->fundingCase = $fundingCase;
-    $this->fundingCaseType = $fundingCaseType;
-    $this->fundingProgram = $fundingProgram;
+    parent::__construct($fundingCase, $fundingCaseType, $fundingProgram);
   }
 
   public function getApplicationProcess(): ApplicationProcessEntity {
     return $this->applicationProcess;
-  }
-
-  public function getFundingCase(): FundingCaseEntity {
-    return $this->fundingCase;
-  }
-
-  public function getFundingCaseType(): FundingCaseTypeEntity {
-    return $this->fundingCaseType;
-  }
-
-  public function getFundingProgram(): FundingProgramEntity {
-    return $this->fundingProgram;
   }
 
 }

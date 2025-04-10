@@ -19,26 +19,27 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Event\FundingCase;
 
+use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\Traits\FundingCaseBundleTrait;
 use Symfony\Contracts\EventDispatcher\Event;
 
 final class FundingCaseUpdatedEvent extends Event {
 
+  use FundingCaseBundleTrait;
+
   private FundingCaseEntity $previousFundingCase;
 
-  private FundingCaseEntity $fundingCase;
-
-  public function __construct(FundingCaseEntity $previousFundingCase, FundingCaseEntity $fundingCase) {
+  public function __construct(
+    FundingCaseEntity $previousFundingCase,
+    FundingCaseBundle $fundingCaseBundle
+  ) {
     $this->previousFundingCase = $previousFundingCase;
-    $this->fundingCase = $fundingCase;
+    $this->fundingCaseBundle = $fundingCaseBundle;
   }
 
   public function getPreviousFundingCase(): FundingCaseEntity {
     return $this->previousFundingCase;
-  }
-
-  public function getFundingCase(): FundingCaseEntity {
-    return $this->fundingCase;
   }
 
 }

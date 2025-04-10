@@ -24,8 +24,9 @@ use Civi\Funding\Api4\Action\Remote\FundingClearingProcess\GetOrCreateAction;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
-use Civi\Funding\EntityFactory\ClearingProcessFactory;
+use Civi\Funding\EntityFactory\ClearingProcessBundleFactory;
 use Civi\Funding\Traits\CreateMockTrait;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -93,20 +94,32 @@ final class RemoteGetOrCreateActionHandlerTest extends TestCase {
     $action = static::createApi4ActionMock(GetOrCreateAction::class);
     $action->setApplicationProcessId(12);
 
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+    $clearingProcessBundle = ClearingProcessBundleFactory::create(
+      [
+        'status' => 'not-started',
+        'creation_date' => NULL,
+        'modification_date' => NULL,
+      ],
       ['is_eligible' => TRUE],
-      ['permissions' => ['application_modify']]
+      ['permissions' => ['application_modify']],
     );
+    $applicationProcessBundle = new ApplicationProcessEntityBundle(
+      $clearingProcessBundle->getApplicationProcess(),
+      $clearingProcessBundle->getFundingCase(),
+      $clearingProcessBundle->getFundingCaseType(),
+      $clearingProcessBundle->getFundingProgram()
+    );
+
     $this->applicationProcessBundleLoaderMock->method('get')
       ->with(12)
       ->willReturn($applicationProcessBundle);
 
     $this->clearingProcessManagerMock->method('getByApplicationProcessId')
       ->with(12)
-      ->willReturn(NULL);
+      ->willReturn($clearingProcessBundle->getClearingProcess());
 
     $this->expectException(UnauthorizedException::class);
-    $this->expectExceptionMessage('Permission to create clearing for application process with ID 12 is missing');
+    $this->expectExceptionMessage('Permission to start clearing for application process with ID 12 is missing');
     $this->handler->getOrCreate($action);
   }
 
@@ -117,24 +130,34 @@ final class RemoteGetOrCreateActionHandlerTest extends TestCase {
     $action = static::createApi4ActionMock(GetOrCreateAction::class);
     $action->setApplicationProcessId(12);
 
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+    $clearingProcessBundle = ClearingProcessBundleFactory::create(
+      [
+        'status' => 'not-started',
+        'creation_date' => NULL,
+        'modification_date' => NULL,
+      ],
       ['is_eligible' => TRUE],
-      ['permissions' => [$permission]]
+      ['permissions' => [$permission]],
     );
+    $applicationProcessBundle = new ApplicationProcessEntityBundle(
+      $clearingProcessBundle->getApplicationProcess(),
+      $clearingProcessBundle->getFundingCase(),
+      $clearingProcessBundle->getFundingCaseType(),
+      $clearingProcessBundle->getFundingProgram()
+    );
+
     $this->applicationProcessBundleLoaderMock->method('get')
       ->with(12)
       ->willReturn($applicationProcessBundle);
 
     $this->clearingProcessManagerMock->method('getByApplicationProcessId')
       ->with(12)
-      ->willReturn(NULL);
+      ->willReturn($clearingProcessBundle->getClearingProcess());
 
-    $clearingProcess = ClearingProcessFactory::create();
-    $this->clearingProcessManagerMock->expects(static::once())->method('create')
-      ->with($applicationProcessBundle)
-      ->willReturn($clearingProcess);
+    $this->clearingProcessManagerMock->expects(static::once())->method('start')
+      ->with($clearingProcessBundle);
 
-    static::assertSame($clearingProcess->toArray(), $this->handler->getOrCreate($action));
+    static::assertSame($clearingProcessBundle->getClearingProcess()->toArray(), $this->handler->getOrCreate($action));
   }
 
   /**
@@ -149,20 +172,31 @@ final class RemoteGetOrCreateActionHandlerTest extends TestCase {
     $action = static::createApi4ActionMock(GetOrCreateAction::class);
     $action->setApplicationProcessId(12);
 
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+    $clearingProcessBundle = ClearingProcessBundleFactory::create(
+      [
+        'status' => 'draft',
+        'creation_date' => '2024-11-11 01:02:03',
+        'modification_date' => '2024-11-11 01:02:03',
+      ],
       ['is_eligible' => TRUE],
-      ['permissions' => ['application_modify']]
+      ['permissions' => ['application_modify']],
     );
+    $applicationProcessBundle = new ApplicationProcessEntityBundle(
+      $clearingProcessBundle->getApplicationProcess(),
+      $clearingProcessBundle->getFundingCase(),
+      $clearingProcessBundle->getFundingCaseType(),
+      $clearingProcessBundle->getFundingProgram()
+    );
+
     $this->applicationProcessBundleLoaderMock->method('get')
       ->with(12)
       ->willReturn($applicationProcessBundle);
 
-    $clearingProcess = ClearingProcessFactory::create();
     $this->clearingProcessManagerMock->method('getByApplicationProcessId')
       ->with(12)
-      ->willReturn($clearingProcess);
+      ->willReturn($clearingProcessBundle->getClearingProcess());
 
-    static::assertSame($clearingProcess->toArray(), $this->handler->getOrCreate($action));
+    static::assertSame($clearingProcessBundle->getClearingProcess()->toArray(), $this->handler->getOrCreate($action));
   }
 
 }

@@ -5,11 +5,21 @@
         "allow-plugins": {
             "civicrm/composer-compile-plugin": false,
             "civicrm/composer-downloads-plugin": true,
-            "cweagans/composer-patches": true
+            "cweagans/composer-patches": true,
+            "wikimedia/composer-merge-plugin": true
         },
         "sort-packages": true
     },
     "require": {
-        "civicrm/civicrm-core": "^5.81"
+        "civicrm/civicrm-core": "^5.81",
+        "wikimedia/composer-merge-plugin": "^2.1",
+	"webmozart/assert": "^1.10"
+    },
+    "extra": {
+        "merge-plugin": {
+            "include": [
+                "../../de.systopia.remotetools/composer.json"
+            ]
+        }
     }
 }

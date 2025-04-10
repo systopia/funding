@@ -110,7 +110,7 @@ final class RemoteFundingDrawdownTest extends AbstractRemoteFundingHeadlessTestC
   }
 
   public function testGetFields(): void {
-    static::assertCount(12, RemoteFundingDrawdown::getFields()->execute());
+    static::assertCount(16, RemoteFundingDrawdown::getFields()->execute());
   }
 
   private function createFundingCase(): FundingCaseEntity {

@@ -22,6 +22,7 @@ declare(strict_types = 1);
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
+use Civi\Funding\DependencyInjection\Util\TaskServiceRegistrator;
 use Civi\Funding\IJB\Application\Actions\IJBApplicationActionsDeterminer;
 use Civi\Funding\IJB\Application\Actions\IJBApplicationActionStatusInfo;
 use Civi\Funding\IJB\Application\Actions\IJBApplicationStatusDeterminer;
@@ -68,6 +69,12 @@ $container->autowire(IJBReportDataLoader::class)
   ->addTag(IJBReportDataLoader::SERVICE_TAG);
 $container->autowire(IJBReportFormFactory::class)
   ->addTag(IJBReportFormFactory::SERVICE_TAG);
+
+TaskServiceRegistrator::autowireAll(
+  $container,
+  __DIR__ . '/../Civi/Funding/IJB/Task',
+  'Civi\\Funding\\IJB\\Task'
+);
 
 $container->autowire(IJBAngularModuleSubscriber::class)
   ->addTag('kernel.event_subscriber');

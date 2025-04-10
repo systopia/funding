@@ -24,9 +24,12 @@ use Civi\Api4\FundingPayoutProcess;
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\PayoutProcessEntity;
+use Civi\Funding\Entity\PayoutProcessBundle;
 use Civi\Funding\Event\PayoutProcess\PayoutProcessCreatedEvent;
+use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
+use Webmozart\Assert\Assert;
 
 class PayoutProcessManager {
 
@@ -34,9 +37,16 @@ class PayoutProcessManager {
 
   private CiviEventDispatcherInterface $eventDispatcher;
 
-  public function __construct(Api4Interface $api4, CiviEventDispatcherInterface $eventDispatcher) {
+  private FundingCaseManager $fundingCaseManager;
+
+  public function __construct(
+    Api4Interface $api4,
+    CiviEventDispatcherInterface $eventDispatcher,
+    FundingCaseManager $fundingCaseManager
+  ) {
     $this->api4 = $api4;
     $this->eventDispatcher = $eventDispatcher;
+    $this->fundingCaseManager = $fundingCaseManager;
   }
 
   /**
@@ -55,8 +65,6 @@ class PayoutProcessManager {
       'funding_case_id' => $fundingCase->getId(),
       'status' => 'open',
       'amount_total' => $amountTotal,
-    ], [
-      'checkPermissions' => FALSE,
     ]);
 
     $payoutProcess = PayoutProcessEntity::singleFromApiResult($result);
@@ -73,14 +81,26 @@ class PayoutProcessManager {
   public function get(int $id): ?PayoutProcessEntity {
     $result = $this->api4->getEntities(
       FundingPayoutProcess::getEntityName(),
-      Comparison::new('id', '=', $id),
-      [],
-      1,
-      0,
-      ['checkPermissions' => FALSE],
+      Comparison::new('id', '=', $id)
     );
 
     return PayoutProcessEntity::singleOrNullFromApiResult($result);
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function getBundle(int $id): ?PayoutProcessBundle {
+    $payoutProcess = $this->get($id);
+
+    if (NULL === $payoutProcess) {
+      return NULL;
+    }
+
+    $fundingCaseBundle = $this->fundingCaseManager->getBundle($payoutProcess->getFundingCaseId());
+    Assert::notNull($fundingCaseBundle);
+
+    return new PayoutProcessBundle($payoutProcess, $fundingCaseBundle);
   }
 
   /**
@@ -133,9 +153,7 @@ class PayoutProcessManager {
       FundingPayoutProcess::getEntityName(),
       Comparison::new('funding_case_id', '=', $fundingCaseId),
       ['id' => 'DESC'],
-      1,
-      0,
-      ['checkPermissions' => FALSE],
+      1
     );
 
     return PayoutProcessEntity::singleOrNullFromApiResult($result);
@@ -147,8 +165,7 @@ class PayoutProcessManager {
   public function hasAccess(int $id): bool {
     return $this->api4->countEntities(
       FundingPayoutProcess::getEntityName(),
-      Comparison::new('id', '=', $id),
-      ['checkPermissions' => FALSE],
+      Comparison::new('id', '=', $id)
     ) === 1;
   }
 
