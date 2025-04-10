@@ -843,6 +843,10 @@ msgstr "Antrag prüfen (rechnerisch)"
 msgid "Review Application (content)"
 msgstr "Antrag prüfen (fachlich)"
 
+#: Civi/Funding/ApplicationProcess/Task/AbstractApplicationReviewFinishTaskHandler.php
+msgid "Finish Application Review"
+msgstr "Antragsprüfung abschließen"
+
 #: Civi/Funding/ApplicationProcess/Validator/IsReviewCalculativeValidator.php
 msgid "Permission to change calculative review result is missing."
 msgstr "Berechtigung zur Änderung des rechnerischen Prüfergebnisses fehlt."
@@ -1011,6 +1015,10 @@ msgstr "Verwendungsnachweis prüfen (rechnerisch)"
 #: Civi/Funding/ClearingProcess/Task/AbstractClearingReviewContentTaskHandler.php
 msgid "Review Clearing (content)"
 msgstr "Verwendungsnachweis prüfen (fachlich)"
+
+#: Civi/Funding/ClearingProcess/Task/AbstractClearingReviewFinishTaskHandler.php
+msgid "Finish Clearing Review"
+msgstr "Verwendungsnachweisprüfung abschließen"
 
 #: Civi/Funding/ClearingProcess/Traits/ClearingCreateTaskTrait.php
 msgid "Create Clearing"
@@ -1350,6 +1358,15 @@ msgstr "Berechtigung zum Erstellen des Weiterleitungsvertrags fehlt."
 #: Civi/Funding/FundingCase/Remote/Api4/ActionHandler/SubmitUpdateFormActionHandler.php
 msgid "Deleted"
 msgstr "Gelöscht"
+
+#: Civi/Funding/FundingCase/Task/AbstractFundingCaseApproveTaskCreator.php
+msgid "Approve Funding Case"
+msgstr "Förderfall bewilligen"
+
+#: Civi/Funding/FundingCase/Task/AbstractFundingCaseFinishClearingTaskCreator.php
+#: ang/crmFunding/case/fundingCase.template.html
+msgid "Finish Clearing"
+msgstr "Abrechnung abschließen"
 
 #: Civi/Funding/FundingPseudoConstants.php
 msgid "New"
@@ -1998,10 +2015,6 @@ msgstr "Weiterleitungsvertrag"
 msgid "Recreate Transfer Contract"
 msgstr "Weiterleitungsvertrag erneut erstellen"
 
-#: ang/crmFunding/case/fundingCase.template.html
-msgid "Finish Clearing"
-msgstr "Abrechnung abschließen"
-
 #: ang/crmFunding/case/fundingCasePermissions.html
 msgid "Funding Case Permissions"
 msgstr "Förderfallberechtigungen"
@@ -2023,6 +2036,7 @@ msgstr "Entfernen"
 
 #: ang/crmFunding/case/notificationContacts.directive.js
 #: ang/crmFunding/form/editableField.directive.js
+#: ang/crmFunding/fundingDate.filter.js
 msgid "empty"
 msgstr "leer"
 
@@ -2273,6 +2287,10 @@ msgid "Funding Clearing Status Change"
 msgstr "Status des Verwendungsnachweises geändert"
 
 #: managed/CustomGroup_funding_drawdown_task.mgd.php
+#: managed/OptionValue_funding_drawdown_task.mgd.php
+msgid "Funding Drawdown Task"
+msgstr "Mittelabrufaufgabe"
+
 #: managed/CustomGroup_funding_payout_process_task.mgd.php
 msgid "Funding Payout Task"
 msgstr "Auszahlungsaufgabe"
@@ -2325,10 +2343,6 @@ msgstr "Aktivitätsart für Prüfstatusänderung eines Verwendungsnachweises"
 #: managed/OptionValue_funding_clearing_status_change.mgd.php
 msgid "Activity type for funding clearing status changes"
 msgstr "Aktivitätsart für Statusänderung eines Verwendungsnachweises"
-
-#: managed/OptionValue_funding_drawdown_task.mgd.php
-msgid "Funding Drawdown Task"
-msgstr "Mittelabrufaufgabe"
 
 #: managed/OptionValue_funding_drawdown_task.mgd.php
 msgid "Activity type for funding drawdown tasks."
@@ -2511,6 +2525,3 @@ msgstr "Änderungsdatum"
 #: managed/SavedSearch_funding_cases.mgd.php
 msgid "Open case"
 msgstr "Fall öffnen"
-
-#~ msgid "Invalid funding program ID or funding case type ID"
-#~ msgstr "Ungültige Förderprogramm ID oder Förderfalltyp ID"

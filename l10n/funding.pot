@@ -494,6 +494,10 @@ msgstr ""
 msgid "Review Application (content)"
 msgstr ""
 
+#: Civi/Funding/ApplicationProcess/Task/AbstractApplicationReviewFinishTaskHandler.php
+msgid "Finish Application Review"
+msgstr ""
+
 #: Civi/Funding/ApplicationProcess/Validator/IsReviewCalculativeValidator.php
 msgid "Permission to change calculative review result is missing."
 msgstr ""
@@ -640,6 +644,10 @@ msgstr ""
 
 #: Civi/Funding/ClearingProcess/Task/AbstractClearingReviewContentTaskHandler.php
 msgid "Review Clearing (content)"
+msgstr ""
+
+#: Civi/Funding/ClearingProcess/Task/AbstractClearingReviewFinishTaskHandler.php
+msgid "Finish Clearing Review"
 msgstr ""
 
 #: Civi/Funding/ClearingProcess/Traits/ClearingCreateTaskTrait.php
@@ -908,6 +916,14 @@ msgstr ""
 
 #: Civi/Funding/FundingCase/Remote/Api4/ActionHandler/SubmitUpdateFormActionHandler.php
 msgid "Deleted"
+msgstr ""
+
+#: Civi/Funding/FundingCase/Task/AbstractFundingCaseApproveTaskCreator.php
+msgid "Approve Funding Case"
+msgstr ""
+
+#: Civi/Funding/FundingCase/Task/AbstractFundingCaseFinishClearingTaskCreator.php ang/crmFunding/case/fundingCase.template.html
+msgid "Finish Clearing"
 msgstr ""
 
 #: Civi/Funding/FundingPseudoConstants.php
@@ -1382,10 +1398,6 @@ msgstr ""
 msgid "Recreate Transfer Contract"
 msgstr ""
 
-#: ang/crmFunding/case/fundingCase.template.html
-msgid "Finish Clearing"
-msgstr ""
-
 #: ang/crmFunding/case/fundingCasePermissions.html
 msgid "Funding Case Permissions"
 msgstr ""
@@ -1398,7 +1410,7 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: ang/crmFunding/case/notificationContacts.directive.js ang/crmFunding/form/editableField.directive.js
+#: ang/crmFunding/case/notificationContacts.directive.js ang/crmFunding/form/editableField.directive.js ang/crmFunding/fundingDate.filter.js
 msgid "empty"
 msgstr ""
 
@@ -1606,7 +1618,11 @@ msgstr ""
 msgid "Funding Clearing Status Change"
 msgstr ""
 
-#: managed/CustomGroup_funding_drawdown_task.mgd.php managed/CustomGroup_funding_payout_process_task.mgd.php
+#: managed/CustomGroup_funding_drawdown_task.mgd.php managed/OptionValue_funding_drawdown_task.mgd.php
+msgid "Funding Drawdown Task"
+msgstr ""
+
+#: managed/CustomGroup_funding_payout_process_task.mgd.php
 msgid "Funding Payout Task"
 msgstr ""
 
@@ -1656,10 +1672,6 @@ msgstr ""
 
 #: managed/OptionValue_funding_clearing_status_change.mgd.php
 msgid "Activity type for funding clearing status changes"
-msgstr ""
-
-#: managed/OptionValue_funding_drawdown_task.mgd.php
-msgid "Funding Drawdown Task"
 msgstr ""
 
 #: managed/OptionValue_funding_drawdown_task.mgd.php
