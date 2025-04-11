@@ -190,7 +190,7 @@ return [
                   'target' => '',
                 ],
                 [
-                  'path' => 'civicrm/funding/drawdown-document/download?drawdownId=[id]civicrm/',
+                  'path' => 'civicrm/funding/drawdown-document/download?drawdownId=[id]',
                   'icon' => 'fa-external-link',
                   'text' => E::ts('Download Document'),
                   'style' => 'default',
