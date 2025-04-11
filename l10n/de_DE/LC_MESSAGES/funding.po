@@ -30,9 +30,9 @@ msgstr "Währung"
 #: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
 #: ang/crmFunding/case/fundingCase.template.html
-#: managed/SavedSearchFundingProgramControlling.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
 #: managed/SavedSearch_funding_cases.mgd.php
+#: managed/SavedSearch_funding_program_controlling.mgd.php
 msgid "Amount Cleared"
 msgstr "Abgerechneter Betrag"
 
@@ -43,9 +43,9 @@ msgstr "Abgerechneter Betrag"
 #: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
 #: ang/crmFunding/case/fundingCase.template.html
-#: managed/SavedSearchFundingProgramControlling.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
 #: managed/SavedSearch_funding_cases.mgd.php
+#: managed/SavedSearch_funding_program_controlling.mgd.php
 msgid "Amount Admitted"
 msgstr "Anerkannter Betrag"
 
@@ -97,9 +97,9 @@ msgstr "Die Summe der Beträge neuer (ungeprüfter) Mittelabrufe."
 #: Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
-#: managed/SavedSearchFundingProgramControlling.mgd.php
 #: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
 #: managed/SavedSearch_funding_cases.mgd.php
+#: managed/SavedSearch_funding_program_controlling.mgd.php
 msgid "Amount Paid Out"
 msgstr "Ausbezahlter Betrag"
 
@@ -303,13 +303,14 @@ msgstr "Förderfalländerungsdatum"
 #: Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php
 #: Civi/Funding/ClearingProcess/Form/AbstractClearingItemsJsonFormsGenerator.php
 #: ang/crmFunding/case/fundingCase.template.html
-#: managed/SavedSearchFundingProgramControlling.mgd.php
 #: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
 #: managed/SavedSearch_funding_cases.mgd.php
+#: managed/SavedSearch_funding_program_controlling.mgd.php
 msgid "Amount Approved"
 msgstr "Bewilligter Betrag"
 
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
 #: Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php
 #: ang/crmFunding/application/defaultApplicationEditor.template.html
 #: ang/crmFunding/case/fundingCase.template.html
@@ -357,9 +358,9 @@ msgstr "Bezeichner"
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCaseTypes.mgd.php
-#: managed/SavedSearchFundingProgramControlling.mgd.php
 #: managed/SavedSearchFundingPrograms.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearch_funding_program_controlling.mgd.php
 msgid "Title"
 msgstr "Titel"
 
@@ -422,8 +423,8 @@ msgid "Start Date"
 msgstr "Startdatum"
 
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
-#: managed/SavedSearchFundingProgramControlling.mgd.php
 #: managed/SavedSearchFundingPrograms.mgd.php
+#: managed/SavedSearch_funding_program_controlling.mgd.php
 msgid "End Date"
 msgstr "Enddatum"
 
@@ -520,7 +521,7 @@ msgid "The sum of the amounts of unverified drawdowns."
 msgstr "Die Summe der Beträge offener Mittelabrufe."
 
 #: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
-#: managed/SavedSearchFundingProgramControlling.mgd.php
+#: managed/SavedSearch_funding_program_controlling.mgd.php
 msgid "Amount Eligible"
 msgstr "Förderfähiger Betrag"
 
@@ -534,7 +535,7 @@ msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
-#: managed/SavedSearchFundingProgramControlling.mgd.php
+#: managed/SavedSearch_funding_program_controlling.mgd.php
 msgid "Amount Available"
 msgstr "Verfügbarer Betrag"
 
@@ -543,12 +544,32 @@ msgid "The difference between the budget and the amount approved."
 msgstr "Die Differenz zwischen Budget und bewilligtem Betrag."
 
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
+msgid "Creation Contact"
+msgstr "Erstellerkontakt"
+
+#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
 msgid "URI to Transfer Contract"
 msgstr "URI zum Weiterleitungsvertrag"
 
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
 msgid "Funding Program Title"
 msgstr "Titel des Förderprogramms"
+
+#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
+msgid "Application Identifiers"
+msgstr "Antragsbezeichner"
+
+#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
+msgid "Comma-separated list of identifiers of eligible applications."
+msgstr "Komma-getrennte Liste von Bezeichnern förderfähiger Anträge."
+
+#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
+msgid "Application Titles"
+msgstr "Antragstitel"
+
+#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
+msgid "Comma-separated list of titles of eligible applications."
+msgstr "Komma-getrennte Liste von Titeln förderfähiger Anträge."
 
 #: Civi/Funding/Api4/Action/Remote/ApplicationProcess/AbstractFormAction.php
 msgid "Application process with ID \"%1\" not found"
@@ -1564,7 +1585,7 @@ msgstr "Förderfälle"
 
 #: ang/afsearchFundingProgramControlling.aff.php
 #: managed/NavigationFunding.mgd.php
-#: managed/SavedSearchFundingProgramControlling.mgd.php
+#: managed/SavedSearch_funding_program_controlling.mgd.php
 msgid "Funding Program Controlling"
 msgstr "Controlling Förderprogramme"
 
@@ -2242,7 +2263,6 @@ msgstr "Rückzahlungsforderung"
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCaseTypes.mgd.php
 #: managed/SavedSearchFundingDrawdowns.mgd.php
-#: managed/SavedSearchFundingProgramControlling.mgd.php
 #: managed/SavedSearchFundingPrograms.mgd.php
 #: managed/SavedSearchFundingTasksMy.mgd.php
 #: managed/SavedSearch_Application_CiviOffice_Templates.mgd.php
@@ -2250,6 +2270,7 @@ msgstr "Rückzahlungsforderung"
 #: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
 #: managed/SavedSearch_FundingDrawdownsAll.mgd.php
 #: managed/SavedSearch_funding_cases.mgd.php
+#: managed/SavedSearch_funding_program_controlling.mgd.php
 msgid "Table"
 msgstr "Tabelle"
 
@@ -2320,11 +2341,6 @@ msgstr "Prüfer*in"
 msgid "Download Document"
 msgstr "Dokument herunterladen"
 
-#: managed/SavedSearchFundingProgramControlling.mgd.php
-#: managed/SavedSearchFundingPrograms.mgd.php
-msgid "Budget"
-msgstr "Budget"
-
 #: managed/SavedSearchFundingPrograms.mgd.php
 msgid "Identifier Prefix"
 msgstr "Bezeichnerpräfix"
@@ -2336,6 +2352,11 @@ msgstr "Startdatum für Anträge"
 #: managed/SavedSearchFundingPrograms.mgd.php
 msgid "Requests End Date"
 msgstr "Enddatum für Anträge"
+
+#: managed/SavedSearchFundingPrograms.mgd.php
+#: managed/SavedSearch_funding_program_controlling.mgd.php
+msgid "Budget"
+msgstr "Budget"
 
 #: managed/SavedSearchFundingPrograms.mgd.php
 msgid "Edit possible funding recipients"

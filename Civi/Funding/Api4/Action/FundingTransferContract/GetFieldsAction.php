@@ -124,6 +124,18 @@ final class GetFieldsAction extends BasicGetFieldsAction {
         'data_type' => 'Float',
       ],
       [
+        'name' => 'creation_contact_display_name',
+        'nullable' => FALSE,
+        'title' => E::ts('Creation Contact'),
+        'data_type' => 'String',
+      ],
+      [
+        'name' => 'recipient_contact_display_name',
+        'nullable' => FALSE,
+        'title' => E::ts('Recipient'),
+        'data_type' => 'String',
+      ],
+      [
         'name' => 'payout_process_id',
         'title' => 'payout_process_id',
         'data_type' => 'Integer',
@@ -197,6 +209,18 @@ final class GetFieldsAction extends BasicGetFieldsAction {
       [
         'name' => 'funding_program_title',
         'title' => E::ts('Funding Program Title'),
+        'data_type' => 'String',
+      ],
+      [
+        'name' => 'application_process_identifiers',
+        'title' => E::ts('Application Identifiers'),
+        'description' => E::ts('Comma-separated list of identifiers of eligible applications.'),
+        'data_type' => 'String',
+      ],
+      [
+        'name' => 'application_process_titles',
+        'title' => E::ts('Application Titles'),
+        'description' => E::ts('Comma-separated list of titles of eligible applications.'),
         'data_type' => 'String',
       ],
       [
