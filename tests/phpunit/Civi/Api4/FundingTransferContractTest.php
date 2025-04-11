@@ -21,6 +21,7 @@ namespace Civi\Api4;
 
 use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\FileTypeNames;
+use Civi\Funding\Fixtures\ApplicationProcessFixture;
 use Civi\Funding\Fixtures\AttachmentFixture;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
@@ -54,6 +55,21 @@ final class FundingTransferContractTest extends AbstractFundingHeadlessTestCase 
       ['amount_approved' => 12.34],
     );
     $payoutProcess = PayoutProcessFixture::addFixture($fundingCase->getId(), ['amount_total' => 12.34]);
+    ApplicationProcessFixture::addFixture($fundingCase->getId(), [
+      'identifier' => 'identifier1',
+      'title' => 'title1',
+      'is_eligible' => TRUE,
+    ]);
+    ApplicationProcessFixture::addFixture($fundingCase->getId(), [
+      'identifier' => 'identifier2',
+      'title' => 'title2',
+      'is_eligible' => TRUE,
+    ]);
+    ApplicationProcessFixture::addFixture($fundingCase->getId(), [
+      'identifier' => 'identifier3',
+      'title' => 'title3',
+      'is_eligible' => FALSE,
+    ]);
     AttachmentFixture::addFixture(
       'civicrm_funding_case',
       $fundingCase->getId(),
@@ -89,6 +105,39 @@ final class FundingTransferContractTest extends AbstractFundingHeadlessTestCase 
       'funding_program_id' => $fundingProgram->getId(),
       'currency' => $fundingProgram->getCurrency(),
       'funding_program_title' => $fundingProgram->getTitle(),
+      'CAN_create_drawdown' => FALSE,
+    ];
+    static::assertEquals($expected, $values);
+
+    $action->setSelect([
+      '*',
+      'creation_contact_display_name',
+      'recipient_contact_display_name',
+      'application_process_identifiers',
+      'application_process_titles',
+    ]);
+    $result = $action->execute();
+    static::assertCount(1, $result);
+
+    /** @var array<string, mixed> $values */
+    $values = $result->first();
+    $expected = [
+      'funding_case_id' => $fundingCase->getId(),
+      'identifier' => $fundingCase->getIdentifier(),
+      'amount_approved' => 12.34,
+      'payout_process_id' => $payoutProcess->getId(),
+      'amount_paid_out' => 0.0,
+      'amount_available' => 12.34,
+      'transfer_contract_uri'
+      => 'http://localhost/civicrm/funding/transfer-contract/download?fundingCaseId=' . $fundingCase->getId(),
+      'funding_case_type_id' => $fundingCaseType->getId(),
+      'funding_program_id' => $fundingProgram->getId(),
+      'currency' => $fundingProgram->getCurrency(),
+      'funding_program_title' => $fundingProgram->getTitle(),
+      'creation_contact_display_name' => 'creation contact',
+      'recipient_contact_display_name' => 'Test organization',
+      'application_process_identifiers' => 'identifier1, identifier2',
+      'application_process_titles' => 'title1, title2',
       'CAN_create_drawdown' => FALSE,
     ];
     static::assertEquals($expected, $values);
@@ -130,7 +179,7 @@ final class FundingTransferContractTest extends AbstractFundingHeadlessTestCase 
       static::assertTrue($field['readonly'], $message);
     }
 
-    static::assertCount(18, $result);
+    static::assertCount(22, $result);
   }
 
 }

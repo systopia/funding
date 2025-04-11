@@ -19,11 +19,14 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\FundingTransferContract;
 
+use Civi\Api4\Contact;
+use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\FundingClearingProcess;
 use Civi\Api4\FundingTransferContract;
 use Civi\Api4\Generic\AbstractGetAction;
 use Civi\Api4\Generic\Result;
 use Civi\Api4\Generic\Traits\ArrayQueryActionTrait;
+use Civi\Funding\Api4\Action\Traits\IsFieldSelectedTrait;
 use Civi\Funding\Api4\Util\WhereUtil;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\FundingCase\FundingCaseManager;
@@ -36,6 +39,8 @@ use Webmozart\Assert\Assert;
 final class GetAction extends AbstractGetAction {
 
   use ArrayQueryActionTrait;
+
+  use IsFieldSelectedTrait;
 
   private Api4Interface $api4;
 
@@ -64,20 +69,34 @@ final class GetAction extends AbstractGetAction {
    * @throws \CRM_Core_Exception
    */
   public function _run(Result $result): void {
+    $applicationProcessMapping = [];
+    if ($this->isFieldExplicitlySelected('application_process_identifiers')) {
+      $applicationProcessMapping['identifier'] = 'application_process_identifiers';
+    }
+    if ($this->isFieldExplicitlySelected('application_process_titles')) {
+      $applicationProcessMapping['title'] = 'application_process_titles';
+    }
+
     $records = [];
     foreach ($this->getFundingCases() as $fundingCase) {
-      $records[] = $this->buildRecord($fundingCase);
+      $records[] = $this->buildRecord($fundingCase, $applicationProcessMapping);
+    }
+
+    if ([] !== $records && in_array('*', $this->getSelect(), TRUE)) {
+      $this->setSelect(array_keys($records[0]));
     }
 
     $this->queryArray($records, $result);
   }
 
   /**
+   * @phpstan-param array<string, string> $applicationProcessMapping
+   *
    * @phpstan-return array<string, mixed>
    *
    * @throws \CRM_Core_Exception
    */
-  private function buildRecord(FundingCaseEntity $fundingCase): array {
+  private function buildRecord(FundingCaseEntity $fundingCase, array $applicationProcessMapping): array {
     $fundingProgram = $this->fundingProgramManager->get($fundingCase->getFundingProgramId());
     Assert::notNull($fundingProgram, sprintf(
       'No permission to access funding program with ID "%d"',
@@ -123,6 +142,35 @@ final class GetAction extends AbstractGetAction {
       'CAN_create_drawdown'
       => in_array('drawdown_create', $fundingCase->getPermissions(), TRUE) && 'closed' !== $payoutProcess->getStatus(),
     ];
+
+    if ($this->isFieldExplicitlySelected('creation_contact_display_name')) {
+      $record['creation_contact_display_name'] = $this->api4->getEntity(
+        Contact::getEntityName(),
+        $fundingCase->getCreationContactId()
+      )['display_name'] ?? '';
+    }
+
+    if ($this->isFieldExplicitlySelected('recipient_contact_display_name')) {
+      $record['recipient_contact_display_name'] = $this->api4->getEntity(
+        Contact::getEntityName(),
+        $fundingCase->getRecipientContactId()
+      )['display_name'] ?? '';
+    }
+
+    if ([] !== $applicationProcessMapping) {
+      $applicationProcesses = $this->api4->execute(FundingApplicationProcess::getEntityName(), 'get', [
+        'select' => array_keys($applicationProcessMapping),
+        'where' => [
+          ['funding_case_id', '=', $fundingCase->getId()],
+          ['is_eligible', '=', TRUE],
+        ],
+        'orderBy' => ['id' => 'ASC'],
+      ]);
+
+      foreach ($applicationProcessMapping as $applicationProcessField => $resultField) {
+        $record[$resultField] = implode(', ', $applicationProcesses->column($applicationProcessField));
+      }
+    }
 
     foreach ($clearingProcessFields as $field) {
       $record[$field] = $clearingProcessAmounts['SUM_' . $field] ?? NULL;
