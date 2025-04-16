@@ -159,18 +159,8 @@ final class KursReportFormFactoryTest extends TestCase {
     static::assertSame(6, $data->reportData->foerderung->summe);
     static::assertAllPropertiesSet($validationSchema, $data);
 
-    $dataArr = [
-      '_action' => 'some-action',
-      'reportData' => (object) [
-        'grunddaten' => $grunddaten,
-        'zuschuss' => (object) [],
-        'dokumente' => $dokumente,
-        'foerderung' => $foerderung,
-      ],
-    ];
-
     $tagValidator = new Validator(new NullTranslator(), OpisValidatorFactory::getValidator());
-    $result = $tagValidator->validate($this->form->getJsonSchema(), $dataArr);
+    $result = $tagValidator->validate($this->form->getJsonSchema(), get_object_vars($data));
 
     $mappedDataLoader = new MappedDataLoader();
     $mappedData = $mappedDataLoader->getMappedData($result->getTaggedData());

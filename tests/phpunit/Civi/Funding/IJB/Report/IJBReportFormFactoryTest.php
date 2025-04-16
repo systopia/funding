@@ -234,10 +234,8 @@ final class IJBReportFormFactoryTest extends TestCase {
     static::assertEquals([
       'title' => 'Test',
       'short_description' => 'foo bar',
-      'recipient_contact_id' => 2,
       'start_date' => '2022-08-24',
       'end_date' => '2022-08-26',
-      'amount_requested' => 0,
     ], $mappedData);
   }
 
