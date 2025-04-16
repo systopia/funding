@@ -23,6 +23,7 @@ use Civi\Funding\EntityFactory\ClearingProcessBundleFactory;
 use Civi\Funding\Form\JsonFormsFormInterface;
 use Civi\Funding\Form\Traits\AssertFormTrait;
 use Civi\Funding\Validation\Traits\AssertValidationResultTrait;
+use Civi\RemoteTools\JsonSchema\Validation\Validator;
 use Civi\RemoteTools\JsonSchema\Validation\OpisValidatorFactory;
 use PHPUnit\Framework\TestCase;
 
@@ -155,6 +156,19 @@ final class KursReportFormFactoryTest extends TestCase {
     static::assertSame($programmtage, $data->reportData->grunddaten->programmtage);
     static::assertSame(6, $data->reportData->foerderung->summe);
     static::assertAllPropertiesSet($validationSchema, $data);
+
+    $tagValidator = new Validator(new NullTranslator(), OpisValidatorFactory::getValidator());
+    $result = tagValidator->validate($validationSchema, $data);
+
+    $mappedDataLoader = new MappedDataLoader();
+    $mappedData = $mappedDataLoader->getMappedData($result->getTaggedData());
+
+    static::assertEquals([
+      'title' => 'Test',
+      'short_description' => 'foo bar',
+      'start_date' => '2022-08-24',
+      'end_date' => '2022-08-26',
+    ], $mappedData);
   }
 
   public function testUiSchema(): void {

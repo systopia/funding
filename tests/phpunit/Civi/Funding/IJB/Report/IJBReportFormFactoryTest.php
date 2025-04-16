@@ -19,12 +19,12 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\IJB\Report;
 
+use Systopia\JsonSchema\Translation\NullTranslator;
 use Civi\Funding\EntityFactory\ClearingProcessBundleFactory;
 use Civi\Funding\Form\JsonFormsFormInterface;
 use Civi\Funding\Form\MappedData\MappedDataLoader;
 use Civi\Funding\Form\Traits\AssertFormTrait;
 use Civi\Funding\Validation\Traits\AssertValidationResultTrait;
-use Civi\RemoteTools\JsonSchema\Validation\NullTranslator;
 use Civi\RemoteTools\JsonSchema\Validation\Validator;
 use Civi\RemoteTools\JsonSchema\Validation\OpisValidatorFactory;
 use PHPUnit\Framework\TestCase;
