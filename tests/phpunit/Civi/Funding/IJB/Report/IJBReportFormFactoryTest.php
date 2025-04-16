@@ -226,7 +226,7 @@ final class IJBReportFormFactoryTest extends TestCase {
     static::assertSame(10, $data->reportData->foerderung->summe);
 
     $tagValidator = new Validator(new NullTranslator(), OpisValidatorFactory::getValidator());
-    $result = $tagValidator->validate($this->form->getJsonSchema(), $data);
+    $result = $tagValidator->validate($this->form->getJsonSchema(), get_object_vars($data));
 
     $mappedDataLoader = new MappedDataLoader();
     $mappedData = $mappedDataLoader->getMappedData($result->getTaggedData());

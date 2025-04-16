@@ -19,8 +19,10 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\SammelantragKurs\Report;
 
+use Systopia\JsonSchema\Translation\NullTranslator;
 use Civi\Funding\EntityFactory\ClearingProcessBundleFactory;
 use Civi\Funding\Form\JsonFormsFormInterface;
+use Civi\Funding\Form\MappedData\MappedDataLoader;
 use Civi\Funding\Form\Traits\AssertFormTrait;
 use Civi\Funding\Validation\Traits\AssertValidationResultTrait;
 use Civi\RemoteTools\JsonSchema\Validation\Validator;
@@ -157,8 +159,18 @@ final class KursReportFormFactoryTest extends TestCase {
     static::assertSame(6, $data->reportData->foerderung->summe);
     static::assertAllPropertiesSet($validationSchema, $data);
 
+    $dataArr = [
+      '_action' => 'some-action',
+      'reportData' => (object) [
+        'grunddaten' => $grunddaten,
+        'zuschuss' => (object) [],
+        'dokumente' => $dokumente,
+        'foerderung' => $foerderung,
+      ],
+    ];
+
     $tagValidator = new Validator(new NullTranslator(), OpisValidatorFactory::getValidator());
-    $result = tagValidator->validate($validationSchema, $data);
+    $result = $tagValidator->validate($this->form->getJsonSchema(), $dataArr);
 
     $mappedDataLoader = new MappedDataLoader();
     $mappedData = $mappedDataLoader->getMappedData($result->getTaggedData());
