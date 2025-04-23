@@ -73,7 +73,15 @@ class ClearingProcessCreatedSubscriber implements EventSubscriberInterface {
 
     $clearingProcess = $event->getClearingProcess();
     $reportData = $clearingProcess->getReportData();
+
+    if (!isset($reportData['grunddaten'])) {
+      return;
+    }
     $basicData = (array) $reportData['grunddaten'];
+
+    if (!isset($basicData['zeitraeume'])) {
+      return;
+    }
     $durations = (array) $basicData['zeitraeume'];
 
     $indexLast = count($durations) - 1;
