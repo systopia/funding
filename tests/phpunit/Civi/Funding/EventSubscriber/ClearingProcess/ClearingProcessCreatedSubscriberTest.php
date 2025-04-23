@@ -25,6 +25,7 @@ use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ClearingProcessFactory;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessCreatedEvent;
+use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -35,6 +36,11 @@ use PHPUnit\Framework\TestCase;
 final class ClearingProcessCreatedSubscriberTest extends TestCase {
 
   /**
+   * @var \Civi\RemoteTools\Api4\Api4Interface&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $api4Mock;
+
+  /**
    * @var \Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $activityManagerMock;
@@ -43,11 +49,14 @@ final class ClearingProcessCreatedSubscriberTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
+    $this->api4Mock = $this->createMock(Api4Interface::class);
     $this->activityManagerMock = $this->createMock(ApplicationProcessActivityManager::class);
     $requestContextMock = $this->createMock(RequestContextInterface::class);
     $requestContextMock->method('getContactId')->willReturn(22);
     $this->subscriber = new ClearingProcessCreatedSubscriber(
-      $this->activityManagerMock, $requestContextMock
+      $this->api4Mock,
+      $this->activityManagerMock,
+      $requestContextMock
     );
   }
 
