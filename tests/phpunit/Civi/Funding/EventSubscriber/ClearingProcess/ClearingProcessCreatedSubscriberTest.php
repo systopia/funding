@@ -180,12 +180,12 @@ final class ClearingProcessCreatedSubscriberTest extends TestCase {
 
     $expectedDurations = [
       [
-        'beginn' => '2025-01-13',
-        'ende' => '2025-01-15',
+        'start_date' => '2025-01-13',
+        'end_date' => '2025-01-15',
       ],
       [
-        'beginn' => '2025-01-11',
-        'ende' => '2025-01-20',
+        'start_date' => '2025-01-11',
+        'end_date' => '2025-01-20',
       ],
     ];
 
