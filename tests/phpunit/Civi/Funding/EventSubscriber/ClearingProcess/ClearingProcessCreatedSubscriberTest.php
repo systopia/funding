@@ -19,12 +19,14 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\ClearingProcess;
 
+use Civi\Api4\FundingClearingProcess;
 use Civi\Funding\ActivityTypeNames;
 use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ClearingProcessFactory;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessCreatedEvent;
+use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -35,6 +37,11 @@ use PHPUnit\Framework\TestCase;
 final class ClearingProcessCreatedSubscriberTest extends TestCase {
 
   /**
+   * @var \Civi\RemoteTools\Api4\Api4Interface&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $api4Mock;
+
+  /**
    * @var \Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $activityManagerMock;
@@ -43,11 +50,14 @@ final class ClearingProcessCreatedSubscriberTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
+    $this->api4Mock = $this->createMock(Api4Interface::class);
     $this->activityManagerMock = $this->createMock(ApplicationProcessActivityManager::class);
     $requestContextMock = $this->createMock(RequestContextInterface::class);
     $requestContextMock->method('getContactId')->willReturn(22);
     $this->subscriber = new ClearingProcessCreatedSubscriber(
-      $this->activityManagerMock, $requestContextMock
+      $this->api4Mock,
+      $this->activityManagerMock,
+      $requestContextMock
     );
   }
 
@@ -80,6 +90,126 @@ final class ClearingProcessCreatedSubscriberTest extends TestCase {
       ->with(22, $applicationProcessBundle->getApplicationProcess(), $activity);
 
     $this->subscriber->onCreated($event);
+
+    $this->api4Mock->expects(static::never());
+  }
+
+  public function testOnCreatedWithGrunddatenZeitraeumeIncomplete(): void {
+    $reportDataSet = [
+      [
+        'grunddaten' => [
+          'zeitraeume' => [
+            [
+              'beginn' => '2025-01-13',
+            ],
+          ],
+        ],
+      ],
+      [
+        'grunddaten' => [
+          'zeitraeume' => [
+            [
+              'ende' => '2025-01-13',
+            ],
+          ],
+        ],
+      ],
+      [
+        'grunddaten' => [
+          'zeitraeume' => [],
+        ],
+      ],
+      [
+        'grunddaten' => [
+          'zeitraeume' => [
+            'beginn' => '',
+            'ende' => '',
+          ],
+        ],
+      ],
+    ];
+
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+      'title' => 'Title',
+      'identifier' => 'Identifier',
+    ]);
+
+    foreach ($reportDataSet as $reportData) {
+      $clearingProcess = ClearingProcessFactory::create([
+        'report_data' => $reportData,
+      ]);
+      $event = new ClearingProcessCreatedEvent($clearingProcess, $applicationProcessBundle);
+
+      $this->subscriber->onCreated($event);
+
+      $this->api4Mock->expects(static::never());
+    }
+  }
+
+  public function testOnCreatedWithGrunddatenZeitraeume(): void {
+    $reportDataSet = [
+      [
+        'grunddaten' => [
+          'zeitraeume' => [
+            [
+              'beginn' => '2025-01-13',
+              'ende' => '2025-01-15',
+            ],
+          ],
+        ],
+      ],
+      [
+        'grunddaten' => [
+          'zeitraeume' => [
+            [
+              'beginn' => '2025-01-13',
+              'ende' => '2025-01-15',
+            ],
+            [
+              'beginn' => '2025-01-13',
+              'ende' => '2025-01-17',
+            ],
+            [
+              'beginn' => '2025-01-11',
+              'ende' => '2025-01-20',
+            ],
+          ],
+        ],
+      ],
+    ];
+
+    $expectedDurations = [
+      [
+        'start_date' => '2025-01-13',
+        'end_date' => '2025-01-15',
+      ],
+      [
+        'start_date' => '2025-01-11',
+        'end_date' => '2025-01-20',
+      ],
+    ];
+
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+      'title' => 'Title',
+      'identifier' => 'Identifier',
+    ]);
+
+    foreach ($reportDataSet as $index => $reportData) {
+      $clearingProcess = ClearingProcessFactory::create([
+        'report_data' => $reportData,
+      ]);
+      $event = new ClearingProcessCreatedEvent($clearingProcess, $applicationProcessBundle);
+
+      $this->subscriber->onCreated($event);
+
+      $this->api4Mock->expects(static::once())
+        ->method('updateEntity')
+        ->with(
+          FundingClearingProcess::getEntityName(),
+          ClearingProcessFactory::DEFAULT_ID,
+          $expectedDurations[$index]
+        );
+    }
   }
 
 }

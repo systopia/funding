@@ -20,57 +20,32 @@ declare(strict_types = 1);
 namespace Civi\Funding\EventSubscriber\ClearingProcess;
 
 use Civi\Api4\FundingClearingProcess;
-use Civi\Funding\ActivityTypeNames;
-use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
-use Civi\Funding\Entity\ActivityEntity;
-use Civi\Funding\Event\ClearingProcess\ClearingProcessCreatedEvent;
+use Civi\Funding\Event\ClearingProcess\ClearingProcessUpdatedEvent;
 use Civi\RemoteTools\Api4\Api4Interface;
-use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class ClearingProcessCreatedSubscriber implements EventSubscriberInterface {
+class ClearingProcessUpdatedSubscriber implements EventSubscriberInterface {
 
   private Api4Interface $api4;
-
-  private ApplicationProcessActivityManager $activityManager;
-
-  private RequestContextInterface $requestContext;
 
   /**
    * @inheritDoc
    */
   public static function getSubscribedEvents(): array {
-    return [ClearingProcessCreatedEvent::class => 'onCreated'];
+    return [ClearingProcessUpdatedEvent::class => 'onUpdated'];
   }
 
   public function __construct(
-    Api4Interface $api4,
-    ApplicationProcessActivityManager $activityManager,
-    RequestContextInterface $requestContext
+    Api4Interface $api4
   ) {
     $this->api4 = $api4;
-    $this->activityManager = $activityManager;
-    $this->requestContext = $requestContext;
   }
 
   /**
    * @throws \CRM_Core_Exception
    */
-  public function onCreated(ClearingProcessCreatedEvent $event): void {
-    $applicationProcess = $event->getApplicationProcess();
-    $activity = ActivityEntity::fromArray([
-      'activity_type_id:name' => ActivityTypeNames::FUNDING_CLEARING_CREATE,
-      'subject' => E::ts('Funding Clearing Started'),
-      'details' => E::ts('Application: %1 (%2)',
-        [
-          1 => $applicationProcess->getTitle(),
-          2 => $applicationProcess->getIdentifier(),
-        ]
-      ),
-    ]);
-    $this->activityManager->addActivity($this->requestContext->getContactId(), $applicationProcess, $activity);
-
+  public function onUpdated(ClearingProcessUpdatedEvent $event): void {
     $clearingProcess = $event->getClearingProcess();
     $reportData = $clearingProcess->getReportData();
 

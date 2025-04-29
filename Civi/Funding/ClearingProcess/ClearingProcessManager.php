@@ -54,6 +54,8 @@ class ClearingProcessManager {
       'status' => 'draft',
       'creation_date' => $now,
       'modification_date' => $now,
+      'start_date' => '',
+      'end_date' => '',
       'report_data' => [],
       'is_review_content' => NULL,
       'reviewer_cont_contact_id' => NULL,
