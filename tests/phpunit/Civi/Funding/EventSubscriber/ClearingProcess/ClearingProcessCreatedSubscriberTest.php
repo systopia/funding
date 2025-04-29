@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\ClearingProcess;
 
+use Civi\Api4\FundingClearingProcess;
 use Civi\Funding\ActivityTypeNames;
 use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\Entity\ActivityEntity;
@@ -89,6 +90,126 @@ final class ClearingProcessCreatedSubscriberTest extends TestCase {
       ->with(22, $applicationProcessBundle->getApplicationProcess(), $activity);
 
     $this->subscriber->onCreated($event);
+
+    $this->api4Mock->expects(static::never());
+  }
+
+  public function testOnCreatedWithGrunddatenZeitraeumeIncomplete(): void {
+    $reportDataSet = [
+      [
+        'grunddaten' => [
+          'zeitraeume' => [
+            [
+              'beginn' => '2025-01-13',
+            ],
+          ],
+        ],
+      ],
+      [
+        'grunddaten' => [
+          'zeitraeume' => [
+            [
+              'ende' => '2025-01-13',
+            ],
+          ],
+        ],
+      ],
+      [
+        'grunddaten' => [
+          'zeitraeume' => [],
+        ],
+      ],
+      [
+        'grunddaten' => [
+          'zeitraeume' => [
+            'beginn' => '',
+            'ende' => '',
+          ],
+        ],
+      ],
+    ];
+
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+      'title' => 'Title',
+      'identifier' => 'Identifier',
+    ]);
+
+    foreach ($reportDataSet as $reportData) {
+      $clearingProcess = ClearingProcessFactory::create([
+        'report_data' => $reportData,
+      ]);
+      $event = new ClearingProcessCreatedEvent($clearingProcess, $applicationProcessBundle);
+
+      $this->subscriber->onCreated($event);
+
+      $this->api4Mock->expects(static::never());
+    }
+  }
+
+  public function testOnCreatedWithGrunddatenZeitraeume(): void {
+    $reportDataSet = [
+      [
+        'grunddaten' => [
+          'zeitraeume' => [
+            [
+              'beginn' => '2025-01-13',
+              'ende' => '2025-01-15',
+            ],
+          ],
+        ],
+      ],
+      [
+        'grunddaten' => [
+          'zeitraeume' => [
+            [
+              'beginn' => '2025-01-13',
+              'ende' => '2025-01-15',
+            ],
+            [
+              'beginn' => '2025-01-13',
+              'ende' => '2025-01-17',
+            ],
+            [
+              'beginn' => '2025-01-11',
+              'ende' => '2025-01-20',
+            ],
+          ],
+        ],
+      ],
+    ];
+
+    $expectedDurations = [
+      [
+        'beginn' => '2025-01-13',
+        'ende' => '2025-01-15',
+      ],
+      [
+        'beginn' => '2025-01-11',
+        'ende' => '2025-01-20',
+      ],
+    ];
+
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+      'title' => 'Title',
+      'identifier' => 'Identifier',
+    ]);
+
+    foreach ($reportDataSet as $index => $reportData) {
+      $clearingProcess = ClearingProcessFactory::create([
+        'report_data' => $reportData,
+      ]);
+      $event = new ClearingProcessCreatedEvent($clearingProcess, $applicationProcessBundle);
+
+      $this->subscriber->onCreated($event);
+
+      $this->api4Mock->expects(static::once())
+        ->method('updateEntity')
+        ->with(
+          FundingClearingProcess::getEntityName(),
+          ClearingProcessFactory::DEFAULT_ID,
+          $expectedDurations[$index]
+        );
+    }
   }
 
 }
