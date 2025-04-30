@@ -23,6 +23,7 @@ declare(strict_types = 1);
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
 use Civi\Funding\DependencyInjection\Util\TaskServiceRegistrator;
+use Civi\Funding\FundingCaseType\MetaData\FundingCaseTypeMetaDataInterface;
 use Civi\Funding\IJB\Application\Actions\IJBApplicationActionsDeterminer;
 use Civi\Funding\IJB\Application\Actions\IJBApplicationActionStatusInfo;
 use Civi\Funding\IJB\Application\Actions\IJBApplicationStatusDeterminer;
@@ -35,8 +36,12 @@ use Civi\Funding\IJB\Application\JsonSchema\IJBApplicationJsonSchemaFactory;
 use Civi\Funding\IJB\Application\UiSchema\IJBApplicationUiSchemaFactory;
 use Civi\Funding\IJB\EventSubscriber\IJBAngularModuleSubscriber;
 use Civi\Funding\IJB\FundingCase\Actions\IJBCaseActionsDeterminer;
+use Civi\Funding\IJB\IJBMetaData;
 use Civi\Funding\IJB\Report\IJBReportDataLoader;
 use Civi\Funding\IJB\Report\IJBReportFormFactory;
+
+$container->autowire(IJBMetaData::class)
+  ->addTag(FundingCaseTypeMetaDataInterface::class);
 
 $container->autowire(IJBApplicationSubmitActionsContainer::class)
   ->addTag(IJBApplicationSubmitActionsContainer::SERVICE_TAG);

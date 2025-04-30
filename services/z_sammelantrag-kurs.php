@@ -23,6 +23,7 @@ declare(strict_types = 1);
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
 use Civi\Funding\DependencyInjection\Util\TaskServiceRegistrator;
+use Civi\Funding\FundingCaseType\MetaData\FundingCaseTypeMetaDataInterface;
 use Civi\Funding\SammelantragKurs\Application\Actions\KursApplicationActionsDeterminer;
 use Civi\Funding\SammelantragKurs\Application\Actions\KursApplicationActionStatusInfo;
 use Civi\Funding\SammelantragKurs\Application\Actions\KursApplicationStatusDeterminer;
@@ -41,9 +42,13 @@ use Civi\Funding\SammelantragKurs\FundingCase\Data\KursCaseFormDataFactory;
 use Civi\Funding\SammelantragKurs\FundingCase\JsonSchema\KursCaseJsonSchemaFactory;
 use Civi\Funding\SammelantragKurs\FundingCase\UiSchema\KursCaseUiSchemaFactory;
 use Civi\Funding\SammelantragKurs\FundingCase\Validation\KursCaseValidator;
+use Civi\Funding\SammelantragKurs\KursMetaData;
 use Civi\Funding\SammelantragKurs\Report\KursReportDataLoader;
 use Civi\Funding\SammelantragKurs\Report\KursReportFormFactory;
 use Symfony\Component\DependencyInjection\Reference;
+
+$container->autowire(KursMetaData::class)
+  ->addTag(FundingCaseTypeMetaDataInterface::class);
 
 $container->autowire(KursApplicationActionsDeterminer::class)
   ->addTag(KursApplicationActionsDeterminer::SERVICE_TAG);

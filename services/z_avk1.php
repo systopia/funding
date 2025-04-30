@@ -23,6 +23,7 @@ declare(strict_types = 1);
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
 use Civi\Funding\DependencyInjection\Util\TaskServiceRegistrator;
+use Civi\Funding\FundingCaseType\MetaData\FundingCaseTypeMetaDataInterface;
 use Civi\Funding\SonstigeAktivitaet\Application\Actions\AVK1ApplicationActionsDeterminer;
 use Civi\Funding\SonstigeAktivitaet\Application\Actions\AVK1ApplicationActionStatusInfo;
 use Civi\Funding\SonstigeAktivitaet\Application\Actions\AVK1ApplicationStatusDeterminer;
@@ -34,10 +35,14 @@ use Civi\Funding\SonstigeAktivitaet\Application\Data\AVK1ProjektunterlagenFactor
 use Civi\Funding\SonstigeAktivitaet\Application\JsonSchema\AVK1JsonSchemaFactory;
 use Civi\Funding\SonstigeAktivitaet\Application\JsonSchema\AVK1StatusMarkupFactory;
 use Civi\Funding\SonstigeAktivitaet\Application\UISchema\AVK1UiSchemaFactory;
+use Civi\Funding\SonstigeAktivitaet\AVK1MetaData;
 use Civi\Funding\SonstigeAktivitaet\EventSubscriber\AVK1AngularModuleSubscriber;
 use Civi\Funding\SonstigeAktivitaet\FundingCase\Actions\AVK1CaseActionsDeterminer;
 use Civi\Funding\SonstigeAktivitaet\Report\AVK1ReportDataLoader;
 use Civi\Funding\SonstigeAktivitaet\Report\AVK1ReportFormFactory;
+
+$container->autowire(AVK1MetaData::class)
+  ->addTag(FundingCaseTypeMetaDataInterface::class);
 
 $container->autowire(AVK1ApplicationSubmitActionsContainer::class)
   ->addTag(AVK1ApplicationSubmitActionsContainer::SERVICE_TAG);

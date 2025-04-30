@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
+use Civi\Funding\Api4\Action\FundingApplicationCostItem\GetFieldsAction;
+use Civi\Funding\Api4\Action\Generic\FinancePlanItem\GetAction;
 use Civi\Funding\Api4\Traits\AccessPermissionsTrait;
 
 /**
@@ -28,8 +30,16 @@ use Civi\Funding\Api4\Traits\AccessPermissionsTrait;
  *
  * @package Civi\Api4
  */
-class FundingApplicationCostItem extends Generic\DAOEntity {
+final class FundingApplicationCostItem extends Generic\DAOEntity {
 
   use AccessPermissionsTrait;
+
+  public static function get($checkPermissions = TRUE) {
+    return (new GetAction(self::getEntityName()))->setCheckPermissions($checkPermissions);
+  }
+
+  public static function getFields($checkPermissions = TRUE) {
+    return (new GetFieldsAction(self::getEntityName()))->setCheckPermissions($checkPermissions);
+  }
 
 }

@@ -24,6 +24,7 @@ use Civi\Funding\Api4\Action\FundingCaseType\GetAction;
 use Civi\Funding\Api4\Action\FundingCaseType\GetByFundingProgramIdAction;
 use Civi\Funding\Api4\Action\FundingCaseType\UpdateAction;
 use Civi\Funding\DependencyInjection\Compiler\FundingCaseFinishClearingHandlerPass;
+use Civi\Funding\DependencyInjection\Compiler\FundingCaseTypeMetaDataPass;
 use Civi\Funding\DependencyInjection\Compiler\FundingCaseTypeServiceLocatorPass;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\EventSubscriber\FundingCaseType\AfformCacheCiviOfficeDocumentSubscriber;
@@ -31,6 +32,7 @@ use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\Reference;
 
+$container->addCompilerPass(new FundingCaseTypeMetaDataPass());
 $container->addCompilerPass(new FundingCaseTypeServiceLocatorPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 1);
 $container->addCompilerPass(new FundingCaseFinishClearingHandlerPass());
 

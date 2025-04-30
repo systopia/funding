@@ -7,6 +7,7 @@ use Civi\Funding\DocumentRender\CiviOffice\CiviOfficeContextDataHolder;
 use Civi\Funding\DocumentRender\DocumentRendererInterface;
 use Civi\Funding\FundingAttachmentManagerInterface;
 use Civi\Funding\FundingCase\FundingCaseManager;
+use Civi\Funding\FundingCaseType\MetaData\FundingCaseTypeMetaDataInterface;
 use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\Funding\Mock\Contact\PossibleRecipientsLoaderMock;
@@ -25,6 +26,7 @@ use Civi\Funding\Mock\FundingCaseType\FundingCase\Data\TestFundingCaseFormDataFa
 use Civi\Funding\Mock\FundingCaseType\FundingCase\JsonSchema\TestFundingCaseJsonSchemaFactory;
 use Civi\Funding\Mock\FundingCaseType\FundingCase\UiSchema\TestFundingCaseUiSchemaFactory;
 use Civi\Funding\Mock\FundingCaseType\FundingCase\Validation\TestFundingCaseValidator;
+use Civi\Funding\Mock\FundingCaseType\TestCaseTypeMetaData;
 use Civi\Funding\Permission\FundingCase\RelationFactory\RelationPropertiesFactoryLocator;
 use Civi\Funding\TestAttachmentManager;
 use Civi\PHPUnit\Comparator\ApiActionComparator;
@@ -86,6 +88,9 @@ function _funding_test_civicrm_container(ContainerBuilder $container): void {
   // overwrite remote contact ID resolver
   $container->autowire(FundingRemoteContactIdResolverInterface::class, DummyRemoteContactIdResolver::class);
   $container->setAlias(RemoteContactIdResolverInterface::class, FundingRemoteContactIdResolverInterface::class);
+
+  $container->autowire(TestCaseTypeMetaData::class)
+    ->addTag(FundingCaseTypeMetaDataInterface::class);
 
   $container->autowire(TestApplicationStatusDeterminer::class)
     ->addTag(TestApplicationStatusDeterminer::SERVICE_TAG);
