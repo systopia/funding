@@ -27,6 +27,7 @@ use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessCreatedEvent;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessPreCreateEvent;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessPreUpdateEvent;
+use Civi\Funding\Event\ClearingProcess\ClearingProcessStartedEvent;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessUpdatedEvent;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
@@ -47,13 +48,11 @@ class ClearingProcessManager {
    * @throws \CRM_Core_Exception
    */
   public function create(ApplicationProcessEntityBundle $applicationProcessBundle): ClearingProcessEntity {
-    /** @var string $now */
-    $now = date('Y-m-d H:i:s');
     $clearingProcess = ClearingProcessEntity::fromArray([
       'application_process_id' => $applicationProcessBundle->getApplicationProcess()->getId(),
-      'status' => 'draft',
-      'creation_date' => $now,
-      'modification_date' => $now,
+      'status' => 'not-started',
+      'creation_date' => NULL,
+      'modification_date' => NULL,
       'report_data' => [],
       'is_review_content' => NULL,
       'reviewer_cont_contact_id' => NULL,
@@ -61,14 +60,18 @@ class ClearingProcessManager {
       'reviewer_calc_contact_id' => NULL,
     ]);
 
-    $event = new ClearingProcessPreCreateEvent($clearingProcess, $applicationProcessBundle);
+    $event = new ClearingProcessPreCreateEvent(
+      new ClearingProcessEntityBundle($clearingProcess, $applicationProcessBundle)
+    );
     $this->eventDispatcher->dispatch(ClearingProcessPreCreateEvent::class, $event);
 
     $result = $this->api4->createEntity(FundingClearingProcess::getEntityName(), $clearingProcess->toArray());
     $clearingProcess = ClearingProcessEntity::singleFromApiResult($result)
       ->reformatDates();
 
-    $event = new ClearingProcessCreatedEvent($clearingProcess, $applicationProcessBundle);
+    $event = new ClearingProcessCreatedEvent(
+      new ClearingProcessEntityBundle($clearingProcess, $applicationProcessBundle)
+    );
     $this->eventDispatcher->dispatch(ClearingProcessCreatedEvent::class, $event);
 
     return $clearingProcess;
@@ -91,6 +94,20 @@ class ClearingProcessManager {
         Comparison::new('application_process_id', '=', $applicationProcessId)
       )
     );
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function start(ClearingProcessEntityBundle $clearingProcessBundle): void {
+    $clearingProcess = $clearingProcessBundle->getClearingProcess();
+    $clearingProcess->setStatus('draft');
+    $clearingProcess->setCreationDate(new \DateTime(date('YmdHis')));
+
+    $this->update($clearingProcessBundle);
+
+    $event = new ClearingProcessStartedEvent($clearingProcessBundle);
+    $this->eventDispatcher->dispatch(ClearingProcessStartedEvent::class, $event);
   }
 
   /**

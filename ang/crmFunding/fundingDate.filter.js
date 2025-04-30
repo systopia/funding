@@ -20,6 +20,10 @@ fundingModule.filter('fundingDate', ['dateFilter', function (dateFilter) {
   const ts = CRM.ts('funding');
 
   return function (value, format = ts('yyyy-MM-dd hh:mm:ss')) {
+    if (value === undefined || value === null || value === '') {
+      return ts('empty');
+    }
+
     const date = new Date(value);
     return dateFilter(date, format);
   };

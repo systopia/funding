@@ -27,6 +27,7 @@ use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\Funding\FundingProgram\FundingProgramManager;
+use Civi\Funding\PayoutProcess\DrawdownManager;
 use Civi\Test;
 use Civi\Test\CiviEnvBuilder;
 use Civi\Test\HeadlessInterface;
@@ -44,6 +45,7 @@ abstract class AbstractFundingHeadlessTestCase extends TestCase implements Headl
     ClockMock::register(ApplicationProcessManager::class);
     ClockMock::register(ApplicationSnapshotCreateHandler::class);
     ClockMock::register(ClearingProcessManager::class);
+    ClockMock::register(DrawdownManager::class);
   }
 
   public static function tearDownAfterClass(): void {

@@ -22,6 +22,7 @@ declare(strict_types = 1);
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
+use Civi\Funding\DependencyInjection\Util\TaskServiceRegistrator;
 use Civi\Funding\SonstigeAktivitaet\Application\Actions\AVK1ApplicationActionsDeterminer;
 use Civi\Funding\SonstigeAktivitaet\Application\Actions\AVK1ApplicationActionStatusInfo;
 use Civi\Funding\SonstigeAktivitaet\Application\Actions\AVK1ApplicationStatusDeterminer;
@@ -68,6 +69,12 @@ $container->autowire(AVK1ReportDataLoader::class)
   ->addTag(AVK1ReportDataLoader::SERVICE_TAG);
 $container->autowire(AVK1ReportFormFactory::class)
   ->addTag(AVK1ReportFormFactory::SERVICE_TAG);
+
+TaskServiceRegistrator::autowireAll(
+  $container,
+  __DIR__ . '/../Civi/Funding/SonstigeAktivitaet/Task',
+  'Civi\\Funding\\SonstigeAktivitaet\\Task'
+);
 
 $container->autowire(AVK1AngularModuleSubscriber::class)
   ->addTag('kernel.event_subscriber');

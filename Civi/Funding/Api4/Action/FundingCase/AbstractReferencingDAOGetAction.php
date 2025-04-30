@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\FundingCase;
 
+use Civi\API\Exception\UnauthorizedException;
 use Civi\Api4\FundingCase;
 use Civi\Api4\Generic\DAOGetAction;
 use Civi\Api4\Generic\Result;
@@ -89,12 +90,11 @@ abstract class AbstractReferencingDAOGetAction extends DAOGetAction {
       $this->ensureFundingCasePermissions();
     }
 
-    if (!$this->isFieldSelected($this->_fundingCaseIdFieldName)) {
-      if ([] === $this->getSelect()) {
-        $this->setSelect(['*']);
-      }
-      $this->addSelect($this->_fundingCaseIdFieldName);
+    if ([] === $this->getSelect()) {
+      $this->setSelect(['*']);
     }
+    $this->addSelect($this->_fundingCaseIdFieldName);
+    $this->addSelect('_pc.permissions');
 
     $limit = $this->getLimit();
     $offset = $this->getOffset();
@@ -121,7 +121,13 @@ abstract class AbstractReferencingDAOGetAction extends DAOGetAction {
     }
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   * @throws \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException
+   */
   public function setDefaultWhereClause(): void {
+    $this->assertIgnoreCasePermissions();
+
     if (!$this->ignoreCasePermissions) {
       if (NULL === $this->originalSelect) {
         // _run() was not called, e.g. aggregation line in SearchKit.
@@ -169,11 +175,16 @@ abstract class AbstractReferencingDAOGetAction extends DAOGetAction {
    * @throws \CRM_Core_Exception
    */
   protected function handleRecord(array &$record): bool {
-    // Normally the funding case ID is set. Though it might be NULL if the where
-    // clause was modified in hook_civicrm_selectWhereClause.
-    return isset($record[$this->_fundingCaseIdFieldName])
-      // @phpstan-ignore argument.type
-      && $this->getFundingCaseManager()->hasAccess($record[$this->_fundingCaseIdFieldName]);
+    try {
+      // Normally the funding case ID is set. Though it might be NULL if the
+      // where clause was modified in hook_civicrm_selectWhereClause.
+      return isset($record['_pc.permissions']) || (isset($record[$this->_fundingCaseIdFieldName])
+        // @phpstan-ignore argument.type
+        && $this->getFundingCaseManager()->hasAccess($record[$this->_fundingCaseIdFieldName]));
+    }
+    finally {
+      unset($record['_pc.permissions']);
+    }
   }
 
   protected function initOriginalSelect(): void {
@@ -229,6 +240,19 @@ abstract class AbstractReferencingDAOGetAction extends DAOGetAction {
   protected function unsetIfNotSelected(array &$record, string $fieldName): void {
     if (!$this->isFieldSelected($fieldName)) {
       unset($record[$fieldName]);
+    }
+  }
+
+  /**
+   * @throws \Civi\API\Exception\UnauthorizedException
+   */
+  private function assertIgnoreCasePermissions(): void {
+    // Only allow to ignore case permissions on internal requests with check
+    // permissions disabled or if contact has administer permission.
+    if ($this->ignoreCasePermissions &&
+      $this->getCheckPermissions() && !\CRM_Core_Permission::check('administer CiviCRM')
+    ) {
+      throw new UnauthorizedException('Ignoring case permissions is not allowed');
     }
   }
 

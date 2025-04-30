@@ -82,7 +82,7 @@ final class HiHApplicationStatusDeterminer extends AbstractApplicationProcessSta
     parent::__construct(self::STATUS_ACTION_STATUS_MAP);
   }
 
-  public function getStatusOnClearingProcessCreated(FullApplicationProcessStatus $currentStatus
+  public function getStatusOnClearingProcessStarted(FullApplicationProcessStatus $currentStatus
   ): FullApplicationProcessStatus {
     return new FullApplicationProcessStatus(
       'complete',

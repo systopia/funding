@@ -25,7 +25,7 @@ use Civi\Funding\Permission\ContactRelation\Types\Relationship;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
 
-final class Upgrader0006 {
+final class Upgrader0006 implements UpgraderInterface {
 
   private Api4Interface $api4;
 

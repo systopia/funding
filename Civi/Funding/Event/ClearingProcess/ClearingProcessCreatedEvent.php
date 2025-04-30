@@ -19,26 +19,15 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Event\ClearingProcess;
 
-use Civi\Funding\Entity\ApplicationProcessEntityBundle;
-use Civi\Funding\Entity\ClearingProcessEntity;
-use Civi\Funding\Entity\Traits\ApplicationProcessEntityBundleTrait;
+use Civi\Funding\Entity\ClearingProcessEntityBundle;
+use Civi\Funding\Entity\Traits\ClearingProcessEntityBundleTrait;
 
 final class ClearingProcessCreatedEvent {
 
-  use ApplicationProcessEntityBundleTrait;
+  use ClearingProcessEntityBundleTrait;
 
-  private ClearingProcessEntity $clearingProcess;
-
-  public function __construct(
-    ClearingProcessEntity $clearingProcess,
-    ApplicationProcessEntityBundle $applicationProcessBundle
-  ) {
-    $this->clearingProcess = $clearingProcess;
-    $this->applicationProcessBundle = $applicationProcessBundle;
-  }
-
-  public function getClearingProcess(): ClearingProcessEntity {
-    return $this->clearingProcess;
+  public function __construct(ClearingProcessEntityBundle $clearingProcessBundle) {
+    $this->clearingProcessBundle = $clearingProcessBundle;
   }
 
 }

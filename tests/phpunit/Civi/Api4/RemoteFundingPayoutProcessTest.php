@@ -80,7 +80,7 @@ final class RemoteFundingPayoutProcessTest extends AbstractRemoteFundingHeadless
   }
 
   public function testGetFields(): void {
-    static::assertCount(7, RemoteFundingPayoutProcess::getFields()->execute());
+    static::assertCount(9, RemoteFundingPayoutProcess::getFields()->execute());
   }
 
   private function createFundingCase(): FundingCaseEntity {

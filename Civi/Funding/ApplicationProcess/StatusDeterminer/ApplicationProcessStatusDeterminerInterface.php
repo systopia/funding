@@ -37,7 +37,7 @@ interface ApplicationProcessStatusDeterminerInterface {
 
   public function getStatus(FullApplicationProcessStatus $currentStatus, string $action): FullApplicationProcessStatus;
 
-  public function getStatusOnClearingProcessCreated(
+  public function getStatusOnClearingProcessStarted(
     FullApplicationProcessStatus $currentStatus
   ): FullApplicationProcessStatus;
 

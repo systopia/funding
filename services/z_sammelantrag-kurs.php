@@ -22,6 +22,7 @@ declare(strict_types = 1);
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
+use Civi\Funding\DependencyInjection\Util\TaskServiceRegistrator;
 use Civi\Funding\SammelantragKurs\Application\Actions\KursApplicationActionsDeterminer;
 use Civi\Funding\SammelantragKurs\Application\Actions\KursApplicationActionStatusInfo;
 use Civi\Funding\SammelantragKurs\Application\Actions\KursApplicationStatusDeterminer;
@@ -78,6 +79,12 @@ $container->autowire(KursApplicationFormDataFactory::class)
   ->addTag(KursApplicationFormDataFactory::SERVICE_TAG);
 $container->autowire(KursApplicationFormFilesFactory::class)
   ->addTag(KursApplicationFormFilesFactory::SERVICE_TAG);
+
+TaskServiceRegistrator::autowireAll(
+  $container,
+  __DIR__ . '/../Civi/Funding/SammelantragKurs/Task',
+  'Civi\\Funding\\SammelantragKurs\\Task'
+);
 
 $container->autowire(KursAngularModuleSubscriber::class)
   ->addTag('kernel.event_subscriber');

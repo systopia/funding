@@ -22,9 +22,12 @@ namespace Civi\Funding\PayoutProcess;
 use Civi\Api4\FundingPayoutProcess;
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
+use Civi\Funding\Entity\PayoutProcessBundle;
+use Civi\Funding\EntityFactory\FundingCaseBundleFactory;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\PayoutProcessFactory;
 use Civi\Funding\Event\PayoutProcess\PayoutProcessCreatedEvent;
+use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -45,15 +48,22 @@ final class PayoutProcessManagerTest extends TestCase {
    */
   private MockObject $eventDispatcherMock;
 
+  /**
+   * @var \Civi\Funding\FundingCase\FundingCaseManager&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $fundingCaseManagerMock;
+
   private PayoutProcessManager $payoutProcessManager;
 
   protected function setUp(): void {
     parent::setUp();
     $this->api4Mock = $this->createMock(Api4Interface::class);
     $this->eventDispatcherMock = $this->createMock(CiviEventDispatcherInterface::class);
+    $this->fundingCaseManagerMock = $this->createMock(FundingCaseManager::class);
     $this->payoutProcessManager = new PayoutProcessManager(
       $this->api4Mock,
       $this->eventDispatcherMock,
+      $this->fundingCaseManagerMock,
     );
   }
 
@@ -94,11 +104,7 @@ final class PayoutProcessManagerTest extends TestCase {
     $this->api4Mock->expects(static::once())->method('getEntities')
       ->with(
         FundingPayoutProcess::getEntityName(),
-        Comparison::new('id', '=', $payoutProcess->getId()),
-        [],
-        1,
-        0,
-        ['checkPermissions' => FALSE],
+        Comparison::new('id', '=', $payoutProcess->getId())
       )->willReturn(new Result([$payoutProcess->toArray()]));
 
     static::assertEquals($payoutProcess, $this->payoutProcessManager->get($payoutProcess->getId()));
@@ -108,14 +114,30 @@ final class PayoutProcessManagerTest extends TestCase {
     $this->api4Mock->expects(static::once())->method('getEntities')
       ->with(
         FundingPayoutProcess::getEntityName(),
-        Comparison::new('id', '=', 12),
-        [],
-        1,
-        0,
-        ['checkPermissions' => FALSE],
+        Comparison::new('id', '=', 12)
       )->willReturn(new Result());
 
     static::assertNull($this->payoutProcessManager->get(12));
+  }
+
+  public function testGetBundle(): void {
+    $fundingCaseBundle = FundingCaseBundleFactory::create();
+    $payoutProcess = PayoutProcessFactory::create();
+
+    $this->fundingCaseManagerMock->expects(static::once())->method('getBundle')
+      ->with($payoutProcess->getFundingCaseId())
+      ->willReturn($fundingCaseBundle);
+
+    $this->api4Mock->expects(static::once())->method('getEntities')
+      ->with(
+        FundingPayoutProcess::getEntityName(),
+        Comparison::new('id', '=', $payoutProcess->getId())
+      )->willReturn(new Result([$payoutProcess->toArray()]));
+
+    static::assertEquals(
+      new PayoutProcessBundle($payoutProcess, $fundingCaseBundle),
+      $this->payoutProcessManager->getBundle($payoutProcess->getId())
+    );
   }
 
   public function testGetLastByFundingCaseId(): void {
@@ -126,9 +148,7 @@ final class PayoutProcessManagerTest extends TestCase {
         FundingPayoutProcess::getEntityName(),
         Comparison::new('funding_case_id', '=', $payoutProcess->getId()),
         ['id' => 'DESC'],
-        1,
-        0,
-        ['checkPermissions' => FALSE],
+        1
       )->willReturn(new Result([$payoutProcess->toArray()]));
 
     static::assertEquals($payoutProcess, $this->payoutProcessManager->getLastByFundingCaseId($payoutProcess->getId()));
@@ -138,8 +158,7 @@ final class PayoutProcessManagerTest extends TestCase {
     $this->api4Mock->method('countEntities')
       ->with(
         FundingPayoutProcess::getEntityName(),
-        Comparison::new('id', '=', 12),
-        ['checkPermissions' => FALSE],
+        Comparison::new('id', '=', 12)
       )->willReturn(1);
 
     static::assertTrue($this->payoutProcessManager->hasAccess(12));

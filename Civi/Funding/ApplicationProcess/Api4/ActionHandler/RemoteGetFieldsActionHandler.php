@@ -22,7 +22,6 @@ namespace Civi\Funding\ApplicationProcess\Api4\ActionHandler;
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\FundingCase;
 use Civi\Api4\FundingClearingProcess;
-use Civi\Api4\Generic\Result;
 use Civi\Funding\Api4\ActionHandler\AbstractRemoteFundingGetFieldsActionHandler;
 use Civi\RemoteTools\Api4\Action\AbstractRemoteGetFieldsAction;
 use Civi\RemoteTools\Api4\Api4Interface;
@@ -40,7 +39,7 @@ final class RemoteGetFieldsActionHandler extends AbstractRemoteFundingGetFieldsA
     $this->optionsLoader = $optionsLoader;
   }
 
-  public function getFields(AbstractRemoteGetFieldsAction $action): Result {
+  public function getFields(AbstractRemoteGetFieldsAction $action): array {
     $fields = parent::getFields($action);
     $fields[] = [
       'type' => 'Extra',

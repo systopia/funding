@@ -20,27 +20,14 @@ declare(strict_types = 1);
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
-use Civi\Funding\Upgrade\Upgrader0002;
-use Civi\Funding\Upgrade\Upgrader0003;
-use Civi\Funding\Upgrade\Upgrader0006;
-use Civi\Funding\Upgrade\Upgrader0008;
-use Civi\Funding\Upgrade\Upgrader0009;
-use Civi\Funding\Upgrade\Upgrader0010;
+use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
+use Civi\Funding\Upgrade\UpgraderInterface;
 
-$container->autowire(Upgrader0002::class)
-  ->setPublic(TRUE);
-
-$container->autowire(Upgrader0003::class)
-  ->setPublic(TRUE);
-
-$container->autowire(Upgrader0006::class)
-  ->setPublic(TRUE);
-
-$container->autowire(Upgrader0008::class)
-  ->setPublic(TRUE);
-
-$container->autowire(Upgrader0009::class)
-  ->setPublic(TRUE);
-
-$container->autowire(Upgrader0010::class)
-  ->setPublic(TRUE);
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/Upgrade',
+  'Civi\\Funding\\Upgrade',
+  UpgraderInterface::class,
+  [],
+  ['public' => TRUE]
+);
