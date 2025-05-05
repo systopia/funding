@@ -29,6 +29,28 @@ use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
 
 final class IJBSachberichtJsonSchema extends JsonSchemaObject {
 
+  public const THEMENFELDER_OPTIONS = [
+    '' => NULL,
+    'Politik und Gesellschaft' => 'politik',
+    'Medien' => 'medien',
+    'Geschichte' => 'geschichte',
+    'Gewaltprävention' => 'gewaltpraeventation',
+    'Sport' => 'sport',
+    'Didaktik und Methodik' => 'didaktik',
+    'Religion' => 'religion',
+    'Natur und Umwelt' => 'natur',
+    'Spiel und Spielen' => 'spiel',
+    'Gesundes Aufwachsen' => 'aufwachsen',
+    'Kunst und Kultur' => 'kunst',
+    'Teamer-, Leiterfortbildung' => 'fortbildung',
+    'Schule, Ausbildung, Beruf' => 'ausbildung',
+    'Rettungs- und Hilfsdienste' => 'rettungsdienste',
+    'Sonstige' => 'sonstige',
+    'geschlechtliche Identität' => 'geschlechtlicheIdentitaet',
+    'Technik und Handwerk' => 'technik',
+    'ohne Schwerpunktthema' => 'ohne',
+  ];
+
   public function __construct() {
     parent::__construct([
       'durchgefuehrt' => new JsonSchemaString([
@@ -92,27 +114,7 @@ final class IJBSachberichtJsonSchema extends JsonSchemaObject {
 
       // Abschnitt 3: Durchführung/Inhalt/Methoden
       'themenfelder' => new JsonSchemaArray(new JsonSchemaString([
-        'oneOf' => JsonSchemaUtil::buildTitledOneOf2([
-          '' => NULL,
-          'Politik und Gesellschaft' => 'politik',
-          'Medien' => 'medien',
-          'Geschichte' => 'geschichte',
-          'Gewaltprävention' => 'gewaltpraeventation',
-          'Sport' => 'sport',
-          'Didaktik und Methodik' => 'didaktik',
-          'Religion' => 'religion',
-          'Natur und Umwelt' => 'natur',
-          'Spiel und Spielen' => 'spiel',
-          'Gesundes Aufwachsen' => 'aufwachsen',
-          'Kunst und Kultur' => 'kunst',
-          'Teamer-, Leiterfortbildung' => 'fortbildung',
-          'Schule, Ausbildung, Beruf' => 'ausbildung',
-          'Rettungs- und Hilfsdienste' => 'rettungsdienste',
-          'Sonstige' => 'sonstige',
-          'geschlechtliche Identität' => 'geschlechtlicheIdentitaet',
-          'Technik und Handwerk' => 'technik',
-          'ohne Schwerpunktthema' => 'ohne',
-        ]),
+        'oneOf' => JsonSchemaUtil::buildTitledOneOf2(self::THEMENFELDER_OPTIONS),
       ]), ['maxItems' => 3, 'uniqueItems' => TRUE]),
       'zieleErreicht' => new JsonSchemaString(),
       'intensiveBegegnungErmoeglicht' => new JsonSchemaString(),
