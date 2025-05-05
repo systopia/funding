@@ -31,6 +31,11 @@ use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
 
 final class IJBGrunddatenJsonSchema extends JsonSchemaObject {
 
+  public const ART_DER_MASSNHAME_OPTIONS = [
+    'fachkraefteprogramm' => 'Fachkräfteprogramm',
+    'jugendbegegnung' => 'Jugendbegegnung oder Workcamp',
+  ];
+
   /**
    * @param bool $report TRUE if used for report.
    */
@@ -84,10 +89,7 @@ EOD,
         0
       ),
       'artDerMassnahme' => new JsonSchemaString([
-        'oneOf' => JsonSchemaUtil::buildTitledOneOf([
-          'fachkraefteprogramm' => 'Fachkräfteprogramm',
-          'jugendbegegnung' => 'Jugendbegegnung oder Workcamp',
-        ]),
+        'oneOf' => JsonSchemaUtil::buildTitledOneOf(self::ART_DER_MASSNHAME_OPTIONS),
       ]),
       'begegnungsland' => new JsonSchemaString([
         'oneOf' => JsonSchemaUtil::buildTitledOneOf([
