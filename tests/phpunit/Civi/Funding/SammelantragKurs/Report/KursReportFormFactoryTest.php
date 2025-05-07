@@ -19,10 +19,13 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\SammelantragKurs\Report;
 
+use Systopia\JsonSchema\Translation\NullTranslator;
 use Civi\Funding\EntityFactory\ClearingProcessBundleFactory;
 use Civi\Funding\Form\JsonFormsFormInterface;
+use Civi\Funding\Form\MappedData\MappedDataLoader;
 use Civi\Funding\Form\Traits\AssertFormTrait;
 use Civi\Funding\Validation\Traits\AssertValidationResultTrait;
+use Civi\RemoteTools\JsonSchema\Validation\Validator;
 use Civi\RemoteTools\JsonSchema\Validation\OpisValidatorFactory;
 use PHPUnit\Framework\TestCase;
 
@@ -51,6 +54,7 @@ final class KursReportFormFactoryTest extends TestCase {
     $grunddaten = (object) [
       'titel' => 'Test',
       'kurzbeschreibungDerInhalte' => 'foo bar',
+      'internerBezeichner' => 'interne id',
       'zeitraeume' => [
         (object) [
           'beginn' => '2022-08-24',
@@ -97,6 +101,7 @@ final class KursReportFormFactoryTest extends TestCase {
     $grunddaten = (object) [
       'titel' => 'Test',
       'kurzbeschreibungDerInhalte' => 'foo bar',
+      'internerBezeichner' => 'interne id',
       'zeitraeume' => [
         (object) [
           'beginn' => '2022-08-24',
@@ -153,6 +158,19 @@ final class KursReportFormFactoryTest extends TestCase {
     static::assertSame($programmtage, $data->reportData->grunddaten->programmtage);
     static::assertSame(6, $data->reportData->foerderung->summe);
     static::assertAllPropertiesSet($validationSchema, $data);
+
+    $tagValidator = new Validator(new NullTranslator(), OpisValidatorFactory::getValidator());
+    $result = $tagValidator->validate($this->form->getJsonSchema(), get_object_vars($data));
+
+    $mappedDataLoader = new MappedDataLoader();
+    $mappedData = $mappedDataLoader->getMappedData($result->getTaggedData());
+
+    static::assertEquals([
+      'title' => 'Test',
+      'short_description' => 'foo bar',
+      'start_date' => '2022-08-24',
+      'end_date' => '2022-08-26',
+    ], $mappedData);
   }
 
   public function testUiSchema(): void {

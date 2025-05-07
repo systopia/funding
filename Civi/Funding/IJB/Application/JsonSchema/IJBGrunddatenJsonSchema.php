@@ -107,11 +107,25 @@ EOD,
         'minimum' => 0,
         'maximum' => new JsonSchemaDataPointer('1/programmtage'),
       ], TRUE);
+      $properties['internerBezeichner'] = new JsonSchemaString([
+        'maxLength' => 255,
+        'readOnly' => TRUE,
+      ]);
+    }
+    else {
+      $properties['internerBezeichner'] = new JsonSchemaString([
+        'maxLength' => 255,
+        '$tag' => JsonSchema::fromArray(
+          ['mapToField' => ['fieldName' => 'funding_application_process_extra.internal_identifier']]
+        ),
+      ]);
     }
 
     $required = array_filter(
       array_keys($properties),
-      static fn (string $key) => $key !== 'fahrtstreckeInKm' && $key !== 'programmtageMitHonorar',
+      static fn (string $key) => $key !== 'fahrtstreckeInKm'
+                              && $key !== 'programmtageMitHonorar'
+                              && $key !== 'internerBezeichner',
     );
 
     parent::__construct($properties, ['required' => $required]);

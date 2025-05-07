@@ -67,6 +67,7 @@ final class KursGrunddatenUiSchema extends JsonFormsCategory {
     }
 
     parent::__construct('Grunddaten', [
+      new JsonFormsControl("$scopePrefix/internerBezeichner", 'Interner Bezeichner'),
       new JsonFormsControl("$scopePrefix/titel", 'Titel'),
       new JsonFormsControl(
         "$scopePrefix/kurzbeschreibungDerInhalte", 'Kurzbeschreibung der Kursinhalte', NULL, [

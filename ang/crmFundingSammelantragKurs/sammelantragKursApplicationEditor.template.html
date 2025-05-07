@@ -25,6 +25,11 @@
       {{ applicationProcess.identifier }}
     </div>
     <div>
+      <editable-field label="'Interner Bezeichner'" type="text"
+                      value="data.grunddaten.internerBezeichner"
+                      e-ng-required="false"></editable-field>
+    </div>
+    <div>
       <label>{{ ts('Status') }}</label>
       {{ statusOptions[applicationProcess.status].label || ts('Unknown') }}
       <funding-fa icon="statusOptions[applicationProcess.status].icon"
@@ -64,7 +69,6 @@
                       value="data.grunddaten.kurzbeschreibungDerInhalte"
                       e-ng-required="true"></editable-field>
     </div>
-
     <div>
       <h3>Zeiträume <funding-validation-errors errors="errors['/grunddaten/zeitraeume']"></funding-validation-errors></h3>
       <table class="table table-condensed table-striped table-hover">
