@@ -25,6 +25,11 @@
       {{ applicationProcess.identifier }}
     </div>
     <div>
+      <editable-field label="'Interner Bezeichner'" type="text"
+                      value="data.grunddaten.internerBezeichner"
+                      e-ng-required="false"></editable-field>
+    </div>
+    <div>
       <label>{{ ts('Status') }}</label>
       {{ statusOptions[applicationProcess.status].label || ts('Unknown') }}
       <funding-fa icon="statusOptions[applicationProcess.status].icon"

@@ -19,10 +19,13 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\IJB\Report;
 
+use Systopia\JsonSchema\Translation\NullTranslator;
 use Civi\Funding\EntityFactory\ClearingProcessBundleFactory;
 use Civi\Funding\Form\JsonFormsFormInterface;
+use Civi\Funding\Form\MappedData\MappedDataLoader;
 use Civi\Funding\Form\Traits\AssertFormTrait;
 use Civi\Funding\Validation\Traits\AssertValidationResultTrait;
+use Civi\RemoteTools\JsonSchema\Validation\Validator;
 use Civi\RemoteTools\JsonSchema\Validation\OpisValidatorFactory;
 use PHPUnit\Framework\TestCase;
 
@@ -78,6 +81,7 @@ final class IJBReportFormFactoryTest extends TestCase {
     $grunddaten = (object) [
       'titel' => 'Test',
       'kurzbeschreibungDesInhalts' => 'foo bar',
+      'internerBezeichner' => 'interne id',
       'zeitraeume' => [
         (object) [
           'beginn' => '2022-08-24',
@@ -220,6 +224,19 @@ final class IJBReportFormFactoryTest extends TestCase {
     static::assertSame(0, $data->reportData->zuschuss->fahrtkostenMax);
     static::assertSame(0, $data->reportData->zuschuss->zuschlagMax);
     static::assertSame(10, $data->reportData->foerderung->summe);
+
+    $tagValidator = new Validator(new NullTranslator(), OpisValidatorFactory::getValidator());
+    $result = $tagValidator->validate($this->form->getJsonSchema(), get_object_vars($data));
+
+    $mappedDataLoader = new MappedDataLoader();
+    $mappedData = $mappedDataLoader->getMappedData($result->getTaggedData());
+
+    static::assertEquals([
+      'title' => 'Test',
+      'short_description' => 'foo bar',
+      'start_date' => '2022-08-24',
+      'end_date' => '2022-08-26',
+    ], $mappedData);
   }
 
   public function testValidationSpracheAndere(): void {
@@ -234,6 +251,7 @@ final class IJBReportFormFactoryTest extends TestCase {
     $grunddaten = (object) [
       'titel' => 'Test',
       'kurzbeschreibungDesInhalts' => 'foo bar',
+      'internerBezeichner' => 'interne id',
       'zeitraeume' => [
         (object) [
           'beginn' => '2022-08-24',
