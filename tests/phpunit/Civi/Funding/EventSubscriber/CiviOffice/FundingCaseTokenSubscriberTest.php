@@ -24,11 +24,11 @@ use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Core\Event\GenericHookEvent;
 use Civi\Funding\DocumentRender\CiviOffice\CiviOfficeContextDataHolder;
 use Civi\Funding\DocumentRender\Token\ResolvedToken;
-use Civi\Funding\DocumentRender\Token\TokenNameExtractorInterface;
-use Civi\Funding\DocumentRender\Token\TokenResolverInterface;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\FundingCase\FundingCaseManager;
+use Civi\Funding\FundingCase\Token\FundingCaseTokenNameExtractor;
+use Civi\Funding\FundingCase\Token\FundingCaseTokenResolver;
 use Civi\Token\Event\TokenValueEvent;
 use Civi\Token\TokenProcessor;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -48,8 +48,7 @@ final class FundingCaseTokenSubscriberTest extends TestCase {
   private MockObject $fundingCaseManagerMock;
 
   /**
-   * @var \Civi\Funding\DocumentRender\Token\TokenResolverInterface&\PHPUnit\Framework\MockObject\MockObject
-   * @phpstan-ignore-next-line Generic argument of AbstractEntity not defined.
+   * @var \Civi\Funding\FundingCase\Token\FundingCaseTokenResolver&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $tokenResolverMock;
 
@@ -59,9 +58,9 @@ final class FundingCaseTokenSubscriberTest extends TestCase {
     parent::setUp();
     $this->fundingCaseManagerMock = $this->createMock(FundingCaseManager::class);
     $this->contextDataHolder = new CiviOfficeContextDataHolder();
-    $this->tokenResolverMock = $this->createMock(TokenResolverInterface::class);
+    $this->tokenResolverMock = $this->createMock(FundingCaseTokenResolver::class);
 
-    $tokenNameExtractorMock = $this->createMock(TokenNameExtractorInterface::class);
+    $tokenNameExtractorMock = $this->createMock(FundingCaseTokenNameExtractor::class);
     $tokenNameExtractorMock->method('getTokenNames')
       ->with(FundingCase::getEntityName(), FundingCaseEntity::class)
       ->willReturn([

@@ -22,10 +22,10 @@ namespace Civi\Funding\EventSubscriber\CiviOffice;
 use Civi\Api4\FundingCase;
 use Civi\Funding\DocumentRender\CiviOffice\AbstractCiviOfficeTokenSubscriber;
 use Civi\Funding\DocumentRender\CiviOffice\CiviOfficeContextDataHolder;
-use Civi\Funding\DocumentRender\Token\TokenNameExtractorInterface;
-use Civi\Funding\DocumentRender\Token\TokenResolverInterface;
 use Civi\Funding\Entity\AbstractEntity;
 use Civi\Funding\FundingCase\FundingCaseManager;
+use Civi\Funding\FundingCase\Token\FundingCaseTokenNameExtractor;
+use Civi\Funding\FundingCase\Token\FundingCaseTokenResolver;
 
 /**
  * @phpstan-extends AbstractCiviOfficeTokenSubscriber<\Civi\Funding\Entity\FundingCaseEntity>
@@ -42,14 +42,11 @@ class FundingCaseTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
     );
   }
 
-  /**
-   * @phpstan-param TokenResolverInterface<\Civi\Funding\Entity\FundingCaseEntity> $tokenResolver
-   */
   public function __construct(
     FundingCaseManager $fundingCaseManager,
     CiviOfficeContextDataHolder $contextDataHolder,
-    TokenResolverInterface $tokenResolver,
-    TokenNameExtractorInterface $tokenNameExtractor
+    FundingCaseTokenResolver $tokenResolver,
+    FundingCaseTokenNameExtractor $tokenNameExtractor
   ) {
     parent::__construct(
       $contextDataHolder,

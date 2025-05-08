@@ -54,6 +54,8 @@ use Civi\Funding\FundingCase\Handler\FundingCasePossibleActionsGetHandlerInterfa
 use Civi\Funding\FundingCase\Handler\FundingCaseUpdateAmountApprovedHandlerInterface;
 use Civi\Funding\FundingCase\Handler\TransferContractRecreateHandlerInterface;
 use Civi\Funding\FundingCase\Recipients\FallbackPossibleRecipientsForChangeLoader;
+use Civi\Funding\FundingCase\Token\FundingCaseTokenNameExtractor;
+use Civi\Funding\FundingCase\Token\FundingCaseTokenResolver;
 use Civi\Funding\FundingCase\TransferContractRouter;
 use Civi\Funding\Permission\FundingCase\ContactsWithPermissionLoader;
 use Civi\Funding\Permission\FundingCase\FundingCaseContactsLoader;
@@ -91,6 +93,9 @@ $container->autowire(TransferContractRouter::class)
   ->setPublic(TRUE);
 $container->autowire(FundingCaseIdentifierGeneratorInterface::class, FundingCaseIdentifierGenerator::class);
 $container->autowire(FallbackPossibleRecipientsForChangeLoader::class);
+
+$container->autowire(FundingCaseTokenNameExtractor::class);
+$container->autowire(FundingCaseTokenResolver::class);
 
 ServiceRegistrator::autowireAllImplementing(
   $container,

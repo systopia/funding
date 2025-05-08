@@ -926,6 +926,10 @@ msgstr ""
 msgid "Finish Clearing"
 msgstr ""
 
+#: Civi/Funding/FundingCase/Token/FundingCaseTokenNameExtractor.php
+msgid "Creation Contact Display Name"
+msgstr ""
+
 #: Civi/Funding/FundingPseudoConstants.php
 msgid "New"
 msgstr ""
