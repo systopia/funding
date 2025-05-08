@@ -101,7 +101,7 @@ trait TaggedFundingCaseTypeServicesTrait {
    *
    * @throws \Symfony\Component\DependencyInjection\Exception\RuntimeException
    */
-  private function getFundingCaseTypes(ContainerBuilder $container, string $id, array $attributes): array {
+  protected function getFundingCaseTypes(ContainerBuilder $container, string $id, array $attributes): array {
     if (array_key_exists('funding_case_types', $attributes)) {
       return $attributes['funding_case_types'];
     }

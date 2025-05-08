@@ -20,6 +20,7 @@ declare(strict_types = 1);
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
+use Civi\Funding\FundingCaseType\MetaData\FundingCaseTypeMetaDataInterface;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Actions\HiHApplicationActionsDeterminer;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Actions\HiHApplicationActionStatusInfo;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Actions\HiHApplicationStatusDeterminer;
@@ -34,6 +35,10 @@ use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\EventSubscriber\HiHAngularModule
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\FundingCase\Actions\HiHCaseActionsDeterminer;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\FundingCase\HiHPossibleRecipientsForChangeLoader;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\FundingCase\StatusDeterminer\HiHCaseStatusDeterminer;
+use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\HiHMetaData;
+
+$container->autowire(HiHMetaData::class)
+  ->addTag(FundingCaseTypeMetaDataInterface::class);
 
 $container->autowire(HiHApplicationActionsDeterminer::class)
   ->addTag(HiHApplicationActionsDeterminer::SERVICE_TAG);
