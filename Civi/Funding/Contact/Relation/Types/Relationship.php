@@ -82,8 +82,10 @@ TEMPLATE;
 
   public function getHelp(): string {
     return E::ts(<<<HELP
-All contacts of any of the given types in any of the given groups to which a
-relationship of the specified type exists are available as recipient.
+Contacts to which a relationship exists are available as recipients. The
+relationship type may be limited to various types. The type of the related
+contacts may be limited to various types. The related contacts may be limited to
+those in any of the given groups.
 HELP);
   }
 

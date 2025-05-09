@@ -39,6 +39,7 @@ msgstr ""
 #: Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/Generic/ClearingItem/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/Generic/FinancePlanItem/AbstractGetFieldsAction.php
 #: managed/SavedSearchFundingPrograms.mgd.php
 msgid "Currency"
 msgstr "Währung"
@@ -591,6 +592,17 @@ msgstr "Antragstitel"
 msgid "Comma-separated list of titles of eligible applications."
 msgstr "Komma-getrennte Liste von Titeln förderfähiger Anträge."
 
+#: Civi/Funding/Api4/Action/Generic/FinancePlanItem/AbstractGetFieldsAction.php
+msgid "Type Label"
+msgstr "Typ-Bezeichner"
+
+#: Civi/Funding/Api4/Action/Generic/FinancePlanItem/AbstractGetFieldsAction.php
+#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
+#: managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearch_funding_cases.mgd.php
+msgid "Funding Case Type"
+msgstr "Förderfalltyp"
+
 #: Civi/Funding/Api4/Action/Remote/ApplicationProcess/AbstractFormAction.php
 msgid "Application process with ID \"%1\" not found"
 msgstr "Antragsprozess mit ID \"%1\" nicht gefunden"
@@ -1031,6 +1043,7 @@ msgid "Contact type and group"
 msgstr "Kontaktart und Gruppe"
 
 #: Civi/Funding/Contact/Relation/Types/ContactTypeAndGroup.php
+#: Civi/Funding/Contact/Relation/Types/Relationship.php
 #: Civi/Funding/Permission/ContactRelation/Types/ContactTypeAndGroup.php
 #: Civi/Funding/Permission/ContactRelation/Types/Relationship.php
 #: Civi/Funding/Permission/FundingCase/RelationFactory/Types/ContactTypeAndGroup.php
@@ -1038,6 +1051,7 @@ msgid "Contact types"
 msgstr "Kontaktarten"
 
 #: Civi/Funding/Contact/Relation/Types/ContactTypeAndGroup.php
+#: Civi/Funding/Contact/Relation/Types/Relationship.php
 #: Civi/Funding/Permission/ContactRelation/Types/ContactTypeAndGroup.php
 #: Civi/Funding/Permission/ContactRelation/Types/Relationship.php
 #: Civi/Funding/Permission/FundingCase/RelationFactory/Types/ContactTypeAndGroup.php
@@ -1045,6 +1059,7 @@ msgid "Groups"
 msgstr "Gruppen"
 
 #: Civi/Funding/Contact/Relation/Types/ContactTypeAndGroup.php
+#: Civi/Funding/Contact/Relation/Types/Relationship.php
 #: Civi/Funding/Permission/ContactRelation/Types/ContactTypeAndGroup.php
 #: Civi/Funding/Permission/ContactRelation/Types/Relationship.php
 #: Civi/Funding/Permission/FundingCase/RelationFactory/Types/ContactTypeAndGroup.php
@@ -1058,48 +1073,37 @@ msgstr ""
 "Kontakte mit irgendeiner der gewählten Kontaktarten in irgendeiner der "
 "gewählten Gruppen."
 
-#: Civi/Funding/Contact/Relation/Types/ContactTypeAndRelationshipType.php
-msgid "Related contacts of a specific type"
-msgstr "In Beziehung stehende Kontakte einer bestimmten Art"
-
-#: Civi/Funding/Contact/Relation/Types/ContactTypeAndRelationshipType.php
-#: Civi/Funding/Contact/Relation/Types/SelfByContactType.php
-msgid "Contact type"
-msgstr "Kontaktart"
-
-#: Civi/Funding/Contact/Relation/Types/ContactTypeAndRelationshipType.php
-#: Civi/Funding/Contact/Relation/Types/RelationshipType.php
-#: Civi/Funding/Permission/ContactRelation/Types/ContactRelationship.php
-#: Civi/Funding/Permission/FundingCase/RelationFactory/Types/CreationContactRelationship.php
-#: Civi/Funding/Permission/FundingCase/RelationFactory/Types/RecipientContactRelationship.php
-msgid "Relationship type"
-msgstr "Beziehungsart"
-
-#: Civi/Funding/Contact/Relation/Types/ContactTypeAndRelationshipType.php
-msgid ""
-"Contacts of the specified type are available as recipients if a relationship "
-"of\n"
-"the specified type exists."
-msgstr ""
-"Kontakte der gewählten Art sind als Empfänger verfügbar, wenn eine Beziehung "
-"der gewählten Art besteht."
-
-#: Civi/Funding/Contact/Relation/Types/RelationshipType.php
+#: Civi/Funding/Contact/Relation/Types/Relationship.php
 msgid "Related contacts"
 msgstr "In Beziehung stehende Kontakte"
 
-#: Civi/Funding/Contact/Relation/Types/RelationshipType.php
+#: Civi/Funding/Contact/Relation/Types/Relationship.php
+#: Civi/Funding/Permission/ContactRelation/Types/Relationship.php
+msgid "Relationship types"
+msgstr "Beziehungsarten"
+
+#: Civi/Funding/Contact/Relation/Types/Relationship.php
 msgid ""
-"All contacts to which a relationship of the specified type exists are "
-"available\n"
-"as recipient."
+"Contacts to which a relationship exists are available as recipients. The\n"
+"relationship type may be limited to various types. The type of the related\n"
+"contacts may be limited to various types. The related contacts may be "
+"limited to\n"
+"those in any of the given groups."
 msgstr ""
-"Alle Kontakte, zu denen eine Beziehung der gewählten Art besteht, sind als "
-"Empfänger verfügbar."
+"Kontakte zu denen eine Beziehung besteht sind als Empfänger verfügbar. "
+"Zutreffend, wenn ein Kontakt eine Beziehung hat. Die Beziehung kann "
+"eingeschränkt werden auf verschiedene Typen. Der Typ der verbundenen "
+"Kontakte kann beschränkt werden auf verschiedene Typen. Die verbundenen "
+"Kontakte können auf solche in einer der angegebenen Gruppen beschränkt "
+"werden."
 
 #: Civi/Funding/Contact/Relation/Types/SelfByContactType.php
 msgid "Applicant by contact type"
 msgstr "Antragssteller nach Kontaktart"
+
+#: Civi/Funding/Contact/Relation/Types/SelfByContactType.php
+msgid "Contact type"
+msgstr "Kontaktart"
 
 #: Civi/Funding/Contact/Relation/Types/SelfByContactType.php
 msgid ""
@@ -1507,6 +1511,12 @@ msgid "Relationship to contact"
 msgstr "Beziehung zu Kontakt"
 
 #: Civi/Funding/Permission/ContactRelation/Types/ContactRelationship.php
+#: Civi/Funding/Permission/FundingCase/RelationFactory/Types/CreationContactRelationship.php
+#: Civi/Funding/Permission/FundingCase/RelationFactory/Types/RecipientContactRelationship.php
+msgid "Relationship type"
+msgstr "Beziehungsart"
+
+#: Civi/Funding/Permission/ContactRelation/Types/ContactRelationship.php
 msgid ""
 "Matches if a contact has a relationship of the specified type to the "
 "specified contact."
@@ -1526,10 +1536,6 @@ msgstr ""
 #: Civi/Funding/Permission/ContactRelation/Types/Relationship.php
 msgid "Relationship"
 msgstr "Beziehung"
-
-#: Civi/Funding/Permission/ContactRelation/Types/Relationship.php
-msgid "Relationship types"
-msgstr "Beziehungsarten"
 
 #: Civi/Funding/Permission/ContactRelation/Types/Relationship.php
 msgid ""
@@ -2394,12 +2400,6 @@ msgstr "Verwendungsnachweis öffnen"
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
 msgid "Funding Case Applications"
 msgstr "Förderfallanträge"
-
-#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
-#: managed/SavedSearch_Clearings.mgd.php
-#: managed/SavedSearch_funding_cases.mgd.php
-msgid "Funding Case Type"
-msgstr "Förderfalltyp"
 
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingPrograms.mgd.php
