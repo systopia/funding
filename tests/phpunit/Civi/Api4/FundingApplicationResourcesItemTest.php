@@ -20,8 +20,8 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\Funding\AbstractFundingHeadlessTestCase;
-use Civi\Funding\Fixtures\ApplicationResourcesItemFixture;
 use Civi\Funding\Fixtures\ApplicationProcessBundleFixture;
+use Civi\Funding\Fixtures\ApplicationResourcesItemFixture;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Util\RequestTestUtil;
