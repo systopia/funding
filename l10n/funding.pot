@@ -14,7 +14,7 @@ msgstr ""
 msgid "Compares two JSON documents and returns true if they overlap. See https://mariadb.com/kb/en/json_overlaps/"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingApplicationProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php Civi/Funding/Api4/Action/Generic/ClearingItem/GetFieldsAction.php managed/SavedSearchFundingPrograms.mgd.php
+#: Civi/Funding/Api4/Action/FundingApplicationProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php Civi/Funding/Api4/Action/Generic/ClearingItem/GetFieldsAction.php Civi/Funding/Api4/Action/Generic/FinancePlanItem/AbstractGetFieldsAction.php managed/SavedSearchFundingPrograms.mgd.php
 msgid "Currency"
 msgstr ""
 
@@ -316,6 +316,14 @@ msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
 msgid "Comma-separated list of titles of eligible applications."
+msgstr ""
+
+#: Civi/Funding/Api4/Action/Generic/FinancePlanItem/AbstractGetFieldsAction.php
+msgid "Type Label"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/Generic/FinancePlanItem/AbstractGetFieldsAction.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_funding_cases.mgd.php
+msgid "Funding Case Type"
 msgstr ""
 
 #: Civi/Funding/Api4/Action/Remote/ApplicationProcess/AbstractFormAction.php
@@ -658,15 +666,15 @@ msgstr ""
 msgid "Contact type and group"
 msgstr ""
 
-#: Civi/Funding/Contact/Relation/Types/ContactTypeAndGroup.php Civi/Funding/Permission/ContactRelation/Types/ContactTypeAndGroup.php Civi/Funding/Permission/ContactRelation/Types/Relationship.php Civi/Funding/Permission/FundingCase/RelationFactory/Types/ContactTypeAndGroup.php
+#: Civi/Funding/Contact/Relation/Types/ContactTypeAndGroup.php Civi/Funding/Contact/Relation/Types/Relationship.php Civi/Funding/Permission/ContactRelation/Types/ContactTypeAndGroup.php Civi/Funding/Permission/ContactRelation/Types/Relationship.php Civi/Funding/Permission/FundingCase/RelationFactory/Types/ContactTypeAndGroup.php
 msgid "Contact types"
 msgstr ""
 
-#: Civi/Funding/Contact/Relation/Types/ContactTypeAndGroup.php Civi/Funding/Permission/ContactRelation/Types/ContactTypeAndGroup.php Civi/Funding/Permission/ContactRelation/Types/Relationship.php Civi/Funding/Permission/FundingCase/RelationFactory/Types/ContactTypeAndGroup.php
+#: Civi/Funding/Contact/Relation/Types/ContactTypeAndGroup.php Civi/Funding/Contact/Relation/Types/Relationship.php Civi/Funding/Permission/ContactRelation/Types/ContactTypeAndGroup.php Civi/Funding/Permission/ContactRelation/Types/Relationship.php Civi/Funding/Permission/FundingCase/RelationFactory/Types/ContactTypeAndGroup.php
 msgid "Groups"
 msgstr ""
 
-#: Civi/Funding/Contact/Relation/Types/ContactTypeAndGroup.php Civi/Funding/Permission/ContactRelation/Types/ContactTypeAndGroup.php Civi/Funding/Permission/ContactRelation/Types/Relationship.php Civi/Funding/Permission/FundingCase/RelationFactory/Types/ContactTypeAndGroup.php
+#: Civi/Funding/Contact/Relation/Types/ContactTypeAndGroup.php Civi/Funding/Contact/Relation/Types/Relationship.php Civi/Funding/Permission/ContactRelation/Types/ContactTypeAndGroup.php Civi/Funding/Permission/ContactRelation/Types/Relationship.php Civi/Funding/Permission/FundingCase/RelationFactory/Types/ContactTypeAndGroup.php
 msgid "any"
 msgstr ""
 
@@ -674,32 +682,24 @@ msgstr ""
 msgid "Contacts with any of the specified types in any of the specified groups."
 msgstr ""
 
-#: Civi/Funding/Contact/Relation/Types/ContactTypeAndRelationshipType.php
-msgid "Related contacts of a specific type"
-msgstr ""
-
-#: Civi/Funding/Contact/Relation/Types/ContactTypeAndRelationshipType.php Civi/Funding/Contact/Relation/Types/SelfByContactType.php
-msgid "Contact type"
-msgstr ""
-
-#: Civi/Funding/Contact/Relation/Types/ContactTypeAndRelationshipType.php Civi/Funding/Contact/Relation/Types/RelationshipType.php Civi/Funding/Permission/ContactRelation/Types/ContactRelationship.php Civi/Funding/Permission/FundingCase/RelationFactory/Types/CreationContactRelationship.php Civi/Funding/Permission/FundingCase/RelationFactory/Types/RecipientContactRelationship.php
-msgid "Relationship type"
-msgstr ""
-
-#: Civi/Funding/Contact/Relation/Types/ContactTypeAndRelationshipType.php
-msgid "Contacts of the specified type are available as recipients if a relationship of\nthe specified type exists."
-msgstr ""
-
-#: Civi/Funding/Contact/Relation/Types/RelationshipType.php
+#: Civi/Funding/Contact/Relation/Types/Relationship.php
 msgid "Related contacts"
 msgstr ""
 
-#: Civi/Funding/Contact/Relation/Types/RelationshipType.php
-msgid "All contacts to which a relationship of the specified type exists are available\nas recipient."
+#: Civi/Funding/Contact/Relation/Types/Relationship.php Civi/Funding/Permission/ContactRelation/Types/Relationship.php
+msgid "Relationship types"
+msgstr ""
+
+#: Civi/Funding/Contact/Relation/Types/Relationship.php
+msgid "Contacts to which a relationship exists are available as recipients. The\nrelationship type may be limited to various types. The type of the related\ncontacts may be limited to various types. The related contacts may be limited to\nthose in any of the given groups."
 msgstr ""
 
 #: Civi/Funding/Contact/Relation/Types/SelfByContactType.php
 msgid "Applicant by contact type"
+msgstr ""
+
+#: Civi/Funding/Contact/Relation/Types/SelfByContactType.php
+msgid "Contact type"
 msgstr ""
 
 #: Civi/Funding/Contact/Relation/Types/SelfByContactType.php
@@ -1062,6 +1062,10 @@ msgstr ""
 msgid "Relationship to contact"
 msgstr ""
 
+#: Civi/Funding/Permission/ContactRelation/Types/ContactRelationship.php Civi/Funding/Permission/FundingCase/RelationFactory/Types/CreationContactRelationship.php Civi/Funding/Permission/FundingCase/RelationFactory/Types/RecipientContactRelationship.php
+msgid "Relationship type"
+msgstr ""
+
 #: Civi/Funding/Permission/ContactRelation/Types/ContactRelationship.php
 msgid "Matches if a contact has a relationship of the specified type to the specified contact."
 msgstr ""
@@ -1072,10 +1076,6 @@ msgstr ""
 
 #: Civi/Funding/Permission/ContactRelation/Types/Relationship.php
 msgid "Relationship"
-msgstr ""
-
-#: Civi/Funding/Permission/ContactRelation/Types/Relationship.php
-msgid "Relationship types"
 msgstr ""
 
 #: Civi/Funding/Permission/ContactRelation/Types/Relationship.php
@@ -1704,10 +1704,6 @@ msgstr ""
 
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
 msgid "Funding Case Applications"
-msgstr ""
-
-#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_funding_cases.mgd.php
-msgid "Funding Case Type"
 msgstr ""
 
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingPrograms.mgd.php managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_funding_cases.mgd.php
