@@ -27,24 +27,26 @@ use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
 
 final class KursBeschreibungJsonSchema extends JsonSchemaObject {
 
+  public const ZIELE_OPTIONS = [
+    'persoenlichkeitsbildung' => 'Persönlichkeitsbildung',
+    'toleranzRespektDemokratie' => 'Förderung von Toleranz, Respekt und Demokratie',
+    'chancengleichheit' => 'Chancengleichheit, Abbau von Diskriminierungen und sozialer Ungerechtigkeit',
+    'jungeMenschen' => 'Stärkung der Beteiligung junger Menschen',
+    'migrantisierteMenschen'
+    => 'Stärkung der Teilhabe, Verbesserung der Bedingungen für migrantisierte Menschen',
+    'gefaehrdungMissbrauchGewalt'
+    => 'Schutz vor Gefährdungen, Missbrauch und Gewalt und Befähigung zum kritischen Umgang mit Risiken',
+    'jugendpolitischeAnliegen' => 'Stärkung jugendpolitischer Anliegen auf nationaler und europäischer Ebene',
+    'internationaleBegegnungen' => 'Stärkung europäischer und internationaler Begegnungen und Erfahrungen',
+    'qualitaetsentwicklung' => 'Qualitätsentwicklung / Teamendenfortbildung',
+    'kinderJugendhilfe' => 'Weiterentwicklung der Kinder- und Jugendhilfe',
+  ];
+
   public function __construct() {
     $properties = [
       'ziele' => new JsonSchemaArray(
         new JsonSchemaString([
-          'oneOf' => JsonSchemaUtil::buildTitledOneOf([
-            'persoenlichkeitsbildung' => 'Persönlichkeitsbildung',
-            'toleranzRespektDemokratie' => 'Förderung von Toleranz, Respekt und Demokratie',
-            'chancengleichheit' => 'Chancengleichheit, Abbau von Diskriminierungen und sozialer Ungerechtigkeit',
-            'jungeMenschen' => 'Stärkung der Beteiligung junger Menschen',
-            'migrantisierteMenschen'
-            => 'Stärkung der Teilhabe, Verbesserung der Bedingungen für migrantisierte Menschen',
-            'gefaehrdungMissbrauchGewalt'
-            => 'Schutz vor Gefährdungen, Missbrauch und Gewalt und Befähigung zum kritischen Umgang mit Risiken',
-            'jugendpolitischeAnliegen' => 'Stärkung jugendpolitischer Anliegen auf nationaler und europäischer Ebene',
-            'internationaleBegegnungen' => 'Stärkung europäischer und internationaler Begegnungen und Erfahrungen',
-            'qualitaetsentwicklung' => 'Qualitätsentwicklung / Teamendenfortbildung',
-            'kinderJugendhilfe' => 'Weiterentwicklung der Kinder- und Jugendhilfe',
-          ]),
+          'oneOf' => JsonSchemaUtil::buildTitledOneOf(self::ZIELE_OPTIONS),
         ]), ['uniqueItems' => TRUE, 'minItems' => 1]),
       'bildungsanteil' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0, 'maximum' => 100]),
       'veranstaltungsort' => new JsonSchemaString(),
