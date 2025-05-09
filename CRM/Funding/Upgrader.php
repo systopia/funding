@@ -25,6 +25,7 @@ use Civi\Funding\Upgrade\Upgrader0008;
 use Civi\Funding\Upgrade\Upgrader0009;
 use Civi\Funding\Upgrade\Upgrader0010;
 use Civi\Funding\Upgrade\Upgrader0011;
+use Civi\Funding\Upgrade\Upgrader0012;
 use CRM_Funding_ExtensionUtil as E;
 
 /**
@@ -128,6 +129,14 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
 
     /** @var \Civi\Funding\Upgrade\Upgrader0011 $upgrader */
     $upgrader = \Civi::service(Upgrader0011::class);
+    $upgrader->execute($this->ctx->log);
+
+    return TRUE;
+  }
+
+  public function upgrade_0012(): bool {
+    /** @var \Civi\Funding\Upgrade\Upgrader0012 $upgrader */
+    $upgrader = \Civi::service(Upgrader0012::class);
     $upgrader->execute($this->ctx->log);
 
     return TRUE;
