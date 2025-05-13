@@ -36,3 +36,7 @@ An application has different components:
 There are two kinds of applications: Normal Applications and Combined Applications.
 
 **Funding Case**{#funding-cases}: A frame around all processes related to an application (e.g. the application process itself, drawdown, or clearing). A funding case is inside a funding program and of a specific funding case type. Depending on the type it might contain multiple applications.
+
+**Drawdown**: A request to pay out money from an approved funding case.
+
+**Clearing**: The process of documenting the project activities and usage of the granted funds.
