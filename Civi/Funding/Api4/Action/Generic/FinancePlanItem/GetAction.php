@@ -19,7 +19,6 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\Generic\FinancePlanItem;
 
-use Civi\Api4\Generic\Result;
 use Civi\Funding\Api4\Action\FundingCase\AbstractReferencingDAOGetAction;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\RemoteTools\Api4\Api4Interface;
@@ -40,22 +39,6 @@ class GetAction extends AbstractReferencingDAOGetAction {
       $requestContext
     );
     $this->_fundingCaseIdFieldName = 'application_process_id.funding_case_id';
-  }
-
-  public function _run(Result $result): void {
-    $this->initOriginalSelect();
-
-    if ([] === $this->getSelect()) {
-      $this->setSelect(['*']);
-    }
-
-    if ($this->isFieldExplicitlySelected('type_label')
-      && !$this->isFieldExplicitlySelected('funding_case_type')
-    ) {
-      $this->addSelect('funding_case_type');
-    }
-
-    parent::_run($result);
   }
 
   protected function handleRecord(array &$record): bool {

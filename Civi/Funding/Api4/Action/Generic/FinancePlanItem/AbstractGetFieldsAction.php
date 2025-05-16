@@ -20,7 +20,9 @@ declare(strict_types = 1);
 namespace Civi\Funding\Api4\Action\Generic\FinancePlanItem;
 
 use Civi\Api4\Generic\DAOGetFieldsAction;
+use Civi\Api4\Query\Api4SelectQuery;
 use Civi\Funding\Api4\Query\AliasSqlRenderer;
+use Civi\Funding\Api4\Query\Util\SqlRendererUtil;
 use Civi\Funding\FundingCaseType\FundingCaseTypeMetaDataProviderInterface;
 use Civi\Funding\FundingCaseType\MetaData\FundingCaseTypeMetaDataInterface;
 use CRM_Funding_ExtensionUtil as E;
@@ -48,17 +50,19 @@ abstract class AbstractGetFieldsAction extends DAOGetFieldsAction {
         'type' => 'Extra',
         'data_type' => 'String',
         'readonly' => TRUE,
-        'sql_renderer' => new AliasSqlRenderer('type'),
+        'sql_renderer' => fn (array $field, Api4SelectQuery $query) => sprintf(
+          'CONCAT(%s, ":", %s)',
+          SqlRendererUtil::getFieldSqlName(
+            $field,
+            $query,
+            'application_process_id.funding_case_id.funding_case_type_id.name'
+          ),
+          SqlRendererUtil::getFieldSqlName($field, $query, 'type')
+        ),
         'output_formatters' => [
           function (string &$value, array $row, array $field): void {
-            if (!isset($row['funding_case_type'])) {
-              throw new \RuntimeException(sprintf(
-                'The field "type_label" of entity "%s" depends on the field "funding_case_type"',
-                $this->getEntityName()
-              ));
-            }
-
-            $value = $this->getTypeLabel($this->getMetaDataProvider()->get($row['funding_case_type']), $value);
+            [$fundingCaseType, $itemType] = explode(':', $value, 2);
+            $value = $this->getTypeLabel($this->getMetaDataProvider()->get($fundingCaseType), $itemType);
           },
         ],
       ],
@@ -70,16 +74,6 @@ abstract class AbstractGetFieldsAction extends DAOGetFieldsAction {
         'readonly' => TRUE,
         'sql_renderer' => new AliasSqlRenderer(
           'application_process_id.funding_case_id.funding_program_id.currency'
-        ),
-      ],
-      [
-        'name' => 'funding_case_type',
-        'title' => E::ts('Funding Case Type'),
-        'type' => 'Extra',
-        'data_type' => 'String',
-        'readonly' => TRUE,
-        'sql_renderer' => new AliasSqlRenderer(
-          'application_process_id.funding_case_id.funding_case_type_id.name'
         ),
       ],
     ]);
