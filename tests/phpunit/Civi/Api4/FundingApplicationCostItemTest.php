@@ -55,14 +55,11 @@ final class FundingApplicationCostItemTest extends AbstractFundingHeadlessTestCa
 
     $result = FundingApplicationCostItem::get()->addSelect('type_label')->execute();
     static::assertSame('Amount requested', $result->first()['type_label'] ?? NULL);
-
-    $result = FundingApplicationCostItem::get()->addSelect('funding_case_type')->execute();
-    static::assertSame('TestCaseType', $result->first()['funding_case_type'] ?? NULL);
   }
 
   public function testGetFields(): void {
     $result = FundingApplicationCostItem::getFields()->execute();
-    static::assertCount(10, $result);
+    static::assertCount(9, $result);
   }
 
 }
