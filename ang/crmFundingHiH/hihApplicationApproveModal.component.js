@@ -100,6 +100,7 @@ fundingHiHModule.directive('fundingHihApplicationApproveModal', function() {
         $scope.data.kosten.honorareBewilligt = honorareBewilligt;
         $scope.data.kosten.sachkostenBewilligt = sachkostenBewilligt;
         $scope.data.kosten.bewilligungsKommentar = bewilligungskommentar;
+        $scope.data.recreateTransferContract = false;
         openDialog();
       };
 
@@ -112,7 +113,7 @@ fundingHiHModule.directive('fundingHihApplicationApproveModal', function() {
           return false;
         }
 
-        if (ctrl.action === 'approve-update') {
+        if (ctrl.action === 'approve-update' && !$scope.data.recreateTransferContract) {
           if (Math.abs(ctrl.approveSum() - $scope.fundingCase.amount_approved) > Number.EPSILON) {
             return false;
           }

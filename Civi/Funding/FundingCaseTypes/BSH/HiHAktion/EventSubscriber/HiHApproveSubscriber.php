@@ -23,6 +23,8 @@ use Civi\Api4\FundingCase;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
+use Civi\Funding\FundingCase\FundingCaseManager;
+use Civi\Funding\FundingCase\FundingCaseStatus;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\HiHConstants;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -30,6 +32,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 final class HiHApproveSubscriber implements EventSubscriberInterface {
 
   private Api4Interface $api4;
+
+  private FundingCaseManager $fundingCaseManager;
 
   /**
    * @inheritDoc
@@ -41,8 +45,9 @@ final class HiHApproveSubscriber implements EventSubscriberInterface {
     ];
   }
 
-  public function __construct(Api4Interface $api4) {
+  public function __construct(Api4Interface $api4, FundingCaseManager $fundingCaseManager) {
     $this->api4 = $api4;
+    $this->fundingCaseManager = $fundingCaseManager;
   }
 
   public function onPreUpdate(ApplicationProcessPreUpdateEvent $event): void {
@@ -51,13 +56,26 @@ final class HiHApproveSubscriber implements EventSubscriberInterface {
     }
 
     $applicationProcess = $event->getApplicationProcess();
-    if ($this->isStatusChangedToApproved($applicationProcess, $event->getPreviousApplicationProcess())) {
+    $recreateTransferContract = $this->isRecreateNoticeOfGranting(
+      $applicationProcess,
+      $event->getPreviousApplicationProcess()
+    );
+    if ($this->isStatusChangedToApproved($applicationProcess, $event->getPreviousApplicationProcess())
+      || $recreateTransferContract
+    ) {
       if (abs($applicationProcess->getAmountRequested() - $this->getAmountApproved($applicationProcess))
         > PHP_FLOAT_EPSILON
       ) {
         $applicationProcess->setStatus('approved_partial');
       }
     }
+
+    $requestData = $applicationProcess->getRequestData();
+    unset($requestData['recreateTransferContract']);
+    $applicationProcess->setValues([
+      'requestData' => $requestData,
+      '_recreateTransferContract' => $recreateTransferContract,
+    ] + $applicationProcess->toArray());
   }
 
   /**
@@ -68,7 +86,7 @@ final class HiHApproveSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    if ($event->getFundingCase()->getStatus() === 'open'
+    if ($event->getFundingCase()->getStatus() === FundingCaseStatus::OPEN
       && $this->isStatusChangedToApproved($event->getApplicationProcess(), $event->getPreviousApplicationProcess())
     ) {
       $this->api4->execute(FundingCase::getEntityName(), 'approve', [
@@ -76,6 +94,24 @@ final class HiHApproveSubscriber implements EventSubscriberInterface {
         'amount' => $this->getAmountApproved($event->getApplicationProcess()),
       ]);
     }
+    elseif ($event->getFundingCase()->getStatus() === FundingCaseStatus::ONGOING
+      && TRUE === $event->getApplicationProcess()->get('_recreateTransferContract')
+    ) {
+      $event->getFundingCase()->setAmountApproved($this->getAmountApproved($event->getApplicationProcess()));
+      $this->fundingCaseManager->update($event->getFundingCase());
+      $this->api4->execute(FundingCase::getEntityName(), 'recreateTransferContract', [
+        'id' => $event->getFundingCase()->getId(),
+      ]);
+    }
+  }
+
+  private function isRecreateNoticeOfGranting(
+    ApplicationProcessEntity $applicationProcess,
+    ApplicationProcessEntity $previousApplicationProcess
+  ): bool {
+    return in_array($applicationProcess->getStatus(), ['approved', 'approved_partial'], TRUE)
+      && in_array($previousApplicationProcess->getStatus(), ['approved', 'approved_partial'], TRUE)
+      && TRUE === ($applicationProcess->getRequestData()['recreateTransferContract'] ?? NULL);
   }
 
   private function isStatusChangedToApproved(

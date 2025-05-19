@@ -21,6 +21,7 @@ namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\JsonSchema;
 
 use Civi\Funding\Form\JsonSchema\JsonSchemaRecipient;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonSchema\JsonSchemaBoolean;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 
 final class HiHApplicationJsonSchema extends JsonSchemaObject {
@@ -53,6 +54,10 @@ final class HiHApplicationJsonSchema extends JsonSchemaObject {
       'finanzierung' => new HiHFinanzierungJsonSchema($ifFullValidation),
       'formales' => new HiHFormalesJsonSchema($ifFullValidation),
     ];
+
+    if ($bshAdmin) {
+      $properties['recreateTransferContract'] = new JsonSchemaBoolean(['default' => FALSE]);
+    }
 
     parent::__construct($properties, [
       'required' => [

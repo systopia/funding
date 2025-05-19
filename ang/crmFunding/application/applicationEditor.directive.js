@@ -44,9 +44,9 @@ fundingModule.directive('fundingApplicationEditor', ['$compile', function($compi
       });
     },
     controller: ['$scope', 'crmStatus', 'fundingContactService',
-      'fundingProgramService', 'fundingApplicationProcessService',
+      'fundingProgramService', 'fundingApplicationProcessService', 'fundingCaseService',
       async function($scope, crmStatus, fundingContactService,
-                     fundingProgramService, fundingApplicationProcessService) {
+                     fundingProgramService, fundingApplicationProcessService, fundingCaseService) {
         function convertStringsToDates(formOrField) {
           // If we ensure that this function is called for every single field via
           // onStartEdit() we would not need to take care of forms, i.e.
@@ -148,6 +148,12 @@ fundingModule.directive('fundingApplicationEditor', ['$compile', function($compi
         function reloadApplicationProcess() {
           return fundingApplicationProcessService.get($scope.applicationProcess.id).then(
               (applicationProcess) => $scope.applicationProcess = applicationProcess
+          );
+        }
+
+        function reloadFundingCase() {
+          return fundingCaseService.get($scope.fundingCase.id).then(
+            (fundingCase) => $scope.fundingCase = fundingCase
           );
         }
 
@@ -378,6 +384,7 @@ fundingModule.directive('fundingApplicationEditor', ['$compile', function($compi
               $scope.comment = {text: null};
               withOverlay(reloadApplicationProcess());
               withOverlay(reloadJsonSchema());
+              withOverlay(reloadFundingCase());
               if ($scope.onPostSubmit) {
                 $scope.$eval($scope.onPostSubmit);
                 //$scope.onPostSubmit(action);

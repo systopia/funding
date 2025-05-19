@@ -7,7 +7,7 @@
       </div>
       <div class="modal-body">
         <div ng-show="$ctrlApprove.action === 'approve-update'" class="alert alert-info">
-          Hinweis: Der bewilligte Betrag darf sich nicht ändern.
+          Hinweis: Der bewilligte Betrag darf sich nicht ändern, wenn der Bewilligungsbescheid nicht neu erstellt wird.
         </div>
         <div class="form-group">
           <label for="personalkostenBewilligt">Bewilligte Personalkosten</label>
@@ -39,6 +39,10 @@
         <div>
           <label for="bewilligungskommentar">Bewilligungskommentar</label>
           <textarea id="bewilligungskommentar" rows="5" cols="80" ng-model="data.kosten.bewilligungskommentar" ng-required="false"></textarea>
+        </div>
+        <div ng-show="$ctrlApprove.action === 'approve-update' && hasAdminPermission" class="form-group">
+          <label for="recreateTransferContract">Bewilligungsbescheid neu erstellen</label>
+          <input id="recreateTransferContract" type="checkbox" ng-model="data.recreateTransferContract">
         </div>
       </div>
       <div class="modal-footer">
