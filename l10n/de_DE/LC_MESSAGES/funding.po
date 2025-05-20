@@ -596,13 +596,6 @@ msgstr "Komma-getrennte Liste von Titeln förderfähiger Anträge."
 msgid "Type Label"
 msgstr "Typ-Bezeichner"
 
-#: Civi/Funding/Api4/Action/Generic/FinancePlanItem/AbstractGetFieldsAction.php
-#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
-#: managed/SavedSearch_Clearings.mgd.php
-#: managed/SavedSearch_funding_cases.mgd.php
-msgid "Funding Case Type"
-msgstr "Förderfalltyp"
-
 #: Civi/Funding/Api4/Action/Remote/ApplicationProcess/AbstractFormAction.php
 msgid "Application process with ID \"%1\" not found"
 msgstr "Antragsprozess mit ID \"%1\" nicht gefunden"
@@ -1018,7 +1011,7 @@ msgstr "Kommentar zu Verwendungsnachweis"
 
 #: Civi/Funding/ClearingProcess/Task/AbstractClearingApplyTaskHandler.php
 msgid "Complete and Apply Clearing"
-msgstr "Verwendungsnachweis vervollständigen und beantragen."
+msgstr "Verwendungsnachweis vervollständigen und beantragen"
 
 #: Civi/Funding/ClearingProcess/Task/AbstractClearingReviewCalculativeTaskHandler.php
 msgid "Review Clearing (calculative)"
@@ -1277,6 +1270,10 @@ msgstr "Antrag: zurückziehen"
 #: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
 msgid "Application: request rework"
 msgstr "Antrag: Überarbeitung beantragen"
+
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
+msgid "Contract: view (applicant)"
+msgstr "Vertrag: ansehen (Antragsteller)"
 
 #: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
 msgid "Drawdown: create"
@@ -1756,6 +1753,7 @@ msgstr "Anträge"
 #: ang/crmFunding/application/applicationSubmitModal.template.html
 #: ang/crmFunding/case/fundingCase.template.html
 #: ang/crmFunding/clearing/clearingSubmitModal.template.html
+#: ang/crmFundingHiH/hihApplicationApproveModal.template.html
 msgid "Close"
 msgstr "Schließen"
 
@@ -1778,6 +1776,7 @@ msgstr "Senden"
 #: ang/crmFunding/application/applicationSubmitModal.template.html
 #: ang/crmFunding/case/fundingCase.template.html
 #: ang/crmFunding/clearing/clearingSubmitModal.template.html
+#: ang/crmFundingHiH/hihApplicationApproveModal.template.html
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -2356,7 +2355,7 @@ msgstr "Aktivitätsart für Statusänderung eines Verwendungsnachweises"
 
 #: managed/OptionValue_funding_drawdown_task.mgd.php
 msgid "Activity type for funding drawdown tasks."
-msgstr "Aktivitätsart für Mittelabrufaufgaben,"
+msgstr "Aktivitätsart für Mittelabrufaufgaben."
 
 #: managed/OptionValuesFileType.mgd.php
 msgid "Payment Instruction"
@@ -2400,6 +2399,12 @@ msgstr "Verwendungsnachweis öffnen"
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
 msgid "Funding Case Applications"
 msgstr "Förderfallanträge"
+
+#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
+#: managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearch_funding_cases.mgd.php
+msgid "Funding Case Type"
+msgstr "Förderfalltyp"
 
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingPrograms.mgd.php
