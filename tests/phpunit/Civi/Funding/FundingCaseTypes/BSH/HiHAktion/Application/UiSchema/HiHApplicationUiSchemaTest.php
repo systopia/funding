@@ -43,6 +43,7 @@ final class HiHApplicationUiSchemaTest extends TestCase {
       new \DateTime('2024-08-08'),
       new \DateTime('2024-08-09'),
       $possibleRecipients,
+      TRUE
     );
 
     $uiSchema = new HiHApplicationUiSchema('EUR');

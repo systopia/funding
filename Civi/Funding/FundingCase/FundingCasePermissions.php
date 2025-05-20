@@ -1,5 +1,6 @@
+<?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2025 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -14,13 +15,12 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-'use strict';
+declare(strict_types = 1);
 
-fundingModule.factory('fundingApplicationProcessActivityService', ['crmApi4', function(crmApi4) {
-  return {
-    get: (applicationProcessId) => crmApi4('FundingApplicationProcessActivity', 'get', {
-      select: ['*', 'custom.*'],
-      applicationProcessId: applicationProcessId,
-    }),
-  };
-}]);
+namespace Civi\Funding\FundingCase;
+
+final class FundingCasePermissions {
+
+  public const CONTRACT_VIEW = 'contract_view';
+
+}

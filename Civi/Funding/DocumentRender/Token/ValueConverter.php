@@ -32,7 +32,7 @@ final class ValueConverter {
     }
 
     $string = self::valueToString($value);
-    if (\is_array($value) || is_object($value) && \str_contains($string, "\n")) {
+    if (\is_array($value) || str_contains($string, "\n")) {
       return new ResolvedToken(
         \nl2br(\htmlentities($string)),
         'text/html',

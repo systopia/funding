@@ -19,13 +19,16 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Controller;
 
+use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\FundingAttachmentManagerInterface;
 use Civi\Funding\FundingCase\FundingCaseManager;
+use Civi\Funding\Mock\RequestContext\TestRequestContext;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @covers \Civi\Funding\Controller\TransferContractDownloadController
@@ -51,25 +54,33 @@ final class TransferContractDownloadControllerTest extends TestCase {
     $this->controller = new TransferContractDownloadController(
       $this->attachmentManagerMock,
       $this->fundingCaseManagerMock,
+      TestRequestContext::newRemote()
     );
   }
 
   public function testHandleInvalidFundingCaseId(): void {
     $request = new Request(['fundingCaseId' => 'abc']);
-    $this->fundingCaseManagerMock->method('hasAccess')
-      ->with(12)
-      ->willReturn(FALSE);
-
     $this->expectException(BadRequestHttpException::class);
     $this->expectExceptionMessage('Invalid funding case ID');
     $this->controller->handle($request);
   }
 
-  public function testHandleUnauthorized(): void {
+  public function testHandleNotFound(): void {
     $request = new Request(['fundingCaseId' => '12']);
-    $this->fundingCaseManagerMock->method('hasAccess')
+    $this->fundingCaseManagerMock->method('get')
       ->with(12)
-      ->willReturn(FALSE);
+      ->willReturn(NULL);
+
+    $this->expectException(NotFoundHttpException::class);
+    $this->controller->handle($request);
+  }
+
+  public function testHandleUnauthorized(): void {
+    $fundingCase = FundingCaseFactory::createFundingCase(['permissions' => ['application_apply']]);
+    $request = new Request(['fundingCaseId' => '12']);
+    $this->fundingCaseManagerMock->method('get')
+      ->with(12)
+      ->willReturn($fundingCase);
 
     $this->expectException(AccessDeniedHttpException::class);
     $this->controller->handle($request);

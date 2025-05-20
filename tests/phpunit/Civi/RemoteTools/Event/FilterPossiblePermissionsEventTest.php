@@ -47,6 +47,13 @@ final class FilterPossiblePermissionsEventTest extends TestCase {
     static::assertSame(['bar1' => 'Bar1', 'bar2' => 'Bar2'], $event->getPermissions());
   }
 
+  public function testKeepPermissionsByPrefixes(): void {
+    $permissions = ['foo1' => 'Foo1', 'foo2' => 'Foo2', 'bar1' => 'Bar1', 'bar2' => 'Bar2', 'baz1' => 'Baz1'];
+    $event = new FilterPossiblePermissionsEvent('entity', $permissions);
+    $event->keepPermissionsByPrefixes(['bar', 'baz']);
+    static::assertSame(['bar1' => 'Bar1', 'bar2' => 'Bar2', 'baz1' => 'Baz1'], $event->getPermissions());
+  }
+
   public function testRemovePermission(): void {
     $permissions = ['foo1' => 'Foo1', 'foo2' => 'Foo2', 'bar1' => 'Bar1', 'bar2' => 'Bar2'];
     $event = new FilterPossiblePermissionsEvent('entity', $permissions);

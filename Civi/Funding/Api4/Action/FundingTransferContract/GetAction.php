@@ -30,6 +30,7 @@ use Civi\Funding\Api4\Action\Traits\IsFieldSelectedTrait;
 use Civi\Funding\Api4\Util\WhereUtil;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\FundingCase\FundingCaseManager;
+use Civi\Funding\FundingCase\FundingCasePermissions;
 use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\Funding\PayoutProcess\PayoutProcessManager;
 use Civi\RemoteTools\Api4\Api4Interface;
@@ -140,7 +141,8 @@ final class GetAction extends AbstractGetAction {
       'currency' => $fundingProgram->getCurrency(),
       'funding_program_title' => $fundingProgram->getTitle(),
       'CAN_create_drawdown'
-      => in_array('drawdown_create', $fundingCase->getPermissions(), TRUE) && 'closed' !== $payoutProcess->getStatus(),
+      => $fundingCase->hasPermission('drawdown_create') && 'closed' !== $payoutProcess->getStatus(),
+      'CAN_view_contract' => $fundingCase->hasPermission(FundingCasePermissions::CONTRACT_VIEW),
     ];
 
     if ($this->isFieldExplicitlySelected('creation_contact_display_name')) {

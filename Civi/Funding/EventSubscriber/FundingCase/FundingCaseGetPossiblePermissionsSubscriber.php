@@ -22,6 +22,7 @@ namespace Civi\Funding\EventSubscriber\FundingCase;
 use Civi\Api4\FundingCase;
 use Civi\Funding\ApplicationProcess\ApplicationProcessPermissions;
 use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
+use Civi\Funding\FundingCase\FundingCasePermissions;
 use Civi\RemoteTools\Event\GetPossiblePermissionsEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use CRM_Funding_ExtensionUtil as E;
@@ -43,6 +44,7 @@ final class FundingCaseGetPossiblePermissionsSubscriber implements EventSubscrib
       'application_apply' => E::ts('Application: apply'),
       'application_withdraw' => E::ts('Application: withdraw'),
       'application_request_rework' => E::ts('Application: request rework'),
+      FundingCasePermissions::CONTRACT_VIEW => E::ts('Contract: view (applicant)'),
       'drawdown_create' => E::ts('Drawdown: create'),
       ClearingProcessPermissions::CLEARING_MODIFY => E::ts('Clearing: modify'),
       ClearingProcessPermissions::CLEARING_APPLY => E::ts('Clearing: apply'),

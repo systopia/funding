@@ -1,3 +1,5 @@
+<funding-hih-application-approve-modal></funding-hih-application-approve-modal>
+
 <div class="funding-application-sidebar-element">
   <label for="ndr_berichterstattung">NDR-Berichterstattung</label>
   <span id="ndr_berichterstattung" editable-select="applicationProcess['bsh_funding_application_extra.ndr_berichterstattung']"
@@ -44,6 +46,10 @@
   <funding-action-button action="release" class="btn btn-default funding-application-sidebar-element" crm-icon="fa-thumbs-up">Für Beirat freigeben</funding-action-button>
   <funding-action-button action="reject" class="btn btn-default funding-application-sidebar-element" crm-icon="fa-thumbs-down">{{:: $ctrl.ts('Reject') }}</funding-action-button>
   <funding-action-button action="request-change" class="btn btn-default funding-application-sidebar-element" crm-icon="fa-arrow-left">{{:: $ctrl.ts('Request Change') }}</funding-action-button>
+  <button ng-show="isActionAllowed('approve')" type="button" ng-click="approve()"
+          class="btn btn-default funding-action-button funding-application-sidebar-element" crm-icon="fa-check">Bewilligen</button>
+  <button ng-show="isActionAllowed('approve-update')" type="button" ng-click="approveUpdate()"
+          class="btn btn-default funding-action-button funding-application-sidebar-element" crm-icon="fa-check-square-o">Bewilligung ändern</button>
   <funding-action-button action="add-comment" with-comment="'required'" class="btn btn-default funding-application-sidebar-element" crm-icon="fa-commenting">{{:: $ctrl.ts('Add Comment') }}</funding-action-button>
 </span>
 

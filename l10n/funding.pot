@@ -322,10 +322,6 @@ msgstr ""
 msgid "Type Label"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/Generic/FinancePlanItem/AbstractGetFieldsAction.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_funding_cases.mgd.php
-msgid "Funding Case Type"
-msgstr ""
-
 #: Civi/Funding/Api4/Action/Remote/ApplicationProcess/AbstractFormAction.php
 msgid "Application process with ID \"%1\" not found"
 msgstr ""
@@ -843,6 +839,10 @@ msgid "Application: request rework"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
+msgid "Contract: view (applicant)"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
 msgid "Drawdown: create"
 msgstr ""
 
@@ -1202,7 +1202,7 @@ msgstr ""
 msgid "Applications"
 msgstr ""
 
-#: ang/crmFunding/application/applicationSubmitModal.template.html ang/crmFunding/case/fundingCase.template.html ang/crmFunding/clearing/clearingSubmitModal.template.html
+#: ang/crmFunding/application/applicationSubmitModal.template.html ang/crmFunding/case/fundingCase.template.html ang/crmFunding/clearing/clearingSubmitModal.template.html ang/crmFundingHiH/hihApplicationApproveModal.template.html
 msgid "Close"
 msgstr ""
 
@@ -1218,7 +1218,7 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
-#: ang/crmFunding/application/applicationSubmitModal.template.html ang/crmFunding/case/fundingCase.template.html ang/crmFunding/clearing/clearingSubmitModal.template.html
+#: ang/crmFunding/application/applicationSubmitModal.template.html ang/crmFunding/case/fundingCase.template.html ang/crmFunding/clearing/clearingSubmitModal.template.html ang/crmFundingHiH/hihApplicationApproveModal.template.html
 msgid "Cancel"
 msgstr ""
 
@@ -1704,6 +1704,10 @@ msgstr ""
 
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
 msgid "Funding Case Applications"
+msgstr ""
+
+#: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_funding_cases.mgd.php
+msgid "Funding Case Type"
 msgstr ""
 
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingPrograms.mgd.php managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_funding_cases.mgd.php
