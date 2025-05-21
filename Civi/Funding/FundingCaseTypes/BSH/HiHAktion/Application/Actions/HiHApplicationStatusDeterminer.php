@@ -62,6 +62,7 @@ final class HiHApplicationStatusDeterminer extends AbstractApplicationProcessSta
       're-apply' => 'applied',
       // Maybe changed to "approved_partial" by a subscriber.
       'approve' => 'approved',
+      'update' => 'advisory',
     ],
     'approved' => [
       'add-comment' => 'approved',
