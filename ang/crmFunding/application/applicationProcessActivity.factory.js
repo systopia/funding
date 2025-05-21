@@ -19,7 +19,6 @@
 fundingModule.factory('fundingApplicationProcessActivityService', ['crmApi4', function(crmApi4) {
   return {
     get: (applicationProcessId) => crmApi4('FundingApplicationProcessActivity', 'get', {
-      select: ['*', 'custom.*'],
       applicationProcessId: applicationProcessId,
     }),
   };

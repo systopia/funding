@@ -71,10 +71,11 @@ final class GetAction extends AbstractGetAction {
       ->setOffset($this->getOffset())
       ->setOrderBy($this->getOrderBy())
       ->setSelect($this->getSelect())
+      ->addSelect('activity_type_id:name')
       ->setDebug($this->getDebug());
 
     if ([] === $this->getSelect()) {
-      $action->addSelect('*', 'custom.*', 'activity_type_id:name');
+      $action->addSelect('*', 'custom.*');
     }
 
     if ([] === $this->getOrderBy()) {
