@@ -143,8 +143,9 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
   }
 
   private function installJsonOverlapsSqlFunction(): void {
+    CRM_Core_DAO::executeQuery('DROP FUNCTION IF EXISTS FUNDING_JSON_OVERLAPS');
     try {
-      CRM_Core_DAO::executeQuery('JSON_OVERLAPS(NULL, NULL)');
+      CRM_Core_DAO::executeQuery('SELECT JSON_OVERLAPS(NULL, NULL)');
       // Native JSON_OVERLAPS exists (MariaDB >=10.9)
       $this->executeFullSqlFile('sql/functions/funding_json_overlaps_alias.sql');
     }
