@@ -32,9 +32,10 @@ class FundingCaseNotificationSubscriber implements EventSubscriberInterface {
    * @inheritDoc
    */
   public static function getSubscribedEvents(): array {
+    // Minimum priority so other subscribers may change properties.
     return [
-      FundingCaseCreatedEvent::class => 'onCreated',
-      FundingCaseUpdatedEvent::class => 'onUpdated',
+      FundingCaseCreatedEvent::class => ['onCreated', PHP_INT_MIN],
+      FundingCaseUpdatedEvent::class => ['onUpdated', PHP_INT_MIN],
     ];
   }
 

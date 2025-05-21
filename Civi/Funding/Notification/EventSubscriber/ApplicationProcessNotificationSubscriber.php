@@ -32,9 +32,10 @@ class ApplicationProcessNotificationSubscriber implements EventSubscriberInterfa
    * @inheritDoc
    */
   public static function getSubscribedEvents(): array {
+    // Minimum priority so other subscribers may change properties.
     return [
-      ApplicationProcessCreatedEvent::class => 'onCreated',
-      ApplicationProcessUpdatedEvent::class => 'onUpdated',
+      ApplicationProcessCreatedEvent::class => ['onCreated', PHP_INT_MIN],
+      ApplicationProcessUpdatedEvent::class => ['onUpdated', PHP_INT_MIN],
     ];
   }
 
