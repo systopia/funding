@@ -87,6 +87,7 @@ fundingHiHModule.directive('fundingHihApplicationApproveModal', function() {
         $scope.data.kosten.personalkostenBewilligt = $scope.data.kosten.personalkostenSumme;
         $scope.data.kosten.honorareBewilligt = $scope.data.kosten.honorareSumme;
         $scope.data.kosten.sachkostenBewilligt = $scope.data.kosten.sachkosten.summe;
+        $scope.data.kosten.bewilligungskommentar = '';
         openDialog();
       };
 
@@ -99,7 +100,7 @@ fundingHiHModule.directive('fundingHihApplicationApproveModal', function() {
         $scope.data.kosten.personalkostenBewilligt = personalkostenBewilligt;
         $scope.data.kosten.honorareBewilligt = honorareBewilligt;
         $scope.data.kosten.sachkostenBewilligt = sachkostenBewilligt;
-        $scope.data.kosten.bewilligungsKommentar = bewilligungskommentar;
+        $scope.data.kosten.bewilligungskommentar = bewilligungskommentar;
         $scope.data.recreateTransferContract = false;
         openDialog();
       };

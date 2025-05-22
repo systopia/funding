@@ -68,11 +68,13 @@ final class HiHApplicationStatusDeterminer extends AbstractApplicationProcessSta
       'add-comment' => 'approved',
       'update' => 'approved',
       'approve-update' => 'approved',
+      'recall' => 'advisory',
     ],
     'approved_partial' => [
       'add-comment' => 'approved_partial',
       'update' => 'approved_partial',
       'approve-update' => 'approved_partial',
+      'recall' => 'advisory',
     ],
     'rejected' => [
       're-apply' => 'applied',

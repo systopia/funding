@@ -50,6 +50,7 @@
           class="btn btn-default funding-action-button funding-application-sidebar-element" crm-icon="fa-check">Bewilligen</button>
   <button ng-show="isActionAllowed('approve-update')" type="button" ng-click="approveUpdate()"
           class="btn btn-default funding-action-button funding-application-sidebar-element" crm-icon="fa-check-square-o">Bewilligung ändern</button>
+  <funding-action-button action="recall" with-comment="'required'" class="btn btn-default funding-application-sidebar-element" crm-icon="fa-times-circle">Bewilligung zurückziehen</funding-action-button>
   <funding-action-button action="add-comment" with-comment="'required'" class="btn btn-default funding-application-sidebar-element" crm-icon="fa-commenting">{{:: $ctrl.ts('Add Comment') }}</funding-action-button>
 </span>
 
