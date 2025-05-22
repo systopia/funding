@@ -26,14 +26,18 @@ use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\FundingCaseStatus;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\HiHConstants;
+use Civi\Funding\PayoutProcess\PayoutProcessManager;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Webmozart\Assert\Assert;
 
 final class HiHApproveSubscriber implements EventSubscriberInterface {
 
   private Api4Interface $api4;
 
   private FundingCaseManager $fundingCaseManager;
+
+  private PayoutProcessManager $payoutProcessManager;
 
   /**
    * @inheritDoc
@@ -45,9 +49,14 @@ final class HiHApproveSubscriber implements EventSubscriberInterface {
     ];
   }
 
-  public function __construct(Api4Interface $api4, FundingCaseManager $fundingCaseManager) {
+  public function __construct(
+    Api4Interface $api4,
+    FundingCaseManager $fundingCaseManager,
+    PayoutProcessManager $payoutProcessManager
+  ) {
     $this->api4 = $api4;
     $this->fundingCaseManager = $fundingCaseManager;
+    $this->payoutProcessManager = $payoutProcessManager;
   }
 
   public function onPreUpdate(ApplicationProcessPreUpdateEvent $event): void {
@@ -97,8 +106,14 @@ final class HiHApproveSubscriber implements EventSubscriberInterface {
     elseif ($event->getFundingCase()->getStatus() === FundingCaseStatus::ONGOING
       && TRUE === $event->getApplicationProcess()->get('_recreateTransferContract')
     ) {
-      $event->getFundingCase()->setAmountApproved($this->getAmountApproved($event->getApplicationProcess()));
+      $amountApproved = $this->getAmountApproved($event->getApplicationProcess());
+      $event->getFundingCase()->setAmountApproved($amountApproved);
       $this->fundingCaseManager->update($event->getFundingCase());
+
+      $payoutProcess = $this->payoutProcessManager->getLastByFundingCaseId($event->getFundingCase()->getId());
+      Assert::notNull($payoutProcess);
+      $this->payoutProcessManager->updateAmountTotal($payoutProcess, $amountApproved);
+
       $this->api4->execute(FundingCase::getEntityName(), 'recreateTransferContract', [
         'id' => $event->getFundingCase()->getId(),
       ]);
