@@ -60,11 +60,11 @@ final class HiHApplicationActionsDeterminer extends AbstractApplicationProcessAc
       'bsh_admin' => ['update', 're-apply', 'reject', 'approve'],
     ],
     'approved' => [
-      'bsh_admin' => ['update', 'approve-update'],
+      'bsh_admin' => ['update', 'approve-update', 'recall'],
       'review_application' => ['add-comment'],
     ],
     'approved_partial' => [
-      'bsh_admin' => ['update', 'approve-update'],
+      'bsh_admin' => ['update', 'approve-update', 'recall'],
       'review_application' => ['add-comment'],
     ],
     'rejected' => [
