@@ -41,6 +41,13 @@ final class FundingCasePermissionsCacheClearSubscriber implements EventSubscribe
 
   private const RELATION_TYPES_WITH_GROUP_IDS = [Relationship::NAME, ContactTypeAndGroup::NAME];
 
+  /**
+   * Allows to disable cache clear on FundingCaseContactRelation change. Can be
+   * used when migrating FundingCaseContactRelation without affect on the actual
+   * permissions.
+   */
+  public static bool $fundingCaseContactRelationDisabled = FALSE;
+
   private Api4Interface $api4;
 
   private ChangeSetFactory $changeSetFactory;
@@ -235,6 +242,10 @@ final class FundingCasePermissionsCacheClearSubscriber implements EventSubscribe
    * @throws \CRM_Core_Exception
    */
   public function onPreFundingCaseContactRelation(PreEvent $event): void {
+    if (self::$fundingCaseContactRelationDisabled) {
+      return;
+    }
+
     if (isset($event->params['funding_case_id'])) {
       $this->permissionsCacheManager->clearByFundingCaseId((int) $event->params['funding_case_id']);
     }

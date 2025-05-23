@@ -24,7 +24,7 @@ use Civi\Api4\Generic\Result;
 use Civi\Funding\EntityFactory\FundingCaseBundleFactory;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
-use Civi\Funding\Permission\ContactRelation\Types\ContactRelationship;
+use Civi\Funding\Permission\ContactRelation\Types\ContactRelationships;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -33,7 +33,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @covers \Civi\Funding\EventSubscriber\FundingCase\FundingCaseContactRelationUpdateSubscriber
  */
-final class FundingCaseContactRelationSubscriberTest extends TestCase {
+final class FundingCaseContactRelationUpdateSubscriberTest extends TestCase {
 
   /**
    * @var \Civi\RemoteTools\Api4\Api4Interface&\PHPUnit\Framework\MockObject\MockObject
@@ -71,25 +71,33 @@ final class FundingCaseContactRelationSubscriberTest extends TestCase {
     $this->api4Mock->expects(static::once())->method('getEntities')
       ->with(FundingCaseContactRelation::getEntityName(), CompositeCondition::fromFieldValuePairs([
         'funding_case_id' => $fundingCaseBundle->getFundingCase()->getId(),
-        'type' => ContactRelationship::NAME,
+        'type' => ContactRelationships::NAME,
       ]))
       ->willReturn(new Result([
         [
           'id' => 2,
           'funding_case_id' => $fundingCaseBundle->getFundingCase()->getId(),
-          'type' => ContactRelationship::NAME,
+          'type' => ContactRelationships::NAME,
           'properties' => [
-            'contactId' => 12,
-            'relationshipTypeId' => 9,
+            'relationships' => [
+              [
+                'contactId' => 12,
+                'relationshipTypeId' => 9,
+              ],
+            ],
           ],
         ],
         [
           'id' => 3,
           'funding_case_id' => $fundingCaseBundle->getFundingCase()->getId(),
-          'type' => ContactRelationship::NAME,
+          'type' => ContactRelationships::NAME,
           'properties' => [
-            'contactId' => 123,
-            'relationshipTypeId' => 9,
+            'relationships' => [
+              [
+                'contactId' => 123,
+                'relationshipTypeId' => 9,
+              ],
+            ],
           ],
         ],
       ]));
@@ -98,10 +106,14 @@ final class FundingCaseContactRelationSubscriberTest extends TestCase {
       ->with(FundingCaseContactRelation::getEntityName(), 3, [
         'id' => 3,
         'funding_case_id' => $fundingCaseBundle->getFundingCase()->getId(),
-        'type' => ContactRelationship::NAME,
+        'type' => ContactRelationships::NAME,
         'properties' => [
-          'contactId' => 1234,
-          'relationshipTypeId' => 9,
+          'relationships' => [
+            [
+              'contactId' => 1234,
+              'relationshipTypeId' => 9,
+            ],
+          ],
         ],
       ]);
 

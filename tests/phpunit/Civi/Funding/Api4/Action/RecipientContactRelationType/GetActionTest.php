@@ -63,6 +63,7 @@ final class GetActionTest extends TestCase {
         'template' => 'Template',
         'help' => 'Help',
         'extra' => ['foo' => 'bar'],
+        'initialProperties' => new \stdClass(),
       ],
     ], $result->getArrayCopy());
   }

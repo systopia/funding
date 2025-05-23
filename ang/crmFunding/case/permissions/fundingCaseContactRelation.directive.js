@@ -31,9 +31,12 @@ fundingModule.directive('fundingCaseContactRelation', ['$compile', function($com
     },
     link: function(scope, element) {
       // Insert/update type specific template on type change.
-      scope.$watch('type', function (newValue) {
+      scope.$watch('type', function (newValue, oldValue) {
         scope.typeSpecification = scope.types[newValue];
         if (scope.typeSpecification) {
+          if (oldValue !== newValue) {
+            scope.properties = scope.typeSpecification.initialProperties;
+          }
           const propertiesElem = angular.element(element[0].querySelector('.funding-case-contact-relation-properties'));
           propertiesElem.html(scope.typeSpecification.template);
           $compile(propertiesElem.contents())(scope);

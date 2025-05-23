@@ -21,6 +21,10 @@ namespace Civi\Funding\Contact\Relation;
 
 abstract class AbstractRelationType implements RelationTypeInterface {
 
+  public function getInitialProperties(): array {
+    return [];
+  }
+
   /**
    * @inheritDoc
    */
@@ -31,6 +35,7 @@ abstract class AbstractRelationType implements RelationTypeInterface {
       'template' => $this->getTemplate(),
       'help' => $this->getHelp(),
       'extra' => $this->getExtra(),
+      'initialProperties' => (object) $this->getInitialProperties(),
     ];
   }
 

@@ -36,12 +36,19 @@ interface RelationTypeInterface {
   public function getExtra(): array;
 
   /**
+   * @phpstan-return array<string, mixed>
+   *   JSON serializable.
+   */
+  public function getInitialProperties(): array;
+
+  /**
    * @phpstan-return array{
    *   name: string,
    *   label: string,
    *   template: string,
    *   help: string,
    *   extra: array<string, mixed>,
+   *   initialProperties: \stdClass,
    * }
    */
   public function toArray(): array;

@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2025 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,16 +17,19 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Permission\ContactRelation\Types;
+namespace Civi\Funding\Permission\FundingCase\RelationFactory\Types;
 
 use Civi\Api4\RelationshipType;
-use Civi\Funding\Contact\Relation\AbstractRelationType;
+use Civi\Funding\Permission\FundingCase\RelationFactory\AbstractRelationPropertiesFactoryType;
 use Civi\RemoteTools\Api4\Api4Interface;
 use CRM_Funding_ExtensionUtil as E;
 
-final class ContactRelationship extends AbstractRelationType {
+/**
+ * @codeCoverageIgnore
+ */
+final class CreationAndRecipientContactRelationship extends AbstractRelationPropertiesFactoryType {
 
-  public const NAME = 'ContactRelationship';
+  public const NAME = 'CreationAndRecipientContactRelationship';
 
   private Api4Interface $api4;
 
@@ -34,31 +37,33 @@ final class ContactRelationship extends AbstractRelationType {
     $this->api4 = $api4;
   }
 
-  public function getName(): string {
+  public static function getName(): string {
     return self::NAME;
   }
 
   public function getLabel(): string {
-    return E::ts('Relationship to contact');
+    return E::ts('Relationship to creation and recipient contact');
   }
 
   public function getTemplate(): string {
-    $relationshipTypeLabel = E::ts('Relationship type');
-    $contactLabel = E::ts('Contact');
+    $creationContactRelationshipTypeLabel = E::ts('Creator relationship type');
+    $recipientContactRelationshipTypeLabel = E::ts('Recipient relationship type');
 
     return <<<TEMPLATE
-<label>$relationshipTypeLabel</label>
-<select class="crm-form-select" ng-model="properties.relationshipTypeId" ng-required="true"
+<label>$creationContactRelationshipTypeLabel</label>
+<select class="crm-form-select" ng-model="properties.creationContactRelationshipTypeId" ng-required="true"
   ng-options="label for (label , value) in typeSpecification.extra.relationshipTypes"></select>
-<label>$contactLabel</label>
-<input crm-entityref="{entity: 'Contact'}"
-       ng-model="properties.contactId" ng-required="true"/>
+<label>$recipientContactRelationshipTypeLabel</label>
+<select class="crm-form-select" ng-model="properties.recipientContactRelationshipTypeId" ng-required="true"
+  ng-options="label for (label , value) in typeSpecification.extra.relationshipTypes"></select>
 TEMPLATE;
   }
 
   public function getHelp(): string {
     return E::ts(<<<HELP
-Matches if a contact has a relationship of the specified type to the specified contact.
+Assign permissions for new funding cases to contacts that have a relationship
+of the specified type to the creation contact and a relationship of the
+specified type to the recipient contact.
 HELP);
   }
 

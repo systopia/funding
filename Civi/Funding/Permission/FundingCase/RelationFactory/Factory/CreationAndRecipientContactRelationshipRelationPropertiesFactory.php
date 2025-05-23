@@ -22,18 +22,19 @@ namespace Civi\Funding\Permission\FundingCase\RelationFactory\Factory;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Permission\ContactRelation\Types\ContactRelationships;
 use Civi\Funding\Permission\FundingCase\RelationFactory\RelationPropertiesFactoryInterface;
-use Civi\Funding\Permission\FundingCase\RelationFactory\Types\CreationContactRelationship;
+use Civi\Funding\Permission\FundingCase\RelationFactory\Types\CreationAndRecipientContactRelationship;
 use Webmozart\Assert\Assert;
 
 /**
  * @phpstan-import-type propertiesT from ContactRelationships
  *
  * @codeCoverageIgnore
+ * phpcs:disable Generic.Files.LineLength.TooLong
  */
-final class CreationContactRelationshipRelationPropertiesFactory implements RelationPropertiesFactoryInterface {
-
+final class CreationAndRecipientContactRelationshipRelationPropertiesFactory implements RelationPropertiesFactoryInterface {
+// phpcs:enable
   public static function getSupportedFactoryType(): string {
-    return CreationContactRelationship::NAME;
+    return CreationAndRecipientContactRelationship::NAME;
   }
 
   /**
@@ -43,13 +44,18 @@ final class CreationContactRelationshipRelationPropertiesFactory implements Rela
     array $properties,
     FundingCaseEntity $fundingCase
   ): array {
-    Assert::integerish($properties['relationshipTypeId']);
+    Assert::integerish($properties['creationContactRelationshipTypeId']);
+    Assert::integerish($properties['recipientContactRelationshipTypeId']);
 
     return [
       'relationships' => [
         [
           'contactId' => $fundingCase->getCreationContactId(),
-          'relationshipTypeId' => (int) $properties['relationshipTypeId'],
+          'relationshipTypeId' => (int) $properties['creationContactRelationshipTypeId'],
+        ],
+        [
+          'contactId' => $fundingCase->getRecipientContactId(),
+          'relationshipTypeId' => (int) $properties['recipientContactRelationshipTypeId'],
         ],
       ],
     ];
