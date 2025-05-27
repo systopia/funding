@@ -100,6 +100,14 @@
   margin-bottom: 10px;
 }
 
+.funding-contact-relation-properties > div {
+  margin-left: 20px;
+}
+
+.funding-contact-relation-properties > :last-child {
+  display: inline-block;
+}
+
 #bootstrap-theme .tab-pane {
   padding: 15px 3px 15px 10px;
 }

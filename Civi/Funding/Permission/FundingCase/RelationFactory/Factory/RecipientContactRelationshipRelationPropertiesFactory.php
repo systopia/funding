@@ -20,11 +20,14 @@ declare(strict_types = 1);
 namespace Civi\Funding\Permission\FundingCase\RelationFactory\Factory;
 
 use Civi\Funding\Entity\FundingCaseEntity;
-use Civi\Funding\Permission\ContactRelation\Types\ContactRelationship;
+use Civi\Funding\Permission\ContactRelation\Types\ContactRelationships;
 use Civi\Funding\Permission\FundingCase\RelationFactory\RelationPropertiesFactoryInterface;
 use Civi\Funding\Permission\FundingCase\RelationFactory\Types\RecipientContactRelationship;
+use Webmozart\Assert\Assert;
 
 /**
+ * @phpstan-import-type propertiesT from ContactRelationships
+ *
  * @codeCoverageIgnore
  */
 final class RecipientContactRelationshipRelationPropertiesFactory implements RelationPropertiesFactoryInterface {
@@ -33,18 +36,27 @@ final class RecipientContactRelationshipRelationPropertiesFactory implements Rel
     return RecipientContactRelationship::NAME;
   }
 
+  /**
+   * @phpstan-return propertiesT
+   */
   public function createRelationProperties(
     array $properties,
     FundingCaseEntity $fundingCase
   ): array {
+    Assert::integerish($properties['relationshipTypeId']);
+
     return [
-      'contactId' => $fundingCase->getRecipientContactId(),
-      'relationshipTypeId' => $properties['relationshipTypeId'],
+      'relationships' => [
+        [
+          'contactId' => $fundingCase->getRecipientContactId(),
+          'relationshipTypeId' => (int) $properties['relationshipTypeId'],
+        ],
+      ],
     ];
   }
 
   public function getRelationType(): string {
-    return ContactRelationship::NAME;
+    return ContactRelationships::NAME;
   }
 
 }

@@ -21,16 +21,16 @@ namespace Civi\Funding\EventSubscriber\FundingCase;
 
 use Civi\Api4\FundingCaseContactRelation;
 use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
-use Civi\Funding\Permission\ContactRelation\Types\ContactRelationship;
+use Civi\Funding\Permission\ContactRelation\Types\ContactRelationships;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * When the recipient contact of a funding case is changed this subscriber
- * changes the contact ID of FundingCaseContactRelation records with type
- * ContactRelationship to the new recipient contact ID if it is equal to the
- * previous recipient contact ID.
+ * changes the contact ID of a relationship in FundingCaseContactRelation
+ * records with type ContactRelationships to the new recipient contact ID
+ * if it is equal to the previous recipient contact ID.
  */
 final class FundingCaseContactRelationUpdateSubscriber implements EventSubscriberInterface {
 
@@ -53,27 +53,38 @@ final class FundingCaseContactRelationUpdateSubscriber implements EventSubscribe
    * @throws \CRM_Core_Exception
    */
   public function onFundingCaseUpdated(FundingCaseUpdatedEvent $event): void {
-    if ($event->getFundingCase()->getRecipientContactId()
-      === $event->getPreviousFundingCase()->getRecipientContactId()
-    ) {
-      return;
-    }
-
     $previousRecipientContactId = $event->getPreviousFundingCase()->getRecipientContactId();
     $newRecipientContactId = $event->getFundingCase()->getRecipientContactId();
 
-    /** @phpstan-var list<array{id: int, properties: array{relationshipTypeId: int, contactId: int}}> $relations */
+    if ($newRecipientContactId === $previousRecipientContactId) {
+      return;
+    }
+
+    /** @phpstan-var list<array{
+     *   id: int,
+     *   properties: array{
+     *     relationships: list<array{relationshipTypeId: int, contactId: int}>,
+     *   },
+     * }> $relations
+     */
     $relations = $this->api4->getEntities(
       FundingCaseContactRelation::getEntityName(),
       CompositeCondition::fromFieldValuePairs([
         'funding_case_id' => $event->getFundingCase()->getId(),
-        'type' => ContactRelationship::NAME,
+        'type' => ContactRelationships::NAME,
       ])
     );
 
     foreach ($relations as $relation) {
-      if ($relation['properties']['contactId'] === $previousRecipientContactId) {
-        $relation['properties']['contactId'] = $newRecipientContactId;
+      $changed = FALSE;
+      foreach ($relation['properties']['relationships'] as &$relationship) {
+        if ($relationship['contactId'] === $previousRecipientContactId) {
+          $relationship['contactId'] = $newRecipientContactId;
+          $changed = TRUE;
+        }
+      }
+
+      if ($changed) {
         $this->api4->updateEntity(FundingCaseContactRelation::getEntityName(), $relation['id'], $relation);
       }
     }

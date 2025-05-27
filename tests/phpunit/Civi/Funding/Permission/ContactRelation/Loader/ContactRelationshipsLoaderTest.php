@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2023 SYSTOPIA GmbH
+ * Copyright (C) 2025 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -27,23 +27,24 @@ use Civi\PHPUnit\Traits\ArrayAssertTrait;
 use Civi\RemoteTools\Api4\Api4;
 
 /**
- * @covers \Civi\Funding\Permission\ContactRelation\Loader\ContactRelationshipLoader
+ * @covers \Civi\Funding\Permission\ContactRelation\Loader\ContactRelationshipsLoader
  *
  * @group headless
  */
-final class ContactRelationshipLoaderTest extends AbstractFundingHeadlessTestCase {
+final class ContactRelationshipsLoaderTest extends AbstractFundingHeadlessTestCase {
 
   use ArrayAssertTrait;
 
-  private ContactRelationshipLoader $loader;
+  private ContactRelationshipsLoader $loader;
 
   protected function setUp(): void {
     parent::setUp();
-    $this->loader = new ContactRelationshipLoader(Api4::getInstance());
+    $this->loader = new ContactRelationshipsLoader(Api4::getInstance());
   }
 
   public function testGetContacts(): void {
-    $contact = ContactFixture::addIndividual();
+    $contact1 = ContactFixture::addIndividual();
+    $contact2 = ContactFixture::addIndividual();
     // Related A to B
     $relatedContact1 = ContactFixture::addIndividual(['last_name' => 'Related 1']);
     // Related B to A
@@ -53,10 +54,18 @@ final class ContactRelationshipLoaderTest extends AbstractFundingHeadlessTestCas
     // Inactive relationship
     $inactiveRelationContact = ContactFixture::addIndividual(['last_name' => 'Inactive Relationship']);
 
-    $relatedRelationshipTypeId = RelationshipType::create(FALSE)
+    $relatedRelationshipTypeId1 = RelationshipType::create(FALSE)
       ->setValues([
-        'name_a_b' => 'related',
-        'name_b_a' => 'related',
+        'name_a_b' => 'related1',
+        'name_b_a' => 'related1',
+        'contact_type_a' => 'Individual',
+        'contact_type_b' => 'Individual',
+      ])->execute()->first()['id'];
+
+    $relatedRelationshipTypeId2 = RelationshipType::create(FALSE)
+      ->setValues([
+        'name_a_b' => 'related2',
+        'name_b_a' => 'related2',
         'contact_type_a' => 'Individual',
         'contact_type_b' => 'Individual',
       ])->execute()->first()['id'];
@@ -71,45 +80,77 @@ final class ContactRelationshipLoaderTest extends AbstractFundingHeadlessTestCas
 
     Relationship::create(FALSE)
       ->setValues([
-        'contact_id_a' => $contact['id'],
+        'contact_id_a' => $contact1['id'],
         'contact_id_b' => $relatedContact1['id'],
-        'relationship_type_id' => $relatedRelationshipTypeId,
+        'relationship_type_id' => $relatedRelationshipTypeId1,
+      ])->execute();
+    Relationship::create(FALSE)
+      ->setValues([
+        'contact_id_a' => $contact2['id'],
+        'contact_id_b' => $relatedContact1['id'],
+        'relationship_type_id' => $relatedRelationshipTypeId2,
       ])->execute();
 
     Relationship::create(FALSE)
       ->setValues([
         'contact_id_a' => $relatedContact2['id'],
-        'contact_id_b' => $contact['id'],
-        'relationship_type_id' => $relatedRelationshipTypeId,
+        'contact_id_b' => $contact1['id'],
+        'relationship_type_id' => $relatedRelationshipTypeId1,
+      ])->execute();
+    Relationship::create(FALSE)
+      ->setValues([
+        'contact_id_a' => $relatedContact2['id'],
+        'contact_id_b' => $contact2['id'],
+        'relationship_type_id' => $relatedRelationshipTypeId2,
       ])->execute();
 
     Relationship::create(FALSE)
       ->setValues([
-        'contact_id_a' => $contact['id'],
+        'contact_id_a' => $contact1['id'],
         'contact_id_b' => $notRelatedContact['id'],
         'relationship_type_id' => $notRelatedRelationshipTypeId,
       ])->execute();
+    Relationship::create(FALSE)
+      ->setValues([
+        'contact_id_a' => $contact2['id'],
+        'contact_id_b' => $notRelatedContact['id'],
+        'relationship_type_id' => $relatedRelationshipTypeId2,
+      ])->execute();
 
     Relationship::create(FALSE)
       ->setValues([
-        'contact_id_a' => $contact['id'],
+        'contact_id_a' => $contact1['id'],
         'contact_id_b' => $inactiveRelationContact['id'],
-        'relationship_type_id' => $relatedRelationshipTypeId,
+        'relationship_type_id' => $relatedRelationshipTypeId1,
         'is_active' => FALSE,
+      ])->execute();
+    Relationship::create(FALSE)
+      ->setValues([
+        'contact_id_a' => $contact2['id'],
+        'contact_id_b' => $inactiveRelationContact['id'],
+        'relationship_type_id' => $relatedRelationshipTypeId2,
       ])->execute();
 
     static::assertArrayHasSameKeys([
       $relatedContact1['id'],
       $relatedContact2['id'],
     ], $this->loader->getContacts('ContactRelationship', [
-      'contactId' => $contact['id'],
-      'relationshipTypeId' => $relatedRelationshipTypeId,
+      'relationships' => [
+        [
+          'contactId' => $contact1['id'],
+          'relationshipTypeId' => $relatedRelationshipTypeId1,
+        ],
+        [
+          'contactId' => $contact2['id'],
+          'relationshipTypeId' => $relatedRelationshipTypeId2,
+        ],
+      ],
     ]));
   }
 
   public function testSupportsRelationType(): void {
-    static::assertTrue($this->loader->supportsRelationType('ContactRelationship'));
-    static::assertFalse($this->loader->supportsRelationType('ContactRelationshipX'));
+    static::assertTrue($this->loader->supportsRelationType('ContactRelationships'));
+    static::assertFalse($this->loader->supportsRelationType('ContactRelationshipsX'));
   }
 
 }

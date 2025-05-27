@@ -29,6 +29,7 @@ use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
+use Civi\Funding\Permission\ContactRelation\Types\ContactRelationships;
 
 trait FundingCaseTestFixturesTrait {
 
@@ -172,10 +173,14 @@ trait FundingCaseTestFixturesTrait {
 
     FundingCaseContactRelationFixture::addFixture(
       $this->permittedFundingCaseId,
-      'ContactRelationship',
+      ContactRelationships::NAME,
       [
-        'contactId' => $this->associatedContactIdNoPermissions,
-        'relationshipTypeId' => $permittedRelationshipTypeId,
+        'relationships' => [
+          [
+            'contactId' => $this->associatedContactIdNoPermissions,
+            'relationshipTypeId' => $permittedRelationshipTypeId,
+          ],
+        ],
       ],
       $permittedRelationshipTypePermissions
     );

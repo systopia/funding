@@ -1494,7 +1494,7 @@ msgid "Requested amount is greater than available amount."
 msgstr "Angefragter Betrag ist größer als der verfügbare Betrag."
 
 #: Civi/Funding/Permission/ContactRelation/Types/Contact.php
-#: Civi/Funding/Permission/ContactRelation/Types/ContactRelationship.php
+#: Civi/Funding/Permission/ContactRelation/Types/ContactRelationships.php
 #: Civi/Funding/Permission/FundingCase/RelationFactory/Types/Contact.php
 msgid "Contact"
 msgstr "Kontakt"
@@ -1503,23 +1503,31 @@ msgstr "Kontakt"
 msgid "Matches if a contact is equal to the specified one."
 msgstr "Zutreffend, wenn ein Kontakt ist gleich dem ausgewählten Kontakt."
 
-#: Civi/Funding/Permission/ContactRelation/Types/ContactRelationship.php
-msgid "Relationship to contact"
-msgstr "Beziehung zu Kontakt"
+#: Civi/Funding/Permission/ContactRelation/Types/ContactRelationships.php
+msgid "Relationship to contacts"
+msgstr "Beziehung zu Kontakten"
 
-#: Civi/Funding/Permission/ContactRelation/Types/ContactRelationship.php
+#: Civi/Funding/Permission/ContactRelation/Types/ContactRelationships.php
 #: Civi/Funding/Permission/FundingCase/RelationFactory/Types/CreationContactRelationship.php
 #: Civi/Funding/Permission/FundingCase/RelationFactory/Types/RecipientContactRelationship.php
 msgid "Relationship type"
 msgstr "Beziehungsart"
 
-#: Civi/Funding/Permission/ContactRelation/Types/ContactRelationship.php
-msgid ""
-"Matches if a contact has a relationship of the specified type to the "
-"specified contact."
-msgstr ""
-"Zutreffend, wenn ein Kontakt eine Beziehung der gewählten Art zum gewählten "
-"Kontakt hat."
+#: Civi/Funding/Permission/ContactRelation/Types/ContactRelationships.php
+#: ang/crmFunding/case/fundingCasePermissions.html
+#: ang/crmFunding/program/fundingNewCasePermissions.html
+#: ang/crmFunding/program/fundingProgramPermissions.html
+#: ang/crmFunding/program/recipientRelations.html
+msgid "Remove"
+msgstr "Entfernen"
+
+#: Civi/Funding/Permission/ContactRelation/Types/ContactRelationships.php
+msgid "Add relationship"
+msgstr "Beziehung hinzufügen"
+
+#: Civi/Funding/Permission/ContactRelation/Types/ContactRelationships.php
+msgid "Matches if a contact has all specified relationships."
+msgstr "Zutreffend, wenn ein Kontakt alle angegebenen Beziehungen hat."
 
 #: Civi/Funding/Permission/ContactRelation/Types/ContactTypeAndGroup.php
 msgid ""
@@ -1563,6 +1571,29 @@ msgid ""
 msgstr ""
 "Berechtigungen für neue Förderfalle an Kontakte mit einer der gewählten "
 "Kontaktarten in einer der gewählten Gruppen zuweisen."
+
+#: Civi/Funding/Permission/FundingCase/RelationFactory/Types/CreationAndRecipientContactRelationship.php
+msgid "Relationship to creation and recipient contact"
+msgstr "Beziehung zu Ersteller- und Empfängerkontakt"
+
+#: Civi/Funding/Permission/FundingCase/RelationFactory/Types/CreationAndRecipientContactRelationship.php
+msgid "Creator relationship type"
+msgstr "Ersteller-Beziehungsart"
+
+#: Civi/Funding/Permission/FundingCase/RelationFactory/Types/CreationAndRecipientContactRelationship.php
+msgid "Recipient relationship type"
+msgstr "Empfänger-Beziehungsart"
+
+#: Civi/Funding/Permission/FundingCase/RelationFactory/Types/CreationAndRecipientContactRelationship.php
+msgid ""
+"Assign permissions for new funding cases to contacts that have a "
+"relationship\n"
+"of the specified type to the creation contact and a relationship of the\n"
+"specified type to the recipient contact."
+msgstr ""
+"Berechtigungen für neue Förderfalle an Kontakte zuweisen, die eine Beziehung "
+"vom gewählten Typ zum Erstellerkontakt und eine Beziehung vom gewählten Typ "
+"zum Empfängerkontakt haben."
 
 #: Civi/Funding/Permission/FundingCase/RelationFactory/Types/CreationContact.php
 msgid "Creation contact"
@@ -2035,13 +2066,6 @@ msgstr "Förderfallberechtigungen"
 #: ang/crmFunding/program/recipientRelations.html
 msgid "Add"
 msgstr "Hinzufügen"
-
-#: ang/crmFunding/case/fundingCasePermissions.html
-#: ang/crmFunding/program/fundingNewCasePermissions.html
-#: ang/crmFunding/program/fundingProgramPermissions.html
-#: ang/crmFunding/program/recipientRelations.html
-msgid "Remove"
-msgstr "Entfernen"
 
 #: ang/crmFunding/case/notificationContacts.directive.js
 #: ang/crmFunding/form/editableField.directive.js
