@@ -174,7 +174,7 @@ return [
                   'target' => '',
                 ],
                 [
-                  'path' => 'civicrm/funding/drawdown/reject?drawdownId=[id]civicrm/',
+                  'path' => 'civicrm/funding/drawdown/reject?drawdownId=[id]',
                   'icon' => 'fa-thumbs-down',
                   'text' => E::ts('Reject'),
                   'style' => 'danger',
