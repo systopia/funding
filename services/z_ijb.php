@@ -24,21 +24,21 @@ declare(strict_types = 1);
 
 use Civi\Funding\DependencyInjection\Util\TaskServiceRegistrator;
 use Civi\Funding\FundingCaseType\MetaData\FundingCaseTypeMetaDataInterface;
-use Civi\Funding\IJB\Application\Actions\IJBApplicationActionsDeterminer;
-use Civi\Funding\IJB\Application\Actions\IJBApplicationActionStatusInfo;
-use Civi\Funding\IJB\Application\Actions\IJBApplicationStatusDeterminer;
-use Civi\Funding\IJB\Application\Actions\IJBApplicationSubmitActionsContainer;
-use Civi\Funding\IJB\Application\Actions\IJBApplicationSubmitActionsFactory;
-use Civi\Funding\IJB\Application\Data\IJBApplicationFormDataFactory;
-use Civi\Funding\IJB\Application\Data\IJBApplicationFormFilesFactory;
-use Civi\Funding\IJB\Application\Data\IJBProjektunterlagenFactory;
-use Civi\Funding\IJB\Application\JsonSchema\IJBApplicationJsonSchemaFactory;
-use Civi\Funding\IJB\Application\UiSchema\IJBApplicationUiSchemaFactory;
-use Civi\Funding\IJB\EventSubscriber\IJBAngularModuleSubscriber;
-use Civi\Funding\IJB\FundingCase\Actions\IJBCaseActionsDeterminer;
-use Civi\Funding\IJB\IJBMetaData;
-use Civi\Funding\IJB\Report\IJBReportDataLoader;
-use Civi\Funding\IJB\Report\IJBReportFormFactory;
+use Civi\Funding\FundingCaseTypes\AuL\IJB\Application\Actions\IJBApplicationActionsDeterminer;
+use Civi\Funding\FundingCaseTypes\AuL\IJB\Application\Actions\IJBApplicationActionStatusInfo;
+use Civi\Funding\FundingCaseTypes\AuL\IJB\Application\Actions\IJBApplicationStatusDeterminer;
+use Civi\Funding\FundingCaseTypes\AuL\IJB\Application\Actions\IJBApplicationSubmitActionsContainer;
+use Civi\Funding\FundingCaseTypes\AuL\IJB\Application\Actions\IJBApplicationSubmitActionsFactory;
+use Civi\Funding\FundingCaseTypes\AuL\IJB\Application\Data\IJBApplicationFormDataFactory;
+use Civi\Funding\FundingCaseTypes\AuL\IJB\Application\Data\IJBApplicationFormFilesFactory;
+use Civi\Funding\FundingCaseTypes\AuL\IJB\Application\Data\IJBProjektunterlagenFactory;
+use Civi\Funding\FundingCaseTypes\AuL\IJB\Application\JsonSchema\IJBApplicationJsonSchemaFactory;
+use Civi\Funding\FundingCaseTypes\AuL\IJB\Application\UiSchema\IJBApplicationUiSchemaFactory;
+use Civi\Funding\FundingCaseTypes\AuL\IJB\EventSubscriber\IJBAngularModuleSubscriber;
+use Civi\Funding\FundingCaseTypes\AuL\IJB\FundingCase\Actions\IJBCaseActionsDeterminer;
+use Civi\Funding\FundingCaseTypes\AuL\IJB\IJBMetaData;
+use Civi\Funding\FundingCaseTypes\AuL\IJB\Report\IJBReportDataLoader;
+use Civi\Funding\FundingCaseTypes\AuL\IJB\Report\IJBReportFormFactory;
 
 $container->autowire(IJBMetaData::class)
   ->addTag(FundingCaseTypeMetaDataInterface::class);
@@ -77,8 +77,8 @@ $container->autowire(IJBReportFormFactory::class)
 
 TaskServiceRegistrator::autowireAll(
   $container,
-  __DIR__ . '/../Civi/Funding/IJB/Task',
-  'Civi\\Funding\\IJB\\Task'
+  __DIR__ . '/../Civi/Funding/FundingCaseTypes/AuL/IJB/Task',
+  'Civi\\Funding\\FundingCaseTypes\\AuL\\IJB\\Task'
 );
 
 $container->autowire(IJBAngularModuleSubscriber::class)

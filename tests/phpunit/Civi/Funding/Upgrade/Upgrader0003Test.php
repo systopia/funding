@@ -22,7 +22,7 @@ namespace Civi\Funding\Upgrade;
 use Civi\Api4\FundingApplicationResourcesItem;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Fixtures\ApplicationProcessBundleFixture;
-use Civi\Funding\SammelantragKurs\KursConstants;
+use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\KursConstants;
 
 /**
  * @covers \Civi\Funding\Upgrade\Upgrader0003

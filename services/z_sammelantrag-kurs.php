@@ -24,27 +24,27 @@ declare(strict_types = 1);
 
 use Civi\Funding\DependencyInjection\Util\TaskServiceRegistrator;
 use Civi\Funding\FundingCaseType\MetaData\FundingCaseTypeMetaDataInterface;
-use Civi\Funding\SammelantragKurs\Application\Actions\KursApplicationActionsDeterminer;
-use Civi\Funding\SammelantragKurs\Application\Actions\KursApplicationActionStatusInfo;
-use Civi\Funding\SammelantragKurs\Application\Actions\KursApplicationStatusDeterminer;
-use Civi\Funding\SammelantragKurs\Application\Actions\KursApplicationSubmitActionsContainer;
-use Civi\Funding\SammelantragKurs\Application\Actions\KursApplicationSubmitActionsFactory;
-use Civi\Funding\SammelantragKurs\Application\Data\KursApplicationFormDataFactory;
-use Civi\Funding\SammelantragKurs\Application\Data\KursApplicationFormFilesFactory;
-use Civi\Funding\SammelantragKurs\Application\JsonSchema\KursApplicationJsonSchemaFactory;
-use Civi\Funding\SammelantragKurs\Application\UiSchema\KursApplicationUiSchemaFactory;
-use Civi\Funding\SammelantragKurs\EventSubscriber\KursAngularModuleSubscriber;
-use Civi\Funding\SammelantragKurs\EventSubscriber\KursApplicationStatusSubscriber;
-use Civi\Funding\SammelantragKurs\FundingCase\Actions\KursCaseActionsDeterminer;
-use Civi\Funding\SammelantragKurs\FundingCase\Actions\KursCaseSubmitActionsContainer;
-use Civi\Funding\SammelantragKurs\FundingCase\Actions\KursCaseSubmitActionsFactory;
-use Civi\Funding\SammelantragKurs\FundingCase\Data\KursCaseFormDataFactory;
-use Civi\Funding\SammelantragKurs\FundingCase\JsonSchema\KursCaseJsonSchemaFactory;
-use Civi\Funding\SammelantragKurs\FundingCase\UiSchema\KursCaseUiSchemaFactory;
-use Civi\Funding\SammelantragKurs\FundingCase\Validation\KursCaseValidator;
-use Civi\Funding\SammelantragKurs\KursMetaData;
-use Civi\Funding\SammelantragKurs\Report\KursReportDataLoader;
-use Civi\Funding\SammelantragKurs\Report\KursReportFormFactory;
+use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Application\Actions\KursApplicationActionsDeterminer;
+use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Application\Actions\KursApplicationActionStatusInfo;
+use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Application\Actions\KursApplicationStatusDeterminer;
+use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Application\Actions\KursApplicationSubmitActionsContainer;
+use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Application\Actions\KursApplicationSubmitActionsFactory;
+use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Application\Data\KursApplicationFormDataFactory;
+use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Application\Data\KursApplicationFormFilesFactory;
+use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Application\JsonSchema\KursApplicationJsonSchemaFactory;
+use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Application\UiSchema\KursApplicationUiSchemaFactory;
+use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\EventSubscriber\KursAngularModuleSubscriber;
+use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\EventSubscriber\KursApplicationStatusSubscriber;
+use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\FundingCase\Actions\KursCaseActionsDeterminer;
+use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\FundingCase\Actions\KursCaseSubmitActionsContainer;
+use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\FundingCase\Actions\KursCaseSubmitActionsFactory;
+use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\FundingCase\Data\KursCaseFormDataFactory;
+use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\FundingCase\JsonSchema\KursCaseJsonSchemaFactory;
+use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\FundingCase\UiSchema\KursCaseUiSchemaFactory;
+use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\FundingCase\Validation\KursCaseValidator;
+use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\KursMetaData;
+use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Report\KursReportDataLoader;
+use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Report\KursReportFormFactory;
 use Symfony\Component\DependencyInjection\Reference;
 
 $container->autowire(KursMetaData::class)
@@ -87,8 +87,8 @@ $container->autowire(KursApplicationFormFilesFactory::class)
 
 TaskServiceRegistrator::autowireAll(
   $container,
-  __DIR__ . '/../Civi/Funding/SammelantragKurs/Task',
-  'Civi\\Funding\\SammelantragKurs\\Task'
+  __DIR__ . '/../Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/Task',
+  'Civi\\Funding\\FundingCaseTypes\\AuL\\SammelantragKurs\\Task'
 );
 
 $container->autowire(KursAngularModuleSubscriber::class)

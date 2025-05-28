@@ -28,7 +28,7 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandlerIn
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandlerInterface;
-use Civi\Funding\SammelantragKurs\KursConstants;
+use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\KursConstants;
 use Civi\RemoteTools\Api4\Query\Comparison;
 
 final class Upgrader0003 implements UpgraderInterface {
