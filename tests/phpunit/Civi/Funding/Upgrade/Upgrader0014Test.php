@@ -19,9 +19,9 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Upgrade;
 
-use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Api4\FundingClearingProcess;
-use Civi\Funding\Fixtures\Traits\ClearingProcessFixturesTrait;
+use Civi\Funding\AbstractFundingHeadlessTestCase;
+use Civi\Funding\Fixtures\ClearingProcessBundleFixture;
 
 /**
  * @covers \Civi\Funding\Upgrade\Upgrader0014
@@ -30,10 +30,8 @@ use Civi\Funding\Fixtures\Traits\ClearingProcessFixturesTrait;
  */
 final class Upgrader0014Test extends AbstractFundingHeadlessTestCase {
 
-  use ClearingProcessFixturesTrait;
-
   public function testExecute(): void {
-    $this->addFixtures([
+    $clearingProcessBundle = ClearingProcessBundleFixture::create([
       'report_data' => [
         'grunddaten' => [
           'zeitraeume' => [
@@ -58,12 +56,12 @@ final class Upgrader0014Test extends AbstractFundingHeadlessTestCase {
 
     $clearingProcess = FundingClearingProcess::get(FALSE)
       ->addSelect('start_date', 'end_date')
-      ->addWhere('id', '=', $this->clearingProcessBundle->getClearingProcess()->getId())
+      ->addWhere('id', '=', $clearingProcessBundle->getClearingProcess()->getId())
       ->execute()
       ->single();
 
-    static::assertSame('2024-03-04', $clearingProcess['start_date']);
-    static::assertSame('2024-04-05', $clearingProcess['end_date']);
+    static::assertSame('2024-03-04 00:00:00', $clearingProcess['start_date']);
+    static::assertSame('2024-04-05 00:00:00', $clearingProcess['end_date']);
   }
 
 }

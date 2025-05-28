@@ -38,8 +38,8 @@ final class Upgrader0014 implements UpgraderInterface {
 
     $clearingProcesses = $this->api4->execute(FundingClearingProcess::getEntityName(), 'get', [
       'select' => [
-        'id', '
-        report_data',
+        'id',
+        'report_data',
       ],
       'where' => [
         ['status', '!=', 'not-started'],
@@ -48,11 +48,10 @@ final class Upgrader0014 implements UpgraderInterface {
 
     /** @phpstan-var array{id: int, report_data: array<string, mixed>} $clearingProcess */
     foreach ($clearingProcesses as $clearingProcess) {
-      /** @phpstan-ignore offsetAccess.nonOffsetAccessible */
+      /** @phpstan-var list<array{beginn: string, ende: string}> $dateRanges */
+      // @phpstan-ignore offsetAccess.nonOffsetAccessible
       $dateRanges = $clearingProcess['report_data']['grunddaten']['zeitraeume'] ?? [];
-      /** @phpstan-ignore offsetAccess.nonOffsetAccessible,offsetAccess.nonOffsetAccessible */
       $startDate = $dateRanges[0]['beginn'] ?? NULL;
-      /** @phpstan-ignore argument.type,offsetAccess.nonOffsetAccessible */
       $endDate = end($dateRanges)['ende'] ?? NULL;
 
       if (NULL !== $startDate || NULL !== $endDate) {

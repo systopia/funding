@@ -154,6 +154,7 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
 
   public function upgrade_0014(): bool {
     $this->ctx->log->info('Applying database migration 0014');
+    $this->executeSqlFile('sql/upgrade/0014.sql');
 
     /** @var \Civi\Funding\Upgrade\Upgrader0014 $upgrader */
     $upgrader = \Civi::service(Upgrader0014::class);

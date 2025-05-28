@@ -11,7 +11,7 @@
 --
 -- /*******************************************************
 -- *
--- * Clean up the existing tables - this section generated from drop.tpl
+-- * Clean up the existing tables - this section generated from file:drop.tpl
 -- *
 -- *******************************************************/
 
@@ -43,6 +43,7 @@ DROP TABLE IF EXISTS `civicrm_funding_program`;
 DROP TABLE IF EXISTS `civicrm_funding_case_type`;
 
 SET FOREIGN_KEY_CHECKS=1;
+
 -- /*******************************************************
 -- *
 -- * Create new tables
@@ -64,8 +65,7 @@ CREATE TABLE `civicrm_funding_case_type` (
   `properties` text NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `index_title`(title),
-  UNIQUE INDEX `index_abbreviation`(abbreviation)
-)
+  UNIQUE INDEX `index_abbreviation`(abbreviation))
 ENGINE=InnoDB;
 
 -- /*******************************************************
@@ -86,8 +86,7 @@ CREATE TABLE `civicrm_funding_program` (
   `budget` decimal(10,2) NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `index_title`(title),
-  UNIQUE INDEX `index_abbreviation`(abbreviation)
-)
+  UNIQUE INDEX `index_abbreviation`(abbreviation))
 ENGINE=InnoDB;
 
 -- /*******************************************************
@@ -104,8 +103,7 @@ CREATE TABLE `civicrm_funding_program_contact_relation` (
   `properties` text NOT NULL,
   `permissions` varchar(512) NOT NULL COMMENT 'Permissions as JSON array',
   PRIMARY KEY (`id`),
-  CONSTRAINT FK_civicrm_funding_program_contact_relation_funding_program_id FOREIGN KEY (`funding_program_id`) REFERENCES `civicrm_funding_program`(`id`) ON DELETE CASCADE
-)
+  CONSTRAINT FK_civicrm_funding_program_contact_relation_funding_program_id FOREIGN KEY (`funding_program_id`) REFERENCES `civicrm_funding_program`(`id`) ON DELETE CASCADE)
 ENGINE=InnoDB;
 
 -- /*******************************************************
@@ -122,8 +120,7 @@ CREATE TABLE `civicrm_funding_program_relationship` (
   `type` varchar(64) NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT FK_civicrm_funding_program_relationship_id_a FOREIGN KEY (`id_a`) REFERENCES `civicrm_funding_program`(`id`) ON DELETE CASCADE,
-  CONSTRAINT FK_civicrm_funding_program_relationship_id_b FOREIGN KEY (`id_b`) REFERENCES `civicrm_funding_program`(`id`) ON DELETE CASCADE
-)
+  CONSTRAINT FK_civicrm_funding_program_relationship_id_b FOREIGN KEY (`id_b`) REFERENCES `civicrm_funding_program`(`id`) ON DELETE CASCADE)
 ENGINE=InnoDB;
 
 -- /*******************************************************
@@ -139,8 +136,7 @@ CREATE TABLE `civicrm_funding_recipient_contact_relation` (
   `type` varchar(255) NOT NULL,
   `properties` text NOT NULL,
   PRIMARY KEY (`id`),
-  CONSTRAINT FK_civicrm_funding_recipient_contact_relation_funding_program_id FOREIGN KEY (`funding_program_id`) REFERENCES `civicrm_funding_program`(`id`) ON DELETE CASCADE
-)
+  CONSTRAINT FK_civicrm_funding_recipient_contact_relation_funding_program_id FOREIGN KEY (`funding_program_id`) REFERENCES `civicrm_funding_program`(`id`) ON DELETE CASCADE)
 ENGINE=InnoDB;
 
 -- /*******************************************************
@@ -157,8 +153,7 @@ CREATE TABLE `civicrm_funding_application_civioffice_template` (
   `label` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `UI_case_type_id_label`(case_type_id, label),
-  CONSTRAINT FK_civicrm_funding_application_civioffice_template_case_type_id FOREIGN KEY (`case_type_id`) REFERENCES `civicrm_funding_case_type`(`id`) ON DELETE CASCADE
-)
+  CONSTRAINT FK_civicrm_funding_application_civioffice_template_case_type_id FOREIGN KEY (`case_type_id`) REFERENCES `civicrm_funding_case_type`(`id`) ON DELETE CASCADE)
 ENGINE=InnoDB;
 
 -- /*******************************************************
@@ -183,8 +178,7 @@ CREATE TABLE `civicrm_funding_case` (
   CONSTRAINT FK_civicrm_funding_case_funding_program_id FOREIGN KEY (`funding_program_id`) REFERENCES `civicrm_funding_program`(`id`) ON DELETE RESTRICT,
   CONSTRAINT FK_civicrm_funding_case_funding_case_type_id FOREIGN KEY (`funding_case_type_id`) REFERENCES `civicrm_funding_case_type`(`id`) ON DELETE RESTRICT,
   CONSTRAINT FK_civicrm_funding_case_creation_contact_id FOREIGN KEY (`creation_contact_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE RESTRICT,
-  CONSTRAINT FK_civicrm_funding_case_recipient_contact_id FOREIGN KEY (`recipient_contact_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE RESTRICT
-)
+  CONSTRAINT FK_civicrm_funding_case_recipient_contact_id FOREIGN KEY (`recipient_contact_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE RESTRICT)
 ENGINE=InnoDB;
 
 -- /*******************************************************
@@ -201,8 +195,7 @@ CREATE TABLE `civicrm_funding_case_contact_relation` (
   `properties` text NOT NULL,
   `permissions` varchar(512) NOT NULL COMMENT 'Permissions as JSON array',
   PRIMARY KEY (`id`),
-  CONSTRAINT FK_civicrm_funding_case_contact_relation_funding_case_id FOREIGN KEY (`funding_case_id`) REFERENCES `civicrm_funding_case`(`id`) ON DELETE CASCADE
-)
+  CONSTRAINT FK_civicrm_funding_case_contact_relation_funding_case_id FOREIGN KEY (`funding_case_id`) REFERENCES `civicrm_funding_case`(`id`) ON DELETE CASCADE)
 ENGINE=InnoDB;
 
 -- /*******************************************************
@@ -220,8 +213,7 @@ CREATE TABLE `civicrm_funding_case_permissions_cache` (
   `permissions` text COMMENT 'Permissions as JSON array. If NULL they have to be determined.',
   PRIMARY KEY (`id`),
   UNIQUE INDEX `UI_funding_case_id_contact_id_is_remote`(funding_case_id, contact_id, is_remote),
-  CONSTRAINT FK_civicrm_funding_case_permissions_cache_funding_case_id FOREIGN KEY (`funding_case_id`) REFERENCES `civicrm_funding_case`(`id`) ON DELETE CASCADE
-)
+  CONSTRAINT FK_civicrm_funding_case_permissions_cache_funding_case_id FOREIGN KEY (`funding_case_id`) REFERENCES `civicrm_funding_case`(`id`) ON DELETE CASCADE)
 ENGINE=InnoDB;
 
 -- /*******************************************************
@@ -237,8 +229,7 @@ CREATE TABLE `civicrm_funding_case_type_program` (
   `funding_case_type_id` int unsigned NOT NULL COMMENT 'FK to FundingCaseType',
   PRIMARY KEY (`id`),
   CONSTRAINT FK_civicrm_funding_case_type_program_funding_program_id FOREIGN KEY (`funding_program_id`) REFERENCES `civicrm_funding_program`(`id`) ON DELETE CASCADE,
-  CONSTRAINT FK_civicrm_funding_case_type_program_funding_case_type_id FOREIGN KEY (`funding_case_type_id`) REFERENCES `civicrm_funding_case_type`(`id`) ON DELETE RESTRICT
-)
+  CONSTRAINT FK_civicrm_funding_case_type_program_funding_case_type_id FOREIGN KEY (`funding_case_type_id`) REFERENCES `civicrm_funding_case_type`(`id`) ON DELETE RESTRICT)
 ENGINE=InnoDB;
 
 -- /*******************************************************
@@ -255,8 +246,7 @@ CREATE TABLE `civicrm_funding_new_case_permissions` (
   `properties` text NOT NULL,
   `permissions` varchar(512) NOT NULL COMMENT 'Permissions as JSON array',
   PRIMARY KEY (`id`),
-  CONSTRAINT FK_civicrm_funding_new_case_permissions_funding_program_id FOREIGN KEY (`funding_program_id`) REFERENCES `civicrm_funding_program`(`id`) ON DELETE CASCADE
-)
+  CONSTRAINT FK_civicrm_funding_new_case_permissions_funding_program_id FOREIGN KEY (`funding_program_id`) REFERENCES `civicrm_funding_program`(`id`) ON DELETE CASCADE)
 ENGINE=InnoDB;
 
 -- /*******************************************************
@@ -270,8 +260,7 @@ CREATE TABLE `civicrm_funding_payout_process` (
   `status` varchar(64) NOT NULL,
   `amount_total` decimal(10,2),
   PRIMARY KEY (`id`),
-  CONSTRAINT FK_civicrm_funding_payout_process_funding_case_id FOREIGN KEY (`funding_case_id`) REFERENCES `civicrm_funding_case`(`id`) ON DELETE CASCADE
-)
+  CONSTRAINT FK_civicrm_funding_payout_process_funding_case_id FOREIGN KEY (`funding_case_id`) REFERENCES `civicrm_funding_case`(`id`) ON DELETE CASCADE)
 ENGINE=InnoDB;
 
 -- /*******************************************************
@@ -288,8 +277,8 @@ CREATE TABLE `civicrm_funding_application_process` (
   `modification_date` timestamp NOT NULL,
   `title` varchar(255) NOT NULL,
   `short_description` varchar(500) NOT NULL,
-  `start_date` timestamp NULL,
-  `end_date` timestamp NULL,
+  `start_date` timestamp NULL COMMENT 'Scheduled start of the activity',
+  `end_date` timestamp NULL COMMENT 'Scheduled end of the activity',
   `request_data` text NOT NULL,
   `amount_requested` decimal(10,2) NOT NULL,
   `is_review_content` tinyint NULL,
@@ -308,8 +297,7 @@ CREATE TABLE `civicrm_funding_application_process` (
   INDEX `index_is_withdrawn`(is_withdrawn),
   CONSTRAINT FK_civicrm_funding_application_process_funding_case_id FOREIGN KEY (`funding_case_id`) REFERENCES `civicrm_funding_case`(`id`) ON DELETE CASCADE,
   CONSTRAINT FK_civicrm_funding_application_process_reviewer_cont_contact_id FOREIGN KEY (`reviewer_cont_contact_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE RESTRICT,
-  CONSTRAINT FK_civicrm_funding_application_process_reviewer_calc_contact_id FOREIGN KEY (`reviewer_calc_contact_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE RESTRICT
-)
+  CONSTRAINT FK_civicrm_funding_application_process_reviewer_calc_contact_id FOREIGN KEY (`reviewer_calc_contact_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE RESTRICT)
 ENGINE=InnoDB;
 
 -- /*******************************************************
@@ -327,8 +315,7 @@ CREATE TABLE `civicrm_funding_app_resources_item` (
   `data_pointer` varchar(255) NOT NULL COMMENT 'JSON pointer to data in application data',
   PRIMARY KEY (`id`),
   UNIQUE INDEX `index_identifier_application_process_id`(identifier, application_process_id),
-  CONSTRAINT FK_civicrm_funding_app_resources_item_application_process_id FOREIGN KEY (`application_process_id`) REFERENCES `civicrm_funding_application_process`(`id`) ON DELETE CASCADE
-)
+  CONSTRAINT FK_civicrm_funding_app_resources_item_application_process_id FOREIGN KEY (`application_process_id`) REFERENCES `civicrm_funding_application_process`(`id`) ON DELETE CASCADE)
 ENGINE=InnoDB;
 
 -- /*******************************************************
@@ -359,8 +346,7 @@ CREATE TABLE `civicrm_funding_application_snapshot` (
   `is_withdrawn` tinyint NOT NULL,
   `custom_fields` mediumtext NOT NULL,
   PRIMARY KEY (`id`),
-  CONSTRAINT FK_civicrm_funding_application_snapshot_application_process_id FOREIGN KEY (`application_process_id`) REFERENCES `civicrm_funding_application_process`(`id`) ON DELETE RESTRICT
-)
+  CONSTRAINT FK_civicrm_funding_application_snapshot_application_process_id FOREIGN KEY (`application_process_id`) REFERENCES `civicrm_funding_application_process`(`id`) ON DELETE RESTRICT)
 ENGINE=InnoDB;
 
 -- /*******************************************************
@@ -374,6 +360,8 @@ CREATE TABLE `civicrm_funding_clearing_process` (
   `status` varchar(64) NOT NULL,
   `creation_date` timestamp NULL COMMENT 'Start of the clearing. (Not date of entity creation.)',
   `modification_date` timestamp NULL,
+  `start_date` timestamp NULL COMMENT 'Actual start of the activity',
+  `end_date` timestamp NULL COMMENT 'Actual end of the activity',
   `report_data` text NOT NULL,
   `is_review_content` tinyint NULL,
   `reviewer_cont_contact_id` int unsigned NULL COMMENT 'FK to Contact',
@@ -383,8 +371,7 @@ CREATE TABLE `civicrm_funding_clearing_process` (
   UNIQUE INDEX `UI_application_process_id`(application_process_id),
   CONSTRAINT FK_civicrm_funding_clearing_process_application_process_id FOREIGN KEY (`application_process_id`) REFERENCES `civicrm_funding_application_process`(`id`) ON DELETE CASCADE,
   CONSTRAINT FK_civicrm_funding_clearing_process_reviewer_cont_contact_id FOREIGN KEY (`reviewer_cont_contact_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE RESTRICT,
-  CONSTRAINT FK_civicrm_funding_clearing_process_reviewer_calc_contact_id FOREIGN KEY (`reviewer_calc_contact_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE RESTRICT
-)
+  CONSTRAINT FK_civicrm_funding_clearing_process_reviewer_calc_contact_id FOREIGN KEY (`reviewer_calc_contact_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE RESTRICT)
 ENGINE=InnoDB;
 
 -- /*******************************************************
@@ -409,8 +396,7 @@ CREATE TABLE `civicrm_funding_clearing_resources_item` (
   PRIMARY KEY (`id`),
   CONSTRAINT FK_civicrm_funding_clearing_resources_item_clearing_process_id FOREIGN KEY (`clearing_process_id`) REFERENCES `civicrm_funding_clearing_process`(`id`) ON DELETE RESTRICT,
   CONSTRAINT FK_civicrm_funding_clearing_resources_item_app_resources_item_id FOREIGN KEY (`app_resources_item_id`) REFERENCES `civicrm_funding_app_resources_item`(`id`) ON DELETE CASCADE,
-  CONSTRAINT FK_civicrm_funding_clearing_resources_item_file_id FOREIGN KEY (`file_id`) REFERENCES `civicrm_file`(`id`) ON DELETE RESTRICT
-)
+  CONSTRAINT FK_civicrm_funding_clearing_resources_item_file_id FOREIGN KEY (`file_id`) REFERENCES `civicrm_file`(`id`) ON DELETE RESTRICT)
 ENGINE=InnoDB;
 
 -- /*******************************************************
@@ -433,8 +419,7 @@ CREATE TABLE `civicrm_funding_drawdown` (
   INDEX `index_status`(status),
   CONSTRAINT FK_civicrm_funding_drawdown_payout_process_id FOREIGN KEY (`payout_process_id`) REFERENCES `civicrm_funding_payout_process`(`id`) ON DELETE CASCADE,
   CONSTRAINT FK_civicrm_funding_drawdown_requester_contact_id FOREIGN KEY (`requester_contact_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE RESTRICT,
-  CONSTRAINT FK_civicrm_funding_drawdown_reviewer_contact_id FOREIGN KEY (`reviewer_contact_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE RESTRICT
-)
+  CONSTRAINT FK_civicrm_funding_drawdown_reviewer_contact_id FOREIGN KEY (`reviewer_contact_id`) REFERENCES `civicrm_contact`(`id`) ON DELETE RESTRICT)
 ENGINE=InnoDB;
 
 -- /*******************************************************
@@ -452,8 +437,7 @@ CREATE TABLE `civicrm_funding_app_cost_item` (
   `data_pointer` varchar(255) NOT NULL COMMENT 'JSON pointer to data in application data',
   PRIMARY KEY (`id`),
   UNIQUE INDEX `index_identifier_application_process_id`(identifier, application_process_id),
-  CONSTRAINT FK_civicrm_funding_app_cost_item_application_process_id FOREIGN KEY (`application_process_id`) REFERENCES `civicrm_funding_application_process`(`id`) ON DELETE CASCADE
-)
+  CONSTRAINT FK_civicrm_funding_app_cost_item_application_process_id FOREIGN KEY (`application_process_id`) REFERENCES `civicrm_funding_application_process`(`id`) ON DELETE CASCADE)
 ENGINE=InnoDB;
 
 -- /*******************************************************
@@ -478,6 +462,5 @@ CREATE TABLE `civicrm_funding_clearing_cost_item` (
   PRIMARY KEY (`id`),
   CONSTRAINT FK_civicrm_funding_clearing_cost_item_clearing_process_id FOREIGN KEY (`clearing_process_id`) REFERENCES `civicrm_funding_clearing_process`(`id`) ON DELETE RESTRICT,
   CONSTRAINT FK_civicrm_funding_clearing_cost_item_application_cost_item_id FOREIGN KEY (`application_cost_item_id`) REFERENCES `civicrm_funding_app_cost_item`(`id`) ON DELETE CASCADE,
-  CONSTRAINT FK_civicrm_funding_clearing_cost_item_file_id FOREIGN KEY (`file_id`) REFERENCES `civicrm_file`(`id`) ON DELETE RESTRICT
-)
+  CONSTRAINT FK_civicrm_funding_clearing_cost_item_file_id FOREIGN KEY (`file_id`) REFERENCES `civicrm_file`(`id`) ON DELETE RESTRICT)
 ENGINE=InnoDB;
