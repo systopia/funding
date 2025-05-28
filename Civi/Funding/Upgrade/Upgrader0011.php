@@ -148,6 +148,8 @@ final class Upgrader0011 implements UpgraderInterface {
         'status' => 'not-started',
         'creation_date' => NULL,
         'modification_date' => NULL,
+        'start_date' => NULL,
+        'end_date' => NULL,
         'report_data' => [],
         'is_review_content' => NULL,
         'reviewer_cont_contact_id' => NULL,

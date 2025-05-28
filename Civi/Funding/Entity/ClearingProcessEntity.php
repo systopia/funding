@@ -26,6 +26,8 @@ namespace Civi\Funding\Entity;
  *   status: string,
  *   creation_date: string|null,
  *   modification_date: string|null,
+ *   start_date: string|null,
+ *   end_date: string|null,
  *   report_data: array<int|string, mixed>,
  *   is_review_content: bool|null,
  *   reviewer_cont_contact_id: int|null,
@@ -69,6 +71,26 @@ final class ClearingProcessEntity extends AbstractEntity {
 
   public function setModificationDate(\DateTimeInterface $modificationDate): self {
     $this->values['modification_date'] = static::toDateTimeStr($modificationDate);
+
+    return $this;
+  }
+
+  public function getStartDate(): ?\DateTimeInterface {
+    return static::toDateTimeOrNull($this->values['start_date']);
+  }
+
+  public function setStartDate(\DateTimeInterface $startDate): self {
+    $this->values['start_date'] = static::toDateTimeStr($startDate);
+
+    return $this;
+  }
+
+  public function getEndDate(): ?\DateTimeInterface {
+    return static::toDateTimeOrNull($this->values['end_date']);
+  }
+
+  public function setEndDate(\DateTimeInterface $endDate): self {
+    $this->values['end_date'] = static::toDateTimeStr($endDate);
 
     return $this;
   }

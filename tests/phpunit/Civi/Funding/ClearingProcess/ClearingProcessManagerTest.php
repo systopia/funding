@@ -81,6 +81,8 @@ final class ClearingProcessManagerTest extends TestCase {
       'status' => 'not-started',
       'creation_date' => NULL,
       'modification_date' => NULL,
+      'start_date' => NULL,
+      'end_date' => NULL,
     ]);
 
     $expectedDispatchCalls = [
@@ -139,6 +141,8 @@ final class ClearingProcessManagerTest extends TestCase {
       'status' => 'not-started',
       'creation_date' => NULL,
       'modification_date' => NULL,
+      'start_date' => NULL,
+      'end_date' => NULL,
     ]);
     $clearingProcess = $clearingProcessBundle->getClearingProcess();
     $previousClearingProcess = clone $clearingProcess;
@@ -176,6 +180,8 @@ final class ClearingProcessManagerTest extends TestCase {
         'status' => 'draft',
         'creation_date' => date('Y-m-d H:i:s'),
         'modification_date' => date('Y-m-d H:i:s'),
+        'start_date' => NULL,
+        'end_date' => NULL,
       ] + $clearingProcess->toArray()
     );
 
