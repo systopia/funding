@@ -36,6 +36,8 @@ final class ClearingProcessFixture {
         'status' => 'draft',
         'creation_date' => date('Y-m-d H:i:s'),
         'modification_date' => date('Y-m-d H:i:s'),
+        'start_date' => NULL,
+        'end_date' => NULL,
         'report_data' => [],
         'is_review_content' => NULL,
         'reviewer_cont_contact_id' => NULL,
