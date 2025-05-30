@@ -36,6 +36,8 @@ final class DeleteAction extends DAODeleteAction {
    * @phpstan-return list<array{id: int}>
    *
    * @throws \CRM_Core_Exception
+   *
+   * @phpstan-ignore method.childParameterType
    */
   protected function deleteObjects($items): array {
     foreach ($items as $item) {
