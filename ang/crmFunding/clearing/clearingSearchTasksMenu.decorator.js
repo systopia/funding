@@ -68,11 +68,9 @@ fundingModule.directive('fundingClearingTasksDecorator', function() {
 
         let searchKitTasks;
         taskManager.getMetadata().then(() => {
-          taskManager.entityInfo = {
-            title: ts('Clearing'),
-            title_plural: ts('Clearings'),
-          };
-
+          taskManager.entityInfo = taskManager.entityInfo || {};
+          taskManager.entityInfo.title = ts('Clearing');
+          taskManager.entityInfo.title_plural = ts('Clearings');
           searchKitTasks = taskManager.tasks;
         });
 
