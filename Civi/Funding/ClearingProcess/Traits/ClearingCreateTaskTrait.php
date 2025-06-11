@@ -38,7 +38,12 @@ trait ClearingCreateTaskTrait {
       'funding_case_id' => $clearingProcessBundle->getFundingCase()->getId(),
       'application_process_id' => $clearingProcessBundle->getApplicationProcess()->getId(),
       'clearing_process_id' => $clearingProcessBundle->getClearingProcess()->getId(),
+      'due_date' => $this->getDueDate($clearingProcessBundle),
     ]);
+  }
+
+  protected function getDueDate(ClearingProcessEntityBundle $clearingProcessBundle): ?\DateTimeInterface {
+    return NULL;
   }
 
   /**

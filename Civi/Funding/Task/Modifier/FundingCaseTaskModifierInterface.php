@@ -23,7 +23,15 @@ use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingTaskEntity;
 
+/**
+ * @phpstan-import-type taskNameT from \Civi\Funding\ActivityTypeNames
+ */
 interface FundingCaseTaskModifierInterface {
+
+  /**
+   * @phpstan-return taskNameT
+   */
+  public function getActivityTypeName(): string;
 
   public function modifyTask(
     FundingTaskEntity $task,

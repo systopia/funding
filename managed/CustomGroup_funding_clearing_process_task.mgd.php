@@ -45,6 +45,7 @@ return [
         'data_type' => 'EntityReference',
         'html_type' => 'Autocomplete-Select',
         'is_required' => TRUE,
+        'is_searchable' => TRUE,
         'text_length' => 255,
         'note_columns' => 60,
         'note_rows' => 4,

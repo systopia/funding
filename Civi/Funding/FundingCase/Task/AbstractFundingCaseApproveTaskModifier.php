@@ -25,7 +25,7 @@ use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingTaskEntity;
 use Civi\Funding\FundingCase\FundingCaseStatus;
 use Civi\Funding\FundingCase\Traits\FundingCaseApproveTaskTrait;
-use Civi\Funding\Task\Modifier\FundingCaseTaskModifierInterface;
+use Civi\Funding\Task\Modifier\AbstractFundingCaseTaskModifier;
 
 /**
  * Completes an apply funding case task if there's no remaining application
@@ -34,7 +34,7 @@ use Civi\Funding\Task\Modifier\FundingCaseTaskModifierInterface;
  * Should be combined with:
  * @see \Civi\Funding\FundingCase\Task\AbstractFundingCaseApproveTaskCreator
  */
-abstract class AbstractFundingCaseApproveTaskModifier implements FundingCaseTaskModifierInterface {
+abstract class AbstractFundingCaseApproveTaskModifier extends AbstractFundingCaseTaskModifier {
 
   use FundingCaseApproveTaskTrait;
 
