@@ -21,9 +21,12 @@ namespace Civi\Funding\FundingCaseTypes\AuL\IJB\Task;
 
 use Civi\Funding\ClearingProcess\Task\AbstractClearingApplyTaskHandler;
 use Civi\Funding\FundingCaseTypes\AuL\IJB\Traits\IJBSupportedFundingCaseTypesTrait;
+use Civi\Funding\FundingCaseTypes\AuL\Traits\Task\AuLClearingTaskCreateDueDateTrait;
 
 final class IJBClearingApplyTaskHandler extends AbstractClearingApplyTaskHandler {
 
   use IJBSupportedFundingCaseTypesTrait;
+
+  use AuLClearingTaskCreateDueDateTrait;
 
 }

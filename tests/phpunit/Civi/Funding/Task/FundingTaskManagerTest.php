@@ -10,6 +10,7 @@ use Civi\Funding\ActivityTypeNames;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\FundingTaskFactory;
 use Civi\RemoteTools\Api4\Api4Interface;
+use Civi\RemoteTools\Api4\Query\Comparison;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -124,7 +125,7 @@ final class FundingTaskManagerTest extends TestCase {
     static::assertNotSame($newTask, $result);
   }
 
-  public function getOpenTasks(): void {
+  public function testGetOpenTask(): void {
     $existingTask = FundingTaskFactory::create([
       'subject' => 'Existing Task',
       'activity_type_id:name' => ActivityTypeNames::FUNDING_CASE_TASK,
@@ -138,40 +139,65 @@ final class FundingTaskManagerTest extends TestCase {
         'useAssigneeFilter' => FALSE,
         'statusType' => ActivityStatusTypes::INCOMPLETE,
         'where' => [
-          ['source_record_id', '=', FundingCaseFactory::DEFAULT_ID],
-          ['activity_type_id:name', '=', ActivityTypeNames::FUNDING_CASE_TASK],
-        ],
-      ])->willReturn(new Result([$existingTask->toPersistArray()]));
-
-    $tasks = $this->taskManager->getOpenTasks(ActivityTypeNames::APPLICATION_PROCESS_TASK, 123);
-    static::assertEquals([$existingTask->toArray()], $tasks);
-  }
-
-  public function getOpenTask(): void {
-    $existingTask = FundingTaskFactory::create([
-      'subject' => 'Existing Task',
-      'activity_type_id:name' => ActivityTypeNames::FUNDING_CASE_TASK,
-      'type' => 'test',
-      'required_permissions' => ['some_permission'],
-    ]);
-
-    $this->api4Mock->expects(static::once())->method('execute')
-      ->with(FundingTask::getEntityName(), 'get', [
-        'ignoreCasePermissions' => TRUE,
-        'useAssigneeFilter' => FALSE,
-        'statusType' => ActivityStatusTypes::INCOMPLETE,
-        'where' => [
-          ['source_record_id', '=', FundingCaseFactory::DEFAULT_ID],
-          ['activity_type_id:name', '=', ActivityTypeNames::FUNDING_CASE_TASK],
+          ['activity_type_id:name', '=', ActivityTypeNames::APPLICATION_PROCESS_TASK],
           ['funding_case_task.type', '=', 'test'],
+          ['source_record_id', '=', 123],
         ],
         'orderBy' => ['id' => 'DESC'],
         'limit' => 1,
       ])->willReturn(new Result([$existingTask->toPersistArray()]));
 
     $task = $this->taskManager->getOpenTask(ActivityTypeNames::APPLICATION_PROCESS_TASK, 123, 'test');
-    static::assertNotNull($task);
-    static::assertEquals($existingTask->toArray(), $task->toArray());
+    static::assertEquals($existingTask, $task);
+  }
+
+  public function testGetOpenTasks(): void {
+    $existingTask = FundingTaskFactory::create([
+      'subject' => 'Existing Task',
+      'activity_type_id:name' => ActivityTypeNames::FUNDING_CASE_TASK,
+      'type' => 'test',
+      'required_permissions' => ['some_permission'],
+    ]);
+
+    $this->api4Mock->expects(static::once())->method('execute')
+      ->with(FundingTask::getEntityName(), 'get', [
+        'ignoreCasePermissions' => TRUE,
+        'useAssigneeFilter' => FALSE,
+        'statusType' => ActivityStatusTypes::INCOMPLETE,
+        'where' => [
+          ['activity_type_id:name', '=', ActivityTypeNames::FUNDING_CASE_TASK],
+          ['source_record_id', '=', 123],
+        ],
+      ])->willReturn(new Result([$existingTask->toPersistArray()]));
+
+    $tasks = $this->taskManager->getOpenTasks(ActivityTypeNames::FUNDING_CASE_TASK, 123);
+    static::assertEquals([$existingTask], $tasks);
+  }
+
+  public function testGetOpenTasksBy(): void {
+    $existingTask = FundingTaskFactory::create([
+      'subject' => 'Existing Task',
+      'activity_type_id:name' => ActivityTypeNames::FUNDING_CASE_TASK,
+      'type' => 'test',
+      'required_permissions' => ['some_permission'],
+    ]);
+
+    $this->api4Mock->expects(static::once())->method('execute')
+      ->with(FundingTask::getEntityName(), 'get', [
+        'ignoreCasePermissions' => TRUE,
+        'useAssigneeFilter' => FALSE,
+        'statusType' => ActivityStatusTypes::INCOMPLETE,
+        'where' => [
+          ['activity_type_id:name', '=', ActivityTypeNames::DRAWDOWN_TASK],
+          ['foo', '=', 'bar'],
+        ],
+      ])->willReturn(new Result([$existingTask->toPersistArray()]));
+
+    $tasks = $this->taskManager->getOpenTasksBy(
+      ActivityTypeNames::DRAWDOWN_TASK,
+      Comparison::new('foo', '=', 'bar')
+    );
+    static::assertEquals([$existingTask], $tasks);
   }
 
   public function testUpdate(): void {

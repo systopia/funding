@@ -39,6 +39,7 @@ use Webmozart\Assert\Assert;
  *    clearing_process_id?: int,
  *    payout_process_id?: int,
  *    drawdown_id?: int,
+ *    due_date?: \DateTimeInterface|null,
  *  }
  *
  * @phpstan-type fundingTaskT array{
@@ -74,6 +75,7 @@ use Webmozart\Assert\Assert;
  *   'funding_case_task.type': string,
  *   'funding_case_task.affected_identifier': string,
  *   'funding_case_task.funding_case_id': int,
+ *   'funding_case_task.due_date': string|null,
  *   'funding_application_process_task.application_process_id'?: int|null,
  *   'funding_clearing_process_task.clearing_process_id'?: int|null,
  *   'funding_payout_process_task.payout_process_id'?: int|null,
@@ -120,6 +122,7 @@ final class FundingTaskEntity extends AbstractActivityEntity {
       'funding_case_task.type' => $values['type'],
       'funding_case_task.affected_identifier' => $values['affected_identifier'],
       'funding_case_task.funding_case_id' => $values['funding_case_id'],
+      'funding_case_task.due_date' => self::toDateStrOrNull($values['due_date'] ?? NULL),
       'funding_application_process_task.application_process_id' => $values['application_process_id'] ?? NULL,
       'funding_clearing_process_task.clearing_process_id' => $values['clearing_process_id'] ?? NULL,
       'funding_payout_process_task.payout_process_id' => $values['payout_process_id'] ?? NULL,
@@ -198,6 +201,16 @@ final class FundingTaskEntity extends AbstractActivityEntity {
 
   public function getFundingCaseId(): int {
     return $this->values['funding_case_task.funding_case_id'];
+  }
+
+  public function getDueDate(): ?\DateTimeInterface {
+    return self::toDateTimeOrNull($this->values['funding_case_task.due_date']);
+  }
+
+  public function setDueDate(?\DateTimeInterface $dueDate): static {
+    $this->values['funding_case_task.due_date'] = self::toDateStrOrNull($dueDate);
+
+    return $this;
   }
 
   public function getApplicationProcessId(): ?int {

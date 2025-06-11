@@ -1682,6 +1682,14 @@ msgstr ""
 msgid "Required Permissions"
 msgstr ""
 
+#: managed/CustomGroup_funding_case_task.mgd.php
+msgid "Due Date"
+msgstr ""
+
+#: managed/CustomGroup_funding_case_task.mgd.php
+msgid "yy-mm-dd"
+msgstr ""
+
 #: managed/CustomGroup_funding_clearing_process_task.mgd.php managed/OptionValue_funding_clearing_process_task.mgd.php
 msgid "Funding Clearing Task"
 msgstr ""

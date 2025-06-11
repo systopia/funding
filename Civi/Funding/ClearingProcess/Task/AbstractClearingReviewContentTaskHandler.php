@@ -24,10 +24,10 @@ use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\Entity\ClearingProcessEntity;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\Entity\FundingTaskEntity;
-use Civi\Funding\Task\Handler\ClearingProcessTaskHandlerInterface;
+use Civi\Funding\Task\Handler\AbstractClearingProcessTaskHandler;
 use CRM_Funding_ExtensionUtil as E;
 
-abstract class AbstractClearingReviewContentTaskHandler implements ClearingProcessTaskHandlerInterface {
+abstract class AbstractClearingReviewContentTaskHandler extends AbstractClearingProcessTaskHandler {
 
   private const TASK_TYPE = 'review_content';
 

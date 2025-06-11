@@ -25,6 +25,11 @@ use Civi\Funding\Entity\FundingTaskEntity;
 
 interface ClearingProcessTaskModifierInterface {
 
+  /**
+   * @phpstan-return \Civi\Funding\ActivityTypeNames::CLEARING_PROCESS_TASK
+   */
+  public function getActivityTypeName(): string;
+
   public function modifyTask(
     FundingTaskEntity $task,
     ClearingProcessEntityBundle $clearingProcessBundle,

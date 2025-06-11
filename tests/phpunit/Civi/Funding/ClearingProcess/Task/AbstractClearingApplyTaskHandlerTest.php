@@ -19,7 +19,10 @@ final class AbstractClearingApplyTaskHandlerTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
-    $this->taskHandler = $this->getMockForAbstractClass(AbstractClearingApplyTaskHandler::class);
+    $this->taskHandler = $this->getMockForAbstractClass(
+      AbstractClearingApplyTaskHandler::class, mockedMethods: ['getDueDate']
+    );
+    $this->taskHandler->method('getDueDate')->willReturn(new \DateTime('2000-01-02'));
   }
 
   /**
@@ -38,6 +41,7 @@ final class AbstractClearingApplyTaskHandlerTest extends TestCase {
         'funding_case_id' => $clearingProcessBundle->getFundingCase()->getId(),
         'application_process_id' => $clearingProcessBundle->getApplicationProcess()->getId(),
         'clearing_process_id' => $clearingProcessBundle->getClearingProcess()->getId(),
+        'due_date' => new \DateTime('2000-01-02'),
       ]),
     ], [...$this->taskHandler->createTasksOnChange($clearingProcessBundle, $previousClearingProcess)]);
   }

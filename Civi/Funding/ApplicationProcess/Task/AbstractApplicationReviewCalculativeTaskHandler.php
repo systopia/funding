@@ -24,10 +24,10 @@ use Civi\Funding\ApplicationProcess\ApplicationProcessPermissions;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingTaskEntity;
-use Civi\Funding\Task\Handler\ApplicationProcessTaskHandlerInterface;
+use Civi\Funding\Task\Handler\AbstractApplicationProcessTaskHandler;
 use CRM_Funding_ExtensionUtil as E;
 
-abstract class AbstractApplicationReviewCalculativeTaskHandler implements ApplicationProcessTaskHandlerInterface {
+abstract class AbstractApplicationReviewCalculativeTaskHandler extends AbstractApplicationProcessTaskHandler {
 
   private const TASK_TYPE = 'review_calculative';
 

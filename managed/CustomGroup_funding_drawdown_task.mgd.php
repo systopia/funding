@@ -45,6 +45,7 @@ return [
         'data_type' => 'EntityReference',
         'html_type' => 'Autocomplete-Select',
         'is_required' => TRUE,
+        'is_searchable' => TRUE,
         'column_name' => 'drawdown_id',
         'fk_entity' => 'FundingDrawdown',
         'fk_entity_on_delete' => 'cascade',

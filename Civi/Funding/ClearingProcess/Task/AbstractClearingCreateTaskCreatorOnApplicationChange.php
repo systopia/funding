@@ -30,6 +30,9 @@ use Civi\Funding\Task\Creator\ApplicationProcessTaskCreatorInterface;
  * Should be combined with:
  * @see \Civi\Funding\ClearingProcess\Task\AbstractClearingCreateTaskCreatorOnFundingCaseChange
  * @see \Civi\Funding\ClearingProcess\Task\AbstractClearingCreateTaskModifier
+ *
+ * Might be combined with:
+ * @see \Civi\Funding\ApplicationProcess\Task\AbstractClearingCreateTaskModifierOnApplicationProcessChange
  */
 abstract class AbstractClearingCreateTaskCreatorOnApplicationChange implements ApplicationProcessTaskCreatorInterface {
 

@@ -24,14 +24,14 @@ use Civi\Funding\ClearingProcess\Traits\ClearingCreateTaskTrait;
 use Civi\Funding\Entity\ClearingProcessEntity;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\Entity\FundingTaskEntity;
-use Civi\Funding\Task\Modifier\ClearingProcessTaskModifierInterface;
+use Civi\Funding\Task\Modifier\AbstractClearingProcessTaskModifier;
 
 /**
  * Should be combined with:
  * @see \Civi\Funding\ClearingProcess\Task\AbstractClearingCreateTaskCreatorOnApplicationChange
  * @see \Civi\Funding\ClearingProcess\Task\AbstractClearingCreateTaskCreatorOnFundingCaseChange
  */
-abstract class AbstractClearingCreateTaskModifier implements ClearingProcessTaskModifierInterface {
+abstract class AbstractClearingCreateTaskModifier extends AbstractClearingProcessTaskModifier {
 
   use ClearingCreateTaskTrait;
 

@@ -24,10 +24,14 @@ use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\Entity\ClearingProcessEntity;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\Entity\FundingTaskEntity;
-use Civi\Funding\Task\Handler\ClearingProcessTaskHandlerInterface;
+use Civi\Funding\Task\Handler\AbstractClearingProcessTaskHandler;
 use CRM_Funding_ExtensionUtil as E;
 
-abstract class AbstractClearingApplyTaskHandler implements ClearingProcessTaskHandlerInterface {
+/**
+ * Might be combined with:
+ * @see \Civi\Funding\ClearingProcess\Task\AbstractClearingApplyTaskModifierOnApplicationProcessChange
+ */
+abstract class AbstractClearingApplyTaskHandler extends AbstractClearingProcessTaskHandler {
 
   private const TASK_TYPE = 'apply';
 
@@ -66,6 +70,10 @@ abstract class AbstractClearingApplyTaskHandler implements ClearingProcessTaskHa
     return TRUE;
   }
 
+  protected function getDueDate(ClearingProcessEntityBundle $clearingProcessBundle): ?\DateTimeInterface {
+    return NULL;
+  }
+
   protected function getTaskSubject(ClearingProcessEntityBundle $clearingProcessBundle): string {
     return E::ts('Complete and Apply Clearing');
   }
@@ -79,6 +87,7 @@ abstract class AbstractClearingApplyTaskHandler implements ClearingProcessTaskHa
       'funding_case_id' => $clearingProcessBundle->getFundingCase()->getId(),
       'application_process_id' => $clearingProcessBundle->getApplicationProcess()->getId(),
       'clearing_process_id' => $clearingProcessBundle->getClearingProcess()->getId(),
+      'due_date' => $this->getDueDate($clearingProcessBundle),
     ]);
   }
 

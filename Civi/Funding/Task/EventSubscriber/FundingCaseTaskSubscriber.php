@@ -19,12 +19,15 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Task\EventSubscriber;
 
-use Civi\Funding\ActivityTypeNames;
 use Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent;
 use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
 use Civi\Funding\Task\FundingTaskManager;
+use Civi\RemoteTools\Api4\Query\Comparison;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+/**
+ * @phpstan-import-type taskNameT from \Civi\Funding\ActivityTypeNames
+ */
 class FundingCaseTaskSubscriber implements EventSubscriberInterface {
 
   private FundingTaskManager $taskManager;
@@ -77,19 +80,30 @@ class FundingCaseTaskSubscriber implements EventSubscriberInterface {
    * @throws \CRM_Core_Exception
    */
   public function onUpdated(FundingCaseUpdatedEvent $event): void {
-    $openTasks = $this->taskManager->getOpenTasks(
-      ActivityTypeNames::FUNDING_CASE_TASK,
-      $event->getFundingCase()->getId()
+    $taskModifiersByActivityTypeName = $this->getTaskModifiersByActivityTypeName(
+      $event->getFundingCaseType()->getName()
     );
-    foreach ($openTasks as $task) {
-      $modified = FALSE;
-      foreach ($this->taskModifiers[$event->getFundingCaseType()->getName()] ?? [] as $taskModifier) {
-        if ($taskModifier->modifyTask($task, $event->getFundingCaseBundle(), $event->getPreviousFundingCase())) {
-          $modified = TRUE;
+    foreach ($taskModifiersByActivityTypeName as $activityTypeName => $taskModifiers) {
+      $openTasks = $this->taskManager->getOpenTasksBy($activityTypeName, Comparison::new(
+        'funding_case_task.funding_case_id',
+        '=',
+        $event->getFundingCase()->getId()
+      ));
+
+      foreach ($openTasks as $task) {
+        $modified = FALSE;
+        foreach ($taskModifiers as $taskModifier) {
+          if ($taskModifier->modifyTask(
+            $task,
+            $event->getFundingCaseBundle(),
+            $event->getPreviousFundingCase()
+          )) {
+            $modified = TRUE;
+          }
         }
-      }
-      if ($modified) {
-        $this->taskManager->updateTask($task);
+        if ($modified) {
+          $this->taskManager->updateTask($task);
+        }
       }
     }
 
@@ -102,6 +116,20 @@ class FundingCaseTaskSubscriber implements EventSubscriberInterface {
         $this->taskManager->addTask($task);
       }
     }
+  }
+
+  /**
+   * @phpstan-return array<
+   *   taskNameT, non-empty-list<\Civi\Funding\Task\Modifier\FundingCaseTaskModifierInterface>
+   * >
+   */
+  private function getTaskModifiersByActivityTypeName(string $fundingCaseTypeName): array {
+    $taskModifiers = [];
+    foreach ($this->taskModifiers[$fundingCaseTypeName] ?? [] as $taskModifier) {
+      $taskModifiers[$taskModifier->getActivityTypeName()][] = $taskModifier;
+    }
+
+    return $taskModifiers;
   }
 
 }

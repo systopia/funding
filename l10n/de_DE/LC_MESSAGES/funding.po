@@ -2374,6 +2374,14 @@ msgstr "Förderfall"
 msgid "Required Permissions"
 msgstr "Notwendige Berechtigungen"
 
+#: managed/CustomGroup_funding_case_task.mgd.php
+msgid "Due Date"
+msgstr "Fälligkeitsdatum"
+
+#: managed/CustomGroup_funding_case_task.mgd.php
+msgid "yy-mm-dd"
+msgstr "dd.mm.yy"
+
 #: managed/CustomGroup_funding_clearing_process_task.mgd.php
 #: managed/OptionValue_funding_clearing_process_task.mgd.php
 msgid "Funding Clearing Task"

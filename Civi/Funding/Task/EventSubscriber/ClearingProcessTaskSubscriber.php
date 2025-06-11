@@ -19,12 +19,15 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Task\EventSubscriber;
 
-use Civi\Funding\ActivityTypeNames;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessCreatedEvent;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessUpdatedEvent;
 use Civi\Funding\Task\FundingTaskManager;
+use Civi\RemoteTools\Api4\Query\Comparison;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+/**
+ * @phpstan-type taskNameT \Civi\Funding\ActivityTypeNames::CLEARING_PROCESS_TASK
+ */
 class ClearingProcessTaskSubscriber implements EventSubscriberInterface {
 
   private FundingTaskManager $taskManager;
@@ -83,23 +86,30 @@ class ClearingProcessTaskSubscriber implements EventSubscriberInterface {
    * @throws \CRM_Core_Exception
    */
   public function onUpdated(ClearingProcessUpdatedEvent $event): void {
-    $openTasks = $this->taskManager->getOpenTasks(
-      ActivityTypeNames::CLEARING_PROCESS_TASK,
-      $event->getClearingProcess()->getId()
+    $taskModifiersByActivityTypeName = $this->getTaskModifiersByActivityTypeName(
+      $event->getFundingCaseType()->getName()
     );
-    foreach ($openTasks as $task) {
-      $modified = FALSE;
-      foreach ($this->taskModifiers[$event->getFundingCaseType()->getName()] ?? [] as $taskModifier) {
-        if ($taskModifier->modifyTask(
-          $task,
-          $event->getClearingProcessBundle(),
-          $event->getPreviousClearingProcess()
-        )) {
-          $modified = TRUE;
+    foreach ($taskModifiersByActivityTypeName as $activityTypeName => $taskModifiers) {
+      $openTasks = $this->taskManager->getOpenTasksBy($activityTypeName, Comparison::new(
+        'funding_clearing_process_task.clearing_process_id',
+        '=',
+        $event->getClearingProcess()->getId()
+      ));
+
+      foreach ($openTasks as $task) {
+        $modified = FALSE;
+        foreach ($taskModifiers as $taskModifier) {
+          if ($taskModifier->modifyTask(
+            $task,
+            $event->getClearingProcessBundle(),
+            $event->getPreviousClearingProcess()
+          )) {
+            $modified = TRUE;
+          }
         }
-      }
-      if ($modified) {
-        $this->taskManager->updateTask($task);
+        if ($modified) {
+          $this->taskManager->updateTask($task);
+        }
       }
     }
 
@@ -115,6 +125,20 @@ class ClearingProcessTaskSubscriber implements EventSubscriberInterface {
         $this->taskManager->addTask($task);
       }
     }
+  }
+
+  /**
+   * @phpstan-return array<
+   *   taskNameT, non-empty-list<\Civi\Funding\Task\Modifier\ClearingProcessTaskModifierInterface>
+   * >
+   */
+  private function getTaskModifiersByActivityTypeName(string $fundingCaseTypeName): array {
+    $taskModifiers = [];
+    foreach ($this->taskModifiers[$fundingCaseTypeName] ?? [] as $taskModifier) {
+      $taskModifiers[$taskModifier->getActivityTypeName()][] = $taskModifier;
+    }
+
+    return $taskModifiers;
   }
 
 }
