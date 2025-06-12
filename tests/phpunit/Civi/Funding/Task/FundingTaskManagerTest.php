@@ -58,6 +58,7 @@ final class FundingTaskManagerTest extends TestCase {
     $this->api4Mock->expects(static::once())->method('execute')
       ->with(FundingTask::getEntityName(), 'get', [
         'ignoreCasePermissions' => TRUE,
+        'useAssigneeFilter' => FALSE,
         'statusType' => ActivityStatusTypes::INCOMPLETE,
         'where' => [
           ['activity_type_id:name', '=', ActivityTypeNames::FUNDING_CASE_TASK],
@@ -106,6 +107,7 @@ final class FundingTaskManagerTest extends TestCase {
     $this->api4Mock->expects(static::once())->method('execute')
       ->with(FundingTask::getEntityName(), 'get', [
         'ignoreCasePermissions' => TRUE,
+        'useAssigneeFilter' => FALSE,
         'statusType' => ActivityStatusTypes::INCOMPLETE,
         'where' => [
           ['activity_type_id:name', '=', ActivityTypeNames::FUNDING_CASE_TASK],
@@ -133,6 +135,7 @@ final class FundingTaskManagerTest extends TestCase {
     $this->api4Mock->expects(static::once())->method('execute')
       ->with(FundingTask::getEntityName(), 'get', [
         'ignoreCasePermissions' => TRUE,
+        'useAssigneeFilter' => FALSE,
         'statusType' => ActivityStatusTypes::INCOMPLETE,
         'where' => [
           ['source_record_id', '=', FundingCaseFactory::DEFAULT_ID],
@@ -155,6 +158,7 @@ final class FundingTaskManagerTest extends TestCase {
     $this->api4Mock->expects(static::once())->method('execute')
       ->with(FundingTask::getEntityName(), 'get', [
         'ignoreCasePermissions' => TRUE,
+        'useAssigneeFilter' => FALSE,
         'statusType' => ActivityStatusTypes::INCOMPLETE,
         'where' => [
           ['source_record_id', '=', FundingCaseFactory::DEFAULT_ID],

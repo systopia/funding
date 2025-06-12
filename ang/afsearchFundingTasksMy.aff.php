@@ -10,6 +10,6 @@ return [
     'access Funding',
   ],
   'search_displays' => [
-    'funding_tasks_my.table',
+    'MyFundingTasks.table',
   ],
 ];

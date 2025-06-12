@@ -80,6 +80,7 @@ class FundingTaskManager {
   public function getOpenTask(string $activityTypeName, int $entityId, string $type): ?FundingTaskEntity {
     $task = $this->api4->execute(FundingTask::getEntityName(), 'get', [
       'ignoreCasePermissions' => TRUE,
+      'useAssigneeFilter' => FALSE,
       'statusType' => ActivityStatusTypes::INCOMPLETE,
       'where' => [
         ['activity_type_id:name', '=', $activityTypeName],
@@ -107,6 +108,7 @@ class FundingTaskManager {
   public function getOpenTasks(string $activityTypeName, int $entityId): array {
     $result = $this->api4->execute(FundingTask::getEntityName(), 'get', [
       'ignoreCasePermissions' => TRUE,
+      'useAssigneeFilter' => FALSE,
       'statusType' => ActivityStatusTypes::INCOMPLETE,
       'where' => [
         ['activity_type_id:name', '=', $activityTypeName],
