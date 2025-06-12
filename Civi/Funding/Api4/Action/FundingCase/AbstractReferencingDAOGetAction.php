@@ -44,6 +44,9 @@ abstract class AbstractReferencingDAOGetAction extends DAOGetAction {
 
   use IsFieldSelectedTrait;
 
+  /**
+   * @var bool
+   */
   protected bool $ignoreCasePermissions = FALSE;
 
   protected string $_fundingCaseIdFieldName = 'funding_case_id';

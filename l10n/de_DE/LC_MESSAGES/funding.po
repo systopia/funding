@@ -578,6 +578,10 @@ msgstr "Abgebrochen"
 msgid "Status Type"
 msgstr "Statusart"
 
+#: Civi/Funding/Api4/Action/FundingTask/GetFieldsAction.php
+msgid "Ignore Task Permissions"
+msgstr "Aufgabenberechtigungen ignorieren"
+
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
 msgid "Creation Contact"
 msgstr "Erstellerkontakt"
@@ -1718,6 +1722,10 @@ msgstr "Förderprogramme"
 msgid "My Tasks"
 msgstr "Meine Aufgaben"
 
+#: ang/afsearchTasksPending.aff.php managed/NavigationFunding.mgd.php
+msgid "Tasks (Pending)"
+msgstr "Aufgaben (unerledigt)"
+
 # Nicht benötigt, solange nur zur Initialisierung der ts Funktion in JavaScript verwendet.
 #: ang/crmFunding/application/application.js
 #: ang/crmFunding/application/applicationEditor.directive.js
@@ -2305,6 +2313,7 @@ msgid "Funding Case Task"
 msgstr "Förderfallaufgabe"
 
 #: managed/CustomGroup_funding_case_task.mgd.php
+#: managed/SavedSearch_Funding_Tasks_Pending.mgd.php
 #: managed/SavedSearch_MyFundingTasks.mgd.php
 msgid "Affected Identifier"
 msgstr "Betroffener Bezeichner"
@@ -2318,6 +2327,7 @@ msgid "Required Permissions"
 msgstr "Notwendige Berechtigungen"
 
 #: managed/CustomGroup_funding_case_task.mgd.php
+#: managed/SavedSearch_Funding_Tasks_Pending.mgd.php
 msgid "Due Date"
 msgstr "Fälligkeitsdatum"
 
@@ -2423,6 +2433,7 @@ msgstr "Rückzahlungsforderung"
 #: managed/SavedSearch_Clearings.mgd.php
 #: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
 #: managed/SavedSearch_FundingDrawdownsAll.mgd.php
+#: managed/SavedSearch_Funding_Tasks_Pending.mgd.php
 #: managed/SavedSearch_MyFundingTasks.mgd.php
 #: managed/SavedSearch_funding_cases.mgd.php
 #: managed/SavedSearch_funding_program_controlling.mgd.php
@@ -2432,6 +2443,7 @@ msgstr "Tabelle"
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearch_Funding_Tasks_Pending.mgd.php
 #: managed/SavedSearch_MyFundingTasks.mgd.php
 msgid "Open application"
 msgstr "Antrag öffnen"
@@ -2439,6 +2451,7 @@ msgstr "Antrag öffnen"
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearch_Funding_Tasks_Pending.mgd.php
 #: managed/SavedSearch_MyFundingTasks.mgd.php
 msgid "Open clearing"
 msgstr "Verwendungsnachweis öffnen"
@@ -2556,19 +2569,26 @@ msgstr "Offene Mittelabrufe"
 msgid "Open Case"
 msgstr "Fall öffnen"
 
-#: managed/SavedSearch_MyFundingTasks.mgd.php
-msgid "My Funding Tasks"
-msgstr "Meine Förderverwaltungsaufgaben"
+#: managed/SavedSearch_Funding_Tasks_Pending.mgd.php
+msgid "Funding Tasks (Pending)"
+msgstr "Förderverwaltungsaufgaben (unerledigt)"
 
+#: managed/SavedSearch_Funding_Tasks_Pending.mgd.php
 #: managed/SavedSearch_MyFundingTasks.mgd.php
 msgid "Subject"
 msgstr "Betreff"
 
+#: managed/SavedSearch_Funding_Tasks_Pending.mgd.php
 #: managed/SavedSearch_MyFundingTasks.mgd.php
 msgid "Modified Date"
 msgstr "Änderungsdatum"
 
+#: managed/SavedSearch_Funding_Tasks_Pending.mgd.php
 #: managed/SavedSearch_MyFundingTasks.mgd.php
 #: managed/SavedSearch_funding_cases.mgd.php
 msgid "Open case"
 msgstr "Fall öffnen"
+
+#: managed/SavedSearch_MyFundingTasks.mgd.php
+msgid "My Funding Tasks"
+msgstr "Meine Förderverwaltungsaufgaben"
