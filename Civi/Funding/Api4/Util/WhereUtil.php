@@ -29,17 +29,17 @@ final class WhereUtil {
   /**
    * @phpstan-param whereT $where
    */
-  public static function containsField(array $where, string $field): bool {
+  public static function containsField(array $where, string ...$field): bool {
     foreach ($where as $clause) {
       if (is_array($clause[1])) {
         // Composite condition.
         // @phpstan-ignore argument.type
-        if (self::containsField($clause[1], $field)) {
+        if (self::containsField($clause[1], ...$field)) {
           return TRUE;
         }
       }
 
-      if ($clause[0] === $field) {
+      if (in_array($clause[0], $field, TRUE)) {
         return TRUE;
       }
     }
@@ -108,6 +108,42 @@ final class WhereUtil {
     }
 
     return NULL;
+  }
+
+  /**
+   * @phpstan-param whereT $where
+   * @phpstan-param array<string, string> $fieldReplacements
+   *   Field names that match a key in this map will be replaced by the value.
+   * @phpstan-param array<int|string, scalar> $valueReplacements
+   *   If a field name is replaced, the value is replaced, too, but only if the
+   *   value equals a key in this map.
+   *
+   * @phpstan-return whereT
+   */
+  public static function replaceField(array $where, array $fieldReplacements, array $valueReplacements = []): array {
+    foreach ($where as &$clause) {
+      if (is_array($clause[1])) {
+        // Composite condition.
+        // @phpstan-ignore argument.type
+        $clause[1] = self::replaceField($clause[1], $fieldReplacements, $valueReplacements);
+      }
+
+      if (isset($fieldReplacements[$clause[0]])) {
+        $clause[0] = $fieldReplacements[$clause[0]];
+        if (is_scalar($clause[2] ?? NULL) && array_key_exists((string) $clause[2], $valueReplacements)) {
+          $clause[2] = $valueReplacements[$clause[2]];
+        }
+        elseif (is_array($clause[2] ?? NULL)) {
+          $clause[2] = array_map(
+            fn ($value) => is_scalar($value) && array_key_exists((string) $value, $valueReplacements)
+              ? $valueReplacements[$value] : $value,
+            $clause[2]
+          );
+        }
+      }
+    }
+
+    return $where;
   }
 
 }

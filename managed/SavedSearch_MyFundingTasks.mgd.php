@@ -3,15 +3,15 @@ use CRM_Funding_ExtensionUtil as E;
 
 return [
   [
-    'name' => 'SavedSearch_FundingTasks',
+    'name' => 'SavedSearch_MyFundingTasks',
     'entity' => 'SavedSearch',
     'cleanup' => 'unused',
     'update' => 'unmodified',
     'params' => [
       'version' => 4,
       'values' => [
-        'name' => 'FundingTasks',
-        'label' => E::ts('Funding Tasks'),
+        'name' => 'MyFundingTasks',
+        'label' => E::ts('My Funding Tasks'),
         'api_entity' => 'FundingTask',
         'api_params' => [
           'version' => 4,
@@ -24,7 +24,27 @@ return [
             'activity_type_id:label',
           ],
           'orderBy' => [],
-          'where' => [],
+          'where' => [
+            [
+              'OR',
+              [
+                [
+                  'assignee_contact_id',
+                  'IS EMPTY',
+                ],
+                [
+                  'assignee_contact_id',
+                  'CONTAINS',
+                  'user_contact_id',
+                ],
+              ],
+            ],
+            [
+              'status_type_id:name',
+              '=',
+              '0',
+            ],
+          ],
           'groupBy' => [],
           'join' => [],
           'having' => [],
@@ -36,7 +56,7 @@ return [
     ],
   ],
   [
-    'name' => 'SavedSearch_FundingTasks_SearchDisplay_table',
+    'name' => 'SavedSearch_MyFundingTasks_SearchDisplay_table',
     'entity' => 'SearchDisplay',
     'cleanup' => 'unused',
     'update' => 'unmodified',
@@ -45,7 +65,7 @@ return [
       'values' => [
         'name' => 'table',
         'label' => E::ts('Table'),
-        'saved_search_id.name' => 'FundingTasks',
+        'saved_search_id.name' => 'MyFundingTasks',
         'type' => 'table',
         'settings' => [
           'description' => NULL,
