@@ -440,7 +440,7 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
     return new ApplicationProcessEntityBundle($applicationProcess, $fundingCase, $fundingCaseType, $fundingProgram);
   }
 
-  private function createFundingCase(int $fundingProgramId = NULL, int $fundingCaseTypeId = NULL): FundingCaseEntity {
+  private function createFundingCase(?int $fundingProgramId = NULL, ?int $fundingCaseTypeId = NULL): FundingCaseEntity {
     $fundingProgramId ??= FundingProgramFixture::addFixture()->getId();
     $fundingCaseTypeId ??= FundingCaseTypeFixture::addFixture()->getId();
     $recipientContact = ContactFixture::addOrganization();

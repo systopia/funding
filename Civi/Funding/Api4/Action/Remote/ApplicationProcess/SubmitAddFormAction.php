@@ -31,7 +31,7 @@ final class SubmitAddFormAction extends AbstractRemoteFundingAction {
 
   use FundingCaseIdParameterTrait;
 
-  public function __construct(ActionHandlerInterface $actionHandler = NULL) {
+  public function __construct(?ActionHandlerInterface $actionHandler = NULL) {
     parent::__construct(RemoteFundingApplicationProcess::getEntityName(), 'submitAddForm', $actionHandler);
   }
 

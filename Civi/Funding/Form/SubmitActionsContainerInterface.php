@@ -35,7 +35,7 @@ interface SubmitActionsContainerInterface {
     string $label,
     ?string $confirm = NULL,
     array $properties = [],
-    int $priority = NULL
+    ?int $priority = NULL
   ): self;
 
   /**

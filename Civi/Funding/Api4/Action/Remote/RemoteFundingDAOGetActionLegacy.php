@@ -30,7 +30,7 @@ class RemoteFundingDAOGetActionLegacy extends EventDAOGetAction implements Remot
   use RemoteFundingActionContactIdRequiredTrait;
 
   public function __construct(string $entityName, string $actionName = 'get',
-    CiviEventDispatcherInterface $eventDispatcher = NULL
+    ?CiviEventDispatcherInterface $eventDispatcher = NULL
   ) {
     parent::__construct(FundingEvents::REQUEST_INIT_EVENT_NAME,
       FundingEvents::REQUEST_AUTHORIZE_EVENT_NAME,

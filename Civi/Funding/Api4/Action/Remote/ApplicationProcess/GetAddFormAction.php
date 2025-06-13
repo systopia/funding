@@ -37,7 +37,7 @@ final class GetAddFormAction extends AbstractRemoteFundingAction {
    */
   protected ?int $copyDataFromId = NULL;
 
-  public function __construct(ActionHandlerInterface $actionHandler = NULL) {
+  public function __construct(?ActionHandlerInterface $actionHandler = NULL) {
     parent::__construct(RemoteFundingApplicationProcess::getEntityName(), 'getAddForm', $actionHandler);
   }
 
