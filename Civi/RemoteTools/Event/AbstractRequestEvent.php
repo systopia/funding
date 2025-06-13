@@ -54,7 +54,7 @@ abstract class AbstractRequestEvent extends Event {
     );
   }
 
-  public static function getEventName(string $entityName = NULL, string $actionName = NULL): string {
+  public static function getEventName(?string $entityName = NULL, ?string $actionName = NULL): string {
     $eventName = static::class;
     if (NULL !== $entityName) {
       $eventName .= '@' . $entityName;

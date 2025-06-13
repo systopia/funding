@@ -233,7 +233,7 @@ final class FundingProgramTokenSubscriberTest extends TestCase {
    * @phpstan-param array<string, mixed> $context
    * @phpstan-param array<string, mixed>|null $rowContext
    */
-  private function createTokenProcessor(array $context, array $rowContext = NULL): TokenProcessor {
+  private function createTokenProcessor(array $context, ?array $rowContext = NULL): TokenProcessor {
     $eventDispatcherMock = $this->createMock(CiviEventDispatcherInterface::class);
     // @phpstan-ignore-next-line
     $tokenProcessor = new TokenProcessor($eventDispatcherMock, $context);

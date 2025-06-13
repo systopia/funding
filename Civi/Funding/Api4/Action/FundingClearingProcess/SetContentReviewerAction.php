@@ -46,7 +46,7 @@ class SetContentReviewerAction extends AbstractAction {
    */
   protected ?int $reviewerContactId = NULL;
 
-  public function __construct(ActionHandlerInterface $actionHandler = NULL) {
+  public function __construct(?ActionHandlerInterface $actionHandler = NULL) {
     parent::__construct(FundingClearingProcess::getEntityName(), 'setContentReviewer');
     $this->setActionHandler($actionHandler);
   }
