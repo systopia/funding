@@ -13,6 +13,7 @@ use Civi\Funding\Event\ClearingProcess\ClearingProcessUpdatedEvent;
 use Civi\Funding\Task\Creator\ClearingProcessTaskCreatorInterface;
 use Civi\Funding\Task\FundingTaskManager;
 use Civi\Funding\Task\Modifier\ClearingProcessTaskModifierInterface;
+use Civi\RemoteTools\Api4\Query\Comparison;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -51,6 +52,8 @@ final class ClearingProcessTaskSubscriberTest extends TestCase {
       [FundingCaseTypeFactory::DEFAULT_NAME => [$this->taskCreatorMock]],
       [FundingCaseTypeFactory::DEFAULT_NAME => [$this->taskModifierMock]]
     );
+
+    $this->taskModifierMock->method('getActivityTypeName')->willReturn(ActivityTypeNames::CLEARING_PROCESS_TASK);
   }
 
   public function testGetSubscribedEvents(): void {
@@ -102,9 +105,12 @@ final class ClearingProcessTaskSubscriberTest extends TestCase {
     $existingTask = FundingTaskFactory::create(['subject' => 'Existing Task']);
     $newTask = FundingTaskFactory::create(['subject' => 'New Task']);
 
-    $this->taskManagerMock->expects(static::once())->method('getOpenTasks')
-      ->with(ActivityTypeNames::CLEARING_PROCESS_TASK, $clearingProcessBundle->getClearingProcess()->getId())
-      ->willReturn([$existingTask]);
+    $this->taskManagerMock->expects(static::once())->method('getOpenTasksBy')
+      ->with(ActivityTypeNames::CLEARING_PROCESS_TASK, Comparison::new(
+        'funding_clearing_process_task.clearing_process_id',
+        '=',
+        $clearingProcessBundle->getClearingProcess()->getId())
+      )->willReturn([$existingTask]);
     $this->taskModifierMock->expects(static::once())->method('modifyTask')
       ->with($existingTask, $clearingProcessBundle, $previousClearingProcess)
       ->willReturn(TRUE);
@@ -130,13 +136,7 @@ final class ClearingProcessTaskSubscriberTest extends TestCase {
     $previousClearingProcess = ClearingProcessFactory::create();
     $event = new ClearingProcessUpdatedEvent($previousClearingProcess, $clearingProcessBundle);
 
-    $existingTask = FundingTaskFactory::create(['subject' => 'Existing Task']);
-
-    $this->taskManagerMock->expects(static::once())->method('getOpenTasks')
-      ->with(ActivityTypeNames::CLEARING_PROCESS_TASK, $clearingProcessBundle->getClearingProcess()->getId())
-      ->willReturn([$existingTask]);
-    $this->taskModifierMock->expects(static::never())->method('modifyTask');
-    $this->taskManagerMock->expects(static::never())->method('updateTask');
+    $this->taskManagerMock->expects(static::never())->method('getOpenTasksBy');
     $this->taskCreatorMock->expects(static::never())->method('createTasksOnChange');
 
     $this->subscriber->onUpdated($event);

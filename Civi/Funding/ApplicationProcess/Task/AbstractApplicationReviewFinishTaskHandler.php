@@ -27,10 +27,10 @@ use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingTaskEntity;
-use Civi\Funding\Task\Handler\ApplicationProcessTaskHandlerInterface;
+use Civi\Funding\Task\Handler\AbstractApplicationProcessTaskHandler;
 use CRM_Funding_ExtensionUtil as E;
 
-abstract class AbstractApplicationReviewFinishTaskHandler implements ApplicationProcessTaskHandlerInterface {
+abstract class AbstractApplicationReviewFinishTaskHandler extends AbstractApplicationProcessTaskHandler {
 
   private const TASK_TYPE = 'review_finish';
 

@@ -25,7 +25,7 @@ use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingTaskEntity;
 use Civi\Funding\FundingCase\Traits\CombinedApplicationCaseTaskTrait;
-use Civi\Funding\Task\Modifier\FundingCaseTaskModifierInterface;
+use Civi\Funding\Task\Modifier\AbstractFundingCaseTaskModifier;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
 
 /**
@@ -35,7 +35,7 @@ use Civi\RemoteTools\Api4\Query\CompositeCondition;
  * Should be combined with:
  * @see \Civi\Funding\FundingCase\Task\AbstractCombinedApplicationApplyTaskCreator
  */
-abstract class AbstractCombinedApplicationApplyTaskModifier implements FundingCaseTaskModifierInterface {
+abstract class AbstractCombinedApplicationApplyTaskModifier extends AbstractFundingCaseTaskModifier {
 
   use CombinedApplicationCaseTaskTrait;
 

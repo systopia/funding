@@ -21,9 +21,12 @@ namespace Civi\Funding\FundingCaseTypes\AuL\SonstigeAktivitaet\Task;
 
 use Civi\Funding\ClearingProcess\Task\AbstractClearingApplyTaskHandler;
 use Civi\Funding\FundingCaseTypes\AuL\SonstigeAktivitaet\Traits\AVK1SupportedFundingCaseTypesTrait;
+use Civi\Funding\FundingCaseTypes\AuL\Traits\Task\AuLClearingTaskCreateDueDateTrait;
 
 final class AVK1ClearingApplyTaskHandler extends AbstractClearingApplyTaskHandler {
 
   use AVK1SupportedFundingCaseTypesTrait;
+
+  use AuLClearingTaskCreateDueDateTrait;
 
 }

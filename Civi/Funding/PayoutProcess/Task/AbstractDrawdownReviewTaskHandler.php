@@ -20,13 +20,13 @@ declare(strict_types = 1);
 namespace Civi\Funding\PayoutProcess\Task;
 
 use Civi\Funding\ActivityStatusNames;
-use Civi\Funding\Entity\DrawdownEntity;
 use Civi\Funding\Entity\DrawdownBundle;
+use Civi\Funding\Entity\DrawdownEntity;
 use Civi\Funding\Entity\FundingTaskEntity;
-use Civi\Funding\Task\Handler\DrawdownTaskHandlerInterface;
+use Civi\Funding\Task\Handler\AbstractDrawdownTaskHandler;
 use CRM_Funding_ExtensionUtil as E;
 
-abstract class AbstractDrawdownReviewTaskHandler implements DrawdownTaskHandlerInterface {
+abstract class AbstractDrawdownReviewTaskHandler extends AbstractDrawdownTaskHandler {
 
   private const TASK_TYPE = 'review';
 

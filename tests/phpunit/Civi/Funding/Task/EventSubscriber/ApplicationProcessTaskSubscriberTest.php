@@ -13,6 +13,7 @@ use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
 use Civi\Funding\Task\Creator\ApplicationProcessTaskCreatorInterface;
 use Civi\Funding\Task\FundingTaskManager;
 use Civi\Funding\Task\Modifier\ApplicationProcessTaskModifierInterface;
+use Civi\RemoteTools\Api4\Query\Comparison;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -51,6 +52,8 @@ final class ApplicationProcessTaskSubscriberTest extends TestCase {
       [FundingCaseTypeFactory::DEFAULT_NAME => [$this->taskCreatorMock]],
       [FundingCaseTypeFactory::DEFAULT_NAME => [$this->taskModifierMock]]
     );
+
+    $this->taskModifierMock->method('getActivityTypeName')->willReturn(ActivityTypeNames::APPLICATION_PROCESS_TASK);
   }
 
   public function testGetSubscribedEvents(): void {
@@ -101,9 +104,12 @@ final class ApplicationProcessTaskSubscriberTest extends TestCase {
     $existingTask = FundingTaskFactory::create(['subject' => 'Existing Task']);
     $newTask = FundingTaskFactory::create(['subject' => 'New Task']);
 
-    $this->taskManagerMock->expects(static::once())->method('getOpenTasks')
-      ->with(ActivityTypeNames::APPLICATION_PROCESS_TASK, $applicationProcessBundle->getApplicationProcess()->getId())
-      ->willReturn([$existingTask]);
+    $this->taskManagerMock->expects(static::once())->method('getOpenTasksBy')
+      ->with(ActivityTypeNames::APPLICATION_PROCESS_TASK, Comparison::new(
+        'funding_application_process_task.application_process_id',
+        '=',
+        $applicationProcessBundle->getApplicationProcess()->getId()
+      ))->willReturn([$existingTask]);
     $this->taskModifierMock->expects(static::once())->method('modifyTask')
       ->with($existingTask, $applicationProcessBundle, $previousApplicationProcess)
       ->willReturn(TRUE);
@@ -128,13 +134,7 @@ final class ApplicationProcessTaskSubscriberTest extends TestCase {
     $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess();
     $event = new ApplicationProcessUpdatedEvent(12, $previousApplicationProcess, $applicationProcessBundle);
 
-    $existingTask = FundingTaskFactory::create(['subject' => 'Existing Task']);
-
-    $this->taskManagerMock->expects(static::once())->method('getOpenTasks')
-      ->with(ActivityTypeNames::APPLICATION_PROCESS_TASK, $applicationProcessBundle->getApplicationProcess()->getId())
-      ->willReturn([$existingTask]);
-    $this->taskModifierMock->expects(static::never())->method('modifyTask');
-    $this->taskManagerMock->expects(static::never())->method('updateTask');
+    $this->taskManagerMock->expects(static::never())->method('getOpenTasksBy');
     $this->taskCreatorMock->expects(static::never())->method('createTasksOnChange');
 
     $this->subscriber->onUpdated($event);

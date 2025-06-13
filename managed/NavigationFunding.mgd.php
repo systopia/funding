@@ -173,6 +173,31 @@ return [
     ],
   ],
   [
+    'name' => 'Navigation_Funding.Tasks',
+    'entity' => 'Navigation',
+    'cleanup' => 'always',
+    'update' => 'unmodified',
+    'params' => [
+      'version' => 4,
+      'values' => [
+        'domain_id' => 'current_domain',
+        'label' => E::ts('Tasks (Pending)'),
+        'name' => 'afsearchFundingTasksMy',
+        'url' => 'civicrm/funding/task/list',
+        'icon' => 'crm-i fa-tasks',
+        'permission' => [
+          'administer Funding',
+          'access Funding',
+        ],
+        'permission_operator' => 'OR',
+        'parent_id.name' => 'funding',
+        'is_active' => TRUE,
+        'has_separator' => 0,
+        'weight' => ++$weight,
+      ],
+    ],
+  ],
+  [
     'name' => 'Navigation_Funding.FundingPrograms',
     'entity' => 'Navigation',
     'cleanup' => 'always',

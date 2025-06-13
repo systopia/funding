@@ -21,9 +21,12 @@ namespace Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Task;
 
 use Civi\Funding\ClearingProcess\Task\AbstractClearingApplyTaskHandler;
 use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
+use Civi\Funding\FundingCaseTypes\AuL\Traits\Task\AuLClearingTaskCreateDueDateTrait;
 
 final class KursClearingApplyTaskHandler extends AbstractClearingApplyTaskHandler {
 
   use KursSupportedFundingCaseTypesTrait;
+
+  use AuLClearingTaskCreateDueDateTrait;
 
 }
