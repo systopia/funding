@@ -77,6 +77,7 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
             'records' => [
               [
                 'receiptNumber' => 'A123',
+                'receiptDate' => '2024-04-03',
                 'paymentDate' => '2024-04-04',
                 'recipient' => 'Recipient',
                 'reason' => 'costTest',
@@ -91,6 +92,7 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
             'records' => [
               [
                 'receiptNumber' => 'A123',
+                'receiptDate' => '2024-04-03',
                 'paymentDate' => '2024-04-04',
                 'recipient' => 'Recipient',
                 'reason' => 'resourcesTest',
@@ -121,6 +123,7 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
             'records' => [
               [
                 'receiptNumber' => 'A123',
+                'receiptDate' => '2024-04-03',
                 'paymentDate' => '2024-04-04',
                 'recipient' => 'Recipient',
                 'reason' => 'costTest',
@@ -135,6 +138,7 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
             'records' => [
               [
                 'receiptNumber' => 'A123',
+                'receiptDate' => '2024-04-03',
                 'paymentDate' => '2024-04-04',
                 'recipient' => 'Recipient',
                 'reason' => 'resourcesTest',
@@ -163,6 +167,7 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
       'status' => 'accepted',
       'file_id' => NULL,
       'receipt_number' => 'A123',
+      'receipt_date' => '2024-04-03',
       'payment_date' => '2024-04-04',
       'recipient' => 'Recipient',
       'reason' => 'costTest',
@@ -177,6 +182,7 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
       'status' => 'rejected',
       'file_id' => NULL,
       'receipt_number' => 'A123',
+      'receipt_date' => '2024-04-03',
       'payment_date' => '2024-04-04',
       'recipient' => 'Recipient',
       'reason' => 'resourcesTest',
@@ -204,6 +210,7 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
               [
                 '_id' => $clearingCostItem->getId(),
                 'receiptNumber' => 'A123',
+                'receiptDate' => '2000-12-31',
                 'paymentDate' => '2001-01-01',
                 'recipient' => 'new cost recipient',
                 'reason' => 'new cost reason',
@@ -219,6 +226,7 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
               [
                 '_id' => $clearingResourcesItem->getId(),
                 'receiptNumber' => 'A123',
+                'receiptDate' => '2000-12-31',
                 'paymentDate' => '2001-01-01',
                 'recipient' => 'new resources recipient',
                 'reason' => 'new resources reason',
@@ -247,6 +255,7 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
       'status' => 'rejected',
       'file_id' => NULL,
       'receipt_number' => 'A123',
+      'receipt_date' => '2000-12-31',
       'payment_date' => '2001-01-01',
       'recipient' => 'new cost recipient',
       'reason' => 'new cost reason',
@@ -261,6 +270,7 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
       'status' => 'accepted',
       'file_id' => NULL,
       'receipt_number' => 'A123',
+      'receipt_date' => '2000-12-31',
       'payment_date' => '2001-01-01',
       'recipient' => 'new resources recipient',
       'reason' => 'new resources reason',
@@ -288,6 +298,7 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
               [
                 '_id' => $clearingCostItem->getId(),
                 'receiptNumber' => 'ignored',
+                'receiptDate' => '2000-12-31',
                 'paymentDate' => '2001-01-01',
                 'recipient' => 'ignored',
                 'reason' => 'ignored',
@@ -303,6 +314,7 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
               [
                 '_id' => $clearingResourcesItem->getId(),
                 'receiptNumber' => 'ignored',
+                'receiptDate' => '2000-12-31',
                 'paymentDate' => '2001-01-01',
                 'recipient' => 'ignored',
                 'reason' => 'ignored',

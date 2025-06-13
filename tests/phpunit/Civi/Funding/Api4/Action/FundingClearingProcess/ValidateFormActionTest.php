@@ -61,6 +61,7 @@ final class ValidateFormActionTest extends AbstractFundingHeadlessTestCase {
             'records' => [
               [
                 'receiptNumber' => 'A123',
+                'receiptDate' => '2024-04-03',
                 'paymentDate' => '2024-04-04',
                 'recipient' => 'Recipient',
                 'reason' => 'costTest',
@@ -75,6 +76,7 @@ final class ValidateFormActionTest extends AbstractFundingHeadlessTestCase {
             'records' => [
               [
                 'receiptNumber' => 'A123',
+                'receiptDate' => '2024-04-03',
                 'paymentDate' => '2024-04-04',
                 'recipient' => 'Recipient',
                 'reason' => 'resourceTest',
@@ -104,6 +106,7 @@ final class ValidateFormActionTest extends AbstractFundingHeadlessTestCase {
             'records' => [
               [
                 'receiptNumber' => 'A123',
+                'receiptDate' => '2024-04-03',
                 'paymentDate' => '2024-04-04',
                 'recipient' => 'Recipient',
                 'reason' => 'costTest',
@@ -118,6 +121,7 @@ final class ValidateFormActionTest extends AbstractFundingHeadlessTestCase {
             'records' => [
               [
                 'receiptNumber' => 'A123',
+                'receiptDate' => '2024-04-03',
                 'paymentDate' => '2024-04-04',
                 'recipient' => 'Recipient',
                 'reason' => 'resourcesTest',

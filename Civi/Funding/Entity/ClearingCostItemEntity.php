@@ -27,6 +27,7 @@ namespace Civi\Funding\Entity;
  *   status: string,
  *   file_id: ?int,
  *   receipt_number: ?string,
+ *   receipt_date: ?string,
  *   payment_date: string,
  *   recipient: string,
  *   reason: string,

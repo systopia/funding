@@ -341,7 +341,6 @@ msgstr "Bewilligter Betrag"
 #: ang/crmFundingIJB/ijbApplicationEditor.template.html
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
-#: managed/SavedSearchFundingTasksMy.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
 #: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
 #: managed/SavedSearch_FundingDrawdownsAll.mgd.php
@@ -432,7 +431,6 @@ msgstr "Erstellungsdatum"
 #: ang/crmFundingIJB/ijbApplicationEditor.template.html
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
-#: managed/SavedSearchFundingTasksMy.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
 #: managed/SavedSearch_funding_cases.mgd.php
 msgid "Modification Date"
@@ -564,6 +562,22 @@ msgstr "Verfügbarer Betrag"
 msgid "The difference between the budget and the amount approved."
 msgstr "Die Differenz zwischen Budget und bewilligtem Betrag."
 
+#: Civi/Funding/Api4/Action/FundingTask/GetFieldsAction.php
+msgid "Incomplete"
+msgstr "Unvollständig"
+
+#: Civi/Funding/Api4/Action/FundingTask/GetFieldsAction.php
+msgid "Completed"
+msgstr "Abgeschlossen"
+
+#: Civi/Funding/Api4/Action/FundingTask/GetFieldsAction.php
+msgid "Cancelled"
+msgstr "Abgebrochen"
+
+#: Civi/Funding/Api4/Action/FundingTask/GetFieldsAction.php
+msgid "Status Type"
+msgstr "Statusart"
+
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
 msgid "Creation Contact"
 msgstr "Erstellerkontakt"
@@ -685,38 +699,38 @@ msgid "Do you really want to delete the application?"
 msgstr "Möchten Sie den Antrag wirklich löschen?"
 
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
+#: Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
 #: Civi/Funding/FundingCaseTypes/BSH/HiHAktion/Application/Actions/HiHApplicationSubmitActionsContainer.php
-#: Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
 #: ang/crmFundingHiH/hihApplicationSidebar.template.html
 msgid "Start Review"
 msgstr "Prüfung starten"
 
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
-#: Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
+#: Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
 msgid "Approve Calculative"
 msgstr "Rechnerisch genehmigen"
 
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
 #: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php
-#: Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
+#: Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
 msgid "Reject Calculative"
 msgstr "Rechnerisch ablehnen"
 
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
-#: Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
+#: Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
 msgid "Approve Content"
 msgstr "Fachlich genehmigen"
 
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
 #: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php
-#: Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
+#: Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
 msgid "Reject Content"
 msgstr "Fachlich ablehnen"
 
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
 #: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php
+#: Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
 #: Civi/Funding/FundingCaseTypes/BSH/HiHAktion/Application/Actions/HiHApplicationSubmitActionsContainer.php
-#: Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
 #: ang/crmFunding/clearing/clearingSidebar.template.html
 #: ang/crmFundingHiH/hihApplicationSidebar.template.html
@@ -725,7 +739,7 @@ msgstr "Änderung verlangen"
 
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
 #: Civi/Funding/ApplicationProcess/ActionsContainer/ReworkPossibleApplicationSubmitActionsContainerFactory.php
-#: Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
+#: Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
 #: ang/crmFunding/case/fundingCase.template.html
 msgid "Approve"
@@ -734,8 +748,8 @@ msgstr "Bewilligen"
 #: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
 #: Civi/Funding/ApplicationProcess/ActionsContainer/ReworkPossibleApplicationSubmitActionsContainerFactory.php
 #: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php
+#: Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
 #: Civi/Funding/FundingCaseTypes/BSH/HiHAktion/Application/Actions/HiHApplicationSubmitActionsContainer.php
-#: Civi/Funding/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
 #: ang/crmFunding/drawdown/drawdownSearchTasksMenu.decorator.js
 #: ang/crmFundingHiH/hihApplicationSidebar.template.html
@@ -952,6 +966,10 @@ msgstr "Beleg"
 #: Civi/Funding/ClearingProcess/Form/AbstractClearingItemsJsonFormsGenerator.php
 msgid "Receipt Number"
 msgstr "Belegnummer"
+
+#: Civi/Funding/ClearingProcess/Form/AbstractClearingItemsJsonFormsGenerator.php
+msgid "Receipt Date"
+msgstr "Belegdatum"
 
 #: Civi/Funding/ClearingProcess/Form/AbstractClearingItemsJsonFormsGenerator.php
 msgid "Payment/Posting Date"
@@ -1771,7 +1789,6 @@ msgstr "Fachliche*r Prüfer*in"
 #: ang/crmFunding/application/defaultApplicationPage.template.html
 #: ang/crmFunding/application/defaultApplicationSidebar.directive.js
 #: ang/crmFundingHiH/hihApplicationPage.template.html
-#: managed/SavedSearchFundingTasksMy.mgd.php
 msgid "Application"
 msgstr "Antrag"
 
@@ -2288,7 +2305,7 @@ msgid "Funding Case Task"
 msgstr "Förderfallaufgabe"
 
 #: managed/CustomGroup_funding_case_task.mgd.php
-#: managed/SavedSearch_FundingTasks.mgd.php
+#: managed/SavedSearch_MyFundingTasks.mgd.php
 msgid "Affected Identifier"
 msgstr "Betroffener Bezeichner"
 
@@ -2394,12 +2411,11 @@ msgstr "Rückzahlungsforderung"
 #: managed/SavedSearchFundingCaseTypes.mgd.php
 #: managed/SavedSearchFundingDrawdowns.mgd.php
 #: managed/SavedSearchFundingPrograms.mgd.php
-#: managed/SavedSearchFundingTasksMy.mgd.php
 #: managed/SavedSearch_Application_CiviOffice_Templates.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
 #: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
 #: managed/SavedSearch_FundingDrawdownsAll.mgd.php
-#: managed/SavedSearch_FundingTasks.mgd.php
+#: managed/SavedSearch_MyFundingTasks.mgd.php
 #: managed/SavedSearch_funding_cases.mgd.php
 #: managed/SavedSearch_funding_program_controlling.mgd.php
 msgid "Table"
@@ -2407,16 +2423,15 @@ msgstr "Tabelle"
 
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
-#: managed/SavedSearchFundingTasksMy.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
-#: managed/SavedSearch_FundingTasks.mgd.php
+#: managed/SavedSearch_MyFundingTasks.mgd.php
 msgid "Open application"
 msgstr "Antrag öffnen"
 
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCaseApplicationProcesses.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
-#: managed/SavedSearch_FundingTasks.mgd.php
+#: managed/SavedSearch_MyFundingTasks.mgd.php
 msgid "Open clearing"
 msgstr "Verwendungsnachweis öffnen"
 
@@ -2503,19 +2518,6 @@ msgstr "Initiale Förderfallberechtigungen bearbeiten"
 msgid "Edit basic values"
 msgstr "Basiswerte bearbeiten"
 
-#: managed/SavedSearchFundingTasksMy.mgd.php
-msgid "My Funding Tasks"
-msgstr "Meine Förderverwaltungsaufgaben"
-
-#: managed/SavedSearchFundingTasksMy.mgd.php
-msgid "Funding tasks of logged in user"
-msgstr "Förderverwaltungsaufgaben des angemeldeten Nutzers"
-
-#: managed/SavedSearchFundingTasksMy.mgd.php
-#: managed/SavedSearch_FundingTasks.mgd.php
-msgid "Subject"
-msgstr "Betreff"
-
 #: managed/SavedSearch_Application_CiviOffice_Templates.mgd.php
 msgid "Application CiviOffice Templates"
 msgstr "CiviOffice-Vorlagen für Anträge"
@@ -2546,15 +2548,19 @@ msgstr "Offene Mittelabrufe"
 msgid "Open Case"
 msgstr "Fall öffnen"
 
-#: managed/SavedSearch_FundingTasks.mgd.php
-msgid "Funding Tasks"
-msgstr "Förderfallaufgaben"
+#: managed/SavedSearch_MyFundingTasks.mgd.php
+msgid "My Funding Tasks"
+msgstr "Meine Förderverwaltungsaufgaben"
 
-#: managed/SavedSearch_FundingTasks.mgd.php
+#: managed/SavedSearch_MyFundingTasks.mgd.php
+msgid "Subject"
+msgstr "Betreff"
+
+#: managed/SavedSearch_MyFundingTasks.mgd.php
 msgid "Modified Date"
 msgstr "Änderungsdatum"
 
-#: managed/SavedSearch_FundingTasks.mgd.php
+#: managed/SavedSearch_MyFundingTasks.mgd.php
 #: managed/SavedSearch_funding_cases.mgd.php
 msgid "Open case"
 msgstr "Fall öffnen"

@@ -41,6 +41,7 @@ final class ClearingResourcesItemFixture {
         'status' => 'new',
         'file_id' => NULL,
         'receipt_number' => NULL,
+        'receipt_date' => NULL,
         'payment_date' => '2024-04-04',
         'recipient' => 'Recipient',
         'reason' => 'Test Clearing Resources Item',

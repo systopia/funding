@@ -211,6 +211,7 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
               '_id' => new JsonSchemaInteger(['readOnly' => TRUE, 'default' => NULL], TRUE),
               'file' => new JsonSchemaString(['format' => 'uri', 'default' => NULL], TRUE),
               'receiptNumber' => new JsonSchemaString(['maxlength' => 255], TRUE),
+              'receiptDate' => new JsonSchemaDate([], TRUE),
               'paymentDate' => new JsonSchemaDate(),
               'recipient' => new JsonSchemaString(['maxlength' => 255]),
               'reason' => new JsonSchemaString(['maxlength' => 255]),
@@ -297,6 +298,7 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
                 new JsonFormsHidden('#/properties/_id', ['internal' => TRUE]),
                 new JsonFormsControl('#/properties/file', E::ts('Receipt'), NULL, ['format' => 'file']),
                 new JsonFormsControl('#/properties/receiptNumber', E::ts('Receipt Number')),
+                new JsonFormsControl('#/properties/receiptDate', E::ts('Receipt Date')),
                 new JsonFormsControl(
                   '#/properties/paymentDate',
                   str_replace('/', "/\u{200B}", E::ts('Payment/Posting Date'))

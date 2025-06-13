@@ -26,7 +26,7 @@ final class DateTimeUtil {
   }
 
   public static function toDateStrOrNull(?\DateTimeInterface $dateTime): ?string {
-    return NULL === $dateTime ? NULL : $dateTime->format('Y-m-d');
+    return $dateTime?->format('Y-m-d');
   }
 
   public static function toDateTimeOrNull(?string $dateTimeStr): ?\DateTime {
@@ -38,7 +38,7 @@ final class DateTimeUtil {
   }
 
   public static function toDateTimeStrOrNull(?\DateTimeInterface $dateTime): ?string {
-    return NULL === $dateTime ? NULL : $dateTime->format('Y-m-d H:i:s');
+    return $dateTime?->format('Y-m-d H:i:s');
   }
 
 }

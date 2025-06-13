@@ -39,7 +39,7 @@ final class PsrContainer implements ContainerInterface {
   /**
    * @inheritDoc
    */
-  public function get($id) {
+  public function get($id): object {
     if (!$this->has($id)) {
       throw new class(sprintf('Service with id "%s" not found', $id))
         extends \RuntimeException implements NotFoundExceptionInterface{};
