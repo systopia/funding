@@ -32,6 +32,7 @@ use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\Entity\ClearingResourcesItemEntity;
 use Civi\Funding\Entity\ExternalFileEntity;
 use Civi\Funding\Exception\FundingException;
+use Civi\Funding\Util\DateTimeUtil;
 use Webmozart\Assert\Assert;
 
 /**
@@ -171,6 +172,7 @@ abstract class AbstractClearingItemsFormDataPersister {
       $existingClearingItem
         ->setFileId($fileId)
         ->setReceiptNumber($record['receiptNumber'])
+        ->setReceiptDate(DateTimeUtil::toDateTimeOrNull($record['receiptDate']))
         ->setPaymentDate(new \DateTime($record['paymentDate']))
         ->setRecipient($record['recipient'])
         ->setReason($record['reason'])
@@ -194,6 +196,7 @@ abstract class AbstractClearingItemsFormDataPersister {
       'status' => $this->determineStatus($record, NULL, $fileId, $permissions),
       'file_id' => $fileId,
       'receipt_number' => $record['receiptNumber'],
+      'receipt_date' => $record['receiptDate'],
       'payment_date' => $record['paymentDate'],
       'recipient' => $record['recipient'],
       'reason' => $record['reason'],
@@ -260,7 +263,8 @@ abstract class AbstractClearingItemsFormDataPersister {
   private function isClearingItemChanged(AbstractClearingItemEntity $clearingItem, array $record, ?int $fileId): bool {
     return $clearingItem->getFileId() !== $fileId
       || $clearingItem->getReceiptNumber() !== $record['receiptNumber']
-      || $clearingItem->get('payment_date') !== $record['paymentDate']
+      || $clearingItem->getReceiptDate()?->format('Y-m-d') !== $record['receiptDate']
+      || $clearingItem->getPaymentDate()->format('Y-m-d') !== $record['paymentDate']
       || $clearingItem->getRecipient() !== $record['recipient']
       || $clearingItem->getReason() !== $record['reason']
       || abs($clearingItem->getAmount() - $record['amount']) >= PHP_FLOAT_EPSILON;

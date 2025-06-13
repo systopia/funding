@@ -43,6 +43,7 @@ use Webmozart\Assert\Assert;
  *   _id: int|null,
  *   file: string|null,
  *   receiptNumber: ?string,
+ *   receiptDate: ?string,
  *   paymentDate: string,
  *   recipient: string,
  *   reason: string,

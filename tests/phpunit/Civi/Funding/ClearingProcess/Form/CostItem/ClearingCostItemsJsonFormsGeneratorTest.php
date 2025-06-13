@@ -151,6 +151,10 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         'type' => ['string', 'null'],
                         'maxlength' => 255,
                       ],
+                      'receiptDate' => [
+                        'type' => ['string', 'null'],
+                        'format' => 'date',
+                      ],
                       'paymentDate' => [
                         'type' => 'string',
                         'format' => 'date',
@@ -301,6 +305,11 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         ],
                         [
                           'type' => 'Control',
+                          'scope' => '#/properties/receiptDate',
+                          'label' => 'Receipt Date',
+                        ],
+                        [
+                          'type' => 'Control',
                           'scope' => '#/properties/paymentDate',
                           'label' => "Payment/\u{200B}Posting Date",
                         ],
@@ -440,6 +449,10 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                       'receiptNumber' => [
                         'type' => ['string', 'null'],
                         'maxlength' => 255,
+                      ],
+                      'receiptDate' => [
+                        'type' => ['string', 'null'],
+                        'format' => 'date',
                       ],
                       'paymentDate' => [
                         'type' => 'string',
@@ -588,6 +601,11 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                           'type' => 'Control',
                           'scope' => '#/properties/receiptNumber',
                           'label' => 'Receipt Number',
+                        ],
+                        [
+                          'type' => 'Control',
+                          'scope' => '#/properties/receiptDate',
+                          'label' => 'Receipt Date',
                         ],
                         [
                           'type' => 'Control',
@@ -744,6 +762,10 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         'type' => ['string', 'null'],
                         'maxlength' => 255,
                       ],
+                      'receiptDate' => [
+                        'type' => ['string', 'null'],
+                        'format' => 'date',
+                      ],
                       'paymentDate' => [
                         'type' => 'string',
                         'format' => 'date',
@@ -892,6 +914,11 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                           'type' => 'Control',
                           'scope' => '#/properties/receiptNumber',
                           'label' => 'Receipt Number',
+                        ],
+                        [
+                          'type' => 'Control',
+                          'scope' => '#/properties/receiptDate',
+                          'label' => 'Receipt Date',
                         ],
                         [
                           'type' => 'Control',

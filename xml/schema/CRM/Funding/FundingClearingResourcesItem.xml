@@ -108,6 +108,15 @@
   </field>
 
   <field>
+    <name>receipt_date</name>
+    <type>date</type>
+    <html>
+      <type>Select Date</type>
+      <formatType>activityDate</formatType>
+    </html>
+  </field>
+
+  <field>
     <name>payment_date</name>
     <type>date</type>
     <required>true</required>

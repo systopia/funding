@@ -26,6 +26,7 @@ namespace Civi\Funding\Entity;
  *   status: string,
  *   file_id: ?int,
  *   receipt_number: ?string,
+ *   receipt_date: ?string,
  *   payment_date: string,
  *   recipient: string,
  *   reason: string,
@@ -82,6 +83,20 @@ abstract class AbstractClearingItemEntity extends AbstractEntity {
    */
   public function setReceiptNumber(?string $receiptNumber): self {
     $this->values['receipt_number'] = $receiptNumber;
+
+    return $this;
+  }
+
+  public function getReceiptDate(): ?\DateTimeInterface {
+    // @phpstan-ignore-next-line
+    return self::toDateTimeOrNull($this->values['receipt_date']);
+  }
+
+  /**
+   * @return static
+   */
+  public function setReceiptDate(?\DateTimeInterface $receiptDate): self {
+    $this->values['receipt_date'] = self::toDateStrOrNull($receiptDate);
 
     return $this;
   }
