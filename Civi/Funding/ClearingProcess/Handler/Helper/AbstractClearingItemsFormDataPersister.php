@@ -109,26 +109,20 @@ abstract class AbstractClearingItemsFormDataPersister {
   ): array {
     $clearingProcessId = $clearingProcessBundle->getClearingProcess()->getId();
     $clearingItems = [];
+    $financePlanItems = [];
     $files = [];
-    foreach ($clearingItemsFormData as $financePlanItemId => $data) {
-      $financePlanItem = $this->financePlanItemManager->get($financePlanItemId);
-      Assert::notNull($financePlanItem, sprintf('Invalid finance plan item ID %d', $financePlanItemId));
-
-      $applicationProcessId = $clearingProcessBundle->getApplicationProcess()->getId();
-      Assert::same(
-        $applicationProcessId,
-        $financePlanItem->getApplicationProcessId(),
-        sprintf(
-          'Expected application process ID of finance plan item with ID %d to be %d',
-          $financePlanItemId,
-          $applicationProcessId
-        )
-      );
-
+    foreach ($clearingItemsFormData as $data) {
       foreach ($data['records'] as $record) {
+        $financePlanItemId = $record['_financePlanItemId'];
+        $financePlanItem = $financePlanItems[$financePlanItemId] ??= $this->getFinancePlanItem(
+          $financePlanItemId,
+          $clearingProcessBundle
+        );
+
         [$clearingItem, $externalFile] = $this->createClearingItem($clearingProcessBundle, $financePlanItem, $record);
         $clearingItems[] = $clearingItem;
         if (NULL !== $externalFile) {
+          Assert::string($record['file'] ?? NULL);
           $files[$record['file']] = $externalFile->getUri();
         }
       }
@@ -152,6 +146,16 @@ abstract class AbstractClearingItemsFormDataPersister {
     AbstractFinancePlanItemEntity $financePlanItem,
     array $record
   ): array {
+    $record += [
+      'file' => NULL,
+      'receiptNumber' => NULL,
+      'receiptDate' => NULL,
+      'paymentDate' => NULL,
+      'recipient' => NULL,
+      'reason' => NULL,
+      'properties' => NULL,
+    ];
+
     $clearingProcessId = $clearingProcessBundle->getClearingProcess()->getId();
     $permissions = $clearingProcessBundle->getFundingCase()->getPermissions();
 
@@ -166,17 +170,18 @@ abstract class AbstractClearingItemsFormDataPersister {
 
       Assert::same($existingClearingItem->get($this->financePlanItemIdFieldName), $financePlanItem->getId());
       $externalFile = $this->handleFile($record, $existingClearingItem, $clearingProcessId);
-      $fileId = NULL === $externalFile ? NULL : $externalFile->getFileId();
+      $fileId = $externalFile?->getFileId();
 
       $status = $this->determineStatus($record, $existingClearingItem, $fileId, $permissions);
       $existingClearingItem
         ->setFileId($fileId)
         ->setReceiptNumber($record['receiptNumber'])
         ->setReceiptDate(DateTimeUtil::toDateTimeOrNull($record['receiptDate']))
-        ->setPaymentDate(new \DateTime($record['paymentDate']))
+        ->setPaymentDate(DateTimeUtil::toDateTimeOrNull($record['paymentDate']))
         ->setRecipient($record['recipient'])
         ->setReason($record['reason'])
         ->setAmount($record['amount'])
+        ->setProperties($record['properties'])
         ->setStatus($status);
       if ($this->hasReviewPermission($permissions)) {
         $existingClearingItem->setAmountAdmitted($record['amountAdmitted']);
@@ -189,7 +194,7 @@ abstract class AbstractClearingItemsFormDataPersister {
     }
 
     $externalFile = $this->handleFile($record, NULL, $clearingProcessId);
-    $fileId = NULL === $externalFile ? NULL : $externalFile->getFileId();
+    $fileId = $externalFile?->getFileId();
     $clearingItem = $this->clearingItemEntityClass::fromArray([
       'clearing_process_id' => $clearingProcessId,
       $this->financePlanItemIdFieldName => $financePlanItem->getId(),
@@ -201,6 +206,7 @@ abstract class AbstractClearingItemsFormDataPersister {
       'recipient' => $record['recipient'],
       'reason' => $record['reason'],
       'amount' => $record['amount'],
+      'properties' => $record['properties'],
       'amount_admitted' => NULL,
     ]);
 
@@ -239,6 +245,32 @@ abstract class AbstractClearingItemsFormDataPersister {
   }
 
   /**
+   * @phpstan-return TFinancePlanItem
+   *
+   * @throws \CRM_Core_Exception
+   */
+  private function getFinancePlanItem(
+    int $financePlanItemId,
+    ClearingProcessEntityBundle $clearingProcessBundle
+  ): AbstractFinancePlanItemEntity {
+    $financePlanItem = $this->financePlanItemManager->get($financePlanItemId);
+    Assert::notNull($financePlanItem, sprintf('Invalid finance plan item ID %d', $financePlanItemId));
+
+    $applicationProcessId = $clearingProcessBundle->getApplicationProcess()->getId();
+    Assert::same(
+      $applicationProcessId,
+      $financePlanItem->getApplicationProcessId(),
+      sprintf(
+        'Expected application process ID of finance plan item with ID %d to be %d',
+        $financePlanItemId,
+        $applicationProcessId
+      )
+    );
+
+    return $financePlanItem;
+  }
+
+  /**
    * @phpstan-param clearingItemRecordT $record
    * @phpstan-param TClearingItem $existingClearingItem
    *
@@ -262,12 +294,13 @@ abstract class AbstractClearingItemsFormDataPersister {
    */
   private function isClearingItemChanged(AbstractClearingItemEntity $clearingItem, array $record, ?int $fileId): bool {
     return $clearingItem->getFileId() !== $fileId
-      || $clearingItem->getReceiptNumber() !== $record['receiptNumber']
-      || $clearingItem->getReceiptDate()?->format('Y-m-d') !== $record['receiptDate']
-      || $clearingItem->getPaymentDate()->format('Y-m-d') !== $record['paymentDate']
-      || $clearingItem->getRecipient() !== $record['recipient']
-      || $clearingItem->getReason() !== $record['reason']
-      || abs($clearingItem->getAmount() - $record['amount']) >= PHP_FLOAT_EPSILON;
+      || $clearingItem->getReceiptNumber() !== ($record['receiptNumber'] ?? NULL)
+      || $clearingItem->getReceiptDate()?->format('Y-m-d') !== ($record['receiptDate'] ?? NULL)
+      || $clearingItem->getPaymentDate()?->format('Y-m-d') !== ($record['paymentDate'] ?? NULL)
+      || $clearingItem->getRecipient() !== ($record['recipient'] ?? NULL)
+      || $clearingItem->getReason() !== ($record['reason'] ?? NULL)
+      || abs($clearingItem->getAmount() - $record['amount']) >= PHP_FLOAT_EPSILON
+      || $clearingItem->getProperties() !== ($record['properties'] ?? NULL);
   }
 
 }

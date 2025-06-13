@@ -66,29 +66,33 @@ final class ClearingFormDataGetHandler implements ClearingFormDataGetHandlerInte
     ];
 
     foreach ($this->clearingCostItemManager->getByClearingProcessId($clearingProcessId) as $clearingItem) {
+      // @todo Allow funding case types to specify index. Maybe store data pointer like for finance plan items?
       $data['costItems'][$clearingItem->getApplicationCostItemId()]['records'][] = [
         '_id' => $clearingItem->getId(),
         'amount' => $clearingItem->getAmount(),
         'file' => $this->getExternalFileUri($clearingItem),
         'receiptNumber' => $clearingItem->getReceiptNumber(),
         'receiptDate' => $clearingItem->getReceiptDate()?->format('Y-m-d'),
-        'paymentDate' => $clearingItem->getPaymentDate()->format('Y-m-d'),
+        'paymentDate' => $clearingItem->getPaymentDate()?->format('Y-m-d'),
         'recipient' => $clearingItem->getRecipient(),
         'reason' => $clearingItem->getReason(),
+        'properties' => $clearingItem->getProperties(),
         'amountAdmitted' => $clearingItem->getAmountAdmitted(),
       ];
     }
 
     foreach ($this->clearingResourcesItemManager->getByClearingProcessId($clearingProcessId) as $clearingItem) {
+      // @todo Allow funding case types to specify index. Maybe store data pointer like for finance plan items?
       $data['resourcesItems'][$clearingItem->getApplicationResourcesItemId()]['records'][] = [
         '_id' => $clearingItem->getId(),
         'amount' => $clearingItem->getAmount(),
         'file' => $this->getExternalFileUri($clearingItem),
         'receiptNumber' => $clearingItem->getReceiptNumber(),
         'receiptDate' => $clearingItem->getReceiptDate()?->format('Y-m-d'),
-        'paymentDate' => $clearingItem->getPaymentDate()->format('Y-m-d'),
+        'paymentDate' => $clearingItem->getPaymentDate()?->format('Y-m-d'),
         'recipient' => $clearingItem->getRecipient(),
         'reason' => $clearingItem->getReason(),
+        'properties' => $clearingItem->getProperties(),
         'amountAdmitted' => $clearingItem->getAmountAdmitted(),
       ];
     }

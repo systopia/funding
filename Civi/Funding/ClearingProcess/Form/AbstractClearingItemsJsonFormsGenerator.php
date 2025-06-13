@@ -209,6 +209,11 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
           'records' => new JsonSchemaArray(
             new JsonSchemaObject([
               '_id' => new JsonSchemaInteger(['readOnly' => TRUE, 'default' => NULL], TRUE),
+              '_financePlanItemId' => new JsonSchemaInteger([
+                'readOnly' => TRUE,
+                'const' => $item->getId(),
+                '$default' => $item->getId(),
+              ]),
               'file' => new JsonSchemaString(['format' => 'uri', 'default' => NULL], TRUE),
               'receiptNumber' => new JsonSchemaString(['maxlength' => 255], TRUE),
               'receiptDate' => new JsonSchemaDate([], TRUE),

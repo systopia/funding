@@ -41,22 +41,24 @@ use Webmozart\Assert\Assert;
 /**
  * @phpstan-type clearingItemRecordT array{
  *   _id: int|null,
- *   file: string|null,
- *   receiptNumber: ?string,
- *   receiptDate: ?string,
- *   paymentDate: string,
- *   recipient: string,
- *   reason: string,
+ *   _financePlanItemId: int,
+ *   file?: string|null,
+ *   receiptNumber?: ?string,
+ *   receiptDate?: ?string,
+ *   paymentDate?: ?string,
+ *   recipient?: ?string,
+ *   reason?: ?string,
  *   amount: float|int,
  *   amountAdmitted: float|int|null,
+ *   properties?: array<string, mixed>|null,
  * }
  *
  * @phpstan-type clearingFormDataT array{
  *   _action: string,
- *   costItems?: array<int, array{records: list<clearingItemRecordT>}>,
+ *   costItems?: array<array{records: list<clearingItemRecordT>}>,
  *   costItemsAmountAdmitted?: float,
  *   costItemsAmountRecorded?: float,
- *   resourcesItems?: array<int, array{records: list<clearingItemRecordT>}>,
+ *   resourcesItems?: array<array{records: list<clearingItemRecordT>}>,
  *   resourcesItemsAdmountAdmitted?: float,
  *   resourcesItemsAmountRecorded?: float,
  *   reportData?: array<string, mixed>,
