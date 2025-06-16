@@ -58,7 +58,7 @@ class FundingCaseNotificationSubscriber implements EventSubscriberInterface {
    * @throws \CRM_Core_Exception
    */
   public function onUpdated(FundingCaseUpdatedEvent $event): void {
-    if ($event->getFundingCase()->getStatus() !== $event->getFundingCase()->getStatus()) {
+    if ($event->getFundingCase()->getStatus() !== $event->getPreviousFundingCase()->getStatus()) {
       $this->notificationSender->sendNotification(
         'funding_case.status_change:' . $event->getFundingCase()->getStatus(),
         $event->getFundingCase(),
