@@ -31,6 +31,7 @@ use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\ClearingProcess\ClearingResourcesItemManager;
 use Civi\Funding\ClearingProcess\ClearingStatusDeterminer;
 use Civi\Funding\ClearingProcess\Form\ClearingFormGenerator;
+use Civi\Funding\ClearingProcess\Form\ClearingFormGeneratorInterface;
 use Civi\Funding\ClearingProcess\Form\ClearingGroupExtractor;
 use Civi\Funding\ClearingProcess\Form\CostItem\ClearableCostItemsLoader;
 use Civi\Funding\ClearingProcess\Form\CostItem\ClearingCostItemsJsonFormsGenerator;
@@ -52,13 +53,17 @@ use Civi\Funding\ClearingProcess\Handler\ClearingFormValidateHandlerInterface;
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingCommentPersister;
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingCostItemsFormDataPersister;
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingResourcesItemsFormDataPersister;
+use Civi\Funding\DependencyInjection\Compiler\ClearingFormGetHandlerPass;
 use Civi\Funding\DependencyInjection\Compiler\ClearingFormValidatorPass;
+use Civi\Funding\DependencyInjection\Compiler\ClearingReceiptsFormFactoryPass;
 use Civi\Funding\DependencyInjection\Compiler\ClearingReportDataLoaderPass;
 use Civi\Funding\DependencyInjection\Compiler\ClearingReportFormFactoryPass;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+$container->addCompilerPass(new ClearingFormGetHandlerPass());
+$container->addCompilerPass(new ClearingReceiptsFormFactoryPass());
 $container->addCompilerPass(new ClearingReportDataLoaderPass());
 $container->addCompilerPass(new ClearingReportFormFactoryPass());
 $container->addCompilerPass(new ClearingFormValidatorPass());
@@ -69,8 +74,9 @@ $container->autowire(ClearingCostItemManager::class);
 $container->autowire(ClearingResourcesItemManager::class);
 $container->autowire(ClearingExternalFileManagerInterface::class, ClearingExternalFileManager::class);
 
-$container->autowire(ClearingFormGenerator::class);
-$container->autowire(ReceiptsFormGeneratorInterface::class, ReceiptsFormGenerator::class);
+$container->autowire(ClearingFormGeneratorInterface::class, ClearingFormGenerator::class);
+$container->autowire(ReceiptsFormGenerator::class)
+  ->addTag(ReceiptsFormGeneratorInterface::class);
 $container->autowire(ClearingCostItemsJsonFormsGenerator::class);
 $container->autowire(ClearingResourcesItemsJsonFormsGenerator::class);
 
@@ -92,8 +98,8 @@ $container->autowire(ClearingActionApplyHandlerInterface::class, ClearingActionA
 $container->autowire(ClearingFormDataGetHandlerInterface::class, ClearingFormDataGetHandler::class)
   ->addTag(ClearingFormDataGetHandlerInterface::SERVICE_TAG);
 
-$container->autowire(ClearingFormGetHandlerInterface::class, ClearingFormGetHandler::class)
-  ->addTag(ClearingFormGetHandlerInterface::SERVICE_TAG);
+$container->autowire(ClearingFormGetHandler::class)
+  ->addTag(ClearingFormGetHandlerInterface::class);
 
 $container->autowire(ClearingFormValidateHandlerInterface::class, ClearingFormValidateHandler::class)
   ->addTag(ClearingFormValidateHandlerInterface::SERVICE_TAG);

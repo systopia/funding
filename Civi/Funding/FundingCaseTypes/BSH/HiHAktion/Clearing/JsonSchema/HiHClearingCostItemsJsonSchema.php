@@ -1,0 +1,88 @@
+<?php
+/*
+ * Copyright (C) 2025 SYSTOPIA GmbH
+ *
+ *  This program is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU Affero General Public License as published by the Free
+ *  Software Foundation, either version 3 of the License, or (at your option) any
+ *  later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+declare(strict_types = 1);
+
+namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Clearing\JsonSchema;
+
+use Civi\Funding\Entity\ApplicationCostItemEntity;
+use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
+use Civi\RemoteTools\JsonSchema\JsonSchemaCalculate;
+use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
+use Civi\RemoteTools\JsonSchema\JsonSchemaInteger;
+use Civi\RemoteTools\JsonSchema\JsonSchemaMoney;
+use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
+use Civi\RemoteTools\JsonSchema\JsonSchemaString;
+
+final class HiHClearingCostItemsJsonSchema extends JsonSchemaObject {
+
+  public function __construct(
+    bool $hasReviewPermission,
+    ApplicationCostItemEntity $personalkostenBewilligt,
+    ApplicationCostItemEntity $honorareBewilligt,
+    ApplicationCostItemEntity $sachkostenBewilligt,
+  ) {
+    $properties = [
+      $personalkostenBewilligt->getId() => new JsonSchemaObject([
+        'records' => new JsonSchemaArray(new JsonSchemaObject([
+          '_id' => new JsonSchemaInteger(['readOnly' => TRUE, 'default' => NULL], TRUE),
+          '_financePlanItemId' => new JsonSchemaInteger([
+            'readOnly' => TRUE,
+            'const' => $personalkostenBewilligt->getId(),
+            '$default' => $personalkostenBewilligt->getId(),
+          ]),
+          'properties' => new JsonSchemaObject([
+            'posten' => new JsonSchemaString(),
+            'wochenstunden' => new JsonSchemaInteger(),
+            'monatlichesArbeitgeberbrutto' => new JsonSchemaMoney(),
+            'monate' => new JsonSchemaInteger(),
+          ], ['required' => ['posten', 'wochenstunden', 'monatlichesArbeitgeberbrutto', 'monate']]),
+          'amount' => new JsonSchemaCalculate('number', 'monatlichesArbeitgeberbrutto * monate', [
+            'monatlichesArbeitgeberbrutto' => new JsonSchemaDataPointer('1/properties/monatlichesArbeitgeberbrutto'),
+            'monate' => new JsonSchemaDataPointer('1/properties/monate'),
+          ]),
+          'amountAdmitted' => new JsonSchemaMoney([
+            'readOnly' => !$hasReviewPermission,
+            'default' => $hasReviewPermission ? new JsonSchemaDataPointer('1/amount') : NULL,
+          ], TRUE),
+        ], ['required' => ['amount', 'properties']])),
+        'amountRecordedTotal' => new JsonSchemaCalculate(
+          'number',
+          'round(sum(map(records, "value.amount")), 2)',
+          ['records' => new JsonSchemaDataPointer('1/records')],
+          NULL,
+          ['default' => 0]
+        ),
+        'amountAdmittedTotal' => new JsonSchemaCalculate(
+          'number',
+          // With Symfony Expression Language 6.2 we'd use '??' instead of '?:'
+          // Though as long as we support PHP 7.4 we have to keep '?:'.
+          'round(sum(map(records, "value.amountAdmitted ?: 0")), 2)',
+          ['records' => new JsonSchemaDataPointer('1/records')],
+          NULL,
+          ['default' => 0]
+        ),
+      ], ['required' => ['records']]),
+    ];
+
+    $keywords = ['required' => [(string) $personalkostenBewilligt->getId()]];
+
+    parent::__construct($properties, $keywords);
+  }
+
+}

@@ -66,31 +66,47 @@ final class ClearingFormDataGetHandler implements ClearingFormDataGetHandlerInte
     ];
 
     foreach ($this->clearingCostItemManager->getByClearingProcessId($clearingProcessId) as $clearingItem) {
-      $data['costItems'][$clearingItem->getApplicationCostItemId()]['records'][] = [
+      $costItemData = [
         '_id' => $clearingItem->getId(),
         'amount' => $clearingItem->getAmount(),
         'file' => $this->getExternalFileUri($clearingItem),
         'receiptNumber' => $clearingItem->getReceiptNumber(),
         'receiptDate' => $clearingItem->getReceiptDate()?->format('Y-m-d'),
-        'paymentDate' => $clearingItem->getPaymentDate()->format('Y-m-d'),
+        'paymentDate' => $clearingItem->getPaymentDate()?->format('Y-m-d'),
         'recipient' => $clearingItem->getRecipient(),
         'reason' => $clearingItem->getReason(),
+        'properties' => $clearingItem->getProperties(),
         'amountAdmitted' => $clearingItem->getAmountAdmitted(),
       ];
+      if (NULL === $clearingItem->getFormKey()) {
+        $data['costItems'][$clearingItem->getApplicationCostItemId()]['records'][] = $costItemData;
+      }
+      else {
+        $data['costItems'][$clearingItem->getApplicationCostItemId()]['records'][$clearingItem->getFormKey()]
+          = $costItemData;
+      }
     }
 
     foreach ($this->clearingResourcesItemManager->getByClearingProcessId($clearingProcessId) as $clearingItem) {
-      $data['resourcesItems'][$clearingItem->getApplicationResourcesItemId()]['records'][] = [
+      $resourcesItemData = [
         '_id' => $clearingItem->getId(),
         'amount' => $clearingItem->getAmount(),
         'file' => $this->getExternalFileUri($clearingItem),
         'receiptNumber' => $clearingItem->getReceiptNumber(),
         'receiptDate' => $clearingItem->getReceiptDate()?->format('Y-m-d'),
-        'paymentDate' => $clearingItem->getPaymentDate()->format('Y-m-d'),
+        'paymentDate' => $clearingItem->getPaymentDate()?->format('Y-m-d'),
         'recipient' => $clearingItem->getRecipient(),
         'reason' => $clearingItem->getReason(),
+        'properties' => $clearingItem->getProperties(),
         'amountAdmitted' => $clearingItem->getAmountAdmitted(),
       ];
+      if (NULL === $clearingItem->getFormKey()) {
+        $data['resourcesItems'][$clearingItem->getApplicationResourcesItemId()]['records'][] = $resourcesItemData;
+      }
+      else {
+        $data['resourcesItems'][$clearingItem->getApplicationResourcesItemId()]['records'][$clearingItem->getFormKey()]
+          = $resourcesItemData;
+      }
     }
 
     // Perform calculations.

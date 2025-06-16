@@ -26,13 +26,14 @@ use Civi\Funding\ClearingProcess\Command\ClearingFormDataGetCommand;
 use Civi\Funding\ClearingProcess\Command\ClearingFormSubmitCommand;
 use Civi\Funding\ClearingProcess\Command\ClearingFormSubmitResult;
 use Civi\Funding\ClearingProcess\Command\ClearingFormValidateCommand;
+use Civi\Funding\ClearingProcess\Form\ClearingFormGeneratorInterface;
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingCommentPersister;
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingCostItemsFormDataPersister;
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingResourcesItemsFormDataPersister;
 use Civi\Funding\ExternalFile\TaggedExternalFilePersister;
 
 /**
- * @phpstan-import-type clearingFormDataT from \Civi\Funding\ClearingProcess\Form\ClearingFormGenerator
+ * @phpstan-import-type clearingFormDataT from ClearingFormGeneratorInterface
  */
 final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterface {
 

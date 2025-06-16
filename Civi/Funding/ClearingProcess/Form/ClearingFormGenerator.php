@@ -38,36 +38,7 @@ use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
 
-/**
- * @phpstan-type clearingItemRecordT array{
- *   _id: int|null,
- *   file: string|null,
- *   receiptNumber: ?string,
- *   receiptDate: ?string,
- *   paymentDate: string,
- *   recipient: string,
- *   reason: string,
- *   amount: float|int,
- *   amountAdmitted: float|int|null,
- * }
- *
- * @phpstan-type clearingFormDataT array{
- *   _action: string,
- *   costItems?: array<int, array{records: list<clearingItemRecordT>}>,
- *   costItemsAmountAdmitted?: float,
- *   costItemsAmountRecorded?: float,
- *   resourcesItems?: array<int, array{records: list<clearingItemRecordT>}>,
- *   resourcesItemsAdmountAdmitted?: float,
- *   resourcesItemsAmountRecorded?: float,
- *   reportData?: array<string, mixed>,
- *   comment?: array{text: string, type: 'internal'|'external'},
- * }
- *
- * This class generates a JSON Forms specification that has a JSON schema that
- * validates the data specified in clearingFormDataT. (For displaying purposes
- * costItems and resourcesItems have additional properties.)
- */
-final class ClearingFormGenerator {
+final class ClearingFormGenerator implements ClearingFormGeneratorInterface {
 
   use HasClearingReviewPermissionTrait;
 
@@ -87,9 +58,6 @@ final class ClearingFormGenerator {
     $this->reportFormFactory = $reportDataFormFactory;
   }
 
-  /**
-   * @throws \CRM_Core_Exception
-   */
   public function generateForm(ClearingProcessEntityBundle $clearingProcessBundle): JsonFormsFormInterface {
     $receiptsForm = $this->receiptsFormGenerator->generateReceiptsForm($clearingProcessBundle);
     $reportForm = $this->reportFormFactory->createReportForm($clearingProcessBundle);

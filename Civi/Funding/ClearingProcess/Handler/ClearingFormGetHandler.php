@@ -21,9 +21,12 @@ namespace Civi\Funding\ClearingProcess\Handler;
 
 use Civi\Funding\ClearingProcess\Command\ClearingFormGetCommand;
 use Civi\Funding\ClearingProcess\Form\ClearingFormGenerator;
+use Civi\Funding\ClearingProcess\Form\ClearingFormGeneratorInterface;
 use Civi\Funding\Form\JsonFormsFormInterface;
 
 final class ClearingFormGetHandler implements ClearingFormGetHandlerInterface {
+
+  public const SUPPORTED_FUNDING_CASE_TYPE = '*';
 
   private ClearingFormGenerator $clearingFormsGenerator;
 
@@ -32,7 +35,7 @@ final class ClearingFormGetHandler implements ClearingFormGetHandlerInterface {
    */
   private array $forms = [];
 
-  public function __construct(ClearingFormGenerator $clearingFormsGenerator) {
+  public function __construct(ClearingFormGeneratorInterface $clearingFormsGenerator) {
     $this->clearingFormsGenerator = $clearingFormsGenerator;
   }
 
