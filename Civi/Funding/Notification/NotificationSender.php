@@ -95,7 +95,10 @@ final class NotificationSender {
       );
 
       if (NULL !== $sendTemplateParams) {
-        \CRM_Core_BAO_MessageTemplate::sendTemplate($sendTemplateParams);
+        \CRM_Core_Transaction::addCallback(
+          \CRM_Core_Transaction::PHASE_POST_COMMIT,
+          fn () => \CRM_Core_BAO_MessageTemplate::sendTemplate($sendTemplateParams)
+        );
       }
     }
   }
