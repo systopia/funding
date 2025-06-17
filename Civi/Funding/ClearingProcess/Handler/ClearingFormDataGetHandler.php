@@ -26,7 +26,12 @@ use Civi\Funding\ClearingProcess\Command\ClearingFormDataGetCommand;
 use Civi\Funding\ClearingProcess\Command\ClearingFormValidateCommand;
 use Civi\Funding\ClearingProcess\Form\ReportDataLoaderInterface;
 use Civi\Funding\Entity\AbstractClearingItemEntity;
+use Civi\Funding\Entity\ClearingCostItemEntity;
+use Civi\Funding\Entity\ClearingResourcesItemEntity;
 
+/**
+ * @phpstan-import-type clearingItemsT from \Civi\Funding\ClearingProcess\Form\ClearingFormGeneratorInterface
+ */
 final class ClearingFormDataGetHandler implements ClearingFormDataGetHandlerInterface {
 
   private ClearingCostItemManager $clearingCostItemManager;
@@ -66,8 +71,9 @@ final class ClearingFormDataGetHandler implements ClearingFormDataGetHandlerInte
     ];
 
     foreach ($this->clearingCostItemManager->getByClearingProcessId($clearingProcessId) as $clearingItem) {
-      $costItemData = [
+      $costItemRecord = [
         '_id' => $clearingItem->getId(),
+        '_financePlanItemId' => $clearingItem->getFinancePlanItemId(),
         'amount' => $clearingItem->getAmount(),
         'file' => $this->getExternalFileUri($clearingItem),
         'receiptNumber' => $clearingItem->getReceiptNumber(),
@@ -78,18 +84,14 @@ final class ClearingFormDataGetHandler implements ClearingFormDataGetHandlerInte
         'properties' => $clearingItem->getProperties(),
         'amountAdmitted' => $clearingItem->getAmountAdmitted(),
       ];
-      if (NULL === $clearingItem->getFormKey()) {
-        $data['costItems'][$clearingItem->getApplicationCostItemId()]['records'][] = $costItemData;
-      }
-      else {
-        $data['costItems'][$clearingItem->getApplicationCostItemId()]['records'][$clearingItem->getFormKey()]
-          = $costItemData;
-      }
+      [$dataKey, $recordKey] = $this->getDataKeyAndRecordKey($clearingItem, $data['costItems']);
+      $data['costItems'][$dataKey]['records'][$recordKey] = $costItemRecord;
     }
 
     foreach ($this->clearingResourcesItemManager->getByClearingProcessId($clearingProcessId) as $clearingItem) {
       $resourcesItemData = [
         '_id' => $clearingItem->getId(),
+        '_financePlanItemId' => $clearingItem->getFinancePlanItemId(),
         'amount' => $clearingItem->getAmount(),
         'file' => $this->getExternalFileUri($clearingItem),
         'receiptNumber' => $clearingItem->getReceiptNumber(),
@@ -100,13 +102,8 @@ final class ClearingFormDataGetHandler implements ClearingFormDataGetHandlerInte
         'properties' => $clearingItem->getProperties(),
         'amountAdmitted' => $clearingItem->getAmountAdmitted(),
       ];
-      if (NULL === $clearingItem->getFormKey()) {
-        $data['resourcesItems'][$clearingItem->getApplicationResourcesItemId()]['records'][] = $resourcesItemData;
-      }
-      else {
-        $data['resourcesItems'][$clearingItem->getApplicationResourcesItemId()]['records'][$clearingItem->getFormKey()]
-          = $resourcesItemData;
-      }
+      [$dataKey, $recordKey] = $this->getDataKeyAndRecordKey($clearingItem, $data['resourcesItems']);
+      $data['resourcesItems'][$dataKey]['records'][$recordKey] = $resourcesItemData;
     }
 
     // Perform calculations.
@@ -125,7 +122,28 @@ final class ClearingFormDataGetHandler implements ClearingFormDataGetHandlerInte
   private function getExternalFileUri(AbstractClearingItemEntity $clearingItem): ?string {
     $externalFile = $this->externalFileManager->getFile($clearingItem);
 
-    return NULL === $externalFile ? NULL : $externalFile->getUri();
+    return $externalFile?->getUri();
+  }
+
+  /**
+   * @phpstan-param clearingItemsT $clearingItemsData
+   *
+   * @phpstan-return array{int|string, int|string}
+   */
+  private function getDataKeyAndRecordKey(
+    ClearingCostItemEntity|ClearingResourcesItemEntity $clearingItem,
+    mixed $clearingItemsData
+  ): array {
+    [$dataKey, $recordKey] = explode('/', $clearingItem->getFormKey() ?? '') + ['', ''];
+    if ('' === $dataKey) {
+      $dataKey = $clearingItem->getFinancePlanItemId();
+    }
+
+    if ('' === $recordKey || 1 === preg_match('/^\d+$/', $recordKey)) {
+      $recordKey = count($clearingItemsData[$dataKey]['records'] ?? []);
+    }
+
+    return [$dataKey, $recordKey];
   }
 
 }

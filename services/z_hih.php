@@ -35,6 +35,7 @@ use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\JsonSchema\HiHApplic
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\JsonSchema\HiHApplicationJsonSchemaFactory;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\UiSchema\HiHApplicationUiSchemaFactory;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Clearing\HiHClearingReceiptsFormGenerator;
+use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Clearing\HiHReportFormFactory;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\FundingCase\Actions\HiHCaseActionsDeterminer;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\FundingCase\HiHPossibleRecipientsForChangeLoader;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\FundingCase\StatusDeterminer\HiHCaseStatusDeterminer;
@@ -88,6 +89,8 @@ $container->autowire(HiHPossibleRecipientsForChangeLoader::class)
 
 $container->autowire(HiHClearingReceiptsFormGenerator::class)
   ->addTag(ReceiptsFormGeneratorInterface::class);
+$container->autowire(HiHReportFormFactory::class)
+  ->addTag(HiHReportFormFactory::SERVICE_TAG);
 
 ServiceRegistrator::autowireAllImplementing(
   $container,

@@ -34,27 +34,53 @@ final class HiHReceiptsUiSchema extends JsonFormsGroup {
     ApplicationCostItemEntity $sachkostenBewilligt,
     string $currency
   ) {
+    $reportDataScopePrefix = '#/properties/reportData/properties';
+    $costItemsScopePrefix = '#/properties/costItems/properties';
+    $sachkostenScopePrefix = "$costItemsScopePrefix/sachkosten/properties/records/properties";
     parent::__construct('Projektkosten', [
-      new JsonFormsArray(
-        sprintf(
-          '#/properties/costItems/properties/%s/properties/records',
-          $personalkostenBewilligt->getId()
+      new JsonFormsGroup('Personalkosten', [
+        new JsonFormsArray(
+          "$costItemsScopePrefix/personalkosten/properties/records",
+          '',
+          NULL,
+          [
+            new JsonFormsHidden('#/properties/_id', ['internal' => TRUE]),
+            new JsonFormsHidden('#/properties/_financePlanItemId', ['internal' => TRUE]),
+            new JsonFormsControl('#/properties/properties/properties/posten', 'Posten'),
+            new JsonFormsControl('#/properties/properties/properties/wochenstunden', 'Wochenstunden'),
+            new JsonFormsControl(
+              '#/properties/properties/properties/monatlichesArbeitgeberbrutto',
+              "Monatliches Arbeitgeberbrutto in $currency (Anteil Projekt)"
+            ),
+            new JsonFormsControl('#/properties/properties/properties/monate', 'Monate'),
+            new JsonFormsControl('#/properties/amount', "Betrag in $currency"),
+          ],
+          ['addButtonLabel' => 'Personalkosten hinzufügen']
         ),
-        'Personalkosten',
-        NULL,
-        [
-          new JsonFormsHidden('#/properties/_id', ['internal' => TRUE]),
-          new JsonFormsControl('#/properties/properties/properties/posten', 'Posten'),
-          new JsonFormsControl('#/properties/properties/properties/wochenstunden', 'Wochenstunden'),
-          new JsonFormsControl(
-            '#/properties/properties/properties/monatlichesArbeitgeberbrutto', 'Monatliches Arbeitgeberbrutto'
-          ),
-          new JsonFormsControl('#/properties/properties/properties/monate', 'Monate'),
-          new JsonFormsControl('#/properties/amount', "Betrag in $currency"),
-          new JsonFormsControl('#/properties/amountAdmitted', "Anerkannter Betrag in $currency"),
-        ],
-        ['addButtonLabel' => 'Hinzufügen']
-      ),
+        new JsonFormsControl("$reportDataScopePrefix/personalkostenKommentar", 'Kommentar zu den Personalkosten'),
+      ]),
+      new JsonFormsGroup('Projektbezogene Sachkosten', [
+        new JsonFormsHidden("$sachkostenScopePrefix/materialien/properties/_id", ['internal' => TRUE]),
+        new JsonFormsHidden("$sachkostenScopePrefix/materialien/properties/_financePlanItemId", ['internal' => TRUE]),
+        new JsonFormsControl(
+          "$sachkostenScopePrefix/materialien/properties/amount",
+          "Projektbezogene Materialien in $currency",
+          'z.B. für Veranstaltungen, Workshops, Verbrauchsmaterial',
+          ['descriptionDisplay' => 'before']
+        ),
+        new JsonFormsArray(
+          "$costItemsScopePrefix/sachkostenSonstige/properties/records",
+          'Sonstige projektbezogene Sachkosten',
+          'z.B. Eintrittsgelder für den Besuch von Veranstaltungen, Telefonkosten, Bürobedarf oder IT-Support',
+          [
+            new JsonFormsHidden('#/properties/_id', ['internal' => TRUE]),
+            new JsonFormsHidden('#/properties/_financePlanItemId', ['internal' => TRUE]),
+            new JsonFormsControl('#/properties/properties/properties/bezeichnung', 'Bezeichnung'),
+            new JsonFormsControl('#/properties/amount', "Summe in $currency"),
+          ],
+          ['addButtonLabel' => 'Sonstige hinzufügen']
+        ),
+      ]),
     ]);
   }
 

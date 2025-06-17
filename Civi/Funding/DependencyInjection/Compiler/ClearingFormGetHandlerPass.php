@@ -19,8 +19,6 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\DependencyInjection\Compiler;
 
-use Civi\Funding\ClearingProcess\Form\Validation\ClearingFormValidatorCollector;
-use Civi\Funding\ClearingProcess\Form\Validation\ClearingFormValidatorInterface;
 use Civi\Funding\ClearingProcess\Handler\ClearingFormGetHandlerCollector;
 use Civi\Funding\ClearingProcess\Handler\ClearingFormGetHandlerInterface;
 use Civi\Funding\DependencyInjection\Compiler\Traits\TaggedFundingCaseTypeServicesTrait;

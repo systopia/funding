@@ -26,14 +26,13 @@ use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 final class HiHReceiptsJsonSchema extends JsonSchemaObject {
 
   public function __construct(
-    bool $hasReviewPermission,
     ApplicationCostItemEntity $personalkostenBewilligt,
     ApplicationCostItemEntity $honorareBewilligt,
     ApplicationCostItemEntity $sachkostenBewilligt,
   ) {
     $properties = [
       'costItems' => new HiHClearingCostItemsJsonSchema(
-        $hasReviewPermission, $personalkostenBewilligt, $honorareBewilligt, $sachkostenBewilligt
+        $personalkostenBewilligt, $honorareBewilligt, $sachkostenBewilligt
       ),
     ];
 

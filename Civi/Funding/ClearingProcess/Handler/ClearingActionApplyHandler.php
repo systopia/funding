@@ -24,7 +24,6 @@ use Civi\Funding\ClearingProcess\ClearingActionsDeterminer;
 use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\ClearingProcess\ClearingStatusDeterminer;
 use Civi\Funding\ClearingProcess\Command\ClearingActionApplyCommand;
-use Civi\Funding\ClearingProcess\Form\ClearingFormGeneratorInterface;
 
 /**
  * @phpstan-import-type clearingFormDataT from ClearingFormGeneratorInterface

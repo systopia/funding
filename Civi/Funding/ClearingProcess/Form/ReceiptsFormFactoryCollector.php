@@ -20,7 +20,6 @@ declare(strict_types = 1);
 namespace Civi\Funding\ClearingProcess\Form;
 
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
-use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Form\JsonFormsFormInterface;
 use Psr\Container\ContainerInterface;
 

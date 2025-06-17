@@ -24,7 +24,6 @@ use Civi\Funding\ClearingProcess\AbstractClearingItemManager;
 use Civi\Funding\ClearingProcess\ClearingCostItemManager;
 use Civi\Funding\ClearingProcess\ClearingExternalFileManagerInterface;
 use Civi\Funding\ClearingProcess\ClearingResourcesItemManager;
-use Civi\Funding\ClearingProcess\Form\ClearingFormGeneratorInterface;
 use Civi\Funding\ClearingProcess\Traits\HasClearingReviewPermissionTrait;
 use Civi\Funding\Entity\AbstractClearingItemEntity;
 use Civi\Funding\Entity\AbstractFinancePlanItemEntity;
@@ -109,29 +108,22 @@ abstract class AbstractClearingItemsFormDataPersister {
     array $clearingItemsFormData
   ): array {
     $clearingProcessId = $clearingProcessBundle->getClearingProcess()->getId();
+    $financePlanItems = [];
     $clearingItems = [];
     $files = [];
-    foreach ($clearingItemsFormData as $financePlanItemId => $data) {
-      $financePlanItem = $this->financePlanItemManager->get($financePlanItemId);
-      Assert::notNull($financePlanItem, sprintf('Invalid finance plan item ID %d', $financePlanItemId));
+    foreach ($clearingItemsFormData as $dataKey => $data) {
+      foreach ($data['records'] as $recordKey => $record) {
+        $financePlanItemId = $record['_financePlanItemId'] ?? $dataKey;
+        Assert::integer($financePlanItemId, 'Finance plan item ID missing');
 
-      $applicationProcessId = $clearingProcessBundle->getApplicationProcess()->getId();
-      Assert::same(
-        $applicationProcessId,
-        $financePlanItem->getApplicationProcessId(),
-        sprintf(
-          'Expected application process ID of finance plan item with ID %d to be %d',
-          $financePlanItemId,
-          $applicationProcessId
-        )
-      );
+        $financePlanItem = $financePlanItems[$financePlanItemId]
+          ??= $this->getFinancePlanItem($financePlanItemId, $clearingProcessBundle);
 
-      foreach ($data['records'] as $key => $record) {
         [$clearingItem, $externalFile] = $this->createClearingItem(
           $clearingProcessBundle,
           $financePlanItem,
           $record,
-          is_int($key) ? NULL : $key
+          "$dataKey/$recordKey"
         );
         $clearingItems[] = $clearingItem;
         if (NULL !== $externalFile) {

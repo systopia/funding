@@ -26,6 +26,7 @@ use Civi\Funding\Form\JsonFormsFormInterface;
 /**
  * @phpstan-type clearingItemRecordT array{
  *   _id: int|null,
+ *   _financePlanItemId?: int,
  *   file?: string|null,
  *   receiptNumber?: ?string,
  *   receiptDate?: ?string,
@@ -33,16 +34,21 @@ use Civi\Funding\Form\JsonFormsFormInterface;
  *   recipient?: ?string,
  *   reason?: ?string,
  *   amount: float|int,
- *   amountAdmitted: float|int|null,
+ *   amountAdmitted?: float|int|null,
  *   properties?: array<string, mixed>|null,
  * }
  *
+ * @phpstan-type clearingItemT array{records: array<int|string, clearingItemRecordT>}
+ * @phpstan-type clearingItemsT array<int, clearingItemT>|array<string, clearingItemT>
+ *   If integer keys are used they are used as finance plan item ID, if
+ *   _financePlanItemId is not set.
+ *
  * @phpstan-type clearingFormDataT array{
  *   _action: string,
- *   costItems?: array<int, array{records: list<clearingItemRecordT>}>,
+ *   costItems?: clearingItemsT,
  *   costItemsAmountAdmitted?: float,
  *   costItemsAmountRecorded?: float,
- *   resourcesItems?: array<int, array{records: list<clearingItemRecordT>}>,
+ *   resourcesItems?: clearingItemsT,
  *   resourcesItemsAdmountAdmitted?: float,
  *   resourcesItemsAmountRecorded?: float,
  *   reportData?: array<string, mixed>,

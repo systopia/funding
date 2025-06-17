@@ -22,7 +22,6 @@ namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Clearing;
 
 use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
 use Civi\Funding\ClearingProcess\Form\ReceiptsFormGeneratorInterface;
-use Civi\Funding\ClearingProcess\Traits\HasClearingReviewPermissionTrait;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\Form\JsonFormsForm;
 use Civi\Funding\Form\JsonFormsFormInterface;
@@ -34,8 +33,6 @@ use Webmozart\Assert\Assert;
 final class HiHClearingReceiptsFormGenerator implements ReceiptsFormGeneratorInterface {
 
   use HiHSupportedFundingCaseTypesTrait;
-
-  use HasClearingReviewPermissionTrait;
 
   private ApplicationCostItemManager $applicationCostItemManager;
 
@@ -72,7 +69,6 @@ final class HiHClearingReceiptsFormGenerator implements ReceiptsFormGeneratorInt
 
     return new JsonFormsForm(
       new HiHReceiptsJsonSchema(
-        $this->hasReviewCalculativePermission($clearingProcessBundle->getFundingCase()->getPermissions()),
         $personalkostenBewilligt,
         $honorareBewilligt,
         $sachkostenBewilligt

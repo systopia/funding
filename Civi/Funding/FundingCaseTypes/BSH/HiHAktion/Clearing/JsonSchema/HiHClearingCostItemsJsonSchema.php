@@ -32,19 +32,18 @@ use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 final class HiHClearingCostItemsJsonSchema extends JsonSchemaObject {
 
   public function __construct(
-    bool $hasReviewPermission,
     ApplicationCostItemEntity $personalkostenBewilligt,
     ApplicationCostItemEntity $honorareBewilligt,
     ApplicationCostItemEntity $sachkostenBewilligt,
   ) {
     $properties = [
-      $personalkostenBewilligt->getId() => new JsonSchemaObject([
+      'personalkosten' => new JsonSchemaObject([
         'records' => new JsonSchemaArray(new JsonSchemaObject([
           '_id' => new JsonSchemaInteger(['readOnly' => TRUE, 'default' => NULL], TRUE),
           '_financePlanItemId' => new JsonSchemaInteger([
             'readOnly' => TRUE,
             'const' => $personalkostenBewilligt->getId(),
-            '$default' => $personalkostenBewilligt->getId(),
+            'default' => $personalkostenBewilligt->getId(),
           ]),
           'properties' => new JsonSchemaObject([
             'posten' => new JsonSchemaString(),
@@ -56,10 +55,58 @@ final class HiHClearingCostItemsJsonSchema extends JsonSchemaObject {
             'monatlichesArbeitgeberbrutto' => new JsonSchemaDataPointer('1/properties/monatlichesArbeitgeberbrutto'),
             'monate' => new JsonSchemaDataPointer('1/properties/monate'),
           ]),
-          'amountAdmitted' => new JsonSchemaMoney([
-            'readOnly' => !$hasReviewPermission,
-            'default' => $hasReviewPermission ? new JsonSchemaDataPointer('1/amount') : NULL,
-          ], TRUE),
+          'amountAdmitted' => new JsonSchemaCalculate('number', 'amount', [
+            'amount' => new JsonSchemaDataPointer('1/amount'),
+          ]),
+        ], ['required' => ['amount', 'properties']])),
+        'amountRecordedTotal' => new JsonSchemaCalculate(
+          'number',
+          'round(sum(map(records, "value.amount")), 2)',
+          ['records' => new JsonSchemaDataPointer('1/records')],
+          NULL,
+          ['default' => 0]
+        ),
+        'amountAdmittedTotal' => new JsonSchemaCalculate(
+          'number',
+          // With Symfony Expression Language 6.2 we'd use '??' instead of '?:'
+          // Though as long as we support PHP 7.4 we have to keep '?:'.
+          'round(sum(map(records, "value.amountAdmitted ?: 0")), 2)',
+          ['records' => new JsonSchemaDataPointer('1/records')],
+          NULL,
+          ['default' => 0]
+        ),
+      ], ['required' => ['records']]),
+      'sachkosten' => new JsonSchemaObject([
+        'records' => new JsonSchemaObject([
+          'materialien' => new JsonSchemaObject([
+            '_id' => new JsonSchemaInteger(['readOnly' => TRUE, 'default' => NULL], TRUE),
+            '_financePlanItemId' => new JsonSchemaInteger([
+              'readOnly' => TRUE,
+              'const' => $sachkostenBewilligt->getId(),
+              'default' => $sachkostenBewilligt->getId(),
+            ]),
+            'amount' => new JsonSchemaMoney(),
+            'amountAdmitted' => new JsonSchemaCalculate('number', 'amount', [
+              'amount' => new JsonSchemaDataPointer('1/amount'),
+            ]),
+          ], ['required' => ['amount']]),
+        ], ['required' => ['materialien']]),
+      ], ['required' => ['records']]),
+      'sachkostenSonstige' => new JsonSchemaObject([
+        'records' => new JsonSchemaArray(new JsonSchemaObject([
+          '_id' => new JsonSchemaInteger(['readOnly' => TRUE, 'default' => NULL], TRUE),
+          '_financePlanItemId' => new JsonSchemaInteger([
+            'readOnly' => TRUE,
+            'const' => $sachkostenBewilligt->getId(),
+            'default' => $sachkostenBewilligt->getId(),
+          ]),
+          'properties' => new JsonSchemaObject([
+            'bezeichnung' => new JsonSchemaString(['maxLength' => 255]),
+          ], ['required' => ['bezeichnung']]),
+          'amount' => new JsonSchemaMoney(),
+          'amountAdmitted' => new JsonSchemaCalculate('number', 'amount', [
+            'amount' => new JsonSchemaDataPointer('1/amount'),
+          ]),
         ], ['required' => ['amount', 'properties']])),
         'amountRecordedTotal' => new JsonSchemaCalculate(
           'number',
@@ -80,7 +127,7 @@ final class HiHClearingCostItemsJsonSchema extends JsonSchemaObject {
       ], ['required' => ['records']]),
     ];
 
-    $keywords = ['required' => [(string) $personalkostenBewilligt->getId()]];
+    $keywords = ['required' => array_keys($properties)];
 
     parent::__construct($properties, $keywords);
   }
