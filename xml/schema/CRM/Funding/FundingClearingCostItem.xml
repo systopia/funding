@@ -169,6 +169,7 @@
     <name>form_key</name>
     <type>varchar</type>
     <length>255</length>
+    <required>true</required>
   </field>
 
 </table>

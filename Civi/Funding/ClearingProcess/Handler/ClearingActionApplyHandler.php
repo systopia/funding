@@ -26,7 +26,7 @@ use Civi\Funding\ClearingProcess\ClearingStatusDeterminer;
 use Civi\Funding\ClearingProcess\Command\ClearingActionApplyCommand;
 
 /**
- * @phpstan-import-type clearingFormDataT from ClearingFormGeneratorInterface
+ * @phpstan-import-type clearingFormDataT from \Civi\Funding\ClearingProcess\Form\ClearingFormGenerator
  */
 final class ClearingActionApplyHandler implements ClearingActionApplyHandlerInterface {
 

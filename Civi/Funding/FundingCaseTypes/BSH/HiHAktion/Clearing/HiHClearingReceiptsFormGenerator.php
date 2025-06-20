@@ -67,17 +67,22 @@ final class HiHClearingReceiptsFormGenerator implements ReceiptsFormGeneratorInt
     Assert::notNull($honorareBewilligt ?? NULL);
     Assert::notNull($sachkostenBewilligt ?? NULL);
 
+    $applicationCostItemsByType = [];
+    foreach ($applicationCostItems as $applicationCostItem) {
+      [$type] = explode('.', $applicationCostItem->getType());
+      $applicationCostItemsByType[$type][$applicationCostItem->getIdentifier()] = $applicationCostItem;
+    }
+
     return new JsonFormsForm(
       new HiHReceiptsJsonSchema(
         $personalkostenBewilligt,
         $honorareBewilligt,
-        $sachkostenBewilligt
+        $sachkostenBewilligt,
+        $clearingProcessBundle
       ),
       new HiHReceiptsUiSchema(
-        $personalkostenBewilligt,
-        $honorareBewilligt,
-        $sachkostenBewilligt,
-        $clearingProcessBundle->getFundingProgram()->getCurrency()
+        $applicationCostItemsByType,
+        $clearingProcessBundle
       ),
     );
   }

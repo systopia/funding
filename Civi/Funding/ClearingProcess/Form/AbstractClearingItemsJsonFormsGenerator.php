@@ -212,7 +212,7 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
               '_financePlanItemId' => new JsonSchemaInteger([
                 'readOnly' => TRUE,
                 'const' => $item->getId(),
-                '$default' => $item->getId(),
+                'default' => $item->getId(),
               ]),
               'file' => new JsonSchemaString(['format' => 'uri', 'default' => NULL], TRUE),
               'receiptNumber' => new JsonSchemaString(['maxlength' => 255], TRUE),
@@ -225,7 +225,7 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
                 'readOnly' => !$hasReviewPermission,
                 'default' => $hasReviewPermission ? new JsonSchemaDataPointer('1/amount') : NULL,
               ], TRUE),
-            ], ['required' => ['paymentDate', 'recipient', 'reason', 'amount']])
+            ], ['required' => ['_financePlanItemId', 'paymentDate', 'recipient', 'reason', 'amount']])
           ),
           'amountRecordedTotal' => new JsonSchemaCalculate(
             'number',

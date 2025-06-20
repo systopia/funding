@@ -21,13 +21,18 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Clearing\JsonSchema;
 
 use Civi\Funding\Entity\ApplicationCostItemEntity;
+use Civi\Funding\Entity\ApplicationProcessEntity;
+use Civi\Funding\Entity\ClearingProcessEntityBundle;
+use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
 use Civi\RemoteTools\JsonSchema\JsonSchemaCalculate;
 use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
 use Civi\RemoteTools\JsonSchema\JsonSchemaInteger;
 use Civi\RemoteTools\JsonSchema\JsonSchemaMoney;
+use Civi\RemoteTools\JsonSchema\JsonSchemaNumber;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
+use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
 
 final class HiHClearingCostItemsJsonSchema extends JsonSchemaObject {
 
@@ -35,7 +40,34 @@ final class HiHClearingCostItemsJsonSchema extends JsonSchemaObject {
     ApplicationCostItemEntity $personalkostenBewilligt,
     ApplicationCostItemEntity $honorareBewilligt,
     ApplicationCostItemEntity $sachkostenBewilligt,
+    ClearingProcessEntityBundle $clearingProcessBundle,
   ) {
+    $sachkostenKeys = [
+      'materialien',
+      'ehrenamtspauschalen',
+      'verpflegung',
+      'fahrtkosten',
+      'oeffentlichkeitsarbeit',
+      'investitionen',
+      'mieten',
+    ];
+
+    $sachkostenRecords = [];
+    foreach ($sachkostenKeys as $sachkostenKey) {
+      $sachkostenRecords[$sachkostenKey] = new JsonSchemaObject([
+        '_id' => new JsonSchemaInteger(['readOnly' => TRUE, 'default' => NULL], TRUE),
+        '_financePlanItemId' => new JsonSchemaInteger([
+          'readOnly' => TRUE,
+          'const' => $sachkostenBewilligt->getId(),
+          'default' => $sachkostenBewilligt->getId(),
+        ]),
+        'amount' => new JsonSchemaMoney(['default' => 0]),
+        'amountAdmitted' => new JsonSchemaCalculate('number', 'amount', [
+          'amount' => new JsonSchemaDataPointer('1/amount'),
+        ]),
+      ], ['required' => ['_financePlanItemId', 'amount']]);
+    }
+
     $properties = [
       'personalkosten' => new JsonSchemaObject([
         'records' => new JsonSchemaArray(new JsonSchemaObject([
@@ -51,7 +83,7 @@ final class HiHClearingCostItemsJsonSchema extends JsonSchemaObject {
             'monatlichesArbeitgeberbrutto' => new JsonSchemaMoney(),
             'monate' => new JsonSchemaInteger(),
           ], ['required' => ['posten', 'wochenstunden', 'monatlichesArbeitgeberbrutto', 'monate']]),
-          'amount' => new JsonSchemaCalculate('number', 'monatlichesArbeitgeberbrutto * monate', [
+          'amount' => new JsonSchemaCalculate('number', 'round(monatlichesArbeitgeberbrutto * monate, 2)', [
             'monatlichesArbeitgeberbrutto' => new JsonSchemaDataPointer('1/properties/monatlichesArbeitgeberbrutto'),
             'monate' => new JsonSchemaDataPointer('1/properties/monate'),
           ]),
@@ -66,32 +98,53 @@ final class HiHClearingCostItemsJsonSchema extends JsonSchemaObject {
           NULL,
           ['default' => 0]
         ),
-        'amountAdmittedTotal' => new JsonSchemaCalculate(
+      ], ['required' => ['records']]),
+
+      'honorare' => new JsonSchemaObject([
+        'records' => new JsonSchemaArray(new JsonSchemaObject([
+          '_id' => new JsonSchemaInteger(['readOnly' => TRUE, 'default' => NULL], TRUE),
+          '_financePlanItemId' => new JsonSchemaInteger([
+            'readOnly' => TRUE,
+            'const' => $honorareBewilligt->getId(),
+            'default' => $honorareBewilligt->getId(),
+          ]),
+          'properties' => new JsonSchemaObject([
+            'posten' => new JsonSchemaString(),
+            'berechnungsgrundlage' => new JsonSchemaString([
+              'oneOf' => JsonSchemaUtil::buildTitledOneOf([
+                'stundensatz' => 'Stundensatz',
+                'tagessatz' => 'Tagessatz',
+              ]),
+            ]),
+            'verguetung' => new JsonSchemaMoney(['minimum' => 0]),
+            'dauer' => new JsonSchemaNumber(['precision' => 2, 'minimum' => 0]),
+          ], ['required' => ['posten', 'wochenstunden', 'monatlichesArbeitgeberbrutto', 'monate']]),
+          'amount' => new JsonSchemaCalculate('number', 'round(dauer * verguetung, 2)', [
+            'dauer' => new JsonSchemaDataPointer('1/properties/dauer'),
+            'verguetung' => new JsonSchemaDataPointer('1/properties/verguetung'),
+          ]),
+          'amountAdmitted' => new JsonSchemaCalculate('number', 'amount', [
+            'amount' => new JsonSchemaDataPointer('1/amount'),
+          ]),
+        ], ['required' => ['amount', 'properties']])),
+        'amountRecordedTotal' => new JsonSchemaCalculate(
           'number',
-          // With Symfony Expression Language 6.2 we'd use '??' instead of '?:'
-          // Though as long as we support PHP 7.4 we have to keep '?:'.
-          'round(sum(map(records, "value.amountAdmitted ?: 0")), 2)',
+          'round(sum(map(records, "value.amount ?: 0")), 2)',
           ['records' => new JsonSchemaDataPointer('1/records')],
           NULL,
           ['default' => 0]
         ),
       ], ['required' => ['records']]),
+
       'sachkosten' => new JsonSchemaObject([
-        'records' => new JsonSchemaObject([
-          'materialien' => new JsonSchemaObject([
-            '_id' => new JsonSchemaInteger(['readOnly' => TRUE, 'default' => NULL], TRUE),
-            '_financePlanItemId' => new JsonSchemaInteger([
-              'readOnly' => TRUE,
-              'const' => $sachkostenBewilligt->getId(),
-              'default' => $sachkostenBewilligt->getId(),
-            ]),
-            'amount' => new JsonSchemaMoney(),
-            'amountAdmitted' => new JsonSchemaCalculate('number', 'amount', [
-              'amount' => new JsonSchemaDataPointer('1/amount'),
-            ]),
-          ], ['required' => ['amount']]),
-        ], ['required' => ['materialien']]),
+        'records' => new JsonSchemaObject($sachkostenRecords, ['required' => $sachkostenKeys]),
+        'amountRecordedTotal' => new JsonSchemaCalculate(
+          'number',
+          'round(' . implode('+', array_map(fn ($key) => "(records.$key.amount ?: 0)", $sachkostenKeys)) . ', 2)',
+          ['records' => new JsonSchemaDataPointer('1/records')],
+        ),
       ], ['required' => ['records']]),
+
       'sachkostenSonstige' => new JsonSchemaObject([
         'records' => new JsonSchemaArray(new JsonSchemaObject([
           '_id' => new JsonSchemaInteger(['readOnly' => TRUE, 'default' => NULL], TRUE),
@@ -107,24 +160,44 @@ final class HiHClearingCostItemsJsonSchema extends JsonSchemaObject {
           'amountAdmitted' => new JsonSchemaCalculate('number', 'amount', [
             'amount' => new JsonSchemaDataPointer('1/amount'),
           ]),
-        ], ['required' => ['amount', 'properties']])),
+        ], ['required' => ['_financePlanItemId', 'amount', 'properties']])),
         'amountRecordedTotal' => new JsonSchemaCalculate(
           'number',
-          'round(sum(map(records, "value.amount")), 2)',
-          ['records' => new JsonSchemaDataPointer('1/records')],
-          NULL,
-          ['default' => 0]
-        ),
-        'amountAdmittedTotal' => new JsonSchemaCalculate(
-          'number',
-          // With Symfony Expression Language 6.2 we'd use '??' instead of '?:'
-          // Though as long as we support PHP 7.4 we have to keep '?:'.
-          'round(sum(map(records, "value.amountAdmitted ?: 0")), 2)',
+          'round(sum(map(records, "value.amount ?: 0")), 2)',
           ['records' => new JsonSchemaDataPointer('1/records')],
           NULL,
           ['default' => 0]
         ),
       ], ['required' => ['records']]),
+
+      'sachkostenAmountRecordedTotal' => new JsonSchemaCalculate(
+        'number',
+        'round(sachkostenAmountRecorded + sachkostenSonstigeAmountRecorded, 2)',
+        [
+          'sachkostenAmountRecorded' => new JsonSchemaDataPointer('1/sachkosten/amountRecordedTotal', 0),
+          'sachkostenSonstigeAmountRecorded'
+          => new JsonSchemaDataPointer('1/sachkostenSonstige/amountRecordedTotal', 0),
+        ]
+      ),
+
+      'ausgaben' => new JsonSchemaCalculate(
+        'number',
+        'round(personalkostenAmount + honorareAmount + sachkostenAmount, 2)',
+        [
+          'personalkostenAmount' => new JsonSchemaDataPointer('1/personalkosten/amountRecordedTotal', 0),
+          'honorareAmount' => new JsonSchemaDataPointer('1/honorare/amountRecordedTotal', 0),
+          'sachkostenAmount' => new JsonSchemaDataPointer('1/sachkostenAmountRecordedTotal'),
+        ]
+      ),
+
+      'restmittel' => new JsonSchemaCalculate(
+        'number',
+        'round(bewilligt - ausgaben, 2)',
+        [
+          'bewilligt' => $clearingProcessBundle->getFundingCase()->getAmountApproved(),
+          'ausgaben' => new JsonSchemaDataPointer('1/ausgaben'),
+        ]
+      ),
     ];
 
     $keywords = ['required' => array_keys($properties)];

@@ -25,8 +25,11 @@ use Civi\Funding\ClearingProcess\Form\ReportFormFactoryInterface;
 use Civi\Funding\ClearingProcess\Form\ReportFormInterface;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Traits\HiHSupportedFundingCaseTypesTrait;
+use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategorization;
+use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 
@@ -42,14 +45,29 @@ final class HiHReportFormFactory implements ReportFormFactoryInterface {
       new JsonSchemaObject([
         'reportData' => new JsonSchemaObject([
           'personalkostenKommentar' => new JsonSchemaString(['minLength' => 1]),
+          'honorareKommentar' => new JsonSchemaString(['minLength' => 1]),
+          'sachkostenKommentar' => new JsonSchemaString(['minLength' => 1]),
         ], [
-          'required' => ['personalkostenKommentar'],
-          '$limitValidation' => new JsonSchemaObject([
-            '_action' => JsonSchema::fromArray(['enum' => ['save']]),
+          'required' => ['personalkostenKommentar', 'honorareKommentar', 'sachkostenKommentar'],
+          '$limitValidation' => JsonSchema::fromArray([
+            'condition' => [
+              'evaluate' => [
+                'expression' => 'action === "save"',
+                'variables' => ['action' => new JsonSchemaDataPointer('/_action')],
+              ],
+            ],
           ]),
         ]),
       ]),
-      new JsonFormsGroup('Sachbericht', []));
+      new JsonFormsCategorization([
+        new JsonFormsCategory('Allgemeines', [
+          new JsonFormsGroup('Allgemeines', []),
+        ]),
+        new JsonFormsCategory('Sachbericht', [
+          new JsonFormsGroup('Sachbericht', []),
+        ]),
+      ])
+    );
   }
 
 }

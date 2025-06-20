@@ -34,7 +34,7 @@ namespace Civi\Funding\Entity;
  *   amount: float,
  *   amount_admitted: ?float,
  *   properties: ?array<string, mixed>,
- *   form_key: ?string,
+ *   form_key: string,
  * }
  *
  * @phpstan-extends AbstractClearingItemEntity<clearingResourcesItemT>

@@ -190,12 +190,12 @@ abstract class AbstractClearingItemEntity extends AbstractEntity {
     return $this;
   }
 
-  public function getFormKey(): ?string {
+  public function getFormKey(): string {
     // @phpstan-ignore return.type
     return $this->values['form_key'];
   }
 
-  public function setFormKey(?string $formKey): static {
+  public function setFormKey(string $formKey): static {
     $this->values['form_key'] = $formKey;
 
     return $this;

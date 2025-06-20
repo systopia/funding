@@ -32,7 +32,7 @@ use Civi\Funding\ClearingProcess\Handler\Helper\ClearingResourcesItemsFormDataPe
 use Civi\Funding\ExternalFile\TaggedExternalFilePersister;
 
 /**
- * @phpstan-import-type clearingFormDataT from ClearingFormGeneratorInterface
+ * @phpstan-import-type clearingFormDataT from \Civi\Funding\ClearingProcess\Form\ClearingFormGenerator
  */
 final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterface {
 

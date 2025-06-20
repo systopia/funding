@@ -21,7 +21,6 @@ namespace Civi\Funding\ClearingProcess\Handler;
 
 use Civi\Funding\ClearingProcess\Command\ClearingFormGetCommand;
 use Civi\Funding\ClearingProcess\Form\ClearingFormGenerator;
-use Civi\Funding\ClearingProcess\Form\ClearingFormGeneratorInterface;
 use Civi\Funding\Form\JsonFormsFormInterface;
 
 final class ClearingFormGetHandler implements ClearingFormGetHandlerInterface {
@@ -35,10 +34,13 @@ final class ClearingFormGetHandler implements ClearingFormGetHandlerInterface {
    */
   private array $forms = [];
 
-  public function __construct(ClearingFormGeneratorInterface $clearingFormsGenerator) {
+  public function __construct(ClearingFormGenerator $clearingFormsGenerator) {
     $this->clearingFormsGenerator = $clearingFormsGenerator;
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function handle(ClearingFormGetCommand $command): JsonFormsFormInterface {
     return $this->forms[$command->getClearingProcess()->getId()] ??=
       $this->clearingFormsGenerator->generateForm($command->getClearingProcessBundle());

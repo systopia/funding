@@ -21,6 +21,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Clearing\JsonSchema;
 
 use Civi\Funding\Entity\ApplicationCostItemEntity;
+use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 
 final class HiHReceiptsJsonSchema extends JsonSchemaObject {
@@ -29,10 +30,11 @@ final class HiHReceiptsJsonSchema extends JsonSchemaObject {
     ApplicationCostItemEntity $personalkostenBewilligt,
     ApplicationCostItemEntity $honorareBewilligt,
     ApplicationCostItemEntity $sachkostenBewilligt,
+    ClearingProcessEntityBundle $clearingProcessBundle
   ) {
     $properties = [
       'costItems' => new HiHClearingCostItemsJsonSchema(
-        $personalkostenBewilligt, $honorareBewilligt, $sachkostenBewilligt
+        $personalkostenBewilligt, $honorareBewilligt, $sachkostenBewilligt, $clearingProcessBundle
       ),
     ];
 

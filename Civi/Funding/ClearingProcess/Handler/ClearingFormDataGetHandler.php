@@ -30,7 +30,7 @@ use Civi\Funding\Entity\ClearingCostItemEntity;
 use Civi\Funding\Entity\ClearingResourcesItemEntity;
 
 /**
- * @phpstan-import-type clearingItemsT from \Civi\Funding\ClearingProcess\Form\ClearingFormGeneratorInterface
+ * @phpstan-import-type clearingItemsT from \Civi\Funding\ClearingProcess\Form\ClearingFormGenerator
  */
 final class ClearingFormDataGetHandler implements ClearingFormDataGetHandlerInterface {
 
@@ -134,12 +134,19 @@ final class ClearingFormDataGetHandler implements ClearingFormDataGetHandlerInte
     ClearingCostItemEntity|ClearingResourcesItemEntity $clearingItem,
     mixed $clearingItemsData
   ): array {
-    [$dataKey, $recordKey] = explode('/', $clearingItem->getFormKey() ?? '') + ['', ''];
-    if ('' === $dataKey) {
+    if ('' === $clearingItem->getFormKey()) {
+      // Items persisted when form key didn't exist.
       $dataKey = $clearingItem->getFinancePlanItemId();
+      $recordKey = NULL;
+    }
+    else {
+      [$dataKey, $recordKey] = explode('/', $clearingItem->getFormKey()) + ['', ''];
     }
 
-    if ('' === $recordKey || 1 === preg_match('/^\d+$/', $recordKey)) {
+    if (NULL === $recordKey || 1 === preg_match('/^\d+$/', $recordKey)) {
+      // By not using the given number it is possible to remove a persisted
+      // clearing item and the resulting records array will still be an array
+      // when JSON serialized.
       $recordKey = count($clearingItemsData[$dataKey]['records'] ?? []);
     }
 

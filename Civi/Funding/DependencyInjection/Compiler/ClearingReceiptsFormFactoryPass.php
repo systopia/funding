@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\DependencyInjection\Compiler;
 
-use Civi\Funding\ClearingProcess\Form\ReceiptsFormFactoryCollector;
+use Civi\Funding\ClearingProcess\Form\ReceiptsFormGeneratorCollector;
 use Civi\Funding\ClearingProcess\Form\ReceiptsFormGeneratorInterface;
 use Civi\Funding\DependencyInjection\Compiler\Traits\TaggedFundingCaseTypeServicesTrait;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -35,7 +35,7 @@ final class ClearingReceiptsFormFactoryPass implements CompilerPassInterface {
    */
   public function process(ContainerBuilder $container): void {
     $services = $this->getTaggedFundingCaseTypeServices($container, ReceiptsFormGeneratorInterface::class);
-    $container->register(ReceiptsFormGeneratorInterface::class, ReceiptsFormFactoryCollector::class)
+    $container->register(ReceiptsFormGeneratorInterface::class, ReceiptsFormGeneratorCollector::class)
       ->addArgument(ServiceLocatorTagPass::register($container, $services));
   }
 

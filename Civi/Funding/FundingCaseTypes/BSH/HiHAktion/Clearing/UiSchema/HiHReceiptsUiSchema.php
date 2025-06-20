@@ -20,32 +20,49 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Clearing\UiSchema;
 
-use Civi\Funding\Entity\ApplicationCostItemEntity;
+use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\RemoteTools\JsonForms\Control\JsonFormsArray;
 use Civi\RemoteTools\JsonForms\Control\JsonFormsHidden;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
+use Civi\RemoteTools\JsonForms\JsonFormsMarkup;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
+use Civi\RemoteTools\JsonForms\Layout\JsonFormsTable;
+use Civi\RemoteTools\JsonForms\Layout\JsonFormsTableRow;
 
 final class HiHReceiptsUiSchema extends JsonFormsGroup {
 
+  /**
+   * @phpstan-param array<string, array<string, \Civi\Funding\Entity\ApplicationCostItemEntity>> $applicationCostItemsByType
+   */
   public function __construct(
-    ApplicationCostItemEntity $personalkostenBewilligt,
-    ApplicationCostItemEntity $honorareBewilligt,
-    ApplicationCostItemEntity $sachkostenBewilligt,
-    string $currency
+    array $applicationCostItemsByType,
+    ClearingProcessEntityBundle $clearingProcessBundle,
   ) {
+    $currency = $clearingProcessBundle->getFundingProgram()->getCurrency();
     $reportDataScopePrefix = '#/properties/reportData/properties';
     $costItemsScopePrefix = '#/properties/costItems/properties';
     $sachkostenScopePrefix = "$costItemsScopePrefix/sachkosten/properties/records/properties";
+
     parent::__construct('Projektkosten', [
       new JsonFormsGroup('Personalkosten', [
+        new JsonFormsTable(['Position', 'Beantragter Betrag', 'Bewilligter Betrag', "Ausgaben in $currency"], [
+          new JsonFormsTableRow([
+            new JsonFormsMarkup('Personalkosten'),
+            new JsonFormsMarkup($this->getAmountSum(
+              $applicationCostItemsByType['personalkosten'] ?? []) . " $currency"
+            ),
+            new JsonFormsMarkup(
+              $applicationCostItemsByType['bewilligt']['personalkostenBewilligt']->getAmount() . " $currency"
+            ),
+            new JsonFormsControl("$costItemsScopePrefix/personalkosten/properties/amountRecordedTotal", NULL),
+          ]),
+        ]),
         new JsonFormsArray(
           "$costItemsScopePrefix/personalkosten/properties/records",
           '',
           NULL,
           [
             new JsonFormsHidden('#/properties/_id', ['internal' => TRUE]),
-            new JsonFormsHidden('#/properties/_financePlanItemId', ['internal' => TRUE]),
             new JsonFormsControl('#/properties/properties/properties/posten', 'Posten'),
             new JsonFormsControl('#/properties/properties/properties/wochenstunden', 'Wochenstunden'),
             new JsonFormsControl(
@@ -53,19 +70,112 @@ final class HiHReceiptsUiSchema extends JsonFormsGroup {
               "Monatliches Arbeitgeberbrutto in $currency (Anteil Projekt)"
             ),
             new JsonFormsControl('#/properties/properties/properties/monate', 'Monate'),
-            new JsonFormsControl('#/properties/amount', "Betrag in $currency"),
+            new JsonFormsControl('#/properties/amount', "Summe in $currency"),
           ],
-          ['addButtonLabel' => 'Personalkosten hinzufügen']
+          [
+            'addButtonLabel' => 'Personalkosten hinzufügen',
+            'removeButtonLabel' => 'Entfernen',
+          ]
         ),
         new JsonFormsControl("$reportDataScopePrefix/personalkostenKommentar", 'Kommentar zu den Personalkosten'),
       ]),
+
+      new JsonFormsGroup('Honorare', [
+        new JsonFormsTable(['Position', 'Beantragter Betrag', 'Bewilligter Betrag', "Ausgaben in $currency"], [
+          new JsonFormsTableRow([
+            new JsonFormsMarkup('Honorare'),
+            new JsonFormsMarkup($this->getAmountSum(
+                $applicationCostItemsByType['honorar'] ?? []) . " $currency"
+            ),
+            new JsonFormsMarkup(
+              $applicationCostItemsByType['bewilligt']['honorareBewilligt']->getAmount() . " $currency"
+            ),
+            new JsonFormsControl("$costItemsScopePrefix/honorare/properties/amountRecordedTotal", NULL),
+          ]),
+        ]),
+        new JsonFormsArray(
+          "$costItemsScopePrefix/honorare/properties/records",
+          '',
+          NULL,
+          [
+            new JsonFormsHidden('#/properties/_id', ['internal' => TRUE]),
+            new JsonFormsControl('#/properties/properties/properties/posten', 'Posten'),
+            new JsonFormsControl('#/properties/properties/properties/berechnungsgrundlage', 'Berechnungsgrundlage'),
+            new JsonFormsControl(
+              '#/properties/properties/properties/verguetung',
+              "Verguetung in $currency"
+            ),
+            new JsonFormsControl('#/properties/properties/properties/dauer', 'Dauer'),
+            new JsonFormsControl('#/properties/amount', "Summe in $currency"),
+          ],
+          [
+            'addButtonLabel' => 'Honorar hinzufügen',
+            'removeButtonLabel' => 'Entfernen',
+          ]
+        ),
+        new JsonFormsControl("$reportDataScopePrefix/honorareKommentar", 'Kommentar zu den Honoraren'),
+      ]),
+
       new JsonFormsGroup('Projektbezogene Sachkosten', [
+        new JsonFormsTable(['Position', 'Beantragter Betrag', 'Bewilligter Betrag', "Ausgaben in $currency"], [
+          new JsonFormsTableRow([
+            new JsonFormsMarkup('Sachkosten'),
+            new JsonFormsMarkup($this->getAmountSum(
+                $applicationCostItemsByType['sachkosten'] ?? []) . " $currency"
+            ),
+            new JsonFormsMarkup(
+              $applicationCostItemsByType['bewilligt']['sachkostenBewilligt']->getAmount() . " $currency"
+            ),
+            new JsonFormsControl("$costItemsScopePrefix/sachkostenAmountRecordedTotal", NULL),
+          ]),
+        ]),
         new JsonFormsHidden("$sachkostenScopePrefix/materialien/properties/_id", ['internal' => TRUE]),
-        new JsonFormsHidden("$sachkostenScopePrefix/materialien/properties/_financePlanItemId", ['internal' => TRUE]),
         new JsonFormsControl(
           "$sachkostenScopePrefix/materialien/properties/amount",
           "Projektbezogene Materialien in $currency",
           'z.B. für Veranstaltungen, Workshops, Verbrauchsmaterial',
+          ['descriptionDisplay' => 'before']
+        ),
+        new JsonFormsHidden("$sachkostenScopePrefix/ehrenamtspauschalen/properties/_id", ['internal' => TRUE]),
+        new JsonFormsControl(
+          "$sachkostenScopePrefix/ehrenamtspauschalen/properties/amount",
+          "Ehrenamts-/Übungsleiterpauschalen in $currency",
+          NULL,
+          ['descriptionDisplay' => 'before']
+        ),
+        new JsonFormsHidden("$sachkostenScopePrefix/verpflegung/properties/_id", ['internal' => TRUE]),
+        new JsonFormsControl(
+          "$sachkostenScopePrefix/verpflegung/properties/amount",
+          "Verpflegung/Catering in $currency",
+          'z.B. für Teilnehmer:innen von Angeboten',
+          ['descriptionDisplay' => 'before']
+        ),
+        new JsonFormsHidden("$sachkostenScopePrefix/fahrtkosten/properties/_id", ['internal' => TRUE]),
+        new JsonFormsControl(
+          "$sachkostenScopePrefix/fahrtkosten/properties/amount",
+          "Fahrtkosten in $currency",
+          'z.B. für Ausflüge',
+          ['descriptionDisplay' => 'before']
+        ),
+        new JsonFormsHidden("$sachkostenScopePrefix/oeffentlichkeitsarbeit/properties/_id", ['internal' => TRUE]),
+        new JsonFormsControl(
+          "$sachkostenScopePrefix/oeffentlichkeitsarbeit/properties/amount",
+          "Projektbezogene Öffentlichkeitsarbeit in $currency",
+          'z.B. Druckkosten, Anzeigen, Gimmicks, RollUps',
+          ['descriptionDisplay' => 'before']
+        ),
+        new JsonFormsHidden("$sachkostenScopePrefix/investitionen/properties/_id", ['internal' => TRUE]),
+        new JsonFormsControl(
+          "$sachkostenScopePrefix/investitionen/properties/amount",
+          "Projektbezogene Investitionen in $currency",
+          'z.B. Möbel, Laptop, Software, Fahrradrikscha',
+          ['descriptionDisplay' => 'before']
+        ),
+        new JsonFormsHidden("$sachkostenScopePrefix/mieten/properties/_id", ['internal' => TRUE]),
+        new JsonFormsControl(
+          "$sachkostenScopePrefix/mieten/properties/amount",
+          "Projektbezogene Mieten in $currency",
+          'z.B. für Veranstaltungen',
           ['descriptionDisplay' => 'before']
         ),
         new JsonFormsArray(
@@ -74,14 +184,47 @@ final class HiHReceiptsUiSchema extends JsonFormsGroup {
           'z.B. Eintrittsgelder für den Besuch von Veranstaltungen, Telefonkosten, Bürobedarf oder IT-Support',
           [
             new JsonFormsHidden('#/properties/_id', ['internal' => TRUE]),
-            new JsonFormsHidden('#/properties/_financePlanItemId', ['internal' => TRUE]),
             new JsonFormsControl('#/properties/properties/properties/bezeichnung', 'Bezeichnung'),
             new JsonFormsControl('#/properties/amount', "Summe in $currency"),
           ],
-          ['addButtonLabel' => 'Sonstige hinzufügen']
+          [
+            'addButtonLabel' => 'Sonstige hinzufügen',
+            'removeButtonLabel' => 'Entfernen',
+          ]
+        ),
+        new JsonFormsControl(
+          "$costItemsScopePrefix/sachkostenSonstige/properties/amountRecordedTotal",
+          "Summe sonstige Sachkosten in $currency",
+        ),
+        new JsonFormsControl("$reportDataScopePrefix/sachkostenKommentar", 'Kommentar zu den Sachkosten'),
+      ]),
+
+      new JsonFormsGroup('Insgesamt', [
+        new JsonFormsTable(
+          ['Beantragter Betrag', 'Bewilligter Betrag', "Ausgaben in $currency", "Restmittel in $currency"],
+          [
+            new JsonFormsTableRow([
+              new JsonFormsMarkup("{$clearingProcessBundle->getApplicationProcess()->getAmountRequested()} $currency"),
+              new JsonFormsMarkup("{$clearingProcessBundle->getFundingCase()->getAmountApproved()} $currency"),
+              new JsonFormsControl("$costItemsScopePrefix/ausgaben", ''),
+              new JsonFormsControl("$costItemsScopePrefix/restmittel", ''),
+            ]),
+          ]
         ),
       ]),
     ]);
+  }
+
+  /**
+   * @param array<\Civi\Funding\Entity\ApplicationCostItemEntity> $applicationCostItems
+   */
+  private function getAmountSum(array $applicationCostItems): float {
+    $sum = 0.0;
+    foreach ($applicationCostItems as $applicationCostItem) {
+      $sum += $applicationCostItem->getAmount();
+    }
+
+    return $sum;
   }
 
 }

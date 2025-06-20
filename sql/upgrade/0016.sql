@@ -5,7 +5,7 @@ ALTER TABLE `civicrm_funding_clearing_cost_item`
   MODIFY `amount` decimal(10,2) NOT NULL,
   MODIFY `amount_admitted` decimal(10,2),
   ADD `properties` text,
-  ADD `form_key` varchar(255);
+  ADD `form_key` varchar(255) NOT NULL;
 
 ALTER TABLE `civicrm_funding_clearing_resources_item`
   MODIFY `payment_date` date,
@@ -14,4 +14,4 @@ ALTER TABLE `civicrm_funding_clearing_resources_item`
   MODIFY `amount` decimal(10,2) NOT NULL,
   MODIFY `amount_admitted` decimal(10,2),
   ADD `properties` text,
-  ADD `form_key` varchar(255);
+  ADD `form_key` varchar(255) NOT NULL;

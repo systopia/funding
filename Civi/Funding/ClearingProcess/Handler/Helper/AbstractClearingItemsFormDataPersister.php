@@ -39,7 +39,8 @@ use Webmozart\Assert\Assert;
  * @template TClearingItem of AbstractClearingItemEntity
  * @template TFinancePlanItem of AbstractFinancePlanItemEntity
  *
- * @phpstan-import-type clearingItemRecordT from ClearingFormGeneratorInterface
+ * @phpstan-import-type clearingItemsT from \Civi\Funding\ClearingProcess\Form\ReceiptsFormGeneratorInterface
+ * @phpstan-import-type clearingItemRecordT from \Civi\Funding\ClearingProcess\Form\ReceiptsFormGeneratorInterface
  */
 abstract class AbstractClearingItemsFormDataPersister {
 
@@ -95,7 +96,7 @@ abstract class AbstractClearingItemsFormDataPersister {
   }
 
   /**
-   * @phpstan-param array<int, array{records: list<clearingItemRecordT>}> $clearingItemsFormData
+   * @phpstan-param clearingItemsT $clearingItemsFormData
    *   Key is the corresponding finance plan item ID.
    *
    * @phpstan-return array<string, string>
@@ -113,9 +114,7 @@ abstract class AbstractClearingItemsFormDataPersister {
     $files = [];
     foreach ($clearingItemsFormData as $dataKey => $data) {
       foreach ($data['records'] as $recordKey => $record) {
-        $financePlanItemId = $record['_financePlanItemId'] ?? $dataKey;
-        Assert::integer($financePlanItemId, 'Finance plan item ID missing');
-
+        $financePlanItemId = $record['_financePlanItemId'];
         $financePlanItem = $financePlanItems[$financePlanItemId]
           ??= $this->getFinancePlanItem($financePlanItemId, $clearingProcessBundle);
 
@@ -150,7 +149,7 @@ abstract class AbstractClearingItemsFormDataPersister {
     ClearingProcessEntityBundle $clearingProcessBundle,
     AbstractFinancePlanItemEntity $financePlanItem,
     array $record,
-    ?string $formKey
+    string $formKey
   ): array {
     $record += [
       'file' => NULL,
@@ -178,6 +177,7 @@ abstract class AbstractClearingItemsFormDataPersister {
       $externalFile = $this->handleFile($record, $existingClearingItem, $clearingProcessId);
       $fileId = $externalFile?->getFileId();
 
+      $record += ['amount_admitted' => $existingClearingItem->getAmountAdmitted()];
       $status = $this->determineStatus($record, $existingClearingItem, $fileId, $permissions);
       $existingClearingItem
         ->setFileId($fileId)
@@ -191,7 +191,9 @@ abstract class AbstractClearingItemsFormDataPersister {
         ->setStatus($status)
         ->setFormKey($formKey);
       if ($this->hasReviewPermission($permissions)) {
-        $existingClearingItem->setAmountAdmitted($record['amountAdmitted']);
+        if (array_key_exists('amountAdmitted', $record)) {
+          $existingClearingItem->setAmountAdmitted($record['amountAdmitted']);
+        }
       }
       elseif ('new' === $status) {
         $existingClearingItem->setAmountAdmitted(NULL);
@@ -219,7 +221,9 @@ abstract class AbstractClearingItemsFormDataPersister {
     ]);
 
     if ($this->hasReviewPermission($permissions)) {
-      $clearingItem->setAmountAdmitted($record['amountAdmitted']);
+      if (array_key_exists('amountAdmitted', $record)) {
+        $clearingItem->setAmountAdmitted($record['amountAdmitted']);
+      }
     }
 
     return [$clearingItem, $externalFile];
@@ -237,7 +241,7 @@ abstract class AbstractClearingItemsFormDataPersister {
     array $permissions
   ): string {
     if ($this->hasReviewPermission($permissions)) {
-      if (NULL === $record['amountAdmitted']) {
+      if (NULL === ($record['amountAdmitted'] ?? NULL)) {
         return 'new';
       }
 
