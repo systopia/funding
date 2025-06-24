@@ -64,14 +64,14 @@ final class DrawdownRejectController implements PageControllerInterface {
       throw new BadRequestHttpException('Invalid drawdown ID');
     }
 
-    return $this->reject((int) $drawdownId);
+    return $this->reject((int) $drawdownId, $request);
   }
 
   /**
    * @throws \CRM_Core_Exception
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    */
-  private function reject(int $drawdownId): Response {
+  private function reject(int $drawdownId, Request $request): Response {
     $drawdown = $this->drawdownManager->get($drawdownId);
     if (NULL === $drawdown) {
       throw new AccessDeniedHttpException();
@@ -84,9 +84,14 @@ final class DrawdownRejectController implements PageControllerInterface {
       'id' => $drawdownId,
     ]);
 
-    return new RedirectResponse($this->urlGenerator->generate(
-      'civicrm/a#/funding/case/' . $payoutProcess->getFundingCaseId()
-    ));
+    $redirectUrl = $request->headers->get('Referer') ?? '';
+    if (!str_contains($redirectUrl, '/civicrm/funding/')) {
+      $redirectUrl = $this->urlGenerator->generate(
+        'civicrm/a#/funding/case/' . $payoutProcess->getFundingCaseId()
+      );
+    }
+
+    return new RedirectResponse($redirectUrl);
   }
 
 }

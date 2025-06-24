@@ -75,7 +75,10 @@ final class DrawdownRejectControllerTest extends TestCase {
     );
   }
 
-  public function testHandle(): void {
+  /**
+   * @dataProvider provideReferrer
+   */
+  public function testHandle(?string $referrer, ?string $expectedRedirect = NULL): void {
     $drawdown = DrawdownFactory::create();
     $this->drawdownManagerMock->method('get')
       ->with($drawdown->getId())
@@ -94,9 +97,23 @@ final class DrawdownRejectControllerTest extends TestCase {
       ->with('civicrm/a#/funding/case/' . $payoutProcess->getFundingCaseId())
       ->willReturn('http://test');
 
-    $response = $this->controller->handle(new Request(['drawdownId' => $drawdown->getId()]));
+    $request = new Request(['drawdownId' => $drawdown->getId()]);
+    if (NULL !== $referrer) {
+      $request->headers->set('Referer', $referrer);
+    }
+
+    $response = $this->controller->handle($request);
     static::assertInstanceOf(RedirectResponse::class, $response);
-    static::assertSame('http://test', $response->getTargetUrl());
+    static::assertSame($expectedRedirect ?? 'http://test', $response->getTargetUrl());
+  }
+
+  /**
+   * @phpstan-return iterable<array{string|null, 1?: string}>
+   */
+  public function provideReferrer(): iterable {
+    yield [NULL];
+    yield ['http://test/civicrm/funding/abc', 'http://test/civicrm/funding/abc'];
+    yield ['http://test/civicrm/a'];
   }
 
   public function testHandleInvalidDrawdownId(): void {
