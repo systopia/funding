@@ -26,6 +26,7 @@ use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Api4\Action\Traits\IsFieldSelectedTrait;
 use Civi\Funding\Api4\Util\FundingCasePermissionsUtil;
+use Civi\Funding\Api4\Util\WhereUtil;
 use Civi\Funding\Event\FundingCase\GetPermissionsEvent;
 use Civi\Funding\FundingCase\FundingCasePermissionsCacheManager;
 use Civi\Funding\FundingCase\TransferContractRouter;
@@ -34,6 +35,7 @@ use Civi\RemoteTools\Api4\Api4;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
+use Webmozart\Assert\Assert;
 
 final class GetAction extends DAOGetAction {
 
@@ -42,6 +44,14 @@ final class GetAction extends DAOGetAction {
   private bool $cachePermissionsOnly = FALSE;
 
   private ?Api4Interface $api4;
+
+  private ?string $drawdownAcceptionDateOperator = NULL;
+
+  private ?string $drawdownAcceptionDateValue = NULL;
+
+  private ?string $drawdownCreationDateOperator = NULL;
+
+  private ?string $drawdownCreationDateValue = NULL;
 
   private ?CiviEventDispatcherInterface $eventDispatcher;
 
@@ -184,11 +194,31 @@ final class GetAction extends DAOGetAction {
     return $this;
   }
 
+  // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
   public function setDefaultWhereClause(): void {
+  // phpcs:enable
     if (!$this->runCalled) {
       // _run() was not called, e.g. aggregation line in SearchKit.
       // See \Civi\Api4\Action\SearchDisplay\Run::processResult()
       $this->ensurePermissions();
+    }
+
+    // See sql_renderer in GetFieldsAction.
+    $maxDepth = 'AND' === ($this->where[0] ?? NULL) && is_array($this->where[1] ?? NULL) ? 1 : 0;
+    $drawdownAcceptionDateClause = WhereUtil::getAndUnsetClause($this->where, 'drawdown_acception_date', $maxDepth);
+    if (NULL !== $drawdownAcceptionDateClause) {
+      Assert::string($drawdownAcceptionDateClause[1]);
+      Assert::nullOrString($drawdownAcceptionDateClause[2] ?? NULL);
+      $this->drawdownAcceptionDateOperator = $drawdownAcceptionDateClause[1];
+      $this->drawdownAcceptionDateValue = $drawdownAcceptionDateClause[2] ?? NULL;
+    }
+
+    $drawdownCreationDateClause = WhereUtil::getAndUnsetClause($this->where, 'drawdown_creation_date', $maxDepth);
+    if (NULL !== $drawdownCreationDateClause) {
+      Assert::string($drawdownCreationDateClause[1]);
+      Assert::nullOrString($drawdownCreationDateClause[2] ?? NULL);
+      $this->drawdownCreationDateOperator = $drawdownCreationDateClause[1];
+      $this->drawdownCreationDateValue = $drawdownCreationDateClause[2] ?? NULL;
     }
 
     FundingCasePermissionsUtil::addPermissionsCacheJoin(
@@ -200,6 +230,22 @@ final class GetAction extends DAOGetAction {
     FundingCasePermissionsUtil::addPermissionsRestriction($this);
 
     parent::setDefaultWhereClause();
+  }
+
+  public function getDrawdownAcceptionDateOperator(): ?string {
+    return $this->drawdownAcceptionDateOperator;
+  }
+
+  public function getDrawdownAcceptionDateValue(): ?string {
+    return $this->drawdownAcceptionDateValue;
+  }
+
+  public function getDrawdownCreationDateOperator(): ?string {
+    return $this->drawdownCreationDateOperator;
+  }
+
+  public function getDrawdownCreationDateValue(): ?string {
+    return $this->drawdownCreationDateValue;
   }
 
   private function getApi4(): Api4Interface {

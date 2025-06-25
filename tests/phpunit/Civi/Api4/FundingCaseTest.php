@@ -118,6 +118,8 @@ final class FundingCaseTest extends AbstractFundingHeadlessTestCase {
         'amount_admitted',
         'application_process_review_progress',
       )
+      ->addWhere('drawdown_creation_date', '>=', '2000-01-02')
+      ->addWhere('drawdown_acception_date', '<=', '2001-02-03')
       ->execute()
       ->single();
 

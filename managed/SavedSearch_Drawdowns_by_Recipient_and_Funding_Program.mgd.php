@@ -17,14 +17,12 @@ return [
           'version' => 4,
           'select' => [
             'COUNT(id) AS COUNT_id',
-            'GROUP_CONCAT(DISTINCT FundingCase_FundingProgram_funding_program_id_01.title) AS GROUP_CONCAT_FundingCase_FundingProgram_funding_program_id_01_title',
-            'GROUP_CONCAT(DISTINCT recipient_contact_id.display_name) AS GROUP_CONCAT_recipient_contact_id_display_name',
+            'GROUP_FIRST(FundingCase_FundingProgram_funding_program_id_01.title) AS GROUP_FIRST_FundingCase_FundingProgram_funding_program_id_01_title',
+            'GROUP_FIRST(recipient_contact_id.display_name) AS GROUP_FIRST_recipient_contact_id_display_name',
             'SUM(amount_approved) AS SUM_amount_approved',
-            'SUM(FundingCase_FundingPayoutProcess_funding_case_id_01_FundingPayoutProcess_FundingDrawdown_payout_process_id_01.amount) AS SUM_FundingCase_FundingPayoutProcess_funding_case_id_01_FundingPayoutProcess_FundingDrawdown_payout_process_id_01_amount',
-            'SUM(FundingCase_FundingPayoutProcess_funding_case_id_01_FundingPayoutProcess_FundingDrawdown_payout_process_id_01.amount_paid_out) AS SUM_FundingCase_FundingPayoutProcess_funding_case_id_01_FundingPayoutProcess_FundingDrawdown_payout_process_id_01_amount_paid_out',
-            'SUM(FundingCase_FundingPayoutProcess_funding_case_id_01_FundingPayoutProcess_FundingDrawdown_payout_process_id_01.amount_new) AS SUM_FundingCase_FundingPayoutProcess_funding_case_id_01_FundingPayoutProcess_FundingDrawdown_payout_process_id_01_amount_new',
-            'GROUP_FIRST(FundingCase_FundingPayoutProcess_funding_case_id_01_FundingPayoutProcess_FundingDrawdown_payout_process_id_01.creation_date) AS GROUP_FIRST_FundingCase_FundingPayoutProcess_funding_case_id_01_FundingPayoutProcess_FundingDrawdown_payout_process_id_01_creation_date',
-            'GROUP_FIRST(FundingCase_FundingPayoutProcess_funding_case_id_01_FundingPayoutProcess_FundingDrawdown_payout_process_id_01.acception_date) AS GROUP_FIRST_FundingCase_FundingPayoutProcess_funding_case_id_01_FundingPayoutProcess_FundingDrawdown_payout_process_id_01_acception_date',
+            'SUM(amount_drawdowns) AS SUM_amount_drawdowns',
+            'SUM(amount_paid_out) AS SUM_amount_paid_out',
+            'SUM(amount_drawdowns_open) AS SUM_amount_drawdowns_open',
           ],
           'orderBy' => [],
           'where' => [
@@ -46,24 +44,6 @@ return [
                 'funding_program_id',
                 '=',
                 'FundingCase_FundingProgram_funding_program_id_01.id',
-              ],
-            ],
-            [
-              'FundingPayoutProcess AS FundingCase_FundingPayoutProcess_funding_case_id_01',
-              'LEFT',
-              [
-                'id',
-                '=',
-                'FundingCase_FundingPayoutProcess_funding_case_id_01.funding_case_id',
-              ],
-            ],
-            [
-              'FundingDrawdown AS FundingCase_FundingPayoutProcess_funding_case_id_01_FundingPayoutProcess_FundingDrawdown_payout_process_id_01',
-              'LEFT',
-              [
-                'FundingCase_FundingPayoutProcess_funding_case_id_01.id',
-                '=',
-                'FundingCase_FundingPayoutProcess_funding_case_id_01_FundingPayoutProcess_FundingDrawdown_payout_process_id_01.payout_process_id',
               ],
             ],
           ],
@@ -96,14 +76,14 @@ return [
           'columns' => [
             [
               'type' => 'field',
-              'key' => 'GROUP_CONCAT_FundingCase_FundingProgram_funding_program_id_01_title',
+              'key' => 'GROUP_FIRST_FundingCase_FundingProgram_funding_program_id_01_title',
               'dataType' => 'String',
               'label' => E::ts('Funding Program'),
               'sortable' => TRUE,
             ],
             [
               'type' => 'field',
-              'key' => 'GROUP_CONCAT_recipient_contact_id_display_name',
+              'key' => 'GROUP_FIRST_recipient_contact_id_display_name',
               'dataType' => 'String',
               'label' => E::ts('Recipient'),
               'sortable' => TRUE,
@@ -120,7 +100,7 @@ return [
             ],
             [
               'type' => 'field',
-              'key' => 'SUM_FundingCase_FundingPayoutProcess_funding_case_id_01_FundingPayoutProcess_FundingDrawdown_payout_process_id_01_amount',
+              'key' => 'SUM_amount_drawdowns',
               'dataType' => 'Money',
               'label' => E::ts('Drawdowns'),
               'sortable' => TRUE,
@@ -130,14 +110,13 @@ return [
             ],
             [
               'type' => 'field',
-              'key' => 'SUM_FundingCase_FundingPayoutProcess_funding_case_id_01_FundingPayoutProcess_FundingDrawdown_payout_process_id_01_amount_paid_out',
+              'key' => 'SUM_amount_paid_out',
               'dataType' => 'Money',
               'label' => E::ts('Amount Paid Out'),
               'sortable' => TRUE,
               'tally' => [
                 'fn' => 'SUM',
               ],
-              'rewrite' => '',
             ],
             [
               'type' => 'field',
@@ -145,11 +124,11 @@ return [
               'dataType' => 'Integer',
               'label' => E::ts('Withdrawable Funds'),
               'sortable' => TRUE,
-              'rewrite' => '{($SUM_amount_approved - $SUM_FundingCase_FundingPayoutProcess_funding_case_id_01_FundingPayoutProcess_FundingDrawdown_payout_process_id_01_amount_paid_out)|crmMoney:$currency}',
+              'rewrite' => '{($SUM_amount_approved - $SUM_amount_paid_out)|crmMoney:$currency}',
             ],
             [
               'type' => 'field',
-              'key' => 'SUM_FundingCase_FundingPayoutProcess_funding_case_id_01_FundingPayoutProcess_FundingDrawdown_payout_process_id_01_amount_new',
+              'key' => 'SUM_amount_drawdowns_open',
               'dataType' => 'Money',
               'label' => E::ts('Open Drawdowns'),
               'sortable' => TRUE,
@@ -168,6 +147,7 @@ return [
           'tally' => [
             'label' => E::ts('Total'),
           ],
+          'actions_display_mode' => 'menu',
         ],
       ],
       'match' => [
