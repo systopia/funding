@@ -88,8 +88,9 @@ final class GetFieldsAction extends DAOGetFieldsAction {
       'sql_renderer' => new AliasSqlRenderer('application_process_id.funding_case_id.funding_program_id.currency'),
     ];
 
-    $recordedCostsSql = 'IFNULL((SELECT SUM(item.amount) FROM civicrm_funding_clearing_cost_item item
-        WHERE item.clearing_process_id = %s AND item.status != "rejected"), 0)';
+    $recordedCostsSql = 'IFNULL(
+      (SELECT SUM(item.amount) FROM civicrm_funding_clearing_cost_item item
+        WHERE item.clearing_process_id = %s), 0)';
     $fields[] = [
       'name' => 'amount_recorded_costs',
       'title' => E::ts('Amount Recorded Costs'),
@@ -106,7 +107,7 @@ final class GetFieldsAction extends DAOGetFieldsAction {
 
     $recordedResourcesSql = 'IFNULL(
         (SELECT SUM(item.amount) FROM civicrm_funding_clearing_resources_item item
-          WHERE item.clearing_process_id = %s AND item.status != "rejected"), 0)';
+          WHERE item.clearing_process_id = %s), 0)';
     $fields[] = [
       'name' => 'amount_recorded_resources',
       'title' => E::ts('Amount Recorded Resources'),

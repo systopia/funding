@@ -109,8 +109,8 @@ final class FundingClearingProcessTest extends AbstractFundingHeadlessTestCase {
     static::assertSame([
       [
         'id' => $clearingProcessId,
-        'amount_recorded_costs' => 10.1,
-        'amount_recorded_resources' => 3.2,
+        'amount_recorded_costs' => 11.2,
+        'amount_recorded_resources' => 4.3,
         'amount_admitted_costs' => 9.1,
         'amount_admitted_resources' => 2.2,
       ],
