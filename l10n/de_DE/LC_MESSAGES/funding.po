@@ -150,6 +150,27 @@ msgstr "Prüffortschritt"
 msgid "The progress of application review in percent."
 msgstr "Der Fortschritt der Antragsprüfung in Prozent."
 
+#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
+msgid "Drawdown Acception Date"
+msgstr "Mittelabrufannahmedatum"
+
+#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
+msgid ""
+"The date of the drawdown acception. Note: Cannot be used in sub-clauses."
+msgstr ""
+"Das Annahmedatum des Mittelabrufs. Hinweis: Kann nicht in Unterbedingungen "
+"verwendet werden."
+
+#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
+msgid "Drawdown Creation Date"
+msgstr "Mittelabruferstellungsdatum"
+
+#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
+msgid "The date of the drawdown creation. Note: Cannot be used in sub-clauses."
+msgstr ""
+"Das Erstellungsdatum des Mittelabrufs. Hinweis: Kann nicht in "
+"Unterbedingungen verwendet werden."
+
 # Übersetzung nicht notwendig
 #: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php

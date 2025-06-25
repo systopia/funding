@@ -20,7 +20,8 @@ declare(strict_types = 1);
 namespace Civi\Funding\Api4\Util;
 
 /**
- * @phpstan-type whereT array<array{string, string|mixed[], 2?: mixed}>
+ * @phpstan-type clauseT array{string, string|mixed[], 2?: mixed}
+ * @phpstan-type whereT list<clauseT>
  *
  * @codeCoverageIgnore
  */
@@ -38,8 +39,7 @@ final class WhereUtil {
           return TRUE;
         }
       }
-
-      if (in_array($clause[0], $field, TRUE)) {
+      elseif (in_array($clause[0], $field, TRUE)) {
         return TRUE;
       }
     }
@@ -59,13 +59,45 @@ final class WhereUtil {
           return TRUE;
         }
       }
-
-      if (str_starts_with($clause[0], $fieldPrefix)) {
+      elseif (str_starts_with($clause[0], $fieldPrefix)) {
         return TRUE;
       }
     }
 
     return FALSE;
+  }
+
+  /**
+   * @phpstan-param whereT $where
+   *
+   * @phpstan-return clauseT|null
+   */
+  public static function getAndUnsetClause(
+    array &$where,
+    string $field,
+    int $maxDepth = PHP_INT_MAX,
+    int $depth = 0
+  ): ?array {
+    if ($depth > $maxDepth) {
+      return NULL;
+    }
+
+    foreach ($where as $index => $clause) {
+      if (is_array($clause[1])) {
+        // Composite condition.
+        $foundClause = self::getAndUnsetClause($clause[1], $field, $maxDepth, ++$depth);
+        if (NULL !== $foundClause) {
+          return $foundClause;
+        }
+      }
+      elseif ($clause[0] === $field) {
+        unset($where[$index]);
+
+        return $clause;
+      }
+    }
+
+    return NULL;
   }
 
   /**

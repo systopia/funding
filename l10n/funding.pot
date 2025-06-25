@@ -78,6 +78,22 @@ msgstr ""
 msgid "The progress of application review in percent."
 msgstr ""
 
+#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
+msgid "Drawdown Acception Date"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
+msgid "The date of the drawdown acception. Note: Cannot be used in sub-clauses."
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
+msgid "Drawdown Creation Date"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
+msgid "The date of the drawdown creation. Note: Cannot be used in sub-clauses."
+msgstr ""
+
 #: Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgramContactRelationType/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php Civi/Funding/Api4/Action/RecipientContactRelationType/GetFieldsAction.php
 msgid "Unique field identifier"
 msgstr ""
