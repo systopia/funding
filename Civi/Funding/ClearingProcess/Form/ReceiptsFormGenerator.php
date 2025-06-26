@@ -38,6 +38,8 @@ use CRM_Funding_ExtensionUtil as E;
 
 final class ReceiptsFormGenerator implements ReceiptsFormGeneratorInterface {
 
+  public const SUPPORTED_FUNDING_CASE_TYPE = '*';
+
   private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
 
   private ApplicationFormCreateHandlerInterface $applicationFormCreateHandler;

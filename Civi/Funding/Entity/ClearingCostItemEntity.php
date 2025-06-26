@@ -28,11 +28,13 @@ namespace Civi\Funding\Entity;
  *   file_id: ?int,
  *   receipt_number: ?string,
  *   receipt_date: ?string,
- *   payment_date: string,
- *   recipient: string,
- *   reason: string,
+ *   payment_date: ?string,
+ *   recipient: ?string,
+ *   reason: ?string,
  *   amount: float,
  *   amount_admitted: ?float,
+ *   properties: ?array<string, mixed>,
+ *   form_key: string,
  * }
  *
  * @phpstan-extends AbstractClearingItemEntity<clearingCostItemT>
