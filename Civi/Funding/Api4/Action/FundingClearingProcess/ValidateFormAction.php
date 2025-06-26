@@ -34,7 +34,7 @@ final class ValidateFormAction extends AbstractAction {
 
   use IdParameterTrait;
 
-  public function __construct(ActionHandlerInterface $actionHandler = NULL) {
+  public function __construct(?ActionHandlerInterface $actionHandler = NULL) {
     parent::__construct(FundingClearingProcess::getEntityName(), 'validateForm');
     $this->setActionHandler($actionHandler);
   }

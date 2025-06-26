@@ -40,8 +40,8 @@ final class ReportForm extends JsonFormsForm implements ReportFormInterface {
   public function __construct(
     JsonSchema $jsonSchema,
     JsonFormsElement $uiSchema,
-    JsonFormsElement $receiptsPrependUiSchema = NULL,
-    JsonFormsElement $receiptsAppendUiSchema = NULL
+    ?JsonFormsElement $receiptsPrependUiSchema = NULL,
+    ?JsonFormsElement $receiptsAppendUiSchema = NULL
   ) {
     parent::__construct($jsonSchema, $uiSchema);
     $this->receiptsPrependUiSchema = $receiptsPrependUiSchema;

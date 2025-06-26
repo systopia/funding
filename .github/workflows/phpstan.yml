@@ -9,13 +9,14 @@ on:
       - ci/composer.json
       - phpstan.ci.neon
       - phpstan.neon.dist
+      - .github/workflows/phpstan.yml
 
 jobs:
   phpstan:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: ['8.1', '8.3']
+        php-versions: ['8.1', '8.4']
         prefer: ['prefer-stable', 'prefer-lowest']
     name: PHPStan with PHP ${{ matrix.php-versions }} ${{ matrix.prefer }}
 

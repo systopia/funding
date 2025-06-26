@@ -35,7 +35,7 @@ class EventCheckAccessAction extends CheckAccessAction implements EventActionInt
 
   public function __construct(string $initRequestEventName, string $authorizeRequestEventName,
                               string $entityName, string $actionName = 'checkAccess',
-                              CiviEventDispatcherInterface $eventDispatcher = NULL) {
+                              ?CiviEventDispatcherInterface $eventDispatcher = NULL) {
     parent::__construct($entityName, $actionName);
     $this->_initRequestEventName = $initRequestEventName;
     $this->_authorizeRequestEventName = $authorizeRequestEventName;
