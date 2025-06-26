@@ -24,6 +24,7 @@ use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\EntityFactory\ClearingProcessFactory;
+use Civi\Funding\FundingCase\FundingCasePermissions;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -40,6 +41,7 @@ final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
       'review_clearing_calculative' => ['set-notification-contacts'],
       'review_clearing_content' => ['set-notification-contacts'],
       'review_drawdown' => ['set-notification-contacts'],
+      'review_case_finish' => [],
     ],
     'ongoing' => [
       'review_calculative' => ['recreate-transfer-contract', 'update-amount-approved', 'set-notification-contacts'],
@@ -47,6 +49,7 @@ final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
       'review_clearing_calculative' => ['set-notification-contacts'],
       'review_clearing_content' => ['set-notification-contacts'],
       'review_drawdown' => ['set-notification-contacts'],
+      'review_case_finish' => ['set-notification-contacts'],
     ],
     'cleared' => [
       'review_calculative' => ['set-notification-contacts'],
@@ -54,6 +57,7 @@ final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
       'review_clearing_calculative' => ['set-notification-contacts'],
       'review_clearing_content' => ['set-notification-contacts'],
       'review_drawdown' => ['set-notification-contacts'],
+      'review_case_finish' => ['set-notification-contacts'],
     ],
     'rejected' => [
       'review_calculative' => ['set-notification-contacts'],
@@ -61,6 +65,7 @@ final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
       'review_clearing_calculative' => ['set-notification-contacts'],
       'review_clearing_content' => ['set-notification-contacts'],
       'review_drawdown' => ['set-notification-contacts'],
+      'review_case_finish' => ['set-notification-contacts'],
     ],
     'withdrawn' => [
       'review_calculative' => ['set-notification-contacts'],
@@ -68,6 +73,7 @@ final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
       'review_clearing_calculative' => ['set-notification-contacts'],
       'review_clearing_content' => ['set-notification-contacts'],
       'review_drawdown' => ['set-notification-contacts'],
+      'review_case_finish' => ['set-notification-contacts'],
     ],
   ];
 
@@ -119,22 +125,19 @@ final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
     }
   }
 
-  /**
-   * @dataProvider provideClearingReviewPermission
-   */
-  public function testGetActionsFinishClearing(string $clearingReviewPermission): void {
+  public function testGetActionsFinishClearing(): void {
     $statusList = [22 => new FullApplicationProcessStatus('review', TRUE, TRUE)];
     static::assertNotContains(FundingCaseActions::FINISH_CLEARING, $this->actionsDeterminer->getActions(
       'ongoing',
       $statusList,
-      [$clearingReviewPermission]
+      [FundingCasePermissions::REVIEW_FINISH]
     ));
 
     $statusList = [22 => new FullApplicationProcessStatus('eligible', TRUE, TRUE)];
     static::assertNotContains(FundingCaseActions::FINISH_CLEARING, $this->actionsDeterminer->getActions(
       'ongoing',
       $statusList,
-      [$clearingReviewPermission]
+      [FundingCasePermissions::REVIEW_FINISH]
     ));
 
     $clearingProcess = ClearingProcessFactory::create(['status' => 'accepted']);
@@ -143,21 +146,21 @@ final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
     static::assertContains(FundingCaseActions::FINISH_CLEARING, $this->actionsDeterminer->getActions(
       'ongoing',
       $statusList,
-      [$clearingReviewPermission]
+      [FundingCasePermissions::REVIEW_FINISH]
     ));
 
     $clearingProcess->setValues(['status' => 'rejected'] + $clearingProcess->toArray());
     static::assertContains(FundingCaseActions::FINISH_CLEARING, $this->actionsDeterminer->getActions(
       'ongoing',
       $statusList,
-      [$clearingReviewPermission]
+      [FundingCasePermissions::REVIEW_FINISH]
     ));
 
     $clearingProcess->setValues(['status' => 'review'] + $clearingProcess->toArray());
     static::assertNotContains(FundingCaseActions::FINISH_CLEARING, $this->actionsDeterminer->getActions(
       'ongoing',
       $statusList,
-      [$clearingReviewPermission]
+      [FundingCasePermissions::REVIEW_FINISH]
     ));
   }
 

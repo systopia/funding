@@ -879,6 +879,10 @@ msgid "Contract: view (applicant)"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
+msgid "Review: finish case"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
 msgid "Drawdown: create"
 msgstr ""
 

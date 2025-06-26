@@ -23,4 +23,6 @@ final class FundingCasePermissions {
 
   public const CONTRACT_VIEW = 'contract_view';
 
+  public const REVIEW_FINISH = 'review_case_finish';
+
 }
