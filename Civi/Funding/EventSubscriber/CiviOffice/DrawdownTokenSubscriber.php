@@ -66,14 +66,14 @@ class DrawdownTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
    * @inheritDoc
    */
   protected function getRelatedContextSchemas(): array {
-    return ['payoutProcessId'];
+    return ['fundingPayoutProcessId'];
   }
 
   /**
    * @inheritDoc
    */
   protected function getRelatedContextValues(AbstractEntity $entity): array {
-    return ['payoutProcessId' => $entity->getPayoutProcessId()];
+    return ['fundingPayoutProcessId' => $entity->getPayoutProcessId()];
   }
 
   protected function loadEntity(int $id): ?AbstractEntity {
