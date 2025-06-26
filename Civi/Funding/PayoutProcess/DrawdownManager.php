@@ -68,8 +68,11 @@ class DrawdownManager {
     $drawdownBundle = new DrawdownBundle($drawdown, $payoutProcessBundle);
     $this->update($drawdownBundle);
 
-    $event = new DrawdownAcceptedEvent($drawdownBundle);
-    $this->eventDispatcher->dispatch(DrawdownAcceptedEvent::class, $event);
+    // Status might have been changed by an event listener.
+    if ('accepted' === $drawdown->getStatus()) {
+      $event = new DrawdownAcceptedEvent($drawdownBundle);
+      $this->eventDispatcher->dispatch(DrawdownAcceptedEvent::class, $event);
+    }
   }
 
   /**
