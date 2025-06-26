@@ -142,6 +142,12 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         'readOnly' => TRUE,
                         'default' => NULL,
                       ],
+                      '_financePlanItemId' => [
+                        'type' => 'integer',
+                        'readOnly' => TRUE,
+                        'const' => $costItem->getId(),
+                        'default' => $costItem->getId(),
+                      ],
                       'file' => [
                         'type' => ['string', 'null'],
                         'format' => 'uri',
@@ -178,7 +184,7 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         'default' => NULL,
                       ],
                     ],
-                    'required' => ['paymentDate', 'recipient', 'reason', 'amount'],
+                    'required' => ['_financePlanItemId', 'paymentDate', 'recipient', 'reason', 'amount'],
                   ],
                 ],
                 'amountRecordedTotal' => [
@@ -441,6 +447,12 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         'readOnly' => TRUE,
                         'default' => NULL,
                       ],
+                      '_financePlanItemId' => [
+                        'type' => 'integer',
+                        'readOnly' => TRUE,
+                        'const' => $costItem->getId(),
+                        'default' => $costItem->getId(),
+                      ],
                       'file' => [
                         'type' => ['string', 'null'],
                         'format' => 'uri',
@@ -477,7 +489,7 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         'default' => NULL,
                       ],
                     ],
-                    'required' => ['paymentDate', 'recipient', 'reason', 'amount'],
+                    'required' => ['_financePlanItemId', 'paymentDate', 'recipient', 'reason', 'amount'],
                   ],
                 ],
                 'amountRecordedTotal' => [
@@ -753,6 +765,12 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         'readOnly' => TRUE,
                         'default' => NULL,
                       ],
+                      '_financePlanItemId' => [
+                        'type' => 'integer',
+                        'readOnly' => TRUE,
+                        'const' => $costItem->getId(),
+                        'default' => $costItem->getId(),
+                      ],
                       'file' => [
                         'type' => ['string', 'null'],
                         'format' => 'uri',
@@ -789,7 +807,7 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         'default' => NULL,
                       ],
                     ],
-                    'required' => ['paymentDate', 'recipient', 'reason', 'amount'],
+                    'required' => ['_financePlanItemId', 'paymentDate', 'recipient', 'reason', 'amount'],
                   ],
                 ],
                 'amountRecordedTotal' => [

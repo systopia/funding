@@ -36,6 +36,9 @@ final class ClearingFormGetHandler implements ClearingFormGetHandlerInterface {
     $this->clearingFormsGenerator = $clearingFormsGenerator;
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function handle(ClearingFormGetCommand $command): JsonFormsFormInterface {
     return $this->forms[$command->getClearingProcess()->getId()] ??=
       $this->clearingFormsGenerator->generateForm($command->getClearingProcessBundle());
