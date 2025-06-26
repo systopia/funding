@@ -27,11 +27,13 @@ namespace Civi\Funding\Entity;
  *   file_id: ?int,
  *   receipt_number: ?string,
  *   receipt_date: ?string,
- *   payment_date: string,
- *   payment_party: string,
- *   reason: string,
+ *   payment_date: ?string,
+ *   payment_party: ?string,
+ *   reason: ?string,
  *   amount: float,
  *   amount_admitted: ?float,
+ *   properties: ?array<string, mixed>,
+ *   form_key: string,
  * }
  *
  * @phpstan-template T of array<string, mixed> //+clearingItemT
@@ -60,7 +62,7 @@ abstract class AbstractClearingItemEntity extends AbstractEntity {
   }
 
   public function getFileId(): ?int {
-    // @phpstan-ignore-next-line
+    // @phpstan-ignore return.type
     return $this->values['file_id'];
   }
 
@@ -74,7 +76,7 @@ abstract class AbstractClearingItemEntity extends AbstractEntity {
   }
 
   public function getReceiptNumber(): ?string {
-    // @phpstan-ignore-next-line
+    // @phpstan-ignore return.type
     return $this->values['receipt_number'];
   }
 
@@ -88,7 +90,7 @@ abstract class AbstractClearingItemEntity extends AbstractEntity {
   }
 
   public function getReceiptDate(): ?\DateTimeInterface {
-    // @phpstan-ignore-next-line
+    // @phpstan-ignore argument.type
     return self::toDateTimeOrNull($this->values['receipt_date']);
   }
 
@@ -101,50 +103,50 @@ abstract class AbstractClearingItemEntity extends AbstractEntity {
     return $this;
   }
 
-  public function getPaymentDate(): \DateTimeInterface {
-    // @phpstan-ignore-next-line
-    return new \DateTime($this->values['payment_date']);
+  public function getPaymentDate(): ?\DateTimeInterface {
+    // @phpstan-ignore argument.type
+    return self::toDateTimeOrNull($this->values['payment_date']);
   }
 
   /**
    * @return static
    */
-  public function setPaymentDate(\DateTimeInterface $paymentDate): self {
-    $this->values['payment_date'] = self::toDateStr($paymentDate);
+  public function setPaymentDate(?\DateTimeInterface $paymentDate): self {
+    $this->values['payment_date'] = self::toDateStrOrNull($paymentDate);
 
     return $this;
   }
 
-  public function getPaymentParty(): string {
-    // @phpstan-ignore-next-line
+  public function getPaymentParty(): ?string {
+    // @phpstan-ignore return.type
     return $this->values['payment_party'];
   }
 
   /**
    * @return static
    */
-  public function setPaymentParty(string $paymentParty): self {
+  public function setPaymentParty(?string $paymentParty): self {
     $this->values['payment_party'] = $paymentParty;
 
     return $this;
   }
 
-  public function getReason(): string {
-    // @phpstan-ignore-next-line
+  public function getReason(): ?string {
+    // @phpstan-ignore return.type
     return $this->values['reason'];
   }
 
   /**
    * @return static
    */
-  public function setReason(string $reason): self {
+  public function setReason(?string $reason): self {
     $this->values['reason'] = $reason;
 
     return $this;
   }
 
   public function getAmount(): float {
-    // @phpstan-ignore-next-line
+    // @phpstan-ignore return.type
     return $this->values['amount'];
   }
 
@@ -158,7 +160,7 @@ abstract class AbstractClearingItemEntity extends AbstractEntity {
   }
 
   public function getAmountAdmitted(): ?float {
-    // @phpstan-ignore-next-line
+    // @phpstan-ignore return.type
     return $this->values['amount_admitted'];
   }
 
@@ -167,6 +169,34 @@ abstract class AbstractClearingItemEntity extends AbstractEntity {
    */
   public function setAmountAdmitted(?float $amountAdmitted): self {
     $this->values['amount_admitted'] = $amountAdmitted;
+
+    return $this;
+  }
+
+  /**
+   * @phpstan-return array<string, mixed>|null
+   */
+  public function getProperties(): ?array {
+    // @phpstan-ignore return.type
+    return $this->values['properties'];
+  }
+
+  /**
+   * @phpstan-param array<string, mixed>|null $properties
+   */
+  public function setProperties(?array $properties): static {
+    $this->values['properties'] = $properties;
+
+    return $this;
+  }
+
+  public function getFormKey(): string {
+    // @phpstan-ignore return.type
+    return $this->values['form_key'];
+  }
+
+  public function setFormKey(string $formKey): static {
+    $this->values['form_key'] = $formKey;
 
     return $this;
   }
@@ -182,6 +212,7 @@ abstract class AbstractClearingItemEntity extends AbstractEntity {
    * @internal
    */
   public function reformatDates(): self {
+    $this->setReceiptDate($this->getReceiptDate());
     $this->setPaymentDate($this->getPaymentDate());
 
     return $this;

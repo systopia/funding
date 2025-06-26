@@ -54,7 +54,9 @@ trait TaggedFundingCaseTypeServicesTrait {
           if ($firstCall) {
             FundingCaseTypeMetaDataPass::$fundingCaseTypes[] = $fundingCaseType;
           }
-          elseif (!in_array($fundingCaseType, FundingCaseTypeMetaDataPass::$fundingCaseTypes, TRUE)) {
+          elseif (!in_array($fundingCaseType, FundingCaseTypeMetaDataPass::$fundingCaseTypes, TRUE)
+            && '*' !== $fundingCaseType
+          ) {
             throw new RuntimeException(sprintf(
               'No %s service for funding case type %s registered',
               FundingCaseTypeMetaDataInterface::class,
@@ -127,14 +129,19 @@ trait TaggedFundingCaseTypeServicesTrait {
       return $fundingCaseTypes;
     }
 
-    if (!method_exists($class, 'getSupportedFundingCaseType')) {
-      throw new RuntimeException(sprintf('No funding case type specified for service "%s"', $id));
+    if (method_exists($class, 'getSupportedFundingCaseType')) {
+      return [$class::getSupportedFundingCaseType()];
     }
 
-    /** @var string $fundingCaseType */
-    $fundingCaseType = $class::getSupportedFundingCaseType();
+    if (defined("$class::SUPPORTED_FUNDING_CASE_TYPES")) {
+      return $class::SUPPORTED_FUNDING_CASE_TYPES;
+    }
 
-    return [$fundingCaseType];
+    if (defined("$class::SUPPORTED_FUNDING_CASE_TYPE")) {
+      return [$class::SUPPORTED_FUNDING_CASE_TYPE];
+    }
+
+    throw new RuntimeException(sprintf('No funding case type specified for service "%s"', $id));
   }
 
   /**

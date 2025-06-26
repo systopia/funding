@@ -35,6 +35,8 @@ use Civi\Funding\Entity\ClearingCostItemEntity;
  *   reason?: string,
  *   amount?: float,
  *   amount_admitted?: ?float,
+ *   properties?: ?array<string, mixed>,
+ *   form_key?: string,
  * }
  */
 final class ClearingCostItemFactory {
@@ -55,6 +57,8 @@ final class ClearingCostItemFactory {
       'reason' => 'TestClearingCostItem',
       'amount' => 1.23,
       'amount_admitted' => NULL,
+      'properties' => NULL,
+      'form_key' => 'foo/bar',
     ];
 
     return ClearingCostItemEntity::fromArray($values)->reformatDates();

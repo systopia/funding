@@ -38,33 +38,19 @@ use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
 
 /**
- * @phpstan-type clearingItemRecordT array{
- *   _id: int|null,
- *   file: string|null,
- *   receiptNumber: ?string,
- *   receiptDate: ?string,
- *   paymentDate: string,
- *   paymentParty: string,
- *   reason: string,
- *   amount: float|int,
- *   amountAdmitted: float|int|null,
- * }
+ * @phpstan-import-type clearingItemsT from ReceiptsFormGeneratorInterface
  *
  * @phpstan-type clearingFormDataT array{
  *   _action: string,
- *   costItems?: array<int, array{records: list<clearingItemRecordT>}>,
- *   costItemsAmountAdmitted?: float,
- *   costItemsAmountRecorded?: float,
- *   resourcesItems?: array<int, array{records: list<clearingItemRecordT>}>,
- *   resourcesItemsAdmountAdmitted?: float,
- *   resourcesItemsAmountRecorded?: float,
+ *   costItems?: clearingItemsT,
+ *   resourcesItems?: clearingItemsT,
  *   reportData?: array<string, mixed>,
  *   comment?: array{text: string, type: 'internal'|'external'},
  * }
  *
  * This class generates a JSON Forms specification that has a JSON schema that
  * validates the data specified in clearingFormDataT. (For displaying purposes
- * costItems and resourcesItems have additional properties.)
+ * the schema might have additional properties.)
  */
 final class ClearingFormGenerator {
 
@@ -168,6 +154,8 @@ final class ClearingFormGenerator {
     if (!$this->actionsDeterminer->isEditAllowed($clearingProcessBundle)) {
       $uiSchema->setReadonly(TRUE);
     }
+
+    $keywords['additionalProperties'] = FALSE;
 
     return new JsonFormsForm(JsonSchema::fromArray($keywords), $uiSchema);
   }
