@@ -25,6 +25,11 @@ use Civi\Funding\Entity\ClearingCostItemEntity;
 final class ClearingCostItemFixture {
 
   /**
+   * @phpstan-var array<int, int>
+   */
+  private static $count = [];
+
+  /**
    * @phpstan-param array<string, mixed> $values
    *
    * @throws \CRM_Core_Exception
@@ -34,6 +39,9 @@ final class ClearingCostItemFixture {
     int $applicationCostItemId,
     array $values = []
   ): ClearingCostItemEntity {
+    self::$count[$applicationCostItemId] ??= 0;
+    $recordKey = self::$count[$applicationCostItemId]++;
+
     $result = FundingClearingCostItem::create(FALSE)
       ->setValues($values + [
         'clearing_process_id' => $clearingProcessId,
@@ -47,6 +55,8 @@ final class ClearingCostItemFixture {
         'reason' => 'Test Clearing Cost Item',
         'amount' => 1.2,
         'amount_admitted' => NULL,
+        'properties' => NULL,
+        'form_key' => "$applicationCostItemId/$recordKey",
       ])->execute();
 
     return ClearingCostItemEntity::singleFromApiResult($result)->reformatDates();
