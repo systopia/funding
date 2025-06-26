@@ -22,8 +22,6 @@ namespace Civi\Funding\ClearingProcess\Form\CostItem;
 use Civi\Core\Format;
 use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\JsonSchemaCostItem;
 use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\JsonSchemaCostItems;
-use Civi\Funding\ClearingProcess\ClearingActionsDeterminer;
-use Civi\Funding\ClearingProcess\ClearingCostItemManager;
 use Civi\Funding\ClearingProcess\Form\ClearingGroupExtractor;
 use Civi\Funding\ClearingProcess\Form\Container\ClearableItems;
 use Civi\Funding\ClearingProcess\Form\Container\ClearingItemsGroup;
@@ -46,13 +44,9 @@ use PHPUnit\Framework\TestCase;
  */
 final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
 
-  private ClearingActionsDeterminer&MockObject $actionsDeterminerMock;
-
   private ClearableCostItemsLoader&MockObject $clearableItemsLoaderMock;
 
   private ClearingGroupExtractor&MockObject $clearingGroupExtractorMock;
-
-  private ClearingCostItemManager&MockObject $clearingItemManagerMock;
 
   private Format&MockObject $formatMock;
 
@@ -62,18 +56,14 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
-    $this->actionsDeterminerMock = $this->createMock(ClearingActionsDeterminer::class);
     $this->clearableItemsLoaderMock = $this->createMock(ClearableCostItemsLoader::class);
     $this->clearingGroupExtractorMock = $this->createMock(ClearingGroupExtractor::class);
-    $this->clearingItemManagerMock = $this->createMock(ClearingCostItemManager::class);
     $this->formatMock = $this->createMock(Format::class);
     $this->itemDetailsFormElementGeneratorMock = $this->createMock(ItemDetailsFormElementGenerator::class);
 
     $this->generator = new ClearingCostItemsJsonFormsGenerator(
-      $this->actionsDeterminerMock,
       $this->clearableItemsLoaderMock,
       $this->clearingGroupExtractorMock,
-      $this->clearingItemManagerMock,
       $this->formatMock,
       $this->itemDetailsFormElementGeneratorMock
     );
@@ -120,15 +110,6 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
       ->with($costItem->getAmount(), 'EUR')
       ->willReturn($costItem->getAmount() . ' €');
 
-    $this->actionsDeterminerMock->expects(static::once())->method('isAdmittedValueChangeAllowed')
-      ->with($clearingProcessBundle)
-      ->willReturn(FALSE);
-    $this->actionsDeterminerMock->expects(static::once())->method('isContentChangeAllowed')
-      ->with($clearingProcessBundle)
-      ->willReturn(FALSE);
-    $this->clearingItemManagerMock->expects(static::once())->method('countByFinancePlanItemId')
-      ->with($costItem->getId())
-      ->willReturn(2);
     $clearingItemsForm = $this->generator->generate($clearingProcessBundle, $applicationForm);
     static::assertEquals([
       'type' => 'object',
@@ -138,69 +119,65 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
           'properties' => [
             '23' => [
               'type' => 'object',
+              'additionalProperties' => FALSE,
               'properties' => [
                 'records' => [
                   'type' => 'array',
-                  'minItems' => 2,
-                  'maxItems' => 2,
                   'items' => [
                     'type' => 'object',
+                    'additionalProperties' => FALSE,
                     'properties' => [
                       '_id' => [
                         'type' => ['integer', 'null'],
-                        'readOnly' => TRUE,
                         'default' => NULL,
+                      ],
+                      '_financePlanItemId' => [
+                        'type' => 'integer',
+                        'const' => $costItem->getId(),
+                        'default' => $costItem->getId(),
                       ],
                       'file' => [
                         'type' => ['string', 'null'],
                         'format' => 'uri',
-                        'readOnly' => TRUE,
                         'default' => NULL,
                       ],
                       'receiptNumber' => [
                         'type' => ['string', 'null'],
-                        'readOnly' => TRUE,
                         'maxlength' => 255,
                       ],
                       'receiptDate' => [
                         'type' => ['string', 'null'],
-                        'readOnly' => TRUE,
                         'format' => 'date',
                       ],
                       'paymentDate' => [
                         'type' => 'string',
-                        'readOnly' => TRUE,
                         'format' => 'date',
                       ],
                       'paymentParty' => [
                         'type' => 'string',
-                        'readOnly' => TRUE,
                         'maxlength' => 255,
                       ],
                       'reason' => [
                         'type' => 'string',
-                        'readOnly' => TRUE,
                         'maxlength' => 255,
                       ],
                       'amount' => [
                         'type' => 'number',
-                        'readOnly' => TRUE,
                         'precision' => 2,
                       ],
                       'amountAdmitted' => [
                         'type' => ['number', 'null'],
                         'precision' => 2,
-                        'readOnly' => TRUE,
-                        'default' => NULL,
                       ],
+                      'properties' => ['type' => 'null'],
                     ],
-                    'required' => ['paymentDate', 'paymentParty', 'reason', 'amount'],
+                    'required' => ['_financePlanItemId', 'paymentDate', 'paymentParty', 'reason', 'amount'],
                   ],
                 ],
                 'amountRecordedTotal' => [
                   'type' => 'number',
                   '$calculate' => [
-                    'expression' => 'round(sum(map(records, "value.amount")), 2)',
+                    'expression' => 'round(sum(map(records, "value.amount ?: 0")), 2)',
                     'variables' => ['records' => ['$data' => '1/records']],
                   ],
                   'default' => 0,
@@ -435,13 +412,6 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
         return $amount . ' €';
       });
 
-    $this->actionsDeterminerMock->expects(static::once())->method('isAdmittedValueChangeAllowed')
-      ->with($clearingProcessBundle)
-      ->willReturn(FALSE);
-    $this->actionsDeterminerMock->expects(static::once())->method('isContentChangeAllowed')
-      ->with($clearingProcessBundle)
-      ->willReturn(TRUE);
-    $this->clearingItemManagerMock->expects(static::never())->method('countByFinancePlanItemId');
     $clearingItemsForm = $this->generator->generate($clearingProcessBundle, $applicationForm);
     static::assertEquals([
       'type' => 'object',
@@ -451,67 +421,65 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
           'properties' => [
             '23' => [
               'type' => 'object',
+              'additionalProperties' => FALSE,
               'properties' => [
                 'records' => [
                   'type' => 'array',
                   'items' => [
                     'type' => 'object',
+                    'additionalProperties' => FALSE,
                     'properties' => [
                       '_id' => [
                         'type' => ['integer', 'null'],
-                        'readOnly' => TRUE,
                         'default' => NULL,
+                      ],
+                      '_financePlanItemId' => [
+                        'type' => 'integer',
+                        'const' => $costItem->getId(),
+                        'default' => $costItem->getId(),
                       ],
                       'file' => [
                         'type' => ['string', 'null'],
                         'format' => 'uri',
-                        'readOnly' => FALSE,
                         'default' => NULL,
                       ],
                       'receiptNumber' => [
                         'type' => ['string', 'null'],
-                        'readOnly' => FALSE,
                         'maxlength' => 255,
                       ],
                       'receiptDate' => [
                         'type' => ['string', 'null'],
-                        'readOnly' => FALSE,
                         'format' => 'date',
                       ],
                       'paymentDate' => [
                         'type' => 'string',
                         'format' => 'date',
-                        'readOnly' => FALSE,
                       ],
                       'paymentParty' => [
                         'type' => 'string',
-                        'readOnly' => FALSE,
                         'maxlength' => 255,
                       ],
                       'reason' => [
                         'type' => 'string',
-                        'readOnly' => FALSE,
                         'maxlength' => 255,
                       ],
                       'amount' => [
                         'type' => 'number',
                         'precision' => 2,
-                        'readOnly' => FALSE,
                       ],
                       'amountAdmitted' => [
                         'type' => ['number', 'null'],
                         'precision' => 2,
-                        'readOnly' => TRUE,
-                        'default' => NULL,
                       ],
+                      'properties' => ['type' => 'null'],
                     ],
-                    'required' => ['paymentDate', 'paymentParty', 'reason', 'amount'],
+                    'required' => ['_financePlanItemId', 'paymentDate', 'paymentParty', 'reason', 'amount'],
                   ],
                 ],
                 'amountRecordedTotal' => [
                   'type' => 'number',
                   '$calculate' => [
-                    'expression' => 'round(sum(map(records, "value.amount")), 2)',
+                    'expression' => 'round(sum(map(records, "value.amount ?: 0")), 2)',
                     'variables' => ['records' => ['$data' => '1/records']],
                   ],
                   'default' => 0,
@@ -759,15 +727,6 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
         return $amount . ' €';
       });
 
-    $this->actionsDeterminerMock->expects(static::once())->method('isAdmittedValueChangeAllowed')
-      ->with($clearingProcessBundle)
-      ->willReturn(TRUE);
-    $this->actionsDeterminerMock->expects(static::once())->method('isContentChangeAllowed')
-      ->with($clearingProcessBundle)
-      ->willReturn(FALSE);
-    $this->clearingItemManagerMock->expects(static::once())->method('countByFinancePlanItemId')
-      ->with($costItem->getId())
-      ->willReturn(2);
     $clearingItemsForm = $this->generator->generate($clearingProcessBundle, $applicationForm);
     static::assertEquals([
       'type' => 'object',
@@ -777,69 +736,65 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
           'properties' => [
             '23' => [
               'type' => 'object',
+              'additionalProperties' => FALSE,
               'properties' => [
                 'records' => [
                   'type' => 'array',
-                  'minItems' => 2,
-                  'maxItems' => 2,
                   'items' => [
                     'type' => 'object',
+                    'additionalProperties' => FALSE,
                     'properties' => [
                       '_id' => [
                         'type' => ['integer', 'null'],
-                        'readOnly' => TRUE,
                         'default' => NULL,
                       ],
+                      '_financePlanItemId' => [
+                        'type' => 'integer',
+                        'const' => $costItem->getId(),
+                        'default' => $costItem->getId(),
+                      ],
                       'file' => [
-                        'readOnly' => TRUE,
                         'type' => ['string', 'null'],
                         'format' => 'uri',
                         'default' => NULL,
                       ],
                       'receiptNumber' => [
-                        'readOnly' => TRUE,
                         'type' => ['string', 'null'],
                         'maxlength' => 255,
                       ],
                       'receiptDate' => [
-                        'readOnly' => TRUE,
                         'type' => ['string', 'null'],
                         'format' => 'date',
                       ],
                       'paymentDate' => [
-                        'readOnly' => TRUE,
                         'type' => 'string',
                         'format' => 'date',
                       ],
                       'paymentParty' => [
-                        'readOnly' => TRUE,
                         'type' => 'string',
                         'maxlength' => 255,
                       ],
                       'reason' => [
-                        'readOnly' => TRUE,
                         'type' => 'string',
                         'maxlength' => 255,
                       ],
                       'amount' => [
-                        'readOnly' => TRUE,
                         'type' => 'number',
                         'precision' => 2,
                       ],
                       'amountAdmitted' => [
                         'type' => ['number', 'null'],
                         'precision' => 2,
-                        'readOnly' => FALSE,
-                        'default' => ['$data' => '1/amount'],
                       ],
+                      'properties' => ['type' => 'null'],
                     ],
-                    'required' => ['paymentDate', 'paymentParty', 'reason', 'amount'],
+                    'required' => ['_financePlanItemId', 'paymentDate', 'paymentParty', 'reason', 'amount'],
                   ],
                 ],
                 'amountRecordedTotal' => [
                   'type' => 'number',
                   '$calculate' => [
-                    'expression' => 'round(sum(map(records, "value.amount")), 2)',
+                    'expression' => 'round(sum(map(records, "value.amount ?: 0")), 2)',
                     'variables' => ['records' => ['$data' => '1/records']],
                   ],
                   'default' => 0,

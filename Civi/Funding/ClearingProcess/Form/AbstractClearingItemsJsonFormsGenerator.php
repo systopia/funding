@@ -20,9 +20,6 @@ declare(strict_types = 1);
 namespace Civi\Funding\ClearingProcess\Form;
 
 use Civi\Core\Format;
-use Civi\Funding\ClearingProcess\ClearingActionsDeterminer;
-use Civi\Funding\ClearingProcess\ClearingCostItemManager;
-use Civi\Funding\ClearingProcess\ClearingResourcesItemManager;
 use Civi\Funding\ClearingProcess\Form\Container\ClearableItems;
 use Civi\Funding\ClearingProcess\Form\Container\ClearingItemsGroup;
 use Civi\Funding\Entity\AbstractFinancePlanItemEntity;
@@ -43,6 +40,7 @@ use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
 use Civi\RemoteTools\JsonSchema\JsonSchemaDate;
 use Civi\RemoteTools\JsonSchema\JsonSchemaInteger;
 use Civi\RemoteTools\JsonSchema\JsonSchemaMoney;
+use Civi\RemoteTools\JsonSchema\JsonSchemaNull;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 use CRM_Funding_ExtensionUtil as E;
@@ -53,16 +51,12 @@ use Webmozart\Assert\Assert;
  */
 abstract class AbstractClearingItemsJsonFormsGenerator {
 
-  private ClearingActionsDeterminer $actionsDeterminer;
-
   /**
    * @phpstan-var AbstractClearableItemsLoader<T>
    */
   private AbstractClearableItemsLoader $clearableItemsLoader;
 
   private ClearingGroupExtractor $clearingGroupExtractor;
-
-  private ClearingCostItemManager|ClearingResourcesItemManager $clearingItemManager;
 
   private Format $format;
 
@@ -83,17 +77,13 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
    * @phpstan-param AbstractClearableItemsLoader<T> $clearableItemsLoader
    */
   public function __construct(
-    ClearingActionsDeterminer $actionsDeterminer,
     AbstractClearableItemsLoader $clearableItemsLoader,
     ClearingGroupExtractor $clearingGroupExtractor,
-    ClearingCostItemManager|ClearingResourcesItemManager $clearingItemManager,
     Format $format,
     ItemDetailsFormElementGenerator $itemDetailsFormElementGenerator
   ) {
-    $this->actionsDeterminer = $actionsDeterminer;
     $this->clearableItemsLoader = $clearableItemsLoader;
     $this->clearingGroupExtractor = $clearingGroupExtractor;
-    $this->clearingItemManager = $clearingItemManager;
     $this->format = $format;
     $this->itemDetailsFormElementGenerator = $itemDetailsFormElementGenerator;
   }
@@ -118,15 +108,11 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
       array_keys($clearableItems)
     );
 
-    $admittedValueChangeAllowed = $this->actionsDeterminer->isAdmittedValueChangeAllowed($clearingProcessBundle);
-    $contentChangeAllowed = $this->actionsDeterminer->isContentChangeAllowed($clearingProcessBundle);
     foreach ($groups as $group) {
       $this->handleGroup(
         $group,
         $clearingProcessBundle->getFundingProgram()->getCurrency(),
-        $clearableItems,
-        $admittedValueChangeAllowed,
-        $contentChangeAllowed
+        $clearableItems
       );
     }
 
@@ -205,9 +191,7 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
   private function handleGroup(
     ClearingItemsGroup $group,
     string $currency,
-    array $clearableItems,
-    bool $admittedValueChangeAllowed,
-    bool $contentChangeAllowed
+    array $clearableItems
   ): void {
     $groupElements = [];
     foreach ($group->elements as $scope => $applicationFormElement) {
@@ -219,27 +203,31 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
         $this->properties[$item->getId()] = new JsonSchemaObject([
           'records' => new JsonSchemaArray(
             new JsonSchemaObject([
-              '_id' => new JsonSchemaInteger(['readOnly' => TRUE, 'default' => NULL], TRUE),
+              '_id' => new JsonSchemaInteger(['default' => NULL], TRUE),
+              '_financePlanItemId' => new JsonSchemaInteger([
+                'const' => $item->getId(),
+                'default' => $item->getId(),
+              ]),
               'file' => new JsonSchemaString([
-                'readOnly' => !$contentChangeAllowed,
                 'format' => 'uri',
                 'default' => NULL,
               ], TRUE),
-              'receiptNumber' => new JsonSchemaString(['readOnly' => !$contentChangeAllowed, 'maxlength' => 255], TRUE),
-              'receiptDate' => new JsonSchemaDate(['readOnly' => !$contentChangeAllowed], TRUE),
-              'paymentDate' => new JsonSchemaDate(['readOnly' => !$contentChangeAllowed]),
-              'paymentParty' => new JsonSchemaString(['readOnly' => !$contentChangeAllowed, 'maxlength' => 255]),
-              'reason' => new JsonSchemaString(['readOnly' => !$contentChangeAllowed, 'maxlength' => 255]),
-              'amount' => new JsonSchemaMoney(['readOnly' => !$contentChangeAllowed]),
-              'amountAdmitted' => new JsonSchemaMoney([
-                'readOnly' => !$admittedValueChangeAllowed,
-                'default' => $admittedValueChangeAllowed ? new JsonSchemaDataPointer('1/amount') : NULL,
-              ], TRUE),
-            ], ['required' => ['paymentDate', 'paymentParty', 'reason', 'amount']]),
+              'receiptNumber' => new JsonSchemaString(['maxlength' => 255], TRUE),
+              'receiptDate' => new JsonSchemaDate([], TRUE),
+              'paymentDate' => new JsonSchemaDate(),
+              'paymentParty' => new JsonSchemaString(['maxlength' => 255]),
+              'reason' => new JsonSchemaString(['maxlength' => 255]),
+              'amount' => new JsonSchemaMoney(),
+              'amountAdmitted' => new JsonSchemaMoney([], TRUE),
+              'properties' => new JsonSchemaNull(),
+            ], [
+              'required' => ['_financePlanItemId', 'paymentDate', 'paymentParty', 'reason', 'amount'],
+              'additionalProperties' => FALSE,
+            ])
           ),
           'amountRecordedTotal' => new JsonSchemaCalculate(
             'number',
-            'round(sum(map(records, "value.amount")), 2)',
+            'round(sum(map(records, "value.amount ?: 0")), 2)',
             ['records' => new JsonSchemaDataPointer('1/records')],
             NULL,
             ['default' => 0]
@@ -253,16 +241,7 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
             NULL,
             ['default' => 0]
           ),
-        ], ['required' => ['records']]);
-
-        if (!$contentChangeAllowed) {
-          $itemCount = $this->clearingItemManager->countByFinancePlanItemId($item->getId());
-          /** @var \Civi\RemoteTools\JsonSchema\JsonSchemaArray $records */
-          // @phpstan-ignore offsetAccess.nonOffsetAccessible
-          $records = $this->properties[$item->getId()]['properties']['records'];
-          $records['minItems'] = $itemCount;
-          $records['maxItems'] = $itemCount;
-        }
+        ], ['required' => ['records'], 'additionalProperties' => FALSE]);
 
         $itemLabel = $financePlanItemSchema->getKeywordValueAt('clearing/itemLabel');
         Assert::string($itemLabel);

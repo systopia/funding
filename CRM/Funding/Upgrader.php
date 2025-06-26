@@ -177,6 +177,15 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
     return TRUE;
   }
 
+  public function upgrade_0017(): bool {
+    $this->ctx->log->info('Applying database migration 0017');
+    $this->executeSqlFile('sql/upgrade/0017.sql');
+
+    // @todo Set form_key for existing clearing items.
+
+    return TRUE;
+  }
+
   private function installJsonOverlapsSqlFunction(): void {
     CRM_Core_DAO::executeQuery('DROP FUNCTION IF EXISTS FUNDING_JSON_OVERLAPS');
     try {

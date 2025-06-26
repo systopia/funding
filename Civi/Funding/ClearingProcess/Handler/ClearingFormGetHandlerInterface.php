@@ -24,8 +24,6 @@ use Civi\Funding\Form\JsonFormsFormInterface;
 
 interface ClearingFormGetHandlerInterface {
 
-  public const SERVICE_TAG = 'clearing.form_get_handler';
-
   public function handle(ClearingFormGetCommand $command): JsonFormsFormInterface;
 
 }

@@ -35,6 +35,8 @@ use Civi\Funding\Entity\ClearingResourcesItemEntity;
  *   reason?: string,
  *   amount?: float,
  *   amount_admitted?: ?float,
+ *   properties?: ?array<string, mixed>,
+ *   form_key?: string,
  * }
  */
 final class ClearingResourcesItemFactory {
@@ -55,6 +57,8 @@ final class ClearingResourcesItemFactory {
       'reason' => 'TestClearingResourcesItem',
       'amount' => 1.23,
       'amount_admitted' => NULL,
+      'properties' => NULL,
+      'form_key' => 'foo/bar',
     ];
 
     return ClearingResourcesItemEntity::fromArray($values)->reformatDates();

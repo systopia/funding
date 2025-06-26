@@ -26,7 +26,7 @@ use Civi\RemoteTools\Api4\Query\Comparison;
 /**
  * @extends AbstractClearingItemManager<ClearingResourcesItemEntity>
  */
-final class ClearingResourcesItemManager extends AbstractClearingItemManager {
+class ClearingResourcesItemManager extends AbstractClearingItemManager {
 
   /**
    * @inheritDoc
