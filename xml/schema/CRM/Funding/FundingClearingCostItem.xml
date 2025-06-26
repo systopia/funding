@@ -81,7 +81,6 @@
   <field>
     <name>file_id</name>
     <type>int unsigned</type>
-    <required>false</required>
     <comment>FK to File</comment>
     <html>
       <type>EntityRef</type>
@@ -115,7 +114,6 @@
   <field>
     <name>payment_date</name>
     <type>date</type>
-    <required>true</required>
     <html>
       <type>Select Date</type>
       <formatType>activityDate</formatType>
@@ -126,7 +124,6 @@
     <name>payment_party</name>
     <type>varchar</type>
     <length>255</length>
-    <required>true</required>
     <html>
       <type>Text</type>
     </html>
@@ -136,7 +133,6 @@
     <name>reason</name>
     <type>varchar</type>
     <length>255</length>
-    <required>true</required>
     <html>
       <type>Text</type>
     </html>
@@ -161,6 +157,19 @@
     <html>
       <type>Text</type>
     </html>
+  </field>
+
+  <field>
+    <name>properties</name>
+    <type>text</type>
+    <serialize>JSON</serialize>
+  </field>
+
+  <field>
+    <name>form_key</name>
+    <type>varchar</type>
+    <length>255</length>
+    <required>true</required>
   </field>
 
 </table>

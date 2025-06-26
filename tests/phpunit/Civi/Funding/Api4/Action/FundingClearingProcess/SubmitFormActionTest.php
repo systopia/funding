@@ -137,6 +137,7 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
           $this->costItem->getId() => [
             'records' => [
               [
+                '_financePlanItemId' => $this->costItem->getId(),
                 'receiptNumber' => 'A123',
                 'receiptDate' => '2024-04-03',
                 'paymentDate' => '2024-04-04',
@@ -152,6 +153,7 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
           $this->resourcesItem->getId() => [
             'records' => [
               [
+                '_financePlanItemId' => $this->resourcesItem->getId(),
                 'receiptNumber' => 'A123',
                 'receiptDate' => '2024-04-03',
                 'paymentDate' => '2024-04-04',
@@ -188,6 +190,8 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
       'reason' => 'costTest',
       'amount' => 2.0,
       'amount_admitted' => NULL,
+      'properties' => NULL,
+      'form_key' => $this->costItem->getId() . '/0',
     ], FundingClearingCostItem::get(FALSE)->execute()->single());
 
     static::assertEquals([
@@ -203,6 +207,8 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
       'reason' => 'resourcesTest',
       'amount' => 3.0,
       'amount_admitted' => NULL,
+      'properties' => NULL,
+      'form_key' => $this->resourcesItem->getId() . '/0',
     ], FundingClearingResourcesItem::get(FALSE)->execute()->single());
   }
 
@@ -299,11 +305,13 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
 
     $clearingCostItem = ClearingCostItemFixture::addFixture(
       $this->clearingProcessBundle->getClearingProcess()->getId(),
-      $this->costItem->getId()
+      $this->costItem->getId(),
+      ['form_key' => 'costs/0'],
     );
     $clearingResourcesItem = ClearingResourcesItemFixture::addFixture(
       $this->clearingProcessBundle->getClearingProcess()->getId(),
-      $this->resourcesItem->getId()
+      $this->resourcesItem->getId(),
+      ['form_key' => 'resources/one'],
     );
 
     $result = FundingClearingProcess::submitForm()
@@ -330,6 +338,7 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
             'records' => [
               [
                 '_id' => $clearingResourcesItem->getId(),
+                '_financePlanItemId' => $this->resourcesItem->getId(),
                 'receiptNumber' => 'A123',
                 'receiptDate' => '2000-12-31',
                 'paymentDate' => '2001-01-01',
@@ -337,6 +346,7 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
                 'reason' => 'new resources reason',
                 'amount' => 3,
                 'amountAdmitted' => 2.3,
+                'properties' => NULL,
               ],
             ],
           ],
@@ -366,6 +376,8 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
       'reason' => 'new cost reason',
       'amount' => 2.0,
       'amount_admitted' => 0.0,
+      'properties' => NULL,
+      'form_key' => $this->costItem->getId() . '/0',
     ], FundingClearingCostItem::get(FALSE)->execute()->single());
 
     static::assertEquals([
@@ -381,6 +393,8 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
       'reason' => 'new resources reason',
       'amount' => 3.0,
       'amount_admitted' => 2.3,
+      'properties' => NULL,
+      'form_key' => $this->resourcesItem->getId() . '/0',
     ], FundingClearingResourcesItem::get(FALSE)->execute()->single());
   }
 
@@ -393,11 +407,13 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
 
     $clearingCostItem = ClearingCostItemFixture::addFixture(
       $this->clearingProcessBundle->getClearingProcess()->getId(),
-      $this->costItem->getId()
+      $this->costItem->getId(),
+      ['form_key' => 'costs/0']
     );
     $clearingResourcesItem = ClearingResourcesItemFixture::addFixture(
       $this->clearingProcessBundle->getClearingProcess()->getId(),
-      $this->resourcesItem->getId()
+      $this->resourcesItem->getId(),
+      ['form_key' => 'resources/one']
     );
 
     $result = FundingClearingProcess::submitForm()
@@ -408,6 +424,7 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
             'records' => [
               [
                 '_id' => $clearingCostItem->getId(),
+                '_financePlanItemId' => $this->costItem->getId(),
                 'receiptNumber' => 'ignored',
                 'receiptDate' => '2000-12-31',
                 'paymentDate' => '2001-01-01',
@@ -424,6 +441,7 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
             'records' => [
               [
                 '_id' => $clearingResourcesItem->getId(),
+                '_financePlanItemId' => $this->resourcesItem->getId(),
                 'receiptNumber' => 'ignored',
                 'receiptDate' => '2000-12-31',
                 'paymentDate' => '2001-01-01',

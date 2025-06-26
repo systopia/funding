@@ -25,6 +25,11 @@ use Civi\Funding\Entity\ClearingResourcesItemEntity;
 final class ClearingResourcesItemFixture {
 
   /**
+   * @phpstan-var array<int, int>
+   */
+  private static $count = [];
+
+  /**
    * @phpstan-param array<string, mixed> $values
    *
    * @throws \CRM_Core_Exception
@@ -34,6 +39,9 @@ final class ClearingResourcesItemFixture {
     int $applicationResourcesItemId,
     array $values = []
   ): ClearingResourcesItemEntity {
+    self::$count[$applicationResourcesItemId] ??= 0;
+    $recordKey = self::$count[$applicationResourcesItemId]++;
+
     $result = FundingClearingResourcesItem::create(FALSE)
       ->setValues($values + [
         'clearing_process_id' => $clearingProcessId,
@@ -47,6 +55,8 @@ final class ClearingResourcesItemFixture {
         'reason' => 'Test Clearing Resources Item',
         'amount' => 1.2,
         'amount_admitted' => NULL,
+        'properties' => NULL,
+        'form_key' => "$applicationResourcesItemId/$recordKey",
       ])->execute();
 
     return ClearingResourcesItemEntity::singleFromApiResult($result)->reformatDates();
