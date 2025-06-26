@@ -20,6 +20,7 @@ declare(strict_types = 1);
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
+use Civi\Funding\ClearingProcess\Form\ReceiptsFormGeneratorInterface;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\FundingCaseType\MetaData\FundingCaseTypeMetaDataInterface;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Actions\HiHApplicationActionsDeterminer;
@@ -33,6 +34,9 @@ use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Data\HiHInfoDateienF
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\JsonSchema\HiHApplicationFormValidator;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\JsonSchema\HiHApplicationJsonSchemaFactory;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\UiSchema\HiHApplicationUiSchemaFactory;
+use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Clearing\HiHClearingReceiptsFormGenerator;
+use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Clearing\HiHReportDataLoader;
+use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Clearing\HiHReportFormFactory;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\FundingCase\Actions\HiHCaseActionsDeterminer;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\FundingCase\HiHPossibleRecipientsForChangeLoader;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\FundingCase\StatusDeterminer\HiHCaseStatusDeterminer;
@@ -83,6 +87,13 @@ $container->autowire(HiHApplicationFormValidator::class)
 
 $container->autowire(HiHPossibleRecipientsForChangeLoader::class)
   ->addTag(HiHPossibleRecipientsForChangeLoader::SERVICE_TAG);
+
+$container->autowire(HiHClearingReceiptsFormGenerator::class)
+  ->addTag(ReceiptsFormGeneratorInterface::class);
+$container->autowire(HiHReportFormFactory::class)
+  ->addTag(HiHReportFormFactory::SERVICE_TAG);
+$container->autowire(HiHReportDataLoader::class)
+  ->addTag(HiHReportDataLoader::SERVICE_TAG);
 
 ServiceRegistrator::autowireAllImplementing(
   $container,
