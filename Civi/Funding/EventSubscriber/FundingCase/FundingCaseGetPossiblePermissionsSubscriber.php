@@ -45,6 +45,7 @@ final class FundingCaseGetPossiblePermissionsSubscriber implements EventSubscrib
       'application_withdraw' => E::ts('Application: withdraw'),
       'application_request_rework' => E::ts('Application: request rework'),
       FundingCasePermissions::CONTRACT_VIEW => E::ts('Contract: view (applicant)'),
+      FundingCasePermissions::REVIEW_FINISH => E::ts('Review: finish case'),
       'drawdown_create' => E::ts('Drawdown: create'),
       ClearingProcessPermissions::CLEARING_MODIFY => E::ts('Clearing: modify'),
       ClearingProcessPermissions::CLEARING_APPLY => E::ts('Clearing: apply'),

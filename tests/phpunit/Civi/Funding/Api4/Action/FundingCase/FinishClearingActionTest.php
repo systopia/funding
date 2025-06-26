@@ -24,12 +24,12 @@ use Civi\Api4\FundingCase;
 use Civi\Api4\FundingPayoutProcess;
 use Civi\Api4\Traits\FundingCaseTestFixturesTrait;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
-use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\FileTypeNames;
 use Civi\Funding\Fixtures\AttachmentFixture;
 use Civi\Funding\Fixtures\ClearingProcessFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\PayoutProcessFixture;
+use Civi\Funding\FundingCase\FundingCasePermissions;
 use Civi\Funding\Util\RequestTestUtil;
 use CRM_Funding_ExtensionUtil as E;
 
@@ -81,7 +81,7 @@ final class FinishClearingActionTest extends AbstractFundingHeadlessTestCase {
     FundingCaseContactRelationFixture::addContact(
       $this->associatedContactId,
       $this->permittedFundingCaseId,
-      [ClearingProcessPermissions::REVIEW_CALCULATIVE],
+      [FundingCasePermissions::REVIEW_FINISH],
     );
 
     AttachmentFixture::addFixture(

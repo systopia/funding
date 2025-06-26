@@ -1315,6 +1315,10 @@ msgid "Contract: view (applicant)"
 msgstr "Vertrag: ansehen (Antragsteller)"
 
 #: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
+msgid "Review: finish case"
+msgstr "Prüfung: Förderfall abschließen"
+
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
 msgid "Drawdown: create"
 msgstr "Mittelabruf: erstellen"
 
