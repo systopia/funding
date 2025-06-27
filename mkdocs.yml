@@ -3,7 +3,7 @@ repo_url: https://github.com/systopia/funding
 site_description: 'A guide for the Funding extension.'
 site_author: 'systopia'
 theme:
-  name: material
+  name: readthedocs
 
 nav:
   - 'Introduction': index.md
