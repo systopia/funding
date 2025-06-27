@@ -21,7 +21,9 @@ namespace Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs;
 
 use Civi\Funding\FundingCaseType\MetaData\AbstractFundingCaseTypeMetaData;
 use Civi\Funding\FundingCaseType\MetaData\CostItemType;
+use Civi\Funding\FundingCaseType\MetaData\DefaultApplicationProcessStatuses;
 use Civi\Funding\FundingCaseType\MetaData\ResourcesItemType;
+use Civi\Funding\FundingCaseType\MetaData\ReworkApplicationProcessStatuses;
 
 final class KursMetaData extends AbstractFundingCaseTypeMetaData {
 
@@ -39,6 +41,13 @@ final class KursMetaData extends AbstractFundingCaseTypeMetaData {
 
   public function getName(): string {
     return self::NAME;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getApplicationProcessStatuses(): array {
+    return DefaultApplicationProcessStatuses::getAll() + ReworkApplicationProcessStatuses::getAll();
   }
 
   /**

@@ -19,8 +19,6 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\ActionStatusInfo;
 
-use Civi\Funding\Entity\FullApplicationProcessStatus;
-
 interface ApplicationProcessActionStatusInfoInterface {
 
   public const SERVICE_TAG = 'funding.application.action_status_info';
@@ -30,46 +28,12 @@ interface ApplicationProcessActionStatusInfoInterface {
    */
   public static function getSupportedFundingCaseTypes(): array;
 
-  /**
-   * @phpstan-return array<string>
-   *   Status of applications that are eligible.
-   */
-  public function getEligibleStatusList(): array;
-
-  /**
-   * @phpstan-return array<string>
-   *   All status that are final states excluding those dedicated for eligible
-   *   applications, i.e. applications in such a status cannot become eligible
-   *   anymore. Usually withdrawn and rejected.
-   */
-  public function getFinalIneligibleStatusList(): array;
-
   public function isApplyAction(string $action): bool;
 
   public function isDeleteAction(string $action): bool;
 
-  /**
-   * @return bool|null
-   *   TRUE if eligible, FALSE if ineligible, NULL if not decided, yet.
-   */
-  public function isEligibleStatus(string $status): ?bool;
-
-  /**
-   * @return bool
-   *   TRUE if in work by the applicant, FALSE otherwise.
-   */
-  public function isInWorkStatus(string $status): bool;
-
   public function isRestoreAction(string $action): bool;
 
   public function isReviewStartAction(string $action): bool;
-
-  public function isReviewStatus(string $status): bool;
-
-  public function isSnapshotRequiredStatus(FullApplicationProcessStatus $status): bool;
-
-  public function isRejectedStatus(string $status): bool;
-
-  public function isWithdrawnStatus(string $status): bool;
 
 }

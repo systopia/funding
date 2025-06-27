@@ -24,7 +24,7 @@ use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions as Actions;
 use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminer;
 use Civi\Funding\FundingCase\FundingCaseStatus as Status;
-use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Actions\HiHApplicationActionStatusInfo;
+use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\HiHMetaData;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Traits\HiHSupportedFundingCaseTypesTrait;
 
 final class HiHCaseActionsDeterminer extends FundingCaseActionsDeterminer {
@@ -68,15 +68,15 @@ final class HiHCaseActionsDeterminer extends FundingCaseActionsDeterminer {
 
   private ClearingProcessManager $clearingProcessManager;
 
-  private HiHApplicationActionStatusInfo $statusInfo;
+  private HiHMetaData $metaData;
 
   public function __construct(
     ClearingProcessManager $clearingProcessManager,
-    HiHApplicationActionStatusInfo $statusInfo
+    HiHMetaData $metaData
   ) {
     parent::__construct(self::STATUS_PERMISSIONS_ACTION_MAP);
-    $this->statusInfo = $statusInfo;
     $this->clearingProcessManager = $clearingProcessManager;
+    $this->metaData = $metaData;
   }
 
   public function getActions(string $status, array $applicationProcessStatusList, array $permissions): array {
@@ -111,7 +111,7 @@ final class HiHCaseActionsDeterminer extends FundingCaseActionsDeterminer {
   private function isApprovePossible(array $applicationProcessStatusList): bool {
     $eligibleCount = 0;
     foreach ($applicationProcessStatusList as $applicationProcessStatus) {
-      $eligible = $this->statusInfo->isEligibleStatus($applicationProcessStatus->getStatus());
+      $eligible = $this->metaData->getApplicationProcessStatus($applicationProcessStatus->getStatus())?->isEligible();
       if (NULL === $eligible) {
         return FALSE;
       }
@@ -130,11 +130,12 @@ final class HiHCaseActionsDeterminer extends FundingCaseActionsDeterminer {
   private function isFinishClearingPossible(array $applicationProcessStatusList): bool {
     foreach ($applicationProcessStatusList as $applicationProcessId => $applicationProcessStatus) {
       // Eligibility of all applications has to be decided.
-      if (NULL === $this->statusInfo->isEligibleStatus($applicationProcessStatus->getStatus())) {
+      $eligible = $this->metaData->getApplicationProcessStatus($applicationProcessStatus->getStatus())?->isEligible();
+      if (NULL === $eligible) {
         return FALSE;
       }
 
-      if (TRUE === $this->statusInfo->isEligibleStatus($applicationProcessStatus->getStatus())) {
+      if (TRUE === $eligible) {
         // There has to be a clearing process for every eligible application that is either accepted or rejected.
         $clearingProcess = $this->clearingProcessManager->getByApplicationProcessId($applicationProcessId);
         if (NULL === $clearingProcess || !in_array($clearingProcess->getStatus(), ['accepted', 'rejected'], TRUE)) {

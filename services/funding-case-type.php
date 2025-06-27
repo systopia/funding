@@ -32,7 +32,7 @@ use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\Reference;
 
-$container->addCompilerPass(new FundingCaseTypeMetaDataPass());
+$container->addCompilerPass(new FundingCaseTypeMetaDataPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 10);
 $container->addCompilerPass(new FundingCaseTypeServiceLocatorPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 1);
 $container->addCompilerPass(new FundingCaseFinishClearingHandlerPass());
 

@@ -56,7 +56,7 @@ final class FundingCaseFinishClearingHandlerPass implements CompilerPassInterfac
       FundingCaseStatusDeterminerInterface::SERVICE_TAG
     );
 
-    foreach (self::$fundingCaseTypes as $fundingCaseType) {
+    foreach (FundingCaseTypeMetaDataPass::$fundingCaseTypes as $fundingCaseType) {
       if (!isset($handlerServices[$fundingCaseType])) {
         Assert::keyExists($actionsDeterminerServices, $fundingCaseType);
         Assert::keyExists($statusDeterminerServices, $fundingCaseType);

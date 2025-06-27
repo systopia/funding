@@ -23,6 +23,7 @@ use Civi\Funding\ApplicationProcess\ActionsDeterminer\AbstractApplicationProcess
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\Helper\DetermineApproveRejectActionsHelper;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\FundingCase\FundingCaseStatus;
+use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\KursMetaData;
 use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
 use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
 
@@ -91,15 +92,16 @@ final class KursApplicationActionsDeterminer extends AbstractApplicationProcessA
 
   private DetermineApproveRejectActionsHelper $determineApproveRejectActionsHelper;
 
-  private KursApplicationActionStatusInfo $statusInfo;
+  private KursMetaData $metaData;
 
-  public function __construct(KursApplicationActionStatusInfo $statusInfo) {
+  public function __construct(KursMetaData $metaData) {
     parent::__construct(self::STATUS_PERMISSION_ACTIONS_MAP);
     $this->determineApproveRejectActionsHelper = new DetermineApproveRejectActionsHelper(
       ['review', 'rework-review'],
       ['approve' => ['review' => 'approve', 'rework-review' => 'approve-change']]
     );
-    $this->statusInfo = $statusInfo;
+
+    $this->metaData = $metaData;
   }
 
   public function getActions(ApplicationProcessEntityBundle $applicationProcessBundle, array $statusList): array {
@@ -128,7 +130,7 @@ final class KursApplicationActionsDeterminer extends AbstractApplicationProcessA
    */
   private function isAnyApplicationInReview(array $statusList): bool {
     foreach ($statusList as $status) {
-      if ($this->statusInfo->isReviewStatus($status->getStatus())) {
+      if (TRUE === $this->metaData->getApplicationProcessStatus($status->getStatus())?->isInReview()) {
         return TRUE;
       }
     }
