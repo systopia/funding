@@ -19,12 +19,10 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\FundingCase\StatusDeterminer;
 
-use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\FundingCase\FundingCaseStatus;
 use Civi\Funding\FundingCase\StatusDeterminer\DefaultFundingCaseStatusDeterminer;
 use Civi\Funding\FundingCase\StatusDeterminer\FundingCaseStatusDeterminerInterface;
-use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Actions\HiHApplicationActionStatusInfo;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Traits\HiHSupportedFundingCaseTypesTrait;
 
 final class HiHCaseStatusDeterminer implements FundingCaseStatusDeterminerInterface {
@@ -33,11 +31,8 @@ final class HiHCaseStatusDeterminer implements FundingCaseStatusDeterminerInterf
 
   private DefaultFundingCaseStatusDeterminer $defaultStatusDeterminer;
 
-  public function __construct(
-    ApplicationProcessManager $applicationProcessManager,
-    HiHApplicationActionStatusInfo $info
-  ) {
-    $this->defaultStatusDeterminer = new DefaultFundingCaseStatusDeterminer($applicationProcessManager, $info);
+  public function __construct(DefaultFundingCaseStatusDeterminer $defaultStatusDeterminer) {
+    $this->defaultStatusDeterminer = $defaultStatusDeterminer;
   }
 
   public function getStatus(string $currentStatus, string $action): string {

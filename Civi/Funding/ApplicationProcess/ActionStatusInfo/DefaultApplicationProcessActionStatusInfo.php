@@ -19,8 +19,6 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\ActionStatusInfo;
 
-use Civi\Funding\Entity\FullApplicationProcessStatus;
-
 /**
  * @codeCoverageIgnore
  */
@@ -33,17 +31,6 @@ final class DefaultApplicationProcessActionStatusInfo extends AbstractApplicatio
     return [];
   }
 
-  public function getEligibleStatusList(): array {
-    return ['eligible', 'complete'];
-  }
-
-  public function getFinalIneligibleStatusList(): array {
-    return [
-      'rejected',
-      'withdrawn',
-    ];
-  }
-
   public function isApplyAction(string $action): bool {
     return 'apply' === $action;
   }
@@ -52,32 +39,12 @@ final class DefaultApplicationProcessActionStatusInfo extends AbstractApplicatio
     return 'delete' === $action;
   }
 
-  public function isInWorkStatus(string $status): bool {
-    return in_array($status, ['new', 'draft'], TRUE);
-  }
-
   public function isRestoreAction(string $action): bool {
     return FALSE;
   }
 
   public function isReviewStartAction(string $action): bool {
     return 'review' === $action;
-  }
-
-  public function isReviewStatus(string $status): bool {
-    return 'review' === $status;
-  }
-
-  public function isSnapshotRequiredStatus(FullApplicationProcessStatus $status): bool {
-    return in_array($status->getStatus(), $this->getEligibleStatusList(), TRUE);
-  }
-
-  public function isRejectedStatus(string $status): bool {
-    return 'rejected' === $status;
-  }
-
-  public function isWithdrawnStatus(string $status): bool {
-    return 'withdrawn' === $status;
   }
 
 }

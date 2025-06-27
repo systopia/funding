@@ -32,6 +32,11 @@ final class FundingCaseTypeMetaDataPass implements CompilerPassInterface {
   use TaggedFundingCaseTypeServicesTrait;
 
   /**
+   * @phpstan-var list<string>
+   */
+  public static array $fundingCaseTypes = [];
+
+  /**
    * @inheritDoc
    */
   public function process(ContainerBuilder $container): void {

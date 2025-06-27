@@ -21,6 +21,10 @@ namespace Civi\Funding\FundingCaseType\MetaData;
 
 abstract class AbstractFundingCaseTypeMetaData implements FundingCaseTypeMetaDataInterface {
 
+  public function getApplicationProcessStatus(string $name): ?ApplicationProcessStatus {
+    return $this->getApplicationProcessStatuses()[$name] ?? NULL;
+  }
+
   public function getCostItemType(string $name): ?CostItemTypeInterface {
     return $this->getCostItemTypes()[$name] ?? NULL;
   }

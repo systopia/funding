@@ -47,12 +47,4 @@ final class ReworkPossibleApplicationProcessActionStatusInfo extends AbstractApp
     return 'review' === $action || parent::isReviewStartAction($action);
   }
 
-  public function isReviewStatus(string $status): bool {
-    return 'rework-review' === $status || parent::isReviewStatus($status);
-  }
-
-  public function isInWorkStatus(string $status): bool {
-    return 'rework' === $status || parent::isInWorkStatus($status);
-  }
-
 }

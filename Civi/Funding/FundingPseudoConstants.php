@@ -22,9 +22,9 @@ namespace Civi\Funding;
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\FundingCase;
 use Civi\Api4\FundingCaseType;
-use Civi\Funding\Event\ApplicationProcess\GetPossibleApplicationProcessStatusEvent;
 use Civi\Funding\Event\FundingCase\GetPossibleFundingCaseStatusEvent;
 use Civi\Funding\FundingCase\FundingCaseStatus;
+use Civi\Funding\FundingCaseType\FundingCaseTypeMetaDataProviderInterface;
 use CRM_Funding_ExtensionUtil as E;
 
 /**
@@ -46,85 +46,11 @@ final class FundingPseudoConstants {
    * @phpstan-return list<optionT>
    *
    * @throws \CRM_Core_Exception
+   *
+   * phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
    */
   public static function getApplicationProcessStatus(string $fieldName, array $params): array {
-    $options = [
-      [
-        'id' => 'new',
-        'name' => 'new',
-        'label' => E::ts('New'),
-        'icon' => 'fa-plus-circle',
-      ],
-      [
-        'id' => 'draft',
-        'name' => 'draft',
-        'label' => E::ts('Draft'),
-        'icon' => 'fa-spinner',
-      ],
-      [
-        'id' => 'withdrawn',
-        'name' => 'withdrawn',
-        'label' => E::ts('Withdrawn'),
-        'icon' => 'fa-arrow-circle-o-left',
-      ],
-      [
-        'id' => 'applied',
-        'name' => 'applied',
-        'label' => E::ts('Applied'),
-        'icon' => 'fa-circle-o',
-      ],
-      [
-        'id' => 'review',
-        'name' => 'review',
-        'label' => E::ts('In review'),
-        'icon' => 'fa-eye',
-      ],
-      [
-        'id' => 'rejected',
-        'name' => 'rejected',
-        'label' => E::ts('Rejected'),
-        'icon' => 'fa-times-circle-o',
-        'color' => '#d65050',
-      ],
-      [
-        'id' => 'eligible',
-        'name' => 'eligible',
-        'label' => E::ts('Eligible'),
-        'icon' => 'fa-check-circle-o',
-        'color' => '#56ab41',
-      ],
-      [
-        'id' => 'complete',
-        'name' => 'complete',
-        'label' => E::ts('Complete'),
-        'icon' => 'fa-check-circle',
-      ],
-      [
-        'id' => 'rework-requested',
-        'name' => 'rework-requested',
-        'label' => E::ts('Rework requested'),
-        'icon' => 'fa-circle-o',
-      ],
-      [
-        'id' => 'rework',
-        'name' => 'rework',
-        'label' => E::ts('In rework'),
-        'icon' => 'fa-spinner',
-      ],
-      [
-        'id' => 'rework-review-requested',
-        'name' => 'rework-review-requested',
-        'label' => E::ts('Rework review requested'),
-        'icon' => 'fa-circle-o',
-      ],
-      [
-        'id' => 'rework-review',
-        'name' => 'rework-review',
-        'label' => E::ts('Rework in review'),
-        'icon' => 'fa-eye',
-      ],
-    ];
-
+  // phpcs:enable
     $fundingCaseTypeName = NULL;
     if ([] !== $params['values']) {
       $values = $params['values'];
@@ -148,11 +74,32 @@ final class FundingPseudoConstants {
       }
     }
 
-    // @todo Enforce funding case types to provide the possible status.
-    $event = new GetPossibleApplicationProcessStatusEvent($options, $fundingCaseTypeName);
-    \Civi::dispatcher()->dispatch(GetPossibleApplicationProcessStatusEvent::class, $event);
+    /** @var \Civi\Funding\FundingCaseType\FundingCaseTypeMetaDataProviderInterface $metaDataProvider */
+    $metaDataProvider = \Civi::service(FundingCaseTypeMetaDataProviderInterface::class);
+    if (NULL === $fundingCaseTypeName) {
+      $statuses = [];
+      foreach ($metaDataProvider->getAll() as $metaData) {
+        $statuses += $metaData->getApplicationProcessStatuses();
+      }
+    }
+    else {
+      $statuses = $metaDataProvider->get($fundingCaseTypeName)->getApplicationProcessStatuses();
+    }
 
-    return $event->getOptions();
+    $options = [];
+    foreach ($statuses as $status) {
+      $options[] = [
+        'id' => $status->getName(),
+        'name' => $status->getName(),
+        'label' => $status->getLabel(),
+        'abbr' => NULL,
+        'description' => NULL,
+        'icon' => $status->getIcon(),
+        'color' => $status->getIconColor(),
+      ];
+    }
+
+    return $options;
   }
 
   /**
