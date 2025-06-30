@@ -19,15 +19,14 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\ApplicationProcess;
 
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoContainer;
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreCreateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
-use Civi\Funding\Mock\Psr\PsrContainer;
-use PHPUnit\Framework\MockObject\MockObject;
+use Civi\Funding\FundingCaseType\MetaData\ApplicationProcessStatus;
+use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataMock;
+use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataProviderMock;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -35,20 +34,16 @@ use PHPUnit\Framework\TestCase;
  */
 final class ApplicationProcessStatusFlagsSubscriberTest extends TestCase {
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $infoMock;
+  private FundingCaseTypeMetaDataMock $metaDataMock;
 
   private ApplicationProcessStatusFlagsSubscriber $subscriber;
 
   protected function setUp(): void {
     parent::setUp();
-    $this->infoMock = $this->createMock(ApplicationProcessActionStatusInfoInterface::class);
-    $infoContainer = new ApplicationProcessActionStatusInfoContainer(new PsrContainer([
-      FundingCaseTypeFactory::DEFAULT_NAME => $this->infoMock,
-    ]));
-    $this->subscriber = new ApplicationProcessStatusFlagsSubscriber($infoContainer);
+    $this->metaDataMock = new FundingCaseTypeMetaDataMock(FundingCaseTypeFactory::DEFAULT_NAME);
+    $this->subscriber = new ApplicationProcessStatusFlagsSubscriber(
+      new FundingCaseTypeMetaDataProviderMock($this->metaDataMock)
+    );
   }
 
   public function testGetSubscribedEvents(): void {
@@ -73,18 +68,16 @@ final class ApplicationProcessStatusFlagsSubscriberTest extends TestCase {
       'is_rejected' => TRUE,
     ]);
 
-    $this->infoMock->expects(static::once())->method('isEligibleStatus')
-      ->with('test')
-      ->willReturn(TRUE);
-    $this->infoMock->expects(static::once())->method('isInWorkStatus')
-      ->with('test')
-      ->willReturn(FALSE);
-    $this->infoMock->expects(static::once())->method('isRejectedStatus')
-      ->with('test')
-      ->willReturn(TRUE);
-    $this->infoMock->expects(static::once())->method('isWithdrawnStatus')
-      ->with('test')
-      ->willReturn(FALSE);
+    $this->metaDataMock->applicationProcessStatuses['test'] = new ApplicationProcessStatus([
+      'name' => 'test',
+      'label' => 'Test',
+      'eligible' => TRUE,
+      'final' => FALSE,
+      'inReview' => FALSE,
+      'inWork' => FALSE,
+      'rejected' => TRUE,
+      'withdrawn' => FALSE,
+    ]);
 
     $event = new ApplicationProcessPreCreateEvent(1, $applicationProcessBundle);
     $this->subscriber->onPreCreate($event);
@@ -102,9 +95,16 @@ final class ApplicationProcessStatusFlagsSubscriberTest extends TestCase {
       'is_eligible' => TRUE,
     ]);
 
-    $this->infoMock->expects(static::once())->method('isEligibleStatus')
-      ->with('test')
-      ->willReturn(NULL);
+    $this->metaDataMock->applicationProcessStatuses['test'] = new ApplicationProcessStatus([
+      'name' => 'test',
+      'label' => 'Test',
+      'eligible' => NULL,
+      'final' => FALSE,
+      'inReview' => FALSE,
+      'inWork' => FALSE,
+      'rejected' => TRUE,
+      'withdrawn' => FALSE,
+    ]);
 
     $event = new ApplicationProcessPreUpdateEvent(1, $previousApplicationProcess, $applicationProcessBundle);
     $this->subscriber->onPreUpdate($event);

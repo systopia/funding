@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\DependencyInjection\Compiler\Traits;
 
+use Civi\Funding\DependencyInjection\Compiler\FundingCaseTypeMetaDataPass;
+use Civi\Funding\FundingCaseType\MetaData\FundingCaseTypeMetaDataInterface;
 use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
@@ -27,16 +29,12 @@ use Symfony\Component\DependencyInjection\Reference;
 trait TaggedFundingCaseTypeServicesTrait {
 
   /**
-   * @phpstan-var list<string>
-   */
-  protected static array $fundingCaseTypes = [];
-
-  /**
    * @phpstan-return array<string, Reference>
    *
    * @throws \Symfony\Component\DependencyInjection\Exception\RuntimeException
    */
   protected function getTaggedFundingCaseTypeServices(ContainerBuilder $container, string $tagName): array {
+    $firstCall = FundingCaseTypeMetaDataPass::$fundingCaseTypes === [];
     $services = [];
     foreach ($container->findTaggedServiceIds($tagName) as $id => $tags) {
       foreach ($tags as $attributes) {
@@ -53,8 +51,15 @@ trait TaggedFundingCaseTypeServicesTrait {
             );
           }
           $services[$fundingCaseType] = new Reference($id);
-          if (!in_array($fundingCaseType, static::$fundingCaseTypes, TRUE)) {
-            static::$fundingCaseTypes[] = $fundingCaseType;
+          if ($firstCall) {
+            FundingCaseTypeMetaDataPass::$fundingCaseTypes[] = $fundingCaseType;
+          }
+          elseif (!in_array($fundingCaseType, FundingCaseTypeMetaDataPass::$fundingCaseTypes, TRUE)) {
+            throw new RuntimeException(sprintf(
+              'No %s service for funding case type %s registered',
+              FundingCaseTypeMetaDataInterface::class,
+              $fundingCaseType
+            ));
           }
         }
       }
@@ -81,8 +86,12 @@ trait TaggedFundingCaseTypeServicesTrait {
 
           $services[$fundingCaseType]->insert(new Reference($id), $this->getPriority($container, $id, $attributes));
 
-          if (!in_array($fundingCaseType, static::$fundingCaseTypes, TRUE)) {
-            static::$fundingCaseTypes[] = $fundingCaseType;
+          if (!in_array($fundingCaseType, FundingCaseTypeMetaDataPass::$fundingCaseTypes, TRUE)) {
+            throw new RuntimeException(sprintf(
+              'No %s service for funding case type %s registered',
+              FundingCaseTypeMetaDataInterface::class,
+              $fundingCaseType
+            ));
           }
         }
       }

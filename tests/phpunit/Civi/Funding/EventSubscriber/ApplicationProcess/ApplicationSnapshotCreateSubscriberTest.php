@@ -19,8 +19,6 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\ApplicationProcess;
 
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoContainer;
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\DefaultApplicationProcessActionStatusInfo;
 use Civi\Funding\ApplicationProcess\Command\ApplicationSnapshotCreateCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandlerInterface;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
@@ -29,7 +27,10 @@ use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\ApplicationSnapshotFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
-use Civi\Funding\Mock\Psr\PsrContainer;
+use Civi\Funding\FundingCaseType\MetaData\ApplicationProcessStatus;
+use Civi\Funding\FundingCaseType\MetaData\DefaultApplicationProcessStatuses;
+use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataMock;
+use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataProviderMock;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -38,23 +39,25 @@ use PHPUnit\Framework\TestCase;
  */
 final class ApplicationSnapshotCreateSubscriberTest extends TestCase {
 
+  private FundingCaseTypeMetaDataMock $metaDataMock;
+
   private ApplicationSnapshotCreateSubscriber $subscriber;
 
   /**
    * @var \Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
    */
-  private MockObject $snapshotCreateHandlerMock;
+  private ApplicationSnapshotCreateHandlerInterface&MockObject $snapshotCreateHandlerMock;
 
   protected function setUp(): void {
     parent::setUp();
-    $infoContainer = new ApplicationProcessActionStatusInfoContainer(new PsrContainer([
-      FundingCaseTypeFactory::DEFAULT_NAME => new DefaultApplicationProcessActionStatusInfo(),
-    ]));
+    $this->metaDataMock = new FundingCaseTypeMetaDataMock(FundingCaseTypeFactory::DEFAULT_NAME);
     $this->snapshotCreateHandlerMock = $this->createMock(ApplicationSnapshotCreateHandlerInterface::class);
     $this->subscriber = new ApplicationSnapshotCreateSubscriber(
-      $infoContainer,
+      new FundingCaseTypeMetaDataProviderMock($this->metaDataMock),
       $this->snapshotCreateHandlerMock,
     );
+
+    $this->metaDataMock->addApplicationProcessStatus(DefaultApplicationProcessStatuses::eligible());
   }
 
   public function testGetSubscribedEvents(): void {
@@ -112,6 +115,11 @@ final class ApplicationSnapshotCreateSubscriberTest extends TestCase {
       'status' => ['eligible', 'new-status'],
       'request_data' => [['foo' => 'bar'], ['foo' => 'baz']],
     ]);
+
+    $this->metaDataMock->addApplicationProcessStatus(new ApplicationProcessStatus([
+      'name' => 'new-status',
+      'label' => 'new-status',
+    ]));
 
     $this->snapshotCreateHandlerMock->expects(static::never())->method('handle');
     $this->subscriber->onPreUpdate($event);

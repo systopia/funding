@@ -244,7 +244,7 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
     $serviceLocatorServices =
       $this->getTaggedFundingCaseTypeServices($container, FundingCaseTypeServiceLocatorInterface::SERVICE_TAG);
 
-    foreach (static::$fundingCaseTypes as $fundingCaseType) {
+    foreach (FundingCaseTypeMetaDataPass::$fundingCaseTypes as $fundingCaseType) {
       if (!isset($applicationActionStatusInfoServices[$fundingCaseType])) {
         throw new RuntimeException(
           sprintf('Application action status info for funding case type "%s" missing', $fundingCaseType)
@@ -300,9 +300,7 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         $container,
         $fundingCaseType,
         DefaultFundingCaseStatusDeterminer::class,
-        [
-          '$info' => $applicationActionStatusInfoServices[$fundingCaseType],
-        ]
+        []
       );
 
       if ($this->isServiceReferenceInstanceOf(

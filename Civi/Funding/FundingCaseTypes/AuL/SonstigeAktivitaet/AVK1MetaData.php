@@ -21,7 +21,9 @@ namespace Civi\Funding\FundingCaseTypes\AuL\SonstigeAktivitaet;
 
 use Civi\Funding\FundingCaseType\MetaData\AbstractFundingCaseTypeMetaData;
 use Civi\Funding\FundingCaseType\MetaData\CostItemType;
+use Civi\Funding\FundingCaseType\MetaData\DefaultApplicationProcessStatuses;
 use Civi\Funding\FundingCaseType\MetaData\ResourcesItemType;
+use Civi\Funding\FundingCaseType\MetaData\ReworkApplicationProcessStatuses;
 
 final class AVK1MetaData extends AbstractFundingCaseTypeMetaData {
 
@@ -40,6 +42,13 @@ final class AVK1MetaData extends AbstractFundingCaseTypeMetaData {
    * @phpstan-var array<string, ResourcesItemType>
    */
   private ?array $resourcesItemTypes = NULL;
+
+  /**
+   * @inheritDoc
+   */
+  public function getApplicationProcessStatuses(): array {
+    return DefaultApplicationProcessStatuses::getAll() + ReworkApplicationProcessStatuses::getAll();
+  }
 
   /**
    * @inheritDoc

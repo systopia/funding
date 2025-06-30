@@ -19,17 +19,18 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\ApplicationProcess;
 
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoContainer;
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreCreateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
+use Civi\Funding\FundingCaseType\FundingCaseTypeMetaDataProviderInterface;
+use Civi\Funding\FundingCaseType\MetaData\FundingCaseTypeMetaDataInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Webmozart\Assert\Assert;
 
 final class ApplicationProcessStatusFlagsSubscriber implements EventSubscriberInterface {
 
-  private ApplicationProcessActionStatusInfoContainer $infoContainer;
+  private FundingCaseTypeMetaDataProviderInterface $metaDataProvider;
 
   /**
    * @inheritDoc
@@ -42,8 +43,8 @@ final class ApplicationProcessStatusFlagsSubscriber implements EventSubscriberIn
     ];
   }
 
-  public function __construct(ApplicationProcessActionStatusInfoContainer $infoContainer) {
-    $this->infoContainer = $infoContainer;
+  public function __construct(FundingCaseTypeMetaDataProviderInterface $metaDataProvider) {
+    $this->metaDataProvider = $metaDataProvider;
   }
 
   public function onPreCreate(ApplicationProcessPreCreateEvent $event): void {
@@ -54,19 +55,20 @@ final class ApplicationProcessStatusFlagsSubscriber implements EventSubscriberIn
     $this->updateStatusFlags($event->getApplicationProcessBundle());
   }
 
-  private function getInfo(FundingCaseTypeEntity $fundingCaseType): ApplicationProcessActionStatusInfoInterface {
-    return $this->infoContainer->get($fundingCaseType->getName());
+  private function getMetaData(FundingCaseTypeEntity $fundingCaseType): FundingCaseTypeMetaDataInterface {
+    return $this->metaDataProvider->get($fundingCaseType->getName());
   }
 
   private function updateStatusFlags(ApplicationProcessEntityBundle $applicationProcessBundle): void {
-    $info = $this->getInfo($applicationProcessBundle->getFundingCaseType());
+    $metaData = $this->getMetaData($applicationProcessBundle->getFundingCaseType());
     $applicationProcess = $applicationProcessBundle->getApplicationProcess();
-    $status = $applicationProcess->getStatus();
+    $status = $metaData->getApplicationProcessStatus($applicationProcess->getStatus());
+    Assert::notNull($status);
     $applicationProcess
-      ->setIsEligible($info->isEligibleStatus($status))
-      ->setIsInWork($info->isInWorkStatus($status))
-      ->setIsRejected($info->isRejectedStatus($status))
-      ->setIsWithdrawn($info->isWithdrawnStatus($status));
+      ->setIsEligible($status->isEligible())
+      ->setIsInWork($status->isInWork())
+      ->setIsRejected($status->isRejected())
+      ->setIsWithdrawn($status->isWithdrawn());
   }
 
 }

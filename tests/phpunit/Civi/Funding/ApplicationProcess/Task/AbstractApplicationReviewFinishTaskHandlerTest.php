@@ -20,15 +20,15 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Task;
 
 use Civi\Funding\ActivityStatusNames;
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoContainer;
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessPermissions;
 use Civi\Funding\Entity\FundingTaskEntity;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
-use Civi\Funding\Mock\Psr\PsrContainer;
-use PHPUnit\Framework\MockObject\MockObject;
+use Civi\Funding\FundingCaseType\MetaData\ApplicationProcessStatus;
+use Civi\Funding\FundingCaseType\MetaData\DefaultApplicationProcessStatuses;
+use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataMock;
+use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataProviderMock;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -36,23 +36,21 @@ use PHPUnit\Framework\TestCase;
  */
 final class AbstractApplicationReviewFinishTaskHandlerTest extends TestCase {
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $infoMock;
+  private FundingCaseTypeMetaDataMock $metaDataMock;
 
   private AbstractApplicationReviewFinishTaskHandler $taskHandler;
 
   protected function setUp(): void {
     parent::setUp();
-    $this->infoMock = $this->createMock(ApplicationProcessActionStatusInfoInterface::class);
-    $infoContainer = new ApplicationProcessActionStatusInfoContainer(new PsrContainer([
-      FundingCaseTypeFactory::DEFAULT_NAME => $this->infoMock,
-    ]));
-    $this->taskHandler = $this->getMockForAbstractClass(
-      AbstractApplicationReviewFinishTaskHandler::class,
-      [$infoContainer]
-    );
+    $this->metaDataMock = new FundingCaseTypeMetaDataMock(FundingCaseTypeFactory::DEFAULT_NAME);
+    $this->taskHandler = new class (new FundingCaseTypeMetaDataProviderMock($this->metaDataMock))
+      extends AbstractApplicationReviewFinishTaskHandler {
+
+      public static function getSupportedFundingCaseTypes(): array {
+        return [];
+      }
+
+    };
   }
 
   public function testCreateTasksOnChangeCalculativeAndContentReviewDone(): void {
@@ -69,9 +67,7 @@ final class AbstractApplicationReviewFinishTaskHandlerTest extends TestCase {
       'reviewer_cont_contact_id' => 456,
     ]);
 
-    $this->infoMock->expects(static::once())->method('isReviewStatus')
-      ->with('review')
-      ->willReturn(TRUE);
+    $this->metaDataMock->addApplicationProcessStatus(DefaultApplicationProcessStatuses::review());
 
     static::assertEquals([
       FundingTaskEntity::newTask([
@@ -103,9 +99,11 @@ final class AbstractApplicationReviewFinishTaskHandlerTest extends TestCase {
       'reviewer_cont_contact_id' => 456,
     ]);
 
-    $this->infoMock->expects(static::once())->method('isReviewStatus')
-      ->with('test')
-      ->willReturn(FALSE);
+    $this->metaDataMock->addApplicationProcessStatus(new ApplicationProcessStatus([
+      'name' => 'test',
+      'label' => 'test',
+      'inReview' => FALSE,
+    ]));
 
     static::assertSame(
       [],
@@ -137,9 +135,7 @@ final class AbstractApplicationReviewFinishTaskHandlerTest extends TestCase {
       'application_process_id' => $previousApplicationProcess->getId(),
     ]);
 
-    $this->infoMock->expects(static::once())->method('isReviewStatus')
-      ->with('review')
-      ->willReturn(TRUE);
+    $this->metaDataMock->addApplicationProcessStatus(DefaultApplicationProcessStatuses::review());
 
     static::assertTrue($this->taskHandler->modifyTask($task, $applicationProcessBundle, $previousApplicationProcess));
     static::assertSame(ActivityStatusNames::CANCELLED, $task->getStatusName());
@@ -163,9 +159,7 @@ final class AbstractApplicationReviewFinishTaskHandlerTest extends TestCase {
       'application_process_id' => $previousApplicationProcess->getId(),
     ]);
 
-    $this->infoMock->expects(static::once())->method('isReviewStatus')
-      ->with('rejected')
-      ->willReturn(FALSE);
+    $this->metaDataMock->addApplicationProcessStatus(DefaultApplicationProcessStatuses::rejected());
 
     static::assertTrue($this->taskHandler->modifyTask($task, $applicationProcessBundle, $previousApplicationProcess));
     static::assertSame(ActivityStatusNames::COMPLETED, $task->getStatusName());
@@ -199,9 +193,7 @@ final class AbstractApplicationReviewFinishTaskHandlerTest extends TestCase {
       'application_process_id' => $previousApplicationProcess->getId(),
     ]);
 
-    $this->infoMock->expects(static::once())->method('isReviewStatus')
-      ->with('review')
-      ->willReturn(TRUE);
+    $this->metaDataMock->addApplicationProcessStatus(DefaultApplicationProcessStatuses::review());
 
     static::assertTrue($this->taskHandler->modifyTask($task, $applicationProcessBundle, $previousApplicationProcess));
     static::assertSame(ActivityStatusNames::SCHEDULED, $task->getStatusName());
@@ -231,8 +223,6 @@ final class AbstractApplicationReviewFinishTaskHandlerTest extends TestCase {
       'funding_case_id' => $previousApplicationProcess->getId(),
       'application_process_id' => $previousApplicationProcess->getId(),
     ]);
-
-    $this->infoMock->expects(static::never())->method('isReviewStatus');
 
     static::assertFalse($this->taskHandler->modifyTask($task, $applicationProcessBundle, $previousApplicationProcess));
     static::assertSame(ActivityStatusNames::SCHEDULED, $task->getStatusName());

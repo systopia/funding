@@ -22,7 +22,7 @@ namespace Civi\Funding\FundingCaseTypes\AuL\IJB\FundingCase\Actions;
 use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\FundingCase\Actions\AbstractFundingCaseActionsDeterminerDecorator;
 use Civi\Funding\FundingCase\Actions\DefaultFundingCaseActionsDeterminer;
-use Civi\Funding\FundingCaseTypes\AuL\IJB\Application\Actions\IJBApplicationActionStatusInfo;
+use Civi\Funding\FundingCaseTypes\AuL\IJB\IJBMetaData;
 use Civi\Funding\FundingCaseTypes\AuL\IJB\Traits\IJBSupportedFundingCaseTypesTrait;
 
 final class IJBCaseActionsDeterminer extends AbstractFundingCaseActionsDeterminerDecorator {
@@ -31,9 +31,9 @@ final class IJBCaseActionsDeterminer extends AbstractFundingCaseActionsDetermine
 
   public function __construct(
     ClearingProcessManager $clearingProcessManager,
-    IJBApplicationActionStatusInfo $statusInfo
+    IJBMetaData $metaData
   ) {
-    parent::__construct(new DefaultFundingCaseActionsDeterminer($clearingProcessManager, $statusInfo));
+    parent::__construct(new DefaultFundingCaseActionsDeterminer($clearingProcessManager, $metaData));
   }
 
 }

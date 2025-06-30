@@ -21,18 +21,19 @@ namespace Civi\Funding\Upgrade;
 
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\FundingApplicationSnapshot;
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoContainer;
+use Civi\Funding\FundingCaseType\FundingCaseTypeMetaDataProviderInterface;
 use Civi\RemoteTools\Api4\Api4Interface;
+use Webmozart\Assert\Assert;
 
 final class Upgrader0010 implements UpgraderInterface {
 
   private Api4Interface $api4;
 
-  private ApplicationProcessActionStatusInfoContainer $infoContainer;
+  private FundingCaseTypeMetaDataProviderInterface $metaDataProvider;
 
-  public function __construct(Api4Interface $api4, ApplicationProcessActionStatusInfoContainer $infoContainer) {
+  public function __construct(Api4Interface $api4, FundingCaseTypeMetaDataProviderInterface $metaDataProvider) {
     $this->api4 = $api4;
-    $this->infoContainer = $infoContainer;
+    $this->metaDataProvider = $metaDataProvider;
   }
 
   /**
@@ -86,11 +87,13 @@ final class Upgrader0010 implements UpgraderInterface {
    * @phpstan-return array<string, mixed>
    */
   private function buildStatusMap(string $status, string $fundingCaseType): array {
-    $info = $this->infoContainer->get($fundingCaseType);
+    $status = $this->metaDataProvider->get($fundingCaseType)->getApplicationProcessStatus($status);
+    Assert::notNull($status);
+
     return [
-      'is_in_work' => $info->isInWorkStatus($status),
-      'is_rejected' => $info->isRejectedStatus($status),
-      'is_withdrawn' => $info->isWithdrawnStatus($status),
+      'is_in_work' => $status->isInWork(),
+      'is_rejected' => $status->isRejected(),
+      'is_withdrawn' => $status->isWithdrawn(),
     ];
   }
 

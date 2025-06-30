@@ -90,6 +90,7 @@ use Civi\Funding\Form\Application\ApplicationCostItemsFormDataLoader;
 use Civi\Funding\Form\Application\ApplicationCostItemsFormDataLoaderInterface;
 use Civi\Funding\Form\Application\ApplicationResourcesItemsFormDataLoader;
 use Civi\Funding\Form\Application\ApplicationResourcesItemsFormDataLoaderInterface;
+use Civi\Funding\FundingCase\StatusDeterminer\DefaultFundingCaseStatusDeterminer;
 use Civi\Funding\Validation\ConcreteEntityValidatorInterface;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -107,6 +108,8 @@ $container->autowire(ApplicationIdentifierGeneratorInterface::class, Application
 $container->autowire(ApplicationProcessActivityManager::class);
 $container->autowire(EligibleApplicationProcessesLoader::class);
 $container->autowire(ApplicationSnapshotManager::class);
+
+$container->autowire(DefaultFundingCaseStatusDeterminer::class);
 
 $container->autowire(ApplicationCostItemsFormDataLoaderInterface::class, ApplicationCostItemsFormDataLoader::class);
 $container->autowire(
