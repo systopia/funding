@@ -19,19 +19,19 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase\Actions;
 
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessPermissions;
 use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions as Actions;
 use Civi\Funding\FundingCase\FundingCasePermissions;
 use Civi\Funding\FundingCase\FundingCaseStatus as Status;
+use Civi\Funding\FundingCaseType\MetaData\FundingCaseTypeMetaDataInterface;
 
 final class DefaultFundingCaseActionsDeterminer extends FundingCaseActionsDeterminer {
 
   private ClearingProcessManager $clearingProcessManager;
 
-  private ApplicationProcessActionStatusInfoInterface $statusInfo;
+  private FundingCaseTypeMetaDataInterface $metaData;
 
   // phpcs:disable Generic.Files.LineLength.TooLong
   private const STATUS_PERMISSIONS_ACTION_MAP = [
@@ -80,10 +80,10 @@ final class DefaultFundingCaseActionsDeterminer extends FundingCaseActionsDeterm
 
   public function __construct(
     ClearingProcessManager $clearingProcessManager,
-    ApplicationProcessActionStatusInfoInterface $statusInfo
+    FundingCaseTypeMetaDataInterface $metaData
   ) {
     parent::__construct(self::STATUS_PERMISSIONS_ACTION_MAP);
-    $this->statusInfo = $statusInfo;
+    $this->metaData = $metaData;
     $this->clearingProcessManager = $clearingProcessManager;
   }
 
@@ -119,7 +119,7 @@ final class DefaultFundingCaseActionsDeterminer extends FundingCaseActionsDeterm
   private function isApprovePossible(array $applicationProcessStatusList): bool {
     $eligibleCount = 0;
     foreach ($applicationProcessStatusList as $applicationProcessStatus) {
-      $eligible = $this->statusInfo->isEligibleStatus($applicationProcessStatus->getStatus());
+      $eligible = $this->metaData->getApplicationProcessStatus($applicationProcessStatus->getStatus())?->isEligible();
       if (NULL === $eligible) {
         return FALSE;
       }
@@ -138,11 +138,12 @@ final class DefaultFundingCaseActionsDeterminer extends FundingCaseActionsDeterm
   private function isFinishClearingPossible(array $applicationProcessStatusList): bool {
     foreach ($applicationProcessStatusList as $applicationProcessId => $applicationProcessStatus) {
       // Eligibility of all applications has to be decided.
-      if (NULL === $this->statusInfo->isEligibleStatus($applicationProcessStatus->getStatus())) {
+      $eligible = $this->metaData->getApplicationProcessStatus($applicationProcessStatus->getStatus())?->isEligible();
+      if (NULL === $eligible) {
         return FALSE;
       }
 
-      if (TRUE === $this->statusInfo->isEligibleStatus($applicationProcessStatus->getStatus())) {
+      if ($eligible) {
         // There has to be a clearing process for every eligible application that is either accepted or rejected.
         $clearingProcess = $this->clearingProcessManager->getByApplicationProcessId($applicationProcessId);
         if (NULL === $clearingProcess || !in_array($clearingProcess->getStatus(), ['accepted', 'rejected'], TRUE)) {

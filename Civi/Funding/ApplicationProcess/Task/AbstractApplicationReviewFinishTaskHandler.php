@@ -20,13 +20,13 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Task;
 
 use Civi\Funding\ActivityStatusNames;
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoContainer;
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessPermissions;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingTaskEntity;
+use Civi\Funding\FundingCaseType\FundingCaseTypeMetaDataProviderInterface;
+use Civi\Funding\FundingCaseType\MetaData\FundingCaseTypeMetaDataInterface;
 use Civi\Funding\Task\Handler\ApplicationProcessTaskHandlerInterface;
 use CRM_Funding_ExtensionUtil as E;
 
@@ -34,15 +34,15 @@ abstract class AbstractApplicationReviewFinishTaskHandler implements Application
 
   private const TASK_TYPE = 'review_finish';
 
-  private ApplicationProcessActionStatusInfoContainer $infoContainer;
+  private FundingCaseTypeMetaDataProviderInterface $metaDataProvider;
 
   /**
    * @phpstan-return list<string>
    */
   abstract public static function getSupportedFundingCaseTypes(): array;
 
-  public function __construct(ApplicationProcessActionStatusInfoContainer $infoContainer) {
-    $this->infoContainer = $infoContainer;
+  public function __construct(FundingCaseTypeMetaDataProviderInterface $metaDataProvider) {
+    $this->metaDataProvider = $metaDataProvider;
   }
 
   public function createTasksOnChange(
@@ -90,10 +90,8 @@ abstract class AbstractApplicationReviewFinishTaskHandler implements Application
     return FALSE;
   }
 
-  final protected function getInfo(
-    FundingCaseTypeEntity $fundingCaseType
-  ): ApplicationProcessActionStatusInfoInterface {
-    return $this->infoContainer->get($fundingCaseType->getName());
+  final protected function getMetaData(FundingCaseTypeEntity $fundingCaseType): FundingCaseTypeMetaDataInterface {
+    return $this->metaDataProvider->get($fundingCaseType->getName());
   }
 
   /**
@@ -126,8 +124,8 @@ abstract class AbstractApplicationReviewFinishTaskHandler implements Application
   }
 
   protected function isInReviewStatus(ApplicationProcessEntityBundle $applicationProcessBundle): bool {
-    return $this->getInfo($applicationProcessBundle->getFundingCaseType())
-      ->isReviewStatus($applicationProcessBundle->getApplicationProcess()->getStatus());
+    return TRUE === $this->getMetaData($applicationProcessBundle->getFundingCaseType())
+      ->getApplicationProcessStatus($applicationProcessBundle->getApplicationProcess()->getStatus())?->isInReview();
   }
 
   private function areReviewerContactsChanged(

@@ -19,11 +19,12 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase\StatusDeterminer;
 
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions;
 use Civi\Funding\FundingCase\FundingCaseStatus;
+use Civi\Funding\FundingCaseType\FundingCaseTypeMetaDataProviderInterface;
 use Civi\RemoteTools\Api4\Query\Comparison;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
 
@@ -31,7 +32,7 @@ final class DefaultFundingCaseStatusDeterminer implements FundingCaseStatusDeter
 
   private ApplicationProcessManager $applicationProcessManager;
 
-  private ApplicationProcessActionStatusInfoInterface $info;
+  private FundingCaseTypeMetaDataProviderInterface $metaDataProvider;
 
   /**
    * @inheritDoc
@@ -42,10 +43,10 @@ final class DefaultFundingCaseStatusDeterminer implements FundingCaseStatusDeter
 
   public function __construct(
     ApplicationProcessManager $applicationProcessManager,
-    ApplicationProcessActionStatusInfoInterface $info
+    FundingCaseTypeMetaDataProviderInterface $metaDataProvider
   ) {
     $this->applicationProcessManager = $applicationProcessManager;
-    $this->info = $info;
+    $this->metaDataProvider = $metaDataProvider;
   }
 
   public function getStatus(string $currentStatus, string $action): string {
@@ -65,7 +66,9 @@ final class DefaultFundingCaseStatusDeterminer implements FundingCaseStatusDeter
     ApplicationProcessEntityBundle $applicationProcessBundle,
     string $previousStatus
   ): string {
-    $ineligibleStatusList = $this->info->getFinalIneligibleStatusList();
+    $ineligibleStatusList = array_keys($this->getFinalIneligibleStatuses(
+      $applicationProcessBundle->getFundingCaseType()
+    ));
 
     if (in_array(
       $applicationProcessBundle->getApplicationProcess()->getStatus(),
@@ -86,6 +89,21 @@ final class DefaultFundingCaseStatusDeterminer implements FundingCaseStatusDeter
     }
 
     return $applicationProcessBundle->getFundingCase()->getStatus();
+  }
+
+  /**
+   * @phpstan-return array<string, \Civi\Funding\FundingCaseType\MetaData\ApplicationProcessStatus>
+   */
+  private function getFinalIneligibleStatuses(FundingCaseTypeEntity $fundingCaseType): array {
+    $statuses = $this->metaDataProvider->get($fundingCaseType->getName())->getApplicationProcessStatuses();
+    $ineligibleStatuses = [];
+    foreach ($statuses as $name => $status) {
+      if ($status->isFinal() && FALSE === $status->isEligible()) {
+        $ineligibleStatuses[$name] = $status;
+      }
+    }
+
+    return $ineligibleStatuses;
   }
 
 }

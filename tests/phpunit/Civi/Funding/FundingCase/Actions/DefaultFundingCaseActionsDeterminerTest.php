@@ -19,12 +19,13 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase\Actions;
 
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface;
 use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\EntityFactory\ClearingProcessFactory;
 use Civi\Funding\FundingCase\FundingCasePermissions;
+use Civi\Funding\FundingCaseType\MetaData\DefaultApplicationProcessStatuses;
+use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataMock;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -92,25 +93,14 @@ final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->clearingProcessManagerMock = $this->createMock(ClearingProcessManager::class);
-    $statusInfoMock = $this->createMock(ApplicationProcessActionStatusInfoInterface::class);
+    $metaDataMock = new FundingCaseTypeMetaDataMock();
     $this->actionsDeterminer = new DefaultFundingCaseActionsDeterminer(
       $this->clearingProcessManagerMock,
-      $statusInfoMock
+      $metaDataMock
     );
     $this->statusList = [22 => new FullApplicationProcessStatus('eligible', TRUE, TRUE)];
 
-    $statusInfoMock->method('isEligibleStatus')
-      ->willReturnCallback(function (string $status): ?bool {
-        if ('eligible' === $status) {
-          return TRUE;
-        }
-
-        if ('withdrawn' === $status) {
-          return FALSE;
-        }
-
-        return NULL;
-      });
+    $metaDataMock->applicationProcessStatuses = DefaultApplicationProcessStatuses::getAll();
   }
 
   public function testGetActions(): void {

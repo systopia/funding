@@ -19,10 +19,13 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase\StatusDeterminer;
 
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
+use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions;
+use Civi\Funding\FundingCaseType\MetaData\ApplicationProcessStatus;
+use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataMock;
+use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataProviderMock;
 use Civi\RemoteTools\Api4\Query\Comparison;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -33,26 +36,53 @@ use PHPUnit\Framework\TestCase;
  */
 final class DefaultFundingCaseStatusDeterminerTest extends TestCase {
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\ApplicationProcessManager|(\Civi\Funding\ApplicationProcess\ApplicationProcessManager&\PHPUnit\Framework\MockObject\MockObject)|\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $applicationProcessManagerMock;
-
-  /**
-   * @var \PHPUnit\Framework\MockObject\MockObject|\Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface|(\Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface&\PHPUnit\Framework\MockObject\MockObject)
-   */
-  private MockObject $infoMock;
+  private ApplicationProcessManager&MockObject $applicationProcessManagerMock;
 
   private DefaultFundingCaseStatusDeterminer $statusDeterminer;
 
   protected function setUp(): void {
     parent::setUp();
     $this->applicationProcessManagerMock = $this->createMock(ApplicationProcessManager::class);
-    $this->infoMock = $this->createMock(ApplicationProcessActionStatusInfoInterface::class);
+    $metaDataMock = new FundingCaseTypeMetaDataMock(FundingCaseTypeFactory::DEFAULT_NAME);
     $this->statusDeterminer = new DefaultFundingCaseStatusDeterminer(
       $this->applicationProcessManagerMock,
-      $this->infoMock,
+      new FundingCaseTypeMetaDataProviderMock($metaDataMock),
     );
+
+    $metaDataMock->applicationProcessStatuses = [
+      'withdrawn' => new ApplicationProcessStatus([
+        'name' => 'withdrawn',
+        'label' => 'withdrawn',
+        'eligible' => FALSE,
+        'final' => TRUE,
+        'withdrawn' => TRUE,
+      ]),
+      'rejected' => new ApplicationProcessStatus([
+        'name' => 'rejected',
+        'label' => 'rejected',
+        'eligible' => FALSE,
+        'final' => TRUE,
+        'rejected' => TRUE,
+      ]),
+      'final_ineligible' => new ApplicationProcessStatus([
+        'name' => 'final_ineligible',
+        'label' => 'final_ineligible',
+        'eligible' => FALSE,
+        'final' => TRUE,
+      ]),
+      'eligible' => new ApplicationProcessStatus([
+        'name' => 'eligible',
+        'label' => 'eligible',
+        'eligible' => TRUE,
+        'final' => TRUE,
+      ]),
+      'ineligible_not_final' => new ApplicationProcessStatus([
+        'name' => 'ineligible_not_final',
+        'label' => 'ineligible_not_final',
+        'eligible' => FALSE,
+        'final' => FALSE,
+      ]),
+    ];
   }
 
   public function testGetStatus(): void {
@@ -63,14 +93,14 @@ final class DefaultFundingCaseStatusDeterminerTest extends TestCase {
 
   public function testGetStatusOnApplicationProcessStatusChangeWithdrawn(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
-      'status' => 'sealed',
+      'status' => 'withdrawn',
       'is_withdrawn' => TRUE,
     ]);
-    $this->infoMock->method('getFinalIneligibleStatusList')->willReturn(['sealed', 'also_sealed']);
+
     $this->applicationProcessManagerMock->method('countBy')
       ->with(CompositeCondition::new('AND',
         Comparison::new('funding_case_id', '=', $applicationProcessBundle->getFundingCase()->getId()),
-        Comparison::new('status', 'NOT IN', ['sealed', 'also_sealed']),
+        Comparison::new('status', 'NOT IN', ['withdrawn', 'rejected', 'final_ineligible']),
       ))->willReturn(0);
 
     static::assertSame(
@@ -81,14 +111,13 @@ final class DefaultFundingCaseStatusDeterminerTest extends TestCase {
 
   public function testGetStatusOnApplicationProcessStatusChangeRejected(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
-      'status' => 'sealed',
+      'status' => 'rejected',
       'is_rejected' => TRUE,
     ]);
-    $this->infoMock->method('getFinalIneligibleStatusList')->willReturn(['sealed', 'also_sealed']);
     $this->applicationProcessManagerMock->method('countBy')
       ->with(CompositeCondition::new('AND',
         Comparison::new('funding_case_id', '=', $applicationProcessBundle->getFundingCase()->getId()),
-        Comparison::new('status', 'NOT IN', ['sealed', 'also_sealed']),
+        Comparison::new('status', 'NOT IN', ['withdrawn', 'rejected', 'final_ineligible']),
       ))->willReturn(0);
 
     static::assertSame(
@@ -97,16 +126,15 @@ final class DefaultFundingCaseStatusDeterminerTest extends TestCase {
     );
   }
 
-  public function testIsClosedByApplicationProcessWithRemainingApplications(): void {
+  public function testGetStatusOnApplicationProcessStatusChangeWithRemainingApplications(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
-      ['status' => 'sealed', 'is_withdrawn' => TRUE],
+      ['status' => 'withdrawn', 'is_withdrawn' => TRUE],
       ['status' => 'test']
     );
-    $this->infoMock->method('getFinalIneligibleStatusList')->willReturn(['sealed', 'also_sealed']);
     $this->applicationProcessManagerMock->method('countBy')
       ->with(CompositeCondition::new('AND',
         Comparison::new('funding_case_id', '=', $applicationProcessBundle->getFundingCase()->getId()),
-        Comparison::new('status', 'NOT IN', ['sealed', 'also_sealed']),
+        Comparison::new('status', 'NOT IN', ['withdrawn', 'rejected', 'final_ineligible']),
       ))->willReturn(1);
 
     static::assertSame(
@@ -115,12 +143,11 @@ final class DefaultFundingCaseStatusDeterminerTest extends TestCase {
     );
   }
 
-  public function testIsClosedByApplicationProcessUnsealedStatus(): void {
+  public function testGetStatusOnApplicationProcessStatusChangeIneligibleNotFinalStatus(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
-      ['status' => 'unsealed'],
+      ['status' => 'ineligible_not_final'],
       ['status' => 'test']
     );
-    $this->infoMock->method('getFinalIneligibleStatusList')->willReturn(['sealed', 'also_sealed']);
     $this->applicationProcessManagerMock->expects(static::never())->method('countBy');
 
     static::assertSame(

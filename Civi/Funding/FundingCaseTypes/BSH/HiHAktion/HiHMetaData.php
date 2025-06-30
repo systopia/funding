@@ -20,7 +20,9 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion;
 
 use Civi\Funding\FundingCaseType\MetaData\AbstractFundingCaseTypeMetaData;
+use Civi\Funding\FundingCaseType\MetaData\ApplicationProcessStatus;
 use Civi\Funding\FundingCaseType\MetaData\CostItemType;
+use Civi\Funding\FundingCaseType\MetaData\DefaultApplicationProcessStatuses;
 
 final class HiHMetaData extends AbstractFundingCaseTypeMetaData {
 
@@ -33,6 +35,44 @@ final class HiHMetaData extends AbstractFundingCaseTypeMetaData {
 
   public function getName(): string {
     return self::NAME;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getApplicationProcessStatuses(): array {
+    return [
+      'advisory' => new ApplicationProcessStatus([
+        'name' => 'advisory',
+        'label' => 'Beirat',
+        'icon' => 'fa-eye',
+        'eligible' => TRUE,
+        'clearingAvailable' => FALSE,
+      ]),
+      'applied' => DefaultApplicationProcessStatuses::applied(),
+      'approved' => new ApplicationProcessStatus([
+        'name' => 'approved',
+        'label' => 'bewilligt',
+        'icon' => 'fa-check-circle-o',
+        'iconColor' => '#56ab41',
+        'eligible' => TRUE,
+      ]),
+      'approved_partial' => new ApplicationProcessStatus([
+        'name' => 'approved_partial',
+        'label' => 'teilbewilligt',
+        'icon' => 'fa-check-circle-o',
+        'iconColor' => '#56ab41',
+        'eligible' => TRUE,
+      ]),
+      'complete' => DefaultApplicationProcessStatuses::complete(),
+      'draft' => DefaultApplicationProcessStatuses::draft(),
+      'new' => DefaultApplicationProcessStatuses::new(),
+      'rejected' => DefaultApplicationProcessStatuses::rejected('rejected', 'sachlich abgelehnt'),
+      'rejected_after_advisory' => DefaultApplicationProcessStatuses::rejected(
+        'rejected_after_advisory', 'abgelehnt nach Beirat'
+      ),
+      'review' => DefaultApplicationProcessStatuses::review(),
+    ];
   }
 
   /**

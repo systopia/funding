@@ -19,18 +19,18 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\ApplicationProcess;
 
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoContainer;
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface;
 use Civi\Funding\ApplicationProcess\Command\ApplicationSnapshotCreateCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandlerInterface;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
+use Civi\Funding\FundingCaseType\FundingCaseTypeMetaDataProviderInterface;
+use Civi\Funding\FundingCaseType\MetaData\FundingCaseTypeMetaDataInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ApplicationSnapshotCreateSubscriber implements EventSubscriberInterface {
 
-  private ApplicationProcessActionStatusInfoContainer $infoContainer;
+  private FundingCaseTypeMetaDataProviderInterface $metaDataProvider;
 
   private ApplicationSnapshotCreateHandlerInterface $snapshotCreateHandler;
 
@@ -40,10 +40,10 @@ class ApplicationSnapshotCreateSubscriber implements EventSubscriberInterface {
   }
 
   public function __construct(
-    ApplicationProcessActionStatusInfoContainer $infoContainer,
+    FundingCaseTypeMetaDataProviderInterface $metaDataProvider,
     ApplicationSnapshotCreateHandlerInterface $snapshotCreateHandler
   ) {
-    $this->infoContainer = $infoContainer;
+    $this->metaDataProvider = $metaDataProvider;
     $this->snapshotCreateHandler = $snapshotCreateHandler;
   }
 
@@ -61,17 +61,17 @@ class ApplicationSnapshotCreateSubscriber implements EventSubscriberInterface {
     }
   }
 
-  private function getInfo(FundingCaseTypeEntity $fundingCaseType): ApplicationProcessActionStatusInfoInterface {
-    return $this->infoContainer->get($fundingCaseType->getName());
+  private function getMetaData(FundingCaseTypeEntity $fundingCaseType): FundingCaseTypeMetaDataInterface {
+    return $this->metaDataProvider->get($fundingCaseType->getName());
   }
 
   private function isSnapshotRequired(ApplicationProcessPreUpdateEvent $event): bool {
     $applicationProcess = $event->getApplicationProcess();
     $previousApplicationProcess = $event->getPreviousApplicationProcess();
+    $status = $this->getMetaData($event->getFundingCaseType())
+      ->getApplicationProcessStatus($applicationProcess->getStatus());
 
-    return $this->getInfo($event->getFundingCaseType())->isSnapshotRequiredStatus(
-      $applicationProcess->getFullStatus()
-    ) && NULL === $applicationProcess->getRestoredSnapshot() && (
+    return ($status?->isSnapshotRequired() ?? TRUE) && NULL === $applicationProcess->getRestoredSnapshot() && (
       $applicationProcess->getStatus() !== $previousApplicationProcess->getStatus()
       || $applicationProcess->getRequestData() != $previousApplicationProcess->getRequestData()
     );

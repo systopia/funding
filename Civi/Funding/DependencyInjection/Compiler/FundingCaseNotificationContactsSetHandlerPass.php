@@ -50,7 +50,10 @@ final class FundingCaseNotificationContactsSetHandlerPass implements CompilerPas
       FundingCaseNotificationContactsSetHandlerInterface::SERVICE_TAG
     );
 
-    foreach (array_diff(static::$fundingCaseTypes, array_keys($handlerServices)) as $fundingCaseType) {
+    foreach (array_diff(
+      FundingCaseTypeMetaDataPass::$fundingCaseTypes,
+      array_keys($handlerServices)
+    ) as $fundingCaseType) {
       $handlerServices[$fundingCaseType] = $this->createFundingCaseTypeService(
         $container,
         $fundingCaseType,

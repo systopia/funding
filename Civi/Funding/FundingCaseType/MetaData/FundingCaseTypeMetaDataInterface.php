@@ -26,6 +26,14 @@ interface FundingCaseTypeMetaDataInterface {
 
   public function getName(): string;
 
+  public function getApplicationProcessStatus(string $name): ?ApplicationProcessStatus;
+
+  /**
+   * @phpstan-return non-empty-array<string, ApplicationProcessStatus>
+   *   Mapping of name to ApplicationProcessStatus.
+   */
+  public function getApplicationProcessStatuses(): array;
+
   public function getCostItemType(string $name): ?CostItemTypeInterface;
 
   /**

@@ -25,7 +25,7 @@ use Civi\Funding\FundingCase\Actions\AbstractFundingCaseActionsDeterminerDecorat
 use Civi\Funding\FundingCase\Actions\DefaultFundingCaseActionsDeterminer;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions;
 use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Application\Actions\KursApplicationActionsDeterminer;
-use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Application\Actions\KursApplicationActionStatusInfo;
+use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\KursMetaData;
 use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
 
 final class KursCaseActionsDeterminer extends AbstractFundingCaseActionsDeterminerDecorator {
@@ -47,9 +47,9 @@ final class KursCaseActionsDeterminer extends AbstractFundingCaseActionsDetermin
     KursApplicationActionsDeterminer $applicationActionsDeterminer,
     ApplicationProcessBundleLoader $applicationProcessBundleLoader,
     ClearingProcessManager $clearingProcessManager,
-    KursApplicationActionStatusInfo $statusInfo
+    KursMetaData $metaData
   ) {
-    parent::__construct(new DefaultFundingCaseActionsDeterminer($clearingProcessManager, $statusInfo));
+    parent::__construct(new DefaultFundingCaseActionsDeterminer($clearingProcessManager, $metaData));
     $this->applicationActionsDeterminer = $applicationActionsDeterminer;
     $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
   }

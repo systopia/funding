@@ -19,8 +19,6 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\ActionStatusInfo;
 
-use Civi\Funding\Entity\FullApplicationProcessStatus;
-
 /**
  * @codeCoverageIgnore
  *
@@ -35,17 +33,6 @@ abstract class AbstractApplicationProcessActionStatusInfoDecorator implements Ap
     $this->info = $info;
   }
 
-  public function getEligibleStatusList(): array {
-    return $this->info->getEligibleStatusList();
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public function getFinalIneligibleStatusList(): array {
-    return $this->info->getFinalIneligibleStatusList();
-  }
-
   public function isApplyAction(string $action): bool {
     return $this->info->isApplyAction($action);
   }
@@ -54,36 +41,12 @@ abstract class AbstractApplicationProcessActionStatusInfoDecorator implements Ap
     return $this->info->isDeleteAction($action);
   }
 
-  public function isEligibleStatus(string $status): ?bool {
-    return $this->info->isEligibleStatus($status);
-  }
-
-  public function isInWorkStatus(string $status): bool {
-    return $this->info->isInWorkStatus($status);
-  }
-
   public function isRestoreAction(string $action): bool {
     return $this->info->isRestoreAction($action);
   }
 
   public function isReviewStartAction(string $action): bool {
     return $this->info->isReviewStartAction($action);
-  }
-
-  public function isReviewStatus(string $status): bool {
-    return $this->info->isReviewStatus($status);
-  }
-
-  public function isSnapshotRequiredStatus(FullApplicationProcessStatus $status): bool {
-    return $this->info->isSnapshotRequiredStatus($status);
-  }
-
-  public function isRejectedStatus(string $status): bool {
-    return $this->info->isRejectedStatus($status);
-  }
-
-  public function isWithdrawnStatus(string $status): bool {
-    return $this->info->isWithdrawnStatus($status);
   }
 
 }
