@@ -128,6 +128,21 @@ class PayoutProcessManager {
   /**
    * @throws \CRM_Core_Exception
    */
+  public function getAmountPaidOut(PayoutProcessEntity $payoutProcess): float {
+    $action = FundingDrawdown::get()
+      ->setCheckPermissions(FALSE)
+      ->addSelect('SUM(amount) AS amountSum')
+      ->addWhere('payout_process_id', '=', $payoutProcess->getId())
+      ->addWhere('status', '=', 'accepted')
+      ->addWhere('amount', '>', 0)
+      ->addGroupBy('payout_process_id');
+
+    return round($this->api4->executeAction($action)->first()['amountSum'] ?? 0.0, 2);
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function getAmountAvailable(PayoutProcessEntity $payoutProcess): float {
     return $payoutProcess->getAmountTotal() - $this->getAmountRequested($payoutProcess);
   }

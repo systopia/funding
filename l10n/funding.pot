@@ -54,12 +54,20 @@ msgstr ""
 msgid "The sum of the amounts of new (unreviewed) drawdowns."
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php managed/SavedSearch_funding_cases.mgd.php managed/SavedSearch_funding_program_controlling.mgd.php
-msgid "Amount Paid Out"
+#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
+msgid "Amount Drawdowns Accepted"
 msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
 msgid "The sum of the amounts of accepted drawdowns."
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
+msgid "Amount Paid Out"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
+msgid "The sum of the amounts of accepted, positive drawdowns."
 msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php managed/SavedSearch_funding_cases.mgd.php
@@ -270,8 +278,16 @@ msgstr ""
 msgid "The sum of the amounts admitted for costs minus the sum of the amounts admitted for resources."
 msgstr ""
 
+#: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php
+msgid "Amount Accepted"
+msgstr ""
+
 #: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php
 msgid "The amount if the drawdown is accepted, 0 otherwise."
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php
+msgid "The amount if the drawdown is accepted and positive, 0 otherwise."
 msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php
@@ -970,51 +986,51 @@ msgstr ""
 msgid "Creation Contact Display Name"
 msgstr ""
 
-#: Civi/Funding/FundingPseudoConstants.php
-msgid "New"
-msgstr ""
-
-#: Civi/Funding/FundingPseudoConstants.php
-msgid "Draft"
-msgstr ""
-
-#: Civi/Funding/FundingPseudoConstants.php
-msgid "Withdrawn"
-msgstr ""
-
-#: Civi/Funding/FundingPseudoConstants.php
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessStatuses.php
 msgid "Applied"
 msgstr ""
 
-#: Civi/Funding/FundingPseudoConstants.php
-msgid "In review"
-msgstr ""
-
-#: Civi/Funding/FundingPseudoConstants.php
-msgid "Rejected"
-msgstr ""
-
-#: Civi/Funding/FundingPseudoConstants.php
-msgid "Eligible"
-msgstr ""
-
-#: Civi/Funding/FundingPseudoConstants.php
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessStatuses.php
 msgid "Complete"
 msgstr ""
 
-#: Civi/Funding/FundingPseudoConstants.php
-msgid "Rework requested"
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessStatuses.php Civi/Funding/FundingPseudoConstants.php
+msgid "Draft"
 msgstr ""
 
-#: Civi/Funding/FundingPseudoConstants.php
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessStatuses.php
+msgid "Eligible"
+msgstr ""
+
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessStatuses.php Civi/Funding/FundingPseudoConstants.php
+msgid "New"
+msgstr ""
+
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessStatuses.php Civi/Funding/FundingPseudoConstants.php
+msgid "Rejected"
+msgstr ""
+
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessStatuses.php Civi/Funding/FundingPseudoConstants.php
+msgid "In review"
+msgstr ""
+
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessStatuses.php Civi/Funding/FundingPseudoConstants.php
+msgid "Withdrawn"
+msgstr ""
+
+#: Civi/Funding/FundingCaseType/MetaData/ReworkApplicationProcessStatuses.php Civi/Funding/FundingPseudoConstants.php
 msgid "In rework"
 msgstr ""
 
-#: Civi/Funding/FundingPseudoConstants.php
+#: Civi/Funding/FundingCaseType/MetaData/ReworkApplicationProcessStatuses.php
+msgid "Rework requested"
+msgstr ""
+
+#: Civi/Funding/FundingCaseType/MetaData/ReworkApplicationProcessStatuses.php
 msgid "Rework review requested"
 msgstr ""
 
-#: Civi/Funding/FundingPseudoConstants.php
+#: Civi/Funding/FundingCaseType/MetaData/ReworkApplicationProcessStatuses.php
 msgid "Rework in review"
 msgstr ""
 
@@ -1876,5 +1892,9 @@ msgstr ""
 
 #: managed/SavedSearch_MyFundingTasks.mgd.php managed/SavedSearch_funding_cases.mgd.php
 msgid "Open case"
+msgstr ""
+
+#: managed/SavedSearch_funding_cases.mgd.php managed/SavedSearch_funding_program_controlling.mgd.php
+msgid "Accepted Drawdowns"
 msgstr ""
 

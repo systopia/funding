@@ -113,8 +113,8 @@ final class GetAction extends DAOGetAction {
     }
 
     if ($this->isFieldExplicitlySelected('withdrawable_funds')) {
-      // amount_paid_out needs to be selected before because it is referenced.
-      array_unshift($this->select, 'amount_paid_out');
+      // amount_drawdowns_accepted needs to be selected before because it is referenced.
+      array_unshift($this->select, 'amount_drawdowns_accepted');
     }
 
     $possiblePermissions = $this->getPossiblePermissions();

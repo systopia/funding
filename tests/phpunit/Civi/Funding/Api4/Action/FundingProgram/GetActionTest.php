@@ -137,7 +137,7 @@ final class GetActionTest extends AbstractFundingHeadlessTestCase {
       ->single());
   }
 
-  public function testAmountPaidOut(): void {
+  public function testAmountDrawdownsAcceptedAndAmountPaidOut(): void {
     $fundingProgram1 = FundingProgramFixture::addFixture();
     $fundingProgram2 = FundingProgramFixture::addFixture();
     $fundingCaseType = FundingCaseTypeFixture::addFixture();
@@ -166,9 +166,12 @@ final class GetActionTest extends AbstractFundingHeadlessTestCase {
       'amount' => 1,
     ]);
 
-    static::assertSame(['amount_paid_out' => 0.0], FundingProgram::get()
+    static::assertSame([
+      'amount_drawdowns_accepted' => 0.0,
+      'amount_paid_out' => 0.0,
+    ], FundingProgram::get()
       ->setAllowEmptyRecordPermissions(TRUE)
-      ->addSelect('amount_paid_out')
+      ->addSelect('amount_drawdowns_accepted', 'amount_paid_out')
       ->addWhere('id', '=', $fundingProgram1->getId())
       ->execute()
       ->single());
@@ -182,13 +185,20 @@ final class GetActionTest extends AbstractFundingHeadlessTestCase {
       'amount' => 2.3,
     ]);
     DrawdownFixture::addFixture($payoutProcess1->getId(), $contact['id'], [
+      'status' => 'accepted',
+      'amount' => -1.1,
+    ]);
+    DrawdownFixture::addFixture($payoutProcess1->getId(), $contact['id'], [
       'status' => 'new',
       'amount' => 10,
     ]);
 
-    static::assertSame(['amount_paid_out' => 3.5], FundingProgram::get()
+    static::assertSame([
+      'amount_drawdowns_accepted' => 2.4,
+      'amount_paid_out' => 3.5,
+    ], FundingProgram::get()
       ->setAllowEmptyRecordPermissions(TRUE)
-      ->addSelect('amount_paid_out')
+      ->addSelect('amount_drawdowns_accepted', 'amount_paid_out')
       ->addWhere('id', '=', $fundingProgram1->getId())
       ->execute()
       ->single());

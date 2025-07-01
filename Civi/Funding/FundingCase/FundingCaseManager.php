@@ -81,11 +81,11 @@ class FundingCaseManager {
 
   public function getAmountRemaining(int $fundingCaseId): float {
     $values = $this->api4->execute(FundingCase::getEntityName(), 'get', [
-      'select' => ['amount_admitted', 'amount_paid_out'],
+      'select' => ['amount_admitted', 'amount_drawdowns_accepted'],
       'where' => [['id', '=', $fundingCaseId]],
     ])->single();
 
-    return ($values['amount_admitted'] ?? 0.0) - $values['amount_paid_out'];
+    return ($values['amount_admitted'] ?? 0.0) - $values['amount_drawdowns_accepted'];
   }
 
   /**

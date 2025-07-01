@@ -79,7 +79,7 @@ final class PayoutProcessManagerHeadlessTest extends AbstractFundingHeadlessTest
     static::assertSame(100.0 - 22.34, $this->payoutProcessManager->getAmountAvailable($payoutProcess));
   }
 
-  public function testGetAmountAccepted(): void {
+  public function testGetAmountAcceptedAndGetAmountPaidOut(): void {
     $payoutProcess = $this->createPayoutProcess(['amount_total' => 100.0]);
     $requesterContactId = ContactFixture::addIndividual()['id'];
 
@@ -91,6 +91,7 @@ final class PayoutProcessManagerHeadlessTest extends AbstractFundingHeadlessTest
 
     RequestTestUtil::mockRemoteRequest((string) $requesterContactId);
     static::assertSame(0.0, $this->payoutProcessManager->getAmountAccepted($payoutProcess));
+    static::assertSame(0.0, $this->payoutProcessManager->getAmountPaidOut($payoutProcess));
 
     DrawdownFixture::addFixture($payoutProcess->getId(), $requesterContactId, [
       'amount' => 12.34,
@@ -101,12 +102,18 @@ final class PayoutProcessManagerHeadlessTest extends AbstractFundingHeadlessTest
       'status' => 'new',
     ]);
     static::assertSame(12.34, $this->payoutProcessManager->getAmountAccepted($payoutProcess));
+    static::assertSame(12.34, $this->payoutProcessManager->getAmountPaidOut($payoutProcess));
 
     DrawdownFixture::addFixture($payoutProcess->getId(), $requesterContactId, [
       'amount' => 10,
       'status' => 'accepted',
     ]);
-    static::assertSame(22.34, $this->payoutProcessManager->getAmountAccepted($payoutProcess));
+    DrawdownFixture::addFixture($payoutProcess->getId(), $requesterContactId, [
+      'amount' => -5,
+      'status' => 'accepted',
+    ]);
+    static::assertSame(17.34, $this->payoutProcessManager->getAmountAccepted($payoutProcess));
+    static::assertSame(22.34, $this->payoutProcessManager->getAmountPaidOut($payoutProcess));
   }
 
   public function testGetAmountRequested(): void {

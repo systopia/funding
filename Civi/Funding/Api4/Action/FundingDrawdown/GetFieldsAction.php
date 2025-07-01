@@ -49,15 +49,29 @@ final class GetFieldsAction extends DAOGetFieldsAction {
         'sql_renderer' => new AliasSqlRenderer('payout_process_id.funding_case_id.funding_program_id.currency'),
       ],
       [
-        'name' => 'amount_paid_out',
-        'title' => E::ts('Amount Paid Out'),
+        'name' => 'amount_accepted',
+        'title' => E::ts('Amount Accepted'),
         'description' => E::ts('The amount if the drawdown is accepted, 0 otherwise.'),
         'type' => 'Extra',
         'data_type' => 'Money',
         'readonly' => TRUE,
         'nullable' => FALSE,
         'sql_renderer' => fn (array $field, Api4SelectQuery $query) => sprintf(
-          '(IF(%s="accepted", %s, 0))',
+          '(IF(%s = "accepted", %s, 0))',
+          SqlRendererUtil::getFieldSqlName($field, $query, 'status'),
+          SqlRendererUtil::getFieldSqlName($field, $query, 'amount')
+        ),
+      ],
+      [
+        'name' => 'amount_paid_out',
+        'title' => E::ts('Amount Paid Out'),
+        'description' => E::ts('The amount if the drawdown is accepted and positive, 0 otherwise.'),
+        'type' => 'Extra',
+        'data_type' => 'Money',
+        'readonly' => TRUE,
+        'nullable' => FALSE,
+        'sql_renderer' => fn (array $field, Api4SelectQuery $query) => sprintf(
+          '(IF(%s = "accepted" AND %2$s > 0, %2$s, 0))',
           SqlRendererUtil::getFieldSqlName($field, $query, 'status'),
           SqlRendererUtil::getFieldSqlName($field, $query, 'amount')
         ),
@@ -71,7 +85,7 @@ final class GetFieldsAction extends DAOGetFieldsAction {
         'readonly' => TRUE,
         'nullable' => FALSE,
         'sql_renderer' => fn (array $field, Api4SelectQuery $query) => sprintf(
-          '(IF(%s="new", %s, 0))',
+          '(IF(%s = "new", %s, 0))',
           SqlRendererUtil::getFieldSqlName($field, $query, 'status'),
           SqlRendererUtil::getFieldSqlName($field, $query, 'amount')
         ),

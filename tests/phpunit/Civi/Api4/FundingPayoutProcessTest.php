@@ -47,26 +47,36 @@ final class FundingPayoutProcessTest extends AbstractFundingHeadlessTestCase {
     FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['application_permission']);
 
     RequestTestUtil::mockRemoteRequest((string) $contact['id']);
-    $result = FundingPayoutProcess::get()->addSelect('id', 'currency', 'amount_paid_out', 'amount_new')->execute();
+    $result = FundingPayoutProcess::get()
+      ->addSelect('id', 'currency', 'amount_accepted', 'amount_paid_out', 'amount_new')
+      ->execute();
     static::assertCount(1, $result);
     static::assertSame([
       'id' => $payoutProcess->getId(),
       'currency' => FundingProgramFixture::DEFAULT_CURRENCY,
+      'amount_accepted' => 0.0,
       'amount_paid_out' => 0.0,
       'amount_new' => 0.0,
     ], $result->first());
 
     DrawdownFixture::addFixture($payoutProcess->getId(), $contactNotPermitted['id'], ['amount' => 0.1]);
     DrawdownFixture::addFixture($payoutProcess->getId(), $contactNotPermitted['id'], [
-      'amount' => 0.2,
+      'amount' => 0.4,
       'status' => 'accepted',
     ]);
-    $result = FundingPayoutProcess::get()->addSelect('id', 'currency', 'amount_paid_out', 'amount_new')->execute();
+    DrawdownFixture::addFixture($payoutProcess->getId(), $contactNotPermitted['id'], [
+      'amount' => -0.2,
+      'status' => 'accepted',
+    ]);
+    $result = FundingPayoutProcess::get()
+      ->addSelect('id', 'currency', 'amount_accepted', 'amount_paid_out', 'amount_new')
+      ->execute();
     static::assertCount(1, $result);
     static::assertSame([
       'id' => $payoutProcess->getId(),
       'currency' => FundingProgramFixture::DEFAULT_CURRENCY,
-      'amount_paid_out' => 0.2,
+      'amount_accepted' => 0.2,
+      'amount_paid_out' => 0.4,
       'amount_new' => 0.1,
     ], $result->first());
 
