@@ -23,6 +23,7 @@ return [
             'recipient_contact_id.display_name',
             'amount_approved',
             'amount_paid_out',
+            'amount_drawdowns_accepted',
             'withdrawable_funds',
             'amount_admitted',
             'amount_cleared',
@@ -142,6 +143,10 @@ return [
               'label' => E::ts('Review Progress'),
               'sortable' => TRUE,
               'rewrite' => '[application_process_review_progress] %',
+              'tally' => [
+                'fn' => 'AVG',
+                'rewrite' => '[application_process_review_progress] %',
+              ],
             ],
             [
               'type' => 'field',
@@ -159,12 +164,15 @@ return [
               'dataType' => 'String',
               'label' => E::ts('Withdrawable Funds'),
               'sortable' => TRUE,
+              'tally' => [
+                'fn' => 'SUM',
+              ],
             ],
             [
               'type' => 'field',
-              'key' => 'amount_paid_out',
+              'key' => 'amount_drawdowns_accepted',
               'dataType' => 'Money',
-              'label' => E::ts('Amount Paid Out'),
+              'label' => E::ts('Accepted Drawdowns'),
               'sortable' => TRUE,
               'tally' => [
                 'fn' => 'SUM',
@@ -177,7 +185,7 @@ return [
               'label' => E::ts('Amount Admitted'),
               'sortable' => TRUE,
               'tally' => [
-                'fn' => 'SUM',
+                'fn' => '',
               ],
             ],
             [
@@ -187,7 +195,7 @@ return [
               'label' => E::ts('Amount Cleared'),
               'sortable' => TRUE,
               'tally' => [
-                'fn' => 'SUM',
+                'fn' => '',
               ],
             ],
             [
@@ -251,6 +259,7 @@ return [
           ],
           'actions' => [
             'download',
+            'civiofficeRender',
           ],
           'classes' => [
             'table',
@@ -259,6 +268,7 @@ return [
           'tally' => [
             'label' => E::ts('Total'),
           ],
+          'actions_display_mode' => 'menu',
         ],
       ],
       'match' => [

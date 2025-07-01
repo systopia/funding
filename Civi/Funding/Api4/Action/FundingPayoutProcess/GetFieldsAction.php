@@ -49,8 +49,8 @@ final class GetFieldsAction extends DAOGetFieldsAction {
         'sql_renderer' => new AliasSqlRenderer('funding_case_id.funding_program_id.currency'),
       ],
       [
-        'name' => 'amount_paid_out',
-        'title' => E::ts('Amount Paid Out'),
+        'name' => 'amount_accepted',
+        'title' => E::ts('Amount Accepted'),
         'description' => E::ts('The sum of the amounts of accepted drawdowns.'),
         'type' => 'Extra',
         'data_type' => 'Money',
@@ -59,6 +59,20 @@ final class GetFieldsAction extends DAOGetFieldsAction {
         'sql_renderer' => fn (array $field, Api4SelectQuery $query) => sprintf(
           'IFNULL((SELECT SUM(d.amount) FROM civicrm_funding_drawdown d
           WHERE d.payout_process_id = %s AND d.status = "accepted"), 0)',
+          SqlRendererUtil::getFieldSqlName($field, $query, 'id')
+        ),
+      ],
+      [
+        'name' => 'amount_paid_out',
+        'title' => E::ts('Amount Paid Out'),
+        'description' => E::ts('The sum of the amounts of accepted, positive drawdowns.'),
+        'type' => 'Extra',
+        'data_type' => 'Money',
+        'readonly' => TRUE,
+        'nullable' => TRUE,
+        'sql_renderer' => fn (array $field, Api4SelectQuery $query) => sprintf(
+          'IFNULL((SELECT SUM(d.amount) FROM civicrm_funding_drawdown d
+          WHERE d.payout_process_id = %s AND d.status = "accepted" AND d.amount > 0), 0)',
           SqlRendererUtil::getFieldSqlName($field, $query, 'id')
         ),
       ],

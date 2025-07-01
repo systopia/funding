@@ -107,11 +107,22 @@ msgstr "Die Summe der Beträge der Mittelabrufe."
 
 #: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
 msgid "Amount Drawdowns Open"
-msgstr "Betrag offene Mittelabrufe"
+msgstr "Betrag offener Mittelabrufe"
 
 #: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
 msgid "The sum of the amounts of new (unreviewed) drawdowns."
 msgstr "Die Summe der Beträge neuer (ungeprüfter) Mittelabrufe."
+
+#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
+msgid "Amount Drawdowns Accepted"
+msgstr "Betrag akzeptierter Mittelabrufe"
+
+#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
+msgid "The sum of the amounts of accepted drawdowns."
+msgstr "Die Summe der Beträge akzeptierter Mittelabrufe."
 
 #: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php
@@ -119,16 +130,12 @@ msgstr "Die Summe der Beträge neuer (ungeprüfter) Mittelabrufe."
 #: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
 #: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
-#: managed/SavedSearch_funding_cases.mgd.php
-#: managed/SavedSearch_funding_program_controlling.mgd.php
 msgid "Amount Paid Out"
 msgstr "Ausbezahlter Betrag"
 
 #: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
-#: Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php
-#: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
-msgid "The sum of the amounts of accepted drawdowns."
-msgstr "Die Summe der Beträge akzeptierter Mittelabrufe."
+msgid "The sum of the amounts of accepted positive drawdowns."
+msgstr "Die Summe der Beträge akzeptierter, positiver Mittelabrufe."
 
 #: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
 #: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
@@ -540,8 +547,18 @@ msgid ""
 msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php
+msgid "Amount Accepted"
+msgstr "Akzeptierter Betrag"
+
+#: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php
 msgid "The amount if the drawdown is accepted, 0 otherwise."
-msgstr "Der Betrag, wenn der Mittelabruf genehmigt wurde, sonst 0."
+msgstr "Der Betrag, wenn der Mittelabruf akzeptiert wurde, sonst 0."
+
+#: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php
+msgid "The amount if the drawdown is accepted and positive, 0 otherwise."
+msgstr ""
+"Der Betrag, wenn der Mittelabruf akzeptiert wurde und positiv ist, sonst 0."
 
 #: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php
@@ -555,6 +572,11 @@ msgstr "Der Betrag, wenn der Mittelabruf ungeprüft ist, sonst 0."
 #: Civi/Funding/Api4/Action/FundingDrawdown/RejectAction.php
 msgid "Permission to reject drawdown is missing."
 msgstr "Berechtigung zum Ablehnen des Mittelabrufs fehlt."
+
+#: Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
+msgid "The sum of the amounts of accepted, positive drawdowns."
+msgstr "Die Summe der Beträge akzeptierter, positiver Mittelabrufe."
 
 #: Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php
 msgid "The sum of the amounts of unverified drawdowns."
@@ -1416,51 +1438,57 @@ msgstr "Abrechnung abschließen"
 msgid "Creation Contact Display Name"
 msgstr "Erstellerkontakt Anzeigename"
 
-#: Civi/Funding/FundingPseudoConstants.php
-msgid "New"
-msgstr "Neu"
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessStatuses.php
+msgid "Applied"
+msgstr "Beantragt"
 
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessStatuses.php
+msgid "Complete"
+msgstr "Vollständig"
+
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessStatuses.php
 #: Civi/Funding/FundingPseudoConstants.php
 msgid "Draft"
 msgstr "Entwurf"
 
-#: Civi/Funding/FundingPseudoConstants.php
-msgid "Withdrawn"
-msgstr "Zurückgezogen"
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessStatuses.php
+msgid "Eligible"
+msgstr "Förderfähig"
 
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessStatuses.php
 #: Civi/Funding/FundingPseudoConstants.php
-msgid "Applied"
-msgstr "Beantragt"
+msgid "New"
+msgstr "Neu"
 
-#: Civi/Funding/FundingPseudoConstants.php
-msgid "In review"
-msgstr "In Prüfung"
-
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessStatuses.php
 #: Civi/Funding/FundingPseudoConstants.php
 msgid "Rejected"
 msgstr "Abgelehnt"
 
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessStatuses.php
 #: Civi/Funding/FundingPseudoConstants.php
-msgid "Eligible"
-msgstr "Förderfähig"
+msgid "In review"
+msgstr "In Prüfung"
 
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessStatuses.php
 #: Civi/Funding/FundingPseudoConstants.php
-msgid "Complete"
-msgstr "Vollständig"
+msgid "Withdrawn"
+msgstr "Zurückgezogen"
 
-#: Civi/Funding/FundingPseudoConstants.php
-msgid "Rework requested"
-msgstr "Überarbeitung beantragt"
-
+#: Civi/Funding/FundingCaseType/MetaData/ReworkApplicationProcessStatuses.php
 #: Civi/Funding/FundingPseudoConstants.php
 msgid "In rework"
 msgstr "In Überarbeitung"
 
-#: Civi/Funding/FundingPseudoConstants.php
+#: Civi/Funding/FundingCaseType/MetaData/ReworkApplicationProcessStatuses.php
+msgid "Rework requested"
+msgstr "Überarbeitung beantragt"
+
+#: Civi/Funding/FundingCaseType/MetaData/ReworkApplicationProcessStatuses.php
 msgid "Rework review requested"
 msgstr "Prüfung der Überarbeitung beantragt"
 
-#: Civi/Funding/FundingPseudoConstants.php
+#: Civi/Funding/FundingCaseType/MetaData/ReworkApplicationProcessStatuses.php
 msgid "Rework in review"
 msgstr "Überarbeitung in Prüfung"
 
@@ -2589,3 +2617,8 @@ msgstr "Änderungsdatum"
 #: managed/SavedSearch_funding_cases.mgd.php
 msgid "Open case"
 msgstr "Fall öffnen"
+
+#: managed/SavedSearch_funding_cases.mgd.php
+#: managed/SavedSearch_funding_program_controlling.mgd.php
+msgid "Accepted Drawdowns"
+msgstr "Akzeptierte Mittelabrufe"

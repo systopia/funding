@@ -330,9 +330,14 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
 
     $api4Mock->method('execute')
       ->with(FundingCase::getEntityName(), 'get', [
-        'select' => ['amount_admitted', 'amount_paid_out'],
+        'select' => ['amount_admitted', 'amount_drawdowns_accepted'],
         'where' => [['id', '=', 23]],
-      ])->willReturn(new Result([['amount_admitted' => 25.2, 'amount_paid_out' => 14.1]]));
+      ])->willReturn(new Result([
+        [
+          'amount_admitted' => 25.2,
+          'amount_drawdowns_accepted' => 14.1,
+        ],
+      ]));
 
     static::assertSame(11.1, $this->fundingCaseManager->getAmountRemaining(23));
   }

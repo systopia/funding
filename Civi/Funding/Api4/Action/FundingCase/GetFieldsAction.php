@@ -106,8 +106,8 @@ final class GetFieldsAction extends DAOGetFieldsAction {
       , 0)", $this->buildDrawdownDateClause($query), SqlRendererUtil::getFieldSqlName($field, $query, 'id')),
       ],
       [
-        'name' => 'amount_paid_out',
-        'title' => E::ts('Amount Paid Out'),
+        'name' => 'amount_drawdowns_accepted',
+        'title' => E::ts('Amount Drawdowns Accepted'),
         'description' => E::ts('The sum of the amounts of accepted drawdowns.'),
         'type' => 'Extra',
         'data_type' => 'Money',
@@ -121,6 +121,21 @@ final class GetFieldsAction extends DAOGetFieldsAction {
       , 0)", $this->buildDrawdownDateClause($query), SqlRendererUtil::getFieldSqlName($field, $query, 'id')),
       ],
       [
+        'name' => 'amount_paid_out',
+        'title' => E::ts('Amount Paid Out'),
+        'description' => E::ts('The sum of the amounts of accepted, positive drawdowns.'),
+        'type' => 'Extra',
+        'data_type' => 'Money',
+        'readonly' => TRUE,
+        'nullable' => FALSE,
+        'sql_renderer' => fn (array $field, Api4SelectQuery $query) => sprintf("IFNULL(
+        (SELECT SUM(drawdown.amount) FROM civicrm_funding_payout_process payout
+        JOIN civicrm_funding_drawdown drawdown ON drawdown.payout_process_id = payout.id
+          AND drawdown.status = 'accepted' AND drawdown.amount > 0
+        WHERE payout.funding_case_id = %s)
+      , 0)", SqlRendererUtil::getFieldSqlName($field, $query, 'id')),
+      ],
+      [
         'name' => 'withdrawable_funds',
         'title' => E::ts('Withdrawable Funds'),
         'description' => E::ts('The difference between the amount approved and the amount paid out.'),
@@ -131,7 +146,7 @@ final class GetFieldsAction extends DAOGetFieldsAction {
         'nullable' => TRUE,
         // Note: Cannot be used in aggregation functions.
         'sql_renderer' => fn (array $field, Api4SelectQuery $query) => sprintf(
-          '(SELECT %s - amount_paid_out)',
+          '(SELECT %s - amount_drawdowns_accepted)',
           SqlRendererUtil::getFieldSqlName($field, $query, 'amount_approved'),
         ),
       ],

@@ -133,7 +133,7 @@ final class GetAction extends AbstractGetAction {
       'identifier' => $fundingCase->getIdentifier(),
       'amount_approved' => $fundingCase->getAmountApproved(),
       'payout_process_id' => $payoutProcess->getId(),
-      'amount_paid_out' => $this->payoutProcessManager->getAmountAccepted($payoutProcess),
+      'amount_paid_out' => $this->payoutProcessManager->getAmountPaidOut($payoutProcess),
       'amount_available' => $amountAvailable,
       'transfer_contract_uri' => $fundingCase->getTransferContractUri(),
       'funding_case_type_id' => $fundingCase->getFundingCaseTypeId(),

@@ -46,30 +46,36 @@ final class RemoteFundingPayoutProcessTest extends AbstractRemoteFundingHeadless
 
     $result = RemoteFundingPayoutProcess::get()
       ->setRemoteContactId((string) $contact['id'])
-      ->addSelect('id', 'currency', 'amount_paid_out', 'amount_new')
+      ->addSelect('id', 'currency', 'amount_accepted', 'amount_paid_out', 'amount_new')
       ->execute();
     static::assertCount(1, $result);
-    static::assertSame([
+    static::assertEquals([
       'id' => $payoutProcess->getId(),
       'currency' => FundingProgramFixture::DEFAULT_CURRENCY,
+      'amount_accepted' => 0.0,
       'amount_paid_out' => 0.0,
       'amount_new' => 0.0,
     ], $result->first());
 
     DrawdownFixture::addFixture($payoutProcess->getId(), $contactNotPermitted['id'], ['amount' => 0.1]);
     DrawdownFixture::addFixture($payoutProcess->getId(), $contactNotPermitted['id'], [
-      'amount' => 0.2,
+      'amount' => 0.4,
+      'status' => 'accepted',
+    ]);
+    DrawdownFixture::addFixture($payoutProcess->getId(), $contactNotPermitted['id'], [
+      'amount' => -0.2,
       'status' => 'accepted',
     ]);
     $result = RemoteFundingPayoutProcess::get()
       ->setRemoteContactId((string) $contact['id'])
-      ->addSelect('id', 'currency', 'amount_paid_out', 'amount_new')
+      ->addSelect('id', 'currency', 'amount_accepted', 'amount_paid_out', 'amount_new')
       ->execute();
     static::assertCount(1, $result);
-    static::assertSame([
+    static::assertEquals([
       'id' => $payoutProcess->getId(),
       'currency' => FundingProgramFixture::DEFAULT_CURRENCY,
-      'amount_paid_out' => 0.2,
+      'amount_accepted' => 0.2,
+      'amount_paid_out' => 0.4,
       'amount_new' => 0.1,
     ], $result->first());
 
@@ -80,7 +86,7 @@ final class RemoteFundingPayoutProcessTest extends AbstractRemoteFundingHeadless
   }
 
   public function testGetFields(): void {
-    static::assertCount(9, RemoteFundingPayoutProcess::getFields()->execute());
+    static::assertCount(10, RemoteFundingPayoutProcess::getFields()->execute());
   }
 
   private function createFundingCase(): FundingCaseEntity {

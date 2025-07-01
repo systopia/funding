@@ -22,7 +22,7 @@ return [
             'amount_eligible',
             'amount_approved',
             'amount_available',
-            'amount_paid_out',
+            'amount_drawdowns_accepted',
             'amount_cleared',
             'amount_admitted',
             'end_date',
@@ -97,9 +97,9 @@ return [
             ],
             [
               'type' => 'field',
-              'key' => 'amount_paid_out',
+              'key' => 'amount_drawdowns_accepted',
               'dataType' => 'Money',
-              'label' => E::ts('Amount Paid Out'),
+              'label' => E::ts('Accepted Drawdowns'),
               'sortable' => TRUE,
             ],
             [

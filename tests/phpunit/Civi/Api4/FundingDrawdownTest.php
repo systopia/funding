@@ -51,12 +51,14 @@ final class FundingDrawdownTest extends AbstractFundingHeadlessTestCase {
     );
 
     RequestTestUtil::mockRemoteRequest((string) $contact['id']);
-    $result = FundingDrawdown::get()->addSelect('id', 'currency', 'amount_paid_out', 'amount_new')->execute();
+    $result = FundingDrawdown::get()
+      ->addSelect('id', 'amount_accepted', 'amount_paid_out', 'amount_new')
+      ->execute();
     static::assertCount(1, $result);
-    static::assertSame(
+    static::assertEquals(
       [
         'id' => $drawdown->getId(),
-        'currency' => FundingProgramFixture::DEFAULT_CURRENCY,
+        'amount_accepted' => 0.0,
         'amount_paid_out' => 0.0,
         'amount_new' => $drawdown->getAmount(),
       ],
@@ -66,6 +68,69 @@ final class FundingDrawdownTest extends AbstractFundingHeadlessTestCase {
     RequestTestUtil::mockRemoteRequest((string) $contactNotPermitted['id']);
     static::assertCount(0, FundingDrawdown::get()
       ->addSelect('id')->execute());
+  }
+
+  public function testGetAccepted(): void {
+    $contact = ContactFixture::addIndividual();
+    $payoutProcess = $this->createPayoutProcess();
+    $drawdown = DrawdownFixture::addFixture(
+      $payoutProcess->getId(),
+      $contact['id'],
+      ['amount' => 1.23, 'status' => 'accepted']
+    );
+
+    FundingCaseContactRelationFixture::addContact(
+      $contact['id'],
+      $payoutProcess->getFundingCaseId(),
+      ['some_permission'],
+    );
+
+    RequestTestUtil::mockInternalRequest($contact['id']);
+    $result = FundingDrawdown::get()
+      ->addSelect('id', 'amount_accepted', 'amount_paid_out', 'amount_new')
+      ->execute();
+    static::assertCount(1, $result);
+    static::assertEquals(
+      [
+        'id' => $drawdown->getId(),
+        'amount_accepted' => 1.23,
+        'amount_paid_out' => 1.23,
+        'amount_new' => 0.0,
+      ],
+      $result->first(),
+    );
+  }
+
+  public function testGetAcceptedPaybackClaim(): void {
+    $contact = ContactFixture::addIndividual();
+    $payoutProcess = $this->createPayoutProcess();
+    $drawdown = DrawdownFixture::addFixture(
+      $payoutProcess->getId(),
+      $contact['id'],
+      ['amount' => -1.23, 'status' => 'accepted']
+    );
+
+    FundingCaseContactRelationFixture::addContact(
+      $contact['id'],
+      $payoutProcess->getFundingCaseId(),
+      ['some_permission'],
+    );
+
+    RequestTestUtil::mockInternalRequest($contact['id']);
+    $result = FundingDrawdown::get()
+      ->addSelect('id', 'currency', 'amount_accepted', 'amount_paid_out', 'amount_new')
+      ->execute();
+    static::assertCount(1, $result);
+    static::assertEquals(
+      [
+        'id' => $drawdown->getId(),
+        'currency' => FundingProgramFixture::DEFAULT_CURRENCY,
+        'amount_accepted' => -1.23,
+        'amount_paid_out' => 0.0,
+        'amount_new' => 0.0,
+      ],
+      $result->first(),
+    );
   }
 
   private function createPayoutProcess(): PayoutProcessEntity {
