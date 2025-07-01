@@ -66,6 +66,18 @@ final class GetFieldsAction extends DAOGetFieldsAction {
       ],
     ];
 
+    // Allow to change the ignoreTaskPermissions parameter in SearchKit via filter.
+    $fields[] = [
+      'type' => 'Filter',
+      'nullable' => TRUE,
+      'readonly' => TRUE,
+      'entity' => 'FundingTask',
+      'name' => 'ignore_task_permissions',
+      'title' => E::ts('Ignore Task Permissions'),
+      'data_type' => 'Boolean',
+      'operators' => ['='],
+    ];
+
     return $fields;
   }
 

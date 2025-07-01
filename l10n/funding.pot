@@ -338,6 +338,10 @@ msgstr ""
 msgid "Status Type"
 msgstr ""
 
+#: Civi/Funding/Api4/Action/FundingTask/GetFieldsAction.php
+msgid "Ignore Task Permissions"
+msgstr ""
+
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
 msgid "Creation Contact"
 msgstr ""
@@ -1250,6 +1254,10 @@ msgstr ""
 msgid "My Tasks"
 msgstr ""
 
+#: ang/afsearchTasksPending.aff.php managed/NavigationFunding.mgd.php
+msgid "Tasks (Pending)"
+msgstr ""
+
 #: ang/crmFunding/application/application.js ang/crmFunding/application/applicationEditor.directive.js ang/crmFunding/application/applicationReviewer.directive.js ang/crmFunding/application/applicationReviewers.directive.js ang/crmFunding/application/applicationSearchTasksMenu.decorator.js ang/crmFunding/application/applicationSubmitModal.component.js ang/crmFunding/application/defaultApplicationSidebar.directive.js ang/crmFunding/application/history/applicationProcessActivity.directive.js ang/crmFunding/application/history/applicationProcessHistory.directive.js ang/crmFunding/case/fundingCase.js ang/crmFunding/case/fundingCasePermissions.js ang/crmFunding/case/notificationContacts.directive.js ang/crmFunding/case/permissions/fundingCaseContactRelation.directive.js ang/crmFunding/case/recipientContact.directive.js ang/crmFunding/clearing/clearing.js ang/crmFunding/clearing/clearingEditor.directive.js ang/crmFunding/clearing/clearingReviewer.directive.js ang/crmFunding/clearing/clearingReviewers.directive.js ang/crmFunding/clearing/clearingSearchTasksMenu.decorator.js ang/crmFunding/clearing/clearingSidebar.directive.js ang/crmFunding/clearing/clearingSubmitModal.component.js ang/crmFunding/drawdown/drawdownSearchTasksMenu.decorator.js ang/crmFunding/form/editableField.directive.js ang/crmFunding/form/editorTrait.factory.js ang/crmFunding/form/fundingAddRowButton.directive.js ang/crmFunding/form/fundingSelectPermissions.directive.js ang/crmFunding/form/fundingValidationErrors.directive.js ang/crmFunding/fundingDate.filter.js ang/crmFunding/jsonForms/jfControlArray.directive.js ang/crmFunding/jsonForms/jfControlFile.directive.js ang/crmFunding/program/fundingNewCasePermissions.js ang/crmFunding/program/fundingProgramPermissions.js ang/crmFunding/program/newCasePermissions/fundingNewCasePermissions.directive.js ang/crmFunding/program/permissions/fundingProgramContactRelation.directive.js ang/crmFunding/program/recipientRelations.js ang/crmFunding/program/recipients/recipientRelation.directive.js ang/crmFundingHiH/hihApplicationSidebar.directive.js
 msgid "funding"
 msgstr ""
@@ -1670,7 +1678,7 @@ msgstr ""
 msgid "Funding Case Task"
 msgstr ""
 
-#: managed/CustomGroup_funding_case_task.mgd.php managed/SavedSearch_MyFundingTasks.mgd.php
+#: managed/CustomGroup_funding_case_task.mgd.php managed/SavedSearch_Funding_Tasks_Pending.mgd.php managed/SavedSearch_MyFundingTasks.mgd.php
 msgid "Affected Identifier"
 msgstr ""
 
@@ -1682,7 +1690,7 @@ msgstr ""
 msgid "Required Permissions"
 msgstr ""
 
-#: managed/CustomGroup_funding_case_task.mgd.php
+#: managed/CustomGroup_funding_case_task.mgd.php managed/SavedSearch_Funding_Tasks_Pending.mgd.php
 msgid "Due Date"
 msgstr ""
 
@@ -1774,15 +1782,15 @@ msgstr ""
 msgid "Payback Claim"
 msgstr ""
 
-#: managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCaseTypes.mgd.php managed/SavedSearchFundingDrawdowns.mgd.php managed/SavedSearchFundingPrograms.mgd.php managed/SavedSearch_Application_CiviOffice_Templates.mgd.php managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php managed/SavedSearch_FundingDrawdownsAll.mgd.php managed/SavedSearch_MyFundingTasks.mgd.php managed/SavedSearch_funding_cases.mgd.php managed/SavedSearch_funding_program_controlling.mgd.php
+#: managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearchFundingCaseTypes.mgd.php managed/SavedSearchFundingDrawdowns.mgd.php managed/SavedSearchFundingPrograms.mgd.php managed/SavedSearch_Application_CiviOffice_Templates.mgd.php managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php managed/SavedSearch_FundingDrawdownsAll.mgd.php managed/SavedSearch_Funding_Tasks_Pending.mgd.php managed/SavedSearch_MyFundingTasks.mgd.php managed/SavedSearch_funding_cases.mgd.php managed/SavedSearch_funding_program_controlling.mgd.php
 msgid "Table"
 msgstr ""
 
-#: managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_MyFundingTasks.mgd.php
+#: managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_Funding_Tasks_Pending.mgd.php managed/SavedSearch_MyFundingTasks.mgd.php
 msgid "Open application"
 msgstr ""
 
-#: managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_MyFundingTasks.mgd.php
+#: managed/SavedSearchFundingApplicationProcesses.mgd.php managed/SavedSearchFundingCaseApplicationProcesses.mgd.php managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_Funding_Tasks_Pending.mgd.php managed/SavedSearch_MyFundingTasks.mgd.php
 msgid "Open clearing"
 msgstr ""
 
@@ -1886,20 +1894,24 @@ msgstr ""
 msgid "Open Case"
 msgstr ""
 
-#: managed/SavedSearch_MyFundingTasks.mgd.php
-msgid "My Funding Tasks"
+#: managed/SavedSearch_Funding_Tasks_Pending.mgd.php
+msgid "Funding Tasks (Pending)"
 msgstr ""
 
-#: managed/SavedSearch_MyFundingTasks.mgd.php
+#: managed/SavedSearch_Funding_Tasks_Pending.mgd.php managed/SavedSearch_MyFundingTasks.mgd.php
 msgid "Subject"
 msgstr ""
 
-#: managed/SavedSearch_MyFundingTasks.mgd.php
+#: managed/SavedSearch_Funding_Tasks_Pending.mgd.php managed/SavedSearch_MyFundingTasks.mgd.php
 msgid "Modified Date"
 msgstr ""
 
-#: managed/SavedSearch_MyFundingTasks.mgd.php managed/SavedSearch_funding_cases.mgd.php
+#: managed/SavedSearch_Funding_Tasks_Pending.mgd.php managed/SavedSearch_MyFundingTasks.mgd.php managed/SavedSearch_funding_cases.mgd.php
 msgid "Open case"
+msgstr ""
+
+#: managed/SavedSearch_MyFundingTasks.mgd.php
+msgid "My Funding Tasks"
 msgstr ""
 
 #: managed/SavedSearch_funding_cases.mgd.php managed/SavedSearch_funding_program_controlling.mgd.php
