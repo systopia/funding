@@ -33,7 +33,6 @@ final class IJBSachberichtJsonSchema extends JsonSchemaObject {
     '' => NULL,
     'Politik und Gesellschaft' => 'politik',
     'Medien' => 'medien',
-    'Geschichte' => 'geschichte',
     'Gewaltprävention' => 'gewaltpraeventation',
     'Sport' => 'sport',
     'Didaktik und Methodik' => 'didaktik',
