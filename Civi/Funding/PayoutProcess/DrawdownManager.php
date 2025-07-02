@@ -31,6 +31,7 @@ use Civi\Funding\Event\PayoutProcess\DrawdownPreCreateEvent;
 use Civi\Funding\Event\PayoutProcess\DrawdownPreUpdateEvent;
 use Civi\Funding\Event\PayoutProcess\DrawdownUpdatedEvent;
 use Civi\RemoteTools\Api4\Api4Interface;
+use Civi\RemoteTools\Api4\Query\Comparison;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
 use Civi\RemoteTools\Api4\Query\ConditionInterface;
 use Webmozart\Assert\Assert;
@@ -148,6 +149,20 @@ class DrawdownManager {
 
     // @phpstan-ignore-next-line The result is not indexed, so it's actual a list.
     return DrawdownEntity::allFromApiResult($result);
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function getLastByPayoutProcessId(int $payoutProcessId): ?DrawdownEntity {
+    $result = $this->api4->getEntities(
+      FundingDrawdown::getEntityName(),
+      Comparison::new('payout_process_id', '=', $payoutProcessId),
+      ['id' => 'DESC'],
+      1
+    );
+
+    return DrawdownEntity::singleOrNullFromApiResult($result);
   }
 
   public function insert(DrawdownEntity $drawdown): void {

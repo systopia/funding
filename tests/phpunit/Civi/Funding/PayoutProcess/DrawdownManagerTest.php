@@ -228,4 +228,17 @@ final class DrawdownManagerTest extends TestCase {
     static::assertEquals([$drawdown], $this->drawdownManager->getBy($condition));
   }
 
+  public function testGetLastByPayoutProcessId(): void {
+    $drawdown = DrawdownFactory::create();
+    $this->api4Mock->method('getEntities')
+      ->with(
+        FundingDrawdown::getEntityName(),
+        Comparison::new('payout_process_id', '=', 12),
+        ['id' => 'DESC'],
+        1
+      )->willReturn(new Result([$drawdown->toArray()]));
+
+    static::assertEquals($drawdown, $this->drawdownManager->getLastByPayoutProcessId(12));
+  }
+
 }
