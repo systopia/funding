@@ -27,7 +27,6 @@ use Civi\Funding\Api4\Query\Util\SqlRendererUtil;
 use Civi\RemoteTools\Api4\Action\Traits\PermissionsGetFieldsActionTrait;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
 use CRM_Funding_ExtensionUtil as E;
-use Webmozart\Assert\Assert;
 
 final class GetFieldsAction extends DAOGetFieldsAction {
 
@@ -138,7 +137,7 @@ final class GetFieldsAction extends DAOGetFieldsAction {
       [
         'name' => 'withdrawable_funds',
         'title' => E::ts('Withdrawable Funds'),
-        'description' => E::ts('The difference between the amount approved and the amount paid out.'),
+        'description' => E::ts('The difference between the amount approved and the amount of accepted drawdowns.'),
         'type' => 'Extra',
         'data_type' => 'Money',
         'readonly' => TRUE,
@@ -221,28 +220,24 @@ final class GetFieldsAction extends DAOGetFieldsAction {
   private function buildDrawdownDateClause(Api4SelectQuery $query): string {
     $clauses = [];
 
-    $acceptionDateOperator = $query->getApiParam('drawdownAcceptionDateOperator');
-    $acceptionDateValue = $query->getApiParam('drawdownAcceptionDateValue');
+    $acceptionDateOperator = GetAction::getDrawdownAcceptionDateOperator();
+    $acceptionDateValue = GetAction::getDrawdownAcceptionDateValue();
     if (NULL !== $acceptionDateOperator) {
-      Assert::string($acceptionDateOperator);
       if (NULL === $acceptionDateValue) {
         $clauses[] = "drawdown.acception_date $acceptionDateOperator";
       }
       else {
-        Assert::string($acceptionDateValue);
         $clauses[] = "drawdown.acception_date $acceptionDateOperator '$acceptionDateValue'";
       }
     }
 
-    $creationDateOperator = $query->getApiParam('drawdownCreationDateOperator');
-    $creationDateValue = $query->getApiParam('drawdownCreationDateValue');
+    $creationDateOperator = GetAction::getDrawdownCreationDateOperator();
+    $creationDateValue = GetAction::getDrawdownCreationDateValue();
     if (NULL !== $creationDateOperator) {
-      Assert::string($creationDateOperator);
       if (NULL === $creationDateValue) {
         $clauses[] = "drawdown.creation_date $creationDateOperator";
       }
       else {
-        Assert::string($creationDateValue);
         $clauses[] = "drawdown.creation_date $creationDateOperator '$creationDateValue'";
       }
     }
