@@ -41,17 +41,17 @@ final class GetAction extends DAOGetAction {
 
   use IsFieldSelectedTrait;
 
+  private static ?string $drawdownAcceptionDateOperator = NULL;
+
+  private static ?string $drawdownAcceptionDateValue = NULL;
+
+  private static ?string $drawdownCreationDateOperator = NULL;
+
+  private static ?string $drawdownCreationDateValue = NULL;
+
   private bool $cachePermissionsOnly = FALSE;
 
   private ?Api4Interface $api4;
-
-  private ?string $drawdownAcceptionDateOperator = NULL;
-
-  private ?string $drawdownAcceptionDateValue = NULL;
-
-  private ?string $drawdownCreationDateOperator = NULL;
-
-  private ?string $drawdownCreationDateValue = NULL;
 
   private ?CiviEventDispatcherInterface $eventDispatcher;
 
@@ -64,6 +64,22 @@ final class GetAction extends DAOGetAction {
   private ?TransferContractRouter $transferContractRouter;
 
   private bool $runCalled = FALSE;
+
+  public static function getDrawdownAcceptionDateOperator(): ?string {
+    return self::$drawdownAcceptionDateOperator;
+  }
+
+  public static function getDrawdownAcceptionDateValue(): ?string {
+    return self::$drawdownAcceptionDateValue;
+  }
+
+  public static function getDrawdownCreationDateOperator(): ?string {
+    return self::$drawdownCreationDateOperator;
+  }
+
+  public static function getDrawdownCreationDateValue(): ?string {
+    return self::$drawdownCreationDateValue;
+  }
 
   public function __construct(
     ?Api4Interface $api4 = NULL,
@@ -177,6 +193,11 @@ final class GetAction extends DAOGetAction {
     if (!$rowCountSelected) {
       $result->rowCount = count($records);
     }
+
+    self::$drawdownAcceptionDateOperator = NULL;
+    self::$drawdownAcceptionDateValue = NULL;
+    self::$drawdownCreationDateValue = NULL;
+    self::$drawdownCreationDateOperator = NULL;
   }
 
   public function isCachePermissionsOnly(): bool {
@@ -203,22 +224,33 @@ final class GetAction extends DAOGetAction {
       $this->ensurePermissions();
     }
 
-    // See sql_renderer in GetFieldsAction.
+    // See sql_renderer in GetFieldsAction. Using static variables to transfer
+    // the values is a bit hacky. The approach with non-static public methods
+    // and access via \Civi\Api4\Query\Api4SelectQuery::getApiParam() does only
+    // work if FundingCase is not used as joined entity.
     $maxDepth = 'AND' === ($this->where[0] ?? NULL) && is_array($this->where[1] ?? NULL) ? 1 : 0;
     $drawdownAcceptionDateClause = WhereUtil::getAndUnsetClause($this->where, 'drawdown_acception_date', $maxDepth);
-    if (NULL !== $drawdownAcceptionDateClause) {
+    if (NULL === $drawdownAcceptionDateClause) {
+      self::$drawdownAcceptionDateOperator = NULL;
+      self::$drawdownAcceptionDateValue = NULL;
+    }
+    else {
       Assert::string($drawdownAcceptionDateClause[1]);
       Assert::nullOrString($drawdownAcceptionDateClause[2] ?? NULL);
-      $this->drawdownAcceptionDateOperator = $drawdownAcceptionDateClause[1];
-      $this->drawdownAcceptionDateValue = $drawdownAcceptionDateClause[2] ?? NULL;
+      self::$drawdownAcceptionDateOperator = $drawdownAcceptionDateClause[1];
+      self::$drawdownAcceptionDateValue = $drawdownAcceptionDateClause[2] ?? NULL;
     }
 
     $drawdownCreationDateClause = WhereUtil::getAndUnsetClause($this->where, 'drawdown_creation_date', $maxDepth);
-    if (NULL !== $drawdownCreationDateClause) {
+    if (NULL === $drawdownCreationDateClause) {
+      self::$drawdownCreationDateOperator = NULL;
+      self::$drawdownCreationDateValue = NULL;
+    }
+    else {
       Assert::string($drawdownCreationDateClause[1]);
       Assert::nullOrString($drawdownCreationDateClause[2] ?? NULL);
-      $this->drawdownCreationDateOperator = $drawdownCreationDateClause[1];
-      $this->drawdownCreationDateValue = $drawdownCreationDateClause[2] ?? NULL;
+      self::$drawdownCreationDateOperator = $drawdownCreationDateClause[1];
+      self::$drawdownCreationDateValue = $drawdownCreationDateClause[2] ?? NULL;
     }
 
     FundingCasePermissionsUtil::addPermissionsCacheJoin(
@@ -230,22 +262,6 @@ final class GetAction extends DAOGetAction {
     FundingCasePermissionsUtil::addPermissionsRestriction($this);
 
     parent::setDefaultWhereClause();
-  }
-
-  public function getDrawdownAcceptionDateOperator(): ?string {
-    return $this->drawdownAcceptionDateOperator;
-  }
-
-  public function getDrawdownAcceptionDateValue(): ?string {
-    return $this->drawdownAcceptionDateValue;
-  }
-
-  public function getDrawdownCreationDateOperator(): ?string {
-    return $this->drawdownCreationDateOperator;
-  }
-
-  public function getDrawdownCreationDateValue(): ?string {
-    return $this->drawdownCreationDateValue;
   }
 
   private function getApi4(): Api4Interface {
