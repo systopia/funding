@@ -31,6 +31,8 @@ use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
 use Civi\Funding\FundingCase\Command\FundingCaseFinishClearingCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\StatusDeterminer\FundingCaseStatusDeterminerInterface;
+use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataMock;
+use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataProviderMock;
 use Civi\Funding\PayoutProcess\DrawdownManager;
 use Civi\Funding\PayoutProcess\PayoutProcessManager;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
@@ -44,37 +46,21 @@ use Symfony\Bridge\PhpUnit\ClockMock;
  */
 final class FundingCaseFinishClearingHandlerTest extends TestCase {
 
-  /**
-   * @var \Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $actionsDeterminerMock;
+  private FundingCaseActionsDeterminerInterface&MockObject $actionsDeterminerMock;
 
-  /**
-   * @var \Civi\Funding\PayoutProcess\DrawdownManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $drawdownManagerMock;
+  private DrawdownManager&MockObject $drawdownManagerMock;
 
-  /**
-   * @var \Civi\Funding\FundingCase\FundingCaseManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $fundingCaseManagerMock;
+  private FundingCaseManager&MockObject $fundingCaseManagerMock;
 
   private FundingCaseFinishClearingHandler $handler;
 
-  /**
-   * @var \Civi\Funding\PayoutProcess\PayoutProcessManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $payoutProcessManagerMock;
+  private FundingCaseTypeMetaDataMock $metaDataMock;
 
-  /**
-   * @var \Civi\RemoteTools\RequestContext\RequestContextInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $requestContextMock;
+  private PayoutProcessManager&MockObject $payoutProcessManagerMock;
 
-  /**
-   * @var \Civi\Funding\FundingCase\StatusDeterminer\FundingCaseStatusDeterminerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $statusDeterminerMock;
+  private RequestContextInterface&MockObject $requestContextMock;
+
+  private FundingCaseStatusDeterminerInterface&MockObject $statusDeterminerMock;
 
   public static function setUpBeforeClass(): void {
     parent::setUpBeforeClass();
@@ -87,6 +73,7 @@ final class FundingCaseFinishClearingHandlerTest extends TestCase {
     $this->actionsDeterminerMock = $this->createMock(FundingCaseActionsDeterminerInterface::class);
     $this->drawdownManagerMock = $this->createMock(DrawdownManager::class);
     $this->fundingCaseManagerMock = $this->createMock(FundingCaseManager::class);
+    $this->metaDataMock = new FundingCaseTypeMetaDataMock();
     $this->payoutProcessManagerMock = $this->createMock(PayoutProcessManager::class);
     $this->requestContextMock = $this->createMock(RequestContextInterface::class);
     $this->statusDeterminerMock = $this->createMock(FundingCaseStatusDeterminerInterface::class);
@@ -94,6 +81,7 @@ final class FundingCaseFinishClearingHandlerTest extends TestCase {
       $this->actionsDeterminerMock,
       $this->drawdownManagerMock,
       $this->fundingCaseManagerMock,
+      new FundingCaseTypeMetaDataProviderMock($this->metaDataMock),
       $this->payoutProcessManagerMock,
       $this->requestContextMock,
       $this->statusDeterminerMock
@@ -102,7 +90,12 @@ final class FundingCaseFinishClearingHandlerTest extends TestCase {
     $this->requestContextMock->method('getContactId')->willReturn(23);
   }
 
-  public function testHandle(): void {
+  /**
+   * @dataProvider provideFinalDrawdownAccepted
+   */
+  public function testHandle(bool $finalDrawdownAccepted): void {
+    $this->metaDataMock->finalDrawdownAcceptedByDefault = $finalDrawdownAccepted;
+
     $fundingCase = FundingCaseFactory::createFundingCase(['status' => 'ongoing']);
     $applicationProcessStatusList = [22 => new FullApplicationProcessStatus('eligible', TRUE, TRUE)];
     $this->actionsDeterminerMock->method('isActionAllowed')
@@ -128,8 +121,12 @@ final class FundingCaseFinishClearingHandlerTest extends TestCase {
       'requester_contact_id' => 23,
     ]);
     $this->drawdownManagerMock->expects(static::once())->method('insert')->with($drawdown);
-    $this->drawdownManagerMock->expects(static::once())->method('accept')
-      ->with($drawdown);
+    if ($finalDrawdownAccepted) {
+      $this->drawdownManagerMock->expects(static::once())->method('accept')->with($drawdown);
+    }
+    else {
+      $this->drawdownManagerMock->expects(static::never())->method('accept');
+    }
 
     $this->payoutProcessManagerMock->expects(static::once())->method('close')
       ->with($payoutProcess);
@@ -148,6 +145,14 @@ final class FundingCaseFinishClearingHandlerTest extends TestCase {
     ));
 
     static::assertSame('new-status', $fundingCase->getStatus());
+  }
+
+  /**
+   * @phpstan-return iterable<array{bool}>
+   */
+  public function provideFinalDrawdownAccepted(): iterable {
+    yield [TRUE];
+    yield [FALSE];
   }
 
   public function testHandleAmountRemainingZero(): void {

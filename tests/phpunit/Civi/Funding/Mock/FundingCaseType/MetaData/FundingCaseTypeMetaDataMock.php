@@ -20,6 +20,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Mock\FundingCaseType\MetaData;
 
+use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\FundingCaseType\MetaData\AbstractFundingCaseTypeMetaData;
 use Civi\Funding\FundingCaseType\MetaData\ApplicationProcessStatus;
 
@@ -32,6 +33,8 @@ final class FundingCaseTypeMetaDataMock extends AbstractFundingCaseTypeMetaData 
    */
   public $applicationProcessStatuses = [];
 
+  public bool $finalDrawdownAcceptedByDefault = TRUE;
+
   /**
    * @phpstan-var array<string, \Civi\Funding\FundingCaseType\MetaData\CostItemTypeInterface>
    */
@@ -40,9 +43,9 @@ final class FundingCaseTypeMetaDataMock extends AbstractFundingCaseTypeMetaData 
   /**
    * @phpstan-var array<string, \Civi\Funding\FundingCaseType\MetaData\ResourcesItemTypeInterface>
    */
-  private array $resourcesItemTypes = [];
+  public array $resourcesItemTypes = [];
 
-  public function __construct(string $name = 'mock') {
+  public function __construct(string $name = FundingCaseTypeFactory::DEFAULT_NAME) {
     $this->name = $name;
   }
 
@@ -76,6 +79,13 @@ final class FundingCaseTypeMetaDataMock extends AbstractFundingCaseTypeMetaData 
    */
   public function getResourcesItemTypes(): array {
     return $this->resourcesItemTypes;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function isFinalDrawdownAcceptedByDefault(): bool {
+    return $this->finalDrawdownAcceptedByDefault;
   }
 
 }

@@ -33,4 +33,8 @@ abstract class AbstractFundingCaseTypeMetaData implements FundingCaseTypeMetaDat
     return $this->getResourcesItemTypes()[$name] ?? NULL;
   }
 
+  public function isFinalDrawdownAcceptedByDefault(): bool {
+    return TRUE;
+  }
+
 }
