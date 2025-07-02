@@ -21,9 +21,11 @@ namespace Civi\Funding\Notification\Event;
 
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\ClearingProcessEntity;
+use Civi\Funding\Entity\DrawdownEntity;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\Entity\PayoutProcessEntity;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
@@ -72,6 +74,11 @@ final class PreSendNotificationEvent extends Event {
     return $this->tokenContext['fundingClearingProcess'] ?? NULL;
   }
 
+  public function getDrawdown(): ?DrawdownEntity {
+    // @phpstan-ignore return.type
+    return $this->tokenContext['fundingDrawdown'] ?? NULL;
+  }
+
   public function getFundingCase(): FundingCaseEntity {
     // @phpstan-ignore return.type
     return $this->tokenContext['fundingCase'];
@@ -85,6 +92,11 @@ final class PreSendNotificationEvent extends Event {
   public function getFundingProgram(): FundingProgramEntity {
     // @phpstan-ignore return.type
     return $this->tokenContext['fundingProgram'];
+  }
+
+  public function getPayoutProcess(): ?PayoutProcessEntity {
+    // @phpstan-ignore return.type
+    return $this->tokenContext['fundingPayoutProcess'] ?? NULL;
   }
 
   /**
