@@ -26,6 +26,7 @@ use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
 use Civi\Funding\FundingCase\Command\FundingCaseFinishClearingCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\StatusDeterminer\FundingCaseStatusDeterminerInterface;
+use Civi\Funding\FundingCaseType\FundingCaseTypeMetaDataProviderInterface;
 use Civi\Funding\PayoutProcess\DrawdownManager;
 use Civi\Funding\PayoutProcess\PayoutProcessManager;
 use Civi\RemoteTools\RequestContext\RequestContext;
@@ -41,6 +42,8 @@ final class FundingCaseFinishClearingHandler implements FundingCaseFinishClearin
 
   private FundingCaseManager $fundingCaseManager;
 
+  private FundingCaseTypeMetaDataProviderInterface $metaDataProvider;
+
   private PayoutProcessManager $payoutProcessManager;
 
   private RequestContextInterface $requestContext;
@@ -51,6 +54,7 @@ final class FundingCaseFinishClearingHandler implements FundingCaseFinishClearin
     FundingCaseActionsDeterminerInterface $actionsDeterminer,
     DrawdownManager $drawdownManager,
     FundingCaseManager $fundingCaseManager,
+    FundingCaseTypeMetaDataProviderInterface $metaDataProvider,
     PayoutProcessManager $payoutProcessManager,
     RequestContextInterface $requestContext,
     FundingCaseStatusDeterminerInterface $statusDeterminer
@@ -58,6 +62,7 @@ final class FundingCaseFinishClearingHandler implements FundingCaseFinishClearin
     $this->actionsDeterminer = $actionsDeterminer;
     $this->drawdownManager = $drawdownManager;
     $this->fundingCaseManager = $fundingCaseManager;
+    $this->metaDataProvider = $metaDataProvider;
     $this->payoutProcessManager = $payoutProcessManager;
     $this->requestContext = $requestContext;
     $this->statusDeterminer = $statusDeterminer;
@@ -87,7 +92,9 @@ final class FundingCaseFinishClearingHandler implements FundingCaseFinishClearin
         'reviewer_contact_id' => NULL,
       ]);
       $this->drawdownManager->insert($drawdown);
-      $this->drawdownManager->accept($drawdown, $this->requestContext->getContactId());
+      if ($this->metaDataProvider->get($command->getFundingCaseType()->getName())->isFinalDrawdownAcceptedByDefault()) {
+        $this->drawdownManager->accept($drawdown, $this->requestContext->getContactId());
+      }
     }
 
     $this->payoutProcessManager->close($payoutProcess);

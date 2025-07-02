@@ -50,4 +50,12 @@ interface FundingCaseTypeMetaDataInterface {
    */
   public function getResourcesItemTypes(): array;
 
+  /**
+   * @return bool
+   *   TRUE if the final drawdown created on finish clearing (if amount paid out
+   *   and amount admitted aren't equal) shall be accepted by default. FALSE if
+   *   the final drawdown shall remain in status "new".
+   */
+  public function isFinalDrawdownAcceptedByDefault(): bool;
+
 }

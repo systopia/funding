@@ -104,4 +104,11 @@ final class HiHMetaData extends AbstractFundingCaseTypeMetaData {
     return [];
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function isFinalDrawdownAcceptedByDefault(): bool {
+    return FALSE;
+  }
+
 }
