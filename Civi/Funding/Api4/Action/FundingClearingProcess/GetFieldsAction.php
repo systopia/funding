@@ -94,7 +94,7 @@ final class GetFieldsAction extends DAOGetFieldsAction {
     $fields[] = [
       'name' => 'amount_recorded_costs',
       'title' => E::ts('Amount Recorded Costs'),
-      'description' => E::ts('The sum of the amounts recorded for costs that are not rejected.'),
+      'description' => E::ts('The sum of the amounts recorded for costs.'),
       'type' => 'Extra',
       'data_type' => 'Money',
       'readonly' => TRUE,
@@ -111,7 +111,7 @@ final class GetFieldsAction extends DAOGetFieldsAction {
     $fields[] = [
       'name' => 'amount_recorded_resources',
       'title' => E::ts('Amount Recorded Resources'),
-      'description' => E::ts('The sum of the amounts recorded for resources that are not rejected.'),
+      'description' => E::ts('The sum of the amounts recorded for resources.'),
       'type' => 'Extra',
       'data_type' => 'Money',
       'readonly' => TRUE,

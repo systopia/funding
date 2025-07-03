@@ -75,7 +75,7 @@ msgid "Withdrawable Funds"
 msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
-msgid "The difference between the amount approved and the amount paid out."
+msgid "The difference between the amount approved and the amount of accepted drawdowns."
 msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php managed/SavedSearch_funding_cases.mgd.php
@@ -255,11 +255,11 @@ msgid "Payback Claim Template"
 msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
-msgid "The sum of the amounts recorded for costs that are not rejected."
+msgid "The sum of the amounts recorded for costs."
 msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
-msgid "The sum of the amounts recorded for resources that are not rejected."
+msgid "The sum of the amounts recorded for resources."
 msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
