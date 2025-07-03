@@ -134,7 +134,9 @@ msgid "Amount Paid Out"
 msgstr "Ausbezahlter Betrag"
 
 #: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
-msgid "The sum of the amounts of accepted positive drawdowns."
+#: Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
+msgid "The sum of the amounts of accepted, positive drawdowns."
 msgstr "Die Summe der Beträge akzeptierter, positiver Mittelabrufe."
 
 #: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
@@ -144,9 +146,12 @@ msgid "Withdrawable Funds"
 msgstr "Abrufbare Mittel"
 
 #: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
-msgid "The difference between the amount approved and the amount paid out."
+msgid ""
+"The difference between the amount approved and the amount of accepted "
+"drawdowns."
 msgstr ""
-"Die Differenz zwischen dem bewilligten Betrag und dem ausbezahlten Betrag."
+"Die Differenz zwischen dem bewilligten Betrag und dem Betrag akzeptierter "
+"Mittelabrufe."
 
 #: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
 #: managed/SavedSearch_funding_cases.mgd.php
@@ -519,12 +524,12 @@ msgid "Payback Claim Template"
 msgstr "Vorlage für Rückzahlungsforderung"
 
 #: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
-msgid "The sum of the amounts recorded for costs that are not rejected."
-msgstr "Die Summe der für Kosten erfassten Beträge, die nicht abgelehnt sind."
+msgid "The sum of the amounts recorded for costs."
+msgstr "Die Summe der für Kosten erfassten Beträge."
 
 #: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
-msgid "The sum of the amounts recorded for resources that are not rejected."
-msgstr "Die Summe der für Mittel erfassten Beträge, die nicht abgelehnt sind."
+msgid "The sum of the amounts recorded for resources."
+msgstr "Die Summe der für Mittel erfassten Beträge."
 
 #: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
 msgid "The sum of the amounts admitted for costs."
@@ -539,12 +544,16 @@ msgid ""
 "The sum of the amounts recorded for costs minus the sum of the amounts "
 "recorded for resources."
 msgstr ""
+"Die Summe der für Kosten erfassten Beträge minus der Summe der für Mittel "
+"erfassten Beträge."
 
 #: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
 msgid ""
 "The sum of the amounts admitted for costs minus the sum of the amounts "
 "admitted for resources."
 msgstr ""
+"Die Summe der für Kosten anerkannten Beträge minus der Summe der für Mittel "
+"anerkannten Beträge."
 
 #: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php
@@ -572,11 +581,6 @@ msgstr "Der Betrag, wenn der Mittelabruf ungeprüft ist, sonst 0."
 #: Civi/Funding/Api4/Action/FundingDrawdown/RejectAction.php
 msgid "Permission to reject drawdown is missing."
 msgstr "Berechtigung zum Ablehnen des Mittelabrufs fehlt."
-
-#: Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php
-#: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
-msgid "The sum of the amounts of accepted, positive drawdowns."
-msgstr "Die Summe der Beträge akzeptierter, positiver Mittelabrufe."
 
 #: Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php
 msgid "The sum of the amounts of unverified drawdowns."
@@ -2622,3 +2626,14 @@ msgstr "Fall öffnen"
 #: managed/SavedSearch_funding_program_controlling.mgd.php
 msgid "Accepted Drawdowns"
 msgstr "Akzeptierte Mittelabrufe"
+
+#~ msgid "The sum of the amounts of accepted positive drawdowns."
+#~ msgstr "Die Summe der Beträge akzeptierter, positiver Mittelabrufe."
+
+#~ msgid "The sum of the amounts recorded for costs that are not rejected."
+#~ msgstr ""
+#~ "Die Summe der für Kosten erfassten Beträge, die nicht abgelehnt sind."
+
+#~ msgid "The sum of the amounts recorded for resources that are not rejected."
+#~ msgstr ""
+#~ "Die Summe der für Mittel erfassten Beträge, die nicht abgelehnt sind."
