@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
-use Civi\Api4\Generic\AbstractEntity;
+use Civi\Api4\Generic\DAOEntity;
 use Civi\Funding\Api4\Action\FundingTask\CreateAction;
 use Civi\Funding\Api4\Action\FundingTask\DeleteAction;
 use Civi\Funding\Api4\Action\FundingTask\GetAction;
@@ -27,30 +27,44 @@ use Civi\Funding\Api4\Action\FundingTask\GetFieldsAction;
 use Civi\Funding\Api4\Action\FundingTask\UpdateAction;
 use Civi\Funding\Api4\Traits\AccessROPermissionsTrait;
 
-final class FundingTask extends AbstractEntity {
+/**
+ * Note: This extends DAOEntity instead of AbstractEntity so joined fields can
+ * be used as filter in SearchKits. This is required because of this code:
+ * https://github.com/civicrm/civicrm-core/blob/4021860a8eb814236ead590a1d39b72bb3325d98/Civi/Api4/Generic/Traits/SavedSearchInspectorTrait.php#L152
+ */
+final class FundingTask extends DAOEntity {
 
   use AccessROPermissionsTrait;
 
-  public static function create(bool $checkPermissions = TRUE): CreateAction {
+  public static function autocomplete($checkPermissions = TRUE) {
+    throw new \BadMethodCallException('Not implemented');
+  }
+
+  public static function create($checkPermissions = TRUE): CreateAction {
     return (new CreateAction())->setCheckPermissions($checkPermissions);
   }
 
-  public static function delete(bool $checkPermissions = TRUE): DeleteAction {
+  public static function delete($checkPermissions = TRUE): DeleteAction {
     return (new DeleteAction())->setCheckPermissions($checkPermissions);
   }
 
-  /**
-   * @inheritDoc
-   */
-  public static function getFields() {
-    return new GetFieldsAction();
+  public static function getFields($checkPermissions = TRUE): GetFieldsAction {
+    return (new GetFieldsAction())->setCheckPermissions($checkPermissions);
   }
 
-  public static function get(bool $checkPermissions = TRUE): GetAction {
+  public static function get($checkPermissions = TRUE): GetAction {
     return (new GetAction())->setCheckPermissions($checkPermissions);
   }
 
-  public static function update(bool $checkPermissions = TRUE): UpdateAction {
+  public static function save($checkPermissions = TRUE) {
+    throw new \BadMethodCallException('Not implemented');
+  }
+
+  public static function replace($checkPermissions = TRUE) {
+    throw new \BadMethodCallException('Not implemented');
+  }
+
+  public static function update($checkPermissions = TRUE): UpdateAction {
     return (new UpdateAction())->setCheckPermissions($checkPermissions);
   }
 
