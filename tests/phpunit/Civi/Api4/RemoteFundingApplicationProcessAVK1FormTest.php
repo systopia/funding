@@ -96,6 +96,7 @@ final class RemoteFundingApplicationProcessAVK1FormTest extends AbstractRemoteFu
         'titel' => $this->applicationProcess->getTitle(),
         'kurzbeschreibungDesInhalts' => $this->applicationProcess->getShortDescription(),
         'foo' => 'bar',
+        'programmtage' => 0,
       ],
       $values['data']['grunddaten']
     );
