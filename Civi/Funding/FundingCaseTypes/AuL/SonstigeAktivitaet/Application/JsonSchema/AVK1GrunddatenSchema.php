@@ -21,6 +21,7 @@ namespace Civi\Funding\FundingCaseTypes\AuL\SonstigeAktivitaet\Application\JsonS
 
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
+use Civi\RemoteTools\JsonSchema\JsonSchemaCalculate;
 use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
 use Civi\RemoteTools\JsonSchema\JsonSchemaDate;
 use Civi\RemoteTools\JsonSchema\JsonSchemaInteger;
@@ -63,6 +64,20 @@ final class AVK1GrunddatenSchema extends JsonSchemaObject {
           'noIntersect' => JsonSchema::fromArray(['begin' => 'beginn', 'end' => 'ende']),
           '$order' => JsonSchema::fromArray(['beginn' => 'ASC']),
         ]
+      ),
+      'programmtage' => new JsonSchemaCalculate(
+        'number',
+        <<<'EOD'
+sum(
+  map(zeitraeume, "
+    value.beginn && value.ende
+    ? date_create(value.beginn).diff(date_create(value.ende)).days + 1
+    : 0
+  ")
+)
+EOD,
+        ['zeitraeume' => new JsonSchemaDataPointer('1/zeitraeume')],
+        0
       ),
       'teilnehmer' => new JsonSchemaObject([
         'gesamt' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 1]),

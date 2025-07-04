@@ -186,6 +186,9 @@ class AVK1JsonSchemaTest extends TestCase {
     static::assertCount(7, $result->getResourcesItemsData());
 
     $resultData = JsonConverter::toStdClass($result->getData());
+
+    static::assertSame(2, $resultData->grunddaten->programmtage);
+
     $unterkunftUndVerpflegung = 222.22;
     $honorar1 = round(11.1 * 22.22, 2);
     static::assertSame($honorar1, $resultData->kosten->honorare[0]->betrag);
