@@ -1,6 +1,8 @@
 <div af-fieldset="">
-  <af-field name="title" />
-  <af-field name="start_date" defn="{input_type: 'Select', search_range: true, input_attrs: {time: false}, default_date_type: 'fixed'}" />
-  <af-field name="end_date" defn="{input_type: 'Select', search_range: true, input_attrs: {time: false}, default_date_type: 'fixed'}" />
+  <div class="af-container af-layout-inline">
+    <af-field name="title" />
+    <af-field name="start_date" defn="{input_type: 'Select', search_range: true, input_attrs: {time: false}, default_date_type: 'fixed'}" />
+    <af-field name="end_date" defn="{input_type: 'Select', search_range: true, input_attrs: {time: false}, default_date_type: 'fixed'}" />
+  </div>
   <crm-search-display-table search-name="funding_programs" display-name="table" filters="{id: routeParams.id}"></crm-search-display-table>
 </div>
