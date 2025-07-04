@@ -31,14 +31,27 @@ use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
+use Webmozart\Assert\Assert;
 
 /**
+ * @method bool getIgnoreTaskPermissions()
+ * @method $this setIgnoreTaskPermissions(bool $ignoreTaskPermissions)
  * @method int|null getStatusType()
  * @method $this setStatusType(int $statusType)
  * @method bool|null getUseAssigneeFilter()
  * @method $this setAssigneeFilter(bool|null $assigneeFilter)
  */
 final class GetAction extends AbstractReferencingDAOGetAction {
+
+  /**
+   * @var bool
+   */
+  protected bool $ignoreTaskPermissions = FALSE;
+
+  /**
+   * @var int
+   */
+  protected ?int $statusType = NULL;
 
   /**
    * @var bool|null
@@ -49,11 +62,6 @@ final class GetAction extends AbstractReferencingDAOGetAction {
    * If NULL, assignee filter is used on remote requests.
    */
   protected ?bool $useAssigneeFilter = NULL;
-
-  /**
-   * @var int
-   */
-  protected ?int $statusType = NULL;
 
   public function __construct(
     ?Api4Interface $api4 = NULL,
@@ -73,6 +81,18 @@ final class GetAction extends AbstractReferencingDAOGetAction {
   public function setDefaultWhereClause(): void {
   // phpcs:enable
     $this->assertUseAssigneeFilter();
+
+    foreach ($this->where as $index => $clause) {
+      if ('ignore_task_permissions' === $clause[0]) {
+        Assert::same('=', $clause[1], 'Only "=" is allowed as operator for "ignore_task_permissions"');
+        $this->ignoreTaskPermissions = $clause[2];
+        unset($this->where[$index]);
+        $this->where = array_values($this->where);
+        break;
+      }
+    }
+
+    $this->assertIgnoreTaskPermissions();
 
     if ([] === $this->getWhere()) {
       // If there's no filter given we restrict access to incomplete tasks for
@@ -148,7 +168,7 @@ final class GetAction extends AbstractReferencingDAOGetAction {
       );
     }
 
-    if (!$this->ignoreCasePermissions) {
+    if (!$this->ignoreCasePermissions && !$this->ignoreTaskPermissions) {
       $this->addSelect(
         'funding_case_task.funding_case_id',
         'funding_case_task.required_permissions',
@@ -191,22 +211,33 @@ final class GetAction extends AbstractReferencingDAOGetAction {
     }
 
     parent::_run($result);
+
+    if (in_array('_ov.filter', $this->select, TRUE)) {
+      /** @phpstan-var array<string, mixed> $record */
+      foreach ($result as &$record) {
+        if (!array_key_exists('_ov.filter', $record)) {
+          continue;
+        }
+
+        if ($this->isFieldExplicitlySelected('status_type_id')) {
+          $record['status_type_id'] = $record['_ov.filter'];
+        }
+        if ($this->isFieldExplicitlySelected('status_type_id:name')) {
+          $record['status_type_id:name'] = $record['_ov.filter'];
+        }
+        if ($this->isFieldExplicitlySelected('status_type_id:label')) {
+          $this->entityFields();
+          $record['status_type_id:label'] = GetFieldsAction::getStatusTypeLabels()[$record['_ov.filter']]
+            ?? $record['_ov.filter'];
+        }
+        unset($record['_ov.filter']);
+      }
+    }
   }
 
   protected function handleRecord(array &$record): bool {
-    if (isset($record['_ov.filter'])) {
-      if ($this->isFieldExplicitlySelected('status_type_id')) {
-        $record['status_type_id'] = $record['_ov.filter'];
-      }
-      if ($this->isFieldExplicitlySelected('status_type_id:name')) {
-        $record['status_type_id:name'] = $record['_ov.filter'];
-      }
-      if ($this->isFieldExplicitlySelected('status_type_id:label')) {
-        $this->entityFields();
-        $record['status_type_id:label'] = GetFieldsAction::getStatusTypeLabels()[$record['_ov.filter']]
-          ?? $record['_ov.filter'];
-      }
-      unset($record['_ov.filter']);
+    if ($this->ignoreTaskPermissions) {
+      return TRUE;
     }
 
     $permissions = $record['_pc.permissions'];
@@ -231,6 +262,17 @@ final class GetAction extends AbstractReferencingDAOGetAction {
 
     return NULL === $requiredPermissions
      || [] !== array_intersect($fundingCase->getPermissions(), $requiredPermissions);
+  }
+
+  /**
+   * @throws \Civi\API\Exception\UnauthorizedException
+   */
+  private function assertIgnoreTaskPermissions(): void {
+    if (FALSE === $this->ignoreTaskPermissions &&
+      $this->getCheckPermissions() && $this->getRequestContext()->isRemote()
+    ) {
+      throw new UnauthorizedException('Ignoring task permissions is not allowed');
+    }
   }
 
   /**

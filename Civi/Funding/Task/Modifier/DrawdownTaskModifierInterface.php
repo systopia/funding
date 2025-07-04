@@ -23,7 +23,15 @@ use Civi\Funding\Entity\DrawdownEntity;
 use Civi\Funding\Entity\DrawdownBundle;
 use Civi\Funding\Entity\FundingTaskEntity;
 
+/**
+ * @phpstan-return \Civi\Funding\ActivityTypeNames::DRAWDOWN_TASK
+ */
 interface DrawdownTaskModifierInterface {
+
+  /**
+   * @phpstan-return \Civi\Funding\ActivityTypeNames::DRAWDOWN_TASK
+   */
+  public function getActivityTypeName(): string;
 
   public function modifyTask(
     FundingTaskEntity $task,

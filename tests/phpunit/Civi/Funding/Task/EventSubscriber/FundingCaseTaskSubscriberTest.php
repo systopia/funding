@@ -13,6 +13,7 @@ use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
 use Civi\Funding\Task\Creator\FundingCaseTaskCreatorInterface;
 use Civi\Funding\Task\FundingTaskManager;
 use Civi\Funding\Task\Modifier\FundingCaseTaskModifierInterface;
+use Civi\RemoteTools\Api4\Query\Comparison;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -51,6 +52,8 @@ final class FundingCaseTaskSubscriberTest extends TestCase {
       [FundingCaseTypeFactory::DEFAULT_NAME => [$this->taskCreatorMock]],
       [FundingCaseTypeFactory::DEFAULT_NAME => [$this->taskModifierMock]]
     );
+
+    $this->taskModifierMock->method('getActivityTypeName')->willReturn(ActivityTypeNames::FUNDING_CASE_TASK);
   }
 
   public function testGetSubscribedEvents(): void {
@@ -97,9 +100,10 @@ final class FundingCaseTaskSubscriberTest extends TestCase {
     $existingTask = FundingTaskFactory::create(['subject' => 'Existing Task']);
     $newTask = FundingTaskFactory::create(['subject' => 'New Task']);
 
-    $this->taskManagerMock->expects(static::once())->method('getOpenTasks')
-      ->with(ActivityTypeNames::FUNDING_CASE_TASK, $fundingCaseBundle->getFundingCase()->getId())
-      ->willReturn([$existingTask]);
+    $this->taskManagerMock->expects(static::once())->method('getOpenTasksBy')
+      ->with(ActivityTypeNames::FUNDING_CASE_TASK, Comparison::new(
+        'funding_case_task.funding_case_id', '=', $fundingCaseBundle->getFundingCase()->getId())
+      )->willReturn([$existingTask]);
     $this->taskModifierMock->expects(static::once())->method('modifyTask')
       ->with($existingTask, $fundingCaseBundle, $previousFundingCase)
       ->willReturn(TRUE);
@@ -122,11 +126,7 @@ final class FundingCaseTaskSubscriberTest extends TestCase {
 
     $existingTask = FundingTaskFactory::create(['subject' => 'Existing Task']);
 
-    $this->taskManagerMock->expects(static::once())->method('getOpenTasks')
-      ->with(ActivityTypeNames::FUNDING_CASE_TASK, $fundingCaseBundle->getFundingCase()->getId())
-      ->willReturn([$existingTask]);
-    $this->taskModifierMock->expects(static::never())->method('modifyTask');
-    $this->taskManagerMock->expects(static::never())->method('updateTask');
+    $this->taskManagerMock->expects(static::never())->method('getOpenTasksBy');
     $this->taskCreatorMock->expects(static::never())->method('createTasksOnChange');
 
     $this->subscriber->onUpdated($event);

@@ -25,7 +25,7 @@ use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingTaskEntity;
 use Civi\Funding\FundingCase\FundingCaseStatus;
 use Civi\Funding\FundingCase\Traits\FundingCaseFinishClearingTaskTrait;
-use Civi\Funding\Task\Modifier\FundingCaseTaskModifierInterface;
+use Civi\Funding\Task\Modifier\AbstractFundingCaseTaskModifier;
 
 /**
  * Completes a finish clearing funding case task.
@@ -33,7 +33,7 @@ use Civi\Funding\Task\Modifier\FundingCaseTaskModifierInterface;
  * Should be combined with:
  * @see \Civi\Funding\FundingCase\Task\AbstractFundingCaseFinishClearingTaskCreator
  */
-abstract class AbstractFundingCaseFinishClearingTaskModifier implements FundingCaseTaskModifierInterface {
+abstract class AbstractFundingCaseFinishClearingTaskModifier extends AbstractFundingCaseTaskModifier {
 
   use FundingCaseFinishClearingTaskTrait;
 

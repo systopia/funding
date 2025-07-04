@@ -32,6 +32,9 @@ use Civi\Funding\Task\Creator\FundingCaseTaskCreatorInterface;
  * Should be combined with:
  * @see \Civi\Funding\ClearingProcess\Task\AbstractClearingCreateTaskCreatorOnApplicationChange
  * @see \Civi\Funding\ClearingProcess\Task\AbstractClearingCreateTaskModifier
+ *
+ * Might be combined with:
+ * @see \Civi\Funding\ApplicationProcess\Task\AbstractClearingCreateTaskModifierOnApplicationProcessChange
  */
 abstract class AbstractClearingCreateTaskCreatorOnFundingCaseChange implements FundingCaseTaskCreatorInterface {
 

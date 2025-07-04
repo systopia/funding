@@ -38,7 +38,8 @@ final class AbstractClearingCreateTaskCreatorOnFundingCaseChangeTest extends Tes
     $this->taskCreator = $this->getMockForAbstractClass(AbstractClearingCreateTaskCreatorOnFundingCaseChange::class, [
       $this->applicationProcessManagerMock,
       $this->clearingProcessManagerMock,
-    ]);
+    ], mockedMethods: ['getDueDate']);
+    $this->taskCreator->method('getDueDate')->willReturn(new \DateTime('2000-01-02'));
   }
 
   public function testCreateTasksOnChangeApproved(): void {
@@ -73,6 +74,7 @@ final class AbstractClearingCreateTaskCreatorOnFundingCaseChangeTest extends Tes
         'funding_case_id' => $fundingCaseBundle->getFundingCase()->getId(),
         'application_process_id' => $eligibleApplicationProcess->getId(),
         'clearing_process_id' => $clearingProcess->getId(),
+        'due_date' => new \DateTime('2000-01-02'),
       ]),
     ], [...$this->taskCreator->createTasksOnChange($fundingCaseBundle, $previousFundingCase)]);
   }

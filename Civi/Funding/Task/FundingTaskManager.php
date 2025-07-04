@@ -23,6 +23,7 @@ use Civi\Api4\FundingTask;
 use Civi\Funding\ActivityStatusTypes;
 use Civi\Funding\Entity\FundingTaskEntity;
 use Civi\RemoteTools\Api4\Api4Interface;
+use Civi\RemoteTools\Api4\Query\ConditionInterface;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 
 /**
@@ -113,6 +114,30 @@ class FundingTaskManager {
       'where' => [
         ['activity_type_id:name', '=', $activityTypeName],
         ['source_record_id', '=', $entityId],
+      ],
+    ]);
+
+    // @phpstan-ignore return.type
+    return FundingTaskEntity::allFromApiResult($result);
+  }
+
+  /**
+   * Tasks are looked up independent of active contact's permissions.
+   *
+   * @phpstan-param taskNameT $activityTypeName
+   *
+   * @phpstan-return list<FundingTaskEntity>
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function getOpenTasksBy(string $activityTypeName, ConditionInterface $condition): array {
+    $result = $this->api4->execute(FundingTask::getEntityName(), 'get', [
+      'ignoreCasePermissions' => TRUE,
+      'useAssigneeFilter' => FALSE,
+      'statusType' => ActivityStatusTypes::INCOMPLETE,
+      'where' => [
+        ['activity_type_id:name', '=', $activityTypeName],
+        $condition->toArray(),
       ],
     ]);
 
