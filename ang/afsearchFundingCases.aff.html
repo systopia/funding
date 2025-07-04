@@ -1,7 +1,7 @@
 <div af-fieldset="">
   <div class="af-container af-layout-inline">
     <af-field name="identifier" defn="{required: false, input_attrs: {}}" />
-    <af-field name="status" defn="{input_attrs: {multiple: true}, required: false}" />
+    <af-field name="status" defn="{input_attrs: {multiple: true}, required: false, afform_default: ['open', 'ongoing', 'rejected', 'cleared']}" />
     <af-field name="funding_program_id" defn="{input_type: 'Select', input_attrs: {multiple: true}, required: false}" />
     <af-field name="recipient_contact_id" defn="{required: false, input_attrs: {}}" />
   </div>
