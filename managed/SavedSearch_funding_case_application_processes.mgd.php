@@ -1,28 +1,9 @@
 <?php
-/*
- * Copyright (C) 2023 SYSTOPIA GmbH
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as published by
- *  the Free Software Foundation in version 3.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Affero General Public License for more details.
- *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-declare(strict_types = 1);
-
 use CRM_Funding_ExtensionUtil as E;
 
-// phpcs:disable Generic.Files.LineLength.TooLong
 return [
   [
-    'name' => 'SavedSearch_FundingCaseApplicationProcesses',
+    'name' => 'SavedSearch_funding_case_application_processes',
     'entity' => 'SavedSearch',
     'cleanup' => 'always',
     'update' => 'unmodified',
@@ -38,6 +19,7 @@ return [
             'id',
             'identifier',
             'title',
+            'start_date',
             'status:label',
             'is_review_calculative',
             'is_review_content',
@@ -45,9 +27,9 @@ return [
             'modification_date',
             'funding_case_id',
             'FundingApplicationProcess_FundingCase_funding_case_id_01_FundingCase_FundingProgram_funding_program_id_01.title',
-            'FundingApplicationProcess_FundingCase_funding_case_id_01_FundingCase_FundingCaseType_funding_case_type_id_01.title',
             'FundingApplicationProcess_FundingCase_funding_case_id_01.recipient_contact_id.display_name',
             'FundingApplicationProcess_FundingClearingProcess_application_process_id_01.id',
+            'FundingApplicationProcess_FundingClearingProcess_application_process_id_01.status:label',
           ],
           'orderBy' => [],
           'where' => [],
@@ -72,15 +54,6 @@ return [
               ],
             ],
             [
-              'FundingCaseType AS FundingApplicationProcess_FundingCase_funding_case_id_01_FundingCase_FundingCaseType_funding_case_type_id_01',
-              'INNER',
-              [
-                'FundingApplicationProcess_FundingCase_funding_case_id_01.funding_case_type_id',
-                '=',
-                'FundingApplicationProcess_FundingCase_funding_case_id_01_FundingCase_FundingCaseType_funding_case_type_id_01.id',
-              ],
-            ],
-            [
               'FundingClearingProcess AS FundingApplicationProcess_FundingClearingProcess_application_process_id_01',
               'LEFT',
               [
@@ -99,7 +72,7 @@ return [
     ],
   ],
   [
-    'name' => 'SearchDisplay_FundingCaseApplicationProcesses.Table',
+    'name' => 'SavedSearch_funding_case_application_processes_SearchDisplay_table',
     'entity' => 'SearchDisplay',
     'cleanup' => 'always',
     'update' => 'unmodified',
@@ -151,6 +124,13 @@ return [
             ],
             [
               'type' => 'field',
+              'key' => 'start_date',
+              'dataType' => 'Timestamp',
+              'label' => E::ts('Start Date'),
+              'sortable' => TRUE,
+            ],
+            [
+              'type' => 'field',
               'key' => 'status:label',
               'dataType' => 'String',
               'label' => E::ts('Status'),
@@ -168,13 +148,6 @@ return [
               'key' => 'is_review_calculative',
               'dataType' => 'Boolean',
               'label' => E::ts('Calculative Review'),
-              'sortable' => TRUE,
-            ],
-            [
-              'type' => 'field',
-              'key' => 'FundingApplicationProcess_FundingCase_funding_case_id_01_FundingCase_FundingCaseType_funding_case_type_id_01.title',
-              'dataType' => 'String',
-              'label' => E::ts('Funding Case Type'),
               'sortable' => TRUE,
             ],
             [
@@ -222,8 +195,9 @@ return [
                   'text' => E::ts('Open clearing'),
                   'style' => 'default',
                   'condition' => [
-                    'FundingApplicationProcess_FundingClearingProcess_application_process_id_01.id',
-                    'IS NOT EMPTY',
+                    'FundingApplicationProcess_FundingClearingProcess_application_process_id_01.status:name',
+                    '!=',
+                    'not-started',
                   ],
                   'task' => '',
                   'entity' => '',
@@ -256,7 +230,9 @@ return [
           ],
           'actions' => [
             'civiofficeRender',
+            'download',
           ],
+          'actions_display_mode' => 'menu',
         ],
       ],
       'match' => [

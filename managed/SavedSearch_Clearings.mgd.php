@@ -1,9 +1,6 @@
 <?php
-declare(strict_types = 1);
-
 use CRM_Funding_ExtensionUtil as E;
 
-// phpcs:disable Generic.Files.LineLength.TooLong
 return [
   [
     'name' => 'SavedSearch_Clearings',
@@ -23,10 +20,10 @@ return [
             'FundingClearingProcess_FundingApplicationProcess_application_process_id_01.identifier',
             'application_process_id.title',
             'FundingClearingProcess_FundingApplicationProcess_application_process_id_01_FundingApplicationProcess_FundingCase_funding_case_id_01_FundingCase_FundingProgram_funding_program_id_01.title',
+            'start_date',
             'status:label',
             'is_review_calculative',
             'is_review_content',
-            'FundingClearingProcess_FundingApplicationProcess_application_process_id_01_FundingApplicationProcess_FundingCase_funding_case_id_01_FundingCase_FundingCaseType_funding_case_type_id_01.title',
             'amount_cleared',
             'amount_admitted',
             'creation_date',
@@ -62,15 +59,6 @@ return [
                 'FundingClearingProcess_FundingApplicationProcess_application_process_id_01_FundingApplicationProcess_FundingCase_funding_case_id_01.funding_program_id',
                 '=',
                 'FundingClearingProcess_FundingApplicationProcess_application_process_id_01_FundingApplicationProcess_FundingCase_funding_case_id_01_FundingCase_FundingProgram_funding_program_id_01.id',
-              ],
-            ],
-            [
-              'FundingCaseType AS FundingClearingProcess_FundingApplicationProcess_application_process_id_01_FundingApplicationProcess_FundingCase_funding_case_id_01_FundingCase_FundingCaseType_funding_case_type_id_01',
-              'INNER',
-              [
-                'FundingClearingProcess_FundingApplicationProcess_application_process_id_01_FundingApplicationProcess_FundingCase_funding_case_id_01.funding_case_type_id',
-                '=',
-                'FundingClearingProcess_FundingApplicationProcess_application_process_id_01_FundingApplicationProcess_FundingCase_funding_case_id_01_FundingCase_FundingCaseType_funding_case_type_id_01.id',
               ],
             ],
           ],
@@ -127,9 +115,14 @@ return [
               'dataType' => 'String',
               'label' => E::ts('Funding Program'),
               'sortable' => TRUE,
-              'tally' => [
-                'fn' => NULL,
-              ],
+            ],
+            [
+              'type' => 'field',
+              'key' => 'start_date',
+              'dataType' => 'Timestamp',
+              'label' => E::ts('Start Date'),
+              'sortable' => TRUE,
+              'format' => 'dateformatshortdate',
             ],
             [
               'type' => 'field',
@@ -156,16 +149,6 @@ return [
               'key' => 'is_review_content',
               'dataType' => 'Boolean',
               'label' => E::ts('Review Content'),
-              'sortable' => TRUE,
-              'tally' => [
-                'fn' => NULL,
-              ],
-            ],
-            [
-              'type' => 'field',
-              'key' => 'FundingClearingProcess_FundingApplicationProcess_application_process_id_01_FundingApplicationProcess_FundingCase_funding_case_id_01_FundingCase_FundingCaseType_funding_case_type_id_01.title',
-              'dataType' => 'String',
-              'label' => E::ts('Funding Case Type'),
               'sortable' => TRUE,
               'tally' => [
                 'fn' => NULL,
@@ -279,6 +262,7 @@ return [
           'tally' => [
             'label' => E::ts('Total'),
           ],
+          'actions_display_mode' => 'menu',
         ],
       ],
       'match' => [
