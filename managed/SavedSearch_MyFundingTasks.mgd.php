@@ -22,6 +22,8 @@ return [
             'funding_case_task.affected_identifier',
             'source_record_id',
             'activity_type_id:label',
+            'GROUP_CONCAT(DISTINCT FundingTask_FundingCase_funding_case_id_01_FundingCase_FundingProgram_funding_program_id_01.title) AS GROUP_CONCAT_FundingTask_FundingCase_funding_case_id_01_FundingCase_FundingProgram_funding_program_id_01_title',
+            'GROUP_CONCAT(DISTINCT FundingTask_FundingCase_funding_case_id_01.recipient_contact_id.display_name) AS GROUP_CONCAT_FundingTask_FundingCase_funding_case_id_01_recipient_contact_id_display_name',
           ],
           'orderBy' => [],
           'where' => [
@@ -45,8 +47,29 @@ return [
               '0',
             ],
           ],
-          'groupBy' => [],
-          'join' => [],
+          'groupBy' => [
+            'id',
+          ],
+          'join' => [
+            [
+              'FundingCase AS FundingTask_FundingCase_funding_case_id_01',
+              'INNER',
+              [
+                'funding_case_task.funding_case_id',
+                '=',
+                'FundingTask_FundingCase_funding_case_id_01.id',
+              ],
+            ],
+            [
+              'FundingProgram AS FundingTask_FundingCase_funding_case_id_01_FundingCase_FundingProgram_funding_program_id_01',
+              'LEFT',
+              [
+                'FundingTask_FundingCase_funding_case_id_01.funding_program_id',
+                '=',
+                'FundingTask_FundingCase_funding_case_id_01_FundingCase_FundingProgram_funding_program_id_01.id',
+              ],
+            ],
+          ],
           'having' => [],
         ],
       ],
@@ -94,6 +117,20 @@ return [
               'dataType' => 'String',
               'label' => E::ts('Affected Identifier'),
               'sortable' => FALSE,
+            ],
+            [
+              'type' => 'field',
+              'key' => 'FundingTask_FundingCase_funding_case_id_01_FundingCase_FundingProgram_funding_program_id_01.title',
+              'dataType' => 'String',
+              'label' => E::ts('Funding Program'),
+              'sortable' => TRUE,
+            ],
+            [
+              'type' => 'field',
+              'key' => 'FundingTask_FundingCase_funding_case_id_01.recipient_contact_id.display_name',
+              'dataType' => 'String',
+              'label' => E::ts('Recipient'),
+              'sortable' => TRUE,
             ],
             [
               'size' => 'btn-xs',
