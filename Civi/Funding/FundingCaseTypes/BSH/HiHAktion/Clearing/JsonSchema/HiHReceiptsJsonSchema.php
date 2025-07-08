@@ -30,11 +30,16 @@ final class HiHReceiptsJsonSchema extends JsonSchemaObject {
     ApplicationCostItemEntity $personalkostenBewilligt,
     ApplicationCostItemEntity $honorareBewilligt,
     ApplicationCostItemEntity $sachkostenBewilligt,
-    ClearingProcessEntityBundle $clearingProcessBundle
+    ClearingProcessEntityBundle $clearingProcessBundle,
+    float $amountDrawdownsAccepted
   ) {
     $properties = [
       'costItems' => new HiHClearingCostItemsJsonSchema(
-        $personalkostenBewilligt, $honorareBewilligt, $sachkostenBewilligt, $clearingProcessBundle
+        $personalkostenBewilligt,
+        $honorareBewilligt,
+        $sachkostenBewilligt,
+        $clearingProcessBundle,
+        $amountDrawdownsAccepted
       ),
     ];
 

@@ -20,8 +20,10 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Clearing\JsonSchema;
 
+use Civi\Funding\ClearingProcess\Traits\HasClearingReviewPermissionTrait;
 use Civi\Funding\Entity\ApplicationCostItemEntity;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
 use Civi\RemoteTools\JsonSchema\JsonSchemaCalculate;
 use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
@@ -34,11 +36,14 @@ use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
 
 final class HiHClearingCostItemsJsonSchema extends JsonSchemaObject {
 
+  use HasClearingReviewPermissionTrait;
+
   public function __construct(
     ApplicationCostItemEntity $personalkostenBewilligt,
     ApplicationCostItemEntity $honorareBewilligt,
     ApplicationCostItemEntity $sachkostenBewilligt,
     ClearingProcessEntityBundle $clearingProcessBundle,
+    float $amountDrawdownsAccepted
   ) {
     $sachkostenKeys = [
       'materialien',
@@ -50,6 +55,9 @@ final class HiHClearingCostItemsJsonSchema extends JsonSchemaObject {
       'mieten',
     ];
 
+    $hasReviewPermission = $this->hasReviewCalculativePermission(
+      $clearingProcessBundle->getFundingCase()->getPermissions()
+    );
     $sachkostenRecords = [];
     foreach ($sachkostenKeys as $sachkostenKey) {
       $sachkostenRecords[$sachkostenKey] = new JsonSchemaObject([
@@ -60,9 +68,10 @@ final class HiHClearingCostItemsJsonSchema extends JsonSchemaObject {
           'default' => $sachkostenBewilligt->getId(),
         ]),
         'amount' => new JsonSchemaMoney(['default' => 0]),
-        'amountAdmitted' => new JsonSchemaCalculate('number', 'amount', [
-          'amount' => new JsonSchemaDataPointer('1/amount'),
-        ]),
+        'amountAdmitted' => new JsonSchemaMoney([
+          'readOnly' => !$hasReviewPermission,
+          'default' => $hasReviewPermission ? new JsonSchemaDataPointer('1/amount') : NULL,
+        ], TRUE),
       ], ['required' => ['_financePlanItemId', 'amount']]);
     }
 
@@ -85,9 +94,10 @@ final class HiHClearingCostItemsJsonSchema extends JsonSchemaObject {
             'monatlichesArbeitgeberbrutto' => new JsonSchemaDataPointer('1/properties/monatlichesArbeitgeberbrutto'),
             'monate' => new JsonSchemaDataPointer('1/properties/monate'),
           ]),
-          'amountAdmitted' => new JsonSchemaCalculate('number', 'amount', [
-            'amount' => new JsonSchemaDataPointer('1/amount'),
-          ]),
+          'amountAdmitted' => new JsonSchemaMoney([
+            'readOnly' => !$hasReviewPermission,
+            'default' => $hasReviewPermission ? new JsonSchemaDataPointer('1/amount') : NULL,
+          ], TRUE),
         ], ['required' => ['amount', 'properties']])),
         'amountRecordedTotal' => new JsonSchemaCalculate(
           'number',
@@ -121,9 +131,10 @@ final class HiHClearingCostItemsJsonSchema extends JsonSchemaObject {
             'dauer' => new JsonSchemaDataPointer('1/properties/dauer'),
             'verguetung' => new JsonSchemaDataPointer('1/properties/verguetung'),
           ]),
-          'amountAdmitted' => new JsonSchemaCalculate('number', 'amount', [
-            'amount' => new JsonSchemaDataPointer('1/amount'),
-          ]),
+          'amountAdmitted' => new JsonSchemaMoney([
+            'readOnly' => !$hasReviewPermission,
+            'default' => $hasReviewPermission ? new JsonSchemaDataPointer('1/amount') : NULL,
+          ], TRUE),
         ], ['required' => ['amount', 'properties']])),
         'amountRecordedTotal' => new JsonSchemaCalculate(
           'number',
@@ -155,9 +166,10 @@ final class HiHClearingCostItemsJsonSchema extends JsonSchemaObject {
             'bezeichnung' => new JsonSchemaString(['maxLength' => 255]),
           ], ['required' => ['bezeichnung']]),
           'amount' => new JsonSchemaMoney(),
-          'amountAdmitted' => new JsonSchemaCalculate('number', 'amount', [
-            'amount' => new JsonSchemaDataPointer('1/amount'),
-          ]),
+          'amountAdmitted' => new JsonSchemaMoney([
+            'readOnly' => !$hasReviewPermission,
+            'default' => $hasReviewPermission ? new JsonSchemaDataPointer('1/amount') : NULL,
+          ], TRUE),
         ], ['required' => ['_financePlanItemId', 'amount', 'properties']])),
         'amountRecordedTotal' => new JsonSchemaCalculate(
           'number',
@@ -185,14 +197,24 @@ final class HiHClearingCostItemsJsonSchema extends JsonSchemaObject {
           'personalkostenAmount' => new JsonSchemaDataPointer('1/personalkosten/amountRecordedTotal', 0),
           'honorareAmount' => new JsonSchemaDataPointer('1/honorare/amountRecordedTotal', 0),
           'sachkostenAmount' => new JsonSchemaDataPointer('1/sachkostenAmountRecordedTotal'),
+        ],
+        NULL,
+        [
+          '$validations' => JsonSchema::convertToJsonSchemaArray([
+            [
+              'keyword' => 'maximum',
+              'value' => $clearingProcessBundle->getFundingCase()->getAmountApproved(),
+              'message' => 'Der bewilligte Betrag darf nicht überschritten werden.',
+            ],
+          ]),
         ]
       ),
 
       'restmittel' => new JsonSchemaCalculate(
         'number',
-        'round(bewilligt - ausgaben, 2)',
+        'round(mittelabrufe - ausgaben, 2)',
         [
-          'bewilligt' => $clearingProcessBundle->getFundingCase()->getAmountApproved(),
+          'mittelabrufe' => $amountDrawdownsAccepted,
           'ausgaben' => new JsonSchemaDataPointer('1/ausgaben'),
         ]
       ),
