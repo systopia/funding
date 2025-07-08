@@ -113,9 +113,9 @@ final class HiHReportDataJsonSchema extends JsonSchemaObject {
 
         'datenschutzbestimmungen' => new JsonSchemaBoolean(['const' => TRUE, 'default' => FALSE]),
 
-        'personalkostenKommentar' => new JsonSchemaString(['minLength' => 1]),
-        'honorareKommentar' => new JsonSchemaString(['minLength' => 1]),
-        'sachkostenKommentar' => new JsonSchemaString(['minLength' => 1]),
+        'personalkostenKommentar' => new JsonSchemaString(),
+        'honorareKommentar' => new JsonSchemaString(),
+        'sachkostenKommentar' => new JsonSchemaString(),
       ], [
         'required' => [
           'ansprechperson',
@@ -130,9 +130,6 @@ final class HiHReportDataJsonSchema extends JsonSchemaObject {
           'doppelfinanzierungAusgeschlossen',
           'verantwortlichePerson',
           'datenschutzbestimmungen',
-          'personalkostenKommentar',
-          'honorareKommentar',
-          'sachkostenKommentar',
         ],
         '$limitValidation' => JsonSchema::fromArray([
           'condition' => [

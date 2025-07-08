@@ -20,6 +20,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Clearing\UiSchema;
 
+use Civi\Funding\ClearingProcess\Traits\HasClearingReviewPermissionTrait;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\RemoteTools\JsonForms\Control\JsonFormsArray;
 use Civi\RemoteTools\JsonForms\Control\JsonFormsHidden;
@@ -35,6 +36,8 @@ use Civi\RemoteTools\JsonForms\Layout\JsonFormsTableRow;
  *   Mapping of cost item types to cost items indexed by identifier.
  */
 final class HiHReceiptsUiSchema extends JsonFormsGroup {
+
+  use HasClearingReviewPermissionTrait;
 
   /**
    * @phpstan-param applicationCostItemsByTypeT $applicationCostItemsByType
@@ -66,7 +69,7 @@ final class HiHReceiptsUiSchema extends JsonFormsGroup {
           "$costItemsScopePrefix/personalkosten/properties/records",
           '',
           NULL,
-          [
+          $this->addAmountAdmittedField([
             new JsonFormsHidden('#/properties/_id', ['internal' => TRUE]),
             new JsonFormsControl('#/properties/properties/properties/posten', 'Posten'),
             new JsonFormsControl('#/properties/properties/properties/wochenstunden', 'Wochenstunden'),
@@ -76,7 +79,7 @@ final class HiHReceiptsUiSchema extends JsonFormsGroup {
             ),
             new JsonFormsControl('#/properties/properties/properties/monate', 'Monate'),
             new JsonFormsControl('#/properties/amount', "Summe in $currency"),
-          ],
+          ], '#/properties', $clearingProcessBundle),
           [
             'addButtonLabel' => 'Personalkosten hinzufügen',
             'removeButtonLabel' => 'Entfernen',
@@ -107,7 +110,7 @@ final class HiHReceiptsUiSchema extends JsonFormsGroup {
           "$costItemsScopePrefix/honorare/properties/records",
           '',
           NULL,
-          [
+          $this->addAmountAdmittedField([
             new JsonFormsHidden('#/properties/_id', ['internal' => TRUE]),
             new JsonFormsControl('#/properties/properties/properties/posten', 'Posten'),
             new JsonFormsControl('#/properties/properties/properties/berechnungsgrundlage', 'Berechnungsgrundlage'),
@@ -117,7 +120,7 @@ final class HiHReceiptsUiSchema extends JsonFormsGroup {
             ),
             new JsonFormsControl('#/properties/properties/properties/dauer', 'Dauer'),
             new JsonFormsControl('#/properties/amount', "Summe in $currency"),
-          ],
+          ], '#/properties', $clearingProcessBundle),
           [
             'addButtonLabel' => 'Honorar hinzufügen',
             'removeButtonLabel' => 'Entfernen',
@@ -144,63 +147,77 @@ final class HiHReceiptsUiSchema extends JsonFormsGroup {
           ]),
         ]),
         new JsonFormsHidden("$sachkostenScopePrefix/materialien/properties/_id", ['internal' => TRUE]),
-        new JsonFormsControl(
-          "$sachkostenScopePrefix/materialien/properties/amount",
-          "Projektbezogene Materialien in $currency",
-          'z.B. für Veranstaltungen, Workshops, Verbrauchsmaterial',
-          ['descriptionDisplay' => 'before']
-        ),
+        ...$this->addAmountAdmittedField([
+          new JsonFormsControl(
+            "$sachkostenScopePrefix/materialien/properties/amount",
+            "Projektbezogene Materialien in $currency",
+            'z.B. für Veranstaltungen, Workshops, Verbrauchsmaterial',
+            ['descriptionDisplay' => 'before']
+          ),
+        ], "$sachkostenScopePrefix/materialien/properties", $clearingProcessBundle),
         new JsonFormsHidden("$sachkostenScopePrefix/ehrenamtspauschalen/properties/_id", ['internal' => TRUE]),
-        new JsonFormsControl(
-          "$sachkostenScopePrefix/ehrenamtspauschalen/properties/amount",
-          "Ehrenamts-/Übungsleiterpauschalen in $currency",
-          NULL,
-          ['descriptionDisplay' => 'before']
-        ),
+        ...$this->addAmountAdmittedField([
+          new JsonFormsControl(
+            "$sachkostenScopePrefix/ehrenamtspauschalen/properties/amount",
+            "Ehrenamts-/Übungsleiterpauschalen in $currency",
+            NULL,
+            ['descriptionDisplay' => 'before']
+          ),
+        ], "$sachkostenScopePrefix/ehrenamtspauschalen/properties", $clearingProcessBundle),
         new JsonFormsHidden("$sachkostenScopePrefix/verpflegung/properties/_id", ['internal' => TRUE]),
-        new JsonFormsControl(
-          "$sachkostenScopePrefix/verpflegung/properties/amount",
-          "Verpflegung/Catering in $currency",
-          'z.B. für Teilnehmer:innen von Angeboten',
-          ['descriptionDisplay' => 'before']
-        ),
+        ...$this->addAmountAdmittedField([
+          new JsonFormsControl(
+            "$sachkostenScopePrefix/verpflegung/properties/amount",
+            "Verpflegung/Catering in $currency",
+            'z.B. für Teilnehmer:innen von Angeboten',
+            ['descriptionDisplay' => 'before']
+          ),
+        ], "$sachkostenScopePrefix/verpflegung/properties", $clearingProcessBundle),
         new JsonFormsHidden("$sachkostenScopePrefix/fahrtkosten/properties/_id", ['internal' => TRUE]),
-        new JsonFormsControl(
-          "$sachkostenScopePrefix/fahrtkosten/properties/amount",
-          "Fahrtkosten in $currency",
-          'z.B. für Ausflüge',
-          ['descriptionDisplay' => 'before']
-        ),
+        ...$this->addAmountAdmittedField([
+          new JsonFormsControl(
+            "$sachkostenScopePrefix/fahrtkosten/properties/amount",
+            "Fahrtkosten in $currency",
+            'z.B. für Ausflüge',
+            ['descriptionDisplay' => 'before']
+          ),
+        ], "$sachkostenScopePrefix/fahrtkosten/properties", $clearingProcessBundle),
         new JsonFormsHidden("$sachkostenScopePrefix/oeffentlichkeitsarbeit/properties/_id", ['internal' => TRUE]),
-        new JsonFormsControl(
-          "$sachkostenScopePrefix/oeffentlichkeitsarbeit/properties/amount",
-          "Projektbezogene Öffentlichkeitsarbeit in $currency",
-          'z.B. Druckkosten, Anzeigen, Gimmicks, RollUps',
-          ['descriptionDisplay' => 'before']
-        ),
+        ...$this->addAmountAdmittedField([
+          new JsonFormsControl(
+            "$sachkostenScopePrefix/oeffentlichkeitsarbeit/properties/amount",
+            "Projektbezogene Öffentlichkeitsarbeit in $currency",
+            'z.B. Druckkosten, Anzeigen, Gimmicks, RollUps',
+            ['descriptionDisplay' => 'before']
+          ),
+        ], "$sachkostenScopePrefix/oeffentlichkeitsarbeit/properties", $clearingProcessBundle),
         new JsonFormsHidden("$sachkostenScopePrefix/investitionen/properties/_id", ['internal' => TRUE]),
-        new JsonFormsControl(
-          "$sachkostenScopePrefix/investitionen/properties/amount",
-          "Projektbezogene Investitionen in $currency",
-          'z.B. Möbel, Laptop, Software, Fahrradrikscha',
-          ['descriptionDisplay' => 'before']
-        ),
+        ...$this->addAmountAdmittedField([
+          new JsonFormsControl(
+            "$sachkostenScopePrefix/investitionen/properties/amount",
+            "Projektbezogene Investitionen in $currency",
+            'z.B. Möbel, Laptop, Software, Fahrradrikscha',
+            ['descriptionDisplay' => 'before']
+          ),
+        ], "$sachkostenScopePrefix/investitionen/properties", $clearingProcessBundle),
         new JsonFormsHidden("$sachkostenScopePrefix/mieten/properties/_id", ['internal' => TRUE]),
-        new JsonFormsControl(
-          "$sachkostenScopePrefix/mieten/properties/amount",
-          "Projektbezogene Mieten in $currency",
-          'z.B. für Veranstaltungen',
-          ['descriptionDisplay' => 'before']
-        ),
+        ...$this->addAmountAdmittedField([
+          new JsonFormsControl(
+            "$sachkostenScopePrefix/mieten/properties/amount",
+            "Projektbezogene Mieten in $currency",
+            'z.B. für Veranstaltungen',
+            ['descriptionDisplay' => 'before']
+          ),
+        ], "$sachkostenScopePrefix/mieten/properties", $clearingProcessBundle),
         new JsonFormsArray(
           "$costItemsScopePrefix/sachkostenSonstige/properties/records",
           'Sonstige projektbezogene Sachkosten',
           'z.B. Eintrittsgelder für den Besuch von Veranstaltungen, Telefonkosten, Bürobedarf oder IT-Support',
-          [
+          $this->addAmountAdmittedField([
             new JsonFormsHidden('#/properties/_id', ['internal' => TRUE]),
             new JsonFormsControl('#/properties/properties/properties/bezeichnung', 'Bezeichnung'),
             new JsonFormsControl('#/properties/amount', "Summe in $currency"),
-          ],
+          ], '#/properties', $clearingProcessBundle),
           [
             'addButtonLabel' => 'Sonstige hinzufügen',
             'removeButtonLabel' => 'Entfernen',
@@ -244,6 +261,21 @@ final class HiHReceiptsUiSchema extends JsonFormsGroup {
     }
 
     return $sum;
+  }
+
+  private function addAmountAdmittedField(
+    array $fields,
+    string $scopePrefix,
+    ClearingProcessEntityBundle $clearingProcessBundle
+  ): array {
+    if ($this->hasReviewCalculativePermission($clearingProcessBundle->getFundingCase()->getPermissions())) {
+      $fields[] = new JsonFormsControl(
+        "$scopePrefix/amountAdmitted",
+        'Anerkannter Betrag in ' . $clearingProcessBundle->getFundingProgram()->getCurrency()
+      );
+    }
+
+    return $fields;
   }
 
 }

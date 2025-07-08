@@ -20,6 +20,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Clearing;
 
+use Assert\Assertion;
 use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
 use Civi\Funding\ClearingProcess\Form\ReceiptsFormGeneratorInterface;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
@@ -28,6 +29,7 @@ use Civi\Funding\Form\JsonFormsFormInterface;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Clearing\JsonSchema\HiHReceiptsJsonSchema;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Clearing\UiSchema\HiHReceiptsUiSchema;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Traits\HiHSupportedFundingCaseTypesTrait;
+use Civi\Funding\PayoutProcess\PayoutProcessManager;
 
 final class HiHClearingReceiptsFormGenerator implements ReceiptsFormGeneratorInterface {
 
@@ -35,8 +37,14 @@ final class HiHClearingReceiptsFormGenerator implements ReceiptsFormGeneratorInt
 
   private ApplicationCostItemManager $applicationCostItemManager;
 
-  public function __construct(ApplicationCostItemManager $applicationCostItemManager) {
+  private PayoutProcessManager $payoutProcessManager;
+
+  public function __construct(
+    ApplicationCostItemManager $applicationCostItemManager,
+    PayoutProcessManager $payoutProcessManager
+  ) {
     $this->applicationCostItemManager = $applicationCostItemManager;
+    $this->payoutProcessManager = $payoutProcessManager;
   }
 
   /**
@@ -53,12 +61,18 @@ final class HiHClearingReceiptsFormGenerator implements ReceiptsFormGeneratorInt
       $applicationCostItemsByType[$type][$applicationCostItem->getIdentifier()] = $applicationCostItem;
     }
 
+    $payoutProcess = $this->payoutProcessManager->getLastByFundingCaseId(
+      $clearingProcessBundle->getFundingCase()->getId()
+    );
+    Assertion::notNull($payoutProcess);
+
     return new JsonFormsForm(
       new HiHReceiptsJsonSchema(
         $applicationCostItemsByType['bewilligt']['personalkostenBewilligt'],
         $applicationCostItemsByType['bewilligt']['honorareBewilligt'],
         $applicationCostItemsByType['bewilligt']['sachkostenBewilligt'],
-        $clearingProcessBundle
+        $clearingProcessBundle,
+        $this->payoutProcessManager->getAmountAccepted($payoutProcess)
       ),
       new HiHReceiptsUiSchema(
         $applicationCostItemsByType,
