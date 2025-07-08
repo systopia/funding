@@ -242,7 +242,8 @@ fundingModule.directive('editableField', ['$filter', function($filter) {
       editElement.attr('ng-show', '$ctrl.editAllowed');
       editElement.attr('editable-' + attrs.type, attrs.value);
       editElement.attr('e-name', attrs.path);
-      editElement.attr('e-form', '{{$ctrl.formName}}');
+      // Setting e-form to null if edit isn't allowed prevents a form field shown in editable table rows.
+      editElement.attr('e-form', '{{$ctrl.editAllowed ? $ctrl.formName : null}}');
       editElement.attr('onshow', 'onStartEdit(this)');
       editElement.attr('onbeforesave', 'onBeforeSave(this)');
       editElement.attr('onaftersave', 'onAfterSave(this)');
