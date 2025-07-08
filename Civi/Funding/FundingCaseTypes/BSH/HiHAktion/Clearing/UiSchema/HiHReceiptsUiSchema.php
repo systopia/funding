@@ -263,6 +263,11 @@ final class HiHReceiptsUiSchema extends JsonFormsGroup {
     return $sum;
   }
 
+  /**
+   * @phpstan-param list<JsonFormsControl> $fields
+   *
+   * @phpstan-return list<JsonFormsControl>
+   */
   private function addAmountAdmittedField(
     array $fields,
     string $scopePrefix,
