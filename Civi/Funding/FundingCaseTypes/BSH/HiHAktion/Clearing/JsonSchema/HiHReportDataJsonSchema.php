@@ -49,7 +49,7 @@ final class HiHReportDataJsonSchema extends JsonSchemaObject {
           'telefonnummer' => new JsonSchemaString(['minLength' => 1, 'maxLength' => 255]),
         ], ['required' => ['name', 'vorname', 'email', 'telefonnummer']]),
 
-        'umsetzung' => new JsonSchemaString(['minLength' => 2500, 'maxLength' => 3000]),
+        'umsetzung' => new JsonSchemaString(['maxLength' => 3000]),
         'zieleErreicht' => new JsonSchemaBoolean(),
         'probleme' => new JsonSchemaString([
           'default' => '',
