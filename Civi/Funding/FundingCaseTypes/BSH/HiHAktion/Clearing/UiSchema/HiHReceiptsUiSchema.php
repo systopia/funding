@@ -182,15 +182,6 @@ final class HiHReceiptsUiSchema extends JsonFormsGroup {
             ['descriptionDisplay' => 'before']
           ),
         ], "$sachkostenScopePrefix/fahrtkosten/properties", $clearingProcessBundle),
-        new JsonFormsHidden("$sachkostenScopePrefix/oeffentlichkeitsarbeit/properties/_id", ['internal' => TRUE]),
-        ...$this->addAmountAdmittedField([
-          new JsonFormsControl(
-            "$sachkostenScopePrefix/oeffentlichkeitsarbeit/properties/amount",
-            "Projektbezogene Öffentlichkeitsarbeit in $currency",
-            'z.B. Druckkosten, Anzeigen, Gimmicks, RollUps',
-            ['descriptionDisplay' => 'before']
-          ),
-        ], "$sachkostenScopePrefix/oeffentlichkeitsarbeit/properties", $clearingProcessBundle),
         new JsonFormsHidden("$sachkostenScopePrefix/investitionen/properties/_id", ['internal' => TRUE]),
         ...$this->addAmountAdmittedField([
           new JsonFormsControl(

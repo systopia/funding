@@ -50,7 +50,6 @@ final class HiHClearingCostItemsJsonSchema extends JsonSchemaObject {
       'ehrenamtspauschalen',
       'verpflegung',
       'fahrtkosten',
-      'oeffentlichkeitsarbeit',
       'investitionen',
       'mieten',
     ];
