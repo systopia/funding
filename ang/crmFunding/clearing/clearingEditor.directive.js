@@ -100,7 +100,7 @@ fundingModule.directive('fundingClearingEditor', [function() {
         };
 
         function reloadClearingProcess() {
-          return fundingClearingProcessService.get($scope.clearingProcess.id).then(
+          return fundingClearingProcessService.get($scope.clearingProcess.id, ['amount_cleared', 'currency']).then(
               (clearingProcess) => $scope.clearingProcess = clearingProcess
           );
         }
