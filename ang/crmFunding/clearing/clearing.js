@@ -23,7 +23,7 @@ fundingModule.config(['$routeProvider', function($routeProvider) {
       templateUrl: '~/crmFunding/clearing/clearing.template.html',
       resolve: {
         clearingProcess: ['$route', 'fundingClearingProcessService', function($route, fundingClearingProcessService) {
-          return fundingClearingProcessService.get($route.current.params.clearingProcessId);
+          return fundingClearingProcessService.get($route.current.params.clearingProcessId, ['amount_cleared', 'currency']);
         }],
         form: ['$route', 'fundingClearingProcessService', function($route, fundingClearingProcessService) {
           return fundingClearingProcessService.getForm($route.current.params.clearingProcessId);

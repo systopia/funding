@@ -64,7 +64,13 @@ fundingModule.factory('fundingClearingProcessService', ['crmApi4', function(crmA
      */
     applyActionMultiple: (ids, action) => crmApi4('FundingClearingProcess', 'applyActionMultiple', {ids, action}),
 
-    get: (id) => crmApi4('FundingClearingProcess', 'get', {
+    /**
+     * @param {int} id
+     * @param {string[]} extraFields
+     * @returns {Promise}
+     */
+    get: (id, extraFields = ['*']) => crmApi4('FundingClearingProcess', 'get', {
+      select: ['*'].concat(extraFields),
       where: [['id', '=', id]],
     }).then(function (result) {
       return result[0] || null;
