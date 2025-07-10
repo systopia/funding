@@ -24,13 +24,13 @@ use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
 
 final class KursBeschreibungUiSchema extends JsonFormsCategory {
 
-  public function __construct() {
+  public function __construct(string $scopePrefix) {
     parent::__construct('Beschreibung des Vorhabens', [
       new JsonFormsControl(
-        '#/properties/beschreibung/properties/ziele', 'Welche Ziele hat die Veranstaltung? (Mehrfachauswahl möglich)'
+        "$scopePrefix/ziele", 'Welche Ziele hat die Veranstaltung? (Mehrfachauswahl möglich)'
       ),
       new JsonFormsControl(
-        '#/properties/beschreibung/properties/bildungsanteil',
+        "$scopePrefix/bildungsanteil",
         'Wie hoch ist der Bildungsanteil des Vorhabens in %?',
         <<<'EOD'
 Der KJP fördert nur Seminare mit <strong>überwiegendem</strong> Lehr- und
@@ -39,10 +39,10 @@ Fortbildungscharakter. Nicht förderbar sind beispielsweise Projekte, die
 EOD
       ),
       new JsonFormsControl(
-        '#/properties/beschreibung/properties/veranstaltungsort', 'Wo findet die Veranstaltung statt?'
+        "$scopePrefix/veranstaltungsort", 'Wo findet die Veranstaltung statt?'
       ),
       new JsonFormsControl(
-        '#/properties/beschreibung/properties/kooperationspartner', 'Kooperationspartner'
+        "$scopePrefix/kooperationspartner", 'Kooperationspartner'
       ),
     ]);
   }

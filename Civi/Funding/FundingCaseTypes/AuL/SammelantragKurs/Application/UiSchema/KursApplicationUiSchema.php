@@ -30,7 +30,7 @@ final class KursApplicationUiSchema extends JsonFormsGroup {
         new KursGrunddatenUiSchema('#/properties/grunddaten/properties'),
         new KursFinanzierungUiSchema('#/properties/finanzierung/properties', $currency),
         new KursZuschussUiSchema($currency),
-        new KursBeschreibungUiSchema(),
+        new KursBeschreibungUiSchema('#/properties/beschreibung/properties'),
       ]),
     ];
     parent::__construct($title, $elements);

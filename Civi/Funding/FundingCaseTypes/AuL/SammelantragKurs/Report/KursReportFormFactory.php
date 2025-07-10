@@ -23,8 +23,10 @@ use Civi\Funding\ClearingProcess\Form\ReportForm;
 use Civi\Funding\ClearingProcess\Form\ReportFormFactoryInterface;
 use Civi\Funding\ClearingProcess\Form\ReportFormInterface;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
+use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Application\JsonSchema\KursBeschreibungJsonSchema;
 use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Application\JsonSchema\KursGrunddatenJsonSchema;
 use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Application\JsonSchema\KursZuschussJsonSchema;
+use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Application\UiSchema\KursBeschreibungUiSchema;
 use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Application\UiSchema\KursGrunddatenUiSchema;
 use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Report\JsonSchema\KursDokumenteJsonSchema;
 use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Report\JsonSchema\KursFoerderungJsonSchema;
@@ -59,6 +61,8 @@ final class KursReportFormFactory implements ReportFormFactoryInterface {
       ARRAY_FILTER_USE_KEY
     ));
 
+    $beschreibungJsonSchema = new KursBeschreibungJsonSchema();
+
     $dokumenteJsonSchema = new KursDokumenteJsonSchema();
     $foerderungJsonSchema = new KursFoerderungJsonSchema();
 
@@ -66,6 +70,7 @@ final class KursReportFormFactory implements ReportFormFactoryInterface {
       'reportData' => new JsonSchemaObject([
         'grunddaten' => $grunddatenJsonSchema,
         'zuschuss' => $zuschussJsonSchema,
+        'beschreibung' => $beschreibungJsonSchema,
         'dokumente' => $dokumenteJsonSchema,
         'foerderung' => $foerderungJsonSchema,
       ]),
@@ -79,16 +84,18 @@ final class KursReportFormFactory implements ReportFormFactoryInterface {
         'reportData' => new JsonSchemaObject([
           'grunddaten' => $grunddatenJsonSchema->withAllFieldsRequired(),
           'zuschuss' => $zuschussJsonSchema,
+          'beschreibung' => $beschreibungJsonSchema,
           'dokumente' => $dokumenteJsonSchema,
           'foerderung' => $foerderungJsonSchema->withAllFieldsRequired(),
         ],
-        ['required' => ['grunddaten', 'zuschuss', 'dokumente', 'foerderung']]),
+        ['required' => ['grunddaten', 'zuschuss', 'beschreibung', 'dokumente', 'foerderung']]),
       ]),
     ]);
 
     $uiSchema = new JsonFormsCategorization([
       (new KursGrunddatenUiSchema('#/properties/reportData/properties/grunddaten/properties', TRUE))
         ->withRequiredLabels($grunddatenJsonSchema),
+      new KursBeschreibungUiSchema('#/properties/reportData/properties/beschreibung/properties'),
       new KursDokumenteCategory('#/properties/reportData/properties/dokumente/properties'),
     ]);
 

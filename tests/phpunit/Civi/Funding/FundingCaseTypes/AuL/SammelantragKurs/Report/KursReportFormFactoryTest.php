@@ -125,6 +125,16 @@ final class KursReportFormFactoryTest extends TestCase {
       ],
     ];
 
+    $beschreibung = (object) [
+      'ziele' => [
+        'persoenlichkeitsbildung',
+        'internationaleBegegnungen',
+      ],
+      'bildungsanteil' => 22,
+      'veranstaltungsort' => 'Veranstaltungsort',
+      'kooperationspartner' => 'Kooperationspartner',
+    ];
+
     $dokumente = (object) [
       'dateien' => [
         (object) [
@@ -144,6 +154,7 @@ final class KursReportFormFactoryTest extends TestCase {
       '_action' => 'some-action',
       'reportData' => (object) [
         'grunddaten' => $grunddaten,
+        'beschreibung' => $beschreibung,
         'zuschuss' => (object) [],
         'dokumente' => $dokumente,
         'foerderung' => $foerderung,
