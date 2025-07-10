@@ -23,14 +23,14 @@
           <div ng-show="isAnyActionAllowed('accept-content', 'reject-content')" class="btn-group" role="group">
             <p><strong>{{:: ts('Content Review') }}</strong></p>
             <p>{{:: ts('The aim intended with the funding was achieved. All required proofs are present.') }}</p>
-            <funding-action-button action="accept-content" hide-disabled="false" class="btn btn-default" crm-icon="fa-thumbs-up">{{:: ts('Passed') }}</funding-action-button>
-            <funding-action-button action="reject-content" hide-disabled="false" class="btn btn-default" crm-icon="fa-thumbs-down">{{:: ts('Failed') }}</funding-action-button>
+            <funding-action-button action="accept-content" with-comment="false" hide-disabled="false" class="btn btn-default" crm-icon="fa-thumbs-up">{{:: ts('Passed') }}</funding-action-button>
+            <funding-action-button action="reject-content" with-comment="false" hide-disabled="false" class="btn btn-default" crm-icon="fa-thumbs-down">{{:: ts('Failed') }}</funding-action-button>
           </div>
           <div ng-show="isAnyActionAllowed('accept-calculative', 'reject-calculative')" class="btn-group" role="group">
             <p><strong>{{:: $ctrl.ts('Calculative Review') }}</strong></p>
             <p>{{:: ts('The clearing is calculationally correct. All required proofs are present. The resources have been used appropriately.') }}</p>
-            <funding-action-button action="accept-calculative" hide-disabled="false" class="btn btn-default" crm-icon="fa-thumbs-up">{{:: $ctrl.ts('Passed') }}</funding-action-button>
-            <funding-action-button action="reject-calculative" hide-disabled="false" class="btn btn-default" crm-icon="fa-thumbs-down">{{:: $ctrl.ts('Failed') }}</funding-action-button>
+            <funding-action-button action="accept-calculative" with-comment="false" hide-disabled="false" class="btn btn-default" crm-icon="fa-thumbs-up">{{:: $ctrl.ts('Passed') }}</funding-action-button>
+            <funding-action-button action="reject-calculative" with-comment="false" hide-disabled="false" class="btn btn-default" crm-icon="fa-thumbs-down">{{:: $ctrl.ts('Failed') }}</funding-action-button>
           </div>
         </div>
       </div>
