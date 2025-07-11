@@ -31,7 +31,7 @@ final class ValidateFormAction extends AbstractRemoteFundingAction {
 
   use IdParameterTrait;
 
-  public function __construct(ActionHandlerInterface $actionHandler = NULL) {
+  public function __construct(?ActionHandlerInterface $actionHandler = NULL) {
     parent::__construct(RemoteFundingClearingProcess::getEntityName(), 'validateForm', $actionHandler);
   }
 

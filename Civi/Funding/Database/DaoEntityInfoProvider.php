@@ -25,7 +25,16 @@ namespace Civi\Funding\Database;
 final class DaoEntityInfoProvider {
 
   public function getTable(string $entityName): string {
-    return \CRM_Core_DAO_AllCoreTables::getTableForEntityName($entityName);
+    // Return type was changed from string to ?string in CiviCRM 6.3.0. To avoid
+    // an error in phpstan when testing with a previous version, the phpdoc type
+    // hint is required.
+    /** @var string|null $table */
+    $table = \CRM_Core_DAO_AllCoreTables::getTableForEntityName($entityName);
+    if (NULL === $table) {
+      throw new \InvalidArgumentException(sprintf('Unknown entity "%s"', $entityName));
+    }
+
+    return $table;
   }
 
 }

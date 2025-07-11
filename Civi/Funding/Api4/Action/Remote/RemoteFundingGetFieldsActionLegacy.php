@@ -30,7 +30,7 @@ class RemoteFundingGetFieldsActionLegacy extends EventGetFieldsAction implements
   use RemoteFundingActionContactIdTrait;
 
   public function __construct(string $entityName, string $actionName = 'getFields',
-    CiviEventDispatcherInterface $eventDispatcher = NULL
+    ?CiviEventDispatcherInterface $eventDispatcher = NULL
   ) {
     parent::__construct(FundingEvents::REQUEST_INIT_EVENT_NAME,
       FundingEvents::REQUEST_AUTHORIZE_EVENT_NAME,

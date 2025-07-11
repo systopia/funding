@@ -28,7 +28,7 @@ final class GetUpdateFormAction extends AbstractRemoteFundingAction {
 
   use FundingCaseIdParameterTrait;
 
-  public function __construct(ActionHandlerInterface $actionHandler = NULL) {
+  public function __construct(?ActionHandlerInterface $actionHandler = NULL) {
     parent::__construct(RemoteFundingCase::getEntityName(), 'getUpdateForm', $actionHandler);
   }
 

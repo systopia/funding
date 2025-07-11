@@ -47,7 +47,7 @@ abstract class AbstractSubmitActionsContainer implements SubmitActionsContainerI
     string $label,
     ?string $confirm = NULL,
     array $properties = [],
-    int $priority = NULL
+    ?int $priority = NULL
   ): SubmitActionsContainerInterface {
     $this->actions[$action] = ['label' => $label, 'confirm' => $confirm, 'properties' => $properties];
     $priority ??= $this->nextPriority;

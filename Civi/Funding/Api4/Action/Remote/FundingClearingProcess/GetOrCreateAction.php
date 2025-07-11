@@ -28,7 +28,7 @@ class GetOrCreateAction extends AbstractRemoteFundingAction {
 
   use ApplicationProcessIdParameterTrait;
 
-  public function __construct(ActionHandlerInterface $actionHandler = NULL) {
+  public function __construct(?ActionHandlerInterface $actionHandler = NULL) {
     parent::__construct(RemoteFundingClearingProcess::getEntityName(), 'getOrCreate', $actionHandler);
   }
 
