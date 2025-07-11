@@ -215,7 +215,11 @@ return [
                   'icon' => 'fa-folder-open-o',
                   'text' => E::ts('Open clearing'),
                   'style' => 'default',
-                  'condition' => [],
+                  'condition' => [
+                    'status:name',
+                    '!=',
+                    'not-started',
+                  ],
                   'task' => '',
                   'entity' => '',
                   'action' => '',

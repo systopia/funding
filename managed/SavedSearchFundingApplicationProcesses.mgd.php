@@ -5,7 +5,7 @@ return [
   [
     'name' => 'SavedSearch_FundingApplicationProcesses',
     'entity' => 'SavedSearch',
-    'cleanup' => 'always',
+    'cleanup' => 'unused',
     'update' => 'unmodified',
     'params' => [
       'version' => 4,
@@ -55,7 +55,7 @@ return [
   [
     'name' => 'SearchDisplay_FundingApplicationProcesses.Table',
     'entity' => 'SearchDisplay',
-    'cleanup' => 'always',
+    'cleanup' => 'unused',
     'update' => 'unmodified',
     'params' => [
       'version' => 4,
@@ -154,8 +154,9 @@ return [
                   'text' => E::ts('Open clearing'),
                   'style' => 'default',
                   'condition' => [
-                    'FundingApplicationProcess_FundingClearingProcess_application_process_id_01.id',
-                    'IS NOT EMPTY',
+                    'FundingApplicationProcess_FundingClearingProcess_application_process_id_01.status:name',
+                    '!=',
+                    'not-started',
                   ],
                   'task' => '',
                   'entity' => '',
@@ -177,6 +178,7 @@ return [
             'table-striped',
           ],
           'headerCount' => TRUE,
+          'actions_display_mode' => 'menu',
         ],
       ],
       'match' => [
