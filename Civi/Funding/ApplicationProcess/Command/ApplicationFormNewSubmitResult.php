@@ -40,7 +40,7 @@ final class ApplicationFormNewSubmitResult extends AbstractApplicationFormSubmit
   protected function __construct(
     bool $success,
     ApplicationFormValidationResult $validationResult,
-    ApplicationProcessEntityBundle $applicationProcessBundle = NULL
+    ?ApplicationProcessEntityBundle $applicationProcessBundle = NULL
   ) {
     parent::__construct($success, $validationResult);
     $this->applicationProcessBundle = $applicationProcessBundle;

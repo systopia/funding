@@ -34,7 +34,7 @@ final class SubmitFormAction extends AbstractAction {
 
   use IdParameterTrait;
 
-  public function __construct(ActionHandlerInterface $actionHandler = NULL) {
+  public function __construct(?ActionHandlerInterface $actionHandler = NULL) {
     parent::__construct(FundingClearingProcess::getEntityName(), 'submitForm');
     $this->setActionHandler($actionHandler);
   }

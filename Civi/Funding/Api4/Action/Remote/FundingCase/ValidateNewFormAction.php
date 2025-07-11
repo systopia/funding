@@ -34,7 +34,7 @@ final class ValidateNewFormAction extends AbstractRemoteFundingAction {
 
   use FundingCaseTypeIdParameterTrait;
 
-  public function __construct(ActionHandlerInterface $actionHandler = NULL) {
+  public function __construct(?ActionHandlerInterface $actionHandler = NULL) {
     parent::__construct(RemoteFundingCase::getEntityName(), 'validateNewForm', $actionHandler);
   }
 

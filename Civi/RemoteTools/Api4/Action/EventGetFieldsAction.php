@@ -33,7 +33,7 @@ class EventGetFieldsAction extends BasicGetFieldsAction implements EventActionIn
 
   public function __construct(string $initRequestEventName, string $authorizeRequestEventName,
                               string $entityName, string $actionName = 'getFields',
-                              CiviEventDispatcherInterface $eventDispatcher = NULL) {
+                              ?CiviEventDispatcherInterface $eventDispatcher = NULL) {
     parent::__construct($entityName, $actionName);
     $this->_initRequestEventName = $initRequestEventName;
     $this->_authorizeRequestEventName = $authorizeRequestEventName;

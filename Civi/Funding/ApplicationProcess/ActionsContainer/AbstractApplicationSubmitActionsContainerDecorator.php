@@ -41,7 +41,7 @@ abstract class AbstractApplicationSubmitActionsContainerDecorator implements App
     string $label,
     ?string $confirm = NULL,
     array $properties = [],
-    int $priority = NULL
+    ?int $priority = NULL
   ): SubmitActionsContainerInterface {
     $this->submitActionsContainer->add($action, $label, $confirm, $properties, $priority);
 

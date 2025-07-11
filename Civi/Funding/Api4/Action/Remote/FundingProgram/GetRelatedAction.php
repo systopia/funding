@@ -48,7 +48,7 @@ class GetRelatedAction extends AbstractAction implements RemoteFundingActionLega
    */
   protected ?string $type = NULL;
 
-  public function __construct(CiviEventDispatcherInterface $eventDispatcher = NULL) {
+  public function __construct(?CiviEventDispatcherInterface $eventDispatcher = NULL) {
     parent::__construct('RemoteFundingProgram', 'getRelated');
     $this->_eventDispatcher = $eventDispatcher ?? \Civi::dispatcher();
     $this->_authorizeRequestEventName = FundingEvents::REQUEST_AUTHORIZE_EVENT_NAME;

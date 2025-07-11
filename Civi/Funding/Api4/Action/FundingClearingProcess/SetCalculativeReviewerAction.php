@@ -46,7 +46,7 @@ class SetCalculativeReviewerAction extends AbstractAction {
    */
   protected ?int $reviewerContactId = NULL;
 
-  public function __construct(ActionHandlerInterface $actionHandler = NULL) {
+  public function __construct(?ActionHandlerInterface $actionHandler = NULL) {
     parent::__construct(FundingClearingProcess::getEntityName(), 'setCalculativeReviewer');
     $this->setActionHandler($actionHandler);
   }
