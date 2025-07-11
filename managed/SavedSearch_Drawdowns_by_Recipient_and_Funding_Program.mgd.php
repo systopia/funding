@@ -21,6 +21,7 @@ return [
             'GROUP_FIRST(recipient_contact_id.display_name) AS GROUP_FIRST_recipient_contact_id_display_name',
             'SUM(amount_approved) AS SUM_amount_approved',
             'SUM(amount_drawdowns) AS SUM_amount_drawdowns',
+            'SUM(amount_drawdowns_accepted) AS SUM_amount_drawdowns_accepted',
             'SUM(amount_paid_out) AS SUM_amount_paid_out',
             'SUM(amount_drawdowns_open) AS SUM_amount_drawdowns_open',
           ],
@@ -124,7 +125,7 @@ return [
               'dataType' => 'Integer',
               'label' => E::ts('Withdrawable Funds'),
               'sortable' => TRUE,
-              'rewrite' => '{($SUM_amount_approved - $SUM_amount_paid_out)|crmMoney:$currency}',
+              'rewrite' => '{($SUM_amount_approved - $SUM_amount_drawdowns_accepted)|crmMoney:$currency}',
             ],
             [
               'type' => 'field',
