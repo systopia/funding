@@ -89,7 +89,7 @@ final class DefaultApplicationProcessStatuses {
     ]);
   }
 
-  public static function withdrawn(string $name = 'draft', ?string $label = NULL): ApplicationProcessStatus {
+  public static function withdrawn(string $name = 'withdrawn', ?string $label = NULL): ApplicationProcessStatus {
     return new ApplicationProcessStatus([
       'name' => $name,
       'label' => $label ?? E::ts('Withdrawn'),
