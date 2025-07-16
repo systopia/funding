@@ -5,7 +5,7 @@ return [
   [
     'name' => 'SavedSearch_funding_drawdowns',
     'entity' => 'SavedSearch',
-    'cleanup' => 'always',
+    'cleanup' => 'unused',
     'update' => 'unmodified',
     'params' => [
       'version' => 4,
@@ -43,7 +43,7 @@ return [
   [
     'name' => 'SearchDisplay_funding_drawdowns.table',
     'entity' => 'SearchDisplay',
-    'cleanup' => 'always',
+    'cleanup' => 'unused',
     'update' => 'unmodified',
     'params' => [
       'version' => 4,
@@ -68,6 +68,9 @@ return [
               'dataType' => 'Timestamp',
               'label' => E::ts('Creation Date'),
               'sortable' => TRUE,
+              'tally' => [
+                'fn' => NULL,
+              ],
             ],
             [
               'type' => 'field',
@@ -75,6 +78,9 @@ return [
               'dataType' => 'Money',
               'label' => E::ts('Amount'),
               'sortable' => TRUE,
+              'tally' => [
+                'fn' => 'SUM',
+              ],
             ],
             [
               'type' => 'field',
@@ -82,6 +88,9 @@ return [
               'dataType' => 'String',
               'label' => E::ts('Requester'),
               'sortable' => TRUE,
+              'tally' => [
+                'fn' => NULL,
+              ],
             ],
             [
               'type' => 'field',
@@ -89,6 +98,9 @@ return [
               'dataType' => 'String',
               'label' => E::ts('Status'),
               'sortable' => TRUE,
+              'tally' => [
+                'fn' => NULL,
+              ],
             ],
             [
               'type' => 'field',
@@ -96,6 +108,9 @@ return [
               'dataType' => 'Timestamp',
               'label' => E::ts('Acception Date'),
               'sortable' => TRUE,
+              'tally' => [
+                'fn' => NULL,
+              ],
             ],
             [
               'type' => 'field',
@@ -103,6 +118,9 @@ return [
               'dataType' => 'String',
               'label' => E::ts('Reviewer'),
               'sortable' => TRUE,
+              'tally' => [
+                'fn' => NULL,
+              ],
             ],
             [
               'size' => 'btn-xs',
@@ -168,6 +186,9 @@ return [
             'table-striped',
           ],
           'actions_display_mode' => 'menu',
+          'tally' => [
+            'label' => E::ts('Total'),
+          ],
         ],
       ],
       'match' => [
