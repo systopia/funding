@@ -180,9 +180,9 @@ return [
             ],
             [
               'type' => 'field',
-              'key' => 'amount_admitted',
+              'key' => 'amount_cleared',
               'dataType' => 'Money',
-              'label' => E::ts('Amount Admitted'),
+              'label' => E::ts('Amount Cleared'),
               'sortable' => TRUE,
               'tally' => [
                 'fn' => '',
@@ -190,9 +190,9 @@ return [
             ],
             [
               'type' => 'field',
-              'key' => 'amount_cleared',
+              'key' => 'amount_admitted',
               'dataType' => 'Money',
-              'label' => E::ts('Amount Cleared'),
+              'label' => E::ts('Amount Admitted'),
               'sortable' => TRUE,
               'tally' => [
                 'fn' => '',
