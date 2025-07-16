@@ -23,6 +23,8 @@ use Civi\Funding\Entity\AttachmentEntity;
 
 interface FundingAttachmentManagerInterface {
 
+  public function attachById(int $id, string $entityTable, int $entityId): void;
+
   /**
    * @phpstan-param array{
    *   file_type_id?: int,
