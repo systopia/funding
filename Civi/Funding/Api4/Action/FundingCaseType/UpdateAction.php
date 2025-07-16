@@ -97,20 +97,19 @@ final class UpdateAction extends DAOUpdateAction {
       ->setWhere($this->getWhere())
       ->execute();
 
-    if ($result->count() > 1) {
+    if ($result->count() !== 1) {
       throw new \InvalidArgumentException(
         'Template can only be updated for a single funding case type'
       );
     }
 
-    if ($result->count() === 1) {
-      $previousFileId = $result->single()[$templateIdFieldName];
-      if ($previousFileId !== NULL && $previousFileId !== $templateFileId) {
-        $fundingCaseTypeId = $result->single()['id'];
-        $this->attachmentManager->deleteById($previousFileId, 'civicrm_funding_case_type', $fundingCaseTypeId);
-      }
+    $fundingCaseTypeId = $result->single()['id'];
+    $previousFileId = $result->single()[$templateIdFieldName];
+    if ($previousFileId !== NULL && $previousFileId !== $templateFileId) {
+      $this->attachmentManager->deleteById($previousFileId, 'civicrm_funding_case_type', $fundingCaseTypeId);
     }
 
+    $this->attachmentManager->attachById($templateFileId, 'civicrm_funding_case_type', $fundingCaseTypeId);
     $this->api4->updateEntity(File::getEntityName(), $templateFileId, [
       'file_type_id:name' => $fileType,
     ]);

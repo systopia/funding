@@ -144,25 +144,38 @@ final class FundingCaseTypeTest extends AbstractFundingHeadlessTestCase {
       ->single()['file_type_id:name'];
     static::assertSame(FileTypeNames::PAYBACK_CLAIM_TEMPLATE, $fileTypeName);
 
-    $attachment2 = AttachmentFixture::addFixture(
-      'civicrm_funding_case_type',
-      $fundingCaseType->getId(),
-      E::path('tests/phpunit/resources/FundingCaseDocumentTemplate.docx')
-    );
+    $file2 = File::create(FALSE)
+      ->setValues([
+        'uri' => 'test',
+        'mime_type' => 'inode/x-empty',
+      ])->execute()->single();
 
-    // Previous file shall be deleted.
+    // New file shall be attached and the file type shall be set. Previous file shall be deleted.
     $result = FundingCaseType::update()
-      ->addValue('payback_claim_template_file_id', $attachment2->getId())
+      ->addValue('payback_claim_template_file_id', $file2['id'])
       ->addWhere('id', '=', $fundingCaseType->getId())
       ->execute();
-    static::assertSame($attachment2->getId(), $result->single()['payback_claim_template_file_id']);
+    static::assertSame($file2['id'], $result->single()['payback_claim_template_file_id']);
+
+    static::assertSame($file2['id'], FundingCaseType::get()
+      ->addSelect('payback_claim_template_file_id')
+      ->addWhere('id', '=', $fundingCaseType->getId())
+      ->execute()->single()['payback_claim_template_file_id']
+    );
 
     $fileTypeName = File::get(FALSE)
       ->addSelect('file_type_id:name')
-      ->addWhere('id', '=', $attachment2->getId())
+      ->addWhere('id', '=', $file2['id'])
       ->execute()
       ->single()['file_type_id:name'];
     static::assertSame(FileTypeNames::PAYBACK_CLAIM_TEMPLATE, $fileTypeName);
+
+    static::assertCount(1, EntityFile::get(FALSE)
+      ->addSelect('id')
+      ->addWhere('file_id', '=', $file2['id'])
+      ->addWhere('entity_table', '=', 'civicrm_funding_case_type')
+      ->addWhere('entity_id', '=', $fundingCaseType->getId())
+      ->execute());
 
     static::assertCount(
       0,
@@ -191,25 +204,38 @@ final class FundingCaseTypeTest extends AbstractFundingHeadlessTestCase {
       ->single()['file_type_id:name'];
     static::assertSame(FileTypeNames::PAYMENT_INSTRUCTION_TEMPLATE, $fileTypeName);
 
-    $attachment2 = AttachmentFixture::addFixture(
-      'civicrm_funding_case_type',
-      $fundingCaseType->getId(),
-      E::path('tests/phpunit/resources/FundingCaseDocumentTemplate.docx')
-    );
+    $file2 = File::create(FALSE)
+      ->setValues([
+        'uri' => 'test',
+        'mime_type' => 'inode/x-empty',
+      ])->execute()->single();
 
-    // Previous file shall be deleted.
+    // New file shall be attached and the file type shall be set. Previous file shall be deleted.
     $result = FundingCaseType::update()
-      ->addValue('payment_instruction_template_file_id', $attachment2->getId())
+      ->addValue('payment_instruction_template_file_id', $file2['id'])
       ->addWhere('id', '=', $fundingCaseType->getId())
       ->execute();
-    static::assertSame($attachment2->getId(), $result->single()['payment_instruction_template_file_id']);
+    static::assertSame($file2['id'], $result->single()['payment_instruction_template_file_id']);
+
+    static::assertSame($file2['id'], FundingCaseType::get()
+      ->addSelect('payment_instruction_template_file_id')
+      ->addWhere('id', '=', $fundingCaseType->getId())
+      ->execute()->single()['payment_instruction_template_file_id']
+    );
 
     $fileTypeName = File::get(FALSE)
       ->addSelect('file_type_id:name')
-      ->addWhere('id', '=', $attachment2->getId())
+      ->addWhere('id', '=', $file2['id'])
       ->execute()
       ->single()['file_type_id:name'];
     static::assertSame(FileTypeNames::PAYMENT_INSTRUCTION_TEMPLATE, $fileTypeName);
+
+    static::assertCount(1, EntityFile::get(FALSE)
+      ->addSelect('id')
+      ->addWhere('file_id', '=', $file2['id'])
+      ->addWhere('entity_table', '=', 'civicrm_funding_case_type')
+      ->addWhere('entity_id', '=', $fundingCaseType->getId())
+      ->execute());
 
     static::assertCount(
       0,
@@ -238,25 +264,38 @@ final class FundingCaseTypeTest extends AbstractFundingHeadlessTestCase {
       ->single()['file_type_id:name'];
     static::assertSame(FileTypeNames::TRANSFER_CONTRACT_TEMPLATE, $fileTypeName);
 
-    $attachment2 = AttachmentFixture::addFixture(
-      'civicrm_funding_case_type',
-      $fundingCaseType->getId(),
-      E::path('tests/phpunit/resources/FundingCaseDocumentTemplate.docx')
-    );
+    $file2 = File::create(FALSE)
+      ->setValues([
+        'uri' => 'test',
+        'mime_type' => 'inode/x-empty',
+      ])->execute()->single();
 
-    // Previous file shall be deleted.
+    // New file shall be attached and the file type shall be set. Previous file shall be deleted.
     $result = FundingCaseType::update()
-      ->addValue('transfer_contract_template_file_id', $attachment2->getId())
+      ->addValue('transfer_contract_template_file_id', $file2['id'])
       ->addWhere('id', '=', $fundingCaseType->getId())
       ->execute();
-    static::assertSame($attachment2->getId(), $result->single()['transfer_contract_template_file_id']);
+    static::assertSame($file2['id'], $result->single()['transfer_contract_template_file_id']);
+
+    static::assertSame($file2['id'], FundingCaseType::get()
+      ->addSelect('transfer_contract_template_file_id')
+      ->addWhere('id', '=', $fundingCaseType->getId())
+      ->execute()->single()['transfer_contract_template_file_id']
+    );
 
     $fileTypeName = File::get(FALSE)
       ->addSelect('file_type_id:name')
-      ->addWhere('id', '=', $attachment2->getId())
+      ->addWhere('id', '=', $file2['id'])
       ->execute()
       ->single()['file_type_id:name'];
     static::assertSame(FileTypeNames::TRANSFER_CONTRACT_TEMPLATE, $fileTypeName);
+
+    static::assertCount(1, EntityFile::get(FALSE)
+      ->addSelect('id')
+      ->addWhere('file_id', '=', $file2['id'])
+      ->addWhere('entity_table', '=', 'civicrm_funding_case_type')
+      ->addWhere('entity_id', '=', $fundingCaseType->getId())
+      ->execute());
 
     static::assertCount(
       0,
@@ -287,27 +326,40 @@ final class FundingCaseTypeTest extends AbstractFundingHeadlessTestCase {
       ->single()['file_type_id:name'];
     static::assertSame(FileTypeNames::PAYBACK_CLAIM_TEMPLATE, $fileTypeName);
 
-    $attachment2 = AttachmentFixture::addFixture(
-      'civicrm_funding_case_type',
-      $fundingCaseType->getId(),
-      E::path('tests/phpunit/resources/FundingCaseDocumentTemplate.docx')
-    );
+    $file2 = File::create(FALSE)
+      ->setValues([
+        'uri' => 'test',
+        'mime_type' => 'inode/x-empty',
+      ])->execute()->single();
 
-    // Previous file shall be deleted.
+    // New file shall be attached and the file type shall be set. Previous file shall be deleted.
     $result = FundingCaseType::save()
       ->addRecord([
         'id' => $fundingCaseType->getId(),
-        'payback_claim_template_file_id' => $attachment2->getId(),
+        'payback_claim_template_file_id' => $file2['id'],
       ])
       ->execute();
-    static::assertSame($attachment2->getId(), $result->single()['payback_claim_template_file_id']);
+    static::assertSame($file2['id'], $result->single()['payback_claim_template_file_id']);
+
+    static::assertSame($file2['id'], FundingCaseType::get()
+      ->addSelect('payback_claim_template_file_id')
+      ->addWhere('id', '=', $fundingCaseType->getId())
+      ->execute()->single()['payback_claim_template_file_id']
+    );
 
     $fileTypeName = File::get(FALSE)
       ->addSelect('file_type_id:name')
-      ->addWhere('id', '=', $attachment2->getId())
+      ->addWhere('id', '=', $file2['id'])
       ->execute()
       ->single()['file_type_id:name'];
     static::assertSame(FileTypeNames::PAYBACK_CLAIM_TEMPLATE, $fileTypeName);
+
+    static::assertCount(1, EntityFile::get(FALSE)
+      ->addSelect('id')
+      ->addWhere('file_id', '=', $file2['id'])
+      ->addWhere('entity_table', '=', 'civicrm_funding_case_type')
+      ->addWhere('entity_id', '=', $fundingCaseType->getId())
+      ->execute());
 
     static::assertCount(
       0,
@@ -338,27 +390,40 @@ final class FundingCaseTypeTest extends AbstractFundingHeadlessTestCase {
       ->single()['file_type_id:name'];
     static::assertSame(FileTypeNames::PAYMENT_INSTRUCTION_TEMPLATE, $fileTypeName);
 
-    $attachment2 = AttachmentFixture::addFixture(
-      'civicrm_funding_case_type',
-      $fundingCaseType->getId(),
-      E::path('tests/phpunit/resources/FundingCaseDocumentTemplate.docx')
-    );
+    $file2 = File::create(FALSE)
+      ->setValues([
+        'uri' => 'test',
+        'mime_type' => 'inode/x-empty',
+      ])->execute()->single();
 
-    // Previous file shall be deleted.
+    // New file shall be attached and the file type shall be set. Previous file shall be deleted.
     $result = FundingCaseType::save()
       ->addRecord([
         'id' => $fundingCaseType->getId(),
-        'payment_instruction_template_file_id' => $attachment2->getId(),
+        'payment_instruction_template_file_id' => $file2['id'],
       ])
       ->execute();
-    static::assertSame($attachment2->getId(), $result->single()['payment_instruction_template_file_id']);
+    static::assertSame($file2['id'], $result->single()['payment_instruction_template_file_id']);
+
+    static::assertSame($file2['id'], FundingCaseType::get()
+      ->addSelect('payment_instruction_template_file_id')
+      ->addWhere('id', '=', $fundingCaseType->getId())
+      ->execute()->single()['payment_instruction_template_file_id']
+    );
 
     $fileTypeName = File::get(FALSE)
       ->addSelect('file_type_id:name')
-      ->addWhere('id', '=', $attachment2->getId())
+      ->addWhere('id', '=', $file2['id'])
       ->execute()
       ->single()['file_type_id:name'];
     static::assertSame(FileTypeNames::PAYMENT_INSTRUCTION_TEMPLATE, $fileTypeName);
+
+    static::assertCount(1, EntityFile::get(FALSE)
+      ->addSelect('id')
+      ->addWhere('file_id', '=', $file2['id'])
+      ->addWhere('entity_table', '=', 'civicrm_funding_case_type')
+      ->addWhere('entity_id', '=', $fundingCaseType->getId())
+      ->execute());
 
     static::assertCount(
       0,
@@ -389,27 +454,40 @@ final class FundingCaseTypeTest extends AbstractFundingHeadlessTestCase {
       ->single()['file_type_id:name'];
     static::assertSame(FileTypeNames::TRANSFER_CONTRACT_TEMPLATE, $fileTypeName);
 
-    $attachment2 = AttachmentFixture::addFixture(
-      'civicrm_funding_case_type',
-      $fundingCaseType->getId(),
-      E::path('tests/phpunit/resources/FundingCaseDocumentTemplate.docx')
-    );
+    $file2 = File::create(FALSE)
+      ->setValues([
+        'uri' => 'test',
+        'mime_type' => 'inode/x-empty',
+      ])->execute()->single();
 
-    // Previous file shall be deleted.
+    // New file shall be attached and the file type shall be set. Previous file shall be deleted.
     $result = FundingCaseType::save()
       ->addRecord([
         'id' => $fundingCaseType->getId(),
-        'transfer_contract_template_file_id' => $attachment2->getId(),
+        'transfer_contract_template_file_id' => $file2['id'],
       ])
       ->execute();
-    static::assertSame($attachment2->getId(), $result->single()['transfer_contract_template_file_id']);
+    static::assertSame($file2['id'], $result->single()['transfer_contract_template_file_id']);
+
+    static::assertSame($file2['id'], FundingCaseType::get()
+      ->addSelect('transfer_contract_template_file_id')
+      ->addWhere('id', '=', $fundingCaseType->getId())
+      ->execute()->single()['transfer_contract_template_file_id']
+    );
 
     $fileTypeName = File::get(FALSE)
       ->addSelect('file_type_id:name')
-      ->addWhere('id', '=', $attachment2->getId())
+      ->addWhere('id', '=', $file2['id'])
       ->execute()
       ->single()['file_type_id:name'];
     static::assertSame(FileTypeNames::TRANSFER_CONTRACT_TEMPLATE, $fileTypeName);
+
+    static::assertCount(1, EntityFile::get(FALSE)
+      ->addSelect('id')
+      ->addWhere('file_id', '=', $file2['id'])
+      ->addWhere('entity_table', '=', 'civicrm_funding_case_type')
+      ->addWhere('entity_id', '=', $fundingCaseType->getId())
+      ->execute());
 
     static::assertCount(
       0,

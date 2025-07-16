@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding;
 
+use Civi\Api4\EntityFile;
 use Civi\Funding\Entity\AttachmentEntity;
 use Civi\RemoteTools\Api3\Api3Interface;
 use Civi\RemoteTools\Api4\Api4Interface;
@@ -35,6 +36,23 @@ final class FundingAttachmentManager implements FundingAttachmentManagerInterfac
   ) {
     $this->api3 = $api3;
     $this->api4 = $api4;
+  }
+
+  public function attachById(int $id, string $entityTable, int $entityId): void {
+    $this->api4->execute(EntityFile::getEntityName(), 'save', [
+      'records' => [
+        [
+          'entity_table' => $entityTable,
+          'entity_id' => $entityId,
+          'file_id' => $id,
+        ],
+      ],
+      'match' => [
+        'entity_table',
+        'entity_id',
+        'file_id',
+      ],
+    ]);
   }
 
   /**

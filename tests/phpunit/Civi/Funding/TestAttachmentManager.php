@@ -34,6 +34,10 @@ final class TestAttachmentManager implements FundingAttachmentManagerInterface {
     $this->attachmentManager = $attachmentManager;
   }
 
+  public function attachById(int $id, string $entityTable, int $entityId): void {
+    $this->attachmentManager->attachById($id, $entityTable, $entityId);
+  }
+
   /**
    * @inheritDoc
    */
