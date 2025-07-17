@@ -22,7 +22,6 @@ return [
             'SUM(amount_approved) AS SUM_amount_approved',
             'SUM(amount_drawdowns) AS SUM_amount_drawdowns',
             'SUM(amount_drawdowns_accepted) AS SUM_amount_drawdowns_accepted',
-            'SUM(amount_paid_out) AS SUM_amount_paid_out',
             'SUM(amount_drawdowns_open) AS SUM_amount_drawdowns_open',
           ],
           'orderBy' => [],
@@ -111,9 +110,9 @@ return [
             ],
             [
               'type' => 'field',
-              'key' => 'SUM_amount_paid_out',
+              'key' => 'SUM_amount_drawdowns_accepted',
               'dataType' => 'Money',
-              'label' => E::ts('Amount Paid Out'),
+              'label' => E::ts('Accepted Drawdowns'),
               'sortable' => TRUE,
               'tally' => [
                 'fn' => 'SUM',
