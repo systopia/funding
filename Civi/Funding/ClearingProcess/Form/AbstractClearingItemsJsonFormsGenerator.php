@@ -229,7 +229,7 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
           ),
           'amountRecordedTotal' => new JsonSchemaCalculate(
             'number',
-            'round(sum(map(records, "value.amount")), 2)',
+            'round(sum(map(records, "value.amount ?: 0")), 2)',
             ['records' => new JsonSchemaDataPointer('1/records')],
             NULL,
             ['default' => 0]
