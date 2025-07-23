@@ -54,11 +54,11 @@ class ClearingStatusDeterminer {
     ],
     'accepted' => [
       'review' => 'review',
-      'request-change' => 'draft',
+      'request-change' => 'rework',
     ],
     'rejected' => [
       'review' => 'review',
-      'request-change' => 'draft',
+      'request-change' => 'rework',
     ],
   ];
 
