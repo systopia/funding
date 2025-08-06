@@ -56,7 +56,7 @@ class ItemDetailsFormElementGenerator {
     /**
      * @phpstan-var list<JsonSchema>|null $arrayFormControls
      */
-    $arrayFormControls = $applicationFormElement['options']['detail']['elements'] ?? NULL;
+    $arrayFormControls = $applicationFormElement['options']['elements'] ?? NULL;
     if (NULL !== $arrayFormControls) {
       $labelPropertyPairs = $this->handleFormControls($arrayFormControls);
     }

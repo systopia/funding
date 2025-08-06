@@ -46,17 +46,11 @@ final class TestRequestContext implements RequestContextInterface {
     $this->remote = $remote;
   }
 
-  /**
-   * @inheritDoc
-   */
-  public function get(string $key, $default = NULL) {
+  public function get(string $key, mixed $default = NULL): mixed {
     return $this->data[$key] ?? $default;
   }
 
-  /**
-   * @inheritDoc
-   */
-  public function set(string $key, $value): void {
+  public function set(string $key, mixed $value): void {
     $this->data[$key] = $value;
   }
 
