@@ -30,7 +30,7 @@ class DummyRemoteContactIdResolver implements FundingRemoteContactIdResolverInte
   /**
    * @inheritDoc
    */
-  public function getContactId($remoteAuthenticationToken): int {
+  public function getContactId(int|string $remoteAuthenticationToken): int {
     Assert::integerish($remoteAuthenticationToken);
 
     return (int) $remoteAuthenticationToken;

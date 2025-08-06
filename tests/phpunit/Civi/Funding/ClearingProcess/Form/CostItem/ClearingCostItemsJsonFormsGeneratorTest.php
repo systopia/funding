@@ -284,55 +284,53 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                   'scope' => '#/properties/costItems/properties/23/properties/records',
                   'label' => '',
                   'options' => [
-                    'detail' => [
-                      'elements' => [
-                        [
-                          'type' => 'Control',
-                          'scope' => '#/properties/_id',
-                          'label' => '',
-                          'options' => ['type' => 'hidden', 'internal' => TRUE],
-                        ],
-                        [
-                          'type' => 'Control',
-                          'scope' => '#/properties/file',
-                          'label' => 'Receipt',
-                          'options' => ['format' => 'file'],
-                        ],
-                        [
-                          'type' => 'Control',
-                          'scope' => '#/properties/receiptNumber',
-                          'label' => 'Receipt Number',
-                        ],
-                        [
-                          'type' => 'Control',
-                          'scope' => '#/properties/receiptDate',
-                          'label' => 'Receipt Date',
-                        ],
-                        [
-                          'type' => 'Control',
-                          'scope' => '#/properties/paymentDate',
-                          'label' => "Payment/\u{200B}Posting Date",
-                        ],
-                        [
-                          'type' => 'Control',
-                          'scope' => '#/properties/recipient',
-                          'label' => 'Payment Recipient',
-                        ],
-                        [
-                          'type' => 'Control',
-                          'scope' => '#/properties/reason',
-                          'label' => "Reason for Payment/\u{200B}Payment Reference",
-                        ],
-                        [
-                          'type' => 'Control',
-                          'scope' => '#/properties/amount',
-                          'label' => 'Amount in EUR',
-                        ],
-                        [
-                          'type' => 'Control',
-                          'scope' => '#/properties/amountAdmitted',
-                          'label' => 'Amount Admitted in EUR',
-                        ],
+                    'elements' => [
+                      [
+                        'type' => 'Control',
+                        'scope' => '#/properties/_id',
+                        'label' => '',
+                        'options' => ['type' => 'hidden', 'internal' => TRUE],
+                      ],
+                      [
+                        'type' => 'Control',
+                        'scope' => '#/properties/file',
+                        'label' => 'Receipt',
+                        'options' => ['format' => 'file'],
+                      ],
+                      [
+                        'type' => 'Control',
+                        'scope' => '#/properties/receiptNumber',
+                        'label' => 'Receipt Number',
+                      ],
+                      [
+                        'type' => 'Control',
+                        'scope' => '#/properties/receiptDate',
+                        'label' => 'Receipt Date',
+                      ],
+                      [
+                        'type' => 'Control',
+                        'scope' => '#/properties/paymentDate',
+                        'label' => "Payment/\u{200B}Posting Date",
+                      ],
+                      [
+                        'type' => 'Control',
+                        'scope' => '#/properties/recipient',
+                        'label' => 'Payment Recipient',
+                      ],
+                      [
+                        'type' => 'Control',
+                        'scope' => '#/properties/reason',
+                        'label' => "Reason for Payment/\u{200B}Payment Reference",
+                      ],
+                      [
+                        'type' => 'Control',
+                        'scope' => '#/properties/amount',
+                        'label' => 'Amount in EUR',
+                      ],
+                      [
+                        'type' => 'Control',
+                        'scope' => '#/properties/amountAdmitted',
+                        'label' => 'Amount Admitted in EUR',
                       ],
                     ],
                     'addButtonLabel' => 'Add Receipt',
@@ -583,55 +581,53 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                   'scope' => '#/properties/costItems/properties/23/properties/records',
                   'label' => '',
                   'options' => [
-                    'detail' => [
-                      'elements' => [
-                        [
-                          'type' => 'Control',
-                          'scope' => '#/properties/_id',
-                          'label' => '',
-                          'options' => ['type' => 'hidden', 'internal' => TRUE],
-                        ],
-                        [
-                          'type' => 'Control',
-                          'scope' => '#/properties/file',
-                          'label' => 'Receipt',
-                          'options' => ['format' => 'file'],
-                        ],
-                        [
-                          'type' => 'Control',
-                          'scope' => '#/properties/receiptNumber',
-                          'label' => 'Receipt Number',
-                        ],
-                        [
-                          'type' => 'Control',
-                          'scope' => '#/properties/receiptDate',
-                          'label' => 'Receipt Date',
-                        ],
-                        [
-                          'type' => 'Control',
-                          'scope' => '#/properties/paymentDate',
-                          'label' => "Payment/\u{200B}Posting Date",
-                        ],
-                        [
-                          'type' => 'Control',
-                          'scope' => '#/properties/recipient',
-                          'label' => 'Payment Recipient',
-                        ],
-                        [
-                          'type' => 'Control',
-                          'scope' => '#/properties/reason',
-                          'label' => "Reason for Payment/\u{200B}Payment Reference",
-                        ],
-                        [
-                          'type' => 'Control',
-                          'scope' => '#/properties/amount',
-                          'label' => 'Amount in EUR',
-                        ],
-                        [
-                          'type' => 'Control',
-                          'scope' => '#/properties/amountAdmitted',
-                          'label' => 'Amount Admitted in EUR',
-                        ],
+                    'elements' => [
+                      [
+                        'type' => 'Control',
+                        'scope' => '#/properties/_id',
+                        'label' => '',
+                        'options' => ['type' => 'hidden', 'internal' => TRUE],
+                      ],
+                      [
+                        'type' => 'Control',
+                        'scope' => '#/properties/file',
+                        'label' => 'Receipt',
+                        'options' => ['format' => 'file'],
+                      ],
+                      [
+                        'type' => 'Control',
+                        'scope' => '#/properties/receiptNumber',
+                        'label' => 'Receipt Number',
+                      ],
+                      [
+                        'type' => 'Control',
+                        'scope' => '#/properties/receiptDate',
+                        'label' => 'Receipt Date',
+                      ],
+                      [
+                        'type' => 'Control',
+                        'scope' => '#/properties/paymentDate',
+                        'label' => "Payment/\u{200B}Posting Date",
+                      ],
+                      [
+                        'type' => 'Control',
+                        'scope' => '#/properties/recipient',
+                        'label' => 'Payment Recipient',
+                      ],
+                      [
+                        'type' => 'Control',
+                        'scope' => '#/properties/reason',
+                        'label' => "Reason for Payment/\u{200B}Payment Reference",
+                      ],
+                      [
+                        'type' => 'Control',
+                        'scope' => '#/properties/amount',
+                        'label' => 'Amount in EUR',
+                      ],
+                      [
+                        'type' => 'Control',
+                        'scope' => '#/properties/amountAdmitted',
+                        'label' => 'Amount Admitted in EUR',
                       ],
                     ],
                     'addButtonLabel' => 'Add Receipt',
@@ -896,55 +892,53 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                   'scope' => '#/properties/costItems/properties/23/properties/records',
                   'label' => '',
                   'options' => [
-                    'detail' => [
-                      'elements' => [
-                        [
-                          'type' => 'Control',
-                          'scope' => '#/properties/_id',
-                          'label' => '',
-                          'options' => ['type' => 'hidden', 'internal' => TRUE],
-                        ],
-                        [
-                          'type' => 'Control',
-                          'scope' => '#/properties/file',
-                          'label' => 'Receipt',
-                          'options' => ['format' => 'file'],
-                        ],
-                        [
-                          'type' => 'Control',
-                          'scope' => '#/properties/receiptNumber',
-                          'label' => 'Receipt Number',
-                        ],
-                        [
-                          'type' => 'Control',
-                          'scope' => '#/properties/receiptDate',
-                          'label' => 'Receipt Date',
-                        ],
-                        [
-                          'type' => 'Control',
-                          'scope' => '#/properties/paymentDate',
-                          'label' => "Payment/\u{200B}Posting Date",
-                        ],
-                        [
-                          'type' => 'Control',
-                          'scope' => '#/properties/recipient',
-                          'label' => 'Payment Recipient',
-                        ],
-                        [
-                          'type' => 'Control',
-                          'scope' => '#/properties/reason',
-                          'label' => "Reason for Payment/\u{200B}Payment Reference",
-                        ],
-                        [
-                          'type' => 'Control',
-                          'scope' => '#/properties/amount',
-                          'label' => 'Amount in EUR',
-                        ],
-                        [
-                          'type' => 'Control',
-                          'scope' => '#/properties/amountAdmitted',
-                          'label' => 'Amount Admitted in EUR',
-                        ],
+                    'elements' => [
+                      [
+                        'type' => 'Control',
+                        'scope' => '#/properties/_id',
+                        'label' => '',
+                        'options' => ['type' => 'hidden', 'internal' => TRUE],
+                      ],
+                      [
+                        'type' => 'Control',
+                        'scope' => '#/properties/file',
+                        'label' => 'Receipt',
+                        'options' => ['format' => 'file'],
+                      ],
+                      [
+                        'type' => 'Control',
+                        'scope' => '#/properties/receiptNumber',
+                        'label' => 'Receipt Number',
+                      ],
+                      [
+                        'type' => 'Control',
+                        'scope' => '#/properties/receiptDate',
+                        'label' => 'Receipt Date',
+                      ],
+                      [
+                        'type' => 'Control',
+                        'scope' => '#/properties/paymentDate',
+                        'label' => "Payment/\u{200B}Posting Date",
+                      ],
+                      [
+                        'type' => 'Control',
+                        'scope' => '#/properties/recipient',
+                        'label' => 'Payment Recipient',
+                      ],
+                      [
+                        'type' => 'Control',
+                        'scope' => '#/properties/reason',
+                        'label' => "Reason for Payment/\u{200B}Payment Reference",
+                      ],
+                      [
+                        'type' => 'Control',
+                        'scope' => '#/properties/amount',
+                        'label' => 'Amount in EUR',
+                      ],
+                      [
+                        'type' => 'Control',
+                        'scope' => '#/properties/amountAdmitted',
+                        'label' => 'Amount Admitted in EUR',
                       ],
                     ],
                     'addButtonLabel' => 'Add Receipt',

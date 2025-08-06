@@ -33,7 +33,7 @@ class FundingRemoteContactIdResolver implements FundingRemoteContactIdResolverIn
   /**
    * @inheritDoc
    */
-  public function getContactId($remoteAuthenticationToken): int {
+  public function getContactId(int|string $remoteAuthenticationToken): int {
     return $this->resolver->getContactId($remoteAuthenticationToken);
   }
 
