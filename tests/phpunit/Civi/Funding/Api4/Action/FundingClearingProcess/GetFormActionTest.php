@@ -67,8 +67,9 @@ final class GetFormActionTest extends AbstractFundingHeadlessTestCase {
       $result['jsonSchema']['properties']['resourcesItems']['properties'][$this->resourcesItem->getId()]
     );
 
-    static::assertSame([
+    static::assertEquals([
       'type' => 'object',
+      'readOnly' => TRUE,
       'properties' => [
         'foo' => ['type' => 'string'],
         'file' => [

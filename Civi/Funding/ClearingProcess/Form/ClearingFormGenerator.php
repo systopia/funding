@@ -20,7 +20,6 @@ declare(strict_types = 1);
 namespace Civi\Funding\ClearingProcess\Form;
 
 use Civi\Funding\ClearingProcess\ClearingActionsDeterminer;
-use Civi\Funding\ClearingProcess\Traits\HasClearingReviewPermissionTrait;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\Form\JsonFormsForm;
 use Civi\Funding\Form\JsonFormsFormInterface;
@@ -69,8 +68,6 @@ use Webmozart\Assert\Assert;
  */
 final class ClearingFormGenerator {
 
-  use HasClearingReviewPermissionTrait;
-
   private ClearingActionsDeterminer $actionsDeterminer;
 
   private ReceiptsFormGeneratorInterface $receiptsFormGenerator;
@@ -89,10 +86,20 @@ final class ClearingFormGenerator {
 
   /**
    * @throws \CRM_Core_Exception
+   *
+   * phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
    */
   public function generateForm(ClearingProcessEntityBundle $clearingProcessBundle): JsonFormsFormInterface {
+  // phpcs:enable
     $receiptsForm = $this->receiptsFormGenerator->generateReceiptsForm($clearingProcessBundle);
     $reportForm = $this->reportFormFactory->createReportForm($clearingProcessBundle);
+    if (!$this->actionsDeterminer->isContentChangeAllowed($clearingProcessBundle)) {
+      /** @var \Civi\RemoteTools\JsonSchema\JsonSchema|null $reportDataSchema */
+      $reportDataSchema = $reportForm->getJsonSchema()['properties']['reportData'] ?? NULL;
+      if (NULL !== $reportDataSchema) {
+        $reportDataSchema['readOnly'] = TRUE;
+      }
+    }
 
     $keywords = $receiptsForm->getJsonSchema()->toArray();
     if ([] !== $keywords) {
@@ -100,13 +107,13 @@ final class ClearingFormGenerator {
       if (NULL !== $reportForm->getReceiptsPrependUiSchema()) {
         $receiptsFormUiSchema['elements'] = array_merge(
           [$reportForm->getReceiptsPrependUiSchema()],
-          // @phpstan-ignore-next-line
+          // @phpstan-ignore argument.type
           $receiptsFormUiSchema['elements']
         );
       }
       if (NULL !== $reportForm->getReceiptsAppendUiSchema()) {
         $receiptsFormUiSchema['elements'] = array_merge(
-        // @phpstan-ignore-next-line
+          // @phpstan-ignore argument.type
           $receiptsFormUiSchema['elements'],
           [$reportForm->getReceiptsAppendUiSchema()]
         );
@@ -137,7 +144,7 @@ final class ClearingFormGenerator {
       $actions = [];
     }
 
-    if ($this->hasReviewPermission($clearingProcessBundle->getFundingCase()->getPermissions())) {
+    if ($this->actionsDeterminer->isActionAllowed('add-comment', $clearingProcessBundle)) {
       // @phpstan-ignore-next-line
       $keywords['properties']['comment'] = new JsonSchemaComment();
     }

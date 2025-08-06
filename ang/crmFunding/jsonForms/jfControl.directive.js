@@ -246,6 +246,25 @@ fundingModule.directive('fundingJfControl', ['$compile', function($compile) {
         scope.required = scope.objectSchema.required instanceof Array &&
           scope.objectSchema.required.includes(scope.propertyName);
 
+        readOnlyBySchema = propertySchema.readOnly || propertySchema.$calculate || uiSchema.readonly;
+        if (!readOnlyBySchema) {
+          let parentSchemaPath = uiSchema.scope.substring(2)
+            .replaceAll('/', '.')
+            .replaceAll(/\.([0-9]+)(\.|$)/g, '[$1]$2');
+          while (!readOnlyBySchema && '' !== parentSchemaPath) {
+            const prevSchemaPath = parentSchemaPath;
+            parentSchemaPath = parentSchemaPath.replace(/\.(properties|items)\.[^.]+$/, '');
+            if (prevSchemaPath === parentSchemaPath) {
+              // Should not happen.
+              break;
+            }
+            readOnlyBySchema = !!('' === parentSchemaPath ? jsonSchema.readOnly : _4.get(jsonSchema, parentSchemaPath).readOnly);
+          }
+        }
+        if (readOnlyBySchema) {
+          scope.editable = false;
+        }
+
         let inputType;
 
         if (type === 'array') {
@@ -283,11 +302,6 @@ fundingModule.directive('fundingJfControl', ['$compile', function($compile) {
           element.html('');
 
           throw new Error(`Unknown JSON schema type ${type}`);
-        }
-
-        readOnlyBySchema = propertySchema.readOnly || propertySchema.$calculate || uiSchema.readonly;
-        if (readOnlyBySchema) {
-          scope.editable = false;
         }
 
         const fieldElement = angular.element('<editable-field></editable-field>');

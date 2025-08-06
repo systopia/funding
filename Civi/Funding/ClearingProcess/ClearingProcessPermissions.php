@@ -25,29 +25,23 @@ final class ClearingProcessPermissions {
 
   public const CLEARING_MODIFY = 'clearing_modify';
 
+  // Required to change admitted values.
   public const REVIEW_CALCULATIVE = 'review_clearing_calculative';
 
   public const REVIEW_CONTENT = 'review_clearing_content';
 
-  /**
-   * @phpstan-param list<string> $permissions
-   */
-  public static function hasReviewPermission(array $permissions): bool {
-    return self::hasReviewCalculativePermission($permissions) || self::hasReviewContentPermission($permissions);
-  }
+  // Required to change content of clearing when in review.
+  public const REVIEW_AMEND = 'review_clearing_amend';
 
   /**
    * @phpstan-param list<string> $permissions
    */
-  public static function hasReviewCalculativePermission(array $permissions): bool {
-    return in_array(self::REVIEW_CALCULATIVE, $permissions, TRUE);
-  }
-
-  /**
-   * @phpstan-param list<string> $permissions
-   */
-  public static function hasReviewContentPermission(array $permissions): bool {
-    return in_array(self::REVIEW_CONTENT, $permissions, TRUE);
+  public static function hasAnyReviewPermission(array $permissions): bool {
+    return [] !== array_intersect($permissions, [
+      self::REVIEW_CALCULATIVE,
+      self::REVIEW_CONTENT,
+      self::REVIEW_AMEND,
+    ]);
   }
 
 }

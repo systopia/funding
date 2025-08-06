@@ -54,6 +54,7 @@ final class FundingCaseGetPossiblePermissionsSubscriber implements EventSubscrib
       'review_drawdown' => E::ts('Review: drawdown'),
       ClearingProcessPermissions::REVIEW_CALCULATIVE => E::ts('Review: clearing calculative'),
       ClearingProcessPermissions::REVIEW_CONTENT => E::ts('Review: clearing content'),
+      ClearingProcessPermissions::REVIEW_AMEND => E::ts('Review: clearing amend'),
     ]);
   }
 

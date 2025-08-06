@@ -68,4 +68,8 @@ final class ClearingResourcesItemManager extends AbstractClearingItemManager {
     return ClearingResourcesItemEntity::class;
   }
 
+  protected function getFinancePlanItemIdFieldName(): string {
+    return 'app_resources_item_id';
+  }
+
 }

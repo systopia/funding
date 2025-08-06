@@ -26,7 +26,7 @@ use Civi\RemoteTools\Api4\Query\Comparison;
 /**
  * @extends AbstractClearingItemManager<ClearingCostItemEntity>
  */
-final class ClearingCostItemManager extends AbstractClearingItemManager {
+class ClearingCostItemManager extends AbstractClearingItemManager {
 
   /**
    * @inheritDoc
@@ -66,6 +66,10 @@ final class ClearingCostItemManager extends AbstractClearingItemManager {
    */
   protected function getEntityClass(): string {
     return ClearingCostItemEntity::class;
+  }
+
+  protected function getFinancePlanItemIdFieldName(): string {
+    return 'application_cost_item_id';
   }
 
 }

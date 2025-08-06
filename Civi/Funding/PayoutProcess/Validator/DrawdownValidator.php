@@ -20,12 +20,12 @@ declare(strict_types = 1);
 namespace Civi\Funding\PayoutProcess\Validator;
 
 use Civi\API\Exception\UnauthorizedException;
-use Civi\Funding\ClearingProcess\Traits\HasClearingReviewPermissionTrait;
 use Civi\Funding\Entity\AbstractEntity;
 use Civi\Funding\Entity\DrawdownEntity;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\PayoutProcessEntity;
 use Civi\Funding\FundingCase\FundingCaseManager;
+use Civi\Funding\FundingCase\FundingCasePermissions;
 use Civi\Funding\PayoutProcess\PayoutProcessManager;
 use Civi\Funding\Validation\ConcreteEntityValidatorInterface;
 use Civi\Funding\Validation\EntityValidationError;
@@ -39,10 +39,6 @@ use Webmozart\Assert\Assert;
  * @implements ConcreteEntityValidatorInterface<DrawdownEntity>
  */
 final class DrawdownValidator implements ConcreteEntityValidatorInterface {
-
-  use HasClearingReviewPermissionTrait {
-    hasReviewPermission as hasClearingReviewPermission;
-  }
 
   private FundingCaseManager $fundingCaseManager;
 
@@ -79,7 +75,7 @@ final class DrawdownValidator implements ConcreteEntityValidatorInterface {
     if ($new->getAmount() < 0) {
       $fundingCase = $this->getFundingCase($payoutProcess);
       // Only reviewers are allowed to create payback claims.
-      if (!$this->hasClearingReviewPermission($fundingCase->getPermissions())) {
+      if (!$fundingCase->hasPermission(FundingCasePermissions::REVIEW_FINISH)) {
         return $this->createAmountLessThanZeroResult();
       }
     }
@@ -114,7 +110,8 @@ final class DrawdownValidator implements ConcreteEntityValidatorInterface {
         return $this->createAmountLessThanZeroResult();
       }
     }
-    elseif (!$this->hasClearingReviewPermission($fundingCase->getPermissions())) {
+    // Allow reviewers to create final drawdown.
+    elseif (!$fundingCase->hasPermission(FundingCasePermissions::REVIEW_FINISH)) {
       throw new UnauthorizedException(E::ts('Permission to create drawdown is missing.'));
     }
 

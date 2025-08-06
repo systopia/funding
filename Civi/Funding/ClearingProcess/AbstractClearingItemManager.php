@@ -46,6 +46,14 @@ abstract class AbstractClearingItemManager {
     ])) === 0;
   }
 
+  public function countByFinancePlanItemId(int $financePlanItemId): int {
+    return $this->api4->countEntities($this->getApiEntityName(), Comparison::new(
+      $this->getFinancePlanItemIdFieldName(),
+      '=',
+      $financePlanItemId
+    ));
+  }
+
   /**
    * @phpstan-param T $item
    *
@@ -113,7 +121,7 @@ abstract class AbstractClearingItemManager {
   /**
    * @phpstan-param array<T> $items
    */
-  public function updateAll(int $clearingProcessId, array $items): void {
+  public function updateAll(int $clearingProcessId, array $items, bool $deleteOther): void {
     $currentItems = $this->getByClearingProcessId($clearingProcessId);
     $usedIds = [];
     foreach ($items as $item) {
@@ -122,8 +130,10 @@ abstract class AbstractClearingItemManager {
       $usedIds[] = $item->getId();
     }
 
-    foreach (array_diff(array_keys($currentItems), $usedIds) as $deletedId) {
-      $this->delete($currentItems[$deletedId]);
+    if ($deleteOther) {
+      foreach (array_diff(array_keys($currentItems), $usedIds) as $deletedId) {
+        $this->delete($currentItems[$deletedId]);
+      }
     }
   }
 
@@ -133,5 +143,7 @@ abstract class AbstractClearingItemManager {
    * @phpstan-return class-string<T>
    */
   abstract protected function getEntityClass(): string;
+
+  abstract protected function getFinancePlanItemIdFieldName(): string;
 
 }

@@ -63,9 +63,7 @@ final class SetCalculativeReviewerActionHandler implements ActionHandlerInterfac
       sprintf('Clearing process with ID %d not found', $action->getClearingProcessId())
     );
 
-    if (!ClearingProcessPermissions::hasReviewCalculativePermission(
-      $clearingProcessBundle->getFundingCase()->getPermissions()
-    )) {
+    if (!$clearingProcessBundle->getFundingCase()->hasPermission(ClearingProcessPermissions::REVIEW_CALCULATIVE)) {
       throw new UnauthorizedException(E::ts('Permission to change calculative reviewer is missing.'));
     }
 

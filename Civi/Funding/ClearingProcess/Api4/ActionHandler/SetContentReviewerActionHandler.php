@@ -63,9 +63,7 @@ final class SetContentReviewerActionHandler implements ActionHandlerInterface {
       sprintf('Clearing process with ID %d not found', $action->getClearingProcessId())
     );
 
-    if (!ClearingProcessPermissions::hasReviewContentPermission(
-      $clearingProcessBundle->getFundingCase()->getPermissions()
-    )) {
+    if (!$clearingProcessBundle->getFundingCase()->hasPermission(ClearingProcessPermissions::REVIEW_CONTENT)) {
       throw new UnauthorizedException(E::ts('Permission to change content reviewer is missing.'));
     }
 

@@ -934,6 +934,10 @@ msgstr ""
 msgid "Review: clearing content"
 msgstr ""
 
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
+msgid "Review: clearing amend"
+msgstr ""
+
 #: Civi/Funding/EventSubscriber/FundingProgram/FundingProgramGetPossiblePermissionsSubscriber.php
 msgid "View"
 msgstr ""

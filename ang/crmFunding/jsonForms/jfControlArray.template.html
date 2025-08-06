@@ -15,7 +15,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr ng-repeat="row in value track by $index" edit-allowed="editable" path="{{ path }}" funding-editable-table-row>
+    <tr ng-repeat="row in value track by $index" edit-allowed="editable" remove-allowed="removeAllowed" path="{{ path }}" funding-editable-table-row>
       <td ng-repeat="cellElement in elements track by $index">
         <funding-jf-element json-schema="propertySchema.items" ui-schema="cellElement"
                             error-path-prefix="{{ path }}[{{ $parent.$index }}]" data="row"
@@ -25,4 +25,4 @@
     </tr>
   </tbody>
 </table>
-<funding-add-row-button path="{{ path }}" ng-show="editable"></funding-add-row-button>
+<funding-add-row-button path="{{ path }}" ng-show="addAllowed"></funding-add-row-button>
