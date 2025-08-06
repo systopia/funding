@@ -63,6 +63,8 @@ final class DefaultApplicationProcessStatusDeterminer extends AbstractApplicatio
     ],
     'complete' => [
       'withdraw' => 'withdrawn',
+      'update' => 'complete',
+      'add-comment' => 'complete',
     ],
   ];
 

@@ -94,6 +94,8 @@ final class DefaultApplicationProcessStatusDeterminerTest extends TestCase {
     yield ['eligible', 'update', 'eligible'];
     yield ['eligible', 'add-comment', 'eligible'];
     yield ['complete', 'withdraw', 'withdrawn'];
+    yield ['complete', 'update', 'complete'];
+    yield ['complete', 'add-comment', 'complete'];
   }
 
   public function testApproveCalculative(): void {
@@ -159,7 +161,6 @@ final class DefaultApplicationProcessStatusDeterminerTest extends TestCase {
   public function provideFinalStatus(): iterable {
     yield [new FullApplicationProcessStatus('withdrawn', NULL, NULL)];
     yield [new FullApplicationProcessStatus('rejected', FALSE, NULL)];
-    yield [new FullApplicationProcessStatus('complete', TRUE, TRUE)];
   }
 
   public function testGetStatusOnClearingProcessCreated(): void {
