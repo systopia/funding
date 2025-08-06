@@ -26,6 +26,7 @@ use Civi\Funding\ClearingProcess\Command\ClearingFormDataGetCommand;
 use Civi\Funding\ClearingProcess\Command\ClearingFormSubmitCommand;
 use Civi\Funding\ClearingProcess\Command\ClearingFormSubmitResult;
 use Civi\Funding\ClearingProcess\Command\ClearingFormValidateCommand;
+use Civi\Funding\ClearingProcess\Handler\Helper\AbstractClearingItemsFormDataPersister;
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingCommentPersister;
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingCostItemsFormDataPersister;
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingResourcesItemsFormDataPersister;
@@ -91,24 +92,30 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
     $files = [];
     $clearingProcessBundle = $command->getClearingProcessBundle();
     $clearingProcess = $clearingProcessBundle->getClearingProcess();
+    $contentChangeAllowed = $this->actionsDeterminer->isContentChangeAllowed($clearingProcessBundle);
 
     if ($this->actionsDeterminer->isEditAction($data['_action'])) {
       $files += $this->clearingCostItemsFormDataPersister->persistClearingItems(
         $clearingProcessBundle,
-        $data['costItems'] ?? []
+        $data['costItems'] ?? [],
+        $contentChangeAllowed ? AbstractClearingItemsFormDataPersister::FLAG_CONTENT_CHANGE_ALLOWED : 0
       );
       $files += $this->clearingResourcesItemsFormDataPersister->persistClearingItems(
         $clearingProcessBundle,
-        $data['resourcesItems'] ?? []
-      );
-      $files += $this->externalFilePersister->handleFiles(
-        $validationResult->getTaggedData(),
-        $data,
-        FundingClearingProcess::getEntityName(),
-        $clearingProcess->getId()
+        $data['resourcesItems'] ?? [],
+        $contentChangeAllowed ? AbstractClearingItemsFormDataPersister::FLAG_CONTENT_CHANGE_ALLOWED : 0
       );
 
-      $clearingProcess->setReportData($data['reportData'] ?? []);
+      if ($contentChangeAllowed) {
+        $files += $this->externalFilePersister->handleFiles(
+          $validationResult->getTaggedData(),
+          $data,
+          FundingClearingProcess::getEntityName(),
+          $clearingProcess->getId()
+        );
+
+        $clearingProcess->setReportData($data['reportData'] ?? []);
+      }
     }
 
     $this->actionApplyHandler->handle(

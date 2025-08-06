@@ -19,12 +19,13 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ClearingProcess\Handler\Helper;
 
+use Civi\API\Exception\UnauthorizedException;
 use Civi\Funding\ApplicationProcess\AbstractFinancePlanItemManager;
 use Civi\Funding\ClearingProcess\AbstractClearingItemManager;
 use Civi\Funding\ClearingProcess\ClearingCostItemManager;
 use Civi\Funding\ClearingProcess\ClearingExternalFileManagerInterface;
+use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\ClearingProcess\ClearingResourcesItemManager;
-use Civi\Funding\ClearingProcess\Traits\HasClearingReviewPermissionTrait;
 use Civi\Funding\Entity\AbstractClearingItemEntity;
 use Civi\Funding\Entity\AbstractFinancePlanItemEntity;
 use Civi\Funding\Entity\ClearingCostItemEntity;
@@ -43,7 +44,7 @@ use Webmozart\Assert\Assert;
  */
 abstract class AbstractClearingItemsFormDataPersister {
 
-  use HasClearingReviewPermissionTrait;
+  public const FLAG_CONTENT_CHANGE_ALLOWED = 1;
 
   /**
    * @phpstan-var \Civi\Funding\ClearingProcess\AbstractClearingItemManager<TClearingItem>
@@ -105,7 +106,8 @@ abstract class AbstractClearingItemsFormDataPersister {
    */
   public function persistClearingItems(
     ClearingProcessEntityBundle $clearingProcessBundle,
-    array $clearingItemsFormData
+    array $clearingItemsFormData,
+    int $flags
   ): array {
     $clearingProcessId = $clearingProcessBundle->getClearingProcess()->getId();
     $clearingItems = [];
@@ -126,7 +128,14 @@ abstract class AbstractClearingItemsFormDataPersister {
       );
 
       foreach ($data['records'] as $record) {
-        [$clearingItem, $externalFile] = $this->createClearingItem($clearingProcessBundle, $financePlanItem, $record);
+        if (isset($record['_id'])) {
+          [$clearingItem, $externalFile] =
+            $this->updateClearingItem($clearingProcessBundle, $financePlanItem, $record, $flags);
+        }
+        else {
+          [$clearingItem, $externalFile] =
+            $this->createClearingItem($clearingProcessBundle, $financePlanItem, $record, $flags);
+        }
         $clearingItems[] = $clearingItem;
         if (NULL !== $externalFile) {
           $files[$record['file']] = $externalFile->getUri();
@@ -134,7 +143,11 @@ abstract class AbstractClearingItemsFormDataPersister {
       }
     }
 
-    $this->clearingItemManager->updateAll($clearingProcessId, $clearingItems);
+    $this->clearingItemManager->updateAll(
+      $clearingProcessId,
+      $clearingItems,
+      0 !== ($flags & self::FLAG_CONTENT_CHANGE_ALLOWED)
+    );
 
     return $files;
   }
@@ -150,44 +163,19 @@ abstract class AbstractClearingItemsFormDataPersister {
   private function createClearingItem(
     ClearingProcessEntityBundle $clearingProcessBundle,
     AbstractFinancePlanItemEntity $financePlanItem,
-    array $record
+    array $record,
+    int $flags
   ): array {
     $clearingProcessId = $clearingProcessBundle->getClearingProcess()->getId();
     $permissions = $clearingProcessBundle->getFundingCase()->getPermissions();
 
-    if (isset($record['_id'])) {
-      $existingClearingItem = $this->clearingItemManager->get($record['_id']);
-      if (NULL === $existingClearingItem) {
-        // Clearing item has been removed by another request. The record may
-        // contain a link to a file already loaded into CiviCRM that was deleted
-        // when the clearing item has been removed.
-        throw new FundingException('Clearing was modified after loading the form');
-      }
-
-      Assert::same($existingClearingItem->get($this->financePlanItemIdFieldName), $financePlanItem->getId());
-      $externalFile = $this->handleFile($record, $existingClearingItem, $clearingProcessId);
-      $fileId = NULL === $externalFile ? NULL : $externalFile->getFileId();
-
-      $status = $this->determineStatus($record, $existingClearingItem, $fileId, $permissions);
-      $existingClearingItem
-        ->setFileId($fileId)
-        ->setReceiptNumber($record['receiptNumber'])
-        ->setReceiptDate(DateTimeUtil::toDateTimeOrNull($record['receiptDate']))
-        ->setPaymentDate(new \DateTime($record['paymentDate']))
-        ->setRecipient($record['recipient'])
-        ->setReason($record['reason'])
-        ->setAmount($record['amount'])
-        ->setStatus($status);
-      if ($this->hasReviewPermission($permissions)) {
-        $existingClearingItem->setAmountAdmitted($record['amountAdmitted']);
-      }
-      elseif ('new' === $status) {
-        $existingClearingItem->setAmountAdmitted(NULL);
-      }
-
-      return [$existingClearingItem, $externalFile];
+    if (0 === ($flags & self::FLAG_CONTENT_CHANGE_ALLOWED)) {
+      throw new UnauthorizedException('Permission to add new clearing items is missing');
     }
 
+    if (!$clearingProcessBundle->getFundingCase()->hasPermission(ClearingProcessPermissions::REVIEW_CALCULATIVE)) {
+      $record['amountAdmitted'] = NULL;
+    }
     $externalFile = $this->handleFile($record, NULL, $clearingProcessId);
     $fileId = NULL === $externalFile ? NULL : $externalFile->getFileId();
     $clearingItem = $this->clearingItemEntityClass::fromArray([
@@ -201,12 +189,8 @@ abstract class AbstractClearingItemsFormDataPersister {
       'recipient' => $record['recipient'],
       'reason' => $record['reason'],
       'amount' => $record['amount'],
-      'amount_admitted' => NULL,
+      'amount_admitted' => $record['amountAdmitted'],
     ]);
-
-    if ($this->hasReviewPermission($permissions)) {
-      $clearingItem->setAmountAdmitted($record['amountAdmitted']);
-    }
 
     return [$clearingItem, $externalFile];
   }
@@ -222,7 +206,7 @@ abstract class AbstractClearingItemsFormDataPersister {
     ?int $fileId,
     array $permissions
   ): string {
-    if ($this->hasReviewPermission($permissions)) {
+    if (ClearingProcessPermissions::hasAnyReviewPermission($permissions)) {
       if (NULL === $record['amountAdmitted']) {
         return 'new';
       }
@@ -268,6 +252,66 @@ abstract class AbstractClearingItemsFormDataPersister {
       || $clearingItem->getRecipient() !== $record['recipient']
       || $clearingItem->getReason() !== $record['reason']
       || abs($clearingItem->getAmount() - $record['amount']) >= PHP_FLOAT_EPSILON;
+  }
+
+  /**
+   * @phpstan-param TFinancePlanItem $financePlanItem
+   * @phpstan-param clearingItemRecordT $record
+   *
+   * @phpstan-return array{TClearingItem, ?\Civi\Funding\Entity\ExternalFileEntity}
+   *
+   * @throws \CRM_Core_Exception
+   */
+  private function updateClearingItem(
+    ClearingProcessEntityBundle $clearingProcessBundle,
+    AbstractFinancePlanItemEntity $financePlanItem,
+    array $record,
+    int $flags
+  ) {
+    assert(isset($record['_id']));
+
+    $clearingProcessId = $clearingProcessBundle->getClearingProcess()->getId();
+    $permissions = $clearingProcessBundle->getFundingCase()->getPermissions();
+    $existingClearingItem = $this->clearingItemManager->get($record['_id']);
+    if (NULL === $existingClearingItem) {
+      // Clearing item has been removed by another request. The record may
+      // contain a link to a file already loaded into CiviCRM that was deleted
+      // when the clearing item has been removed.
+      throw new FundingException('Clearing was modified after loading the form');
+    }
+
+    Assert::same($existingClearingItem->get($this->financePlanItemIdFieldName), $financePlanItem->getId());
+    if (0 !== ($flags & self::FLAG_CONTENT_CHANGE_ALLOWED)) {
+      $externalFile = $this->handleFile($record, $existingClearingItem, $clearingProcessId);
+      $fileId = NULL === $externalFile ? NULL : $externalFile->getFileId();
+    }
+    else {
+      $externalFile = $this->externalFileManager->getFile($existingClearingItem);
+      $fileId = $existingClearingItem->getFileId();
+    }
+
+    $status = $this->determineStatus($record, $existingClearingItem, $fileId, $permissions);
+    $existingClearingItem->setStatus($status);
+
+    if (0 !== ($flags & self::FLAG_CONTENT_CHANGE_ALLOWED)) {
+      $existingClearingItem
+        ->setFileId($fileId)
+        ->setReceiptNumber($record['receiptNumber'])
+        ->setReceiptDate(DateTimeUtil::toDateTimeOrNull($record['receiptDate']))
+        ->setPaymentDate(new \DateTime($record['paymentDate']))
+        ->setRecipient($record['recipient'])
+        ->setReason($record['reason'])
+        ->setAmount($record['amount']);
+    }
+
+    if ($clearingProcessBundle->getFundingCase()->hasPermission(ClearingProcessPermissions::REVIEW_CALCULATIVE)) {
+      $existingClearingItem->setAmountAdmitted($record['amountAdmitted']);
+    }
+    elseif ('new' === $status) {
+      $existingClearingItem->setAmountAdmitted(NULL);
+    }
+
+    return [$existingClearingItem, $externalFile];
   }
 
 }

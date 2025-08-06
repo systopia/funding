@@ -20,6 +20,8 @@ declare(strict_types = 1);
 namespace Civi\Funding\ClearingProcess\Form\ResourcesItem;
 
 use Civi\Core\Format;
+use Civi\Funding\ClearingProcess\ClearingActionsDeterminer;
+use Civi\Funding\ClearingProcess\ClearingResourcesItemManager;
 use Civi\Funding\ClearingProcess\Form\AbstractClearingItemsJsonFormsGenerator;
 use Civi\Funding\ClearingProcess\Form\ClearingGroupExtractor;
 use Civi\Funding\ClearingProcess\Form\ItemDetailsFormElementGenerator;
@@ -32,12 +34,21 @@ use CRM_Funding_ExtensionUtil as E;
 final class ClearingResourcesItemsJsonFormsGenerator extends AbstractClearingItemsJsonFormsGenerator {
 
   public function __construct(
+    ClearingActionsDeterminer $actionsDeterminer,
     ClearableResourcesItemsLoader $clearableItemsLoader,
     ClearingGroupExtractor $clearingGroupExtractor,
+    ClearingResourcesItemManager $clearingResourcesItemManager,
     Format $format,
     ItemDetailsFormElementGenerator $itemDetailsFormElementGenerator
   ) {
-    parent::__construct($clearableItemsLoader, $clearingGroupExtractor, $format, $itemDetailsFormElementGenerator);
+    parent::__construct(
+      $actionsDeterminer,
+      $clearableItemsLoader,
+      $clearingGroupExtractor,
+      $clearingResourcesItemManager,
+      $format,
+      $itemDetailsFormElementGenerator
+    );
   }
 
   protected function getPropertyKeyword(): string {

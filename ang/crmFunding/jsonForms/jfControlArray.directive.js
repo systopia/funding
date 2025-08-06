@@ -59,6 +59,8 @@ fundingModule.directive('fundingJfControlArray', [function() {
             $scope.value = [];
             _4.set(newData, $scope.path, $scope.value);
           }
+          $scope.addAllowed = $scope.editable && ($scope.propertySchema.maxItems == null || $scope.value.length < $scope.propertySchema.maxItems);
+          $scope.removeAllowed = $scope.editable && ($scope.propertySchema.minItems == null || $scope.value.length > $scope.propertySchema.minItems);
         }
       });
     }],

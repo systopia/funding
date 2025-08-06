@@ -46,7 +46,7 @@ final class ValidateFormActionTest extends AbstractFundingHeadlessTestCase {
     FundingCaseContactRelationFixture::addContact(
       $contact['id'],
       $this->clearingProcessBundle->getFundingCase()->getId(),
-      [ClearingProcessPermissions::REVIEW_CONTENT],
+      [ClearingProcessPermissions::REVIEW_AMEND],
     );
 
     RequestTestUtil::mockInternalRequest($contact['id']);

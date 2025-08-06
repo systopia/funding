@@ -22,12 +22,14 @@ namespace Civi\Funding\ClearingProcess\Form\CostItem;
 use Civi\Core\Format;
 use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\JsonSchemaCostItem;
 use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\JsonSchemaCostItems;
+use Civi\Funding\ClearingProcess\ClearingActionsDeterminer;
+use Civi\Funding\ClearingProcess\ClearingCostItemManager;
 use Civi\Funding\ClearingProcess\Form\ClearingGroupExtractor;
 use Civi\Funding\ClearingProcess\Form\Container\ClearableItems;
 use Civi\Funding\ClearingProcess\Form\Container\ClearingItemsGroup;
 use Civi\Funding\ClearingProcess\Form\ItemDetailsFormElementGenerator;
 use Civi\Funding\EntityFactory\ApplicationCostItemFactory;
-use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
+use Civi\Funding\EntityFactory\ClearingProcessBundleFactory;
 use Civi\Funding\Form\JsonFormsForm;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsTable;
@@ -44,45 +46,41 @@ use PHPUnit\Framework\TestCase;
  */
 final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
 
-  /**
-   * @var \Civi\Funding\ClearingProcess\Form\CostItem\ClearableCostItemsLoader&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $clearableItemsLoaderMock;
+  private ClearingActionsDeterminer&MockObject $actionsDeterminerMock;
 
-  /**
-   * @var \Civi\Funding\ClearingProcess\Form\ClearingGroupExtractor&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $clearingGroupExtractorMock;
+  private ClearableCostItemsLoader&MockObject $clearableItemsLoaderMock;
 
-  /**
-   * @var \Civi\Core\Format&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $formatMock;
+  private ClearingGroupExtractor&MockObject $clearingGroupExtractorMock;
+
+  private ClearingCostItemManager&MockObject $clearingItemManagerMock;
+
+  private Format&MockObject $formatMock;
 
   private ClearingCostItemsJsonFormsGenerator $generator;
 
-  /**
-   * @var \Civi\Funding\ClearingProcess\Form\ItemDetailsFormElementGenerator&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $itemDetailsFormElementGeneratorMock;
+  private ItemDetailsFormElementGenerator&MockObject $itemDetailsFormElementGeneratorMock;
 
   protected function setUp(): void {
     parent::setUp();
+    $this->actionsDeterminerMock = $this->createMock(ClearingActionsDeterminer::class);
     $this->clearableItemsLoaderMock = $this->createMock(ClearableCostItemsLoader::class);
     $this->clearingGroupExtractorMock = $this->createMock(ClearingGroupExtractor::class);
+    $this->clearingItemManagerMock = $this->createMock(ClearingCostItemManager::class);
     $this->formatMock = $this->createMock(Format::class);
     $this->itemDetailsFormElementGeneratorMock = $this->createMock(ItemDetailsFormElementGenerator::class);
 
     $this->generator = new ClearingCostItemsJsonFormsGenerator(
+      $this->actionsDeterminerMock,
       $this->clearableItemsLoaderMock,
       $this->clearingGroupExtractorMock,
+      $this->clearingItemManagerMock,
       $this->formatMock,
       $this->itemDetailsFormElementGeneratorMock
     );
   }
 
   public function testNumberItem(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $clearingProcessBundle = ClearingProcessBundleFactory::create();
 
     $costItem = ApplicationCostItemFactory::createApplicationCostItem([
       'id' => 23,
@@ -100,7 +98,7 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
     $applicationForm = new JsonFormsForm($jsonSchema, $uiSchema);
 
     $this->clearableItemsLoaderMock->method('getClearableItems')
-      ->with($applicationProcessBundle, $jsonSchema)
+      ->with($clearingProcessBundle, $jsonSchema)
       ->willReturn([
         '#/properties/test' => new ClearableItems('#/properties', $propertySchema, $costItemSchema, [$costItem]),
       ]);
@@ -122,7 +120,16 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
       ->with($costItem->getAmount(), 'EUR')
       ->willReturn($costItem->getAmount() . ' €');
 
-    $clearingItemsForm = $this->generator->generate($applicationProcessBundle, $applicationForm);
+    $this->actionsDeterminerMock->expects(static::once())->method('isAdmittedValueChangeAllowed')
+      ->with($clearingProcessBundle)
+      ->willReturn(FALSE);
+    $this->actionsDeterminerMock->expects(static::once())->method('isContentChangeAllowed')
+      ->with($clearingProcessBundle)
+      ->willReturn(FALSE);
+    $this->clearingItemManagerMock->expects(static::once())->method('countByFinancePlanItemId')
+      ->with($costItem->getId())
+      ->willReturn(2);
+    $clearingItemsForm = $this->generator->generate($clearingProcessBundle, $applicationForm);
     static::assertEquals([
       'type' => 'object',
       'properties' => [
@@ -134,6 +141,8 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
               'properties' => [
                 'records' => [
                   'type' => 'array',
+                  'minItems' => 2,
+                  'maxItems' => 2,
                   'items' => [
                     'type' => 'object',
                     'properties' => [
@@ -145,30 +154,37 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                       'file' => [
                         'type' => ['string', 'null'],
                         'format' => 'uri',
+                        'readOnly' => TRUE,
                         'default' => NULL,
                       ],
                       'receiptNumber' => [
                         'type' => ['string', 'null'],
+                        'readOnly' => TRUE,
                         'maxlength' => 255,
                       ],
                       'receiptDate' => [
                         'type' => ['string', 'null'],
+                        'readOnly' => TRUE,
                         'format' => 'date',
                       ],
                       'paymentDate' => [
                         'type' => 'string',
+                        'readOnly' => TRUE,
                         'format' => 'date',
                       ],
                       'recipient' => [
                         'type' => 'string',
+                        'readOnly' => TRUE,
                         'maxlength' => 255,
                       ],
                       'reason' => [
                         'type' => 'string',
+                        'readOnly' => TRUE,
                         'maxlength' => 255,
                       ],
                       'amount' => [
                         'type' => 'number',
+                        'readOnly' => TRUE,
                         'precision' => 2,
                       ],
                       'amountAdmitted' => [
@@ -381,7 +397,7 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
   }
 
   public function testNumberItemWithoutGroup(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $clearingProcessBundle = ClearingProcessBundleFactory::create();
 
     $costItem = ApplicationCostItemFactory::createApplicationCostItem([
       'id' => 23,
@@ -399,7 +415,7 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
     $applicationForm = new JsonFormsForm($jsonSchema, $uiSchema);
 
     $this->clearableItemsLoaderMock->method('getClearableItems')
-      ->with($applicationProcessBundle, $jsonSchema)
+      ->with($clearingProcessBundle, $jsonSchema)
       ->willReturn([
         '#/properties/test' => new ClearableItems('#/properties', $propertySchema, $costItemSchema, [$costItem]),
       ]);
@@ -419,7 +435,14 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
         return $amount . ' €';
       });
 
-    $clearingItemsForm = $this->generator->generate($applicationProcessBundle, $applicationForm);
+    $this->actionsDeterminerMock->expects(static::once())->method('isAdmittedValueChangeAllowed')
+      ->with($clearingProcessBundle)
+      ->willReturn(FALSE);
+    $this->actionsDeterminerMock->expects(static::once())->method('isContentChangeAllowed')
+      ->with($clearingProcessBundle)
+      ->willReturn(TRUE);
+    $this->clearingItemManagerMock->expects(static::never())->method('countByFinancePlanItemId');
+    $clearingItemsForm = $this->generator->generate($clearingProcessBundle, $applicationForm);
     static::assertEquals([
       'type' => 'object',
       'properties' => [
@@ -442,31 +465,38 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                       'file' => [
                         'type' => ['string', 'null'],
                         'format' => 'uri',
+                        'readOnly' => FALSE,
                         'default' => NULL,
                       ],
                       'receiptNumber' => [
                         'type' => ['string', 'null'],
+                        'readOnly' => FALSE,
                         'maxlength' => 255,
                       ],
                       'receiptDate' => [
                         'type' => ['string', 'null'],
+                        'readOnly' => FALSE,
                         'format' => 'date',
                       ],
                       'paymentDate' => [
                         'type' => 'string',
                         'format' => 'date',
+                        'readOnly' => FALSE,
                       ],
                       'recipient' => [
                         'type' => 'string',
+                        'readOnly' => FALSE,
                         'maxlength' => 255,
                       ],
                       'reason' => [
                         'type' => 'string',
+                        'readOnly' => FALSE,
                         'maxlength' => 255,
                       ],
                       'amount' => [
                         'type' => 'number',
                         'precision' => 2,
+                        'readOnly' => FALSE,
                       ],
                       'amountAdmitted' => [
                         'type' => ['number', 'null'],
@@ -678,7 +708,7 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
   }
 
   public function testArrayItem(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $clearingProcessBundle = ClearingProcessBundleFactory::create();
 
     $costItem = ApplicationCostItemFactory::createApplicationCostItem([
       'id' => 23,
@@ -707,7 +737,7 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
     $applicationForm = new JsonFormsForm($jsonSchema, $uiSchema);
 
     $this->clearableItemsLoaderMock->method('getClearableItems')
-      ->with($applicationProcessBundle, $jsonSchema)
+      ->with($clearingProcessBundle, $jsonSchema)
       ->willReturn([
         '#/properties/test' => new ClearableItems('#/properties', $propertySchema, $costItemsSchema, [$costItem]),
       ]);
@@ -729,7 +759,16 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
         return $amount . ' €';
       });
 
-    $clearingItemsForm = $this->generator->generate($applicationProcessBundle, $applicationForm);
+    $this->actionsDeterminerMock->expects(static::once())->method('isAdmittedValueChangeAllowed')
+      ->with($clearingProcessBundle)
+      ->willReturn(TRUE);
+    $this->actionsDeterminerMock->expects(static::once())->method('isContentChangeAllowed')
+      ->with($clearingProcessBundle)
+      ->willReturn(FALSE);
+    $this->clearingItemManagerMock->expects(static::once())->method('countByFinancePlanItemId')
+      ->with($costItem->getId())
+      ->willReturn(2);
+    $clearingItemsForm = $this->generator->generate($clearingProcessBundle, $applicationForm);
     static::assertEquals([
       'type' => 'object',
       'properties' => [
@@ -741,6 +780,8 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
               'properties' => [
                 'records' => [
                   'type' => 'array',
+                  'minItems' => 2,
+                  'maxItems' => 2,
                   'items' => [
                     'type' => 'object',
                     'properties' => [
@@ -750,39 +791,46 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         'default' => NULL,
                       ],
                       'file' => [
+                        'readOnly' => TRUE,
                         'type' => ['string', 'null'],
                         'format' => 'uri',
                         'default' => NULL,
                       ],
                       'receiptNumber' => [
+                        'readOnly' => TRUE,
                         'type' => ['string', 'null'],
                         'maxlength' => 255,
                       ],
                       'receiptDate' => [
+                        'readOnly' => TRUE,
                         'type' => ['string', 'null'],
                         'format' => 'date',
                       ],
                       'paymentDate' => [
+                        'readOnly' => TRUE,
                         'type' => 'string',
                         'format' => 'date',
                       ],
                       'recipient' => [
+                        'readOnly' => TRUE,
                         'type' => 'string',
                         'maxlength' => 255,
                       ],
                       'reason' => [
+                        'readOnly' => TRUE,
                         'type' => 'string',
                         'maxlength' => 255,
                       ],
                       'amount' => [
+                        'readOnly' => TRUE,
                         'type' => 'number',
                         'precision' => 2,
                       ],
                       'amountAdmitted' => [
                         'type' => ['number', 'null'],
                         'precision' => 2,
-                        'readOnly' => TRUE,
-                        'default' => NULL,
+                        'readOnly' => FALSE,
+                        'default' => ['$data' => '1/amount'],
                       ],
                     ],
                     'required' => ['paymentDate', 'recipient', 'reason', 'amount'],

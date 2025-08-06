@@ -44,11 +44,15 @@ fundingModule.directive('fundingEditableTableRow', function() {
       'path': '@?',
       'inserted': '=?',
       'editAllowed': '=?',
+      'removeAllowed': '=?',
     },
     controllerAs: '$ctrl',
     controller: ['$scope', '$attrs', function ($scope, $attrs) {
       if ($attrs.editAllowed === undefined) {
         $attrs.editAllowed = 'isEditAllowed()';
+      }
+      if ($attrs.removeAllowed === undefined) {
+        $attrs.removeAllowed = $attrs.editAllowed;
       }
       if ($attrs.ngRepeat) {
         // "row in ..." or "(key, row) in ..."

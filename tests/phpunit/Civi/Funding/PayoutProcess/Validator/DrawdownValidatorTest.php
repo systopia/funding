@@ -20,7 +20,6 @@ declare(strict_types = 1);
 namespace Civi\Funding\PayoutProcess\Validator;
 
 use Civi\API\Exception\UnauthorizedException;
-use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\Entity\DrawdownEntity;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\PayoutProcessEntity;
@@ -28,6 +27,7 @@ use Civi\Funding\EntityFactory\DrawdownFactory;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\PayoutProcessFactory;
 use Civi\Funding\FundingCase\FundingCaseManager;
+use Civi\Funding\FundingCase\FundingCasePermissions;
 use Civi\Funding\PayoutProcess\PayoutProcessManager;
 use Civi\Funding\Validation\EntityValidationError;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -124,11 +124,11 @@ final class DrawdownValidatorTest extends TestCase {
     ], $result->getErrors());
   }
 
-  public function testValidateAmountLessThanZeroWithClearingPermission(): void {
+  public function testValidateAmountLessThanZeroWithReviewFinishPermission(): void {
     $current = DrawdownFactory::create(['amount' => 10.0]);
     $new = DrawdownFactory::create(['amount' => -0.1]);
     $this->fundingCase->setValues([
-      'permissions' => [ClearingProcessPermissions::REVIEW_CONTENT],
+      'permissions' => [FundingCasePermissions::REVIEW_FINISH],
     ] + $this->fundingCase->toArray());
 
     $result = $this->validator->validate($new, $current, TRUE);
@@ -217,10 +217,10 @@ final class DrawdownValidatorTest extends TestCase {
     ], $result->getErrors());
   }
 
-  public function testValidateNewAmountLessThanZeroWithClearingPermission(): void {
+  public function testValidateNewAmountLessThanZeroWithReviewFinishPermission(): void {
     $new = DrawdownFactory::create(['amount' => -0.1]);
     $this->fundingCase->setValues([
-      'permissions' => [ClearingProcessPermissions::REVIEW_CALCULATIVE],
+      'permissions' => [FundingCasePermissions::REVIEW_FINISH],
     ] + $this->fundingCase->toArray());
 
     $result = $this->validator->validateNew($new, TRUE);

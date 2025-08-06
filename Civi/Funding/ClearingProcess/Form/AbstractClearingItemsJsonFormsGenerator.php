@@ -20,11 +20,13 @@ declare(strict_types = 1);
 namespace Civi\Funding\ClearingProcess\Form;
 
 use Civi\Core\Format;
+use Civi\Funding\ClearingProcess\ClearingActionsDeterminer;
+use Civi\Funding\ClearingProcess\ClearingCostItemManager;
+use Civi\Funding\ClearingProcess\ClearingResourcesItemManager;
 use Civi\Funding\ClearingProcess\Form\Container\ClearableItems;
 use Civi\Funding\ClearingProcess\Form\Container\ClearingItemsGroup;
-use Civi\Funding\ClearingProcess\Traits\HasClearingReviewPermissionTrait;
 use Civi\Funding\Entity\AbstractFinancePlanItemEntity;
-use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\Form\JsonFormsForm;
 use Civi\Funding\Form\JsonFormsFormInterface;
 use Civi\RemoteTools\JsonForms\Control\JsonFormsArray;
@@ -51,7 +53,7 @@ use Webmozart\Assert\Assert;
  */
 abstract class AbstractClearingItemsJsonFormsGenerator {
 
-  use HasClearingReviewPermissionTrait;
+  private ClearingActionsDeterminer $actionsDeterminer;
 
   /**
    * @phpstan-var AbstractClearableItemsLoader<T>
@@ -59,6 +61,8 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
   private AbstractClearableItemsLoader $clearableItemsLoader;
 
   private ClearingGroupExtractor $clearingGroupExtractor;
+
+  private ClearingCostItemManager|ClearingResourcesItemManager $clearingItemManager;
 
   private Format $format;
 
@@ -79,13 +83,17 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
    * @phpstan-param AbstractClearableItemsLoader<T> $clearableItemsLoader
    */
   public function __construct(
+    ClearingActionsDeterminer $actionsDeterminer,
     AbstractClearableItemsLoader $clearableItemsLoader,
     ClearingGroupExtractor $clearingGroupExtractor,
+    ClearingCostItemManager|ClearingResourcesItemManager $clearingItemManager,
     Format $format,
     ItemDetailsFormElementGenerator $itemDetailsFormElementGenerator
   ) {
+    $this->actionsDeterminer = $actionsDeterminer;
     $this->clearableItemsLoader = $clearableItemsLoader;
     $this->clearingGroupExtractor = $clearingGroupExtractor;
+    $this->clearingItemManager = $clearingItemManager;
     $this->format = $format;
     $this->itemDetailsFormElementGenerator = $itemDetailsFormElementGenerator;
   }
@@ -94,14 +102,14 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
    * @throws \CRM_Core_Exception
    */
   public function generate(
-    ApplicationProcessEntityBundle $applicationProcessBundle,
+    ClearingProcessEntityBundle $clearingProcessBundle,
     JsonFormsFormInterface $applicationForm
   ): JsonFormsFormInterface {
     $this->properties = [];
     $this->formElements = [];
 
     $clearableItems = $this->clearableItemsLoader->getClearableItems(
-      $applicationProcessBundle,
+      $clearingProcessBundle,
       $applicationForm->getJsonSchema()
     );
 
@@ -110,13 +118,15 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
       array_keys($clearableItems)
     );
 
-    $hasReviewPermission = $this->hasReviewPermission($applicationProcessBundle->getFundingCase()->getPermissions());
+    $admittedValueChangeAllowed = $this->actionsDeterminer->isAdmittedValueChangeAllowed($clearingProcessBundle);
+    $contentChangeAllowed = $this->actionsDeterminer->isContentChangeAllowed($clearingProcessBundle);
     foreach ($groups as $group) {
       $this->handleGroup(
         $group,
-        $applicationProcessBundle->getFundingProgram()->getCurrency(),
+        $clearingProcessBundle->getFundingProgram()->getCurrency(),
         $clearableItems,
-        $hasReviewPermission
+        $admittedValueChangeAllowed,
+        $contentChangeAllowed
       );
     }
 
@@ -164,7 +174,7 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
       ), 2),
       0.0
     );
-    $currency = $applicationProcessBundle->getFundingProgram()->getCurrency();
+    $currency = $clearingProcessBundle->getFundingProgram()->getCurrency();
     $this->formElements[] = new JsonFormsGroup(E::ts('Overall'), [
       new JsonFormsTable([
         E::ts('Amount Approved'),
@@ -196,7 +206,8 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
     ClearingItemsGroup $group,
     string $currency,
     array $clearableItems,
-    bool $hasReviewPermission
+    bool $admittedValueChangeAllowed,
+    bool $contentChangeAllowed
   ): void {
     $groupElements = [];
     foreach ($group->elements as $scope => $applicationFormElement) {
@@ -209,18 +220,22 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
           'records' => new JsonSchemaArray(
             new JsonSchemaObject([
               '_id' => new JsonSchemaInteger(['readOnly' => TRUE, 'default' => NULL], TRUE),
-              'file' => new JsonSchemaString(['format' => 'uri', 'default' => NULL], TRUE),
-              'receiptNumber' => new JsonSchemaString(['maxlength' => 255], TRUE),
-              'receiptDate' => new JsonSchemaDate([], TRUE),
-              'paymentDate' => new JsonSchemaDate(),
-              'recipient' => new JsonSchemaString(['maxlength' => 255]),
-              'reason' => new JsonSchemaString(['maxlength' => 255]),
-              'amount' => new JsonSchemaMoney(),
-              'amountAdmitted' => new JsonSchemaMoney([
-                'readOnly' => !$hasReviewPermission,
-                'default' => $hasReviewPermission ? new JsonSchemaDataPointer('1/amount') : NULL,
+              'file' => new JsonSchemaString([
+                'readOnly' => !$contentChangeAllowed,
+                'format' => 'uri',
+                'default' => NULL,
               ], TRUE),
-            ], ['required' => ['paymentDate', 'recipient', 'reason', 'amount']])
+              'receiptNumber' => new JsonSchemaString(['readOnly' => !$contentChangeAllowed, 'maxlength' => 255], TRUE),
+              'receiptDate' => new JsonSchemaDate(['readOnly' => !$contentChangeAllowed], TRUE),
+              'paymentDate' => new JsonSchemaDate(['readOnly' => !$contentChangeAllowed]),
+              'recipient' => new JsonSchemaString(['readOnly' => !$contentChangeAllowed, 'maxlength' => 255]),
+              'reason' => new JsonSchemaString(['readOnly' => !$contentChangeAllowed, 'maxlength' => 255]),
+              'amount' => new JsonSchemaMoney(['readOnly' => !$contentChangeAllowed]),
+              'amountAdmitted' => new JsonSchemaMoney([
+                'readOnly' => !$admittedValueChangeAllowed,
+                'default' => $admittedValueChangeAllowed ? new JsonSchemaDataPointer('1/amount') : NULL,
+              ], TRUE),
+            ], ['required' => ['paymentDate', 'recipient', 'reason', 'amount']]),
           ),
           'amountRecordedTotal' => new JsonSchemaCalculate(
             'number',
@@ -239,6 +254,15 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
             ['default' => 0]
           ),
         ], ['required' => ['records']]);
+
+        if (!$contentChangeAllowed) {
+          $itemCount = $this->clearingItemManager->countByFinancePlanItemId($item->getId());
+          /** @var \Civi\RemoteTools\JsonSchema\JsonSchemaArray $records */
+          // @phpstan-ignore offsetAccess.nonOffsetAccessible
+          $records = $this->properties[$item->getId()]['properties']['records'];
+          $records['minItems'] = $itemCount;
+          $records['maxItems'] = $itemCount;
+        }
 
         $itemLabel = $financePlanItemSchema->getKeywordValueAt('clearing/itemLabel');
         Assert::string($itemLabel);

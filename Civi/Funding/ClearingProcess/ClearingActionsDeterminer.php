@@ -19,15 +19,12 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ClearingProcess;
 
-use Civi\Funding\ClearingProcess\Traits\HasClearingReviewPermissionTrait;
 use Civi\Funding\Entity\ClearingProcessEntity;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\FundingCase\FundingCaseStatus;
 use CRM_Funding_ExtensionUtil as E;
 
 class ClearingActionsDeterminer {
-
-  use HasClearingReviewPermissionTrait;
 
   private const EDIT_ACTIONS = ['save', 'apply', 'update'];
 
@@ -53,8 +50,11 @@ class ClearingActionsDeterminer {
     'review' => [
       ClearingProcessPermissions::CLEARING_APPLY => [],
       ClearingProcessPermissions::CLEARING_MODIFY => [],
-      ClearingProcessPermissions::REVIEW_CALCULATIVE => ['reject', 'request-change', 'update', 'add-comment'],
-      ClearingProcessPermissions::REVIEW_CONTENT => ['reject', 'request-change', 'update', 'add-comment'],
+      // Action "update" is required to submit admitted amounts, though other fields will be read only if
+      // REVIEW_AMEND permission is not given.
+      ClearingProcessPermissions::REVIEW_CALCULATIVE => ['update', 'reject', 'request-change', 'add-comment'],
+      ClearingProcessPermissions::REVIEW_CONTENT => ['reject', 'request-change', 'add-comment'],
+      ClearingProcessPermissions::REVIEW_AMEND => ['update', 'add-comment'],
     ],
     'rework' => [
       ClearingProcessPermissions::CLEARING_APPLY => ['apply', 'save'],
@@ -119,7 +119,8 @@ class ClearingActionsDeterminer {
       return [];
     }
 
-    $permissions = $clearingProcessBundle->getFundingCase()->getPermissions();
+    $fundingCase = $clearingProcessBundle->getFundingCase();
+    $permissions = $fundingCase->getPermissions();
     $status = $clearingProcessBundle->getClearingProcess()->getStatus();
     $actions = [];
     foreach ($permissions as $permission) {
@@ -128,8 +129,8 @@ class ClearingActionsDeterminer {
 
     $actions = array_merge($actions, $this->getReviewActions(
       $clearingProcessBundle->getClearingProcess(),
-      $this->hasReviewCalculativePermission($permissions),
-      $this->hasReviewContentPermission($permissions)
+      $fundingCase->hasPermission(ClearingProcessPermissions::REVIEW_CALCULATIVE),
+      $fundingCase->hasPermission(ClearingProcessPermissions::REVIEW_CONTENT)
     ));
 
     return array_filter($this->labels, fn (string $name) => in_array($name, $actions, TRUE), ARRAY_FILTER_USE_KEY);
@@ -147,6 +148,22 @@ class ClearingActionsDeterminer {
       array_keys($this->getActions($clearingProcessBundle)),
       $actions
     );
+  }
+
+  public function isAdmittedValueChangeAllowed(ClearingProcessEntityBundle $clearingProcessBundle): bool {
+    return $clearingProcessBundle->getFundingCase()->hasPermission(ClearingProcessPermissions::REVIEW_CALCULATIVE)
+      && $this->isActionAllowed('update', $clearingProcessBundle);
+  }
+
+  public function isContentChangeAllowed(ClearingProcessEntityBundle $clearingProcessBundle): bool {
+    $fundingCase = $clearingProcessBundle->getFundingCase();
+    $actions = array_keys($this->getActions($clearingProcessBundle));
+    if ([] !== array_intersect($actions, ['save', 'apply'])) {
+      return TRUE;
+    }
+
+    return in_array('update', $actions, TRUE)
+      && $fundingCase->hasPermission(ClearingProcessPermissions::REVIEW_AMEND);
   }
 
   /**

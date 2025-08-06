@@ -95,6 +95,7 @@ msgstr "Förderfall mit ID \"%1\" nicht gefunden"
 #: ang/crmFundingIJB/ijbApplicationEditor.template.html
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
+#: managed/SavedSearch_funding_application_processes.mgd.php
 msgid "Amount Requested"
 msgstr "Beantragter Betrag"
 
@@ -130,7 +131,6 @@ msgstr "Die Summe der Beträge akzeptierter Mittelabrufe."
 #: Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
-#: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
 msgid "Amount Paid Out"
 msgstr "Ausbezahlter Betrag"
 
@@ -407,6 +407,7 @@ msgstr "Förderprogramm"
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearch_funding_application_processes.mgd.php
 #: managed/SavedSearch_funding_case_application_processes.mgd.php
 #: managed/SavedSearch_funding_cases.mgd.php
 msgid "Identifier"
@@ -417,6 +418,7 @@ msgstr "Bezeichner"
 #: managed/SavedSearchFundingCaseTypes.mgd.php
 #: managed/SavedSearchFundingPrograms.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearch_funding_application_processes.mgd.php
 #: managed/SavedSearch_funding_case_application_processes.mgd.php
 #: managed/SavedSearch_funding_program_controlling.mgd.php
 msgid "Title"
@@ -424,6 +426,7 @@ msgstr "Titel"
 
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
+#: managed/SavedSearch_funding_application_processes.mgd.php
 msgid "Short Description"
 msgstr "Kurzbeschreibung"
 
@@ -439,6 +442,7 @@ msgstr "Kurzbeschreibung"
 #: managed/SavedSearchFundingDrawdowns.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
 #: managed/SavedSearch_FundingDrawdownsAll.mgd.php
+#: managed/SavedSearch_funding_application_processes.mgd.php
 #: managed/SavedSearch_funding_case_application_processes.mgd.php
 #: managed/SavedSearch_funding_cases.mgd.php
 msgid "Status"
@@ -863,6 +867,7 @@ msgstr "Ist Sammelantrag"
 
 #: Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
+#: managed/SavedSearch_funding_application_processes.mgd.php
 msgid "Clearing Status"
 msgstr "Verwendungsnachweisstatus"
 
@@ -1387,6 +1392,10 @@ msgstr "Prüfung: Verwendungsnachweis rechnerisch"
 msgid "Review: clearing content"
 msgstr "Prüfung: Verwendungsnachweis fachlich"
 
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
+msgid "Review: clearing amend"
+msgstr "Prüfung: Verwendungsnachweis ändern"
+
 #: Civi/Funding/EventSubscriber/FundingProgram/FundingProgramGetPossiblePermissionsSubscriber.php
 msgid "View"
 msgstr "Ansehen"
@@ -1763,6 +1772,7 @@ msgstr "Mittelabrufe"
 
 #: ang/afsearchFundingCaseApplicationProcesses.aff.php
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
+#: managed/SavedSearch_funding_application_processes.mgd.php
 msgid "Funding Applications"
 msgstr "Förderanträge"
 
@@ -1970,6 +1980,7 @@ msgstr "Fachliche Prüfung starten"
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
 #: ang/crmFunding/clearing/clearingSidebar.template.html
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
+#: managed/SavedSearch_funding_application_processes.mgd.php
 #: managed/SavedSearch_funding_case_application_processes.mgd.php
 msgid "Content Review"
 msgstr "Fachliche Prüfung"
@@ -1981,6 +1992,7 @@ msgstr "Der mit der Zuwendung beabsichtigte Zweck kann erreicht werden."
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
 #: ang/crmFunding/clearing/clearingSidebar.template.html
 #: managed/SavedSearchFundingApplicationProcesses.mgd.php
+#: managed/SavedSearch_funding_application_processes.mgd.php
 #: managed/SavedSearch_funding_case_application_processes.mgd.php
 msgid "Calculative Review"
 msgstr "Rechnerische Prüfung"
@@ -2232,6 +2244,7 @@ msgstr ""
 #: managed/SavedSearchFundingPrograms.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
 #: managed/SavedSearch_FundingDrawdownsAll.mgd.php
+#: managed/SavedSearch_funding_application_processes.mgd.php
 #: managed/SavedSearch_funding_case_application_processes.mgd.php
 #: managed/SavedSearch_funding_cases.mgd.php
 msgid "Actions"
@@ -2498,6 +2511,7 @@ msgstr "Rückzahlungsforderung"
 #: managed/SavedSearch_FundingDrawdownsAll.mgd.php
 #: managed/SavedSearch_Funding_Tasks_Pending.mgd.php
 #: managed/SavedSearch_MyFundingTasks.mgd.php
+#: managed/SavedSearch_funding_application_processes.mgd.php
 #: managed/SavedSearch_funding_case_application_processes.mgd.php
 #: managed/SavedSearch_funding_cases.mgd.php
 #: managed/SavedSearch_funding_program_controlling.mgd.php
@@ -2508,6 +2522,7 @@ msgstr "Tabelle"
 #: managed/SavedSearch_Clearings.mgd.php
 #: managed/SavedSearch_Funding_Tasks_Pending.mgd.php
 #: managed/SavedSearch_MyFundingTasks.mgd.php
+#: managed/SavedSearch_funding_application_processes.mgd.php
 #: managed/SavedSearch_funding_case_application_processes.mgd.php
 msgid "Open application"
 msgstr "Antrag öffnen"
@@ -2516,6 +2531,7 @@ msgstr "Antrag öffnen"
 #: managed/SavedSearch_Clearings.mgd.php
 #: managed/SavedSearch_Funding_Tasks_Pending.mgd.php
 #: managed/SavedSearch_MyFundingTasks.mgd.php
+#: managed/SavedSearch_funding_application_processes.mgd.php
 #: managed/SavedSearch_funding_case_application_processes.mgd.php
 msgid "Open clearing"
 msgstr "Verwendungsnachweis öffnen"
@@ -2556,6 +2572,15 @@ msgstr "Prüfer*in"
 #: managed/SavedSearch_FundingDrawdownsAll.mgd.php
 msgid "Download Document"
 msgstr "Dokument herunterladen"
+
+#: managed/SavedSearchFundingDrawdowns.mgd.php
+#: managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
+#: managed/SavedSearch_FundingDrawdownsAll.mgd.php
+#: managed/SavedSearch_funding_application_processes.mgd.php
+#: managed/SavedSearch_funding_cases.mgd.php
+msgid "Total"
+msgstr "Gesamt"
 
 #: managed/SavedSearchFundingPrograms.mgd.php
 msgid "Identifier Prefix"
@@ -2605,15 +2630,15 @@ msgstr "Dokument"
 msgid "Label"
 msgstr "Bezeichnung"
 
-#: managed/SavedSearch_Clearings.mgd.php
-#: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
-#: managed/SavedSearch_funding_cases.mgd.php
-msgid "Total"
-msgstr "Gesamt"
-
 #: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
 msgid "Drawdowns by Recipient and Funding Program"
 msgstr "Mittelabrufe nach Empfänger und Förderprogramm"
+
+#: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
+#: managed/SavedSearch_funding_cases.mgd.php
+#: managed/SavedSearch_funding_program_controlling.mgd.php
+msgid "Accepted Drawdowns"
+msgstr "Akzeptierte Mittelabrufe"
 
 #: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
 msgid "Open Drawdowns"
@@ -2654,8 +2679,3 @@ msgstr "Förderfallanträge"
 #: managed/SavedSearch_funding_cases.mgd.php
 msgid "Funding Case Type"
 msgstr "Förderfalltyp"
-
-#: managed/SavedSearch_funding_cases.mgd.php
-#: managed/SavedSearch_funding_program_controlling.mgd.php
-msgid "Accepted Drawdowns"
-msgstr "Akzeptierte Mittelabrufe"

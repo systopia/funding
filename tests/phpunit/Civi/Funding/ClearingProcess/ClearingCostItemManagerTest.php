@@ -52,6 +52,14 @@ final class ClearingCostItemManagerTest extends TestCase {
     $this->itemManager = new ClearingCostItemManager($this->api4Mock, $this->externalFileManagerMock);
   }
 
+  public function testGetByFinancePlanItemId(): void {
+    $this->api4Mock->expects(static::once())->method('countEntities')
+      ->with('FundingClearingCostItem', Comparison::new('application_cost_item_id', '=', 2))
+      ->willReturn(3);
+
+    static::assertSame(3, $this->itemManager->countByFinancePlanItemId(2));
+  }
+
   public function testDelete(): void {
     $item = ClearingCostItemFactory::create(['id' => 22]);
 

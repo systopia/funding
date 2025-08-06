@@ -22,7 +22,7 @@
         <div ng-show="!$ctrl.form().$visible">
             <button type="button" ng-click="$ctrl.form().$show()"
                     class="btn btn-sm btn-info" crm-icon="fa-edit"></button>
-            <button ng-if="removeAt && $ctrl.path && $ctrl.row"
+            <button ng-show="$ctrl.removeAllowed && removeAt && $ctrl.path && $ctrl.row"
                     type="button"
                     ng-click="removeAt($ctrl.path, $index)"
                     class="btn btn-sm btn-danger" crm-icon="fa-trash"></button>
