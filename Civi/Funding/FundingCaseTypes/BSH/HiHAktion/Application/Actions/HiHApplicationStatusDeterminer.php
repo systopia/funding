@@ -84,10 +84,6 @@ final class HiHApplicationStatusDeterminer extends AbstractApplicationProcessSta
       're-release' => 'advisory',
       'add-comment' => 'rejected_after_advisory',
     ],
-    'complete' => [
-      'add-comment' => 'complete',
-      'approve-update' => 'complete',
-    ],
   ];
 
   public function __construct() {
@@ -96,11 +92,7 @@ final class HiHApplicationStatusDeterminer extends AbstractApplicationProcessSta
 
   public function getStatusOnClearingProcessStarted(FullApplicationProcessStatus $currentStatus
   ): FullApplicationProcessStatus {
-    return new FullApplicationProcessStatus(
-      'complete',
-      $currentStatus->getIsReviewCalculative(),
-      $currentStatus->getIsReviewContent()
-    );
+    return $currentStatus;
   }
 
   protected function getIsReviewCalculative(FullApplicationProcessStatus $currentStatus, string $action): ?bool {
