@@ -30,6 +30,7 @@ final class KursCaseSubmitActionsContainer extends AbstractSubmitActionsContaine
     $this
       ->add('save', 'Speichern')
       ->add('apply', 'Beantragen')
+      ->add('withdraw', 'Zurückziehen', 'Wollen Sie diesen Sammelantrag wirklich zurückziehen?')
       ->add('delete', 'Löschen', 'Wollen Sie diesen Sammelantrag wirklich löschen?');
   }
 

@@ -90,6 +90,9 @@ final class KursCaseActionsDeterminer extends AbstractFundingCaseActionsDetermin
     if ($this->isActionAllowedForAllApplications('delete', $applicationProcessStatusList, $permissions)) {
       $actions[] = 'delete';
     }
+    elseif ($this->isActionAllowedForAllApplications('withdraw', $applicationProcessStatusList, $permissions)) {
+      $actions[] = 'withdraw';
+    }
 
     foreach ($permissions as $permission) {
       $actions = array_merge($actions, self::EXTRA_STATUS_PERMISSIONS_ACTION_MAP[$status][$permission] ?? []);
