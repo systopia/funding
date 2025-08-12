@@ -86,11 +86,11 @@ final class ApplicationFilesSubscriberTest extends TestCase {
       ->with(new ApplicationFilesPersistCommand($applicationProcessBundle, NULL))
       ->willReturn(['https://example.org' => $externalFile]);
 
-    $this->subscriber->onCreated(new ApplicationProcessCreatedEvent(2, $applicationProcessBundle));
+    $this->subscriber->onCreated(new ApplicationProcessCreatedEvent($applicationProcessBundle));
 
     $validationResult = ApplicationFormValidationResultFactory::createValid();
     $submitResult = ApplicationFormNewSubmitResult::createSuccess($validationResult, $applicationProcessBundle);
-    $formSuccessEvent = new ApplicationFormSubmitSuccessEvent(2, $applicationProcessBundle, [], $submitResult);
+    $formSuccessEvent = new ApplicationFormSubmitSuccessEvent($applicationProcessBundle, [], $submitResult);
     $this->subscriber->onSubmitSuccess($formSuccessEvent);
     static::assertSame(['https://example.org' => $externalFile], $formSuccessEvent->getResult()->getFiles());
   }
@@ -100,7 +100,7 @@ final class ApplicationFilesSubscriberTest extends TestCase {
     $this->filesAddIdentifiersHandlerMock->expects(static::once())->method('handle')
       ->with(new ApplicationFilesAddIdentifiersCommand($applicationProcessBundle));
 
-    $this->subscriber->onPreCreate(new ApplicationProcessPreCreateEvent(2, $applicationProcessBundle));
+    $this->subscriber->onPreCreate(new ApplicationProcessPreCreateEvent($applicationProcessBundle));
   }
 
   public function testOnPreUpdate(): void {
@@ -110,7 +110,6 @@ final class ApplicationFilesSubscriberTest extends TestCase {
       ->with(new ApplicationFilesAddIdentifiersCommand($applicationProcessBundle));
 
     $this->subscriber->onPreUpdate(new ApplicationProcessPreUpdateEvent(
-      2,
       $previousApplicationProcess,
       $applicationProcessBundle,
     ));
@@ -125,14 +124,13 @@ final class ApplicationFilesSubscriberTest extends TestCase {
       ->willReturn(['https://example.org' => $externalFile]);
 
     $this->subscriber->onUpdated(new ApplicationProcessUpdatedEvent(
-      2,
       $previousApplicationProcess,
       $applicationProcessBundle,
     ));
 
     $validationResult = ApplicationFormValidationResultFactory::createValid();
     $submitResult = ApplicationFormNewSubmitResult::createSuccess($validationResult, $applicationProcessBundle);
-    $formSuccessEvent = new ApplicationFormSubmitSuccessEvent(2, $applicationProcessBundle, [], $submitResult);
+    $formSuccessEvent = new ApplicationFormSubmitSuccessEvent($applicationProcessBundle, [], $submitResult);
     $this->subscriber->onSubmitSuccess($formSuccessEvent);
     static::assertSame(['https://example.org' => $externalFile], $formSuccessEvent->getResult()->getFiles());
   }

@@ -28,6 +28,7 @@ use Civi\Api4\Traits\FundingCaseTestFixturesTrait;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Api4\Permissions;
 use Civi\Funding\FileTypeNames;
+use Civi\Funding\Fixtures\ApplicationProcessBundleFixture;
 use Civi\Funding\Fixtures\AttachmentFixture;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
@@ -198,6 +199,53 @@ final class FundingCaseTest extends AbstractFundingHeadlessTestCase {
 
     // Previous transfer contract should have been removed.
     static::assertFileDoesNotExist($transferContractAttachment->getPath());
+  }
+
+  public function testReject(): void {
+    $contact = ContactFixture::addIndividual();
+    $applicationProcessBundle = ApplicationProcessBundleFixture::create([
+      'request_data' => ['file' => 'foo.txt'],
+    ]);
+    $fundingCaseId = $applicationProcessBundle->getFundingCase()->getId();
+    RequestTestUtil::mockInternalRequest($contact['id']);
+
+    FundingCaseContactRelationFixture::addContact(
+      $contact['id'],
+      $fundingCaseId,
+      ['review_something'],
+    );
+
+    $e = NULL;
+    try {
+      FundingCase::reject()
+        ->setId($fundingCaseId)
+        ->execute();
+    }
+    catch (UnauthorizedException $e) {
+      static::assertSame(sprintf(
+        'Rejecting funding case "%s" is not allowed.',
+        $applicationProcessBundle->getFundingCase()->getIdentifier()
+      ), $e->getMessage());
+    }
+    static::assertNotNull($e);
+
+    FundingCaseContactRelationFixture::addContact(
+      $contact['id'],
+      $fundingCaseId,
+      ['review_case_finish'],
+    );
+
+    $result = FundingCase::reject()
+      ->setId($fundingCaseId)
+      ->execute();
+
+    static::assertSame('rejected', $result['status']);
+    static::assertSame('rejected', FundingApplicationProcess::get()
+      ->addSelect('status')
+      ->addWhere('id', '=', $applicationProcessBundle->getApplicationProcess()->getId())
+      ->execute()
+      ->single()['status']
+    );
   }
 
   public function testPermissionsInternal(): void {

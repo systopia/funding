@@ -88,7 +88,7 @@ final class ApplicationActionApplyHandlerTest extends TestCase {
       ->willReturn($newStatus);
 
     $this->applicationProcessManagerMock->expects(static::once())->method('update')
-      ->with($command->getContactId(), $command->getApplicationProcessBundle());
+      ->with($command->getApplicationProcessBundle());
 
     $this->commentStoreHandlerMock->expects(static::never())->method('handle');
 
@@ -145,7 +145,7 @@ final class ApplicationActionApplyHandlerTest extends TestCase {
     $command = $this->createCommand('withdraw-change', FALSE);
 
     $this->applicationSnapshotRestorerMock->expects(static::once())->method('restoreLastSnapshot')
-      ->with($command->getContactId(), $command->getApplicationProcessBundle());
+      ->with($command->getApplicationProcessBundle());
     $this->applicationProcessManagerMock->expects(static::never())->method('update');
 
     $this->handler->handle($command);
@@ -160,7 +160,7 @@ final class ApplicationActionApplyHandlerTest extends TestCase {
       ->willReturn($newStatus);
 
     $this->applicationProcessManagerMock->expects(static::once())->method('update')
-      ->with($command->getContactId(), $command->getApplicationProcessBundle());
+      ->with($command->getApplicationProcessBundle());
 
     $this->commentStoreHandlerMock->expects(static::never())->method('handle');
 

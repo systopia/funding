@@ -69,7 +69,6 @@ final class ApplicationResourcesItemsSubscriberTest extends TestCase {
     $resourcesItemsData = ['test' => $this->createResourcesItem()];
     $validationResult = ApplicationFormValidationResultFactory::createValid([], [], [], $resourcesItemsData);
     $event = new ApplicationFormSubmitSuccessEvent(
-      2,
       $applicationProcessBundle,
       $applicationProcessBundle->getApplicationProcess()->getRequestData(),
       ApplicationFormSubmitResult::createSuccess($validationResult),
@@ -85,7 +84,6 @@ final class ApplicationResourcesItemsSubscriberTest extends TestCase {
     $resourcesItemsData = ['test' => $this->createResourcesItem()];
     $validationResult = ApplicationFormValidationResultFactory::createValid([], [], [], $resourcesItemsData, TRUE);
     $event = new ApplicationFormSubmitSuccessEvent(
-      2,
       $applicationProcessBundle,
       $applicationProcessBundle->getApplicationProcess()->getRequestData(),
       ApplicationFormSubmitResult::createSuccess($validationResult),
@@ -103,7 +101,6 @@ final class ApplicationResourcesItemsSubscriberTest extends TestCase {
     $resourcesItemsData = ['test' => $this->createResourcesItem()];
     $validationResult = ApplicationFormValidationResultFactory::createValid([], [], [], $resourcesItemsData);
     $event = new ApplicationFormSubmitSuccessEvent(
-      2,
       $applicationProcessBundle,
       $applicationProcessBundle->getApplicationProcess()->getRequestData(),
       ApplicationFormSubmitResult::createSuccess($validationResult),

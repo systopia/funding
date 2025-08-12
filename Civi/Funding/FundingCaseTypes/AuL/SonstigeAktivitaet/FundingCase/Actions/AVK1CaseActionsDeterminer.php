@@ -22,6 +22,7 @@ namespace Civi\Funding\FundingCaseTypes\AuL\SonstigeAktivitaet\FundingCase\Actio
 use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\FundingCase\Actions\AbstractFundingCaseActionsDeterminerDecorator;
 use Civi\Funding\FundingCase\Actions\DefaultFundingCaseActionsDeterminer;
+use Civi\Funding\FundingCaseTypes\AuL\SonstigeAktivitaet\Application\Actions\AVK1ApplicationStatusDeterminer;
 use Civi\Funding\FundingCaseTypes\AuL\SonstigeAktivitaet\AVK1MetaData;
 use Civi\Funding\FundingCaseTypes\AuL\SonstigeAktivitaet\Traits\AVK1SupportedFundingCaseTypesTrait;
 
@@ -30,10 +31,13 @@ final class AVK1CaseActionsDeterminer extends AbstractFundingCaseActionsDetermin
   use AVK1SupportedFundingCaseTypesTrait;
 
   public function __construct(
+    AVK1ApplicationStatusDeterminer $applicationStatusDeterminer,
     ClearingProcessManager $clearingProcessManager,
     AVK1MetaData $metaData
   ) {
-    parent::__construct(new DefaultFundingCaseActionsDeterminer($clearingProcessManager, $metaData));
+    parent::__construct(new DefaultFundingCaseActionsDeterminer(
+      $applicationStatusDeterminer, $clearingProcessManager, $metaData
+    ));
   }
 
 }

@@ -31,12 +31,14 @@ final class DefaultApplicationProcessStatusDeterminer extends AbstractApplicatio
     'new' => [
       'save' => 'new',
       'apply' => 'applied',
+      'reject' => 'rejected',
     ],
     'applied' => [
       'modify' => 'draft',
       'withdraw' => 'withdrawn',
       'review' => 'review',
       'add-comment' => 'applied',
+      'reject' => 'rejected',
     ],
     'review' => [
       'approve-calculative' => 'review',
@@ -55,6 +57,7 @@ final class DefaultApplicationProcessStatusDeterminer extends AbstractApplicatio
       'withdraw' => 'withdrawn',
       'review' => 'review',
       'add-comment' => 'draft',
+      'reject' => 'rejected',
     ],
     'eligible' => [
       'withdraw' => 'withdrawn',

@@ -29,6 +29,8 @@ final class FundingCaseActions {
 
   public const RECREATE_TRANSFER_CONTRACT = 'recreate-transfer-contract';
 
+  public const REJECT = 'reject';
+
   public const SET_NOTIFICATION_CONTACTS = 'set-notification-contacts';
 
   public const SET_RECIPIENT_CONTACT = 'set-recipient-contact';

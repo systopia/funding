@@ -102,7 +102,6 @@ final class ApplicationFormNewSubmitHandlerTest extends TestCase {
     $applicationProcess = ApplicationProcessFactory::createApplicationProcess();
     $this->applicationProcessManagerMock->expects(static::once())->method('create')
       ->with(
-        $command->getContactId(),
         $fundingCase,
         $command->getFundingCaseType(),
         $command->getFundingProgram(),

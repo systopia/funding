@@ -79,7 +79,7 @@ final class ApplicationProcessStatusFlagsSubscriberTest extends TestCase {
       'withdrawn' => FALSE,
     ]);
 
-    $event = new ApplicationProcessPreCreateEvent(1, $applicationProcessBundle);
+    $event = new ApplicationProcessPreCreateEvent($applicationProcessBundle);
     $this->subscriber->onPreCreate($event);
     $applicationProcess = $applicationProcessBundle->getApplicationProcess();
     static::assertTrue($applicationProcess->getIsEligible());
@@ -106,7 +106,7 @@ final class ApplicationProcessStatusFlagsSubscriberTest extends TestCase {
       'withdrawn' => FALSE,
     ]);
 
-    $event = new ApplicationProcessPreUpdateEvent(1, $previousApplicationProcess, $applicationProcessBundle);
+    $event = new ApplicationProcessPreUpdateEvent($previousApplicationProcess, $applicationProcessBundle);
     $this->subscriber->onPreUpdate($event);
     static::assertNull($applicationProcessBundle->getApplicationProcess()->getIsEligible());
   }

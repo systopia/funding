@@ -57,6 +57,11 @@ final class DefaultFundingCaseStatusDeterminer implements FundingCaseStatusDeter
       case FundingCaseActions::FINISH_CLEARING:
         return FundingCaseStatus::CLEARED;
 
+      case FundingCaseActions::REJECT:
+        if (FundingCaseStatus::OPEN === $currentStatus) {
+          return FundingCaseStatus::REJECTED;
+        }
+
       default:
         return $currentStatus;
     }

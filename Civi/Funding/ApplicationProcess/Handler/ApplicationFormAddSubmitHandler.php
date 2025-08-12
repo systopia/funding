@@ -75,7 +75,6 @@ final class ApplicationFormAddSubmitHandler implements ApplicationFormAddSubmitH
     $validatedData = $validationResult->getValidatedData();
 
     $applicationProcess = $this->applicationProcessManager->create(
-      $command->getContactId(),
       $command->getFundingCase(),
       $command->getFundingCaseType(),
       $command->getFundingProgram(),

@@ -24,14 +24,11 @@ use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDet
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessStartedEvent;
 use Civi\Funding\FundingCaseTypeServiceLocatorContainer;
-use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ClearingProcessStartedSubscriber implements EventSubscriberInterface {
 
   private ApplicationProcessManager $applicationProcessManager;
-
-  private RequestContextInterface $requestContext;
 
   private FundingCaseTypeServiceLocatorContainer $serviceLocatorContainer;
 
@@ -44,11 +41,9 @@ class ClearingProcessStartedSubscriber implements EventSubscriberInterface {
 
   public function __construct(
     ApplicationProcessManager $applicationProcessManager,
-    RequestContextInterface $requestContext,
     FundingCaseTypeServiceLocatorContainer $serviceLocatorContainer
   ) {
     $this->applicationProcessManager = $applicationProcessManager;
-    $this->requestContext = $requestContext;
     $this->serviceLocatorContainer = $serviceLocatorContainer;
   }
 
@@ -61,10 +56,7 @@ class ClearingProcessStartedSubscriber implements EventSubscriberInterface {
       ->getStatusOnClearingProcessStarted($applicationProcess->getFullStatus());
     if ($applicationProcess->getFullStatus() != $newFullStatus) {
       $event->getApplicationProcess()->setFullStatus($newFullStatus);
-      $this->applicationProcessManager->update(
-        $this->requestContext->getContactId(),
-        $event->getClearingProcessBundle()
-      );
+      $this->applicationProcessManager->update($event->getClearingProcessBundle());
     }
   }
 

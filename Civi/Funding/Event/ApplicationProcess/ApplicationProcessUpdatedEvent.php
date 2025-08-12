@@ -26,11 +26,11 @@ class ApplicationProcessUpdatedEvent extends AbstractApplicationEvent {
 
   private ApplicationProcessEntity $previousApplicationProcess;
 
-  public function __construct(int $contactId,
+  public function __construct(
     ApplicationProcessEntity $previousApplicationProcess,
     ApplicationProcessEntityBundle $applicationProcessBundle
   ) {
-    parent::__construct($contactId, $applicationProcessBundle);
+    parent::__construct($applicationProcessBundle);
     $this->previousApplicationProcess = $previousApplicationProcess;
   }
 

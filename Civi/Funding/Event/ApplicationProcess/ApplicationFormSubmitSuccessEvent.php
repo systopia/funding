@@ -36,12 +36,11 @@ final class ApplicationFormSubmitSuccessEvent extends AbstractApplicationEvent {
    * @phpstan-param array<string, mixed> $submittedData
    */
   public function __construct(
-    int $contactId,
     ApplicationProcessEntityBundle $applicationProcessBundle,
     array $submittedData,
     AbstractApplicationFormSubmitResult $result
   ) {
-    parent::__construct($contactId, $applicationProcessBundle);
+    parent::__construct($applicationProcessBundle);
     $this->submittedData = $submittedData;
     $this->result = $result;
   }

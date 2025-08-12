@@ -48,6 +48,12 @@ fundingModule.factory('fundingCaseService', ['crmApi4', function(crmApi4) {
 
     /**
      * @param {integer} id
+     * @returns {Promise<object>}
+     */
+    reject: (id) => crmApi4('FundingCase', 'reject', {id}),
+
+    /**
+     * @param {integer} id
      * @param {string[]} extraFields
      * @returns {Promise}
      */

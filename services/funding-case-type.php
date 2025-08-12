@@ -24,6 +24,7 @@ use Civi\Funding\Api4\Action\FundingCaseType\GetAction;
 use Civi\Funding\Api4\Action\FundingCaseType\GetByFundingProgramIdAction;
 use Civi\Funding\Api4\Action\FundingCaseType\UpdateAction;
 use Civi\Funding\DependencyInjection\Compiler\FundingCaseFinishClearingHandlerPass;
+use Civi\Funding\DependencyInjection\Compiler\FundingCaseRejectHandlerPass;
 use Civi\Funding\DependencyInjection\Compiler\FundingCaseTypeMetaDataPass;
 use Civi\Funding\DependencyInjection\Compiler\FundingCaseTypeServiceLocatorPass;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
@@ -35,6 +36,7 @@ use Symfony\Component\DependencyInjection\Reference;
 $container->addCompilerPass(new FundingCaseTypeMetaDataPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 10);
 $container->addCompilerPass(new FundingCaseTypeServiceLocatorPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 1);
 $container->addCompilerPass(new FundingCaseFinishClearingHandlerPass());
+$container->addCompilerPass(new FundingCaseRejectHandlerPass());
 
 $container->autowire(GetAction::class)
   ->setPublic(TRUE)

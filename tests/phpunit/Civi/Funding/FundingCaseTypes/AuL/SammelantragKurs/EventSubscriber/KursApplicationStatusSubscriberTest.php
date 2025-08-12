@@ -191,11 +191,7 @@ final class KursApplicationStatusSubscriberTest extends TestCase {
       ->with($snapshot->getApplicationProcessId())
       ->willReturn($snapshot);
 
-    return new ApplicationProcessPreUpdateEvent(
-      1,
-      $previousApplicationProcess,
-      $applicationProcessBundle,
-    );
+    return new ApplicationProcessPreUpdateEvent($previousApplicationProcess, $applicationProcessBundle);
   }
 
 }

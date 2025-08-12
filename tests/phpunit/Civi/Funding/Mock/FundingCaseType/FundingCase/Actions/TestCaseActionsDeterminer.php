@@ -24,6 +24,7 @@ use Civi\Funding\FundingCase\Actions\AbstractFundingCaseActionsDeterminerDecorat
 use Civi\Funding\FundingCase\Actions\DefaultFundingCaseActionsDeterminer;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions;
 use Civi\Funding\FundingCase\Actions\SetRecipientContactActionsDeterminer;
+use Civi\Funding\Mock\FundingCaseType\Application\Actions\TestApplicationStatusDeterminer;
 use Civi\Funding\Mock\FundingCaseType\TestCaseTypeMetaData;
 use Civi\Funding\Mock\FundingCaseType\Traits\TestSupportedFundingCaseTypesTrait;
 use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
@@ -35,11 +36,12 @@ final class TestCaseActionsDeterminer extends AbstractFundingCaseActionsDetermin
   use HasReviewPermissionTrait;
 
   public function __construct(
+    TestApplicationStatusDeterminer $applicationStatusDeterminer,
     ClearingProcessManager $clearingProcessManager,
     TestCaseTypeMetaData $metaData
   ) {
     parent::__construct(new SetRecipientContactActionsDeterminer(
-      new DefaultFundingCaseActionsDeterminer($clearingProcessManager, $metaData)
+      new DefaultFundingCaseActionsDeterminer($applicationStatusDeterminer, $clearingProcessManager, $metaData)
     ));
   }
 

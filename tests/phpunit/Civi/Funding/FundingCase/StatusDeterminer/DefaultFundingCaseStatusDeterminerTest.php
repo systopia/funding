@@ -23,6 +23,7 @@ use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions;
+use Civi\Funding\FundingCase\FundingCaseStatus;
 use Civi\Funding\FundingCaseType\MetaData\ApplicationProcessStatus;
 use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataMock;
 use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataProviderMock;
@@ -89,6 +90,11 @@ final class DefaultFundingCaseStatusDeterminerTest extends TestCase {
     static::assertSame('test', $this->statusDeterminer->getStatus('test', 'do_something'));
     static::assertSame('ongoing', $this->statusDeterminer->getStatus('test', 'approve'));
     static::assertSame('cleared', $this->statusDeterminer->getStatus('test', FundingCaseActions::FINISH_CLEARING));
+    static::assertSame(
+      'rejected',
+      $this->statusDeterminer->getStatus(FundingCaseStatus::OPEN, FundingCaseActions::REJECT)
+    );
+    static::assertSame('test', $this->statusDeterminer->getStatus('test', FundingCaseActions::REJECT));
   }
 
   public function testGetStatusOnApplicationProcessStatusChangeWithdrawn(): void {

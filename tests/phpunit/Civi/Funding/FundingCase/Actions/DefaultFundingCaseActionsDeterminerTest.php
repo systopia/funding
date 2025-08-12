@@ -19,11 +19,13 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase\Actions;
 
+use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\EntityFactory\ClearingProcessFactory;
 use Civi\Funding\FundingCase\FundingCasePermissions;
+use Civi\Funding\FundingCaseType\MetaData\ApplicationProcessStatus;
 use Civi\Funding\FundingCaseType\MetaData\DefaultApplicationProcessStatuses;
 use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataMock;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -80,10 +82,14 @@ final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
 
   private DefaultFundingCaseActionsDeterminer $actionsDeterminer;
 
+  private ApplicationProcessStatusDeterminerInterface&MockObject $applicationProcessStatusDeterminerMock;
+
   /**
    * @var \Civi\Funding\ClearingProcess\ClearingProcessManager&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $clearingProcessManagerMock;
+
+  private FundingCaseTypeMetaDataMock $metaDataMock;
 
   /**
    * @phpstan-var array<int, FullApplicationProcessStatus>
@@ -92,15 +98,18 @@ final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
+    $this->applicationProcessStatusDeterminerMock =
+      $this->createMock(ApplicationProcessStatusDeterminerInterface::class);
     $this->clearingProcessManagerMock = $this->createMock(ClearingProcessManager::class);
-    $metaDataMock = new FundingCaseTypeMetaDataMock();
+    $this->metaDataMock = new FundingCaseTypeMetaDataMock();
     $this->actionsDeterminer = new DefaultFundingCaseActionsDeterminer(
+      $this->applicationProcessStatusDeterminerMock,
       $this->clearingProcessManagerMock,
-      $metaDataMock
+      $this->metaDataMock
     );
     $this->statusList = [22 => new FullApplicationProcessStatus('eligible', TRUE, TRUE)];
 
-    $metaDataMock->applicationProcessStatuses = DefaultApplicationProcessStatuses::getAll();
+    $this->metaDataMock->applicationProcessStatuses = DefaultApplicationProcessStatuses::getAll();
   }
 
   public function testGetActions(): void {
@@ -160,6 +169,81 @@ final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
     $this->clearingProcessManagerMock->expects(static::never())->method('getByApplicationProcessId');
     static::assertNotContains(FundingCaseActions::FINISH_CLEARING, $this->actionsDeterminer->getActions(
       'ongoing',
+      $statusList,
+      ['review_content']
+    ));
+  }
+
+  public function testGetActionsReject(): void {
+    $statusList = [22 => new FullApplicationProcessStatus('test', TRUE, TRUE)];
+
+    $this->metaDataMock->addApplicationProcessStatus(new ApplicationProcessStatus([
+      'name' => 'test',
+      'label' => 'test',
+      'eligible' => TRUE,
+    ]));
+    static::assertNotContains(FundingCaseActions::REJECT, $this->actionsDeterminer->getActions(
+      'open',
+      $statusList,
+      [FundingCasePermissions::REVIEW_FINISH]
+    ));
+
+    $this->metaDataMock->addApplicationProcessStatus(new ApplicationProcessStatus([
+      'name' => 'test',
+      'label' => 'test',
+      'eligible' => FALSE,
+    ]));
+    static::assertContains(FundingCaseActions::REJECT, $this->actionsDeterminer->getActions(
+      'open',
+      $statusList,
+      [FundingCasePermissions::REVIEW_FINISH]
+    ));
+    static::assertNotContains(FundingCaseActions::REJECT, $this->actionsDeterminer->getActions(
+      'ongoing',
+      $statusList,
+      [FundingCasePermissions::REVIEW_FINISH]
+    ));
+
+    $this->metaDataMock->addApplicationProcessStatus(new ApplicationProcessStatus([
+      'name' => 'test',
+      'label' => 'test',
+      'eligible' => NULL,
+    ]));
+    $this->applicationProcessStatusDeterminerMock->expects(static::exactly(2))->method('getStatus')
+      ->with($statusList[22], 'reject')
+      ->willReturnCallback(function () {
+        static $called = FALSE;
+
+        if (!$called) {
+          $called = TRUE;
+
+          throw new \InvalidArgumentException();
+        }
+
+        return new FullApplicationProcessStatus('newStatus', FALSE, FALSE);
+      });
+    static::assertNotContains(FundingCaseActions::REJECT, $this->actionsDeterminer->getActions(
+      'open',
+      $statusList,
+      [FundingCasePermissions::REVIEW_FINISH]
+    ));
+    static::assertContains(FundingCaseActions::REJECT, $this->actionsDeterminer->getActions(
+      'open',
+      $statusList,
+      [FundingCasePermissions::REVIEW_FINISH]
+    ));
+  }
+
+  public function testGetActionsRejectWithoutPermission(): void {
+    $statusList = [22 => new FullApplicationProcessStatus('test', TRUE, TRUE)];
+
+    $this->metaDataMock->addApplicationProcessStatus(new ApplicationProcessStatus([
+      'name' => 'test',
+      'label' => 'test',
+      'is_eligible' => FALSE,
+    ]));
+    static::assertNotContains(FundingCaseActions::REJECT, $this->actionsDeterminer->getActions(
+      'open',
       $statusList,
       ['review_content']
     ));

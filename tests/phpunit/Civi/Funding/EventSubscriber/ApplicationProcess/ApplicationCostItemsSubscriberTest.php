@@ -68,7 +68,6 @@ final class ApplicationCostItemsSubscriberTest extends TestCase {
     $costItemsData = ['test' => $this->createCostItem()];
     $validationResult = ApplicationFormValidationResultFactory::createValid([], [], $costItemsData);
     $event = new ApplicationFormSubmitSuccessEvent(
-      2,
       $applicationProcessBundle,
       $applicationProcessBundle->getApplicationProcess()->getRequestData(),
       ApplicationFormSubmitResult::createSuccess($validationResult),
@@ -84,7 +83,6 @@ final class ApplicationCostItemsSubscriberTest extends TestCase {
     $costItemsData = ['test' => $this->createCostItem()];
     $validationResult = ApplicationFormValidationResultFactory::createValid([], [], $costItemsData, [], TRUE);
     $event = new ApplicationFormSubmitSuccessEvent(
-      2,
       $applicationProcessBundle,
       $applicationProcessBundle->getApplicationProcess()->getRequestData(),
       ApplicationFormSubmitResult::createSuccess($validationResult),
@@ -102,7 +100,6 @@ final class ApplicationCostItemsSubscriberTest extends TestCase {
     $costItemsData = ['test' => $this->createCostItem()];
     $validationResult = ApplicationFormValidationResultFactory::createValid([], [], $costItemsData);
     $event = new ApplicationFormSubmitSuccessEvent(
-      2,
       $applicationProcessBundle,
       $applicationProcessBundle->getApplicationProcess()->getRequestData(),
       ApplicationFormSubmitResult::createSuccess($validationResult),

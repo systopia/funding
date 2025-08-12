@@ -35,6 +35,11 @@ interface ApplicationProcessStatusDeterminerInterface {
 
   public function getInitialStatus(string $action): string;
 
+  /**
+   * @throws \InvalidArgumentException
+   *   If there's no status transition from the given status with the given
+   *   action.
+   */
   public function getStatus(FullApplicationProcessStatus $currentStatus, string $action): FullApplicationProcessStatus;
 
   public function getStatusOnClearingProcessStarted(

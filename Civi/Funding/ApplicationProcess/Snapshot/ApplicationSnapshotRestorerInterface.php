@@ -23,6 +23,6 @@ use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 
 interface ApplicationSnapshotRestorerInterface {
 
-  public function restoreLastSnapshot(int $contactId, ApplicationProcessEntityBundle $applicationProcessBundle): void;
+  public function restoreLastSnapshot(ApplicationProcessEntityBundle $applicationProcessBundle): void;
 
 }

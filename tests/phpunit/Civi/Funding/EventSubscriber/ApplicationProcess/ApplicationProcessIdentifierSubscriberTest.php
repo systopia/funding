@@ -71,7 +71,7 @@ final class ApplicationProcessIdentifierSubscriberTest extends TestCase {
 
   public function testOnCreated(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(['id' => 2]);
-    $event = new ApplicationProcessCreatedEvent(1, $applicationProcessBundle);
+    $event = new ApplicationProcessCreatedEvent($applicationProcessBundle);
 
     $this->applicationIdentifierGeneratorMock->method('generateIdentifier')
       ->with($applicationProcessBundle)

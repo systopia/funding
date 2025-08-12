@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase\Actions;
 
 use Civi\Funding\ApplicationProcess\ApplicationProcessPermissions;
+use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions as Actions;
@@ -28,6 +29,8 @@ use Civi\Funding\FundingCase\FundingCaseStatus as Status;
 use Civi\Funding\FundingCaseType\MetaData\FundingCaseTypeMetaDataInterface;
 
 final class DefaultFundingCaseActionsDeterminer extends FundingCaseActionsDeterminer {
+
+  private ApplicationProcessStatusDeterminerInterface $applicationProcessStatusDeterminer;
 
   private ClearingProcessManager $clearingProcessManager;
 
@@ -41,7 +44,7 @@ final class DefaultFundingCaseActionsDeterminer extends FundingCaseActionsDeterm
       ClearingProcessPermissions::REVIEW_CALCULATIVE => [Actions::SET_NOTIFICATION_CONTACTS],
       ClearingProcessPermissions::REVIEW_CONTENT => [Actions::SET_NOTIFICATION_CONTACTS],
       'review_drawdown' => [Actions::SET_NOTIFICATION_CONTACTS],
-      FundingCasePermissions::REVIEW_FINISH => [],
+      FundingCasePermissions::REVIEW_FINISH => [Actions::REJECT],
     ],
     Status::ONGOING => [
       ApplicationProcessPermissions::REVIEW_CALCULATIVE => [Actions::RECREATE_TRANSFER_CONTRACT, Actions::UPDATE_AMOUNT_APPROVED, Actions::SET_NOTIFICATION_CONTACTS],
@@ -79,10 +82,12 @@ final class DefaultFundingCaseActionsDeterminer extends FundingCaseActionsDeterm
   // phpcs:enable
 
   public function __construct(
+    ApplicationProcessStatusDeterminerInterface $applicationProcessStatusDeterminer,
     ClearingProcessManager $clearingProcessManager,
     FundingCaseTypeMetaDataInterface $metaData
   ) {
     parent::__construct(self::STATUS_PERMISSIONS_ACTION_MAP);
+    $this->applicationProcessStatusDeterminer = $applicationProcessStatusDeterminer;
     $this->metaData = $metaData;
     $this->clearingProcessManager = $clearingProcessManager;
   }
@@ -103,6 +108,12 @@ final class DefaultFundingCaseActionsDeterminer extends FundingCaseActionsDeterm
     $posFinishClearing = array_search(Actions::FINISH_CLEARING, $actions, TRUE);
     if (FALSE !== $posFinishClearing && !$this->isFinishClearingPossible($applicationProcessStatusList)) {
       unset($actions[$posFinishClearing]);
+      $actions = array_values($actions);
+    }
+
+    $posReject = array_search(Actions::REJECT, $actions, TRUE);
+    if (FALSE !== $posReject && !$this->isRejectPossible($applicationProcessStatusList)) {
+      unset($actions[$posReject]);
       $actions = array_values($actions);
     }
 
@@ -147,6 +158,35 @@ final class DefaultFundingCaseActionsDeterminer extends FundingCaseActionsDeterm
         // There has to be a clearing process for every eligible application that is either accepted or rejected.
         $clearingProcess = $this->clearingProcessManager->getByApplicationProcessId($applicationProcessId);
         if (NULL === $clearingProcess || !in_array($clearingProcess->getStatus(), ['accepted', 'rejected'], TRUE)) {
+          return FALSE;
+        }
+      }
+    }
+
+    return TRUE;
+  }
+
+  /**
+   * @param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $applicationProcessStatusList
+   */
+  private function isRejectPossible(array $applicationProcessStatusList): bool {
+    foreach ($applicationProcessStatusList as $applicationProcessStatus) {
+      $status = $this->metaData->getApplicationProcessStatus($applicationProcessStatus->getStatus());
+      if (NULL === $status) {
+        // Should not happen.
+        return FALSE;
+      }
+
+      if (TRUE === $status->isEligible()) {
+        return FALSE;
+      }
+
+      if (NULL === $status->isEligible()) {
+        try {
+          $this->applicationProcessStatusDeterminer->getStatus($applicationProcessStatus, 'reject');
+        }
+        catch (\InvalidArgumentException $e) {
+          // No status transition with action "rejected".
           return FALSE;
         }
       }

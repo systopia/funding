@@ -30,7 +30,7 @@ msgstr ""
 msgid "No such application or missing permission."
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCase/ApproveAction.php Civi/Funding/Api4/Action/FundingCase/GetPossibleActionsAction.php Civi/Funding/Api4/Action/FundingCase/RecreateTransferContractAction.php Civi/Funding/FundingCase/Api4/ActionHandler/FinishClearingActionHandler.php Civi/Funding/FundingCase/Api4/ActionHandler/GetPossibleRecipientsActionHandler.php Civi/Funding/FundingCase/Api4/ActionHandler/ResetPermissionsActionHandler.php Civi/Funding/FundingCase/Api4/ActionHandler/SetNotificationContactsActionHandler.php Civi/Funding/FundingCase/Api4/ActionHandler/SetRecipientContactActionHandler.php Civi/Funding/FundingCase/Api4/ActionHandler/UpdateAmountApprovedActionHandler.php
+#: Civi/Funding/Api4/Action/FundingCase/ApproveAction.php Civi/Funding/Api4/Action/FundingCase/GetPossibleActionsAction.php Civi/Funding/Api4/Action/FundingCase/RecreateTransferContractAction.php Civi/Funding/FundingCase/Api4/ActionHandler/FinishClearingActionHandler.php Civi/Funding/FundingCase/Api4/ActionHandler/GetPossibleRecipientsActionHandler.php Civi/Funding/FundingCase/Api4/ActionHandler/RejectActionHandler.php Civi/Funding/FundingCase/Api4/ActionHandler/ResetPermissionsActionHandler.php Civi/Funding/FundingCase/Api4/ActionHandler/SetNotificationContactsActionHandler.php Civi/Funding/FundingCase/Api4/ActionHandler/SetRecipientContactActionHandler.php Civi/Funding/FundingCase/Api4/ActionHandler/UpdateAmountApprovedActionHandler.php
 msgid "Funding case with ID \"%1\" not found"
 msgstr ""
 
@@ -466,7 +466,7 @@ msgstr ""
 msgid "Approve"
 msgstr ""
 
-#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php Civi/Funding/ApplicationProcess/ActionsContainer/ReworkPossibleApplicationSubmitActionsContainerFactory.php Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php Civi/Funding/FundingCaseTypes/BSH/HiHAktion/Application/Actions/HiHApplicationSubmitActionsContainer.php ang/crmFunding/application/defaultApplicationSidebar.template.html ang/crmFunding/drawdown/drawdownSearchTasksMenu.decorator.js ang/crmFundingHiH/hihApplicationSidebar.template.html managed/SavedSearchFundingDrawdowns.mgd.php managed/SavedSearch_FundingDrawdownsAll.mgd.php
+#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php Civi/Funding/ApplicationProcess/ActionsContainer/ReworkPossibleApplicationSubmitActionsContainerFactory.php Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php Civi/Funding/FundingCaseTypes/BSH/HiHAktion/Application/Actions/HiHApplicationSubmitActionsContainer.php ang/crmFunding/application/defaultApplicationSidebar.template.html ang/crmFunding/case/fundingCase.template.html ang/crmFunding/drawdown/drawdownSearchTasksMenu.decorator.js ang/crmFundingHiH/hihApplicationSidebar.template.html managed/SavedSearchFundingDrawdowns.mgd.php managed/SavedSearch_FundingDrawdownsAll.mgd.php
 msgid "Reject"
 msgstr ""
 
@@ -1460,6 +1460,10 @@ msgstr ""
 
 #: ang/crmFunding/case/fundingCase.js
 msgid "This will close the funding case. A final payment instruction will be created,             if the available funding wasn't paid out completely, yet. Otherwise, a payback             claim will be created. Maybe you want to update the amount approved before."
+msgstr ""
+
+#: ang/crmFunding/case/fundingCase.js
+msgid "The funding case with all its applications will be rejected. Do you want to continue?"
 msgstr ""
 
 #: ang/crmFunding/case/fundingCase.template.html

@@ -80,6 +80,7 @@ msgstr "Kein passender Antrag oder fehlende Berechtigung."
 #: Civi/Funding/Api4/Action/FundingCase/RecreateTransferContractAction.php
 #: Civi/Funding/FundingCase/Api4/ActionHandler/FinishClearingActionHandler.php
 #: Civi/Funding/FundingCase/Api4/ActionHandler/GetPossibleRecipientsActionHandler.php
+#: Civi/Funding/FundingCase/Api4/ActionHandler/RejectActionHandler.php
 #: Civi/Funding/FundingCase/Api4/ActionHandler/ResetPermissionsActionHandler.php
 #: Civi/Funding/FundingCase/Api4/ActionHandler/SetNotificationContactsActionHandler.php
 #: Civi/Funding/FundingCase/Api4/ActionHandler/SetRecipientContactActionHandler.php
@@ -813,6 +814,7 @@ msgstr "Bewilligen"
 #: Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
 #: Civi/Funding/FundingCaseTypes/BSH/HiHAktion/Application/Actions/HiHApplicationSubmitActionsContainer.php
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
+#: ang/crmFunding/case/fundingCase.template.html
 #: ang/crmFunding/drawdown/drawdownSearchTasksMenu.decorator.js
 #: ang/crmFundingHiH/hihApplicationSidebar.template.html
 #: managed/SavedSearchFundingDrawdowns.mgd.php
@@ -2120,6 +2122,14 @@ msgstr ""
 "wird erstellt, wenn die verfügbare Förderung noch nicht vollständig "
 "ausgezahlt wurde. Anderenfalls wird eine Rückzahlungsforderung erstellt. "
 "Vielleicht möchten Sie den bewilligten Betrag zuvor anpassen."
+
+#: ang/crmFunding/case/fundingCase.js
+msgid ""
+"The funding case with all its applications will be rejected. Do you want to "
+"continue?"
+msgstr ""
+"Der Förderfall mit all seinen Anträgen wird abgelehnt. Möchten Sie "
+"fortfahren?"
 
 #: ang/crmFunding/case/fundingCase.template.html
 msgid "Available budget"
