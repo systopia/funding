@@ -42,7 +42,7 @@ final class KursApplicationActionsDeterminer extends AbstractApplicationProcessA
     'new' => [
       'application_modify' => ['save'],
       'application_apply' => ['apply'],
-      'application_withdraw' => ['delete'],
+      'application_withdraw' => ['withdraw', 'delete'],
     ],
     'applied' => [
       'application_modify' => ['modify'],
