@@ -25,6 +25,7 @@ use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -43,9 +44,13 @@ final class ApplicationProcessReviewStatusSubscriberTest extends TestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->activityManagerMock = $this->createMock(ApplicationProcessActivityManager::class);
+    $requestContextMock = $this->createMock(RequestContextInterface::class);
     $this->subscriber = new ApplicationProcessReviewStatusSubscriber(
       $this->activityManagerMock,
+      $requestContextMock,
     );
+
+    $requestContextMock->method('getContactId')->willReturn(111);
   }
 
   public function testGetSubscribedEvents(): void {
@@ -75,7 +80,7 @@ final class ApplicationProcessReviewStatusSubscriberTest extends TestCase {
     ]);
 
     $this->activityManagerMock->expects(static::once())->method('addActivity')
-      ->with($event->getContactId(), $event->getApplicationProcess(), $activity);
+      ->with(111, $event->getApplicationProcess(), $activity);
 
     $this->subscriber->onUpdated($event);
   }
@@ -95,7 +100,7 @@ final class ApplicationProcessReviewStatusSubscriberTest extends TestCase {
     ]);
 
     $this->activityManagerMock->expects(static::once())->method('addActivity')
-      ->with($event->getContactId(), $event->getApplicationProcess(), $activity);
+      ->with(111, $event->getApplicationProcess(), $activity);
 
     $this->subscriber->onUpdated($event);
   }
@@ -120,7 +125,6 @@ final class ApplicationProcessReviewStatusSubscriberTest extends TestCase {
     ];
 
     return new ApplicationProcessUpdatedEvent(
-      11,
       ApplicationProcessFactory::createApplicationProcess($applicationProcessValues + [
         'is_review_calculative' => $oldIsCalculativeReview,
         'is_review_content' => $oldIsContentReview,

@@ -27,18 +27,8 @@ abstract class AbstractApplicationEvent extends Event {
 
   use ApplicationProcessEntityBundleTrait;
 
-  private int $contactId;
-
-  public function __construct(
-    int $contactId,
-    ApplicationProcessEntityBundle $applicationProcessBundle
-  ) {
-    $this->contactId = $contactId;
+  public function __construct(ApplicationProcessEntityBundle $applicationProcessBundle) {
     $this->applicationProcessBundle = $applicationProcessBundle;
-  }
-
-  public function getContactId(): int {
-    return $this->contactId;
   }
 
 }

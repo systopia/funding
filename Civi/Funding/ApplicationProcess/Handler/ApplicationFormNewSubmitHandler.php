@@ -92,7 +92,6 @@ final class ApplicationFormNewSubmitHandler implements ApplicationFormNewSubmitH
     );
 
     $applicationProcess = $this->applicationProcessManager->create(
-      $command->getContactId(),
       $fundingCase,
       $command->getFundingCaseType(),
       $command->getFundingProgram(),

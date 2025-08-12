@@ -59,7 +59,7 @@ final class ApplicationSnapshotRestorer implements ApplicationSnapshotRestorerIn
   /**
    * @throws \CRM_Core_Exception
    */
-  public function restoreLastSnapshot(int $contactId, ApplicationProcessEntityBundle $applicationProcessBundle): void {
+  public function restoreLastSnapshot(ApplicationProcessEntityBundle $applicationProcessBundle): void {
     $applicationProcess = $applicationProcessBundle->getApplicationProcess();
 
     $applicationSnapshot = $this->applicationSnapshotManager->getLastByApplicationProcessId(
@@ -84,7 +84,7 @@ final class ApplicationSnapshotRestorer implements ApplicationSnapshotRestorerIn
     // @phpstan-ignore-next-line
     $applicationProcess->setValues($applicationProcess->toArray() + $applicationSnapshot->getCustomFields());
 
-    $this->applicationProcessManager->update($contactId, $applicationProcessBundle);
+    $this->applicationProcessManager->update($applicationProcessBundle);
 
     $this->restoreCostItems($applicationSnapshot);
     $this->restoreResourcesItems($applicationSnapshot);

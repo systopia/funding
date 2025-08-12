@@ -216,6 +216,16 @@
         });
       };
 
+      $scope.reject = function () {
+        CRM.confirm({
+          message: ts('The funding case with all its applications will be rejected. Do you want to continue?'),
+        }).on('crmConfirm:yes', function () {
+          return withOverlay(crmStatus({}, fundingCaseService.reject(fundingCase.id)
+            .then(() => window.location.reload())
+          ));
+        });
+      };
+
       $scope.recreateTransferContract = function () {
         withOverlay(crmStatus({}, fundingCaseService.recreateTransferContract(fundingCase.id)
           .then(onFundingCaseUpdate)

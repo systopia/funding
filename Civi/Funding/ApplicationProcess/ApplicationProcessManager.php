@@ -79,7 +79,6 @@ class ApplicationProcessManager {
    * @throws \CRM_Core_Exception
    */
   public function create(
-    int $contactId,
     FundingCaseEntity $fundingCase,
     FundingCaseTypeEntity $fundingCaseType,
     FundingProgramEntity $fundingProgram,
@@ -110,7 +109,6 @@ class ApplicationProcessManager {
     ] + $data->getMappedData());
 
     $event = new ApplicationProcessPreCreateEvent(
-      $contactId,
       new ApplicationProcessEntityBundle($applicationProcess, $fundingCase, $fundingCaseType, $fundingProgram)
     );
     $this->eventDispatcher->dispatch(ApplicationProcessPreCreateEvent::class, $event);
@@ -127,7 +125,7 @@ class ApplicationProcessManager {
       $fundingProgram
     );
 
-    $event = new ApplicationProcessCreatedEvent($contactId, $applicationProcessBundle);
+    $event = new ApplicationProcessCreatedEvent($applicationProcessBundle);
     $this->eventDispatcher->dispatch(ApplicationProcessCreatedEvent::class, $event);
 
     return $applicationProcess;
@@ -243,7 +241,7 @@ class ApplicationProcessManager {
   /**
    * @throws \CRM_Core_Exception
    */
-  public function update(int $contactId, ApplicationProcessEntityBundle $applicationProcessBundle): void {
+  public function update(ApplicationProcessEntityBundle $applicationProcessBundle): void {
     $applicationProcess = $applicationProcessBundle->getApplicationProcess();
     $applicationProcess->setModificationDate(new \DateTime(date('YmdHis')));
 
@@ -251,7 +249,6 @@ class ApplicationProcessManager {
     Assert::notNull($previousApplicationProcess, 'Application process could not be loaded');
 
     $event = new ApplicationProcessPreUpdateEvent(
-      $contactId,
       $previousApplicationProcess,
       $applicationProcessBundle,
     );
@@ -262,7 +259,6 @@ class ApplicationProcessManager {
     $this->api4->executeAction($action);
 
     $event = new ApplicationProcessUpdatedEvent(
-      $contactId,
       $previousApplicationProcess,
       $applicationProcessBundle,
     );

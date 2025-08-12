@@ -43,7 +43,6 @@ final class ApplicationFormSubmitEventDecorator implements ApplicationFormSubmit
     $result = $this->handler->handle($command);
     if ($result->isSuccess()) {
       $event = new ApplicationFormSubmitSuccessEvent(
-        $command->getContactId(),
         $command->getApplicationProcessBundle(),
         $command->getData(),
         $result,

@@ -45,7 +45,6 @@ final class ApplicationFormNewSubmitEventDecorator implements ApplicationFormNew
     if ($result->isSuccess()) {
       Assert::notNull($result->getApplicationProcessBundle());
       $event = new ApplicationFormSubmitSuccessEvent(
-        $command->getContactId(),
         $result->getApplicationProcessBundle(),
         $command->getData(),
         $result,

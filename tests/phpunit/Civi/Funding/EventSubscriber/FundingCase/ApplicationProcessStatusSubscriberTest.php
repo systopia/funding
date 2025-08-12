@@ -107,7 +107,6 @@ final class ApplicationProcessStatusSubscriberTest extends TestCase {
     string $applicationProcessStatus
   ): ApplicationProcessUpdatedEvent {
     return new ApplicationProcessUpdatedEvent(
-      11,
       ApplicationProcessFactory::createApplicationProcess(['status' => 'previous_status']),
       ApplicationProcessBundleFactory::createApplicationProcessBundle(
         ['status' => $applicationProcessStatus],

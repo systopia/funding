@@ -31,6 +31,7 @@ use Civi\Funding\FundingCaseType\MetaData\ApplicationProcessStatus;
 use Civi\Funding\FundingCaseType\MetaData\DefaultApplicationProcessStatuses;
 use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataMock;
 use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataProviderMock;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -43,21 +44,20 @@ final class ApplicationSnapshotCreateSubscriberTest extends TestCase {
 
   private ApplicationSnapshotCreateSubscriber $subscriber;
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
   private ApplicationSnapshotCreateHandlerInterface&MockObject $snapshotCreateHandlerMock;
 
   protected function setUp(): void {
     parent::setUp();
     $this->metaDataMock = new FundingCaseTypeMetaDataMock(FundingCaseTypeFactory::DEFAULT_NAME);
+    $requestContextMock = $this->createMock(RequestContextInterface::class);
     $this->snapshotCreateHandlerMock = $this->createMock(ApplicationSnapshotCreateHandlerInterface::class);
     $this->subscriber = new ApplicationSnapshotCreateSubscriber(
-      new FundingCaseTypeMetaDataProviderMock($this->metaDataMock),
+      new FundingCaseTypeMetaDataProviderMock($this->metaDataMock), $requestContextMock,
       $this->snapshotCreateHandlerMock,
     );
 
     $this->metaDataMock->addApplicationProcessStatus(DefaultApplicationProcessStatuses::eligible());
+    $requestContextMock->method('getContactId')->willReturn(111);
   }
 
   public function testGetSubscribedEvents(): void {
@@ -80,7 +80,7 @@ final class ApplicationSnapshotCreateSubscriberTest extends TestCase {
 
     $this->snapshotCreateHandlerMock->expects(static::once())->method('handle')
       ->with(new ApplicationSnapshotCreateCommand(
-        1,
+        111,
         new ApplicationProcessEntityBundle(
           $event->getPreviousApplicationProcess(),
           $event->getFundingCase(),
@@ -99,7 +99,7 @@ final class ApplicationSnapshotCreateSubscriberTest extends TestCase {
 
     $this->snapshotCreateHandlerMock->expects(static::once())->method('handle')
       ->with(new ApplicationSnapshotCreateCommand(
-        1,
+        111,
         new ApplicationProcessEntityBundle(
           $event->getPreviousApplicationProcess(),
           $event->getFundingCase(),
@@ -146,11 +146,7 @@ final class ApplicationSnapshotCreateSubscriberTest extends TestCase {
     $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess($previousValues);
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle($currentValues);
 
-    return new ApplicationProcessPreUpdateEvent(
-      1,
-      $previousApplicationProcess,
-      $applicationProcessBundle,
-    );
+    return new ApplicationProcessPreUpdateEvent($previousApplicationProcess, $applicationProcessBundle);
   }
 
 }

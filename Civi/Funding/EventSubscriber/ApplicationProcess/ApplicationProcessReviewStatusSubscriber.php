@@ -23,12 +23,15 @@ use Civi\Funding\ActivityTypeIds;
 use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ApplicationProcessReviewStatusSubscriber implements EventSubscriberInterface {
 
   private ApplicationProcessActivityManager $activityManager;
+
+  private RequestContextInterface $requestContext;
 
   /**
    * @inheritDoc
@@ -37,8 +40,12 @@ class ApplicationProcessReviewStatusSubscriber implements EventSubscriberInterfa
     return [ApplicationProcessUpdatedEvent::class => 'onUpdated'];
   }
 
-  public function __construct(ApplicationProcessActivityManager $activityManager) {
+  public function __construct(
+    ApplicationProcessActivityManager $activityManager,
+    RequestContextInterface $requestContext,
+  ) {
     $this->activityManager = $activityManager;
+    $this->requestContext = $requestContext;
   }
 
   /**
@@ -74,7 +81,7 @@ class ApplicationProcessReviewStatusSubscriber implements EventSubscriberInterfa
         => $applicationProcess->getIsReviewCalculative(),
       ]);
 
-      $this->activityManager->addActivity($event->getContactId(), $applicationProcess, $activity);
+      $this->activityManager->addActivity($this->requestContext->getContactId(), $applicationProcess, $activity);
     }
   }
 

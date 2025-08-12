@@ -63,7 +63,6 @@ final class ApplicationActionApplyHandler implements ApplicationActionApplyHandl
 
     if ($this->info->isRestoreAction($command->getAction())) {
       $this->applicationSnapshotRestorer->restoreLastSnapshot(
-        $command->getContactId(),
         $command->getApplicationProcessBundle()
       );
     }
@@ -89,10 +88,7 @@ final class ApplicationActionApplyHandler implements ApplicationActionApplyHandl
         }
       }
 
-      $this->applicationProcessManager->update(
-        $command->getContactId(),
-        $command->getApplicationProcessBundle(),
-      );
+      $this->applicationProcessManager->update($command->getApplicationProcessBundle());
     }
   }
 

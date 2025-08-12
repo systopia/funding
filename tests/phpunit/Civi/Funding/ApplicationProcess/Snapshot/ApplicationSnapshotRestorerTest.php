@@ -97,7 +97,7 @@ final class ApplicationSnapshotRestorerTest extends TestCase {
       ->willReturn($applicationSnapshot);
 
     $this->applicationProcessManagerMock->expects(static::once())->method('update')
-      ->with(11, $applicationProcessBundle);
+      ->with($applicationProcessBundle);
 
     $this->costItemManagerMock->expects(static::once())->method('updateAll')
       ->with($applicationProcess->getId(), [$costItem]);
@@ -114,7 +114,7 @@ final class ApplicationSnapshotRestorerTest extends TestCase {
     $this->externalFileManagerMock->expects(static::once())->method('deleteFiles')
       ->with($applicationProcess->getId(), ['testIdentifier']);
 
-    $this->applicationSnapshotRestorer->restoreLastSnapshot(11, $applicationProcessBundle);
+    $this->applicationSnapshotRestorer->restoreLastSnapshot($applicationProcessBundle);
 
     static::assertSame($applicationSnapshot->getStatus(), $applicationProcess->getStatus());
     static::assertSame($applicationSnapshot->getTitle(), $applicationProcess->getTitle());

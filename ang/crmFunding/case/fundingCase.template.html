@@ -119,6 +119,11 @@
     <span class="funding-label">{{ ts('Finish Clearing') }}</span>
   </button>
 
+  <button ng-show="possibleActions.includes('reject')" type="button"
+          ng-click="reject()">
+    <span class="funding-label">{{ ts('Reject') }}</span>
+  </button>
+
   <h2 ng-show="payoutProcesses.length > 0">{{ ts('Drawdowns') }}</h2>
   <div ng-repeat="payoutProcess in payoutProcesses">
     <sk-drawdown-table options="{filters: {payout_process_id: payoutProcess.id}}"></sk-drawdown-table>

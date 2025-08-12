@@ -71,7 +71,7 @@ final class ApplicationProcessTaskSubscriberTest extends TestCase {
 
   public function testOnCreated(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
-    $event = new ApplicationProcessCreatedEvent(12, $applicationProcessBundle);
+    $event = new ApplicationProcessCreatedEvent($applicationProcessBundle);
     $task = FundingTaskFactory::create();
 
     $this->taskCreatorMock->expects(static::once())->method('createTasksOnNew')
@@ -89,7 +89,7 @@ final class ApplicationProcessTaskSubscriberTest extends TestCase {
       [],
       ['name' => 'SomeCaseType']
     );
-    $event = new ApplicationProcessCreatedEvent(12, $applicationProcessBundle);
+    $event = new ApplicationProcessCreatedEvent($applicationProcessBundle);
 
     $this->taskCreatorMock->expects(static::never())->method('createTasksOnNew');
 
@@ -99,7 +99,7 @@ final class ApplicationProcessTaskSubscriberTest extends TestCase {
   public function testOnUpdated(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
     $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess();
-    $event = new ApplicationProcessUpdatedEvent(12, $previousApplicationProcess, $applicationProcessBundle);
+    $event = new ApplicationProcessUpdatedEvent($previousApplicationProcess, $applicationProcessBundle);
 
     $existingTask = FundingTaskFactory::create(['subject' => 'Existing Task']);
     $newTask = FundingTaskFactory::create(['subject' => 'New Task']);
@@ -132,7 +132,7 @@ final class ApplicationProcessTaskSubscriberTest extends TestCase {
       ['name' => 'SomeCaseType']
     );
     $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess();
-    $event = new ApplicationProcessUpdatedEvent(12, $previousApplicationProcess, $applicationProcessBundle);
+    $event = new ApplicationProcessUpdatedEvent($previousApplicationProcess, $applicationProcessBundle);
 
     $this->taskManagerMock->expects(static::never())->method('getOpenTasksBy');
     $this->taskCreatorMock->expects(static::never())->method('createTasksOnChange');

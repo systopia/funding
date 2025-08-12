@@ -25,6 +25,7 @@ use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
 use Civi\RemoteTools\Api4\OptionsLoaderInterface;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -33,6 +34,8 @@ class ApplicationProcessStatusSubscriber implements EventSubscriberInterface {
   private ApplicationProcessActivityManager $activityManager;
 
   private OptionsLoaderInterface $optionsLoader;
+
+  private RequestContextInterface $requestContext;
 
   /**
    * @inheritDoc
@@ -43,10 +46,12 @@ class ApplicationProcessStatusSubscriber implements EventSubscriberInterface {
 
   public function __construct(
     ApplicationProcessActivityManager $activityManager,
-    OptionsLoaderInterface $optionsLoader
+    OptionsLoaderInterface $optionsLoader,
+    RequestContextInterface $requestContext
   ) {
     $this->activityManager = $activityManager;
     $this->optionsLoader = $optionsLoader;
+    $this->requestContext = $requestContext;
   }
 
   /**
@@ -72,7 +77,7 @@ class ApplicationProcessStatusSubscriber implements EventSubscriberInterface {
         'funding_application_status_change.to_status' => $applicationProcess->getStatus(),
       ]);
 
-      $this->activityManager->addActivity($event->getContactId(), $applicationProcess, $activity);
+      $this->activityManager->addActivity($this->requestContext->getContactId(), $applicationProcess, $activity);
     }
   }
 

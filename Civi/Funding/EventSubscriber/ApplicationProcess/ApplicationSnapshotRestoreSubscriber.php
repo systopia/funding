@@ -23,12 +23,15 @@ use Civi\Funding\ActivityTypeIds;
 use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ApplicationSnapshotRestoreSubscriber implements EventSubscriberInterface {
 
   private ApplicationProcessActivityManager $activityManager;
+
+  private RequestContextInterface $requestContext;
 
   /**
    * @inheritDoc
@@ -38,8 +41,12 @@ class ApplicationSnapshotRestoreSubscriber implements EventSubscriberInterface {
     return [ApplicationProcessUpdatedEvent::class => ['onUpdated', PHP_INT_MIN]];
   }
 
-  public function __construct(ApplicationProcessActivityManager $activityManager) {
+  public function __construct(
+    ApplicationProcessActivityManager $activityManager,
+    RequestContextInterface $requestContext
+  ) {
     $this->activityManager = $activityManager;
+    $this->requestContext = $requestContext;
   }
 
   /**
@@ -61,7 +68,7 @@ class ApplicationSnapshotRestoreSubscriber implements EventSubscriberInterface {
         'funding_application_restore.application_snapshot_id' => $applicationProcess->getRestoredSnapshot()->getId(),
       ]);
 
-      $this->activityManager->addActivity($event->getContactId(), $applicationProcess, $activity);
+      $this->activityManager->addActivity($this->requestContext->getContactId(), $applicationProcess, $activity);
     }
   }
 
