@@ -164,6 +164,15 @@ final class FundingPseudoConstants {
         'description' => NULL,
       ],
       [
+        'id' => 'rework-review-requested',
+        'name' => 'rework-review-requested',
+        'label' => E::ts('Rework review requested'),
+        'icon' => 'fa-circle-o',
+        'color' => NULL,
+        'abbr' => NULL,
+        'description' => NULL,
+      ],
+      [
         'id' => 'accepted',
         'name' => 'accepted',
         'label' => E::ts('Accepted'),

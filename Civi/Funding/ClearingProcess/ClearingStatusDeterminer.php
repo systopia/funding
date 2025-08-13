@@ -49,7 +49,11 @@ class ClearingStatusDeterminer {
     ],
     'rework' => [
       'save' => 'rework',
-      'apply' => 'review-requested',
+      'apply' => 'rework-review-requested',
+      'review' => 'review',
+    ],
+    'rework-review-requested' => [
+      'modify' => 'rework',
       'review' => 'review',
     ],
     'accepted' => [
