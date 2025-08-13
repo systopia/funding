@@ -55,3 +55,17 @@
   <funding-action-button action="update" modal-submit-button-label="{{:: ts('Save') }}" class="btn btn-success funding-clearing-sidebar-element" crm-icon="fa-check">{{:: ts('Save') }}</funding-action-button>
   <button type="button" class="btn btn-danger funding-clearing-sidebar-element" ng-click="reset()" ng-disabled="editCount > 0" crm-icon="fa-times">{{:: ts('Reset') }}</button>
 </span>
+
+<div class="funding-application-sidebar-element" ng-show="$ctrl.lastInternalCommentActivity">
+  <div class="funding-activity funding-application-comment panel panel-info">
+    <div class="funding-activity-title panel-heading">{{:: ts('Last Internal Comment')}}</div>
+    <div class="panel-body">
+      <div class="funding-activity-date">{{ ts('Date: %date', {date: ($ctrl.lastInternalCommentActivity.created_date | fundingDate)}) }}</div>
+      <div class="funding-activity-performed-by">{{ ts('From: %name', {name: $ctrl.lastInternalCommentActivity.source_contact_name}) }}</div>
+      <div class="funding-activity-comment">
+        {{:: ts('Text:') }}<br>
+        <span ng-bind-html="$ctrl.lastInternalCommentActivity.details"></span>
+      </div>
+    </div>
+  </div>
+</div>

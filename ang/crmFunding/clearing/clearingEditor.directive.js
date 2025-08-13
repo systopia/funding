@@ -20,6 +20,7 @@ fundingModule.directive('fundingClearingEditor', [function() {
   return {
     restrict: 'E',
     scope: {
+      activities: '<',
       clearingProcess: '=',
       // Buttons are not shown initially if JSON schema is loaded in controller.
       form: '=',
