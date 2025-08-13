@@ -62,6 +62,12 @@ class ClearingActionsDeterminer {
       ClearingProcessPermissions::REVIEW_CALCULATIVE => ['review', 'add-comment'],
       ClearingProcessPermissions::REVIEW_CONTENT => ['review', 'add-comment'],
     ],
+    'rework-review-requested' => [
+      ClearingProcessPermissions::CLEARING_APPLY => ['modify'],
+      ClearingProcessPermissions::CLEARING_MODIFY => ['modify'],
+      ClearingProcessPermissions::REVIEW_CALCULATIVE => ['review', 'add-comment'],
+      ClearingProcessPermissions::REVIEW_CONTENT => ['review', 'add-comment'],
+    ],
     'accepted' => [
       ClearingProcessPermissions::CLEARING_APPLY => [],
       ClearingProcessPermissions::CLEARING_MODIFY => [],

@@ -1511,6 +1511,7 @@ msgid "Rework requested"
 msgstr "Überarbeitung beantragt"
 
 #: Civi/Funding/FundingCaseType/MetaData/ReworkApplicationProcessStatuses.php
+#: Civi/Funding/FundingPseudoConstants.php
 msgid "Rework review requested"
 msgstr "Prüfung der Überarbeitung beantragt"
 

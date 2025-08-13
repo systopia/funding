@@ -1034,7 +1034,7 @@ msgstr ""
 msgid "Rework requested"
 msgstr ""
 
-#: Civi/Funding/FundingCaseType/MetaData/ReworkApplicationProcessStatuses.php
+#: Civi/Funding/FundingCaseType/MetaData/ReworkApplicationProcessStatuses.php Civi/Funding/FundingPseudoConstants.php
 msgid "Rework review requested"
 msgstr ""
 
