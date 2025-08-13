@@ -30,7 +30,7 @@ fundingModule.directive('fundingJfControlArray', [function() {
 
       $scope.elements = [];
       $scope.header = [];
-      for (const element of $scope.uiSchema.options.detail.elements) {
+      for (const element of $scope.uiSchema.options.elements) {
         if (!element.options ||
           element.options.type !== 'hidden' && element.options.type !== 'value'
         ) {
