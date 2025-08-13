@@ -2027,6 +2027,7 @@ msgid "Reset"
 msgstr "Zurücksetzen"
 
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
+#: ang/crmFunding/clearing/clearingSidebar.template.html
 msgid "Last Internal Comment"
 msgstr "Letzter interner Kommentar"
 
@@ -2038,16 +2039,19 @@ msgstr "Letzter interner Kommentar"
 #: ang/crmFunding/application/history/activities/create.template.html
 #: ang/crmFunding/application/history/activities/reviewStatusChange.template.html
 #: ang/crmFunding/application/history/activities/statusChange.template.html
+#: ang/crmFunding/clearing/clearingSidebar.template.html
 msgid "Date: %date"
 msgstr "Datum: %date"
 
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
 #: ang/crmFunding/application/history/activities/comment.template.html
+#: ang/crmFunding/clearing/clearingSidebar.template.html
 msgid "From: %name"
 msgstr "Von: %name"
 
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
 #: ang/crmFunding/application/history/activities/comment.template.html
+#: ang/crmFunding/clearing/clearingSidebar.template.html
 msgid "Text:"
 msgstr "Text:"
 

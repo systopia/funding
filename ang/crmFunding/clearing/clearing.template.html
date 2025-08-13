@@ -14,6 +14,7 @@
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane" ng-class="{active: tab === 'clearing'}">
             <funding-clearing-editor ng-show="tab === 'clearing'"
+                                     activities="activities"
                                      clearing-process="clearingProcess"
                                      form="form"
                                      status-options="clearingStatusOptions"

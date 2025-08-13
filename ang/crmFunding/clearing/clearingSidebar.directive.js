@@ -22,8 +22,20 @@ fundingModule.directive('fundingClearingSidebar', function() {
     scope: false,
     templateUrl: '~/crmFunding/clearing/clearingSidebar.template.html',
     controllerAs: '$ctrl',
-    controller: [function () {
+    controller: ['$scope', function ($scope) {
+      const ctrl = this;
       this.ts = CRM.ts('funding');
+
+      $scope.$watch('activities', function (activities) {
+        if (activities) {
+          for (const activity of activities) {
+            if (activity['activity_type_id:name'] === 'funding_application_comment_internal') {
+              ctrl.lastInternalCommentActivity = activity;
+              break;
+            }
+          }
+        }
+      });
     }],
   };
 });

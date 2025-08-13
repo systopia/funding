@@ -1386,19 +1386,19 @@ msgstr ""
 msgid "Reset"
 msgstr ""
 
-#: ang/crmFunding/application/defaultApplicationSidebar.template.html
+#: ang/crmFunding/application/defaultApplicationSidebar.template.html ang/crmFunding/clearing/clearingSidebar.template.html
 msgid "Last Internal Comment"
 msgstr ""
 
-#: ang/crmFunding/application/defaultApplicationSidebar.template.html ang/crmFunding/application/history/activities/clearingCreate.template.html ang/crmFunding/application/history/activities/clearingReviewStatusChange.template.html ang/crmFunding/application/history/activities/clearingStatusChange.template.html ang/crmFunding/application/history/activities/comment.template.html ang/crmFunding/application/history/activities/create.template.html ang/crmFunding/application/history/activities/reviewStatusChange.template.html ang/crmFunding/application/history/activities/statusChange.template.html
+#: ang/crmFunding/application/defaultApplicationSidebar.template.html ang/crmFunding/application/history/activities/clearingCreate.template.html ang/crmFunding/application/history/activities/clearingReviewStatusChange.template.html ang/crmFunding/application/history/activities/clearingStatusChange.template.html ang/crmFunding/application/history/activities/comment.template.html ang/crmFunding/application/history/activities/create.template.html ang/crmFunding/application/history/activities/reviewStatusChange.template.html ang/crmFunding/application/history/activities/statusChange.template.html ang/crmFunding/clearing/clearingSidebar.template.html
 msgid "Date: %date"
 msgstr ""
 
-#: ang/crmFunding/application/defaultApplicationSidebar.template.html ang/crmFunding/application/history/activities/comment.template.html
+#: ang/crmFunding/application/defaultApplicationSidebar.template.html ang/crmFunding/application/history/activities/comment.template.html ang/crmFunding/clearing/clearingSidebar.template.html
 msgid "From: %name"
 msgstr ""
 
-#: ang/crmFunding/application/defaultApplicationSidebar.template.html ang/crmFunding/application/history/activities/comment.template.html
+#: ang/crmFunding/application/defaultApplicationSidebar.template.html ang/crmFunding/application/history/activities/comment.template.html ang/crmFunding/clearing/clearingSidebar.template.html
 msgid "Text:"
 msgstr ""
 

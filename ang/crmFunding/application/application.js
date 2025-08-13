@@ -71,7 +71,7 @@ fundingModule.controller('fundingApplicationCtrl', [
       );
     });
 
-    $scope.activities = {};
+    $scope.activities = [];
     $scope.loadActivities = function () {
       fundingApplicationProcessActivityService.get(applicationProcess.id)
           .then((result) => $scope.activities = result);
