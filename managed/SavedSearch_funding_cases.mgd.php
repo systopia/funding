@@ -219,14 +219,11 @@ return [
               ],
             ],
             [
-              'text' => E::ts('Actions'),
-              'style' => 'default',
-              'size' => 'btn-sm',
-              'icon' => 'fa-bars',
+              'size' => 'btn-xs',
               'links' => [
                 [
                   'path' => 'civicrm/a#funding/case/[id]',
-                  'icon' => 'fa-folder-open-o',
+                  'icon' => 'fa-folder-open',
                   'text' => E::ts('Open case'),
                   'style' => 'default',
                   'condition' => [],
@@ -238,7 +235,7 @@ return [
                 ],
                 [
                   'path' => 'civicrm/a/#/funding/case/[id]/permissions',
-                  'icon' => 'fa-pencil-square-o',
+                  'icon' => 'fa-pen-to-square',
                   'text' => E::ts('Edit permissions'),
                   'style' => 'default',
                   'condition' => [
@@ -253,8 +250,9 @@ return [
                   'task' => '',
                 ],
               ],
-              'type' => 'menu',
+              'type' => 'buttons',
               'alignment' => 'text-right',
+              'label' => E::ts('Actions'),
             ],
           ],
           'actions' => [
