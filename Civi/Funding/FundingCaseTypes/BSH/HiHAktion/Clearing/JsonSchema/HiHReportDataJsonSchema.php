@@ -65,7 +65,7 @@ final class HiHReportDataJsonSchema extends JsonSchemaObject {
               'evaluate' => [
                 'expression' => 'action === "save" || zieleErreicht',
                 'variables' => [
-                  'action' => new JsonSchemaDataPointer('/_action'),
+                  'action' => new JsonSchemaDataPointer('/_action', ''),
                   'zieleErreicht' => new JsonSchemaDataPointer('1/zieleErreicht', FALSE),
                 ],
               ],
@@ -95,7 +95,14 @@ final class HiHReportDataJsonSchema extends JsonSchemaObject {
               'alterAb67' => new JsonSchemaDataPointer('1/alterAb67', 0),
             ],
             0,
-            ['minimum' => 1]
+            [
+              'minimum' => 1,
+              '$limitValidation' => JsonSchema::fromArray([
+                'rules' => [
+                 ['value' => ['const' => 0]],
+                ],
+              ]),
+            ]
           ),
           'kommentar' => new JsonSchemaString(),
         ], ['required' => ['gesamt']]),
@@ -141,7 +148,7 @@ final class HiHReportDataJsonSchema extends JsonSchemaObject {
           'condition' => [
             'evaluate' => [
               'expression' => 'action === "save"',
-              'variables' => ['action' => new JsonSchemaDataPointer('/_action')],
+              'variables' => ['action' => new JsonSchemaDataPointer('/_action', '')],
             ],
           ],
         ]),
