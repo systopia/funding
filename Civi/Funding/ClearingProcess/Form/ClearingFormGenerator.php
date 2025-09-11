@@ -33,6 +33,7 @@ use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaNull;
+use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
@@ -78,13 +79,20 @@ final class ClearingFormGenerator {
   public function generateForm(ClearingProcessEntityBundle $clearingProcessBundle): JsonFormsFormInterface {
   // phpcs:enable
     $receiptsForm = $this->receiptsFormGenerator->generateReceiptsForm($clearingProcessBundle);
+    /** @var \Civi\RemoteTools\JsonSchema\JsonSchema $receiptsProperties */
+    $receiptsProperties = $receiptsForm->getJsonSchema()['properties']
+      ??= new JsonSchemaObject([], ['additionalProperties' => FALSE]);
+    $receiptsProperties['costItems'] ??= new JsonSchemaObject([], ['additionalProperties' => FALSE]);
+    $receiptsProperties['resourcesItems'] ??= new JsonSchemaObject([], ['additionalProperties' => FALSE]);
     $reportForm = $this->reportFormFactory->createReportForm($clearingProcessBundle);
+    /** @var \Civi\RemoteTools\JsonSchema\JsonSchema $reportProperties */
+    $reportProperties = $reportForm->getJsonSchema()['properties']
+      ??= new JsonSchemaObject([], ['additionalProperties' => FALSE]);
+    /** @var \Civi\RemoteTools\JsonSchema\JsonSchema $reportDataSchema */
+    $reportDataSchema = $reportProperties['reportData']
+      ??= new JsonSchemaObject([], ['additionalProperties' => FALSE]);
     if (!$this->actionsDeterminer->isContentChangeAllowed($clearingProcessBundle)) {
-      /** @var \Civi\RemoteTools\JsonSchema\JsonSchema|null $reportDataSchema */
-      $reportDataSchema = $reportForm->getJsonSchema()['properties']['reportData'] ?? NULL;
-      if (NULL !== $reportDataSchema) {
-        $reportDataSchema['readOnly'] = TRUE;
-      }
+      $reportDataSchema['readOnly'] = TRUE;
     }
 
     $keywords = $receiptsForm->getJsonSchema()->toArray();
