@@ -26,7 +26,7 @@ use CRM_Funding_ExtensionUtil as E;
 
 class ClearingActionsDeterminer {
 
-  private const EDIT_ACTIONS = ['save', 'apply', 'update'];
+  public const EDIT_ACTIONS = ['save', 'apply', 'update'];
 
   private const FUNDING_CASE_FINAL_STATUS_LIST = [FundingCaseStatus::CLEARED];
 

@@ -29,10 +29,11 @@ final class KursDokumenteJsonSchema extends JsonSchemaObject {
     parent::__construct([
       'dateien' => new JsonSchemaArray(new JsonSchemaObject([
         'datei' => new JsonSchemaString([
+          'minLength' => 1,
           'format' => 'uri',
           '$tag' => 'externalFile',
         ]),
-        'beschreibung' => new JsonSchemaString(),
+        'beschreibung' => new JsonSchemaString(['minLength' => 1]),
       ], ['required' => ['datei', 'beschreibung']])),
     ]);
   }

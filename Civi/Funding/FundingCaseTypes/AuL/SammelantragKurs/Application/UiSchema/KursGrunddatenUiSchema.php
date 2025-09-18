@@ -19,23 +19,17 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Application\UiSchema;
 
-use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Application\JsonSchema\KursGrunddatenJsonSchema;
 use Civi\RemoteTools\JsonForms\Control\JsonFormsArray;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
-use Civi\RemoteTools\JsonForms\JsonFormsElement;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 
 final class KursGrunddatenUiSchema extends JsonFormsCategory {
 
-  private string $scopePrefix;
-
   /**
    * @param bool $report TRUE if used for report.
    */
   public function __construct(string $scopePrefix, bool $report = FALSE) {
-    $this->scopePrefix = $scopePrefix;
-
     $teilnehmerElements = [
       new JsonFormsControl(
         "$scopePrefix/teilnehmer/properties/gesamt", 'Gesamtanzahl der Teilnehmer*innen',
@@ -86,41 +80,6 @@ final class KursGrunddatenUiSchema extends JsonFormsCategory {
       new JsonFormsGroup('Teilnehmer*innen', $teilnehmerElements),
       new JsonFormsControl("$scopePrefix/teilnehmertage", 'Teilnehmendentage'),
     ]);
-  }
-
-  /**
-   * Adds an asterisk to every non-required field. In report all fields are
-   * required.
-   */
-  public function withRequiredLabels(KursGrunddatenJsonSchema $grunddatenJsonSchema): self {
-    $clone = clone $this;
-    $clone->modifyLabels($clone, $grunddatenJsonSchema);
-
-    return $clone;
-  }
-
-  private function modifyLabels(JsonFormsElement $element, KursGrunddatenJsonSchema $grunddatenJsonSchema): void {
-    if ('Control' === $element['type']) {
-      // @phpstan-ignore-next-line
-      $relativeScope = 'properties' . substr($element['scope'], strlen($this->scopePrefix));
-      $schemaPath = explode('/', $relativeScope);
-      $propertyName = array_pop($schemaPath);
-      array_pop($schemaPath);
-      /** @var \Civi\RemoteTools\JsonSchema\JsonSchema $objectSchema */
-      $objectSchema = $grunddatenJsonSchema->getKeywordValueAt($schemaPath);
-      // @phpstan-ignore-next-line
-      if (!in_array($propertyName, $objectSchema['required'] ?? [], TRUE) && !$element->hasKeyword('$calculate')) {
-        // @phpstan-ignore-next-line
-        $element['label'] .= '&nbsp;*';
-      }
-    }
-    else {
-      /** @phpstan-var list<JsonFormsElement> $elements */
-      $elements = $element['elements'] ?? [];
-      foreach ($elements as $subElement) {
-        $this->modifyLabels($subElement, $grunddatenJsonSchema);
-      }
-    }
   }
 
 }
