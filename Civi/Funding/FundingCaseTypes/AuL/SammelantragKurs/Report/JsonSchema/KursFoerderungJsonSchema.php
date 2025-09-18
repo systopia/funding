@@ -27,10 +27,10 @@ use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 final class KursFoerderungJsonSchema extends JsonSchemaObject {
 
   public function __construct() {
-    parent::__construct([
-      'teilnahmetage' => new JsonSchemaMoney([], TRUE),
-      'honorare' => new JsonSchemaMoney([], TRUE),
-      'fahrtkosten' => new JsonSchemaMoney([], TRUE),
+    $properties = [
+      'teilnahmetage' => new JsonSchemaMoney(),
+      'honorare' => new JsonSchemaMoney(),
+      'fahrtkosten' => new JsonSchemaMoney(),
       'summe' => new JsonSchemaCalculate(
         'number',
         'teilnahmetage + honorare + fahrtkosten',
@@ -40,25 +40,8 @@ final class KursFoerderungJsonSchema extends JsonSchemaObject {
           'fahrtkosten' => new JsonSchemaDataPointer('1/fahrtkosten', 0),
         ]
       ),
-    ]);
-  }
-
-  public function withAllFieldsRequired(): self {
-    $schema = clone $this;
-    $schema->addValidations();
-
-    return $schema;
-  }
-
-  private function addValidations(): void {
-    // @phpstan-ignore-next-line
-    $requiredNumbers = array_keys($this['properties']->getKeywords());
-    $this['required'] = $requiredNumbers;
-
-    foreach ($requiredNumbers as $property) {
-      // @phpstan-ignore-next-line
-      $this['properties'][$property]['type'] = 'number';
-    }
+    ];
+    parent::__construct($properties, ['required' => ['teilnahmetage', 'honorare', 'fahrtkosten']]);
   }
 
 }
