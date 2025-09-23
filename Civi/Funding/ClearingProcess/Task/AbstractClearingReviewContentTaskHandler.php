@@ -21,6 +21,7 @@ namespace Civi\Funding\ClearingProcess\Task;
 
 use Civi\Funding\ActivityStatusNames;
 use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
+use Civi\Funding\ClearingProcess\ClearingStatusDeterminer;
 use Civi\Funding\Entity\ClearingProcessEntity;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\Entity\FundingTaskEntity;
@@ -119,7 +120,11 @@ abstract class AbstractClearingReviewContentTaskHandler extends AbstractClearing
   }
 
   private function isInReviewableStatus(ClearingProcessEntityBundle $clearingProcessBundle): bool {
-    return in_array($clearingProcessBundle->getClearingProcess()->getStatus(), ['review-requested', 'review'], TRUE);
+    return in_array(
+      $clearingProcessBundle->getClearingProcess()->getStatus(),
+      ClearingStatusDeterminer::REVIEWABLE_STATUSES,
+      TRUE
+    );
   }
 
   private function isStatusChangedToReviewable(
