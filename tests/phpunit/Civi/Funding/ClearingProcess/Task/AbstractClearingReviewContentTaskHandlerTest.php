@@ -22,12 +22,15 @@ final class AbstractClearingReviewContentTaskHandlerTest extends TestCase {
     $this->taskHandler = $this->getMockForAbstractClass(AbstractClearingReviewContentTaskHandler::class);
   }
 
-  public function testCreateTasksOnChangeReviewRequested(): void {
+  /**
+   * @dataProvider provideReviewableStatusChange
+   */
+  public function testCreateTasksOnChangeReviewRequested(string $oldStatus, string $newStatus): void {
     $clearingProcessBundle = ClearingProcessBundleFactory::create([
-      'status' => 'review-requested',
+      'status' => $newStatus,
       'reviewer_cont_contact_id' => 123,
     ]);
-    $previousClearingProcess = ClearingProcessFactory::create(['status' => 'draft']);
+    $previousClearingProcess = ClearingProcessFactory::create(['status' => $oldStatus]);
 
     static::assertEquals([
       FundingTaskEntity::newTask([
@@ -41,6 +44,14 @@ final class AbstractClearingReviewContentTaskHandlerTest extends TestCase {
         'assignee_contact_ids' => [123],
       ]),
     ], [...$this->taskHandler->createTasksOnChange($clearingProcessBundle, $previousClearingProcess)]);
+  }
+
+  /**
+   * @return iterable<array{string, string}>
+   */
+  public static function provideReviewableStatusChange(): iterable {
+    yield ['draft', 'review-requested'];
+    yield ['rework', 'rework-review-requested'];
   }
 
   public function testCreateTasksOnChangeNotReview(): void {

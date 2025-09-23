@@ -23,6 +23,12 @@ use Civi\Funding\Entity\FullClearingProcessStatus;
 
 class ClearingStatusDeterminer {
 
+  public const REVIEWABLE_STATUSES = [
+    'review-requested',
+    'rework-review-requested',
+    'review',
+  ];
+
   private const STATUS_ACTION_STATUS_MAP = [
     'not-started' => [
       'save' => 'draft',
