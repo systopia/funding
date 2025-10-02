@@ -2,7 +2,7 @@
 msgid "Funding Case"
 msgstr ""
 
-#: CRM/Funding/BAO/FundingProgram.php CRM/Funding/DAO/FundingCase.php CRM/Funding/DAO/FundingCaseTypeProgram.php CRM/Funding/DAO/FundingProgram.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php managed/OptionValueCgExtendsFundingProgram.mgd.php managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php managed/SavedSearch_FundingDrawdownsAll.mgd.php managed/SavedSearch_Funding_Tasks_Pending.mgd.php managed/SavedSearch_MyFundingTasks.mgd.php managed/SavedSearch_funding_case_application_processes.mgd.php managed/SavedSearch_funding_cases.mgd.php
+#: CRM/Funding/BAO/FundingProgram.php CRM/Funding/DAO/FundingCase.php CRM/Funding/DAO/FundingCaseTypeProgram.php CRM/Funding/DAO/FundingFormStringTranslation.php CRM/Funding/DAO/FundingProgram.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php managed/OptionValueCgExtendsFundingProgram.mgd.php managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php managed/SavedSearch_FundingDrawdownsAll.mgd.php managed/SavedSearch_Funding_Tasks_Pending.mgd.php managed/SavedSearch_MyFundingTasks.mgd.php managed/SavedSearch_funding_case_application_processes.mgd.php managed/SavedSearch_funding_cases.mgd.php managed/SavedSearch_funding_form_translation.mgd.php
 msgid "Funding Program"
 msgstr ""
 
@@ -14,7 +14,7 @@ msgstr ""
 msgid "Application Template"
 msgstr ""
 
-#: CRM/Funding/DAO/ApplicationCiviOfficeTemplate.php CRM/Funding/DAO/ApplicationCostItem.php CRM/Funding/DAO/ApplicationProcess.php CRM/Funding/DAO/ApplicationResourcesItem.php CRM/Funding/DAO/ApplicationSnapshot.php CRM/Funding/DAO/ClearingCostItem.php CRM/Funding/DAO/ClearingProcess.php CRM/Funding/DAO/ClearingResourcesItem.php CRM/Funding/DAO/Drawdown.php CRM/Funding/DAO/FundingCase.php CRM/Funding/DAO/FundingCaseContactRelation.php CRM/Funding/DAO/FundingCasePermissionsCache.php CRM/Funding/DAO/FundingCaseType.php CRM/Funding/DAO/FundingCaseTypeProgram.php CRM/Funding/DAO/FundingNewCasePermissions.php CRM/Funding/DAO/FundingProgram.php CRM/Funding/DAO/FundingProgramContactRelation.php CRM/Funding/DAO/FundingProgramRelationship.php CRM/Funding/DAO/FundingRecipientContactRelation.php CRM/Funding/DAO/PayoutProcess.php
+#: CRM/Funding/DAO/ApplicationCiviOfficeTemplate.php CRM/Funding/DAO/ApplicationCostItem.php CRM/Funding/DAO/ApplicationProcess.php CRM/Funding/DAO/ApplicationResourcesItem.php CRM/Funding/DAO/ApplicationSnapshot.php CRM/Funding/DAO/ClearingCostItem.php CRM/Funding/DAO/ClearingProcess.php CRM/Funding/DAO/ClearingResourcesItem.php CRM/Funding/DAO/Drawdown.php CRM/Funding/DAO/FundingCase.php CRM/Funding/DAO/FundingCaseContactRelation.php CRM/Funding/DAO/FundingCasePermissionsCache.php CRM/Funding/DAO/FundingCaseType.php CRM/Funding/DAO/FundingCaseTypeProgram.php CRM/Funding/DAO/FundingFormStringTranslation.php CRM/Funding/DAO/FundingNewCasePermissions.php CRM/Funding/DAO/FundingProgram.php CRM/Funding/DAO/FundingProgramContactRelation.php CRM/Funding/DAO/FundingProgramRelationship.php CRM/Funding/DAO/FundingRecipientContactRelation.php CRM/Funding/DAO/PayoutProcess.php
 msgid "ID"
 msgstr ""
 
@@ -26,7 +26,7 @@ msgstr ""
 msgid "Case Type ID"
 msgstr ""
 
-#: CRM/Funding/DAO/ApplicationCiviOfficeTemplate.php CRM/Funding/DAO/FundingCase.php CRM/Funding/DAO/FundingCaseTypeProgram.php
+#: CRM/Funding/DAO/ApplicationCiviOfficeTemplate.php CRM/Funding/DAO/FundingCase.php CRM/Funding/DAO/FundingCaseTypeProgram.php CRM/Funding/DAO/FundingFormStringTranslation.php
 msgid "FK to FundingCaseType"
 msgstr ""
 
@@ -118,7 +118,7 @@ msgstr ""
 msgid "Creation Date"
 msgstr ""
 
-#: CRM/Funding/DAO/ApplicationProcess.php CRM/Funding/DAO/ClearingProcess.php CRM/Funding/DAO/FundingCase.php CRM/Funding/DAO/PayoutProcess.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php ang/crmFunding/application/defaultApplicationEditor.template.html ang/crmFunding/case/fundingCase.template.html ang/crmFunding/clearing/clearingEditor.template.html ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html ang/crmFundingHiH/hihApplicationEditor.template.html ang/crmFundingIJB/ijbApplicationEditor.template.html ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_funding_case_application_processes.mgd.php managed/SavedSearch_funding_cases.mgd.php
+#: CRM/Funding/DAO/ApplicationProcess.php CRM/Funding/DAO/ClearingProcess.php CRM/Funding/DAO/FundingCase.php CRM/Funding/DAO/FundingFormStringTranslation.php CRM/Funding/DAO/PayoutProcess.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php ang/crmFunding/application/defaultApplicationEditor.template.html ang/crmFunding/case/fundingCase.template.html ang/crmFunding/clearing/clearingEditor.template.html ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html ang/crmFundingHiH/hihApplicationEditor.template.html ang/crmFundingIJB/ijbApplicationEditor.template.html ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_funding_case_application_processes.mgd.php managed/SavedSearch_funding_cases.mgd.php managed/SavedSearch_funding_form_string_translation.mgd.php
 msgid "Modification Date"
 msgstr ""
 
@@ -378,7 +378,7 @@ msgstr ""
 msgid "Unique FundingCase ID"
 msgstr ""
 
-#: CRM/Funding/DAO/FundingCase.php CRM/Funding/DAO/FundingCaseTypeProgram.php CRM/Funding/DAO/FundingNewCasePermissions.php CRM/Funding/DAO/FundingProgramContactRelation.php CRM/Funding/DAO/FundingProgramRelationship.php CRM/Funding/DAO/FundingRecipientContactRelation.php
+#: CRM/Funding/DAO/FundingCase.php CRM/Funding/DAO/FundingCaseTypeProgram.php CRM/Funding/DAO/FundingFormStringTranslation.php CRM/Funding/DAO/FundingNewCasePermissions.php CRM/Funding/DAO/FundingProgramContactRelation.php CRM/Funding/DAO/FundingProgramRelationship.php CRM/Funding/DAO/FundingRecipientContactRelation.php
 msgid "FK to FundingProgram"
 msgstr ""
 
@@ -458,7 +458,7 @@ msgstr ""
 msgid "Funding Case Types"
 msgstr ""
 
-#: CRM/Funding/DAO/FundingCaseType.php CRM/Funding/DAO/FundingCaseTypeProgram.php managed/SavedSearch_funding_cases.mgd.php
+#: CRM/Funding/DAO/FundingCaseType.php CRM/Funding/DAO/FundingCaseTypeProgram.php CRM/Funding/DAO/FundingFormStringTranslation.php managed/SavedSearch_funding_cases.mgd.php managed/SavedSearch_funding_form_translation.mgd.php
 msgid "Funding Case Type"
 msgstr ""
 
@@ -496,6 +496,26 @@ msgstr ""
 
 #: CRM/Funding/DAO/FundingCaseTypeProgram.php
 msgid "Unique FundingCaseTypeProgram ID"
+msgstr ""
+
+#: CRM/Funding/DAO/FundingFormStringTranslation.php
+msgid "Funding Form String Translations"
+msgstr ""
+
+#: CRM/Funding/DAO/FundingFormStringTranslation.php
+msgid "Funding Form String Translation"
+msgstr ""
+
+#: CRM/Funding/DAO/FundingFormStringTranslation.php
+msgid "Unique FundingFormStringTranslation ID"
+msgstr ""
+
+#: CRM/Funding/DAO/FundingFormStringTranslation.php managed/SavedSearch_funding_form_string_translation.mgd.php
+msgid "Original"
+msgstr ""
+
+#: CRM/Funding/DAO/FundingFormStringTranslation.php ang/afformFundingFormStringTranslationEdit.aff.php ang/afsearchFundingFormStringTranslationList.aff.php managed/SavedSearch_funding_form_string_translation.mgd.php
+msgid "Translation"
 msgstr ""
 
 #: CRM/Funding/DAO/FundingNewCasePermissions.php
@@ -1750,12 +1770,32 @@ msgstr ""
 msgid "Assign permissions for new funding cases to contacts that have a relationship\nof the specified type to the recipient contact."
 msgstr ""
 
+#: Civi/Funding/Translation/EventSubscriber/ExtractStringsSearchKitTaskSubscriber.php managed/SavedSearch_funding_form_translation.mgd.php
+msgid "Extract Strings"
+msgstr ""
+
+#: Civi/Funding/Translation/EventSubscriber/ExtractStringsSearchKitTaskSubscriber.php
+msgid "Extract strings..."
+msgstr ""
+
+#: Civi/Funding/Translation/EventSubscriber/ExtractStringsSearchKitTaskSubscriber.php
+msgid "Successfully extracted strings."
+msgstr ""
+
+#: Civi/Funding/Translation/EventSubscriber/ExtractStringsSearchKitTaskSubscriber.php
+msgid "An error occurred while extracting strings."
+msgstr ""
+
 #: Civi/Funding/Validation/EntityValidationResult.php
 msgid "Validation failed: %1"
 msgstr ""
 
 #: ang/afformFundingCaseTypeTemplates.aff.php
 msgid "Funding Case Type Templates"
+msgstr ""
+
+#: ang/afformFundingFormStringTranslationEdit.aff.html ang/crmFunding/application/applicationSubmitModal.template.html ang/crmFunding/case/fundingCase.template.html ang/crmFunding/clearing/clearingSubmitModal.template.html
+msgid "Submit"
 msgstr ""
 
 #: ang/afformFundingProgramAdd.aff.php
@@ -1776,6 +1816,10 @@ msgstr ""
 
 #: ang/afsearchFundingCaseApplicationProcesses.aff.php managed/SavedSearch_funding_application_processes.mgd.php
 msgid "Funding Applications"
+msgstr ""
+
+#: ang/afsearchFundingFormTranslation.aff.php
+msgid "Funding Form Translation"
 msgstr ""
 
 #: ang/afsearchFundingProgramControlling.aff.php managed/NavigationFunding.mgd.php managed/SavedSearch_funding_program_controlling.mgd.php
@@ -1832,10 +1876,6 @@ msgstr ""
 
 #: ang/crmFunding/application/applicationSubmitModal.template.html ang/crmFunding/clearing/clearingSubmitModal.template.html
 msgid "Comment Type"
-msgstr ""
-
-#: ang/crmFunding/application/applicationSubmitModal.template.html ang/crmFunding/case/fundingCase.template.html ang/crmFunding/clearing/clearingSubmitModal.template.html
-msgid "Submit"
 msgstr ""
 
 #: ang/crmFunding/application/applicationSubmitModal.template.html ang/crmFunding/case/fundingCase.template.html ang/crmFunding/clearing/clearingSubmitModal.template.html ang/crmFundingHiH/hihApplicationApproveModal.template.html
@@ -2258,6 +2298,10 @@ msgstr ""
 msgid "Funding"
 msgstr ""
 
+#: managed/NavigationFunding.mgd.php managed/SavedSearch_funding_form_translation.mgd.php
+msgid "Form Translation"
+msgstr ""
+
 #: managed/NavigationFunding.mgd.php
 msgid "Add Funding Program"
 msgstr ""
@@ -2396,6 +2440,30 @@ msgstr ""
 
 #: managed/SavedSearch_funding_case_application_processes.mgd.php
 msgid "Funding Case Applications"
+msgstr ""
+
+#: managed/SavedSearch_funding_form_string_translation.mgd.php
+msgid "Form String Translation"
+msgstr ""
+
+#: managed/SavedSearch_funding_form_string_translation.mgd.php
+msgid "translation"
+msgstr ""
+
+#: managed/SavedSearch_funding_form_string_translation.mgd.php
+msgid "Edit Translation"
+msgstr ""
+
+#: managed/SavedSearch_funding_form_translation.mgd.php
+msgid "table"
+msgstr ""
+
+#: managed/SavedSearch_funding_form_translation.mgd.php
+msgid "Number of Strings"
+msgstr ""
+
+#: managed/SavedSearch_funding_form_translation.mgd.php
+msgid "Translate"
 msgstr ""
 
 #: managed/SavedSearch_funding_programs.mgd.php

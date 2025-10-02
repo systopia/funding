@@ -60,4 +60,11 @@ class TestJsonSchemaFactory implements CombinedApplicationJsonSchemaFactoryInter
     return new TestJsonSchema(TRUE);
   }
 
+  public function createJsonSchemaForTranslation(
+    FundingProgramEntity $fundingProgram,
+    FundingCaseTypeEntity $fundingCaseType,
+  ): JsonSchema {
+    return $this->createJsonSchemaInitial(0, $fundingCaseType, $fundingProgram);
+  }
+
 }

@@ -68,7 +68,6 @@ final class ReceiptsFormGenerator implements ReceiptsFormGeneratorInterface {
       $clearingProcessBundle,
       $this->applicationProcessBundleLoader->getStatusList($clearingProcessBundle)
     ));
-    $applicationForm = new JsonFormsForm($applicationForm->getJsonSchema(), $applicationForm->getUiSchema());
 
     $costItemsForm = $this->clearingCostItemsJsonFormsGenerator->generate($clearingProcessBundle, $applicationForm);
     $resourcesItemsForm = $this->clearingResourcesItemsJsonFormsGenerator->generate(

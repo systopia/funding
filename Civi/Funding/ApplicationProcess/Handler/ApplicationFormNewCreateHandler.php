@@ -27,9 +27,12 @@ use Civi\Funding\Form\Application\NonCombinedApplicationUiSchemaFactoryInterface
 use Civi\Funding\Form\JsonSchema\JsonFormsSubmitButtonsFactory;
 use Civi\Funding\Form\JsonFormsFormWithData;
 use Civi\Funding\Form\JsonFormsFormWithDataInterface;
+use Civi\Funding\Translation\FormTranslatorInterface;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 
 final class ApplicationFormNewCreateHandler implements ApplicationFormNewCreateHandlerInterface {
+
+  private FormTranslatorInterface $formTranslator;
 
   private ApplicationJsonSchemaCreateHelper $jsonSchemaCreateHelper;
 
@@ -42,12 +45,14 @@ final class ApplicationFormNewCreateHandler implements ApplicationFormNewCreateH
   private NonCombinedApplicationUiSchemaFactoryInterface $uiSchemaFactory;
 
   public function __construct(
+    FormTranslatorInterface $formTranslator,
     ApplicationJsonSchemaCreateHelper $jsonSchemaCreateHelper,
     NonCombinedApplicationJsonSchemaFactoryInterface $jsonSchemaFactory,
     RequestContextInterface $requestContext,
     ApplicationSubmitActionsFactoryInterface $submitActionsFactory,
     NonCombinedApplicationUiSchemaFactoryInterface $uiSchemaFactory
   ) {
+    $this->formTranslator = $formTranslator;
     $this->jsonSchemaCreateHelper = $jsonSchemaCreateHelper;
     $this->jsonSchemaFactory = $jsonSchemaFactory;
     $this->requestContext = $requestContext;
@@ -79,7 +84,10 @@ final class ApplicationFormNewCreateHandler implements ApplicationFormNewCreateH
     $elements = array_merge($uiSchema->getElements(), $submitButtons);
     $uiSchema['elements'] = $elements;
 
-    return new JsonFormsFormWithData($jsonSchema, $uiSchema);
+    $form = new JsonFormsFormWithData($jsonSchema, $uiSchema);
+    $this->formTranslator->translateForm($form, $command->getFundingProgram(), $command->getFundingCaseType());
+
+    return $form;
   }
 
 }
