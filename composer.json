@@ -20,6 +20,7 @@
     "require": {
         "php": "^8.1",
         "psr/simple-cache": "^1 || ^2 || ^3",
+        "symfony/html-sanitizer": "^6 || ^7",
         "symfony/http-foundation": " ^5.4 || ^6 || ^7",
         "symfony/http-kernel": " ^5.4 || ^6 || ^7",
         "symfony/property-access": "^5.4 || ^6 || ^7",

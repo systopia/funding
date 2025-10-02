@@ -27,6 +27,7 @@ use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Form\Application\ApplicationSubmitActionsFactoryInterface;
 use Civi\Funding\Form\Application\CombinedApplicationJsonSchemaFactoryInterface;
 use Civi\Funding\Form\Application\CombinedApplicationUiSchemaFactoryInterface;
+use Civi\Funding\Translation\FormTranslatorInterface;
 use Civi\Funding\Util\FormTestUtil;
 use Civi\RemoteTools\JsonForms\Control\JsonFormsSubmitButton;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
@@ -40,38 +41,30 @@ use PHPUnit\Framework\TestCase;
  */
 final class ApplicationFormAddCreateHandlerTest extends TestCase {
 
+  private FormTranslatorInterface&MockObject $formTranslatorMock;
+
   /**
    * @var \Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddCreateHandler
    */
   private ApplicationFormAddCreateHandler $handler;
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\Helper\ApplicationJsonSchemaCreateHelper&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private $jsonSchemaCreateHelperMock;
+  private ApplicationJsonSchemaCreateHelper&MockObject $jsonSchemaCreateHelperMock;
 
-  /**
-   * @var \Civi\Funding\Form\Application\CombinedApplicationJsonSchemaFactoryInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $jsonSchemaFactoryMock;
+  private CombinedApplicationJsonSchemaFactoryInterface&MockObject $jsonSchemaFactoryMock;
 
-  /**
-   * @var \Civi\Funding\Form\Application\ApplicationSubmitActionsFactoryInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $submitActionsFactoryMock;
+  private ApplicationSubmitActionsFactoryInterface&MockObject $submitActionsFactoryMock;
 
-  /**
-   * @var \Civi\Funding\Form\Application\CombinedApplicationUiSchemaFactoryInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $uiSchemaFactoryMock;
+  private CombinedApplicationUiSchemaFactoryInterface&MockObject $uiSchemaFactoryMock;
 
   protected function setUp(): void {
     parent::setUp();
+    $this->formTranslatorMock = $this->createMock(FormTranslatorInterface::class);
     $this->jsonSchemaCreateHelperMock = $this->createMock(ApplicationJsonSchemaCreateHelper::class);
     $this->jsonSchemaFactoryMock = $this->createMock(CombinedApplicationJsonSchemaFactoryInterface::class);
     $this->submitActionsFactoryMock = $this->createMock(ApplicationSubmitActionsFactoryInterface::class);
     $this->uiSchemaFactoryMock = $this->createMock(CombinedApplicationUiSchemaFactoryInterface::class);
     $this->handler = new ApplicationFormAddCreateHandler(
+      $this->formTranslatorMock,
       $this->jsonSchemaCreateHelperMock,
       $this->jsonSchemaFactoryMock,
       $this->submitActionsFactoryMock,
@@ -105,6 +98,8 @@ final class ApplicationFormAddCreateHandlerTest extends TestCase {
         'submitAction1' => ['label' => 'Submit1', 'properties' => []],
         'submitAction2' => ['label' => 'Submit2', 'confirm' => 'Proceed?', 'properties' => []],
       ]);
+
+    $this->formTranslatorMock->expects(self::once())->method('translateForm');
 
     $form = $this->handler->handle($command);
     static::assertSame($jsonSchema, $form->getJsonSchema());

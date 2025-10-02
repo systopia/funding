@@ -19,10 +19,9 @@ declare(strict_types = 1);
 
 namespace Civi\RemoteTools\Form;
 
-use Civi\RemoteTools\JsonForms\JsonFormsElement;
-use Civi\RemoteTools\JsonSchema\JsonSchema;
+use Civi\Funding\Form\JsonFormsFormInterface;
 
-interface RemoteFormInterface {
+interface RemoteFormInterface extends JsonFormsFormInterface {
 
   /**
    * @return array<string, mixed>
@@ -35,9 +34,5 @@ interface RemoteFormInterface {
    * @return $this
    */
   public function setData(array $data): self;
-
-  public function getJsonSchema(): JsonSchema;
-
-  public function getUiSchema(): JsonFormsElement;
 
 }

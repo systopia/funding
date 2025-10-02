@@ -24,6 +24,7 @@ use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\Form\JsonFormsForm;
 use Civi\Funding\Form\JsonFormsFormInterface;
 use Civi\Funding\Form\JsonSchema\JsonSchemaComment;
+use Civi\Funding\Translation\FormTranslatorInterface;
 use Civi\Funding\Util\ArrayUtil;
 use Civi\RemoteTools\JsonForms\Control\JsonFormsSubmitButton;
 use Civi\RemoteTools\JsonForms\JsonFormsElement;
@@ -70,16 +71,20 @@ final class ClearingFormGenerator {
 
   private ClearingActionsDeterminer $actionsDeterminer;
 
+  private FormTranslatorInterface $formTranslator;
+
   private ReceiptsFormGeneratorInterface $receiptsFormGenerator;
 
   private ReportFormFactoryInterface $reportFormFactory;
 
   public function __construct(
     ClearingActionsDeterminer $actionsDeterminer,
+    FormTranslatorInterface $formTranslator,
     ReceiptsFormGeneratorInterface $receiptsFormGenerator,
     ReportFormFactoryInterface $reportDataFormFactory
   ) {
     $this->actionsDeterminer = $actionsDeterminer;
+    $this->formTranslator = $formTranslator;
     $this->receiptsFormGenerator = $receiptsFormGenerator;
     $this->reportFormFactory = $reportDataFormFactory;
   }
@@ -169,7 +174,14 @@ final class ClearingFormGenerator {
       $uiSchema->setReadonly(TRUE);
     }
 
-    return new JsonFormsForm(JsonSchema::fromArray($keywords), $uiSchema);
+    $form = new JsonFormsForm(JsonSchema::fromArray($keywords), $uiSchema);
+    $this->formTranslator->translateForm(
+      $form,
+      $clearingProcessBundle->getFundingProgram(),
+      $clearingProcessBundle->getFundingCaseType()
+    );
+
+    return $form;
   }
 
   /**
