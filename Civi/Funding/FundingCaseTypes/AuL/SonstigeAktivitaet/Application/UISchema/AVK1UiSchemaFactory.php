@@ -53,4 +53,11 @@ final class AVK1UiSchemaFactory implements NonCombinedApplicationUiSchemaFactory
     return new AVK1UiSchema($fundingProgram->getCurrency());
   }
 
+  public function createUiSchemaForTranslation(
+    FundingProgramEntity $fundingProgram,
+    FundingCaseTypeEntity $fundingCaseType,
+  ): JsonFormsLayout {
+    return $this->createUiSchemaNew($fundingProgram, $fundingCaseType);
+  }
+
 }

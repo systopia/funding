@@ -5,6 +5,8 @@ includes:
 	- phpstan.neon.dist
 
 parameters:
+	scanFiles:
+		- {VENDOR_DIR}/civicrm/civicrm-packages/DB/DataObject.php
 	scanDirectories:
 		- {VENDOR_DIR}/civicrm/civicrm-core/api/
 		- {VENDOR_DIR}/civicrm/civicrm-core/CRM/

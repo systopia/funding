@@ -24,6 +24,8 @@ use Civi\Funding\ClearingProcess\Form\ReportForm;
 use Civi\Funding\ClearingProcess\Form\ReportFormFactoryInterface;
 use Civi\Funding\ClearingProcess\Form\ReportFormInterface;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
+use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Clearing\JsonSchema\HiHReportDataJsonSchema;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Traits\HiHSupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonForms\Control\JsonFormsArray;
@@ -43,6 +45,20 @@ final class HiHReportFormFactory implements ReportFormFactoryInterface {
    * @inheritDoc
    */
   public function createReportForm(ClearingProcessEntityBundle $clearingProcessBundle): ReportFormInterface {
+    return $this->doCreateReportForm();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function createReportFormForTranslation(
+    FundingProgramEntity $fundingProgram,
+    FundingCaseTypeEntity $fundingCaseType
+  ): ReportFormInterface {
+    return $this->doCreateReportForm();
+  }
+
+  public function doCreateReportForm(): ReportFormInterface {
     $scopePrefix = '#/properties/reportData/properties';
     $scopePrefixAnsprechperson = "$scopePrefix/ansprechperson/properties";
     $scopePrefixTeilnehmende = "$scopePrefix/teilnehmende/properties";
@@ -97,7 +113,7 @@ EOD;
 Wenn Nein: Was lief anders als geplant, welche Probleme gab es bei der
 Projektumsetzung und wie wurden sie gelöst?
 EOD
-          ,
+              ,
               NULL,
               ['multi' => TRUE],
               [
@@ -209,7 +225,7 @@ EOD
           new JsonFormsGroup('Erklärungen zum Verwendungsnachweis', [
             new JsonFormsControl(
               "$scopePrefix/autorisiert",
-            'Ich bin autorisiert, den Verwendungsnachweis im Namen des anfangs genannten Projektträgers einzureichen.'
+              'Ich bin autorisiert, den Verwendungsnachweis im Namen des anfangs genannten Projektträgers einzureichen.'
             ),
             new JsonFormsControl(
               "$scopePrefix/korrekt",
