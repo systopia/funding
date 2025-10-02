@@ -273,6 +273,31 @@ return [
     ],
   ],
   [
+    'name' => 'Navigation_Funding.FormTranslation',
+    'entity' => 'Navigation',
+    'cleanup' => 'unused',
+    'update' => 'unmodified',
+    'params' => [
+      'version' => 4,
+      'values' => [
+        'label' => E::ts('Form Translation'),
+        'name' => 'FormTranslation',
+        'url' => 'civicrm/funding/form-translation',
+        'icon' => 'crm-i fa-language',
+        'permission' => [
+          'administer Funding',
+        ],
+        'permission_operator' => 'AND',
+        'parent_id.name' => 'funding',
+        'weight' => ++$weight,
+      ],
+      'match' => [
+        'name',
+        'domain_id',
+      ],
+    ],
+  ],
+  [
     'name' => 'Navigation_Funding.FundingProgramAdd',
     'entity' => 'Navigation',
     'cleanup' => 'always',
