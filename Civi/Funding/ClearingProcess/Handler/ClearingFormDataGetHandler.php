@@ -134,16 +134,9 @@ final class ClearingFormDataGetHandler implements ClearingFormDataGetHandlerInte
     ClearingCostItemEntity|ClearingResourcesItemEntity $clearingItem,
     array $clearingItemsData
   ): array {
-    if ('' === $clearingItem->getFormKey()) {
-      // Items persisted when form key didn't exist.
-      $dataKey = $clearingItem->getFinancePlanItemId();
-      $recordKey = NULL;
-    }
-    else {
-      [$dataKey, $recordKey] = explode('/', $clearingItem->getFormKey()) + ['', ''];
-    }
+    [$dataKey, $recordKey] = explode('/', $clearingItem->getFormKey());
 
-    if (NULL === $recordKey || 1 === preg_match('/^\d+$/', $recordKey)) {
+    if (1 === preg_match('/^\d+$/', $recordKey)) {
       // By not using the given number it is possible to remove a persisted
       // clearing item and the resulting records array will still be an array
       // when JSON serialized.

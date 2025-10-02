@@ -28,6 +28,7 @@ use Civi\Funding\Upgrade\Upgrader0011;
 use Civi\Funding\Upgrade\Upgrader0012;
 use Civi\Funding\Upgrade\Upgrader0013;
 use Civi\Funding\Upgrade\Upgrader0014;
+use Civi\Funding\Upgrade\Upgrader0017;
 use CRM_Funding_ExtensionUtil as E;
 
 /**
@@ -177,11 +178,16 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
     return TRUE;
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function upgrade_0017(): bool {
     $this->ctx->log->info('Applying database migration 0017');
     $this->executeSqlFile('sql/upgrade/0017.sql');
 
-    // @todo Set form_key for existing clearing items.
+    /** @var \Civi\Funding\Upgrade\Upgrader0017 $upgrader */
+    $upgrader = \Civi::service(Upgrader0017::class);
+    $upgrader->execute($this->ctx->log);
 
     return TRUE;
   }
