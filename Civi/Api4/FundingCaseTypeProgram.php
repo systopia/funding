@@ -19,7 +19,9 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
+use Civi\Funding\Api4\Action\FundingCaseTypeProgram\ExtractStringsAction;
 use Civi\Funding\Api4\Action\FundingCaseTypeProgram\GetRelationAction;
+use Civi\Funding\Api4\Permissions;
 use Civi\Funding\Api4\Traits\AccessPermissionsTrait;
 
 /**
@@ -31,7 +33,9 @@ use Civi\Funding\Api4\Traits\AccessPermissionsTrait;
  */
 class FundingCaseTypeProgram extends Generic\DAOEntity {
 
-  use AccessPermissionsTrait;
+  use AccessPermissionsTrait {
+    permissions as traitPermissions;
+  }
 
   /**
    * Returns the entity that has the given funding case type ID and the given
@@ -41,6 +45,19 @@ class FundingCaseTypeProgram extends Generic\DAOEntity {
    */
   public static function getRelation(bool $checkPermissions = TRUE): GetRelationAction {
     return (new GetRelationAction(static::get()))->setCheckPermissions($checkPermissions);
+  }
+
+  public static function extractStrings(bool $checkPermissions = TRUE): ExtractStringsAction {
+    return (new ExtractStringsAction(self::getEntityName(), __FUNCTION__))->setCheckPermissions($checkPermissions);
+  }
+
+  /**
+   * @return array<string, list<string|list<string>>>
+   */
+  public static function permissions(): array {
+    return self::traitPermissions() + [
+      'extractStrings' => [Permissions::ADMINISTER_FUNDING],
+    ];
   }
 
 }

@@ -75,4 +75,16 @@ final class HiHApplicationJsonSchemaFactory implements NonCombinedApplicationJso
     );
   }
 
+  public function createJsonSchemaForTranslation(
+    FundingProgramEntity $fundingProgram,
+    FundingCaseTypeEntity $fundingCaseType,
+  ): JsonSchema {
+    return new HiHApplicationJsonSchema(
+      $fundingProgram->getStartDate(),
+      $fundingProgram->getEndDate(),
+      [],
+      FALSE
+    );
+  }
+
 }

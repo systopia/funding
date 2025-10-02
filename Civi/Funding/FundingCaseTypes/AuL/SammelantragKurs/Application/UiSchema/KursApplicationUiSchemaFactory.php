@@ -55,4 +55,11 @@ final class KursApplicationUiSchemaFactory implements CombinedApplicationUiSchem
     return new KursApplicationUiSchema('Neuer Kurs', $fundingProgram->getCurrency());
   }
 
+  public function createUiSchemaForTranslation(
+    FundingProgramEntity $fundingProgram,
+    FundingCaseTypeEntity $fundingCaseType,
+  ): JsonFormsLayout {
+    return new KursApplicationUiSchema('Neuer Kurs', $fundingProgram->getCurrency());
+  }
+
 }
