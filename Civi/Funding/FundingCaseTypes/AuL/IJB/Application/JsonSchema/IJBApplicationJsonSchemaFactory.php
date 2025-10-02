@@ -76,4 +76,15 @@ final class IJBApplicationJsonSchemaFactory implements NonCombinedApplicationJso
     );
   }
 
+  public function createJsonSchemaForTranslation(
+    FundingProgramEntity $fundingProgram,
+    FundingCaseTypeEntity $fundingCaseType,
+  ): JsonSchema {
+    return new IJBApplicationJsonSchema(
+      $fundingProgram->getRequestsStartDate(),
+      $fundingProgram->getRequestsEndDate(),
+      [],
+    );
+  }
+
 }

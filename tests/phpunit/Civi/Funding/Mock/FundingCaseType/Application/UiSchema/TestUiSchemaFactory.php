@@ -58,4 +58,11 @@ final class TestUiSchemaFactory implements CombinedApplicationUiSchemaFactoryInt
     return new TestUiSchema();
   }
 
+  public function createUiSchemaForTranslation(
+    FundingProgramEntity $fundingProgram,
+    FundingCaseTypeEntity $fundingCaseType,
+  ): JsonFormsLayout {
+    return $this->createUiSchemaNew($fundingProgram, $fundingCaseType);
+  }
+
 }

@@ -60,4 +60,14 @@ final class KursApplicationJsonSchemaFactory implements CombinedApplicationJsonS
     );
   }
 
+  public function createJsonSchemaForTranslation(
+    FundingProgramEntity $fundingProgram,
+    FundingCaseTypeEntity $fundingCaseType,
+  ): JsonSchema {
+    return new KursApplicationJsonSchema(
+      $fundingProgram->getRequestsStartDate(),
+      $fundingProgram->getRequestsEndDate(),
+    );
+  }
+
 }

@@ -1,0 +1,7 @@
+<div af-fieldset="">
+  <div class="af-container af-layout-inline">
+    <af-field name="msg_text" defn="{required: false, input_attrs: {}, input_type: 'Text'}" />
+    <af-field name="new_text" defn="{required: false, input_attrs: {}, input_type: 'Text'}" />
+  </div>
+  <crm-search-display-table search-name="funding_form_string_translation" display-name="translation" filters="{funding_case_type_id: routeParams.funding_case_type_id, funding_program_id: routeParams.funding_program_id}"></crm-search-display-table>
+</div>

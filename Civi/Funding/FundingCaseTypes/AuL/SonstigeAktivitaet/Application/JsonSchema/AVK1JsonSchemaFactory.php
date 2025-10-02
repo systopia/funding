@@ -70,4 +70,15 @@ class AVK1JsonSchemaFactory implements NonCombinedApplicationJsonSchemaFactoryIn
     );
   }
 
+  public function createJsonSchemaForTranslation(
+    FundingProgramEntity $fundingProgram,
+    FundingCaseTypeEntity $fundingCaseType,
+  ): JsonSchema {
+    return new AVK1JsonSchema(
+      $fundingProgram->getRequestsStartDate(),
+      $fundingProgram->getRequestsEndDate(),
+      [],
+    );
+  }
+
 }

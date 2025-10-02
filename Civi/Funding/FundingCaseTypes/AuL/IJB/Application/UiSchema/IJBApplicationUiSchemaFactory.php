@@ -50,4 +50,11 @@ final class IJBApplicationUiSchemaFactory implements NonCombinedApplicationUiSch
     return new IJBApplicationUiSchema($fundingProgram->getCurrency());
   }
 
+  public function createUiSchemaForTranslation(
+    FundingProgramEntity $fundingProgram,
+    FundingCaseTypeEntity $fundingCaseType,
+  ): JsonFormsLayout {
+    return $this->createUiSchemaNew($fundingProgram, $fundingCaseType);
+  }
+
 }
