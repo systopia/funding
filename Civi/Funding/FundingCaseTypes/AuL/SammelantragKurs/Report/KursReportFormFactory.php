@@ -23,6 +23,8 @@ use Civi\Funding\ClearingProcess\Form\ReportForm;
 use Civi\Funding\ClearingProcess\Form\ReportFormFactoryInterface;
 use Civi\Funding\ClearingProcess\Form\ReportFormInterface;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
+use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Application\JsonSchema\KursBeschreibungJsonSchema;
 use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Application\JsonSchema\KursGrunddatenJsonSchema;
 use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Application\JsonSchema\KursZuschussJsonSchema;
@@ -45,7 +47,17 @@ final class KursReportFormFactory implements ReportFormFactoryInterface {
   use KursSupportedFundingCaseTypesTrait;
 
   public function createReportForm(ClearingProcessEntityBundle $clearingProcessBundle): ReportFormInterface {
-    $fundingProgram = $clearingProcessBundle->getFundingProgram();
+    return $this->doCreateReportForm($clearingProcessBundle->getFundingProgram());
+  }
+
+  public function createReportFormForTranslation(
+    FundingProgramEntity $fundingProgram,
+    FundingCaseTypeEntity $fundingCaseType
+  ): ReportFormInterface {
+    return $this->doCreateReportForm($fundingProgram);
+  }
+
+  public function doCreateReportForm(FundingProgramEntity $fundingProgram): ReportFormInterface {
     $grunddatenJsonSchema = new KursGrunddatenJsonSchema(
       $fundingProgram->getRequestsStartDate(),
       $fundingProgram->getRequestsEndDate(),
@@ -99,7 +111,7 @@ final class KursReportFormFactory implements ReportFormFactoryInterface {
       new KursDokumenteCategory('#/properties/reportData/properties/dokumente/properties'),
     ]);
 
-    $currency = $clearingProcessBundle->getFundingProgram()->getCurrency();
+    $currency = $fundingProgram->getCurrency();
     $zuschussUiSchema = new KursZuschussGroup(
       $currency,
       '#/properties/reportData/properties/zuschuss/properties'

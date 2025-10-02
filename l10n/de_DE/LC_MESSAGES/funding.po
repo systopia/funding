@@ -95,7 +95,6 @@ msgstr "Förderfall mit ID \"%1\" nicht gefunden"
 #: ang/crmFundingHiH/hihApplicationEditor.template.html
 #: ang/crmFundingIJB/ijbApplicationEditor.template.html
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
-#: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearch_funding_application_processes.mgd.php
 msgid "Amount Requested"
 msgstr "Beantragter Betrag"
@@ -395,6 +394,7 @@ msgstr "Empfänger"
 #: managed/SavedSearch_MyFundingTasks.mgd.php
 #: managed/SavedSearch_funding_case_application_processes.mgd.php
 #: managed/SavedSearch_funding_cases.mgd.php
+#: managed/SavedSearch_funding_form_translation.mgd.php
 msgid "Funding Program"
 msgstr "Förderprogramm"
 
@@ -406,7 +406,6 @@ msgstr "Förderprogramm"
 #: ang/crmFundingHiH/hihApplicationEditor.template.html
 #: ang/crmFundingIJB/ijbApplicationEditor.template.html
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
-#: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
 #: managed/SavedSearch_funding_application_processes.mgd.php
 #: managed/SavedSearch_funding_case_application_processes.mgd.php
@@ -415,7 +414,6 @@ msgid "Identifier"
 msgstr "Bezeichner"
 
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
-#: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCaseTypes.mgd.php
 #: managed/SavedSearchFundingPrograms.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
@@ -426,7 +424,6 @@ msgid "Title"
 msgstr "Titel"
 
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
-#: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearch_funding_application_processes.mgd.php
 msgid "Short Description"
 msgstr "Kurzbeschreibung"
@@ -439,7 +436,6 @@ msgstr "Kurzbeschreibung"
 #: ang/crmFundingHiH/hihApplicationEditor.template.html
 #: ang/crmFundingIJB/ijbApplicationEditor.template.html
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
-#: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingDrawdowns.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
 #: managed/SavedSearch_FundingDrawdownsAll.mgd.php
@@ -476,6 +472,7 @@ msgstr "Erstellungsdatum"
 #: managed/SavedSearch_Clearings.mgd.php
 #: managed/SavedSearch_funding_case_application_processes.mgd.php
 #: managed/SavedSearch_funding_cases.mgd.php
+#: managed/SavedSearch_funding_form_string_translation.mgd.php
 msgid "Modification Date"
 msgstr "Änderungsdatum"
 
@@ -868,7 +865,6 @@ msgid "Is Combined Application"
 msgstr "Ist Sammelantrag"
 
 #: Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php
-#: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearch_funding_application_processes.mgd.php
 msgid "Clearing Status"
 msgstr "Verwendungsnachweisstatus"
@@ -1735,6 +1731,23 @@ msgstr ""
 msgid "Used for combined applications"
 msgstr "Für Sammelanträge verwendet"
 
+#: Civi/Funding/Translation/EventSubscriber/ExtractStringsSearchKitTaskSubscriber.php
+#: managed/SavedSearch_funding_form_translation.mgd.php
+msgid "Extract Strings"
+msgstr "Zeichenketten extrahieren"
+
+#: Civi/Funding/Translation/EventSubscriber/ExtractStringsSearchKitTaskSubscriber.php
+msgid "Extract strings..."
+msgstr "Zeichenketten extrahieren..."
+
+#: Civi/Funding/Translation/EventSubscriber/ExtractStringsSearchKitTaskSubscriber.php
+msgid "Successfully extracted strings."
+msgstr "Zeichenketten erfolgreich extrahiert."
+
+#: Civi/Funding/Translation/EventSubscriber/ExtractStringsSearchKitTaskSubscriber.php
+msgid "An error occurred while extracting strings."
+msgstr "Beim Extrahieren der Zeichenketten ist ein Fehler aufgetreten."
+
 #: Civi/Funding/Validation/EntityValidationResult.php
 msgid "Validation failed: %1"
 msgstr "Validierung fehlgeschlagen: %1"
@@ -1746,6 +1759,19 @@ msgstr "Antragsvorlagen"
 #: ang/afformFundingCaseTypeTemplates.aff.php
 msgid "Funding Case Type Templates"
 msgstr "Vorlagen für Förderfalltyp"
+
+#: ang/afformFundingFormStringTranslationEdit.aff.html
+#: ang/crmFunding/application/applicationSubmitModal.template.html
+#: ang/crmFunding/case/fundingCase.template.html
+#: ang/crmFunding/clearing/clearingSubmitModal.template.html
+msgid "Submit"
+msgstr "Senden"
+
+#: ang/afformFundingFormStringTranslationEdit.aff.php
+#: ang/afsearchFundingFormStringTranslationList.aff.php
+#: managed/SavedSearch_funding_form_string_translation.mgd.php
+msgid "Translation"
+msgstr "Übersetzung"
 
 #: ang/afformFundingProgramAdd.aff.php
 msgid "New Funding Program"
@@ -1774,7 +1800,6 @@ msgid "Drawdowns"
 msgstr "Mittelabrufe"
 
 #: ang/afsearchFundingCaseApplicationProcesses.aff.php
-#: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearch_funding_application_processes.mgd.php
 msgid "Funding Applications"
 msgstr "Förderanträge"
@@ -1783,6 +1808,10 @@ msgstr "Förderanträge"
 #: managed/SavedSearch_funding_cases.mgd.php
 msgid "Funding Cases"
 msgstr "Förderfälle"
+
+#: ang/afsearchFundingFormTranslation.aff.php
+msgid "Funding Form Translation"
+msgstr "Förderformularübersetzung"
 
 #: ang/afsearchFundingProgramControlling.aff.php
 #: managed/NavigationFunding.mgd.php
@@ -1903,12 +1932,6 @@ msgstr "Kommentarart"
 #: ang/crmFunding/application/applicationSubmitModal.template.html
 #: ang/crmFunding/case/fundingCase.template.html
 #: ang/crmFunding/clearing/clearingSubmitModal.template.html
-msgid "Submit"
-msgstr "Senden"
-
-#: ang/crmFunding/application/applicationSubmitModal.template.html
-#: ang/crmFunding/case/fundingCase.template.html
-#: ang/crmFunding/clearing/clearingSubmitModal.template.html
 #: ang/crmFundingHiH/hihApplicationApproveModal.template.html
 msgid "Cancel"
 msgstr "Abbrechen"
@@ -1982,7 +2005,6 @@ msgstr "Fachliche Prüfung starten"
 
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
 #: ang/crmFunding/clearing/clearingSidebar.template.html
-#: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearch_funding_application_processes.mgd.php
 #: managed/SavedSearch_funding_case_application_processes.mgd.php
 msgid "Content Review"
@@ -1994,7 +2016,6 @@ msgstr "Der mit der Zuwendung beabsichtigte Zweck kann erreicht werden."
 
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
 #: ang/crmFunding/clearing/clearingSidebar.template.html
-#: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearch_funding_application_processes.mgd.php
 #: managed/SavedSearch_funding_case_application_processes.mgd.php
 msgid "Calculative Review"
@@ -2254,7 +2275,6 @@ msgstr ""
 "nicht möglich."
 
 #: ang/crmFunding/jsonForms/jfControlArray.template.html
-#: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingDrawdowns.mgd.php
 #: managed/SavedSearchFundingPrograms.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
@@ -2464,6 +2484,11 @@ msgid "Funding"
 msgstr "Fördermittel"
 
 #: managed/NavigationFunding.mgd.php
+#: managed/SavedSearch_funding_form_translation.mgd.php
+msgid "Form Translation"
+msgstr "Formularübersetzung"
+
+#: managed/NavigationFunding.mgd.php
 msgid "Add Funding Program"
 msgstr "Förderprogramm hinzufügen"
 
@@ -2516,7 +2541,6 @@ msgstr "Zahlungsanweisung"
 msgid "Payback Claim"
 msgstr "Rückzahlungsforderung"
 
-#: managed/SavedSearchFundingApplicationProcesses.mgd.php
 #: managed/SavedSearchFundingCaseTypes.mgd.php
 #: managed/SavedSearchFundingDrawdowns.mgd.php
 #: managed/SavedSearchFundingPrograms.mgd.php
@@ -2532,24 +2556,6 @@ msgstr "Rückzahlungsforderung"
 #: managed/SavedSearch_funding_program_controlling.mgd.php
 msgid "Table"
 msgstr "Tabelle"
-
-#: managed/SavedSearchFundingApplicationProcesses.mgd.php
-#: managed/SavedSearch_Clearings.mgd.php
-#: managed/SavedSearch_Funding_Tasks_Pending.mgd.php
-#: managed/SavedSearch_MyFundingTasks.mgd.php
-#: managed/SavedSearch_funding_application_processes.mgd.php
-#: managed/SavedSearch_funding_case_application_processes.mgd.php
-msgid "Open application"
-msgstr "Antrag öffnen"
-
-#: managed/SavedSearchFundingApplicationProcesses.mgd.php
-#: managed/SavedSearch_Clearings.mgd.php
-#: managed/SavedSearch_Funding_Tasks_Pending.mgd.php
-#: managed/SavedSearch_MyFundingTasks.mgd.php
-#: managed/SavedSearch_funding_application_processes.mgd.php
-#: managed/SavedSearch_funding_case_application_processes.mgd.php
-msgid "Open clearing"
-msgstr "Verwendungsnachweis öffnen"
 
 #: managed/SavedSearchFundingCaseTypes.mgd.php
 #: managed/SavedSearchFundingPrograms.mgd.php
@@ -2645,6 +2651,22 @@ msgstr "Dokument"
 msgid "Label"
 msgstr "Bezeichnung"
 
+#: managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearch_Funding_Tasks_Pending.mgd.php
+#: managed/SavedSearch_MyFundingTasks.mgd.php
+#: managed/SavedSearch_funding_application_processes.mgd.php
+#: managed/SavedSearch_funding_case_application_processes.mgd.php
+msgid "Open clearing"
+msgstr "Verwendungsnachweis öffnen"
+
+#: managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearch_Funding_Tasks_Pending.mgd.php
+#: managed/SavedSearch_MyFundingTasks.mgd.php
+#: managed/SavedSearch_funding_application_processes.mgd.php
+#: managed/SavedSearch_funding_case_application_processes.mgd.php
+msgid "Open application"
+msgstr "Antrag öffnen"
+
 #: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
 msgid "Drawdowns by Recipient and Funding Program"
 msgstr "Mittelabrufe nach Empfänger und Förderprogramm"
@@ -2692,5 +2714,34 @@ msgid "Funding Case Applications"
 msgstr "Förderfallanträge"
 
 #: managed/SavedSearch_funding_cases.mgd.php
+#: managed/SavedSearch_funding_form_translation.mgd.php
 msgid "Funding Case Type"
 msgstr "Förderfalltyp"
+
+#: managed/SavedSearch_funding_form_string_translation.mgd.php
+msgid "Form String Translation"
+msgstr "Übersetzung von Formularzeichenkette"
+
+#: managed/SavedSearch_funding_form_string_translation.mgd.php
+msgid "translation"
+msgstr "Übersetzung"
+
+#: managed/SavedSearch_funding_form_string_translation.mgd.php
+msgid "Original"
+msgstr "Original"
+
+#: managed/SavedSearch_funding_form_string_translation.mgd.php
+msgid "Edit Translation"
+msgstr "Übersetzung bearbeiten"
+
+#: managed/SavedSearch_funding_form_translation.mgd.php
+msgid "table"
+msgstr "Tabelle"
+
+#: managed/SavedSearch_funding_form_translation.mgd.php
+msgid "Number of Strings"
+msgstr "Anzahl von Zeichenketten"
+
+#: managed/SavedSearch_funding_form_translation.mgd.php
+msgid "Translate"
+msgstr "Übersetzen"

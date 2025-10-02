@@ -66,4 +66,11 @@
     <key>id</key>
     <onDelete>RESTRICT</onDelete>
   </foreignKey>
+
+  <index>
+    <name>UI_funding_case_type_program</name>
+    <fieldName>funding_program_id</fieldName>
+    <fieldName>funding_case_type_id</fieldName>
+    <unique>true</unique>
+  </index>
 </table>

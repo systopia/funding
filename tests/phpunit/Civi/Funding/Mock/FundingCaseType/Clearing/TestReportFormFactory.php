@@ -23,6 +23,8 @@ use Civi\Funding\ClearingProcess\Form\ReportForm;
 use Civi\Funding\ClearingProcess\Form\ReportFormFactoryInterface;
 use Civi\Funding\ClearingProcess\Form\ReportFormInterface;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
+use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Mock\FundingCaseType\Traits\TestSupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
 use Civi\RemoteTools\JsonForms\JsonFormsMarkup;
@@ -35,6 +37,17 @@ final class TestReportFormFactory implements ReportFormFactoryInterface {
   use TestSupportedFundingCaseTypesTrait;
 
   public function createReportForm(ClearingProcessEntityBundle $clearingProcessBundle): ReportFormInterface {
+    return $this->doCreateReportForm();
+  }
+
+  public function createReportFormForTranslation(
+    FundingProgramEntity $fundingProgram,
+    FundingCaseTypeEntity $fundingCaseType
+  ): ReportFormInterface {
+    return $this->doCreateReportForm();
+  }
+
+  private function doCreateReportForm(): ReportFormInterface {
     $jsonSchema = new JsonSchemaObject([
       'reportData' => new JsonSchemaObject([
         'foo' => new JsonSchemaString(),
