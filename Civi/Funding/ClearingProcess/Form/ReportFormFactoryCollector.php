@@ -20,6 +20,8 @@ declare(strict_types = 1);
 namespace Civi\Funding\ClearingProcess\Form;
 
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
+use Civi\Funding\Entity\FundingProgramEntity;
 use Psr\Container\ContainerInterface;
 
 final class ReportFormFactoryCollector implements ReportFormFactoryInterface {
@@ -41,6 +43,21 @@ final class ReportFormFactoryCollector implements ReportFormFactoryInterface {
       $formFactory = $this->formFactories->get($fundingCaseTypeName);
 
       return $formFactory->createReportForm($clearingProcessBundle);
+    }
+
+    return ReportForm::newEmpty();
+  }
+
+  public function createReportFormForTranslation(
+    FundingProgramEntity $fundingProgram,
+    FundingCaseTypeEntity $fundingCaseType
+  ): ReportFormInterface {
+    $fundingCaseTypeName = $fundingCaseType->getName();
+    if ($this->formFactories->has($fundingCaseTypeName)) {
+      /** @var \Civi\Funding\ClearingProcess\Form\ReportFormFactoryInterface $formFactory */
+      $formFactory = $this->formFactories->get($fundingCaseTypeName);
+
+      return $formFactory->createReportFormForTranslation($fundingProgram, $fundingCaseType);
     }
 
     return ReportForm::newEmpty();
