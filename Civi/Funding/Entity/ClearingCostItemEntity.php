@@ -29,7 +29,7 @@ namespace Civi\Funding\Entity;
  *   receipt_number: ?string,
  *   receipt_date: ?string,
  *   payment_date: string,
- *   recipient: string,
+ *   payment_party: string,
  *   reason: string,
  *   amount: float,
  *   amount_admitted: ?float,

@@ -127,7 +127,7 @@
   </field>
 
   <field>
-    <name>recipient</name>
+    <name>payment_party</name>
     <type>varchar</type>
     <length>255</length>
     <required>true</required>

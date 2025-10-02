@@ -50,6 +50,10 @@ final class ClearingCostItemsJsonFormsGenerator extends AbstractClearingItemsJso
     );
   }
 
+  protected function getPaymentPartyLabel(): string {
+    return E::ts('Payee');
+  }
+
   protected function getPropertyKeyword(): string {
     return 'costItems';
   }

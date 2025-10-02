@@ -28,7 +28,7 @@ namespace Civi\Funding\Entity;
  *   receipt_number: ?string,
  *   receipt_date: ?string,
  *   payment_date: string,
- *   recipient: string,
+ *   payment_party: string,
  *   reason: string,
  *   amount: float,
  *   amount_admitted: ?float,
@@ -115,16 +115,16 @@ abstract class AbstractClearingItemEntity extends AbstractEntity {
     return $this;
   }
 
-  public function getRecipient(): string {
+  public function getPaymentParty(): string {
     // @phpstan-ignore-next-line
-    return $this->values['recipient'];
+    return $this->values['payment_party'];
   }
 
   /**
    * @return static
    */
-  public function setRecipient(string $recipient): self {
-    $this->values['recipient'] = $recipient;
+  public function setPaymentParty(string $paymentParty): self {
+    $this->values['payment_party'] = $paymentParty;
 
     return $this;
   }

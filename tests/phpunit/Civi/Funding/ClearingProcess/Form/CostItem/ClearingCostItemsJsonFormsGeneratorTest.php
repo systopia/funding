@@ -172,7 +172,7 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         'readOnly' => TRUE,
                         'format' => 'date',
                       ],
-                      'recipient' => [
+                      'paymentParty' => [
                         'type' => 'string',
                         'readOnly' => TRUE,
                         'maxlength' => 255,
@@ -194,7 +194,7 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         'default' => NULL,
                       ],
                     ],
-                    'required' => ['paymentDate', 'recipient', 'reason', 'amount'],
+                    'required' => ['paymentDate', 'paymentParty', 'reason', 'amount'],
                   ],
                 ],
                 'amountRecordedTotal' => [
@@ -330,8 +330,8 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                       ],
                       [
                         'type' => 'Control',
-                        'scope' => '#/properties/recipient',
-                        'label' => 'Payment Recipient',
+                        'scope' => '#/properties/paymentParty',
+                        'label' => 'Payee',
                       ],
                       [
                         'type' => 'Control',
@@ -483,7 +483,7 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         'format' => 'date',
                         'readOnly' => FALSE,
                       ],
-                      'recipient' => [
+                      'paymentParty' => [
                         'type' => 'string',
                         'readOnly' => FALSE,
                         'maxlength' => 255,
@@ -505,7 +505,7 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         'default' => NULL,
                       ],
                     ],
-                    'required' => ['paymentDate', 'recipient', 'reason', 'amount'],
+                    'required' => ['paymentDate', 'paymentParty', 'reason', 'amount'],
                   ],
                 ],
                 'amountRecordedTotal' => [
@@ -641,8 +641,8 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                       ],
                       [
                         'type' => 'Control',
-                        'scope' => '#/properties/recipient',
-                        'label' => 'Payment Recipient',
+                        'scope' => '#/properties/paymentParty',
+                        'label' => 'Payee',
                       ],
                       [
                         'type' => 'Control',
@@ -811,7 +811,7 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         'type' => 'string',
                         'format' => 'date',
                       ],
-                      'recipient' => [
+                      'paymentParty' => [
                         'readOnly' => TRUE,
                         'type' => 'string',
                         'maxlength' => 255,
@@ -833,7 +833,7 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                         'default' => ['$data' => '1/amount'],
                       ],
                     ],
-                    'required' => ['paymentDate', 'recipient', 'reason', 'amount'],
+                    'required' => ['paymentDate', 'paymentParty', 'reason', 'amount'],
                   ],
                 ],
                 'amountRecordedTotal' => [
@@ -970,8 +970,8 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                       ],
                       [
                         'type' => 'Control',
-                        'scope' => '#/properties/recipient',
-                        'label' => 'Payment Recipient',
+                        'scope' => '#/properties/paymentParty',
+                        'label' => 'Payee',
                       ],
                       [
                         'type' => 'Control',

@@ -186,7 +186,7 @@ abstract class AbstractClearingItemsFormDataPersister {
       'receipt_number' => $record['receiptNumber'],
       'receipt_date' => $record['receiptDate'],
       'payment_date' => $record['paymentDate'],
-      'recipient' => $record['recipient'],
+      'payment_party' => $record['paymentParty'],
       'reason' => $record['reason'],
       'amount' => $record['amount'],
       'amount_admitted' => $record['amountAdmitted'],
@@ -249,7 +249,7 @@ abstract class AbstractClearingItemsFormDataPersister {
       || $clearingItem->getReceiptNumber() !== $record['receiptNumber']
       || $clearingItem->getReceiptDate()?->format('Y-m-d') !== $record['receiptDate']
       || $clearingItem->getPaymentDate()->format('Y-m-d') !== $record['paymentDate']
-      || $clearingItem->getRecipient() !== $record['recipient']
+      || $clearingItem->getPaymentParty() !== $record['paymentParty']
       || $clearingItem->getReason() !== $record['reason']
       || abs($clearingItem->getAmount() - $record['amount']) >= PHP_FLOAT_EPSILON;
   }
@@ -299,7 +299,7 @@ abstract class AbstractClearingItemsFormDataPersister {
         ->setReceiptNumber($record['receiptNumber'])
         ->setReceiptDate(DateTimeUtil::toDateTimeOrNull($record['receiptDate']))
         ->setPaymentDate(new \DateTime($record['paymentDate']))
-        ->setRecipient($record['recipient'])
+        ->setPaymentParty($record['paymentParty'])
         ->setReason($record['reason'])
         ->setAmount($record['amount']);
     }

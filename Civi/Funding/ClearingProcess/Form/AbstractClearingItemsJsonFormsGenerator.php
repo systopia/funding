@@ -228,14 +228,14 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
               'receiptNumber' => new JsonSchemaString(['readOnly' => !$contentChangeAllowed, 'maxlength' => 255], TRUE),
               'receiptDate' => new JsonSchemaDate(['readOnly' => !$contentChangeAllowed], TRUE),
               'paymentDate' => new JsonSchemaDate(['readOnly' => !$contentChangeAllowed]),
-              'recipient' => new JsonSchemaString(['readOnly' => !$contentChangeAllowed, 'maxlength' => 255]),
+              'paymentParty' => new JsonSchemaString(['readOnly' => !$contentChangeAllowed, 'maxlength' => 255]),
               'reason' => new JsonSchemaString(['readOnly' => !$contentChangeAllowed, 'maxlength' => 255]),
               'amount' => new JsonSchemaMoney(['readOnly' => !$contentChangeAllowed]),
               'amountAdmitted' => new JsonSchemaMoney([
                 'readOnly' => !$admittedValueChangeAllowed,
                 'default' => $admittedValueChangeAllowed ? new JsonSchemaDataPointer('1/amount') : NULL,
               ], TRUE),
-            ], ['required' => ['paymentDate', 'recipient', 'reason', 'amount']]),
+            ], ['required' => ['paymentDate', 'paymentParty', 'reason', 'amount']]),
           ),
           'amountRecordedTotal' => new JsonSchemaCalculate(
             'number',
@@ -304,8 +304,9 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
           );
         }
 
-        /** @var string $recipientLabel */
-        $recipientLabel = $financePlanItemSchema['clearing']['recipientLabel'] ?? E::ts('Payment Recipient');
+        /** @var string $paymentPartyLabel */
+        $paymentPartyLabel = $financePlanItemSchema['clearing']['paymentPartyLabel']
+          ?? $this->getPaymentPartyLabel();
 
         $groupElements[] =
           new JsonFormsCloseableGroup(E::ts('Receipts'), [
@@ -327,7 +328,7 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
                   '#/properties/paymentDate',
                   str_replace('/', "/\u{200B}", E::ts('Payment/Posting Date'))
                 ),
-                new JsonFormsControl('#/properties/recipient', $recipientLabel),
+                new JsonFormsControl('#/properties/paymentParty', $paymentPartyLabel),
                 new JsonFormsControl(
                   '#/properties/reason',
                   str_replace('/', "/\u{200B}", E::ts('Reason for Payment/Payment Reference'))
@@ -344,6 +345,8 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
     Assert::string($group->label);
     $this->formElements[] = new JsonFormsGroup($group->label, $groupElements);
   }
+
+  abstract protected function getPaymentPartyLabel(): string;
 
   abstract protected function getPropertyKeyword(): string;
 

@@ -36,7 +36,7 @@ final class JsonSchemaCostItem extends JsonSchema {
    *   identifier: non-empty-string,
    *   clearing?: array{
    *     itemLabel: non-empty-string,
-   *     recipientLabel?: non-empty-string,
+   *     paymentPartyLabel?: non-empty-string,
    *   },
    * } $config
    */
