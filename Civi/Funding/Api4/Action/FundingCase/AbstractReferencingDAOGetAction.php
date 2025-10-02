@@ -120,6 +120,10 @@ abstract class AbstractReferencingDAOGetAction extends DAOGetAction {
       $this->setLimit($limit - count($records));
     } while ($this->getLimit() > 0 && count($result) === $limitBefore);
 
+    // Set limit and offset back to their original values.
+    $this->setOffset($offset);
+    $this->setLimit($limit);
+
     $result->exchangeArray($records);
     if (!$rowCountSelected) {
       $result->rowCount = count($records);
