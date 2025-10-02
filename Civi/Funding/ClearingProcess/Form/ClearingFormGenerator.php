@@ -44,7 +44,7 @@ use Webmozart\Assert\Assert;
  *   receiptNumber: ?string,
  *   receiptDate: ?string,
  *   paymentDate: string,
- *   recipient: string,
+ *   paymentParty: string,
  *   reason: string,
  *   amount: float|int,
  *   amountAdmitted: float|int|null,

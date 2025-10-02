@@ -1,0 +1,2 @@
+ALTER TABLE civicrm_funding_clearing_cost_item RENAME COLUMN recipient TO payment_party;
+ALTER TABLE civicrm_funding_clearing_resources_item RENAME COLUMN recipient TO payment_party;

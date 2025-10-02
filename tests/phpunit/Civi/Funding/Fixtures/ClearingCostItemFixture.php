@@ -43,7 +43,7 @@ final class ClearingCostItemFixture {
         'receipt_number' => NULL,
         'receipt_date' => NULL,
         'payment_date' => '2024-04-04',
-        'recipient' => 'Recipient',
+        'payment_party' => 'Payee',
         'reason' => 'Test Clearing Cost Item',
         'amount' => 1.2,
         'amount_admitted' => NULL,
