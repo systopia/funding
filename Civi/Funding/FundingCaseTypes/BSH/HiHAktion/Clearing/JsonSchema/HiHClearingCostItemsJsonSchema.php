@@ -56,7 +56,7 @@ final class HiHClearingCostItemsJsonSchema extends JsonSchemaObject {
           'default' => $sachkostenBewilligt->getId(),
         ]),
         'amount' => new JsonSchemaMoney(['default' => 0]),
-        'amountAdmitted' => new JsonSchemaMoney([], TRUE),
+        'amountAdmitted' => new JsonSchemaMoney(['maximum' => new JsonSchemaDataPointer('1/amount')], TRUE),
       ], ['required' => ['_financePlanItemId', 'amount']]);
     }
 
@@ -78,7 +78,7 @@ final class HiHClearingCostItemsJsonSchema extends JsonSchemaObject {
             'monatlichesArbeitgeberbrutto' => new JsonSchemaDataPointer('1/properties/monatlichesArbeitgeberbrutto'),
             'monate' => new JsonSchemaDataPointer('1/properties/monate'),
           ]),
-          'amountAdmitted' => new JsonSchemaMoney([], TRUE),
+          'amountAdmitted' => new JsonSchemaMoney(['maximum' => new JsonSchemaDataPointer('1/amount')], TRUE),
         ], ['required' => ['amount', 'properties']])),
         'amountRecordedTotal' => new JsonSchemaCalculate(
           'number',
@@ -111,7 +111,7 @@ final class HiHClearingCostItemsJsonSchema extends JsonSchemaObject {
             'dauer' => new JsonSchemaDataPointer('1/properties/dauer'),
             'verguetung' => new JsonSchemaDataPointer('1/properties/verguetung'),
           ]),
-          'amountAdmitted' => new JsonSchemaMoney([], TRUE),
+          'amountAdmitted' => new JsonSchemaMoney(['maximum' => new JsonSchemaDataPointer('1/amount')], TRUE),
         ], ['required' => ['amount', 'properties']])),
         'amountRecordedTotal' => new JsonSchemaCalculate(
           'number',
@@ -142,7 +142,7 @@ final class HiHClearingCostItemsJsonSchema extends JsonSchemaObject {
             'bezeichnung' => new JsonSchemaString(['minLength' => 1, 'maxLength' => 255]),
           ], ['required' => ['bezeichnung']]),
           'amount' => new JsonSchemaMoney(),
-          'amountAdmitted' => new JsonSchemaMoney([], TRUE),
+          'amountAdmitted' => new JsonSchemaMoney(['maximum' => new JsonSchemaDataPointer('1/amount')], TRUE),
         ], ['required' => ['_financePlanItemId', 'amount', 'properties']])),
         'amountRecordedTotal' => new JsonSchemaCalculate(
           'number',
