@@ -191,6 +191,29 @@ final class DrawdownValidatorTest extends TestCase {
     ], $result->getErrors());
   }
 
+  public function testValidatePayoutProcessClosed(): void {
+    $current = DrawdownFactory::create();
+    $new = DrawdownFactory::create(['status' => 'accepted']);
+    $this->payoutProcess->setStatus('closed');
+    $this->fundingCase->setValues(['permissions' => ['review_drawdown']] + $this->fundingCase->toArray());
+
+    $this->expectException(UnauthorizedException::class);
+    $this->expectExceptionMessage('Payout process is closed.');
+
+    $this->validator->validate($new, $current, TRUE)->isValid();
+  }
+
+  public function testValidatePayoutProcessClosedWithReviewFinishPermission(): void {
+    $current = DrawdownFactory::create();
+    $new = DrawdownFactory::create(['status' => 'accepted']);
+    $this->payoutProcess->setStatus('closed');
+    $this->fundingCase->setValues(
+      ['permissions' => [FundingCasePermissions::REVIEW_FINISH]] + $this->fundingCase->toArray()
+    );
+
+    static::assertTrue($this->validator->validate($new, $current, TRUE)->isValid());
+  }
+
   public function testValidateNew(): void {
     $new = DrawdownFactory::create(['amount' => 10.1]);
     $this->fundingCase->setValues(['permissions' => ['drawdown_create']] + $this->fundingCase->toArray());
