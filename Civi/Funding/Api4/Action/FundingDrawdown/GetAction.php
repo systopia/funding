@@ -27,6 +27,7 @@ use Civi\Funding\Api4\Action\FundingCase\AbstractReferencingDAOGetAction;
 use Civi\Funding\Api4\Util\WhereUtil;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\FundingCase\FundingCaseManager;
+use Civi\Funding\FundingCase\FundingCasePermissions;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Webmozart\Assert\Assert;
@@ -123,9 +124,12 @@ final class GetAction extends AbstractReferencingDAOGetAction {
    * @throws \CRM_Core_Exception
    */
   private function getCanReview(string $drawdownStatus, string $payoutProcessStatus, int $fundingCaseId): bool {
+    $fundingCase = $this->getFundingCase($fundingCaseId);
+
     return 'new' === $drawdownStatus
-      && 'open' === $payoutProcessStatus
-      && $this->getFundingCase($fundingCaseId)->hasPermission('review_drawdown');
+      // Final reviewers are allowed to accept/reject final drawdown in case it was created as "new".
+      && ('open' === $payoutProcessStatus || $fundingCase->hasPermission(FundingCasePermissions::REVIEW_FINISH))
+      && $fundingCase->hasPermission('review_drawdown');
   }
 
 }

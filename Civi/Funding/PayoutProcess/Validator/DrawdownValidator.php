@@ -70,7 +70,13 @@ final class DrawdownValidator implements ConcreteEntityValidatorInterface {
     bool $checkPermissions
   ): EntityValidationResult {
     $payoutProcess = $this->getPayoutProcess($new);
-    $this->assertNotClosed($payoutProcess);
+
+    // Final reviewers are allowed to accept/reject final drawdown in case it was created as "new".
+    if ($current->getStatus() !== 'new' || $new->getStatus() === 'new'
+      || !$this->getFundingCase($payoutProcess)->hasPermission(FundingCasePermissions::REVIEW_FINISH)
+    ) {
+      $this->assertNotClosed($payoutProcess);
+    }
 
     if ($new->getAmount() < 0) {
       $fundingCase = $this->getFundingCase($payoutProcess);
