@@ -97,12 +97,12 @@ use Webmozart\Assert\Assert;
 final class FundingTaskEntity extends AbstractActivityEntity {
 
   public function __construct(array $values) {
-    if (is_string($values['funding_case_task.required_permissions'] ?? NULL)) {
+    if (is_string($values['funding_case_task.required_permissions'])) {
       // When loaded from persisted values.
-      $values['funding_case_task.required_permissions'] = json_decode(
-        $values['funding_case_task.required_permissions'],
-        TRUE
-      );
+      $values['funding_case_task.required_permissions'] =
+        // CiviCRM doesn't persist NULL, but an empty string.
+        '' === $values['funding_case_task.required_permissions'] ? NULL
+        : json_decode($values['funding_case_task.required_permissions'], TRUE);
     }
     parent::__construct($values);
   }
