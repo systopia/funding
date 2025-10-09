@@ -38,7 +38,7 @@ class EventGetAction extends AbstractGetAction implements EventActionInterface {
     parent::__construct($entityName, $actionName);
     $this->_initRequestEventName = $initRequestEventName;
     $this->_authorizeRequestEventName = $authorizeRequestEventName;
-    $this->_eventDispatcher = $eventDispatcher ?? \Civi::dispatcher();
+    $this->_eventDispatcher = $eventDispatcher;
   }
 
   /**

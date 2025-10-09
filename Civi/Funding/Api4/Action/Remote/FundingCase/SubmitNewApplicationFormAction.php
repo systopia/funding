@@ -41,10 +41,10 @@ class SubmitNewApplicationFormAction extends AbstractNewApplicationFormAction {
   use FundingProgramIdParameterTrait;
 
   public function __construct(
-    FundingCaseTypeManager $fundingCaseTypeManager,
-    FundingProgramManager $fundingProgramManager,
-    CiviEventDispatcherInterface $eventDispatcher,
-    FundingCaseTypeProgramRelationChecker $relationChecker
+    ?FundingCaseTypeManager $fundingCaseTypeManager = NULL,
+    ?FundingProgramManager $fundingProgramManager = NULL,
+    ?CiviEventDispatcherInterface $eventDispatcher = NULL,
+    ?FundingCaseTypeProgramRelationChecker $relationChecker = NULL
   ) {
     parent::__construct(
       'submitNewApplicationForm',

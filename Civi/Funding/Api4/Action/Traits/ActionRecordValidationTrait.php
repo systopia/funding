@@ -24,18 +24,13 @@ use Civi\Api4\Utils\FormattingUtil;
 use Civi\Funding\Api4\Util\WhereUtil;
 use Civi\Funding\Entity\AbstractEntity;
 use Civi\Funding\Validation\EntityValidationResult;
-use Civi\Funding\Validation\EntityValidatorInterface;
-use Civi\RemoteTools\Api4\Api4Interface;
 use Webmozart\Assert\Assert;
 
 trait ActionRecordValidationTrait {
 
-  protected Api4Interface $_api4;
+  use Api4Trait;
 
-  /**
-   * @phpstan-ignore-next-line It's ok that generic parameter is not set.
-   */
-  protected EntityValidatorInterface $_entityValidator;
+  use EntityValidatorTrait;
 
   /**
    * @var array<string, mixed>|null
@@ -122,7 +117,7 @@ trait ActionRecordValidationTrait {
     $entityClass = $this->_getEntityClass();
     $entity = $entityClass::fromArray($record);
 
-    return $this->_entityValidator->validateNew($entity, $this->getCheckPermissions());
+    return $this->getEntityValidator()->validateNew($entity, $this->getCheckPermissions());
   }
 
   /**
@@ -130,7 +125,7 @@ trait ActionRecordValidationTrait {
    */
   protected function _validateRecordUpdate(array $record): EntityValidationResult {
     $id = $record[$this->_getIdFieldName()];
-    $currentRecord = $this->_api4->execute($this->getEntityName(), 'get', [
+    $currentRecord = $this->getApi4()->execute($this->getEntityName(), 'get', [
       'checkPermissions' => FALSE,
       'where' => [['id', '=', $id]],
     ])->single();
@@ -139,7 +134,7 @@ trait ActionRecordValidationTrait {
     $new = $entityClass::fromArray($record + $currentRecord);
     $current = $entityClass::fromArray($currentRecord);
 
-    return $this->_entityValidator->validate($new, $current, $this->getCheckPermissions());
+    return $this->getEntityValidator()->validate($new, $current, $this->getCheckPermissions());
   }
 
   /**

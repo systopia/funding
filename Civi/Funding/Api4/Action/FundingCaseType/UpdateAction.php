@@ -23,19 +23,23 @@ use Civi\Api4\File;
 use Civi\Api4\FundingCaseType;
 use Civi\Api4\Generic\DAOUpdateAction;
 use Civi\Api4\Generic\Result;
+use Civi\Funding\Api4\Action\Traits\Api4Trait;
 use Civi\Funding\FileTypeNames;
 use Civi\Funding\FundingAttachmentManagerInterface;
 use Civi\RemoteTools\Api4\Api4Interface;
 
 final class UpdateAction extends DAOUpdateAction {
 
-  private Api4Interface $api4;
+  use Api4Trait;
 
-  private FundingAttachmentManagerInterface $attachmentManager;
+  private ?FundingAttachmentManagerInterface $attachmentManager;
 
-  public function __construct(Api4Interface $api4, FundingAttachmentManagerInterface $attachmentManager) {
+  public function __construct(
+    ?Api4Interface $api4 = NULL,
+    ?FundingAttachmentManagerInterface $attachmentManager = NULL
+  ) {
     parent::__construct(FundingCaseType::getEntityName(), 'update');
-    $this->api4 = $api4;
+    $this->_api4 = $api4;
     $this->attachmentManager = $attachmentManager;
   }
 
@@ -106,13 +110,18 @@ final class UpdateAction extends DAOUpdateAction {
     $fundingCaseTypeId = $result->single()['id'];
     $previousFileId = $result->single()[$templateIdFieldName];
     if ($previousFileId !== NULL && $previousFileId !== $templateFileId) {
-      $this->attachmentManager->deleteById($previousFileId, 'civicrm_funding_case_type', $fundingCaseTypeId);
+      $this->getAttachmentManager()->deleteById($previousFileId, 'civicrm_funding_case_type', $fundingCaseTypeId);
     }
 
-    $this->attachmentManager->attachById($templateFileId, 'civicrm_funding_case_type', $fundingCaseTypeId);
-    $this->api4->updateEntity(File::getEntityName(), $templateFileId, [
+    $this->getAttachmentManager()->attachById($templateFileId, 'civicrm_funding_case_type', $fundingCaseTypeId);
+    $this->getApi4()->updateEntity(File::getEntityName(), $templateFileId, [
       'file_type_id:name' => $fileType,
     ]);
+  }
+
+  private function getAttachmentManager(): FundingAttachmentManagerInterface {
+    // @phpstan-ignore return.type, assign.propertyType
+    return $this->attachmentManager ??= \Civi::service(FundingAttachmentManagerInterface::class);
   }
 
 }

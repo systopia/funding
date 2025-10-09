@@ -28,22 +28,11 @@ use Civi\Funding\Permission\ContactRelation\ContactRelationCheckerInterface;
 use Civi\Funding\Permission\ContactRelation\ContactRelationLoaderCollection;
 use Civi\Funding\Permission\ContactRelation\ContactRelationLoaderInterface;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
-use Symfony\Component\DependencyInjection\Reference;
-
-$container->autowire(\Civi\Funding\Api4\Action\FundingCaseContactRelationType\GetFieldsAction::class);
-$container->autowire(\Civi\Funding\Api4\Action\FundingCaseContactRelationType\GetAction::class)
-  ->setArgument('$relationTypeContainer', new Reference('funding.permission.contact_relation_type_container'))
-  ->setPublic(TRUE)
-  ->setShared(TRUE);
-
-$container->autowire(\Civi\Funding\Api4\Action\FundingProgramContactRelationType\GetFieldsAction::class);
-$container->autowire(\Civi\Funding\Api4\Action\FundingProgramContactRelationType\GetAction::class)
-  ->setArgument('$relationTypeContainer', new Reference('funding.permission.contact_relation_type_container'))
-  ->setPublic(TRUE)
-  ->setShared(TRUE);
 
 $container->register('funding.permission.contact_relation_type_container', RelationTypeContainer::class)
-  ->addArgument(new TaggedIteratorArgument('funding.permission.contact_relation_type'));
+  ->addArgument(new TaggedIteratorArgument('funding.permission.contact_relation_type'))
+  // Used in API action.
+  ->setPublic(TRUE);
 
 ServiceRegistrator::autowireAllImplementing(
   $container,

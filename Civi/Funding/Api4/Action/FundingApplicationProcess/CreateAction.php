@@ -33,8 +33,8 @@ final class CreateAction extends DAOCreateAction {
    * @phpstan-param EntityValidatorInterface<\Civi\Funding\Entity\ApplicationProcessEntity> $entityValidator
    */
   public function __construct(
-    Api4Interface $api4,
-    EntityValidatorInterface $entityValidator
+    ?Api4Interface $api4 = NULL,
+    ?EntityValidatorInterface $entityValidator = NULL
   ) {
     parent::__construct(FundingApplicationProcess::getEntityName(), 'create');
     $this->_api4 = $api4;

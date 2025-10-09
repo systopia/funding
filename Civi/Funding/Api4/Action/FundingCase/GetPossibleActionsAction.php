@@ -22,6 +22,9 @@ namespace Civi\Funding\Api4\Action\FundingCase;
 use Civi\Api4\FundingCase;
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
+use Civi\Funding\Api4\Action\Traits\ApplicationProcessManagerTrait;
+use Civi\Funding\Api4\Action\Traits\FundingCaseManagerTrait;
+use Civi\Funding\Api4\Action\Traits\FundingCaseTypeManagerTrait;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\FundingCase\Command\FundingCasePossibleActionsGetCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
@@ -35,24 +38,24 @@ class GetPossibleActionsAction extends AbstractAction {
 
   use IdParameterTrait;
 
-  private ApplicationProcessManager $applicationProcessManager;
+  use ApplicationProcessManagerTrait;
 
-  private FundingCaseManager $fundingCaseManager;
+  use FundingCaseManagerTrait;
 
-  private FundingCaseTypeManager $fundingCaseTypeManager;
+  use FundingCaseTypeManagerTrait;
 
-  private FundingCasePossibleActionsGetHandlerInterface $possibleActionsGetHandler;
+  private ?FundingCasePossibleActionsGetHandlerInterface $possibleActionsGetHandler;
 
   public function __construct(
-    ApplicationProcessManager $applicationProcessManager,
-    FundingCaseManager $fundingCaseManager,
-    FundingCaseTypeManager $fundingCaseTypeManager,
-    FundingCasePossibleActionsGetHandlerInterface $possibleActionsGetHandler
+    ?ApplicationProcessManager $applicationProcessManager = NULL,
+    ?FundingCaseManager $fundingCaseManager = NULL,
+    ?FundingCaseTypeManager $fundingCaseTypeManager = NULL,
+    ?FundingCasePossibleActionsGetHandlerInterface $possibleActionsGetHandler = NULL
   ) {
     parent::__construct(FundingCase::getEntityName(), 'getPossibleActions');
-    $this->applicationProcessManager = $applicationProcessManager;
-    $this->fundingCaseManager = $fundingCaseManager;
-    $this->fundingCaseTypeManager = $fundingCaseTypeManager;
+    $this->_applicationProcessManager = $applicationProcessManager;
+    $this->_fundingCaseManager = $fundingCaseManager;
+    $this->_fundingCaseTypeManager = $fundingCaseTypeManager;
     $this->possibleActionsGetHandler = $possibleActionsGetHandler;
   }
 
@@ -60,20 +63,25 @@ class GetPossibleActionsAction extends AbstractAction {
    * @inheritDoc
    */
   public function _run(Result $result): void {
-    $fundingCase = $this->fundingCaseManager->get($this->getId());
+    $fundingCase = $this->getFundingCaseManager()->get($this->getId());
     Assert::notNull($fundingCase, E::ts('Funding case with ID "%1" not found', [1 => $this->getId()]));
-    $fundingCaseType = $this->fundingCaseTypeManager->get($fundingCase->getFundingCaseTypeId());
+    $fundingCaseType = $this->getFundingCaseTypeManager()->get($fundingCase->getFundingCaseTypeId());
     Assert::notNull($fundingCaseType);
 
-    $actions = $this->possibleActionsGetHandler->handle(
+    $actions = $this->getPossibleActionsGetHandler()->handle(
       new FundingCasePossibleActionsGetCommand(
         $fundingCase,
-        $this->applicationProcessManager->getStatusListByFundingCaseId($fundingCase->getId()),
+        $this->getApplicationProcessManager()->getStatusListByFundingCaseId($fundingCase->getId()),
         $fundingCaseType,
       )
     );
 
     $result->exchangeArray($actions);
+  }
+
+  private function getPossibleActionsGetHandler(): FundingCasePossibleActionsGetHandlerInterface {
+    // @phpstan-ignore return.type, assign.propertyType
+    return $this->possibleActionsGetHandler ??= \Civi::service(FundingCasePossibleActionsGetHandlerInterface::class);
   }
 
 }

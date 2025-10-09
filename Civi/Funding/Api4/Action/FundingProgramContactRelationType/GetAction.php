@@ -23,17 +23,18 @@ use Civi\Api4\FundingProgramContactRelationType;
 use Civi\Api4\Generic\AbstractGetAction;
 use Civi\Api4\Generic\Result;
 use Civi\Api4\Generic\Traits\ArrayQueryActionTrait;
+use Civi\Funding\Api4\Action\Traits\ContactRelationTypeContainerTrait;
 use Civi\Funding\Contact\Relation\RelationTypeContainerInterface;
 
 final class GetAction extends AbstractGetAction {
 
   use ArrayQueryActionTrait;
 
-  private RelationTypeContainerInterface $relationTypeContainer;
+  use ContactRelationTypeContainerTrait;
 
-  public function __construct(RelationTypeContainerInterface $relationTypeContainer) {
+  public function __construct(?RelationTypeContainerInterface $contactRelationTypeContainer = NULL) {
     parent::__construct(FundingProgramContactRelationType::getEntityName(), 'get');
-    $this->relationTypeContainer = $relationTypeContainer;
+    $this->_contactRelationTypeContainer = $contactRelationTypeContainer;
   }
 
   /**
@@ -41,7 +42,7 @@ final class GetAction extends AbstractGetAction {
    */
   public function _run(Result $result): void {
     $types = [];
-    foreach ($this->relationTypeContainer->getRelationTypes() as $type) {
+    foreach ($this->getContactRelationTypeContainer()->getRelationTypes() as $type) {
       $types[] = $type->toArray();
     }
 

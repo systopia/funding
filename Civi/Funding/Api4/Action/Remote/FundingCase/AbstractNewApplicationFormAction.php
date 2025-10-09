@@ -24,6 +24,8 @@ use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingActionLegacy;
 use Civi\Funding\Api4\Action\Remote\FundingCase\Traits\NewApplicationFormActionTrait;
 use Civi\Funding\Api4\Action\Remote\Traits\RemoteFundingActionContactIdRequiredTrait;
+use Civi\Funding\Api4\Action\Traits\FundingCaseTypeManagerTrait;
+use Civi\Funding\Api4\Action\Traits\FundingProgramManagerTrait;
 use Civi\Funding\Event\Remote\FundingEvents;
 use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker;
@@ -34,23 +36,23 @@ use Webmozart\Assert\Assert;
 abstract class AbstractNewApplicationFormAction extends AbstractRemoteFundingActionLegacy {
 
   use NewApplicationFormActionTrait;
+
   use RemoteFundingActionContactIdRequiredTrait;
 
-  protected FundingCaseTypeManager $_fundingCaseTypeManager;
+  use FundingCaseTypeManagerTrait;
 
-  protected FundingProgramManager $_fundingProgramManager;
+  use FundingProgramManagerTrait;
 
   public function __construct(
     string $actionName,
-    FundingCaseTypeManager $fundingCaseTypeManager,
-    FundingProgramManager $fundingProgramManager,
-    CiviEventDispatcherInterface $eventDispatcher,
-    FundingCaseTypeProgramRelationChecker $relationChecker
+    ?FundingCaseTypeManager $fundingCaseTypeManager,
+    ?FundingProgramManager $fundingProgramManager,
+    ?CiviEventDispatcherInterface $eventDispatcher,
+    ?FundingCaseTypeProgramRelationChecker $relationChecker
   ) {
-    parent::__construct(RemoteFundingCase::getEntityName(), $actionName);
+    parent::__construct(RemoteFundingCase::getEntityName(), $actionName, $eventDispatcher);
     $this->_fundingCaseTypeManager = $fundingCaseTypeManager;
     $this->_fundingProgramManager = $fundingProgramManager;
-    $this->_eventDispatcher = $eventDispatcher;
     $this->_relationChecker = $relationChecker;
     $this->_authorizeRequestEventName = FundingEvents::REQUEST_AUTHORIZE_EVENT_NAME;
     $this->_initRequestEventName = FundingEvents::REQUEST_INIT_EVENT_NAME;
@@ -64,13 +66,13 @@ abstract class AbstractNewApplicationFormAction extends AbstractRemoteFundingAct
   protected function createEventParams(int $fundingCaseTypeId, int $fundingProgramId): array {
     Assert::notNull($this->remoteContactId);
 
-    $fundingCaseType = $this->_fundingCaseTypeManager->get($fundingCaseTypeId);
+    $fundingCaseType = $this->getFundingCaseTypeManager()->get($fundingCaseTypeId);
     Assert::notNull(
       $fundingCaseType,
       E::ts('Funding case type with ID "%1" not found', [1 => $fundingCaseTypeId])
     );
 
-    $fundingProgram = $this->_fundingProgramManager->get($fundingProgramId);
+    $fundingProgram = $this->getFundingProgramManager()->get($fundingProgramId);
     Assert::notNull($fundingProgram, E::ts('Funding program with ID "%1" not found', [1 => $fundingProgramId]));
     $this->assertFundingProgramDates($fundingProgram);
     $this->assertCreateApplicationPermission($fundingProgram);

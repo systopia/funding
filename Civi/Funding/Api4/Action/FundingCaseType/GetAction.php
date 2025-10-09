@@ -30,9 +30,9 @@ final class GetAction extends DAOGetAction {
 
   use IsFieldSelectedTrait;
 
-  private FundingAttachmentManagerInterface $attachmentManager;
+  private ?FundingAttachmentManagerInterface $attachmentManager;
 
-  public function __construct(FundingAttachmentManagerInterface $attachmentManager) {
+  public function __construct(?FundingAttachmentManagerInterface $attachmentManager = NULL) {
     parent::__construct(FundingCaseType::getEntityName(), 'get');
     $this->attachmentManager = $attachmentManager;
   }
@@ -95,13 +95,18 @@ final class GetAction extends DAOGetAction {
    * @throws \CRM_Core_Exception
    */
   private function getFileId(int $fundingCaseId, string $fileTypeName): ?int {
-    $attachment = $this->attachmentManager->getLastByFileType(
+    $attachment = $this->getAttachmentManager()->getLastByFileType(
       'civicrm_funding_case_type',
       $fundingCaseId,
       $fileTypeName
     );
 
     return NULL === $attachment ? NULL : $attachment->getId();
+  }
+
+  private function getAttachmentManager(): FundingAttachmentManagerInterface {
+    // @phpstan-ignore return.type, assign.propertyType
+    return $this->attachmentManager ??= \Civi::service(FundingAttachmentManagerInterface::class);
   }
 
 }

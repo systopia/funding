@@ -20,9 +20,6 @@ declare(strict_types = 1);
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
-use Civi\Funding\Api4\Action\FundingCaseType\GetAction;
-use Civi\Funding\Api4\Action\FundingCaseType\GetByFundingProgramIdAction;
-use Civi\Funding\Api4\Action\FundingCaseType\UpdateAction;
 use Civi\Funding\DependencyInjection\Compiler\FundingCaseFinishClearingHandlerPass;
 use Civi\Funding\DependencyInjection\Compiler\FundingCaseRejectHandlerPass;
 use Civi\Funding\DependencyInjection\Compiler\FundingCaseTypeMetaDataPass;
@@ -37,16 +34,6 @@ $container->addCompilerPass(new FundingCaseTypeMetaDataPass(), PassConfig::TYPE_
 $container->addCompilerPass(new FundingCaseTypeServiceLocatorPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 1);
 $container->addCompilerPass(new FundingCaseFinishClearingHandlerPass());
 $container->addCompilerPass(new FundingCaseRejectHandlerPass());
-
-$container->autowire(GetAction::class)
-  ->setPublic(TRUE)
-  ->setShared(FALSE);
-$container->autowire(GetByFundingProgramIdAction::class)
-  ->setPublic(TRUE)
-  ->setShared(FALSE);
-$container->autowire(UpdateAction::class)
-  ->setPublic(TRUE)
-  ->setShared(FALSE);
 
 $container->autowire(AfformCacheCiviOfficeDocumentSubscriber::class)
   ->setArgument('$assetBuilder', new Reference('asset_builder'))

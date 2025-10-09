@@ -25,7 +25,9 @@ use Civi\Api4\FundingProgram;
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\DAOGetAction;
 use Civi\Api4\Generic\Result;
+use Civi\Funding\Api4\Action\Traits\Api4Trait;
 use Civi\Funding\Api4\Action\Traits\FundingProgramIdParameterTrait;
+use Civi\Funding\Api4\Action\Traits\LoggerTrait;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Psr\Log\LoggerInterface;
 
@@ -33,14 +35,14 @@ final class GetByFundingProgramIdAction extends AbstractAction {
 
   use FundingProgramIdParameterTrait;
 
-  private Api4Interface $api4;
+  use Api4Trait;
 
-  private LoggerInterface $logger;
+  use LoggerTrait;
 
-  public function __construct(Api4Interface $api4, LoggerInterface $logger) {
+  public function __construct(?Api4Interface $api4 = NULL, ?LoggerInterface $logger = NULL) {
     parent::__construct(FundingCaseType::getEntityName(), 'getByFundingProgramId');
-    $this->api4 = $api4;
-    $this->logger = $logger;
+    $this->_api4 = $api4;
+    $this->_logger = $logger;
   }
 
   /**
@@ -50,10 +52,12 @@ final class GetByFundingProgramIdAction extends AbstractAction {
    */
   public function _run(Result $result): void {
     if (!$this->fundingProgramExists()) {
-      $this->logger->debug(sprintf('A funding program with id "%d" does not exist', $this->fundingProgramId));
+      $this->getLogger()->debug(sprintf('A funding program with id "%d" does not exist', $this->fundingProgramId));
     }
     elseif (!$this->hasFundingProgramAccess()) {
-      $this->logger->debug(sprintf('Contact has no access to funding program with id "%d"', $this->fundingProgramId));
+      $this->getLogger()->debug(
+        sprintf('Contact has no access to funding program with id "%d"', $this->fundingProgramId)
+      );
     }
     else {
       $action = FundingCaseType::get($this->getCheckPermissions())
@@ -75,7 +79,7 @@ final class GetByFundingProgramIdAction extends AbstractAction {
       ->selectRowCount()
       ->addWhere('id', '=', $this->getFundingProgramId());
 
-    $result = $this->api4->executeAction($action);
+    $result = $this->getApi4()->executeAction($action);
     if ($this->getDebug()) {
       $this->_debugOutput['fundingProgramExists'] = $result->debug;
     }
@@ -92,7 +96,7 @@ final class GetByFundingProgramIdAction extends AbstractAction {
       ->addSelect('id')
       ->addWhere('id', '=', $this->getFundingProgramId());
 
-    $result = $this->api4->executeAction($action);
+    $result = $this->getApi4()->executeAction($action);
     if ($this->getDebug()) {
       $this->_debugOutput['hasFundingProgramAccess'] = $result->debug;
     }

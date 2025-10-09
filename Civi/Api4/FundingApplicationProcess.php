@@ -63,11 +63,12 @@ class FundingApplicationProcess extends Generic\DAOEntity {
   use AccessPermissionsTrait;
 
   public static function create($checkPermissions = TRUE) {
-    return \Civi::service(CreateAction::class)->setCheckPermissions($checkPermissions);
+    return (new CreateAction())->setCheckPermissions($checkPermissions);
   }
 
   public static function delete($checkPermissions = TRUE) {
-    return \Civi::service(DeleteAction::class)->setCheckPermissions($checkPermissions);
+    // @phpstan-ignore return.type
+    return (new DeleteAction())->setCheckPermissions($checkPermissions);
   }
 
   /**
@@ -80,15 +81,15 @@ class FundingApplicationProcess extends Generic\DAOEntity {
   }
 
   public static function getFields($checkPermissions = TRUE) {
-    return \Civi::service(GetFieldsAction::class)->setCheckPermissions($checkPermissions);
+    return (new GetFieldsAction())->setCheckPermissions($checkPermissions);
   }
 
   public static function update($checkPermissions = TRUE) {
-    return \Civi::service(UpdateAction::class)->setCheckPermissions($checkPermissions);
+    return (new UpdateAction())->setCheckPermissions($checkPermissions);
   }
 
   public static function save($checkPermissions = TRUE) {
-    return \Civi::service(SaveAction::class)->setCheckPermissions($checkPermissions);
+    return (new SaveAction())->setCheckPermissions($checkPermissions);
   }
 
   public static function applyActionMultiple(bool $checkPermissions = TRUE): ApplyActionMultipleAction {
@@ -104,19 +105,19 @@ class FundingApplicationProcess extends Generic\DAOEntity {
   }
 
   public static function getFormData(): GetFormDataAction {
-    return \Civi::service(GetFormDataAction::class);
+    return new GetFormDataAction();
   }
 
   public static function getJsonSchema(): GetJsonSchemaAction {
-    return \Civi::service(GetJsonSchemaAction::class);
+    return new GetJsonSchemaAction();
   }
 
   public static function submitForm(): SubmitFormAction {
-    return \Civi::service(SubmitFormAction::class);
+    return new SubmitFormAction();
   }
 
   public static function validateForm(): ValidateFormAction {
-    return \Civi::service(ValidateFormAction::class);
+    return new ValidateFormAction();
   }
 
 }

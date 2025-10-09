@@ -20,14 +20,6 @@ declare(strict_types = 1);
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
-use Civi\Funding\Api4\Action\FundingApplicationProcess\CreateAction;
-use Civi\Funding\Api4\Action\FundingApplicationProcess\DeleteAction;
-use Civi\Funding\Api4\Action\FundingApplicationProcess\GetFieldsAction;
-use Civi\Funding\Api4\Action\FundingApplicationProcess\GetFormDataAction;
-use Civi\Funding\Api4\Action\FundingApplicationProcess\GetJsonSchemaAction;
-use Civi\Funding\Api4\Action\FundingApplicationProcess\SaveAction;
-use Civi\Funding\Api4\Action\FundingApplicationProcess\UpdateAction;
-use Civi\Funding\Api4\Action\Remote\ApplicationProcess\SubmitFormAction;
 use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
 use Civi\Funding\ApplicationProcess\ApplicationExternalFileManager;
 use Civi\Funding\ApplicationProcess\ApplicationExternalFileManagerInterface;
@@ -97,7 +89,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 $container->addCompilerPass(new ApplicationFormValidatorPass());
 
-$container->autowire(ApplicationProcessManager::class);
+$container->autowire(ApplicationProcessManager::class)
+  // Used in API actions.
+  ->setPublic(TRUE);
 $container->autowire(ApplicationProcessBundleLoader::class)
   // Used in API actions.
   ->setPublic(TRUE);
@@ -144,7 +138,9 @@ $container->autowire(
   ApplicationAllowedActionsGetHandlerInterface::class,
   DefaultApplicationAllowedActionsGetHandler::class
 );
-$container->autowire(ApplicationDeleteHandlerInterface::class, DefaultApplicationDeleteHandler::class);
+$container->autowire(ApplicationDeleteHandlerInterface::class, DefaultApplicationDeleteHandler::class)
+  // Used in API action.
+  ->setPublic(TRUE);
 
 $container->autowire(ApplicationFormNewCreateHandlerInterface::class, DefaultApplicationFormNewCreateHandler::class);
 $container->autowire(ApplicationFormNewValidateHandlerInterface::class, ApplicationFormNewValidateHandler::class);
@@ -154,12 +150,20 @@ $container->autowire(ApplicationFormAddCreateHandlerInterface::class, DefaultApp
 $container->autowire(ApplicationFormAddValidateHandlerInterface::class, ApplicationFormAddValidateHandler::class);
 $container->autowire(ApplicationFormAddSubmitHandlerInterface::class, DefaultApplicationFormAddSubmitHandler::class);
 
-$container->autowire(ApplicationFormDataGetHandlerInterface::class, DefaultApplicationFormDataGetHandler::class);
+$container->autowire(ApplicationFormDataGetHandlerInterface::class, DefaultApplicationFormDataGetHandler::class)
+  // Used in API action.
+  ->setPublic(TRUE);
 $container->autowire(ApplicationFormCreateHandlerInterface::class, DefaultApplicationFormCreateHandler::class);
-$container->autowire(ApplicationFormValidateHandlerInterface::class, ApplicationFormValidateHandler::class);
-$container->autowire(ApplicationFormSubmitHandlerInterface::class, DefaultApplicationFormSubmitHandler::class);
+$container->autowire(ApplicationFormValidateHandlerInterface::class, ApplicationFormValidateHandler::class)
+  // Used in API action.
+  ->setPublic(TRUE);
+$container->autowire(ApplicationFormSubmitHandlerInterface::class, DefaultApplicationFormSubmitHandler::class)
+  // Used in API action.
+  ->setPublic(TRUE);
 
-$container->autowire(ApplicationJsonSchemaGetHandlerInterface::class, DefaultApplicationJsonSchemaGetHandler::class);
+$container->autowire(ApplicationJsonSchemaGetHandlerInterface::class, DefaultApplicationJsonSchemaGetHandler::class)
+  // Used in API action.
+  ->setPublic(TRUE);
 $container->autowire(
   ApplicationCostItemsPersistHandlerInterface::class,
   DefaultApplicationCostItemsPersistHandler::class
@@ -182,43 +186,6 @@ ServiceRegistrator::autowireAllImplementing(
   ActionHandlerInterface::class,
   [ActionHandlerInterface::SERVICE_TAG => []],
 );
-
-$container->autowire(CreateAction::class)
-  ->setPublic(TRUE)
-  ->setShared(FALSE);
-$container->autowire(DeleteAction::class)
-  ->setPublic(TRUE)
-  ->setShared(TRUE);
-$container->autowire(GetFieldsAction::class)
-  ->setPublic(TRUE)
-  ->setShared(FALSE);
-$container->autowire(SaveAction::class)
-  ->setPublic(TRUE)
-  ->setShared(FALSE);
-$container->autowire(UpdateAction::class)
-  ->setPublic(TRUE)
-  ->setShared(FALSE);
-
-$container->autowire(\Civi\Funding\Api4\Action\FundingApplicationProcessActivity\GetAction::class)
-  ->setPublic(TRUE)
-  ->setShared(FALSE);
-
-$container->autowire(GetFormDataAction::class)
-  ->setPublic(TRUE)
-  ->setShared(FALSE);
-$container->autowire(\Civi\Funding\Api4\Action\FundingApplicationProcess\SubmitFormAction::class)
-  ->setPublic(TRUE)
-  ->setShared(FALSE);
-$container->autowire(\Civi\Funding\Api4\Action\FundingApplicationProcess\ValidateFormAction::class)
-  ->setPublic(TRUE)
-  ->setShared(FALSE);
-$container->autowire(GetJsonSchemaAction::class)
-  ->setPublic(TRUE)
-  ->setShared(FALSE);
-
-$container->autowire(SubmitFormAction::class)
-  ->setPublic(TRUE)
-  ->setShared(FALSE);
 
 ServiceRegistrator::autowireAllImplementing(
   $container,

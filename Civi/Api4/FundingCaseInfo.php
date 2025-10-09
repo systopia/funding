@@ -32,14 +32,14 @@ final class FundingCaseInfo extends AbstractEntity {
   use AccessPermissionsTrait;
 
   public static function get(): GetAction {
-    return \Civi::service(GetAction::class);
+    return new GetAction();
   }
 
   /**
    * @inheritDoc
    */
   public static function getFields() {
-    return \Civi::service(GetFieldsAction::class);
+    return new GetFieldsAction();
   }
 
 }

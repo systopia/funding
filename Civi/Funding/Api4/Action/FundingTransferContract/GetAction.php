@@ -26,7 +26,11 @@ use Civi\Api4\FundingTransferContract;
 use Civi\Api4\Generic\AbstractGetAction;
 use Civi\Api4\Generic\Result;
 use Civi\Api4\Generic\Traits\ArrayQueryActionTrait;
+use Civi\Funding\Api4\Action\Traits\Api4Trait;
+use Civi\Funding\Api4\Action\Traits\FundingCaseManagerTrait;
+use Civi\Funding\Api4\Action\Traits\FundingProgramManagerTrait;
 use Civi\Funding\Api4\Action\Traits\IsFieldSelectedTrait;
+use Civi\Funding\Api4\Action\Traits\PayoutProcessManagerTrait;
 use Civi\Funding\Api4\Util\WhereUtil;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\FundingCase\FundingCaseManager;
@@ -43,25 +47,25 @@ final class GetAction extends AbstractGetAction {
 
   use IsFieldSelectedTrait;
 
-  private Api4Interface $api4;
+  use Api4Trait;
 
-  private FundingCaseManager $fundingCaseManager;
+  use FundingCaseManagerTrait;
 
-  private FundingProgramManager $fundingProgramManager;
+  use FundingProgramManagerTrait;
 
-  private PayoutProcessManager $payoutProcessManager;
+  use PayoutProcessManagerTrait;
 
   public function __construct(
-    Api4Interface $api4,
-    FundingCaseManager $fundingCaseManager,
-    FundingProgramManager $fundingProgramManager,
-    PayoutProcessManager $payoutProcessManager
+    ?Api4Interface $api4 = NULL,
+    ?FundingCaseManager $fundingCaseManager = NULL,
+    ?FundingProgramManager $fundingProgramManager = NULL,
+    ?PayoutProcessManager $payoutProcessManager = NULL
   ) {
     parent::__construct(FundingTransferContract::getEntityName(), 'get');
-    $this->api4 = $api4;
-    $this->fundingCaseManager = $fundingCaseManager;
-    $this->fundingProgramManager = $fundingProgramManager;
-    $this->payoutProcessManager = $payoutProcessManager;
+    $this->_api4 = $api4;
+    $this->_fundingCaseManager = $fundingCaseManager;
+    $this->_fundingProgramManager = $fundingProgramManager;
+    $this->_payoutProcessManager = $payoutProcessManager;
   }
 
   /**
@@ -98,17 +102,17 @@ final class GetAction extends AbstractGetAction {
    * @throws \CRM_Core_Exception
    */
   private function buildRecord(FundingCaseEntity $fundingCase, array $applicationProcessMapping): array {
-    $fundingProgram = $this->fundingProgramManager->get($fundingCase->getFundingProgramId());
+    $fundingProgram = $this->getFundingProgramManager()->get($fundingCase->getFundingProgramId());
     Assert::notNull($fundingProgram, sprintf(
       'No permission to access funding program with ID "%d"',
       $fundingCase->getFundingProgramId()
     ));
-    $payoutProcess = $this->payoutProcessManager->getLastByFundingCaseId($fundingCase->getId());
+    $payoutProcess = $this->getPayoutProcessManager()->getLastByFundingCaseId($fundingCase->getId());
     Assert::notNull($payoutProcess, sprintf(
       'Payout process with funding case ID "%d" not found',
       $fundingCase->getId()
     ));
-    $amountAvailable = $this->payoutProcessManager->getAmountAvailable($payoutProcess);
+    $amountAvailable = $this->getPayoutProcessManager()->getAmountAvailable($payoutProcess);
 
     $clearingProcessFields = array_intersect([
       'amount_recorded_costs',
@@ -119,7 +123,7 @@ final class GetAction extends AbstractGetAction {
       'amount_admitted',
     ], $this->getSelect());
     if ([] !== $clearingProcessFields) {
-      $clearingProcessAmounts = $this->api4->execute(FundingClearingProcess::getEntityName(), 'get', [
+      $clearingProcessAmounts = $this->getApi4()->execute(FundingClearingProcess::getEntityName(), 'get', [
         'select' => array_map(fn (string $field) => 'SUM(' . $field . ') AS SUM_' . $field, $clearingProcessFields),
         'where' => [
           ['application_process_id.funding_case_id', '=', $fundingCase->getId()],
@@ -133,7 +137,7 @@ final class GetAction extends AbstractGetAction {
       'identifier' => $fundingCase->getIdentifier(),
       'amount_approved' => $fundingCase->getAmountApproved(),
       'payout_process_id' => $payoutProcess->getId(),
-      'amount_paid_out' => $this->payoutProcessManager->getAmountPaidOut($payoutProcess),
+      'amount_paid_out' => $this->getPayoutProcessManager()->getAmountPaidOut($payoutProcess),
       'amount_available' => $amountAvailable,
       'transfer_contract_uri' => $fundingCase->getTransferContractUri(),
       'funding_case_type_id' => $fundingCase->getFundingCaseTypeId(),
@@ -146,21 +150,21 @@ final class GetAction extends AbstractGetAction {
     ];
 
     if ($this->isFieldExplicitlySelected('creation_contact_display_name')) {
-      $record['creation_contact_display_name'] = $this->api4->getEntity(
+      $record['creation_contact_display_name'] = $this->getApi4()->getEntity(
         Contact::getEntityName(),
         $fundingCase->getCreationContactId()
       )['display_name'] ?? '';
     }
 
     if ($this->isFieldExplicitlySelected('recipient_contact_display_name')) {
-      $record['recipient_contact_display_name'] = $this->api4->getEntity(
+      $record['recipient_contact_display_name'] = $this->getApi4()->getEntity(
         Contact::getEntityName(),
         $fundingCase->getRecipientContactId()
       )['display_name'] ?? '';
     }
 
     if ([] !== $applicationProcessMapping) {
-      $applicationProcesses = $this->api4->execute(FundingApplicationProcess::getEntityName(), 'get', [
+      $applicationProcesses = $this->getApi4()->execute(FundingApplicationProcess::getEntityName(), 'get', [
         'select' => array_keys($applicationProcessMapping),
         'where' => [
           ['funding_case_id', '=', $fundingCase->getId()],
@@ -193,12 +197,12 @@ final class GetAction extends AbstractGetAction {
   private function getFundingCases(): array {
     $fundingCaseId = $this->getFundingCaseIdFromWhere();
     if (NULL === $fundingCaseId) {
-      return $this->fundingCaseManager->getBy(
+      return $this->getFundingCaseManager()->getBy(
         Comparison::new('amount_approved', '>', 0)
       );
     }
 
-    $fundingCase = $this->fundingCaseManager->get($fundingCaseId);
+    $fundingCase = $this->getFundingCaseManager()->get($fundingCaseId);
     if (NULL !== $fundingCase && $fundingCase->getAmountApproved() > 0) {
       return [$fundingCase];
     }

@@ -22,6 +22,7 @@ namespace Civi\Funding\Api4\Action\FundingApplicationProcess;
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
+use Civi\Funding\Api4\Action\Traits\ApplicationProcessBundleLoaderTrait;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterface;
@@ -35,16 +36,16 @@ final class ValidateFormAction extends AbstractAction {
 
   use IdParameterTrait;
 
-  private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
+  use ApplicationProcessBundleLoaderTrait;
 
-  private ApplicationFormValidateHandlerInterface $validateFormHandler;
+  private ?ApplicationFormValidateHandlerInterface $validateFormHandler;
 
   public function __construct(
-    ApplicationProcessBundleLoader $applicationProcessBundleLoader,
-    ApplicationFormValidateHandlerInterface $validateFormHandler
+    ?ApplicationProcessBundleLoader $applicationProcessBundleLoader = NULL,
+    ?ApplicationFormValidateHandlerInterface $validateFormHandler = NULL
   ) {
     parent::__construct(FundingApplicationProcess::getEntityName(), 'validateForm');
-    $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
+    $this->_applicationProcessBundleLoader = $applicationProcessBundleLoader;
     $this->validateFormHandler = $validateFormHandler;
   }
 
@@ -55,7 +56,7 @@ final class ValidateFormAction extends AbstractAction {
    */
   public function _run(Result $result): void {
     $command = $this->createCommand();
-    $commandResult = $this->validateFormHandler->handle($command);
+    $commandResult = $this->getValidateFormHandler()->handle($command);
 
     $result['valid'] = $commandResult->isValid();
     $result['data'] = $commandResult->getValidatedData()->getRawData();
@@ -67,11 +68,16 @@ final class ValidateFormAction extends AbstractAction {
    * @throws \CRM_Core_Exception
    */
   protected function createCommand(): ApplicationFormValidateCommand {
-    $applicationProcessBundle = $this->applicationProcessBundleLoader->get($this->getId());
+    $applicationProcessBundle = $this->getApplicationProcessBundleLoader()->get($this->getId());
     Assert::notNull($applicationProcessBundle, sprintf('Application process with ID "%d" not found', $this->getId()));
-    $statusList = $this->applicationProcessBundleLoader->getStatusList($applicationProcessBundle);
+    $statusList = $this->getApplicationProcessBundleLoader()->getStatusList($applicationProcessBundle);
 
     return new ApplicationFormValidateCommand($applicationProcessBundle, $statusList, $this->getData(), 20);
+  }
+
+  private function getValidateFormHandler(): ApplicationFormValidateHandlerInterface {
+    // @phpstan-ignore return.type, assign.propertyType
+    return $this->validateFormHandler ??= \Civi::service(ApplicationFormValidateHandlerInterface::class);
   }
 
 }

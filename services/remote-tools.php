@@ -20,7 +20,6 @@ declare(strict_types = 1);
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
-use Civi\Core\CiviEventDispatcherInterface;
 use Civi\RemoteTools\Api4\OptionsLoader;
 use Civi\RemoteTools\Api4\OptionsLoaderInterface;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoader;
@@ -29,20 +28,14 @@ use Civi\RemoteTools\Database\TransactionFactory;
 use Civi\RemoteTools\EventSubscriber\ApiAuthorizeInitRequestSubscriber;
 use Civi\RemoteTools\EventSubscriber\ApiAuthorizeSubscriber;
 use Civi\RemoteTools\EventSubscriber\CheckAccessSubscriber;
-use Psr\Log\LoggerInterface;
-use Psr\SimpleCache\CacheInterface;
-
-$container->setAlias(CiviEventDispatcherInterface::class, 'dispatcher.boot');
-$container->setAlias(CacheInterface::class, 'cache.long');
-$container->setAlias(LoggerInterface::class, 'psr_log');
 
 $container->register(TransactionFactory::class);
 
-$container->autowire(OptionsLoaderInterface::class, OptionsLoader::class);
+$container->autowire(OptionsLoaderInterface::class, OptionsLoader::class)
+  // Used in API action.
+  ->setPublic(TRUE);
 $container->autowire(PossiblePermissionsLoaderInterface::class, PossiblePermissionsLoader::class)
-  // phpcs:disable Squiz.PHP.CommentedOutCode.Found
-  // Used in class \Civi\Funding\Api4\Action\FundingCase\GetAction.
-  // phpcs:enable
+  // Used in API action.
   ->setPublic(TRUE);
 
 $container->autowire(ApiAuthorizeInitRequestSubscriber::class)

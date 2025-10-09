@@ -23,6 +23,7 @@ use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\FundingCase;
 use Civi\Api4\FundingCaseInfo;
 use Civi\Api4\Generic\BasicGetFieldsAction;
+use Civi\Funding\Api4\Action\Traits\Api4Trait;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\OptionsLoaderInterface;
 use Civi\RemoteTools\Api4\RemoteApiConstants;
@@ -33,13 +34,13 @@ use CRM_Funding_ExtensionUtil as E;
  */
 final class GetFieldsAction extends BasicGetFieldsAction {
 
-  private Api4Interface $api4;
+  use Api4Trait;
 
-  private OptionsLoaderInterface $optionsLoader;
+  private ?OptionsLoaderInterface $optionsLoader;
 
-  public function __construct(Api4Interface $api4, OptionsLoaderInterface $optionsLoader) {
+  public function __construct(?Api4Interface $api4 = NULL, ?OptionsLoaderInterface $optionsLoader = NULL) {
     parent::__construct(FundingCaseInfo::getEntityName(), 'getFields');
-    $this->api4 = $api4;
+    $this->_api4 = $api4;
     $this->optionsLoader = $optionsLoader;
   }
 
@@ -350,7 +351,7 @@ final class GetFieldsAction extends BasicGetFieldsAction {
       return TRUE;
     }
 
-    return $this->optionsLoader->getOptions($entityName, $field);
+    return $this->getOptionsLoader()->getOptions($entityName, $field);
   }
 
   /**
@@ -360,7 +361,7 @@ final class GetFieldsAction extends BasicGetFieldsAction {
    */
   private function getPermissionFields(): iterable {
     $action = FundingCase::getFields($this->getCheckPermissions());
-    $result = $this->api4->executeAction($action);
+    $result = $this->getApi4()->executeAction($action);
 
     /** @var array<string, mixed>&array{name: string} $field */
     foreach ($result as $field) {
@@ -369,6 +370,11 @@ final class GetFieldsAction extends BasicGetFieldsAction {
         yield $field;
       }
     }
+  }
+
+  private function getOptionsLoader(): OptionsLoaderInterface {
+    // @phpstan-ignore return.type, assign.propertyType
+    return $this->optionsLoader ??= \Civi::service(OptionsLoaderInterface::class);
   }
 
 }

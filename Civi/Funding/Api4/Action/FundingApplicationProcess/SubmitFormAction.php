@@ -22,6 +22,8 @@ namespace Civi\Funding\Api4\Action\FundingApplicationProcess;
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
+use Civi\Funding\Api4\Action\Traits\ApplicationProcessBundleLoaderTrait;
+use Civi\Funding\Api4\Action\Traits\RequestContextTrait;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormDataGetCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitCommand;
@@ -38,25 +40,25 @@ final class SubmitFormAction extends AbstractAction {
 
   use IdParameterTrait;
 
-  private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
+  use RequestContextTrait;
 
-  private ApplicationFormDataGetHandlerInterface $formDataGetHandler;
+  use ApplicationProcessBundleLoaderTrait;
 
-  private ApplicationFormSubmitHandlerInterface $submitFormHandler;
+  private ?ApplicationFormDataGetHandlerInterface $formDataGetHandler;
 
-  private RequestContextInterface $requestContext;
+  private ?ApplicationFormSubmitHandlerInterface $submitFormHandler;
 
   public function __construct(
-    ApplicationProcessBundleLoader $applicationProcessBundleLoader,
-    ApplicationFormDataGetHandlerInterface $formDataGetHandler,
-    ApplicationFormSubmitHandlerInterface $submitFormHandler,
-    RequestContextInterface $requestContext
+    ?ApplicationProcessBundleLoader $applicationProcessBundleLoader = NULL,
+    ?ApplicationFormDataGetHandlerInterface $formDataGetHandler = NULL,
+    ?ApplicationFormSubmitHandlerInterface $submitFormHandler = NULL,
+    ?RequestContextInterface $requestContext = NULL
   ) {
     parent::__construct(FundingApplicationProcess::getEntityName(), 'submitForm');
-    $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
+    $this->_applicationProcessBundleLoader = $applicationProcessBundleLoader;
     $this->formDataGetHandler = $formDataGetHandler;
     $this->submitFormHandler = $submitFormHandler;
-    $this->requestContext = $requestContext;
+    $this->_requestContext = $requestContext;
   }
 
   /**
@@ -66,10 +68,10 @@ final class SubmitFormAction extends AbstractAction {
    */
   public function _run(Result $result): void {
     $command = $this->createCommand();
-    $commandResult = $this->submitFormHandler->handle($command);
+    $commandResult = $this->getSubmitFormHandler()->handle($command);
 
     if ([] === $commandResult->getValidationResult()->getErrorMessages()) {
-      $result['data'] = $this->formDataGetHandler->handle(
+      $result['data'] = $this->getFormDataGetHandler()->handle(
         new ApplicationFormDataGetCommand(
           $command->getApplicationProcessBundle(), $command->getApplicationProcessStatusList()
         )
@@ -86,16 +88,26 @@ final class SubmitFormAction extends AbstractAction {
    * @throws \CRM_Core_Exception
    */
   protected function createCommand(): ApplicationFormSubmitCommand {
-    $applicationProcessBundle = $this->applicationProcessBundleLoader->get($this->getId());
+    $applicationProcessBundle = $this->getApplicationProcessBundleLoader()->get($this->getId());
     Assert::notNull($applicationProcessBundle);
-    $statusList = $this->applicationProcessBundleLoader->getStatusList($applicationProcessBundle);
+    $statusList = $this->getApplicationProcessBundleLoader()->getStatusList($applicationProcessBundle);
 
     return new ApplicationFormSubmitCommand(
-      $this->requestContext->getContactId(),
+      $this->getRequestContext()->getContactId(),
       $applicationProcessBundle,
       $statusList,
       $this->getData()
     );
+  }
+
+  private function getFormDataGetHandler(): ApplicationFormDataGetHandlerInterface {
+    // @phpstan-ignore return.type, assign.propertyType
+    return $this->formDataGetHandler ??= \Civi::service(ApplicationFormDataGetHandlerInterface::class);
+  }
+
+  private function getSubmitFormHandler(): ApplicationFormSubmitHandlerInterface {
+    // @phpstan-ignore return.type, assign.propertyType
+    return $this->submitFormHandler ??= \Civi::service(ApplicationFormSubmitHandlerInterface::class);
   }
 
 }
