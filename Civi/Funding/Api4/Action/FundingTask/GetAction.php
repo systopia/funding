@@ -119,7 +119,8 @@ final class GetAction extends AbstractReferencingDAOGetAction {
     // to influence execution of Activity.get (In any way it wouldn't result in
     // "nice" code.)
     if ($this->_isFieldSelected('status_type_id', 'status_type_id:label', 'status_type_id:name')
-        // Note $this->_whereContains() currently has a bug. https://github.com/civicrm/civicrm-core/pull/32974
+        // Note $this->_whereContains() has a bug before before CiviCRM 6.5.
+        // https://github.com/civicrm/civicrm-core/pull/32974
       || WhereUtil::containsField($this->where, 'status_type_id', 'status_type_id:label', 'status_type_id:name')
     ) {
       $this->addJoin('OptionValue AS _ov', 'INNER', NULL,
@@ -185,6 +186,8 @@ final class GetAction extends AbstractReferencingDAOGetAction {
           CompositeCondition::new(
             'OR',
             Comparison::new('funding_case_task.required_permissions', '=', NULL),
+            // CiviCRM doesn't persist NULL, but an empty string.
+            Comparison::new('funding_case_task.required_permissions', '=', ''),
             Comparison::new(
               'FUNDING_JSON_OVERLAPS(_pc.permissions, funding_case_task.required_permissions)',
               '=',
@@ -257,7 +260,12 @@ final class GetAction extends AbstractReferencingDAOGetAction {
       return FALSE;
     }
 
-    /** @phpstan-var list<string>|null $requiredPermissions */
+    if (is_string($record['funding_case_task.required_permissions'])) {
+      $record['funding_case_task.required_permissions'] =
+        '' === $record['funding_case_task.required_permissions'] ? NULL
+        : json_decode($record['funding_case_task.required_permissions'], TRUE, 2, JSON_THROW_ON_ERROR);
+    }
+    /** @var list<string>|null $requiredPermissions */
     $requiredPermissions = $record['funding_case_task.required_permissions'];
 
     return NULL === $requiredPermissions
