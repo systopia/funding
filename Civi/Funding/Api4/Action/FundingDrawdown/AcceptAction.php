@@ -22,6 +22,8 @@ namespace Civi\Funding\Api4\Action\FundingDrawdown;
 use Civi\Api4\FundingDrawdown;
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
+use Civi\Funding\Api4\Action\Traits\DrawdownManagerTrait;
+use Civi\Funding\Api4\Action\Traits\RequestContextTrait;
 use Civi\Funding\PayoutProcess\DrawdownManager;
 use Civi\RemoteTools\Api4\Action\Traits\IdParameterTrait;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
@@ -31,23 +33,26 @@ class AcceptAction extends AbstractAction {
 
   use IdParameterTrait;
 
-  private DrawdownManager $drawdownManager;
+  use DrawdownManagerTrait;
 
-  private RequestContextInterface $requestContext;
+  use RequestContextTrait;
 
-  public function __construct(DrawdownManager $drawdownManager, RequestContextInterface $requestContext) {
+  public function __construct(
+    ?DrawdownManager $drawdownManager = NULL,
+    ?RequestContextInterface $requestContext = NULL
+  ) {
     parent::__construct(FundingDrawdown::getEntityName(), 'accept');
-    $this->drawdownManager = $drawdownManager;
-    $this->requestContext = $requestContext;
+    $this->_drawdownManager = $drawdownManager;
+    $this->_requestContext = $requestContext;
   }
 
   /**
    * @inheritDoc
    */
   public function _run(Result $result): void {
-    $drawdown = $this->drawdownManager->get($this->getId());
+    $drawdown = $this->getDrawdownManager()->get($this->getId());
     Assert::notNull($drawdown, sprintf('Drawdown with ID "%d" not found', $this->getId()));
-    $this->drawdownManager->accept($drawdown, $this->requestContext->getContactId());
+    $this->getDrawdownManager()->accept($drawdown, $this->getRequestContext()->getContactId());
 
     $result->exchangeArray([$drawdown->toArray()]);
   }

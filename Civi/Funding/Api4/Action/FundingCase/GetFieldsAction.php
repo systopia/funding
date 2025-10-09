@@ -22,6 +22,7 @@ namespace Civi\Funding\Api4\Action\FundingCase;
 use Civi\Api4\FundingCase;
 use Civi\Api4\Generic\DAOGetFieldsAction;
 use Civi\Api4\Query\Api4SelectQuery;
+use Civi\Funding\Api4\Action\Traits\PossiblePermissionsLoaderTrait;
 use Civi\Funding\Api4\Query\AliasSqlRenderer;
 use Civi\Funding\Api4\Query\Util\SqlRendererUtil;
 use Civi\RemoteTools\Api4\Action\Traits\PermissionsGetFieldsActionTrait;
@@ -34,11 +35,11 @@ final class GetFieldsAction extends DAOGetFieldsAction {
     PermissionsGetFieldsActionTrait::getRecords as getRecordsWithPermissions;
   }
 
-  private PossiblePermissionsLoaderInterface $possiblePermissionsLoader;
+  use PossiblePermissionsLoaderTrait;
 
-  public function __construct(PossiblePermissionsLoaderInterface $possiblePermissionsLoader) {
+  public function __construct(?PossiblePermissionsLoaderInterface $possiblePermissionsLoader = NULL) {
     parent::__construct(FundingCase::getEntityName(), 'getFields');
-    $this->possiblePermissionsLoader = $possiblePermissionsLoader;
+    $this->_possiblePermissionsLoader = $possiblePermissionsLoader;
   }
 
   /**
@@ -214,7 +215,7 @@ final class GetFieldsAction extends DAOGetFieldsAction {
    * @phpstan-return array<string, string>
    */
   protected function getPossiblePermissions(): array {
-    return $this->possiblePermissionsLoader->getFilteredPermissions($this->getEntityName());
+    return $this->getPossiblePermissionsLoader()->getFilteredPermissions($this->getEntityName());
   }
 
   private function buildDrawdownDateClause(Api4SelectQuery $query): string {

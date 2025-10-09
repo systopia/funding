@@ -19,13 +19,15 @@ declare(strict_types = 1);
 
 namespace Civi\RemoteTools\Api4\Action\Traits;
 
-use Civi\Core\CiviEventDispatcherInterface;
+use Civi\Funding\Api4\Action\Traits\EventDispatcherTrait;
 use Civi\RemoteTools\Api4\Action\EventActionInterface;
 use Civi\RemoteTools\Event\AbstractRequestEvent;
 use Civi\RemoteTools\Event\AuthorizeApiRequestEvent;
 use Civi\RemoteTools\Event\InitApiRequestEvent;
 
 trait EventActionTrait {
+
+  use EventDispatcherTrait;
 
   protected string $_authorizeRequestEventName;
 
@@ -34,8 +36,6 @@ trait EventActionTrait {
    */
   protected array $_extraParams = [];
 
-  protected CiviEventDispatcherInterface $_eventDispatcher;
-
   protected string $_initRequestEventName;
 
   /**
@@ -43,9 +43,9 @@ trait EventActionTrait {
    */
   protected function dispatchEvent(AbstractRequestEvent $event): void {
     /** @var \Civi\Api4\Generic\AbstractAction $this */
-    $this->_eventDispatcher->dispatch($event::getEventName($this->getEntityName(), $this->getActionName()), $event);
-    $this->_eventDispatcher->dispatch($event::getEventName($this->getEntityName()), $event);
-    $this->_eventDispatcher->dispatch($event::getEventName(), $event);
+    $this->getEventDispatcher()->dispatch($event::getEventName($this->getEntityName(), $this->getActionName()), $event);
+    $this->getEventDispatcher()->dispatch($event::getEventName($this->getEntityName()), $event);
+    $this->getEventDispatcher()->dispatch($event::getEventName(), $event);
   }
 
   public function getAuthorizeRequestEventClass(): string {

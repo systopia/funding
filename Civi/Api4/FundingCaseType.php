@@ -41,11 +41,11 @@ class FundingCaseType extends Generic\DAOEntity {
   use ManagedEntity;
 
   public static function get($checkPermissions = TRUE) {
-    return \Civi::service(GetAction::class)->setCheckPermissions($checkPermissions);
+    return (new GetAction())->setCheckPermissions($checkPermissions);
   }
 
   public static function getByFundingProgramId(bool $checkPermissions = TRUE): GetByFundingProgramIdAction {
-    return \Civi::service(GetByFundingProgramIdAction::class)->setCheckPermissions($checkPermissions);
+    return (new GetByFundingProgramIdAction())->setCheckPermissions($checkPermissions);
   }
 
   public static function getFields($checkPermissions = TRUE) {
@@ -57,7 +57,7 @@ class FundingCaseType extends Generic\DAOEntity {
   }
 
   public static function update($checkPermissions = TRUE) {
-    return \Civi::service(UpdateAction::class)->setCheckPermissions($checkPermissions);
+    return (new UpdateAction())->setCheckPermissions($checkPermissions);
   }
 
 }

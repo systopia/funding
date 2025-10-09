@@ -22,27 +22,28 @@ namespace Civi\Funding\Api4\Action\FundingApplicationProcess;
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
+use Civi\Funding\Api4\Action\Traits\ApplicationProcessBundleLoaderTrait;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ApplicationProcess\Command\ApplicationJsonSchemaGetCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationJsonSchemaGetHandlerInterface;
 use Civi\RemoteTools\Api4\Action\Traits\IdParameterTrait;
-use Webmozart\Assert\Assert;
 use CRM_Funding_ExtensionUtil as E;
+use Webmozart\Assert\Assert;
 
 final class GetJsonSchemaAction extends AbstractAction {
 
   use IdParameterTrait;
 
-  private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
+  use ApplicationProcessBundleLoaderTrait;
 
-  private ApplicationJsonSchemaGetHandlerInterface $jsonSchemaGetHandler;
+  private ?ApplicationJsonSchemaGetHandlerInterface $jsonSchemaGetHandler;
 
   public function __construct(
-    ApplicationProcessBundleLoader $applicationProcessBundleLoader,
-    ApplicationJsonSchemaGetHandlerInterface $jsonSchemaGetHandler
+    ?ApplicationProcessBundleLoader $applicationProcessBundleLoader = NULL,
+    ?ApplicationJsonSchemaGetHandlerInterface $jsonSchemaGetHandler = NULL
   ) {
     parent::__construct(FundingApplicationProcess::getEntityName(), 'getJsonSchema');
-    $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
+    $this->_applicationProcessBundleLoader = $applicationProcessBundleLoader;
     $this->jsonSchemaGetHandler = $jsonSchemaGetHandler;
   }
 
@@ -52,18 +53,23 @@ final class GetJsonSchemaAction extends AbstractAction {
    * @throws \CRM_Core_Exception
    */
   public function _run(Result $result): void {
-    $result['jsonSchema'] = $this->jsonSchemaGetHandler->handle($this->createCommand());
+    $result['jsonSchema'] = $this->getJsonSchemaGetHandler()->handle($this->createCommand());
   }
 
   /**
    * @throws \CRM_Core_Exception
    */
   protected function createCommand(): ApplicationJsonSchemaGetCommand {
-    $applicationProcessBundle = $this->applicationProcessBundleLoader->get($this->getId());
+    $applicationProcessBundle = $this->getApplicationProcessBundleLoader()->get($this->getId());
     Assert::notNull($applicationProcessBundle, E::ts('No such application or missing permission.'));
-    $statusList = $this->applicationProcessBundleLoader->getStatusList($applicationProcessBundle);
+    $statusList = $this->getApplicationProcessBundleLoader()->getStatusList($applicationProcessBundle);
 
     return new ApplicationJsonSchemaGetCommand($applicationProcessBundle, $statusList);
+  }
+
+  private function getJsonSchemaGetHandler(): ApplicationJsonSchemaGetHandlerInterface {
+    // @phpstan-ignore return.type, assign.propertyType
+    return $this->jsonSchemaGetHandler ??= \Civi::service(ApplicationJsonSchemaGetHandlerInterface::class);
   }
 
 }

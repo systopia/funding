@@ -29,9 +29,9 @@ final class GetAction extends AbstractGetAction {
 
   use ArrayQueryActionTrait;
 
-  private RelationPropertiesFactoryTypeContainer $factoryTypeContainer;
+  private ?RelationPropertiesFactoryTypeContainer $factoryTypeContainer;
 
-  public function __construct(RelationPropertiesFactoryTypeContainer $factoryTypeContainer) {
+  public function __construct(?RelationPropertiesFactoryTypeContainer $factoryTypeContainer = NULL) {
     parent::__construct(FundingCaseContactRelationPropertiesFactoryType::getEntityName(), 'get');
     $this->factoryTypeContainer = $factoryTypeContainer;
   }
@@ -41,7 +41,7 @@ final class GetAction extends AbstractGetAction {
    */
   public function _run(Result $result): void {
     $types = [];
-    foreach ($this->factoryTypeContainer->getFactoryTypes() as $type) {
+    foreach ($this->getFactoryTypeContainer()->getFactoryTypes() as $type) {
       $types[] = $type->toArray();
     }
 
@@ -49,6 +49,11 @@ final class GetAction extends AbstractGetAction {
     $types = $this->limitArray($types);
     $types = $this->selectArray($types);
     $result->exchangeArray($types);
+  }
+
+  private function getFactoryTypeContainer(): RelationPropertiesFactoryTypeContainer {
+    // @phpstan-ignore return.type, assign.propertyType
+    return $this->factoryTypeContainer ??= \Civi::service(RelationPropertiesFactoryTypeContainer::class);
   }
 
 }

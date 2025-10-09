@@ -20,6 +20,7 @@ declare(strict_types = 1);
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Api4\DAOActionFactory;
 use Civi\Funding\Api4\DAOActionFactoryInterface;
 use Civi\Funding\Contact\FundingRemoteContactIdResolver;
@@ -45,11 +46,23 @@ use Civi\Funding\Util\MoneyFactory;
 use Civi\Funding\Util\UrlGenerator;
 use Civi\Funding\Validation\EntityValidator;
 use Civi\Funding\Validation\EntityValidatorInterface;
+use Psr\Log\LoggerInterface;
+use Psr\SimpleCache\CacheInterface;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+
+$container->setAlias(CacheInterface::class, 'cache.long');
+
+if (!$container->has(CiviEventDispatcherInterface::class)) {
+  $container->setAlias(CiviEventDispatcherInterface::class, 'dispatcher.boot');
+}
+
+if (!$container->has(LoggerInterface::class)) {
+  $container->setAlias(LoggerInterface::class, 'psr_log');
+}
 
 if (!$container->has(PropertyAccessorInterface::class)) {
   $container->register(PropertyAccessorInterface::class, PropertyAccess::class)
@@ -88,10 +101,14 @@ $container->autowire(FundingFilterPossiblePermissionsSubscriber::class)
 $container->autowire(FundingCiviOfficeSearchKitTaskSubscriber::class)
   ->addTag('kernel.event_subscriber');
 
-$container->autowire(EntityValidatorInterface::class, EntityValidator::class);
+$container->autowire(EntityValidatorInterface::class, EntityValidator::class)
+  // Used in API action.
+  ->setPublic(TRUE);
 $container->addCompilerPass(new EntityValidatorPass());
 
-$container->autowire(FundingAttachmentManagerInterface::class, FundingAttachmentManager::class);
+$container->autowire(FundingAttachmentManagerInterface::class, FundingAttachmentManager::class)
+  // Used in API action.
+  ->setPublic(TRUE);
 $container->autowire(FundingExternalFileManagerInterface::class, FundingExternalFileManager::class);
 
 ServiceRegistrator::autowireAllImplementing(

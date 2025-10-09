@@ -22,6 +22,7 @@ namespace Civi\Funding\Api4\Action\FundingApplicationProcess;
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
+use Civi\Funding\Api4\Action\Traits\ApplicationProcessBundleLoaderTrait;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormDataGetCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandlerInterface;
@@ -32,16 +33,16 @@ final class GetFormDataAction extends AbstractAction {
 
   use IdParameterTrait;
 
-  private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
+  use ApplicationProcessBundleLoaderTrait;
 
-  private ApplicationFormDataGetHandlerInterface $formDataGetHandler;
+  private ?ApplicationFormDataGetHandlerInterface $formDataGetHandler;
 
   public function __construct(
-    ApplicationProcessBundleLoader $applicationProcessBundleLoader,
-    ApplicationFormDataGetHandlerInterface $formDataGetHandler
+    ?ApplicationProcessBundleLoader $applicationProcessBundleLoader = NULL,
+    ?ApplicationFormDataGetHandlerInterface $formDataGetHandler = NULL
   ) {
     parent::__construct(FundingApplicationProcess::getEntityName(), 'getFormData');
-    $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
+    $this->_applicationProcessBundleLoader = $applicationProcessBundleLoader;
     $this->formDataGetHandler = $formDataGetHandler;
   }
 
@@ -51,18 +52,23 @@ final class GetFormDataAction extends AbstractAction {
    * @throws \CRM_Core_Exception
    */
   public function _run(Result $result): void {
-    $result['data'] = $this->formDataGetHandler->handle($this->createCommand());
+    $result['data'] = $this->getFormDataGetHandler()->handle($this->createCommand());
   }
 
   /**
    * @throws \CRM_Core_Exception
    */
   protected function createCommand(): ApplicationFormDataGetCommand {
-    $applicationProcessBundle = $this->applicationProcessBundleLoader->get($this->getId());
+    $applicationProcessBundle = $this->getApplicationProcessBundleLoader()->get($this->getId());
     Assert::notNull($applicationProcessBundle);
-    $statusList = $this->applicationProcessBundleLoader->getStatusList($applicationProcessBundle);
+    $statusList = $this->getApplicationProcessBundleLoader()->getStatusList($applicationProcessBundle);
 
     return new ApplicationFormDataGetCommand($applicationProcessBundle, $statusList);
+  }
+
+  private function getFormDataGetHandler(): ApplicationFormDataGetHandlerInterface {
+    // @phpstan-ignore return.type, assign.propertyType
+    return $this->formDataGetHandler ??= \Civi::service(ApplicationFormDataGetHandlerInterface::class);
   }
 
 }

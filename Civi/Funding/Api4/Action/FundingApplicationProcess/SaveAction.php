@@ -33,8 +33,8 @@ final class SaveAction extends DAOSaveAction {
    * @phpstan-param EntityValidatorInterface<\Civi\Funding\Entity\ApplicationProcessEntity> $entityValidator
    */
   public function __construct(
-    Api4Interface $api4,
-    EntityValidatorInterface $entityValidator
+    ?Api4Interface $api4 = NULL,
+    ?EntityValidatorInterface $entityValidator = NULL
   ) {
     parent::__construct(FundingApplicationProcess::getEntityName(), 'save');
     $this->_api4 = $api4;

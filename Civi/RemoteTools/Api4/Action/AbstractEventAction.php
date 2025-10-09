@@ -38,7 +38,7 @@ abstract class AbstractEventAction extends AbstractAction implements EventAction
     parent::__construct($entityName, $actionName);
     $this->_initRequestEventName = $initRequestEventName;
     $this->_authorizeRequestEventName = $authorizeRequestEventName;
-    $this->_eventDispatcher = $eventDispatcher ?? \Civi::dispatcher();
+    $this->_eventDispatcher = $eventDispatcher;
   }
 
   /**

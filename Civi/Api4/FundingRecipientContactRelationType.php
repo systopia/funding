@@ -28,7 +28,7 @@ final class FundingRecipientContactRelationType extends Generic\AbstractEntity {
   use AdministerPermissionsTrait;
 
   public static function get(): GetAction {
-    return \Civi::service(GetAction::class);
+    return new GetAction();
   }
 
   /**

@@ -29,7 +29,7 @@ final class FundingDrawdown extends Generic\DAOEntity {
   }
 
   public static function accept(bool $checkPermissions = TRUE): AcceptAction {
-    return \Civi::service(AcceptAction::class)->setCheckPermissions($checkPermissions);
+    return (new AcceptAction())->setCheckPermissions($checkPermissions);
   }
 
   public static function acceptMultiple(bool $checkPermissions = TRUE): AcceptMultipleAction {
@@ -37,7 +37,7 @@ final class FundingDrawdown extends Generic\DAOEntity {
   }
 
   public static function create($checkPermissions = TRUE) {
-    return \Civi::service(CreateAction::class)->setCheckPermissions($checkPermissions);
+    return (new CreateAction())->setCheckPermissions($checkPermissions);
   }
 
   public static function get($checkPermissions = TRUE) {
@@ -45,11 +45,11 @@ final class FundingDrawdown extends Generic\DAOEntity {
   }
 
   public static function getFields($checkPermissions = TRUE) {
-    return \Civi::service(GetFieldsAction::class)->setCheckPermissions($checkPermissions);
+    return (new GetFieldsAction())->setCheckPermissions($checkPermissions);
   }
 
   public static function reject(bool $checkPermissions = TRUE): RejectAction {
-    return \Civi::service(RejectAction::class)->setCheckPermissions($checkPermissions);
+    return (new RejectAction())->setCheckPermissions($checkPermissions);
   }
 
   public static function rejectMultiple(bool $checkPermissions = TRUE): RejectMultipleAction {
@@ -57,11 +57,11 @@ final class FundingDrawdown extends Generic\DAOEntity {
   }
 
   public static function save($checkPermissions = TRUE) {
-    return \Civi::service(SaveAction::class)->setCheckPermissions($checkPermissions);
+    return (new SaveAction())->setCheckPermissions($checkPermissions);
   }
 
   public static function update($checkPermissions = TRUE) {
-    return \Civi::service(UpdateAction::class)->setCheckPermissions($checkPermissions);
+    return (new UpdateAction())->setCheckPermissions($checkPermissions);
   }
 
   /**

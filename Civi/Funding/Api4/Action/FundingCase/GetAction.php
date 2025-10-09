@@ -24,14 +24,17 @@ use Civi\Api4\FundingClearingProcess;
 use Civi\Api4\Generic\DAOGetAction;
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
+use Civi\Funding\Api4\Action\Traits\Api4Trait;
+use Civi\Funding\Api4\Action\Traits\EventDispatcherTrait;
 use Civi\Funding\Api4\Action\Traits\IsFieldSelectedTrait;
+use Civi\Funding\Api4\Action\Traits\PossiblePermissionsLoaderTrait;
+use Civi\Funding\Api4\Action\Traits\RequestContextTrait;
 use Civi\Funding\Api4\Util\FundingCasePermissionsUtil;
 use Civi\Funding\Api4\Util\WhereUtil;
 use Civi\Funding\Event\FundingCase\GetPermissionsEvent;
 use Civi\Funding\FundingCase\FundingCasePermissionsCacheManager;
 use Civi\Funding\FundingCase\TransferContractRouter;
 use Civi\Funding\Permission\Util\FlattenedPermissionsUtil;
-use Civi\RemoteTools\Api4\Api4;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
@@ -40,6 +43,14 @@ use Webmozart\Assert\Assert;
 final class GetAction extends DAOGetAction {
 
   use IsFieldSelectedTrait;
+
+  use Api4Trait;
+
+  use EventDispatcherTrait;
+
+  use PossiblePermissionsLoaderTrait;
+
+  use RequestContextTrait;
 
   private static ?string $drawdownAcceptionDateOperator = NULL;
 
@@ -51,15 +62,7 @@ final class GetAction extends DAOGetAction {
 
   private bool $cachePermissionsOnly = FALSE;
 
-  private ?Api4Interface $api4;
-
-  private ?CiviEventDispatcherInterface $eventDispatcher;
-
   private ?FundingCasePermissionsCacheManager $permissionsCacheManager;
-
-  private ?PossiblePermissionsLoaderInterface $possiblePermissionsLoader;
-
-  private ?RequestContextInterface $requestContext;
 
   private ?TransferContractRouter $transferContractRouter;
 
@@ -90,11 +93,11 @@ final class GetAction extends DAOGetAction {
     ?TransferContractRouter $transferContractRouterRecreate = NULL
   ) {
     parent::__construct(FundingCase::getEntityName(), 'get');
-    $this->api4 = $api4;
-    $this->eventDispatcher = $eventDispatcher;
+    $this->_api4 = $api4;
+    $this->_eventDispatcher = $eventDispatcher;
     $this->permissionsCacheManager = $permissionsCacheManager;
-    $this->possiblePermissionsLoader = $possiblePermissionsLoader;
-    $this->requestContext = $requestContext;
+    $this->_possiblePermissionsLoader = $possiblePermissionsLoader;
+    $this->_requestContext = $requestContext;
     $this->transferContractRouter = $transferContractRouterRecreate;
   }
 
@@ -264,27 +267,9 @@ final class GetAction extends DAOGetAction {
     parent::setDefaultWhereClause();
   }
 
-  private function getApi4(): Api4Interface {
-    return $this->api4 ??= Api4::getInstance();
-  }
-
-  private function getEventDispatcher(): CiviEventDispatcherInterface {
-    return $this->eventDispatcher ??= \Civi::dispatcher();
-  }
-
   private function getPermissionsCacheManager(): FundingCasePermissionsCacheManager {
     // @phpstan-ignore return.type, assign.propertyType
     return $this->permissionsCacheManager ??= \Civi::service(FundingCasePermissionsCacheManager::class);
-  }
-
-  public function getPossiblePermissionsLoader(): PossiblePermissionsLoaderInterface {
-    // @phpstan-ignore return.type, assign.propertyType
-    return $this->possiblePermissionsLoader ??= \Civi::service(PossiblePermissionsLoaderInterface::class);
-  }
-
-  private function getRequestContext(): RequestContextInterface {
-    // @phpstan-ignore return.type, assign.propertyType
-    return $this->requestContext ??= \Civi::service(RequestContextInterface::class);
   }
 
   public function getTransferContractRouter(): TransferContractRouter {
@@ -293,7 +278,7 @@ final class GetAction extends DAOGetAction {
   }
 
   /**
-   * @phpstan-param array{id: int, '_pc.id': int|null} $record
+   * @phpstan-param array{id: int, "_pc.id": int|null} $record
    *
    * @phpstan-return list<string>
    */
@@ -343,7 +328,7 @@ final class GetAction extends DAOGetAction {
 
     $result = new Result();
     $daoGetAction->_run($result);
-    /** @phpstan-var array{id: int, '_pc.id': int|null} $record */
+    /** @phpstan-var array{id: int, "_pc.id": int|null} $record */
     foreach ($result as $record) {
       $this->determineAndCachePermissions($record);
     }

@@ -39,7 +39,7 @@ class EventCheckAccessAction extends CheckAccessAction implements EventActionInt
     parent::__construct($entityName, $actionName);
     $this->_initRequestEventName = $initRequestEventName;
     $this->_authorizeRequestEventName = $authorizeRequestEventName;
-    $this->_eventDispatcher = $eventDispatcher ?? \Civi::dispatcher();
+    $this->_eventDispatcher = $eventDispatcher;
   }
 
   /**
@@ -66,8 +66,7 @@ class EventCheckAccessAction extends CheckAccessAction implements EventActionInt
     $event = $this->createEvent();
 
     if (CheckAccessEvent::class !== get_class($event)) {
-      /** @noinspection PhpParamsInspection */
-      $this->_eventDispatcher->dispatch(CheckAccessEvent::getEventName(), $event);
+      $this->getEventDispatcher()->dispatch(CheckAccessEvent::getEventName(), $event);
     }
     $this->dispatchEvent($event);
 

@@ -22,6 +22,10 @@ namespace Civi\Funding\Api4\Action\FundingCase;
 use Civi\Api4\FundingCase;
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
+use Civi\Funding\Api4\Action\Traits\ApplicationProcessManagerTrait;
+use Civi\Funding\Api4\Action\Traits\FundingCaseManagerTrait;
+use Civi\Funding\Api4\Action\Traits\FundingCaseTypeManagerTrait;
+use Civi\Funding\Api4\Action\Traits\FundingProgramManagerTrait;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\FundingCase\Command\FundingCaseApproveCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
@@ -41,6 +45,14 @@ class ApproveAction extends AbstractAction {
 
   use IdParameterTrait;
 
+  use ApplicationProcessManagerTrait;
+
+  use FundingCaseManagerTrait;
+
+  use FundingCaseTypeManagerTrait;
+
+  use FundingProgramManagerTrait;
+
   /**
    * @var mixed
    * @required
@@ -48,32 +60,24 @@ class ApproveAction extends AbstractAction {
    */
   protected ?float $amount = NULL;
 
-  private ApplicationProcessManager $applicationProcessManager;
+  private ?FundingCaseApproveHandlerInterface $approveHandler;
 
-  private FundingCaseApproveHandlerInterface $approveHandler;
-
-  private FundingCaseManager $fundingCaseManager;
-
-  private FundingCaseTypeManager $fundingCaseTypeManager;
-
-  private FundingProgramManager $fundingProgramManager;
-
-  private TransferContractRouter $transferContractRouter;
+  private ?TransferContractRouter $transferContractRouter;
 
   public function __construct(
-    ApplicationProcessManager $applicationProcessManager,
-    FundingCaseApproveHandlerInterface $approveHandler,
-    FundingCaseManager $fundingCaseManager,
-    FundingCaseTypeManager $fundingCaseTypeManager,
-    FundingProgramManager $fundingProgramManager,
-    TransferContractRouter $transferContractRouter
+    ?ApplicationProcessManager $applicationProcessManager = NULL,
+    ?FundingCaseApproveHandlerInterface $approveHandler = NULL,
+    ?FundingCaseManager $fundingCaseManager = NULL,
+    ?FundingCaseTypeManager $fundingCaseTypeManager = NULL,
+    ?FundingProgramManager $fundingProgramManager = NULL,
+    ?TransferContractRouter $transferContractRouter = NULL
   ) {
     parent::__construct(FundingCase::getEntityName(), 'approve');
-    $this->applicationProcessManager = $applicationProcessManager;
+    $this->_applicationProcessManager = $applicationProcessManager;
     $this->approveHandler = $approveHandler;
-    $this->fundingCaseManager = $fundingCaseManager;
-    $this->fundingCaseTypeManager = $fundingCaseTypeManager;
-    $this->fundingProgramManager = $fundingProgramManager;
+    $this->_fundingCaseManager = $fundingCaseManager;
+    $this->_fundingCaseTypeManager = $fundingCaseTypeManager;
+    $this->_fundingProgramManager = $fundingProgramManager;
     $this->transferContractRouter = $transferContractRouter;
   }
 
@@ -82,11 +86,11 @@ class ApproveAction extends AbstractAction {
    */
   public function _run(Result $result): void {
     Assert::greaterThan($this->amount, 0);
-    $fundingCase = $this->fundingCaseManager->get($this->getId());
+    $fundingCase = $this->getFundingCaseManager()->get($this->getId());
     Assert::notNull($fundingCase, E::ts('Funding case with ID "%1" not found', [1 => $this->getId()]));
-    $fundingCaseType = $this->fundingCaseTypeManager->get($fundingCase->getFundingCaseTypeId());
+    $fundingCaseType = $this->getFundingCaseTypeManager()->get($fundingCase->getFundingCaseTypeId());
     Assert::notNull($fundingCaseType);
-    $fundingProgram = $this->fundingProgramManager->get($fundingCase->getFundingProgramId());
+    $fundingProgram = $this->getFundingProgramManager()->get($fundingCase->getFundingProgramId());
     Assert::notNull($fundingProgram, sprintf(
       'No permission to access funding program with ID "%d"',
       $fundingCase->getFundingProgramId()
@@ -95,14 +99,24 @@ class ApproveAction extends AbstractAction {
     $command = new FundingCaseApproveCommand(
       $fundingCase,
       $this->amount,
-      $this->applicationProcessManager->getStatusListByFundingCaseId($fundingCase->getId()),
+      $this->getApplicationProcessManager()->getStatusListByFundingCaseId($fundingCase->getId()),
       $fundingCaseType,
       $fundingProgram,
     );
-    $this->approveHandler->handle($command);
+    $this->getApproveHandler()->handle($command);
 
-    $fundingCase->setTransferContractUri($this->transferContractRouter->generate($fundingCase->getId()));
+    $fundingCase->setTransferContractUri($this->getTransferContractRouter()->generate($fundingCase->getId()));
     $result->exchangeArray($fundingCase->toArray());
+  }
+
+  private function getApproveHandler(): FundingCaseApproveHandlerInterface {
+    // @phpstan-ignore return.type, assign.propertyType
+    return $this->approveHandler ??= \Civi::service(FundingCaseApproveHandlerInterface::class);
+  }
+
+  private function getTransferContractRouter(): TransferContractRouter {
+    // @phpstan-ignore return.type, assign.propertyType
+    return $this->transferContractRouter ??= \Civi::service(TransferContractRouter::class);
   }
 
 }

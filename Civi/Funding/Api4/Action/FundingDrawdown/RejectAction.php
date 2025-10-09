@@ -23,6 +23,9 @@ use Civi\API\Exception\UnauthorizedException;
 use Civi\Api4\FundingDrawdown;
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
+use Civi\Funding\Api4\Action\Traits\DrawdownManagerTrait;
+use Civi\Funding\Api4\Action\Traits\FundingCaseManagerTrait;
+use Civi\Funding\Api4\Action\Traits\PayoutProcessManagerTrait;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\PayoutProcess\DrawdownManager;
 use Civi\Funding\PayoutProcess\PayoutProcessManager;
@@ -34,39 +37,39 @@ class RejectAction extends AbstractAction {
 
   use IdParameterTrait;
 
-  private DrawdownManager $drawdownManager;
+  use DrawdownManagerTrait;
 
-  private FundingCaseManager $fundingCaseManager;
+  use FundingCaseManagerTrait;
 
-  private PayoutProcessManager $payoutProcessManager;
+  use PayoutProcessManagerTrait;
 
   public function __construct(
-    DrawdownManager $drawdownManager,
-    FundingCaseManager $fundingCaseManager,
-    PayoutProcessManager $payoutProcessManager
+    ?DrawdownManager $drawdownManager = NULL,
+    ?FundingCaseManager $fundingCaseManager = NULL,
+    ?PayoutProcessManager $payoutProcessManager = NULL
   ) {
     parent::__construct(FundingDrawdown::getEntityName(), 'reject');
-    $this->drawdownManager = $drawdownManager;
-    $this->fundingCaseManager = $fundingCaseManager;
-    $this->payoutProcessManager = $payoutProcessManager;
+    $this->_drawdownManager = $drawdownManager;
+    $this->_fundingCaseManager = $fundingCaseManager;
+    $this->_payoutProcessManager = $payoutProcessManager;
   }
 
   /**
    * @inheritDoc
    */
   public function _run(Result $result): void {
-    $drawdown = $this->drawdownManager->get($this->getId());
+    $drawdown = $this->getDrawdownManager()->get($this->getId());
     Assert::notNull($drawdown, sprintf('Drawdown with ID "%d" not found', $this->getId()));
-    $payoutProcess = $this->payoutProcessManager->get($drawdown->getPayoutProcessId());
+    $payoutProcess = $this->getPayoutProcessManager()->get($drawdown->getPayoutProcessId());
     Assert::notNull($payoutProcess, sprintf('Payout process with ID "%d" not found', $drawdown->getPayoutProcessId()));
-    $fundingCase = $this->fundingCaseManager->get($payoutProcess->getFundingCaseId());
+    $fundingCase = $this->getFundingCaseManager()->get($payoutProcess->getFundingCaseId());
     Assert::notNull($fundingCase, sprintf('Funding case with ID "%d" not found', $payoutProcess->getFundingCaseId()));
 
     if (!in_array('review_drawdown', $fundingCase->getPermissions(), TRUE)) {
       throw new UnauthorizedException(E::ts('Permission to reject drawdown is missing.'));
     }
 
-    $this->drawdownManager->delete($drawdown);
+    $this->getDrawdownManager()->delete($drawdown);
 
     $result->exchangeArray([$drawdown->toArray()]);
   }

@@ -23,6 +23,7 @@ use Civi\Api4\RemoteFundingApplicationProcess;
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingActionLegacy;
 use Civi\Funding\Api4\Action\Remote\Traits\RemoteFundingActionContactIdRequiredTrait;
+use Civi\Funding\Api4\Action\Traits\ApplicationProcessBundleLoaderTrait;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\Event\Remote\FundingEvents;
 use CRM_Funding_ExtensionUtil as E;
@@ -32,16 +33,15 @@ abstract class AbstractFormAction extends AbstractRemoteFundingActionLegacy {
 
   use RemoteFundingActionContactIdRequiredTrait;
 
-  protected ApplicationProcessBundleLoader $_applicationProcessBundleLoader;
+  use ApplicationProcessBundleLoaderTrait;
 
   public function __construct(
     string $actionName,
-    ApplicationProcessBundleLoader $applicationProcessBundleLoader,
-    CiviEventDispatcherInterface $eventDispatcher
+    ?ApplicationProcessBundleLoader $applicationProcessBundleLoader,
+    ?CiviEventDispatcherInterface $eventDispatcher
   ) {
-    parent::__construct(RemoteFundingApplicationProcess::getEntityName(), $actionName);
+    parent::__construct(RemoteFundingApplicationProcess::getEntityName(), $actionName, $eventDispatcher);
     $this->_applicationProcessBundleLoader = $applicationProcessBundleLoader;
-    $this->_eventDispatcher = $eventDispatcher;
     $this->_authorizeRequestEventName = FundingEvents::REQUEST_AUTHORIZE_EVENT_NAME;
     $this->_initRequestEventName = FundingEvents::REQUEST_INIT_EVENT_NAME;
   }
@@ -54,7 +54,7 @@ abstract class AbstractFormAction extends AbstractRemoteFundingActionLegacy {
   protected function createEventParams(int $applicationProcessId): array {
     Assert::notNull($this->remoteContactId);
 
-    $applicationProcessBundle = $this->_applicationProcessBundleLoader->get($applicationProcessId);
+    $applicationProcessBundle = $this->getApplicationProcessBundleLoader()->get($applicationProcessId);
     Assert::notNull(
       $applicationProcessBundle,
       E::ts('Application process with ID "%1" not found', [1 => $applicationProcessId])

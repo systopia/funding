@@ -36,8 +36,8 @@ class SubmitFormAction extends AbstractFormAction {
   use DataParameterTrait;
 
   public function __construct(
-    ApplicationProcessBundleLoader $applicationProcessBundleLoader,
-    CiviEventDispatcherInterface $eventDispatcher
+    ?ApplicationProcessBundleLoader $applicationProcessBundleLoader = NULL,
+    ?CiviEventDispatcherInterface $eventDispatcher = NULL
   ) {
     parent::__construct('submitForm', $applicationProcessBundleLoader, $eventDispatcher);
   }

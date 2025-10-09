@@ -29,7 +29,7 @@ final class FundingCaseContactRelationType extends AbstractEntity {
   use AdministerPermissionsTrait;
 
   public static function get(): GetAction {
-    return \Civi::service(GetAction::class);
+    return new GetAction();
   }
 
   /**

@@ -22,6 +22,10 @@ namespace Civi\Funding\Api4\Action\FundingCase;
 use Civi\Api4\FundingCase;
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
+use Civi\Funding\Api4\Action\Traits\ApplicationProcessManagerTrait;
+use Civi\Funding\Api4\Action\Traits\FundingCaseManagerTrait;
+use Civi\Funding\Api4\Action\Traits\FundingCaseTypeManagerTrait;
+use Civi\Funding\Api4\Action\Traits\FundingProgramManagerTrait;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\FundingCase\Command\TransferContractRecreateCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
@@ -36,28 +40,28 @@ class RecreateTransferContractAction extends AbstractAction {
 
   use IdParameterTrait;
 
-  private ApplicationProcessManager $applicationProcessManager;
+  use ApplicationProcessManagerTrait;
 
-  private FundingCaseManager $fundingCaseManager;
+  use FundingCaseManagerTrait;
 
-  private FundingCaseTypeManager $fundingCaseTypeManager;
+  use FundingCaseTypeManagerTrait;
 
-  private FundingProgramManager $fundingProgramManager;
+  use FundingProgramManagerTrait;
 
-  private TransferContractRecreateHandlerInterface $transferContractRecreateHandler;
+  private ?TransferContractRecreateHandlerInterface $transferContractRecreateHandler;
 
   public function __construct(
-    ApplicationProcessManager $applicationProcessManager,
-    FundingCaseManager $fundingCaseManager,
-    FundingCaseTypeManager $fundingCaseTypeManager,
-    FundingProgramManager $fundingProgramManager,
-    TransferContractRecreateHandlerInterface $transferContractRecreateHandler
+    ?ApplicationProcessManager $applicationProcessManager = NULL,
+    ?FundingCaseManager $fundingCaseManager = NULL,
+    ?FundingCaseTypeManager $fundingCaseTypeManager = NULL,
+    ?FundingProgramManager $fundingProgramManager = NULL,
+    ?TransferContractRecreateHandlerInterface $transferContractRecreateHandler = NULL
   ) {
     parent::__construct(FundingCase::getEntityName(), 'recreateTransferContract');
-    $this->applicationProcessManager = $applicationProcessManager;
-    $this->fundingCaseManager = $fundingCaseManager;
-    $this->fundingCaseTypeManager = $fundingCaseTypeManager;
-    $this->fundingProgramManager = $fundingProgramManager;
+    $this->_applicationProcessManager = $applicationProcessManager;
+    $this->_fundingCaseManager = $fundingCaseManager;
+    $this->_fundingCaseTypeManager = $fundingCaseTypeManager;
+    $this->_fundingProgramManager = $fundingProgramManager;
     $this->transferContractRecreateHandler = $transferContractRecreateHandler;
   }
 
@@ -65,24 +69,30 @@ class RecreateTransferContractAction extends AbstractAction {
    * @inheritDoc
    */
   public function _run(Result $result): void {
-    $fundingCase = $this->fundingCaseManager->get($this->getId());
+    $fundingCase = $this->getFundingCaseManager()->get($this->getId());
     Assert::notNull($fundingCase, E::ts('Funding case with ID "%1" not found', [1 => $this->getId()]));
-    $fundingCaseType = $this->fundingCaseTypeManager->get($fundingCase->getFundingCaseTypeId());
+    $fundingCaseType = $this->getFundingCaseTypeManager()->get($fundingCase->getFundingCaseTypeId());
     Assert::notNull($fundingCaseType);
-    $fundingProgram = $this->fundingProgramManager->get($fundingCase->getFundingProgramId());
+    $fundingProgram = $this->getFundingProgramManager()->get($fundingCase->getFundingProgramId());
     Assert::notNull($fundingProgram, sprintf(
       'No permission to access funding program with ID "%d"',
       $fundingCase->getFundingProgramId()
     ));
 
-    $this->transferContractRecreateHandler->handle(new TransferContractRecreateCommand(
+    $this->getTransferContractRecreateHandler()->handle(new TransferContractRecreateCommand(
       $fundingCase,
-      $this->applicationProcessManager->getStatusListByFundingCaseId($fundingCase->getId()),
+      $this->getApplicationProcessManager()->getStatusListByFundingCaseId($fundingCase->getId()),
       $fundingCaseType,
       $fundingProgram,
     ));
 
     $result->exchangeArray($fundingCase->toArray());
+  }
+
+  private function getTransferContractRecreateHandler(): TransferContractRecreateHandlerInterface {
+    // @phpstan-ignore return.type, assign.propertyType
+    return $this->transferContractRecreateHandler
+      ??= \Civi::service(TransferContractRecreateHandlerInterface::class);
   }
 
 }

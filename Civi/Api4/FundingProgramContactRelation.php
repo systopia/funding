@@ -34,7 +34,7 @@ class FundingProgramContactRelation extends Generic\DAOEntity {
   use AdministerPermissionsTrait;
 
   public static function getFields($checkPermissions = TRUE) {
-    return \Civi::service(GetFieldsAction::class)->setCheckPermissions($checkPermissions);
+    return (new GetFieldsAction())->setCheckPermissions($checkPermissions);
   }
 
 }

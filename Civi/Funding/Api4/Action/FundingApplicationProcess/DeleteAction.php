@@ -22,6 +22,8 @@ namespace Civi\Funding\Api4\Action\FundingApplicationProcess;
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\AbstractBatchAction;
 use Civi\Api4\Generic\Result;
+use Civi\Funding\Api4\Action\Traits\Api4Trait;
+use Civi\Funding\Api4\Action\Traits\ApplicationProcessBundleLoaderTrait;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ApplicationProcess\Command\ApplicationDeleteCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationDeleteHandlerInterface;
@@ -31,21 +33,21 @@ use Webmozart\Assert\Assert;
 
 final class DeleteAction extends AbstractBatchAction {
 
-  private Api4Interface $api4;
+  use Api4Trait;
 
-  private ApplicationDeleteHandlerInterface $applicationDeleteHandler;
+  use ApplicationProcessBundleLoaderTrait;
 
-  private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
+  private ?ApplicationDeleteHandlerInterface $applicationDeleteHandler;
 
   public function __construct(
-    Api4Interface $api4,
-    ApplicationDeleteHandlerInterface $applicationDeleteHandler,
-    ApplicationProcessBundleLoader $applicationProcessBundleLoader
+    ?Api4Interface $api4 = NULL,
+    ?ApplicationDeleteHandlerInterface $applicationDeleteHandler = NULL,
+    ?ApplicationProcessBundleLoader $applicationProcessBundleLoader = NULL
   ) {
     parent::__construct(FundingApplicationProcess::getEntityName(), 'delete');
-    $this->api4 = $api4;
+    $this->_api4 = $api4;
     $this->applicationDeleteHandler = $applicationDeleteHandler;
-    $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
+    $this->_applicationProcessBundleLoader = $applicationProcessBundleLoader;
   }
 
   /**
@@ -54,10 +56,12 @@ final class DeleteAction extends AbstractBatchAction {
   public function _run(Result $result): void {
     $applicationProcessBundles = $this->getApplicationProcessBundles();
     foreach ($applicationProcessBundles as $applicationProcessBundle) {
-      $statusList = $this->applicationProcessBundleLoader->getStatusList($applicationProcessBundle);
+      $statusList = $this->getApplicationProcessBundleLoader()->getStatusList($applicationProcessBundle);
       unset($statusList[$applicationProcessBundle->getApplicationProcess()->getId()]);
 
-      $this->applicationDeleteHandler->handle(new ApplicationDeleteCommand($applicationProcessBundle, $statusList));
+      $this->getApplicationDeleteHandler()->handle(
+        new ApplicationDeleteCommand($applicationProcessBundle, $statusList)
+      );
       $result[] = ['id' => $applicationProcessBundle->getApplicationProcess()->getId()];
     }
   }
@@ -72,16 +76,21 @@ final class DeleteAction extends AbstractBatchAction {
       ->setWhere($this->getWhere());
 
     /** @var array<array{id: int}> $records */
-    $records = $this->api4->executeAction($action)->getArrayCopy();
+    $records = $this->getApi4()->executeAction($action)->getArrayCopy();
 
     return \array_map(
       function (array $values): ApplicationProcessEntityBundle {
-        $applicationProcessBundle = $this->applicationProcessBundleLoader->get($values['id']);
+        $applicationProcessBundle = $this->getApplicationProcessBundleLoader()->get($values['id']);
         Assert::notNull($applicationProcessBundle);
 
         return $applicationProcessBundle;
       }, $records,
     );
+  }
+
+  private function getApplicationDeleteHandler(): ApplicationDeleteHandlerInterface {
+    // @phpstan-ignore return.type, assign.propertyType
+    return $this->applicationDeleteHandler ??= \Civi::service(ApplicationDeleteHandlerInterface::class);
   }
 
 }

@@ -71,7 +71,7 @@ final class RemoteFundingCase extends AbstractRemoteFundingEntity {
   }
 
   public static function submitNewApplicationForm(): SubmitNewApplicationFormAction {
-    return \Civi::service(SubmitNewApplicationFormAction::class);
+    return new SubmitNewApplicationFormAction();
   }
 
   public static function validateNewApplicationForm(): ValidateNewApplicationFormAction {

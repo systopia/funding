@@ -20,8 +20,6 @@ declare(strict_types = 1);
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
-use Civi\Api4\Generic\AbstractAction;
-use Civi\Funding\Api4\Action\Remote\FundingCase\SubmitNewApplicationFormAction;
 use Civi\Funding\DependencyInjection\Compiler\FundingCaseNotificationContactsSetHandlerPass;
 use Civi\Funding\DependencyInjection\Compiler\FundingCaseRecipientContactSetHandlerPass;
 use Civi\Funding\DependencyInjection\PossibleRecipientsForChangeLoaderPass;
@@ -87,9 +85,7 @@ $container->autowire(FundingCasePermissionsCacheManager::class)
   // phpcs:enable
   ->setPublic(TRUE);
 $container->autowire(TransferContractRouter::class)
-  // phpcs:disable Squiz.PHP.CommentedOutCode.Found
-  // Used in class \Civi\Funding\Api4\Action\FundingCase\GetAction.
-  // phpcs:enable
+  // Used in API action.
   ->setPublic(TRUE);
 $container->autowire(FundingCaseIdentifierGeneratorInterface::class, FundingCaseIdentifierGenerator::class);
 $container->autowire(FallbackPossibleRecipientsForChangeLoader::class);
@@ -131,64 +127,22 @@ $container->autowire(
   DefaultFundingCaseFormUpdateValidateHandler::class
 );
 
-$container->autowire(FundingCaseApproveHandlerInterface::class, DefaultFundingCaseApproveHandler::class);
+$container->autowire(FundingCaseApproveHandlerInterface::class, DefaultFundingCaseApproveHandler::class)
+  // Used in API action.
+  ->setPublic(TRUE);
 $container->autowire(
   FundingCasePossibleActionsGetHandlerInterface::class,
   DefaultFundingCasePossibleActionsGetHandler::class
-);
+)
+  // Used in API action.
+  ->setPublic(TRUE);
 $container->autowire(
   FundingCaseUpdateAmountApprovedHandlerInterface::class,
   DefaultFundingCaseUpdateAmountApprovedHandler::class
 );
-$container->autowire(TransferContractRecreateHandlerInterface::class, DefaultTransferContractRecreateHandler::class);
-
-ServiceRegistrator::autowireAllImplementing(
-  $container,
-  __DIR__ . '/../Civi/Funding/Api4/Action/FundingCase',
-  'Civi\\Funding\\Api4\\Action\\FundingCase',
-  AbstractAction::class,
-  [],
-  [
-    'public' => TRUE,
-    'shared' => FALSE,
-  ]
-);
-
-ServiceRegistrator::autowireAllImplementing(
-  $container,
-  __DIR__ . '/../Civi/Funding/Api4/Action/FundingCaseContactRelation',
-  'Civi\\Funding\\Api4\\Action\\FundingCaseContactRelation',
-  AbstractAction::class,
-  [],
-  [
-    'public' => TRUE,
-    'shared' => FALSE,
-  ]
-);
-
-ServiceRegistrator::autowireAllImplementing(
-  $container,
-  __DIR__ . '/../Civi/Funding/Api4/Action/FundingCaseContactRelationPropertiesFactoryType',
-  'Civi\\Funding\\Api4\\Action\\FundingCaseContactRelationPropertiesFactoryType',
-  AbstractAction::class,
-  [],
-  [
-    'public' => TRUE,
-    'shared' => FALSE,
-  ]
-);
-
-ServiceRegistrator::autowireAllImplementing(
-  $container,
-  __DIR__ . '/../Civi/Funding/Api4/Action/FundingNewCasePermissions',
-  'Civi\\Funding\\Api4\\Action\\FundingNewCasePermissions',
-  AbstractAction::class,
-  [],
-  [
-    'public' => TRUE,
-    'shared' => FALSE,
-  ]
-);
+$container->autowire(TransferContractRecreateHandlerInterface::class, DefaultTransferContractRecreateHandler::class)
+  // Used in API action.
+  ->setPublic(TRUE);
 
 $container->autowire(FundingCaseContactRelationFactory::class);
 
@@ -206,7 +160,9 @@ ServiceRegistrator::autowireAllImplementing(
 );
 
 $container->autowire(RelationPropertiesFactoryTypeContainer::class)
-  ->addArgument(new TaggedIteratorArgument('funding.case.contact_relation_properties_factory_type'));
+  ->addArgument(new TaggedIteratorArgument('funding.case.contact_relation_properties_factory_type'))
+  // Used in API action.
+  ->setPublic(TRUE);
 
 ServiceRegistrator::autowireAllImplementing(
   $container,
@@ -217,7 +173,9 @@ ServiceRegistrator::autowireAllImplementing(
 );
 
 $container->register(FundingCaseContactsLoaderInterface::class, FundingCaseContactsLoaderCollection::class)
-  ->addArgument(new TaggedIteratorArgument('funding.case.contacts_loader'));
+  ->addArgument(new TaggedIteratorArgument('funding.case.contacts_loader'))
+  // Used in API action.
+  ->setPublic(TRUE);
 $container->autowire(FundingCaseContactsLoader::class)
   ->addTag('funding.case.contacts_loader');
 $container->autowire(ContactsWithPermissionLoader::class);
@@ -230,7 +188,3 @@ ServiceRegistrator::autowireAllImplementing(
   ['kernel.event_subscriber' => []],
   ['lazy' => 'auto'],
 );
-
-$container->autowire(SubmitNewApplicationFormAction::class)
-  ->setPublic(TRUE)
-  ->setShared(FALSE);

@@ -46,7 +46,7 @@ final class FundingCase extends Generic\DAOEntity {
   }
 
   public static function approve(bool $checkPermissions = TRUE): ApproveAction {
-    return \Civi::service(ApproveAction::class)->setCheckPermissions($checkPermissions);
+    return (new ApproveAction())->setCheckPermissions($checkPermissions);
   }
 
   public static function finishClearing(bool $checkPermissions = TRUE): FinishClearingAction {
@@ -68,11 +68,11 @@ final class FundingCase extends Generic\DAOEntity {
    * @return \Civi\Funding\Api4\Action\FundingCase\GetFieldsAction
    */
   public static function getFields($checkPermissions = TRUE) {
-    return \Civi::service(GetFieldsAction::class)->setCheckPermissions($checkPermissions);
+    return (new GetFieldsAction())->setCheckPermissions($checkPermissions);
   }
 
   public static function getPossibleActions(bool $checkPermissions = TRUE): GetPossibleActionsAction {
-    return \Civi::service(GetPossibleActionsAction::class)->setCheckPermissions($checkPermissions);
+    return (new GetPossibleActionsAction())->setCheckPermissions($checkPermissions);
   }
 
   public static function getPossibleRecipients(bool $checkPermissions = TRUE): GetPossibleRecipientsAction {
@@ -80,7 +80,7 @@ final class FundingCase extends Generic\DAOEntity {
   }
 
   public static function recreateTransferContract(bool $checkPermissions = TRUE): RecreateTransferContractAction {
-    return \Civi::service(RecreateTransferContractAction::class)->setCheckPermissions($checkPermissions);
+    return (new RecreateTransferContractAction())->setCheckPermissions($checkPermissions);
   }
 
   public static function reject(bool $checkPermissions = TRUE): RejectAction {

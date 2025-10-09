@@ -24,6 +24,10 @@ use Civi\Api4\FundingProgram;
 use Civi\Api4\Generic\DAOGetAction;
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
+use Civi\Funding\Api4\Action\Traits\Api4Trait;
+use Civi\Funding\Api4\Action\Traits\EventDispatcherTrait;
+use Civi\Funding\Api4\Action\Traits\PossiblePermissionsLoaderTrait;
+use Civi\Funding\Api4\Action\Traits\RequestContextTrait;
 use Civi\Funding\Event\FundingProgram\GetPermissionsEvent;
 use Civi\RemoteTools\Api4\Action\Traits\PermissionsGetActionTrait;
 use Civi\RemoteTools\Api4\Api4Interface;
@@ -38,27 +42,27 @@ final class GetAction extends DAOGetAction {
     PermissionsGetActionTrait::_run as traitRun;
   }
 
-  private Api4Interface $api4;
+  use Api4Trait;
 
-  private CiviEventDispatcherInterface $eventDispatcher;
+  use EventDispatcherTrait;
 
-  private PossiblePermissionsLoaderInterface $possiblePermissionsLoader;
+  use PossiblePermissionsLoaderTrait;
 
-  private RequestContextInterface $requestContext;
+  use RequestContextTrait;
 
   private bool $allowEmptyRecordPermissions = FALSE;
 
   public function __construct(
-    Api4Interface $api4,
-    CiviEventDispatcherInterface $eventDispatcher,
-    PossiblePermissionsLoaderInterface $possiblePermissionsLoader,
-    RequestContextInterface $requestContext
+    ?Api4Interface $api4 = NULL,
+    ?CiviEventDispatcherInterface $eventDispatcher = NULL,
+    ?PossiblePermissionsLoaderInterface $possiblePermissionsLoader = NULL,
+    ?RequestContextInterface $requestContext = NULL
   ) {
     parent::__construct(FundingProgram::getEntityName(), 'get');
-    $this->api4 = $api4;
-    $this->eventDispatcher = $eventDispatcher;
-    $this->possiblePermissionsLoader = $possiblePermissionsLoader;
-    $this->requestContext = $requestContext;
+    $this->_api4 = $api4;
+    $this->_eventDispatcher = $eventDispatcher;
+    $this->_possiblePermissionsLoader = $possiblePermissionsLoader;
+    $this->_requestContext = $requestContext;
   }
 
   public function _run(Result $result): void {
@@ -75,7 +79,7 @@ final class GetAction extends DAOGetAction {
     if ([] !== $clearingProcessFields) {
       /** @phpstan-var array<string, mixed> $record */
       foreach ($result as &$record) {
-        $clearingProcessAmounts = $this->api4->execute(FundingClearingProcess::getEntityName(), 'get', [
+        $clearingProcessAmounts = $this->getApi4()->execute(FundingClearingProcess::getEntityName(), 'get', [
           'select' => array_map(fn (string $field) => 'SUM(' . $field . ') AS SUM_' . $field, $clearingProcessFields),
           'where' => [
             ['application_process_id.funding_case_id.funding_program_id', '=', $record['id']],
@@ -112,8 +116,8 @@ final class GetAction extends DAOGetAction {
    * @return list<string>
    */
   protected function getRecordPermissions(array $record): array {
-    $permissionsGetEvent = new GetPermissionsEvent($record['id'], $this->requestContext->getContactId());
-    $this->eventDispatcher->dispatch(GetPermissionsEvent::class, $permissionsGetEvent);
+    $permissionsGetEvent = new GetPermissionsEvent($record['id'], $this->getRequestContext()->getContactId());
+    $this->getEventDispatcher()->dispatch(GetPermissionsEvent::class, $permissionsGetEvent);
 
     return $permissionsGetEvent->getPermissions();
   }
@@ -122,7 +126,7 @@ final class GetAction extends DAOGetAction {
    * @phpstan-return list<string>
    */
   protected function getPossiblePermissions(): array {
-    return \array_keys($this->possiblePermissionsLoader->getFilteredPermissions($this->getEntityName()));
+    return \array_keys($this->getPossiblePermissionsLoader()->getFilteredPermissions($this->getEntityName()));
   }
 
 }

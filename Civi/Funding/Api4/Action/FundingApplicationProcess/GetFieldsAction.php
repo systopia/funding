@@ -21,6 +21,8 @@ namespace Civi\Funding\Api4\Action\FundingApplicationProcess;
 
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\DAOGetFieldsAction;
+use Civi\Funding\Api4\Action\Traits\ApplicationProcessManagerTrait;
+use Civi\Funding\Api4\Action\Traits\FundingCaseManagerTrait;
 use Civi\Funding\Api4\Query\AliasSqlRenderer;
 use Civi\Funding\Api4\Util\ContactUtil;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
@@ -34,25 +36,25 @@ use CRM_Funding_ExtensionUtil as E;
  */
 final class GetFieldsAction extends DAOGetFieldsAction {
 
-  private ApplicationProcessManager $applicationProcessManager;
+  use ApplicationProcessManagerTrait;
 
-  private FundingCaseContactsLoaderInterface $contactsLoader;
+  use FundingCaseManagerTrait;
 
-  private FundingCaseManager $fundingCaseManager;
+  private ?FundingCaseContactsLoaderInterface $contactsLoader;
 
   private bool $fundingCaseLoaded = FALSE;
 
   private ?FundingCaseEntity $fundingCase = NULL;
 
   public function __construct(
-    ApplicationProcessManager $applicationProcessManager,
-    FundingCaseContactsLoaderInterface $contactsLoader,
-    FundingCaseManager $fundingCaseManager
+    ?ApplicationProcessManager $applicationProcessManager = NULL,
+    ?FundingCaseContactsLoaderInterface $contactsLoader = NULL,
+    ?FundingCaseManager $fundingCaseManager = NULL
   ) {
     parent::__construct(FundingApplicationProcess::getEntityName(), 'getFields');
-    $this->applicationProcessManager = $applicationProcessManager;
+    $this->_applicationProcessManager = $applicationProcessManager;
     $this->contactsLoader = $contactsLoader;
-    $this->fundingCaseManager = $fundingCaseManager;
+    $this->_fundingCaseManager = $fundingCaseManager;
   }
 
   /**
@@ -114,9 +116,9 @@ final class GetFieldsAction extends DAOGetFieldsAction {
   private function getFundingCaseFromValues(): ?FundingCaseEntity {
     if (!$this->fundingCaseLoaded) {
       if (isset($this->values['id'])) {
-        $applicationProcess = $this->applicationProcessManager->get($this->values['id']);
+        $applicationProcess = $this->getApplicationProcessManager()->get($this->values['id']);
         $this->fundingCase = NULL === $applicationProcess ? NULL :
-          $this->fundingCaseManager->get($applicationProcess->getFundingCaseId());
+          $this->getFundingCaseManager()->get($applicationProcess->getFundingCaseId());
       }
       $this->fundingCaseLoaded = TRUE;
     }
@@ -140,10 +142,15 @@ final class GetFieldsAction extends DAOGetFieldsAction {
       return TRUE;
     }
 
-    $contacts = $this->contactsLoader->getContactsWithAnyPermission($fundingCase, [$permission]);
+    $contacts = $this->getContactsLoader()->getContactsWithAnyPermission($fundingCase, [$permission]);
 
-    /** @phpstan-ignore-next-line */
+    // @phpstan-ignore argument.type
     return array_map(fn (array $contact) => ContactUtil::getDisplayName($contact), $contacts);
+  }
+
+  private function getContactsLoader(): FundingCaseContactsLoaderInterface {
+    // @phpstan-ignore return.type, assign.propertyType
+    return $this->contactsLoader ??= \Civi::service(FundingCaseContactsLoaderInterface::class);
   }
 
 }

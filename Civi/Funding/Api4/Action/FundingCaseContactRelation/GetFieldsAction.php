@@ -23,17 +23,18 @@ use Civi\Api4\FundingCase;
 use Civi\Api4\FundingCaseContactRelation;
 use Civi\Api4\Generic\DAOGetFieldsAction;
 use Civi\Funding\Api4\Action\Traits\PermissionsSelectTrait;
+use Civi\Funding\Api4\Action\Traits\PossiblePermissionsLoaderTrait;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
 
 final class GetFieldsAction extends DAOGetFieldsAction {
 
   use PermissionsSelectTrait;
 
-  private PossiblePermissionsLoaderInterface $possiblePermissionsLoader;
+  use PossiblePermissionsLoaderTrait;
 
-  public function __construct(PossiblePermissionsLoaderInterface $possiblePermissionsLoader) {
+  public function __construct(?PossiblePermissionsLoaderInterface $possiblePermissionsLoader = NULL) {
     parent::__construct(FundingCaseContactRelation::getEntityName(), 'getFields');
-    $this->possiblePermissionsLoader = $possiblePermissionsLoader;
+    $this->_possiblePermissionsLoader = $possiblePermissionsLoader;
   }
 
   /**
@@ -41,7 +42,7 @@ final class GetFieldsAction extends DAOGetFieldsAction {
    *   Permissions mapped to labels.
    */
   protected function getPossiblePermissions(): array {
-    return $this->possiblePermissionsLoader->getPermissions(FundingCase::getEntityName());
+    return $this->getPossiblePermissionsLoader()->getPermissions(FundingCase::getEntityName());
   }
 
 }

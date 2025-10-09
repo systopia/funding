@@ -20,7 +20,6 @@ declare(strict_types = 1);
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
-use Civi\Funding\Api4\Action\RecipientContactRelationType\GetAction;
 use Civi\Funding\Contact\FundingCaseRecipientLoader;
 use Civi\Funding\Contact\FundingCaseRecipientLoaderInterface;
 use Civi\Funding\Contact\PossibleRecipientsLoaderCollection;
@@ -32,7 +31,6 @@ use Civi\Funding\Contact\Relation\RelationTypeContainer;
 use Civi\Funding\Contact\Relation\RelationTypeInterface;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
-use Symfony\Component\DependencyInjection\Reference;
 
 $container->autowire(FundingCaseRecipientLoaderInterface::class, FundingCaseRecipientLoader::class);
 
@@ -40,11 +38,6 @@ $container->register(PossibleRecipientsLoaderInterface::class, PossibleRecipient
   ->addArgument(new TaggedIteratorArgument(PossibleRecipientsLoaderInterface::SERVICE_TAG));
 $container->autowire(DefaultPossibleRecipientsLoader::class)
   ->addTag(PossibleRecipientsLoaderInterface::SERVICE_TAG);
-
-$container->autowire(GetAction::class)
-  ->setArgument('$relationTypeContainer', new Reference('funding.contact_relation_type_container'))
-  ->setPublic(TRUE)
-  ->setShared(TRUE);
 
 $container->register('funding.contact_relation_type_container', RelationTypeContainer::class)
   ->addArgument(new TaggedIteratorArgument('funding.contact_relation_type'));

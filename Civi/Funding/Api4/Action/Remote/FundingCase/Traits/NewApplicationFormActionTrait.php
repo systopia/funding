@@ -27,7 +27,7 @@ use CRM_Funding_ExtensionUtil as E;
 
 trait NewApplicationFormActionTrait {
 
-  protected FundingCaseTypeProgramRelationChecker $_relationChecker;
+  protected ?FundingCaseTypeProgramRelationChecker $_relationChecker;
 
   /**
    * @throws \Civi\API\Exception\UnauthorizedException
@@ -42,7 +42,7 @@ trait NewApplicationFormActionTrait {
    * @throws \CRM_Core_Exception
    */
   protected function assertFundingCaseTypeAndProgramRelated(int $fundingCaseTypeId, int $fundingProgramId): void {
-    if (!$this->_relationChecker->areFundingCaseTypeAndProgramRelated($fundingCaseTypeId, $fundingProgramId)) {
+    if (!$this->getRelationChecker()->areFundingCaseTypeAndProgramRelated($fundingCaseTypeId, $fundingProgramId)) {
       throw new FundingException(E::ts('Funding program and funding case type are not related'), 'invalid_arguments');
     }
   }
@@ -64,6 +64,11 @@ trait NewApplicationFormActionTrait {
         [1 => $fundingProgram->getRequestsEndDate()->format(E::ts('Y-m-d'))]
       ), 'invalid_arguments');
     }
+  }
+
+  protected function getRelationChecker(): FundingCaseTypeProgramRelationChecker {
+    // @phpstan-ignore return.type, assign.propertyType
+    return $this->_relationChecker ??= \Civi::service(FundingCaseTypeProgramRelationChecker::class);
   }
 
 }

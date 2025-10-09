@@ -20,8 +20,6 @@ declare(strict_types = 1);
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
-use Civi\Funding\Api4\Action\FundingClearingProcess\GetAction;
-use Civi\Funding\Api4\Action\FundingClearingProcess\GetFieldsAction;
 use Civi\Funding\ClearingProcess\ClearingActionsDeterminer;
 use Civi\Funding\ClearingProcess\ClearingCostItemManager;
 use Civi\Funding\ClearingProcess\ClearingExternalFileManager;
@@ -63,7 +61,9 @@ $container->addCompilerPass(new ClearingReportDataLoaderPass());
 $container->addCompilerPass(new ClearingReportFormFactoryPass());
 $container->addCompilerPass(new ClearingFormValidatorPass());
 
-$container->autowire(ClearingProcessManager::class);
+$container->autowire(ClearingProcessManager::class)
+  // Used in API action.
+  ->setPublic(TRUE);
 $container->autowire(ClearingProcessBundleLoader::class);
 $container->autowire(ClearingCostItemManager::class);
 $container->autowire(ClearingResourcesItemManager::class);
@@ -100,13 +100,6 @@ $container->autowire(ClearingFormValidateHandlerInterface::class, ClearingFormVa
 
 $container->autowire(ClearingFormSubmitHandlerInterface::class, ClearingFormSubmitHandler::class)
   ->addTag(ClearingFormSubmitHandlerInterface::SERVICE_TAG);
-
-$container->autowire(GetAction::class)
-  ->setPublic(TRUE)
-  ->setShared(FALSE);
-$container->autowire(GetFieldsAction::class)
-  ->setPublic(TRUE)
-  ->setShared(FALSE);
 
 ServiceRegistrator::autowireAllImplementing(
   $container,

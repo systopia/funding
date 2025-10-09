@@ -25,6 +25,8 @@ use Civi\Api4\FundingClearingProcess;
 use Civi\Api4\Generic\AbstractGetAction;
 use Civi\Api4\Generic\Result;
 use Civi\Api4\Generic\Traits\ArrayQueryActionTrait;
+use Civi\Funding\Api4\Action\Traits\Api4Trait;
+use Civi\Funding\Api4\Action\Traits\ApplicationProcessBundleLoaderTrait;
 use Civi\Funding\Api4\Action\Traits\IsFieldSelectedTrait;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
@@ -78,17 +80,17 @@ final class GetAction extends AbstractGetAction {
 
   use IsFieldSelectedTrait;
 
-  private Api4Interface $api4;
+  use Api4Trait;
 
-  private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
+  use ApplicationProcessBundleLoaderTrait;
 
   public function __construct(
-    Api4Interface $api4,
-    ApplicationProcessBundleLoader $applicationProcessBundleLoader
+    ?Api4Interface $api4 = NULL,
+    ?ApplicationProcessBundleLoader $applicationProcessBundleLoader = NULL
   ) {
     parent::__construct(FundingCaseInfo::getEntityName(), 'get');
-    $this->api4 = $api4;
-    $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
+    $this->_api4 = $api4;
+    $this->_applicationProcessBundleLoader = $applicationProcessBundleLoader;
   }
 
   /**
@@ -98,7 +100,7 @@ final class GetAction extends AbstractGetAction {
    */
   public function _run(Result $result): void {
     if ($this->getSelect() === ['row_count']) {
-      $count = $this->applicationProcessBundleLoader->countBy($this->buildCondition($this->getWhere()));
+      $count = $this->getApplicationProcessBundleLoader()->countBy($this->buildCondition($this->getWhere()));
       $result->setCountMatched($count);
       $result->exchangeArray([['row_count' => $count]]);
 
@@ -120,7 +122,7 @@ final class GetAction extends AbstractGetAction {
       }
       else {
         $result->setCountMatched(
-          $this->applicationProcessBundleLoader->countBy($this->buildCondition($this->getWhere()))
+          $this->getApplicationProcessBundleLoader()->countBy($this->buildCondition($this->getWhere()))
         );
       }
     }
@@ -151,7 +153,7 @@ final class GetAction extends AbstractGetAction {
       'clearing_process_amount_admitted',
     ], $this->getSelect());
     if ([] !== $clearingProcessFields) {
-      $clearingProcessAmounts = $this->api4->execute(FundingClearingProcess::getEntityName(), 'get', [
+      $clearingProcessAmounts = $this->getApi4()->execute(FundingClearingProcess::getEntityName(), 'get', [
         'select' => array_map(
           fn (string $field) => 'SUM(' . substr($field, 17) . ') AS SUM_' . $field,
           $clearingProcessFields
@@ -194,10 +196,14 @@ final class GetAction extends AbstractGetAction {
     ];
 
     if ($this->isFieldExplicitlySelected('funding_case_recipient_contact_display_name')) {
-      $record['funding_case_recipient_contact_display_name'] = $this->api4->execute(Contact::getEntityName(), 'get', [
-        'select' => ['display_name'],
-        'where' => [['id', '=', $fundingCase->getRecipientContactId()]],
-      ])->single()['display_name'];
+      $record['funding_case_recipient_contact_display_name'] = $this->getApi4()->execute(
+        Contact::getEntityName(),
+        'get',
+        [
+          'select' => ['display_name'],
+          'where' => [['id', '=', $fundingCase->getRecipientContactId()]],
+        ]
+      )->single()['display_name'];
     }
 
     foreach ($clearingProcessFields as $field) {
@@ -229,7 +235,7 @@ final class GetAction extends AbstractGetAction {
    * @throws \CRM_Core_Exception
    */
   private function getApplicationProcessBundles(): iterable {
-    return $this->applicationProcessBundleLoader->getBy(
+    return $this->getApplicationProcessBundleLoader()->getBy(
       $this->buildCondition($this->getWhere()),
       $this->buildOrderBy(),
       $this->getLimit(),

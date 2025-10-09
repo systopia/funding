@@ -23,11 +23,13 @@ use Civi\API\Exception\UnauthorizedException;
 use Civi\Api4\FundingCase;
 use Civi\Api4\Generic\DAOGetAction;
 use Civi\Api4\Generic\Result;
+use Civi\Funding\Api4\Action\Traits\Api4Trait;
+use Civi\Funding\Api4\Action\Traits\FundingCaseManagerTrait;
 use Civi\Funding\Api4\Action\Traits\IsFieldSelectedTrait;
+use Civi\Funding\Api4\Action\Traits\RequestContextTrait;
 use Civi\Funding\Api4\Util\FundingCasePermissionsUtil;
 use Civi\Funding\Api4\Util\WhereUtil;
 use Civi\Funding\FundingCase\FundingCaseManager;
-use Civi\RemoteTools\Api4\Api4;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Util\SelectUtil;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
@@ -44,18 +46,18 @@ abstract class AbstractReferencingDAOGetAction extends DAOGetAction {
 
   use IsFieldSelectedTrait;
 
+  use Api4Trait;
+
+  use FundingCaseManagerTrait;
+
+  use RequestContextTrait;
+
   /**
    * @var bool
    */
   protected bool $ignoreCasePermissions = FALSE;
 
   protected string $_fundingCaseIdFieldName = 'funding_case_id';
-
-  private ?Api4Interface $api4;
-
-  private ?FundingCaseManager $fundingCaseManager;
-
-  private ?RequestContextInterface $requestContext;
 
   /**
    * @phpstan-var array<string, bool>
@@ -74,9 +76,9 @@ abstract class AbstractReferencingDAOGetAction extends DAOGetAction {
     ?RequestContextInterface $requestContext = NULL
   ) {
     parent::__construct($entityName, 'get');
-    $this->api4 = $api4;
-    $this->fundingCaseManager = $fundingCaseManager;
-    $this->requestContext = $requestContext;
+    $this->_api4 = $api4;
+    $this->_fundingCaseManager = $fundingCaseManager;
+    $this->_requestContext = $requestContext;
   }
 
   public function _run(Result $result): void {
@@ -199,20 +201,6 @@ abstract class AbstractReferencingDAOGetAction extends DAOGetAction {
    */
   protected function getOriginalSelect(): array {
     return $this->originalSelect ?? $this->getSelect();
-  }
-
-  protected function getApi4(): Api4Interface {
-    return $this->api4 ??= Api4::getInstance();
-  }
-
-  protected function getFundingCaseManager(): FundingCaseManager {
-    // @phpstan-ignore return.type, assign.propertyType
-    return $this->fundingCaseManager ??= \Civi::service(FundingCaseManager::class);
-  }
-
-  protected function getRequestContext(): RequestContextInterface {
-    // @phpstan-ignore return.type, assign.propertyType
-    return $this->requestContext ??= \Civi::service(RequestContextInterface::class);
   }
 
   /**

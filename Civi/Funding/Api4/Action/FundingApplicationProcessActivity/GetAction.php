@@ -25,7 +25,9 @@ use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\FundingApplicationProcessActivity;
 use Civi\Api4\Generic\AbstractGetAction;
 use Civi\Api4\Generic\Result;
+use Civi\Funding\Api4\Action\Traits\Api4Trait;
 use Civi\Funding\Api4\Action\Traits\ApplicationProcessIdParameterTrait;
+use Civi\Funding\Api4\Action\Traits\ApplicationProcessManagerTrait;
 use Civi\Funding\Api4\Util\ContactUtil;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\RemoteTools\Api4\Api4Interface;
@@ -35,17 +37,17 @@ final class GetAction extends AbstractGetAction {
 
   use ApplicationProcessIdParameterTrait;
 
-  private Api4Interface $api4;
+  use Api4Trait;
 
-  private ApplicationProcessManager $applicationProcessManager;
+  use ApplicationProcessManagerTrait;
 
   public function __construct(
-    Api4Interface $api4,
-    ApplicationProcessManager $applicationProcessManager
+    ?Api4Interface $api4 = NULL,
+    ?ApplicationProcessManager $applicationProcessManager = NULL
   ) {
     parent::__construct(FundingApplicationProcessActivity::getEntityName(), 'get');
-    $this->api4 = $api4;
-    $this->applicationProcessManager = $applicationProcessManager;
+    $this->_api4 = $api4;
+    $this->_applicationProcessManager = $applicationProcessManager;
   }
 
   /**
@@ -57,7 +59,7 @@ final class GetAction extends AbstractGetAction {
     Assert::notNull($this->applicationProcessId);
 
     // Ensure access permission is granted
-    $applicationProcess = $this->applicationProcessManager->get($this->applicationProcessId);
+    $applicationProcess = $this->getApplicationProcessManager()->get($this->applicationProcessId);
     if (NULL === $applicationProcess) {
       return;
     }
@@ -82,9 +84,9 @@ final class GetAction extends AbstractGetAction {
       $action->addOrderBy('id', 'DESC');
     }
 
-    $getResult = $this->api4->executeAction($action);
+    $getResult = $this->getApi4()->executeAction($action);
     $result->debug = $getResult->debug;
-    /** @phpstan-var array{id: int, 'activity_type_id:name'?: string}&array<string, mixed> $record */
+    /** @phpstan-var array{id: int, "activity_type_id:name"?: string}&array<string, mixed> $record */
     foreach ($getResult as $record) {
       $record['source_contact_name'] = $this->getSourceContactName($record);
       if (isset($record['activity_type_id:name'])) {
@@ -126,7 +128,7 @@ final class GetAction extends AbstractGetAction {
       ->addWhere('ac.record_type_id:name', '=', 'Activity Source');
 
     /** @phpstan-var array{id: int, display_name: ?string}|null $contact */
-    $contact = $this->api4->executeAction($action)->first();
+    $contact = $this->getApi4()->executeAction($action)->first();
     if (NULL === $contact) {
       return '-';
     }
