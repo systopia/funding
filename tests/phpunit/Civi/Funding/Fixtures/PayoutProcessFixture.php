@@ -34,6 +34,8 @@ final class PayoutProcessFixture {
       ->setValues($values + [
         'funding_case_id' => $fundingCaseId,
         'status' => 'open',
+        'creation_date' => \CRM_Utils_Time::date('Y-m-d H:i:s'),
+        'modification_date' => \CRM_Utils_Time::date('Y-m-d H:i:s'),
         'amount_total' => 1.2,
       ])->execute();
 

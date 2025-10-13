@@ -57,16 +57,13 @@ class DrawdownManager {
   /**
    * @throws \CRM_Core_Exception
    */
-  public function accept(DrawdownEntity $drawdown, int $contactId): void {
-    $payoutProcessBundle = $this->payoutProcessManager->getBundle($drawdown->getPayoutProcessId());
-    Assert::notNull($payoutProcessBundle);
-
+  public function accept(DrawdownBundle $drawdownBundle, int $contactId): void {
+    $drawdown = $drawdownBundle->getDrawdown();
     $drawdown
       ->setReviewerContactId($contactId)
       ->setStatus('accepted')
       ->setAcceptionDate(new \DateTime(date('Y-m-d H:i:s')));
 
-    $drawdownBundle = new DrawdownBundle($drawdown, $payoutProcessBundle);
     $this->update($drawdownBundle);
 
     // Status might have been changed by an event listener.
@@ -110,21 +107,21 @@ class DrawdownManager {
   /**
    * @throws \CRM_Core_Exception
    */
-  public function delete(DrawdownEntity $drawdown): void {
-    $this->api4->deleteEntity(FundingDrawdown::getEntityName(), $drawdown->getId());
+  public function delete(DrawdownBundle $drawdownBundle): void {
+    $this->api4->deleteEntity(FundingDrawdown::getEntityName(), $drawdownBundle->getDrawdown()->getId());
 
-    $event = new DrawdownDeletedEvent($drawdown);
+    $event = new DrawdownDeletedEvent($drawdownBundle);
     $this->eventDispatcher->dispatch(DrawdownDeletedEvent::class, $event);
   }
 
-  public function deleteNewDrawdownsByPayoutProcessId(int $payoutProcessId): void {
+  public function deleteNewDrawdownsByPayoutProcess(PayoutProcessBundle $payoutProcessBundle): void {
     $drawdowns = $this->getBy(CompositeCondition::fromFieldValuePairs([
-      'payout_process_id' => $payoutProcessId,
+      'payout_process_id' => $payoutProcessBundle->getPayoutProcess()->getId(),
       'status' => 'new',
     ]));
 
     foreach ($drawdowns as $drawdown) {
-      $this->delete($drawdown);
+      $this->delete(new DrawdownBundle($drawdown, $payoutProcessBundle));
     }
   }
 
@@ -136,6 +133,21 @@ class DrawdownManager {
 
     // @phpstan-ignore argument.type
     return NULL === $values ? NULL : DrawdownEntity::fromArray($values);
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function getBundle(int $id): ?DrawdownBundle {
+    $drawdown = $this->get($id);
+    if (NULL === $drawdown) {
+      return NULL;
+    }
+
+    $payoutProcessBundle = $this->payoutProcessManager->getBundle($drawdown->getPayoutProcessId());
+    Assert::notNull($payoutProcessBundle);
+
+    return new DrawdownBundle($drawdown, $payoutProcessBundle);
   }
 
   /**

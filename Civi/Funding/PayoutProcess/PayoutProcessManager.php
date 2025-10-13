@@ -26,6 +26,8 @@ use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\PayoutProcessEntity;
 use Civi\Funding\Entity\PayoutProcessBundle;
 use Civi\Funding\Event\PayoutProcess\PayoutProcessCreatedEvent;
+use Civi\Funding\Event\PayoutProcess\PayoutProcessPreUpdateEvent;
+use Civi\Funding\Event\PayoutProcess\PayoutProcessUpdatedEvent;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
@@ -52,18 +54,22 @@ class PayoutProcessManager {
   /**
    * @throws \CRM_Core_Exception
    */
-  public function close(PayoutProcessEntity $payoutProcess): void {
-    $payoutProcess->setStatus('closed');
-    $this->update($payoutProcess);
+  public function close(PayoutProcessBundle $payoutProcessBundle): void {
+    $payoutProcessBundle->getPayoutProcess()->setStatus('closed');
+    $payoutProcessBundle->getPayoutProcess()->setModificationDate(new \DateTime(\CRM_Utils_Time::date('Y-m-d H:i:s')));
+    $this->update($payoutProcessBundle);
   }
 
   /**
    * @throws \CRM_Core_Exception
    */
   public function create(FundingCaseEntity $fundingCase, float $amountTotal): PayoutProcessEntity {
+    $now = \CRM_Utils_Time::date('Y-m-d H:i:s');
     $result = $this->api4->createEntity(FundingPayoutProcess::getEntityName(), [
       'funding_case_id' => $fundingCase->getId(),
       'status' => 'open',
+      'creation_date' => $now,
+      'modification_date' => $now,
       'amount_total' => $amountTotal,
     ]);
 
@@ -106,9 +112,10 @@ class PayoutProcessManager {
   /**
    * @throws \CRM_Core_Exception
    */
-  public function updateAmountTotal(PayoutProcessEntity $payoutProcess, float $amountTotal): void {
-    $payoutProcess->setAmountTotal($amountTotal);
-    $this->update($payoutProcess);
+  public function updateAmountTotal(PayoutProcessBundle $payoutProcessBundle, float $amountTotal): void {
+    $payoutProcessBundle->getPayoutProcess()->setAmountTotal($amountTotal);
+    $payoutProcessBundle->getPayoutProcess()->setModificationDate(new \DateTime(\CRM_Utils_Time::date('YmdHis')));
+    $this->update($payoutProcessBundle);
   }
 
   /**
@@ -163,6 +170,21 @@ class PayoutProcessManager {
   /**
    * @throws \CRM_Core_Exception
    */
+  public function getLastBundleByFundingCaseId(int $fundingCaseId): ?PayoutProcessBundle {
+    $payoutProcess = $this->getLastByFundingCaseId($fundingCaseId);
+    if (NULL === $payoutProcess) {
+      return NULL;
+    }
+
+    $fundingCaseBundle = $this->fundingCaseManager->getBundle($payoutProcess->getFundingCaseId());
+    Assert::notNull($fundingCaseBundle);
+
+    return new PayoutProcessBundle($payoutProcess, $fundingCaseBundle);
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function getLastByFundingCaseId(int $fundingCaseId): ?PayoutProcessEntity {
     $result = $this->api4->getEntities(
       FundingPayoutProcess::getEntityName(),
@@ -187,12 +209,19 @@ class PayoutProcessManager {
   /**
    * @throws \CRM_Core_Exception
    */
-  private function update(PayoutProcessEntity $payoutProcess): void {
+  public function update(PayoutProcessBundle $payoutProcessBundle): void {
+    $event = new PayoutProcessPreUpdateEvent($payoutProcessBundle);
+    $this->eventDispatcher->dispatch(PayoutProcessPreUpdateEvent::class, $event);
+
+    $payoutProcess = $payoutProcessBundle->getPayoutProcess();
     $this->api4->updateEntity(
       FundingPayoutProcess::getEntityName(),
       $payoutProcess->getId(),
       $payoutProcess->toArray()
     );
+
+    $event = new PayoutProcessUpdatedEvent($payoutProcessBundle);
+    $this->eventDispatcher->dispatch(PayoutProcessUpdatedEvent::class, $event);
   }
 
 }

@@ -21,9 +21,7 @@ namespace Civi\Funding\Api4\Action\FundingDrawdown;
 
 use Civi\API\Exception\UnauthorizedException;
 use Civi\Api4\Generic\Result;
-use Civi\Funding\EntityFactory\DrawdownFactory;
-use Civi\Funding\EntityFactory\FundingCaseFactory;
-use Civi\Funding\EntityFactory\PayoutProcessFactory;
+use Civi\Funding\EntityFactory\DrawdownBundleFactory;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\PayoutProcess\DrawdownManager;
 use Civi\Funding\PayoutProcess\PayoutProcessManager;
@@ -72,23 +70,14 @@ final class RejectActionTest extends TestCase {
   }
 
   public function testRun(): void {
-    $drawdown = DrawdownFactory::create();
-    $this->drawdownManagerMock->method('get')
+    $drawdownBundle = DrawdownBundleFactory::create(fundingCaseValues: ['permissions' => ['review_drawdown']]);
+    $drawdown = $drawdownBundle->getDrawdown();
+    $this->drawdownManagerMock->method('getBundle')
       ->with($drawdown->getId())
-      ->willReturn($drawdown);
-
-    $payoutProcess = PayoutProcessFactory::create();
-    $this->payoutProcessManagerMock->method('get')
-      ->with($payoutProcess->getId())
-      ->willReturn($payoutProcess);
-
-    $fundingCase = FundingCaseFactory::createFundingCase(['permissions' => ['review_drawdown']]);
-    $this->fundingCaseManagerMock->method('get')
-      ->with($fundingCase->getId())
-      ->willReturn($fundingCase);
+      ->willReturn($drawdownBundle);
 
     $this->drawdownManagerMock->expects(static::once())->method('delete')
-      ->with($drawdown);
+      ->with($drawdownBundle);
 
     $this->action->setId($drawdown->getId());
     $result = new Result();
@@ -97,20 +86,11 @@ final class RejectActionTest extends TestCase {
   }
 
   public function testRunWithoutPermission(): void {
-    $drawdown = DrawdownFactory::create();
-    $this->drawdownManagerMock->method('get')
+    $drawdownBundle = DrawdownBundleFactory::create(fundingCaseValues: ['permissions' => ['review_content']]);
+    $drawdown = $drawdownBundle->getDrawdown();
+    $this->drawdownManagerMock->method('getBundle')
       ->with($drawdown->getId())
-      ->willReturn($drawdown);
-
-    $payoutProcess = PayoutProcessFactory::create();
-    $this->payoutProcessManagerMock->method('get')
-      ->with($payoutProcess->getId())
-      ->willReturn($payoutProcess);
-
-    $fundingCase = FundingCaseFactory::createFundingCase(['permissions' => ['review_content']]);
-    $this->fundingCaseManagerMock->method('get')
-      ->with($fundingCase->getId())
-      ->willReturn($fundingCase);
+      ->willReturn($drawdownBundle);
 
     $this->drawdownManagerMock->expects(static::never())->method('delete');
 

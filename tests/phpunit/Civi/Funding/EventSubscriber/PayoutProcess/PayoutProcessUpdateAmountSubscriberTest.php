@@ -19,10 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\PayoutProcess;
 
-use Civi\Funding\EntityFactory\FundingCaseFactory;
-use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
-use Civi\Funding\EntityFactory\FundingProgramFactory;
-use Civi\Funding\EntityFactory\PayoutProcessFactory;
+use Civi\Funding\EntityFactory\PayoutProcessBundleFactory;
 use Civi\Funding\Event\FundingCase\FundingCaseAmountApprovedUpdatedEvent;
 use Civi\Funding\PayoutProcess\PayoutProcessManager;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -59,18 +56,19 @@ final class PayoutProcessUpdateAmountSubscriberTest extends TestCase {
   }
 
   public function testOnAmountApprovedUpdated(): void {
-    $fundingCase = FundingCaseFactory::createFundingCase(['amount_approved' => 1.23]);
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
-    $fundingProgram = FundingProgramFactory::createFundingProgram();
-
-    $payoutProcess = PayoutProcessFactory::create();
-    $this->payoutProcessManagerMock->method('getLastByFundingCaseId')
-      ->willReturn($payoutProcess);
+    $payoutProcessBundle = PayoutProcessBundleFactory::create();
+    $this->payoutProcessManagerMock->method('getLastBundleByFundingCaseId')
+      ->willReturn($payoutProcessBundle);
 
     $this->payoutProcessManagerMock->expects(static::once())->method('updateAmountTotal')
-      ->with($payoutProcess, 1.23);
+      ->with($payoutProcessBundle, 1.23);
 
-    $event = new FundingCaseAmountApprovedUpdatedEvent($fundingCase, $fundingCaseType, $fundingProgram);
+    $payoutProcessBundle->getFundingCase()->setAmountApproved(1.23);
+    $event = new FundingCaseAmountApprovedUpdatedEvent(
+      $payoutProcessBundle->getFundingCase(),
+      $payoutProcessBundle->getFundingCaseType(),
+      $payoutProcessBundle->getFundingProgram()
+    );
     $this->subscriber->onAmountApprovedUpdated($event);
   }
 

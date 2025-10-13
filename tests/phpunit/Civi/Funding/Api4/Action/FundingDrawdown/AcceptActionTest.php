@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Api4\Action\FundingDrawdown;
 
 use Civi\Api4\Generic\Result;
-use Civi\Funding\EntityFactory\DrawdownFactory;
+use Civi\Funding\EntityFactory\DrawdownBundleFactory;
 use Civi\Funding\Mock\RequestContext\TestRequestContext;
 use Civi\Funding\PayoutProcess\DrawdownManager;
 use Civi\Funding\Traits\CreateMockTrait;
@@ -51,14 +51,15 @@ final class AcceptActionTest extends TestCase {
   }
 
   public function testRun(): void {
-    $drawdown = DrawdownFactory::create();
+    $drawdownBundle = DrawdownBundleFactory::create();
+    $drawdown = $drawdownBundle->getDrawdown();
 
-    $this->drawdownManagerMock->method('get')
+    $this->drawdownManagerMock->method('getBundle')
       ->with($drawdown->getId())
-      ->willReturn($drawdown);
+      ->willReturn($drawdownBundle);
 
     $this->drawdownManagerMock->expects(static::once())->method('accept')
-      ->with($drawdown, 2);
+      ->with($drawdownBundle, 2);
 
     $this->action->setId($drawdown->getId());
     $result = new Result();

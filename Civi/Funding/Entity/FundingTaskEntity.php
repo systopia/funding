@@ -147,9 +147,6 @@ final class FundingTaskEntity extends AbstractActivityEntity {
       $entityValues['activity_type_id:name'] = ActivityTypeNames::DRAWDOWN_TASK;
       $entityValues['source_record_id'] = $values['drawdown_id'];
     }
-    elseif (isset($values['payout_process_id'])) {
-      throw new \InvalidArgumentException('Payout process tasks are not supported');
-    }
     elseif (isset($values['clearing_process_id'])) {
       Assert::integer(
         $values['application_process_id'] ?? NULL,

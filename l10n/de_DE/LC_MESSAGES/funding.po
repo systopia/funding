@@ -235,6 +235,7 @@ msgstr "Status"
 #: CRM/Funding/DAO/ApplicationProcess.php
 #: CRM/Funding/DAO/ApplicationSnapshot.php CRM/Funding/DAO/ClearingProcess.php
 #: CRM/Funding/DAO/Drawdown.php CRM/Funding/DAO/FundingCase.php
+#: CRM/Funding/DAO/PayoutProcess.php
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
 #: ang/crmFunding/application/defaultApplicationEditor.template.html
 #: ang/crmFunding/case/fundingCase.template.html
@@ -252,7 +253,7 @@ msgid "Creation Date"
 msgstr "Erstellungsdatum"
 
 #: CRM/Funding/DAO/ApplicationProcess.php CRM/Funding/DAO/ClearingProcess.php
-#: CRM/Funding/DAO/FundingCase.php
+#: CRM/Funding/DAO/FundingCase.php CRM/Funding/DAO/PayoutProcess.php
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
 #: ang/crmFunding/application/defaultApplicationEditor.template.html
 #: ang/crmFunding/case/fundingCase.template.html
@@ -2259,6 +2260,10 @@ msgstr "Kein Bankkonto für Kontakt mit ID \"%1\" verfügbar."
 #: Civi/Funding/PayoutProcess/Task/AbstractDrawdownReviewTaskHandler.php
 msgid "Review Drawdown"
 msgstr "Mittelabruf prüfen"
+
+#: Civi/Funding/PayoutProcess/Task/DrawdownCreateTaskTrait.php
+msgid "Create Drawdown"
+msgstr "Mittelabruf erstellen"
 
 #: Civi/Funding/PayoutProcess/Token/DrawdownTokenNameExtractor.php
 msgid "Display name of drawdown review contact"

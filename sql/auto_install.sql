@@ -15,10 +15,6 @@
 -- *
 -- *******************************************************/
 
--- DON'T DROP THIS LINE as long as MariaDB <= 10.9 is supported!
--- https://mariadb.com/kb/en/server-system-variables/#explicit_defaults_for_timestamp
-SET SESSION explicit_defaults_for_timestamp=ON;
-
 SET FOREIGN_KEY_CHECKS=0;
 
 DROP TABLE IF EXISTS `civicrm_funding_clearing_cost_item`;
@@ -258,6 +254,8 @@ CREATE TABLE `civicrm_funding_payout_process` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique PayoutProcess ID',
   `funding_case_id` int unsigned NOT NULL COMMENT 'FK to FundingCase',
   `status` varchar(64) NOT NULL,
+  `creation_date` timestamp NOT NULL,
+  `modification_date` timestamp NOT NULL,
   `amount_total` decimal(10,2),
   PRIMARY KEY (`id`),
   CONSTRAINT FK_civicrm_funding_payout_process_funding_case_id FOREIGN KEY (`funding_case_id`) REFERENCES `civicrm_funding_case`(`id`) ON DELETE CASCADE)
