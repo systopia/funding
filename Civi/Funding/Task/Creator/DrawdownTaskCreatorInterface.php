@@ -25,7 +25,7 @@ use Civi\Funding\Entity\DrawdownBundle;
 interface DrawdownTaskCreatorInterface {
 
   /**
-   * @phpstan-return iterable<\Civi\Funding\Entity\FundingTaskEntity>
+   * @return iterable<\Civi\Funding\Entity\FundingTaskEntity>
    */
   public function createTasksOnChange(
     DrawdownBundle $drawdownBundle,
@@ -33,7 +33,12 @@ interface DrawdownTaskCreatorInterface {
   ): iterable;
 
   /**
-   * @phpstan-return iterable<\Civi\Funding\Entity\FundingTaskEntity>
+   * @return iterable<\Civi\Funding\Entity\FundingTaskEntity>
+   */
+  public function createTasksOnDelete(DrawdownBundle $drawdownBundle): iterable;
+
+  /**
+   * @return iterable<\Civi\Funding\Entity\FundingTaskEntity>
    */
   public function createTasksOnNew(DrawdownBundle $drawdownBundle): iterable;
 

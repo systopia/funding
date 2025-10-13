@@ -21,11 +21,16 @@ declare(strict_types = 1);
 namespace Civi\Funding\Task\Handler;
 
 use Civi\Funding\ActivityTypeNames;
+use Civi\Funding\Entity\DrawdownBundle;
 
 abstract class AbstractDrawdownTaskHandler implements DrawdownTaskHandlerInterface {
 
   public function getActivityTypeName(): string {
     return ActivityTypeNames::DRAWDOWN_TASK;
+  }
+
+  public function createTasksOnDelete(DrawdownBundle $drawdownBundle): iterable {
+    return [];
   }
 
 }

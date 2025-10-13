@@ -24,6 +24,8 @@ namespace Civi\Funding\Entity;
  *   id?: int,
  *   funding_case_id: int,
  *   status: string,
+ *   creation_date: string,
+ *   modification_date: string,
  *   amount_total: float,
  * }
  *
@@ -43,6 +45,20 @@ final class PayoutProcessEntity extends AbstractEntity {
 
   public function setStatus(string $status): self {
     $this->values['status'] = $status;
+
+    return $this;
+  }
+
+  public function getCreationDate(): \DateTimeInterface {
+    return new \DateTime($this->values['creation_date']);
+  }
+
+  public function getModificationDate(): \DateTimeInterface {
+    return new \DateTime($this->values['modification_date']);
+  }
+
+  public function setModificationDate(\DateTimeInterface $modificationDate): self {
+    $this->values['modification_date'] = self::toDateTimeStr($modificationDate);
 
     return $this;
   }

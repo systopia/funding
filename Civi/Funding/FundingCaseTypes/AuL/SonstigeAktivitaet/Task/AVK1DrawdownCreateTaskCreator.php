@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2023 SYSTOPIA GmbH
+ * Copyright (C) 2025 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,18 +17,13 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Event\PayoutProcess;
+namespace Civi\Funding\FundingCaseTypes\AuL\SonstigeAktivitaet\Task;
 
-use Civi\Funding\Entity\DrawdownBundle;
-use Civi\Funding\Entity\Traits\DrawdownBundleTrait;
-use Symfony\Contracts\EventDispatcher\Event;
+use Civi\Funding\FundingCaseTypes\AuL\SonstigeAktivitaet\Traits\AVK1SupportedFundingCaseTypesTrait;
+use Civi\Funding\PayoutProcess\Task\AbstractDrawdownCreateTaskCreator;
 
-final class DrawdownDeletedEvent extends Event {
+final class AVK1DrawdownCreateTaskCreator extends AbstractDrawdownCreateTaskCreator {
 
-  use DrawdownBundleTrait;
-
-  public function __construct(DrawdownBundle $drawdownBundle) {
-    $this->drawdownBundle = $drawdownBundle;
-  }
+  use AVK1SupportedFundingCaseTypesTrait;
 
 }

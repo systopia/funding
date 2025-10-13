@@ -69,6 +69,9 @@ parameters:
 		- '#^Property Civi\\RemoteTools\\Event\\DAOGetEvent::\$join type has no value type specified in iterable type array.$#'
 		- '#^Method Civi\\RemoteTools\\Event\\DAOGetEvent::addJoin\(\) has parameter \$conditions with no value type specified in iterable type array.$#'
 		- '#^Method Civi\\RemoteTools\\Event\\DAOGetEvent::getJoin\(\) return type has no value type specified in iterable type array.$#'
+		- '#^Do not compare objects directly, DateTime(Interface)?(\|null)? and DateTime(Interface)?(\|null)? found.$#'
+		# Wrong type hint in CiviCRM.
+		- message: '/^Parameter #1 \$newDateTime of static method CRM_Utils_Time::setTime\(\) expects string, int given.$/'
 		-
 			message: '#^Call to function method_exists\(\) with .+ will always evaluate to true.$#'
 			path: */tests/phpunit/**/EventSubscriber/*SubscriberTest.php

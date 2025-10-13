@@ -19,7 +19,6 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Permission\ContactRelation\Loader;
 
-use Civi\Api4\Contact;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\ContactTypeFixture;
@@ -45,9 +44,7 @@ final class ContactTypeAndGroupLoaderTest extends AbstractFundingHeadlessTestCas
   }
 
   public function testGetContacts(): void {
-    Contact::delete(FALSE)
-      ->addWhere('id', 'IS NOT NULL')
-      ->execute();
+    \CRM_Core_DAO::executeQuery('UPDATE civicrm_contact SET is_deleted=1');
 
     $contactType1 = ContactTypeFixture::addIndividualFixture('testType1');
     $contactType2 = ContactTypeFixture::addIndividualFixture('testType2');
