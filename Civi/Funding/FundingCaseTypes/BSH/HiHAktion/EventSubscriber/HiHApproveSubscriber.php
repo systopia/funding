@@ -95,27 +95,28 @@ final class HiHApproveSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    if ($event->getFundingCase()->getStatus() === FundingCaseStatus::OPEN
+    $fundingCase = $event->getFundingCase();
+    if ($fundingCase->getStatus() === FundingCaseStatus::OPEN
       && $this->isStatusChangedToApproved($event->getApplicationProcess(), $event->getPreviousApplicationProcess())
     ) {
       $this->api4->execute(FundingCase::getEntityName(), 'approve', [
-        'id' => $event->getFundingCase()->getId(),
+        'id' => $fundingCase->getId(),
         'amount' => $this->getAmountApproved($event->getApplicationProcess()),
       ]);
     }
-    elseif ($event->getFundingCase()->getStatus() === FundingCaseStatus::ONGOING
+    elseif ($fundingCase->getStatus() === FundingCaseStatus::ONGOING
       && TRUE === $event->getApplicationProcess()->get('_recreateTransferContract')
     ) {
       $amountApproved = $this->getAmountApproved($event->getApplicationProcess());
-      $event->getFundingCase()->setAmountApproved($amountApproved);
-      $this->fundingCaseManager->update($event->getFundingCase());
+      $fundingCase->setAmountApproved($amountApproved);
+      $this->fundingCaseManager->update($fundingCase);
 
-      $payoutProcess = $this->payoutProcessManager->getLastByFundingCaseId($event->getFundingCase()->getId());
-      Assert::notNull($payoutProcess);
-      $this->payoutProcessManager->updateAmountTotal($payoutProcess, $amountApproved);
+      $payoutProcessBundle = $this->payoutProcessManager->getLastBundleByFundingCaseId($fundingCase->getId());
+      Assert::notNull($payoutProcessBundle);
+      $this->payoutProcessManager->updateAmountTotal($payoutProcessBundle, $amountApproved);
 
       $this->api4->execute(FundingCase::getEntityName(), 'recreateTransferContract', [
-        'id' => $event->getFundingCase()->getId(),
+        'id' => $fundingCase->getId(),
       ]);
     }
   }

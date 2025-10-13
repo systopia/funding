@@ -43,9 +43,9 @@ class PayoutProcessUpdateAmountSubscriber implements EventSubscriberInterface {
    * @throws \CRM_Core_Exception
    */
   public function onAmountApprovedUpdated(FundingCaseAmountApprovedUpdatedEvent $event): void {
-    $payoutProcess = $this->payoutProcessManager->getLastByFundingCaseId($event->getFundingCase()->getId());
-    Assert::notNull($payoutProcess);
-    $this->payoutProcessManager->updateAmountTotal($payoutProcess, $event->getAmount());
+    $payoutProcessBundle = $this->payoutProcessManager->getLastBundleByFundingCaseId($event->getFundingCase()->getId());
+    Assert::notNull($payoutProcessBundle);
+    $this->payoutProcessManager->updateAmountTotal($payoutProcessBundle, $event->getAmount());
   }
 
 }

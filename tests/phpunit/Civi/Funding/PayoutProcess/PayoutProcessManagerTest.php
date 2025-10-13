@@ -25,6 +25,7 @@ use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Entity\PayoutProcessBundle;
 use Civi\Funding\EntityFactory\FundingCaseBundleFactory;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
+use Civi\Funding\EntityFactory\PayoutProcessBundleFactory;
 use Civi\Funding\EntityFactory\PayoutProcessFactory;
 use Civi\Funding\Event\PayoutProcess\PayoutProcessCreatedEvent;
 use Civi\Funding\FundingCase\FundingCaseManager;
@@ -55,6 +56,12 @@ final class PayoutProcessManagerTest extends TestCase {
 
   private PayoutProcessManager $payoutProcessManager;
 
+  public static function setUpBeforeClass(): void {
+    parent::setUpBeforeClass();
+    putenv('TIME_FUNC=frozen');
+    \CRM_Utils_Time::setTime('2000-01-01 00:00:00');
+  }
+
   protected function setUp(): void {
     parent::setUp();
     $this->api4Mock = $this->createMock(Api4Interface::class);
@@ -68,26 +75,35 @@ final class PayoutProcessManagerTest extends TestCase {
   }
 
   public function testClose(): void {
-    $payoutProcess = PayoutProcessFactory::create();
+    $payoutProcessBundle = PayoutProcessBundleFactory::create();
+    $payoutProcess = $payoutProcessBundle->getPayoutProcess();
+    $now = \CRM_Utils_Time::date('Y-m-d H:i:s');
     $this->api4Mock->expects(static::once())->method('updateEntity')
       ->with(
         FundingPayoutProcess::getEntityName(),
         $payoutProcess->getId(),
-        ['status' => 'closed'] + $payoutProcess->toArray(),
+        [
+          'status' => 'closed',
+          'modification_date' => $now,
+        ] + $payoutProcess->toArray(),
       );
 
-    $this->payoutProcessManager->close($payoutProcess);
+    $this->payoutProcessManager->close($payoutProcessBundle);
     static::assertSame('closed', $payoutProcess->getStatus());
+    static::assertEquals(new \DateTime($now), $payoutProcess->getModificationDate());
   }
 
   public function testCreate(): void {
     $fundingCase = FundingCaseFactory::createFundingCase(['amount_approved' => 12.34]);
     $payoutProcess = PayoutProcessFactory::create(['amount_total' => 12.34]);
 
+    $now = \CRM_Utils_Time::date('Y-m-d H:i:s');
     $this->api4Mock->expects(static::once())->method('createEntity')
       ->with(FundingPayoutProcess::getEntityName(), [
         'funding_case_id' => FundingCaseFactory::DEFAULT_ID,
         'status' => 'open',
+        'creation_date' => $now,
+        'modification_date' => $now,
         'amount_total' => 12.34,
       ])
       ->willReturn(new Result([$payoutProcess->toArray()]));
@@ -140,6 +156,28 @@ final class PayoutProcessManagerTest extends TestCase {
     );
   }
 
+  public function testGetLastBundleByFundingCaseId(): void {
+    $fundingCaseBundle = FundingCaseBundleFactory::create();
+    $payoutProcess = PayoutProcessFactory::create();
+
+    $this->api4Mock->method('getEntities')
+      ->with(
+        FundingPayoutProcess::getEntityName(),
+        Comparison::new('funding_case_id', '=', $payoutProcess->getId()),
+        ['id' => 'DESC'],
+        1
+      )->willReturn(new Result([$payoutProcess->toArray()]));
+
+    $this->fundingCaseManagerMock->expects(static::once())->method('getBundle')
+      ->with($payoutProcess->getFundingCaseId())
+      ->willReturn($fundingCaseBundle);
+
+    static::assertEquals(
+      new PayoutProcessBundle($payoutProcess, $fundingCaseBundle),
+      $this->payoutProcessManager->getLastBundleByFundingCaseId($payoutProcess->getId())
+    );
+  }
+
   public function testGetLastByFundingCaseId(): void {
     $payoutProcess = PayoutProcessFactory::create();
 
@@ -165,15 +203,40 @@ final class PayoutProcessManagerTest extends TestCase {
   }
 
   public function testUpdateAmountTotal(): void {
-    $payoutProcess = PayoutProcessFactory::create();
+    $payoutProcessBundle = PayoutProcessBundleFactory::create();
+    $payoutProcess = $payoutProcessBundle->getPayoutProcess();
+    $now = \CRM_Utils_Time::date('Y-m-d H:i:s');
     $this->api4Mock->expects(static::once())->method('updateEntity')
       ->with(
         FundingPayoutProcess::getEntityName(),
         $payoutProcess->getId(),
-        ['amount_total' => 123.45] + $payoutProcess->toArray()
-      )->willReturn(new Result([['amount_total' => 123.45] + $payoutProcess->toArray()]));
+        [
+          'amount_total' => 123.45,
+          'modification_date' => $now,
+        ] + $payoutProcess->toArray()
+      )->willReturn(new Result([['amount_total' => 123.45, 'modification_date' => $now] + $payoutProcess->toArray()]));
 
-    $this->payoutProcessManager->updateAmountTotal($payoutProcess, 123.45);
+    $this->payoutProcessManager->updateAmountTotal($payoutProcessBundle, 123.45);
+    static::assertSame(123.45, $payoutProcess->getAmountTotal());
+    static::assertEquals(new \DateTime($now), $payoutProcess->getModificationDate());
+  }
+
+  public function testUpdate(): void {
+    $payoutProcessBundle = PayoutProcessBundleFactory::create();
+    $payoutProcess = $payoutProcessBundle->getPayoutProcess();
+
+    \CRM_Utils_Time::setTime(date('YmdHis', \CRM_Utils_Time::time() - 1));
+    $now = \CRM_Utils_Time::date('Y-m-d H:i:s');
+    $this->api4Mock->expects(static::once())->method('updateEntity')
+      ->with(
+        FundingPayoutProcess::getEntityName(),
+        $payoutProcess->getId(),
+        ['modification_date' => $now] + $payoutProcess->toArray()
+      )->willReturn(new Result([['modification_date' => $now] + $payoutProcess->toArray()]));
+
+    $payoutProcess->setModificationDate(new \DateTime($now));
+    $this->payoutProcessManager->update($payoutProcessBundle);
+    static::assertEquals(new \DateTime($now), $payoutProcess->getModificationDate());
   }
 
 }

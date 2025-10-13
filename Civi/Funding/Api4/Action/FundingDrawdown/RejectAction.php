@@ -24,11 +24,7 @@ use Civi\Api4\FundingDrawdown;
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
 use Civi\Funding\Api4\Action\Traits\DrawdownManagerTrait;
-use Civi\Funding\Api4\Action\Traits\FundingCaseManagerTrait;
-use Civi\Funding\Api4\Action\Traits\PayoutProcessManagerTrait;
-use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\PayoutProcess\DrawdownManager;
-use Civi\Funding\PayoutProcess\PayoutProcessManager;
 use Civi\RemoteTools\Api4\Action\Traits\IdParameterTrait;
 use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
@@ -39,39 +35,28 @@ class RejectAction extends AbstractAction {
 
   use DrawdownManagerTrait;
 
-  use FundingCaseManagerTrait;
-
-  use PayoutProcessManagerTrait;
-
-  public function __construct(
-    ?DrawdownManager $drawdownManager = NULL,
-    ?FundingCaseManager $fundingCaseManager = NULL,
-    ?PayoutProcessManager $payoutProcessManager = NULL
-  ) {
+  public function __construct(?DrawdownManager $drawdownManager = NULL) {
     parent::__construct(FundingDrawdown::getEntityName(), 'reject');
     $this->_drawdownManager = $drawdownManager;
-    $this->_fundingCaseManager = $fundingCaseManager;
-    $this->_payoutProcessManager = $payoutProcessManager;
   }
 
   /**
    * @inheritDoc
+   *
+   * @throws \CRM_Core_Exception
    */
   public function _run(Result $result): void {
-    $drawdown = $this->getDrawdownManager()->get($this->getId());
-    Assert::notNull($drawdown, sprintf('Drawdown with ID "%d" not found', $this->getId()));
-    $payoutProcess = $this->getPayoutProcessManager()->get($drawdown->getPayoutProcessId());
-    Assert::notNull($payoutProcess, sprintf('Payout process with ID "%d" not found', $drawdown->getPayoutProcessId()));
-    $fundingCase = $this->getFundingCaseManager()->get($payoutProcess->getFundingCaseId());
-    Assert::notNull($fundingCase, sprintf('Funding case with ID "%d" not found', $payoutProcess->getFundingCaseId()));
+    $drawdownBundle = $this->getDrawdownManager()->getBundle($this->getId());
+    Assert::notNull($drawdownBundle, sprintf('Drawdown with ID "%d" not found', $this->getId()));
+    $fundingCase = $drawdownBundle->getFundingCase();
 
     if (!in_array('review_drawdown', $fundingCase->getPermissions(), TRUE)) {
       throw new UnauthorizedException(E::ts('Permission to reject drawdown is missing.'));
     }
 
-    $this->getDrawdownManager()->delete($drawdown);
+    $this->getDrawdownManager()->delete($drawdownBundle);
 
-    $result->exchangeArray([$drawdown->toArray()]);
+    $result->exchangeArray([$drawdownBundle->getDrawdown()->toArray()]);
   }
 
 }

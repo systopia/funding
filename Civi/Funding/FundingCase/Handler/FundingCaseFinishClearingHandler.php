@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase\Handler;
 
 use Civi\API\Exception\UnauthorizedException;
+use Civi\Funding\Entity\DrawdownBundle;
 use Civi\Funding\Entity\DrawdownEntity;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions;
 use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
@@ -76,14 +77,14 @@ final class FundingCaseFinishClearingHandler implements FundingCaseFinishClearin
     $fundingCase = $command->getFundingCase();
     $this->assertAuthorized($command);
 
-    $payoutProcess = $this->payoutProcessManager->getLastByFundingCaseId($fundingCase->getId());
-    Assert::notNull($payoutProcess);
-    $this->drawdownManager->deleteNewDrawdownsByPayoutProcessId($payoutProcess->getId());
+    $payoutProcessBundle = $this->payoutProcessManager->getLastBundleByFundingCaseId($fundingCase->getId());
+    Assert::notNull($payoutProcessBundle);
+    $this->drawdownManager->deleteNewDrawdownsByPayoutProcess($payoutProcessBundle);
 
     $amountRemaining = $this->fundingCaseManager->getAmountRemaining($fundingCase->getId());
     if (0.0 !== $amountRemaining) {
       $drawdown = DrawdownEntity::fromArray([
-        'payout_process_id' => $payoutProcess->getId(),
+        'payout_process_id' => $payoutProcessBundle->getPayoutProcess()->getId(),
         'status' => 'new',
         'creation_date' => date('Y-m-d H:i:s'),
         'amount' => $amountRemaining,
@@ -91,13 +92,19 @@ final class FundingCaseFinishClearingHandler implements FundingCaseFinishClearin
         'requester_contact_id' => $this->requestContext->getContactId(),
         'reviewer_contact_id' => NULL,
       ]);
+
+      // Prevent unnecessary updates. Modification dates will be persisted below.
+      $fundingCase->setModificationDate($drawdown->getCreationDate());
+      $payoutProcessBundle->getPayoutProcess()->setModificationDate($drawdown->getCreationDate());
+
       $this->drawdownManager->insert($drawdown);
       if ($this->metaDataProvider->get($command->getFundingCaseType()->getName())->isFinalDrawdownAcceptedByDefault()) {
-        $this->drawdownManager->accept($drawdown, $this->requestContext->getContactId());
+        $drawdownBundle = new DrawdownBundle($drawdown, $payoutProcessBundle);
+        $this->drawdownManager->accept($drawdownBundle, $this->requestContext->getContactId());
       }
     }
 
-    $this->payoutProcessManager->close($payoutProcess);
+    $this->payoutProcessManager->close($payoutProcessBundle);
 
     $fundingCase->setStatus($this->statusDeterminer->getStatus(
       $fundingCase->getStatus(),

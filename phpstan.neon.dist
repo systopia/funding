@@ -52,6 +52,7 @@ parameters:
 		- '#^Class Civi\\Funding\\Api4\\Action\\[^\s]+Action(Legacy)? has an uninitialized property \$[^\s]+\. Give it default value or assign it in the constructor.$#'
 		- '/^Parameter #1 \$items \(array<int, array{id: int}>\) of method Civi\\Funding\\Api4\\Action\\[^\s]+::deleteObjects\(\) should be contravariant with parameter \$items \((array|mixed)\) of method Civi\\Api4\\Generic\\[^\s]+::deleteObjects\(\)$/'
 		- '/^Parameter #1 \$items \(array<int, array<string, mixed>>\) of method Civi\\Funding\\Api4\\Action\\[^\s]+::writeObjects\(\) should be contravariant with parameter \$items \(array\) of method Civi\\Api4\\Generic\\[^\s]+::writeObjects\(\)$/'
+		- '#^Do not compare objects directly, DateTime(Interface)?(\|null)? and DateTime(Interface)?(\|null)? found.$#'
 		-
 			message: '#^Call to function method_exists\(\) with .+ will always evaluate to true.$#'
 			path: */tests/phpunit/**/EventSubscriber/*SubscriberTest.php

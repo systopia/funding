@@ -50,6 +50,26 @@
   </field>
 
   <field>
+    <name>creation_date</name>
+    <type>timestamp</type>
+    <required>true</required>
+    <html>
+      <type>Select Date</type>
+      <formatType>activityDateTime</formatType>
+    </html>
+  </field>
+
+  <field>
+    <name>modification_date</name>
+    <type>timestamp</type>
+    <required>true</required>
+    <html>
+      <type>Select Date</type>
+      <formatType>activityDateTime</formatType>
+    </html>
+  </field>
+
+  <field>
     <name>amount_total</name>
     <type>decimal(10,2)</type>
     <crmType>CRM_Utils_Type::T_MONEY</crmType>

@@ -150,7 +150,7 @@ final class RemoteSubmitNewApplicationFormActionHandlerTest extends TestCase {
     $contactId = 1;
     $action = $this->createSubmitNewFormAction($contactId);
 
-    \CRM_Utils_Time::setTime(date('Y-m-d', \CRM_Utils_Time::time() - 1));
+    \CRM_Utils_Time::setTime(date('YmdHis', \CRM_Utils_Time::time() - 1));
 
     static::expectExceptionObject(new FundingException(
       'Funding program does not allow applications before 2000-01-01',
@@ -163,7 +163,7 @@ final class RemoteSubmitNewApplicationFormActionHandlerTest extends TestCase {
     $contactId = 1;
     $action = $this->createSubmitNewFormAction($contactId);
 
-    \CRM_Utils_Time::setTime(date('Y-m-d', \CRM_Utils_Time::time() + 24 * 60 * 60));
+    \CRM_Utils_Time::setTime(date('YmdHis', \CRM_Utils_Time::time() + 24 * 60 * 60));
 
     static::expectExceptionObject(new FundingException(
       'Funding program does not allow applications after 2000-01-01',

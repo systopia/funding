@@ -24,6 +24,7 @@ use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Entity\DrawdownBundle;
 use Civi\Funding\Entity\DrawdownEntity;
+use Civi\Funding\EntityFactory\DrawdownBundleFactory;
 use Civi\Funding\EntityFactory\DrawdownFactory;
 use Civi\Funding\EntityFactory\PayoutProcessBundleFactory;
 use Civi\Funding\Event\PayoutProcess\DrawdownAcceptedEvent;
@@ -81,17 +82,13 @@ final class DrawdownManagerTest extends TestCase {
   }
 
   public function testAccept(): void {
-    $drawdown = DrawdownFactory::create();
+    $drawdownBundle = DrawdownBundleFactory::create();
+    $drawdown = $drawdownBundle->getDrawdown();
     $previousDrawdown = clone $drawdown;
 
     $this->api4Mock->expects(static::once())->method('getEntity')
       ->with(FundingDrawdown::getEntityName(), $drawdown->getId())
       ->willReturn($previousDrawdown->toArray());
-
-    $payoutProcessBundle = PayoutProcessBundleFactory::create();
-    $this->payoutProcessManagerMock->expects(static::once())->method('getBundle')
-      ->with($drawdown->getPayoutProcessId())
-      ->willReturn($payoutProcessBundle);
 
     $this->api4Mock->expects(static::once())->method('updateEntity')
       ->with(
@@ -103,8 +100,6 @@ final class DrawdownManagerTest extends TestCase {
           'acception_date' => date('Y-m-d H:i:s'),
         ] + $drawdown->toArray(),
       );
-
-    $drawdownBundle = new DrawdownBundle($drawdown, $payoutProcessBundle);
 
     $expectedDispatchCalls = [
       [
@@ -127,7 +122,7 @@ final class DrawdownManagerTest extends TestCase {
         return $args[1];
       });
 
-    $this->drawdownManager->accept($drawdown, 2);
+    $this->drawdownManager->accept($drawdownBundle, 2);
     static::assertSame('accepted', $drawdown->getStatus());
     static::assertSame(2, $drawdown->getReviewerContactId());
     static::assertEquals(new \DateTime('@12345'), $drawdown->getAcceptionDate());
@@ -175,18 +170,19 @@ final class DrawdownManagerTest extends TestCase {
   }
 
   public function testDelete(): void {
-    $drawdown = DrawdownFactory::create();
+    $drawdownBundle = DrawdownBundleFactory::create();
 
     $this->api4Mock->expects(static::once())->method('deleteEntity')
-      ->with(FundingDrawdown::getEntityName(), $drawdown->getId());
+      ->with(FundingDrawdown::getEntityName(), $drawdownBundle->getDrawdown()->getId());
 
     $this->eventDispatcherMock->expects(static::once())->method('dispatch')
-      ->with(DrawdownDeletedEvent::class, new DrawdownDeletedEvent($drawdown));
+      ->with(DrawdownDeletedEvent::class, new DrawdownDeletedEvent($drawdownBundle));
 
-    $this->drawdownManager->delete($drawdown);
+    $this->drawdownManager->delete($drawdownBundle);
   }
 
-  public function testDeleteNewDrawdownsByPayoutProcessId(): void {
+  public function testDeleteNewDrawdownsByPayoutProcess(): void {
+    $payoutProcessBundle = PayoutProcessBundleFactory::create(['id' => 23]);
     $drawdown = DrawdownFactory::create();
     $this->api4Mock->method('getEntities')
       ->with(FundingDrawdown::getEntityName(), CompositeCondition::fromFieldValuePairs([
@@ -197,7 +193,7 @@ final class DrawdownManagerTest extends TestCase {
     $this->api4Mock->expects(static::once())->method('deleteEntity')
       ->with(FundingDrawdown::getEntityName(), $drawdown->getId());
 
-    $this->drawdownManager->deleteNewDrawdownsByPayoutProcessId(23);
+    $this->drawdownManager->deleteNewDrawdownsByPayoutProcess($payoutProcessBundle);
   }
 
   public function testGet(): void {
@@ -208,6 +204,24 @@ final class DrawdownManagerTest extends TestCase {
       ->willReturn($drawdown->toArray());
 
     static::assertEquals($drawdown, $this->drawdownManager->get($drawdown->getId()));
+  }
+
+  public function testGetBundle(): void {
+    $drawdown = DrawdownFactory::create();
+
+    $this->api4Mock->expects(static::once())->method('getEntity')
+      ->with(FundingDrawdown::getEntityName(), $drawdown->getId())
+      ->willReturn($drawdown->toArray());
+
+    $payoutProcessBundle = PayoutProcessBundleFactory::create();
+    $this->payoutProcessManagerMock->expects(static::once())->method('getBundle')
+      ->with($drawdown->getPayoutProcessId())
+      ->willReturn($payoutProcessBundle);
+
+    static::assertEquals(
+      new DrawdownBundle($drawdown, $payoutProcessBundle),
+      $this->drawdownManager->getBundle($drawdown->getId())
+    );
   }
 
   public function testGetNull(): void {

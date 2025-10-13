@@ -50,11 +50,11 @@ class AcceptAction extends AbstractAction {
    * @inheritDoc
    */
   public function _run(Result $result): void {
-    $drawdown = $this->getDrawdownManager()->get($this->getId());
-    Assert::notNull($drawdown, sprintf('Drawdown with ID "%d" not found', $this->getId()));
-    $this->getDrawdownManager()->accept($drawdown, $this->getRequestContext()->getContactId());
+    $drawdownBundle = $this->getDrawdownManager()->getBundle($this->getId());
+    Assert::notNull($drawdownBundle, sprintf('Drawdown with ID "%d" not found', $this->getId()));
+    $this->getDrawdownManager()->accept($drawdownBundle, $this->getRequestContext()->getContactId());
 
-    $result->exchangeArray([$drawdown->toArray()]);
+    $result->exchangeArray([$drawdownBundle->getDrawdown()->toArray()]);
   }
 
 }
