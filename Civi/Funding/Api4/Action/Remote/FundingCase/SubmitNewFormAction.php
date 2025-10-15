@@ -26,7 +26,7 @@ use Civi\Funding\Api4\Action\Traits\FundingProgramIdParameterTrait;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Civi\RemoteTools\Api4\Action\Traits\DataParameterTrait;
 
-final class SubmitNewFormAction extends AbstractRemoteFundingAction {
+class SubmitNewFormAction extends AbstractRemoteFundingAction {
 
   use DataParameterTrait;
 
