@@ -46,6 +46,8 @@ abstract class AbstractFundingHeadlessTestCase extends TestCase implements Headl
     ClockMock::register(ApplicationSnapshotCreateHandler::class);
     ClockMock::register(ClearingProcessManager::class);
     ClockMock::register(DrawdownManager::class);
+    // See \CRM_Utils_Time.
+    putenv('TIME_FUNC=frozen');
   }
 
   public static function tearDownAfterClass(): void {
@@ -93,7 +95,7 @@ abstract class AbstractFundingHeadlessTestCase extends TestCase implements Headl
   }
 
   /**
-   * @phpstan-param array<string>|null $permissions
+   * @param list<string>|null $permissions
    */
   protected function setUserPermissions(?array $permissions): void {
     $userPermissions = \CRM_Core_Config::singleton()->userPermissionClass;

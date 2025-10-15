@@ -25,9 +25,6 @@ use Civi\RemoteTools\Api4\OptionsLoaderInterface;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoader;
 use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
 use Civi\RemoteTools\Database\TransactionFactory;
-use Civi\RemoteTools\EventSubscriber\ApiAuthorizeInitRequestSubscriber;
-use Civi\RemoteTools\EventSubscriber\ApiAuthorizeSubscriber;
-use Civi\RemoteTools\EventSubscriber\CheckAccessSubscriber;
 
 $container->register(TransactionFactory::class);
 
@@ -37,10 +34,3 @@ $container->autowire(OptionsLoaderInterface::class, OptionsLoader::class)
 $container->autowire(PossiblePermissionsLoaderInterface::class, PossiblePermissionsLoader::class)
   // Used in API action.
   ->setPublic(TRUE);
-
-$container->autowire(ApiAuthorizeInitRequestSubscriber::class)
-  ->addTag('kernel.event_subscriber');
-$container->autowire(ApiAuthorizeSubscriber::class)
-  ->addTag('kernel.event_subscriber');
-$container->autowire(CheckAccessSubscriber::class)
-  ->addTag('kernel.event_subscriber');

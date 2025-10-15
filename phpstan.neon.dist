@@ -49,35 +49,15 @@ parameters:
 		# https://youtrack.jetbrains.com/issue/WI-63891/PHPStan-ignoreErrors-configuration-isnt-working-with-inspections
 		- '#^Method Civi\\Funding\\Page\\[^\s]+Page::getController\(\) should return Civi\\Funding\\Controller\\PageControllerInterface but returns mixed.$#'
 		- '#^Method Civi\\Funding\\FundingCaseTypeServiceLocator::[^\s]+ should return [^\s]+ but returns mixed.$#'
-		-
-			message: '#has an uninitialized property#'
-			paths:
-				- */Civi/Funding/Event/*.php
-				- */Civi/RemoteTools/Event/*.php
-		-
-			message: '#^Call to an undefined method Civi\\Api4\\Generic\\AbstractAction::getEventDispatcher\(\).$#'
-			path: */Civi/RemoteTools/Api4/Action/Traits/EventActionTrait.php
 		- '#^Class Civi\\Funding\\Api4\\Action\\[^\s]+Action(Legacy)? has an uninitialized property \$[^\s]+\. Give it default value or assign it in the constructor.$#'
 		- '/^Parameter #1 \$items \(array<int, array{id: int}>\) of method Civi\\Funding\\Api4\\Action\\[^\s]+::deleteObjects\(\) should be contravariant with parameter \$items \((array|mixed)\) of method Civi\\Api4\\Generic\\[^\s]+::deleteObjects\(\)$/'
 		- '/^Parameter #1 \$items \(array<int, array<string, mixed>>\) of method Civi\\Funding\\Api4\\Action\\[^\s]+::writeObjects\(\) should be contravariant with parameter \$items \(array\) of method Civi\\Api4\\Generic\\[^\s]+::writeObjects\(\)$/'
-		- '#^Access to an uninitialized property Civi\\Funding\\Event\\[^\s]+Event::\$[^\s]+.$#'
-		-
-			message: '#^Variable property access on \$this\(Civi\\RemoteTools\\Event\\AbstractRequestEvent\).$#'
-			path: */Civi/RemoteTools/Event/AbstractRequestEvent.php
-		# Wrong type hint
-		- '#^Method Civi\\RemoteTools\\Event\\GetEvent::addClause\(\) has parameter \$conditions with no value type specified in iterable type array.$#'
-		- '#^Property Civi\\RemoteTools\\Event\\DAOGetEvent::\$join type has no value type specified in iterable type array.$#'
-		- '#^Method Civi\\RemoteTools\\Event\\DAOGetEvent::addJoin\(\) has parameter \$conditions with no value type specified in iterable type array.$#'
-		- '#^Method Civi\\RemoteTools\\Event\\DAOGetEvent::getJoin\(\) return type has no value type specified in iterable type array.$#'
 		-
 			message: '#^Call to function method_exists\(\) with .+ will always evaluate to true.$#'
 			path: */tests/phpunit/**/EventSubscriber/*SubscriberTest.php
 		- # Accessing results of API requests
 			message: "#^Offset '[^']+' does not exist on array\\|null.$#"
 			path: */tests/phpunit/Civi/**/*Test.php
-		-
-			message: '#^Class [^\s]+ has an uninitialized property#'
-			path : */tests/phpunit/Civi/Funding/Mock/**/*.php
 		- '#^Method Civi\\Funding\\Fixtures\\[^\s]+Fixture::[^\s]+\(\) should return array{[^}]+} but returns array\|null.$#'
 		-
 			identifier: return.type

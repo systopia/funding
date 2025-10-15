@@ -62,6 +62,7 @@ final class RemoteFundingCaseAVK1FormTest extends AbstractRemoteFundingHeadlessT
 
   protected function setUp(): void {
     parent::setUp();
+    \CRM_Utils_Time::setTime('1970-01-02');
     $this->addFixtures();
   }
 

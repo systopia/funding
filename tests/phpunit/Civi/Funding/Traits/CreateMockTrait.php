@@ -35,16 +35,40 @@ trait CreateMockTrait {
    * callbacks would be called that (might) require a complete Civi env.
    *
    * @template RealInstanceType of \Civi\Api4\Generic\AbstractAction
-   * @phpstan-param class-string<RealInstanceType> $className
-   * @phpstan-param mixed ...$constructorArgs
+   * @param class-string<RealInstanceType> $className
    *
    * @return \PHPUnit\Framework\MockObject\MockObject&RealInstanceType
    */
-  public function createApi4ActionMock(string $className, ...$constructorArgs): MockObject {
+  public function createApi4ActionMock(string $className, mixed ...$constructorArgs): MockObject {
     return $this->getMockBuilder($className)
       ->onlyMethods(['getParamInfo'])
       ->setConstructorArgs($constructorArgs)
       ->getMock();
+  }
+
+  /**
+   * Creates an APIv4 remote action mock that behaves (mostly) like the mocked
+   * class itself. However, getResolvedContactId() is mocked to return the given
+   * contact id, and getParamInfo() is mocked because otherwise option callbacks
+   * would be called that (might) require a complete Civi env.
+   *
+   * @template RealInstanceType of \Civi\RemoteTools\Api4\Action\RemoteActionInterface
+   * @param class-string<RealInstanceType> $className
+   *
+   * @return \PHPUnit\Framework\MockObject\MockObject&RealInstanceType
+   */
+  public function createApi4RemoteActionMock(
+    string $className,
+    ?int $resolvedContactId,
+    mixed ...$constructorArgs
+  ): MockObject {
+    $mock = $this->getMockBuilder($className)
+      ->onlyMethods(['getParamInfo', 'getResolvedContactId'])
+      ->setConstructorArgs($constructorArgs)
+      ->getMock();
+    $mock->method('getResolvedContactId')->willReturn($resolvedContactId);
+
+    return $mock;
   }
 
   /**
