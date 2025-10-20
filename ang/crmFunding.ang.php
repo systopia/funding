@@ -30,5 +30,4 @@ return [
     'skApplicationProcessTable',
     'skDrawdownTable',
   ],
-  'settings' => [],
 ];
