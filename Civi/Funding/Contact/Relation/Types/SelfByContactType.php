@@ -51,10 +51,7 @@ TEMPLATE;
   }
 
   public function getHelp(): string {
-    return E::ts(<<<HELP
-The applying contact itself is available as recipient if the contact is of the
-specified type.
-HELP);
+    return E::ts('The applying contact itself is available as recipient if the contact is of the specified type.');
   }
 
   public function getExtra(): array {

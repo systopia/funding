@@ -81,11 +81,7 @@ TEMPLATE;
   }
 
   public function getHelp(): string {
-    return E::ts(<<<HELP
-Matches a contact that has a relationship. The relationship type may be limited
-to various types. The type of the related contacts may be limited to various
-types. The related contacts may be limited to those in any of the given groups.
-HELP);
+    return E::ts("Matches a contact that has a relationship. The relationship type may be limited to various types. The type of the related contacts may be limited to various types. The related contacts may be limited to those in any of the given groups.");
   }
 
   /**

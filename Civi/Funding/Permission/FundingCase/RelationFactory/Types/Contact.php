@@ -47,9 +47,7 @@ TEMPLATE;
   }
 
   public function getHelp(): string {
-    return E::ts(<<<HELP
-Assign permissions for new funding cases to the specified contact.
-HELP);
+    return E::ts("Assign permissions for new funding cases to the specified contact.");
   }
 
   public function getExtra(): array {
