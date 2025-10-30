@@ -56,10 +56,7 @@ TEMPLATE;
   }
 
   public function getHelp(): string {
-    return E::ts(<<<HELP
-Assign permissions for new funding cases to contacts that have a relationship
-of the specified type to the recipient contact.
-HELP);
+    return E::ts('Assign permissions for new funding cases to contacts that have a relationship of the specified type to the recipient contact.');
   }
 
   public function getExtra(): array {
