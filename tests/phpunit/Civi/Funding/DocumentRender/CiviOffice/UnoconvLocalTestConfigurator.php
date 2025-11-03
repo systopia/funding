@@ -23,6 +23,12 @@ use Civi\Funding\Util\TestFileUtil;
 
 final class UnoconvLocalTestConfigurator {
 
+  private const UNOCONV_BINARY_PATH_SETTINGS_KEY = 'unoconv_binary_path';
+
+  private const UNOCONV_LOCK_FILE_PATH_SETTINGS_KEY = 'unoconv_lock_file_path';
+
+  private const PHPWORD_TOKENS_SETTINGS_KEY = 'phpword_tokens';
+
   private static ?string $unoconv;
 
   private static bool $unoconvSearched = FALSE;
@@ -37,10 +43,11 @@ final class UnoconvLocalTestConfigurator {
     $unoconvLockFile = $tmpDir . '/unoconv.lock';
     \Civi::settings()->set('civioffice_renderer_unoconv-local', [
       'type' => 'unoconv-local',
-      \CRM_Civioffice_DocumentRendererType_LocalUnoconv::UNOCONV_BINARY_PATH_SETTINGS_KEY => self::getUnoconv(),
-      \CRM_Civioffice_DocumentRendererType_LocalUnoconv::UNOCONV_LOCK_FILE_PATH_SETTINGS_KEY => $unoconvLockFile,
-      \CRM_Civioffice_DocumentRendererType_LocalUnoconv::PHPWORD_TOKENS_SETTINGS_KEY => TRUE,
+      self::UNOCONV_BINARY_PATH_SETTINGS_KEY => self::getUnoconv(),
+      self::UNOCONV_LOCK_FILE_PATH_SETTINGS_KEY => $unoconvLockFile,
+      self::PHPWORD_TOKENS_SETTINGS_KEY => TRUE,
     ]);
+    \Civi::settings()->set('civioffice_renderers', ['unoconv-local' => 'unoconv Renderer']);
     touch($unoconvLockFile);
   }
 
