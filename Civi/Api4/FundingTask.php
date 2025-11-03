@@ -23,6 +23,7 @@ use Civi\Api4\Generic\DAOEntity;
 use Civi\Funding\Api4\Action\FundingTask\CreateAction;
 use Civi\Funding\Api4\Action\FundingTask\DeleteAction;
 use Civi\Funding\Api4\Action\FundingTask\GetAction;
+use Civi\Funding\Api4\Action\FundingTask\GetActionsAction;
 use Civi\Funding\Api4\Action\FundingTask\GetFieldsAction;
 use Civi\Funding\Api4\Action\FundingTask\UpdateAction;
 use Civi\Funding\Api4\Traits\AccessROPermissionsTrait;
@@ -48,12 +49,16 @@ final class FundingTask extends DAOEntity {
     return (new DeleteAction())->setCheckPermissions($checkPermissions);
   }
 
-  public static function getFields($checkPermissions = TRUE): GetFieldsAction {
-    return (new GetFieldsAction())->setCheckPermissions($checkPermissions);
-  }
-
   public static function get($checkPermissions = TRUE): GetAction {
     return (new GetAction())->setCheckPermissions($checkPermissions);
+  }
+
+  public static function getActions($checkPermissions = TRUE) {
+    return (new GetActionsAction())->setCheckPermissions(FALSE);
+  }
+
+  public static function getFields($checkPermissions = TRUE): GetFieldsAction {
+    return (new GetFieldsAction())->setCheckPermissions($checkPermissions);
   }
 
   public static function save($checkPermissions = TRUE) {
