@@ -40,6 +40,8 @@ abstract class AbstractDrawdownReviewTaskHandler extends AbstractDrawdownTaskHan
     DrawdownEntity $previousDrawdown
   ): iterable {
     if ($this->isStatusChangedToNew($drawdownBundle, $previousDrawdown)) {
+      // Actually this should not happen because the possibility to switch back
+      // to status "new" is not provided.
       yield $this->createReviewTask($drawdownBundle);
     }
   }
@@ -66,7 +68,7 @@ abstract class AbstractDrawdownReviewTaskHandler extends AbstractDrawdownTaskHan
 
   /**
    * @phpstan-return non-empty-list<string>
-   *   One of the returned permissions is required to apply an drawdown.
+   *   One of the returned permissions is required to review a drawdown.
    */
   protected function getRequiredPermissions(): array {
     return ['review_drawdown'];
