@@ -28,6 +28,10 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * prefixed by "file://". It only allows to access single files by their URI.
  * This makes it possible to just pass the path of a template file to CiviOffice.
  *
+ * @todo Add PHP type hints for parameters once CiviOffice is released in a new
+ * version containing the type hints and this version is required as minimum
+ * version.
+ *
  * @codeCoverageIgnore
  */
 final class CiviOfficeDocumentStore extends \CRM_Civioffice_DocumentStore implements EventSubscriberInterface {
@@ -77,7 +81,7 @@ final class CiviOfficeDocumentStore extends \CRM_Civioffice_DocumentStore implem
   /**
    * @inheritDoc
    */
-  public function getDocumentByURI($uri) {
+  public function getDocumentByURI($uri): ?CiviOfficeDocument {
     if ($this->isStoreURI($uri) && is_file($uri)) {
       return new CiviOfficeDocument($this, $uri);
     }
@@ -87,6 +91,8 @@ final class CiviOfficeDocumentStore extends \CRM_Civioffice_DocumentStore implem
 
   /**
    * @inheritDoc
+   *
+   * @param string $uri
    */
   public function isStoreURI($uri): bool {
     return str_starts_with($uri, self::SCHEME . '://');
