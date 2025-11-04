@@ -34,7 +34,6 @@ final class HiHReceiptsJsonSchema extends JsonSchemaObject {
     ApplicationCostItemEntity $honorareBewilligt,
     ApplicationCostItemEntity $sachkostenBewilligt,
     ClearingProcessEntityBundle $clearingProcessBundle,
-    float $amountDrawdownsAccepted
   ) {
     $properties = [
       'costItems' => new HiHClearingCostItemsJsonSchema(
@@ -71,15 +70,6 @@ final class HiHReceiptsJsonSchema extends JsonSchemaObject {
             'message' => 'Der bewilligte Betrag darf nicht überschritten werden.',
           ],
         ]),
-      ]
-    );
-
-    $properties['restmittel'] = new JsonSchemaCalculate(
-      'number',
-      'round(mittelabrufe - ausgaben, 2)',
-      [
-        'mittelabrufe' => $amountDrawdownsAccepted,
-        'ausgaben' => new JsonSchemaDataPointer('1/ausgaben'),
       ]
     );
 

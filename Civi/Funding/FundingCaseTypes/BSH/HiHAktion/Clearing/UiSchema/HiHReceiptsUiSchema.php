@@ -226,13 +226,12 @@ final class HiHReceiptsUiSchema extends JsonFormsGroup {
 
       new JsonFormsGroup('Insgesamt', [
         new JsonFormsTable(
-          ['Beantragter Betrag', 'Bewilligter Betrag', "Ausgaben in $currency", "Restmittel in $currency"],
+          ['Beantragter Betrag', 'Bewilligter Betrag', "Ausgaben in $currency"],
           [
             new JsonFormsTableRow([
               new JsonFormsMarkup("{$clearingProcessBundle->getApplicationProcess()->getAmountRequested()} $currency"),
               new JsonFormsMarkup("{$clearingProcessBundle->getFundingCase()->getAmountApproved()} $currency"),
               new JsonFormsControl('#/properties/ausgaben', ''),
-              new JsonFormsControl('#/properties/restmittel', ''),
             ]),
           ]
         ),

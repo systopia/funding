@@ -72,7 +72,6 @@ final class HiHClearingReceiptsFormGenerator implements ReceiptsFormGeneratorInt
         $applicationCostItemsByType['bewilligt']['honorareBewilligt'],
         $applicationCostItemsByType['bewilligt']['sachkostenBewilligt'],
         $clearingProcessBundle,
-        $this->payoutProcessManager->getAmountAccepted($payoutProcess)
       ),
       new HiHReceiptsUiSchema(
         $applicationCostItemsByType,
