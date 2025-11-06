@@ -22,6 +22,7 @@ namespace Civi\Funding\Api4\Action\FundingCase;
 use Civi\Api4\FundingCase;
 use Civi\Api4\Generic\DAOGetFieldsAction;
 use Civi\Api4\Query\Api4SelectQuery;
+use Civi\Funding\Api4\Action\FundingClearingProcess\Query\ClearingProcessQuery;
 use Civi\Funding\Api4\Action\Traits\PossiblePermissionsLoaderTrait;
 use Civi\Funding\Api4\Query\AliasSqlRenderer;
 use Civi\Funding\Api4\Query\Util\SqlRendererUtil;
@@ -158,8 +159,14 @@ final class GetFieldsAction extends DAOGetFieldsAction {
         'readonly' => TRUE,
         'nullable' => TRUE,
         'operators' => [],
-        // Without sql renderer the query would fail. The actual value is fetched afterward.
-        'sql_renderer' => fn () => '(SELECT NULL)',
+        'sql_renderer' => fn (array $field, Api4SelectQuery $query) => ClearingProcessQuery::amountCleared(
+          sprintf('(SELECT cp.id from civicrm_funding_clearing_process cp
+            JOIN civicrm_funding_application_process ap ON ap.id = cp.application_process_id
+            AND ap.funding_case_id = %s)',
+            SqlRendererUtil::getFieldSqlName($field, $query, 'id')
+          ),
+          'IN'
+        ),
       ],
       [
         'name' => 'amount_admitted',
@@ -168,8 +175,14 @@ final class GetFieldsAction extends DAOGetFieldsAction {
         'data_type' => 'Money',
         'readonly' => TRUE,
         'nullable' => TRUE,
-        // Without sql renderer the query would fail. The actual value is fetched afterward.
-        'sql_renderer' => fn () => '(SELECT NULL)',
+        'sql_renderer' => fn (array $field, Api4SelectQuery $query) => ClearingProcessQuery::amountAdmitted(
+          sprintf('(SELECT cp.id from civicrm_funding_clearing_process cp
+            JOIN civicrm_funding_application_process ap ON ap.id = cp.application_process_id
+            AND ap.funding_case_id = %s)',
+            SqlRendererUtil::getFieldSqlName($field, $query, 'id')
+          ),
+          'IN'
+        ),
       ],
       [
         'name' => 'application_process_review_progress',

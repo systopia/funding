@@ -122,8 +122,8 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
 
     static::assertArraySubset([
       'CAN_open_clearing' => FALSE,
-      'amount_cleared' => NULL,
-      'amount_admitted' => NULL,
+      'amount_cleared' => 0.0,
+      'amount_admitted' => 0.0,
     ], FundingApplicationProcess::get()->addSelect(
         '*',
         'CAN_open_clearing',

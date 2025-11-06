@@ -185,7 +185,7 @@ return [
               'label' => E::ts('Amount Cleared'),
               'sortable' => TRUE,
               'tally' => [
-                'fn' => '',
+                'fn' => 'SUM',
               ],
             ],
             [
@@ -195,7 +195,7 @@ return [
               'label' => E::ts('Amount Admitted'),
               'sortable' => TRUE,
               'tally' => [
-                'fn' => '',
+                'fn' => 'SUM',
               ],
             ],
             [

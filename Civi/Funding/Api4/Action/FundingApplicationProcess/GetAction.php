@@ -70,33 +70,12 @@ final class GetAction extends AbstractReferencingDAOGetAction {
         $this->unsetIfNotSelected($record, 'funding_case_id.funding_case_type_id.name');
       }
     }
-
-    $clearingProcessFields = array_intersect([
-      'amount_cleared',
-      'amount_admitted',
-    ], $this->getSelect());
-    if ([] !== $clearingProcessFields) {
-      /** @phpstan-var array<string, mixed> $record */
-      foreach ($result as &$record) {
-        $clearingProcessAmounts = $this->getApi4()->execute(FundingClearingProcess::getEntityName(), 'get', [
-          'select' => array_map(fn (string $field) => 'SUM(' . $field . ') AS SUM_' . $field, $clearingProcessFields),
-          'where' => [
-            ['application_process_id', '=', $record['id']],
-          ],
-          'groupBy' => ['application_process_id'],
-        ])->first();
-
-        foreach ($clearingProcessFields as $field) {
-          $record[$field] = $clearingProcessAmounts["SUM_$field"] ?? NULL;
-        }
-      }
-    }
   }
 
   /**
    * @phpstan-param array{
    *   id: int,
-   *   'funding_case_id.funding_case_type_id.name': string,
+   *   "funding_case_id.funding_case_type_id.name": string,
    *   status: string,
    *   funding_case_id: int,
    * } $record

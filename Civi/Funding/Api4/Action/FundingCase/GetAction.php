@@ -20,7 +20,6 @@ declare(strict_types = 1);
 namespace Civi\Funding\Api4\Action\FundingCase;
 
 use Civi\Api4\FundingCase;
-use Civi\Api4\FundingClearingProcess;
 use Civi\Api4\Generic\DAOGetAction;
 use Civi\Api4\Generic\Result;
 use Civi\Core\CiviEventDispatcherInterface;
@@ -165,24 +164,6 @@ final class GetAction extends DAOGetAction {
         FlattenedPermissionsUtil::addFlattenedPermissions($record, $record['permissions'], $possiblePermissions);
         $record['transfer_contract_uri'] =
           isset($record['id']) ? $this->getTransferContractRouter()->generate($record['id']) : NULL;
-
-        $clearingProcessFields = array_intersect([
-          'amount_cleared',
-          'amount_admitted',
-        ], $this->getSelect());
-        if ([] !== $clearingProcessFields) {
-          $clearingProcessAmounts = $this->getApi4()->execute(FundingClearingProcess::getEntityName(), 'get', [
-            'select' => array_map(fn (string $field) => 'SUM(' . $field . ') AS SUM_' . $field, $clearingProcessFields),
-            'where' => [
-              ['application_process_id.funding_case_id', '=', $record['id']],
-            ],
-            'groupBy' => ['application_process_id.funding_case_id'],
-          ])->first();
-        }
-
-        foreach ($clearingProcessFields as $field) {
-          $record[$field] = $clearingProcessAmounts['SUM_' . $field] ?? NULL;
-        }
 
         $records[] = $record;
       }
