@@ -22,6 +22,7 @@ namespace Civi\Funding\Api4\Action\FundingClearingProcess;
 use Civi\Api4\FundingClearingProcess;
 use Civi\Api4\Generic\DAOGetFieldsAction;
 use Civi\Api4\Query\Api4SelectQuery;
+use Civi\Funding\Api4\Action\FundingClearingProcess\Query\ClearingProcessQuery;
 use Civi\Funding\Api4\Action\Traits\ApplicationProcessManagerTrait;
 use Civi\Funding\Api4\Action\Traits\ClearingProcessManagerTrait;
 use Civi\Funding\Api4\Action\Traits\FundingCaseManagerTrait;
@@ -91,9 +92,6 @@ final class GetFieldsAction extends DAOGetFieldsAction {
       'sql_renderer' => new AliasSqlRenderer('application_process_id.funding_case_id.funding_program_id.currency'),
     ];
 
-    $recordedCostsSql = 'IFNULL(
-      (SELECT SUM(item.amount) FROM civicrm_funding_clearing_cost_item item
-        WHERE item.clearing_process_id = %s), 0)';
     $fields[] = [
       'name' => 'amount_recorded_costs',
       'title' => E::ts('Amount Recorded Costs'),
@@ -102,15 +100,10 @@ final class GetFieldsAction extends DAOGetFieldsAction {
       'data_type' => 'Money',
       'readonly' => TRUE,
       'nullable' => FALSE,
-      'sql_renderer' => fn (array $field, Api4SelectQuery $query) => sprintf(
-        $recordedCostsSql,
-        SqlRendererUtil::getFieldSqlName($field, $query, 'id')
-      ),
+      'sql_renderer' => fn (array $field, Api4SelectQuery $query) =>
+      ClearingProcessQuery::recordedCostsSql(SqlRendererUtil::getFieldSqlName($field, $query, 'id')),
     ];
 
-    $recordedResourcesSql = 'IFNULL(
-        (SELECT SUM(item.amount) FROM civicrm_funding_clearing_resources_item item
-          WHERE item.clearing_process_id = %s), 0)';
     $fields[] = [
       'name' => 'amount_recorded_resources',
       'title' => E::ts('Amount Recorded Resources'),
@@ -119,15 +112,10 @@ final class GetFieldsAction extends DAOGetFieldsAction {
       'data_type' => 'Money',
       'readonly' => TRUE,
       'nullable' => FALSE,
-      'sql_renderer' => fn (array $field, Api4SelectQuery $query) => sprintf(
-        $recordedResourcesSql,
-        SqlRendererUtil::getFieldSqlName($field, $query, 'id')
-      ),
+      'sql_renderer' => fn (array $field, Api4SelectQuery $query) =>
+      ClearingProcessQuery::recordedResourcesSql(SqlRendererUtil::getFieldSqlName($field, $query, 'id')),
     ];
 
-    $admittedCostsSql = 'IFNULL(
-        (SELECT SUM(item.amount_admitted) FROM civicrm_funding_clearing_cost_item item
-        WHERE item.clearing_process_id = %s), 0)';
     $fields[] = [
       'name' => 'amount_admitted_costs',
       'title' => E::ts('Amount Admitted Costs'),
@@ -136,15 +124,10 @@ final class GetFieldsAction extends DAOGetFieldsAction {
       'data_type' => 'Money',
       'readonly' => TRUE,
       'nullable' => FALSE,
-      'sql_renderer' => fn (array $field, Api4SelectQuery $query) => sprintf(
-        $admittedCostsSql,
-        SqlRendererUtil::getFieldSqlName($field, $query, 'id')
-      ),
+      'sql_renderer' => fn (array $field, Api4SelectQuery $query) =>
+      ClearingProcessQuery::admittedCostsSql(SqlRendererUtil::getFieldSqlName($field, $query, 'id')),
     ];
 
-    $admittedResourcesSql = 'IFNULL(
-        (SELECT SUM(item.amount_admitted) FROM civicrm_funding_clearing_resources_item item
-        WHERE item.clearing_process_id = %s), 0)';
     $fields[] = [
       'name' => 'amount_admitted_resources',
       'title' => E::ts('Amount Admitted Resources'),
@@ -153,10 +136,8 @@ final class GetFieldsAction extends DAOGetFieldsAction {
       'data_type' => 'Money',
       'readonly' => TRUE,
       'nullable' => FALSE,
-      'sql_renderer' => fn(array $field, Api4SelectQuery $query) => sprintf(
-        $admittedResourcesSql,
-        SqlRendererUtil::getFieldSqlName($field, $query, 'id')
-      ),
+      'sql_renderer' => fn(array $field, Api4SelectQuery $query) =>
+      ClearingProcessQuery::admittedResourcesSql(SqlRendererUtil::getFieldSqlName($field, $query, 'id')),
     ];
 
     $fields[] = [
@@ -169,11 +150,8 @@ final class GetFieldsAction extends DAOGetFieldsAction {
       'data_type' => 'Money',
       'readonly' => TRUE,
       'nullable' => FALSE,
-      'sql_renderer' => fn (array $field, Api4SelectQuery $query) => sprintf(
-        '(SELECT %s - %s)',
-        sprintf($recordedCostsSql, SqlRendererUtil::getFieldSqlName($field, $query, 'id')),
-        sprintf($recordedResourcesSql, SqlRendererUtil::getFieldSqlName($field, $query, 'id'))
-      ),
+      'sql_renderer' => fn (array $field, Api4SelectQuery $query) =>
+      ClearingProcessQuery::amountCleared(SqlRendererUtil::getFieldSqlName($field, $query, 'id')),
     ];
 
     $fields[] = [
@@ -186,11 +164,8 @@ final class GetFieldsAction extends DAOGetFieldsAction {
       'data_type' => 'Money',
       'readonly' => TRUE,
       'nullable' => FALSE,
-      'sql_renderer' => fn (array $field, Api4SelectQuery $query) => sprintf(
-        '(SELECT %s - %s)',
-        sprintf($admittedCostsSql, SqlRendererUtil::getFieldSqlName($field, $query, 'id')),
-        sprintf($admittedResourcesSql, SqlRendererUtil::getFieldSqlName($field, $query, 'id'))
-      ),
+      'sql_renderer' => fn (array $field, Api4SelectQuery $query) =>
+      ClearingProcessQuery::amountAdmitted(SqlRendererUtil::getFieldSqlName($field, $query, 'id')),
     ];
 
     return $fields;

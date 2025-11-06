@@ -21,9 +21,12 @@ namespace Civi\Funding\Api4\Action\FundingApplicationProcess;
 
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\DAOGetFieldsAction;
+use Civi\Api4\Query\Api4SelectQuery;
+use Civi\Funding\Api4\Action\FundingClearingProcess\Query\ClearingProcessQuery;
 use Civi\Funding\Api4\Action\Traits\ApplicationProcessManagerTrait;
 use Civi\Funding\Api4\Action\Traits\FundingCaseManagerTrait;
 use Civi\Funding\Api4\Query\AliasSqlRenderer;
+use Civi\Funding\Api4\Query\Util\SqlRendererUtil;
 use Civi\Funding\Api4\Util\ContactUtil;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\Entity\FundingCaseEntity;
@@ -84,20 +87,30 @@ final class GetFieldsAction extends DAOGetFieldsAction {
     $fields[] = [
       'name' => 'amount_cleared',
       'title' => E::ts('Amount Cleared'),
-      'type' => 'Custom',
+      'type' => 'Extra',
       'data_type' => 'Money',
       'readonly' => TRUE,
-      'nullable' => TRUE,
-      'operators' => [],
+      'nullable' => FALSE,
+      'sql_renderer' => fn (array $field, Api4SelectQuery $query) => ClearingProcessQuery::amountCleared(
+        sprintf('(SELECT cp.id from civicrm_funding_clearing_process cp WHERE cp.application_process_id = %s)',
+          SqlRendererUtil::getFieldSqlName($field, $query, 'id')
+        ),
+        'IN'
+      ),
     ];
     $fields[] = [
       'name' => 'amount_admitted',
       'title' => E::ts('Amount Admitted'),
-      'type' => 'Custom',
+      'type' => 'Extra',
       'data_type' => 'Money',
       'readonly' => TRUE,
-      'nullable' => TRUE,
-      'operators' => [],
+      'nullable' => FALSE,
+      'sql_renderer' => fn (array $field, Api4SelectQuery $query) => ClearingProcessQuery::amountAdmitted(
+        sprintf('(SELECT cp.id from civicrm_funding_clearing_process cp WHERE cp.application_process_id = %s)',
+          SqlRendererUtil::getFieldSqlName($field, $query, 'id')
+        ),
+        'IN'
+      ),
     ];
     $fields[] = [
       'name' => 'CAN_open_clearing',
