@@ -47,6 +47,12 @@ final class HiHReportFormFactory implements ReportFormFactoryInterface {
     $scopePrefixAnsprechperson = "$scopePrefix/ansprechperson/properties";
     $scopePrefixTeilnehmende = "$scopePrefix/teilnehmende/properties";
 
+    $clearingNote = <<<EOD
+<p>Achtung: Ihr Verwendungsnachweis ist erst gespeichert bzw. eingereicht, wenn
+das System auf die Übersichtsseite springt. Dieser Vorgang kann einen Moment
+dauern, bitte haben Sie etwas Geduld.</p>
+EOD;
+
     return new ReportForm(
       new HiHReportDataJsonSchema(),
       new JsonFormsCategorization([
@@ -67,6 +73,7 @@ final class HiHReportFormFactory implements ReportFormFactoryInterface {
             new JsonFormsControl("$scopePrefixAnsprechperson/email", 'Mailadresse'),
             new JsonFormsControl("$scopePrefixAnsprechperson/telefonnummer", 'Telefonnummer'),
           ]),
+          new JsonFormsMarkup($clearingNote),
         ]),
 
         new JsonFormsCategory('Sachbericht', [
@@ -245,8 +252,11 @@ EOD
             ),
           ]),
 
+          new JsonFormsMarkup($clearingNote),
         ]),
-      ])
+      ]),
+      NULL,
+      new JsonFormsMarkup($clearingNote)
     );
   }
 
