@@ -550,4 +550,141 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
     );
   }
 
+  public function testAcceptCalculativeDoesNotInitializesAmountAdmittedIfNotAllowed(): void {
+    FundingCaseContactRelationFixture::addContact(
+      $this->contactId,
+      $this->clearingProcessBundle->getFundingCase()->getId(),
+      [ClearingProcessPermissions::REVIEW_CALCULATIVE, ClearingProcessPermissions::REVIEW_AMEND],
+    );
+
+    $clearingCostItem = ClearingCostItemFixture::addFixture(
+      $this->clearingProcessBundle->getClearingProcess()->getId(),
+      $this->costItem->getId(),
+      ['status' => 'new', 'amount_admitted' => NULL]
+    );
+    $clearingResourcesItem = ClearingResourcesItemFixture::addFixture(
+      $this->clearingProcessBundle->getClearingProcess()->getId(),
+      $this->resourcesItem->getId(),
+      ['status' => 'rejected', 'amount_admitted' => NULL]
+    );
+
+    $result = FundingClearingProcess::submitForm()
+      ->setId($this->clearingProcessBundle->getClearingProcess()->getId())
+      ->setData([
+        'costItems' => [
+          $this->costItem->getId() => [
+            'records' => [
+              [
+                '_id' => $clearingCostItem->getId(),
+                'receiptNumber' => 'ignored',
+                'receiptDate' => '2000-12-31',
+                'paymentDate' => '2001-01-01',
+                'paymentParty' => 'ignored',
+                'reason' => 'ignored',
+                'amount' => 2,
+                'amountAdmitted' => NULL,
+              ],
+            ],
+          ],
+        ],
+        'resourcesItems' => [
+          $this->resourcesItem->getId() => [
+            'records' => [
+              [
+                '_id' => $clearingResourcesItem->getId(),
+                'receiptNumber' => 'ignored',
+                'receiptDate' => '2000-12-31',
+                'paymentDate' => '2001-01-01',
+                'paymentParty' => 'ignored',
+                'reason' => 'ignored',
+                'amount' => 3,
+                'amountAdmitted' => NULL,
+              ],
+            ],
+          ],
+        ],
+        'reportData' => ['foo' => 'bar'],
+        '_action' => 'accept-calculative',
+      ])->execute()->getArrayCopy();
+    static::assertSame(['/_action' => ['The value is not allowed.']], $result['errors']);
+  }
+
+  public function testAcceptCalculativeDoesNotChangeDataButInitializesAmountAdmittedIfAllowed(): void {
+    FundingCaseContactRelationFixture::addContact(
+      $this->contactId,
+      $this->clearingProcessBundle->getFundingCase()->getId(),
+      [ClearingProcessPermissions::REVIEW_CALCULATIVE, ClearingProcessPermissions::REVIEW_AMEND],
+    );
+
+    $clearingCostItem = ClearingCostItemFixture::addFixture(
+      $this->clearingProcessBundle->getClearingProcess()->getId(),
+      $this->costItem->getId(),
+      ['status' => 'new', 'amount_admitted' => NULL]
+    );
+    $clearingResourcesItem = ClearingResourcesItemFixture::addFixture(
+      $this->clearingProcessBundle->getClearingProcess()->getId(),
+      $this->resourcesItem->getId(),
+      ['status' => 'rejected', 'amount_admitted' => NULL]
+    );
+
+    $submitAction = FundingClearingProcess::submitForm()
+      ->setId($this->clearingProcessBundle->getClearingProcess()->getId())
+      ->setData([
+        'costItems' => [
+          $this->costItem->getId() => [
+            'records' => [
+              [
+                '_id' => $clearingCostItem->getId(),
+                'receiptNumber' => 'ignored',
+                'receiptDate' => '2000-12-31',
+                'paymentDate' => '2001-01-01',
+                'paymentParty' => 'ignored',
+                'reason' => 'ignored',
+                'amount' => 2,
+                'amountAdmitted' => NULL,
+              ],
+            ],
+          ],
+        ],
+        'resourcesItems' => [
+          $this->resourcesItem->getId() => [
+            'records' => [
+              [
+                '_id' => $clearingResourcesItem->getId(),
+                'receiptNumber' => 'ignored',
+                'receiptDate' => '2000-12-31',
+                'paymentDate' => '2001-01-01',
+                'paymentParty' => 'ignored',
+                'reason' => 'ignored',
+                'amount' => 3.4,
+                'amountAdmitted' => NULL,
+              ],
+            ],
+          ],
+        ],
+        'reportData' => ['foo' => 'bar'],
+        '_action' => 'accept-calculative',
+      ]);
+
+    $this->getTestCaseTypeMetaData()->setGeneralClearingAdmitAllowed(TRUE);
+    $result = $submitAction->execute()->getArrayCopy();
+    static::assertEquals(new \stdClass(), $result['errors']);
+
+    static::assertEquals(
+      ['amount_admitted' => 2.0, 'status' => 'accepted'] + $clearingCostItem->toArray(),
+      FundingClearingCostItem::get(FALSE)->execute()->single()
+    );
+    static::assertEquals(
+      ['amount_admitted' => 3.4, 'status' => 'accepted'] + $clearingResourcesItem->toArray(),
+      FundingClearingResourcesItem::get(FALSE)->execute()->single()
+    );
+
+    static::assertEquals(
+      [
+        'is_review_calculative' => TRUE,
+      ] + $this->clearingProcessBundle->getClearingProcess()->toArray(),
+      FundingClearingProcess::get(FALSE)->execute()->single()
+    );
+  }
+
 }

@@ -77,8 +77,10 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
    * @throws \CRM_Core_Exception
    */
   public function handle(ClearingFormSubmitCommand $command): ClearingFormSubmitResult {
+    $clearingProcessBundle = $command->getClearingProcessBundle();
+
     $validationResult = $this->validateHandler->handle(
-      new ClearingFormValidateCommand($command->getClearingProcessBundle(), $command->getData())
+      new ClearingFormValidateCommand($clearingProcessBundle, $command->getData())
     );
 
     if (!$validationResult->isValid()) {
@@ -89,21 +91,31 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
 
     /** @phpstan-var clearingFormDataT $data */
     $data = $validationResult->getData();
-    $files = [];
-    $clearingProcessBundle = $command->getClearingProcessBundle();
-    $clearingProcess = $clearingProcessBundle->getClearingProcess();
-    $contentChangeAllowed = $this->actionsDeterminer->isContentChangeAllowed($clearingProcessBundle);
 
-    if ($this->actionsDeterminer->isEditAction($data['_action'])) {
+    $amountAdmittedInitialized = FALSE;
+    if ('accept-calculative' === $command->getData()['_action']) {
+      $contentChangeAllowed = FALSE;
+      $amountAdmittedInitialized = $this->initializeAmountsAdmitted($data);
+    }
+    else {
+      $contentChangeAllowed = $this->actionsDeterminer->isContentChangeAllowed($clearingProcessBundle);
+    }
+
+    $files = [];
+    $clearingProcess = $clearingProcessBundle->getClearingProcess();
+
+    if ($amountAdmittedInitialized || $this->actionsDeterminer->isEditAction($data['_action'])) {
+      $persistClearingItemsFlags = $contentChangeAllowed
+        ? AbstractClearingItemsFormDataPersister::FLAG_CONTENT_CHANGE_ALLOWED : 0;
       $files += $this->clearingCostItemsFormDataPersister->persistClearingItems(
         $clearingProcessBundle,
         $data['costItems'] ?? [],
-        $contentChangeAllowed ? AbstractClearingItemsFormDataPersister::FLAG_CONTENT_CHANGE_ALLOWED : 0
+        $persistClearingItemsFlags
       );
       $files += $this->clearingResourcesItemsFormDataPersister->persistClearingItems(
         $clearingProcessBundle,
         $data['resourcesItems'] ?? [],
-        $contentChangeAllowed ? AbstractClearingItemsFormDataPersister::FLAG_CONTENT_CHANGE_ALLOWED : 0
+        $persistClearingItemsFlags
       );
 
       if ($contentChangeAllowed) {
@@ -134,6 +146,36 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
     $data = $this->formDataGetHandler->handle(new ClearingFormDataGetCommand($clearingProcessBundle));
 
     return new ClearingFormSubmitResult([], $data, $files);
+  }
+
+  /**
+   * If the clearing shall be accepted calculative, all amounts admitted have to
+   * be set. This sets all unset amounts admitted to the amount cleared.
+   *
+   * @phpstan-param clearingFormDataT $data
+   *
+   * @return bool
+   *   TRUE if at least one amount admitted was initialized.
+   */
+  private function initializeAmountsAdmitted(array &$data): bool {
+    $amountAdmittedInitialized = FALSE;
+
+    foreach (['costItems', 'resourcesItems'] as $itemsKey) {
+      if (!isset($data[$itemsKey])) {
+        continue;
+      }
+
+      foreach ($data[$itemsKey] as &$costItem) {
+        foreach ($costItem['records'] as &$record) {
+          if (!isset($record['amountAdmitted'])) {
+            $record['amountAdmitted'] = $record['amount'];
+            $amountAdmittedInitialized = TRUE;
+          }
+        }
+      }
+    }
+
+    return $amountAdmittedInitialized;
   }
 
 }

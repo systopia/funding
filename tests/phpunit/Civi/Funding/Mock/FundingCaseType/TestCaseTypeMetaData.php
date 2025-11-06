@@ -39,6 +39,8 @@ final class TestCaseTypeMetaData extends AbstractFundingCaseTypeMetaData {
    */
   private ?array $resourcesItemTypes = NULL;
 
+  private ?bool $generalClearingAdmitAllowed = NULL;
+
   public function getName(): string {
     return self::NAME;
   }
@@ -66,6 +68,16 @@ final class TestCaseTypeMetaData extends AbstractFundingCaseTypeMetaData {
     return $this->resourcesItemTypes ??= [
       'testResources' => new ResourcesItemType('testResources', 'Test resources'),
     ];
+  }
+
+  public function isGeneralClearingAdmitAllowed(): bool {
+    return $this->generalClearingAdmitAllowed ?? parent::isGeneralClearingAdmitAllowed();
+  }
+
+  public function setGeneralClearingAdmitAllowed(?bool $generalClearingAdmitAllowed): self {
+    $this->generalClearingAdmitAllowed = $generalClearingAdmitAllowed;
+
+    return $this;
   }
 
 }

@@ -90,7 +90,8 @@ function _funding_test_civicrm_container(ContainerBuilder $container): void {
   $container->setAlias(RemoteContactIdResolverInterface::class, FundingRemoteContactIdResolverInterface::class);
 
   $container->autowire(TestCaseTypeMetaData::class)
-    ->addTag(FundingCaseTypeMetaDataInterface::class);
+    ->addTag(FundingCaseTypeMetaDataInterface::class)
+    ->setPublic(TRUE);
 
   $container->autowire(TestApplicationStatusDeterminer::class)
     ->addTag(TestApplicationStatusDeterminer::SERVICE_TAG);
