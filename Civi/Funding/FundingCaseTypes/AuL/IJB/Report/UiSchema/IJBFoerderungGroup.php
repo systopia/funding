@@ -28,14 +28,14 @@ final class IJBFoerderungGroup extends JsonFormsGroup {
     parent::__construct('Verteilung des abgerechneten Betrages auf die Festbeträge', [
       new JsonFormsControl(
         "$scopePrefix/teilnahmetage",
-        'KJP-Festbetragsförderung Teilnahmetage in ' . $currency . '&nbsp;*'
+        'KJP-Festbetragsförderung Teilnahmetage in ' . $currency
       ),
-      new JsonFormsControl("$scopePrefix/honorare", 'KJP-Festbetragsförderung Honorare in ' . $currency . '&nbsp;*'),
+      new JsonFormsControl("$scopePrefix/honorare", 'KJP-Festbetragsförderung Honorare in ' . $currency),
       new JsonFormsControl(
         "$scopePrefix/fahrtkosten",
-        'KJP-Festbetragsförderung Fahrtkosten in ' . $currency . '&nbsp;*'
+        'KJP-Festbetragsförderung Fahrtkosten in ' . $currency
       ),
-      new JsonFormsControl("$scopePrefix/zuschlaege", 'KJP-Festbetragsförderung Zuschläge in ' . $currency . '&nbsp;*'),
+      new JsonFormsControl("$scopePrefix/zuschlaege", 'KJP-Festbetragsförderung Zuschläge in ' . $currency),
       new JsonFormsControl("$scopePrefix/summe", 'KJP-Festbetragsförderung gesamt in ' . $currency),
     ]);
   }

@@ -132,7 +132,7 @@ final class IJBReportFormFactoryTest extends TestCase {
     ];
 
     $data = (object) [
-      '_action' => 'some-action',
+      '_action' => 'apply',
       'reportData' => (object) [
         'grunddaten' => $grunddaten,
         'teilnehmer' => $teilnehmer,
@@ -148,7 +148,7 @@ final class IJBReportFormFactoryTest extends TestCase {
     static::assertFalse($validator->validate($data, $validationSchema)->isValid());
 
     $data = (object) [
-      '_action' => 'some-action',
+      '_action' => 'apply',
       'reportData' => (object) [
         'grunddaten' => $grunddaten,
         'teilnehmer' => $teilnehmer,
@@ -301,31 +301,23 @@ final class IJBReportFormFactoryTest extends TestCase {
       ],
     ];
 
-    $foerderung = (object) [
-      'teilnahmetage' => 1,
-      'honorare' => 2,
-      'fahrtkosten' => 3,
-      'zuschlaege' => 4,
-    ];
-
     $data = (object) [
-      '_action' => 'some-action',
+      '_action' => 'save',
       'reportData' => (object) [
         'grunddaten' => $grunddaten,
         'teilnehmer' => $teilnehmer,
         'zuschuss' => (object) [],
-        'sachbericht' => [
-          'aenderungen' => '',
-          'verstaendigungFreitext' => '',
+        'sachbericht' => (object) [
+          'sprache' => 'andere',
         ],
         'dokumente' => $dokumente,
         'foerderung' => (object) [],
       ],
     ];
-    static::assertFalse($validator->validate($data, $validationSchema)->isValid());
+    static::assertValidationValid($validator->validate($data, $validationSchema));
 
     $data = (object) [
-      '_action' => 'some-action',
+      '_action' => 'apply',
       'reportData' => (object) [
         'grunddaten' => $grunddaten,
         'teilnehmer' => $teilnehmer,
