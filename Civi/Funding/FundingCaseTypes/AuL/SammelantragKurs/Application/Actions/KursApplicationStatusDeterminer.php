@@ -33,6 +33,9 @@ final class KursApplicationStatusDeterminer extends AbstractApplicationProcessSt
   }
 
   private const STATUS_ACTION_STATUS_MAP = [
+    'new' => [
+      'review' => 'review',
+    ],
     'eligible' => [
       'modify' => 'rework',
       'update' => 'eligible',

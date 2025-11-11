@@ -40,10 +40,14 @@ final class KursGrunddatenJsonSchema extends JsonSchemaObject {
   ) {
     $properties = [
       'titel' => new JsonSchemaString([
+        'minLength' => 1,
+        '$limitValidation' => FALSE,
         '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'title']]),
       ]),
       'kurzbeschreibungDerInhalte' => new JsonSchemaString([
+        'minLength' => 1,
         'maxLength' => 500,
+        '$limitValidation' => FALSE,
         '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'short_description']]),
       ]),
       'zeitraeume' => new JsonSchemaArray(
@@ -105,8 +109,8 @@ EOD,
     if ($report) {
       /** @var \Civi\RemoteTools\JsonSchema\JsonSchema $teilnehmerProperties */
       $teilnehmerProperties = $properties['teilnehmer']['properties'];
-      $teilnehmerProperties['referentenMitHonorar'] = new JsonSchemaInteger(['minimum' => 0], TRUE);
-      $teilnehmerProperties['mitFahrtkosten'] = new JsonSchemaInteger(['minimum' => 0], TRUE);
+      $teilnehmerProperties['referentenMitHonorar'] = new JsonSchemaInteger(['minimum' => 0]);
+      $teilnehmerProperties['mitFahrtkosten'] = new JsonSchemaInteger(['minimum' => 0]);
 
       $properties['internerBezeichner'] = new JsonSchemaString([
         'maxLength' => 255,
@@ -127,20 +131,24 @@ EOD,
       static fn (string $key) => $key !== 'internerBezeichner',
     );
 
-    parent::__construct($properties, ['required' => $required]);
+    parent::__construct($properties, [
+      'required' => $required,
+      '$limitValidation' => JsonSchema::fromArray([
+        'schema' => [
+          'required' => ['titel', 'kurzbeschreibungDerInhalte'],
+        ],
+      ]),
+    ]);
+
+    if ($report) {
+      $this->addReportValidations();
+    }
   }
 
   /**
    * In report all fields are required.
    */
-  public function withAllFieldsRequired(): self {
-    $schema = clone $this;
-    $schema->addValidations();
-
-    return $schema;
-  }
-
-  private function addValidations(): void {
+  private function addReportValidations(): void {
     $requiredTeilnehmerIntegers = [
       'weiblich',
       'divers',

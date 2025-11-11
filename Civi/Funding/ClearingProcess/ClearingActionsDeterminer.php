@@ -26,7 +26,7 @@ use CRM_Funding_ExtensionUtil as E;
 
 class ClearingActionsDeterminer {
 
-  private const EDIT_ACTIONS = ['save', 'apply', 'update'];
+  public const EDIT_ACTIONS = ['save', 'apply', 'update'];
 
   private const FUNDING_CASE_FINAL_STATUS_LIST = [FundingCaseStatus::CLEARED];
 
@@ -34,6 +34,8 @@ class ClearingActionsDeterminer {
     'not-started' => [
       ClearingProcessPermissions::CLEARING_APPLY => ['apply', 'save'],
       ClearingProcessPermissions::CLEARING_MODIFY => ['save'],
+      ClearingProcessPermissions::REVIEW_CALCULATIVE => ['review'],
+      ClearingProcessPermissions::REVIEW_CONTENT => ['review'],
     ],
     'draft' => [
       ClearingProcessPermissions::CLEARING_APPLY => ['apply', 'save'],
@@ -103,7 +105,7 @@ class ClearingActionsDeterminer {
       'save' => E::ts('Save'),
       'apply' => E::ts('Request Review'),
       'modify' => E::ts('Modify'),
-      'review' => E::ts('Review'),
+      'review' => E::ts('Start Review'),
       'update' => E::ts('Save'),
       'accept-content' => E::ts('Accept Content'),
       'reject-content' => E::ts('Reject Content'),

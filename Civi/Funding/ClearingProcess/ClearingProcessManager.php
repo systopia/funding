@@ -104,12 +104,7 @@ class ClearingProcessManager {
   public function start(ClearingProcessEntityBundle $clearingProcessBundle): void {
     $clearingProcess = $clearingProcessBundle->getClearingProcess();
     $clearingProcess->setStatus('draft');
-    $clearingProcess->setCreationDate(new \DateTime(date('YmdHis')));
-
     $this->update($clearingProcessBundle);
-
-    $event = new ClearingProcessStartedEvent($clearingProcessBundle);
-    $this->eventDispatcher->dispatch(ClearingProcessStartedEvent::class, $event);
   }
 
   /**
@@ -117,9 +112,22 @@ class ClearingProcessManager {
    */
   public function update(ClearingProcessEntityBundle $clearingProcessBundle): void {
     $clearingProcess = $clearingProcessBundle->getClearingProcess();
-    $clearingProcess->setModificationDate(new \DateTime(date('YmdHis')));
     $previousClearingProcess = $this->get($clearingProcess->getId());
     Assert::notNull($previousClearingProcess);
+
+    if ($clearingProcess->getModificationDate() == $previousClearingProcess->getModificationDate()
+      || NULL === $clearingProcess->getModificationDate()
+    ) {
+      $clearingProcess->setModificationDate(new \DateTime(date('Y-m-d H:i:s')));
+    }
+
+    $started = FALSE;
+    if ('not-started' === $previousClearingProcess->getStatus() && 'not-started' !== $clearingProcess->getStatus()) {
+      /** @var \DateTimeInterface $modificationDate */
+      $modificationDate = $clearingProcess->getModificationDate();
+      $clearingProcess->setCreationDate($modificationDate);
+      $started = TRUE;
+    }
 
     $event = new ClearingProcessPreUpdateEvent($previousClearingProcess, $clearingProcessBundle);
     $this->eventDispatcher->dispatch(ClearingProcessPreUpdateEvent::class, $event);
@@ -132,6 +140,11 @@ class ClearingProcessManager {
 
     $event = new ClearingProcessUpdatedEvent($previousClearingProcess, $clearingProcessBundle);
     $this->eventDispatcher->dispatch(ClearingProcessUpdatedEvent::class, $event);
+
+    if ($started) {
+      $event = new ClearingProcessStartedEvent($clearingProcessBundle);
+      $this->eventDispatcher->dispatch(ClearingProcessStartedEvent::class, $event);
+    }
   }
 
 }

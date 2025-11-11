@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Report;
 
+use Civi\Funding\ClearingProcess\ClearingActionsDeterminer;
 use Civi\Funding\ClearingProcess\Form\ReportForm;
 use Civi\Funding\ClearingProcess\Form\ReportFormFactoryInterface;
 use Civi\Funding\ClearingProcess\Form\ReportFormInterface;
@@ -38,6 +39,7 @@ use Civi\RemoteTools\JsonForms\JsonFormsControl;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategorization;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 
 final class KursReportFormFactory implements ReportFormFactoryInterface {
@@ -61,40 +63,33 @@ final class KursReportFormFactory implements ReportFormFactoryInterface {
       ARRAY_FILTER_USE_KEY
     ));
 
-    $beschreibungJsonSchema = new KursBeschreibungJsonSchema();
-
-    $dokumenteJsonSchema = new KursDokumenteJsonSchema();
-    $foerderungJsonSchema = new KursFoerderungJsonSchema();
-
     $jsonSchema = new JsonSchemaObject([
       'reportData' => new JsonSchemaObject([
         'grunddaten' => $grunddatenJsonSchema,
         'zuschuss' => $zuschussJsonSchema,
-        'beschreibung' => $beschreibungJsonSchema,
-        'dokumente' => $dokumenteJsonSchema,
-        'foerderung' => $foerderungJsonSchema,
+        'beschreibung' => new KursBeschreibungJsonSchema(),
+        'dokumente' => new KursDokumenteJsonSchema(),
+        'foerderung' => new KursFoerderungJsonSchema(),
+      ], [
+        'required' => ['grunddaten', 'zuschuss', 'beschreibung', 'dokumente', 'foerderung'],
       ]),
     ], [
-      'if' => JsonSchema::fromArray([
-        'properties' => [
-          '_action' => ['not' => ['const' => 'save']],
+      'required' => ['reportData'],
+      '$limitValidation' => JsonSchema::fromArray([
+        'condition' => [
+          'evaluate' => [
+            'expression' => 'action not in editActions || action === "save"',
+            'variables' => [
+              'action' => new JsonSchemaDataPointer('/_action', ''),
+              'editActions' => ClearingActionsDeterminer::EDIT_ACTIONS,
+            ],
+          ],
         ],
-      ]),
-      'then' => new JsonSchemaObject([
-        'reportData' => new JsonSchemaObject([
-          'grunddaten' => $grunddatenJsonSchema->withAllFieldsRequired(),
-          'zuschuss' => $zuschussJsonSchema,
-          'beschreibung' => $beschreibungJsonSchema,
-          'dokumente' => $dokumenteJsonSchema,
-          'foerderung' => $foerderungJsonSchema->withAllFieldsRequired(),
-        ],
-        ['required' => ['grunddaten', 'zuschuss', 'beschreibung', 'dokumente', 'foerderung']]),
       ]),
     ]);
 
     $uiSchema = new JsonFormsCategorization([
-      (new KursGrunddatenUiSchema('#/properties/reportData/properties/grunddaten/properties', TRUE))
-        ->withRequiredLabels($grunddatenJsonSchema),
+      new KursGrunddatenUiSchema('#/properties/reportData/properties/grunddaten/properties', TRUE),
       new KursBeschreibungUiSchema('#/properties/reportData/properties/beschreibung/properties'),
       new KursDokumenteCategory('#/properties/reportData/properties/dokumente/properties'),
     ]);

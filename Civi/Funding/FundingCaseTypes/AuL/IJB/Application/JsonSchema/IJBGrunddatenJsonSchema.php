@@ -46,10 +46,14 @@ final class IJBGrunddatenJsonSchema extends JsonSchemaObject {
   ) {
     $properties = [
       'titel' => new JsonSchemaString([
+        'minLength' => 1,
+        '$limitValidation' => FALSE,
         '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'title']]),
       ]),
       'kurzbeschreibungDesInhalts' => new JsonSchemaString([
+        'minLength' => 1,
         'maxLength' => 500,
+        '$limitValidation' => FALSE,
         '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'short_description']]),
       ]),
       'zeitraeume' => new JsonSchemaArray(
@@ -128,7 +132,14 @@ EOD,
                               && $key !== 'internerBezeichner',
     );
 
-    parent::__construct($properties, ['required' => $required]);
+    parent::__construct($properties, [
+      'required' => $required,
+      '$limitValidation' => JsonSchema::fromArray([
+        'schema' => [
+          'required' => ['titel', 'kurzbeschreibungDesInhalts'],
+        ],
+      ]),
+    ]);
   }
 
 }

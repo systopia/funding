@@ -30,7 +30,6 @@ use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
 final class IJBSachberichtJsonSchema extends JsonSchemaObject {
 
   public const THEMENFELDER_OPTIONS = [
-    '' => NULL,
     'Politik und Gesellschaft' => 'politik',
     'Medien' => 'medien',
     'Gewaltprävention' => 'gewaltpraeventation',
@@ -54,266 +53,226 @@ final class IJBSachberichtJsonSchema extends JsonSchemaObject {
     parent::__construct([
       'durchgefuehrt' => new JsonSchemaString([
         'oneOf' => JsonSchemaUtil::buildTitledOneOf2([
-          '' => NULL,
           'entsprechend dem geplanten Programm' => 'geplant',
           'mit folgenden wesentlichen Änderungen (kurze Begründung für die Änderung):' => 'geaendert',
         ]),
-      ], TRUE),
+      ]),
       'form' => new JsonSchemaString([
         'oneOf' => JsonSchemaUtil::buildTitledOneOf2([
-          '' => NULL,
           'in Präsenz' => 'praesenz',
           'digital/hybrid' => 'digital_hybrid',
           'in Präsenz mit digitalen Anteilen' => 'digitaleAnteile',
         ]),
+      ]),
+      'aenderungen' => new JsonSchemaString([
+        '$validations' => [
+          JsonSchema::fromArray([
+            'keyword' => 'evaluate',
+            'value' => [
+              'expression' => 'data != "" || durchgefuehrt === "geplant"',
+              'variables' => [
+                'durchgefuehrt' => new JsonSchemaDataPointer('1/durchgefuehrt'),
+              ],
+            ],
+            'message' => 'Bitte Begründung für die Änderungen angeben.',
+          ]),
+        ],
       ], TRUE),
-      'aenderungen' => new JsonSchemaString([], TRUE),
       'sprache' => new JsonSchemaString([
         'oneOf' => JsonSchemaUtil::buildTitledOneOf2([
-          '' => NULL,
           'in der Partnersprache' => 'partnersprache',
           'auf Deutsch' => 'deutsch',
           'auf:' => 'andere',
         ]),
+      ]),
+      'andereSprache' => new JsonSchemaString([
+        'maxLength' => 50,
+        '$validations' => [
+          JsonSchema::fromArray([
+            'keyword' => 'evaluate',
+            'value' => [
+              'expression' => 'data != "" || sprache !== "andere"',
+              'variables' => [
+                'sprache' => new JsonSchemaDataPointer('1/sprache'),
+              ],
+            ],
+            'message' => 'Bitte die Verständigungssprache angeben.',
+          ]),
+        ],
       ], TRUE),
-      'andereSprache' => new JsonSchemaString(['maxLength' => 50], TRUE),
 
       // Abschnitt 1: Sprachliche Verständigung
       'verstaendigungBewertung' => new JsonSchemaString([
         'oneOf' => JsonSchemaUtil::buildTitledOneOf2([
-          '' => NULL,
           'gut' => 'gut',
           'zufriedenstellend' => 'zufriedenstellend',
           'schlecht (bitte Begründung angeben)' => 'schlecht',
         ]),
-      ], TRUE),
-      'verstaendigungFreitext' => new JsonSchemaString(),
+      ]),
+      'verstaendigungFreitext' => new JsonSchemaString([
+        '$validations' => [
+          JsonSchema::fromArray([
+            'keyword' => 'evaluate',
+            'value' => [
+              'expression' => 'data != "" || verstaendigungBewertung !== "schlecht"',
+              'variables' => [
+                'verstaendigungBewertung' => new JsonSchemaDataPointer('1/verstaendigungBewertung'),
+              ],
+            ],
+            'message' => 'Bitte eine Begründung angeben.',
+          ]),
+        ],
+      ]),
       'sprachlicheUnterstuetzung' => new JsonSchemaBoolean([
         'oneOf' => JsonSchemaUtil::buildTitledOneOf2([
-          '' => NULL,
           'ja' => TRUE,
           'nein' => FALSE,
         ]),
+      ]),
+      'sprachlicheUnterstuetzungArt' => new JsonSchemaString([
+        '$validations' => [
+          JsonSchema::fromArray([
+            'keyword' => 'evaluate',
+            'value' => [
+              'expression' => 'data != "" || !sprachlicheUnterstuetzung',
+              'variables' => [
+                'sprachlicheUnterstuetzung' => new JsonSchemaDataPointer('1/sprachlicheUnterstuetzung'),
+              ],
+            ],
+            'message' => 'Bitte die Art der Unterstützung angeben.',
+          ]),
+        ],
       ], TRUE),
-      'sprachlicheUnterstuetzungArt' => new JsonSchemaString(),
-      'sprachlicheUnterstuetzungProgrammpunkte' => new JsonSchemaString(),
-      'sprachlicheUnterstuetzungErfahrungen' => new JsonSchemaString(),
+      'sprachlicheUnterstuetzungProgrammpunkte' => new JsonSchemaString([
+        '$validations' => [
+          JsonSchema::fromArray([
+            'keyword' => 'evaluate',
+            'value' => [
+              'expression' => 'data != "" || !sprachlicheUnterstuetzung',
+              'variables' => [
+                'sprachlicheUnterstuetzung' => new JsonSchemaDataPointer('1/sprachlicheUnterstuetzung'),
+              ],
+            ],
+            'message' => 'Bitte die Programmpunkte angeben.',
+          ]),
+        ],
+      ], TRUE),
+      'sprachlicheUnterstuetzungErfahrungen' => new JsonSchemaString([
+        '$validations' => [
+          JsonSchema::fromArray([
+            'keyword' => 'evaluate',
+            'value' => [
+              'expression' => 'data != "" || !sprachlicheUnterstuetzung',
+              'variables' => [
+                'sprachlicheUnterstuetzung' => new JsonSchemaDataPointer('1/sprachlicheUnterstuetzung'),
+              ],
+            ],
+            'message' => 'Bitte die Erfahrungen angeben.',
+          ]),
+        ],
+      ], TRUE),
 
       // Abschnitt 2: Vorbereitung der Maßnahme
-      'vorbereitung' => new JsonSchemaString(),
+      'vorbereitung' => new JsonSchemaString(['minLength' => 1]),
       'vorbereitungstreffen' => new JsonSchemaBoolean([
         'oneOf' => JsonSchemaUtil::buildTitledOneOf2([
-          '' => NULL,
           'ja' => TRUE,
           'nein, weil' => FALSE,
         ]),
-      ], TRUE),
-      'vorbereitungstreffenFreitext' => new JsonSchemaString(),
-      'vorbereitungTeilnehmer' => new JsonSchemaString(),
+      ]),
+      'vorbereitungstreffenFreitext' => new JsonSchemaString([
+        '$validations' => [
+          JsonSchema::fromArray([
+            'keyword' => 'evaluate',
+            'value' => [
+              'expression' => 'data != "" || vorbereitungstreffen === TRUE',
+              'variables' => [
+                'vorbereitungstreffen' => new JsonSchemaDataPointer('1/vorbereitungstreffen'),
+              ],
+            ],
+            'message' => 'Bitte eine Begründung angeben.',
+          ]),
+        ],
+      ]),
+      'vorbereitungTeilnehmer' => new JsonSchemaString(['minLength' => 1]),
 
       // Abschnitt 3: Durchführung/Inhalt/Methoden
       'themenfelder' => new JsonSchemaArray(new JsonSchemaString([
         'oneOf' => JsonSchemaUtil::buildTitledOneOf2(self::THEMENFELDER_OPTIONS),
       ]), ['maxItems' => 3, 'uniqueItems' => TRUE]),
-      'zieleErreicht' => new JsonSchemaString(),
-      'intensiveBegegnungErmoeglicht' => new JsonSchemaString(),
+      'zieleErreicht' => new JsonSchemaString(['minLength' => 1]),
+      'intensiveBegegnungErmoeglicht' => new JsonSchemaString(['minLength' => 1]),
       'programmpunkteGemeinsamDurchgefuehrt' => new JsonSchemaBoolean([
         'oneOf' => JsonSchemaUtil::buildTitledOneOf2([
-          '' => NULL,
           'ja:' => TRUE,
           'nein,' => FALSE,
         ]),
-      ], TRUE),
-      'programmpunkteGemeinsamDurchgefuehrtFreitext' => new JsonSchemaString(),
-      'jugendlicheBeteiligt' => new JsonSchemaString(),
-      'methoden' => new JsonSchemaString(),
-      'besondere' => new JsonSchemaString(),
-      'erschwerteZugangsvoraussetzungenBeteiligt' => new JsonSchemaString(),
+      ]),
+      'programmpunkteGemeinsamDurchgefuehrtFreitext' => new JsonSchemaString([
+        '$validations' => [
+          JsonSchema::fromArray([
+            'keyword' => 'evaluate',
+            'value' => [
+              'expression' => 'data != "" || programmpunkteGemeinsamDurchgefuehrt === TRUE',
+              'variables' => [
+                'programmpunkteGemeinsamDurchgefuehrt'
+                => new JsonSchemaDataPointer('1/programmpunkteGemeinsamDurchgefuehrt'),
+              ],
+            ],
+            'message' => 'Bitte eine Begründung angeben.',
+          ]),
+        ],
+      ]),
+      'jugendlicheBeteiligt' => new JsonSchemaString(['minLength' => 1]),
+      'methoden' => new JsonSchemaString(['minLength' => 1]),
+      'besondere' => new JsonSchemaString(['minLength' => 1]),
+      'erschwerteZugangsvoraussetzungenBeteiligt' => new JsonSchemaString(['minLength' => 1]),
 
       // Abschnitt 4: Auswertung, Evaluierung und Perspektiven
-      'beurteilungTeilnehmer' => new JsonSchemaString(),
-      'evaluierungsinstrumente' => new JsonSchemaString(),
+      'beurteilungTeilnehmer' => new JsonSchemaString(['minLength' => 1]),
+      'evaluierungsinstrumente' => new JsonSchemaString(['minLength' => 1]),
       'teilnahmenachweis' => new JsonSchemaBoolean([
         'oneOf' => JsonSchemaUtil::buildTitledOneOf2([
-          '' => NULL,
           'ja' => TRUE,
           'nein' => FALSE,
         ]),
-      ], TRUE),
-      'schlussfolgerungen' => new JsonSchemaString(),
-      'massnahmenGeplant' => new JsonSchemaString(),
-      'veroeffentlichungen' => new JsonSchemaString(),
-      'hinweisBMFSFJ' => new JsonSchemaString(),
-      'anregungenBMFSFJ' => new JsonSchemaString(),
+      ]),
+      'schlussfolgerungen' => new JsonSchemaString(['minLength' => 1]),
+      'massnahmenGeplant' => new JsonSchemaString(['minLength' => 1]),
+      'veroeffentlichungen' => new JsonSchemaString(['minLength' => 1]),
+      'hinweisBMFSFJ' => new JsonSchemaString(['minLength' => 1]),
+      'anregungenBMFSFJ' => new JsonSchemaString(['minLength' => 1]),
+    ], [
+      'required' => [
+        'durchgefuehrt',
+        'form',
+        'sprache',
+        'verstaendigungBewertung',
+        'vorbereitung',
+        'vorbereitungTeilnehmer',
+        'zieleErreicht',
+        'intensiveBegegnungErmoeglicht',
+        'jugendlicheBeteiligt',
+        'methoden',
+        'besondere',
+        'erschwerteZugangsvoraussetzungenBeteiligt',
+        'beurteilungTeilnehmer',
+        'evaluierungsinstrumente',
+        'schlussfolgerungen',
+        'massnahmenGeplant',
+        'veroeffentlichungen',
+        'hinweisBMFSFJ',
+        'anregungenBMFSFJ',
+        'themenfelder',
+        'sprachlicheUnterstuetzung',
+        'sprachlicheUnterstuetzungArt',
+        'sprachlicheUnterstuetzungProgrammpunkte',
+        'sprachlicheUnterstuetzungErfahrungen',
+        'vorbereitungstreffen',
+        'teilnahmenachweis',
+        'programmpunkteGemeinsamDurchgefuehrt',
+      ],
     ]);
-  }
-
-  public function withValidations(): self {
-    $schema = clone $this;
-    $schema->addValidations();
-
-    return $schema;
-  }
-
-  private function addValidations(): void {
-    $requiredStrings = [
-      'durchgefuehrt',
-      'form',
-      'sprache',
-      'verstaendigungBewertung',
-      'vorbereitung',
-      'vorbereitungTeilnehmer',
-      'zieleErreicht',
-      'intensiveBegegnungErmoeglicht',
-      'jugendlicheBeteiligt',
-      'methoden',
-      'besondere',
-      'erschwerteZugangsvoraussetzungenBeteiligt',
-      'beurteilungTeilnehmer',
-      'evaluierungsinstrumente',
-      'schlussfolgerungen',
-      'massnahmenGeplant',
-      'veroeffentlichungen',
-      'hinweisBMFSFJ',
-      'anregungenBMFSFJ',
-    ];
-
-    $requiredArrays = [
-      'themenfelder',
-    ];
-
-    $requiredBooleans = [
-      'sprachlicheUnterstuetzung',
-      'vorbereitungstreffen',
-      'teilnahmenachweis',
-      'programmpunkteGemeinsamDurchgefuehrt',
-    ];
-
-    $this['required'] = array_merge($requiredStrings, $requiredArrays, $requiredBooleans);
-
-    foreach ($requiredStrings as $property) {
-      // @phpstan-ignore-next-line
-      $this['properties'][$property]['type'] = 'string';
-      // @phpstan-ignore-next-line
-      $this['properties'][$property]['minLength'] ??= 1;
-      if (isset($this['properties'][$property]['oneOf'])) {
-        $this['properties'][$property]['oneOf'] = array_values(array_filter(
-          $this['properties'][$property]['oneOf'],
-          fn ($entry) => $entry['const'] !== NULL
-        ));
-      }
-    }
-
-    foreach ($requiredArrays as $property) {
-      // @phpstan-ignore-next-line
-      $this['properties'][$property]['minItems'] ??= 1;
-    }
-
-    foreach ($requiredBooleans as $property) {
-      // @phpstan-ignore-next-line
-      $this['properties'][$property]['type'] = 'boolean';
-      if (isset($this['properties'][$property]['oneOf'])) {
-        $this['properties'][$property]['oneOf'] = array_values(array_filter(
-          $this['properties'][$property]['oneOf'],
-          fn ($entry) => $entry['const'] !== NULL
-        ));
-      }
-    }
-
-    self::addValidation($this, 'aenderungen', JsonSchema::fromArray([
-      'keyword' => 'evaluate',
-      'value' => [
-        'expression' => 'data != "" || durchgefuehrt === "geplant"',
-        'variables' => [
-          'durchgefuehrt' => new JsonSchemaDataPointer('1/durchgefuehrt'),
-        ],
-      ],
-      'message' => 'Bitte Begründung für die Änderungen angeben.',
-    ]));
-
-    self::addValidation($this, 'andereSprache', JsonSchema::fromArray([
-      'keyword' => 'evaluate',
-      'value' => [
-        'expression' => 'data != "" || sprache !== "andere"',
-        'variables' => [
-          'sprache' => new JsonSchemaDataPointer('1/sprache'),
-        ],
-      ],
-      'message' => 'Bitte die Verständigungssprache angeben.',
-    ]));
-
-    self::addValidation($this, 'sprachlicheUnterstuetzungArt', JsonSchema::fromArray([
-      'keyword' => 'evaluate',
-      'value' => [
-        'expression' => 'data != "" || !sprachlicheUnterstuetzung',
-        'variables' => [
-          'sprachlicheUnterstuetzung' => new JsonSchemaDataPointer('1/sprachlicheUnterstuetzung'),
-        ],
-      ],
-      'message' => 'Bitte die Art der Unterstützung angeben.',
-    ]));
-
-    self::addValidation($this, 'sprachlicheUnterstuetzungProgrammpunkte', JsonSchema::fromArray([
-      'keyword' => 'evaluate',
-      'value' => [
-        'expression' => 'data != "" || !sprachlicheUnterstuetzung',
-        'variables' => [
-          'sprachlicheUnterstuetzung' => new JsonSchemaDataPointer('1/sprachlicheUnterstuetzung'),
-        ],
-      ],
-      'message' => 'Bitte die Programmpunkte angeben.',
-    ]));
-
-    self::addValidation($this, 'sprachlicheUnterstuetzungErfahrungen', JsonSchema::fromArray([
-      'keyword' => 'evaluate',
-      'value' => [
-        'expression' => 'data != "" || !sprachlicheUnterstuetzung',
-        'variables' => [
-          'sprachlicheUnterstuetzung' => new JsonSchemaDataPointer('1/sprachlicheUnterstuetzung'),
-        ],
-      ],
-      'message' => 'Bitte die Erfahrungen angeben.',
-    ]));
-
-    self::addValidation($this, 'verstaendigungFreitext', JsonSchema::fromArray([
-      'keyword' => 'evaluate',
-      'value' => [
-        'expression' => 'data != "" || verstaendigungBewertung !== "schlecht"',
-        'variables' => [
-          'verstaendigungBewertung' => new JsonSchemaDataPointer('1/verstaendigungBewertung'),
-        ],
-      ],
-      'message' => 'Bitte eine Begründung angeben.',
-    ]));
-
-    self::addValidation($this, 'vorbereitungstreffenFreitext', JsonSchema::fromArray([
-      'keyword' => 'evaluate',
-      'value' => [
-        'expression' => 'data != "" || vorbereitungstreffen === TRUE',
-        'variables' => [
-          'vorbereitungstreffen' => new JsonSchemaDataPointer('1/vorbereitungstreffen'),
-        ],
-      ],
-      'message' => 'Bitte eine Begründung angeben.',
-    ]));
-
-    self::addValidation($this, 'programmpunkteGemeinsamDurchgefuehrtFreitext', JsonSchema::fromArray([
-      'keyword' => 'evaluate',
-      'value' => [
-        'expression' => 'data != "" || programmpunkteGemeinsamDurchgefuehrt === TRUE',
-        'variables' => [
-          'programmpunkteGemeinsamDurchgefuehrt' => new JsonSchemaDataPointer('1/programmpunkteGemeinsamDurchgefuehrt'),
-        ],
-      ],
-      'message' => 'Bitte eine Begründung angeben.',
-    ]));
-  }
-
-  private static function addValidation(self $schema, string $property, JsonSchema $validation): void {
-    $validations = $schema['properties'][$property]['$validations'] ?? [];
-    $validations[] = $validation;
-    // @phpstan-ignore-next-line
-    $schema['properties'][$property]['$validations'] = $validations;
   }
 
 }

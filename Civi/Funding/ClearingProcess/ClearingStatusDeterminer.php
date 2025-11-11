@@ -33,6 +33,7 @@ class ClearingStatusDeterminer {
     'not-started' => [
       'save' => 'draft',
       'apply' => 'review-requested',
+      'review' => 'review',
     ],
     'draft' => [
       'save' => 'draft',

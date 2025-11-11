@@ -58,7 +58,7 @@ final class GetAllowedActionsMultipleTest extends AbstractFundingHeadlessTestCas
     static::assertEquals([
       $clearingProcessBundle->getClearingProcess()->getId() => [
         'request-change' => ['label' => 'Request Change', 'confirm' => NULL],
-        'review' => ['label' => 'Review', 'confirm' => NULL],
+        'review' => ['label' => 'Start Review', 'confirm' => NULL],
       ],
     ], $action->execute()->getArrayCopy());
   }

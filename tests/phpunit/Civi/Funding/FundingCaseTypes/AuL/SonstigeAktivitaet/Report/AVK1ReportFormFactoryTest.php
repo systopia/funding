@@ -113,7 +113,7 @@ final class AVK1ReportFormFactoryTest extends TestCase {
     ];
 
     $data = (object) [
-      '_action' => 'some-action',
+      '_action' => 'apply',
       'reportData' => (object) [
         'grunddaten' => $grunddaten,
         'sachbericht' => (object) [
@@ -127,7 +127,7 @@ final class AVK1ReportFormFactoryTest extends TestCase {
     static::assertFalse($result->isValid());
 
     $data = (object) [
-      '_action' => 'some-action',
+      '_action' => 'apply',
       'reportData' => (object) [
         'grunddaten' => $grunddaten,
         'sachbericht' => (object) [
@@ -142,12 +142,11 @@ final class AVK1ReportFormFactoryTest extends TestCase {
       ],
     ];
     static::assertAllPropertiesSet($validationSchema, $data);
-    $validator = OpisValidatorFactory::getValidator();
     static::assertValidationValid($validator->validate($data, $validationSchema));
 
     // 'aenderungen' is required if 'durchgefuehrt' is 'geändert'.
     $data = (object) [
-      '_action' => 'some-action',
+      '_action' => 'apply',
       'reportData' => (object) [
         'grunddaten' => $grunddaten,
         'sachbericht' => (object) [
@@ -161,11 +160,10 @@ final class AVK1ReportFormFactoryTest extends TestCase {
         'dokumente' => $dokumente,
       ],
     ];
-    $validator = OpisValidatorFactory::getValidator();
     static::assertFalse($validator->validate($data, $validationSchema)->isValid());
 
     $data = (object) [
-      '_action' => 'some-action',
+      '_action' => 'apply',
       'reportData' => (object) [
         'grunddaten' => $grunddaten,
         'sachbericht' => (object) [

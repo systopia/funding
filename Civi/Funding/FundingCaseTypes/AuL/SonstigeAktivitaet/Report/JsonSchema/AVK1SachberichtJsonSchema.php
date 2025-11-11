@@ -31,66 +31,37 @@ final class AVK1SachberichtJsonSchema extends JsonSchemaObject {
     parent::__construct([
       'durchgefuehrt' => new JsonSchemaString([
         'oneOf' => JsonSchemaUtil::buildTitledOneOf2([
-          '' => NULL,
           'entsprechend dem geplanten Programm' => 'geplant',
           'mit folgenden wesentlichen Änderungen (kurze Begründung für die Änderung):' => 'geaendert',
         ]),
-      ], TRUE),
-      'aenderungen' => new JsonSchemaString([], TRUE),
-      'thematischeSchwerpunkte' => new JsonSchemaString(),
-      'methoden' => new JsonSchemaString(),
-      'zielgruppe' => new JsonSchemaString(),
-      'sonstiges' => new JsonSchemaString(),
-    ]);
-  }
-
-  public function withValidations(): self {
-    $schema = clone $this;
-    $schema->addValidations();
-
-    return $schema;
-  }
-
-  private function addValidations(): void {
-    $requiredStrings = [
-      'durchgefuehrt',
-      'thematischeSchwerpunkte',
-      'methoden',
-      'zielgruppe',
-      'sonstiges',
-    ];
-    $this['required'] = $requiredStrings;
-
-    foreach ($requiredStrings as $property) {
-      // @phpstan-ignore-next-line
-      $this['properties'][$property]['type'] = 'string';
-      // @phpstan-ignore-next-line
-      $this['properties'][$property]['minLength'] ??= 1;
-      if (isset($this['properties'][$property]['oneOf'])) {
-        $this['properties'][$property]['oneOf'] = array_values(array_filter(
-          $this['properties'][$property]['oneOf'],
-          fn ($entry) => $entry['const'] !== NULL
-        ));
-      }
-    }
-
-    self::addValidation($this, 'aenderungen', JsonSchema::fromArray([
-      'keyword' => 'evaluate',
-      'value' => [
-        'expression' => 'data != "" || durchgefuehrt === "geplant"',
-        'variables' => [
-          'durchgefuehrt' => new JsonSchemaDataPointer('1/durchgefuehrt'),
+      ]),
+      'aenderungen' => new JsonSchemaString([
+        '$validations' => [
+          JsonSchema::fromArray([
+            'keyword' => 'evaluate',
+            'value' => [
+              'expression' => 'data != "" || durchgefuehrt === "geplant"',
+              'variables' => [
+                'durchgefuehrt' => new JsonSchemaDataPointer('1/durchgefuehrt'),
+              ],
+            ],
+            'message' => 'Bitte Begründung für die Änderungen angeben.',
+          ]),
         ],
+      ], TRUE),
+      'thematischeSchwerpunkte' => new JsonSchemaString(['minLength' => 1]),
+      'methoden' => new JsonSchemaString(['minLength' => 1]),
+      'zielgruppe' => new JsonSchemaString(['minLength' => 1]),
+      'sonstiges' => new JsonSchemaString(['minLength' => 1]),
+    ], [
+      'required' => [
+        'durchgefuehrt',
+        'thematischeSchwerpunkte',
+        'methoden',
+        'zielgruppe',
+        'sonstiges',
       ],
-      'message' => 'Bitte Begründung für die Änderungen angeben.',
-    ]));
-  }
-
-  private static function addValidation(self $schema, string $property, JsonSchema $validation): void {
-    $validations = $schema['properties'][$property]['$validations'] ?? [];
-    $validations[] = $validation;
-    // @phpstan-ignore-next-line
-    $schema['properties'][$property]['$validations'] = $validations;
+    ]);
   }
 
 }

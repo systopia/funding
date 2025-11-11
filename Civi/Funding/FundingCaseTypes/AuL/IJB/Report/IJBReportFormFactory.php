@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\AuL\IJB\Report;
 
+use Civi\Funding\ClearingProcess\ClearingActionsDeterminer;
 use Civi\Funding\ClearingProcess\Form\ReportForm;
 use Civi\Funding\ClearingProcess\Form\ReportFormFactoryInterface;
 use Civi\Funding\ClearingProcess\Form\ReportFormInterface;
@@ -38,6 +39,7 @@ use Civi\Funding\FundingCaseTypes\AuL\IJB\Report\UiSchema\IJBZuschussGroup;
 use Civi\Funding\FundingCaseTypes\AuL\IJB\Traits\IJBSupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategorization;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 
 final class IJBReportFormFactory implements ReportFormFactoryInterface {
@@ -51,7 +53,7 @@ final class IJBReportFormFactory implements ReportFormFactoryInterface {
       $fundingProgram->getRequestsEndDate(),
       TRUE
     );
-    $teilnehmerJsonSchema = new IJBTeilnehmerJsonSchema(TRUE);
+
     $zuschussJsonSchema = new IJBZuschussJsonSchema(TRUE);
     $zuschussJsonSchema['required'] = [];
     $zuschussJsonSchema['properties'] = new JsonSchema(array_filter(
@@ -61,44 +63,34 @@ final class IJBReportFormFactory implements ReportFormFactoryInterface {
       ARRAY_FILTER_USE_KEY
     ));
 
-    // In draft fields may be empty.
-    $sachberichtDraftJsonSchema = new IJBSachberichtJsonSchema();
-    $sachberichtJsonSchema = $sachberichtDraftJsonSchema->withValidations();
-    $dokumenteJsonSchema = new IJBDokumenteJsonSchema();
-    $foerderungJsonSchema = new IJBFoerderungJsonSchema();
-
     $jsonSchema = new JsonSchemaObject([
       'reportData' => new JsonSchemaObject([
         'grunddaten' => $grunddatenJsonSchema,
-        'teilnehmer' => $teilnehmerJsonSchema,
+        'teilnehmer' => new IJBTeilnehmerJsonSchema(TRUE),
         'zuschuss' => $zuschussJsonSchema,
-        'sachbericht' => $sachberichtDraftJsonSchema,
-        'dokumente' => $dokumenteJsonSchema,
-        'foerderung' => $foerderungJsonSchema,
-      ]),
+        'sachbericht' => new IJBSachberichtJsonSchema(),
+        'dokumente' => new IJBDokumenteJsonSchema(),
+        'foerderung' => new IJBFoerderungJsonSchema(),
+      ], ['required' => ['grunddaten', 'teilnehmer', 'zuschuss', 'sachbericht', 'dokumente', 'foerderung']]
+      ),
     ], [
-      'if' => JsonSchema::fromArray([
-        'properties' => [
-          '_action' => ['not' => ['const' => 'save']],
+      'required' => ['reportData'],
+      '$limitValidation' => JsonSchema::fromArray([
+        'condition' => [
+          'evaluate' => [
+            'expression' => 'action not in editActions || action === "save"',
+            'variables' => [
+              'action' => new JsonSchemaDataPointer('/_action', ''),
+              'editActions' => ClearingActionsDeterminer::EDIT_ACTIONS,
+            ],
+          ],
         ],
-      ]),
-      'then' => new JsonSchemaObject([
-        'reportData' => new JsonSchemaObject([
-          'grunddaten' => $grunddatenJsonSchema,
-          'teilnehmer' => $teilnehmerJsonSchema->withAllFieldsRequired(),
-          'zuschuss' => $zuschussJsonSchema,
-          'sachbericht' => $sachberichtJsonSchema,
-          'dokumente' => $dokumenteJsonSchema,
-          'foerderung' => $foerderungJsonSchema->withAllFieldsRequired(),
-        ],
-        ['required' => ['grunddaten', 'teilnehmer', 'zuschuss', 'sachbericht', 'dokumente', 'foerderung']]),
       ]),
     ]);
 
     $uiSchema = new JsonFormsCategorization([
       new IJBGrunddatenUiSchema('#/properties/reportData/properties/grunddaten/properties', TRUE),
-      (new IJBTeilnehmerUiSchema('#/properties/reportData/properties/teilnehmer/properties', TRUE))
-        ->withRequiredLabels($teilnehmerJsonSchema),
+      new IJBTeilnehmerUiSchema('#/properties/reportData/properties/teilnehmer/properties', TRUE),
       new IJBSachberichtCategory('#/properties/reportData/properties/sachbericht/properties'),
       new IJBDokumenteCategory('#/properties/reportData/properties/dokumente/properties'),
     ]);

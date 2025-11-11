@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\AuL\SonstigeAktivitaet\Report;
 
+use Civi\Funding\ClearingProcess\ClearingActionsDeterminer;
 use Civi\Funding\ClearingProcess\Form\ReportForm;
 use Civi\Funding\ClearingProcess\Form\ReportFormFactoryInterface;
 use Civi\Funding\ClearingProcess\Form\ReportFormInterface;
@@ -32,6 +33,7 @@ use Civi\Funding\FundingCaseTypes\AuL\SonstigeAktivitaet\Report\UiSchema\AVK1Sac
 use Civi\Funding\FundingCaseTypes\AuL\SonstigeAktivitaet\Traits\AVK1SupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategorization;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 
 final class AVK1ReportFormFactory implements ReportFormFactoryInterface {
@@ -45,35 +47,30 @@ final class AVK1ReportFormFactory implements ReportFormFactoryInterface {
       $fundingProgram->getRequestsEndDate(),
       TRUE
     );
-    // In draft report data fields may be empty.
-    $reportDataDraftSchema = new AVK1SachberichtJsonSchema();
-    $reportDataSchema = $reportDataDraftSchema->withValidations();
-    $dokumenteJsonSchema = new AVK1DokumenteJsonSchema();
 
     $jsonSchema = new JsonSchemaObject([
       'reportData' => new JsonSchemaObject([
         'grunddaten' => $grunddatenJsonSchema,
-        'dokumente' => $dokumenteJsonSchema,
-        'sachbericht' => $reportDataDraftSchema,
-      ]),
+        'dokumente' => new AVK1DokumenteJsonSchema(),
+        'sachbericht' => new AVK1SachberichtJsonSchema(),
+      ], ['required' => ['grunddaten', 'sachbericht', 'dokumente']]),
     ], [
-      'if' => JsonSchema::fromArray([
-        'properties' => [
-          '_action' => ['not' => ['const' => 'save']],
+      'required' => ['reportData'],
+      '$limitValidation' => JsonSchema::fromArray([
+        'condition' => [
+          'evaluate' => [
+            'expression' => 'action not in editActions || action === "save"',
+            'variables' => [
+              'action' => new JsonSchemaDataPointer('/_action', ''),
+              'editActions' => ClearingActionsDeterminer::EDIT_ACTIONS,
+            ],
+          ],
         ],
-      ]),
-      'then' => new JsonSchemaObject([
-        'reportData' => new JsonSchemaObject([
-          'grunddaten' => $grunddatenJsonSchema->withAllFieldsRequired(),
-          'sachbericht' => $reportDataSchema,
-          'dokumente' => $dokumenteJsonSchema,
-        ], ['required' => ['grunddaten', 'sachbericht', 'dokumente']]),
       ]),
     ]);
 
     $uiSchema = new JsonFormsCategorization([
-      (new AVK1GrunddatenUiSchema('#/properties/reportData/properties/grunddaten/properties'))
-        ->withRequiredLabels($grunddatenJsonSchema),
+      new AVK1GrunddatenUiSchema('#/properties/reportData/properties/grunddaten/properties'),
       new AVK1SachberichtCategory('#/properties/reportData/properties/sachbericht/properties'),
       new AVK1DokumenteCategory('#/properties/reportData/properties/dokumente/properties'),
     ]);

@@ -37,10 +37,14 @@ final class AVK1GrunddatenSchema extends JsonSchemaObject {
   ) {
     $properties = [
       'titel' => new JsonSchemaString([
+        'minLength' => 1,
+        '$limitValidation' => FALSE,
         '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'title']]),
       ]),
       'kurzbeschreibungDesInhalts' => new JsonSchemaString([
+        'minLength' => 1,
         'maxLength' => 500,
+        '$limitValidation' => FALSE,
         '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'short_description']]),
       ]),
       'zeitraeume' => new JsonSchemaArray(
@@ -110,20 +114,24 @@ EOD,
       static fn (string $key) => $key !== 'internerBezeichner',
     );
 
-    parent::__construct($properties, ['required' => $required]);
+    parent::__construct($properties, [
+      'required' => $required,
+      '$limitValidation' => JsonSchema::fromArray([
+        'schema' => [
+          'required' => ['titel', 'kurzbeschreibungDesInhalts'],
+        ],
+      ]),
+    ]);
+
+    if ($report) {
+      $this->addReportValidations();
+    }
   }
 
   /**
    * In report all fields are required.
    */
-  public function withAllFieldsRequired(): self {
-    $schema = clone $this;
-    $schema->addValidations();
-
-    return $schema;
-  }
-
-  private function addValidations(): void {
+  private function addReportValidations(): void {
     $required = [];
 
     /**

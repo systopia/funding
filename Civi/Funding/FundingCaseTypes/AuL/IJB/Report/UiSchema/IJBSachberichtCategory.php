@@ -41,7 +41,7 @@ EOD
       ),
       new JsonFormsControl(
         "$scopePrefix/durchgefuehrt",
-        'Die Maßnahme wurde durchgeführt&nbsp;*',
+        'Die Maßnahme wurde durchgeführt',
         NULL,
         ['format' => 'radio']
       ),
@@ -54,7 +54,7 @@ EOD
       ),
       new JsonFormsControl(
         "$scopePrefix/form",
-        'Form der Durchführung der Maßnahme&nbsp;*',
+        'Form der Durchführung der Maßnahme',
         NULL,
         ['format' => 'radio']
       ),
@@ -62,7 +62,7 @@ EOD
       new JsonFormsGroup('1. Sprachliche Verständigung', [
         new JsonFormsControl(
           "$scopePrefix/sprache",
-          '1.1 Die sprachliche Verständigung während der Maßnahme erfolgte:&nbsp;*',
+          '1.1 Die sprachliche Verständigung während der Maßnahme erfolgte:',
           NULL,
           ['format' => 'radio'],
         ),
@@ -75,7 +75,7 @@ EOD
         ]),
         new JsonFormsControl(
           "$scopePrefix/verstaendigungBewertung",
-          '1.2 Die sprachliche Verständigung während der Maßnahme war:&nbsp;*',
+          '1.2 Die sprachliche Verständigung während der Maßnahme war:',
           NULL,
           ['format' => 'radio'],
         ),
@@ -83,46 +83,46 @@ EOD
         new JsonFormsControl(
           "$scopePrefix/sprachlicheUnterstuetzung",
           '1.3 Wurde während der Maßnahme sprachliche Unterstützung ' .
-          '(Sprachanimation, Sprachmittlung, Dolmetschung) in Anspruch genommen?&nbsp;*',
+          '(Sprachanimation, Sprachmittlung, Dolmetschung) in Anspruch genommen?',
           NULL,
           ['format' => 'radio']
         ),
         new JsonFormsControl(
           "$scopePrefix/sprachlicheUnterstuetzungArt",
-          'Art der Unterstützung&nbsp;*',
+          'Art der Unterstützung',
           NULL,
           [],
           [
             'rule' => new JsonFormsRule(
-              'HIDE',
+              'SHOW',
               "$scopePrefix/sprachlicheUnterstuetzung",
-              JsonSchema::fromArray(['const' => FALSE])
+              JsonSchema::fromArray(['const' => TRUE])
             ),
           ]
         ),
         new JsonFormsControl(
           "$scopePrefix/sprachlicheUnterstuetzungProgrammpunkte",
-          'Bei welchen Programmpunkten?&nbsp;*',
+          'Bei welchen Programmpunkten?',
           NULL,
           [],
           [
             'rule' => new JsonFormsRule(
-              'HIDE',
+              'SHOW',
               "$scopePrefix/sprachlicheUnterstuetzung",
-              JsonSchema::fromArray(['const' => FALSE])
+              JsonSchema::fromArray(['const' => TRUE])
             ),
           ]
         ),
         new JsonFormsControl(
           "$scopePrefix/sprachlicheUnterstuetzungErfahrungen",
-          'Welche Erfahrungen habt Ihr damit gemacht?&nbsp;*',
+          'Welche Erfahrungen habt Ihr damit gemacht?',
           NULL,
           [],
           [
             'rule' => new JsonFormsRule(
-              'HIDE',
+              'SHOW',
               "$scopePrefix/sprachlicheUnterstuetzung",
-              JsonSchema::fromArray(['const' => FALSE])
+              JsonSchema::fromArray(['const' => TRUE])
             ),
           ]
         ),
@@ -131,20 +131,20 @@ EOD
       new JsonFormsGroup('2. Vorbereitung der Maßnahme', [
         new JsonFormsControl(
           "$scopePrefix/vorbereitung",
-          '2.1 Über welche Erfahrungen verfügte(n) die Leitungsperson(en) und wie erfolgte die Vorbereitung?&nbsp;*',
+          '2.1 Über welche Erfahrungen verfügte(n) die Leitungsperson(en) und wie erfolgte die Vorbereitung?',
           NULL,
           ['multi' => TRUE]
         ),
         new JsonFormsControl(
           "$scopePrefix/vorbereitungstreffen",
-          'Gab es ein Vorbereitungstreffen?&nbsp;*',
+          'Gab es ein Vorbereitungstreffen?',
           NULL,
           ['format' => 'radio']
         ),
         new JsonFormsControl("$scopePrefix/vorbereitungstreffenFreitext", 'Anmerkungen'),
         new JsonFormsControl(
           "$scopePrefix/vorbereitungTeilnehmer",
-          '2.2 Wie bereiteten sich die Teilnehmenden auf die Maßnahme vor?&nbsp;*',
+          '2.2 Wie bereiteten sich die Teilnehmenden auf die Maßnahme vor?',
           NULL,
           ['multi' => TRUE]
         ),
@@ -155,17 +155,17 @@ EOD
 3.1 Welche inhaltlichen Ziele wurden/werden (kurz und ggf. mittel- bis
 langfristig) mit der Maßnahme verfolgt (siehe auch Themenfelder im
 Formblatt M Statistische Mitteilungen)?<br>Themenfelder (bis zu 3 Themen können
-angekreuzt werden)&nbsp;*
+angekreuzt werden)
 EOD),
         new JsonFormsControl(
           "$scopePrefix/zieleErreicht",
-          'Welche dieser Ziele wurden aus Eurer Sicht erreicht?&nbsp;*',
+          'Welche dieser Ziele wurden aus Eurer Sicht erreicht?',
           NULL,
           ['multi' => TRUE]
         ),
         new JsonFormsControl(
           "$scopePrefix/intensiveBegegnungErmoeglicht",
-          '3.2 Wie wurde eine intensive Begegnung der Teilnehmenden ermöglicht?&nbsp;*',
+          '3.2 Wie wurde eine intensive Begegnung der Teilnehmenden ermöglicht?',
           NULL,
           ['multi' => TRUE]
         ),
@@ -174,7 +174,7 @@ EOD),
           <<<'EOD'
 Wurden alle Programmpunkte gemeinsam von den deutschen und ausländischen
 Jugendlichen der Partnerorganisation durchgeführt? Wenn nein, erläutert bitte,
-welche Punkte nicht gemeinsam verbracht worden sind und warum.&nbsp;*
+welche Punkte nicht gemeinsam verbracht worden sind und warum.
 EOD,
           NULL,
           ['format' => 'radio']
@@ -188,15 +188,15 @@ EOD,
 
         new JsonFormsControl("$scopePrefix/jugendlicheBeteiligt", <<<'EOD'
   3.3 Bei Jugendbegegnungen: In welcher Form waren die Jugendlichen an der
-  Vorbereitung, Durchführung sowie Auswertung des Projekts beteiligt?&nbsp;*
+  Vorbereitung, Durchführung sowie Auswertung des Projekts beteiligt?
 EOD, NULL, ['multi' => TRUE]),
         new JsonFormsControl("$scopePrefix/methoden", <<<'EOD'
 3.4 Mit welchen Methoden und Programmbausteinen wurde im Projekt gearbeitet?
-Welche haben sich bewährt, welche nicht und warum?&nbsp;*
+Welche haben sich bewährt, welche nicht und warum?
 EOD, NULL, ['multi' => TRUE]),
         new JsonFormsControl("$scopePrefix/besondere", <<<'EOD'
 3.5 Was war das Besondere an der Begegnung? Gab es aus Sicht der
-Begegnungsleitung ein Highlight oder herausragende Erlebnisse?&nbsp;*
+Begegnungsleitung ein Highlight oder herausragende Erlebnisse?
 EOD, NULL, ['multi' => TRUE]),
         new JsonFormsControl(
           "$scopePrefix/erschwerteZugangsvoraussetzungenBeteiligt",
@@ -204,7 +204,7 @@ EOD, NULL, ['multi' => TRUE]),
 3.6 Waren junge Menschen mit erschwerten Zugangsvoraussetzungen an der Maßnahme
 beteiligt (z.B. Jugendliche mit Migrationsgeschichte, Fluchterfahrung,
 Beeinträchtigung oder erhöhtem Betreuungsbedarf)? Wenn ja, welche Erfahrungen
-habt Ihr dabei gemacht?&nbsp;*
+habt Ihr dabei gemacht?
 EOD,
           NULL,
           ['multi' => TRUE],
@@ -214,44 +214,44 @@ EOD,
       new JsonFormsGroup('4. Auswertung, Evaluierung und Perspektiven', [
         new JsonFormsControl(
           "$scopePrefix/beurteilungTeilnehmer",
-          '4.1 Wie beurteilten die Teilnehmenden die Maßnahme?&nbsp;*',
+          '4.1 Wie beurteilten die Teilnehmenden die Maßnahme?',
           NULL,
           ['multi' => TRUE],
         ),
         new JsonFormsControl(
           "$scopePrefix/evaluierungsinstrumente",
-          '4.2 Welche Evaluierungsinstrumente wurden genutzt?&nbsp;*',
+          '4.2 Welche Evaluierungsinstrumente wurden genutzt?',
           NULL,
           ['multi' => TRUE]
         ),
         new JsonFormsControl("$scopePrefix/teilnahmenachweis", <<<'EOD'
 4.3 Stellt Ihr Euren Teilnehmenden einen „Teilnahmenachweis International“ aus
-(vgl. <a href="https://www.nachweise-international.de/" target="_blank">www.nachweise-international.de</a>)?&nbsp;*
+(vgl. <a href="https://www.nachweise-international.de/" target="_blank">www.nachweise-international.de</a>)?
 EOD, NULL, ['format' => 'radio']),
         new JsonFormsControl("$scopePrefix/schlussfolgerungen", <<<'EOD'
 4.4 Welche Schlussfolgerungen zieht die Leitung aus der Maßnahme? Wie werden die
-Erfahrungen durch die Leitung ausgewertet und weitergegeben?&nbsp;*
+Erfahrungen durch die Leitung ausgewertet und weitergegeben?
 EOD, NULL, ['multi' => TRUE]),
         new JsonFormsControl(
           "$scopePrefix/massnahmenGeplant",
-          '4.5 Sind weitere Maßnahmen geplant? Wenn ja, welche?&nbsp;*',
+          '4.5 Sind weitere Maßnahmen geplant? Wenn ja, welche?',
           NULL,
           ['multi' => TRUE]
         ),
         new JsonFormsControl("$scopePrefix/veroeffentlichungen", <<<'EOD'
 4.6 Welche Veröffentlichungen oder Produkte gab es? Bitte ggf. einen Link zum
 Artikel auf der Homepage angeben, Kopie(n) von Pressemitteilung(en),
-Belegexemplare etc. bei den Dokumenten hochladen.&nbsp;*
+Belegexemplare etc. bei den Dokumenten hochladen.
 EOD, NULL, ['multi' => TRUE]),
         new JsonFormsControl(
           "$scopePrefix/hinweisBMFSFJ",
-          '4.7 Wie wurde auf die Förderung durch das BMFSFJ hingewiesen?&nbsp;*',
+          '4.7 Wie wurde auf die Förderung durch das BMFSFJ hingewiesen?',
           NULL,
           ['multi' => TRUE]
         ),
         new JsonFormsControl(
           "$scopePrefix/anregungenBMFSFJ",
-          '4.8 Welche Anregungen für den Bundearbeitskreis/das BMFSFJ haben sich ggf. aus der Maßnahme ergeben?&nbsp;*',
+          '4.8 Welche Anregungen für den Bundearbeitskreis/das BMFSFJ haben sich ggf. aus der Maßnahme ergeben?',
           NULL,
           ['multi' => TRUE]
         ),
