@@ -30,7 +30,7 @@ final class AVK1SachberichtCategory extends JsonFormsCategory {
     parent::__construct('Sachbericht', [
       new JsonFormsControl(
         "$scopePrefix/durchgefuehrt",
-        'Die Maßnahme wurde durchgeführt&nbsp;*',
+        'Die Maßnahme wurde durchgeführt',
         NULL,
         ['format' => 'radio']
       ),
@@ -43,25 +43,25 @@ final class AVK1SachberichtCategory extends JsonFormsCategory {
       ]),
       new JsonFormsControl(
         "$scopePrefix/thematischeSchwerpunkte",
-        'Welche thematischen Schwerpunkte hatte die Veranstaltung?&nbsp;*',
+        'Welche thematischen Schwerpunkte hatte die Veranstaltung?',
         NULL,
         ['multi' => TRUE],
       ),
       new JsonFormsControl(
         "$scopePrefix/methoden",
-        'Inwiefern und mit welchen Methoden wurden die  inhaltlichen Ziele erreicht?&nbsp;*',
+        'Inwiefern und mit welchen Methoden wurden die  inhaltlichen Ziele erreicht?',
         NULL,
         ['multi' => TRUE]
       ),
       new JsonFormsControl(
         "$scopePrefix/zielgruppe",
-        'Welche Zielgruppe wurde mit der Veranstaltung erreicht (Zusammensetzung, Alter)?&nbsp;*',
+        'Welche Zielgruppe wurde mit der Veranstaltung erreicht (Zusammensetzung, Alter)?',
         NULL,
         ['multi' => TRUE]
       ),
       new JsonFormsControl(
         "$scopePrefix/sonstiges",
-        'Besondere Vorkommnisse, Schlussfolgerungen oder sonstige Hinweise&nbsp;*',
+        'Besondere Vorkommnisse, Schlussfolgerungen oder sonstige Hinweise',
         NULL,
         ['multi' => TRUE]
       ),

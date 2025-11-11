@@ -19,21 +19,15 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\AuL\SonstigeAktivitaet\Application\UISchema;
 
-use Civi\Funding\FundingCaseTypes\AuL\SonstigeAktivitaet\Application\JsonSchema\AVK1GrunddatenSchema;
 use Civi\RemoteTools\JsonForms\Control\JsonFormsArray;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
-use Civi\RemoteTools\JsonForms\JsonFormsElement;
 use Civi\RemoteTools\JsonForms\JsonFormsMarkup;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 
 final class AVK1GrunddatenUiSchema extends JsonFormsCategory {
 
-  private string $scopePrefix;
-
   public function __construct(string $scopePrefix) {
-    $this->scopePrefix = $scopePrefix;
-
     $elements = [
       new JsonFormsMarkup(<<<EOD
 <p>Bei Sonstigen Aktivitäten kann die Summe einer Kostenkategorie (Einzelansätze,
@@ -109,41 +103,6 @@ EOD
       'Grunddaten',
       $elements,
     );
-  }
-
-  /**
-   * Adds an asterisk to every non-required field. In report all fields are
-   * required.
-   */
-  public function withRequiredLabels(AVK1GrunddatenSchema $grunddatenJsonSchema): self {
-    $clone = clone $this;
-    $clone->modifyLabels($clone, $grunddatenJsonSchema);
-
-    return $clone;
-  }
-
-  private function modifyLabels(JsonFormsElement $element, AVK1GrunddatenSchema $grunddatenJsonSchema): void {
-    if ('Control' === $element['type']) {
-      // @phpstan-ignore-next-line
-      $relativeScope = 'properties' . substr($element['scope'], strlen($this->scopePrefix));
-      $schemaPath = explode('/', $relativeScope);
-      $propertyName = array_pop($schemaPath);
-      array_pop($schemaPath);
-      /** @var \Civi\RemoteTools\JsonSchema\JsonSchema $objectSchema */
-      $objectSchema = $grunddatenJsonSchema->getKeywordValueAt($schemaPath);
-      // @phpstan-ignore-next-line
-      if (!in_array($propertyName, $objectSchema['required'] ?? [], TRUE) && !$element->hasKeyword('$calculate')) {
-        // @phpstan-ignore-next-line
-        $element['label'] .= '&nbsp;*';
-      }
-    }
-    else {
-      /** @phpstan-var list<JsonFormsElement> $elements */
-      $elements = $element['elements'] ?? [];
-      foreach ($elements as $subElement) {
-        $this->modifyLabels($subElement, $grunddatenJsonSchema);
-      }
-    }
   }
 
 }
