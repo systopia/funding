@@ -160,6 +160,7 @@ final class ReceiptsFormGeneratorDecoratorTest extends TestCase {
         ],
       ],
       'required' => ['_financePlanItemId', 'paymentDate', 'recipient', 'reason', 'amount', '_id'],
+      'readOnly' => TRUE,
     ];
 
     if (NULL === $recordKey) {

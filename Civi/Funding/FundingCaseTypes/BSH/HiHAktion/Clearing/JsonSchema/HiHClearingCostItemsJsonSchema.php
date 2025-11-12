@@ -36,7 +36,8 @@ final class HiHClearingCostItemsJsonSchema extends JsonSchemaObject {
   public function __construct(
     ApplicationCostItemEntity $personalkostenBewilligt,
     ApplicationCostItemEntity $honorareBewilligt,
-    ApplicationCostItemEntity $sachkostenBewilligt
+    ApplicationCostItemEntity $sachkostenBewilligt,
+    bool $hasClearingChangePermission
   ) {
     $sachkostenKeys = [
       'materialien',
@@ -154,6 +155,11 @@ final class HiHClearingCostItemsJsonSchema extends JsonSchemaObject {
       ], ['required' => ['records']]),
     ];
 
+    if (!$hasClearingChangePermission) {
+      foreach ($properties as $schema) {
+        $schema['readOnly'] = TRUE;
+      }
+    }
     $keywords = ['required' => array_keys($properties)];
 
     parent::__construct($properties, $keywords);

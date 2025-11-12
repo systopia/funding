@@ -161,7 +161,7 @@ final class ReceiptsFormGeneratorPermissionDecorator implements ReceiptsFormGene
     bool $contentChangeAllowed
   ): void {
     Assert::same('object', $itemSchema['type']);
-    /** @var array<string, JsonSchema> $properties */
+    /** @var \Civi\RemoteTools\JsonSchema\JsonSchema&\ArrayAccess<string, JsonSchema> $properties */
     $properties = $itemSchema['properties'];
 
     $properties['_id']['readOnly'] = TRUE;
@@ -187,6 +187,9 @@ final class ReceiptsFormGeneratorPermissionDecorator implements ReceiptsFormGene
     else {
       $properties['amountAdmitted']['readOnly'] = TRUE;
       $properties['amountAdmitted']['default'] = NULL;
+      if (!$contentChangeAllowed) {
+        $itemSchema['readOnly'] = TRUE;
+      }
     }
   }
 

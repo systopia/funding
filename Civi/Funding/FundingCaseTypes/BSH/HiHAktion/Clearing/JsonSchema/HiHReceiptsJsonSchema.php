@@ -20,6 +20,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Clearing\JsonSchema;
 
+use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\Entity\ApplicationCostItemEntity;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
@@ -35,11 +36,18 @@ final class HiHReceiptsJsonSchema extends JsonSchemaObject {
     ApplicationCostItemEntity $sachkostenBewilligt,
     ClearingProcessEntityBundle $clearingProcessBundle,
   ) {
+    $fundingCase = $clearingProcessBundle->getFundingCase();
+    $hasClearingChangePermission =
+      $fundingCase->hasPermission(ClearingProcessPermissions::CLEARING_APPLY)
+      || $fundingCase->hasPermission(ClearingProcessPermissions::CLEARING_MODIFY)
+      || $fundingCase->hasPermission(ClearingProcessPermissions::REVIEW_AMEND);
+
     $properties = [
       'costItems' => new HiHClearingCostItemsJsonSchema(
         $personalkostenBewilligt,
         $honorareBewilligt,
-        $sachkostenBewilligt
+        $sachkostenBewilligt,
+        $hasClearingChangePermission
       ),
     ];
 
