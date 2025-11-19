@@ -67,7 +67,7 @@ final class HiHReceiptsJsonSchema extends JsonSchemaObject {
       [
         'personalkostenAmount' => new JsonSchemaDataPointer('1/costItems/personalkosten/amountRecordedTotal', 0),
         'honorareAmount' => new JsonSchemaDataPointer('1/costItems/honorare/amountRecordedTotal', 0),
-        'sachkostenAmount' => new JsonSchemaDataPointer('1/sachkostenAmountRecordedTotal'),
+        'sachkostenAmount' => new JsonSchemaDataPointer('1/sachkostenAmountRecordedTotal', 0),
       ],
       NULL,
       [

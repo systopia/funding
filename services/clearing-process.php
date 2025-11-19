@@ -50,6 +50,9 @@ use Civi\Funding\ClearingProcess\Handler\ClearingFormValidateHandlerInterface;
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingCommentPersister;
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingCostItemsFormDataPersister;
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingResourcesItemsFormDataPersister;
+use Civi\Funding\ClearingProcess\JsonSchema\Validator\ClearingSchemaValidator;
+use Civi\Funding\ClearingProcess\JsonSchema\Validator\OpisClearingValidator;
+use Civi\Funding\ClearingProcess\JsonSchema\Validator\OpisClearingValidatorFactory;
 use Civi\Funding\DependencyInjection\Compiler\ClearingFormValidatorPass;
 use Civi\Funding\DependencyInjection\Compiler\ClearingReceiptsFormFactoryPass;
 use Civi\Funding\DependencyInjection\Compiler\ClearingReportDataLoaderPass;
@@ -102,6 +105,10 @@ $container->autowire(ClearingFormValidateHandlerInterface::class, ClearingFormVa
 
 $container->autowire(ClearingFormSubmitHandlerInterface::class, ClearingFormSubmitHandler::class)
   ->addTag(ClearingFormSubmitHandlerInterface::SERVICE_TAG);
+
+$container->register(OpisClearingValidator::class, OpisClearingValidator::class)
+  ->setFactory([OpisClearingValidatorFactory::class, 'getValidator']);
+$container->autowire(ClearingSchemaValidator::class);
 
 ServiceRegistrator::autowireAllImplementing(
   $container,

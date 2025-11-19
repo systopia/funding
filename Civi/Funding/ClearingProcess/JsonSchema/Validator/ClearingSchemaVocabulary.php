@@ -17,19 +17,15 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\ApplicationProcess\JsonSchema\Validator;
+namespace Civi\Funding\ClearingProcess\JsonSchema\Validator;
 
-use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemKeywordValidatorParser;
-use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemsKeywordValidatorParser;
-use Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemKeywordValidatorParser;
-use Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemsKeywordValidatorParser;
 use Civi\Funding\JsonSchema\DefaultKeyword\DefaultKeywordParser;
 use Systopia\JsonSchema\Parsers\SystopiaVocabulary;
 
 /**
  * @codeCoverageIgnore
  */
-final class ApplicationSchemaVocabulary extends SystopiaVocabulary {
+final class ClearingSchemaVocabulary extends SystopiaVocabulary {
 
   /**
    * @inheritDoc
@@ -37,10 +33,6 @@ final class ApplicationSchemaVocabulary extends SystopiaVocabulary {
   public function __construct(array $keywords = [], array $keywordValidators = [], array $pragmas = []) {
     $keywords[] = new DefaultKeywordParser();
     parent::__construct($keywords, $keywordValidators, $pragmas);
-    $this->keywordValidators[] = new CostItemKeywordValidatorParser();
-    $this->keywordValidators[] = new CostItemsKeywordValidatorParser();
-    $this->keywordValidators[] = new ResourcesItemKeywordValidatorParser();
-    $this->keywordValidators[] = new ResourcesItemsKeywordValidatorParser();
   }
 
 }

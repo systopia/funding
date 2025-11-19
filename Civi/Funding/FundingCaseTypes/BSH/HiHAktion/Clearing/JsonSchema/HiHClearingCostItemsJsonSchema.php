@@ -21,6 +21,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Clearing\JsonSchema;
 
 use Civi\Funding\Entity\ApplicationCostItemEntity;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
 use Civi\RemoteTools\JsonSchema\JsonSchemaCalculate;
 use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
@@ -61,6 +62,9 @@ final class HiHClearingCostItemsJsonSchema extends JsonSchemaObject {
       ], ['required' => ['_financePlanItemId', 'amount']]);
     }
 
+    // The "$default" keyword in "personalkosten" and "honorare" is used to have
+    // a value of 0 for "amountRecordedTotal" if no cost items of the
+    // corresponding types are existent.
     $properties = [
       'personalkosten' => new JsonSchemaObject([
         'records' => new JsonSchemaArray(new JsonSchemaObject([
@@ -85,10 +89,9 @@ final class HiHClearingCostItemsJsonSchema extends JsonSchemaObject {
           'number',
           'round(sum(map(records, "value.amount ?: 0")), 2)',
           ['records' => new JsonSchemaDataPointer('1/records')],
-          NULL,
-          ['default' => 0]
+          0
         ),
-      ], ['required' => ['records']]),
+      ], ['required' => ['records'], '$default' => new JsonSchema([])]),
 
       'honorare' => new JsonSchemaObject([
         'records' => new JsonSchemaArray(new JsonSchemaObject([
@@ -118,10 +121,9 @@ final class HiHClearingCostItemsJsonSchema extends JsonSchemaObject {
           'number',
           'round(sum(map(records, "value.amount ?: 0")), 2)',
           ['records' => new JsonSchemaDataPointer('1/records')],
-          NULL,
-          ['default' => 0]
+          0
         ),
-      ], ['required' => ['records']]),
+      ], ['required' => ['records'], '$default' => new JsonSchema([])]),
 
       'sachkosten' => new JsonSchemaObject([
         'records' => new JsonSchemaObject($sachkostenRecords, ['required' => $sachkostenKeys]),
