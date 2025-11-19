@@ -113,7 +113,7 @@ final class HiHReceiptsUiSchema extends JsonFormsGroup {
             new JsonFormsControl('#/properties/properties/properties/berechnungsgrundlage', 'Berechnungsgrundlage'),
             new JsonFormsControl(
               '#/properties/properties/properties/verguetung',
-              "Verguetung in $currency"
+              "Vergütung in $currency"
             ),
             new JsonFormsControl('#/properties/properties/properties/dauer', 'Dauer'),
             new JsonFormsControl('#/properties/amount', "Summe in $currency"),
