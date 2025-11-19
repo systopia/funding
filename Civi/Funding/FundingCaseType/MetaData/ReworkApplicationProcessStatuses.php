@@ -76,7 +76,7 @@ final class ReworkApplicationProcessStatuses {
     return $statuses ??= [
       'rework' => self::rework(),
       'rework-requested' => self::reworkRequested(),
-      'rework-review' => self::reworkReviewRequested(),
+      'rework-review' => self::reworkReview(),
       'rework-review-requested' => self::reworkReviewRequested(),
     ];
   }
