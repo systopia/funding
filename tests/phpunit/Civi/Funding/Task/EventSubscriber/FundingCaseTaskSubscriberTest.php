@@ -11,7 +11,7 @@ use Civi\Funding\EntityFactory\FundingTaskFactory;
 use Civi\Funding\Event\FundingCase\FundingCaseCreatedEvent;
 use Civi\Funding\Event\FundingCase\FundingCaseUpdatedEvent;
 use Civi\Funding\Task\Creator\FundingCaseTaskCreatorInterface;
-use Civi\Funding\Task\FundingTaskManager;
+use Civi\Funding\Task\FundingTaskManagerInterface;
 use Civi\Funding\Task\Modifier\FundingCaseTaskModifierInterface;
 use Civi\RemoteTools\Api4\Query\Comparison;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -27,24 +27,15 @@ final class FundingCaseTaskSubscriberTest extends TestCase {
    */
   private FundingCaseTaskSubscriber $subscriber;
 
-  /**
-   * @var \Civi\Funding\Task\Creator\FundingCaseTaskCreatorInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $taskCreatorMock;
+  private FundingCaseTaskCreatorInterface&MockObject $taskCreatorMock;
 
-  /**
-   * @var \Civi\Funding\Task\FundingTaskManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $taskManagerMock;
+  private FundingTaskManagerInterface&MockObject $taskManagerMock;
 
-  /**
-   * @var \Civi\Funding\Task\Modifier\FundingCaseTaskModifierInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $taskModifierMock;
+  private FundingCaseTaskModifierInterface&MockObject $taskModifierMock;
 
   protected function setUp(): void {
     parent::setUp();
-    $this->taskManagerMock = $this->createMock(FundingTaskManager::class);
+    $this->taskManagerMock = $this->createMock(FundingTaskManagerInterface::class);
     $this->taskCreatorMock = $this->createMock(FundingCaseTaskCreatorInterface::class);
     $this->taskModifierMock = $this->createMock(FundingCaseTaskModifierInterface::class);
     $this->subscriber = new FundingCaseTaskSubscriber(
