@@ -11,7 +11,7 @@ use Civi\Funding\EntityFactory\FundingTaskFactory;
 use Civi\Funding\Event\PayoutProcess\DrawdownCreatedEvent;
 use Civi\Funding\Event\PayoutProcess\DrawdownUpdatedEvent;
 use Civi\Funding\Task\Creator\DrawdownTaskCreatorInterface;
-use Civi\Funding\Task\FundingTaskManager;
+use Civi\Funding\Task\FundingTaskManagerInterface;
 use Civi\Funding\Task\Modifier\DrawdownTaskModifierInterface;
 use Civi\RemoteTools\Api4\Query\Comparison;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -27,24 +27,15 @@ final class DrawdownTaskSubscriberTest extends TestCase {
    */
   private DrawdownTaskSubscriber $subscriber;
 
-  /**
-   * @var \Civi\Funding\Task\Creator\DrawdownTaskCreatorInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $taskCreatorMock;
+  private DrawdownTaskCreatorInterface&MockObject $taskCreatorMock;
 
-  /**
-   * @var \Civi\Funding\Task\FundingTaskManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $taskManagerMock;
+  private FundingTaskManagerInterface&MockObject $taskManagerMock;
 
-  /**
-   * @var \Civi\Funding\Task\Modifier\DrawdownTaskModifierInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $taskModifierMock;
+  private DrawdownTaskModifierInterface&MockObject $taskModifierMock;
 
   protected function setUp(): void {
     parent::setUp();
-    $this->taskManagerMock = $this->createMock(FundingTaskManager::class);
+    $this->taskManagerMock = $this->createMock(FundingTaskManagerInterface::class);
     $this->taskCreatorMock = $this->createMock(DrawdownTaskCreatorInterface::class);
     $this->taskModifierMock = $this->createMock(DrawdownTaskModifierInterface::class);
     $this->subscriber = new DrawdownTaskSubscriber(

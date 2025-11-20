@@ -21,7 +21,7 @@ namespace Civi\Funding\Task\EventSubscriber;
 
 use Civi\Funding\Event\ClearingProcess\ClearingProcessCreatedEvent;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessUpdatedEvent;
-use Civi\Funding\Task\FundingTaskManager;
+use Civi\Funding\Task\FundingTaskManagerInterface;
 use Civi\RemoteTools\Api4\Query\Comparison;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -30,7 +30,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class ClearingProcessTaskSubscriber implements EventSubscriberInterface {
 
-  private FundingTaskManager $taskManager;
+  private FundingTaskManagerInterface $taskManager;
 
   /**
    * @phpstan-var array<string, iterable<\Civi\Funding\Task\Creator\ClearingProcessTaskCreatorInterface>>
@@ -62,7 +62,7 @@ class ClearingProcessTaskSubscriber implements EventSubscriberInterface {
    *   iterable<\Civi\Funding\Task\Modifier\ClearingProcessTaskModifierInterface>
    * > $taskModifiers
    */
-  public function __construct(FundingTaskManager $taskManager, array $taskCreators, array $taskModifiers) {
+  public function __construct(FundingTaskManagerInterface $taskManager, array $taskCreators, array $taskModifiers) {
     $this->taskManager = $taskManager;
     $this->taskCreators = $taskCreators;
     $this->taskModifiers = $taskModifiers;

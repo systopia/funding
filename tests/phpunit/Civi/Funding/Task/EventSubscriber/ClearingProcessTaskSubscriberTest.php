@@ -11,7 +11,7 @@ use Civi\Funding\EntityFactory\FundingTaskFactory;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessCreatedEvent;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessUpdatedEvent;
 use Civi\Funding\Task\Creator\ClearingProcessTaskCreatorInterface;
-use Civi\Funding\Task\FundingTaskManager;
+use Civi\Funding\Task\FundingTaskManagerInterface;
 use Civi\Funding\Task\Modifier\ClearingProcessTaskModifierInterface;
 use Civi\RemoteTools\Api4\Query\Comparison;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -27,24 +27,15 @@ final class ClearingProcessTaskSubscriberTest extends TestCase {
    */
   private ClearingProcessTaskSubscriber $subscriber;
 
-  /**
-   * @var \Civi\Funding\Task\Creator\ClearingProcessTaskCreatorInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $taskCreatorMock;
+  private ClearingProcessTaskCreatorInterface&MockObject $taskCreatorMock;
 
-  /**
-   * @var \Civi\Funding\Task\FundingTaskManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $taskManagerMock;
+  private FundingTaskManagerInterface&MockObject $taskManagerMock;
 
-  /**
-   * @var \Civi\Funding\Task\Modifier\ClearingProcessTaskModifierInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $taskModifierMock;
+  private ClearingProcessTaskModifierInterface&MockObject $taskModifierMock;
 
   protected function setUp(): void {
     parent::setUp();
-    $this->taskManagerMock = $this->createMock(FundingTaskManager::class);
+    $this->taskManagerMock = $this->createMock(FundingTaskManagerInterface::class);
     $this->taskCreatorMock = $this->createMock(ClearingProcessTaskCreatorInterface::class);
     $this->taskModifierMock = $this->createMock(ClearingProcessTaskModifierInterface::class);
     $this->subscriber = new ClearingProcessTaskSubscriber(

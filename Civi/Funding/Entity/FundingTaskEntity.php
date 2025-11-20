@@ -40,6 +40,8 @@ use Webmozart\Assert\Assert;
  *    payout_process_id?: int,
  *    drawdown_id?: int,
  *    due_date?: \DateTimeInterface|null,
+ *    external_url?: string,
+ *    external_url_label?: string,
  *  }
  *
  * @phpstan-type fundingTaskT array{
@@ -76,6 +78,8 @@ use Webmozart\Assert\Assert;
  *   'funding_case_task.affected_identifier': string,
  *   'funding_case_task.funding_case_id': int,
  *   'funding_case_task.due_date': string|null,
+ *   'funding_case_task.external_url': string|null,
+ *   'funding_case_task.external_url_label': string|null,
  *   'funding_application_process_task.application_process_id'?: int|null,
  *   'funding_clearing_process_task.clearing_process_id'?: int|null,
  *   'funding_payout_process_task.payout_process_id'?: int|null,
@@ -123,6 +127,8 @@ final class FundingTaskEntity extends AbstractActivityEntity {
       'funding_case_task.affected_identifier' => $values['affected_identifier'],
       'funding_case_task.funding_case_id' => $values['funding_case_id'],
       'funding_case_task.due_date' => self::toDateStrOrNull($values['due_date'] ?? NULL),
+      'funding_case_task.external_url' => $values['external_url'] ?? NULL,
+      'funding_case_task.external_url_label' => $values['external_url_label'] ?? NULL,
       'funding_application_process_task.application_process_id' => $values['application_process_id'] ?? NULL,
       'funding_clearing_process_task.clearing_process_id' => $values['clearing_process_id'] ?? NULL,
       'funding_payout_process_task.payout_process_id' => $values['payout_process_id'] ?? NULL,
@@ -159,6 +165,13 @@ final class FundingTaskEntity extends AbstractActivityEntity {
     else {
       $entityValues['activity_type_id:name'] = ActivityTypeNames::FUNDING_CASE_TASK;
       $entityValues['source_record_id'] = $values['funding_case_id'];
+    }
+
+    if (isset($values['external_url']) && !isset($values['external_url_label'])) {
+      throw new \InvalidArgumentException('external_url_label is required if external_url given');
+    }
+    elseif (isset($values['external_url_label']) && !isset($values['external_url'])) {
+      throw new \InvalidArgumentException('external_url is required if external_url_label given');
     }
 
     return static::fromArray($entityValues);
@@ -209,6 +222,26 @@ final class FundingTaskEntity extends AbstractActivityEntity {
 
   public function setDueDate(?\DateTimeInterface $dueDate): static {
     $this->values['funding_case_task.due_date'] = self::toDateStrOrNull($dueDate);
+
+    return $this;
+  }
+
+  public function getExternalUrl(): ?string {
+    return $this->values['funding_case_task.external_url'];
+  }
+
+  public function setExternalUrl(?string $externalUrl): static {
+    $this->values['funding_case_task.external_url'] = $externalUrl;
+
+    return $this;
+  }
+
+  public function getExternalUrlLabel(): ?string {
+    return $this->values['funding_case_task.external_url_label'];
+  }
+
+  public function setExternalUrlLabel(?string $externalUrlLabel): static {
+    $this->values['funding_case_task.external_url_label'] = $externalUrlLabel;
 
     return $this;
   }

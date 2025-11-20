@@ -21,7 +21,7 @@ namespace Civi\Funding\Task\EventSubscriber;
 
 use Civi\Funding\Event\PayoutProcess\DrawdownCreatedEvent;
 use Civi\Funding\Event\PayoutProcess\DrawdownUpdatedEvent;
-use Civi\Funding\Task\FundingTaskManager;
+use Civi\Funding\Task\FundingTaskManagerInterface;
 use Civi\RemoteTools\Api4\Query\Comparison;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -30,7 +30,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class DrawdownTaskSubscriber implements EventSubscriberInterface {
 
-  private FundingTaskManager $taskManager;
+  private FundingTaskManagerInterface $taskManager;
 
   /**
    * @phpstan-var array<string, iterable<\Civi\Funding\Task\Creator\DrawdownTaskCreatorInterface>>
@@ -62,7 +62,7 @@ class DrawdownTaskSubscriber implements EventSubscriberInterface {
    *   iterable<\Civi\Funding\Task\Modifier\DrawdownTaskModifierInterface>
    * > $taskModifiers
    */
-  public function __construct(FundingTaskManager $taskManager, array $taskCreators, array $taskModifiers) {
+  public function __construct(FundingTaskManagerInterface $taskManager, array $taskCreators, array $taskModifiers) {
     $this->taskManager = $taskManager;
     $this->taskCreators = $taskCreators;
     $this->taskModifiers = $taskModifiers;
