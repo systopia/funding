@@ -37,6 +37,7 @@ use Symfony\Bridge\PhpUnit\ClockMock;
  * @covers \Civi\Api4\FundingClearingProcess
  * @covers \Civi\Funding\Api4\Action\FundingClearingProcess\SubmitFormAction
  * @covers \Civi\Funding\ClearingProcess\Api4\ActionHandler\SubmitFormActionHandler
+ * @covers \Civi\Funding\ClearingProcess\Handler\ClearingFormSubmitHandler
  *
  * @group headless
  */
@@ -682,6 +683,84 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
     static::assertEquals(
       [
         'is_review_calculative' => TRUE,
+      ] + $this->clearingProcessBundle->getClearingProcess()->toArray(),
+      FundingClearingProcess::get(FALSE)->execute()->single()
+    );
+  }
+
+  public function testRejectDoesNotChangeDataButSetsAmountAdmittedToZero(): void {
+    FundingCaseContactRelationFixture::addContact(
+      $this->contactId,
+      $this->clearingProcessBundle->getFundingCase()->getId(),
+      [ClearingProcessPermissions::REVIEW_CALCULATIVE, ClearingProcessPermissions::REVIEW_AMEND],
+    );
+
+    $clearingCostItem = ClearingCostItemFixture::addFixture(
+      $this->clearingProcessBundle->getClearingProcess()->getId(),
+      $this->costItem->getId(),
+      ['status' => 'new', 'amount_admitted' => 1.2]
+    );
+    $clearingResourcesItem = ClearingResourcesItemFixture::addFixture(
+      $this->clearingProcessBundle->getClearingProcess()->getId(),
+      $this->resourcesItem->getId(),
+      ['status' => 'rejected', 'amount_admitted' => 3.4]
+    );
+
+    $submitAction = FundingClearingProcess::submitForm()
+      ->setId($this->clearingProcessBundle->getClearingProcess()->getId())
+      ->setData([
+        'costItems' => [
+          $this->costItem->getId() => [
+            'records' => [
+              [
+                '_id' => $clearingCostItem->getId(),
+                'receiptNumber' => 'ignored',
+                'receiptDate' => '2000-12-31',
+                'paymentDate' => '2001-01-01',
+                'paymentParty' => 'ignored',
+                'reason' => 'ignored',
+                'amount' => 2,
+                'amountAdmitted' => 1.2,
+              ],
+            ],
+          ],
+        ],
+        'resourcesItems' => [
+          $this->resourcesItem->getId() => [
+            'records' => [
+              [
+                '_id' => $clearingResourcesItem->getId(),
+                'receiptNumber' => 'ignored',
+                'receiptDate' => '2000-12-31',
+                'paymentDate' => '2001-01-01',
+                'paymentParty' => 'ignored',
+                'reason' => 'ignored',
+                'amount' => 3.4,
+                'amountAdmitted' => 3.4,
+              ],
+            ],
+          ],
+        ],
+        'reportData' => ['foo' => 'bar'],
+        '_action' => 'reject',
+      ]);
+
+    $this->getTestCaseTypeMetaData()->setGeneralClearingAdmitAllowed(TRUE);
+    $result = $submitAction->execute()->getArrayCopy();
+    static::assertEquals(new \stdClass(), $result['errors']);
+
+    static::assertEquals(
+      ['amount_admitted' => 0.0, 'status' => 'rejected'] + $clearingCostItem->toArray(),
+      FundingClearingCostItem::get(FALSE)->execute()->single()
+    );
+    static::assertEquals(
+      ['amount_admitted' => 0.0, 'status' => 'rejected'] + $clearingResourcesItem->toArray(),
+      FundingClearingResourcesItem::get(FALSE)->execute()->single()
+    );
+
+    static::assertEquals(
+      [
+        'status' => 'rejected',
       ] + $this->clearingProcessBundle->getClearingProcess()->toArray(),
       FundingClearingProcess::get(FALSE)->execute()->single()
     );

@@ -30,6 +30,7 @@ use Civi\Funding\ClearingProcess\Handler\Helper\AbstractClearingItemsFormDataPer
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingCommentPersister;
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingCostItemsFormDataPersister;
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingResourcesItemsFormDataPersister;
+use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\ExternalFile\TaggedExternalFilePersister;
 
 /**
@@ -92,10 +93,14 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
     /** @phpstan-var clearingFormDataT $data */
     $data = $validationResult->getData();
 
-    $amountAdmittedInitialized = FALSE;
+    $amountAdmittedChanged = FALSE;
     if ('accept-calculative' === $command->getData()['_action']) {
       $contentChangeAllowed = FALSE;
-      $amountAdmittedInitialized = $this->initializeAmountsAdmitted($data);
+      $amountAdmittedChanged = $this->initializeAmountsAdmitted($data);
+    }
+    elseif ('reject' === $command->getData()['_action']) {
+      $contentChangeAllowed = FALSE;
+      $amountAdmittedChanged = $this->setAmountsAdmittedToZero($data);
     }
     else {
       $contentChangeAllowed = $this->actionsDeterminer->isContentChangeAllowed($clearingProcessBundle);
@@ -104,19 +109,8 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
     $files = [];
     $clearingProcess = $clearingProcessBundle->getClearingProcess();
 
-    if ($amountAdmittedInitialized || $this->actionsDeterminer->isEditAction($data['_action'])) {
-      $persistClearingItemsFlags = $contentChangeAllowed
-        ? AbstractClearingItemsFormDataPersister::FLAG_CONTENT_CHANGE_ALLOWED : 0;
-      $files += $this->clearingCostItemsFormDataPersister->persistClearingItems(
-        $clearingProcessBundle,
-        $data['costItems'] ?? [],
-        $persistClearingItemsFlags
-      );
-      $files += $this->clearingResourcesItemsFormDataPersister->persistClearingItems(
-        $clearingProcessBundle,
-        $data['resourcesItems'] ?? [],
-        $persistClearingItemsFlags
-      );
+    if ($amountAdmittedChanged || $this->actionsDeterminer->isEditAction($data['_action'])) {
+      $files += $this->persistClearingItems($clearingProcessBundle, $data, $contentChangeAllowed);
 
       if ($contentChangeAllowed) {
         $files += $this->externalFilePersister->handleFiles(
@@ -176,6 +170,64 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
     }
 
     return $amountAdmittedInitialized;
+  }
+
+  /**
+   * @phpstan-param clearingFormDataT $data
+   *
+   * @return array<string, string>
+   *   Mapping of submitted file URIs to CiviCRM file URIs.
+   */
+  private function persistClearingItems(
+    ClearingProcessEntityBundle $clearingProcessBundle,
+    array $data,
+    bool $contentChangeAllowed
+  ): array {
+    $persistClearingItemsFlags = $contentChangeAllowed
+      ? AbstractClearingItemsFormDataPersister::FLAG_CONTENT_CHANGE_ALLOWED : 0;
+
+    $files = $this->clearingCostItemsFormDataPersister->persistClearingItems(
+      $clearingProcessBundle,
+      $data['costItems'] ?? [],
+      $persistClearingItemsFlags
+    );
+
+    $files += $this->clearingResourcesItemsFormDataPersister->persistClearingItems(
+      $clearingProcessBundle,
+      $data['resourcesItems'] ?? [],
+      $persistClearingItemsFlags
+    );
+
+    return $files;
+  }
+
+  /**
+   * This sets all amounts admitted to 0.0.
+   *
+   * @phpstan-param clearingFormDataT $data
+   *
+   * @return bool
+   *   TRUE if at least one amount admitted was changed.
+   */
+  private function setAmountsAdmittedToZero(array &$data): bool {
+    $amountAdmittedChanged = FALSE;
+
+    foreach (['costItems', 'resourcesItems'] as $itemsKey) {
+      if (!isset($data[$itemsKey])) {
+        continue;
+      }
+
+      foreach ($data[$itemsKey] as &$costItem) {
+        foreach ($costItem['records'] as &$record) {
+          if (!isset($record['amountAdmitted']) || $record['amountAdmitted'] != 0) {
+            $record['amountAdmitted'] = 0.0;
+            $amountAdmittedChanged = TRUE;
+          }
+        }
+      }
+    }
+
+    return $amountAdmittedChanged;
   }
 
 }
