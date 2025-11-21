@@ -48,17 +48,25 @@ final class HiHReceiptsUiSchema extends JsonFormsGroup {
     $costItemsScopePrefix = '#/properties/costItems/properties';
     $sachkostenScopePrefix = "$costItemsScopePrefix/sachkosten/properties/records/properties";
 
+    $numberFormatter = \NumberFormatter::create('de_DE', \NumberFormatter::DECIMAL);
+    $numberFormatter->setAttribute(\NumberFormatter::MAX_FRACTION_DIGITS, 2);
+
     parent::__construct('Projektkosten', [
       new JsonFormsGroup('Personalkosten', [
-        new JsonFormsTable(['Position', 'Beantragter Betrag', 'Bewilligter Betrag', "Ausgaben in $currency"], [
+        new JsonFormsTable([
+          'Position',
+          "Beantragter Betrag in $currency",
+          "Bewilligter Betrag in $currency",
+          "Ausgaben in $currency",
+        ], [
           new JsonFormsTableRow([
             new JsonFormsMarkup('Personalkosten'),
-            new JsonFormsMarkup($this->getAmountSum(
-              $applicationCostItemsByType['personalkosten'] ?? []) . " $currency"
-            ),
-            new JsonFormsMarkup(
-              $applicationCostItemsByType['bewilligt']['personalkostenBewilligt']->getAmount() . " $currency"
-            ),
+            new JsonFormsMarkup((string) $numberFormatter->format($this->getAmountSum(
+              $applicationCostItemsByType['personalkosten'] ?? [])
+            )),
+            new JsonFormsMarkup((string) $numberFormatter->format(
+              $applicationCostItemsByType['bewilligt']['personalkostenBewilligt']->getAmount()
+            )),
             new JsonFormsControl("$costItemsScopePrefix/personalkosten/properties/amountRecordedTotal", ''),
           ]),
         ]),
@@ -91,15 +99,20 @@ final class HiHReceiptsUiSchema extends JsonFormsGroup {
       ]),
 
       new JsonFormsGroup('Honorare', [
-        new JsonFormsTable(['Position', 'Beantragter Betrag', 'Bewilligter Betrag', "Ausgaben in $currency"], [
+        new JsonFormsTable([
+          'Position',
+          "Beantragter Betrag in $currency",
+          "Bewilligter Betrag in $currency",
+          "Ausgaben in $currency",
+        ], [
           new JsonFormsTableRow([
             new JsonFormsMarkup('Honorare'),
-            new JsonFormsMarkup($this->getAmountSum(
-                $applicationCostItemsByType['honorar'] ?? []) . " $currency"
-            ),
-            new JsonFormsMarkup(
-              $applicationCostItemsByType['bewilligt']['honorareBewilligt']->getAmount() . " $currency"
-            ),
+            new JsonFormsMarkup((string) $numberFormatter->format($this->getAmountSum(
+                $applicationCostItemsByType['honorar'] ?? [])
+            )),
+            new JsonFormsMarkup((string) $numberFormatter->format(
+              $applicationCostItemsByType['bewilligt']['honorareBewilligt']->getAmount()
+            )),
             new JsonFormsControl("$costItemsScopePrefix/honorare/properties/amountRecordedTotal", ''),
           ]),
         ]),
@@ -131,15 +144,19 @@ final class HiHReceiptsUiSchema extends JsonFormsGroup {
       ]),
 
       new JsonFormsGroup('Projektbezogene Sachkosten', [
-        new JsonFormsTable(['Position', 'Beantragter Betrag', 'Bewilligter Betrag', "Ausgaben in $currency"], [
+        new JsonFormsTable(['Position',
+          "Beantragter Betrag in $currency",
+          "Bewilligter Betrag in $currency",
+          "Ausgaben in $currency",
+        ], [
           new JsonFormsTableRow([
             new JsonFormsMarkup('Sachkosten'),
-            new JsonFormsMarkup($this->getAmountSum(
-                $applicationCostItemsByType['sachkosten'] ?? []) . " $currency"
-            ),
-            new JsonFormsMarkup(
-              $applicationCostItemsByType['bewilligt']['sachkostenBewilligt']->getAmount() . " $currency"
-            ),
+            new JsonFormsMarkup((string) $numberFormatter->format($this->getAmountSum(
+                $applicationCostItemsByType['sachkosten'] ?? [])
+            )),
+            new JsonFormsMarkup((string) $numberFormatter->format(
+              $applicationCostItemsByType['bewilligt']['sachkostenBewilligt']->getAmount()
+            )),
             new JsonFormsControl('#/properties/sachkostenAmountRecordedTotal', ''),
           ]),
         ]),
@@ -213,11 +230,15 @@ final class HiHReceiptsUiSchema extends JsonFormsGroup {
 
       new JsonFormsGroup('Insgesamt', [
         new JsonFormsTable(
-          ['Beantragter Betrag', 'Bewilligter Betrag', "Ausgaben in $currency"],
+          ["Beantragter Betrag in $currency", "Bewilligter Betrag in $currency", "Ausgaben in $currency"],
           [
             new JsonFormsTableRow([
-              new JsonFormsMarkup("{$clearingProcessBundle->getApplicationProcess()->getAmountRequested()} $currency"),
-              new JsonFormsMarkup("{$clearingProcessBundle->getFundingCase()->getAmountApproved()} $currency"),
+              new JsonFormsMarkup((string) $numberFormatter->format(
+                $clearingProcessBundle->getApplicationProcess()->getAmountRequested()
+              )),
+              new JsonFormsMarkup((string) $numberFormatter->format(
+                $clearingProcessBundle->getFundingCase()->getAmountApproved() ?? 0
+              )),
               new JsonFormsControl('#/properties/ausgaben', ''),
             ]),
           ]
