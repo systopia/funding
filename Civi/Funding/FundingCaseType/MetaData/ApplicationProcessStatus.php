@@ -63,6 +63,10 @@ final class ApplicationProcessStatus {
    */
   public function __construct(array $values) {
     $this->values = $values;
+
+    if ($this->isFinal() && NULL === $this->isEligible()) {
+      throw new \InvalidArgumentException('The eligibility of final status has to be decided');
+    }
   }
 
   public function getIcon(): ?string {
