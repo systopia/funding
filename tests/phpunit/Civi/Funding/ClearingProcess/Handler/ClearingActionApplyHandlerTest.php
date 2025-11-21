@@ -5,7 +5,9 @@ namespace Civi\Funding\ClearingProcess\Handler;
 
 use Civi\API\Exception\UnauthorizedException;
 use Civi\Funding\ClearingProcess\ClearingActionsDeterminer;
+use Civi\Funding\ClearingProcess\ClearingCostItemManager;
 use Civi\Funding\ClearingProcess\ClearingProcessManager;
+use Civi\Funding\ClearingProcess\ClearingResourcesItemManager;
 use Civi\Funding\ClearingProcess\ClearingStatusDeterminer;
 use Civi\Funding\ClearingProcess\Command\ClearingActionApplyCommand;
 use Civi\Funding\Entity\FullClearingProcessStatus;
@@ -23,10 +25,14 @@ final class ClearingActionApplyHandlerTest extends TestCase {
    */
   private MockObject $actionsDeterminerMock;
 
+  private ClearingCostItemManager&MockObject $clearingCostItemManagerMock;
+
   /**
    * @var \Civi\Funding\ClearingProcess\ClearingProcessManager&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $clearingProcessManagerMock;
+
+  private ClearingResourcesItemManager&MockObject $clearingResourcesItemManagerMock;
 
   private ClearingActionApplyHandler $handler;
 
@@ -38,11 +44,15 @@ final class ClearingActionApplyHandlerTest extends TestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->actionsDeterminerMock = $this->createMock(ClearingActionsDeterminer::class);
+    $this->clearingCostItemManagerMock = $this->createMock(ClearingCostItemManager::class);
     $this->clearingProcessManagerMock = $this->createMock(ClearingProcessManager::class);
+    $this->clearingResourcesItemManagerMock = $this->createMock(ClearingResourcesItemManager::class);
     $this->statusDeterminerMock = $this->createMock(ClearingStatusDeterminer::class);
     $this->handler = new ClearingActionApplyHandler(
       $this->actionsDeterminerMock,
+      $this->clearingCostItemManagerMock,
       $this->clearingProcessManagerMock,
+      $this->clearingResourcesItemManagerMock,
       $this->statusDeterminerMock
     );
   }
@@ -55,6 +65,11 @@ final class ClearingActionApplyHandlerTest extends TestCase {
     $this->actionsDeterminerMock->method('isActionAllowed')
       ->with($action, $clearingProcessBundle)
       ->willReturn(TRUE);
+
+    $this->clearingCostItemManagerMock->expects(static::never())
+      ->method('resetAmountsAdmittedByClearingProcessId');
+    $this->clearingResourcesItemManagerMock->expects(static::never())
+      ->method('resetAmountsAdmittedByClearingProcessId');
 
     $this->statusDeterminerMock->method('getStatus')
       ->with($clearingProcessBundle->getClearingProcess()->getFullStatus(), $action)
@@ -78,6 +93,33 @@ final class ClearingActionApplyHandlerTest extends TestCase {
     $this->expectException(UnauthorizedException::class);
     $this->expectExceptionMessage('Action "test" is not allowed on clearing process with ID 123');
     $this->handler->handle(new ClearingActionApplyCommand($clearingProcessBundle, $action));
+  }
+
+  public function testHandleRequestChangeOnRejected(): void {
+    $clearingProcessBundle = ClearingProcessBundleFactory::create(['id' => 123, 'status' => 'rejected']);
+    $action = 'request-change';
+    $newFullStatus = new FullClearingProcessStatus('rework', NULL, NULL);
+
+    $this->actionsDeterminerMock->method('isActionAllowed')
+      ->with($action, $clearingProcessBundle)
+      ->willReturn(TRUE);
+
+    $this->clearingCostItemManagerMock->expects(static::once())
+      ->method('resetAmountsAdmittedByClearingProcessId')
+      ->with(123);
+    $this->clearingResourcesItemManagerMock->expects(static::once())
+      ->method('resetAmountsAdmittedByClearingProcessId')
+      ->with(123);
+
+    $this->statusDeterminerMock->method('getStatus')
+      ->with($clearingProcessBundle->getClearingProcess()->getFullStatus(), $action)
+      ->willReturn($newFullStatus);
+
+    $this->clearingProcessManagerMock->expects(static::once())->method('update')
+      ->with($clearingProcessBundle);
+
+    $this->handler->handle(new ClearingActionApplyCommand($clearingProcessBundle, $action));
+    static::assertEquals($newFullStatus, $clearingProcessBundle->getClearingProcess()->getFullStatus());
   }
 
 }

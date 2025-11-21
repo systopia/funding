@@ -97,6 +97,21 @@ final class ClearingCostItemManagerTest extends TestCase {
     static::assertEquals([22 => $item], $this->itemManager->getByCostItemId(33));
   }
 
+  public function testResetAmountsAdmittedByClearingProcessId(): void {
+    $item = ClearingCostItemFactory::create(['id' => 22, 'amount_admitted' => 0.0, 'status' => 'rejected']);
+    $this->api4Mock->method('getEntities')->with(
+      FundingClearingCostItem::getEntityName(),
+      Comparison::new('clearing_process_id', '=', 12)
+    )->willReturn(new Result([$item->toArray()]));
+
+    $newValues = ['amount_admitted' => NULL, 'status' => 'new'] + $item->toArray();
+    $this->api4Mock->expects(static::once())->method('updateEntity')
+      ->with(FundingClearingCostItem::getEntityName(), 22, $newValues)
+      ->willReturn(new Result([$newValues]));
+
+    $this->itemManager->resetAmountsAdmittedByClearingProcessId(12);
+  }
+
   public function testSaveNew(): void {
     $item = ClearingCostItemFactory::create();
     $this->api4Mock->expects(static::once())->method('createEntity')

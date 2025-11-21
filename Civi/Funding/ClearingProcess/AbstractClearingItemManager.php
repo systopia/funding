@@ -105,6 +105,17 @@ abstract class AbstractClearingItemManager {
   }
 
   /**
+   * @throws \CRM_Core_Exception
+   */
+  public function resetAmountsAdmittedByClearingProcessId(int $clearingProcessId): void {
+    foreach ($this->getByClearingProcessId($clearingProcessId) as $item) {
+      $item->setAmountAdmitted(NULL);
+      $item->setStatus('new');
+      $this->save($item);
+    }
+  }
+
+  /**
    * @phpstan-param T $item
    *
    * @throws \CRM_Core_Exception
