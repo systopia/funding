@@ -21,9 +21,9 @@ namespace Civi\Funding\ClearingProcess\Handler;
 
 use Civi\Funding\ClearingProcess\Command\ClearingFormGetCommand;
 use Civi\Funding\ClearingProcess\Command\ClearingFormValidateCommand;
-use Civi\Funding\ClearingProcess\Form\Validation\ClearingFormValidatorInterface;
 use Civi\Funding\ClearingProcess\Form\Validation\ClearingFormValidationResult;
-use Civi\RemoteTools\JsonSchema\Validation\ValidatorInterface;
+use Civi\Funding\ClearingProcess\Form\Validation\ClearingFormValidatorInterface;
+use Civi\Funding\ClearingProcess\JsonSchema\Validator\ClearingSchemaValidator;
 
 final class ClearingFormValidateHandler implements ClearingFormValidateHandlerInterface {
 
@@ -31,12 +31,12 @@ final class ClearingFormValidateHandler implements ClearingFormValidateHandlerIn
 
   private ClearingFormValidatorInterface $formValidator;
 
-  private ValidatorInterface $jsonSchemaValidator;
+  private ClearingSchemaValidator $jsonSchemaValidator;
 
   public function __construct(
     ClearingFormGetHandlerInterface $formGetHandler,
     ClearingFormValidatorInterface $formValidator,
-    ValidatorInterface $jsonSchemaValidator) {
+    ClearingSchemaValidator $jsonSchemaValidator) {
     $this->formGetHandler = $formGetHandler;
     $this->formValidator = $formValidator;
     $this->jsonSchemaValidator = $jsonSchemaValidator;

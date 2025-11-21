@@ -68,7 +68,7 @@ final class HiHFragenZumProjektJsonSchema extends JsonSchemaObject {
         'vorname' => new JsonSchemaString(['maxLength' => 255]),
         'nachname' => new JsonSchemaString(['maxLength' => 255]),
         'telefonnummer' => new JsonSchemaString(['maxLength' => 255]),
-        'email' => new JsonSchemaString(['maxLength' => 255]),
+        'email' => new JsonSchemaString(['maxLength' => 255, 'format' => 'email']),
       ]),
       'adresseNichtIdentischMitOrganisation' => new JsonSchemaBoolean(['default' => FALSE]),
       'abweichendeAnschrift' => $abweichendeAnschrift,

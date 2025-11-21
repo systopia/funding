@@ -46,11 +46,13 @@ abstract class AbstractClearingItemManager {
     ])) === 0;
   }
 
-  public function countByFinancePlanItemId(int $financePlanItemId): int {
-    return $this->api4->countEntities($this->getApiEntityName(), Comparison::new(
-      $this->getFinancePlanItemIdFieldName(),
-      '=',
-      $financePlanItemId
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function countByFinancePlanItemIdAndDataKey(int $financePlanItemId, string $dataKey): int {
+    return $this->api4->countEntities($this->getApiEntityName(), CompositeCondition::new('AND',
+      Comparison::new($this->getFinancePlanItemIdFieldName(), '=', $financePlanItemId),
+      Comparison::new('form_key', 'LIKE', "$dataKey/%")
     ));
   }
 
@@ -100,6 +102,17 @@ abstract class AbstractClearingItemManager {
 
     /** @phpstan-ignore-next-line */
     return $this->getEntityClass()::allFromApiResult($result);
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function resetAmountsAdmittedByClearingProcessId(int $clearingProcessId): void {
+    foreach ($this->getByClearingProcessId($clearingProcessId) as $item) {
+      $item->setAmountAdmitted(NULL);
+      $item->setStatus('new');
+      $this->save($item);
+    }
   }
 
   /**

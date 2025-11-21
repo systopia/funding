@@ -11,7 +11,7 @@
   <thead>
     <tr>
       <th ng-repeat="label in header track by $index">{{ label }}</th>
-      <th>{{:: ts('Actions') }}</th>
+      <th ng-show="editable">{{:: ts('Actions') }}</th>
     </tr>
   </thead>
   <tbody>
@@ -21,7 +21,7 @@
                             error-path-prefix="{{ path }}[{{ $parent.$index }}]" data="row"
                             editable="editable" errors="errors" no-label="true"></funding-jf-element>
       </td>
-      <td class="editable-table-row-actions"></td>
+      <td ng-show="editable" class="editable-table-row-actions"></td>
     </tr>
   </tbody>
 </table>

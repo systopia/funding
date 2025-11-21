@@ -27,6 +27,7 @@ use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\Funding\FundingProgram\FundingProgramManager;
+use Civi\Funding\Mock\FundingCaseType\TestCaseTypeMetaData;
 use Civi\Funding\PayoutProcess\DrawdownManager;
 use Civi\Test;
 use Civi\Test\CiviEnvBuilder;
@@ -92,6 +93,11 @@ abstract class AbstractFundingHeadlessTestCase extends TestCase implements Headl
     FundingCasePermissionsCache::delete(FALSE)
       ->addWhere('id', 'IS NOT NULL')
       ->execute();
+  }
+
+  protected function getTestCaseTypeMetaData(): TestCaseTypeMetaData {
+    // @phpstan-ignore return.type
+    return \Civi::service(TestCaseTypeMetaData::class);
   }
 
   /**

@@ -21,9 +21,9 @@ namespace Civi\Funding\ApplicationProcess\JsonSchema\Validator;
 
 use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemKeywordValidatorParser;
 use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemsKeywordValidatorParser;
-use Civi\Funding\ApplicationProcess\JsonSchema\DefaultKeyword\DefaultKeywordParser;
 use Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemKeywordValidatorParser;
 use Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemsKeywordValidatorParser;
+use Civi\Funding\JsonSchema\DefaultKeyword\DefaultKeywordParser;
 use Systopia\JsonSchema\Parsers\SystopiaVocabulary;
 
 /**

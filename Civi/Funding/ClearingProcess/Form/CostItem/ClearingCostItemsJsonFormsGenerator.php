@@ -20,8 +20,6 @@ declare(strict_types = 1);
 namespace Civi\Funding\ClearingProcess\Form\CostItem;
 
 use Civi\Core\Format;
-use Civi\Funding\ClearingProcess\ClearingActionsDeterminer;
-use Civi\Funding\ClearingProcess\ClearingCostItemManager;
 use Civi\Funding\ClearingProcess\Form\AbstractClearingItemsJsonFormsGenerator;
 use Civi\Funding\ClearingProcess\Form\ClearingGroupExtractor;
 use Civi\Funding\ClearingProcess\Form\ItemDetailsFormElementGenerator;
@@ -33,18 +31,14 @@ use CRM_Funding_ExtensionUtil as E;
 final class ClearingCostItemsJsonFormsGenerator extends AbstractClearingItemsJsonFormsGenerator {
 
   public function __construct(
-    ClearingActionsDeterminer $actionsDeterminer,
     ClearableCostItemsLoader $clearableItemsLoader,
     ClearingGroupExtractor $clearingGroupExtractor,
-    ClearingCostItemManager $clearingCostItemManager,
     Format $format,
     ItemDetailsFormElementGenerator $itemDetailsFormElementGenerator
   ) {
     parent::__construct(
-      $actionsDeterminer,
       $clearableItemsLoader,
       $clearingGroupExtractor,
-      $clearingCostItemManager,
       $format,
       $itemDetailsFormElementGenerator
     );

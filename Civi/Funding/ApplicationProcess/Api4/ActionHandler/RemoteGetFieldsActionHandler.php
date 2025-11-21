@@ -95,6 +95,22 @@ final class RemoteGetFieldsActionHandler extends AbstractRemoteFundingGetFieldsA
 
     $fields[] = [
       'type' => 'Extra',
+      'name' => 'funding_case_id.creation_contact_id',
+      'title' => 'funding_case_creation_contact_id',
+      'data_type' => 'Integer',
+      'nullable' => FALSE,
+    ];
+
+    $fields[] = [
+      'type' => 'Extra',
+      'name' => 'funding_case_id.creation_contact_id.display_name',
+      'title' => E::ts('Creation Contact'),
+      'data_type' => 'String',
+      'nullable' => FALSE,
+    ];
+
+    $fields[] = [
+      'type' => 'Extra',
       'name' => 'funding_case_id.recipient_contact_id',
       'title' => 'funding_case_recipient_contact_id',
       'data_type' => 'Integer',

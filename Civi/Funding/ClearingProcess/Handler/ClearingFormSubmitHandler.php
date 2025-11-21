@@ -30,6 +30,7 @@ use Civi\Funding\ClearingProcess\Handler\Helper\AbstractClearingItemsFormDataPer
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingCommentPersister;
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingCostItemsFormDataPersister;
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingResourcesItemsFormDataPersister;
+use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\ExternalFile\TaggedExternalFilePersister;
 
 /**
@@ -77,8 +78,10 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
    * @throws \CRM_Core_Exception
    */
   public function handle(ClearingFormSubmitCommand $command): ClearingFormSubmitResult {
+    $clearingProcessBundle = $command->getClearingProcessBundle();
+
     $validationResult = $this->validateHandler->handle(
-      new ClearingFormValidateCommand($command->getClearingProcessBundle(), $command->getData())
+      new ClearingFormValidateCommand($clearingProcessBundle, $command->getData())
     );
 
     if (!$validationResult->isValid()) {
@@ -89,22 +92,25 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
 
     /** @phpstan-var clearingFormDataT $data */
     $data = $validationResult->getData();
-    $files = [];
-    $clearingProcessBundle = $command->getClearingProcessBundle();
-    $clearingProcess = $clearingProcessBundle->getClearingProcess();
-    $contentChangeAllowed = $this->actionsDeterminer->isContentChangeAllowed($clearingProcessBundle);
 
-    if ($this->actionsDeterminer->isEditAction($data['_action'])) {
-      $files += $this->clearingCostItemsFormDataPersister->persistClearingItems(
-        $clearingProcessBundle,
-        $data['costItems'] ?? [],
-        $contentChangeAllowed ? AbstractClearingItemsFormDataPersister::FLAG_CONTENT_CHANGE_ALLOWED : 0
-      );
-      $files += $this->clearingResourcesItemsFormDataPersister->persistClearingItems(
-        $clearingProcessBundle,
-        $data['resourcesItems'] ?? [],
-        $contentChangeAllowed ? AbstractClearingItemsFormDataPersister::FLAG_CONTENT_CHANGE_ALLOWED : 0
-      );
+    $amountAdmittedChanged = FALSE;
+    if ('accept-calculative' === $command->getData()['_action']) {
+      $contentChangeAllowed = FALSE;
+      $amountAdmittedChanged = $this->initializeAmountsAdmitted($data);
+    }
+    elseif ('reject' === $command->getData()['_action']) {
+      $contentChangeAllowed = FALSE;
+      $amountAdmittedChanged = $this->setAmountsAdmittedToZero($data);
+    }
+    else {
+      $contentChangeAllowed = $this->actionsDeterminer->isContentChangeAllowed($clearingProcessBundle);
+    }
+
+    $files = [];
+    $clearingProcess = $clearingProcessBundle->getClearingProcess();
+
+    if ($amountAdmittedChanged || $this->actionsDeterminer->isEditAction($data['_action'])) {
+      $files += $this->persistClearingItems($clearingProcessBundle, $data, $contentChangeAllowed);
 
       if ($contentChangeAllowed) {
         $files += $this->externalFilePersister->handleFiles(
@@ -134,6 +140,94 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
     $data = $this->formDataGetHandler->handle(new ClearingFormDataGetCommand($clearingProcessBundle));
 
     return new ClearingFormSubmitResult([], $data, $files);
+  }
+
+  /**
+   * If the clearing shall be accepted calculative, all amounts admitted have to
+   * be set. This sets all unset amounts admitted to the amount cleared.
+   *
+   * @phpstan-param clearingFormDataT $data
+   *
+   * @return bool
+   *   TRUE if at least one amount admitted was initialized.
+   */
+  private function initializeAmountsAdmitted(array &$data): bool {
+    $amountAdmittedInitialized = FALSE;
+
+    foreach (['costItems', 'resourcesItems'] as $itemsKey) {
+      if (!isset($data[$itemsKey])) {
+        continue;
+      }
+
+      foreach ($data[$itemsKey] as &$costItem) {
+        foreach ($costItem['records'] as &$record) {
+          if (!isset($record['amountAdmitted'])) {
+            $record['amountAdmitted'] = $record['amount'];
+            $amountAdmittedInitialized = TRUE;
+          }
+        }
+      }
+    }
+
+    return $amountAdmittedInitialized;
+  }
+
+  /**
+   * @phpstan-param clearingFormDataT $data
+   *
+   * @return array<string, string>
+   *   Mapping of submitted file URIs to CiviCRM file URIs.
+   */
+  private function persistClearingItems(
+    ClearingProcessEntityBundle $clearingProcessBundle,
+    array $data,
+    bool $contentChangeAllowed
+  ): array {
+    $persistClearingItemsFlags = $contentChangeAllowed
+      ? AbstractClearingItemsFormDataPersister::FLAG_CONTENT_CHANGE_ALLOWED : 0;
+
+    $files = $this->clearingCostItemsFormDataPersister->persistClearingItems(
+      $clearingProcessBundle,
+      $data['costItems'] ?? [],
+      $persistClearingItemsFlags
+    );
+
+    $files += $this->clearingResourcesItemsFormDataPersister->persistClearingItems(
+      $clearingProcessBundle,
+      $data['resourcesItems'] ?? [],
+      $persistClearingItemsFlags
+    );
+
+    return $files;
+  }
+
+  /**
+   * This sets all amounts admitted to 0.0.
+   *
+   * @phpstan-param clearingFormDataT $data
+   *
+   * @return bool
+   *   TRUE if at least one amount admitted was changed.
+   */
+  private function setAmountsAdmittedToZero(array &$data): bool {
+    $amountAdmittedChanged = FALSE;
+
+    foreach (['costItems', 'resourcesItems'] as $itemsKey) {
+      if (!isset($data[$itemsKey])) {
+        continue;
+      }
+
+      foreach ($data[$itemsKey] as &$costItem) {
+        foreach ($costItem['records'] as &$record) {
+          if (!isset($record['amountAdmitted']) || $record['amountAdmitted'] != 0) {
+            $record['amountAdmitted'] = 0.0;
+            $amountAdmittedChanged = TRUE;
+          }
+        }
+      }
+    }
+
+    return $amountAdmittedChanged;
   }
 
 }

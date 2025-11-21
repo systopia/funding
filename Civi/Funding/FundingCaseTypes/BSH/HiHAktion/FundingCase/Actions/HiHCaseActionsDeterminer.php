@@ -23,6 +23,7 @@ use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions as Actions;
 use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminer;
+use Civi\Funding\FundingCase\FundingCasePermissions;
 use Civi\Funding\FundingCase\FundingCaseStatus as Status;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\HiHMetaData;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Traits\HiHSupportedFundingCaseTypesTrait;
@@ -44,6 +45,7 @@ final class HiHCaseActionsDeterminer extends FundingCaseActionsDeterminer {
       ClearingProcessPermissions::REVIEW_CALCULATIVE => [Actions::SET_NOTIFICATION_CONTACTS],
       ClearingProcessPermissions::REVIEW_CONTENT => [Actions::SET_NOTIFICATION_CONTACTS],
       'review_drawdown' => [Actions::SET_NOTIFICATION_CONTACTS],
+      FundingCasePermissions::REVIEW_FINISH => [Actions::FINISH_CLEARING, Actions::SET_NOTIFICATION_CONTACTS],
       'bsh_admin' => [Actions::RECREATE_TRANSFER_CONTRACT],
     ],
     Status::CLEARED => [
@@ -51,18 +53,21 @@ final class HiHCaseActionsDeterminer extends FundingCaseActionsDeterminer {
       ClearingProcessPermissions::REVIEW_CALCULATIVE => [Actions::SET_NOTIFICATION_CONTACTS],
       ClearingProcessPermissions::REVIEW_CONTENT => [Actions::SET_NOTIFICATION_CONTACTS],
       'review_drawdown' => [Actions::SET_NOTIFICATION_CONTACTS],
+      FundingCasePermissions::REVIEW_FINISH => [Actions::SET_NOTIFICATION_CONTACTS],
     ],
     Status::REJECTED => [
       'review_application' => [Actions::SET_NOTIFICATION_CONTACTS],
       ClearingProcessPermissions::REVIEW_CALCULATIVE => [Actions::SET_NOTIFICATION_CONTACTS],
       ClearingProcessPermissions::REVIEW_CONTENT => [Actions::SET_NOTIFICATION_CONTACTS],
       'review_drawdown' => [Actions::SET_NOTIFICATION_CONTACTS],
+      FundingCasePermissions::REVIEW_FINISH => [Actions::SET_NOTIFICATION_CONTACTS],
     ],
     Status::WITHDRAWN => [
       'review_application' => [Actions::SET_NOTIFICATION_CONTACTS],
       ClearingProcessPermissions::REVIEW_CALCULATIVE => [Actions::SET_NOTIFICATION_CONTACTS],
       ClearingProcessPermissions::REVIEW_CONTENT => [Actions::SET_NOTIFICATION_CONTACTS],
       'review_drawdown' => [Actions::SET_NOTIFICATION_CONTACTS],
+      FundingCasePermissions::REVIEW_FINISH => [Actions::SET_NOTIFICATION_CONTACTS],
     ],
   ];
 

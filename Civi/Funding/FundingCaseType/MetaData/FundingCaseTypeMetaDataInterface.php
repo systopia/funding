@@ -52,6 +52,14 @@ interface FundingCaseTypeMetaDataInterface {
 
   /**
    * @return bool
+   *   TRUE if it is allowed to accept a clearing calculative without checking
+   *   each clearing item individually. The amount admitted of items will be set
+   *   to the amount cleared, if not set.
+   */
+  public function isGeneralClearingAdmitAllowed(): bool;
+
+  /**
+   * @return bool
    *   TRUE if the final drawdown created on finish clearing (if amount paid out
    *   and amount admitted aren't equal) shall be accepted by default. FALSE if
    *   the final drawdown shall remain in status "new".

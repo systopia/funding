@@ -24,6 +24,7 @@ use Civi\Api4\Generic\Result;
 use Civi\Funding\EntityFactory\ClearingCostItemFactory;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
+use Civi\RemoteTools\Api4\Query\CompositeCondition;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -52,12 +53,14 @@ final class ClearingCostItemManagerTest extends TestCase {
     $this->itemManager = new ClearingCostItemManager($this->api4Mock, $this->externalFileManagerMock);
   }
 
-  public function testGetByFinancePlanItemId(): void {
+  public function testCountByFinancePlanItemIdAndDataKey(): void {
     $this->api4Mock->expects(static::once())->method('countEntities')
-      ->with('FundingClearingCostItem', Comparison::new('application_cost_item_id', '=', 2))
-      ->willReturn(3);
+      ->with('FundingClearingCostItem', CompositeCondition::new('AND',
+        Comparison::new('application_cost_item_id', '=', 2),
+        Comparison::new('form_key', 'LIKE', 'foo/%')
+      ))->willReturn(3);
 
-    static::assertSame(3, $this->itemManager->countByFinancePlanItemId(2));
+    static::assertSame(3, $this->itemManager->countByFinancePlanItemIdAndDataKey(2, 'foo'));
   }
 
   public function testDelete(): void {
@@ -92,6 +95,21 @@ final class ClearingCostItemManagerTest extends TestCase {
     )->willReturn(new Result([$item->toArray()]));
 
     static::assertEquals([22 => $item], $this->itemManager->getByCostItemId(33));
+  }
+
+  public function testResetAmountsAdmittedByClearingProcessId(): void {
+    $item = ClearingCostItemFactory::create(['id' => 22, 'amount_admitted' => 0.0, 'status' => 'rejected']);
+    $this->api4Mock->method('getEntities')->with(
+      FundingClearingCostItem::getEntityName(),
+      Comparison::new('clearing_process_id', '=', 12)
+    )->willReturn(new Result([$item->toArray()]));
+
+    $newValues = ['amount_admitted' => NULL, 'status' => 'new'] + $item->toArray();
+    $this->api4Mock->expects(static::once())->method('updateEntity')
+      ->with(FundingClearingCostItem::getEntityName(), 22, $newValues)
+      ->willReturn(new Result([$newValues]));
+
+    $this->itemManager->resetAmountsAdmittedByClearingProcessId(12);
   }
 
   public function testSaveNew(): void {

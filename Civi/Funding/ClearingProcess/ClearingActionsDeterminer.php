@@ -19,9 +19,9 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ClearingProcess;
 
-use Civi\Funding\Entity\ClearingProcessEntity;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\FundingCase\FundingCaseStatus;
+use Civi\Funding\FundingCaseType\FundingCaseTypeMetaDataProviderInterface;
 use CRM_Funding_ExtensionUtil as E;
 
 class ClearingActionsDeterminer {
@@ -88,6 +88,8 @@ class ClearingActionsDeterminer {
 
   private ClearingResourcesItemManager $clearingResourcesItemManager;
 
+  private FundingCaseTypeMetaDataProviderInterface $metaDataProvider;
+
   /**
    * @phpstan-var array<string, string>
    */
@@ -95,10 +97,12 @@ class ClearingActionsDeterminer {
 
   public function __construct(
     ClearingCostItemManager $clearingCostItemManager,
-    ClearingResourcesItemManager $clearingResourcesItemManager
+    ClearingResourcesItemManager $clearingResourcesItemManager,
+    FundingCaseTypeMetaDataProviderInterface $metaDataProvider
   ) {
     $this->clearingCostItemManager = $clearingCostItemManager;
     $this->clearingResourcesItemManager = $clearingResourcesItemManager;
+    $this->metaDataProvider = $metaDataProvider;
 
     // Order determines the order returned by getActions().
     $this->labels = [
@@ -136,7 +140,7 @@ class ClearingActionsDeterminer {
     }
 
     $actions = array_merge($actions, $this->getReviewActions(
-      $clearingProcessBundle->getClearingProcess(),
+      $clearingProcessBundle,
       $fundingCase->hasPermission(ClearingProcessPermissions::REVIEW_CALCULATIVE),
       $fundingCase->hasPermission(ClearingProcessPermissions::REVIEW_CONTENT)
     ));
@@ -191,19 +195,23 @@ class ClearingActionsDeterminer {
    * @phpstan-return list<string>
    */
   private function getReviewActions(
-    ClearingProcessEntity $clearingProcess,
+    ClearingProcessEntityBundle $clearingProcessBundle,
     bool $hasReviewCalculativePermission,
     bool $hasReviewContentPermission
   ): array {
+    $metaData = $this->metaDataProvider->get($clearingProcessBundle->getFundingCaseType()->getName());
+    $clearingProcess = $clearingProcessBundle->getClearingProcess();
+
     $actions = [];
     if ('review' === $clearingProcess->getStatus()
       && ($hasReviewCalculativePermission || $hasReviewContentPermission)
     ) {
       if ($hasReviewCalculativePermission) {
         if (TRUE !== $clearingProcess->getIsReviewCalculative()) {
-          if ($this->clearingCostItemManager->areAllItemsReviewed($clearingProcess->getId())
+          if ($metaData->isGeneralClearingAdmitAllowed() || (
+            $this->clearingCostItemManager->areAllItemsReviewed($clearingProcess->getId())
             && $this->clearingResourcesItemManager->areAllItemsReviewed($clearingProcess->getId())
-          ) {
+            )) {
             $actions[] = 'accept-calculative';
           }
         }
