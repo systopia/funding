@@ -74,7 +74,7 @@ msgstr ""
 msgid "Amount"
 msgstr ""
 
-#: CRM/Funding/DAO/ApplicationCostItem.php CRM/Funding/DAO/ApplicationResourcesItem.php CRM/Funding/DAO/FundingCaseContactRelation.php CRM/Funding/DAO/FundingCaseType.php CRM/Funding/DAO/FundingNewCasePermissions.php CRM/Funding/DAO/FundingProgramContactRelation.php CRM/Funding/DAO/FundingRecipientContactRelation.php
+#: CRM/Funding/DAO/ApplicationCostItem.php CRM/Funding/DAO/ApplicationResourcesItem.php CRM/Funding/DAO/ClearingCostItem.php CRM/Funding/DAO/ClearingResourcesItem.php CRM/Funding/DAO/FundingCaseContactRelation.php CRM/Funding/DAO/FundingCaseType.php CRM/Funding/DAO/FundingNewCasePermissions.php CRM/Funding/DAO/FundingProgramContactRelation.php CRM/Funding/DAO/FundingRecipientContactRelation.php
 msgid "Properties"
 msgstr ""
 
@@ -288,6 +288,10 @@ msgstr ""
 
 #: CRM/Funding/DAO/ClearingCostItem.php CRM/Funding/DAO/ClearingResourcesItem.php Civi/Funding/Api4/Action/FundingApplicationProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php ang/crmFunding/case/fundingCase.template.html managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_funding_cases.mgd.php managed/SavedSearch_funding_program_controlling.mgd.php
 msgid "Amount Admitted"
+msgstr ""
+
+#: CRM/Funding/DAO/ClearingCostItem.php CRM/Funding/DAO/ClearingResourcesItem.php
+msgid "Form Key"
 msgstr ""
 
 #: CRM/Funding/DAO/ClearingProcess.php
@@ -882,7 +886,7 @@ msgstr ""
 msgid "Ignore Task Permissions"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php
 msgid "Creation Contact"
 msgstr ""
 
@@ -914,35 +918,23 @@ msgstr ""
 msgid "Type Label"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/Remote/ApplicationProcess/AbstractFormAction.php
-msgid "Application process with ID \"%1\" not found"
-msgstr ""
-
-#: Civi/Funding/Api4/Action/Remote/FundingCase/AbstractNewApplicationFormAction.php
-msgid "Funding case type with ID \"%1\" not found"
-msgstr ""
-
-#: Civi/Funding/Api4/Action/Remote/FundingCase/AbstractNewApplicationFormAction.php
-msgid "Funding program with ID \"%1\" not found"
-msgstr ""
-
-#: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php Civi/Funding/FundingCase/Api4/ActionHandler/Traits/NewApplicationFormRemoteActionHandlerTrait.php
+#: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php Civi/Funding/FundingCase/Api4/ActionHandler/RemoteSubmitNewApplicationFormActionHandler.php Civi/Funding/FundingCase/Api4/ActionHandler/Traits/NewApplicationFormRemoteActionHandlerTrait.php
 msgid "Required permission is missing"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php Civi/Funding/FundingCase/Api4/ActionHandler/Traits/NewApplicationFormRemoteActionHandlerTrait.php
+#: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php Civi/Funding/FundingCase/Api4/ActionHandler/RemoteSubmitNewApplicationFormActionHandler.php Civi/Funding/FundingCase/Api4/ActionHandler/Traits/NewApplicationFormRemoteActionHandlerTrait.php
 msgid "Funding program and funding case type are not related"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php Civi/Funding/FundingCase/Api4/ActionHandler/Traits/NewApplicationFormRemoteActionHandlerTrait.php
+#: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php Civi/Funding/FundingCase/Api4/ActionHandler/RemoteSubmitNewApplicationFormActionHandler.php Civi/Funding/FundingCase/Api4/ActionHandler/Traits/NewApplicationFormRemoteActionHandlerTrait.php
 msgid "Funding program does not allow applications before %1"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php Civi/Funding/FundingCase/Api4/ActionHandler/Traits/NewApplicationFormRemoteActionHandlerTrait.php
+#: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php Civi/Funding/FundingCase/Api4/ActionHandler/RemoteSubmitNewApplicationFormActionHandler.php Civi/Funding/FundingCase/Api4/ActionHandler/Traits/NewApplicationFormRemoteActionHandlerTrait.php
 msgid "Y-m-d"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php Civi/Funding/FundingCase/Api4/ActionHandler/Traits/NewApplicationFormRemoteActionHandlerTrait.php
+#: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php Civi/Funding/FundingCase/Api4/ActionHandler/RemoteSubmitNewApplicationFormActionHandler.php Civi/Funding/FundingCase/Api4/ActionHandler/Traits/NewApplicationFormRemoteActionHandlerTrait.php
 msgid "Funding program does not allow applications after %1"
 msgstr ""
 
@@ -978,7 +970,7 @@ msgstr ""
 msgid "Do you really want to delete the application?"
 msgstr ""
 
-#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php Civi/Funding/FundingCaseTypes/BSH/HiHAktion/Application/Actions/HiHApplicationSubmitActionsContainer.php ang/crmFundingHiH/hihApplicationSidebar.template.html
+#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php Civi/Funding/FundingCaseTypes/BSH/HiHAktion/Application/Actions/HiHApplicationSubmitActionsContainer.php ang/crmFundingHiH/hihApplicationSidebar.template.html
 msgid "Start Review"
 msgstr ""
 
@@ -1050,6 +1042,18 @@ msgstr ""
 msgid "Clearing Status"
 msgstr ""
 
+#: Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteSubmitFormActionHandler.php
+msgid "Application process with ID \"%1\" not found"
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteSubmitFormActionHandler.php Civi/Funding/ApplicationProcess/Remote/Api4/ActionHandler/SubmitAddFormActionHandler.php Civi/Funding/ClearingProcess/Api4/ActionHandler/RemoteSubmitFormActionHandler.php Civi/Funding/FundingCase/Api4/ActionHandler/RemoteSubmitNewApplicationFormActionHandler.php Civi/Funding/FundingCase/Remote/Api4/ActionHandler/SubmitNewFormActionHandler.php Civi/Funding/FundingCase/Remote/Api4/ActionHandler/SubmitUpdateFormActionHandler.php ang/crmFunding/application/applicationEditor.directive.js ang/crmFunding/application/defaultApplicationEditor.template.html ang/crmFunding/case/fundingCase.js ang/crmFunding/clearing/clearingEditor.template.html ang/crmFunding/form/editorTrait.factory.js ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html ang/crmFundingHiH/hihApplicationEditor.template.html ang/crmFundingIJB/ijbApplicationEditor.template.html ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
+msgid "Validation failed"
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteSubmitFormActionHandler.php Civi/Funding/ApplicationProcess/Remote/Api4/ActionHandler/SubmitAddFormActionHandler.php Civi/Funding/FundingCase/Api4/ActionHandler/RemoteSubmitNewApplicationFormActionHandler.php
+msgid "Saved (Status: %1)"
+msgstr ""
+
 #: Civi/Funding/ApplicationProcess/Handler/ApplicationDeleteHandler.php
 msgid "Permission to delete application is missing."
 msgstr ""
@@ -1064,14 +1068,6 @@ msgstr ""
 
 #: Civi/Funding/ApplicationProcess/JsonSchema/ResourcesItem/ResourcesItemKeywordValidator.php Civi/Funding/ApplicationProcess/JsonSchema/ResourcesItem/ResourcesItemsKeywordValidator.php
 msgid "Duplicate resources item identifier \"{identifier}\""
-msgstr ""
-
-#: Civi/Funding/ApplicationProcess/Remote/Api4/ActionHandler/SubmitAddFormActionHandler.php Civi/Funding/ClearingProcess/Api4/ActionHandler/RemoteSubmitFormActionHandler.php Civi/Funding/EventSubscriber/Form/SubmitApplicationFormSubscriber.php Civi/Funding/FundingCase/Remote/Api4/ActionHandler/SubmitNewFormActionHandler.php Civi/Funding/FundingCase/Remote/Api4/ActionHandler/SubmitUpdateFormActionHandler.php ang/crmFunding/application/applicationEditor.directive.js ang/crmFunding/application/defaultApplicationEditor.template.html ang/crmFunding/case/fundingCase.js ang/crmFunding/clearing/clearingEditor.template.html ang/crmFunding/form/editorTrait.factory.js ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html ang/crmFundingHiH/hihApplicationEditor.template.html ang/crmFundingIJB/ijbApplicationEditor.template.html ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
-msgid "Validation failed"
-msgstr ""
-
-#: Civi/Funding/ApplicationProcess/Remote/Api4/ActionHandler/SubmitAddFormActionHandler.php Civi/Funding/EventSubscriber/Form/SubmitApplicationFormSubscriber.php
-msgid "Saved (Status: %1)"
 msgstr ""
 
 #: Civi/Funding/ApplicationProcess/Task/AbstractApplicationApplyTaskHandler.php Civi/Funding/FundingCase/Task/AbstractCombinedApplicationApplyTaskCreator.php
@@ -1120,10 +1116,6 @@ msgstr ""
 
 #: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php
 msgid "Request Review"
-msgstr ""
-
-#: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php ang/crmFunding/application/defaultApplicationSidebar.template.html ang/crmFunding/clearing/clearingSidebar.template.html
-msgid "Review"
 msgstr ""
 
 #: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php
@@ -1480,6 +1472,14 @@ msgstr ""
 
 #: Civi/Funding/Form/JsonSchema/JsonSchemaComment.php ang/crmFunding/application/applicationSubmitModal.template.html ang/crmFunding/clearing/clearingSubmitModal.template.html
 msgid "external"
+msgstr ""
+
+#: Civi/Funding/FundingCase/Api4/ActionHandler/RemoteSubmitNewApplicationFormActionHandler.php
+msgid "Funding case type with ID \"%1\" not found"
+msgstr ""
+
+#: Civi/Funding/FundingCase/Api4/ActionHandler/RemoteSubmitNewApplicationFormActionHandler.php
+msgid "Funding program with ID \"%1\" not found"
 msgstr ""
 
 #: Civi/Funding/FundingCase/Handler/FundingCaseApproveHandler.php
@@ -1848,6 +1848,10 @@ msgstr ""
 
 #: ang/crmFunding/application/defaultApplicationPage.template.html ang/crmFunding/clearing/clearing.template.html ang/crmFundingHiH/hihApplicationPage.template.html
 msgid "History"
+msgstr ""
+
+#: ang/crmFunding/application/defaultApplicationSidebar.template.html ang/crmFunding/clearing/clearingSidebar.template.html
+msgid "Review"
 msgstr ""
 
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html ang/crmFunding/clearing/clearingSidebar.template.html
