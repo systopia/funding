@@ -62,7 +62,7 @@ final class AbstractApplicationApplyTaskHandlerTest extends TestCase {
    * @dataProvider provideAppliableStatus
    */
   public function testCreateTasksOnChangeStatusAppliable(string $appliableStatus): void {
-    $previousApplication = ApplicationProcessFactory::createApplicationProcess(['stauts' => 'old']);
+    $previousApplication = ApplicationProcessFactory::createApplicationProcess(['status' => 'old']);
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
       'status' => $appliableStatus,
     ]);
@@ -81,7 +81,7 @@ final class AbstractApplicationApplyTaskHandlerTest extends TestCase {
   }
 
   public function testCreateTasksOnChangeStatusNotAppliable(): void {
-    $previousApplication = ApplicationProcessFactory::createApplicationProcess(['stauts' => 'new']);
+    $previousApplication = ApplicationProcessFactory::createApplicationProcess(['status' => 'new']);
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
       'status' => 'test',
     ]);

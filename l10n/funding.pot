@@ -1086,6 +1086,10 @@ msgstr ""
 msgid "Finish Application Review"
 msgstr ""
 
+#: Civi/Funding/ApplicationProcess/Task/AbstractApplicationReviewReworkRequestTaskHandler.php
+msgid "Review Rework Request"
+msgstr ""
+
 #: Civi/Funding/ApplicationProcess/Task/AbstractApplicationReviewReworkTaskHandler.php
 msgid "Review Application Rework"
 msgstr ""
@@ -2202,6 +2206,22 @@ msgstr ""
 msgid "yy-mm-dd"
 msgstr ""
 
+#: managed/CustomGroup_funding_case_task.mgd.php
+msgid "External URL"
+msgstr ""
+
+#: managed/CustomGroup_funding_case_task.mgd.php
+msgid "URL to an external system to fulfil the task."
+msgstr ""
+
+#: managed/CustomGroup_funding_case_task.mgd.php
+msgid "External URL Label"
+msgstr ""
+
+#: managed/CustomGroup_funding_case_task.mgd.php
+msgid "Label for the external URL."
+msgstr ""
+
 #: managed/CustomGroup_funding_clearing_process_task.mgd.php managed/OptionValue_funding_clearing_process_task.mgd.php
 msgid "Funding Clearing Task"
 msgstr ""
@@ -2360,6 +2380,10 @@ msgstr ""
 
 #: managed/SavedSearch_Funding_Tasks_Pending.mgd.php managed/SavedSearch_MyFundingTasks.mgd.php
 msgid "Modified Date"
+msgstr ""
+
+#: managed/SavedSearch_Funding_Tasks_Pending.mgd.php
+msgid "[funding_case_task.external_url_label]"
 msgstr ""
 
 #: managed/SavedSearch_Funding_Tasks_Pending.mgd.php managed/SavedSearch_MyFundingTasks.mgd.php managed/SavedSearch_funding_cases.mgd.php
