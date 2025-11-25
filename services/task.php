@@ -22,11 +22,12 @@ declare(strict_types = 1);
 
 use Civi\Funding\DependencyInjection\Compiler\FundingTaskPass;
 use Civi\Funding\Task\FundingTaskManager;
+use Civi\Funding\Task\FundingTaskManagerInterface;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 
 $container->addCompilerPass(new FundingTaskPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 1);
 
-$container->autowire(FundingTaskManager::class);
+$container->autowire(FundingTaskManagerInterface::class, FundingTaskManager::class);
 
 $container->autowire(\Civi\Funding\Task\Api4\ActionHandler\RemoteGetActionHandler::class)
   ->addTag(\Civi\Funding\Task\Api4\ActionHandler\RemoteGetActionHandler::SERVICE_TAG);

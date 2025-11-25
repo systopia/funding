@@ -26,15 +26,7 @@ use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\ConditionInterface;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 
-/**
- * Manages tasks for funding cases, application processes and clearing
- * processes.
- *
- * Each entity can have only one open task per type.
- *
- * @phpstan-import-type taskNameT from \Civi\Funding\ActivityTypeNames
- */
-class FundingTaskManager {
+final class FundingTaskManager implements FundingTaskManagerInterface {
 
   private Api4Interface $api4;
 
@@ -45,9 +37,6 @@ class FundingTaskManager {
     $this->requestContext = $requestContext;
   }
 
-  /**
-   * @throws \CRM_Core_Exception
-   */
   public function addTask(FundingTaskEntity $task): FundingTaskEntity {
     $existingTask = $this->getOpenTask(
       $task->getActivityTypeName(),
@@ -71,13 +60,6 @@ class FundingTaskManager {
     return $task;
   }
 
-  /**
-   * Tasks are looked up independent of active contact's permissions.
-   *
-   * @phpstan-param taskNameT $activityTypeName
-   *
-   * @throws \CRM_Core_Exception
-   */
   public function getOpenTask(string $activityTypeName, int $entityId, string $type): ?FundingTaskEntity {
     $task = $this->api4->execute(FundingTask::getEntityName(), 'get', [
       'ignoreCasePermissions' => TRUE,
@@ -97,15 +79,6 @@ class FundingTaskManager {
     return NULL === $task ? NULL : FundingTaskEntity::fromArray($task);
   }
 
-  /**
-   * Tasks are looked up independent of active contact's permissions.
-   *
-   * @phpstan-param taskNameT $activityTypeName
-   *
-   * @phpstan-return list<FundingTaskEntity>
-   *
-   * @throws \CRM_Core_Exception
-   */
   public function getOpenTasks(string $activityTypeName, int $entityId): array {
     $result = $this->api4->execute(FundingTask::getEntityName(), 'get', [
       'ignoreCasePermissions' => TRUE,
@@ -121,15 +94,6 @@ class FundingTaskManager {
     return FundingTaskEntity::allFromApiResult($result);
   }
 
-  /**
-   * Tasks are looked up independent of active contact's permissions.
-   *
-   * @phpstan-param taskNameT $activityTypeName
-   *
-   * @phpstan-return list<FundingTaskEntity>
-   *
-   * @throws \CRM_Core_Exception
-   */
   public function getOpenTasksBy(string $activityTypeName, ConditionInterface $condition): array {
     $result = $this->api4->execute(FundingTask::getEntityName(), 'get', [
       'ignoreCasePermissions' => TRUE,
@@ -145,11 +109,6 @@ class FundingTaskManager {
     return FundingTaskEntity::allFromApiResult($result);
   }
 
-  /**
-   * Task is updated independent of active contact's permissions.
-   *
-   * @throws \CRM_Core_Exception
-   */
   public function updateTask(FundingTaskEntity $task): void {
     $task->setModifiedDate(new \DateTime(date('YmdHis')));
     $this->api4->updateEntity(
