@@ -22,6 +22,7 @@ namespace Civi\Funding\ApplicationProcess;
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\DAODeleteAction;
 use Civi\Core\CiviEventDispatcherInterface;
+use Civi\Funding\ActivityTypeNames;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
@@ -44,11 +45,18 @@ use Webmozart\Assert\Assert;
 
 class ApplicationProcessManager {
 
+  private ApplicationProcessActivityManager $activityManager;
+
   private Api4Interface $api4;
 
   private CiviEventDispatcherInterface $eventDispatcher;
 
-  public function __construct(Api4Interface $api4, CiviEventDispatcherInterface $eventDispatcher) {
+  public function __construct(
+    ApplicationProcessActivityManager $activityManager,
+    Api4Interface $api4,
+    CiviEventDispatcherInterface $eventDispatcher
+  ) {
+    $this->activityManager = $activityManager;
     $this->api4 = $api4;
     $this->eventDispatcher = $eventDispatcher;
   }
@@ -243,6 +251,10 @@ class ApplicationProcessManager {
    */
   public function update(ApplicationProcessEntityBundle $applicationProcessBundle): void {
     $applicationProcess = $applicationProcessBundle->getApplicationProcess();
+    if ('@previous' === $applicationProcess->getStatus()) {
+      $applicationProcess->setStatus($this->getPreviousStatus($applicationProcess));
+    }
+
     $applicationProcess->setModificationDate(new \DateTime(date('YmdHis')));
 
     $previousApplicationProcess = $this->get($applicationProcess->getId());
@@ -279,6 +291,27 @@ class ApplicationProcessManager {
 
     $deletedEvent = new ApplicationProcessDeletedEvent($applicationProcessBundle);
     $this->eventDispatcher->dispatch(ApplicationProcessDeletedEvent::class, $deletedEvent);
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  private function getPreviousStatus(ApplicationProcessEntity $applicationProcess): string {
+    $activity = $this->activityManager->getLastByApplicationProcessAndType(
+      $applicationProcess->getId(),
+      ActivityTypeNames::FUNDING_APPLICATION_STATUS_CHANGE
+    );
+    if (NULL === $activity) {
+      throw new \RuntimeException(sprintf(
+        'No status change activity found for application process with ID %d',
+        $applicationProcess->getId()
+      ));
+    }
+
+    $previousStatus = $activity->get('funding_application_status_change.from_status');
+    Assert::stringNotEmpty($previousStatus);
+
+    return $previousStatus;
   }
 
 }

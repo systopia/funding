@@ -94,11 +94,13 @@ class ApplicationProcessActivityManager {
   public function getByApplicationProcess(
     int $applicationProcessId,
     ?ConditionInterface $condition = NULL,
-    array $orderBy = []
+    array $orderBy = [],
+    int $limit = 0,
   ): array {
     $action = FundingApplicationProcessActivity::get(FALSE)
       ->setApplicationProcessId($applicationProcessId)
-      ->setOrderBy($orderBy);
+      ->setOrderBy($orderBy)
+      ->setLimit($limit);
 
     if (NULL !== $condition) {
       $action->setWhere([$condition->toArray()]);
@@ -120,6 +122,18 @@ class ApplicationProcessActivityManager {
       Comparison::new('activity_type_id:name', '=', $type),
       $orderBy
     );
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function getLastByApplicationProcessAndType(int $applicationProcessId, string $type): ?ActivityEntity {
+    return $this->getByApplicationProcess(
+      $applicationProcessId,
+      Comparison::new('activity_type_id:name', '=', $type),
+      ['id' => 'DESC'],
+      1
+    )[0] ?? NULL;
   }
 
   /**

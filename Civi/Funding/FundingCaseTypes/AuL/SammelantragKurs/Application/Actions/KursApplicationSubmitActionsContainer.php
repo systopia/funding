@@ -47,7 +47,8 @@ final class KursApplicationSubmitActionsContainer extends AbstractApplicationSub
       ->add('approve', E::ts('Approve'), NULL, ['needsFormData' => FALSE])
       ->add('approve-change', E::ts('Approve'), NULL, ['needsFormData' => FALSE])
       ->add('reject', E::ts('Reject'), NULL, ['needsFormData' => FALSE])
-      ->add('reject-change', E::ts('Reject'), NULL, ['needsFormData' => FALSE]);
+      ->add('reject-change', E::ts('Reject'), NULL, ['needsFormData' => FALSE])
+      ->add('reopen', E::ts('Reopen'), NULL, ['needsFormData' => FALSE]);
   }
 
 }

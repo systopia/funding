@@ -2212,6 +2212,10 @@ msgstr "Prüfung der Überarbeitung beantragt"
 msgid "Rework in review"
 msgstr "Überarbeitung in Prüfung"
 
+#: Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
+msgid "Reopen"
+msgstr "Wieder öffnen"
+
 #: Civi/Funding/FundingPseudoConstants.php
 msgid "Accepted"
 msgstr "Angenommen"

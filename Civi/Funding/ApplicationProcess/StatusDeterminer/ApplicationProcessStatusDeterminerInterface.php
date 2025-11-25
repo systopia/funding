@@ -36,6 +36,10 @@ interface ApplicationProcessStatusDeterminerInterface {
   public function getInitialStatus(string $action): string;
 
   /**
+   * The returned full status may contain the special status "@previous". In
+   * this case the status gets set to the previous status according to the
+   * application history.
+   *
    * @throws \InvalidArgumentException
    *   If there's no status transition from the given status with the given
    *   action.

@@ -1578,6 +1578,10 @@ msgstr ""
 msgid "Rework in review"
 msgstr ""
 
+#: Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
+msgid "Reopen"
+msgstr ""
+
 #: Civi/Funding/FundingPseudoConstants.php
 msgid "Accepted"
 msgstr ""

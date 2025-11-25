@@ -89,6 +89,14 @@ final class KursApplicationActionsDeterminer extends AbstractApplicationProcessA
       'review_calculative' => ['update', 'add-comment'],
       'review_content' => ['update', 'add-comment'],
     ],
+    'rejected' => [
+      'review_calculative' => ['reopen'],
+      'review_content' => ['reopen'],
+    ],
+    'withdrawn' => [
+      'review_calculative' => ['reopen'],
+      'review_content' => ['reopen'],
+    ],
   ];
 
   private DetermineApproveRejectActionsHelper $determineApproveRejectActionsHelper;
