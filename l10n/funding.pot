@@ -1086,6 +1086,10 @@ msgstr ""
 msgid "Finish Application Review"
 msgstr ""
 
+#: Civi/Funding/ApplicationProcess/Task/AbstractApplicationReviewReworkTaskHandler.php
+msgid "Review Application Rework"
+msgstr ""
+
 #: Civi/Funding/ApplicationProcess/Validator/IsReviewCalculativeValidator.php
 msgid "Permission to change calculative review result is missing."
 msgstr ""

@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2025 SYSTOPIA GmbH
+ * Copyright (C) 2024 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -23,40 +23,39 @@ use Civi\Funding\ActivityStatusNames;
 use Civi\Funding\ApplicationProcess\ApplicationProcessPermissions;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
-use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingTaskEntity;
-use Civi\Funding\FundingCaseType\FundingCaseTypeMetaDataProviderInterface;
-use Civi\Funding\FundingCaseType\MetaData\FundingCaseTypeMetaDataInterface;
 use Civi\Funding\Task\Handler\AbstractApplicationProcessTaskHandler;
 use CRM_Funding_ExtensionUtil as E;
 
-abstract class AbstractApplicationReviewFinishTaskHandler extends AbstractApplicationProcessTaskHandler {
+/**
+ * Creates a review task on application review request after rework if the flags
+ * for calculative review and content review haven't been reset. Otherwise,
+ * other task handlers will do the job.
+ *
+ * @see AbstractApplicationReviewCalculativeTaskHandler
+ * @see AbstractApplicationReviewContentTaskHandler
+ * @see AbstractApplicationReviewFinishTaskHandler
+ */
+abstract class AbstractApplicationReviewReworkTaskHandler extends AbstractApplicationProcessTaskHandler {
 
-  private const TASK_TYPE = 'review_finish';
-
-  private FundingCaseTypeMetaDataProviderInterface $metaDataProvider;
+  private const TASK_TYPE = 'application_review_rework';
 
   /**
    * @phpstan-return list<string>
    */
   abstract public static function getSupportedFundingCaseTypes(): array;
 
-  public function __construct(FundingCaseTypeMetaDataProviderInterface $metaDataProvider) {
-    $this->metaDataProvider = $metaDataProvider;
-  }
-
   public function createTasksOnChange(
     ApplicationProcessEntityBundle $applicationProcessBundle,
     ApplicationProcessEntity $previousApplicationProcess
   ): iterable {
-    if ($this->isReviewFinishOutstanding($applicationProcessBundle, $previousApplicationProcess)) {
-      yield $this->createReviewFinishTask($applicationProcessBundle);
+    if ($this->isStatusChangedToReworkReviewRequested($applicationProcessBundle, $previousApplicationProcess)
+      && $this->isCalculativeAndContentReviewFinished($applicationProcessBundle)
+    ) {
+      yield $this->createReviewTask($applicationProcessBundle);
     }
   }
 
-  /**
-   * @codeCoverageIgnore
-   */
   public function createTasksOnNew(ApplicationProcessEntityBundle $applicationProcessBundle): iterable {
     return [];
   }
@@ -67,14 +66,16 @@ abstract class AbstractApplicationReviewFinishTaskHandler extends AbstractApplic
     ApplicationProcessEntity $previousApplicationProcess
   ): bool {
     if (self::TASK_TYPE === $task->getType()) {
-      if (!$this->isInReviewStatus($applicationProcessBundle)) {
-        $task->setStatusName(ActivityStatusNames::COMPLETED);
+      if (!$this->isCalculativeAndContentReviewFinished($applicationProcessBundle)) {
+        $task->setStatusName(ActivityStatusNames::CANCELLED);
 
         return TRUE;
       }
 
-      if (!$this->isCalculativeAndContentReviewFinished($applicationProcessBundle->getApplicationProcess())) {
-        $task->setStatusName(ActivityStatusNames::CANCELLED);
+      if (NULL !== $applicationProcessBundle->getApplicationProcess()->getIsEligible()
+        || $applicationProcessBundle->getApplicationProcess()->getIsInWork()
+      ) {
+        $task->setStatusName(ActivityStatusNames::COMPLETED);
 
         return TRUE;
       }
@@ -90,13 +91,10 @@ abstract class AbstractApplicationReviewFinishTaskHandler extends AbstractApplic
     return FALSE;
   }
 
-  final protected function getMetaData(FundingCaseTypeEntity $fundingCaseType): FundingCaseTypeMetaDataInterface {
-    return $this->metaDataProvider->get($fundingCaseType->getName());
-  }
-
   /**
    * @phpstan-return non-empty-list<string>
-   *   One of the returned permissions is required to approve an application.
+   *   One of the returned permissions is required to review an application
+   *   content-wise.
    */
   protected function getRequiredPermissions(): array {
     return [
@@ -106,28 +104,25 @@ abstract class AbstractApplicationReviewFinishTaskHandler extends AbstractApplic
   }
 
   protected function getTaskSubject(ApplicationProcessEntityBundle $applicationProcessBundle): string {
-    return E::ts('Finish Application Review');
-  }
-
-  protected function isReviewFinishOutstanding(
-    ApplicationProcessEntityBundle $applicationProcessBundle,
-    ApplicationProcessEntity $previousApplicationProcess
-  ): bool {
-    return $this->isInReviewStatus($applicationProcessBundle)
-      && $this->isCalculativeAndContentReviewFinished($applicationProcessBundle->getApplicationProcess())
-      && !$this->isCalculativeAndContentReviewFinished($previousApplicationProcess);
+    return E::ts('Review Application Rework');
   }
 
   final protected function isCalculativeAndContentReviewFinished(
-    ApplicationProcessEntity $applicationProcess
+    ApplicationProcessEntityBundle $applicationProcessBundle
   ): bool {
-    return NULL !== $applicationProcess->getIsReviewCalculative()
-      && NULL !== $applicationProcess->getIsReviewContent();
+    return NULL !== $applicationProcessBundle->getApplicationProcess()->getIsReviewCalculative()
+      && NULL !== $applicationProcessBundle->getApplicationProcess()->getIsReviewContent();
   }
 
-  protected function isInReviewStatus(ApplicationProcessEntityBundle $applicationProcessBundle): bool {
-    return TRUE === $this->getMetaData($applicationProcessBundle->getFundingCaseType())
-      ->getApplicationProcessStatus($applicationProcessBundle->getApplicationProcess()->getStatus())?->isInReview();
+  protected function isStatusChangedToReworkReviewRequested(
+    ApplicationProcessEntityBundle $applicationProcessBundle,
+    ApplicationProcessEntity $previousApplicationProcess
+  ): bool {
+    $applicationProcess = $applicationProcessBundle->getApplicationProcess();
+
+    return $previousApplicationProcess->getIsInWork() && !$applicationProcess->getIsInWork()
+      && NULL === $applicationProcess->getIsEligible()
+      && $this->isCalculativeAndContentReviewFinished($applicationProcessBundle);
   }
 
   private function areReviewerContactsChanged(
@@ -140,7 +135,7 @@ abstract class AbstractApplicationReviewFinishTaskHandler extends AbstractApplic
       !== $previousApplicationProcess->getReviewerContentContactId();
   }
 
-  private function createReviewFinishTask(ApplicationProcessEntityBundle $applicationProcessBundle): FundingTaskEntity {
+  private function createReviewTask(ApplicationProcessEntityBundle $applicationProcessBundle): FundingTaskEntity {
     return FundingTaskEntity::newTask([
       'subject' => $this->getTaskSubject($applicationProcessBundle),
       'affected_identifier' => $applicationProcessBundle->getApplicationProcess()->getIdentifier(),
