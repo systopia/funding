@@ -151,10 +151,9 @@ final class HiHClearingCostItemsJsonSchema extends JsonSchemaObject {
           'number',
           'round(sum(map(records, "value.amount ?: 0")), 2)',
           ['records' => new JsonSchemaDataPointer('1/records')],
-          NULL,
-          ['default' => 0]
+          0,
         ),
-      ], ['required' => ['records']]),
+      ], ['required' => ['records'], '$default' => new JsonSchema([])]),
     ];
 
     if (!$hasClearingChangePermission) {
