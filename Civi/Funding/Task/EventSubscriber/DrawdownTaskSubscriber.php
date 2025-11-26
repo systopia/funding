@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Task\EventSubscriber;
 
 use Civi\Funding\Event\PayoutProcess\DrawdownCreatedEvent;
+use Civi\Funding\Event\PayoutProcess\DrawdownDeletedEvent;
 use Civi\Funding\Event\PayoutProcess\DrawdownUpdatedEvent;
 use Civi\Funding\Task\FundingTaskManagerInterface;
 use Civi\RemoteTools\Api4\Query\Comparison;
@@ -48,6 +49,7 @@ class DrawdownTaskSubscriber implements EventSubscriberInterface {
   public static function getSubscribedEvents(): array {
     return [
       DrawdownCreatedEvent::class => 'onCreated',
+      DrawdownDeletedEvent::class => 'onDeleted',
       DrawdownUpdatedEvent::class => 'onUpdated',
     ];
   }
@@ -74,6 +76,17 @@ class DrawdownTaskSubscriber implements EventSubscriberInterface {
   public function onCreated(DrawdownCreatedEvent $event): void {
     foreach ($this->taskCreators[$event->getFundingCaseType()->getName()] ?? [] as $taskCreator) {
       foreach ($taskCreator->createTasksOnNew($event->getDrawdownBundle()) as $task) {
+        $task->setValues($task->toArray() +
+          ['target_contact_id' => [$event->getFundingCase()->getRecipientContactId()]]
+        );
+        $this->taskManager->addTask($task);
+      }
+    }
+  }
+
+  public function onDeleted(DrawdownDeletedEvent $event): void {
+    foreach ($this->taskCreators[$event->getFundingCaseType()->getName()] ?? [] as $taskCreator) {
+      foreach ($taskCreator->createTasksOnDelete($event->getDrawdownBundle()) as $task) {
         $task->setValues($task->toArray() +
           ['target_contact_id' => [$event->getFundingCase()->getRecipientContactId()]]
         );

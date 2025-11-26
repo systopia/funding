@@ -20,12 +20,13 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase\Handler;
 
 use Civi\API\Exception\UnauthorizedException;
+use Civi\Funding\Entity\DrawdownBundle;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\EntityFactory\DrawdownFactory;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingProgramFactory;
-use Civi\Funding\EntityFactory\PayoutProcessFactory;
+use Civi\Funding\EntityFactory\PayoutProcessBundleFactory;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions;
 use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
 use Civi\Funding\FundingCase\Command\FundingCaseFinishClearingCommand;
@@ -96,40 +97,39 @@ final class FundingCaseFinishClearingHandlerTest extends TestCase {
   public function testHandle(bool $finalDrawdownAccepted): void {
     $this->metaDataMock->finalDrawdownAcceptedByDefault = $finalDrawdownAccepted;
 
-    $fundingCase = FundingCaseFactory::createFundingCase(['status' => 'ongoing']);
     $applicationProcessStatusList = [22 => new FullApplicationProcessStatus('eligible', TRUE, TRUE)];
     $this->actionsDeterminerMock->method('isActionAllowed')
       ->with(FundingCaseActions::FINISH_CLEARING, 'ongoing', $applicationProcessStatusList)
       ->willReturn(TRUE);
 
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
-    $fundingProgram = FundingProgramFactory::createFundingProgram();
-
-    $payoutProcess = PayoutProcessFactory::create();
-    $this->payoutProcessManagerMock->method('getLastByFundingCaseId')
+    $payoutProcessBundle = PayoutProcessBundleFactory::create(fundingCaseValues: ['status' => 'ongoing']);
+    $fundingCase = $payoutProcessBundle->getFundingCase();
+    $this->payoutProcessManagerMock->method('getLastBundleByFundingCaseId')
       ->with($fundingCase->getId())
-      ->willReturn($payoutProcess);
+      ->willReturn($payoutProcessBundle);
 
     $this->fundingCaseManagerMock->method('getAmountRemaining')
       ->with($fundingCase->getId())
       ->willReturn(-1.23);
-    $this->drawdownManagerMock->expects(static::once())->method('deleteNewDrawdownsByPayoutProcessId');
+    $this->drawdownManagerMock->expects(static::once())->method('deleteNewDrawdownsByPayoutProcess')
+      ->with($payoutProcessBundle);
     $drawdown = DrawdownFactory::create([
       'id' => NULL,
       'amount' => -1.23,
       'creation_date' => '2024-07-15 10:20:30',
       'requester_contact_id' => 23,
     ]);
+    $drawdownBundle = new DrawdownBundle($drawdown, $payoutProcessBundle);
     $this->drawdownManagerMock->expects(static::once())->method('insert')->with($drawdown);
     if ($finalDrawdownAccepted) {
-      $this->drawdownManagerMock->expects(static::once())->method('accept')->with($drawdown);
+      $this->drawdownManagerMock->expects(static::once())->method('accept')->with($drawdownBundle);
     }
     else {
       $this->drawdownManagerMock->expects(static::never())->method('accept');
     }
 
     $this->payoutProcessManagerMock->expects(static::once())->method('close')
-      ->with($payoutProcess);
+      ->with($payoutProcessBundle);
 
     $this->statusDeterminerMock->method('getStatus')
       ->with($fundingCase->getStatus(), FundingCaseActions::FINISH_CLEARING)
@@ -140,8 +140,8 @@ final class FundingCaseFinishClearingHandlerTest extends TestCase {
     $this->handler->handle(new FundingCaseFinishClearingCommand(
       $fundingCase,
       $applicationProcessStatusList,
-      $fundingCaseType,
-      $fundingProgram
+      $payoutProcessBundle->getFundingCaseType(),
+      $payoutProcessBundle->getFundingProgram()
     ));
 
     static::assertSame('new-status', $fundingCase->getStatus());
@@ -156,28 +156,25 @@ final class FundingCaseFinishClearingHandlerTest extends TestCase {
   }
 
   public function testHandleAmountRemainingZero(): void {
-    $fundingCase = FundingCaseFactory::createFundingCase(['status' => 'ongoing']);
     $applicationProcessStatusList = [22 => new FullApplicationProcessStatus('eligible', TRUE, TRUE)];
     $this->actionsDeterminerMock->method('isActionAllowed')
       ->with(FundingCaseActions::FINISH_CLEARING, 'ongoing', $applicationProcessStatusList)
       ->willReturn(TRUE);
 
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
-    $fundingProgram = FundingProgramFactory::createFundingProgram();
-
-    $payoutProcess = PayoutProcessFactory::create();
-    $this->payoutProcessManagerMock->method('getLastByFundingCaseId')
+    $payoutProcessBundle = PayoutProcessBundleFactory::create(fundingCaseValues: ['status' => 'ongoing']);
+    $fundingCase = $payoutProcessBundle->getFundingCase();
+    $this->payoutProcessManagerMock->method('getLastBundleByFundingCaseId')
       ->with($fundingCase->getId())
-      ->willReturn($payoutProcess);
+      ->willReturn($payoutProcessBundle);
 
     $this->fundingCaseManagerMock->method('getAmountRemaining')
       ->with($fundingCase->getId())
       ->willReturn(0.0);
-    $this->drawdownManagerMock->expects(static::once())->method('deleteNewDrawdownsByPayoutProcessId');
+    $this->drawdownManagerMock->expects(static::once())->method('deleteNewDrawdownsByPayoutProcess');
     $this->drawdownManagerMock->expects(static::never())->method('insert');
 
     $this->payoutProcessManagerMock->expects(static::once())->method('close')
-      ->with($payoutProcess);
+      ->with($payoutProcessBundle);
 
     $this->statusDeterminerMock->method('getStatus')
       ->with($fundingCase->getStatus(), FundingCaseActions::FINISH_CLEARING)
@@ -188,8 +185,8 @@ final class FundingCaseFinishClearingHandlerTest extends TestCase {
     $this->handler->handle(new FundingCaseFinishClearingCommand(
       $fundingCase,
       $applicationProcessStatusList,
-      $fundingCaseType,
-      $fundingProgram
+      $payoutProcessBundle->getFundingCaseType(),
+      $payoutProcessBundle->getFundingProgram()
     ));
 
     static::assertSame('new-status', $fundingCase->getStatus());

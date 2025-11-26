@@ -9,6 +9,7 @@ use Civi\Funding\EntityFactory\DrawdownFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingTaskFactory;
 use Civi\Funding\Event\PayoutProcess\DrawdownCreatedEvent;
+use Civi\Funding\Event\PayoutProcess\DrawdownDeletedEvent;
 use Civi\Funding\Event\PayoutProcess\DrawdownUpdatedEvent;
 use Civi\Funding\Task\Creator\DrawdownTaskCreatorInterface;
 use Civi\Funding\Task\FundingTaskManagerInterface;
@@ -50,6 +51,7 @@ final class DrawdownTaskSubscriberTest extends TestCase {
   public function testGetSubscribedEvents(): void {
     $expectedSubscriptions = [
       DrawdownCreatedEvent::class => 'onCreated',
+      DrawdownDeletedEvent::class => 'onDeleted',
       DrawdownUpdatedEvent::class => 'onUpdated',
     ];
 
@@ -86,6 +88,35 @@ final class DrawdownTaskSubscriberTest extends TestCase {
     $this->taskCreatorMock->expects(static::never())->method('createTasksOnNew');
 
     $this->subscriber->onCreated($event);
+  }
+
+  public function testOnDeleted(): void {
+    $drawdownBundle = DrawdownBundleFactory::create();
+    $event = new DrawdownDeletedEvent($drawdownBundle);
+    $task = FundingTaskFactory::create();
+
+    $this->taskCreatorMock->expects(static::once())->method('createTasksOnDelete')
+      ->with($drawdownBundle)
+      ->willReturn([$task]);
+    $this->taskManagerMock->expects(static::once())->method('addTask')
+      ->with($task)
+      ->willReturn($task);
+
+    $this->subscriber->onDeleted($event);
+  }
+
+  public function testOnDeletedWithoutCreators(): void {
+    $drawdownBundle = DrawdownBundleFactory::create(
+      [],
+      [],
+      [],
+      ['name' => 'SomeCaseType']
+    );
+    $event = new DrawdownDeletedEvent($drawdownBundle);
+
+    $this->taskCreatorMock->expects(static::never())->method('createTasksOnDelete');
+
+    $this->subscriber->onDeleted($event);
   }
 
   public function testOnUpdated(): void {

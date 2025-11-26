@@ -26,6 +26,8 @@ use Civi\Funding\Entity\PayoutProcessEntity;
  *   id?: int,
  *   funding_case_id?: int,
  *   status?: string,
+ *   creation_date?: string,
+ *   modification_date?: string,
  *   amount_total?: float,
  * }
  */
@@ -37,10 +39,14 @@ final class PayoutProcessFactory {
    * @phpstan-param payoutProcessT $values
    */
   public static function create(array $values = []): PayoutProcessEntity {
+    $now = \CRM_Utils_Time::date('Y-m-d H:i:s');
+
     return PayoutProcessEntity::fromArray($values + [
       'id' => self::DEFAULT_ID,
       'funding_case_id' => FundingCaseFactory::DEFAULT_ID,
       'status' => 'open',
+      'creation_date' => $now,
+      'modification_date' => $now,
       'amount_total' => 12.34,
     ]);
   }
