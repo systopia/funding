@@ -122,7 +122,7 @@ final class ApplicationProcessActivityManagerTest extends AbstractFundingHeadles
     static::assertCount(0, $this->activityManager->getOpenByApplicationProcess($applicationProcess->getId()));
 
     // Test getByApplicationProcessAndType
-    static::assertEquals([$activity], $this->activityManager->getByApplicationProcessAndType(
+    static::assertCount(1, $this->activityManager->getByApplicationProcessAndType(
       $applicationProcess->getId(),
       ActivityTypeNames::FUNDING_APPLICATION_STATUS_CHANGE
     ));
@@ -136,10 +136,10 @@ final class ApplicationProcessActivityManagerTest extends AbstractFundingHeadles
     ));
 
     // Test getLastByApplicationProcessAndType
-    static::assertEquals($activity, $this->activityManager->getLastByApplicationProcessAndType(
+    static::assertSame($activity->getId(), $this->activityManager->getLastByApplicationProcessAndType(
       $applicationProcess->getId(),
       ActivityTypeNames::FUNDING_APPLICATION_STATUS_CHANGE
-    ));
+    )?->getId());
     static::assertNull($this->activityManager->getLastByApplicationProcessAndType(
         $applicationProcess->getId() + 1,
         ActivityTypeNames::FUNDING_APPLICATION_STATUS_CHANGE
