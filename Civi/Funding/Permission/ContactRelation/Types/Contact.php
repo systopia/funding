@@ -44,9 +44,7 @@ TEMPLATE;
   }
 
   public function getHelp(): string {
-    return E::ts(<<<HELP
-Matches if a contact is equal to the specified one.
-HELP);
+    return E::ts('Matches if a contact is equal to the specified one.');
   }
 
   public function getExtra(): array {

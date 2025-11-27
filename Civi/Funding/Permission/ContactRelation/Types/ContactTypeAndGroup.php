@@ -68,10 +68,7 @@ TEMPLATE;
   }
 
   public function getHelp(): string {
-    return E::ts(<<<HELP
-Matches if a contact has one of the specified contact types and is in one of the
-specified groups.
-HELP);
+    return E::ts("Matches if a contact has one of the specified contact types and is in one of the specified groups.");
   }
 
   /**
