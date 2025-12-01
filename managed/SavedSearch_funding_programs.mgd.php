@@ -21,7 +21,7 @@ use CRM_Funding_ExtensionUtil as E;
 
 return [
   [
-    'name' => 'SavedSearch_FundingPrograms',
+    'name' => 'SavedSearch_funding_programs',
     'entity' => 'SavedSearch',
     'cleanup' => 'always',
     'update' => 'unmodified',
@@ -58,7 +58,7 @@ return [
     ],
   ],
   [
-    'name' => 'SavedSearch_FundingPrograms.Table',
+    'name' => 'SavedSearch_funding_programs_SearchDisplay_table',
     'entity' => 'SearchDisplay',
     'cleanup' => 'always',
     'update' => 'unmodified',
@@ -143,78 +143,92 @@ return [
               'sortable' => TRUE,
             ],
             [
-              'text' => E::ts('Actions'),
-              'style' => 'default',
               'size' => 'btn-sm',
-              'icon' => 'fa-bars',
               'links' => [
                 [
                   'path' => 'civicrm/a/#/funding/program/[id]/recipients',
-                  'icon' => 'fa-pencil-square-o',
+                  'icon' => 'fa-pen-to-square',
                   'text' => E::ts('Edit possible funding recipients'),
                   'style' => 'default',
-                  'condition' => [
-                    'check user permission',
-                    '=',
-                    'administer Funding',
+                  'conditions' => [
+                    [
+                      'check user permission',
+                      '=',
+                      [
+                        'administer Funding',
+                      ],
+                    ],
                   ],
+                  'task' => '',
                   'entity' => '',
                   'action' => '',
                   'join' => '',
                   'target' => '',
-                  'task' => '',
                 ],
                 [
                   'path' => 'civicrm/a/#/funding/program/[id]/permissions',
-                  'icon' => 'fa-pencil-square-o',
+                  'icon' => 'fa-pen-to-square',
                   'text' => E::ts('Edit permissions'),
                   'style' => 'default',
-                  'condition' => [
-                    'check user permission',
-                    '=',
-                    'administer Funding',
+                  'conditions' => [
+                    [
+                      'check user permission',
+                      '=',
+                      [
+                        'administer Funding',
+                      ],
+                    ],
                   ],
+                  'task' => '',
                   'entity' => '',
                   'action' => '',
                   'join' => '',
                   'target' => '',
-                  'task' => '',
                 ],
                 [
                   'path' => 'civicrm/a/#/funding/program/[id]/new-case-permissions',
-                  'icon' => 'fa-pencil-square-o',
+                  'icon' => 'fa-pen-to-square',
                   'text' => E::ts('Edit initial funding case permissions'),
                   'style' => 'default',
-                  'condition' => [
-                    'check user permission',
-                    '=',
-                    'administer Funding',
+                  'conditions' => [
+                    [
+                      'check user permission',
+                      '=',
+                      [
+                        'administer Funding',
+                      ],
+                    ],
                   ],
+                  'task' => '',
                   'entity' => '',
                   'action' => '',
                   'join' => '',
                   'target' => '',
-                  'task' => '',
                 ],
                 [
                   'path' => 'civicrm/funding/program/edit#?FundingProgram1=[id]',
-                  'icon' => 'fa-pencil-square-o',
+                  'icon' => 'fa-pen-to-square',
                   'text' => E::ts('Edit basic values'),
                   'style' => 'default',
-                  'condition' => [
-                    'check user permission',
-                    '=',
-                    'administer Funding',
+                  'conditions' => [
+                    [
+                      'check user permission',
+                      '=',
+                      [
+                        'administer Funding',
+                      ],
+                    ],
                   ],
+                  'task' => '',
                   'entity' => '',
                   'action' => '',
                   'join' => '',
                   'target' => '',
-                  'task' => '',
                 ],
               ],
-              'type' => 'menu',
-              'alignment' => 'text-right',
+              'type' => 'buttons',
+              'alignment' => '',
+              'label' => E::ts('Actions'),
             ],
           ],
           'actions' => TRUE,
@@ -222,6 +236,7 @@ return [
             'table',
             'table-striped',
           ],
+          'actions_display_mode' => 'menu',
         ],
       ],
       'match' => [
