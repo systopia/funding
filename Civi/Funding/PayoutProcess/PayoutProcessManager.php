@@ -163,6 +163,21 @@ class PayoutProcessManager {
   /**
    * @throws \CRM_Core_Exception
    */
+  public function getLastBundleByFundingCaseId(int $fundingCaseId): ?PayoutProcessBundle {
+    $payoutProcess = $this->getLastByFundingCaseId($fundingCaseId);
+    if (NULL === $payoutProcess) {
+      return NULL;
+    }
+
+    $fundingCaseBundle = $this->fundingCaseManager->getBundle($payoutProcess->getFundingCaseId());
+    Assert::notNull($fundingCaseBundle);
+
+    return new PayoutProcessBundle($payoutProcess, $fundingCaseBundle);
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function getLastByFundingCaseId(int $fundingCaseId): ?PayoutProcessEntity {
     $result = $this->api4->getEntities(
       FundingPayoutProcess::getEntityName(),

@@ -241,4 +241,43 @@ final class DrawdownManagerTest extends TestCase {
     static::assertEquals($drawdown, $this->drawdownManager->getLastByPayoutProcessId(12));
   }
 
+  public function testInsert(): void {
+    $payoutProcessBundle = PayoutProcessBundleFactory::create();
+
+    $drawdown = DrawdownEntity::fromArray([
+      'payout_process_id' => $payoutProcessBundle->getPayoutProcess()->getId(),
+      'status' => 'new',
+      'creation_date' => date('Y-m-d H:i:s'),
+      'amount' => 12.34,
+      'acception_date' => NULL,
+      'requester_contact_id' => 56,
+      'reviewer_contact_id' => NULL,
+    ]);
+    $persistedDrawdown = DrawdownEntity::fromArray(['id' => 99] + $drawdown->toArray());
+
+    $expectedDispatchCalls = [
+      [
+        DrawdownPreCreateEvent::class,
+        new DrawdownPreCreateEvent(new DrawdownBundle($drawdown, $payoutProcessBundle)),
+      ],
+      [
+        DrawdownCreatedEvent::class,
+        new DrawdownCreatedEvent(new DrawdownBundle($persistedDrawdown, $payoutProcessBundle)),
+      ],
+    ];
+    $this->eventDispatcherMock->expects(static::exactly(2))->method('dispatch')
+      ->willReturnCallback(function (...$args) use (&$expectedDispatchCalls) {
+        static::assertEquals(array_shift($expectedDispatchCalls), $args);
+
+        return $args[1];
+      });
+
+    $this->api4Mock->expects(static::once())->method('createEntity')
+      ->with(FundingDrawdown::getEntityName(), $drawdown->toArray())
+      ->willReturn(new Result([$persistedDrawdown->toArray()]));
+
+    $this->drawdownManager->insert($drawdown, $payoutProcessBundle);
+    static::assertEquals($persistedDrawdown, $drawdown);
+  }
+
 }

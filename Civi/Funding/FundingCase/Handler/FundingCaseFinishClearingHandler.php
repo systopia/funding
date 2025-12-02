@@ -76,8 +76,9 @@ final class FundingCaseFinishClearingHandler implements FundingCaseFinishClearin
     $fundingCase = $command->getFundingCase();
     $this->assertAuthorized($command);
 
-    $payoutProcess = $this->payoutProcessManager->getLastByFundingCaseId($fundingCase->getId());
-    Assert::notNull($payoutProcess);
+    $payoutProcessBundle = $this->payoutProcessManager->getLastBundleByFundingCaseId($fundingCase->getId());
+    Assert::notNull($payoutProcessBundle);
+    $payoutProcess = $payoutProcessBundle->getPayoutProcess();
     $this->drawdownManager->deleteNewDrawdownsByPayoutProcessId($payoutProcess->getId());
 
     $amountRemaining = $this->fundingCaseManager->getAmountRemaining($fundingCase->getId());
@@ -91,7 +92,7 @@ final class FundingCaseFinishClearingHandler implements FundingCaseFinishClearin
         'requester_contact_id' => $this->requestContext->getContactId(),
         'reviewer_contact_id' => NULL,
       ]);
-      $this->drawdownManager->insert($drawdown);
+      $this->drawdownManager->insert($drawdown, $payoutProcessBundle);
       if ($this->metaDataProvider->get($command->getFundingCaseType()->getName())->isFinalDrawdownAcceptedByDefault()) {
         $this->drawdownManager->accept($drawdown, $this->requestContext->getContactId());
       }
