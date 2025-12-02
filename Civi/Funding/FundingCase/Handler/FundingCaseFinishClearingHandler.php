@@ -97,7 +97,7 @@ final class FundingCaseFinishClearingHandler implements FundingCaseFinishClearin
       $fundingCase->setModificationDate($drawdown->getCreationDate());
       $payoutProcessBundle->getPayoutProcess()->setModificationDate($drawdown->getCreationDate());
 
-      $this->drawdownManager->insert($drawdown);
+      $this->drawdownManager->insert($drawdown, $payoutProcessBundle);
       if ($this->metaDataProvider->get($command->getFundingCaseType()->getName())->isFinalDrawdownAcceptedByDefault()) {
         $drawdownBundle = new DrawdownBundle($drawdown, $payoutProcessBundle);
         $this->drawdownManager->accept($drawdownBundle, $this->requestContext->getContactId());
