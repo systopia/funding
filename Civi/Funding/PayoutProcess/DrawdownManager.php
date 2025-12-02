@@ -94,15 +94,7 @@ class DrawdownManager {
       'reviewer_contact_id' => NULL,
     ]);
 
-    $drawdownBundle = new DrawdownBundle($drawdown, $payoutProcessBundle);
-    $event = new DrawdownPreCreateEvent($drawdownBundle);
-    $this->eventDispatcher->dispatch(DrawdownPreCreateEvent::class, $event);
-
-    $result = $this->api4->createEntity(FundingDrawdown::getEntityName(), $drawdown->toArray());
-    $drawdown->setValues(['id' => $result->single()['id']] + $drawdown->toArray());
-
-    $event = new DrawdownCreatedEvent($drawdownBundle);
-    $this->eventDispatcher->dispatch(DrawdownCreatedEvent::class, $event);
+    $this->insert($drawdown, $payoutProcessBundle);
 
     return $drawdown;
   }
@@ -165,13 +157,24 @@ class DrawdownManager {
     return DrawdownEntity::singleOrNullFromApiResult($result);
   }
 
-  public function insert(DrawdownEntity $drawdown): void {
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function insert(DrawdownEntity $drawdown, PayoutProcessBundle $payoutProcessBundle): void {
     if (NULL !== $drawdown->getAcceptionDate() || 'new' !== $drawdown->getStatus()) {
       throw new \InvalidArgumentException('New drawdowns have to be in status "new"');
     }
 
+    $drawdownBundle = new DrawdownBundle($drawdown, $payoutProcessBundle);
+
+    $event = new DrawdownPreCreateEvent($drawdownBundle);
+    $this->eventDispatcher->dispatch(DrawdownPreCreateEvent::class, $event);
+
     $result = $this->api4->createEntity(FundingDrawdown::getEntityName(), $drawdown->toArray());
     $drawdown->setValues(['id' => $result->single()['id']] + $drawdown->toArray());
+
+    $event = new DrawdownCreatedEvent($drawdownBundle);
+    $this->eventDispatcher->dispatch(DrawdownCreatedEvent::class, $event);
   }
 
   /**

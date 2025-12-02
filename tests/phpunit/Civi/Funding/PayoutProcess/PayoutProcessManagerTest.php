@@ -140,6 +140,28 @@ final class PayoutProcessManagerTest extends TestCase {
     );
   }
 
+  public function testGetLastBundleByFundingCaseId(): void {
+    $fundingCaseBundle = FundingCaseBundleFactory::create();
+    $payoutProcess = PayoutProcessFactory::create();
+
+    $this->api4Mock->method('getEntities')
+      ->with(
+        FundingPayoutProcess::getEntityName(),
+        Comparison::new('funding_case_id', '=', $payoutProcess->getId()),
+        ['id' => 'DESC'],
+        1
+      )->willReturn(new Result([$payoutProcess->toArray()]));
+
+    $this->fundingCaseManagerMock->expects(static::once())->method('getBundle')
+      ->with($payoutProcess->getFundingCaseId())
+      ->willReturn($fundingCaseBundle);
+
+    static::assertEquals(
+      new PayoutProcessBundle($payoutProcess, $fundingCaseBundle),
+      $this->payoutProcessManager->getLastBundleByFundingCaseId($payoutProcess->getId())
+    );
+  }
+
   public function testGetLastByFundingCaseId(): void {
     $payoutProcess = PayoutProcessFactory::create();
 
