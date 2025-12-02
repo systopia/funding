@@ -47,8 +47,10 @@ class DrawdownSubscriber implements EventSubscriberInterface {
 
   public function onCreated(DrawdownCreatedEvent $event): void {
     $payoutProcess = $event->getPayoutProcess();
-    $payoutProcess->setModificationDate($event->getDrawdown()->getCreationDate());
-    $this->payoutProcessManager->update($event->getDrawdownBundle());
+    if ($payoutProcess->getModificationDate() != $event->getDrawdown()->getCreationDate()) {
+      $payoutProcess->setModificationDate($event->getDrawdown()->getCreationDate());
+      $this->payoutProcessManager->update($event->getDrawdownBundle());
+    }
   }
 
   public function onDeleted(DrawdownDeletedEvent $event): void {
