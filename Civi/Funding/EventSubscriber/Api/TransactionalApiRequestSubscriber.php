@@ -19,8 +19,6 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\Api;
 
-use Civi\RemoteTools\EventSubscriber\AbstractTransactionalApiRequestSubscriber;
-
 /**
  * @codeCoverageIgnore
  */

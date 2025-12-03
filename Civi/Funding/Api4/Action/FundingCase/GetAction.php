@@ -33,9 +33,9 @@ use Civi\Funding\Api4\Util\WhereUtil;
 use Civi\Funding\Event\FundingCase\GetPermissionsEvent;
 use Civi\Funding\FundingCase\FundingCasePermissionsCacheManager;
 use Civi\Funding\FundingCase\TransferContractRouter;
+use Civi\Funding\Permission\PossiblePermissionsLoaderInterface;
 use Civi\Funding\Permission\Util\FlattenedPermissionsUtil;
 use Civi\RemoteTools\Api4\Api4Interface;
-use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Webmozart\Assert\Assert;
 

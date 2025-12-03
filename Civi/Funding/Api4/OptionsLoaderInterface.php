@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2025 SYSTOPIA GmbH
+ * Copyright (C) 2022 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,26 +17,21 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding;
+namespace Civi\Funding\Api4;
 
-final class PermissionPrefixes {
+interface OptionsLoaderInterface {
 
-  // Note: Check also fundingSelectPermissions.directive.js on change.
-  public const APPLICANT = [
-    'application_',
-    'drawdown_',
-    'clearing_',
-    'contract_',
-  ];
+  /**
+   * @phpstan-return array<string|int, string>
+   *   Options in the form "value => label".
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function getOptions(string $entityName, string $field): array;
 
-  public static function isApplicantPermission(string $permission): bool {
-    foreach (self::APPLICANT as $permissionPrefix) {
-      if (\str_starts_with($permission, $permissionPrefix)) {
-        return TRUE;
-      }
-    }
-
-    return FALSE;
-  }
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function getOptionLabel(string $entityName, string $field, string $value): ?string;
 
 }

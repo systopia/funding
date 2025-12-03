@@ -18,17 +18,20 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Api4\Action\Traits;
+namespace Civi\Funding\Form;
 
-use Civi\Funding\Permission\PossiblePermissionsLoaderInterface;
+interface JsonFormsFormWithDataInterface extends JsonFormsFormInterface {
 
-trait PossiblePermissionsLoaderTrait {
+  /**
+   * @return array<string, mixed>
+   */
+  public function getData(): array;
 
-  protected ?PossiblePermissionsLoaderInterface $_possiblePermissionsLoader;
-
-  protected function getPossiblePermissionsLoader(): PossiblePermissionsLoaderInterface {
-    // @phpstan-ignore return.type, assign.propertyType
-    return $this->_possiblePermissionsLoader ??= \Civi::service(PossiblePermissionsLoaderInterface::class);
-  }
+  /**
+   * @phpstan-param array<string, mixed> $data JSON serializable.
+   *
+   * @return $this
+   */
+  public function setData(array $data): self;
 
 }

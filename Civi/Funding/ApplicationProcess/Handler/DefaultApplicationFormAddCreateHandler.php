@@ -20,8 +20,8 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormAddCreateCommand;
+use Civi\Funding\Form\JsonFormsFormWithDataInterface;
 use Civi\Funding\FundingCaseTypeServiceLocatorContainer;
-use Civi\RemoteTools\Form\RemoteFormInterface;
 
 /**
  * @codeCoverageIgnore
@@ -34,7 +34,7 @@ final class DefaultApplicationFormAddCreateHandler implements ApplicationFormAdd
     $this->serviceLocatorContainer = $serviceLocatorContainer;
   }
 
-  public function handle(ApplicationFormAddCreateCommand $command): RemoteFormInterface {
+  public function handle(ApplicationFormAddCreateCommand $command): JsonFormsFormWithDataInterface {
     $handler = $this->serviceLocatorContainer->get($command->getFundingCaseType()->getName())
       ->getApplicationFormAddCreateHandler();
     if (NULL === $handler) {

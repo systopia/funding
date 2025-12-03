@@ -28,10 +28,10 @@ use Civi\Funding\Api4\Action\Traits\Api4Trait;
 use Civi\Funding\Api4\Action\Traits\EventDispatcherTrait;
 use Civi\Funding\Api4\Action\Traits\PossiblePermissionsLoaderTrait;
 use Civi\Funding\Api4\Action\Traits\RequestContextTrait;
+use Civi\Funding\Api4\Traits\PermissionsGetActionTrait;
 use Civi\Funding\Event\FundingProgram\GetPermissionsEvent;
-use Civi\RemoteTools\Api4\Action\Traits\PermissionsGetActionTrait;
+use Civi\Funding\Permission\PossiblePermissionsLoaderInterface;
 use Civi\RemoteTools\Api4\Api4Interface;
-use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 
 final class GetAction extends DAOGetAction {

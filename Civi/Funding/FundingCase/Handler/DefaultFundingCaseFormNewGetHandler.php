@@ -19,9 +19,9 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase\Handler;
 
+use Civi\Funding\Form\JsonFormsFormWithDataInterface;
 use Civi\Funding\FundingCase\Command\FundingCaseFormNewGetCommand;
 use Civi\Funding\FundingCaseTypeServiceLocatorContainer;
-use Civi\RemoteTools\Form\RemoteFormInterface;
 
 /**
  * @codeCoverageIgnore
@@ -34,7 +34,7 @@ final class DefaultFundingCaseFormNewGetHandler implements FundingCaseFormNewGet
     $this->serviceLocatorContainer = $serviceLocatorContainer;
   }
 
-  public function handle(FundingCaseFormNewGetCommand $command): RemoteFormInterface {
+  public function handle(FundingCaseFormNewGetCommand $command): JsonFormsFormWithDataInterface {
     $handler = $this->serviceLocatorContainer->get($command->getFundingCaseType()->getName())
       ->getFundingCaseFormNewGetHandler();
     if (NULL === $handler) {

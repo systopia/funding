@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2025 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,23 +17,26 @@
 
 declare(strict_types = 1);
 
-namespace Civi\RemoteTools\Authorization;
+namespace Civi\Funding\Permission;
 
-interface PossiblePermissionsLoaderInterface {
+final class PermissionPrefixes {
 
-  public function clearCache(string $entityName): void;
+  // Note: Check also fundingSelectPermissions.directive.js on change.
+  public const APPLICANT = [
+    'application_',
+    'drawdown_',
+    'clearing_',
+    'contract_',
+  ];
 
-  /**
-   * @phpstan-return array<string, string>
-   *   Permissions mapped to labels. Permissions might be filtered (possibly
-   *   depending on request context.)
-   */
-  public function getFilteredPermissions(string $entityName): array;
+  public static function isApplicantPermission(string $permission): bool {
+    foreach (self::APPLICANT as $permissionPrefix) {
+      if (\str_starts_with($permission, $permissionPrefix)) {
+        return TRUE;
+      }
+    }
 
-  /**
-   * @phpstan-return array<string, string>
-   *   Permissions mapped to labels.
-   */
-  public function getPermissions(string $entityName): array;
+    return FALSE;
+  }
 
 }

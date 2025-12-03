@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\Funding\AbstractFundingHeadlessTestCase;
+use Civi\Funding\Api4\RemoteApiConstants;
 use Civi\Funding\FileTypeNames;
 use Civi\Funding\Fixtures\ApplicationProcessFixture;
 use Civi\Funding\Fixtures\AttachmentFixture;
@@ -30,7 +31,6 @@ use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\Funding\Util\TestUtil;
-use Civi\RemoteTools\Api4\RemoteApiConstants;
 use CRM_Funding_ExtensionUtil as E;
 
 /**

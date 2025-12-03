@@ -21,12 +21,12 @@ namespace Civi\Funding\EventSubscriber\ClearingProcess;
 
 use Civi\Api4\FundingClearingProcess;
 use Civi\Funding\ActivityTypeNames;
+use Civi\Funding\Api4\OptionsLoaderInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\EntityFactory\ClearingProcessBundleFactory;
 use Civi\Funding\EntityFactory\ClearingProcessFactory;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessUpdatedEvent;
-use Civi\RemoteTools\Api4\OptionsLoaderInterface;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -42,7 +42,7 @@ final class ClearingProcessStatusSubscriberTest extends TestCase {
   private MockObject $activityManagerMock;
 
   /**
-   * @var \Civi\RemoteTools\Api4\OptionsLoaderInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\Api4\OptionsLoaderInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $optionsLoaderMock;
 

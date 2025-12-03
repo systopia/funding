@@ -21,8 +21,8 @@ namespace Civi\Funding\EventSubscriber;
 
 use Civi\Api4\FundingCase;
 use Civi\Api4\FundingProgram;
-use Civi\Funding\PermissionPrefixes;
-use Civi\RemoteTools\Event\FilterPossiblePermissionsEvent;
+use Civi\Funding\Event\Permission\FilterPossiblePermissionsEvent;
+use Civi\Funding\Permission\PermissionPrefixes;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 

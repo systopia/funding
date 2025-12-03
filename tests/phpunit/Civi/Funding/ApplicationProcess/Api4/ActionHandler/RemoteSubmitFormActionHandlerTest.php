@@ -22,6 +22,7 @@ namespace Civi\Funding\ApplicationProcess\Api4\ActionHandler;
 
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\SubmitFormAction;
+use Civi\Funding\Api4\OptionsLoaderInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitResult;
@@ -33,7 +34,6 @@ use Civi\Funding\EntityFactory\ExternalFileFactory;
 use Civi\Funding\Form\RemoteSubmitResponseActions;
 use Civi\Funding\Mock\ApplicationProcess\Form\Validation\ApplicationFormValidationResultFactory;
 use Civi\Funding\Traits\CreateMockTrait;
-use Civi\RemoteTools\Api4\OptionsLoaderInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

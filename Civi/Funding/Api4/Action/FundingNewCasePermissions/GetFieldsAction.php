@@ -24,7 +24,7 @@ use Civi\Api4\FundingNewCasePermissions;
 use Civi\Api4\Generic\DAOGetFieldsAction;
 use Civi\Funding\Api4\Action\Traits\PermissionsSelectTrait;
 use Civi\Funding\Api4\Action\Traits\PossiblePermissionsLoaderTrait;
-use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
+use Civi\Funding\Permission\PossiblePermissionsLoaderInterface;
 
 final class GetFieldsAction extends DAOGetFieldsAction {
 

@@ -19,11 +19,11 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\Validation;
 
-use Civi\RemoteTools\Form\RemoteFormInterface;
+use Civi\Funding\Form\JsonFormsFormWithDataInterface;
 use Civi\RemoteTools\JsonSchema\Validation\ValidationResultInterface;
 
 interface FormValidatorInterface {
 
-  public function validate(RemoteFormInterface $form): ValidationResultInterface;
+  public function validate(JsonFormsFormWithDataInterface $form): ValidationResultInterface;
 
 }

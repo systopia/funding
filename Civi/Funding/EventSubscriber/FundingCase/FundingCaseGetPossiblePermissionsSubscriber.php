@@ -22,10 +22,10 @@ namespace Civi\Funding\EventSubscriber\FundingCase;
 use Civi\Api4\FundingCase;
 use Civi\Funding\ApplicationProcess\ApplicationProcessPermissions;
 use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
+use Civi\Funding\Event\Permission\GetPossiblePermissionsEvent;
 use Civi\Funding\FundingCase\FundingCasePermissions;
-use Civi\RemoteTools\Event\GetPossiblePermissionsEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use CRM_Funding_ExtensionUtil as E;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 final class FundingCaseGetPossiblePermissionsSubscriber implements EventSubscriberInterface {
 
