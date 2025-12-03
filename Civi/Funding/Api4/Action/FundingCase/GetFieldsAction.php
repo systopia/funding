@@ -26,8 +26,8 @@ use Civi\Funding\Api4\Action\FundingClearingProcess\Query\ClearingProcessQuery;
 use Civi\Funding\Api4\Action\Traits\PossiblePermissionsLoaderTrait;
 use Civi\Funding\Api4\Query\AliasSqlRenderer;
 use Civi\Funding\Api4\Query\Util\SqlRendererUtil;
-use Civi\RemoteTools\Api4\Action\Traits\PermissionsGetFieldsActionTrait;
-use Civi\RemoteTools\Authorization\PossiblePermissionsLoaderInterface;
+use Civi\Funding\Api4\Traits\PermissionsGetFieldsActionTrait;
+use Civi\Funding\Permission\PossiblePermissionsLoaderInterface;
 use CRM_Funding_ExtensionUtil as E;
 
 final class GetFieldsAction extends DAOGetFieldsAction {

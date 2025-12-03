@@ -25,8 +25,8 @@ use Civi\Funding\Form\Application\ApplicationSubmitActionsFactoryInterface;
 use Civi\Funding\Form\Application\CombinedApplicationJsonSchemaFactoryInterface;
 use Civi\Funding\Form\Application\CombinedApplicationUiSchemaFactoryInterface;
 use Civi\Funding\Form\JsonSchema\JsonFormsSubmitButtonsFactory;
-use Civi\RemoteTools\Form\RemoteForm;
-use Civi\RemoteTools\Form\RemoteFormInterface;
+use Civi\Funding\Form\JsonFormsFormWithData;
+use Civi\Funding\Form\JsonFormsFormWithDataInterface;
 
 final class ApplicationFormAddCreateHandler implements ApplicationFormAddCreateHandlerInterface {
 
@@ -50,7 +50,7 @@ final class ApplicationFormAddCreateHandler implements ApplicationFormAddCreateH
     $this->uiSchemaFactory = $uiSchemaFactory;
   }
 
-  public function handle(ApplicationFormAddCreateCommand $command): RemoteFormInterface {
+  public function handle(ApplicationFormAddCreateCommand $command): JsonFormsFormWithDataInterface {
     $jsonSchema = $this->jsonSchemaFactory->createJsonSchemaAdd(
       $command->getFundingProgram(),
       $command->getFundingCaseType(),
@@ -77,7 +77,7 @@ final class ApplicationFormAddCreateHandler implements ApplicationFormAddCreateH
     $elements = array_merge($uiSchema->getElements(), $submitButtons);
     $uiSchema['elements'] = $elements;
 
-    return new RemoteForm($jsonSchema, $uiSchema);
+    return new JsonFormsFormWithData($jsonSchema, $uiSchema);
   }
 
 }

@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Entity;
 
-use Civi\RemoteTools\Api4\RemoteApiConstants;
+use Civi\Funding\Api4\RemoteApiConstants;
 
 /**
  * @phpstan-type fundingCaseT array{

@@ -17,21 +17,10 @@
 
 declare(strict_types = 1);
 
-namespace Civi\RemoteTools\Api4;
+namespace Civi\Funding\Api4;
 
-interface OptionsLoaderInterface {
+final class RemoteApiConstants {
 
-  /**
-   * @phpstan-return array<string|int, string>
-   *   Options in the form "value => label".
-   *
-   * @throws \CRM_Core_Exception
-   */
-  public function getOptions(string $entityName, string $field): array;
-
-  /**
-   * @throws \CRM_Core_Exception
-   */
-  public function getOptionLabel(string $entityName, string $field, string $value): ?string;
+  public const PERMISSION_FIELD_PREFIX = 'PERM_';
 
 }

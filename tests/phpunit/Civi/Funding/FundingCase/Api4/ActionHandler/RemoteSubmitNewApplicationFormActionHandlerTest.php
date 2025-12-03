@@ -23,6 +23,7 @@ namespace Civi\Funding\FundingCase\Api4\ActionHandler;
 use Civi\API\Exception\UnauthorizedException;
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Funding\Api4\Action\Remote\FundingCase\SubmitNewApplicationFormAction;
+use Civi\Funding\Api4\OptionsLoaderInterface;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewSubmitCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewSubmitResult;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewSubmitHandlerInterface;
@@ -39,7 +40,6 @@ use Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker;
 use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\Funding\Mock\ApplicationProcess\Form\Validation\ApplicationFormValidationResultFactory;
 use Civi\Funding\Traits\CreateMockTrait;
-use Civi\RemoteTools\Api4\OptionsLoaderInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

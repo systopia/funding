@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Event\FundingCase;
 
 use Civi\Api4\FundingCase;
-use Civi\RemoteTools\Event\AbstractGetPermissionsEvent;
+use Civi\Funding\Event\Permission\AbstractGetPermissionsEvent;
 
 /**
  * Note: The result is cached. This means that permissions may not be fully

@@ -20,12 +20,12 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewCreateCommand;
-use Civi\RemoteTools\Form\RemoteFormInterface;
+use Civi\Funding\Form\JsonFormsFormWithDataInterface;
 
 interface ApplicationFormNewCreateHandlerInterface {
 
   public const SERVICE_TAG = 'funding.application.form_new_create_handler';
 
-  public function handle(ApplicationFormNewCreateCommand $command): RemoteFormInterface;
+  public function handle(ApplicationFormNewCreateCommand $command): JsonFormsFormWithDataInterface;
 
 }

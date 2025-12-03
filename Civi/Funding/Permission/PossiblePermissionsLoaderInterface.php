@@ -17,10 +17,23 @@
 
 declare(strict_types = 1);
 
-namespace Civi\RemoteTools\Api4;
+namespace Civi\Funding\Permission;
 
-final class RemoteApiConstants {
+interface PossiblePermissionsLoaderInterface {
 
-  public const PERMISSION_FIELD_PREFIX = 'PERM_';
+  public function clearCache(string $entityName): void;
+
+  /**
+   * @phpstan-return array<string, string>
+   *   Permissions mapped to labels. Permissions might be filtered (possibly
+   *   depending on request context.)
+   */
+  public function getFilteredPermissions(string $entityName): array;
+
+  /**
+   * @phpstan-return array<string, string>
+   *   Permissions mapped to labels.
+   */
+  public function getPermissions(string $entityName): array;
 
 }

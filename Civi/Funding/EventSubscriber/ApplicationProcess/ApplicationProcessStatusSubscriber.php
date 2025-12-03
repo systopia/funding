@@ -21,10 +21,10 @@ namespace Civi\Funding\EventSubscriber\ApplicationProcess;
 
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Funding\ActivityTypeIds;
+use Civi\Funding\Api4\OptionsLoaderInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
-use Civi\RemoteTools\Api4\OptionsLoaderInterface;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Util;
 
-use Civi\RemoteTools\Api4\RemoteApiConstants;
+use Civi\Funding\Api4\RemoteApiConstants;
 
 final class TestUtil {
 

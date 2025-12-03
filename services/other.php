@@ -23,6 +23,8 @@ declare(strict_types = 1);
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\Api4\DAOActionFactory;
 use Civi\Funding\Api4\DAOActionFactoryInterface;
+use Civi\Funding\Api4\OptionsLoader;
+use Civi\Funding\Api4\OptionsLoaderInterface;
 use Civi\Funding\Contact\FundingRemoteContactIdResolver;
 use Civi\Funding\Contact\FundingRemoteContactIdResolverInterface;
 use Civi\Funding\Controller\PageControllerInterface;
@@ -41,6 +43,8 @@ use Civi\Funding\ExternalFile\FundingExternalFileManagerInterface;
 use Civi\Funding\FundingAttachmentManager;
 use Civi\Funding\FundingAttachmentManagerInterface;
 use Civi\Funding\Permission\CiviPermissionChecker;
+use Civi\Funding\Permission\PossiblePermissionsLoader;
+use Civi\Funding\Permission\PossiblePermissionsLoaderInterface;
 use Civi\Funding\Util\MoneyFactory;
 use Civi\Funding\Util\UrlGenerator;
 use Civi\Funding\Validation\EntityValidator;
@@ -80,9 +84,17 @@ $container->autowire(ChangeSetFactory::class);
 $container->autowire(DaoEntityInfoProvider::class);
 $container->autowire(CiviPermissionChecker::class);
 
+$container->autowire(OptionsLoaderInterface::class, OptionsLoader::class)
+  // Used in API action.
+  ->setPublic(TRUE);
+
 $container->addCompilerPass(new ActionPropertyAutowireFixPass(), PassConfig::TYPE_BEFORE_REMOVING);
 
 $container->autowire(FundingRemoteContactIdResolverInterface::class, FundingRemoteContactIdResolver::class);
+
+$container->autowire(PossiblePermissionsLoaderInterface::class, PossiblePermissionsLoader::class)
+  // Used in API action.
+  ->setPublic(TRUE);
 
 $container->autowire(RemotePageRequestSubscriber::class)
   ->addTag('kernel.event_subscriber');

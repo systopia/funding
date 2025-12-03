@@ -21,10 +21,10 @@ namespace Civi\Funding\EventSubscriber\ClearingProcess;
 
 use Civi\Api4\FundingClearingProcess;
 use Civi\Funding\ActivityTypeNames;
+use Civi\Funding\Api4\OptionsLoaderInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessUpdatedEvent;
-use Civi\RemoteTools\Api4\OptionsLoaderInterface;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

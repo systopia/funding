@@ -21,6 +21,7 @@ namespace Civi\Funding\ApplicationProcess\Remote\Api4\ActionHandler;
 
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\SubmitAddFormAction;
+use Civi\Funding\Api4\OptionsLoaderInterface;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormAddSubmitCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddSubmitHandlerInterface;
 use Civi\Funding\Entity\ExternalFileEntity;
@@ -29,7 +30,6 @@ use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
-use Civi\RemoteTools\Api4\OptionsLoaderInterface;
 use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
 

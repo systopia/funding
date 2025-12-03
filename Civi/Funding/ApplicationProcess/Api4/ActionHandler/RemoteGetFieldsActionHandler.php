@@ -23,9 +23,9 @@ use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\FundingCase;
 use Civi\Api4\FundingClearingProcess;
 use Civi\Funding\Api4\ActionHandler\AbstractRemoteFundingGetFieldsActionHandler;
+use Civi\Funding\Api4\OptionsLoaderInterface;
 use Civi\RemoteTools\Api4\Action\AbstractRemoteGetFieldsAction;
 use Civi\RemoteTools\Api4\Api4Interface;
-use Civi\RemoteTools\Api4\OptionsLoaderInterface;
 use CRM_Funding_ExtensionUtil as E;
 
 final class RemoteGetFieldsActionHandler extends AbstractRemoteFundingGetFieldsActionHandler {

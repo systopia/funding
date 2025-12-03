@@ -21,12 +21,12 @@ namespace Civi\Funding\EventSubscriber\ApplicationProcess;
 
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Funding\ActivityTypeIds;
+use Civi\Funding\Api4\OptionsLoaderInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
-use Civi\RemoteTools\Api4\OptionsLoaderInterface;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -42,7 +42,7 @@ final class ApplicationProcessStatusSubscriberTest extends TestCase {
   private MockObject $activityManagerMock;
 
   /**
-   * @var \Civi\RemoteTools\Api4\OptionsLoaderInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @var \Civi\Funding\Api4\OptionsLoaderInterface&\PHPUnit\Framework\MockObject\MockObject
    */
   private MockObject $optionsLoaderMock;
 

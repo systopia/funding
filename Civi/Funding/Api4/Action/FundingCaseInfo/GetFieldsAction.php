@@ -24,9 +24,9 @@ use Civi\Api4\FundingCase;
 use Civi\Api4\FundingCaseInfo;
 use Civi\Api4\Generic\BasicGetFieldsAction;
 use Civi\Funding\Api4\Action\Traits\Api4Trait;
+use Civi\Funding\Api4\OptionsLoaderInterface;
+use Civi\Funding\Api4\RemoteApiConstants;
 use Civi\RemoteTools\Api4\Api4Interface;
-use Civi\RemoteTools\Api4\OptionsLoaderInterface;
-use Civi\RemoteTools\Api4\RemoteApiConstants;
 use CRM_Funding_ExtensionUtil as E;
 
 /**

@@ -21,10 +21,10 @@ namespace Civi\Funding\FundingCaseTypes\AuL\SonstigeAktivitaet\Application\JsonS
 
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Funding\ActivityTypeNames;
+use Civi\Funding\Api4\OptionsLoaderInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
-use Civi\RemoteTools\Api4\OptionsLoaderInterface;
 
 final class AVK1StatusMarkupFactory {
 

@@ -20,9 +20,9 @@ declare(strict_types = 1);
 namespace Civi\Funding\EventSubscriber\FundingProgram;
 
 use Civi\Api4\FundingProgram;
-use Civi\RemoteTools\Event\GetPossiblePermissionsEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Civi\Funding\Event\Permission\GetPossiblePermissionsEvent;
 use CRM_Funding_ExtensionUtil as E;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 final class FundingProgramGetPossiblePermissionsSubscriber implements EventSubscriberInterface {
 

@@ -21,9 +21,9 @@ namespace Civi\Funding\FundingCase\Handler;
 
 use Civi\Funding\Form\FundingCase\FundingCaseJsonSchemaFactoryInterface;
 use Civi\Funding\Form\FundingCase\FundingCaseUiSchemaFactoryInterface;
+use Civi\Funding\Form\JsonFormsFormWithData;
+use Civi\Funding\Form\JsonFormsFormWithDataInterface;
 use Civi\Funding\FundingCase\Command\FundingCaseFormNewGetCommand;
-use Civi\RemoteTools\Form\RemoteForm;
-use Civi\RemoteTools\Form\RemoteFormInterface;
 
 final class FundingCaseFormNewGetHandler implements FundingCaseFormNewGetHandlerInterface {
 
@@ -39,7 +39,7 @@ final class FundingCaseFormNewGetHandler implements FundingCaseFormNewGetHandler
     $this->uiSchemaFactory = $uiSchemaFactory;
   }
 
-  public function handle(FundingCaseFormNewGetCommand $command): RemoteFormInterface {
+  public function handle(FundingCaseFormNewGetCommand $command): JsonFormsFormWithDataInterface {
     $jsonSchema = $this->jsonSchemaFactory->createJsonSchemaNew(
       $command->getContactId(),
       $command->getFundingProgram(),
@@ -50,7 +50,7 @@ final class FundingCaseFormNewGetHandler implements FundingCaseFormNewGetHandler
       $command->getFundingCaseType(),
     );
 
-    return new RemoteForm($jsonSchema, $uiSchema);
+    return new JsonFormsFormWithData($jsonSchema, $uiSchema);
   }
 
 }

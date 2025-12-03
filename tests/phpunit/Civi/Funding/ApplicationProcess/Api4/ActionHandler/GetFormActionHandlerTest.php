@@ -24,8 +24,8 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationFormCreateCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
+use Civi\Funding\Form\JsonFormsFormWithData;
 use Civi\Funding\Traits\CreateMockTrait;
-use Civi\RemoteTools\Form\RemoteForm;
 use Civi\RemoteTools\JsonForms\JsonFormsElement;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -78,7 +78,10 @@ final class GetFormActionHandlerTest extends TestCase {
 
     $this->formCreateHandlerMock->method('handle')
       ->with(new ApplicationFormCreateCommand($applicationProcessBundle, $statusList))
-      ->willReturn(new RemoteForm(new JsonSchema(['foo' => 'bar']), new JsonFormsElement('test'), ['x' => 'y']));
+      ->willReturn(new JsonFormsFormWithData(new JsonSchema(['foo' => 'bar']),
+        new JsonFormsElement('test'),
+        ['x' => 'y']
+      ));
 
     static::assertSame([
       'jsonSchema' => ['foo' => 'bar'],

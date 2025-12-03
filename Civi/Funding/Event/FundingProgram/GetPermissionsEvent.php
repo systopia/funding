@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Event\FundingProgram;
 
 use Civi\Api4\RemoteFundingProgram;
-use Civi\RemoteTools\Event\AbstractGetPermissionsEvent;
+use Civi\Funding\Event\Permission\AbstractGetPermissionsEvent;
 
 final class GetPermissionsEvent extends AbstractGetPermissionsEvent {
 

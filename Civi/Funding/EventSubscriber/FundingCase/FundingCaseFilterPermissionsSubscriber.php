@@ -22,7 +22,7 @@ namespace Civi\Funding\EventSubscriber\FundingCase;
 use Civi\Funding\Api4\Permissions;
 use Civi\Funding\Event\FundingCase\GetPermissionsEvent;
 use Civi\Funding\Permission\CiviPermissionChecker;
-use Civi\Funding\PermissionPrefixes;
+use Civi\Funding\Permission\PermissionPrefixes;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 

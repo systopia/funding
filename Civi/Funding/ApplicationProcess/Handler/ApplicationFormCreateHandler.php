@@ -25,8 +25,8 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationJsonSchemaGetCommand;
 use Civi\Funding\Form\Application\ApplicationSubmitActionsFactoryInterface;
 use Civi\Funding\Form\Application\ApplicationUiSchemaFactoryInterface;
 use Civi\Funding\Form\JsonSchema\JsonFormsSubmitButtonsFactory;
-use Civi\RemoteTools\Form\RemoteForm;
-use Civi\RemoteTools\Form\RemoteFormInterface;
+use Civi\Funding\Form\JsonFormsFormWithData;
+use Civi\Funding\Form\JsonFormsFormWithDataInterface;
 
 final class ApplicationFormCreateHandler implements ApplicationFormCreateHandlerInterface {
 
@@ -50,7 +50,7 @@ final class ApplicationFormCreateHandler implements ApplicationFormCreateHandler
     $this->dataGetHandler = $dataGetHandler;
   }
 
-  public function handle(ApplicationFormCreateCommand $command): RemoteFormInterface {
+  public function handle(ApplicationFormCreateCommand $command): JsonFormsFormWithDataInterface {
     $jsonSchema = $this->jsonSchemaGetHandler->handle(new ApplicationJsonSchemaGetCommand(
       $command->getApplicationProcessBundle(),
       $command->getApplicationProcessStatusList(),
@@ -78,7 +78,7 @@ final class ApplicationFormCreateHandler implements ApplicationFormCreateHandler
       $command->getApplicationProcessStatusList(),
     ));
 
-    return new RemoteForm($jsonSchema, $uiSchema, $data);
+    return new JsonFormsFormWithData($jsonSchema, $uiSchema, $data);
   }
 
 }

@@ -19,13 +19,13 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase\Handler;
 
+use Civi\Funding\Form\JsonFormsFormWithDataInterface;
 use Civi\Funding\FundingCase\Command\FundingCaseFormNewGetCommand;
-use Civi\RemoteTools\Form\RemoteFormInterface;
 
 interface FundingCaseFormNewGetHandlerInterface {
 
   public const SERVICE_TAG = 'funding.case.form_new_get_handler';
 
-  public function handle(FundingCaseFormNewGetCommand $command): RemoteFormInterface;
+  public function handle(FundingCaseFormNewGetCommand $command): JsonFormsFormWithDataInterface;
 
 }
