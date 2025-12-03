@@ -42,7 +42,7 @@ abstract class AbstractDrawdownCreateTaskHandler extends AbstractFundingCaseTask
    */
   abstract public static function getSupportedFundingCaseTypes(): array;
 
-  private PayoutProcessManager $payoutProcessManager;
+  protected PayoutProcessManager $payoutProcessManager;
 
   public function __construct(PayoutProcessManager $payoutProcessManager) {
     $this->payoutProcessManager = $payoutProcessManager;

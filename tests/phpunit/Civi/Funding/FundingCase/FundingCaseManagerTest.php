@@ -129,21 +129,47 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
     );
   }
 
+  public function testGetBundleBy(): void {
+    $api4Mock = $this->createMock(Api4Interface::class);
+    $this->makeFullyMocked($api4Mock);
+
+    $fundingProgram = FundingProgramFactory::createFundingProgram();
+    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
+    $fundingCase = FundingCaseFactory::createFundingCase();
+
+    $condition = Comparison::new('identifier', '=', 'test');
+    $api4Mock->expects(static::once())->method('getEntities')
+      ->with(FundingCase::getEntityName(), $condition)
+      ->willReturn(new Result([$fundingCase->toArray()]));
+
+    $this->fundingCaseTypeManagerMock->expects(static::once())->method('get')
+      ->with($fundingCase->getFundingCaseTypeId())
+      ->willReturn($fundingCaseType);
+
+    $this->fundingProgramManagerMock->expects(static::once())->method('get')
+      ->with($fundingCase->getFundingProgramId())
+      ->willReturn($fundingProgram);
+
+    static::assertEquals(
+      [new FundingCaseBundle($fundingCase, $fundingCaseType, $fundingProgram)],
+      $this->fundingCaseManager->getBundleBy($condition)
+    );
+  }
+
   public function testGetBy(): void {
     $api4Mock = $this->createMock(Api4Interface::class);
     $this->makeFullyMocked($api4Mock);
 
     $fundingCase = FundingCaseFactory::createFundingCase();
 
-    $action = FundingCase::get(FALSE)
-      ->setWhere([['title', '=', 'test']]);
-    $api4Mock->expects(static::once())->method('executeAction')
-      ->with($action)
+    $condition = Comparison::new('title', '=', 'test');
+    $api4Mock->expects(static::once())->method('getEntities')
+      ->with('FundingCase', $condition)
       ->willReturn(new Result([$fundingCase->toArray()]));
 
     static::assertEquals(
       [$fundingCase],
-      $this->fundingCaseManager->getBy(Comparison::new('title', '=', 'test'))
+      $this->fundingCaseManager->getBy($condition)
     );
   }
 

@@ -27,11 +27,17 @@ use Civi\RemoteTools\Api4\Query\Comparison;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * @phpstan-type taskNameT \Civi\Funding\ActivityTypeNames::DRAWDOWN_TASK
+ * @phpstan-import-type taskNameT from \Civi\Funding\ActivityTypeNames
+ * phpstan-type taskNameT \Civi\Funding\ActivityTypeNames::DRAWDOWN_TASK
  */
 class DrawdownTaskSubscriber implements EventSubscriberInterface {
 
   private FundingTaskManagerInterface $taskManager;
+
+  /**
+   * @var array<string, iterable<\Civi\Funding\Task\Modifier\DrawdownCreateTaskModifierInterface>>
+   */
+  private array $createTaskModifiers;
 
   /**
    * @phpstan-var array<string, iterable<\Civi\Funding\Task\Creator\DrawdownTaskCreatorInterface>>
@@ -57,6 +63,10 @@ class DrawdownTaskSubscriber implements EventSubscriberInterface {
   /**
    * @phpstan-param array<
    *   string,
+   * iterable<\Civi\Funding\Task\Modifier\DrawdownCreateTaskModifierInterface>
+   * > $createTaskModifiers
+   * @phpstan-param array<
+   *   string,
    *   iterable<\Civi\Funding\Task\Creator\DrawdownTaskCreatorInterface>
    * > $taskCreators
    * @phpstan-param array<
@@ -64,8 +74,14 @@ class DrawdownTaskSubscriber implements EventSubscriberInterface {
    *   iterable<\Civi\Funding\Task\Modifier\DrawdownTaskModifierInterface>
    * > $taskModifiers
    */
-  public function __construct(FundingTaskManagerInterface $taskManager, array $taskCreators, array $taskModifiers) {
+  public function __construct(
+    FundingTaskManagerInterface $taskManager,
+    array $createTaskModifiers,
+    array $taskCreators,
+    array $taskModifiers
+  ) {
     $this->taskManager = $taskManager;
+    $this->createTaskModifiers = $createTaskModifiers;
     $this->taskCreators = $taskCreators;
     $this->taskModifiers = $taskModifiers;
   }
@@ -74,6 +90,32 @@ class DrawdownTaskSubscriber implements EventSubscriberInterface {
    * @throws \CRM_Core_Exception
    */
   public function onCreated(DrawdownCreatedEvent $event): void {
+    $taskModifiersByActivityTypeName = $this->getCreateTaskModifiersByActivityTypeName(
+      $event->getFundingCaseType()->getName()
+    );
+    foreach ($taskModifiersByActivityTypeName as $activityTypeName => $taskModifiers) {
+      $openTasks = $this->taskManager->getOpenTasksBy($activityTypeName, Comparison::new(
+        'funding_case_task.funding_case_id',
+        '=',
+        $event->getFundingCase()->getId()
+      ));
+
+      foreach ($openTasks as $task) {
+        $modified = FALSE;
+        foreach ($taskModifiers as $taskModifier) {
+          if ($taskModifier->modifyTaskOnDrawdownCreate(
+            $task,
+            $event->getDrawdownBundle()
+          )) {
+            $modified = TRUE;
+          }
+        }
+        if ($modified) {
+          $this->taskManager->updateTask($task);
+        }
+      }
+    }
+
     foreach ($this->taskCreators[$event->getFundingCaseType()->getName()] ?? [] as $taskCreator) {
       foreach ($taskCreator->createTasksOnNew($event->getDrawdownBundle()) as $task) {
         $task->setValues($task->toArray() +
@@ -148,6 +190,20 @@ class DrawdownTaskSubscriber implements EventSubscriberInterface {
   private function getTaskModifiersByActivityTypeName(string $fundingCaseTypeName): array {
     $taskModifiers = [];
     foreach ($this->taskModifiers[$fundingCaseTypeName] ?? [] as $taskModifier) {
+      $taskModifiers[$taskModifier->getActivityTypeName()][] = $taskModifier;
+    }
+
+    return $taskModifiers;
+  }
+
+  /**
+   * @phpstan-return array<
+   *   taskNameT, non-empty-list<\Civi\Funding\Task\Modifier\DrawdownCreateTaskModifierInterface>
+   * >
+   */
+  private function getCreateTaskModifiersByActivityTypeName(string $fundingCaseTypeName): array {
+    $taskModifiers = [];
+    foreach ($this->createTaskModifiers[$fundingCaseTypeName] ?? [] as $taskModifier) {
       $taskModifiers[$taskModifier->getActivityTypeName()][] = $taskModifier;
     }
 

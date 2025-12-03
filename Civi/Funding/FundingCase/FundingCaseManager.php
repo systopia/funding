@@ -97,24 +97,25 @@ class FundingCaseManager {
       return NULL;
     }
 
-    $fundingCaseType = $this->fundingCaseTypeManager->get($fundingCase->getFundingCaseTypeId());
-    Assert::notNull($fundingCaseType);
-    $fundingProgram = $this->fundingProgramManager->get($fundingCase->getFundingProgramId());
-    Assert::notNull($fundingProgram);
-
-    return new FundingCaseBundle($fundingCase, $fundingCaseType, $fundingProgram);
+    return $this->createBundle($fundingCase);
   }
 
   /**
-   * @phpstan-return array<FundingCaseEntity>
+   * @return list<FundingCaseBundle>
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function getBundleBy(ConditionInterface $condition): array {
+    return array_map([$this, 'createBundle'], $this->getBy($condition));
+  }
+
+  /**
+   * @return list<FundingCaseEntity>
    *
    * @throws \CRM_Core_Exception
    */
   public function getBy(ConditionInterface $condition): array {
-    $action = FundingCase::get(FALSE)
-      ->setWhere([$condition->toArray()]);
-
-    $result = $this->api4->executeAction($action);
+    $result = $this->api4->getEntities('FundingCase', $condition);
 
     return $this->getFundingCasesFromApiResult($result);
   }
@@ -314,6 +315,18 @@ class FundingCaseManager {
    */
   public function hasTransferContract(int $id): bool {
     return $this->attachmentManager->has('civicrm_funding_case', $id, FileTypeNames::TRANSFER_CONTRACT);
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  private function createBundle(FundingCaseEntity $fundingCase): FundingCaseBundle {
+    $fundingCaseType = $this->fundingCaseTypeManager->get($fundingCase->getFundingCaseTypeId());
+    Assert::notNull($fundingCaseType);
+    $fundingProgram = $this->fundingProgramManager->get($fundingCase->getFundingProgramId());
+    Assert::notNull($fundingProgram);
+
+    return new FundingCaseBundle($fundingCase, $fundingCaseType, $fundingProgram);
   }
 
   /**
