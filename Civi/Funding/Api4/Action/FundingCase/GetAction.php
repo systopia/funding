@@ -130,6 +130,11 @@ final class GetAction extends DAOGetAction {
       $this->addSelect('id');
     }
 
+    if ($this->isFieldExplicitlySelected('amount_available')) {
+      // amount_drawdowns needs to be selected before because it is referenced.
+      array_unshift($this->select, 'amount_drawdowns');
+    }
+
     if ($this->isFieldExplicitlySelected('withdrawable_funds')) {
       // amount_drawdowns_accepted needs to be selected before because it is referenced.
       array_unshift($this->select, 'amount_drawdowns_accepted');

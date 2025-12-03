@@ -137,6 +137,20 @@ final class GetFieldsAction extends DAOGetFieldsAction {
       , 0)", SqlRendererUtil::getFieldSqlName($field, $query, 'id')),
       ],
       [
+        'name' => 'amount_available',
+        'title' => E::ts('Amount Available'),
+        'description' => E::ts('The difference between the amount approved and the amount of drawdowns.'),
+        'type' => 'Extra',
+        'data_type' => 'Money',
+        'readonly' => TRUE,
+        'nullable' => FALSE,
+        // Note: Cannot be used in aggregation functions.
+        'sql_renderer' => fn (array $field, Api4SelectQuery $query) => sprintf(
+          'IFNULL((SELECT %s - amount_drawdowns), 0)',
+          SqlRendererUtil::getFieldSqlName($field, $query, 'amount_approved'),
+        ),
+      ],
+      [
         'name' => 'withdrawable_funds',
         'title' => E::ts('Withdrawable Funds'),
         'description' => E::ts('The difference between the amount approved and the amount of accepted drawdowns.'),
