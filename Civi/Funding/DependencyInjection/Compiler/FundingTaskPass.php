@@ -30,6 +30,7 @@ use Civi\Funding\Task\EventSubscriber\DrawdownTaskSubscriber;
 use Civi\Funding\Task\EventSubscriber\FundingCaseTaskSubscriber;
 use Civi\Funding\Task\Modifier\ApplicationProcessTaskModifierInterface;
 use Civi\Funding\Task\Modifier\ClearingProcessTaskModifierInterface;
+use Civi\Funding\Task\Modifier\DrawdownCreateTaskModifierInterface;
 use Civi\Funding\Task\Modifier\DrawdownTaskModifierInterface;
 use Civi\Funding\Task\Modifier\FundingCaseTaskModifierInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -48,44 +49,44 @@ final class FundingTaskPass implements CompilerPassInterface {
    * @throws \Symfony\Component\DependencyInjection\Exception\RuntimeException
    */
   public function process(ContainerBuilder $container): void {
-    foreach ($this->getSubscriberSpecifications() as $subscriberClass => [$creatorTag, $modifierTag]) {
-      $taskCreatorServices = $this->getMultiTaggedFundingCaseTypeServices($container, $creatorTag);
-      $taskModifierServices = $this->getMultiTaggedFundingCaseTypeServices($container, $modifierTag);
-
-      $container->autowire($subscriberClass)
+    foreach ($this->getSubscriberSpecifications() as $subscriberClass => $arguments) {
+      $definition = $container->autowire($subscriberClass)
         ->setClass($subscriberClass)
         // Needs to be public for not being removed in optimization step.
         ->setPublic(TRUE)
-        ->setArgument('$taskCreators', $taskCreatorServices)
-        ->setArgument('$taskModifiers', $taskModifierServices)
         ->addTag('event_subscriber')
         ->setLazy(!(new \ReflectionClass($subscriberClass))->isFinal());
-    }
 
+      foreach ($arguments as $argumentKey => $tag) {
+        $services = $this->getMultiTaggedFundingCaseTypeServices($container, $tag);
+        $definition->setArgument($argumentKey, $services);
+      }
+    }
   }
 
   /**
-   * @phpstan-return iterable<class-string, array{string, string}>
+   * @phpstan-return iterable<class-string, array<string, string>>
    */
   private function getSubscriberSpecifications(): iterable {
     yield FundingCaseTaskSubscriber::class => [
-      FundingCaseTaskCreatorInterface::class,
-      FundingCaseTaskModifierInterface::class,
+      '$taskCreators' => FundingCaseTaskCreatorInterface::class,
+      '$taskModifiers' => FundingCaseTaskModifierInterface::class,
     ];
 
     yield ApplicationProcessTaskSubscriber::class => [
-      ApplicationProcessTaskCreatorInterface::class,
-      ApplicationProcessTaskModifierInterface::class,
+      '$taskCreators' => ApplicationProcessTaskCreatorInterface::class,
+      '$taskModifiers' => ApplicationProcessTaskModifierInterface::class,
     ];
 
     yield ClearingProcessTaskSubscriber::class => [
-      ClearingProcessTaskCreatorInterface::class,
-      ClearingProcessTaskModifierInterface::class,
+      '$taskCreators' => ClearingProcessTaskCreatorInterface::class,
+      '$taskModifiers' => ClearingProcessTaskModifierInterface::class,
     ];
 
     yield DrawdownTaskSubscriber::class => [
-      DrawdownTaskCreatorInterface::class,
-      DrawdownTaskModifierInterface::class,
+      '$createTaskModifiers' => DrawdownCreateTaskModifierInterface::class,
+      '$taskCreators' => DrawdownTaskCreatorInterface::class,
+      '$taskModifiers' => DrawdownTaskModifierInterface::class,
     ];
   }
 

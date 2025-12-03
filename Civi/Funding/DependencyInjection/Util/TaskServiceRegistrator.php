@@ -26,6 +26,7 @@ use Civi\Funding\Task\Creator\DrawdownTaskCreatorInterface;
 use Civi\Funding\Task\Creator\FundingCaseTaskCreatorInterface;
 use Civi\Funding\Task\Modifier\ApplicationProcessTaskModifierInterface;
 use Civi\Funding\Task\Modifier\ClearingProcessTaskModifierInterface;
+use Civi\Funding\Task\Modifier\DrawdownCreateTaskModifierInterface;
 use Civi\Funding\Task\Modifier\DrawdownTaskModifierInterface;
 use Civi\Funding\Task\Modifier\FundingCaseTaskModifierInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -70,6 +71,14 @@ final class TaskServiceRegistrator {
       $namespace,
       ClearingProcessTaskModifierInterface::class,
       [ClearingProcessTaskModifierInterface::class => []],
+    );
+
+    ServiceRegistrator::autowireAllImplementing(
+      $container,
+      $dir,
+      $namespace,
+      DrawdownCreateTaskModifierInterface::class,
+      [DrawdownCreateTaskModifierInterface::class => []]
     );
 
     ServiceRegistrator::autowireAllImplementing(

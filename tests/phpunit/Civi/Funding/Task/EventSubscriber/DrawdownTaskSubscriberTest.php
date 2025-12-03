@@ -13,6 +13,7 @@ use Civi\Funding\Event\PayoutProcess\DrawdownDeletedEvent;
 use Civi\Funding\Event\PayoutProcess\DrawdownUpdatedEvent;
 use Civi\Funding\Task\Creator\DrawdownTaskCreatorInterface;
 use Civi\Funding\Task\FundingTaskManagerInterface;
+use Civi\Funding\Task\Modifier\DrawdownCreateTaskModifierInterface;
 use Civi\Funding\Task\Modifier\DrawdownTaskModifierInterface;
 use Civi\RemoteTools\Api4\Query\Comparison;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -23,9 +24,8 @@ use PHPUnit\Framework\TestCase;
  */
 final class DrawdownTaskSubscriberTest extends TestCase {
 
-  /**
-   * @var \Civi\Funding\Task\EventSubscriber\DrawdownTaskSubscriber
-   */
+  private DrawdownCreateTaskModifierInterface&MockObject $createTaskModifierMock;
+
   private DrawdownTaskSubscriber $subscriber;
 
   private DrawdownTaskCreatorInterface&MockObject $taskCreatorMock;
@@ -36,15 +36,18 @@ final class DrawdownTaskSubscriberTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
+    $this->createTaskModifierMock = $this->createMock(DrawdownCreateTaskModifierInterface::class);
     $this->taskManagerMock = $this->createMock(FundingTaskManagerInterface::class);
     $this->taskCreatorMock = $this->createMock(DrawdownTaskCreatorInterface::class);
     $this->taskModifierMock = $this->createMock(DrawdownTaskModifierInterface::class);
     $this->subscriber = new DrawdownTaskSubscriber(
       $this->taskManagerMock,
+      [FundingCaseTypeFactory::DEFAULT_NAME => [$this->createTaskModifierMock]],
       [FundingCaseTypeFactory::DEFAULT_NAME => [$this->taskCreatorMock]],
       [FundingCaseTypeFactory::DEFAULT_NAME => [$this->taskModifierMock]]
     );
 
+    $this->createTaskModifierMock->method('getActivityTypeName')->willReturn(ActivityTypeNames::FUNDING_CASE_TASK);
     $this->taskModifierMock->method('getActivityTypeName')->willReturn(ActivityTypeNames::DRAWDOWN_TASK);
   }
 
@@ -65,13 +68,25 @@ final class DrawdownTaskSubscriberTest extends TestCase {
   public function testOnCreated(): void {
     $drawdownBundle = DrawdownBundleFactory::create();
     $event = new DrawdownCreatedEvent($drawdownBundle);
-    $task = FundingTaskFactory::create();
+
+    $existingTask = FundingTaskFactory::create(['subject' => 'Existing Task']);
+    $newTask = FundingTaskFactory::create(['subject' => 'New Task']);
+
+    $this->taskManagerMock->expects(static::once())->method('getOpenTasksBy')
+      ->with(ActivityTypeNames::FUNDING_CASE_TASK, Comparison::new(
+        'funding_case_task.funding_case_id', '=', $drawdownBundle->getFundingCase()->getId())
+      )->willReturn([$existingTask]);
+
+    $this->createTaskModifierMock->expects(static::once())->method('modifyTaskOnDrawdownCreate')
+      ->with($existingTask, $drawdownBundle)
+      ->willReturn(TRUE);
+    $this->taskManagerMock->expects(static::once())->method('updateTask')->with($existingTask);
 
     $this->taskCreatorMock->expects(static::once())->method('createTasksOnNew')
-      ->willReturn([$task]);
+      ->willReturn([$newTask]);
     $this->taskManagerMock->expects(static::once())->method('addTask')
-      ->with($task)
-      ->willReturn($task);
+      ->with($newTask)
+      ->willReturn($newTask);
 
     $this->subscriber->onCreated($event);
   }
@@ -85,6 +100,7 @@ final class DrawdownTaskSubscriberTest extends TestCase {
     );
     $event = new DrawdownCreatedEvent($drawdownBundle);
 
+    $this->taskManagerMock->expects(static::never())->method('getOpenTasksBy');
     $this->taskCreatorMock->expects(static::never())->method('createTasksOnNew');
 
     $this->subscriber->onCreated($event);
