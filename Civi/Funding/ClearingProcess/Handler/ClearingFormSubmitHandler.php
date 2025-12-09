@@ -98,10 +98,6 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
       $contentChangeAllowed = FALSE;
       $amountAdmittedChanged = $this->initializeAmountsAdmitted($data);
     }
-    elseif ('reject' === $command->getData()['_action']) {
-      $contentChangeAllowed = FALSE;
-      $amountAdmittedChanged = $this->setAmountsAdmittedToZero($data);
-    }
     else {
       $contentChangeAllowed = $this->actionsDeterminer->isContentChangeAllowed($clearingProcessBundle);
     }
@@ -177,6 +173,8 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
    *
    * @return array<string, string>
    *   Mapping of submitted file URIs to CiviCRM file URIs.
+   *
+   * @throws \CRM_Core_Exception
    */
   private function persistClearingItems(
     ClearingProcessEntityBundle $clearingProcessBundle,
@@ -199,35 +197,6 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
     );
 
     return $files;
-  }
-
-  /**
-   * This sets all amounts admitted to 0.0.
-   *
-   * @phpstan-param clearingFormDataT $data
-   *
-   * @return bool
-   *   TRUE if at least one amount admitted was changed.
-   */
-  private function setAmountsAdmittedToZero(array &$data): bool {
-    $amountAdmittedChanged = FALSE;
-
-    foreach (['costItems', 'resourcesItems'] as $itemsKey) {
-      if (!isset($data[$itemsKey])) {
-        continue;
-      }
-
-      foreach ($data[$itemsKey] as &$costItem) {
-        foreach ($costItem['records'] as &$record) {
-          if (!isset($record['amountAdmitted']) || $record['amountAdmitted'] != 0) {
-            $record['amountAdmitted'] = 0.0;
-            $amountAdmittedChanged = TRUE;
-          }
-        }
-      }
-    }
-
-    return $amountAdmittedChanged;
   }
 
 }

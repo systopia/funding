@@ -21,9 +21,7 @@ namespace Civi\Funding\ClearingProcess\Handler;
 
 use Civi\API\Exception\UnauthorizedException;
 use Civi\Funding\ClearingProcess\ClearingActionsDeterminer;
-use Civi\Funding\ClearingProcess\ClearingCostItemManager;
 use Civi\Funding\ClearingProcess\ClearingProcessManager;
-use Civi\Funding\ClearingProcess\ClearingResourcesItemManager;
 use Civi\Funding\ClearingProcess\ClearingStatusDeterminer;
 use Civi\Funding\ClearingProcess\Command\ClearingActionApplyCommand;
 
@@ -34,25 +32,17 @@ final class ClearingActionApplyHandler implements ClearingActionApplyHandlerInte
 
   private ClearingActionsDeterminer $actionsDeterminer;
 
-  private ClearingCostItemManager $clearingCostItemManager;
-
   private ClearingProcessManager $clearingProcessManager;
-
-  private ClearingResourcesItemManager $clearingResourcesItemManager;
 
   private ClearingStatusDeterminer $statusDeterminer;
 
   public function __construct(
     ClearingActionsDeterminer $actionsDeterminer,
-    ClearingCostItemManager $clearingCostItemManager,
     ClearingProcessManager $clearingProcessManager,
-    ClearingResourcesItemManager $clearingResourcesItemManager,
     ClearingStatusDeterminer $statusDeterminer
   ) {
     $this->actionsDeterminer = $actionsDeterminer;
-    $this->clearingCostItemManager = $clearingCostItemManager;
     $this->clearingProcessManager = $clearingProcessManager;
-    $this->clearingResourcesItemManager = $clearingResourcesItemManager;
     $this->statusDeterminer = $statusDeterminer;
   }
 
@@ -72,11 +62,6 @@ final class ClearingActionApplyHandler implements ClearingActionApplyHandlerInte
     $clearingProcess = $clearingProcessBundle->getClearingProcess();
 
     if ('add-comment' !== $command->getAction()) {
-      if ('rejected' === $clearingProcess->getStatus() && 'request-change' === $command->getAction()) {
-        $this->clearingCostItemManager->resetAmountsAdmittedByClearingProcessId($clearingProcess->getId());
-        $this->clearingResourcesItemManager->resetAmountsAdmittedByClearingProcessId($clearingProcess->getId());
-      }
-
       $clearingProcess->setFullStatus(
         $this->statusDeterminer->getStatus($clearingProcess->getFullStatus(), $command->getAction())
       );

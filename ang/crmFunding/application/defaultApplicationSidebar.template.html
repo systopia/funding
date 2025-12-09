@@ -4,7 +4,7 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <h4 class="panel-title">
-          <a data-toggle="collapse" data-target="#review-panel" aria-expanded="true">{{ $ctrl.ts('Review') }}</a>
+          <a data-toggle="collapse" data-target="#review-panel" aria-expanded="true">{{:: $ctrl.ts('Review') }}</a>
         </h4>
       </div>
       <div id="review-panel" class="panel-collapse collapse in">
@@ -12,61 +12,64 @@
           <button ng-show="hasReviewCalculativePermission() && (isActionAllowed('review') || applicationProcess.reviewer_calc_contact_id === null)"
                   type="button" class="btn btn-default funding-action-button" crm-icon="fa-eye"
                   ng-click="startReviewCalculative()">
-              <span class="funding-label">{{ ts('Start Calculative Review') }}</span>
+              <span class="funding-label">{{:: ts('Start Calculative Review') }}</span>
           </button>
           <button ng-show="hasReviewContentPermission() && (isActionAllowed('review') || applicationProcess.reviewer_cont_contact_id === null)"
                   type="button" class="btn btn-default funding-action-button" crm-icon="fa-eye"
                   ng-click="startReviewContent()">
-              <span class="funding-label">{{ ts('Start Content Review') }}</span>
+              <span class="funding-label">{{:: ts('Start Content Review') }}</span>
           </button>
 
           <div ng-show="isAnyActionAllowed('approve-content', 'reject-content')" class="btn-group" role="group">
-            <p><strong>{{ $ctrl.ts('Content Review') }}</strong>: {{ $ctrl.ts('The aim intended by the funding can be achieved.')}}</p>
-            <funding-action-button action="approve-content" with-comment="false" hide-disabled="false" class="btn btn-default" crm-icon="fa-thumbs-up">{{ $ctrl.ts('Passed') }}</funding-action-button>
-            <funding-action-button action="reject-content" with-comment="false" hide-disabled="false" class="btn btn-default" crm-icon="fa-thumbs-down">{{ $ctrl.ts('Failed') }}</funding-action-button>
+            <p><strong>{{:: $ctrl.ts('Content Review') }}</strong>: {{:: $ctrl.ts('The aim intended by the funding can be achieved.')}}</p>
+            <funding-action-button action="approve-content" with-comment="false" hide-disabled="false" class="btn btn-default" crm-icon="fa-thumbs-up">{{:: $ctrl.ts('Passed') }}</funding-action-button>
+            <funding-action-button action="reject-content" with-comment="false" hide-disabled="false" class="btn btn-default" crm-icon="fa-thumbs-down">{{:: $ctrl.ts('Failed') }}</funding-action-button>
           </div>
           <div ng-show="isAnyActionAllowed('approve-calculative', 'reject-calculative')" class="btn-group" role="group">
-            <p><strong>{{ $ctrl.ts('Calculative Review') }}</strong>: {{ $ctrl.ts('The calculation is correct.') }}</p>
-            <funding-action-button action="approve-calculative" with-comment="false" hide-disabled="false" class="btn btn-default" crm-icon="fa-thumbs-up">{{ $ctrl.ts('Passed') }}</funding-action-button>
-            <funding-action-button action="reject-calculative" with-comment="false" hide-disabled="false" class="btn btn-default" crm-icon="fa-thumbs-down">{{ $ctrl.ts('Failed') }}</funding-action-button>
+            <p><strong>{{::$ctrl.ts('Calculative Review') }}</strong>: {{:: $ctrl.ts('The calculation is correct.') }}</p>
+            <funding-action-button action="approve-calculative" with-comment="false" hide-disabled="false" class="btn btn-default" crm-icon="fa-thumbs-up">{{:: $ctrl.ts('Passed') }}</funding-action-button>
+            <funding-action-button action="reject-calculative" with-comment="false" hide-disabled="false" class="btn btn-default" crm-icon="fa-thumbs-down">{{:: $ctrl.ts('Failed') }}</funding-action-button>
           </div>
           <div ng-show="isAnyActionAllowed('approve-change', 'reject-change')" class="btn-group" role="group">
-            <p><strong>{{ $ctrl.ts('Change Review') }}</strong></p>
-            <funding-action-button action="approve-change" class="btn btn-default" crm-icon="fa-check-circle">{{ $ctrl.ts('Approve') }}</funding-action-button>
-            <funding-action-button action="reject-change" class="btn btn-default" crm-icon="fa-times">{{ $ctrl.ts('Reject') }}</funding-action-button>
+            <p><strong>{{:: $ctrl.ts('Change Review') }}</strong></p>
+            <funding-action-button action="approve-change" class="btn btn-default" crm-icon="fa-check-circle">{{:: $ctrl.ts('Approve') }}</funding-action-button>
+            <funding-action-button action="reject-change" class="btn btn-default" crm-icon="fa-times">{{:: $ctrl.ts('Reject') }}</funding-action-button>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <funding-action-button action="add-comment" with-comment="'required'" class="btn btn-default funding-application-sidebar-element" crm-icon="fa-commenting">{{ $ctrl.ts('Add Comment') }}</funding-action-button>
-  <funding-action-button action="request-change" class="btn btn-default funding-application-sidebar-element" crm-icon="fa-arrow-left">{{ $ctrl.ts('Request Change') }}</funding-action-button>
+
+  <funding-action-button action="add-comment" with-comment="'required'" class="btn btn-default funding-application-sidebar-element" crm-icon="fa-commenting">{{:: $ctrl.ts('Add Comment') }}</funding-action-button>
+  <funding-action-button action="request-change" class="btn btn-default funding-application-sidebar-element" crm-icon="fa-arrow-left">{{:: $ctrl.ts('Request Change') }}</funding-action-button>
   <div ng-show="isAnyActionAllowed('approve', 'reject')">
     <funding-action-button action="reject" class="btn btn-default funding-application-sidebar-element" crm-icon="fa-ban">
-      {{ ts('Reject %applicationProcessLabel', { applicationProcessLabel: $ctrl.applicationProcessLabel }) }}
+      {{:: ts('Reject %applicationProcessLabel', { applicationProcessLabel: $ctrl.applicationProcessLabel }) }}
     </funding-action-button>
     <funding-action-button action="approve" hide-disabled="false" class="btn btn-default funding-application-sidebar-element" crm-icon="fa-check">
-      {{ ts('Approve %applicationProcessLabel', { applicationProcessLabel: $ctrl.applicationProcessLabel }) }}
+      {{:: ts('Approve %applicationProcessLabel', { applicationProcessLabel: $ctrl.applicationProcessLabel }) }}
     </funding-action-button>
     <p ng-show="!isActionAllowed('approve')" class="disabled">
-      {{ $ctrl.ts('Approval is possible once the review was successful.') }}
+      {{:: $ctrl.ts('Approval is possible once the review was successful.') }}
     </p>
   </div>
-  <funding-action-button action="approve-rework-request" class="btn btn-default funding-application-sidebar-element" crm-icon="fa-check-circle">{{ $ctrl.ts('Approve Rework Request') }}</funding-action-button>
-  <funding-action-button action="reject-rework-request" class="btn btn-default funding-application-sidebar-element" crm-icon="fa-times">{{ $ctrl.ts('Reject Rework Request') }}</funding-action-button>
+  <funding-action-button action="approve-rework-request" class="btn btn-default funding-application-sidebar-element" crm-icon="fa-check-circle">{{:: $ctrl.ts('Approve Rework Request') }}</funding-action-button>
+  <funding-action-button action="reject-rework-request" class="btn btn-default funding-application-sidebar-element" crm-icon="fa-times">{{:: $ctrl.ts('Reject Rework Request') }}</funding-action-button>
+
+  <funding-action-button action="reopen" class="btn btn-default funding-application-sidebar-element" crm-icon="fa-undo">{{:: $ctrl.ts('Reopen') }}</funding-action-button>
 </span>
 
 <span ng-if="isChanged">
-  <funding-action-button action="update" with-comment="'required'" class="btn btn-success funding-application-sidebar-element" crm-icon="fa-check">{{ $ctrl.ts('Save') }}</funding-action-button>
-  <button type="button" class="btn btn-danger funding-application-sidebar-element" ng-click="reset()" ng-disabled="editCount > 0" crm-icon="fa-times">{{ $ctrl.ts('Reset') }}</button>
+  <funding-action-button action="update" with-comment="'required'" class="btn btn-success funding-application-sidebar-element" crm-icon="fa-check">{{:: $ctrl.ts('Save') }}</funding-action-button>
+  <button type="button" class="btn btn-danger funding-application-sidebar-element" ng-click="reset()" ng-disabled="editCount > 0" crm-icon="fa-times">{{:: $ctrl.ts('Reset') }}</button>
 </span>
 
 <div class="funding-application-sidebar-element" ng-show="$ctrl.lastInternalCommentActivity">
   <div class="funding-activity funding-application-comment panel panel-info">
     <div class="funding-activity-title panel-heading">{{:: ts('Last Internal Comment')}}</div>
     <div class="panel-body">
-      <div class="funding-activity-date">{{ ts('Date: %date', {date: ($ctrl.lastInternalCommentActivity.created_date | fundingDate)}) }}</div>
-      <div class="funding-activity-performed-by">{{ ts('From: %name', {name: $ctrl.lastInternalCommentActivity.source_contact_name}) }}</div>
+      <div class="funding-activity-date">{{:: ts('Date: %date', {date: ($ctrl.lastInternalCommentActivity.created_date | fundingDate)}) }}</div>
+      <div class="funding-activity-performed-by">{{:: ts('From: %name', {name: $ctrl.lastInternalCommentActivity.source_contact_name}) }}</div>
       <div class="funding-activity-comment">
         {{:: ts('Text:') }}<br>
         <span ng-bind-html="$ctrl.lastInternalCommentActivity.details"></span>

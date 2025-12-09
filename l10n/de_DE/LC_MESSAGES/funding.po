@@ -273,11 +273,11 @@ msgstr "Änderungsdatum"
 #: CRM/Funding/DAO/FundingProgram.php
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
 #: managed/SavedSearchFundingCaseTypes.mgd.php
-#: managed/SavedSearchFundingPrograms.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
 #: managed/SavedSearch_funding_application_processes.mgd.php
 #: managed/SavedSearch_funding_case_application_processes.mgd.php
 #: managed/SavedSearch_funding_program_controlling.mgd.php
+#: managed/SavedSearch_funding_programs.mgd.php
 msgid "Title"
 msgstr "Titel"
 
@@ -292,9 +292,9 @@ msgstr "Kurzbeschreibung"
 #: CRM/Funding/DAO/ApplicationSnapshot.php CRM/Funding/DAO/ClearingProcess.php
 #: CRM/Funding/DAO/FundingProgram.php
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
-#: managed/SavedSearchFundingPrograms.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
 #: managed/SavedSearch_funding_case_application_processes.mgd.php
+#: managed/SavedSearch_funding_programs.mgd.php
 msgid "Start Date"
 msgstr "Startdatum"
 
@@ -306,8 +306,8 @@ msgstr ""
 #: CRM/Funding/DAO/ApplicationSnapshot.php CRM/Funding/DAO/ClearingProcess.php
 #: CRM/Funding/DAO/FundingProgram.php
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
-#: managed/SavedSearchFundingPrograms.mgd.php
 #: managed/SavedSearch_funding_program_controlling.mgd.php
+#: managed/SavedSearch_funding_programs.mgd.php
 msgid "End Date"
 msgstr "Enddatum"
 
@@ -732,7 +732,7 @@ msgstr ""
 
 #: CRM/Funding/DAO/FundingCaseType.php CRM/Funding/DAO/FundingProgram.php
 #: managed/SavedSearchFundingCaseTypes.mgd.php
-#: managed/SavedSearchFundingPrograms.mgd.php
+#: managed/SavedSearch_funding_programs.mgd.php
 msgid "Abbreviation"
 msgstr "Abkürzung"
 
@@ -790,7 +790,8 @@ msgid "Funding Program ID"
 msgstr "Förderprogramm-ID"
 
 #: CRM/Funding/DAO/FundingProgram.php ang/afsearchFundingPrograms.aff.php
-#: managed/NavigationFunding.mgd.php managed/SavedSearchFundingPrograms.mgd.php
+#: managed/NavigationFunding.mgd.php
+#: managed/SavedSearch_funding_programs.mgd.php
 msgid "Funding Programs"
 msgstr "Förderprogramme"
 
@@ -799,7 +800,7 @@ msgid "Unique FundingProgram ID"
 msgstr ""
 
 #: CRM/Funding/DAO/FundingProgram.php
-#: managed/SavedSearchFundingPrograms.mgd.php
+#: managed/SavedSearch_funding_programs.mgd.php
 msgid "Identifier Prefix"
 msgstr "Bezeichnerpräfix"
 
@@ -810,12 +811,12 @@ msgid ""
 msgstr ""
 
 #: CRM/Funding/DAO/FundingProgram.php
-#: managed/SavedSearchFundingPrograms.mgd.php
+#: managed/SavedSearch_funding_programs.mgd.php
 msgid "Requests Start Date"
 msgstr "Startdatum für Anträge"
 
 #: CRM/Funding/DAO/FundingProgram.php
-#: managed/SavedSearchFundingPrograms.mgd.php
+#: managed/SavedSearch_funding_programs.mgd.php
 msgid "Requests End Date"
 msgstr "Enddatum für Anträge"
 
@@ -829,13 +830,13 @@ msgstr "Enddatum für Anträge"
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/Generic/ClearingItem/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/Generic/FinancePlanItem/AbstractGetFieldsAction.php
-#: managed/SavedSearchFundingPrograms.mgd.php
+#: managed/SavedSearch_funding_programs.mgd.php
 msgid "Currency"
 msgstr "Währung"
 
 #: CRM/Funding/DAO/FundingProgram.php
-#: managed/SavedSearchFundingPrograms.mgd.php
 #: managed/SavedSearch_funding_program_controlling.mgd.php
+#: managed/SavedSearch_funding_programs.mgd.php
 msgid "Budget"
 msgstr "Budget"
 
@@ -991,6 +992,19 @@ msgstr "Ausbezahlter Betrag"
 #: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
 msgid "The sum of the amounts of accepted, positive drawdowns."
 msgstr "Die Summe der Beträge akzeptierter, positiver Mittelabrufe."
+
+#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
+#: managed/SavedSearch_funding_program_controlling.mgd.php
+msgid "Amount Available"
+msgstr "Verfügbarer Betrag"
+
+#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
+msgid "The difference between the amount approved and the amount of drawdowns."
+msgstr ""
+"Die Differenz zwischen dem bewilligten Betrag und dem Betrag der "
+"Mittelabrufe."
 
 #: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
 #: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
@@ -1310,12 +1324,6 @@ msgid ""
 msgstr ""
 "Die Summe der beantragten Beträge von förderfähigen Anträgen im "
 "Förderprogramm."
-
-#: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
-#: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
-#: managed/SavedSearch_funding_program_controlling.mgd.php
-msgid "Amount Available"
-msgstr "Verfügbarer Betrag"
 
 #: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
 msgid "The difference between the budget and the amount approved."
@@ -2213,6 +2221,11 @@ msgstr "Prüfung der Überarbeitung beantragt"
 msgid "Rework in review"
 msgstr "Überarbeitung in Prüfung"
 
+#: Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
+#: ang/crmFunding/application/defaultApplicationSidebar.template.html
+msgid "Reopen"
+msgstr "Wieder öffnen"
+
 #: Civi/Funding/FundingPseudoConstants.php
 msgid "Accepted"
 msgstr "Angenommen"
@@ -2910,12 +2923,12 @@ msgstr ""
 
 #: ang/crmFunding/jsonForms/jfControlArray.template.html
 #: managed/SavedSearchFundingDrawdowns.mgd.php
-#: managed/SavedSearchFundingPrograms.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
 #: managed/SavedSearch_FundingDrawdownsAll.mgd.php
 #: managed/SavedSearch_funding_application_processes.mgd.php
 #: managed/SavedSearch_funding_case_application_processes.mgd.php
 #: managed/SavedSearch_funding_cases.mgd.php
+#: managed/SavedSearch_funding_programs.mgd.php
 msgid "Actions"
 msgstr "Aktionen"
 
@@ -3166,7 +3179,6 @@ msgstr "Rückzahlungsforderung"
 
 #: managed/SavedSearchFundingCaseTypes.mgd.php
 #: managed/SavedSearchFundingDrawdowns.mgd.php
-#: managed/SavedSearchFundingPrograms.mgd.php
 #: managed/SavedSearch_Application_CiviOffice_Templates.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
 #: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
@@ -3177,6 +3189,7 @@ msgstr "Rückzahlungsforderung"
 #: managed/SavedSearch_funding_case_application_processes.mgd.php
 #: managed/SavedSearch_funding_cases.mgd.php
 #: managed/SavedSearch_funding_program_controlling.mgd.php
+#: managed/SavedSearch_funding_programs.mgd.php
 msgid "Table"
 msgstr "Tabelle"
 
@@ -3216,25 +3229,6 @@ msgstr "Dokument herunterladen"
 msgid "Total"
 msgstr "Gesamt"
 
-#: managed/SavedSearchFundingPrograms.mgd.php
-msgid "Edit possible funding recipients"
-msgstr "Mögliche Fördergeldempfänger bearbeiten"
-
-#: managed/SavedSearchFundingPrograms.mgd.php
-#: managed/SavedSearch_Clearings.mgd.php
-#: managed/SavedSearch_funding_case_application_processes.mgd.php
-#: managed/SavedSearch_funding_cases.mgd.php
-msgid "Edit permissions"
-msgstr "Berechtigungen bearbeiten"
-
-#: managed/SavedSearchFundingPrograms.mgd.php
-msgid "Edit initial funding case permissions"
-msgstr "Initiale Förderfallberechtigungen bearbeiten"
-
-#: managed/SavedSearchFundingPrograms.mgd.php
-msgid "Edit basic values"
-msgstr "Basiswerte bearbeiten"
-
 #: managed/SavedSearch_Application_CiviOffice_Templates.mgd.php
 msgid "Application CiviOffice Templates"
 msgstr "CiviOffice-Vorlagen für Anträge"
@@ -3254,6 +3248,13 @@ msgstr "Verwendungsnachweis öffnen"
 #: managed/SavedSearch_funding_case_application_processes.mgd.php
 msgid "Open application"
 msgstr "Antrag öffnen"
+
+#: managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearch_funding_case_application_processes.mgd.php
+#: managed/SavedSearch_funding_cases.mgd.php
+#: managed/SavedSearch_funding_programs.mgd.php
+msgid "Edit permissions"
+msgstr "Berechtigungen bearbeiten"
 
 #: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
 msgid "Drawdowns by Recipient and Funding Program"
@@ -3304,3 +3305,15 @@ msgstr "Meine Förderverwaltungsaufgaben"
 #: managed/SavedSearch_funding_case_application_processes.mgd.php
 msgid "Funding Case Applications"
 msgstr "Förderfallanträge"
+
+#: managed/SavedSearch_funding_programs.mgd.php
+msgid "Edit possible funding recipients"
+msgstr "Mögliche Fördergeldempfänger bearbeiten"
+
+#: managed/SavedSearch_funding_programs.mgd.php
+msgid "Edit initial funding case permissions"
+msgstr "Initiale Förderfallberechtigungen bearbeiten"
+
+#: managed/SavedSearch_funding_programs.mgd.php
+msgid "Edit basic values"
+msgstr "Basiswerte bearbeiten"

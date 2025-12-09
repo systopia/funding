@@ -64,6 +64,12 @@ final class KursApplicationStatusDeterminer extends AbstractApplicationProcessSt
       'update' => 'rework-review',
       'add-comment' => 'rework-review',
     ],
+    'rejected' => [
+      'reopen' => '@previous',
+    ],
+    'withdrawn' => [
+      'reopen' => '@previous',
+    ],
   ];
 
   public function getStatus(FullApplicationProcessStatus $currentStatus, string $action): FullApplicationProcessStatus {
