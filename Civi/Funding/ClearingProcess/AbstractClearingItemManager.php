@@ -23,6 +23,7 @@ use Civi\Funding\Entity\AbstractClearingItemEntity;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
+use Civi\RemoteTools\Api4\Query\ConditionInterface;
 use Webmozart\Assert\Assert;
 
 /**
@@ -94,14 +95,24 @@ abstract class AbstractClearingItemManager {
    * @throws \CRM_Core_Exception
    */
   public function getByClearingProcessId(int $clearingProcessId): array {
-    $result = $this->api4->getEntities($this->getApiEntityName(), Comparison::new(
-      'clearing_process_id',
-      '=',
-      $clearingProcessId
-    ))->indexBy('id');
+    return $this->getBy(
+      Comparison::new('clearing_process_id', '=', $clearingProcessId)
+    );
+  }
 
-    /** @phpstan-ignore-next-line */
-    return $this->getEntityClass()::allFromApiResult($result);
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function rejectByClearingProcessId(int $clearingProcessId): void {
+    $condition = CompositeCondition::new('AND',
+      Comparison::new('clearing_process_id', '=', $clearingProcessId),
+      Comparison::new('amount_admitted', '!=', 0)
+    );
+    foreach ($this->getBy($condition) as $item) {
+      $item->setAmountAdmitted(0.0);
+      $item->setStatus('rejected');
+      $this->save($item);
+    }
   }
 
   /**
@@ -158,5 +169,18 @@ abstract class AbstractClearingItemManager {
   abstract protected function getEntityClass(): string;
 
   abstract protected function getFinancePlanItemIdFieldName(): string;
+
+  /**
+   * @phpstan-return array<int, T>
+   *   Clearing items indexed by id.
+   *
+   * @throws \CRM_Core_Exception
+   */
+  protected function getBy(ConditionInterface $condition): array {
+    $result = $this->api4->getEntities($this->getApiEntityName(), $condition)->indexBy('id');
+
+    /** @phpstan-ignore-next-line */
+    return $this->getEntityClass()::allFromApiResult($result);
+  }
 
 }
