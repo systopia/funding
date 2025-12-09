@@ -25,6 +25,8 @@ use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\DAOGetAction;
 use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
+use Civi\Funding\ActivityTypeNames;
+use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
@@ -55,12 +57,11 @@ use Symfony\Bridge\PhpUnit\ClockMock;
  */
 final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCase {
 
+  private MockObject&ApplicationProcessActivityManager $activityManagerMock;
+
   private ApplicationProcessManager $applicationProcessManager;
 
-  /**
-   * @var \Civi\Core\CiviEventDispatcherInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $eventDispatcherMock;
+  private CiviEventDispatcherInterface&MockObject $eventDispatcherMock;
 
   public static function setUpBeforeClass(): void {
     parent::setUpBeforeClass();
@@ -70,8 +71,10 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
 
   protected function setUp(): void {
     parent::setUp();
+    $this->activityManagerMock = $this->createMock(ApplicationProcessActivityManager::class);
     $this->eventDispatcherMock = $this->createMock(CiviEventDispatcherInterface::class);
     $this->applicationProcessManager = new ApplicationProcessManager(
+      $this->activityManagerMock,
       new Api4(),
       $this->eventDispatcherMock
     );
@@ -421,6 +424,39 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
 
     $applicationProcess->setTitle('New title');
     $this->applicationProcessManager->update($applicationProcessBundle);
+    static::assertSame(time(), $applicationProcess->getModificationDate()->getTimestamp());
+  }
+
+  public function testUpdatePreviousStatus(): void {
+    $contact = ContactFixture::addIndividual();
+    $fundingProgram = FundingProgramFixture::addFixture();
+    $fundingCaseType = FundingCaseTypeFixture::addFixture();
+    $fundingCase = $this->createFundingCase($fundingProgram->getId(), $fundingCaseType->getId());
+    RequestTestUtil::mockInternalRequest($contact['id']);
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['test_permission']);
+
+    $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId());
+    $applicationProcessBundle = new ApplicationProcessEntityBundle(
+      $applicationProcess,
+      $fundingCase,
+      $fundingCaseType,
+      $fundingProgram
+    );
+    $oldStatus = $applicationProcess->getStatus();
+
+    $this->activityManagerMock->expects(static::once())->method('getLastByApplicationProcessAndType')
+      ->with($applicationProcess->getId(), ActivityTypeNames::FUNDING_APPLICATION_STATUS_CHANGE)
+      ->willReturn(ActivityEntity::fromArray([
+        'activity_type_id' => 123,
+        'subject' => 'test',
+        'funding_application_status_change.from_status' => 'previous_status',
+      ]));
+
+    $this->eventDispatcherMock->expects(static::exactly(2))->method('dispatch');
+
+    $applicationProcess->setStatus('@previous');
+    $this->applicationProcessManager->update($applicationProcessBundle);
+    static::assertSame('previous_status', $applicationProcess->getStatus());
     static::assertSame(time(), $applicationProcess->getModificationDate()->getTimestamp());
   }
 

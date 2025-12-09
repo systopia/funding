@@ -22,6 +22,7 @@ namespace Civi\Funding\ApplicationProcess;
 use Civi\Api4\ActivityContact;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\ActivityTypeIds;
+use Civi\Funding\ActivityTypeNames;
 use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\Fixtures\ApplicationProcessFixture;
 use Civi\Funding\Fixtures\ContactFixture;
@@ -119,6 +120,34 @@ final class ApplicationProcessActivityManagerTest extends AbstractFundingHeadles
 
     // Test getOpenByApplicationProcess
     static::assertCount(0, $this->activityManager->getOpenByApplicationProcess($applicationProcess->getId()));
+
+    // Test getByApplicationProcessAndType
+    static::assertCount(1, $this->activityManager->getByApplicationProcessAndType(
+      $applicationProcess->getId(),
+      ActivityTypeNames::FUNDING_APPLICATION_STATUS_CHANGE
+    ));
+    static::assertSame([], $this->activityManager->getByApplicationProcessAndType(
+      $applicationProcess->getId() + 1,
+      ActivityTypeNames::FUNDING_APPLICATION_STATUS_CHANGE
+    ));
+    static::assertSame([], $this->activityManager->getByApplicationProcessAndType(
+      $applicationProcess->getId(),
+      'test'
+    ));
+
+    // Test getLastByApplicationProcessAndType
+    static::assertSame($activity->getId(), $this->activityManager->getLastByApplicationProcessAndType(
+      $applicationProcess->getId(),
+      ActivityTypeNames::FUNDING_APPLICATION_STATUS_CHANGE
+    )?->getId());
+    static::assertNull($this->activityManager->getLastByApplicationProcessAndType(
+        $applicationProcess->getId() + 1,
+        ActivityTypeNames::FUNDING_APPLICATION_STATUS_CHANGE
+    ));
+    static::assertNull($this->activityManager->getLastByApplicationProcessAndType(
+      $applicationProcess->getId(),
+      'test'
+    ));
 
     // Test completeActivity
     $this->activityManager->completeActivity($activity);
