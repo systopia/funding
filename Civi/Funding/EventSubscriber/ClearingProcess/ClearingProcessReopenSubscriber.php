@@ -21,6 +21,8 @@ namespace Civi\Funding\EventSubscriber\ClearingProcess;
 
 use Civi\Funding\ClearingProcess\ClearingCostItemManager;
 use Civi\Funding\ClearingProcess\ClearingResourcesItemManager;
+use Civi\Funding\Entity\ClearingProcessEntity;
+use Civi\Funding\Event\ClearingProcess\ClearingProcessPreUpdateEvent;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessUpdatedEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -38,7 +40,10 @@ class ClearingProcessReopenSubscriber implements EventSubscriberInterface {
    * @inheritDoc
    */
   public static function getSubscribedEvents(): array {
-    return [ClearingProcessUpdatedEvent::class => 'onUpdated'];
+    return [
+      ClearingProcessPreUpdateEvent::class => 'onPreUpdate',
+      ClearingProcessUpdatedEvent::class => 'onUpdated',
+    ];
   }
 
   public function __construct(
@@ -49,17 +54,28 @@ class ClearingProcessReopenSubscriber implements EventSubscriberInterface {
     $this->clearingResourcesItemManager = $clearingResourcesItemManager;
   }
 
+  public function onPreUpdate(ClearingProcessPreUpdateEvent $event): void {
+    if ($this->isReopened($event->getClearingProcess(), $event->getPreviousClearingProcess())) {
+      $event->getClearingProcess()->setIsReviewCalculative(NULL);
+    }
+  }
+
   /**
    * @throws \CRM_Core_Exception
    */
   public function onUpdated(ClearingProcessUpdatedEvent $event): void {
-    $newStatus = $event->getClearingProcess()->getStatus();
-    $oldStatus = $event->getPreviousClearingProcess()->getStatus();
-    if ('rejected' === $oldStatus && 'rejected' !== $newStatus) {
+    if ($this->isReopened($event->getClearingProcess(), $event->getPreviousClearingProcess())) {
       $clearingProcessId = $event->getClearingProcess()->getId();
       $this->clearingCostItemManager->resetAmountsAdmittedByClearingProcessId($clearingProcessId);
       $this->clearingResourcesItemManager->resetAmountsAdmittedByClearingProcessId($clearingProcessId);
     }
+  }
+
+  private function isReopened(
+    ClearingProcessEntity $clearingProcess,
+    ClearingProcessEntity $previousClearingProcess
+  ): bool {
+    return 'rejected' === $previousClearingProcess->getStatus() && 'rejected' !== $clearingProcess->getStatus();
   }
 
 }

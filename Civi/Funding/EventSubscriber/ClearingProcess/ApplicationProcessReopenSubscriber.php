@@ -89,6 +89,11 @@ class ApplicationProcessReopenSubscriber implements EventSubscriberInterface {
     else {
       $clearingProcess->setStatus($previousStatus);
     }
+
+    if (TRUE === $clearingProcess->getIsReviewCalculative()) {
+      $clearingProcess->setIsReviewCalculative(NULL);
+    }
+
     $clearingProcess->setModificationDate($applicationProcess->getModificationDate());
     $this->clearingProcessManager->update(new ClearingProcessEntityBundle(
       $clearingProcess,
