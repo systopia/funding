@@ -24,6 +24,7 @@ use Civi\Funding\ClearingProcess\ClearingCostItemManager;
 use Civi\Funding\ClearingProcess\ClearingResourcesItemManager;
 use Civi\Funding\EntityFactory\ClearingProcessBundleFactory;
 use Civi\Funding\EntityFactory\ClearingProcessFactory;
+use Civi\Funding\Event\ClearingProcess\ClearingProcessPreUpdateEvent;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessUpdatedEvent;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -50,7 +51,10 @@ final class ClearingProcessReopenSubscriberTest extends TestCase {
   }
 
   public function testGetSubscribedEvents(): void {
-    $expectedSubscriptions = [ClearingProcessUpdatedEvent::class => 'onUpdated'];
+    $expectedSubscriptions = [
+      ClearingProcessPreUpdateEvent::class => 'onPreUpdate',
+      ClearingProcessUpdatedEvent::class => 'onUpdated',
+    ];
 
     self::assertEquals($expectedSubscriptions, $this->subscriber::getSubscribedEvents());
 
@@ -59,7 +63,29 @@ final class ClearingProcessReopenSubscriberTest extends TestCase {
     }
   }
 
-  public function testReopened(): void {
+  public function testOnPreUpdateReopened(): void {
+    $previousClearingProcess = ClearingProcessFactory::create(['status' => 'rejected']);
+    $clearingProcessBundle = ClearingProcessBundleFactory::create([
+      'status' => 'changed',
+      'is_review_calculative' => TRUE,
+    ]);
+
+    $this->subscriber->onPreUpdate(new ClearingProcessPreUpdateEvent($previousClearingProcess, $clearingProcessBundle));
+    static::assertNull($clearingProcessBundle->getClearingProcess()->getIsReviewCalculative());
+  }
+
+  public function testOnPreUpdateNotReopened(): void {
+    $previousClearingProcess = ClearingProcessFactory::create(['status' => 'review']);
+    $clearingProcessBundle = ClearingProcessBundleFactory::create([
+      'status' => 'accepted',
+      'is_review_calculative' => TRUE,
+    ]);
+
+    $this->subscriber->onPreUpdate(new ClearingProcessPreUpdateEvent($previousClearingProcess, $clearingProcessBundle));
+    static::assertTrue($clearingProcessBundle->getClearingProcess()->getIsReviewCalculative());
+  }
+
+  public function testOnUpdatedReopened(): void {
     $previousClearingProcess = ClearingProcessFactory::create(['status' => 'rejected']);
     $clearingProcessBundle = ClearingProcessBundleFactory::create(['status' => 'changed']);
 
@@ -71,7 +97,7 @@ final class ClearingProcessReopenSubscriberTest extends TestCase {
     $this->subscriber->onUpdated(new ClearingProcessUpdatedEvent($previousClearingProcess, $clearingProcessBundle));
   }
 
-  public function testNotReopened(): void {
+  public function testOnUpdatedNotReopened(): void {
     $previousClearingProcess = ClearingProcessFactory::create(['status' => 'rejected']);
     $clearingProcessBundle = ClearingProcessBundleFactory::create(['status' => 'rejected']);
 
