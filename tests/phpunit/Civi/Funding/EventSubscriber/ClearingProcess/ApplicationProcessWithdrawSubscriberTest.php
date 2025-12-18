@@ -76,6 +76,23 @@ final class ApplicationProcessWithdrawSubscriberTest extends TestCase {
     $this->subscriber->onUpdated($event);
   }
 
+  public function testRejected(): void {
+    $event = $this->createEvent('complete', 'rejected');
+    $clearingProcess = ClearingProcessFactory::create(['status' => 'review']);
+    $this->clearingProcessManagerMock->method('getByApplicationProcessId')
+      ->with($event->getApplicationProcess()->getId())
+      ->willReturn($clearingProcess);
+
+    $this->clearingProcessManagerMock->expects(static::once())->method('update')
+      ->with(static::callback(
+        fn(ClearingProcessEntityBundle $clearingProcessBundle) =>
+          $clearingProcessBundle->getClearingProcess() === $clearingProcess
+          && 'rejected' === $clearingProcess->getStatus()
+      ));
+
+    $this->subscriber->onUpdated($event);
+  }
+
   public function testWithdrawnNoClearingProcessExists(): void {
     $event = $this->createEvent('eligible', 'withdrawn');
     $this->clearingProcessManagerMock->expects(static::once())->method('getByApplicationProcessId')
@@ -91,6 +108,18 @@ final class ApplicationProcessWithdrawSubscriberTest extends TestCase {
     $this->subscriber->onUpdated($event);
   }
 
+  public function testClearingProcessNotStarted(): void {
+    $event = $this->createEvent('eligible', 'withdrawn');
+    $clearingProcess = ClearingProcessFactory::create(['status' => 'not-started']);
+    $this->clearingProcessManagerMock->method('getByApplicationProcessId')
+      ->with($event->getApplicationProcess()->getId())
+      ->willReturn($clearingProcess);
+
+    $this->clearingProcessManagerMock->expects(static::never())->method('update');
+    $this->subscriber->onUpdated($event);
+    static::assertSame('not-started', $clearingProcess->getStatus());
+  }
+
   public function testOtherStatusChange(): void {
     $event = $this->createEvent('eligible', 'complete');
     $this->clearingProcessManagerMock->expects(static::never())->method('getByApplicationProcessId');
@@ -101,10 +130,12 @@ final class ApplicationProcessWithdrawSubscriberTest extends TestCase {
     return new ApplicationProcessUpdatedEvent(
       ApplicationProcessFactory::createApplicationProcess([
         'status' => $oldStatus,
+        'is_rejected' => 'rejected' === $oldStatus,
         'is_withdrawn' => 'withdrawn' === $oldStatus,
       ]),
       ApplicationProcessBundleFactory::createApplicationProcessBundle([
         'status' => $newStatus,
+        'is_rejected' => 'rejected' === $newStatus,
         'is_withdrawn' => 'withdrawn' === $newStatus,
       ]),
     );
