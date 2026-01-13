@@ -56,119 +56,119 @@ fundingModule.directive('fundingApplicationTasksDecorator', function() {
 
         // See TaskManager in searchDisplayTasksTrait
         const taskManager = ctrl.taskManager;
-        const entityName = taskManager.getEntityName();
 
-        if (entityName !== 'FundingApplicationProcess') {
-          return;
-        }
-
-        const ts = CRM.ts('funding');
-
-        let allowedActionsByApplication = {};
-
-        let searchKitTasks;
         taskManager.getMetadata().then(() => {
-          taskManager.entityInfo = taskManager.entityInfo || {};
+          const entityName = taskManager.entityInfo.name;
+          if (entityName !== 'FundingApplicationProcess') {
+            return;
+          }
+
+          const ts = CRM.ts('funding');
+
+          let allowedActionsByApplication = {};
+
           taskManager.entityInfo.title = ts('Application');
           taskManager.entityInfo.title_plural = ts('Applications');
-          searchKitTasks = taskManager.tasks;
-        });
+          const searchKitTasks = taskManager.tasks;
 
-        function updateAvailableTasks() {
-          if (ctrl.ids.length === 0) {
-            taskManager.tasks = searchKitTasks;
-            return;
-          }
-
-          let tasks = {};
-          const firstActions = allowedActionsByApplication[ctrl.ids[0]] || {};
-          for (const [actionName, {label, confirm}] of Object.entries(firstActions)) {
-            tasks[actionName] = {
-              name: actionName,
-              title: label,
-              confirm: confirm,
-              _customTask: true,
-            };
-          }
-
-          // Filter out tasks that are not available in all selected application
-          // processes or have a different label.
-          for (let i = 1; i < ctrl.ids.length; ++i) {
-            const actions = allowedActionsByApplication[ctrl.ids[i]] || {};
-            tasks = _4.pickBy(tasks, (task, actionName) => actions[actionName] && actions[actionName].label === task.title);
-          }
-
-          taskManager.tasks = searchKitTasks.concat(Object.values(tasks));
-        }
-
-        let lastIds;
-        function updateTasks() {
-          if (_4.isEqual(lastIds, ctrl.ids)) {
-            return new Promise((resolve) => resolve([]));
-          }
-
-          lastIds = _4.clone(ctrl.ids);
-          const idsToGetActions = [];
-          ctrl.ids.forEach((id) => {
-            if (!allowedActionsByApplication[id]) {
-              idsToGetActions.push(id);
+          function updateAvailableTasks() {
+            if (ctrl.ids.length === 0) {
+              taskManager.tasks = searchKitTasks;
+              return;
             }
-          });
 
-          if (idsToGetActions.length > 0) {
-            taskManager.tasks = searchKitTasks;
-            return fundingApplicationProcessService.getAllowedActionsMultiple(idsToGetActions)
-              .then((allowedActions) => _4.extend(allowedActionsByApplication, allowedActions))
-              .then(updateAvailableTasks);
-          } else {
-            updateAvailableTasks();
-            return new Promise((resolve) => resolve([]));
-          }
-        }
+            let tasks = {};
+            const firstActions = allowedActionsByApplication[ctrl.ids[0]] || {};
+            for (const [actionName, {label, confirm}] of Object.entries(firstActions)) {
+              tasks[actionName] = {
+                name: actionName,
+                title: label,
+                confirm: confirm,
+                _customTask: true,
+              };
+            }
 
-        // Only triggered if a new ID is selected, not un deselect.
-        $scope.$watch('$ctrl.ids', () => updateTasks());
+            // Filter out tasks that are not available in all selected application
+            // processes or have a different label.
+            for (let i = 1; i < ctrl.ids.length; ++i) {
+              const actions = allowedActionsByApplication[ctrl.ids[i]] || {};
+              tasks = _4.pickBy(tasks, (task, actionName) => actions[actionName] && actions[actionName].label === task.title);
+            }
 
-        taskManager.getMetadata = updateTasks;
-
-        const parentDoTask = taskManager.doTask;
-        taskManager.doTask = function(action, ids) {
-          if (!action._customTask) {
-            parentDoTask(action, ids);
-
-            return;
+            taskManager.tasks = searchKitTasks.concat(Object.values(tasks));
           }
 
-          if (!action.confirm || window.confirm(action.confirm)) {
-            crmStatus(
-              {},
-              fundingApplicationProcessService.applyActionMultiple(ids, action.name)
-            ).then(() => {
-              allowedActionsByApplication = _4.pickBy(allowedActionsByApplication,
-                (actions, id) => !ids.includes(parseInt(id)));
+          let lastIds;
 
-              this.refreshAfterTask();
+          function updateTasks() {
+            if (_4.isEqual(lastIds, ctrl.ids)) {
+              return new Promise((resolve) => resolve([]));
+            }
 
-              const event = new CustomEvent('applicationSearchTaskExecuted', {
-                detail: {
-                  entity: entityName,
-                  ids: ids,
-                  action: action.name,
-                },
-              });
-              document.dispatchEvent(event);
+            lastIds = _4.clone(ctrl.ids);
+            const idsToGetActions = [];
+            ctrl.ids.forEach((id) => {
+              if (!allowedActionsByApplication[id]) {
+                idsToGetActions.push(id);
+              }
             });
-          }
-        };
 
-        const parentIsActionAllowed = ctrl.isActionAllowed;
-        ctrl.isActionAllowed = function (action) {
-          if (action._customTask) {
-            return true;
+            if (idsToGetActions.length > 0) {
+              taskManager.tasks = searchKitTasks;
+              return fundingApplicationProcessService.getAllowedActionsMultiple(idsToGetActions)
+                .then((allowedActions) => _4.extend(allowedActionsByApplication, allowedActions))
+                .then(updateAvailableTasks);
+            }
+            else {
+              updateAvailableTasks();
+              return new Promise((resolve) => resolve([]));
+            }
           }
 
-          return parentIsActionAllowed(action);
-        };
+          // Only triggered if a new ID is selected, not un deselect.
+          $scope.$watch('$ctrl.ids', () => updateTasks());
+
+          taskManager.getMetadata = updateTasks;
+
+          const parentDoTask = taskManager.doTask;
+          taskManager.doTask = function (action, ids) {
+            if (!action._customTask) {
+              parentDoTask(action, ids);
+
+              return;
+            }
+
+            if (!action.confirm || window.confirm(action.confirm)) {
+              crmStatus(
+                {},
+                fundingApplicationProcessService.applyActionMultiple(ids, action.name)
+              ).then(() => {
+                allowedActionsByApplication = _4.pickBy(allowedActionsByApplication,
+                  (actions, id) => !ids.includes(parseInt(id)));
+
+                this.refreshAfterTask();
+
+                const event = new CustomEvent('applicationSearchTaskExecuted', {
+                  detail: {
+                    entity: entityName,
+                    ids: ids,
+                    action: action.name,
+                  },
+                });
+                document.dispatchEvent(event);
+              });
+            }
+          };
+
+          const parentIsActionAllowed = ctrl.isActionAllowed;
+          ctrl.isActionAllowed = function (action) {
+            if (action._customTask) {
+              return true;
+            }
+
+            return parentIsActionAllowed(action);
+          };
+        });
       }
     ],
   };
