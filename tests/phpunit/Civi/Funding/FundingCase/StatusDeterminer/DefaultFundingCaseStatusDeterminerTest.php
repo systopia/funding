@@ -21,6 +21,7 @@ namespace Civi\Funding\FundingCase\StatusDeterminer;
 
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
+use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions;
 use Civi\Funding\FundingCase\FundingCaseStatus;
@@ -102,6 +103,7 @@ final class DefaultFundingCaseStatusDeterminerTest extends TestCase {
       'status' => 'withdrawn',
       'is_withdrawn' => TRUE,
     ]);
+    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess(['status' => 'previous']);
 
     $this->applicationProcessManagerMock->method('countBy')
       ->with(CompositeCondition::new('AND',
@@ -111,7 +113,10 @@ final class DefaultFundingCaseStatusDeterminerTest extends TestCase {
 
     static::assertSame(
       'withdrawn',
-      $this->statusDeterminer->getStatusOnApplicationProcessStatusChange($applicationProcessBundle, 'previous')
+      $this->statusDeterminer->getStatusOnApplicationProcessStatusChange(
+        $applicationProcessBundle,
+        $previousApplicationProcess
+      )
     );
   }
 
@@ -120,6 +125,8 @@ final class DefaultFundingCaseStatusDeterminerTest extends TestCase {
       'status' => 'rejected',
       'is_rejected' => TRUE,
     ]);
+    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess(['status' => 'previous']);
+
     $this->applicationProcessManagerMock->method('countBy')
       ->with(CompositeCondition::new('AND',
         Comparison::new('funding_case_id', '=', $applicationProcessBundle->getFundingCase()->getId()),
@@ -128,7 +135,10 @@ final class DefaultFundingCaseStatusDeterminerTest extends TestCase {
 
     static::assertSame(
       'rejected',
-      $this->statusDeterminer->getStatusOnApplicationProcessStatusChange($applicationProcessBundle, 'previous')
+      $this->statusDeterminer->getStatusOnApplicationProcessStatusChange(
+        $applicationProcessBundle,
+        $previousApplicationProcess
+      )
     );
   }
 
@@ -137,6 +147,8 @@ final class DefaultFundingCaseStatusDeterminerTest extends TestCase {
       ['status' => 'withdrawn', 'is_withdrawn' => TRUE],
       ['status' => 'test']
     );
+    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess(['status' => 'previous']);
+
     $this->applicationProcessManagerMock->method('countBy')
       ->with(CompositeCondition::new('AND',
         Comparison::new('funding_case_id', '=', $applicationProcessBundle->getFundingCase()->getId()),
@@ -145,7 +157,10 @@ final class DefaultFundingCaseStatusDeterminerTest extends TestCase {
 
     static::assertSame(
       'test',
-      $this->statusDeterminer->getStatusOnApplicationProcessStatusChange($applicationProcessBundle, 'previous')
+      $this->statusDeterminer->getStatusOnApplicationProcessStatusChange(
+        $applicationProcessBundle,
+        $previousApplicationProcess
+      )
     );
   }
 
@@ -154,11 +169,37 @@ final class DefaultFundingCaseStatusDeterminerTest extends TestCase {
       ['status' => 'ineligible_not_final'],
       ['status' => 'test']
     );
+    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess(['status' => 'previous']);
+
     $this->applicationProcessManagerMock->expects(static::never())->method('countBy');
 
     static::assertSame(
       'test',
-      $this->statusDeterminer->getStatusOnApplicationProcessStatusChange($applicationProcessBundle, 'previous')
+      $this->statusDeterminer->getStatusOnApplicationProcessStatusChange(
+        $applicationProcessBundle,
+        $previousApplicationProcess
+      )
+    );
+  }
+
+  public function testGetStatusOnApplicationProcessStatusChangeReopened(): void {
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+      ['status' => 'not_withdrawn', 'is_withdrawn' => FALSE],
+      ['status' => 'withdrawn']
+    );
+    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess([
+      'status' => 'withdrawn',
+      'is_withdrawn' => TRUE,
+    ]);
+
+    $this->applicationProcessManagerMock->expects(static::never())->method('countBy');
+
+    static::assertSame(
+      'open',
+      $this->statusDeterminer->getStatusOnApplicationProcessStatusChange(
+        $applicationProcessBundle,
+        $previousApplicationProcess
+      )
     );
   }
 

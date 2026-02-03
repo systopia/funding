@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase\StatusDeterminer;
 
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
+use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions;
@@ -69,28 +70,33 @@ final class DefaultFundingCaseStatusDeterminer implements FundingCaseStatusDeter
 
   public function getStatusOnApplicationProcessStatusChange(
     ApplicationProcessEntityBundle $applicationProcessBundle,
-    string $previousStatus
+    ApplicationProcessEntity $previousApplicationProcess
   ): string {
     $ineligibleStatusList = array_keys($this->getFinalIneligibleStatuses(
       $applicationProcessBundle->getFundingCaseType()
     ));
 
-    if (in_array(
-      $applicationProcessBundle->getApplicationProcess()->getStatus(),
-      $ineligibleStatusList,
-      TRUE
-    ) && 0 === $this->applicationProcessManager->countBy(
+    $applicationProcess = $applicationProcessBundle->getApplicationProcess();
+    $fundingCase = $applicationProcessBundle->getFundingCase();
+
+    if (in_array($applicationProcess->getStatus(), $ineligibleStatusList, TRUE)
+      && 0 === $this->applicationProcessManager->countBy(
         CompositeCondition::new('AND',
-          Comparison::new('funding_case_id', '=', $applicationProcessBundle->getFundingCase()->getId()),
+          Comparison::new('funding_case_id', '=', $fundingCase->getId()),
           Comparison::new('status', 'NOT IN', $ineligibleStatusList),
         ),
       )) {
       // Application process status has changed to an ineligible status and
       // there is no other application process that is eligible or with an
       // undecided eligibility.
-      return $applicationProcessBundle->getApplicationProcess()->getIsWithdrawn()
-        ? FundingCaseStatus::WITHDRAWN
-        : FundingCaseStatus::REJECTED;
+      return $applicationProcess->getIsWithdrawn() ? FundingCaseStatus::WITHDRAWN : FundingCaseStatus::REJECTED;
+    }
+
+    if ($this->isApplicationProcessReopened($applicationProcess, $previousApplicationProcess)
+      && in_array($fundingCase->getStatus(), [FundingCaseStatus::REJECTED, FundingCaseStatus::WITHDRAWN], TRUE)
+    ) {
+      // Reopen funding case.
+      return FundingCaseStatus::OPEN;
     }
 
     return $applicationProcessBundle->getFundingCase()->getStatus();
@@ -109,6 +115,14 @@ final class DefaultFundingCaseStatusDeterminer implements FundingCaseStatusDeter
     }
 
     return $ineligibleStatuses;
+  }
+
+  private function isApplicationProcessReopened(
+    ApplicationProcessEntity $applicationProcess,
+    ApplicationProcessEntity $previousApplicationProcess
+  ): bool {
+    return ($previousApplicationProcess->getIsWithdrawn() || $previousApplicationProcess->getIsRejected()) &&
+      !$applicationProcess->getIsWithdrawn() && !$applicationProcess->getIsRejected();
   }
 
 }

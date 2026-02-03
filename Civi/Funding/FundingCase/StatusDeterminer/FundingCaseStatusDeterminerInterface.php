@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase\StatusDeterminer;
 
+use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 
 interface FundingCaseStatusDeterminerInterface {
@@ -39,7 +40,7 @@ interface FundingCaseStatusDeterminerInterface {
    */
   public function getStatusOnApplicationProcessStatusChange(
     ApplicationProcessEntityBundle $applicationProcessBundle,
-    string $previousStatus
+    ApplicationProcessEntity $previousApplicationProcess
   ): string;
 
 }

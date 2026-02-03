@@ -57,7 +57,7 @@ class ApplicationProcessStatusSubscriber implements EventSubscriberInterface {
 
     $applicationProcessBundle = $event->getApplicationProcessBundle();
     $newStatus = $this->getStatusDeterminer($applicationProcessBundle)
-      ->getStatusOnApplicationProcessStatusChange($applicationProcessBundle, $previousStatus);
+      ->getStatusOnApplicationProcessStatusChange($applicationProcessBundle, $event->getPreviousApplicationProcess());
     if ($fundingCase->getStatus() !== $newStatus) {
       $fundingCase->setStatus($newStatus);
       $this->fundingCaseManager->update($fundingCase);

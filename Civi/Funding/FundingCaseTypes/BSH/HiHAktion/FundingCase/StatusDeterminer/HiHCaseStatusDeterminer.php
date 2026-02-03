@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\FundingCase\StatusDeterminer;
 
+use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\FundingCase\FundingCaseStatus;
 use Civi\Funding\FundingCase\StatusDeterminer\DefaultFundingCaseStatusDeterminer;
@@ -44,23 +45,24 @@ final class HiHCaseStatusDeterminer implements FundingCaseStatusDeterminerInterf
    */
   public function getStatusOnApplicationProcessStatusChange(
     ApplicationProcessEntityBundle $applicationProcessBundle,
-    string $previousStatus
+    ApplicationProcessEntity $previousApplicationProcess
   ): string {
-    if ('rejected' === $previousStatus
-      && in_array($applicationProcessBundle->getApplicationProcess()->getStatus(), ['applied', 'review'], TRUE)
-    ) {
+    $status = $applicationProcessBundle->getApplicationProcess()->getStatus();
+    $previousStatus = $previousApplicationProcess->getStatus();
+
+    if ('rejected' === $previousStatus && in_array($status, ['applied', 'review'], TRUE)) {
       return FundingCaseStatus::OPEN;
     }
 
     if (in_array($previousStatus, ['rejected_after_advisory', 'approved', 'approved_partial'], TRUE)
-      && 'advisory' === $applicationProcessBundle->getApplicationProcess()->getStatus()
+      && 'advisory' === $status
     ) {
       return FundingCaseStatus::OPEN;
     }
 
     return $this->defaultStatusDeterminer->getStatusOnApplicationProcessStatusChange(
       $applicationProcessBundle,
-      $previousStatus
+      $previousApplicationProcess
     );
   }
 
