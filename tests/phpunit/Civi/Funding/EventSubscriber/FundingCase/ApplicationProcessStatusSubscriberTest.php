@@ -79,7 +79,7 @@ final class ApplicationProcessStatusSubscriberTest extends TestCase {
     $event = $this->createEvent('foo', 'new_status');
 
     $this->statusDeterminerMock->expects(static::once())->method('getStatusOnApplicationProcessStatusChange')
-      ->with($event->getApplicationProcessBundle(), 'previous_status')
+      ->with($event->getApplicationProcessBundle(), $event->getPreviousApplicationProcess())
       ->willReturn('bar');
 
     $this->fundingCaseManagerMock->expects(static::once())->method('update')
@@ -93,7 +93,7 @@ final class ApplicationProcessStatusSubscriberTest extends TestCase {
     $event = $this->createEvent('foo', 'new_status');
 
     $this->statusDeterminerMock->expects(static::once())->method('getStatusOnApplicationProcessStatusChange')
-      ->with($event->getApplicationProcessBundle(), 'previous_status')
+      ->with($event->getApplicationProcessBundle(), $event->getPreviousApplicationProcess())
       ->willReturn('foo');
 
     $this->fundingCaseManagerMock->expects(static::never())->method('update');
