@@ -27,6 +27,7 @@ DROP TABLE IF EXISTS `civicrm_funding_app_resources_item`;
 DROP TABLE IF EXISTS `civicrm_funding_application_process`;
 DROP TABLE IF EXISTS `civicrm_funding_payout_process`;
 DROP TABLE IF EXISTS `civicrm_funding_new_case_permissions`;
+DROP TABLE IF EXISTS `civicrm_funding_form_string_translation`;
 DROP TABLE IF EXISTS `civicrm_funding_case_type_program`;
 DROP TABLE IF EXISTS `civicrm_funding_case_permissions_cache`;
 DROP TABLE IF EXISTS `civicrm_funding_case_contact_relation`;
@@ -224,8 +225,27 @@ CREATE TABLE `civicrm_funding_case_type_program` (
   `funding_program_id` int unsigned NOT NULL COMMENT 'FK to FundingProgram',
   `funding_case_type_id` int unsigned NOT NULL COMMENT 'FK to FundingCaseType',
   PRIMARY KEY (`id`),
+  UNIQUE INDEX `UI_funding_case_type_program`(funding_program_id, funding_case_type_id),
   CONSTRAINT FK_civicrm_funding_case_type_program_funding_program_id FOREIGN KEY (`funding_program_id`) REFERENCES `civicrm_funding_program`(`id`) ON DELETE CASCADE,
   CONSTRAINT FK_civicrm_funding_case_type_program_funding_case_type_id FOREIGN KEY (`funding_case_type_id`) REFERENCES `civicrm_funding_case_type`(`id`) ON DELETE RESTRICT)
+ENGINE=InnoDB;
+
+-- /*******************************************************
+-- *
+-- * civicrm_funding_form_string_translation
+-- *
+-- *******************************************************/
+CREATE TABLE `civicrm_funding_form_string_translation` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Unique FundingFormStringTranslation ID',
+  `funding_program_id` int unsigned NOT NULL COMMENT 'FK to FundingProgram',
+  `funding_case_type_id` int unsigned NOT NULL COMMENT 'FK to FundingCaseType',
+  `msg_text` varchar(8000) COLLATE utf8mb4_bin NOT NULL COMMENT 'Original',
+  `new_text` varchar(8000) COLLATE utf8mb4_bin NOT NULL COMMENT 'Translation',
+  `modification_date` timestamp ON UPDATE CURRENT_TIMESTAMP NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `UI_translation`(funding_program_id, funding_case_type_id, msg_text),
+  CONSTRAINT FK_civicrm_funding_form_string_translation_funding_program_id FOREIGN KEY (`funding_program_id`) REFERENCES `civicrm_funding_program`(`id`) ON DELETE CASCADE,
+  CONSTRAINT FK_civicrm_funding_form_string_translation_funding_case_type_id FOREIGN KEY (`funding_case_type_id`) REFERENCES `civicrm_funding_case_type`(`id`) ON DELETE CASCADE)
 ENGINE=InnoDB;
 
 -- /*******************************************************

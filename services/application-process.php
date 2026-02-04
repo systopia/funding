@@ -77,6 +77,8 @@ use Civi\Funding\ApplicationProcess\JsonSchema\Validator\OpisApplicationValidato
 use Civi\Funding\ApplicationProcess\Snapshot\ApplicationSnapshotRestorer;
 use Civi\Funding\ApplicationProcess\Snapshot\ApplicationSnapshotRestorerInterface;
 use Civi\Funding\DependencyInjection\ApplicationFormValidatorPass;
+use Civi\Funding\DependencyInjection\Compiler\ApplicationJsonSchemaFactoryPass;
+use Civi\Funding\DependencyInjection\Compiler\ApplicationUiSchemaFactoryPass;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\Form\Application\ApplicationCostItemsFormDataLoader;
 use Civi\Funding\Form\Application\ApplicationCostItemsFormDataLoaderInterface;
@@ -88,6 +90,8 @@ use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 $container->addCompilerPass(new ApplicationFormValidatorPass());
+$container->addCompilerPass(new ApplicationJsonSchemaFactoryPass());
+$container->addCompilerPass(new ApplicationUiSchemaFactoryPass());
 
 $container->autowire(ApplicationProcessManager::class)
   // Used in API actions.

@@ -27,8 +27,13 @@ use Civi\Funding\Form\Application\ApplicationUiSchemaFactoryInterface;
 use Civi\Funding\Form\JsonSchema\JsonFormsSubmitButtonsFactory;
 use Civi\Funding\Form\JsonFormsFormWithData;
 use Civi\Funding\Form\JsonFormsFormWithDataInterface;
+use Civi\Funding\Translation\FormTranslatorInterface;
 
 final class ApplicationFormCreateHandler implements ApplicationFormCreateHandlerInterface {
+
+  private FormTranslatorInterface $formTranslator;
+
+  private ApplicationFormDataGetHandlerInterface $dataGetHandler;
 
   private ApplicationJsonSchemaGetHandlerInterface $jsonSchemaGetHandler;
 
@@ -36,20 +41,23 @@ final class ApplicationFormCreateHandler implements ApplicationFormCreateHandler
 
   private ApplicationUiSchemaFactoryInterface $uiSchemaFactory;
 
-  private ApplicationFormDataGetHandlerInterface $dataGetHandler;
-
   public function __construct(
+    FormTranslatorInterface $formTranslator,
+    ApplicationFormDataGetHandlerInterface $dataGetHandler,
     ApplicationJsonSchemaGetHandlerInterface $jsonSchemaGetHandler,
     ApplicationSubmitActionsFactoryInterface $submitActionsFactory,
     ApplicationUiSchemaFactoryInterface $uiSchemaFactory,
-    ApplicationFormDataGetHandlerInterface $dataGetHandler
   ) {
+    $this->dataGetHandler = $dataGetHandler;
+    $this->formTranslator = $formTranslator;
     $this->jsonSchemaGetHandler = $jsonSchemaGetHandler;
     $this->submitActionsFactory = $submitActionsFactory;
     $this->uiSchemaFactory = $uiSchemaFactory;
-    $this->dataGetHandler = $dataGetHandler;
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function handle(ApplicationFormCreateCommand $command): JsonFormsFormWithDataInterface {
     $jsonSchema = $this->jsonSchemaGetHandler->handle(new ApplicationJsonSchemaGetCommand(
       $command->getApplicationProcessBundle(),
@@ -78,7 +86,10 @@ final class ApplicationFormCreateHandler implements ApplicationFormCreateHandler
       $command->getApplicationProcessStatusList(),
     ));
 
-    return new JsonFormsFormWithData($jsonSchema, $uiSchema, $data);
+    $form = new JsonFormsFormWithData($jsonSchema, $uiSchema, $data);
+    $this->formTranslator->translateForm($form, $command->getFundingProgram(), $command->getFundingCaseType());
+
+    return $form;
   }
 
 }

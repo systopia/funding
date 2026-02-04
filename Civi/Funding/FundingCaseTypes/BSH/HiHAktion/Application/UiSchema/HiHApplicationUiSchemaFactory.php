@@ -50,4 +50,11 @@ final class HiHApplicationUiSchemaFactory implements NonCombinedApplicationUiSch
     return new HiHApplicationUiSchema($fundingProgram->getCurrency());
   }
 
+  public function createUiSchemaForTranslation(
+    FundingProgramEntity $fundingProgram,
+    FundingCaseTypeEntity $fundingCaseType,
+  ): JsonFormsLayout {
+    return $this->createUiSchemaNew($fundingProgram, $fundingCaseType);
+  }
+
 }

@@ -18,6 +18,7 @@ msgstr "Förderfall"
 
 #: CRM/Funding/BAO/FundingProgram.php CRM/Funding/DAO/FundingCase.php
 #: CRM/Funding/DAO/FundingCaseTypeProgram.php
+#: CRM/Funding/DAO/FundingFormStringTranslation.php
 #: CRM/Funding/DAO/FundingProgram.php
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
 #: Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php
@@ -29,6 +30,7 @@ msgstr "Förderfall"
 #: managed/SavedSearch_MyFundingTasks.mgd.php
 #: managed/SavedSearch_funding_case_application_processes.mgd.php
 #: managed/SavedSearch_funding_cases.mgd.php
+#: managed/SavedSearch_funding_form_translation.mgd.php
 msgid "Funding Program"
 msgstr "Förderprogramm"
 
@@ -53,6 +55,7 @@ msgstr "Antragsvorlage"
 #: CRM/Funding/DAO/FundingCasePermissionsCache.php
 #: CRM/Funding/DAO/FundingCaseType.php
 #: CRM/Funding/DAO/FundingCaseTypeProgram.php
+#: CRM/Funding/DAO/FundingFormStringTranslation.php
 #: CRM/Funding/DAO/FundingNewCasePermissions.php
 #: CRM/Funding/DAO/FundingProgram.php
 #: CRM/Funding/DAO/FundingProgramContactRelation.php
@@ -72,6 +75,7 @@ msgstr "Förderfalltyp-ID"
 
 #: CRM/Funding/DAO/ApplicationCiviOfficeTemplate.php
 #: CRM/Funding/DAO/FundingCase.php CRM/Funding/DAO/FundingCaseTypeProgram.php
+#: CRM/Funding/DAO/FundingFormStringTranslation.php
 msgid "FK to FundingCaseType"
 msgstr ""
 
@@ -253,7 +257,9 @@ msgid "Creation Date"
 msgstr "Erstellungsdatum"
 
 #: CRM/Funding/DAO/ApplicationProcess.php CRM/Funding/DAO/ClearingProcess.php
-#: CRM/Funding/DAO/FundingCase.php CRM/Funding/DAO/PayoutProcess.php
+#: CRM/Funding/DAO/FundingCase.php
+#: CRM/Funding/DAO/FundingFormStringTranslation.php
+#: CRM/Funding/DAO/PayoutProcess.php
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
 #: ang/crmFunding/application/defaultApplicationEditor.template.html
 #: ang/crmFunding/case/fundingCase.template.html
@@ -265,6 +271,7 @@ msgstr "Erstellungsdatum"
 #: managed/SavedSearch_Clearings.mgd.php
 #: managed/SavedSearch_funding_case_application_processes.mgd.php
 #: managed/SavedSearch_funding_cases.mgd.php
+#: managed/SavedSearch_funding_form_string_translation.mgd.php
 msgid "Modification Date"
 msgstr "Änderungsdatum"
 
@@ -600,6 +607,7 @@ msgid "Unique FundingCase ID"
 msgstr ""
 
 #: CRM/Funding/DAO/FundingCase.php CRM/Funding/DAO/FundingCaseTypeProgram.php
+#: CRM/Funding/DAO/FundingFormStringTranslation.php
 #: CRM/Funding/DAO/FundingNewCasePermissions.php
 #: CRM/Funding/DAO/FundingProgramContactRelation.php
 #: CRM/Funding/DAO/FundingProgramRelationship.php
@@ -722,7 +730,9 @@ msgstr "Förderfalltypen"
 
 #: CRM/Funding/DAO/FundingCaseType.php
 #: CRM/Funding/DAO/FundingCaseTypeProgram.php
+#: CRM/Funding/DAO/FundingFormStringTranslation.php
 #: managed/SavedSearch_funding_cases.mgd.php
+#: managed/SavedSearch_funding_form_translation.mgd.php
 msgid "Funding Case Type"
 msgstr "Förderfalltyp"
 
@@ -770,6 +780,30 @@ msgstr ""
 #: CRM/Funding/DAO/FundingCaseTypeProgram.php
 msgid "Unique FundingCaseTypeProgram ID"
 msgstr ""
+
+#: CRM/Funding/DAO/FundingFormStringTranslation.php
+msgid "Funding Form String Translations"
+msgstr ""
+
+#: CRM/Funding/DAO/FundingFormStringTranslation.php
+msgid "Funding Form String Translation"
+msgstr ""
+
+#: CRM/Funding/DAO/FundingFormStringTranslation.php
+msgid "Unique FundingFormStringTranslation ID"
+msgstr ""
+
+#: CRM/Funding/DAO/FundingFormStringTranslation.php
+#: managed/SavedSearch_funding_form_string_translation.mgd.php
+msgid "Original"
+msgstr "Original"
+
+#: CRM/Funding/DAO/FundingFormStringTranslation.php
+#: ang/afformFundingFormStringTranslationEdit.aff.php
+#: ang/afsearchFundingFormStringTranslationList.aff.php
+#: managed/SavedSearch_funding_form_string_translation.mgd.php
+msgid "Translation"
+msgstr "Übersetzung"
 
 #: CRM/Funding/DAO/FundingNewCasePermissions.php
 msgid "Funding New Case Permissionses"
@@ -2442,6 +2476,23 @@ msgstr ""
 "Berechtigungen für neue Förderfalle an Kontakte zuweisen, die eine Beziehung "
 "vom gewählten Typ zum Empfängerkontakt haben."
 
+#: Civi/Funding/Translation/EventSubscriber/ExtractStringsSearchKitTaskSubscriber.php
+#: managed/SavedSearch_funding_form_translation.mgd.php
+msgid "Extract Strings"
+msgstr "Zeichenketten extrahieren"
+
+#: Civi/Funding/Translation/EventSubscriber/ExtractStringsSearchKitTaskSubscriber.php
+msgid "Extract strings..."
+msgstr "Zeichenketten extrahieren..."
+
+#: Civi/Funding/Translation/EventSubscriber/ExtractStringsSearchKitTaskSubscriber.php
+msgid "Successfully extracted strings."
+msgstr "Zeichenketten erfolgreich extrahiert."
+
+#: Civi/Funding/Translation/EventSubscriber/ExtractStringsSearchKitTaskSubscriber.php
+msgid "An error occurred while extracting strings."
+msgstr "Beim Extrahieren der Zeichenketten ist ein Fehler aufgetreten."
+
 #: Civi/Funding/Validation/EntityValidationResult.php
 msgid "Validation failed: %1"
 msgstr "Validierung fehlgeschlagen: %1"
@@ -2449,6 +2500,13 @@ msgstr "Validierung fehlgeschlagen: %1"
 #: ang/afformFundingCaseTypeTemplates.aff.php
 msgid "Funding Case Type Templates"
 msgstr "Vorlagen für Förderfalltyp"
+
+#: ang/afformFundingFormStringTranslationEdit.aff.html
+#: ang/crmFunding/application/applicationSubmitModal.template.html
+#: ang/crmFunding/case/fundingCase.template.html
+#: ang/crmFunding/clearing/clearingSubmitModal.template.html
+msgid "Submit"
+msgstr "Senden"
 
 #: ang/afformFundingProgramAdd.aff.php
 msgid "New Funding Program"
@@ -2472,6 +2530,10 @@ msgstr "Controlling Mittelabrufe"
 #: managed/SavedSearch_funding_application_processes.mgd.php
 msgid "Funding Applications"
 msgstr "Förderanträge"
+
+#: ang/afsearchFundingFormTranslation.aff.php
+msgid "Funding Form Translation"
+msgstr "Förderformularübersetzung"
 
 #: ang/afsearchFundingProgramControlling.aff.php
 #: managed/NavigationFunding.mgd.php
@@ -2583,12 +2645,6 @@ msgstr "Kommentar"
 #: ang/crmFunding/clearing/clearingSubmitModal.template.html
 msgid "Comment Type"
 msgstr "Kommentarart"
-
-#: ang/crmFunding/application/applicationSubmitModal.template.html
-#: ang/crmFunding/case/fundingCase.template.html
-#: ang/crmFunding/clearing/clearingSubmitModal.template.html
-msgid "Submit"
-msgstr "Senden"
 
 #: ang/crmFunding/application/applicationSubmitModal.template.html
 #: ang/crmFunding/case/fundingCase.template.html
@@ -3130,6 +3186,11 @@ msgid "Funding"
 msgstr "Fördermittel"
 
 #: managed/NavigationFunding.mgd.php
+#: managed/SavedSearch_funding_form_translation.mgd.php
+msgid "Form Translation"
+msgstr "Formularübersetzung"
+
+#: managed/NavigationFunding.mgd.php
 msgid "Add Funding Program"
 msgstr "Förderprogramm hinzufügen"
 
@@ -3305,6 +3366,30 @@ msgstr "Meine Förderverwaltungsaufgaben"
 #: managed/SavedSearch_funding_case_application_processes.mgd.php
 msgid "Funding Case Applications"
 msgstr "Förderfallanträge"
+
+#: managed/SavedSearch_funding_form_string_translation.mgd.php
+msgid "Form String Translation"
+msgstr "Übersetzung von Formularzeichenkette"
+
+#: managed/SavedSearch_funding_form_string_translation.mgd.php
+msgid "translation"
+msgstr "Übersetzung"
+
+#: managed/SavedSearch_funding_form_string_translation.mgd.php
+msgid "Edit Translation"
+msgstr "Übersetzung bearbeiten"
+
+#: managed/SavedSearch_funding_form_translation.mgd.php
+msgid "table"
+msgstr "Tabelle"
+
+#: managed/SavedSearch_funding_form_translation.mgd.php
+msgid "Number of Strings"
+msgstr "Anzahl von Zeichenketten"
+
+#: managed/SavedSearch_funding_form_translation.mgd.php
+msgid "Translate"
+msgstr "Übersetzen"
 
 #: managed/SavedSearch_funding_programs.mgd.php
 msgid "Edit possible funding recipients"

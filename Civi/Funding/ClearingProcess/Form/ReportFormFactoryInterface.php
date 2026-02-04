@@ -20,6 +20,8 @@ declare(strict_types = 1);
 namespace Civi\Funding\ClearingProcess\Form;
 
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
+use Civi\Funding\Entity\FundingProgramEntity;
 
 interface ReportFormFactoryInterface {
 
@@ -57,5 +59,34 @@ interface ReportFormFactoryInterface {
    * @see \Civi\Funding\ClearingProcess\Form\Validation\ClearingFormValidatorInterface
    */
   public function createReportForm(ClearingProcessEntityBundle $clearingProcessBundle): ReportFormInterface;
+
+  /**
+   * The returned form is used to extract translatable strings. If there are
+   * strings with dynamic content, they can be replaced by a JsonSchema object
+   * with the keywords "text" and "values", and optionally "locale".
+   * The keyword "text" contains the string with placeholders, and "values" a
+   * mapping of placeholder to replacement, e.g. (JSON encoded):
+   * { "text": "Hello {name}", "values": {"name": "World"} }
+   *
+   * For the replacement PHP's \MessageFormatter is used. This allows locale
+   * aware number and date formatting. If the property "locale" is not given,
+   * CiviCRMs locale will be used.
+   *
+   * There might be strings that are only visible under specific conditions.
+   * Those can be set as a list of strings at the keyword "$translatableTexts"
+   * in the UI schema.
+   *
+   *  If no translation is required, an empty form can be returned.
+   *
+   * @see \Civi\Funding\Translation\JsonSchemaStringExtractor
+   * @see \Civi\Funding\Translation\UiSchemaStringExtractor
+   * For the places where strings are extracted.
+   *
+   * @see \MessageFormatter::formatMessage()
+   */
+  public function createReportFormForTranslation(
+    FundingProgramEntity $fundingProgram,
+    FundingCaseTypeEntity $fundingCaseType
+  ): ReportFormInterface;
 
 }

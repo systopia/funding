@@ -24,6 +24,8 @@ use Civi\Funding\ClearingProcess\Form\ReportForm;
 use Civi\Funding\ClearingProcess\Form\ReportFormFactoryInterface;
 use Civi\Funding\ClearingProcess\Form\ReportFormInterface;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
+use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\FundingCaseTypes\AuL\SonstigeAktivitaet\Application\JsonSchema\AVK1GrunddatenSchema;
 use Civi\Funding\FundingCaseTypes\AuL\SonstigeAktivitaet\Application\UISchema\AVK1GrunddatenUiSchema;
 use Civi\Funding\FundingCaseTypes\AuL\SonstigeAktivitaet\Report\JsonSchema\AVK1DokumenteJsonSchema;
@@ -41,7 +43,17 @@ final class AVK1ReportFormFactory implements ReportFormFactoryInterface {
   use AVK1SupportedFundingCaseTypesTrait;
 
   public function createReportForm(ClearingProcessEntityBundle $clearingProcessBundle): ReportFormInterface {
-    $fundingProgram = $clearingProcessBundle->getFundingProgram();
+    return $this->doCreateReportForm($clearingProcessBundle->getFundingProgram());
+  }
+
+  public function createReportFormForTranslation(
+    FundingProgramEntity $fundingProgram,
+    FundingCaseTypeEntity $fundingCaseType
+  ): ReportFormInterface {
+    return $this->doCreateReportForm($fundingProgram);
+  }
+
+  public function doCreateReportForm(FundingProgramEntity $fundingProgram): ReportFormInterface {
     $grunddatenJsonSchema = new AVK1GrunddatenSchema(
       $fundingProgram->getRequestsStartDate(),
       $fundingProgram->getRequestsEndDate(),

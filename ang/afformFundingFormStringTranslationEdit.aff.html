@@ -1,0 +1,8 @@
+<af-form ctrl="afform">
+  <af-entity actions="{create: false, update: true}" type="FundingFormStringTranslation" name="FundingFormStringTranslation1" label="Funding Form String Translation 1" security="RBAC" data="{}" url-autofill="1" />
+  <div af-fieldset="FundingFormStringTranslation1" class="af-container">
+    <af-field name="msg_text" defn="{input_type: 'DisplayOnly', required: false}" />
+    <af-field name="new_text" defn="{required: false, input_attrs: {}}" />
+  </div>
+  <button class="af-button btn btn-primary" crm-icon="fa-check" ng-click="afform.submit()" ng-if="afform.showSubmitButton">{{:: ts('Submit') }}</button>
+</af-form>
