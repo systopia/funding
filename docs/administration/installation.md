@@ -10,15 +10,9 @@ In the following, `$DRUPAL_ROOT` refers to the Drupal installation root, for exa
 
 The status of this document is **work in progress**.
 
-The installation instructions were used on a system with
-
-- `CiviCRM 5.67.3`
-- `Drupal 10.1.6`
-- `PHP 8.1`
-
 ## Configure Upload of Private Files
 
-```bash
+```shell
 mkdir $DRUPAL_ROOT/drupal/web/sites/default/files/private
 chmod g+w $DRUPAL_ROOT/drupal/web/sites/default/files/private
 ```
@@ -39,13 +33,28 @@ Open a terminal at `$DRUPAL_ROOT` and use `composer` in order to add the followi
 composer config repositories.json_forms vcs git@github.com:systopia/drupal-json_forms.git
 composer config repositories.custom/civiremote vcs git@github.com:systopia/civiremote.git
 composer config repositories.custom/civiremote_funding vcs git@github.com:systopia/drupal-civiremote_funding.git
+composer config repositories.tabby '{"type": "package", "package": {"name": "cferdinandi/tabby", "version": "v12.0.3", "type": "drupal-library", "source": {"url": "https://github.com/cferdinandi/tabby.git", "type": "git", "reference": "tags/v12.0.3"}}}'
 ```
 
-Still at at `$DRUPAL_ROOT`, enter:
+Still at `$DRUPAL_ROOT/drupal`, enter:
 
-```bash
-composer require custom/civiremote_funding
-drush pm:enable civiremote_funding
+```shell
+composer require custom/civiremote_funding oomphinc/composer-installers-extender
+composer require cferdinandi/tabby:v12.0.3
+drush pm:install civiremote_funding
+```
+
+(The package `oomphinc/composer-installers-extender` is required to install
+`cferdinandi/tabby`.)
+
+Currently there's a
+[patch](https://git.drupalcode.org/project/views_current_path/-/merge_requests/8.patch)
+required for the Drupal module
+[Views Current Path](https://www.drupal.org/project/views_current_path):
+```sh
+composer require 'cweagans/composer-patches:^1'
+composer config extra.patches.drupal/views_current_path --json '{"fallback string only in preview": "https://git.drupalcode.org/project/views_current_path/-/merge_requests/8.patch"}'
+composer update drupal/views_current_path
 ```
 
 ## Further Modules/Dependencies
@@ -55,18 +64,23 @@ drush pm:enable civiremote_funding
 - `symfony/property-access` and `webmozart/assert` are dependencies of the funding extension.
 
 ```
-composer require drupal/fontawesome drupal/formtips symfony/property-access webmozart/assert
-drush pm:enable fontawesome formtips
+composer require drupal/fontawesome:^2 drupal/formtips symfony/property-access webmozart/assert
+drush pm:install fontawesome formtips
 ```
 
-Enter this command, so that changes to views etc. can be applied:
+To update changed Drupal views and other configuration in case of updates it is
+recommended to use the
+[Configuration Update Manager](https://www.drupal.org/project/config_update):
 
-```
+```shell
 composer require drupal/config_update
-drush pm:enable config_update_ui
+drush pm:install config_update_ui
 ```
 
-The last step is no longer necessary as soon as we have releases of `civiremote_funding` with update routines.
+Updated configuration in the `civiremote_funding` module is not automatically
+applied because there might be custom changes made (e.g. to views). So after
+updating `civiremote_funding` you should use the `config_update` module to
+compare and update the configuration.
 
 ### Configure Fontawesome
 
@@ -85,12 +99,15 @@ Set the following under `/admin/config/user-interface/formtips` (adjust times if
 
 ```
 Trigger Action: Hover
-Selector: :not(#funding-form *)
+Selector: :not(.json-forms-description-tooltip)
 Interval: 100
 Timeout: 100
 ```
 
-The above selector restricts the module to the funding forms.
+The above selector allows it to use `descriptionDisplay: tooltip` in the Control
+options in JSON Forms specifications. Alternatively the selector
+`:not(.civiremote-funding-form *)` could be used. This will transform all form
+field descriptions in funding forms to tooltips.
 
 ## Install CiviCRM Extensions
 
@@ -99,7 +116,7 @@ Install the following extensions, use the newest release if not otherwise indica
 - [de.systopia.xcm](https://github.com/systopia/de.systopia.xcm)
 - [de.systopia.identitytracker](https://github.com/systopia/de.systopia.identitytracker)
 - [de.systopia.remotetools](https://github.com/systopia/de.systopia.remotetools)
-- [de.systopia.civioffice](https://github.com/systopia/de.systopia.civioffice) - version >= 1.0
+- [de.systopia.civioffice](https://github.com/systopia/de.systopia.civioffice)
 - [org.project60.banking](https://github.com/Project60/org.project60.banking) - The  _CiviContribute_ component needs to be activated for this extension.
 - [activity-entity](https://github.com/systopia/activity-entity)
 - [external-file](https://github.com/systopia/external-file)
