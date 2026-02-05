@@ -826,6 +826,10 @@ msgstr ""
 msgid "Payback Claim Template"
 msgstr ""
 
+#: Civi/Funding/Api4/Action/FundingCaseType/GetFieldsAction.php managed/OptionValuesFileType.mgd.php
+msgid "Drawdown Submit Confirmation Template"
+msgstr ""
+
 #: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
 msgid "The sum of the amounts recorded for costs."
 msgstr ""
@@ -868,6 +872,10 @@ msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php
 msgid "The amount if the drawdown is unverified, 0 otherwise."
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php
+msgid "Submit Confirmation Document URI"
 msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingDrawdown/RejectAction.php
@@ -1324,6 +1332,10 @@ msgstr ""
 
 #: Civi/Funding/Controller/DrawdownDocumentDownloadController.php
 msgid "payment-instructions"
+msgstr ""
+
+#: Civi/Funding/Controller/DrawdownSubmitConfirmationDownloadController.php
+msgid "drawdown-submit-confirmation"
 msgstr ""
 
 #: Civi/Funding/Controller/TransferContractDownloadController.php
@@ -2340,6 +2352,10 @@ msgstr ""
 
 #: managed/OptionValue_funding_drawdown_task.mgd.php
 msgid "Activity type for funding drawdown tasks."
+msgstr ""
+
+#: managed/OptionValuesFileType.mgd.php
+msgid "Drawdown Submit Confirmation"
 msgstr ""
 
 #: managed/OptionValuesFileType.mgd.php

@@ -56,6 +56,11 @@ final class UpdateAction extends DAOUpdateAction {
     $paybackClaimTemplateFileId = $this->values['payback_claim_template_file_id'] ?? NULL;
     unset($this->values['payback_claim_template_file_id']);
 
+    $drawdownSubmitConfirmationTemplateFileIdSet
+      = array_key_exists('drawdown_submit_confirmation_template_file_id', $this->values);
+    $drawdownSubmitConfirmationTemplateFileId = $this->values['drawdown_submit_confirmation_template_file_id'] ?? NULL;
+    unset($this->values['drawdown_submit_confirmation_template_file_id']);
+
     parent::_run($result);
 
     if (NULL !== $transferContractTemplateFileId) {
@@ -90,12 +95,22 @@ final class UpdateAction extends DAOUpdateAction {
       // @phpstan-ignore-next-line
       $result[0]['payback_claim_template_file_id'] = $paybackClaimTemplateFileId;
     }
+
+    if ($drawdownSubmitConfirmationTemplateFileIdSet) {
+      $this->updateTemplate(
+        'drawdown_submit_confirmation_template_file_id',
+        $drawdownSubmitConfirmationTemplateFileId,
+        FileTypeNames::DRAWDOWN_SUBMIT_CONFIRMATION_TEMPLATE
+      );
+      // @phpstan-ignore offsetAccess.nonOffsetAccessible
+      $result[0]['drawdown_submit_confirmation_template_file_id'] = $drawdownSubmitConfirmationTemplateFileId;
+    }
   }
 
   /**
    * @throws \CRM_Core_Exception
    */
-  private function updateTemplate(string $templateIdFieldName, int $templateFileId, string $fileType): void {
+  private function updateTemplate(string $templateIdFieldName, ?int $templateFileId, string $fileType): void {
     $result = FundingCaseType::get(FALSE)
       ->addSelect('id', $templateIdFieldName)
       ->setWhere($this->getWhere())
@@ -113,10 +128,12 @@ final class UpdateAction extends DAOUpdateAction {
       $this->getAttachmentManager()->deleteById($previousFileId, 'civicrm_funding_case_type', $fundingCaseTypeId);
     }
 
-    $this->getAttachmentManager()->attachById($templateFileId, 'civicrm_funding_case_type', $fundingCaseTypeId);
-    $this->getApi4()->updateEntity(File::getEntityName(), $templateFileId, [
-      'file_type_id:name' => $fileType,
-    ]);
+    if (NULL !== $templateFileId) {
+      $this->getAttachmentManager()->attachById($templateFileId, 'civicrm_funding_case_type', $fundingCaseTypeId);
+      $this->getApi4()->updateEntity(File::getEntityName(), $templateFileId, [
+        'file_type_id:name' => $fileType,
+      ]);
+    }
   }
 
   private function getAttachmentManager(): FundingAttachmentManagerInterface {

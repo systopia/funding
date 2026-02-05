@@ -1283,6 +1283,11 @@ msgstr "Vorlage für Zahlungsanweisung"
 msgid "Payback Claim Template"
 msgstr "Vorlage für Rückzahlungsforderung"
 
+#: Civi/Funding/Api4/Action/FundingCaseType/GetFieldsAction.php
+#: managed/OptionValuesFileType.mgd.php
+msgid "Drawdown Submit Confirmation Template"
+msgstr "Vorlage für Bestätigung über gestellten Mittelabruf"
+
 #: Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php
 msgid "The sum of the amounts recorded for costs."
 msgstr "Die Summe der für Kosten erfassten Beträge."
@@ -1337,6 +1342,10 @@ msgstr "Offener Betrag"
 #: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php
 msgid "The amount if the drawdown is unverified, 0 otherwise."
 msgstr "Der Betrag, wenn der Mittelabruf ungeprüft ist, sonst 0."
+
+#: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php
+msgid "Submit Confirmation Document URI"
+msgstr "URI zu Bestätigungsdokument über gestellten Abruf"
 
 #: Civi/Funding/Api4/Action/FundingDrawdown/RejectAction.php
 msgid "Permission to reject drawdown is missing."
@@ -1934,6 +1943,10 @@ msgstr "Zahlungsanweisung"
 #: Civi/Funding/Controller/DrawdownDocumentDownloadController.php
 msgid "payment-instructions"
 msgstr "Zahlungsanweisungen"
+
+#: Civi/Funding/Controller/DrawdownSubmitConfirmationDownloadController.php
+msgid "drawdown-submit-confirmation"
+msgstr "Bestätigung-über-gestellten-Mittelabruf"
 
 #: Civi/Funding/Controller/TransferContractDownloadController.php
 msgid "transfer-contract"
@@ -3229,6 +3242,10 @@ msgstr "Aktivitätsart für Statusänderung eines Verwendungsnachweises"
 #: managed/OptionValue_funding_drawdown_task.mgd.php
 msgid "Activity type for funding drawdown tasks."
 msgstr "Aktivitätsart für Mittelabrufaufgaben."
+
+#: managed/OptionValuesFileType.mgd.php
+msgid "Drawdown Submit Confirmation"
+msgstr "Bestätigung über gestellten Mittelabruf"
 
 #: managed/OptionValuesFileType.mgd.php
 msgid "Payment Instruction"

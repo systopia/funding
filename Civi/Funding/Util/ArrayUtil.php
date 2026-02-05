@@ -24,6 +24,22 @@ use Opis\JsonSchema\JsonPointer;
 final class ArrayUtil {
 
   /**
+   * Removes the first occurrence of the given value.
+   *
+   * @param array<mixed> $array
+   *
+   * @return bool TRUE if the given value was found, FALSE otherwise.
+   */
+  public static function removeFirstOccurrence(array &$array, mixed $value): bool {
+    $index = array_search($value, $array, TRUE);
+    if ($index !== FALSE) {
+      unset($array[$index]);
+    }
+
+    return FALSE !== $index;
+  }
+
+  /**
    * Similar to array_merge_recursive(), but only performs recursive merge if
    * both values are arrays. Otherwise, the latter one overwrites the previous
    * one.

@@ -6,6 +6,48 @@ use CRM_Funding_ExtensionUtil as E;
 
 return [
   [
+    'name' => 'OptionValue_file_type.' . FileTypeNames::DRAWDOWN_SUBMIT_CONFIRMATION,
+    'entity' => 'OptionValue',
+    'cleanup' => 'unused',
+    'update' => 'always',
+    'params' => [
+      'version' => 4,
+      'values' => [
+        'option_group_id.name' => 'file_type',
+        'label' => E::ts('Drawdown Submit Confirmation'),
+        'name' => FileTypeNames::DRAWDOWN_SUBMIT_CONFIRMATION,
+        'grouping' => 'funding',
+        'filter' => 0,
+        'is_default' => FALSE,
+        'weight' => 1,
+        'is_optgroup' => FALSE,
+        'is_reserved' => TRUE,
+        'is_active' => TRUE,
+      ],
+    ],
+  ],
+  [
+    'name' => 'OptionValue_file_type.' . FileTypeNames::DRAWDOWN_SUBMIT_CONFIRMATION_TEMPLATE,
+    'entity' => 'OptionValue',
+    'cleanup' => 'unused',
+    'update' => 'always',
+    'params' => [
+      'version' => 4,
+      'values' => [
+        'option_group_id.name' => 'file_type',
+        'label' => E::ts('Drawdown Submit Confirmation Template'),
+        'name' => FileTypeNames::DRAWDOWN_SUBMIT_CONFIRMATION_TEMPLATE,
+        'grouping' => 'funding',
+        'filter' => 0,
+        'is_default' => FALSE,
+        'weight' => 1,
+        'is_optgroup' => FALSE,
+        'is_reserved' => TRUE,
+        'is_active' => TRUE,
+      ],
+    ],
+  ],
+  [
     'name' => 'OptionValue_file_type.transfer_contract',
     'entity' => 'OptionValue',
     'cleanup' => 'unused',

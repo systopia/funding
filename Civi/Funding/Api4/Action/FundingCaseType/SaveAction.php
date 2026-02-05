@@ -30,9 +30,9 @@ final class SaveAction extends DAOSaveAction {
   }
 
   /**
-   * @phpstan-param list<array<string, mixed>> $items
+   * @param list<array<string, mixed>> $items
    *
-   * @phpstan-return list<array<string, mixed>>
+   * @return list<array<string, mixed>>
    */
   protected function writeObjects($items): array {
     $result = parent::writeObjects($items);
@@ -42,16 +42,7 @@ final class SaveAction extends DAOSaveAction {
         continue;
       }
 
-      $updateValues = [];
-      if (isset($item['transfer_contract_template_file_id'])) {
-        $updateValues['transfer_contract_template_file_id'] = $item['transfer_contract_template_file_id'];
-      }
-      if (isset($item['payment_instruction_template_file_id'])) {
-        $updateValues['payment_instruction_template_file_id'] = $item['payment_instruction_template_file_id'];
-      }
-      if (isset($item['payback_claim_template_file_id'])) {
-        $updateValues['payback_claim_template_file_id'] = $item['payback_claim_template_file_id'];
-      }
+      $updateValues = $this->getValuesForUpdate($item);
 
       if ([] !== $updateValues) {
         FundingCaseType::update(FALSE)
@@ -64,6 +55,31 @@ final class SaveAction extends DAOSaveAction {
     }
 
     return $result;
+  }
+
+  /**
+   * @param array<string, mixed> $item
+   *
+   * @return array<string, mixed>
+   */
+  private function getValuesForUpdate(array $item): array {
+    $updateValues = [];
+    if ('' !== ($item['transfer_contract_template_file_id'] ?? '')) {
+      $updateValues['transfer_contract_template_file_id'] = $item['transfer_contract_template_file_id'];
+    }
+    if ('' !== ($item['payment_instruction_template_file_id'] ?? '')) {
+      $updateValues['payment_instruction_template_file_id'] = $item['payment_instruction_template_file_id'];
+    }
+    if ('' !== ($item['payback_claim_template_file_id'] ?? '')) {
+      $updateValues['payback_claim_template_file_id'] = $item['payback_claim_template_file_id'];
+    }
+    if (isset($item['drawdown_submit_confirmation_template_file_id'])) {
+      $updateValues['drawdown_submit_confirmation_template_file_id']
+        = '' === $item['drawdown_submit_confirmation_template_file_id']
+        ? NULL : $item['drawdown_submit_confirmation_template_file_id'];
+    }
+
+    return $updateValues;
   }
 
 }

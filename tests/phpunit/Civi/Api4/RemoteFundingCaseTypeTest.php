@@ -59,7 +59,7 @@ final class RemoteFundingCaseTypeTest extends AbstractRemoteFundingHeadlessTestC
   }
 
   public function testGetFields(): void {
-    static::assertCount(13, RemoteFundingCaseType::getFields()->execute());
+    static::assertCount(14, RemoteFundingCaseType::getFields()->execute());
   }
 
 }

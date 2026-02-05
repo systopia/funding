@@ -28,6 +28,7 @@ use Civi\Funding\Api4\Util\WhereUtil;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\FundingCasePermissions;
+use Civi\Funding\PayoutProcess\DrawdownSubmitConfirmationRouter;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Webmozart\Assert\Assert;
@@ -36,12 +37,15 @@ final class GetAction extends AbstractReferencingDAOGetAction {
 
   private bool $canReviewSelected;
 
+  private ?DrawdownSubmitConfirmationRouter $submitConfirmationRouter;
+
   /**
    * @phpstan-var array<FundingCaseEntity>
    */
   private array $fundingCases = [];
 
   public function __construct(
+    ?DrawdownSubmitConfirmationRouter $submitConfirmationRouter = NULL,
     ?Api4Interface $api4 = NULL,
     ?FundingCaseManager $fundingCaseManager = NULL,
     ?RequestContextInterface $requestContext = NULL
@@ -52,6 +56,7 @@ final class GetAction extends AbstractReferencingDAOGetAction {
       $fundingCaseManager,
       $requestContext
     );
+    $this->submitConfirmationRouter = $submitConfirmationRouter;
     $this->_fundingCaseIdFieldName = 'payout_process_id.funding_case_id';
   }
 
@@ -104,6 +109,10 @@ final class GetAction extends AbstractReferencingDAOGetAction {
       $this->unsetIfNotSelected($record, 'payout_process_id.status');
     }
 
+    if ($this->isFieldExplicitlySelected('submit_confirmation_document_uri')) {
+      $record['submit_confirmation_document_uri'] = $this->getSubmitConfirmationRouter()->generate($record['id']);
+    }
+
     return TRUE;
   }
 
@@ -130,6 +139,11 @@ final class GetAction extends AbstractReferencingDAOGetAction {
       // Final reviewers are allowed to accept/reject final drawdown in case it was created as "new".
       && ('open' === $payoutProcessStatus || $fundingCase->hasPermission(FundingCasePermissions::REVIEW_FINISH))
       && $fundingCase->hasPermission('review_drawdown');
+  }
+
+  private function getSubmitConfirmationRouter(): DrawdownSubmitConfirmationRouter {
+    // @phpstan-ignore assign.propertyType, return.type
+    return $this->submitConfirmationRouter ??= \Civi::service(DrawdownSubmitConfirmationRouter::class);
   }
 
 }

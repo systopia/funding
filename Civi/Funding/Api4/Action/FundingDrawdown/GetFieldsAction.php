@@ -91,6 +91,17 @@ final class GetFieldsAction extends DAOGetFieldsAction {
         ),
       ],
       [
+        'name' => 'submit_confirmation_document_uri',
+        'title' => E::ts('Submit Confirmation Document URI'),
+        'type' => 'Extra',
+        'data_type' => 'String',
+        'readonly' => TRUE,
+        'required' => FALSE,
+        'operators' => [],
+        // Without sql renderer the query would fail. The actual value is fetched afterward.
+        'sql_renderer' => fn () => '(SELECT NULL)',
+      ],
+      [
         'name' => 'CAN_review',
         'type' => 'Custom',
         'data_type' => 'Boolean',
