@@ -25,6 +25,7 @@ use Civi\Api4\Generic\Result;
 use Civi\Funding\Api4\Action\Traits\IsFieldSelectedTrait;
 use Civi\Funding\FileTypeNames;
 use Civi\Funding\FundingAttachmentManagerInterface;
+use Civi\Funding\Util\ArrayUtil;
 
 final class GetAction extends DAOGetAction {
 
@@ -38,54 +39,62 @@ final class GetAction extends DAOGetAction {
   }
 
   public function _run(Result $result): void {
-    $transferContractTemplateFileIdIndex = array_search('transfer_contract_template_file_id', $this->select, TRUE);
-    if ($transferContractTemplateFileIdIndex !== FALSE) {
-      unset($this->select[$transferContractTemplateFileIdIndex]);
-    }
+    $transferContractTemplateFileIdSelected =
+      ArrayUtil::removeFirstOccurrence($this->select, 'transfer_contract_template_file_id');
 
-    $paymentInstructionTemplateFileIdIndex = array_search('payment_instruction_template_file_id', $this->select, TRUE);
-    if ($paymentInstructionTemplateFileIdIndex !== FALSE) {
-      unset($this->select[$paymentInstructionTemplateFileIdIndex]);
-    }
+    $paymentInstructionTemplateFileIdSelected =
+      ArrayUtil::removeFirstOccurrence($this->select, 'payment_instruction_template_file_id');
 
-    $paybackClaimTemplateFileIdIndex = array_search('payback_claim_template_file_id', $this->select, TRUE);
-    if ($paybackClaimTemplateFileIdIndex !== FALSE) {
-      unset($this->select[$paybackClaimTemplateFileIdIndex]);
-    }
+    $paybackClaimTemplateFileIdSelected =
+      ArrayUtil::removeFirstOccurrence($this->select, 'payback_claim_template_file_id');
+
+    $drawdownSubmitConfirmationTemplateFileIdSelected =
+      ArrayUtil::removeFirstOccurrence($this->select, 'drawdown_submit_confirmation_template_file_id');
 
     parent::_run($result);
 
     $idSelected = $this->isFieldSelected('id');
 
-    if ($idSelected && $transferContractTemplateFileIdIndex !== FALSE) {
+    if ($idSelected && $transferContractTemplateFileIdSelected) {
       /** @phpstan-var array<string, mixed> $record */
       foreach ($result as &$record) {
         $record['transfer_contract_template_file_id'] = $this->getFileId(
-        // @phpstan-ignore-next-line
+          // @phpstan-ignore argument.type
           $record['id'],
           FileTypeNames::TRANSFER_CONTRACT_TEMPLATE
         );
       }
     }
 
-    if ($idSelected && $paymentInstructionTemplateFileIdIndex !== FALSE) {
+    if ($idSelected && $paymentInstructionTemplateFileIdSelected) {
       /** @phpstan-var array<string, mixed> $record */
       foreach ($result as &$record) {
         $record['payment_instruction_template_file_id'] = $this->getFileId(
-        // @phpstan-ignore-next-line
+          // @phpstan-ignore argument.type
           $record['id'],
           FileTypeNames::PAYMENT_INSTRUCTION_TEMPLATE
         );
       }
     }
 
-    if ($idSelected && $paybackClaimTemplateFileIdIndex !== FALSE) {
+    if ($idSelected && $paybackClaimTemplateFileIdSelected) {
       /** @phpstan-var array<string, mixed> $record */
       foreach ($result as &$record) {
         $record['payback_claim_template_file_id'] = $this->getFileId(
-          // @phpstan-ignore-next-line
+          // @phpstan-ignore argument.type
           $record['id'],
           FileTypeNames::PAYBACK_CLAIM_TEMPLATE
+        );
+      }
+    }
+
+    if ($idSelected && $drawdownSubmitConfirmationTemplateFileIdSelected) {
+      /** @phpstan-var array<string, mixed> $record */
+      foreach ($result as &$record) {
+        $record['drawdown_submit_confirmation_template_file_id'] = $this->getFileId(
+          // @phpstan-ignore argument.type
+          $record['id'],
+          FileTypeNames::DRAWDOWN_SUBMIT_CONFIRMATION_TEMPLATE
         );
       }
     }
@@ -101,7 +110,7 @@ final class GetAction extends DAOGetAction {
       $fileTypeName
     );
 
-    return NULL === $attachment ? NULL : $attachment->getId();
+    return $attachment?->getId();
   }
 
   private function getAttachmentManager(): FundingAttachmentManagerInterface {

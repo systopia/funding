@@ -26,6 +26,19 @@ use PHPUnit\Framework\TestCase;
  */
 final class ArrayUtilTest extends TestCase {
 
+  public function testRemoveFirstOccurrence(): void {
+    $array = ['a', 'b', 'c', 'b'];
+
+    static::assertTrue(ArrayUtil::removeFirstOccurrence($array, 'b'));
+    static::assertSame(['a', 2 => 'c', 3 => 'b'], $array);
+
+    static::assertTrue(ArrayUtil::removeFirstOccurrence($array, 'b'));
+    static::assertSame(['a', 2 => 'c'], $array);
+
+    static::assertFalse(ArrayUtil::removeFirstOccurrence($array, 'b'));
+    static::assertSame(['a', 2 => 'c'], $array);
+  }
+
   public function testSetValue(): void {
     $array = [];
     ArrayUtil::setValue($array, ['x', 'y', 2], 'test');

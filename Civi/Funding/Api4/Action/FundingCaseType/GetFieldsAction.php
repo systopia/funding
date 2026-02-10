@@ -41,7 +41,7 @@ final class GetFieldsAction extends DAOGetFieldsAction {
       'name' => 'transfer_contract_template_file_id',
       'title' => E::ts('Transfer Contract Template'),
       'description' => 'ID of a file already attached to the entity',
-      'type' => 'Custom',
+      'type' => 'Extra',
       'data_type' => 'Integer',
       'input_type' => 'File',
       'fk_entity' => 'File',
@@ -53,7 +53,7 @@ final class GetFieldsAction extends DAOGetFieldsAction {
       'name' => 'payment_instruction_template_file_id',
       'title' => E::ts('Payment Instruction Template'),
       'description' => 'ID of a file already attached to the entity',
-      'type' => 'Custom',
+      'type' => 'Extra',
       'data_type' => 'Integer',
       'input_type' => 'File',
       'fk_entity' => 'File',
@@ -65,12 +65,23 @@ final class GetFieldsAction extends DAOGetFieldsAction {
       'name' => 'payback_claim_template_file_id',
       'title' => E::ts('Payback Claim Template'),
       'description' => 'ID of a file already attached to the entity',
-      'type' => 'Custom',
+      'type' => 'Extra',
       'data_type' => 'Integer',
       'input_type' => 'File',
       'fk_entity' => 'File',
       // Might be NULL on get until set.
       'nullable' => !str_starts_with($this->action, 'get'),
+      'readonly' => 'create' === $this->action,
+    ];
+    $fields[] = [
+      'name' => 'drawdown_submit_confirmation_template_file_id',
+      'title' => E::ts('Drawdown Submit Confirmation Template'),
+      'description' => 'ID of a file already attached to the entity',
+      'type' => 'Extra',
+      'data_type' => 'Integer',
+      'input_type' => 'File',
+      'fk_entity' => 'File',
+      'nullable' => TRUE,
       'readonly' => 'create' === $this->action,
     ];
 

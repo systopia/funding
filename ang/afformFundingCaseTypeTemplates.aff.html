@@ -4,6 +4,7 @@
     <af-field name="transfer_contract_template_file_id" defn="{input_type: 'File'}" />
     <af-field name="payment_instruction_template_file_id" defn="{input_type: 'File'}" />
     <af-field name="payback_claim_template_file_id" defn="{input_type: 'File'}" />
+    <af-field name="drawdown_submit_confirmation_template_file_id" defn="{input_type: 'File', help_post: 'This optional template is used to create a confirmation document on drawdown submit that is accessible for applicants.'}" />
   </fieldset>
   <button class="af-button btn btn-primary" crm-icon="fa-check" ng-click="afform.submit()" ng-if="afform.showSubmitButton">Submit</button>
 </af-form>

@@ -36,4 +36,16 @@
     <title>DrawdownDocumentDownload</title>
     <access_arguments>access Funding;administer Funding</access_arguments>
   </item>
+  <item>
+    <path>civicrm/funding/drawdown-submit-confirmation/download</path>
+    <page_callback>Civi\Funding\Page\DrawdownSubmitConfirmationDownloadPage</page_callback>
+    <title>DrawdownDocumentDownload</title>
+    <access_arguments>access Funding;administer Funding</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/funding/remote/drawdown-submit-confirmation/download</path>
+    <page_callback>Civi\Funding\Page\RemoteDrawdownSubmitConfirmationDownloadPage</page_callback>
+    <title>DrawdownDocumentDownload</title>
+    <access_arguments>access Remote Funding</access_arguments>
+  </item>
 </menu>

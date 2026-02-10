@@ -23,6 +23,7 @@ declare(strict_types = 1);
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\PayoutProcess\BankAccountManager;
 use Civi\Funding\PayoutProcess\DrawdownManager;
+use Civi\Funding\PayoutProcess\DrawdownSubmitConfirmationRouter;
 use Civi\Funding\PayoutProcess\Handler\DrawdownDocumentRenderHandler;
 use Civi\Funding\PayoutProcess\Handler\DrawdownDocumentRenderHandlerInterface;
 use Civi\Funding\PayoutProcess\DrawdownDocumentCreator;
@@ -40,6 +41,10 @@ $container->autowire(PayoutProcessManager::class)
   // Used in API action.
   ->setPublic(TRUE);
 $container->autowire(BankAccountManager::class);
+
+$container->autowire(DrawdownSubmitConfirmationRouter::class)
+  // Used in API action.
+  ->setPublic(TRUE);
 
 $container->autowire(DrawdownDocumentCreator::class);
 $container->autowire(DrawdownDocumentRenderHandlerInterface::class, DrawdownDocumentRenderHandler::class);
