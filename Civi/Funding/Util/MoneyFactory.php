@@ -34,7 +34,7 @@ final class MoneyFactory {
   public function createMoney(float $amount, ?string $currencyCode): Money {
     $currency = $this->getCurrencyObject($currencyCode ?? $this->getDefaultCurrencyCode());
 
-    return Money::of($amount, $currency, NULL, RoundingMode::HALF_UP);
+    return Money::of($amount, $currency, NULL, RoundingMode::HalfUp);
   }
 
   /**
