@@ -230,6 +230,7 @@ final class GetAction extends AbstractReferencingDAOGetAction {
         }
         if ($this->isFieldExplicitlySelected('status_type_id:label')) {
           $this->entityFields();
+          // @phpstan-ignore offsetAccess.invalidOffset
           $record['status_type_id:label'] = GetFieldsAction::getStatusTypeLabels()[$record['_ov.filter']]
             ?? $record['_ov.filter'];
         }

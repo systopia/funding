@@ -93,6 +93,7 @@ final class ReceiptsFormGeneratorPermissionDecorator implements ReceiptsFormGene
     Assert::same('object', $costItemsSchema['type']);
     $costItemsSchema['additionalProperties'] = FALSE;
     /** @var iterable<int|string, JsonSchema> $properties */
+    // @phpstan-ignore varTag.nativeType
     $properties = $costItemsSchema['properties'];
     foreach ($properties as $dataKey => $property) {
       /** @var \Civi\RemoteTools\JsonSchema\JsonSchema|null $recordsSchema */
@@ -124,6 +125,7 @@ final class ReceiptsFormGeneratorPermissionDecorator implements ReceiptsFormGene
   ): void {
     $recordsSchema['additionalProperties'] = FALSE;
     /** @var iterable<int|string, JsonSchema> $properties */
+    // @phpstan-ignore varTag.nativeType
     $properties = $recordsSchema['properties'];
     foreach ($properties as $clearingItemSchema) {
       $this->handleClearingItemSchema($clearingItemSchema, $admittedValueChangeAllowed, $contentChangeAllowed);
@@ -144,7 +146,7 @@ final class ReceiptsFormGeneratorPermissionDecorator implements ReceiptsFormGene
     $this->handleClearingItemSchema($itemSchema, $admittedValueChangeAllowed, $contentChangeAllowed);
 
     if (!$contentChangeAllowed) {
-      // @phpstan-ignore offsetAccess.nonOffsetAccessible
+      // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible
       $financePlanItemId = $itemSchema['properties']['_financePlanItemId']['const'];
       Assert::integer($financePlanItemId);
       /** @var int $financePlanItemId */
@@ -170,7 +172,7 @@ final class ReceiptsFormGeneratorPermissionDecorator implements ReceiptsFormGene
     if (!$contentChangeAllowed) {
       // Prevent null for _id.
       $properties['_id']['type'] = 'integer';
-      // @phpstan-ignore argument.type
+      // @phpstan-ignore argument.type, offsetAssign.valueType
       $itemSchema['required'] = array_merge($itemSchema['required'], ['_id']);
 
       /** @var \Civi\RemoteTools\JsonSchema\JsonSchema $property */

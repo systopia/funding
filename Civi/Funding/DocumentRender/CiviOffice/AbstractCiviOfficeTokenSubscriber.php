@@ -195,6 +195,7 @@ abstract class AbstractCiviOfficeTokenSubscriber extends AbstractTokenSubscriber
 
   private function addRelatedContextValues(TokenValueEvent $event): void {
     /** @var \Civi\Token\TokenRow $row */
+    // @phpstan-ignore varTag.type
     foreach ($event->getRows() as $row) {
       $entity = $row->context[$this->getContextKey()] ?? NULL;
       if (NULL === $entity && isset($row->context[$this->getContextKey() . 'Id'])) {

@@ -54,13 +54,13 @@ final class RelationshipLoader implements RelatedContactsLoaderInterface {
    */
   public function getRelatedContacts(int $contactId, string $relationType, array $relationProperties): array {
     $relationshipTypeIds = $relationProperties['relationshipTypeIds'] ?? [];
-    Assert::isArray($relationshipTypeIds);
+    Assert::isList($relationshipTypeIds);
     Assert::allIntegerish($relationshipTypeIds);
     $contactTypeIds = $relationProperties['contactTypeIds'] ?? [];
-    Assert::isArray($contactTypeIds);
+    Assert::isList($contactTypeIds);
     Assert::allIntegerish($contactTypeIds);
     $groupIds = $relationProperties['groupIds'] ?? [];
-    Assert::isArray($groupIds);
+    Assert::isList($groupIds);
     Assert::allIntegerish($groupIds);
 
     $relationshipJoinConditions = [

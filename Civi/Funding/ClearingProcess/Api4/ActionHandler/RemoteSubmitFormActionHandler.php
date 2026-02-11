@@ -57,7 +57,7 @@ final class RemoteSubmitFormActionHandler implements ActionHandlerInterface {
     $result = $this->api4->execute(FundingClearingProcess::getEntityName(), 'submitForm', [
       'id' => $action->getId(),
       'data' => $action->getData(),
-    ]);
+    ])->getArrayCopy();
 
     if (!$result['errors'] instanceof \stdClass) {
       return [

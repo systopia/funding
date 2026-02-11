@@ -20,7 +20,7 @@ final class AbstractClearingApplyTaskHandlerTest extends TestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->taskHandler = $this->getMockForAbstractClass(
-      AbstractClearingApplyTaskHandler::class, mockedMethods: ['getDueDate']
+      AbstractClearingApplyTaskHandler::class, [], '', TRUE, TRUE, TRUE, ['getDueDate']
     );
     $this->taskHandler->method('getDueDate')->willReturn(new \DateTime('2000-01-02'));
   }

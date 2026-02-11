@@ -94,6 +94,7 @@ class ApplicationProcessManager {
     ValidatedApplicationDataInterface $data
   ): ApplicationProcessEntity {
     /** @var string $now */
+    // @phpstan-ignore varTag.type
     $now = date('Y-m-d H:i:s');
     // @phpstan-ignore-next-line Because of possible extra values through mapped data.
     $applicationProcess = ApplicationProcessEntity::fromArray([

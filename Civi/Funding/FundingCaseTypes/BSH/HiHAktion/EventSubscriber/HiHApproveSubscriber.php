@@ -142,6 +142,7 @@ final class HiHApproveSubscriber implements EventSubscriberInterface {
     /** @phpstan-var array<string, mixed> $kosten */
     $kosten = $applicationProcess->getRequestData()['kosten'];
 
+    // @phpstan-ignore binaryOp.invalid, binaryOp.invalid
     return round($kosten['personalkostenBewilligt'] + $kosten['honorareBewilligt'] + $kosten['sachkostenBewilligt'], 2);
   }
 

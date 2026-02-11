@@ -33,6 +33,7 @@ final class GetFieldsAction extends DAOGetFieldsAction {
    * @phpstan-return list<array<string, array<string, scalar>|array<scalar>|scalar|null>>
    */
   protected function getRecords(): array {
+    /** @var list<array<string, array<string, scalar>|array<scalar>|scalar|null>> $fields */
     $fields = parent::getRecords();
     // Files must already be attached to the entity, so the fields are actually
     // not available on create. However, for Afform we must not exclude them on

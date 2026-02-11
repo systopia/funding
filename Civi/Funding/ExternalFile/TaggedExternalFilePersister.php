@@ -62,6 +62,7 @@ final class TaggedExternalFilePersister {
       /** @var non-empty-string $dataPointer */
       // @phpstan-ignore-next-line
       $dataPointer = $externalFile->getCustomData()['dataPointer'];
+      // @phpstan-ignore parameterByRef.type
       ArrayUtil::setValueAtPointer($data, $dataPointer, $externalFile->getUri());
 
       $result[$uri] = $externalFile->getUri();

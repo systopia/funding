@@ -115,7 +115,9 @@ final class ArrayUtil {
       throw new \InvalidArgumentException(sprintf('Invalid JSON pointer "%s"', $pointer));
     }
 
-    self::setValue($array, $parsedPointer->path(), $value);
+    /** @var list<string> $path */
+    $path = $parsedPointer->path();
+    self::setValue($array, $path, $value);
   }
 
 }

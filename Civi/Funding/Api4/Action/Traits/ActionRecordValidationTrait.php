@@ -46,12 +46,10 @@ trait ActionRecordValidationTrait {
    * @phpstan-param array<string, mixed> $record
    *
    * @throws \Civi\Funding\Validation\Exception\EntityValidationFailedException
-   *
-   * @phpstan-ignore-next-line
-   *   Ignore $record not being contravariant with array.
    */
   protected function formatWriteValues(&$record): void {
     $this->_validateRecord($record);
+    // @phpstan-ignore parameterByRef.type
     parent::formatWriteValues($record);
   }
 

@@ -53,6 +53,7 @@ final class ContactRelationshipsLoader implements ContactRelationLoaderInterface
 
     foreach ($relationships as $index => $relationship) {
       Assert::integer($index);
+      Assert::isArray($relationship);
       Assert::integerish($relationship['contactId']);
       Assert::integerish($relationship['relationshipTypeId']);
 

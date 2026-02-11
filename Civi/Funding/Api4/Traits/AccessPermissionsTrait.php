@@ -34,7 +34,7 @@ use Civi\Funding\Api4\Permissions;
 trait AccessPermissionsTrait {
 
   /**
-   * @return array<string, array<string|string[]>>
+   * @return array<string, list<string|list<string>>>
    */
   public static function permissions(): array {
     return [

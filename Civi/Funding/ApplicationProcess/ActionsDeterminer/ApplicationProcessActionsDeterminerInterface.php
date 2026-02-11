@@ -39,9 +39,9 @@ interface ApplicationProcessActionsDeterminerInterface {
   public function getActions(ApplicationProcessEntityBundle $applicationProcessBundle, array $statusList): array;
 
   /**
-   * @phpstan-param array<string> $permissions
+   * @param list<string> $permissions
    *
-   * @phpstan-return array<string>
+   * @return list<string>
    */
   public function getInitialActions(array $permissions): array;
 

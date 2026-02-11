@@ -30,6 +30,7 @@ trait IsFieldSelectedTrait {
    * @see isFieldExplicitlySelected()
    */
   protected function isFieldSelected(string $fieldName): bool {
+    // @phpstan-ignore argument.type
     return SelectUtil::isFieldSelected($fieldName, $this->getSelect());
   }
 

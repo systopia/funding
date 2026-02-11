@@ -125,6 +125,7 @@ final class FundingCasePermissionsCacheClearSubscriber implements EventSubscribe
       if (!isset($event->params['contact_id'])) {
         // \CRM_Contact_BAO_GroupContact::bulkAddContactsToGroup()
         // The BAO class has an unexpected way of defining the event.
+        /** @var list<int> $contactIds */
         $contactIds = $event->params;
         $groupIds = [(int) $event->id];
       }
@@ -138,6 +139,8 @@ final class FundingCasePermissionsCacheClearSubscriber implements EventSubscribe
       if (isset($event->params[0])) {
         // \CRM_Contact_BAO_GroupContact::removeContactsFromGroup()
         // The BAO class has an unexpected way of defining the event.
+        /** @var list<int> $contactIds */
+        // @phpstan-ignore varTag.nativeType
         $contactIds = $event->params;
         $groupIds = [(int) $event->id];
       }

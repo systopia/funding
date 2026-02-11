@@ -35,6 +35,7 @@ final class SaveAction extends DAOSaveAction {
    * @return list<array<string, mixed>>
    */
   protected function writeObjects($items): array {
+    /** @var list<array<string, mixed>> $result */
     $result = parent::writeObjects($items);
 
     foreach ($items as $index => $item) {

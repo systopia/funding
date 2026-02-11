@@ -13,6 +13,13 @@ parameters:
 	reportUnmatchedIgnoredErrors: false
 	ignoreErrors:
 		# Errors we get when using "prefer-lowest"
+
 		# \DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts is used
 		- '#^Call to deprecated method assertArraySubset\(\)#'
+
+		-
+			identifier: varTag.nativeType
+			path: Civi/Funding/Database/DaoEntityInfoProvider.php
+
+		# Required with symfony/event-dispatcher <4.4.27
 		- '#::getSubscribedEvents\(\) return type has no value type specified in iterable type array.$#'

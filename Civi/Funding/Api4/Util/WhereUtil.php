@@ -34,7 +34,6 @@ final class WhereUtil {
     foreach ($where as $clause) {
       if (is_array($clause[1])) {
         // Composite condition.
-        // @phpstan-ignore argument.type
         if (self::containsField($clause[1], ...$field)) {
           return TRUE;
         }
@@ -54,7 +53,6 @@ final class WhereUtil {
     foreach ($where as $clause) {
       if (is_array($clause[1])) {
         // Composite condition.
-        // @phpstan-ignore argument.type
         if (self::containsFieldPrefix($clause[1], $fieldPrefix)) {
           return TRUE;
         }
@@ -91,6 +89,7 @@ final class WhereUtil {
         }
       }
       elseif ($clause[0] === $field) {
+        // @phpstan-ignore parameterByRef.type
         unset($where[$index]);
 
         return $clause;
@@ -107,7 +106,6 @@ final class WhereUtil {
     foreach ($where as $clause) {
       if (is_array($clause[1])) {
         // Composite condition.
-        // @phpstan-ignore argument.type
         return 'AND' === $clause[0] ? self::getBool($clause[1], $field) : NULL;
       }
 
@@ -130,7 +128,6 @@ final class WhereUtil {
     foreach ($where as $clause) {
       if (is_array($clause[1])) {
         // Composite condition.
-        // @phpstan-ignore argument.type
         return 'AND' === $clause[0] ? self::getInt($clause[1], $field) : NULL;
       }
 
@@ -156,18 +153,19 @@ final class WhereUtil {
     foreach ($where as &$clause) {
       if (is_array($clause[1])) {
         // Composite condition.
-        // @phpstan-ignore argument.type
         $clause[1] = self::replaceField($clause[1], $fieldReplacements, $valueReplacements);
       }
 
       if (isset($fieldReplacements[$clause[0]])) {
         $clause[0] = $fieldReplacements[$clause[0]];
         if (is_scalar($clause[2] ?? NULL) && array_key_exists((string) $clause[2], $valueReplacements)) {
+          // @phpstan-ignore offsetAccess.invalidOffset
           $clause[2] = $valueReplacements[$clause[2]];
         }
         elseif (is_array($clause[2] ?? NULL)) {
           $clause[2] = array_map(
             fn ($value) => is_scalar($value) && array_key_exists((string) $value, $valueReplacements)
+              // @phpstan-ignore offsetAccess.invalidOffset
               ? $valueReplacements[$value] : $value,
             $clause[2]
           );

@@ -113,8 +113,9 @@ abstract class AbstractClearableItemsLoader {
       }
 
       if ($financePlanItemSchema->hasKeyword('clearing')) {
+        // @phpstan-ignore voku.Coalesce
         $clearableItems[$scope] ??= new ClearableItems($scope, $propertySchema, $financePlanItemSchema);
-        /** @phpstan-var array<string, ClearableItems<T>> $clearableItems */
+        /** @phpstan-var non-empty-array<string, ClearableItems<T>> $clearableItems */
         $clearableItems[$scope]->items[$index] = $item;
       }
     }

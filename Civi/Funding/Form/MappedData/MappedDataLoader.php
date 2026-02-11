@@ -52,7 +52,7 @@ final class MappedDataLoader {
     $multipleFields = [];
 
     foreach ($taggedData->getByTag('mapToField') as $dataPointer => $data) {
-      /** @var \stdClass{fieldName: string, multiple?: bool, replace?: bool} $extra */
+      /** @var object{fieldName: string, multiple?: bool, replace?: bool}&\stdClass $extra */
       $extra = $taggedData->getExtra('mapToField', $dataPointer);
       $fieldName = $extra->fieldName;
       $multiple = $extra->multiple ?? FALSE;

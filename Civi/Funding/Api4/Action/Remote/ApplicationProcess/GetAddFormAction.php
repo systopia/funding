@@ -25,7 +25,7 @@ use Civi\Funding\Api4\Action\Traits\FundingCaseIdParameterTrait;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 
 /**
- * @method int getCopyDataFromId()
+ * @method int|null getCopyDataFromId()
  * @method $this setCopyDataFromId(int $copyDataFromId)
  */
 final class GetAddFormAction extends AbstractRemoteFundingAction {

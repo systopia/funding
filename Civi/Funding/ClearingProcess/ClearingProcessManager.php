@@ -115,6 +115,7 @@ class ClearingProcessManager {
     $previousClearingProcess = $this->get($clearingProcess->getId());
     Assert::notNull($previousClearingProcess);
 
+    // @phpstan-ignore equal.notAllowed
     if ($clearingProcess->getModificationDate() == $previousClearingProcess->getModificationDate()
       || NULL === $clearingProcess->getModificationDate()
     ) {

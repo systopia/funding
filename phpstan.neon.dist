@@ -33,6 +33,11 @@ parameters:
 		- Civi\Core\Event\GenericHookEvent
 		- CRM_Core_Config
 		- CRM_Core_DAO
+	earlyTerminatingMethodCalls:
+		CRM_Utils_System:
+			- civiExit
+		CRM_Queue_Runner:
+			- runAllViaWeb
 	checkTooWideReturnTypesInProtectedAndPublicMethods: true
 	checkUninitializedProperties: true
 	checkMissingCallableSignature: true
@@ -50,16 +55,19 @@ parameters:
 		- '#^Method Civi\\Funding\\Page\\[^\s]+Page::getController\(\) should return Civi\\Funding\\Controller\\PageControllerInterface but returns mixed.$#'
 		- '#^Method Civi\\Funding\\FundingCaseTypeServiceLocator::[^\s]+ should return [^\s]+ but returns mixed.$#'
 		- '#^Class Civi\\Funding\\Api4\\Action\\[^\s]+Action(Legacy)? has an uninitialized property \$[^\s]+\. Give it default value or assign it in the constructor.$#'
-		- '/^Parameter #1 \$items \(array<int, array{id: int}>\) of method Civi\\Funding\\Api4\\Action\\[^\s]+::deleteObjects\(\) should be contravariant with parameter \$items \((array|mixed)\) of method Civi\\Api4\\Generic\\[^\s]+::deleteObjects\(\)$/'
-		- '/^Parameter #1 \$items \(array<int, array<string, mixed>>\) of method Civi\\Funding\\Api4\\Action\\[^\s]+::writeObjects\(\) should be contravariant with parameter \$items \(array\) of method Civi\\Api4\\Generic\\[^\s]+::writeObjects\(\)$/'
-		- '#^Do not compare objects directly, DateTime(Interface)?(\|null)? and DateTime(Interface)?(\|null)? found.$#'
+		- identifier: voku.NotEqual # Already handled by notEqual.notAllowed
+		- # Allow ??= operator.
+			identifier: voku.Coalesce
+			message: '#^Coalesce: Do not compare objects directly, [^\s]+ and [^\s]+\|null found.$#'
+		- # Allow specify array type hint in overridden methods.
+			identifier: method.childParameterType
+			message: '/^Parameter #[0-9]+ \$[^\s]+ \((array|list)<[^)]+>\) of method [^\s]+ should be contravariant with parameter \$[^\s]+ \((array|mixed)\) of method [^\s]+/'
+		-
+			identifier: argument.type
+			message: '~^Parameter #1 \$where of static method Civi\\Funding\\Api4\\Util\\WhereUtil::[^\s]+ expects list<.+>, array(<mixed>)? given.$~'
 		-
 			message: '#^Call to function method_exists\(\) with .+ will always evaluate to true.$#'
 			path: */tests/phpunit/**/EventSubscriber/*SubscriberTest.php
-		- # Accessing results of API requests
-			message: "#^Offset '[^']+' does not exist on array\\|null.$#"
-			path: */tests/phpunit/Civi/**/*Test.php
-		- '#^Method Civi\\Funding\\Fixtures\\[^\s]+Fixture::[^\s]+\(\) should return array{[^}]+} but returns array\|null.$#'
 		-
 			identifier: return.type
 			path: */tests/phpunit/Civi/Funding/Fixtures/*.php
@@ -72,5 +80,11 @@ parameters:
 			path: */tests/phpunit/Civi/*
 		-
 			message: '#^Access to an uninitialized property #'
+			path: */tests/phpunit/Civi/**/*Test.php
+		-
+			identifier: offsetAccess.notFound
+			path: */tests/phpunit/Civi/**/*Test.php
+		-
+			identifier: offsetAccess.nonOffsetAccessible
 			path: */tests/phpunit/Civi/**/*Test.php
 	tmpDir: .phpstan

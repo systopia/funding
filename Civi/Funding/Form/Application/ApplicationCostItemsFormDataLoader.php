@@ -53,11 +53,14 @@ final class ApplicationCostItemsFormDataLoader implements ApplicationCostItemsFo
         throw new \RuntimeException(sprintf('Invalid data pointer "%s"', $costItem->getDataPointer()));
       }
 
+      /** @var list<string> $path */
       $path = $jsonPointer->path();
       if ([] === $costItem->getProperties()) {
+        // @phpstan-ignore parameterByRef.type
         ArrayUtil::setValue($formData, $path, $costItem->getAmount());
       }
       else {
+        // @phpstan-ignore parameterByRef.type
         ArrayUtil::setValue($formData, $path, $costItem->getProperties());
       }
     }

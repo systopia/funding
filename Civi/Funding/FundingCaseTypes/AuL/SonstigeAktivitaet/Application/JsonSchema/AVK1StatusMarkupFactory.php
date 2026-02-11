@@ -96,6 +96,7 @@ final class AVK1StatusMarkupFactory {
       $applicationProcess->getId(),
       ActivityTypeNames::FUNDING_APPLICATION_STATUS_CHANGE,
     ) as $activity) {
+      // @phpstan-ignore offsetAccess.invalidOffset
       $activities[$activity->get('to_status')] ??= $activity;
     }
 

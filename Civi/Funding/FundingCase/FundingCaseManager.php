@@ -267,6 +267,7 @@ class FundingCaseManager {
   public function update(FundingCaseEntity $fundingCase): void {
     $previousFundingCase = $this->getWithoutCache($fundingCase->getId());
     Assert::notNull($previousFundingCase, 'Funding case could not be loaded');
+    // @phpstan-ignore equal.notAllowed
     if ($fundingCase->getModificationDate() == $previousFundingCase->getModificationDate()) {
       $fundingCase->setModificationDate(new \DateTime(date('Y-m-d H:i:s')));
     }

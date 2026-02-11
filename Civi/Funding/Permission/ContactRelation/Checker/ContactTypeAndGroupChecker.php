@@ -45,10 +45,10 @@ final class ContactTypeAndGroupChecker implements ContactRelationCheckerInterfac
    */
   public function hasRelation(int $contactId, string $relationType, array $relationProperties): bool {
     $contactTypeIds = $relationProperties['contactTypeIds'] ?? [];
-    Assert::isArray($contactTypeIds);
+    Assert::isList($contactTypeIds);
     Assert::allIntegerish($contactTypeIds);
     $groupIds = $relationProperties['groupIds'] ?? [];
-    Assert::isArray($groupIds);
+    Assert::isList($groupIds);
     Assert::allIntegerish($groupIds);
 
     $action = Contact::get(FALSE)

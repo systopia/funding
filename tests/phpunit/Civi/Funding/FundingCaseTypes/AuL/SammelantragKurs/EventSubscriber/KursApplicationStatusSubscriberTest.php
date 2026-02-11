@@ -177,10 +177,8 @@ final class KursApplicationStatusSubscriberTest extends TestCase {
     $previousValues = array_map(fn(array $oldAndNew) => $oldAndNew[0], $changeSet);
     $currentValues = array_map(fn(array $oldAndNew) => $oldAndNew[1], $changeSet);
 
-    // @phpstan-ignore-next-line
     $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess($previousValues);
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
-      // @phpstan-ignore-next-line
       $currentValues,
       [],
       ['name' => $fundingCaseTypeName]

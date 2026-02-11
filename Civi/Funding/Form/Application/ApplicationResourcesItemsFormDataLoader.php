@@ -53,11 +53,14 @@ final class ApplicationResourcesItemsFormDataLoader implements ApplicationResour
         throw new \RuntimeException(sprintf('Invalid data pointer "%s"', $resourcesItem->getDataPointer()));
       }
 
+      /** @var list<string> $path */
       $path = $jsonPointer->path();
       if ([] === $resourcesItem->getProperties()) {
+        // @phpstan-ignore parameterByRef.type
         ArrayUtil::setValue($formData, $path, $resourcesItem->getAmount());
       }
       else {
+        // @phpstan-ignore parameterByRef.type
         ArrayUtil::setValue($formData, $path, $resourcesItem->getProperties());
       }
     }

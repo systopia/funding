@@ -29,7 +29,7 @@ final class AbstractClearingCreateTaskCreatorOnApplicationChangeTest extends Tes
     $this->clearingProcessManagerMock = $this->createMock(ClearingProcessManager::class);
     $this->taskCreator = $this->getMockForAbstractClass(AbstractClearingCreateTaskCreatorOnApplicationChange::class, [
       $this->clearingProcessManagerMock,
-    ], mockedMethods: ['getDueDate']);
+    ], '', TRUE, TRUE, TRUE, ['getDueDate']);
     $this->taskCreator->method('getDueDate')->willReturn(new \DateTime('2000-01-02'));
   }
 

@@ -30,9 +30,11 @@ final class SqlRendererUtil {
    */
   public static function getFieldSqlName(array $field, Api4SelectQuery $query, string $fieldName): string {
     if (isset($field['explicit_join'])) {
+      // @phpstan-ignore binaryOp.invalid
       $resultField = $query->getField($field['explicit_join'] . '.' . $fieldName, TRUE);
     }
     elseif (isset($field['implicit_join'])) {
+      // @phpstan-ignore binaryOp.invalid
       $resultField = $query->getField($field['implicit_join'] . '.' . $fieldName, TRUE);
     }
     else {

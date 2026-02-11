@@ -46,7 +46,7 @@ abstract class AbstractEntity {
    *   The keys of the given result are preserved.
    */
   public static function allFromApiResult(Result $result): array {
-    // @phpstan-ignore-next-line
+    // @phpstan-ignore argument.type, argument.type
     return array_map(fn (array $record) => static::fromArray($record), $result->getArrayCopy());
   }
 
@@ -56,6 +56,7 @@ abstract class AbstractEntity {
    * @throws \CRM_Core_Exception
    */
   public static function singleFromApiResult(Result $result): self {
+    // @phpstan-ignore argument.type
     return static::fromArray($result->single());
   }
 
@@ -71,6 +72,7 @@ abstract class AbstractEntity {
 
     $values = $result->first();
 
+    // @phpstan-ignore argument.type
     return NULL === $values ? NULL : static::fromArray($values);
   }
 
@@ -101,6 +103,7 @@ abstract class AbstractEntity {
     unset($values['custom']);
     unset($values['check_permissions']);
 
+    // @phpstan-ignore assign.propertyType
     $this->values = $values;
   }
 

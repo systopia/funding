@@ -26,7 +26,7 @@ interface ApplicationSubmitActionsFactoryInterface {
   public const SERVICE_TAG = 'funding.application.submit_actions_factory';
 
   /**
-   * @phpstan-param array<string> $permissions
+   * @param list<string> $permissions
    *
    * @phpstan-return array<string, array{
    *   label: string,

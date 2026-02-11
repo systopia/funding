@@ -24,6 +24,9 @@ use Civi\Funding\Api4\Query\AliasSqlRenderer;
 use CRM_Funding_ExtensionUtil as E;
 
 /**
+ * @phpstan-type sqlRendererT callable(array<string, mixed>, \Civi\Api4\Query\Api4SelectQuery): string
+ * @phpstan-type fieldT array<string, array<string, scalar>|scalar[]|scalar|null|sqlRendererT>
+ *
  * @codeCoverageIgnore
  */
 final class GetFieldsAction extends DAOGetFieldsAction {
@@ -33,10 +36,13 @@ final class GetFieldsAction extends DAOGetFieldsAction {
   }
 
   /**
-   * @phpstan-return list<array<string, array<string, scalar>|array<scalar>|scalar|null>&array{name: string}>
+   * @return list<fieldT>
    */
   protected function getRecords(): array {
-    return array_merge(parent::getRecords(), [
+    /** @var list<fieldT> $fields */
+    $fields = parent::getRecords();
+
+    return array_merge($fields, [
       [
         'name' => 'currency',
         'title' => E::ts('Currency'),

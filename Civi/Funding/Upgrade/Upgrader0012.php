@@ -45,7 +45,7 @@ final class Upgrader0012 implements UpgraderInterface {
    * @throws \CRM_Core_Exception
    */
   private function migrateRelationshipTypeRelations(): void {
-    /** @phpstan-var list<array{id: int, type: string, properties: array{relationshipTypeId: int, contactTypeId: int}}> $relations */
+    /** @phpstan-var \ArrayObject<int, array{id: int, type: string, properties: array{relationshipTypeId: int, contactTypeId: int}}> $relations */
     $relations = $this->api4->getEntities(
       FundingRecipientContactRelation::getEntityName(),
       Comparison::new('type', '=', 'RelationshipType')
@@ -67,7 +67,7 @@ final class Upgrader0012 implements UpgraderInterface {
    * @throws \CRM_Core_Exception
    */
   private function migrateContactTypeAndRelationshipTypeRelations(): void {
-    /** @phpstan-var list<array{id: int, type: string, properties: array{relationshipTypeId: int, contactTypeId: int}}> $relations */
+    /** @phpstan-var \ArrayObject<int, array{id: int, type: string, properties: array{relationshipTypeId: int, contactTypeId: int}}> $relations */
     $relations = $this->api4->getEntities(
       FundingRecipientContactRelation::getEntityName(),
       Comparison::new('type', '=', 'ContactTypeAndRelationshipType')

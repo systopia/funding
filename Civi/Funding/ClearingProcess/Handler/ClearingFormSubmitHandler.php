@@ -115,6 +115,7 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
           FundingClearingProcess::getEntityName(),
           $clearingProcess->getId()
         );
+        /** @phpstan-var clearingFormDataT $data */
 
         $clearingProcess->setReportData($data['reportData'] ?? []);
       }

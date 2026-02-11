@@ -41,6 +41,7 @@ class PayoutProcessModificationDateSubscriber implements EventSubscriberInterfac
 
   public function onUpdated(PayoutProcessUpdatedEvent $event): void {
     $fundingCase = $event->getFundingCase();
+    // @phpstan-ignore notEqual.notAllowed
     if ($fundingCase->getModificationDate() != $event->getPayoutProcess()->getModificationDate()) {
       $fundingCase->setModificationDate($event->getPayoutProcess()->getModificationDate());
       $this->fundingCaseManager->update($fundingCase);

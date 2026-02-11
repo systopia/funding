@@ -30,7 +30,7 @@ use Civi\Funding\Api4\Permissions;
 trait AccessROPermissionsTrait {
 
   /**
-   * @phpstan-return array<string, array<string|array<string>>>
+   * @return array<string, list<string|list<string>>>
    */
   public static function permissions(): array {
     return [
