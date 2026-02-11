@@ -60,7 +60,7 @@ final class FundingCaseContactRelationUpdateSubscriber implements EventSubscribe
       return;
     }
 
-    /** @phpstan-var list<array{
+    /** @phpstan-var \ArrayObject<int, array{
      *   id: int,
      *   properties: array{
      *     relationships: list<array{relationshipTypeId: int, contactId: int}>,

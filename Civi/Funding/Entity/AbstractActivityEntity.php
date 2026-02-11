@@ -24,7 +24,7 @@ namespace Civi\Funding\Entity;
  *   id?: int,
  *   source_record_id?: ?int,
  *   activity_type_id?: int,
- *   'activity_type_id:name'?: string,
+ *   "activity_type_id:name"?: string,
  *   subject: ?string,
  *   activity_date_time?: ?string,
  *   duration?: ?int,
@@ -32,7 +32,7 @@ namespace Civi\Funding\Entity;
  *   phone_id?: ?int,
  *   details?: ?string,
  *   status_id?: ?int,
- *   'status_id:name'?: ?string,
+ *   "status_id:name"?: ?string,
  *   priority_id?: ?string,
  *   parent_id?: ?string,
  *   is_test?: bool,
@@ -69,6 +69,7 @@ abstract class AbstractActivityEntity extends AbstractEntity {
       throw new \InvalidArgumentException('Either activity_type_id or activity_type_id:name is required');
     }
 
+    // @phpstan-ignore argument.type
     parent::__construct($values);
   }
 
@@ -81,6 +82,7 @@ abstract class AbstractActivityEntity extends AbstractEntity {
    * @return $this
    */
   public function setSourceRecordId(?int $sourceRecordId): self {
+    // @phpstan-ignore assign.propertyType
     $this->values['source_record_id'] = $sourceRecordId;
 
     return $this;
@@ -105,6 +107,7 @@ abstract class AbstractActivityEntity extends AbstractEntity {
    * @return $this
    */
   public function setSubject(?string $subject): self {
+    // @phpstan-ignore assign.propertyType
     $this->values['subject'] = $subject;
 
     return $this;
@@ -119,6 +122,7 @@ abstract class AbstractActivityEntity extends AbstractEntity {
    * @return $this
    */
   public function setActivityDateTime(?\DateTimeInterface $activityDateTime): self {
+    // @phpstan-ignore assign.propertyType
     $this->values['activity_date_time'] = static::toDateTimeStrOrNull($activityDateTime);
 
     return $this;
@@ -133,6 +137,7 @@ abstract class AbstractActivityEntity extends AbstractEntity {
    * @return $this
    */
   public function setDetails(?string $details): self {
+    // @phpstan-ignore assign.propertyType
     $this->values['details'] = $details;
 
     return $this;
@@ -147,6 +152,7 @@ abstract class AbstractActivityEntity extends AbstractEntity {
    * @return $this
    */
   public function setStatusId(?int $statusId): self {
+    // @phpstan-ignore assign.propertyType
     $this->values['status_id'] = $statusId;
 
     return $this;
@@ -161,6 +167,7 @@ abstract class AbstractActivityEntity extends AbstractEntity {
    * @return $this
    */
   public function setCreatedDate(?\DateTimeInterface $createdDate): self {
+    // @phpstan-ignore assign.propertyType
     $this->values['created_date'] = static::toDateTimeStrOrNull($createdDate);
 
     return $this;
@@ -175,6 +182,7 @@ abstract class AbstractActivityEntity extends AbstractEntity {
    * @return $this
    */
   public function setModifiedDate(?\DateTimeInterface $modifiedDate): self {
+    // @phpstan-ignore assign.propertyType
     $this->values['modified_date'] = static::toDateTimeStrOrNull($modifiedDate);
 
     return $this;
@@ -186,6 +194,7 @@ abstract class AbstractActivityEntity extends AbstractEntity {
    * @return $this
    */
   public function setTargetContactIds(array $targetContactId): self {
+    // @phpstan-ignore assign.propertyType
     $this->values['target_contact_id'] = $targetContactId;
 
     return $this;
@@ -197,6 +206,7 @@ abstract class AbstractActivityEntity extends AbstractEntity {
    * @return $this
    */
   public function setAssigneeContactIds(array $assigneeContactId): self {
+    // @phpstan-ignore assign.propertyType
     $this->values['assignee_contact_id'] = $assigneeContactId;
 
     return $this;

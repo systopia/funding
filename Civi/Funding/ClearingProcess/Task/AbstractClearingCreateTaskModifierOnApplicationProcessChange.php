@@ -59,6 +59,7 @@ abstract class AbstractClearingCreateTaskModifierOnApplicationProcessChange impl
     }
 
     $newDueDate = $this->getDueDate($applicationProcessBundle, $previousApplicationProcess, $task);
+    // @phpstan-ignore notEqual.notAllowed
     if ($task->getDueDate() != $newDueDate) {
       $task->setDueDate($newDueDate);
 

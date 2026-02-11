@@ -54,6 +54,7 @@ class ClearingProcessStartedSubscriber implements EventSubscriberInterface {
     $applicationProcess = $event->getApplicationProcess();
     $newFullStatus = $this->getStatusDeterminer($event->getFundingCaseType())
       ->getStatusOnClearingProcessStarted($applicationProcess->getFullStatus());
+    // @phpstan-ignore notEqual.notAllowed
     if ($applicationProcess->getFullStatus() != $newFullStatus) {
       $event->getApplicationProcess()->setFullStatus($newFullStatus);
       $this->applicationProcessManager->update($event->getClearingProcessBundle());

@@ -53,13 +53,13 @@ final class RelationshipChecker implements ContactRelationCheckerInterface {
    */
   public function hasRelation(int $contactId, string $relationType, array $relationProperties): bool {
     $relationshipTypeIds = $relationProperties['relationshipTypeIds'] ?? [];
-    Assert::isArray($relationshipTypeIds);
+    Assert::isList($relationshipTypeIds);
     Assert::allIntegerish($relationshipTypeIds);
     $contactTypeIds = $relationProperties['contactTypeIds'] ?? [];
-    Assert::isArray($contactTypeIds);
+    Assert::isList($contactTypeIds);
     Assert::allIntegerish($contactTypeIds);
     $groupIds = $relationProperties['groupIds'] ?? [];
-    Assert::isArray($groupIds);
+    Assert::isList($groupIds);
     Assert::allIntegerish($groupIds);
 
     $action = \Civi\Api4\Relationship::get(FALSE)

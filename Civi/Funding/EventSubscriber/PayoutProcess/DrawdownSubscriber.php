@@ -47,6 +47,7 @@ class DrawdownSubscriber implements EventSubscriberInterface {
 
   public function onCreated(DrawdownCreatedEvent $event): void {
     $payoutProcess = $event->getPayoutProcess();
+    // @phpstan-ignore notEqual.notAllowed
     if ($payoutProcess->getModificationDate() != $event->getDrawdown()->getCreationDate()) {
       $payoutProcess->setModificationDate($event->getDrawdown()->getCreationDate());
       $this->payoutProcessManager->update($event->getDrawdownBundle());
@@ -64,6 +65,7 @@ class DrawdownSubscriber implements EventSubscriberInterface {
     $payoutProcess = $event->getPayoutProcess();
 
     if (NULL !== $drawdown->getAcceptionDate()
+      // @phpstan-ignore notEqual.notAllowed
       && $drawdown->getAcceptionDate() != $event->getPreviousDrawdown()->getAcceptionDate()
     ) {
       $newModificationDate = $drawdown->getAcceptionDate();
@@ -72,6 +74,7 @@ class DrawdownSubscriber implements EventSubscriberInterface {
       $newModificationDate = new \DateTime(\CRM_Utils_Time::date('YmdHis'));
     }
 
+    // @phpstan-ignore notEqual.notAllowed
     if ($payoutProcess->getModificationDate() != $newModificationDate) {
       $payoutProcess->setModificationDate($newModificationDate);
       $this->payoutProcessManager->update($event->getDrawdownBundle());

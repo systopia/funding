@@ -36,7 +36,7 @@ trait AccessROAdministerRWPermissionsTrait {
   }
 
   /**
-   * @return array<string, array<string|string[]>>
+   * @return array<string, list<string|list<string>>>
    */
   public static function permissions(): array {
     $accessPermissions = self::accessPermissions();

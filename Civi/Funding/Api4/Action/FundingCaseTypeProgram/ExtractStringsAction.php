@@ -24,8 +24,10 @@ use Civi\Api4\Generic\AbstractAction;
 use Civi\RemoteTools\Api4\Action\Traits\ActionHandlerRunTrait;
 
 /**
- * @method array getWhere()
- * @method $this setWhere(array $where)
+ * @phpstan-import-type whereT from \Civi\Funding\Api4\Util\WhereUtil
+ *
+ * @phpstan-method whereT getWhere()
+ * @phpstan-method $this setWhere(whereT $where)
  */
 final class ExtractStringsAction extends AbstractAction {
 
@@ -33,7 +35,7 @@ final class ExtractStringsAction extends AbstractAction {
 
   /**
    * @var array
-   * @phpstan-var list<array{string, string|mixed[], 2?: mixed}>
+   * @phpstan-var whereT
    */
   protected array $where = [];
 

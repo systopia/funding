@@ -49,6 +49,7 @@ final class DeleteAction extends DAODeleteAction {
       }
     }
 
+    // @phpstan-ignore return.type
     return parent::deleteObjects($items);
   }
 

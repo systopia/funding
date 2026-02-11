@@ -57,7 +57,7 @@ final class TestFileUtil {
       return FALSE;
     }
 
-    /** @var \SplFileInfo[] $files */
+    /** @var iterable<\SplFileInfo> $files */
     $files = new \RecursiveIteratorIterator(
       new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS),
       \RecursiveIteratorIterator::CHILD_FIRST

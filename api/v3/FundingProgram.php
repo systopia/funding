@@ -30,6 +30,7 @@ use Webmozart\Assert\Assert;
  * @see _civicrm_api3_generic_getlist_params
  */
 function _civicrm_api3_funding_program_getlist_params(array &$request): void {
+  // @phpstan-ignore parameterByRef.type
   _civicrm_api3_generic_getlist_params($request);
 }
 

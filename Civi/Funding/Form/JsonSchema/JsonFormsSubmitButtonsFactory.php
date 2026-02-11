@@ -42,7 +42,7 @@ final class JsonFormsSubmitButtonsFactory {
    * @phpstan-param array<string, submitActionT> $actions
    *   Key is the action name.
    *
-   * @phpstan-return array<JsonFormsSubmitButton>
+   * @phpstan-return list<JsonFormsSubmitButton>
    */
   public static function createButtons(array $actions): array {
     $buttons = [];

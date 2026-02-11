@@ -27,7 +27,8 @@ use Civi\Funding\Api4\Query\Util\SqlRendererUtil;
 use CRM_Funding_ExtensionUtil as E;
 
 /**
- * @phpstan-type fieldT array<string, array<string, scalar>|scalar[]|scalar|null>
+ * @phpstan-type sqlRendererT callable(array<string, mixed>, Api4SelectQuery): string
+ * @phpstan-type fieldT array<string, array<string, scalar>|scalar[]|scalar|null|sqlRendererT>
  */
 final class GetFieldsAction extends DAOGetFieldsAction {
 
@@ -39,7 +40,10 @@ final class GetFieldsAction extends DAOGetFieldsAction {
    * @phpstan-return list<fieldT>
    */
   protected function getRecords(): array {
-    return array_merge(parent::getRecords(), [
+    /** @phpstan-var list<fieldT> $fields */
+    $fields = parent::getRecords();
+
+    return array_merge($fields, [
       [
         'name' => 'currency',
         'title' => E::ts('Currency'),

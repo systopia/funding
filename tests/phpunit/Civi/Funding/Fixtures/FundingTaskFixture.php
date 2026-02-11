@@ -50,7 +50,6 @@ final class FundingTaskFixture {
       ->execute()
       ->single();
 
-    // @phpstan-ignore argument.type
     $task->setValues($task->toArray() + $newValues);
 
     return $task;

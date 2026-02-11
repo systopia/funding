@@ -54,9 +54,9 @@ class ApproveAction extends AbstractAction {
   use FundingProgramManagerTrait;
 
   /**
-   * @var mixed
+   * @var mixed CiviCRM (v5.59) does not know float/double in @var.
    * @required
-   * @phpstan-ignore-next-line CiviCRM (v5.59) does not know float/double in @var.
+   * @phpstan-ignore property.phpDocType
    */
   protected ?float $amount = NULL;
 

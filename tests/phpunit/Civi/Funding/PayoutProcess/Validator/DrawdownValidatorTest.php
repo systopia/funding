@@ -200,7 +200,7 @@ final class DrawdownValidatorTest extends TestCase {
     $this->expectException(UnauthorizedException::class);
     $this->expectExceptionMessage('Payout process is closed.');
 
-    $this->validator->validate($new, $current, TRUE)->isValid();
+    $this->validator->validate($new, $current, TRUE);
   }
 
   public function testValidatePayoutProcessClosedWithReviewFinishPermission(): void {

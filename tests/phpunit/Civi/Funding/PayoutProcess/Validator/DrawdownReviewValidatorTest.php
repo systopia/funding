@@ -74,7 +74,7 @@ final class DrawdownReviewValidatorTest extends TestCase {
 
     $this->expectException(UnauthorizedException::class);
     $this->expectExceptionMessage('Permission to change drawdown status is missing.');
-    $this->validator->validate($new, $current, TRUE)->isValid();
+    $this->validator->validate($new, $current, TRUE);
   }
 
   public function testValidateWithPermission(): void {
@@ -95,7 +95,7 @@ final class DrawdownReviewValidatorTest extends TestCase {
 
     $this->expectException(UnauthorizedException::class);
     $this->expectExceptionMessage('Permission to change drawdown status is missing.');
-    $this->validator->validateNew($new, TRUE)->isValid();
+    $this->validator->validateNew($new, TRUE);
   }
 
   public function testValidateNewWithPermission(): void {

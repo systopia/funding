@@ -39,6 +39,7 @@ final class GetActionsAction extends GetActions {
       $itemsToGet = ['create', 'delete', 'get', 'getActions', 'getFields', 'update'];
     }
 
+    // @phpstan-ignore return.type
     return $itemsToGet;
   }
 

@@ -81,6 +81,7 @@ final class ChangeSetFactory {
 
     $changeSet = [];
     foreach ($fieldNames as $fieldName) {
+      // @phpstan-ignore notEqual.notAllowed
       if ($oldValues[$fieldName] != $values[$fieldName]) {
         $changeSet[$fieldName] = [$oldValues[$fieldName], $values[$fieldName]];
       }

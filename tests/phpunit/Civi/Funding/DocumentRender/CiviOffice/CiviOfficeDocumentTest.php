@@ -23,9 +23,10 @@ use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Util\TestFileUtil;
 
 /**
+ * Headless test required for classes of de.systopia.civioffice being available.
+ *
  * @covers \Civi\Funding\DocumentRender\CiviOffice\CiviOfficeDocument
  *
- * Headless test required for classes of de.systopia.civioffice being available.
  * @group headless
  */
 final class CiviOfficeDocumentTest extends AbstractFundingHeadlessTestCase {

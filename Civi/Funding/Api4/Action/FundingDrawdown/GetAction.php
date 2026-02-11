@@ -101,8 +101,11 @@ final class GetAction extends AbstractReferencingDAOGetAction {
 
     if ($this->canReviewSelected) {
       $record['CAN_review'] = $this->getCanReview(
+        // @phpstan-ignore argument.type
         $record['status'],
+        // @phpstan-ignore argument.type
         $record['payout_process_id.status'],
+        // @phpstan-ignore argument.type
         $record[$this->_fundingCaseIdFieldName]
       );
       $this->unsetIfNotSelected($record, 'status');
@@ -110,6 +113,7 @@ final class GetAction extends AbstractReferencingDAOGetAction {
     }
 
     if ($this->isFieldExplicitlySelected('submit_confirmation_document_uri')) {
+      // @phpstan-ignore argument.type
       $record['submit_confirmation_document_uri'] = $this->getSubmitConfirmationRouter()->generate($record['id']);
     }
 

@@ -168,6 +168,7 @@ final class GetAction extends DAOGetAction {
 
         FlattenedPermissionsUtil::addFlattenedPermissions($record, $record['permissions'], $possiblePermissions);
         $record['transfer_contract_uri'] =
+          // @phpstan-ignore argument.type
           isset($record['id']) ? $this->getTransferContractRouter()->generate($record['id']) : NULL;
 
         $records[] = $record;

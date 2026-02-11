@@ -98,7 +98,9 @@ class GetAction extends AbstractReferencingDAOGetAction {
 
     if ($this->canReviewSelected) {
       $record['CAN_review'] = $this->getCanReview(
+        // @phpstan-ignore argument.type
         $record['clearing_process_id.status'],
+        // @phpstan-ignore argument.type
         $record[$this->_fundingCaseIdFieldName]
       );
       $this->unsetIfNotSelected($record, 'clearing_process_id.status');

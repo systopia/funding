@@ -25,8 +25,8 @@ use Civi\RemoteTools\Api4\Action\Traits\ActionHandlerRunTrait;
 use Civi\RemoteTools\Api4\Action\Traits\IdParameterTrait;
 
 /**
- * @method array|null getContactIds()
- * @method $this setContactIds(array $contactId)
+ * @method list<int>|null getContactIds()
+ * @method $this setContactIds(list<int> $contactIds)
  */
 class SetNotificationContactsAction extends AbstractAction {
 

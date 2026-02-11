@@ -89,7 +89,7 @@ final class ApplicationTemplateRenderController implements PageControllerInterfa
     $fundingCase = $this->fundingCaseManager->get($applicationProcess->getFundingCaseId());
     Assert::notNull($fundingCase);
 
-    /** @phpstan-var applicationCiviOfficeTemplateT $template */
+    /** @phpstan-var applicationCiviOfficeTemplateT|null $template */
     $template = $this->api4->getEntity(FundingApplicationCiviOfficeTemplate::getEntityName(), $templateId);
     if (NULL === $template) {
       throw new NotFoundHttpException('Template not found');

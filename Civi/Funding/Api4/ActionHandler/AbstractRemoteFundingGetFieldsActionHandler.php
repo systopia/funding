@@ -58,6 +58,7 @@ abstract class AbstractRemoteFundingGetFieldsActionHandler implements ActionHand
 
     foreach ($remoteFields as $fieldName => $field) {
       if (($field['options'] ?? FALSE) !== FALSE && is_array($field['suffixes'] ?? NULL)) {
+        /** @var string $suffix */
         foreach ($field['suffixes'] as $suffix) {
           if (
             is_array($field['options'])

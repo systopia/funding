@@ -46,10 +46,10 @@ final class ContactTypeAndGroupLoader implements ContactRelationLoaderInterface 
    */
   public function getContacts(string $relationType, array $relationProperties): array {
     $contactTypeIds = $relationProperties['contactTypeIds'] ?? [];
-    Assert::isArray($contactTypeIds);
+    Assert::isList($contactTypeIds);
     Assert::allIntegerish($contactTypeIds);
     $groupIds = $relationProperties['groupIds'] ?? [];
-    Assert::isArray($groupIds);
+    Assert::isList($groupIds);
     Assert::allIntegerish($groupIds);
 
     $action = Contact::get(FALSE);

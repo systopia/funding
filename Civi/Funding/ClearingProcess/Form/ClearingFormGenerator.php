@@ -104,6 +104,7 @@ final class ClearingFormGenerator {
     if ([] !== $keywords) {
       $receiptsFormUiSchema = $receiptsForm->getUiSchema();
       if (NULL !== $reportForm->getReceiptsPrependUiSchema()) {
+        // @phpstan-ignore offsetAssign.valueType
         $receiptsFormUiSchema['elements'] = array_merge(
           [$reportForm->getReceiptsPrependUiSchema()],
           // @phpstan-ignore argument.type
@@ -111,6 +112,7 @@ final class ClearingFormGenerator {
         );
       }
       if (NULL !== $reportForm->getReceiptsAppendUiSchema()) {
+        // @phpstan-ignore offsetAssign.valueType
         $receiptsFormUiSchema['elements'] = array_merge(
           // @phpstan-ignore argument.type
           $receiptsFormUiSchema['elements'],

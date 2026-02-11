@@ -84,6 +84,7 @@ final class ClearingFormDataGetHandler implements ClearingFormDataGetHandlerInte
         'properties' => $clearingItem->getProperties(),
         'amountAdmitted' => $clearingItem->getAmountAdmitted(),
       ];
+      // @phpstan-ignore argument.type
       [$dataKey, $recordKey] = $this->getDataKeyAndRecordKey($clearingItem, $data['costItems']);
       $data['costItems'][$dataKey]['records'][$recordKey] = $costItemRecord;
     }
@@ -102,6 +103,7 @@ final class ClearingFormDataGetHandler implements ClearingFormDataGetHandlerInte
         'properties' => $clearingItem->getProperties(),
         'amountAdmitted' => $clearingItem->getAmountAdmitted(),
       ];
+      // @phpstan-ignore argument.type
       [$dataKey, $recordKey] = $this->getDataKeyAndRecordKey($clearingItem, $data['resourcesItems']);
       $data['resourcesItems'][$dataKey]['records'][$recordKey] = $resourcesItemData;
     }

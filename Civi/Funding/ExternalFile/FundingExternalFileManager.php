@@ -221,6 +221,7 @@ final class FundingExternalFileManager implements FundingExternalFileManagerInte
   public function updateCustomData(ExternalFileEntity $externalFile, array $customData): void {
     $customData['entityName'] ??= $externalFile->getCustomData()['entityName'] ?? NULL;
     $customData['entityId'] ??= $externalFile->getCustomData()['entityId'] ?? NULL;
+    // @phpstan-ignore notEqual.notAllowed
     if ($externalFile->getCustomData() != $customData) {
       $externalFile->setCustomData($customData);
       $this->api4->updateEntity(
@@ -289,6 +290,7 @@ final class FundingExternalFileManager implements FundingExternalFileManagerInte
       ->addWhere('entity_table', '=', $this->daoEntityInfoProvider->getTable($entityName))
       ->addWhere('entity_id', '=', $entityId);
 
+    // @phpstan-ignore return.type
     return $this->api4->executeAction($entityFileAction)->column('file_id');
   }
 

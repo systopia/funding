@@ -28,6 +28,10 @@ use Civi\Funding\FundingCaseType\MetaData\FundingCaseTypeMetaDataInterface;
 use CRM_Funding_ExtensionUtil as E;
 
 /**
+ * @phpstan-type outputFormatterT callable(string $value, array<mixed> $row, array<string, mixed> $field): void
+ * @phpstan-type sqlRendererT callable(array<string, mixed> $field, \Civi\Api4\Query\Api4SelectQuery): string
+ * @phpstan-type fieldT array<string, array<string, scalar>|scalar[]|scalar|null|list<outputFormatterT>|sqlRendererT>
+ *
  * @codeCoverageIgnore
  */
 abstract class AbstractGetFieldsAction extends DAOGetFieldsAction {
@@ -40,10 +44,13 @@ abstract class AbstractGetFieldsAction extends DAOGetFieldsAction {
   }
 
   /**
-   * @phpstan-return list<array<string, array<string, scalar>|array<scalar>|scalar|null>&array{name: string}>
+   * @phpstan-return list<fieldT>
    */
   protected function getRecords(): array {
-    return array_merge(parent::getRecords(), [
+    /** @var list<fieldT> $fields */
+    $fields = parent::getRecords();
+
+    return array_merge($fields, [
       [
         'name' => 'type_label',
         'title' => E::ts('Type Label'),

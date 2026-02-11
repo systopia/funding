@@ -78,6 +78,7 @@ class ApplicationSnapshotCreateSubscriber implements EventSubscriberInterface {
 
     return ($status?->isSnapshotRequired() ?? TRUE) && NULL === $applicationProcess->getRestoredSnapshot() && (
       $applicationProcess->getStatus() !== $previousApplicationProcess->getStatus()
+      // @phpstan-ignore notEqual.notAllowed
       || $applicationProcess->getRequestData() != $previousApplicationProcess->getRequestData()
     );
   }

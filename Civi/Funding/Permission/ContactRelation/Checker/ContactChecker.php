@@ -33,6 +33,7 @@ final class ContactChecker implements ContactRelationCheckerInterface {
   public function hasRelation(int $contactId, string $relationType, array $relationProperties): bool {
     // Input fields with "crm-entityref" return the IDs as strings, so we have
     // to compare for equality instead of identity.
+    // @phpstan-ignore equal.notAllowed
     return $contactId == $relationProperties['contactId'];
   }
 

@@ -33,6 +33,7 @@ final class ApplicationCostItemFixture {
    */
   public static function addFixture(int $applicationProcessId, array $values = []): ApplicationCostItemEntity {
     self::$count++;
+    /** @var string $identifier */
     $identifier = $values['identifier'] ?? ('amountRequested' . self::$count);
 
     $result = FundingApplicationCostItem::create(FALSE)

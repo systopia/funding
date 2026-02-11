@@ -74,13 +74,8 @@ final class GetAllowedActionsMultipleActionHandler implements ActionHandlerInter
       fn (array $action) => FALSE === ($action['properties']['needsFormData'] ?? TRUE),
     );
 
-    foreach ($actions as $actionName => &$action) {
-      if (FALSE !== ($action['properties']['needsFormData'] ?? TRUE)) {
-        unset($actions[$actionName]);
-      }
-      else {
-        unset($action['properties']);
-      }
+    foreach ($actions as &$action) {
+      unset($action['properties']);
     }
 
     return $actions;

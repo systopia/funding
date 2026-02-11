@@ -86,6 +86,9 @@ final class IJBTeilnehmerJsonSchema extends JsonSchemaObject {
     return $schema;
   }
 
+  /**
+   * @phpstan-ignore void.pure
+   */
   private function addValidations(): void {
     $requiredIntegers = [
       'weiblich',
@@ -96,22 +99,22 @@ final class IJBTeilnehmerJsonSchema extends JsonSchemaObject {
       'referenten',
     ];
 
-    // @phpstan-ignore-next-line
+    // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible
     $this['properties']['deutschland']['required']
-    // @phpstan-ignore-next-line
+    // @phpstan-ignore argument.type, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible
       = array_merge($this['properties']['deutschland']['required'], $requiredIntegers, ['mitFahrtkosten']);
-    // @phpstan-ignore-next-line
+    // @phpstan-ignore offsetAccess.nonOffsetAccessible
     $this['properties']['partnerland']['required']
-    // @phpstan-ignore-next-line
+    // @phpstan-ignore argument.type, offsetAccess.nonOffsetAccessible
       = array_merge($this['properties']['partnerland']['required'], $requiredIntegers);
 
     foreach ($requiredIntegers as $property) {
-      // @phpstan-ignore-next-line
+      // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible
       $this['properties']['deutschland']['properties'][$property]['type'] = 'integer';
-      // @phpstan-ignore-next-line
+      // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible
       $this['properties']['partnerland']['properties'][$property]['type'] = 'integer';
     }
-    // @phpstan-ignore-next-line
+    // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible
     $this['properties']['deutschland']['properties']['mitFahrtkosten']['type'] = 'integer';
   }
 

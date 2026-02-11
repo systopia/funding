@@ -23,6 +23,8 @@ namespace Civi\Funding\Validation;
  * @phpstan-type validatorsT array<class-string, iterable<EntityValidatorInterface>>
  *
  * @codeCoverageIgnore
+ *
+ * @phpstan-ignore missingType.generics
  */
 class EntityValidatorLoader {
 

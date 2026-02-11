@@ -65,7 +65,7 @@ abstract class AbstractReferencingDAOGetAction extends DAOGetAction {
   private array $fieldSelected = [];
 
   /**
-   * @phpstan-var array<string>
+   * @var list<string>|null
    */
   private ?array $originalSelect = NULL;
 
@@ -197,13 +197,15 @@ abstract class AbstractReferencingDAOGetAction extends DAOGetAction {
   }
 
   protected function initOriginalSelect(): void {
+    // @phpstan-ignore assign.propertyType
     $this->originalSelect ??= $this->getSelect();
   }
 
   /**
-   * @phpstan-return array<string>
+   * @return list<string>
    */
   protected function getOriginalSelect(): array {
+    // @phpstan-ignore return.type
     return $this->originalSelect ?? $this->getSelect();
   }
 
@@ -215,6 +217,7 @@ abstract class AbstractReferencingDAOGetAction extends DAOGetAction {
    */
   protected function isFieldSelected(string $fieldName): bool {
     if (NULL === $this->originalSelect) {
+      // @phpstan-ignore argument.type
       return SelectUtil::isFieldSelected($fieldName, $this->getSelect());
     }
 

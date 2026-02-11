@@ -151,7 +151,7 @@ final class FundingCaseEntity extends AbstractEntity {
    *   RemoteApiConstants::PERMISSIONS_FIELD_PREFIX.
    */
   public function getFlattenedPermissions(): array {
-    /** @phpstan-var array<string, bool> */
+    // @phpstan-ignore return.type
     return array_filter(
       $this->values,
       fn (string $key) => str_starts_with($key, RemoteApiConstants::PERMISSION_FIELD_PREFIX),

@@ -38,10 +38,10 @@ final class SetRecipientContactActionsDeterminer extends FundingCaseActionsDeter
   }
 
   public function getActions(string $status, array $applicationProcessStatusList, array $permissions): array {
-    return array_unique(array_merge(
+    return array_values(array_unique(array_merge(
       $this->actionsDeterminer->getActions($status, $applicationProcessStatusList, $permissions),
       parent::getActions($status, $applicationProcessStatusList, $permissions)
-    ));
+    )));
   }
 
 }

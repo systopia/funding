@@ -54,7 +54,6 @@ final class FundingTaskManager implements FundingTaskManagerInterface {
     $values = $this->api4->createEntity(FundingTask::getEntityName(),
       ['source_contact_id' => $this->getSourceContactId()] + $task->toPersistArray()
     )->single();
-    // @phpstan-ignore argument.type
     $task->setValues($task->toArray() + $values);
 
     return $task;

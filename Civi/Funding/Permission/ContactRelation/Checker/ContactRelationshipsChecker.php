@@ -51,6 +51,7 @@ final class ContactRelationshipsChecker implements ContactRelationCheckerInterfa
 
     $conditions = [];
     foreach ($relationships as $relationship) {
+      Assert::isArray($relationship);
       Assert::integerish($relationship['contactId']);
       Assert::integerish($relationship['relationshipTypeId']);
 
