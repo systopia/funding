@@ -38,9 +38,17 @@ use Symfony\Component\DependencyInjection\Reference;
 
 ini_set('memory_limit', '2G');
 
+if (file_exists(__DIR__ . '/bootstrap.local.php')) {
+  require_once __DIR__ . '/bootstrap.local.php';
+}
+
 // phpcs:disable Drupal.Functions.DiscouragedFunctions.Discouraged
 eval(cv('php:boot --level=classloader', 'phpcode'));
-// phpcs.enable
+// phpcs:enable
+
+if (file_exists(__DIR__ . '/../../vendor/autoload.php')) {
+  require_once __DIR__ . '/../../vendor/autoload.php';
+}
 
 // Make CRM_Funding_ExtensionUtil available.
 require_once __DIR__ . '/../../funding.civix.php';
@@ -60,6 +68,27 @@ if (!function_exists('ts')) {
   // In later versions the function is registered following the composer conventions.
   \CRM_Core_I18n::singleton();
 }
+
+/*
+ * In CRM/Core/Error.php $e is set to a new instance of \PEAR_ErrorStack in
+ * global scope:
+ * https://github.com/civicrm/civicrm-core/blob/3530736bf080096671f6748dd4f2e8089bd79cf3/CRM/Core/Error.php#L1064
+ * Depending on when the file is loaded, this might override $e set in
+ * \Symfony\Component\ErrorHandler\DebugClassLoader here:
+ * https://github.com/symfony/error-handler/blob/4bbc6c920b62273a5642419584aacfefbb9704f1/DebugClassLoader.php#L296
+ *
+ * If this happens, this results in a call of error_reporting() with the
+ * \PEAR_ErrorStack instance (PHP type error) as argument here:
+ * https://github.com/symfony/error-handler/blob/4bbc6c920b62273a5642419584aacfefbb9704f1/DebugClassLoader.php#L315C13-L315C32
+ *
+ * This happened in the CI environment when executing the CiviCRM bootstrap
+ * code:
+ * https://github.com/civicrm/civicrm-core/blob/3530736bf080096671f6748dd4f2e8089bd79cf3/Civi/Test/CiviTestListenerPHPUnit7.php#L151
+ *
+ * With the following line CRM/Core/Error.php is already included and executed
+ * when the DebugClassLoader is active and won't be included again.
+ */
+class_exists(\CRM_Core_Error::class);
 
 $comparatorFactory = Factory::getInstance();
 $comparatorFactory->register(new ApiActionComparator());
@@ -178,7 +207,7 @@ function cv(string $cmd, string $decode = 'json') {
   $result = stream_get_contents($pipes[1]);
   fclose($pipes[1]);
   if (proc_close($process) !== 0) {
-    throw new RuntimeException("Command failed ($cmd):\n$result");
+    throw new \RuntimeException("Command failed ($cmd):\n$result");
   }
   switch ($decode) {
     case 'raw':
@@ -187,7 +216,7 @@ function cv(string $cmd, string $decode = 'json') {
     case 'phpcode':
       // If the last output is /*PHPCODE*/, then we managed to complete execution.
       if (substr(trim($result), 0, 12) !== '/*BEGINPHP*/' || substr(trim($result), -10) !== '/*ENDPHP*/') {
-        throw new RuntimeException("Command failed ($cmd):\n$result");
+        throw new \RuntimeException("Command failed ($cmd):\n$result");
       }
       return $result;
 
@@ -195,6 +224,6 @@ function cv(string $cmd, string $decode = 'json') {
       return json_decode($result, TRUE);
 
     default:
-      throw new RuntimeException("Bad decoder format ($decode)");
+      throw new \RuntimeException("Bad decoder format ($decode)");
   }
 }

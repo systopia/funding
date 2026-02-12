@@ -38,6 +38,7 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
 
   public function install(): void {
     $this->installJsonOverlapsSqlFunction();
+    $this->createUniqueTranslationIndex();
   }
 
   public function upgrade_0001(): bool {
@@ -202,8 +203,30 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
   public function upgrade_0019(): bool {
     $this->ctx->log->info('Applying database migration 0019');
     $this->executeSqlFile('sql/upgrade/0019.sql');
+    $this->createUniqueTranslationIndex();
 
     return TRUE;
+  }
+
+  private function createUniqueTranslationIndex(): void {
+    try {
+      // Not possible on MySQL because it exceeds max key length of 3072 bytes.
+      CRM_Core_DAO::executeQuery(
+        'CREATE UNIQUE INDEX `UI_translation` ON `civicrm_funding_form_string_translation`
+        (funding_program_id, funding_case_type_id, msg_text);'
+      );
+    }
+    catch (DBQueryException $e) {
+      $message = 'Could not create database index "UI_translation": ' . $e->getUserInfo();
+      // Not set during install.
+      // @phpstan-ignore isset.property
+      if (isset($this->ctx->log)) {
+        $this->ctx->log->debug($message);
+      }
+      else {
+        Civi::log()->debug($message);
+      }
+    }
   }
 
   private function installJsonOverlapsSqlFunction(): void {

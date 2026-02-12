@@ -23,8 +23,8 @@
   <comments/>
   <requires>
     <ext>org.civicrm.afform</ext>
-    <ext>de.systopia.remotetools</ext>
     <ext>de.systopia.identitytracker</ext>
+    <ext>de.systopia.remotetools</ext>
     <ext>de.systopia.civioffice</ext>
     <ext>activity-entity</ext>
     <ext>external-file</ext>

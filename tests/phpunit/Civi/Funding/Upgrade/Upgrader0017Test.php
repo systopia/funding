@@ -36,10 +36,6 @@ use Civi\Funding\Fixtures\ClearingResourcesItemFixture;
  */
 final class Upgrader0017Test extends AbstractFundingHeadlessTestCase {
 
-  protected function setUp(): void {
-    parent::setUp();
-  }
-
   public function testExecute(): void {
     $clearingBundle = ClearingProcessBundleFixture::create();
     $clearingProcess = $clearingBundle->getClearingProcess();

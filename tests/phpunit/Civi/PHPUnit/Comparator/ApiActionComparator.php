@@ -27,7 +27,7 @@ final class ApiActionComparator extends ObjectComparator {
   /**
    * @inheritDoc
    */
-  public function accepts($expected, $actual) {
+  public function accepts($expected, $actual): bool {
     return $expected instanceof AbstractAction && $actual instanceof AbstractAction;
   }
 
