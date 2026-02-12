@@ -1,12 +1,12 @@
 name: PHPStan
 
 on:
-  push:
+  workflow_dispatch: ~
+  pull_request:
     paths:
       - '**.php'
       - composer.json
       - tools/phpstan/composer.json
-      - ci/composer.json
       - phpstan.ci.neon
       - phpstan.neon.dist
       - .github/workflows/phpstan.yml
@@ -21,7 +21,7 @@ jobs:
     name: PHPStan with PHP ${{ matrix.php-versions }} ${{ matrix.prefer }}
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
@@ -36,26 +36,40 @@ jobs:
       run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
     - name: Cache dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ${{ steps.composer-cache.outputs.dir }}
         key: ${{ runner.os }}-composer-${{ matrix.prefer }}-${{ hashFiles('**/composer.json') }}
         restore-keys: ${{ runner.os }}-composer-${{ matrix.prefer }}-
 
     - name: Install dependencies
+      env:
+        COMPOSER_COMPILE: all
       run: |
-        git clone --depth=1 https://github.com/systopia/activity-entity.git ../activity-entity &&
-        git clone --depth=1 https://github.com/systopia/de.systopia.civioffice.git ../de.systopia.civioffice &&
-        git clone --depth=1 https://github.com/systopia/de.systopia.remotetools.git ../de.systopia.remotetools &&
-        git clone --depth=1 https://github.com/systopia/external-file.git ../external-file &&
-        composer composer-phpunit -- update --no-progress --prefer-dist &&
-        composer composer-phpstan -- update --no-progress --prefer-dist --optimize-autoloader &&
-        # TODO: The extension's composer.json should be included in ci/composer.json.
-        # Though if it is, analyzing fails with interface not found error...
-        composer update --no-progress --prefer-dist --${{ matrix.prefer }} --optimize-autoloader &&
-        (composer --working-dir=ci update --no-progress --prefer-dist --${{ matrix.prefer }} --ignore-platform-req=ext-gd;
-        # "--with-all-dependencies" necessary when update initiated after install of wikimedia/composer-merge-plugin fails
-        composer --working-dir=ci update --no-progress --prefer-dist --${{ matrix.prefer }} --with-all-dependencies --ignore-platform-req=ext-gd)
+        if [ "${{ matrix.prefer }}" = "prefer-lowest" ]; then
+          # Actually test with lowest possible versions.
+          export COMPOSER_NO_SECURITY_BLOCKING=1
+        fi
+
+        composer config --no-plugins allow-plugins.civicrm/composer-compile-plugin false
+        composer config --no-plugins allow-plugins.civicrm/composer-downloads-plugin true
+        composer config --no-plugins allow-plugins.composer/installers true
+        composer config --no-plugins allow-plugins.cweagans/composer-patches true
+
+        # Until systopia/de.systopia.remotetools is officially released as composer package.
+        git clone --depth=1 https://github.com/systopia/de.systopia.remotetools.git ../de.systopia.remotetools
+        composer config repositories.remotetools path $(dirname $PWD)/de.systopia.remotetools
+        composer require --no-update systopia/de.systopia.remotetools
+
+        composer config --json "extra.installer-paths.$(dirname $PWD)/{\$name}" '["type:civicrm-ext"]'
+        composer require --ignore-platform-reqs composer/installers
+
+        # Run with --no-scripts so ComposerHelper doesn't prevent installation
+        # of civicrm packages.
+        composer update --no-scripts --no-progress --prefer-dist --${{ matrix.prefer }} --optimize-autoloader --ignore-platform-reqs
+
+        composer composer-phpunit -- update --no-progress --prefer-dist --optimize-autoloader
+        composer composer-phpstan -- update --no-progress --prefer-dist --optimize-autoloader
 
     - name: Run PHPStan
       run: composer phpstan -- analyse -c phpstan.ci.neon

@@ -34,7 +34,14 @@ final class MoneyFactory {
   public function createMoney(float $amount, ?string $currencyCode): Money {
     $currency = $this->getCurrencyObject($currencyCode ?? $this->getDefaultCurrencyCode());
 
-    return Money::of($amount, $currency, NULL, RoundingMode::HALF_UP);
+    if (enum_exists(RoundingMode::class) && (new \ReflectionEnum(RoundingMode::class))->hasCase('HalfUp')) {
+      // brick/math >=0.14.2 (Requires PHP 8.2)
+      return Money::of($amount, $currency, NULL, RoundingMode::HalfUp);
+    }
+    else {
+      // @phpstan-ignore classConstant.deprecated
+      return Money::of($amount, $currency, NULL, RoundingMode::HALF_UP);
+    }
   }
 
   /**

@@ -3,13 +3,13 @@ includes:
 
 parameters:
 	scanFiles:
-		- ci/vendor/civicrm/civicrm-packages/DB/DataObject.php
+		- vendor/civicrm/civicrm-packages/DB/DataObject.php
 	scanDirectories:
-		- ci/vendor/civicrm/civicrm-core/api/
-		- ci/vendor/civicrm/civicrm-core/CRM/
+		- vendor/civicrm/civicrm-core/api
+		- vendor/civicrm/civicrm-core/CRM
 	bootstrapFiles:
-		- ci/vendor/autoload.php
-	# Because we test with different versions in CI we have unmatched errors
+		- vendor/autoload.php
+	# Because we test with different versions in CI we may have unmatched errors.
 	reportUnmatchedIgnoredErrors: false
 	ignoreErrors:
 		# Errors we get when using "prefer-lowest"
@@ -17,9 +17,17 @@ parameters:
 		# \DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts is used
 		- '#^Call to deprecated method assertArraySubset\(\)#'
 
-		-
+		- # Required with CiviCRM <6.3.0
 			identifier: varTag.nativeType
 			path: Civi/Funding/Database/DaoEntityInfoProvider.php
+
+		# For brick/math <0.14.2
+		-
+			message: '#ReflectionEnum constructor#'
+			identifier: argument.type
+		-
+			message: '#Brick\\Math\\RoundingMode::HalfUp#'
+			identifier: classConstant.notFound
 
 		# Required with symfony/event-dispatcher <4.4.27
 		- '#::getSubscribedEvents\(\) return type has no value type specified in iterable type array.$#'
