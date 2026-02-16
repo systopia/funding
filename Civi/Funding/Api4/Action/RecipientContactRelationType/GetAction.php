@@ -23,18 +23,17 @@ use Civi\Api4\FundingRecipientContactRelationType;
 use Civi\Api4\Generic\AbstractGetAction;
 use Civi\Api4\Generic\Result;
 use Civi\Api4\Generic\Traits\ArrayQueryActionTrait;
-use Civi\Funding\Api4\Action\Traits\ContactRelationTypeContainerTrait;
 use Civi\Funding\Contact\Relation\RelationTypeContainerInterface;
 
 final class GetAction extends AbstractGetAction {
 
   use ArrayQueryActionTrait;
 
-  use ContactRelationTypeContainerTrait;
+  private ?RelationTypeContainerInterface $contactRelationTypeContainer;
 
   public function __construct(?RelationTypeContainerInterface $contactRelationTypeContainer = NULL) {
     parent::__construct(FundingRecipientContactRelationType::getEntityName(), 'get');
-    $this->_contactRelationTypeContainer = $contactRelationTypeContainer;
+    $this->contactRelationTypeContainer = $contactRelationTypeContainer;
   }
 
   /**
@@ -50,6 +49,11 @@ final class GetAction extends AbstractGetAction {
     $types = $this->limitArray($types);
     $types = $this->selectArray($types);
     $result->exchangeArray($types);
+  }
+
+  public function getContactRelationTypeContainer(): RelationTypeContainerInterface {
+    // @phpstan-ignore return.type, assign.propertyType
+    return $this->contactRelationTypeContainer ??= \Civi::service('funding.contact_relation_type_container');
   }
 
 }

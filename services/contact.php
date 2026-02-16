@@ -40,7 +40,9 @@ $container->autowire(DefaultPossibleRecipientsLoader::class)
   ->addTag(PossibleRecipientsLoaderInterface::SERVICE_TAG);
 
 $container->register('funding.contact_relation_type_container', RelationTypeContainer::class)
-  ->addArgument(new TaggedIteratorArgument('funding.contact_relation_type'));
+  ->addArgument(new TaggedIteratorArgument('funding.contact_relation_type'))
+  // Used in API action.
+  ->setPublic(TRUE);
 
 ServiceRegistrator::autowireAllImplementing(
   $container,
