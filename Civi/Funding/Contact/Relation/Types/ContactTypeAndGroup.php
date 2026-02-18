@@ -69,9 +69,7 @@ TEMPLATE;
   }
 
   public function getHelp(): string {
-    return E::ts(<<<HELP
-Contacts with any of the specified types in any of the specified groups.
-HELP);
+    return E::ts('Contacts with any of the specified types in any of the specified groups.');
   }
 
   /**

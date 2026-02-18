@@ -42,9 +42,7 @@ final class CreationContact extends AbstractRelationPropertiesFactoryType {
   }
 
   public function getHelp(): string {
-    return E::ts(<<<HELP
-Assign permissions for new funding cases to the contact which created the funding case.
-HELP);
+    return E::ts('Assign permissions for new funding cases to the contact which created the funding case.');
   }
 
   public function getExtra(): array {

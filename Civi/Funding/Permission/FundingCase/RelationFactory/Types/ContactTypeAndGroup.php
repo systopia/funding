@@ -71,10 +71,7 @@ TEMPLATE;
   }
 
   public function getHelp(): string {
-    return E::ts(<<<HELP
-Assign permissions for new funding cases to contacts with one of the specified
-contact types in one of the specified groups.
-HELP);
+    return E::ts("Assign permissions for new funding cases to contacts with one of the specified contact types in one of the specified groups.");
   }
 
   /**
