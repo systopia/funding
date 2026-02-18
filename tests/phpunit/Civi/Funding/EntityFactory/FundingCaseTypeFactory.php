@@ -22,11 +22,13 @@ namespace Civi\Funding\EntityFactory;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 
 /**
+ * @phpstan-import-type fundingCaseTypePropertiesT from FundingCaseTypeEntity
+ *
  * @phpstan-type fundingCaseTypeValuesT array{
  *   id?: int,
  *   title?: string,
  *   name?: string,
- *   properties?: array<string, mixed>,
+ *   properties?: fundingCaseTypePropertiesT,
  * }
  */
 final class FundingCaseTypeFactory {

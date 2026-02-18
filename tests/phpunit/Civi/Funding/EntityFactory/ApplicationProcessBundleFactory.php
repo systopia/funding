@@ -22,59 +22,10 @@ namespace Civi\Funding\EntityFactory;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 
 /**
- * @phpstan-type applicationProcessValuesT array{
- *   id?: int|null,
- *   funding_case_id?: int,
- *   status?: string,
- *   creation_date?: string,
- *   modification_date?: string,
- *   title?: string,
- *   short_description?: string,
- *   start_date?: string|null,
- *   end_date?: string|null,
- *   request_data?: array<string, mixed>,
- *   amount_requested?: float,
- *   is_review_content?: bool|null,
- *   reviewer_cont_contact_id?: int|null,
- *   is_review_calculative?: bool|null,
- *   reviewer_calc_contact_id?: int|null,
- *   is_eligible?: bool|null,
- *   check_permissions?: bool,
- *   custom?: mixed,
- * }
- *
- * @phpstan-type fundingCaseValuesT array{
- *   id?: int,
- *   funding_program_id?: int,
- *   funding_case_type_id?: int,
- *   status?: string,
- *   title?: string,
- *   recipient_contact_id?: int,
- *   creation_date?: string,
- *   modification_date?: string,
- *   amount_approved?: float|null,
- *   permissions?: list<string>,
- *   transfer_contract_uri?: string|null,
- * }
- *
- * @phpstan-type fundingCaseTypeValuesT array{
- *   id?: int,
- *   title?: string,
- *   name?: string,
- *   properties?: array<string, mixed>,
- * }
- *
- * @phpstan-type fundingProgramValuesT array{
- *   id?: int,
- *   title?: string,
- *   start_date?: string,
- *   end_date?: string,
- *   requests_start_date?: string,
- *   requests_end_date?: string,
- *   currency?: string,
- *   budget?: float|null,
- *   permissions?: list<string>,
- * }
+ * @phpstan-import-type applicationProcessValuesT from \Civi\Funding\EntityFactory\ApplicationProcessFactory
+ * @phpstan-import-type fundingCaseValuesT from \Civi\Funding\EntityFactory\FundingCaseFactory
+ * @phpstan-import-type fundingCaseTypeValuesT from \Civi\Funding\EntityFactory\FundingCaseTypeFactory
+ * @phpstan-import-type fundingProgramValuesT from \Civi\Funding\EntityFactory\FundingProgramFactory
  */
 final class ApplicationProcessBundleFactory {
 

@@ -20,6 +20,15 @@ declare(strict_types = 1);
 namespace Civi\Funding\Entity;
 
 /**
+ * @phpstan-type fundingCaseTypePropertiesT array{
+ *    amountApprovedNonAdjustable?: bool,
+ *    applicationAddableStatusList?: list<string>,
+ *    applicationEditorTagName?: string,
+ *    applicationFormTagName?: string,
+ *    applicationPageTagName?: string,
+ *    applicationReviewSidebarTagName?: string,
+ *  }
+ *
  * @phpstan-type fundingCaseTypeT array{
  *   id?: int,
  *   title: string,
@@ -27,7 +36,7 @@ namespace Civi\Funding\Entity;
  *   name: string,
  *   is_combined_application: bool,
  *   application_process_label: string|null,
- *   properties: array<string, mixed>,
+ *   properties: fundingCaseTypePropertiesT|array<string, mixed>,
  * }
  *
  * @phpstan-extends AbstractEntity<fundingCaseTypeT>
@@ -85,7 +94,7 @@ final class FundingCaseTypeEntity extends AbstractEntity {
   }
 
   /**
-   * @phpstan-return array<string, mixed>
+   * @phpstan-return fundingCaseTypePropertiesT|array<string, mixed>
    *   JSON serializable array.
    */
   public function getProperties(): array {
@@ -93,7 +102,7 @@ final class FundingCaseTypeEntity extends AbstractEntity {
   }
 
   /**
-   * @phpstan-param array<string, mixed> $properties
+   * @phpstan-param fundingCaseTypePropertiesT|array<string, mixed> $properties
    *   JSON serializable array.
    */
   public function setProperties(array $properties): self {

@@ -24,8 +24,6 @@ use Civi\Funding\FundingCase\Command\FundingCaseUpdateAmountApprovedCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\FundingCaseStatus;
 use Civi\Funding\FundingCase\Handler\FundingCaseUpdateAmountApprovedHandlerInterface;
-use Civi\Funding\FundingProgram\FundingCaseTypeManager;
-use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\RemoteTools\Api4\Query\Comparison;
 use Civi\RemoteTools\Api4\Query\CompositeCondition;
 
@@ -35,23 +33,15 @@ final class Upgrader0009 implements UpgraderInterface {
 
   private FundingCaseManager $fundingCaseManager;
 
-  private FundingCaseTypeManager $fundingCaseTypeManager;
-
-  private FundingProgramManager $fundingProgramManager;
-
   private FundingCaseUpdateAmountApprovedHandlerInterface $updateAmountApprovedHandler;
 
   public function __construct(
     ApplicationProcessManager $applicationProcessManager,
     FundingCaseManager $fundingCaseManager,
-    FundingCaseTypeManager $fundingCaseTypeManager,
-    FundingProgramManager $fundingProgramManager,
     FundingCaseUpdateAmountApprovedHandlerInterface $updateAmountApprovedHandler
   ) {
     $this->applicationProcessManager = $applicationProcessManager;
     $this->fundingCaseManager = $fundingCaseManager;
-    $this->fundingCaseTypeManager = $fundingCaseTypeManager;
-    $this->fundingProgramManager = $fundingProgramManager;
     $this->updateAmountApprovedHandler = $updateAmountApprovedHandler;
   }
 
@@ -65,17 +55,13 @@ final class Upgrader0009 implements UpgraderInterface {
       Comparison::new('amount_approved', '>', 0),
     ));
     foreach ($withdrawnFundingCases as $fundingCase) {
-      $fundingCaseType = $this->fundingCaseTypeManager->get($fundingCase->getFundingCaseTypeId());
-      assert(NULL !== $fundingCaseType);
-      $fundingProgram = $this->fundingProgramManager->get($fundingCase->getFundingProgramId());
-      assert(NULL !== $fundingProgram);
+      $fundingCaseBundle = $this->fundingCaseManager->getBundle($fundingCase->getId());
+      assert(NULL !== $fundingCaseBundle);
 
       $this->updateAmountApprovedHandler->handle((new FundingCaseUpdateAmountApprovedCommand(
-        $fundingCase,
+        $fundingCaseBundle,
         0.0,
         $this->applicationProcessManager->getStatusListByFundingCaseId($fundingCase->getId()),
-        $fundingCaseType,
-        $fundingProgram
       ))->setAuthorized(TRUE));
     }
   }

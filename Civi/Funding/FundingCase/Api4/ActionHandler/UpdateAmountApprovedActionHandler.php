@@ -24,8 +24,6 @@ use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\FundingCase\Command\FundingCaseUpdateAmountApprovedCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\Handler\FundingCaseUpdateAmountApprovedHandlerInterface;
-use Civi\Funding\FundingProgram\FundingCaseTypeManager;
-use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
@@ -40,22 +38,14 @@ final class UpdateAmountApprovedActionHandler implements ActionHandlerInterface 
 
   private FundingCaseManager $fundingCaseManager;
 
-  private FundingCaseTypeManager $fundingCaseTypeManager;
-
-  private FundingProgramManager $fundingProgramManager;
-
   public function __construct(
     ApplicationProcessManager $applicationProcessManager,
     FundingCaseUpdateAmountApprovedHandlerInterface $updateAmountApprovedHandler,
     FundingCaseManager $fundingCaseManager,
-    FundingCaseTypeManager $fundingCaseTypeManager,
-    FundingProgramManager $fundingProgramManager
   ) {
     $this->applicationProcessManager = $applicationProcessManager;
     $this->updateAmountApprovedHandler = $updateAmountApprovedHandler;
     $this->fundingCaseManager = $fundingCaseManager;
-    $this->fundingCaseTypeManager = $fundingCaseTypeManager;
-    $this->fundingProgramManager = $fundingProgramManager;
   }
 
   /**
@@ -65,19 +55,14 @@ final class UpdateAmountApprovedActionHandler implements ActionHandlerInterface 
    */
   public function updateAmountApproved(UpdateAmountApprovedAction $action): array {
     Assert::greaterThan($action->getAmount(), 0);
-    $fundingCase = $this->fundingCaseManager->get($action->getId());
-    Assert::notNull($fundingCase, E::ts('Funding case with ID "%1" not found', [1 => $action->getId()]));
-    $fundingCaseType = $this->fundingCaseTypeManager->get($fundingCase->getFundingCaseTypeId());
-    Assert::notNull($fundingCaseType);
-    $fundingProgram = $this->fundingProgramManager->get($fundingCase->getFundingProgramId());
-    Assert::notNull($fundingProgram);
+    $fundingCaseBundle = $this->fundingCaseManager->getBundle($action->getId());
+    Assert::notNull($fundingCaseBundle, E::ts('Funding case with ID "%1" not found', [1 => $action->getId()]));
+    $fundingCase = $fundingCaseBundle->getFundingCase();
 
     $command = new FundingCaseUpdateAmountApprovedCommand(
-      $fundingCase,
+      $fundingCaseBundle,
       $action->getAmount(),
       $this->applicationProcessManager->getStatusListByFundingCaseId($fundingCase->getId()),
-      $fundingCaseType,
-      $fundingProgram,
     );
     $this->updateAmountApprovedHandler->handle($command);
 

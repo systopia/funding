@@ -60,11 +60,9 @@ class FundingCaseWithdrawnSubscriber implements EventSubscriberInterface {
     if ($this->isStatusChangedToWithdrawn($fundingCase, $event->getPreviousFundingCase())) {
       if ($fundingCase->getAmountApproved() > 0) {
         $this->updateAmountApprovedHandler->handle((new FundingCaseUpdateAmountApprovedCommand(
-          $fundingCase,
+          $event->getFundingCaseBundle(),
           0.0,
           $this->applicationProcessManager->getStatusListByFundingCaseId($fundingCase->getId()),
-          $event->getFundingCaseType(),
-          $event->getFundingProgram()
         ))->setAuthorized(TRUE));
       }
     }

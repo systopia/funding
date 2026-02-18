@@ -46,9 +46,11 @@
   );
 
   fundingModule.controller('fundingCaseCtrl', [
-    '$scope', 'crmStatus', 'fundingProgramService', 'fundingCaseService', 'fundingApplicationProcessService', 'fundingContactService',
+    '$scope', 'crmStatus', 'fundingCurrencyFilter', 'fundingProgramService', 'fundingCaseService',
+    'fundingApplicationProcessService', 'fundingCaseTypeService', 'fundingContactService',
     'fundingCase', 'statusLabels', 'applicationProcesses', 'payoutProcesses', 'possibleActions',
-    function ($scope, crmStatus, fundingProgramService, fundingCaseService, fundingApplicationProcessService, fundingContactService,
+    function ($scope, crmStatus, fundingCurrencyFilter, fundingProgramService, fundingCaseService,
+              fundingApplicationProcessService, fundingCaseTypeService, fundingContactService,
               fundingCase, statusLabels, applicationProcesses, payoutProcesses, possibleActions) {
       const $ = CRM.$;
       const ts = $scope.ts = CRM.ts('funding');
@@ -101,9 +103,17 @@
         }
       );
 
+      fundingCaseTypeService.get(fundingCase.funding_case_type_id).then(
+        (fundingCaseType) => {
+          $scope.fundingCaseType = fundingCaseType;
+        }
+      );
+
       fundingContactService.get(fundingCase.recipient_contact_id).then(
         (contact) => $scope.recipientContact = contact
       );
+
+      $scope.fundingCurrencyFilter = fundingCurrencyFilter;
 
       $scope.fundingCase = fundingCase;
       $scope.statusLabels = statusLabels;
@@ -175,7 +185,10 @@
       };
       let $updateAmountApprovedModal = null;
       $scope.updateAmountApprovedPrepare = function () {
-        $scope.updateAmountApproved.amount = $scope.fundingCase.amount_approved;
+        if ($scope.fundingCaseType.properties.amountApprovedNonAdjustable) {
+          $scope.updateAmountApproved.amount = $scope.amountRequestedEligible;
+        }
+
         if ($scope.fundingProgram.budget !== null) {
           fundingProgramService.getAmountApproved(fundingCase.funding_program_id).then((amountApproved) => {
             $scope.availableBudget = $scope.fundingProgram.budget - amountApproved + $scope.fundingCase.amount_approved;
