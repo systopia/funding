@@ -24,15 +24,11 @@ use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
 use Civi\Funding\Api4\Action\Traits\ApplicationProcessManagerTrait;
 use Civi\Funding\Api4\Action\Traits\FundingCaseManagerTrait;
-use Civi\Funding\Api4\Action\Traits\FundingCaseTypeManagerTrait;
-use Civi\Funding\Api4\Action\Traits\FundingProgramManagerTrait;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\FundingCase\Command\FundingCaseApproveCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\Handler\FundingCaseApproveHandlerInterface;
 use Civi\Funding\FundingCase\TransferContractRouter;
-use Civi\Funding\FundingProgram\FundingCaseTypeManager;
-use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\RemoteTools\Api4\Action\Traits\IdParameterTrait;
 use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
@@ -49,10 +45,6 @@ class ApproveAction extends AbstractAction {
 
   use FundingCaseManagerTrait;
 
-  use FundingCaseTypeManagerTrait;
-
-  use FundingProgramManagerTrait;
-
   /**
    * @var mixed CiviCRM (v5.59) does not know float/double in @var.
    * @required
@@ -68,16 +60,12 @@ class ApproveAction extends AbstractAction {
     ?ApplicationProcessManager $applicationProcessManager = NULL,
     ?FundingCaseApproveHandlerInterface $approveHandler = NULL,
     ?FundingCaseManager $fundingCaseManager = NULL,
-    ?FundingCaseTypeManager $fundingCaseTypeManager = NULL,
-    ?FundingProgramManager $fundingProgramManager = NULL,
     ?TransferContractRouter $transferContractRouter = NULL
   ) {
     parent::__construct(FundingCase::getEntityName(), 'approve');
     $this->_applicationProcessManager = $applicationProcessManager;
     $this->approveHandler = $approveHandler;
     $this->_fundingCaseManager = $fundingCaseManager;
-    $this->_fundingCaseTypeManager = $fundingCaseTypeManager;
-    $this->_fundingProgramManager = $fundingProgramManager;
     $this->transferContractRouter = $transferContractRouter;
   }
 
@@ -86,22 +74,14 @@ class ApproveAction extends AbstractAction {
    */
   public function _run(Result $result): void {
     Assert::greaterThan($this->amount, 0);
-    $fundingCase = $this->getFundingCaseManager()->get($this->getId());
-    Assert::notNull($fundingCase, E::ts('Funding case with ID "%1" not found', [1 => $this->getId()]));
-    $fundingCaseType = $this->getFundingCaseTypeManager()->get($fundingCase->getFundingCaseTypeId());
-    Assert::notNull($fundingCaseType);
-    $fundingProgram = $this->getFundingProgramManager()->get($fundingCase->getFundingProgramId());
-    Assert::notNull($fundingProgram, sprintf(
-      'No permission to access funding program with ID "%d"',
-      $fundingCase->getFundingProgramId()
-    ));
+    $fundingCaseBundle = $this->getFundingCaseManager()->getBundle($this->getId());
+    Assert::notNull($fundingCaseBundle, E::ts('Funding case with ID "%1" not found', [1 => $this->getId()]));
+    $fundingCase = $fundingCaseBundle->getFundingCase();
 
     $command = new FundingCaseApproveCommand(
-      $fundingCase,
+      $fundingCaseBundle,
       $this->amount,
       $this->getApplicationProcessManager()->getStatusListByFundingCaseId($fundingCase->getId()),
-      $fundingCaseType,
-      $fundingProgram,
     );
     $this->getApproveHandler()->handle($command);
 

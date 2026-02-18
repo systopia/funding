@@ -21,10 +21,9 @@ namespace Civi\Funding\FundingCase\Handler;
 
 use Civi\API\Exception\UnauthorizedException;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
-use Civi\Funding\EntityFactory\FundingCaseFactory;
-use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
-use Civi\Funding\EntityFactory\FundingProgramFactory;
+use Civi\Funding\EntityFactory\FundingCaseBundleFactory;
 use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
+use Civi\Funding\FundingCase\Approval\ApprovalValidator;
 use Civi\Funding\FundingCase\Command\FundingCaseApproveCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\StatusDeterminer\FundingCaseStatusDeterminerInterface;
@@ -38,36 +37,28 @@ use PHPUnit\Framework\TestCase;
  */
 final class FundingCaseApproveHandlerTest extends TestCase {
 
-  /**
-   * @var \Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $actionsDeterminerMock;
+  private FundingCaseActionsDeterminerInterface&MockObject $actionsDeterminerMock;
 
-  /**
-   * @var \Civi\Funding\FundingCase\FundingCaseManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $fundingCaseManagerMock;
+  private ApprovalValidator&MockObject $approvalValidatorMock;
+
+  private FundingCaseManager&MockObject $fundingCaseManagerMock;
 
   private FundingCaseApproveHandler $handler;
 
-  /**
-   * @var \Civi\Funding\FundingCase\StatusDeterminer\FundingCaseStatusDeterminerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $statusDeterminerMock;
+  private FundingCaseStatusDeterminerInterface&MockObject $statusDeterminerMock;
 
-  /**
-   * @var \Civi\Funding\TransferContract\TransferContractCreator&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $transferContractCreatorMock;
+  private TransferContractCreator&MockObject $transferContractCreatorMock;
 
   protected function setUp(): void {
     parent::setUp();
     $this->actionsDeterminerMock = $this->createMock(FundingCaseActionsDeterminerInterface::class);
+    $this->approvalValidatorMock = $this->createMock(ApprovalValidator::class);
     $this->fundingCaseManagerMock = $this->createMock(FundingCaseManager::class);
     $this->statusDeterminerMock = $this->createMock(FundingCaseStatusDeterminerInterface::class);
     $this->transferContractCreatorMock = $this->createMock(TransferContractCreator::class);
     $this->handler = new FundingCaseApproveHandler(
       $this->actionsDeterminerMock,
+      $this->approvalValidatorMock,
       $this->fundingCaseManagerMock,
       $this->statusDeterminerMock,
       $this->transferContractCreatorMock,
@@ -83,6 +74,10 @@ final class FundingCaseApproveHandlerTest extends TestCase {
         $command->getApplicationProcessStatusList(),
         $command->getFundingCase()->getPermissions()
       )
+      ->willReturn(TRUE);
+
+    $this->approvalValidatorMock->method('isAmountAllowed')
+      ->with($command->getAmount(), $command->getFundingCaseBundle())
       ->willReturn(TRUE);
 
     $this->transferContractCreatorMock->expects(static::once())->method('createTransferContract')
@@ -104,7 +99,7 @@ final class FundingCaseApproveHandlerTest extends TestCase {
     static::assertSame(12.34, $command->getFundingCase()->getAmountApproved());
   }
 
-  public function testHandleUnauthorized(): void {
+  public function testHandleUnauthorizedActionNotAllowed(): void {
     $command = $this->createCommand();
     $this->actionsDeterminerMock->method('isActionAllowed')
       ->with(
@@ -120,18 +115,34 @@ final class FundingCaseApproveHandlerTest extends TestCase {
     $this->handler->handle($command);
   }
 
+  public function testHandleUnauthorizedAmountNotAllowed(): void {
+    $command = $this->createCommand();
+    $this->actionsDeterminerMock->method('isActionAllowed')
+      ->with(
+        'approve',
+        $command->getFundingCase()->getStatus(),
+        $command->getApplicationProcessStatusList(),
+        $command->getFundingCase()->getPermissions()
+      )
+      ->willReturn(TRUE);
+
+    $this->approvalValidatorMock->method('isAmountAllowed')
+      ->with($command->getAmount(), $command->getFundingCaseBundle())
+      ->willReturn(FALSE);
+
+    $this->expectException(UnauthorizedException::class);
+    $this->expectExceptionMessage('The chosen amount is not allowed.');
+    $this->handler->handle($command);
+  }
+
   private function createCommand(): FundingCaseApproveCommand {
-    $fundingCase = FundingCaseFactory::createFundingCase();
+    $fundingCaseBundle = FundingCaseBundleFactory::create();
     $amount = 12.34;
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
-    $fundingProgram = FundingProgramFactory::createFundingProgram();
 
     return new FundingCaseApproveCommand(
-      $fundingCase,
+      $fundingCaseBundle,
       $amount,
       [22 => new FullApplicationProcessStatus('eligible', TRUE, TRUE)],
-      $fundingCaseType,
-      $fundingProgram
     );
   }
 

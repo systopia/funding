@@ -11,18 +11,19 @@
                 </div>
                 <div class="modal-body">
                     <div ng-show="fundingProgram.budget !== null">
-                      <label>{{ ts('Available budget') }}</label>
+                      <label>{{:: ts('Available budget') }}</label>
                       {{ availableBudget|fundingCurrency:fundingProgram.currency }}
                     </div>
                     <div>
                         <label for="approve-amount">{{ ts('Amount') }}</label>
-                        <input id="approve-amount" type="number" min="0.01" step="0.01" ng-model="approve.amount" ng-required="true"/>
+                        <input id="approve-amount" type="number" min="0.01" step="0.01" ng-model="approve.amount" ng-required="true"
+                               ng-disabled="fundingCaseType.properties.amountApprovedNonAdjustable"/>
                         {{ currencySymbol }}
                     </div>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-success" crm-icon="fa-check" ng-click="approveSubmit()">{{ ts('Submit') }}</button>
-                  <button type="button" class="btn btn-default" crm-icon="fa-times" data-dismiss="modal">{{ ts('Cancel') }}</button>
+                  <button type="button" class="btn btn-success" crm-icon="fa-check" ng-click="approveSubmit()">{{:: ts('Submit') }}</button>
+                  <button type="button" class="btn btn-default" crm-icon="fa-times" data-dismiss="modal">{{:: ts('Cancel') }}</button>
                 </div>
             </div>
         </div>
@@ -37,17 +38,19 @@
         </div>
         <div class="modal-body">
           <div ng-show="fundingProgram.budget !== null">
-            <label>{{ ts('Available budget') }}</label>
+            <label>{{:: ts('Available budget') }}</label>
             {{ availableBudget|fundingCurrency:fundingProgram.currency }}
           </div>
           <div>
-            <label for="amount-approved">{{ ts('Amount') }}</label>
-            <input id="amount-approved" type="number" min="0.01" step="0.01" ng-model="updateAmountApproved.amount" ng-required="true"/>
+            <label for="amount-approved">{{:: ts('Amount') }}</label>
+            <input id="amount-approved" type="number" min="0.01" step="0.01" ng-model="updateAmountApproved.amount" ng-required="true"
+                   ng-disabled="fundingCaseType.properties.amountApprovedNonAdjustable"/>
             {{ currencySymbol }}
+            {{ ts('(Current: %1)', {1: fundingCurrencyFilter(fundingCase.amount_approved, fundingProgram.currency) }) }}
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-success" crm-icon="fa-check" ng-click="updateAmountApprovedSubmit()">{{ ts('Submit') }}</button>
+          <button type="button" class="btn btn-success" crm-icon="fa-check" ng-click="updateAmountApprovedSubmit()">{{:: ts('Submit') }}</button>
           <button type="button" class="btn btn-default" crm-icon="fa-times" data-dismiss="modal">{{ ts('Cancel') }}</button>
         </div>
       </div>
@@ -57,46 +60,46 @@
   <h1 crm-page-title>{{ ts('Funding Case: %1', {1: fundingCase.identifier}) }}</h1>
 
   <div>
-      <label>{{ ts('Status' )}}</label>
+      <label>{{:: ts('Status' )}}</label>
       {{ statusLabels[fundingCase.status] || ts('Unknown') }}
   </div>
   <div>
-      <label>{{ ts('Creation Date') }}</label>
+      <label>{{:: ts('Creation Date') }}</label>
       {{ fundingCase.creation_date }}
   </div>
   <div>
-      <label>{{ ts('Modification Date') }}</label>
+      <label>{{:: ts('Modification Date') }}</label>
       {{ fundingCase.modification_date }}
   </div>
   <div>
-      <label>{{ ts('Recipient') }}</label>
+      <label>{{:: ts('Recipient') }}</label>
       <funding-recipient-contact funding-case="fundingCase" edit-allowed="possibleActions.includes('set-recipient-contact')"></funding-recipient-contact>
   </div>
   <div>
-    <label>{{ ts('Notification Contacts') }}</label>
+    <label>{{:: ts('Notification Contacts') }}</label>
     <funding-notification-contacts funding-case="fundingCase" edit-allowed="possibleActions.includes('set-notification-contacts')"></funding-notification-contacts>
   </div>
   <div>
-    <label>{{ ts('Amount Approved')}}</label>
+    <label>{{:: ts('Amount Approved')}}</label>
     {{ fundingCase.amount_approved|fundingCurrency:fundingProgram.currency }}
   </div>
   <div>
-      <label>{{ ts('Amount Requested Eligible') }}</label>
+      <label>{{:: ts('Amount Requested Eligible') }}</label>
       {{ amountRequestedEligible|fundingCurrency:fundingProgram.currency }}
   </div>
   <div>
-    <label>{{ ts('Amount Cleared') }}</label>
+    <label>{{:: ts('Amount Cleared') }}</label>
     {{ fundingCase.amount_cleared|fundingCurrency:fundingProgram.currency }}
   </div>
   <div>
-    <label>{{ ts('Amount Admitted') }}</label>
+    <label>{{:: ts('Amount Admitted') }}</label>
     {{ fundingCase.amount_admitted|fundingCurrency:fundingProgram.currency }}
   </div>
   <div ng-show="fundingCase.transfer_contract_uri">
       <a href="{{ fundingCase.transfer_contract_uri }}" target="_blank" crm-icon="fa-external-link">{{ ts('Transfer Contract') }}</a>
   </div>
 
-  <h2>{{ ts('Applications') }}</h2>
+  <h2>{{:: ts('Applications') }}</h2>
   <sk-application-process-table options="{filters: {funding_case_id: fundingCase.id}}"></sk-application-process-table>
 
   <button ng-show="possibleActions.includes('approve')" type="button"

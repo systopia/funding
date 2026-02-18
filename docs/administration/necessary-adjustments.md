@@ -71,10 +71,12 @@ return [
 
 For `properties` an array may be set. These attributes can be used optionally:
 
+* `amountApprovedNonAdjustable`: If `true` the amount approved is non-adjustable and equals the sum of the amounts requested of the eligible application processes of a funding case.
 * `applicationAddableStatusList`: A new application is added to an existing funding case in any of the given status that has the same funding case type and the same funding program. If no such funding case exists, a new one is created. Only relevant for non-combined applications. (If empty or not specified a new funding case is created for every application.)
 * `applicationEditorTagName`: The tag name of an AngularJS directive to use instead of the default application editor for reviewers.
 * `applicationReviewSidebarTagName`: The tag name of an AngularJS directive to use instead of the default review sidebar.
 * `applicationFormTagName`: The tag name of an AngularJS directive to use instead of the default application form for reviewers.
+* `applicationPageTagName`: The tag name of an Angular JS directive to use instead of the default application page for reviewers.
 
 If a custom AngularJS directive shall be used, the module containing it has to
 be registered as a requirement of the `crmFunding` module. This can be achieved

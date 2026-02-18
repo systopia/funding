@@ -59,8 +59,6 @@ final class FundingCaseWithdrawnSubscriberTest extends TestCase {
       'amount_approved' => 0.1,
     ]);
     $fundingCase = $fundingCaseBundle->getFundingCase();
-    $fundingCaseType = $fundingCaseBundle->getFundingCaseType();
-    $fundingProgram = $fundingCaseBundle->getFundingProgram();
     $previousFundingCase = FundingCaseFactory::createFundingCase([
       'status' => FundingCaseStatus::ONGOING,
       'amount_approved' => 0.1,
@@ -73,7 +71,7 @@ final class FundingCaseWithdrawnSubscriberTest extends TestCase {
 
     $this->updateAmountApprovedHandlerMock->expects(static::once())->method('handle')
       ->with((new FundingCaseUpdateAmountApprovedCommand(
-        $fundingCase, 0.0, $statusList, $fundingCaseType, $fundingProgram
+        $fundingCaseBundle, 0.0, $statusList
       ))->setAuthorized(TRUE)
     );
 
