@@ -2,7 +2,6 @@ site_name: Funding Program Manager
 site_description: 'A guide for the Funding extension.'
 site_author: SYSTOPIA
 repo_url: https://github.com/systopia/funding
-site_description: 'A guide for the Funding extension.'
 theme:
   name: material
 
