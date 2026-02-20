@@ -43,14 +43,18 @@ trait ActionRecordValidationTrait {
   private ?string $_entityClass = NULL;
 
   /**
-   * @phpstan-param array<string, mixed> $record
+   * @param array<string, mixed> $record
+   * @param string|null $entityName
+   * @param string|null $actionName
    *
    * @throws \Civi\Funding\Validation\Exception\EntityValidationFailedException
    */
-  protected function formatWriteValues(&$record): void {
+  protected function formatWriteValues(&$record, $entityName = NULL, $actionName = NULL): void {
     $this->_validateRecord($record);
-    // @phpstan-ignore parameterByRef.type
-    parent::formatWriteValues($record);
+    // Parameters $entityName and $actionName will be added in CiviCRM 6.12:
+    // https://github.com/civicrm/civicrm-core/pull/34508
+    // @phpstan-ignore parameterByRef.type, arguments.count
+    parent::formatWriteValues($record, $entityName, $actionName);
   }
 
   /**
