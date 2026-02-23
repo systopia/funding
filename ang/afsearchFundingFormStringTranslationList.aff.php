@@ -3,7 +3,7 @@ use CRM_Funding_ExtensionUtil as E;
 
 return [
   'type' => 'search',
-  'title' => E::ts('Translation'),
+  'title' => E::ts('Strings'),
   'icon' => 'fa-list-alt',
   'server_route' => 'civicrm/funding/form-string-translation/list',
   'permission' => [

@@ -799,11 +799,13 @@ msgid "Original"
 msgstr "Original"
 
 #: CRM/Funding/DAO/FundingFormStringTranslation.php
-#: ang/afformFundingFormStringTranslationEdit.aff.php
-#: ang/afsearchFundingFormStringTranslationList.aff.php
 #: managed/SavedSearch_funding_form_string_translation.mgd.php
-msgid "Translation"
-msgstr "Übersetzung"
+msgid "Actual"
+msgstr "Tatsächlich"
+
+#: CRM/Funding/DAO/FundingFormStringTranslation.php
+msgid "Actual string"
+msgstr "Tatsächliche Zeichenkette"
 
 #: CRM/Funding/DAO/FundingNewCasePermissions.php
 msgid "Funding New Case Permissionses"
@@ -2172,6 +2174,11 @@ msgstr "Förderprogramm mit ID \"%1\" nicht gefunden"
 msgid "Approving this funding case is not allowed."
 msgstr "Diesen Förderfall zu bewilligen ist nicht erlaubt."
 
+#: Civi/Funding/FundingCase/Handler/FundingCaseApproveHandler.php
+#: Civi/Funding/FundingCase/Handler/FundingCaseUpdateAmountApprovedHandler.php
+msgid "The chosen amount is not allowed."
+msgstr "Der gewählte Betrag ist nicht erlaubt."
+
 #: Civi/Funding/FundingCase/Handler/FundingCaseFinishClearingHandler.php
 msgid "Finishing the clearing of funding case \"%1\" is not allowed."
 msgstr ""
@@ -2490,7 +2497,6 @@ msgstr ""
 "vom gewählten Typ zum Empfängerkontakt haben."
 
 #: Civi/Funding/Translation/EventSubscriber/ExtractStringsSearchKitTaskSubscriber.php
-#: managed/SavedSearch_funding_form_translation.mgd.php
 msgid "Extract Strings"
 msgstr "Zeichenketten extrahieren"
 
@@ -2521,6 +2527,10 @@ msgstr "Vorlagen für Förderfalltyp"
 msgid "Submit"
 msgstr "Senden"
 
+#: ang/afformFundingFormStringTranslationEdit.aff.php
+msgid "Edit String"
+msgstr "Zeichenkette bearbeiten"
+
 #: ang/afformFundingProgramAdd.aff.php
 msgid "New Funding Program"
 msgstr "Neues Förderprogramm"
@@ -2544,9 +2554,13 @@ msgstr "Controlling Mittelabrufe"
 msgid "Funding Applications"
 msgstr "Förderanträge"
 
+#: ang/afsearchFundingFormStringTranslationList.aff.php
+msgid "Strings"
+msgstr "Zeichenketten"
+
 #: ang/afsearchFundingFormTranslation.aff.php
 msgid "Funding Form Translation"
-msgstr "Förderformularübersetzung"
+msgstr "Förderformularbeschriftung"
 
 #: ang/afsearchFundingProgramControlling.aff.php
 #: managed/NavigationFunding.mgd.php
@@ -2901,6 +2915,10 @@ msgid "Update Amount Approved"
 msgstr "Bewilligten Betrag ändern"
 
 #: ang/crmFunding/case/fundingCase.template.html
+msgid "(Current: %1)"
+msgstr "(Aktuell: %1)"
+
+#: ang/crmFunding/case/fundingCase.template.html
 msgid "Funding Case: %1"
 msgstr "Förderfall: %1"
 
@@ -3201,7 +3219,7 @@ msgstr "Fördermittel"
 #: managed/NavigationFunding.mgd.php
 #: managed/SavedSearch_funding_form_translation.mgd.php
 msgid "Form Translation"
-msgstr "Formularübersetzung"
+msgstr "Formularbeschriftung"
 
 #: managed/NavigationFunding.mgd.php
 msgid "Add Funding Program"
@@ -3386,15 +3404,15 @@ msgstr "Förderfallanträge"
 
 #: managed/SavedSearch_funding_form_string_translation.mgd.php
 msgid "Form String Translation"
-msgstr "Übersetzung von Formularzeichenkette"
+msgstr "Anpassung von Formularzeichenkette"
 
 #: managed/SavedSearch_funding_form_string_translation.mgd.php
-msgid "translation"
+msgid "Translation"
 msgstr "Übersetzung"
 
 #: managed/SavedSearch_funding_form_string_translation.mgd.php
-msgid "Edit Translation"
-msgstr "Übersetzung bearbeiten"
+msgid "Edit string"
+msgstr "Zeichenkette bearbeiten"
 
 #: managed/SavedSearch_funding_form_translation.mgd.php
 msgid "table"
@@ -3405,8 +3423,12 @@ msgid "Number of Strings"
 msgstr "Anzahl von Zeichenketten"
 
 #: managed/SavedSearch_funding_form_translation.mgd.php
-msgid "Translate"
-msgstr "Übersetzen"
+msgid "Extract strings"
+msgstr "Zeichenketten extrahieren"
+
+#: managed/SavedSearch_funding_form_translation.mgd.php
+msgid "Edit strings"
+msgstr "Zeichenketten bearbeiten"
 
 #: managed/SavedSearch_funding_programs.mgd.php
 msgid "Edit possible funding recipients"

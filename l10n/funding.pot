@@ -514,8 +514,12 @@ msgstr ""
 msgid "Original"
 msgstr ""
 
-#: CRM/Funding/DAO/FundingFormStringTranslation.php ang/afformFundingFormStringTranslationEdit.aff.php ang/afsearchFundingFormStringTranslationList.aff.php managed/SavedSearch_funding_form_string_translation.mgd.php
-msgid "Translation"
+#: CRM/Funding/DAO/FundingFormStringTranslation.php managed/SavedSearch_funding_form_string_translation.mgd.php
+msgid "Actual"
+msgstr ""
+
+#: CRM/Funding/DAO/FundingFormStringTranslation.php
+msgid "Actual string"
 msgstr ""
 
 #: CRM/Funding/DAO/FundingNewCasePermissions.php
@@ -1530,6 +1534,10 @@ msgstr ""
 msgid "Approving this funding case is not allowed."
 msgstr ""
 
+#: Civi/Funding/FundingCase/Handler/FundingCaseApproveHandler.php Civi/Funding/FundingCase/Handler/FundingCaseUpdateAmountApprovedHandler.php
+msgid "The chosen amount is not allowed."
+msgstr ""
+
 #: Civi/Funding/FundingCase/Handler/FundingCaseFinishClearingHandler.php
 msgid "Finishing the clearing of funding case \"%1\" is not allowed."
 msgstr ""
@@ -1782,7 +1790,7 @@ msgstr ""
 msgid "Assign permissions for new funding cases to contacts that have a relationship\nof the specified type to the recipient contact."
 msgstr ""
 
-#: Civi/Funding/Translation/EventSubscriber/ExtractStringsSearchKitTaskSubscriber.php managed/SavedSearch_funding_form_translation.mgd.php
+#: Civi/Funding/Translation/EventSubscriber/ExtractStringsSearchKitTaskSubscriber.php
 msgid "Extract Strings"
 msgstr ""
 
@@ -1810,6 +1818,10 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
+#: ang/afformFundingFormStringTranslationEdit.aff.php
+msgid "Edit String"
+msgstr ""
+
 #: ang/afformFundingProgramAdd.aff.php
 msgid "New Funding Program"
 msgstr ""
@@ -1828,6 +1840,10 @@ msgstr ""
 
 #: ang/afsearchFundingCaseApplicationProcesses.aff.php managed/SavedSearch_funding_application_processes.mgd.php
 msgid "Funding Applications"
+msgstr ""
+
+#: ang/afsearchFundingFormStringTranslationList.aff.php
+msgid "Strings"
 msgstr ""
 
 #: ang/afsearchFundingFormTranslation.aff.php
@@ -2056,6 +2072,10 @@ msgstr ""
 
 #: ang/crmFunding/case/fundingCase.template.html
 msgid "Update Amount Approved"
+msgstr ""
+
+#: ang/crmFunding/case/fundingCase.template.html
+msgid "(Current: %1)"
 msgstr ""
 
 #: ang/crmFunding/case/fundingCase.template.html
@@ -2463,11 +2483,11 @@ msgid "Form String Translation"
 msgstr ""
 
 #: managed/SavedSearch_funding_form_string_translation.mgd.php
-msgid "translation"
+msgid "Translation"
 msgstr ""
 
 #: managed/SavedSearch_funding_form_string_translation.mgd.php
-msgid "Edit Translation"
+msgid "Edit string"
 msgstr ""
 
 #: managed/SavedSearch_funding_form_translation.mgd.php
@@ -2479,7 +2499,11 @@ msgid "Number of Strings"
 msgstr ""
 
 #: managed/SavedSearch_funding_form_translation.mgd.php
-msgid "Translate"
+msgid "Extract strings"
+msgstr ""
+
+#: managed/SavedSearch_funding_form_translation.mgd.php
+msgid "Edit strings"
 msgstr ""
 
 #: managed/SavedSearch_funding_programs.mgd.php

@@ -97,7 +97,7 @@
       see \CRM_Utils_API_HTMLInputCoder::getSkipFields().
     -->
     <name>new_text</name>
-    <title>Translation</title>
+    <title>Actual</title>
     <!--
       Because this field is marked as not required CiviCRM adds NULL to the type
       in the SQL code, resulting in "varchar(8000) NOT NULL". So NULL is not
@@ -110,7 +110,7 @@
     <length>8000</length>
     <crmType>CRM_Utils_Type::T_STRING</crmType>
     <required>false</required>
-    <comment>Translation</comment>
+    <comment>Actual string</comment>
     <html>
       <type>TextArea</type>
     </html>
