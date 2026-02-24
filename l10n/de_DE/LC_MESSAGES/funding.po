@@ -2111,6 +2111,10 @@ msgid "Review: finish case"
 msgstr "Prüfung: Förderfall abschließen"
 
 #: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
+msgid "Review: drawdown create"
+msgstr "Prüfung: Mittelabruf erstellen"
+
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
 msgid "Drawdown: create"
 msgstr "Mittelabruf: erstellen"
 
@@ -2123,12 +2127,12 @@ msgid "Clearing: apply"
 msgstr "Verwendungsnachweis: beantragen"
 
 #: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
-msgid "Review: calculative"
-msgstr "Prüfung: rechnerisch"
+msgid "Review: application calculative"
+msgstr "Prüfung: Antrag rechnerisch"
 
 #: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
-msgid "Review: content"
-msgstr "Prüfung: fachlich"
+msgid "Review: application content"
+msgstr "Prüfung: Antrag fachlich"
 
 #: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
 msgid "Review: drawdown"
@@ -2161,6 +2165,11 @@ msgstr "intern"
 #: ang/crmFunding/clearing/clearingSubmitModal.template.html
 msgid "external"
 msgstr "extern"
+
+#: Civi/Funding/FundingCase/Api4/ActionHandler/GetSearchTasksActionHandler.php
+#: ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.template.html
+msgid "Create drawdown"
+msgstr "Mittelabruf erstellen"
 
 #: Civi/Funding/FundingCase/Api4/ActionHandler/RemoteSubmitNewApplicationFormActionHandler.php
 msgid "Funding case type with ID \"%1\" not found"
@@ -2591,6 +2600,7 @@ msgstr "Aufgaben (unerledigt)"
 #: ang/crmFunding/case/notificationContacts.directive.js
 #: ang/crmFunding/case/permissions/fundingCaseContactRelation.directive.js
 #: ang/crmFunding/case/recipientContact.directive.js
+#: ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.ctrl.js
 #: ang/crmFunding/clearing/clearing.js
 #: ang/crmFunding/clearing/clearingEditor.directive.js
 #: ang/crmFunding/clearing/clearingReviewer.directive.js
@@ -2675,6 +2685,7 @@ msgstr "Kommentarart"
 
 #: ang/crmFunding/application/applicationSubmitModal.template.html
 #: ang/crmFunding/case/fundingCase.template.html
+#: ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.template.html
 #: ang/crmFunding/clearing/clearingSubmitModal.template.html
 #: ang/crmFundingHiH/hihApplicationApproveModal.template.html
 msgid "Cancel"
@@ -2956,6 +2967,36 @@ msgstr "Hinzufügen"
 #: ang/crmFunding/fundingDate.filter.js
 msgid "empty"
 msgstr "leer"
+
+#: ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.ctrl.js
+msgid ""
+"The amount of each created drawdown is: <code>This value × amount approved ÷ "
+"100</code>. In case that exceeds the amount available, the amount available "
+"will be used."
+msgstr ""
+"Der Betrag jedes erstellten Mittelabrufs ist: <code>Dieser Wert ⋅ "
+"bewilligter Betrag : 100</code>. Sollte dies den verfügbaren Betrag "
+"überschreiten, wird der verfügbare Betrag verwendet."
+
+#: ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.ctrl.js
+msgid "An error occurred while attempting to create drawdowns: %1"
+msgstr "Beim der Mittelabrufe ist ein Fehler aufgetreten: %1"
+
+#: ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.ctrl.js
+msgid "Error"
+msgstr "Fehler"
+
+#: ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.ctrl.js
+msgid "An error occurred while attempting to create drawdowns."
+msgstr "Beim der Mittelabrufe ist ein Fehler aufgetreten."
+
+#: ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.template.html
+msgid "Percent of amount approved"
+msgstr "Prozent des bewilligten Betrags."
+
+#: ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.template.html
+msgid "Create %1 drawdowns"
+msgstr "%1 Mittelabrufe erstellen"
 
 #: ang/crmFunding/clearing/clearingSidebar.template.html
 msgid ""

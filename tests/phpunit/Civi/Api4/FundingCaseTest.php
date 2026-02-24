@@ -94,6 +94,20 @@ final class FundingCaseTest extends AbstractFundingHeadlessTestCase {
     static::assertSame('ongoing', $result['status']);
   }
 
+  public function testCreateDrawdowns(): void {
+    $this->addInternalFixtures();
+    RequestTestUtil::mockInternalRequest($this->associatedContactId);
+
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage('Payout process for funding case ID 12345 not found');
+
+    FundingCase::createDrawdowns(FALSE)
+      ->setIds([12345])
+      ->setAmountPercent(1)
+      ->execute()
+      ->getArrayCopy();
+  }
+
   public function testGet(): void {
     $this->addInternalFixtures();
 
@@ -150,6 +164,17 @@ final class FundingCaseTest extends AbstractFundingHeadlessTestCase {
       ->single();
 
     static::assertSame(1.1, $values['withdrawable_funds']);
+  }
+
+  public function testGetSearchTasks(): void {
+    $this->addInternalFixtures();
+    RequestTestUtil::mockInternalRequest($this->associatedContactId);
+
+    $searchTasks = FundingCase::getSearchTasks(FALSE)
+      ->setIds([$this->permittedFundingCaseId])
+      ->execute()
+      ->getArrayCopy();
+    static::assertSame([$this->permittedFundingCaseId => []], $searchTasks);
   }
 
   public function testRecreateTransferContract(): void {

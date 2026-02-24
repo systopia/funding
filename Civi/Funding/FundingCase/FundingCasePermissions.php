@@ -25,4 +25,6 @@ final class FundingCasePermissions {
 
   public const REVIEW_FINISH = 'review_case_finish';
 
+  public const REVIEW_DRAWDOWN_CREATE = 'review_drawdown_create';
+
 }

@@ -116,8 +116,10 @@ final class DrawdownValidator implements ConcreteEntityValidatorInterface {
         return $this->createAmountLessThanZeroResult();
       }
     }
-    // Allow reviewers to create final drawdown.
-    elseif (!$fundingCase->hasPermission(FundingCasePermissions::REVIEW_FINISH)) {
+    elseif (!$fundingCase->hasPermission(FundingCasePermissions::REVIEW_DRAWDOWN_CREATE) &&
+      // Allow reviewers to create final drawdown.
+      !$fundingCase->hasPermission(FundingCasePermissions::REVIEW_FINISH)
+    ) {
       throw new UnauthorizedException(E::ts('Permission to create drawdown is missing.'));
     }
 

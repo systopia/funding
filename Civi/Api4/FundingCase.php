@@ -20,11 +20,13 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\Funding\Api4\Action\FundingCase\ApproveAction;
+use Civi\Funding\Api4\Action\FundingCase\CreateDrawdownsAction;
 use Civi\Funding\Api4\Action\FundingCase\FinishClearingAction;
 use Civi\Funding\Api4\Action\FundingCase\GetAction;
 use Civi\Funding\Api4\Action\FundingCase\GetFieldsAction;
 use Civi\Funding\Api4\Action\FundingCase\GetPossibleActionsAction;
 use Civi\Funding\Api4\Action\FundingCase\GetPossibleRecipientsAction;
+use Civi\Funding\Api4\Action\FundingCase\GetSearchTasksAction;
 use Civi\Funding\Api4\Action\FundingCase\RecreateTransferContractAction;
 use Civi\Funding\Api4\Action\FundingCase\RejectAction;
 use Civi\Funding\Api4\Action\FundingCase\ResetPermissionsAction;
@@ -49,6 +51,10 @@ final class FundingCase extends Generic\DAOEntity {
     return (new ApproveAction())->setCheckPermissions($checkPermissions);
   }
 
+  public static function createDrawdowns(bool $checkPermissions = TRUE): CreateDrawdownsAction {
+    return (new CreateDrawdownsAction())->setCheckPermissions($checkPermissions);
+  }
+
   public static function finishClearing(bool $checkPermissions = TRUE): FinishClearingAction {
     return (new FinishClearingAction())->setCheckPermissions($checkPermissions);
   }
@@ -69,6 +75,10 @@ final class FundingCase extends Generic\DAOEntity {
    */
   public static function getFields($checkPermissions = TRUE) {
     return (new GetFieldsAction())->setCheckPermissions($checkPermissions);
+  }
+
+  public static function getSearchTasks(bool $checkPermissions = TRUE): GetSearchTasksAction {
+    return (new GetSearchTasksAction())->setCheckPermissions($checkPermissions);
   }
 
   public static function getPossibleActions(bool $checkPermissions = TRUE): GetPossibleActionsAction {
