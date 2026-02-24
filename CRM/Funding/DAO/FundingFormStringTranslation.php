@@ -226,8 +226,8 @@ class CRM_Funding_DAO_FundingFormStringTranslation extends CRM_Core_DAO {
         'new_text' => [
           'name' => 'new_text',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => E::ts('Translation'),
-          'description' => E::ts('Translation'),
+          'title' => E::ts('Actual'),
+          'description' => E::ts('Actual string'),
           'required' => FALSE,
           'maxlength' => 8000,
           'size' => CRM_Utils_Type::HUGE,

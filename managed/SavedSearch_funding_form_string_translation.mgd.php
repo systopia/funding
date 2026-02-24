@@ -47,7 +47,7 @@ return [
       'version' => 4,
       'values' => [
         'name' => 'translation',
-        'label' => E::ts('translation'),
+        'label' => E::ts('Translation'),
         'saved_search_id.name' => 'funding_form_string_translation',
         'type' => 'table',
         'settings' => [
@@ -73,7 +73,7 @@ return [
               'type' => 'field',
               'key' => 'new_text',
               'dataType' => 'Text',
-              'label' => E::ts('Translation'),
+              'label' => E::ts('Actual'),
               'sortable' => TRUE,
               'editable' => TRUE,
             ],
@@ -90,7 +90,7 @@ return [
                 [
                   'path' => 'civicrm/funding/funding/form-string-translation/edit#?FundingFormStringTranslation1=[id]',
                   'icon' => 'fa-pen-to-square',
-                  'text' => E::ts('Edit Translation'),
+                  'text' => E::ts('Edit string'),
                   'style' => 'default',
                   'conditions' => [],
                   'task' => '',

@@ -116,7 +116,7 @@ return [
                   'entity' => 'FundingCaseTypeProgram',
                   'join' => '',
                   'target' => 'crm-popup',
-                  'text' => E::ts('Extract Strings'),
+                  'text' => E::ts('Extract strings'),
                   'style' => 'default',
                   'path' => '',
                   'action' => '',
@@ -126,7 +126,7 @@ return [
                 [
                   'path' => 'civicrm/funding/form-string-translation/list#?funding_program_id=[FundingCaseTypeProgram_FundingProgram_funding_program_id_01.id]&funding_case_type_id=[FundingCaseTypeProgram_FundingCaseType_funding_case_type_id_01.id]',
                   'icon' => 'fa-pen-to-square',
-                  'text' => E::ts('Translate'),
+                  'text' => E::ts('Edit strings'),
                   'style' => 'default',
                   'conditions' => [],
                   'task' => '',
