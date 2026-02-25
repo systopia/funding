@@ -46,7 +46,7 @@ final class GetSearchTasksActionHandler implements ActionHandlerInterface {
     $tasks = [];
 
     foreach ($action->getIds() as $id) {
-      $tasks[$id] = $this->getSearchKitTasksById($id);
+      $tasks[$id] = $this->getSearchTasksByFundingCaseId($id);
     }
 
     return $tasks;
@@ -58,7 +58,7 @@ final class GetSearchTasksActionHandler implements ActionHandlerInterface {
    *
    * @throws \CRM_Core_Exception
    */
-  private function getSearchKitTasksById(int $fundingCaseId): array {
+  private function getSearchTasksByFundingCaseId(int $fundingCaseId): array {
     $tasks = [];
 
     if ($this->isDrawdownCreatePossible($fundingCaseId)) {

@@ -31,6 +31,10 @@
     };
 
     this.createDrawdowns = function() {
+      if (ctrl.run) {
+        return;
+      }
+
       ctrl.run = true;
       $('.ui-dialog-titlebar button').hide();
 

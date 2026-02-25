@@ -48,9 +48,7 @@ fundingModule.directive('fundingCaseTasksDecorator', function() {
   return {
     restrict: 'AE',
     scope: false,
-    template: function () {
-      return '';
-    },
+    template: '',
     controller: ['$scope', 'fundingCaseService',
       function ($scope, fundingCaseService) {
         const ctrl = $scope.$ctrl;
