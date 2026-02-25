@@ -21,12 +21,13 @@ namespace Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\FundingCase\UiSchem
 
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\Entity\ApplicationProcessEntity;
+use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\FundingCase\FundingCaseUiSchemaFactoryInterface;
 use Civi\Funding\Form\JsonSchema\JsonFormsSubmitButtonsFactory;
-use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\FundingCase\Actions\KursCaseSubmitActionsFactory;
+use Civi\Funding\FundingCase\Actions\FundingCaseSubmitActionsFactoryInterface;
 use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonForms\JsonFormsElement;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
@@ -37,11 +38,11 @@ final class KursCaseUiSchemaFactory implements FundingCaseUiSchemaFactoryInterfa
 
   private ApplicationProcessManager $applicationProcessManager;
 
-  private KursCaseSubmitActionsFactory $submitActionsFactory;
+  private FundingCaseSubmitActionsFactoryInterface $submitActionsFactory;
 
   public function __construct(
     ApplicationProcessManager $applicationProcessManager,
-    KursCaseSubmitActionsFactory $submitActionsFactory
+    FundingCaseSubmitActionsFactoryInterface $submitActionsFactory
   ) {
     $this->applicationProcessManager = $applicationProcessManager;
     $this->submitActionsFactory = $submitActionsFactory;
@@ -55,13 +56,12 @@ final class KursCaseUiSchemaFactory implements FundingCaseUiSchemaFactoryInterfa
     $applicationProcesses = $this->applicationProcessManager->getByFundingCaseId($fundingCase->getId());
 
     $submitButtons = JsonFormsSubmitButtonsFactory::createButtons(
-      $this->submitActionsFactory->createSubmitActions(
-        $fundingCase->getStatus(),
+      $this->submitActionsFactory->getSubmitActions(
+        new FundingCaseBundle($fundingCase, $fundingCaseType, $fundingProgram),
         array_map(
           fn (ApplicationProcessEntity $applicationProcess) => $applicationProcess->getFullStatus(),
           $applicationProcesses
-        ),
-        $fundingCase->getPermissions()
+        )
       )
     );
 
@@ -73,7 +73,7 @@ final class KursCaseUiSchemaFactory implements FundingCaseUiSchemaFactoryInterfa
     FundingCaseTypeEntity $fundingCaseType
   ): JsonFormsElement {
     $submitButtons = JsonFormsSubmitButtonsFactory::createButtons(
-      $this->submitActionsFactory->createInitialSubmitActions($fundingProgram->getPermissions())
+      $this->submitActionsFactory->getInitialSubmitActions($fundingProgram->getPermissions(), $fundingCaseType)
     );
 
     return new KursNewCaseUiSchema($submitButtons);

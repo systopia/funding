@@ -84,6 +84,8 @@ use Civi\Funding\Form\Application\ApplicationCostItemsFormDataLoader;
 use Civi\Funding\Form\Application\ApplicationCostItemsFormDataLoaderInterface;
 use Civi\Funding\Form\Application\ApplicationResourcesItemsFormDataLoader;
 use Civi\Funding\Form\Application\ApplicationResourcesItemsFormDataLoaderInterface;
+use Civi\Funding\Form\Application\ApplicationSubmitActionsFactory;
+use Civi\Funding\Form\Application\ApplicationSubmitActionsFactoryInterface;
 use Civi\Funding\FundingCase\StatusDeterminer\DefaultFundingCaseStatusDeterminer;
 use Civi\Funding\Validation\ConcreteEntityValidatorInterface;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
@@ -136,6 +138,8 @@ ServiceRegistrator::autowireAllImplementing(
 $container->register(OpisApplicationValidator::class, OpisApplicationValidator::class)
   ->setFactory([OpisApplicationValidatorFactory::class, 'getValidator']);
 $container->autowire(ApplicationSchemaValidatorInterface::class, ApplicationSchemaValidator::class);
+
+$container->autowire(ApplicationSubmitActionsFactoryInterface::class, ApplicationSubmitActionsFactory::class);
 
 $container->autowire(ApplicationActionApplyHandlerInterface::class, DefaultApplicationActionApplyHandler::class);
 $container->autowire(

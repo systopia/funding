@@ -19,10 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\DependencyInjection\Compiler;
 
-use Civi\Funding\ApplicationProcess\ActionsContainer\ApplicationSubmitActionsContainerInterface;
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerInterface;
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoContainer;
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface;
 use Civi\Funding\ApplicationProcess\ApplicationFormFilesFactoryInterface;
 use Civi\Funding\ApplicationProcess\DefaultApplicationFormFilesFactory;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationActionApplyHandler;
@@ -67,8 +64,6 @@ use Civi\Funding\DependencyInjection\Compiler\Traits\CreateFundingCaseTypeServic
 use Civi\Funding\DependencyInjection\Compiler\Traits\TaggedFundingCaseTypeServicesTrait;
 use Civi\Funding\Form\Application\ApplicationFormDataFactoryInterface;
 use Civi\Funding\Form\Application\ApplicationJsonSchemaFactoryInterface;
-use Civi\Funding\Form\Application\ApplicationSubmitActionsFactory;
-use Civi\Funding\Form\Application\ApplicationSubmitActionsFactoryInterface;
 use Civi\Funding\Form\Application\ApplicationUiSchemaFactoryInterface;
 use Civi\Funding\Form\Application\CombinedApplicationJsonSchemaFactoryInterface;
 use Civi\Funding\Form\Application\DefaultApplicationFormDataFactory;
@@ -132,13 +127,6 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
   // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh, Generic.Metrics.CyclomaticComplexity.MaxExceeded
   public function process(ContainerBuilder $container): void {
   // phpcs:enable
-    $applicationActionsContainerServices =
-      $this->getTaggedFundingCaseTypeServices($container, ApplicationSubmitActionsContainerInterface::SERVICE_TAG);
-    $applicationSubmitActionsFactoryServices =
-      $this->getTaggedFundingCaseTypeServices($container, ApplicationSubmitActionsFactoryInterface::SERVICE_TAG);
-    $applicationActionStatusInfoServices =
-      $this->getTaggedFundingCaseTypeServices($container, ApplicationProcessActionStatusInfoInterface::SERVICE_TAG);
-
     $applicationFormDataFactoryServices =
       $this->getTaggedFundingCaseTypeServices($container, ApplicationFormDataFactoryInterface::SERVICE_TAG);
     $applicationJsonSchemaFactoryServices =
@@ -245,12 +233,6 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
       $this->getTaggedFundingCaseTypeServices($container, FundingCaseTypeServiceLocatorInterface::SERVICE_TAG);
 
     foreach (FundingCaseTypeMetaDataPass::$fundingCaseTypes as $fundingCaseType) {
-      if (!isset($applicationActionStatusInfoServices[$fundingCaseType])) {
-        throw new RuntimeException(
-          sprintf('Application action status info for funding case type "%s" missing', $fundingCaseType)
-        );
-      }
-
       if (isset($serviceLocatorServices[$fundingCaseType])) {
         continue;
       }
@@ -273,18 +255,7 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         $container,
         $fundingCaseType,
         ApplicationAllowedActionsGetHandler::class,
-        [
-          '$submitActionsFactory' => $applicationSubmitActionsFactoryServices[$fundingCaseType] ??=
-          $this->createService(
-            $container,
-            $fundingCaseType,
-            ApplicationSubmitActionsFactory::class,
-            [
-              '$actionsDeterminer' => $applicationActionsDeterminerServices[$fundingCaseType],
-              '$submitActionsContainer' => $applicationActionsContainerServices[$fundingCaseType],
-            ],
-          ),
-        ],
+        [],
       );
 
       $applicationDeleteHandlerServices[$fundingCaseType] ??= $this->createService(
@@ -311,7 +282,6 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         $applicationFormNewCreateHandlerServices[$fundingCaseType] ??= $this->createService(
           $container, $fundingCaseType, ApplicationFormNewCreateHandler::class, [
             '$jsonSchemaFactory' => $applicationJsonSchemaFactoryServices[$fundingCaseType],
-            '$submitActionsFactory' => $applicationSubmitActionsFactoryServices[$fundingCaseType],
             '$uiSchemaFactory' => $applicationUiSchemaFactoryServices[$fundingCaseType],
           ]
         );
@@ -339,7 +309,6 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
           ApplicationFormAddCreateHandler::class,
           [
             '$jsonSchemaFactory' => $applicationJsonSchemaFactoryServices[$fundingCaseType],
-            '$submitActionsFactory' => $applicationSubmitActionsFactoryServices[$fundingCaseType],
             '$uiSchemaFactory' => $applicationUiSchemaFactoryServices[$fundingCaseType],
           ],
         );
@@ -444,7 +413,6 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         ApplicationFormCreateHandler::class,
         [
           '$jsonSchemaGetHandler' => $applicationFormJsonSchemaGetHandlerServices[$fundingCaseType],
-          '$submitActionsFactory' => $applicationSubmitActionsFactoryServices[$fundingCaseType],
           '$uiSchemaFactory' => $applicationUiSchemaFactoryServices[$fundingCaseType],
           '$dataGetHandler' => $applicationFormDataGetHandlerServices[$fundingCaseType],
         ]
@@ -471,7 +439,6 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         ApplicationActionApplyHandler::class,
         [
           '$commentPersistHandler' => $applicationFormCommentPersistHandlerServices[$fundingCaseType],
-          '$info' => $applicationActionStatusInfoServices[$fundingCaseType],
           '$statusDeterminer' => $applicationStatusDeterminerServices[$fundingCaseType],
         ]
       );
@@ -575,6 +542,7 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         ApplicationSnapshotCreateHandlerInterface::class => $applicationSnapshotCreateHandlerServices[$fundingCaseType],
         ApplicationProcessActionsDeterminerInterface::class => $applicationActionsDeterminerServices[$fundingCaseType],
         ApplicationProcessStatusDeterminerInterface::class => $applicationStatusDeterminerServices[$fundingCaseType],
+        FundingCaseActionsDeterminerInterface::class => $fundingCaseActionsDeterminerServices[$fundingCaseType],
         FundingCaseApproveHandlerInterface::class => $fundingCaseApproveHandlerServices[$fundingCaseType],
         FundingCaseStatusDeterminerInterface::class => $fundingCaseStatusDeterminerServices[$fundingCaseType],
         FundingCasePossibleActionsGetHandlerInterface::class
@@ -630,11 +598,6 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         throw new RuntimeException(sprintf('No form factory for funding case type "%s" defined', $fundingCaseType));
       }
     }
-
-    $container->register(
-      ApplicationProcessActionStatusInfoContainer::class,
-      ApplicationProcessActionStatusInfoContainer::class
-    )->addArgument(ServiceLocatorTagPass::register($container, $applicationActionStatusInfoServices));
 
     $container->register(FundingCaseTypeServiceLocatorContainer::class, FundingCaseTypeServiceLocatorContainer::class)
       ->addArgument(ServiceLocatorTagPass::register($container, $serviceLocatorServices));

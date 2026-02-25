@@ -19,22 +19,14 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Command;
 
-use Civi\Funding\Entity\FundingCaseEntity;
-use Civi\Funding\Entity\FundingCaseTypeEntity;
-use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\Entity\FundingCaseBundle;
+use Civi\Funding\Entity\Traits\FundingCaseBundleTrait;
 
 final class ApplicationFormAddValidateCommand {
 
   private int $contactId;
 
-  /**
-   * @var \Civi\Funding\Entity\FundingCaseEntity
-   */
-  private FundingCaseEntity $fundingCase;
-
-  private FundingCaseTypeEntity $fundingCaseType;
-
-  private FundingProgramEntity $fundingProgram;
+  use FundingCaseBundleTrait;
 
   /**
    * @phpstan-var array<string, mixed> JSON serializable.
@@ -46,32 +38,16 @@ final class ApplicationFormAddValidateCommand {
    */
   public function __construct(
     int $contactId,
-    FundingProgramEntity $fundingProgram,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingCaseEntity $fundingCase,
+    FundingCaseBundle $fundingCaseBundle,
     array $data
   ) {
     $this->contactId = $contactId;
-    $this->fundingProgram = $fundingProgram;
-    $this->fundingCaseType = $fundingCaseType;
-    $this->fundingCase = $fundingCase;
+    $this->fundingCaseBundle = $fundingCaseBundle;
     $this->data = $data;
   }
 
   public function getContactId(): int {
     return $this->contactId;
-  }
-
-  public function getFundingCaseType(): FundingCaseTypeEntity {
-    return $this->fundingCaseType;
-  }
-
-  public function getFundingCase(): FundingCaseEntity {
-    return $this->fundingCase;
-  }
-
-  public function getFundingProgram(): FundingProgramEntity {
-    return $this->fundingProgram;
   }
 
   /**

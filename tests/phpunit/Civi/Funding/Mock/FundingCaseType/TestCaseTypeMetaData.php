@@ -21,9 +21,11 @@ namespace Civi\Funding\Mock\FundingCaseType;
 
 use Civi\Funding\FundingCaseType\MetaData\AbstractFundingCaseTypeMetaData;
 use Civi\Funding\FundingCaseType\MetaData\CostItemType;
+use Civi\Funding\FundingCaseType\MetaData\DefaultApplicationProcessActions;
 use Civi\Funding\FundingCaseType\MetaData\DefaultApplicationProcessStatuses;
 use Civi\Funding\FundingCaseType\MetaData\ResourcesItemType;
 use Civi\Funding\FundingCaseType\MetaData\ReworkApplicationProcessStatuses;
+use Civi\Funding\FundingCaseType\MetaData\ReworkApplicationProcessActions;
 
 final class TestCaseTypeMetaData extends AbstractFundingCaseTypeMetaData {
 
@@ -45,6 +47,10 @@ final class TestCaseTypeMetaData extends AbstractFundingCaseTypeMetaData {
     return self::NAME;
   }
 
+  public function getApplicationProcessActions(): array {
+    return DefaultApplicationProcessActions::getAll() + ReworkApplicationProcessActions::getAll();
+  }
+
   /**
    * @inheritDoc
    */
@@ -59,6 +65,13 @@ final class TestCaseTypeMetaData extends AbstractFundingCaseTypeMetaData {
     return $this->costItemTypes ??= [
       'amount' => new CostItemType('amount', 'Amount requested'),
     ];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getFundingCaseActions(): array {
+    return [];
   }
 
   /**

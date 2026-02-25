@@ -17,15 +17,14 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Form\Application;
+namespace Civi\Funding\FundingCase\Actions;
 
-use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerInterface;
-use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\FundingCaseType\FundingCaseTypeMetaDataProviderInterface;
 use Civi\Funding\FundingCaseTypeServiceLocatorContainer;
 
-final class ApplicationSubmitActionsFactory implements ApplicationSubmitActionsFactoryInterface {
+final class FundingCaseSubmitActionsFactory implements FundingCaseSubmitActionsFactoryInterface {
 
   private FundingCaseTypeMetaDataProviderInterface $metaDataProvider;
 
@@ -39,19 +38,16 @@ final class ApplicationSubmitActionsFactory implements ApplicationSubmitActionsF
     $this->serviceLocatorContainer = $serviceLocatorContainer;
   }
 
-  /**
-   * @return array<string, \Civi\Funding\FundingCaseType\MetaData\ApplicationProcessAction>
-   */
-  public function getSubmitActions(ApplicationProcessEntityBundle $applicationProcessBundle, array $statusList): array {
-    $actionNames = $this->getActionsDeterminer($applicationProcessBundle->getFundingCaseType())
-      ->getActions($applicationProcessBundle, $statusList);
+  public function getSubmitActions(FundingCaseBundle $fundingCaseBundle, array $applicationProcessStatusList): array {
+    $actionNames = $this->getActionsDeterminer($fundingCaseBundle->getFundingCaseType())->getActions(
+      $fundingCaseBundle->getFundingCase()->getStatus(),
+      $applicationProcessStatusList,
+      $fundingCaseBundle->getFundingCase()->getPermissions()
+    );
 
-    return $this->getActions($applicationProcessBundle->getFundingCaseType(), $actionNames);
+    return $this->getActions($fundingCaseBundle->getFundingCaseType(), $actionNames);
   }
 
-  /**
-   * @return array<string, \Civi\Funding\FundingCaseType\MetaData\ApplicationProcessAction>
-   */
   public function getInitialSubmitActions(array $permissions, FundingCaseTypeEntity $fundingCaseType): array {
     $actionNames = $this->getActionsDeterminer($fundingCaseType)->getInitialActions($permissions);
 
@@ -61,13 +57,13 @@ final class ApplicationSubmitActionsFactory implements ApplicationSubmitActionsF
   /**
    * @param list<string> $actionNames
    *
-   * @return array<string, \Civi\Funding\FundingCaseType\MetaData\ApplicationProcessAction>
+   * @return array<string, \Civi\Funding\FundingCaseType\MetaData\FundingCaseAction>
    */
   private function getActions(FundingCaseTypeEntity $fundingCaseType, array $actionNames): array {
     $metaData = $this->metaDataProvider->get($fundingCaseType->getName());
 
     return array_filter(
-      $metaData->getApplicationProcessActions(),
+      $metaData->getFundingCaseActions(),
       fn(string $actionName) => in_array($actionName, $actionNames, TRUE),
       ARRAY_FILTER_USE_KEY
     );
@@ -75,8 +71,8 @@ final class ApplicationSubmitActionsFactory implements ApplicationSubmitActionsF
 
   private function getActionsDeterminer(
     FundingCaseTypeEntity $fundingCaseType
-  ): ApplicationProcessActionsDeterminerInterface {
-    return $this->serviceLocatorContainer->get($fundingCaseType->getName())->getApplicationProcessActionsDeterminer();
+  ): FundingCaseActionsDeterminerInterface {
+    return $this->serviceLocatorContainer->get($fundingCaseType->getName())->getFundingCaseActionsDeterminer();
   }
 
 }

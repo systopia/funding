@@ -42,10 +42,10 @@ final class GetAllowedActionsMultipleActionHandler implements ActionHandlerInter
   }
 
   /**
-   * @phpstan-return array<int, array<string, array{label: string, confirm: string|null}>>
+   * @return array<int, array<string, array{label: string, confirm: string|null}>>
    *   Map of action names to button labels and confirm messages indexed by
-   *   application process ID. Contains only those actions that can be applied
-   *   without form data.
+   *   application process ID. Contains only those actions that can be applied to
+   *   multiple actions at the same time, i.e. can be performed without form data.
    */
   public function getAllowedActionsMultiple(GetAllowedActionsMultipleAction $action): array {
     $actions = [];
@@ -66,19 +66,22 @@ final class GetAllowedActionsMultipleActionHandler implements ActionHandlerInter
       return [];
     }
 
-    $actions = array_filter(
-      $this->allowedActionsGetHandler->handle(new ApplicationAllowedActionsGetCommand(
-        $applicationProcessBundle,
-        $this->applicationProcessBundleLoader->getStatusList($applicationProcessBundle),
-      )),
-      fn (array $action) => FALSE === ($action['properties']['needsFormData'] ?? TRUE),
-    );
+    $actions = $this->allowedActionsGetHandler->handle(new ApplicationAllowedActionsGetCommand(
+      $applicationProcessBundle,
+      $this->applicationProcessBundleLoader->getStatusList($applicationProcessBundle),
+    ));
 
-    foreach ($actions as &$action) {
-      unset($action['properties']);
+    $result = [];
+    foreach ($actions as $action) {
+      if ($action->isBatchPossible()) {
+        $result[$action->getName()] = [
+          'label' => $action->getLabel(),
+          'confirm' => $action->getConfirmMessage(),
+        ];
+      }
     }
 
-    return $actions;
+    return $result;
   }
 
 }

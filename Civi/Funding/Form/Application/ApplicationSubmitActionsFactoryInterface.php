@@ -20,36 +20,26 @@ declare(strict_types = 1);
 namespace Civi\Funding\Form\Application;
 
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
 
 interface ApplicationSubmitActionsFactoryInterface {
-
-  public const SERVICE_TAG = 'funding.application.submit_actions_factory';
 
   /**
    * @param list<string> $permissions
    *
-   * @phpstan-return array<string, array{
-   *   label: string,
-   *   confirm: string|null,
-   *   properties: array<string, mixed>,
-   * }>
-   *   Map of action names to button labels, confirm messages, and properties.
+   * @return array<string, \Civi\Funding\FundingCaseType\MetaData\ApplicationProcessAction>
+   *   Map of action names to actions.
    */
-  public function createInitialSubmitActions(array $permissions): array;
+  public function getInitialSubmitActions(array $permissions, FundingCaseTypeEntity $fundingCaseType): array;
 
   /**
-   * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $statusList
+   * @param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $statusList
    *     Status of other application processes in same funding case indexed by ID.
    *
-   * @phpstan-return array<string, array{
-   *   label: string,
-   *   confirm: string|null,
-   *   properties: array<string, mixed>&array{needsFormData?: bool},
-   * }>
-   *   Map of action names to button labels, confirm messages, and properties.
-   *   needsFormData is FALSE if the action is applicable without form data.
+   * @return array<string, \Civi\Funding\FundingCaseType\MetaData\ApplicationProcessAction>
+   *   Map of action names to actions.
    */
-  public function createSubmitActions(
+  public function getSubmitActions(
     ApplicationProcessEntityBundle $applicationProcessBundle,
     array $statusList
   ): array;

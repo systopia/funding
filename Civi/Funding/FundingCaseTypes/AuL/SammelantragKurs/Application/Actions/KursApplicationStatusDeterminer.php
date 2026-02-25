@@ -44,7 +44,6 @@ final class KursApplicationStatusDeterminer extends AbstractApplicationProcessSt
       'save' => 'rework',
       'apply' => 'rework-review-requested',
       'withdraw-change' => 'applied',
-      'revert-change' => 'applied',
       'review' => 'rework-review',
       'add-comment' => 'rework',
     ],

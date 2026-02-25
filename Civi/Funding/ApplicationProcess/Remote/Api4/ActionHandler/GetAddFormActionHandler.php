@@ -26,8 +26,6 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationFormDataGetCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandlerInterface;
 use Civi\Funding\FundingCase\FundingCaseManager;
-use Civi\Funding\FundingProgram\FundingCaseTypeManager;
-use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Webmozart\Assert\Assert;
 
@@ -43,24 +41,16 @@ final class GetAddFormActionHandler implements ActionHandlerInterface {
 
   private FundingCaseManager $fundingCaseManager;
 
-  private FundingCaseTypeManager $fundingCaseTypeManager;
-
-  private FundingProgramManager $fundingProgramManager;
-
   public function __construct(
     ApplicationProcessBundleLoader $applicationProcessBundleLoader,
     ApplicationFormAddCreateHandlerInterface $createHandler,
     ApplicationFormDataGetHandlerInterface $formDataGetHandler,
     FundingCaseManager $fundingCaseManager,
-    FundingCaseTypeManager $fundingCaseTypeManager,
-    FundingProgramManager $fundingProgramManager
   ) {
     $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
     $this->createHandler = $createHandler;
     $this->formDataGetHandler = $formDataGetHandler;
     $this->fundingCaseManager = $fundingCaseManager;
-    $this->fundingCaseTypeManager = $fundingCaseTypeManager;
-    $this->fundingProgramManager = $fundingProgramManager;
   }
 
   /**
@@ -73,19 +63,12 @@ final class GetAddFormActionHandler implements ActionHandlerInterface {
    * @throws \CRM_Core_Exception
    */
   public function getAddForm(GetAddFormAction $action): array {
-    $fundingCase = $this->fundingCaseManager->get($action->getFundingCaseId());
-    Assert::notNull($fundingCase, sprintf('Funding case with id "%d" not found', $action->getFundingCaseId()));
-
-    $fundingProgram = $this->fundingProgramManager->get($fundingCase->getFundingProgramId());
-    Assert::notNull($fundingProgram);
-    $fundingCaseType = $this->fundingCaseTypeManager->get($fundingCase->getFundingCaseTypeId());
-    Assert::notNull($fundingCaseType);
+    $fundingCaseBundle = $this->fundingCaseManager->getBundle($action->getFundingCaseId());
+    Assert::notNull($fundingCaseBundle, sprintf('Funding case with id "%d" not found', $action->getFundingCaseId()));
 
     $form = $this->createHandler->handle(new ApplicationFormAddCreateCommand(
       $action->getResolvedContactId(),
-      $fundingProgram,
-      $fundingCaseType,
-      $fundingCase,
+      $fundingCaseBundle,
     ));
 
     if (NULL !== $action->getCopyDataFromId()) {
@@ -95,7 +78,7 @@ final class GetAddFormActionHandler implements ActionHandlerInterface {
         sprintf('Application process with ID "%d" not found', $action->getCopyDataFromId())
       );
       Assert::same(
-        $fundingCaseType->getId(),
+        $fundingCaseBundle->getFundingCaseType()->getId(),
         $applicationProcessBundle->getFundingCaseType()->getId(),
         'Copies are only allowed with the same funding case type'
       );

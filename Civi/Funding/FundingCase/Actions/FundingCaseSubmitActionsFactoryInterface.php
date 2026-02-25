@@ -19,27 +19,23 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase\Actions;
 
+use Civi\Funding\Entity\FundingCaseBundle;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
+
 interface FundingCaseSubmitActionsFactoryInterface {
 
   /**
-   * @phpstan-param array<string> $permissions
+   * @param list<string> $permissions
    *
-   * @phpstan-return array<string, array{label: string, confirm: string|null}>
-   *   Map of action names to button labels and confirm messages.
+   * @return array<string, \Civi\Funding\FundingCaseType\MetaData\FundingCaseAction>
    */
-  public function createInitialSubmitActions(array $permissions): array;
+  public function getInitialSubmitActions(array $permissions, FundingCaseTypeEntity $fundingCaseType): array;
 
   /**
-   * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $applicationProcessStatusList
-   * @phpstan-param array<string> $permissions
+   * @param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $applicationProcessStatusList
    *
-   * @phpstan-return array<string, array{label: string, confirm: string|null}>
-   *   Map of action names to button labels and confirm messages.
+   * @return array<string, \Civi\Funding\FundingCaseType\MetaData\FundingCaseAction>
    */
-  public function createSubmitActions(
-    string $fundingCaseStatus,
-    array $applicationProcessStatusList,
-    array $permissions
-  ): array;
+  public function getSubmitActions(FundingCaseBundle $fundingCaseBundle, array $applicationProcessStatusList): array;
 
 }

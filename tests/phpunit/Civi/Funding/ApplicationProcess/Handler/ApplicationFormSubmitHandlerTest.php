@@ -19,8 +19,6 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Handler;
 
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\DefaultApplicationProcessActionStatusInfo;
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\ReworkPossibleApplicationProcessActionStatusInfo;
 use Civi\Funding\ApplicationProcess\Command\ApplicationActionApplyCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateCommand;
@@ -52,9 +50,6 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
-    $info = new ReworkPossibleApplicationProcessActionStatusInfo(
-      new DefaultApplicationProcessActionStatusInfo()
-    );
     $this->actionApplyHandlerMock = $this->createMock(ApplicationActionApplyHandlerInterface::class);
     $this->validateHandlerMock = $this->createMock(ApplicationFormValidateHandlerInterface::class);
     $this->handler = new ApplicationFormSubmitHandler(
