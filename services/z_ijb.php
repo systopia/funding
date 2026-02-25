@@ -25,10 +25,7 @@ declare(strict_types = 1);
 use Civi\Funding\DependencyInjection\Util\TaskServiceRegistrator;
 use Civi\Funding\FundingCaseType\MetaData\FundingCaseTypeMetaDataInterface;
 use Civi\Funding\FundingCaseTypes\AuL\IJB\Application\Actions\IJBApplicationActionsDeterminer;
-use Civi\Funding\FundingCaseTypes\AuL\IJB\Application\Actions\IJBApplicationActionStatusInfo;
 use Civi\Funding\FundingCaseTypes\AuL\IJB\Application\Actions\IJBApplicationStatusDeterminer;
-use Civi\Funding\FundingCaseTypes\AuL\IJB\Application\Actions\IJBApplicationSubmitActionsContainer;
-use Civi\Funding\FundingCaseTypes\AuL\IJB\Application\Actions\IJBApplicationSubmitActionsFactory;
 use Civi\Funding\FundingCaseTypes\AuL\IJB\Application\Data\IJBApplicationFormDataFactory;
 use Civi\Funding\FundingCaseTypes\AuL\IJB\Application\Data\IJBApplicationFormFilesFactory;
 use Civi\Funding\FundingCaseTypes\AuL\IJB\Application\Data\IJBProjektunterlagenFactory;
@@ -43,12 +40,8 @@ use Civi\Funding\FundingCaseTypes\AuL\IJB\Report\IJBReportFormFactory;
 $container->autowire(IJBMetaData::class)
   ->addTag(FundingCaseTypeMetaDataInterface::class);
 
-$container->autowire(IJBApplicationSubmitActionsContainer::class)
-  ->addTag(IJBApplicationSubmitActionsContainer::SERVICE_TAG);
 $container->autowire(IJBApplicationActionsDeterminer::class)
   ->addTag(IJBApplicationActionsDeterminer::SERVICE_TAG);
-$container->autowire(IJBApplicationSubmitActionsFactory::class)
-  ->addTag(IJBApplicationSubmitActionsFactory::SERVICE_TAG);
 
 $container->autowire(IJBApplicationJsonSchemaFactory::class)
   ->addTag(IJBApplicationJsonSchemaFactory::SERVICE_TAG);
@@ -64,8 +57,6 @@ $container->autowire(IJBApplicationFormFilesFactory::class)
 
 $container->autowire(IJBApplicationStatusDeterminer::class)
   ->addTag(IJBApplicationStatusDeterminer::SERVICE_TAG);
-$container->autowire(IJBApplicationActionStatusInfo::class)
-  ->addTag(IJBApplicationActionStatusInfo::SERVICE_TAG);
 
 $container->autowire(IJBCaseActionsDeterminer::class)
   ->addTag(IJBCaseActionsDeterminer::SERVICE_TAG);

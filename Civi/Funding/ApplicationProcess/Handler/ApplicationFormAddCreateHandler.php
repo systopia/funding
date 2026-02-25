@@ -75,8 +75,9 @@ final class ApplicationFormAddCreateHandler implements ApplicationFormAddCreateH
     );
 
     $submitButtons = JsonFormsSubmitButtonsFactory::createButtons(
-      $this->submitActionsFactory->createInitialSubmitActions(
-        $command->getFundingCase()->getPermissions()
+      $this->submitActionsFactory->getInitialSubmitActions(
+        $command->getFundingCase()->getPermissions(),
+        $command->getFundingCaseType()
       )
     );
     $elements = array_merge($uiSchema->getElements(), $submitButtons);

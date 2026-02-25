@@ -47,9 +47,7 @@ final class ApplicationFormAddValidateHandler implements ApplicationFormAddValid
   public function handle(ApplicationFormAddValidateCommand $command): ApplicationFormValidationResult {
     $form = $this->formCreateHandler->handle(new ApplicationFormAddCreateCommand(
       $command->getContactId(),
-      $command->getFundingProgram(),
-      $command->getFundingCaseType(),
-      $command->getFundingCase()
+      $command->getFundingCaseBundle()
     ));
     $jsonSchema = $form->getJsonSchema();
 

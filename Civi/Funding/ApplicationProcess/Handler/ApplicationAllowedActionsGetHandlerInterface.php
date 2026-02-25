@@ -26,12 +26,7 @@ interface ApplicationAllowedActionsGetHandlerInterface {
   public const SERVICE_TAG = 'funding.application.allowed_actions_get_handler';
 
   /**
-   * @phpstan-return array<string, array{
-   *    label: string,
-   *    confirm: string|null,
-   *    properties: array<string, mixed>&array{needsFormData?: bool},
-   *  }>
-   *    needsFormData is FALSE if the action is applicable without form data.
+   * @return array<string, \Civi\Funding\FundingCaseType\MetaData\ApplicationProcessAction>
    */
   public function handle(ApplicationAllowedActionsGetCommand $command): array;
 

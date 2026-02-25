@@ -61,7 +61,7 @@ final class ReworkApplicationProcessStatuses {
   ): ApplicationProcessStatus {
     return new ApplicationProcessStatus([
       'name' => $name,
-      'label' => E::ts('Rework in review'),
+      'label' => $label ?? E::ts('Rework in review'),
       'icon' => 'fa-eye',
       'inReview' => TRUE,
     ]);
