@@ -97,6 +97,17 @@ final class DrawdownValidatorTest extends TestCase {
     static::assertTrue($this->validator->validateNew($new, TRUE)->isValid());
   }
 
+  public function testValidateNewWithReviewDrawdownCreatePermission(): void {
+    $new = DrawdownFactory::create();
+    $this->fundingCase->setValues(['permissions' => ['review_drawdown_create']] + $this->fundingCase->toArray());
+
+    $this->payoutProcessManagerMock->method('getAmountAvailable')
+      ->with($this->payoutProcess)
+      ->willReturn(10.1);
+
+    static::assertTrue($this->validator->validateNew($new, TRUE)->isValid());
+  }
+
   public function testValidateNewClosed(): void {
     $new = DrawdownFactory::create();
     $this->payoutProcess->setValues(['status' => 'closed'] + $this->payoutProcess->toArray());

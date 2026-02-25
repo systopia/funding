@@ -1475,6 +1475,10 @@ msgid "Review: finish case"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
+msgid "Review: drawdown create"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
 msgid "Drawdown: create"
 msgstr ""
 
@@ -1487,11 +1491,11 @@ msgid "Clearing: apply"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
-msgid "Review: calculative"
+msgid "Review: application calculative"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
-msgid "Review: content"
+msgid "Review: application content"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
@@ -1520,6 +1524,10 @@ msgstr ""
 
 #: Civi/Funding/Form/JsonSchema/JsonSchemaComment.php ang/crmFunding/application/applicationSubmitModal.template.html ang/crmFunding/clearing/clearingSubmitModal.template.html
 msgid "external"
+msgstr ""
+
+#: Civi/Funding/FundingCase/Api4/ActionHandler/GetSearchTasksActionHandler.php ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.template.html
+msgid "Create drawdown"
 msgstr ""
 
 #: Civi/Funding/FundingCase/Api4/ActionHandler/RemoteSubmitNewApplicationFormActionHandler.php
@@ -1862,7 +1870,7 @@ msgstr ""
 msgid "Tasks (Pending)"
 msgstr ""
 
-#: ang/crmFunding/application/application.js ang/crmFunding/application/applicationEditor.directive.js ang/crmFunding/application/applicationReviewer.directive.js ang/crmFunding/application/applicationReviewers.directive.js ang/crmFunding/application/applicationSearchTasksMenu.decorator.js ang/crmFunding/application/applicationSubmitModal.component.js ang/crmFunding/application/defaultApplicationSidebar.directive.js ang/crmFunding/application/history/applicationProcessActivity.directive.js ang/crmFunding/application/history/applicationProcessHistory.directive.js ang/crmFunding/case/fundingCase.js ang/crmFunding/case/fundingCasePermissions.js ang/crmFunding/case/notificationContacts.directive.js ang/crmFunding/case/permissions/fundingCaseContactRelation.directive.js ang/crmFunding/case/recipientContact.directive.js ang/crmFunding/clearing/clearing.js ang/crmFunding/clearing/clearingEditor.directive.js ang/crmFunding/clearing/clearingReviewer.directive.js ang/crmFunding/clearing/clearingReviewers.directive.js ang/crmFunding/clearing/clearingSearchTasksMenu.decorator.js ang/crmFunding/clearing/clearingSidebar.directive.js ang/crmFunding/clearing/clearingSubmitModal.component.js ang/crmFunding/drawdown/drawdownSearchTasksMenu.decorator.js ang/crmFunding/form/editableField.directive.js ang/crmFunding/form/editorTrait.factory.js ang/crmFunding/form/fundingAddRowButton.directive.js ang/crmFunding/form/fundingSelectPermissions.directive.js ang/crmFunding/form/fundingValidationErrors.directive.js ang/crmFunding/fundingDate.filter.js ang/crmFunding/jsonForms/jfControlArray.directive.js ang/crmFunding/jsonForms/jfControlFile.directive.js ang/crmFunding/program/fundingNewCasePermissions.js ang/crmFunding/program/fundingProgramPermissions.js ang/crmFunding/program/newCasePermissions/fundingNewCasePermissions.directive.js ang/crmFunding/program/permissions/fundingProgramContactRelation.directive.js ang/crmFunding/program/recipientRelations.js ang/crmFunding/program/recipients/recipientRelation.directive.js ang/crmFundingHiH/hihApplicationSidebar.directive.js
+#: ang/crmFunding/application/application.js ang/crmFunding/application/applicationEditor.directive.js ang/crmFunding/application/applicationReviewer.directive.js ang/crmFunding/application/applicationReviewers.directive.js ang/crmFunding/application/applicationSearchTasksMenu.decorator.js ang/crmFunding/application/applicationSubmitModal.component.js ang/crmFunding/application/defaultApplicationSidebar.directive.js ang/crmFunding/application/history/applicationProcessActivity.directive.js ang/crmFunding/application/history/applicationProcessHistory.directive.js ang/crmFunding/case/fundingCase.js ang/crmFunding/case/fundingCasePermissions.js ang/crmFunding/case/notificationContacts.directive.js ang/crmFunding/case/permissions/fundingCaseContactRelation.directive.js ang/crmFunding/case/recipientContact.directive.js ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.ctrl.js ang/crmFunding/clearing/clearing.js ang/crmFunding/clearing/clearingEditor.directive.js ang/crmFunding/clearing/clearingReviewer.directive.js ang/crmFunding/clearing/clearingReviewers.directive.js ang/crmFunding/clearing/clearingSearchTasksMenu.decorator.js ang/crmFunding/clearing/clearingSidebar.directive.js ang/crmFunding/clearing/clearingSubmitModal.component.js ang/crmFunding/drawdown/drawdownSearchTasksMenu.decorator.js ang/crmFunding/form/editableField.directive.js ang/crmFunding/form/editorTrait.factory.js ang/crmFunding/form/fundingAddRowButton.directive.js ang/crmFunding/form/fundingSelectPermissions.directive.js ang/crmFunding/form/fundingValidationErrors.directive.js ang/crmFunding/fundingDate.filter.js ang/crmFunding/jsonForms/jfControlArray.directive.js ang/crmFunding/jsonForms/jfControlFile.directive.js ang/crmFunding/program/fundingNewCasePermissions.js ang/crmFunding/program/fundingProgramPermissions.js ang/crmFunding/program/newCasePermissions/fundingNewCasePermissions.directive.js ang/crmFunding/program/permissions/fundingProgramContactRelation.directive.js ang/crmFunding/program/recipientRelations.js ang/crmFunding/program/recipients/recipientRelation.directive.js ang/crmFundingHiH/hihApplicationSidebar.directive.js
 msgid "funding"
 msgstr ""
 
@@ -1906,7 +1914,7 @@ msgstr ""
 msgid "Comment Type"
 msgstr ""
 
-#: ang/crmFunding/application/applicationSubmitModal.template.html ang/crmFunding/case/fundingCase.template.html ang/crmFunding/clearing/clearingSubmitModal.template.html ang/crmFundingHiH/hihApplicationApproveModal.template.html
+#: ang/crmFunding/application/applicationSubmitModal.template.html ang/crmFunding/case/fundingCase.template.html ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.template.html ang/crmFunding/clearing/clearingSubmitModal.template.html ang/crmFundingHiH/hihApplicationApproveModal.template.html
 msgid "Cancel"
 msgstr ""
 
@@ -2108,6 +2116,30 @@ msgstr ""
 
 #: ang/crmFunding/case/notificationContacts.directive.js ang/crmFunding/form/editableField.directive.js ang/crmFunding/fundingDate.filter.js
 msgid "empty"
+msgstr ""
+
+#: ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.ctrl.js
+msgid "The amount of each created drawdown is: <code>This value × amount approved ÷ 100</code>. In case that exceeds the amount available, the amount available will be used."
+msgstr ""
+
+#: ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.ctrl.js
+msgid "An error occurred while attempting to create drawdowns: %1"
+msgstr ""
+
+#: ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.ctrl.js
+msgid "Error"
+msgstr ""
+
+#: ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.ctrl.js
+msgid "An error occurred while attempting to create drawdowns."
+msgstr ""
+
+#: ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.template.html
+msgid "Percent of amount approved"
+msgstr ""
+
+#: ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.template.html
+msgid "Create %1 drawdowns"
 msgstr ""
 
 #: ang/crmFunding/clearing/clearingSidebar.template.html

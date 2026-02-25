@@ -78,6 +78,13 @@ fundingModule.factory('fundingCaseService', ['crmApi4', function(crmApi4) {
     getPossibleRecipients: (id) => crmApi4('FundingCase', 'getPossibleRecipients', {id}),
 
     /**
+     * @param {integer[]} ids
+     *
+     * @returns {Promise}
+     */
+    getSearchTasks: (ids) => crmApi4('FundingCase', 'getSearchTasks', {ids}),
+
+    /**
      * @param {integer} id
      * @returns {Promise<string[]>}
      */

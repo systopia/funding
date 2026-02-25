@@ -1,0 +1,16 @@
+<div id="bootstrap-theme" crm-dialog="crmSearchTask">
+  <form id="createDrawdownForm" name="createDrawdownForm" class="form-horizontal" ng-controller="fundingCaseSearchTaskCreateDrawdown as $ctrl" ng-submit="$ctrl.createDrawdowns()">
+    <div class="form-inline">
+      <label for="amountPercent" class="control-label">{{:: ts('Percent of amount approved') }}</label>
+      <input type="number" id="amountPercent" class="form-control" ng-model="amountPercent" ng-required="true"
+             min="1" max="100" step="1">
+      <p class="help-block" ng-bind-html="amountPercentHelp"></p>
+    </div>
+
+    <crm-dialog-button text="ts('Cancel')" icons="{primary: 'fa-times'}" on-click="$ctrl.cancel()" disabled="$ctrl.run"></crm-dialog-button>
+    <crm-dialog-button
+      text="model.ids.length === 1 ? ts('Create drawdown') : ts('Create %1 drawdowns', {1: model.ids.length})"
+      icons="{primary: $ctrl.run ? 'fa-spin fa-spinner' : 'fa-check'}"
+      on-click="$ctrl.createDrawdowns()" disabled="createDrawdownForm.$invalid || $ctrl.run"></crm-dialog-button>
+  </form>
+</div>
