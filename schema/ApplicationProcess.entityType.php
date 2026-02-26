@@ -163,6 +163,9 @@ return [
       'sql_type' => 'boolean',
       'input_type' => 'CheckBox',
     ],
+    /**
+     * shortened because of limited FK identifier length
+     */
     'reviewer_cont_contact_id' => [
       'title' => E::ts('Reviewer Cont Contact ID'),
       'sql_type' => 'int unsigned',
@@ -179,6 +182,9 @@ return [
       'sql_type' => 'boolean',
       'input_type' => 'CheckBox',
     ],
+    /**
+     * shortened because of limited FK identifier length
+     */
     'reviewer_calc_contact_id' => [
       'title' => E::ts('Reviewer Calc Contact ID'),
       'sql_type' => 'int unsigned',

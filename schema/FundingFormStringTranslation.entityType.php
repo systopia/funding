@@ -80,14 +80,34 @@ return [
     ],
     'msg_text' => [
       'title' => E::ts('Original'),
+      /**
+       * We need a collation that is accent-sensitive and case-sensitive. However, the
+       * chosen collation utf8mb4_bin doesn't sort in natural order. Collations
+       * that are also sorting in natural order are named differently on MariaDB
+       * and MySQL, though. (MariaDB: utf8mb4_0900_as_cs, MySQL:
+       * utf8mb4_0900_as_cs) Since MariaDB 11.4.5 there's a mapping of MySQL
+       * collations: https://jira.mariadb.org/browse/MDEV-20912.
+       */
       'sql_type' => 'varchar(8000) COLLATE utf8mb4_bin',
       'input_type' => 'TextArea',
       'data_type' => 'String',
       'required' => TRUE,
       'description' => E::ts('Original'),
     ],
+    /**
+     * The field name is chosen to be skipped in \CRM_Utils_API_HTMLInputCoder,
+     * see \CRM_Utils_API_HTMLInputCoder::getSkipFields().
+     */
     'new_text' => [
       'title' => E::ts('Actual'),
+      /**
+       * Because this field is marked as not required CiviCRM adds NULL to the type
+       * in the SQL code, resulting in "varchar(8000) NOT NULL". So NULL is not
+       * allowed by the schema and at the same time the empty string may be used in
+       * SearchKit's in-place edit.
+       *
+       * For the collation see comment on msg_text.
+       */
       'sql_type' => 'varchar(8000) COLLATE utf8mb4_bin NOT',
       'input_type' => 'TextArea',
       'data_type' => 'String',

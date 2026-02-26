@@ -49,6 +49,10 @@ return [
       'primary_key' => TRUE,
       'auto_increment' => TRUE,
     ],
+    /**
+     * Without "funding_" so the generated constraint name does not exceed the
+     * limit of 64 chars.
+     */
     'case_type_id' => [
       'title' => E::ts('Case Type ID'),
       'sql_type' => 'int unsigned',

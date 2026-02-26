@@ -21,6 +21,10 @@ use CRM_Funding_ExtensionUtil as E;
 
 return [
   'name' => 'FundingApplicationResourcesItem',
+  /**
+   * "application" is shortened to "app" in the table name so the generated
+   * constraint name does not exceed the limit of 64 chars.
+   */
   'table' => 'civicrm_funding_app_resources_item',
   'class' => 'CRM_Funding_DAO_ApplicationResourcesItem',
   'getInfo' => fn() => [

@@ -57,6 +57,10 @@ return [
         'on_delete' => 'RESTRICT',
       ],
     ],
+    /**
+     * "application" is shortened to "app" so the generated constraint name does
+     * not exceed the limit of 64 chars.
+     */
     'app_resources_item_id' => [
       'title' => E::ts('App Resources Item ID'),
       'sql_type' => 'int unsigned',

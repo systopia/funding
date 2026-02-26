@@ -21,6 +21,10 @@ use CRM_Funding_ExtensionUtil as E;
 
 return [
   'name' => 'FundingApplicationCostItem',
+  /**
+   * "application" is shortened to "app" in the table name to be consistent with
+   * FundingApplicationResourcesItem (see comment there).
+   */
   'table' => 'civicrm_funding_app_cost_item',
   'class' => 'CRM_Funding_DAO_ApplicationCostItem',
   'getInfo' => fn() => [
