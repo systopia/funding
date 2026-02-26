@@ -25,10 +25,7 @@ declare(strict_types = 1);
 use Civi\Funding\DependencyInjection\Util\TaskServiceRegistrator;
 use Civi\Funding\FundingCaseType\MetaData\FundingCaseTypeMetaDataInterface;
 use Civi\Funding\FundingCaseTypes\AuL\SonstigeAktivitaet\Application\Actions\AVK1ApplicationActionsDeterminer;
-use Civi\Funding\FundingCaseTypes\AuL\SonstigeAktivitaet\Application\Actions\AVK1ApplicationActionStatusInfo;
 use Civi\Funding\FundingCaseTypes\AuL\SonstigeAktivitaet\Application\Actions\AVK1ApplicationStatusDeterminer;
-use Civi\Funding\FundingCaseTypes\AuL\SonstigeAktivitaet\Application\Actions\AVK1ApplicationSubmitActionsContainer;
-use Civi\Funding\FundingCaseTypes\AuL\SonstigeAktivitaet\Application\Actions\AVK1ApplicationSubmitActionsFactory;
 use Civi\Funding\FundingCaseTypes\AuL\SonstigeAktivitaet\Application\Data\AVK1ApplicationFormFilesFactory;
 use Civi\Funding\FundingCaseTypes\AuL\SonstigeAktivitaet\Application\Data\AVK1FormDataFactory;
 use Civi\Funding\FundingCaseTypes\AuL\SonstigeAktivitaet\Application\Data\AVK1ProjektunterlagenFactory;
@@ -44,12 +41,8 @@ use Civi\Funding\FundingCaseTypes\AuL\SonstigeAktivitaet\Report\AVK1ReportFormFa
 $container->autowire(AVK1MetaData::class)
   ->addTag(FundingCaseTypeMetaDataInterface::class);
 
-$container->autowire(AVK1ApplicationSubmitActionsContainer::class)
-  ->addTag(AVK1ApplicationSubmitActionsContainer::SERVICE_TAG);
 $container->autowire(AVK1ApplicationActionsDeterminer::class)
   ->addTag(AVK1ApplicationActionsDeterminer::SERVICE_TAG);
-$container->autowire(AVK1ApplicationSubmitActionsFactory::class)
-  ->addTag(AVK1ApplicationSubmitActionsFactory::SERVICE_TAG);
 
 $container->autowire(AVK1StatusMarkupFactory::class);
 $container->autowire(AVK1JsonSchemaFactory::class)
@@ -64,8 +57,6 @@ $container->autowire(AVK1ApplicationFormFilesFactory::class)
 
 $container->autowire(AVK1ApplicationStatusDeterminer::class)
   ->addTag(AVK1ApplicationStatusDeterminer::SERVICE_TAG);
-$container->autowire(AVK1ApplicationActionStatusInfo::class)
-  ->addTag(AVK1ApplicationActionStatusInfo::SERVICE_TAG);
 
 $container->autowire(AVK1CaseActionsDeterminer::class)
   ->addTag(AVK1CaseActionsDeterminer::SERVICE_TAG);

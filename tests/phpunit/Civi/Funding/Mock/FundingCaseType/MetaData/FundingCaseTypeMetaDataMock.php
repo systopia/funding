@@ -22,26 +22,38 @@ namespace Civi\Funding\Mock\FundingCaseType\MetaData;
 
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\FundingCaseType\MetaData\AbstractFundingCaseTypeMetaData;
+use Civi\Funding\FundingCaseType\MetaData\ApplicationProcessAction;
 use Civi\Funding\FundingCaseType\MetaData\ApplicationProcessStatus;
+use Civi\Funding\FundingCaseType\MetaData\FundingCaseAction;
 
 final class FundingCaseTypeMetaDataMock extends AbstractFundingCaseTypeMetaData {
 
   public string $name;
 
   /**
-   * @phpstan-var array<string, \Civi\Funding\FundingCaseType\MetaData\ApplicationProcessStatus>
+   * @var array<string, ApplicationProcessAction>
    */
-  public $applicationProcessStatuses = [];
+  public array $applicationProcessActions = [];
+
+  /**
+   * @var array<string, ApplicationProcessStatus>
+   */
+  public array $applicationProcessStatuses = [];
+
+  /**
+   * @var array<string, FundingCaseAction>
+   */
+  public array $fundingCaseActions = [];
 
   public bool $finalDrawdownAcceptedByDefault = TRUE;
 
   /**
-   * @phpstan-var array<string, \Civi\Funding\FundingCaseType\MetaData\CostItemTypeInterface>
+   * @var array<string, \Civi\Funding\FundingCaseType\MetaData\CostItemTypeInterface>
    */
   public array $cosItemTypes = [];
 
   /**
-   * @phpstan-var array<string, \Civi\Funding\FundingCaseType\MetaData\ResourcesItemTypeInterface>
+   * @var array<string, \Civi\Funding\FundingCaseType\MetaData\ResourcesItemTypeInterface>
    */
   public array $resourcesItemTypes = [];
 
@@ -51,6 +63,15 @@ final class FundingCaseTypeMetaDataMock extends AbstractFundingCaseTypeMetaData 
 
   public function getName(): string {
     return $this->name;
+  }
+
+  public function addApplicationProcessAction(ApplicationProcessAction $action): void {
+    $this->applicationProcessActions[$action->getName()] = $action;
+  }
+
+  public function getApplicationProcessActions(): array {
+    // @phpstan-ignore return.type
+    return $this->applicationProcessActions;
   }
 
   public function addApplicationProcessStatus(ApplicationProcessStatus $status): self {
@@ -72,6 +93,17 @@ final class FundingCaseTypeMetaDataMock extends AbstractFundingCaseTypeMetaData 
    */
   public function getCostItemTypes(): array {
     return $this->cosItemTypes;
+  }
+
+  public function addFundingCaseAction(FundingCaseAction $action): void {
+    $this->fundingCaseActions[$action->getName()] = $action;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getFundingCaseActions(): array {
+    return $this->fundingCaseActions;
   }
 
   /**

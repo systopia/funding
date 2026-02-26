@@ -37,6 +37,7 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationJsonSchemaGetHandlerInter
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
+use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseApproveHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseFormDataGetHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseFormNewGetHandlerInterface;
@@ -90,6 +91,8 @@ interface FundingCaseTypeServiceLocatorInterface {
   public function getApplicationResourcesItemsPersistHandler(): ApplicationResourcesItemsPersistHandlerInterface;
 
   public function getApplicationSnapshotCreateHandler(): ApplicationSnapshotCreateHandlerInterface;
+
+  public function getFundingCaseActionsDeterminer(): FundingCaseActionsDeterminerInterface;
 
   public function getFundingCaseApproveHandler(): FundingCaseApproveHandlerInterface;
 

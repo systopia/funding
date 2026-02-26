@@ -69,7 +69,7 @@ final class ApplicationFormCreateHandler implements ApplicationFormCreateHandler
     );
 
     $submitButtons = JsonFormsSubmitButtonsFactory::createButtons(
-      $this->submitActionsFactory->createSubmitActions(
+      $this->submitActionsFactory->getSubmitActions(
         $command->getApplicationProcessBundle(),
         $command->getApplicationProcessStatusList()
       )

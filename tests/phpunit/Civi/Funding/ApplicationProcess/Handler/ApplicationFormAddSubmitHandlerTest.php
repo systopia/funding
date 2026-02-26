@@ -24,9 +24,7 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationFormAddSubmitCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormAddValidateCommand;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\EntityFactory\ApplicationProcessFactory;
-use Civi\Funding\EntityFactory\FundingCaseFactory;
-use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
-use Civi\Funding\EntityFactory\FundingProgramFactory;
+use Civi\Funding\EntityFactory\FundingCaseBundleFactory;
 use Civi\Funding\Mock\ApplicationProcess\Form\Validation\ApplicationFormValidationResultFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -74,9 +72,7 @@ final class ApplicationFormAddSubmitHandlerTest extends TestCase {
     $validationResult = ApplicationFormValidationResultFactory::createValid();
     $this->validateHandlerMock->method('handle')->with(new ApplicationFormAddValidateCommand(
       $command->getContactId(),
-      $command->getFundingProgram(),
-      $command->getFundingCaseType(),
-      $command->getFundingCase(),
+      $command->getFundingCaseBundle(),
       $command->getData()
     ))->willReturn($validationResult);
 
@@ -109,9 +105,7 @@ final class ApplicationFormAddSubmitHandlerTest extends TestCase {
     $validationResult = ApplicationFormValidationResultFactory::createInvalid($errorMessages);
     $this->validateHandlerMock->method('handle')->with(new ApplicationFormAddValidateCommand(
       $command->getContactId(),
-      $command->getFundingProgram(),
-      $command->getFundingCaseType(),
-      $command->getFundingCase(),
+      $command->getFundingCaseBundle(),
       $command->getData()
     ))->willReturn($validationResult);
 
@@ -127,9 +121,7 @@ final class ApplicationFormAddSubmitHandlerTest extends TestCase {
   private function createCommand(): ApplicationFormAddSubmitCommand {
     return new ApplicationFormAddSubmitCommand(
       1,
-      FundingProgramFactory::createFundingProgram(),
-      FundingCaseTypeFactory::createFundingCaseType(),
-      FundingCaseFactory::createFundingCase(),
+      FundingCaseBundleFactory::create(),
       ['test' => 'foo'],
     );
   }

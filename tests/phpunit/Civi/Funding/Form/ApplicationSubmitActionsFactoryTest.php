@@ -19,12 +19,18 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form;
 
-use Civi\Funding\ApplicationProcess\ActionsContainer\ApplicationSubmitActionsContainer;
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerInterface;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
+use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\Form\Application\ApplicationSubmitActionsFactory;
+use Civi\Funding\FundingCaseType\MetaData\ApplicationProcessAction;
+use Civi\Funding\FundingCaseTypeServiceLocator;
+use Civi\Funding\FundingCaseTypeServiceLocatorContainer;
+use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataMock;
+use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataProviderMock;
+use Civi\Funding\Mock\Psr\PsrContainer;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -38,78 +44,87 @@ final class ApplicationSubmitActionsFactoryTest extends TestCase {
    */
   private MockObject $actionsDeterminerMock;
 
-  private ApplicationSubmitActionsContainer $submitActionsContainer;
+  private FundingCaseTypeMetaDataMock $metaDataMock;
 
   private ApplicationSubmitActionsFactory $submitActionsFactory;
 
   protected function setUp(): void {
     parent::setUp();
     $this->actionsDeterminerMock = $this->createMock(ApplicationProcessActionsDeterminerInterface::class);
-    $this->submitActionsContainer = new ApplicationSubmitActionsContainer();
+    $this->metaDataMock = new FundingCaseTypeMetaDataMock(FundingCaseTypeFactory::DEFAULT_NAME);
+    $serviceLocatorContainer = new FundingCaseTypeServiceLocatorContainer(new PsrContainer([
+      FundingCaseTypeFactory::DEFAULT_NAME => new FundingCaseTypeServiceLocator(new PsrContainer([
+        ApplicationProcessActionsDeterminerInterface::class => $this->actionsDeterminerMock,
+      ])),
+    ]));
     $this->submitActionsFactory = new ApplicationSubmitActionsFactory(
-      $this->actionsDeterminerMock,
-      $this->submitActionsContainer,
+      new FundingCaseTypeMetaDataProviderMock($this->metaDataMock),
+      $serviceLocatorContainer,
     );
   }
 
-  public function testCreateSubmitActions(): void {
-    $this->submitActionsContainer->add('test1', 'Test1');
-    $this->submitActionsContainer->add('test2', 'Test2');
-    $this->submitActionsContainer->add('test3', 'Test3', 'Really?');
+  public function testGetSubmitActions(): void {
+    $actionTest1 = new ApplicationProcessAction(['name' => 'test1', 'label' => 'Test1']);
+    $this->metaDataMock->addApplicationProcessAction($actionTest1);
+    $actionTest2 = new ApplicationProcessAction(['name' => 'test2', 'label' => 'Test2']);
+    $this->metaDataMock->addApplicationProcessAction($actionTest2);
+
     $applicationProcessBundle = $this->createApplicationProcessBundle('test', NULL, NULL);
     $statusList = [23 => new FullApplicationProcessStatus('status', NULL, NULL)];
     $this->actionsDeterminerMock->expects(static::once())->method('getActions')
       ->with($applicationProcessBundle, $statusList)
-      ->willReturn(['test3', 'test1']);
+      ->willReturn(['test2', 'test1']);
 
-    $submitActions = $this->submitActionsFactory->createSubmitActions(
+    $submitActions = $this->submitActionsFactory->getSubmitActions(
       $applicationProcessBundle,
       $statusList
     );
     // "test1" must be first
     static::assertSame([
-      'test1' => ['label' => 'Test1', 'confirm' => NULL, 'properties' => []],
-      'test3' => ['label' => 'Test3', 'confirm' => 'Really?', 'properties' => []],
+      'test1' => $actionTest1,
+      'test2' => $actionTest2,
     ], $submitActions);
   }
 
-  public function testCreateSubmitActionsUnknownAction(): void {
-    $this->submitActionsContainer->add('test1', 'Test1');
+  public function testGetSubmitActionsUnknownAction(): void {
     $applicationProcessBundle = $this->createApplicationProcessBundle('test', NULL, NULL);
     $statusList = [23 => new FullApplicationProcessStatus('status', NULL, NULL)];
     $this->actionsDeterminerMock->expects(static::once())->method('getActions')
       ->with($applicationProcessBundle, $statusList)
-      ->willReturn(['test2']);
+      ->willReturn(['test']);
 
     static::assertSame(
       [],
-      $this->submitActionsFactory->createSubmitActions($applicationProcessBundle, $statusList)
+      $this->submitActionsFactory->getSubmitActions($applicationProcessBundle, $statusList)
     );
   }
 
-  public function testCreateInitialSubmitActions(): void {
-    $this->submitActionsContainer->add('test1', 'Test1');
-    $this->submitActionsContainer->add('test2', 'Test2');
-    $this->submitActionsContainer->add('test3', 'Test3', 'Really?');
+  public function testGetInitialSubmitActions(): void {
+    $actionTest1 = new ApplicationProcessAction(['name' => 'test1', 'label' => 'Test1']);
+    $this->metaDataMock->addApplicationProcessAction($actionTest1);
+    $actionTest2 = new ApplicationProcessAction(['name' => 'test2', 'label' => 'Test2']);
+    $this->metaDataMock->addApplicationProcessAction($actionTest2);
+
     $this->actionsDeterminerMock->expects(static::once())->method('getInitialActions')
       ->with(['permission'])
-      ->willReturn(['test3', 'test1']);
+      ->willReturn(['test2', 'test1']);
 
-    $submitActions = $this->submitActionsFactory->createInitialSubmitActions(['permission']);
+    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
+    $submitActions = $this->submitActionsFactory->getInitialSubmitActions(['permission'], $fundingCaseType);
     // "test1" must be first
     static::assertSame([
-      'test1' => ['label' => 'Test1', 'confirm' => NULL, 'properties' => []],
-      'test3' => ['label' => 'Test3', 'confirm' => 'Really?', 'properties' => []],
+      'test1' => $actionTest1,
+      'test2' => $actionTest2,
     ], $submitActions);
   }
 
-  public function testCreateInitialSubmitActionsUnknownAction(): void {
-    $this->submitActionsContainer->add('test1', 'Test1');
+  public function testGetInitialSubmitActionsUnknownAction(): void {
     $this->actionsDeterminerMock->expects(static::once())->method('getInitialActions')
       ->with(['permission'])
-      ->willReturn(['test2']);
+      ->willReturn(['test']);
 
-    static::assertSame([], $this->submitActionsFactory->createInitialSubmitActions(['permission']));
+    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
+    static::assertSame([], $this->submitActionsFactory->getInitialSubmitActions(['permission'], $fundingCaseType));
   }
 
   private function createApplicationProcessBundle(

@@ -21,9 +21,11 @@ namespace Civi\Funding\FundingCaseTypes\AuL\SonstigeAktivitaet;
 
 use Civi\Funding\FundingCaseType\MetaData\AbstractFundingCaseTypeMetaData;
 use Civi\Funding\FundingCaseType\MetaData\CostItemType;
+use Civi\Funding\FundingCaseType\MetaData\DefaultApplicationProcessActions;
 use Civi\Funding\FundingCaseType\MetaData\DefaultApplicationProcessStatuses;
 use Civi\Funding\FundingCaseType\MetaData\ResourcesItemType;
 use Civi\Funding\FundingCaseType\MetaData\ReworkApplicationProcessStatuses;
+use Civi\Funding\FundingCaseType\MetaData\ReworkApplicationProcessActions;
 
 final class AVK1MetaData extends AbstractFundingCaseTypeMetaData {
 
@@ -42,6 +44,13 @@ final class AVK1MetaData extends AbstractFundingCaseTypeMetaData {
    * @phpstan-var array<string, ResourcesItemType>
    */
   private ?array $resourcesItemTypes = NULL;
+
+  /**
+   * @inheritDoc
+   */
+  public function getApplicationProcessActions(): array {
+    return DefaultApplicationProcessActions::getAll() + ReworkApplicationProcessActions::getAll();
+  }
 
   /**
    * @inheritDoc
@@ -69,6 +78,13 @@ final class AVK1MetaData extends AbstractFundingCaseTypeMetaData {
         'Kosten der Versicherung der Teilnehmer*innen'
       ),
     ];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getFundingCaseActions(): array {
+    return [];
   }
 
   /**

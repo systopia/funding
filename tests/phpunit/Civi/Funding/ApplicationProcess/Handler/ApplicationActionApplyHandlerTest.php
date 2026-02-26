@@ -19,8 +19,6 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Handler;
 
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\DefaultApplicationProcessActionStatusInfo;
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\ReworkPossibleApplicationProcessActionStatusInfo;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationActionApplyCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormCommentPersistCommand;
@@ -29,7 +27,11 @@ use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDet
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ApplicationProcessFactory;
+use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
+use Civi\Funding\FundingCaseType\MetaData\ApplicationProcessAction;
 use Civi\Funding\Mock\ApplicationProcess\Form\Validation\ApplicationFormValidationResultFactory;
+use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataMock;
+use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataProviderMock;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -56,6 +58,8 @@ final class ApplicationActionApplyHandlerTest extends TestCase {
 
   private ApplicationActionApplyHandler $handler;
 
+  private FundingCaseTypeMetaDataMock $metaDataMock;
+
   /**
    * @var \Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface&\PHPUnit\Framework\MockObject\MockObject
    */
@@ -63,18 +67,17 @@ final class ApplicationActionApplyHandlerTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
-    $info = new ReworkPossibleApplicationProcessActionStatusInfo(
-      new DefaultApplicationProcessActionStatusInfo()
-    );
+
     $this->applicationProcessManagerMock = $this->createMock(ApplicationProcessManager::class);
     $this->applicationSnapshotRestorerMock = $this->createMock(ApplicationSnapshotRestorerInterface::class);
     $this->commentStoreHandlerMock = $this->createMock(ApplicationFormCommentPersistHandlerInterface::class);
+    $this->metaDataMock = new FundingCaseTypeMetaDataMock(FundingCaseTypeFactory::DEFAULT_NAME);
     $this->statusDeterminerMock = $this->createMock(ApplicationProcessStatusDeterminerInterface::class);
     $this->handler = new ApplicationActionApplyHandler(
       $this->applicationProcessManagerMock,
       $this->applicationSnapshotRestorerMock,
       $this->commentStoreHandlerMock,
-      $info,
+      new FundingCaseTypeMetaDataProviderMock($this->metaDataMock),
       $this->statusDeterminerMock,
     );
   }
@@ -143,6 +146,11 @@ final class ApplicationActionApplyHandlerTest extends TestCase {
 
   public function testHandleRestore(): void {
     $command = $this->createCommand('withdraw-change', FALSE);
+    $this->metaDataMock->addApplicationProcessAction(new ApplicationProcessAction([
+      'name' => 'withdraw-change',
+      'label' => 'Withdraw change',
+      'restore' => TRUE,
+    ]));
 
     $this->applicationSnapshotRestorerMock->expects(static::once())->method('restoreLastSnapshot')
       ->with($command->getApplicationProcessBundle());
@@ -177,6 +185,11 @@ final class ApplicationActionApplyHandlerTest extends TestCase {
 
   public function testHandleValidDelete(): void {
     $command = $this->createCommand('delete', FALSE);
+    $this->metaDataMock->addApplicationProcessAction(new ApplicationProcessAction([
+      'name' => 'delete',
+      'label' => 'Delete',
+      'delete' => TRUE,
+    ]));
 
     $this->applicationProcessManagerMock->expects(static::once())->method('delete')
       ->with($command->getApplicationProcessBundle());

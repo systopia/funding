@@ -25,10 +25,7 @@ declare(strict_types = 1);
 use Civi\Funding\DependencyInjection\Util\TaskServiceRegistrator;
 use Civi\Funding\FundingCaseType\MetaData\FundingCaseTypeMetaDataInterface;
 use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Application\Actions\KursApplicationActionsDeterminer;
-use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Application\Actions\KursApplicationActionStatusInfo;
 use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Application\Actions\KursApplicationStatusDeterminer;
-use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Application\Actions\KursApplicationSubmitActionsContainer;
-use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Application\Actions\KursApplicationSubmitActionsFactory;
 use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Application\Data\KursApplicationFormDataFactory;
 use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Application\Data\KursApplicationFormFilesFactory;
 use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Application\JsonSchema\KursApplicationJsonSchemaFactory;
@@ -36,8 +33,6 @@ use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Application\UiSchema\Kurs
 use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\EventSubscriber\KursAngularModuleSubscriber;
 use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\EventSubscriber\KursApplicationStatusSubscriber;
 use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\FundingCase\Actions\KursCaseActionsDeterminer;
-use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\FundingCase\Actions\KursCaseSubmitActionsContainer;
-use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\FundingCase\Actions\KursCaseSubmitActionsFactory;
 use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\FundingCase\Data\KursCaseFormDataFactory;
 use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\FundingCase\JsonSchema\KursCaseJsonSchemaFactory;
 use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\FundingCase\UiSchema\KursCaseUiSchemaFactory;
@@ -52,19 +47,11 @@ $container->autowire(KursMetaData::class)
 
 $container->autowire(KursApplicationActionsDeterminer::class)
   ->addTag(KursApplicationActionsDeterminer::SERVICE_TAG);
-$container->autowire(KursApplicationActionStatusInfo::class)
-  ->addTag(KursApplicationActionStatusInfo::SERVICE_TAG);
 $container->autowire(KursApplicationStatusDeterminer::class)
   ->addTag(KursApplicationStatusDeterminer::SERVICE_TAG);
-$container->autowire(KursApplicationSubmitActionsContainer::class)
-  ->addTag(KursApplicationSubmitActionsContainer::SERVICE_TAG);
-$container->autowire(KursApplicationSubmitActionsFactory::class)
-  ->addTag(KursApplicationSubmitActionsFactory::SERVICE_TAG);
 
 $container->autowire(KursCaseActionsDeterminer::class)
   ->addTag(KursCaseActionsDeterminer::SERVICE_TAG);
-$container->autowire(KursCaseSubmitActionsContainer::class);
-$container->autowire(KursCaseSubmitActionsFactory::class);
 
 $container->autowire(KursCaseFormDataFactory::class)
   ->addTag(KursCaseFormDataFactory::SERVICE_TAG);

@@ -20,13 +20,20 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion;
 
 use Civi\Funding\FundingCaseType\MetaData\AbstractFundingCaseTypeMetaData;
+use Civi\Funding\FundingCaseType\MetaData\ApplicationProcessAction;
 use Civi\Funding\FundingCaseType\MetaData\ApplicationProcessStatus;
 use Civi\Funding\FundingCaseType\MetaData\CostItemType;
+use Civi\Funding\FundingCaseType\MetaData\DefaultApplicationProcessActions;
 use Civi\Funding\FundingCaseType\MetaData\DefaultApplicationProcessStatuses;
 
 final class HiHMetaData extends AbstractFundingCaseTypeMetaData {
 
   public const NAME = HiHConstants::FUNDING_CASE_TYPE_NAME;
+
+  /**
+   * @var non-empty-array<string, ApplicationProcessAction>|null
+   */
+  private ?array $applicationProcessActions = NULL;
 
   /**
    * @phpstan-var array<string, CostItemType>
@@ -35,6 +42,46 @@ final class HiHMetaData extends AbstractFundingCaseTypeMetaData {
 
   public function getName(): string {
     return self::NAME;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getApplicationProcessActions(): array {
+    return $this->applicationProcessActions ??= [
+      // Applicant actions.
+      'save' => DefaultApplicationProcessActions::save(),
+      'modify' => DefaultApplicationProcessActions::modify(),
+      'apply' => DefaultApplicationProcessActions::apply(),
+      'withdraw' => DefaultApplicationProcessActions::withdraw(),
+      'delete' => DefaultApplicationProcessActions::delete(),
+      // Reviewer actions.
+      'review' => DefaultApplicationProcessActions::review(),
+      'release' => new ApplicationProcessAction([
+        'name' => 'release',
+        'label' => 'Für Beirat freigeben',
+        'batchPossible' => TRUE,
+      ]),
+      'request-change' => DefaultApplicationProcessActions::requestChange(),
+      'reject' => DefaultApplicationProcessActions::reject(),
+      // Admin actions.
+      're-apply' => new ApplicationProcessAction([
+        'name' => 're-apply',
+        'label' => 'Zurück zu "beantragt"',
+        'batchPossible' => TRUE,
+      ]),
+      're-release' => new ApplicationProcessAction([
+        'name' => 're-release',
+        'label' => 'Erneut für Beirat freigeben',
+        'batchPossible' => TRUE,
+      ]),
+      'approve' => DefaultApplicationProcessActions::approve('Bewilligen'),
+      'approve-update' => new ApplicationProcessAction([
+        'name' => 'approve-update',
+        'label' => 'Bewilligung aktualisieren',
+        'batchPossible' => TRUE,
+      ]),
+    ];
   }
 
   /**
@@ -95,6 +142,13 @@ final class HiHMetaData extends AbstractFundingCaseTypeMetaData {
       'sachkosten.mieten' => new CostItemType('sachkosten.mieten', 'Sachkosten (Mieten)'),
       'sachkosten.sonstige' => new CostItemType('sachkosten.sonstige', 'Sachkosten (Sonstige)'),
     ];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getFundingCaseActions(): array {
+    return [];
   }
 
   /**

@@ -19,7 +19,6 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Handler;
 
-use Civi\Funding\ApplicationProcess\ActionStatusInfo\ApplicationProcessActionStatusInfoInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationActionApplyCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormCommentPersistCommand;
@@ -27,6 +26,7 @@ use Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormValidationRes
 use Civi\Funding\ApplicationProcess\Snapshot\ApplicationSnapshotRestorerInterface;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\Entity\ApplicationProcessEntity;
+use Civi\Funding\FundingCaseType\FundingCaseTypeMetaDataProviderInterface;
 
 final class ApplicationActionApplyHandler implements ApplicationActionApplyHandlerInterface {
 
@@ -36,7 +36,7 @@ final class ApplicationActionApplyHandler implements ApplicationActionApplyHandl
 
   private ApplicationFormCommentPersistHandlerInterface $commentPersistHandler;
 
-  private ApplicationProcessActionStatusInfoInterface $info;
+  private FundingCaseTypeMetaDataProviderInterface $metaDataProvider;
 
   private ApplicationProcessStatusDeterminerInterface $statusDeterminer;
 
@@ -44,24 +44,30 @@ final class ApplicationActionApplyHandler implements ApplicationActionApplyHandl
     ApplicationProcessManager $applicationProcessManager,
     ApplicationSnapshotRestorerInterface $applicationSnapshotRestorer,
     ApplicationFormCommentPersistHandlerInterface $commentPersistHandler,
-    ApplicationProcessActionStatusInfoInterface $info,
+    FundingCaseTypeMetaDataProviderInterface $metaDataProvider,
     ApplicationProcessStatusDeterminerInterface $statusDeterminer
   ) {
     $this->applicationProcessManager = $applicationProcessManager;
     $this->applicationSnapshotRestorer = $applicationSnapshotRestorer;
     $this->commentPersistHandler = $commentPersistHandler;
-    $this->info = $info;
+    $this->metaDataProvider = $metaDataProvider;
     $this->statusDeterminer = $statusDeterminer;
   }
 
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function handle(ApplicationActionApplyCommand $command): void {
-    if ($this->info->isDeleteAction($command->getAction())) {
+    $action = $this->metaDataProvider->get($command->getFundingCaseType()->getName())->getApplicationProcessAction(
+      $command->getAction());
+
+    if (TRUE === $action?->isDelete()) {
       $this->applicationProcessManager->delete($command->getApplicationProcessBundle());
 
       return;
     }
 
-    if ($this->info->isRestoreAction($command->getAction())) {
+    if (TRUE === $action?->isRestore()) {
       $this->applicationSnapshotRestorer->restoreLastSnapshot(
         $command->getApplicationProcessBundle()
       );
