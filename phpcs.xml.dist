@@ -7,6 +7,7 @@
     <file>Civi</file>
     <file>CRM</file>
     <file>services</file>
+    <file>schema</file>
     <file>tests</file>
     <file>funding.php</file>
 

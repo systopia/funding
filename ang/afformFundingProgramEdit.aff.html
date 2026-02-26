@@ -11,7 +11,7 @@
         <af-field name="requests_start_date" defn="{input_attrs: {time: false}}" />
         <af-field name="requests_end_date" defn="{input_attrs: {time: false}}" />
         <af-field name="currency" defn="{required: true, input_attrs: {}, afform_default: 'EUR'}" />
-        <af-field name="budget" />
+        <af-field name="budget" defn="{input_attrs: { step: 0.01 }}" />
       </fieldset>
     </fieldset>
     <button class="af-button btn btn-primary" crm-icon="fa-check" ng-click="afform.submit()">Save</button>

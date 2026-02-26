@@ -8,6 +8,7 @@ parameters:
 		- CRM
 		- managed
 		- services
+		- schema
 		- tests
 		# funding.php currently fails with 'Internal error: Class "CRM_Core_Page" not found while analysing file'
 		#- funding.php
