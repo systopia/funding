@@ -88,7 +88,7 @@ return [
        * utf8mb4_0900_as_cs) Since MariaDB 11.4.5 there's a mapping of MySQL
        * collations: https://jira.mariadb.org/browse/MDEV-20912.
        *
-       * See the funding_civicrm_install() hook in funding.php.
+       * See the funding_civicrm_postInstall() hook in funding.php.
        */
       'sql_type' => 'varchar(8000)',
       'input_type' => 'TextArea',
@@ -108,7 +108,7 @@ return [
        * allowed by the schema and at the same time the empty string may be used in
        * SearchKit's in-place edit.
        *
-       * See the funding_civicrm_install() hook in funding.php.
+       * See the funding_civicrm_postInstall() hook in funding.php.
        */
       'sql_type' => 'varchar(8000)',
       'input_type' => 'TextArea',

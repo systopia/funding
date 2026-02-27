@@ -88,7 +88,14 @@ function funding_civicrm_permission(array &$permissions): void {
  */
 function funding_civicrm_install(): void {
   _funding_civix_civicrm_install();
+}
 
+/**
+ * Implements hook_civicrm_postInstall().
+ *
+ * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_postInstall
+ */
+function funding_civicrm_postInstall(): void {
   /**
    * We need a collation that is accent-sensitive and case-sensitive. However, the
    * chosen collation utf8mb4_bin doesn't sort in natural order. Collations
@@ -102,6 +109,7 @@ function funding_civicrm_install(): void {
              MODIFY COLUMN msg_text VARCHAR(8000) COLLATE utf8mb4_bin,
              MODIFY COLUMN new_text VARCHAR(8000) COLLATE utf8mb4_bin NOT NULL'
   );
+
 }
 
 /**
