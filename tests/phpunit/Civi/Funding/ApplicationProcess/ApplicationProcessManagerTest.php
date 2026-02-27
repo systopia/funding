@@ -154,6 +154,7 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
       'short_description' => ValidatedApplicationDataMock::SHORT_DESCRIPTION,
       'request_data' => ValidatedApplicationDataMock::APPLICATION_DATA,
       'amount_requested' => ValidatedApplicationDataMock::AMOUNT_REQUESTED,
+      'amount_eligible' => 0.0,
       'creation_date' => date('Y-m-d H:i:s'),
       'modification_date' => date('Y-m-d H:i:s'),
       'start_date' => ValidatedApplicationDataMock::START_DATE,

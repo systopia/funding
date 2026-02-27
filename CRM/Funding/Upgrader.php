@@ -208,6 +208,14 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
     return TRUE;
   }
 
+  public function upgrade_0020(): bool {
+    $this->ctx->log->info('Applying database migration 0020');
+    $this->executeSqlFile('sql/upgrade/0020.sql');
+    $this->createUniqueTranslationIndex();
+
+    return TRUE;
+  }
+
   private function createUniqueTranslationIndex(): void {
     try {
       // Not possible on MySQL because it exceeds max key length of 3072 bytes.

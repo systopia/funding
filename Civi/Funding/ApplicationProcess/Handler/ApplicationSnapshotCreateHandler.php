@@ -75,6 +75,7 @@ final class ApplicationSnapshotCreateHandler implements ApplicationSnapshotCreat
       'cost_items' => [...$this->getCostItems($applicationProcess->getId())],
       'resources_items' => [...$this->getResourcesItems($applicationProcess->getId())],
       'amount_requested' => $applicationProcess->getAmountRequested(),
+      'amount_eligible' => $applicationProcess->getAmountEligible(),
       'is_review_content' => $applicationProcess->getIsReviewContent(),
       'is_review_calculative' => $applicationProcess->getIsReviewCalculative(),
       'is_eligible' => $applicationProcess->getIsEligible(),

@@ -30,16 +30,23 @@ use Webmozart\Assert\Assert;
 
 final class ApplicationProcessStatusFlagsSubscriber implements EventSubscriberInterface {
 
+  /**
+   * Priority is decreased so other subscribers can change the status before.
+   * Subscribers of ApplicationProcessPreCreateEvent and
+   * ApplicationProcessPreUpdateEvent depending on the status flags must have a
+   * lower priority.
+   */
+  public const PRIORITY = -100;
+
   private FundingCaseTypeMetaDataProviderInterface $metaDataProvider;
 
   /**
    * @inheritDoc
    */
   public static function getSubscribedEvents(): array {
-    // Priority is decreased so other subscribers can change the status before.
     return [
-      ApplicationProcessPreCreateEvent::class => ['onPreCreate', -100],
-      ApplicationProcessPreUpdateEvent::class => ['onPreUpdate', -100],
+      ApplicationProcessPreCreateEvent::class => ['onPreCreate', self::PRIORITY],
+      ApplicationProcessPreUpdateEvent::class => ['onPreUpdate', self::PRIORITY],
     ];
   }
 

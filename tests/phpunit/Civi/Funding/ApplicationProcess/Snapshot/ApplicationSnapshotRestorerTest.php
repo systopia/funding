@@ -87,6 +87,7 @@ final class ApplicationSnapshotRestorerTest extends TestCase {
     $resourcesItem = ApplicationResourcesItemFactory::createApplicationResourcesItem();
 
     $applicationSnapshot = ApplicationSnapshotFactory::createApplicationSnapshot([
+      'amount_eligible' => 1.2,
       'cost_items' => [$costItem->toArray()],
       'resources_items' => [$resourcesItem->toArray()],
       'custom_fields' => ['foo.bar' => 'baz'],
@@ -123,6 +124,7 @@ final class ApplicationSnapshotRestorerTest extends TestCase {
     static::assertEquals($applicationSnapshot->getEndDate(), $applicationProcess->getEndDate());
     static::assertSame($applicationSnapshot->getRequestData(), $applicationProcess->getRequestData());
     static::assertSame($applicationSnapshot->getAmountRequested(), $applicationProcess->getAmountRequested());
+    static::assertSame($applicationSnapshot->getAmountEligible(), $applicationProcess->getAmountEligible());
     static::assertSame($applicationSnapshot->getIsReviewContent(), $applicationProcess->getIsReviewContent());
     static::assertSame($applicationSnapshot->getIsReviewCalculative(), $applicationProcess->getIsReviewCalculative());
     static::assertSame($applicationSnapshot->getIsEligible(), $applicationProcess->getIsEligible());

@@ -106,6 +106,7 @@ class ApplicationProcessManager {
       'short_description' => $data->getShortDescription(),
       'request_data' => $data->getApplicationData(),
       'amount_requested' => $data->getAmountRequested(),
+      'amount_eligible' => 0.0,
       'creation_date' => $now,
       'modification_date' => $now,
       'start_date' => DateTimeUtil::toDateTimeStrOrNull($data->getStartDate()),

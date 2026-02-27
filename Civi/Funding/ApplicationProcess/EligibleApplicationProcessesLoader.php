@@ -20,6 +20,8 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess;
 
 use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\RemoteTools\Api4\Query\Comparison;
+use Civi\RemoteTools\Api4\Query\CompositeCondition;
 
 class EligibleApplicationProcessesLoader {
 
@@ -37,14 +39,10 @@ class EligibleApplicationProcessesLoader {
    * @throws \CRM_Core_Exception
    */
   public function getEligibleProcessesForContract(FundingCaseEntity $fundingCase): array {
-    $eligibleApplicationProcesses = [];
-    foreach ($this->applicationProcessManager->getByFundingCaseId($fundingCase->getId()) as $applicationProcess) {
-      if (TRUE === $applicationProcess->getIsEligible()) {
-        $eligibleApplicationProcesses[] = $applicationProcess;
-      }
-    }
-
-    return $eligibleApplicationProcesses;
+    return $this->applicationProcessManager->getBy(CompositeCondition::new('AND',
+      Comparison::new('funding_case_id', '=', $fundingCase->getId()),
+      Comparison::new('amount_eligible', '>', 0)
+    ));
   }
 
 }

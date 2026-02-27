@@ -158,6 +158,13 @@ return [
       'data_type' => 'Money',
       'required' => TRUE,
     ],
+    'amount_eligible' => [
+      'title' => E::ts('Amount Eligible'),
+      'sql_type' => 'decimal(10,2)',
+      'input_type' => 'Text',
+      'data_type' => 'Money',
+      'required' => TRUE,
+    ],
     'is_review_content' => [
       'title' => E::ts('Is Review Content'),
       'sql_type' => 'boolean',

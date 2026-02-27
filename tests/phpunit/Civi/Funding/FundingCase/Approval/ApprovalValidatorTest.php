@@ -55,8 +55,7 @@ final class ApprovalValidatorTest extends TestCase {
     );
 
     $applicationProcess = ApplicationProcessFactory::createApplicationProcess([
-      'is_eligible' => TRUE,
-      'amount_requested' => 1.23,
+      'amount_eligible' => 1.23,
     ]);
     $this->eligibleApplicationProcessesLoaderMock->expects(static::once())->method('getEligibleProcessesForContract')
       ->willReturn([$applicationProcess]);
@@ -70,8 +69,7 @@ final class ApprovalValidatorTest extends TestCase {
     );
 
     $applicationProcess = ApplicationProcessFactory::createApplicationProcess([
-      'is_eligible' => TRUE,
-      'amount_requested' => 1.23,
+      'amount_eligible' => 1.23,
     ]);
     $this->eligibleApplicationProcessesLoaderMock->expects(static::once())->method('getEligibleProcessesForContract')
       ->willReturn([$applicationProcess]);
@@ -85,8 +83,7 @@ final class ApprovalValidatorTest extends TestCase {
     );
 
     $applicationProcess = ApplicationProcessFactory::createApplicationProcess([
-      'is_eligible' => TRUE,
-      'amount_requested' => 1.23,
+      'amount_eligible' => 1.23,
     ]);
     $this->eligibleApplicationProcessesLoaderMock->expects(static::once())->method('getEligibleProcessesForContract')
       ->willReturn([$applicationProcess]);
