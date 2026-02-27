@@ -54,7 +54,7 @@ return [
       'required' => TRUE,
       'description' => E::ts('FK to FundingApplicationProcess'),
       'entity_reference' => [
-        'entity' => 'ApplicationProcess',
+        'entity' => 'FundingApplicationProcess',
         'key' => 'id',
         'on_delete' => 'CASCADE',
       ],

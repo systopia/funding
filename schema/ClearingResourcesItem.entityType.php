@@ -52,7 +52,7 @@ return [
         'prefetch' => 'false',
       ],
       'entity_reference' => [
-        'entity' => 'ClearingProcess',
+        'entity' => 'FundingClearingProcess',
         'key' => 'id',
         'on_delete' => 'RESTRICT',
       ],
@@ -74,7 +74,7 @@ return [
         'prefetch' => 'false',
       ],
       'entity_reference' => [
-        'entity' => 'ApplicationResourcesItem',
+        'entity' => 'FundingApplicationResourcesItem',
         'key' => 'id',
         'on_delete' => 'CASCADE',
       ],

@@ -53,7 +53,7 @@ return [
         'prefetch' => 'false',
       ],
       'entity_reference' => [
-        'entity' => 'ApplicationProcess',
+        'entity' => 'FundingApplicationProcess',
         'key' => 'id',
         'on_delete' => 'RESTRICT',
       ],

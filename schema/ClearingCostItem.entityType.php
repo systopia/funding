@@ -52,7 +52,7 @@ return [
         'prefetch' => 'false',
       ],
       'entity_reference' => [
-        'entity' => 'ClearingProcess',
+        'entity' => 'FundingClearingProcess',
         'key' => 'id',
         'on_delete' => 'RESTRICT',
       ],
@@ -62,7 +62,7 @@ return [
       'sql_type' => 'int unsigned',
       'input_type' => 'EntityRef',
       'required' => TRUE,
-      'description' => E::ts('FK to FundingApplicationResourcesItem'),
+      'description' => E::ts('FK to FundingApplicationCostItem'),
       'pseudoconstant' => [
         'table' => 'civicrm_funding_app_cost_item',
         'key_column' => 'id',
@@ -70,7 +70,7 @@ return [
         'prefetch' => 'false',
       ],
       'entity_reference' => [
-        'entity' => 'ApplicationCostItem',
+        'entity' => 'FundingApplicationCostItem',
         'key' => 'id',
         'on_delete' => 'CASCADE',
       ],

@@ -59,7 +59,7 @@ return [
         'prefetch' => 'false',
       ],
       'entity_reference' => [
-        'entity' => 'PayoutProcess',
+        'entity' => 'FundingPayoutProcess',
         'key' => 'id',
         'on_delete' => 'CASCADE',
       ],
