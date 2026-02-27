@@ -52,7 +52,7 @@ return [
         'table' => 'civicrm_funding_program',
         'key_column' => 'id',
         'label_column' => 'title',
-        'prefetch' => 'false',
+        'prefetch' => FALSE,
       ],
       'entity_reference' => [
         'entity' => 'FundingProgram',
@@ -70,7 +70,7 @@ return [
         'table' => 'civicrm_funding_case_type',
         'key_column' => 'id',
         'label_column' => 'title',
-        'prefetch' => 'false',
+        'prefetch' => FALSE,
       ],
       'entity_reference' => [
         'entity' => 'FundingCaseType',
@@ -87,8 +87,10 @@ return [
        * and MySQL, though. (MariaDB: utf8mb4_0900_as_cs, MySQL:
        * utf8mb4_0900_as_cs) Since MariaDB 11.4.5 there's a mapping of MySQL
        * collations: https://jira.mariadb.org/browse/MDEV-20912.
+       *
+       * See the funding_civicrm_install() hook in funding.php.
        */
-      'sql_type' => 'varchar(8000) COLLATE utf8mb4_bin',
+      'sql_type' => 'varchar(8000)',
       'input_type' => 'TextArea',
       'data_type' => 'String',
       'required' => TRUE,
@@ -106,9 +108,9 @@ return [
        * allowed by the schema and at the same time the empty string may be used in
        * SearchKit's in-place edit.
        *
-       * For the collation see comment on msg_text.
+       * See the funding_civicrm_install() hook in funding.php.
        */
-      'sql_type' => 'varchar(8000) COLLATE utf8mb4_bin NOT',
+      'sql_type' => 'varchar(8000)',
       'input_type' => 'TextArea',
       'data_type' => 'String',
       'description' => E::ts('Actual string'),

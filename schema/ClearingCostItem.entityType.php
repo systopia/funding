@@ -49,7 +49,7 @@ return [
         'table' => 'civicrm_funding_clearing_process',
         'key_column' => 'id',
         'label_column' => 'id',
-        'prefetch' => 'false',
+        'prefetch' => FALSE,
       ],
       'entity_reference' => [
         'entity' => 'FundingClearingProcess',
@@ -67,7 +67,7 @@ return [
         'table' => 'civicrm_funding_app_cost_item',
         'key_column' => 'id',
         'label_column' => 'identifier',
-        'prefetch' => 'false',
+        'prefetch' => FALSE,
       ],
       'entity_reference' => [
         'entity' => 'FundingApplicationCostItem',

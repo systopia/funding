@@ -88,6 +88,20 @@ function funding_civicrm_permission(array &$permissions): void {
  */
 function funding_civicrm_install(): void {
   _funding_civix_civicrm_install();
+
+  /**
+   * We need a collation that is accent-sensitive and case-sensitive. However, the
+   * chosen collation utf8mb4_bin doesn't sort in natural order. Collations
+   * that are also sorting in natural order are named differently on MariaDB
+   * and MySQL, though. (MariaDB: utf8mb4_0900_as_cs, MySQL:
+   * utf8mb4_0900_as_cs) Since MariaDB 11.4.5 there's a mapping of MySQL
+   * collations: https://jira.mariadb.org/browse/MDEV-20912.
+   */
+  CRM_Core_DAO::executeQuery(
+    'ALTER TABLE civicrm_funding_form_string_translation
+             MODIFY COLUMN msg_text VARCHAR(8000) COLLATE utf8mb4_bin,
+             MODIFY COLUMN new_text VARCHAR(8000) COLLATE utf8mb4_bin NOT NULL'
+  );
 }
 
 /**

@@ -62,7 +62,7 @@ return [
         'table' => 'civicrm_funding_application_process',
         'key_column' => 'id',
         'label_column' => 'title',
-        'prefetch' => 'false',
+        'prefetch' => FALSE,
       ],
       'entity_reference' => [
         'entity' => 'FundingApplicationProcess',

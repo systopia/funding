@@ -63,7 +63,7 @@ return [
         'table' => 'civicrm_funding_case_type',
         'key_column' => 'id',
         'label_column' => 'title',
-        'prefetch' => 'false',
+        'prefetch' => FALSE,
       ],
       'entity_reference' => [
         'entity' => 'FundingCaseType',

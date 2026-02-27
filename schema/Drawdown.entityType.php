@@ -56,7 +56,7 @@ return [
         'table' => 'civicrm_funding_payout_process',
         'key_column' => 'id',
         'label_column' => 'id',
-        'prefetch' => 'false',
+        'prefetch' => FALSE,
       ],
       'entity_reference' => [
         'entity' => 'FundingPayoutProcess',
