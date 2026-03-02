@@ -26,9 +26,9 @@ use Civi\Api4\Generic\AbstractGetAction;
 use Civi\Api4\Generic\Result;
 use Civi\Api4\Generic\Traits\ArrayQueryActionTrait;
 use Civi\Funding\Api4\Action\Traits\Api4Trait;
-use Civi\Funding\Api4\Action\Traits\ApplicationProcessBundleLoaderTrait;
+use Civi\Funding\Api4\Action\Traits\ApplicationProcessManagerTrait;
 use Civi\Funding\Api4\Action\Traits\IsFieldSelectedTrait;
-use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\RemoteTools\Api4\Api4Interface;
@@ -82,15 +82,15 @@ final class GetAction extends AbstractGetAction {
 
   use Api4Trait;
 
-  use ApplicationProcessBundleLoaderTrait;
+  use ApplicationProcessManagerTrait;
 
   public function __construct(
     ?Api4Interface $api4 = NULL,
-    ?ApplicationProcessBundleLoader $applicationProcessBundleLoader = NULL
+    ?ApplicationProcessManager $applicationProcessManager = NULL
   ) {
     parent::__construct(FundingCaseInfo::getEntityName(), 'get');
     $this->_api4 = $api4;
-    $this->_applicationProcessBundleLoader = $applicationProcessBundleLoader;
+    $this->_applicationProcessManager = $applicationProcessManager;
   }
 
   /**
@@ -100,7 +100,7 @@ final class GetAction extends AbstractGetAction {
    */
   public function _run(Result $result): void {
     if ($this->getSelect() === ['row_count']) {
-      $count = $this->getApplicationProcessBundleLoader()->countBy($this->buildCondition($this->getWhere()));
+      $count = $this->getApplicationProcessManager()->countBy($this->buildCondition($this->getWhere()));
       $result->setCountMatched($count);
       $result->exchangeArray([['row_count' => $count]]);
 
@@ -122,7 +122,7 @@ final class GetAction extends AbstractGetAction {
       }
       else {
         $result->setCountMatched(
-          $this->getApplicationProcessBundleLoader()->countBy($this->buildCondition($this->getWhere()))
+          $this->getApplicationProcessManager()->countBy($this->buildCondition($this->getWhere()))
         );
       }
     }
@@ -235,7 +235,7 @@ final class GetAction extends AbstractGetAction {
    * @throws \CRM_Core_Exception
    */
   private function getApplicationProcessBundles(): iterable {
-    return $this->getApplicationProcessBundleLoader()->getBy(
+    return $this->getApplicationProcessManager()->getBundlesBy(
       $this->buildCondition($this->getWhere()),
       $this->buildOrderBy(),
       $this->getLimit(),

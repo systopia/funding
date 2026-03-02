@@ -17,9 +17,10 @@
 
 declare(strict_types = 1);
 
+namespace Civi\Funding\ApplicationProcess\Api4\ActionHandler;
+
 use Civi\Funding\Api4\Action\FundingApplicationProcess\GetFormAction;
-use Civi\Funding\ApplicationProcess\Api4\ActionHandler\GetFormActionHandler;
-use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormCreateCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
@@ -38,24 +39,18 @@ final class GetFormActionHandlerTest extends TestCase {
 
   use CreateMockTrait;
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $applicationProcessBundleLoaderMock;
+  private ApplicationProcessManager&MockObject $applicationProcessManagerMock;
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $formCreateHandlerMock;
+  private ApplicationFormCreateHandlerInterface&MockObject $formCreateHandlerMock;
 
   private GetFormActionHandler $handler;
 
   protected function setUp(): void {
     parent::setUp();
-    $this->applicationProcessBundleLoaderMock = $this->createMock(ApplicationProcessBundleLoader::class);
+    $this->applicationProcessManagerMock = $this->createMock(ApplicationProcessManager::class);
     $this->formCreateHandlerMock = $this->createMock(ApplicationFormCreateHandlerInterface::class);
     $this->handler = new GetFormActionHandler(
-      $this->applicationProcessBundleLoaderMock,
+      $this->applicationProcessManagerMock,
       $this->formCreateHandlerMock
     );
   }
@@ -69,10 +64,10 @@ final class GetFormActionHandlerTest extends TestCase {
     $action = $this->createApi4ActionMock(GetFormAction::class)
       ->setId($applicationProcessId);
 
-    $this->applicationProcessBundleLoaderMock->method('get')
+    $this->applicationProcessManagerMock->method('getBundle')
       ->with($applicationProcessId)
       ->willReturn($applicationProcessBundle);
-    $this->applicationProcessBundleLoaderMock->method('getStatusList')
+    $this->applicationProcessManagerMock->method('getStatusList')
       ->with($applicationProcessBundle)
       ->willReturn($statusList);
 

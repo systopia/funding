@@ -29,6 +29,7 @@ use Civi\Funding\ActivityTypeNames;
 use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\EntityFactory\FundingCaseBundleFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreCreateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
@@ -39,6 +40,7 @@ use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
+use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
 use Civi\Funding\Util\RequestTestUtil;
 use Civi\RemoteTools\Api4\Api4;
@@ -63,6 +65,8 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
 
   private CiviEventDispatcherInterface&MockObject $eventDispatcherMock;
 
+  private FundingCaseManager&MockObject $fundingCaseManagerMock;
+
   public static function setUpBeforeClass(): void {
     parent::setUpBeforeClass();
     ClockMock::register(__CLASS__);
@@ -73,10 +77,12 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
     parent::setUp();
     $this->activityManagerMock = $this->createMock(ApplicationProcessActivityManager::class);
     $this->eventDispatcherMock = $this->createMock(CiviEventDispatcherInterface::class);
+    $this->fundingCaseManagerMock = $this->createMock(FundingCaseManager::class);
     $this->applicationProcessManager = new ApplicationProcessManager(
       $this->activityManagerMock,
       new Api4(),
-      $this->eventDispatcherMock
+      $this->eventDispatcherMock,
+      $this->fundingCaseManagerMock,
     );
   }
 
@@ -200,6 +206,22 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
     static::assertNotNull($this->applicationProcessManager->get($applicationProcess->getId()));
 
     static::assertNull($this->applicationProcessManager->get($applicationProcess->getId() + 1));
+  }
+
+  public function testGetBundle(): void {
+    $contact = ContactFixture::addIndividual();
+    $fundingCase = $this->createFundingCase();
+
+    $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId());
+    RequestTestUtil::mockInternalRequest($contact['id']);
+    static::assertNull($this->applicationProcessManager->getBundle($applicationProcess->getId()));
+
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['test_permission']);
+    $this->clearCache();
+    $this->fundingCaseManagerMock->expects(static::once())->method('getBundle')
+      ->with($fundingCase->getId())
+      ->willReturn(FundingCaseBundleFactory::create());
+    static::assertNotNull($this->applicationProcessManager->getBundle($applicationProcess->getId()));
   }
 
   public function testGetCustomFields(): void {

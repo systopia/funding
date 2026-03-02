@@ -25,6 +25,9 @@ use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\RemoteTools\Api4\Query\ConditionInterface;
 use Webmozart\Assert\Assert;
 
+/**
+ * @deprecated Use ApplicationProcessManager instead.
+ */
 class ApplicationProcessBundleLoader {
 
   private ApplicationProcessManager $applicationProcessManager;

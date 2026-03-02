@@ -21,7 +21,7 @@ namespace Civi\Funding\ApplicationProcess\Api4\ActionHandler;
 
 use Civi\API\Exception\UnauthorizedException;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\ApplyActionMultipleAction;
-use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationActionApplyCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationAllowedActionsGetCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationActionApplyHandlerInterface;
@@ -38,19 +38,19 @@ final class ApplyActionMultipleActionHandler implements ActionHandlerInterface {
 
   private ApplicationAllowedActionsGetHandlerInterface $allowedActionsGetHandler;
 
-  private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
+  private ApplicationProcessManager $applicationProcessManager;
 
   private RequestContextInterface $requestContext;
 
   public function __construct(
     ApplicationActionApplyHandlerInterface $actionApplyHandler,
     ApplicationAllowedActionsGetHandlerInterface $allowedActionsGetHandler,
-    ApplicationProcessBundleLoader $applicationProcessBundleLoader,
+    ApplicationProcessManager $applicationProcessManager,
     RequestContextInterface $requestContext
   ) {
     $this->actionApplyHandler = $actionApplyHandler;
     $this->allowedActionsGetHandler = $allowedActionsGetHandler;
-    $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
+    $this->applicationProcessManager = $applicationProcessManager;
     $this->requestContext = $requestContext;
   }
 
@@ -80,12 +80,12 @@ final class ApplyActionMultipleActionHandler implements ActionHandlerInterface {
    * @throws \CRM_Core_Exception
    */
   private function applyActionById(string $action, int $id): array {
-    $applicationProcessBundle = $this->applicationProcessBundleLoader->get($id);
+    $applicationProcessBundle = $this->applicationProcessManager->getBundle($id);
     if (NULL === $applicationProcessBundle) {
       throw new UnauthorizedException(E::ts('Application process with ID %1 not found.', [1 => $id]));
     }
 
-    $applicationProcessStatusList = $this->applicationProcessBundleLoader->getStatusList($applicationProcessBundle);
+    $applicationProcessStatusList = $this->applicationProcessManager->getStatusList($applicationProcessBundle);
     $allowedActions = $this->allowedActionsGetHandler->handle(new ApplicationAllowedActionsGetCommand(
       $applicationProcessBundle,
       $applicationProcessStatusList,

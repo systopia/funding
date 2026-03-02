@@ -23,7 +23,7 @@ namespace Civi\Funding\ApplicationProcess\Api4\ActionHandler;
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\SubmitFormAction;
 use Civi\Funding\Api4\OptionsLoaderInterface;
-use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
 use Civi\Funding\Entity\ApplicationProcessEntity;
@@ -37,18 +37,18 @@ final class RemoteSubmitFormActionHandler implements ActionHandlerInterface {
 
   public const ENTITY_NAME = 'RemoteFundingApplicationProcess';
 
-  private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
+  private ApplicationProcessManager $applicationProcessManager;
 
   private OptionsLoaderInterface $optionsLoader;
 
   private ApplicationFormSubmitHandlerInterface $submitHandler;
 
   public function __construct(
-    ApplicationProcessBundleLoader $applicationProcessBundleLoader,
+    ApplicationProcessManager $applicationProcessManager,
     OptionsLoaderInterface $optionsLoader,
     ApplicationFormSubmitHandlerInterface $submitHandler
   ) {
-    $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
+    $this->applicationProcessManager = $applicationProcessManager;
     $this->optionsLoader = $optionsLoader;
     $this->submitHandler = $submitHandler;
   }
@@ -64,13 +64,13 @@ final class RemoteSubmitFormActionHandler implements ActionHandlerInterface {
    * @throws \CRM_Core_Exception
    */
   public function submitForm(SubmitFormAction $action): array {
-    $applicationProcessBundle = $this->applicationProcessBundleLoader->get($action->getApplicationProcessId());
+    $applicationProcessBundle = $this->applicationProcessManager->getBundle($action->getApplicationProcessId());
     Assert::notNull(
       $applicationProcessBundle,
       E::ts('Application process with ID "%1" not found', [1 => $action->getApplicationProcessId()])
     );
 
-    $statusList = $this->applicationProcessBundleLoader->getStatusList($applicationProcessBundle);
+    $statusList = $this->applicationProcessManager->getStatusList($applicationProcessBundle);
 
     $command = new ApplicationFormSubmitCommand(
       $action->getResolvedContactId(),

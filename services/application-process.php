@@ -96,6 +96,7 @@ $container->addCompilerPass(new ApplicationUiSchemaFactoryPass());
 $container->autowire(ApplicationProcessManager::class)
   // Used in API actions.
   ->setPublic(TRUE);
+// @phpstan-ignore classConstant.deprecatedClass
 $container->autowire(ApplicationProcessBundleLoader::class)
   // Used in API actions.
   ->setPublic(TRUE);

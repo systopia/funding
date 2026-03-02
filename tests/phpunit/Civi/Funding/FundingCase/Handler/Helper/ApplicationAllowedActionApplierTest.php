@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase\Handler\Helper;
 
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerInterface;
-use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationActionApplyCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationActionApplyHandlerInterface;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
@@ -39,37 +39,28 @@ final class ApplicationAllowedActionApplierTest extends TestCase {
    */
   private ApplicationAllowedActionApplier $actionApplier;
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\Handler\ApplicationActionApplyHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $actionApplyHandlerMock;
+  private ApplicationActionApplyHandlerInterface&MockObject $actionApplyHandlerMock;
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $actionsDeterminerMock;
+  private ApplicationProcessActionsDeterminerInterface&MockObject $actionsDeterminerMock;
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $applicationProcessBundleLoaderMock;
+  private ApplicationProcessManager&MockObject $applicationProcessManagerMock;
 
   protected function setUp(): void {
     parent::setUp();
     $this->actionApplyHandlerMock = $this->createMock(ApplicationActionApplyHandlerInterface::class);
     $this->actionsDeterminerMock = $this->createMock(ApplicationProcessActionsDeterminerInterface::class);
-    $this->applicationProcessBundleLoaderMock = $this->createMock(ApplicationProcessBundleLoader::class);
+    $this->applicationProcessManagerMock = $this->createMock(ApplicationProcessManager::class);
     $this->actionApplier = new ApplicationAllowedActionApplier(
       $this->actionApplyHandlerMock,
       $this->actionsDeterminerMock,
-      $this->applicationProcessBundleLoaderMock,
+      $this->applicationProcessManagerMock,
     );
   }
 
   public function testApplyAllowedAction(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
     $statusList = [123 => new FullApplicationProcessStatus('test', NULL, NULL)];
-    $this->applicationProcessBundleLoaderMock->method('getStatusList')
+    $this->applicationProcessManagerMock->method('getStatusList')
       ->with($applicationProcessBundle)
       ->willReturn($statusList);
     $this->actionsDeterminerMock->method('isActionAllowed')->with(
@@ -89,7 +80,7 @@ final class ApplicationAllowedActionApplierTest extends TestCase {
   public function testApplyAllowedActionNotAllowed(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
     $statusList = [123 => new FullApplicationProcessStatus('test', NULL, NULL)];
-    $this->applicationProcessBundleLoaderMock->method('getStatusList')
+    $this->applicationProcessManagerMock->method('getStatusList')
       ->with($applicationProcessBundle)
       ->willReturn($statusList);
     $this->actionsDeterminerMock->method('isActionAllowed')->with(
@@ -117,11 +108,14 @@ final class ApplicationAllowedActionApplierTest extends TestCase {
     $applicationProcess2 = $applicationProcessBundle2->getApplicationProcess();
     $fundingCase = $applicationProcessBundle1->getFundingCase();
 
-    $this->applicationProcessBundleLoaderMock->method('getByFundingCaseId')
+    $this->applicationProcessManagerMock->method('getBundlesByFundingCaseId')
       ->with($fundingCase->getId())
-      ->willReturn([$applicationProcessBundle1, $applicationProcessBundle2]);
+      ->willReturn([
+        $applicationProcess1->getId() => $applicationProcessBundle1,
+        $applicationProcess2->getId() => $applicationProcessBundle2,
+      ]);
 
-    $this->applicationProcessBundleLoaderMock->method('getStatusList')->willReturnMap([
+    $this->applicationProcessManagerMock->method('getStatusList')->willReturnMap([
       [
         $applicationProcessBundle1,
         [$applicationProcess2->getId() => $applicationProcess2->getFullStatus()],

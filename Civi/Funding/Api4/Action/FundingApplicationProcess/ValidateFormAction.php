@@ -22,8 +22,8 @@ namespace Civi\Funding\Api4\Action\FundingApplicationProcess;
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
-use Civi\Funding\Api4\Action\Traits\ApplicationProcessBundleLoaderTrait;
-use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
+use Civi\Funding\Api4\Action\Traits\ApplicationProcessManagerTrait;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormValidateHandlerInterface;
 use Civi\RemoteTools\Api4\Action\Traits\DataParameterTrait;
@@ -36,16 +36,16 @@ final class ValidateFormAction extends AbstractAction {
 
   use IdParameterTrait;
 
-  use ApplicationProcessBundleLoaderTrait;
+  use ApplicationProcessManagerTrait;
 
   private ?ApplicationFormValidateHandlerInterface $validateFormHandler;
 
   public function __construct(
-    ?ApplicationProcessBundleLoader $applicationProcessBundleLoader = NULL,
+    ?ApplicationProcessManager $applicationProcessManager = NULL,
     ?ApplicationFormValidateHandlerInterface $validateFormHandler = NULL
   ) {
     parent::__construct(FundingApplicationProcess::getEntityName(), 'validateForm');
-    $this->_applicationProcessBundleLoader = $applicationProcessBundleLoader;
+    $this->_applicationProcessManager = $applicationProcessManager;
     $this->validateFormHandler = $validateFormHandler;
   }
 
@@ -68,9 +68,9 @@ final class ValidateFormAction extends AbstractAction {
    * @throws \CRM_Core_Exception
    */
   protected function createCommand(): ApplicationFormValidateCommand {
-    $applicationProcessBundle = $this->getApplicationProcessBundleLoader()->get($this->getId());
+    $applicationProcessBundle = $this->getApplicationProcessManager()->getBundle($this->getId());
     Assert::notNull($applicationProcessBundle, sprintf('Application process with ID "%d" not found', $this->getId()));
-    $statusList = $this->getApplicationProcessBundleLoader()->getStatusList($applicationProcessBundle);
+    $statusList = $this->getApplicationProcessManager()->getStatusList($applicationProcessBundle);
 
     return new ApplicationFormValidateCommand($applicationProcessBundle, $statusList, $this->getData(), 20);
   }

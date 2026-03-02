@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ClearingProcess\Form;
 
-use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormCreateCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
 use Civi\Funding\ClearingProcess\Form\CostItem\ClearingCostItemsJsonFormsGenerator;
@@ -40,7 +40,7 @@ final class ReceiptsFormGenerator implements ReceiptsFormGeneratorInterface {
 
   public const SUPPORTED_FUNDING_CASE_TYPE = '*';
 
-  private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
+  private ApplicationProcessManager $applicationProcessManager;
 
   private ApplicationFormCreateHandlerInterface $applicationFormCreateHandler;
 
@@ -49,12 +49,12 @@ final class ReceiptsFormGenerator implements ReceiptsFormGeneratorInterface {
   private ClearingResourcesItemsJsonFormsGenerator $clearingResourcesItemsJsonFormsGenerator;
 
   public function __construct(
-    ApplicationProcessBundleLoader $applicationProcessBundleLoader,
+    ApplicationProcessManager $applicationProcessManager,
     ApplicationFormCreateHandlerInterface $applicationFormCreateHandler,
     ClearingCostItemsJsonFormsGenerator $clearingCostItemsJsonFormsGenerator,
     ClearingResourcesItemsJsonFormsGenerator $clearingResourcesItemsJsonFormsGenerator
   ) {
-    $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
+    $this->applicationProcessManager = $applicationProcessManager;
     $this->applicationFormCreateHandler = $applicationFormCreateHandler;
     $this->clearingCostItemsJsonFormsGenerator = $clearingCostItemsJsonFormsGenerator;
     $this->clearingResourcesItemsJsonFormsGenerator = $clearingResourcesItemsJsonFormsGenerator;
@@ -66,7 +66,7 @@ final class ReceiptsFormGenerator implements ReceiptsFormGeneratorInterface {
   public function generateReceiptsForm(ClearingProcessEntityBundle $clearingProcessBundle): JsonFormsFormInterface {
     $applicationForm = $this->applicationFormCreateHandler->handle(new ApplicationFormCreateCommand(
       $clearingProcessBundle,
-      $this->applicationProcessBundleLoader->getStatusList($clearingProcessBundle)
+      $this->applicationProcessManager->getStatusList($clearingProcessBundle)
     ));
 
     $costItemsForm = $this->clearingCostItemsJsonFormsGenerator->generate($clearingProcessBundle, $applicationForm);

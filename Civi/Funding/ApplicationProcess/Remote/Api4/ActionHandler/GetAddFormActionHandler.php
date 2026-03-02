@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Remote\Api4\ActionHandler;
 
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetAddFormAction;
-use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormAddCreateCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormDataGetCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddCreateHandlerInterface;
@@ -35,7 +35,7 @@ final class GetAddFormActionHandler implements ActionHandlerInterface {
 
   public const ENTITY_NAME = 'RemoteFundingApplicationProcess';
 
-  private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
+  private ApplicationProcessManager $applicationProcessManager;
 
   private ApplicationFormAddCreateHandlerInterface $createHandler;
 
@@ -48,14 +48,14 @@ final class GetAddFormActionHandler implements ActionHandlerInterface {
   private FundingProgramManager $fundingProgramManager;
 
   public function __construct(
-    ApplicationProcessBundleLoader $applicationProcessBundleLoader,
+    ApplicationProcessManager $applicationProcessManager,
     ApplicationFormAddCreateHandlerInterface $createHandler,
     ApplicationFormDataGetHandlerInterface $formDataGetHandler,
     FundingCaseManager $fundingCaseManager,
     FundingCaseTypeManager $fundingCaseTypeManager,
     FundingProgramManager $fundingProgramManager
   ) {
-    $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
+    $this->applicationProcessManager = $applicationProcessManager;
     $this->createHandler = $createHandler;
     $this->formDataGetHandler = $formDataGetHandler;
     $this->fundingCaseManager = $fundingCaseManager;
@@ -89,7 +89,7 @@ final class GetAddFormActionHandler implements ActionHandlerInterface {
     ));
 
     if (NULL !== $action->getCopyDataFromId()) {
-      $applicationProcessBundle = $this->applicationProcessBundleLoader->get($action->getCopyDataFromId());
+      $applicationProcessBundle = $this->applicationProcessManager->getBundle($action->getCopyDataFromId());
       Assert::notNull(
         $applicationProcessBundle,
         sprintf('Application process with ID "%d" not found', $action->getCopyDataFromId())
@@ -101,7 +101,7 @@ final class GetAddFormActionHandler implements ActionHandlerInterface {
       );
       $formData = $this->formDataGetHandler->handle(new ApplicationFormDataGetCommand(
         $applicationProcessBundle,
-        $this->applicationProcessBundleLoader->getStatusList($applicationProcessBundle),
+        $this->applicationProcessManager->getStatusList($applicationProcessBundle),
         ApplicationFormDataGetCommand::FLAG_COPY
       )) + $form->getData();
     }

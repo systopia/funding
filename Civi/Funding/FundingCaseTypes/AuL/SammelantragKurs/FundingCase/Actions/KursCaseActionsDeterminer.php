@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\FundingCase\Actions;
 
-use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\FundingCase\Actions\AbstractFundingCaseActionsDeterminerDecorator;
 use Civi\Funding\FundingCase\Actions\DefaultFundingCaseActionsDeterminer;
@@ -42,12 +42,12 @@ final class KursCaseActionsDeterminer extends AbstractFundingCaseActionsDetermin
 
   private KursApplicationActionsDeterminer $applicationActionsDeterminer;
 
-  private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
+  private ApplicationProcessManager $applicationProcessManager;
 
   public function __construct(
     KursApplicationActionsDeterminer $applicationActionsDeterminer,
     KursApplicationStatusDeterminer $applicationStatusDeterminer,
-    ApplicationProcessBundleLoader $applicationProcessBundleLoader,
+    ApplicationProcessManager $applicationProcessManager,
     ClearingProcessManager $clearingProcessManager,
     KursMetaData $metaData
   ) {
@@ -55,7 +55,7 @@ final class KursCaseActionsDeterminer extends AbstractFundingCaseActionsDetermin
       $applicationStatusDeterminer, $clearingProcessManager, $metaData
     ));
     $this->applicationActionsDeterminer = $applicationActionsDeterminer;
-    $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
+    $this->applicationProcessManager = $applicationProcessManager;
   }
 
   /**
@@ -74,7 +74,7 @@ final class KursCaseActionsDeterminer extends AbstractFundingCaseActionsDetermin
       if ($this->applicationActionsDeterminer->isActionAllowed(
         'apply',
         // @phpstan-ignore argument.type
-        $this->applicationProcessBundleLoader->get($id),
+        $this->applicationProcessManager->getBundle($id),
         $curStatusList
       )) {
         $actions[] = 'apply';
@@ -83,7 +83,7 @@ final class KursCaseActionsDeterminer extends AbstractFundingCaseActionsDetermin
       elseif ($this->applicationActionsDeterminer->isActionAllowed(
         'review',
         // @phpstan-ignore argument.type
-        $this->applicationProcessBundleLoader->get($id),
+        $this->applicationProcessManager->getBundle($id),
         $curStatusList
       )) {
         $actions[] = 'review';
@@ -134,7 +134,7 @@ final class KursCaseActionsDeterminer extends AbstractFundingCaseActionsDetermin
       if (!$this->applicationActionsDeterminer->isActionAllowed(
         $action,
         // @phpstan-ignore argument.type
-        $this->applicationProcessBundleLoader->get($id),
+        $this->applicationProcessManager->getBundle($id),
         $curStatusList
       )) {
         return FALSE;

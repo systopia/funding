@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Upgrade;
 
-use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationCostItemsPersistCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormDataGetCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateCommand;
@@ -33,7 +33,7 @@ use Civi\RemoteTools\Api4\Query\Comparison;
 
 final class Upgrader0003 implements UpgraderInterface {
 
-  private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
+  private ApplicationProcessManager $applicationProcessManager;
 
   private ApplicationCostItemsPersistHandlerInterface $costItemsPersistHandler;
 
@@ -44,13 +44,13 @@ final class Upgrader0003 implements UpgraderInterface {
   private ApplicationFormValidateHandlerInterface $validateHandler;
 
   public function __construct(
-    ApplicationProcessBundleLoader $applicationProcessBundleLoader,
+    ApplicationProcessManager $applicationProcessManager,
     ApplicationCostItemsPersistHandlerInterface $costItemsPersistHandler,
     ApplicationFormDataGetHandlerInterface $formDataGetHandler,
     ApplicationResourcesItemsPersistHandlerInterface $resourcesItemsPersistHandler,
     ApplicationFormValidateHandlerInterface $validateHandler
   ) {
-    $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
+    $this->applicationProcessManager = $applicationProcessManager;
     $this->costItemsPersistHandler = $costItemsPersistHandler;
     $this->formDataGetHandler = $formDataGetHandler;
     $this->resourcesItemsPersistHandler = $resourcesItemsPersistHandler;
@@ -65,10 +65,10 @@ final class Upgrader0003 implements UpgraderInterface {
    */
   public function execute(\Log $log): void {
     $log->info('Add "finanzierung" to Kurs applications, if missing');
-    foreach ($this->applicationProcessBundleLoader->getBy(
+    foreach ($this->applicationProcessManager->getBundlesBy(
       Comparison::new('funding_case_id.funding_case_type_id.name', '=', KursConstants::FUNDING_CASE_TYPE_NAME)
     ) as $applicationProcessBundle) {
-      $applicationProcessStatusList = $this->applicationProcessBundleLoader->getStatusList($applicationProcessBundle);
+      $applicationProcessStatusList = $this->applicationProcessManager->getStatusList($applicationProcessBundle);
       $formData = $this->formDataGetHandler->handle(new ApplicationFormDataGetCommand(
         $applicationProcessBundle,
         $applicationProcessStatusList
