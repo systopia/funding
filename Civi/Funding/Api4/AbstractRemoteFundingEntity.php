@@ -25,7 +25,7 @@ use Civi\Funding\Api4\Action\Remote\RemoteFundingGetFieldsAction;
 use Civi\Funding\Api4\Traits\RemotePermissionsTrait;
 use Civi\RemoteTools\Api4\Action\RemoteGetActions;
 
-class AbstractRemoteFundingEntity extends AbstractEntity {
+abstract class AbstractRemoteFundingEntity extends AbstractEntity {
 
   use RemotePermissionsTrait;
 
