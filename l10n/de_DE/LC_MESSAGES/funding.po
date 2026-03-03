@@ -2345,6 +2345,10 @@ msgstr "Mittelabruf erstellen"
 msgid "Display name of drawdown review contact"
 msgstr "Anzeigename des Mittelabruf-Prüfkontakts"
 
+#: Civi/Funding/PayoutProcess/Token/DrawdownTokenNameExtractor.php
+msgid "Display name of drawdown requester contact"
+msgstr "Anzeigename des Mittelabruf-Anfordererkontakts"
+
 #: Civi/Funding/PayoutProcess/Validator/DrawdownReviewValidator.php
 msgid "Permission to change drawdown status is missing."
 msgstr "Berechtigung zur Änderung des Status des Mittelabrufs fehlt."

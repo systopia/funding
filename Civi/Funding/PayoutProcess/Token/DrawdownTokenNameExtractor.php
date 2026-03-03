@@ -37,8 +37,10 @@ final class DrawdownTokenNameExtractor implements TokenNameExtractorInterface {
    * @inheritDoc
    */
   public function getTokenNames(string $entityName, string $entityClass): array {
-    return $this->tokenNameExtractor->getTokenNames($entityName, $entityClass)
-      + ['reviewer_contact_display_name' => E::ts('Display name of drawdown review contact')];
+    return $this->tokenNameExtractor->getTokenNames($entityName, $entityClass) + [
+      'reviewer_contact_display_name' => E::ts('Display name of drawdown review contact'),
+      'requester_contact_display_name' => E::ts('Display name of drawdown requester contact'),
+    ];
   }
 
 }
