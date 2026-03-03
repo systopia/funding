@@ -22,8 +22,8 @@ namespace Civi\Funding\Api4\Action\FundingApplicationProcess;
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
-use Civi\Funding\Api4\Action\Traits\ApplicationProcessBundleLoaderTrait;
-use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
+use Civi\Funding\Api4\Action\Traits\ApplicationProcessManagerTrait;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationJsonSchemaGetCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationJsonSchemaGetHandlerInterface;
 use Civi\RemoteTools\Api4\Action\Traits\IdParameterTrait;
@@ -34,16 +34,16 @@ final class GetJsonSchemaAction extends AbstractAction {
 
   use IdParameterTrait;
 
-  use ApplicationProcessBundleLoaderTrait;
+  use ApplicationProcessManagerTrait;
 
   private ?ApplicationJsonSchemaGetHandlerInterface $jsonSchemaGetHandler;
 
   public function __construct(
-    ?ApplicationProcessBundleLoader $applicationProcessBundleLoader = NULL,
+    ?ApplicationProcessManager $applicationProcessManager = NULL,
     ?ApplicationJsonSchemaGetHandlerInterface $jsonSchemaGetHandler = NULL
   ) {
     parent::__construct(FundingApplicationProcess::getEntityName(), 'getJsonSchema');
-    $this->_applicationProcessBundleLoader = $applicationProcessBundleLoader;
+    $this->_applicationProcessManager = $applicationProcessManager;
     $this->jsonSchemaGetHandler = $jsonSchemaGetHandler;
   }
 
@@ -60,9 +60,9 @@ final class GetJsonSchemaAction extends AbstractAction {
    * @throws \CRM_Core_Exception
    */
   protected function createCommand(): ApplicationJsonSchemaGetCommand {
-    $applicationProcessBundle = $this->getApplicationProcessBundleLoader()->get($this->getId());
+    $applicationProcessBundle = $this->getApplicationProcessManager()->getBundle($this->getId());
     Assert::notNull($applicationProcessBundle, E::ts('No such application or missing permission.'));
-    $statusList = $this->getApplicationProcessBundleLoader()->getStatusList($applicationProcessBundle);
+    $statusList = $this->getApplicationProcessManager()->getStatusList($applicationProcessBundle);
 
     return new ApplicationJsonSchemaGetCommand($applicationProcessBundle, $statusList);
   }

@@ -36,6 +36,7 @@ use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreDeleteEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
 use Civi\Funding\Form\Application\ValidatedApplicationDataInterface;
+use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\Util\DateTimeUtil;
 use Civi\Funding\Util\Uuid;
 use Civi\RemoteTools\Api4\Api4Interface;
@@ -51,14 +52,18 @@ class ApplicationProcessManager {
 
   private CiviEventDispatcherInterface $eventDispatcher;
 
+  private FundingCaseManager $fundingCaseManager;
+
   public function __construct(
     ApplicationProcessActivityManager $activityManager,
     Api4Interface $api4,
-    CiviEventDispatcherInterface $eventDispatcher
+    CiviEventDispatcherInterface $eventDispatcher,
+    FundingCaseManager $fundingCaseManager
   ) {
     $this->activityManager = $activityManager;
     $this->api4 = $api4;
     $this->eventDispatcher = $eventDispatcher;
+    $this->fundingCaseManager = $fundingCaseManager;
   }
 
   /**
@@ -151,6 +156,15 @@ class ApplicationProcessManager {
   }
 
   /**
+   * @throws \CRM_Core_Exception
+   */
+  public function getBundle(int $applicationProcessId): ?ApplicationProcessEntityBundle {
+    $applicationProcess = $this->get($applicationProcessId);
+
+    return NULL === $applicationProcess ? NULL : $this->createBundle($applicationProcess);
+  }
+
+  /**
    * @phpstan-return array<string, mixed>
    *
    * @throws \CRM_Core_Exception
@@ -174,6 +188,18 @@ class ApplicationProcessManager {
     // @phpstan-ignore-next-line
     return ApplicationProcessEntity::allFromApiResult(
       $this->api4->getEntities(FundingApplicationProcess::getEntityName())
+    );
+  }
+
+  /**
+   * @return list<ApplicationProcessEntityBundle>
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function getAllBundles(): array {
+    return array_map(
+      [$this, 'createBundle'],
+      $this->getAll(),
     );
   }
 
@@ -207,6 +233,26 @@ class ApplicationProcessManager {
   }
 
   /**
+   * @param array<string, 'ASC'|'DESC'> $orderBy
+   *
+   * @return array<ApplicationProcessEntityBundle>
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function getBundlesBy(
+    ConditionInterface $condition,
+    array $orderBy = [],
+    int $limit = 0,
+    int $offset = 0,
+    ?string $indexBy = NULL
+  ): array {
+    return array_map(
+      [$this, 'createBundle'],
+      $this->getBy($condition, $orderBy, $limit, $offset, $indexBy),
+    );
+  }
+
+  /**
    * @throws \CRM_Core_Exception
    *
    * @phpstan-return array<int, FullApplicationProcessStatus>
@@ -231,6 +277,21 @@ class ApplicationProcessManager {
   }
 
   /**
+   * @return array<int, \Civi\Funding\Entity\FullApplicationProcessStatus>
+   *   Status of other application processes in same funding case indexed by ID.
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public function getStatusList(ApplicationProcessEntityBundle $applicationProcessBundle): array {
+    $statusList = $this->getStatusListByFundingCaseId(
+      $applicationProcessBundle->getFundingCase()->getId()
+    );
+    unset($statusList[$applicationProcessBundle->getApplicationProcess()->getId()]);
+
+    return $statusList;
+  }
+
+  /**
    * @phpstan-return array<int, ApplicationProcessEntity>
    *   Indexed by id.
    *
@@ -241,10 +302,30 @@ class ApplicationProcessManager {
   }
 
   /**
+   * @return array<int, ApplicationProcessEntityBundle>
+   *   Indexed by id.
+   */
+  public function getBundlesByFundingCaseId(int $fundingCaseId): array {
+    return array_map(
+      [$this, 'createBundle'],
+      $this->getByFundingCaseId($fundingCaseId),
+    );
+  }
+
+  /**
    * @throws \CRM_Core_Exception
    */
   public function getFirstByFundingCaseId(int $fundingCaseId): ?ApplicationProcessEntity {
     return $this->getBy(Comparison::new('funding_case_id', '=', $fundingCaseId), ['id' => 'ASC'], 1)[0] ?? NULL;
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function getFirstBundleByFundingCaseId(int $fundingCaseId): ?ApplicationProcessEntityBundle {
+    $applicationProcess = $this->getFirstByFundingCaseId($fundingCaseId);
+
+    return NULL === $applicationProcess ? NULL : $this->createBundle($applicationProcess);
   }
 
   /**
@@ -292,6 +373,23 @@ class ApplicationProcessManager {
 
     $deletedEvent = new ApplicationProcessDeletedEvent($applicationProcessBundle);
     $this->eventDispatcher->dispatch(ApplicationProcessDeletedEvent::class, $deletedEvent);
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  private function createBundle(
+    ApplicationProcessEntity $applicationProcess
+  ): ApplicationProcessEntityBundle {
+    $fundingCaseBundle = $this->fundingCaseManager->getBundle($applicationProcess->getFundingCaseId());
+    Assert::notNull($fundingCaseBundle);
+
+    return new ApplicationProcessEntityBundle(
+      $applicationProcess,
+      $fundingCaseBundle->getFundingCase(),
+      $fundingCaseBundle->getFundingCaseType(),
+      $fundingCaseBundle->getFundingProgram()
+    );
   }
 
   /**

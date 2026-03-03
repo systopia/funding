@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase\Handler\Helper;
 
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerInterface;
-use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationActionApplyCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationActionApplyHandlerInterface;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
@@ -32,16 +32,16 @@ class ApplicationAllowedActionApplier {
 
   private ApplicationProcessActionsDeterminerInterface $actionsDeterminer;
 
-  private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
+  private ApplicationProcessManager $applicationProcessManager;
 
   public function __construct(
     ApplicationActionApplyHandlerInterface $actionApplyHandler,
     ApplicationProcessActionsDeterminerInterface $actionsDeterminer,
-    ApplicationProcessBundleLoader $applicationProcessBundleLoader
+    ApplicationProcessManager $applicationProcessManager
   ) {
     $this->actionApplyHandler = $actionApplyHandler;
     $this->actionsDeterminer = $actionsDeterminer;
-    $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
+    $this->applicationProcessManager = $applicationProcessManager;
   }
 
   public function applyAllowedAction(
@@ -64,7 +64,7 @@ class ApplicationAllowedActionApplier {
     FundingCaseEntity $fundingCase,
     string $action
   ): void {
-    $applicationProcessBundles = $this->applicationProcessBundleLoader->getByFundingCaseId($fundingCase->getId());
+    $applicationProcessBundles = $this->applicationProcessManager->getBundlesByFundingCaseId($fundingCase->getId());
     foreach ($applicationProcessBundles as $applicationProcessBundle) {
       $this->applyAllowedAction($contactId, $applicationProcessBundle, $action);
     }
@@ -80,7 +80,7 @@ class ApplicationAllowedActionApplier {
     return $this->actionsDeterminer->isActionAllowed(
       $action,
       $applicationProcessBundle,
-      $this->applicationProcessBundleLoader->getStatusList($applicationProcessBundle),
+      $this->applicationProcessManager->getStatusList($applicationProcessBundle),
     );
   }
 

@@ -19,22 +19,22 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ClearingProcess;
 
-use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\Entity\ClearingProcessEntity;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Webmozart\Assert\Assert;
 
 class ClearingProcessBundleLoader {
 
-  private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
+  private ApplicationProcessManager $applicationProcessManager;
 
   private ClearingProcessManager $clearingProcessManager;
 
   public function __construct(
-    ApplicationProcessBundleLoader $applicationProcessBundleLoader,
+    ApplicationProcessManager $applicationProcessManager,
     ClearingProcessManager $clearingProcessManager
   ) {
-    $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
+    $this->applicationProcessManager = $applicationProcessManager;
     $this->clearingProcessManager = $clearingProcessManager;
   }
 
@@ -53,7 +53,8 @@ class ClearingProcessBundleLoader {
   private function createFromClearingProcess(
     ClearingProcessEntity $clearingProcess
   ): ClearingProcessEntityBundle {
-    $applicationProcessBundle = $this->applicationProcessBundleLoader->get($clearingProcess->getApplicationProcessId());
+    $applicationProcessBundle =
+      $this->applicationProcessManager->getBundle($clearingProcess->getApplicationProcessId());
     Assert::notNull($applicationProcessBundle);
 
     return new ClearingProcessEntityBundle($clearingProcess, $applicationProcessBundle);

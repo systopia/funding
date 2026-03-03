@@ -21,7 +21,7 @@ namespace Civi\Funding\ClearingProcess\Api4\ActionHandler;
 
 use Civi\API\Exception\UnauthorizedException;
 use Civi\Funding\Api4\Action\Remote\FundingClearingProcess\GetOrCreateAction;
-use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
@@ -38,25 +38,19 @@ final class RemoteGetOrCreateActionHandlerTest extends TestCase {
 
   use CreateMockTrait;
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $applicationProcessBundleLoaderMock;
+  private ApplicationProcessManager&MockObject $applicationProcessManagerMock;
 
-  /**
-   * @var \Civi\Funding\ClearingProcess\ClearingProcessManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $clearingProcessManagerMock;
+  private ClearingProcessManager&MockObject $clearingProcessManagerMock;
 
   private RemoteGetOrCreateActionHandler $handler;
 
   protected function setUp(): void {
     parent::setUp();
 
-    $this->applicationProcessBundleLoaderMock = $this->createMock(ApplicationProcessBundleLoader::class);
+    $this->applicationProcessManagerMock = $this->createMock(ApplicationProcessManager::class);
     $this->clearingProcessManagerMock = $this->createMock(ClearingProcessManager::class);
     $this->handler = new RemoteGetOrCreateActionHandler(
-      $this->applicationProcessBundleLoaderMock,
+      $this->applicationProcessManagerMock,
       $this->clearingProcessManagerMock
     );
   }
@@ -65,7 +59,7 @@ final class RemoteGetOrCreateActionHandlerTest extends TestCase {
     $action = static::createApi4ActionMock(GetOrCreateAction::class);
     $action->setApplicationProcessId(12);
 
-    $this->applicationProcessBundleLoaderMock->method('get')
+    $this->applicationProcessManagerMock->method('getBundle')
       ->with(12)
       ->willReturn(NULL);
 
@@ -81,7 +75,7 @@ final class RemoteGetOrCreateActionHandlerTest extends TestCase {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
       ['is_eligible' => FALSE]
     );
-    $this->applicationProcessBundleLoaderMock->method('get')
+    $this->applicationProcessManagerMock->method('getBundle')
       ->with(12)
       ->willReturn($applicationProcessBundle);
 
@@ -110,7 +104,7 @@ final class RemoteGetOrCreateActionHandlerTest extends TestCase {
       $clearingProcessBundle->getFundingProgram()
     );
 
-    $this->applicationProcessBundleLoaderMock->method('get')
+    $this->applicationProcessManagerMock->method('getBundle')
       ->with(12)
       ->willReturn($applicationProcessBundle);
 
@@ -146,7 +140,7 @@ final class RemoteGetOrCreateActionHandlerTest extends TestCase {
       $clearingProcessBundle->getFundingProgram()
     );
 
-    $this->applicationProcessBundleLoaderMock->method('get')
+    $this->applicationProcessManagerMock->method('getBundle')
       ->with(12)
       ->willReturn($applicationProcessBundle);
 
@@ -188,7 +182,7 @@ final class RemoteGetOrCreateActionHandlerTest extends TestCase {
       $clearingProcessBundle->getFundingProgram()
     );
 
-    $this->applicationProcessBundleLoaderMock->method('get')
+    $this->applicationProcessManagerMock->method('getBundle')
       ->with(12)
       ->willReturn($applicationProcessBundle);
 

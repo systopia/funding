@@ -22,9 +22,9 @@ namespace Civi\Funding\Api4\Action\FundingApplicationProcess;
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
-use Civi\Funding\Api4\Action\Traits\ApplicationProcessBundleLoaderTrait;
+use Civi\Funding\Api4\Action\Traits\ApplicationProcessManagerTrait;
 use Civi\Funding\Api4\Action\Traits\RequestContextTrait;
-use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormDataGetCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandlerInterface;
@@ -42,20 +42,20 @@ final class SubmitFormAction extends AbstractAction {
 
   use RequestContextTrait;
 
-  use ApplicationProcessBundleLoaderTrait;
+  use ApplicationProcessManagerTrait;
 
   private ?ApplicationFormDataGetHandlerInterface $formDataGetHandler;
 
   private ?ApplicationFormSubmitHandlerInterface $submitFormHandler;
 
   public function __construct(
-    ?ApplicationProcessBundleLoader $applicationProcessBundleLoader = NULL,
+    ?ApplicationProcessManager $applicationProcessManager = NULL,
     ?ApplicationFormDataGetHandlerInterface $formDataGetHandler = NULL,
     ?ApplicationFormSubmitHandlerInterface $submitFormHandler = NULL,
     ?RequestContextInterface $requestContext = NULL
   ) {
     parent::__construct(FundingApplicationProcess::getEntityName(), 'submitForm');
-    $this->_applicationProcessBundleLoader = $applicationProcessBundleLoader;
+    $this->_applicationProcessManager = $applicationProcessManager;
     $this->formDataGetHandler = $formDataGetHandler;
     $this->submitFormHandler = $submitFormHandler;
     $this->_requestContext = $requestContext;
@@ -88,9 +88,9 @@ final class SubmitFormAction extends AbstractAction {
    * @throws \CRM_Core_Exception
    */
   protected function createCommand(): ApplicationFormSubmitCommand {
-    $applicationProcessBundle = $this->getApplicationProcessBundleLoader()->get($this->getId());
+    $applicationProcessBundle = $this->getApplicationProcessManager()->getBundle($this->getId());
     Assert::notNull($applicationProcessBundle);
-    $statusList = $this->getApplicationProcessBundleLoader()->getStatusList($applicationProcessBundle);
+    $statusList = $this->getApplicationProcessManager()->getStatusList($applicationProcessBundle);
 
     return new ApplicationFormSubmitCommand(
       $this->getRequestContext()->getContactId(),

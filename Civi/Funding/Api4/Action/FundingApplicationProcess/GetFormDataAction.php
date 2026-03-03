@@ -22,8 +22,8 @@ namespace Civi\Funding\Api4\Action\FundingApplicationProcess;
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
-use Civi\Funding\Api4\Action\Traits\ApplicationProcessBundleLoaderTrait;
-use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
+use Civi\Funding\Api4\Action\Traits\ApplicationProcessManagerTrait;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormDataGetCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandlerInterface;
 use Civi\RemoteTools\Api4\Action\Traits\IdParameterTrait;
@@ -33,16 +33,16 @@ final class GetFormDataAction extends AbstractAction {
 
   use IdParameterTrait;
 
-  use ApplicationProcessBundleLoaderTrait;
+  use ApplicationProcessManagerTrait;
 
   private ?ApplicationFormDataGetHandlerInterface $formDataGetHandler;
 
   public function __construct(
-    ?ApplicationProcessBundleLoader $applicationProcessBundleLoader = NULL,
+    ?ApplicationProcessManager $applicationProcessManager = NULL,
     ?ApplicationFormDataGetHandlerInterface $formDataGetHandler = NULL
   ) {
     parent::__construct(FundingApplicationProcess::getEntityName(), 'getFormData');
-    $this->_applicationProcessBundleLoader = $applicationProcessBundleLoader;
+    $this->_applicationProcessManager = $applicationProcessManager;
     $this->formDataGetHandler = $formDataGetHandler;
   }
 
@@ -59,9 +59,9 @@ final class GetFormDataAction extends AbstractAction {
    * @throws \CRM_Core_Exception
    */
   protected function createCommand(): ApplicationFormDataGetCommand {
-    $applicationProcessBundle = $this->getApplicationProcessBundleLoader()->get($this->getId());
+    $applicationProcessBundle = $this->getApplicationProcessManager()->getBundle($this->getId());
     Assert::notNull($applicationProcessBundle);
-    $statusList = $this->getApplicationProcessBundleLoader()->getStatusList($applicationProcessBundle);
+    $statusList = $this->getApplicationProcessManager()->getStatusList($applicationProcessBundle);
 
     return new ApplicationFormDataGetCommand($applicationProcessBundle, $statusList);
   }

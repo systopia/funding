@@ -21,7 +21,7 @@ namespace Civi\Funding\ClearingProcess\Api4\ActionHandler;
 
 use Civi\API\Exception\UnauthorizedException;
 use Civi\Funding\Api4\Action\Remote\FundingClearingProcess\GetOrCreateAction;
-use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
@@ -34,15 +34,15 @@ final class RemoteGetOrCreateActionHandler implements ActionHandlerInterface {
 
   public const ENTITY_NAME = 'RemoteFundingClearingProcess';
 
-  private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
+  private ApplicationProcessManager $applicationProcessManager;
 
   private ClearingProcessManager $clearingProcessManager;
 
   public function __construct(
-    ApplicationProcessBundleLoader $applicationProcessBundleLoader,
+    ApplicationProcessManager $applicationProcessManager,
     ClearingProcessManager $clearingProcessManager
   ) {
-    $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
+    $this->applicationProcessManager = $applicationProcessManager;
     $this->clearingProcessManager = $clearingProcessManager;
   }
 
@@ -52,7 +52,7 @@ final class RemoteGetOrCreateActionHandler implements ActionHandlerInterface {
    * @throws \CRM_Core_Exception
    */
   public function getOrCreate(GetOrCreateAction $action): array {
-    $applicationProcessBundle = $this->applicationProcessBundleLoader->get($action->getApplicationProcessId());
+    $applicationProcessBundle = $this->applicationProcessManager->getBundle($action->getApplicationProcessId());
     if (NULL === $applicationProcessBundle) {
       throw new \CRM_Core_Exception(
         sprintf('No application process with ID %d found', $action->getApplicationProcessId())

@@ -23,7 +23,7 @@ namespace Civi\Funding\ApplicationProcess\Api4\ActionHandler;
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\SubmitFormAction;
 use Civi\Funding\Api4\OptionsLoaderInterface;
-use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitResult;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
@@ -44,7 +44,7 @@ final class RemoteSubmitFormActionHandlerTest extends TestCase {
 
   use CreateMockTrait;
 
-  private ApplicationProcessBundleLoader&MockObject $applicationProcessBundleLoaderMock;
+  private ApplicationProcessManager&MockObject $applicationProcessManagerMock;
 
   private RemoteSubmitFormActionHandler $hander;
 
@@ -59,11 +59,11 @@ final class RemoteSubmitFormActionHandlerTest extends TestCase {
 
   protected function setUp(): void {
     parent::setUp();
-    $this->applicationProcessBundleLoaderMock = $this->createMock(ApplicationProcessBundleLoader::class);
+    $this->applicationProcessManagerMock = $this->createMock(ApplicationProcessManager::class);
     $this->optionsLoaderMock = $this->createMock(OptionsLoaderInterface::class);
     $this->submitHandlerMock = $this->createMock(ApplicationFormSubmitHandlerInterface::class);
     $this->hander = new RemoteSubmitFormActionHandler(
-      $this->applicationProcessBundleLoaderMock,
+      $this->applicationProcessManagerMock,
       $this->optionsLoaderMock,
       $this->submitHandlerMock,
     );
@@ -130,11 +130,11 @@ final class RemoteSubmitFormActionHandlerTest extends TestCase {
     ApplicationProcessEntityBundle $applicationProcessBundle,
     int $contactId
   ): SubmitFormAction {
-    $this->applicationProcessBundleLoaderMock->method('get')
+    $this->applicationProcessManagerMock->method('getBundle')
       ->with($applicationProcessBundle->getApplicationProcess()->getId())
       ->willReturn($applicationProcessBundle);
 
-    $this->applicationProcessBundleLoaderMock->method('getStatusList')
+    $this->applicationProcessManagerMock->method('getStatusList')
       ->with($applicationProcessBundle)
       ->willReturn($this->statusList);
 

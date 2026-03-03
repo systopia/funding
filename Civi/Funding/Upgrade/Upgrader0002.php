@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Upgrade;
 
-use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationCostItemsPersistCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormDataGetCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormValidateCommand;
@@ -32,7 +32,7 @@ use Civi\Funding\FundingCase\FundingCasePermissionsCacheManager;
 
 final class Upgrader0002 implements UpgraderInterface {
 
-  private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
+  private ApplicationProcessManager $applicationProcessManager;
 
   private ApplicationCostItemsPersistHandlerInterface $costItemsPersistHandler;
 
@@ -45,14 +45,14 @@ final class Upgrader0002 implements UpgraderInterface {
   private FundingCasePermissionsCacheManager $fundingCasePermissionsCacheManager;
 
   public function __construct(
-    ApplicationProcessBundleLoader $applicationProcessBundleLoader,
+    ApplicationProcessManager $applicationProcessManager,
     ApplicationCostItemsPersistHandlerInterface $costItemsPersistHandler,
     ApplicationFormDataGetHandlerInterface $formDataGetHandler,
     ApplicationResourcesItemsPersistHandlerInterface $resourcesItemsPersistHandler,
     ApplicationFormValidateHandlerInterface $validateHandler,
     FundingCasePermissionsCacheManager $fundingCasePermissionsCacheManager
   ) {
-    $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
+    $this->applicationProcessManager = $applicationProcessManager;
     $this->costItemsPersistHandler = $costItemsPersistHandler;
     $this->formDataGetHandler = $formDataGetHandler;
     $this->resourcesItemsPersistHandler = $resourcesItemsPersistHandler;
@@ -65,8 +65,8 @@ final class Upgrader0002 implements UpgraderInterface {
     $this->fundingCasePermissionsCacheManager->clear();
 
     $log->info('Add data path to cost items and resources items');
-    foreach ($this->applicationProcessBundleLoader->getAll() as $applicationProcessBundle) {
-      $applicationProcessStatusList = $this->applicationProcessBundleLoader->getStatusList($applicationProcessBundle);
+    foreach ($this->applicationProcessManager->getAllBundles() as $applicationProcessBundle) {
+      $applicationProcessStatusList = $this->applicationProcessManager->getStatusList($applicationProcessBundle);
       $formData = $this->formDataGetHandler->handle(new ApplicationFormDataGetCommand(
         $applicationProcessBundle,
         $applicationProcessStatusList

@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Api4\ActionHandler;
 
 use Civi\Funding\Api4\Action\FundingApplicationProcess\GetFormAction;
-use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormCreateCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormCreateHandlerInterface;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
@@ -37,15 +37,15 @@ final class GetFormActionHandler implements ActionHandlerInterface {
 
   public const ENTITY_NAME = 'FundingApplicationProcess';
 
-  private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
+  private ApplicationProcessManager $applicationProcessManager;
 
   private ApplicationFormCreateHandlerInterface $createHandler;
 
   public function __construct(
-    ApplicationProcessBundleLoader $applicationProcessBundleLoader,
+    ApplicationProcessManager $applicationProcessManager,
     ApplicationFormCreateHandlerInterface $createHandler
   ) {
-    $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
+    $this->applicationProcessManager = $applicationProcessManager;
     $this->createHandler = $createHandler;
   }
 
@@ -55,9 +55,9 @@ final class GetFormActionHandler implements ActionHandlerInterface {
    * @throws \CRM_Core_Exception
    */
   public function getForm(GetFormAction $action): array {
-    $applicationProcessBundle = $this->applicationProcessBundleLoader->get($action->getId());
+    $applicationProcessBundle = $this->applicationProcessManager->getBundle($action->getId());
     Assert::notNull($applicationProcessBundle, sprintf('Application process with ID "%d" not found', $action->getId()));
-    $applicationProcessStatusList = $this->applicationProcessBundleLoader->getStatusList($applicationProcessBundle);
+    $applicationProcessStatusList = $this->applicationProcessManager->getStatusList($applicationProcessBundle);
 
     $form = $this->createHandler->handle(new ApplicationFormCreateCommand(
       $applicationProcessBundle,

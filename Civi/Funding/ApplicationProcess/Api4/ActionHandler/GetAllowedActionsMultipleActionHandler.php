@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Api4\ActionHandler;
 
 use Civi\Funding\Api4\Action\FundingApplicationProcess\GetAllowedActionsMultipleAction;
-use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationAllowedActionsGetCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationAllowedActionsGetHandlerInterface;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
@@ -31,14 +31,14 @@ final class GetAllowedActionsMultipleActionHandler implements ActionHandlerInter
 
   private ApplicationAllowedActionsGetHandlerInterface $allowedActionsGetHandler;
 
-  private ApplicationProcessBundleLoader $applicationProcessBundleLoader;
+  private ApplicationProcessManager $applicationProcessManager;
 
   public function __construct(
     ApplicationAllowedActionsGetHandlerInterface $allowedActionsGetHandler,
-    ApplicationProcessBundleLoader $applicationProcessBundleLoader
+    ApplicationProcessManager $applicationProcessManager
   ) {
     $this->allowedActionsGetHandler = $allowedActionsGetHandler;
-    $this->applicationProcessBundleLoader = $applicationProcessBundleLoader;
+    $this->applicationProcessManager = $applicationProcessManager;
   }
 
   /**
@@ -61,7 +61,7 @@ final class GetAllowedActionsMultipleActionHandler implements ActionHandlerInter
    *    Map of action names to button labels and confirm messages.
    */
   private function getAllowedActionsById(int $id): array {
-    $applicationProcessBundle = $this->applicationProcessBundleLoader->get($id);
+    $applicationProcessBundle = $this->applicationProcessManager->getBundle($id);
     if (NULL === $applicationProcessBundle) {
       return [];
     }
@@ -69,7 +69,7 @@ final class GetAllowedActionsMultipleActionHandler implements ActionHandlerInter
     $actions = array_filter(
       $this->allowedActionsGetHandler->handle(new ApplicationAllowedActionsGetCommand(
         $applicationProcessBundle,
-        $this->applicationProcessBundleLoader->getStatusList($applicationProcessBundle),
+        $this->applicationProcessManager->getStatusList($applicationProcessBundle),
       )),
       fn (array $action) => FALSE === ($action['properties']['needsFormData'] ?? TRUE),
     );
