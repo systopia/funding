@@ -25,7 +25,6 @@ use Civi\Funding\DocumentRender\Token\ResolvedToken;
 use Civi\Funding\DocumentRender\Token\TokenResolverInterface;
 use Civi\Funding\Entity\AbstractEntity;
 use Civi\RemoteTools\Api4\Api4Interface;
-use Civi\RemoteTools\RequestContext\RequestContextInterface;
 
 /**
  * @implements TokenResolverInterface<\Civi\Funding\Entity\DrawdownEntity>
@@ -33,8 +32,6 @@ use Civi\RemoteTools\RequestContext\RequestContextInterface;
 final class DrawdownTokenResolver implements TokenResolverInterface {
 
   private Api4Interface $api4;
-
-  private RequestContextInterface $requestContext;
 
   /**
    * @phpstan-var TokenResolverInterface<\Civi\Funding\Entity\DrawdownEntity>
@@ -46,11 +43,9 @@ final class DrawdownTokenResolver implements TokenResolverInterface {
    */
   public function __construct(
     Api4Interface $api4,
-    RequestContextInterface $requestContext,
     TokenResolverInterface $tokenResolver
   ) {
     $this->api4 = $api4;
-    $this->requestContext = $requestContext;
     $this->tokenResolver = $tokenResolver;
   }
 
@@ -59,17 +54,24 @@ final class DrawdownTokenResolver implements TokenResolverInterface {
    */
   public function resolveToken(string $entityName, AbstractEntity $entity, string $tokenName): ResolvedToken {
     if ($tokenName === 'reviewer_contact_display_name') {
-      return new ResolvedToken($this->getRequestContactDisplayName(), 'text/plain');
+      if (NULL === $entity->getReviewerContactId()) {
+        return new ResolvedToken('', 'text/plain');
+      }
+
+      return new ResolvedToken($this->getContactDisplayName($entity->getReviewerContactId()), 'text/plain');
+    }
+    elseif ($tokenName === 'requester_contact_display_name') {
+      return new ResolvedToken($this->getContactDisplayName($entity->getRequesterContactId()), 'text/plain');
     }
 
     return $this->tokenResolver->resolveToken($entityName, $entity, $tokenName);
   }
 
-  private function getRequestContactDisplayName(): string {
-    /** @phpstan-var array{id: int, display_name: string|null} $contact */
+  private function getContactDisplayName(int $contactId): string {
+    /** @var array{id: int, display_name: string|null} $contact */
     $contact = $this->api4->execute(Contact::getEntityName(), 'get', [
       'select' => ['id', 'display_name'],
-      'where' => [['id', '=', $this->requestContext->getContactId()]],
+      'where' => [['id', '=', $contactId]],
     ])->single();
 
     return ContactUtil::getDisplayName($contact);

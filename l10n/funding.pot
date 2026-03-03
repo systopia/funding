@@ -1690,6 +1690,10 @@ msgstr ""
 msgid "Display name of drawdown review contact"
 msgstr ""
 
+#: Civi/Funding/PayoutProcess/Token/DrawdownTokenNameExtractor.php
+msgid "Display name of drawdown requester contact"
+msgstr ""
+
 #: Civi/Funding/PayoutProcess/Validator/DrawdownReviewValidator.php
 msgid "Permission to change drawdown status is missing."
 msgstr ""
