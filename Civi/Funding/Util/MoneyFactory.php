@@ -22,7 +22,6 @@ namespace Civi\Funding\Util;
 use Brick\Math\RoundingMode;
 use Brick\Money\Currency;
 use Brick\Money\Exception\UnknownCurrencyException;
-use Brick\Money\ISOCurrencyProvider;
 use Brick\Money\Money;
 
 final class MoneyFactory {
@@ -36,11 +35,11 @@ final class MoneyFactory {
 
     if (enum_exists(RoundingMode::class) && (new \ReflectionEnum(RoundingMode::class))->hasCase('HalfUp')) {
       // brick/math >=0.14.2 (Requires PHP 8.2)
-      return Money::of($amount, $currency, NULL, RoundingMode::HalfUp);
+      return Money::of((string) $amount, $currency, NULL, RoundingMode::HalfUp);
     }
     else {
-      // @phpstan-ignore classConstant.deprecated
-      return Money::of($amount, $currency, NULL, RoundingMode::HALF_UP);
+      // @phpstan-ignore-next-line
+      return Money::of((string) $amount, $currency, NULL, RoundingMode::HALF_UP);
     }
   }
 
@@ -55,7 +54,14 @@ final class MoneyFactory {
    */
   private function getCurrencyObject(string $currencyCode): Currency {
     try {
-      $currency = ISOCurrencyProvider::getInstance()->getCurrency($currencyCode);
+      // ISOCurrencyProvider was renamed to IsoCurrencyProvider in brick/money 0.12.0.
+      if (class_exists('Brick\Money\ISOCurrencyProvider')) {
+        $currency = \Brick\Money\ISOCurrencyProvider::getInstance()->getCurrency($currencyCode);
+      }
+      else {
+        // @phpstan-ignore class.nameCase
+        $currency = \Brick\Money\IsoCurrencyProvider::getInstance()->getCurrency($currencyCode);
+      }
     }
     catch (UnknownCurrencyException $e) {
       $currency = new Currency(
