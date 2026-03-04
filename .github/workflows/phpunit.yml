@@ -23,7 +23,7 @@ jobs:
   phpunit:
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         php-versions: ['8.1', '8.4']
         prefer: ['prefer-stable', 'prefer-lowest']
@@ -56,13 +56,6 @@ jobs:
       run: |
         # MySQL is installed by default.
         # https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2404-Readme.md#mysql
-
-        # Required for sql/functions/funding_json_overlaps.sql
-        #cat <<EOD >/etc/mysql/conf.d/trustfunctioncreators.cnf
-        #[mysqld]
-        #log_bin_trust_function_creators = 1
-        #EOD
-
         sudo systemctl start mysql.service
         until sudo mysqladmin ping --silent; do sleep 1; done
         sudo mysql -e 'CREATE DATABASE civicrm;' --user=root --password=root
@@ -91,7 +84,6 @@ jobs:
         EXT_COMPOSER_NAME=$(composer show --self --name-only)
         composer composer-phpunit -- update --no-progress --prefer-dist --optimize-autoloader
         cd ..
-
         git clone https://github.com/civicrm/civicrm-standalone.git
         cd civicrm-standalone
 
