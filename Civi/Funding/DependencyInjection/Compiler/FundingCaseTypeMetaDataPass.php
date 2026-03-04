@@ -37,13 +37,20 @@ final class FundingCaseTypeMetaDataPass implements CompilerPassInterface {
   public static array $fundingCaseTypes = [];
 
   /**
+   * @var array<string, \Symfony\Component\DependencyInjection\Reference>
+   */
+  public static array $metaDataServices = [];
+
+  /**
    * @inheritDoc
    */
   public function process(ContainerBuilder $container): void {
-    $services = $this->getTaggedFundingCaseTypeServices($container, FundingCaseTypeMetaDataInterface::class);
+    self::$metaDataServices =
+      $this->getTaggedFundingCaseTypeServices($container, FundingCaseTypeMetaDataInterface::class);
+
     $container->register(FundingCaseTypeMetaDataProviderInterface::class, FundingCaseTypeMetaDataProvider::class)
-      ->addArgument(ServiceLocatorTagPass::register($container, $services))
-      ->addArgument(array_keys($services))
+      ->addArgument(ServiceLocatorTagPass::register($container, self::$metaDataServices))
+      ->addArgument(array_keys(self::$metaDataServices))
       ->setPublic(TRUE);
   }
 

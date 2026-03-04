@@ -77,6 +77,7 @@ use Civi\Funding\Form\FundingCase\FundingCaseFormDataFactoryInterface;
 use Civi\Funding\Form\FundingCase\FundingCaseJsonSchemaFactoryInterface;
 use Civi\Funding\Form\FundingCase\FundingCaseUiSchemaFactoryInterface;
 use Civi\Funding\Form\FundingCase\FundingCaseValidatorInterface;
+use Civi\Funding\FundingCase\Actions\DefaultFundingCaseActionsDeterminer;
 use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
 use Civi\Funding\FundingCase\Handler\Decorator\FundingCaseApproveEventDecorator;
 use Civi\Funding\FundingCase\Handler\Decorator\FundingCaseUpdateAmountApprovedEventDecorator;
@@ -509,6 +510,16 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         $fundingCaseType,
         ApplicationSnapshotCreateHandler::class,
         []
+      );
+
+      $fundingCaseActionsDeterminerServices[$fundingCaseType] ??= $this->createService(
+        $container,
+        $fundingCaseType,
+        DefaultFundingCaseActionsDeterminer::class,
+        [
+          '$applicationProcessStatusDeterminer' => $applicationStatusDeterminerServices[$fundingCaseType],
+          '$metaData' => FundingCaseTypeMetaDataPass::$metaDataServices[$fundingCaseType],
+        ]
       );
 
       $fundingCaseApproveHandlerServices[$fundingCaseType] ??= $this->createService(
