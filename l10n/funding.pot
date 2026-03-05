@@ -1,633 +1,9 @@
-#: CRM/Funding/BAO/FundingCase.php CRM/Funding/DAO/FundingCase.php managed/CustomGroup_funding_case_task.mgd.php
+#: CRM/Funding/BAO/FundingCase.php managed/CustomGroup_funding_case_task.mgd.php schema/FundingCase.entityType.php
 msgid "Funding Case"
 msgstr ""
 
-#: CRM/Funding/BAO/FundingProgram.php CRM/Funding/DAO/FundingCase.php CRM/Funding/DAO/FundingCaseTypeProgram.php CRM/Funding/DAO/FundingFormStringTranslation.php CRM/Funding/DAO/FundingProgram.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php managed/OptionValueCgExtendsFundingProgram.mgd.php managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php managed/SavedSearch_FundingDrawdownsAll.mgd.php managed/SavedSearch_Funding_Tasks_Pending.mgd.php managed/SavedSearch_MyFundingTasks.mgd.php managed/SavedSearch_funding_case_application_processes.mgd.php managed/SavedSearch_funding_cases.mgd.php managed/SavedSearch_funding_form_translation.mgd.php
+#: CRM/Funding/BAO/FundingProgram.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php managed/OptionValueCgExtendsFundingProgram.mgd.php managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php managed/SavedSearch_FundingDrawdownsAll.mgd.php managed/SavedSearch_Funding_Tasks_Pending.mgd.php managed/SavedSearch_MyFundingTasks.mgd.php managed/SavedSearch_funding_case_application_processes.mgd.php managed/SavedSearch_funding_cases.mgd.php managed/SavedSearch_funding_form_translation.mgd.php schema/FundingCase.entityType.php schema/FundingCaseTypeProgram.entityType.php schema/FundingFormStringTranslation.entityType.php schema/FundingProgram.entityType.php
 msgid "Funding Program"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationCiviOfficeTemplate.php ang/afformApplicationTemplates.aff.php
-msgid "Application Templates"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationCiviOfficeTemplate.php
-msgid "Application Template"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationCiviOfficeTemplate.php CRM/Funding/DAO/ApplicationCostItem.php CRM/Funding/DAO/ApplicationProcess.php CRM/Funding/DAO/ApplicationResourcesItem.php CRM/Funding/DAO/ApplicationSnapshot.php CRM/Funding/DAO/ClearingCostItem.php CRM/Funding/DAO/ClearingProcess.php CRM/Funding/DAO/ClearingResourcesItem.php CRM/Funding/DAO/Drawdown.php CRM/Funding/DAO/FundingCase.php CRM/Funding/DAO/FundingCaseContactRelation.php CRM/Funding/DAO/FundingCasePermissionsCache.php CRM/Funding/DAO/FundingCaseType.php CRM/Funding/DAO/FundingCaseTypeProgram.php CRM/Funding/DAO/FundingFormStringTranslation.php CRM/Funding/DAO/FundingNewCasePermissions.php CRM/Funding/DAO/FundingProgram.php CRM/Funding/DAO/FundingProgramContactRelation.php CRM/Funding/DAO/FundingProgramRelationship.php CRM/Funding/DAO/FundingRecipientContactRelation.php CRM/Funding/DAO/PayoutProcess.php
-msgid "ID"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationCiviOfficeTemplate.php
-msgid "Unique FundingApplicationCiviOfficeTemplate ID"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationCiviOfficeTemplate.php
-msgid "Case Type ID"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationCiviOfficeTemplate.php CRM/Funding/DAO/FundingCase.php CRM/Funding/DAO/FundingCaseTypeProgram.php CRM/Funding/DAO/FundingFormStringTranslation.php
-msgid "FK to FundingCaseType"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationCiviOfficeTemplate.php managed/SavedSearch_Application_CiviOffice_Templates.mgd.php
-msgid "Document"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationCiviOfficeTemplate.php
-msgid "CiviOffice document URI"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationCiviOfficeTemplate.php managed/SavedSearch_Application_CiviOffice_Templates.mgd.php
-msgid "Label"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationCostItem.php
-msgid "Application Cost Items"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationCostItem.php
-msgid "Application Cost Item"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationCostItem.php
-msgid "Unique FundingApplicationCostItem ID"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationCostItem.php CRM/Funding/DAO/ApplicationResourcesItem.php CRM/Funding/DAO/ApplicationSnapshot.php CRM/Funding/DAO/ClearingProcess.php
-msgid "Application Process ID"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationCostItem.php CRM/Funding/DAO/ApplicationResourcesItem.php CRM/Funding/DAO/ApplicationSnapshot.php CRM/Funding/DAO/ClearingProcess.php
-msgid "FK to FundingApplicationProcess"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationCostItem.php CRM/Funding/DAO/ApplicationProcess.php CRM/Funding/DAO/ApplicationResourcesItem.php CRM/Funding/DAO/FundingCase.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php ang/crmFunding/application/defaultApplicationEditor.template.html ang/crmFunding/clearing/clearingEditor.template.html ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html ang/crmFundingHiH/hihApplicationEditor.template.html ang/crmFundingIJB/ijbApplicationEditor.template.html ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_funding_application_processes.mgd.php managed/SavedSearch_funding_case_application_processes.mgd.php managed/SavedSearch_funding_cases.mgd.php
-msgid "Identifier"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationCostItem.php CRM/Funding/DAO/ApplicationResourcesItem.php CRM/Funding/DAO/FundingCaseContactRelation.php CRM/Funding/DAO/FundingNewCasePermissions.php CRM/Funding/DAO/FundingProgramContactRelation.php CRM/Funding/DAO/FundingProgramRelationship.php CRM/Funding/DAO/FundingRecipientContactRelation.php ang/crmFunding/case/permissions/fundingCaseContactRelation.template.html ang/crmFunding/program/newCasePermissions/fundingNewCasePermissions.template.html ang/crmFunding/program/permissions/fundingProgramContactRelation.template.html ang/crmFunding/program/recipients/recipientRelation.template.html managed/CustomGroup_funding_case_task.mgd.php
-msgid "Type"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationCostItem.php CRM/Funding/DAO/ApplicationResourcesItem.php CRM/Funding/DAO/ClearingCostItem.php CRM/Funding/DAO/ClearingResourcesItem.php CRM/Funding/DAO/Drawdown.php ang/crmFunding/case/fundingCase.template.html managed/SavedSearchFundingDrawdowns.mgd.php managed/SavedSearch_FundingDrawdownsAll.mgd.php
-msgid "Amount"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationCostItem.php CRM/Funding/DAO/ApplicationResourcesItem.php CRM/Funding/DAO/ClearingCostItem.php CRM/Funding/DAO/ClearingResourcesItem.php CRM/Funding/DAO/FundingCaseContactRelation.php CRM/Funding/DAO/FundingCaseType.php CRM/Funding/DAO/FundingNewCasePermissions.php CRM/Funding/DAO/FundingProgramContactRelation.php CRM/Funding/DAO/FundingRecipientContactRelation.php
-msgid "Properties"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationCostItem.php CRM/Funding/DAO/ApplicationResourcesItem.php
-msgid "Data Pointer"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationCostItem.php CRM/Funding/DAO/ApplicationResourcesItem.php
-msgid "JSON pointer to data in application data"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationProcess.php
-msgid "Application Processes"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationProcess.php managed/CustomGroup_funding_application_process_task.mgd.php managed/OptionValue_cg_extend_objects-civicrm_funding_application_process.mgd.php
-msgid "Application Process"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationProcess.php
-msgid "Unique FundingApplicationProcess ID"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationProcess.php CRM/Funding/DAO/FundingCase.php
-msgid "Unique generated identifier"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationProcess.php CRM/Funding/DAO/FundingCaseContactRelation.php CRM/Funding/DAO/FundingCasePermissionsCache.php CRM/Funding/DAO/PayoutProcess.php
-msgid "Funding Case ID"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationProcess.php CRM/Funding/DAO/FundingCaseContactRelation.php CRM/Funding/DAO/FundingCasePermissionsCache.php CRM/Funding/DAO/PayoutProcess.php
-msgid "FK to FundingCase"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationProcess.php CRM/Funding/DAO/ApplicationSnapshot.php CRM/Funding/DAO/ClearingCostItem.php CRM/Funding/DAO/ClearingProcess.php CRM/Funding/DAO/ClearingResourcesItem.php CRM/Funding/DAO/Drawdown.php CRM/Funding/DAO/FundingCase.php CRM/Funding/DAO/PayoutProcess.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php ang/crmFunding/application/defaultApplicationEditor.template.html ang/crmFunding/case/fundingCase.template.html ang/crmFunding/clearing/clearingEditor.template.html ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html ang/crmFundingHiH/hihApplicationEditor.template.html ang/crmFundingIJB/ijbApplicationEditor.template.html ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html managed/SavedSearchFundingDrawdowns.mgd.php managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_FundingDrawdownsAll.mgd.php managed/SavedSearch_funding_application_processes.mgd.php managed/SavedSearch_funding_case_application_processes.mgd.php managed/SavedSearch_funding_cases.mgd.php
-msgid "Status"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationProcess.php CRM/Funding/DAO/ApplicationSnapshot.php CRM/Funding/DAO/ClearingProcess.php CRM/Funding/DAO/Drawdown.php CRM/Funding/DAO/FundingCase.php CRM/Funding/DAO/PayoutProcess.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php ang/crmFunding/application/defaultApplicationEditor.template.html ang/crmFunding/case/fundingCase.template.html ang/crmFunding/clearing/clearingEditor.template.html ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html ang/crmFundingHiH/hihApplicationEditor.template.html ang/crmFundingIJB/ijbApplicationEditor.template.html ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html managed/SavedSearchFundingDrawdowns.mgd.php managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_FundingDrawdownsAll.mgd.php managed/SavedSearch_funding_case_application_processes.mgd.php managed/SavedSearch_funding_cases.mgd.php
-msgid "Creation Date"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationProcess.php CRM/Funding/DAO/ClearingProcess.php CRM/Funding/DAO/FundingCase.php CRM/Funding/DAO/FundingFormStringTranslation.php CRM/Funding/DAO/PayoutProcess.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php ang/crmFunding/application/defaultApplicationEditor.template.html ang/crmFunding/case/fundingCase.template.html ang/crmFunding/clearing/clearingEditor.template.html ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html ang/crmFundingHiH/hihApplicationEditor.template.html ang/crmFundingIJB/ijbApplicationEditor.template.html ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_funding_case_application_processes.mgd.php managed/SavedSearch_funding_cases.mgd.php managed/SavedSearch_funding_form_string_translation.mgd.php
-msgid "Modification Date"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationProcess.php CRM/Funding/DAO/ApplicationSnapshot.php CRM/Funding/DAO/FundingCaseType.php CRM/Funding/DAO/FundingProgram.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php managed/SavedSearchFundingCaseTypes.mgd.php managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_funding_application_processes.mgd.php managed/SavedSearch_funding_case_application_processes.mgd.php managed/SavedSearch_funding_program_controlling.mgd.php managed/SavedSearch_funding_programs.mgd.php
-msgid "Title"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationProcess.php CRM/Funding/DAO/ApplicationSnapshot.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php managed/SavedSearch_funding_application_processes.mgd.php
-msgid "Short Description"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationProcess.php CRM/Funding/DAO/ApplicationSnapshot.php CRM/Funding/DAO/ClearingProcess.php CRM/Funding/DAO/FundingProgram.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_funding_case_application_processes.mgd.php managed/SavedSearch_funding_programs.mgd.php
-msgid "Start Date"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationProcess.php
-msgid "Scheduled start of the activity"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationProcess.php CRM/Funding/DAO/ApplicationSnapshot.php CRM/Funding/DAO/ClearingProcess.php CRM/Funding/DAO/FundingProgram.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php managed/SavedSearch_funding_program_controlling.mgd.php managed/SavedSearch_funding_programs.mgd.php
-msgid "End Date"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationProcess.php
-msgid "Scheduled end of the activity"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationProcess.php CRM/Funding/DAO/ApplicationSnapshot.php
-msgid "Request Data"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationProcess.php CRM/Funding/DAO/ApplicationSnapshot.php Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php ang/crmFunding/application/defaultApplicationEditor.template.html ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html ang/crmFundingHiH/hihApplicationEditor.template.html ang/crmFundingIJB/ijbApplicationEditor.template.html ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html managed/SavedSearch_funding_application_processes.mgd.php
-msgid "Amount Requested"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationProcess.php CRM/Funding/DAO/ApplicationSnapshot.php CRM/Funding/DAO/ClearingProcess.php
-msgid "Is Review Content"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationProcess.php CRM/Funding/DAO/ClearingProcess.php
-msgid "Reviewer Cont Contact ID"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationProcess.php CRM/Funding/DAO/ClearingProcess.php CRM/Funding/DAO/Drawdown.php CRM/Funding/DAO/FundingCase.php
-msgid "FK to Contact"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationProcess.php CRM/Funding/DAO/ApplicationSnapshot.php CRM/Funding/DAO/ClearingProcess.php
-msgid "Is Review Calculative"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationProcess.php CRM/Funding/DAO/ClearingProcess.php
-msgid "Reviewer Calc Contact ID"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationProcess.php CRM/Funding/DAO/ApplicationSnapshot.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
-msgid "Is Eligible"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationProcess.php CRM/Funding/DAO/ApplicationSnapshot.php
-msgid "Is In Work"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationProcess.php
-msgid "Is the application in work by the applicant?"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationProcess.php CRM/Funding/DAO/ApplicationSnapshot.php
-msgid "Is Rejected"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationProcess.php CRM/Funding/DAO/ApplicationSnapshot.php
-msgid "Is Withdrawn"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationResourcesItem.php
-msgid "Application Resources Items"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationResourcesItem.php
-msgid "Application Resources Item"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationResourcesItem.php
-msgid "Unique FundingApplicationResourcesItem ID"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationSnapshot.php
-msgid "Application Snapshots"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationSnapshot.php
-msgid "Application Snapshot"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationSnapshot.php
-msgid "Unique FundingApplicationSnapshot ID"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationSnapshot.php
-msgid "Cost Items"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationSnapshot.php
-msgid "Resources Items"
-msgstr ""
-
-#: CRM/Funding/DAO/ApplicationSnapshot.php
-msgid "Custom Fields"
-msgstr ""
-
-#: CRM/Funding/DAO/ClearingCostItem.php
-msgid "Clearing Cost Items"
-msgstr ""
-
-#: CRM/Funding/DAO/ClearingCostItem.php
-msgid "Clearing Cost Item"
-msgstr ""
-
-#: CRM/Funding/DAO/ClearingCostItem.php
-msgid "Unique FundingClearingCostItem ID"
-msgstr ""
-
-#: CRM/Funding/DAO/ClearingCostItem.php CRM/Funding/DAO/ClearingResourcesItem.php
-msgid "Clearing Process ID"
-msgstr ""
-
-#: CRM/Funding/DAO/ClearingCostItem.php CRM/Funding/DAO/ClearingResourcesItem.php
-msgid "FK to FundingClearingProcess"
-msgstr ""
-
-#: CRM/Funding/DAO/ClearingCostItem.php
-msgid "Application Cost Item ID"
-msgstr ""
-
-#: CRM/Funding/DAO/ClearingCostItem.php CRM/Funding/DAO/ClearingResourcesItem.php
-msgid "FK to FundingApplicationResourcesItem"
-msgstr ""
-
-#: CRM/Funding/DAO/ClearingCostItem.php CRM/Funding/DAO/ClearingResourcesItem.php
-msgid "File ID"
-msgstr ""
-
-#: CRM/Funding/DAO/ClearingCostItem.php CRM/Funding/DAO/ClearingResourcesItem.php
-msgid "FK to File"
-msgstr ""
-
-#: CRM/Funding/DAO/ClearingCostItem.php CRM/Funding/DAO/ClearingResourcesItem.php Civi/Funding/ClearingProcess/Form/AbstractClearingItemsJsonFormsGenerator.php
-msgid "Receipt Number"
-msgstr ""
-
-#: CRM/Funding/DAO/ClearingCostItem.php CRM/Funding/DAO/ClearingResourcesItem.php Civi/Funding/ClearingProcess/Form/AbstractClearingItemsJsonFormsGenerator.php
-msgid "Receipt Date"
-msgstr ""
-
-#: CRM/Funding/DAO/ClearingCostItem.php CRM/Funding/DAO/ClearingResourcesItem.php
-msgid "Payment Date"
-msgstr ""
-
-#: CRM/Funding/DAO/ClearingCostItem.php CRM/Funding/DAO/ClearingResourcesItem.php
-msgid "Payment Party"
-msgstr ""
-
-#: CRM/Funding/DAO/ClearingCostItem.php CRM/Funding/DAO/ClearingResourcesItem.php
-msgid "Reason"
-msgstr ""
-
-#: CRM/Funding/DAO/ClearingCostItem.php CRM/Funding/DAO/ClearingResourcesItem.php Civi/Funding/Api4/Action/FundingApplicationProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php ang/crmFunding/case/fundingCase.template.html managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_funding_cases.mgd.php managed/SavedSearch_funding_program_controlling.mgd.php
-msgid "Amount Admitted"
-msgstr ""
-
-#: CRM/Funding/DAO/ClearingCostItem.php CRM/Funding/DAO/ClearingResourcesItem.php
-msgid "Form Key"
-msgstr ""
-
-#: CRM/Funding/DAO/ClearingProcess.php
-msgid "Clearing Processes"
-msgstr ""
-
-#: CRM/Funding/DAO/ClearingProcess.php managed/CustomGroup_funding_clearing_process_task.mgd.php
-msgid "Clearing Process"
-msgstr ""
-
-#: CRM/Funding/DAO/ClearingProcess.php
-msgid "Unique FundingClearingProcess ID"
-msgstr ""
-
-#: CRM/Funding/DAO/ClearingProcess.php
-msgid "Start of the clearing. (Not date of entity creation.)"
-msgstr ""
-
-#: CRM/Funding/DAO/ClearingProcess.php
-msgid "Actual start of the activity"
-msgstr ""
-
-#: CRM/Funding/DAO/ClearingProcess.php
-msgid "Actual end of the activity"
-msgstr ""
-
-#: CRM/Funding/DAO/ClearingProcess.php
-msgid "Report Data"
-msgstr ""
-
-#: CRM/Funding/DAO/ClearingResourcesItem.php
-msgid "Clearing Resources Items"
-msgstr ""
-
-#: CRM/Funding/DAO/ClearingResourcesItem.php
-msgid "Clearing Resources Item"
-msgstr ""
-
-#: CRM/Funding/DAO/ClearingResourcesItem.php
-msgid "Unique FundingClearingResourcesItem ID"
-msgstr ""
-
-#: CRM/Funding/DAO/ClearingResourcesItem.php
-msgid "App Resources Item ID"
-msgstr ""
-
-#: CRM/Funding/DAO/Drawdown.php ang/afsearchDrawdowns.aff.php ang/crmFunding/case/fundingCase.template.html ang/crmFunding/drawdown/drawdownSearchTasksMenu.decorator.js managed/NavigationFunding.mgd.php managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php managed/SavedSearch_FundingDrawdownsAll.mgd.php
-msgid "Drawdowns"
-msgstr ""
-
-#: CRM/Funding/DAO/Drawdown.php ang/crmFunding/drawdown/drawdownSearchTasksMenu.decorator.js managed/CustomGroup_funding_drawdown_task.mgd.php
-msgid "Drawdown"
-msgstr ""
-
-#: CRM/Funding/DAO/Drawdown.php
-msgid "Unique FundingDrawdown ID"
-msgstr ""
-
-#: CRM/Funding/DAO/Drawdown.php
-msgid "Payout Process ID"
-msgstr ""
-
-#: CRM/Funding/DAO/Drawdown.php
-msgid "FK to FundingPayoutProcess"
-msgstr ""
-
-#: CRM/Funding/DAO/Drawdown.php managed/SavedSearchFundingDrawdowns.mgd.php managed/SavedSearch_FundingDrawdownsAll.mgd.php
-msgid "Acception Date"
-msgstr ""
-
-#: CRM/Funding/DAO/Drawdown.php
-msgid "Requester Contact ID"
-msgstr ""
-
-#: CRM/Funding/DAO/Drawdown.php
-msgid "Reviewer Contact ID"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingCase.php ang/afsearchFundingCases.aff.php managed/NavigationFunding.mgd.php managed/SavedSearch_funding_cases.mgd.php
-msgid "Funding Cases"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingCase.php
-msgid "Unique FundingCase ID"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingCase.php CRM/Funding/DAO/FundingCaseTypeProgram.php CRM/Funding/DAO/FundingFormStringTranslation.php CRM/Funding/DAO/FundingNewCasePermissions.php CRM/Funding/DAO/FundingProgramContactRelation.php CRM/Funding/DAO/FundingProgramRelationship.php CRM/Funding/DAO/FundingRecipientContactRelation.php
-msgid "FK to FundingProgram"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingCase.php
-msgid "Funding Case Type ID"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingCase.php
-msgid "Creation Contact ID"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingCase.php
-msgid "Notification Contact Ids"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingCase.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php ang/crmFunding/application/defaultApplicationEditor.template.html ang/crmFunding/case/fundingCase.template.html ang/crmFunding/clearing/clearingEditor.template.html ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html ang/crmFundingHiH/hihApplicationEditor.template.html ang/crmFundingIJB/ijbApplicationEditor.template.html ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php managed/SavedSearch_FundingDrawdownsAll.mgd.php managed/SavedSearch_Funding_Tasks_Pending.mgd.php managed/SavedSearch_MyFundingTasks.mgd.php managed/SavedSearch_funding_case_application_processes.mgd.php managed/SavedSearch_funding_cases.mgd.php
-msgid "Recipient"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingCase.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php Civi/Funding/ClearingProcess/Form/AbstractClearingItemsJsonFormsGenerator.php ang/crmFunding/case/fundingCase.template.html managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php managed/SavedSearch_funding_cases.mgd.php managed/SavedSearch_funding_program_controlling.mgd.php
-msgid "Amount Approved"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingCaseContactRelation.php
-msgid "Funding Case Contact Relations"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingCaseContactRelation.php
-msgid "Funding Case Contact Relation"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingCaseContactRelation.php
-msgid "Unique FundingCaseContactRelation ID"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingCaseContactRelation.php CRM/Funding/DAO/FundingCasePermissionsCache.php CRM/Funding/DAO/FundingNewCasePermissions.php CRM/Funding/DAO/FundingProgramContactRelation.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php ang/crmFunding/case/permissions/fundingCaseContactRelation.template.html ang/crmFunding/program/newCasePermissions/fundingNewCasePermissions.template.html ang/crmFunding/program/permissions/fundingProgramContactRelation.template.html
-msgid "Permissions"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingCaseContactRelation.php CRM/Funding/DAO/FundingNewCasePermissions.php CRM/Funding/DAO/FundingProgramContactRelation.php
-msgid "Permissions as JSON array"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingCasePermissionsCache.php
-msgid "Funding Case Permissions Caches"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingCasePermissionsCache.php
-msgid "Funding Case Permissions Cache"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingCasePermissionsCache.php
-msgid "Unique FundingCasePermissionsCache ID"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingCasePermissionsCache.php
-msgid "Contact ID"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingCasePermissionsCache.php
-msgid "No FK to contact to work with 0 (contact ID on CLI), too"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingCasePermissionsCache.php
-msgid "Is Remote"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingCasePermissionsCache.php
-msgid "Indicates whether the permissions are for internal or remote requests"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingCasePermissionsCache.php
-msgid "Permissions as JSON array. If NULL they have to be determined."
-msgstr ""
-
-#: CRM/Funding/DAO/FundingCaseType.php managed/NavigationFunding.mgd.php managed/SavedSearchFundingCaseTypes.mgd.php
-msgid "Funding Case Types"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingCaseType.php CRM/Funding/DAO/FundingCaseTypeProgram.php CRM/Funding/DAO/FundingFormStringTranslation.php managed/SavedSearch_funding_cases.mgd.php managed/SavedSearch_funding_form_translation.mgd.php
-msgid "Funding Case Type"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingCaseType.php
-msgid "Unique FundingCaseType ID"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingCaseType.php CRM/Funding/DAO/FundingProgram.php managed/SavedSearchFundingCaseTypes.mgd.php managed/SavedSearch_funding_programs.mgd.php
-msgid "Abbreviation"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingCaseType.php
-msgid "Name"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingCaseType.php Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php Civi/Funding/FundingCase/Api4/ActionHandler/RemoteGetFieldsActionHandler.php Civi/Funding/Task/Api4/ActionHandler/RemoteGetFieldsActionHandler.php managed/SavedSearchFundingCaseTypes.mgd.php
-msgid "Is Combined Application"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingCaseType.php Civi/Funding/FundingCase/Api4/ActionHandler/RemoteGetFieldsActionHandler.php Civi/Funding/Task/Api4/ActionHandler/RemoteGetFieldsActionHandler.php
-msgid "Application Process Label"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingCaseType.php Civi/Funding/Task/Api4/ActionHandler/RemoteGetFieldsActionHandler.php
-msgid "Used for combined applications"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingCaseTypeProgram.php
-msgid "Funding Case Type Programs"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingCaseTypeProgram.php
-msgid "Funding Case Type Program"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingCaseTypeProgram.php
-msgid "Unique FundingCaseTypeProgram ID"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingFormStringTranslation.php
-msgid "Funding Form String Translations"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingFormStringTranslation.php
-msgid "Funding Form String Translation"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingFormStringTranslation.php
-msgid "Unique FundingFormStringTranslation ID"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingFormStringTranslation.php managed/SavedSearch_funding_form_string_translation.mgd.php
-msgid "Original"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingFormStringTranslation.php managed/SavedSearch_funding_form_string_translation.mgd.php
-msgid "Actual"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingFormStringTranslation.php
-msgid "Actual string"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingNewCasePermissions.php
-msgid "Funding New Case Permissionses"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingNewCasePermissions.php
-msgid "Funding New Case Permissions"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingNewCasePermissions.php
-msgid "Unique FundingNewCasePermissions ID"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingNewCasePermissions.php CRM/Funding/DAO/FundingProgramContactRelation.php CRM/Funding/DAO/FundingRecipientContactRelation.php
-msgid "Funding Program ID"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingProgram.php ang/afsearchFundingPrograms.aff.php managed/NavigationFunding.mgd.php managed/SavedSearch_funding_programs.mgd.php
-msgid "Funding Programs"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingProgram.php
-msgid "Unique FundingProgram ID"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingProgram.php managed/SavedSearch_funding_programs.mgd.php
-msgid "Identifier Prefix"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingProgram.php
-msgid "The database ID of a funding case will be appended to this prefix and forms its identifier"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingProgram.php managed/SavedSearch_funding_programs.mgd.php
-msgid "Requests Start Date"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingProgram.php managed/SavedSearch_funding_programs.mgd.php
-msgid "Requests End Date"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingProgram.php Civi/Funding/Api4/Action/FundingApplicationProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php Civi/Funding/Api4/Action/Generic/ClearingItem/GetFieldsAction.php Civi/Funding/Api4/Action/Generic/FinancePlanItem/AbstractGetFieldsAction.php managed/SavedSearch_funding_programs.mgd.php
-msgid "Currency"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingProgram.php managed/SavedSearch_funding_program_controlling.mgd.php managed/SavedSearch_funding_programs.mgd.php
-msgid "Budget"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingProgramContactRelation.php
-msgid "Funding Program Contact Relations"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingProgramContactRelation.php
-msgid "Funding Program Contact Relation"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingProgramContactRelation.php
-msgid "Unique FundingProgramContactRelation ID"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingProgramRelationship.php
-msgid "Funding Program Relationships"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingProgramRelationship.php
-msgid "Funding Program Relationship"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingProgramRelationship.php
-msgid "Unique FundingProgramRelationship ID"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingProgramRelationship.php
-msgid "ID A"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingProgramRelationship.php
-msgid "ID B"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingRecipientContactRelation.php
-msgid "Funding Recipient Contact Relations"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingRecipientContactRelation.php
-msgid "Funding Recipient Contact Relation"
-msgstr ""
-
-#: CRM/Funding/DAO/FundingRecipientContactRelation.php
-msgid "Unique FundingRecipientContactRelation ID"
-msgstr ""
-
-#: CRM/Funding/DAO/PayoutProcess.php
-msgid "Payout Processes"
-msgstr ""
-
-#: CRM/Funding/DAO/PayoutProcess.php managed/CustomGroup_funding_payout_process_task.mgd.php
-msgid "Payout Process"
-msgstr ""
-
-#: CRM/Funding/DAO/PayoutProcess.php
-msgid "Unique PayoutProcess ID"
-msgstr ""
-
-#: CRM/Funding/DAO/PayoutProcess.php
-msgid "Amount Total"
 msgstr ""
 
 #: Civi/Api4/Query/SqlFunctionFUNDING_JSON_OVERLAPS.php
@@ -646,8 +22,16 @@ msgstr ""
 msgid "Compares two JSON documents and returns true if they overlap. See https://mariadb.com/kb/en/json_overlaps/"
 msgstr ""
 
+#: Civi/Funding/Api4/Action/FundingApplicationProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php Civi/Funding/Api4/Action/Generic/ClearingItem/GetFieldsAction.php Civi/Funding/Api4/Action/Generic/FinancePlanItem/AbstractGetFieldsAction.php managed/SavedSearch_funding_programs.mgd.php schema/FundingProgram.entityType.php
+msgid "Currency"
+msgstr ""
+
 #: Civi/Funding/Api4/Action/FundingApplicationProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php ang/crmFunding/case/fundingCase.template.html ang/crmFunding/clearing/clearingEditor.template.html managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_funding_cases.mgd.php managed/SavedSearch_funding_program_controlling.mgd.php
 msgid "Amount Cleared"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingApplicationProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php ang/crmFunding/case/fundingCase.template.html managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_funding_cases.mgd.php managed/SavedSearch_funding_program_controlling.mgd.php schema/ClearingCostItem.entityType.php schema/ClearingResourcesItem.entityType.php
+msgid "Amount Admitted"
 msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingApplicationProcess/GetJsonSchemaAction.php
@@ -656,6 +40,10 @@ msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingCase/ApproveAction.php Civi/Funding/Api4/Action/FundingCase/GetPossibleActionsAction.php Civi/Funding/Api4/Action/FundingCase/RecreateTransferContractAction.php Civi/Funding/FundingCase/Api4/ActionHandler/FinishClearingActionHandler.php Civi/Funding/FundingCase/Api4/ActionHandler/GetPossibleRecipientsActionHandler.php Civi/Funding/FundingCase/Api4/ActionHandler/RejectActionHandler.php Civi/Funding/FundingCase/Api4/ActionHandler/ResetPermissionsActionHandler.php Civi/Funding/FundingCase/Api4/ActionHandler/SetNotificationContactsActionHandler.php Civi/Funding/FundingCase/Api4/ActionHandler/SetRecipientContactActionHandler.php Civi/Funding/FundingCase/Api4/ActionHandler/UpdateAmountApprovedActionHandler.php
 msgid "Funding case with ID \"%1\" not found"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php ang/crmFunding/application/defaultApplicationEditor.template.html ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html ang/crmFundingHiH/hihApplicationEditor.template.html ang/crmFundingIJB/ijbApplicationEditor.template.html ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html managed/SavedSearch_funding_application_processes.mgd.php schema/ApplicationProcess.entityType.php schema/ApplicationSnapshot.entityType.php
+msgid "Amount Requested"
 msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
@@ -790,6 +178,10 @@ msgstr ""
 msgid "Funding Case Identifier"
 msgstr ""
 
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php ang/crmFunding/case/permissions/fundingCaseContactRelation.template.html ang/crmFunding/program/newCasePermissions/fundingNewCasePermissions.template.html ang/crmFunding/program/permissions/fundingProgramContactRelation.template.html schema/FundingCaseContactRelation.entityType.php schema/FundingCasePermissionsCache.entityType.php schema/FundingNewCasePermissions.entityType.php schema/FundingProgramContactRelation.entityType.php
+msgid "Permissions"
+msgstr ""
+
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php
 msgid "Funding Case Status"
 msgstr ""
@@ -800,6 +192,50 @@ msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php
 msgid "Funding Case Modification Date"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php Civi/Funding/ClearingProcess/Form/AbstractClearingItemsJsonFormsGenerator.php ang/crmFunding/case/fundingCase.template.html managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php managed/SavedSearch_funding_cases.mgd.php managed/SavedSearch_funding_program_controlling.mgd.php schema/FundingCase.entityType.php
+msgid "Amount Approved"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php ang/crmFunding/application/defaultApplicationEditor.template.html ang/crmFunding/case/fundingCase.template.html ang/crmFunding/clearing/clearingEditor.template.html ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html ang/crmFundingHiH/hihApplicationEditor.template.html ang/crmFundingIJB/ijbApplicationEditor.template.html ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php managed/SavedSearch_FundingDrawdownsAll.mgd.php managed/SavedSearch_Funding_Tasks_Pending.mgd.php managed/SavedSearch_MyFundingTasks.mgd.php managed/SavedSearch_funding_case_application_processes.mgd.php managed/SavedSearch_funding_cases.mgd.php schema/FundingCase.entityType.php
+msgid "Recipient"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php ang/crmFunding/application/defaultApplicationEditor.template.html ang/crmFunding/clearing/clearingEditor.template.html ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html ang/crmFundingHiH/hihApplicationEditor.template.html ang/crmFundingIJB/ijbApplicationEditor.template.html ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_funding_application_processes.mgd.php managed/SavedSearch_funding_case_application_processes.mgd.php managed/SavedSearch_funding_cases.mgd.php schema/ApplicationCostItem.entityType.php schema/ApplicationProcess.entityType.php schema/ApplicationResourcesItem.entityType.php schema/FundingCase.entityType.php
+msgid "Identifier"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php managed/SavedSearchFundingCaseTypes.mgd.php managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_funding_application_processes.mgd.php managed/SavedSearch_funding_case_application_processes.mgd.php managed/SavedSearch_funding_program_controlling.mgd.php managed/SavedSearch_funding_programs.mgd.php schema/ApplicationProcess.entityType.php schema/ApplicationSnapshot.entityType.php schema/FundingCaseType.entityType.php schema/FundingProgram.entityType.php
+msgid "Title"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php managed/SavedSearch_funding_application_processes.mgd.php schema/ApplicationProcess.entityType.php schema/ApplicationSnapshot.entityType.php
+msgid "Short Description"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php ang/crmFunding/application/defaultApplicationEditor.template.html ang/crmFunding/case/fundingCase.template.html ang/crmFunding/clearing/clearingEditor.template.html ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html ang/crmFundingHiH/hihApplicationEditor.template.html ang/crmFundingIJB/ijbApplicationEditor.template.html ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html managed/SavedSearchFundingDrawdowns.mgd.php managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_FundingDrawdownsAll.mgd.php managed/SavedSearch_funding_application_processes.mgd.php managed/SavedSearch_funding_case_application_processes.mgd.php managed/SavedSearch_funding_cases.mgd.php schema/ApplicationProcess.entityType.php schema/ApplicationSnapshot.entityType.php schema/ClearingCostItem.entityType.php schema/ClearingProcess.entityType.php schema/ClearingResourcesItem.entityType.php schema/Drawdown.entityType.php schema/FundingCase.entityType.php schema/PayoutProcess.entityType.php
+msgid "Status"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php ang/crmFunding/application/defaultApplicationEditor.template.html ang/crmFunding/case/fundingCase.template.html ang/crmFunding/clearing/clearingEditor.template.html ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html ang/crmFundingHiH/hihApplicationEditor.template.html ang/crmFundingIJB/ijbApplicationEditor.template.html ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html managed/SavedSearchFundingDrawdowns.mgd.php managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_FundingDrawdownsAll.mgd.php managed/SavedSearch_funding_case_application_processes.mgd.php managed/SavedSearch_funding_cases.mgd.php schema/ApplicationProcess.entityType.php schema/ApplicationSnapshot.entityType.php schema/ClearingProcess.entityType.php schema/Drawdown.entityType.php schema/FundingCase.entityType.php schema/PayoutProcess.entityType.php
+msgid "Creation Date"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php ang/crmFunding/application/defaultApplicationEditor.template.html ang/crmFunding/case/fundingCase.template.html ang/crmFunding/clearing/clearingEditor.template.html ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html ang/crmFundingHiH/hihApplicationEditor.template.html ang/crmFundingIJB/ijbApplicationEditor.template.html ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_funding_case_application_processes.mgd.php managed/SavedSearch_funding_cases.mgd.php managed/SavedSearch_funding_form_string_translation.mgd.php schema/ApplicationProcess.entityType.php schema/ClearingProcess.entityType.php schema/FundingCase.entityType.php schema/FundingFormStringTranslation.entityType.php schema/PayoutProcess.entityType.php
+msgid "Modification Date"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_funding_case_application_processes.mgd.php managed/SavedSearch_funding_programs.mgd.php schema/ApplicationProcess.entityType.php schema/ApplicationSnapshot.entityType.php schema/ClearingProcess.entityType.php schema/FundingProgram.entityType.php
+msgid "Start Date"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php managed/SavedSearch_funding_program_controlling.mgd.php managed/SavedSearch_funding_programs.mgd.php schema/ApplicationProcess.entityType.php schema/ApplicationSnapshot.entityType.php schema/ClearingProcess.entityType.php schema/FundingProgram.entityType.php
+msgid "End Date"
+msgstr ""
+
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php schema/ApplicationProcess.entityType.php schema/ApplicationSnapshot.entityType.php
+msgid "Is Eligible"
 msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
@@ -1074,6 +510,10 @@ msgstr ""
 msgid "Performing action %1 on application process %2 is not allowed."
 msgstr ""
 
+#: Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php Civi/Funding/FundingCase/Api4/ActionHandler/RemoteGetFieldsActionHandler.php Civi/Funding/Task/Api4/ActionHandler/RemoteGetFieldsActionHandler.php managed/SavedSearchFundingCaseTypes.mgd.php schema/FundingCaseType.entityType.php
+msgid "Is Combined Application"
+msgstr ""
+
 #: Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php managed/SavedSearch_funding_application_processes.mgd.php
 msgid "Clearing Status"
 msgstr ""
@@ -1200,6 +640,14 @@ msgstr ""
 
 #: Civi/Funding/ClearingProcess/Form/AbstractClearingItemsJsonFormsGenerator.php
 msgid "Receipt"
+msgstr ""
+
+#: Civi/Funding/ClearingProcess/Form/AbstractClearingItemsJsonFormsGenerator.php schema/ClearingCostItem.entityType.php schema/ClearingResourcesItem.entityType.php
+msgid "Receipt Number"
+msgstr ""
+
+#: Civi/Funding/ClearingProcess/Form/AbstractClearingItemsJsonFormsGenerator.php schema/ClearingCostItem.entityType.php schema/ClearingResourcesItem.entityType.php
+msgid "Receipt Date"
 msgstr ""
 
 #: Civi/Funding/ClearingProcess/Form/AbstractClearingItemsJsonFormsGenerator.php
@@ -1530,6 +978,10 @@ msgstr ""
 msgid "Create drawdown"
 msgstr ""
 
+#: Civi/Funding/FundingCase/Api4/ActionHandler/RemoteGetFieldsActionHandler.php Civi/Funding/Task/Api4/ActionHandler/RemoteGetFieldsActionHandler.php schema/FundingCaseType.entityType.php
+msgid "Application Process Label"
+msgstr ""
+
 #: Civi/Funding/FundingCase/Api4/ActionHandler/RemoteSubmitNewApplicationFormActionHandler.php
 msgid "Funding case type with ID \"%1\" not found"
 msgstr ""
@@ -1802,6 +1254,10 @@ msgstr ""
 msgid "Assign permissions for new funding cases to contacts that have a relationship\nof the specified type to the recipient contact."
 msgstr ""
 
+#: Civi/Funding/Task/Api4/ActionHandler/RemoteGetFieldsActionHandler.php schema/FundingCaseType.entityType.php
+msgid "Used for combined applications"
+msgstr ""
+
 #: Civi/Funding/Translation/EventSubscriber/ExtractStringsSearchKitTaskSubscriber.php
 msgid "Extract Strings"
 msgstr ""
@@ -1820,6 +1276,10 @@ msgstr ""
 
 #: Civi/Funding/Validation/EntityValidationResult.php
 msgid "Validation failed: %1"
+msgstr ""
+
+#: ang/afformApplicationTemplates.aff.php schema/ApplicationCiviOfficeTemplate.entityType.php
+msgid "Application Templates"
 msgstr ""
 
 #: ang/afformFundingCaseTypeTemplates.aff.php
@@ -1850,8 +1310,16 @@ msgstr ""
 msgid "Drawdown Controlling"
 msgstr ""
 
+#: ang/afsearchDrawdowns.aff.php ang/crmFunding/case/fundingCase.template.html ang/crmFunding/drawdown/drawdownSearchTasksMenu.decorator.js managed/NavigationFunding.mgd.php managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php managed/SavedSearch_FundingDrawdownsAll.mgd.php schema/Drawdown.entityType.php
+msgid "Drawdowns"
+msgstr ""
+
 #: ang/afsearchFundingCaseApplicationProcesses.aff.php managed/SavedSearch_funding_application_processes.mgd.php
 msgid "Funding Applications"
+msgstr ""
+
+#: ang/afsearchFundingCases.aff.php managed/NavigationFunding.mgd.php managed/SavedSearch_funding_cases.mgd.php schema/FundingCase.entityType.php
+msgid "Funding Cases"
 msgstr ""
 
 #: ang/afsearchFundingFormStringTranslationList.aff.php
@@ -1864,6 +1332,10 @@ msgstr ""
 
 #: ang/afsearchFundingProgramControlling.aff.php managed/NavigationFunding.mgd.php managed/SavedSearch_funding_program_controlling.mgd.php
 msgid "Funding Program Controlling"
+msgstr ""
+
+#: ang/afsearchFundingPrograms.aff.php managed/NavigationFunding.mgd.php managed/SavedSearch_funding_programs.mgd.php schema/FundingProgram.entityType.php
+msgid "Funding Programs"
 msgstr ""
 
 #: ang/afsearchFundingTasksMy.aff.php managed/NavigationFunding.mgd.php
@@ -2082,6 +1554,10 @@ msgstr ""
 msgid "Available budget"
 msgstr ""
 
+#: ang/crmFunding/case/fundingCase.template.html managed/SavedSearchFundingDrawdowns.mgd.php managed/SavedSearch_FundingDrawdownsAll.mgd.php schema/ApplicationCostItem.entityType.php schema/ApplicationResourcesItem.entityType.php schema/ClearingCostItem.entityType.php schema/ClearingResourcesItem.entityType.php schema/Drawdown.entityType.php
+msgid "Amount"
+msgstr ""
+
 #: ang/crmFunding/case/fundingCase.template.html
 msgid "Update Amount Approved"
 msgstr ""
@@ -2120,6 +1596,10 @@ msgstr ""
 
 #: ang/crmFunding/case/notificationContacts.directive.js ang/crmFunding/form/editableField.directive.js ang/crmFunding/fundingDate.filter.js
 msgid "empty"
+msgstr ""
+
+#: ang/crmFunding/case/permissions/fundingCaseContactRelation.template.html ang/crmFunding/program/newCasePermissions/fundingNewCasePermissions.template.html ang/crmFunding/program/permissions/fundingProgramContactRelation.template.html ang/crmFunding/program/recipients/recipientRelation.template.html managed/CustomGroup_funding_case_task.mgd.php schema/ApplicationCostItem.entityType.php schema/ApplicationResourcesItem.entityType.php schema/FundingCaseContactRelation.entityType.php schema/FundingNewCasePermissions.entityType.php schema/FundingProgramContactRelation.entityType.php schema/FundingProgramRelationship.entityType.php schema/FundingRecipientContactRelation.entityType.php
+msgid "Type"
 msgstr ""
 
 #: ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.ctrl.js
@@ -2164,6 +1644,10 @@ msgstr ""
 
 #: ang/crmFunding/clearing/clearingSidebar.template.html
 msgid "Accept is possible once the review was successful."
+msgstr ""
+
+#: ang/crmFunding/drawdown/drawdownSearchTasksMenu.decorator.js managed/CustomGroup_funding_drawdown_task.mgd.php schema/Drawdown.entityType.php
+msgid "Drawdown"
 msgstr ""
 
 #: ang/crmFunding/drawdown/drawdownSearchTasksMenu.decorator.js
@@ -2306,6 +1790,10 @@ msgstr ""
 msgid "Funding Application Process Task"
 msgstr ""
 
+#: managed/CustomGroup_funding_application_process_task.mgd.php managed/OptionValue_cg_extend_objects-civicrm_funding_application_process.mgd.php schema/ApplicationProcess.entityType.php
+msgid "Application Process"
+msgstr ""
+
 #: managed/CustomGroup_funding_case_task.mgd.php managed/OptionValue_funding_case_task.mgd.php
 msgid "Funding Case Task"
 msgstr ""
@@ -2346,6 +1834,10 @@ msgstr ""
 msgid "Funding Clearing Task"
 msgstr ""
 
+#: managed/CustomGroup_funding_clearing_process_task.mgd.php schema/ClearingProcess.entityType.php
+msgid "Clearing Process"
+msgstr ""
+
 #: managed/CustomGroup_funding_clearing_review_status_change.mgd.php managed/OptionValue_funding_clearing_review_status_change.mgd.php
 msgid "Funding Clearing Review Status Change"
 msgstr ""
@@ -2362,6 +1854,10 @@ msgstr ""
 msgid "Funding Payout Task"
 msgstr ""
 
+#: managed/CustomGroup_funding_payout_process_task.mgd.php schema/PayoutProcess.entityType.php
+msgid "Payout Process"
+msgstr ""
+
 #: managed/NavigationFunding.mgd.php
 msgid "Funding"
 msgstr ""
@@ -2372,6 +1868,10 @@ msgstr ""
 
 #: managed/NavigationFunding.mgd.php
 msgid "Add Funding Program"
+msgstr ""
+
+#: managed/NavigationFunding.mgd.php managed/SavedSearchFundingCaseTypes.mgd.php schema/FundingCaseType.entityType.php
+msgid "Funding Case Types"
 msgstr ""
 
 #: managed/OptionValueActivityUsedForApplicationProcess.mgd.php
@@ -2426,6 +1926,10 @@ msgstr ""
 msgid "Table"
 msgstr ""
 
+#: managed/SavedSearchFundingCaseTypes.mgd.php managed/SavedSearch_funding_programs.mgd.php schema/FundingCaseType.entityType.php schema/FundingProgram.entityType.php
+msgid "Abbreviation"
+msgstr ""
+
 #: managed/SavedSearchFundingCaseTypes.mgd.php
 msgid "Manage templates"
 msgstr ""
@@ -2442,6 +1946,10 @@ msgstr ""
 msgid "Requester"
 msgstr ""
 
+#: managed/SavedSearchFundingDrawdowns.mgd.php managed/SavedSearch_FundingDrawdownsAll.mgd.php schema/Drawdown.entityType.php
+msgid "Acception Date"
+msgstr ""
+
 #: managed/SavedSearchFundingDrawdowns.mgd.php managed/SavedSearch_FundingDrawdownsAll.mgd.php
 msgid "Reviewer"
 msgstr ""
@@ -2456,6 +1964,14 @@ msgstr ""
 
 #: managed/SavedSearch_Application_CiviOffice_Templates.mgd.php
 msgid "Application CiviOffice Templates"
+msgstr ""
+
+#: managed/SavedSearch_Application_CiviOffice_Templates.mgd.php schema/ApplicationCiviOfficeTemplate.entityType.php
+msgid "Document"
+msgstr ""
+
+#: managed/SavedSearch_Application_CiviOffice_Templates.mgd.php schema/ApplicationCiviOfficeTemplate.entityType.php
+msgid "Label"
 msgstr ""
 
 #: managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_Funding_Tasks_Pending.mgd.php managed/SavedSearch_MyFundingTasks.mgd.php managed/SavedSearch_funding_application_processes.mgd.php managed/SavedSearch_funding_case_application_processes.mgd.php
@@ -2514,12 +2030,24 @@ msgstr ""
 msgid "Funding Case Applications"
 msgstr ""
 
+#: managed/SavedSearch_funding_cases.mgd.php managed/SavedSearch_funding_form_translation.mgd.php schema/FundingCaseType.entityType.php schema/FundingCaseTypeProgram.entityType.php schema/FundingFormStringTranslation.entityType.php
+msgid "Funding Case Type"
+msgstr ""
+
 #: managed/SavedSearch_funding_form_string_translation.mgd.php
 msgid "Form String Translation"
 msgstr ""
 
 #: managed/SavedSearch_funding_form_string_translation.mgd.php
 msgid "Translation"
+msgstr ""
+
+#: managed/SavedSearch_funding_form_string_translation.mgd.php schema/FundingFormStringTranslation.entityType.php
+msgid "Original"
+msgstr ""
+
+#: managed/SavedSearch_funding_form_string_translation.mgd.php schema/FundingFormStringTranslation.entityType.php
+msgid "Actual"
 msgstr ""
 
 #: managed/SavedSearch_funding_form_string_translation.mgd.php
@@ -2542,6 +2070,22 @@ msgstr ""
 msgid "Edit strings"
 msgstr ""
 
+#: managed/SavedSearch_funding_program_controlling.mgd.php managed/SavedSearch_funding_programs.mgd.php schema/FundingProgram.entityType.php
+msgid "Budget"
+msgstr ""
+
+#: managed/SavedSearch_funding_programs.mgd.php schema/FundingProgram.entityType.php
+msgid "Identifier Prefix"
+msgstr ""
+
+#: managed/SavedSearch_funding_programs.mgd.php schema/FundingProgram.entityType.php
+msgid "Requests Start Date"
+msgstr ""
+
+#: managed/SavedSearch_funding_programs.mgd.php schema/FundingProgram.entityType.php
+msgid "Requests End Date"
+msgstr ""
+
 #: managed/SavedSearch_funding_programs.mgd.php
 msgid "Edit possible funding recipients"
 msgstr ""
@@ -2552,5 +2096,517 @@ msgstr ""
 
 #: managed/SavedSearch_funding_programs.mgd.php
 msgid "Edit basic values"
+msgstr ""
+
+#: schema/ApplicationCiviOfficeTemplate.entityType.php
+msgid "Application Template"
+msgstr ""
+
+#: schema/ApplicationCiviOfficeTemplate.entityType.php
+msgid "Templates for use in application portal"
+msgstr ""
+
+#: schema/ApplicationCiviOfficeTemplate.entityType.php schema/ApplicationCostItem.entityType.php schema/ApplicationProcess.entityType.php schema/ApplicationResourcesItem.entityType.php schema/ApplicationSnapshot.entityType.php schema/ClearingCostItem.entityType.php schema/ClearingProcess.entityType.php schema/ClearingResourcesItem.entityType.php schema/Drawdown.entityType.php schema/FundingCase.entityType.php schema/FundingCaseContactRelation.entityType.php schema/FundingCasePermissionsCache.entityType.php schema/FundingCaseType.entityType.php schema/FundingCaseTypeProgram.entityType.php schema/FundingFormStringTranslation.entityType.php schema/FundingNewCasePermissions.entityType.php schema/FundingProgram.entityType.php schema/FundingProgramContactRelation.entityType.php schema/FundingProgramRelationship.entityType.php schema/FundingRecipientContactRelation.entityType.php schema/PayoutProcess.entityType.php
+msgid "ID"
+msgstr ""
+
+#: schema/ApplicationCiviOfficeTemplate.entityType.php
+msgid "Unique FundingApplicationCiviOfficeTemplate ID"
+msgstr ""
+
+#: schema/ApplicationCiviOfficeTemplate.entityType.php
+msgid "Case Type ID"
+msgstr ""
+
+#: schema/ApplicationCiviOfficeTemplate.entityType.php schema/FundingCase.entityType.php schema/FundingCaseTypeProgram.entityType.php schema/FundingFormStringTranslation.entityType.php
+msgid "FK to FundingCaseType"
+msgstr ""
+
+#: schema/ApplicationCiviOfficeTemplate.entityType.php
+msgid "CiviOffice document URI"
+msgstr ""
+
+#: schema/ApplicationCostItem.entityType.php
+msgid "Application Cost Item"
+msgstr ""
+
+#: schema/ApplicationCostItem.entityType.php
+msgid "Application Cost Items"
+msgstr ""
+
+#: schema/ApplicationCostItem.entityType.php schema/ApplicationProcess.entityType.php schema/ApplicationResourcesItem.entityType.php schema/FundingCase.entityType.php schema/FundingCaseType.entityType.php schema/FundingFormStringTranslation.entityType.php schema/FundingProgram.entityType.php schema/PayoutProcess.entityType.php
+msgid "FIXME"
+msgstr ""
+
+#: schema/ApplicationCostItem.entityType.php
+msgid "Unique FundingApplicationCostItem ID"
+msgstr ""
+
+#: schema/ApplicationCostItem.entityType.php schema/ApplicationResourcesItem.entityType.php schema/ApplicationSnapshot.entityType.php schema/ClearingProcess.entityType.php
+msgid "Application Process ID"
+msgstr ""
+
+#: schema/ApplicationCostItem.entityType.php schema/ApplicationResourcesItem.entityType.php schema/ApplicationSnapshot.entityType.php schema/ClearingProcess.entityType.php
+msgid "FK to FundingApplicationProcess"
+msgstr ""
+
+#: schema/ApplicationCostItem.entityType.php schema/ApplicationResourcesItem.entityType.php schema/ClearingCostItem.entityType.php schema/ClearingResourcesItem.entityType.php schema/FundingCaseContactRelation.entityType.php schema/FundingCaseType.entityType.php schema/FundingNewCasePermissions.entityType.php schema/FundingProgramContactRelation.entityType.php schema/FundingRecipientContactRelation.entityType.php
+msgid "Properties"
+msgstr ""
+
+#: schema/ApplicationCostItem.entityType.php schema/ApplicationResourcesItem.entityType.php
+msgid "Data Pointer"
+msgstr ""
+
+#: schema/ApplicationCostItem.entityType.php schema/ApplicationResourcesItem.entityType.php
+msgid "JSON pointer to data in application data"
+msgstr ""
+
+#: schema/ApplicationProcess.entityType.php
+msgid "Application Processes"
+msgstr ""
+
+#: schema/ApplicationProcess.entityType.php
+msgid "Unique FundingApplicationProcess ID"
+msgstr ""
+
+#: schema/ApplicationProcess.entityType.php schema/FundingCase.entityType.php
+msgid "Unique generated identifier"
+msgstr ""
+
+#: schema/ApplicationProcess.entityType.php schema/FundingCaseContactRelation.entityType.php schema/FundingCasePermissionsCache.entityType.php schema/PayoutProcess.entityType.php
+msgid "Funding Case ID"
+msgstr ""
+
+#: schema/ApplicationProcess.entityType.php schema/FundingCaseContactRelation.entityType.php schema/FundingCasePermissionsCache.entityType.php schema/PayoutProcess.entityType.php
+msgid "FK to FundingCase"
+msgstr ""
+
+#: schema/ApplicationProcess.entityType.php
+msgid "Scheduled start of the activity"
+msgstr ""
+
+#: schema/ApplicationProcess.entityType.php
+msgid "Scheduled end of the activity"
+msgstr ""
+
+#: schema/ApplicationProcess.entityType.php schema/ApplicationSnapshot.entityType.php
+msgid "Request Data"
+msgstr ""
+
+#: schema/ApplicationProcess.entityType.php schema/ApplicationSnapshot.entityType.php schema/ClearingProcess.entityType.php
+msgid "Is Review Content"
+msgstr ""
+
+#: schema/ApplicationProcess.entityType.php schema/ClearingProcess.entityType.php
+msgid "Reviewer Cont Contact ID"
+msgstr ""
+
+#: schema/ApplicationProcess.entityType.php schema/ClearingProcess.entityType.php schema/Drawdown.entityType.php schema/FundingCase.entityType.php
+msgid "FK to Contact"
+msgstr ""
+
+#: schema/ApplicationProcess.entityType.php schema/ApplicationSnapshot.entityType.php schema/ClearingProcess.entityType.php
+msgid "Is Review Calculative"
+msgstr ""
+
+#: schema/ApplicationProcess.entityType.php schema/ClearingProcess.entityType.php
+msgid "Reviewer Calc Contact ID"
+msgstr ""
+
+#: schema/ApplicationProcess.entityType.php schema/ApplicationSnapshot.entityType.php
+msgid "Is In Work"
+msgstr ""
+
+#: schema/ApplicationProcess.entityType.php
+msgid "Is the application in work by the applicant?"
+msgstr ""
+
+#: schema/ApplicationProcess.entityType.php schema/ApplicationSnapshot.entityType.php
+msgid "Is Rejected"
+msgstr ""
+
+#: schema/ApplicationProcess.entityType.php schema/ApplicationSnapshot.entityType.php
+msgid "Is Withdrawn"
+msgstr ""
+
+#: schema/ApplicationResourcesItem.entityType.php
+msgid "Application Resources Item"
+msgstr ""
+
+#: schema/ApplicationResourcesItem.entityType.php
+msgid "Application Resources Items"
+msgstr ""
+
+#: schema/ApplicationResourcesItem.entityType.php
+msgid "Unique FundingApplicationResourcesItem ID"
+msgstr ""
+
+#: schema/ApplicationSnapshot.entityType.php
+msgid "Application Snapshot"
+msgstr ""
+
+#: schema/ApplicationSnapshot.entityType.php
+msgid "Application Snapshots"
+msgstr ""
+
+#: schema/ApplicationSnapshot.entityType.php
+msgid "Snapshots of application versions that need to be preserved"
+msgstr ""
+
+#: schema/ApplicationSnapshot.entityType.php
+msgid "Unique FundingApplicationSnapshot ID"
+msgstr ""
+
+#: schema/ApplicationSnapshot.entityType.php
+msgid "Cost Items"
+msgstr ""
+
+#: schema/ApplicationSnapshot.entityType.php
+msgid "Resources Items"
+msgstr ""
+
+#: schema/ApplicationSnapshot.entityType.php
+msgid "Custom Fields"
+msgstr ""
+
+#: schema/ClearingCostItem.entityType.php
+msgid "Clearing Cost Item"
+msgstr ""
+
+#: schema/ClearingCostItem.entityType.php
+msgid "Clearing Cost Items"
+msgstr ""
+
+#: schema/ClearingCostItem.entityType.php
+msgid "Clearing for an application cost item"
+msgstr ""
+
+#: schema/ClearingCostItem.entityType.php
+msgid "Unique FundingClearingCostItem ID"
+msgstr ""
+
+#: schema/ClearingCostItem.entityType.php schema/ClearingResourcesItem.entityType.php
+msgid "Clearing Process ID"
+msgstr ""
+
+#: schema/ClearingCostItem.entityType.php schema/ClearingResourcesItem.entityType.php
+msgid "FK to FundingClearingProcess"
+msgstr ""
+
+#: schema/ClearingCostItem.entityType.php
+msgid "Application Cost Item ID"
+msgstr ""
+
+#: schema/ClearingCostItem.entityType.php
+msgid "FK to FundingApplicationCostItem"
+msgstr ""
+
+#: schema/ClearingCostItem.entityType.php schema/ClearingResourcesItem.entityType.php
+msgid "File ID"
+msgstr ""
+
+#: schema/ClearingCostItem.entityType.php schema/ClearingResourcesItem.entityType.php
+msgid "FK to File"
+msgstr ""
+
+#: schema/ClearingCostItem.entityType.php schema/ClearingResourcesItem.entityType.php
+msgid "Payment Date"
+msgstr ""
+
+#: schema/ClearingCostItem.entityType.php schema/ClearingResourcesItem.entityType.php
+msgid "Payment Party"
+msgstr ""
+
+#: schema/ClearingCostItem.entityType.php schema/ClearingResourcesItem.entityType.php
+msgid "Reason"
+msgstr ""
+
+#: schema/ClearingCostItem.entityType.php schema/ClearingResourcesItem.entityType.php
+msgid "Form Key"
+msgstr ""
+
+#: schema/ClearingProcess.entityType.php
+msgid "Clearing Processes"
+msgstr ""
+
+#: schema/ClearingProcess.entityType.php
+msgid "Unique FundingClearingProcess ID"
+msgstr ""
+
+#: schema/ClearingProcess.entityType.php
+msgid "Start of the clearing. (Not date of entity creation.)"
+msgstr ""
+
+#: schema/ClearingProcess.entityType.php
+msgid "Actual start of the activity"
+msgstr ""
+
+#: schema/ClearingProcess.entityType.php
+msgid "Actual end of the activity"
+msgstr ""
+
+#: schema/ClearingProcess.entityType.php
+msgid "Report Data"
+msgstr ""
+
+#: schema/ClearingResourcesItem.entityType.php
+msgid "Clearing Resources Item"
+msgstr ""
+
+#: schema/ClearingResourcesItem.entityType.php
+msgid "Clearing Resources Items"
+msgstr ""
+
+#: schema/ClearingResourcesItem.entityType.php
+msgid "Clearing for an application resources item"
+msgstr ""
+
+#: schema/ClearingResourcesItem.entityType.php
+msgid "Unique FundingClearingResourcesItem ID"
+msgstr ""
+
+#: schema/ClearingResourcesItem.entityType.php
+msgid "App Resources Item ID"
+msgstr ""
+
+#: schema/ClearingResourcesItem.entityType.php
+msgid "FK to FundingApplicationResourcesItem"
+msgstr ""
+
+#: schema/Drawdown.entityType.php
+msgid "Drawdowns in a payout process"
+msgstr ""
+
+#: schema/Drawdown.entityType.php
+msgid "Unique FundingDrawdown ID"
+msgstr ""
+
+#: schema/Drawdown.entityType.php
+msgid "Payout Process ID"
+msgstr ""
+
+#: schema/Drawdown.entityType.php
+msgid "FK to FundingPayoutProcess"
+msgstr ""
+
+#: schema/Drawdown.entityType.php
+msgid "Requester Contact ID"
+msgstr ""
+
+#: schema/Drawdown.entityType.php
+msgid "Reviewer Contact ID"
+msgstr ""
+
+#: schema/FundingCase.entityType.php
+msgid "Unique FundingCase ID"
+msgstr ""
+
+#: schema/FundingCase.entityType.php schema/FundingCaseTypeProgram.entityType.php schema/FundingFormStringTranslation.entityType.php schema/FundingNewCasePermissions.entityType.php schema/FundingProgramContactRelation.entityType.php schema/FundingProgramRelationship.entityType.php schema/FundingRecipientContactRelation.entityType.php
+msgid "FK to FundingProgram"
+msgstr ""
+
+#: schema/FundingCase.entityType.php
+msgid "Funding Case Type ID"
+msgstr ""
+
+#: schema/FundingCase.entityType.php
+msgid "Creation Contact ID"
+msgstr ""
+
+#: schema/FundingCase.entityType.php
+msgid "Notification Contact Ids"
+msgstr ""
+
+#: schema/FundingCaseContactRelation.entityType.php
+msgid "Funding Case Contact Relation"
+msgstr ""
+
+#: schema/FundingCaseContactRelation.entityType.php
+msgid "Funding Case Contact Relations"
+msgstr ""
+
+#: schema/FundingCaseContactRelation.entityType.php
+msgid "Stores which permissions a contact or a related contact has on a funding case"
+msgstr ""
+
+#: schema/FundingCaseContactRelation.entityType.php
+msgid "Unique FundingCaseContactRelation ID"
+msgstr ""
+
+#: schema/FundingCaseContactRelation.entityType.php schema/FundingNewCasePermissions.entityType.php schema/FundingProgramContactRelation.entityType.php
+msgid "Permissions as JSON array"
+msgstr ""
+
+#: schema/FundingCasePermissionsCache.entityType.php
+msgid "Funding Case Permissions Cache"
+msgstr ""
+
+#: schema/FundingCasePermissionsCache.entityType.php
+msgid "Funding Case Permissions Caches"
+msgstr ""
+
+#: schema/FundingCasePermissionsCache.entityType.php
+msgid "Cache for FundingCase permissions"
+msgstr ""
+
+#: schema/FundingCasePermissionsCache.entityType.php
+msgid "Unique FundingCasePermissionsCache ID"
+msgstr ""
+
+#: schema/FundingCasePermissionsCache.entityType.php
+msgid "Contact ID"
+msgstr ""
+
+#: schema/FundingCasePermissionsCache.entityType.php
+msgid "No FK to contact to work with 0 (contact ID on CLI), too"
+msgstr ""
+
+#: schema/FundingCasePermissionsCache.entityType.php
+msgid "Is Remote"
+msgstr ""
+
+#: schema/FundingCasePermissionsCache.entityType.php
+msgid "Indicates whether the permissions are for internal or remote requests"
+msgstr ""
+
+#: schema/FundingCasePermissionsCache.entityType.php
+msgid "Permissions as JSON array. If NULL they have to be determined."
+msgstr ""
+
+#: schema/FundingCaseType.entityType.php
+msgid "Unique FundingCaseType ID"
+msgstr ""
+
+#: schema/FundingCaseType.entityType.php
+msgid "Name"
+msgstr ""
+
+#: schema/FundingCaseTypeProgram.entityType.php
+msgid "Funding Case Type Program"
+msgstr ""
+
+#: schema/FundingCaseTypeProgram.entityType.php
+msgid "Funding Case Type Programs"
+msgstr ""
+
+#: schema/FundingCaseTypeProgram.entityType.php
+msgid "Stores which funding case types are available in a funding program"
+msgstr ""
+
+#: schema/FundingCaseTypeProgram.entityType.php
+msgid "Unique FundingCaseTypeProgram ID"
+msgstr ""
+
+#: schema/FundingFormStringTranslation.entityType.php
+msgid "Funding Form String Translation"
+msgstr ""
+
+#: schema/FundingFormStringTranslation.entityType.php
+msgid "Funding Form String Translations"
+msgstr ""
+
+#: schema/FundingFormStringTranslation.entityType.php
+msgid "Unique FundingFormStringTranslation ID"
+msgstr ""
+
+#: schema/FundingFormStringTranslation.entityType.php
+msgid "Actual string"
+msgstr ""
+
+#: schema/FundingNewCasePermissions.entityType.php
+msgid "Funding New Case Permissions"
+msgstr ""
+
+#: schema/FundingNewCasePermissions.entityType.php
+msgid "Funding New Case Permissionses"
+msgstr ""
+
+#: schema/FundingNewCasePermissions.entityType.php
+msgid "Defines the initial permissions for new funding cases"
+msgstr ""
+
+#: schema/FundingNewCasePermissions.entityType.php
+msgid "Unique FundingNewCasePermissions ID"
+msgstr ""
+
+#: schema/FundingNewCasePermissions.entityType.php schema/FundingProgramContactRelation.entityType.php schema/FundingRecipientContactRelation.entityType.php
+msgid "Funding Program ID"
+msgstr ""
+
+#: schema/FundingProgram.entityType.php
+msgid "Unique FundingProgram ID"
+msgstr ""
+
+#: schema/FundingProgram.entityType.php
+msgid "The database ID of a funding case will be appended to this prefix and forms its identifier"
+msgstr ""
+
+#: schema/FundingProgramContactRelation.entityType.php
+msgid "Funding Program Contact Relation"
+msgstr ""
+
+#: schema/FundingProgramContactRelation.entityType.php
+msgid "Funding Program Contact Relations"
+msgstr ""
+
+#: schema/FundingProgramContactRelation.entityType.php
+msgid "Defines who is allowed to access a funding program"
+msgstr ""
+
+#: schema/FundingProgramContactRelation.entityType.php
+msgid "Unique FundingProgramContactRelation ID"
+msgstr ""
+
+#: schema/FundingProgramRelationship.entityType.php
+msgid "Funding Program Relationship"
+msgstr ""
+
+#: schema/FundingProgramRelationship.entityType.php
+msgid "Funding Program Relationships"
+msgstr ""
+
+#: schema/FundingProgramRelationship.entityType.php
+msgid "Stores relationships between FundingProgram entities"
+msgstr ""
+
+#: schema/FundingProgramRelationship.entityType.php
+msgid "Unique FundingProgramRelationship ID"
+msgstr ""
+
+#: schema/FundingProgramRelationship.entityType.php
+msgid "ID A"
+msgstr ""
+
+#: schema/FundingProgramRelationship.entityType.php
+msgid "ID B"
+msgstr ""
+
+#: schema/FundingRecipientContactRelation.entityType.php
+msgid "Funding Recipient Contact Relation"
+msgstr ""
+
+#: schema/FundingRecipientContactRelation.entityType.php
+msgid "Funding Recipient Contact Relations"
+msgstr ""
+
+#: schema/FundingRecipientContactRelation.entityType.php
+msgid "Defines the contacts from which the recipient of a funding can be chosen"
+msgstr ""
+
+#: schema/FundingRecipientContactRelation.entityType.php
+msgid "Unique FundingRecipientContactRelation ID"
+msgstr ""
+
+#: schema/PayoutProcess.entityType.php
+msgid "Payout Processes"
+msgstr ""
+
+#: schema/PayoutProcess.entityType.php
+msgid "Unique PayoutProcess ID"
+msgstr ""
+
+#: schema/PayoutProcess.entityType.php
+msgid "Amount Total"
 msgstr ""
 
