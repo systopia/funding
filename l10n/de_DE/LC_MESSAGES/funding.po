@@ -130,6 +130,15 @@ msgid "Amount Requested"
 msgstr "Beantragter Betrag"
 
 #: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
+#: ang/crmFunding/case/fundingCase.template.html
+#: managed/SavedSearch_funding_program_controlling.mgd.php
+#: schema/ApplicationProcess.entityType.php
+#: schema/ApplicationSnapshot.entityType.php
+msgid "Amount Eligible"
+msgstr "Förderfähiger Betrag"
+
+#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
 msgid "Amount Drawdowns"
 msgstr "Betrag Mittelabrufe"
 
@@ -667,11 +676,6 @@ msgstr "Berechtigung zum Ablehnen des Mittelabrufs fehlt."
 #: Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php
 msgid "The sum of the amounts of unverified drawdowns."
 msgstr "Die Summe der Beträge offener Mittelabrufe."
-
-#: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
-#: managed/SavedSearch_funding_program_controlling.mgd.php
-msgid "Amount Eligible"
-msgstr "Förderfähiger Betrag"
 
 #: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
 msgid ""
@@ -2317,10 +2321,6 @@ msgstr "Förderfall: %1"
 #: ang/crmFunding/case/fundingCase.template.html
 msgid "Notification Contacts"
 msgstr "Benachrichtigungskontakte"
-
-#: ang/crmFunding/case/fundingCase.template.html
-msgid "Amount Requested Eligible"
-msgstr "Förderfähiger Betrag"
 
 #: ang/crmFunding/case/fundingCase.template.html
 #: managed/OptionValuesFileType.mgd.php

@@ -45,12 +45,12 @@ class ApprovalValidator {
     $eligibleApplicationProcesses = $this->eligibleApplicationProcessesLoader->getEligibleProcessesForContract(
       $fundingCaseBundle->getFundingCase()
     );
-    $amountRequestedEligible = 0;
+    $amountEligible = 0;
     foreach ($eligibleApplicationProcesses as $eligibleApplicationProcess) {
-      $amountRequestedEligible += $eligibleApplicationProcess->getAmountRequested();
+      $amountEligible += $eligibleApplicationProcess->getAmountEligible();
     }
 
-    return abs($amount - $amountRequestedEligible) <= PHP_FLOAT_EPSILON;
+    return abs($amount - $amountEligible) <= PHP_FLOAT_EPSILON;
   }
 
 }
