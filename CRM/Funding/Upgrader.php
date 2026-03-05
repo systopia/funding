@@ -41,6 +41,22 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
     $this->createUniqueTranslationIndex();
   }
 
+  public function postInstall(): void {
+    /**
+     * We need a collation that is accent-sensitive and case-sensitive. However, the
+     * chosen collation utf8mb4_bin doesn't sort in natural order. Collations
+     * that are also sorting in natural order are named differently on MariaDB
+     * and MySQL, though. (MariaDB: utf8mb4_0900_as_cs, MySQL:
+     * utf8mb4_0900_as_cs) Since MariaDB 11.4.5 there's a mapping of MySQL
+     * collations: https://jira.mariadb.org/browse/MDEV-20912.
+     */
+    CRM_Core_DAO::executeQuery(
+      'ALTER TABLE civicrm_funding_form_string_translation
+             MODIFY COLUMN msg_text VARCHAR(8000) COLLATE utf8mb4_bin,
+             MODIFY COLUMN new_text VARCHAR(8000) COLLATE utf8mb4_bin NOT NULL'
+    );
+  }
+
   public function upgrade_0001(): bool {
     $this->ctx->log->info('Applying database migration 0001');
     $this->executeSqlFile('sql/upgrade/0001.sql');

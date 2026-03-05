@@ -1,7 +1,3 @@
--- Fix timestamp columns in MariaDB <= 10.9
--- https://mariadb.com/kb/en/server-system-variables/#explicit_defaults_for_timestamp
-SET SESSION explicit_defaults_for_timestamp=ON;
-
 ALTER TABLE civicrm_funding_case
   MODIFY creation_date TIMESTAMP NOT NULL,
   MODIFY modification_date TIMESTAMP NOT NULL;
