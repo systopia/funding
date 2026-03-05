@@ -35,7 +35,8 @@ namespace Civi\Funding\Entity;
  *   request_data: array<string, mixed>,
  *   cost_items: array<applicationCostItemT>,
  *   resources_items: array<applicationResourcesItemT>,
- *   amount_requested: double,
+ *   amount_requested: float,
+ *   amount_eligible: float,
  *   is_review_content: ?bool,
  *   is_review_calculative: ?bool,
  *   is_eligible: ?bool,
@@ -100,6 +101,10 @@ final class ApplicationSnapshotEntity extends AbstractEntity {
 
   public function getAmountRequested(): float {
     return $this->values['amount_requested'];
+  }
+
+  public function getAmountEligible(): float {
+    return $this->values['amount_eligible'];
   }
 
   public function getIsReviewContent(): ?bool {

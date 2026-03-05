@@ -46,6 +46,10 @@ msgstr ""
 msgid "Amount Requested"
 msgstr ""
 
+#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php ang/crmFunding/case/fundingCase.template.html managed/SavedSearch_funding_program_controlling.mgd.php schema/ApplicationProcess.entityType.php schema/ApplicationSnapshot.entityType.php
+msgid "Amount Eligible"
+msgstr ""
+
 #: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
 msgid "Amount Drawdowns"
 msgstr ""
@@ -324,10 +328,6 @@ msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php
 msgid "The sum of the amounts of unverified drawdowns."
-msgstr ""
-
-#: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php managed/SavedSearch_funding_program_controlling.mgd.php
-msgid "Amount Eligible"
 msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
@@ -1572,10 +1572,6 @@ msgstr ""
 
 #: ang/crmFunding/case/fundingCase.template.html
 msgid "Notification Contacts"
-msgstr ""
-
-#: ang/crmFunding/case/fundingCase.template.html
-msgid "Amount Requested Eligible"
 msgstr ""
 
 #: ang/crmFunding/case/fundingCase.template.html managed/OptionValuesFileType.mgd.php
