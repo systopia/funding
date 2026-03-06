@@ -23,8 +23,6 @@ use Civi\Funding\Api4\Action\Remote\ApplicationProcess\ValidateAddFormAction;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormAddValidateCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddValidateHandlerInterface;
 use Civi\Funding\FundingCase\FundingCaseManager;
-use Civi\Funding\FundingProgram\FundingCaseTypeManager;
-use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Webmozart\Assert\Assert;
 
@@ -36,20 +34,12 @@ final class ValidateAddFormActionHandler implements ActionHandlerInterface {
 
   private FundingCaseManager $fundingCaseManager;
 
-  private FundingCaseTypeManager $fundingCaseTypeManager;
-
-  private FundingProgramManager $fundingProgramManager;
-
   public function __construct(
     ApplicationFormAddValidateHandlerInterface $validateHandler,
     FundingCaseManager $fundingCaseManager,
-    FundingCaseTypeManager $fundingCaseTypeManager,
-    FundingProgramManager $fundingProgramManager
   ) {
     $this->validateHandler = $validateHandler;
     $this->fundingCaseManager = $fundingCaseManager;
-    $this->fundingCaseTypeManager = $fundingCaseTypeManager;
-    $this->fundingProgramManager = $fundingProgramManager;
   }
 
   /**
@@ -61,19 +51,12 @@ final class ValidateAddFormActionHandler implements ActionHandlerInterface {
    * @throws \CRM_Core_Exception
    */
   public function validateAddForm(ValidateAddFormAction $action): array {
-    $fundingCase = $this->fundingCaseManager->get($action->getFundingCaseId());
-    Assert::notNull($fundingCase, sprintf('Funding case with id "%d" not found', $action->getFundingCaseId()));
-
-    $fundingProgram = $this->fundingProgramManager->get($fundingCase->getFundingProgramId());
-    Assert::notNull($fundingProgram);
-    $fundingCaseType = $this->fundingCaseTypeManager->get($fundingCase->getFundingCaseTypeId());
-    Assert::notNull($fundingCaseType);
+    $fundingCaseBundle = $this->fundingCaseManager->getBundle($action->getFundingCaseId());
+    Assert::notNull($fundingCaseBundle, sprintf('Funding case with id "%d" not found', $action->getFundingCaseId()));
 
     $validateResult = $this->validateHandler->handle(new ApplicationFormAddValidateCommand(
       $action->getResolvedContactId(),
-      $fundingProgram,
-      $fundingCaseType,
-      $fundingCase,
+      $fundingCaseBundle,
       $action->getData(),
     ));
 

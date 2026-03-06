@@ -25,9 +25,8 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationFormAddSubmitResult;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddSubmitHandlerInterface;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\EntityFactory\ApplicationProcessFactory;
+use Civi\Funding\EntityFactory\FundingCaseBundleFactory;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
-use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
-use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationFormSubmitSuccessEvent;
 use Civi\Funding\Mock\ApplicationProcess\Form\Validation\ApplicationFormValidationResultFactory;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -101,9 +100,7 @@ final class ApplicationFormAddSubmitEventDecoratorTest extends TestCase {
   private function createCommand(): ApplicationFormAddSubmitCommand {
     return new ApplicationFormAddSubmitCommand(
       1,
-      FundingProgramFactory::createFundingProgram(),
-      FundingCaseTypeFactory::createFundingCaseType(),
-      FundingCaseFactory::createFundingCase(),
+      FundingCaseBundleFactory::create(),
       ['test' => 'foo'],
     );
   }

@@ -21,9 +21,11 @@ namespace Civi\Funding\FundingCaseTypes\AuL\IJB;
 
 use Civi\Funding\FundingCaseType\MetaData\AbstractFundingCaseTypeMetaData;
 use Civi\Funding\FundingCaseType\MetaData\CostItemType;
+use Civi\Funding\FundingCaseType\MetaData\DefaultApplicationProcessActions;
 use Civi\Funding\FundingCaseType\MetaData\DefaultApplicationProcessStatuses;
 use Civi\Funding\FundingCaseType\MetaData\ResourcesItemType;
 use Civi\Funding\FundingCaseType\MetaData\ReworkApplicationProcessStatuses;
+use Civi\Funding\FundingCaseType\MetaData\ReworkApplicationProcessActions;
 
 final class IJBMetaData extends AbstractFundingCaseTypeMetaData {
 
@@ -41,6 +43,13 @@ final class IJBMetaData extends AbstractFundingCaseTypeMetaData {
 
   public function getName(): string {
     return self::NAME;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getApplicationProcessActions(): array {
+    return DefaultApplicationProcessActions::getAll() + ReworkApplicationProcessActions::getAll();
   }
 
   /**
@@ -94,6 +103,13 @@ EOD
       'Raum-, Materialmiete (techn. Geräte, Beamer, Flipchart etc.)'
       ),
     ];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getFundingCaseActions(): array {
+    return [];
   }
 
   /**

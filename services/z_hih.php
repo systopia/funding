@@ -24,10 +24,7 @@ use Civi\Funding\ClearingProcess\Form\ReceiptsFormGeneratorInterface;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\FundingCaseType\MetaData\FundingCaseTypeMetaDataInterface;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Actions\HiHApplicationActionsDeterminer;
-use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Actions\HiHApplicationActionStatusInfo;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Actions\HiHApplicationStatusDeterminer;
-use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Actions\HiHApplicationSubmitActionsContainer;
-use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Actions\HiHApplicationSubmitActionsFactory;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Data\HiHApplicationFormDataFactory;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Data\HiHApplicationFormFilesFactory;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Data\HiHInfoDateienFactory;
@@ -49,18 +46,8 @@ $container->autowire(HiHMetaData::class)
 $container->autowire(HiHApplicationActionsDeterminer::class)
   ->addTag(HiHApplicationActionsDeterminer::SERVICE_TAG);
 
-$container->autowire(HiHApplicationActionStatusInfo::class)
-  ->addTag(HiHApplicationActionStatusInfo::SERVICE_TAG);
-
 $container->autowire(HiHApplicationStatusDeterminer::class)
   ->addTag(HiHApplicationStatusDeterminer::SERVICE_TAG);
-
-$container->autowire(HiHApplicationSubmitActionsContainer::class)
-  ->addTag(HiHApplicationSubmitActionsContainer::SERVICE_TAG);
-
-$container->autowire(
-  HiHApplicationSubmitActionsFactory::class)
-  ->addTag(HiHApplicationSubmitActionsFactory::SERVICE_TAG);
 
 $container->autowire(HiHApplicationJsonSchemaFactory::class)
   ->addTag(HiHApplicationJsonSchemaFactory::SERVICE_TAG);

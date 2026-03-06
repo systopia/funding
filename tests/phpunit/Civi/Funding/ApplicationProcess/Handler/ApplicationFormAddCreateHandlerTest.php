@@ -21,12 +21,11 @@ namespace Civi\Funding\ApplicationProcess\Handler;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormAddCreateCommand;
 use Civi\Funding\ApplicationProcess\Helper\ApplicationJsonSchemaCreateHelper;
-use Civi\Funding\EntityFactory\FundingCaseFactory;
-use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
-use Civi\Funding\EntityFactory\FundingProgramFactory;
+use Civi\Funding\EntityFactory\FundingCaseBundleFactory;
 use Civi\Funding\Form\Application\ApplicationSubmitActionsFactoryInterface;
 use Civi\Funding\Form\Application\CombinedApplicationJsonSchemaFactoryInterface;
 use Civi\Funding\Form\Application\CombinedApplicationUiSchemaFactoryInterface;
+use Civi\Funding\FundingCaseType\MetaData\ApplicationProcessAction;
 use Civi\Funding\Translation\FormTranslatorInterface;
 use Civi\Funding\Util\FormTestUtil;
 use Civi\RemoteTools\JsonForms\Control\JsonFormsSubmitButton;
@@ -74,10 +73,11 @@ final class ApplicationFormAddCreateHandlerTest extends TestCase {
 
   public function testHandle(): void {
     $contactId = 12;
-    $fundingProgram = FundingProgramFactory::createFundingProgram();
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
-    $fundingCase = FundingCaseFactory::createFundingCase();
-    $command = new ApplicationFormAddCreateCommand($contactId, $fundingProgram, $fundingCaseType, $fundingCase);
+    $fundingCaseBundle = FundingCaseBundleFactory::create();
+    $fundingProgram = $fundingCaseBundle->getFundingProgram();
+    $fundingCaseType = $fundingCaseBundle->getFundingCaseType();
+    $fundingCase = $fundingCaseBundle->getFundingCase();
+    $command = new ApplicationFormAddCreateCommand($contactId, $fundingCaseBundle);
 
     $jsonSchema = new JsonSchema([]);
     $this->jsonSchemaFactoryMock->method('createJsonSchemaAdd')
@@ -92,11 +92,15 @@ final class ApplicationFormAddCreateHandlerTest extends TestCase {
       ->with($fundingProgram, $fundingCaseType, $fundingCase)
       ->willReturn($uiSchema);
 
-    $this->submitActionsFactoryMock->expects(self::once())->method('createInitialSubmitActions')
-      ->with($fundingCase->getPermissions())
+    $this->submitActionsFactoryMock->expects(self::once())->method('getInitialSubmitActions')
+      ->with($fundingCase->getPermissions(), $command->getFundingCaseType())
       ->willReturn([
-        'submitAction1' => ['label' => 'Submit1', 'properties' => []],
-        'submitAction2' => ['label' => 'Submit2', 'confirm' => 'Proceed?', 'properties' => []],
+        'submitAction1' => new ApplicationProcessAction(['name' => 'submitAction1', 'label' => 'Submit1']),
+        'submitAction2' => new ApplicationProcessAction([
+          'name' => 'submitAction2',
+          'label' => 'Submit2',
+          'confirmMessage' => 'Proceed?',
+        ]),
       ]);
 
     $this->formTranslatorMock->expects(self::once())->method('translateForm');
