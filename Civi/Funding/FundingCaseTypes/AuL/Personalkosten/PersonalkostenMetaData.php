@@ -21,6 +21,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCaseTypes\AuL\Personalkosten;
 
 use Civi\Funding\FundingCaseType\MetaData\AbstractFundingCaseTypeMetaData;
+use Civi\Funding\FundingCaseType\MetaData\CostItemType;
 use Civi\Funding\FundingCaseType\MetaData\DefaultApplicationProcessActions;
 use Civi\Funding\FundingCaseType\MetaData\DefaultApplicationProcessStatuses;
 use Civi\Funding\FundingCaseType\MetaData\ReworkApplicationProcessActions;
@@ -52,8 +53,10 @@ final class PersonalkostenMetaData extends AbstractFundingCaseTypeMetaData {
    * @inheritDoc
    */
   public function getCostItemTypes(): array {
-    // @todo
-    return [];
+    return [
+      'personalkosten' => new CostItemType('personalkosten', 'Personalkosten'),
+      'sachkosten' => new CostItemType('sachkosten', 'Sachkostenpauschale'),
+    ];
   }
 
   /**
