@@ -30,7 +30,7 @@ final class IJBSachberichtCategory extends JsonFormsCategory {
   public function __construct(string $scopePrefix) {
     parent::__construct('Sachbericht', [
       new JsonFormsGroup('Sachbericht', [], <<<'EOD'
-Mit der Beantwortung der nachfolgenden Fragen gebt Ihr uns und dem BMFSFJ die
+Mit der Beantwortung der nachfolgenden Fragen gebt Ihr uns und dem BMBFSFJ die
 Möglichkeit, einen Einblick in Eure Maßnahme zu gewinnen. Eure Erfahrungen
 helfen uns, den internationalen Jugendaustausch weiterzuentwickeln, bewährte
 Methoden oder Programmteile weiterzuempfehlen sowie möglicherweise häufiger
@@ -245,13 +245,13 @@ Belegexemplare etc. bei den Dokumenten hochladen.
 EOD, NULL, ['multi' => TRUE]),
         new JsonFormsControl(
           "$scopePrefix/hinweisBMFSFJ",
-          '4.7 Wie wurde auf die Förderung durch das BMFSFJ hingewiesen?',
+          '4.7 Wie wurde auf die Förderung durch das BMBFSFJ hingewiesen?',
           NULL,
           ['multi' => TRUE]
         ),
         new JsonFormsControl(
           "$scopePrefix/anregungenBMFSFJ",
-          '4.8 Welche Anregungen für den Bundearbeitskreis/das BMFSFJ haben sich ggf. aus der Maßnahme ergeben?',
+          '4.8 Welche Anregungen für den Bundearbeitskreis/das BMBFSFJ haben sich ggf. aus der Maßnahme ergeben?',
           NULL,
           ['multi' => TRUE]
         ),
