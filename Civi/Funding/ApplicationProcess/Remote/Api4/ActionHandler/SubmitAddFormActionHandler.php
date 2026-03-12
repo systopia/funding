@@ -27,8 +27,6 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddSubmitHandlerInter
 use Civi\Funding\Entity\ExternalFileEntity;
 use Civi\Funding\Form\RemoteSubmitResponseActions;
 use Civi\Funding\FundingCase\FundingCaseManager;
-use Civi\Funding\FundingProgram\FundingCaseTypeManager;
-use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
@@ -41,23 +39,15 @@ final class SubmitAddFormActionHandler implements ActionHandlerInterface {
 
   private FundingCaseManager $fundingCaseManager;
 
-  private FundingCaseTypeManager $fundingCaseTypeManager;
-
-  private FundingProgramManager $fundingProgramManager;
-
   private OptionsLoaderInterface $optionsLoader;
 
   public function __construct(
     ApplicationFormAddSubmitHandlerInterface $submitHandler,
     FundingCaseManager $fundingCaseManager,
-    FundingCaseTypeManager $fundingCaseTypeManager,
-    FundingProgramManager $fundingProgramManager,
     OptionsLoaderInterface $optionsLoader
   ) {
     $this->submitHandler = $submitHandler;
     $this->fundingCaseManager = $fundingCaseManager;
-    $this->fundingCaseTypeManager = $fundingCaseTypeManager;
-    $this->fundingProgramManager = $fundingProgramManager;
     $this->optionsLoader = $optionsLoader;
   }
 
@@ -72,19 +62,12 @@ final class SubmitAddFormActionHandler implements ActionHandlerInterface {
    * @throws \CRM_Core_Exception
    */
   public function submitAddForm(SubmitAddFormAction $action): array {
-    $fundingCase = $this->fundingCaseManager->get($action->getFundingCaseId());
-    Assert::notNull($fundingCase, sprintf('Funding case with id "%d" not found', $action->getFundingCaseId()));
-
-    $fundingProgram = $this->fundingProgramManager->get($fundingCase->getFundingProgramId());
-    Assert::notNull($fundingProgram);
-    $fundingCaseType = $this->fundingCaseTypeManager->get($fundingCase->getFundingCaseTypeId());
-    Assert::notNull($fundingCaseType);
+    $fundingCaseBundle = $this->fundingCaseManager->getBundle($action->getFundingCaseId());
+    Assert::notNull($fundingCaseBundle, sprintf('Funding case with id "%d" not found', $action->getFundingCaseId()));
 
     $submitResult = $this->submitHandler->handle(new ApplicationFormAddSubmitCommand(
       $action->getResolvedContactId(),
-      $fundingProgram,
-      $fundingCaseType,
-      $fundingCase,
+      $fundingCaseBundle,
       $action->getData(),
     ));
 

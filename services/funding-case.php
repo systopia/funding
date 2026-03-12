@@ -24,6 +24,8 @@ use Civi\Funding\DependencyInjection\Compiler\FundingCaseNotificationContactsSet
 use Civi\Funding\DependencyInjection\Compiler\FundingCaseRecipientContactSetHandlerPass;
 use Civi\Funding\DependencyInjection\PossibleRecipientsForChangeLoaderPass;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
+use Civi\Funding\FundingCase\Actions\FundingCaseSubmitActionsFactory;
+use Civi\Funding\FundingCase\Actions\FundingCaseSubmitActionsFactoryInterface;
 use Civi\Funding\FundingCase\Approval\ApprovalValidator;
 use Civi\Funding\FundingCase\FundingCaseIdentifierGenerator;
 use Civi\Funding\FundingCase\FundingCaseIdentifierGeneratorInterface;
@@ -95,6 +97,8 @@ $container->autowire(FundingCaseTokenNameExtractor::class);
 $container->autowire(FundingCaseTokenResolver::class);
 
 $container->autowire(ApprovalValidator::class);
+
+$container->autowire(FundingCaseSubmitActionsFactoryInterface::class, FundingCaseSubmitActionsFactory::class);
 
 ServiceRegistrator::autowireAllImplementing(
   $container,

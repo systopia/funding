@@ -19,22 +19,14 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Command;
 
-use Civi\Funding\Entity\FundingCaseEntity;
-use Civi\Funding\Entity\FundingCaseTypeEntity;
-use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\Entity\FundingCaseBundle;
+use Civi\Funding\Entity\Traits\FundingCaseBundleTrait;
 
 final class ApplicationFormAddSubmitCommand {
 
+  use FundingCaseBundleTrait;
+
   private int $contactId;
-
-  /**
-   * @var \Civi\Funding\Entity\FundingCaseEntity
-   */
-  private FundingCaseEntity $fundingCase;
-
-  private FundingCaseTypeEntity $fundingCaseType;
-
-  private FundingProgramEntity $fundingProgram;
 
   /**
    * @phpstan-var array<string, mixed> JSON serializable.
@@ -42,19 +34,15 @@ final class ApplicationFormAddSubmitCommand {
   private array $data;
 
   /**
-   * @phpstan-param array<string, mixed> $data JSON serializable.
+   * @param array<string, mixed> $data JSON serializable.
    */
   public function __construct(
     int $contactId,
-    FundingProgramEntity $fundingProgram,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingCaseEntity $fundingCase,
+    FundingCaseBundle $fundingCaseBundle,
     array $data
   ) {
     $this->contactId = $contactId;
-    $this->fundingProgram = $fundingProgram;
-    $this->fundingCaseType = $fundingCaseType;
-    $this->fundingCase = $fundingCase;
+    $this->fundingCaseBundle = $fundingCaseBundle;
     $this->data = $data;
   }
 
@@ -62,20 +50,8 @@ final class ApplicationFormAddSubmitCommand {
     return $this->contactId;
   }
 
-  public function getFundingCaseType(): FundingCaseTypeEntity {
-    return $this->fundingCaseType;
-  }
-
-  public function getFundingCase(): FundingCaseEntity {
-    return $this->fundingCase;
-  }
-
-  public function getFundingProgram(): FundingProgramEntity {
-    return $this->fundingProgram;
-  }
-
   /**
-   * @phpstan-return array<string, mixed> JSON serializable.
+   * @return array<string, mixed> JSON serializable.
    */
   public function getData(): array {
     return $this->data;

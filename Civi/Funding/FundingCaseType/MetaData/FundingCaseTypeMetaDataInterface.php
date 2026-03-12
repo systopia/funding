@@ -26,10 +26,22 @@ interface FundingCaseTypeMetaDataInterface {
 
   public function getName(): string;
 
+  public function getApplicationProcessAction(string $name): ?ApplicationProcessAction;
+
+  /**
+   * @return non-empty-array<string, ApplicationProcessAction>
+   *   Must contain actions:
+   *     - that shall be shown on the application form to applicants.
+   *       (The order determines the order on the form.)
+   *     - that shall be available as SearchKit action for reviewers.
+   *     - that shall perform a deletion or a restore.
+   */
+  public function getApplicationProcessActions(): array;
+
   public function getApplicationProcessStatus(string $name): ?ApplicationProcessStatus;
 
   /**
-   * @phpstan-return non-empty-array<string, ApplicationProcessStatus>
+   * @return non-empty-array<string, ApplicationProcessStatus>
    *   Mapping of name to ApplicationProcessStatus.
    */
   public function getApplicationProcessStatuses(): array;
@@ -37,15 +49,25 @@ interface FundingCaseTypeMetaDataInterface {
   public function getCostItemType(string $name): ?CostItemTypeInterface;
 
   /**
-   * @phpstan-return array<string, CostItemTypeInterface>
+   * @return array<string, CostItemTypeInterface>
    *   Mapping of name to CostItemTypeInterface.
    */
   public function getCostItemTypes(): array;
 
+  public function getFundingCaseAction(string $actionName): ?FundingCaseAction;
+
+  /**
+   * @return array<string, FundingCaseAction>
+   *   Actions available to applicants for the funding case. Only relevant for
+   *   combined applications. Funding case types for non-combined application
+   *   can return an empty array.
+   */
+  public function getFundingCaseActions(): array;
+
   public function getResourcesItemType(string $name): ?ResourcesItemTypeInterface;
 
   /**
-   * @phpstan-return array<string, ResourcesItemTypeInterface>
+   * @return array<string, ResourcesItemTypeInterface>
    *   Mapping of name to ResourcesItemTypeInterface.
    */
   public function getResourcesItemTypes(): array;

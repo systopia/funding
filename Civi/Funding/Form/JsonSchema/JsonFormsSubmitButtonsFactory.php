@@ -21,41 +21,21 @@ namespace Civi\Funding\Form\JsonSchema;
 
 use Civi\RemoteTools\JsonForms\Control\JsonFormsSubmitButton;
 
-/**
- * @phpstan-type submitActionT array{label: string, confirm?: string|null}
- */
 final class JsonFormsSubmitButtonsFactory {
 
   /**
-   * @phpstan-param submitActionT $action
-   */
-  public static function createButton(string $actionName, array $action): JsonFormsSubmitButton {
-    return new JsonFormsSubmitButton(
-      '#/properties/_action',
-      $actionName,
-      $action['label'],
-      $action['confirm'] ?? NULL
-    );
-  }
-
-  /**
-   * @phpstan-param array<string, submitActionT> $actions
-   *   Key is the action name.
+   * phpcs:ignore Generic.Files.LineLength.TooLong
+   * @param array<\Civi\Funding\FundingCaseType\MetaData\ApplicationProcessAction>|array<\Civi\Funding\FundingCaseType\MetaData\FundingCaseAction> $actions
    *
-   * @phpstan-return list<JsonFormsSubmitButton>
+   * @return list<JsonFormsSubmitButton>
    */
   public static function createButtons(array $actions): array {
-    $buttons = [];
-    foreach ($actions as $name => $action) {
-      $buttons[] = new JsonFormsSubmitButton(
-        '#/properties/_action',
-        $name,
-        $action['label'],
-        $action['confirm'] ?? NULL
-      );
-    }
-
-    return $buttons;
+    return array_values(array_map(fn ($action) => new JsonFormsSubmitButton(
+      '#/properties/_action',
+      $action->getName(),
+      $action->getLabel(),
+      $action->getConfirmMessage()
+    ), $actions));
   }
 
 }
