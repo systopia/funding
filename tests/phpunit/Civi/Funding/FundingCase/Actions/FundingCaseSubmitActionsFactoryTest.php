@@ -64,11 +64,12 @@ final class FundingCaseSubmitActionsFactoryTest extends TestCase {
     $actionTest2 = new FundingCaseAction(['name' => 'test2', 'label' => 'Test2', 'priority' => 0]);
     $this->metaDataMock->addFundingCaseAction($actionTest2);
 
+    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
+
     $this->actionsDeterminerMock->expects(static::once())->method('getInitialActions')
-      ->with(['permission'])
+      ->with($fundingCaseType, ['permission'])
       ->willReturn(['test2', 'test1']);
 
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
     $submitActions = $this->submitActionsFactory->getInitialSubmitActions(['permission'], $fundingCaseType);
     // "test1" must be first
     static::assertSame([
@@ -78,11 +79,11 @@ final class FundingCaseSubmitActionsFactoryTest extends TestCase {
   }
 
   public function testGetInitialSubmitActionsUnknownAction(): void {
-    $this->actionsDeterminerMock->expects(static::once())->method('getInitialActions')
-      ->with(['permission'])
-      ->willReturn(['test']);
-
     $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
+
+    $this->actionsDeterminerMock->expects(static::once())->method('getInitialActions')
+      ->with($fundingCaseType, ['permission'])
+      ->willReturn(['test']);
     static::assertSame([], $this->submitActionsFactory->getInitialSubmitActions(['permission'], $fundingCaseType));
   }
 
@@ -96,9 +97,8 @@ final class FundingCaseSubmitActionsFactoryTest extends TestCase {
     $statusList = [23 => new FullApplicationProcessStatus('status', NULL, NULL)];
     $this->actionsDeterminerMock->expects(static::once())->method('getActions')
       ->with(
-        $fundingCaseBundle->getFundingCase()->getStatus(),
+        $fundingCaseBundle,
         $statusList,
-        $fundingCaseBundle->getFundingCase()->getPermissions()
       )
       ->willReturn(['test2', 'test1']);
 
@@ -118,9 +118,8 @@ final class FundingCaseSubmitActionsFactoryTest extends TestCase {
     $statusList = [23 => new FullApplicationProcessStatus('status', NULL, NULL)];
     $this->actionsDeterminerMock->expects(static::once())->method('getActions')
       ->with(
-        $fundingCaseBundle->getFundingCase()->getStatus(),
+        $fundingCaseBundle,
         $statusList,
-        $fundingCaseBundle->getFundingCase()->getPermissions()
       )
       ->willReturn(['test']);
 

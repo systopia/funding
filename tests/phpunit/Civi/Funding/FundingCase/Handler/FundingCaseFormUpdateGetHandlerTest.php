@@ -19,9 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase\Handler;
 
-use Civi\Funding\EntityFactory\FundingCaseFactory;
-use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
-use Civi\Funding\EntityFactory\FundingProgramFactory;
+use Civi\Funding\EntityFactory\FundingCaseBundleFactory;
 use Civi\Funding\Form\FundingCase\FundingCaseJsonSchemaFactoryInterface;
 use Civi\Funding\Form\FundingCase\FundingCaseUiSchemaFactoryInterface;
 use Civi\Funding\FundingCase\Command\FundingCaseFormDataGetCommand;
@@ -37,22 +35,13 @@ use PHPUnit\Framework\TestCase;
  */
 final class FundingCaseFormUpdateGetHandlerTest extends TestCase {
 
-  /**
-   * @var \Civi\Funding\FundingCase\Handler\FundingCaseFormDataGetHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $formDataGetHandlerMock;
+  private FundingCaseFormDataGetHandlerInterface&MockObject $formDataGetHandlerMock;
 
   private FundingCaseFormUpdateGetHandler $handler;
 
-  /**
-   * @var \Civi\Funding\Form\FundingCase\FundingCaseJsonSchemaFactoryInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $jsonSchemaFactoryMock;
+  private FundingCaseJsonSchemaFactoryInterface&MockObject $jsonSchemaFactoryMock;
 
-  /**
-   * @var \Civi\Funding\Form\FundingCase\FundingCaseUiSchemaFactoryInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $uiSchemaFactoryMock;
+  private FundingCaseUiSchemaFactoryInterface&MockObject $uiSchemaFactoryMock;
 
   protected function setUp(): void {
     parent::setUp();
@@ -68,21 +57,19 @@ final class FundingCaseFormUpdateGetHandlerTest extends TestCase {
 
   public function testHandle(): void {
     $contactId = 12;
-    $fundingProgram = FundingProgramFactory::createFundingProgram();
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
-    $fundingCase = FundingCaseFactory::createFundingCase();
-    $command = new FundingCaseFormUpdateGetCommand($contactId, $fundingProgram, $fundingCaseType, $fundingCase);
+    $fundingCaseBundle = FundingCaseBundleFactory::create();
+    $command = new FundingCaseFormUpdateGetCommand($contactId, $fundingCaseBundle);
 
     $jsonSchema = new JsonSchema([]);
     $this->formDataGetHandlerMock->method('handle')
-      ->with(new FundingCaseFormDataGetCommand($fundingProgram, $fundingCaseType, $fundingCase))
+      ->with(new FundingCaseFormDataGetCommand($fundingCaseBundle))
       ->willReturn(['foo' => 'bar']);
     $this->jsonSchemaFactoryMock->method('createJsonSchemaUpdate')
-      ->with($fundingProgram, $fundingCaseType, $fundingCase)
+      ->with($fundingCaseBundle)
       ->willReturn($jsonSchema);
     $uiSchema = new JsonFormsElement('test');
     $this->uiSchemaFactoryMock->method('createUiSchemaUpdate')
-      ->with($fundingProgram, $fundingCaseType, $fundingCase)
+      ->with($fundingCaseBundle)
       ->willReturn($uiSchema);
 
     $form = $this->handler->handle($command);

@@ -23,8 +23,6 @@ use Civi\Funding\Api4\Action\Remote\FundingCase\GetUpdateFormAction;
 use Civi\Funding\FundingCase\Command\FundingCaseFormUpdateGetCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\Handler\FundingCaseFormUpdateGetHandlerInterface;
-use Civi\Funding\FundingProgram\FundingCaseTypeManager;
-use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Webmozart\Assert\Assert;
 
@@ -36,20 +34,12 @@ final class GetUpdateFormActionHandler implements ActionHandlerInterface {
 
   private FundingCaseManager $fundingCaseManager;
 
-  private FundingCaseTypeManager $fundingCaseTypeManager;
-
-  private FundingProgramManager $fundingProgramManager;
-
   public function __construct(
     FundingCaseFormUpdateGetHandlerInterface $formUpdateGetHandler,
     FundingCaseManager $fundingCaseManager,
-    FundingCaseTypeManager $fundingCaseTypeManager,
-    FundingProgramManager $fundingProgramManager
   ) {
     $this->formUpdateGetHandler = $formUpdateGetHandler;
     $this->fundingCaseManager = $fundingCaseManager;
-    $this->fundingCaseTypeManager = $fundingCaseTypeManager;
-    $this->fundingProgramManager = $fundingProgramManager;
   }
 
   /**
@@ -62,24 +52,12 @@ final class GetUpdateFormActionHandler implements ActionHandlerInterface {
    * @throws \CRM_Core_Exception
    */
   public function getUpdateForm(GetUpdateFormAction $action): array {
-    $fundingCase = $this->fundingCaseManager->get($action->getFundingCaseId());
-    Assert::notNull($fundingCase, sprintf('Funding case with ID %d not found', $action->getFundingCaseId()));
-    $fundingProgram = $this->fundingProgramManager->get($fundingCase->getFundingProgramId());
-    Assert::notNull(
-      $fundingProgram,
-      sprintf('Funding program with ID %d not found', $fundingCase->getFundingProgramId())
-    );
-    $fundingCaseType = $this->fundingCaseTypeManager->get($fundingCase->getFundingCaseTypeId());
-    Assert::notNull($fundingCaseType, sprintf(
-      'Funding case type with ID %d not found',
-      $fundingCase->getFundingCaseTypeId(),
-    ));
+    $fundingCaseBundle = $this->fundingCaseManager->getBundle($action->getFundingCaseId());
+    Assert::notNull($fundingCaseBundle, sprintf('Funding case with ID %d not found', $action->getFundingCaseId()));
 
     $form = $this->formUpdateGetHandler->handle(new FundingCaseFormUpdateGetCommand(
       $action->getResolvedContactId(),
-      $fundingProgram,
-      $fundingCaseType,
-      $fundingCase,
+      $fundingCaseBundle,
     ));
 
     return [

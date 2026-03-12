@@ -4,9 +4,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase\Recipients;
 
 use Civi\Funding\Contact\PossibleRecipientsLoaderInterface;
-use Civi\Funding\Entity\FundingCaseEntity;
-use Civi\Funding\Entity\FundingCaseTypeEntity;
-use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 
 final class FallbackPossibleRecipientsForChangeLoader implements PossibleRecipientsForChangeLoaderInterface {
@@ -26,23 +24,19 @@ final class FallbackPossibleRecipientsForChangeLoader implements PossibleRecipie
   /**
    * @inheritDoc
    */
-  public function getPossibleRecipients(
-    FundingCaseEntity $fundingCase,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingProgramEntity $fundingProgram
-  ): array {
+  public function getPossibleRecipients(FundingCaseBundle $fundingCaseBundle): array {
     // In this fallback implementation we use the possible recipients loader
     // used when creating a new funding case. If we have no result with the
     // current users contact ID we use the funding case's creation contact ID.
     $contacts = $this->possibleRecipientsLoader->getPossibleRecipients(
       $this->requestContext->getContactId(),
-      $fundingProgram
+      $fundingCaseBundle->getFundingProgram()
     );
 
     return [] !== $contacts ? $contacts
       : $this->possibleRecipientsLoader->getPossibleRecipients(
-        $fundingCase->getCreationContactId(),
-        $fundingProgram
+        $fundingCaseBundle->getFundingCase()->getCreationContactId(),
+        $fundingCaseBundle->getFundingProgram()
       );
   }
 

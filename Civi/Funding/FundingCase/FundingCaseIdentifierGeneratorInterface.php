@@ -19,16 +19,10 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase;
 
-use Civi\Funding\Entity\FundingCaseEntity;
-use Civi\Funding\Entity\FundingCaseTypeEntity;
-use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\Entity\FundingCaseBundle;
 
 interface FundingCaseIdentifierGeneratorInterface {
 
-  public function generateIdentifier(
-    FundingCaseEntity $fundingCase,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingProgramEntity $fundingProgram
-  ): string;
+  public function generateIdentifier(FundingCaseBundle $fundingCaseBundle): string;
 
 }

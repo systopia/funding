@@ -20,9 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Form\Validation;
 
 use Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidationResult;
-use Civi\Funding\Entity\FundingCaseEntity;
-use Civi\Funding\Entity\FundingCaseTypeEntity;
-use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\Entity\FundingCaseBundle;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -41,17 +39,21 @@ final class ApplicationFormAddValidatorCollector implements ApplicationFormAddVa
   }
 
   public function validateAdd(
-    FundingCaseEntity $fundingCase,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingProgramEntity $fundingProgram,
+    FundingCaseBundle $fundingCaseBundle,
     ApplicationSchemaValidationResult $schemaValidationResult,
     bool $readOnly
   ): ApplicationFormValidationResult {
+    $fundingCaseType = $fundingCaseBundle->getFundingCaseType();
     if ($this->validators->has($fundingCaseType->getName())) {
       /** @var \Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormNewValidatorInterface $validator */
       $validator = $this->validators->get($fundingCaseType->getName());
 
-      return $validator->validateInitial($fundingCaseType, $fundingProgram, $schemaValidationResult, $readOnly);
+      return $validator->validateInitial(
+        $fundingCaseBundle->getFundingCaseType(),
+        $fundingCaseBundle->getFundingProgram(),
+        $schemaValidationResult,
+        $readOnly
+      );
     }
 
     return new ApplicationFormValidationResult(

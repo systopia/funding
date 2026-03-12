@@ -3,9 +3,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase\Recipients;
 
-use Civi\Funding\Entity\FundingCaseEntity;
-use Civi\Funding\Entity\FundingCaseTypeEntity;
-use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\Entity\FundingCaseBundle;
 use Psr\Container\ContainerInterface;
 
 final class PossibleRecipientsForChangeLoaderCollector implements PossibleRecipientsForChangeLoaderInterface {
@@ -29,16 +27,9 @@ final class PossibleRecipientsForChangeLoaderCollector implements PossibleRecipi
   /**
    * @inheritDoc
    */
-  public function getPossibleRecipients(
-    FundingCaseEntity $fundingCase,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingProgramEntity $fundingProgram
-  ): array {
-    return $this->getRecipientsLoader($fundingCaseType->getName())->getPossibleRecipients(
-      $fundingCase,
-      $fundingCaseType,
-      $fundingProgram
-    );
+  public function getPossibleRecipients(FundingCaseBundle $fundingCaseBundle): array {
+    return $this->getRecipientsLoader($fundingCaseBundle->getFundingCaseType()->getName())
+      ->getPossibleRecipients($fundingCaseBundle);
   }
 
   private function getRecipientsLoader(string $fundingCaseTypeName): PossibleRecipientsForChangeLoaderInterface {

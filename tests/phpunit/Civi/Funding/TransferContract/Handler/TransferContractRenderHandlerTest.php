@@ -107,9 +107,7 @@ final class TransferContractRenderHandlerTest extends TestCase {
     ]);
     return new TransferContractRenderCommand(
       [$applicationProcessBundle->getApplicationProcess()],
-      $applicationProcessBundle->getFundingCase(),
-      $applicationProcessBundle->getFundingCaseType(),
-      $applicationProcessBundle->getFundingProgram(),
+      $applicationProcessBundle,
     );
   }
 

@@ -19,36 +19,27 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\TransferContract\Command;
 
-use Civi\Funding\Entity\FundingCaseEntity;
-use Civi\Funding\Entity\FundingCaseTypeEntity;
-use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\Entity\FundingCaseBundle;
+use Civi\Funding\Entity\Traits\FundingCaseBundleTrait;
 
 final class TransferContractRenderCommand {
+
+  use FundingCaseBundleTrait;
 
   /**
    * @phpstan-var array<\Civi\Funding\Entity\ApplicationProcessEntity>
    */
   private array $eligibleApplicationProcesses;
 
-  private FundingCaseEntity $fundingCase;
-
-  private FundingCaseTypeEntity $fundingCaseType;
-
-  private FundingProgramEntity $fundingProgram;
-
   /**
    * @phpstan-param array<\Civi\Funding\Entity\ApplicationProcessEntity> $eligibleApplicationProcesses
    */
   public function __construct(
     array $eligibleApplicationProcesses,
-    FundingCaseEntity $fundingCase,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingProgramEntity $fundingProgram
+    FundingCaseBundle $fundingCaseBundle,
   ) {
     $this->eligibleApplicationProcesses = $eligibleApplicationProcesses;
-    $this->fundingCase = $fundingCase;
-    $this->fundingCaseType = $fundingCaseType;
-    $this->fundingProgram = $fundingProgram;
+    $this->fundingCaseBundle = $fundingCaseBundle;
   }
 
   /**
@@ -56,18 +47,6 @@ final class TransferContractRenderCommand {
    */
   public function getEligibleApplicationProcesses(): array {
     return $this->eligibleApplicationProcesses;
-  }
-
-  public function getFundingCase(): FundingCaseEntity {
-    return $this->fundingCase;
-  }
-
-  public function getFundingCaseType(): FundingCaseTypeEntity {
-    return $this->fundingCaseType;
-  }
-
-  public function getFundingProgram(): FundingProgramEntity {
-    return $this->fundingProgram;
   }
 
 }

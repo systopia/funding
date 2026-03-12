@@ -22,7 +22,7 @@ namespace Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\FundingCase\JsonSch
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\Contact\PossibleRecipientsLoaderInterface;
 use Civi\Funding\Entity\ApplicationProcessEntity;
-use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\FundingCase\FundingCaseJsonSchemaFactoryInterface;
@@ -52,20 +52,17 @@ final class KursCaseJsonSchemaFactory implements FundingCaseJsonSchemaFactoryInt
     $this->actionsDeterminer = $actionsDeterminer;
   }
 
-  public function createJsonSchemaUpdate(
-    FundingProgramEntity $fundingProgram,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingCaseEntity $fundingCase
-  ): JsonSchema {
-    $applicationProcesses = $this->applicationProcessManager->getByFundingCaseId($fundingCase->getId());
+  public function createJsonSchemaUpdate(FundingCaseBundle $fundingCaseBundle): JsonSchema {
+    $applicationProcesses = $this->applicationProcessManager->getByFundingCaseId(
+      $fundingCaseBundle->getFundingCase()->getId()
+    );
 
     $submitActions = $this->actionsDeterminer->getActions(
-      $fundingCase->getStatus(),
+      $fundingCaseBundle,
       array_map(
         fn (ApplicationProcessEntity $applicationProcess) => $applicationProcess->getFullStatus(),
         $applicationProcesses
       ),
-      $fundingCase->getPermissions()
     );
     if ([] === $submitActions) {
       // Enums must not be empty.
@@ -83,7 +80,10 @@ final class KursCaseJsonSchemaFactory implements FundingCaseJsonSchemaFactoryInt
     FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType
   ): JsonSchema {
-    $submitActions = $this->actionsDeterminer->getInitialActions($fundingProgram->getPermissions());
+    $submitActions = $this->actionsDeterminer->getInitialActions(
+      $fundingCaseType,
+      $fundingProgram->getPermissions()
+    );
     if ([] === $submitActions) {
       // Enums must not be empty.
       $submitActions = [NULL];

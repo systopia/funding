@@ -24,8 +24,6 @@ use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\FundingCase\Command\FundingCaseNotificationContactsSetCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\Handler\FundingCaseNotificationContactsSetHandlerInterface;
-use Civi\Funding\FundingProgram\FundingCaseTypeManager;
-use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
@@ -38,23 +36,15 @@ final class SetNotificationContactsActionHandler implements ActionHandlerInterfa
 
   private FundingCaseManager $fundingCaseManager;
 
-  private FundingCaseTypeManager $fundingCaseTypeManager;
-
-  private FundingProgramManager $fundingProgramManager;
-
   private FundingCaseNotificationContactsSetHandlerInterface $notificationContactsSetHandler;
 
   public function __construct(
     ApplicationProcessManager $applicationProcessManager,
     FundingCaseManager $fundingCaseManager,
-    FundingCaseTypeManager $fundingCaseTypeManager,
-    FundingProgramManager $fundingProgramManager,
     FundingCaseNotificationContactsSetHandlerInterface $notificationContactsSetHandler
   ) {
     $this->applicationProcessManager = $applicationProcessManager;
     $this->fundingCaseManager = $fundingCaseManager;
-    $this->fundingCaseTypeManager = $fundingCaseTypeManager;
-    $this->fundingProgramManager = $fundingProgramManager;
     $this->notificationContactsSetHandler = $notificationContactsSetHandler;
   }
 
@@ -66,19 +56,14 @@ final class SetNotificationContactsActionHandler implements ActionHandlerInterfa
   public function setNotificationContacts(SetNotificationContactsAction $action): array {
     Assert::notNull($action->getContactIds(), 'Parameter "contactIds" not set');
 
-    $fundingCase = $this->fundingCaseManager->get($action->getId());
-    Assert::notNull($fundingCase, E::ts('Funding case with ID "%1" not found', [1 => $action->getId()]));
-    $fundingCaseType = $this->fundingCaseTypeManager->get($fundingCase->getFundingCaseTypeId());
-    Assert::notNull($fundingCaseType);
-    $fundingProgram = $this->fundingProgramManager->get($fundingCase->getFundingProgramId());
-    Assert::notNull($fundingProgram);
+    $fundingCaseBundle = $this->fundingCaseManager->getBundle($action->getId());
+    Assert::notNull($fundingCaseBundle, E::ts('Funding case with ID "%1" not found', [1 => $action->getId()]));
+    $fundingCase = $fundingCaseBundle->getFundingCase();
 
     $this->notificationContactsSetHandler->handle(new FundingCaseNotificationContactsSetCommand(
-      $fundingCase,
+      $fundingCaseBundle,
       $action->getContactIds(),
       $this->applicationProcessManager->getStatusListByFundingCaseId($fundingCase->getId()),
-      $fundingCaseType,
-      $fundingProgram
     ));
 
     return $fundingCase->toArray();

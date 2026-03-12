@@ -50,16 +50,12 @@ final class FundingCaseRecipientContactSetHandler implements FundingCaseRecipien
    * @throws \CRM_Core_Exception
    */
   public function handle(FundingCaseRecipientContactSetCommand $command): void {
-    $fundingCase = $command->getFundingCase();
     $this->assertAuthorized($command);
 
-    $possibleRecipients = $this->possibleRecipientsLoader->getPossibleRecipients(
-      $fundingCase,
-      $command->getFundingCaseType(),
-      $command->getFundingProgram()
-    );
+    $possibleRecipients = $this->possibleRecipientsLoader->getPossibleRecipients($command->getFundingCaseBundle());
     Assert::keyExists($possibleRecipients, $command->getRecipientContactId(), 'Invalid recipient contact ID');
 
+    $fundingCase = $command->getFundingCase();
     $fundingCase->setRecipientContactId($command->getRecipientContactId());
     $this->fundingCaseManager->update($fundingCase);
   }
@@ -70,9 +66,8 @@ final class FundingCaseRecipientContactSetHandler implements FundingCaseRecipien
   private function assertAuthorized(FundingCaseRecipientContactSetCommand $command): void {
     if (!$this->actionsDeterminer->isActionAllowed(
       FundingCaseActions::SET_RECIPIENT_CONTACT,
-      $command->getFundingCase()->getStatus(),
+      $command->getFundingCaseBundle(),
       $command->getApplicationProcessStatusList(),
-      $command->getFundingCase()->getPermissions(),
     )) {
       throw new UnauthorizedException(E::ts('Changing the recipient contact of this funding case is not allowed.'));
     }

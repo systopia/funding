@@ -21,19 +21,13 @@ declare(strict_types = 1);
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
-use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\Funding\FundingProgram\FundingCaseTypeProgramRelationChecker;
 use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-$container->autowire(FundingProgramManager::class)
-  // Used in API action.
-  ->setPublic(TRUE);
+$container->autowire(FundingProgramManager::class);
 $container->autowire(FundingCaseTypeProgramRelationChecker::class)
-  // Used in API action.
-  ->setPublic(TRUE);
-$container->autowire(FundingCaseTypeManager::class)
   // Used in API action.
   ->setPublic(TRUE);
 

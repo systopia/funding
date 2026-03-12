@@ -20,9 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\Form\Validation;
 
 use Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidationResult;
-use Civi\Funding\Entity\FundingCaseEntity;
-use Civi\Funding\Entity\FundingCaseTypeEntity;
-use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\Entity\FundingCaseBundle;
 
 /**
  * Used when adding a new application to an existing funding case, i.e. for
@@ -39,9 +37,7 @@ interface ApplicationFormAddValidatorInterface {
   public const SERVICE_TAG = 'funding.application.form_add_validator';
 
   public function validateAdd(
-    FundingCaseEntity $fundingCase,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingProgramEntity $fundingProgram,
+    FundingCaseBundle $fundingCaseBundle,
     ApplicationSchemaValidationResult $schemaValidationResult,
     bool $readOnly
   ): ApplicationFormValidationResult;

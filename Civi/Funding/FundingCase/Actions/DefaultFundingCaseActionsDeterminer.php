@@ -23,6 +23,7 @@ use Civi\Funding\ApplicationProcess\ApplicationProcessPermissions;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
+use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions as Actions;
 use Civi\Funding\FundingCase\FundingCasePermissions;
 use Civi\Funding\FundingCase\FundingCaseStatus as Status;
@@ -92,12 +93,8 @@ final class DefaultFundingCaseActionsDeterminer extends FundingCaseActionsDeterm
     $this->clearingProcessManager = $clearingProcessManager;
   }
 
-  public function getActions(string $status, array $applicationProcessStatusList, array $permissions): array {
-    $actions = parent::getActions(
-      $status,
-      $applicationProcessStatusList,
-      $permissions
-    );
+  public function getActions(FundingCaseBundle $fundingCaseBundle, array $applicationProcessStatusList): array {
+    $actions = parent::getActions($fundingCaseBundle, $applicationProcessStatusList);
 
     $posApprove = array_search(Actions::APPROVE, $actions, TRUE);
     if (FALSE !== $posApprove && !$this->isApprovePossible($applicationProcessStatusList)) {

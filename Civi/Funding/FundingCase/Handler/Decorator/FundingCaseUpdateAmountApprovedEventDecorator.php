@@ -46,9 +46,7 @@ final class FundingCaseUpdateAmountApprovedEventDecorator implements FundingCase
     $this->handler->handle($command);
 
     if ($command->getFundingCase()->getAmountApproved() !== $amountBefore) {
-      $event = new FundingCaseAmountApprovedUpdatedEvent(
-        $command->getFundingCase(), $command->getFundingCaseType(), $command->getFundingProgram()
-      );
+      $event = new FundingCaseAmountApprovedUpdatedEvent($command->getFundingCaseBundle());
 
       $this->eventDispatcher->dispatch(FundingCaseAmountApprovedUpdatedEvent::class, $event);
     }

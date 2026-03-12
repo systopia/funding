@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\FundingCase;
 
-use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
@@ -44,17 +44,11 @@ abstract class AbstractFundingCaseValidator implements FundingCaseValidatorInter
    * @inheritDoc
    */
   public function validateUpdate(
-    FundingProgramEntity $fundingProgram,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingCaseEntity $fundingCase,
+    FundingCaseBundle $fundingCaseBundle,
     array $data,
     int $maxErrors = 1
   ): FundingCaseValidationResult {
-    $jsonSchema = $this->jsonSchemaFactory->createJsonSchemaUpdate(
-      $fundingProgram,
-      $fundingCaseType,
-      $fundingCase,
-    );
+    $jsonSchema = $this->jsonSchemaFactory->createJsonSchemaUpdate($fundingCaseBundle);
     $jsonSchemaValidationResult = $this->jsonSchemaValidator->validate($jsonSchema, $data, $maxErrors);
     if (!$jsonSchemaValidationResult->isValid()) {
       return FundingCaseValidationResult::newInvalid(
@@ -65,9 +59,7 @@ abstract class AbstractFundingCaseValidator implements FundingCaseValidatorInter
     }
 
     return $this->getValidationResultExisting(
-      $fundingProgram,
-      $fundingCaseType,
-      $fundingCase,
+      $fundingCaseBundle,
       $data,
       $jsonSchema,
       $jsonSchemaValidationResult,
@@ -115,9 +107,7 @@ abstract class AbstractFundingCaseValidator implements FundingCaseValidatorInter
    * @phpstan-param array<string, mixed> $formData JSON serializable.
    */
   abstract protected function getValidationResultExisting(
-    FundingProgramEntity $fundingProgram,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingCaseEntity $fundingCase,
+    FundingCaseBundle $fundingCaseBundle,
     array $formData,
     JsonSchema $jsonSchema,
     ValidationResultInterface $jsonSchemaValidationResult,

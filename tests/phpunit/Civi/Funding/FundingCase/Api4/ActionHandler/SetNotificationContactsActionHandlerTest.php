@@ -22,14 +22,11 @@ namespace Civi\Funding\FundingCase\Api4\ActionHandler;
 use Civi\Funding\Api4\Action\FundingCase\SetNotificationContactsAction;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
+use Civi\Funding\EntityFactory\FundingCaseBundleFactory;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
-use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
-use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\FundingCase\Command\FundingCaseNotificationContactsSetCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\Handler\FundingCaseNotificationContactsSetHandlerInterface;
-use Civi\Funding\FundingProgram\FundingCaseTypeManager;
-use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\Funding\Traits\CreateMockTrait;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -41,32 +38,13 @@ final class SetNotificationContactsActionHandlerTest extends TestCase {
 
   use CreateMockTrait;
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\ApplicationProcessManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $applicationProcessManagerMock;
+  private ApplicationProcessManager&MockObject $applicationProcessManagerMock;
 
   private SetNotificationContactsActionHandler $actionHandler;
 
-  /**
-   * @var \Civi\Funding\FundingCase\FundingCaseManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $fundingCaseManagerMock;
+  private FundingCaseManager&MockObject $fundingCaseManagerMock;
 
-  /**
-   * @var \Civi\Funding\FundingProgram\FundingCaseTypeManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $fundingCaseTypeManagerMock;
-
-  /**
-   * @var \Civi\Funding\FundingProgram\FundingProgramManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $fundingProgramManagerMock;
-
-  /**
-   * @var \Civi\Funding\FundingCase\Handler\FundingCaseNotificationContactsSetHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $notificationContactsSetHandlerMock;
+  private FundingCaseNotificationContactsSetHandlerInterface&MockObject $notificationContactsSetHandlerMock;
 
   protected function setUp(): void {
     parent::setUp();
@@ -75,15 +53,11 @@ final class SetNotificationContactsActionHandlerTest extends TestCase {
       FundingCaseNotificationContactsSetHandlerInterface::class
     );
     $this->fundingCaseManagerMock = $this->createMock(FundingCaseManager::class);
-    $this->fundingCaseTypeManagerMock = $this->createMock(FundingCaseTypeManager::class);
-    $this->fundingProgramManagerMock = $this->createMock(FundingProgramManager::class);
 
     $this->actionHandler = new SetNotificationContactsActionHandler(
       $this->applicationProcessManagerMock,
       $this->fundingCaseManagerMock,
-      $this->fundingCaseTypeManagerMock,
-      $this->fundingProgramManagerMock,
-      $this->notificationContactsSetHandlerMock
+      $this->notificationContactsSetHandlerMock,
     );
   }
 
@@ -92,20 +66,11 @@ final class SetNotificationContactsActionHandlerTest extends TestCase {
     $action->setId(FundingCaseFactory::DEFAULT_ID)
       ->setContactIds([1, 2, 3, 4]);
 
-    $fundingCase = FundingCaseFactory::createFundingCase();
-    $this->fundingCaseManagerMock->method('get')
+    $fundingCaseBundle = FundingCaseBundleFactory::create();
+    $fundingCase = $fundingCaseBundle->getFundingCase();
+    $this->fundingCaseManagerMock->method('getBundle')
       ->with($fundingCase->getId())
-      ->willReturn($fundingCase);
-
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
-    $this->fundingCaseTypeManagerMock->method('get')
-      ->with($fundingCase->getFundingCaseTypeId())
-      ->willReturn($fundingCaseType);
-
-    $fundingProgram = FundingProgramFactory::createFundingProgram();
-    $this->fundingProgramManagerMock->method('get')
-      ->with($fundingCase->getFundingProgramId())
-      ->willReturn($fundingProgram);
+      ->willReturn($fundingCaseBundle);
 
     $statusList = [22 => new FullApplicationProcessStatus('new', FALSE, FALSE)];
     $this->applicationProcessManagerMock->method('getStatusListByFundingCaseId')
@@ -114,11 +79,9 @@ final class SetNotificationContactsActionHandlerTest extends TestCase {
 
     $this->notificationContactsSetHandlerMock->expects(static::once())->method('handle')
       ->with(new FundingCaseNotificationContactsSetCommand(
-        $fundingCase,
+        $fundingCaseBundle,
         [1, 2, 3, 4],
         $statusList,
-        $fundingCaseType,
-        $fundingProgram
       ));
 
     static::assertEquals($fundingCase->toArray(), $this->actionHandler->setNotificationContacts($action));

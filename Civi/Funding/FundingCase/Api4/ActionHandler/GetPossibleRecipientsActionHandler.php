@@ -22,8 +22,6 @@ namespace Civi\Funding\FundingCase\Api4\ActionHandler;
 use Civi\Funding\Api4\Action\FundingCase\GetPossibleRecipientsAction;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\Recipients\PossibleRecipientsForChangeLoaderInterface;
-use Civi\Funding\FundingProgram\FundingCaseTypeManager;
-use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
@@ -34,21 +32,13 @@ final class GetPossibleRecipientsActionHandler implements ActionHandlerInterface
 
   private FundingCaseManager $fundingCaseManager;
 
-  private FundingCaseTypeManager $fundingCaseTypeManager;
-
-  private FundingProgramManager $fundingProgramManager;
-
   private PossibleRecipientsForChangeLoaderInterface $possibleRecipientsLoader;
 
   public function __construct(
     FundingCaseManager $fundingCaseManager,
-    FundingCaseTypeManager $fundingCaseTypeManager,
-    FundingProgramManager $fundingProgramManager,
     PossibleRecipientsForChangeLoaderInterface $possibleRecipientsLoader
   ) {
     $this->fundingCaseManager = $fundingCaseManager;
-    $this->fundingCaseTypeManager = $fundingCaseTypeManager;
-    $this->fundingProgramManager = $fundingProgramManager;
     $this->possibleRecipientsLoader = $possibleRecipientsLoader;
   }
 
@@ -58,18 +48,10 @@ final class GetPossibleRecipientsActionHandler implements ActionHandlerInterface
    * @phpstan-return list<array{id: int, name: string}>
    */
   public function getPossibleRecipients(GetPossibleRecipientsAction $action): array {
-    $fundingCase = $this->fundingCaseManager->get($action->getId());
-    Assert::notNull($fundingCase, E::ts('Funding case with ID "%1" not found', [1 => $action->getId()]));
-    $fundingCaseType = $this->fundingCaseTypeManager->get($fundingCase->getFundingCaseTypeId());
-    Assert::notNull($fundingCaseType);
-    $fundingProgram = $this->fundingProgramManager->get($fundingCase->getFundingProgramId());
-    Assert::notNull($fundingProgram);
+    $fundingCaseBundle = $this->fundingCaseManager->getBundle($action->getId());
+    Assert::notNull($fundingCaseBundle, E::ts('Funding case with ID "%1" not found', [1 => $action->getId()]));
 
-    $possibleRecipients = $this->possibleRecipientsLoader->getPossibleRecipients(
-      $fundingCase,
-      $fundingCaseType,
-      $fundingProgram
-    );
+    $possibleRecipients = $this->possibleRecipientsLoader->getPossibleRecipients($fundingCaseBundle);
     $result = [];
     foreach ($possibleRecipients as $id => $name) {
       $result[] = [

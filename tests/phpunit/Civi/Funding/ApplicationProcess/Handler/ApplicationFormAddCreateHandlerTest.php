@@ -42,9 +42,6 @@ final class ApplicationFormAddCreateHandlerTest extends TestCase {
 
   private FormTranslatorInterface&MockObject $formTranslatorMock;
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddCreateHandler
-   */
   private ApplicationFormAddCreateHandler $handler;
 
   private ApplicationJsonSchemaCreateHelper&MockObject $jsonSchemaCreateHelperMock;
@@ -74,14 +71,13 @@ final class ApplicationFormAddCreateHandlerTest extends TestCase {
   public function testHandle(): void {
     $contactId = 12;
     $fundingCaseBundle = FundingCaseBundleFactory::create();
-    $fundingProgram = $fundingCaseBundle->getFundingProgram();
     $fundingCaseType = $fundingCaseBundle->getFundingCaseType();
     $fundingCase = $fundingCaseBundle->getFundingCase();
     $command = new ApplicationFormAddCreateCommand($contactId, $fundingCaseBundle);
 
     $jsonSchema = new JsonSchema([]);
     $this->jsonSchemaFactoryMock->method('createJsonSchemaAdd')
-      ->with($fundingProgram, $fundingCaseType, $fundingCase)
+      ->with($fundingCaseBundle)
       ->willReturn($jsonSchema);
     $uiSchema = new JsonFormsGroup('test', []);
 
@@ -89,7 +85,7 @@ final class ApplicationFormAddCreateHandlerTest extends TestCase {
       ->with($jsonSchema, $fundingCaseType, $fundingCase->getPermissions());
 
     $this->uiSchemaFactoryMock->method('createUiSchemaAdd')
-      ->with($fundingProgram, $fundingCaseType, $fundingCase)
+      ->with($fundingCaseBundle)
       ->willReturn($uiSchema);
 
     $this->submitActionsFactoryMock->expects(self::once())->method('getInitialSubmitActions')

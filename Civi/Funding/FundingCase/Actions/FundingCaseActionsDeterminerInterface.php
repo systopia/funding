@@ -19,6 +19,9 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase\Actions;
 
+use Civi\Funding\Entity\FundingCaseBundle;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
+
 interface FundingCaseActionsDeterminerInterface {
 
   public const SERVICE_TAG = 'funding.case.actions_determiner';
@@ -29,44 +32,26 @@ interface FundingCaseActionsDeterminerInterface {
   public static function getSupportedFundingCaseTypes(): array;
 
   /**
-   * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $applicationProcessStatusList
-   * @phpstan-param array<string> $permissions
+   * @param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $applicationProcessStatusList
    *
-   * @phpstan-return list<string>
+   * @return list<string>
    */
-  public function getActions(string $status, array $applicationProcessStatusList, array $permissions): array;
+  public function getActions(FundingCaseBundle $fundingCaseBundle, array $applicationProcessStatusList): array;
 
   /**
-   * @phpstan-param array<string> $permissions
+   * @param list<string> $permissions
    *
-   * @phpstan-return list<string>
+   * @return list<string>
    */
-  public function getInitialActions(array $permissions): array;
+  public function getInitialActions(FundingCaseTypeEntity $fundingCaseType, array $permissions): array;
 
   /**
-   * @phpstan-param array<string> $permissions
-   * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $applicationProcessStatusList
+   * @param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $applicationProcessStatusList
    */
   public function isActionAllowed(
     string $action,
-    string $status,
+    FundingCaseBundle $fundingCaseBundle,
     array $applicationProcessStatusList,
-    array $permissions
-  ): bool;
-
-  /**
-   * @phpstan-param array<string> $actions
-   * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $applicationProcessStatusList
-   * @phpstan-param array<string> $permissions
-   *
-   * @return bool
-   *   true if one of the specified actions is allowed.
-   */
-  public function isAnyActionAllowed(
-    array $actions,
-    string $status,
-    array $applicationProcessStatusList,
-    array $permissions
   ): bool;
 
 }

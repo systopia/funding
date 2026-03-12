@@ -19,9 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase\Handler;
 
-use Civi\Funding\EntityFactory\FundingCaseFactory;
-use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
-use Civi\Funding\EntityFactory\FundingProgramFactory;
+use Civi\Funding\EntityFactory\FundingCaseBundleFactory;
 use Civi\Funding\Form\FundingCase\FundingCaseValidationResult;
 use Civi\Funding\Form\FundingCase\FundingCaseValidatorInterface;
 use Civi\Funding\FundingCase\Command\FundingCaseFormUpdateValidateCommand;
@@ -38,10 +36,7 @@ final class FundingCaseFormUpdateValidateHandlerTest extends TestCase {
 
   private FundingCaseFormUpdateValidateHandler $handler;
 
-  /**
-   * @var \Civi\Funding\Form\FundingCase\FundingCaseValidatorInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $validatorMock;
+  private FundingCaseValidatorInterface&MockObject $validatorMock;
 
   protected function setUp(): void {
     parent::setUp();
@@ -50,10 +45,7 @@ final class FundingCaseFormUpdateValidateHandlerTest extends TestCase {
   }
 
   public function testHandle(): void {
-    $contactId = 1;
-    $fundingProgram = FundingProgramFactory::createFundingProgram();
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
-    $fundingCase = FundingCaseFactory::createFundingCase();
+    $fundingCaseBundle = FundingCaseBundleFactory::create();
 
     $data = ['foo' => 'bar'];
     $validatedData = new ValidatedFundingCaseDataMock([]);
@@ -61,13 +53,11 @@ final class FundingCaseFormUpdateValidateHandlerTest extends TestCase {
     $validationResult = FundingCaseValidationResult::newInvalid($errorMessages, $validatedData);
 
     $this->validatorMock->expects(static::once())->method('validateUpdate')
-      ->with($fundingProgram, $fundingCaseType, $fundingCase, $data, 20)
+      ->with($fundingCaseBundle, $data, 20)
       ->willReturn($validationResult);
 
     $command = new FundingCaseFormUpdateValidateCommand(
-      $fundingProgram,
-      $fundingCaseType,
-      $fundingCase,
+      $fundingCaseBundle,
       $data,
       20,
     );

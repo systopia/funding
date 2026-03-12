@@ -94,9 +94,8 @@ final class FundingCaseRejectHandler implements FundingCaseRejectHandlerInterfac
   private function assertAuthorized(FundingCaseRejectCommand $command): void {
     if (!$this->actionsDeterminer->isActionAllowed(
       FundingCaseActions::REJECT,
-      $command->getFundingCase()->getStatus(),
+      $command->getFundingCaseBundle(),
       $command->getApplicationProcessStatusList(),
-      $command->getFundingCase()->getPermissions(),
     )) {
       throw new UnauthorizedException(sprintf(
         'Rejecting funding case "%s" is not allowed.',

@@ -23,10 +23,7 @@ use Civi\Funding\ActivityTypeIds;
 use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormCommentPersistCommand;
 use Civi\Funding\Entity\ActivityEntity;
-use Civi\Funding\EntityFactory\ApplicationProcessFactory;
-use Civi\Funding\EntityFactory\FundingCaseFactory;
-use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
-use Civi\Funding\EntityFactory\FundingProgramFactory;
+use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -36,10 +33,7 @@ use PHPUnit\Framework\TestCase;
  */
 final class ApplicationFormCommentPersistHandlerTest extends TestCase {
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $activityManagerMock;
+  private ApplicationProcessActivityManager&MockObject $activityManagerMock;
 
   private ApplicationFormCommentPersistHandler $handler;
 
@@ -52,10 +46,7 @@ final class ApplicationFormCommentPersistHandlerTest extends TestCase {
   public function testHandleInternal(): void {
     $command = new ApplicationFormCommentPersistCommand(
       1,
-      ApplicationProcessFactory::createApplicationProcess(),
-      FundingCaseFactory::createFundingCase(),
-      FundingCaseTypeFactory::createFundingCaseType(),
-      FundingProgramFactory::createFundingProgram(),
+      ApplicationProcessBundleFactory::createApplicationProcessBundle(),
       new ValidatedApplicationDataMock([], ['comment' => ['text' => "Test >\ncomment", 'type' => 'internal']]),
     );
 
@@ -82,10 +73,7 @@ final class ApplicationFormCommentPersistHandlerTest extends TestCase {
   public function testHandleExternal(): void {
     $command = new ApplicationFormCommentPersistCommand(
       1,
-      ApplicationProcessFactory::createApplicationProcess(),
-      FundingCaseFactory::createFundingCase(),
-      FundingCaseTypeFactory::createFundingCaseType(),
-      FundingProgramFactory::createFundingProgram(),
+      ApplicationProcessBundleFactory::createApplicationProcessBundle(),
       new ValidatedApplicationDataMock([], ['comment' => ['text' => "Test >\ncomment", 'type' => 'external']]),
     );
 

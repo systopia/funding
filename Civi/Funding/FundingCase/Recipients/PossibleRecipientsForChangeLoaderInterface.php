@@ -3,9 +3,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase\Recipients;
 
-use Civi\Funding\Entity\FundingCaseEntity;
-use Civi\Funding\Entity\FundingCaseTypeEntity;
-use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\Entity\FundingCaseBundle;
 
 /**
  * Loads the possible recipients when the recipient of an existing funding case
@@ -19,10 +17,6 @@ interface PossibleRecipientsForChangeLoaderInterface {
    * @phpstan-return array<int, string>
    *   Contact ID mapped to display name.
    */
-  public function getPossibleRecipients(
-    FundingCaseEntity $fundingCase,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingProgramEntity $fundingProgram
-  ): array;
+  public function getPossibleRecipients(FundingCaseBundle $fundingCaseBundle): array;
 
 }

@@ -57,9 +57,8 @@ final class FundingCaseNotificationContactsSetHandler implements FundingCaseNoti
   private function assertAuthorized(FundingCaseNotificationContactsSetCommand $command): void {
     if (!$this->actionsDeterminer->isActionAllowed(
       FundingCaseActions::SET_NOTIFICATION_CONTACTS,
-      $command->getFundingCase()->getStatus(),
+      $command->getFundingCaseBundle(),
       $command->getApplicationProcessStatusList(),
-      $command->getFundingCase()->getPermissions(),
     )) {
       throw new UnauthorizedException(E::ts('Changing the notification contacts of this funding case is not allowed.'));
     }

@@ -20,8 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase\Handler;
 
 use Civi\Funding\Entity\FullApplicationProcessStatus;
-use Civi\Funding\EntityFactory\FundingCaseFactory;
-use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
+use Civi\Funding\EntityFactory\FundingCaseBundleFactory;
 use Civi\Funding\FundingCase\Command\FundingCasePossibleActionsGetCommand;
 use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -33,10 +32,7 @@ use PHPUnit\Framework\TestCase;
  */
 final class FundingCasePossibleActionsGetHandlerTest extends TestCase {
 
-  /**
-   * @var \Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $actionsDeterminerMock;
+  private FundingCaseActionsDeterminerInterface&MockObject $actionsDeterminerMock;
 
   private FundingCasePossibleActionsGetHandler $handler;
 
@@ -50,22 +46,19 @@ final class FundingCasePossibleActionsGetHandlerTest extends TestCase {
 
   public function testHandle(): void {
     $command = $this->createCommand();
-    $fundingCase = $command->getFundingCase();
     $this->actionsDeterminerMock->method('getActions')
-      ->with($fundingCase->getStatus(), $command->getApplicationProcessStatusList(), $fundingCase->getPermissions())
+      ->with($command->getFundingCaseBundle(), $command->getApplicationProcessStatusList())
       ->willReturn(['permitted_action']);
 
     static::assertSame(['permitted_action'], $this->handler->handle($command));
   }
 
   private function createCommand(): FundingCasePossibleActionsGetCommand {
-    $fundingCase = FundingCaseFactory::createFundingCase();
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
+    $fundingCaseBundle = FundingCaseBundleFactory::create();
 
     return new FundingCasePossibleActionsGetCommand(
-      $fundingCase,
+      $fundingCaseBundle,
       [22 => new FullApplicationProcessStatus('eligible', TRUE, TRUE)],
-      $fundingCaseType
     );
   }
 

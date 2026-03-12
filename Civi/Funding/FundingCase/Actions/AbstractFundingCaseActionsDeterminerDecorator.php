@@ -19,6 +19,9 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase\Actions;
 
+use Civi\Funding\Entity\FundingCaseBundle;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
+
 /**
  * @phpstan-type statusPermissionsActionMapT array<string|null, array<string, list<string>>>
  *
@@ -35,15 +38,15 @@ abstract class AbstractFundingCaseActionsDeterminerDecorator extends AbstractFun
   /**
    * @inheritDoc
    */
-  public function getActions(string $status, array $applicationProcessStatusList, array $permissions): array {
-    return $this->actionsDeterminer->getActions($status, $applicationProcessStatusList, $permissions);
+  public function getActions(FundingCaseBundle $fundingCaseBundle, array $applicationProcessStatusList): array {
+    return $this->actionsDeterminer->getActions($fundingCaseBundle, $applicationProcessStatusList);
   }
 
   /**
    * @inheritDoc
    */
-  public function getInitialActions(array $permissions): array {
-    return $this->actionsDeterminer->getInitialActions($permissions);
+  public function getInitialActions(FundingCaseTypeEntity $fundingCaseType, array $permissions): array {
+    return $this->actionsDeterminer->getInitialActions($fundingCaseType, $permissions);
   }
 
 }

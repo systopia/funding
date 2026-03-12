@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\Application\JsonSchema;
 
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
-use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\Application\CombinedApplicationJsonSchemaFactoryInterface;
@@ -49,11 +49,9 @@ final class KursApplicationJsonSchemaFactory implements CombinedApplicationJsonS
   /**
    * @inheritDoc
    */
-  public function createJsonSchemaAdd(
-    FundingProgramEntity $fundingProgram,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingCaseEntity $fundingCase
-  ): JsonSchema {
+  public function createJsonSchemaAdd(FundingCaseBundle $fundingCaseBundle): JsonSchema {
+    $fundingProgram = $fundingCaseBundle->getFundingProgram();
+
     return new KursApplicationJsonSchema(
       $fundingProgram->getRequestsStartDate(),
       $fundingProgram->getRequestsEndDate(),

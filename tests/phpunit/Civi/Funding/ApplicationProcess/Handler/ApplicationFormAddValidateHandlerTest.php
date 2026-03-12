@@ -38,22 +38,13 @@ use PHPUnit\Framework\TestCase;
  */
 final class ApplicationFormAddValidateHandlerTest extends TestCase {
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddCreateHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $formCreateHandlerMock;
+  private ApplicationFormAddCreateHandlerInterface&MockObject $formCreateHandlerMock;
 
   private ApplicationFormAddValidateHandler $handler;
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormAddValidatorInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $formValidatorMock;
+  private ApplicationFormAddValidatorInterface&MockObject $formValidatorMock;
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidatorInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $jsonSchemaValidatorMock;
+  private ApplicationSchemaValidatorInterface&MockObject $jsonSchemaValidatorMock;
 
   protected function setUp(): void {
     parent::setUp();
@@ -70,9 +61,6 @@ final class ApplicationFormAddValidateHandlerTest extends TestCase {
   public function testHandleValid(): void {
     $contactId = 1;
     $fundingCaseBundle = FundingCaseBundleFactory::create();
-    $fundingProgram = $fundingCaseBundle->getFundingProgram();
-    $fundingCaseType = $fundingCaseBundle->getFundingCaseType();
-    $fundingCase = $fundingCaseBundle->getFundingCase();
 
     $data = ['_action' => 'save'];
     $validationResult = ApplicationFormValidationResultFactory::createValid();
@@ -88,7 +76,7 @@ final class ApplicationFormAddValidateHandlerTest extends TestCase {
       ->willReturn($schemaValidationResult);
 
     $this->formValidatorMock->expects(static::once())->method('validateAdd')
-      ->with($fundingCase, $fundingCaseType, $fundingProgram, $schemaValidationResult, FALSE)
+      ->with($fundingCaseBundle, $schemaValidationResult, FALSE)
       ->willReturn($validationResult);
 
     $command = new ApplicationFormAddValidateCommand($contactId, $fundingCaseBundle, $data);

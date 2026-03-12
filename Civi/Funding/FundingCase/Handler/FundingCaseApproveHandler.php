@@ -65,11 +65,7 @@ final class FundingCaseApproveHandler implements FundingCaseApproveHandlerInterf
 
     $fundingCase->setAmountApproved($command->getAmount());
 
-    $this->transferContractCreator->createTransferContract(
-      $fundingCase,
-      $command->getFundingCaseType(),
-      $command->getFundingProgram(),
-    );
+    $this->transferContractCreator->createTransferContract($command->getFundingCaseBundle());
 
     $fundingCase->setStatus($this->statusDeterminer->getStatus(
       $fundingCase->getStatus(),
@@ -85,9 +81,8 @@ final class FundingCaseApproveHandler implements FundingCaseApproveHandlerInterf
   private function assertAuthorized(FundingCaseApproveCommand $command): void {
     if (!$this->actionsDeterminer->isActionAllowed(
       FundingCaseActions::APPROVE,
-      $command->getFundingCase()->getStatus(),
+      $command->getFundingCaseBundle(),
       $command->getApplicationProcessStatusList(),
-      $command->getFundingCase()->getPermissions(),
     )) {
       throw new UnauthorizedException(E::ts('Approving this funding case is not allowed.'));
     }

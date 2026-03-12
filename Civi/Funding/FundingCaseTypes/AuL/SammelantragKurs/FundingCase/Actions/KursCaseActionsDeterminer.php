@@ -21,6 +21,8 @@ namespace Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\FundingCase\Actions
 
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ClearingProcess\ClearingProcessManager;
+use Civi\Funding\Entity\FundingCaseBundle;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\FundingCase\Actions\AbstractFundingCaseActionsDeterminerDecorator;
 use Civi\Funding\FundingCase\Actions\DefaultFundingCaseActionsDeterminer;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions;
@@ -61,11 +63,7 @@ final class KursCaseActionsDeterminer extends AbstractFundingCaseActionsDetermin
   /**
    * @inheritDoc
    */
-  public function getActions(
-    string $status,
-    array $applicationProcessStatusList,
-    array $permissions
-  ): array {
+  public function getActions(FundingCaseBundle $fundingCaseBundle, array $applicationProcessStatusList): array {
     $actions = [];
 
     foreach ($applicationProcessStatusList as $id => $applicationProcessStatus) {
@@ -91,10 +89,12 @@ final class KursCaseActionsDeterminer extends AbstractFundingCaseActionsDetermin
       }
     }
 
-    if ($this->isActionAllowedForAllApplications('delete', $applicationProcessStatusList, $permissions)) {
+    $status = $fundingCaseBundle->getFundingCase()->getStatus();
+    $permissions = $fundingCaseBundle->getFundingCase()->getPermissions();
+    if ($this->isActionAllowedForAllApplications('delete', $applicationProcessStatusList)) {
       $actions[] = 'delete';
     }
-    elseif ($this->isActionAllowedForAllApplications('withdraw', $applicationProcessStatusList, $permissions)) {
+    elseif ($this->isActionAllowedForAllApplications('withdraw', $applicationProcessStatusList)) {
       $actions[] = 'withdraw';
     }
 
@@ -104,14 +104,14 @@ final class KursCaseActionsDeterminer extends AbstractFundingCaseActionsDetermin
 
     return array_values(array_unique(array_merge(
       $actions,
-      parent::getActions($status, $applicationProcessStatusList, $permissions)
+      parent::getActions($fundingCaseBundle, $applicationProcessStatusList)
     )));
   }
 
   /**
    * @inheritDoc
    */
-  public function getInitialActions(array $permissions): array {
+  public function getInitialActions(FundingCaseTypeEntity $fundingCaseType, array $permissions): array {
     if (in_array('application_create', $permissions, TRUE)) {
       return ['save'];
     }
@@ -121,12 +121,10 @@ final class KursCaseActionsDeterminer extends AbstractFundingCaseActionsDetermin
 
   /**
    * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $applicationProcessStatusList
-   * @phpstan-param array<string> $permissions
    */
   private function isActionAllowedForAllApplications(
     string $action,
-    array $applicationProcessStatusList,
-    array $permissions
+    array $applicationProcessStatusList
   ): bool {
     foreach ($applicationProcessStatusList as $id => $applicationProcessStatus) {
       $curStatusList = $applicationProcessStatusList;

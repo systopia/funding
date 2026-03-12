@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Mock\FundingCaseType\Application\JsonSchema;
 
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
-use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\Application\CombinedApplicationJsonSchemaFactoryInterface;
@@ -37,11 +37,7 @@ class TestJsonSchemaFactory implements CombinedApplicationJsonSchemaFactoryInter
   /**
    * @inheritDoc
    */
-  public function createJsonSchemaAdd(
-    FundingProgramEntity $fundingProgram,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingCaseEntity $fundingCase
-  ): JsonSchema {
+  public function createJsonSchemaAdd(FundingCaseBundle $fundingCaseBundle): JsonSchema {
     return new TestJsonSchema(FALSE);
   }
 

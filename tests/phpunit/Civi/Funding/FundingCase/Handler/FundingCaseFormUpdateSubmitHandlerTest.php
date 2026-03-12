@@ -19,9 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase\Handler;
 
-use Civi\Funding\EntityFactory\FundingCaseFactory;
-use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
-use Civi\Funding\EntityFactory\FundingProgramFactory;
+use Civi\Funding\EntityFactory\FundingCaseBundleFactory;
 use Civi\Funding\Form\FundingCase\FundingCaseValidationResult;
 use Civi\Funding\Form\FundingCase\ValidatedFundingCaseDataInvalid;
 use Civi\Funding\FundingCase\Command\FundingCaseFormUpdateSubmitCommand;
@@ -40,27 +38,15 @@ use PHPUnit\Framework\TestCase;
  */
 final class FundingCaseFormUpdateSubmitHandlerTest extends TestCase {
 
-  /**
-   * @var \Civi\Funding\FundingCase\Handler\Helper\ApplicationAllowedActionApplier&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $applicationAllowedActionApplierMock;
+  private ApplicationAllowedActionApplier&MockObject $applicationAllowedActionApplierMock;
 
-  /**
-   * @var \Civi\Funding\FundingCase\FundingCaseManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $fundingCaseManagerMock;
+  private FundingCaseManager&MockObject $fundingCaseManagerMock;
 
   private FundingCaseFormUpdateSubmitHandler $handler;
 
-  /**
-   * @var \Civi\Funding\FundingCase\StatusDeterminer\FundingCaseStatusDeterminerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $statusDeterminerMock;
+  private FundingCaseStatusDeterminerInterface&MockObject $statusDeterminerMock;
 
-  /**
-   * @var \Civi\Funding\FundingCase\Handler\FundingCaseFormUpdateValidateHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $validateHandlerMock;
+  private FundingCaseFormUpdateValidateHandlerInterface&MockObject $validateHandlerMock;
 
   protected function setUp(): void {
     parent::setUp();
@@ -87,9 +73,7 @@ final class FundingCaseFormUpdateSubmitHandlerTest extends TestCase {
     ]);
     $validationResult = FundingCaseValidationResult::newValid($validatedData);
     $this->validateHandlerMock->method('handle')->with(new FundingCaseFormUpdateValidateCommand(
-      $command->getFundingProgram(),
-      $command->getFundingCaseType(),
-      $command->getFundingCase(),
+      $command->getFundingCaseBundle(),
       $command->getData(),
     ))->willReturn($validationResult);
 
@@ -118,9 +102,7 @@ final class FundingCaseFormUpdateSubmitHandlerTest extends TestCase {
     $errorMessages = ['/field' => ['error']];
     $validationResult = FundingCaseValidationResult::newInvalid($errorMessages, $validatedData);
     $this->validateHandlerMock->method('handle')->with(new FundingCaseFormUpdateValidateCommand(
-      $command->getFundingProgram(),
-      $command->getFundingCaseType(),
-      $command->getFundingCase(),
+      $command->getFundingCaseBundle(),
       $command->getData(),
     ))->willReturn($validationResult);
 
@@ -139,9 +121,7 @@ final class FundingCaseFormUpdateSubmitHandlerTest extends TestCase {
   private function createCommand(): FundingCaseFormUpdateSubmitCommand {
     return new FundingCaseFormUpdateSubmitCommand(
       1,
-      FundingProgramFactory::createFundingProgram(),
-      FundingCaseTypeFactory::createFundingCaseType(),
-      FundingCaseFactory::createFundingCase(),
+      FundingCaseBundleFactory::create(),
       ['test' => 'foo'],
     );
   }

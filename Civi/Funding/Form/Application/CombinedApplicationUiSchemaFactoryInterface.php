@@ -19,9 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\Application;
 
-use Civi\Funding\Entity\FundingCaseEntity;
-use Civi\Funding\Entity\FundingCaseTypeEntity;
-use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\RemoteTools\JsonForms\JsonFormsLayout;
 
 interface CombinedApplicationUiSchemaFactoryInterface extends ApplicationUiSchemaFactoryInterface {
@@ -29,10 +27,6 @@ interface CombinedApplicationUiSchemaFactoryInterface extends ApplicationUiSchem
   /**
    * Called when adding an application to an existing funding case.
    */
-  public function createUiSchemaAdd(
-    FundingProgramEntity $fundingProgram,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingCaseEntity $fundingCase
-  ): JsonFormsLayout;
+  public function createUiSchemaAdd(FundingCaseBundle $fundingCaseBundle): JsonFormsLayout;
 
 }

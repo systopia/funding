@@ -49,11 +49,7 @@ final class TransferContractRecreateHandler implements TransferContractRecreateH
     $this->assertAuthorized($command);
     Assert::notNull($fundingCase->getAmountApproved(), 'Funding case has no approved amount.');
 
-    $this->transferContractCreator->createTransferContract(
-      $fundingCase,
-      $command->getFundingCaseType(),
-      $command->getFundingProgram(),
-    );
+    $this->transferContractCreator->createTransferContract($command->getFundingCaseBundle());
   }
 
   /**
@@ -62,9 +58,8 @@ final class TransferContractRecreateHandler implements TransferContractRecreateH
   private function assertAuthorized(TransferContractRecreateCommand $command): void {
     if (!$this->actionsDeterminer->isActionAllowed(
       'recreate-transfer-contract',
-      $command->getFundingCase()->getStatus(),
+      $command->getFundingCaseBundle(),
       $command->getApplicationProcessStatusList(),
-      $command->getFundingCase()->getPermissions(),
     )) {
       throw new UnauthorizedException(E::ts('Permission to recreate transfer contract is missing.'));
     }

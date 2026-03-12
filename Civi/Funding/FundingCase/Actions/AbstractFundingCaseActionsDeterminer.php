@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase\Actions;
 
+use Civi\Funding\Entity\FundingCaseBundle;
+
 abstract class AbstractFundingCaseActionsDeterminer implements FundingCaseActionsDeterminerInterface {
 
   /**
@@ -26,23 +28,10 @@ abstract class AbstractFundingCaseActionsDeterminer implements FundingCaseAction
    */
   public function isActionAllowed(
     string $action,
-    string $status,
+    FundingCaseBundle $fundingCaseBundle,
     array $applicationProcessStatusList,
-    array $permissions
   ): bool {
-    return $this->isAnyActionAllowed([$action], $status, $applicationProcessStatusList, $permissions);
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public function isAnyActionAllowed(
-    array $actions,
-    string $status,
-    array $applicationProcessStatusList,
-    array $permissions
-  ): bool {
-    return [] !== array_intersect($this->getActions($status, $applicationProcessStatusList, $permissions), $actions);
+    return in_array($action, $this->getActions($fundingCaseBundle, $applicationProcessStatusList), TRUE);
   }
 
 }

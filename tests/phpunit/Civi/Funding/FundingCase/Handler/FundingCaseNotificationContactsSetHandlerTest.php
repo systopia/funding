@@ -21,9 +21,7 @@ namespace Civi\Funding\FundingCase\Handler;
 
 use Civi\API\Exception\UnauthorizedException;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
-use Civi\Funding\EntityFactory\FundingCaseFactory;
-use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
-use Civi\Funding\EntityFactory\FundingProgramFactory;
+use Civi\Funding\EntityFactory\FundingCaseBundleFactory;
 use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
 use Civi\Funding\FundingCase\Command\FundingCaseNotificationContactsSetCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
@@ -36,15 +34,9 @@ use PHPUnit\Framework\TestCase;
  */
 final class FundingCaseNotificationContactsSetHandlerTest extends TestCase {
 
-  /**
-   * @var \Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $actionsDeterminerMock;
+  private FundingCaseActionsDeterminerInterface&MockObject $actionsDeterminerMock;
 
-  /**
-   * @var \Civi\Funding\FundingCase\FundingCaseManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $fundingCaseManagerMock;
+  private FundingCaseManager&MockObject $fundingCaseManagerMock;
 
   private FundingCaseNotificationContactsSetHandler $handler;
 
@@ -63,9 +55,8 @@ final class FundingCaseNotificationContactsSetHandlerTest extends TestCase {
     $this->actionsDeterminerMock->method('isActionAllowed')
       ->with(
         'set-notification-contacts',
-        $command->getFundingCase()->getStatus(),
+        $command->getFundingCaseBundle(),
         $command->getApplicationProcessStatusList(),
-        $command->getFundingCase()->getPermissions()
       )
       ->willReturn(TRUE);
 
@@ -81,9 +72,8 @@ final class FundingCaseNotificationContactsSetHandlerTest extends TestCase {
     $this->actionsDeterminerMock->method('isActionAllowed')
       ->with(
         'set-notification-contacts',
-        $command->getFundingCase()->getStatus(),
+        $command->getFundingCaseBundle(),
         $command->getApplicationProcessStatusList(),
-        $command->getFundingCase()->getPermissions()
       )
       ->willReturn(FALSE);
 
@@ -93,17 +83,13 @@ final class FundingCaseNotificationContactsSetHandlerTest extends TestCase {
   }
 
   private function createCommand(): FundingCaseNotificationContactsSetCommand {
-    $fundingCase = FundingCaseFactory::createFundingCase();
+    $fundingCaseBundle = FundingCaseBundleFactory::create();
     $notificationContactIds = [1, 2, 3, 4];
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
-    $fundingProgram = FundingProgramFactory::createFundingProgram();
 
     return new FundingCaseNotificationContactsSetCommand(
-      $fundingCase,
+      $fundingCaseBundle,
       $notificationContactIds,
       [22 => new FullApplicationProcessStatus('eligible', TRUE, TRUE)],
-      $fundingCaseType,
-      $fundingProgram
     );
   }
 

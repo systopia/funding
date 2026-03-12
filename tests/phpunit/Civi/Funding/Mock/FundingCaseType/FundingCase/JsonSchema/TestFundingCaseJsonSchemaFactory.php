@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Mock\FundingCaseType\FundingCase\JsonSchema;
 
-use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\FundingCase\FundingCaseJsonSchemaFactoryInterface;
@@ -31,11 +31,7 @@ final class TestFundingCaseJsonSchemaFactory implements FundingCaseJsonSchemaFac
 
   use TestSupportedFundingCaseTypesTrait;
 
-  public function createJsonSchemaUpdate(
-    FundingProgramEntity $fundingProgram,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingCaseEntity $fundingCase
-  ): JsonSchema {
+  public function createJsonSchemaUpdate(FundingCaseBundle $fundingCaseBundle): JsonSchema {
     $submitActions = ['save'];
     $extraProperties = [
       '_action' => new JsonSchemaString(['enum' => $submitActions]),

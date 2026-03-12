@@ -21,9 +21,7 @@ namespace Civi\Funding\FundingCase\Handler;
 
 use Civi\API\Exception\UnauthorizedException;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
-use Civi\Funding\EntityFactory\FundingCaseFactory;
-use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
-use Civi\Funding\EntityFactory\FundingProgramFactory;
+use Civi\Funding\EntityFactory\FundingCaseBundleFactory;
 use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
 use Civi\Funding\FundingCase\Command\FundingCaseRecipientContactSetCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
@@ -37,15 +35,9 @@ use PHPUnit\Framework\TestCase;
  */
 final class FundingCaseRecipientContactSetHandlerTest extends TestCase {
 
-  /**
-   * @var \Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $actionsDeterminerMock;
+  private FundingCaseActionsDeterminerInterface&MockObject $actionsDeterminerMock;
 
-  /**
-   * @var \Civi\Funding\FundingCase\FundingCaseManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $fundingCaseManagerMock;
+  private FundingCaseManager&MockObject $fundingCaseManagerMock;
 
   private FundingCaseRecipientContactSetHandler $handler;
 
@@ -71,14 +63,13 @@ final class FundingCaseRecipientContactSetHandlerTest extends TestCase {
     $this->actionsDeterminerMock->method('isActionAllowed')
       ->with(
         'set-recipient-contact',
-        $command->getFundingCase()->getStatus(),
+        $command->getFundingCaseBundle(),
         $command->getApplicationProcessStatusList(),
-        $command->getFundingCase()->getPermissions()
       )
       ->willReturn(TRUE);
 
     $this->possibleRecipientsLoaderMock->method('getPossibleRecipients')
-      ->with($command->getFundingCase(), $command->getFundingCaseType(), $command->getFundingProgram())
+      ->with($command->getFundingCaseBundle())
       ->willReturn([1234 => 'New Recipient']);
 
     $this->fundingCaseManagerMock->expects(static::once())->method('update')
@@ -93,14 +84,13 @@ final class FundingCaseRecipientContactSetHandlerTest extends TestCase {
     $this->actionsDeterminerMock->method('isActionAllowed')
       ->with(
         'set-recipient-contact',
-        $command->getFundingCase()->getStatus(),
+        $command->getFundingCaseBundle(),
         $command->getApplicationProcessStatusList(),
-        $command->getFundingCase()->getPermissions()
       )
       ->willReturn(TRUE);
 
     $this->possibleRecipientsLoaderMock->method('getPossibleRecipients')
-      ->with($command->getFundingCase(), $command->getFundingCaseType(), $command->getFundingProgram())
+      ->with($command->getFundingCaseBundle())
       ->willReturn([$command->getRecipientContactId() + 1 => 'Some Recipient']);
 
     $this->expectException(\InvalidArgumentException::class);
@@ -113,9 +103,8 @@ final class FundingCaseRecipientContactSetHandlerTest extends TestCase {
     $this->actionsDeterminerMock->method('isActionAllowed')
       ->with(
         'set-recipient-contact',
-        $command->getFundingCase()->getStatus(),
+        $command->getFundingCaseBundle(),
         $command->getApplicationProcessStatusList(),
-        $command->getFundingCase()->getPermissions()
       )
       ->willReturn(FALSE);
 
@@ -125,17 +114,13 @@ final class FundingCaseRecipientContactSetHandlerTest extends TestCase {
   }
 
   private function createCommand(): FundingCaseRecipientContactSetCommand {
-    $fundingCase = FundingCaseFactory::createFundingCase(['creation_contact_id' => 1, 'recipient_contact_id' => 2]);
+    $fundingCaseBundle = FundingCaseBundleFactory::create(['creation_contact_id' => 1, 'recipient_contact_id' => 2]);
     $recipientContactId = 1234;
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
-    $fundingProgram = FundingProgramFactory::createFundingProgram();
 
     return new FundingCaseRecipientContactSetCommand(
-      $fundingCase,
+      $fundingCaseBundle,
       $recipientContactId,
       [22 => new FullApplicationProcessStatus('eligible', TRUE, TRUE)],
-      $fundingCaseType,
-      $fundingProgram
     );
   }
 
