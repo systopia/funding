@@ -34,7 +34,7 @@
         "systopia/de.systopia.xcm": "^1.15",
         "systopia/external-file": "^1.0",
         "tomsgu/pdf-merger": "^0.5",
-        "webmozart/assert": "^1.10"
+        "webmozart/assert": "^1.10 || ^2"
     },
     "require-dev": {
         "colinodell/psr-testlogger": "^1"
