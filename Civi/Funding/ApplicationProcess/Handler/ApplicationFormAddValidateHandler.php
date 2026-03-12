@@ -68,9 +68,7 @@ final class ApplicationFormAddValidateHandler implements ApplicationFormAddValid
     }
 
     return $this->formValidator->validateAdd(
-      $command->getFundingCase(),
-      $command->getFundingCaseType(),
-      $command->getFundingProgram(),
+      $command->getFundingCaseBundle(),
       $schemaValidationResult,
       $this->isJsonSchemaReadOnly($jsonSchema)
     );

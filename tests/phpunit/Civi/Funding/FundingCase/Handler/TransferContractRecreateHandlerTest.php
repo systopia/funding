@@ -21,9 +21,7 @@ namespace Civi\Funding\FundingCase\Handler;
 
 use Civi\API\Exception\UnauthorizedException;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
-use Civi\Funding\EntityFactory\FundingCaseFactory;
-use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
-use Civi\Funding\EntityFactory\FundingProgramFactory;
+use Civi\Funding\EntityFactory\FundingCaseBundleFactory;
 use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
 use Civi\Funding\FundingCase\Command\TransferContractRecreateCommand;
 use Civi\Funding\TransferContract\TransferContractCreator;
@@ -36,17 +34,11 @@ use PHPUnit\Framework\TestCase;
  */
 final class TransferContractRecreateHandlerTest extends TestCase {
 
-  /**
-   * @var \Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $actionsDeterminerMock;
+  private FundingCaseActionsDeterminerInterface&MockObject $actionsDeterminerMock;
 
   private TransferContractRecreateHandler $handler;
 
-  /**
-   * @var \Civi\Funding\TransferContract\TransferContractCreator&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $transferContractCreatorMock;
+  private TransferContractCreator&MockObject $transferContractCreatorMock;
 
   protected function setUp(): void {
     parent::setUp();
@@ -63,17 +55,12 @@ final class TransferContractRecreateHandlerTest extends TestCase {
     $this->actionsDeterminerMock->method('isActionAllowed')
       ->with(
         'recreate-transfer-contract',
-        $command->getFundingCase()->getStatus(),
+        $command->getFundingCaseBundle(),
         $command->getApplicationProcessStatusList(),
-        $command->getFundingCase()->getPermissions(),
       )->willReturn(TRUE);
 
     $this->transferContractCreatorMock->expects(static::once())->method('createTransferContract')
-      ->with(
-        $command->getFundingCase(),
-        $command->getFundingCaseType(),
-        $command->getFundingProgram(),
-      );
+      ->with($command->getFundingCaseBundle());
 
     $this->handler->handle($command);
   }
@@ -83,9 +70,8 @@ final class TransferContractRecreateHandlerTest extends TestCase {
     $this->actionsDeterminerMock->method('isActionAllowed')
       ->with(
         'recreate-transfer-contract',
-        $command->getFundingCase()->getStatus(),
+        $command->getFundingCaseBundle(),
         $command->getApplicationProcessStatusList(),
-        $command->getFundingCase()->getPermissions(),
       )->willReturn(FALSE);
 
     $this->expectException(UnauthorizedException::class);
@@ -94,12 +80,10 @@ final class TransferContractRecreateHandlerTest extends TestCase {
   }
 
   private function createCommand(float $amountApproved = 12.34): TransferContractRecreateCommand {
-    $fundingCase = FundingCaseFactory::createFundingCase(['amount_approved' => $amountApproved]);
+    $fundingCaseBundle = FundingCaseBundleFactory::create(['amount_approved' => $amountApproved]);
     $statusList = [22 => new FullApplicationProcessStatus('eligible', TRUE, TRUE)];
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
-    $fundingProgram = FundingProgramFactory::createFundingProgram();
 
-    return new TransferContractRecreateCommand($fundingCase, $statusList, $fundingCaseType, $fundingProgram);
+    return new TransferContractRecreateCommand($fundingCaseBundle, $statusList);
   }
 
 }

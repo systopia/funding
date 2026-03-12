@@ -45,9 +45,7 @@ final class FundingCaseFormDataGetHandler implements FundingCaseFormDataGetHandl
 
     // Perform calculations
     $result = $this->validateHandler->handle(new FundingCaseFormUpdateValidateCommand(
-      $command->getFundingProgram(),
-      $command->getFundingCaseType(),
-      $command->getFundingCase(),
+      $command->getFundingCaseBundle(),
       $data,
     ));
 

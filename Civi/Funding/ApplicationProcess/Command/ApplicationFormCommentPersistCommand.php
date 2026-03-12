@@ -19,10 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Command;
 
-use Civi\Funding\Entity\ApplicationProcessEntity;
-use Civi\Funding\Entity\FundingCaseEntity;
-use Civi\Funding\Entity\FundingCaseTypeEntity;
-use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\Entity\Traits\ApplicationProcessEntityBundleTrait;
 use Civi\Funding\Form\Application\ValidatedApplicationDataInterface;
 use Webmozart\Assert\Assert;
 
@@ -30,50 +28,22 @@ final class ApplicationFormCommentPersistCommand {
 
   private int $contactId;
 
-  private ApplicationProcessEntity $applicationProcess;
-
-  private FundingCaseEntity $fundingCase;
-
-  private FundingCaseTypeEntity $fundingCaseType;
-
-  private FundingProgramEntity $fundingProgram;
+  use ApplicationProcessEntityBundleTrait;
 
   private ValidatedApplicationDataInterface $validatedData;
 
   public function __construct(
     int $contactId,
-    ApplicationProcessEntity $applicationProcess,
-    FundingCaseEntity $fundingCase,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingProgramEntity $fundingProgram,
+    ApplicationProcessEntityBundle $applicationProcessBundle,
     ValidatedApplicationDataInterface $validatedData
   ) {
     $this->contactId = $contactId;
-    $this->applicationProcess = $applicationProcess;
-    $this->fundingCase = $fundingCase;
-    $this->fundingCaseType = $fundingCaseType;
-    $this->fundingProgram = $fundingProgram;
+    $this->applicationProcessBundle = $applicationProcessBundle;
     $this->validatedData = $validatedData;
   }
 
   public function getContactId(): int {
     return $this->contactId;
-  }
-
-  public function getApplicationProcess(): ApplicationProcessEntity {
-    return $this->applicationProcess;
-  }
-
-  public function getFundingCase(): FundingCaseEntity {
-    return $this->fundingCase;
-  }
-
-  public function getFundingCaseType(): FundingCaseTypeEntity {
-    return $this->fundingCaseType;
-  }
-
-  public function getFundingProgram(): FundingProgramEntity {
-    return $this->fundingProgram;
   }
 
   public function getValidatedData(): ValidatedApplicationDataInterface {

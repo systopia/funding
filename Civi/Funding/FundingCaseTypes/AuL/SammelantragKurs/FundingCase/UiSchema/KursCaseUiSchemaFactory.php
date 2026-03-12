@@ -22,7 +22,6 @@ namespace Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\FundingCase\UiSchem
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\FundingCaseBundle;
-use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\FundingCase\FundingCaseUiSchemaFactoryInterface;
@@ -48,16 +47,14 @@ final class KursCaseUiSchemaFactory implements FundingCaseUiSchemaFactoryInterfa
     $this->submitActionsFactory = $submitActionsFactory;
   }
 
-  public function createUiSchemaUpdate(
-    FundingProgramEntity $fundingProgram,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingCaseEntity $fundingCase
-  ): JsonFormsElement {
-    $applicationProcesses = $this->applicationProcessManager->getByFundingCaseId($fundingCase->getId());
+  public function createUiSchemaUpdate(FundingCaseBundle $fundingCaseBundle): JsonFormsElement {
+    $applicationProcesses = $this->applicationProcessManager->getByFundingCaseId(
+      $fundingCaseBundle->getFundingCase()->getId()
+    );
 
     $submitButtons = JsonFormsSubmitButtonsFactory::createButtons(
       $this->submitActionsFactory->getSubmitActions(
-        new FundingCaseBundle($fundingCase, $fundingCaseType, $fundingProgram),
+        $fundingCaseBundle,
         array_map(
           fn (ApplicationProcessEntity $applicationProcess) => $applicationProcess->getFullStatus(),
           $applicationProcesses

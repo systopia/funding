@@ -50,13 +50,9 @@ class FundingCaseIdentifierSubscriber implements EventSubscriberInterface {
    * @throws \CRM_Core_Exception
    */
   public function onCreated(FundingCaseCreatedEvent $event): void {
-    $fundingCase = $event->getFundingCase();
-    $identifier = $this->identifierGenerator->generateIdentifier(
-      $fundingCase,
-      $event->getFundingCaseType(),
-      $event->getFundingProgram(),
-    );
+    $identifier = $this->identifierGenerator->generateIdentifier($event->getFundingCaseBundle());
 
+    $fundingCase = $event->getFundingCase();
     $fundingCase->setIdentifier($identifier);
     $this->api4->updateEntity(
       FundingCase::getEntityName(),

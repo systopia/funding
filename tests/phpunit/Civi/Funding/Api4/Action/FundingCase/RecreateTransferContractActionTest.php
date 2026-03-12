@@ -22,14 +22,11 @@ namespace Civi\Funding\Api4\Action\FundingCase;
 use Civi\Api4\Generic\Result;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
+use Civi\Funding\EntityFactory\FundingCaseBundleFactory;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
-use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
-use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\FundingCase\Command\TransferContractRecreateCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\Handler\TransferContractRecreateHandlerInterface;
-use Civi\Funding\FundingProgram\FundingCaseTypeManager;
-use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\Funding\Traits\CreateMockTrait;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -43,44 +40,21 @@ final class RecreateTransferContractActionTest extends TestCase {
 
   private RecreateTransferContractAction $action;
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\ApplicationProcessManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $applicationProcessManagerMock;
+  private ApplicationProcessManager&MockObject $applicationProcessManagerMock;
 
-  /**
-   * @var \Civi\Funding\FundingCase\FundingCaseManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $fundingCaseManagerMock;
+  private FundingCaseManager&MockObject $fundingCaseManagerMock;
 
-  /**
-   * @var \Civi\Funding\FundingProgram\FundingCaseTypeManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $fundingCaseTypeManagerMock;
-
-  /**
-   * @var \Civi\Funding\FundingProgram\FundingProgramManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $fundingProgramManagerMock;
-
-  /**
-   * @var \Civi\Funding\FundingCase\Handler\TransferContractRecreateHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $transferContractRecreateHandlerMock;
+  private TransferContractRecreateHandlerInterface&MockObject $transferContractRecreateHandlerMock;
 
   protected function setUp(): void {
     parent::setUp();
     $this->applicationProcessManagerMock = $this->createMock(ApplicationProcessManager::class);
     $this->fundingCaseManagerMock = $this->createMock(FundingCaseManager::class);
-    $this->fundingCaseTypeManagerMock = $this->createMock(FundingCaseTypeManager::class);
-    $this->fundingProgramManagerMock = $this->createMock(FundingProgramManager::class);
     $this->transferContractRecreateHandlerMock = $this->createMock(TransferContractRecreateHandlerInterface::class);
     $this->action = $this->createApi4ActionMock(
       RecreateTransferContractAction::class,
       $this->applicationProcessManagerMock,
       $this->fundingCaseManagerMock,
-      $this->fundingCaseTypeManagerMock,
-      $this->fundingProgramManagerMock,
       $this->transferContractRecreateHandlerMock,
     );
   }
@@ -88,32 +62,22 @@ final class RecreateTransferContractActionTest extends TestCase {
   public function test(): void {
     $this->action->setId(FundingCaseFactory::DEFAULT_ID);
 
-    $fundingCase = FundingCaseFactory::createFundingCase(['amount_approved' => 12.34]);
-    $this->fundingCaseManagerMock->method('get')
+    $fundingCaseBundle = FundingCaseBundleFactory::create(['amount_approved' => 12.34]);
+    $this->fundingCaseManagerMock->method('getBundle')
       ->with(FundingCaseFactory::DEFAULT_ID)
-      ->willReturn($fundingCase);
-
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
-    $this->fundingCaseTypeManagerMock->method('get')
-      ->with($fundingCase->getFundingCaseTypeId())
-      ->willReturn($fundingCaseType);
-
-    $fundingProgram = FundingProgramFactory::createFundingProgram();
-    $this->fundingProgramManagerMock->method('get')
-      ->with($fundingCase->getFundingProgramId())
-      ->willReturn($fundingProgram);
+      ->willReturn($fundingCaseBundle);
 
     $statusList = [22 => new FullApplicationProcessStatus('new', FALSE, FALSE)];
     $this->applicationProcessManagerMock->method('getStatusListByFundingCaseId')
-      ->with($fundingCase->getId())
+      ->with($fundingCaseBundle->getFundingCase()->getId())
       ->willReturn($statusList);
 
     $this->transferContractRecreateHandlerMock->expects(static::once())->method('handle')
-      ->with(new TransferContractRecreateCommand($fundingCase, $statusList, $fundingCaseType, $fundingProgram));
+      ->with(new TransferContractRecreateCommand($fundingCaseBundle, $statusList));
 
     $result = new Result();
     $this->action->_run($result);
-    static::assertEquals($fundingCase->toArray(), $result->getArrayCopy());
+    static::assertEquals($fundingCaseBundle->getFundingCase()->toArray(), $result->getArrayCopy());
   }
 
 }

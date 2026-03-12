@@ -22,10 +22,9 @@ namespace Civi\Funding\FundingCase\Handler;
 use Civi\API\Exception\UnauthorizedException;
 use Civi\Funding\Entity\DrawdownBundle;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
+use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\EntityFactory\DrawdownFactory;
-use Civi\Funding\EntityFactory\FundingCaseFactory;
-use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
-use Civi\Funding\EntityFactory\FundingProgramFactory;
+use Civi\Funding\EntityFactory\FundingCaseBundleFactory;
 use Civi\Funding\EntityFactory\PayoutProcessBundleFactory;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions;
 use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
@@ -98,12 +97,16 @@ final class FundingCaseFinishClearingHandlerTest extends TestCase {
     $this->metaDataMock->finalDrawdownAcceptedByDefault = $finalDrawdownAccepted;
 
     $applicationProcessStatusList = [22 => new FullApplicationProcessStatus('eligible', TRUE, TRUE)];
-    $this->actionsDeterminerMock->method('isActionAllowed')
-      ->with(FundingCaseActions::FINISH_CLEARING, 'ongoing', $applicationProcessStatusList)
-      ->willReturn(TRUE);
-
     $payoutProcessBundle = PayoutProcessBundleFactory::create(fundingCaseValues: ['status' => 'ongoing']);
     $fundingCase = $payoutProcessBundle->getFundingCase();
+    $fundingCaseBundle = new FundingCaseBundle(
+      $fundingCase, $payoutProcessBundle->getFundingCaseType(), $payoutProcessBundle->getFundingProgram()
+    );
+
+    $this->actionsDeterminerMock->method('isActionAllowed')
+      ->with(FundingCaseActions::FINISH_CLEARING, $fundingCaseBundle, $applicationProcessStatusList)
+      ->willReturn(TRUE);
+
     $this->payoutProcessManagerMock->method('getLastBundleByFundingCaseId')
       ->with($fundingCase->getId())
       ->willReturn($payoutProcessBundle);
@@ -138,10 +141,8 @@ final class FundingCaseFinishClearingHandlerTest extends TestCase {
       ->with($fundingCase);
 
     $this->handler->handle(new FundingCaseFinishClearingCommand(
-      $fundingCase,
+      $fundingCaseBundle,
       $applicationProcessStatusList,
-      $payoutProcessBundle->getFundingCaseType(),
-      $payoutProcessBundle->getFundingProgram()
     ));
 
     static::assertSame('new-status', $fundingCase->getStatus());
@@ -156,13 +157,17 @@ final class FundingCaseFinishClearingHandlerTest extends TestCase {
   }
 
   public function testHandleAmountRemainingZero(): void {
-    $applicationProcessStatusList = [22 => new FullApplicationProcessStatus('eligible', TRUE, TRUE)];
-    $this->actionsDeterminerMock->method('isActionAllowed')
-      ->with(FundingCaseActions::FINISH_CLEARING, 'ongoing', $applicationProcessStatusList)
-      ->willReturn(TRUE);
-
     $payoutProcessBundle = PayoutProcessBundleFactory::create(fundingCaseValues: ['status' => 'ongoing']);
     $fundingCase = $payoutProcessBundle->getFundingCase();
+    $fundingCaseBundle = new FundingCaseBundle(
+      $fundingCase, $payoutProcessBundle->getFundingCaseType(), $payoutProcessBundle->getFundingProgram()
+    );
+
+    $applicationProcessStatusList = [22 => new FullApplicationProcessStatus('eligible', TRUE, TRUE)];
+    $this->actionsDeterminerMock->method('isActionAllowed')
+      ->with(FundingCaseActions::FINISH_CLEARING, $fundingCaseBundle, $applicationProcessStatusList)
+      ->willReturn(TRUE);
+
     $this->payoutProcessManagerMock->method('getLastBundleByFundingCaseId')
       ->with($fundingCase->getId())
       ->willReturn($payoutProcessBundle);
@@ -183,33 +188,27 @@ final class FundingCaseFinishClearingHandlerTest extends TestCase {
       ->with($fundingCase);
 
     $this->handler->handle(new FundingCaseFinishClearingCommand(
-      $fundingCase,
+      $fundingCaseBundle,
       $applicationProcessStatusList,
-      $payoutProcessBundle->getFundingCaseType(),
-      $payoutProcessBundle->getFundingProgram()
     ));
 
     static::assertSame('new-status', $fundingCase->getStatus());
   }
 
   public function testHandleActionNotAllowed(): void {
-    $fundingCase = FundingCaseFactory::createFundingCase(['status' => 'ongoing', 'identifier' => 'test']);
+    $fundingCaseBundle = FundingCaseBundleFactory::create(['status' => 'ongoing', 'identifier' => 'test']);
+    $fundingCase = $fundingCaseBundle->getFundingCase();
     $applicationProcessStatusList = [22 => new FullApplicationProcessStatus('eligible', TRUE, TRUE)];
     $this->actionsDeterminerMock->method('isActionAllowed')
-      ->with(FundingCaseActions::FINISH_CLEARING, 'ongoing', $applicationProcessStatusList)
+      ->with(FundingCaseActions::FINISH_CLEARING, $fundingCaseBundle, $applicationProcessStatusList)
       ->willReturn(FALSE);
 
     $this->expectException(UnauthorizedException::class);
     $this->expectExceptionMessage('Finishing the clearing of funding case "test" is not allowed.');
 
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
-    $fundingProgram = FundingProgramFactory::createFundingProgram();
-
     $this->handler->handle(new FundingCaseFinishClearingCommand(
-      $fundingCase,
+      $fundingCaseBundle,
       $applicationProcessStatusList,
-      $fundingCaseType,
-      $fundingProgram
     ));
 
     static::assertSame('new--status', $fundingCase->getStatus());

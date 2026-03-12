@@ -24,8 +24,6 @@ use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\FundingCase\Command\FundingCaseRecipientContactSetCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\Handler\FundingCaseRecipientContactSetHandlerInterface;
-use Civi\Funding\FundingProgram\FundingCaseTypeManager;
-use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
@@ -38,23 +36,15 @@ final class SetRecipientContactActionHandler implements ActionHandlerInterface {
 
   private FundingCaseManager $fundingCaseManager;
 
-  private FundingCaseTypeManager $fundingCaseTypeManager;
-
-  private FundingProgramManager $fundingProgramManager;
-
   private FundingCaseRecipientContactSetHandlerInterface $recipientContactSetHandler;
 
   public function __construct(
     ApplicationProcessManager $applicationProcessManager,
     FundingCaseManager $fundingCaseManager,
-    FundingCaseTypeManager $fundingCaseTypeManager,
-    FundingProgramManager $fundingProgramManager,
     FundingCaseRecipientContactSetHandlerInterface $recipientContactSetHandler
   ) {
     $this->applicationProcessManager = $applicationProcessManager;
     $this->fundingCaseManager = $fundingCaseManager;
-    $this->fundingCaseTypeManager = $fundingCaseTypeManager;
-    $this->fundingProgramManager = $fundingProgramManager;
     $this->recipientContactSetHandler = $recipientContactSetHandler;
   }
 
@@ -64,19 +54,14 @@ final class SetRecipientContactActionHandler implements ActionHandlerInterface {
    * @phpstan-return array<string, mixed>
    */
   public function setRecipientContact(SetRecipientContactAction $action): array {
-    $fundingCase = $this->fundingCaseManager->get($action->getId());
-    Assert::notNull($fundingCase, E::ts('Funding case with ID "%1" not found', [1 => $action->getId()]));
-    $fundingCaseType = $this->fundingCaseTypeManager->get($fundingCase->getFundingCaseTypeId());
-    Assert::notNull($fundingCaseType);
-    $fundingProgram = $this->fundingProgramManager->get($fundingCase->getFundingProgramId());
-    Assert::notNull($fundingProgram);
+    $fundingCaseBundle = $this->fundingCaseManager->getBundle($action->getId());
+    Assert::notNull($fundingCaseBundle, E::ts('Funding case with ID "%1" not found', [1 => $action->getId()]));
+    $fundingCase = $fundingCaseBundle->getFundingCase();
 
     $this->recipientContactSetHandler->handle(new FundingCaseRecipientContactSetCommand(
-      $fundingCase,
+      $fundingCaseBundle,
       $action->getContactId(),
       $this->applicationProcessManager->getStatusListByFundingCaseId($fundingCase->getId()),
-      $fundingCaseType,
-      $fundingProgram
     ));
 
     return $fundingCase->toArray();

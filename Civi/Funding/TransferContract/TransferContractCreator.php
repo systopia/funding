@@ -20,9 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\TransferContract;
 
 use Civi\Funding\ApplicationProcess\EligibleApplicationProcessesLoader;
-use Civi\Funding\Entity\FundingCaseEntity;
-use Civi\Funding\Entity\FundingCaseTypeEntity;
-use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\FileTypeNames;
 use Civi\Funding\FundingAttachmentManagerInterface;
 use Civi\Funding\TransferContract\Command\TransferContractRenderCommand;
@@ -50,16 +48,11 @@ class TransferContractCreator {
    * @throws \Civi\Funding\Exception\FundingException
    * @throws \CRM_Core_Exception
    */
-  public function createTransferContract(
-    FundingCaseEntity $fundingCase,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingProgramEntity $fundingProgram
-  ): void {
+  public function createTransferContract(FundingCaseBundle $fundingCaseBundle): void {
+    $fundingCase = $fundingCaseBundle->getFundingCase();
     $createTransferContractCommand = new TransferContractRenderCommand(
       $this->applicationProcessesLoader->getEligibleProcessesForContract($fundingCase),
-      $fundingCase,
-      $fundingCaseType,
-      $fundingProgram,
+      $fundingCaseBundle
     );
     $result = $this->transferContractRenderHandler->handle($createTransferContractCommand);
 

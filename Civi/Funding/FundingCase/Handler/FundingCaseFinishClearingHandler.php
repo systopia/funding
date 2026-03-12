@@ -119,9 +119,8 @@ final class FundingCaseFinishClearingHandler implements FundingCaseFinishClearin
   private function assertAuthorized(FundingCaseFinishClearingCommand $command): void {
     if (!$this->actionsDeterminer->isActionAllowed(
       FundingCaseActions::FINISH_CLEARING,
-      $command->getFundingCase()->getStatus(),
+      $command->getFundingCaseBundle(),
       $command->getApplicationProcessStatusList(),
-      $command->getFundingCase()->getPermissions(),
     )) {
       throw new UnauthorizedException(E::ts(
         'Finishing the clearing of funding case "%1" is not allowed.',

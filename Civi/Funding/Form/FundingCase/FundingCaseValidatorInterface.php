@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\FundingCase;
 
-use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 
@@ -38,9 +38,7 @@ interface FundingCaseValidatorInterface {
    * @phpstan-param array<string, mixed> $data JSON serializable.
    */
   public function validateUpdate(
-    FundingProgramEntity $fundingProgram,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingCaseEntity $fundingCase,
+    FundingCaseBundle $fundingCaseBundle,
     array $data,
     int $maxErrors = 1
   ): FundingCaseValidationResult;

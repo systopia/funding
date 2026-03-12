@@ -19,47 +19,26 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Event\FundingCase;
 
-use Civi\Funding\Entity\FundingCaseEntity;
-use Civi\Funding\Entity\FundingCaseTypeEntity;
-use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\Entity\FundingCaseBundle;
+use Civi\Funding\Entity\Traits\FundingCaseBundleTrait;
 use Symfony\Contracts\EventDispatcher\Event;
 
 final class FundingCaseApprovedEvent extends Event {
 
-  private FundingCaseEntity $fundingCase;
+  use FundingCaseBundleTrait;
 
   private float $amount;
 
-  private FundingCaseTypeEntity $fundingCaseType;
-
-  private FundingProgramEntity $fundingProgram;
-
   public function __construct(
-    FundingCaseEntity $fundingCase,
+    FundingCaseBundle $fundingCaseBundle,
     float $amount,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingProgramEntity $fundingProgram
   ) {
-    $this->fundingCase = $fundingCase;
+    $this->fundingCaseBundle = $fundingCaseBundle;
     $this->amount = $amount;
-    $this->fundingCaseType = $fundingCaseType;
-    $this->fundingProgram = $fundingProgram;
-  }
-
-  public function getFundingCase(): FundingCaseEntity {
-    return $this->fundingCase;
   }
 
   public function getAmount(): float {
     return $this->amount;
-  }
-
-  public function getFundingCaseType(): FundingCaseTypeEntity {
-    return $this->fundingCaseType;
-  }
-
-  public function getFundingProgram(): FundingProgramEntity {
-    return $this->fundingProgram;
   }
 
 }

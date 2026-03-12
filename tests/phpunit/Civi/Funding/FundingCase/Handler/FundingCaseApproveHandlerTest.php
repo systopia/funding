@@ -70,9 +70,8 @@ final class FundingCaseApproveHandlerTest extends TestCase {
     $this->actionsDeterminerMock->method('isActionAllowed')
       ->with(
         'approve',
-        $command->getFundingCase()->getStatus(),
+        $command->getFundingCaseBundle(),
         $command->getApplicationProcessStatusList(),
-        $command->getFundingCase()->getPermissions()
       )
       ->willReturn(TRUE);
 
@@ -81,11 +80,7 @@ final class FundingCaseApproveHandlerTest extends TestCase {
       ->willReturn(TRUE);
 
     $this->transferContractCreatorMock->expects(static::once())->method('createTransferContract')
-      ->with(
-        $command->getFundingCase(),
-        $command->getFundingCaseType(),
-        $command->getFundingProgram(),
-      );
+      ->with($command->getFundingCaseBundle());
 
     $this->statusDeterminerMock->method('getStatus')
       ->with($command->getFundingCase()->getStatus(), 'approve')
@@ -104,9 +99,8 @@ final class FundingCaseApproveHandlerTest extends TestCase {
     $this->actionsDeterminerMock->method('isActionAllowed')
       ->with(
         'approve',
-        $command->getFundingCase()->getStatus(),
+        $command->getFundingCaseBundle(),
         $command->getApplicationProcessStatusList(),
-        $command->getFundingCase()->getPermissions()
       )
       ->willReturn(FALSE);
 
@@ -120,9 +114,8 @@ final class FundingCaseApproveHandlerTest extends TestCase {
     $this->actionsDeterminerMock->method('isActionAllowed')
       ->with(
         'approve',
-        $command->getFundingCase()->getStatus(),
+        $command->getFundingCaseBundle(),
         $command->getApplicationProcessStatusList(),
-        $command->getFundingCase()->getPermissions()
       )
       ->willReturn(TRUE);
 

@@ -35,9 +35,8 @@ final class FundingCasePossibleActionsGetHandler implements FundingCasePossibleA
    */
   public function handle(FundingCasePossibleActionsGetCommand $command): array {
     return $this->actionsDeterminer->getActions(
-      $command->getFundingCase()->getStatus(),
+      $command->getFundingCaseBundle(),
       $command->getApplicationProcessStatusList(),
-      $command->getFundingCase()->getPermissions(),
     );
   }
 

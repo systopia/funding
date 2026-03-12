@@ -19,32 +19,28 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase\Command;
 
-use Civi\Funding\Entity\FundingCaseEntity;
-use Civi\Funding\Entity\FundingCaseTypeEntity;
+use Civi\Funding\Entity\FundingCaseBundle;
+use Civi\Funding\Entity\Traits\FundingCaseBundleTrait;
 
 final class FundingCasePossibleActionsGetCommand {
+
+  use FundingCaseBundleTrait;
 
   /**
    * @phpstan-var array<int, \Civi\Funding\Entity\FullApplicationProcessStatus>
    */
   private array $applicationProcessStatusList;
 
-  private FundingCaseEntity $fundingCase;
-
-  private FundingCaseTypeEntity $fundingCaseType;
-
   /**
    * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $applicationProcessStatusList
    *   Indexed by application process ID.
    */
   public function __construct(
-    FundingCaseEntity $fundingCase,
+    FundingCaseBundle $fundingCaseBundle,
     array $applicationProcessStatusList,
-    FundingCaseTypeEntity $fundingCaseType
   ) {
-    $this->fundingCase = $fundingCase;
+    $this->fundingCaseBundle = $fundingCaseBundle;
     $this->applicationProcessStatusList = $applicationProcessStatusList;
-    $this->fundingCaseType = $fundingCaseType;
   }
 
   /**
@@ -53,14 +49,6 @@ final class FundingCasePossibleActionsGetCommand {
    */
   public function getApplicationProcessStatusList(): array {
     return $this->applicationProcessStatusList;
-  }
-
-  public function getFundingCase(): FundingCaseEntity {
-    return $this->fundingCase;
-  }
-
-  public function getFundingCaseType(): FundingCaseTypeEntity {
-    return $this->fundingCaseType;
   }
 
 }

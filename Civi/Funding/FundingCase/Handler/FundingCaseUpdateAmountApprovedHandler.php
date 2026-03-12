@@ -70,11 +70,7 @@ final class FundingCaseUpdateAmountApprovedHandler implements FundingCaseUpdateA
       FundingCaseActions::UPDATE_AMOUNT_APPROVED
     ));
 
-    $this->transferContractCreator->createTransferContract(
-      $fundingCase,
-      $command->getFundingCaseType(),
-      $command->getFundingProgram(),
-    );
+    $this->transferContractCreator->createTransferContract($command->getFundingCaseBundle());
 
     $this->fundingCaseManager->update($fundingCase);
   }
@@ -86,9 +82,8 @@ final class FundingCaseUpdateAmountApprovedHandler implements FundingCaseUpdateA
   private function assertAuthorized(FundingCaseUpdateAmountApprovedCommand $command): void {
     if (!$command->isAuthorized() && !$this->actionsDeterminer->isActionAllowed(
       FundingCaseActions::UPDATE_AMOUNT_APPROVED,
-      $command->getFundingCase()->getStatus(),
+      $command->getFundingCaseBundle(),
       $command->getApplicationProcessStatusList(),
-      $command->getFundingCase()->getPermissions(),
     )) {
       throw new UnauthorizedException(E::ts('Updating the approved amount of this funding case is not allowed.'));
     }

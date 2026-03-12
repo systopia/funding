@@ -44,12 +44,7 @@ final class FundingCaseApproveEventDecorator implements FundingCaseApproveHandle
   public function handle(FundingCaseApproveCommand $command): void {
     $this->handler->handle($command);
 
-    $event = new FundingCaseApprovedEvent(
-      $command->getFundingCase(),
-      $command->getAmount(),
-      $command->getFundingCaseType(),
-      $command->getFundingProgram()
-    );
+    $event = new FundingCaseApprovedEvent($command->getFundingCaseBundle(), $command->getAmount());
     $this->eventDispatcher->dispatch(FundingCaseApprovedEvent::class, $event);
   }
 

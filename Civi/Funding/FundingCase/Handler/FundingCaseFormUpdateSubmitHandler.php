@@ -51,7 +51,7 @@ final class FundingCaseFormUpdateSubmitHandler implements FundingCaseFormUpdateS
 
   public function handle(FundingCaseFormUpdateSubmitCommand $command): FundingCaseFormUpdateSubmitResult {
     $validationResult = $this->validateHandler->handle(new FundingCaseFormUpdateValidateCommand(
-      $command->getFundingProgram(), $command->getFundingCaseType(), $command->getFundingCase(), $command->getData(),
+      $command->getFundingCaseBundle(), $command->getData(),
     ));
 
     if (!$validationResult->isValid()) {

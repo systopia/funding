@@ -26,6 +26,7 @@ use Civi\Funding\DependencyInjection\Compiler\FundingCaseTypeMetaDataPass;
 use Civi\Funding\DependencyInjection\Compiler\FundingCaseTypeServiceLocatorPass;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\EventSubscriber\FundingCaseType\AfformCacheCiviOfficeDocumentSubscriber;
+use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\Reference;
@@ -34,6 +35,9 @@ $container->addCompilerPass(new FundingCaseTypeMetaDataPass(), PassConfig::TYPE_
 $container->addCompilerPass(new FundingCaseTypeServiceLocatorPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 1);
 $container->addCompilerPass(new FundingCaseFinishClearingHandlerPass());
 $container->addCompilerPass(new FundingCaseRejectHandlerPass());
+
+
+$container->autowire(FundingCaseTypeManager::class);
 
 $container->autowire(AfformCacheCiviOfficeDocumentSubscriber::class)
   ->setArgument('$assetBuilder', new Reference('asset_builder'))

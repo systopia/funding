@@ -24,12 +24,10 @@ use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
 use Civi\Funding\Api4\Action\Traits\ApplicationProcessManagerTrait;
 use Civi\Funding\Api4\Action\Traits\FundingCaseManagerTrait;
-use Civi\Funding\Api4\Action\Traits\FundingCaseTypeManagerTrait;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\FundingCase\Command\FundingCasePossibleActionsGetCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\Handler\FundingCasePossibleActionsGetHandlerInterface;
-use Civi\Funding\FundingProgram\FundingCaseTypeManager;
 use Civi\RemoteTools\Api4\Action\Traits\IdParameterTrait;
 use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
@@ -42,20 +40,16 @@ class GetPossibleActionsAction extends AbstractAction {
 
   use FundingCaseManagerTrait;
 
-  use FundingCaseTypeManagerTrait;
-
   private ?FundingCasePossibleActionsGetHandlerInterface $possibleActionsGetHandler;
 
   public function __construct(
     ?ApplicationProcessManager $applicationProcessManager = NULL,
     ?FundingCaseManager $fundingCaseManager = NULL,
-    ?FundingCaseTypeManager $fundingCaseTypeManager = NULL,
     ?FundingCasePossibleActionsGetHandlerInterface $possibleActionsGetHandler = NULL
   ) {
     parent::__construct(FundingCase::getEntityName(), 'getPossibleActions');
     $this->_applicationProcessManager = $applicationProcessManager;
     $this->_fundingCaseManager = $fundingCaseManager;
-    $this->_fundingCaseTypeManager = $fundingCaseTypeManager;
     $this->possibleActionsGetHandler = $possibleActionsGetHandler;
   }
 
@@ -63,16 +57,15 @@ class GetPossibleActionsAction extends AbstractAction {
    * @inheritDoc
    */
   public function _run(Result $result): void {
-    $fundingCase = $this->getFundingCaseManager()->get($this->getId());
-    Assert::notNull($fundingCase, E::ts('Funding case with ID "%1" not found', [1 => $this->getId()]));
-    $fundingCaseType = $this->getFundingCaseTypeManager()->get($fundingCase->getFundingCaseTypeId());
-    Assert::notNull($fundingCaseType);
+    $fundingCaseBundle = $this->getFundingCaseManager()->getBundle($this->getId());
+    Assert::notNull($fundingCaseBundle, E::ts('Funding case with ID "%1" not found', [1 => $this->getId()]));
 
     $actions = $this->getPossibleActionsGetHandler()->handle(
       new FundingCasePossibleActionsGetCommand(
-        $fundingCase,
-        $this->getApplicationProcessManager()->getStatusListByFundingCaseId($fundingCase->getId()),
-        $fundingCaseType,
+        $fundingCaseBundle,
+        $this->getApplicationProcessManager()->getStatusListByFundingCaseId(
+          $fundingCaseBundle->getFundingCase()->getId()
+        ),
       )
     );
 

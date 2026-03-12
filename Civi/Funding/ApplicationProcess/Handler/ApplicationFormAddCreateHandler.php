@@ -56,11 +56,7 @@ final class ApplicationFormAddCreateHandler implements ApplicationFormAddCreateH
   }
 
   public function handle(ApplicationFormAddCreateCommand $command): JsonFormsFormWithDataInterface {
-    $jsonSchema = $this->jsonSchemaFactory->createJsonSchemaAdd(
-      $command->getFundingProgram(),
-      $command->getFundingCaseType(),
-      $command->getFundingCase(),
-    );
+    $jsonSchema = $this->jsonSchemaFactory->createJsonSchemaAdd($command->getFundingCaseBundle());
 
     $this->jsonSchemaCreateHelper->addInitialActionProperty(
       $jsonSchema,
@@ -68,11 +64,7 @@ final class ApplicationFormAddCreateHandler implements ApplicationFormAddCreateH
       $command->getFundingCase()->getPermissions()
     );
 
-    $uiSchema = $this->uiSchemaFactory->createUiSchemaAdd(
-      $command->getFundingProgram(),
-      $command->getFundingCaseType(),
-      $command->getFundingCase(),
-    );
+    $uiSchema = $this->uiSchemaFactory->createUiSchemaAdd($command->getFundingCaseBundle());
 
     $submitButtons = JsonFormsSubmitButtonsFactory::createButtons(
       $this->submitActionsFactory->getInitialSubmitActions(

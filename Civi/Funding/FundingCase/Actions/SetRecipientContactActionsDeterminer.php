@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase\Actions;
 
+use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions as Actions;
 
 final class SetRecipientContactActionsDeterminer extends FundingCaseActionsDeterminer {
@@ -37,10 +38,10 @@ final class SetRecipientContactActionsDeterminer extends FundingCaseActionsDeter
     $this->actionsDeterminer = $actionsDeterminer;
   }
 
-  public function getActions(string $status, array $applicationProcessStatusList, array $permissions): array {
+  public function getActions(FundingCaseBundle $fundingCaseBundle, array $applicationProcessStatusList): array {
     return array_values(array_unique(array_merge(
-      $this->actionsDeterminer->getActions($status, $applicationProcessStatusList, $permissions),
-      parent::getActions($status, $applicationProcessStatusList, $permissions)
+      $this->actionsDeterminer->getActions($fundingCaseBundle, $applicationProcessStatusList),
+      parent::getActions($fundingCaseBundle, $applicationProcessStatusList)
     )));
   }
 

@@ -28,14 +28,12 @@ use Civi\Api4\Generic\Result;
 use Civi\Api4\Generic\Traits\ArrayQueryActionTrait;
 use Civi\Funding\Api4\Action\Traits\Api4Trait;
 use Civi\Funding\Api4\Action\Traits\FundingCaseManagerTrait;
-use Civi\Funding\Api4\Action\Traits\FundingProgramManagerTrait;
 use Civi\Funding\Api4\Action\Traits\IsFieldSelectedTrait;
 use Civi\Funding\Api4\Action\Traits\PayoutProcessManagerTrait;
 use Civi\Funding\Api4\Util\WhereUtil;
-use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\FundingCasePermissions;
-use Civi\Funding\FundingProgram\FundingProgramManager;
 use Civi\Funding\PayoutProcess\PayoutProcessManager;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
@@ -51,20 +49,16 @@ final class GetAction extends AbstractGetAction {
 
   use FundingCaseManagerTrait;
 
-  use FundingProgramManagerTrait;
-
   use PayoutProcessManagerTrait;
 
   public function __construct(
     ?Api4Interface $api4 = NULL,
     ?FundingCaseManager $fundingCaseManager = NULL,
-    ?FundingProgramManager $fundingProgramManager = NULL,
     ?PayoutProcessManager $payoutProcessManager = NULL
   ) {
     parent::__construct(FundingTransferContract::getEntityName(), 'get');
     $this->_api4 = $api4;
     $this->_fundingCaseManager = $fundingCaseManager;
-    $this->_fundingProgramManager = $fundingProgramManager;
     $this->_payoutProcessManager = $payoutProcessManager;
   }
 
@@ -83,8 +77,8 @@ final class GetAction extends AbstractGetAction {
     }
 
     $records = [];
-    foreach ($this->getFundingCases() as $fundingCase) {
-      $records[] = $this->buildRecord($fundingCase, $applicationProcessMapping);
+    foreach ($this->getFundingCaseBundles() as $fundingCaseBundle) {
+      $records[] = $this->buildRecord($fundingCaseBundle, $applicationProcessMapping);
     }
 
     if ([] !== $records && in_array('*', $this->getSelect(), TRUE)) {
@@ -101,12 +95,10 @@ final class GetAction extends AbstractGetAction {
    *
    * @throws \CRM_Core_Exception
    */
-  private function buildRecord(FundingCaseEntity $fundingCase, array $applicationProcessMapping): array {
-    $fundingProgram = $this->getFundingProgramManager()->get($fundingCase->getFundingProgramId());
-    Assert::notNull($fundingProgram, sprintf(
-      'No permission to access funding program with ID "%d"',
-      $fundingCase->getFundingProgramId()
-    ));
+  private function buildRecord(FundingCaseBundle $fundingCaseBundle, array $applicationProcessMapping): array {
+    $fundingCase = $fundingCaseBundle->getFundingCase();
+    $fundingProgram = $fundingCaseBundle->getFundingProgram();
+
     $payoutProcess = $this->getPayoutProcessManager()->getLastByFundingCaseId($fundingCase->getId());
     Assert::notNull($payoutProcess, sprintf(
       'Payout process with funding case ID "%d" not found',
@@ -190,21 +182,21 @@ final class GetAction extends AbstractGetAction {
   }
 
   /**
-   * @return array<\Civi\Funding\Entity\FundingCaseEntity>
+   * @return array<\Civi\Funding\Entity\FundingCaseBundle>
    *
    * @throws \CRM_Core_Exception
    */
-  private function getFundingCases(): array {
+  private function getFundingCaseBundles(): array {
     $fundingCaseId = $this->getFundingCaseIdFromWhere();
     if (NULL === $fundingCaseId) {
-      return $this->getFundingCaseManager()->getBy(
+      return $this->getFundingCaseManager()->getBundleBy(
         Comparison::new('amount_approved', '>', 0)
       );
     }
 
-    $fundingCase = $this->getFundingCaseManager()->get($fundingCaseId);
-    if (NULL !== $fundingCase && $fundingCase->getAmountApproved() > 0) {
-      return [$fundingCase];
+    $fundingCaseBundle = $this->getFundingCaseManager()->getBundle($fundingCaseId);
+    if (NULL !== $fundingCaseBundle && $fundingCaseBundle->getFundingCase()->getAmountApproved() > 0) {
+      return [$fundingCaseBundle];
     }
 
     return [];

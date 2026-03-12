@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\PayoutProcess;
 
+use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\EntityFactory\PayoutProcessBundleFactory;
 use Civi\Funding\Event\FundingCase\FundingCaseAmountApprovedUpdatedEvent;
 use Civi\Funding\PayoutProcess\PayoutProcessManager;
@@ -30,10 +31,7 @@ use PHPUnit\Framework\TestCase;
  */
 final class PayoutProcessUpdateAmountSubscriberTest extends TestCase {
 
-  /**
-   * @var \Civi\Funding\PayoutProcess\PayoutProcessManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $payoutProcessManagerMock;
+  private PayoutProcessManager&MockObject $payoutProcessManagerMock;
 
   private PayoutProcessUpdateAmountSubscriber $subscriber;
 
@@ -65,9 +63,11 @@ final class PayoutProcessUpdateAmountSubscriberTest extends TestCase {
 
     $payoutProcessBundle->getFundingCase()->setAmountApproved(1.23);
     $event = new FundingCaseAmountApprovedUpdatedEvent(
-      $payoutProcessBundle->getFundingCase(),
-      $payoutProcessBundle->getFundingCaseType(),
-      $payoutProcessBundle->getFundingProgram()
+      new FundingCaseBundle(
+        $payoutProcessBundle->getFundingCase(),
+        $payoutProcessBundle->getFundingCaseType(),
+        $payoutProcessBundle->getFundingProgram(),
+      )
     );
     $this->subscriber->onAmountApprovedUpdated($event);
   }

@@ -41,29 +41,17 @@ use PHPUnit\Framework\TestCase;
  */
 final class ApplicationActionApplyHandlerTest extends TestCase {
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\ApplicationProcessManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $applicationProcessManagerMock;
+  private ApplicationProcessManager&MockObject $applicationProcessManagerMock;
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\Snapshot\ApplicationSnapshotRestorerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $applicationSnapshotRestorerMock;
+  private ApplicationSnapshotRestorerInterface&MockObject $applicationSnapshotRestorerMock;
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\Handler\ApplicationFormCommentPersistHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $commentStoreHandlerMock;
+  private ApplicationFormCommentPersistHandlerInterface&MockObject $commentStoreHandlerMock;
 
   private ApplicationActionApplyHandler $handler;
 
   private FundingCaseTypeMetaDataMock $metaDataMock;
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $statusDeterminerMock;
+  private ApplicationProcessStatusDeterminerInterface&MockObject $statusDeterminerMock;
 
   protected function setUp(): void {
     parent::setUp();
@@ -130,15 +118,13 @@ final class ApplicationActionApplyHandlerTest extends TestCase {
 
     $this->applicationProcessManagerMock->expects(static::once())->method('update');
 
+    $validationResult = $command->getValidationResult();
+    assert(NULL !== $validationResult);
     $this->commentStoreHandlerMock->expects(static::once())->method('handle')
       ->with(new ApplicationFormCommentPersistCommand(
         $command->getContactId(),
-        $command->getApplicationProcess(),
-        $command->getFundingCase(),
-        $command->getFundingCaseType(),
-        $command->getFundingProgram(),
-        // @phpstan-ignore-next-line
-        $command->getValidationResult()->getValidatedData(),
+        $command->getApplicationProcessBundle(),
+        $validationResult->getValidatedData(),
       ));
 
     $this->handler->handle($command);

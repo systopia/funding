@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Mock\FundingCaseType\FundingCase\UiSchema;
 
-use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\FundingCase\FundingCaseUiSchemaFactoryInterface;
@@ -30,11 +30,7 @@ final class TestFundingCaseUiSchemaFactory implements FundingCaseUiSchemaFactory
 
   use TestSupportedFundingCaseTypesTrait;
 
-  public function createUiSchemaUpdate(
-    FundingProgramEntity $fundingProgram,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingCaseEntity $fundingCase
-  ): JsonFormsElement {
+  public function createUiSchemaUpdate(FundingCaseBundle $fundingCaseBundle): JsonFormsElement {
     return new TestFundingCaseUiSchema();
   }
 

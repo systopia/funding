@@ -45,21 +45,9 @@ final class FundingCaseFormUpdateGetHandler implements FundingCaseFormUpdateGetH
   }
 
   public function handle(FundingCaseFormUpdateGetCommand $command): JsonFormsFormWithDataInterface {
-    $jsonSchema = $this->jsonSchemaFactory->createJsonSchemaUpdate(
-      $command->getFundingProgram(),
-      $command->getFundingCaseType(),
-      $command->getFundingCase(),
-    );
-    $uiSchema = $this->uiSchemaFactory->createUiSchemaUpdate(
-      $command->getFundingProgram(),
-      $command->getFundingCaseType(),
-      $command->getFundingCase(),
-    );
-    $data = $this->formDataGetHandler->handle(new FundingCaseFormDataGetCommand(
-      $command->getFundingProgram(),
-      $command->getFundingCaseType(),
-      $command->getFundingCase(),
-    ));
+    $jsonSchema = $this->jsonSchemaFactory->createJsonSchemaUpdate($command->getFundingCaseBundle());
+    $uiSchema = $this->uiSchemaFactory->createUiSchemaUpdate($command->getFundingCaseBundle());
+    $data = $this->formDataGetHandler->handle(new FundingCaseFormDataGetCommand($command->getFundingCaseBundle()));
 
     return new JsonFormsFormWithData($jsonSchema, $uiSchema, $data);
   }

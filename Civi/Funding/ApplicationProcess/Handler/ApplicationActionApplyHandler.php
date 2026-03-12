@@ -85,10 +85,7 @@ final class ApplicationActionApplyHandler implements ApplicationActionApplyHandl
         if (NULL !== $validatedData->getComment() && '' !== $validatedData->getComment()['text']) {
           $this->commentPersistHandler->handle(new ApplicationFormCommentPersistCommand(
             $command->getContactId(),
-            $command->getApplicationProcess(),
-            $command->getFundingCase(),
-            $command->getFundingCaseType(),
-            $command->getFundingProgram(),
+            $command->getApplicationProcessBundle(),
             $validatedData,
           ));
         }

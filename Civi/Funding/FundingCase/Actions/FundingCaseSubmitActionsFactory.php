@@ -40,16 +40,15 @@ final class FundingCaseSubmitActionsFactory implements FundingCaseSubmitActionsF
 
   public function getSubmitActions(FundingCaseBundle $fundingCaseBundle, array $applicationProcessStatusList): array {
     $actionNames = $this->getActionsDeterminer($fundingCaseBundle->getFundingCaseType())->getActions(
-      $fundingCaseBundle->getFundingCase()->getStatus(),
+      $fundingCaseBundle,
       $applicationProcessStatusList,
-      $fundingCaseBundle->getFundingCase()->getPermissions()
     );
 
     return $this->getActions($fundingCaseBundle->getFundingCaseType(), $actionNames);
   }
 
   public function getInitialSubmitActions(array $permissions, FundingCaseTypeEntity $fundingCaseType): array {
-    $actionNames = $this->getActionsDeterminer($fundingCaseType)->getInitialActions($permissions);
+    $actionNames = $this->getActionsDeterminer($fundingCaseType)->getInitialActions($fundingCaseType, $permissions);
 
     return $this->getActions($fundingCaseType, $actionNames);
   }

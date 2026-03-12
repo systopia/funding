@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Mock\FundingCaseType\FundingCase\Actions;
 
 use Civi\Funding\ClearingProcess\ClearingProcessManager;
+use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\FundingCase\Actions\AbstractFundingCaseActionsDeterminerDecorator;
 use Civi\Funding\FundingCase\Actions\DefaultFundingCaseActionsDeterminer;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions;
@@ -45,13 +46,11 @@ final class TestCaseActionsDeterminer extends AbstractFundingCaseActionsDetermin
     ));
   }
 
-  public function getActions(string $status, array $applicationProcessStatusList, array $permissions): array {
-    $actions = parent::getActions(
-      $status,
-      $applicationProcessStatusList,
-      $permissions
-    );
+  public function getActions(FundingCaseBundle $fundingCaseBundle, array $applicationProcessStatusList): array {
+    $actions = parent::getActions($fundingCaseBundle, $applicationProcessStatusList);
 
+    $status = $fundingCaseBundle->getFundingCase()->getStatus();
+    $permissions = $fundingCaseBundle->getFundingCase()->getPermissions();
     if ('ongoing' === $status && $this->hasReviewPermission($permissions)) {
       $actions[] = FundingCaseActions::UPDATE_AMOUNT_APPROVED;
     }

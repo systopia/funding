@@ -24,6 +24,7 @@ use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\EntityFactory\ClearingProcessFactory;
+use Civi\Funding\EntityFactory\FundingCaseBundleFactory;
 use Civi\Funding\FundingCase\FundingCasePermissions;
 use Civi\Funding\FundingCaseType\MetaData\ApplicationProcessStatus;
 use Civi\Funding\FundingCaseType\MetaData\DefaultApplicationProcessStatuses;
@@ -84,10 +85,7 @@ final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
 
   private ApplicationProcessStatusDeterminerInterface&MockObject $applicationProcessStatusDeterminerMock;
 
-  /**
-   * @var \Civi\Funding\ClearingProcess\ClearingProcessManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $clearingProcessManagerMock;
+  private ClearingProcessManager&MockObject $clearingProcessManagerMock;
 
   private FundingCaseTypeMetaDataMock $metaDataMock;
 
@@ -117,7 +115,10 @@ final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
       foreach ($permissionActionsMap as $permission => $actions) {
         static::assertSame(
           $actions,
-          $this->actionsDeterminer->getActions($status, $this->statusList, [$permission]),
+          $this->actionsDeterminer->getActions(
+            FundingCaseBundleFactory::create(['status' => $status, 'permissions' => [$permission]]),
+            $this->statusList
+          ),
           sprintf('Status: %s, permission: %s', $status, $permission)
         );
       }
@@ -127,39 +128,49 @@ final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
   public function testGetActionsFinishClearing(): void {
     $statusList = [22 => new FullApplicationProcessStatus('review', TRUE, TRUE)];
     static::assertNotContains(FundingCaseActions::FINISH_CLEARING, $this->actionsDeterminer->getActions(
-      'ongoing',
+      FundingCaseBundleFactory::create([
+        'status' => 'ongoing',
+        'permissions' => [FundingCasePermissions::REVIEW_FINISH],
+      ]),
       $statusList,
-      [FundingCasePermissions::REVIEW_FINISH]
     ));
 
     $statusList = [22 => new FullApplicationProcessStatus('eligible', TRUE, TRUE)];
     static::assertNotContains(FundingCaseActions::FINISH_CLEARING, $this->actionsDeterminer->getActions(
-      'ongoing',
+      FundingCaseBundleFactory::create([
+        'status' => 'ongoing',
+        'permissions' => [FundingCasePermissions::REVIEW_FINISH],
+      ]),
       $statusList,
-      [FundingCasePermissions::REVIEW_FINISH]
     ));
 
     $clearingProcess = ClearingProcessFactory::create(['status' => 'accepted']);
     $this->clearingProcessManagerMock->method('getByApplicationProcessId')
       ->with(22)->willReturn($clearingProcess);
     static::assertContains(FundingCaseActions::FINISH_CLEARING, $this->actionsDeterminer->getActions(
-      'ongoing',
+      FundingCaseBundleFactory::create([
+        'status' => 'ongoing',
+        'permissions' => [FundingCasePermissions::REVIEW_FINISH],
+      ]),
       $statusList,
-      [FundingCasePermissions::REVIEW_FINISH]
     ));
 
     $clearingProcess->setValues(['status' => 'rejected'] + $clearingProcess->toArray());
     static::assertContains(FundingCaseActions::FINISH_CLEARING, $this->actionsDeterminer->getActions(
-      'ongoing',
+      FundingCaseBundleFactory::create([
+        'status' => 'ongoing',
+        'permissions' => [FundingCasePermissions::REVIEW_FINISH],
+      ]),
       $statusList,
-      [FundingCasePermissions::REVIEW_FINISH]
     ));
 
     $clearingProcess->setValues(['status' => 'review'] + $clearingProcess->toArray());
     static::assertNotContains(FundingCaseActions::FINISH_CLEARING, $this->actionsDeterminer->getActions(
-      'ongoing',
+      FundingCaseBundleFactory::create([
+        'status' => 'ongoing',
+        'permissions' => [FundingCasePermissions::REVIEW_FINISH],
+      ]),
       $statusList,
-      [FundingCasePermissions::REVIEW_FINISH]
     ));
   }
 
@@ -168,9 +179,11 @@ final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
     $clearingProcess = ClearingProcessFactory::create(['status' => 'accepted']);
     $this->clearingProcessManagerMock->expects(static::never())->method('getByApplicationProcessId');
     static::assertNotContains(FundingCaseActions::FINISH_CLEARING, $this->actionsDeterminer->getActions(
-      'ongoing',
+      FundingCaseBundleFactory::create([
+        'status' => 'ongoing',
+        'permissions' => ['review_content'],
+      ]),
       $statusList,
-      ['review_content']
     ));
   }
 
@@ -183,9 +196,11 @@ final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
       'eligible' => TRUE,
     ]));
     static::assertNotContains(FundingCaseActions::REJECT, $this->actionsDeterminer->getActions(
-      'open',
+      FundingCaseBundleFactory::create([
+        'status' => 'open',
+        'permissions' => [FundingCasePermissions::REVIEW_FINISH],
+      ]),
       $statusList,
-      [FundingCasePermissions::REVIEW_FINISH]
     ));
 
     $this->metaDataMock->addApplicationProcessStatus(new ApplicationProcessStatus([
@@ -194,14 +209,18 @@ final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
       'eligible' => FALSE,
     ]));
     static::assertContains(FundingCaseActions::REJECT, $this->actionsDeterminer->getActions(
-      'open',
+      FundingCaseBundleFactory::create([
+        'status' => 'open',
+        'permissions' => [FundingCasePermissions::REVIEW_FINISH],
+      ]),
       $statusList,
-      [FundingCasePermissions::REVIEW_FINISH]
     ));
     static::assertNotContains(FundingCaseActions::REJECT, $this->actionsDeterminer->getActions(
-      'ongoing',
+      FundingCaseBundleFactory::create([
+        'status' => 'ongoing',
+        'permissions' => [FundingCasePermissions::REVIEW_FINISH],
+      ]),
       $statusList,
-      [FundingCasePermissions::REVIEW_FINISH]
     ));
 
     $this->metaDataMock->addApplicationProcessStatus(new ApplicationProcessStatus([
@@ -223,14 +242,18 @@ final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
         return new FullApplicationProcessStatus('newStatus', FALSE, FALSE);
       });
     static::assertNotContains(FundingCaseActions::REJECT, $this->actionsDeterminer->getActions(
-      'open',
+      FundingCaseBundleFactory::create([
+        'status' => 'open',
+        'permissions' => [FundingCasePermissions::REVIEW_FINISH],
+      ]),
       $statusList,
-      [FundingCasePermissions::REVIEW_FINISH]
     ));
     static::assertContains(FundingCaseActions::REJECT, $this->actionsDeterminer->getActions(
-      'open',
+      FundingCaseBundleFactory::create([
+        'status' => 'open',
+        'permissions' => [FundingCasePermissions::REVIEW_FINISH],
+      ]),
       $statusList,
-      [FundingCasePermissions::REVIEW_FINISH]
     ));
   }
 
@@ -243,9 +266,11 @@ final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
       'is_eligible' => FALSE,
     ]));
     static::assertNotContains(FundingCaseActions::REJECT, $this->actionsDeterminer->getActions(
-      'open',
+      FundingCaseBundleFactory::create([
+        'status' => 'open',
+        'permissions' => ['review_content'],
+      ]),
       $statusList,
-      ['review_content']
     ));
   }
 
@@ -263,7 +288,10 @@ final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
       $permissions = array_keys($permissionActionsMap);
       static::assertEquals(
         $actions,
-        $this->actionsDeterminer->getActions($status, $this->statusList, $permissions),
+        $this->actionsDeterminer->getActions(
+          FundingCaseBundleFactory::create(['status' => $status, 'permissions' => $permissions]),
+          $this->statusList
+        ),
         sprintf('Status: %s, permissions: %s', $status, var_export($permissions, TRUE))
       );
     }
@@ -272,81 +300,50 @@ final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
   public function testIsActionAllowed(): void {
     static::assertTrue($this->actionsDeterminer->isActionAllowed(
       'approve',
-      'open',
+      FundingCaseBundleFactory::create(['status' => 'open', 'permissions' => ['review_calculative']]),
       $this->statusList,
-      ['review_calculative']
     ));
     static::assertFalse($this->actionsDeterminer->isActionAllowed(
       'some_action',
-      'open',
+      FundingCaseBundleFactory::create(['status' => 'open', 'permissions' => ['review_calculative']]),
       $this->statusList,
-      ['review_calculative']
     ));
     static::assertFalse($this->actionsDeterminer->isActionAllowed(
       'approve',
-      'ongoing',
+      FundingCaseBundleFactory::create(['status' => 'ongoing', 'permissions' => ['review_calculative']]),
       $this->statusList,
-      ['review_calculative']
     ));
-  }
-
-  public function testIsAnyActionAllowed(): void {
-    static::assertTrue(
-      $this->actionsDeterminer->isAnyActionAllowed(
-        ['some_action', 'approve'],
-        'open',
-        $this->statusList,
-        ['review_calculative'])
-    );
-    static::assertFalse(
-      $this->actionsDeterminer->isAnyActionAllowed(
-        ['some_action', 'another_action'],
-        'open',
-        $this->statusList,
-        ['review_calculative'])
-    );
-    static::assertFalse(
-      $this->actionsDeterminer->isAnyActionAllowed(
-        ['some_action', 'approve'],
-        'ongoing',
-        $this->statusList,
-        ['review_calculative'])
-    );
   }
 
   public function testApprove(): void {
     static::assertFalse($this->actionsDeterminer->isActionAllowed(
       'approve',
-      'open',
+      FundingCaseBundleFactory::create(['status' => 'open', 'permissions' => ['review_calculative']]),
       [22 => new FullApplicationProcessStatus('review', TRUE, TRUE)],
-      ['review_calculative']
     ));
 
     static::assertFalse($this->actionsDeterminer->isActionAllowed(
       'approve',
-      'open',
+      FundingCaseBundleFactory::create(['status' => 'open', 'permissions' => ['review_calculative']]),
       [
         22 => new FullApplicationProcessStatus('eligible', TRUE, TRUE),
         23 => new FullApplicationProcessStatus('review', TRUE, TRUE),
       ],
-      ['review_calculative']
     ));
 
     static::assertFalse($this->actionsDeterminer->isActionAllowed(
       'approve',
-      'open',
+      FundingCaseBundleFactory::create(['status' => 'open', 'permissions' => ['review_calculative']]),
       [],
-      ['review_calculative']
     ));
 
     static::assertTrue($this->actionsDeterminer->isActionAllowed(
       'approve',
-      'open',
+      FundingCaseBundleFactory::create(['status' => 'open', 'permissions' => ['review_calculative']]),
       [
         22 => new FullApplicationProcessStatus('eligible', TRUE, TRUE),
         23 => new FullApplicationProcessStatus('withdrawn', TRUE, TRUE),
       ],
-      ['review_calculative']
     ));
   }
 

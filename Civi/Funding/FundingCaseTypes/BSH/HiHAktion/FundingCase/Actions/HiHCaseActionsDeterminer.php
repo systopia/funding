@@ -21,6 +21,7 @@ namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\FundingCase\Actions;
 
 use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
+use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions as Actions;
 use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminer;
 use Civi\Funding\FundingCase\FundingCasePermissions;
@@ -84,12 +85,8 @@ final class HiHCaseActionsDeterminer extends FundingCaseActionsDeterminer {
     $this->metaData = $metaData;
   }
 
-  public function getActions(string $status, array $applicationProcessStatusList, array $permissions): array {
-    $actions = parent::getActions(
-      $status,
-      $applicationProcessStatusList,
-      $permissions
-    );
+  public function getActions(FundingCaseBundle $fundingCaseBundle, array $applicationProcessStatusList): array {
+    $actions = parent::getActions($fundingCaseBundle, $applicationProcessStatusList);
 
     $posApprove = array_search(Actions::APPROVE, $actions, TRUE);
     if (FALSE !== $posApprove && !$this->isApprovePossible($applicationProcessStatusList)) {

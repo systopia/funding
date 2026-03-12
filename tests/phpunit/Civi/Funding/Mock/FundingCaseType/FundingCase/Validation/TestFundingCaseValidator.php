@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Mock\FundingCaseType\FundingCase\Validation;
 
-use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\FundingCase\AbstractFundingCaseValidator;
@@ -37,9 +37,7 @@ final class TestFundingCaseValidator extends AbstractFundingCaseValidator {
    * @inheritDoc
    */
   protected function getValidationResultExisting(
-    FundingProgramEntity $fundingProgram,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingCaseEntity $fundingCase,
+    FundingCaseBundle $fundingCaseBundle,
     array $formData,
     JsonSchema $jsonSchema,
     ValidationResultInterface $jsonSchemaValidationResult,

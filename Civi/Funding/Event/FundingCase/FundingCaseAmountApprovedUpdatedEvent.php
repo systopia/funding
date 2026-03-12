@@ -19,46 +19,23 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Event\FundingCase;
 
-use Civi\Funding\Entity\FundingCaseEntity;
-use Civi\Funding\Entity\FundingCaseTypeEntity;
-use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\Entity\FundingCaseBundle;
+use Civi\Funding\Entity\Traits\FundingCaseBundleTrait;
 use Symfony\Contracts\EventDispatcher\Event;
 
 final class FundingCaseAmountApprovedUpdatedEvent extends Event {
 
-  private FundingCaseEntity $fundingCase;
+  use FundingCaseBundleTrait;
 
-  private FundingCaseTypeEntity $fundingCaseType;
-
-  private FundingProgramEntity $fundingProgram;
-
-  public function __construct(
-    FundingCaseEntity $fundingCase,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingProgramEntity $fundingProgram
-  ) {
-    $this->fundingCase = $fundingCase;
-    $this->fundingCaseType = $fundingCaseType;
-    $this->fundingProgram = $fundingProgram;
-  }
-
-  public function getFundingCase(): FundingCaseEntity {
-    return $this->fundingCase;
+  public function __construct(FundingCaseBundle $fundingCaseBundle) {
+    $this->fundingCaseBundle = $fundingCaseBundle;
   }
 
   public function getAmount(): float {
     /** @var float $amount */
-    $amount = $this->fundingCase->getAmountApproved();
+    $amount = $this->getFundingCase()->getAmountApproved();
 
     return $amount;
-  }
-
-  public function getFundingCaseType(): FundingCaseTypeEntity {
-    return $this->fundingCaseType;
-  }
-
-  public function getFundingProgram(): FundingProgramEntity {
-    return $this->fundingProgram;
   }
 
 }

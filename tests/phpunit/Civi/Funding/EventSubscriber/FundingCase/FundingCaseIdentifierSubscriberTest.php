@@ -32,19 +32,10 @@ use PHPUnit\Framework\TestCase;
  */
 final class FundingCaseIdentifierSubscriberTest extends TestCase {
 
-  /**
-   * @var \Civi\RemoteTools\Api4\Api4Interface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $api4Mock;
+  private Api4Interface&MockObject $api4Mock;
 
-  /**
-   * @var \Civi\Funding\FundingCase\FundingCaseIdentifierGeneratorInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $fundingCaseIdentifierGeneratorMock;
+  private FundingCaseIdentifierGeneratorInterface&MockObject $fundingCaseIdentifierGeneratorMock;
 
-  /**
-   * @var \Civi\Funding\EventSubscriber\FundingCase\FundingCaseIdentifierSubscriber
-   */
   private FundingCaseIdentifierSubscriber $subscriber;
 
   protected function setUp(): void {
@@ -74,11 +65,7 @@ final class FundingCaseIdentifierSubscriberTest extends TestCase {
     $event = new FundingCaseCreatedEvent($fundingCaseBundle);
 
     $this->fundingCaseIdentifierGeneratorMock->method('generateIdentifier')
-      ->with(
-        $fundingCaseBundle->getFundingCase(),
-        $fundingCaseBundle->getFundingCaseType(),
-        $fundingCaseBundle->getFundingProgram()
-      )
+      ->with($fundingCaseBundle)
       ->willReturn('generated');
 
     $this->api4Mock->expects(static::once())->method('updateEntity')

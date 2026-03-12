@@ -4,9 +4,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\FundingCase;
 
 use Civi\Api4\Contact;
-use Civi\Funding\Entity\FundingCaseEntity;
-use Civi\Funding\Entity\FundingCaseTypeEntity;
-use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\FundingCase\Recipients\PossibleRecipientsForChangeLoaderInterface;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Traits\HiHSupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\Api4\Api4Interface;
@@ -28,11 +26,7 @@ final class HiHPossibleRecipientsForChangeLoader implements PossibleRecipientsFo
    *
    * @throws \CRM_Core_Exception
    */
-  public function getPossibleRecipients(
-    FundingCaseEntity $fundingCase,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingProgramEntity $fundingProgram
-  ): array {
+  public function getPossibleRecipients(FundingCaseBundle $fundingCaseBundle): array {
     $separator = \CRM_Core_DAO::VALUE_SEPARATOR;
 
     return $this->api4->execute(Contact::getEntityName(), 'get', [

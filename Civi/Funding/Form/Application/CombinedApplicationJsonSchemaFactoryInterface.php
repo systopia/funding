@@ -19,9 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Form\Application;
 
-use Civi\Funding\Entity\FundingCaseEntity;
-use Civi\Funding\Entity\FundingCaseTypeEntity;
-use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 
 interface CombinedApplicationJsonSchemaFactoryInterface extends ApplicationJsonSchemaFactoryInterface {
@@ -29,10 +27,6 @@ interface CombinedApplicationJsonSchemaFactoryInterface extends ApplicationJsonS
   /**
    * Called when adding an application to an existing funding case.
    */
-  public function createJsonSchemaAdd(
-    FundingProgramEntity $fundingProgram,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingCaseEntity $fundingCase
-  ): JsonSchema;
+  public function createJsonSchemaAdd(FundingCaseBundle $fundingCaseBundle): JsonSchema;
 
 }

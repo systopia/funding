@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Mock\FundingCaseType\Application\UiSchema;
 
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
-use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\Application\CombinedApplicationUiSchemaFactoryInterface;
@@ -36,11 +36,7 @@ final class TestUiSchemaFactory implements CombinedApplicationUiSchemaFactoryInt
   /**
    * @inheritDoc
    */
-  public function createUiSchemaAdd(
-    FundingProgramEntity $fundingProgram,
-    FundingCaseTypeEntity $fundingCaseType,
-    FundingCaseEntity $fundingCase
-  ): JsonFormsLayout {
+  public function createUiSchemaAdd(FundingCaseBundle $fundingCaseBundle): JsonFormsLayout {
     return new TestUiSchema();
   }
 

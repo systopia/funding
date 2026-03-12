@@ -19,9 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\PayoutProcess;
 
-use Civi\Funding\EntityFactory\FundingCaseFactory;
-use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
-use Civi\Funding\EntityFactory\FundingProgramFactory;
+use Civi\Funding\EntityFactory\FundingCaseBundleFactory;
 use Civi\Funding\EntityFactory\PayoutProcessFactory;
 use Civi\Funding\Event\FundingCase\FundingCaseApprovedEvent;
 use Civi\Funding\PayoutProcess\PayoutProcessManager;
@@ -33,10 +31,7 @@ use PHPUnit\Framework\TestCase;
  */
 final class PayoutProcessCreateSubscriberTest extends TestCase {
 
-  /**
-   * @var \Civi\Funding\PayoutProcess\PayoutProcessManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $payoutProcessManagerMock;
+  private PayoutProcessManager&MockObject $payoutProcessManagerMock;
 
   private PayoutProcessCreateSubscriber $subscriber;
 
@@ -59,14 +54,12 @@ final class PayoutProcessCreateSubscriberTest extends TestCase {
   }
 
   public function testOnApproved(): void {
-    $fundingProgram = FundingProgramFactory::createFundingProgram();
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
-    $fundingCase = FundingCaseFactory::createFundingCase();
+    $fundingCaseBundle = FundingCaseBundleFactory::create();
 
-    $event = new FundingCaseApprovedEvent($fundingCase, 12.34, $fundingCaseType, $fundingProgram);
+    $event = new FundingCaseApprovedEvent($fundingCaseBundle, 12.34);
 
     $this->payoutProcessManagerMock->expects(static::once())->method('create')
-      ->with($fundingCase, 12.34)
+      ->with($fundingCaseBundle->getFundingCase(), 12.34)
       ->willReturn(PayoutProcessFactory::create());
     $this->subscriber->onApproved($event);
   }
