@@ -160,6 +160,7 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
       'short_description' => ValidatedApplicationDataMock::SHORT_DESCRIPTION,
       'request_data' => ValidatedApplicationDataMock::APPLICATION_DATA,
       'amount_requested' => ValidatedApplicationDataMock::AMOUNT_REQUESTED,
+      'amount_eligible' => 0.0,
       'creation_date' => date('Y-m-d H:i:s'),
       'modification_date' => date('Y-m-d H:i:s'),
       'start_date' => ValidatedApplicationDataMock::START_DATE,
@@ -206,6 +207,37 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
     static::assertNotNull($this->applicationProcessManager->get($applicationProcess->getId()));
 
     static::assertNull($this->applicationProcessManager->get($applicationProcess->getId() + 1));
+  }
+
+  public function testGetAmountEligibleByFundingCaseId(): void {
+    $contact = ContactFixture::addIndividual();
+    $fundingCase1 = $this->createFundingCase();
+    $fundingCase2 = $this->createFundingCase();
+
+    ApplicationProcessFixture::addFixture($fundingCase1->getId(), ['amount_eligible' => 1.11]);
+    ApplicationProcessFixture::addFixture($fundingCase1->getId(), ['amount_eligible' => 2.22]);
+
+    ApplicationProcessFixture::addFixture($fundingCase2->getId(), ['amount_eligible' => 100.0]);
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase2->getId(), ['test_permission']);
+
+    RequestTestUtil::mockInternalRequest($contact['id']);
+    static::assertSame(0.0, $this->applicationProcessManager->getAmountEligibleByFundingCaseId($fundingCase1->getId()));
+    static::assertSame(
+      100.0,
+      $this->applicationProcessManager->getAmountEligibleByFundingCaseId($fundingCase2->getId())
+    );
+
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase1->getId(), ['test_permission']);
+    $this->clearCache();
+    static::assertSame(
+      3.33,
+      $this->applicationProcessManager->getAmountEligibleByFundingCaseId($fundingCase1->getId())
+    );
+
+    static::assertSame(
+      0.0,
+      $this->applicationProcessManager->getAmountEligibleByFundingCaseId($fundingCase2->getId() + 1)
+    );
   }
 
   public function testGetBundle(): void {

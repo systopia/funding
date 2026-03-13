@@ -20,15 +20,16 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase\Approval;
 
-use Civi\Funding\ApplicationProcess\EligibleApplicationProcessesLoader;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\Entity\FundingCaseBundle;
+use Civi\Funding\Util\FloatUtil;
 
 class ApprovalValidator {
 
-  private EligibleApplicationProcessesLoader $eligibleApplicationProcessesLoader;
+  private ApplicationProcessManager $applicationProcessManager;
 
-  public function __construct(EligibleApplicationProcessesLoader $eligibleApplicationProcessesLoader) {
-    $this->eligibleApplicationProcessesLoader = $eligibleApplicationProcessesLoader;
+  public function __construct(ApplicationProcessManager $applicationProcessManager) {
+    $this->applicationProcessManager = $applicationProcessManager;
   }
 
   /**
@@ -42,15 +43,11 @@ class ApprovalValidator {
       return TRUE;
     }
 
-    $eligibleApplicationProcesses = $this->eligibleApplicationProcessesLoader->getEligibleProcessesForContract(
-      $fundingCaseBundle->getFundingCase()
+    $amountEligible = $this->applicationProcessManager->getAmountEligibleByFundingCaseId(
+      $fundingCaseBundle->getFundingCase()->getId(),
     );
-    $amountRequestedEligible = 0;
-    foreach ($eligibleApplicationProcesses as $eligibleApplicationProcess) {
-      $amountRequestedEligible += $eligibleApplicationProcess->getAmountRequested();
-    }
 
-    return abs($amount - $amountRequestedEligible) <= PHP_FLOAT_EPSILON;
+    return FloatUtil::isMoneyEqual($amount, $amountEligible);
   }
 
 }

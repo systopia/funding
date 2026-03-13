@@ -111,6 +111,7 @@ class ApplicationProcessManager {
       'short_description' => $data->getShortDescription(),
       'request_data' => $data->getApplicationData(),
       'amount_requested' => $data->getAmountRequested(),
+      'amount_eligible' => 0.0,
       'creation_date' => $now,
       'modification_date' => $now,
       'start_date' => DateTimeUtil::toDateTimeStrOrNull($data->getStartDate()),
@@ -201,6 +202,16 @@ class ApplicationProcessManager {
       [$this, 'createBundle'],
       $this->getAll(),
     );
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function getAmountEligibleByFundingCaseId(int $fundingCaseId): float {
+    return round($this->api4->executeAction(FundingApplicationProcess::get(FALSE)
+      ->addSelect('SUM(amount_eligible) AS sum_amount_eligible')
+      ->addWhere('funding_case_id', '=', $fundingCaseId)
+    )->first()['sum_amount_eligible'] ?? 0.0, 2);
   }
 
   /**

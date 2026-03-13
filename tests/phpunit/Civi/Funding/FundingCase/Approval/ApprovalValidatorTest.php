@@ -20,8 +20,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCase\Approval;
 
-use Civi\Funding\ApplicationProcess\EligibleApplicationProcessesLoader;
-use Civi\Funding\EntityFactory\ApplicationProcessFactory;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\EntityFactory\FundingCaseBundleFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -31,20 +30,20 @@ use PHPUnit\Framework\TestCase;
  */
 final class ApprovalValidatorTest extends TestCase {
 
-  private ApprovalValidator $approvalValidator;
+  private ApplicationProcessManager&MockObject $applicationProcessManagerMock;
 
-  private MockObject&EligibleApplicationProcessesLoader $eligibleApplicationProcessesLoaderMock;
+  private ApprovalValidator $approvalValidator;
 
   protected function setUp(): void {
     parent::setUp();
-    $this->eligibleApplicationProcessesLoaderMock = $this->createMock(EligibleApplicationProcessesLoader::class);
-    $this->approvalValidator = new ApprovalValidator($this->eligibleApplicationProcessesLoaderMock);
+    $this->applicationProcessManagerMock = $this->createMock(ApplicationProcessManager::class);
+    $this->approvalValidator = new ApprovalValidator($this->applicationProcessManagerMock);
   }
 
   public function testIsAmountAllowedAdjustable(): void {
     $fundingCaseBundle = FundingCaseBundleFactory::create();
 
-    $this->eligibleApplicationProcessesLoaderMock->expects(static::never())->method('getEligibleProcessesForContract');
+    $this->applicationProcessManagerMock->expects(static::never())->method('getAmountEligibleByFundingCaseId');
 
     static::assertTrue($this->approvalValidator->isAmountAllowed(1.23, $fundingCaseBundle));
   }
@@ -54,12 +53,11 @@ final class ApprovalValidatorTest extends TestCase {
       fundingCaseTypeValues: ['properties' => ['amountApprovedNonAdjustable' => TRUE]]
     );
 
-    $applicationProcess = ApplicationProcessFactory::createApplicationProcess([
-      'is_eligible' => TRUE,
-      'amount_requested' => 1.23,
-    ]);
-    $this->eligibleApplicationProcessesLoaderMock->expects(static::once())->method('getEligibleProcessesForContract')
-      ->willReturn([$applicationProcess]);
+    $this->applicationProcessManagerMock
+      ->expects(static::once())
+      ->method('getAmountEligibleByFundingCaseId')
+      ->with($fundingCaseBundle->getFundingCase()->getId())
+      ->willReturn(1.23);
 
     static::assertTrue($this->approvalValidator->isAmountAllowed(1.23, $fundingCaseBundle));
   }
@@ -69,12 +67,11 @@ final class ApprovalValidatorTest extends TestCase {
       fundingCaseTypeValues: ['properties' => ['amountApprovedNonAdjustable' => TRUE]]
     );
 
-    $applicationProcess = ApplicationProcessFactory::createApplicationProcess([
-      'is_eligible' => TRUE,
-      'amount_requested' => 1.23,
-    ]);
-    $this->eligibleApplicationProcessesLoaderMock->expects(static::once())->method('getEligibleProcessesForContract')
-      ->willReturn([$applicationProcess]);
+    $this->applicationProcessManagerMock
+      ->expects(static::once())
+      ->method('getAmountEligibleByFundingCaseId')
+      ->with($fundingCaseBundle->getFundingCase()->getId())
+      ->willReturn(1.23);
 
     static::assertFalse($this->approvalValidator->isAmountAllowed(1.24, $fundingCaseBundle));
   }
@@ -84,12 +81,11 @@ final class ApprovalValidatorTest extends TestCase {
       fundingCaseTypeValues: ['properties' => ['amountApprovedNonAdjustable' => TRUE]]
     );
 
-    $applicationProcess = ApplicationProcessFactory::createApplicationProcess([
-      'is_eligible' => TRUE,
-      'amount_requested' => 1.23,
-    ]);
-    $this->eligibleApplicationProcessesLoaderMock->expects(static::once())->method('getEligibleProcessesForContract')
-      ->willReturn([$applicationProcess]);
+    $this->applicationProcessManagerMock
+      ->expects(static::once())
+      ->method('getAmountEligibleByFundingCaseId')
+      ->with($fundingCaseBundle->getFundingCase()->getId())
+      ->willReturn(1.23);
 
     static::assertFalse($this->approvalValidator->isAmountAllowed(1.22, $fundingCaseBundle));
   }
