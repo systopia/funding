@@ -20,8 +20,12 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase\Handler;
 
 use Civi\Funding\FundingCase\Command\FundingCaseFinishClearingCommand;
+use Civi\Funding\FundingCaseType\FundingCaseTypeServiceInterface;
 
-interface FundingCaseFinishClearingHandlerInterface {
+/**
+ * @see FundingCaseTypeServiceInterface
+ */
+interface FundingCaseFinishClearingHandlerInterface extends FundingCaseTypeServiceInterface {
 
   public const SERVICE_TAG = 'funding.case.finish_clearing_handler';
 

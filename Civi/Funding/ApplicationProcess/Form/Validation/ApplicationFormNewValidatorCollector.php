@@ -22,22 +22,15 @@ namespace Civi\Funding\ApplicationProcess\Form\Validation;
 use Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidationResult;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
-use Psr\Container\ContainerInterface;
+use Civi\Funding\FundingCaseType\AbstractFundingCaseTypeServiceCollector;
 
 /**
+ * @extends AbstractFundingCaseTypeServiceCollector<ApplicationFormNewValidatorInterface>
+ *
  * @codeCoverageIgnore
  */
-final class ApplicationFormNewValidatorCollector implements ApplicationFormNewValidatorInterface {
-
-  private ContainerInterface $validators;
-
-  /**
-   * @param \Psr\Container\ContainerInterface $validators
-   *   Validators with funding case type name as ID.
-   */
-  public function __construct(ContainerInterface $validators) {
-    $this->validators = $validators;
-  }
+// phpcs:ignore Generic.Files.LineLength.TooLong
+final class ApplicationFormNewValidatorCollector extends AbstractFundingCaseTypeServiceCollector implements ApplicationFormNewValidatorInterface {
 
   public function validateInitial(
     FundingCaseTypeEntity $fundingCaseType,
@@ -45,11 +38,10 @@ final class ApplicationFormNewValidatorCollector implements ApplicationFormNewVa
     ApplicationSchemaValidationResult $schemaValidationResult,
     bool $readOnly
   ): ApplicationFormValidationResult {
-    if ($this->validators->has($fundingCaseType->getName())) {
-      /** @var \Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormNewValidatorInterface $validator */
-      $validator = $this->validators->get($fundingCaseType->getName());
-
-      return $validator->validateInitial($fundingCaseType, $fundingProgram, $schemaValidationResult, $readOnly);
+    if ($this->hasService($fundingCaseType->getName())) {
+      return $this
+        ->getService($fundingCaseType->getName())
+        ->validateInitial($fundingCaseType, $fundingProgram, $schemaValidationResult, $readOnly);
     }
 
     return new ApplicationFormValidationResult(

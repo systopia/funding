@@ -21,6 +21,7 @@ namespace Civi\Funding\ClearingProcess\Form;
 
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\Form\JsonFormsFormInterface;
+use Civi\Funding\FundingCaseType\FundingCaseTypeServiceInterface;
 
 /**
  * @phpstan-type urlT string
@@ -60,8 +61,10 @@ use Civi\Funding\Form\JsonFormsFormInterface;
  * have the "const" keyword. The property "amountAdmitted" must be defined,
  * but doesn't need to be required. Other optional properties doesn't need to be
  * defined.
+ *
+ * @see FundingCaseTypeServiceInterface
  */
-interface ReceiptsFormGeneratorInterface {
+interface ReceiptsFormGeneratorInterface extends FundingCaseTypeServiceInterface {
 
   /**
    * Returns a JSON Forms specification that has a JSON schema that validates

@@ -30,11 +30,6 @@ abstract class AbstractDrawdownReviewTaskHandler extends AbstractDrawdownTaskHan
 
   private const TASK_TYPE = 'review';
 
-  /**
-   * @phpstan-return list<string>
-   */
-  abstract public static function getSupportedFundingCaseTypes(): array;
-
   public function createTasksOnChange(
     DrawdownBundle $drawdownBundle,
     DrawdownEntity $previousDrawdown

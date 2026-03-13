@@ -21,8 +21,12 @@ namespace Civi\Funding\Task\Creator;
 
 use Civi\Funding\Entity\DrawdownEntity;
 use Civi\Funding\Entity\DrawdownBundle;
+use Civi\Funding\FundingCaseType\FundingCaseTypeServiceInterface;
 
-interface DrawdownTaskCreatorInterface {
+/**
+ * @see FundingCaseTypeServiceInterface
+ */
+interface DrawdownTaskCreatorInterface extends FundingCaseTypeServiceInterface {
 
   /**
    * @return iterable<\Civi\Funding\Entity\FundingTaskEntity>

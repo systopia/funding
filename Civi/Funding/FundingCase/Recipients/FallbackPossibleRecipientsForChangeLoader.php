@@ -5,9 +5,11 @@ namespace Civi\Funding\FundingCase\Recipients;
 
 use Civi\Funding\Contact\PossibleRecipientsLoaderInterface;
 use Civi\Funding\Entity\FundingCaseBundle;
+use Civi\Funding\FundingCaseType\FallbackFundingCaseTypeServiceInterface;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 
-final class FallbackPossibleRecipientsForChangeLoader implements PossibleRecipientsForChangeLoaderInterface {
+// phpcs:ignore Generic.Files.LineLength.TooLong
+final class FallbackPossibleRecipientsForChangeLoader implements PossibleRecipientsForChangeLoaderInterface, FallbackFundingCaseTypeServiceInterface {
 
   private PossibleRecipientsLoaderInterface $possibleRecipientsLoader;
 

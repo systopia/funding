@@ -20,27 +20,18 @@ declare(strict_types = 1);
 namespace Civi\Funding\ClearingProcess\Form;
 
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
-use Psr\Container\ContainerInterface;
+use Civi\Funding\FundingCaseType\AbstractFundingCaseTypeServiceCollector;
 
-final class ReportDataLoaderCollector implements ReportDataLoaderInterface {
-
-  private ContainerInterface $dataLoaders;
-
-  /**
-   * @param \Psr\Container\ContainerInterface $dataLoaders
-   *   Data loaders with funding case type name as ID.
-   */
-  public function __construct(ContainerInterface $dataLoaders) {
-    $this->dataLoaders = $dataLoaders;
-  }
+/**
+ * @extends AbstractFundingCaseTypeServiceCollector<ReportDataLoaderInterface>
+ */
+// phpcs:ignore Generic.Files.LineLength.TooLong
+final class ReportDataLoaderCollector extends AbstractFundingCaseTypeServiceCollector implements ReportDataLoaderInterface {
 
   public function getReportData(ClearingProcessEntityBundle $clearingProcessBundle): array {
     $fundingCaseTypeName = $clearingProcessBundle->getFundingCaseType()->getName();
-    if ($this->dataLoaders->has($fundingCaseTypeName)) {
-      /** @var \Civi\Funding\ClearingProcess\Form\ReportDataLoaderInterface $dataLoader */
-      $dataLoader = $this->dataLoaders->get($fundingCaseTypeName);
-
-      return $dataLoader->getReportData($clearingProcessBundle);
+    if ($this->hasService($fundingCaseTypeName)) {
+      return $this->getService($fundingCaseTypeName)->getReportData($clearingProcessBundle);
     }
 
     return $clearingProcessBundle->getClearingProcess()->getReportData();

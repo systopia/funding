@@ -21,39 +21,25 @@ namespace Civi\Funding\ApplicationProcess\Form\Validation;
 
 use Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidationResult;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
-use Psr\Container\ContainerInterface;
+use Civi\Funding\FundingCaseType\AbstractFundingCaseTypeServiceCollector;
 
 /**
+ * @extends AbstractFundingCaseTypeServiceCollector<ApplicationFormValidatorInterface>
+ *
  * @codeCoverageIgnore
  */
-final class ApplicationFormValidatorCollector implements ApplicationFormValidatorInterface {
+// phpcs:ignore Generic.Files.LineLength.TooLong
+final class ApplicationFormValidatorCollector extends AbstractFundingCaseTypeServiceCollector implements ApplicationFormValidatorInterface {
 
-  private ContainerInterface $validators;
-
-  /**
-   * @param \Psr\Container\ContainerInterface $validators
-   *   Validators with funding case type name as ID.
-   */
-  public function __construct(ContainerInterface $validators) {
-    $this->validators = $validators;
-  }
-
-  /**
-   * @param bool $readOnly *
-   *
-   * @inheritDoc
-   */
   public function validateExisting(
     ApplicationProcessEntityBundle $applicationProcessBundle,
     ApplicationSchemaValidationResult $schemaValidationResult,
     bool $readOnly
   ): ApplicationFormValidationResult {
-    $fundingCaseTypeName = $applicationProcessBundle->getFundingCaseType()->getName();
-    if ($this->validators->has($fundingCaseTypeName)) {
-      /** @var \Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormValidatorInterface $validator */
-      $validator = $this->validators->get($fundingCaseTypeName);
-
-      return $validator->validateExisting($applicationProcessBundle, $schemaValidationResult, $readOnly);
+    if ($this->hasService($applicationProcessBundle->getFundingCaseType()->getName())) {
+      return $this
+        ->getService($applicationProcessBundle->getFundingCaseType()->getName())
+        ->validateExisting($applicationProcessBundle, $schemaValidationResult, $readOnly);
     }
 
     return new ApplicationFormValidationResult(

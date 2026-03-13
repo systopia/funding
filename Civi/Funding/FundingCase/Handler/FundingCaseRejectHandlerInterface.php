@@ -21,8 +21,12 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase\Handler;
 
 use Civi\Funding\FundingCase\Command\FundingCaseRejectCommand;
+use Civi\Funding\FundingCaseType\FundingCaseTypeServiceInterface;
 
-interface FundingCaseRejectHandlerInterface {
+/**
+ * @see FundingCaseTypeServiceInterface
+ */
+interface FundingCaseRejectHandlerInterface extends FundingCaseTypeServiceInterface {
 
   public function handle(FundingCaseRejectCommand $command): void;
 

@@ -24,11 +24,6 @@ trait CombinedApplicationCaseTaskTrait {
   protected static string $taskType = 'apply';
 
   /**
-   * @phpstan-return list<string>
-   */
-  abstract public static function getSupportedFundingCaseTypes(): array;
-
-  /**
    * @phpstan-return non-empty-list<string>
    *   One of the returned permissions is required to apply an application.
    */

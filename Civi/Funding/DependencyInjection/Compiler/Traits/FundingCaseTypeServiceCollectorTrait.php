@@ -27,19 +27,25 @@ trait FundingCaseTypeServiceCollectorTrait {
   use TaggedFundingCaseTypeServicesTrait;
 
   /**
-   * @phpstan-param class-string $collectorClass
-   * @phpstan-param class-string $interfaceClass
-   * @param int|string $argumentKey
+   * @param class-string $collectorClass
+   * @param class-string $interfaceClass
+   *
+   * @return array<string, \Symfony\Component\DependencyInjection\Reference>
+   *   The services in the collector.
    */
   protected function registerCollector(
     ContainerBuilder $container,
     string $collectorClass,
     string $interfaceClass,
-    $argumentKey = 0
-  ): void {
+    int|string $argumentKey = 0,
+    bool $public = FALSE,
+  ): array {
     $services = $this->getTaggedFundingCaseTypeServices($container, $interfaceClass::SERVICE_TAG);
     $container->autowire($interfaceClass, $collectorClass)
-      ->setArgument($argumentKey, ServiceLocatorTagPass::register($container, $services));
+      ->setArgument($argumentKey, ServiceLocatorTagPass::register($container, $services))
+      ->setPublic($public);
+
+    return $services;
   }
 
 }

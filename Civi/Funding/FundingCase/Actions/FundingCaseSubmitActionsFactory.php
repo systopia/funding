@@ -22,33 +22,29 @@ namespace Civi\Funding\FundingCase\Actions;
 use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\FundingCaseType\FundingCaseTypeMetaDataProviderInterface;
-use Civi\Funding\FundingCaseTypeServiceLocatorContainer;
 
 final class FundingCaseSubmitActionsFactory implements FundingCaseSubmitActionsFactoryInterface {
 
+  private FundingCaseActionsDeterminerInterface $actionDeterminer;
+
   private FundingCaseTypeMetaDataProviderInterface $metaDataProvider;
 
-  private FundingCaseTypeServiceLocatorContainer $serviceLocatorContainer;
-
   public function __construct(
+    FundingCaseActionsDeterminerInterface $actionDeterminer,
     FundingCaseTypeMetaDataProviderInterface $metaDataProvider,
-    FundingCaseTypeServiceLocatorContainer $serviceLocatorContainer
   ) {
+    $this->actionDeterminer = $actionDeterminer;
     $this->metaDataProvider = $metaDataProvider;
-    $this->serviceLocatorContainer = $serviceLocatorContainer;
   }
 
   public function getSubmitActions(FundingCaseBundle $fundingCaseBundle, array $applicationProcessStatusList): array {
-    $actionNames = $this->getActionsDeterminer($fundingCaseBundle->getFundingCaseType())->getActions(
-      $fundingCaseBundle,
-      $applicationProcessStatusList,
-    );
+    $actionNames = $this->actionDeterminer->getActions($fundingCaseBundle, $applicationProcessStatusList);
 
     return $this->getActions($fundingCaseBundle->getFundingCaseType(), $actionNames);
   }
 
   public function getInitialSubmitActions(array $permissions, FundingCaseTypeEntity $fundingCaseType): array {
-    $actionNames = $this->getActionsDeterminer($fundingCaseType)->getInitialActions($fundingCaseType, $permissions);
+    $actionNames = $this->actionDeterminer->getInitialActions($fundingCaseType, $permissions);
 
     return $this->getActions($fundingCaseType, $actionNames);
   }
@@ -66,12 +62,6 @@ final class FundingCaseSubmitActionsFactory implements FundingCaseSubmitActionsF
       fn(string $actionName) => in_array($actionName, $actionNames, TRUE),
       ARRAY_FILTER_USE_KEY
     );
-  }
-
-  private function getActionsDeterminer(
-    FundingCaseTypeEntity $fundingCaseType
-  ): FundingCaseActionsDeterminerInterface {
-    return $this->serviceLocatorContainer->get($fundingCaseType->getName())->getFundingCaseActionsDeterminer();
   }
 
 }

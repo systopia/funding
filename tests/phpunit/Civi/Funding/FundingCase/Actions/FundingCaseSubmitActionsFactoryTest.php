@@ -24,11 +24,8 @@ use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\EntityFactory\FundingCaseBundleFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\FundingCaseType\MetaData\FundingCaseAction;
-use Civi\Funding\FundingCaseTypeServiceLocator;
-use Civi\Funding\FundingCaseTypeServiceLocatorContainer;
 use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataMock;
 use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataProviderMock;
-use Civi\Funding\Mock\Psr\PsrContainer;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -37,7 +34,7 @@ use PHPUnit\Framework\TestCase;
  */
 final class FundingCaseSubmitActionsFactoryTest extends TestCase {
 
-  private MockObject&FundingCaseActionsDeterminerInterface $actionsDeterminerMock;
+  private FundingCaseActionsDeterminerInterface&MockObject $actionsDeterminerMock;
 
   private FundingCaseTypeMetaDataMock $metaDataMock;
 
@@ -47,14 +44,9 @@ final class FundingCaseSubmitActionsFactoryTest extends TestCase {
     parent::setUp();
     $this->actionsDeterminerMock = $this->createMock(FundingCaseActionsDeterminerInterface::class);
     $this->metaDataMock = new FundingCaseTypeMetaDataMock(FundingCaseTypeFactory::DEFAULT_NAME);
-    $serviceLocatorContainer = new FundingCaseTypeServiceLocatorContainer(new PsrContainer([
-      FundingCaseTypeFactory::DEFAULT_NAME => new FundingCaseTypeServiceLocator(new PsrContainer([
-        FundingCaseActionsDeterminerInterface::class => $this->actionsDeterminerMock,
-      ])),
-    ]));
     $this->submitActionsFactory = new FundingCaseSubmitActionsFactory(
+      $this->actionsDeterminerMock,
       new FundingCaseTypeMetaDataProviderMock($this->metaDataMock),
-      $serviceLocatorContainer,
     );
   }
 

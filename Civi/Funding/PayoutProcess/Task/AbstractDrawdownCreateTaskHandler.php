@@ -37,11 +37,6 @@ abstract class AbstractDrawdownCreateTaskHandler extends AbstractFundingCaseTask
 
   use DrawdownCreateTaskTrait;
 
-  /**
-   * @phpstan-return list<string>
-   */
-  abstract public static function getSupportedFundingCaseTypes(): array;
-
   protected PayoutProcessManager $payoutProcessManager;
 
   public function __construct(PayoutProcessManager $payoutProcessManager) {

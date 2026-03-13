@@ -22,8 +22,12 @@ namespace Civi\Funding\Task\Modifier;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingTaskEntity;
+use Civi\Funding\FundingCaseType\FundingCaseTypeServiceInterface;
 
-interface ApplicationProcessTaskModifierInterface {
+/**
+ * @see FundingCaseTypeServiceInterface
+ */
+interface ApplicationProcessTaskModifierInterface extends FundingCaseTypeServiceInterface {
 
   /**
    * @phpstan-return \Civi\Funding\ActivityTypeNames::APPLICATION_PROCESS_TASK|\Civi\Funding\ActivityTypeNames::CLEARING_PROCESS_TASK

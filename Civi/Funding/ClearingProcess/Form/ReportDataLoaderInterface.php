@@ -20,13 +20,17 @@ declare(strict_types = 1);
 namespace Civi\Funding\ClearingProcess\Form;
 
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
+use Civi\Funding\FundingCaseType\FundingCaseTypeServiceInterface;
 
-interface ReportDataLoaderInterface {
+/**
+ * @see FundingCaseTypeServiceInterface
+ */
+interface ReportDataLoaderInterface extends FundingCaseTypeServiceInterface {
 
   public const SERVICE_TAG = 'funding.clearing.report_data_loader';
 
   /**
-   * @phpstan-return array<int|string, mixed>
+   * @return array<int|string, mixed>
    */
   public function getReportData(ClearingProcessEntityBundle $clearingProcessBundle): array;
 

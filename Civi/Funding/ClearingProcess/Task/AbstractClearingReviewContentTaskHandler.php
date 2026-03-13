@@ -32,11 +32,6 @@ abstract class AbstractClearingReviewContentTaskHandler extends AbstractClearing
 
   private const TASK_TYPE = 'review_content';
 
-  /**
-   * @phpstan-return list<string>
-   */
-  abstract public static function getSupportedFundingCaseTypes(): array;
-
   public function createTasksOnChange(
     ClearingProcessEntityBundle $clearingProcessBundle,
     ClearingProcessEntity $previousClearingProcess

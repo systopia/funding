@@ -44,13 +44,6 @@ final class AbstractClearingApplyTaskModifierOnApplicationProcessChangeTest exte
 
       public static ?\DateTimeInterface $dueDate = NULL;
 
-      /**
-       * @inheritDoc
-       */
-      public static function getSupportedFundingCaseTypes(): array {
-        return [];
-      }
-
       protected function getDueDate(
         ApplicationProcessEntityBundle $applicationProcessBundle,
         ApplicationProcessEntity $previousApplicationProcess,

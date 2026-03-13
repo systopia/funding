@@ -22,15 +22,14 @@ namespace Civi\Funding\Form\FundingCase;
 use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\FundingCaseType\FundingCaseTypeServiceInterface;
 
-interface FundingCaseValidatorInterface {
+/**
+ * @see FundingCaseTypeServiceInterface
+ */
+interface FundingCaseValidatorInterface extends FundingCaseTypeServiceInterface {
 
   public const SERVICE_TAG = 'funding.case.validator';
-
-  /**
-   * @phpstan-return list<string>
-   */
-  public static function getSupportedFundingCaseTypes(): array;
 
   /**
    * Called when updating a funding case.

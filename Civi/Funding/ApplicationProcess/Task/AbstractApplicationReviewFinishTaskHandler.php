@@ -36,11 +36,6 @@ abstract class AbstractApplicationReviewFinishTaskHandler extends AbstractApplic
 
   private FundingCaseTypeMetaDataProviderInterface $metaDataProvider;
 
-  /**
-   * @phpstan-return list<string>
-   */
-  abstract public static function getSupportedFundingCaseTypes(): array;
-
   public function __construct(FundingCaseTypeMetaDataProviderInterface $metaDataProvider) {
     $this->metaDataProvider = $metaDataProvider;
   }

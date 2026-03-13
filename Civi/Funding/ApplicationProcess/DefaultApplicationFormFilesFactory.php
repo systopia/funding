@@ -24,13 +24,6 @@ final class DefaultApplicationFormFilesFactory implements ApplicationFormFilesFa
   /**
    * @inheritDoc
    */
-  public static function getSupportedFundingCaseTypes(): array {
-    return [];
-  }
-
-  /**
-   * @inheritDoc
-   */
   public function addIdentifiers(array $requestData): array {
     return $requestData;
   }

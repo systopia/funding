@@ -21,15 +21,14 @@ namespace Civi\Funding\Form\Application;
 
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\FundingCaseType\FundingCaseTypeServiceInterface;
 
-interface ApplicationFormDataFactoryInterface {
+/**
+ * @see FundingCaseTypeServiceInterface
+ */
+interface ApplicationFormDataFactoryInterface extends FundingCaseTypeServiceInterface {
 
   public const SERVICE_TAG = 'funding.application.form_data_factory';
-
-  /**
-   * @phpstan-return list<string>
-   */
-  public static function getSupportedFundingCaseTypes(): array;
 
   /**
    * @phpstan-return array<string, mixed> JSON serializable.

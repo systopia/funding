@@ -21,24 +21,16 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase\Handler;
 
 use Civi\Funding\FundingCase\Command\FundingCaseRejectCommand;
-use Psr\Container\ContainerInterface;
+use Civi\Funding\FundingCaseType\AbstractFundingCaseTypeServiceCollector;
 
-final class FundingCaseRejectHandlerCollector implements FundingCaseRejectHandlerInterface {
-
-  private ContainerInterface $handlers;
-
-  /**
-   * @param \Psr\Container\ContainerInterface $handlers
-   *   Reject handlers with funding case type name as ID.
-   */
-  public function __construct(ContainerInterface $handlers) {
-    $this->handlers = $handlers;
-  }
+/**
+ * @extends AbstractFundingCaseTypeServiceCollector<FundingCaseRejectHandlerInterface>
+ */
+// phpcs:ignore Generic.Files.LineLength.TooLong
+final class FundingCaseRejectHandlerCollector extends AbstractFundingCaseTypeServiceCollector implements FundingCaseRejectHandlerInterface {
 
   public function handle(FundingCaseRejectCommand $command): void {
-    /** @var \Civi\Funding\FundingCase\Handler\FundingCaseRejectHandlerInterface $handler */
-    $handler = $this->handlers->get($command->getFundingCaseType()->getName());
-    $handler->handle($command);
+    $this->getService($command->getFundingCaseType()->getName())->handle($command);
   }
 
 }

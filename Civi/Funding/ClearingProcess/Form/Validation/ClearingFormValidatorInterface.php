@@ -20,16 +20,16 @@ declare(strict_types = 1);
 namespace Civi\Funding\ClearingProcess\Form\Validation;
 
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
+use Civi\Funding\FundingCaseType\FundingCaseTypeServiceInterface;
 use Systopia\JsonSchema\Tags\TaggedDataContainerInterface;
 
 /**
  * This can be used if additional validation to JSON schema validation is
  * required.
  *
- * Implementations should be registered as service tagged with SERVICE_TAG and
- * add the public static method getFundingCaseType() or getFundingCaseTypes().
+ * @see FundingCaseTypeServiceInterface
  */
-interface ClearingFormValidatorInterface {
+interface ClearingFormValidatorInterface extends FundingCaseTypeServiceInterface {
 
   public const SERVICE_TAG = 'funding.clearing.form_validator';
 

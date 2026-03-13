@@ -37,11 +37,6 @@ abstract class AbstractClearingApplyTaskModifierOnApplicationProcessChange imple
   public const TASK_TYPE = 'apply';
 
   /**
-   * @phpstan-return list<string>
-   */
-  abstract public static function getSupportedFundingCaseTypes(): array;
-
-  /**
    * @phpstan-return ActivityTypeNames::CLEARING_PROCESS_TASK
    */
   public function getActivityTypeName(): string {

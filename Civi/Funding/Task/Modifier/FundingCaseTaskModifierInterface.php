@@ -22,11 +22,14 @@ namespace Civi\Funding\Task\Modifier;
 use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingTaskEntity;
+use Civi\Funding\FundingCaseType\FundingCaseTypeServiceInterface;
 
 /**
  * @phpstan-import-type taskNameT from \Civi\Funding\ActivityTypeNames
+ *
+ * @see FundingCaseTypeServiceInterface
  */
-interface FundingCaseTaskModifierInterface {
+interface FundingCaseTaskModifierInterface extends FundingCaseTypeServiceInterface {
 
   /**
    * @phpstan-return taskNameT

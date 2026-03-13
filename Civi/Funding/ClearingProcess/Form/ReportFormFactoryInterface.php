@@ -22,8 +22,12 @@ namespace Civi\Funding\ClearingProcess\Form;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\FundingCaseType\FundingCaseTypeServiceInterface;
 
-interface ReportFormFactoryInterface {
+/**
+ * @see FundingCaseTypeServiceInterface
+ */
+interface ReportFormFactoryInterface extends FundingCaseTypeServiceInterface {
 
   public const SERVICE_TAG = 'funding.clearing.report_form_factory';
 
