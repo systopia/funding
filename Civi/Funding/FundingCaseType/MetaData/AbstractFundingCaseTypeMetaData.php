@@ -29,6 +29,10 @@ abstract class AbstractFundingCaseTypeMetaData implements FundingCaseTypeMetaDat
     return $this->getApplicationProcessStatuses()[$name] ?? NULL;
   }
 
+  public function getAutoUpdateAmountApproved(): AutoUpdateAmountApproved {
+    return AutoUpdateAmountApproved::No;
+  }
+
   public function getCostItemType(string $name): ?CostItemTypeInterface {
     return $this->getCostItemTypes()[$name] ?? NULL;
   }
@@ -39,6 +43,10 @@ abstract class AbstractFundingCaseTypeMetaData implements FundingCaseTypeMetaDat
 
   public function getResourcesItemType(string $name): ?ResourcesItemTypeInterface {
     return $this->getResourcesItemTypes()[$name] ?? NULL;
+  }
+
+  public function isAutoIncreaseAmountApprovedOnEligibleEnabled(): bool {
+    return FALSE;
   }
 
   public function isGeneralClearingAdmitAllowed(): bool {

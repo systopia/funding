@@ -24,6 +24,7 @@ use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\FundingCaseType\MetaData\AbstractFundingCaseTypeMetaData;
 use Civi\Funding\FundingCaseType\MetaData\ApplicationProcessAction;
 use Civi\Funding\FundingCaseType\MetaData\ApplicationProcessStatus;
+use Civi\Funding\FundingCaseType\MetaData\AutoUpdateAmountApproved;
 use Civi\Funding\FundingCaseType\MetaData\FundingCaseAction;
 
 final class FundingCaseTypeMetaDataMock extends AbstractFundingCaseTypeMetaData {
@@ -39,6 +40,8 @@ final class FundingCaseTypeMetaDataMock extends AbstractFundingCaseTypeMetaData 
    * @var array<string, ApplicationProcessStatus>
    */
   public array $applicationProcessStatuses = [];
+
+  public AutoUpdateAmountApproved $autoUpdateAmountApproved = AutoUpdateAmountApproved::No;
 
   /**
    * @var array<string, FundingCaseAction>
@@ -86,6 +89,13 @@ final class FundingCaseTypeMetaDataMock extends AbstractFundingCaseTypeMetaData 
   public function getApplicationProcessStatuses(): array {
     // @phpstan-ignore return.type
     return $this->applicationProcessStatuses;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getAutoUpdateAmountApproved(): AutoUpdateAmountApproved {
+    return $this->autoUpdateAmountApproved;
   }
 
   /**

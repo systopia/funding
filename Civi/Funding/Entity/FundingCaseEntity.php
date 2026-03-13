@@ -170,6 +170,13 @@ final class FundingCaseEntity extends AbstractEntity {
     return in_array($permission, $this->getPermissions(), TRUE);
   }
 
+  /**
+   * @param list<string> $permissions
+   */
+  public function withPermissions(array $permissions): self {
+    return new self(['permissions' => $permissions] + $this->values);
+  }
+
   public function getTransferContractUri(): ?string {
     return $this->values['transfer_contract_uri'] ?? NULL;
   }
