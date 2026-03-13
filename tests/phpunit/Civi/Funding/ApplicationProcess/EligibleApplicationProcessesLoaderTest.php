@@ -21,6 +21,8 @@ namespace Civi\Funding\ApplicationProcess;
 
 use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\FundingCaseFactory;
+use Civi\RemoteTools\Api4\Query\Comparison;
+use Civi\RemoteTools\Api4\Query\CompositeCondition;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -43,20 +45,15 @@ final class EligibleApplicationProcessesLoaderTest extends TestCase {
   }
 
   public function test(): void {
-    $applicationProcessEligibilityUndecided = ApplicationProcessFactory::createApplicationProcess([
-      'is_eligible' => NULL,
-    ]);
-    $applicationProcessIneligible = ApplicationProcessFactory::createApplicationProcess(['is_eligible' => FALSE]);
-    $applicationProcessEligible = ApplicationProcessFactory::createApplicationProcess(['is_eligible' => TRUE]);
+    $applicationProcessEligible = ApplicationProcessFactory::createApplicationProcess(['amount_eligible' => 1.23]);
 
     $fundingCase = FundingCaseFactory::createFundingCase();
-    $this->applicationProcessManagerMock->method('getByFundingCaseId')
-      ->with($fundingCase->getId())
-      ->willReturn([
-        $applicationProcessEligibilityUndecided,
-        $applicationProcessIneligible,
-        $applicationProcessEligible,
-      ]);
+    $this->applicationProcessManagerMock->method('getBy')
+      ->with(CompositeCondition::new('AND',
+        Comparison::new('funding_case_id', '=', $fundingCase->getId()),
+        Comparison::new('amount_eligible', '>', 0)
+      ))
+      ->willReturn([$applicationProcessEligible]);
 
     static::assertSame([$applicationProcessEligible], $this->loader->getEligibleProcessesForContract($fundingCase));
   }

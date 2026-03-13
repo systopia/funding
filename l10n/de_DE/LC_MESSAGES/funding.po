@@ -130,6 +130,15 @@ msgid "Amount Requested"
 msgstr "Beantragter Betrag"
 
 #: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
+#: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
+#: ang/crmFunding/case/fundingCase.template.html
+#: managed/SavedSearch_funding_program_controlling.mgd.php
+#: schema/ApplicationProcess.entityType.php
+#: schema/ApplicationSnapshot.entityType.php
+msgid "Amount Eligible"
+msgstr "Förderfähiger Betrag"
+
+#: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
 msgid "Amount Drawdowns"
 msgstr "Betrag Mittelabrufe"
 
@@ -669,11 +678,6 @@ msgid "The sum of the amounts of unverified drawdowns."
 msgstr "Die Summe der Beträge offener Mittelabrufe."
 
 #: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
-#: managed/SavedSearch_funding_program_controlling.mgd.php
-msgid "Amount Eligible"
-msgstr "Förderfähiger Betrag"
-
-#: Civi/Funding/Api4/Action/FundingProgram/GetFieldsAction.php
 msgid ""
 "The sum of the amounts requested of eligible applications in the funding "
 "program."
@@ -773,143 +777,6 @@ msgstr "Förderprogramm erlaubt keine Anträge nach %1"
 #: ang/crmFunding/clearing/clearingReviewer.directive.js
 msgid "Contact %1"
 msgstr "Kontakt %1"
-
-#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
-#: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php
-#: Civi/Funding/FundingCaseTypes/BSH/HiHAktion/Application/Actions/HiHApplicationSubmitActionsContainer.php
-#: ang/crmFunding/application/defaultApplicationSidebar.template.html
-#: ang/crmFunding/case/fundingCasePermissions.html
-#: ang/crmFunding/clearing/clearingSidebar.template.html
-#: ang/crmFunding/program/fundingNewCasePermissions.html
-#: ang/crmFunding/program/fundingProgramPermissions.html
-#: ang/crmFunding/program/recipientRelations.html
-#: ang/crmFundingHiH/hihApplicationSidebar.template.html
-msgid "Save"
-msgstr "Speichern"
-
-#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
-#: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php
-#: Civi/Funding/FundingCaseTypes/BSH/HiHAktion/Application/Actions/HiHApplicationSubmitActionsContainer.php
-msgid "Modify"
-msgstr "Ändern"
-
-#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
-#: Civi/Funding/FundingCaseTypes/BSH/HiHAktion/Application/Actions/HiHApplicationSubmitActionsContainer.php
-msgid "Apply"
-msgstr "Beantragen"
-
-#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
-#: Civi/Funding/FundingCaseTypes/BSH/HiHAktion/Application/Actions/HiHApplicationSubmitActionsContainer.php
-msgid "Withdraw"
-msgstr "Zurückziehen"
-
-#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
-#: Civi/Funding/FundingCaseTypes/BSH/HiHAktion/Application/Actions/HiHApplicationSubmitActionsContainer.php
-msgid "Do you really want to withdraw the application?"
-msgstr "Möchten Sie den Antrag wirklich zurückziehen?"
-
-#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
-#: Civi/Funding/FundingCaseTypes/BSH/HiHAktion/Application/Actions/HiHApplicationSubmitActionsContainer.php
-#: managed/SavedSearch_Application_CiviOffice_Templates.mgd.php
-msgid "Delete"
-msgstr "Löschen"
-
-#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
-#: Civi/Funding/FundingCaseTypes/BSH/HiHAktion/Application/Actions/HiHApplicationSubmitActionsContainer.php
-msgid "Do you really want to delete the application?"
-msgstr "Möchten Sie den Antrag wirklich löschen?"
-
-#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
-#: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php
-#: Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
-#: Civi/Funding/FundingCaseTypes/BSH/HiHAktion/Application/Actions/HiHApplicationSubmitActionsContainer.php
-#: ang/crmFundingHiH/hihApplicationSidebar.template.html
-msgid "Start Review"
-msgstr "Prüfung starten"
-
-#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
-#: Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
-msgid "Approve Calculative"
-msgstr "Rechnerisch genehmigen"
-
-#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
-#: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php
-#: Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
-msgid "Reject Calculative"
-msgstr "Rechnerisch ablehnen"
-
-#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
-#: Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
-msgid "Approve Content"
-msgstr "Fachlich genehmigen"
-
-#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
-#: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php
-#: Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
-msgid "Reject Content"
-msgstr "Fachlich ablehnen"
-
-#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
-#: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php
-#: Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
-#: Civi/Funding/FundingCaseTypes/BSH/HiHAktion/Application/Actions/HiHApplicationSubmitActionsContainer.php
-#: ang/crmFunding/application/defaultApplicationSidebar.template.html
-#: ang/crmFunding/clearing/clearingSidebar.template.html
-#: ang/crmFundingHiH/hihApplicationSidebar.template.html
-msgid "Request Change"
-msgstr "Änderung verlangen"
-
-#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
-#: Civi/Funding/ApplicationProcess/ActionsContainer/ReworkPossibleApplicationSubmitActionsContainerFactory.php
-#: Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
-#: ang/crmFunding/application/defaultApplicationSidebar.template.html
-#: ang/crmFunding/case/fundingCase.template.html
-msgid "Approve"
-msgstr "Bewilligen"
-
-#: Civi/Funding/ApplicationProcess/ActionsContainer/DefaultApplicationSubmitActionsContainerFactory.php
-#: Civi/Funding/ApplicationProcess/ActionsContainer/ReworkPossibleApplicationSubmitActionsContainerFactory.php
-#: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php
-#: Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
-#: Civi/Funding/FundingCaseTypes/BSH/HiHAktion/Application/Actions/HiHApplicationSubmitActionsContainer.php
-#: ang/crmFunding/application/defaultApplicationSidebar.template.html
-#: ang/crmFunding/case/fundingCase.template.html
-#: ang/crmFunding/drawdown/drawdownSearchTasksMenu.decorator.js
-#: ang/crmFundingHiH/hihApplicationSidebar.template.html
-#: managed/SavedSearchFundingDrawdowns.mgd.php
-#: managed/SavedSearch_FundingDrawdownsAll.mgd.php
-msgid "Reject"
-msgstr "Ablehnen"
-
-#: Civi/Funding/ApplicationProcess/ActionsContainer/ReworkPossibleApplicationSubmitActionsContainerFactory.php
-msgid "Request rework"
-msgstr "Überarbeitung beantragen"
-
-#: Civi/Funding/ApplicationProcess/ActionsContainer/ReworkPossibleApplicationSubmitActionsContainerFactory.php
-msgid "Withdraw rework request"
-msgstr "Antrag zur Überarbeitung zurückziehen"
-
-#: Civi/Funding/ApplicationProcess/ActionsContainer/ReworkPossibleApplicationSubmitActionsContainerFactory.php
-msgid "Withdraw change"
-msgstr "Änderung zurückziehen"
-
-#: Civi/Funding/ApplicationProcess/ActionsContainer/ReworkPossibleApplicationSubmitActionsContainerFactory.php
-msgid "Apply rework"
-msgstr "Überarbeitung beantragen"
-
-#: Civi/Funding/ApplicationProcess/ActionsContainer/ReworkPossibleApplicationSubmitActionsContainerFactory.php
-msgid "Withdraw rework"
-msgstr "Überarbeitung zurückziehen"
-
-#: Civi/Funding/ApplicationProcess/ActionsContainer/ReworkPossibleApplicationSubmitActionsContainerFactory.php
-#: ang/crmFunding/application/defaultApplicationSidebar.template.html
-msgid "Approve Rework Request"
-msgstr "Antrag zur Überarbeitung annehmen"
-
-#: Civi/Funding/ApplicationProcess/ActionsContainer/ReworkPossibleApplicationSubmitActionsContainerFactory.php
-#: ang/crmFunding/application/defaultApplicationSidebar.template.html
-msgid "Reject Rework Request"
-msgstr "Antrag zur Überarbeitung"
 
 #: Civi/Funding/ApplicationProcess/Api4/ActionHandler/ApplyActionMultipleActionHandler.php
 msgid "Application process with ID %1 not found."
@@ -1039,16 +906,49 @@ msgid "Saved"
 msgstr "Gespeichert"
 
 #: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessActions.php
+#: ang/crmFunding/application/defaultApplicationSidebar.template.html
+#: ang/crmFunding/case/fundingCasePermissions.html
+#: ang/crmFunding/clearing/clearingSidebar.template.html
+#: ang/crmFunding/program/fundingNewCasePermissions.html
+#: ang/crmFunding/program/fundingProgramPermissions.html
+#: ang/crmFunding/program/recipientRelations.html
+#: ang/crmFundingHiH/hihApplicationSidebar.template.html
+msgid "Save"
+msgstr "Speichern"
+
+#: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php
 msgid "Request Review"
 msgstr "Prüfung beantragen"
+
+#: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessActions.php
+msgid "Modify"
+msgstr "Ändern"
+
+#: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessActions.php
+#: ang/crmFundingHiH/hihApplicationSidebar.template.html
+msgid "Start Review"
+msgstr "Prüfung starten"
 
 #: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php
 msgid "Accept Content"
 msgstr "Fachlich annehmen"
 
 #: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessActions.php
+msgid "Reject Content"
+msgstr "Fachlich ablehnen"
+
+#: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php
 msgid "Accept Calculative"
 msgstr "Rechnerisch annehmen"
+
+#: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessActions.php
+msgid "Reject Calculative"
+msgstr "Rechnerisch ablehnen"
 
 #: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
@@ -1058,11 +958,31 @@ msgid "Add Comment"
 msgstr "Kommentar hinzufügen"
 
 #: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessActions.php
+#: ang/crmFunding/application/defaultApplicationSidebar.template.html
+#: ang/crmFunding/clearing/clearingSidebar.template.html
+#: ang/crmFundingHiH/hihApplicationSidebar.template.html
+msgid "Request Change"
+msgstr "Änderung verlangen"
+
+#: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php
 #: ang/crmFunding/drawdown/drawdownSearchTasksMenu.decorator.js
 #: managed/SavedSearchFundingDrawdowns.mgd.php
 #: managed/SavedSearch_FundingDrawdownsAll.mgd.php
 msgid "Accept"
 msgstr "Annehmen"
+
+#: Civi/Funding/ClearingProcess/ClearingActionsDeterminer.php
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessActions.php
+#: Civi/Funding/FundingCaseType/MetaData/ReworkApplicationProcessActions.php
+#: ang/crmFunding/application/defaultApplicationSidebar.template.html
+#: ang/crmFunding/case/fundingCase.template.html
+#: ang/crmFunding/drawdown/drawdownSearchTasksMenu.decorator.js
+#: ang/crmFundingHiH/hihApplicationSidebar.template.html
+#: managed/SavedSearchFundingDrawdowns.mgd.php
+#: managed/SavedSearch_FundingDrawdownsAll.mgd.php
+msgid "Reject"
+msgstr "Ablehnen"
 
 #: Civi/Funding/ClearingProcess/Form/AbstractClearingItemsJsonFormsGenerator.php
 msgid "Overall"
@@ -1566,6 +1486,42 @@ msgstr "Abrechnung abschließen"
 msgid "Creation Contact Display Name"
 msgstr "Erstellerkontakt Anzeigename"
 
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessActions.php
+msgid "Apply"
+msgstr "Beantragen"
+
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessActions.php
+msgid "Withdraw"
+msgstr "Zurückziehen"
+
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessActions.php
+msgid "Do you really want to withdraw the application?"
+msgstr "Möchten Sie den Antrag wirklich zurückziehen?"
+
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessActions.php
+#: managed/SavedSearch_Application_CiviOffice_Templates.mgd.php
+msgid "Delete"
+msgstr "Löschen"
+
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessActions.php
+msgid "Do you really want to delete the application?"
+msgstr "Möchten Sie den Antrag wirklich löschen?"
+
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessActions.php
+msgid "Approve Calculative"
+msgstr "Rechnerisch genehmigen"
+
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessActions.php
+msgid "Approve Content"
+msgstr "Fachlich genehmigen"
+
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessActions.php
+#: Civi/Funding/FundingCaseType/MetaData/ReworkApplicationProcessActions.php
+#: ang/crmFunding/application/defaultApplicationSidebar.template.html
+#: ang/crmFunding/case/fundingCase.template.html
+msgid "Approve"
+msgstr "Bewilligen"
+
 #: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessStatuses.php
 msgid "Applied"
 msgstr "Beantragt"
@@ -1603,6 +1559,36 @@ msgstr "In Prüfung"
 msgid "Withdrawn"
 msgstr "Zurückgezogen"
 
+#: Civi/Funding/FundingCaseType/MetaData/ReworkApplicationProcessActions.php
+msgid "Request rework"
+msgstr "Überarbeitung beantragen"
+
+#: Civi/Funding/FundingCaseType/MetaData/ReworkApplicationProcessActions.php
+msgid "Withdraw rework request"
+msgstr "Antrag zur Überarbeitung zurückziehen"
+
+#: Civi/Funding/FundingCaseType/MetaData/ReworkApplicationProcessActions.php
+msgid "Withdraw change"
+msgstr "Änderung zurückziehen"
+
+#: Civi/Funding/FundingCaseType/MetaData/ReworkApplicationProcessActions.php
+msgid "Apply rework"
+msgstr "Überarbeitung beantragen"
+
+#: Civi/Funding/FundingCaseType/MetaData/ReworkApplicationProcessActions.php
+msgid "Withdraw rework"
+msgstr "Überarbeitung zurückziehen"
+
+#: Civi/Funding/FundingCaseType/MetaData/ReworkApplicationProcessActions.php
+#: ang/crmFunding/application/defaultApplicationSidebar.template.html
+msgid "Approve Rework Request"
+msgstr "Antrag zur Überarbeitung annehmen"
+
+#: Civi/Funding/FundingCaseType/MetaData/ReworkApplicationProcessActions.php
+#: ang/crmFunding/application/defaultApplicationSidebar.template.html
+msgid "Reject Rework Request"
+msgstr "Antrag zur Überarbeitung"
+
 #: Civi/Funding/FundingCaseType/MetaData/ReworkApplicationProcessStatuses.php
 #: Civi/Funding/FundingPseudoConstants.php
 msgid "In rework"
@@ -1621,7 +1607,7 @@ msgstr "Prüfung der Überarbeitung beantragt"
 msgid "Rework in review"
 msgstr "Überarbeitung in Prüfung"
 
-#: Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/Application/Actions/KursApplicationSubmitActionsContainer.php
+#: Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/KursMetaData.php
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
 msgid "Reopen"
 msgstr "Wieder öffnen"
@@ -2317,10 +2303,6 @@ msgstr "Förderfall: %1"
 #: ang/crmFunding/case/fundingCase.template.html
 msgid "Notification Contacts"
 msgstr "Benachrichtigungskontakte"
-
-#: ang/crmFunding/case/fundingCase.template.html
-msgid "Amount Requested Eligible"
-msgstr "Förderfähiger Betrag"
 
 #: ang/crmFunding/case/fundingCase.template.html
 #: managed/OptionValuesFileType.mgd.php
