@@ -64,22 +64,21 @@
           .find(part => part.type = 'currency').value;
       }
 
-      function updateAmountRequestedEligible() {
-        $scope.amountRequestedEligible = $scope.applicationProcesses
-          .filter((applicationProcess) => applicationProcess.is_eligible)
+      function updateAmountEligible() {
+        $scope.amountEligible = $scope.applicationProcesses
           .reduce(
-            (total, applicationProcess) => total + applicationProcess.amount_requested,
+            (total, applicationProcess) => total + applicationProcess.amount_eligible,
             0
           );
         $scope.approve = {
-          amount: $scope.amountRequestedEligible,
+          amount: $scope.amountEligible,
         };
       }
 
       function updateApplicationProcesses() {
         fundingApplicationProcessService.getByFundingCaseId($scope.fundingCase.id).then(function (applicationProcesses) {
           $scope.applicationProcesses = applicationProcesses;
-          updateAmountRequestedEligible();
+          updateAmountEligible();
         });
       }
 
@@ -120,7 +119,7 @@
       $scope.applicationProcesses = applicationProcesses;
       $scope.payoutProcesses = payoutProcesses;
       $scope.possibleActions = possibleActions;
-      updateAmountRequestedEligible();
+      updateAmountEligible();
 
       function handleSetValue(field, value) {
         return function (result) {
@@ -186,7 +185,7 @@
       let $updateAmountApprovedModal = null;
       $scope.updateAmountApprovedPrepare = function () {
         if ($scope.fundingCaseType.properties.amountApprovedNonAdjustable) {
-          $scope.updateAmountApproved.amount = $scope.amountRequestedEligible;
+          $scope.updateAmountApproved.amount = $scope.amountEligible;
         }
 
         if ($scope.fundingProgram.budget !== null) {

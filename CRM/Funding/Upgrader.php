@@ -29,6 +29,7 @@ use Civi\Funding\Upgrade\Upgrader0012;
 use Civi\Funding\Upgrade\Upgrader0013;
 use Civi\Funding\Upgrade\Upgrader0014;
 use Civi\Funding\Upgrade\Upgrader0017;
+use Civi\Funding\Upgrade\Upgrader0020;
 use CRM_Funding_ExtensionUtil as E;
 
 /**
@@ -220,6 +221,17 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
     $this->ctx->log->info('Applying database migration 0019');
     $this->executeSqlFile('sql/upgrade/0019.sql');
     $this->createUniqueTranslationIndex();
+
+    return TRUE;
+  }
+
+  public function upgrade_0020(): bool {
+    $this->ctx->log->info('Applying database migration 0020');
+    $this->executeSqlFile('sql/upgrade/0020.sql');
+
+    /** @var \Civi\Funding\Upgrade\Upgrader0020 $upgrader */
+    $upgrader = \Civi::service(Upgrader0020::class);
+    $upgrader->execute($this->ctx->log);
 
     return TRUE;
   }

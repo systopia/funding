@@ -33,6 +33,7 @@ namespace Civi\Funding\Entity;
  *   end_date: string|null,
  *   request_data: array<string, mixed>,
  *   amount_requested: float,
+ *   amount_eligible: float,
  *   is_review_content: bool|null,
  *   reviewer_cont_contact_id: int|null,
  *   is_review_calculative: bool|null,
@@ -149,6 +150,16 @@ final class ApplicationProcessEntity extends AbstractEntity {
 
   public function setAmountRequested(float $amountRequested): self {
     $this->values['amount_requested'] = $amountRequested;
+
+    return $this;
+  }
+
+  public function getAmountEligible(): float {
+    return $this->values['amount_eligible'];
+  }
+
+  public function setAmountEligible(float $amountEligible): self {
+    $this->values['amount_eligible'] = $amountEligible;
 
     return $this;
   }
