@@ -21,15 +21,14 @@ namespace Civi\Funding\FundingCase\StatusDeterminer;
 
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\FundingCaseType\FundingCaseTypeServiceInterface;
 
-interface FundingCaseStatusDeterminerInterface {
+/**
+ * @see FundingCaseTypeServiceInterface
+ */
+interface FundingCaseStatusDeterminerInterface extends FundingCaseTypeServiceInterface {
 
   public const SERVICE_TAG = 'funding.case.status_determiner';
-
-  /**
-   * @phpstan-return list<string>
-   */
-  public static function getSupportedFundingCaseTypes(): array;
 
   public function getStatus(string $currentStatus, string $action): string;
 

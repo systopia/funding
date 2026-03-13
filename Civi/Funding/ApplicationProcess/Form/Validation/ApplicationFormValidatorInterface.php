@@ -21,6 +21,7 @@ namespace Civi\Funding\ApplicationProcess\Form\Validation;
 
 use Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidationResult;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\FundingCaseType\FundingCaseTypeServiceInterface;
 
 /**
  * Used when validating a submit to an existing application, i.e. for combined
@@ -29,10 +30,9 @@ use Civi\Funding\Entity\ApplicationProcessEntityBundle;
  * This can be used if additional validation to JSON schema validation is
  * required or if additional mapped values shall be set.
  *
- * Implementations should be registered as service tagged with SERVICE_TAG and
- * add the public static method getFundingCaseType() or getFundingCaseTypes().
+ * @see FundingCaseTypeServiceInterface
  */
-interface ApplicationFormValidatorInterface {
+interface ApplicationFormValidatorInterface extends FundingCaseTypeServiceInterface {
 
   public const SERVICE_TAG = 'funding.application.form_validator';
 

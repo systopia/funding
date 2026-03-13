@@ -22,27 +22,18 @@ namespace Civi\Funding\ClearingProcess\Form;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
-use Psr\Container\ContainerInterface;
+use Civi\Funding\FundingCaseType\AbstractFundingCaseTypeServiceCollector;
 
-final class ReportFormFactoryCollector implements ReportFormFactoryInterface {
-
-  private ContainerInterface $formFactories;
-
-  /**
-   * @param \Psr\Container\ContainerInterface $formFactories
-   *   Form factories with funding case type name as ID.
-   */
-  public function __construct(ContainerInterface $formFactories) {
-    $this->formFactories = $formFactories;
-  }
+/**
+ * @extends AbstractFundingCaseTypeServiceCollector<ReportFormFactoryInterface>
+ */
+// phpcs:ignore Generic.Files.LineLength.TooLong
+final class ReportFormFactoryCollector extends AbstractFundingCaseTypeServiceCollector implements ReportFormFactoryInterface {
 
   public function createReportForm(ClearingProcessEntityBundle $clearingProcessBundle): ReportFormInterface {
     $fundingCaseTypeName = $clearingProcessBundle->getFundingCaseType()->getName();
-    if ($this->formFactories->has($fundingCaseTypeName)) {
-      /** @var \Civi\Funding\ClearingProcess\Form\ReportFormFactoryInterface $formFactory */
-      $formFactory = $this->formFactories->get($fundingCaseTypeName);
-
-      return $formFactory->createReportForm($clearingProcessBundle);
+    if ($this->hasService($fundingCaseTypeName)) {
+      return $this->getService($fundingCaseTypeName)->createReportForm($clearingProcessBundle);
     }
 
     return ReportForm::newEmpty();
@@ -52,12 +43,10 @@ final class ReportFormFactoryCollector implements ReportFormFactoryInterface {
     FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType
   ): ReportFormInterface {
-    $fundingCaseTypeName = $fundingCaseType->getName();
-    if ($this->formFactories->has($fundingCaseTypeName)) {
-      /** @var \Civi\Funding\ClearingProcess\Form\ReportFormFactoryInterface $formFactory */
-      $formFactory = $this->formFactories->get($fundingCaseTypeName);
-
-      return $formFactory->createReportFormForTranslation($fundingProgram, $fundingCaseType);
+    if ($this->hasService($fundingCaseType->getName())) {
+      return $this
+        ->getService($fundingCaseType->getName())
+        ->createReportFormForTranslation($fundingProgram, $fundingCaseType);
     }
 
     return ReportForm::newEmpty();

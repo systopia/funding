@@ -60,13 +60,6 @@ final class ReworkPossibleApplicationProcessStatusDeterminer extends AbstractApp
     ],
   ];
 
-  /**
-   * @inheritDoc
-   */
-  public static function getSupportedFundingCaseTypes(): array {
-    return [];
-  }
-
   public function getStatus(FullApplicationProcessStatus $currentStatus, string $action): FullApplicationProcessStatus {
     return isset(self::STATUS_ACTION_STATUS_MAP[$currentStatus->getStatus()][$action])
       ? new FullApplicationProcessStatus(

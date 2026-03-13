@@ -22,16 +22,15 @@ namespace Civi\Funding\Form\FundingCase;
 use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\FundingCaseType\FundingCaseTypeServiceInterface;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 
-interface FundingCaseJsonSchemaFactoryInterface {
+/**
+ * @see FundingCaseTypeServiceInterface
+ */
+interface FundingCaseJsonSchemaFactoryInterface extends FundingCaseTypeServiceInterface {
 
   public const SERVICE_TAG = 'funding.case.json_schema_factory';
-
-  /**
-   * @phpstan-return list<string>
-   */
-  public static function getSupportedFundingCaseTypes(): array;
 
   /**
    * Called when creating a new funding case.

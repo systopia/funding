@@ -20,8 +20,12 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase\Handler;
 
 use Civi\Funding\FundingCase\Command\TransferContractRecreateCommand;
+use Civi\Funding\FundingCaseType\FundingCaseTypeServiceInterface;
 
-interface TransferContractRecreateHandlerInterface {
+/**
+ * @see FundingCaseTypeServiceInterface
+ */
+interface TransferContractRecreateHandlerInterface extends FundingCaseTypeServiceInterface {
 
   public const SERVICE_TAG = 'funding.case.transfer_contract_recreate_handler';
 

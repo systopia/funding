@@ -19,14 +19,14 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess;
 
-interface ApplicationFormFilesFactoryInterface {
+use Civi\Funding\FundingCaseType\FundingCaseTypeServiceInterface;
+
+/**
+ * @see FundingCaseTypeServiceInterface
+ */
+interface ApplicationFormFilesFactoryInterface extends FundingCaseTypeServiceInterface {
 
   public const SERVICE_TAG = 'funding.application.files_factory';
-
-  /**
-   * @phpstan-return list<string>
-   */
-  public static function getSupportedFundingCaseTypes(): array;
 
   /**
    * Adds identifiers to new files in request data, where necessary. Each file

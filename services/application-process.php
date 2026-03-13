@@ -31,6 +31,12 @@ use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager;
 use Civi\Funding\ApplicationProcess\ApplicationSnapshotManager;
 use Civi\Funding\ApplicationProcess\EligibleApplicationProcessesLoader;
+use Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormAddValidatorCollector;
+use Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormAddValidatorInterface;
+use Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormNewValidatorCollector;
+use Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormNewValidatorInterface;
+use Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormValidatorCollector;
+use Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormValidatorInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationActionApplyHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationAllowedActionsGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandlerInterface;
@@ -76,24 +82,45 @@ use Civi\Funding\ApplicationProcess\JsonSchema\Validator\OpisApplicationValidato
 use Civi\Funding\ApplicationProcess\JsonSchema\Validator\OpisApplicationValidatorFactory;
 use Civi\Funding\ApplicationProcess\Snapshot\ApplicationSnapshotRestorer;
 use Civi\Funding\ApplicationProcess\Snapshot\ApplicationSnapshotRestorerInterface;
-use Civi\Funding\DependencyInjection\ApplicationFormValidatorPass;
-use Civi\Funding\DependencyInjection\Compiler\ApplicationJsonSchemaFactoryPass;
-use Civi\Funding\DependencyInjection\Compiler\ApplicationUiSchemaFactoryPass;
+use Civi\Funding\DependencyInjection\Compiler\FundingCaseTypeServicePass;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\Form\Application\ApplicationCostItemsFormDataLoader;
 use Civi\Funding\Form\Application\ApplicationCostItemsFormDataLoaderInterface;
+use Civi\Funding\Form\Application\ApplicationJsonSchemaFactoryCollector;
+use Civi\Funding\Form\Application\ApplicationJsonSchemaFactoryInterface;
 use Civi\Funding\Form\Application\ApplicationResourcesItemsFormDataLoader;
 use Civi\Funding\Form\Application\ApplicationResourcesItemsFormDataLoaderInterface;
 use Civi\Funding\Form\Application\ApplicationSubmitActionsFactory;
 use Civi\Funding\Form\Application\ApplicationSubmitActionsFactoryInterface;
+use Civi\Funding\Form\Application\ApplicationUiSchemaFactoryCollector;
+use Civi\Funding\Form\Application\ApplicationUiSchemaFactoryInterface;
 use Civi\Funding\FundingCase\StatusDeterminer\DefaultFundingCaseStatusDeterminer;
 use Civi\Funding\Validation\ConcreteEntityValidatorInterface;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-$container->addCompilerPass(new ApplicationFormValidatorPass());
-$container->addCompilerPass(new ApplicationJsonSchemaFactoryPass());
-$container->addCompilerPass(new ApplicationUiSchemaFactoryPass());
+$container->addCompilerPass(new FundingCaseTypeServicePass(
+  ApplicationFormValidatorCollector::class,
+  ApplicationFormValidatorInterface::class,
+));
+$container->addCompilerPass(new FundingCaseTypeServicePass(
+  ApplicationFormAddValidatorCollector::class,
+  ApplicationFormAddValidatorInterface::class,
+));
+$container->addCompilerPass(new FundingCaseTypeServicePass(
+  ApplicationFormNewValidatorCollector::class,
+  ApplicationFormNewValidatorInterface::class,
+));
+$container->addCompilerPass(new FundingCaseTypeServicePass(
+  ApplicationJsonSchemaFactoryCollector::class,
+  ApplicationJsonSchemaFactoryInterface::class,
+  TRUE,
+));
+$container->addCompilerPass(new FundingCaseTypeServicePass(
+  ApplicationUiSchemaFactoryCollector::class,
+  ApplicationUiSchemaFactoryInterface::class,
+  TRUE,
+));
 
 $container->autowire(ApplicationProcessManager::class)
   // Used in API actions.

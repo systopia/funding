@@ -22,8 +22,10 @@ declare(strict_types = 1);
 
 use Civi\Funding\DependencyInjection\Compiler\FundingCaseNotificationContactsSetHandlerPass;
 use Civi\Funding\DependencyInjection\Compiler\FundingCaseRecipientContactSetHandlerPass;
-use Civi\Funding\DependencyInjection\PossibleRecipientsForChangeLoaderPass;
+use Civi\Funding\DependencyInjection\Compiler\FundingCaseTypeServicePass;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
+use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerCollector;
+use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
 use Civi\Funding\FundingCase\Actions\FundingCaseSubmitActionsFactory;
 use Civi\Funding\FundingCase\Actions\FundingCaseSubmitActionsFactoryInterface;
 use Civi\Funding\FundingCase\Approval\ApprovalValidator;
@@ -40,9 +42,7 @@ use Civi\Funding\FundingCase\Handler\DefaultFundingCaseFormNewValidateHandler;
 use Civi\Funding\FundingCase\Handler\DefaultFundingCaseFormUpdateGetHandler;
 use Civi\Funding\FundingCase\Handler\DefaultFundingCaseFormUpdateSubmitHandler;
 use Civi\Funding\FundingCase\Handler\DefaultFundingCaseFormUpdateValidateHandler;
-use Civi\Funding\FundingCase\Handler\DefaultFundingCasePossibleActionsGetHandler;
 use Civi\Funding\FundingCase\Handler\DefaultFundingCaseUpdateAmountApprovedHandler;
-use Civi\Funding\FundingCase\Handler\DefaultTransferContractRecreateHandler;
 use Civi\Funding\FundingCase\Handler\FundingCaseApproveHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseFormDataGetHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseFormNewGetHandlerInterface;
@@ -51,10 +51,16 @@ use Civi\Funding\FundingCase\Handler\FundingCaseFormNewValidateHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseFormUpdateGetHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseFormUpdateSubmitHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseFormUpdateValidateHandlerInterface;
+use Civi\Funding\FundingCase\Handler\FundingCasePossibleActionsGetHandler;
+use Civi\Funding\FundingCase\Handler\FundingCasePossibleActionsGetHandlerCollector;
 use Civi\Funding\FundingCase\Handler\FundingCasePossibleActionsGetHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseUpdateAmountApprovedHandlerInterface;
+use Civi\Funding\FundingCase\Handler\TransferContractRecreateHandler;
+use Civi\Funding\FundingCase\Handler\TransferContractRecreateHandlerCollector;
 use Civi\Funding\FundingCase\Handler\TransferContractRecreateHandlerInterface;
 use Civi\Funding\FundingCase\Recipients\FallbackPossibleRecipientsForChangeLoader;
+use Civi\Funding\FundingCase\Recipients\PossibleRecipientsForChangeLoaderCollector;
+use Civi\Funding\FundingCase\Recipients\PossibleRecipientsForChangeLoaderInterface;
 use Civi\Funding\FundingCase\Token\FundingCaseTokenNameExtractor;
 use Civi\Funding\FundingCase\Token\FundingCaseTokenResolver;
 use Civi\Funding\FundingCase\TransferContractRouter;
@@ -72,9 +78,17 @@ use Symfony\Component\DependencyInjection\Argument\ServiceLocatorArgument;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-$container->addCompilerPass(new PossibleRecipientsForChangeLoaderPass());
+$container->addCompilerPass(new FundingCaseTypeServicePass(
+  PossibleRecipientsForChangeLoaderCollector::class,
+  PossibleRecipientsForChangeLoaderInterface::class,
+));
 $container->addCompilerPass(new FundingCaseRecipientContactSetHandlerPass());
 $container->addCompilerPass(new FundingCaseNotificationContactsSetHandlerPass());
+$container->addCompilerPass(new FundingCaseTypeServicePass(
+  FundingCaseActionsDeterminerCollector::class,
+  FundingCaseActionsDeterminerInterface::class,
+  TRUE
+));
 
 $container->autowire(FundingCaseManager::class)
   // phpcs:disable Squiz.PHP.CommentedOutCode.Found
@@ -91,7 +105,8 @@ $container->autowire(TransferContractRouter::class)
   // Used in API action.
   ->setPublic(TRUE);
 $container->autowire(FundingCaseIdentifierGeneratorInterface::class, FundingCaseIdentifierGenerator::class);
-$container->autowire(FallbackPossibleRecipientsForChangeLoader::class);
+$container->autowire(FallbackPossibleRecipientsForChangeLoader::class)
+  ->addTag(FallbackPossibleRecipientsForChangeLoader::SERVICE_TAG);
 
 $container->autowire(FundingCaseTokenNameExtractor::class);
 $container->autowire(FundingCaseTokenResolver::class);
@@ -137,19 +152,31 @@ $container->autowire(
 $container->autowire(FundingCaseApproveHandlerInterface::class, DefaultFundingCaseApproveHandler::class)
   // Used in API action.
   ->setPublic(TRUE);
-$container->autowire(
-  FundingCasePossibleActionsGetHandlerInterface::class,
-  DefaultFundingCasePossibleActionsGetHandler::class
-)
+
+$container->autowire(FundingCasePossibleActionsGetHandler::class)
+  ->addTag(FundingCasePossibleActionsGetHandler::SERVICE_TAG);
+$container->addCompilerPass(
+  (new FundingCaseTypeServicePass(
+    FundingCasePossibleActionsGetHandlerCollector::class, FundingCasePossibleActionsGetHandlerInterface::class,
+  ))
   // Used in API action.
-  ->setPublic(TRUE);
+    ->setPublic(TRUE)
+);
+
 $container->autowire(
   FundingCaseUpdateAmountApprovedHandlerInterface::class,
   DefaultFundingCaseUpdateAmountApprovedHandler::class
 );
-$container->autowire(TransferContractRecreateHandlerInterface::class, DefaultTransferContractRecreateHandler::class)
+$container->autowire(TransferContractRecreateHandler::class)
+  ->addTag(TransferContractRecreateHandler::SERVICE_TAG);
+$container->addCompilerPass(
+  (new FundingCaseTypeServicePass(
+  TransferContractRecreateHandlerCollector::class,
+  TransferContractRecreateHandlerInterface::class,
+  ))
   // Used in API action.
-  ->setPublic(TRUE);
+    ->setPublic(TRUE)
+);
 
 $container->autowire(FundingCaseContactRelationFactory::class);
 

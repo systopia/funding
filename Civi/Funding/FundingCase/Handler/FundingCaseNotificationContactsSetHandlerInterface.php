@@ -20,8 +20,12 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase\Handler;
 
 use Civi\Funding\FundingCase\Command\FundingCaseNotificationContactsSetCommand;
+use Civi\Funding\FundingCaseType\FundingCaseTypeServiceInterface;
 
-interface FundingCaseNotificationContactsSetHandlerInterface {
+/**
+ * @see FundingCaseTypeServiceInterface
+ */
+interface FundingCaseNotificationContactsSetHandlerInterface extends FundingCaseTypeServiceInterface {
 
   public const SERVICE_TAG = 'funding.case.set_notification_contacts_handler';
 

@@ -21,39 +21,25 @@ namespace Civi\Funding\ApplicationProcess\Form\Validation;
 
 use Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidationResult;
 use Civi\Funding\Entity\FundingCaseBundle;
-use Psr\Container\ContainerInterface;
+use Civi\Funding\FundingCaseType\AbstractFundingCaseTypeServiceCollector;
 
 /**
+ * @extends AbstractFundingCaseTypeServiceCollector<ApplicationFormAddValidatorInterface>
+ *
  * @codeCoverageIgnore
  */
-final class ApplicationFormAddValidatorCollector implements ApplicationFormAddValidatorInterface {
-
-  private ContainerInterface $validators;
-
-  /**
-   * @param \Psr\Container\ContainerInterface $validators
-   *   Validators with funding case type name as ID.
-   */
-  public function __construct(ContainerInterface $validators) {
-    $this->validators = $validators;
-  }
+// phpcs:ignore Generic.Files.LineLength.TooLong
+final class ApplicationFormAddValidatorCollector extends AbstractFundingCaseTypeServiceCollector implements ApplicationFormAddValidatorInterface {
 
   public function validateAdd(
     FundingCaseBundle $fundingCaseBundle,
     ApplicationSchemaValidationResult $schemaValidationResult,
     bool $readOnly
   ): ApplicationFormValidationResult {
-    $fundingCaseType = $fundingCaseBundle->getFundingCaseType();
-    if ($this->validators->has($fundingCaseType->getName())) {
-      /** @var \Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormNewValidatorInterface $validator */
-      $validator = $this->validators->get($fundingCaseType->getName());
-
-      return $validator->validateInitial(
-        $fundingCaseBundle->getFundingCaseType(),
-        $fundingCaseBundle->getFundingProgram(),
-        $schemaValidationResult,
-        $readOnly
-      );
+    if ($this->hasService($fundingCaseBundle->getFundingCaseType()->getName())) {
+      return $this
+        ->getService($fundingCaseBundle->getFundingCaseType()->getName())
+        ->validateAdd($fundingCaseBundle, $schemaValidationResult, $readOnly);
     }
 
     return new ApplicationFormValidationResult(

@@ -20,15 +20,14 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\FundingCaseType\FundingCaseTypeServiceInterface;
 
-interface ApplicationProcessActionsDeterminerInterface {
+/**
+ * @see FundingCaseTypeServiceInterface
+ */
+interface ApplicationProcessActionsDeterminerInterface extends FundingCaseTypeServiceInterface {
 
   public const SERVICE_TAG = 'funding.application.actions_determiner';
-
-  /**
-   * @phpstan-return list<string>
-   */
-  public static function getSupportedFundingCaseTypes(): array;
 
   /**
    * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $statusList

@@ -20,20 +20,14 @@ declare(strict_types = 1);
 namespace Civi\Funding\ClearingProcess\Form\Validation;
 
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
-use Psr\Container\ContainerInterface;
+use Civi\Funding\FundingCaseType\AbstractFundingCaseTypeServiceCollector;
 use Systopia\JsonSchema\Tags\TaggedDataContainerInterface;
 
-final class ClearingFormValidatorCollector implements ClearingFormValidatorInterface {
-
-  private ContainerInterface $validators;
-
-  /**
-   * @param \Psr\Container\ContainerInterface $validators
-   *   Validators with funding case type name as ID.
-   */
-  public function __construct(ContainerInterface $validators) {
-    $this->validators = $validators;
-  }
+/**
+ * @extends AbstractFundingCaseTypeServiceCollector<ClearingFormValidatorInterface>
+ */
+// phpcs:ignore Generic.Files.LineLength.TooLong
+final class ClearingFormValidatorCollector extends AbstractFundingCaseTypeServiceCollector implements ClearingFormValidatorInterface {
 
   /**
    * @inheritDoc
@@ -43,12 +37,10 @@ final class ClearingFormValidatorCollector implements ClearingFormValidatorInter
     array $data,
     TaggedDataContainerInterface $taggedData
   ): ClearingFormValidationResult {
-    $fundingCaseTypeName = $clearingProcessBundle->getFundingCaseType()->getName();
-    if ($this->validators->has($fundingCaseTypeName)) {
-      /** @var \Civi\Funding\ClearingProcess\Form\Validation\ClearingFormValidatorInterface $validator */
-      $validator = $this->validators->get($fundingCaseTypeName);
-
-      return $validator->validate($clearingProcessBundle, $data, $taggedData);
+    if ($this->hasService($clearingProcessBundle->getFundingCaseType()->getName())) {
+      return $this
+        ->getService($clearingProcessBundle->getFundingCaseType()->getName())
+        ->validate($clearingProcessBundle, $data, $taggedData);
     }
 
     return new ClearingFormValidationResult([], $data, $taggedData);

@@ -35,11 +35,6 @@ abstract class AbstractClearingApplyTaskHandler extends AbstractClearingProcessT
 
   private const TASK_TYPE = 'apply';
 
-  /**
-   * @phpstan-return list<string>
-   */
-  abstract public static function getSupportedFundingCaseTypes(): array;
-
   public function createTasksOnChange(
     ClearingProcessEntityBundle $clearingProcessBundle,
     ClearingProcessEntity $previousClearingProcess

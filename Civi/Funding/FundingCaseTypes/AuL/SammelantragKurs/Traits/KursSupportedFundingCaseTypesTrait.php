@@ -24,7 +24,7 @@ use Civi\Funding\FundingCaseTypes\AuL\SammelantragKurs\KursConstants;
 trait KursSupportedFundingCaseTypesTrait {
 
   /**
-   * @phpstan-return list<string>
+   * @return list<string>
    */
   public static function getSupportedFundingCaseTypes(): array {
     return [KursConstants::FUNDING_CASE_TYPE_NAME];

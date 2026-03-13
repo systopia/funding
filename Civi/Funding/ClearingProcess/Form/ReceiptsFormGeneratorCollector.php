@@ -21,30 +21,18 @@ namespace Civi\Funding\ClearingProcess\Form;
 
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\Form\JsonFormsFormInterface;
-use Psr\Container\ContainerInterface;
+use Civi\Funding\FundingCaseType\AbstractFundingCaseTypeServiceCollector;
 
-final class ReceiptsFormGeneratorCollector implements ReceiptsFormGeneratorInterface {
-
-  private ContainerInterface $formGenerators;
-
-  /**
-   * @param \Psr\Container\ContainerInterface $formGenerators
-   *   Form generators with funding case type name as ID.
-   */
-  public function __construct(ContainerInterface $formGenerators) {
-    $this->formGenerators = $formGenerators;
-  }
+/**
+ * @extends AbstractFundingCaseTypeServiceCollector<ReceiptsFormGeneratorInterface>
+ */
+// phpcs:ignore Generic.Files.LineLength.TooLong
+final class ReceiptsFormGeneratorCollector extends AbstractFundingCaseTypeServiceCollector implements ReceiptsFormGeneratorInterface {
 
   public function generateReceiptsForm(ClearingProcessEntityBundle $clearingProcessBundle): JsonFormsFormInterface {
-    return $this->getFormGenerator(
-      $clearingProcessBundle->getFundingCaseType()->getName()
-    )->generateReceiptsForm($clearingProcessBundle);
-  }
-
-  private function getFormGenerator(string $fundingCaseTypeName): ReceiptsFormGeneratorInterface {
-    // @phpstan-ignore return.type
-    return $this->formGenerators->has($fundingCaseTypeName)
-      ? $this->formGenerators->get($fundingCaseTypeName) : $this->formGenerators->get('*');
+    return $this
+      ->getService($clearingProcessBundle->getFundingCaseType()->getName())
+      ->generateReceiptsForm($clearingProcessBundle);
   }
 
 }

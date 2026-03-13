@@ -22,21 +22,20 @@ namespace Civi\Funding\Form\Application;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\FundingCaseType\FundingCaseTypeServiceInterface;
 use Civi\RemoteTools\JsonForms\JsonFormsLayout;
 
-interface ApplicationUiSchemaFactoryInterface {
+/**
+ * @see FundingCaseTypeServiceInterface
+ */
+interface ApplicationUiSchemaFactoryInterface extends FundingCaseTypeServiceInterface {
 
   public const SERVICE_TAG = 'funding.application.ui_schema_factory';
 
   /**
-   * @phpstan-return list<string>
-   */
-  public static function getSupportedFundingCaseTypes(): array;
-
-  /**
    * Called for an existing application process.
    *
-   * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $applicationProcessStatusList
+   * @param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $applicationProcessStatusList
    *   Status of other application processes in same funding case indexed by ID.
    */
   public function createUiSchemaExisting(

@@ -21,8 +21,12 @@ namespace Civi\Funding\Task\Creator;
 
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\FundingCaseType\FundingCaseTypeServiceInterface;
 
-interface ApplicationProcessTaskCreatorInterface {
+/**
+ * @see FundingCaseTypeServiceInterface
+ */
+interface ApplicationProcessTaskCreatorInterface extends FundingCaseTypeServiceInterface {
 
   /**
    * @phpstan-return iterable<\Civi\Funding\Entity\FundingTaskEntity>

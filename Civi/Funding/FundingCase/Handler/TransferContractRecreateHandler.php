@@ -22,11 +22,13 @@ namespace Civi\Funding\FundingCase\Handler;
 use Civi\API\Exception\UnauthorizedException;
 use Civi\Funding\FundingCase\Command\TransferContractRecreateCommand;
 use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
+use Civi\Funding\FundingCaseType\FallbackFundingCaseTypeServiceInterface;
 use Civi\Funding\TransferContract\TransferContractCreator;
 use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
 
-final class TransferContractRecreateHandler implements TransferContractRecreateHandlerInterface {
+// phpcs:ignore Generic.Files.LineLength.TooLong
+final class TransferContractRecreateHandler implements TransferContractRecreateHandlerInterface, FallbackFundingCaseTypeServiceInterface {
 
   private FundingCaseActionsDeterminerInterface $actionsDeterminer;
 

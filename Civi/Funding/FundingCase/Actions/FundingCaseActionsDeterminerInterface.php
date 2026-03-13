@@ -21,15 +21,14 @@ namespace Civi\Funding\FundingCase\Actions;
 
 use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
+use Civi\Funding\FundingCaseType\FundingCaseTypeServiceInterface;
 
-interface FundingCaseActionsDeterminerInterface {
+/**
+ * @see FundingCaseTypeServiceInterface
+ */
+interface FundingCaseActionsDeterminerInterface extends FundingCaseTypeServiceInterface {
 
   public const SERVICE_TAG = 'funding.case.actions_determiner';
-
-  /**
-   * @phpstan-return list<string>
-   */
-  public static function getSupportedFundingCaseTypes(): array;
 
   /**
    * @param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $applicationProcessStatusList

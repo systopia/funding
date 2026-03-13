@@ -37,7 +37,6 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationJsonSchemaGetHandlerInter
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
-use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseApproveHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseFormDataGetHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseFormNewGetHandlerInterface;
@@ -46,9 +45,7 @@ use Civi\Funding\FundingCase\Handler\FundingCaseFormNewValidateHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseFormUpdateGetHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseFormUpdateSubmitHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseFormUpdateValidateHandlerInterface;
-use Civi\Funding\FundingCase\Handler\FundingCasePossibleActionsGetHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseUpdateAmountApprovedHandlerInterface;
-use Civi\Funding\FundingCase\Handler\TransferContractRecreateHandlerInterface;
 use Civi\Funding\FundingCase\StatusDeterminer\FundingCaseStatusDeterminerInterface;
 use Civi\Funding\TransferContract\Handler\TransferContractRenderHandlerInterface;
 use Psr\Container\ContainerInterface;
@@ -133,10 +130,6 @@ final class FundingCaseTypeServiceLocator implements FundingCaseTypeServiceLocat
     return $this->locator->get(ApplicationProcessStatusDeterminerInterface::class);
   }
 
-  public function getFundingCaseActionsDeterminer(): FundingCaseActionsDeterminerInterface {
-    return $this->locator->get(FundingCaseActionsDeterminerInterface::class);
-  }
-
   public function getFundingCaseApproveHandler(): FundingCaseApproveHandlerInterface {
     return $this->locator->get(FundingCaseApproveHandlerInterface::class);
   }
@@ -169,20 +162,12 @@ final class FundingCaseTypeServiceLocator implements FundingCaseTypeServiceLocat
     return $this->getOrNull(FundingCaseFormUpdateValidateHandlerInterface::class);
   }
 
-  public function getFundingCasePossibleActionsGetHandler(): FundingCasePossibleActionsGetHandlerInterface {
-    return $this->locator->get(FundingCasePossibleActionsGetHandlerInterface::class);
-  }
-
   public function getFundingCaseStatusDeterminer(): FundingCaseStatusDeterminerInterface {
     return $this->locator->get(FundingCaseStatusDeterminerInterface::class);
   }
 
   public function getFundingCaseUpdateAmountApprovedHandler(): FundingCaseUpdateAmountApprovedHandlerInterface {
     return $this->locator->get(FundingCaseUpdateAmountApprovedHandlerInterface::class);
-  }
-
-  public function getTransferContractRecreateHandler(): TransferContractRecreateHandlerInterface {
-    return $this->locator->get(TransferContractRecreateHandlerInterface::class);
   }
 
   public function getTransferContractRenderHandler(): TransferContractRenderHandlerInterface {

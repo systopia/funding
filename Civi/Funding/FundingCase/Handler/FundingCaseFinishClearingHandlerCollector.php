@@ -20,24 +20,16 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase\Handler;
 
 use Civi\Funding\FundingCase\Command\FundingCaseFinishClearingCommand;
-use Psr\Container\ContainerInterface;
+use Civi\Funding\FundingCaseType\AbstractFundingCaseTypeServiceCollector;
 
-final class FundingCaseFinishClearingHandlerCollector implements FundingCaseFinishClearingHandlerInterface {
-
-  private ContainerInterface $handlers;
-
-  /**
-   * @param \Psr\Container\ContainerInterface $handlers
-   *   Finish clearing handlers with funding case type name as ID.
-   */
-  public function __construct(ContainerInterface $handlers) {
-    $this->handlers = $handlers;
-  }
+/**
+ * @extends AbstractFundingCaseTypeServiceCollector<FundingCaseFinishClearingHandlerInterface>
+ */
+// phpcs:ignore Generic.Files.LineLength.TooLong
+final class FundingCaseFinishClearingHandlerCollector extends AbstractFundingCaseTypeServiceCollector implements FundingCaseFinishClearingHandlerInterface {
 
   public function handle(FundingCaseFinishClearingCommand $command): void {
-    /** @var \Civi\Funding\FundingCase\Handler\FundingCaseFinishClearingHandlerInterface $handler */
-    $handler = $this->handlers->get($command->getFundingCaseType()->getName());
-    $handler->handle($command);
+    $this->getService($command->getFundingCaseType()->getName())->handle($command);
   }
 
 }

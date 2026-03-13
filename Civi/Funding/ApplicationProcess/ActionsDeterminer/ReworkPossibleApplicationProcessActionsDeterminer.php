@@ -28,13 +28,6 @@ use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
 final class ReworkPossibleApplicationProcessActionsDeterminer extends AbstractApplicationProcessActionsDeterminer {
 // phpcs:enable
 
-  /**
-   * @inheritDoc
-   */
-  public static function getSupportedFundingCaseTypes(): array {
-    return [];
-  }
-
   use HasReviewPermissionTrait;
 
   private const FUNDING_CASE_FINAL_STATUS_LIST = [FundingCaseStatus::CLEARED];

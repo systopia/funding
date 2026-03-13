@@ -26,13 +26,6 @@ use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
 
 final class DefaultApplicationProcessActionsDeterminer extends AbstractApplicationProcessActionsDeterminer {
 
-  /**
-   * @inheritDoc
-   */
-  public static function getSupportedFundingCaseTypes(): array {
-    return [];
-  }
-
   use HasReviewPermissionTrait;
 
   private const FUNDING_CASE_FINAL_STATUS_LIST = [FundingCaseStatus::CLEARED];

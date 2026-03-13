@@ -20,18 +20,16 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\StatusDeterminer;
 
 use Civi\Funding\Entity\FullApplicationProcessStatus;
+use Civi\Funding\FundingCaseType\FundingCaseTypeServiceInterface;
 
 /**
  * Determines the status of an application process for a given action.
+ *
+ * @see FundingCaseTypeServiceInterface
  */
-interface ApplicationProcessStatusDeterminerInterface {
+interface ApplicationProcessStatusDeterminerInterface extends FundingCaseTypeServiceInterface {
 
   public const SERVICE_TAG = 'funding.application.status_determiner';
-
-  /**
-   * @phpstan-return list<string>
-   */
-  public static function getSupportedFundingCaseTypes(): array;
 
   public function getInitialStatus(string $action): string;
 

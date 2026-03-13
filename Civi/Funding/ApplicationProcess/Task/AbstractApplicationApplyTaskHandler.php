@@ -30,11 +30,6 @@ abstract class AbstractApplicationApplyTaskHandler extends AbstractApplicationPr
 
   private const TASK_TYPE = 'apply';
 
-  /**
-   * @phpstan-return list<string>
-   */
-  abstract public static function getSupportedFundingCaseTypes(): array;
-
   public function createTasksOnChange(
     ApplicationProcessEntityBundle $applicationProcessBundle,
     ApplicationProcessEntity $previousApplicationProcess

@@ -35,11 +35,6 @@ abstract class AbstractClearingCreateTaskModifier extends AbstractClearingProces
 
   use ClearingCreateTaskTrait;
 
-  /**
-   * @phpstan-return list<string>
-   */
-  abstract public static function getSupportedFundingCaseTypes(): array;
-
   public function modifyTask(
     FundingTaskEntity $task,
     ClearingProcessEntityBundle $clearingProcessBundle,
