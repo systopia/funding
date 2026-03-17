@@ -58,7 +58,7 @@ final class FundingCaseFormUpdateGetHandlerTest extends TestCase {
   public function testHandle(): void {
     $contactId = 12;
     $fundingCaseBundle = FundingCaseBundleFactory::create();
-    $command = new FundingCaseFormUpdateGetCommand($contactId, $fundingCaseBundle);
+    $command = new FundingCaseFormUpdateGetCommand($fundingCaseBundle);
 
     $jsonSchema = new JsonSchema([]);
     $this->formDataGetHandlerMock->method('handle')

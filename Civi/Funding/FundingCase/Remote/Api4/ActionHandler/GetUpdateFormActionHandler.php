@@ -55,10 +55,7 @@ final class GetUpdateFormActionHandler implements ActionHandlerInterface {
     $fundingCaseBundle = $this->fundingCaseManager->getBundle($action->getFundingCaseId());
     Assert::notNull($fundingCaseBundle, sprintf('Funding case with ID %d not found', $action->getFundingCaseId()));
 
-    $form = $this->formUpdateGetHandler->handle(new FundingCaseFormUpdateGetCommand(
-      $action->getResolvedContactId(),
-      $fundingCaseBundle,
-    ));
+    $form = $this->formUpdateGetHandler->handle(new FundingCaseFormUpdateGetCommand($fundingCaseBundle));
 
     return [
       'jsonSchema' => $form->getJsonSchema()->toArray(),

@@ -31,8 +31,6 @@ final class ApplicationFormSubmitCommand {
    */
   private array $applicationProcessStatusList;
 
-  private int $contactId;
-
   /**
    * @phpstan-var array<string, mixed> JSON serializable.
    */
@@ -44,12 +42,10 @@ final class ApplicationFormSubmitCommand {
    * @phpstan-param array<string, mixed> $data JSON serializable.
    */
   public function __construct(
-    int $contactId,
     ApplicationProcessEntityBundle $applicationProcessBundle,
     array $applicationProcessStatusList,
     array $data
   ) {
-    $this->contactId = $contactId;
     $this->applicationProcessBundle = $applicationProcessBundle;
     $this->applicationProcessStatusList = $applicationProcessStatusList;
     $this->data = $data;
@@ -61,10 +57,6 @@ final class ApplicationFormSubmitCommand {
    */
   public function getApplicationProcessStatusList(): array {
     return $this->applicationProcessStatusList;
-  }
-
-  public function getContactId(): int {
-    return $this->contactId;
   }
 
   /**

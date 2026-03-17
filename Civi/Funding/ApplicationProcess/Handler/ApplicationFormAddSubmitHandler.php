@@ -50,9 +50,7 @@ final class ApplicationFormAddSubmitHandler implements ApplicationFormAddSubmitH
    */
   public function handle(ApplicationFormAddSubmitCommand $command): ApplicationFormAddSubmitResult {
     $validationResult = $this->validateHandler->handle(new ApplicationFormAddValidateCommand(
-      $command->getContactId(),
-      $command->getFundingCaseBundle(),
-      $command->getData(),
+      $command->getFundingCaseBundle(), $command->getData(),
     ));
 
     if ($validationResult->isValid()) {

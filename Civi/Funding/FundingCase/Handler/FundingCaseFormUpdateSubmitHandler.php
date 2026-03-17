@@ -60,11 +60,7 @@ final class FundingCaseFormUpdateSubmitHandler implements FundingCaseFormUpdateS
 
     $action = $validationResult->getValidatedData()->getAction();
     $fundingCase = $command->getFundingCase();
-    $this->applicationAllowedActionApplier->applyAllowedActionsByFundingCase(
-      $command->getContactId(),
-      $fundingCase,
-      $action
-    );
+    $this->applicationAllowedActionApplier->applyAllowedActionsByFundingCase($fundingCase, $action);
 
     if (FundingCaseActions::DELETE === $action) {
       $this->fundingCaseManager->delete($fundingCase);

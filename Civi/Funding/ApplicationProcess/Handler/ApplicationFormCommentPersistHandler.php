@@ -23,19 +23,26 @@ use Civi\Funding\ActivityTypeIds;
 use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormCommentPersistCommand;
 use Civi\Funding\Entity\ActivityEntity;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use CRM_Funding_ExtensionUtil as E;
 
 final class ApplicationFormCommentPersistHandler implements ApplicationFormCommentPersistHandlerInterface {
 
   private ApplicationProcessActivityManager $activityManager;
 
-  public function __construct(ApplicationProcessActivityManager $activityManager) {
+  private RequestContextInterface $requestContext;
+
+  public function __construct(
+    ApplicationProcessActivityManager $activityManager,
+    RequestContextInterface $requestContext
+  ) {
     $this->activityManager = $activityManager;
+    $this->requestContext = $requestContext;
   }
 
   public function handle(ApplicationFormCommentPersistCommand $command): void {
     $this->activityManager->addActivity(
-      $command->getContactId(),
+      $this->requestContext->getContactId(),
       $command->getApplicationProcess(),
       $this->createActivity($command)
     );

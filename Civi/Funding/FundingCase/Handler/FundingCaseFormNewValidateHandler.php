@@ -22,18 +22,22 @@ namespace Civi\Funding\FundingCase\Handler;
 use Civi\Funding\Form\FundingCase\FundingCaseValidationResult;
 use Civi\Funding\Form\FundingCase\FundingCaseValidatorInterface;
 use Civi\Funding\FundingCase\Command\FundingCaseFormNewValidateCommand;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 
 final class FundingCaseFormNewValidateHandler implements FundingCaseFormNewValidateHandlerInterface {
 
+  private RequestContextInterface $requestContext;
+
   private FundingCaseValidatorInterface $validator;
 
-  public function __construct(FundingCaseValidatorInterface $validator) {
+  public function __construct(RequestContextInterface $requestContext, FundingCaseValidatorInterface $validator) {
+    $this->requestContext = $requestContext;
     $this->validator = $validator;
   }
 
   public function handle(FundingCaseFormNewValidateCommand $command): FundingCaseValidationResult {
     return $this->validator->validateNew(
-      $command->getContactId(),
+      $this->requestContext->getContactId(),
       $command->getFundingProgram(),
       $command->getFundingCaseType(),
       $command->getData(),

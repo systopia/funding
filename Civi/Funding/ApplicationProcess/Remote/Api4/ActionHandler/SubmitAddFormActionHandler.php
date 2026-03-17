@@ -66,9 +66,7 @@ final class SubmitAddFormActionHandler implements ActionHandlerInterface {
     Assert::notNull($fundingCaseBundle, sprintf('Funding case with id "%d" not found', $action->getFundingCaseId()));
 
     $submitResult = $this->submitHandler->handle(new ApplicationFormAddSubmitCommand(
-      $action->getResolvedContactId(),
-      $fundingCaseBundle,
-      $action->getData(),
+      $fundingCaseBundle, $action->getData(),
     ));
 
     if (!$submitResult->isSuccess()) {

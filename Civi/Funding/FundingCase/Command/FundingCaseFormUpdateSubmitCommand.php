@@ -25,7 +25,6 @@ use Civi\Funding\Entity\Traits\FundingCaseBundleTrait;
 final class FundingCaseFormUpdateSubmitCommand {
 
   use FundingCaseBundleTrait;
-  private int $contactId;
 
   /**
    * @var array<string, mixed>
@@ -36,17 +35,11 @@ final class FundingCaseFormUpdateSubmitCommand {
    * @param array<string, mixed> $data
    */
   public function __construct(
-    int $contactId,
     FundingCaseBundle $fundingCaseBundle,
     array $data
   ) {
-    $this->contactId = $contactId;
     $this->fundingCaseBundle = $fundingCaseBundle;
     $this->data = $data;
-  }
-
-  public function getContactId(): int {
-    return $this->contactId;
   }
 
   /**

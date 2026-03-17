@@ -25,6 +25,7 @@ use Civi\Funding\Form\FundingCase\FundingCaseValidationResult;
 use Civi\Funding\Form\FundingCase\FundingCaseValidatorInterface;
 use Civi\Funding\FundingCase\Command\FundingCaseFormNewValidateCommand;
 use Civi\Funding\Mock\FundingCaseType\FundingCase\Validation\ValidatedFundingCaseDataMock;
+use Civi\Funding\Mock\RequestContext\TestRequestContext;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -37,19 +38,18 @@ final class FundingCaseFormNewValidateHandlerTest extends TestCase {
 
   private FundingCaseFormNewValidateHandler $handler;
 
-  /**
-   * @var \Civi\Funding\Form\FundingCase\FundingCaseValidatorInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $validatorMock;
+  private TestRequestContext $requestContext;
+
+  private FundingCaseValidatorInterface&MockObject $validatorMock;
 
   protected function setUp(): void {
     parent::setUp();
+    $this->requestContext = TestRequestContext::newRemote();
     $this->validatorMock = $this->createMock(FundingCaseValidatorInterface::class);
-    $this->handler = new FundingCaseFormNewValidateHandler($this->validatorMock);
+    $this->handler = new FundingCaseFormNewValidateHandler($this->requestContext, $this->validatorMock);
   }
 
   public function testHandle(): void {
-    $contactId = 1;
     $fundingProgram = FundingProgramFactory::createFundingProgram();
     $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
 
@@ -59,15 +59,10 @@ final class FundingCaseFormNewValidateHandlerTest extends TestCase {
     $validationResult = FundingCaseValidationResult::newInvalid($errorMessages, $validatedData);
 
     $this->validatorMock->expects(static::once())->method('validateNew')
-      ->with($contactId, $fundingProgram, $fundingCaseType, $data, 20)
+      ->with($this->requestContext->getContactId(), $fundingProgram, $fundingCaseType, $data, 20)
       ->willReturn($validationResult);
 
-    $command = new FundingCaseFormNewValidateCommand(
-      $contactId,
-      $fundingProgram,
-      $fundingCaseType,
-      $data,
-    );
+    $command = new FundingCaseFormNewValidateCommand($fundingProgram, $fundingCaseType, $data);
     $result = $this->handler->handle($command);
     static::assertSame($validatedData, $result->getValidatedData());
     static::assertSame($errorMessages, $result->getErrorMessages());

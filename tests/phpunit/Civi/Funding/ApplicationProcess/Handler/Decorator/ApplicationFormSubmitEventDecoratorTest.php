@@ -89,7 +89,6 @@ final class ApplicationFormSubmitEventDecoratorTest extends TestCase {
 
   private function createCommand(): ApplicationFormSubmitCommand {
     return new ApplicationFormSubmitCommand(
-      1,
       ApplicationProcessBundleFactory::createApplicationProcessBundle(),
       [23 => new FullApplicationProcessStatus('status', NULL, NULL)],
       ['test' => 'foo'],

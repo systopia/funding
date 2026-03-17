@@ -98,11 +98,7 @@ final class ApplicationFormAddSubmitEventDecoratorTest extends TestCase {
   }
 
   private function createCommand(): ApplicationFormAddSubmitCommand {
-    return new ApplicationFormAddSubmitCommand(
-      1,
-      FundingCaseBundleFactory::create(),
-      ['test' => 'foo'],
-    );
+    return new ApplicationFormAddSubmitCommand(FundingCaseBundleFactory::create(), ['test' => 'foo']);
   }
 
 }

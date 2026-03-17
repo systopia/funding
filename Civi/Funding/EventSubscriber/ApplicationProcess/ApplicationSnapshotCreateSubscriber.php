@@ -26,14 +26,11 @@ use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
 use Civi\Funding\FundingCaseType\FundingCaseTypeMetaDataProviderInterface;
 use Civi\Funding\FundingCaseType\MetaData\FundingCaseTypeMetaDataInterface;
-use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ApplicationSnapshotCreateSubscriber implements EventSubscriberInterface {
 
   private FundingCaseTypeMetaDataProviderInterface $metaDataProvider;
-
-  private RequestContextInterface $requestContext;
 
   private ApplicationSnapshotCreateHandlerInterface $snapshotCreateHandler;
 
@@ -44,18 +41,15 @@ class ApplicationSnapshotCreateSubscriber implements EventSubscriberInterface {
 
   public function __construct(
     FundingCaseTypeMetaDataProviderInterface $metaDataProvider,
-    RequestContextInterface $requestContext,
     ApplicationSnapshotCreateHandlerInterface $snapshotCreateHandler
   ) {
     $this->metaDataProvider = $metaDataProvider;
-    $this->requestContext = $requestContext;
     $this->snapshotCreateHandler = $snapshotCreateHandler;
   }
 
   public function onPreUpdate(ApplicationProcessPreUpdateEvent $event): void {
     if ($this->isSnapshotRequired($event)) {
       $this->snapshotCreateHandler->handle(new ApplicationSnapshotCreateCommand(
-        $this->requestContext->getContactId(),
         new ApplicationProcessEntityBundle(
           $event->getPreviousApplicationProcess(),
           $event->getFundingCase(),

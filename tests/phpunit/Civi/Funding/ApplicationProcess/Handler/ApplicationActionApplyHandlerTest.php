@@ -122,9 +122,7 @@ final class ApplicationActionApplyHandlerTest extends TestCase {
     assert(NULL !== $validationResult);
     $this->commentStoreHandlerMock->expects(static::once())->method('handle')
       ->with(new ApplicationFormCommentPersistCommand(
-        $command->getContactId(),
-        $command->getApplicationProcessBundle(),
-        $validationResult->getValidatedData(),
+        $command->getApplicationProcessBundle(), $validationResult->getValidatedData(),
       ));
 
     $this->handler->handle($command);
@@ -197,11 +195,14 @@ final class ApplicationActionApplyHandlerTest extends TestCase {
   ): ApplicationActionApplyCommand {
 
     return new ApplicationActionApplyCommand(
-      1,
       $action,
       ApplicationProcessBundleFactory::createApplicationProcessBundle(),
       ApplicationFormValidationResultFactory::createValid(
-        ['_action' => $action] + $formData, $mappedData, [], [], $readOnly
+        ['_action' => $action] + $formData,
+        $mappedData,
+        [],
+        [],
+        $readOnly
       ),
     );
   }

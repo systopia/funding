@@ -67,7 +67,7 @@ final class ApplicationFormAddValidateHandlerTest extends TestCase {
 
     $form = new ApplicationFormMock();
     $this->formCreateHandlerMock->method('handle')
-      ->with(new ApplicationFormAddCreateCommand($contactId, $fundingCaseBundle))
+      ->with(new ApplicationFormAddCreateCommand($fundingCaseBundle))
       ->willReturn($form);
 
     $schemaValidationResult = new ApplicationSchemaValidationResult(new ValidationResultMock($data), [], []);
@@ -79,7 +79,7 @@ final class ApplicationFormAddValidateHandlerTest extends TestCase {
       ->with($fundingCaseBundle, $schemaValidationResult, FALSE)
       ->willReturn($validationResult);
 
-    $command = new ApplicationFormAddValidateCommand($contactId, $fundingCaseBundle, $data);
+    $command = new ApplicationFormAddValidateCommand($fundingCaseBundle, $data);
     $result = $this->handler->handle($command);
     static::assertSame($validationResult, $result);
   }
@@ -93,7 +93,7 @@ final class ApplicationFormAddValidateHandlerTest extends TestCase {
 
     $form = new ApplicationFormMock();
     $this->formCreateHandlerMock->method('handle')
-      ->with(new ApplicationFormAddCreateCommand($contactId, $fundingCaseBundle))
+      ->with(new ApplicationFormAddCreateCommand($fundingCaseBundle))
       ->willReturn($form);
 
     $schemaValidationResult = new ValidationResultMock($data, $errorMessages);
@@ -103,7 +103,7 @@ final class ApplicationFormAddValidateHandlerTest extends TestCase {
 
     $this->formValidatorMock->expects(static::never())->method('validateAdd');
 
-    $command = new ApplicationFormAddValidateCommand($contactId, $fundingCaseBundle, $data);
+    $command = new ApplicationFormAddValidateCommand($fundingCaseBundle, $data);
     $result = $this->handler->handle($command);
     static::assertInstanceOf(ValidatedApplicationDataInvalid::class, $result->getValidatedData());
     static::assertSame($data, $result->getData());

@@ -67,12 +67,13 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
       $command->getData()
     ))->willReturn($validationResult);
 
-    $this->actionApplyHandlerMock->expects(static::once())->method('handle')->with(new ApplicationActionApplyCommand(
-      $command->getContactId(),
-      $validationResult->getAction(),
-      $command->getApplicationProcessBundle(),
-      $validationResult,
-    ));
+    $this->actionApplyHandlerMock->expects(static::once())->method('handle')
+      ->with(new ApplicationActionApplyCommand(
+        $validationResult->getAction(),
+        $command->getApplicationProcessBundle(),
+        $validationResult,
+      )
+    );
 
     $result = $this->handler->handle($command);
 
@@ -101,7 +102,6 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
 
   private function createCommand(): ApplicationFormSubmitCommand {
     return new ApplicationFormSubmitCommand(
-      1,
       ApplicationProcessBundleFactory::createApplicationProcessBundle(),
       [23 => new FullApplicationProcessStatus('status', NULL, NULL)],
       ['test' => 'foo'],

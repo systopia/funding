@@ -49,7 +49,7 @@ final class CreateDrawdownsActionHandlerTest extends TestCase {
     $this->handler = new CreateDrawdownsActionHandler(
       $this->drawdownManagerMock,
       $this->payoutProcessManagerMock,
-      new TestRequestContext(1234, FALSE)
+      TestRequestContext::newInternal(1234)
     );
   }
 

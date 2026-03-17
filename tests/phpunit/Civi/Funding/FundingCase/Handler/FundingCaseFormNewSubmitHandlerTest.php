@@ -28,6 +28,7 @@ use Civi\Funding\FundingCase\Command\FundingCaseFormNewSubmitCommand;
 use Civi\Funding\FundingCase\Command\FundingCaseFormNewValidateCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\Mock\FundingCaseType\FundingCase\Validation\ValidatedFundingCaseDataMock;
+use Civi\Funding\Mock\RequestContext\TestRequestContext;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -45,18 +46,17 @@ final class FundingCaseFormNewSubmitHandlerTest extends TestCase {
 
   private FundingCaseFormNewSubmitHandler $handler;
 
-  /**
-   * @var \Civi\Funding\FundingCase\Handler\FundingCaseFormNewValidateHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $validateHandlerMock;
+  private TestRequestContext $requestContext;
+
+  private FundingCaseFormNewValidateHandlerInterface&MockObject $validateHandlerMock;
 
   protected function setUp(): void {
     parent::setUp();
     $this->fundingCaseManagerMock = $this->createMock(FundingCaseManager::class);
+    $this->requestContext = TestRequestContext::newRemote(12);
     $this->validateHandlerMock = $this->createMock(FundingCaseFormNewValidateHandlerInterface::class);
     $this->handler = new FundingCaseFormNewSubmitHandler(
-      $this->fundingCaseManagerMock,
-      $this->validateHandlerMock,
+      $this->fundingCaseManagerMock, $this->requestContext, $this->validateHandlerMock,
     );
   }
 
@@ -71,16 +71,13 @@ final class FundingCaseFormNewSubmitHandlerTest extends TestCase {
     ]);
     $validationResult = FundingCaseValidationResult::newValid($validatedData);
     $this->validateHandlerMock->method('handle')->with(new FundingCaseFormNewValidateCommand(
-      $command->getContactId(),
-      $command->getFundingProgram(),
-      $command->getFundingCaseType(),
-      $command->getData()
+      $command->getFundingProgram(), $command->getFundingCaseType(), $command->getData()
     ))->willReturn($validationResult);
 
     $fundingCase = FundingCaseFactory::createFundingCase();
     $this->fundingCaseManagerMock->expects(static::once())->method('create')
       ->with(
-        $command->getContactId(),
+        $this->requestContext->getContactId(),
         [
           'funding_program' => $command->getFundingProgram(),
           'funding_case_type' => $command->getFundingCaseType(),
@@ -103,10 +100,7 @@ final class FundingCaseFormNewSubmitHandlerTest extends TestCase {
     $errorMessages = ['/field' => ['error']];
     $validationResult = FundingCaseValidationResult::newInvalid($errorMessages, $validatedData);
     $this->validateHandlerMock->method('handle')->with(new FundingCaseFormNewValidateCommand(
-      $command->getContactId(),
-      $command->getFundingProgram(),
-      $command->getFundingCaseType(),
-      $command->getData()
+      $command->getFundingProgram(), $command->getFundingCaseType(), $command->getData()
     ))->willReturn($validationResult);
 
     $this->fundingCaseManagerMock->expects(static::never())->method('update');
@@ -121,10 +115,7 @@ final class FundingCaseFormNewSubmitHandlerTest extends TestCase {
 
   private function createCommand(): FundingCaseFormNewSubmitCommand {
     return new FundingCaseFormNewSubmitCommand(
-      1,
-      FundingProgramFactory::createFundingProgram(),
-      FundingCaseTypeFactory::createFundingCaseType(),
-      ['test' => 'foo'],
+      FundingProgramFactory::createFundingProgram(), FundingCaseTypeFactory::createFundingCaseType(), ['test' => 'foo'],
     );
   }
 

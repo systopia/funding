@@ -111,10 +111,7 @@ final class RemoteSubmitNewApplicationFormActionHandlerTest extends TestCase {
     $contactId = 1;
     $action = $this->createSubmitNewFormAction($contactId);
     $command = new ApplicationFormNewSubmitCommand(
-      $contactId,
-      $this->fundingCaseType,
-      $this->fundingProgram,
-      $action->getData()
+      $this->fundingCaseType, $this->fundingProgram, $action->getData()
     );
 
     $validationResult = ApplicationFormValidationResultFactory::createValid();

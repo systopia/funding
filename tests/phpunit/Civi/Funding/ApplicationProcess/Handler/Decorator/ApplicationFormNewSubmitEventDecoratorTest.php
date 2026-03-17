@@ -100,7 +100,6 @@ final class ApplicationFormNewSubmitEventDecoratorTest extends TestCase {
 
   private function createCommand(): ApplicationFormNewSubmitCommand {
     return new ApplicationFormNewSubmitCommand(
-      1,
       FundingCaseTypeFactory::createFundingCaseType(),
       FundingProgramFactory::createFundingProgram(),
       ['test' => 'foo'],
