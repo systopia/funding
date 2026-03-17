@@ -36,8 +36,8 @@ trait ArrayAssertTrait {
   }
 
   /**
-   * @param mixed[] $expected
-   * @param mixed[] $actual
+   * @param array<scalar|null> $expected
+   * @param array<scalar|null> $actual
    */
   public static function assertArrayHasSameValues(array $expected, array $actual): void {
     foreach (array_unique($expected, SORT_REGULAR) as $expectedValue) {

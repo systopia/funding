@@ -149,6 +149,7 @@ final class RemoteFundingApplicationProcessAVK1FormTest extends AbstractRemoteFu
     $values = $action->execute()->getArrayCopy();
     static::assertEquals(['valid', 'errors'], array_keys($values));
     static::assertFalse($values['valid']);
+    static::assertIsArray($values['errors']);
     static::assertNotCount(0, $values['errors']);
   }
 
@@ -186,6 +187,7 @@ final class RemoteFundingApplicationProcessAVK1FormTest extends AbstractRemoteFu
     static::assertEquals(['action', 'message', 'errors'], array_keys($values));
     static::assertSame('showValidation', $values['action']);
     static::assertSame('Validation failed', $values['message']);
+    static::assertIsArray($values['errors']);
     static::assertNotCount(0, $values['errors']);
   }
 

@@ -95,6 +95,7 @@ final class ValidateFormActionTest extends AbstractRemoteFundingHeadlessTestCase
       ->getArrayCopy();
 
     static::assertFalse($result['valid']);
+    static::assertIsArray($result['errors']);
     static::assertCount(4, $result['errors']);
     static::assertIsArray($result['data']);
   }

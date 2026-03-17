@@ -53,8 +53,9 @@ final class FundingCaseContactRelationPropertiesFactoryTypeTest extends Abstract
   }
 
   public function testGetFields(): void {
-    /** @phpstan-var array<array<string, mixed>> $fields */
+    /** @var list<array<string, mixed>> $fields */
     $fields = FundingCaseContactRelationPropertiesFactoryType::getFields()->execute()->getArrayCopy();
+    /** @var list<string> $fieldNames */
     $fieldNames = array_map(fn ($field) => $field['name'], $fields);
     static::assertArrayHasSameValues(self::FIELD_NAMES, $fieldNames);
   }
