@@ -26,18 +26,8 @@ final class ApplicationFormAddCreateCommand {
 
   use FundingCaseBundleTrait;
 
-  private int $contactId;
-
-  public function __construct(
-    int $contactId,
-    FundingCaseBundle $fundingCaseBundle
-  ) {
-    $this->contactId = $contactId;
+  public function __construct(FundingCaseBundle $fundingCaseBundle) {
     $this->fundingCaseBundle = $fundingCaseBundle;
-  }
-
-  public function getContactId(): int {
-    return $this->contactId;
   }
 
 }

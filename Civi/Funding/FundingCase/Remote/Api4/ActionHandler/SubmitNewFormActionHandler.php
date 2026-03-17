@@ -70,10 +70,7 @@ final class SubmitNewFormActionHandler implements ActionHandlerInterface {
     ));
 
     $submitResult = $this->submitHandler->handle(new FundingCaseFormNewSubmitCommand(
-      $action->getResolvedContactId(),
-      $fundingProgram,
-      $fundingCaseType,
-      $action->getData(),
+      $fundingProgram, $fundingCaseType, $action->getData(),
     ));
 
     if (!$submitResult->isSuccess()) {

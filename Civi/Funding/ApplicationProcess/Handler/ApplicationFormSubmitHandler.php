@@ -50,7 +50,6 @@ final class ApplicationFormSubmitHandler implements ApplicationFormSubmitHandler
     }
 
     $this->actionApplyHandler->handle(new ApplicationActionApplyCommand(
-      $command->getContactId(),
       $validationResult->getValidatedData()->getAction(),
       $command->getApplicationProcessBundle(),
       $validationResult,

@@ -72,12 +72,7 @@ final class RemoteSubmitFormActionHandler implements ActionHandlerInterface {
 
     $statusList = $this->applicationProcessManager->getStatusList($applicationProcessBundle);
 
-    $command = new ApplicationFormSubmitCommand(
-      $action->getResolvedContactId(),
-      $applicationProcessBundle,
-      $statusList,
-      $action->getData(),
-    );
+    $command = new ApplicationFormSubmitCommand($applicationProcessBundle, $statusList, $action->getData());
 
     $result = $this->submitHandler->handle($command);
     if ($result->isSuccess()) {

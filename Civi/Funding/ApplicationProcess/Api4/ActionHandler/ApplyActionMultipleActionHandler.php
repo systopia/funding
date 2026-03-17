@@ -27,7 +27,6 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationAllowedActionsGetCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationActionApplyHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationAllowedActionsGetHandlerInterface;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
-use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use CRM_Funding_ExtensionUtil as E;
 
 final class ApplyActionMultipleActionHandler implements ActionHandlerInterface {
@@ -40,18 +39,14 @@ final class ApplyActionMultipleActionHandler implements ActionHandlerInterface {
 
   private ApplicationProcessManager $applicationProcessManager;
 
-  private RequestContextInterface $requestContext;
-
   public function __construct(
     ApplicationActionApplyHandlerInterface $actionApplyHandler,
     ApplicationAllowedActionsGetHandlerInterface $allowedActionsGetHandler,
     ApplicationProcessManager $applicationProcessManager,
-    RequestContextInterface $requestContext
   ) {
     $this->actionApplyHandler = $actionApplyHandler;
     $this->allowedActionsGetHandler = $allowedActionsGetHandler;
     $this->applicationProcessManager = $applicationProcessManager;
-    $this->requestContext = $requestContext;
   }
 
   /**
@@ -99,10 +94,7 @@ final class ApplyActionMultipleActionHandler implements ActionHandlerInterface {
     }
 
     $this->actionApplyHandler->handle(new ApplicationActionApplyCommand(
-      $this->requestContext->getContactId(),
-      $action,
-      $applicationProcessBundle,
-      NULL
+      $action, $applicationProcessBundle, NULL
     ));
 
     $applicationProcess = $applicationProcessBundle->getApplicationProcess();

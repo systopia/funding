@@ -71,10 +71,10 @@ final class ApplicationAllowedActionApplierTest extends TestCase {
 
     $contactId = 2;
     $this->actionApplyHandlerMock->expects(static::once())->method('handle')->with(new ApplicationActionApplyCommand(
-      $contactId, 'action', $applicationProcessBundle, NULL
+      'action', $applicationProcessBundle, NULL
     ));
 
-    $this->actionApplier->applyAllowedAction($contactId, $applicationProcessBundle, 'action');
+    $this->actionApplier->applyAllowedAction($applicationProcessBundle, 'action');
   }
 
   public function testApplyAllowedActionNotAllowed(): void {
@@ -92,7 +92,7 @@ final class ApplicationAllowedActionApplierTest extends TestCase {
     $contactId = 2;
     $this->actionApplyHandlerMock->expects(static::never())->method('handle');
 
-    $this->actionApplier->applyAllowedAction($contactId, $applicationProcessBundle, 'action');
+    $this->actionApplier->applyAllowedAction($applicationProcessBundle, 'action');
   }
 
   public function testApplyAllowedActionsByFundingCase(): void {
@@ -146,10 +146,10 @@ final class ApplicationAllowedActionApplierTest extends TestCase {
 
     $contactId = 2;
     $this->actionApplyHandlerMock->expects(static::once())->method('handle')->with(new ApplicationActionApplyCommand(
-      $contactId, 'action', $applicationProcessBundle2, NULL
+      'action', $applicationProcessBundle2, NULL
     ));
 
-    $this->actionApplier->applyAllowedActionsByFundingCase($contactId, $fundingCase, 'action');
+    $this->actionApplier->applyAllowedActionsByFundingCase($fundingCase, 'action');
   }
 
 }

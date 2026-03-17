@@ -65,11 +65,7 @@ final class GetNewFormActionHandler implements ActionHandlerInterface {
       $action->getFundingCaseTypeId(),
     ));
 
-    $form = $this->formNewGetHandler->handle(new FundingCaseFormNewGetCommand(
-      $action->getResolvedContactId(),
-      $fundingProgram,
-      $fundingCaseType,
-    ));
+    $form = $this->formNewGetHandler->handle(new FundingCaseFormNewGetCommand($fundingProgram, $fundingCaseType));
 
     return [
       'jsonSchema' => $form->getJsonSchema()->toArray(),

@@ -28,8 +28,6 @@ final class ApplicationActionApplyCommand {
 
   use ApplicationProcessEntityBundleTrait;
 
-  private int $contactId;
-
   private string $action;
 
   private ?ApplicationFormValidationResult $validationResult;
@@ -39,12 +37,10 @@ final class ApplicationActionApplyCommand {
    *   A valid result or NULL.
    */
   public function __construct(
-    int $contactId,
     string $action,
     ApplicationProcessEntityBundle $applicationProcessBundle,
     ?ApplicationFormValidationResult $validationResult
   ) {
-    $this->contactId = $contactId;
     $this->action = $action;
     $this->applicationProcessBundle = $applicationProcessBundle;
     if (NULL !== $validationResult) {
@@ -55,10 +51,6 @@ final class ApplicationActionApplyCommand {
 
   public function getAction(): string {
     return $this->action;
-  }
-
-  public function getContactId(): int {
-    return $this->contactId;
   }
 
   public function getValidationResult(): ?ApplicationFormValidationResult {

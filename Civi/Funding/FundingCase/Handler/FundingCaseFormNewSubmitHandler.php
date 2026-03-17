@@ -23,19 +23,24 @@ use Civi\Funding\FundingCase\Command\FundingCaseFormNewSubmitCommand;
 use Civi\Funding\FundingCase\Command\FundingCaseFormNewSubmitResult;
 use Civi\Funding\FundingCase\Command\FundingCaseFormNewValidateCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 
 final class FundingCaseFormNewSubmitHandler implements FundingCaseFormNewSubmitHandlerInterface {
 
   private FundingCaseManager $fundingCaseManager;
 
+  private RequestContextInterface $requestContext;
+
   private FundingCaseFormNewValidateHandlerInterface $validateHandler;
 
   public function __construct(
     FundingCaseManager $fundingCaseManager,
-    FundingCaseFormNewValidateHandlerInterface $validateHandler
+    RequestContextInterface $requestContext,
+    FundingCaseFormNewValidateHandlerInterface $validateHandler,
   ) {
     $this->fundingCaseManager = $fundingCaseManager;
     $this->validateHandler = $validateHandler;
+    $this->requestContext = $requestContext;
   }
 
   /**
@@ -43,7 +48,6 @@ final class FundingCaseFormNewSubmitHandler implements FundingCaseFormNewSubmitH
    */
   public function handle(FundingCaseFormNewSubmitCommand $command): FundingCaseFormNewSubmitResult {
     $validationResult = $this->validateHandler->handle(new FundingCaseFormNewValidateCommand(
-      $command->getContactId(),
       $command->getFundingProgram(),
       $command->getFundingCaseType(),
       $command->getData(),
@@ -55,7 +59,7 @@ final class FundingCaseFormNewSubmitHandler implements FundingCaseFormNewSubmitH
 
     $validatedData = $validationResult->getValidatedData();
     $fundingCase = $this->fundingCaseManager->create(
-      $command->getContactId(),
+      $this->requestContext->getContactId(),
       [
         'funding_program' => $command->getFundingProgram(),
         'funding_case_type' => $command->getFundingCaseType(),

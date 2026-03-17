@@ -24,24 +24,29 @@ use Civi\Funding\Form\FundingCase\FundingCaseUiSchemaFactoryInterface;
 use Civi\Funding\Form\JsonFormsFormWithData;
 use Civi\Funding\Form\JsonFormsFormWithDataInterface;
 use Civi\Funding\FundingCase\Command\FundingCaseFormNewGetCommand;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 
 final class FundingCaseFormNewGetHandler implements FundingCaseFormNewGetHandlerInterface {
 
   private FundingCaseJsonSchemaFactoryInterface $jsonSchemaFactory;
 
+  private RequestContextInterface $requestContext;
+
   private FundingCaseUiSchemaFactoryInterface $uiSchemaFactory;
 
   public function __construct(
     FundingCaseJsonSchemaFactoryInterface $jsonSchemaFactory,
+    RequestContextInterface $requestContext,
     FundingCaseUiSchemaFactoryInterface $uiSchemaFactory
   ) {
     $this->jsonSchemaFactory = $jsonSchemaFactory;
+    $this->requestContext = $requestContext;
     $this->uiSchemaFactory = $uiSchemaFactory;
   }
 
   public function handle(FundingCaseFormNewGetCommand $command): JsonFormsFormWithDataInterface {
     $jsonSchema = $this->jsonSchemaFactory->createJsonSchemaNew(
-      $command->getContactId(),
+      $this->requestContext->getContactId(),
       $command->getFundingProgram(),
       $command->getFundingCaseType(),
     );

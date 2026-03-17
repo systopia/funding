@@ -24,30 +24,22 @@ use Civi\Funding\Entity\Traits\FundingCaseBundleTrait;
 
 final class ApplicationFormAddValidateCommand {
 
-  private int $contactId;
-
   use FundingCaseBundleTrait;
 
   /**
-   * @phpstan-var array<string, mixed> JSON serializable.
+   * @var array<string, mixed> JSON serializable.
    */
   private array $data;
 
   /**
-   * @phpstan-param array<string, mixed> $data JSON serializable.
+   * @param array<string, mixed> $data JSON serializable.
    */
   public function __construct(
-    int $contactId,
     FundingCaseBundle $fundingCaseBundle,
     array $data
   ) {
-    $this->contactId = $contactId;
     $this->fundingCaseBundle = $fundingCaseBundle;
     $this->data = $data;
-  }
-
-  public function getContactId(): int {
-    return $this->contactId;
   }
 
   /**

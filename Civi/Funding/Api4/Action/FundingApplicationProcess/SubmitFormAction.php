@@ -23,7 +23,6 @@ use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
 use Civi\Funding\Api4\Action\Traits\ApplicationProcessManagerTrait;
-use Civi\Funding\Api4\Action\Traits\RequestContextTrait;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormDataGetCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormSubmitCommand;
@@ -31,7 +30,6 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandlerInterfa
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterface;
 use Civi\RemoteTools\Api4\Action\Traits\DataParameterTrait;
 use Civi\RemoteTools\Api4\Action\Traits\IdParameterTrait;
-use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Webmozart\Assert\Assert;
 
 final class SubmitFormAction extends AbstractAction {
@@ -39,8 +37,6 @@ final class SubmitFormAction extends AbstractAction {
   use DataParameterTrait;
 
   use IdParameterTrait;
-
-  use RequestContextTrait;
 
   use ApplicationProcessManagerTrait;
 
@@ -52,13 +48,11 @@ final class SubmitFormAction extends AbstractAction {
     ?ApplicationProcessManager $applicationProcessManager = NULL,
     ?ApplicationFormDataGetHandlerInterface $formDataGetHandler = NULL,
     ?ApplicationFormSubmitHandlerInterface $submitFormHandler = NULL,
-    ?RequestContextInterface $requestContext = NULL
   ) {
     parent::__construct(FundingApplicationProcess::getEntityName(), 'submitForm');
     $this->_applicationProcessManager = $applicationProcessManager;
     $this->formDataGetHandler = $formDataGetHandler;
     $this->submitFormHandler = $submitFormHandler;
-    $this->_requestContext = $requestContext;
   }
 
   /**
@@ -92,12 +86,7 @@ final class SubmitFormAction extends AbstractAction {
     Assert::notNull($applicationProcessBundle);
     $statusList = $this->getApplicationProcessManager()->getStatusList($applicationProcessBundle);
 
-    return new ApplicationFormSubmitCommand(
-      $this->getRequestContext()->getContactId(),
-      $applicationProcessBundle,
-      $statusList,
-      $this->getData()
-    );
+    return new ApplicationFormSubmitCommand($applicationProcessBundle, $statusList, $this->getData());
   }
 
   private function getFormDataGetHandler(): ApplicationFormDataGetHandlerInterface {

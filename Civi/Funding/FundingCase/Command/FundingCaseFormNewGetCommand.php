@@ -24,24 +24,16 @@ use Civi\Funding\Entity\FundingProgramEntity;
 
 final class FundingCaseFormNewGetCommand {
 
-  private int $contactId;
-
   private FundingProgramEntity $fundingProgram;
 
   private FundingCaseTypeEntity $fundingCaseType;
 
   public function __construct(
-    int $contactId,
     FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType
   ) {
-    $this->contactId = $contactId;
     $this->fundingProgram = $fundingProgram;
     $this->fundingCaseType = $fundingCaseType;
-  }
-
-  public function getContactId(): int {
-    return $this->contactId;
   }
 
   public function getFundingProgram(): FundingProgramEntity {

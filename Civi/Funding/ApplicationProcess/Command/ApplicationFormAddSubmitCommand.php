@@ -26,28 +26,17 @@ final class ApplicationFormAddSubmitCommand {
 
   use FundingCaseBundleTrait;
 
-  private int $contactId;
-
   /**
-   * @phpstan-var array<string, mixed> JSON serializable.
+   * @var array<string, mixed> JSON serializable.
    */
   private array $data;
 
   /**
    * @param array<string, mixed> $data JSON serializable.
    */
-  public function __construct(
-    int $contactId,
-    FundingCaseBundle $fundingCaseBundle,
-    array $data
-  ) {
-    $this->contactId = $contactId;
+  public function __construct(FundingCaseBundle $fundingCaseBundle, array $data) {
     $this->fundingCaseBundle = $fundingCaseBundle;
     $this->data = $data;
-  }
-
-  public function getContactId(): int {
-    return $this->contactId;
   }
 
   /**

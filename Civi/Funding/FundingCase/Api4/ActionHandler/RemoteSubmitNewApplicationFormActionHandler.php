@@ -93,12 +93,7 @@ final class RemoteSubmitNewApplicationFormActionHandler implements ActionHandler
     $this->assertFundingProgramDates($fundingProgram);
     $this->assertCreateApplicationPermission($fundingProgram);
 
-    $command = new ApplicationFormNewSubmitCommand(
-      $action->getResolvedContactId(),
-      $fundingCaseType,
-      $fundingProgram,
-      $action->getData()
-    );
+    $command = new ApplicationFormNewSubmitCommand($fundingCaseType, $fundingProgram, $action->getData());
 
     $result = $this->submitHandler->handle($command);
     if ($result->isSuccess()) {

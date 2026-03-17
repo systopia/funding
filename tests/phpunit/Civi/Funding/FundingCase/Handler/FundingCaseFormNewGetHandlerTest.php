@@ -24,6 +24,7 @@ use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\Form\FundingCase\FundingCaseJsonSchemaFactoryInterface;
 use Civi\Funding\Form\FundingCase\FundingCaseUiSchemaFactoryInterface;
 use Civi\Funding\FundingCase\Command\FundingCaseFormNewGetCommand;
+use Civi\Funding\Mock\RequestContext\TestRequestContext;
 use Civi\RemoteTools\JsonForms\JsonFormsElement;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -37,35 +38,32 @@ final class FundingCaseFormNewGetHandlerTest extends TestCase {
 
   private FundingCaseFormNewGetHandler $handler;
 
-  /**
-   * @var \Civi\Funding\Form\FundingCase\FundingCaseJsonSchemaFactoryInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $jsonSchemaFactoryMock;
+  private FundingCaseJsonSchemaFactoryInterface&MockObject $jsonSchemaFactoryMock;
 
-  /**
-   * @var \Civi\Funding\Form\FundingCase\FundingCaseUiSchemaFactoryInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $uiSchemaFactoryMock;
+  private TestRequestContext $requestContext;
+
+  private FundingCaseUiSchemaFactoryInterface&MockObject $uiSchemaFactoryMock;
 
   protected function setUp(): void {
     parent::setUp();
     $this->jsonSchemaFactoryMock = $this->createMock(FundingCaseJsonSchemaFactoryInterface::class);
+    $this->requestContext = TestRequestContext::newInternal(111);
     $this->uiSchemaFactoryMock = $this->createMock(FundingCaseUiSchemaFactoryInterface::class);
     $this->handler = new FundingCaseFormNewGetHandler(
       $this->jsonSchemaFactoryMock,
+      $this->requestContext,
       $this->uiSchemaFactoryMock,
     );
   }
 
   public function testHandle(): void {
-    $contactId = 12;
     $fundingProgram = FundingProgramFactory::createFundingProgram();
     $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
-    $command = new FundingCaseFormNewGetCommand($contactId, $fundingProgram, $fundingCaseType);
+    $command = new FundingCaseFormNewGetCommand($fundingProgram, $fundingCaseType);
 
     $jsonSchema = new JsonSchema([]);
     $this->jsonSchemaFactoryMock->method('createJsonSchemaNew')
-      ->with($contactId, $fundingProgram, $fundingCaseType)
+      ->with($this->requestContext->getContactId(), $fundingProgram, $fundingCaseType)
       ->willReturn($jsonSchema);
     $uiSchema = new JsonFormsElement('test');
     $this->uiSchemaFactoryMock->method('createUiSchemaNew')

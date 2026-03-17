@@ -67,7 +67,6 @@ final class GetAddFormActionHandler implements ActionHandlerInterface {
     Assert::notNull($fundingCaseBundle, sprintf('Funding case with id "%d" not found', $action->getFundingCaseId()));
 
     $form = $this->createHandler->handle(new ApplicationFormAddCreateCommand(
-      $action->getResolvedContactId(),
       $fundingCaseBundle,
     ));
 

@@ -58,8 +58,8 @@ final class ApplicationActionApplyHandler implements ApplicationActionApplyHandl
    * @throws \CRM_Core_Exception
    */
   public function handle(ApplicationActionApplyCommand $command): void {
-    $action = $this->metaDataProvider->get($command->getFundingCaseType()->getName())->getApplicationProcessAction(
-      $command->getAction());
+    $action = $this->metaDataProvider->get($command->getFundingCaseType()->getName())
+      ->getApplicationProcessAction($command->getAction());
 
     if (TRUE === $action?->isDelete()) {
       $this->applicationProcessManager->delete($command->getApplicationProcessBundle());
@@ -84,9 +84,7 @@ final class ApplicationActionApplyHandler implements ApplicationActionApplyHandl
         $validatedData = $command->getValidationResult()->getValidatedData();
         if (NULL !== $validatedData->getComment() && '' !== $validatedData->getComment()['text']) {
           $this->commentPersistHandler->handle(new ApplicationFormCommentPersistCommand(
-            $command->getContactId(),
-            $command->getApplicationProcessBundle(),
-            $validatedData,
+            $command->getApplicationProcessBundle(), $validatedData,
           ));
         }
       }

@@ -30,6 +30,7 @@ use Civi\Funding\EntityFactory\FundingProgramFactory;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\Mock\ApplicationProcess\Form\Validation\ApplicationFormValidationResultFactory;
 use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
+use Civi\Funding\Mock\RequestContext\TestRequestContext;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -41,37 +42,29 @@ use PHPUnit\Framework\TestCase;
  */
 final class ApplicationFormNewSubmitHandlerTest extends TestCase {
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\ApplicationProcessManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $applicationProcessManagerMock;
+  private ApplicationProcessManager&MockObject $applicationProcessManagerMock;
 
-  /**
-   * @var \Civi\Funding\FundingCase\FundingCaseManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $fundingCaseManagerMock;
+  private FundingCaseManager&MockObject $fundingCaseManagerMock;
 
   private ApplicationFormNewSubmitHandler $handler;
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $statusDeterminerMock;
+  private TestRequestContext $requestContext;
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewValidateHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $validateHandlerMock;
+  private ApplicationProcessStatusDeterminerInterface&MockObject $statusDeterminerMock;
+
+  private ApplicationFormNewValidateHandlerInterface&MockObject $validateHandlerMock;
 
   protected function setUp(): void {
     parent::setUp();
     $this->applicationProcessManagerMock = $this->createMock(ApplicationProcessManager::class);
     $this->fundingCaseManagerMock = $this->createMock(FundingCaseManager::class);
+    $this->requestContext = TestRequestContext::newRemote(111);
     $this->statusDeterminerMock = $this->createMock(ApplicationProcessStatusDeterminerInterface::class);
     $this->validateHandlerMock = $this->createMock(ApplicationFormNewValidateHandlerInterface::class);
     $this->handler = new ApplicationFormNewSubmitHandler(
       $this->applicationProcessManagerMock,
       $this->fundingCaseManagerMock,
+      $this->requestContext,
       $this->statusDeterminerMock,
       $this->validateHandlerMock
     );
@@ -93,7 +86,7 @@ final class ApplicationFormNewSubmitHandlerTest extends TestCase {
 
     $fundingCase = FundingCaseFactory::createFundingCase();
     $this->fundingCaseManagerMock->expects(static::once())->method('getOrCreate')
-      ->with(['addable_status'], $command->getContactId(), [
+      ->with(['addable_status'], $this->requestContext->getContactId(), [
         'funding_program' => $command->getFundingProgram(),
         'funding_case_type' => $command->getFundingCaseType(),
         'recipient_contact_id' => ApplicationFormValidationResultFactory::RECIPIENT_CONTACT_ID,
@@ -139,12 +132,9 @@ final class ApplicationFormNewSubmitHandlerTest extends TestCase {
 
   private function createCommand(): ApplicationFormNewSubmitCommand {
     return new ApplicationFormNewSubmitCommand(
-      1,
       FundingCaseTypeFactory::createFundingCaseType([
         'properties' => ['applicationAddableStatusList' => ['addable_status']],
-      ]),
-      FundingProgramFactory::createFundingProgram(),
-      ['test' => 'foo'],
+      ]), FundingProgramFactory::createFundingProgram(), ['test' => 'foo'],
     );
   }
 

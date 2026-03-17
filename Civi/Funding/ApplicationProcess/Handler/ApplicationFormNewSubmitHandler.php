@@ -27,6 +27,7 @@ use Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormValidationRes
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\FundingCase\FundingCaseManager;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Webmozart\Assert\Assert;
 
 final class ApplicationFormNewSubmitHandler implements ApplicationFormNewSubmitHandlerInterface {
@@ -35,6 +36,8 @@ final class ApplicationFormNewSubmitHandler implements ApplicationFormNewSubmitH
 
   private FundingCaseManager $fundingCaseManager;
 
+  private RequestContextInterface $requestContext;
+
   private ApplicationProcessStatusDeterminerInterface $statusDeterminer;
 
   private ApplicationFormNewValidateHandlerInterface $validateHandler;
@@ -42,11 +45,13 @@ final class ApplicationFormNewSubmitHandler implements ApplicationFormNewSubmitH
   public function __construct(
     ApplicationProcessManager $applicationProcessManager,
     FundingCaseManager $fundingCaseManager,
+    RequestContextInterface $requestContext,
     ApplicationProcessStatusDeterminerInterface $statusDeterminer,
     ApplicationFormNewValidateHandlerInterface $validateHandler
   ) {
     $this->applicationProcessManager = $applicationProcessManager;
     $this->fundingCaseManager = $fundingCaseManager;
+    $this->requestContext = $requestContext;
     $this->statusDeterminer = $statusDeterminer;
     $this->validateHandler = $validateHandler;
   }
@@ -83,7 +88,7 @@ final class ApplicationFormNewSubmitHandler implements ApplicationFormNewSubmitH
 
     $fundingCase = $this->fundingCaseManager->getOrCreate(
       $applicationAddableStatusList,
-      $command->getContactId(),
+      $this->requestContext->getContactId(),
       [
         'funding_program' => $command->getFundingProgram(),
         'funding_case_type' => $command->getFundingCaseType(),

@@ -26,24 +26,16 @@ use Webmozart\Assert\Assert;
 
 final class ApplicationFormCommentPersistCommand {
 
-  private int $contactId;
-
   use ApplicationProcessEntityBundleTrait;
 
   private ValidatedApplicationDataInterface $validatedData;
 
   public function __construct(
-    int $contactId,
     ApplicationProcessEntityBundle $applicationProcessBundle,
     ValidatedApplicationDataInterface $validatedData
   ) {
-    $this->contactId = $contactId;
     $this->applicationProcessBundle = $applicationProcessBundle;
     $this->validatedData = $validatedData;
-  }
-
-  public function getContactId(): int {
-    return $this->contactId;
   }
 
   public function getValidatedData(): ValidatedApplicationDataInterface {

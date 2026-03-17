@@ -71,9 +71,7 @@ final class ApplicationFormAddSubmitHandlerTest extends TestCase {
 
     $validationResult = ApplicationFormValidationResultFactory::createValid();
     $this->validateHandlerMock->method('handle')->with(new ApplicationFormAddValidateCommand(
-      $command->getContactId(),
-      $command->getFundingCaseBundle(),
-      $command->getData()
+      $command->getFundingCaseBundle(), $command->getData()
     ))->willReturn($validationResult);
 
     $this->statusDeterminerMock->expects(static::once())->method('getInitialStatus')
@@ -104,9 +102,7 @@ final class ApplicationFormAddSubmitHandlerTest extends TestCase {
     $errorMessages = ['/field' => ['error']];
     $validationResult = ApplicationFormValidationResultFactory::createInvalid($errorMessages);
     $this->validateHandlerMock->method('handle')->with(new ApplicationFormAddValidateCommand(
-      $command->getContactId(),
-      $command->getFundingCaseBundle(),
-      $command->getData()
+      $command->getFundingCaseBundle(), $command->getData()
     ))->willReturn($validationResult);
 
     $this->applicationProcessManagerMock->expects(static::never())->method('update');
@@ -120,9 +116,7 @@ final class ApplicationFormAddSubmitHandlerTest extends TestCase {
 
   private function createCommand(): ApplicationFormAddSubmitCommand {
     return new ApplicationFormAddSubmitCommand(
-      1,
-      FundingCaseBundleFactory::create(),
-      ['test' => 'foo'],
+      FundingCaseBundleFactory::create(), ['test' => 'foo'],
     );
   }
 

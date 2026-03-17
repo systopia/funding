@@ -45,28 +45,23 @@ class ApplicationAllowedActionApplier {
   }
 
   public function applyAllowedAction(
-    int $contactId,
     ApplicationProcessEntityBundle $applicationProcessBundle,
     string $action
   ): void {
     if ($this->isApplicationProcessActionAllowed($action, $applicationProcessBundle)) {
       $this->actionApplyHandler->handle(new ApplicationActionApplyCommand(
-        $contactId,
-        $action,
-        $applicationProcessBundle,
-        NULL,
+        $action, $applicationProcessBundle, NULL,
       ));
     }
   }
 
   public function applyAllowedActionsByFundingCase(
-    int $contactId,
     FundingCaseEntity $fundingCase,
     string $action
   ): void {
     $applicationProcessBundles = $this->applicationProcessManager->getBundlesByFundingCaseId($fundingCase->getId());
     foreach ($applicationProcessBundles as $applicationProcessBundle) {
-      $this->applyAllowedAction($contactId, $applicationProcessBundle, $action);
+      $this->applyAllowedAction($applicationProcessBundle, $action);
     }
   }
 

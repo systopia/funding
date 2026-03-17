@@ -78,7 +78,7 @@ final class FundingCaseFormUpdateSubmitHandlerTest extends TestCase {
     ))->willReturn($validationResult);
 
     $this->applicationAllowedActionApplierMock->expects(static::once())->method('applyAllowedActionsByFundingCase')
-      ->with($command->getContactId(), $command->getFundingCase(), 'apply');
+      ->with($command->getFundingCase(), 'apply');
 
     $this->statusDeterminerMock->method('getStatus')
       ->with($command->getFundingCase()->getStatus(), 'apply')
@@ -119,11 +119,7 @@ final class FundingCaseFormUpdateSubmitHandlerTest extends TestCase {
   }
 
   private function createCommand(): FundingCaseFormUpdateSubmitCommand {
-    return new FundingCaseFormUpdateSubmitCommand(
-      1,
-      FundingCaseBundleFactory::create(),
-      ['test' => 'foo'],
-    );
+    return new FundingCaseFormUpdateSubmitCommand(FundingCaseBundleFactory::create(), ['test' => 'foo']);
   }
 
 }

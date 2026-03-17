@@ -24,34 +24,26 @@ use Civi\Funding\Entity\FundingProgramEntity;
 
 final class FundingCaseFormNewValidateCommand {
 
-  private int $contactId;
-
   private FundingProgramEntity $fundingProgram;
 
   private FundingCaseTypeEntity $fundingCaseType;
 
   /**
-   * @phpstan-var array<string, mixed>
+   * @var array<string, mixed>
    */
   private array $data;
 
   /**
-   * @phpstan-param array<string, mixed> $data
+   * @param array<string, mixed> $data
    */
   public function __construct(
-    int $contactId,
     FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType,
     array $data
   ) {
-    $this->contactId = $contactId;
     $this->fundingProgram = $fundingProgram;
     $this->fundingCaseType = $fundingCaseType;
     $this->data = $data;
-  }
-
-  public function getContactId(): int {
-    return $this->contactId;
   }
 
   public function getFundingProgram(): FundingProgramEntity {

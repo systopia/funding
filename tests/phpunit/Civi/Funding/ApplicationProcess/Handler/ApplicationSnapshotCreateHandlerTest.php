@@ -147,7 +147,7 @@ final class ApplicationSnapshotCreateHandlerTest extends TestCase {
     $this->externalFileManagerMock->expects(static::once())->method('attachFileToSnapshot')
       ->with($externalFile, 123);
 
-    $this->handler->handle(new ApplicationSnapshotCreateCommand(11, $applicationProcessBundle));
+    $this->handler->handle(new ApplicationSnapshotCreateCommand($applicationProcessBundle));
   }
 
 }

@@ -73,7 +73,7 @@ final class ApplicationFormAddCreateHandlerTest extends TestCase {
     $fundingCaseBundle = FundingCaseBundleFactory::create();
     $fundingCaseType = $fundingCaseBundle->getFundingCaseType();
     $fundingCase = $fundingCaseBundle->getFundingCase();
-    $command = new ApplicationFormAddCreateCommand($contactId, $fundingCaseBundle);
+    $command = new ApplicationFormAddCreateCommand($fundingCaseBundle);
 
     $jsonSchema = new JsonSchema([]);
     $this->jsonSchemaFactoryMock->method('createJsonSchemaAdd')

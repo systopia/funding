@@ -24,34 +24,26 @@ use Civi\Funding\Entity\FundingProgramEntity;
 
 final class ApplicationFormNewSubmitCommand {
 
-  private int $contactId;
-
   private FundingCaseTypeEntity $fundingCaseType;
 
   private FundingProgramEntity $fundingProgram;
 
   /**
-   * @phpstan-var array<string, mixed> JSON serializable.
+   * @var array<string, mixed> JSON serializable.
    */
   private array $data;
 
   /**
-   * @phpstan-param array<string, mixed> $data JSON serializable.
+   * @param array<string, mixed> $data JSON serializable.
    */
   public function __construct(
-    int $contactId,
     FundingCaseTypeEntity $fundingCaseType,
     FundingProgramEntity $fundingProgram,
     array $data
   ) {
-    $this->contactId = $contactId;
     $this->fundingCaseType = $fundingCaseType;
     $this->fundingProgram = $fundingProgram;
     $this->data = $data;
-  }
-
-  public function getContactId(): int {
-    return $this->contactId;
   }
 
   public function getFundingProgram(): FundingProgramEntity {

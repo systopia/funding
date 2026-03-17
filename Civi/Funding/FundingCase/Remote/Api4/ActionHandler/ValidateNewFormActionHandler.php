@@ -65,10 +65,7 @@ final class ValidateNewFormActionHandler implements ActionHandlerInterface {
     ));
 
     $validateResult = $this->validateHandler->handle(new FundingCaseFormNewValidateCommand(
-      $action->getResolvedContactId(),
-      $fundingProgram,
-      $fundingCaseType,
-      $action->getData(),
+      $fundingProgram, $fundingCaseType, $action->getData(),
     ));
 
     return [

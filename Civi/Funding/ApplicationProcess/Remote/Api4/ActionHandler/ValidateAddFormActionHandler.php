@@ -55,9 +55,7 @@ final class ValidateAddFormActionHandler implements ActionHandlerInterface {
     Assert::notNull($fundingCaseBundle, sprintf('Funding case with id "%d" not found', $action->getFundingCaseId()));
 
     $validateResult = $this->validateHandler->handle(new ApplicationFormAddValidateCommand(
-      $action->getResolvedContactId(),
-      $fundingCaseBundle,
-      $action->getData(),
+      $fundingCaseBundle, $action->getData(),
     ));
 
     return [

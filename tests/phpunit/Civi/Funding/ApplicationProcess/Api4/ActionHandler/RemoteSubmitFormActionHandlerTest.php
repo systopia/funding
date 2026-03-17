@@ -76,7 +76,7 @@ final class RemoteSubmitFormActionHandlerTest extends TestCase {
     $contactId = 1;
     $action = $this->createSubmitFormAction($applicationProcessBundle, $contactId);
     $command = new ApplicationFormSubmitCommand(
-      $contactId, $applicationProcessBundle, $this->statusList, $action->getData()
+      $applicationProcessBundle, $this->statusList, $action->getData()
     );
 
     $validationResult = ApplicationFormValidationResultFactory::createValid(['_action' => 'save']);
@@ -109,7 +109,7 @@ final class RemoteSubmitFormActionHandlerTest extends TestCase {
     $contactId = 1;
     $action = $this->createSubmitFormAction($applicationProcessBundle, $contactId);
     $command = new ApplicationFormSubmitCommand(
-      $contactId, $applicationProcessBundle, $this->statusList, $action->getData()
+      $applicationProcessBundle, $this->statusList, $action->getData()
     );
 
     $errorMessages = ['/a/b' => ['error']];
