@@ -26,6 +26,7 @@ use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaCalculate;
 use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
 use Civi\RemoteTools\JsonSchema\JsonSchemaDate;
+use Civi\RemoteTools\JsonSchema\JsonSchemaInteger;
 use Civi\RemoteTools\JsonSchema\JsonSchemaMoney;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
@@ -113,6 +114,12 @@ final class PersonalkostenApplicationJsonSchema extends JsonSchemaObject {
             'itemLabel' => 'Sachkostenpauschale',
           ],
         ]),
+      ]),
+      // Store in request data to know which Förderquote was applied for application snapshot.
+      'foerderquote' => new JsonSchemaInteger([
+        'const' => $foerderquote,
+        'readOnly' => TRUE,
+        'default' => $foerderquote,
       ]),
       'beantragterZuschuss' => new JsonSchemaCalculate(
         'number',
