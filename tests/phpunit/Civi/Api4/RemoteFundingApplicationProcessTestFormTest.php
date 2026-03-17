@@ -136,6 +136,7 @@ final class RemoteFundingApplicationProcessTestFormTest extends AbstractRemoteFu
     $values = $action->execute()->getArrayCopy();
     static::assertEquals(['valid', 'errors'], array_keys($values));
     static::assertFalse($values['valid']);
+    static::assertIsArray($values['errors']);
     static::assertNotCount(0, $values['errors']);
 
     $validData = [
@@ -189,6 +190,7 @@ final class RemoteFundingApplicationProcessTestFormTest extends AbstractRemoteFu
     static::assertEquals(['action', 'message', 'errors'], array_keys($values));
     static::assertSame('showValidation', $values['action']);
     static::assertSame('Validation failed', $values['message']);
+    static::assertIsArray($values['errors']);
     static::assertNotCount(0, $values['errors']);
 
     // Test with valid data
@@ -207,6 +209,7 @@ final class RemoteFundingApplicationProcessTestFormTest extends AbstractRemoteFu
     static::assertEquals(['action', 'message', 'files'], array_keys($values));
     static::assertSame('closeForm', $values['action']);
     $fileCiviUri = $values['files']['https://example.org/test.txt'];
+    static::assertIsString($fileCiviUri);
     static::assertStringStartsWith('http://localhost/', $fileCiviUri);
   }
 

@@ -160,9 +160,10 @@ final class ClearingFormGenerator {
       // empty array is not allowed as enum
       $actionsEnum = [NULL];
     }
-    // @phpstan-ignore-next-line
+    // @phpstan-ignore offsetAccess.nonOffsetAccessible
     $keywords['properties']['_action'] =
       new JsonSchemaString(['enum' => $actionsEnum]);
+    // @phpstan-ignore offsetAccess.nonOffsetAccessible
     $keywords['required'][] = '_action';
 
     $uiSchema = new JsonFormsGroup(E::ts('Clearing'), $elements);
