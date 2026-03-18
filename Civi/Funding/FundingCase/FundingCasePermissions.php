@@ -21,6 +21,8 @@ namespace Civi\Funding\FundingCase;
 
 final class FundingCasePermissions {
 
+  public const AUTO_UPDATE_AMOUNT_APPROVED = 'auto_update_amount_approved';
+
   public const CONTRACT_VIEW = 'contract_view';
 
   public const REVIEW_FINISH = 'review_case_finish';

@@ -72,6 +72,8 @@ interface FundingCaseTypeMetaDataInterface {
    */
   public function getResourcesItemTypes(): array;
 
+  public function getAutoUpdateAmountApproved(): AutoUpdateAmountApproved;
+
   /**
    * @return bool
    *   TRUE if it is allowed to accept a clearing calculative without checking
