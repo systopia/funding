@@ -65,8 +65,8 @@ final class PersonalkostenApplicationJsonSchemaFactory implements NonCombinedApp
     return new PersonalkostenApplicationJsonSchema(
       $foerderquote,
       $sachkostenpauschale,
-      $fundingProgram->getRequestsStartDate(),
-      $fundingProgram->getRequestsEndDate(),
+      $fundingProgram->getStartDate(),
+      $fundingProgram->getEndDate(),
       $this->existingCaseRecipientLoader->getRecipient($fundingCase),
       $this->getLimitedValidationActions(),
     );
@@ -85,8 +85,8 @@ final class PersonalkostenApplicationJsonSchemaFactory implements NonCombinedApp
     return new PersonalkostenApplicationJsonSchema(
       $foerderquote,
       $sachkostenpauschale,
-      $fundingProgram->getRequestsStartDate(),
-      $fundingProgram->getRequestsEndDate(),
+      $fundingProgram->getStartDate(),
+      $fundingProgram->getEndDate(),
       $this->possibleRecipientsLoader->getPossibleRecipients($contactId, $fundingProgram),
       $this->getLimitedValidationActions(),
     );
@@ -102,8 +102,8 @@ final class PersonalkostenApplicationJsonSchemaFactory implements NonCombinedApp
     return new PersonalkostenApplicationJsonSchema(
       0,
       0.0,
-      $fundingProgram->getRequestsStartDate(),
-      $fundingProgram->getRequestsEndDate(),
+      $fundingProgram->getStartDate(),
+      $fundingProgram->getEndDate(),
       [],
       [],
     );
