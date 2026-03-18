@@ -46,6 +46,7 @@ final class ApplicationProcessFixture {
         'short_description' => 'Description',
         'request_data' => ['foo' => 'bar'],
         'amount_requested' => 1.2,
+        'amount_eligible' => 0.0,
         'creation_date' => $now,
         'modification_date' => $now,
         'start_date' => NULL,

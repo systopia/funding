@@ -124,6 +124,7 @@ trait FundingCaseTestFixturesTrait {
       [
         'status' => 'eligible',
         'is_eligible' => TRUE,
+        'amount_eligible' => 1.12,
       ]
     )->getId();
 

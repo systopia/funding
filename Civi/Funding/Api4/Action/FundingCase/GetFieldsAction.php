@@ -75,7 +75,18 @@ final class GetFieldsAction extends DAOGetFieldsAction {
         'sql_renderer' => fn (array $field, Api4SelectQuery $query) => sprintf('IFNULL(
         (SELECT SUM(ap.amount_requested) FROM civicrm_funding_application_process ap
         WHERE ap.funding_case_id = %s AND ap.is_withdrawn = FALSE AND ap.is_rejected = FALSE)
-      , 0)', SqlRendererUtil::getFieldSqlName($field, $query, 'id')),
+        , 0)', SqlRendererUtil::getFieldSqlName($field, $query, 'id')),
+      ],
+      [
+        'name' => 'amount_eligible',
+        'title' => E::ts('Amount Eligible'),
+        'type' => 'Extra',
+        'data_type' => 'Money',
+        'readonly' => TRUE,
+        'nullable' => FALSE,
+        'sql_renderer' => fn (array $field, Api4SelectQuery $query) => sprintf('IFNULL(
+        (SELECT SUM(ap.amount_eligible) FROM civicrm_funding_application_process ap WHERE ap.funding_case_id = %s)
+        , 0)', SqlRendererUtil::getFieldSqlName($field, $query, 'id')),
       ],
       [
         'name' => 'amount_drawdowns',
