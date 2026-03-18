@@ -24,11 +24,12 @@ use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 /**
  * @codeCoverageIgnore
  */
-abstract class AbstractApplicationActionsDeterminerDecorator implements ApplicationProcessActionsDeterminerInterface {
+abstract class AbstractApplicationActionsDeterminerDecorator extends AbstractApplicationProcessActionsDeterminer {
 
   private ApplicationProcessActionsDeterminerInterface $actionsDeterminer;
 
   public function __construct(ApplicationProcessActionsDeterminerInterface $actionsDeterminer) {
+    parent::__construct([]);
     $this->actionsDeterminer = $actionsDeterminer;
   }
 
@@ -44,38 +45,6 @@ abstract class AbstractApplicationActionsDeterminerDecorator implements Applicat
    */
   public function getInitialActions(array $permissions): array {
     return $this->actionsDeterminer->getInitialActions($permissions);
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public function isActionAllowed(
-    string $action,
-    ApplicationProcessEntityBundle $applicationProcessBundle,
-    array $statusList
-  ): bool {
-    return $this->actionsDeterminer->isActionAllowed($action, $applicationProcessBundle, $statusList);
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public function isAnyActionAllowed(
-    array $actions,
-    ApplicationProcessEntityBundle $applicationProcessBundle,
-    array $statusList
-  ): bool {
-    return $this->actionsDeterminer->isAnyActionAllowed($actions, $applicationProcessBundle, $statusList);
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public function isEditAllowed(
-    ApplicationProcessEntityBundle $applicationProcessBundle,
-    array $statusList
-  ): bool {
-    return $this->actionsDeterminer->isEditAllowed($applicationProcessBundle, $statusList);
   }
 
 }
