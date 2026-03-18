@@ -55,8 +55,8 @@ final class IJBApplicationJsonSchemaFactory implements NonCombinedApplicationJso
     $fundingProgram = $applicationProcessBundle->getFundingProgram();
 
     return new IJBApplicationJsonSchema(
-      $fundingProgram->getRequestsStartDate(),
-      $fundingProgram->getRequestsEndDate(),
+      $fundingProgram->getStartDate(),
+      $fundingProgram->getEndDate(),
       $this->existingCaseRecipientLoader->getRecipient($fundingCase),
     );
   }
@@ -70,8 +70,8 @@ final class IJBApplicationJsonSchemaFactory implements NonCombinedApplicationJso
     FundingProgramEntity $fundingProgram
   ): JsonSchema {
     return new IJBApplicationJsonSchema(
-      $fundingProgram->getRequestsStartDate(),
-      $fundingProgram->getRequestsEndDate(),
+      $fundingProgram->getStartDate(),
+      $fundingProgram->getEndDate(),
       $this->possibleRecipientsLoader->getPossibleRecipients($contactId, $fundingProgram),
     );
   }
@@ -81,8 +81,8 @@ final class IJBApplicationJsonSchemaFactory implements NonCombinedApplicationJso
     FundingCaseTypeEntity $fundingCaseType,
   ): JsonSchema {
     return new IJBApplicationJsonSchema(
-      $fundingProgram->getRequestsStartDate(),
-      $fundingProgram->getRequestsEndDate(),
+      $fundingProgram->getStartDate(),
+      $fundingProgram->getEndDate(),
       [],
     );
   }
