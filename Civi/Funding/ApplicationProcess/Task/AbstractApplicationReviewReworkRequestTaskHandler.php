@@ -32,11 +32,6 @@ abstract class AbstractApplicationReviewReworkRequestTaskHandler extends Abstrac
 
   private const TASK_TYPE = 'application_review_rework_request';
 
-  /**
-   * @phpstan-return list<string>
-   */
-  abstract public static function getSupportedFundingCaseTypes(): array;
-
   public function createTasksOnChange(
     ApplicationProcessEntityBundle $applicationProcessBundle,
     ApplicationProcessEntity $previousApplicationProcess

@@ -20,8 +20,12 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase\Handler;
 
 use Civi\Funding\FundingCase\Command\FundingCasePossibleActionsGetCommand;
+use Civi\Funding\FundingCaseType\FundingCaseTypeServiceInterface;
 
-interface FundingCasePossibleActionsGetHandlerInterface {
+/**
+ * @see FundingCaseTypeServiceInterface
+ */
+interface FundingCasePossibleActionsGetHandlerInterface extends FundingCaseTypeServiceInterface {
 
   public const SERVICE_TAG = 'funding.case.possible_actions_get_handler';
 

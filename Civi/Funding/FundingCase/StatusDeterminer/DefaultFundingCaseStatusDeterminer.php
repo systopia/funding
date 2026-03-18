@@ -35,13 +35,6 @@ final class DefaultFundingCaseStatusDeterminer implements FundingCaseStatusDeter
 
   private FundingCaseTypeMetaDataProviderInterface $metaDataProvider;
 
-  /**
-   * @inheritDoc
-   */
-  public static function getSupportedFundingCaseTypes(): array {
-    return [];
-  }
-
   public function __construct(
     ApplicationProcessManager $applicationProcessManager,
     FundingCaseTypeMetaDataProviderInterface $metaDataProvider

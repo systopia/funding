@@ -31,11 +31,6 @@ abstract class AbstractApplicationReviewContentTaskHandler extends AbstractAppli
 
   private const TASK_TYPE = 'review_content';
 
-  /**
-   * @phpstan-return list<string>
-   */
-  abstract public static function getSupportedFundingCaseTypes(): array;
-
   public function createTasksOnChange(
     ApplicationProcessEntityBundle $applicationProcessBundle,
     ApplicationProcessEntity $previousApplicationProcess

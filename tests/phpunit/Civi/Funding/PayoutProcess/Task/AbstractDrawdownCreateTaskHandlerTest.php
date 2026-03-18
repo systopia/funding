@@ -39,13 +39,7 @@ final class AbstractDrawdownCreateTaskHandlerTest extends TestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->payoutProcessManagerMock = $this->createMock(PayoutProcessManager::class);
-    $this->taskHandler = new class ($this->payoutProcessManagerMock) extends AbstractDrawdownCreateTaskHandler {
-
-      public static function getSupportedFundingCaseTypes(): array {
-        return [];
-      }
-
-    };
+    $this->taskHandler = new class ($this->payoutProcessManagerMock) extends AbstractDrawdownCreateTaskHandler {};
   }
 
   public function testCreateTasksOnChanged(): void {

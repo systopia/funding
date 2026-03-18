@@ -38,11 +38,6 @@ abstract class AbstractClearingCreateTaskModifierOnApplicationProcessChange impl
   public const TASK_TYPE = 'create';
 
   /**
-   * @phpstan-return list<string>
-   */
-  abstract public static function getSupportedFundingCaseTypes(): array;
-
-  /**
    * @phpstan-return ActivityTypeNames::CLEARING_PROCESS_TASK
    */
   public function getActivityTypeName(): string {

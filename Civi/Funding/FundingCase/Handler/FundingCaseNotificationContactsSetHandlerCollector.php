@@ -20,25 +20,16 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase\Handler;
 
 use Civi\Funding\FundingCase\Command\FundingCaseNotificationContactsSetCommand;
-use Psr\Container\ContainerInterface;
+use Civi\Funding\FundingCaseType\AbstractFundingCaseTypeServiceCollector;
 
-// phpcs:disable Generic.Files.LineLength.TooLong
-final class FundingCaseNotificationContactsSetHandlerCollector implements FundingCaseNotificationContactsSetHandlerInterface {
-// phpcs:enable
-  private ContainerInterface $container;
-
-  /**
-   * @param \Psr\Container\ContainerInterface $container
-   *   Handlers with funding case type name as ID.
-   */
-  public function __construct(ContainerInterface $container) {
-    $this->container = $container;
-  }
+/**
+ * @extends AbstractFundingCaseTypeServiceCollector<FundingCaseNotificationContactsSetHandlerInterface>
+ */
+// phpcs:ignore Generic.Files.LineLength.TooLong
+final class FundingCaseNotificationContactsSetHandlerCollector extends AbstractFundingCaseTypeServiceCollector implements FundingCaseNotificationContactsSetHandlerInterface {
 
   public function handle(FundingCaseNotificationContactsSetCommand $command): void {
-    /** @var \Civi\Funding\FundingCase\Handler\FundingCaseNotificationContactsSetHandlerInterface $handler */
-    $handler = $this->container->get($command->getFundingCaseType()->getName());
-    $handler->handle($command);
+    $this->getService($command->getFundingCaseType()->getName())->handle($command);
   }
 
 }

@@ -29,7 +29,7 @@ use Symfony\Component\DependencyInjection\Reference;
 trait TaggedFundingCaseTypeServicesTrait {
 
   /**
-   * @phpstan-return array<string, Reference>
+   * @return array<string, Reference>
    *
    * @throws \Symfony\Component\DependencyInjection\Exception\RuntimeException
    */
@@ -71,13 +71,13 @@ trait TaggedFundingCaseTypeServicesTrait {
   }
 
   /**
-   * @phpstan-return array<string, IteratorArgument>
+   * @return array<string, IteratorArgument>
    *   Mapping of funding case type to prioritized service references.
    *
    * @throws \Symfony\Component\DependencyInjection\Exception\RuntimeException
    */
   protected function getMultiTaggedFundingCaseTypeServices(ContainerBuilder $container, string $tagName): array {
-    /** @phpstan-var array<string, \SplPriorityQueue<int, Reference>> $services */
+    /** @var array<string, \SplPriorityQueue<int, Reference>> $services */
     $services = [];
     foreach ($container->findTaggedServiceIds($tagName) as $id => $tags) {
       foreach ($tags as $attributes) {
@@ -106,17 +106,13 @@ trait TaggedFundingCaseTypeServicesTrait {
   }
 
   /**
-   * @phpstan-param array{funding_case_type?: string, funding_case_types?: list<string>} $attributes
+   * @param array{funding_case_type?: string} $attributes
    *
-   * @phpstan-return list<string>
+   * @return list<string>
    *
    * @throws \Symfony\Component\DependencyInjection\Exception\RuntimeException
    */
   protected function getFundingCaseTypes(ContainerBuilder $container, string $id, array $attributes): array {
-    if (array_key_exists('funding_case_types', $attributes)) {
-      return $attributes['funding_case_types'];
-    }
-
     if (array_key_exists('funding_case_type', $attributes)) {
       return [$attributes['funding_case_type']];
     }
@@ -145,7 +141,7 @@ trait TaggedFundingCaseTypeServicesTrait {
   }
 
   /**
-   * @phpstan-param array{priority?: int} $attributes
+   * @param array{priority?: int} $attributes
    */
   private function getPriority(ContainerBuilder $container, string $id, array $attributes): int {
     if (isset($attributes['priority'])) {

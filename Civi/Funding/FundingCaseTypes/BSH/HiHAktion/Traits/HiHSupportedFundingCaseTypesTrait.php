@@ -24,7 +24,7 @@ use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\HiHConstants;
 trait HiHSupportedFundingCaseTypesTrait {
 
   /**
-   * @phpstan-return list<string>
+   * @return list<string>
    */
   public static function getSupportedFundingCaseTypes(): array {
     return [HiHConstants::FUNDING_CASE_TYPE_NAME];

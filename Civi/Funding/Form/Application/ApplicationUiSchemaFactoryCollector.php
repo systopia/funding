@@ -23,27 +23,14 @@ namespace Civi\Funding\Form\Application;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\FundingCaseType\AbstractFundingCaseTypeServiceCollector;
 use Civi\RemoteTools\JsonForms\JsonFormsLayout;
-use Psr\Container\ContainerInterface;
 
-final class ApplicationUiSchemaFactoryCollector implements ApplicationUiSchemaFactoryInterface {
-
-  private ContainerInterface $factories;
-
-  /**
-   * @inheritDoc
-   */
-  public static function getSupportedFundingCaseTypes(): array {
-    return [];
-  }
-
-  /**
-   * @param \Psr\Container\ContainerInterface $factories
-   *   UI schema factories with funding case type name as ID.
-   */
-  public function __construct(ContainerInterface $factories) {
-    $this->factories = $factories;
-  }
+/**
+ * @extends AbstractFundingCaseTypeServiceCollector<ApplicationUiSchemaFactoryInterface>
+ */
+// phpcs:ignore Generic.Files.LineLength.TooLong
+final class ApplicationUiSchemaFactoryCollector extends AbstractFundingCaseTypeServiceCollector implements ApplicationUiSchemaFactoryInterface {
 
   /**
    * @inheritDoc
@@ -52,7 +39,8 @@ final class ApplicationUiSchemaFactoryCollector implements ApplicationUiSchemaFa
     ApplicationProcessEntityBundle $applicationProcessBundle,
     array $applicationProcessStatusList
   ): JsonFormsLayout {
-    return $this->getFactory($applicationProcessBundle->getFundingCaseType())
+    return $this
+      ->getService($applicationProcessBundle->getFundingCaseType()->getName())
       ->createUiSchemaExisting($applicationProcessBundle, $applicationProcessStatusList);
   }
 
@@ -60,12 +48,9 @@ final class ApplicationUiSchemaFactoryCollector implements ApplicationUiSchemaFa
     FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType,
   ): JsonFormsLayout {
-    return $this->getFactory($fundingCaseType)->createUiSchemaForTranslation($fundingProgram, $fundingCaseType);
-  }
-
-  private function getFactory(FundingCaseTypeEntity $fundingCaseType): ApplicationUiSchemaFactoryInterface {
-    // @phpstan-ignore return.type
-    return $this->factories->get($fundingCaseType->getName());
+    return $this
+      ->getService($fundingCaseType->getName())
+      ->createUiSchemaForTranslation($fundingProgram, $fundingCaseType);
   }
 
 }

@@ -21,8 +21,10 @@ namespace Civi\Funding\FundingCase\Handler;
 
 use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
 use Civi\Funding\FundingCase\Command\FundingCasePossibleActionsGetCommand;
+use Civi\Funding\FundingCaseType\FallbackFundingCaseTypeServiceInterface;
 
-final class FundingCasePossibleActionsGetHandler implements FundingCasePossibleActionsGetHandlerInterface {
+// phpcs:ignore Generic.Files.LineLength.TooLong
+final class FundingCasePossibleActionsGetHandler implements FundingCasePossibleActionsGetHandlerInterface, FallbackFundingCaseTypeServiceInterface {
 
   private FundingCaseActionsDeterminerInterface $actionsDeterminer;
 

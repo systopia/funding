@@ -44,13 +44,7 @@ final class AbstractApplicationReviewFinishTaskHandlerTest extends TestCase {
     parent::setUp();
     $this->metaDataMock = new FundingCaseTypeMetaDataMock(FundingCaseTypeFactory::DEFAULT_NAME);
     $this->taskHandler = new class (new FundingCaseTypeMetaDataProviderMock($this->metaDataMock))
-      extends AbstractApplicationReviewFinishTaskHandler {
-
-      public static function getSupportedFundingCaseTypes(): array {
-        return [];
-      }
-
-    };
+      extends AbstractApplicationReviewFinishTaskHandler {};
   }
 
   public function testCreateTasksOnChangeCalculativeAndContentReviewDone(): void {

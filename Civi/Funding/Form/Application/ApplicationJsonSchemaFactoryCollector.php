@@ -23,27 +23,14 @@ namespace Civi\Funding\Form\Application;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\FundingCaseType\AbstractFundingCaseTypeServiceCollector;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
-use Psr\Container\ContainerInterface;
 
-final class ApplicationJsonSchemaFactoryCollector implements ApplicationJsonSchemaFactoryInterface {
-
-  private ContainerInterface $factories;
-
-  /**
-   * @inheritDoc
-   */
-  public static function getSupportedFundingCaseTypes(): array {
-    return [];
-  }
-
-  /**
-   * @param \Psr\Container\ContainerInterface $factories
-   *   JSON schema factories with funding case type name as ID.
-   */
-  public function __construct(ContainerInterface $factories) {
-    $this->factories = $factories;
-  }
+/**
+ * @extends AbstractFundingCaseTypeServiceCollector<ApplicationJsonSchemaFactoryInterface>
+ */
+// phpcs:ignore Generic.Files.LineLength.TooLong
+final class ApplicationJsonSchemaFactoryCollector extends AbstractFundingCaseTypeServiceCollector implements ApplicationJsonSchemaFactoryInterface {
 
   /**
    * @inheritDoc
@@ -52,7 +39,8 @@ final class ApplicationJsonSchemaFactoryCollector implements ApplicationJsonSche
     ApplicationProcessEntityBundle $applicationProcessBundle,
     array $applicationProcessStatusList
   ): JsonSchema {
-    return $this->getFactory($applicationProcessBundle->getFundingCaseType())
+    return $this
+      ->getService($applicationProcessBundle->getFundingCaseType()->getName())
       ->createJsonSchemaExisting($applicationProcessBundle, $applicationProcessStatusList);
   }
 
@@ -60,12 +48,9 @@ final class ApplicationJsonSchemaFactoryCollector implements ApplicationJsonSche
     FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType,
   ): JsonSchema {
-    return $this->getFactory($fundingCaseType)->createJsonSchemaForTranslation($fundingProgram, $fundingCaseType);
-  }
-
-  private function getFactory(FundingCaseTypeEntity $fundingCaseType): ApplicationJsonSchemaFactoryInterface {
-    // @phpstan-ignore return.type
-    return $this->factories->get($fundingCaseType->getName());
+    return $this
+      ->getService($fundingCaseType->getName())
+      ->createJsonSchemaForTranslation($fundingProgram, $fundingCaseType);
   }
 
 }

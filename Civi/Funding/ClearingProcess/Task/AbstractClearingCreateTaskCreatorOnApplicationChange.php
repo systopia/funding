@@ -40,11 +40,6 @@ abstract class AbstractClearingCreateTaskCreatorOnApplicationChange implements A
 
   private ClearingProcessManager $clearingProcessManager;
 
-  /**
-   * @phpstan-return list<string>
-   */
-  abstract public static function getSupportedFundingCaseTypes(): array;
-
   public function __construct(ClearingProcessManager $clearingProcessManager) {
     $this->clearingProcessManager = $clearingProcessManager;
   }

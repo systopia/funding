@@ -36,13 +36,7 @@ final class AbstractApplicationReviewReworkTaskHandlerTest extends TestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->taskHandler = new class ()
-      extends AbstractApplicationReviewReworkTaskHandler {
-
-      public static function getSupportedFundingCaseTypes(): array {
-        return [];
-      }
-
-    };
+      extends AbstractApplicationReviewReworkTaskHandler {};
   }
 
   public function testCreateTasksOnChangeReworkReviewRequested(): void {

@@ -20,15 +20,14 @@ declare(strict_types = 1);
 namespace Civi\Funding\Form\FundingCase;
 
 use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\FundingCaseType\FundingCaseTypeServiceInterface;
 
-interface FundingCaseFormDataFactoryInterface {
+/**
+ * @see FundingCaseTypeServiceInterface
+ */
+interface FundingCaseFormDataFactoryInterface extends FundingCaseTypeServiceInterface {
 
   public const SERVICE_TAG = 'funding.case.form_data_factory';
-
-  /**
-   * @phpstan-return list<string>
-   */
-  public static function getSupportedFundingCaseTypes(): array;
 
   /**
    * @phpstan-return array<string, mixed> JSON serializable.

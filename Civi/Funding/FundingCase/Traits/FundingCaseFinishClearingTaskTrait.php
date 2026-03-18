@@ -32,11 +32,6 @@ trait FundingCaseFinishClearingTaskTrait {
 
   protected Api4Interface $api4;
 
-  /**
-   * @phpstan-return list<string>
-   */
-  abstract public static function getSupportedFundingCaseTypes(): array;
-
   public function __construct(Api4Interface $api4) {
     $this->api4 = $api4;
   }

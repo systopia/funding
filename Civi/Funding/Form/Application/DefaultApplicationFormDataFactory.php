@@ -27,13 +27,6 @@ final class DefaultApplicationFormDataFactory implements ApplicationFormDataFact
   /**
    * @inheritDoc
    */
-  public static function getSupportedFundingCaseTypes(): array {
-    return [];
-  }
-
-  /**
-   * @inheritDoc
-   */
   public function createFormData(ApplicationProcessEntity $applicationProcess, FundingCaseEntity $fundingCase): array {
     return $applicationProcess->getRequestData();
   }

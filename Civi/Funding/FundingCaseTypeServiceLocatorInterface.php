@@ -37,7 +37,6 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationJsonSchemaGetHandlerInter
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandlerInterface;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
-use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseApproveHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseFormDataGetHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseFormNewGetHandlerInterface;
@@ -46,9 +45,7 @@ use Civi\Funding\FundingCase\Handler\FundingCaseFormNewValidateHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseFormUpdateGetHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseFormUpdateSubmitHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseFormUpdateValidateHandlerInterface;
-use Civi\Funding\FundingCase\Handler\FundingCasePossibleActionsGetHandlerInterface;
 use Civi\Funding\FundingCase\Handler\FundingCaseUpdateAmountApprovedHandlerInterface;
-use Civi\Funding\FundingCase\Handler\TransferContractRecreateHandlerInterface;
 use Civi\Funding\FundingCase\StatusDeterminer\FundingCaseStatusDeterminerInterface;
 use Civi\Funding\TransferContract\Handler\TransferContractRenderHandlerInterface;
 
@@ -92,8 +89,6 @@ interface FundingCaseTypeServiceLocatorInterface {
 
   public function getApplicationSnapshotCreateHandler(): ApplicationSnapshotCreateHandlerInterface;
 
-  public function getFundingCaseActionsDeterminer(): FundingCaseActionsDeterminerInterface;
-
   public function getFundingCaseApproveHandler(): FundingCaseApproveHandlerInterface;
 
   public function getFundingCaseFormDataGetHandler(): ?FundingCaseFormDataGetHandlerInterface;
@@ -110,13 +105,9 @@ interface FundingCaseTypeServiceLocatorInterface {
 
   public function getFundingCaseFormUpdateValidateHandler(): ?FundingCaseFormUpdateValidateHandlerInterface;
 
-  public function getFundingCasePossibleActionsGetHandler(): FundingCasePossibleActionsGetHandlerInterface;
-
   public function getFundingCaseStatusDeterminer(): FundingCaseStatusDeterminerInterface;
 
   public function getFundingCaseUpdateAmountApprovedHandler(): FundingCaseUpdateAmountApprovedHandlerInterface;
-
-  public function getTransferContractRecreateHandler(): TransferContractRecreateHandlerInterface;
 
   public function getTransferContractRenderHandler(): TransferContractRenderHandlerInterface;
 
