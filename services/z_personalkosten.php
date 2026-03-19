@@ -29,6 +29,7 @@ use Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Application\Data\Personalko
 use Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Application\Data\PersonalkostenDokumenteFactory;
 use Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Application\JsonSchema\PersonalkostenApplicationJsonSchemaFactory;
 use Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Application\UiSchema\PersonalkostenApplicationUiSchemaFactory;
+use Civi\Funding\FundingCaseTypes\AuL\Personalkosten\FundingCase\Actions\PersonalkostenCaseActionsDeterminer;
 use Civi\Funding\FundingCaseTypes\AuL\Personalkosten\PersonalkostenMetaData;
 
 $container->autowire(PersonalkostenMetaData::class)
@@ -50,6 +51,9 @@ $container->autowire(PersonalkostenApplicationUiSchemaFactory::class)
 
 $container->autowire(PersonalkostenApplicationStatusDeterminer::class)
   ->addTag(PersonalkostenApplicationStatusDeterminer::SERVICE_TAG);
+
+$container->autowire(PersonalkostenCaseActionsDeterminer::class)
+  ->addTag(PersonalkostenCaseActionsDeterminer::SERVICE_TAG);
 
 TaskServiceRegistrator::autowireAll(
   $container,
