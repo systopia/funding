@@ -41,8 +41,8 @@ final class KursApplicationJsonSchemaFactory implements CombinedApplicationJsonS
     $fundingProgram = $applicationProcessBundle->getFundingProgram();
 
     return new KursApplicationJsonSchema(
-      $fundingProgram->getRequestsStartDate(),
-      $fundingProgram->getRequestsEndDate(),
+      $fundingProgram->getStartDate(),
+      $fundingProgram->getEndDate(),
     );
   }
 
@@ -53,8 +53,8 @@ final class KursApplicationJsonSchemaFactory implements CombinedApplicationJsonS
     $fundingProgram = $fundingCaseBundle->getFundingProgram();
 
     return new KursApplicationJsonSchema(
-      $fundingProgram->getRequestsStartDate(),
-      $fundingProgram->getRequestsEndDate(),
+      $fundingProgram->getStartDate(),
+      $fundingProgram->getEndDate(),
     );
   }
 
@@ -63,8 +63,8 @@ final class KursApplicationJsonSchemaFactory implements CombinedApplicationJsonS
     FundingCaseTypeEntity $fundingCaseType,
   ): JsonSchema {
     return new KursApplicationJsonSchema(
-      $fundingProgram->getRequestsStartDate(),
-      $fundingProgram->getRequestsEndDate(),
+      $fundingProgram->getStartDate(),
+      $fundingProgram->getEndDate(),
     );
   }
 

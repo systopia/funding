@@ -61,8 +61,8 @@ final class KursReportFormFactory implements ReportFormFactoryInterface {
 
   public function doCreateReportForm(FundingProgramEntity $fundingProgram): ReportFormInterface {
     $grunddatenJsonSchema = new KursGrunddatenJsonSchema(
-      $fundingProgram->getRequestsStartDate(),
-      $fundingProgram->getRequestsEndDate(),
+      $fundingProgram->getStartDate(),
+      $fundingProgram->getEndDate(),
       TRUE
     );
 
