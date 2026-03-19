@@ -21,6 +21,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCaseTypes\AuL\Personalkosten;
 
 use Civi\Funding\FundingCaseType\MetaData\AbstractFundingCaseTypeMetaData;
+use Civi\Funding\FundingCaseType\MetaData\AutoUpdateAmountApproved;
 use Civi\Funding\FundingCaseType\MetaData\CostItemType;
 use Civi\Funding\FundingCaseType\MetaData\DefaultApplicationProcessActions;
 use Civi\Funding\FundingCaseType\MetaData\DefaultApplicationProcessStatuses;
@@ -47,6 +48,10 @@ final class PersonalkostenMetaData extends AbstractFundingCaseTypeMetaData {
    */
   public function getApplicationProcessStatuses(): array {
     return DefaultApplicationProcessStatuses::getAll() + ReworkApplicationProcessStatuses::getAll();
+  }
+
+  public function getAutoUpdateAmountApproved(): AutoUpdateAmountApproved {
+    return AutoUpdateAmountApproved::SumOfAmountsEligible;
   }
 
   /**
