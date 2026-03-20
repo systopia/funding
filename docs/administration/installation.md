@@ -39,7 +39,7 @@ composer config repositories.tabby '{"type": "package", "package": {"name": "cfe
 Still at `$DRUPAL_ROOT/drupal`, enter:
 
 ```shell
-composer require custom/civiremote_funding oomphinc/composer-installers-extender
+composer require --with-all-dependencies custom/civiremote_funding oomphinc/composer-installers-extender
 composer require cferdinandi/tabby:v12.0.3
 drush pm:install civiremote_funding
 ```
@@ -128,10 +128,22 @@ See [https://docs.civicrm.org/civioffice/en/latest/](https://docs.civicrm.org/ci
 
 The option **Use PHPWord macros for token replacement** needs to be activated at the settings page of _CiviOffice_ at `civicrm/admin/civioffice/settings`, in section **CiviOffice Document Renderers**.
 
+## Configure XCM
+
+At `/civicrm/admin/setting/xcm` adjust the default profile to your needs or add
+a new one. The default profile has to be saved once with all required values
+set.
+
 ## Configure CiviRemote
 
 - Activate **Acquire CiviRemote ID** at `/admin/config/services/civiremote.` with Parameter mapping: **Email** → **email**
-- Activate the option **Remote Contact Matching Enabled** at `/civicrm/admin/remotetools`.
+- Activate the option **Remote Contact Matching Enabled** at
+  `/civicrm/admin/remotetools` and select the XCM profile to use.
+
+## Configure CiviRemote Funding date format
+
+You might want to change the *CiviRemote Funding date only* date format at
+`/admin/config/regional/date-time`.
 
 ## Configure CiviMRF
 
@@ -146,7 +158,8 @@ Set up a Drupal role **CiviCRM API** with the following permissions:
 
 Set up a Drupal User:
 
-- Add a API user **api** with the role **CiviCRM API**. This also creates a corresponding CiviCRM contact named **api**.
+- Add an API user **api** with the role **CiviCRM API**. This also creates a
+  corresponding CiviCRM contact named **api**.
 - Verify that the CiviCRM contact has a matching Drupal **User ID**. See field **Contact ID/User ID** at the summary page of the contact.
 - Generate an [API key](https://docs.civicrm.org/sysadmin/en/latest/setup/api-keys/) for the corresponding CiviCRM contact **api**.
 
@@ -156,12 +169,10 @@ Set up a CiviMRF profile under `/admin/config/cmrf/profiles` or edit the default
 - Insert the API Key you just created for user **api**.
 - **URL APIv3** and **URL APIv4** must be set to proper url of your CiviCRM instance. Verify that those endpoints can be reached.
 
-[Optional]
-
-Activate **CiviMRF Call Report** at `/admin/modules` or via `drush` at `$DRUPAL_ROOT`
+Optionally activate **CiviMRF Call Report** at `/admin/modules` or via `drush`:
 
 ```
-drush pm:enable cmrf_call_report
+drush pm:install cmrf_call_report
 ```
 
 This helps with debugging by showing a report about all API calls sent to CiviCRM and the corresponding results.
@@ -192,15 +203,16 @@ If no roles are listed for **Test User** after **CiviRemote: Synchronise CiviRem
 - If you see a message ``FAIL civiremote RemoteContact match`` then the Drupal **Test User** did not receive a **CiviRemote ID** for its CiviCRM contact through action **CiviRemote: Match contacts**.
 - You can verify this by taking a look at the infopage of **Test User**, listed at `/admin/people`. The field **CiviRemote ID** might be empty.
 
-2. You can try to solve this issue by relaoding the XCM (Extended Contact Matcher) profile, that is used for matching contacts.
+2. You can try to solve this issue by modifying the XCM (Extended Contact
+   Matcher) profile, that is used for matching contacts.
 
-- Go to `/civicrm/admin/setting/xcm` and edit the XCM-Profile (ie. _default_).
-- Save the profile without making any changes.
+- Go to `/civicrm/admin/setting/xcm` and edit the XCM-Profile.
 - Perform action **CiviRemote: Match contacts** again for Drupal user **Test User**.
 
 3. CiviMRF Call Reports at `/admin/reports/cmrfcalls` should now show a message ``DONE civiremote RemoteContact match``.
 
-- If so, run action **CiviRemote: Synchronise CiviRemote Roles** for Drupal user **Test User** again in order to synchronize roles from CiviCRM.
+- If so, run action **CiviRemote: Synchronise CiviRemote Roles** for Drupal
+  user **Test User** again in order to synchronise roles from CiviCRM.
 
 ## Configure Dashboard
 
