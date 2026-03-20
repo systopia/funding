@@ -27,25 +27,20 @@ use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\Application\NonCombinedApplicationJsonSchemaFactoryInterface;
 use Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Traits\PersonalkostenSupportedFundingCaseTypesTrait;
-use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 
 final class PersonalkostenApplicationJsonSchemaFactory implements NonCombinedApplicationJsonSchemaFactoryInterface {
 
   use PersonalkostenSupportedFundingCaseTypesTrait;
 
-  private Api4Interface $api4;
-
   private FundingCaseRecipientLoaderInterface $existingCaseRecipientLoader;
 
   private PossibleRecipientsLoaderInterface $possibleRecipientsLoader;
 
   public function __construct(
-    Api4Interface $api4,
     FundingCaseRecipientLoaderInterface $existingCaseRecipientLoader,
     PossibleRecipientsLoaderInterface $possibleRecipientsLoader
   ) {
-    $this->api4 = $api4;
     $this->existingCaseRecipientLoader = $existingCaseRecipientLoader;
     $this->possibleRecipientsLoader = $possibleRecipientsLoader;
   }
@@ -60,11 +55,11 @@ final class PersonalkostenApplicationJsonSchemaFactory implements NonCombinedApp
     $fundingCase = $applicationProcessBundle->getFundingCase();
     $fundingProgram = $applicationProcessBundle->getFundingProgram();
 
-    [$foerderquote, $sachkostenpauschale] = $this->getFoerderquoteAndSachkostenpauschale($fundingProgram->getId());
-
     return new PersonalkostenApplicationJsonSchema(
-      $foerderquote,
-      $sachkostenpauschale,
+    // @phpstan-ignore argument.type
+      $fundingProgram->get('funding_program_extra.foerderquote'),
+      // @phpstan-ignore argument.type
+      $fundingProgram->get('funding_program_extra.sachkostenpauschale'),
       $fundingProgram->getStartDate(),
       $fundingProgram->getEndDate(),
       $this->existingCaseRecipientLoader->getRecipient($fundingCase),
@@ -80,11 +75,11 @@ final class PersonalkostenApplicationJsonSchemaFactory implements NonCombinedApp
     FundingCaseTypeEntity $fundingCaseType,
     FundingProgramEntity $fundingProgram
   ): JsonSchema {
-    [$foerderquote, $sachkostenpauschale] = $this->getFoerderquoteAndSachkostenpauschale($fundingProgram->getId());
-
     return new PersonalkostenApplicationJsonSchema(
-      $foerderquote,
-      $sachkostenpauschale,
+      // @phpstan-ignore argument.type
+      $fundingProgram->get('funding_program_extra.foerderquote'),
+      // @phpstan-ignore argument.type
+      $fundingProgram->get('funding_program_extra.sachkostenpauschale'),
       $fundingProgram->getStartDate(),
       $fundingProgram->getEndDate(),
       $this->possibleRecipientsLoader->getPossibleRecipients($contactId, $fundingProgram),
@@ -107,26 +102,6 @@ final class PersonalkostenApplicationJsonSchemaFactory implements NonCombinedApp
       [],
       [],
     );
-  }
-
-  /**
-   * @return array{int, float}
-   *
-   * @throws \CRM_Core_Exception
-   */
-  public function getFoerderquoteAndSachkostenpauschale(int $fundingProgramId): array {
-    $values = $this->api4->execute('FundingProgram', 'get', [
-      'select' => [
-        'funding_program_extra.foerderquote',
-        'funding_program_extra.sachkostenpauschale',
-      ],
-      'where' => [['id', '=', $fundingProgramId]],
-    ])->single();
-
-    return [
-      $values['funding_program_extra.foerderquote'],
-      $values['funding_program_extra.sachkostenpauschale'],
-    ];
   }
 
   /**

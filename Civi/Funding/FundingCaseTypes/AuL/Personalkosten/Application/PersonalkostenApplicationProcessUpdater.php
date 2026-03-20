@@ -27,7 +27,7 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationFormSubmitHandlerInterfac
 use Civi\Funding\ClearingProcess\ClearingCostItemManager;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 
-final class PersonalkostenApplicationProcessUpdater {
+class PersonalkostenApplicationProcessUpdater {
 
   private ApplicationCostItemManager $applicationCostItemManager;
 
