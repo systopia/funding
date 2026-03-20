@@ -146,7 +146,7 @@ final class FundingCaseTypeTest extends AbstractFundingHeadlessTestCase {
 
     $file2 = File::create(FALSE)
       ->setValues([
-        'uri' => 'test',
+        'file_name' => 'test',
         'mime_type' => 'inode/x-empty',
       ])->execute()->single();
 
@@ -206,7 +206,7 @@ final class FundingCaseTypeTest extends AbstractFundingHeadlessTestCase {
 
     $file2 = File::create(FALSE)
       ->setValues([
-        'uri' => 'test',
+        'file_name' => 'test',
         'mime_type' => 'inode/x-empty',
       ])->execute()->single();
 
@@ -266,7 +266,7 @@ final class FundingCaseTypeTest extends AbstractFundingHeadlessTestCase {
 
     $file2 = File::create(FALSE)
       ->setValues([
-        'uri' => 'test',
+        'file_name' => 'test',
         'mime_type' => 'inode/x-empty',
       ])->execute()->single();
 
@@ -328,7 +328,7 @@ final class FundingCaseTypeTest extends AbstractFundingHeadlessTestCase {
 
     $file2 = File::create(FALSE)
       ->setValues([
-        'uri' => 'test',
+        'file_name' => 'test',
         'mime_type' => 'inode/x-empty',
       ])->execute()->single();
 
@@ -392,7 +392,7 @@ final class FundingCaseTypeTest extends AbstractFundingHeadlessTestCase {
 
     $file2 = File::create(FALSE)
       ->setValues([
-        'uri' => 'test',
+        'file_name' => 'test',
         'mime_type' => 'inode/x-empty',
       ])->execute()->single();
 
@@ -456,7 +456,7 @@ final class FundingCaseTypeTest extends AbstractFundingHeadlessTestCase {
 
     $file2 = File::create(FALSE)
       ->setValues([
-        'uri' => 'test',
+        'file_name' => 'test',
         'mime_type' => 'inode/x-empty',
       ])->execute()->single();
 
