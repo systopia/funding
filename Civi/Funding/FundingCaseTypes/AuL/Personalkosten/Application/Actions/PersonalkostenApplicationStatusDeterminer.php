@@ -23,6 +23,7 @@ namespace Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Application\Actions;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\AbstractApplicationProcessStatusDeterminerDecorator;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\DefaultApplicationProcessStatusDeterminer;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ReworkPossibleApplicationProcessStatusDeterminer;
+use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Traits\PersonalkostenSupportedFundingCaseTypesTrait;
 
 final class PersonalkostenApplicationStatusDeterminer extends AbstractApplicationProcessStatusDeterminerDecorator {
@@ -35,6 +36,13 @@ final class PersonalkostenApplicationStatusDeterminer extends AbstractApplicatio
         new DefaultApplicationProcessStatusDeterminer()
       )
     );
+  }
+
+  public function getStatus(FullApplicationProcessStatus $currentStatus, string $action): FullApplicationProcessStatus {
+    // On change of "Förderquote" or "Sachkostenpauschale" of funding program
+    // "update" may happen in status not expected by the decorated status
+    // determiner.
+    return 'update' === $action ? $currentStatus : parent::getStatus($currentStatus, $action);
   }
 
 }

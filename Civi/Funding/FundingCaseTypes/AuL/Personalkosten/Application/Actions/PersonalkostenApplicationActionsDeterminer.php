@@ -20,19 +20,41 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Application\Actions;
 
+use Civi\Funding\Api4\Permissions;
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\AbstractApplicationActionsDeterminerDecorator;
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\DefaultApplicationProcessActionsDeterminer;
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\ReworkPossibleApplicationProcessActionsDeterminer;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\FundingCase\FundingCaseStatus;
 use Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Traits\PersonalkostenSupportedFundingCaseTypesTrait;
+use Civi\Funding\Permission\CiviPermissionChecker;
 
 final class PersonalkostenApplicationActionsDeterminer extends AbstractApplicationActionsDeterminerDecorator {
 
   use PersonalkostenSupportedFundingCaseTypesTrait;
 
-  public function __construct() {
+  private CiviPermissionChecker $civiPermissionChecker;
+
+  public function __construct(CiviPermissionChecker $civiPermissionChecker) {
+    $this->civiPermissionChecker = $civiPermissionChecker;
     parent::__construct(
       new ReworkPossibleApplicationProcessActionsDeterminer(new DefaultApplicationProcessActionsDeterminer())
     );
+  }
+
+  public function getActions(ApplicationProcessEntityBundle $applicationProcessBundle, array $statusList): array {
+    $actions = parent::getActions($applicationProcessBundle, $statusList);
+
+    if (
+      $applicationProcessBundle->getFundingCase()->getStatus() !== FundingCaseStatus::CLEARED
+      && !in_array('update', $actions, TRUE)
+      && $this->civiPermissionChecker->checkPermission(Permissions::ADMINISTER_FUNDING)
+    ) {
+      // Required for change of "Förderquote" and "Sachkostenpauschale" of funding program.
+      $actions[] = 'update';
+    }
+
+    return $actions;
   }
 
 }
