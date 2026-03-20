@@ -20,6 +20,7 @@ declare(strict_types = 1);
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
+use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\DependencyInjection\Util\TaskServiceRegistrator;
 use Civi\Funding\FundingCaseType\MetaData\FundingCaseTypeMetaDataInterface;
 use Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Application\Actions\PersonalkostenApplicationActionsDeterminer;
@@ -28,9 +29,11 @@ use Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Application\Data\Personalko
 use Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Application\Data\PersonalkostenApplicationFormFilesFactory;
 use Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Application\Data\PersonalkostenDokumenteFactory;
 use Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Application\JsonSchema\PersonalkostenApplicationJsonSchemaFactory;
+use Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Application\PersonalkostenApplicationProcessUpdater;
 use Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Application\UiSchema\PersonalkostenApplicationUiSchemaFactory;
 use Civi\Funding\FundingCaseTypes\AuL\Personalkosten\FundingCase\Actions\PersonalkostenCaseActionsDeterminer;
 use Civi\Funding\FundingCaseTypes\AuL\Personalkosten\PersonalkostenMetaData;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 $container->autowire(PersonalkostenMetaData::class)
   ->addTag(FundingCaseTypeMetaDataInterface::class);
@@ -52,6 +55,8 @@ $container->autowire(PersonalkostenApplicationUiSchemaFactory::class)
 $container->autowire(PersonalkostenApplicationStatusDeterminer::class)
   ->addTag(PersonalkostenApplicationStatusDeterminer::SERVICE_TAG);
 
+$container->autowire(PersonalkostenApplicationProcessUpdater::class);
+
 $container->autowire(PersonalkostenCaseActionsDeterminer::class)
   ->addTag(PersonalkostenCaseActionsDeterminer::SERVICE_TAG);
 
@@ -59,4 +64,13 @@ TaskServiceRegistrator::autowireAll(
   $container,
   __DIR__ . '/../Civi/Funding/FundingCaseTypes/AuL/Personalkosten/Task',
   'Civi\\Funding\\FundingCaseTypes\\AuL\\Personalkosten\\Task'
+);
+
+ServiceRegistrator::autowireAllImplementing(
+  $container,
+  __DIR__ . '/../Civi/Funding/FundingCaseTypes/AuL/Personalkosten/EventSubscriber',
+  'Civi\\Funding\\FundingCaseTypes\\AuL\\Personalkosten\\EventSubscriber',
+  EventSubscriberInterface::class,
+  ['kernel.event_subscriber' => []],
+  ['lazy' => 'auto'],
 );
