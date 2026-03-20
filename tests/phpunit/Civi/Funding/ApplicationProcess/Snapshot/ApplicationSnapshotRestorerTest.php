@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Snapshot;
 
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
 use Civi\Funding\ApplicationProcess\ApplicationExternalFileManagerInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
@@ -29,6 +30,7 @@ use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ApplicationResourcesItemFactory;
 use Civi\Funding\EntityFactory\ApplicationSnapshotFactory;
 use Civi\Funding\EntityFactory\ExternalFileFactory;
+use Civi\Funding\Event\ApplicationProcess\ApplicationSnapshotRestoredEvent;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -37,44 +39,33 @@ use PHPUnit\Framework\TestCase;
  */
 final class ApplicationSnapshotRestorerTest extends TestCase {
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\ApplicationProcessManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $applicationProcessManagerMock;
+  private ApplicationProcessManager&MockObject $applicationProcessManagerMock;
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\ApplicationSnapshotManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $applicationSnapshotManagerMock;
+  private ApplicationSnapshotManager&MockObject $applicationSnapshotManagerMock;
 
   private ApplicationSnapshotRestorer $applicationSnapshotRestorer;
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\ApplicationCostItemManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $costItemManagerMock;
+  private ApplicationCostItemManager&MockObject $costItemManagerMock;
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\ApplicationExternalFileManagerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $externalFileManagerMock;
+  private CiviEventDispatcherInterface&MockObject $eventDispatcherMock;
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $resourcesItemManagerMock;
+  private ApplicationExternalFileManagerInterface&MockObject $externalFileManagerMock;
+
+  private ApplicationResourcesItemManager&MockObject $resourcesItemManagerMock;
 
   protected function setUp(): void {
     parent::setUp();
     $this->applicationProcessManagerMock = $this->createMock(ApplicationProcessManager::class);
     $this->applicationSnapshotManagerMock = $this->createMock(ApplicationSnapshotManager::class);
     $this->costItemManagerMock = $this->createMock(ApplicationCostItemManager::class);
+    $this->eventDispatcherMock = $this->createMock(CiviEventDispatcherInterface::class);
     $this->externalFileManagerMock = $this->createMock(ApplicationExternalFileManagerInterface::class);
     $this->resourcesItemManagerMock = $this->createMock(ApplicationResourcesItemManager::class);
     $this->applicationSnapshotRestorer = new ApplicationSnapshotRestorer(
       $this->applicationProcessManagerMock,
       $this->applicationSnapshotManagerMock,
       $this->costItemManagerMock,
+      $this->eventDispatcherMock,
       $this->externalFileManagerMock,
       $this->resourcesItemManagerMock
     );
@@ -114,6 +105,12 @@ final class ApplicationSnapshotRestorerTest extends TestCase {
       ->with($externalFile);
     $this->externalFileManagerMock->expects(static::once())->method('deleteFiles')
       ->with($applicationProcess->getId(), ['testIdentifier']);
+
+    $this->eventDispatcherMock->expects(static::once())->method('dispatch')
+      ->with(
+        ApplicationSnapshotRestoredEvent::class,
+        new ApplicationSnapshotRestoredEvent($applicationProcessBundle),
+      );
 
     $this->applicationSnapshotRestorer->restoreLastSnapshot($applicationProcessBundle);
 
