@@ -24,16 +24,27 @@ use Civi\Funding\Entity\ClearingProcessEntityBundle;
 final class ClearingProcessBundleFixture {
 
   /**
-   * @phpstan-param array<string, mixed> $clearingProcessValues
-   * @phpstan-param array<string, mixed> $applicationProcessValues
+   * @param array<string, mixed> $clearingProcessValues
+   * @param array<string, mixed> $applicationProcessValues
+   * @param array<string, mixed> $fundingCaseValues
+   * @param array<string, scalar> $fundingCaseTypeValues
+   * @param array<string, scalar|null> $fundingProgramValues
    *
    * @throws \CRM_Core_Exception
    */
   public static function create(
     array $clearingProcessValues = [],
-    array $applicationProcessValues = []
+    array $applicationProcessValues = [],
+    array $fundingCaseValues = [],
+    array $fundingCaseTypeValues = [],
+    array $fundingProgramValues = [],
   ): ClearingProcessEntityBundle {
-    $applicationProcessBundle = ApplicationProcessBundleFixture::create($applicationProcessValues);
+    $applicationProcessBundle = ApplicationProcessBundleFixture::create(
+      $applicationProcessValues,
+      $fundingCaseValues,
+      $fundingCaseTypeValues,
+      $fundingProgramValues
+    );
     $clearingProcess = ClearingProcessFixture::addFixture(
       $applicationProcessBundle->getApplicationProcess()->getId(),
       $clearingProcessValues

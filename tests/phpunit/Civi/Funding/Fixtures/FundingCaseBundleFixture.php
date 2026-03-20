@@ -37,6 +37,8 @@ final class FundingCaseBundleFixture {
   ): FundingCaseBundle {
     $fundingProgram = FundingProgramFixture::addFixture($fundingProgramValues);
     $fundingCaseType = FundingCaseTypeFixture::addFixture($fundingCaseTypeValues);
+    FundingCaseTypeProgramFixture::addFixture($fundingCaseType->getId(), $fundingProgram->getId());
+
     $recipientContact = ContactFixture::addOrganization();
     $creationContact = ContactFixture::addIndividual();
 
