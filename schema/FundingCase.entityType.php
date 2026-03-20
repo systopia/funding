@@ -27,7 +27,7 @@ return [
   'getInfo' => fn() => [
     'title' => E::ts('Funding Case'),
     'title_plural' => E::ts('Funding Cases'),
-    'description' => E::ts('FIXME'),
+    'description' => '',
     'log' => TRUE,
   ],
   'getIndices' => fn() => [

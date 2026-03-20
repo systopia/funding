@@ -27,7 +27,7 @@ return [
   'getInfo' => fn() => [
     'title' => E::ts('Application Process'),
     'title_plural' => E::ts('Application Processes'),
-    'description' => E::ts('FIXME'),
+    'description' => '',
     'log' => TRUE,
     'label_field' => 'title',
   ],

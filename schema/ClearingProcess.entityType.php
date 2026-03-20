@@ -27,7 +27,7 @@ return [
   'getInfo' => fn() => [
     'title' => E::ts('Clearing Process'),
     'title_plural' => E::ts('Clearing Processes'),
-    'description' => E::ts(''),
+    'description' => '',
     'log' => TRUE,
   ],
   'getIndices' => fn() => [

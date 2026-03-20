@@ -26,7 +26,7 @@ return [
   'getInfo' => fn() => [
     'title' => E::ts('Funding Case Type'),
     'title_plural' => E::ts('Funding Case Types'),
-    'description' => E::ts('FIXME'),
+    'description' => '',
     'log' => TRUE,
     'label_field' => 'title',
   ],

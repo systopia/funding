@@ -26,7 +26,7 @@ return [
   'getInfo' => fn() => [
     'title' => E::ts('Payout Process'),
     'title_plural' => E::ts('Payout Processes'),
-    'description' => E::ts('FIXME'),
+    'description' => '',
     'log' => TRUE,
   ],
   'getFields' => fn() => [

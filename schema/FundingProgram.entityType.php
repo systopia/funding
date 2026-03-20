@@ -26,7 +26,7 @@ return [
   'getInfo' => fn() => [
     'title' => E::ts('Funding Program'),
     'title_plural' => E::ts('Funding Programs'),
-    'description' => E::ts('FIXME'),
+    'description' => '',
     'log' => TRUE,
     'label_field' => 'title',
   ],

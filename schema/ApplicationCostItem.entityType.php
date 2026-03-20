@@ -30,7 +30,7 @@ return [
   'getInfo' => fn() => [
     'title' => E::ts('Application Cost Item'),
     'title_plural' => E::ts('Application Cost Items'),
-    'description' => E::ts('FIXME'),
+    'description' => '',
     'log' => TRUE,
   ],
   'getIndices' => fn() => [
