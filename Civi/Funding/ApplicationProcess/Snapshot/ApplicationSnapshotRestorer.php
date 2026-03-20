@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Snapshot;
 
+use Civi\Core\CiviEventDispatcherInterface;
 use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
 use Civi\Funding\ApplicationProcess\ApplicationExternalFileManagerInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
@@ -28,6 +29,7 @@ use Civi\Funding\Entity\ApplicationCostItemEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\ApplicationResourcesItemEntity;
 use Civi\Funding\Entity\ApplicationSnapshotEntity;
+use Civi\Funding\Event\ApplicationProcess\ApplicationSnapshotRestoredEvent;
 use Webmozart\Assert\Assert;
 
 final class ApplicationSnapshotRestorer implements ApplicationSnapshotRestorerInterface {
@@ -38,6 +40,8 @@ final class ApplicationSnapshotRestorer implements ApplicationSnapshotRestorerIn
 
   private ApplicationCostItemManager $costItemManager;
 
+  private CiviEventDispatcherInterface $eventDispatcher;
+
   private ApplicationExternalFileManagerInterface $externalFileManager;
 
   private ApplicationResourcesItemManager $resourcesItemManager;
@@ -46,12 +50,14 @@ final class ApplicationSnapshotRestorer implements ApplicationSnapshotRestorerIn
     ApplicationProcessManager $applicationProcessManager,
     ApplicationSnapshotManager $applicationSnapshotManager,
     ApplicationCostItemManager $costItemManager,
+    CiviEventDispatcherInterface $eventDispatcher,
     ApplicationExternalFileManagerInterface $externalFileManager,
     ApplicationResourcesItemManager $resourcesItemManager
   ) {
     $this->applicationProcessManager = $applicationProcessManager;
     $this->applicationSnapshotManager = $applicationSnapshotManager;
     $this->costItemManager = $costItemManager;
+    $this->eventDispatcher = $eventDispatcher;
     $this->externalFileManager = $externalFileManager;
     $this->resourcesItemManager = $resourcesItemManager;
   }
@@ -98,6 +104,11 @@ final class ApplicationSnapshotRestorer implements ApplicationSnapshotRestorerIn
     }
 
     $this->externalFileManager->deleteFiles($applicationProcess->getId(), $usedIdentifiers);
+
+    $this->eventDispatcher->dispatch(
+      ApplicationSnapshotRestoredEvent::class,
+      new ApplicationSnapshotRestoredEvent($applicationProcessBundle),
+    );
   }
 
   /**
