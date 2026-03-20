@@ -26,7 +26,7 @@ return [
   'getInfo' => fn() => [
     'title' => E::ts('Funding Form String Translation'),
     'title_plural' => E::ts('Funding Form String Translations'),
-    'description' => E::ts('FIXME'),
+    'description' => '',
     'log' => TRUE,
   ],
   'getPaths' => fn() => [

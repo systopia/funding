@@ -30,7 +30,7 @@ return [
   'getInfo' => fn() => [
     'title' => E::ts('Application Resources Item'),
     'title_plural' => E::ts('Application Resources Items'),
-    'description' => E::ts('FIXME'),
+    'description' => '',
     'log' => TRUE,
   ],
   'getIndices' => fn() => [

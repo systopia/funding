@@ -2130,10 +2130,6 @@ msgstr ""
 msgid "Application Cost Items"
 msgstr ""
 
-#: schema/ApplicationCostItem.entityType.php schema/ApplicationProcess.entityType.php schema/ApplicationResourcesItem.entityType.php schema/FundingCase.entityType.php schema/FundingCaseType.entityType.php schema/FundingFormStringTranslation.entityType.php schema/FundingProgram.entityType.php schema/PayoutProcess.entityType.php
-msgid "FIXME"
-msgstr ""
-
 #: schema/ApplicationCostItem.entityType.php
 msgid "Unique FundingApplicationCostItem ID"
 msgstr ""
