@@ -20,6 +20,7 @@ declare(strict_types = 1);
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
+use Civi\Funding\ClearingProcess\Form\ReceiptsFormGeneratorInterface;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\DependencyInjection\Util\TaskServiceRegistrator;
 use Civi\Funding\FundingCaseType\MetaData\FundingCaseTypeMetaDataInterface;
@@ -31,6 +32,9 @@ use Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Application\Data\Personalko
 use Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Application\JsonSchema\PersonalkostenApplicationJsonSchemaFactory;
 use Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Application\PersonalkostenApplicationProcessUpdater;
 use Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Application\UiSchema\PersonalkostenApplicationUiSchemaFactory;
+use Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Clearing\PersonalkostenClearingReceiptsFormGenerator;
+use Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Clearing\PersonalkostenReportDataLoader;
+use Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Clearing\PersonalkostenReportFormFactory;
 use Civi\Funding\FundingCaseTypes\AuL\Personalkosten\FundingCase\Actions\PersonalkostenCaseActionsDeterminer;
 use Civi\Funding\FundingCaseTypes\AuL\Personalkosten\PersonalkostenMetaData;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -56,6 +60,13 @@ $container->autowire(PersonalkostenApplicationStatusDeterminer::class)
   ->addTag(PersonalkostenApplicationStatusDeterminer::SERVICE_TAG);
 
 $container->autowire(PersonalkostenApplicationProcessUpdater::class);
+
+$container->autowire(PersonalkostenClearingReceiptsFormGenerator::class)
+  ->addTag(ReceiptsFormGeneratorInterface::class);
+$container->autowire(PersonalkostenReportFormFactory::class)
+  ->addTag(PersonalkostenReportFormFactory::SERVICE_TAG);
+$container->autowire(PersonalkostenReportDataLoader::class)
+  ->addTag(PersonalkostenReportDataLoader::SERVICE_TAG);
 
 $container->autowire(PersonalkostenCaseActionsDeterminer::class)
   ->addTag(PersonalkostenCaseActionsDeterminer::SERVICE_TAG);
