@@ -120,7 +120,7 @@ EOD,
       $properties['internerBezeichner'] = new JsonSchemaString([
         'maxLength' => 255,
         '$tag' => JsonSchema::fromArray(
-          ['mapToField' => ['fieldName' => 'funding_application_process_extra.internal_identifier']]
+          ['mapToField' => ['fieldName' => 'funding_application_process_adb.internal_identifier']]
         ),
       ]);
     }

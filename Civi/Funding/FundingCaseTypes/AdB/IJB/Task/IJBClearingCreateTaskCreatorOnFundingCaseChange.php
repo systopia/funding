@@ -21,13 +21,13 @@ namespace Civi\Funding\FundingCaseTypes\AdB\IJB\Task;
 
 use Civi\Funding\ClearingProcess\Task\AbstractClearingCreateTaskCreatorOnFundingCaseChange;
 use Civi\Funding\FundingCaseTypes\AdB\IJB\Traits\IJBSupportedFundingCaseTypesTrait;
-use Civi\Funding\FundingCaseTypes\AdB\Traits\Task\AuLClearingTaskCreateDueDateTrait;
+use Civi\Funding\FundingCaseTypes\AdB\Traits\Task\AdBClearingTaskCreateDueDateTrait;
 
 // phpcs:disable Generic.Files.LineLength.TooLong
 final class IJBClearingCreateTaskCreatorOnFundingCaseChange extends AbstractClearingCreateTaskCreatorOnFundingCaseChange {
 
   use IJBSupportedFundingCaseTypesTrait;
 
-  use AuLClearingTaskCreateDueDateTrait;
+  use AdBClearingTaskCreateDueDateTrait;
 
 }

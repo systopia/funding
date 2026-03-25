@@ -20,11 +20,19 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\AdB\Traits\Task;
 
-final class AuLClearingTaskConstants {
+use Civi\Funding\Entity\ApplicationProcessEntity;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\Entity\FundingTaskEntity;
 
-  /**
-   * A string that can be used as duration in \DateInterval.
-   */
-  public const DUE_DATE_DELAY = 'P6W';
+trait AdBClearingTaskModifyDueDateTrait {
+
+  protected function getDueDate(
+    ApplicationProcessEntityBundle $applicationProcessBundle,
+    ApplicationProcessEntity $previousApplicationProcess,
+    FundingTaskEntity $task
+  ): ?\DateTimeInterface {
+    return $applicationProcessBundle->getApplicationProcess()->getEndDate()
+      ?->add(new \DateInterval(AdBClearingTaskConstants::DUE_DATE_DELAY));
+  }
 
 }

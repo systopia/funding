@@ -21,13 +21,13 @@ namespace Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Task;
 
 use Civi\Funding\ClearingProcess\Task\AbstractClearingCreateTaskCreatorOnApplicationChange;
 use Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
-use Civi\Funding\FundingCaseTypes\AdB\Traits\Task\AuLClearingTaskCreateDueDateTrait;
+use Civi\Funding\FundingCaseTypes\AdB\Traits\Task\AdBClearingTaskCreateDueDateTrait;
 
 // phpcs:disable Generic.Files.LineLength.TooLong
 final class KursClearingCreateTaskCreatorOnApplicationChange extends AbstractClearingCreateTaskCreatorOnApplicationChange {
 
   use KursSupportedFundingCaseTypesTrait;
 
-  use AuLClearingTaskCreateDueDateTrait;
+  use AdBClearingTaskCreateDueDateTrait;
 
 }

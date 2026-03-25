@@ -22,11 +22,11 @@ namespace Civi\Funding\FundingCaseTypes\AdB\Traits\Task;
 
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 
-trait AuLClearingTaskCreateDueDateTrait {
+trait AdBClearingTaskCreateDueDateTrait {
 
   protected function getDueDate(ClearingProcessEntityBundle $clearingProcessBundle): ?\DateTimeInterface {
     return $clearingProcessBundle->getApplicationProcess()->getEndDate()
-      ?->add(new \DateInterval(AuLClearingTaskConstants::DUE_DATE_DELAY));
+      ?->add(new \DateInterval(AdBClearingTaskConstants::DUE_DATE_DELAY));
   }
 
 }
