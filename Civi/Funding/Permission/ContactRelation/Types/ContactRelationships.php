@@ -75,9 +75,7 @@ TEMPLATE;
   }
 
   public function getHelp(): string {
-    return E::ts(<<<HELP
-Matches if a contact has all specified relationships.
-HELP);
+    return E::ts("Matches if a contact has all specified relationships.");
   }
 
   public function getExtra(): array {
