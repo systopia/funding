@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Clearing\UiSchema;
 
@@ -34,7 +34,8 @@ final class PersonalkostenClearingDokumenteUiSchema extends JsonFormsCategory {
         'Dokumente',
         <<<EOD
 <p>Hier können Dokumente hochgeladen werden.</p>
-Das Formblatt Personalkostenplanung ist erforderlich.
+Das Formblatt Personalkostenplanung, das Lohnjournal und eine Belegliste (Auszug
+aus der Buchhaltung) sind erforderlich.
 EOD,
         [
           new JsonFormsHidden('#/properties/_identifier'),
@@ -44,7 +45,8 @@ EOD,
         [
           'addButtonLabel' => 'Dokument hinzufügen',
           'removeButtonLabel' => 'Dokument entfernen',
-        ]
+        ],
+        ['minItems' => 1]
       ),
     ]);
   }

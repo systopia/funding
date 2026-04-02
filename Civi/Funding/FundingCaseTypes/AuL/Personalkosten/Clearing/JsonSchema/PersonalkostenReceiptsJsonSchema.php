@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Clearing\JsonSchema;
 
@@ -32,17 +32,14 @@ final class PersonalkostenReceiptsJsonSchema extends JsonSchemaObject {
     ApplicationCostItemEntity $sachkostenpauschale,
     ClearingProcessEntityBundle $clearingProcessBundle,
   ) {
-    $fundingCase = $clearingProcessBundle->getFundingCase();
-    $hasClearingChangePermission =
-      $fundingCase->hasPermission(ClearingProcessPermissions::CLEARING_APPLY)
-      || $fundingCase->hasPermission(ClearingProcessPermissions::CLEARING_MODIFY)
-      || $fundingCase->hasPermission(ClearingProcessPermissions::REVIEW_AMEND);
-
+    /** @var float $foerderquote */
+    $foerderquote = $clearingProcessBundle->getFundingProgram()->get('funding_program_extra.foerderquote');
     $properties = [
       'costItems' => new PersonalkostenClearingCostItemsJsonSchema(
         $personalkostenBeantragt,
         $sachkostenpauschale,
-        $hasClearingChangePermission
+        $clearingProcessBundle->getFundingCase()->hasPermission(ClearingProcessPermissions::REVIEW_CALCULATIVE),
+        $foerderquote,
       ),
     ];
     parent::__construct($properties, ['required' => array_keys($properties)]);

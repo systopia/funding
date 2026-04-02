@@ -476,7 +476,7 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
     );
   }
 
-  public function testAcceptCalculativeDoesNotChangeData(): void {
+  public function testAcceptCalculativeDoesNotChangeDataButOnlyAmountAdmitted(): void {
     FundingCaseContactRelationFixture::addContact(
       $this->contactId,
       $this->clearingProcessBundle->getFundingCase()->getId(),
@@ -537,9 +537,12 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
 
     static::assertEquals(new \stdClass(), $result['errors']);
 
-    static::assertEquals($clearingCostItem->toArray(), FundingClearingCostItem::get(FALSE)->execute()->single());
     static::assertEquals(
-      $clearingResourcesItem->toArray(),
+      ['amount_admitted' => 0.0, 'status' => 'rejected'] + $clearingCostItem->toArray(),
+      FundingClearingCostItem::get(FALSE)->execute()->single()
+    );
+    static::assertEquals(
+      ['amount_admitted' => 2.3, 'status' => 'accepted'] + $clearingResourcesItem->toArray(),
       FundingClearingResourcesItem::get(FALSE)->execute()->single()
     );
 
