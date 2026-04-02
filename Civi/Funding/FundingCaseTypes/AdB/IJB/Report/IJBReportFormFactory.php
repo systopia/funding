@@ -1,0 +1,124 @@
+<?php
+/*
+ * Copyright (C) 2025 SYSTOPIA GmbH
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as published by
+ *  the Free Software Foundation in version 3.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+declare(strict_types = 1);
+
+namespace Civi\Funding\FundingCaseTypes\AdB\IJB\Report;
+
+use Civi\Funding\ClearingProcess\ClearingActionsDeterminer;
+use Civi\Funding\ClearingProcess\Form\ReportForm;
+use Civi\Funding\ClearingProcess\Form\ReportFormFactoryInterface;
+use Civi\Funding\ClearingProcess\Form\ReportFormInterface;
+use Civi\Funding\Entity\ClearingProcessEntityBundle;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
+use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\FundingCaseTypes\AdB\IJB\Application\JsonSchema\IJBGrunddatenJsonSchema;
+use Civi\Funding\FundingCaseTypes\AdB\IJB\Application\JsonSchema\IJBTeilnehmerJsonSchema;
+use Civi\Funding\FundingCaseTypes\AdB\IJB\Application\JsonSchema\AdbIJBZuschussJsonSchema;
+use Civi\Funding\FundingCaseTypes\AdB\IJB\Application\UiSchema\IJBGrunddatenUiSchema;
+use Civi\Funding\FundingCaseTypes\AdB\IJB\Application\UiSchema\IJBTeilnehmerUiSchema;
+use Civi\Funding\FundingCaseTypes\AdB\IJB\Report\JsonSchema\IJBDokumenteJsonSchema;
+use Civi\Funding\FundingCaseTypes\AdB\IJB\Report\JsonSchema\IJBFoerderungJsonSchema;
+use Civi\Funding\FundingCaseTypes\AdB\IJB\Report\JsonSchema\IJBSachberichtJsonSchema;
+use Civi\Funding\FundingCaseTypes\AdB\IJB\Report\UiSchema\IJBDokumenteCategory;
+use Civi\Funding\FundingCaseTypes\AdB\IJB\Report\UiSchema\IJBFoerderungGroup;
+use Civi\Funding\FundingCaseTypes\AdB\IJB\Report\UiSchema\IJBSachberichtCategory;
+use Civi\Funding\FundingCaseTypes\AdB\IJB\Report\UiSchema\IJBZuschussGroup;
+use Civi\Funding\FundingCaseTypes\AdB\IJB\Traits\IJBSupportedFundingCaseTypesTrait;
+use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategorization;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
+use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
+
+final class IJBReportFormFactory implements ReportFormFactoryInterface {
+
+  use IJBSupportedFundingCaseTypesTrait;
+
+  public function createReportForm(ClearingProcessEntityBundle $clearingProcessBundle): ReportFormInterface {
+    return $this->doCreateReportForm($clearingProcessBundle->getFundingProgram());
+  }
+
+  public function createReportFormForTranslation(
+    FundingProgramEntity $fundingProgram,
+    FundingCaseTypeEntity $fundingCaseType
+  ): ReportFormInterface {
+    return $this->doCreateReportForm($fundingProgram);
+  }
+
+  public function doCreateReportForm(FundingProgramEntity $fundingProgram): ReportFormInterface {
+    $grunddatenJsonSchema = new IJBGrunddatenJsonSchema(
+      $fundingProgram->getRequestsStartDate(),
+      $fundingProgram->getRequestsEndDate(),
+      TRUE
+    );
+
+    $zuschussJsonSchema = new AdbIJBZuschussJsonSchema(TRUE);
+    $zuschussJsonSchema['required'] = [];
+    $zuschussJsonSchema['properties'] = new JsonSchema(array_filter(
+      // @phpstan-ignore-next-line
+      $zuschussJsonSchema['properties']->getKeywords(),
+      fn ($propertyName) => str_ends_with((string) $propertyName, 'Max'),
+      ARRAY_FILTER_USE_KEY
+    ));
+
+    $jsonSchema = new JsonSchemaObject([
+      'reportData' => new JsonSchemaObject([
+        'grunddaten' => $grunddatenJsonSchema,
+        'teilnehmer' => new IJBTeilnehmerJsonSchema(TRUE),
+        'zuschuss' => $zuschussJsonSchema,
+        'sachbericht' => new IJBSachberichtJsonSchema(),
+        'dokumente' => new IJBDokumenteJsonSchema(),
+        'foerderung' => new IJBFoerderungJsonSchema(),
+      ], ['required' => ['grunddaten', 'teilnehmer', 'zuschuss', 'sachbericht', 'dokumente', 'foerderung']]
+      ),
+    ], [
+      'required' => ['reportData'],
+      '$limitValidation' => JsonSchema::fromArray([
+        'condition' => [
+          'evaluate' => [
+            'expression' => 'action not in editActions || action === "save"',
+            'variables' => [
+              'action' => new JsonSchemaDataPointer('/_action', ''),
+              'editActions' => ClearingActionsDeterminer::EDIT_ACTIONS,
+            ],
+          ],
+        ],
+      ]),
+    ]);
+
+    $uiSchema = new JsonFormsCategorization([
+      new IJBGrunddatenUiSchema('#/properties/reportData/properties/grunddaten/properties', TRUE),
+      new IJBTeilnehmerUiSchema('#/properties/reportData/properties/teilnehmer/properties', TRUE),
+      new IJBSachberichtCategory('#/properties/reportData/properties/sachbericht/properties'),
+      new IJBDokumenteCategory('#/properties/reportData/properties/dokumente/properties'),
+    ]);
+
+    $currency = $fundingProgram->getCurrency();
+    $zuschussUiSchema = new IJBZuschussGroup(
+      $currency,
+      '#/properties/reportData/properties/zuschuss/properties',
+      '#/properties/reportData/properties/grunddaten/properties'
+    );
+    $foerderungUiSchema = new IJBFoerderungGroup(
+      '#/properties/reportData/properties/foerderung/properties',
+      $currency,
+    );
+
+    return new ReportForm($jsonSchema, $uiSchema, $zuschussUiSchema, $foerderungUiSchema);
+  }
+
+}
