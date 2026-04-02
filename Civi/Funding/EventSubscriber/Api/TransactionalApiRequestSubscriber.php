@@ -26,7 +26,8 @@ final class TransactionalApiRequestSubscriber extends AbstractTransactionalApiRe
 
   protected function isTransactionalAction(string $entity, string $action): bool {
     return (str_starts_with($entity, 'Funding') || str_starts_with($entity, 'RemoteFunding'))
-      && !str_starts_with($action, 'get');
+      // RemoteFundingClearingProcess has getOrCreate action.
+      && (!str_starts_with($action, 'get') || $action === 'getOrCreate');
   }
 
 }
