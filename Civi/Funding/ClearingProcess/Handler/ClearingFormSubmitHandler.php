@@ -93,10 +93,14 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
     /** @phpstan-var clearingFormDataT $data */
     $data = $validationResult->getData();
 
-    $amountAdmittedChanged = FALSE;
+    $acceptCalculative = FALSE;
     if ('accept-calculative' === $command->getData()['_action']) {
       $contentChangeAllowed = FALSE;
-      $amountAdmittedChanged = $this->initializeAmountsAdmitted($data);
+      $acceptCalculative = TRUE;
+      // Note: Previously clearing items where only persisted when this method
+      // changed the data, though the value might have been set by the
+      // "$default" or the "$calculate" keyword.
+      $this->initializeAmountsAdmitted($data);
     }
     else {
       $contentChangeAllowed = $this->actionsDeterminer->isContentChangeAllowed($clearingProcessBundle);
@@ -105,7 +109,7 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
     $files = [];
     $clearingProcess = $clearingProcessBundle->getClearingProcess();
 
-    if ($amountAdmittedChanged || $this->actionsDeterminer->isEditAction($data['_action'])) {
+    if ($acceptCalculative || $this->actionsDeterminer->isEditAction($data['_action'])) {
       $files += $this->persistClearingItems($clearingProcessBundle, $data, $contentChangeAllowed);
 
       if ($contentChangeAllowed) {
@@ -144,13 +148,8 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
    * be set. This sets all unset amounts admitted to the amount cleared.
    *
    * @phpstan-param clearingFormDataT $data
-   *
-   * @return bool
-   *   TRUE if at least one amount admitted was initialized.
    */
-  private function initializeAmountsAdmitted(array &$data): bool {
-    $amountAdmittedInitialized = FALSE;
-
+  private function initializeAmountsAdmitted(array &$data): void {
     foreach (['costItems', 'resourcesItems'] as $itemsKey) {
       if (!isset($data[$itemsKey])) {
         continue;
@@ -160,13 +159,10 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
         foreach ($costItem['records'] as &$record) {
           if (!isset($record['amountAdmitted'])) {
             $record['amountAdmitted'] = $record['amount'];
-            $amountAdmittedInitialized = TRUE;
           }
         }
       }
     }
-
-    return $amountAdmittedInitialized;
   }
 
   /**

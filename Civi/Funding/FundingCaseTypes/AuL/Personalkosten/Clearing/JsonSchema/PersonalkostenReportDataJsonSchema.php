@@ -49,16 +49,6 @@ final class PersonalkostenReportDataJsonSchema extends JsonSchemaObject {
           'minLength' => 1,
           'maxLength' => 255,
         ]),
-        'titel' => new JsonSchemaString([
-          'minLength' => 1,
-          'maxLength' => 255,
-          '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'title']]),
-        ]),
-        'kurzbeschreibung' => new JsonSchemaString([
-          'minLength' => 1,
-          'maxLength' => 255,
-          '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'short_description']]),
-        ]),
         'beginn' => new JsonSchemaDate([
           'minDate' => $applicationBegin->format('Y-m-d'),
           'maxDate' => $applicationEnd->format('Y-m-d'),
@@ -69,30 +59,33 @@ final class PersonalkostenReportDataJsonSchema extends JsonSchemaObject {
           'maxDate' => $applicationEnd->format('Y-m-d'),
           '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'end_date']]),
         ]),
-        'personalkostenBeantragt' => new JsonSchemaMoney([
-          'readOnly' => TRUE,
-        ]),
-        'personalkostenTatsaechlich' => new JsonSchemaMoney(),
-        'sachkostenpauschale' => new JsonSchemaMoney([
-          'readOnly' => TRUE,
-        ]),
-        'beantragterZuschuss' => new JsonSchemaMoney([
-          'readOnly' => TRUE,
-        ]),
         'dokumente' => new JsonSchemaArray(
           new JsonSchemaObject(
             [
               '_identifier' => new JsonSchemaString(['readOnly' => TRUE]),
-              'datei' => new JsonSchemaString(['format' => 'uri']),
+              'datei' => new JsonSchemaString([
+                'format' => 'uri',
+                '$tag' => 'externalFile',
+              ]),
               'beschreibung' => new JsonSchemaString(),
             ],
             ['required' => ['datei', 'beschreibung']]
-          ),
-          ['minItems' => 1]
+          )
         ),
       ]),
     ];
-    parent::__construct($properties, ['required' => array_keys($properties)]);
+
+    parent::__construct($properties, [
+      'required' => array_keys($properties),
+      '$limitValidation' => JsonSchema::fromArray([
+        'condition' => [
+          'evaluate' => [
+            'expression' => 'action === "save"',
+            'variables' => ['action' => new JsonSchemaDataPointer('/_action', '')],
+          ],
+        ],
+      ]),
+    ]);
   }
 
 }

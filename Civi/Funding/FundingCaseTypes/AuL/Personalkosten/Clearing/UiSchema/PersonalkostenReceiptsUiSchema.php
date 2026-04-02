@@ -16,12 +16,14 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Clearing\UiSchema;
 
+use Civi\Funding\Entity\ApplicationCostItemEntity;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
+use Civi\RemoteTools\JsonForms\JsonFormsMarkup;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 
 /**
@@ -33,22 +35,28 @@ final class PersonalkostenReceiptsUiSchema extends JsonFormsGroup {
 
   public function __construct(
     ClearingProcessEntityBundle $clearingProcessBundle,
+    string $personalkostenBewilligt,
   ) {
     $currency = $clearingProcessBundle->getFundingProgram()->getCurrency();
     $scopePrefix = '#/properties/costItems/properties';
 
     $elements = [
+      new JsonFormsMarkup('Bewilligte Personalkosten: ' . $personalkostenBewilligt),
       new JsonFormsControl(
         "$scopePrefix/personalkosten/properties/records/properties/personalkosten/properties/amount",
         "Tatsächliche Personalkosten in $currency",
         'Hier bitte den Betrag des tatsächlichen AG-Bruttos angeben, der gefördert werden soll.',
       ),
       new JsonFormsControl(
+        "$scopePrefix/personalkosten/properties/records/properties/personalkosten/properties/amountAdmitted",
+        "Anerkannte Personalkosten in $currency",
+      ),
+      new JsonFormsControl(
         "$scopePrefix/sachkostenpauschale/properties/records/properties/sachkostenpauschale/properties/amount",
         "Sachkostenpauschale in $currency",
       ),
     ];
-    parent::__construct('Personalkostenförderung', $elements);
+    parent::__construct('Personalkosten', $elements);
   }
 
 }

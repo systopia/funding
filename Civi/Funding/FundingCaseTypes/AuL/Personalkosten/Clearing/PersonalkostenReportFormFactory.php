@@ -16,25 +16,20 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Clearing;
 
-use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
 use Civi\Funding\ClearingProcess\Form\ReportForm;
 use Civi\Funding\ClearingProcess\Form\ReportFormFactoryInterface;
 use Civi\Funding\ClearingProcess\Form\ReportFormInterface;
-use Civi\Funding\Entity\ApplicationCostItemEntity;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
-use Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Application\Data\PersonalkostenDokumenteFactory;
-use Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Clearing\JsonSchema\PersonalkostenClearingCostItemsJsonSchema;
 use Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Clearing\JsonSchema\PersonalkostenReportDataJsonSchema;
 use Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Clearing\UiSchema\PersonalkostenClearingDokumenteUiSchema;
 use Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Traits\PersonalkostenSupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
-use Civi\RemoteTools\JsonForms\JsonFormsMarkup;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategorization;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
@@ -42,15 +37,6 @@ use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 final class PersonalkostenReportFormFactory implements ReportFormFactoryInterface {
 
   use PersonalkostenSupportedFundingCaseTypesTrait;
-
-  private ApplicationCostItemManager $applicationCostItemManager;
-
-  private PersonalkostenDokumenteFactory $dokumenteFactory;
-
-  public function __construct(ApplicationCostItemManager $applicationCostItemManager, PersonalkostenDokumenteFactory $dokumenteFactory) {
-    $this->applicationCostItemManager = $applicationCostItemManager;
-    $this->dokumenteFactory = $dokumenteFactory;
-  }
 
   /**
    * @inheritDoc
@@ -88,13 +74,9 @@ final class PersonalkostenReportFormFactory implements ReportFormFactoryInterfac
             new JsonFormsControl("$scopePrefix/tarifUndEingruppierung", 'Tarif und Eingruppierung'),
             new JsonFormsControl("$scopePrefix/beginn", 'Beschäftigungszeitraum von'),
             new JsonFormsControl("$scopePrefix/ende", 'Beschäftigungszeitraum bis'),
-            new JsonFormsControl("$scopePrefix/personalkostenBeantragt", 'Personalkostenförderung beantragt'),
-            new JsonFormsControl("$scopePrefix/sachkostenpauschale", 'Sachkostenpauschale'),
-            new JsonFormsControl("$scopePrefix/titel", 'Titel'),
-            new JsonFormsControl("$scopePrefix/kurzbeschreibung", 'Kurzbeschreibung'),
           ]),
-          new PersonalkostenClearingDokumenteUiSchema("$scopePrefix/dokumente"),
         ]),
+        new PersonalkostenClearingDokumenteUiSchema("$scopePrefix/dokumente"),
       ]),
     );
   }
