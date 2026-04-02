@@ -21,6 +21,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Clearing\JsonSchema;
 
 use Civi\Funding\Entity\ApplicationCostItemEntity;
+use Civi\RemoteTools\JsonSchema\JsonSchemaCalculate;
 use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
 use Civi\RemoteTools\JsonSchema\JsonSchemaInteger;
 use Civi\RemoteTools\JsonSchema\JsonSchemaMoney;
@@ -31,8 +32,23 @@ final class PersonalkostenClearingCostItemsJsonSchema extends JsonSchemaObject {
   public function __construct(
     ApplicationCostItemEntity $personalkostenBewilligt,
     ApplicationCostItemEntity $sachkostenpauschaleBewilligt,
-    bool $hasClearingChangePermission
+    bool $hasReviewCalculativePermission,
+    float $foerderquote,
   ) {
+    if ($hasReviewCalculativePermission) {
+      $personalkostenAmountAdmittedSchema = new JsonSchemaCalculate(
+        'number',
+        'round(foerderquote * personalkosten / 100, 2)',
+        [
+          'foerderquote' => $foerderquote,
+          'personalkosten' => new JsonSchemaDataPointer('1/amount', 0),
+        ],
+      );
+    }
+    else {
+      $personalkostenAmountAdmittedSchema = new JsonSchemaMoney([], TRUE);
+    }
+
     $properties = [
       'personalkosten' => new JsonSchemaObject([
         'records' => new JsonSchemaObject([
@@ -43,7 +59,7 @@ final class PersonalkostenClearingCostItemsJsonSchema extends JsonSchemaObject {
               'default' => $personalkostenBewilligt->getId(),
             ]),
             'amount' => new JsonSchemaMoney(['default' => $personalkostenBewilligt->getAmount()]),
-            'amountAdmitted' => new JsonSchemaMoney(['maximum' => new JsonSchemaDataPointer('1/amount')], TRUE),
+            'amountAdmitted' => $personalkostenAmountAdmittedSchema,
           ], ['required' => ['_financePlanItemId', 'amount']]),
         ], ['required' => ['personalkosten']]),
       ], ['required' => ['records']]),
@@ -55,17 +71,16 @@ final class PersonalkostenClearingCostItemsJsonSchema extends JsonSchemaObject {
               'const' => $sachkostenpauschaleBewilligt->getId(),
               'default' => $sachkostenpauschaleBewilligt->getId(),
             ]),
-            'amount' => new JsonSchemaMoney(['default' => $sachkostenpauschaleBewilligt->getAmount(), 'readOnly' => TRUE]),
-            'amountAdmitted' => new JsonSchemaMoney(['maximum' => new JsonSchemaDataPointer('1/amount')], TRUE),
+            'amount' => new JsonSchemaMoney([
+              'const' => $sachkostenpauschaleBewilligt->getAmount(),
+              'default' => $sachkostenpauschaleBewilligt->getAmount(),
+              'readOnly' => TRUE,
+            ]),
+            'amountAdmitted' => new JsonSchemaMoney([], TRUE),
           ], ['required' => ['_financePlanItemId', 'amount']]),
         ], ['required' => ['sachkostenpauschale']]),
-      ], ['required' => ['records'], 'readOnly' => TRUE]),
+      ], ['required' => ['records']]),
     ];
-    if (!$hasClearingChangePermission) {
-      foreach ($properties as $schema) {
-        $schema['readOnly'] = TRUE;
-      }
-    }
 
     parent::__construct($properties, ['required' => array_keys($properties)]);
   }

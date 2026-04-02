@@ -16,10 +16,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Clearing;
 
+use Civi\Core\Format;
 use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
 use Civi\Funding\ClearingProcess\Form\ReceiptsFormGeneratorInterface;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
@@ -35,10 +36,11 @@ final class PersonalkostenClearingReceiptsFormGenerator implements ReceiptsFormG
 
   private ApplicationCostItemManager $applicationCostItemManager;
 
-  public function __construct(
-    ApplicationCostItemManager $applicationCostItemManager
-  ) {
+  private Format $format;
+
+  public function __construct(ApplicationCostItemManager $applicationCostItemManager, Format $format) {
     $this->applicationCostItemManager = $applicationCostItemManager;
+    $this->format = $format;
   }
 
   /**
@@ -49,20 +51,23 @@ final class PersonalkostenClearingReceiptsFormGenerator implements ReceiptsFormG
       $clearingProcessBundle->getApplicationProcess()->getId()
     );
 
-    $applicationCostItemsByType = [];
+    $applicationCostItemsByIdentifier = [];
     foreach ($applicationCostItems as $applicationCostItem) {
-      [$type] = explode('.', $applicationCostItem->getType());
-      $applicationCostItemsByType[$type][$applicationCostItem->getIdentifier()] = $applicationCostItem;
+      $applicationCostItemsByIdentifier[$applicationCostItem->getIdentifier()] = $applicationCostItem;
     }
 
     return new JsonFormsForm(
       new PersonalkostenReceiptsJsonSchema(
-        personalkostenBeantragt: $applicationCostItemsByType['personalkosten']['personalkosten'],
-        sachkostenpauschale: $applicationCostItemsByType['sachkostenpauschale']['sachkostenpauschale'],
-        clearingProcessBundle: $clearingProcessBundle,
+        $applicationCostItemsByIdentifier['personalkosten'],
+        $applicationCostItemsByIdentifier['sachkostenpauschale'],
+        $clearingProcessBundle,
       ),
       new PersonalkostenReceiptsUiSchema(
-        clearingProcessBundle: $clearingProcessBundle,
+        $clearingProcessBundle,
+        $this->format->money(
+          $applicationCostItemsByIdentifier['personalkosten']->getAmount(),
+          $clearingProcessBundle->getFundingProgram()->getCurrency()
+        ),
       )
     );
   }

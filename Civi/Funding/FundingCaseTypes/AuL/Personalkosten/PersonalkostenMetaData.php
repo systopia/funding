@@ -78,4 +78,8 @@ final class PersonalkostenMetaData extends AbstractFundingCaseTypeMetaData {
     return [];
   }
 
+  public function isGeneralClearingAdmitAllowed(): bool {
+    return TRUE;
+  }
+
 }
