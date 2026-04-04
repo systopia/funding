@@ -52,8 +52,8 @@ class AVK1JsonSchemaFactory implements NonCombinedApplicationJsonSchemaFactoryIn
     $fundingProgram = $applicationProcessBundle->getFundingProgram();
 
     return new AVK1JsonSchema(
-      $fundingProgram->getRequestsStartDate(),
-      $fundingProgram->getRequestsEndDate(),
+      $fundingProgram->getStartDate(),
+      $fundingProgram->getEndDate(),
       $this->existingCaseRecipientLoader->getRecipient($fundingCase),
     );
   }
@@ -64,8 +64,8 @@ class AVK1JsonSchemaFactory implements NonCombinedApplicationJsonSchemaFactoryIn
     FundingProgramEntity $fundingProgram
   ): JsonSchema {
     return new AVK1JsonSchema(
-      $fundingProgram->getRequestsStartDate(),
-      $fundingProgram->getRequestsEndDate(),
+      $fundingProgram->getStartDate(),
+      $fundingProgram->getEndDate(),
       $this->possibleRecipientsLoader->getPossibleRecipients($contactId, $fundingProgram),
     );
   }
@@ -75,8 +75,8 @@ class AVK1JsonSchemaFactory implements NonCombinedApplicationJsonSchemaFactoryIn
     FundingCaseTypeEntity $fundingCaseType,
   ): JsonSchema {
     return new AVK1JsonSchema(
-      $fundingProgram->getRequestsStartDate(),
-      $fundingProgram->getRequestsEndDate(),
+      $fundingProgram->getStartDate(),
+      $fundingProgram->getEndDate(),
       [],
     );
   }
