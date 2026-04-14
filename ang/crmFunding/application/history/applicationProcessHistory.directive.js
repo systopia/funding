@@ -24,6 +24,7 @@ fundingModule.directive('fundingApplicationProcessHistory', [function() {
       statusOptions: '=',
       clearingStatusOptions: '<',
       reviewStatusLabels: '=',
+      applicationProcessId: '=',
     },
     templateUrl: '~/crmFunding/application/history/applicationProcessHistory.template.html',
     controller: function($scope) {
@@ -55,6 +56,30 @@ fundingModule.directive('fundingApplicationProcessHistory', [function() {
           default:
             return false;
         }
+      };
+
+      /**
+       * Finds the first activity in the list that matches the criteria for snapshot target.
+       *
+       * @param activity
+       * @returns {boolean}
+       */
+      $scope.isSnapshotTarget = function (activity) {
+        if (!activity || activity['activity_type_id:name'] !== 'funding_application_status_change') {
+          return false;
+        }
+        const applicableStatuses = ['rework-review-requested', 'review']; //TODO
+        if (!applicableStatuses.includes(activity.to_status)) {
+          return false;
+        }
+
+        // Find the "first" activity in the list (newest) that matches the criteria
+        const target = $scope.activities.find(a =>
+          a['activity_type_id:name'] === 'funding_application_status_change' &&
+          applicableStatuses.includes(a.to_status)
+        );
+
+        return target && target.id === activity.id;
       };
     },
   };

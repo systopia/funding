@@ -28,7 +28,8 @@
                                              activities="activities"
                                              status-options="statusOptions"
                                              clearing-status-options="clearingStatusOptions"
-                                             review-status-labels="reviewStatusLabels"></funding-application-process-history>
+                                             review-status-labels="reviewStatusLabels"
+                                             application-process-id="applicationProcess.id"></funding-application-process-history>
     </div>
     <div ng-if="::hasVotePermission || hasShowVotesPermission" role="tabpanel" class="tab-pane" ng-class="{active: tab === 'advisoryComments'}">
       <funding-hih-advisory-comments ng-show="tab === 'advisoryComments'"></funding-hih-advisory-comments>

@@ -1,0 +1,30 @@
+<dialog id="funding-diff-dialog" closedby="any">
+  <div class="funding-diff-dialog-container">
+    <div class="funding-diff-dialog-header">
+      <h3>{{ ts('Compare Funding Application Changes') }}</h3>
+    </div>
+    <div class="funding-diff-dialog-content">
+      <div ng-if="changes.length === 0">
+        {{ ts('No differences found.') }}
+      </div>
+      <div ng-if="changes.length > 0" class="funding-diff-container">
+        <table class="funding-diff-table">
+          <thead>
+          <tr>
+            <th class="col-field">{{ ts('Field') }}</th>
+            <th class="col-data">{{ ts('Version 1 (%1)', { 1: snapshot.creation_date }) }}</th>
+            <th class="col-data">{{ ts('Current') }}</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="change in changes">
+            <td class="field-name"><strong>{{ ::change.key }}</strong></td>
+            <td class="data-snapshot" ng-bind-html="change.snapshotDiff"></td>
+            <td class="data-current" ng-bind-html="change.currentDiff"></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</dialog>

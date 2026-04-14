@@ -6,5 +6,10 @@
     <div class="panel-body">
         <div class="funding-activity-date">{{ ts('Date: %date', {date: (activity.created_date | fundingDate)}) }}</div>
         <div class="funding-activity-performed-by">{{ ts('Performed by: %name', {name: activity.source_contact_name}) }}</div>
+        <div ng-if="snapshotId" style="margin-top: 10px;">
+            <button class="btn btn-xs btn-info" ng-click="openDiffDialog()">
+                <i class="fa fa-columns"></i> {{ ts('Compare Changes', {}) }}
+            </button>
+        </div>
     </div>
 </div>
