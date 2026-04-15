@@ -974,6 +974,14 @@ msgstr ""
 msgid "Creation Contact Display Name"
 msgstr ""
 
+#: Civi/Funding/FundingCase/Token/FundingCaseTokenNameExtractor.php
+msgid "Bank account reference (e.g. IBAN) of recipient contact's bank account"
+msgstr ""
+
+#: Civi/Funding/FundingCase/Token/FundingCaseTokenNameExtractor.php
+msgid "BIC of recipient contact's bank account"
+msgstr ""
+
 #: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessActions.php
 msgid "Apply"
 msgstr ""

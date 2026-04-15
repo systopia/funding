@@ -38,7 +38,12 @@ class FundingCaseTokenNameExtractor implements TokenNameExtractorInterface {
    */
   public function getTokenNames(string $entityName, string $entityClass): array {
     return $this->tokenNameExtractor->getTokenNames($entityName, $entityClass)
-      + ['creation_contact_display_name' => E::ts('Creation Contact Display Name')];
+      + [
+        'creation_contact_display_name' => E::ts('Creation Contact Display Name'),
+        'recipient_bank_account_reference'
+        => E::ts("Bank account reference (e.g. IBAN) of recipient contact's bank account"),
+        'recipient_bic' => E::ts("BIC of recipient contact's bank account"),
+      ];
   }
 
 }

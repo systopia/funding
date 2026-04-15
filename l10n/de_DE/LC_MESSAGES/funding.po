@@ -1486,6 +1486,14 @@ msgstr "Abrechnung abschließen"
 msgid "Creation Contact Display Name"
 msgstr "Erstellerkontakt Anzeigename"
 
+#: Civi/Funding/FundingCase/Token/FundingCaseTokenNameExtractor.php
+msgid "Bank account reference (e.g. IBAN) of recipient contact's bank account"
+msgstr "Bankkontoreferenz (z. B. IBAN) des Bankkontos des Empfängerkontakts"
+
+#: Civi/Funding/FundingCase/Token/FundingCaseTokenNameExtractor.php
+msgid "BIC of recipient contact's bank account"
+msgstr "BIC des Bankkontos des Empfängerkontakts"
+
 #: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessActions.php
 msgid "Apply"
 msgstr "Beantragen"
