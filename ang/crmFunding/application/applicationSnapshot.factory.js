@@ -41,11 +41,22 @@ fundingModule.factory('fundingApplicationSnapshotService', [
     };
 
     /**
+     * Formats a single line of the diff.
+     *
+     * @param {string} line
+     * @param {string} className
+     * @returns {string}
+     */
+    const formatLineHtml = (line, className) => {
+      return `<div class="${className}">${escapeHtml(line) || '&nbsp;'}</div>`;
+    };
+
+    /**
      * Formats the diff lines between snapshot and current JSON.
      *
      * @param snapshotJSON
      * @param currentJSON
-     * @returns {string}
+     * @returns {Object}
      */
     const formatDiffLines = (snapshotJSON, currentJSON) => {
       const snapshotLines = snapshotJSON.split('\n');
@@ -61,20 +72,23 @@ fundingModule.factory('fundingApplicationSnapshotService', [
         const currentClass = isDiff ? 'funding-diff-line-added' : '';
 
         if (i < snapshotLines.length) {
-          snapshotResult += `<div class="${snapshotClass}">${escapeHtml(snapshotLine) || '&nbsp;'}</div>`;
+          snapshotResult += formatLineHtml(snapshotLine, snapshotClass);
         }
         if (i < currentLines.length) {
-          currentResult += `<div class="${currentClass}">${escapeHtml(currentLine) || '&nbsp;'}</div>`;
+          currentResult += formatLineHtml(currentLine, currentClass);
         }
       }
-      return [snapshotResult, currentResult];
+      return {
+        snapshotResult: snapshotResult,
+        currentResult: currentResult,
+      };
     };
 
     /**
      * Normalizes the value for comparison in diff.
      *
      * @param val
-     * @returns {string}
+     * @returns {*}
      */
     const normalizeValue = (val) => {
       if (val === null || val === undefined || val === '' || (typeof val === 'string' && val.trim() === '')) {
@@ -87,6 +101,7 @@ fundingModule.factory('fundingApplicationSnapshotService', [
         return val;
       }
       if (Array.isArray(val)) {
+        // recursively normalize array elements
         const normalizedArray = val.map(normalizeValue).filter(v => v !== '');
         if (normalizedArray.length === 0) {
           return '';
@@ -120,7 +135,7 @@ fundingModule.factory('fundingApplicationSnapshotService', [
      *
      * @param requestData
      * @param costItems
-     * @returns {{}}
+     * @returns {Object}
      */
     const prepareCombinedData = (requestData, costItems) => {
       const data = {};
@@ -138,7 +153,7 @@ fundingModule.factory('fundingApplicationSnapshotService', [
      *
      * @param snapshotData
      * @param currentData
-     * @returns {[]}
+     * @returns {Array}
      */
     const calculateChanges = (snapshotData, currentData) => {
       const allKeys = new Set([...Object.keys(snapshotData), ...Object.keys(currentData)]);
@@ -152,11 +167,11 @@ fundingModule.factory('fundingApplicationSnapshotService', [
         const currentJSON = JSON.stringify(normalizeValue(currentData[key]), null, 2);
 
         if (snapshotJSON !== currentJSON) {
-          const [snapshotDiff, currentDiff] = formatDiffLines(snapshotJSON, currentJSON);
+          const { snapshotResult, currentResult } = formatDiffLines(snapshotJSON, currentJSON);
           changes.push({
             key: key,
-            snapshotDiff: $sce.trustAsHtml(snapshotDiff),
-            currentDiff: $sce.trustAsHtml(currentDiff),
+            snapshotDiff: $sce.trustAsHtml(snapshotResult),
+            currentDiff: $sce.trustAsHtml(currentResult),
           });
         }
       });
@@ -182,15 +197,13 @@ fundingModule.factory('fundingApplicationSnapshotService', [
 
       return Promise.all([snapshotPromise, currentPromise, currentCostsPromise])
         // destructuring the result
-        .then(([snapshot, current, currentCosts]) => {
-          const snapshotData = prepareCombinedData(snapshot.request_data, snapshot.cost_items);
-          const currentData = prepareCombinedData(current, currentCosts);
-
-          const changes = calculateChanges(snapshotData, currentData);
+        .then(([applicationSnapshot, currentApplication, currentCosts]) => {
+          const snapshotData = prepareCombinedData(applicationSnapshot.request_data, applicationSnapshot.cost_items);
+          const currentData = prepareCombinedData(currentApplication, currentCosts);
 
           const scope = $rootScope.$new();
-          scope.snapshot = snapshot;
-          scope.changes = changes; //ng-repeat
+          scope.changes = calculateChanges(snapshotData, currentData); //ng-repeat
+          scope.snapshot = applicationSnapshot;
           scope.ts = ts;
 
           // make sure any dialog modal is removed before creating a new one
@@ -204,7 +217,6 @@ fundingModule.factory('fundingApplicationSnapshotService', [
 
           // remove the dialog on close
           scope.close = () => {
-            console.log('closing diff dialog');
             const dialog = document.getElementById('funding-diff-dialog');
             if (dialog) {
               dialog.close();
