@@ -20,7 +20,6 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\AuL\Personalkosten\Clearing\UiSchema;
 
-use Civi\Funding\Entity\ApplicationCostItemEntity;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
 use Civi\RemoteTools\JsonForms\JsonFormsMarkup;
