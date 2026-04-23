@@ -232,27 +232,3 @@ fundingModule.factory('fundingApplicationSnapshotService', [
     };
   },
 ]);
-
-/**
- * Directive for displaying a dialog with the difference between a snapshot and the current data.
- */
-fundingModule.directive('fundingApplicationSnapshotDiff', [
-  function () {
-    return {
-      restrict: 'AE',
-      templateUrl: '~/crmFunding/application/applicationSnapshotDiff.template.html',
-      link: function (scope, element) {
-        const dialog = element.find('dialog')[0] || element[0];
-        if (dialog && typeof dialog.showModal === 'function') {
-          dialog.showModal();
-          // ensure scope and element cleanpu:
-          dialog.addEventListener('close', function () {
-            if (typeof scope.close === 'function') {
-              scope.close();
-            }
-          });
-        }
-      },
-    };
-  },
-]);
