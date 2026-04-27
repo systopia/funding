@@ -131,8 +131,9 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
       [ClearingProcessPermissions::REVIEW_AMEND],
     );
 
+    $clearingProcessId = $this->clearingProcessBundle->getClearingProcess()->getId();
     $result = FundingClearingProcess::submitForm()
-      ->setId($this->clearingProcessBundle->getClearingProcess()->getId())
+      ->setId($clearingProcessId)
       ->setData([
         'costItems' => [
           $this->costItem->getId() => [
@@ -166,7 +167,10 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
             ],
           ],
         ],
-        'reportData' => ['foo' => 'bar'],
+        'reportData' => [
+          'foo' => 'bar',
+          'date_of_begin' => '2000-01-02T03:04:05',
+        ],
         '_action' => 'update',
       ])
       ->execute()
@@ -180,7 +184,7 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
 
     static::assertEquals([
       'id' => $result['data']['costItems'][$this->costItem->getId()]['records'][0]['_id'],
-      'clearing_process_id' => $this->clearingProcessBundle->getClearingProcess()->getId(),
+      'clearing_process_id' => $clearingProcessId,
       'application_cost_item_id' => $this->costItem->getId(),
       'status' => 'new',
       'file_id' => NULL,
@@ -197,7 +201,7 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
 
     static::assertEquals([
       'id' => $result['data']['resourcesItems'][$this->resourcesItem->getId()]['records'][0]['_id'],
-      'clearing_process_id' => $this->clearingProcessBundle->getClearingProcess()->getId(),
+      'clearing_process_id' => $clearingProcessId,
       'app_resources_item_id' => $this->resourcesItem->getId(),
       'status' => 'new',
       'file_id' => NULL,
@@ -211,6 +215,16 @@ final class SubmitFormActionTest extends AbstractFundingHeadlessTestCase {
       'properties' => NULL,
       'form_key' => $this->resourcesItem->getId() . '/0',
     ], FundingClearingResourcesItem::get(FALSE)->execute()->single());
+
+    // date_of_begin should be mapped to start_date.
+    static::assertSame(
+      '2000-01-02 03:04:05',
+      FundingClearingProcess::get(FALSE)
+        ->addWhere('id', '=', $clearingProcessId)
+        ->addSelect('start_date')
+        ->execute()
+        ->single()['start_date']
+    );
   }
 
   public function testAddClearingItemWithoutAmendPermission(): void {

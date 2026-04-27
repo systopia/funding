@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ClearingProcess\Form\Validation;
 
+use Civi\Funding\Form\MappedData\MappedDataLoader;
 use Systopia\JsonSchema\Tags\TaggedDataContainerInterface;
 
 /**
@@ -27,24 +28,31 @@ use Systopia\JsonSchema\Tags\TaggedDataContainerInterface;
 final class ClearingFormValidationResult {
 
   /**
-   * @phpstan-var array<string, non-empty-list<string>>
+   * @var array<string, non-empty-list<string>>
    */
   private array $errorMessages;
 
   /**
-   * @phpstan-var array<string, mixed>
+   * @var array<string, mixed>
    */
   private array $data;
+
+  /**
+   * @var array<string, mixed>
+   */
+  private array $mappedData;
 
   private TaggedDataContainerInterface $taggedData;
 
   /**
-   * @phpstan-param array<string, non-empty-list<string>> $errorMessages
-   * @phpstan-param array<string, mixed> $data
+   * @param array<string, non-empty-list<string>> $errorMessages
+   * @param array<string, mixed> $data
    */
   public function __construct(array $errorMessages, array $data, TaggedDataContainerInterface $taggedData) {
     $this->errorMessages = $errorMessages;
     $this->data = $data;
+    $mappedDataLoader = new MappedDataLoader();
+    $this->mappedData = $mappedDataLoader->getMappedData($taggedData);
     $this->taggedData = $taggedData;
   }
 
@@ -65,10 +73,17 @@ final class ClearingFormValidationResult {
   }
 
   /**
-   * @phpstan-return array<string, mixed>
+   * @return array<string, mixed>
    */
   public function getData(): array {
     return $this->data;
+  }
+
+  /**
+   * @return array<string, mixed>
+   */
+  public function getMappedData(): array {
+    return $this->mappedData;
   }
 
   public function getTaggedData(): TaggedDataContainerInterface {
