@@ -25,7 +25,6 @@ namespace Civi\Funding\ApplicationProcess\JsonSchema\CostItem;
  *   identifier: non-empty-string,
  *   amount: float,
  *   properties: array<string, mixed>,
- *   clearing: array{itemLabel: string}|null,
  *   dataPointer: non-empty-string,
  *   dataType: 'number'|'integer'|'object',
  * }
@@ -69,14 +68,6 @@ final class CostItemData {
    */
   public function getProperties(): array {
     return $this->data['properties'];
-  }
-
-  /**
-   * @phpstan-return array{itemLabel: string}|null
-   *   NULL if no clearing is required.
-   */
-  public function getClearing(): ?array {
-    return $this->data['clearing'];
   }
 
   /**

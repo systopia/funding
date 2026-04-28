@@ -117,7 +117,6 @@ final class ApplicationCostItemsSubscriberTest extends TestCase {
       'properties' => [],
       'dataPointer' => '/foo',
       'dataType' => 'number',
-      'clearing' => NULL,
     ]);
   }
 

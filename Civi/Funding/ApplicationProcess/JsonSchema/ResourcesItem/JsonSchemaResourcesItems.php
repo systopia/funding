@@ -35,20 +35,10 @@ final class JsonSchemaResourcesItems extends JsonSchema {
    *   type: non-empty-string,
    *   identifierProperty: non-empty-string,
    *   amountProperty: non-empty-string,
-   *   clearing?: array{
-   *     itemLabel: non-empty-string,
-   *     paymentPartyLabel?: non-empty-string,
-   *   },
    * } $config
    */
   public function __construct(array $config) {
-    $keywords = $config;
-    if (isset($keywords['clearing'])) {
-      $keywords['clearing'] = JsonSchema::fromArray($keywords['clearing']);
-    }
-
-    // @phpstan-ignore-next-line 'clearing' is now of type JsonSchema
-    parent::__construct($keywords);
+    parent::__construct($config);
   }
 
 }

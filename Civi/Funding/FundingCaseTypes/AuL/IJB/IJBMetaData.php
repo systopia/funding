@@ -64,44 +64,88 @@ final class IJBMetaData extends AbstractFundingCaseTypeMetaData {
    */
   public function getCostItemTypes(): array {
     return $this->costItemTypes ??= [
-      'unterkunftUndVerpflegung' => new CostItemType('unterkunftUndVerpflegung', 'Unterkunft und Verpflegung'),
-      'honorar' => new CostItemType('honorar', 'Honorar'),
-      'fahrtkosten/flug' => new CostItemType('fahrtkosten/intern', 'Fahrt-/Flugkosten inkl. Transfer zur Unterkunft'),
-      'fahrtkosten/anTeilnehmerErstattet' => new CostItemType(
-        'fahrtkosten/anTeilnehmerErstattet',
-        'An Teilnehmer*innen/Referent*innen erstattete Fahrtkosten'
-      ),
-      'programmkosten/programmkosten' => new CostItemType('programmkosten/programmkosten', 'Programmkosten'),
-      'programmkosten/arbeitsmaterial' => new CostItemType('programmkosten/arbeitsmaterial', 'Arbeitsmaterial'),
-      'programmkosten/fahrt' => new CostItemType('programmkosten/fahrt', 'Programmfahrtkosten'),
-      'sonstigeKosten' => new CostItemType('sonstigeKosten', 'Sonstige Kosten'),
-      'sonstigeAusgabe' => new CostItemType('sonstigeAusgabe', 'Sonstige Ausgabe'),
-      'zuschlagsrelevanteKosten/programmabsprachen' => new CostItemType(
-        'zuschlagsrelevanteKosten/programmabsprachen',
-        'Programmabsprachen (Telefon, Porto, Kopien, Internet etc.)'
-      ),
-      'zuschlagsrelevanteKosten/veroeffentlichungen' => new CostItemType(
-        'zuschlagsrelevanteKosten/veroeffentlichungen',
-        <<<'EOD'
+      'unterkunftUndVerpflegung' => new CostItemType([
+        'name' => 'unterkunftUndVerpflegung',
+        'label' => 'Unterkunft und Verpflegung',
+        'clearable' => TRUE,
+      ]),
+      'honorar' => new CostItemType([
+        'name' => 'honorar',
+        'label' => 'Honorar',
+        'clearable' => TRUE,
+      ]),
+      'fahrtkosten/flug' => new CostItemType([
+        'name' => 'fahrtkosten/intern',
+        'label' => 'Fahrt-/Flugkosten inkl. Transfer zur Unterkunft',
+        'clearable' => TRUE,
+      ]),
+      'fahrtkosten/anTeilnehmerErstattet' => new CostItemType([
+        'name' => 'fahrtkosten/anTeilnehmerErstattet',
+        'label' => 'An Teilnehmer*innen/Referent*innen erstattete Fahrtkosten',
+        'clearable' => TRUE,
+      ]),
+      'programmkosten/programmkosten' => new CostItemType([
+        'name' => 'programmkosten/programmkosten',
+        'label' => 'Programmkosten',
+        'clearable' => TRUE,
+      ]),
+      'programmkosten/arbeitsmaterial' => new CostItemType([
+        'name' => 'programmkosten/arbeitsmaterial',
+        'label' => 'Arbeitsmaterial',
+        'clearable' => TRUE,
+      ]),
+      'programmkosten/fahrt' => new CostItemType([
+        'name' => 'programmkosten/fahrt',
+        'label' => 'Programmfahrtkosten',
+        'clearable' => TRUE,
+      ]),
+      'sonstigeKosten' => new CostItemType([
+        'name' => 'sonstigeKosten',
+        'label' => 'Sonstige Kosten',
+        'clearable' => TRUE,
+      ]),
+      'sonstigeAusgabe' => new CostItemType([
+        'name' => 'sonstigeAusgabe',
+        'label' => 'Sonstige Ausgabe',
+        'clearable' => TRUE,
+      ]),
+      'zuschlagsrelevanteKosten/programmabsprachen' => new CostItemType([
+        'name' => 'zuschlagsrelevanteKosten/programmabsprachen',
+        'label' => 'Programmabsprachen (Telefon, Porto, Kopien, Internet etc.)',
+        'clearable' => TRUE,
+      ]),
+      'zuschlagsrelevanteKosten/vorbereitungsmaterial' => new CostItemType([
+        'name' => 'zuschlagsrelevanteKosten/vorbereitungsmaterial',
+        'label' => 'Erstellung von Vorbereitungsmaterial',
+        'clearable' => TRUE,
+      ]),
+      'zuschlagsrelevanteKosten/veroeffentlichungen' => new CostItemType([
+        'name' => 'zuschlagsrelevanteKosten/veroeffentlichungen',
+        'label' => <<<'EOD'
 Veröffentlichungen, Publikationen, Videos, Fotos etc. als Dokumentation der Ergebnisse und für die Öffentlichkeitsarbeit
-EOD
-      ),
-      'zuschlagsrelevanteKosten/honorare' => new CostItemType(
-        'zuschlagsrelevanteKosten/honorare',
-        'Honorare für Vorträge, die der Vorbereitung der Gruppe dienen (nur im Inland)'
-      ),
-      'zuschlagsrelevanteKosten/fahrtkostenUndVerpflegung' => new CostItemType(
-        'zuschlagsrelevanteKosten/fahrtkostenUndVerpflegung',
-        'Fahrtkosten und Verpflegung, ggf. Übernachtung bei überregionaler TN-Zusammensetzung'
-      ),
-      'zuschlagsrelevanteKosten/reisekosten' => new CostItemType(
-        'zuschlagsrelevanteKosten/reisekosten',
-        'Reise-/Fahrtkosten für interne Koordination und Organisation der Vor- und Nachbereitung'
-      ),
-      'zuschlagsrelevanteKosten/miete' => new CostItemType(
-        'zuschlagsrelevanteKosten/miete',
-      'Raum-, Materialmiete (techn. Geräte, Beamer, Flipchart etc.)'
-      ),
+EOD,
+        'clearable' => TRUE,
+      ]),
+      'zuschlagsrelevanteKosten/honorare' => new CostItemType([
+        'name' => 'zuschlagsrelevanteKosten/honorare',
+        'label' => 'Honorare für Vorträge, die der Vorbereitung der Gruppe dienen (nur im Inland)',
+        'clearable' => TRUE,
+      ]),
+      'zuschlagsrelevanteKosten/fahrtkostenUndVerpflegung' => new CostItemType([
+        'name' => 'zuschlagsrelevanteKosten/fahrtkostenUndVerpflegung',
+        'label' => 'Fahrtkosten und Verpflegung, ggf. Übernachtung bei überregionaler TN-Zusammensetzung',
+        'clearable' => TRUE,
+      ]),
+      'zuschlagsrelevanteKosten/reisekosten' => new CostItemType([
+        'name' => 'zuschlagsrelevanteKosten/reisekosten',
+        'label' => 'Reise-/Fahrtkosten für interne Koordination und Organisation der Vor- und Nachbereitung',
+        'clearable' => TRUE,
+      ]),
+      'zuschlagsrelevanteKosten/miete' => new CostItemType([
+        'name' => 'zuschlagsrelevanteKosten/miete',
+        'label' => 'Raum-, Materialmiete (techn. Geräte, Beamer, Flipchart etc.)',
+        'clearable' => TRUE,
+      ]),
     ];
   }
 
@@ -117,21 +161,42 @@ EOD
    */
   public function getResourcesItemTypes(): array {
     return $this->resourcesItemTypes ??= [
-      'teilnehmerbeitraege' => new ResourcesItemType('teilnehmerbeitraege', 'Teilnehmer*innenbeiträge'),
-      'eigenmittel' => new ResourcesItemType('eigenmittel', 'Eigenmittel'),
-      'oeffentlicheMittel/europa' => new ResourcesItemType(
-        'oeffentlicheMittel/europa',
-        'Finanzierung durch Europa-Mittel'
-      ),
-      'oeffentlicheMittel/bundeslaender' => new ResourcesItemType(
-        'oeffentlicheMittel/bundeslaender',
-        'Finanzierung durch Bundesländer'
-      ),
-      'oeffentlicheMittel/staedteUndKreise' => new ResourcesItemType(
-        'oeffentlicheMittel/staedteUndKreise',
-        'Finanzierung durch Städte und Kreise'
-      ),
-      'sonstigeMittel' => new ResourcesItemType('sonstigeMittel', 'Sonstige Mittel'),
+      'teilnehmerbeitraege' => new ResourcesItemType([
+        'name' => 'teilnehmerbeitraege',
+        'label' => 'Teilnehmer*innenbeiträge',
+        'clearable' => TRUE,
+        'paymentPartyLabel' => 'Fördernde Stelle',
+      ]),
+      'eigenmittel' => new ResourcesItemType([
+        'name' => 'eigenmittel',
+        'label' => 'Eigenmittel',
+        'clearable' => TRUE,
+        'paymentPartyLabel' => 'Fördernde Stelle',
+      ]),
+      'oeffentlicheMittel/europa' => new ResourcesItemType([
+        'name' => 'oeffentlicheMittel/europa',
+        'label' => 'Finanzierung durch Europa-Mittel',
+        'clearable' => TRUE,
+        'paymentPartyLabel' => 'Fördernde Stelle',
+      ]),
+      'oeffentlicheMittel/bundeslaender' => new ResourcesItemType([
+        'name' => 'oeffentlicheMittel/bundeslaender',
+        'label' => 'Finanzierung durch Bundesländer',
+        'clearable' => TRUE,
+        'paymentPartyLabel' => 'Fördernde Stelle',
+      ]),
+      'oeffentlicheMittel/staedteUndKreise' => new ResourcesItemType([
+        'name' => 'oeffentlicheMittel/staedteUndKreise',
+        'label' => 'Finanzierung durch Städte und Kreise',
+        'clearable' => TRUE,
+        'paymentPartyLabel' => 'Fördernde Stelle',
+      ]),
+      'sonstigeMittel' => new ResourcesItemType([
+        'name' => 'sonstigeMittel',
+        'label' => 'Sonstige Mittel',
+        'clearable' => TRUE,
+        'paymentPartyLabel' => 'Fördernde Stelle',
+      ]),
     ];
   }
 

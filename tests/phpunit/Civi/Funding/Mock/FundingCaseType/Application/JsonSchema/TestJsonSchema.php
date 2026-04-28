@@ -61,9 +61,6 @@ final class TestJsonSchema extends JsonSchemaObject {
         '$costItem' => new JsonSchemaCostItem([
           'type' => 'amount',
           'identifier' => 'amountRequested',
-          'clearing' => [
-            'itemLabel' => 'Amount requested',
-          ],
         ]),
         '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'amount_requested']]),
       ]),
@@ -71,9 +68,6 @@ final class TestJsonSchema extends JsonSchemaObject {
         '$resourcesItem' => new JsonSchemaResourcesItem([
           'type' => 'testResources',
           'identifier' => 'resources',
-          'clearing' => [
-            'itemLabel' => 'Test Resources',
-          ],
         ]),
       ]),
       'file' => new JsonSchemaString(['format' => 'uri']),

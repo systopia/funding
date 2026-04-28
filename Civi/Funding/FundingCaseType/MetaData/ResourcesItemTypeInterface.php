@@ -19,10 +19,5 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseType\MetaData;
 
-interface ResourcesItemTypeInterface {
-
-  public function getName(): string;
-
-  public function getLabel(): string;
-
+interface ResourcesItemTypeInterface extends FinancePlanItemTypeInterface {
 }

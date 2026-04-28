@@ -19,23 +19,48 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseType\MetaData;
 
+use CRM_Funding_ExtensionUtil as E;
+
+/**
+ * @phpstan-type costItemT array{
+ *    name: non-empty-string,
+ *    label: non-empty-string,
+ *    clearable: bool,
+ *    clearingLabel?: non-empty-string|null,
+ *    paymentPartyLabel?: non-empty-string|null,
+ *  }
+ *    Defaults:
+ *      - clearingLabel: The value of label
+ *      - paymentPartyLabel: E::ts('Payee')
+ */
 final class CostItemType implements CostItemTypeInterface {
 
-  private string $name;
-
-  private string $label;
-
-  public function __construct(string $name, string $label) {
-    $this->name = $name;
-    $this->label = $label;
-  }
+  /**
+   * @phpstan-param costItemT $values
+   */
+  public function __construct(
+    private readonly array $values
+  ) {}
 
   public function getName(): string {
-    return $this->name;
+    return $this->values['name'];
   }
 
   public function getLabel(): string {
-    return $this->label;
+    return $this->values['label'];
+  }
+
+  public function isClearable(): bool {
+    return $this->values['clearable'];
+  }
+
+  public function getClearingLabel(): string {
+    return $this->values['clearingLabel'] ?? $this->getLabel();
+  }
+
+  public function getPaymentPartyLabel(): string {
+    /** @var non-empty-string */
+    return $this->values['paymentPartyLabel'] ?? E::ts('Payee');
   }
 
 }

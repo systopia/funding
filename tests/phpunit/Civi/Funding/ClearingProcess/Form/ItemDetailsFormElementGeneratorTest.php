@@ -51,7 +51,6 @@ final class ItemDetailsFormElementGeneratorTest extends TestCase {
       'type' => 'xyz',
       'identifierProperty' => 'theIdentifier',
       'amountProperty' => 'theAmount',
-      'clearing' => ['itemLabel' => 'label'],
     ]);
 
     $applicationPropertySchema = new JsonSchemaArray(new JsonSchemaObject([
@@ -126,7 +125,6 @@ final class ItemDetailsFormElementGeneratorTest extends TestCase {
       'type' => 'xyz',
       'identifierProperty' => 'theIdentifier',
       'amountProperty' => 'theAmount',
-      'clearing' => ['itemLabel' => 'label'],
     ]);
 
     $applicationPropertySchema = new JsonSchemaArray(new JsonSchemaObject([

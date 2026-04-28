@@ -27,11 +27,10 @@ final class JsonSchemaStringTranslator {
   /**
    * @param array<string, string> $translations
    *   Mapping of original string to translation.
-   *
-   * phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
    */
+  // phpcs:ignore Generic.Metrics.CyclomaticComplexity.TooHigh
   public function translateStrings(JsonSchema $schema, array $translations, string $defaultLocale): void {
-  // phpcs:enable
+    // phpcs:enable
     $validations = $schema['$validations'];
     if (is_array($validations)) {
       foreach ($validations as $validation) {
@@ -60,18 +59,6 @@ final class JsonSchemaStringTranslator {
           $this->translateStrings($property, $translations, $defaultLocale);
         }
       }
-    }
-
-    $financePlanItem = $schema['$costItem'] ?? $schema['$costItems']
-      ?? $schema['$resourcesItem'] ?? $schema['$resourcesItems'];
-    $financePlanItemClearing = $financePlanItem['clearing'] ?? NULL;
-    if ($financePlanItemClearing instanceof JsonSchema) {
-      StringTranslateUtil::translateStrings(
-        $financePlanItemClearing,
-        ['itemLabel', 'recipientLabel'],
-        $translations,
-        $defaultLocale
-      );
     }
   }
 

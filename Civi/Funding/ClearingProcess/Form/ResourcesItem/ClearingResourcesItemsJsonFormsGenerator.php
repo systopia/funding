@@ -45,10 +45,6 @@ final class ClearingResourcesItemsJsonFormsGenerator extends AbstractClearingIte
     );
   }
 
-  protected function getPaymentPartyLabel(): string {
-    return E::ts('Payer');
-  }
-
   protected function getPropertyKeyword(): string {
     return 'resourcesItems';
   }

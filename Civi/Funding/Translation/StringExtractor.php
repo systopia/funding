@@ -25,6 +25,7 @@ use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\Application\ApplicationJsonSchemaFactoryInterface;
 use Civi\Funding\Form\Application\ApplicationUiSchemaFactoryInterface;
+use Civi\Funding\FundingCaseType\FundingCaseTypeMetaDataProviderInterface;
 
 final class StringExtractor {
 
@@ -42,6 +43,7 @@ final class StringExtractor {
     ApplicationJsonSchemaFactoryInterface $applicationJsonSchemaFactory,
     ApplicationUiSchemaFactoryInterface $applicationUiSchemaFactory,
     JsonSchemaStringExtractor $jsonSchemaStringExtractor,
+    private readonly FundingCaseTypeMetaDataProviderInterface $metaDataProvider,
     ReportFormFactoryInterface $reportFormFactory,
     UiSchemaStringExtractor $uiSchemaStringExtractor
   ) {
@@ -53,7 +55,7 @@ final class StringExtractor {
   }
 
   /**
-   * @return list<string>
+   * @return list<non-empty-string>
    */
   public function extractStrings(FundingProgramEntity $fundingProgram, FundingCaseTypeEntity $fundingCaseType): array {
     $reportForm = $this->reportFormFactory->createReportFormForTranslation($fundingProgram, $fundingCaseType);
@@ -71,6 +73,32 @@ final class StringExtractor {
     if (NULL !== $reportForm->getReceiptsPrependUiSchema()) {
       $strings += $this->uiSchemaStringExtractor->extractStrings($reportForm->getReceiptsPrependUiSchema());
     }
+
+    $metaData = $this->metaDataProvider->get($fundingCaseType->getName());
+
+    foreach ($metaData->getCostItemTypes() as $costItemType) {
+      $strings[$costItemType->getLabel()] = TRUE;
+      $strings[$costItemType->getClearingLabel()] = TRUE;
+      $strings[$costItemType->getPaymentPartyLabel()] = TRUE;
+    }
+
+    foreach ($metaData->getResourcesItemTypes() as $resourcesItemType) {
+      $strings[$resourcesItemType->getLabel()] = TRUE;
+      $strings[$resourcesItemType->getClearingLabel()] = TRUE;
+      $strings[$resourcesItemType->getPaymentPartyLabel()] = TRUE;
+    }
+
+    foreach ($metaData->getApplicationProcessActions() as $action) {
+      $strings[$action->getLabel()] = TRUE;
+      $strings[$action->getConfirmMessage()] = TRUE;
+    }
+
+    foreach ($metaData->getFundingCaseActions() as $action) {
+      $strings[$action->getLabel()] = TRUE;
+      $strings[$action->getConfirmMessage()] = TRUE;
+    }
+
+    unset($strings['']);
 
     return array_keys($strings);
   }

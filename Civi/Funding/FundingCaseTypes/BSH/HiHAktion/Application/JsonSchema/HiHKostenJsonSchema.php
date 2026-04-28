@@ -225,9 +225,6 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
         '$costItem' => new JsonSchemaCostItem([
           'type' => 'bewilligt',
           'identifier' => 'personalkostenBewilligt',
-          'clearing' => [
-            'itemLabel' => 'Personalkosten',
-          ],
         ]),
         '$tag' => JsonSchema::fromArray([
           'mapToField' => [
@@ -241,9 +238,6 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
         '$costItem' => new JsonSchemaCostItem([
           'type' => 'bewilligt',
           'identifier' => 'honorareBewilligt',
-          'clearing' => [
-            'itemLabel' => 'Honorare',
-          ],
         ]),
         '$tag' => JsonSchema::fromArray([
           'mapToField' => [
@@ -257,9 +251,6 @@ final class HiHKostenJsonSchema extends JsonSchemaObject {
         '$costItem' => new JsonSchemaCostItem([
           'type' => 'bewilligt',
           'identifier' => 'sachkostenBewilligt',
-          'clearing' => [
-            'itemLabel' => 'Sachkosten',
-          ],
         ]),
         '$tag' => JsonSchema::fromArray([
           'mapToField' => [

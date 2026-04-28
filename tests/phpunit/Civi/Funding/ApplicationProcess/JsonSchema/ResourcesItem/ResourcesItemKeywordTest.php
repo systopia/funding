@@ -50,7 +50,6 @@ final class ResourcesItemKeywordTest extends TestCase {
           '$resourcesItem' => new JsonSchemaResourcesItem([
             'type' => 'foo',
             'identifier' => 'bar',
-            'clearing' => ['itemLabel' => 'label'],
           ]),
         ]),
       ]),
@@ -78,7 +77,6 @@ final class ResourcesItemKeywordTest extends TestCase {
           'identifier' => 'bar',
           'amount' => 123.45,
           'properties' => [],
-          'clearing' => ['itemLabel' => 'label'],
           'dataPointer' => '/resources/amount1',
           'dataType' => 'number',
         ]),
@@ -119,7 +117,6 @@ final class ResourcesItemKeywordTest extends TestCase {
           'identifier' => 'bar',
           'amount' => 123.0,
           'properties' => [],
-          'clearing' => NULL,
           'dataPointer' => '/resources/amount1',
           'dataType' => 'integer',
         ]),
@@ -135,7 +132,6 @@ final class ResourcesItemKeywordTest extends TestCase {
           '$resourcesItem' => new JsonSchemaResourcesItem([
             'type' => 'foo',
             'identifier' => 'bar',
-            'clearing' => ['itemLabel' => 'label'],
           ]),
         ], TRUE),
       ]),

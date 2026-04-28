@@ -119,10 +119,27 @@ final class KursMetaData extends AbstractFundingCaseTypeMetaData {
    */
   public function getCostItemTypes(): array {
     return $this->costItemTypes ??= [
-      'teilnehmerkosten' => new CostItemType('teilnehmerkosten', 'Teilnehmerkosten'),
-      'fahrtkosten' => new CostItemType('fahrtkosten', 'Fahrtkosten'),
-      'honorarkosten' => new CostItemType('honorarkosten', 'Honorarkosten'),
-      'sonstigeAusgaben' => new CostItemType('sonstigeAusgaben', 'Sonstige Ausgaben'),
+      'teilnehmerkosten' => new CostItemType([
+        'name' => 'teilnehmerkosten',
+        'label' => 'Teilnehmer*innenbeiträge',
+        'clearable' => TRUE,
+        'clearingLabel' => 'Unterkunft und Verpflegung',
+      ]),
+      'fahrtkosten' => new CostItemType([
+        'name' => 'fahrtkosten',
+        'label' => 'Fahrtkosten',
+        'clearable' => TRUE,
+      ]),
+      'honorarkosten' => new CostItemType([
+        'name' => 'honorarkosten',
+        'label' => 'Honorarkosten',
+        'clearable' => TRUE,
+      ]),
+      'sonstigeAusgaben' => new CostItemType([
+        'name' => 'sonstigeAusgaben',
+        'label' => 'Sonstige Ausgaben',
+        'clearable' => TRUE,
+      ]),
     ];
   }
 
@@ -151,18 +168,42 @@ final class KursMetaData extends AbstractFundingCaseTypeMetaData {
    */
   public function getResourcesItemTypes(): array {
     return $this->resourcesItemTypes ??= [
-      'teilnehmerbeitraege' => new ResourcesItemType('teilnehmerbeitraege', 'Teilnehmer*innenbeiträge'),
-      'eigenmittel' => new ResourcesItemType('eigenmittel', 'Eigenmittel'),
-      'oeffentlicheMittel/europa' => new ResourcesItemType('oeffentlicheMittel/europa', 'Öffentliche Mittel'),
-      'oeffentlicheMittel/bundeslaender' => new ResourcesItemType(
-        'oeffentlicheMittel/bundeslaender',
-        'Öffentliche Mittel'
-      ),
-      'oeffentlicheMittel/staedteUndKreise' => new ResourcesItemType(
-        'oeffentlicheMittel/staedteUndKreise',
-        'Öffentliche Mittel'
-      ),
-      'sonstigeMittel' => new ResourcesItemType('sonstigeMittel', 'Sonstige Mittel'),
+      'teilnehmerbeitraege' => new ResourcesItemType([
+        'name' => 'teilnehmerbeitraege',
+        'label' => 'Teilnehmer*innenbeiträge',
+        'clearable' => TRUE,
+        'paymentPartyLabel' => 'Fördernde Stelle',
+      ]),
+      'eigenmittel' => new ResourcesItemType([
+        'name' => 'eigenmittel',
+        'label' => 'Eigenmittel',
+        'clearable' => TRUE,
+        'paymentPartyLabel' => 'Fördernde Stelle',
+      ]),
+      'oeffentlicheMittel/europa' => new ResourcesItemType([
+        'name' => 'oeffentlicheMittel/europa',
+        'label' => 'Öffentliche Mittel',
+        'clearable' => TRUE,
+        'paymentPartyLabel' => 'Fördernde Stelle',
+      ]),
+      'oeffentlicheMittel/bundeslaender' => new ResourcesItemType([
+        'name' => 'oeffentlicheMittel/bundeslaender',
+        'label' => 'Öffentliche Mittel',
+        'clearable' => TRUE,
+        'paymentPartyLabel' => 'Fördernde Stelle',
+      ]),
+      'oeffentlicheMittel/staedteUndKreise' => new ResourcesItemType([
+        'name' => 'oeffentlicheMittel/staedteUndKreise',
+        'label' => 'Öffentliche Mittel',
+        'clearable' => TRUE,
+        'paymentPartyLabel' => 'Fördernde Stelle',
+      ]),
+      'sonstigeMittel' => new ResourcesItemType([
+        'name' => 'sonstigeMittel',
+        'label' => 'Sonstige Mittel',
+        'clearable' => TRUE,
+        'paymentPartyLabel' => 'Fördernde Stelle',
+      ]),
     ];
   }
 

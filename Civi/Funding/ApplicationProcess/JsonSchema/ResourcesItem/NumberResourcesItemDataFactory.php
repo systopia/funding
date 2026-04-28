@@ -26,8 +26,6 @@ use Opis\JsonSchema\ValidationContext;
 
 /**
  * ResourcesItemData factory for numbers/integers.
- *
- * @phpstan-type clearingT array{itemLabel: string}
  */
 final class NumberResourcesItemDataFactory {
 
@@ -40,11 +38,6 @@ final class NumberResourcesItemDataFactory {
    * @phpstan-var non-empty-string
    */
   private string $identifier;
-
-  /**
-   * @phpstan-var clearingT|null
-   */
-  private ?array $clearing;
 
   /**
    * @param \stdClass $resourcesItemSchema
@@ -68,27 +61,7 @@ final class NumberResourcesItemDataFactory {
     return new self(
       $resourcesItemSchema->type,
       $resourcesItemSchema->identifier,
-      self::parseClearing($resourcesItemSchema)
     );
-  }
-
-  /**
-   * @phpstan-return clearingT|null
-   *
-   * @throws \Opis\JsonSchema\Exceptions\ParseException
-   */
-  private static function parseClearing(\stdClass $data): ?array {
-    if (!property_exists($data, 'clearing')) {
-      return NULL;
-    }
-
-    if (!self::propertyIsNonEmptyString($data->clearing, 'itemLabel')) {
-      throw new ParseException('If clearing is enabled, an item label has to be set');
-    }
-
-    return [
-      'itemLabel' => $data->clearing->itemLabel,
-    ];
   }
 
   private static function propertyIsNonEmptyString(\stdClass $data, string $propertyName): bool {
@@ -100,17 +73,13 @@ final class NumberResourcesItemDataFactory {
   /**
    * @phpstan-param non-empty-string $type
    * @phpstan-param non-empty-string $identifier
-   * @phpstan-param clearingT|null $clearing
-   *   NULL if no clearing is required.
    */
   private function __construct(
     string $type,
     string $identifier,
-    ?array $clearing
   ) {
     $this->type = $type;
     $this->identifier = $identifier;
-    $this->clearing = $clearing;
   }
 
   /**
@@ -141,7 +110,6 @@ final class NumberResourcesItemDataFactory {
       'identifier' => $this->identifier,
       'amount' => (float) $amount,
       'properties' => [],
-      'clearing' => $this->clearing,
       'dataPointer' => $dataPointer,
       'dataType' => $dataType,
     ]);

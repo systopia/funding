@@ -42,9 +42,6 @@ final class AVK1KostenSchema extends JsonSchemaObject {
         '$costItem' => new JsonSchemaCostItem([
           'type' => 'unterkunftUndVerpflegung',
           'identifier' => 'unterkunftUndVerpflegung',
-          'clearing' => [
-            'itemLabel' => 'Unterkunft und Verpflegung',
-          ],
         ]),
       ]),
       // Abschnitt I.2
@@ -75,9 +72,6 @@ final class AVK1KostenSchema extends JsonSchemaObject {
             'type' => 'honorar',
             'identifierProperty' => '_identifier',
             'amountProperty' => 'betrag',
-            'clearing' => [
-              'itemLabel' => 'Honorar {@pos}',
-            ],
           ]),
         ]
       ),
@@ -92,9 +86,6 @@ final class AVK1KostenSchema extends JsonSchemaObject {
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'fahrtkosten/intern',
             'identifier' => 'fahrtkosten.intern',
-            'clearing' => [
-              'itemLabel' => 'Fahrtkosten innerhalb des Programms',
-            ],
           ]),
         ]),
         'anTeilnehmerErstattet' => new JsonSchemaMoney([
@@ -103,9 +94,6 @@ final class AVK1KostenSchema extends JsonSchemaObject {
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'fahrtkosten/anTeilnehmerErstattet',
             'identifier' => 'fahrtkosten.anTeilnehmerErstattet',
-            'clearing' => [
-              'itemLabel' => 'An Teilnehmer*innen/Referent*innen erstattete Fahrtkosten',
-            ],
           ]),
         ]),
       ]),
@@ -126,9 +114,6 @@ final class AVK1KostenSchema extends JsonSchemaObject {
               'type' => 'sachkosten/ausstattung',
               'identifierProperty' => '_identifier',
               'amountProperty' => 'betrag',
-              'clearing' => [
-                'itemLabel' => 'Sachkosten {@pos}',
-              ],
             ]),
           ]
         ),
@@ -152,9 +137,6 @@ final class AVK1KostenSchema extends JsonSchemaObject {
             'type' => 'sonstigeAusgabe',
             'identifierProperty' => '_identifier',
             'amountProperty' => 'betrag',
-            'clearing' => [
-              'itemLabel' => 'Sonstige Ausgabe {@pos}',
-            ],
           ]),
         ]
       ),
@@ -171,9 +153,6 @@ final class AVK1KostenSchema extends JsonSchemaObject {
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'versicherung/teilnehmer',
             'identifier' => 'versicherung.teilnehmer',
-            'clearing' => [
-              'itemLabel' => 'Kosten der Versicherung der Teilnehmer*innen',
-            ],
           ]),
         ]),
       ]),

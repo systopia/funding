@@ -25,6 +25,9 @@ use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\JsonSchemaCostItems;
 use Civi\Funding\ClearingProcess\Form\Container\ClearableItems;
 use Civi\Funding\EntityFactory\ApplicationCostItemFactory;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
+use Civi\Funding\FundingCaseType\MetaData\CostItemType;
+use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataMock;
+use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataProviderMock;
 use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
 use Civi\RemoteTools\JsonSchema\JsonSchemaNumber;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
@@ -39,6 +42,8 @@ use PHPUnit\Framework\TestCase;
  */
 final class ClearableCostItemsLoaderTest extends TestCase {
 
+  private CostItemType $clearableCostItemType;
+
   /**
    * @var \Civi\Funding\ApplicationProcess\ApplicationCostItemManager&\PHPUnit\Framework\MockObject\MockObject
    */
@@ -51,18 +56,31 @@ final class ClearableCostItemsLoaderTest extends TestCase {
 
   private TestLogger $logger;
 
+  private CostItemType $nonClearableCostItemType;
+
   protected function setUp(): void {
     parent::setUp();
     $this->itemManagerMock = $this->createMock(ApplicationCostItemManager::class);
     $this->logger = new TestLogger();
+
+    $metaDataMock = new FundingCaseTypeMetaDataMock();
+    $this->clearableCostItemType = new CostItemType(['name' => 'clearable', 'label' => 'test', 'clearable' => TRUE]);
+    $this->nonClearableCostItemType = new CostItemType(
+      ['name' => 'nonClearable', 'label' => 'test', 'clearable' => FALSE]
+    );
+    $metaDataMock->addCostItemType($this->clearableCostItemType);
+    $metaDataMock->addCostItemType($this->nonClearableCostItemType);
+
     $this->loader = new ClearableCostItemsLoader(
       $this->itemManagerMock,
-      $this->logger
+      $this->logger,
+      new FundingCaseTypeMetaDataProviderMock($metaDataMock),
     );
   }
 
   public function testNumberItem(): void {
     $item = ApplicationCostItemFactory::createApplicationCostItem([
+      'type' => $this->clearableCostItemType->getName(),
       'data_pointer' => '/test',
     ]);
 
@@ -70,7 +88,6 @@ final class ClearableCostItemsLoaderTest extends TestCase {
     $costItemSchema = new JsonSchemaCostItem([
       'type' => $item->getType(),
       'identifier' => $item->getIdentifier(),
-      'clearing' => ['itemLabel' => 'test'],
     ]);
     $propertySchema = new JsonSchemaNumber([
       '$costItem' => $costItemSchema,
@@ -84,13 +101,18 @@ final class ClearableCostItemsLoaderTest extends TestCase {
       ->willReturn([$item]);
 
     static::assertEquals(
-      ['#/properties/test' => new ClearableItems('#/properties/test', $propertySchema, $costItemSchema, [$item])],
+      [
+        '#/properties/test' => new ClearableItems(
+          '#/properties/test', $propertySchema, $costItemSchema, $this->clearableCostItemType, [$item]
+        ),
+      ],
       $this->loader->getClearableItems($applicationProcessBundle, $jsonSchema)
     );
   }
 
   public function testArrayItems(): void {
     $item0 = ApplicationCostItemFactory::createApplicationCostItem([
+      'type' => $this->clearableCostItemType->getName(),
       'data_pointer' => '/test/0',
       'identifier' => 'item0',
       'amount' => 10.0,
@@ -101,6 +123,7 @@ final class ClearableCostItemsLoaderTest extends TestCase {
       ],
     ]);
     $item1 = ApplicationCostItemFactory::createApplicationCostItem([
+      'type' => $this->clearableCostItemType->getName(),
       'data_pointer' => '/test/1',
       'identifier' => 'item1',
       'amount' => 20.0,
@@ -116,7 +139,6 @@ final class ClearableCostItemsLoaderTest extends TestCase {
       'type' => $item0->getType(),
       'identifierProperty' => 'theIdentifier',
       'amountProperty' => 'theAmount',
-      'clearing' => ['itemLabel' => 'test'],
     ]);
     $propertySchema = new JsonSchemaArray(new JsonSchemaObject([
       'theIdentifier' => new JsonSchemaString(),
@@ -134,15 +156,44 @@ final class ClearableCostItemsLoaderTest extends TestCase {
     static::assertEquals(
       [
         '#/properties/test' => new ClearableItems(
-          '#/properties/test', $propertySchema, $costItemsSchema, [$item0, $item1]
+          '#/properties/test', $propertySchema, $costItemsSchema, $this->clearableCostItemType, [$item0, $item1]
         ),
       ],
       $this->loader->getClearableItems($applicationProcessBundle, $jsonSchema)
     );
   }
 
+  public function testNoCostItemType(): void {
+    $item = ApplicationCostItemFactory::createApplicationCostItem([
+      'type' => 'unknown',
+      'data_pointer' => '/test',
+    ]);
+
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $costItemSchema = new JsonSchemaCostItem([
+      'type' => $item->getType(),
+      'identifier' => $item->getIdentifier(),
+    ]);
+    $propertySchema = new JsonSchemaNumber([
+      '$costItem' => $costItemSchema,
+    ]);
+    $jsonSchema = new JsonSchemaObject([
+      'test' => $propertySchema,
+    ]);
+
+    $this->itemManagerMock->method('getByApplicationProcessId')
+      ->with($applicationProcessBundle->getApplicationProcess()->getId())
+      ->willReturn([$item]);
+
+    static::assertSame(
+      [],
+      $this->loader->getClearableItems($applicationProcessBundle, $jsonSchema)
+    );
+  }
+
   public function testNonClearableNumberItem(): void {
     $item = ApplicationCostItemFactory::createApplicationCostItem([
+      'type' => $this->nonClearableCostItemType->getName(),
       'data_pointer' => '/test',
     ]);
 
@@ -167,6 +218,7 @@ final class ClearableCostItemsLoaderTest extends TestCase {
 
   public function testNonClearableArrayItems(): void {
     $item0 = ApplicationCostItemFactory::createApplicationCostItem([
+      'type' => $this->nonClearableCostItemType->getName(),
       'data_pointer' => '/test/0',
       'identifier' => 'item0',
       'amount' => 10.0,
@@ -177,6 +229,7 @@ final class ClearableCostItemsLoaderTest extends TestCase {
       ],
     ]);
     $item1 = ApplicationCostItemFactory::createApplicationCostItem([
+      'type' => $this->nonClearableCostItemType->getName(),
       'data_pointer' => '/test/1',
       'identifier' => 'item1',
       'amount' => 20.0,
@@ -211,6 +264,7 @@ final class ClearableCostItemsLoaderTest extends TestCase {
 
   public function testNoPropertySchema(): void {
     $item = ApplicationCostItemFactory::createApplicationCostItem([
+      'type' => $this->clearableCostItemType->getName(),
       'data_pointer' => '/test',
     ]);
 
@@ -234,6 +288,7 @@ final class ClearableCostItemsLoaderTest extends TestCase {
 
   public function testNoCostItemSchema(): void {
     $item = ApplicationCostItemFactory::createApplicationCostItem([
+      'type' => $this->clearableCostItemType->getName(),
       'data_pointer' => '/test',
     ]);
 

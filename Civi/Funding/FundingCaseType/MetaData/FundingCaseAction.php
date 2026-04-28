@@ -22,7 +22,7 @@ namespace Civi\Funding\FundingCaseType\MetaData;
 
 /**
  * @phpstan-type fundingCaseActionT array{
- *   name: string,
+ *   name: non-empty-string,
  *   label: string,
  *   confirmMessage?: string|null,
  * }
@@ -46,6 +46,9 @@ final class FundingCaseAction {
     $this->values = $values;
   }
 
+  /**
+   * @return non-empty-string
+   */
   public function getName(): string {
     return $this->values['name'];
   }

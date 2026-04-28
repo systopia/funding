@@ -20,13 +20,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Translation;
 
-use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\JsonSchemaCostItem;
-use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\JsonSchemaCostItems;
-use Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\JsonSchemaResourcesItem;
-use Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\JsonSchemaResourcesItems;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
-use Civi\RemoteTools\JsonSchema\JsonSchemaMoney;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 use PHPUnit\Framework\TestCase;
@@ -96,74 +91,6 @@ final class JsonSchemaStringExtractorTest extends TestCase {
             ],
           ]),
         ])
-      ))
-    );
-
-    // Extract labels in cost item schema.
-    static::assertEquals(
-      ['Item' => TRUE, 'Recipient' => TRUE],
-      $extractor->extractStrings(new JsonSchemaMoney([
-        '$costItem' => new JsonSchemaCostItem([
-          'type' => 'foo',
-          'identifier' => 'bar',
-          'clearing' => [
-            'itemLabel' => 'Item',
-            'recipientLabel' => 'Recipient',
-          ],
-        ]),
-      ]))
-    );
-
-    // Extract labels in cost items schema.
-    static::assertEquals(
-      ['Item' => TRUE, 'Recipient' => TRUE],
-      $extractor->extractStrings(new JsonSchemaArray(
-        new JsonSchemaObject([]),
-        [
-          '$costItems' => new JsonSchemaCostItems([
-            'type' => 'foo',
-            'identifierProperty' => 'identifier',
-            'amountProperty' => 'amount',
-            'clearing' => [
-              'itemLabel' => 'Item',
-              'recipientLabel' => 'Recipient',
-            ],
-          ]),
-        ]
-      ))
-    );
-
-    // Extract labels in resources item schema.
-    static::assertEquals(
-      ['Item' => TRUE, 'Recipient' => TRUE],
-      $extractor->extractStrings(new JsonSchemaMoney([
-        '$resourcesItem' => new JsonSchemaResourcesItem([
-          'type' => 'foo',
-          'identifier' => 'bar',
-          'clearing' => [
-            'itemLabel' => 'Item',
-            'recipientLabel' => 'Recipient',
-          ],
-        ]),
-      ]))
-    );
-
-    // Extract labels in resources items schema.
-    static::assertEquals(
-      ['Item' => TRUE, 'Recipient' => TRUE],
-      $extractor->extractStrings(new JsonSchemaArray(
-        new JsonSchemaObject([]),
-        [
-          '$resourcesItems' => new JsonSchemaResourcesItems([
-            'type' => 'foo',
-            'identifierProperty' => 'identifier',
-            'amountProperty' => 'amount',
-            'clearing' => [
-              'itemLabel' => 'Item',
-              'recipientLabel' => 'Recipient',
-            ],
-          ]),
-        ]
       ))
     );
   }

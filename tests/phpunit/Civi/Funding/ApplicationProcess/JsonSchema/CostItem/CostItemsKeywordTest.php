@@ -59,7 +59,6 @@ final class CostItemsKeywordTest extends TestCase {
             'type' => 'xyz',
             'identifierProperty' => 'theIdentifier',
             'amountProperty' => 'theAmount',
-            'clearing' => ['itemLabel' => 'label'],
           ]),
         ]
       ),
@@ -93,7 +92,6 @@ final class CostItemsKeywordTest extends TestCase {
             'theAmount' => 123.45,
             'foo' => 'bar',
           ],
-          'clearing' => ['itemLabel' => 'label'],
           'dataPointer' => '/costs/0',
           'dataType' => 'object',
         ]),
@@ -115,7 +113,6 @@ final class CostItemsKeywordTest extends TestCase {
             'type' => 'xyz',
             'identifierProperty' => 'theIdentifier',
             'amountProperty' => 'theAmount',
-            'clearing' => ['itemLabel' => 'label'],
           ]),
         ]
       ),
@@ -149,7 +146,6 @@ final class CostItemsKeywordTest extends TestCase {
             'theAmount' => 123,
             'foo' => 'bar',
           ],
-          'clearing' => ['itemLabel' => 'label'],
           'dataPointer' => '/costs/0',
           'dataType' => 'object',
         ]),
@@ -171,7 +167,6 @@ final class CostItemsKeywordTest extends TestCase {
             'type' => 'xyz',
             'identifierProperty' => 'theIdentifier',
             'amountProperty' => 'theAmount',
-            'clearing' => ['itemLabel' => 'label'],
           ]),
         ]
       ),
@@ -210,7 +205,6 @@ final class CostItemsKeywordTest extends TestCase {
             'theAmount' => 123.45,
             'foo' => 'bar',
           ],
-          'clearing' => ['itemLabel' => 'label'],
           'dataPointer' => '/costs/0',
           'dataType' => 'object',
         ]),
@@ -235,7 +229,6 @@ final class CostItemsKeywordTest extends TestCase {
           'type' => 'xyz',
           'identifierProperty' => 'theIdentifier',
           'amountProperty' => 'theAmount',
-          'clearing' => ['itemLabel' => 'label'],
         ]),
       ]),
     ]);
@@ -267,7 +260,6 @@ final class CostItemsKeywordTest extends TestCase {
             'type' => 'xyz',
             'identifierProperty' => 'theIdentifier',
             'amountProperty' => 'theAmount',
-            'clearing' => ['itemLabel' => 'label'],
           ]),
         ]
       ),
@@ -305,7 +297,6 @@ final class CostItemsKeywordTest extends TestCase {
             'type' => 'xyz',
             'identifierProperty' => 'theIdentifier',
             'amountProperty' => 'theAmount',
-            'clearing' => ['itemLabel' => 'label'],
           ]),
         ]
       ),
@@ -344,7 +335,6 @@ final class CostItemsKeywordTest extends TestCase {
             'type' => 'xyz',
             'identifierProperty' => 'theIdentifier',
             'amountProperty' => 'theAmount',
-            'clearing' => ['itemLabel' => 'label'],
           ]),
         ]
       ),

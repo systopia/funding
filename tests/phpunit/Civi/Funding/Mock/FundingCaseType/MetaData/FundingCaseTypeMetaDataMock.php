@@ -25,6 +25,7 @@ use Civi\Funding\FundingCaseType\MetaData\AbstractFundingCaseTypeMetaData;
 use Civi\Funding\FundingCaseType\MetaData\ApplicationProcessAction;
 use Civi\Funding\FundingCaseType\MetaData\ApplicationProcessStatus;
 use Civi\Funding\FundingCaseType\MetaData\AutoUpdateAmountApproved;
+use Civi\Funding\FundingCaseType\MetaData\CostItemType;
 use Civi\Funding\FundingCaseType\MetaData\FundingCaseAction;
 
 final class FundingCaseTypeMetaDataMock extends AbstractFundingCaseTypeMetaData {
@@ -96,6 +97,10 @@ final class FundingCaseTypeMetaDataMock extends AbstractFundingCaseTypeMetaData 
    */
   public function getAutoUpdateAmountApproved(): AutoUpdateAmountApproved {
     return $this->autoUpdateAmountApproved;
+  }
+
+  public function addCostItemType(CostItemType $costItemType): void {
+    $this->cosItemTypes[$costItemType->getName()] = $costItemType;
   }
 
   /**

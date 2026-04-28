@@ -29,6 +29,7 @@ use Civi\Funding\ClearingProcess\Form\ItemDetailsFormElementGenerator;
 use Civi\Funding\EntityFactory\ApplicationCostItemFactory;
 use Civi\Funding\EntityFactory\ClearingProcessBundleFactory;
 use Civi\Funding\Form\JsonFormsForm;
+use Civi\Funding\FundingCaseType\MetaData\CostItemType;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsTable;
 use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
@@ -80,8 +81,8 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
     $costItemSchema = new JsonSchemaCostItem([
       'type' => $costItem->getType(),
       'identifier' => 'test-cost-item',
-      'clearing' => ['itemLabel' => 'TestItemLabel'],
     ]);
+    $costItemType = new CostItemType(['name' => $costItem->getType(), 'label' => 'TestItemLabel', 'clearable' => TRUE]);
     $propertySchema = new JsonSchemaNumber(['$costItem' => $costItemSchema]);
     $jsonSchema = new JsonSchemaObject(['test' => $propertySchema]);
     $uiSchema = new JsonFormsGroup('Test', []);
@@ -90,7 +91,9 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
     $this->clearableItemsLoaderMock->method('getClearableItems')
       ->with($clearingProcessBundle, $jsonSchema)
       ->willReturn([
-        '#/properties/test' => new ClearableItems('#/properties', $propertySchema, $costItemSchema, [$costItem]),
+        '#/properties/test' => new ClearableItems(
+          '#/properties', $propertySchema, $costItemSchema, $costItemType, [$costItem]
+        ),
       ]);
 
     $this->clearingGroupExtractorMock->method('extractGroups')
@@ -384,8 +387,8 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
     $costItemSchema = new JsonSchemaCostItem([
       'type' => $costItem->getType(),
       'identifier' => 'test-cost-item',
-      'clearing' => ['itemLabel' => 'TestItemLabel'],
     ]);
+    $costItemType = new CostItemType(['name' => $costItem->getType(), 'label' => 'TestItemLabel', 'clearable' => TRUE]);
     $propertySchema = new JsonSchemaNumber(['$costItem' => $costItemSchema]);
     $jsonSchema = new JsonSchemaObject(['test' => $propertySchema]);
     $uiSchema = new JsonFormsGroup('Test', []);
@@ -394,7 +397,9 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
     $this->clearableItemsLoaderMock->method('getClearableItems')
       ->with($clearingProcessBundle, $jsonSchema)
       ->willReturn([
-        '#/properties/test' => new ClearableItems('#/properties', $propertySchema, $costItemSchema, [$costItem]),
+        '#/properties/test' => new ClearableItems(
+          '#/properties', $propertySchema, $costItemSchema, $costItemType, [$costItem]
+        ),
       ]);
 
     $this->clearingGroupExtractorMock->method('extractGroups')
@@ -693,8 +698,8 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
       'type' => $costItem->getType(),
       'identifierProperty' => 'theIdentifier',
       'amountProperty' => 'theAmount',
-      'clearing' => ['itemLabel' => 'TestItemLabel'],
     ]);
+    $costItemType = new CostItemType(['name' => $costItem->getType(), 'label' => 'TestItemLabel', 'clearable' => TRUE]);
     $propertySchema = new JsonSchemaArray(new JsonSchemaObject([
       'theIdentifier' => new JsonSchemaString(),
       'theAmount' => new JsonSchemaNumber(),
@@ -707,7 +712,9 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
     $this->clearableItemsLoaderMock->method('getClearableItems')
       ->with($clearingProcessBundle, $jsonSchema)
       ->willReturn([
-        '#/properties/test' => new ClearableItems('#/properties', $propertySchema, $costItemsSchema, [$costItem]),
+        '#/properties/test' => new ClearableItems(
+          '#/properties', $propertySchema, $costItemsSchema, $costItemType, [$costItem]
+        ),
       ]);
 
     $this->clearingGroupExtractorMock->method('extractGroups')
@@ -863,7 +870,12 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                     [
                       'type' => 'Markup',
                       'contentMediaType' => 'text/html',
-                      'content' => 'TestItemLabel',
+                      'content' => [
+                        'text' => 'TestItemLabel {@pos}',
+                        'values' => [
+                          '@pos' => 1,
+                        ],
+                      ],
                     ],
                     [
                       'type' => 'Markup',

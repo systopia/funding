@@ -60,7 +60,6 @@ final class ApplicationCostItemsPersistHandlerTest extends TestCase {
         'properties' => ['x' => 1.23, 'y' => 'z'],
         'dataPointer' => '/foo',
         'dataType' => 'object',
-        'clearing' => NULL,
       ]),
     ];
     $costItems = [
