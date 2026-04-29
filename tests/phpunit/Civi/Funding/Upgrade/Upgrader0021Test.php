@@ -21,14 +21,16 @@ declare(strict_types = 1);
 namespace Civi\Funding\Upgrade;
 
 use Civi\Api4\FundingClearingProcess;
+use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Fixtures\ClearingProcessBundleFixture;
 use Civi\Funding\FundingCaseTypes\AuL\SonstigeAktivitaet\AVK1Constants;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Civi\Funding\Upgrade\Upgrader0021
+ *
+ * @group headless
  */
-final class Upgrader0021Test extends TestCase {
+final class Upgrader0021Test extends AbstractFundingHeadlessTestCase {
 
   public function testExecute(): void {
     $clearingProcessBundle = ClearingProcessBundleFixture::create(
