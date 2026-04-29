@@ -105,16 +105,14 @@ final class IJBTeilnehmerJsonSchema extends JsonSchemaObject {
       = array_merge($this['properties']['deutschland']['required'], $requiredIntegers, ['mitFahrtkosten']);
     // @phpstan-ignore offsetAccess.nonOffsetAccessible
     $this['properties']['partnerland']['required']
-    // @phpstan-ignore argument.type, offsetAccess.nonOffsetAccessible
+    // @phpstan-ignore offsetAccess.notFound, argument.type, offsetAccess.nonOffsetAccessible
       = array_merge($this['properties']['partnerland']['required'], $requiredIntegers);
 
     foreach ($requiredIntegers as $property) {
-      // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible
       $this['properties']['deutschland']['properties'][$property]['type'] = 'integer';
       // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible
       $this['properties']['partnerland']['properties'][$property]['type'] = 'integer';
     }
-    // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible
     $this['properties']['deutschland']['properties']['mitFahrtkosten']['type'] = 'integer';
   }
 
