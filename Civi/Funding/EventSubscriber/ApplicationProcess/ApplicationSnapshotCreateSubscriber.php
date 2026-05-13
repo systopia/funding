@@ -88,10 +88,10 @@ class ApplicationSnapshotCreateSubscriber implements EventSubscriberInterface {
       ->getApplicationProcessStatus($applicationProcess->getStatus());
 
     return ($status?->isSnapshotRequired() ?? TRUE) && NULL === $applicationProcess->getRestoredSnapshot() && (
-      $applicationProcess->getStatus() !== $previousApplicationProcess->getStatus()
-      // @phpstan-ignore notEqual.notAllowed
-      || $applicationProcess->getRequestData() != $previousApplicationProcess->getRequestData()
-    );
+        $applicationProcess->getStatus() !== $previousApplicationProcess->getStatus()
+        // @phpstan-ignore notEqual.notAllowed
+        || $applicationProcess->getRequestData() != $previousApplicationProcess->getRequestData()
+      );
   }
 
   public function onSnapshotCreated(ApplicationSnapshotCreatedEvent $event): void {
@@ -102,9 +102,9 @@ class ApplicationSnapshotCreateSubscriber implements EventSubscriberInterface {
       'activity_type_id' => ActivityTypeIds::FUNDING_APPLICATION_SNAPSHOT_CREATION,
       'subject' => E::ts('Funding Application Snapshot Created'),
       'details' => E::ts('Application: %1 (%2)', [
-          1 => $applicationProcess->getTitle(),
-          2 => $applicationProcess->getIdentifier(),
-        ]),
+        1 => $applicationProcess->getTitle(),
+        2 => $applicationProcess->getIdentifier(),
+      ]),
       'funding_application_snapshot_creation.snapshot_id' => $applicationSnapshot->getId(),
     ]);
 
