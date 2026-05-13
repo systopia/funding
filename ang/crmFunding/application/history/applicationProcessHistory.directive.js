@@ -46,6 +46,7 @@ fundingModule.directive('fundingApplicationProcessHistory', [function() {
           case 'funding_application_status_change':
           case 'funding_application_review_status_change':
           case 'funding_application_create':
+          case 'funding_application_snapshot_creation':
           case 'funding_clearing_status_change':
           case 'funding_clearing_review_status_change':
           case 'funding_clearing_create':
@@ -68,15 +69,14 @@ fundingModule.directive('fundingApplicationProcessHistory', [function() {
         if (!activity || activity['activity_type_id:name'] !== 'funding_application_status_change') {
           return false;
         }
-        const applicableStatuses = ['rework-review-requested', 'review']; //TODO
-        if (!applicableStatuses.includes(activity.to_status)) {
+
+        if (!activity || activity['activity_type_id:name'] !== 'funding_application_snapshot_creation') {
           return false;
         }
 
         // Find the "first" activity in the list (newest) that matches the criteria
         const target = $scope.activities.find(a =>
-          a['activity_type_id:name'] === 'funding_application_status_change' &&
-          applicableStatuses.includes(a.to_status)
+          a['activity_type_id:name'] === 'funding_application_snapshot_creation'
         );
 
         return target && target.id === activity.id;

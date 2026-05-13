@@ -22,160 +22,40 @@ fundingModule.factory('fundingApplicationSnapshotService', [
   '$compile',
   '$rootScope',
   '$sce',
-  function (crmApi4, fundingApplicationProcessService, $compile, $rootScope, $sce) {
+  'fundingApplicationDiffService',
+  function (crmApi4, fundingApplicationProcessService, $compile, $rootScope, $sce, fundingApplicationDiffService) {
     const ts = CRM.ts('funding');
-
-    /**
-     * Escapes HTML special characters in a string.
-     *
-     * @param unsafe
-     * @returns {string}
-     */
-    const escapeHtml = (unsafe) => {
-      return (unsafe || '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-    };
-
-    /**
-     * Formats a single line of the diff.
-     *
-     * @param {string} line
-     * @param {string} className
-     * @returns {string}
-     */
-    const formatLineHtml = (line, className) => {
-      return `<div class="${className}">${escapeHtml(line) || '&nbsp;'}</div>`;
-    };
-
-    /**
-     * Formats the diff lines between snapshot and current JSON.
-     *
-     * @param snapshotJSON
-     * @param currentJSON
-     * @returns {Object}
-     */
-    const formatDiffLines = (snapshotJSON, currentJSON) => {
-      const snapshotLines = snapshotJSON.split('\n');
-      const currentLines = currentJSON.split('\n');
-      const maxLines = Math.max(snapshotLines.length, currentLines.length);
-      let snapshotResult = '', currentResult = '';
-
-      for (let i = 0; i < maxLines; i++) {
-        const snapshotLine = snapshotLines[i] || '';
-        const currentLine = currentLines[i] || '';
-        const isDiff = snapshotLine !== currentLine;
-        const snapshotClass = isDiff ? 'funding-diff-line-removed' : '';
-        const currentClass = isDiff ? 'funding-diff-line-added' : '';
-
-        if (i < snapshotLines.length) {
-          snapshotResult += formatLineHtml(snapshotLine, snapshotClass);
-        }
-        if (i < currentLines.length) {
-          currentResult += formatLineHtml(currentLine, currentClass);
-        }
-      }
-      return {
-        snapshotResult: snapshotResult,
-        currentResult: currentResult,
-      };
-    };
-
-    /**
-     * Normalizes the value for comparison in diff.
-     *
-     * @param val
-     * @returns {*}
-     */
-    const normalizeValue = (val) => {
-      if (val === null || val === undefined || val === '' || (typeof val === 'string' && val.trim() === '')) {
-        return '';
-      }
-      if (typeof val === 'string') {
-        return val.trim();
-      }
-      if (typeof val !== 'object') {
-        return val;
-      }
-      if (Array.isArray(val)) {
-        // recursively normalize array elements
-        const normalizedArray = val.map(normalizeValue).filter(v => v !== '');
-        if (normalizedArray.length === 0) {
-          return '';
-        }
-        if (normalizedArray.every(v => typeof v !== 'object')) {
-          normalizedArray.sort();
-        }
-        return normalizedArray;
-      }
-      const sortedObj = {};
-      const keys = Object.keys(val).sort();
-      let hasVisibleProps = false;
-      keys.forEach(k => {
-        if (k.startsWith('_')) {
-          return;
-        }
-        if (k === 'id' || k === 'identifier') {
-          return;
-        }
-        const v = normalizeValue(val[k]);
-        if (v !== '') {
-          sortedObj[k] = v;
-          hasVisibleProps = true;
-        }
-      });
-      return hasVisibleProps ? sortedObj : '';
-    };
 
     /**
      * Prepares combined data for snapshot comparison.
      *
      * @param requestData
-     * @param costItems
      * @returns {Object}
      */
-    const prepareCombinedData = (requestData, costItems) => {
+    const prepareCombinedData = (requestData) => {
       const data = {};
       Object.keys(requestData || {}).forEach(key => {
         data[key] = requestData[key];
-      });
-      (costItems || []).forEach(item => {
-        data[item.type] = item;
       });
       return data;
     };
 
     /**
-     * Calculates changes between snapshot and current data.
+     * Calculates changes between snapshot and current data as a single JSON diff.
      *
      * @param snapshotData
      * @param currentData
-     * @returns {Array}
+     * @returns {Object}
      */
     const calculateChanges = (snapshotData, currentData) => {
-      const allKeys = new Set([...Object.keys(snapshotData), ...Object.keys(currentData)]);
-      const sortedKeys = Array.from(allKeys)
-        .filter(key => !key.startsWith('_'))
-        .sort();
-
-      const changes = [];
-      sortedKeys.forEach(key => {
-        const snapshotJSON = JSON.stringify(normalizeValue(snapshotData[key]), null, 2);
-        const currentJSON = JSON.stringify(normalizeValue(currentData[key]), null, 2);
-
-        if (snapshotJSON !== currentJSON) {
-          const { snapshotResult, currentResult } = formatDiffLines(snapshotJSON, currentJSON);
-          changes.push({
-            key: key,
-            snapshotDiff: $sce.trustAsHtml(snapshotResult),
-            currentDiff: $sce.trustAsHtml(currentResult),
-          });
-        }
-      });
-      return changes;
+      const snapshotJSON = JSON.stringify(fundingApplicationDiffService.normalizeValue(snapshotData), null, 2);
+      const currentJSON = JSON.stringify(fundingApplicationDiffService.normalizeValue(currentData), null, 2);
+      const { snapshotResult, currentResult } = fundingApplicationDiffService.formatDiffLines(snapshotJSON, currentJSON);
+      return {
+        snapshotDiff: $sce.trustAsHtml(snapshotResult),
+        currentDiff: $sce.trustAsHtml(currentResult),
+        hasDifferences: snapshotJSON !== currentJSON,
+      };
     };
 
     /**
@@ -187,22 +67,22 @@ fundingModule.factory('fundingApplicationSnapshotService', [
     function openDiffDialog(applicationProcessId, snapshotId) {
       const snapshotPromise = crmApi4('FundingApplicationSnapshot', 'get', {
         where: [['id', '=', snapshotId]],
-        select: ['request_data', 'cost_items', 'creation_date'],
+        select: ['request_data', 'creation_date'],
       }).then(result => result[0]);
 
       const currentPromise = fundingApplicationProcessService.getFormData(applicationProcessId);
-      const currentCostsPromise = crmApi4('FundingApplicationCostItem', 'get', {
-        where: [['application_process_id', '=', applicationProcessId]],
-      });
 
-      return Promise.all([snapshotPromise, currentPromise, currentCostsPromise])
+      return Promise.all([snapshotPromise, currentPromise])
         // destructuring the result
-        .then(([applicationSnapshot, currentApplication, currentCosts]) => {
-          const snapshotData = prepareCombinedData(applicationSnapshot.request_data, applicationSnapshot.cost_items);
-          const currentData = prepareCombinedData(currentApplication, currentCosts);
+        .then(([applicationSnapshot, currentApplication]) => {
+          const snapshotData = prepareCombinedData(applicationSnapshot.request_data);
+          const currentData = prepareCombinedData(currentApplication);
 
           const scope = $rootScope.$new();
-          scope.changes = calculateChanges(snapshotData, currentData); //ng-repeat
+          scope.snapshotData = snapshotData;
+          scope.currentData = currentData;
+          const diffResult = calculateChanges(snapshotData, currentData);
+          scope.hasDifferences = diffResult.hasDifferences;
           scope.snapshot = applicationSnapshot;
           scope.ts = ts;
 
@@ -229,6 +109,7 @@ fundingModule.factory('fundingApplicationSnapshotService', [
 
     return {
       openDiffDialog: openDiffDialog,
+      calculateChanges: calculateChanges,
     };
   },
 ]);

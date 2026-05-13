@@ -33,6 +33,8 @@ final class ActivityTypeIds {
 
   public const FUNDING_APPLICATION_RESTORE = 63785207;
 
+  public const FUNDING_APPLICATION_SNAPSHOT_CREATION = 63785230;
+
   /**
    * @phpstan-return array<string, int>
    *

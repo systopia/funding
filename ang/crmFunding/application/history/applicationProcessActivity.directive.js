@@ -54,6 +54,8 @@ fundingModule.directive('fundingApplicationProcessActivity', ['crmApi4', 'fundin
             console.error('Snapshot fetch error:', error);
           });
         }
+      } else if ($scope.activity['activity_type_id:name'] === 'funding_application_snapshot_creation') {
+        $scope.snapshotId = $scope.activity['funding_application_snapshot_creation.snapshot_id'];
       } else if ($scope.activity['activity_type_id:name'] === 'funding_application_create') {
         $scope.statusOption = $scope.statusOptions['new'];
       } else if ($scope.activity['activity_type_id:name'] === 'funding_clearing_status_change') {
@@ -70,6 +72,8 @@ fundingModule.directive('fundingApplicationProcessActivity', ['crmApi4', 'fundin
         switch (activity['activity_type_id:name']) {
           case 'funding_application_status_change':
             return '~/crmFunding/application/history/activities/statusChange.template.html';
+          case 'funding_application_snapshot_creation':
+            return '~/crmFunding/application/history/activities/snapshotCreation.template.html';
           case 'funding_application_create':
             return '~/crmFunding/application/history/activities/create.template.html';
           case 'funding_application_comment_external':

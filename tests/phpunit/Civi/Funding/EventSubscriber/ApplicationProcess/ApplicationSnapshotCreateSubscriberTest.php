@@ -19,18 +19,23 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\ApplicationProcess;
 
+use Civi\Funding\ActivityTypeIds;
+use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationSnapshotCreateCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandlerInterface;
+use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\ApplicationSnapshotFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
+use Civi\Funding\Event\ApplicationProcess\ApplicationSnapshotCreatedEvent;
 use Civi\Funding\FundingCaseType\MetaData\ApplicationProcessStatus;
 use Civi\Funding\FundingCaseType\MetaData\DefaultApplicationProcessStatuses;
 use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataMock;
 use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataProviderMock;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -39,27 +44,43 @@ use PHPUnit\Framework\TestCase;
  */
 final class ApplicationSnapshotCreateSubscriberTest extends TestCase {
 
+  private const CONTACT_ID = 123;
+
+  private const SNAPSHOT_ID = 456;
+
+  private const APPLICATION_PROCESS_ID = 'APP-789';
+
   private FundingCaseTypeMetaDataMock $metaDataMock;
 
   private ApplicationSnapshotCreateSubscriber $subscriber;
 
   private ApplicationSnapshotCreateHandlerInterface&MockObject $snapshotCreateHandlerMock;
 
+  private ApplicationProcessActivityManager&MockObject $activityManagerMock;
+
+  private RequestContextInterface&MockObject $requestContextMock;
+
   protected function setUp(): void {
     parent::setUp();
     $this->metaDataMock = new FundingCaseTypeMetaDataMock(FundingCaseTypeFactory::DEFAULT_NAME);
     $this->snapshotCreateHandlerMock = $this->createMock(ApplicationSnapshotCreateHandlerInterface::class);
+    $this->activityManagerMock = $this->createMock(ApplicationProcessActivityManager::class);
+    $this->requestContextMock = $this->createMock(RequestContextInterface::class);
     $this->subscriber = new ApplicationSnapshotCreateSubscriber(
       new FundingCaseTypeMetaDataProviderMock($this->metaDataMock),
       $this->snapshotCreateHandlerMock,
+      $this->activityManagerMock,
+      $this->requestContextMock
     );
 
     $this->metaDataMock->addApplicationProcessStatus(DefaultApplicationProcessStatuses::eligible());
+    $this->requestContextMock->method('getContactId')->willReturn(self::CONTACT_ID);
   }
 
   public function testGetSubscribedEvents(): void {
     $expectedSubscriptions = [
       ApplicationProcessPreUpdateEvent::class => ['onPreUpdate', PHP_INT_MIN],
+      ApplicationSnapshotCreatedEvent::class => ['onSnapshotCreated'],
     ];
 
     static::assertEquals($expectedSubscriptions, $this->subscriber::getSubscribedEvents());
@@ -142,6 +163,36 @@ final class ApplicationSnapshotCreateSubscriberTest extends TestCase {
     $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle($currentValues);
 
     return new ApplicationProcessPreUpdateEvent($previousApplicationProcess, $applicationProcessBundle);
+  }
+
+  public function testOnSnapshotCreated(): void {
+    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+      'title' => 'Test Application',
+      'identifier' => self::APPLICATION_PROCESS_ID,
+    ]);
+    $applicationSnapshot = ApplicationSnapshotFactory::createApplicationSnapshot(['id' => self::SNAPSHOT_ID]);
+
+    $event = new ApplicationSnapshotCreatedEvent($applicationSnapshot, $applicationProcessBundle);
+
+    $this->activityManagerMock->expects(static::once())->method('addActivity')
+      ->with(
+        self::CONTACT_ID,
+        $event->getApplicationProcess(),
+        static::callback(static function(ActivityEntity $activity): bool {
+          static::assertSame(
+            ActivityTypeIds::FUNDING_APPLICATION_SNAPSHOT_CREATION,
+            $activity->get('activity_type_id')
+          );
+          static::assertSame(
+            self::SNAPSHOT_ID,
+            $activity->get('funding_application_snapshot_creation.snapshot_id')
+          );
+          static::assertStringContainsString('Test Application', (string) $activity->getDetails());
+          static::assertStringContainsString(self::APPLICATION_PROCESS_ID, (string) $activity->getDetails());
+          return TRUE;
+        }));
+
+    $this->subscriber->onSnapshotCreated($event);
   }
 
 }

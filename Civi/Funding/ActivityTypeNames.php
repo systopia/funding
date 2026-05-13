@@ -42,6 +42,8 @@ final class ActivityTypeNames {
 
   public const FUNDING_APPLICATION_RESTORE = 'funding_application_restore';
 
+  public const FUNDING_APPLICATION_SNAPSHOT_CREATION = 'funding_application_snapshot_creation';
+
   public const FUNDING_CASE_TASK = 'funding_case_task';
 
   public const FUNDING_CLEARING_CREATE = 'funding_clearing_create';
