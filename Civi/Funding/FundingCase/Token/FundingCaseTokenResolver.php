@@ -24,6 +24,8 @@ use Civi\Funding\Api4\Util\ContactUtil;
 use Civi\Funding\DocumentRender\Token\ResolvedToken;
 use Civi\Funding\DocumentRender\Token\TokenResolverInterface;
 use Civi\Funding\Entity\AbstractEntity;
+use Civi\Funding\PayoutProcess\BankAccount;
+use Civi\Funding\PayoutProcess\BankAccountManager;
 use Civi\RemoteTools\Api4\Api4Interface;
 
 /**
@@ -32,6 +34,14 @@ use Civi\RemoteTools\Api4\Api4Interface;
 class FundingCaseTokenResolver implements TokenResolverInterface {
 
   private Api4Interface $api4;
+
+  private BankAccountManager $bankAccountManager;
+
+  /**
+   * @var array<int, BankAccount|null>
+   *  Mapping of contact ID to BankAccount.
+   */
+  private array $bankAccounts = [];
 
   /**
    * @phpstan-var TokenResolverInterface<\Civi\Funding\Entity\FundingCaseEntity>
@@ -43,9 +53,11 @@ class FundingCaseTokenResolver implements TokenResolverInterface {
    */
   public function __construct(
     Api4Interface $api4,
+    BankAccountManager $bankAccountManager,
     TokenResolverInterface $tokenResolver
   ) {
     $this->api4 = $api4;
+    $this->bankAccountManager = $bankAccountManager;
     $this->tokenResolver = $tokenResolver;
   }
 
@@ -55,11 +67,18 @@ class FundingCaseTokenResolver implements TokenResolverInterface {
    * @throws \CRM_Core_Exception
    */
   public function resolveToken(string $entityName, AbstractEntity $entity, string $tokenName): ResolvedToken {
-    if ($tokenName === 'creation_contact_display_name') {
-      return new ResolvedToken($this->getContactDisplayName($entity->getCreationContactId()), 'text/plain');
-    }
-
-    return $this->tokenResolver->resolveToken($entityName, $entity, $tokenName);
+    return match ($tokenName) {
+      'creation_contact_display_name' => new ResolvedToken(
+        $this->getContactDisplayName($entity->getCreationContactId()), 'text/plain'
+      ),
+      'recipient_bank_account_reference' => new ResolvedToken(
+        $this->getBankAccount($entity->getRecipientContactId())?->getReference() ?? '', 'text/plain'
+      ),
+      'recipient_bic' => new ResolvedToken(
+        $this->getBankAccount($entity->getRecipientContactId())?->getBic() ?? '', 'text/plain'
+      ),
+      default => $this->tokenResolver->resolveToken($entityName, $entity, $tokenName)
+    };
   }
 
   /**
@@ -73,6 +92,10 @@ class FundingCaseTokenResolver implements TokenResolverInterface {
     ])->single();
 
     return ContactUtil::getDisplayName($contact);
+  }
+
+  private function getBankAccount(int $contactId): ?BankAccount {
+    return $this->bankAccounts[$contactId] ??= $this->bankAccountManager->getBankAccountByContactId($contactId);
   }
 
 }

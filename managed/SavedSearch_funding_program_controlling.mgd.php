@@ -29,16 +29,12 @@ return [
           ],
           'orderBy' => [],
           'where' => [],
-          'groupBy' => [
-            'id',
-          ],
+          'groupBy' => ['id'],
           'join' => [],
           'having' => [],
         ],
       ],
-      'match' => [
-        'name',
-      ],
+      'match' => ['name'],
     ],
   ],
   [
@@ -55,7 +51,9 @@ return [
         'type' => 'table',
         'settings' => [
           'description' => NULL,
-          'sort' => [],
+          'sort' => [
+            ['end_date', 'DESC'],
+          ],
           'limit' => 50,
           'pager' => [],
           'placeholder' => 5,
@@ -124,14 +122,10 @@ return [
               'sortable' => TRUE,
             ],
           ],
-          'actions' => [
-            'download',
-          ],
-          'classes' => [
-            'table',
-            'table-striped',
-          ],
+          'actions' => ['download'],
+          'classes' => ['table', 'table-striped'],
           'actions_display_mode' => 'menu',
+          'columnMode' => 'custom',
         ],
       ],
       'match' => [

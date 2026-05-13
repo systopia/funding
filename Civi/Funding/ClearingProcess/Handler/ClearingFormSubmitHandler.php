@@ -32,6 +32,7 @@ use Civi\Funding\ClearingProcess\Handler\Helper\ClearingCostItemsFormDataPersist
 use Civi\Funding\ClearingProcess\Handler\Helper\ClearingResourcesItemsFormDataPersister;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\ExternalFile\TaggedExternalFilePersister;
+use Webmozart\Assert\Assert;
 
 /**
  * @phpstan-import-type clearingFormDataT from \Civi\Funding\ClearingProcess\Form\ClearingFormGenerator
@@ -118,6 +119,19 @@ final class ClearingFormSubmitHandler implements ClearingFormSubmitHandlerInterf
         /** @phpstan-var clearingFormDataT $data */
 
         $clearingProcess->setReportData($data['reportData'] ?? []);
+
+        $mappedData = $validationResult->getMappedData();
+        if (isset($mappedData['start_date'])) {
+          Assert::string($mappedData['start_date']);
+          $clearingProcess->setStartDate(new \DateTime($mappedData['start_date']));
+        }
+        if (isset($mappedData['end_date'])) {
+          Assert::string($mappedData['end_date']);
+          $clearingProcess->setEndDate(new \DateTime($mappedData['end_date']));
+        }
+        // Map custom fields.
+        // @phpstan-ignore argument.type
+        $clearingProcess->setValues($clearingProcess->toArray() + $validationResult->getMappedData());
       }
     }
 

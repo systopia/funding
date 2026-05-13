@@ -26,7 +26,7 @@ final class ApplicationProcessBundleFixture {
   /**
    * @phpstan-param array<string, mixed> $applicationProcessValues
    * @phpstan-param array<string, mixed> $fundingCaseValues
-   * @phpstan-param array<string, scalar> $fundingCaseTypeValues
+   * @phpstan-param array<string, mixed> $fundingCaseTypeValues
    * @phpstan-param array<string, scalar|null> $fundingProgramValues
    *
    * @throws \CRM_Core_Exception

@@ -1,31 +1,37 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
+			message: '#^Call to deprecated method withConsecutive\(\) of class PHPUnit\\Framework\\MockObject\\Builder\\InvocationMocker\.$#'
+			identifier: method.deprecated
 			count: 1
 			path: tests/phpunit/Civi/Funding/Api4/Action/FundingCaseTypeProgram/GetRelationActionTest.php
 
 		-
-			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
+			message: '#^Call to deprecated method withConsecutive\(\) of class PHPUnit\\Framework\\MockObject\\Builder\\InvocationMocker\.$#'
+			identifier: method.deprecated
 			count: 2
 			path: tests/phpunit/Civi/Funding/ApplicationProcess/ApplicationProcessManagerTest.php
 
 		-
-			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
+			message: '#^Call to deprecated method withConsecutive\(\) of class PHPUnit\\Framework\\MockObject\\Builder\\InvocationMocker\.$#'
+			identifier: method.deprecated
 			count: 1
 			path: tests/phpunit/Civi/Funding/Contact/RecipientsLoader/DefaultPossibleRecipientsLoaderTest.php
 
 		-
-			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
+			message: '#^Call to deprecated method withConsecutive\(\) of class PHPUnit\\Framework\\MockObject\\Builder\\InvocationMocker\.$#'
+			identifier: method.deprecated
 			count: 1
 			path: tests/phpunit/Civi/Funding/DocumentRender/Token/TokenResolverTest.php
 
 		-
-			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
+			message: '#^Call to deprecated method withConsecutive\(\) of class PHPUnit\\Framework\\MockObject\\Builder\\InvocationMocker\.$#'
+			identifier: method.deprecated
 			count: 1
 			path: tests/phpunit/Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriberTest.php
 
 		-
-			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
+			message: '#^Call to deprecated method withConsecutive\(\) of class PHPUnit\\Framework\\MockObject\\Builder\\InvocationMocker\.$#'
+			identifier: method.deprecated
 			count: 1
 			path: tests/phpunit/Civi/Funding/Permission/FundingCase/ContactsWithPermissionLoaderTest.php

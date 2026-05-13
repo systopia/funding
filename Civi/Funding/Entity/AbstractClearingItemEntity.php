@@ -56,7 +56,6 @@ abstract class AbstractClearingItemEntity extends AbstractEntity {
    * @return static
    */
   public function setStatus(string $status): self {
-    // @phpstan-ignore assign.propertyType
     $this->values['status'] = $status;
 
     return $this;
@@ -71,7 +70,6 @@ abstract class AbstractClearingItemEntity extends AbstractEntity {
    * @return static
    */
   public function setFileId(?int $fileId): self {
-    // @phpstan-ignore assign.propertyType
     $this->values['file_id'] = $fileId;
 
     return $this;
@@ -86,7 +84,6 @@ abstract class AbstractClearingItemEntity extends AbstractEntity {
    * @return static
    */
   public function setReceiptNumber(?string $receiptNumber): self {
-    // @phpstan-ignore assign.propertyType
     $this->values['receipt_number'] = $receiptNumber;
 
     return $this;
@@ -101,7 +98,6 @@ abstract class AbstractClearingItemEntity extends AbstractEntity {
    * @return static
    */
   public function setReceiptDate(?\DateTimeInterface $receiptDate): self {
-    // @phpstan-ignore assign.propertyType
     $this->values['receipt_date'] = self::toDateStrOrNull($receiptDate);
 
     return $this;
@@ -116,7 +112,6 @@ abstract class AbstractClearingItemEntity extends AbstractEntity {
    * @return static
    */
   public function setPaymentDate(?\DateTimeInterface $paymentDate): self {
-    // @phpstan-ignore assign.propertyType
     $this->values['payment_date'] = self::toDateStrOrNull($paymentDate);
 
     return $this;
@@ -131,7 +126,6 @@ abstract class AbstractClearingItemEntity extends AbstractEntity {
    * @return static
    */
   public function setPaymentParty(?string $paymentParty): self {
-    // @phpstan-ignore assign.propertyType
     $this->values['payment_party'] = $paymentParty;
 
     return $this;
@@ -146,7 +140,6 @@ abstract class AbstractClearingItemEntity extends AbstractEntity {
    * @return static
    */
   public function setReason(?string $reason): self {
-    // @phpstan-ignore assign.propertyType
     $this->values['reason'] = $reason;
 
     return $this;
@@ -161,7 +154,6 @@ abstract class AbstractClearingItemEntity extends AbstractEntity {
    * @return static
    */
   public function setAmount(float $amount): self {
-    // @phpstan-ignore assign.propertyType
     $this->values['amount'] = $amount;
 
     return $this;
@@ -176,7 +168,6 @@ abstract class AbstractClearingItemEntity extends AbstractEntity {
    * @return static
    */
   public function setAmountAdmitted(?float $amountAdmitted): self {
-    // @phpstan-ignore assign.propertyType
     $this->values['amount_admitted'] = $amountAdmitted;
 
     return $this;
@@ -194,7 +185,6 @@ abstract class AbstractClearingItemEntity extends AbstractEntity {
    * @phpstan-param array<string, mixed>|null $properties
    */
   public function setProperties(?array $properties): static {
-    // @phpstan-ignore assign.propertyType
     $this->values['properties'] = $properties;
 
     return $this;
@@ -206,7 +196,6 @@ abstract class AbstractClearingItemEntity extends AbstractEntity {
   }
 
   public function setFormKey(string $formKey): static {
-    // @phpstan-ignore assign.propertyType
     $this->values['form_key'] = $formKey;
 
     return $this;

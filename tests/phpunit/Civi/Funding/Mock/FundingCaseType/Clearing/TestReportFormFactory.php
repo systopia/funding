@@ -29,6 +29,7 @@ use Civi\Funding\Mock\FundingCaseType\Traits\TestSupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
 use Civi\RemoteTools\JsonForms\JsonFormsMarkup;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 
@@ -54,6 +55,10 @@ final class TestReportFormFactory implements ReportFormFactoryInterface {
         'file' => new JsonSchemaString([
           'format' => 'uri',
           '$tag' => 'externalFile',
+        ]),
+        'date_of_begin' => new JsonSchemaString([
+          'format' => 'date-time',
+          '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'start_date']]),
         ]),
       ]),
     ]);

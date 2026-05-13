@@ -77,6 +77,13 @@ final class GetFormActionTest extends AbstractFundingHeadlessTestCase {
           'format' => 'uri',
           '$tag' => 'externalFile',
         ],
+        'date_of_begin' => [
+          'type' => 'string',
+          'format' => 'date-time',
+          '$tag' => [
+            'mapToField' => ['fieldName' => 'start_date'],
+          ],
+        ],
       ],
     ], $result['jsonSchema']['properties']['reportData']);
 

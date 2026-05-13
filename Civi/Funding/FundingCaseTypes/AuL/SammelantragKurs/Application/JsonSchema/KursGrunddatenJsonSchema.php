@@ -168,7 +168,6 @@ EOD,
       = array_merge($this['properties']['teilnehmer']['required'], $requiredTeilnehmerIntegers);
 
     foreach ($requiredTeilnehmerIntegers as $property) {
-      // @phpstan-ignore-next-line
       $this['properties']['teilnehmer']['properties'][$property]['type'] = 'integer';
     }
   }
