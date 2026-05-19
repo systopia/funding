@@ -47,6 +47,11 @@ namespace Civi\Funding\Entity;
  */
 final class ExternalFileEntity extends AbstractEntity {
 
+  public function __construct(array $values) {
+    unset($values['file_is_public']);
+    parent::__construct($values);
+  }
+
   /**
    * @return int ID of referenced File entity.
    */
