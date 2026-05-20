@@ -130,6 +130,7 @@ EOD,
 
   /**
    * In report all fields are required.
+   * @phpstan-ignore-next-line
    */
   private function addReportValidations(): void {
     $required = [];
