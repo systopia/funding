@@ -65,14 +65,21 @@ final class FundingExternalFileManagerTest extends AbstractFundingHeadlessTestCa
       'entityId' => $fundingProgram->getId(),
     ], $externalFile1->getCustomData());
 
-    static::assertEquals(
-      $externalFile1,
-      $this->externalFileManager->getFile(
-        'identifier1',
-        FundingProgram::getEntityName(),
-        $fundingProgram->getId()
-      )
+    $file1 = $this->externalFileManager->getFile(
+      'identifier1',
+      FundingProgram::getEntityName(),
+      $fundingProgram->getId()
     );
+
+    /**
+     * Workaround for public/private files introduced in CiviCRM 6.14.0.
+     * https://github.com/civicrm/civicrm-core/pull/35031
+     * https://github.com/civicrm/civicrm-core/commit/dd2c238369a51504d74a8a6c337ef37e3e83ebbb
+     */
+    if (NULL !== $file1 && $file1->has('file_is_public')) {
+      $externalFile1->setValues($externalFile1->toArray() + ['file_is_public' => FALSE]);
+    }
+    static::assertEquals($externalFile1, $file1);
 
     static::assertNull(
       $this->externalFileManager->getFile(
@@ -142,6 +149,15 @@ final class FundingExternalFileManagerTest extends AbstractFundingHeadlessTestCa
       FundingProgram::getEntityName(),
       $fundingProgram->getId(),
     );
+
+    /**
+     * Workaround for public/private files introduced in CiviCRM 6.14.0.
+     * https://github.com/civicrm/civicrm-core/pull/35031
+     * https://github.com/civicrm/civicrm-core/commit/dd2c238369a51504d74a8a6c337ef37e3e83ebbb
+     */
+    if (NULL !== $file1 && $file1->has('file_is_public')) {
+      $externalFile2->setValues($externalFile2->toArray() + ['file_is_public' => FALSE]);
+    }
     static::assertEquals(
       [$externalFile1, $externalFile2],
       $this->externalFileManager->getFiles(

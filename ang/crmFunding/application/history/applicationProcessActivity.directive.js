@@ -16,7 +16,7 @@
 
 'use strict';
 
-fundingModule.directive('fundingApplicationProcessActivity', [function() {
+fundingModule.directive('fundingApplicationProcessActivity', ['crmApi4', 'fundingApplicationProcessService', 'fundingApplicationSnapshotService', function (crmApi4, fundingApplicationProcessService, fundingApplicationSnapshotService) {
   return {
     restrict: 'E',
     scope: {
@@ -24,6 +24,8 @@ fundingModule.directive('fundingApplicationProcessActivity', [function() {
       statusOptions: '=',
       clearingStatusOptions: '<',
       reviewStatusLabels: '=',
+      applicationProcessId: '=',
+      isSnapshotTarget: '<',
     },
     templateUrl: '~/crmFunding/application/history/applicationProcessActivity.template.html',
     controller: function($scope) {
@@ -35,6 +37,25 @@ fundingModule.directive('fundingApplicationProcessActivity', [function() {
           name: 'unknown',
           label: ts('Unknown'),
         };
+        if ($scope.isSnapshotTarget) {
+          crmApi4('FundingApplicationSnapshot', 'get', {
+            where: [
+              ['application_process_id', '=', $scope.applicationProcessId],
+              ['creation_date', '<=', $scope.activity.created_date],
+            ],
+            orderBy: { creation_date: 'DESC' },
+            limit: 1,
+            select: ['id'],
+          }).then(result => {
+            if (result.length) {
+              $scope.snapshotId = result[0].id;
+            }
+          }, error => {
+            console.error('Snapshot fetch error:', error);
+          });
+        }
+      } else if ($scope.activity['activity_type_id:name'] === 'funding_application_snapshot_creation') {
+        $scope.snapshotId = $scope.activity['funding_application_snapshot_creation.snapshot_id'];
       } else if ($scope.activity['activity_type_id:name'] === 'funding_application_create') {
         $scope.statusOption = $scope.statusOptions['new'];
       } else if ($scope.activity['activity_type_id:name'] === 'funding_clearing_status_change') {
@@ -51,6 +72,8 @@ fundingModule.directive('fundingApplicationProcessActivity', [function() {
         switch (activity['activity_type_id:name']) {
           case 'funding_application_status_change':
             return '~/crmFunding/application/history/activities/statusChange.template.html';
+          case 'funding_application_snapshot_creation':
+            return '~/crmFunding/application/history/activities/snapshotCreation.template.html';
           case 'funding_application_create':
             return '~/crmFunding/application/history/activities/create.template.html';
           case 'funding_application_comment_external':
@@ -70,6 +93,16 @@ fundingModule.directive('fundingApplicationProcessActivity', [function() {
       }
 
       $scope.templateUrl = getActivityTemplateUrl($scope.activity);
+
+      /**
+       * Opens the diff dialog for the snapshot.
+       */
+      $scope.openDiffDialog = function () {
+        if (!$scope.snapshotId) {
+          return;
+        }
+        fundingApplicationSnapshotService.openDiffDialog($scope.applicationProcessId, $scope.snapshotId);
+      };
     },
   };
 }]);

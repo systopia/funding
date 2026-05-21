@@ -30,9 +30,11 @@ use Civi\Funding\EntityFactory\ApplicationCostItemFactory;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ApplicationResourcesItemFactory;
 use Civi\Funding\EntityFactory\ExternalFileFactory;
+use Civi\Funding\Event\ApplicationProcess\ApplicationSnapshotCreatedEvent;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ClockMock;
+use Civi\Core\CiviEventDispatcherInterface;
 
 /**
  * @covers \Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandler
@@ -66,6 +68,11 @@ final class ApplicationSnapshotCreateHandlerTest extends TestCase {
    */
   private MockObject $resourcesItemManagerMock;
 
+  /**
+   * @var \Civi\Core\CiviEventDispatcherInterface&\PHPUnit\Framework\MockObject\MockObject
+   */
+  private MockObject $eventDispatcherMock;
+
   public static function setUpBeforeClass(): void {
     parent::setUpBeforeClass();
     ClockMock::register(__CLASS__);
@@ -80,12 +87,15 @@ final class ApplicationSnapshotCreateHandlerTest extends TestCase {
     $this->costItemManagerMock = $this->createMock(ApplicationCostItemManager::class);
     $this->externalFileManagerMock = $this->createMock(ApplicationExternalFileManagerInterface::class);
     $this->resourcesItemManagerMock = $this->createMock(ApplicationResourcesItemManager::class);
+    $this->eventDispatcherMock = $this->createMock(CiviEventDispatcherInterface::class);
+
     $this->handler = new ApplicationSnapshotCreateHandler(
       $this->applicationProcessManagerMock,
       $this->applicationSnapshotManagerMock,
       $this->costItemManagerMock,
       $this->externalFileManagerMock,
-      $this->resourcesItemManagerMock
+      $this->resourcesItemManagerMock,
+      $this->eventDispatcherMock
     );
   }
 
@@ -146,6 +156,16 @@ final class ApplicationSnapshotCreateHandlerTest extends TestCase {
       ->willReturn([$externalFile]);
     $this->externalFileManagerMock->expects(static::once())->method('attachFileToSnapshot')
       ->with($externalFile, 123);
+
+    $this->eventDispatcherMock->expects(static::once())->method('dispatch')
+      ->with(
+        ApplicationSnapshotCreatedEvent::class,
+        static::callback(function (ApplicationSnapshotCreatedEvent $event) use ($applicationProcess) {
+          static::assertSame($applicationProcess->getId(), $event->getApplicationProcess()->getId());
+          static::assertSame(123, $event->getApplicationSnapshot()->getId());
+          return TRUE;
+        })
+      );
 
     $this->handler->handle(new ApplicationSnapshotCreateCommand($applicationProcessBundle));
   }
