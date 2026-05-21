@@ -17,7 +17,6 @@ return [
       'values' => [
         'option_group_id.name' => 'activity_type',
         'label' => E::ts('Funding Application Snapshot Creation'),
-        'value' => ActivityTypeIds::FUNDING_APPLICATION_SNAPSHOT_CREATION,
         'name' => ActivityTypeNames::FUNDING_APPLICATION_SNAPSHOT_CREATION,
         'grouping' => 'funding',
         'filter' => 0,

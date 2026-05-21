@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\ApplicationProcess;
 
-use Civi\Funding\ActivityTypeIds;
+use Civi\Funding\ActivityTypeNames;
 use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationSnapshotCreateCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandlerInterface;
@@ -180,8 +180,8 @@ final class ApplicationSnapshotCreateSubscriberTest extends TestCase {
         $event->getApplicationProcess(),
         static::callback(static function(ActivityEntity $activity): bool {
           static::assertSame(
-            ActivityTypeIds::FUNDING_APPLICATION_SNAPSHOT_CREATION,
-            $activity->get('activity_type_id')
+            ActivityTypeNames::FUNDING_APPLICATION_SNAPSHOT_CREATION,
+            $activity->get('activity_type_id:name')
           );
           static::assertSame(
             self::SNAPSHOT_ID,

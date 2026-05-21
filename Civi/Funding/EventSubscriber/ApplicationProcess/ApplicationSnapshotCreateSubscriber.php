@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\ApplicationProcess;
 
-use Civi\Funding\ActivityTypeIds;
+use Civi\Funding\ActivityTypeNames;
 use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationSnapshotCreateCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandlerInterface;
@@ -88,10 +88,10 @@ class ApplicationSnapshotCreateSubscriber implements EventSubscriberInterface {
       ->getApplicationProcessStatus($applicationProcess->getStatus());
 
     return ($status?->isSnapshotRequired() ?? TRUE) && NULL === $applicationProcess->getRestoredSnapshot() && (
-      $applicationProcess->getStatus() !== $previousApplicationProcess->getStatus()
-      // @phpstan-ignore notEqual.notAllowed
-      || $applicationProcess->getRequestData() != $previousApplicationProcess->getRequestData()
-    );
+        $applicationProcess->getStatus() !== $previousApplicationProcess->getStatus()
+        // @phpstan-ignore notEqual.notAllowed
+        || $applicationProcess->getRequestData() != $previousApplicationProcess->getRequestData()
+      );
   }
 
   public function onSnapshotCreated(ApplicationSnapshotCreatedEvent $event): void {
@@ -99,7 +99,7 @@ class ApplicationSnapshotCreateSubscriber implements EventSubscriberInterface {
     $applicationSnapshot = $event->getApplicationSnapshot();
 
     $activity = ActivityEntity::fromArray([
-      'activity_type_id' => ActivityTypeIds::FUNDING_APPLICATION_SNAPSHOT_CREATION,
+      'activity_type_id:name' => ActivityTypeNames::FUNDING_APPLICATION_SNAPSHOT_CREATION,
       'subject' => E::ts('Funding Application Snapshot Created'),
       'details' => E::ts('Application: %1 (%2)', [
         1 => $applicationProcess->getTitle(),
