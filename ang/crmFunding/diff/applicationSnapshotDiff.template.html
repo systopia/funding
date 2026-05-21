@@ -1,6 +1,9 @@
 <dialog id="funding-diff-dialog" closedby="any">
   <div class="funding-diff-dialog-container">
     <div class="funding-diff-dialog-header">
+      <button type="button" class="close" aria-label="{{ ts('Close') }}" ng-click="close()">
+        <span aria-hidden="true">&times;</span>
+      </button>
       <h3>{{ ts('Funding Application Changes') }}</h3>
     </div>
     <div class="funding-diff-dialog-content">
