@@ -111,7 +111,7 @@ EOD,
 
     $required = array_filter(
       array_keys($properties),
-      static fn (string $key) => $key !== 'internerBezeichner',
+      static fn(string $key) => $key !== 'internerBezeichner',
     );
 
     parent::__construct($properties, [
@@ -130,7 +130,8 @@ EOD,
 
   /**
    * In report all fields are required.
-   * @phpstan-ignore-next-line
+   *
+   * @phpstan-ignore void.pure
    */
   private function addReportValidations(): void {
     $required = [];
