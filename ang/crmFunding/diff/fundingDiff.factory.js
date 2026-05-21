@@ -16,8 +16,9 @@
 
 'use strict';
 
-fundingModule.factory('fundingApplicationDiffService', [
-  function () {
+fundingModule.factory('fundingDiffService', [
+  '$sce',
+  function ($sce) {
     /**
      * Escapes HTML special characters in a string.
      *
@@ -181,9 +182,28 @@ fundingModule.factory('fundingApplicationDiffService', [
       return hasVisibleProps ? sortedObj : '';
     };
 
+    /**
+     * Calculates changes between two data sets as a single JSON diff.
+     *
+     * @param leftData
+     * @param rightData
+     * @returns {Object}
+     */
+    const calculateChanges = (leftData, rightData) => {
+      const leftJSON = JSON.stringify(normalizeValue(leftData), null, 2);
+      const rightJSON = JSON.stringify(normalizeValue(rightData), null, 2);
+      const { snapshotResult, currentResult } = formatDiffLines(leftJSON, rightJSON);
+      return {
+        leftDiff: $sce.trustAsHtml(snapshotResult),
+        rightDiff: $sce.trustAsHtml(currentResult),
+        hasDifferences: leftJSON !== rightJSON,
+      };
+    };
+
     return {
       normalizeValue: normalizeValue,
       formatDiffLines: formatDiffLines,
+      calculateChanges: calculateChanges,
     };
   },
 ]);

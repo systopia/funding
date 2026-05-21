@@ -17,8 +17,8 @@
 'use strict';
 
 fundingModule.directive('fundingJsonDiff', [
-  'fundingApplicationSnapshotService',
-  function (fundingApplicationSnapshotService) {
+  'fundingDiffService',
+  function (fundingDiffService) {
     return {
       restrict: 'E',
       scope: {
@@ -27,14 +27,14 @@ fundingModule.directive('fundingJsonDiff', [
         leftLabel: '@',
         rightLabel: '@',
       },
-      templateUrl: '~/crmFunding/application/fundingJsonDiff.template.html',
+      templateUrl: '~/crmFunding/diff/fundingJsonDiff.template.html',
       link: function (scope) {
         scope.ts = CRM.ts('funding');
         scope.$watchGroup(['leftData', 'rightData'], function () {
           if (scope.leftData && scope.rightData) {
-            const diffResult = fundingApplicationSnapshotService.calculateChanges(scope.leftData, scope.rightData);
-            scope.leftDiff = diffResult.snapshotDiff;
-            scope.rightDiff = diffResult.currentDiff;
+            const diffResult = fundingDiffService.calculateChanges(scope.leftData, scope.rightData);
+            scope.leftDiff = diffResult.leftDiff;
+            scope.rightDiff = diffResult.rightDiff;
             scope.hasDifferences = diffResult.hasDifferences;
           }
         });

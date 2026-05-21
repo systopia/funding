@@ -23,7 +23,7 @@ fundingModule.directive('fundingApplicationSnapshotDiff', [
   function () {
     return {
       restrict: 'AE',
-      templateUrl: '~/crmFunding/application/applicationSnapshotDiff.template.html',
+      templateUrl: '~/crmFunding/diff/applicationSnapshotDiff.template.html',
       link: function (scope, element) {
         const dialog = element.find('dialog')[0] || element[0];
         if (dialog && typeof dialog.showModal === 'function') {

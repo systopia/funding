@@ -21,9 +21,8 @@ fundingModule.factory('fundingApplicationSnapshotService', [
   'fundingApplicationProcessService',
   '$compile',
   '$rootScope',
-  '$sce',
-  'fundingApplicationDiffService',
-  function (crmApi4, fundingApplicationProcessService, $compile, $rootScope, $sce, fundingApplicationDiffService) {
+  'fundingDiffService',
+  function (crmApi4, fundingApplicationProcessService, $compile, $rootScope, fundingDiffService) {
     const ts = CRM.ts('funding');
 
     /**
@@ -48,13 +47,11 @@ fundingModule.factory('fundingApplicationSnapshotService', [
      * @returns {Object}
      */
     const calculateChanges = (snapshotData, currentData) => {
-      const snapshotJSON = JSON.stringify(fundingApplicationDiffService.normalizeValue(snapshotData), null, 2);
-      const currentJSON = JSON.stringify(fundingApplicationDiffService.normalizeValue(currentData), null, 2);
-      const { snapshotResult, currentResult } = fundingApplicationDiffService.formatDiffLines(snapshotJSON, currentJSON);
+      const diffResult = fundingDiffService.calculateChanges(snapshotData, currentData);
       return {
-        snapshotDiff: $sce.trustAsHtml(snapshotResult),
-        currentDiff: $sce.trustAsHtml(currentResult),
-        hasDifferences: snapshotJSON !== currentJSON,
+        snapshotDiff: diffResult.leftDiff,
+        currentDiff: diffResult.rightDiff,
+        hasDifferences: diffResult.hasDifferences,
       };
     };
 
