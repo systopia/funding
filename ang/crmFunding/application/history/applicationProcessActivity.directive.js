@@ -25,7 +25,6 @@ fundingModule.directive('fundingApplicationProcessActivity', ['crmApi4', 'fundin
       clearingStatusOptions: '<',
       reviewStatusLabels: '=',
       applicationProcessId: '=',
-      isSnapshotTarget: '<',
     },
     templateUrl: '~/crmFunding/application/history/applicationProcessActivity.template.html',
     controller: function($scope) {
@@ -37,25 +36,26 @@ fundingModule.directive('fundingApplicationProcessActivity', ['crmApi4', 'fundin
           name: 'unknown',
           label: ts('Unknown'),
         };
-        if ($scope.isSnapshotTarget) {
-          crmApi4('FundingApplicationSnapshot', 'get', {
-            where: [
-              ['application_process_id', '=', $scope.applicationProcessId],
-              ['creation_date', '<=', $scope.activity.created_date],
-            ],
-            orderBy: { creation_date: 'DESC' },
-            limit: 1,
-            select: ['id'],
-          }).then(result => {
-            if (result.length) {
-              $scope.snapshotId = result[0].id;
+        crmApi4('FundingApplicationSnapshot', 'get', {
+          where: [
+            ['application_process_id', '=', $scope.applicationProcessId],
+            ['creation_date', '<=', $scope.activity.created_date],
+          ],
+          orderBy: { creation_date: 'DESC' },
+          limit: 1,
+          select: ['id', 'creation_date'],
+        }).then(result => {
+          if (result.length) {
+            const snapshot = result[0];
+            const snapshotDate = new Date(snapshot.creation_date.replace(' ', 'T')).getTime();
+            const activityDate = new Date($scope.activity.created_date.replace(' ', 'T')).getTime();
+            if ((activityDate - snapshotDate) / 1000 <= 1) {
+              $scope.snapshotId = snapshot.id;
             }
-          }, error => {
-            console.error('Snapshot fetch error:', error);
-          });
-        }
-      } else if ($scope.activity['activity_type_id:name'] === 'funding_application_snapshot_creation') {
-        $scope.snapshotId = $scope.activity['funding_application_snapshot_creation.snapshot_id'];
+          }
+        }, error => {
+          console.error('Snapshot fetch error:', error);
+        });
       } else if ($scope.activity['activity_type_id:name'] === 'funding_application_create') {
         $scope.statusOption = $scope.statusOptions['new'];
       } else if ($scope.activity['activity_type_id:name'] === 'funding_clearing_status_change') {
@@ -72,8 +72,6 @@ fundingModule.directive('fundingApplicationProcessActivity', ['crmApi4', 'fundin
         switch (activity['activity_type_id:name']) {
           case 'funding_application_status_change':
             return '~/crmFunding/application/history/activities/statusChange.template.html';
-          case 'funding_application_snapshot_creation':
-            return '~/crmFunding/application/history/activities/snapshotCreation.template.html';
           case 'funding_application_create':
             return '~/crmFunding/application/history/activities/create.template.html';
           case 'funding_application_comment_external':

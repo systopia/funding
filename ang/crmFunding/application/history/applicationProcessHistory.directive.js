@@ -46,7 +46,6 @@ fundingModule.directive('fundingApplicationProcessHistory', [function() {
           case 'funding_application_status_change':
           case 'funding_application_review_status_change':
           case 'funding_application_create':
-          case 'funding_application_snapshot_creation':
           case 'funding_clearing_status_change':
           case 'funding_clearing_review_status_change':
           case 'funding_clearing_create':
@@ -54,32 +53,11 @@ fundingModule.directive('fundingApplicationProcessHistory', [function() {
           case 'funding_application_comment_external':
           case 'funding_application_comment_internal':
             return $scope.commentsHidden;
+          case 'funding_application_snapshot_creation':
+            return true;
           default:
             return false;
         }
-      };
-
-      /**
-       * Finds the first activity in the list that matches the criteria for snapshot target.
-       *
-       * @param activity
-       * @returns {boolean}
-       */
-      $scope.isSnapshotTarget = function (activity) {
-        if (!activity || activity['activity_type_id:name'] !== 'funding_application_status_change') {
-          return false;
-        }
-
-        if (!activity || activity['activity_type_id:name'] !== 'funding_application_snapshot_creation') {
-          return false;
-        }
-
-        // Find the "first" activity in the list (newest) that matches the criteria
-        const target = $scope.activities.find(a =>
-          a['activity_type_id:name'] === 'funding_application_snapshot_creation'
-        );
-
-        return target && target.id === activity.id;
       };
     },
   };
