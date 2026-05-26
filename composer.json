@@ -31,6 +31,7 @@
         "systopia/activity-entity": "^1.0",
         "systopia/de.systopia.civioffice": "^1.0",
         "systopia/de.systopia.identitytracker": "^1.5",
+        "systopia/de.systopia.remotetools": "^1.2",
         "systopia/de.systopia.xcm": "^1.15",
         "systopia/external-file": "^1.0",
         "tomsgu/pdf-merger": "^0.5",
@@ -88,6 +89,10 @@
     },
     "conflict": {
         "pear/mail_mime": "<1.10.2",
+        "pear/pear-core-minimal": "<1.10.16",
         "systopia/opis-json-schema-ext": "<0.6.4"
-    }
+    },
+    "_comment": [
+      "PEAR_ErrorStack::singleton() overridden in CRM_Core_Error is static since pear/pear-core v1.10.16"
+    ]
 }
