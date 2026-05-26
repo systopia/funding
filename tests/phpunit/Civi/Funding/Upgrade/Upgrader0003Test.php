@@ -41,8 +41,8 @@ final class Upgrader0003Test extends AbstractFundingHeadlessTestCase {
         'kurzbeschreibungDerInhalte' => 'foo bar',
         'zeitraeume' => [
           [
-            'beginn' => '2022-08-24',
-            'ende' => '2022-08-24',
+            'beginn' => '2022-10-22',
+            'ende' => '2022-10-22',
           ],
         ],
         'teilnehmer' => [
