@@ -54,7 +54,8 @@ class FundingProgramManager {
     if (!array_key_exists($id, $this->fundingPrograms)) {
       $action = FundingProgram::get(FALSE)
         ->setAllowEmptyRecordPermissions(TRUE)
-        ->addWhere('id', '=', $id);
+        ->addWhere('id', '=', $id)
+        ->addSelect('*', 'custom.*');
       $result = $this->api4->executeAction($action);
       $this->fundingPrograms[$id] = FundingProgramEntity::singleOrNullFromApiResult($result);
     }
