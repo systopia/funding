@@ -64,7 +64,7 @@ function funding_civicrm_pageRun(\CRM_Core_Page $page): void {
 /**
  * Implements hook_civicrm_permission().
  *
- * @phpstan-param array<string, string|array{string, string}> $permissions
+ * @phpstan-param array<string, array{label: string, description: string}> $permissions
  */
 function funding_civicrm_permission(array &$permissions): void {
   $permissions[Permissions::ACCESS_FUNDING] = [
