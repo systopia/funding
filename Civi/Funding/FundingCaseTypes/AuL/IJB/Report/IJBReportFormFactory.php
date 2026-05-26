@@ -61,8 +61,8 @@ final class IJBReportFormFactory implements ReportFormFactoryInterface {
 
   public function doCreateReportForm(FundingProgramEntity $fundingProgram): ReportFormInterface {
     $grunddatenJsonSchema = new IJBGrunddatenJsonSchema(
-      $fundingProgram->getRequestsStartDate(),
-      $fundingProgram->getRequestsEndDate(),
+      $fundingProgram->getStartDate(),
+      $fundingProgram->getEndDate(),
       TRUE
     );
 
