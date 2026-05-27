@@ -36,26 +36,7 @@ fundingModule.directive('fundingApplicationProcessActivity', ['crmApi4', 'fundin
           name: 'unknown',
           label: ts('Unknown'),
         };
-        crmApi4('FundingApplicationSnapshot', 'get', {
-          where: [
-            ['application_process_id', '=', $scope.applicationProcessId],
-            ['creation_date', '<=', $scope.activity.created_date],
-          ],
-          orderBy: { creation_date: 'DESC' },
-          limit: 1,
-          select: ['id', 'creation_date'],
-        }).then(result => {
-          if (result.length) {
-            const snapshot = result[0];
-            const snapshotDate = new Date(snapshot.creation_date.replace(' ', 'T')).getTime();
-            const activityDate = new Date($scope.activity.created_date.replace(' ', 'T')).getTime();
-            if ((activityDate - snapshotDate) / 1000 <= 1) {
-              $scope.snapshotId = snapshot.id;
-            }
-          }
-        }, error => {
-          console.error('Snapshot fetch error:', error);
-        });
+        $scope.snapshotId = $scope.activity.snapshot_id;
       } else if ($scope.activity['activity_type_id:name'] === 'funding_application_create') {
         $scope.statusOption = $scope.statusOptions['new'];
       } else if ($scope.activity['activity_type_id:name'] === 'funding_clearing_status_change') {
