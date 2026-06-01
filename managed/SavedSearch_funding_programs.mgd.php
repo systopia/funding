@@ -24,7 +24,7 @@ return [
     'name' => 'SavedSearch_funding_programs',
     'entity' => 'SavedSearch',
     'cleanup' => 'always',
-    'update' => 'unmodified',
+    'update' => 'always',
     'params' => [
       'version' => 4,
       'values' => [
@@ -61,7 +61,7 @@ return [
     'name' => 'SavedSearch_funding_programs_SearchDisplay_table',
     'entity' => 'SearchDisplay',
     'cleanup' => 'always',
-    'update' => 'unmodified',
+    'update' => 'always',
     'params' => [
       'version' => 4,
       'values' => [
@@ -146,17 +146,33 @@ return [
               'size' => 'btn-sm',
               'links' => [
                 [
+                  'path' => 'civicrm/a/#/funding/program/[id]/clone',
+                  'icon' => 'fa-copy',
+                  'text' => E::ts('Clone'),
+                  'style' => 'default',
+                  'condition' => [
+                    'check user permission',
+                    '=',
+                    [
+                      'administer Funding',
+                    ],
+                  ],
+                  'task' => '',
+                  'entity' => '',
+                  'action' => '',
+                  'join' => '',
+                  'target' => '',
+                ],
+                [
                   'path' => 'civicrm/a/#/funding/program/[id]/recipients',
                   'icon' => 'fa-pen-to-square',
                   'text' => E::ts('Edit possible funding recipients'),
                   'style' => 'default',
-                  'conditions' => [
+                  'condition' => [
+                    'check user permission',
+                    '=',
                     [
-                      'check user permission',
-                      '=',
-                      [
-                        'administer Funding',
-                      ],
+                      'administer Funding',
                     ],
                   ],
                   'task' => '',
@@ -170,13 +186,11 @@ return [
                   'icon' => 'fa-pen-to-square',
                   'text' => E::ts('Edit permissions'),
                   'style' => 'default',
-                  'conditions' => [
+                  'condition' => [
+                    'check user permission',
+                    '=',
                     [
-                      'check user permission',
-                      '=',
-                      [
-                        'administer Funding',
-                      ],
+                      'administer Funding',
                     ],
                   ],
                   'task' => '',
@@ -190,13 +204,11 @@ return [
                   'icon' => 'fa-pen-to-square',
                   'text' => E::ts('Edit initial funding case permissions'),
                   'style' => 'default',
-                  'conditions' => [
+                  'condition' => [
+                    'check user permission',
+                    '=',
                     [
-                      'check user permission',
-                      '=',
-                      [
-                        'administer Funding',
-                      ],
+                      'administer Funding',
                     ],
                   ],
                   'task' => '',
@@ -210,13 +222,11 @@ return [
                   'icon' => 'fa-pen-to-square',
                   'text' => E::ts('Edit basic values'),
                   'style' => 'default',
-                  'conditions' => [
+                  'condition' => [
+                    'check user permission',
+                    '=',
                     [
-                      'check user permission',
-                      '=',
-                      [
-                        'administer Funding',
-                      ],
+                      'administer Funding',
                     ],
                   ],
                   'task' => '',
