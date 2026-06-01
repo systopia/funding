@@ -29,6 +29,9 @@ fundingModule.directive('fundingApplicationProcessActivity', ['crmApi4', 'fundin
     templateUrl: '~/crmFunding/application/history/applicationProcessActivity.template.html',
     controller: function($scope) {
       const ts = $scope.ts = CRM.ts('funding');
+      $scope.$watch('activity.snapshot_id', function (snapshotId) {
+        $scope.snapshotId = snapshotId;
+      });
 
       if ($scope.activity['activity_type_id:name'] === 'funding_application_status_change') {
         $scope.statusOption = $scope.statusOptions[$scope.activity.to_status] || {
@@ -36,7 +39,6 @@ fundingModule.directive('fundingApplicationProcessActivity', ['crmApi4', 'fundin
           name: 'unknown',
           label: ts('Unknown'),
         };
-        $scope.snapshotId = $scope.activity.snapshot_id;
       } else if ($scope.activity['activity_type_id:name'] === 'funding_application_create') {
         $scope.statusOption = $scope.statusOptions['new'];
       } else if ($scope.activity['activity_type_id:name'] === 'funding_clearing_status_change') {
@@ -66,6 +68,8 @@ fundingModule.directive('fundingApplicationProcessActivity', ['crmApi4', 'fundin
             return '~/crmFunding/application/history/activities/clearingCreate.template.html';
           case 'funding_clearing_review_status_change':
             return '~/crmFunding/application/history/activities/clearingReviewStatusChange.template.html';
+          case 'funding_application_snapshot_creation':
+            return '~/crmFunding/application/history/activities/snapshotCreation.template.html';
           default:
             return null;
         }

@@ -41,21 +41,6 @@ fundingModule.directive('fundingApplicationProcessHistory', [function() {
         $scope.workflowActivitiesHidden = !$scope.workflowActivitiesHidden;
       };
 
-      $scope.$watch('activities', function (activities) {
-        if (activities) {
-          activities.forEach(function (activity, index) {
-            if (activity['activity_type_id:name'] === 'funding_application_status_change' && activity.to_status === 'rework') {
-              for (let i = index + 1; i < activities.length; i++) {
-                if (activities[i]['activity_type_id:name'] === 'funding_application_snapshot_creation') {
-                  activity.snapshot_id = activities[i].snapshot_id;
-                  break;
-                }
-              }
-            }
-          });
-        }
-      });
-
       $scope.isActivityHidden = function (activity) {
         switch (activity['activity_type_id:name']) {
           case 'funding_application_status_change':
@@ -64,12 +49,11 @@ fundingModule.directive('fundingApplicationProcessHistory', [function() {
           case 'funding_clearing_status_change':
           case 'funding_clearing_review_status_change':
           case 'funding_clearing_create':
+          case 'funding_application_snapshot_creation':
             return $scope.workflowActivitiesHidden;
           case 'funding_application_comment_external':
           case 'funding_application_comment_internal':
             return $scope.commentsHidden;
-          case 'funding_application_snapshot_creation':
-            return true;
           default:
             return false;
         }
