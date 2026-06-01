@@ -76,7 +76,8 @@ final class FundingExternalFileManagerTest extends AbstractFundingHeadlessTestCa
      * https://github.com/civicrm/civicrm-core/pull/35031
      * https://github.com/civicrm/civicrm-core/commit/dd2c238369a51504d74a8a6c337ef37e3e83ebbb
      */
-    if (NULL !== $file1 && $file1->has('file_is_public')) {
+    static::assertNotNull($file1);
+    if ($file1->has('file_is_public')) {
       $externalFile1->setValues($externalFile1->toArray() + ['file_is_public' => FALSE]);
     }
     static::assertEquals($externalFile1, $file1);
@@ -155,7 +156,7 @@ final class FundingExternalFileManagerTest extends AbstractFundingHeadlessTestCa
      * https://github.com/civicrm/civicrm-core/pull/35031
      * https://github.com/civicrm/civicrm-core/commit/dd2c238369a51504d74a8a6c337ef37e3e83ebbb
      */
-    if (NULL !== $file1 && $file1->has('file_is_public')) {
+    if ($file1->has('file_is_public')) {
       $externalFile2->setValues($externalFile2->toArray() + ['file_is_public' => FALSE]);
     }
     static::assertEquals(

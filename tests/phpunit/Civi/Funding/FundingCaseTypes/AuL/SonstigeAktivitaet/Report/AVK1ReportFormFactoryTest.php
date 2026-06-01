@@ -54,8 +54,8 @@ final class AVK1ReportFormFactoryTest extends TestCase {
       'internerBezeichner' => 'interne id',
       'zeitraeume' => [
         (object) [
-          'beginn' => '2022-08-24',
-          'ende' => '2022-08-25',
+          'beginn' => '2022-10-22',
+          'ende' => '2022-10-23',
         ],
       ],
       'teilnehmer' => (object) [],
@@ -88,8 +88,8 @@ final class AVK1ReportFormFactoryTest extends TestCase {
       'internerBezeichner' => 'interne id',
       'zeitraeume' => [
         (object) [
-          'beginn' => '2022-08-24',
-          'ende' => '2022-08-25',
+          'beginn' => '2022-10-22',
+          'ende' => '2022-10-23',
         ],
       ],
       'teilnehmer' => (object) [

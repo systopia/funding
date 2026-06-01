@@ -84,12 +84,12 @@ final class IJBReportFormFactoryTest extends TestCase {
       'internerBezeichner' => 'interne id',
       'zeitraeume' => [
         (object) [
-          'beginn' => '2022-08-24',
-          'ende' => '2022-08-24',
+          'beginn' => '2022-10-22',
+          'ende' => '2022-10-22',
         ],
         (object) [
-          'beginn' => '2022-08-25',
-          'ende' => '2022-08-26',
+          'beginn' => '2022-10-24',
+          'ende' => '2022-10-25',
         ],
       ],
       'programmtageMitHonorar' => 2,
@@ -234,8 +234,8 @@ final class IJBReportFormFactoryTest extends TestCase {
     static::assertEquals([
       'title' => 'Test',
       'short_description' => 'foo bar',
-      'start_date' => '2022-08-24',
-      'end_date' => '2022-08-26',
+      'start_date' => '2022-10-22',
+      'end_date' => '2022-10-25',
     ], $mappedData);
   }
 
@@ -254,12 +254,12 @@ final class IJBReportFormFactoryTest extends TestCase {
       'internerBezeichner' => 'interne id',
       'zeitraeume' => [
         (object) [
-          'beginn' => '2022-08-24',
-          'ende' => '2022-08-24',
+          'beginn' => '2022-10-22',
+          'ende' => '2022-10-22',
         ],
         (object) [
-          'beginn' => '2022-08-25',
-          'ende' => '2022-08-26',
+          'beginn' => '2022-10-24',
+          'ende' => '2022-10-25',
         ],
       ],
       'programmtageMitHonorar' => 0,

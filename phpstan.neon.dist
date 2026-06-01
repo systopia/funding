@@ -10,8 +10,7 @@ parameters:
 		- services
 		- schema
 		- tests
-		# funding.php currently fails with 'Internal error: Class "CRM_Core_Page" not found while analysing file'
-		#- funding.php
+		- funding.php
 	excludePaths:
 		analyse:
 			- CRM/Funding/DAO/*
@@ -21,6 +20,7 @@ parameters:
 		- tools/phpunit/vendor/bin/.phpunit/phpunit/src/Framework/TestCase.php
 	scanDirectories:
 		- tools/phpunit/vendor/bin/.phpunit/phpunit/src/Framework
+		- mixin
 		- ../activity-entity/Civi/
 		- ../de.systopia.civioffice/Civi/
 		- ../de.systopia.civioffice/CRM/
@@ -34,9 +34,11 @@ parameters:
 		- Civi\Core\Event\GenericHookEvent
 		- CRM_Core_Config
 		- CRM_Core_DAO
+		- civicrm_api3
 	earlyTerminatingMethodCalls:
 		CRM_Utils_System:
 			- civiExit
+			- redirect
 		CRM_Queue_Runner:
 			- runAllViaWeb
 	checkTooWideReturnTypesInProtectedAndPublicMethods: true
