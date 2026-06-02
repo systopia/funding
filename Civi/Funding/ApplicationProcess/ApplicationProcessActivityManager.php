@@ -25,29 +25,35 @@ use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\FundingApplicationProcessActivity;
 use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\Entity\ApplicationProcessEntity;
+use Civi\Funding\Activity\Traits\SourceContactTrait;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\Comparison;
 use Civi\RemoteTools\Api4\Query\ConditionInterface;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Webmozart\Assert\Assert;
 
 class ApplicationProcessActivityManager {
 
+  use SourceContactTrait;
+
   private Api4Interface $api4;
 
-  public function __construct(Api4Interface $api4) {
+  private RequestContextInterface $requestContext;
+
+  public function __construct(Api4Interface $api4, RequestContextInterface $requestContext) {
     $this->api4 = $api4;
+    $this->requestContext = $requestContext;
   }
 
   /**
    * @throws \CRM_Core_Exception
    */
   public function addActivity(
-    int $contactId,
     ApplicationProcessEntity $applicationProcess,
     ActivityEntity $activity
   ): void {
     $values = $activity->toArray() + [
-      'source_contact_id' => $contactId,
+      'source_contact_id' => $this->getResolvedSourceContactId(),
       'source_record_id' => $applicationProcess->getFundingCaseId(),
     ];
     if (!array_key_exists('status_id', $values)) {

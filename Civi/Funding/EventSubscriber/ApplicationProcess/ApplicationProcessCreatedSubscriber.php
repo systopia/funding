@@ -23,15 +23,12 @@ use Civi\Funding\ActivityTypeIds;
 use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
-use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ApplicationProcessCreatedSubscriber implements EventSubscriberInterface {
 
   private ApplicationProcessActivityManager $activityManager;
-
-  private RequestContextInterface $requestContext;
 
   /**
    * @inheritDoc
@@ -40,12 +37,8 @@ class ApplicationProcessCreatedSubscriber implements EventSubscriberInterface {
     return [ApplicationProcessCreatedEvent::class => 'onCreated'];
   }
 
-  public function __construct(
-    ApplicationProcessActivityManager $activityManager,
-    RequestContextInterface $requestContext
-  ) {
+  public function __construct(ApplicationProcessActivityManager $activityManager) {
     $this->activityManager = $activityManager;
-    $this->requestContext = $requestContext;
   }
 
   /**
@@ -63,7 +56,7 @@ class ApplicationProcessCreatedSubscriber implements EventSubscriberInterface {
         ]
       ),
     ]);
-    $this->activityManager->addActivity($this->requestContext->getContactId(), $applicationProcess, $activity);
+    $this->activityManager->addActivity($applicationProcess, $activity);
   }
 
 }

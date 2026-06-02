@@ -23,15 +23,12 @@ use Civi\Funding\ActivityTypeNames;
 use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessUpdatedEvent;
-use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ClearingProcessReviewStatusSubscriber implements EventSubscriberInterface {
 
   private ApplicationProcessActivityManager $activityManager;
-
-  private RequestContextInterface $requestContext;
 
   /**
    * @inheritDoc
@@ -40,12 +37,8 @@ class ClearingProcessReviewStatusSubscriber implements EventSubscriberInterface 
     return [ClearingProcessUpdatedEvent::class => 'onUpdated'];
   }
 
-  public function __construct(
-    ApplicationProcessActivityManager $activityManager,
-    RequestContextInterface $requestContext
-  ) {
+  public function __construct(ApplicationProcessActivityManager $activityManager) {
     $this->activityManager = $activityManager;
-    $this->requestContext = $requestContext;
   }
 
   /**
@@ -79,7 +72,7 @@ class ClearingProcessReviewStatusSubscriber implements EventSubscriberInterface 
         'funding_clearing_review_status_change.to_is_review_calculative' => $toIsReviewCalculative,
       ]);
 
-      $this->activityManager->addActivity($this->requestContext->getContactId(), $applicationProcess, $activity);
+      $this->activityManager->addActivity($applicationProcess, $activity);
     }
   }
 

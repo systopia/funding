@@ -25,7 +25,6 @@ use Civi\Funding\Api4\OptionsLoaderInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessUpdatedEvent;
-use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -34,8 +33,6 @@ class ClearingProcessStatusSubscriber implements EventSubscriberInterface {
   private ApplicationProcessActivityManager $activityManager;
 
   private OptionsLoaderInterface $optionsLoader;
-
-  private RequestContextInterface $requestContext;
 
   /**
    * @inheritDoc
@@ -46,12 +43,10 @@ class ClearingProcessStatusSubscriber implements EventSubscriberInterface {
 
   public function __construct(
     ApplicationProcessActivityManager $activityManager,
-    OptionsLoaderInterface $optionsLoader,
-    RequestContextInterface $requestContext
+    OptionsLoaderInterface $optionsLoader
   ) {
     $this->activityManager = $activityManager;
     $this->optionsLoader = $optionsLoader;
-    $this->requestContext = $requestContext;
   }
 
   /**
@@ -78,7 +73,7 @@ class ClearingProcessStatusSubscriber implements EventSubscriberInterface {
         'funding_clearing_status_change.to_status' => $newStatus,
       ]);
 
-      $this->activityManager->addActivity($this->requestContext->getContactId(), $applicationProcess, $activity);
+      $this->activityManager->addActivity($applicationProcess, $activity);
     }
   }
 
