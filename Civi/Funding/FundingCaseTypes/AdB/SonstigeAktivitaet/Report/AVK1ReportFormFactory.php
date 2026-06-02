@@ -55,8 +55,8 @@ final class AVK1ReportFormFactory implements ReportFormFactoryInterface {
 
   public function doCreateReportForm(FundingProgramEntity $fundingProgram): ReportFormInterface {
     $grunddatenJsonSchema = new AVK1GrunddatenSchema(
-      $fundingProgram->getRequestsStartDate(),
-      $fundingProgram->getRequestsEndDate(),
+      $fundingProgram->getStartDate(),
+      $fundingProgram->getEndDate(),
       TRUE
     );
 
