@@ -72,6 +72,10 @@ jobs:
         env:
           COMPOSER_COMPILE: all
         run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H gitlab.com >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
           if [ "${{ matrix.prefer }}" = "prefer-lowest" ]; then
             # Actually test with lowest possible versions.
             export COMPOSER_NO_SECURITY_BLOCKING=1
