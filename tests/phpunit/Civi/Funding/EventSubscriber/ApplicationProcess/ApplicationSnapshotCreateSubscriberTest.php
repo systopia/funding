@@ -35,7 +35,6 @@ use Civi\Funding\FundingCaseType\MetaData\ApplicationProcessStatus;
 use Civi\Funding\FundingCaseType\MetaData\DefaultApplicationProcessStatuses;
 use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataMock;
 use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataProviderMock;
-use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -43,8 +42,6 @@ use PHPUnit\Framework\TestCase;
  * @covers \Civi\Funding\EventSubscriber\ApplicationProcess\ApplicationSnapshotCreateSubscriber
  */
 final class ApplicationSnapshotCreateSubscriberTest extends TestCase {
-
-  private const CONTACT_ID = 123;
 
   private const SNAPSHOT_ID = 456;
 
@@ -58,23 +55,18 @@ final class ApplicationSnapshotCreateSubscriberTest extends TestCase {
 
   private ApplicationProcessActivityManager&MockObject $activityManagerMock;
 
-  private RequestContextInterface&MockObject $requestContextMock;
-
   protected function setUp(): void {
     parent::setUp();
     $this->metaDataMock = new FundingCaseTypeMetaDataMock(FundingCaseTypeFactory::DEFAULT_NAME);
     $this->snapshotCreateHandlerMock = $this->createMock(ApplicationSnapshotCreateHandlerInterface::class);
     $this->activityManagerMock = $this->createMock(ApplicationProcessActivityManager::class);
-    $this->requestContextMock = $this->createMock(RequestContextInterface::class);
     $this->subscriber = new ApplicationSnapshotCreateSubscriber(
       new FundingCaseTypeMetaDataProviderMock($this->metaDataMock),
       $this->snapshotCreateHandlerMock,
-      $this->activityManagerMock,
-      $this->requestContextMock
+      $this->activityManagerMock
     );
 
     $this->metaDataMock->addApplicationProcessStatus(DefaultApplicationProcessStatuses::eligible());
-    $this->requestContextMock->method('getContactId')->willReturn(self::CONTACT_ID);
   }
 
   public function testGetSubscribedEvents(): void {
@@ -176,7 +168,6 @@ final class ApplicationSnapshotCreateSubscriberTest extends TestCase {
 
     $this->activityManagerMock->expects(static::once())->method('addActivity')
       ->with(
-        self::CONTACT_ID,
         $event->getApplicationProcess(),
         static::callback(static function(ActivityEntity $activity): bool {
           static::assertSame(

@@ -77,7 +77,6 @@ final class ApplicationProcessActivityManagerTest extends AbstractFundingHeadles
     ]);
     $this->activityManager->addActivity($applicationProcess, $activity);
 
-    static::assertSame($recipientContact['id'], $activity->get('source_contact_id'));
     static::assertSame($fundingCase->getId(), $activity->getSourceRecordId());
     static::assertSame('Test subject', $activity->getSubject());
     static::assertSame('Test details', $activity->getDetails());

@@ -30,7 +30,6 @@ use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationSnapshotCreatedEvent;
 use Civi\Funding\FundingCaseType\FundingCaseTypeMetaDataProviderInterface;
 use Civi\Funding\FundingCaseType\MetaData\FundingCaseTypeMetaDataInterface;
-use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -41,8 +40,6 @@ class ApplicationSnapshotCreateSubscriber implements EventSubscriberInterface {
   private ApplicationSnapshotCreateHandlerInterface $snapshotCreateHandler;
 
   private ApplicationProcessActivityManager $activityManager;
-
-  private RequestContextInterface $requestContext;
 
   public static function getSubscribedEvents(): array {
     // Minimal priority so every comparison is done against the state that is going to be persisted.
@@ -55,13 +52,11 @@ class ApplicationSnapshotCreateSubscriber implements EventSubscriberInterface {
   public function __construct(
     FundingCaseTypeMetaDataProviderInterface $metaDataProvider,
     ApplicationSnapshotCreateHandlerInterface $snapshotCreateHandler,
-    ApplicationProcessActivityManager $activityManager,
-    RequestContextInterface $requestContext
+    ApplicationProcessActivityManager $activityManager
   ) {
     $this->metaDataProvider = $metaDataProvider;
     $this->snapshotCreateHandler = $snapshotCreateHandler;
     $this->activityManager = $activityManager;
-    $this->requestContext = $requestContext;
   }
 
   public function onPreUpdate(ApplicationProcessPreUpdateEvent $event): void {
@@ -108,11 +103,7 @@ class ApplicationSnapshotCreateSubscriber implements EventSubscriberInterface {
       'funding_application_snapshot_creation.snapshot_id' => $applicationSnapshot->getId(),
     ]);
 
-    $this->activityManager->addActivity(
-      $this->requestContext->getContactId(),
-      $applicationProcess,
-      $activity
-    );
+    $this->activityManager->addActivity($applicationProcess, $activity);
   }
 
 }
