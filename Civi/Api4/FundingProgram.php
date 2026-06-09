@@ -65,6 +65,10 @@ final class FundingProgram extends Generic\DAOEntity {
 
   /**
    * Clones a funding program.
+   *
+   * @param bool $checkPermissions
+   *
+   * @return \Civi\Funding\Api4\Action\FundingProgram\CloneAction
    */
   public static function clone(bool $checkPermissions = TRUE): CloneAction {
     return (new CloneAction())->setCheckPermissions($checkPermissions);

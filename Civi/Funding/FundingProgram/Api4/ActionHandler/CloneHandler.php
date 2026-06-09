@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2022 SYSTOPIA GmbH
+ * Copyright (C) 2026 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -25,7 +25,7 @@ use Civi\Api4\FundingNewCasePermissions;
 use Civi\Api4\FundingProgram;
 use Civi\Api4\FundingProgramContactRelation;
 use Civi\Api4\FundingRecipientContactRelation;
-use Civi\Funding\Api4\Action\FundingProgram\CloneAction;
+use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Civi\RemoteTools\Api4\Api4Interface;
 use CRM_Funding_ExtensionUtil as E;
@@ -41,69 +41,65 @@ class CloneHandler implements ActionHandlerInterface {
   }
 
   /**
-   * Clones the funding program.
+   * Prepares the data for a new program based on source and action values.
    *
-   * @param \Civi\Funding\Api4\Action\FundingProgram\CloneAction $action
+   * @param \Civi\Funding\Entity\FundingProgramEntity $sourceFundingProgram
+   * @param array<string, mixed> $values
    *
-   * @return array
-   * @throws \CRM_Core_Exception
+   * @return \Civi\Funding\Entity\FundingProgramEntity
    */
-  public function clone(CloneAction $action): array {
-    $sourceId = $action->getId();
+  public function prepareTargetFundingProgramData(FundingProgramEntity $sourceFundingProgram, array $values): FundingProgramEntity {
+    $sourceFundingProgramData = $sourceFundingProgram->toArray();
+    unset($sourceFundingProgramData['id']);
 
-    // 1. Get source program
-    $sourceProgram = $this->api4->execute(FundingProgram::getEntityName(), 'get', [
-      'where' => [['id', '=', $sourceId]],
-      'checkPermissions' => $action->getCheckPermissions(),
-    ])->first();
+    $sourceFundingProgramData = array_merge($sourceFundingProgramData, $values);
+    // @phpstan-ignore argument.type
+    $targetFundingProgram = FundingProgramEntity::fromArray($sourceFundingProgramData);
 
-    if (!$sourceProgram) {
-      throw new \CRM_Core_Exception(sprintf('Source FundingProgram with ID %d not found.', $sourceId));
-    }
-
-    // 2. Prepare data for new program
-    $newProgramData = $sourceProgram;
-    unset($newProgramData['id']);
-
-    if (empty($action->getValues()['title'])) {
-      $newProgramData['title'] = $this->getUniqueValue(
+    if (!isset($values['title']) || $values['title'] === '') {
+      $targetFundingProgram->setTitle($this->getUniqueValue(
         FundingProgram::getEntityName(),
         'title',
-        E::ts('Copy of %1', [1 => $sourceProgram['title']]),
+        E::ts('Copy of %1', [1 => $sourceFundingProgram->getTitle()]),
         255,
         ' '
-      );
+      ));
     }
 
-    if (empty($action->getValues()['abbreviation'])) {
-      $newProgramData['abbreviation'] = $this->getUniqueValue(
+    if (!isset($values['abbreviation']) || $values['abbreviation'] === '') {
+      $targetFundingProgram->setAbbreviation($this->getUniqueValue(
         FundingProgram::getEntityName(),
         'abbreviation',
-        $sourceProgram['abbreviation'] . '_copy',
+        $sourceFundingProgram->getAbbreviation() . '_copy',
         20,
         '_'
-      );
+      ));
     }
 
-    // Override with values from action
-    $newProgramData = array_merge($newProgramData, $action->getValues());
+    return $targetFundingProgram;
+  }
 
-    // 3. Create new program
-    $newProgram = $this->api4->execute(FundingProgram::getEntityName(), 'create', [
-      'values' => $newProgramData,
-      'checkPermissions' => $action->getCheckPermissions(),
-    ])->first();
+  /**
+   * Executes the clone operation.
+   */
+  public function executeClone(
+    int $sourceFundingProgramId,
+    FundingProgramEntity $targetFundingProgramEntity,
+    bool $checkPermissions
+  ): FundingProgramEntity {
+    $action = FundingProgram::create($checkPermissions)
+      ->setValues($targetFundingProgramEntity->toArray());
+    $targetFundingProgram = FundingProgramEntity::singleFromApiResult($action->execute());
 
-    $newId = $newProgram['id'];
+    $targetId = $targetFundingProgram->getId();
 
-    // 4. Clone related entities
-    $this->cloneRelatedEntities(FundingCaseTypeProgram::getEntityName(), 'funding_program_id', $sourceId, $newId, $action->getCheckPermissions());
-    $this->cloneRelatedEntities(FundingProgramContactRelation::getEntityName(), 'funding_program_id', $sourceId, $newId, $action->getCheckPermissions());
-    $this->cloneRelatedEntities(FundingRecipientContactRelation::getEntityName(), 'funding_program_id', $sourceId, $newId, $action->getCheckPermissions());
-    $this->cloneRelatedEntities(FundingNewCasePermissions::getEntityName(), 'funding_program_id', $sourceId, $newId, $action->getCheckPermissions());
-    $this->cloneRelatedEntities(FundingFormStringTranslation::getEntityName(), 'funding_program_id', $sourceId, $newId, $action->getCheckPermissions());
+    $this->cloneRelatedEntities(FundingCaseTypeProgram::getEntityName(), $sourceFundingProgramId, $targetId, $checkPermissions);
+    $this->cloneRelatedEntities(FundingProgramContactRelation::getEntityName(), $sourceFundingProgramId, $targetId, $checkPermissions);
+    $this->cloneRelatedEntities(FundingRecipientContactRelation::getEntityName(), $sourceFundingProgramId, $targetId, $checkPermissions);
+    $this->cloneRelatedEntities(FundingNewCasePermissions::getEntityName(), $sourceFundingProgramId, $targetId, $checkPermissions);
+    $this->cloneRelatedEntities(FundingFormStringTranslation::getEntityName(), $sourceFundingProgramId, $targetId, $checkPermissions);
 
-    return [$newProgram];
+    return $targetFundingProgram;
   }
 
   /**
@@ -130,20 +126,30 @@ class CloneHandler implements ActionHandlerInterface {
 
   /**
    * Clones related entities.
+   *
+   * @param string $entityName
+   * @param int $sourceFundingProgramId
+   * @param int $targetFundingProgramId
+   * @param bool $checkPermissions
+   *
+   * @throws \CRM_Core_Exception
    */
-  private function cloneRelatedEntities(string $entityName, string $fkField, int $sourceId, int $newId, bool $checkPermissions): void {
-    $records = $this->api4->execute($entityName, 'get', [
-      'where' => [[$fkField, '=', $sourceId]],
+  private function cloneRelatedEntities(string $entityName, int $sourceFundingProgramId, int $targetFundingProgramId, bool $checkPermissions): void {
+    $sourceRelatedEntities = $this->api4->execute($entityName, 'get', [
+      'where' => [['funding_program_id', '=', $sourceFundingProgramId]],
       'checkPermissions' => $checkPermissions,
     ]);
 
-    foreach ($records as $record) {
-      $newData = $record;
-      unset($newData['id']);
-      $newData[$fkField] = $newId;
+    /**
+     * @var array<string, mixed> $entity
+     */
+    foreach ($sourceRelatedEntities as $entity) {
+      $targetData = $entity;
+      unset($targetData['id']);
+      $targetData['funding_program_id'] = $targetFundingProgramId;
 
       $this->api4->execute($entityName, 'create', [
-        'values' => $newData,
+        'values' => $targetData,
         'checkPermissions' => $checkPermissions,
       ]);
     }

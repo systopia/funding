@@ -37,17 +37,5 @@ fundingModule.factory('fundingProgramService', ['crmApi4', function(crmApi4) {
     }).then(function (result) {
       return result[0];
     }),
-
-    /**
-     * @param {integer} id
-     * @param {object} values
-     * @returns {Promise}
-     */
-    clone: (id, values) => crmApi4('FundingProgram', 'clone', {
-      id: id,
-      values: values || {}
-    }).then(function (result) {
-      return result[0];
-    }),
   };
 }]);

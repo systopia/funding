@@ -21,6 +21,12 @@ namespace Civi\Api4;
 
 use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Api4\Permissions;
+use Civi\Funding\Fixtures\FundingCaseTypeFixture;
+use Civi\Funding\Fixtures\FundingCaseTypeProgramFixture;
+use Civi\Funding\Fixtures\FundingNewCasePermissionsFixture;
+use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
+use Civi\Funding\Fixtures\FundingProgramFixture;
+use Civi\Funding\Fixtures\FundingRecipientContactRelationFixture;
 
 /**
  * @group headless
@@ -33,69 +39,42 @@ final class FundingProgramCloneTest extends AbstractFundingHeadlessTestCase {
     $this->setUserPermissions([Permissions::ACCESS_CIVICRM, Permissions::ADMINISTER_FUNDING]);
 
     // 1. Create a source program
-    $sourceProgram = FundingProgram::create(FALSE)
-      ->setValues([
-        'title' => 'Source Program',
-        'abbreviation' => 'SP',
-        'identifier_prefix' => 'SP',
-        'start_date' => '2026-01-01',
-        'end_date' => '2026-12-31',
-        'requests_start_date' => '2026-01-01',
-        'requests_end_date' => '2026-06-30',
-      ])
-      ->execute()
-      ->first();
-    $sourceId = $sourceProgram['id'];
+    $sourceProgram = FundingProgramFixture::addFixture([
+      'title' => 'Source Program',
+      'abbreviation' => 'SP',
+      'identifier_prefix' => 'SP',
+      'start_date' => '2026-01-01',
+      'end_date' => '2026-12-31',
+      'requests_start_date' => '2026-01-01',
+      'requests_end_date' => '2026-06-30',
+    ]);
+    $sourceId = $sourceProgram->getId();
 
     // 2. Add some related entities
     // FundingCaseTypeProgram
-    $caseType = FundingCaseType::create(FALSE)
-      ->setValues([
-        'name' => 'test_case_type',
-        'label' => 'Test Case Type',
-        'title' => 'Test Case Type',
-        'abbreviation' => 'TCT',
-        'is_combined_application' => FALSE,
-      ])
-      ->execute()->first();
-    FundingCaseTypeProgram::create(FALSE)
-      ->setValues(['funding_program_id' => $sourceId, 'funding_case_type_id' => $caseType['id']])
-      ->execute();
+    $caseType = FundingCaseTypeFixture::addFixture([
+      'name' => 'test_case_type',
+      'label' => 'Test Case Type',
+      'title' => 'Test Case Type',
+      'abbreviation' => 'TCT',
+      'is_combined_application' => FALSE,
+    ]);
+    FundingCaseTypeProgramFixture::addFixture($caseType->getId(), $sourceId);
 
     // FundingProgramContactRelation
-    FundingProgramContactRelation::create(FALSE)
-      ->setValues([
-        'funding_program_id' => $sourceId,
-        'type' => 'Contact',
-        'properties' => ['contactId' => 1],
-        'permissions' => ['view'],
-      ])
-      ->execute();
+    FundingProgramContactRelationFixture::addFixture($sourceId, 'Contact', ['contactId' => 1], ['view']);
 
     // FundingRecipientContactRelation
-    FundingRecipientContactRelation::create(FALSE)
-      ->setValues([
-        'funding_program_id' => $sourceId,
-        'type' => 'Relationship',
-        'properties' => ['relationshipTypeIds' => [1]],
-      ])
-      ->execute();
+    FundingRecipientContactRelationFixture::addFixture($sourceId, 'Relationship', ['relationshipTypeIds' => [1]]);
 
     // FundingNewCasePermissions
-    FundingNewCasePermissions::create(FALSE)
-      ->setValues([
-        'funding_program_id' => $sourceId,
-        'type' => 'Contact',
-        'properties' => ['contactId' => 1],
-        'permissions' => ['view'],
-      ])
-      ->execute();
+    FundingNewCasePermissionsFixture::addFixture($sourceId, 'Contact', ['contactId' => 1], ['view']);
 
     // FundingFormStringTranslation
     FundingFormStringTranslation::create(FALSE)
       ->setValues([
         'funding_program_id' => $sourceId,
-        'funding_case_type_id' => $caseType['id'],
+        'funding_case_type_id' => $caseType->getId(),
         'msg_text' => 'test_string',
         'new_text' => 'test_translation',
       ])
@@ -103,7 +82,7 @@ final class FundingProgramCloneTest extends AbstractFundingHeadlessTestCase {
 
     // 3. Clone
     $result = FundingProgram::clone(FALSE)
-      ->setId($sourceId)
+      ->addWhere('id', '=', $sourceId)
       ->execute();
 
     static::assertCount(1, $result);
@@ -119,7 +98,7 @@ final class FundingProgramCloneTest extends AbstractFundingHeadlessTestCase {
       ->addWhere('funding_program_id', '=', $newId)
       ->execute();
     static::assertSame(1, $related->rowCount);
-    static::assertSame($caseType['id'], $related->first()['funding_case_type_id']);
+    static::assertSame($caseType->getId(), $related->first()['funding_case_type_id']);
 
     static::assertSame(1, FundingProgramContactRelation::get(FALSE)
       ->addWhere('funding_program_id', '=', $newId)
@@ -139,7 +118,7 @@ final class FundingProgramCloneTest extends AbstractFundingHeadlessTestCase {
 
     // 5. Test uniqueness with second clone
     $result2 = FundingProgram::clone(FALSE)
-      ->setId($sourceId)
+      ->addWhere('id', '=', $sourceId)
       ->execute();
     $newProgram2 = $result2->first();
     static::assertSame('Copy of Source Program 2', $newProgram2['title']);
@@ -147,7 +126,7 @@ final class FundingProgramCloneTest extends AbstractFundingHeadlessTestCase {
 
     // 6. Test clone with custom values
     $result3 = FundingProgram::clone(FALSE)
-      ->setId($sourceId)
+      ->addWhere('id', '=', $sourceId)
       ->setValues([
         'title' => 'Custom Title',
         'abbreviation' => 'CT',
@@ -157,4 +136,5 @@ final class FundingProgramCloneTest extends AbstractFundingHeadlessTestCase {
     static::assertSame('Custom Title', $newProgram3['title']);
     static::assertSame('CT', $newProgram3['abbreviation']);
   }
+
 }

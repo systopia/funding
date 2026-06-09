@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.9\n"
 
 #: CRM/Funding/BAO/FundingCase.php
 #: managed/CustomGroup_funding_case_task.mgd.php
@@ -1405,6 +1405,22 @@ msgstr "Prüfung: Verwendungsnachweis ändern"
 msgid "View"
 msgstr "Ansehen"
 
+#: Civi/Funding/EventSubscriber/FundingProgram/FundingProgramSearchKitTaskSubscriber.php
+msgid "Clone Funding Program"
+msgstr "Förderprogramm duplizieren"
+
+#: Civi/Funding/EventSubscriber/FundingProgram/FundingProgramSearchKitTaskSubscriber.php
+msgid "Cloning funding program..."
+msgstr "Dupliziere Förderprogramm..."
+
+#: Civi/Funding/EventSubscriber/FundingProgram/FundingProgramSearchKitTaskSubscriber.php
+msgid "Successfully cloned funding program."
+msgstr "Förderprogramm erfolgreich dupliziert."
+
+#: Civi/Funding/EventSubscriber/FundingProgram/FundingProgramSearchKitTaskSubscriber.php
+msgid "An error occurred while cloning funding program."
+msgstr "Beim Duplizieren des Förderprogramms ist ein Fehler aufgetreten."
+
 #: Civi/Funding/Form/JsonSchema/JsonSchemaComment.php
 #: ang/crmFunding/application/applicationSubmitModal.template.html
 #: ang/crmFunding/clearing/clearingSubmitModal.template.html
@@ -1619,6 +1635,10 @@ msgstr "Überarbeitung in Prüfung"
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
 msgid "Reopen"
 msgstr "Wieder öffnen"
+
+#: Civi/Funding/FundingProgram/Api4/ActionHandler/CloneHandler.php
+msgid "Copy of %1"
+msgstr "Kopie von %1"
 
 #: Civi/Funding/FundingPseudoConstants.php
 msgid "Accepted"

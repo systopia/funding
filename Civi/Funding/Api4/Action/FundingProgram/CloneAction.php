@@ -20,29 +20,63 @@ declare(strict_types = 1);
 namespace Civi\Funding\Api4\Action\FundingProgram;
 
 use Civi\Api4\FundingProgram;
-use Civi\Api4\Generic\AbstractAction;
+use Civi\Api4\Generic\AbstractBatchAction;
+use Civi\Api4\Generic\Result;
+use Civi\Funding\Api4\Action\Traits\Api4Trait;
+use Civi\Funding\Entity\FundingProgramEntity;
+use Civi\Funding\FundingProgram\Api4\ActionHandler\CloneHandler;
 use Civi\RemoteTools\Api4\Action\Traits\ActionHandlerRunTrait;
-use Civi\RemoteTools\Api4\Action\Traits\IdParameterTrait;
+use Civi\RemoteTools\Api4\Api4Interface;
 
 /**
  * Clones a FundingProgram including related settings.
  */
-class CloneAction extends AbstractAction {
+class CloneAction extends AbstractBatchAction {
 
   use ActionHandlerRunTrait;
-  use IdParameterTrait;
+
+  use Api4Trait;
 
   /**
    * @var array
+   * @phpstan-var array<string, mixed>
    */
   protected array $values = [];
 
-  public function __construct() {
+  public function __construct(?Api4Interface $api4 = NULL) {
     parent::__construct(FundingProgram::getEntityName(), 'clone');
+    $this->_api4 = $api4;
   }
 
   /**
-   * @param array $values
+   * @return string[]
+   */
+  protected function getSelect(): array {
+    return ['*'];
+  }
+
+  /**
+   * @param \Civi\Api4\Generic\Result $result
+   */
+  public function _run(Result $result): void {
+    $handler = new CloneHandler($this->getApi4());
+    foreach ($this->getBatchRecords() as $record) {
+      $sourceFundingProgramEntity = FundingProgramEntity::fromArray($record);
+      $targetFundingProgramData = $handler->prepareTargetFundingProgramData(
+        $sourceFundingProgramEntity,
+        $this->getValues()
+      );
+      $result[] = $handler->executeClone(
+        $sourceFundingProgramEntity->getId(),
+        $targetFundingProgramData,
+        $this->getCheckPermissions()
+      )->toArray();
+    }
+  }
+
+  /**
+   * @param array<string, mixed> $values
+   *
    * @return $this
    */
   public function setValues(array $values): self {
@@ -51,7 +85,7 @@ class CloneAction extends AbstractAction {
   }
 
   /**
-   * @return array
+   * @return array<string, mixed>
    */
   public function getValues(): array {
     return $this->values;

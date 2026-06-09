@@ -906,6 +906,22 @@ msgstr ""
 msgid "View"
 msgstr ""
 
+#: Civi/Funding/EventSubscriber/FundingProgram/FundingProgramSearchKitTaskSubscriber.php
+msgid "Clone Funding Program"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/FundingProgram/FundingProgramSearchKitTaskSubscriber.php
+msgid "Cloning funding program..."
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/FundingProgram/FundingProgramSearchKitTaskSubscriber.php
+msgid "Successfully cloned funding program."
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/FundingProgram/FundingProgramSearchKitTaskSubscriber.php
+msgid "An error occurred while cloning funding program."
+msgstr ""
+
 #: Civi/Funding/Form/JsonSchema/JsonSchemaComment.php ang/crmFunding/application/applicationSubmitModal.template.html ang/crmFunding/clearing/clearingSubmitModal.template.html
 msgid "internal"
 msgstr ""
@@ -1092,6 +1108,10 @@ msgstr ""
 
 #: Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/KursMetaData.php ang/crmFunding/application/defaultApplicationSidebar.template.html
 msgid "Reopen"
+msgstr ""
+
+#: Civi/Funding/FundingProgram/Api4/ActionHandler/CloneHandler.php
+msgid "Copy of %1"
 msgstr ""
 
 #: Civi/Funding/FundingPseudoConstants.php
