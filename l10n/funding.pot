@@ -2610,3 +2610,11 @@ msgstr ""
 msgid "Amount Total"
 msgstr ""
 
+#: settings/funding.setting.php
+msgid "Funding Renderer URI"
+msgstr ""
+
+#: settings/funding.setting.php
+msgid "URI of the CiviOffice renderer to use."
+msgstr ""
+
