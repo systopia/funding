@@ -20,7 +20,6 @@ declare(strict_types = 1);
 namespace Civi\Funding\Settings;
 
 use Civi;
-use Civi\Civioffice\DocumentRendererTypeContainer;
 
 class RendererOptions {
 
@@ -28,8 +27,13 @@ class RendererOptions {
    * @return string[]
    */
   public static function getOptions(): array {
-    if (Civi::container()->has(DocumentRendererTypeContainer::class)) {
-      return DocumentRendererTypeContainer::getInstance()->getTitles();
+    $typeContainerClassname = '\Civi\Civioffice\DocumentRendererTypeContainer';
+    if (class_exists($typeContainerClassname) && Civi::container()->has($typeContainerClassname)) {
+      return $typeContainerClassname::getInstance()->getTitles();
+    }
+    $civiOfficeConfigurationClassname = '\CRM_Civioffice_Configuration';
+    if (class_exists($civiOfficeConfigurationClassname) && Civi::container()->has($civiOfficeConfigurationClassname)) {
+      return $civiOfficeConfigurationClassname::getDocumentRendererTypes();
     }
     return ['unoconv-local' => 'Local Unoconv'];
   }
