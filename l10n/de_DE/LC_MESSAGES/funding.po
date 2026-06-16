@@ -3609,3 +3609,11 @@ msgstr ""
 #: schema/PayoutProcess.entityType.php
 msgid "Amount Total"
 msgstr "Gesamtbetrag"
+
+#: settings/funding.setting.php
+msgid "Funding Renderer URI"
+msgstr "Dokument-Renderer URI"
+
+#: settings/funding.setting.php
+msgid "URI of the CiviOffice renderer to use."
+msgstr "URI des zu benutzenden CiviOffice-Renderers."
