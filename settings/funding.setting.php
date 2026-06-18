@@ -19,8 +19,6 @@ use CRM_Funding_ExtensionUtil as E;
 
 return [
   'funding_renderer_uri' => [
-    'group_name' => 'funding',
-    'group' => 'funding',
     'name' => 'funding_renderer_uri',
     'type' => 'String',
     'html_type' => 'select',
@@ -28,7 +26,11 @@ return [
     'default' => 'unoconv-local',
     'title' => E::ts('Funding Renderer URI'),
     'description' => E::ts('URI of the CiviOffice renderer to use.'),
-    'settings_pages' => ['funding'],
+    'settings_pages' => [
+      'funding' => [
+        'weight' => 20,
+      ],
+    ],
     'is_domain' => 1,
     'is_contact' => 0,
   ],
