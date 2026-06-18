@@ -27,7 +27,7 @@ class RendererOptions {
    * @return string[]
    */
   public static function getOptions(): array {
-    $typeContainerClassname = '\Civi\Civioffice\DocumentRendererTypeContainer';
+    $typeContainerClassname = 'Civi\Civioffice\DocumentRendererTypeContainer';
     if (class_exists($typeContainerClassname) && Civi::container()->has($typeContainerClassname)) {
       return $typeContainerClassname::getInstance()->getTitles();
     }
