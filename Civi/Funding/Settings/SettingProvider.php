@@ -28,7 +28,7 @@ class SettingProvider {
    */
   public function getRendererUri(): string {
     // @phpstan-ignore-next-line cast.string
-    return (string) (\Civi::settings()->get('funding_renderer_uri') ?? 'unoconv-local');
+    return (string) (\Civi::settings()->get('funding_renderer_uri') ?? 'unoconv-local-1');
   }
 
 }
