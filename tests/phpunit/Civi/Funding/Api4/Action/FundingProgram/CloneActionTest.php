@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Api4\Action\FundingProgram;
 
-use Civi\Api4\Generic\Result;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
@@ -23,12 +22,10 @@ final class CloneActionTest extends AbstractFundingHeadlessTestCase {
     $contact = ContactFixture::addIndividual();
     FundingProgramContactRelationFixture::addContact((int) $contact['id'], $fundingProgram->getId(), []);
 
-    $action = new CloneAction();
-    $action->setCheckPermissions(FALSE);
-    $action->addWhere('id', '=', $fundingProgram->getId());
-
-    $result = new Result();
-    $action->_run($result);
+    $result = (new CloneAction())
+      ->setCheckPermissions(FALSE)
+      ->addWhere('id', '=', $fundingProgram->getId())
+      ->execute();
 
     static::assertCount(1, $result);
     $clonedProgram = $result->first();

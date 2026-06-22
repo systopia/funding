@@ -48,7 +48,10 @@ class CloneHandler implements ActionHandlerInterface {
    *
    * @return \Civi\Funding\Entity\FundingProgramEntity
    */
-  public function prepareTargetFundingProgramData(FundingProgramEntity $sourceFundingProgram, array $values): FundingProgramEntity {
+  public function prepareTargetFundingProgramData(
+    FundingProgramEntity $sourceFundingProgram,
+    array $values
+  ): FundingProgramEntity {
     $sourceFundingProgramData = $sourceFundingProgram->toArray();
     unset($sourceFundingProgramData['id']);
 
@@ -87,17 +90,26 @@ class CloneHandler implements ActionHandlerInterface {
     FundingProgramEntity $targetFundingProgramEntity,
     bool $checkPermissions
   ): FundingProgramEntity {
-    $action = FundingProgram::create($checkPermissions)
-      ->setValues($targetFundingProgramEntity->toArray());
-    $targetFundingProgram = FundingProgramEntity::singleFromApiResult($action->execute());
+    $result = $this->api4->createEntity(FundingProgram::getEntityName(), $targetFundingProgramEntity->toArray());
+    $targetFundingProgram = FundingProgramEntity::singleFromApiResult($result);
 
     $targetId = $targetFundingProgram->getId();
 
-    $this->cloneRelatedEntities(FundingCaseTypeProgram::getEntityName(), $sourceFundingProgramId, $targetId, $checkPermissions);
-    $this->cloneRelatedEntities(FundingProgramContactRelation::getEntityName(), $sourceFundingProgramId, $targetId, $checkPermissions);
-    $this->cloneRelatedEntities(FundingRecipientContactRelation::getEntityName(), $sourceFundingProgramId, $targetId, $checkPermissions);
-    $this->cloneRelatedEntities(FundingNewCasePermissions::getEntityName(), $sourceFundingProgramId, $targetId, $checkPermissions);
-    $this->cloneRelatedEntities(FundingFormStringTranslation::getEntityName(), $sourceFundingProgramId, $targetId, $checkPermissions);
+    $this->cloneRelatedEntities(
+      FundingCaseTypeProgram::getEntityName(), $sourceFundingProgramId, $targetId, $checkPermissions
+    );
+    $this->cloneRelatedEntities(
+      FundingProgramContactRelation::getEntityName(), $sourceFundingProgramId, $targetId, $checkPermissions
+    );
+    $this->cloneRelatedEntities(
+      FundingRecipientContactRelation::getEntityName(), $sourceFundingProgramId, $targetId, $checkPermissions
+    );
+    $this->cloneRelatedEntities(
+      FundingNewCasePermissions::getEntityName(), $sourceFundingProgramId, $targetId, $checkPermissions
+    );
+    $this->cloneRelatedEntities(
+      FundingFormStringTranslation::getEntityName(), $sourceFundingProgramId, $targetId, $checkPermissions
+    );
 
     return $targetFundingProgram;
   }
@@ -105,7 +117,13 @@ class CloneHandler implements ActionHandlerInterface {
   /**
    * Generates a unique value for a field.
    */
-  private function getUniqueValue(string $entityName, string $fieldName, string $baseValue, int $maxLength, string $separator): string {
+  private function getUniqueValue(
+    string $entityName,
+    string $fieldName,
+    string $baseValue,
+    int $maxLength,
+    string $separator
+  ): string {
     $value = mb_substr($baseValue, 0, $maxLength);
     $counter = 1;
     while (TRUE) {
@@ -134,7 +152,12 @@ class CloneHandler implements ActionHandlerInterface {
    *
    * @throws \CRM_Core_Exception
    */
-  private function cloneRelatedEntities(string $entityName, int $sourceFundingProgramId, int $targetFundingProgramId, bool $checkPermissions): void {
+  private function cloneRelatedEntities(
+    string $entityName,
+    int $sourceFundingProgramId,
+    int $targetFundingProgramId,
+    bool $checkPermissions
+  ): void {
     $sourceRelatedEntities = $this->api4->execute($entityName, 'get', [
       'where' => [['funding_program_id', '=', $sourceFundingProgramId]],
       'checkPermissions' => $checkPermissions,

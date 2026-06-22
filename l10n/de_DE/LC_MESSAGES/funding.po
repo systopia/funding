@@ -1407,19 +1407,19 @@ msgstr "Ansehen"
 
 #: Civi/Funding/EventSubscriber/FundingProgram/FundingProgramSearchKitTaskSubscriber.php
 msgid "Clone Funding Program"
-msgstr "Förderprogramm duplizieren"
+msgstr "Förderprogramm klonen"
 
 #: Civi/Funding/EventSubscriber/FundingProgram/FundingProgramSearchKitTaskSubscriber.php
 msgid "Cloning funding program..."
-msgstr "Dupliziere Förderprogramm..."
+msgstr "Klone Förderprogramm..."
 
 #: Civi/Funding/EventSubscriber/FundingProgram/FundingProgramSearchKitTaskSubscriber.php
 msgid "Successfully cloned funding program."
-msgstr "Förderprogramm erfolgreich dupliziert."
+msgstr "Förderprogramm erfolgreich geklont."
 
 #: Civi/Funding/EventSubscriber/FundingProgram/FundingProgramSearchKitTaskSubscriber.php
 msgid "An error occurred while cloning funding program."
-msgstr "Beim Duplizieren des Förderprogramms ist ein Fehler aufgetreten."
+msgstr "Beim Klonen des Förderprogramms ist ein Fehler aufgetreten."
 
 #: Civi/Funding/Form/JsonSchema/JsonSchemaComment.php
 #: ang/crmFunding/application/applicationSubmitModal.template.html

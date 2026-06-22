@@ -21,12 +21,15 @@ namespace Civi\Funding\EventSubscriber\FundingProgram;
 
 use Civi\Api4\FundingProgram;
 use Civi\Core\Event\GenericHookEvent;
-use PHPUnit\Framework\TestCase;
+use Civi\Funding\AbstractFundingHeadlessTestCase;
+use Civi\Funding\Api4\Permissions;
 
 /**
+ * @group headless
+ *
  * @covers \Civi\Funding\EventSubscriber\FundingProgram\FundingProgramSearchKitTaskSubscriber
  */
-final class FundingProgramSearchKitTaskSubscriberTest extends TestCase {
+final class FundingProgramSearchKitTaskSubscriberTest extends AbstractFundingHeadlessTestCase {
 
   private FundingProgramSearchKitTaskSubscriber $subscriber;
 
@@ -52,6 +55,34 @@ final class FundingProgramSearchKitTaskSubscriberTest extends TestCase {
 
     static::assertArrayHasKey('clone', $event->tasks[FundingProgram::getEntityName()]);
     static::assertSame('Clone Funding Program', $event->tasks[FundingProgram::getEntityName()]['clone']['title']);
+  }
+
+  public function testOnSearchKitTasksWithMissingPermission(): void {
+    $this->setUserPermissions([Permissions::ACCESS_CIVICRM]);
+
+    $event = GenericHookEvent::create([
+      'checkPermissions' => TRUE,
+      'userId' => 1,
+      'tasks' => [FundingProgram::getEntityName() => []],
+    ]);
+
+    $this->subscriber->onSearchKitTasks($event);
+
+    static::assertArrayNotHasKey('clone', $event->tasks[FundingProgram::getEntityName()]);
+  }
+
+  public function testOnSearchKitTasksWithPermission(): void {
+    $this->setUserPermissions([Permissions::ACCESS_CIVICRM, Permissions::ADMINISTER_FUNDING]);
+
+    $event = GenericHookEvent::create([
+      'checkPermissions' => TRUE,
+      'userId' => 1,
+      'tasks' => [FundingProgram::getEntityName() => []],
+    ]);
+
+    $this->subscriber->onSearchKitTasks($event);
+
+    static::assertArrayHasKey('clone', $event->tasks[FundingProgram::getEntityName()]);
   }
 
 }

@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
+use Civi\API\Exception\UnauthorizedException;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\Api4\Permissions;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
@@ -38,7 +39,6 @@ final class FundingProgramCloneTest extends AbstractFundingHeadlessTestCase {
   public function testClone(): void {
     $this->setUserPermissions([Permissions::ACCESS_CIVICRM, Permissions::ADMINISTER_FUNDING]);
 
-    // 1. Create a source program
     $sourceProgram = FundingProgramFixture::addFixture([
       'title' => 'Source Program',
       'abbreviation' => 'SP',
@@ -50,8 +50,6 @@ final class FundingProgramCloneTest extends AbstractFundingHeadlessTestCase {
     ]);
     $sourceId = $sourceProgram->getId();
 
-    // 2. Add some related entities
-    // FundingCaseTypeProgram
     $caseType = FundingCaseTypeFixture::addFixture([
       'name' => 'test_case_type',
       'label' => 'Test Case Type',
@@ -61,16 +59,10 @@ final class FundingProgramCloneTest extends AbstractFundingHeadlessTestCase {
     ]);
     FundingCaseTypeProgramFixture::addFixture($caseType->getId(), $sourceId);
 
-    // FundingProgramContactRelation
     FundingProgramContactRelationFixture::addFixture($sourceId, 'Contact', ['contactId' => 1], ['view']);
-
-    // FundingRecipientContactRelation
     FundingRecipientContactRelationFixture::addFixture($sourceId, 'Relationship', ['relationshipTypeIds' => [1]]);
-
-    // FundingNewCasePermissions
     FundingNewCasePermissionsFixture::addFixture($sourceId, 'Contact', ['contactId' => 1], ['view']);
 
-    // FundingFormStringTranslation
     FundingFormStringTranslation::create(FALSE)
       ->setValues([
         'funding_program_id' => $sourceId,
@@ -80,7 +72,6 @@ final class FundingProgramCloneTest extends AbstractFundingHeadlessTestCase {
       ])
       ->execute();
 
-    // 3. Clone
     $result = FundingProgram::clone(FALSE)
       ->addWhere('id', '=', $sourceId)
       ->execute();
@@ -93,7 +84,6 @@ final class FundingProgramCloneTest extends AbstractFundingHeadlessTestCase {
     static::assertSame('Copy of Source Program', $newProgram['title']);
     static::assertSame('SP_copy', $newProgram['abbreviation']);
 
-    // 4. Verify related entities were cloned
     $related = FundingCaseTypeProgram::get(FALSE)
       ->addWhere('funding_program_id', '=', $newId)
       ->execute();
@@ -116,7 +106,6 @@ final class FundingProgramCloneTest extends AbstractFundingHeadlessTestCase {
       ->addWhere('funding_program_id', '=', $newId)
       ->execute()->rowCount);
 
-    // 5. Test uniqueness with second clone
     $result2 = FundingProgram::clone(FALSE)
       ->addWhere('id', '=', $sourceId)
       ->execute();
@@ -124,7 +113,6 @@ final class FundingProgramCloneTest extends AbstractFundingHeadlessTestCase {
     static::assertSame('Copy of Source Program 2', $newProgram2['title']);
     static::assertSame('SP_copy_2', $newProgram2['abbreviation']);
 
-    // 6. Test clone with custom values
     $result3 = FundingProgram::clone(FALSE)
       ->addWhere('id', '=', $sourceId)
       ->setValues([
@@ -135,6 +123,15 @@ final class FundingProgramCloneTest extends AbstractFundingHeadlessTestCase {
     $newProgram3 = $result3->first();
     static::assertSame('Custom Title', $newProgram3['title']);
     static::assertSame('CT', $newProgram3['abbreviation']);
+  }
+
+  public function testCloneThrowsUnauthorizedException(): void {
+    $this->expectException(UnauthorizedException::class);
+    $this->setUserPermissions([Permissions::ACCESS_CIVICRM]);
+    $sourceProgram = FundingProgramFixture::addFixture(['title' => 'Source']);
+    FundingProgram::clone()
+      ->addWhere('id', '=', $sourceProgram->getId())
+      ->execute();
   }
 
 }

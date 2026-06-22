@@ -30,6 +30,9 @@ use Civi\RemoteTools\Api4\Api4Interface;
 
 /**
  * Clones a FundingProgram including related settings.
+ *
+ * @method $this setValues(array<string, mixed> $values)
+ * @method array<string, mixed> getValues()
  */
 class CloneAction extends AbstractBatchAction {
 
@@ -52,7 +55,7 @@ class CloneAction extends AbstractBatchAction {
    * @return string[]
    */
   protected function getSelect(): array {
-    return ['*'];
+    return ['*', 'custom.*'];
   }
 
   /**
@@ -72,23 +75,6 @@ class CloneAction extends AbstractBatchAction {
         $this->getCheckPermissions()
       )->toArray();
     }
-  }
-
-  /**
-   * @param array<string, mixed> $values
-   *
-   * @return $this
-   */
-  public function setValues(array $values): self {
-    $this->values = $values;
-    return $this;
-  }
-
-  /**
-   * @return array<string, mixed>
-   */
-  public function getValues(): array {
-    return $this->values;
   }
 
 }
