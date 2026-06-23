@@ -130,7 +130,7 @@ final class PersonalkostenApplicationJsonSchema extends JsonSchemaObject {
         ['$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'amount_requested']])]
       ),
       'empfaenger' => new JsonSchemaRecipient($possibleRecipients),
-      'dokumente' => new PersonalkostenDokumenteJsonSchema(),
+      'dokumente' => new PersonalkostenDokumenteJsonSchema($limitedValidationActions),
     ];
 
     $required = array_keys($properties);
