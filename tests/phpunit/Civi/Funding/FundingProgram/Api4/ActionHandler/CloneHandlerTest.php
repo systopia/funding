@@ -6,6 +6,7 @@ namespace Civi\Funding\FundingProgram\Api4\ActionHandler;
 
 use Civi\Api4\FundingProgram;
 use Civi\Api4\Generic\Result;
+use Civi\Funding\Api4\Action\FundingProgram\CloneAction;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\RemoteTools\Api4\Api4Interface;
 use PHPUnit\Framework\TestCase;
@@ -35,16 +36,17 @@ final class CloneHandlerTest extends TestCase {
 
     $sourceEntity = FundingProgramEntity::fromArray($sourceData);
 
+    $result = $this->createMock(Result::class);
+    $result->method('count')->willReturn(0);
+
     $api4->expects(static::exactly(2))
       ->method('execute')
-      ->willReturnCallback(function($entity, $action) {
-        static::assertEquals(FundingProgram::getEntityName(), $entity);
-        static::assertEquals('get', $action);
-
-        $result = $this->createMock(Result::class);
-        $result->method('count')->willReturn(0);
-        return $result;
-      });
+      ->with(
+        static::equalTo(FundingProgram::getEntityName()),
+        static::equalTo('get'),
+        static::isType('array')
+      )
+      ->willReturn($result);
 
     $targetData = $handler->prepareTargetFundingProgramData($sourceEntity, []);
 
@@ -52,6 +54,43 @@ final class CloneHandlerTest extends TestCase {
     static::assertEquals('Copy of Original Program', $targetData->getTitle());
     static::assertEquals('OP_copy', $targetData->getAbbreviation());
     static::assertEquals('custom value', $targetData->toArray()['custom_123'] ?? NULL);
+  }
+
+  public function testClone(): void {
+    $api4 = $this->createMock(Api4Interface::class);
+    $handler = new CloneHandler($api4);
+
+    $action = $this->getMockBuilder(CloneAction::class)
+      ->setConstructorArgs([$api4])
+      ->onlyMethods(['getBatchRecords'])
+      ->addMethods(['getValues', 'getCheckPermissions'])
+      ->getMock();
+    $action->method('getBatchRecords')->willReturn([['id' => 123, 'title' => 'Original', 'abbreviation' => 'OR']]);
+    $action->method('getValues')->willReturn(['title' => 'Clone']);
+    $action->method('getCheckPermissions')->willReturn(FALSE);
+
+    $createResult = $this->createMock(Result::class);
+    $createResult->method('single')->willReturn(['id' => 124, 'title' => 'Clone', 'abbreviation' => 'OR']);
+    $api4->expects(static::once())
+      ->method('createEntity')
+      ->willReturn($createResult);
+
+    $getResult = $this->createMock(Result::class);
+    $getResult->method('getIterator')->willReturn(new \ArrayIterator([]));
+
+    $api4->expects(static::exactly(6))
+      ->method('execute')
+      ->with(
+        static::isType('string'),
+        static::equalTo('get'),
+        static::isType('array')
+      )
+      ->willReturn($getResult);
+
+    $result = $handler->clone($action);
+
+    static::assertCount(1, $result);
+    static::assertEquals(124, $result[0]['id']);
   }
 
 }

@@ -25,11 +25,15 @@ use Civi\Api4\FundingNewCasePermissions;
 use Civi\Api4\FundingProgram;
 use Civi\Api4\FundingProgramContactRelation;
 use Civi\Api4\FundingRecipientContactRelation;
+use Civi\Funding\Api4\Action\FundingProgram\CloneAction;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Civi\RemoteTools\Api4\Api4Interface;
 use CRM_Funding_ExtensionUtil as E;
 
+/**
+ * @phpstan-import-type fundingProgramT from FundingProgramEntity
+ */
 class CloneHandler implements ActionHandlerInterface {
 
   public const ENTITY_NAME = 'FundingProgram';
@@ -83,9 +87,29 @@ class CloneHandler implements ActionHandlerInterface {
   }
 
   /**
-   * Executes the clone operation.
+   * @param \Civi\Funding\Api4\Action\FundingProgram\CloneAction $action
+   *
+   * @return list<fundingProgramT>
    */
-  public function executeClone(
+  public function clone(CloneAction $action): array {
+    $result = [];
+    foreach ($action->getBatchRecords() as $record) {
+      /** @var fundingProgramT $record */
+      $sourceFundingProgramEntity = FundingProgramEntity::fromArray($record);
+      $targetFundingProgramData = $this->prepareTargetFundingProgramData(
+        $sourceFundingProgramEntity,
+        $action->getValues()
+      );
+      $result[] = $this->executeClone(
+        $sourceFundingProgramEntity->getId(),
+        $targetFundingProgramData,
+        $action->getCheckPermissions()
+      )->toArray();
+    }
+    return $result;
+  }
+
+  private function executeClone(
     int $sourceFundingProgramId,
     FundingProgramEntity $targetFundingProgramEntity,
     bool $checkPermissions
@@ -114,9 +138,6 @@ class CloneHandler implements ActionHandlerInterface {
     return $targetFundingProgram;
   }
 
-  /**
-   * Generates a unique value for a field.
-   */
   private function getUniqueValue(
     string $entityName,
     string $fieldName,
@@ -142,16 +163,6 @@ class CloneHandler implements ActionHandlerInterface {
     }
   }
 
-  /**
-   * Clones related entities.
-   *
-   * @param string $entityName
-   * @param int $sourceFundingProgramId
-   * @param int $targetFundingProgramId
-   * @param bool $checkPermissions
-   *
-   * @throws \CRM_Core_Exception
-   */
   private function cloneRelatedEntities(
     string $entityName,
     int $sourceFundingProgramId,

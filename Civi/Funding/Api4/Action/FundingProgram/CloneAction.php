@@ -21,10 +21,7 @@ namespace Civi\Funding\Api4\Action\FundingProgram;
 
 use Civi\Api4\FundingProgram;
 use Civi\Api4\Generic\AbstractBatchAction;
-use Civi\Api4\Generic\Result;
 use Civi\Funding\Api4\Action\Traits\Api4Trait;
-use Civi\Funding\Entity\FundingProgramEntity;
-use Civi\Funding\FundingProgram\Api4\ActionHandler\CloneHandler;
 use Civi\RemoteTools\Api4\Action\Traits\ActionHandlerRunTrait;
 use Civi\RemoteTools\Api4\Api4Interface;
 
@@ -59,22 +56,10 @@ class CloneAction extends AbstractBatchAction {
   }
 
   /**
-   * @param \Civi\Api4\Generic\Result $result
+   * @return array<array<string, mixed>>
    */
-  public function _run(Result $result): void {
-    $handler = new CloneHandler($this->getApi4());
-    foreach ($this->getBatchRecords() as $record) {
-      $sourceFundingProgramEntity = FundingProgramEntity::fromArray($record);
-      $targetFundingProgramData = $handler->prepareTargetFundingProgramData(
-        $sourceFundingProgramEntity,
-        $this->getValues()
-      );
-      $result[] = $handler->executeClone(
-        $sourceFundingProgramEntity->getId(),
-        $targetFundingProgramData,
-        $this->getCheckPermissions()
-      )->toArray();
-    }
+  public function getBatchRecords(): array {
+    return parent::getBatchRecords();
   }
 
 }
