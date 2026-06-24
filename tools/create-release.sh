@@ -28,7 +28,7 @@ readonly SCRIPT_NAME=$(basename "$0")
 
 usage() {
   cat <<EOD
-Usage: $SCRIPT_NAME [-h|--help] [--dry-run] [--no-composer] [--no-pot-update] [version] [develStage] [nextVersion]
+Usage: $SCRIPT_NAME [-h|--help] [--dry-run] [--no-pot-update] [version] [develStage] [nextVersion]
 
 Arguments:
   version  Version of the release (e.g. 1.2.3 or 1.2.3-alpha1)
@@ -41,7 +41,6 @@ Arguments:
 All values that are determined programmatically have to be confirmed.
 
 Options:
-  --no-composer  Do not add composer dependencies.
   --no-pot-update  Do not update .pot file.
   --dry-run  Do nothing, just print what would be done.
   -h|--help  Show this help.
@@ -263,7 +262,7 @@ updatePot() {
 
 main() {
   DRY_RUN=0
-  local noComposer=0
+  local noComposer=1
   local noPotUpdate=0
 
   while [ $# -gt 0 ]; do
