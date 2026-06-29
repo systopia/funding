@@ -18,14 +18,14 @@
 use CRM_Funding_ExtensionUtil as E;
 
 return [
-  'funding_renderer_uri' => [
-    'name' => 'funding_renderer_uri',
+  'funding_civioffice_renderer_uri' => [
+    'name' => 'funding_civioffice_renderer_uri',
     'type' => 'String',
     'html_type' => 'select',
-    'pseudoconstant' => ['callback' => '\Civi\Funding\Settings\RendererOptions::getOptions'],
+    'pseudoconstant' => ['callback' => '\Civi\Funding\DocumentRender\CiviOffice\CiviOfficeRendererOptions::getOptions'],
     'default' => 'unoconv-local',
-    'title' => E::ts('Funding Renderer URI'),
-    'description' => E::ts('URI of the CiviOffice renderer to use.'),
+    'title' => E::ts('CiviOffice Renderer'),
+    'description' => E::ts('The CiviOffice renderer to use for rendering PDFs.'),
     'settings_pages' => [
       'funding' => [
         'weight' => 20,
