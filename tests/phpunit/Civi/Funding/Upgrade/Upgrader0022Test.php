@@ -29,26 +29,26 @@ use Civi\Funding\AbstractFundingHeadlessTestCase;
  */
 final class Upgrader0022Test extends AbstractFundingHeadlessTestCase {
 
-  public function testExecuteSetsDefault(): void {
-    \Civi::settings()->set('funding_renderer_uri', NULL);
+  public function testExecuteHandlesNullValue(): void {
+    \Civi::settings()->set('funding_civioffice_renderer_uri', NULL);
 
     /** @var \Civi\Funding\Upgrade\Upgrader0022 $upgrader */
     $upgrader = \Civi::service(Upgrader0022::class);
 
     $upgrader->execute(new \Log_null('test'));
 
-    static::assertSame('unoconv-local', \Civi::settings()->get('funding_renderer_uri'));
+    static::assertSame('unoconv-local', \Civi::settings()->get('funding_civioffice_renderer_uri'));
   }
 
   public function testExecuteDoesNotOverwriteExisting(): void {
-    \Civi::settings()->set('funding_renderer_uri', 'custom-renderer');
+    \Civi::settings()->set('funding_civioffice_renderer_uri', 'custom-renderer');
 
     /** @var \Civi\Funding\Upgrade\Upgrader0022 $upgrader */
     $upgrader = \Civi::service(Upgrader0022::class);
 
     $upgrader->execute(new \Log_null('test'));
 
-    static::assertSame('custom-renderer', \Civi::settings()->get('funding_renderer_uri'));
+    static::assertSame('custom-renderer', \Civi::settings()->get('funding_civioffice_renderer_uri'));
   }
 
 }

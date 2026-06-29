@@ -25,8 +25,9 @@ use Civi\Funding\DocumentRender\CiviOffice\CiviOfficeContextDataHolder;
 use Civi\Funding\DocumentRender\CiviOffice\CiviOfficeDocumentRenderer;
 use Civi\Funding\DocumentRender\CiviOffice\CiviOfficeDocumentStore;
 use Civi\Funding\DocumentRender\CiviOffice\CiviOfficeRenderer;
-use Civi\Funding\Settings\SettingProvider;
+use Civi\Funding\DocumentRender\CiviOffice\CiviOfficeRendererOptions;
 use Civi\Funding\DocumentRender\DocumentRendererInterface;
+use Civi\Funding\DocumentRender\SettingProvider;
 use Civi\Funding\DocumentRender\Token\TokenNameExtractor;
 use Civi\Funding\DocumentRender\Token\TokenNameExtractorCacheDecorator;
 use Civi\Funding\DocumentRender\Token\TokenNameExtractorInterface;
@@ -35,7 +36,7 @@ use Civi\Funding\DocumentRender\Token\TokenResolverInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 // Don't fail in event subscriber pass, when CiviOffice is not available.
-if (class_exists(\CRM_Civioffice_DocumentStore::class)) {
+if (class_exists(CRM_Civioffice_DocumentStore::class)) {
   $container->autowire(CiviOfficeDocumentStore::class)
     ->addTag('kernel.event_subscriber');
 
@@ -51,6 +52,8 @@ if (class_exists(\CRM_Civioffice_DocumentStore::class)) {
 
 $container->autowire(CiviOfficeContextDataHolder::class);
 $container->autowire(SettingProvider::class);
+$container->autowire(CiviOfficeRendererOptions::class)
+  ->setPublic(TRUE);
 $container->autowire(CiviOfficeRenderer::class);
 $container->autowire(DocumentRendererInterface::class, CiviOfficeDocumentRenderer::class);
 

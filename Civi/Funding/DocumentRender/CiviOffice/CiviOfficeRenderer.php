@@ -19,7 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\DocumentRender\CiviOffice;
 
-use Civi\Funding\Settings\SettingProvider;
+use Civi\Funding\DocumentRender\SettingProvider;
 use Civi\RemoteTools\Api3\Api3Interface;
 use Webmozart\Assert\Assert;
 
@@ -71,7 +71,7 @@ class CiviOfficeRenderer {
         'entity_type' => $entityName,
         'entity_ids' => [$entityId],
         'target_mime_type' => $this->mimeType,
-        'renderer_uri' => $this->settingProvider->getRendererUri(),
+        'renderer_uri' => $this->settingProvider->getCiviOfficeRendererUri(),
       ]);
     }
     finally {

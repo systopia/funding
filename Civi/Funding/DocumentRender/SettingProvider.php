@@ -17,7 +17,7 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Settings;
+namespace Civi\Funding\DocumentRender;
 
 class SettingProvider {
 
@@ -26,9 +26,9 @@ class SettingProvider {
    *
    * @return string
    */
-  public function getRendererUri(): string {
+  public function getCiviOfficeRendererUri(): string {
     // @phpstan-ignore-next-line cast.string
-    return (string) (\Civi::settings()->get('funding_renderer_uri') ?? 'unoconv-local-1');
+    return (string) (\Civi::settings()->get('funding_civioffice_renderer_uri') ?? 'unoconv-local');
   }
 
 }

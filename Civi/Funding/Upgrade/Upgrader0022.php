@@ -22,9 +22,9 @@ namespace Civi\Funding\Upgrade;
 final class Upgrader0022 implements UpgraderInterface {
 
   public function execute(\Log $log): void {
-    $log->info('Set default value for funding_renderer_uri');
-    if (\Civi::settings()->get('funding_renderer_uri') === NULL) {
-      \Civi::settings()->set('funding_renderer_uri', 'unoconv-local-1');
+    $log->info('Set default value for funding_civioffice_renderer_uri');
+    if (\Civi::settings()->get('funding_civioffice_renderer_uri') === NULL) {
+      \Civi::settings()->set('funding_civioffice_renderer_uri', 'unoconv-local');
     }
   }
 
