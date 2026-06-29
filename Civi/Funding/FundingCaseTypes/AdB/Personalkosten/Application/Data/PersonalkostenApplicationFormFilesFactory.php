@@ -29,9 +29,10 @@ use Webmozart\Assert\Assert;
 /**
  * @phpstan-type dokumenteT list<array{
  *   _identifier?: string,
- *   datei: string,
+ *   datei?: string,
  *   beschreibung: string,
  * }>
+ * On submit with limited validation (e.g. acion "save") "datei" may be missing.
  */
 final class PersonalkostenApplicationFormFilesFactory implements ApplicationFormFilesFactoryInterface {
 
@@ -60,6 +61,10 @@ final class PersonalkostenApplicationFormFilesFactory implements ApplicationForm
     /** @phpstan-var dokumenteT $dokumente */
     $dokumente = $requestData['dokumente'];
     foreach ($dokumente as $dokument) {
+      if (!array_key_exists('datei', $dokument)) {
+        continue;
+      }
+
       Assert::keyExists($dokument, '_identifier');
       $files[] = new FundingFormFile(
         $dokument['datei'],

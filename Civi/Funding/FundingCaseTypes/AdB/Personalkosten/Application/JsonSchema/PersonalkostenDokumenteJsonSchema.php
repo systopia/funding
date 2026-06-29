@@ -20,22 +20,48 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\AdB\Personalkosten\Application\JsonSchema;
 
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
+use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 
 final class PersonalkostenDokumenteJsonSchema extends JsonSchemaArray {
 
-  public function __construct() {
+  /**
+   * @param list<string> $limitedValidationActions
+   */
+  public function __construct(array $limitedValidationActions) {
     parent::__construct(
       new JsonSchemaObject(
         [
           '_identifier' => new JsonSchemaString(['readonly' => TRUE]),
-          'datei' => new JsonSchemaString(['format' => 'uri']),
-          'beschreibung' => new JsonSchemaString(),
+          'datei' => new JsonSchemaString([
+            'format' => 'uri',
+            'maxLength' => 255,
+          ]),
+          'beschreibung' => new JsonSchemaString(['minLength' => 1, 'maxLength' => 255]),
         ],
-        ['required' => ['datei', 'beschreibung']]
-      ), ['minItems' => 1]
+        [
+          'required' => ['datei', 'beschreibung'],
+          // If "beschreibung" is not empty a "datei" is required so it's
+          // possible to persist the file together with "beschreibung".
+          '$limitValidation' => JsonSchema::fromArray([
+            'condition' => [
+              'evaluate' => [
+                'expression' => 'action in limitedValidationActions && beschreibung == ""',
+                'variables' => [
+                  'action' => new JsonSchemaDataPointer('/_action', ''),
+                  'limitedValidationActions' => $limitedValidationActions,
+                  'beschreibung' => new JsonSchemaDataPointer('0/beschreibung'),
+                ],
+              ],
+            ],
+          ]),
+        ]
+      ), [
+        'minItems' => 1,
+      ]
     );
   }
 
