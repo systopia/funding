@@ -33,4 +33,11 @@ final class CloneActionTest extends AbstractFundingHeadlessTestCase {
     static::assertStringStartsWith('Copy of ', $clonedProgram['title']);
   }
 
+  public function testSetValuesAndGetValues(): void {
+    $action = new CloneAction();
+    $values = ['title' => 'New Title', 'abbreviation' => 'NEW'];
+    $action->setValues($values);
+    static::assertEquals($values, $action->getValues());
+  }
+
 }

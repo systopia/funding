@@ -52,7 +52,7 @@ class CloneHandler implements ActionHandlerInterface {
    *
    * @return \Civi\Funding\Entity\FundingProgramEntity
    */
-  public function prepareTargetFundingProgramData(
+  private function prepareTargetFundingProgram(
     FundingProgramEntity $sourceFundingProgram,
     array $values
   ): FundingProgramEntity {
@@ -95,14 +95,14 @@ class CloneHandler implements ActionHandlerInterface {
     $result = [];
     foreach ($action->getBatchRecords() as $record) {
       /** @var fundingProgramT $record */
-      $sourceFundingProgramEntity = FundingProgramEntity::fromArray($record);
-      $targetFundingProgramData = $this->prepareTargetFundingProgramData(
-        $sourceFundingProgramEntity,
+      $sourceFundingProgram = FundingProgramEntity::fromArray($record);
+      $targetFundingProgram = $this->prepareTargetFundingProgram(
+        $sourceFundingProgram,
         $action->getValues()
       );
       $result[] = $this->executeClone(
-        $sourceFundingProgramEntity->getId(),
-        $targetFundingProgramData,
+        $sourceFundingProgram->getId(),
+        $targetFundingProgram,
         $action->getCheckPermissions()
       )->toArray();
     }

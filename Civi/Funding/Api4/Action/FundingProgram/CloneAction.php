@@ -21,9 +21,7 @@ namespace Civi\Funding\Api4\Action\FundingProgram;
 
 use Civi\Api4\FundingProgram;
 use Civi\Api4\Generic\AbstractBatchAction;
-use Civi\Funding\Api4\Action\Traits\Api4Trait;
 use Civi\RemoteTools\Api4\Action\Traits\ActionHandlerRunTrait;
-use Civi\RemoteTools\Api4\Api4Interface;
 
 /**
  * Clones a FundingProgram including related settings.
@@ -35,17 +33,17 @@ class CloneAction extends AbstractBatchAction {
 
   use ActionHandlerRunTrait;
 
-  use Api4Trait;
-
   /**
+   * Used for getting the values of the FundingProgram to clone and setting
+   * the values of the clone.
+   *
    * @var array
    * @phpstan-var array<string, mixed>
    */
   protected array $values = [];
 
-  public function __construct(?Api4Interface $api4 = NULL) {
+  public function __construct() {
     parent::__construct(FundingProgram::getEntityName(), 'clone');
-    $this->_api4 = $api4;
   }
 
   /**
