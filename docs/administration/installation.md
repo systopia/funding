@@ -61,10 +61,10 @@ composer update drupal/views_current_path
 
 - `fontawesome` is not required if **Font Awesome** is provided by other means.
 - `formtips` is not required, but recommended.
-- `symfony/property-access` and `webmozart/assert` are dependencies of the funding extension.
+- `symfony/property-access`, `tomsgu/pdf-merger`, and `webmozart/assert` are dependencies of the funding extension.
 
 ```
-composer require drupal/fontawesome:^2 drupal/formtips symfony/property-access webmozart/assert
+composer require drupal/fontawesome:^2 drupal/formtips symfony/property-access tomsgu/pdf-merger webmozart/assert
 drush pm:install fontawesome formtips
 ```
 
