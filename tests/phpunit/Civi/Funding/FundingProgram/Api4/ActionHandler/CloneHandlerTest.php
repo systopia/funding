@@ -47,13 +47,29 @@ final class CloneHandlerTest extends TestCase {
     $action->method('getValues')->willReturn([]);
     $action->method('getCheckPermissions')->willReturn(FALSE);
 
+    $expectedParams = [
+      'title' => 'Copy of Original Program',
+      'abbreviation' => 'OP_copy',
+      'identifier_prefix' => 'OP-',
+      'start_date' => '2026-01-01',
+      'end_date' => '2026-12-31',
+      'requests_start_date' => '2026-01-01',
+      'requests_end_date' => '2026-06-01',
+      'currency' => 'EUR',
+      'budget' => 1000.0,
+      'custom_123' => 'custom value',
+    ];
+
     $programClone = [
       'id' => 124,
       'title' => 'Copy of Original Program',
       'abbreviation' => 'OP_copy',
       'custom_123' => 'custom value',
     ];
-    $api4->method('createEntity')->willReturn(new Result([$programClone]));
+    $api4->expects(static::once())
+      ->method('createEntity')
+      ->with(FundingProgram::getEntityName(), $expectedParams)
+      ->willReturn(new Result([$programClone]));
 
     $result = $handler->clone($action);
 
@@ -69,14 +85,33 @@ final class CloneHandlerTest extends TestCase {
       ->onlyMethods(['getBatchRecords'])
       ->addMethods(['getValues', 'getCheckPermissions'])
       ->getMock();
-    $action->method('getBatchRecords')->willReturn([['id' => 123, 'title' => 'Original', 'abbreviation' => 'OR']]);
-    $action->method('getValues')->willReturn(['title' => 'Clone']);
+    $action->method('getBatchRecords')->willReturn([
+      ['id' => 123, 'title' => 'Original', 'abbreviation' => 'OR', 'currency' => 'EUR'],
+    ]);
+    $action->method('getValues')->willReturn([
+      'title' => 'New Title',
+      'currency' => 'USD',
+      'custom_data' => 'new',
+    ]);
     $action->method('getCheckPermissions')->willReturn(FALSE);
 
-    $programClone = ['id' => 124, 'title' => 'Clone', 'abbreviation' => 'OR'];
+    $programClone = [
+      'id' => 124,
+      'title' => 'New Title',
+      'abbreviation' => 'OR_copy',
+      'currency' => 'USD',
+      'custom_data' => 'new',
+    ];
     $createResult = new Result([$programClone]);
+    $expectedParams = [
+      'title' => 'New Title',
+      'abbreviation' => 'OR_copy',
+      'currency' => 'USD',
+      'custom_data' => 'new',
+    ];
     $api4->expects(static::once())
       ->method('createEntity')
+      ->with(FundingProgram::getEntityName(), $expectedParams)
       ->willReturn($createResult);
 
     $getResult = new Result([]);

@@ -34,8 +34,7 @@ class CloneAction extends AbstractBatchAction {
   use ActionHandlerRunTrait;
 
   /**
-   * Used for getting the values of the FundingProgram to clone and setting
-   * the values of the clone.
+   * Used for setting the values of a FundingProgram clone.
    *
    * @var array
    * @phpstan-var array<string, mixed>
