@@ -26,7 +26,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @covers \Civi\Funding\DocumentRender\CiviOffice\CiviOfficeRendererOptions
  */
-class CiviOfficeRendererOptionsTest extends TestCase {
+final class CiviOfficeRendererOptionsTest extends TestCase {
 
   public function testFetchOptions(): void {
     $api4 = $this->createMock(Api4Interface::class);
@@ -40,10 +40,11 @@ class CiviOfficeRendererOptionsTest extends TestCase {
     $api4->expects(static::once())
       ->method('execute')
       ->with('CiviofficeRenderer', 'get', [
+        'select' => ['uri', 'name'],
         'where' => [
           ['is_active', '=', TRUE],
         ],
-        'checkPermissions' => TRUE,
+        'checkPermissions' => FALSE,
       ])
       ->willReturn($result);
 

@@ -37,14 +37,15 @@ class CiviOfficeRendererOptions {
    */
   public function fetchOptions(): array {
     $civiofficeRenderers = $this->api4->execute('CiviofficeRenderer', 'get', [
+      'select' => ['uri', 'name'],
       'where' => [
         ['is_active', '=', TRUE],
       ],
-      'checkPermissions' => TRUE,
+      'checkPermissions' => FALSE,
     ]);
 
     $options = [];
-    /** @var array<string, string> $renderer */
+    /** @var array{ uri: string, name: string } $renderer */
     foreach ($civiofficeRenderers as $renderer) {
       $options[$renderer['uri']] = $renderer['name'];
     }
@@ -55,10 +56,16 @@ class CiviOfficeRendererOptions {
    * Get options for the CiviOffice renderer URI setting.
    *
    * @return array<string, string>
+   * @throws \CRM_Core_Exception
    */
   public static function getOptions(): array {
-    // @phpstan-ignore method.nonObject
-    return \Civi::service(self::class)->fetchOptions();
+    return self::getInstance()->fetchOptions();
+  }
+
+  public static function getInstance(): self {
+    /** @var self $instance */
+    $instance = \Civi::service(self::class);
+    return $instance;
   }
 
 }
