@@ -128,6 +128,8 @@ See [https://docs.civicrm.org/civioffice/en/latest/](https://docs.civicrm.org/ci
 
 The option **Use PHPWord macros for token replacement** needs to be activated at the settings page of _CiviOffice_ at `civicrm/admin/civioffice/settings`, in section **CiviOffice Document Renderers**.
 
+The CiviOffice document renderer to use can be configured at `/civicrm/admin/setting/funding`.
+
 ## Configure XCM
 
 At `/civicrm/admin/setting/xcm` adjust the default profile to your needs or add
