@@ -26,7 +26,6 @@ use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\ApplicationSnapshotFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
-use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -45,10 +44,7 @@ final class ApplicationSnapshotRestoreSubscriberTest extends TestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->activityManagerMock = $this->createMock(ApplicationProcessActivityManager::class);
-    $requestContextMock = $this->createMock(RequestContextInterface::class);
-    $this->subscriber = new ApplicationSnapshotRestoreSubscriber($this->activityManagerMock, $requestContextMock);
-
-    $requestContextMock->method('getContactId')->willReturn(111);
+    $this->subscriber = new ApplicationSnapshotRestoreSubscriber($this->activityManagerMock);
   }
 
   public function testGetSubscribedEvents(): void {
@@ -75,7 +71,6 @@ final class ApplicationSnapshotRestoreSubscriberTest extends TestCase {
 
     $this->activityManagerMock->expects(static::once())->method('addActivity')
       ->with(
-        111,
         $event->getApplicationProcess(),
         static::callback(function (ActivityEntity $activity) {
           static::assertSame(ActivityTypeIds::FUNDING_APPLICATION_RESTORE, $activity->getActivityTypeId());

@@ -22,11 +22,14 @@ namespace Civi\Funding\Task;
 use Civi\Api4\FundingTask;
 use Civi\Funding\ActivityStatusTypes;
 use Civi\Funding\Entity\FundingTaskEntity;
+use Civi\Funding\Activity\Traits\SourceContactTrait;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Civi\RemoteTools\Api4\Query\ConditionInterface;
 use Civi\RemoteTools\RequestContext\RequestContextInterface;
 
 final class FundingTaskManager implements FundingTaskManagerInterface {
+
+  use SourceContactTrait;
 
   private Api4Interface $api4;
 
@@ -52,7 +55,7 @@ final class FundingTaskManager implements FundingTaskManagerInterface {
     $task->setCreatedDate($now);
     $task->setModifiedDate($now);
     $values = $this->api4->createEntity(FundingTask::getEntityName(),
-      ['source_contact_id' => $this->getSourceContactId()] + $task->toPersistArray()
+      ['source_contact_id' => $this->getResolvedSourceContactId()] + $task->toPersistArray()
     )->single();
     $task->setValues($task->toArray() + $values);
 
@@ -116,12 +119,6 @@ final class FundingTaskManager implements FundingTaskManagerInterface {
       $task->toPersistArray(),
       ['ignoreCasePermissions' => TRUE]
     );
-  }
-
-  private function getSourceContactId(): int {
-    return 0 === $this->requestContext->getContactId()
-      ? (int) \CRM_Core_BAO_Domain::getDomain()->contact_id
-      : $this->requestContext->getContactId();
   }
 
 }

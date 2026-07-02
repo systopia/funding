@@ -25,7 +25,6 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationFormCommentPersistCommand
 use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\Mock\Form\ValidatedApplicationDataMock;
-use Civi\Funding\Mock\RequestContext\TestRequestContext;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -42,8 +41,7 @@ final class ApplicationFormCommentPersistHandlerTest extends TestCase {
     parent::setUp();
     $this->activityManagerMock = $this->createMock(ApplicationProcessActivityManager::class);
     $this->handler = new ApplicationFormCommentPersistHandler(
-      $this->activityManagerMock,
-      TestRequestContext::newInternal(123)
+      $this->activityManagerMock
     );
   }
 
@@ -63,7 +61,6 @@ final class ApplicationFormCommentPersistHandlerTest extends TestCase {
 
     $this->activityManagerMock->expects(static::once())->method('addActivity')
       ->with(
-        123,
         $command->getApplicationProcess(),
         static::callback(function (ActivityEntity $activity) {
           static::assertSame(ActivityTypeIds::FUNDING_APPLICATION_COMMENT_INTERNAL, $activity->getActivityTypeId());
@@ -97,7 +94,6 @@ final class ApplicationFormCommentPersistHandlerTest extends TestCase {
 
     $this->activityManagerMock->expects(static::once())->method('addActivity')
       ->with(
-        123,
         $command->getApplicationProcess(),
         static::callback(function (ActivityEntity $activity) {
           static::assertSame(ActivityTypeIds::FUNDING_APPLICATION_COMMENT_EXTERNAL, $activity->getActivityTypeId());

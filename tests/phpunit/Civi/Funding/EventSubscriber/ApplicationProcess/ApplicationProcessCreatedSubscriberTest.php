@@ -24,7 +24,6 @@ use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
-use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -43,10 +42,7 @@ final class ApplicationProcessCreatedSubscriberTest extends TestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->activityManagerMock = $this->createMock(ApplicationProcessActivityManager::class);
-    $requestContextMock = $this->createMock(RequestContextInterface::class);
-    $this->subscriber = new ApplicationProcessCreatedSubscriber($this->activityManagerMock, $requestContextMock);
-
-    $requestContextMock->method('getContactId')->willReturn(111);
+    $this->subscriber = new ApplicationProcessCreatedSubscriber($this->activityManagerMock);
   }
 
   public function testGetSubscribedEvents(): void {
@@ -74,7 +70,7 @@ final class ApplicationProcessCreatedSubscriberTest extends TestCase {
       'details' => 'Application: Title (Identifier)',
     ]);
     $this->activityManagerMock->expects(static::once())->method('addActivity')
-      ->with(111, $applicationProcessBundle->getApplicationProcess(), $activity);
+      ->with($applicationProcessBundle->getApplicationProcess(), $activity);
 
     $this->subscriber->onCreated($event);
   }

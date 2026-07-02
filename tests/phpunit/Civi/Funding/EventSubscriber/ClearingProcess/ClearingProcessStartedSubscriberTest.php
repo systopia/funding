@@ -24,7 +24,6 @@ use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\EntityFactory\ClearingProcessBundleFactory;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessStartedEvent;
-use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -43,11 +42,7 @@ final class ClearingProcessStartedSubscriberTest extends TestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->activityManagerMock = $this->createMock(ApplicationProcessActivityManager::class);
-    $requestContextMock = $this->createMock(RequestContextInterface::class);
-    $requestContextMock->method('getContactId')->willReturn(22);
-    $this->subscriber = new ClearingProcessStartedSubscriber(
-      $this->activityManagerMock, $requestContextMock
-    );
+    $this->subscriber = new ClearingProcessStartedSubscriber($this->activityManagerMock);
   }
 
   public function testGetSubscribedEvents(): void {
@@ -78,7 +73,7 @@ final class ClearingProcessStartedSubscriberTest extends TestCase {
       'details' => 'Application: Title (Identifier)',
     ]);
     $this->activityManagerMock->expects(static::once())->method('addActivity')
-      ->with(22, $clearingProcessBundle->getApplicationProcess(), $activity);
+      ->with($clearingProcessBundle->getApplicationProcess(), $activity);
 
     $this->subscriber->onStarted($event);
   }

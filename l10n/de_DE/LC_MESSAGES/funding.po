@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.9\n"
 
 #: CRM/Funding/BAO/FundingCase.php
 #: managed/CustomGroup_funding_case_task.mgd.php
@@ -1221,6 +1221,7 @@ msgstr "Förderantrag erstellt"
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessCreatedSubscriber.php
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriber.php
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationSnapshotCreateSubscriber.php
 #: Civi/Funding/EventSubscriber/ClearingProcess/ClearingProcessReviewStatusSubscriber.php
 #: Civi/Funding/EventSubscriber/ClearingProcess/ClearingProcessStartedSubscriber.php
 #: Civi/Funding/EventSubscriber/ClearingProcess/ClearingProcessStatusSubscriber.php
@@ -1289,6 +1290,10 @@ msgstr "Von Status: %1"
 #: Civi/Funding/EventSubscriber/ClearingProcess/ClearingProcessStatusSubscriber.php
 msgid "To status: %1"
 msgstr "Zu Status: %1"
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationSnapshotCreateSubscriber.php
+msgid "Funding Application Snapshot Created"
+msgstr "Förderantragssnapshot erstellt"
 
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationSnapshotRestoreSubscriber.php
 msgid "Funding Application Restored"
@@ -1956,6 +1961,7 @@ msgstr "Aufgaben (unerledigt)"
 #: ang/crmFunding/application/applicationReviewer.directive.js
 #: ang/crmFunding/application/applicationReviewers.directive.js
 #: ang/crmFunding/application/applicationSearchTasksMenu.decorator.js
+#: ang/crmFunding/application/applicationSnapshot.factory.js
 #: ang/crmFunding/application/applicationSubmitModal.component.js
 #: ang/crmFunding/application/defaultApplicationSidebar.directive.js
 #: ang/crmFunding/application/history/applicationProcessActivity.directive.js
@@ -1973,6 +1979,7 @@ msgstr "Aufgaben (unerledigt)"
 #: ang/crmFunding/clearing/clearingSearchTasksMenu.decorator.js
 #: ang/crmFunding/clearing/clearingSidebar.directive.js
 #: ang/crmFunding/clearing/clearingSubmitModal.component.js
+#: ang/crmFunding/diff/fundingJsonDiff.directive.js
 #: ang/crmFunding/drawdown/drawdownSearchTasksMenu.decorator.js
 #: ang/crmFunding/form/editableField.directive.js
 #: ang/crmFunding/form/editorTrait.factory.js
@@ -2034,6 +2041,7 @@ msgstr "Anträge"
 #: ang/crmFunding/application/applicationSubmitModal.template.html
 #: ang/crmFunding/case/fundingCase.template.html
 #: ang/crmFunding/clearing/clearingSubmitModal.template.html
+#: ang/crmFunding/diff/applicationSnapshotDiff.template.html
 #: ang/crmFundingHiH/hihApplicationApproveModal.template.html
 msgid "Close"
 msgstr "Schließen"
@@ -2184,6 +2192,7 @@ msgstr "Letzter interner Kommentar"
 #: ang/crmFunding/application/history/activities/comment.template.html
 #: ang/crmFunding/application/history/activities/create.template.html
 #: ang/crmFunding/application/history/activities/reviewStatusChange.template.html
+#: ang/crmFunding/application/history/activities/snapshotCreation.template.html
 #: ang/crmFunding/application/history/activities/statusChange.template.html
 #: ang/crmFunding/clearing/clearingSidebar.template.html
 msgid "Date: %date"
@@ -2210,6 +2219,7 @@ msgstr "Verwendungsnachweis gestartet"
 #: ang/crmFunding/application/history/activities/clearingStatusChange.template.html
 #: ang/crmFunding/application/history/activities/create.template.html
 #: ang/crmFunding/application/history/activities/reviewStatusChange.template.html
+#: ang/crmFunding/application/history/activities/snapshotCreation.template.html
 #: ang/crmFunding/application/history/activities/statusChange.template.html
 msgid "Performed by: %name"
 msgstr "Durchgeführt von: %name"
@@ -2245,6 +2255,14 @@ msgstr "Fachliche Prüfung: %status"
 #: ang/crmFunding/application/history/activities/reviewStatusChange.template.html
 msgid "Calculative review: %status"
 msgstr "Rechnerische Prüfung: %status"
+
+#: ang/crmFunding/application/history/activities/snapshotCreation.template.html
+msgid "Snapshot created"
+msgstr "Snapshot erstellt"
+
+#: ang/crmFunding/application/history/activities/snapshotCreation.template.html
+msgid "Show Changes"
+msgstr "Änderungen anzeigen"
 
 #: ang/crmFunding/application/history/activities/statusChange.template.html
 msgid "Status: %status"
@@ -2412,6 +2430,22 @@ msgstr "Verwendungsnachweis annehmen"
 msgid "Accept is possible once the review was successful."
 msgstr "Annahme ist möglich, wenn die Prüfung erfolgreich war."
 
+#: ang/crmFunding/diff/applicationSnapshotDiff.template.html
+msgid "Funding Application Changes"
+msgstr "Änderungen bei Förderanträgen"
+
+#: ang/crmFunding/diff/applicationSnapshotDiff.template.html
+msgid "No differences found."
+msgstr "Keine Unterschiede festgestellt."
+
+#: ang/crmFunding/diff/applicationSnapshotDiff.template.html
+msgid "Previous (%1)"
+msgstr "Vorher (%1)"
+
+#: ang/crmFunding/diff/applicationSnapshotDiff.template.html
+msgid "Current"
+msgstr "Aktuell"
+
 #: ang/crmFunding/drawdown/drawdownSearchTasksMenu.decorator.js
 #: managed/CustomGroup_funding_drawdown_task.mgd.php
 #: schema/Drawdown.entityType.php
@@ -2530,6 +2564,15 @@ msgstr "Prüfstatus von Förderantrag geändert"
 msgid "Activity type for funding application review status changes"
 msgstr "Aktivitätsart für Prüfstatusänderung eines Förderantrags"
 
+#: managed/ActivityTypeFundingApplicationSnapshotCreation.mgd.php
+#: managed/CustomGroupFundingApplicationSnapshotCreation.mgd.php
+msgid "Funding Application Snapshot Creation"
+msgstr "Erstellung eines Förderantragssnapshots"
+
+#: managed/ActivityTypeFundingApplicationSnapshotCreation.mgd.php
+msgid "Activity type for funding application snapshot creation"
+msgstr "Aktivitätsart für Erstellung eines Förderantragssnapshots"
+
 #: managed/ActivityTypeFundingApplicationStatusChange.mgd.php
 #: managed/CustomGroupFundingApplicationStatusChange.mgd.php
 msgid "Funding Application Status Change"
@@ -2566,6 +2609,10 @@ msgstr "Von fachliche Prüfung"
 #: managed/CustomGroup_funding_clearing_review_status_change.mgd.php
 msgid "To Review Content"
 msgstr "Zu fachliche Prüfung"
+
+#: managed/CustomGroupFundingApplicationSnapshotCreation.mgd.php
+msgid "Snapshot ID"
+msgstr "Snapshot ID"
 
 #: managed/CustomGroupFundingApplicationStatusChange.mgd.php
 #: managed/CustomGroup_funding_clearing_status_change.mgd.php
