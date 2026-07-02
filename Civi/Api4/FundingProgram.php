@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
+use Civi\Funding\Api4\Action\FundingProgram\CloneAction;
 use Civi\Funding\Api4\Action\FundingProgram\GetAmountApprovedAction;
 use Civi\Funding\Api4\Action\FundingProgram\GetAction;
 use Civi\Funding\Api4\Action\FundingProgram\GetFieldsAction;
@@ -60,6 +61,13 @@ final class FundingProgram extends Generic\DAOEntity {
    */
   public static function getFields($checkPermissions = TRUE) {
     return (new GetFieldsAction())->setCheckPermissions($checkPermissions);
+  }
+
+  /**
+   * Clones a funding program.
+   */
+  public static function clone(bool $checkPermissions = TRUE): CloneAction {
+    return (new CloneAction())->setCheckPermissions($checkPermissions);
   }
 
 }

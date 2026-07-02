@@ -150,13 +150,11 @@ return [
                   'icon' => 'fa-pen-to-square',
                   'text' => E::ts('Edit possible funding recipients'),
                   'style' => 'default',
-                  'conditions' => [
+                  'condition' => [
+                    'check user permission',
+                    '=',
                     [
-                      'check user permission',
-                      '=',
-                      [
-                        'administer Funding',
-                      ],
+                      'administer Funding',
                     ],
                   ],
                   'task' => '',
@@ -170,13 +168,11 @@ return [
                   'icon' => 'fa-pen-to-square',
                   'text' => E::ts('Edit permissions'),
                   'style' => 'default',
-                  'conditions' => [
+                  'condition' => [
+                    'check user permission',
+                    '=',
                     [
-                      'check user permission',
-                      '=',
-                      [
-                        'administer Funding',
-                      ],
+                      'administer Funding',
                     ],
                   ],
                   'task' => '',
@@ -190,13 +186,11 @@ return [
                   'icon' => 'fa-pen-to-square',
                   'text' => E::ts('Edit initial funding case permissions'),
                   'style' => 'default',
-                  'conditions' => [
+                  'condition' => [
+                    'check user permission',
+                    '=',
                     [
-                      'check user permission',
-                      '=',
-                      [
-                        'administer Funding',
-                      ],
+                      'administer Funding',
                     ],
                   ],
                   'task' => '',
@@ -210,13 +204,11 @@ return [
                   'icon' => 'fa-pen-to-square',
                   'text' => E::ts('Edit basic values'),
                   'style' => 'default',
-                  'conditions' => [
+                  'condition' => [
+                    'check user permission',
+                    '=',
                     [
-                      'check user permission',
-                      '=',
-                      [
-                        'administer Funding',
-                      ],
+                      'administer Funding',
                     ],
                   ],
                   'task' => '',
