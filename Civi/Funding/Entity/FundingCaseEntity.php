@@ -33,6 +33,7 @@ use Civi\Funding\Api4\RemoteApiConstants;
  *   modification_date: string,
  *   creation_contact_id: int,
  *   notification_contact_ids: list<int>,
+ *   budget_requested: ?float,
  *   amount_approved: ?float,
  *   permissions?: list<string>,
  *   transfer_contract_uri?: ?string,
@@ -131,6 +132,16 @@ final class FundingCaseEntity extends AbstractEntity {
    */
   public function setNotificationContactIds(array $notificationContactIds): self {
     $this->values['notification_contact_ids'] = $notificationContactIds;
+
+    return $this;
+  }
+
+  public function getBudgetRequested(): ?float {
+    return $this->values['budget_requested'];
+  }
+
+  public function setBudgetRequested(?float $budgetRequested): self {
+    $this->values['budget_requested'] = $budgetRequested;
 
     return $this;
   }

@@ -20,6 +20,8 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\FundingCase\JsonSchema;
 
 use Civi\Funding\Form\JsonSchema\JsonSchemaRecipient;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonSchema\JsonSchemaMoney;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 use Webmozart\Assert\Assert;
 
@@ -35,11 +37,16 @@ final class KursNewCaseJsonSchema extends JsonSchemaObject {
     Assert::isArray($required);
     $keywords['required'] = array_merge([
       'empfaenger',
+      'gewuenschtesBudget',
     ], $required);
 
     parent::__construct(
       [
         'empfaenger' => new JsonSchemaRecipient($possibleRecipients),
+        'gewuenschtesBudget' => new JsonSchemaMoney([
+          'exclusiveMinimum' => 0,
+          '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'budget_requested']]),
+        ]),
       ] + $extraProperties,
       $keywords,
     );

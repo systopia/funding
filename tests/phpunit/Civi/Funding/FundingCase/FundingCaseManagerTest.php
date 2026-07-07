@@ -219,6 +219,7 @@ final class FundingCaseManagerTest extends AbstractFundingHeadlessTestCase {
       'funding_program_id' => $fundingProgram->getId(),
       'funding_case_type_id' => $fundingCaseType->getId(),
       'recipient_contact_id' => $recipientContact['id'],
+      'budget_requested' => NULL,
       'status' => 'open',
       'creation_date' => date('Y-m-d H:i:s'),
       'modification_date' => date('Y-m-d H:i:s'),

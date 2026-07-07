@@ -28,11 +28,12 @@ final class KursNewCaseUiSchema extends JsonFormsGroup {
   /**
    * @phpstan-param array<int, \Civi\RemoteTools\JsonForms\Control\JsonFormsSubmitButton> $submitButtons
    */
-  public function __construct(array $submitButtons) {
+  public function __construct(array $submitButtons, string $currency) {
     parent::__construct('Sammelantrag Kurs', [
       new JsonFormsCloseableGroup('Antragstellende Organisation', [
         new JsonFormsControl('#/properties/empfaenger', ''),
       ]),
+      new JsonFormsControl('#/properties/gewuenschtesBudget', "Gewünschtes Budget in $currency"),
       ...$submitButtons,
     ]);
   }

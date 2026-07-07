@@ -254,6 +254,24 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
     return TRUE;
   }
 
+  public function upgrade_0023(): bool {
+    $this->ctx->log->info('Applying database migration 0022');
+    E::schema()->alterSchemaField(
+      'FundingCase',
+      'budget_requested',
+      [
+        'title' => E::ts('Budget Requested'),
+        'description' => E::ts('For combined funding cases that require approval before application creation.'),
+        'sql_type' => 'decimal(10,2)',
+        'input_type' => 'Text',
+        'data_type' => 'Money',
+      ],
+      'AFTER recipient_contact_id'
+    );
+
+    return TRUE;
+  }
+
   private function createUniqueTranslationIndex(): void {
     try {
       // Not possible on MySQL because it exceeds max key length of 3072 bytes.

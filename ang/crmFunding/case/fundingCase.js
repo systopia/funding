@@ -70,9 +70,11 @@
             (total, applicationProcess) => total + applicationProcess.amount_eligible,
             0
           );
-        $scope.approve = {
-          amount: $scope.amountEligible,
-        };
+        if ($scope.fundingCase.budget_requested === null) {
+          $scope.approve = {
+            amount: $scope.amountEligible,
+          };
+        }
       }
 
       function updateApplicationProcesses() {
@@ -119,6 +121,13 @@
       $scope.applicationProcesses = applicationProcesses;
       $scope.payoutProcesses = payoutProcesses;
       $scope.possibleActions = possibleActions;
+
+      if (fundingCase.budget_requested !== null) {
+        $scope.approve = {
+          amount: fundingCase.budget_requested,
+        };
+      }
+
       updateAmountEligible();
 
       function handleSetValue(field, value) {

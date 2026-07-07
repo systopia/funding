@@ -23,6 +23,7 @@ use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsD
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
+use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\Form\Application\ApplicationSubmitActionsFactory;
 use Civi\Funding\FundingCaseType\MetaData\ApplicationProcessAction;
@@ -105,12 +106,17 @@ final class ApplicationSubmitActionsFactoryTest extends TestCase {
     $actionTest2 = new ApplicationProcessAction(['name' => 'test2', 'label' => 'Test2']);
     $this->metaDataMock->addApplicationProcessAction($actionTest2);
 
+    $fundingCase = FundingCaseFactory::createFundingCase();
     $this->actionsDeterminerMock->expects(static::once())->method('getInitialActions')
-      ->with(['permission'])
+      ->with(['permission'], $fundingCase)
       ->willReturn(['test2', 'test1']);
 
     $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
-    $submitActions = $this->submitActionsFactory->getInitialSubmitActions(['permission'], $fundingCaseType);
+    $submitActions = $this->submitActionsFactory->getInitialSubmitActions(
+      ['permission'],
+      $fundingCaseType,
+      $fundingCase
+    );
     // "test1" must be first
     static::assertSame([
       'test1' => $actionTest1,
@@ -119,12 +125,11 @@ final class ApplicationSubmitActionsFactoryTest extends TestCase {
   }
 
   public function testGetInitialSubmitActionsUnknownAction(): void {
-    $this->actionsDeterminerMock->expects(static::once())->method('getInitialActions')
-      ->with(['permission'])
-      ->willReturn(['test']);
-
     $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
-    static::assertSame([], $this->submitActionsFactory->getInitialSubmitActions(['permission'], $fundingCaseType));
+    static::assertSame(
+      [],
+      $this->submitActionsFactory->getInitialSubmitActions(['permission'], $fundingCaseType, NULL)
+    );
   }
 
   private function createApplicationProcessBundle(

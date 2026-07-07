@@ -26,13 +26,19 @@ interface ValidatedFundingCaseDataInterface {
   public function getRecipientContactId(): int;
 
   /**
-   * @phpstan-return array<string, mixed> JSON serializable.
+   * @return array<string, mixed> JSON serializable.
    *   Request data without extra data like "_action".
    */
   public function getFundingCaseData(): array;
 
   /**
-   * @phpstan-return array<string, mixed> JSON serializable.
+   * @return array{budget_requested?: ?float, ...} JSON serializable.
+   *   Data to set in the FundingCase entity.
+   */
+  public function getMappedData(): array;
+
+  /**
+   * @return array<string, mixed> JSON serializable.
    *   The request data (after JSON schema validation) from which data is
    *   extracted.
    */

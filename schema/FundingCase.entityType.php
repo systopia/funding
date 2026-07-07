@@ -149,6 +149,13 @@ return [
         'on_delete' => 'RESTRICT',
       ],
     ],
+    'budget_requested' => [
+      'title' => E::ts('Budget Requested'),
+      'description' => E::ts('For combined funding cases that require approval before application creation.'),
+      'sql_type' => 'decimal(10,2)',
+      'input_type' => 'Text',
+      'data_type' => 'Money',
+    ],
     'amount_approved' => [
       'title' => E::ts('Amount Approved'),
       'sql_type' => 'decimal(10,2)',

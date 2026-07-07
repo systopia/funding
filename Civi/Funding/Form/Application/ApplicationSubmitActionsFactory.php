@@ -21,6 +21,7 @@ namespace Civi\Funding\Form\Application;
 
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerInterface;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\FundingCaseType\FundingCaseTypeMetaDataProviderInterface;
 use Civi\Funding\FundingCaseTypeServiceLocatorContainer;
@@ -52,8 +53,12 @@ final class ApplicationSubmitActionsFactory implements ApplicationSubmitActionsF
   /**
    * @return array<string, \Civi\Funding\FundingCaseType\MetaData\ApplicationProcessAction>
    */
-  public function getInitialSubmitActions(array $permissions, FundingCaseTypeEntity $fundingCaseType): array {
-    $actionNames = $this->getActionsDeterminer($fundingCaseType)->getInitialActions($permissions);
+  public function getInitialSubmitActions(
+    array $permissions,
+    FundingCaseTypeEntity $fundingCaseType,
+    ?FundingCaseEntity $fundingCase
+  ): array {
+    $actionNames = $this->getActionsDeterminer($fundingCaseType)->getInitialActions($permissions, $fundingCase);
 
     return $this->getActions($fundingCaseType, $actionNames);
   }

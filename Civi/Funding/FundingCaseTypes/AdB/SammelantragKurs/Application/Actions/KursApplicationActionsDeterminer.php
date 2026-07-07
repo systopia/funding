@@ -22,8 +22,8 @@ namespace Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Application\Actions
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\AbstractApplicationProcessActionsDeterminer;
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\Helper\DetermineApproveRejectActionsHelper;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\FundingCase\FundingCaseStatus;
-use Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\KursMetaData;
 use Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
 use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
 
@@ -101,16 +101,12 @@ final class KursApplicationActionsDeterminer extends AbstractApplicationProcessA
 
   private DetermineApproveRejectActionsHelper $determineApproveRejectActionsHelper;
 
-  private KursMetaData $metaData;
-
-  public function __construct(KursMetaData $metaData) {
+  public function __construct() {
     parent::__construct(self::STATUS_PERMISSION_ACTIONS_MAP);
     $this->determineApproveRejectActionsHelper = new DetermineApproveRejectActionsHelper(
       ['review', 'rework-review'],
       ['approve' => ['review' => 'approve', 'rework-review' => 'approve-change']]
     );
-
-    $this->metaData = $metaData;
   }
 
   public function getActions(ApplicationProcessEntityBundle $applicationProcessBundle, array $statusList): array {
@@ -119,10 +115,6 @@ final class KursApplicationActionsDeterminer extends AbstractApplicationProcessA
     }
 
     $permissions = $applicationProcessBundle->getFundingCase()->getPermissions();
-
-    if (!$this->hasReviewPermission($permissions) && $this->isAnyApplicationInReview($statusList)) {
-      return [];
-    }
 
     return array_merge(
       parent::getActions($applicationProcessBundle, $statusList),
@@ -134,17 +126,12 @@ final class KursApplicationActionsDeterminer extends AbstractApplicationProcessA
     );
   }
 
-  /**
-   * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $statusList
-   */
-  private function isAnyApplicationInReview(array $statusList): bool {
-    foreach ($statusList as $status) {
-      if (TRUE === $this->metaData->getApplicationProcessStatus($status->getStatus())?->isInReview()) {
-        return TRUE;
-      }
+  public function getInitialActions(array $permissions, ?FundingCaseEntity $fundingCase): array {
+    if (FundingCaseStatus::OPEN === $fundingCase?->getStatus()) {
+      return [];
     }
 
-    return FALSE;
+    return parent::getInitialActions($permissions, $fundingCase);
   }
 
 }

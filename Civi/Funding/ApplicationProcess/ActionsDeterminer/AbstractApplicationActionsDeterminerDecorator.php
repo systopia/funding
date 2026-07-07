@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\Entity\FundingCaseEntity;
 
 /**
  * @codeCoverageIgnore
@@ -43,8 +44,8 @@ abstract class AbstractApplicationActionsDeterminerDecorator extends AbstractApp
   /**
    * @inheritDoc
    */
-  public function getInitialActions(array $permissions): array {
-    return $this->actionsDeterminer->getInitialActions($permissions);
+  public function getInitialActions(array $permissions, ?FundingCaseEntity $fundingCase): array {
+    return $this->actionsDeterminer->getInitialActions($permissions, $fundingCase);
   }
 
 }

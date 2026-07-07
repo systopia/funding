@@ -20,17 +20,25 @@ declare(strict_types = 1);
 namespace Civi\Funding\Form\Application;
 
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 
 interface ApplicationSubmitActionsFactoryInterface {
 
   /**
    * @param list<string> $permissions
+   * @param \Civi\Funding\Entity\FundingCaseEntity|null $fundingCase
+   *   The funding case a new application process is going to be added. NULL if
+   *   no funding case exists, yet.
    *
    * @return array<string, \Civi\Funding\FundingCaseType\MetaData\ApplicationProcessAction>
    *   Map of action names to actions.
    */
-  public function getInitialSubmitActions(array $permissions, FundingCaseTypeEntity $fundingCaseType): array;
+  public function getInitialSubmitActions(
+    array $permissions,
+    FundingCaseTypeEntity $fundingCaseType,
+    ?FundingCaseEntity $fundingCase
+  ): array;
 
   /**
    * @param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $statusList

@@ -73,7 +73,7 @@ final class KursCaseUiSchemaFactory implements FundingCaseUiSchemaFactoryInterfa
       $this->submitActionsFactory->getInitialSubmitActions($fundingProgram->getPermissions(), $fundingCaseType)
     );
 
-    return new KursNewCaseUiSchema($submitButtons);
+    return new KursNewCaseUiSchema($submitButtons, $fundingProgram->getCurrency());
   }
 
 }

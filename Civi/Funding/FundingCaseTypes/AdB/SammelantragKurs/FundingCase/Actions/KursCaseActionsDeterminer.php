@@ -54,7 +54,10 @@ final class KursCaseActionsDeterminer extends AbstractFundingCaseActionsDetermin
     KursMetaData $metaData
   ) {
     parent::__construct(new DefaultFundingCaseActionsDeterminer(
-      $applicationStatusDeterminer, $clearingProcessManager, $metaData
+      $applicationStatusDeterminer,
+      $clearingProcessManager,
+      $metaData,
+      DefaultFundingCaseActionsDeterminer::FLAG_APPROVE_APPLICATION_INDEPENDENT
     ));
     $this->applicationActionsDeterminer = $applicationActionsDeterminer;
     $this->applicationProcessManager = $applicationProcessManager;

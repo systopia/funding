@@ -21,6 +21,7 @@ namespace Civi\Funding\ApplicationProcess\Helper;
 
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerInterface;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Form\JsonSchema\JsonSchemaComment;
 use Civi\Funding\FundingCaseTypeServiceLocatorContainer;
@@ -53,14 +54,18 @@ class ApplicationJsonSchemaCreateHelper {
   }
 
   /**
-   * @phpstan-param list<string> $permissions
+   * @param list<string> $permissions
+   * @param \Civi\Funding\Entity\FundingCaseEntity|null $fundingCase
+   *   The funding case a new application process is going to be added. NULL if
+   *   no funding case exists, yet.
    */
   public function addInitialActionProperty(
     JsonSchema $jsonSchema,
     FundingCaseTypeEntity $fundingCaseType,
-    array $permissions
+    array $permissions,
+    ?FundingCaseEntity $fundingCase
   ): void {
-    $submitActions = $this->getActionsDeterminer($fundingCaseType)->getInitialActions($permissions);
+    $submitActions = $this->getActionsDeterminer($fundingCaseType)->getInitialActions($permissions, $fundingCase);
     $this->doAddActionProperty($jsonSchema, $submitActions);
   }
 

@@ -54,6 +54,13 @@ final class ValidatedFundingCaseDataInvalid implements ValidatedFundingCaseDataI
   /**
    * @inheritDoc
    */
+  public function getMappedData(): array {
+    return [];
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function getRawData(): array {
     return $this->rawData;
   }

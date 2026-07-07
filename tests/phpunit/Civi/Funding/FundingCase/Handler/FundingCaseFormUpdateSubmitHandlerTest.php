@@ -70,7 +70,7 @@ final class FundingCaseFormUpdateSubmitHandlerTest extends TestCase {
       '_action' => 'apply',
       'title' => 'Test',
       'recipient' => $recipientContactId,
-    ]);
+    ], ['budget_requested' => 1.23, 'custom.field' => 'abc']);
     $validationResult = FundingCaseValidationResult::newValid($validatedData);
     $this->validateHandlerMock->method('handle')->with(new FundingCaseFormUpdateValidateCommand(
       $command->getFundingCaseBundle(),
@@ -93,6 +93,8 @@ final class FundingCaseFormUpdateSubmitHandlerTest extends TestCase {
     static::assertSame($validatedData, $result->getValidatedData());
     static::assertSame($command->getFundingCase(), $result->getFundingCase());
     static::assertSame('new_status', $command->getFundingCase()->getStatus());
+    static::assertSame(1.23, $command->getFundingCase()->getBudgetRequested());
+    static::assertSame('abc', $command->getFundingCase()->get('custom.field'));
   }
 
   public function testHandleInvalid(): void {

@@ -6,6 +6,14 @@ msgstr ""
 msgid "Funding Program"
 msgstr ""
 
+#: CRM/Funding/Upgrader.php ang/crmFunding/case/fundingCase.template.html schema/FundingCase.entityType.php
+msgid "Budget Requested"
+msgstr ""
+
+#: CRM/Funding/Upgrader.php schema/FundingCase.entityType.php
+msgid "For combined funding cases that require approval before application creation."
+msgstr ""
+
 #: Civi/Api4/Query/SqlFunctionFUNDING_JSON_OVERLAPS.php
 msgid "json_document1"
 msgstr ""

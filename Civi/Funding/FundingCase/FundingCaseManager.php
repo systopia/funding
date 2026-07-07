@@ -143,28 +143,34 @@ class FundingCaseManager {
    *   funding_program: \Civi\Funding\Entity\FundingProgramEntity,
    *   funding_case_type: \Civi\Funding\Entity\FundingCaseTypeEntity,
    *   recipient_contact_id: int,
+   *   budget_requested?: ?float,
+   *   ...
    * } $values
    *
    * @throws \CRM_Core_Exception
    */
   public function create(int $contactId, array $values): FundingCaseEntity {
     $now = date('Y-m-d H:i:s');
+    $fundingProgram = $values['funding_program'];
+    unset($values['funding_program']);
+    $fundingCaseType = $values['funding_case_type'];
+    unset($values['funding_case_type']);
+    $values['budget_requested'] ??= NULL;
     $fundingCase = FundingCaseEntity::fromArray([
       // Initialize with random UUID
       'identifier' => Uuid::generateRandom(),
-      'funding_program_id' => $values['funding_program']->getId(),
-      'funding_case_type_id' => $values['funding_case_type']->getId(),
-      'recipient_contact_id' => $values['recipient_contact_id'],
+      'funding_program_id' => $fundingProgram->getId(),
+      'funding_case_type_id' => $fundingCaseType->getId(),
       'status' => 'open',
       'creation_date' => $now,
       'modification_date' => $now,
       'creation_contact_id' => $contactId,
       'notification_contact_ids' => [$contactId],
       'amount_approved' => NULL,
-    ]);
+    ] + $values);
 
     $event = new FundingCasePreCreateEvent(
-      new FundingCaseBundle($fundingCase, $values['funding_case_type'], $values['funding_program'])
+      new FundingCaseBundle($fundingCase, $fundingCaseType, $fundingProgram)
     );
     $this->eventDispatcher->dispatch(FundingCasePreCreateEvent::class, $event);
 
@@ -174,11 +180,7 @@ class FundingCaseManager {
     $fundingCase = FundingCaseEntity::singleFromApiResult($this->api4->executeAction($action))->reformatDates();
 
     $event = new FundingCaseCreatedEvent(
-      new FundingCaseBundle(
-        $fundingCase,
-        $values['funding_case_type'],
-        $values['funding_program']
-      )
+      new FundingCaseBundle($fundingCase, $fundingCaseType, $fundingProgram)
     );
     $this->eventDispatcher->dispatch(FundingCaseCreatedEvent::class, $event);
 
