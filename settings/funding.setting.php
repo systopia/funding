@@ -15,6 +15,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Civi\Funding\DocumentRender\CiviOffice\CiviOfficeRendererOptions;
 use CRM_Funding_ExtensionUtil as E;
 
 return [
@@ -22,7 +23,7 @@ return [
     'name' => 'funding_civioffice_renderer_uri',
     'type' => 'String',
     'html_type' => 'select',
-    'pseudoconstant' => ['callback' => '\Civi\Funding\DocumentRender\CiviOffice\CiviOfficeRendererOptions::getOptions'],
+    'pseudoconstant' => ['callback' => [CiviOfficeRendererOptions::class, 'getOptions']],
     'default' => 'unoconv-local',
     'title' => E::ts('CiviOffice Renderer'),
     'description' => E::ts('The CiviOffice renderer to use for rendering PDFs.'),
