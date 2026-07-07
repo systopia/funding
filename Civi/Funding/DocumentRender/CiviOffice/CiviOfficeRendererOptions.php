@@ -63,9 +63,8 @@ class CiviOfficeRendererOptions {
   }
 
   public static function getInstance(): self {
-    /** @var self $instance */
-    $instance = \Civi::service(self::class);
-    return $instance;
+    /** @var self */
+    return \Civi::service(self::class);
   }
 
 }

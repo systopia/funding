@@ -19,16 +19,33 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\DocumentRender;
 
+use Civi\Funding\DocumentRender\CiviOffice\CiviOfficeRendererOptions;
+
 class SettingProvider {
+
+  private ?CiviOfficeRendererOptions $options;
+
+  public function __construct(?CiviOfficeRendererOptions $options = NULL) {
+    $this->options = $options;
+  }
+
+  private function getOptions(): CiviOfficeRendererOptions {
+    return $this->options ?? CiviOfficeRendererOptions::getInstance();
+  }
+
+  protected function getSettingsValue(): ?string {
+    /** @var ?string */
+    return \Civi::settings()->get('funding_civioffice_renderer_uri');
+  }
 
   /**
    * Get the configured renderer URI.
    *
    * @return string
+   * @throws \CRM_Core_Exception
    */
   public function getCiviOfficeRendererUri(): string {
-    // @phpstan-ignore-next-line cast.string
-    return (string) (\Civi::settings()->get('funding_civioffice_renderer_uri') ?? 'unoconv-local');
+    return (string) ($this->getSettingsValue() ?? array_first($this->getOptions()->fetchOptions()));
   }
 
 }

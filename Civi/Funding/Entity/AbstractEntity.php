@@ -82,7 +82,6 @@ abstract class AbstractEntity {
    * @return static
    */
   public static function fromArray(array $values): self {
-    // @phpstan-ignore return.type
     return new static($values);
   }
 
