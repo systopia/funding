@@ -21,6 +21,7 @@ namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
+use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\FundingCase\FundingCaseStatus;
 use PHPUnit\Framework\TestCase;
 
@@ -297,15 +298,23 @@ final class DefaultApplicationProcessActionsDeterminerTest extends TestCase {
   }
 
   public function testGetInitialActions(): void {
+    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
     foreach (self::INITIAL_PERMISSION_ACTIONS_MAP as $permission => $actions) {
-      static::assertSame($actions, $this->actionsDeterminer->getInitialActions([$permission], NULL));
+      static::assertSame(
+        $actions,
+        $this->actionsDeterminer->getInitialActions([$permission], $fundingCaseType, NULL)
+      );
     }
   }
 
   public function testGetInitialActionsAllPermissions(): void {
     $actions = array_merge(...array_values(self::INITIAL_PERMISSION_ACTIONS_MAP));
     $permissions = array_keys(self::INITIAL_PERMISSION_ACTIONS_MAP);
-    static::assertEquals($actions, $this->actionsDeterminer->getInitialActions($permissions, NULL));
+    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
+    static::assertEquals(
+      $actions,
+      $this->actionsDeterminer->getInitialActions($permissions, $fundingCaseType, NULL)
+    );
   }
 
   public function testIsActionAllowed(): void {

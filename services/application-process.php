@@ -20,6 +20,8 @@ declare(strict_types = 1);
 // phpcs:disable Drupal.Commenting.DocComment.ContentAfterOpen
 /** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
 
+use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerCollector;
+use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerInterface;
 use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
 use Civi\Funding\ApplicationProcess\ApplicationExternalFileManager;
 use Civi\Funding\ApplicationProcess\ApplicationExternalFileManagerInterface;
@@ -40,6 +42,8 @@ use Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormValidatorInte
 use Civi\Funding\ApplicationProcess\Handler\ApplicationActionApplyHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationAllowedActionsGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandlerInterface;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationDeleteHandler;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationDeleteHandlerCollector;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationDeleteHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesPersistHandlerInterface;
@@ -62,7 +66,6 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandlerInte
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationActionApplyHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationAllowedActionsGetHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationCostItemsPersistHandler;
-use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationDeleteHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFilesAddIdentifiersHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFilesPersistHandler;
 use Civi\Funding\ApplicationProcess\Handler\DefaultApplicationFormAddCreateHandler;
@@ -100,6 +103,11 @@ use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 $container->addCompilerPass(new FundingCaseTypeServicePass(
+  ApplicationProcessActionsDeterminerCollector::class,
+  ApplicationProcessActionsDeterminerInterface::class,
+  TRUE
+));
+$container->addCompilerPass(new FundingCaseTypeServicePass(
   ApplicationFormValidatorCollector::class,
   ApplicationFormValidatorInterface::class,
 ));
@@ -121,6 +129,15 @@ $container->addCompilerPass(new FundingCaseTypeServicePass(
   ApplicationUiSchemaFactoryInterface::class,
   TRUE,
 ));
+
+$container->addCompilerPass(
+  (new FundingCaseTypeServicePass(
+    ApplicationDeleteHandlerCollector::class,
+    ApplicationDeleteHandlerInterface::class,
+  ))
+    // Used in API action.
+    ->setPublic(TRUE)
+);
 
 $container->autowire(ApplicationProcessManager::class)
   // Used in API actions.
@@ -174,9 +191,9 @@ $container->autowire(
   ApplicationAllowedActionsGetHandlerInterface::class,
   DefaultApplicationAllowedActionsGetHandler::class
 );
-$container->autowire(ApplicationDeleteHandlerInterface::class, DefaultApplicationDeleteHandler::class)
-  // Used in API action.
-  ->setPublic(TRUE);
+
+$container->autowire(ApplicationDeleteHandler::class)
+  ->addTag(ApplicationDeleteHandler::SERVICE_TAG);
 
 $container->autowire(ApplicationFormNewCreateHandlerInterface::class, DefaultApplicationFormNewCreateHandler::class);
 $container->autowire(ApplicationFormNewValidateHandlerInterface::class, ApplicationFormNewValidateHandler::class);

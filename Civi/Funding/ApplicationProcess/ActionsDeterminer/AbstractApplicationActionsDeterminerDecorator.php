@@ -21,6 +21,7 @@ namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
 
 /**
  * @codeCoverageIgnore
@@ -42,10 +43,16 @@ abstract class AbstractApplicationActionsDeterminerDecorator extends AbstractApp
   }
 
   /**
+   * @param \Civi\Funding\Entity\FundingCaseTypeEntity $fundingCaseType *
+   *
    * @inheritDoc
    */
-  public function getInitialActions(array $permissions, ?FundingCaseEntity $fundingCase): array {
-    return $this->actionsDeterminer->getInitialActions($permissions, $fundingCase);
+  public function getInitialActions(
+    array $permissions,
+    FundingCaseTypeEntity $fundingCaseType,
+    ?FundingCaseEntity $fundingCase
+  ): array {
+    return $this->actionsDeterminer->getInitialActions($permissions, $fundingCaseType, $fundingCase);
   }
 
 }

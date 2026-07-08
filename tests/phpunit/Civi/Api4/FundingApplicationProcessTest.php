@@ -30,6 +30,7 @@ use Civi\Funding\Fixtures\ApplicationSnapshotFixture;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\EntityFileFixture;
 use Civi\Funding\Fixtures\ExternalFileFixture;
+use Civi\Funding\Fixtures\FundingCaseBundleFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
@@ -135,6 +136,36 @@ final class FundingApplicationProcessTest extends AbstractFundingHeadlessTestCas
     RequestTestUtil::mockRemoteRequest((string) $contactNotPermitted['id']);
     static::assertCount(0, FundingApplicationProcess::get()
       ->addSelect('id')->execute());
+  }
+
+  /**
+   * @covers \Civi\Funding\Api4\Action\FundingApplicationProcess\GetAllowedActionsInitialByFundingCaseAction
+   * @covers \Civi\Funding\ApplicationProcess\Api4\ActionHandler\GetAllowedActionsInitialByFundingCaseActionHandler
+   */
+  public function testGetAllowedActionsInitialByFundingCase(): void {
+    $fundingCaseBundle = FundingCaseBundleFixture::create();
+    $fundingCaseId = $fundingCaseBundle->getFundingCase()->getId();
+    $contactId = $fundingCaseBundle->getFundingCase()->getCreationContactId();
+    // Remote request to get an action with permission "application_create".
+    RequestTestUtil::mockRemoteRequest((string) $contactId);
+
+    $action = FundingApplicationProcess::getAllowedActionsInitialByFundingCase()
+      ->setFundingCaseIds([$fundingCaseId]);
+
+    static::assertSame([$fundingCaseId => []], $action->execute()->getArrayCopy());
+
+    FundingCaseContactRelationFixture::addContact($contactId, $fundingCaseId, ['application_create']);
+    static::assertEquals(
+      [
+        $fundingCaseId => [
+          'save' => [
+            'label' => 'Save',
+            'confirm' => NULL,
+          ],
+        ],
+      ],
+      $action->execute()->getArrayCopy()
+    );
   }
 
   public function testGetFields(): void {

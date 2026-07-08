@@ -21,6 +21,7 @@ namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
 
 /**
  * @phpstan-type statusPermissionsActionMapT array<string|null, array<string, list<string>>>
@@ -46,7 +47,11 @@ abstract class AbstractApplicationProcessActionsDeterminer implements Applicatio
     );
   }
 
-  public function getInitialActions(array $permissions, ?FundingCaseEntity $fundingCase): array {
+  public function getInitialActions(
+    array $permissions,
+    FundingCaseTypeEntity $fundingCaseType,
+    ?FundingCaseEntity $fundingCase
+  ): array {
     return $this->doGetActions(NULL, $permissions);
   }
 

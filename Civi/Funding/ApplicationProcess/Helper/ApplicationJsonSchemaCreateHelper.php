@@ -24,18 +24,15 @@ use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Form\JsonSchema\JsonSchemaComment;
-use Civi\Funding\FundingCaseTypeServiceLocatorContainer;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaNull;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 
 class ApplicationJsonSchemaCreateHelper {
 
-  private FundingCaseTypeServiceLocatorContainer $serviceLocatorContainer;
-
-  public function __construct(FundingCaseTypeServiceLocatorContainer $serviceLocatorContainer) {
-    $this->serviceLocatorContainer = $serviceLocatorContainer;
-  }
+  public function __construct(
+    private readonly ApplicationProcessActionsDeterminerInterface $actionsDeterminer
+  ) {}
 
   /**
    * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $applicationProcessStatusList
@@ -46,7 +43,7 @@ class ApplicationJsonSchemaCreateHelper {
     ApplicationProcessEntityBundle $applicationProcessBundle,
     array $applicationProcessStatusList
   ): void {
-    $submitActions = $this->getActionsDeterminer($applicationProcessBundle->getFundingCaseType())->getActions(
+    $submitActions = $this->actionsDeterminer->getActions(
       $applicationProcessBundle,
       $applicationProcessStatusList
     );
@@ -65,7 +62,11 @@ class ApplicationJsonSchemaCreateHelper {
     array $permissions,
     ?FundingCaseEntity $fundingCase
   ): void {
-    $submitActions = $this->getActionsDeterminer($fundingCaseType)->getInitialActions($permissions, $fundingCase);
+    $submitActions = $this->actionsDeterminer->getInitialActions(
+      $permissions,
+      $fundingCaseType,
+      $fundingCase
+    );
     $this->doAddActionProperty($jsonSchema, $submitActions);
   }
 
@@ -81,7 +82,7 @@ class ApplicationJsonSchemaCreateHelper {
     /** @var \Civi\RemoteTools\JsonSchema\JsonSchema $properties */
     $properties = $jsonSchema['properties'];
 
-    if ($this->getActionsDeterminer($applicationProcessBundle->getFundingCaseType())->isActionAllowed(
+    if ($this->actionsDeterminer->isActionAllowed(
       'add-comment',
       $applicationProcessBundle,
       $applicationProcessStatusList
@@ -104,10 +105,7 @@ class ApplicationJsonSchemaCreateHelper {
     array $applicationProcessStatusList
   ): void {
     // The readOnly keyword is not inherited, though we use it for informational purposes.
-    if (!$this->getActionsDeterminer($applicationProcessBundle->getFundingCaseType())->isEditAllowed(
-      $applicationProcessBundle,
-      $applicationProcessStatusList
-    )) {
+    if (!$this->actionsDeterminer->isEditAllowed($applicationProcessBundle, $applicationProcessStatusList)) {
       $jsonSchema->addKeyword('readOnly', TRUE);
     }
   }
@@ -129,12 +127,6 @@ class ApplicationJsonSchemaCreateHelper {
     $required = $jsonSchema['_required'] ?? [];
     $required[] = '_action';
     $jsonSchema['_required'] = $required;
-  }
-
-  private function getActionsDeterminer(
-    FundingCaseTypeEntity $fundingCaseType
-  ): ApplicationProcessActionsDeterminerInterface {
-    return $this->serviceLocatorContainer->get($fundingCaseType->getName())->getApplicationProcessActionsDeterminer();
   }
 
 }

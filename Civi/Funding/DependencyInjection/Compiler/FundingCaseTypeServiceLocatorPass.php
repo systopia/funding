@@ -28,8 +28,6 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationAllowedActionsGetHandler;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationAllowedActionsGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandler;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandlerInterface;
-use Civi\Funding\ApplicationProcess\Handler\ApplicationDeleteHandler;
-use Civi\Funding\ApplicationProcess\Handler\ApplicationDeleteHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesAddIdentifiersHandler;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesPersistHandler;
@@ -140,9 +138,6 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
     $applicationAllowedActionsGetHandlerServices =
       $this->getTaggedFundingCaseTypeServices($container, ApplicationAllowedActionsGetHandlerInterface::SERVICE_TAG);
 
-    $applicationDeleteHandlerServices =
-      $this->getTaggedFundingCaseTypeServices($container, ApplicationDeleteHandlerInterface::SERVICE_TAG);
-
     $applicationFormNewCreateHandlerServices =
       $this->getTaggedFundingCaseTypeServices($container, ApplicationFormNewCreateHandlerInterface::SERVICE_TAG);
     $applicationFormNewSubmitHandlerServices =
@@ -249,15 +244,6 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         $fundingCaseType,
         ApplicationAllowedActionsGetHandler::class,
         [],
-      );
-
-      $applicationDeleteHandlerServices[$fundingCaseType] ??= $this->createService(
-        $container,
-        $fundingCaseType,
-        ApplicationDeleteHandler::class,
-        [
-          '$actionsDeterminer' => $applicationActionsDeterminerServices[$fundingCaseType],
-        ]
       );
 
       $fundingCaseStatusDeterminerServices[$fundingCaseType] ??= $this->createService(
@@ -368,7 +354,7 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
               $container,
               $fundingCaseType,
               ApplicationAllowedActionApplier::class,
-              ['$actionsDeterminer' => $applicationActionsDeterminerServices[$fundingCaseType]],
+              [],
             ),
             '$statusDeterminer' => $fundingCaseStatusDeterminerServices[$fundingCaseType],
           ],
@@ -512,7 +498,6 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         ApplicationAllowedActionsGetHandlerInterface::class
         => $applicationAllowedActionsGetHandlerServices[$fundingCaseType],
         ApplicationActionApplyHandlerInterface::class => $applicationActionApplyHandlerServices[$fundingCaseType],
-        ApplicationDeleteHandlerInterface::class => $applicationDeleteHandlerServices[$fundingCaseType],
         ApplicationFilesAddIdentifiersHandlerInterface::class
         => $applicationFilesAddIdentifiersHandlerServices[$fundingCaseType],
         ApplicationFilesPersistHandlerInterface::class => $applicationFilesPersistHandlerServices[$fundingCaseType],
@@ -527,7 +512,6 @@ final class FundingCaseTypeServiceLocatorPass implements CompilerPassInterface {
         ApplicationResourcesItemsPersistHandlerInterface::class
         => $applicationResourcesItemsPersistHandlerServices[$fundingCaseType],
         ApplicationSnapshotCreateHandlerInterface::class => $applicationSnapshotCreateHandlerServices[$fundingCaseType],
-        ApplicationProcessActionsDeterminerInterface::class => $applicationActionsDeterminerServices[$fundingCaseType],
         ApplicationProcessStatusDeterminerInterface::class => $applicationStatusDeterminerServices[$fundingCaseType],
         FundingCaseApproveHandlerInterface::class => $fundingCaseApproveHandlerServices[$fundingCaseType],
         FundingCaseStatusDeterminerInterface::class => $fundingCaseStatusDeterminerServices[$fundingCaseType],

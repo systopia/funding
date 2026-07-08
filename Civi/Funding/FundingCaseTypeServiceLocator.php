@@ -19,11 +19,9 @@ declare(strict_types = 1);
 
 namespace Civi\Funding;
 
-use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationActionApplyHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationAllowedActionsGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandlerInterface;
-use Civi\Funding\ApplicationProcess\Handler\ApplicationDeleteHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddCreateHandlerInterface;
@@ -64,10 +62,6 @@ final class FundingCaseTypeServiceLocator implements FundingCaseTypeServiceLocat
 
   public function getApplicationAllowedActionsGetHandler(): ApplicationAllowedActionsGetHandlerInterface {
     return $this->locator->get(ApplicationAllowedActionsGetHandlerInterface::class);
-  }
-
-  public function getApplicationDeleteHandler(): ApplicationDeleteHandlerInterface {
-    return $this->locator->get(ApplicationDeleteHandlerInterface::class);
   }
 
   public function getApplicationFilesAddIdentifiersHandler() : ApplicationFilesAddIdentifiersHandlerInterface {
@@ -120,10 +114,6 @@ final class FundingCaseTypeServiceLocator implements FundingCaseTypeServiceLocat
 
   public function getApplicationSnapshotCreateHandler(): ApplicationSnapshotCreateHandlerInterface {
     return $this->locator->get(ApplicationSnapshotCreateHandlerInterface::class);
-  }
-
-  public function getApplicationProcessActionsDeterminer(): ApplicationProcessActionsDeterminerInterface {
-    return $this->locator->get(ApplicationProcessActionsDeterminerInterface::class);
   }
 
   public function getApplicationProcessStatusDeterminer(): ApplicationProcessStatusDeterminerInterface {
