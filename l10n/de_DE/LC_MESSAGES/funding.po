@@ -2432,7 +2432,7 @@ msgstr "Annahme ist möglich, wenn die Prüfung erfolgreich war."
 
 #: ang/crmFunding/diff/applicationSnapshotDiff.template.html
 msgid "Funding Application Changes"
-msgstr "Änderungen bei Förderanträgen"
+msgstr "Änderungen in Förderantrag"
 
 #: ang/crmFunding/diff/applicationSnapshotDiff.template.html
 msgid "No differences found."
