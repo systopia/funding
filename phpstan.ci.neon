@@ -23,6 +23,12 @@ parameters:
 		-
 			message: '#Brick\\Math\\RoundingMode::HalfUp#'
 			identifier: classConstant.notFound
+		-
+			message: '#enum_exists\(\).+RoundingMode#'
+			identifier: function.impossibleType
+		-
+			message: '#ReflectionEnum constructor#'
+			identifier: argument.unresolvableType
 
 		# Required with symfony/event-dispatcher <4.4.27
 		- '#::getSubscribedEvents\(\) return type has no value type specified in iterable type array.$#'

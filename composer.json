@@ -30,7 +30,7 @@
         "symfony/property-access": "^5.4 || ^6 || ^7",
         "systopia/activity-entity": "^1.0",
         "systopia/de.systopia.civioffice": "^1.0",
-        "systopia/de.systopia.identitytracker": "^1.5",
+        "systopia/de.systopia.identitytracker": "^1.6",
         "systopia/de.systopia.remotetools": "^1.2",
         "systopia/de.systopia.xcm": "^1.15",
         "systopia/external-file": "^1.0",
@@ -84,7 +84,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "0.29.x-dev"
+            "dev-main": "0.30.x-dev"
         }
     },
     "conflict": {

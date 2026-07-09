@@ -1410,6 +1410,22 @@ msgstr "Prüfung: Verwendungsnachweis ändern"
 msgid "View"
 msgstr "Ansehen"
 
+#: Civi/Funding/EventSubscriber/FundingProgram/FundingProgramSearchKitTaskSubscriber.php
+msgid "Clone Funding Program"
+msgstr "Förderprogramm klonen"
+
+#: Civi/Funding/EventSubscriber/FundingProgram/FundingProgramSearchKitTaskSubscriber.php
+msgid "Cloning funding program..."
+msgstr "Klone Förderprogramm..."
+
+#: Civi/Funding/EventSubscriber/FundingProgram/FundingProgramSearchKitTaskSubscriber.php
+msgid "Successfully cloned funding program."
+msgstr "Förderprogramm erfolgreich geklont."
+
+#: Civi/Funding/EventSubscriber/FundingProgram/FundingProgramSearchKitTaskSubscriber.php
+msgid "An error occurred while cloning funding program."
+msgstr "Beim Klonen des Förderprogramms ist ein Fehler aufgetreten."
+
 #: Civi/Funding/Form/JsonSchema/JsonSchemaComment.php
 #: ang/crmFunding/application/applicationSubmitModal.template.html
 #: ang/crmFunding/clearing/clearingSubmitModal.template.html
@@ -1624,6 +1640,10 @@ msgstr "Überarbeitung in Prüfung"
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
 msgid "Reopen"
 msgstr "Wieder öffnen"
+
+#: Civi/Funding/FundingProgram/Api4/ActionHandler/CloneHandler.php
+msgid "Copy of %1"
+msgstr "Kopie von %1"
 
 #: Civi/Funding/FundingPseudoConstants.php
 msgid "Accepted"

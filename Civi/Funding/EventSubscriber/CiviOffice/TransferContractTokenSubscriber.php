@@ -32,7 +32,7 @@ class TransferContractTokenSubscriber extends AbstractTokenSubscriber {
 
   private CiviOfficeContextDataHolder $contextDataHolder;
 
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     return [
       'civi.civioffice.tokenContext' => 'onCiviOfficeTokenContext',
     ] + parent::getSubscribedEvents();

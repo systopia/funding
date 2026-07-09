@@ -160,4 +160,16 @@ final class FundingProgramTest extends AbstractFundingHeadlessTestCase {
     static::assertSame(0.0, $fundingProgram['amount_admitted']);
   }
 
+  public function testClone(): void {
+    $this->setUserPermissions([Permissions::ACCESS_CIVICRM, Permissions::ADMINISTER_FUNDING]);
+    $sourceProgram = FundingProgram::get()->execute()->first();
+    $result = FundingProgram::clone()
+      ->addWhere('id', '=', $sourceProgram['id'])
+      ->execute();
+    static::assertCount(1, $result);
+    $cloned = $result->first();
+    static::assertNotEquals($sourceProgram['id'], $cloned['id']);
+    static::assertEquals('Copy of ' . $sourceProgram['title'], $cloned['title']);
+  }
+
 }
