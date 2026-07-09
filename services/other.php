@@ -53,6 +53,7 @@ use Psr\Log\LoggerInterface;
 use Psr\SimpleCache\CacheInterface;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -61,6 +62,10 @@ $container->setAlias(CacheInterface::class, 'cache.long');
 
 if (!$container->has(CiviEventDispatcherInterface::class)) {
   $container->setAlias(CiviEventDispatcherInterface::class, 'dispatcher.boot');
+}
+
+if (!$container->has(EventDispatcherInterface::class)) {
+  $container->setAlias(EventDispatcherInterface::class, 'event_dispatcher');
 }
 
 if (!$container->has(LoggerInterface::class)) {

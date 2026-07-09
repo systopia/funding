@@ -16,7 +16,7 @@
 
 'use strict';
 
-fundingModule.directive('fundingApplicationProcessActivity', [function() {
+fundingModule.directive('fundingApplicationProcessActivity', ['crmApi4', 'fundingApplicationProcessService', 'fundingApplicationSnapshotService', function (crmApi4, fundingApplicationProcessService, fundingApplicationSnapshotService) {
   return {
     restrict: 'E',
     scope: {
@@ -24,10 +24,14 @@ fundingModule.directive('fundingApplicationProcessActivity', [function() {
       statusOptions: '=',
       clearingStatusOptions: '<',
       reviewStatusLabels: '=',
+      applicationProcessId: '=',
     },
     templateUrl: '~/crmFunding/application/history/applicationProcessActivity.template.html',
     controller: function($scope) {
       const ts = $scope.ts = CRM.ts('funding');
+      $scope.$watch('activity.snapshot_id', function (snapshotId) {
+        $scope.snapshotId = snapshotId;
+      });
 
       if ($scope.activity['activity_type_id:name'] === 'funding_application_status_change') {
         $scope.statusOption = $scope.statusOptions[$scope.activity.to_status] || {
@@ -64,12 +68,24 @@ fundingModule.directive('fundingApplicationProcessActivity', [function() {
             return '~/crmFunding/application/history/activities/clearingCreate.template.html';
           case 'funding_clearing_review_status_change':
             return '~/crmFunding/application/history/activities/clearingReviewStatusChange.template.html';
+          case 'funding_application_snapshot_creation':
+            return '~/crmFunding/application/history/activities/snapshotCreation.template.html';
           default:
             return null;
         }
       }
 
       $scope.templateUrl = getActivityTemplateUrl($scope.activity);
+
+      /**
+       * Opens the diff dialog for the snapshot.
+       */
+      $scope.openDiffDialog = function () {
+        if (!$scope.snapshotId) {
+          return;
+        }
+        fundingApplicationSnapshotService.openDiffDialog($scope.applicationProcessId, $scope.snapshotId);
+      };
     },
   };
 }]);

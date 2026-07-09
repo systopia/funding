@@ -111,7 +111,7 @@ EOD,
 
     $required = array_filter(
       array_keys($properties),
-      static fn (string $key) => $key !== 'internerBezeichner',
+      static fn(string $key) => $key !== 'internerBezeichner',
     );
 
     parent::__construct($properties, [

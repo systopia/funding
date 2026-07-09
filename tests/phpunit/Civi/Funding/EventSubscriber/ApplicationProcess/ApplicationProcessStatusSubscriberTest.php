@@ -27,7 +27,6 @@ use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
-use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -52,14 +51,10 @@ final class ApplicationProcessStatusSubscriberTest extends TestCase {
     parent::setUp();
     $this->activityManagerMock = $this->createMock(ApplicationProcessActivityManager::class);
     $this->optionsLoaderMock = $this->createMock(OptionsLoaderInterface::class);
-    $requestContextMock = $this->createMock(RequestContextInterface::class);
     $this->subscriber = new ApplicationProcessStatusSubscriber(
       $this->activityManagerMock,
-      $this->optionsLoaderMock,
-      $requestContextMock,
+      $this->optionsLoaderMock
     );
-
-    $requestContextMock->method('getContactId')->willReturn(111);
   }
 
   public function testGetSubscribedEvents(): void {
@@ -91,7 +86,7 @@ final class ApplicationProcessStatusSubscriberTest extends TestCase {
         [FundingApplicationProcess::getEntityName(), 'status', 'new-status'],
       )->willReturnOnConsecutiveCalls('Old', 'New');
     $this->activityManagerMock->expects(static::once())->method('addActivity')
-      ->with(111, $event->getApplicationProcess(), $activity);
+      ->with($event->getApplicationProcess(), $activity);
 
     $this->subscriber->onUpdated($event);
   }

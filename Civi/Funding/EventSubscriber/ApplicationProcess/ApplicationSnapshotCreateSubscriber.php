@@ -19,13 +19,18 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\ApplicationProcess;
 
+use Civi\Funding\ActivityTypeNames;
+use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationSnapshotCreateCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandlerInterface;
+use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
+use Civi\Funding\Event\ApplicationProcess\ApplicationSnapshotCreatedEvent;
 use Civi\Funding\FundingCaseType\FundingCaseTypeMetaDataProviderInterface;
 use Civi\Funding\FundingCaseType\MetaData\FundingCaseTypeMetaDataInterface;
+use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ApplicationSnapshotCreateSubscriber implements EventSubscriberInterface {
@@ -34,17 +39,24 @@ class ApplicationSnapshotCreateSubscriber implements EventSubscriberInterface {
 
   private ApplicationSnapshotCreateHandlerInterface $snapshotCreateHandler;
 
+  private ApplicationProcessActivityManager $activityManager;
+
   public static function getSubscribedEvents(): array {
     // Minimal priority so every comparison is done against the state that is going to be persisted.
-    return [ApplicationProcessPreUpdateEvent::class => ['onPreUpdate', PHP_INT_MIN]];
+    return [
+      ApplicationProcessPreUpdateEvent::class => ['onPreUpdate', PHP_INT_MIN],
+      ApplicationSnapshotCreatedEvent::class => ['onSnapshotCreated'],
+    ];
   }
 
   public function __construct(
     FundingCaseTypeMetaDataProviderInterface $metaDataProvider,
-    ApplicationSnapshotCreateHandlerInterface $snapshotCreateHandler
+    ApplicationSnapshotCreateHandlerInterface $snapshotCreateHandler,
+    ApplicationProcessActivityManager $activityManager
   ) {
     $this->metaDataProvider = $metaDataProvider;
     $this->snapshotCreateHandler = $snapshotCreateHandler;
+    $this->activityManager = $activityManager;
   }
 
   public function onPreUpdate(ApplicationProcessPreUpdateEvent $event): void {
@@ -75,6 +87,23 @@ class ApplicationSnapshotCreateSubscriber implements EventSubscriberInterface {
       // @phpstan-ignore notEqual.notAllowed
       || $applicationProcess->getRequestData() != $previousApplicationProcess->getRequestData()
     );
+  }
+
+  public function onSnapshotCreated(ApplicationSnapshotCreatedEvent $event): void {
+    $applicationProcess = $event->getApplicationProcess();
+    $applicationSnapshot = $event->getApplicationSnapshot();
+
+    $activity = ActivityEntity::fromArray([
+      'activity_type_id:name' => ActivityTypeNames::FUNDING_APPLICATION_SNAPSHOT_CREATION,
+      'subject' => E::ts('Funding Application Snapshot Created'),
+      'details' => E::ts('Application: %1 (%2)', [
+        1 => $applicationProcess->getTitle(),
+        2 => $applicationProcess->getIdentifier(),
+      ]),
+      'funding_application_snapshot_creation.snapshot_id' => $applicationSnapshot->getId(),
+    ]);
+
+    $this->activityManager->addActivity($applicationProcess, $activity);
   }
 
 }

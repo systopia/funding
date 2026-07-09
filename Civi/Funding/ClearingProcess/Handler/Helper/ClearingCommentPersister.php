@@ -23,21 +23,14 @@ use Civi\Funding\ActivityTypeNames;
 use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
-use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use CRM_Funding_ExtensionUtil as E;
 
 final class ClearingCommentPersister {
 
   private ApplicationProcessActivityManager $activityManager;
 
-  private RequestContextInterface $requestContext;
-
-  public function __construct(
-    ApplicationProcessActivityManager $activityManager,
-    RequestContextInterface $requestContext
-  ) {
+  public function __construct(ApplicationProcessActivityManager $activityManager) {
     $this->activityManager = $activityManager;
-    $this->requestContext = $requestContext;
   }
 
   /**
@@ -52,7 +45,6 @@ final class ClearingCommentPersister {
     string $action
   ): void {
     $this->activityManager->addActivity(
-      $this->requestContext->getContactId(),
       $clearingProcessBundle->getApplicationProcess(),
       $this->createActivity($commentType, $commentText, $action)
     );

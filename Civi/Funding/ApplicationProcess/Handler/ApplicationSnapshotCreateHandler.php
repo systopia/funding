@@ -26,7 +26,9 @@ use Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager;
 use Civi\Funding\ApplicationProcess\ApplicationSnapshotManager;
 use Civi\Funding\ApplicationProcess\Command\ApplicationSnapshotCreateCommand;
 use Civi\Funding\Entity\ApplicationSnapshotEntity;
+use Civi\Funding\Event\ApplicationProcess\ApplicationSnapshotCreatedEvent;
 use Civi\Funding\Util\DateTimeUtil;
+use Civi\Core\CiviEventDispatcherInterface;
 
 /**
  * @phpstan-import-type applicationCostItemT from \Civi\Funding\Entity\ApplicationCostItemEntity
@@ -44,18 +46,22 @@ final class ApplicationSnapshotCreateHandler implements ApplicationSnapshotCreat
 
   private ApplicationResourcesItemManager $resourcesItemManager;
 
+  private CiviEventDispatcherInterface $eventDispatcher;
+
   public function __construct(
     ApplicationProcessManager $applicationProcessManager,
     ApplicationSnapshotManager $applicationSnapshotManager,
     ApplicationCostItemManager $costItemManager,
     ApplicationExternalFileManagerInterface $externalFileManager,
-    ApplicationResourcesItemManager $resourcesItemManager
+    ApplicationResourcesItemManager $resourcesItemManager,
+    CiviEventDispatcherInterface $eventDispatcher
   ) {
     $this->applicationProcessManager = $applicationProcessManager;
     $this->applicationSnapshotManager = $applicationSnapshotManager;
     $this->costItemManager = $costItemManager;
     $this->externalFileManager = $externalFileManager;
     $this->resourcesItemManager = $resourcesItemManager;
+    $this->eventDispatcher = $eventDispatcher;
   }
 
   /**
@@ -91,6 +97,14 @@ final class ApplicationSnapshotCreateHandler implements ApplicationSnapshotCreat
     foreach ($externalFiles as $externalFile) {
       $this->externalFileManager->attachFileToSnapshot($externalFile, $applicationSnapshot->getId());
     }
+
+    $this->eventDispatcher->dispatch(
+      ApplicationSnapshotCreatedEvent::class,
+      new ApplicationSnapshotCreatedEvent(
+        $applicationSnapshot,
+        $command->getApplicationProcessBundle()
+      )
+    );
   }
 
   /**

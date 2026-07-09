@@ -33,6 +33,7 @@ use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\Funding\Util\RequestTestUtil;
 use Civi\RemoteTools\Api4\Api4;
 use Civi\RemoteTools\Api4\Query\Comparison;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 
 /**
  * @group headless
@@ -43,13 +44,12 @@ final class ApplicationProcessActivityManagerTest extends AbstractFundingHeadles
 
   private ApplicationProcessActivityManager $activityManager;
 
-  protected function setUp(): void {
-    parent::setUp();
-    $this->activityManager = new ApplicationProcessActivityManager(Api4::getInstance());
-  }
-
   public function test(): void {
     $recipientContact = ContactFixture::addOrganization(['display_name' => 'Test']);
+    $requestContextMock = $this->createMock(RequestContextInterface::class);
+    $requestContextMock->method('getContactId')->willReturn($recipientContact['id']);
+    $this->activityManager = new ApplicationProcessActivityManager(Api4::getInstance(), $requestContextMock);
+
     $fundingProgram = FundingProgramFixture::addFixture();
     $fundingCaseType = FundingCaseTypeFixture::addFixture();
     $creationContact = ContactFixture::addIndividual(['first_name' => 'creation', 'last_name' => 'contact']);
@@ -65,6 +65,7 @@ final class ApplicationProcessActivityManagerTest extends AbstractFundingHeadles
       'identifier' => '22-bar',
       'status' => 'draft',
     ]);
+    $requestContextMock->method('getContactId')->willReturn($recipientContact['id']);
 
     // Test addActivity
     $activity = ActivityEntity::fromArray([
@@ -74,7 +75,7 @@ final class ApplicationProcessActivityManagerTest extends AbstractFundingHeadles
       'funding_application_status_change.from_status' => 'old-status',
       'funding_application_status_change.to_status' => 'new-status',
     ]);
-    $this->activityManager->addActivity($recipientContact['id'], $applicationProcess, $activity);
+    $this->activityManager->addActivity($applicationProcess, $activity);
 
     static::assertSame($fundingCase->getId(), $activity->getSourceRecordId());
     static::assertSame('Test subject', $activity->getSubject());
@@ -89,7 +90,11 @@ final class ApplicationProcessActivityManagerTest extends AbstractFundingHeadles
     RequestTestUtil::mockInternalRequest($recipientContact['id']);
     $activities = $this->activityManager->getByApplicationProcess($applicationProcess->getId());
     static::assertCount(1, $activities);
-    static::assertEquals($activity->toArray() + [
+    $activityArray = $activity->toArray();
+    // remove source_contact_id, as it's not returned by the API:
+    // @phpstan-ignore unset.offset
+    unset($activityArray['source_contact_id']);
+    static::assertEquals($activityArray + [
       'activity_type_id:name' => 'funding_application_status_change',
       'source_contact_name' => 'Test',
       'from_status' => 'old-status',

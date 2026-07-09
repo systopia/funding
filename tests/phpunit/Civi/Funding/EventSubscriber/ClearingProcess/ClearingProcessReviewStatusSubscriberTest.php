@@ -25,7 +25,6 @@ use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\EntityFactory\ClearingProcessBundleFactory;
 use Civi\Funding\EntityFactory\ClearingProcessFactory;
 use Civi\Funding\Event\ClearingProcess\ClearingProcessUpdatedEvent;
-use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -44,12 +43,7 @@ final class ClearingProcessReviewStatusSubscriberTest extends TestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->activityManagerMock = $this->createMock(ApplicationProcessActivityManager::class);
-    $requestContextMock = $this->createMock(RequestContextInterface::class);
-    $requestContextMock->method('getContactId')->willReturn(22);
-    $this->subscriber = new ClearingProcessReviewStatusSubscriber(
-      $this->activityManagerMock,
-      $requestContextMock
-    );
+    $this->subscriber = new ClearingProcessReviewStatusSubscriber($this->activityManagerMock);
   }
 
   public function testGetSubscribedEvents(): void {
@@ -79,7 +73,7 @@ final class ClearingProcessReviewStatusSubscriberTest extends TestCase {
     ]);
 
     $this->activityManagerMock->expects(static::once())->method('addActivity')
-      ->with(22, $event->getApplicationProcess(), $activity);
+      ->with($event->getApplicationProcess(), $activity);
 
     $this->subscriber->onUpdated($event);
   }
@@ -99,7 +93,7 @@ final class ClearingProcessReviewStatusSubscriberTest extends TestCase {
     ]);
 
     $this->activityManagerMock->expects(static::once())->method('addActivity')
-      ->with(22, $event->getApplicationProcess(), $activity);
+      ->with($event->getApplicationProcess(), $activity);
 
     $this->subscriber->onUpdated($event);
   }
