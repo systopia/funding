@@ -45,7 +45,7 @@ class SettingProviderTest extends AbstractFundingHeadlessTestCase {
       ->method('getSettingsValue')
       ->willReturn(NULL);
 
-    static::assertSame('Name 1', $provider->getCiviOfficeRendererUri());
+    static::assertSame('uri1', $provider->getCiviOfficeRendererUri());
   }
 
 }

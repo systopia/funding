@@ -29,10 +29,6 @@ class SettingProvider {
     $this->options = $options;
   }
 
-  private function getOptions(): CiviOfficeRendererOptions {
-    return $this->options;
-  }
-
   protected function getSettingsValue(): ?string {
     /** @var ?string */
     return \Civi::settings()->get('funding_civioffice_renderer_uri');
@@ -45,15 +41,8 @@ class SettingProvider {
    * @throws \CRM_Core_Exception
    */
   public function getCiviOfficeRendererUri(): string {
-    $settingsValue = $this->getSettingsValue();
-    if ($settingsValue !== NULL) {
-      return $settingsValue;
-    }
-    $options = $this->getOptions()->fetchOptions();
-    if (count($options) > 0) {
-      return (string) array_values($options)[0];
-    }
-    return '';
+    $rendererUri = $this->getSettingsValue() ?? key($this->options->fetchOptions());
+    return $rendererUri ?? '';
   }
 
 }
