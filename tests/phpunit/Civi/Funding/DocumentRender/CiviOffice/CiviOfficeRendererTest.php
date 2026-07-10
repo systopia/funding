@@ -29,6 +29,7 @@ use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\Funding\Util\RequestTestUtil;
 use Civi\RemoteTools\Api3\Api3;
+use Civi\RemoteTools\Api4\Api4;
 use CRM_Funding_ExtensionUtil as E;
 
 /**
@@ -51,7 +52,7 @@ EOT
     /** @var \Civi\Funding\DocumentRender\CiviOffice\CiviOfficeContextDataHolder $contextDataHolder */
     $contextDataHolder = \Civi::service(CiviOfficeContextDataHolder::class);
     $this->renderer = new CiviOfficeRenderer(
-      new Api3(), $contextDataHolder, new SettingProvider()
+      new Api3(), $contextDataHolder, new SettingProvider(new CiviOfficeRendererOptions(new Api4()))
     );
   }
 

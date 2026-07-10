@@ -23,14 +23,14 @@ use Civi\Funding\DocumentRender\CiviOffice\CiviOfficeRendererOptions;
 
 class SettingProvider {
 
-  private ?CiviOfficeRendererOptions $options;
+  private CiviOfficeRendererOptions $options;
 
-  public function __construct(?CiviOfficeRendererOptions $options = NULL) {
+  public function __construct(CiviOfficeRendererOptions $options) {
     $this->options = $options;
   }
 
   private function getOptions(): CiviOfficeRendererOptions {
-    return $this->options ?? CiviOfficeRendererOptions::getInstance();
+    return $this->options;
   }
 
   protected function getSettingsValue(): ?string {
@@ -45,7 +45,15 @@ class SettingProvider {
    * @throws \CRM_Core_Exception
    */
   public function getCiviOfficeRendererUri(): string {
-    return (string) ($this->getSettingsValue() ?? array_first($this->getOptions()->fetchOptions()));
+    $settingsValue = $this->getSettingsValue();
+    if ($settingsValue !== NULL) {
+      return $settingsValue;
+    }
+    $options = $this->getOptions()->fetchOptions();
+    if (count($options) > 0) {
+      return (string) array_values($options)[0];
+    }
+    return '';
   }
 
 }
