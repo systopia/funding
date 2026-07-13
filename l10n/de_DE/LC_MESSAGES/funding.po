@@ -1636,6 +1636,7 @@ msgstr "Prüfung der Überarbeitung beantragt"
 msgid "Rework in review"
 msgstr "Überarbeitung in Prüfung"
 
+#: Civi/Funding/FundingCaseTypes/AdB/SammelantragKurs/KursMetaData.php
 #: Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/KursMetaData.php
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
 msgid "Reopen"
@@ -3611,9 +3612,13 @@ msgid "Amount Total"
 msgstr "Gesamtbetrag"
 
 #: settings/funding.setting.php
-msgid "Funding Renderer URI"
-msgstr "Dokument-Renderer URI"
+msgid "CiviOffice Renderer"
+msgstr "CiviOffice-Renderer"
 
 #: settings/funding.setting.php
-msgid "URI of the CiviOffice renderer to use."
-msgstr "URI des zu benutzenden CiviOffice-Renderers."
+msgid "The CiviOffice renderer to use for rendering PDFs."
+msgstr ""
+"Der CiviOffice-Renderer, der zum Rendern von PDFs verwendet werden soll."
+
+#~ msgid "Funding Renderer URI"
+#~ msgstr "Dokument-Renderer URI"

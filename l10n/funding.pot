@@ -1110,7 +1110,7 @@ msgstr ""
 msgid "Rework in review"
 msgstr ""
 
-#: Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/KursMetaData.php ang/crmFunding/application/defaultApplicationSidebar.template.html
+#: Civi/Funding/FundingCaseTypes/AdB/SammelantragKurs/KursMetaData.php Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/KursMetaData.php ang/crmFunding/application/defaultApplicationSidebar.template.html
 msgid "Reopen"
 msgstr ""
 
@@ -2671,10 +2671,10 @@ msgid "Amount Total"
 msgstr ""
 
 #: settings/funding.setting.php
-msgid "Funding Renderer URI"
+msgid "CiviOffice Renderer"
 msgstr ""
 
 #: settings/funding.setting.php
-msgid "URI of the CiviOffice renderer to use."
+msgid "The CiviOffice renderer to use for rendering PDFs."
 msgstr ""
 
