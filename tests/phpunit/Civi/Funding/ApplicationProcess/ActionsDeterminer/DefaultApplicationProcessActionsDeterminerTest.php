@@ -298,14 +298,14 @@ final class DefaultApplicationProcessActionsDeterminerTest extends TestCase {
 
   public function testGetInitialActions(): void {
     foreach (self::INITIAL_PERMISSION_ACTIONS_MAP as $permission => $actions) {
-      static::assertSame($actions, $this->actionsDeterminer->getInitialActions([$permission]));
+      static::assertSame($actions, $this->actionsDeterminer->getInitialActions([$permission], NULL));
     }
   }
 
   public function testGetInitialActionsAllPermissions(): void {
     $actions = array_merge(...array_values(self::INITIAL_PERMISSION_ACTIONS_MAP));
     $permissions = array_keys(self::INITIAL_PERMISSION_ACTIONS_MAP);
-    static::assertEquals($actions, $this->actionsDeterminer->getInitialActions($permissions));
+    static::assertEquals($actions, $this->actionsDeterminer->getInitialActions($permissions, NULL));
   }
 
   public function testIsActionAllowed(): void {

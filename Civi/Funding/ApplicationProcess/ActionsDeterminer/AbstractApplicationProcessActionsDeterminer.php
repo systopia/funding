@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\Entity\FundingCaseEntity;
 
 /**
  * @phpstan-type statusPermissionsActionMapT array<string|null, array<string, list<string>>>
@@ -45,7 +46,7 @@ abstract class AbstractApplicationProcessActionsDeterminer implements Applicatio
     );
   }
 
-  public function getInitialActions(array $permissions): array {
+  public function getInitialActions(array $permissions, ?FundingCaseEntity $fundingCase): array {
     return $this->doGetActions(NULL, $permissions);
   }
 

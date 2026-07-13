@@ -67,6 +67,12 @@ final class FundingCaseFormUpdateSubmitHandler implements FundingCaseFormUpdateS
     }
     else {
       $fundingCase->setStatus($this->statusDeterminer->getStatus($fundingCase->getStatus(), $action));
+      $mappedData = $validationResult->getValidatedData()->getMappedData();
+      if (array_key_exists('budget_requested', $mappedData)) {
+        $fundingCase->setBudgetRequested($mappedData['budget_requested']);
+      }
+      // Map custom fields.
+      $fundingCase->setValues($fundingCase->toArray() + $validationResult->getValidatedData()->getMappedData());
       $this->fundingCaseManager->update($fundingCase);
     }
 

@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\FundingCaseType\FundingCaseTypeServiceInterface;
 
 /**
@@ -39,10 +40,13 @@ interface ApplicationProcessActionsDeterminerInterface extends FundingCaseTypeSe
 
   /**
    * @param list<string> $permissions
+   * @param \Civi\Funding\Entity\FundingCaseEntity|null $fundingCase
+   *   The funding case a new application process is going to be added. NULL if
+   *   no funding case exists, yet.
    *
    * @return list<string>
    */
-  public function getInitialActions(array $permissions): array;
+  public function getInitialActions(array $permissions, ?FundingCaseEntity $fundingCase): array;
 
   /**
    * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $statusList

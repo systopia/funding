@@ -31,11 +31,12 @@ use Civi\Funding\FundingCaseType\MetaData\FundingCaseTypeMetaDataInterface;
 
 final class DefaultFundingCaseActionsDeterminer extends FundingCaseActionsDeterminer {
 
-  private ApplicationProcessStatusDeterminerInterface $applicationProcessStatusDeterminer;
-
-  private ClearingProcessManager $clearingProcessManager;
-
-  private FundingCaseTypeMetaDataInterface $metaData;
+  /**
+   * By default, approval is only possible if the eligibility of all
+   * applications in the case is decided. This flag allows approval independent
+   * of applications.
+   */
+  public const FLAG_APPROVE_APPLICATION_INDEPENDENT = 1;
 
   // phpcs:disable Generic.Files.LineLength.TooLong
   private const STATUS_PERMISSIONS_ACTION_MAP = [
@@ -83,14 +84,12 @@ final class DefaultFundingCaseActionsDeterminer extends FundingCaseActionsDeterm
   // phpcs:enable
 
   public function __construct(
-    ApplicationProcessStatusDeterminerInterface $applicationProcessStatusDeterminer,
-    ClearingProcessManager $clearingProcessManager,
-    FundingCaseTypeMetaDataInterface $metaData
+    private readonly ApplicationProcessStatusDeterminerInterface $applicationProcessStatusDeterminer,
+    private readonly ClearingProcessManager $clearingProcessManager,
+    private readonly FundingCaseTypeMetaDataInterface $metaData,
+    private readonly int $flags = 0
   ) {
     parent::__construct(self::STATUS_PERMISSIONS_ACTION_MAP);
-    $this->applicationProcessStatusDeterminer = $applicationProcessStatusDeterminer;
-    $this->metaData = $metaData;
-    $this->clearingProcessManager = $clearingProcessManager;
   }
 
   public function getActions(FundingCaseBundle $fundingCaseBundle, array $applicationProcessStatusList): array {
@@ -125,6 +124,10 @@ final class DefaultFundingCaseActionsDeterminer extends FundingCaseActionsDeterm
    *   all applications is decided.
    */
   private function isApprovePossible(array $applicationProcessStatusList): bool {
+    if (0 !== ($this->flags & self::FLAG_APPROVE_APPLICATION_INDEPENDENT)) {
+      return TRUE;
+    }
+
     $eligibleCount = 0;
     foreach ($applicationProcessStatusList as $applicationProcessStatus) {
       $eligible = $this->metaData->getApplicationProcessStatus($applicationProcessStatus->getStatus())?->isEligible();

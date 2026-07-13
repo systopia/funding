@@ -32,6 +32,7 @@ use Civi\Funding\Entity\FundingCaseEntity;
  *   creation_date?: string,
  *   modification_date?: string,
  *   creation_contact_id?: int,
+ *   budget_requested?: ?float,
  *   amount_approved?: ?float,
  *   permissions?: list<string>,
  * }
@@ -57,6 +58,7 @@ final class FundingCaseFactory {
       'modification_date' => date('Y-m-d H:i:s'),
       'creation_contact_id' => 1,
       'notification_contact_ids' => [1],
+      'budget_requested' => NULL,
       'amount_approved' => NULL,
       'permissions' => ['test_permission'],
     ]);

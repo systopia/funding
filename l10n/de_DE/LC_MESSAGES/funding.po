@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.9\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #: CRM/Funding/BAO/FundingCase.php
 #: managed/CustomGroup_funding_case_task.mgd.php
@@ -35,6 +35,17 @@ msgstr "Förderfall"
 #: schema/FundingProgram.entityType.php
 msgid "Funding Program"
 msgstr "Förderprogramm"
+
+#: CRM/Funding/Upgrader.php ang/crmFunding/case/fundingCase.template.html
+#: schema/FundingCase.entityType.php
+msgid "Budget Requested"
+msgstr "Beantragtes Budget"
+
+#: CRM/Funding/Upgrader.php schema/FundingCase.entityType.php
+msgid ""
+"For combined funding cases that require approval before application creation."
+msgstr ""
+"Für Sammelanträge, die eine Bewilligung vor Antragserstellung benötigen."
 
 #: Civi/Api4/Query/SqlFunctionFUNDING_JSON_OVERLAPS.php
 msgid "json_document1"
@@ -2417,7 +2428,7 @@ msgstr "Beim der Mittelabrufe ist ein Fehler aufgetreten."
 
 #: ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.template.html
 msgid "Percent of amount approved"
-msgstr "Prozent des bewilligten Betrags."
+msgstr "Prozent des bewilligten Betrags"
 
 #: ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.template.html
 msgid "Create %1 drawdowns"
@@ -3619,6 +3630,3 @@ msgstr "CiviOffice-Renderer"
 msgid "The CiviOffice renderer to use for rendering PDFs."
 msgstr ""
 "Der CiviOffice-Renderer, der zum Rendern von PDFs verwendet werden soll."
-
-#~ msgid "Funding Renderer URI"
-#~ msgstr "Dokument-Renderer URI"

@@ -35,9 +35,13 @@ final class ValidatedFundingCaseDataMock implements ValidatedFundingCaseDataInte
   private array $data;
 
   /**
-   * @phpstan-param array<string, mixed> $validatedData
+   * @param array<string, mixed> $validatedData
+   * @param array{budget_requested?: ?float, ...} $mappedData
    */
-  public function __construct(array $validatedData) {
+  public function __construct(
+    array $validatedData,
+    private readonly array $mappedData = []
+  ) {
     /** @phpstan-var testValidatedDataT $validatedData */
     $this->data = $validatedData;
   }
@@ -55,6 +59,10 @@ final class ValidatedFundingCaseDataMock implements ValidatedFundingCaseDataInte
     unset($data['_action']);
 
     return $data;
+  }
+
+  public function getMappedData(): array {
+    return $this->mappedData;
   }
 
   public function getRawData(): array {

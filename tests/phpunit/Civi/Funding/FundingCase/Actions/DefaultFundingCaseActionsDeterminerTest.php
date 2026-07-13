@@ -345,6 +345,18 @@ final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
         23 => new FullApplicationProcessStatus('withdrawn', TRUE, TRUE),
       ],
     ));
+
+    $this->actionsDeterminer = new DefaultFundingCaseActionsDeterminer(
+      $this->applicationProcessStatusDeterminerMock,
+      $this->clearingProcessManagerMock,
+      $this->metaDataMock,
+      DefaultFundingCaseActionsDeterminer::FLAG_APPROVE_APPLICATION_INDEPENDENT
+    );
+    static::assertTrue($this->actionsDeterminer->isActionAllowed(
+      'approve',
+      FundingCaseBundleFactory::create(['status' => 'open', 'permissions' => ['review_calculative']]),
+      [22 => new FullApplicationProcessStatus('review', TRUE, TRUE)],
+    ));
   }
 
 }

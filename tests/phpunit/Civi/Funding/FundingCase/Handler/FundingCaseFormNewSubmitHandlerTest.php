@@ -68,7 +68,7 @@ final class FundingCaseFormNewSubmitHandlerTest extends TestCase {
       '_action' => 'save',
       'title' => 'Test',
       'recipient' => $recipientContactId,
-    ]);
+    ], ['budget_requested' => 123.45]);
     $validationResult = FundingCaseValidationResult::newValid($validatedData);
     $this->validateHandlerMock->method('handle')->with(new FundingCaseFormNewValidateCommand(
       $command->getFundingProgram(), $command->getFundingCaseType(), $command->getData()
@@ -82,6 +82,7 @@ final class FundingCaseFormNewSubmitHandlerTest extends TestCase {
           'funding_program' => $command->getFundingProgram(),
           'funding_case_type' => $command->getFundingCaseType(),
           'recipient_contact_id' => $recipientContactId,
+          'budget_requested' => 123.45,
         ]
       )->willReturn($fundingCase);
 

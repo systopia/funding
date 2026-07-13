@@ -61,7 +61,8 @@ final class ApplicationFormAddCreateHandler implements ApplicationFormAddCreateH
     $this->jsonSchemaCreateHelper->addInitialActionProperty(
       $jsonSchema,
       $command->getFundingCaseType(),
-      $command->getFundingCase()->getPermissions()
+      $command->getFundingCase()->getPermissions(),
+      $command->getFundingCase(),
     );
 
     $uiSchema = $this->uiSchemaFactory->createUiSchemaAdd($command->getFundingCaseBundle());
@@ -69,7 +70,8 @@ final class ApplicationFormAddCreateHandler implements ApplicationFormAddCreateH
     $submitButtons = JsonFormsSubmitButtonsFactory::createButtons(
       $this->submitActionsFactory->getInitialSubmitActions(
         $command->getFundingCase()->getPermissions(),
-        $command->getFundingCaseType()
+        $command->getFundingCaseType(),
+        $command->getFundingCase(),
       )
     );
     $elements = array_merge($uiSchema->getElements(), $submitButtons);

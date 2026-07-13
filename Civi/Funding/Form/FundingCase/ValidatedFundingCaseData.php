@@ -32,7 +32,8 @@ final class ValidatedFundingCaseData implements ValidatedFundingCaseDataInterfac
 
   /**
    * @phpstan-var array{
-   *   recipient_contact_id: int
+   *   recipient_contact_id: int,
+   *   ...
    * } May contain additional data.
    */
   private array $mappedData;
@@ -66,6 +67,13 @@ final class ValidatedFundingCaseData implements ValidatedFundingCaseDataInterfac
    */
   public function getFundingCaseData(): array {
     return array_filter($this->data, fn (string $key) => !str_starts_with($key, '_'), ARRAY_FILTER_USE_KEY);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getMappedData(): array {
+    return $this->mappedData;
   }
 
   /**
