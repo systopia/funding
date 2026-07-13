@@ -41,8 +41,7 @@ class SettingProvider {
    * @throws \CRM_Core_Exception
    */
   public function getCiviOfficeRendererUri(): string {
-    $rendererUri = $this->getSettingsValue() ?? key($this->options->fetchOptions());
-    return $rendererUri ?? '';
+    return $this->getSettingsValue() ?? key($this->options->fetchOptions()) ?? '';
   }
 
 }
