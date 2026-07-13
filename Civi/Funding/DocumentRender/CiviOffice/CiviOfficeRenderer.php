@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\DocumentRender\CiviOffice;
 
+use Civi\Funding\DocumentRender\SettingProvider;
 use Civi\RemoteTools\Api3\Api3Interface;
 use Webmozart\Assert\Assert;
 
@@ -30,17 +31,17 @@ class CiviOfficeRenderer {
 
   private string $mimeType;
 
-  private string $rendererUri;
+  private SettingProvider $settingProvider;
 
   public function __construct(
     Api3Interface $api3,
     CiviOfficeContextDataHolder $contextDataHolder,
-    string $rendererUri = 'unoconv-local',
+    SettingProvider $settingProvider,
     string $mimeType = 'application/pdf'
   ) {
     $this->api3 = $api3;
     $this->contextDataHolder = $contextDataHolder;
-    $this->rendererUri = $rendererUri;
+    $this->settingProvider = $settingProvider;
     $this->mimeType = $mimeType;
   }
 
@@ -70,7 +71,7 @@ class CiviOfficeRenderer {
         'entity_type' => $entityName,
         'entity_ids' => [$entityId],
         'target_mime_type' => $this->mimeType,
-        'renderer_uri' => $this->rendererUri,
+        'renderer_uri' => $this->settingProvider->getCiviOfficeRendererUri(),
       ]);
     }
     finally {

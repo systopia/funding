@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\DocumentRender\CiviOffice;
 
 use Civi\Funding\AbstractFundingHeadlessTestCase;
+use Civi\Funding\DocumentRender\SettingProvider;
 use Civi\Funding\Fixtures\ApplicationProcessFixture;
 use Civi\Funding\Fixtures\ContactFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
@@ -28,6 +29,7 @@ use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
 use Civi\Funding\Util\RequestTestUtil;
 use Civi\RemoteTools\Api3\Api3;
+use Civi\RemoteTools\Api4\Api4;
 use CRM_Funding_ExtensionUtil as E;
 
 /**
@@ -50,7 +52,7 @@ EOT
     /** @var \Civi\Funding\DocumentRender\CiviOffice\CiviOfficeContextDataHolder $contextDataHolder */
     $contextDataHolder = \Civi::service(CiviOfficeContextDataHolder::class);
     $this->renderer = new CiviOfficeRenderer(
-      new Api3(), $contextDataHolder,
+      new Api3(), $contextDataHolder, new SettingProvider(new CiviOfficeRendererOptions(new Api4()))
     );
   }
 
