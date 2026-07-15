@@ -5,7 +5,7 @@ return [
   [
     'name' => 'SavedSearch_funding_case_application_processes',
     'entity' => 'SavedSearch',
-    'cleanup' => 'always',
+    'cleanup' => 'unused',
     'update' => 'unmodified',
     'params' => [
       'version' => 4,
@@ -66,15 +66,13 @@ return [
           'having' => [],
         ],
       ],
-      'match' => [
-        'name',
-      ],
+      'match' => ['name'],
     ],
   ],
   [
     'name' => 'SavedSearch_funding_case_application_processes_SearchDisplay_table',
     'entity' => 'SearchDisplay',
-    'cleanup' => 'always',
+    'cleanup' => 'unused',
     'update' => 'unmodified',
     'params' => [
       'version' => 4,
@@ -85,20 +83,14 @@ return [
         'type' => 'table',
         'settings' => [
           'limit' => 60,
-          'classes' => [
-            'table',
-            'table-striped',
-          ],
+          'classes' => ['table', 'table-striped'],
           'pager' => [
             'show_count' => FALSE,
             'expose_limit' => TRUE,
           ],
           'placeholder' => 5,
           'sort' => [
-            [
-              'id',
-              'DESC',
-            ],
+            ['id', 'DESC'],
           ],
           'columns' => [
             [
@@ -175,7 +167,7 @@ return [
               'size' => 'btn-xs',
               'links' => [
                 [
-                  'path' => 'civicrm/a/#/funding/application/[id]',
+                  'path' => 'civicrm/funding/application/show?id=[id]',
                   'icon' => 'fa-folder-open',
                   'text' => E::ts('Open application'),
                   'style' => 'default',
@@ -185,40 +177,45 @@ return [
                   'join' => '',
                   'target' => '',
                   'task' => '',
+                  'conditions' => [],
                 ],
                 [
-                  'path' => 'civicrm/a/#/funding/clearing/[FundingApplicationProcess_FundingClearingProcess_application_process_id_01.id]',
+                  'path' => 'civicrm/funding/clearing/show?applicationProcessId=[id]',
                   'icon' => 'fa-folder-open',
                   'text' => E::ts('Open clearing'),
                   'style' => 'default',
-                  'condition' => [
-                    'FundingApplicationProcess_FundingClearingProcess_application_process_id_01.status:name',
-                    '!=',
-                    'not-started',
-                  ],
                   'task' => '',
                   'entity' => '',
                   'action' => '',
                   'join' => '',
                   'target' => '',
+                  'conditions' => [
+                    [
+                      'FundingApplicationProcess_FundingClearingProcess_application_process_id_01.status:name',
+                      '!=',
+                      'not-started',
+                    ],
+                  ],
                 ],
                 [
                   'path' => 'civicrm/a/#/funding/case/[funding_case_id]/permissions',
                   'icon' => 'fa-pen-to-square',
                   'text' => E::ts('Edit permissions'),
                   'style' => 'default',
-                  'condition' => [
-                    'check user permission',
-                    '=',
-                    [
-                      'administer Funding',
-                    ],
-                  ],
                   'entity' => '',
                   'action' => '',
                   'join' => '',
                   'target' => '',
                   'task' => '',
+                  'conditions' => [
+                    [
+                      'check user permission',
+                      '=',
+                      [
+                        'administer Funding',
+                      ],
+                    ],
+                  ],
                 ],
               ],
               'type' => 'buttons',
@@ -231,6 +228,7 @@ return [
             'download',
           ],
           'actions_display_mode' => 'menu',
+          'columnMode' => 'custom',
         ],
       ],
       'match' => [

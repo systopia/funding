@@ -88,7 +88,7 @@ fundingModule.factory('fundingClearingProcessService', ['crmApi4', function(crmA
      */
     getByApplicationProcessId: (applicationProcessId) => crmApi4('FundingClearingProcess', 'get', {
       where: [['application_process_id', '=', applicationProcessId]],
-    }),
+    }).then((result) => result[0] || null),
     getFormData: (id) => crmApi4('FundingClearingProcess', 'getFormData', {id}).then(function (result) {
       return result.data || null;
     }),

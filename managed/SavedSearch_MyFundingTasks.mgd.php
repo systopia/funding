@@ -47,9 +47,7 @@ return [
               '0',
             ],
           ],
-          'groupBy' => [
-            'id',
-          ],
+          'groupBy' => ['id'],
           'join' => [
             [
               'FundingCase AS FundingTask_FundingCase_funding_case_id_01',
@@ -73,9 +71,7 @@ return [
           'having' => [],
         ],
       ],
-      'match' => [
-        'name',
-      ],
+      'match' => ['name'],
     ],
   ],
   [
@@ -120,15 +116,13 @@ return [
             ],
             [
               'type' => 'field',
-              'key' => 'FundingTask_FundingCase_funding_case_id_01_FundingCase_FundingProgram_funding_program_id_01.title',
-              'dataType' => 'String',
+              'key' => 'GROUP_CONCAT_FundingTask_FundingCase_funding_case_id_01_FundingCase_FundingProgram_funding_program_id_01_title',
               'label' => E::ts('Funding Program'),
               'sortable' => TRUE,
             ],
             [
               'type' => 'field',
-              'key' => 'FundingTask_FundingCase_funding_case_id_01.recipient_contact_id.display_name',
-              'dataType' => 'String',
+              'key' => 'GROUP_CONCAT_FundingTask_FundingCase_funding_case_id_01_recipient_contact_id_display_name',
               'label' => E::ts('Recipient'),
               'sortable' => TRUE,
             ],
@@ -140,65 +134,67 @@ return [
                   'icon' => 'fa-folder-open-o',
                   'text' => E::ts('Open case'),
                   'style' => 'default',
-                  'condition' => [
-                    'activity_type_id:name',
-                    'IN',
-                    [
-                      'funding_case_task',
-                      'funding_drawdown_task',
-                    ],
-                  ],
                   'task' => '',
                   'entity' => '',
                   'action' => '',
                   'join' => '',
                   'target' => '',
+                  'conditions' => [
+                    [
+                      'activity_type_id:name',
+                      'IN',
+                      [
+                        'funding_case_task',
+                        'funding_drawdown_task',
+                      ],
+                    ],
+                  ],
                 ],
                 [
-                  'path' => 'civicrm/a#funding/application/[source_record_id]',
+                  'path' => 'civicrm/funding/application/show?id=[source_record_id]',
                   'icon' => 'fa-folder-open-o',
                   'text' => E::ts('Open application'),
                   'style' => 'default',
-                  'condition' => [
-                    'activity_type_id:name',
-                    '=',
-                    'funding_application_process_task',
-                  ],
                   'task' => '',
                   'entity' => '',
                   'action' => '',
                   'join' => '',
                   'target' => '',
+                  'conditions' => [
+                    [
+                      'activity_type_id:name',
+                      '=',
+                      'funding_application_process_task',
+                    ],
+                  ],
                 ],
                 [
-                  'path' => 'civicrm/a#funding/clearing/[source_record_id]',
+                  'path' => 'civicrm/funding/clearing/show?applicationProcessId=[funding_application_process_task.application_process_id]',
                   'icon' => 'fa-folder-open-o',
                   'text' => E::ts('Open clearing'),
                   'style' => 'default',
-                  'condition' => [
-                    'activity_type_id:name',
-                    '=',
-                    'funding_clearing_process_task',
-                  ],
                   'task' => '',
                   'entity' => '',
                   'action' => '',
                   'join' => '',
                   'target' => '',
+                  'conditions' => [
+                    [
+                      'activity_type_id:name',
+                      '=',
+                      'funding_clearing_process_task',
+                    ],
+                  ],
                 ],
               ],
               'type' => 'buttons',
               'alignment' => 'text-right',
             ],
           ],
-          'actions' => [
-            'download',
-          ],
-          'classes' => [
-            'table',
-            'table-striped',
-          ],
+          'actions' => ['download'],
+          'classes' => ['table', 'table-striped'],
           'actions_display_mode' => 'menu',
+          'columnMode' => 'custom',
         ],
       ],
       'match' => [

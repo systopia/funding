@@ -16,7 +16,7 @@
 
 'use strict';
 
-fundingModule.directive('fundingJfForm', ['$compile', function($compile) {
+fundingModule.directive('fundingJfForm', [function() {
   return {
     restrict: 'E',
     scope: {

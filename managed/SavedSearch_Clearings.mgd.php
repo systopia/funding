@@ -65,9 +65,7 @@ return [
           'having' => [],
         ],
       ],
-      'match' => [
-        'name',
-      ],
+      'match' => ['name'],
     ],
   ],
   [
@@ -208,23 +206,21 @@ return [
               'size' => 'btn-xs',
               'links' => [
                 [
-                  'path' => 'civicrm/a/#/funding/clearing/[id]',
+                  'path' => 'civicrm/funding/clearing/show?applicationProcessId=[application_process_id]',
                   'icon' => 'fa-folder-open',
                   'text' => E::ts('Open clearing'),
                   'style' => 'default',
-                  'condition' => [
-                    'status:name',
-                    '!=',
-                    'not-started',
-                  ],
                   'task' => '',
                   'entity' => '',
                   'action' => '',
                   'join' => '',
                   'target' => '',
+                  'conditions' => [
+                    ['status:name', '!=', 'not-started'],
+                  ],
                 ],
                 [
-                  'path' => 'civicrm/a/#/funding/application/[application_process_id]',
+                  'path' => 'civicrm/funding/application/show?id=[application_process_id]',
                   'icon' => 'fa-folder-open',
                   'text' => E::ts('Open application'),
                   'style' => 'default',
@@ -234,6 +230,7 @@ return [
                   'action' => '',
                   'join' => '',
                   'target' => '',
+                  'conditions' => [],
                 ],
                 [
                   'path' => 'civicrm/a/#/funding/case/[FundingClearingProcess_FundingApplicationProcess_application_process_id_01.funding_case_id]/permissions',
@@ -246,6 +243,7 @@ return [
                   'action' => '',
                   'join' => '',
                   'target' => '',
+                  'conditions' => [],
                 ],
               ],
               'type' => 'buttons',
@@ -253,17 +251,13 @@ return [
               'label' => E::ts('Actions'),
             ],
           ],
-          'actions' => [
-            'download',
-          ],
-          'classes' => [
-            'table',
-            'table-striped',
-          ],
+          'actions' => ['download'],
+          'classes' => ['table', 'table-striped'],
           'tally' => [
             'label' => E::ts('Total'),
           ],
           'actions_display_mode' => 'menu',
+          'columnMode' => 'custom',
         ],
       ],
       'match' => [
