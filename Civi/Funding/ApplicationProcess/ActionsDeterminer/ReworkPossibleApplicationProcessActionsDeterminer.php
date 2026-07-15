@@ -22,6 +22,7 @@ namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\Helper\DetermineApproveRejectActionsHelper;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\FundingCase\FundingCaseStatus;
 use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
 
@@ -91,10 +92,14 @@ final class ReworkPossibleApplicationProcessActionsDeterminer extends AbstractAp
     )));
   }
 
-  public function getInitialActions(array $permissions, ?FundingCaseEntity $fundingCase): array {
+  public function getInitialActions(
+    array $permissions,
+    FundingCaseTypeEntity $fundingCaseType,
+    ?FundingCaseEntity $fundingCase
+  ): array {
     return \array_values(\array_unique(\array_merge(
-      parent::getInitialActions($permissions, $fundingCase),
-      $this->actionsDeterminer->getInitialActions($permissions, $fundingCase),
+      parent::getInitialActions($permissions, $fundingCaseType, $fundingCase),
+      $this->actionsDeterminer->getInitialActions($permissions, $fundingCaseType, $fundingCase),
     )));
   }
 

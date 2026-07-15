@@ -21,6 +21,7 @@ namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\FundingCaseType\FundingCaseTypeServiceInterface;
 
 /**
@@ -46,7 +47,11 @@ interface ApplicationProcessActionsDeterminerInterface extends FundingCaseTypeSe
    *
    * @return list<string>
    */
-  public function getInitialActions(array $permissions, ?FundingCaseEntity $fundingCase): array;
+  public function getInitialActions(
+    array $permissions,
+    FundingCaseTypeEntity $fundingCaseType,
+    ?FundingCaseEntity $fundingCase
+  ): array;
 
   /**
    * @phpstan-param array<int, \Civi\Funding\Entity\FullApplicationProcessStatus> $statusList

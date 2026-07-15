@@ -21,6 +21,7 @@ namespace Civi\Api4;
 
 use Civi\Funding\Api4\AbstractRemoteFundingEntity;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetAddFormAction;
+use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetAllowedActionsInitialByFundingCaseAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetFormAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetTemplateRenderUriAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetTemplatesAction;
@@ -38,6 +39,12 @@ final class RemoteFundingApplicationProcess extends AbstractRemoteFundingEntity 
 
   public static function get(): RemoteFundingGetAction {
     return new RemoteFundingGetAction(self::getEntityName(), __FUNCTION__);
+  }
+
+  public static function getAllowedActionsInitialByFundingCase(
+    bool $checkPermissions = TRUE
+  ): GetAllowedActionsInitialByFundingCaseAction {
+    return (new GetAllowedActionsInitialByFundingCaseAction())->setCheckPermissions($checkPermissions);
   }
 
   public static function getTemplateRenderUri(): GetTemplateRenderUriAction {

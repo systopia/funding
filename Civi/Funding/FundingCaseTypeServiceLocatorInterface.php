@@ -19,11 +19,9 @@ declare(strict_types = 1);
 
 namespace Civi\Funding;
 
-use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationActionApplyHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationAllowedActionsGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandlerInterface;
-use Civi\Funding\ApplicationProcess\Handler\ApplicationDeleteHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesPersistHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormAddCreateHandlerInterface;
@@ -57,8 +55,6 @@ interface FundingCaseTypeServiceLocatorInterface {
 
   public function getApplicationAllowedActionsGetHandler(): ApplicationAllowedActionsGetHandlerInterface;
 
-  public function getApplicationDeleteHandler(): ApplicationDeleteHandlerInterface;
-
   public function getApplicationFilesAddIdentifiersHandler(): ApplicationFilesAddIdentifiersHandlerInterface;
 
   public function getApplicationFilesPersistHandler(): ApplicationFilesPersistHandlerInterface;
@@ -80,8 +76,6 @@ interface FundingCaseTypeServiceLocatorInterface {
   public function getApplicationJsonSchemaGetHandler(): ApplicationJsonSchemaGetHandlerInterface;
 
   public function getApplicationCostItemsPersistHandler(): ApplicationCostItemsPersistHandlerInterface;
-
-  public function getApplicationProcessActionsDeterminer(): ApplicationProcessActionsDeterminerInterface;
 
   public function getApplicationProcessStatusDeterminer(): ApplicationProcessStatusDeterminerInterface;
 

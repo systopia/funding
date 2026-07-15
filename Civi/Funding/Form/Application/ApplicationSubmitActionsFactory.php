@@ -24,28 +24,19 @@ use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\FundingCaseType\FundingCaseTypeMetaDataProviderInterface;
-use Civi\Funding\FundingCaseTypeServiceLocatorContainer;
 
 final class ApplicationSubmitActionsFactory implements ApplicationSubmitActionsFactoryInterface {
 
-  private FundingCaseTypeMetaDataProviderInterface $metaDataProvider;
-
-  private FundingCaseTypeServiceLocatorContainer $serviceLocatorContainer;
-
   public function __construct(
-    FundingCaseTypeMetaDataProviderInterface $metaDataProvider,
-    FundingCaseTypeServiceLocatorContainer $serviceLocatorContainer
-  ) {
-    $this->metaDataProvider = $metaDataProvider;
-    $this->serviceLocatorContainer = $serviceLocatorContainer;
-  }
+    private readonly ApplicationProcessActionsDeterminerInterface $actionsDeterminer,
+    private readonly FundingCaseTypeMetaDataProviderInterface $metaDataProvider
+  ) {}
 
   /**
    * @return array<string, \Civi\Funding\FundingCaseType\MetaData\ApplicationProcessAction>
    */
   public function getSubmitActions(ApplicationProcessEntityBundle $applicationProcessBundle, array $statusList): array {
-    $actionNames = $this->getActionsDeterminer($applicationProcessBundle->getFundingCaseType())
-      ->getActions($applicationProcessBundle, $statusList);
+    $actionNames = $this->actionsDeterminer->getActions($applicationProcessBundle, $statusList);
 
     return $this->getActions($applicationProcessBundle->getFundingCaseType(), $actionNames);
   }
@@ -58,7 +49,11 @@ final class ApplicationSubmitActionsFactory implements ApplicationSubmitActionsF
     FundingCaseTypeEntity $fundingCaseType,
     ?FundingCaseEntity $fundingCase
   ): array {
-    $actionNames = $this->getActionsDeterminer($fundingCaseType)->getInitialActions($permissions, $fundingCase);
+    $actionNames = $this->actionsDeterminer->getInitialActions(
+      $permissions,
+      $fundingCaseType,
+      $fundingCase
+    );
 
     return $this->getActions($fundingCaseType, $actionNames);
   }
@@ -76,12 +71,6 @@ final class ApplicationSubmitActionsFactory implements ApplicationSubmitActionsF
       fn(string $actionName) => in_array($actionName, $actionNames, TRUE),
       ARRAY_FILTER_USE_KEY
     );
-  }
-
-  private function getActionsDeterminer(
-    FundingCaseTypeEntity $fundingCaseType
-  ): ApplicationProcessActionsDeterminerInterface {
-    return $this->serviceLocatorContainer->get($fundingCaseType->getName())->getApplicationProcessActionsDeterminer();
   }
 
 }

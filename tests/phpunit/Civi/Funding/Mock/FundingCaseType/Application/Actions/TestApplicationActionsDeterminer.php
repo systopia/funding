@@ -23,6 +23,7 @@ use Civi\Funding\ApplicationProcess\ActionsDeterminer\AbstractApplicationActions
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\DefaultApplicationProcessActionsDeterminer;
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\ReworkPossibleApplicationProcessActionsDeterminer;
 use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Mock\FundingCaseType\Traits\TestSupportedFundingCaseTypesTrait;
 
 final class TestApplicationActionsDeterminer extends AbstractApplicationActionsDeterminerDecorator {
@@ -35,8 +36,12 @@ final class TestApplicationActionsDeterminer extends AbstractApplicationActionsD
     );
   }
 
-  public function getInitialActions(array $permissions, ?FundingCaseEntity $fundingCase): array {
-    $actions = parent::getInitialActions($permissions, $fundingCase);
+  public function getInitialActions(
+    array $permissions,
+    FundingCaseTypeEntity $fundingCaseType,
+    ?FundingCaseEntity $fundingCase
+  ): array {
+    $actions = parent::getInitialActions($permissions, $fundingCaseType, $fundingCase);
     if (in_array('application_create', $permissions, TRUE)) {
       $actions = array_merge($actions, ['save&new', 'save&copy']);
     }

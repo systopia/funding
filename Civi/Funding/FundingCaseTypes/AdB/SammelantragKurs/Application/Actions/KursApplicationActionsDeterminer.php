@@ -23,6 +23,7 @@ use Civi\Funding\ApplicationProcess\ActionsDeterminer\AbstractApplicationProcess
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\Helper\DetermineApproveRejectActionsHelper;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseEntity;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\FundingCase\FundingCaseStatus;
 use Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
 use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
@@ -126,12 +127,17 @@ final class KursApplicationActionsDeterminer extends AbstractApplicationProcessA
     );
   }
 
-  public function getInitialActions(array $permissions, ?FundingCaseEntity $fundingCase): array {
+  public function getInitialActions(
+    array $permissions,
+    FundingCaseTypeEntity $fundingCaseType,
+    ?FundingCaseEntity $fundingCase
+  ): array {
     if (FundingCaseStatus::OPEN === $fundingCase?->getStatus()) {
+      // Allow adding applications only after approval.
       return [];
     }
 
-    return parent::getInitialActions($permissions, $fundingCase);
+    return parent::getInitialActions($permissions, $fundingCaseType, $fundingCase);
   }
 
 }

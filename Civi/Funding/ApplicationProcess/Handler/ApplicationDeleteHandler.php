@@ -27,6 +27,8 @@ use CRM_Funding_ExtensionUtil as E;
 
 final class ApplicationDeleteHandler implements ApplicationDeleteHandlerInterface {
 
+  public const SUPPORTED_FUNDING_CASE_TYPE = '*';
+
   private ApplicationProcessActionsDeterminerInterface $actionsDeterminer;
 
   private ApplicationProcessManager $applicationProcessManager;

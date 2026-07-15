@@ -27,11 +27,8 @@ use Civi\Funding\EntityFactory\FundingCaseFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\Form\Application\ApplicationSubmitActionsFactory;
 use Civi\Funding\FundingCaseType\MetaData\ApplicationProcessAction;
-use Civi\Funding\FundingCaseTypeServiceLocator;
-use Civi\Funding\FundingCaseTypeServiceLocatorContainer;
 use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataMock;
 use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataProviderMock;
-use Civi\Funding\Mock\Psr\PsrContainer;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -53,14 +50,9 @@ final class ApplicationSubmitActionsFactoryTest extends TestCase {
     parent::setUp();
     $this->actionsDeterminerMock = $this->createMock(ApplicationProcessActionsDeterminerInterface::class);
     $this->metaDataMock = new FundingCaseTypeMetaDataMock(FundingCaseTypeFactory::DEFAULT_NAME);
-    $serviceLocatorContainer = new FundingCaseTypeServiceLocatorContainer(new PsrContainer([
-      FundingCaseTypeFactory::DEFAULT_NAME => new FundingCaseTypeServiceLocator(new PsrContainer([
-        ApplicationProcessActionsDeterminerInterface::class => $this->actionsDeterminerMock,
-      ])),
-    ]));
     $this->submitActionsFactory = new ApplicationSubmitActionsFactory(
+      $this->actionsDeterminerMock,
       new FundingCaseTypeMetaDataProviderMock($this->metaDataMock),
-      $serviceLocatorContainer,
     );
   }
 
@@ -106,12 +98,12 @@ final class ApplicationSubmitActionsFactoryTest extends TestCase {
     $actionTest2 = new ApplicationProcessAction(['name' => 'test2', 'label' => 'Test2']);
     $this->metaDataMock->addApplicationProcessAction($actionTest2);
 
+    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
     $fundingCase = FundingCaseFactory::createFundingCase();
     $this->actionsDeterminerMock->expects(static::once())->method('getInitialActions')
-      ->with(['permission'], $fundingCase)
+      ->with(['permission'], $fundingCaseType, $fundingCase)
       ->willReturn(['test2', 'test1']);
 
-    $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
     $submitActions = $this->submitActionsFactory->getInitialSubmitActions(
       ['permission'],
       $fundingCaseType,

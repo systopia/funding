@@ -23,6 +23,7 @@ use Civi\Funding\Api4\Action\FundingApplicationProcess\ApplyActionMultipleAction
 use Civi\Funding\Api4\Action\FundingApplicationProcess\CreateAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\DeleteAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\GetAction;
+use Civi\Funding\Api4\Action\FundingApplicationProcess\GetAllowedActionsInitialByFundingCaseAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\GetAllowedActionsMultipleAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\GetFieldsAction;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\GetFormAction;
@@ -98,6 +99,12 @@ class FundingApplicationProcess extends Generic\DAOEntity {
 
   public static function getAllowedActionsMultiple(bool $checkPermissions = TRUE): GetAllowedActionsMultipleAction {
     return (new GetAllowedActionsMultipleAction())->setCheckPermissions($checkPermissions);
+  }
+
+  public static function getAllowedActionsInitialByFundingCase(
+    bool $checkPermissions = TRUE
+  ): GetAllowedActionsInitialByFundingCaseAction {
+    return (new GetAllowedActionsInitialByFundingCaseAction())->setCheckPermissions($checkPermissions);
   }
 
   public static function getForm(): GetFormAction {
