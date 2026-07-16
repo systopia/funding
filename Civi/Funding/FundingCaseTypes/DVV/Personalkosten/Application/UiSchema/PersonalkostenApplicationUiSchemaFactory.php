@@ -20,16 +20,23 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\DVV\Personalkosten\Application\UiSchema;
 
+use Civi\Funding\Contact\PossibleRecipientsLoaderInterface;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\Application\NonCombinedApplicationUiSchemaFactoryInterface;
 use Civi\Funding\FundingCaseTypes\DVV\Personalkosten\Traits\PersonalkostenSupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonForms\JsonFormsLayout;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 
 final class PersonalkostenApplicationUiSchemaFactory implements NonCombinedApplicationUiSchemaFactoryInterface {
 
   use PersonalkostenSupportedFundingCaseTypesTrait;
+
+  public function __construct(
+    private readonly RequestContextInterface $requestContext,
+    private readonly PossibleRecipientsLoaderInterface $possibleRecipientsLoader
+  ) {}
 
   /**
    * @inheritDoc
@@ -38,7 +45,7 @@ final class PersonalkostenApplicationUiSchemaFactory implements NonCombinedAppli
     ApplicationProcessEntityBundle $applicationProcessBundle,
     array $applicationProcessStatusList
   ): JsonFormsLayout {
-    return new PersonalkostenApplicationUiSchema($applicationProcessBundle->getFundingProgram()->getCurrency());
+    return new PersonalkostenApplicationUiSchema($applicationProcessBundle->getFundingProgram()->getCurrency(), 0);
   }
 
   /**
@@ -48,7 +55,15 @@ final class PersonalkostenApplicationUiSchemaFactory implements NonCombinedAppli
     FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType
   ): JsonFormsLayout {
-    return new PersonalkostenApplicationUiSchema($fundingProgram->getCurrency());
+    $possibleRecipients = $this->possibleRecipientsLoader->getPossibleRecipients(
+      $this->requestContext->getContactId(),
+      $fundingProgram
+    );
+
+    return new PersonalkostenApplicationUiSchema(
+      $fundingProgram->getCurrency(),
+      1 === count($possibleRecipients) ? 0 : PersonalkostenApplicationUiSchema::FLAG_SHOW_RECIPIENTS_CONTROL
+    );
   }
 
   /**
@@ -58,7 +73,9 @@ final class PersonalkostenApplicationUiSchemaFactory implements NonCombinedAppli
     FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType,
   ): JsonFormsLayout {
-    return $this->createUiSchemaNew($fundingProgram, $fundingCaseType);
+    return new PersonalkostenApplicationUiSchema(
+      $fundingProgram->getCurrency(), PersonalkostenApplicationUiSchema::FLAG_SHOW_RECIPIENTS_CONTROL
+    );
   }
 
 }
