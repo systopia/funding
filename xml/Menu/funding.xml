@@ -37,6 +37,16 @@
     <access_arguments>access Funding;administer Funding</access_arguments>
   </item>
   <item>
+    <path>civicrm/funding/application/show</path>
+    <page_callback>CRM_Funding_Page_Application</page_callback>
+    <access_arguments>access Funding;administer Funding</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/funding/clearing/show</path>
+    <page_callback>CRM_Funding_Page_Clearing</page_callback>
+    <access_arguments>access Funding;administer Funding</access_arguments>
+  </item>
+  <item>
     <path>civicrm/funding/drawdown-submit-confirmation/download</path>
     <page_callback>Civi\Funding\Page\DrawdownSubmitConfirmationDownloadPage</page_callback>
     <title>DrawdownDocumentDownload</title>

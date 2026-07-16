@@ -22,10 +22,14 @@ fundingModule.directive('fundingClearingEditor', [function() {
     scope: {
       activities: '<',
       clearingProcess: '=',
+      applicationProcess: '<',
+      fundingCase: '<',
+      fundingCaseType: '<',
+      fundingProgram: '<',
       // Buttons are not shown initially if JSON schema is loaded in controller.
       form: '=',
-      statusOptions: '=',
-      reviewStatusLabels: '=',
+      statusOptions: '<',
+      reviewStatusLabels: '<',
       onPostSubmit: '&',
     },
     templateUrl: '~/crmFunding/clearing/clearingEditor.template.html',
@@ -33,11 +37,9 @@ fundingModule.directive('fundingClearingEditor', [function() {
     link: function () {
       window.setTimeout(fixHeights, 100);
     },
-    controller: ['$scope', 'crmStatus', 'fundingContactService', 'fundingCaseService',
-      'fundingCaseTypeService', 'fundingProgramService', 'fundingApplicationProcessService',
+    controller: ['$scope', 'crmStatus', 'fundingContactService',
       'fundingClearingProcessService', 'fundingEditorTrait',
-      function($scope, crmStatus, fundingContactService, fundingCaseService,
-                     fundingCaseTypeService, fundingProgramService, fundingApplicationProcessService,
+      function($scope, crmStatus, fundingContactService,
                      fundingClearingProcessService, fundingEditorTrait) {
         fundingEditorTrait.use($scope);
 
@@ -46,20 +48,32 @@ fundingModule.directive('fundingClearingEditor', [function() {
         const $ = CRM.$;
         const ts = $scope.ts = CRM.ts('funding');
 
-        fundingApplicationProcessService.get($scope.clearingProcess.application_process_id).then((applicationProcess) => {
-          $scope.applicationProcess = applicationProcess;
-          fundingCaseService.get(applicationProcess.funding_case_id).then((fundingCase) => {
+        $scope.$watch('form', (form) => {
+          if (form) {
+            $scope.form = form;
+            $scope.jsonSchema = $scope.form.jsonSchema;
+            $scope.uiSchema = $scope.form.uiSchema;
+            $scope.uiSchema.label = null;
+            $scope.data = $scope.form.data;
+            $scope.resetOriginalData();
+          }
+        });
+
+        const unwatchFundingCase = $scope.$watch('fundingCase', function (fundingCase) {
+          if (fundingCase) {
             $scope.permissions = fundingCase.permissions;
-            fundingProgramService.get(fundingCase.funding_program_id).then(
-              (fundingProgram) => $scope.currency = fundingProgram.currency
-            );
             fundingContactService.get(fundingCase.recipient_contact_id).then(
               (contact) => $scope.recipientContact = contact
             );
-            fundingCaseTypeService.get(fundingCase.funding_case_type_id).then(
-              (fundingCaseType) => $scope.fundingCaseType = fundingCaseType
-            );
-          });
+            unwatchFundingCase();
+          }
+        });
+
+        const unwatchFundingProgram = $scope.$watch('fundingProgram', function (fundingProgram) {
+          if (fundingProgram) {
+            $scope.currency = fundingProgram.currency;
+            unwatchFundingProgram();
+          }
         });
 
         $scope.comment = {text: null};
@@ -70,14 +84,8 @@ fundingModule.directive('fundingClearingEditor', [function() {
           $scope.comment = {text: null};
         };
 
-        $scope.jsonSchema = $scope.form.jsonSchema;
-        $scope.uiSchema = $scope.form.uiSchema;
-        $scope.uiSchema.label = null;
-        $scope.data = $scope.form.data;
-        $scope.resetOriginalData();
-
         $scope.isActionAllowed = function (action) {
-          return $scope.jsonSchema.properties._action.enum.includes(action);
+          return $scope.jsonSchema && $scope.jsonSchema.properties._action.enum.includes(action);
         };
 
         $scope.isAnyActionAllowed = function (...actions) {
@@ -99,25 +107,6 @@ fundingModule.directive('fundingClearingEditor', [function() {
         $scope.isEditAllowed = function () {
           return $scope.isActionAllowed('update');
         };
-
-        function reloadClearingProcess() {
-          return fundingClearingProcessService.get($scope.clearingProcess.id, ['amount_cleared', 'currency']).then(
-              (clearingProcess) => $scope.clearingProcess = clearingProcess
-          );
-        }
-
-        function reloadForm() {
-          return fundingClearingProcessService.getForm($scope.clearingProcess.id).then(
-            (form) => {
-              $scope.form = form;
-              $scope.jsonSchema = form.jsonSchema;
-              $scope.uiSchema = $scope.form.uiSchema;
-              $scope.uiSchema.label = null;
-              $scope.data = form.data;
-              $scope.resetOriginalData();
-            }
-          );
-        }
 
         $scope.setReviewerCalculative = function (contactId) {
           return crmStatus({}, fundingClearingProcessService.setCalculativeReviewer($scope.clearingProcess.id, contactId))
@@ -162,7 +151,7 @@ fundingModule.directive('fundingClearingEditor', [function() {
           if (withComment) {
             const commentRequired = withComment === 'required';
             if ($submitModal === null) {
-              $submitModal = $('#submit-modal');
+              $submitModal = $('#clearing-submit-modal');
               $submitModal.on('hidden.bs.modal', function () {
                 // comment will be cleared if not submitted or on successful submit
                 if (!$scope.submitModal.submitted) {
@@ -200,6 +189,7 @@ fundingModule.directive('fundingClearingEditor', [function() {
           const data = angular.extend({}, $scope.data, {_action: 'update'});
           return fundingClearingProcessService.validateForm($scope.clearingProcess.id, data).then(function (result) {
             if (result.data) {
+              $scope.form.data = result.data;
               $scope.data = result.data;
             }
             $scope.errors = result.errors;
@@ -230,11 +220,7 @@ fundingModule.directive('fundingClearingEditor', [function() {
 
             if (_4.isEmpty(result.errors)) {
               $scope.comment = {text: null};
-              withOverlay(reloadClearingProcess());
-              withOverlay(reloadForm());
-              if ($scope.onPostSubmit) {
-                $scope.$eval($scope.onPostSubmit);
-              }
+              $scope.$eval($scope.onPostSubmit);
 
               return true;
             }
