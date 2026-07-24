@@ -32,6 +32,7 @@ use Civi\Funding\Upgrade\Upgrader0017;
 use Civi\Funding\Upgrade\Upgrader0020;
 use Civi\Funding\Upgrade\Upgrader0021;
 use Civi\Funding\Upgrade\Upgrader0022;
+use Civi\Funding\Upgrade\Upgrader0024;
 use CRM_Funding_ExtensionUtil as E;
 
 /**
@@ -70,19 +71,13 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
   public function upgrade_0002(): bool {
     $this->ctx->log->info('Applying database migration 0002');
     $this->executeSqlFile('sql/upgrade/0002.sql');
-    /** @var \Civi\Funding\Upgrade\Upgrader0002 $upgrader */
-    $upgrader = \Civi::service(Upgrader0002::class);
-
-    $upgrader->execute($this->ctx->log);
+    $this->executeUpgrader(Upgrader0002::class);
 
     return TRUE;
   }
 
   public function upgrade_0003(): bool {
-    /** @var \Civi\Funding\Upgrade\Upgrader0003 $upgrader */
-    $upgrader = \Civi::service(Upgrader0003::class);
-
-    $upgrader->execute($this->ctx->log);
+    $this->executeUpgrader(Upgrader0003::class);
 
     return TRUE;
   }
@@ -102,9 +97,7 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
   }
 
   public function upgrade_0006(): bool {
-    /** @var \Civi\Funding\Upgrade\Upgrader0006 $upgrader */
-    $upgrader = \Civi::service(Upgrader0006::class);
-    $upgrader->execute($this->ctx->log);
+    $this->executeUpgrader(Upgrader0006::class);
 
     return TRUE;
   }
@@ -117,17 +110,13 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
   }
 
   public function upgrade_0008(): bool {
-    /** @var \Civi\Funding\Upgrade\Upgrader0008 $upgrader */
-    $upgrader = \Civi::service(Upgrader0008::class);
-    $upgrader->execute($this->ctx->log);
+    $this->executeUpgrader(Upgrader0008::class);
 
     return TRUE;
   }
 
   public function upgrade_0009(): bool {
-    /** @var \Civi\Funding\Upgrade\Upgrader0009 $upgrader */
-    $upgrader = \Civi::service(Upgrader0009::class);
-    $upgrader->execute($this->ctx->log);
+    $this->executeUpgrader(Upgrader0009::class);
 
     return TRUE;
   }
@@ -136,9 +125,7 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
     $this->ctx->log->info('Applying database migration 0010');
     $this->executeSqlFile('sql/upgrade/0010.sql');
 
-    /** @var \Civi\Funding\Upgrade\Upgrader0010 $upgrader */
-    $upgrader = \Civi::service(Upgrader0010::class);
-    $upgrader->execute($this->ctx->log);
+    $this->executeUpgrader(Upgrader0010::class);
 
     return TRUE;
   }
@@ -150,25 +137,19 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
     $this->ctx->log->info('Installing JSON overlaps SQL function');
     $this->installJsonOverlapsSqlFunction();
 
-    /** @var \Civi\Funding\Upgrade\Upgrader0011 $upgrader */
-    $upgrader = \Civi::service(Upgrader0011::class);
-    $upgrader->execute($this->ctx->log);
+    $this->executeUpgrader(Upgrader0011::class);
 
     return TRUE;
   }
 
   public function upgrade_0012(): bool {
-    /** @var \Civi\Funding\Upgrade\Upgrader0012 $upgrader */
-    $upgrader = \Civi::service(Upgrader0012::class);
-    $upgrader->execute($this->ctx->log);
+    $this->executeUpgrader(Upgrader0012::class);
 
     return TRUE;
   }
 
   public function upgrade_0013(): bool {
-    /** @var \Civi\Funding\Upgrade\Upgrader0013 $upgrader */
-    $upgrader = \Civi::service(Upgrader0013::class);
-    $upgrader->execute($this->ctx->log);
+    $this->executeUpgrader(Upgrader0013::class);
 
     return TRUE;
   }
@@ -177,9 +158,7 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
     $this->ctx->log->info('Applying database migration 0014');
     $this->executeSqlFile('sql/upgrade/0014.sql');
 
-    /** @var \Civi\Funding\Upgrade\Upgrader0014 $upgrader */
-    $upgrader = \Civi::service(Upgrader0014::class);
-    $upgrader->execute($this->ctx->log);
+    $this->executeUpgrader(Upgrader0014::class);
 
     return TRUE;
   }
@@ -205,9 +184,7 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
     $this->ctx->log->info('Applying database migration 0017');
     $this->executeSqlFile('sql/upgrade/0017.sql');
 
-    /** @var \Civi\Funding\Upgrade\Upgrader0017 $upgrader */
-    $upgrader = \Civi::service(Upgrader0017::class);
-    $upgrader->execute($this->ctx->log);
+    $this->executeUpgrader(Upgrader0017::class);
 
     return TRUE;
   }
@@ -231,31 +208,25 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
     $this->ctx->log->info('Applying database migration 0020');
     $this->executeSqlFile('sql/upgrade/0020.sql');
 
-    /** @var \Civi\Funding\Upgrade\Upgrader0020 $upgrader */
-    $upgrader = \Civi::service(Upgrader0020::class);
-    $upgrader->execute($this->ctx->log);
+    $this->executeUpgrader(Upgrader0020::class);
 
     return TRUE;
   }
 
   public function upgrade_0021(): bool {
-    /** @var \Civi\Funding\Upgrade\Upgrader0021 $upgrader */
-    $upgrader = \Civi::service(Upgrader0021::class);
-    $upgrader->execute($this->ctx->log);
+    $this->executeUpgrader(Upgrader0021::class);
 
     return TRUE;
   }
 
   public function upgrade_0022(): bool {
-    /** @var \Civi\Funding\Upgrade\Upgrader0022 $upgrader */
-    $upgrader = \Civi::service(Upgrader0022::class);
-    $upgrader->execute($this->ctx->log);
+    $this->executeUpgrader(Upgrader0022::class);
 
     return TRUE;
   }
 
   public function upgrade_0023(): bool {
-    $this->ctx->log->info('Applying database migration 0022');
+    $this->ctx->log->info('Applying database migration 0023');
     E::schema()->alterSchemaField(
       'FundingCase',
       'budget_requested',
@@ -268,6 +239,12 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
       ],
       'AFTER recipient_contact_id'
     );
+
+    return TRUE;
+  }
+
+  public function upgrade_0024(): bool {
+    $this->executeUpgrader(Upgrader0024::class);
 
     return TRUE;
   }
@@ -318,6 +295,19 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
     $sql = file_get_contents(E::path($path));
     assert(is_string($sql));
     CRM_Core_DAO::executeQuery($sql);
+  }
+
+  /**
+   * @template T of \Civi\Funding\Upgrade\UpgraderInterface
+   *
+   * @param class-string<T> $upgraderClass
+   *
+   * @throws \CRM_Core_Exception
+   */
+  private function executeUpgrader(string $upgraderClass): void {
+    /** @var T $upgrader */
+    $upgrader = \Civi::service($upgraderClass);
+    $upgrader->execute($this->ctx->log);
   }
 
 }
