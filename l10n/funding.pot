@@ -754,7 +754,7 @@ msgstr ""
 msgid "Funding Application Created"
 msgstr ""
 
-#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessCreatedSubscriber.php Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriber.php Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationSnapshotCreateSubscriber.php Civi/Funding/EventSubscriber/ClearingProcess/ClearingProcessReviewStatusSubscriber.php Civi/Funding/EventSubscriber/ClearingProcess/ClearingProcessStartedSubscriber.php Civi/Funding/EventSubscriber/ClearingProcess/ClearingProcessStatusSubscriber.php
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessCreatedSubscriber.php Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriber.php Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationSnapshotCreateSubscriber.php Civi/Funding/EventSubscriber/ClearingProcess/ClearingProcessReviewStatusSubscriber.php Civi/Funding/EventSubscriber/ClearingProcess/ClearingProcessStartedSubscriber.php Civi/Funding/EventSubscriber/ClearingProcess/ClearingProcessStatusSubscriber.php Civi/Funding/Upgrade/Upgrader0024.php
 msgid "Application: %1 (%2)"
 msgstr ""
 
@@ -802,7 +802,7 @@ msgstr ""
 msgid "To status: %1"
 msgstr ""
 
-#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationSnapshotCreateSubscriber.php
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationSnapshotCreateSubscriber.php Civi/Funding/Upgrade/Upgrader0024.php
 msgid "Funding Application Snapshot Created"
 msgstr ""
 
@@ -1312,6 +1312,18 @@ msgstr ""
 
 #: Civi/Funding/Translation/EventSubscriber/ExtractStringsSearchKitTaskSubscriber.php
 msgid "An error occurred while extracting strings."
+msgstr ""
+
+#: Civi/Funding/Upgrade/Upgrader0024.php
+msgid "modification date of application process"
+msgstr ""
+
+#: Civi/Funding/Upgrade/Upgrader0024.php
+msgid "creation date of activity %1"
+msgstr ""
+
+#: Civi/Funding/Upgrade/Upgrader0024.php
+msgid "Created during update for existing snapshot. Date (%1) may be inaccurate."
 msgstr ""
 
 #: Civi/Funding/Validation/EntityValidationResult.php
