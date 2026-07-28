@@ -19,20 +19,25 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\DVV\SammelantragKurs\FundingCase\UiSchema;
 
+use Civi\RemoteTools\JsonForms\Control\JsonFormsHidden;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCloseableGroup;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 
 final class KursNewCaseUiSchema extends JsonFormsGroup {
 
+  public const FLAG_SHOW_RECIPIENTS_CONTROL = 1;
+
   /**
    * @phpstan-param array<int, \Civi\RemoteTools\JsonForms\Control\JsonFormsSubmitButton> $submitButtons
    */
-  public function __construct(array $submitButtons) {
+  public function __construct(array $submitButtons, int $flags) {
     parent::__construct('Sammelantrag Kurs', [
-      new JsonFormsCloseableGroup('Antragstellende Organisation', [
+      0 !== ($flags & self::FLAG_SHOW_RECIPIENTS_CONTROL)
+      ? new JsonFormsCloseableGroup('Antragstellende Organisation', [
         new JsonFormsControl('#/properties/empfaenger', ''),
-      ]),
+      ])
+      : new JsonFormsHidden('#/properties/empfaenger'),
       ...$submitButtons,
     ]);
   }

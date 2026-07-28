@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\DVV\SonstigeAktivitaet\Application\UISchema;
 
+use Civi\Funding\Contact\PossibleRecipientsLoaderInterface;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
@@ -27,15 +28,17 @@ use Civi\Funding\FundingCaseTypes\DVV\SonstigeAktivitaet\Application\JsonSchema\
 use Civi\Funding\FundingCaseTypes\DVV\SonstigeAktivitaet\Traits\AVK1SupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonForms\JsonFormsLayout;
 use Civi\RemoteTools\JsonForms\JsonFormsMarkup;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 
 final class AVK1UiSchemaFactory implements NonCombinedApplicationUiSchemaFactoryInterface {
 
   use AVK1SupportedFundingCaseTypesTrait;
-  private AVK1StatusMarkupFactory $statusMarkupFactory;
 
-  public function __construct(AVK1StatusMarkupFactory $statusMarkupFactory) {
-    $this->statusMarkupFactory = $statusMarkupFactory;
-  }
+  public function __construct(
+    private readonly PossibleRecipientsLoaderInterface $possibleRecipientsLoader,
+    private readonly RequestContextInterface $requestContext,
+    private readonly AVK1StatusMarkupFactory $statusMarkupFactory,
+  ) {}
 
   public function createUiSchemaExisting(
     ApplicationProcessEntityBundle $applicationProcessBundle,
@@ -43,21 +46,29 @@ final class AVK1UiSchemaFactory implements NonCombinedApplicationUiSchemaFactory
   ): JsonFormsLayout {
     $statusMarkup = new JsonFormsMarkup($this->statusMarkupFactory->buildStatusMarkup($applicationProcessBundle));
 
-    return new AVK1UiSchema($applicationProcessBundle->getFundingProgram()->getCurrency(), [$statusMarkup]);
+    return new AVK1UiSchema($applicationProcessBundle->getFundingProgram()->getCurrency(), 0, [$statusMarkup]);
   }
 
   public function createUiSchemaNew(
     FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType
   ): JsonFormsLayout {
-    return new AVK1UiSchema($fundingProgram->getCurrency());
+    $possibleRecipients = $this->possibleRecipientsLoader->getPossibleRecipients(
+      $this->requestContext->getContactId(),
+      $fundingProgram
+    );
+
+    return new AVK1UiSchema(
+      $fundingProgram->getCurrency(),
+      1 === count($possibleRecipients) ? AVK1UiSchema::FLAG_SHOW_RECIPIENTS_CONTROL : 0
+    );
   }
 
   public function createUiSchemaForTranslation(
     FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType,
   ): JsonFormsLayout {
-    return $this->createUiSchemaNew($fundingProgram, $fundingCaseType);
+    return new AVK1UiSchema($fundingProgram->getCurrency(), 0);
   }
 
 }

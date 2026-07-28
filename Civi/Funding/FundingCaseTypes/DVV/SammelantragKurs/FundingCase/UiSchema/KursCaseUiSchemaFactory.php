@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCaseTypes\DVV\SammelantragKurs\FundingCase\UiSchema;
 
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
+use Civi\Funding\Contact\PossibleRecipientsLoaderInterface;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
@@ -30,22 +31,18 @@ use Civi\Funding\FundingCase\Actions\FundingCaseSubmitActionsFactoryInterface;
 use Civi\Funding\FundingCaseTypes\DVV\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonForms\JsonFormsElement;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 
 final class KursCaseUiSchemaFactory implements FundingCaseUiSchemaFactoryInterface {
 
   use KursSupportedFundingCaseTypesTrait;
 
-  private ApplicationProcessManager $applicationProcessManager;
-
-  private FundingCaseSubmitActionsFactoryInterface $submitActionsFactory;
-
   public function __construct(
-    ApplicationProcessManager $applicationProcessManager,
-    FundingCaseSubmitActionsFactoryInterface $submitActionsFactory
-  ) {
-    $this->applicationProcessManager = $applicationProcessManager;
-    $this->submitActionsFactory = $submitActionsFactory;
-  }
+    private readonly ApplicationProcessManager $applicationProcessManager,
+    private readonly FundingCaseSubmitActionsFactoryInterface $submitActionsFactory,
+    private readonly PossibleRecipientsLoaderInterface $possibleRecipientsLoader,
+    private readonly RequestContextInterface $requestContext,
+  ) {}
 
   public function createUiSchemaUpdate(FundingCaseBundle $fundingCaseBundle): JsonFormsElement {
     $applicationProcesses = $this->applicationProcessManager->getByFundingCaseId(
@@ -69,11 +66,19 @@ final class KursCaseUiSchemaFactory implements FundingCaseUiSchemaFactoryInterfa
     FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType
   ): JsonFormsElement {
+    $possibleRecipients = $this->possibleRecipientsLoader->getPossibleRecipients(
+      $this->requestContext->getContactId(),
+      $fundingProgram
+    );
+
     $submitButtons = JsonFormsSubmitButtonsFactory::createButtons(
       $this->submitActionsFactory->getInitialSubmitActions($fundingProgram->getPermissions(), $fundingCaseType)
     );
 
-    return new KursNewCaseUiSchema($submitButtons);
+    return new KursNewCaseUiSchema(
+      $submitButtons,
+      1 === count($possibleRecipients) ? KursNewCaseUiSchema::FLAG_SHOW_RECIPIENTS_CONTROL : 0
+    );
   }
 
 }

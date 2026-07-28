@@ -19,16 +19,23 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\DVV\IJB\Application\UiSchema;
 
+use Civi\Funding\Contact\PossibleRecipientsLoaderInterface;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Entity\FundingProgramEntity;
 use Civi\Funding\Form\Application\NonCombinedApplicationUiSchemaFactoryInterface;
 use Civi\Funding\FundingCaseTypes\DVV\IJB\Traits\IJBSupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonForms\JsonFormsLayout;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 
 final class IJBApplicationUiSchemaFactory implements NonCombinedApplicationUiSchemaFactoryInterface {
 
   use IJBSupportedFundingCaseTypesTrait;
+
+  public function __construct(
+    private readonly PossibleRecipientsLoaderInterface $possibleRecipientsLoader,
+    private readonly RequestContextInterface $requestContext,
+  ) {}
 
   /**
    * @inheritDoc
@@ -37,7 +44,7 @@ final class IJBApplicationUiSchemaFactory implements NonCombinedApplicationUiSch
     ApplicationProcessEntityBundle $applicationProcessBundle,
     array $applicationProcessStatusList
   ): JsonFormsLayout {
-    return new IJBApplicationUiSchema($applicationProcessBundle->getFundingProgram()->getCurrency());
+    return new IJBApplicationUiSchema($applicationProcessBundle->getFundingProgram()->getCurrency(), 0);
   }
 
   /**
@@ -47,14 +54,24 @@ final class IJBApplicationUiSchemaFactory implements NonCombinedApplicationUiSch
     FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType
   ): JsonFormsLayout {
-    return new IJBApplicationUiSchema($fundingProgram->getCurrency());
+    $possibleRecipients = $this->possibleRecipientsLoader->getPossibleRecipients(
+      $this->requestContext->getContactId(),
+      $fundingProgram
+    );
+
+    return new IJBApplicationUiSchema(
+      $fundingProgram->getCurrency(),
+      1 === count($possibleRecipients) ? 0 : IJBApplicationUiSchema::FLAG_SHOW_RECIPIENTS_CONTROL
+    );
   }
 
   public function createUiSchemaForTranslation(
     FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType,
   ): JsonFormsLayout {
-    return $this->createUiSchemaNew($fundingProgram, $fundingCaseType);
+    return new IJBApplicationUiSchema(
+      $fundingProgram->getCurrency(), IJBApplicationUiSchema::FLAG_SHOW_RECIPIENTS_CONTROL
+    );
   }
 
 }
