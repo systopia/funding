@@ -21,7 +21,6 @@ namespace Civi\Funding\FundingCaseTypes\DVV\SonstigeAktivitaet\Application\UISch
 
 use Civi\RemoteTools\JsonForms\Control\JsonFormsArray;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
-use Civi\RemoteTools\JsonForms\JsonFormsMarkup;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 
@@ -29,14 +28,6 @@ final class AVK1GrunddatenUiSchema extends JsonFormsCategory {
 
   public function __construct(string $scopePrefix) {
     $elements = [
-      new JsonFormsMarkup(<<<EOD
-<p>Bei Sonstigen Aktivitäten kann die Summe einer Kostenkategorie (Einzelansätze,
-nicht die einzelne Positionen) um bis zu 20 % überschritten werden, solange die
-Überschreitung durch entsprechende Einsparungen bei anderen Einzelansätzen
-ausgeglichen werden kann. Die bewilligte Gesamtsumme kann nicht überschritten
-werden.</p>
-EOD
-      ),
       new JsonFormsControl(
         "$scopePrefix/internerBezeichner",
         'Interner Bezeichner'
@@ -86,11 +77,11 @@ EOD
         ),
         new JsonFormsControl(
           "$scopePrefix/teilnehmer/properties/inJugendhilfeEhrenamtlichTaetig",
-          'davon in der Kinder- und Jugendhilfe (Multiplikator*innen-Seminare) ehrenamtlich tätig',
+          'davon in der Kinder- und Jugendhilfe ehrenamtlich tätig',
         ),
         new JsonFormsControl(
           "$scopePrefix/teilnehmer/properties/inJugendhilfeHauptamtlichTaetig",
-          'davon in der Kinder- und Jugendhilfe (Multiplikator*innen-Seminare) hauptamtlich tätig',
+          'davon in der Kinder- und Jugendhilfe hauptamtlich tätig',
         ),
         new JsonFormsControl(
           "$scopePrefix/teilnehmer/properties/referenten",

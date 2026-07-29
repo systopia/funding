@@ -21,6 +21,9 @@ namespace Civi\Funding\FundingCaseTypes\DVV\SonstigeAktivitaet\Application\JsonS
 
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
+use Civi\RemoteTools\JsonSchema\JsonSchemaBoolean;
+use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
+use Civi\RemoteTools\JsonSchema\JsonSchemaInteger;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
@@ -28,11 +31,11 @@ use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
 final class AVK1BeschreibungSchema extends JsonSchemaObject {
 
   public function __construct() {
-    parent::__construct([
-      'thematischeSchwerpunkte' => new JsonSchemaString(),
-      'geplanterAblauf' => new JsonSchemaString(),
-      'beitragZuPolitischerJugendbildung' => new JsonSchemaString(),
-      'zielgruppe' => new JsonSchemaString(),
+    $properties = [
+      'thematischeSchwerpunkte' => new JsonSchemaString(['minLength' => 1]),
+      'geplanterAblauf' => new JsonSchemaString(['minLength' => 1]),
+      'beitragZuPolitischerJugendbildung' => new JsonSchemaString(['minLength' => 1]),
+      'zielgruppe' => new JsonSchemaString(['minLength' => 1]),
       'ziele' => new JsonSchemaArray(
         new JsonSchemaString([
           'oneOf' => JsonSchemaUtil::buildTitledOneOf([
@@ -45,15 +48,37 @@ final class AVK1BeschreibungSchema extends JsonSchemaObject {
             'gefaehrdungMissbrauchGewalt'
             => 'Schutz vor Gefährdungen, Missbrauch und Gewalt und Befähigung zum kritischen Umgang mit Risiken',
             'jugendpolitischeAnliegen' => 'Stärkung jugendpolitischer Anliegen auf nationaler und europäischer Ebene',
-            'internationaleBegegnungen' => 'Stärkung europäischer und internationaler Begegnungen und Erfahrungen',
             'qualitaetsentwicklung' => 'Qualitätsentwicklung / Teamendenfortbildung',
             'kinderJugendhilfe' => 'Weiterentwicklung der Kinder- und Jugendhilfe',
           ]),
-        ]), ['uniqueItems' => TRUE]),
-      'bildungsanteil' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0, 'maximum' => 100]),
-      'veranstaltungsort' => new JsonSchemaString(),
-      'partner' => new JsonSchemaString(),
-    ]);
+        ]), ['uniqueItems' => TRUE, 'minItems' => 1]),
+      'bildungsanteil' => new JsonSchemaInteger(['minimum' => 0, 'maximum' => 100]),
+      'veranstaltungsort' => new JsonSchemaString(['minLength' => 1]),
+      'mitSchuleKooperiert' => new JsonSchemaBoolean(),
+      'partnerschule' => new JsonSchemaString([
+        'minLength' => 1,
+        '$limitValidation' => JsonSchema::fromArray([
+          'condition' => [
+            'evaluate' => [
+              'expression' => '!mitSchuleKooperiert',
+              'variables' => ['mitSchuleKooperiert' => new JsonSchemaDataPointer('1/mitSchuleKooperiert')],
+            ],
+          ],
+        ]),
+      ]),
+      'artDerKooperation' => new JsonSchemaString([
+        'minLength' => 1,
+        '$limitValidation' => JsonSchema::fromArray([
+          'condition' => [
+            'evaluate' => [
+              'expression' => '!mitSchuleKooperiert',
+              'variables' => ['mitSchuleKooperiert' => new JsonSchemaDataPointer('1/mitSchuleKooperiert')],
+            ],
+          ],
+        ]),
+      ]),
+    ];
+    parent::__construct($properties, ['required' => array_keys($properties)]);
   }
 
 }

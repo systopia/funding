@@ -20,14 +20,11 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCaseTypes\DVV\SonstigeAktivitaet\Application\JsonSchema;
 
 use Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\JsonSchemaResourcesItem;
-use Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\JsonSchemaResourcesItems;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
-use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
 use Civi\RemoteTools\JsonSchema\JsonSchemaCalculate;
 use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
 use Civi\RemoteTools\JsonSchema\JsonSchemaMoney;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
-use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 
 final class AVK1FinanzierungSchema extends JsonSchemaObject {
 
@@ -57,6 +54,42 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
           ],
         ]),
       ]),
+      'spenden' => new JsonSchemaMoney([
+        'minimum' => 0,
+        'default' => 0,
+        '$resourcesItem' => new JsonSchemaResourcesItem([
+          'type' => 'spenden',
+          'identifier' => 'spenden',
+          'clearing' => [
+            'itemLabel' => 'Spenden',
+          ],
+        ]),
+      ]),
+      // Eigenanteil
+      'eigenanteil' => new JsonSchemaCalculate(
+        'number',
+        'round(teilnehmerbeitraege + eigenmittel + spenden, 2)',
+        [
+          'teilnehmerbeitraege' => new JsonSchemaDataPointer('1/teilnehmerbeitraege', 0),
+          'eigenmittel' => new JsonSchemaDataPointer('1/eigenmittel', 0),
+          'spenden' => new JsonSchemaDataPointer('1/spenden', 0),
+        ],
+        0,
+        [
+          '$validations' => [
+            JsonSchema::fromArray([
+              'keyword' => 'evaluate',
+              'value' => [
+                'expression' => 'gesamtkosten == 0 || data / gesamtkosten >= 0.1',
+                'variables' => [
+                  'gesamtkosten' => new JsonSchemaDataPointer('/kosten/gesamtkosten'),
+                ],
+              ],
+              'message' => 'Der Eigenanteil muss mindestens 10 % betragen.',
+            ]),
+          ],
+        ],
+      ),
       // Abschnitt II.3
       'oeffentlicheMittel' => new JsonSchemaObject([
         'europa' => new JsonSchemaMoney([
@@ -105,39 +138,13 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
           'staedteUndKreise' => new JsonSchemaDataPointer('1/oeffentlicheMittel/staedteUndKreise'),
         ]
       ),
-      // Abschnitt II.4
-      'sonstigeMittel' => new JsonSchemaArray(
-        new JsonSchemaObject([
-          '_identifier' => new JsonSchemaString(['readonly' => TRUE]),
-          'quelle' => new JsonSchemaString(),
-          'betrag' => new JsonSchemaMoney(['minimum' => 0]),
-        ], ['required' => ['betrag', 'quelle']]),
-        [
-          '$resourcesItems' => new JsonSchemaResourcesItems([
-            'type' => 'sonstigeMittel',
-            'identifierProperty' => '_identifier',
-            'amountProperty' => 'betrag',
-            'clearing' => [
-              'itemLabel' => 'Sonstige Mittel',
-              'paymentPartyLabel' => 'Fördernde Stelle',
-            ],
-          ]),
-        ]
-      ),
-      'sonstigeMittelGesamt' => new JsonSchemaCalculate(
-        'number',
-        'round(sum(map(sonstigeMittel, "value.betrag")), 2)',
-        ['sonstigeMittel' => new JsonSchemaDataPointer('1/sonstigeMittel')]
-      ),
       // Gesamtmittel ohne Zuschuss
       'gesamtmittel' => new JsonSchemaCalculate(
         'number',
-        'round(teilnehmerbeitraege + eigenmittel + oeffentlicheMittelGesamt + sonstigeMittelGesamt, 2)',
+        'round(eigenanteil + oeffentlicheMittelGesamt, 2)',
         [
-          'teilnehmerbeitraege' => new JsonSchemaDataPointer('1/teilnehmerbeitraege'),
-          'eigenmittel' => new JsonSchemaDataPointer('1/eigenmittel', 0),
+          'eigenanteil' => new JsonSchemaDataPointer('1/eigenanteil'),
           'oeffentlicheMittelGesamt' => new JsonSchemaDataPointer('1/oeffentlicheMittelGesamt'),
-          'sonstigeMittelGesamt' => new JsonSchemaDataPointer('1/sonstigeMittelGesamt'),
         ],
         NULL,
         ['minimum' => 0.01],
@@ -147,10 +154,14 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
         'gesamtkosten' => new JsonSchemaDataPointer('/kosten/gesamtkosten'),
         'gesamtmittel' => new JsonSchemaDataPointer('1/gesamtmittel'),
       ], NULL, ['$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'amount_requested']])]),
+      'gesamtfinanzierung' => new JsonSchemaCalculate('number', 'round(beantragterZuschuss + gesamtmittel, 2)', [
+        'beantragterZuschuss' => new JsonSchemaDataPointer('1/beantragterZuschuss'),
+        'gesamtmittel' => new JsonSchemaDataPointer('1/gesamtmittel'),
+      ]),
     ], [
       'required' => [
         'oeffentlicheMittel',
-        'sonstigeMittel',
+        'spenden',
       ],
     ]);
   }

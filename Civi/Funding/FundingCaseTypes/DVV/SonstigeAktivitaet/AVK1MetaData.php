@@ -66,17 +66,10 @@ final class AVK1MetaData extends AbstractFundingCaseTypeMetaData {
     return $this->costItemTypes ??= [
       'unterkunftUndVerpflegung' => new CostItemType('unterkunftUndVerpflegung', 'Unterkunft und Verpflegung'),
       'honorar' => new CostItemType('honorar', 'Honorar'),
-      'fahrtkosten/intern' => new CostItemType('fahrtkosten/intern', 'Fahrtkosten'),
-      'fahrtkosten/anTeilnehmerErstattet' => new CostItemType(
-        'fahrtkosten/anTeilnehmerErstattet',
-        'An Teilnehmer*innen/Referent*innen erstattete Fahrtkosten'
-      ),
+      'fahrtkosten/teilnehmer' => new CostItemType('fahrtkosten/intern', 'Fahrtkosten Teilnehmer*innen'),
+      'fahrtkosten/referenten' => new CostItemType('fahrtkosten/referenten', 'Fahrtkosten Referent*innen'),
       'sachkosten/ausstattung' => new CostItemType('sachkosten/ausstattung', 'Sachkosten'),
       'sonstigeAusgabe' => new CostItemType('sonstigeAusgabe', 'Sonstige Ausgabe'),
-      'versicherung/teilnehmer' => new CostItemType(
-        'versicherung/teilnehmer',
-        'Kosten der Versicherung der Teilnehmer*innen'
-      ),
     ];
   }
 
@@ -94,6 +87,7 @@ final class AVK1MetaData extends AbstractFundingCaseTypeMetaData {
     return $this->resourcesItemTypes ??= [
       'teilnehmerbeitraege' => new ResourcesItemType('teilnehmerbeitraege', 'Teilnehmer*innenbeiträge'),
       'eigenmittel' => new ResourcesItemType('eigenmittel', 'Eigenmittel'),
+      'spenden' => new ResourcesItemType('spenden', 'Spenden'),
       'oeffentlicheMittel/europa' => new ResourcesItemType(
         'oeffentlicheMittel/europa',
         'Finanzierung durch Europa-Mittel'
@@ -106,7 +100,6 @@ final class AVK1MetaData extends AbstractFundingCaseTypeMetaData {
         'oeffentlicheMittel/staedteUndKreise',
         'Finanzierung durch Städte und Kreise'
       ),
-      'sonstigeMittel' => new ResourcesItemType('sonstigeMittel', 'Sonstige Mittel'),
     ];
   }
 

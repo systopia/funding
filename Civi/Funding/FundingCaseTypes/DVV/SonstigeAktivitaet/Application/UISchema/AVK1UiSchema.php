@@ -22,9 +22,11 @@ namespace Civi\Funding\FundingCaseTypes\DVV\SonstigeAktivitaet\Application\UISch
 use Civi\RemoteTools\JsonForms\Control\JsonFormsArray;
 use Civi\RemoteTools\JsonForms\Control\JsonFormsHidden;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
+use Civi\RemoteTools\JsonForms\JsonFormsRule;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategorization;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 
 /**
  * This implements the UI schema for an "AV-K1" form to apply for a funding for
@@ -69,13 +71,6 @@ final class AVK1UiSchema extends JsonFormsGroup {
           new AVK1SachkostenUiSchema($currency),
           // Abschnitt I.6
           new AVK1SonstigeAusgabenUiSchema($currency),
-          // Abschnitt I.7
-          new JsonFormsGroup('Nur bei internationalen Maßnahmen', [
-            new JsonFormsControl(
-              '#/properties/kosten/properties/versicherung/properties/teilnehmer',
-              'Kosten der Versicherung der Teilnehmer*innen in ' . $currency
-            ),
-          ], 'Nur bei internationalen Maßnahmen'),
           new JsonFormsGroup('Gesamtkosten', [
             new JsonFormsControl(
               '#/properties/kosten/properties/gesamtkosten', 'Gesamtkosten in ' . $currency
@@ -96,23 +91,29 @@ final class AVK1UiSchema extends JsonFormsGroup {
               '#/properties/finanzierung/properties/eigenmittel', 'Eigenmittel in ' . $currency
             ),
           ], 'Bitte geben Sie hier die Eigenmittel an, die Sie für Ihr Vorhaben aufbringen können.'),
+          new JsonFormsGroup('Spenden', [
+            new JsonFormsControl(
+              '#/properties/finanzierung/properties/spenden', 'Spenden in ' . $currency
+            ),
+          ], 'Bitte geben Sie hier die Spenden an, die Sie für Ihr Vorhaben aufbringen können.'),
           // Abschnitt II.3
           new AVK1OeffentlicheMittelUiSchema($currency),
-          // Abschnitt II.4
-          new AVK1SonstigeMittelUiSchema($currency),
           new JsonFormsGroup('Gesamtfinanzierung und beantragter Zuschuss', [
-            // Gesamtmittel ohne Zuschuss
             new JsonFormsControl(
-              '#/properties/finanzierung/properties/gesamtmittel', 'Gesamtfinanzierung in ' . $currency
+              '#/properties/finanzierung/properties/eigenanteil', 'Summe Eigenanteil in ' . $currency
             ),
             // Abschnitt II.5
             new JsonFormsControl(
-              '#/properties/finanzierung/properties/beantragterZuschuss', 'Beantragter Zuschuss in ' . $currency
+              '#/properties/finanzierung/properties/beantragterZuschuss', 'Beantragter KJP-Zuschuss in ' . $currency
+            ),
+            new JsonFormsControl(
+              '#/properties/finanzierung/properties/gesamtfinanzierung', 'Gesamtfinanzierung in ' . $currency
             ),
           ]),
         ], <<<'EOD'
-  Eine Vollförderung ist bei den Sonstigen Aktivitäten nicht möglich. Bitte geben
-  Sie deswegen bei mindestens einer der folgenden Kategorien Mittel an.
+  Eine Vollförderung ist bei den Sonstigen Aktivitäten nicht möglich. Der
+  Eigenanteil beträgt mindestens 10%. Bitte geben Sie deswegen bei
+  Teilnehmer*innenbeiträge, Eigenmittel und/oder Spenden einen Betrag ein.
   EOD
         ),
       ]),
@@ -162,7 +163,33 @@ final class AVK1UiSchema extends JsonFormsGroup {
           '#/properties/beschreibung/properties/veranstaltungsort', 'Wo findet die Veranstaltung statt?'
         ),
         new JsonFormsControl(
-          '#/properties/beschreibung/properties/partner', 'Mit welcher Schule oder Organisation wird kooperiert?'
+          '#/properties/beschreibung/properties/mitSchuleKooperiert', 'Wird mit einer Schule kooperiert?'
+        ),
+        new JsonFormsControl(
+          '#/properties/beschreibung/properties/partnerschule',
+          'Mit welcher Schule wird kooperiert?',
+          NULL,
+          NULL,
+          [
+            'rule' => new JsonFormsRule(
+              'SHOW',
+              '#/properties/beschreibung/properties/mitSchuleKooperiert',
+              JsonSchema::fromArray(['const' => TRUE])
+            ),
+          ]
+        ),
+        new JsonFormsControl(
+          '#/properties/beschreibung/properties/artDerKooperation',
+          'Welcher Art entspricht die Kooperation?',
+          NULL,
+          NULL,
+          [
+            'rule' => new JsonFormsRule(
+              'SHOW',
+              '#/properties/beschreibung/properties/mitSchuleKooperiert',
+              JsonSchema::fromArray(['const' => TRUE])
+            ),
+          ]
         ),
       ]),
       new JsonFormsCategory('Projektunterlagen', [
@@ -188,7 +215,7 @@ EOD,
 
     $elements[] = new JsonFormsCategorization($categories);
 
-    parent::__construct('Förderantrag für Sonstige Aktivitäten (SoA) / Virtuelle Kurse', [
+    parent::__construct('Förderantrag für Sonstige Aktivitäten (SoA)', [
       ...$elements,
       ...$extraElements,
     ]);
