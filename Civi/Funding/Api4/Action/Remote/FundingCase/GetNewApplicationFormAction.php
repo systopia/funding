@@ -25,6 +25,15 @@ use Civi\Funding\Api4\Action\Remote\FundingCase\Traits\NewApplicationFormActionT
 use Civi\Funding\Api4\Action\Traits\FundingCaseTypeIdParameterTrait;
 use Civi\Funding\Api4\Action\Traits\FundingProgramIdParameterTrait;
 
+/**
+ * Generates and returns the form specification for a new application
+ * (non-combined funding case)
+ *
+ * @method int|null getCopyDataFromId()
+ * @method $this setCopyDataFromId(int $copyDataFromId)
+ *
+ * @see \Civi\Funding\FundingCase\Api4\ActionHandler\RemoteGetNewApplicationFormActionHandler
+ */
 class GetNewApplicationFormAction extends AbstractRemoteFundingAction {
 
   use FundingCaseTypeIdParameterTrait;
@@ -32,6 +41,11 @@ class GetNewApplicationFormAction extends AbstractRemoteFundingAction {
   use FundingProgramIdParameterTrait;
 
   use NewApplicationFormActionTrait;
+
+  /**
+   * @var int ID of the application process to copy the initial data from.
+   */
+  protected ?int $copyDataFromId = NULL;
 
   public function __construct() {
     parent::__construct(RemoteFundingCase::getEntityName(), 'getNewApplicationForm');
