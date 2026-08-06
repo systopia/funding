@@ -81,7 +81,12 @@ final class GetAction extends AbstractGetAction {
     }
 
     if ([] === $this->getOrderBy()) {
-      $action->addOrderBy('id', 'DESC');
+      /**
+       * Note: Because of artificially generated snapshot creation activities in
+       * {@link \Civi\Funding\Upgrade\Upgrader0024} we have to order by
+       * created_date and not by id.
+       */
+      $action->addOrderBy('created_date', 'DESC');
     }
 
     $getResult = $this->getApi4()->executeAction($action);

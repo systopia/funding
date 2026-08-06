@@ -34,16 +34,40 @@ final class ActivityFixture {
    */
   public static function addApplicationProcessFixture(
     int $applicationProcessId,
-    int $activityTypeId,
+    int|string $activityType,
     int $sourceContactId,
     array $values = []
   ): array {
+    if (is_string($activityType)) {
+      $values['activity_type_id:name'] = $activityType;
+    }
+    else {
+      $values['activity_type_id'] = $activityType;
+    }
+
     /** @phpstan-var array{id: int} $activityValues */
     $activityValues = Activity::create(FALSE)
       ->setValues([
-        'activity_type_id' => $activityTypeId,
         'source_contact_id' => $sourceContactId,
       ] + $values)->execute()->single();
+
+    if (isset($values['created_date'])) {
+      // CiviCRM ignores a given activity created_date so we have to set it directly.
+      \CRM_Core_DAO::executeQuery('UPDATE civicrm_activity SET created_date = %1 WHERE id = %2', [
+        1 => [$values['created_date'], 'String'],
+        2 => [$activityValues['id'], 'Integer'],
+      ]);
+      $activityValues['created_date'] = $values['created_date'];
+    }
+
+    if (isset($values['modified_date'])) {
+      // CiviCRM ignores a given activity modified_date so we have to set it directly.
+      \CRM_Core_DAO::executeQuery('UPDATE civicrm_activity SET modified_date = %1 WHERE id = %2', [
+        1 => [$values['modified_date'], 'String'],
+        2 => [$activityValues['id'], 'Integer'],
+      ]);
+      $activityValues['modified_date'] = $values['modified_date'];
+    }
 
     EntityActivity::connect(FALSE)
       ->setActivityId($activityValues['id'])

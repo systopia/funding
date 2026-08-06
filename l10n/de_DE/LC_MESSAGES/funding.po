@@ -1236,6 +1236,7 @@ msgstr "Förderantrag erstellt"
 #: Civi/Funding/EventSubscriber/ClearingProcess/ClearingProcessReviewStatusSubscriber.php
 #: Civi/Funding/EventSubscriber/ClearingProcess/ClearingProcessStartedSubscriber.php
 #: Civi/Funding/EventSubscriber/ClearingProcess/ClearingProcessStatusSubscriber.php
+#: Civi/Funding/Upgrade/Upgrader0024.php
 msgid "Application: %1 (%2)"
 msgstr "Antrag: %1 (%2)"
 
@@ -1303,6 +1304,7 @@ msgid "To status: %1"
 msgstr "Zu Status: %1"
 
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationSnapshotCreateSubscriber.php
+#: Civi/Funding/Upgrade/Upgrader0024.php
 msgid "Funding Application Snapshot Created"
 msgstr "Förderantragssnapshot erstellt"
 
@@ -1897,6 +1899,21 @@ msgstr "Zeichenketten erfolgreich extrahiert."
 #: Civi/Funding/Translation/EventSubscriber/ExtractStringsSearchKitTaskSubscriber.php
 msgid "An error occurred while extracting strings."
 msgstr "Beim Extrahieren der Zeichenketten ist ein Fehler aufgetreten."
+
+#: Civi/Funding/Upgrade/Upgrader0024.php
+msgid "modification date of application process"
+msgstr "Änderungsdatum von Antragsprozess"
+
+#: Civi/Funding/Upgrade/Upgrader0024.php
+msgid "creation date of activity %1"
+msgstr "Erstellungsdatum von Aktivität %1"
+
+#: Civi/Funding/Upgrade/Upgrader0024.php
+msgid ""
+"Created during update for existing snapshot. Date (%1) may be inaccurate."
+msgstr ""
+"Erstellt während Update für existierenden Snapshot. Datum (%1) ist "
+"möglicherweise ungenau."
 
 #: Civi/Funding/Validation/EntityValidationResult.php
 msgid "Validation failed: %1"
